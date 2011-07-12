@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 
 import org.arc4eclipse.repositoryFacard.IRepositoryFacardCallback;
+import org.arc4eclipse.swtBinding.constants.SwtBindingConstants;
 import org.arc4eclipse.swtBinding.constants.SwtBindingMessages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
@@ -38,6 +39,7 @@ public class BoundLabelAndText<Key, Thing, Aspect, Data> extends BoundCompositeW
 
 		Label lblNewLabel = new Label(this, SWT.NONE);
 		FormData fd_lblNewLabel = new FormData();
+		fd_lblNewLabel.right = new FormAttachment(0, SwtBindingConstants.titleValuePairTitleWidth);
 		fd_lblNewLabel.top = new FormAttachment(0);
 		fd_lblNewLabel.left = new FormAttachment(0);
 		lblNewLabel.setLayoutData(fd_lblNewLabel);
@@ -45,7 +47,7 @@ public class BoundLabelAndText<Key, Thing, Aspect, Data> extends BoundCompositeW
 
 		Button btnNewButton = new Button(this, SWT.NONE);
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
-			
+			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				startText = text.getText();
 				text.setEditable(!text.getEditable());
@@ -66,10 +68,12 @@ public class BoundLabelAndText<Key, Thing, Aspect, Data> extends BoundCompositeW
 		fd_text.left = new FormAttachment(0, 82);
 		text.setLayoutData(fd_text);
 		text.addFocusListener(new FocusListener() {
+			@Override
 			public void focusLost(FocusEvent arg0) {
 				if (!updating && text.getEditable() && !startText.equals(text.getText())) {
 					logger.debug(MessageFormat.format(SwtBindingMessages.changing, Arrays.asList(keys), text.getText()));
 					updateDataWith(text.getText(), new IRepositoryFacardCallback<Key, Thing, Aspect, Data>() {
+						@Override
 						public void process(Key key, Thing thing, Aspect aspect, Data data) {
 							logger.debug(MessageFormat.format(SwtBindingMessages.changed, Arrays.asList(keys), text.getText()));
 						}
@@ -77,6 +81,7 @@ public class BoundLabelAndText<Key, Thing, Aspect, Data> extends BoundCompositeW
 				}
 			}
 
+			@Override
 			public void focusGained(FocusEvent arg0) {
 			}
 		});
@@ -93,7 +98,7 @@ public class BoundLabelAndText<Key, Thing, Aspect, Data> extends BoundCompositeW
 		}
 	}
 
-	
+	@Override
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
 	}
@@ -106,7 +111,7 @@ public class BoundLabelAndText<Key, Thing, Aspect, Data> extends BoundCompositeW
 		text.addModifyListener(listener);
 	}
 
-	
+	@Override
 	protected void setFromValue(Key key, Thing thing, Data data, Object value) {
 		logger.debug(MessageFormat.format(SwtBindingMessages.setFromValue, key, Arrays.asList(keys), data, value));
 		String string = value == null ? "" : value.toString();

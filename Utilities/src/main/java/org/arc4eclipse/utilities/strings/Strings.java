@@ -58,6 +58,7 @@ public class Strings {
 			private final StringBuilder builder = new StringBuilder();
 			private boolean addSeparator;
 
+			@Override
 			public void add(T t) {
 				if (addSeparator)
 					builder.append(separator);
@@ -65,6 +66,7 @@ public class Strings {
 				builder.append(t);
 			}
 
+			@Override
 			public String result() {
 				return builder.toString();
 			}
@@ -74,6 +76,7 @@ public class Strings {
 
 	public static IFunction1<String, Integer> length() {
 		return new IFunction1<String, Integer>() {
+			@Override
 			public Integer apply(String from) throws Exception {
 				return from.length();
 			}
@@ -82,9 +85,11 @@ public class Strings {
 
 	public static IFunction1<Object, String> toStringFn() {
 		return new IFunction1<Object, String>() {
+			@Override
 			public String apply(Object from) throws Exception {
 				return from.toString();
 			}
 		};
 	}
+
 }

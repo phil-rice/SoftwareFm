@@ -1,5 +1,6 @@
 package org.arc4eclipse.binding.path;
 
+import java.io.File;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -21,16 +22,17 @@ public final class BindingPathCalculator implements IPathCalculator<IBinding, IE
 		this.thin = thin;
 	}
 
-	
+	@Override
 	public String makeUrl(IBinding thing, IEntityType entityType) {
 		final IPath path = thing.getJavaElement().getPath();
 		if (path == null)
 			return null;
 		IJarDetails jarDetails = Maps.findOrCreate(cache, path, new Callable<IJarDetails>() {
-			
+
+			@Override
 			public IJarDetails call() throws Exception {
 				String lastSegment = path.lastSegment();
-				return IJarDetails.Utils.makeJarDetails(lastSegment, "SomeRelease");
+				return IJarDetails.Utils.makeJarDetails(new File(lastSegment), "SomeRelease");
 			}
 		});
 		JavaElementRipperResult ripperResult = ripper.apply(thing);
