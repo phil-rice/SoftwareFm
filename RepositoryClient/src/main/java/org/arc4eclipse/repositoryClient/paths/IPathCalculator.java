@@ -10,10 +10,17 @@ public interface IPathCalculator<Thing, Aspect> {
 	String makeUrl(Thing thing, Aspect entityType);
 
 	public static class Utils {
+		public static <Thing, Aspect> IPathCalculator<Thing, Aspect> simplest(final String prefix) {
+			return new IPathCalculator<Thing, Aspect>() {
+				public String makeUrl(Thing thing, Aspect entityType) {
+					return prefix + "/" + thing + "/" + entityType;
+				}
+			};
+		}
+
 		public static IPathCalculator<Object, IEntityType> classPathCalculator(IJarDetails jarDetails) {
 			JarPathToRepositoryPathConvertor convertor = new JarPathToRepositoryPathConvertor();
 			return classPathCalculator(convertor, jarDetails);
-
 		}
 
 		private static IPathCalculator<Object, IEntityType> classPathCalculator(JarPathToRepositoryPathConvertor convertor, IJarDetails jarDetails) {

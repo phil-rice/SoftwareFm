@@ -13,6 +13,14 @@ public interface IRepositoryClient<Thing, Aspect> {
 	void setDetails(Thing thing, Aspect aspect, IResponseCallback<Thing, Aspect> callback, String... details);
 
 	static class Utils {
+		public static <Thing, Aspect> IRepositoryClient<Thing, Aspect> simplestClient(String prefix) {
+			return new RepositoryClient<Thing, Aspect>(IPathCalculator.Utils.<Thing, Aspect> simplest(prefix), IHttpClient.Utils.defaultClient());
+		}
+
+		public static <Thing, Aspect> IRepositoryClient<Thing, Aspect> simplestClient(String prefix, IHttpClient client) {
+			return new RepositoryClient<Thing, Aspect>(IPathCalculator.Utils.<Thing, Aspect> simplest(prefix), client);
+		}
+
 		public static <Thing, Aspect> IRepositoryClient<Thing, Aspect> repositoryClient(IPathCalculator<Thing, Aspect> pathCalculator, IHttpClient client) {
 			return new RepositoryClient<Thing, Aspect>(pathCalculator, client);
 		}

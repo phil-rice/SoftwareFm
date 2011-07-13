@@ -27,10 +27,8 @@ public class AspectToParameters<Thing, Aspect> implements IAspectToParameters<Th
 
 	@Override
 	public Map<Object, Object> makeFrom(String string) {
-		Map<Object, Object> raw = makeMap(string);
-		Object data = raw.get(RepositoryFacardConstants.dataKey);
-		Map<Object, Object> dataMap = makeMap(data);
-		return dataMap;
+		Map<Object, Object> map = makeMap(string);
+		return map;
 	}
 
 	@Override
