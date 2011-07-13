@@ -1,5 +1,6 @@
 package org.arc4eclipse.utilities.maps;
 
+import java.lang.reflect.Array;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -206,6 +207,7 @@ public class Maps {
 
 	public static <K, V> IFunction1<K, V> get(final Map<K, V> map) {
 		return new IFunction1<K, V>() {
+			@Override
 			public V apply(K from) throws Exception {
 				return map.get(from);
 			}
@@ -214,6 +216,7 @@ public class Maps {
 
 	public static <K, V> IFunction1<Entry<String, String>, String> entryToStr(final String pattern) {
 		return new IFunction1<Map.Entry<String, String>, String>() {
+			@Override
 			public String apply(Entry<String, String> from) throws Exception {
 				return MessageFormat.format(pattern, from.getKey(), from.getValue());
 			}
@@ -223,6 +226,7 @@ public class Maps {
 	/** The map is from K to a pattern. The parameters passed to MessageFormat are key + extraParameters */
 	public static <K, V> IFunction1<K, String> keyToValuePatternToStr(final Map<K, V> map, final Object... extraParameters) {
 		return new IFunction1<K, String>() {
+			@Override
 			public String apply(K from) throws Exception {
 				List<Object> arguments = new ArrayList<Object>();
 				arguments.add(from);
@@ -237,11 +241,24 @@ public class Maps {
 		return mapTheMap(map, Functions.<K, K> identity(), mapValue);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static <FromK, ToK, FromV, ToV> Map<ToK, ToV> mapTheMap(Map<FromK, FromV> map, IFunction1<FromK, ToK> mapKey, IFunction1<FromV, ToV> mapValue) {
 		try {
-			Map<ToK, ToV> result = new HashMap<ToK, ToV>();
+			Map<ToK, ToV> result = (Map) newMapOfSameTypeMap(map);
 			for (Entry<FromK, FromV> entry : map.entrySet())
 				result.put(mapKey.apply(entry.getKey()), mapValue.apply(entry.getValue()));
+			return result;
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+	}
+
+	public static <K, V, To> List<To> map(Map<K, V> map, IFunction1<Map.Entry<K, V>, To> convertor) {
+		try {
+
+			List<To> result = new ArrayList<To>(map.size());
+			for (Entry<K, V> entry : map.entrySet())
+				result.add(convertor.apply(entry));
 			return result;
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
@@ -318,6 +335,7 @@ public class Maps {
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <K, V> void put(Map<K, V> data, K[] keys, V value) {
 		Map<K, V> map = data;
 		for (int i = 0; i < keys.length - 1; i++) {
@@ -334,5 +352,25 @@ public class Maps {
 			throw new IllegalStateException(MessageFormat.format(UtilityMessages.cannotFindMapForGet, data, Arrays.asList(keys)));
 		map.put(keys[keys.length - 1], value);
 
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <K, V, To> To[] toParameters(Map<K, V> map, IFunction1<K, To> keyConvertor, IFunction1<V, To> valueConvertor, Class<To> toClass) {
+		try {
+			To[] result = (To[]) Array.newInstance(toClass, 2 * map.size());
+			int i = 0;
+			for (Entry<K, V> entry : map.entrySet()) {
+				result[i++] = keyConvertor.apply(entry.getKey());
+				result[i++] = valueConvertor.apply(entry.getValue());
+			}
+			return result;
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+
+	}
+
+	public static <K, V, To> To[] toParameters(Map<K, V> map, Class<To> toClass) {
+		return Maps.<K, V, To> toParameters(map, Functions.<K, To> cast(), Functions.<V, To> cast(), toClass);
 	}
 }

@@ -11,7 +11,7 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.arc4eclipse.utilities.constants.UtilityMessages;
-import org.arc4eclipse.utilities.maps.Maps;
+import org.arc4eclipse.utilities.functions.Functions;
 
 public class MapsTest extends TestCase {
 
@@ -151,6 +151,21 @@ public class MapsTest extends TestCase {
 	private void checkPartitionMapByValueClass(Map<Object, Object> input, Map<Object, Object> expected, Class... partitionClasses) {
 		Map<Class, Map<Object, Object>> actual = Maps.partitionByValueClass(input, LinkedHashMap.class, partitionClasses);
 		assertEquals(expected, actual);
+
+	}
+
+	public void testToParameters() {
+		check(Object.class);
+		check(String.class);
+		check(Object.class, "a", "1", "b", "2");
+		check(String.class, "a", "1", "b", "2");
+	}
+
+	private <T> void check(Class<T> toClass, Object... params) {
+		Map<Object, Object> firstMap = Maps.makeMap(params);
+		T[] foundParameters = Maps.toParameters(firstMap, Functions.<Object, T> identity(), Functions.<Object, T> identity(), toClass);
+		Map<Object, Object> secondMap = Maps.makeMap(foundParameters);
+		assertEquals(firstMap, secondMap);
 
 	}
 }

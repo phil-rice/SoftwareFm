@@ -6,6 +6,7 @@ import org.arc4eclipse.httpClient.api.IHttpClient;
 import org.arc4eclipse.repositoryClient.api.IRepositoryClient;
 import org.arc4eclipse.repositoryClient.paths.IPathCalculator;
 import org.arc4eclipse.repositoryFacard.impl.AspectToParameters;
+import org.arc4eclipse.repositoryFacard.impl.AspectToParametersAsDataValue;
 import org.arc4eclipse.repositoryFacard.impl.RepositoryFacard;
 
 public interface IRepositoryFacard<Key, Thing, Aspect, Data> {
@@ -14,6 +15,10 @@ public interface IRepositoryFacard<Key, Thing, Aspect, Data> {
 	void setDetails(Key key, Thing thing, Aspect aspect, Data data, IRepositoryFacardCallback<Key, Thing, Aspect, Data> callback);
 
 	public static class Utils {
+
+		public static <Key, Thing, Aspect> IRepositoryFacard<Key, Thing, Aspect, Map<Object, Object>> facardUsingDataField(IRepositoryClient<Thing, Aspect> repositoryClient) {
+			return new RepositoryFacard<Key, Thing, Aspect, Map<Object, Object>>(repositoryClient, new AspectToParametersAsDataValue<Thing, Aspect>());
+		}
 
 		public static <Key, Thing, Aspect> IRepositoryFacard<Key, Thing, Aspect, Map<Object, Object>> facard(IRepositoryClient<Thing, Aspect> repositoryClient) {
 			return new RepositoryFacard<Key, Thing, Aspect, Map<Object, Object>>(repositoryClient, new AspectToParameters<Thing, Aspect>());
