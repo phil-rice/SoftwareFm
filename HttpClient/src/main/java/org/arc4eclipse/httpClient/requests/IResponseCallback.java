@@ -10,5 +10,14 @@ public interface IResponseCallback<Thing, Aspect> {
 		public static <Thing, Aspect> MemoryResponseCallback<Thing, Aspect> memoryCallback() {
 			return new MemoryResponseCallback<Thing, Aspect>();
 		}
+
+		public static <Thing, Aspect> IResponseCallback<Thing, Aspect> sysoutStatusCallback() {
+			return new IResponseCallback<Thing, Aspect>() {
+				@Override
+				public <T> void process(Thing thing, Aspect aspect, IResponse response) {
+					System.out.println(response.statusCode());
+				}
+			};
+		}
 	}
 }

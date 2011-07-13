@@ -9,6 +9,8 @@ public interface IJarDetails {
 
 	File pathToJar();
 
+	String shortJarName();
+
 	String release();
 
 	byte[] digest();

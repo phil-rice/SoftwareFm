@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -89,5 +90,16 @@ public class Files {
 			throw WrappedException.wrap(e);
 
 		}
+	}
+
+	public static FilenameFilter extensionFilter(final String string) {
+		return new FilenameFilter() {
+			private final String extension = "." + string;
+
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.endsWith(extension);
+			}
+		};
 	}
 }

@@ -44,4 +44,8 @@ public class JarDetails implements IJarDetails {
 	public String toString() {
 		return "JarDetails [pathToJar=" + pathToJar + ", release=" + release + ", digest=" + digestAsHexString() + "]";
 	}
+
+	public String shortJarName() {
+		return pathToJar.getName();
+	}
 }
