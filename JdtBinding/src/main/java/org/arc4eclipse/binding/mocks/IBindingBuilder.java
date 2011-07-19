@@ -4,7 +4,7 @@ import org.eclipse.jdt.core.dom.IBinding;
 
 public interface IBindingBuilder extends IBinding {
 
-	IBindingBuilder withClazz(String className);
+	IBindingBuilder withClass(String className);
 
 	IBindingBuilder child();
 

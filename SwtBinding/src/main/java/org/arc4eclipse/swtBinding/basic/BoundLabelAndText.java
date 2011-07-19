@@ -1,83 +1,59 @@
 package org.arc4eclipse.swtBinding.basic;
 
-import java.text.MessageFormat;
-import java.util.Arrays;
-
-import org.arc4eclipse.repositoryFacard.IRepositoryFacardCallback;
-import org.arc4eclipse.swtBinding.constants.SwtBindingConstants;
-import org.arc4eclipse.swtBinding.constants.SwtBindingMessages;
+import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseCallback;
+import org.arc4eclipse.arc4eclipseRepository.data.IRepositoryDataItem;
+import org.arc4eclipse.httpClient.response.IResponse;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-public class BoundLabelAndText<Key, Thing, Aspect, Data> extends BoundCompositeWithValue<Key, Thing, Aspect, Data> {
-	private final Text text;
-	private boolean updating;
-	protected String startText;
+public class BoundLabelAndText<Data extends IRepositoryDataItem> extends Composite implements IBound<Data> {
 
-	/**
-	 * Create the composite.
-	 * 
-	 * @param style
-	 * @param factory
-	 * @param aspect
-	 * @param keys
-	 */
-	public BoundLabelAndText(Composite parent, int style, String title, Aspect aspect, final String... keys) {
-		super(parent, style, aspect, keys);
+	private final Text txtText;
+	private String currentUrl;
+	private final BindingContext<Data> context;
+	private final String key;
+
+	public BoundLabelAndText(Composite arg0, int arg1, String title, final BindingContext<Data> context, final String key) {
+		super(arg0, arg1);
+		this.context = context;
+		this.key = key;
 		setLayout(new FormLayout());
 
-		Label lblNewLabel = new Label(this, SWT.NONE);
-		FormData fd_lblNewLabel = new FormData();
-		fd_lblNewLabel.right = new FormAttachment(0, SwtBindingConstants.titleValuePairTitleWidth);
-		fd_lblNewLabel.top = new FormAttachment(0);
-		fd_lblNewLabel.left = new FormAttachment(0);
-		lblNewLabel.setLayoutData(fd_lblNewLabel);
-		lblNewLabel.setText(title == null ? "" : title);
+		Label lblTitle = new Label(this, SWT.NONE);
+		FormData fd_lblTitle = new FormData();
+		fd_lblTitle.right = new FormAttachment(0, 60);
+		fd_lblTitle.left = new FormAttachment(0, 5);
+		lblTitle.setLayoutData(fd_lblTitle);
+		lblTitle.setText(title == null ? "" : title);
 
-		Button btnNewButton = new Button(this, SWT.NONE);
-		btnNewButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				startText = text.getText();
-				text.setEditable(!text.getEditable());
-			}
-		});
-		FormData fd_btnNewButton = new FormData();
-		fd_btnNewButton.top = new FormAttachment(0);
-		fd_btnNewButton.right = new FormAttachment(100);
-		fd_btnNewButton.left = new FormAttachment(100, -22);
-		btnNewButton.setLayoutData(fd_btnNewButton);
-		btnNewButton.setText("...");
+		txtText = new Text(this, SWT.BORDER);
+		fd_lblTitle.top = new FormAttachment(txtText, 0, SWT.TOP);
+		FormData fd_txtText = new FormData();
+		fd_txtText.bottom = new FormAttachment(100, 0);
+		fd_txtText.right = new FormAttachment(100, 0);
+		fd_txtText.top = new FormAttachment(0, 0);
+		fd_txtText.left = new FormAttachment(0, 96);
+		txtText.setLayoutData(fd_txtText);
+		txtText.setText("");
+		txtText.addFocusListener(new FocusListener() {
 
-		text = new Text(this, SWT.BORDER);
-		text.setEditable(false);
-		FormData fd_text = new FormData();
-		fd_text.right = new FormAttachment(btnNewButton, -6);
-		fd_text.top = new FormAttachment(lblNewLabel, 0, SWT.TOP);
-		fd_text.left = new FormAttachment(0, 82);
-		text.setLayoutData(fd_text);
-		text.addFocusListener(new FocusListener() {
 			@Override
 			public void focusLost(FocusEvent arg0) {
-				if (!updating && text.getEditable() && !startText.equals(text.getText())) {
-					logger.debug(MessageFormat.format(SwtBindingMessages.changing, Arrays.asList(keys), text.getText()));
-					updateDataWith(text.getText(), new IRepositoryFacardCallback<Key, Thing, Aspect, Data>() {
+				if (currentUrl != null) {
+					IArc4EclipseCallback<Data> callback = new IArc4EclipseCallback<Data>() {
 						@Override
-						public void process(Key key, Thing thing, Aspect aspect, Data data) {
-							logger.debug(MessageFormat.format(SwtBindingMessages.changed, Arrays.asList(keys), text.getText()));
+						public void process(IResponse response, Data data) {
+							System.out.println("Changed data to: " + data);
 						}
-					});
+					};
+					context.repository.modifyData(currentUrl, key, getText(), context.mapper, callback);
 				}
 			}
 
@@ -85,36 +61,30 @@ public class BoundLabelAndText<Key, Thing, Aspect, Data> extends BoundCompositeW
 			public void focusGained(FocusEvent arg0) {
 			}
 		});
-
 	}
 
 	public void setText(String text) {
-		assert !updating;
-		updating = true;
-		try {
-			this.text.setText(text);
-		} finally {
-			updating = false;
+		txtText.setText(text);
+	}
+
+	public String getText() {
+		return txtText.getText();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void setData(Object arg0) {
+		super.setData(arg0);
+		if (arg0 != null && context.clazz.isAssignableFrom(arg0.getClass())) {
+			Data data = (Data) arg0;
+			Object value = data.get(key);
+			setText(value == null ? "" : value.toString());
 		}
 	}
 
 	@Override
-	protected void checkSubclass() {
-		// Disable the check that prevents subclassing of SWT components
-	}
-
-	public String getText() {
-		return this.text.getText();
-	}
-
-	public void addModifyListener(ModifyListener listener) {
-		text.addModifyListener(listener);
-	}
-
-	@Override
-	protected void setFromValue(Key key, Thing thing, Data data, Object value) {
-		logger.debug(MessageFormat.format(SwtBindingMessages.setFromValue, key, Arrays.asList(keys), data, value));
-		String string = value == null ? "" : value.toString();
-		setText(string);
+	public void processResponse(IResponse response, Data data) {
+		currentUrl = response.url();
+		setData(data);
 	}
 }

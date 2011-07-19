@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.arc4eclipse.panelExerciser.constants.PanelExerciserConstants;
+import org.arc4eclipse.utilities.reflection.Fields;
 import org.eclipse.jdt.core.dom.IBinding;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -39,7 +40,8 @@ public class BindingList extends org.eclipse.swt.widgets.Composite {
 	/**
 	 * Overriding checkSubclass allows this class to extend org.eclipse.swt.widgets.Composite
 	 */
-	
+
+	@Override
 	protected void checkSubclass() {
 	}
 
@@ -70,7 +72,7 @@ public class BindingList extends org.eclipse.swt.widgets.Composite {
 			Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
 			shell.setSize(shellBounds.width, shellBounds.height);
 		}
-		inst.setData(PanelExerciserTestFixture.bindings);
+		inst.setData(Fields.constantsOfClass(PanelExerciserTestFixture.class, IBinding.class));
 		shell.open();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
@@ -100,7 +102,8 @@ public class BindingList extends org.eclipse.swt.widgets.Composite {
 				tree1 = new Tree(this, SWT.NONE);
 				tree1.setLayoutData(tree1LData);
 				tree1.addSelectionListener(new SelectionAdapter() {
-					
+
+					@Override
 					public void widgetSelected(SelectionEvent evt) {
 						Object item = evt.item.getData();
 						logger.debug(MessageFormat.format(PanelExerciserConstants.selected, item));
@@ -116,8 +119,8 @@ public class BindingList extends org.eclipse.swt.widgets.Composite {
 		}
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
-	
 	public void setData(Object data) {
 		super.setData(data);
 		if (data instanceof Iterable) {

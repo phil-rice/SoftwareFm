@@ -23,7 +23,7 @@ public class DeleteRequest extends AbstractRequestBuilder {
 			HttpDelete delete = new HttpDelete(param);
 			HttpResponse httpResponse = client.execute(delete);
 			HttpEntity entity = httpResponse.getEntity();
-			Response response = new Response(httpResponse.getStatusLine().getStatusCode(), entity == null ? null : EntityUtils.toString(entity));
+			Response response = new Response(url, httpResponse.getStatusLine().getStatusCode(), entity == null ? null : EntityUtils.toString(entity));
 			callback.process(response);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);

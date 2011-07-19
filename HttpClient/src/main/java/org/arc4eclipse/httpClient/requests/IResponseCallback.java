@@ -15,7 +15,7 @@ public interface IResponseCallback {
 			return new IResponseCallback() {
 				@Override
 				public void process(IResponse response) {
-					System.out.println(response.statusCode());
+					System.out.println(response.url() + " " + response.statusCode());
 				}
 			};
 		}

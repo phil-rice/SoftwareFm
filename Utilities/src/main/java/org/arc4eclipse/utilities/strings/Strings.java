@@ -101,4 +101,14 @@ public class Strings {
 		return '"' + raw + '"';
 	}
 
+	public static String onlyKeep(String raw, String chars) {
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < raw.length(); i++) {
+			char ch = raw.charAt(i);
+			if (chars.indexOf(ch) != -1)
+				builder.append(ch);
+		}
+		return builder.toString();
+	}
+
 }

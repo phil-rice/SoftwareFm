@@ -9,13 +9,6 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.arc4eclipse</groupId>
-			<artifactId>RepositoryFacard</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.arc4eclipse</groupId>
 			<artifactId>swt</artifactId>
 			<version>1.0.0</version>
 		</dependency>
@@ -33,6 +26,13 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.16</version>
+		</dependency>
+		<dependency>
+			<groupId>org.arc4eclipse</groupId>
+			<artifactId>Arc4EclipseRepository</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<type>jar</type>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 </project>

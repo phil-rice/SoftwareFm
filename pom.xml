@@ -26,15 +26,14 @@
 		<module>Utilities</module>
 		<module>HttpClient</module>
 		<module>JdtBinding</module>
-		<module>RepositoryClient</module>
 		<module>RepositoryFacard</module>
 		<module>SwtBinding</module>
 		<module>SelectedArtefactPanel</module>
 		<module>PanelExerciser</module>
 		<module>JarScanPanel</module>
-		<module>RepositoryCache</module>
 		<module>RepositoryViewer</module>
 		<module>SwtBasics</module>
+		<module>Arc4EclipseRepository</module>
 	</modules> 
 
 	<build>

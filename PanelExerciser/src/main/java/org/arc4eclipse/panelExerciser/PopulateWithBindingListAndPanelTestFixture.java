@@ -1,53 +1,67 @@
 package org.arc4eclipse.panelExerciser;
 
+import java.lang.reflect.Field;
 import java.util.Map;
 
-import org.arc4eclipse.binding.path.BindingPathCalculator;
-import org.arc4eclipse.binding.path.JavaElementRipper;
-import org.arc4eclipse.binding.path.JavaElementRipperResult;
-import org.arc4eclipse.httpClient.api.IHttpClient;
-import org.arc4eclipse.repositoryClient.api.IEntityType;
-import org.arc4eclipse.repositoryClient.api.IRepositoryClient;
-import org.arc4eclipse.repositoryClient.paths.impl.PathCalculatorThin;
-import org.arc4eclipse.repositoryFacard.IRepositoryFacard;
-import org.arc4eclipse.repositoryFacard.IRepositoryFacardCallback;
-import org.arc4eclipse.utilities.maps.Maps;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.jdt.core.dom.IBinding;
+import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseCallback;
+import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
+import org.arc4eclipse.arc4eclipseRepository.api.IUrlGenerator;
+import org.arc4eclipse.arc4eclipseRepository.data.IJarData;
+import org.arc4eclipse.arc4eclipseRepository.data.IOrganisationData;
+import org.arc4eclipse.arc4eclipseRepository.data.IProjectData;
+import org.arc4eclipse.arc4eclipseRepository.data.IReleaseData;
+import org.arc4eclipse.arc4eclipseRepository.data.IRepositoryDataItem;
+import org.arc4eclipse.utilities.exceptions.WrappedException;
+import org.arc4eclipse.utilities.functions.IFunction1;
+import org.arc4eclipse.utilities.reflection.Fields;
 
 public class PopulateWithBindingListAndPanelTestFixture {
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws Exception {
-		BindingPathCalculator pathCalculator = new BindingPathCalculator(new PathCalculatorThin());
-		IHttpClient client = IHttpClient.Utils.builder().withCredentials("admin", "admin");
-		IRepositoryClient<IBinding, IEntityType> repositoryClient = IRepositoryClient.Utils.repositoryClient(pathCalculator, client);
-		IRepositoryFacard<IPath, IBinding, IEntityType, Map<Object, Object>> facard = IRepositoryFacard.Utils.facard(repositoryClient);
-		IRepositoryFacardCallback<IPath, IBinding, IEntityType, Map<Object, Object>> callback = new IRepositoryFacardCallback<IPath, IBinding, IEntityType, Map<Object, Object>>() {
-			
-			public void process(IPath key, IBinding binding, IEntityType entityType, Map<Object, Object> data) {
-				System.out.println(binding + " " + entityType + " " + data);
-			}
-		};
 
-		for (IBinding binding : PanelExerciserTestFixture.bindings) {
-			JavaElementRipperResult result = JavaElementRipper.rip(binding);
-			JavaElementRipperResult ripperResult = JavaElementRipper.rip(binding);
-			IPath path = ripperResult.path;
-			facard.setDetails(path, binding, IEntityType.PROJECT, Maps.<Object, Object> makeMap(//
-					"comment", "Project for " + result.path.toOSString() + " not known yet"), callback);
-			facard.setDetails(path, binding, IEntityType.RELEASE, Maps.<Object, Object> makeMap(//
-					"comment", "The release for " + result.path.toOSString()), callback);
-			facard.setDetails(path, binding, IEntityType.PACKAGE, Maps.<Object, Object> makeMap(//
-					"package", result.packageName,//
-					"comment", "Some comment about " + result.packageName), callback);
-			facard.setDetails(path, binding, IEntityType.CLASS, Maps.<Object, Object> makeMap(//
-					"package", result.packageName,//
-					"class", result.className,//
-					"comment", "Comment for " + result.className), callback);
-			if (ripperResult.methodName != null)
-				facard.setDetails(path, binding, IEntityType.METHOD, Maps.<Object, Object> makeMap(//
-						"class", ripperResult.className,//
-						"method", ripperResult.methodName,//
-						"comment", "The " + result.methodName + " method"), callback);
+		IArc4EclipseRepository repository = IArc4EclipseRepository.Utils.repository();
+		final IUrlGenerator generator = repository.generator();
+		System.out.println("Jar Data");
+		for (Field field : Fields.constantFieldsOfClass(PanelExerciserTestFixture.class, JarDataAndPath.class)) {
+			JarDataAndPath dataAndPath = (JarDataAndPath) field.get(null);
+			IJarData jarData = dataAndPath.data;
+			for (String key : jarData.keys())
+				repository.modifyJarData(dataAndPath.jar, key, jarData.get(key), IArc4EclipseCallback.Utils.sysout());
+		}
+
+		putData(repository, IOrganisationData.class, new IFunction1<IOrganisationData, String>() {
+			@Override
+			public String apply(IOrganisationData from) throws Exception {
+				return generator.forOrganisation(from.getOrganisationUrl());
+			}
+		}, IArc4EclipseRepository.Utils.organisationData());
+		putData(repository, IProjectData.class, new IFunction1<IProjectData, String>() {
+			@Override
+			public String apply(IProjectData from) throws Exception {
+				return generator.forProject(from.getOrganisationUrl(), from.getProjectName());
+			}
+		}, IArc4EclipseRepository.Utils.projectData());
+		putData(repository, IReleaseData.class, new IFunction1<IReleaseData, String>() {
+			@Override
+			public String apply(IReleaseData from) throws Exception {
+				return generator.forRelease(from.getOrganisationUrl(), from.getProjectName(), from.getReleaseIdentifier());
+			}
+		}, IArc4EclipseRepository.Utils.releaseData());
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <Data extends IRepositoryDataItem> void putData(IArc4EclipseRepository repository, Class<Data> clazz, IFunction1<Data, String> urlFunction, IFunction1<Map<String, Object>, Data> mapper) throws IllegalAccessException {
+		try {
+			System.out.println("Data for " + clazz.getSimpleName());
+			for (Field field : Fields.constantFieldsOfClass(PanelExerciserTestFixture.class, clazz)) {
+				Data item = (Data) field.get(null);
+				for (String key : item.keys()) {
+					Object value = item.get(key);
+					repository.modifyData(urlFunction.apply(item), key, value, mapper, IArc4EclipseCallback.Utils.sysout());
+				}
+			}
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
 		}
 	}
 }

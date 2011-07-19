@@ -23,7 +23,7 @@ public class PostRequest extends AbstractRequestBuilder {
 			HttpPost post = new HttpPost(param);
 			post.setEntity(new UrlEncodedFormEntity(parameters));
 			HttpResponse httpResponse = client.execute(post);
-			Response response = new Response(httpResponse.getStatusLine().getStatusCode(), EntityUtils.toString(httpResponse.getEntity()));
+			Response response = new Response(url, httpResponse.getStatusLine().getStatusCode(), EntityUtils.toString(httpResponse.getEntity()));
 			callback.process(response);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);

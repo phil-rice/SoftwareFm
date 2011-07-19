@@ -1,19 +1,16 @@
 package org.arc4eclipse.panelExerciser;
 
 import java.net.URL;
-import java.util.Map;
 
 import org.apache.log4j.xml.DOMConfigurator;
-import org.arc4eclipse.binding.path.BindingPathCalculator;
+import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseCallback;
+import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
+import org.arc4eclipse.arc4eclipseRepository.data.IJarData;
 import org.arc4eclipse.binding.path.JavaElementRipper;
 import org.arc4eclipse.binding.path.JavaElementRipperResult;
-import org.arc4eclipse.httpClient.api.IHttpClient;
+import org.arc4eclipse.httpClient.response.IResponse;
 import org.arc4eclipse.panel.SoftwareFmPanel;
-import org.arc4eclipse.repositoryClient.api.IEntityType;
-import org.arc4eclipse.repositoryClient.api.IRepositoryClient;
-import org.arc4eclipse.repositoryClient.paths.impl.PathCalculatorThin;
-import org.arc4eclipse.repositoryFacard.IDataRipper;
-import org.arc4eclipse.repositoryFacard.IRepositoryFacard;
+import org.arc4eclipse.utilities.reflection.Fields;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.dom.IBinding;
 import org.eclipse.swt.SWT;
@@ -37,6 +34,7 @@ public class BindingListAndPanel extends org.eclipse.swt.widgets.Composite {
 	private SashForm sashForm2;
 	private Text text1;
 	private SoftwareFmPanel softwareFmPanel1;
+	private final IArc4EclipseRepository repository;
 
 	/**
 	 * Auto-generated main method to display this org.eclipse.swt.widgets.Composite inside a new Shell.
@@ -44,28 +42,25 @@ public class BindingListAndPanel extends org.eclipse.swt.widgets.Composite {
 	public static void main(String[] args) {
 		URL resource = ClassLoader.getSystemClassLoader().getResource("log4j.xml");
 		DOMConfigurator.configure(resource);
-		showGUI();
+		showGUI(IArc4EclipseRepository.Utils.repository());
 	}
 
 	/**
 	 * Overriding checkSubclass allows this class to extend org.eclipse.swt.widgets.Composite
 	 */
-	
+
+	@Override
 	protected void checkSubclass() {
 	}
 
 	/**
 	 * Auto-generated method to display this org.eclipse.swt.widgets.Composite inside a new Shell.
 	 */
-	public static void showGUI() {
+	public static void showGUI(IArc4EclipseRepository repository) {
 		Display display = Display.getDefault();
 		Shell shell = new Shell(display);
-		BindingPathCalculator pathCalculator = new BindingPathCalculator(new PathCalculatorThin());
-		IHttpClient client = IHttpClient.Utils.builder().withCredentials("admin", "admin");
-		IRepositoryClient<IBinding, IEntityType> repositoryClient = IRepositoryClient.Utils.repositoryClient(pathCalculator, client);
-		IRepositoryFacard<IPath, IBinding, IEntityType, Map<Object, Object>> facard = IRepositoryFacard.Utils.facard(repositoryClient);
-		BindingListAndPanel inst = new BindingListAndPanel(shell, SWT.NULL);
-		inst.setRepositoryFacard(facard);
+		BindingListAndPanel inst = new BindingListAndPanel(shell, SWT.NULL, repository);
+		inst.setRepository(repository);
 		Point size = inst.getSize();
 		shell.setLayout(new FillLayout());
 		shell.layout();
@@ -76,7 +71,8 @@ public class BindingListAndPanel extends org.eclipse.swt.widgets.Composite {
 			Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
 			shell.setSize(shellBounds.width, shellBounds.height);
 		}
-		inst.fileList1.setData(PanelExerciserTestFixture.bindings);
+		Iterable<IBinding> bindings = Fields.constantsOfClass(PanelExerciserTestFixture.class, IBinding.class);
+		inst.fileList1.setData(bindings);
 		shell.open();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
@@ -84,13 +80,14 @@ public class BindingListAndPanel extends org.eclipse.swt.widgets.Composite {
 		}
 	}
 
-	private void setRepositoryFacard(IRepositoryFacard<IPath, IBinding, IEntityType, Map<Object, Object>> repositoryFacard) {
-		softwareFmPanel1.setRepositoryClient(repositoryFacard);
-		softwareFmPanel1.bind(repositoryFacard, IDataRipper.Utils.mapRipper());
+	private void setRepository(IArc4EclipseRepository repository) {
+		// TODO Auto-generated method stub
+
 	}
 
-	public BindingListAndPanel(org.eclipse.swt.widgets.Composite parent, int style) {
+	public BindingListAndPanel(org.eclipse.swt.widgets.Composite parent, int style, IArc4EclipseRepository repository) {
 		super(parent, style);
+		this.repository = repository;
 		initGUI();
 	}
 
@@ -113,12 +110,21 @@ public class BindingListAndPanel extends org.eclipse.swt.widgets.Composite {
 					fileList1 = new BindingList(sashForm1, SWT.NONE);
 					fileList1.setBounds(0, 0, 222, 162);
 					fileList1.addFireSelectionListener(new IBindingSelectedListener() {
-						
+
+						@Override
 						public void bindingSelected(IBinding binding) {
 							String text = binding == null ? "" : binding.toString();
 							JavaElementRipperResult ripperResult = JavaElementRipper.rip(binding);
 							text1.setText(text + "\n" + ripperResult);
-							softwareFmPanel1.setData(binding);
+							IPath path = ripperResult.path;
+							if (path != null) {
+								repository.getJarData(path.toFile(), new IArc4EclipseCallback<IJarData>() {
+									@Override
+									public void process(IResponse response, IJarData data) {
+										softwareFmPanel1.setData(data);
+									}
+								});
+							}
 						}
 					});
 				}
@@ -130,7 +136,7 @@ public class BindingListAndPanel extends org.eclipse.swt.widgets.Composite {
 						text1.setText("text1");
 					}
 					{
-						softwareFmPanel1 = new SoftwareFmPanel(sashForm2, SWT.NONE);
+						softwareFmPanel1 = new SoftwareFmPanel(sashForm2, SWT.NONE, repository);
 					}
 				}
 			}

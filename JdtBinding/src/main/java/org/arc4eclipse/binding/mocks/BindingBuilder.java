@@ -44,7 +44,7 @@ public class BindingBuilder extends BindingAdapter implements IBindingBuilder, I
 	}
 
 	
-	public IBindingBuilder withClazz(String className) {
+	public IBindingBuilder withClass(String className) {
 		return withInterface(className);
 	}
 

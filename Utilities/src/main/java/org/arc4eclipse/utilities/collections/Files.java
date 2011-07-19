@@ -8,6 +8,7 @@ import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.math.BigInteger;
 import java.net.URL;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
@@ -64,6 +65,20 @@ public class Files {
 	@SuppressWarnings("rawtypes")
 	public static String getTextFromClassPath(Class clazz, String path) {
 		return getText(new ClassPathResource(path, clazz));
+	}
+
+	public static String digestAsHexString(File file) {
+		try {
+			DigestInputStream inputStream = new DigestInputStream(new FileInputStream(file), MessageDigest.getInstance("SHA-1"));
+			byte[] buffer = new byte[8192];
+			while (inputStream.read(buffer) != -1)
+				;
+			byte[] rawDigest = inputStream.getMessageDigest().digest();
+			return new BigInteger(rawDigest).abs().toString(16);
+		} catch (Exception e) {
+			System.out.println(file.getAbsolutePath());
+			throw WrappedException.wrap(e);
+		}
 	}
 
 	public static byte[] digest(File file) {

@@ -2,6 +2,7 @@ package org.arc4eclipse.swtBasics.text;
 
 import org.arc4eclipse.swtBasics.LayoutRules;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -44,5 +45,10 @@ public class TitleAndTextField extends Composite {
 
 	public int getAsInteger() {
 		return Integer.parseInt(getText());
+	}
+
+	public void addModifyListener(ModifyListener listener) {
+		txtText.addModifyListener(listener);
+
 	}
 }
