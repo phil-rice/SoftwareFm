@@ -11,6 +11,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.arc4eclipse.httpClient.api.IClientBuilder;
 import org.arc4eclipse.httpClient.constants.HttpClientConstants;
 import org.arc4eclipse.httpClient.requests.IRequestBuilder;
+import org.arc4eclipse.httpClient.requests.impl.DeleteRequest;
 import org.arc4eclipse.httpClient.requests.impl.GetRequest;
 import org.arc4eclipse.httpClient.requests.impl.PostRequest;
 
@@ -33,20 +34,25 @@ public class ClientBuilder implements IClientBuilder {
 		this.client = httpClient;
 	}
 
-	
+	@Override
 	public IClientBuilder withCredentials(String userName, String password) {
 		client.getCredentialsProvider().setCredentials(makeAuthScope(), new UsernamePasswordCredentials(userName, password));
 		return this;
 	}
 
-	
+	@Override
 	public IRequestBuilder post(String url) {
 		return new PostRequest(host, client, url);
 	}
 
-	
+	@Override
 	public IRequestBuilder get(String url) {
 		return new GetRequest(host, client, url);
+	}
+
+	@Override
+	public IRequestBuilder delete(String url) {
+		return new DeleteRequest(host, client, url);
 	}
 
 	public AuthScope makeAuthScope() {

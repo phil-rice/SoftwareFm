@@ -35,6 +35,12 @@ public abstract class AbstractRequestBuilder implements IRequestBuilder {
 		return this;
 	}
 
+	@Override
+	public IRequestBuilder addParams(List<NameValuePair> nameAndValues) {
+		parameters.addAll(nameAndValues);
+		return this;
+	}
+
 	protected String protocolHostAndUrl() {
 		return "http://" + host.getHostName() + ":" + host.getPort() + url;
 	}

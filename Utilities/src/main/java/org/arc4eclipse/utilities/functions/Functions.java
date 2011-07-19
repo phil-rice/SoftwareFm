@@ -1,5 +1,9 @@
 package org.arc4eclipse.utilities.functions;
 
+import java.util.List;
+
+import org.arc4eclipse.utilities.collections.Lists;
+
 public class Functions {
 
 	public static <From, Middle, To> IFunction1<From, To> compose(final IFunction1<From, Middle> one, final IFunction1<Middle, To> two) {
@@ -8,6 +12,22 @@ public class Functions {
 			public To apply(From from) throws Exception {
 				Middle middle = one.apply(from);
 				return two.apply(middle);
+			}
+		};
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static IFunction1 arraysBecomeLists() {
+		return new IFunction1() {
+			@Override
+			public Object apply(Object from) throws Exception {
+				if (from.getClass().isArray()) {
+					List<Object> result = Lists.newList();
+					for (Object f : (Object[]) from)
+						result.add(f);
+					return result;
+				} else
+					return from;
 			}
 		};
 	}

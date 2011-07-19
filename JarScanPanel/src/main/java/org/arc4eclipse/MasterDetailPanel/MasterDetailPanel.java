@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.Composite;
 
 public class MasterDetailPanel<T> extends Composite implements IMasterDetailPanel<T> {
 
-	private final TableWithTitle tableWithTitle;
+	private final TableWithTitle<T> tableWithTitle;
 	private final BrowserWithTitle browserWithTitle;
 
 	/**
@@ -22,7 +22,7 @@ public class MasterDetailPanel<T> extends Composite implements IMasterDetailPane
 		super(parent, style);
 		setLayout(new FormLayout());
 
-		tableWithTitle = new TableWithTitle(this, SWT.NONE, masterTitle);
+		tableWithTitle = new TableWithTitle<T>(this, SWT.NONE, masterTitle);
 		FormData fd_tableWithTitle = new FormData();
 		fd_tableWithTitle.bottom = new FormAttachment(0, 290);
 		fd_tableWithTitle.right = new FormAttachment(0, 177);

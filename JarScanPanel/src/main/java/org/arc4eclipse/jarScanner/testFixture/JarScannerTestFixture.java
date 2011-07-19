@@ -18,6 +18,16 @@ import org.springframework.core.io.ClassPathResource;
 
 public class JarScannerTestFixture {
 
+	private final static Map<String, Map<String, Integer>> jarToRelease = Maps.makeMap(//
+			"commons-math-2.0.jar", Maps.makeMap(//
+					JarScannerConstants.organisation, "http://www.apache.org/",//
+					JarScannerConstants.project, "commons.apache.org/math/",//
+					JarScannerConstants.release, "2.0"),//
+			"commons-math-2.0.jar", Maps.makeMap(//
+					JarScannerConstants.organisation, "http://www.apache.org/",//
+					JarScannerConstants.project, "commons.apache.org/math/",//
+					JarScannerConstants.release, "2.0"));//
+
 	private final static IRepositoryFacard<Object, IJarDetails, IEntityType, Map<Object, Object>> repositoryFacard = IRepositoryFacard.Utils.facard(IRepositoryClient.Utils.repositoryClient(new IPathCalculator<IJarDetails, IEntityType>() {
 		@Override
 		public String makeUrl(IJarDetails jarDetails, IEntityType entityType) {
@@ -42,11 +52,20 @@ public class JarScannerTestFixture {
 			IJarDetails rawJarDetails = IJarDetails.Utils.makeJarDetails(jarFile, null);
 			IJarDetails withDigest = IJarDetails.Utils.withDigest(rawJarDetails);
 			String digest = withDigest.digestAsHexString();
-			repositoryFacard.setDetails(digest, withDigest, IEntityType.RELEASE, Maps.makeMap(//
-					JarScannerConstants.jarName, withDigest.shortJarName()
-
-			), callback);
-
+			Map<Object, Object> data = Maps.makeMap(//
+					JarScannerConstants.jarName, withDigest.shortJarName(), //
+					JarScannerConstants.digest, withDigest.digestAsHexString());
+			Map<String, Integer> organisation = jarToRelease.get(withDigest.shortJarName());
+			if (organisation != null)
+				data.put(JarScannerConstants.organisation, organisation);
+			repositoryFacard.setDetails(digest, withDigest, IEntityType.RELEASE, data, callback);
+		}
+		System.out.println("Reading");
+		for (File jarFile : directory.listFiles(Files.extensionFilter("jar"))) {
+			IJarDetails rawJarDetails = IJarDetails.Utils.makeJarDetails(jarFile, null);
+			IJarDetails withDigest = IJarDetails.Utils.withDigest(rawJarDetails);
+			String digest = withDigest.digestAsHexString();
+			repositoryFacard.getDetails(digest, withDigest, IEntityType.RELEASE, callback);
 		}
 
 	}

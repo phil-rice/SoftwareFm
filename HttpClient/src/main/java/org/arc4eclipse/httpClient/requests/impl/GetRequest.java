@@ -15,14 +15,14 @@ public class GetRequest extends AbstractRequestBuilder {
 		super(host, client, url);
 	}
 
-	
-	public <Context1, Context2> void execute(Context1 context1, Context2 context2, IResponseCallback<Context1, Context2> callback) {
+	@Override
+	public void execute(IResponseCallback callback) {
 		try {
 			String protocolHostAndUrl = protocolHostAndUrl();
 			HttpGet get = new HttpGet(protocolHostAndUrl);
 			HttpResponse httpResponse = client.execute(get);
 			Response response = new Response(httpResponse.getStatusLine().getStatusCode(), EntityUtils.toString(httpResponse.getEntity()));
-			callback.process(context1, context2, response);
+			callback.process(response);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}

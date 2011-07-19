@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * This class demonstrates TableTree
  */
+@SuppressWarnings("deprecation")
 public class TableTreeTest {
 	// The number of rows and columns
 	private static final int NUM = 3;

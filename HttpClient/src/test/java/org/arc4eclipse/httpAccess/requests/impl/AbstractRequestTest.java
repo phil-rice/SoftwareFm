@@ -1,9 +1,9 @@
 package org.arc4eclipse.httpAccess.requests.impl;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import junit.framework.TestCase;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -11,7 +11,7 @@ import org.arc4eclipse.httpClient.api.impl.ClientBuilder;
 import org.arc4eclipse.httpClient.requests.IRequestBuilder;
 import org.arc4eclipse.httpClient.requests.impl.AbstractRequestBuilder;
 
-public class AbstractRequestTest {
+abstract public class AbstractRequestTest extends TestCase {
 
 	protected void checkRequest(IRequestBuilder requestBuilder, ClientBuilder builder, String... parameters) {
 		AbstractRequestBuilder postOrGet = (AbstractRequestBuilder) requestBuilder;

@@ -69,6 +69,7 @@ public class PlayerTableTree extends ApplicationWindow {
 	 *            the main window
 	 * @return Control
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	protected Control createContents(Composite parent) {
 		// Create the table viewer to display the players
@@ -481,6 +482,7 @@ class Player {
  * This class represents a team
  */
 
+@SuppressWarnings("rawtypes")
 class Team {
 	private final String name;
 
@@ -527,6 +529,7 @@ class Team {
 	 *            the player to add
 	 * @return boolean
 	 */
+	@SuppressWarnings("unchecked")
 	public boolean add(Player player) {
 		boolean added = players.add(player);
 		if (added)
@@ -539,6 +542,8 @@ class Team {
 	 * 
 	 * @return List
 	 */
+
+	@SuppressWarnings("unchecked")
 	public List getPlayers() {
 		return Collections.unmodifiableList(players);
 	}

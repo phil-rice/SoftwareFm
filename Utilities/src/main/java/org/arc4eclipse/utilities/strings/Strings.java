@@ -92,4 +92,13 @@ public class Strings {
 		};
 	}
 
+	public static String bracket(String raw, String brackets) {
+		assert brackets.length() == 2;
+		return brackets.charAt(0) + raw + brackets.charAt(1);
+	}
+
+	public static String quote(String raw) {
+		return '"' + raw + '"';
+	}
+
 }
