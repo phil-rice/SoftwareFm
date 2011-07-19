@@ -17,11 +17,11 @@ public class JsonTest extends TestCase {
 		assertEquals(Arrays.asList(1l, 2l, 3l), Json.parse("[1,2,3]"));
 		assertEquals(1l, Json.parse("1"));
 		assertEquals(Maps.makeMap("a", 1l, "b", 2l), Json.parse("{\"a\": 1, \"b\":2}"));
-		assertEquals(Maps.makeMap("a", 1l, "b", 2l), Json.parse("{'a': 1, 'b':2}"));
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void _testSingleQuotes() throws ParseException {
+		assertEquals(Maps.makeMap("a", 1l, "b", 2l), Json.parse("{'a': 1, 'b':2}"));
 		Object actual = JSONValue.parseWithException("{'a': 1, 'b':2}");
 		Map<String, Long> expected = new HashMap<String, Long>();
 		expected.put("a", 1L);

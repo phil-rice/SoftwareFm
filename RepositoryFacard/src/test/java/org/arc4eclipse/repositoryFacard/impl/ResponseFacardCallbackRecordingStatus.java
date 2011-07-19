@@ -19,13 +19,13 @@ final class ResponseFacardCallbackRecordingStatus implements IRepositoryFacardCa
 		this.response.set(response);
 		this.data.set(data);
 		if (count.incrementAndGet() > 1)
-			RepositoryFrontEndTest.fail();
+			RepositoryFacardTest.fail();
 
 	}
 
 	public void assertOk() {
 		int code = statusCode.get();
-		RepositoryFrontEndTest.assertTrue("Code: " + code + "\n" + response.get(), code == 200 || code == 201);
+		RepositoryFacardTest.assertTrue("Code: " + code + "\n" + response.get(), code == 200 || code == 201);
 	}
 
 }

@@ -18,6 +18,6 @@ class ResponseCallbackRecordingStatus implements IResponseCallback {
 
 	public void assertOk() {
 		int code = statusCode.get();
-		RepositoryFrontEndTest.assertTrue("Code: " + code + "\n" + responseString.get(), code == 200 || code == 201);
+		RepositoryFacardTest.assertTrue("Code: " + code + "\n" + responseString.get(), code == 200 || code == 201);
 	}
 }

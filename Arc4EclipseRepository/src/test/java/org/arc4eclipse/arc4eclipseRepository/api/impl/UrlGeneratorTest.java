@@ -11,22 +11,22 @@ public class UrlGeneratorTest extends TestCase {
 
 	@Test
 	public void testForJar() {
-		assertEquals("/aTh/aThisIsDigest/jar", urlGenerator.forJar("ThisIsDigest"));
+		assertEquals("/jars/aTh/aThisIsDigest/jar", urlGenerator.forJar("ThisIsDigest"));
 	}
 
 	public void testForOrganisation() {
 		assertEquals(565, Math.abs("someurl".hashCode() % 1000));
-		assertEquals("/565/someurl/organisation", urlGenerator.forOrganisation("someUrl"));
-		assertEquals("/565/someurl/organisation", urlGenerator.forOrganisation("@#'~someUrl?"));
-		assertEquals("/472/someurlabd/organisation", urlGenerator.forOrganisation("@#'~someUrl/?abd"));
+		assertEquals("/organisations/565/someurl/organisation", urlGenerator.forOrganisation("someUrl"));
+		assertEquals("/organisations/565/someurl/organisation", urlGenerator.forOrganisation("@#'~someUrl?"));
+		assertEquals("/organisations/472/someurlabd/organisation", urlGenerator.forOrganisation("@#'~someUrl/?abd"));
 	}
 
 	public void testForProject() {
-		assertEquals("/565/someurl/organisation/proj1/project", urlGenerator.forProject("someUrl", "proj1"));
+		assertEquals("/organisations/565/someurl/organisation/proj1/project", urlGenerator.forProject("someUrl", "proj1"));
 	}
 
 	public void testForRelease() {
-		assertEquals("/565/someurl/organisation/proj1/project/rel1/release", urlGenerator.forRelease("someUrl", "proj1", "rel1"));
+		assertEquals("/organisations/565/someurl/organisation/proj1/project/rel1/release", urlGenerator.forRelease("someUrl", "proj1", "rel1"));
 	}
 
 	@Override

@@ -8,7 +8,7 @@ import junit.framework.TestCase;
 import org.arc4eclipse.repositoryFacard.IRepositoryFacard;
 import org.arc4eclipse.utilities.maps.Maps;
 
-public class AbstractRepositoryFacardTest extends TestCase {
+public abstract class AbstractRepositoryFacardTest extends TestCase {
 	protected IRepositoryFacard facard;
 
 	@Override
