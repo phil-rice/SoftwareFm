@@ -7,7 +7,7 @@ import org.arc4eclipse.repositoryFacard.IRepositoryFacard;
 import org.arc4eclipse.utilities.maps.Maps;
 
 public class RepositoryWithSingleValueTests extends AbstractRepositoryFacardTest {
-	private final String url = "/" + RepositoryWithSingleValueTests.class.getSimpleName();
+	private final String url = "/tests/" + RepositoryWithSingleValueTests.class.getSimpleName();
 
 	public void testPuttingSingleValuesIntoExistingObject() {
 		facard.delete(url, IResponseCallback.Utils.memoryCallback());

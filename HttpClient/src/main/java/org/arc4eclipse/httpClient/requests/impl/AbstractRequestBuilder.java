@@ -44,4 +44,8 @@ public abstract class AbstractRequestBuilder implements IRequestBuilder {
 	protected String protocolHostAndUrl() {
 		return "http://" + host.getHostName() + ":" + host.getPort() + url;
 	}
+
+	public String getUrl() {
+		return url;
+	}
 }

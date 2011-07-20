@@ -91,7 +91,7 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 	}
 
 	public void testGetAndModifyData() {
-		String url = "/" + getClass().getSimpleName();
+		String url = "/tests/" + getClass().getSimpleName();
 		facard.delete(url, IResponseCallback.Utils.memoryCallback());
 		final AtomicInteger count = new AtomicInteger();
 		checkGetAndModifyData(url, Arc4EclipseRepositoryConstants.organisationUrlKey, "orgUrl", new IArc4EclipseCallback<IOrganisationData>() {

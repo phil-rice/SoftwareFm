@@ -21,7 +21,7 @@ public class ApacheTestFixture {
 	public final static IOrganisationData orgLog4J = new OrganisationData(Maps.<String, Object> makeMap(//
 			organisationNameKey, "Logging Services (TM)",//
 			organisationUrlKey, orgUrlLog4j,//
-			descriptionKey, ""));
+			descriptionKey, "Provides the industry standard Logging Framework"));
 	public final static IProjectData projLog4J = new ProjectData(Maps.<String, Object> makeMap(//
 			organisationUrlKey, orgUrlLog4j,//
 			projectNameKey, projNameLog4j,//
@@ -30,7 +30,7 @@ public class ApacheTestFixture {
 			organisationUrlKey, orgUrlLog4j,//
 			projectNameKey, projNameLog4j,//
 			releaseIdentifierKey, "1.2.16",//
-			descriptionKey, "")); // Log 4 J
+			descriptionKey, ""));
 
 	public final static JarDataAndPath jarLog4J1_2_16 = new JarDataAndPath(releaseLog4J1_2_16, log4jJar);
 	public final static IBinding Method_AppenderSkeleton_doAppend = IBindingBuilder.Utils.//

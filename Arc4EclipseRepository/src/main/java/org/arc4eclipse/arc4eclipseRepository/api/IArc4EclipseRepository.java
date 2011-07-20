@@ -29,6 +29,8 @@ public interface IArc4EclipseRepository extends ICleansCache {
 
 	IUrlGenerator generator();
 
+	void addLogger(IArc4EclipseLogger logger);
+
 	static class Utils {
 
 		public static IArc4EclipseRepository repository() {

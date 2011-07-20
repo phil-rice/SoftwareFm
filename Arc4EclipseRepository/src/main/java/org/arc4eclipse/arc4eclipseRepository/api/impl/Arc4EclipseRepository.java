@@ -1,10 +1,13 @@
 package org.arc4eclipse.arc4eclipseRepository.api.impl;
 
 import java.io.File;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseCallback;
+import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseLogger;
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
 import org.arc4eclipse.arc4eclipseRepository.api.IJarDigester;
 import org.arc4eclipse.arc4eclipseRepository.api.IUrlGenerator;
@@ -16,18 +19,21 @@ import org.arc4eclipse.httpClient.response.IResponse;
 import org.arc4eclipse.repositoryFacard.IRepositoryFacard;
 import org.arc4eclipse.repositoryFacard.IRepositoryFacardCallback;
 import org.arc4eclipse.repositoryFacardConstants.RepositoryFacardConstants;
+import org.arc4eclipse.utilities.collections.Lists;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.arc4eclipse.utilities.maps.Maps;
 
 public class Arc4EclipseRepository implements IArc4EclipseRepository {
+	private final static Map<String, Object> emptyParameters = Collections.<String, Object> emptyMap();
 
 	private final IRepositoryFacard facard;
 	private final IUrlGenerator urlGenerator;
 	private final Map<File, String> fileToDigest = Maps.newMap();
 	private final IJarDigester jarDigester;
+	private final List<IArc4EclipseLogger> loggers = Collections.synchronizedList(Lists.<IArc4EclipseLogger> newList());
 
-	static abstract class CallbackForData<T> implements IRepositoryFacardCallback {
+	abstract class CallbackForData<T> implements IRepositoryFacardCallback {
 		private final IArc4EclipseCallback<T> callback;
 
 		public CallbackForData(IArc4EclipseCallback<T> callback) {
@@ -37,14 +43,12 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 		@Override
 		public void process(IResponse response, Map<String, Object> data) {
 			try {
-				if (RepositoryFacardConstants.okStatusCodes.contains(response.statusCode()))
-					callback.process(response, makeData(data));
-				else
-					callback.process(null, null);
+				T madeData = RepositoryFacardConstants.okStatusCodes.contains(response.statusCode()) ? makeData(data) : null;
+				fireResponse(response, madeData);
+				callback.process(response, madeData);
 			} catch (Exception e) {
 				throw WrappedException.wrap(e);
 			}
-
 		}
 
 		abstract protected T makeData(Map<String, Object> data) throws Exception;
@@ -60,22 +64,23 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 
 		@Override
 		public void process(final IResponse response) {
+			fireResponse(response, null);
 			try {
-				if (RepositoryFacardConstants.okStatusCodes.contains(response.statusCode()))
+				if (RepositoryFacardConstants.okStatusCodes.contains(response.statusCode())) {
+					fireRequest("RefreshingData", response.url(), emptyParameters);
 					facard.get(response.url(), new IRepositoryFacardCallback() {
 						@Override
 						public void process(IResponse response, Map<String, Object> data) {
 							try {
-								if (RepositoryFacardConstants.okStatusCodes.contains(response.statusCode()))
-									callback.process(response, makeData(data));
-								else
-									callback.process(response, null);
+								T madeData = RepositoryFacardConstants.okStatusCodes.contains(response.statusCode()) ? makeData(data) : null;
+								fireResponse(response, madeData);
+								callback.process(response, madeData);
 							} catch (Exception e) {
 								throw WrappedException.wrap(e);
 							}
 						}
 					});
-				else
+				} else
 					callback.process(response, null);
 			} catch (Exception e) {
 				throw WrappedException.wrap(e);
@@ -97,6 +102,7 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 		try {
 			String jarDigest = findJarDigest(jar);
 			String url = urlGenerator.forJar(jarDigest);
+			fireRequest("getJarData", url, emptyParameters);
 			facard.get(url, new CallbackForData<IJarData>(callback) {
 				@Override
 				protected IJarData makeData(Map<String, Object> data) {
@@ -114,7 +120,9 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 		try {
 			String jarDigest = findJarDigest(jar);
 			String url = urlGenerator.forJar(jarDigest);
-			facard.post(url, Maps.<String, Object> makeMap(name, value, Arc4EclipseRepositoryConstants.hexDigest, jarDigest), new CallbackForModify<IJarData>(callback) {
+			Map<String, Object> parameters = Maps.<String, Object> makeMap(name, value, Arc4EclipseRepositoryConstants.hexDigest, jarDigest);
+			fireRequest("modifyJarData", url, parameters);
+			facard.post(url, parameters, new CallbackForModify<IJarData>(callback) {
 				@Override
 				protected IJarData makeData(Map<String, Object> data) {
 					return new JarData(data);
@@ -127,6 +135,7 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 
 	@Override
 	public <T> void getData(String url, final IFunction1<Map<String, Object>, T> mapper, IArc4EclipseCallback<T> callback) {
+		fireRequest("getData", url, emptyParameters);
 		facard.get(url, new CallbackForData<T>(callback) {
 			@Override
 			protected T makeData(Map<String, Object> data) throws Exception {
@@ -138,7 +147,9 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 
 	@Override
 	public <T> void modifyData(String url, String name, Object value, final IFunction1<Map<String, Object>, T> mapper, IArc4EclipseCallback<T> callback) {
-		facard.post(url, Maps.<String, Object> makeMap(name, value), new CallbackForModify<T>(callback) {
+		Map<String, Object> parameters = Maps.<String, Object> makeMap(name, value);
+		fireRequest("modifyData", url, parameters);
+		facard.post(url, parameters, new CallbackForModify<T>(callback) {
 			@Override
 			protected T makeData(Map<String, Object> data) throws Exception {
 				T to = mapper.apply(data);
@@ -164,7 +175,23 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 	}
 
 	@Override
+	public void addLogger(IArc4EclipseLogger logger) {
+		loggers.add(logger);
+	}
+
+	@Override
 	public IUrlGenerator generator() {
 		return urlGenerator;
 	}
+
+	private void fireRequest(String method, String url, Map<String, Object> parameters) {
+		for (IArc4EclipseLogger logger : loggers)
+			logger.sendingRequest(method, url, parameters);
+	}
+
+	private void fireResponse(IResponse response, Object data) {
+		for (IArc4EclipseLogger logger : loggers)
+			logger.receivedReply(response, data);
+	}
+
 }

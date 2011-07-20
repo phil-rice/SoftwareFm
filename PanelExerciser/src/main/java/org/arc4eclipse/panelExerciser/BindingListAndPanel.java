@@ -9,7 +9,7 @@ import org.arc4eclipse.arc4eclipseRepository.data.IJarData;
 import org.arc4eclipse.binding.path.JavaElementRipper;
 import org.arc4eclipse.binding.path.JavaElementRipperResult;
 import org.arc4eclipse.httpClient.response.IResponse;
-import org.arc4eclipse.panel.SoftwareFmPanel;
+import org.arc4eclipse.panel.SelectedArtefactPanel;
 import org.arc4eclipse.panelExerciser.fixtures.AllTestFixtures;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.dom.IBinding;
@@ -33,7 +33,7 @@ public class BindingListAndPanel extends org.eclipse.swt.widgets.Composite {
 	private BindingList fileList1;
 	private SashForm sashForm2;
 	private Text text1;
-	private SoftwareFmPanel softwareFmPanel1;
+	private SelectedArtefactPanel selectedArtefactPanel;
 	private final IArc4EclipseRepository repository;
 
 	/**
@@ -121,7 +121,7 @@ public class BindingListAndPanel extends org.eclipse.swt.widgets.Composite {
 								repository.getJarData(path.toFile(), new IArc4EclipseCallback<IJarData>() {
 									@Override
 									public void process(IResponse response, IJarData data) {
-										softwareFmPanel1.setData(data);
+										selectedArtefactPanel.setData(data);
 									}
 								});
 							}
@@ -136,7 +136,7 @@ public class BindingListAndPanel extends org.eclipse.swt.widgets.Composite {
 						text1.setText("text1");
 					}
 					{
-						softwareFmPanel1 = new SoftwareFmPanel(sashForm2, SWT.NONE, repository);
+						selectedArtefactPanel = new SelectedArtefactPanel(sashForm2, SWT.NONE, repository);
 					}
 				}
 			}

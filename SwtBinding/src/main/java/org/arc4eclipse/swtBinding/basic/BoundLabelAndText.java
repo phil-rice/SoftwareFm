@@ -28,12 +28,12 @@ public class BoundLabelAndText<Data extends IRepositoryDataItem> extends Composi
 
 		Label lblTitle = new Label(this, SWT.NONE);
 		FormData fd_lblTitle = new FormData();
-		fd_lblTitle.right = new FormAttachment(0, 60);
 		fd_lblTitle.left = new FormAttachment(0, 5);
 		lblTitle.setLayoutData(fd_lblTitle);
 		lblTitle.setText(title == null ? "" : title);
 
 		txtText = new Text(this, SWT.BORDER);
+		fd_lblTitle.right = new FormAttachment(0, 90);
 		fd_lblTitle.top = new FormAttachment(txtText, 0, SWT.TOP);
 		FormData fd_txtText = new FormData();
 		fd_txtText.bottom = new FormAttachment(100, 0);

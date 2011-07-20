@@ -11,12 +11,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 
-public class SoftwareFmPanel extends Composite {
+public class SelectedArtefactPanel extends Composite {
 
 	private final OrganisationPanel organisationPanel;
 	private final ProjectPanel projectPanel;
 	private final ReleasePanel releasePanel;
 	private final IArc4EclipseRepository repository;
+	private final DebugPanel debugPanel;
 
 	/**
 	 * Create the composite.
@@ -25,7 +26,7 @@ public class SoftwareFmPanel extends Composite {
 	 * @param style
 	 * @param repository
 	 */
-	public SoftwareFmPanel(Composite parent, int style, IArc4EclipseRepository repository) {
+	public SelectedArtefactPanel(Composite parent, int style, IArc4EclipseRepository repository) {
 		super(parent, style);
 		this.repository = repository;
 		setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -42,10 +43,16 @@ public class SoftwareFmPanel extends Composite {
 		tabItem3.setText("Project");
 		projectPanel = new ProjectPanel(tabFolder, SWT.BORDER, repository);
 		tabItem3.setControl(projectPanel);
+
 		TabItem tabItem4 = new TabItem(tabFolder, SWT.NULL);
 		tabItem4.setText("Release");
-		releasePanel = new ReleasePanel(tabFolder, SWT.BORDER);
+		releasePanel = new ReleasePanel(tabFolder, SWT.BORDER, repository);
 		tabItem4.setControl(releasePanel);
+		TabItem tabItem5 = new TabItem(tabFolder, SWT.NULL);
+		tabItem5.setText("Debug");
+		debugPanel = new DebugPanel(tabFolder, SWT.BORDER, repository);
+		tabItem5.setControl(debugPanel);
+		repository.addLogger(debugPanel);
 	}
 
 	@Override
@@ -62,7 +69,7 @@ public class SoftwareFmPanel extends Composite {
 			String organisationUrl = jarData.getOrganisationUrl();
 			repository.getData(generator.forOrganisation(organisationUrl), IArc4EclipseRepository.Utils.organisationData(), organisationPanel);
 			repository.getData(generator.forProject(organisationUrl, jarData.getProjectName()), IArc4EclipseRepository.Utils.projectData(), projectPanel);
-
+			repository.getData(generator.forRelease(organisationUrl, jarData.getProjectName(), jarData.getReleaseIdentifier()), IArc4EclipseRepository.Utils.releaseData(), releasePanel);
 		}
 	}
 
@@ -71,8 +78,9 @@ public class SoftwareFmPanel extends Composite {
 		Swts.display("Selected Artefact Panel", new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				return new SoftwareFmPanel(from, SWT.NULL, repository);
+				return new SelectedArtefactPanel(from, SWT.NULL, repository);
 			}
 		});
 	}
+
 }

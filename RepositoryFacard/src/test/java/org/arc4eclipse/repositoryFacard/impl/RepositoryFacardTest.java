@@ -80,7 +80,7 @@ public class RepositoryFacardTest extends AbstractRepositoryFacardTest {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void checkRoundTripWith(Map expected, Map data) {
-		String url = "/" + getClass().getSimpleName();
+		String url = "/tests/" + getClass().getSimpleName();
 
 		ResponseCallbackRecordingStatus deleteCallback = new ResponseCallbackRecordingStatus();
 		facard.delete(url, deleteCallback);
@@ -100,7 +100,7 @@ public class RepositoryFacardTest extends AbstractRepositoryFacardTest {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void checkRoundTripWithArrays(Map expected, Map data) {
-		String url = "/" + getClass().getSimpleName();
+		String url = "/tests/" + getClass().getSimpleName();
 
 		ResponseCallbackRecordingStatus deleteCallback = new ResponseCallbackRecordingStatus();
 		facard.delete(url, deleteCallback);
