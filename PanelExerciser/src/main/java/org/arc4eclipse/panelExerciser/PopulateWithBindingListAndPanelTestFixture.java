@@ -1,6 +1,5 @@
 package org.arc4eclipse.panelExerciser;
 
-import java.lang.reflect.Field;
 import java.util.Map;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseCallback;
@@ -11,9 +10,9 @@ import org.arc4eclipse.arc4eclipseRepository.data.IOrganisationData;
 import org.arc4eclipse.arc4eclipseRepository.data.IProjectData;
 import org.arc4eclipse.arc4eclipseRepository.data.IReleaseData;
 import org.arc4eclipse.arc4eclipseRepository.data.IRepositoryDataItem;
+import org.arc4eclipse.panelExerciser.fixtures.AllTestFixtures;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
-import org.arc4eclipse.utilities.reflection.Fields;
 
 public class PopulateWithBindingListAndPanelTestFixture {
 	@SuppressWarnings("unchecked")
@@ -22,8 +21,7 @@ public class PopulateWithBindingListAndPanelTestFixture {
 		IArc4EclipseRepository repository = IArc4EclipseRepository.Utils.repository();
 		final IUrlGenerator generator = repository.generator();
 		System.out.println("Jar Data");
-		for (Field field : Fields.constantFieldsOfClass(PanelExerciserTestFixture.class, JarDataAndPath.class)) {
-			JarDataAndPath dataAndPath = (JarDataAndPath) field.get(null);
+		for (JarDataAndPath dataAndPath : AllTestFixtures.allConstants(JarDataAndPath.class)) {
 			IJarData jarData = dataAndPath.data;
 			for (String key : jarData.keys())
 				repository.modifyJarData(dataAndPath.jar, key, jarData.get(key), IArc4EclipseCallback.Utils.sysout());
@@ -53,8 +51,7 @@ public class PopulateWithBindingListAndPanelTestFixture {
 	private static <Data extends IRepositoryDataItem> void putData(IArc4EclipseRepository repository, Class<Data> clazz, IFunction1<Data, String> urlFunction, IFunction1<Map<String, Object>, Data> mapper) throws IllegalAccessException {
 		try {
 			System.out.println("Data for " + clazz.getSimpleName());
-			for (Field field : Fields.constantFieldsOfClass(PanelExerciserTestFixture.class, clazz)) {
-				Data item = (Data) field.get(null);
+			for (Data item : AllTestFixtures.allConstants(clazz)) {
 				for (String key : item.keys()) {
 					Object value = item.get(key);
 					repository.modifyData(urlFunction.apply(item), key, value, mapper, IArc4EclipseCallback.Utils.sysout());

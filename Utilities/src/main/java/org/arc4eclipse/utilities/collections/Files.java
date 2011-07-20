@@ -117,4 +117,13 @@ public class Files {
 			}
 		};
 	}
+
+	public static String justName(File file) {
+		String name = file.getName();
+		int index = name.lastIndexOf('.');
+		if (index == -1)
+			return name;
+		else
+			return name.substring(0, index);
+	}
 }

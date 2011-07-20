@@ -1,10 +1,17 @@
 package org.arc4eclipse.utilities.reflection;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.List;
 
+import org.arc4eclipse.utilities.collections.Files;
 import org.arc4eclipse.utilities.collections.Iterables;
+import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
+import org.springframework.core.io.Resource;
 
 public class Fields {
 
@@ -53,6 +60,32 @@ public class Fields {
 			}
 		};
 		return Iterables.map(Iterables.filter(publicFields(dataClass), acceptor), mapper);
+	}
+
+	public static <T> Iterable<T> constantsOfClass(Resource directoryResource, final String packageName, final Class<T> typeClass) {
+		try {
+			File directory = directoryResource.getFile();
+			List<File> files = Arrays.asList(directory.listFiles(Files.extensionFilter("class")));
+			return Iterables.split(files, new IFunction1<File, Iterable<T>>() {
+				@Override
+				public Iterable<T> apply(File from) throws Exception {
+					Class<?> clazz = fileToClass(packageName, from);
+					return constantsOfClass(clazz, typeClass);
+				}
+			});
+		} catch (IOException e) {
+			throw WrappedException.wrap(e);
+		}
+	}
+
+	public static Class<?> fileToClass(String packageName, File file) {
+		try {
+			String name = Files.justName(file);
+			Class<?> clazz = Class.forName(packageName + "." + name);
+			return clazz;
+		} catch (Exception e) {
+			throw new RuntimeException("Class from file failed: " + file, e);
+		}
 	}
 
 	public final static IFunction1<Field, String> fieldToName = new IFunction1<Field, String>() {

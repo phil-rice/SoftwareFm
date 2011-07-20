@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.arc4eclipse.panelExerciser.constants.PanelExerciserConstants;
-import org.arc4eclipse.utilities.reflection.Fields;
+import org.arc4eclipse.panelExerciser.fixtures.AllTestFixtures;
 import org.eclipse.jdt.core.dom.IBinding;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -72,7 +72,7 @@ public class BindingList extends org.eclipse.swt.widgets.Composite {
 			Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
 			shell.setSize(shellBounds.width, shellBounds.height);
 		}
-		inst.setData(Fields.constantsOfClass(PanelExerciserTestFixture.class, IBinding.class));
+		inst.setData(AllTestFixtures.allConstants(IBinding.class));
 		shell.open();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())

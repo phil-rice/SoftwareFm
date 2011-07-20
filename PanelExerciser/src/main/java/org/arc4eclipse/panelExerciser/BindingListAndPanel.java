@@ -10,7 +10,7 @@ import org.arc4eclipse.binding.path.JavaElementRipper;
 import org.arc4eclipse.binding.path.JavaElementRipperResult;
 import org.arc4eclipse.httpClient.response.IResponse;
 import org.arc4eclipse.panel.SoftwareFmPanel;
-import org.arc4eclipse.utilities.reflection.Fields;
+import org.arc4eclipse.panelExerciser.fixtures.AllTestFixtures;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.dom.IBinding;
 import org.eclipse.swt.SWT;
@@ -71,7 +71,7 @@ public class BindingListAndPanel extends org.eclipse.swt.widgets.Composite {
 			Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
 			shell.setSize(shellBounds.width, shellBounds.height);
 		}
-		Iterable<IBinding> bindings = Fields.constantsOfClass(PanelExerciserTestFixture.class, IBinding.class);
+		Iterable<IBinding> bindings = AllTestFixtures.allConstants(IBinding.class);
 		inst.fileList1.setData(bindings);
 		shell.open();
 		while (!shell.isDisposed()) {
