@@ -23,7 +23,7 @@ public class ProjectData extends AbstractRepositoryDataItem implements IProjectD
 
 	@Override
 	public String getProjectName() {
-		return getString(Arc4EclipseRepositoryConstants.projectNameKey);
+		return getString(Arc4EclipseRepositoryConstants.projectUrlKey);
 	}
 
 }

@@ -120,7 +120,7 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 		try {
 			String jarDigest = findJarDigest(jar);
 			String url = urlGenerator.forJar(jarDigest);
-			Map<String, Object> parameters = Maps.<String, Object> makeMap(name, value, Arc4EclipseRepositoryConstants.hexDigest, jarDigest);
+			Map<String, Object> parameters = Maps.<String, Object> makeMap(name, value, Arc4EclipseRepositoryConstants.hexDigestKey, jarDigest);
 			fireRequest("modifyJarData", url, parameters);
 			facard.post(url, parameters, new CallbackForModify<IJarData>(callback) {
 				@Override

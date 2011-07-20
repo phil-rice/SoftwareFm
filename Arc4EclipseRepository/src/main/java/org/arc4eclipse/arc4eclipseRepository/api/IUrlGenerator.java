@@ -6,8 +6,6 @@ public interface IUrlGenerator {
 
 	String forOrganisation(String organisationUrl);
 
-	String forProject(String organisationUrl, String projectName);
-
-	String forRelease(String organisationUrl, String projectName, String releaseIdentifier);
+	String forProject(String organisationUrl, String projectUrl);
 
 }

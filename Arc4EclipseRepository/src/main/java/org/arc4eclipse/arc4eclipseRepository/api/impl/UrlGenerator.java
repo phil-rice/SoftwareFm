@@ -2,33 +2,31 @@ package org.arc4eclipse.arc4eclipseRepository.api.impl;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IUrlGenerator;
 import org.arc4eclipse.utilities.strings.Strings;
+import org.arc4eclipse.utilities.strings.UrlRipperResult;
+import org.arc4eclipse.utilities.strings.Urls;
 
 public class UrlGenerator implements IUrlGenerator {
 
 	@Override
 	public String forJar(String jarDigest) {
 		String prefix = jarDigest.substring(0, 2);
-		return "/jars/a" + prefix + "/a" + jarDigest + "/jar";
+		return "/jars/a" + prefix + "/a" + jarDigest;
 	}
 
 	@Override
 	public String forOrganisation(String organisationUrl) {
-		String cleanUrl = cleanUrl(organisationUrl);
-		return "/organisations/" + Math.abs(cleanUrl.hashCode()) % 1000 + "/" + cleanUrl + "/organisation";
+		return makeUrl(organisationUrl, "organisation");
 	}
 
 	@Override
-	public String forProject(String organisationUrl, String projectName) {
-		return forOrganisation(organisationUrl) + "/" + cleanUrl(projectName) + "/project";
+	public String forProject(String organisationUrl, String projectUrl) {
+		return makeUrl(projectUrl, "project");
 	}
 
-	@Override
-	public String forRelease(String organisationUrl, String projectName, String releaseIdentifier) {
-		return forProject(organisationUrl, projectName) + "/" + cleanUrl(releaseIdentifier) + "/release";
-	}
-
-	private String cleanUrl(String organisationWebSiteUrl) {
-		return Strings.onlyKeep(organisationWebSiteUrl.toLowerCase(), "abcdefghijklmnopqrstuvwxyz0123456789._");
+	private String makeUrl(String rawUrl, String name) {
+		UrlRipperResult ripperResult = Urls.rip(rawUrl);
+		String cleanUrl = Strings.onlyKeep(ripperResult.resourcePath.toLowerCase(), "abcdefghijklmnopqrstuvwxyz0123456789._");
+		return "/" + name + "s/" + Math.abs(cleanUrl.hashCode()) % 1000 + "/" + cleanUrl;
 	}
 
 }

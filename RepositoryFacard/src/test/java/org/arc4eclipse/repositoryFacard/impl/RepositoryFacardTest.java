@@ -25,7 +25,7 @@ public class RepositoryFacardTest extends AbstractRepositoryFacardTest {
 	}
 
 	public void testGetWithDepth() {
-		String url = "/" + getClass().getSimpleName();
+		String url = "/tests/" + getClass().getSimpleName();
 		facard.delete(url, new ResponseCallbackRecordingStatus());
 		ResponseCallbackRecordingStatus oneReponse = new ResponseCallbackRecordingStatus();
 		ResponseCallbackRecordingStatus twoReponse = new ResponseCallbackRecordingStatus();
@@ -44,7 +44,7 @@ public class RepositoryFacardTest extends AbstractRepositoryFacardTest {
 	}
 
 	public void testPostImport() {
-		String url = "/" + getClass().getSimpleName();
+		String url = "/tests" + getClass().getSimpleName();
 		facard.delete(url, new ResponseCallbackRecordingStatus());
 
 		Map<String, Object> expected = Maps.makeMap("namep1", "datap1", "namep2", 2L, "jcr:primaryType", "nt:unstructured", //

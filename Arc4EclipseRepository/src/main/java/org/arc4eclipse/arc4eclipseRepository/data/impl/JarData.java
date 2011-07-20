@@ -17,18 +17,23 @@ public class JarData extends AbstractRepositoryDataItem implements IJarData {
 	}
 
 	@Override
-	public String getReleaseIdentifier() {
-		return getString(Arc4EclipseRepositoryConstants.releaseIdentifierKey);
-	}
-
-	@Override
 	public String getHexDigest() {
-		return getString(Arc4EclipseRepositoryConstants.hexDigest);
+		return getString(Arc4EclipseRepositoryConstants.hexDigestKey);
 	}
 
 	@Override
 	public String getProjectName() {
-		return getString(Arc4EclipseRepositoryConstants.projectNameKey);
+		return getString(Arc4EclipseRepositoryConstants.projectUrlKey);
+	}
+
+	@Override
+	public String getJavaDocUrl() {
+		return getString(Arc4EclipseRepositoryConstants.javadocKey);
+	}
+
+	@Override
+	public String getSourceUrl() {
+		return getString(Arc4EclipseRepositoryConstants.sourceKey);
 	}
 
 }

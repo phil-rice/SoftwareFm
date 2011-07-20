@@ -8,7 +8,6 @@ import org.arc4eclipse.arc4eclipseRepository.api.IUrlGenerator;
 import org.arc4eclipse.arc4eclipseRepository.data.IJarData;
 import org.arc4eclipse.arc4eclipseRepository.data.IOrganisationData;
 import org.arc4eclipse.arc4eclipseRepository.data.IProjectData;
-import org.arc4eclipse.arc4eclipseRepository.data.IReleaseData;
 import org.arc4eclipse.arc4eclipseRepository.data.IRepositoryDataItem;
 import org.arc4eclipse.panelExerciser.fixtures.AllTestFixtures;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
@@ -39,12 +38,6 @@ public class PopulateWithBindingListAndPanelTestFixture {
 				return generator.forProject(from.getOrganisationUrl(), from.getProjectName());
 			}
 		}, IArc4EclipseRepository.Utils.projectData());
-		putData(repository, IReleaseData.class, new IFunction1<IReleaseData, String>() {
-			@Override
-			public String apply(IReleaseData from) throws Exception {
-				return generator.forRelease(from.getOrganisationUrl(), from.getProjectName(), from.getReleaseIdentifier());
-			}
-		}, IArc4EclipseRepository.Utils.releaseData());
 	}
 
 	@SuppressWarnings("unchecked")

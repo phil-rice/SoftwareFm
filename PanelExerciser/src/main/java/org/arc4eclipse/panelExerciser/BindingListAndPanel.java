@@ -3,15 +3,11 @@ package org.arc4eclipse.panelExerciser;
 import java.net.URL;
 
 import org.apache.log4j.xml.DOMConfigurator;
-import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseCallback;
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
-import org.arc4eclipse.arc4eclipseRepository.data.IJarData;
 import org.arc4eclipse.binding.path.JavaElementRipper;
 import org.arc4eclipse.binding.path.JavaElementRipperResult;
-import org.arc4eclipse.httpClient.response.IResponse;
 import org.arc4eclipse.panel.SelectedArtefactPanel;
 import org.arc4eclipse.panelExerciser.fixtures.AllTestFixtures;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.dom.IBinding;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -113,18 +109,10 @@ public class BindingListAndPanel extends org.eclipse.swt.widgets.Composite {
 
 						@Override
 						public void bindingSelected(IBinding binding) {
+							selectedArtefactPanel.setData(binding);
 							String text = binding == null ? "" : binding.toString();
 							JavaElementRipperResult ripperResult = JavaElementRipper.rip(binding);
 							text1.setText(text + "\n" + ripperResult);
-							IPath path = ripperResult.path;
-							if (path != null) {
-								repository.getJarData(path.toFile(), new IArc4EclipseCallback<IJarData>() {
-									@Override
-									public void process(IResponse response, IJarData data) {
-										selectedArtefactPanel.setData(data);
-									}
-								});
-							}
 						}
 					});
 				}

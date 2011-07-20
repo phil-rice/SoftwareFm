@@ -46,7 +46,6 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 				assertEquals(response.toString(), expectedDigest, data.getHexDigest());
 				assertEquals(response.toString(), "", data.getOrganisationUrl());
 				assertEquals(response.toString(), "", data.getProjectName());
-				assertEquals(response.toString(), "", data.getReleaseIdentifier());
 				count.incrementAndGet();
 			}
 		});
@@ -58,11 +57,10 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 				assertEquals(response.toString(), expectedDigest, data.getHexDigest());
 				assertEquals(response.toString(), "OrgUrl", data.getOrganisationUrl());
 				assertEquals(response.toString(), "", data.getProjectName());
-				assertEquals(response.toString(), "", data.getReleaseIdentifier());
 				count.incrementAndGet();
 			}
 		});
-		checkGetAndModifyJarData(antFile, Arc4EclipseRepositoryConstants.projectNameKey, "ProjName", new IArc4EclipseCallback<IJarData>() {
+		checkGetAndModifyJarData(antFile, Arc4EclipseRepositoryConstants.projectUrlKey, "ProjName", new IArc4EclipseCallback<IJarData>() {
 			@Override
 			public void process(IResponse response, IJarData data) {
 				assertNotNull(response.toString(), data);
@@ -70,24 +68,11 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 				assertEquals(response.toString(), expectedDigest, data.getHexDigest());
 				assertEquals(response.toString(), "OrgUrl", data.getOrganisationUrl());
 				assertEquals(response.toString(), "ProjName", data.getProjectName());
-				assertEquals(response.toString(), "", data.getReleaseIdentifier());
-				count.incrementAndGet();
-			}
-		});
-		checkGetAndModifyJarData(antFile, Arc4EclipseRepositoryConstants.releaseIdentifierKey, "rel", new IArc4EclipseCallback<IJarData>() {
-			@Override
-			public void process(IResponse response, IJarData data) {
-				assertNotNull(response.toString(), data);
-				assertEquals("value1", data.get("name1"));
-				assertEquals(response.toString(), expectedDigest, data.getHexDigest());
-				assertEquals(response.toString(), "OrgUrl", data.getOrganisationUrl());
-				assertEquals(response.toString(), "ProjName", data.getProjectName());
-				assertEquals(response.toString(), "rel", data.getReleaseIdentifier());
 				count.incrementAndGet();
 			}
 		});
 
-		assertEquals(8, count.get());
+		assertEquals(6, count.get());
 	}
 
 	public void testGetAndModifyData() {

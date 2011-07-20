@@ -9,11 +9,9 @@ import org.arc4eclipse.arc4eclipseRepository.api.impl.UrlGenerator;
 import org.arc4eclipse.arc4eclipseRepository.data.IJarData;
 import org.arc4eclipse.arc4eclipseRepository.data.IOrganisationData;
 import org.arc4eclipse.arc4eclipseRepository.data.IProjectData;
-import org.arc4eclipse.arc4eclipseRepository.data.IReleaseData;
 import org.arc4eclipse.arc4eclipseRepository.data.impl.JarData;
 import org.arc4eclipse.arc4eclipseRepository.data.impl.OrganisationData;
 import org.arc4eclipse.arc4eclipseRepository.data.impl.ProjectData;
-import org.arc4eclipse.arc4eclipseRepository.data.impl.ReleaseData;
 import org.arc4eclipse.repositoryFacard.IRepositoryFacard;
 import org.arc4eclipse.utilities.functions.IFunction1;
 
@@ -64,15 +62,6 @@ public interface IArc4EclipseRepository extends ICleansCache {
 				@Override
 				public IProjectData apply(Map<String, Object> from) throws Exception {
 					return new ProjectData(from);
-				}
-			};
-		}
-
-		public static IFunction1<Map<String, Object>, IReleaseData> releaseData() {
-			return new IFunction1<Map<String, Object>, IReleaseData>() {
-				@Override
-				public IReleaseData apply(Map<String, Object> from) throws Exception {
-					return new ReleaseData(from);
 				}
 			};
 		}

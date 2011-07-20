@@ -4,10 +4,12 @@ public interface IJarData extends IRepositoryDataItem {
 
 	String getOrganisationUrl();
 
-	String getReleaseIdentifier();
-
 	String getHexDigest();
 
 	String getProjectName();
+
+	String getJavaDocUrl();
+
+	String getSourceUrl();
 
 }

@@ -4,10 +4,8 @@ import static org.arc4eclipse.arc4eclipseRepository.constants.Arc4EclipseReposit
 
 import org.arc4eclipse.arc4eclipseRepository.data.IOrganisationData;
 import org.arc4eclipse.arc4eclipseRepository.data.IProjectData;
-import org.arc4eclipse.arc4eclipseRepository.data.IReleaseData;
 import org.arc4eclipse.arc4eclipseRepository.data.impl.OrganisationData;
 import org.arc4eclipse.arc4eclipseRepository.data.impl.ProjectData;
-import org.arc4eclipse.arc4eclipseRepository.data.impl.ReleaseData;
 import org.arc4eclipse.binding.mocks.IBindingBuilder;
 import org.arc4eclipse.panelExerciser.JarDataAndPath;
 import org.arc4eclipse.utilities.maps.Maps;
@@ -15,24 +13,24 @@ import org.eclipse.jdt.core.dom.IBinding;
 
 public class ApacheTestFixture {
 
-	private final static String orgUrlLog4j = "http://logging.apache.org/";
-	private final static String projNameLog4j = "Logging Services (TM)";
+	private final static String orgUrlApache = "http://www.apache.org";
+	private final static String projUrlLog4j = "http://logging.apache.org/";
 	public static final String log4jJar = "../PanelExerciser/src/main/resources/log4j-1.2.16.jar";
 	public final static IOrganisationData orgLog4J = new OrganisationData(Maps.<String, Object> makeMap(//
-			organisationNameKey, "Logging Services (TM)",//
-			organisationUrlKey, orgUrlLog4j,//
-			descriptionKey, "Provides the industry standard Logging Framework"));
+			organisationNameKey, "The Apache Software Foundation",//
+			organisationUrlKey, orgUrlApache,//
+			descriptionKey, "Provides support for the Apache community of open-source software projects."));
 	public final static IProjectData projLog4J = new ProjectData(Maps.<String, Object> makeMap(//
-			organisationUrlKey, orgUrlLog4j,//
-			projectNameKey, projNameLog4j,//
-			descriptionKey, ""));
-	public final static IReleaseData releaseLog4J1_2_16 = new ReleaseData(Maps.<String, Object> makeMap(//
-			organisationUrlKey, orgUrlLog4j,//
-			projectNameKey, projNameLog4j,//
-			releaseIdentifierKey, "1.2.16",//
-			descriptionKey, ""));
+			organisationUrlKey, orgUrlApache,//
+			projectUrlKey, projUrlLog4j,//
+			descriptionKey, "The Apache Logging Services Project creates and maintains open-source software related to the logging of application behavior and released at no charge to the public."));
 
-	public final static JarDataAndPath jarLog4J1_2_16 = new JarDataAndPath(releaseLog4J1_2_16, log4jJar);
+	public final static JarDataAndPath jarLog4J1_2_16 = new JarDataAndPath(log4jJar,//
+			organisationUrlKey, orgUrlApache,//
+			projectUrlKey, projUrlLog4j,//
+			descriptionKey, "",//
+			javadocKey, "http://repo1.maven.org/maven2/log4j/log4j/1.2.16/log4j-1.2.16-javadoc.jar",//
+			sourceKey, "http://repo1.maven.org/maven2/log4j/log4j/1.2.16/log4j-1.2.16-sources.jar");
 	public final static IBinding Method_AppenderSkeleton_doAppend = IBindingBuilder.Utils.//
 			parent(log4jJar).withPackage("org.apache.log4j ").withClass("AppenderSkeleton").//
 			child().withMethod("doAppend");

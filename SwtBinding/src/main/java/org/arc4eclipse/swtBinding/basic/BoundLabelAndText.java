@@ -3,6 +3,8 @@ package org.arc4eclipse.swtBinding.basic;
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseCallback;
 import org.arc4eclipse.arc4eclipseRepository.data.IRepositoryDataItem;
 import org.arc4eclipse.httpClient.response.IResponse;
+import org.arc4eclipse.utilities.strings.UrlRipperResult;
+import org.arc4eclipse.utilities.strings.Urls;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -28,18 +30,18 @@ public class BoundLabelAndText<Data extends IRepositoryDataItem> extends Composi
 
 		Label lblTitle = new Label(this, SWT.NONE);
 		FormData fd_lblTitle = new FormData();
-		fd_lblTitle.left = new FormAttachment(0, 5);
+		fd_lblTitle.left = new FormAttachment(0);
 		lblTitle.setLayoutData(fd_lblTitle);
 		lblTitle.setText(title == null ? "" : title);
 
 		txtText = new Text(this, SWT.BORDER);
-		fd_lblTitle.right = new FormAttachment(0, 90);
-		fd_lblTitle.top = new FormAttachment(txtText, 0, SWT.TOP);
+		fd_lblTitle.right = new FormAttachment(100);
+
 		FormData fd_txtText = new FormData();
-		fd_txtText.bottom = new FormAttachment(100, 0);
+		fd_txtText.bottom = new FormAttachment(100);
 		fd_txtText.right = new FormAttachment(100, 0);
-		fd_txtText.top = new FormAttachment(0, 0);
-		fd_txtText.left = new FormAttachment(0, 96);
+		fd_txtText.top = new FormAttachment(0, 20);
+		fd_txtText.left = new FormAttachment(0, 0);
 		txtText.setLayoutData(fd_txtText);
 		txtText.setText("");
 		txtText.addFocusListener(new FocusListener() {
@@ -79,12 +81,20 @@ public class BoundLabelAndText<Data extends IRepositoryDataItem> extends Composi
 			Data data = (Data) arg0;
 			Object value = data.get(key);
 			setText(value == null ? "" : value.toString());
+			setEnabled(data != null);
 		}
 	}
 
 	@Override
 	public void processResponse(IResponse response, Data data) {
-		currentUrl = response.url();
+		UrlRipperResult ripperResult = Urls.rip(response.url());
+		currentUrl = ripperResult.resourcePath;
 		setData(data);
+	}
+
+	@Override
+	public void clear() {
+		setText("");
+		setEnabled(false);
 	}
 }
