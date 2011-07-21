@@ -37,7 +37,7 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 	}
 
 	public void testGetAndModifyJarData() throws Exception {
-		facard.delete("/" + urlGenerator.forJar(jarDigestor.apply(antFile)), IResponseCallback.Utils.memoryCallback());
+		facard.delete("/" + urlGenerator.forJar().apply(jarDigestor.apply(antFile)), IResponseCallback.Utils.memoryCallback());
 		final String expectedDigest = "48292d38f6d060f873891171e1df689b3eaa0b37";
 		checkModifyAndGetJarData("name1", "value1", IRepositoryDataItem.Utils.jarData(//
 				Arc4EclipseRepositoryConstants.hexDigestKey, expectedDigest, //

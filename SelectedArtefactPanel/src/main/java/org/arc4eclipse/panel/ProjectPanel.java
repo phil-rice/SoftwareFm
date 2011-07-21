@@ -10,6 +10,7 @@ import org.arc4eclipse.arc4eclipseRepository.data.IProjectData;
 import org.arc4eclipse.swtBinding.basic.BoundLabelAndText;
 import org.arc4eclipse.swtBinding.basic.IBound;
 import org.arc4eclipse.swtBinding.basic.MasterBoundLabelAndText;
+import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormAttachment;
@@ -31,10 +32,10 @@ public class ProjectPanel extends AbstractRepositoryDataPanel<IProjectData> {
 	 */
 	public ProjectPanel(Composite parent, int style, IArc4EclipseRepository repository) {
 		super(parent, style, repository);
-		txtOrganisationUrl = new BoundLabelAndText<IProjectData>(this, SWT.NONE, "Organisatio Url", context, Arc4EclipseRepositoryConstants.organisationUrlKey, this);
+		txtOrganisationUrl = new BoundLabelAndText<IProjectData>(this, SWT.NONE, "Organisation Url", context, Arc4EclipseRepositoryConstants.organisationUrlKey, this);
 		FormData fd_txtOrganisation = new FormData();
 		txtOrganisationUrl.setLayoutData(fd_txtOrganisation);
-		txtProjectUrl = new MasterBoundLabelAndText<IProjectData>(this, SWT.NONE, "Name", context, Arc4EclipseRepositoryConstants.projectUrlKey);
+		txtProjectUrl = new MasterBoundLabelAndText<IProjectData>(this, SWT.NONE, "Project Url", context, Arc4EclipseRepositoryConstants.projectUrlKey, this);
 		FormData fd_txtName = new FormData();
 		fd_txtName.top = new FormAttachment(0, 15);
 		txtProjectUrl.setLayoutData(fd_txtName);
@@ -78,7 +79,11 @@ public class ProjectPanel extends AbstractRepositoryDataPanel<IProjectData> {
 
 	@Override
 	public String url() {
-		return context.repository.generator().forOrganisation(txtProjectUrl.getText());
+		try {
+			return context.repository.generator().forProject().apply(txtProjectUrl.getText());
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
 	}
 
 	@Override

@@ -114,12 +114,16 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 	}
 
 	private <T extends IRepositoryDataItem> void fireStatusChanged(String url, Class<T> clazz, RepositoryDataItemStatus status, T data) {
-		Collection<IStatusChangedListener<IRepositoryDataItem>> collection = findListenersFor(clazz);
-		if (collection != null)
-			for (IStatusChangedListener<IRepositoryDataItem> listener : collection)
-				listener.statusChanged(url, clazz, status, data);
-		if (clazz != IRepositoryDataItem.class)
-			fireStatusChanged(url, IRepositoryDataItem.class, status, data);
+		try {
+			Collection<IStatusChangedListener<IRepositoryDataItem>> collection = findListenersFor(clazz);
+			if (collection != null)
+				for (IStatusChangedListener<IRepositoryDataItem> listener : collection)
+					listener.statusChanged(url, clazz, status, data);
+			if (clazz != IRepositoryDataItem.class)
+				fireStatusChanged(url, IRepositoryDataItem.class, status, data);
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
 	}
 
 	private <T> Collection<IStatusChangedListener<IRepositoryDataItem>> findListenersFor(Class<T> clazz) {
@@ -144,7 +148,7 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 				return;
 			}
 			String jarDigest = findJarDigest(jar);
-			String url = urlGenerator.forJar(jarDigest);
+			String url = urlGenerator.forJar().apply(jarDigest);
 			fireRequest("getJarData", url, emptyParameters);
 			fireStatusChanged(url, IJarData.class, RepositoryDataItemStatus.REQUESTED, null);
 			facard.get(url, new CallbackForData<IJarData>(IJarData.class));
@@ -158,7 +162,7 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 	public void modifyJarData(File jar, String name, Object value) {
 		try {
 			String jarDigest = findJarDigest(jar);
-			String url = urlGenerator.forJar(jarDigest);
+			String url = urlGenerator.forJar().apply(jarDigest);
 			Map<String, Object> parameters = Maps.<String, Object> makeMap(name, value, Arc4EclipseRepositoryConstants.hexDigestKey, jarDigest);
 			fireRequest("modifyJarData", url, parameters);
 			facard.post(url, parameters, new CallbackForModify<IJarData>(IJarData.class));

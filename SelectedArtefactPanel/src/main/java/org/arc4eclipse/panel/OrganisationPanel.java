@@ -10,6 +10,7 @@ import org.arc4eclipse.arc4eclipseRepository.data.IOrganisationData;
 import org.arc4eclipse.swtBinding.basic.BoundLabelAndText;
 import org.arc4eclipse.swtBinding.basic.IBound;
 import org.arc4eclipse.swtBinding.basic.MasterBoundLabelAndText;
+import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormAttachment;
@@ -35,7 +36,7 @@ public class OrganisationPanel extends AbstractRepositoryDataPanel<IOrganisation
 		FormData fd_boundLabelAndText = new FormData();
 		txtName.setLayoutData(fd_boundLabelAndText);
 
-		txtUrl = new MasterBoundLabelAndText<IOrganisationData>(this, SWT.NONE, "Organisation Url", context, Arc4EclipseRepositoryConstants.organisationUrlKey);
+		txtUrl = new MasterBoundLabelAndText<IOrganisationData>(this, SWT.NONE, "Organisation Url", context, Arc4EclipseRepositoryConstants.organisationUrlKey, this);
 		fd_boundLabelAndText.right = new FormAttachment(100, -10);
 		fd_boundLabelAndText.left = new FormAttachment(0, 12);
 		FormData fd_boundLabelAndText_1 = new FormData();
@@ -85,7 +86,11 @@ public class OrganisationPanel extends AbstractRepositoryDataPanel<IOrganisation
 
 	@Override
 	public String url() {
-		return context.repository.generator().forOrganisation(txtUrl.getText());
+		try {
+			return context.repository.generator().forOrganisation().apply(txtUrl.getText());
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
 	}
 
 }

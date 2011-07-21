@@ -7,7 +7,7 @@ import org.arc4eclipse.arc4eclipseRepository.data.IRepositoryDataItem;
 
 public interface IStatusChangedListener<T extends IRepositoryDataItem> {
 
-	void statusChanged(String url, Class<? extends T> clazz, RepositoryDataItemStatus status, T item);
+	void statusChanged(String url, Class<? extends T> clazz, RepositoryDataItemStatus status, T item) throws Exception;
 
 	public static class Utils {
 		public static <T extends IRepositoryDataItem> IStatusChangedListener<T> sysout() {
@@ -26,11 +26,11 @@ public interface IStatusChangedListener<T extends IRepositoryDataItem> {
 		public static IStatusChangedListener<IJarData> requestMoreWhenGotJarData(final IArc4EclipseRepository repository) {
 			return new IStatusChangedListener<IJarData>() {
 				@Override
-				public void statusChanged(String url, Class<? extends IJarData> clazz, RepositoryDataItemStatus status, IJarData item) {
+				public void statusChanged(String url, Class<? extends IJarData> clazz, RepositoryDataItemStatus status, IJarData item) throws Exception {
 					if (item != null && status == RepositoryDataItemStatus.FOUND) {
 						IUrlGenerator generator = repository.generator();
-						repository.getData(generator.forOrganisation(item.getOrganisationUrl()), IOrganisationData.class);
-						repository.getData(generator.forProject(item.getOrganisationUrl(), item.getProjectUrl()), IProjectData.class);
+						repository.getData(generator.forOrganisation().apply(item.getOrganisationUrl()), IOrganisationData.class);
+						repository.getData(generator.forProject().apply(item.getProjectUrl()), IProjectData.class);
 					}
 				}
 			};

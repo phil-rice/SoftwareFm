@@ -14,15 +14,15 @@ import org.eclipse.jdt.core.dom.IBinding;
 public class AntTestFixture {
 	// Ant
 	public static final String antContribJar = "../PanelExerciser/src/main/resources/ant-contrib-1.0b3.jar";
-	private final static String orgUrlAntContrib = "http://ant-contrib.sourceforge.net/";
-	private final static String projNameAntContrib = "Ant Contrib Tasks";
+	private final static String orgUrlAntContrib = "http://ant.apache.org/";
+	private final static String projUrlAntContrib = "http://ant-contrib.sourceforge.net/";
 	public final static IOrganisationData orgAntContrib = new OrganisationData(Maps.<String, Object> makeMap(//
-			organisationNameKey, "Ant Contrib Tasks",//
+			organisationNameKey, "Apache Ant",//
 			organisationUrlKey, orgUrlAntContrib,//
 			descriptionKey, ""));
 	public final static IProjectData projAntContrib = new ProjectData(Maps.<String, Object> makeMap(//
 			organisationUrlKey, orgUrlAntContrib,//
-			projectUrlKey, projNameAntContrib,//
+			projectUrlKey, projUrlAntContrib,//
 			descriptionKey, "The Ant-Contrib project is a collection of tasks (and at one point maybe types and other tools) for Apache Ant."));
 
 	public final static IBinding Utils$ColumnName = IBindingBuilder.Utils.//
@@ -31,6 +31,6 @@ public class AntTestFixture {
 
 	public final static JarDataAndPath jarAntContrib1_0b3 = new JarDataAndPath(antContribJar,//
 			organisationUrlKey, orgUrlAntContrib,//
-			projectUrlKey, projNameAntContrib,//
+			projectUrlKey, projUrlAntContrib,//
 			descriptionKey, "");
 }

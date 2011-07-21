@@ -10,6 +10,7 @@ import org.arc4eclipse.arc4eclipseRepository.data.IJarData;
 import org.arc4eclipse.swtBinding.basic.BoundLabelAndText;
 import org.arc4eclipse.swtBinding.basic.IBound;
 import org.arc4eclipse.swtBinding.basic.MasterBoundLabelAndText;
+import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormAttachment;
@@ -18,9 +19,9 @@ import org.eclipse.swt.widgets.Composite;
 
 public class JarPanel extends AbstractRepositoryDataPanel<IJarData> {
 
-	private final MasterBoundLabelAndText<IJarData> txtOrganisation;
+	private final BoundLabelAndText<IJarData> txtOrganisation;
 	private final BoundLabelAndText<IJarData> txtProject;
-	private final BoundLabelAndText<IJarData> txtDigest;
+	private final MasterBoundLabelAndText<IJarData> txtDigest;
 	private final BoundLabelAndText<IJarData> txtJavadoc;
 	private final BoundLabelAndText<IJarData> txtSource;
 
@@ -33,7 +34,7 @@ public class JarPanel extends AbstractRepositoryDataPanel<IJarData> {
 	public JarPanel(Composite parent, int style, IArc4EclipseRepository repository) {
 		super(parent, style, repository);
 
-		txtOrganisation = new MasterBoundLabelAndText<IJarData>(this, SWT.NONE, "Organisation Url", context, Arc4EclipseRepositoryConstants.organisationUrlKey);
+		txtOrganisation = new BoundLabelAndText<IJarData>(this, SWT.NONE, "Organisation Url", context, Arc4EclipseRepositoryConstants.organisationUrlKey, this);
 		FormData fd_boundLabelAndText = new FormData();
 		txtOrganisation.setLayoutData(fd_boundLabelAndText);
 
@@ -45,7 +46,7 @@ public class JarPanel extends AbstractRepositoryDataPanel<IJarData> {
 		fd_boundLabelAndText_1.left = new FormAttachment(0, 12);
 		txtProject.setLayoutData(fd_boundLabelAndText_1);
 
-		txtDigest = new BoundLabelAndText<IJarData>(this, SWT.NONE, "Digest", context, Arc4EclipseRepositoryConstants.hexDigestKey, null);
+		txtDigest = new MasterBoundLabelAndText<IJarData>(this, SWT.NONE, "Digest", context, Arc4EclipseRepositoryConstants.hexDigestKey, this);
 		fd_boundLabelAndText.right = new FormAttachment(100, -10);
 		fd_boundLabelAndText.left = new FormAttachment(0, 12);
 		FormData fd_boundLabelAndText_2 = new FormData();
@@ -97,7 +98,11 @@ public class JarPanel extends AbstractRepositoryDataPanel<IJarData> {
 
 	@Override
 	public String url() {
-		return context.repository.generator().forJar(txtDigest.getText());
+		try {
+			return context.repository.generator().forJar().apply(txtDigest.getText());
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
 	}
 
 	@Override
