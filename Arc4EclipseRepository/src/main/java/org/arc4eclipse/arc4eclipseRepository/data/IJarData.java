@@ -6,7 +6,7 @@ public interface IJarData extends IRepositoryDataItem {
 
 	String getHexDigest();
 
-	String getProjectName();
+	String getProjectUrl();
 
 	String getJavaDocUrl();
 

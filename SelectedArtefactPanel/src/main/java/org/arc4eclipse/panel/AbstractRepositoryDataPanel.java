@@ -1,8 +1,8 @@
 package org.arc4eclipse.panel;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
+import org.arc4eclipse.arc4eclipseRepository.api.RepositoryDataItemStatus;
 import org.arc4eclipse.arc4eclipseRepository.data.IRepositoryDataItem;
-import org.arc4eclipse.httpClient.response.IResponse;
 import org.arc4eclipse.swtBinding.basic.BindingContext;
 import org.arc4eclipse.swtBinding.basic.IBound;
 import org.eclipse.swt.layout.FormLayout;
@@ -18,16 +18,9 @@ public abstract class AbstractRepositoryDataPanel<T extends IRepositoryDataItem>
 	}
 
 	@Override
-	public void process(IResponse response, T data) {
-		if (data == null)
-			clearBoundChildren();
-		else
-			for (IBound<T> bound : boundChildren())
-				bound.processResponse(response, data);
+	public void statusChanged(String url, java.lang.Class<? extends T> clazz, RepositoryDataItemStatus status, T item) {
+		for (IBound<T> bound : boundChildren())
+			bound.processResponse(status, item);
 	}
 
-	public void clearBoundChildren() {
-		for (IBound<T> bound : boundChildren())
-			bound.clear();
-	};
 }

@@ -1,18 +1,20 @@
 package org.arc4eclipse.arc4eclipseRepository.api.impl;
 
+import static org.arc4eclipse.arc4eclipseRepository.api.RepositoryDataItemStatus.*;
+
 import java.io.File;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import junit.framework.TestCase;
 
-import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseCallback;
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
 import org.arc4eclipse.arc4eclipseRepository.api.IJarDigester;
+import org.arc4eclipse.arc4eclipseRepository.api.IStatusChangedListener;
+import org.arc4eclipse.arc4eclipseRepository.api.MemoryStatusChangedListener;
 import org.arc4eclipse.arc4eclipseRepository.constants.Arc4EclipseRepositoryConstants;
 import org.arc4eclipse.arc4eclipseRepository.data.IJarData;
 import org.arc4eclipse.arc4eclipseRepository.data.IOrganisationData;
+import org.arc4eclipse.arc4eclipseRepository.data.IRepositoryDataItem;
 import org.arc4eclipse.httpClient.requests.IResponseCallback;
-import org.arc4eclipse.httpClient.response.IResponse;
 import org.arc4eclipse.repositoryFacard.IRepositoryFacard;
 import org.springframework.core.io.ClassPathResource;
 
@@ -37,98 +39,77 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 	public void testGetAndModifyJarData() throws Exception {
 		facard.delete("/" + urlGenerator.forJar(jarDigestor.apply(antFile)), IResponseCallback.Utils.memoryCallback());
 		final String expectedDigest = "48292d38f6d060f873891171e1df689b3eaa0b37";
-		final AtomicInteger count = new AtomicInteger();
-		checkGetAndModifyJarData(antFile, "name1", "value1", new IArc4EclipseCallback<IJarData>() {
-			@Override
-			public void process(IResponse response, IJarData data) {
-				assertNotNull(response.toString(), data);
-				assertEquals("value1", data.get("name1"));
-				assertEquals(response.toString(), expectedDigest, data.getHexDigest());
-				assertEquals(response.toString(), "", data.getOrganisationUrl());
-				assertEquals(response.toString(), "", data.getProjectName());
-				count.incrementAndGet();
-			}
-		});
-		checkGetAndModifyJarData(antFile, Arc4EclipseRepositoryConstants.organisationUrlKey, "OrgUrl", new IArc4EclipseCallback<IJarData>() {
-			@Override
-			public void process(IResponse response, IJarData data) {
-				assertNotNull(response.toString(), data);
-				assertEquals("value1", data.get("name1"));
-				assertEquals(response.toString(), expectedDigest, data.getHexDigest());
-				assertEquals(response.toString(), "OrgUrl", data.getOrganisationUrl());
-				assertEquals(response.toString(), "", data.getProjectName());
-				count.incrementAndGet();
-			}
-		});
-		checkGetAndModifyJarData(antFile, Arc4EclipseRepositoryConstants.projectUrlKey, "ProjName", new IArc4EclipseCallback<IJarData>() {
-			@Override
-			public void process(IResponse response, IJarData data) {
-				assertNotNull(response.toString(), data);
-				assertEquals("value1", data.get("name1"));
-				assertEquals(response.toString(), expectedDigest, data.getHexDigest());
-				assertEquals(response.toString(), "OrgUrl", data.getOrganisationUrl());
-				assertEquals(response.toString(), "ProjName", data.getProjectName());
-				count.incrementAndGet();
-			}
-		});
+		checkModifyAndGetJarData("name1", "value1", IRepositoryDataItem.Utils.jarData(//
+				Arc4EclipseRepositoryConstants.hexDigestKey, expectedDigest, //
+				"jcr:primaryType", "nt:unstructured",//
+				"name1", "value1"));
 
-		assertEquals(6, count.get());
+		checkModifyAndGetJarData(Arc4EclipseRepositoryConstants.organisationUrlKey, "OrgUrl", IRepositoryDataItem.Utils.jarData(//
+				Arc4EclipseRepositoryConstants.hexDigestKey, expectedDigest, //
+				Arc4EclipseRepositoryConstants.organisationUrlKey, "OrgUrl",//
+				"jcr:primaryType", "nt:unstructured",//
+				"name1", "value1"));
+
+		checkModifyAndGetJarData(Arc4EclipseRepositoryConstants.projectUrlKey, "ProjName", IRepositoryDataItem.Utils.jarData(//
+				Arc4EclipseRepositoryConstants.hexDigestKey, expectedDigest, //
+				Arc4EclipseRepositoryConstants.organisationUrlKey, "OrgUrl",//
+				Arc4EclipseRepositoryConstants.projectUrlKey, "ProjName",//
+				"jcr:primaryType", "nt:unstructured",//
+				"name1", "value1"));
+	}
+
+	private void checkModifyAndGetJarData(String key, String value, IJarData expected) {
+		MemoryStatusChangedListener<IJarData> validListener = IStatusChangedListener.Utils.memory();
+		MemoryStatusChangedListener<IOrganisationData> inValidListener = IStatusChangedListener.Utils.memory();
+		repository.addStatusListener(IJarData.class, validListener);
+		repository.addStatusListener(IOrganisationData.class, inValidListener);
+		repository.modifyJarData(antFile, key, value);
+		validListener.assertEquals(//
+				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", IJarData.class, REQUESTED, null,//
+				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37.json", IJarData.class, FOUND, expected);
+		repository.getJarData(antFile);
+		validListener.assertEquals(//
+				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", IJarData.class, REQUESTED, null,//
+				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37.json", IJarData.class, FOUND, expected,//
+				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", IJarData.class, REQUESTED, null,//
+				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37.json", IJarData.class, FOUND, expected);
+		inValidListener.assertEquals();
 	}
 
 	public void testGetAndModifyData() {
 		String url = "/tests/" + getClass().getSimpleName();
 		facard.delete(url, IResponseCallback.Utils.memoryCallback());
-		final AtomicInteger count = new AtomicInteger();
-		checkGetAndModifyData(url, Arc4EclipseRepositoryConstants.organisationUrlKey, "orgUrl", new IArc4EclipseCallback<IOrganisationData>() {
-			@Override
-			public void process(IResponse response, IOrganisationData data) {
-				assertEquals("orgUrl", data.getOrganisationUrl());
-				assertEquals("", data.getOrganisationName());
-				assertEquals("", data.getDescription());
-				count.incrementAndGet();
-			}
-		});
-		checkGetAndModifyData(url, Arc4EclipseRepositoryConstants.organisationNameKey, "orgName", new IArc4EclipseCallback<IOrganisationData>() {
-			@Override
-			public void process(IResponse response, IOrganisationData data) {
-				assertEquals("orgUrl", data.getOrganisationUrl());
-				assertEquals("orgName", data.getOrganisationName());
-				assertEquals("", data.getDescription());
-				count.incrementAndGet();
-			}
-		});
-		checkGetAndModifyData(url, Arc4EclipseRepositoryConstants.descriptionKey, "orgDesc", new IArc4EclipseCallback<IOrganisationData>() {
-			@Override
-			public void process(IResponse response, IOrganisationData data) {
-				assertEquals("orgUrl", data.getOrganisationUrl());
-				assertEquals("orgName", data.getOrganisationName());
-				assertEquals("orgDesc", data.getDescription());
-				count.incrementAndGet();
-			}
-		});
-		assertEquals(6, count.get());
+		checkModifyAndGetData(url, Arc4EclipseRepositoryConstants.organisationUrlKey, "orgUrl", IOrganisationData.class, IRepositoryDataItem.Utils.organisationData(//
+				Arc4EclipseRepositoryConstants.organisationUrlKey, "orgUrl",//
+				"jcr:primaryType", "nt:unstructured"));
+		checkModifyAndGetData(url, Arc4EclipseRepositoryConstants.organisationNameKey, "orgName", IOrganisationData.class, IRepositoryDataItem.Utils.organisationData(//
+				Arc4EclipseRepositoryConstants.organisationUrlKey, "orgUrl",//
+				"jcr:primaryType", "nt:unstructured",//
+				Arc4EclipseRepositoryConstants.organisationNameKey, "orgName"));
+		checkModifyAndGetData(url, Arc4EclipseRepositoryConstants.descriptionKey, "orgDesc", IOrganisationData.class, IRepositoryDataItem.Utils.organisationData(//
+				Arc4EclipseRepositoryConstants.organisationUrlKey, "orgUrl",//
+				Arc4EclipseRepositoryConstants.organisationNameKey, "orgName",//
+				"jcr:primaryType", "nt:unstructured",//
+				Arc4EclipseRepositoryConstants.descriptionKey, "orgDesc"));
 	}
 
-	private void checkGetAndModifyData(String url, final String name, final String value, IArc4EclipseCallback<IOrganisationData> callback) {
-		repository.modifyData(url, name, value, IArc4EclipseRepository.Utils.organisationData(), callback);
-		repository.getData(url, IArc4EclipseRepository.Utils.organisationData(), callback);
-		repository.getData(url, IArc4EclipseRepository.Utils.organisationData(), new IArc4EclipseCallback<IOrganisationData>() {
-			@Override
-			public void process(IResponse response, IOrganisationData data) {
-				assertEquals(value, data.get(name));
-			}
-		});
-	}
+	private <T extends IRepositoryDataItem> void checkModifyAndGetData(String url, String key, String value, Class<T> clazz, T expected) {
+		MemoryStatusChangedListener<T> validListener = IStatusChangedListener.Utils.memory();
+		MemoryStatusChangedListener<IJarData> inValidListener = IStatusChangedListener.Utils.memory();
+		repository.addStatusListener(clazz, validListener);
+		repository.addStatusListener(IJarData.class, inValidListener);
+		repository.modifyData(url, key, value, clazz);
+		validListener.assertEquals(//
+				url, clazz, REQUESTED, null,//
+				url + ".json", clazz, FOUND, expected);
+		repository.getData(url, clazz);
+		validListener.assertEquals(//
+				url, clazz, REQUESTED, null,//
+				url + ".json", clazz, FOUND, expected,//
+				url, clazz, REQUESTED, null,//
+				url + ".json", clazz, FOUND, expected);
+		inValidListener.assertEquals();
 
-	private void checkGetAndModifyJarData(File jar, final String name, final String value, IArc4EclipseCallback<IJarData> callback) {
-		repository.modifyJarData(jar, name, value, callback);
-		repository.getJarData(jar, callback);
-		repository.getJarData(jar, new IArc4EclipseCallback<IJarData>() {
-			@Override
-			public void process(IResponse response, IJarData data) {
-				assertEquals(value, data.get(name));
-			}
-		});
 	}
 
 	@Override

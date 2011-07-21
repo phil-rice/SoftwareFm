@@ -1,12 +1,12 @@
 package org.arc4eclipse.panel;
 
-import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseCallback;
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
-import org.arc4eclipse.arc4eclipseRepository.api.IUrlGenerator;
+import org.arc4eclipse.arc4eclipseRepository.api.IStatusChangedListener;
 import org.arc4eclipse.arc4eclipseRepository.data.IJarData;
+import org.arc4eclipse.arc4eclipseRepository.data.IOrganisationData;
+import org.arc4eclipse.arc4eclipseRepository.data.IProjectData;
 import org.arc4eclipse.binding.path.JavaElementRipper;
 import org.arc4eclipse.binding.path.JavaElementRipperResult;
-import org.arc4eclipse.httpClient.response.IResponse;
 import org.arc4eclipse.swtBasics.Swts;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.eclipse.core.runtime.IPath;
@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 
-public class SelectedArtefactPanel extends Composite implements IArc4EclipseCallback<IJarData> {
+public class SelectedArtefactPanel extends Composite {
 
 	private final OrganisationPanel organisationPanel;
 	private final ProjectPanel projectPanel;
@@ -63,6 +63,10 @@ public class SelectedArtefactPanel extends Composite implements IArc4EclipseCall
 		debugPanel = new DebugPanel(tabFolder, SWT.BORDER, repository);
 		tabDebug.setControl(debugPanel);
 		repository.addLogger(debugPanel);
+		repository.addStatusListener(IJarData.class, IStatusChangedListener.Utils.requestMoreWhenGotJarData(repository));
+		repository.addStatusListener(IJarData.class, jarPanel);
+		repository.addStatusListener(IOrganisationData.class, organisationPanel);
+		repository.addStatusListener(IProjectData.class, projectPanel);
 	}
 
 	@Override
@@ -87,27 +91,12 @@ public class SelectedArtefactPanel extends Composite implements IArc4EclipseCall
 			IBinding binding = (IBinding) arg0;
 			JavaElementRipperResult ripperResult = JavaElementRipper.rip(binding);
 			IPath path = ripperResult.path;
-			organisationPanel.clearBoundChildren();
-			projectPanel.clearBoundChildren();
-			jarPanel.clearBoundChildren();
-			if (path != null)
-				repository.getJarData(path.toFile(), this);
+			if (path == null)
+				repository.getJarData(null);
+			else
+				repository.getJarData(path.toFile());
 		}
 
 	}
 
-	@Override
-	public void process(IResponse response, IJarData jarData) {
-		jarPanel.process(response, jarData);
-		IUrlGenerator generator = repository.generator();
-		if (jarData == null) {
-			organisationPanel.clearBoundChildren();
-			projectPanel.clearBoundChildren();
-
-		} else {
-			String organisationUrl = jarData.getOrganisationUrl();
-			repository.getData(generator.forOrganisation(organisationUrl), IArc4EclipseRepository.Utils.organisationData(), organisationPanel);
-			repository.getData(generator.forProject(organisationUrl, jarData.getProjectName()), IArc4EclipseRepository.Utils.projectData(), projectPanel);
-		}
-	}
 }

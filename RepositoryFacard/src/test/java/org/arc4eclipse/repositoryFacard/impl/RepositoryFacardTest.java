@@ -44,7 +44,7 @@ public class RepositoryFacardTest extends AbstractRepositoryFacardTest {
 	}
 
 	public void testPostImport() {
-		String url = "/tests" + getClass().getSimpleName();
+		String url = "/tests/" + getClass().getSimpleName();
 		facard.delete(url, new ResponseCallbackRecordingStatus());
 
 		Map<String, Object> expected = Maps.makeMap("namep1", "datap1", "namep2", 2L, "jcr:primaryType", "nt:unstructured", //

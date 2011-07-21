@@ -22,7 +22,7 @@ public class JarData extends AbstractRepositoryDataItem implements IJarData {
 	}
 
 	@Override
-	public String getProjectName() {
+	public String getProjectUrl() {
 		return getString(Arc4EclipseRepositoryConstants.projectUrlKey);
 	}
 

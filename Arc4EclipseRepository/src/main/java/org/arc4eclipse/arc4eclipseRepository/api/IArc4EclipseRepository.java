@@ -9,6 +9,7 @@ import org.arc4eclipse.arc4eclipseRepository.api.impl.UrlGenerator;
 import org.arc4eclipse.arc4eclipseRepository.data.IJarData;
 import org.arc4eclipse.arc4eclipseRepository.data.IOrganisationData;
 import org.arc4eclipse.arc4eclipseRepository.data.IProjectData;
+import org.arc4eclipse.arc4eclipseRepository.data.IRepositoryDataItem;
 import org.arc4eclipse.arc4eclipseRepository.data.impl.JarData;
 import org.arc4eclipse.arc4eclipseRepository.data.impl.OrganisationData;
 import org.arc4eclipse.arc4eclipseRepository.data.impl.ProjectData;
@@ -17,15 +18,17 @@ import org.arc4eclipse.utilities.functions.IFunction1;
 
 public interface IArc4EclipseRepository extends ICleansCache {
 
-	void getJarData(File jar, IArc4EclipseCallback<IJarData> callback);
+	void getJarData(File jar);
 
-	<T> void getData(String url, IFunction1<Map<String, Object>, T> mapper, IArc4EclipseCallback<T> callback);
+	void modifyJarData(File jar, String name, Object value);
 
-	void modifyJarData(File jar, String name, Object value, IArc4EclipseCallback<IJarData> callback);
+	<T extends IRepositoryDataItem> void getData(String url, Class<T> clazz);
 
-	<T> void modifyData(String url, String name, Object value, IFunction1<Map<String, Object>, T> mapper, IArc4EclipseCallback<T> callback);
+	<T extends IRepositoryDataItem> void modifyData(String url, String name, Object value, Class<T> clazz);
 
 	IUrlGenerator generator();
+
+	<T extends IRepositoryDataItem> void addStatusListener(Class<T> clazz, IStatusChangedListener<T> listener);
 
 	void addLogger(IArc4EclipseLogger logger);
 

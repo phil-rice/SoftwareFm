@@ -13,5 +13,7 @@ public class Arc4EclipseRepositoryConstants {
 	public static final String valueNotAString = "Value is not a string for key {0} It is of {1}. With value {2}. Map is {3}";
 	public static final String javadocKey = "javadoc";
 	public static final String sourceKey = "source";
+	public static final String failedToChange = "Failed to change {0}";
+	public static final String cannotFindMapperFor = "Cannot find mapper for {0}";
 
 }

@@ -76,7 +76,7 @@ public class Files {
 			byte[] rawDigest = inputStream.getMessageDigest().digest();
 			return new BigInteger(rawDigest).abs().toString(16);
 		} catch (Exception e) {
-			System.out.println(file.getAbsolutePath());
+			System.out.println(file == null ? "File is null" : file.getAbsolutePath());
 			throw WrappedException.wrap(e);
 		}
 	}

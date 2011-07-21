@@ -9,7 +9,7 @@ public class UrlGenerator implements IUrlGenerator {
 
 	@Override
 	public String forJar(String jarDigest) {
-		if (jarDigest.length() < 2)
+		if (jarDigest == null || jarDigest.length() < 2)
 			return "";
 		String prefix = jarDigest.substring(0, 2);
 		return "/jars/a" + prefix + "/a" + jarDigest;

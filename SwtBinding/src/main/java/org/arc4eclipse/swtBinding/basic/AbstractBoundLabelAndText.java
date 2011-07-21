@@ -1,7 +1,6 @@
 package org.arc4eclipse.swtBinding.basic;
 
 import org.arc4eclipse.arc4eclipseRepository.data.IRepositoryDataItem;
-import org.arc4eclipse.httpClient.response.IResponse;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -10,7 +9,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-public class AbstractBoundLabelAndText<Data extends IRepositoryDataItem> extends Composite implements IBound<Data> {
+public abstract class AbstractBoundLabelAndText<Data extends IRepositoryDataItem> extends Composite implements IBound<Data> {
 	protected final Text txtText;
 	private final BindingContext<Data> context;
 	private final String key;
@@ -57,11 +56,6 @@ public class AbstractBoundLabelAndText<Data extends IRepositoryDataItem> extends
 			Object value = data.get(key);
 			setText(value == null ? "" : value.toString());
 		}
-	}
-
-	@Override
-	public void processResponse(IResponse response, Data data) {
-		setData(data);
 	}
 
 	@Override
