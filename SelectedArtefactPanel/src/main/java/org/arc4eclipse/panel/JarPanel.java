@@ -9,6 +9,7 @@ import org.arc4eclipse.arc4eclipseRepository.constants.Arc4EclipseRepositoryCons
 import org.arc4eclipse.arc4eclipseRepository.data.IJarData;
 import org.arc4eclipse.swtBinding.basic.BoundLabelAndText;
 import org.arc4eclipse.swtBinding.basic.IBound;
+import org.arc4eclipse.swtBinding.basic.MasterBoundLabelAndText;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormAttachment;
@@ -17,7 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 
 public class JarPanel extends AbstractRepositoryDataPanel<IJarData> {
 
-	private final BoundLabelAndText<IJarData> txtOrganisation;
+	private final MasterBoundLabelAndText<IJarData> txtOrganisation;
 	private final BoundLabelAndText<IJarData> txtProject;
 	private final BoundLabelAndText<IJarData> txtDigest;
 	private final BoundLabelAndText<IJarData> txtJavadoc;
@@ -32,38 +33,38 @@ public class JarPanel extends AbstractRepositoryDataPanel<IJarData> {
 	public JarPanel(Composite parent, int style, IArc4EclipseRepository repository) {
 		super(parent, style, repository);
 
-		txtOrganisation = new BoundLabelAndText<IJarData>(this, SWT.NONE, "Organisation Url", context, Arc4EclipseRepositoryConstants.organisationUrlKey);
+		txtOrganisation = new MasterBoundLabelAndText<IJarData>(this, SWT.NONE, "Organisation Url", context, Arc4EclipseRepositoryConstants.organisationUrlKey);
 		FormData fd_boundLabelAndText = new FormData();
-		fd_boundLabelAndText.right = new FormAttachment(100, -10);
-		fd_boundLabelAndText.bottom = new FormAttachment(0, 54);
-		fd_boundLabelAndText.top = new FormAttachment(0, 12);
-		fd_boundLabelAndText.left = new FormAttachment(0, 12);
 		txtOrganisation.setLayoutData(fd_boundLabelAndText);
 
-		txtProject = new BoundLabelAndText<IJarData>(this, SWT.NONE, "Project Url", context, Arc4EclipseRepositoryConstants.projectUrlKey);
+		txtProject = new BoundLabelAndText<IJarData>(this, SWT.NONE, "Project Url", context, Arc4EclipseRepositoryConstants.projectUrlKey, this);
+		fd_boundLabelAndText.top = new FormAttachment(0, 68);
+		fd_boundLabelAndText.bottom = new FormAttachment(0, 110);
 		FormData fd_boundLabelAndText_1 = new FormData();
 		fd_boundLabelAndText_1.right = new FormAttachment(100, -10);
 		fd_boundLabelAndText_1.left = new FormAttachment(0, 12);
-		fd_boundLabelAndText_1.top = new FormAttachment(0, 70);
 		txtProject.setLayoutData(fd_boundLabelAndText_1);
 
-		txtDigest = new BoundLabelAndText<IJarData>(this, SWT.NONE, "Digest", context, Arc4EclipseRepositoryConstants.hexDigestKey);
-		fd_boundLabelAndText_1.bottom = new FormAttachment(0, 109);
+		txtDigest = new BoundLabelAndText<IJarData>(this, SWT.NONE, "Digest", context, Arc4EclipseRepositoryConstants.hexDigestKey, null);
+		fd_boundLabelAndText.right = new FormAttachment(100, -10);
+		fd_boundLabelAndText.left = new FormAttachment(0, 12);
 		FormData fd_boundLabelAndText_2 = new FormData();
-		fd_boundLabelAndText_2.right = new FormAttachment(100, -10);
-		fd_boundLabelAndText_2.left = new FormAttachment(0, 12);
-		fd_boundLabelAndText_2.bottom = new FormAttachment(0, 165);
-		fd_boundLabelAndText_2.top = new FormAttachment(0, 115);
+		fd_boundLabelAndText_2.top = new FormAttachment(0, 18);
+		fd_boundLabelAndText_2.bottom = new FormAttachment(0, 68);
 		txtDigest.setLayoutData(fd_boundLabelAndText_2);
 
-		txtJavadoc = new BoundLabelAndText<IJarData>(this, SWT.NONE, "Javadoc", context, Arc4EclipseRepositoryConstants.javadocKey);
+		txtJavadoc = new BoundLabelAndText<IJarData>(this, SWT.NONE, "Javadoc", context, Arc4EclipseRepositoryConstants.javadocKey, this);
+		fd_boundLabelAndText_2.right = new FormAttachment(100, -10);
+		fd_boundLabelAndText_2.left = new FormAttachment(0, 12);
+		fd_boundLabelAndText_1.top = new FormAttachment(0, 116);
+		fd_boundLabelAndText_1.bottom = new FormAttachment(0, 155);
 		FormData fd_txtJavadoc = new FormData();
 		fd_txtJavadoc.right = new FormAttachment(100, -10);
 		fd_txtJavadoc.top = new FormAttachment(0, 167);
 		fd_txtJavadoc.left = new FormAttachment(0, 12);
 		txtJavadoc.setLayoutData(fd_txtJavadoc);
 
-		txtSource = new BoundLabelAndText<IJarData>(this, SWT.NONE, "Source", context, Arc4EclipseRepositoryConstants.sourceKey);
+		txtSource = new BoundLabelAndText<IJarData>(this, SWT.NONE, "Source", context, Arc4EclipseRepositoryConstants.sourceKey, this);
 		fd_txtJavadoc.bottom = new FormAttachment(0, 208);
 		FormData fd_txtSource = new FormData();
 		fd_txtSource.top = new FormAttachment(0, 214);
@@ -92,5 +93,15 @@ public class JarPanel extends AbstractRepositoryDataPanel<IJarData> {
 	@Override
 	public IFunction1<Map<String, Object>, IJarData> mapper() {
 		return IArc4EclipseRepository.Utils.jarData();
+	}
+
+	@Override
+	public String url() {
+		return context.repository.generator().forJar(txtDigest.getText());
+	}
+
+	@Override
+	public void setPrimaryKey(String primaryKey) {
+		txtDigest.setText(primaryKey);
 	}
 }

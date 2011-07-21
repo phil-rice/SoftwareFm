@@ -9,6 +9,7 @@ import org.arc4eclipse.arc4eclipseRepository.constants.Arc4EclipseRepositoryCons
 import org.arc4eclipse.arc4eclipseRepository.data.IOrganisationData;
 import org.arc4eclipse.swtBinding.basic.BoundLabelAndText;
 import org.arc4eclipse.swtBinding.basic.IBound;
+import org.arc4eclipse.swtBinding.basic.MasterBoundLabelAndText;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormAttachment;
@@ -18,7 +19,7 @@ import org.eclipse.swt.widgets.Composite;
 public class OrganisationPanel extends AbstractRepositoryDataPanel<IOrganisationData> {
 
 	private final BoundLabelAndText<IOrganisationData> txtName;
-	private final BoundLabelAndText<IOrganisationData> txtUrl;
+	private final MasterBoundLabelAndText<IOrganisationData> txtUrl;
 	private final BoundLabelAndText<IOrganisationData> txtDescription;
 
 	/**
@@ -30,23 +31,23 @@ public class OrganisationPanel extends AbstractRepositoryDataPanel<IOrganisation
 	public OrganisationPanel(Composite parent, int style, IArc4EclipseRepository repository) {
 		super(parent, style, repository);
 
-		txtName = new BoundLabelAndText<IOrganisationData>(this, SWT.NONE, "Name", context, Arc4EclipseRepositoryConstants.organisationNameKey);
+		txtName = new BoundLabelAndText<IOrganisationData>(this, SWT.NONE, "Name", context, Arc4EclipseRepositoryConstants.organisationNameKey, this);
 		FormData fd_boundLabelAndText = new FormData();
-		fd_boundLabelAndText.right = new FormAttachment(100, -10);
-		fd_boundLabelAndText.bottom = new FormAttachment(0, 54);
-		fd_boundLabelAndText.top = new FormAttachment(0, 12);
-		fd_boundLabelAndText.left = new FormAttachment(0, 12);
 		txtName.setLayoutData(fd_boundLabelAndText);
 
-		txtUrl = new BoundLabelAndText<IOrganisationData>(this, SWT.NONE, "Organisation Url", context, Arc4EclipseRepositoryConstants.organisationUrlKey);
+		txtUrl = new MasterBoundLabelAndText<IOrganisationData>(this, SWT.NONE, "Organisation Url", context, Arc4EclipseRepositoryConstants.organisationUrlKey);
+		fd_boundLabelAndText.right = new FormAttachment(100, -10);
+		fd_boundLabelAndText.left = new FormAttachment(0, 12);
 		FormData fd_boundLabelAndText_1 = new FormData();
-		fd_boundLabelAndText_1.right = new FormAttachment(100, -10);
-		fd_boundLabelAndText_1.left = new FormAttachment(0, 12);
-		fd_boundLabelAndText_1.bottom = new FormAttachment(0, 116);
-		fd_boundLabelAndText_1.top = new FormAttachment(0, 66);
+		fd_boundLabelAndText_1.bottom = new FormAttachment(0, 60);
+		fd_boundLabelAndText_1.top = new FormAttachment(0, 10);
 		txtUrl.setLayoutData(fd_boundLabelAndText_1);
 
-		txtDescription = new BoundLabelAndText<IOrganisationData>(this, SWT.NONE, "Description", context, Arc4EclipseRepositoryConstants.descriptionKey);
+		txtDescription = new BoundLabelAndText<IOrganisationData>(this, SWT.NONE, "Description", context, Arc4EclipseRepositoryConstants.descriptionKey, this);
+		fd_boundLabelAndText.top = new FormAttachment(0, 72);
+		fd_boundLabelAndText.bottom = new FormAttachment(0, 114);
+		fd_boundLabelAndText_1.right = new FormAttachment(100, -10);
+		fd_boundLabelAndText_1.left = new FormAttachment(0, 12);
 		FormData fd_boundLabelAndText_2 = new FormData();
 		fd_boundLabelAndText_2.right = new FormAttachment(100, -10);
 		fd_boundLabelAndText_2.left = new FormAttachment(0, 12);
@@ -75,6 +76,16 @@ public class OrganisationPanel extends AbstractRepositoryDataPanel<IOrganisation
 	@Override
 	public IFunction1<Map<String, Object>, IOrganisationData> mapper() {
 		return IArc4EclipseRepository.Utils.organisationData();
+	}
+
+	@Override
+	public void setPrimaryKey(String primaryKey) {
+		txtUrl.setText(primaryKey);
+	}
+
+	@Override
+	public String url() {
+		return context.repository.generator().forOrganisation(txtUrl.getText());
 	}
 
 }

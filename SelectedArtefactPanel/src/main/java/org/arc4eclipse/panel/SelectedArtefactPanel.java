@@ -38,28 +38,30 @@ public class SelectedArtefactPanel extends Composite implements IArc4EclipseCall
 		setLayout(new FillLayout(SWT.HORIZONTAL));
 
 		TabFolder tabFolder = new TabFolder(this, SWT.NONE);
-		TabItem tabItem = new TabItem(tabFolder, SWT.NULL);
-		tabItem.setText("My Software FM");
-		tabItem.setControl(new MySoftwareFmPanel(tabFolder, SWT.BORDER));
-		TabItem tabItem2 = new TabItem(tabFolder, SWT.NULL);
-		tabItem2.setText("Organisation");
-		organisationPanel = new OrganisationPanel(tabFolder, SWT.BORDER, repository);
-		tabItem2.setControl(organisationPanel);
-		TabItem tabItem3 = new TabItem(tabFolder, SWT.NULL);
-		tabItem3.setText("Project");
 
-		projectPanel = new ProjectPanel(tabFolder, SWT.BORDER, repository);
-		tabItem3.setControl(projectPanel);
-
-		TabItem tabItem4 = new TabItem(tabFolder, SWT.NULL);
-		tabItem4.setText("Jar");
+		TabItem tabJar = new TabItem(tabFolder, SWT.NULL);
+		tabJar.setText("Jar");
 		jarPanel = new JarPanel(tabFolder, SWT.BORDER, repository);
-		tabItem4.setControl(jarPanel);
+		tabJar.setControl(jarPanel);
 
-		TabItem tabItem5 = new TabItem(tabFolder, SWT.NULL);
-		tabItem5.setText("Debug");
+		TabItem tabOrg = new TabItem(tabFolder, SWT.NULL);
+		tabOrg.setText("Organisation");
+		organisationPanel = new OrganisationPanel(tabFolder, SWT.BORDER, repository);
+		tabOrg.setControl(organisationPanel);
+
+		TabItem tabProject = new TabItem(tabFolder, SWT.NULL);
+		tabProject.setText("Project");
+		projectPanel = new ProjectPanel(tabFolder, SWT.BORDER, repository);
+		tabProject.setControl(projectPanel);
+
+		TabItem tabMy = new TabItem(tabFolder, SWT.NULL);
+		tabMy.setText("My Software FM");
+		tabMy.setControl(new MySoftwareFmPanel(tabFolder, SWT.BORDER));
+
+		TabItem tabDebug = new TabItem(tabFolder, SWT.NULL);
+		tabDebug.setText("Debug");
 		debugPanel = new DebugPanel(tabFolder, SWT.BORDER, repository);
-		tabItem5.setControl(debugPanel);
+		tabDebug.setControl(debugPanel);
 		repository.addLogger(debugPanel);
 	}
 
@@ -85,14 +87,11 @@ public class SelectedArtefactPanel extends Composite implements IArc4EclipseCall
 			IBinding binding = (IBinding) arg0;
 			JavaElementRipperResult ripperResult = JavaElementRipper.rip(binding);
 			IPath path = ripperResult.path;
-			if (path == null) {
-				organisationPanel.clearBoundChildren();
-				projectPanel.clearBoundChildren();
-				jarPanel.clearBoundChildren();
-			} else {
-				jarPanel.clearBoundChildren();
+			organisationPanel.clearBoundChildren();
+			projectPanel.clearBoundChildren();
+			jarPanel.clearBoundChildren();
+			if (path != null)
 				repository.getJarData(path.toFile(), this);
-			}
 		}
 
 	}
