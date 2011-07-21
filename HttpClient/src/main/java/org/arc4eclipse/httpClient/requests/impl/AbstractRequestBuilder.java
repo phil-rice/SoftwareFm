@@ -7,6 +7,7 @@ import org.apache.http.HttpHost;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.arc4eclipse.httpClient.api.IServiceExecutor;
 import org.arc4eclipse.httpClient.requests.IRequestBuilder;
 
 public abstract class AbstractRequestBuilder implements IRequestBuilder {
@@ -15,8 +16,10 @@ public abstract class AbstractRequestBuilder implements IRequestBuilder {
 	public final HttpClient client;
 	public final String url;
 	public final List<NameValuePair> parameters = new ArrayList<NameValuePair>();
+	public final IServiceExecutor executor;
 
-	public AbstractRequestBuilder(HttpHost host, HttpClient client, String url) {
+	public AbstractRequestBuilder(IServiceExecutor executor, HttpHost host, HttpClient client, String url) {
+		this.executor = executor;
 		this.host = host;
 		this.client = client;
 		this.url = url;
@@ -45,6 +48,7 @@ public abstract class AbstractRequestBuilder implements IRequestBuilder {
 		return "http://" + host.getHostName() + ":" + host.getPort() + url;
 	}
 
+	@Override
 	public String getUrl() {
 		return url;
 	}

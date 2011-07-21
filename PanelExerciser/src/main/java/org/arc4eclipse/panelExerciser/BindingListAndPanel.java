@@ -38,7 +38,12 @@ public class BindingListAndPanel extends org.eclipse.swt.widgets.Composite {
 	public static void main(String[] args) {
 		URL resource = ClassLoader.getSystemClassLoader().getResource("log4j.xml");
 		DOMConfigurator.configure(resource);
-		showGUI(IArc4EclipseRepository.Utils.repository());
+		IArc4EclipseRepository repository = IArc4EclipseRepository.Utils.repository();
+		try {
+			showGUI(repository);
+		} finally {
+			repository.shutdown();
+		}
 	}
 
 	/**

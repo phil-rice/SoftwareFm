@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseLogger;
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
@@ -28,6 +29,7 @@ import org.arc4eclipse.repositoryFacardConstants.RepositoryFacardConstants;
 import org.arc4eclipse.utilities.collections.Lists;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
+import org.arc4eclipse.utilities.future.Futures;
 import org.arc4eclipse.utilities.maps.Maps;
 
 public class Arc4EclipseRepository implements IArc4EclipseRepository {
@@ -72,7 +74,7 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 			if (RepositoryFacardConstants.okStatusCodes.contains(response.statusCode())) {
 				fireRequest("RefreshingData", response.url(), emptyParameters);
 				fireStatusChanged(response.url(), clazz, RepositoryDataItemStatus.REQUESTED, null);
-				facard.get(response.url(), new IRepositoryFacardCallback() {
+				Future<?> future = facard.get(response.url(), new IRepositoryFacardCallback() {
 					@Override
 					public void process(IResponse response, Map<String, Object> data) {
 						try {
@@ -84,6 +86,11 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 						}
 					}
 				});
+				try {
+					future.get();// its OK blocking here as we are in a worker thread
+				} catch (Exception e) {
+					throw WrappedException.wrap(e);
+				}
 			} else
 				throw new RuntimeException(MessageFormat.format(Arc4EclipseRepositoryConstants.failedToChange, clazz.getSimpleName()));
 		}
@@ -141,17 +148,17 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 	}
 
 	@Override
-	public void getJarData(File jar) {
+	public Future<?> getJarData(File jar) {
 		try {
 			if (jar == null) {
 				fireStatusChanged("", IJarData.class, RepositoryDataItemStatus.PATH_NULL, null);
-				return;
+				return Futures.doneFuture(null);
 			}
 			String jarDigest = findJarDigest(jar);
 			String url = urlGenerator.forJar().apply(jarDigest);
 			fireRequest("getJarData", url, emptyParameters);
 			fireStatusChanged(url, IJarData.class, RepositoryDataItemStatus.REQUESTED, null);
-			facard.get(url, new CallbackForData<IJarData>(IJarData.class));
+			return facard.get(url, new CallbackForData<IJarData>(IJarData.class));
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
@@ -159,30 +166,30 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 	}
 
 	@Override
-	public void modifyJarData(File jar, String name, Object value) {
+	public Future<?> modifyJarData(File jar, String name, Object value) {
 		try {
 			String jarDigest = findJarDigest(jar);
 			String url = urlGenerator.forJar().apply(jarDigest);
 			Map<String, Object> parameters = Maps.<String, Object> makeMap(name, value, Arc4EclipseRepositoryConstants.hexDigestKey, jarDigest);
 			fireRequest("modifyJarData", url, parameters);
-			facard.post(url, parameters, new CallbackForModify<IJarData>(IJarData.class));
+			return facard.post(url, parameters, new CallbackForModify<IJarData>(IJarData.class));
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
 	}
 
 	@Override
-	public <T extends IRepositoryDataItem> void getData(String url, Class<T> clazz) {
+	public <T extends IRepositoryDataItem> Future<?> getData(String url, Class<T> clazz) {
 		fireRequest("getData", url, emptyParameters);
 		fireStatusChanged(url, clazz, RepositoryDataItemStatus.REQUESTED, null);
-		facard.get(url, new CallbackForData<T>(clazz));
+		return facard.get(url, new CallbackForData<T>(clazz));
 	}
 
 	@Override
-	public <T extends IRepositoryDataItem> void modifyData(String url, String name, Object value, Class<T> clazz) {
+	public <T extends IRepositoryDataItem> Future<?> modifyData(String url, String name, Object value, Class<T> clazz) {
 		Map<String, Object> parameters = Maps.<String, Object> makeMap(name, value);
 		fireRequest("modifyData", url, parameters);
-		facard.post(url, parameters, new CallbackForModify<T>(clazz));
+		return facard.post(url, parameters, new CallbackForModify<T>(clazz));
 
 	}
 
@@ -225,6 +232,11 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 	public <T extends IRepositoryDataItem> void addStatusListener(Class<T> clazz, IStatusChangedListener<T> listener) {
 		Maps.addToCollection((Map) listeners, ArrayList.class, clazz, listener);
 
+	}
+
+	@Override
+	public void shutdown() {
+		facard.shutdown();
 	}
 
 }

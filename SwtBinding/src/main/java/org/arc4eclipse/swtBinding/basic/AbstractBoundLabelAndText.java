@@ -14,8 +14,8 @@ public abstract class AbstractBoundLabelAndText<Data extends IRepositoryDataItem
 	private final BindingContext<Data> context;
 	private final String key;
 
-	public AbstractBoundLabelAndText(Composite arg0, int arg1, String title, final BindingContext<Data> context, final String key) {
-		super(arg0, arg1);
+	public AbstractBoundLabelAndText(Composite composite, int arg1, String title, final BindingContext<Data> context, final String key) {
+		super(composite, arg1);
 		this.context = context;
 		this.key = key;
 		setLayout(new FormLayout());
@@ -39,8 +39,13 @@ public abstract class AbstractBoundLabelAndText<Data extends IRepositoryDataItem
 
 	}
 
-	public void setText(String text) {
-		txtText.setText(text);
+	public void setText(final String text) {
+		getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				txtText.setText(text);
+			}
+		});
 	}
 
 	public String getText() {
@@ -49,18 +54,28 @@ public abstract class AbstractBoundLabelAndText<Data extends IRepositoryDataItem
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void setData(Object arg0) {
-		super.setData(arg0);
-		if (arg0 != null && context.clazz.isAssignableFrom(arg0.getClass())) {
-			Data data = (Data) arg0;
-			Object value = data.get(key);
-			setText(value == null ? "" : value.toString());
-		}
+	public void setData(final Object rawData) {
+		getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				AbstractBoundLabelAndText.super.setData(rawData);
+				if (rawData != null && context.clazz.isAssignableFrom(rawData.getClass())) {
+					Data data = (Data) rawData;
+					Object value = data.get(key);
+					setText(value == null ? "" : value.toString());
+				}
+			}
+		});
 	}
 
 	@Override
 	public void clear() {
-		setText("");
+		getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				setText("");
+			}
+		});
 	}
 
 }

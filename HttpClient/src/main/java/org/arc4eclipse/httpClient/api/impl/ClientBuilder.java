@@ -7,8 +7,11 @@ import org.apache.http.HttpHost;
 import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.arc4eclipse.httpClient.api.IClientBuilder;
+import org.arc4eclipse.httpClient.api.IServiceExecutor;
 import org.arc4eclipse.httpClient.constants.HttpClientConstants;
 import org.arc4eclipse.httpClient.requests.IRequestBuilder;
 import org.arc4eclipse.httpClient.requests.impl.DeleteRequest;
@@ -18,6 +21,7 @@ import org.arc4eclipse.httpClient.requests.impl.PostRequest;
 public class ClientBuilder implements IClientBuilder {
 	public final HttpHost host;
 	public final DefaultHttpClient client;
+	private final IServiceExecutor executor;
 
 	public ClientBuilder() {
 		this(HttpClientConstants.defaultHost, HttpClientConstants.defaultPort);
@@ -25,11 +29,12 @@ public class ClientBuilder implements IClientBuilder {
 
 	@SuppressWarnings("unchecked")
 	public ClientBuilder(String host, int port) {
-		this(new HttpHost(host, port), makeClient(), null, Collections.EMPTY_LIST);
+		this(IServiceExecutor.Utils.defaultExecutor(), new HttpHost(host, port), makeClient(), null, Collections.EMPTY_LIST);
 	}
 
-	public ClientBuilder(HttpHost httpHost, DefaultHttpClient httpClient, String url, List<NameValuePair> parameters) {
+	public ClientBuilder(IServiceExecutor executor, HttpHost httpHost, DefaultHttpClient httpClient, String url, List<NameValuePair> parameters) {
 		super();
+		this.executor = executor;
 		this.host = httpHost;
 		this.client = httpClient;
 	}
@@ -42,17 +47,17 @@ public class ClientBuilder implements IClientBuilder {
 
 	@Override
 	public IRequestBuilder post(String url) {
-		return new PostRequest(host, client, url);
+		return new PostRequest(executor, host, client, url);
 	}
 
 	@Override
 	public IRequestBuilder get(String url) {
-		return new GetRequest(host, client, url);
+		return new GetRequest(executor, host, client, url);
 	}
 
 	@Override
 	public IRequestBuilder delete(String url) {
-		return new DeleteRequest(host, client, url);
+		return new DeleteRequest(executor, host, client, url);
 	}
 
 	public AuthScope makeAuthScope() {
@@ -60,8 +65,17 @@ public class ClientBuilder implements IClientBuilder {
 	}
 
 	private static DefaultHttpClient makeClient() {
-		DefaultHttpClient client = new DefaultHttpClient();
-		client.addRequestInterceptor(new PreemptiveAuthInterceptor(), 0);
-		return client;
+		DefaultHttpClient rawClient = new DefaultHttpClient();
+		ClientConnectionManager mgr = rawClient.getConnectionManager();
+
+		DefaultHttpClient actualClient = new DefaultHttpClient(new ThreadSafeClientConnManager(mgr.getSchemeRegistry()));
+
+		actualClient.addRequestInterceptor(new PreemptiveAuthInterceptor(), 0);
+		return actualClient;
+	}
+
+	@Override
+	public void shutdown() {
+		executor.shutdown();
 	}
 }

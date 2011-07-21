@@ -37,7 +37,7 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 	}
 
 	public void testGetAndModifyJarData() throws Exception {
-		facard.delete("/" + urlGenerator.forJar().apply(jarDigestor.apply(antFile)), IResponseCallback.Utils.memoryCallback());
+		facard.delete("/" + urlGenerator.forJar().apply(jarDigestor.apply(antFile)), IResponseCallback.Utils.memoryCallback()).get();
 		final String expectedDigest = "48292d38f6d060f873891171e1df689b3eaa0b37";
 		checkModifyAndGetJarData("name1", "value1", IRepositoryDataItem.Utils.jarData(//
 				Arc4EclipseRepositoryConstants.hexDigestKey, expectedDigest, //
@@ -58,16 +58,16 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 				"name1", "value1"));
 	}
 
-	private void checkModifyAndGetJarData(String key, String value, IJarData expected) {
+	private void checkModifyAndGetJarData(String key, String value, IJarData expected) throws Exception {
 		MemoryStatusChangedListener<IJarData> validListener = IStatusChangedListener.Utils.memory();
 		MemoryStatusChangedListener<IOrganisationData> inValidListener = IStatusChangedListener.Utils.memory();
 		repository.addStatusListener(IJarData.class, validListener);
 		repository.addStatusListener(IOrganisationData.class, inValidListener);
-		repository.modifyJarData(antFile, key, value);
+		repository.modifyJarData(antFile, key, value).get();
 		validListener.assertEquals(//
 				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", IJarData.class, REQUESTED, null,//
 				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37.json", IJarData.class, FOUND, expected);
-		repository.getJarData(antFile);
+		repository.getJarData(antFile).get();
 		validListener.assertEquals(//
 				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", IJarData.class, REQUESTED, null,//
 				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37.json", IJarData.class, FOUND, expected,//
@@ -76,9 +76,9 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 		inValidListener.assertEquals();
 	}
 
-	public void testGetAndModifyData() {
+	public void testGetAndModifyData() throws Exception {
 		String url = "/tests/" + getClass().getSimpleName();
-		facard.delete(url, IResponseCallback.Utils.memoryCallback());
+		facard.delete(url, IResponseCallback.Utils.memoryCallback()).get();
 		checkModifyAndGetData(url, Arc4EclipseRepositoryConstants.organisationUrlKey, "orgUrl", IOrganisationData.class, IRepositoryDataItem.Utils.organisationData(//
 				Arc4EclipseRepositoryConstants.organisationUrlKey, "orgUrl",//
 				"jcr:primaryType", "nt:unstructured"));
@@ -93,16 +93,16 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 				Arc4EclipseRepositoryConstants.descriptionKey, "orgDesc"));
 	}
 
-	private <T extends IRepositoryDataItem> void checkModifyAndGetData(String url, String key, String value, Class<T> clazz, T expected) {
+	private <T extends IRepositoryDataItem> void checkModifyAndGetData(String url, String key, String value, Class<T> clazz, T expected) throws Exception {
 		MemoryStatusChangedListener<T> validListener = IStatusChangedListener.Utils.memory();
 		MemoryStatusChangedListener<IJarData> inValidListener = IStatusChangedListener.Utils.memory();
 		repository.addStatusListener(clazz, validListener);
 		repository.addStatusListener(IJarData.class, inValidListener);
-		repository.modifyData(url, key, value, clazz);
+		repository.modifyData(url, key, value, clazz).get();
 		validListener.assertEquals(//
 				url, clazz, REQUESTED, null,//
 				url + ".json", clazz, FOUND, expected);
-		repository.getData(url, clazz);
+		repository.getData(url, clazz).get();
 		validListener.assertEquals(//
 				url, clazz, REQUESTED, null,//
 				url + ".json", clazz, FOUND, expected,//

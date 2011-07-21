@@ -2,6 +2,7 @@ package org.arc4eclipse.arc4eclipseRepository.api;
 
 import java.io.File;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 import org.arc4eclipse.arc4eclipseRepository.api.impl.Arc4EclipseRepository;
 import org.arc4eclipse.arc4eclipseRepository.api.impl.JarDigestor;
@@ -18,19 +19,21 @@ import org.arc4eclipse.utilities.functions.IFunction1;
 
 public interface IArc4EclipseRepository extends ICleansCache {
 
-	void getJarData(File jar);
+	Future<?> getJarData(File jar);
 
-	void modifyJarData(File jar, String name, Object value);
+	Future<?> modifyJarData(File jar, String name, Object value);
 
-	<T extends IRepositoryDataItem> void getData(String url, Class<T> clazz);
+	<T extends IRepositoryDataItem> Future<?> getData(String url, Class<T> clazz);
 
-	<T extends IRepositoryDataItem> void modifyData(String url, String name, Object value, Class<T> clazz);
+	<T extends IRepositoryDataItem> Future<?> modifyData(String url, String name, Object value, Class<T> clazz);
 
 	IUrlGenerator generator();
 
 	<T extends IRepositoryDataItem> void addStatusListener(Class<T> clazz, IStatusChangedListener<T> listener);
 
 	void addLogger(IArc4EclipseLogger logger);
+
+	void shutdown();
 
 	static class Utils {
 
@@ -70,4 +73,5 @@ public interface IArc4EclipseRepository extends ICleansCache {
 		}
 
 	}
+
 }

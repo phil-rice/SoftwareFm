@@ -16,13 +16,13 @@ public abstract class AbstractRepositoryFacardTest extends TestCase {
 		facard = IRepositoryFacard.Utils.defaultFacard();
 	}
 
-	protected void checkDataMatches(String url, Object... expectedObjects) {
+	protected void checkDataMatches(String url, Object... expectedObjects) throws Exception {
 		checkDataMatches(url, Maps.makeImmutableMap(expectedObjects));
 	}
 
-	protected void checkDataMatches(String url, @SuppressWarnings("rawtypes") Map rawExpected) {
+	protected void checkDataMatches(String url, @SuppressWarnings("rawtypes") Map rawExpected) throws Exception {
 		ResponseFacardCallbackRecordingStatus callback = new ResponseFacardCallbackRecordingStatus();
-		facard.get(url, callback);
+		facard.get(url, callback).get();
 		checkCallbackHasMapRepresenting(callback, rawExpected);
 	}
 

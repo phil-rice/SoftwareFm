@@ -8,15 +8,21 @@ import org.eclipse.swt.widgets.Composite;
 
 public class BoundLabelAndText<Data extends IRepositoryDataItem> extends AbstractBoundLabelAndText<Data> {
 
-	public BoundLabelAndText(Composite arg0, int arg1, String title, final BindingContext<Data> context, final String key, final ICurrentUrlCalculator currentUrlCalculator) {
-		super(arg0, arg1, title, context, key);
+	public BoundLabelAndText(Composite composite, int arg1, String title, final BindingContext<Data> context, final String key, final ICurrentUrlCalculator currentUrlCalculator) {
+		super(composite, arg1, title, context, key);
+
 		txtText.addFocusListener(new FocusListener() {
 
 			@Override
-			public void focusLost(FocusEvent arg0) {
-				String currentUrl = currentUrlCalculator == null ? null : currentUrlCalculator.url();
-				if (currentUrl != null)
-					context.repository.modifyData(currentUrl, key, getText(), context.clazz);
+			public void focusLost(FocusEvent composite) {
+				getDisplay().asyncExec(new Runnable() {
+					@Override
+					public void run() {
+						String currentUrl = currentUrlCalculator == null ? null : currentUrlCalculator.url();
+						if (currentUrl != null)
+							context.repository.modifyData(currentUrl, key, getText(), context.clazz);
+					}
+				});
 			}
 
 			@Override
@@ -26,7 +32,7 @@ public class BoundLabelAndText<Data extends IRepositoryDataItem> extends Abstrac
 	}
 
 	@Override
-	public void processResponse(RepositoryDataItemStatus status, Data data) {
+	public void processResponse(final RepositoryDataItemStatus status, final Data data) {
 		switch (status) {
 		case FOUND:
 			setData(data);
@@ -34,6 +40,7 @@ public class BoundLabelAndText<Data extends IRepositoryDataItem> extends Abstrac
 		default:
 			setText("");
 		}
+
 	};
 
 }

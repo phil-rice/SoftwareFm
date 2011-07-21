@@ -1,9 +1,11 @@
 package org.arc4eclipse.httpClient.requests;
 
+import java.util.concurrent.Future;
+
 public interface IRequest {
 
 	String getUrl();
 
-	void execute(IResponseCallback callback);
+	Future<?> execute(IResponseCallback callback);
 
 }

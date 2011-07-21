@@ -25,4 +25,6 @@ public interface IHttpClient {
 
 	IRequestBuilder delete(String url);
 
+	void shutdown();
+
 }

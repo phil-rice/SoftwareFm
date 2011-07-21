@@ -34,12 +34,22 @@ public class TitleAndStyledTextField extends Composite {
 
 	}
 
-	public void setText(String text) {
-		txtText.setText(text);
+	public void setText(final String text) {
+		getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				txtText.setText(text);
+			}
+		});
 	}
 
-	public void appendText(String text) {
-		txtText.append(text);
+	public void appendText(final String text) {
+		getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				txtText.append(text);
+			}
+		});
 	}
 
 	public String getText() {

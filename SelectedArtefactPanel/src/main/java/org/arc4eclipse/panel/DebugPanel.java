@@ -49,10 +49,15 @@ public class DebugPanel extends Composite implements IArc4EclipseLogger {
 		addToHistory(MessageFormat.format("< {0} {1}   {2}", response.statusCode(), response.url(), data));
 	}
 
-	private void addToHistory(String text) {
-		history.add(0, text);
-		if (history.size() > maxSize)
-			history.remove(maxSize);
-		textField.setText(Strings.join(history, "\n"));
+	private void addToHistory(final String text) {
+		getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				history.add(0, text);
+				if (history.size() > maxSize)
+					history.remove(maxSize);
+				textField.setText(Strings.join(history, "\n"));
+			}
+		});
 	}
 }

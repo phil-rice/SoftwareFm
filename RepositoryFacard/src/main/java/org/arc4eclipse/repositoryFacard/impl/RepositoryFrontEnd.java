@@ -2,6 +2,7 @@ package org.arc4eclipse.repositoryFacard.impl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 import org.apache.http.NameValuePair;
 import org.arc4eclipse.httpClient.api.IHttpClient;
@@ -29,8 +30,8 @@ public class RepositoryFrontEnd implements IRepositoryFacard {
 	}
 
 	@Override
-	public void get(String url, final IRepositoryFacardCallback callback) {
-		client.get(url + ".json").execute(new IResponseCallback() {
+	public Future<?> get(String url, final IRepositoryFacardCallback callback) {
+		return client.get(url + ".json").execute(new IResponseCallback() {
 			@Override
 			public void process(IResponse response) {
 				try {
@@ -48,19 +49,19 @@ public class RepositoryFrontEnd implements IRepositoryFacard {
 	}
 
 	@Override
-	public void post(String url, Map<String, Object> map, IResponseCallback callback) {
+	public Future<?> post(String url, Map<String, Object> map, IResponseCallback callback) {
 		List<NameValuePair> nameValuePairs = parameterMaker.makeParameters(map);
-		client.post(url).addParams(nameValuePairs).execute(callback);
+		return client.post(url).addParams(nameValuePairs).execute(callback);
 	}
 
 	@Override
-	public void delete(String url, IResponseCallback callback) {
-		client.delete(url).execute(callback);
+	public Future<?> delete(String url, IResponseCallback callback) {
+		return client.delete(url).execute(callback);
 	}
 
 	@Override
-	public void getDepth(String url, int depth, final IRepositoryFacardCallback callback) {
-		client.get(url + "." + depth + ".json").execute(new IResponseCallback() {
+	public Future<?> getDepth(String url, int depth, final IRepositoryFacardCallback callback) {
+		return client.get(url + "." + depth + ".json").execute(new IResponseCallback() {
 			@Override
 			public void process(IResponse response) {
 				try {
@@ -75,8 +76,8 @@ public class RepositoryFrontEnd implements IRepositoryFacard {
 	}
 
 	@Override
-	public void postMany(String parentUrl, Map<String, Object> map, IResponseCallback callback) {
-		client.post(parentUrl).//
+	public Future<?> postMany(String parentUrl, Map<String, Object> map, IResponseCallback callback) {
+		return client.post(parentUrl).//
 				addParams(//
 						RepositoryFacardConstants.operation, RepositoryFacardConstants.importOperation,//
 						RepositoryFacardConstants.contentType, RepositoryFacardConstants.json, //
@@ -84,5 +85,10 @@ public class RepositoryFrontEnd implements IRepositoryFacard {
 				).//
 				execute(callback);
 
+	}
+
+	@Override
+	public void shutdown() {
+		client.shutdown();
 	}
 }
