@@ -23,17 +23,16 @@
 	</repositories>
 
 	<modules>
-		<module>Utilities</module>
+		<module>Arc4EclipseRepository</module>
 		<module>HttpClient</module>
 		<module>JdtBinding</module>
-		<module>RepositoryFacard</module>
-		<module>SwtBinding</module>
-		<module>SelectedArtefactPanel</module>
 		<module>PanelExerciser</module>
+		<module>RepositoryFacard</module>
 		<module>JarScanPanel</module>
-		<module>RepositoryViewer</module>
+		<module>SelectedArtefactPanel</module>
 		<module>SwtBasics</module>
-		<module>Arc4EclipseRepository</module>
+		<module>SwtBinding</module>
+		<module>Utilities</module>
 	</modules> 
 
 	<build>
