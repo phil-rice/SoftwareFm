@@ -22,6 +22,7 @@ public class ProjectPanel extends AbstractRepositoryDataPanel<IProjectData> {
 	private final BoundLabelAndText<IProjectData> txtOrganisationUrl;
 	private final MasterBoundLabelAndText<IProjectData> txtProjectUrl;
 	private final BoundLabelAndText<IProjectData> txtDescription;
+	private final BoundLabelAndText<IProjectData> txtMailingList;
 
 	/**
 	 * Create the composite.
@@ -54,6 +55,14 @@ public class ProjectPanel extends AbstractRepositoryDataPanel<IProjectData> {
 		fd_txtDescription.bottom = new FormAttachment(0, 180);
 		txtDescription.setLayoutData(fd_txtDescription);
 
+		txtMailingList = new BoundLabelAndText<IProjectData>(this, SWT.NONE, "Mailing List", context, "mainMailingList", this);
+		FormData fd_boundLabelAndText = new FormData();
+		fd_boundLabelAndText.bottom = new FormAttachment(0, 236);
+		fd_boundLabelAndText.right = new FormAttachment(100, -10);
+		fd_boundLabelAndText.top = new FormAttachment(0, 186);
+		fd_boundLabelAndText.left = new FormAttachment(0, 8);
+		txtMailingList.setLayoutData(fd_boundLabelAndText);
+
 	}
 
 	@Override
@@ -64,7 +73,7 @@ public class ProjectPanel extends AbstractRepositoryDataPanel<IProjectData> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<IBound<IProjectData>> boundChildren() {
-		return Arrays.<IBound<IProjectData>> asList(txtOrganisationUrl, txtProjectUrl, txtDescription);
+		return Arrays.<IBound<IProjectData>> asList(txtOrganisationUrl, txtProjectUrl, txtDescription, txtMailingList);
 	}
 
 	@Override

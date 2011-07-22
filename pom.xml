@@ -7,14 +7,17 @@
 
 	<properties>
 		<org.springframework.version>3.0.5.RELEASE</org.springframework.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
+	<pluginRepositories>
+		<pluginRepository>
+			<id>onejar-maven-plugin.googlecode.com</id>
+			<url>http://onejar-maven-plugin.googlecode.com/svn/mavenrepo</url>
+		</pluginRepository>
+	</pluginRepositories>
+
 	<repositories>
-		<repository>
-			<id>helios</id>
-			<layout>p2</layout>
-			<url>http://download.eclipse.org/releases/helios</url>
-		</repository>
 		<repository>
 			<id>installJars</id>
 			<layout>default</layout>
@@ -33,6 +36,7 @@
 		<module>SwtBasics</module>
 		<module>SwtBinding</module>
 		<module>Utilities</module>
+		<module>OneJar</module>
 	</modules>
 
 	<build>
@@ -46,38 +50,7 @@
 						<target>1.6</target>
 					</configuration>
 				</plugin>
-				 <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>org.arc4eclipse.BindingListAndPanel</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-				<plugin>
-					<groupId>org.dstovall</groupId>
-					<artifactId>onejar-maven-plugin</artifactId>
-					<version>1.4.4</version>
-					<executions>
-						<execution>
-							<configuration>
-								<!-- Optional -->
-								<onejarVersion>0.97</onejarVersion>
-								
-								<!-- Optional, default is false -->
-								<attachToBuild>true</attachToBuild>
-								<!-- Optional, default is "onejar" -->
-								<classifier>onejar</classifier>
-							</configuration>
-							<goals>
-								<goal>one-jar</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
+
 			</plugins>
 
 		</pluginManagement>
@@ -91,10 +64,4 @@
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>onejar-maven-plugin.googlecode.com</id>
-			<url>http://onejar-maven-plugin.googlecode.com/svn/mavenrepo</url>
-		</pluginRepository>
-	</pluginRepositories>
 </project>

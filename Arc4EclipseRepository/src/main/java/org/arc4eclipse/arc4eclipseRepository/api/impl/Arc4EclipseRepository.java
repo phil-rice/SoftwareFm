@@ -151,7 +151,7 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 	public Future<?> getJarData(File jar) {
 		try {
 			if (jar == null) {
-				fireStatusChanged("", IJarData.class, RepositoryDataItemStatus.PATH_NULL, null);
+				fireStatusChanged("", IRepositoryDataItem.class, RepositoryDataItemStatus.PATH_NULL, null);
 				return Futures.doneFuture(null);
 			}
 			String jarDigest = findJarDigest(jar);

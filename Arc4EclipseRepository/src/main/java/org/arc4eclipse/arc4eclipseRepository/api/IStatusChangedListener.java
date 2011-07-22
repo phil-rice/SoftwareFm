@@ -32,6 +32,7 @@ public interface IStatusChangedListener<T extends IRepositoryDataItem> {
 						repository.getData(generator.forOrganisation().apply(item.getOrganisationUrl()), IOrganisationData.class);
 						repository.getData(generator.forProject().apply(item.getProjectUrl()), IProjectData.class);
 					}
+
 				}
 			};
 
