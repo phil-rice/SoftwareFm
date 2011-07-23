@@ -21,11 +21,7 @@
 	</pluginRepositories>
 
 	<repositories>
-		<repository>
-			<id>installJars</id>
-			<layout>default</layout>
-			<url>file://${project.basedir}/../lib</url>
-		</repository>
+		<!-- <repository> <id>installJars</id> <layout>default</layout> <url>file://${project.basedir}/../lib</url> </repository> -->
 		<repository>
 			<id>p2.eclipse.${platform-version-name}</id>
 			<layout>p2</layout>
@@ -35,6 +31,7 @@
 
 	<modules>
 		<module>Arc4EclipseRepository</module>
+		<module>EclipsePlugIn</module>
 		<module>HttpClient</module>
 		<module>JdtBinding</module>
 		<module>PanelExerciser</module>
