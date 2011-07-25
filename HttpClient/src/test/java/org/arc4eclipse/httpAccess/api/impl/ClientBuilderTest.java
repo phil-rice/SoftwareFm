@@ -11,9 +11,10 @@ import org.arc4eclipse.httpClient.api.IHttpClient;
 import org.arc4eclipse.httpClient.api.impl.ClientBuilder;
 import org.arc4eclipse.httpClient.api.impl.PreemptiveAuthInterceptor;
 import org.arc4eclipse.httpClient.constants.HttpClientConstants;
+import org.junit.Test;
 
 public class ClientBuilderTest extends TestCase {
-
+	@Test
 	public void testUtilsMethodsMakesWithHostAndPort() {
 		checkHostAndPort(IHttpClient.Utils.builder(), HttpClientConstants.defaultHost, HttpClientConstants.defaultPort);
 		checkHostAndPort(IHttpClient.Utils.builder("host", 111), "host", 111);
@@ -21,6 +22,7 @@ public class ClientBuilderTest extends TestCase {
 		checkUserNameAndPassword(IHttpClient.Utils.builder("host", 111), null, null);
 	}
 
+	@Test
 	public void testWithCredentials() {
 		checkUserNameAndPassword(IHttpClient.Utils.builder().withCredentials("user", "pass"), "user", "pass");
 	}

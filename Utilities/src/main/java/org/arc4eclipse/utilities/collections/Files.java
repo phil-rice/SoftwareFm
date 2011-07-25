@@ -12,6 +12,10 @@ import java.math.BigInteger;
 import java.net.URL;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Stack;
 
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.springframework.core.io.ClassPathResource;
@@ -19,6 +23,40 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 
 public class Files {
+
+	public static Iterable<File> walkChildrenOf(final File root, final FilenameFilter filter) {
+		return new AbstractFindNextIterable<File, Stack<Iterator<File>>>() {
+
+			@Override
+			protected File findNext(Stack<Iterator<File>> context) throws Exception {
+				while (!context.isEmpty()) {
+					Iterator<File> iterator = context.peek();
+					if (iterator.hasNext()) {
+						File next = iterator.next();
+						if (next.isDirectory())
+							push(context, next);
+						else if (filter.accept(next.getParentFile(), next.getName()))
+							return next;
+
+					} else
+						context.pop();
+				}
+				return null;
+			}
+
+			@Override
+			protected Stack<Iterator<File>> reset() throws Exception {
+				Stack<Iterator<File>> stack = new Stack<Iterator<File>>();
+				push(stack, root);
+				return stack;
+			}
+
+			private void push(Stack<Iterator<File>> stack, final File file) {
+				List<File> files = Arrays.asList(file.listFiles());
+				stack.push(files.iterator());
+			}
+		};
+	}
 
 	public static String getText(Resource resource) {
 		try {
@@ -118,12 +156,26 @@ public class Files {
 		};
 	}
 
-	public static String justName(File file) {
+	public static String nameWithoutExtension(File file) {
 		String name = file.getName();
-		int index = name.lastIndexOf('.');
+		int index = name.indexOf('.');
 		if (index == -1)
 			return name;
 		else
 			return name.substring(0, index);
+	}
+
+	public static String noExtension(String raw) {
+		int index = raw.indexOf('.');
+		if (index == -1)
+			return raw;
+		else
+			return raw.substring(0, index);
+
+	}
+
+	public static String justName(File file) {
+		String name = file.getName();
+		return noExtension(name);
 	}
 }

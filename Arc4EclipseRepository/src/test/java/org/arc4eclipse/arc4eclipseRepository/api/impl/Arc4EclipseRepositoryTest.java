@@ -16,6 +16,8 @@ import org.arc4eclipse.arc4eclipseRepository.data.IOrganisationData;
 import org.arc4eclipse.arc4eclipseRepository.data.IRepositoryDataItem;
 import org.arc4eclipse.httpClient.requests.IResponseCallback;
 import org.arc4eclipse.repositoryFacard.IRepositoryFacard;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 
 public class Arc4EclipseRepositoryTest extends TestCase {
@@ -36,6 +38,7 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 		assertTrue(classWorldsFile.exists());
 	}
 
+	@Test
 	public void testGetAndModifyJarData() throws Exception {
 		facard.delete("/" + urlGenerator.forJar().apply(jarDigestor.apply(antFile)), IResponseCallback.Utils.memoryCallback()).get();
 		final String expectedDigest = "48292d38f6d060f873891171e1df689b3eaa0b37";
@@ -76,6 +79,7 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 		inValidListener.assertEquals();
 	}
 
+	@Test
 	public void testGetAndModifyData() throws Exception {
 		String url = "/tests/" + getClass().getSimpleName();
 		facard.delete(url, IResponseCallback.Utils.memoryCallback()).get();
@@ -113,6 +117,7 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 	}
 
 	@Override
+	@Before
 	protected void setUp() throws Exception {
 		super.setUp();
 		urlGenerator = new UrlGenerator();

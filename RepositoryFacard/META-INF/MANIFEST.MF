@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: RepositoryFacard
-Bundle-SymbolicName: RepositoryFacard
+Bundle-SymbolicName: org.arc4eclipse.repositoryFacard
 Bundle-Version: 1.0.0.qualifier
 Export-Package: org.arc4eclipse.repositoryFacard,
  org.arc4eclipse.repositoryFacard.impl,
  org.arc4eclipse.repositoryFacardConstants
-Require-Bundle: HttpClient;bundle-version="1.0.0";visibility:=reexport
+Require-Bundle: org.arc4eclipse.httpClient;bundle-version="1.0.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

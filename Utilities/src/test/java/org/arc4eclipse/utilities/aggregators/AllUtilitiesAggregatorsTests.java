@@ -6,10 +6,10 @@ import junit.framework.TestSuite;
 public class AllUtilitiesAggregatorsTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite(AllUtilitiesAggregatorsTests.class.getName());
-		//$JUnit-BEGIN$
+		TestSuite suite = new TestSuite(AllUtilitiesAggregatorsTests.class);
+		// $JUnit-BEGIN$
 		suite.addTestSuite(CrossThreadsAggregatorTest.class);
-		//$JUnit-END$
+		// $JUnit-END$
 		return suite;
 	}
 

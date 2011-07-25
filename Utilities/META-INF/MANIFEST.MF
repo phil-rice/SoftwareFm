@@ -1,10 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Utilities
-Bundle-SymbolicName: Utilities
+Bundle-SymbolicName: org.arc4eclipse.utilities
 Bundle-Version: 1.0.0.qualifier
-Export-Package: org.arc4eclipse.utilities,
- org.arc4eclipse.utilities.aggregators,
+Export-Package: org.arc4eclipse.utilities.aggregators,
  org.arc4eclipse.utilities.annotations,
  org.arc4eclipse.utilities.callbacks,
  org.arc4eclipse.utilities.collections,

@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: AllTests
+Bundle-SymbolicName: org.arc4eclipse.allTests
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.arc4eclipse.utilities;bundle-version="1.0.0",
+ org.arc4eclipse.panelExerciser;bundle-version="1.0.0"

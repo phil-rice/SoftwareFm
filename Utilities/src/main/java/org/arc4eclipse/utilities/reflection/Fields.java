@@ -70,7 +70,8 @@ public class Fields {
 				@Override
 				public Iterable<T> apply(File from) throws Exception {
 					Class<?> clazz = fileToClass(packageName, from);
-					return constantsOfClass(clazz, typeClass);
+					Iterable<T> constants = constantsOfClass(clazz, typeClass);
+					return constants;
 				}
 			});
 		} catch (IOException e) {

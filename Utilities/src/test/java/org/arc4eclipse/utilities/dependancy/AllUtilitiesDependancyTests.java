@@ -9,6 +9,7 @@ public class AllUtilitiesDependancyTests {
 		TestSuite suite = new TestSuite(AllUtilitiesDependancyTests.class.getName());
 		//$JUnit-BEGIN$
 		suite.addTestSuite(DependancyBuilderTest.class);
+		suite.addTestSuite(TopologicalSortResultTest.class);
 		//$JUnit-END$
 		return suite;
 	}

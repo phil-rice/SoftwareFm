@@ -143,4 +143,13 @@ public class Functions {
 			}
 		};
 	}
+
+	public static <T> IFunction1<T, Boolean> isNull() {
+		return new IFunction1<T, Boolean>() {
+			@Override
+			public Boolean apply(T from) throws Exception {
+				return from == null;
+			}
+		};
+	}
 }

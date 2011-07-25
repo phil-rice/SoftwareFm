@@ -3,14 +3,17 @@ package org.arc4eclipse.httpAccess.requests.impl;
 import org.arc4eclipse.httpClient.api.IHttpClient;
 import org.arc4eclipse.httpClient.api.impl.ClientBuilder;
 import org.arc4eclipse.httpClient.requests.impl.PostRequest;
+import org.junit.Test;
 
 public class PostRequestTest extends AbstractRequestTest {
+	@Test
 	public void testPost() {
 		ClientBuilder builder = (ClientBuilder) IHttpClient.Utils.builder();
 		PostRequest post = (PostRequest) builder.post("someUrl");
 		checkRequest(post, builder);
 	}
 
+	@Test
 	public void testPostWithParameters() {
 		ClientBuilder builder = (ClientBuilder) IHttpClient.Utils.builder();
 		checkRequest(builder.post("someUrl"), builder);

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: HttpClient
-Bundle-SymbolicName: HttpClient
+Bundle-SymbolicName: org.arc4eclipse.httpClient
 Bundle-Version: 1.0.0.qualifier
 Export-Package: org.arc4eclipse.httpAccess.api.impl,
  org.arc4eclipse.httpAccess.requests.impl,
@@ -12,5 +12,5 @@ Export-Package: org.arc4eclipse.httpAccess.api.impl,
  org.arc4eclipse.httpClient.requests.impl,
  org.arc4eclipse.httpClient.response,
  org.arc4eclipse.httpClient.response.impl
-Require-Bundle: Utilities;bundle-version="1.0.0";visibility:=reexport
+Require-Bundle: org.arc4eclipse.utilities;bundle-version="1.0.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

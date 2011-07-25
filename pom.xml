@@ -62,6 +62,7 @@
 		<module>SwtBinding</module>
 		<module>Utilities</module>
 		<module>MakeJarForPlugIn</module>
+		<module>AllTests</module>
 	</modules>
 
 	<build>
