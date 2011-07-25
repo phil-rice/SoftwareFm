@@ -8,18 +8,38 @@
 	<properties>
 		<org.springframework.version>3.0.5.RELEASE</org.springframework.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<tycho-version>0.11.1</tycho-version>
+		<tycho-version>0.12.0</tycho-version>
 		<platform-version-name>indigo</platform-version-name>
 		<eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
 	</properties>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>onejar-maven-plugin.googlecode.com</id>
-			<url>http://onejar-maven-plugin.googlecode.com/svn/mavenrepo</url>
-		</pluginRepository>
-	</pluginRepositories>
-
+	
+	<profiles>
+		<profile>
+			<id>mac</id>
+			<activation>
+				<os>
+					<name>mac os x</name>
+				</os>
+			</activation>
+			<properties>
+				<swt.groupId>org.eclipse.swt.carbon</swt.groupId>
+				<swt.artifactId>macosx</swt.artifactId>
+			</properties>
+		</profile>
+		<profile>
+			<id>windows</id>
+			<activation>
+				<os>
+					<family>windows</family>
+				</os>
+			</activation>
+			<properties>
+				<swt.groupId>org.eclipse.swt.win32.win32</swt.groupId>
+				<swt.artifactId>x86</swt.artifactId>
+			</properties>
+		</profile>
+	</profiles>
+	
 	<repositories>
 		<!-- <repository> <id>installJars</id> <layout>default</layout> <url>file://${project.basedir}/../lib</url> </repository> -->
 		<repository>
@@ -31,7 +51,6 @@
 
 	<modules>
 		<module>Arc4EclipseRepository</module>
-		<module>EclipsePlugIn</module>
 		<module>HttpClient</module>
 		<module>JdtBinding</module>
 		<module>PanelExerciser</module>
@@ -48,139 +67,28 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>2.3.1</version>
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
+					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.sonatype.tycho</groupId>
+				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-maven-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<extensions>true</extensions>
 			</plugin>
 			<plugin>
-				<groupId>org.sonatype.tycho</groupId>
+				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
-					<resolver>p2</resolver>
-					<environments>
-						<environment>
-							<os>linux</os>
-							<ws>gtk</ws>
-							<arch>x86</arch>
-						</environment>
-						<environment>
-							<os>linux</os>
-							<ws>gtk</ws>
-							<arch>x86_64</arch>
-						</environment>
-						<environment>
-							<os>win32</os>
-							<ws>win32</ws>
-							<arch>x86</arch>
-						</environment>
-						<environment>
-							<os>win32</os>
-							<ws>win32</ws>
-							<arch>x86_64</arch>
-						</environment>
-						<environment>
-							<os>macosx</os>
-							<ws>cocoa</ws>
-							<arch>x86</arch>
-						</environment>
-					</environments>
+					<pomDependencies>consider</pomDependencies>
 				</configuration>
 			</plugin>
 		</plugins>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<configuration>
-						<source>1.6</source>
-						<target>1.6</target>
-						<encoding>UTF-8</encoding>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.sonatype.tycho</groupId>
-					<artifactId>maven-osgi-compiler-plugin</artifactId>
-					<version>${tycho-version}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.sonatype.tycho</groupId>
-					<artifactId>maven-osgi-source-plugin</artifactId>
-					<version>${tycho-version}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-resources-plugin</artifactId>
-					<version>2.5</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-antrun-plugin</artifactId>
-					<version>1.6</version>
-				</plugin>
-				<plugin>
-					<groupId>org.sonatype.tycho</groupId>
-					<artifactId>tycho-p2-repository-plugin</artifactId>
-					<version>${tycho-version}</version>
-					<configuration>
-						<includeAllDependencies>false</includeAllDependencies>
-						<createArtifactRepository>true</createArtifactRepository>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.sonatype.tycho</groupId>
-					<artifactId>tycho-p2-director-plugin</artifactId>
-					<version>${tycho-version}</version>
-					<executions>
-						<execution>
-							<id>materialize-products</id>
-							<goals>
-								<goal>materialize-products</goal>
-							</goals>
-						</execution>
-						<execution>
-							<id>archive-products</id>
-							<goals>
-								<goal>archive-products</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.sonatype.tycho</groupId>
-					<artifactId>maven-osgi-packaging-plugin</artifactId>
-					<version>${tycho-version}</version>
-					<configuration>
-						<strictVersions>false</strictVersions>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-jar-plugin</artifactId>
-					<version>2.3</version>
-					<configuration>
-						<archive>
-							<manifestEntries>
-								<Implementation-Title>Arc4Eclipse ${project.artifactId}</Implementation-Title>
-								<Implementation-Version>${project.version}</Implementation-Version>
-								<Implementation-Vendor>Arc4Eclipse</Implementation-Vendor>
-								<Implementation-Vendor-Id>org.arc4eclipse</Implementation-Vendor-Id>
-								<Implementation-Vendor-URL>org.arc4eclipse}</Implementation-Vendor-URL>
-							</manifestEntries>
-						</archive>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 
 	</build>
 	<dependencies>
