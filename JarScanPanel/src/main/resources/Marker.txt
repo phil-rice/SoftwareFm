@@ -1,1 +1,0 @@
-Exists to allow the tests to find this directory

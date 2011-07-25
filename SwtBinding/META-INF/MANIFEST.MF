@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: SwtBinding
+Bundle-SymbolicName: SwtBinding
+Bundle-Version: 1.0.0.qualifier
+Export-Package: org.arc4eclipse.swtBinding.basic,
+ org.arc4eclipse.swtBinding.constants
+Require-Bundle: SwtBasics;bundle-version="1.0.0";visibility:=reexport,
+ Arc4EclipseRepository;bundle-version="1.0.0";visibility:=reexport
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

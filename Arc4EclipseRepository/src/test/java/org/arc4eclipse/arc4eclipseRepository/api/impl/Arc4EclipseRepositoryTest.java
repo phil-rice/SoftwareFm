@@ -119,7 +119,7 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 		facard = IRepositoryFacard.Utils.defaultFacard();
 		jarDigestor = new JarDigestor();
 		repository = IArc4EclipseRepository.Utils.repository(facard, urlGenerator, jarDigestor);
-		antFile = new ClassPathResource("ant-nodeps-1.6.5.jar").getFile();
-		classWorldsFile = new ClassPathResource("classworlds-1.1.jar").getFile();
+		antFile = new ClassPathResource("ant-nodeps-1.6.5.jar", getClass()).getFile();
+		classWorldsFile = new ClassPathResource("classworlds-1.1.jar", getClass()).getFile();
 	}
 }

@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PanelExerciser
+Bundle-SymbolicName: PanelExerciser
+Bundle-Version: 1.0.0.qualifier
+Export-Package: org.arc4eclipse.panelExerciser,
+ org.arc4eclipse.panelExerciser.constants,
+ org.arc4eclipse.panelExerciser.fixtures
+Require-Bundle: SelectedArtefactPanel;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ClassPath: src/main/java/,
+ src/main/resources/

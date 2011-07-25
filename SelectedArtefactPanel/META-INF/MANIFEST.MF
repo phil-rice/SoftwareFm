@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: SelectedArtefactPanel
+Bundle-SymbolicName: SelectedArtefactPanel
+Bundle-Version: 1.0.0.qualifier
+Export-Package: org.arc4eclipse.panel,
+ org.arc4eclipse.shellPanel
+Require-Bundle: SwtBinding;bundle-version="1.0.0";visibility:=reexport,
+ JdtBinding;bundle-version="1.0.0";visibility:=reexport
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
