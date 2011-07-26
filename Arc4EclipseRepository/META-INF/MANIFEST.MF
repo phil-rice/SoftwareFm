@@ -8,5 +8,6 @@ Export-Package: org.arc4eclipse.arc4eclipseRepository.api,
  org.arc4eclipse.arc4eclipseRepository.constants,
  org.arc4eclipse.arc4eclipseRepository.data,
  org.arc4eclipse.arc4eclipseRepository.data.impl
-Require-Bundle: org.arc4eclipse.repositoryFacard;bundle-version="1.0.0";visibility:=reexport
+Require-Bundle: org.arc4eclipse.repositoryFacard;bundle-version="1.0.0";visibility:=reexport,
+ org.arc4eclipse.jdtBinding;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

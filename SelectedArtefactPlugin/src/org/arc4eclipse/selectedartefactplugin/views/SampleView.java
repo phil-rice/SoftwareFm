@@ -47,7 +47,7 @@ public class SampleView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		IArc4EclipseRepository repository = Activator.getDefault().getRepository();
-		final SelectedArtefactPanel artefactPanel = new SelectedArtefactPanel(parent, SWT.NULL, repository);
+		final SelectedArtefactPanel artefactPanel = new SelectedArtefactPanel(parent, SWT.NULL, repository, Activator.getDefault().getBindingRipper());
 		listener = new ISelectionListener() {
 			@Override
 			public void selectionChanged(IWorkbenchPart part, ISelection selection) {

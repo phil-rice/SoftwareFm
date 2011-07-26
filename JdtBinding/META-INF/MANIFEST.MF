@@ -4,8 +4,8 @@ Bundle-Name: JdtBinding
 Bundle-SymbolicName: org.arc4eclipse.jdtBinding
 Bundle-Version: 1.0.0.qualifier
 Export-Package: org.arc4eclipse.binding,
- org.arc4eclipse.binding.mocks,
- org.arc4eclipse.binding.path
+ org.arc4eclipse.jdtBinding.api,
+ org.arc4eclipse.jdtBinding.mocks
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.7.0";visibility:=reexport,
  org.eclipse.jdt.core;bundle-version="3.7.0";visibility:=reexport,
  org.eclipse.core.resources;bundle-version="3.7.100";visibility:=reexport,

@@ -5,10 +5,11 @@ import java.net.URL;
 
 import org.apache.log4j.xml.DOMConfigurator;
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
-import org.arc4eclipse.binding.path.JavaElementRipper;
-import org.arc4eclipse.binding.path.JavaElementRipperResult;
+import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
+import org.arc4eclipse.jdtBinding.api.IBindingRipper;
 import org.arc4eclipse.panel.SelectedArtefactPanel;
 import org.arc4eclipse.panelExerciser.fixtures.AllTestFixtures;
+import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.eclipse.jdt.core.dom.IBinding;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -98,6 +99,7 @@ public class BindingListAndPanel extends org.eclipse.swt.widgets.Composite {
 
 	private void initGUI() {
 		try {
+			final IBindingRipper bindingRipper = IBindingRipper.Utils.ripper();
 			FormLayout thisLayout = new FormLayout();
 			this.setLayout(thisLayout);
 			this.setSize(648, 168);
@@ -115,13 +117,16 @@ public class BindingListAndPanel extends org.eclipse.swt.widgets.Composite {
 					fileList1 = new BindingList(sashForm1, SWT.NONE);
 					fileList1.setBounds(0, 0, 222, 162);
 					fileList1.addFireSelectionListener(new IBindingSelectedListener() {
-
 						@Override
 						public void bindingSelected(IBinding binding) {
-							selectedArtefactPanel.setData(binding);
-							String text = binding == null ? "" : binding.toString();
-							JavaElementRipperResult ripperResult = JavaElementRipper.rip(binding);
-							text1.setText(text + "\n" + ripperResult);
+							try {
+								selectedArtefactPanel.setData(binding);
+								String text = binding == null ? "" : binding.toString();
+								BindingRipperResult ripperResult = bindingRipper.apply(binding);
+								text1.setText(text + "\n" + ripperResult);
+							} catch (Exception e) {
+								throw WrappedException.wrap(e);
+							}
 						}
 					});
 				}
@@ -133,7 +138,7 @@ public class BindingListAndPanel extends org.eclipse.swt.widgets.Composite {
 						text1.setText("text1");
 					}
 					{
-						selectedArtefactPanel = new SelectedArtefactPanel(sashForm2, SWT.NONE, repository);
+						selectedArtefactPanel = new SelectedArtefactPanel(sashForm2, SWT.NONE, repository, bindingRipper);
 					}
 				}
 			}

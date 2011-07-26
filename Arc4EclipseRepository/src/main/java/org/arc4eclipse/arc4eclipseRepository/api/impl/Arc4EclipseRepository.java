@@ -1,18 +1,15 @@
 package org.arc4eclipse.arc4eclipseRepository.api.impl;
 
-import java.io.File;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseLogger;
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
-import org.arc4eclipse.arc4eclipseRepository.api.IJarDigester;
 import org.arc4eclipse.arc4eclipseRepository.api.IStatusChangedListener;
 import org.arc4eclipse.arc4eclipseRepository.api.IUrlGenerator;
 import org.arc4eclipse.arc4eclipseRepository.api.RepositoryDataItemStatus;
@@ -23,6 +20,7 @@ import org.arc4eclipse.arc4eclipseRepository.data.IProjectData;
 import org.arc4eclipse.arc4eclipseRepository.data.IRepositoryDataItem;
 import org.arc4eclipse.httpClient.requests.IResponseCallback;
 import org.arc4eclipse.httpClient.response.IResponse;
+import org.arc4eclipse.jdtBinding.api.IJarDigester;
 import org.arc4eclipse.repositoryFacard.IRepositoryFacard;
 import org.arc4eclipse.repositoryFacard.IRepositoryFacardCallback;
 import org.arc4eclipse.repositoryFacardConstants.RepositoryFacardConstants;
@@ -37,8 +35,6 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 
 	private final IRepositoryFacard facard;
 	private final IUrlGenerator urlGenerator;
-	private final Map<File, String> fileToDigest = Maps.newMap();
-	private final IJarDigester jarDigester;
 
 	private final Collection<IArc4EclipseLogger> loggers = Collections.synchronizedList(Lists.<IArc4EclipseLogger> newList());
 	private final Map<Class<?>, Collection<IStatusChangedListener<IRepositoryDataItem>>> listeners = Collections.synchronizedMap(Maps.<Class<?>, Collection<IStatusChangedListener<IRepositoryDataItem>>> newMap());
@@ -140,7 +136,6 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 	public Arc4EclipseRepository(IRepositoryFacard facard, IUrlGenerator urlGenerator, IJarDigester jarDigester) {
 		this.facard = facard;
 		this.urlGenerator = urlGenerator;
-		this.jarDigester = jarDigester;
 		mappers = Collections.synchronizedMap(Maps.<Class<?>, IFunction1<Map<String, Object>, IRepositoryDataItem>> makeMap(//
 				IJarData.class, IArc4EclipseRepository.Utils.jarData(),//
 				IOrganisationData.class, IArc4EclipseRepository.Utils.organisationData(),//
@@ -148,13 +143,12 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 	}
 
 	@Override
-	public Future<?> getJarData(File jar) {
+	public Future<?> getJarData(String jarDigest) {
 		try {
-			if (jar == null) {
+			if (jarDigest == null) {
 				fireStatusChanged("", IRepositoryDataItem.class, RepositoryDataItemStatus.PATH_NULL, null);
 				return Futures.doneFuture(null);
 			}
-			String jarDigest = findJarDigest(jar);
 			String url = urlGenerator.forJar().apply(jarDigest);
 			fireRequest("getJarData", url, emptyParameters);
 			fireStatusChanged(url, IJarData.class, RepositoryDataItemStatus.REQUESTED, null);
@@ -166,9 +160,8 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 	}
 
 	@Override
-	public Future<?> modifyJarData(File jar, String name, Object value) {
+	public Future<?> modifyJarData(String jarDigest, String name, Object value) {
 		try {
-			String jarDigest = findJarDigest(jar);
 			String url = urlGenerator.forJar().apply(jarDigest);
 			Map<String, Object> parameters = Maps.<String, Object> makeMap(name, value, Arc4EclipseRepositoryConstants.hexDigestKey, jarDigest);
 			fireRequest("modifyJarData", url, parameters);
@@ -191,20 +184,6 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 		fireRequest("modifyData", url, parameters);
 		return facard.post(url, parameters, new CallbackForModify<T>(clazz));
 
-	}
-
-	@Override
-	public void cleanCache() {
-		fileToDigest.clear();
-	}
-
-	private String findJarDigest(final File jar) throws Exception {
-		return Maps.findOrCreate(fileToDigest, jar, new Callable<String>() {
-			@Override
-			public String call() throws Exception {
-				return jarDigester.apply(jar);
-			}
-		});
 	}
 
 	@Override

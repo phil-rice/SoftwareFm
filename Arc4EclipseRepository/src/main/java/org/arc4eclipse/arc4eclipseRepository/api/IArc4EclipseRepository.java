@@ -1,11 +1,9 @@
 package org.arc4eclipse.arc4eclipseRepository.api;
 
-import java.io.File;
 import java.util.Map;
 import java.util.concurrent.Future;
 
 import org.arc4eclipse.arc4eclipseRepository.api.impl.Arc4EclipseRepository;
-import org.arc4eclipse.arc4eclipseRepository.api.impl.JarDigestor;
 import org.arc4eclipse.arc4eclipseRepository.api.impl.UrlGenerator;
 import org.arc4eclipse.arc4eclipseRepository.data.IJarData;
 import org.arc4eclipse.arc4eclipseRepository.data.IOrganisationData;
@@ -14,14 +12,15 @@ import org.arc4eclipse.arc4eclipseRepository.data.IRepositoryDataItem;
 import org.arc4eclipse.arc4eclipseRepository.data.impl.JarData;
 import org.arc4eclipse.arc4eclipseRepository.data.impl.OrganisationData;
 import org.arc4eclipse.arc4eclipseRepository.data.impl.ProjectData;
+import org.arc4eclipse.jdtBinding.api.IJarDigester;
 import org.arc4eclipse.repositoryFacard.IRepositoryFacard;
 import org.arc4eclipse.utilities.functions.IFunction1;
 
-public interface IArc4EclipseRepository extends ICleansCache {
+public interface IArc4EclipseRepository {
 
-	Future<?> getJarData(File jar);
+	Future<?> getJarData(String jarDigest);
 
-	Future<?> modifyJarData(File jar, String name, Object value);
+	Future<?> modifyJarData(String jarDigest, String name, Object value);
 
 	<T extends IRepositoryDataItem> Future<?> getData(String url, Class<T> clazz);
 
@@ -38,7 +37,7 @@ public interface IArc4EclipseRepository extends ICleansCache {
 	static class Utils {
 
 		public static IArc4EclipseRepository repository() {
-			return repository(IRepositoryFacard.Utils.defaultFacard(), new UrlGenerator(), new JarDigestor());
+			return repository(IRepositoryFacard.Utils.defaultFacard(), new UrlGenerator(), IJarDigester.Utils.digester());
 		}
 
 		public static IArc4EclipseRepository repository(IRepositoryFacard facard, IUrlGenerator urlGenerator, IJarDigester jarDigester) {

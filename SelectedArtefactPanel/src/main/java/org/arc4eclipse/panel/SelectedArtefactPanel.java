@@ -5,11 +5,11 @@ import org.arc4eclipse.arc4eclipseRepository.api.IStatusChangedListener;
 import org.arc4eclipse.arc4eclipseRepository.data.IJarData;
 import org.arc4eclipse.arc4eclipseRepository.data.IOrganisationData;
 import org.arc4eclipse.arc4eclipseRepository.data.IProjectData;
-import org.arc4eclipse.binding.path.JavaElementRipper;
-import org.arc4eclipse.binding.path.JavaElementRipperResult;
+import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
+import org.arc4eclipse.jdtBinding.api.IBindingRipper;
 import org.arc4eclipse.swtBasics.Swts;
+import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.dom.IBinding;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -24,6 +24,7 @@ public class SelectedArtefactPanel extends Composite {
 	private final IArc4EclipseRepository repository;
 	private final DebugPanel debugPanel;
 	private final JarPanel jarPanel;
+	private final IFunction1<IBinding, BindingRipperResult> bindingRipper;
 
 	/**
 	 * Create the composite.
@@ -32,9 +33,10 @@ public class SelectedArtefactPanel extends Composite {
 	 * @param style
 	 * @param repository
 	 */
-	public SelectedArtefactPanel(Composite parent, int style, IArc4EclipseRepository repository) {
+	public SelectedArtefactPanel(Composite parent, int style, IArc4EclipseRepository repository, IFunction1<IBinding, BindingRipperResult> bindingRipper) {
 		super(parent, style);
 		this.repository = repository;
+		this.bindingRipper = bindingRipper;
 		setLayout(new FillLayout(SWT.HORIZONTAL));
 
 		TabFolder tabFolder = new TabFolder(this, SWT.NONE);
@@ -79,7 +81,7 @@ public class SelectedArtefactPanel extends Composite {
 		Swts.display("Selected Artefact Panel", new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				return new SelectedArtefactPanel(from, SWT.NULL, repository);
+				return new SelectedArtefactPanel(from, SWT.NULL, repository, IBindingRipper.Utils.ripper());
 			}
 		});
 	}
@@ -87,14 +89,16 @@ public class SelectedArtefactPanel extends Composite {
 	@Override
 	public void setData(Object arg0) {
 		super.setData(arg0);
-		if (arg0 instanceof IBinding) {
-			IBinding binding = (IBinding) arg0;
-			JavaElementRipperResult ripperResult = JavaElementRipper.rip(binding);
-			IPath path = ripperResult.path;
-			if (path == null)
-				repository.getJarData(null);
-			else
-				repository.getJarData(path.toFile());
+		try {
+			if (arg0 instanceof IBinding) {
+				IBinding binding = (IBinding) arg0;
+				BindingRipperResult ripperResult = bindingRipper.apply(binding);
+				debugPanel.setRipperData(ripperResult);
+				jarPanel.setRipperData(ripperResult);
+				repository.getJarData(ripperResult.hexDigest);
+			}
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
 		}
 
 	}

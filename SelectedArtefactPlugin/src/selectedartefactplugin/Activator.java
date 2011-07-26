@@ -1,6 +1,10 @@
 package selectedartefactplugin;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
+import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
+import org.arc4eclipse.jdtBinding.api.IBindingRipper;
+import org.arc4eclipse.utilities.functions.IFunction1;
+import org.eclipse.jdt.core.dom.IBinding;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -17,6 +21,8 @@ public class Activator extends AbstractUIPlugin {
 	private static Activator plugin;
 
 	private IArc4EclipseRepository repository;
+
+	private IFunction1<IBinding, BindingRipperResult> bindingRipper;
 
 	public Activator() {
 	}
@@ -67,5 +73,11 @@ public class Activator extends AbstractUIPlugin {
 
 	public IArc4EclipseRepository getRepository() {
 		return repository;
+	}
+
+	public IFunction1<IBinding, BindingRipperResult> getBindingRipper() {
+		if (bindingRipper == null)
+			bindingRipper = IBindingRipper.Utils.ripper();
+		return bindingRipper;
 	}
 }

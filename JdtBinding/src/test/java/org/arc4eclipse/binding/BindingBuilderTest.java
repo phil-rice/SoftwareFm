@@ -4,7 +4,7 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
-import org.arc4eclipse.binding.mocks.IBindingBuilder;
+import org.arc4eclipse.jdtBinding.mocks.IBindingBuilder;
 import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.ILocalVariable;

@@ -1,6 +1,6 @@
 package org.arc4eclipse.panelExerciser.fixtures;
 
-import org.arc4eclipse.binding.mocks.IBindingBuilder;
+import org.arc4eclipse.jdtBinding.mocks.IBindingBuilder;
 import org.eclipse.jdt.core.dom.IBinding;
 
 //This is a jar that doesn't have any data about it in the repository

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -105,16 +106,31 @@ public class Files {
 		return getText(new ClassPathResource(path, clazz));
 	}
 
+	public static String digestAsHexString(Resource resource) {
+		try {
+			return digestAsHexString(resource.getInputStream());
+		} catch (IOException e) {
+			throw WrappedException.wrap(e);
+		}
+	}
+
 	public static String digestAsHexString(File file) {
 		try {
-			DigestInputStream inputStream = new DigestInputStream(new FileInputStream(file), MessageDigest.getInstance("SHA-1"));
+			return digestAsHexString(new FileInputStream(file));
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+	}
+
+	private static String digestAsHexString(InputStream inputStream) {
+		try {
+			DigestInputStream digestInputStream = new DigestInputStream(inputStream, MessageDigest.getInstance("SHA-1"));
 			byte[] buffer = new byte[8192];
-			while (inputStream.read(buffer) != -1)
+			while (digestInputStream.read(buffer) != -1)
 				;
-			byte[] rawDigest = inputStream.getMessageDigest().digest();
+			byte[] rawDigest = digestInputStream.getMessageDigest().digest();
 			return new BigInteger(rawDigest).abs().toString(16);
 		} catch (Exception e) {
-			System.out.println(file == null ? "File is null" : file.getAbsolutePath());
 			throw WrappedException.wrap(e);
 		}
 	}

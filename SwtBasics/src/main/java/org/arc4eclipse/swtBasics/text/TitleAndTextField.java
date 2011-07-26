@@ -24,12 +24,13 @@ public class TitleAndTextField extends Composite {
 		lblTitle.setText(title == null ? "" : title);
 
 		txtText = new Text(this, SWT.BORDER);
-		fd_lblTitle.right = new FormAttachment(txtText, -6);
+		fd_lblTitle.bottom = new FormAttachment(0, 25);
+		fd_lblTitle.right = new FormAttachment(0, 240);
 		FormData fd_txtValue = new FormData();
+		fd_txtValue.top = new FormAttachment(0, 31);
+		fd_txtValue.left = new FormAttachment(0);
 		fd_txtValue.bottom = new FormAttachment(100, 0);
-		fd_txtValue.left = new FormAttachment(0, 75);
 		fd_txtValue.right = new FormAttachment(100, 0);
-		fd_txtValue.top = new FormAttachment(0);
 		txtText.setLayoutData(fd_txtValue);
 		txtText.setText("");
 	}

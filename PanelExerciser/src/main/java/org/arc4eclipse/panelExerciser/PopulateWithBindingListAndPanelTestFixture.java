@@ -7,21 +7,24 @@ import org.arc4eclipse.arc4eclipseRepository.data.IJarData;
 import org.arc4eclipse.arc4eclipseRepository.data.IOrganisationData;
 import org.arc4eclipse.arc4eclipseRepository.data.IProjectData;
 import org.arc4eclipse.arc4eclipseRepository.data.IRepositoryDataItem;
+import org.arc4eclipse.jdtBinding.api.IJarDigester;
 import org.arc4eclipse.panelExerciser.fixtures.AllTestFixtures;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
 
 public class PopulateWithBindingListAndPanelTestFixture {
 	public static void main(String[] args) throws Exception {
-
+		IJarDigester digester = IJarDigester.Utils.digester();
 		IArc4EclipseRepository repository = IArc4EclipseRepository.Utils.repository();
 		repository.addStatusListener(IRepositoryDataItem.class, IStatusChangedListener.Utils.sysout());
 		final IUrlGenerator generator = repository.generator();
 		System.out.println("Jar Data");
 		for (JarDataAndPath dataAndPath : AllTestFixtures.allConstants(JarDataAndPath.class)) {
 			IJarData jarData = dataAndPath.data;
-			for (String key : jarData.keys())
-				repository.modifyJarData(dataAndPath.jar, key, jarData.get(key));
+			for (String key : jarData.keys()) {
+				String digest = digester.apply(dataAndPath.jar);
+				repository.modifyJarData(digest, key, jarData.get(key));
+			}
 		}
 
 		putData(repository, IOrganisationData.class, new IFunction1<IOrganisationData, String>() {

@@ -6,7 +6,7 @@ import org.arc4eclipse.arc4eclipseRepository.data.IOrganisationData;
 import org.arc4eclipse.arc4eclipseRepository.data.IProjectData;
 import org.arc4eclipse.arc4eclipseRepository.data.impl.OrganisationData;
 import org.arc4eclipse.arc4eclipseRepository.data.impl.ProjectData;
-import org.arc4eclipse.binding.mocks.IBindingBuilder;
+import org.arc4eclipse.jdtBinding.mocks.IBindingBuilder;
 import org.arc4eclipse.panelExerciser.JarDataAndPath;
 import org.arc4eclipse.utilities.maps.Maps;
 import org.eclipse.jdt.core.dom.IBinding;
