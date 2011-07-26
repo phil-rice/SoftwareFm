@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.arc4eclipse.arc4EclipseFeature"
+      label="Arc4EclipseFeature"
+      version="1.0.0.qualifier">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.arc4eclipse.selectedArtefactPanel" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.arc4eclipse.utilities" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.arc4eclipse.panelExerciser" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.arc4eclipse.repositoryFacard" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.runtime" version="3.7.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.jdt.core" version="3.7.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.resources" version="3.7.100" match="greaterOrEqual"/>
+      <import plugin="org.arc4eclipse.httpClient" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.arc4eclipse.swtBinding" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.arc4eclipse.jdtBinding" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.swt" version="3.7.0" match="greaterOrEqual"/>
+      <import plugin="org.arc4eclipse.swtBasics" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.arc4eclipse.arc4EclipseRepository" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.arc4eclipse.externals" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.junit4" version="4.8.1" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="org.arc4eclipse.selectedArtefactPlugin"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.arc4eclipse.allTests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.arc4eclipse.arc4EclipseRepository"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.arc4eclipse.externals"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.arc4eclipse.httpClient"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.arc4eclipse.jdtBinding"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.arc4eclipse.panelExerciser"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.arc4eclipse.repositoryFacard"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.arc4eclipse.selectedArtefactPanel"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.arc4eclipse.swtBasics"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.arc4eclipse.swtBinding"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.arc4eclipse.utilities"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

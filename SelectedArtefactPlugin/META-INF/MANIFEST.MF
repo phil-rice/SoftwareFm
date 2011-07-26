@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: SelectedArtefactPlugin
+Bundle-SymbolicName: org.arc4eclipse.selectedArtefactPlugin; singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: selectedartefactplugin.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.arc4eclipse.selectedArtefactPanel;bundle-version="1.0.0",
+ org.eclipse.jface.text;bundle-version="3.7.0",
+ org.eclipse.jdt.ui;bundle-version="3.7.0"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
