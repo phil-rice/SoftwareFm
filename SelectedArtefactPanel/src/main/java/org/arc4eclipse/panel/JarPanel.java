@@ -12,7 +12,6 @@ import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.arc4eclipse.swtBasics.text.TitleAndTextField;
 import org.arc4eclipse.swtBinding.basic.BoundLabelAndText;
 import org.arc4eclipse.swtBinding.basic.IBound;
-import org.arc4eclipse.swtBinding.basic.MasterBoundLabelAndText;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.eclipse.core.runtime.IPath;
@@ -25,7 +24,7 @@ public class JarPanel extends AbstractRepositoryDataPanel<IJarData> {
 
 	private final BoundLabelAndText<IJarData> txtOrganisation;
 	private final BoundLabelAndText<IJarData> txtProject;
-	private final MasterBoundLabelAndText<IJarData> txtDigest;
+	private final TitleAndTextField txtDigest;
 	private final BoundLabelAndText<IJarData> txtJavadoc;
 	private final BoundLabelAndText<IJarData> txtSource;
 	private final TitleAndTextField txtJarPath;
@@ -50,7 +49,7 @@ public class JarPanel extends AbstractRepositoryDataPanel<IJarData> {
 		FormData fd_project = new FormData();
 		txtProject.setLayoutData(fd_project);
 
-		txtDigest = new MasterBoundLabelAndText<IJarData>(this, SWT.NONE, "Digest", context, Arc4EclipseRepositoryConstants.hexDigestKey, this);
+		txtDigest = new TitleAndTextField(this, SWT.NONE, "Digest");
 		FormData fd_digest = new FormData();
 		fd_digest.bottom = new FormAttachment(txtOrganisation, -6);
 		fd_digest.top = new FormAttachment(0, 125);
@@ -100,6 +99,7 @@ public class JarPanel extends AbstractRepositoryDataPanel<IJarData> {
 	public void setRipperData(BindingRipperResult result) {
 		IPath path = result.path;
 		File file = path.toFile();
+		txtDigest.setText(result.hexDigest);
 		txtJarPath.setText(file.getPath().toString());
 		txtJarName.setText(file.getName());
 	}
@@ -112,7 +112,7 @@ public class JarPanel extends AbstractRepositoryDataPanel<IJarData> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<IBound<IJarData>> boundChildren() {
-		return Arrays.<IBound<IJarData>> asList(txtOrganisation, txtProject, txtDigest, txtJavadoc, txtSource);
+		return Arrays.<IBound<IJarData>> asList(txtOrganisation, txtProject, txtJavadoc, txtSource);
 	}
 
 	@Override

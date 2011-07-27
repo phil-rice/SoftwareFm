@@ -8,3 +8,5 @@ Export-Package: org.arc4eclipse.swtBinding.basic,
 Require-Bundle: org.arc4eclipse.swtBasics;bundle-version="1.0.0";visibility:=reexport,
  org.arc4eclipse.arc4EclipseRepository;bundle-version="1.0.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ClassPath: .,
+ swing2swt.jar
