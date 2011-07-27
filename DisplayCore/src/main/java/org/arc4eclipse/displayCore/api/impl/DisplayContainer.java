@@ -5,6 +5,7 @@ import java.util.List;
 import org.arc4eclipse.displayCore.api.IDisplayContainer;
 import org.arc4eclipse.displayCore.api.ITitleLookup;
 import org.arc4eclipse.displayCore.api.NameSpaceNameValueAndDisplayer;
+import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -20,7 +21,7 @@ public class DisplayContainer implements IDisplayContainer {
 		this.parent = parent;
 		this.style = style;
 		this.content = new Composite(parent, style);
-		content.setLayout(new GridLayout(1, false));
+		content.setLayout(new FormLayout());
 	}
 
 	@Override
@@ -36,7 +37,12 @@ public class DisplayContainer implements IDisplayContainer {
 				makeCurrent();
 				for (NameSpaceNameValueAndDisplayer nameSpaceNameValueAndDisplayer : toBeDisplayed)
 					nameSpaceNameValueAndDisplayer.displayer.makeCompositeAsChildOf(titleLookup, current, nameSpaceNameValueAndDisplayer.nameSpaceNameAndValue);
-				parent.pack();
+				current.pack();
+				current.redraw();
+				System.out.println("Parent " + parent + " " + parent.getSize());
+				System.out.println("Current " + current + " " + current.getSize());
+				for (Control child : current.getChildren())
+					System.out.println("Child " + child + " " + child.getSize());
 			}
 		});
 
@@ -49,6 +55,6 @@ public class DisplayContainer implements IDisplayContainer {
 			current.dispose();
 		}
 		current = new Composite(content, style);
-		current.setLayout(new GridLayout(1, false));
+		current.setLayout(new GridLayout());
 	}
 }
