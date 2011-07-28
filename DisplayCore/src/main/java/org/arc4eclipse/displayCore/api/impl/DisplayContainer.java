@@ -26,6 +26,13 @@ public class DisplayContainer implements IDisplayContainer {
 	}
 
 	@Override
+	public void dispose() {
+		content.dispose();
+		if (current != null)
+			current.dispose();
+	}
+
+	@Override
 	public Composite getComposite() {
 		return content;
 	}

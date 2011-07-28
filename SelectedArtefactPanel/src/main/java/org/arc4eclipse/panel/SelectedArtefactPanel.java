@@ -37,6 +37,14 @@ public class SelectedArtefactPanel extends Composite implements IStatusChangedLi
 		this.displayContainer = IDisplayContainer.Utils.displayContainer(this);
 		this.repository = repository;
 		setLayout(new FillLayout(SWT.HORIZONTAL));
+		repository.addStatusListener(this);
+	}
+
+	@Override
+	public void dispose() {
+		repository.removeStatusListener(this);
+		super.dispose();
+		displayContainer.dispose();
 	}
 
 	@Override
@@ -48,7 +56,6 @@ public class SelectedArtefactPanel extends Composite implements IStatusChangedLi
 	public void statusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> data, Map<String, Object> context) throws Exception {
 		BindingContext bindingContext = new BindingContext(repository, ITitleLookup.Utils.titleLookup());
 		displayManager.populate(displayContainer, bindingContext, data);
-
 	}
 
 	public static void main(String args[]) {
@@ -56,7 +63,9 @@ public class SelectedArtefactPanel extends Composite implements IStatusChangedLi
 		Swts.display("Selected Artefact Panel", new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				return new SelectedArtefactPanel(from, SWT.NULL, IDisplayManager.Utils.displayManager(), repository, IBindingRipper.Utils.ripper());
+				SelectedArtefactPanel selectedArtefactPanel = new SelectedArtefactPanel(from, SWT.NULL, IDisplayManager.Utils.displayManager(), repository, IBindingRipper.Utils.ripper());
+
+				return selectedArtefactPanel;
 			}
 		});
 	}

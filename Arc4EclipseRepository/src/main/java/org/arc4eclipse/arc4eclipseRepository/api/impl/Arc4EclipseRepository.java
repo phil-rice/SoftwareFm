@@ -174,6 +174,12 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 	}
 
 	@Override
+	public void removeStatusListener(IStatusChangedListener listener) {
+		listeners.remove(listener);
+
+	}
+
+	@Override
 	public void shutdown() {
 		facard.shutdown();
 	}

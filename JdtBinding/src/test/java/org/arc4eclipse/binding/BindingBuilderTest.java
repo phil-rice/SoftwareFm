@@ -23,7 +23,7 @@ public class BindingBuilderTest extends TestCase {
 
 	public void testClassMethod() {
 		IBinding binding = IBindingBuilder.Utils.//
-				parent(pathname).//
+				parent(pathname, getClass()).//
 				withPackage("org.someOrg.somePackage").//
 				withInterface("IGenerator").//
 				child().//
@@ -47,7 +47,7 @@ public class BindingBuilderTest extends TestCase {
 
 	public void testClassInterface() {
 		IBinding binding = IBindingBuilder.Utils.//
-				parent(pathname).//
+				parent(pathname, getClass()).//
 				withPackage("org.someOrg.somePackage").//
 				withInterface("IGenerator").//
 				child().//
@@ -70,7 +70,7 @@ public class BindingBuilderTest extends TestCase {
 
 	public void testMethodParameter() {
 		IBinding binding = IBindingBuilder.Utils.//
-				parent(pathname).//
+				parent(pathname, getClass()).//
 				withMethod("someMethod").//
 				child().//
 				withLocalVariable("var");//

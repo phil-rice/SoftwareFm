@@ -22,6 +22,8 @@ public interface IArc4EclipseRepository {
 
 	void addStatusListener(IStatusChangedListener listener);
 
+	void removeStatusListener(IStatusChangedListener listener);
+
 	void addLogger(IArc4EclipseLogger logger);
 
 	void shutdown();
