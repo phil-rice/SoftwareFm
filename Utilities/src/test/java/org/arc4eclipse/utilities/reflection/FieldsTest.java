@@ -103,7 +103,7 @@ public class FieldsTest extends TestCase {
 		checkConstantsOfClassInDirectoryWithFilter(int.class, Functions.<Field> falseFn());
 	}
 
-	private void checkConstantsOfClassInDirectoryWithFilter(Class<?> typeClass, IFunction1<Field, Boolean> filter, Object... expected) {
+	private <T> void checkConstantsOfClassInDirectoryWithFilter(Class<T> typeClass, IFunction1<Field, Boolean> filter, Object... expected) {
 		List<?> actual = Iterables.list(Fields.constantsOfClassInDirectoryWithFilter(new ClassPathResource(".", getClass()), getClass().getPackage().getName(), typeClass, filter));
 		assertEquals(Arrays.asList(expected), actual);
 
