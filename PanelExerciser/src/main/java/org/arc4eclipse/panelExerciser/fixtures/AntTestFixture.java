@@ -24,7 +24,7 @@ public class AntTestFixture {
 			descriptionKey, "The Ant-Contrib project is a collection of tasks (and at one point maybe types and other tools) for Apache Ant.");
 
 	public final static IBinding Utils$ColumnName = IBindingBuilder.Utils.//
-			parent(jarAntContrib).withPackage("net.sf.antcontrib.logic").withClass("AntCallBack ").//
+			parent(jarAntContrib, AntTestFixture.class).withPackage("net.sf.antcontrib.logic").withClass("AntCallBack ").//
 			child().withMethod("init");
 
 	public final static JarDataAndPath jarAntContrib1_0b3 = new JarDataAndPath(jarAntContrib, AntTestFixture.class,//

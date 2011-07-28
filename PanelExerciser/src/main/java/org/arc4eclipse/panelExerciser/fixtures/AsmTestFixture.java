@@ -9,7 +9,7 @@ public class AsmTestFixture {
 	public static final String asmJar = "../PanelExerciser/src/main/resources/asm-all-3.1.jar";
 
 	public final static IBinding Method_AppenderSkeleton_doAppend = IBindingBuilder.Utils.//
-			parent(asmJar).withPackage("org.objectweb.asm").withClass("ClassReader").//
+			parent(asmJar, AsmTestFixture.class).withPackage("org.objectweb.asm").withClass("ClassReader").//
 			child().withMethod("getAccess");
 
 }

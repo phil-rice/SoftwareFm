@@ -30,13 +30,13 @@ public class ApacheTestFixture {
 			javadocKey, "http://repo1.maven.org/maven2/log4j/log4j/1.2.16/log4j-1.2.16-javadoc.jar",//
 			sourceKey, "http://repo1.maven.org/maven2/log4j/log4j/1.2.16/log4j-1.2.16-sources.jar");
 	public final static IBinding Method_AppenderSkeleton_doAppend = IBindingBuilder.Utils.//
-			parent(log4jJar).withPackage("org.apache.log4j ").withClass("AppenderSkeleton").//
+			parent(log4jJar, ApacheTestFixture.class).withPackage("org.apache.log4j ").withClass("AppenderSkeleton").//
 			child().withMethod("doAppend");
 	public final static IBinding Method_AppenderSkeleton_Append = IBindingBuilder.Utils.//
-			parent(log4jJar).withPackage("org.apache.log4j ").withClass("AppenderSkeleton").//
+			parent(log4jJar, ApacheTestFixture.class).withPackage("org.apache.log4j ").withClass("AppenderSkeleton").//
 			child().withMethod("append");
 	public final static IBinding LocalVariable_AppenderSkeleton_headFilter = IBindingBuilder.Utils.//
-			parent(log4jJar).withPackage("org.apache.log4j ").withClass("AppenderSkeleton").//
+			parent(log4jJar, ApacheTestFixture.class).withPackage("org.apache.log4j ").withClass("AppenderSkeleton").//
 			child().withLocalVariable("headFilter");
 
 }

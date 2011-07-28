@@ -1,5 +1,7 @@
 package org.arc4eclipse.jdtBinding.api.impl;
 
+import java.io.File;
+
 import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.arc4eclipse.jdtBinding.api.IBindingRipper;
 import org.arc4eclipse.utilities.collections.Files;
@@ -19,7 +21,8 @@ public class BindingRipper implements IBindingRipper {
 			IJavaElement javaElement = from.getJavaElement();
 			if (javaElement != null) {
 				IPath path = javaElement.getPath();
-				String digestAsHexString = Files.digestAsHexString(path.toFile());
+				File file = path.toFile();
+				String digestAsHexString = Files.digestAsHexString(file);
 				if (javaElement instanceof IMethod) {
 					String packageName = ((IMethodBinding) from).getDeclaringClass().getPackage().getName();
 					String className = javaElement.getParent().getElementName();

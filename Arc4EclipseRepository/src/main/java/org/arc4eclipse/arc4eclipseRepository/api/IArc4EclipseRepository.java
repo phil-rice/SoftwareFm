@@ -1,5 +1,6 @@
 package org.arc4eclipse.arc4eclipseRepository.api;
 
+import java.util.Map;
 import java.util.concurrent.Future;
 
 import org.arc4eclipse.arc4eclipseRepository.api.impl.Arc4EclipseRepository;
@@ -9,13 +10,13 @@ import org.arc4eclipse.repositoryFacard.IRepositoryFacard;
 
 public interface IArc4EclipseRepository {
 
-	Future<?> getJarData(String jarDigest);
+	Future<?> getJarData(String jarDigest, Map<String, Object> context);
 
-	Future<?> modifyJarData(String jarDigest, String name, Object value);
+	Future<?> modifyJarData(String jarDigest, String name, Object value, Map<String, Object> context);
 
-	Future<?> getData(String url);
+	Future<?> getData(String url, Map<String, Object> context);
 
-	Future<?> modifyData(String url, String name, Object value);
+	Future<?> modifyData(String url, String name, Object value, Map<String, Object> context);
 
 	IUrlGenerator generator();
 

@@ -8,18 +8,21 @@ public class StatusAndData {
 	public final String url;
 	public final RepositoryDataItemStatus status;
 	private final Map<String, Object> data;
+	private final Map<String, Object> context;
 
-	public StatusAndData(String url, RepositoryDataItemStatus status, Map<String, Object> data) {
+	public StatusAndData(String url, RepositoryDataItemStatus status, Map<String, Object> data, Map<String, Object> context) {
 		super();
 		this.url = url;
 		this.status = status;
 		this.data = data;
+		this.context = context;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((context == null) ? 0 : context.hashCode());
 		result = prime * result + ((data == null) ? 0 : data.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		result = prime * result + ((url == null) ? 0 : url.hashCode());
@@ -35,6 +38,11 @@ public class StatusAndData {
 		if (getClass() != obj.getClass())
 			return false;
 		StatusAndData other = (StatusAndData) obj;
+		if (context == null) {
+			if (other.context != null)
+				return false;
+		} else if (!context.equals(other.context))
+			return false;
 		if (data == null) {
 			if (other.data != null)
 				return false;
@@ -52,7 +60,7 @@ public class StatusAndData {
 
 	@Override
 	public String toString() {
-		return "StatusAndData [url=" + url + ", status=" + status + ", data=" + data + "]";
+		return "StatusAndData [url=" + url + ", status=" + status + ", data=" + data + ", context=" + context + "]";
 	}
 
 }

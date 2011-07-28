@@ -1,6 +1,7 @@
 package org.arc4eclipse.panelExerciser;
 
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.Map;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
@@ -23,7 +24,7 @@ public class PopulateWithBindingListAndPanelTestFixture {
 			for (String key : jarData.keySet()) {
 				String digest = digester.apply(dataAndPath.jar);
 				Object value = jarData.get(key);
-				repository.modifyJarData(digest, key, value).get();
+				repository.modifyJarData(digest, key, value, Collections.<String, Object> emptyMap()).get();
 			}
 		}
 		putData(repository, AllTestFixtures.allOrganisationDataConstants(), Arc4EclipseRepositoryConstants.organisationUrlKey, repository.generator().forOrganisation());
@@ -41,7 +42,7 @@ public class PopulateWithBindingListAndPanelTestFixture {
 				String url = urlMapper.apply(rawUrl);
 				for (String key : item.keySet()) {
 					Object value = item.get(key);
-					repository.modifyData(url, key, value).get();
+					repository.modifyData(url, key, value, Collections.<String, Object> emptyMap()).get();
 				}
 			}
 		} catch (Exception e) {

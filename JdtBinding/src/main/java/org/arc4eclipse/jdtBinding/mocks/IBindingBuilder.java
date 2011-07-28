@@ -18,9 +18,8 @@ public interface IBindingBuilder extends IBinding {
 
 	public class Utils {
 
-		public static IBindingBuilder parent(String path) {
-			return new BindingBuilder(path);
-
+		public static IBindingBuilder parent(String path, Class<?> markerClass) {
+			return new BindingBuilder(path, markerClass);
 		}
 
 	}

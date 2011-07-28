@@ -34,29 +34,41 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 
 	class CallbackForData implements IRepositoryFacardCallback {
 
+		private final Map<String, Object> context;
+
+		public CallbackForData(Map<String, Object> context) {
+			this.context = context;
+		}
+
 		@Override
 		public void process(IResponse response, Map<String, Object> data) {
 			Map<String, Object> madeData = RepositoryFacardConstants.okStatusCodes.contains(response.statusCode()) ? data : null;
-			fireResponse(response, madeData);
-			fireStatusChangedFromResponse(response.url(), madeData);
+			fireResponse(response, madeData, context);
+			fireStatusChangedFromResponse(response.url(), madeData, context);
 		}
 
 	}
 
 	class CallbackForModify implements IResponseCallback {
+		private final Map<String, Object> context;
+
+		public CallbackForModify(Map<String, Object> context) {
+			this.context = context;
+		}
+
 		@Override
 		public void process(final IResponse response) {
-			fireResponse(response, null);
+			fireResponse(response, null, context);
 			if (RepositoryFacardConstants.okStatusCodes.contains(response.statusCode())) {
-				fireRequest("RefreshingData", response.url(), emptyParameters);
-				fireStatusChanged(response.url(), RepositoryDataItemStatus.REQUESTED, null);
+				fireRequest("RefreshingData", response.url(), emptyParameters, context);
+				fireStatusChanged(response.url(), RepositoryDataItemStatus.REQUESTED, null, context);
 				Future<?> future = facard.get(response.url(), new IRepositoryFacardCallback() {
 					@Override
 					public void process(IResponse response, Map<String, Object> data) {
 						try {
 							Map<String, Object> madeData = RepositoryFacardConstants.okStatusCodes.contains(response.statusCode()) ? data : null;
-							fireResponse(response, madeData);
-							fireStatusChangedFromResponse(response.url(), madeData);
+							fireResponse(response, madeData, context);
+							fireStatusChangedFromResponse(response.url(), madeData, context);
 						} catch (Exception e) {
 							throw WrappedException.wrap(e);
 						}
@@ -73,15 +85,15 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 
 	}
 
-	private void fireStatusChangedFromResponse(String url, Map<String, Object> data) {
+	private void fireStatusChangedFromResponse(String url, Map<String, Object> data, Map<String, Object> context) {
 		RepositoryDataItemStatus status = data == null ? RepositoryDataItemStatus.NOT_FOUND : RepositoryDataItemStatus.FOUND;
-		fireStatusChanged(url, status, data);
+		fireStatusChanged(url, status, data, context);
 	}
 
-	private void fireStatusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> data) {
+	private void fireStatusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> data, Map<String, Object> context) {
 		try {
 			for (IStatusChangedListener listener : listeners)
-				listener.statusChanged(url, status, data);
+				listener.statusChanged(url, status, data, context);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
@@ -93,16 +105,16 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 	}
 
 	@Override
-	public Future<?> getJarData(String jarDigest) {
+	public Future<?> getJarData(String jarDigest, Map<String, Object> context) {
 		try {
 			if (jarDigest == null) {
-				fireStatusChanged("", RepositoryDataItemStatus.PATH_NULL, null);
+				fireStatusChanged("", RepositoryDataItemStatus.PATH_NULL, null, context);
 				return Futures.doneFuture(null);
 			}
 			String url = urlGenerator.forJar().apply(jarDigest);
-			fireRequest("getJarData", url, emptyParameters);
-			fireStatusChanged(url, RepositoryDataItemStatus.REQUESTED, null);
-			return facard.get(url, new CallbackForData());
+			fireRequest("getJarData", url, emptyParameters, context);
+			fireStatusChanged(url, RepositoryDataItemStatus.REQUESTED, null, context);
+			return facard.get(url, new CallbackForData(context));
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
@@ -110,29 +122,29 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 	}
 
 	@Override
-	public Future<?> modifyJarData(String jarDigest, String name, Object value) {
+	public Future<?> modifyJarData(String jarDigest, String name, Object value, Map<String, Object> context) {
 		try {
 			String url = urlGenerator.forJar().apply(jarDigest);
 			Map<String, Object> parameters = Maps.<String, Object> makeMap(name, value, Arc4EclipseRepositoryConstants.hexDigestKey, jarDigest);
-			fireRequest("modifyJarData", url, parameters);
-			return facard.post(url, parameters, new CallbackForModify());
+			fireRequest("modifyJarData", url, parameters, context);
+			return facard.post(url, parameters, new CallbackForModify(context));
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
 	}
 
 	@Override
-	public Future<?> getData(String url) {
-		fireRequest("getData", url, emptyParameters);
-		fireStatusChanged(url, RepositoryDataItemStatus.REQUESTED, null);
-		return facard.get(url, new CallbackForData());
+	public Future<?> getData(String url, Map<String, Object> context) {
+		fireRequest("getData", url, emptyParameters, context);
+		fireStatusChanged(url, RepositoryDataItemStatus.REQUESTED, null, context);
+		return facard.get(url, new CallbackForData(context));
 	}
 
 	@Override
-	public Future<?> modifyData(String url, String name, Object value) {
+	public Future<?> modifyData(String url, String name, Object value, Map<String, Object> context) {
 		Map<String, Object> parameters = Maps.<String, Object> makeMap(name, value);
-		fireRequest("modifyData", url, parameters);
-		return facard.post(url, parameters, new CallbackForModify());
+		fireRequest("modifyData", url, parameters, context);
+		return facard.post(url, parameters, new CallbackForModify(context));
 	}
 
 	@Override
@@ -145,14 +157,14 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 		return urlGenerator;
 	}
 
-	private void fireRequest(String method, String url, Map<String, Object> parameters) {
+	private void fireRequest(String method, String url, Map<String, Object> parameters, Map<String, Object> context) {
 		for (IArc4EclipseLogger logger : loggers)
-			logger.sendingRequest(method, url, parameters);
+			logger.sendingRequest(method, url, parameters, context);
 	}
 
-	private void fireResponse(IResponse response, Object data) {
+	private void fireResponse(IResponse response, Object data, Map<String, Object> context) {
 		for (IArc4EclipseLogger logger : loggers)
-			logger.receivedReply(response, data);
+			logger.receivedReply(response, data, context);
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package org.arc4eclipse.displayCore.api;
 
+import java.util.Collections;
+
 public abstract class AbstractDisplayer implements IDisplayer {
 	private final BindingContext context;
 	private final String url;
@@ -12,6 +14,6 @@ public abstract class AbstractDisplayer implements IDisplayer {
 	}
 
 	protected void update(Object value) {
-		context.repository.modifyData(url, nameSpaceNameAndValue.key, value);
+		context.repository.modifyData(url, nameSpaceNameAndValue.key, value, Collections.<String, Object> emptyMap());
 	}
 }

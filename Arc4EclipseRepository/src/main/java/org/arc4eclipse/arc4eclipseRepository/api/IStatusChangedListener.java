@@ -4,14 +4,14 @@ import java.util.Map;
 
 public interface IStatusChangedListener {
 
-	void statusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> item) throws Exception;
+	void statusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> item, Map<String, Object> context) throws Exception;
 
 	public static class Utils {
 		public static IStatusChangedListener sysout() {
 			return new IStatusChangedListener() {
 				@Override
-				public void statusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> item) {
-					System.out.println(status + " " + item);
+				public void statusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> item, Map<String, Object> context) {
+					System.out.println(status + " " + item + "  -------------  " + context);
 				}
 			};
 		}

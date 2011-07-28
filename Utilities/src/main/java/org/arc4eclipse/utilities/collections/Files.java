@@ -116,7 +116,10 @@ public class Files {
 
 	public static String digestAsHexString(File file) {
 		try {
-			return digestAsHexString(new FileInputStream(file));
+			if (file.exists())
+				return digestAsHexString(new FileInputStream(file));
+			else
+				return "";
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}

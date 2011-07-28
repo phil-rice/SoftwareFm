@@ -53,18 +53,20 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 	}
 
 	private void checkModifyAndGetJarData(String key, String value, Map<String, Object> expected) throws Exception {
+		Map<String, Object> context1 = Maps.makeMap("c", 1);
+		Map<String, Object> context2 = Maps.makeMap("c", 2);
 		MemoryStatusChangedListener validListener = IStatusChangedListener.Utils.memory();
 		repository.addStatusListener(validListener);
-		repository.modifyJarData(digest, key, value).get();
+		repository.modifyJarData(digest, key, value, context1).get();
 		validListener.assertEquals(//
-				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", REQUESTED, null,//
-				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37.json", FOUND, expected);
-		repository.getJarData(digest).get();
+				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", REQUESTED, null, context1, //
+				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37.json", FOUND, expected, context1);
+		repository.getJarData(digest, context2).get();
 		validListener.assertEquals(//
-				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", REQUESTED, null,//
-				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37.json", FOUND, expected,//
-				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", REQUESTED, null,//
-				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37.json", FOUND, expected);
+				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", REQUESTED, null, context1,//
+				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37.json", FOUND, expected, context1,//
+				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", REQUESTED, null, context2,//
+				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37.json", FOUND, expected, context2);
 	}
 
 	@Test
@@ -86,18 +88,21 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 	}
 
 	private void checkModifyAndGetData(String url, String key, String value, Map<String, Object> expected) throws Exception {
+		Map<String, Object> context1 = Maps.makeMap("c", 1);
+		Map<String, Object> context2 = Maps.makeMap("c", 2);
+
 		MemoryStatusChangedListener validListener = IStatusChangedListener.Utils.memory();
 		repository.addStatusListener(validListener);
-		repository.modifyData(url, key, value).get();
+		repository.modifyData(url, key, value, context1).get();
 		validListener.assertEquals(//
-				url, REQUESTED, null,//
-				url + ".json", FOUND, expected);
-		repository.getData(url).get();
+				url, REQUESTED, null, context1, //
+				url + ".json", FOUND, expected, context1);
+		repository.getData(url, context2).get();
 		validListener.assertEquals(//
-				url, REQUESTED, null,//
-				url + ".json", FOUND, expected,//
-				url, REQUESTED, null,//
-				url + ".json", FOUND, expected);
+				url, REQUESTED, null, context1,//
+				url + ".json", FOUND, expected, context1,//
+				url, REQUESTED, null, context2,//
+				url + ".json", FOUND, expected, context2);
 
 	}
 

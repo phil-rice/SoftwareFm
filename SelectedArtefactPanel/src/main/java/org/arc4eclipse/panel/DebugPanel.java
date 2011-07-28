@@ -54,13 +54,13 @@ public class DebugPanel extends Composite implements IArc4EclipseLogger {
 	}
 
 	@Override
-	public void sendingRequest(String method, String url, Map<String, Object> parameters) {
-		addToHistory(MessageFormat.format(" > {0} {1}   {2}\n", method, url, parameters));
+	public void sendingRequest(String method, String url, Map<String, Object> parameters, Map<String, Object> context) {
+		addToHistory(MessageFormat.format("> {0} {1}\nParams{2}\nContext {3}\n", method, url, parameters, context));
 	}
 
 	@Override
-	public void receivedReply(IResponse response, Object data) {
-		addToHistory(MessageFormat.format("< {0} {1}   {2}", response.statusCode(), response.url(), data));
+	public void receivedReply(IResponse response, Object data, Map<String, Object> context) {
+		addToHistory(MessageFormat.format("< {0} {1}\nResponse{2}\nContext {3}\n", response.statusCode(), response.url(), data, context));
 	}
 
 	private void addToHistory(final String text) {

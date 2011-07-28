@@ -12,8 +12,8 @@ public class MemoryStatusChangedListener implements IStatusChangedListener {
 	private final List<StatusAndData> list = Lists.newList();
 
 	@Override
-	public void statusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> item) throws Exception {
-		list.add(new StatusAndData(url, status, item));
+	public void statusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> item, Map<String, Object> context) throws Exception {
+		list.add(new StatusAndData(url, status, item, context));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -23,8 +23,8 @@ public class MemoryStatusChangedListener implements IStatusChangedListener {
 			expected.add(new StatusAndData(//
 					(String) statusAndData[i + 0], //
 					(RepositoryDataItemStatus) statusAndData[i + 1], //
-					(Map<String, Object>) statusAndData[i + 2]));
+					(Map<String, Object>) statusAndData[i + 2],//
+					(Map<String, Object>) statusAndData[i + 3]));
 		Assert.assertEquals(expected, list);
 	}
-
 }
