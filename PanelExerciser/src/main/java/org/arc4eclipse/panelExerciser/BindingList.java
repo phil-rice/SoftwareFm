@@ -72,7 +72,7 @@ public class BindingList extends org.eclipse.swt.widgets.Composite {
 			Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
 			shell.setSize(shellBounds.width, shellBounds.height);
 		}
-		inst.setData(AllTestFixtures.allConstants(IBinding.class));
+		inst.setData(AllTestFixtures.allBindings());
 		shell.open();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())

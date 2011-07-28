@@ -111,4 +111,14 @@ public class Strings {
 		return builder.toString();
 	}
 
+	public static IFunction1<String, Boolean> startsWith(final String prefix) {
+		return new IFunction1<String, Boolean>() {
+			@Override
+			public Boolean apply(String from) throws Exception {
+				return from.startsWith(prefix);
+			}
+		};
+
+	}
+
 }

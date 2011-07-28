@@ -1,6 +1,7 @@
 package org.arc4eclipse.selectedartefactplugin.views;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
+import org.arc4eclipse.displayCore.api.IDisplayManager;
 import org.arc4eclipse.panel.SelectedArtefactPanel;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
@@ -47,7 +48,7 @@ public class SampleView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		IArc4EclipseRepository repository = Activator.getDefault().getRepository();
-		final SelectedArtefactPanel artefactPanel = new SelectedArtefactPanel(parent, SWT.NULL, repository, Activator.getDefault().getBindingRipper());
+		final SelectedArtefactPanel artefactPanel = new SelectedArtefactPanel(parent, SWT.NULL, IDisplayManager.Utils.displayManager(), repository, Activator.getDefault().getBindingRipper());
 		listener = new ISelectionListener() {
 			@Override
 			public void selectionChanged(IWorkbenchPart part, ISelection selection) {

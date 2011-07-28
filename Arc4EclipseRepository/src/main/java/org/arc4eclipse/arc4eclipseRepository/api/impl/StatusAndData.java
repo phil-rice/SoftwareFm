@@ -1,18 +1,17 @@
 package org.arc4eclipse.arc4eclipseRepository.api.impl;
 
+import java.util.Map;
+
 import org.arc4eclipse.arc4eclipseRepository.api.RepositoryDataItemStatus;
-import org.arc4eclipse.arc4eclipseRepository.data.IRepositoryDataItem;
 
 public class StatusAndData {
 	public final String url;
-	public final Class<?> clazz;
 	public final RepositoryDataItemStatus status;
-	public final IRepositoryDataItem data;
+	private final Map<String, Object> data;
 
-	public StatusAndData(String url, Class<?> clazz, RepositoryDataItemStatus status, IRepositoryDataItem data) {
+	public StatusAndData(String url, RepositoryDataItemStatus status, Map<String, Object> data) {
 		super();
 		this.url = url;
-		this.clazz = clazz;
 		this.status = status;
 		this.data = data;
 	}
@@ -21,7 +20,6 @@ public class StatusAndData {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((clazz == null) ? 0 : clazz.hashCode());
 		result = prime * result + ((data == null) ? 0 : data.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		result = prime * result + ((url == null) ? 0 : url.hashCode());
@@ -37,11 +35,6 @@ public class StatusAndData {
 		if (getClass() != obj.getClass())
 			return false;
 		StatusAndData other = (StatusAndData) obj;
-		if (clazz == null) {
-			if (other.clazz != null)
-				return false;
-		} else if (!clazz.equals(other.clazz))
-			return false;
 		if (data == null) {
 			if (other.data != null)
 				return false;
@@ -59,7 +52,7 @@ public class StatusAndData {
 
 	@Override
 	public String toString() {
-		return "StatusAndData [url=" + url + ", clazz=" + clazz + ", status=" + status + ", data=" + data + "]";
+		return "StatusAndData [url=" + url + ", status=" + status + ", data=" + data + "]";
 	}
 
 }

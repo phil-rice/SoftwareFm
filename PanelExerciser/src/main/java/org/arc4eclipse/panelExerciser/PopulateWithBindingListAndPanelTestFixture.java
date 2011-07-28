@@ -1,12 +1,11 @@
 package org.arc4eclipse.panelExerciser;
 
+import java.text.MessageFormat;
+import java.util.Map;
+
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
 import org.arc4eclipse.arc4eclipseRepository.api.IStatusChangedListener;
-import org.arc4eclipse.arc4eclipseRepository.api.IUrlGenerator;
-import org.arc4eclipse.arc4eclipseRepository.data.IJarData;
-import org.arc4eclipse.arc4eclipseRepository.data.IOrganisationData;
-import org.arc4eclipse.arc4eclipseRepository.data.IProjectData;
-import org.arc4eclipse.arc4eclipseRepository.data.IRepositoryDataItem;
+import org.arc4eclipse.arc4eclipseRepository.constants.Arc4EclipseRepositoryConstants;
 import org.arc4eclipse.jdtBinding.api.IJarDigester;
 import org.arc4eclipse.panelExerciser.fixtures.AllTestFixtures;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
@@ -16,38 +15,33 @@ public class PopulateWithBindingListAndPanelTestFixture {
 	public static void main(String[] args) throws Exception {
 		IJarDigester digester = IJarDigester.Utils.digester();
 		IArc4EclipseRepository repository = IArc4EclipseRepository.Utils.repository();
-		repository.addStatusListener(IRepositoryDataItem.class, IStatusChangedListener.Utils.sysout());
-		final IUrlGenerator generator = repository.generator();
+		repository.addStatusListener(IStatusChangedListener.Utils.sysout());
+		// Rewrite
 		System.out.println("Jar Data");
-		for (JarDataAndPath dataAndPath : AllTestFixtures.allConstants(JarDataAndPath.class)) {
-			IJarData jarData = dataAndPath.data;
-			for (String key : jarData.keys()) {
+		for (JarDataAndPath dataAndPath : AllTestFixtures.allJarDataConstants()) {
+			Map<String, Object> jarData = dataAndPath.data;
+			for (String key : jarData.keySet()) {
 				String digest = digester.apply(dataAndPath.jar);
-				repository.modifyJarData(digest, key, jarData.get(key));
+				Object value = jarData.get(key);
+				repository.modifyJarData(digest, key, value).get();
 			}
 		}
-
-		putData(repository, IOrganisationData.class, new IFunction1<IOrganisationData, String>() {
-			@Override
-			public String apply(IOrganisationData from) throws Exception {
-				return generator.forOrganisation().apply(from.getOrganisationUrl());
-			}
-		});
-		putData(repository, IProjectData.class, new IFunction1<IProjectData, String>() {
-			@Override
-			public String apply(IProjectData from) throws Exception {
-				return generator.forProject().apply(from.getProjectName());
-			}
-		});
+		putData(repository, AllTestFixtures.allOrganisationDataConstants(), Arc4EclipseRepositoryConstants.organisationUrlKey, repository.generator().forOrganisation());
+		putData(repository, AllTestFixtures.allProjectDataConstants(), Arc4EclipseRepositoryConstants.projectUrlKey, repository.generator().forProject());
+		repository.shutdown();
 	}
 
-	private static <Data extends IRepositoryDataItem> void putData(IArc4EclipseRepository repository, Class<Data> clazz, IFunction1<Data, String> urlFunction) throws IllegalAccessException {
+	private static void putData(IArc4EclipseRepository repository, Iterable<Map<String, Object>> maps, String urlKey, IFunction1<String, String> urlMapper) throws IllegalAccessException {
 		try {
-			System.out.println("Data for " + clazz.getSimpleName());
-			for (Data item : AllTestFixtures.allConstants(clazz)) {
-				for (String key : item.keys()) {
+			System.out.println("Data for " + urlKey);
+			for (Map<String, Object> item : maps) {
+				String rawUrl = (String) item.get(urlKey);
+				if (rawUrl == null)
+					throw new NullPointerException(MessageFormat.format(Arc4EclipseRepositoryConstants.cannotFindDataFor, urlKey, item));
+				String url = urlMapper.apply(rawUrl);
+				for (String key : item.keySet()) {
 					Object value = item.get(key);
-					repository.modifyData(urlFunction.apply(item), key, value, clazz);
+					repository.modifyData(url, key, value).get();
 				}
 			}
 		} catch (Exception e) {

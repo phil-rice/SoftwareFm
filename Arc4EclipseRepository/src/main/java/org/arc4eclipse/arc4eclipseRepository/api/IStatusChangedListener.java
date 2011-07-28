@@ -1,41 +1,24 @@
 package org.arc4eclipse.arc4eclipseRepository.api;
 
-import org.arc4eclipse.arc4eclipseRepository.data.IJarData;
-import org.arc4eclipse.arc4eclipseRepository.data.IOrganisationData;
-import org.arc4eclipse.arc4eclipseRepository.data.IProjectData;
-import org.arc4eclipse.arc4eclipseRepository.data.IRepositoryDataItem;
+import java.util.Map;
 
-public interface IStatusChangedListener<T extends IRepositoryDataItem> {
+public interface IStatusChangedListener {
 
-	void statusChanged(String url, Class<? extends T> clazz, RepositoryDataItemStatus status, T item) throws Exception;
+	void statusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> item) throws Exception;
 
 	public static class Utils {
-		public static <T extends IRepositoryDataItem> IStatusChangedListener<T> sysout() {
-			return new IStatusChangedListener<T>() {
+		public static IStatusChangedListener sysout() {
+			return new IStatusChangedListener() {
 				@Override
-				public void statusChanged(String url, Class<? extends T> clazz, RepositoryDataItemStatus status, T item) {
-					System.out.println(status + " " + clazz.getSimpleName() + " " + item);
+				public void statusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> item) {
+					System.out.println(status + " " + item);
 				}
 			};
 		}
 
-		public static <T extends IRepositoryDataItem> MemoryStatusChangedListener<T> memory() {
-			return new MemoryStatusChangedListener<T>();
+		public static MemoryStatusChangedListener memory() {
+			return new MemoryStatusChangedListener();
 		};
 
-		public static IStatusChangedListener<IJarData> requestMoreWhenGotJarData(final IArc4EclipseRepository repository) {
-			return new IStatusChangedListener<IJarData>() {
-				@Override
-				public void statusChanged(String url, Class<? extends IJarData> clazz, RepositoryDataItemStatus status, IJarData item) throws Exception {
-					if (item != null && status == RepositoryDataItemStatus.FOUND) {
-						IUrlGenerator generator = repository.generator();
-						repository.getData(generator.forOrganisation().apply(item.getOrganisationUrl()), IOrganisationData.class);
-						repository.getData(generator.forProject().apply(item.getProjectUrl()), IProjectData.class);
-					}
-
-				}
-			};
-
-		}
 	}
 }

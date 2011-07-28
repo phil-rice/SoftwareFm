@@ -1,14 +1,11 @@
 package org.arc4eclipse.displayCore.api;
 
-public class NameSpaceNameAndValue {
+public class NameSpaceNameAndValue extends NameSpaceAndName {
 
-	public String nameSpace;
-	public String name;
 	public Object value;
 
-	public NameSpaceNameAndValue(String nameSpace, String name, Object value) {
-		this.nameSpace = nameSpace;
-		this.name = name;
+	public NameSpaceNameAndValue(String key, String nameSpace, String name, Object value) {
+		super(key, nameSpace, name);
 		this.value = value;
 	}
 

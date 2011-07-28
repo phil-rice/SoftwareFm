@@ -1,9 +1,10 @@
 package org.arc4eclipse.displayCore.api.impl;
 
 import java.util.List;
+import java.util.Map;
 
+import org.arc4eclipse.displayCore.api.BindingContext;
 import org.arc4eclipse.displayCore.api.IDisplayContainer;
-import org.arc4eclipse.displayCore.api.ITitleLookup;
 import org.arc4eclipse.displayCore.api.NameSpaceNameValueAndDisplayer;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridLayout;
@@ -30,13 +31,13 @@ public class DisplayContainer implements IDisplayContainer {
 	}
 
 	@Override
-	public void addDisplayers(final ITitleLookup titleLookup, final List<NameSpaceNameValueAndDisplayer> toBeDisplayed) {
+	public void addDisplayers(final BindingContext bindingContext, final Map<String, Object> data, final List<NameSpaceNameValueAndDisplayer> toBeDisplayed) {
 		parent.getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				makeCurrent();
 				for (NameSpaceNameValueAndDisplayer nameSpaceNameValueAndDisplayer : toBeDisplayed)
-					nameSpaceNameValueAndDisplayer.displayer.makeCompositeAsChildOf(titleLookup, current, nameSpaceNameValueAndDisplayer.nameSpaceNameAndValue);
+					nameSpaceNameValueAndDisplayer.displayer.makeCompositeAsChildOf(current, bindingContext, data, nameSpaceNameValueAndDisplayer);
 				current.pack();
 				current.redraw();
 				System.out.println("Parent " + parent + " " + parent.getSize());

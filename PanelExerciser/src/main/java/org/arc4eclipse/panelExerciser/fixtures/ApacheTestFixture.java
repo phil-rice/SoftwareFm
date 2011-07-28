@@ -2,10 +2,8 @@ package org.arc4eclipse.panelExerciser.fixtures;
 
 import static org.arc4eclipse.arc4eclipseRepository.constants.Arc4EclipseRepositoryConstants.*;
 
-import org.arc4eclipse.arc4eclipseRepository.data.IOrganisationData;
-import org.arc4eclipse.arc4eclipseRepository.data.IProjectData;
-import org.arc4eclipse.arc4eclipseRepository.data.impl.OrganisationData;
-import org.arc4eclipse.arc4eclipseRepository.data.impl.ProjectData;
+import java.util.Map;
+
 import org.arc4eclipse.jdtBinding.mocks.IBindingBuilder;
 import org.arc4eclipse.panelExerciser.JarDataAndPath;
 import org.arc4eclipse.utilities.maps.Maps;
@@ -15,17 +13,17 @@ public class ApacheTestFixture {
 
 	private final static String orgUrlApache = "http://www.apache.org";
 	private final static String projUrlLog4j = "http://logging.apache.org/";
-	public static final String log4jJar = "../PanelExerciser/src/main/resources/log4j-1.2.16.jar";
-	public final static IOrganisationData orgLog4J = new OrganisationData(Maps.<String, Object> makeMap(//
+	public static final String log4jJar = "log4j-1.2.16.jar";
+	public final static Map<String, Object> orgLog4J = Maps.<String, Object> makeMap(//
 			organisationNameKey, "The Apache Software Foundation",//
 			organisationUrlKey, orgUrlApache,//
-			descriptionKey, "Provides support for the Apache community of open-source software projects."));
-	public final static IProjectData projLog4J = new ProjectData(Maps.<String, Object> makeMap(//
+			descriptionKey, "Provides support for the Apache community of open-source software projects.");
+	public final static Map<String, Object> projLog4J = Maps.<String, Object> makeMap(//
 			organisationUrlKey, orgUrlApache,//
 			projectUrlKey, projUrlLog4j,//
-			descriptionKey, "The Apache Logging Services Project creates and maintains open-source software related to the logging of application behavior and released at no charge to the public."));
+			descriptionKey, "The Apache Logging Services Project creates and maintains open-source software related to the logging of application behavior and released at no charge to the public.");
 
-	public final static JarDataAndPath jarLog4J1_2_16 = new JarDataAndPath(log4jJar,//
+	public final static JarDataAndPath jarLog4J1_2_16 = new JarDataAndPath(log4jJar, ApacheTestFixture.class,//
 			organisationUrlKey, orgUrlApache,//
 			projectUrlKey, projUrlLog4j,//
 			descriptionKey, "",//

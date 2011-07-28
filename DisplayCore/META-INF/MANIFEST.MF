@@ -4,5 +4,6 @@ Bundle-Name: DisplayCore
 Bundle-SymbolicName: org.arc4eclipse.displayCore
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.arc4eclipse.swtBinding;bundle-version="1.0.0";visibility:=reexport
 Export-Package: org.arc4eclipse.displayCore.api
+Require-Bundle: org.arc4eclipse.swtBasics;bundle-version="1.0.0";visibility:=reexport,
+ org.arc4eclipse.arc4EclipseRepository;bundle-version="1.0.0";visibility:=reexport

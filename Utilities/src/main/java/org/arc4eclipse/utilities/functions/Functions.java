@@ -152,4 +152,34 @@ public class Functions {
 			}
 		};
 	}
+
+	public static <T> IFunction1<T, Boolean> trueFn() {
+		return new IFunction1<T, Boolean>() {
+			@Override
+			public Boolean apply(T from) throws Exception {
+				return true;
+			}
+		};
+	}
+
+	public static <T> IFunction1<T, Boolean> falseFn() {
+		return new IFunction1<T, Boolean>() {
+			@Override
+			public Boolean apply(T from) throws Exception {
+				return false;
+			}
+		};
+	}
+
+	public static <T> IFunction1<T, Boolean> and(final IFunction1<T, Boolean>... fns) {
+		return new IFunction1<T, Boolean>() {
+			@Override
+			public Boolean apply(T from) throws Exception {
+				for (IFunction1<T, Boolean> fn : fns)
+					if (!fn.apply(from))
+						return false;
+				return true;
+			}
+		};
+	}
 }

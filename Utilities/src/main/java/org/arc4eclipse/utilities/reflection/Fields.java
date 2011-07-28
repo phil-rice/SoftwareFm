@@ -10,9 +10,12 @@ import java.util.List;
 import org.arc4eclipse.utilities.collections.Files;
 import org.arc4eclipse.utilities.collections.Iterables;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
+import org.arc4eclipse.utilities.functions.Functions;
 import org.arc4eclipse.utilities.functions.IFunction1;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
+//TODO rewrite this as a DSL for querying fields and constants.
 public class Fields {
 
 	public static Iterable<Field> publicFields(Class<?> clazz) {
@@ -42,8 +45,16 @@ public class Fields {
 		});
 	}
 
-	public static <T> Iterable<T> constantsOfClass(Class<?> dataClass, final Class<T> typeClass) {
-		IFunction1<Field, Boolean> acceptor = new IFunction1<Field, Boolean>() {
+	public final static IFunction1<Field, Boolean> isConstant = new IFunction1<Field, Boolean>() {
+		@Override
+		public Boolean apply(Field from) throws Exception {
+			int mod = from.getModifiers();
+			return Modifier.isFinal(mod) && Modifier.isStatic(mod);
+		}
+	};
+
+	public final static IFunction1<Field, Boolean> isConstantOfType(final Class<?> typeClass) {
+		return new IFunction1<Field, Boolean>() {
 			@Override
 			public Boolean apply(Field from) throws Exception {
 				int mod = from.getModifiers();
@@ -52,6 +63,28 @@ public class Fields {
 				return modifiers && assignable;
 			}
 		};
+	}
+
+	public final static IFunction1<Field, Boolean> nameStartWith(final String prefix) {
+		return new IFunction1<Field, Boolean>() {
+			@Override
+			public Boolean apply(Field from) throws Exception {
+				return from.getName().startsWith(prefix);
+			}
+		};
+	}
+
+	public static <T> Iterable<T> constantsOfClass(Class<?> dataClass, final Class<T> typeClass) {
+		return fieldsOfClass(dataClass, typeClass, isConstantOfType(typeClass));
+	}
+
+	public static <T> Iterable<T> constantsOfClassWithFilter(Class<?> dataClass, Class<T> typeClazz, IFunction1<Field, Boolean> filter) {
+		@SuppressWarnings("unchecked")
+		IFunction1<Field, Boolean> acceptor = Functions.<Field> and(isConstantOfType(typeClazz), filter);
+		return fieldsOfClass(dataClass, typeClazz, acceptor);
+	}
+
+	public static <T> Iterable<T> fieldsOfClass(Class<?> dataClass, final Class<T> typeClass, IFunction1<Field, Boolean> acceptor) {
 		IFunction1<Field, T> mapper = new IFunction1<Field, T>() {
 			@SuppressWarnings("unchecked")
 			@Override
@@ -62,7 +95,7 @@ public class Fields {
 		return Iterables.map(Iterables.filter(publicFields(dataClass), acceptor), mapper);
 	}
 
-	public static <T> Iterable<T> constantsOfClass(Resource directoryResource, final String packageName, final Class<T> typeClass) {
+	public static <T> Iterable<T> constantsOfClassInDirectory(Resource directoryResource, final String packageName, final Class<? super T> typeClass) {
 		try {
 			File directory = directoryResource.getFile();
 			List<File> files = Arrays.asList(directory.listFiles(Files.extensionFilter("class")));
@@ -70,7 +103,26 @@ public class Fields {
 				@Override
 				public Iterable<T> apply(File from) throws Exception {
 					Class<?> clazz = fileToClass(packageName, from);
-					Iterable<T> constants = constantsOfClass(clazz, typeClass);
+					@SuppressWarnings("unchecked")
+					Iterable<T> constants = (Iterable<T>) constantsOfClass(clazz, typeClass);
+					return constants;
+				}
+			});
+		} catch (IOException e) {
+			throw WrappedException.wrap(e);
+		}
+	}
+
+	public static <T> Iterable<T> constantsOfClassInDirectoryWithFilter(ClassPathResource directoryResource, final String packageName, final Class<? super T> typeClass, final IFunction1<Field, Boolean> filter) {
+		try {
+			File directory = directoryResource.getFile();
+			List<File> files = Arrays.asList(directory.listFiles(Files.extensionFilter("class")));
+			return Iterables.split(files, new IFunction1<File, Iterable<T>>() {
+				@Override
+				public Iterable<T> apply(File from) throws Exception {
+					Class<?> clazz = fileToClass(packageName, from);
+					@SuppressWarnings("unchecked")
+					Iterable<T> constants = (Iterable<T>) constantsOfClassWithFilter(clazz, typeClass, filter);
 					return constants;
 				}
 			});

@@ -5,4 +5,15 @@ Bundle-SymbolicName: org.arc4eclipse.allTests
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.arc4eclipse.utilities;bundle-version="1.0.0",
- org.arc4eclipse.panelExerciser;bundle-version="1.0.0"
+ org.arc4eclipse.panelExerciser;bundle-version="1.0.0",
+ org.arc4eclipse.displayCore;bundle-version="1.0.0",
+ org.arc4eclipse.displayJavadoc;bundle-version="1.0.0",
+ org.arc4eclipse.displayMailingList;bundle-version="1.0.0",
+ org.arc4eclipse.displayOrganisation;bundle-version="1.0.0",
+ org.arc4eclipse.displayProject;bundle-version="1.0.0",
+ org.arc4eclipse.displaySource;bundle-version="1.0.0",
+ org.arc4eclipse.displayStyledText;bundle-version="1.0.0",
+ org.arc4eclipse.displayTest;bundle-version="1.0.0",
+ org.arc4eclipse.displayText;bundle-version="1.0.0",
+ org.arc4eclipse.displayText;bundle-version="1.0.0",
+ org.arc4eclipse.selectedArtefactPlugin;bundle-version="1.0.0"

@@ -5,6 +5,7 @@ import java.net.URL;
 
 import org.apache.log4j.xml.DOMConfigurator;
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
+import org.arc4eclipse.displayCore.api.IDisplayManager;
 import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.arc4eclipse.jdtBinding.api.IBindingRipper;
 import org.arc4eclipse.panel.SelectedArtefactPanel;
@@ -77,7 +78,7 @@ public class BindingListAndPanel extends org.eclipse.swt.widgets.Composite {
 			Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
 			shell.setSize(shellBounds.width, shellBounds.height);
 		}
-		Iterable<IBinding> bindings = AllTestFixtures.allConstants(IBinding.class);
+		Iterable<IBinding> bindings = AllTestFixtures.allBindings();
 		inst.fileList1.setData(bindings);
 		shell.open();
 		while (!shell.isDisposed()) {
@@ -138,7 +139,7 @@ public class BindingListAndPanel extends org.eclipse.swt.widgets.Composite {
 						text1.setText("text1");
 					}
 					{
-						selectedArtefactPanel = new SelectedArtefactPanel(sashForm2, SWT.NONE, repository, bindingRipper);
+						selectedArtefactPanel = new SelectedArtefactPanel(sashForm2, SWT.NONE, IDisplayManager.Utils.displayManager(), repository, bindingRipper);
 					}
 				}
 			}

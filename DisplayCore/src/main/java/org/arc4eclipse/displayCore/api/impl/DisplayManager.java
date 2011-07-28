@@ -1,14 +1,15 @@
 package org.arc4eclipse.displayCore.api.impl;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
+import org.arc4eclipse.displayCore.api.BindingContext;
 import org.arc4eclipse.displayCore.api.IDisplayContainer;
 import org.arc4eclipse.displayCore.api.IDisplayManager;
 import org.arc4eclipse.displayCore.api.IDisplayer;
 import org.arc4eclipse.displayCore.api.ITitleLookup;
-import org.arc4eclipse.displayCore.api.NameSpaceNameAndValue;
+import org.arc4eclipse.displayCore.api.NameSpaceAndName;
 import org.arc4eclipse.displayCore.api.NameSpaceNameValueAndDisplayer;
 import org.arc4eclipse.utilities.collections.Lists;
 import org.arc4eclipse.utilities.maps.Maps;
@@ -29,17 +30,18 @@ public class DisplayManager implements IDisplayManager {
 	}
 
 	@Override
-	public void populate(IDisplayContainer container, Map<String, Object> jsonObject) {
+	public void populate(IDisplayContainer container, BindingContext bindingContext, Map<String, Object> data) {
 		List<NameSpaceNameValueAndDisplayer> toBeDisplayed = Lists.newList();
-		for (Entry<String, Object> entry : jsonObject.entrySet()) {
-			NameSpaceNameAndValue nameSpaceNameAndValue = Entries.rip(entry);
-			IDisplayer displayer = registeredDisplayers.get(nameSpaceNameAndValue.nameSpace);
+		for (String key : data.keySet()) {
+			Object value = data.get(key);
+			NameSpaceAndName nameSpaceAndName = NameSpaceAndName.Utils.rip(key);
+			IDisplayer displayer = registeredDisplayers.get(nameSpaceAndName.nameSpace);
 			if (displayer == null)
-				toBeDisplayed.add(new NameSpaceNameValueAndDisplayer(nameSpaceNameAndValue, displayUnknown));
+				toBeDisplayed.add(new NameSpaceNameValueAndDisplayer(nameSpaceAndName, value, displayUnknown));
 			else
-				toBeDisplayed.add(new NameSpaceNameValueAndDisplayer(nameSpaceNameAndValue, displayer));
+				toBeDisplayed.add(new NameSpaceNameValueAndDisplayer(nameSpaceAndName, value, displayer));
 		}
-		container.addDisplayers(titleLookup, toBeDisplayed);
+		Collections.sort(toBeDisplayed, titleLookup);
+		container.addDisplayers(bindingContext, data, toBeDisplayed);
 	}
-
 }

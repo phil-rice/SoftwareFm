@@ -1,8 +1,10 @@
 package org.arc4eclipse.displayCore.api;
 
+import java.util.Comparator;
+
 import org.arc4eclipse.displayCore.api.impl.TitleLookup;
 
-public interface ITitleLookup {
+public interface ITitleLookup extends Comparator<NameSpaceAndName> {
 
 	String getTitle(String nameSpace, String name);
 

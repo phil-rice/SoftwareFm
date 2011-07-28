@@ -1,13 +1,11 @@
 package org.arc4eclipse.displayCore.api;
 
-public class NameSpaceNameValueAndDisplayer {
+public class NameSpaceNameValueAndDisplayer extends NameSpaceNameAndValue {
 
 	public final IDisplayer displayer;
-	public final NameSpaceNameAndValue nameSpaceNameAndValue;
 
-	public NameSpaceNameValueAndDisplayer(NameSpaceNameAndValue nameSpaceNameAndValue, IDisplayer displayer) {
-		this.nameSpaceNameAndValue = nameSpaceNameAndValue;
+	public NameSpaceNameValueAndDisplayer(NameSpaceAndName nameSpaceAndName, Object value, IDisplayer displayer) {
+		super(nameSpaceAndName.key, nameSpaceAndName.nameSpace, nameSpaceAndName.name, value);
 		this.displayer = displayer;
-
 	}
 }

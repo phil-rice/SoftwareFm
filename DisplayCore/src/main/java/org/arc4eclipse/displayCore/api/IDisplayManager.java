@@ -8,7 +8,7 @@ public interface IDisplayManager {
 
 	void registerDisplayer(IDisplayer displayer);
 
-	void populate(IDisplayContainer container, Map<String, Object> jsonObject);
+	void populate(IDisplayContainer container, BindingContext bindingContext, Map<String, Object> data);
 
 	public static class Utils {
 		public static IDisplayManager displayManager() {
