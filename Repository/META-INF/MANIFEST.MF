@@ -8,4 +8,5 @@ Require-Bundle: org.arc4eclipse.repositoryClient;bundle-version="1.0.0";visibili
  org.arc4eclipse.jdtBinding;bundle-version="1.0.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.arc4eclipse.arc4eclipseRepository.api
+Export-Package: org.arc4eclipse.arc4eclipseRepository.api,
+ org.arc4eclipse.arc4eclipseRepository.constants

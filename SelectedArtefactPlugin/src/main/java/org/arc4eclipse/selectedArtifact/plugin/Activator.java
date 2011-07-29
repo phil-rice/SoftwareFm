@@ -20,12 +20,6 @@ public class Activator extends AbstractUIPlugin {
 	// The shared instance
 	private static Activator plugin;
 
-	private IDisplayManager displayManager;
-
-	private IArc4EclipseRepository repository;
-
-	private ISelectedBindingManager selectedBindingManager;
-
 	public Activator() {
 	}
 
@@ -33,17 +27,6 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		displayManager = Arc4EclipseCoreActivator.getDefault().getDisplayManager();
-		repository = Arc4EclipseCoreActivator.getDefault().getRepository();
-		selectedBindingManager = Arc4EclipseCoreActivator.getDefault().getSelectedBindingManager();
-	}
-
-	public IDisplayManager getDisplayManager() {
-		return displayManager;
-	}
-
-	public IArc4EclipseRepository getRepository() {
-		return repository;
 	}
 
 	@Override
@@ -56,12 +39,20 @@ public class Activator extends AbstractUIPlugin {
 		return plugin;
 	}
 
+	public IDisplayManager getDisplayManager() {
+		return Arc4EclipseCoreActivator.getDefault().getDisplayManager();
+	}
+
+	public IArc4EclipseRepository getRepository() {
+		return Arc4EclipseCoreActivator.getDefault().getRepository();
+	}
+
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
 
 	public ISelectedBindingManager getSelectedBindingManager() {
-		return selectedBindingManager;
+		return Arc4EclipseCoreActivator.getDefault().getSelectedBindingManager();
 	}
 
 }

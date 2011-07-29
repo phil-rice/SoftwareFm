@@ -38,19 +38,21 @@ public class DisplayContainer implements IDisplayContainer {
 	}
 
 	@Override
-	public void addDisplayers(final BindingContext bindingContext, final Map<String, Object> data, final List<NameSpaceNameValueAndDisplayer> toBeDisplayed) {
+	public void addDisplayers(final BindingContext bindingContext, final String url, final Map<String, Object> data, final List<NameSpaceNameValueAndDisplayer> toBeDisplayed) {
 		parent.getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				makeCurrent();
 				for (NameSpaceNameValueAndDisplayer nameSpaceNameValueAndDisplayer : toBeDisplayed)
-					nameSpaceNameValueAndDisplayer.displayer.makeCompositeAsChildOf(current, bindingContext, data, nameSpaceNameValueAndDisplayer);
+					nameSpaceNameValueAndDisplayer.displayer.makeCompositeAsChildOf(current, bindingContext, url, data, nameSpaceNameValueAndDisplayer);
 				current.pack();
 				current.redraw();
 				System.out.println("Parent " + parent + " " + parent.getSize());
 				System.out.println("Current " + current + " " + current.getSize());
 				for (Control child : current.getChildren())
 					System.out.println("Child " + child + " " + child.getSize());
+				parent.layout();
+				parent.redraw();
 			}
 		});
 

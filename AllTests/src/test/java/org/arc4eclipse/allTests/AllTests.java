@@ -1,9 +1,9 @@
 package org.arc4eclipse.allTests;
+
 import java.io.File;
 
 import junit.framework.Test;
 
-import org.apache.log4j.Logger;
 import org.arc4eclipse.utilities.reflection.IClassAcceptor;
 import org.arc4eclipse.utilities.tests.Tests;
 

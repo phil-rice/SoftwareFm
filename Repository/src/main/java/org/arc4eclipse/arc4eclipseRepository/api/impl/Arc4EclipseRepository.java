@@ -3,6 +3,7 @@ package org.arc4eclipse.arc4eclipseRepository.api.impl;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Future;
 
@@ -11,7 +12,7 @@ import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
 import org.arc4eclipse.arc4eclipseRepository.api.IStatusChangedListener;
 import org.arc4eclipse.arc4eclipseRepository.api.IUrlGenerator;
 import org.arc4eclipse.arc4eclipseRepository.api.RepositoryDataItemStatus;
-import org.arc4eclipse.arc4eclipseRepository.constants.Arc4EclipseRepositoryConstants;
+import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
 import org.arc4eclipse.httpClient.requests.IResponseCallback;
 import org.arc4eclipse.httpClient.response.IResponse;
 import org.arc4eclipse.jdtBinding.api.IJarDigester;
@@ -22,6 +23,7 @@ import org.arc4eclipse.utilities.collections.Lists;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.future.Futures;
 import org.arc4eclipse.utilities.maps.Maps;
+import org.arc4eclipse.utilities.strings.Urls;
 
 public class Arc4EclipseRepository implements IArc4EclipseRepository {
 	private final static Map<String, Object> emptyParameters = Collections.<String, Object> emptyMap();
@@ -80,7 +82,7 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 					throw WrappedException.wrap(e);
 				}
 			} else
-				throw new RuntimeException(MessageFormat.format(Arc4EclipseRepositoryConstants.failedToChange, response.url()));
+				throw new RuntimeException(MessageFormat.format(RepositoryConstants.failedToChange, response.url()));
 		}
 
 	}
@@ -90,7 +92,8 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 		fireStatusChanged(url, status, data, context);
 	}
 
-	private void fireStatusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> data, Map<String, Object> context) {
+	private void fireStatusChanged(String rawUrl, RepositoryDataItemStatus status, Map<String, Object> data, Map<String, Object> context) {
+		String url = Urls.rip(rawUrl).resourcePath;
 		try {
 			for (IStatusChangedListener listener : listeners)
 				listener.statusChanged(url, status, data, context);
@@ -105,8 +108,10 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 	}
 
 	@Override
-	public Future<?> getJarData(String jarDigest, Map<String, Object> context) {
+	public Future<?> getJarData(String jarDigest, Map<String, Object> rawContext) {
 		try {
+			Map<String, Object> context = new HashMap<String, Object>(rawContext);
+			context.put(RepositoryConstants.entity, RepositoryConstants.entityJarData);
 			if (jarDigest == null || jarDigest.equals("")) {
 				fireStatusChanged("", RepositoryDataItemStatus.PATH_NULL, null, context);
 				return Futures.doneFuture(null);
@@ -125,7 +130,7 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 	public Future<?> modifyJarData(String jarDigest, String name, Object value, Map<String, Object> context) {
 		try {
 			String url = urlGenerator.forJar().apply(jarDigest);
-			Map<String, Object> parameters = Maps.<String, Object> makeMap(name, value, Arc4EclipseRepositoryConstants.hexDigestKey, jarDigest);
+			Map<String, Object> parameters = Maps.<String, Object> makeMap(name, value, RepositoryConstants.hexDigestKey, jarDigest);
 			fireRequest("modifyJarData", url, parameters, context);
 			return facard.post(url, parameters, new CallbackForModify(context));
 		} catch (Exception e) {

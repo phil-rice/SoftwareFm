@@ -7,7 +7,7 @@ public class TitleLookup implements ITitleLookup {
 
 	@Override
 	public String getTitle(String nameSpace, String name) {
-		return "<" + name + ">";
+		return name;
 	}
 
 	@Override

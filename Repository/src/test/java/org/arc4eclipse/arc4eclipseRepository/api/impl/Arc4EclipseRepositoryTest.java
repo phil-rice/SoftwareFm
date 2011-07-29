@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
 import org.arc4eclipse.arc4eclipseRepository.api.IStatusChangedListener;
 import org.arc4eclipse.arc4eclipseRepository.api.MemoryStatusChangedListener;
-import org.arc4eclipse.arc4eclipseRepository.constants.Arc4EclipseRepositoryConstants;
+import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
 import org.arc4eclipse.httpClient.requests.IResponseCallback;
 import org.arc4eclipse.jdtBinding.api.IJarDigester;
 import org.arc4eclipse.repositoryFacard.IRepositoryFacard;
@@ -34,20 +34,20 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 	public void testGetAndModifyJarData() throws Exception {
 		facard.delete("/" + urlGenerator.forJar().apply(digest), IResponseCallback.Utils.memoryCallback()).get();
 		checkModifyAndGetJarData("name1", "value1", Maps.<String, Object> makeMap(//
-				Arc4EclipseRepositoryConstants.hexDigestKey, digest, //
+				RepositoryConstants.hexDigestKey, digest, //
 				"jcr:primaryType", "nt:unstructured",//
 				"name1", "value1"));
 
-		checkModifyAndGetJarData(Arc4EclipseRepositoryConstants.organisationUrlKey, "OrgUrl", Maps.<String, Object> makeMap(//
-				Arc4EclipseRepositoryConstants.hexDigestKey, digest, //
-				Arc4EclipseRepositoryConstants.organisationUrlKey, "OrgUrl",//
+		checkModifyAndGetJarData(RepositoryConstants.organisationUrlKey, "OrgUrl", Maps.<String, Object> makeMap(//
+				RepositoryConstants.hexDigestKey, digest, //
+				RepositoryConstants.organisationUrlKey, "OrgUrl",//
 				"jcr:primaryType", "nt:unstructured",//
 				"name1", "value1"));
 
-		checkModifyAndGetJarData(Arc4EclipseRepositoryConstants.projectUrlKey, "ProjName", Maps.<String, Object> makeMap(//
-				Arc4EclipseRepositoryConstants.hexDigestKey, digest, //
-				Arc4EclipseRepositoryConstants.organisationUrlKey, "OrgUrl",//
-				Arc4EclipseRepositoryConstants.projectUrlKey, "ProjName",//
+		checkModifyAndGetJarData(RepositoryConstants.projectUrlKey, "ProjName", Maps.<String, Object> makeMap(//
+				RepositoryConstants.hexDigestKey, digest, //
+				RepositoryConstants.organisationUrlKey, "OrgUrl",//
+				RepositoryConstants.projectUrlKey, "ProjName",//
 				"jcr:primaryType", "nt:unstructured",//
 				"name1", "value1"));
 	}
@@ -73,18 +73,18 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 	public void testGetAndModifyData() throws Exception {
 		String url = "/tests/" + getClass().getSimpleName();
 		facard.delete(url, IResponseCallback.Utils.memoryCallback()).get();
-		checkModifyAndGetData(url, Arc4EclipseRepositoryConstants.organisationUrlKey, "orgUrl", Maps.<String, Object> makeMap(//
-				Arc4EclipseRepositoryConstants.organisationUrlKey, "orgUrl",//
+		checkModifyAndGetData(url, RepositoryConstants.organisationUrlKey, "orgUrl", Maps.<String, Object> makeMap(//
+				RepositoryConstants.organisationUrlKey, "orgUrl",//
 				"jcr:primaryType", "nt:unstructured"));
-		checkModifyAndGetData(url, Arc4EclipseRepositoryConstants.organisationNameKey, "orgName", Maps.<String, Object> makeMap(//
-				Arc4EclipseRepositoryConstants.organisationUrlKey, "orgUrl",//
+		checkModifyAndGetData(url, RepositoryConstants.organisationNameKey, "orgName", Maps.<String, Object> makeMap(//
+				RepositoryConstants.organisationUrlKey, "orgUrl",//
 				"jcr:primaryType", "nt:unstructured",//
-				Arc4EclipseRepositoryConstants.organisationNameKey, "orgName"));
-		checkModifyAndGetData(url, Arc4EclipseRepositoryConstants.descriptionKey, "orgDesc", Maps.<String, Object> makeMap(//
-				Arc4EclipseRepositoryConstants.organisationUrlKey, "orgUrl",//
-				Arc4EclipseRepositoryConstants.organisationNameKey, "orgName",//
+				RepositoryConstants.organisationNameKey, "orgName"));
+		checkModifyAndGetData(url, RepositoryConstants.descriptionKey, "orgDesc", Maps.<String, Object> makeMap(//
+				RepositoryConstants.organisationUrlKey, "orgUrl",//
+				RepositoryConstants.organisationNameKey, "orgName",//
 				"jcr:primaryType", "nt:unstructured",//
-				Arc4EclipseRepositoryConstants.descriptionKey, "orgDesc"));
+				RepositoryConstants.descriptionKey, "orgDesc"));
 	}
 
 	private void checkModifyAndGetData(String url, String key, String value, Map<String, Object> expected) throws Exception {

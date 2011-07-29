@@ -8,7 +8,11 @@ public interface IDisplayManager {
 
 	void registerDisplayer(IDisplayer displayer);
 
-	void populate(IDisplayContainer container, BindingContext bindingContext, Map<String, Object> data);
+	void populate(IDisplayContainer container, BindingContext bindingContext, String url, Map<String, Object> data, Map<String, Object> context);
+
+	void addModifier(IModifiesToBeDisplayed modifier);
+
+	void removeModifier(IModifiesToBeDisplayed modifier);
 
 	public static class Utils {
 		public static IDisplayManager displayManager() {

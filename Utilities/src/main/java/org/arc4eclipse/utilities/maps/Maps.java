@@ -316,7 +316,7 @@ public class Maps {
 			return new HashMap<K, V>();
 		else if (IdentityHashMap.class.isAssignableFrom(clazz))
 			return new IdentityHashMap<K, V>();
-		throw new IllegalArgumentException();
+		throw new IllegalArgumentException(clazz.toString());
 	}
 
 	@SuppressWarnings("unchecked")

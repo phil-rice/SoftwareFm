@@ -9,6 +9,6 @@ public interface IDisplayer {
 
 	String getNameSpace();
 
-	Control makeCompositeAsChildOf(Composite parent, BindingContext bindingContext, Map<String, Object> data, NameSpaceNameAndValue nameSpaceNameAndValue);
+	Control makeCompositeAsChildOf(Composite parent, BindingContext bindingContext, String url, Map<String, Object> data, NameSpaceNameAndValue nameSpaceNameAndValue);
 
 }

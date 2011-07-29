@@ -4,7 +4,7 @@ public class NameSpaceAndName {
 
 	public static class Utils {
 		public static NameSpaceAndName rip(String key) {
-			int index = key.indexOf(':');
+			int index = key.indexOf('_');
 			if (index == -1)
 				return new NameSpaceAndName(key, key, key);
 			else {
@@ -20,7 +20,7 @@ public class NameSpaceAndName {
 	public String nameSpace;
 	public String name;
 
-	public NameSpaceAndName(String key, String nameSpace, String name) {
+	protected NameSpaceAndName(String key, String nameSpace, String name) {
 		this.key = key;
 		this.nameSpace = nameSpace;
 		this.name = name;

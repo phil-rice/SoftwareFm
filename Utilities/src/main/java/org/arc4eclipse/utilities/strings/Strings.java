@@ -127,4 +127,11 @@ public class Strings {
 		return join(logger, separator);
 	}
 
+	public static String nullSafeToString(Object value) {
+		if (value == null)
+			return "";
+		else
+			return value.toString();
+	}
+
 }
