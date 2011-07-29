@@ -6,7 +6,6 @@ import org.arc4eclipse.panel.ISelectedBindingManager;
 import org.arc4eclipse.panel.SelectedArtefactPanel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.part.ViewPart;
 
 import arc4eclipse.core.plugin.Arc4EclipseCoreActivator;
@@ -21,7 +20,6 @@ import arc4eclipse.core.plugin.Arc4EclipseCoreActivator;
 public class SelectedArtifactView extends ViewPart {
 
 	public static final String ID = "org.arc4eclipse.selectedArtifactPlugin.views.SelectedArtifactView";
-	private ISelectionListener listener;
 
 	public SelectedArtifactView() {
 	}
@@ -41,7 +39,6 @@ public class SelectedArtifactView extends ViewPart {
 	@Override
 	public void dispose() {
 		super.dispose();
-		getSite().getPage().removeSelectionListener(listener);
 	}
 
 	@Override

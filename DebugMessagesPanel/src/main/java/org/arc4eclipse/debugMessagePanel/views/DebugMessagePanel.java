@@ -7,9 +7,6 @@ import java.util.Map;
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseLogger;
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
 import org.arc4eclipse.httpClient.response.IResponse;
-import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
-import org.arc4eclipse.panel.ISelectedBindingListener;
-import org.arc4eclipse.panel.ISelectedBindingManager;
 import org.arc4eclipse.repositoryFacardConstants.RepositoryFacardConstants;
 import org.arc4eclipse.swtBasics.text.TitleAndStyledTextField;
 import org.arc4eclipse.utilities.collections.Lists;
@@ -20,12 +17,12 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 
-public class DebugMessagePanel extends Composite implements IArc4EclipseLogger, ISelectedBindingListener {
+public class DebugMessagePanel extends Composite implements IArc4EclipseLogger {
 	private final int logSize = 8;
 	private final List<String> log = Lists.newList();
 	private final TitleAndStyledTextField titleAndStyledTextField;
 
-	public DebugMessagePanel(Composite parent, int style, IArc4EclipseRepository repository, ISelectedBindingManager selectedBindingManager) {
+	public DebugMessagePanel(Composite parent, int style, IArc4EclipseRepository repository) {
 		super(parent, style);
 		setLayout(new FormLayout());
 
@@ -37,7 +34,6 @@ public class DebugMessagePanel extends Composite implements IArc4EclipseLogger, 
 		fd_titleAndStyledTextField.left = new FormAttachment(0, 0);
 		titleAndStyledTextField.setLayoutData(fd_titleAndStyledTextField);
 		repository.addLogger(this);
-		selectedBindingManager.addSelectedArtifactSelectionListener(this);
 	}
 
 	@Override
@@ -56,10 +52,6 @@ public class DebugMessagePanel extends Composite implements IArc4EclipseLogger, 
 		String message = MessageFormat.format(pattern, arguments);
 		String text = Strings.addToRollingLog(log, logSize, "\n", message);
 		titleAndStyledTextField.setText(text);
-	}
-
-	@Override
-	public void selectionOccured(BindingRipperResult ripperResult) {
 	}
 
 }
