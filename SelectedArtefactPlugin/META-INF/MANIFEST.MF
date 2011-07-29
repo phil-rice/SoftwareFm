@@ -9,7 +9,8 @@ Require-Bundle: org.eclipse.ui,
  org.arc4eclipse.selectedArtefactPanel;bundle-version="1.0.0";visibility:=reexport,
  org.eclipse.jface.text;bundle-version="3.7.0",
  org.eclipse.jdt.ui;bundle-version="3.7.0",
- org.eclipse.core.resources;bundle-version="3.7.100"
+ org.eclipse.core.resources;bundle-version="3.7.100",
+ org.arc4Eclipse.core;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.arc4eclipse.selectedArtifact.plugin

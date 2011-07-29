@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Arc4EclipseCorePlugin
+Bundle-SymbolicName: org.arc4Eclipse.core;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: arc4eclipse.core.plugin.Arc4EclipseCoreActivator
+Bundle-Vendor: Arc4Eclipse
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.arc4eclipse.repository;bundle-version="1.0.0",
+ org.arc4eclipse.selection;bundle-version="1.0.0",
+ org.eclipse.jface.text;bundle-version="3.7.0",
+ org.eclipse.jdt.ui;bundle-version="3.7.0",
+ org.arc4eclipse.displayCore;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: arc4eclipse.core.plugin

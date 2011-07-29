@@ -1,13 +1,14 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: DebugMessagePanel
-Bundle-SymbolicName: org.arc4eclipse.debugMessagePanel;singleton:=true
+Bundle-Name: DebugPanels
+Bundle-SymbolicName: org.arc4eclipse.debugPanels;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.arc4eclipse.debugMessagePanel.Activator
 Bundle-Vendor: Arc4Eclipse
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.arc4eclipse.swtBasics;bundle-version="1.0.0",
- org.arc4eclipse.selectedArtefactPlugin;bundle-version="1.0.0"
+ org.arc4eclipse.swtBasics;bundle-version="1.0.0";visibility:=reexport,
+ org.arc4eclipse.selection;bundle-version="1.0.0";visibility:=reexport,
+ org.arc4eclipse.repository;bundle-version="1.0.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
+Export-Package: org.arc4eclipse.debugMessagePanel.views

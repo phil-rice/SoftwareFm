@@ -6,5 +6,6 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Arc4Eclipse
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.arc4eclipse.displayCore;bundle-version="1.0.0",
- org.arc4eclipse.displayText;bundle-version="1.0.0";visibility:=reexport
+ org.arc4eclipse.displayText;bundle-version="1.0.0";visibility:=reexport,
+ org.arc4eclipse.selection;bundle-version="1.0.0"
 Export-Package: org.arc4eclipse.panel
