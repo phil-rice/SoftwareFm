@@ -7,6 +7,7 @@ import org.arc4eclipse.displayCore.api.IDisplayManager;
 import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.arc4eclipse.jdtBinding.api.IBindingRipper;
 import org.arc4eclipse.panel.ISelectedBindingListener;
+import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -46,9 +47,9 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		IWorkbenchWindow[] workbenchWindows = workbench.getWorkbenchWindows();
 		for (int i = 0; i < workbenchWindows.length; i++) {
-			IWorkbenchPage page = workbench.getWorkbenchWindows()[i].getActivePage();
-			System.out.println("Page: " + page);
-			page.addSelectionListener(selectedBindingManager);
+			IWorkbenchWindow workbenchWindow = workbench.getWorkbenchWindows()[i];
+			ISelectionService selectionService = workbenchWindow.getSelectionService();
+			selectionService.addSelectionListener(selectedBindingManager);
 		}
 		selectedBindingManager.addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
 			@Override

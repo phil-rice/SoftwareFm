@@ -1,12 +1,9 @@
 package org.arc4eclipse.debugMessagePanel.views;
 
-import java.util.List;
-
 import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.arc4eclipse.panel.ISelectedBindingListener;
 import org.arc4eclipse.panel.ISelectedBindingManager;
 import org.arc4eclipse.swtBasics.text.TitleAndStyledTextField;
-import org.arc4eclipse.utilities.collections.Lists;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -14,8 +11,6 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 
 public class DebugBindingPanel extends Composite implements ISelectedBindingListener {
-	private final int logSize = 8;
-	private final List<String> log = Lists.newList();
 	private final TitleAndStyledTextField titleAndStyledTextField;
 
 	public DebugBindingPanel(Composite parent, int style, ISelectedBindingManager selectedBindingManager) {

@@ -1,7 +1,6 @@
 package org.arc4eclipse.swtBasics.text;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -25,19 +24,13 @@ public class TitleAndStyledTextField extends Composite {
 		lblTitle.setText(title == null ? "" : title);
 		fd_lblTitle.right = new FormAttachment(0, 185);
 
-		ScrolledComposite scrolledComposite = new ScrolledComposite(this, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		FormData fd_scrolledComposite = new FormData();
-		fd_scrolledComposite.bottom = new FormAttachment(100, 0);
-		fd_scrolledComposite.right = new FormAttachment(100, 0);
-		fd_scrolledComposite.top = new FormAttachment(0, 25);
-		fd_scrolledComposite.left = new FormAttachment(0, 0);
-		scrolledComposite.setLayoutData(fd_scrolledComposite);
-		scrolledComposite.setExpandHorizontal(true);
-		scrolledComposite.setExpandVertical(true);
-
-		txtText = new StyledText(scrolledComposite, SWT.BORDER | SWT.WRAP);
-		scrolledComposite.setContent(txtText);
-		scrolledComposite.setMinSize(txtText.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		txtText = new StyledText(this, SWT.BORDER);
+		FormData fd_styledText = new FormData();
+		fd_styledText.bottom = new FormAttachment(100, 0);
+		fd_styledText.right = new FormAttachment(100, 0);
+		fd_styledText.top = new FormAttachment(0, 30);
+		fd_styledText.left = new FormAttachment(0, 0);
+		txtText.setLayoutData(fd_styledText);
 
 	}
 
