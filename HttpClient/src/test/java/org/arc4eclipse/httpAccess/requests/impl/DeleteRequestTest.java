@@ -10,8 +10,8 @@ public class DeleteRequestTest extends AbstractRequestTest {
 	@Test
 	public void testPost() {
 		ClientBuilder builder = (ClientBuilder) IHttpClient.Utils.builder();
-		DeleteRequest post = (DeleteRequest) builder.delete("someUrl");
-		checkRequest(post, builder);
+		checkRequest(DeleteRequest.class, builder.delete("someUrl"), builder);
+		checkRequest(DeleteRequest.class, builder.delete("/someUrl"), builder);
 	}
 
 }

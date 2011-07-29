@@ -10,15 +10,13 @@ import org.arc4eclipse.displayCore.api.IDisplayContainer;
 import org.arc4eclipse.displayCore.api.IDisplayManager;
 import org.arc4eclipse.displayCore.api.ITitleLookup;
 import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
-import org.arc4eclipse.jdtBinding.api.IBindingRipper;
 import org.arc4eclipse.swtBasics.Swts;
 import org.arc4eclipse.utilities.functions.IFunction1;
-import org.eclipse.jdt.core.dom.IBinding;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 
-public class SelectedArtefactPanel extends Composite implements IStatusChangedListener {
+public class SelectedArtefactPanel extends Composite implements IStatusChangedListener, ISelectedBindingListener {
 
 	private final IArc4EclipseRepository repository;
 	private final IDisplayContainer displayContainer;
@@ -31,13 +29,14 @@ public class SelectedArtefactPanel extends Composite implements IStatusChangedLi
 	 * @param style
 	 * @param repository
 	 */
-	public SelectedArtefactPanel(Composite parent, int style, IDisplayManager displayManager, IArc4EclipseRepository repository, IFunction1<IBinding, BindingRipperResult> bindingRipper) {
+	public SelectedArtefactPanel(Composite parent, int style, IDisplayManager displayManager, IArc4EclipseRepository repository, ISelectedBindingManager selectedBindingManager) {
 		super(parent, style);
 		this.displayManager = displayManager;
 		this.displayContainer = IDisplayContainer.Utils.displayContainer(this);
 		this.repository = repository;
 		setLayout(new FillLayout(SWT.HORIZONTAL));
 		repository.addStatusListener(this);
+		selectedBindingManager.addSelectedArtifactSelectionListener(this);
 	}
 
 	@Override
@@ -53,9 +52,15 @@ public class SelectedArtefactPanel extends Composite implements IStatusChangedLi
 	}
 
 	@Override
+	public void selectionOccured(BindingRipperResult ripperResult) {
+	}
+
+	@Override
 	public void statusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> data, Map<String, Object> context) throws Exception {
-		BindingContext bindingContext = new BindingContext(repository, ITitleLookup.Utils.titleLookup());
-		displayManager.populate(displayContainer, bindingContext, data);
+		if (status == RepositoryDataItemStatus.FOUND) {
+			BindingContext bindingContext = new BindingContext(repository, ITitleLookup.Utils.titleLookup());
+			displayManager.populate(displayContainer, bindingContext, data);
+		}
 	}
 
 	public static void main(String args[]) {
@@ -63,10 +68,10 @@ public class SelectedArtefactPanel extends Composite implements IStatusChangedLi
 		Swts.display("Selected Artefact Panel", new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				SelectedArtefactPanel selectedArtefactPanel = new SelectedArtefactPanel(from, SWT.NULL, IDisplayManager.Utils.displayManager(), repository, IBindingRipper.Utils.ripper());
-
+				SelectedArtefactPanel selectedArtefactPanel = new SelectedArtefactPanel(from, SWT.NULL, IDisplayManager.Utils.displayManager(), repository, ISelectedBindingManager.Utils.noSelectedBindingManager());
 				return selectedArtefactPanel;
 			}
 		});
 	}
+
 }

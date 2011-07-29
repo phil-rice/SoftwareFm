@@ -22,7 +22,7 @@ public abstract class AbstractRequestBuilder implements IRequestBuilder {
 		this.executor = executor;
 		this.host = host;
 		this.client = client;
-		this.url = url;
+		this.url = url.startsWith("/") ? url : "/" + url;
 	}
 
 	@Override

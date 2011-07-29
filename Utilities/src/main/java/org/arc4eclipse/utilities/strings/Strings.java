@@ -118,7 +118,13 @@ public class Strings {
 				return from.startsWith(prefix);
 			}
 		};
+	}
 
+	public static String addToRollingLog(List<String> logger, int size, String separator, String value) {
+		logger.add(0, value);
+		if (logger.size() >= size)
+			logger.remove(logger.size() - 1);
+		return join(logger, separator);
 	}
 
 }

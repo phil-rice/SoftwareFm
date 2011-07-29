@@ -13,9 +13,10 @@ import org.arc4eclipse.httpClient.requests.impl.AbstractRequestBuilder;
 
 abstract public class AbstractRequestTest extends TestCase {
 
-	protected void checkRequest(IRequestBuilder requestBuilder, ClientBuilder builder, String... parameters) {
+	protected void checkRequest(Class<?> clazz, IRequestBuilder requestBuilder, ClientBuilder builder, String... parameters) {
+		assertTrue(clazz.isAssignableFrom(requestBuilder.getClass()));
 		AbstractRequestBuilder postOrGet = (AbstractRequestBuilder) requestBuilder;
-		assertEquals("someUrl", postOrGet.url);
+		assertEquals("/someUrl", postOrGet.url);
 		assertEquals(builder.host, postOrGet.host);
 		assertEquals(builder.client, postOrGet.client);
 		List<NameValuePair> expected = new ArrayList<NameValuePair>();

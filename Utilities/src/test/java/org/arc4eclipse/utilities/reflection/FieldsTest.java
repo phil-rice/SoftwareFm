@@ -82,7 +82,7 @@ public class FieldsTest extends TestCase {
 		checkConstantsOfClassInDirectory(File.class);
 	}
 
-	private void checkConstantsOfClassInDirectory(Class class1, Object... expected) {
+	private void checkConstantsOfClassInDirectory(@SuppressWarnings("rawtypes") Class class1, Object... expected) {
 		@SuppressWarnings("unchecked")
 		List<?> actual = Iterables.list(Fields.constantsOfClassInDirectory(new ClassPathResource(".", getClass()), getClass().getPackage().getName(), class1));
 		assertEquals(Arrays.asList(expected), actual);

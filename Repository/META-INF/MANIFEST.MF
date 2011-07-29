@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.arc4eclipse.repository
+Bundle-SymbolicName: org.arc4eclipse.repository
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Arc4Eclipse
+Require-Bundle: org.arc4eclipse.repositoryClient;bundle-version="1.0.0";visibility:=reexport,
+ org.arc4eclipse.jdtBinding;bundle-version="1.0.0";visibility:=reexport
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: org.arc4eclipse.arc4eclipseRepository.api

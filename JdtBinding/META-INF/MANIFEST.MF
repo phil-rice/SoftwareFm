@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.arc4eclipse.jdtBinding
+Bundle-SymbolicName: org.arc4eclipse.jdtBinding
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Arc4Eclipse
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.eclipse.jdt;bundle-version="3.7.0";visibility:=reexport,
+ org.eclipse.jdt.core;bundle-version="3.7.0";visibility:=reexport,
+ org.eclipse.core.runtime;bundle-version="3.7.0",
+ org.eclipse.core.resources;bundle-version="3.7.100",
+ org.arc4eclipse.utilities;bundle-version="1.0.0";visibility:=reexport
+Export-Package: org.arc4eclipse.jdtBinding.api
