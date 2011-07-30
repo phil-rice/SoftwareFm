@@ -6,7 +6,7 @@ import java.util.Map;
 import org.arc4eclipse.displayCore.api.BindingContext;
 import org.arc4eclipse.displayCore.api.IDisplayContainer;
 import org.arc4eclipse.displayCore.api.NameSpaceNameValueAndDisplayer;
-import org.eclipse.swt.layout.FormLayout;
+import org.arc4eclipse.swtBasics.Swts;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -22,7 +22,10 @@ public class DisplayContainer implements IDisplayContainer {
 		this.parent = parent;
 		this.style = style;
 		this.content = new Composite(parent, style);
-		content.setLayout(new FormLayout());
+		GridLayout layout = new GridLayout();
+		layout.marginWidth = 0;
+		content.setLayout(layout);
+
 	}
 
 	@Override
@@ -45,17 +48,16 @@ public class DisplayContainer implements IDisplayContainer {
 				makeCurrent();
 				for (NameSpaceNameValueAndDisplayer nameSpaceNameValueAndDisplayer : toBeDisplayed)
 					nameSpaceNameValueAndDisplayer.displayer.makeCompositeAsChildOf(current, bindingContext, url, data, nameSpaceNameValueAndDisplayer);
-				current.pack();
+				Swts.addGrabHorizontalAndFillGridDataToAllChildren(current);
 				current.redraw();
-				System.out.println("Parent " + parent + " " + parent.getSize());
-				System.out.println("Current " + current + " " + current.getSize());
+				System.out.println("Parent " + Swts.layoutAsString(parent));
+				System.out.println("Current " + Swts.layoutAsString(current));
 				for (Control child : current.getChildren())
-					System.out.println("Child " + child + " " + child.getSize());
+					System.out.println("Child " + Swts.layoutAsString(child));
 				parent.layout();
 				parent.redraw();
 			}
 		});
-
 	}
 
 	private void makeCurrent() {
@@ -65,6 +67,9 @@ public class DisplayContainer implements IDisplayContainer {
 			current.dispose();
 		}
 		current = new Composite(content, style);
-		current.setLayout(new GridLayout());
+		GridLayout layout = new GridLayout();
+		layout.marginWidth = 0;
+		current.setLayout(layout);
+		current.setLayoutData(Swts.makeGrabHorizonalAndFillGridData());
 	}
 }

@@ -2,14 +2,42 @@ package org.arc4eclipse.swtBasics;
 
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 public class Swts {
+
+	public static void addGrabHorizontalAndFillGridDataToAllChildren(Composite composite) {
+		for (Control control : composite.getChildren()) {
+			GridData data = makeGrabHorizonalAndFillGridData();
+			control.setLayoutData(data);
+		}
+	}
+
+	public static GridData makeGrabHorizonalAndFillGridData() {
+		GridData data = new GridData();
+		data.horizontalAlignment = GridData.FILL;
+		data.grabExcessHorizontalSpace = true;
+		return data;
+	}
+
+	public static String layoutAsString(Control control) {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(control.getClass().getSimpleName());
+		Point size = control.getSize();
+		buffer.append(" Size: " + size.x + ", " + size.y);
+		if (control instanceof Composite)
+			buffer.append(" Layout: " + ((Composite) control).getLayout());
+		buffer.append(" LayoutData: " + control.getLayoutData());
+		return buffer.toString();
+	}
 
 	public static void display(String title, IFunction1<Composite, Composite> builder) {
 		try {

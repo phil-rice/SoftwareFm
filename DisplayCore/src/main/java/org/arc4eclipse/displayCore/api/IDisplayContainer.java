@@ -16,7 +16,7 @@ public interface IDisplayContainer extends IHasComposite {
 
 	public static class Utils {
 		public static IDisplayContainer displayContainer(Composite parent) {
-			return new DisplayContainer(parent, SWT.BORDER);
+			return new DisplayContainer(parent, SWT.NULL);
 		}
 	}
 
