@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Text;
 public class TitleAndTextField extends Composite {
 	private final Text txtText;
 	private final Label lblTitle;
-	private final Composite compButtons;
+	private final Composite compForTitle;
 	private final Color originalBackground;
 
 	/**
@@ -34,16 +34,20 @@ public class TitleAndTextField extends Composite {
 		super(arg0, arg1);
 		setLayout(new FormLayout());
 
-		lblTitle = new Label(this, SWT.NONE);
-		FormData fd_lblTitle = new FormData();
-		fd_lblTitle.top = new FormAttachment(0);
-		fd_lblTitle.left = new FormAttachment(0);
-		lblTitle.setLayoutData(fd_lblTitle);
+		compForTitle = new Composite(this, SWT.NULL);
+		FormData fd_compButtons = new FormData();
+		fd_compButtons.left = new FormAttachment(0, 0);
+		fd_compButtons.right = new FormAttachment(100, 0);
+		compForTitle.setLayoutData(fd_compButtons);
+		RowLayout layout = new RowLayout();
+		compForTitle.setLayout(layout);
+		layout.marginTop = 0;
+		layout.marginBottom = 0;
+
+		lblTitle = new Label(compForTitle, SWT.NONE);
 		lblTitle.setText(title == null ? "" : title);
 
 		txtText = new Text(this, SWT.BORDER);
-		fd_lblTitle.bottom = new FormAttachment(0, 18);
-		fd_lblTitle.right = new FormAttachment(0, 240);
 		FormData fd_txtValue = new FormData();
 		fd_txtValue.top = new FormAttachment(0, 20);
 		fd_txtValue.left = new FormAttachment(0);
@@ -53,23 +57,12 @@ public class TitleAndTextField extends Composite {
 		txtText.setText("");
 		txtText.setEditable(false);
 
-		compButtons = new Composite(this, SWT.NULL);
-		FormData fd_compButtons = new FormData();
-		fd_compButtons.left = new FormAttachment(0, 290);
-		fd_compButtons.bottom = new FormAttachment(lblTitle, 0, SWT.BOTTOM);
-		fd_compButtons.top = new FormAttachment(lblTitle, 0, SWT.TOP);
-		fd_compButtons.right = new FormAttachment(100);
-		compButtons.setLayoutData(fd_compButtons);
-		RowLayout layout = new RowLayout();
-		compButtons.setLayout(layout);
-		layout.marginTop = 0;
-		layout.marginBottom = 0;
 		originalBackground = txtText.getBackground();
 		addEditButton(editable);
 	}
 
-	private Button addButton(String title, SelectionListener listener) {
-		Button button = new Button(compButtons, SWT.PUSH);
+	public Button addButton(String title, SelectionListener listener) {
+		Button button = new Button(compForTitle, SWT.PUSH);
 		button.setText(title);
 		// button.setSize(new Point(35, 12));
 		button.addSelectionListener(listener);
