@@ -34,7 +34,9 @@ public class DisplayManager implements IDisplayManager {
 	}
 
 	@Override
-	public void populate(IDisplayContainer container, BindingContext bindingContext, String url, Map<String, Object> data, Map<String, Object> context) {
+	public void populate(IDisplayContainer container, BindingContext bindingContext) {
+		Map<String, Object> data = bindingContext.data;
+		Map<String, Object> context = bindingContext.context;
 		List<NameSpaceNameValueAndDisplayer> toBeDisplayed = Lists.newList();
 		if (data != null)
 			for (String key : data.keySet()) {
@@ -46,7 +48,7 @@ public class DisplayManager implements IDisplayManager {
 			}
 		modifyData(toBeDisplayed, data, context);
 		Collections.sort(toBeDisplayed, titleLookup);
-		container.addDisplayers(bindingContext, url, data, toBeDisplayed);
+		container.addDisplayers(toBeDisplayed, bindingContext);
 	}
 
 	private void addFor(List<NameSpaceNameValueAndDisplayer> toBeDisplayed, NameSpaceAndName nameSpaceAndName, Object value) {

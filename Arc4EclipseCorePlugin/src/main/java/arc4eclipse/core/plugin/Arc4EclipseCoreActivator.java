@@ -1,6 +1,5 @@
 package arc4eclipse.core.plugin;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +8,7 @@ import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
 import org.arc4eclipse.displayCore.api.IDisplayManager;
 import org.arc4eclipse.displayCore.api.IModifiesToBeDisplayed;
 import org.arc4eclipse.displayCore.api.NameSpaceNameAndValue;
+import org.arc4eclipse.displayCore.constants.DisplayCoreConstants;
 import org.arc4eclipse.displayJavadoc.DisplayJavadoc;
 import org.arc4eclipse.displayOrganisation.DisplayOrganisation;
 import org.arc4eclipse.displaySource.DisplaySource;
@@ -17,6 +17,7 @@ import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.arc4eclipse.jdtBinding.api.IBindingRipper;
 import org.arc4eclipse.panel.ISelectedBindingListener;
 import org.arc4eclipse.utilities.collections.Lists;
+import org.arc4eclipse.utilities.maps.Maps;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -86,7 +87,8 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 			selectedBindingManager.addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
 				@Override
 				public void selectionOccured(BindingRipperResult ripperResult) {
-					getRepository().getJarData(ripperResult.hexDigest, Collections.<String, Object> emptyMap());
+					Map<String, Object> context = Maps.makeMap(DisplayCoreConstants.ripperResult, ripperResult);
+					getRepository().getJarData(ripperResult.hexDigest, context);
 				}
 			});
 			IWorkbench workbench = PlatformUI.getWorkbench();

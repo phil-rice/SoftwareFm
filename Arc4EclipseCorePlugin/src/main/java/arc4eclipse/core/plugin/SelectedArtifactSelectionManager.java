@@ -58,7 +58,7 @@ public class SelectedArtifactSelectionManager implements ISelectedBindingManager
 								Expression expression = (Expression) node;
 								ITypeBinding binding = expression.resolveTypeBinding();
 								BindingRipperResult ripperResult = bindingRipper.apply(binding);
-								fireListeners(ripperResult);
+								fireListeners(binding, ripperResult);
 							}
 							System.out.println("Node: " + node + "/" + node.getClass());
 						}
@@ -71,7 +71,7 @@ public class SelectedArtifactSelectionManager implements ISelectedBindingManager
 		}
 	}
 
-	private void fireListeners(BindingRipperResult ripperResult) {
+	private void fireListeners(ITypeBinding binding, BindingRipperResult ripperResult) {
 		for (ISelectedBindingListener listener : listeners)
 			listener.selectionOccured(ripperResult);
 	}

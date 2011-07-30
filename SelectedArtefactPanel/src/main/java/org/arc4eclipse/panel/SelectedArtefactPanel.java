@@ -82,8 +82,8 @@ public class SelectedArtefactPanel extends Composite implements IStatusChangedLi
 
 	@Override
 	public void statusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> data, Map<String, Object> context) throws Exception {
-		BindingContext bindingContext = new BindingContext(repository, ITitleLookup.Utils.titleLookup());
-		displayManager.populate(displayContainer, bindingContext, url, data, context);
+		BindingContext bindingContext = new BindingContext(repository, ITitleLookup.Utils.titleLookup(), url, data, context);
+		displayManager.populate(displayContainer, bindingContext);
 	}
 
 	public static void main(String args[]) {

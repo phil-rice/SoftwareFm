@@ -41,10 +41,12 @@ public class DisplayContainer implements IDisplayContainer {
 	}
 
 	@Override
-	public void addDisplayers(final BindingContext bindingContext, final String url, final Map<String, Object> data, final List<NameSpaceNameValueAndDisplayer> toBeDisplayed) {
+	public void addDisplayers(final List<NameSpaceNameValueAndDisplayer> toBeDisplayed, final BindingContext bindingContext) {
 		parent.getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
+				Map<String, Object> data = bindingContext.data;
+				String url = bindingContext.url;
 				makeCurrent();
 				for (NameSpaceNameValueAndDisplayer nameSpaceNameValueAndDisplayer : toBeDisplayed)
 					nameSpaceNameValueAndDisplayer.displayer.makeCompositeAsChildOf(current, bindingContext, url, data, nameSpaceNameValueAndDisplayer);
