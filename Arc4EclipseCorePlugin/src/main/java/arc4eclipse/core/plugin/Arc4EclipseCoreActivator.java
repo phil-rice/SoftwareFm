@@ -9,6 +9,7 @@ import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
 import org.arc4eclipse.displayCore.api.IDisplayManager;
 import org.arc4eclipse.displayCore.api.IModifiesToBeDisplayed;
 import org.arc4eclipse.displayCore.api.NameSpaceNameAndValue;
+import org.arc4eclipse.displayText.DisplayOrganisation;
 import org.arc4eclipse.displayText.DisplayText;
 import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.arc4eclipse.jdtBinding.api.IBindingRipper;
@@ -118,7 +119,9 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 						result.add(NameSpaceNameAndValue.Utils.make(key, defaultValue));
 				}
 			});
+			// TODO This is better done with an executable extension point
 			displayManager.registerDisplayer(new DisplayText());
+			displayManager.registerDisplayer(new DisplayOrganisation());
 		}
 		return displayManager;
 	}

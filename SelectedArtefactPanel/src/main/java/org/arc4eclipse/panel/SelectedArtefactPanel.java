@@ -42,8 +42,8 @@ public class SelectedArtefactPanel extends Composite implements IStatusChangedLi
 		super(parent, style);
 		this.displayManager = displayManager;
 		this.selectedBindingManager = selectedBindingManager;
-		txtJarPath = new TitleAndTextField(this, SWT.NULL, DisplayCoreConstants.jarPathTitle);
-		txtJarName = new TitleAndTextField(this, SWT.NULL, DisplayCoreConstants.jarNameTitle);
+		txtJarPath = new TitleAndTextField(this, SWT.NULL, DisplayCoreConstants.jarPathTitle, false);
+		txtJarName = new TitleAndTextField(this, SWT.NULL, DisplayCoreConstants.jarNameTitle, false);
 		this.displayContainer = IDisplayContainer.Utils.displayContainer(this);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 		this.repository = repository;

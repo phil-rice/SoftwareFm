@@ -2,10 +2,12 @@ package org.arc4eclipse.arc4eclipseRepository.constants;
 
 public class RepositoryConstants {
 
-	public static final String organisationUrlKey = "text_organisationUrl";
-	public static final String projectUrlKey = "text_projectName";
+	public static final String organisationUrlKey = "organisation_organisationUrl";
 	public static final String organisationNameKey = "text_organisationName";
+
+	public static final String projectUrlKey = "text_projectName";
 	public static final String descriptionKey = "text_description";
+
 	public static final String javadocKey = "javadoc";
 	public static final String sourceKey = "source";
 
