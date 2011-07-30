@@ -9,7 +9,7 @@ import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
 import org.arc4eclipse.displayCore.api.IDisplayManager;
 import org.arc4eclipse.displayCore.api.IModifiesToBeDisplayed;
 import org.arc4eclipse.displayCore.api.NameSpaceNameAndValue;
-import org.arc4eclipse.displayText.DisplayOrganisation;
+import org.arc4eclipse.displayOrganisation.DisplayOrganisation;
 import org.arc4eclipse.displayText.DisplayText;
 import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.arc4eclipse.jdtBinding.api.IBindingRipper;
