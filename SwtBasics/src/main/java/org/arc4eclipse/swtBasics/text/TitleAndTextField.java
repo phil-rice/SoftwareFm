@@ -8,6 +8,8 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -18,6 +20,8 @@ import org.eclipse.swt.widgets.Text;
 public class TitleAndTextField extends Composite {
 	private final Text txtText;
 	private final Label lblTitle;
+	private final Composite compButtons;
+	private final Color originalBackground;
 
 	/**
 	 * @wbp.parser.constructor
@@ -48,7 +52,34 @@ public class TitleAndTextField extends Composite {
 		txtText.setLayoutData(fd_txtValue);
 		txtText.setText("");
 		txtText.setEditable(false);
-		final Color originalBackground = txtText.getBackground();
+
+		compButtons = new Composite(this, SWT.NULL);
+		FormData fd_compButtons = new FormData();
+		fd_compButtons.left = new FormAttachment(0, 290);
+		fd_compButtons.bottom = new FormAttachment(lblTitle, 0, SWT.BOTTOM);
+		fd_compButtons.top = new FormAttachment(lblTitle, 0, SWT.TOP);
+		fd_compButtons.right = new FormAttachment(100);
+		compButtons.setLayoutData(fd_compButtons);
+		RowLayout layout = new RowLayout();
+		compButtons.setLayout(layout);
+		layout.marginTop = 0;
+		layout.marginBottom = 0;
+		originalBackground = txtText.getBackground();
+		addEditButton(editable);
+	}
+
+	private Button addButton(String title, SelectionListener listener) {
+		Button button = new Button(compButtons, SWT.PUSH);
+		button.setText(title);
+		// button.setSize(new Point(35, 12));
+		button.addSelectionListener(listener);
+		RowData data = new RowData();
+		data.height = 18;
+		button.setLayoutData(data);
+		return button;
+	}
+
+	private void addEditButton(boolean editable) {
 		addCrListener(new Listener() {
 			@Override
 			public void handleEvent(Event event) {
@@ -56,16 +87,7 @@ public class TitleAndTextField extends Composite {
 				txtText.setBackground(originalBackground);
 			}
 		});
-		Button btnEdit = new Button(this, SWT.NONE);
-		FormData fd_btnEdi = new FormData();
-		fd_btnEdi.bottom = new FormAttachment(txtText);
-		fd_btnEdi.right = new FormAttachment(100);
-		fd_btnEdi.top = new FormAttachment(0);
-		fd_btnEdi.left = new FormAttachment(100, -35);
-		btnEdit.setLayoutData(fd_btnEdi);
-		btnEdit.setText("Edit");
-		btnEdit.setEnabled(editable);
-		btnEdit.addSelectionListener(new SelectionListener() {
+		addButton("Edit", new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				widgetDefaultSelected(e);
@@ -77,6 +99,16 @@ public class TitleAndTextField extends Composite {
 				txtText.setBackground(getDisplay().getSystemColor(SWT.COLOR_YELLOW));
 			}
 		});
+		// Button btnEdit = new Button(this, SWT.NONE);
+		// FormData fd_btnEdi = new FormData();
+		// fd_btnEdi.bottom = new FormAttachment(txtText);
+		// fd_btnEdi.right = new FormAttachment(100);
+		// fd_btnEdi.top = new FormAttachment(0);
+		// fd_btnEdi.left = new FormAttachment(100, -35);
+		// btnEdit.setLayoutData(fd_btnEdi);
+		// btnEdit.setText("Edit");
+		// btnEdit.setEnabled(editable);
+		// btnEdit.addSelectionListener();
 	}
 
 	public void setText(String text) {

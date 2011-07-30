@@ -9,7 +9,9 @@ import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
 import org.arc4eclipse.displayCore.api.IDisplayManager;
 import org.arc4eclipse.displayCore.api.IModifiesToBeDisplayed;
 import org.arc4eclipse.displayCore.api.NameSpaceNameAndValue;
+import org.arc4eclipse.displayJavadoc.DisplayJavadoc;
 import org.arc4eclipse.displayOrganisation.DisplayOrganisation;
+import org.arc4eclipse.displaySource.DisplaySource;
 import org.arc4eclipse.displayText.DisplayText;
 import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.arc4eclipse.jdtBinding.api.IBindingRipper;
@@ -107,6 +109,8 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 					List<NameSpaceNameAndValue> result = Lists.newList();
 					Object entity = context.get(RepositoryConstants.entity);
 					if (RepositoryConstants.entityJarData.equals(entity)) {
+						addDefault(result, data, RepositoryConstants.sourceKey, "");
+						addDefault(result, data, RepositoryConstants.javadocKey, "");
 						addDefault(result, data, RepositoryConstants.organisationUrlKey, "<org>");
 						addDefault(result, data, RepositoryConstants.projectUrlKey, "<proj>");
 					}
@@ -122,6 +126,8 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 			// TODO This is better done with an executable extension point
 			displayManager.registerDisplayer(new DisplayText());
 			displayManager.registerDisplayer(new DisplayOrganisation());
+			displayManager.registerDisplayer(new DisplaySource());
+			displayManager.registerDisplayer(new DisplayJavadoc());
 		}
 		return displayManager;
 	}
