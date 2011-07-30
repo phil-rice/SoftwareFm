@@ -49,7 +49,7 @@ public class DisplayContainer implements IDisplayContainer {
 				String url = bindingContext.url;
 				makeCurrent();
 				for (NameSpaceNameValueAndDisplayer nameSpaceNameValueAndDisplayer : toBeDisplayed)
-					nameSpaceNameValueAndDisplayer.displayer.makeCompositeAsChildOf(current, bindingContext, url, data, nameSpaceNameValueAndDisplayer);
+					nameSpaceNameValueAndDisplayer.displayer.makeCompositeAsChildOf(current, bindingContext, nameSpaceNameValueAndDisplayer);
 				Swts.addGrabHorizontalAndFillGridDataToAllChildren(current);
 				current.redraw();
 				// System.out.println("Parent " + Swts.layoutAsString(parent));

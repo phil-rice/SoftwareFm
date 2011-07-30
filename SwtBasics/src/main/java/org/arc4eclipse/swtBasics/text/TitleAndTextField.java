@@ -58,11 +58,16 @@ public class TitleAndTextField extends Composite {
 		txtText.setEditable(false);
 
 		originalBackground = txtText.getBackground();
-		addEditButton(editable);
+		if (editable)
+			addEditButton();
 	}
 
-	public Button addButton(String title, SelectionListener listener) {
-		Button button = new Button(compForTitle, SWT.PUSH);
+	public Button addPushButton(String title, SelectionListener listener) {
+		return addButton(SWT.PUSH, title, listener);
+	}
+
+	public Button addButton(int style, String title, SelectionListener listener) {
+		Button button = new Button(compForTitle, style);
 		button.setText(title);
 		// button.setSize(new Point(35, 12));
 		button.addSelectionListener(listener);
@@ -72,15 +77,15 @@ public class TitleAndTextField extends Composite {
 		return button;
 	}
 
-	private void addEditButton(boolean editable) {
+	private void addEditButton() {
 		addCrListener(new Listener() {
 			@Override
 			public void handleEvent(Event event) {
 				txtText.setEditable(false);
-				txtText.setBackground(originalBackground);
+				updateBackground();
 			}
 		});
-		addButton("Edit", new SelectionListener() {
+		addButton(SWT.TOGGLE, "Edit", new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				widgetDefaultSelected(e);
@@ -88,8 +93,8 @@ public class TitleAndTextField extends Composite {
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
-				txtText.setEditable(true);
-				txtText.setBackground(getDisplay().getSystemColor(SWT.COLOR_YELLOW));
+				txtText.setEditable(!txtText.getEditable());
+				updateBackground();
 			}
 		});
 		// Button btnEdit = new Button(this, SWT.NONE);
@@ -102,6 +107,14 @@ public class TitleAndTextField extends Composite {
 		// btnEdit.setText("Edit");
 		// btnEdit.setEnabled(editable);
 		// btnEdit.addSelectionListener();
+	}
+
+	protected void updateBackground() {
+		if (txtText.getEditable())
+			txtText.setBackground(getDisplay().getSystemColor(SWT.COLOR_YELLOW));
+		else
+			txtText.setBackground(originalBackground);
+
 	}
 
 	public void setText(String text) {
