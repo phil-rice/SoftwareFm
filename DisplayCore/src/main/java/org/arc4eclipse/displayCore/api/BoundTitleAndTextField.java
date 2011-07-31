@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Listener;
 public class BoundTitleAndTextField extends TitleAndTextField {
 
 	public BoundTitleAndTextField(Composite parent, int style, final BindingContext bindingContext, final NameSpaceNameAndValue nameSpaceNameAndValue) {
-		super(parent, style, bindingContext.titleLookup.getTitle(nameSpaceNameAndValue.nameSpace, nameSpaceNameAndValue.name), true);
+		super(parent, style, bindingContext.images, bindingContext.titleLookup.getTitle(nameSpaceNameAndValue.nameSpace, nameSpaceNameAndValue.name), true);
 		setText(nameSpaceNameAndValue.value.toString());
 		addCrListener(new Listener() {
 			@Override

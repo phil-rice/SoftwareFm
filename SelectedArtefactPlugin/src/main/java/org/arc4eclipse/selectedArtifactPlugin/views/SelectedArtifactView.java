@@ -5,6 +5,7 @@ import org.arc4eclipse.displayCore.api.IDisplayManager;
 import org.arc4eclipse.panel.ISelectedBindingManager;
 import org.arc4eclipse.panel.SelectedArtefactPanel;
 import org.arc4eclipse.selectedArtifact.plugin.Activator;
+import org.arc4eclipse.swtBasics.images.Images;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
@@ -32,7 +33,8 @@ public class SelectedArtifactView extends ViewPart {
 		final IArc4EclipseRepository repository = activator.getRepository();
 		IDisplayManager displayManager = activator.getDisplayManager();
 		ISelectedBindingManager selectedBindingManager = activator.getSelectedBindingManager();
-		new SelectedArtefactPanel(parent, SWT.NULL, displayManager, repository, selectedBindingManager);
+		Images images = new Images(parent.getDisplay());
+		new SelectedArtefactPanel(parent, SWT.NULL, displayManager, repository, selectedBindingManager, images);
 	}
 
 	@Override

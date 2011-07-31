@@ -14,6 +14,7 @@ import org.arc4eclipse.displayCore.api.ITitleLookup;
 import org.arc4eclipse.displayCore.constants.DisplayCoreConstants;
 import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.arc4eclipse.swtBasics.Swts;
+import org.arc4eclipse.swtBasics.images.Images;
 import org.arc4eclipse.swtBasics.text.TitleAndTextField;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
@@ -30,6 +31,7 @@ public class SelectedArtefactPanel extends Composite implements IStatusChangedLi
 	private final ISelectedBindingManager selectedBindingManager;
 	private final TitleAndTextField txtJarPath;
 	private final TitleAndTextField txtJarName;
+	private final Images images;
 
 	/**
 	 * Create the composite.
@@ -38,12 +40,13 @@ public class SelectedArtefactPanel extends Composite implements IStatusChangedLi
 	 * @param style
 	 * @param repository
 	 */
-	public SelectedArtefactPanel(Composite parent, int style, IDisplayManager displayManager, IArc4EclipseRepository repository, ISelectedBindingManager selectedBindingManager) {
+	public SelectedArtefactPanel(Composite parent, int style, IDisplayManager displayManager, IArc4EclipseRepository repository, ISelectedBindingManager selectedBindingManager, Images images) {
 		super(parent, style);
 		this.displayManager = displayManager;
 		this.selectedBindingManager = selectedBindingManager;
-		txtJarPath = new TitleAndTextField(this, SWT.NULL, DisplayCoreConstants.jarPathTitle, false);
-		txtJarName = new TitleAndTextField(this, SWT.NULL, DisplayCoreConstants.jarNameTitle, false);
+		this.images = images;
+		txtJarPath = new TitleAndTextField(this, SWT.NULL, images, DisplayCoreConstants.jarPathTitle, false);
+		txtJarName = new TitleAndTextField(this, SWT.NULL, images, DisplayCoreConstants.jarNameTitle, false);
 		this.displayContainer = IDisplayContainer.Utils.displayContainer(this);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 		this.repository = repository;
@@ -82,7 +85,7 @@ public class SelectedArtefactPanel extends Composite implements IStatusChangedLi
 
 	@Override
 	public void statusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> data, Map<String, Object> context) throws Exception {
-		BindingContext bindingContext = new BindingContext(repository, ITitleLookup.Utils.titleLookup(), url, data, context);
+		BindingContext bindingContext = new BindingContext(repository, ITitleLookup.Utils.titleLookup(), images, url, data, context);
 		displayManager.populate(displayContainer, bindingContext);
 	}
 
@@ -91,7 +94,7 @@ public class SelectedArtefactPanel extends Composite implements IStatusChangedLi
 		Swts.display("Selected Artefact Panel", new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				SelectedArtefactPanel selectedArtefactPanel = new SelectedArtefactPanel(from, SWT.NULL, IDisplayManager.Utils.displayManager(), repository, ISelectedBindingManager.Utils.noSelectedBindingManager());
+				SelectedArtefactPanel selectedArtefactPanel = new SelectedArtefactPanel(from, SWT.NULL, IDisplayManager.Utils.displayManager(), repository, ISelectedBindingManager.Utils.noSelectedBindingManager(), new Images(from.getDisplay()));
 				return selectedArtefactPanel;
 			}
 		});

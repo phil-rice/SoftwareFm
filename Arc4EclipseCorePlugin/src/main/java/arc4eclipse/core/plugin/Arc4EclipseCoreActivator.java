@@ -133,4 +133,5 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 		}
 		return displayManager;
 	}
+
 }

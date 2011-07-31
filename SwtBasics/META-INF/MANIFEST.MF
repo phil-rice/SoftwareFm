@@ -6,6 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Arc4Eclipse
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.arc4eclipse.utilities;bundle-version="1.0.0";visibility:=reexport,
- org.eclipse.swt;bundle-version="3.7.0";visibility:=reexport
+ org.eclipse.swt;bundle-version="3.7.0";visibility:=reexport,
+ org.eclipse.ui.forms;bundle-version="3.5.100"
 Export-Package: org.arc4eclipse.swtBasics,
+ org.arc4eclipse.swtBasics.images,
  org.arc4eclipse.swtBasics.text
