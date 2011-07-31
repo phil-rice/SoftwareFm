@@ -1,10 +1,10 @@
 package org.arc4eclipse.swtBasics.text;
 
+import org.arc4eclipse.swtBasics.images.IImageButtonListener;
+import org.arc4eclipse.swtBasics.images.ImageButton;
 import org.arc4eclipse.swtBasics.images.Images;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
@@ -12,7 +12,6 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
@@ -30,11 +29,11 @@ public class TitleAndTextField extends Composite {
 	 * @wbp.parser.constructor
 	 */
 	public TitleAndTextField(Composite arg0, int arg1, Images images, String title) {
-		this(arg0, arg1, images, title, true);
+		this(arg0, images, title, true);
 	}
 
-	public TitleAndTextField(Composite arg0, int arg1, Images images, String title, boolean editable) {
-		super(arg0, arg1);
+	public TitleAndTextField(Composite parent, Images images, String title, boolean editable) {
+		super(parent, SWT.BORDER);
 		setLayout(new FormLayout());
 
 		compForTitle = new Composite(this, SWT.NULL);
@@ -60,9 +59,10 @@ public class TitleAndTextField extends Composite {
 		txtText.setText("");
 		txtText.setEditable(false);
 
-		originalBackground = txtText.getBackground();
+		originalBackground = getDisplay().getSystemColor(SWT.COLOR_WHITE);
 		if (editable)
 			addEditButton(images);
+		updateBackground();
 	}
 
 	@Override
@@ -72,15 +72,11 @@ public class TitleAndTextField extends Composite {
 		super.dispose();
 	}
 
-	public Button addPushButton(String title, SelectionListener listener) {
-		return addButton(SWT.PUSH, title, listener);
-	}
-
-	public Button addButton(int style, String title, SelectionListener listener) {
-		Button button = new Button(compForTitle, style);
-		button.setText(title);
+	public ImageButton addButton(Image image, String tooltipText, IImageButtonListener listener) {
+		ImageButton button = new ImageButton(compForTitle, image);
 		// button.setSize(new Point(35, 12));
-		button.addSelectionListener(listener);
+		button.addListener(listener);
+		button.setTooltipText(tooltipText);
 		RowData data = new RowData();
 		data.height = 18;
 		button.setLayoutData(data);
@@ -95,20 +91,13 @@ public class TitleAndTextField extends Composite {
 				updateBackground();
 			}
 		});
-		Button button = addButton(SWT.FLAT, "", new SelectionListener() {
+		addButton(images.getEditImage(), "Toggles the editable state of this value", new IImageButtonListener() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
-				widgetDefaultSelected(e);
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
+			public void buttonPressed(ImageButton button) {
 				txtText.setEditable(!txtText.getEditable());
 				updateBackground();
 			}
 		});
-		button.setImage(images.getEditImage());
-		button.setToolTipText("Allows/Cancels editing of this value");
 	}
 
 	protected void updateBackground() {
