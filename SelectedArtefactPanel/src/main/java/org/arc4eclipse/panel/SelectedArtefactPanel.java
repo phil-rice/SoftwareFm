@@ -10,7 +10,6 @@ import org.arc4eclipse.displayCore.api.BindingContext;
 import org.arc4eclipse.displayCore.api.IDisplayContainer;
 import org.arc4eclipse.displayCore.api.IDisplayManager;
 import org.arc4eclipse.displayCore.api.ITitleLookup;
-import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.arc4eclipse.swtBasics.Swts;
 import org.arc4eclipse.swtBasics.images.Images;
 import org.arc4eclipse.utilities.functions.IFunction1;
@@ -19,7 +18,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
 
-public class SelectedArtefactPanel extends Composite implements IStatusChangedListener, ISelectedBindingListener {
+public class SelectedArtefactPanel extends Composite implements IStatusChangedListener {
 
 	private final IArc4EclipseRepository repository;
 	private final IDisplayContainer displayContainer;
@@ -48,13 +47,11 @@ public class SelectedArtefactPanel extends Composite implements IStatusChangedLi
 		// layout.numColumns = 1;
 		setLayout(layout);
 		repository.addStatusListener(this);
-		selectedBindingManager.addSelectedArtifactSelectionListener(this);
 	}
 
 	@Override
 	public void dispose() {
 		repository.removeStatusListener(this);
-		selectedBindingManager.removeSelectedArtifactSelectionListener(this);
 		displayContainer.dispose();
 		super.dispose();
 	}
@@ -62,10 +59,6 @@ public class SelectedArtefactPanel extends Composite implements IStatusChangedLi
 	@Override
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
-	}
-
-	@Override
-	public void selectionOccured(BindingRipperResult ripperResult) {
 	}
 
 	@Override

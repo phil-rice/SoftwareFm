@@ -1,6 +1,7 @@
 package org.arc4eclipse.displayCore.api.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.arc4eclipse.displayCore.api.BindingContext;
 import org.arc4eclipse.displayCore.api.IDisplayContainer;
@@ -45,19 +46,20 @@ public class DisplayContainer implements IDisplayContainer {
 		parent.getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				// Map<String, Object> data = bindingContext.data;
-				// String url = bindingContext.url;
+				Map<String, Object> data = bindingContext.data;
+				String url = bindingContext.url;
 				makeCurrent();
 				for (NameSpaceNameValueAndDisplayer nameSpaceNameValueAndDisplayer : toBeDisplayed)
 					nameSpaceNameValueAndDisplayer.displayer.makeCompositeAsChildOf(current, bindingContext, nameSpaceNameValueAndDisplayer);
 				Swts.addGrabHorizontalAndFillGridDataToAllChildren(current);
-				current.redraw();
-				// System.out.println("Parent " + Swts.layoutAsString(parent));
-				// System.out.println("Current " + Swts.layoutAsString(current));
-				// for (Control child : current.getChildren())
-				// System.out.println("Child " + Swts.layoutAsString(child));
+				System.out.println("Parent " + Swts.layoutAsString(parent));
+				System.out.println("Current " + Swts.layoutAsString(current));
+				for (Control child : current.getChildren())
+					System.out.println("Child " + Swts.layoutAsString(child));
 				parent.layout();
 				parent.redraw();
+				current.layout();
+				content.redraw();
 			}
 		});
 	}
