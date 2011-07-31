@@ -1,7 +1,6 @@
 package org.arc4eclipse.displayCore.api.impl;
 
 import java.util.List;
-import java.util.Map;
 
 import org.arc4eclipse.displayCore.api.BindingContext;
 import org.arc4eclipse.displayCore.api.IDisplayContainer;
@@ -46,8 +45,8 @@ public class DisplayContainer implements IDisplayContainer {
 		parent.getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				Map<String, Object> data = bindingContext.data;
-				String url = bindingContext.url;
+				// Map<String, Object> data = bindingContext.data;
+				// String url = bindingContext.url;
 				makeCurrent();
 				for (NameSpaceNameValueAndDisplayer nameSpaceNameValueAndDisplayer : toBeDisplayed)
 					nameSpaceNameValueAndDisplayer.displayer.makeCompositeAsChildOf(current, bindingContext, nameSpaceNameValueAndDisplayer);

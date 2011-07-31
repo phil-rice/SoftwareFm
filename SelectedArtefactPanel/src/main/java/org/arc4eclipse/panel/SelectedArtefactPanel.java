@@ -5,6 +5,7 @@ import java.util.Map;
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
 import org.arc4eclipse.arc4eclipseRepository.api.IStatusChangedListener;
 import org.arc4eclipse.arc4eclipseRepository.api.RepositoryDataItemStatus;
+import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
 import org.arc4eclipse.displayCore.api.BindingContext;
 import org.arc4eclipse.displayCore.api.IDisplayContainer;
 import org.arc4eclipse.displayCore.api.IDisplayManager;
@@ -25,6 +26,7 @@ public class SelectedArtefactPanel extends Composite implements IStatusChangedLi
 	private final IDisplayManager displayManager;
 	private final ISelectedBindingManager selectedBindingManager;
 	private final Images images;
+	private final String entity;
 
 	/**
 	 * Create the composite.
@@ -33,8 +35,9 @@ public class SelectedArtefactPanel extends Composite implements IStatusChangedLi
 	 * @param style
 	 * @param repository
 	 */
-	public SelectedArtefactPanel(Composite parent, int style, IDisplayManager displayManager, IArc4EclipseRepository repository, ISelectedBindingManager selectedBindingManager, Images images) {
+	public SelectedArtefactPanel(Composite parent, int style, String entity, IDisplayManager displayManager, IArc4EclipseRepository repository, ISelectedBindingManager selectedBindingManager, Images images) {
 		super(parent, style);
+		this.entity = entity;
 		this.displayManager = displayManager;
 		this.selectedBindingManager = selectedBindingManager;
 		this.images = images;
@@ -67,8 +70,11 @@ public class SelectedArtefactPanel extends Composite implements IStatusChangedLi
 
 	@Override
 	public void statusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> data, Map<String, Object> context) throws Exception {
-		BindingContext bindingContext = new BindingContext(repository, ITitleLookup.Utils.titleLookup(), images, url, data, context);
-		displayManager.populate(displayContainer, bindingContext);
+		Object actualEntity = context.get(RepositoryConstants.entity);
+		if (entity.equals(actualEntity)) {
+			BindingContext bindingContext = new BindingContext(repository, ITitleLookup.Utils.titleLookup(), images, url, data, context);
+			displayManager.populate(displayContainer, bindingContext);
+		}
 	}
 
 	public static void main(String args[]) {
@@ -76,7 +82,7 @@ public class SelectedArtefactPanel extends Composite implements IStatusChangedLi
 		Swts.display("Selected Artefact Panel", new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				SelectedArtefactPanel selectedArtefactPanel = new SelectedArtefactPanel(from, SWT.NULL, IDisplayManager.Utils.displayManager(), repository, ISelectedBindingManager.Utils.noSelectedBindingManager(), new Images(from.getDisplay()));
+				SelectedArtefactPanel selectedArtefactPanel = new SelectedArtefactPanel(from, SWT.NULL, RepositoryConstants.entityJarData, IDisplayManager.Utils.displayManager(), repository, ISelectedBindingManager.Utils.noSelectedBindingManager(), new Images(from.getDisplay()));
 				return selectedArtefactPanel;
 			}
 		});

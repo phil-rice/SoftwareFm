@@ -1,6 +1,7 @@
 package org.arc4eclipse.debugMessagePanel.views;
 
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +20,7 @@ import org.eclipse.swt.widgets.Composite;
 
 public class DebugMessagePanel extends Composite implements IArc4EclipseLogger {
 	private final int logSize = 8;
-	private final List<String> log = Lists.newList();
+	private final List<String> log = Collections.synchronizedList(Lists.<String> newList());
 	private final TitleAndStyledTextField titleAndStyledTextField;
 
 	public DebugMessagePanel(Composite parent, int style, IArc4EclipseRepository repository) {

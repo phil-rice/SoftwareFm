@@ -17,11 +17,11 @@ import org.eclipse.ui.part.ViewPart;
  * <p>
  */
 
-public class SelectedArtifactView extends ViewPart {
+abstract public class AbstractSelectedArtifactView extends ViewPart {
 
-	public static final String ID = "org.arc4eclipse.selectedArtifactPlugin.views.SelectedArtifactView";
+	public static final String ID = "org.arc4eclipse.selectedArtifactPlugin.views.AbstractSelectedArtifactView";
 
-	public SelectedArtifactView() {
+	public AbstractSelectedArtifactView() {
 	}
 
 	/**
@@ -34,8 +34,10 @@ public class SelectedArtifactView extends ViewPart {
 		IDisplayManager displayManager = activator.getDisplayManager();
 		ISelectedBindingManager selectedBindingManager = activator.getSelectedBindingManager();
 		Images images = new Images(parent.getDisplay());
-		new SelectedArtefactPanel(parent, SWT.NULL, displayManager, repository, selectedBindingManager, images);
+		new SelectedArtefactPanel(parent, SWT.NULL, entity(), displayManager, repository, selectedBindingManager, images);
 	}
+
+	abstract protected String entity();
 
 	@Override
 	public void dispose() {

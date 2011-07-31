@@ -29,7 +29,7 @@ public class BindingRipperResult {
 
 	@Override
 	public String toString() {
-		return "BindingRipperResult [path=" + path + "\nHexDigest=" + hexDigest + "\nPackageName=" + packageName + "\nClassName=" + className + "\nMethodName=" + methodName + "\nRoot= " + packageFragment + "\nJavaProject=" + javaProject + "]";
+		return "BindingRipperResult [path=" + path + "\nHexDigest=" + hexDigest + "\nPackageName=" + packageName + "\nClassName=" + className + "\nMethodName=" + methodName + "]";
 	}
 
 }

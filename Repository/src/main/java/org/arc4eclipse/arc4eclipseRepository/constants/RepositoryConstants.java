@@ -16,6 +16,8 @@ public class RepositoryConstants {
 
 	public static final String entity = "entity";
 	public static final String entityJarData = "jarData";
+	public static final String entityOrganisation = "Organisation";
+	public static final String entityProject = "Project";
 
 	public static final String cannotFindDataFor = "Cannot find data for key {0} in map {1}";
 	public static final String valueNotAString = "Value is not a string for key {0} It is of {1}. With value {2}. Map is {3}";
