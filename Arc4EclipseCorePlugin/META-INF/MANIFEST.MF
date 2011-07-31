@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.ui,
  org.arc4eclipse.displayText;bundle-version="1.0.0",
  org.arc4eclipse.displayOrganisation;bundle-version="1.0.0",
  org.arc4eclipse.displaySource;bundle-version="1.0.0",
- org.arc4eclipse.displayJavadoc;bundle-version="1.0.0"
+ org.arc4eclipse.displayJavadoc;bundle-version="1.0.0",
+ org.arc4eclipse.displayJarPath;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: arc4eclipse.core.plugin

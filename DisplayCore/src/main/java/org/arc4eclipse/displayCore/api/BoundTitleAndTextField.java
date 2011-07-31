@@ -3,14 +3,19 @@ package org.arc4eclipse.displayCore.api;
 import java.util.Collections;
 
 import org.arc4eclipse.swtBasics.text.TitleAndTextField;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 public class BoundTitleAndTextField extends TitleAndTextField {
 
+	public BoundTitleAndTextField(Composite parent, final BindingContext bindingContext, final NameSpaceNameAndValue nameSpaceNameAndValue) {
+		this(parent, SWT.BORDER, bindingContext, nameSpaceNameAndValue);
+	}
+
 	public BoundTitleAndTextField(Composite parent, int style, final BindingContext bindingContext, final NameSpaceNameAndValue nameSpaceNameAndValue) {
-		super(parent, bindingContext.images, bindingContext.titleLookup.getTitle(nameSpaceNameAndValue.nameSpace, nameSpaceNameAndValue.name), true);
+		super(parent, style, bindingContext.images, bindingContext.titleLookup.getTitle(nameSpaceNameAndValue.nameSpace, nameSpaceNameAndValue.name), true);
 		setText(nameSpaceNameAndValue.value.toString());
 		addCrListener(new Listener() {
 			@Override

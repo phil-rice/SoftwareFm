@@ -7,6 +7,7 @@ import org.arc4eclipse.displayCore.api.BindingContext;
 import org.arc4eclipse.displayCore.api.IDisplayContainer;
 import org.arc4eclipse.displayCore.api.NameSpaceNameValueAndDisplayer;
 import org.arc4eclipse.swtBasics.Swts;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -21,7 +22,7 @@ public class DisplayContainer implements IDisplayContainer {
 	public DisplayContainer(Composite parent, int style) {
 		this.parent = parent;
 		this.style = style;
-		this.content = new Composite(parent, style);
+		this.content = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout();
 		layout.marginWidth = 0;
 		content.setLayout(layout);

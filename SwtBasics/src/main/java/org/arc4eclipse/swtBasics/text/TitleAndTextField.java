@@ -25,15 +25,12 @@ public class TitleAndTextField extends Composite {
 	private final Color originalBackground;
 	private Image image;
 
-	/**
-	 * @wbp.parser.constructor
-	 */
-	public TitleAndTextField(Composite arg0, int arg1, Images images, String title) {
-		this(arg0, images, title, true);
+	public TitleAndTextField(Composite parent, Images images, String title, boolean editable) {
+		this(parent, SWT.BORDER, images, title, editable);
 	}
 
-	public TitleAndTextField(Composite parent, Images images, String title, boolean editable) {
-		super(parent, SWT.BORDER);
+	public TitleAndTextField(Composite parent, int style, Images images, String title, boolean editable) {
+		super(parent, style);
 		setLayout(new FormLayout());
 
 		compForTitle = new Composite(this, SWT.NULL);

@@ -9,6 +9,7 @@ import org.arc4eclipse.displayCore.api.IDisplayManager;
 import org.arc4eclipse.displayCore.api.IModifiesToBeDisplayed;
 import org.arc4eclipse.displayCore.api.NameSpaceNameAndValue;
 import org.arc4eclipse.displayCore.constants.DisplayCoreConstants;
+import org.arc4eclipse.displayJarPath.DisplayJarPath;
 import org.arc4eclipse.displayJavadoc.DisplayJavadoc;
 import org.arc4eclipse.displayOrganisation.DisplayOrganisation;
 import org.arc4eclipse.displaySource.DisplaySource;
@@ -111,6 +112,7 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 					List<NameSpaceNameAndValue> result = Lists.newList();
 					Object entity = context.get(RepositoryConstants.entity);
 					if (RepositoryConstants.entityJarData.equals(entity)) {
+						addDefault(result, data, RepositoryConstants.jarPathKey, "<ignored>");
 						addDefault(result, data, RepositoryConstants.sourceKey, "");
 						addDefault(result, data, RepositoryConstants.javadocKey, "");
 						addDefault(result, data, RepositoryConstants.organisationUrlKey, "<org>");
@@ -130,6 +132,7 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 			displayManager.registerDisplayer(new DisplayOrganisation());
 			displayManager.registerDisplayer(new DisplaySource());
 			displayManager.registerDisplayer(new DisplayJavadoc());
+			displayManager.registerDisplayer(new DisplayJarPath());
 		}
 		return displayManager;
 	}

@@ -8,6 +8,7 @@ public class RepositoryConstants {
 	public static final String projectUrlKey = "text_projectName";
 	public static final String descriptionKey = "text_description";
 
+	public static final String jarPathKey = "jarPath";
 	public static final String javadocKey = "javadoc";
 	public static final String sourceKey = "source";
 
