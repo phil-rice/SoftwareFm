@@ -373,4 +373,10 @@ public class Maps {
 	public static <K, V, To> To[] toParameters(Map<K, V> map, Class<To> toClass) {
 		return Maps.<K, V, To> toParameters(map, Functions.<K, To> cast(), Functions.<V, To> cast(), toClass);
 	}
+
+	public static <K, V> Map<K, V> newMapWith(Map<K, V> old, K key, V value) {
+		HashMap<K, V> result = new HashMap<K, V>(old);
+		result.put(key, value);
+		return result;
+	}
 }

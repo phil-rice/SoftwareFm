@@ -32,7 +32,7 @@ public class ShellPanel extends Composite {
 		super(parent, style);
 		setLayout(new FormLayout());
 		Images images = new Images(getDisplay());
-		textHost = new TitleAndTextField(this, SWT.NONE, images, "Host");
+		textHost = new TitleAndTextField(this, SWT.NONE, images, "Host", true);
 		FormData fd_textHost = new FormData();
 		fd_textHost.bottom = new FormAttachment(0, 31);
 		fd_textHost.right = new FormAttachment(0, 369);
@@ -41,7 +41,7 @@ public class ShellPanel extends Composite {
 		textHost.setLayoutData(fd_textHost);
 		textHost.setText(HttpClientConstants.defaultHost);
 
-		textPort = new TitleAndTextField(this, SWT.NONE, images, "Port");
+		textPort = new TitleAndTextField(this, SWT.NONE, images, "Port", true);
 		FormData fd_textPort = new FormData();
 		fd_textPort.bottom = new FormAttachment(0, 58);
 		fd_textPort.right = new FormAttachment(0, 369);
@@ -50,7 +50,7 @@ public class ShellPanel extends Composite {
 		textPort.setLayoutData(fd_textPort);
 		textPort.setText(Integer.toString(HttpClientConstants.defaultPort));
 
-		textUserName = new TitleAndTextField(this, SWT.NONE, images, "Username");
+		textUserName = new TitleAndTextField(this, SWT.NONE, images, "Username", true);
 		FormData fd_textUserName = new FormData();
 		fd_textUserName.bottom = new FormAttachment(0, 91);
 		fd_textUserName.right = new FormAttachment(0, 369);
@@ -59,7 +59,7 @@ public class ShellPanel extends Composite {
 		textUserName.setLayoutData(fd_textUserName);
 		textUserName.setText("admin");
 
-		textPassword = new TitleAndTextField(this, SWT.NONE, images, "Password");
+		textPassword = new TitleAndTextField(this, SWT.NONE, images, "Password", true);
 		FormData fd_textPassword = new FormData();
 		fd_textPassword.bottom = new FormAttachment(0, 121);
 		fd_textPassword.right = new FormAttachment(0, 369);
@@ -68,7 +68,7 @@ public class ShellPanel extends Composite {
 		textPassword.setLayoutData(fd_textPassword);
 		textPassword.setText("admin");
 
-		textPrefix = new TitleAndTextField(this, SWT.NONE, images, "Prefix");
+		textPrefix = new TitleAndTextField(this, SWT.NONE, images, "Prefix", true);
 		FormData fd_textPrefix = new FormData();
 		fd_textPrefix.bottom = new FormAttachment(0, 148);
 		fd_textPrefix.right = new FormAttachment(0, 369);
@@ -76,7 +76,7 @@ public class ShellPanel extends Composite {
 		fd_textPrefix.left = new FormAttachment(0, 10);
 		textPrefix.setLayoutData(fd_textPrefix);
 
-		textMiddle = new TitleAndTextField(this, SWT.NONE, images, "Middle");
+		textMiddle = new TitleAndTextField(this, SWT.NONE, images, "Middle", true);
 		FormData fd_textMiddle = new FormData();
 		fd_textMiddle.bottom = new FormAttachment(0, 175);
 		fd_textMiddle.right = new FormAttachment(0, 369);
@@ -84,7 +84,7 @@ public class ShellPanel extends Composite {
 		fd_textMiddle.left = new FormAttachment(0, 10);
 		textMiddle.setLayoutData(fd_textMiddle);
 
-		textPostFix = new TitleAndTextField(this, SWT.NONE, images, "Postfix");
+		textPostFix = new TitleAndTextField(this, SWT.NONE, images, "Postfix", true);
 		FormData fd_textPostFix = new FormData();
 		fd_textPostFix.bottom = new FormAttachment(0, 206);
 		fd_textPostFix.right = new FormAttachment(0, 369);
@@ -93,7 +93,7 @@ public class ShellPanel extends Composite {
 		textPostFix.setLayoutData(fd_textPostFix);
 		textPostFix.setText(".json");
 
-		textSending = new TitleAndTextField(this, SWT.NONE, images, "Sending");
+		textSending = new TitleAndTextField(this, SWT.NONE, images, "Sending", true);
 		FormData fd_textSending = new FormData();
 		fd_textSending.bottom = new FormAttachment(0, 233);
 		fd_textSending.right = new FormAttachment(0, 369);

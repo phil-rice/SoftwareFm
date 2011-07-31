@@ -60,13 +60,13 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 		repository.modifyJarData(digest, key, value, context1).get();
 		validListener.assertEquals(//
 				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", REQUESTED, null, context1, //
-				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37.json", FOUND, expected, context1);
+				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", FOUND, expected, context1);
 		repository.getJarData(digest, context2).get();
 		validListener.assertEquals(//
 				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", REQUESTED, null, context1,//
-				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37.json", FOUND, expected, context1,//
-				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", REQUESTED, null, context2,//
-				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37.json", FOUND, expected, context2);
+				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", FOUND, expected, context1,//
+				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", REQUESTED, null, Maps.newMapWith(context2, RepositoryConstants.entity, RepositoryConstants.entityJarData),//
+				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", FOUND, expected, Maps.newMapWith(context2, RepositoryConstants.entity, RepositoryConstants.entityJarData));
 	}
 
 	@Test
@@ -96,13 +96,13 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 		repository.modifyData(url, key, value, context1).get();
 		validListener.assertEquals(//
 				url, REQUESTED, null, context1, //
-				url + ".json", FOUND, expected, context1);
+				url, FOUND, expected, context1);
 		repository.getData(url, context2).get();
 		validListener.assertEquals(//
 				url, REQUESTED, null, context1,//
-				url + ".json", FOUND, expected, context1,//
+				url, FOUND, expected, context1,//
 				url, REQUESTED, null, context2,//
-				url + ".json", FOUND, expected, context2);
+				url, FOUND, expected, context2);
 
 	}
 
