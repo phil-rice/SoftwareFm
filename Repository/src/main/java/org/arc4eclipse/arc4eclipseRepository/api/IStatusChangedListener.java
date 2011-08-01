@@ -11,7 +11,12 @@ public interface IStatusChangedListener {
 			return new IStatusChangedListener() {
 				@Override
 				public void statusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> item, Map<String, Object> context) {
-					System.out.println(status + " " + item + "  -------------  " + context);
+					System.out.println(status + " " + url + " " + item + "  -------------  " + context);
+				}
+
+				@Override
+				public String toString() {
+					return "sysout";
 				}
 			};
 		}

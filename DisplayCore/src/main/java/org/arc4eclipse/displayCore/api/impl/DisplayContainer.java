@@ -52,13 +52,14 @@ public class DisplayContainer implements IDisplayContainer {
 				for (NameSpaceNameValueAndDisplayer nameSpaceNameValueAndDisplayer : toBeDisplayed)
 					nameSpaceNameValueAndDisplayer.displayer.makeCompositeAsChildOf(current, bindingContext, nameSpaceNameValueAndDisplayer);
 				Swts.addGrabHorizontalAndFillGridDataToAllChildren(current);
-				current.redraw();
-				// System.out.println("Parent " + Swts.layoutAsString(parent));
-				// System.out.println("Current " + Swts.layoutAsString(current));
-				// for (Control child : current.getChildren())
-				// System.out.println("Child " + Swts.layoutAsString(child));
+				System.out.println("Parent " + Swts.layoutAsString(parent));
+				System.out.println("Current " + Swts.layoutAsString(current));
+				for (Control child : current.getChildren())
+					System.out.println("Child " + Swts.layoutAsString(child));
 				parent.layout();
 				parent.redraw();
+				current.layout();
+				content.redraw();
 			}
 		});
 	}

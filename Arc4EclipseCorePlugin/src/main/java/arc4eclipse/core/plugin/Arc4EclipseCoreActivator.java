@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
+import org.arc4eclipse.arc4eclipseRepository.api.IStatusChangedListener;
+import org.arc4eclipse.arc4eclipseRepository.api.RepositoryDataItemStatus;
 import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
 import org.arc4eclipse.displayCore.api.IDisplayManager;
 import org.arc4eclipse.displayCore.api.IModifiesToBeDisplayed;
@@ -18,6 +20,8 @@ import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.arc4eclipse.jdtBinding.api.IBindingRipper;
 import org.arc4eclipse.panel.ISelectedBindingListener;
 import org.arc4eclipse.utilities.collections.Lists;
+import org.arc4eclipse.utilities.exceptions.WrappedException;
+import org.arc4eclipse.utilities.functions.IFunction1;
 import org.arc4eclipse.utilities.maps.Maps;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbench;
@@ -77,8 +81,39 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 	}
 
 	public IArc4EclipseRepository getRepository() {
-		if (repository == null)
+		if (repository == null) {
 			repository = IArc4EclipseRepository.Utils.repository();
+			repository.addStatusListener(new IStatusChangedListener() {
+				@Override
+				public void statusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> item, Map<String, Object> context) throws Exception {
+					if (item != null) {
+						Object actualEntity = context.get(RepositoryConstants.entity);
+						if (RepositoryConstants.entityJarData.equals(actualEntity)) {
+							getDependantData(item, repository.generator().forOrganisation(), RepositoryConstants.entityOrganisation, RepositoryConstants.organisationUrlKey);
+							getDependantData(item, repository.generator().forProject(), RepositoryConstants.entityProject, RepositoryConstants.projectUrlKey);
+						}
+					}
+				}
+
+				private void getDependantData(Map<String, Object> item, IFunction1<String, String> urlConvertor, String entity, String key) {
+					try {
+						String rawUrl = (String) item.get(key);
+						if (rawUrl != null && !rawUrl.equals("")) {
+							String url = urlConvertor.apply(rawUrl);
+							repository.getData(url, Maps.<String, Object> makeMap(RepositoryConstants.entity, entity));
+						}
+					} catch (Exception e) {
+						throw WrappedException.wrap(e);
+					}
+				}
+
+				@Override
+				public String toString() {
+					return "GetOrgProjDataFromJarData";
+				}
+			});
+			// repository.addStatusListener(IStatusChangedListener.Utils.sysout());
+		}
 		return repository;
 	}
 
@@ -117,6 +152,19 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 						addDefault(result, data, RepositoryConstants.javadocKey, "");
 						addDefault(result, data, RepositoryConstants.organisationUrlKey, "<org>");
 						addDefault(result, data, RepositoryConstants.projectUrlKey, "<proj>");
+					}
+					if (RepositoryConstants.entityOrganisation.equals(entity)) {
+						addDefault(result, data, RepositoryConstants.organisationNameKey, "");
+						addDefault(result, data, RepositoryConstants.organisationDescriptionKey, "");
+					}
+					if (RepositoryConstants.entityProject.equals(entity)) {
+						addDefault(result, data, RepositoryConstants.projectUrlKey, "");
+						addDefault(result, data, RepositoryConstants.projectNameKey, "");
+						addDefault(result, data, RepositoryConstants.projectLicenseKey, "");
+						addDefault(result, data, RepositoryConstants.projectDescriptionKey, "");
+						addDefault(result, data, RepositoryConstants.projectMailingListsKey, "");
+						addDefault(result, data, RepositoryConstants.projectTutorialsKey, "");
+						addDefault(result, data, RepositoryConstants.projectJobsKey, "");
 					}
 					return result;
 				}

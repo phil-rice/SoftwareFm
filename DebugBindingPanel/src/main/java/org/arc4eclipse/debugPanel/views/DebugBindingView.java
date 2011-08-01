@@ -1,6 +1,7 @@
 package org.arc4eclipse.debugPanel.views;
 
 import org.arc4eclipse.debugMessagePanel.views.DebugBindingPanel;
+import org.arc4eclipse.swtBasics.images.Images;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
@@ -24,7 +25,7 @@ public class DebugBindingView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		Arc4EclipseCoreActivator activator = Arc4EclipseCoreActivator.getDefault();
-		new DebugBindingPanel(parent, SWT.NULL, activator.getSelectedBindingManager());
+		new DebugBindingPanel(parent, SWT.NULL, new Images(parent.getDisplay()), activator.getSelectedBindingManager());
 	}
 
 	@Override

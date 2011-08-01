@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.arc4eclipse.displaySource
+Bundle-SymbolicName: org.arc4eclipse.displaySource
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Arc4Eclipse
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.arc4eclipse.displayCore;bundle-version="1.0.0";visibility:=reexport,
+ org.eclipse.core.runtime;bundle-version="3.7.0"
+Export-Package: org.arc4eclipse.displaySource
