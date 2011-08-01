@@ -14,6 +14,7 @@ public class Images {
 	private Image editImage;
 	private Image linkImage;
 	private Image browseImage;
+	private Image clearImage;
 
 	public Images(Display display) {
 		this.display = display;
@@ -47,6 +48,11 @@ public class Images {
 			linkImage = makeImage("Link.png");
 		return linkImage;
 	}
+	public Image getClearImage() {
+		if (clearImage == null)
+			clearImage = makeImage("Clear.png");
+		return clearImage;
+	}
 
 	private Image makeImage(String string) {
 		try {
@@ -56,5 +62,6 @@ public class Images {
 			throw WrappedException.wrap(e);
 		}
 	}
+
 
 }

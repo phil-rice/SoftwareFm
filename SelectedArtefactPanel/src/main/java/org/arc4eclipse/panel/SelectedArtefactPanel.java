@@ -81,4 +81,9 @@ public class SelectedArtefactPanel extends Composite implements IStatusChangedLi
 		});
 	}
 
+	@Override
+	public String toString() {
+		return entity + "/" + super.toString();
+	}
+
 }

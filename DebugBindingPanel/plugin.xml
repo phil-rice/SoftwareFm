@@ -5,22 +5,29 @@
    <extension
          point="org.eclipse.ui.views">
       <category
-            name="Arc4Eclipse"
-            id="org.ar4eclipse">
+            name="Arc4Eclipse - debug"
+            id="org.arc4eclipse.debug">
       </category>
       <view
             name="Arc4Eclipse - Binding Debug"
             icon="icons/sample.gif"
-            category="org.arc4eclipse"
+            category="org.arc4eclipse.debug"
             class="org.arc4eclipse.debugPanel.views.DebugBindingView"
             id="org.arc4eclipse.debugPanel.views.DebugBindingView">
       </view>
       <view
             name="Arc4Eclipse - Messages Debug"
             icon="icons/sample.gif"
-            category="org.arc4eclipse"
+            category="org.arc4eclipse.debug"
             class="org.arc4eclipse.debugPanel.views.DebugMessageView"
             id="org.arc4eclipse.debugPanel.views.DebugMessageView">
+      </view>
+      <view
+            name="Arc4Eclipse - Events Debug"
+            icon="icons/sample.gif"
+            category="org.arc4eclipse.debug"
+            class="org.arc4eclipse.debugPanel.views.DebugEventView"
+            id="org.arc4eclipse.debugPanel.views.DebugEventView">
       </view>
    </extension>
    <extension
@@ -41,6 +48,15 @@
                relative="org.eclipse.ui.views.TaskList"
                relationship="right"
                id="org.arc4eclipse.debugPanel.views.DebugMessageView">
+         </view>
+      </perspectiveExtension>
+      <perspectiveExtension
+            targetID="org.eclipse.jdt.ui.JavaPerspective">
+         <view
+               ratio="0.5"
+               relative="org.eclipse.ui.views.TaskList"
+               relationship="right"
+               id="org.arc4eclipse.debugPanel.views.DebugEventView">
          </view>
       </perspectiveExtension>
    </extension>

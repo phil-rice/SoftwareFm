@@ -13,6 +13,11 @@ public interface IStatusChangedListener {
 				public void statusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> item, Map<String, Object> context) {
 					System.out.println(status + " " + url + " " + item + "  -------------  " + context);
 				}
+
+				@Override
+				public String toString() {
+					return "sysout";
+				}
 			};
 		}
 

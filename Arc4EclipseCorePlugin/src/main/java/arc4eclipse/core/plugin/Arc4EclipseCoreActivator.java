@@ -106,8 +106,13 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 						throw WrappedException.wrap(e);
 					}
 				}
+
+				@Override
+				public String toString() {
+					return "GetOrgProjDataFromJarData";
+				}
 			});
-			repository.addStatusListener(IStatusChangedListener.Utils.sysout());
+			// repository.addStatusListener(IStatusChangedListener.Utils.sysout());
 		}
 		return repository;
 	}
@@ -150,9 +155,16 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 					}
 					if (RepositoryConstants.entityOrganisation.equals(entity)) {
 						addDefault(result, data, RepositoryConstants.organisationNameKey, "");
+						addDefault(result, data, RepositoryConstants.organisationDescriptionKey, "");
 					}
 					if (RepositoryConstants.entityProject.equals(entity)) {
 						addDefault(result, data, RepositoryConstants.projectUrlKey, "");
+						addDefault(result, data, RepositoryConstants.projectNameKey, "");
+						addDefault(result, data, RepositoryConstants.projectLicenseKey, "");
+						addDefault(result, data, RepositoryConstants.projectDescriptionKey, "");
+						addDefault(result, data, RepositoryConstants.projectMailingListsKey, "");
+						addDefault(result, data, RepositoryConstants.projectTutorialsKey, "");
+						addDefault(result, data, RepositoryConstants.projectJobsKey, "");
 					}
 					return result;
 				}

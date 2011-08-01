@@ -1,7 +1,6 @@
 package org.arc4eclipse.arc4eclipseRepository.api.impl;
 
 import java.text.MessageFormat;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +18,8 @@ import org.arc4eclipse.jdtBinding.api.IJarDigester;
 import org.arc4eclipse.repositoryFacard.IRepositoryFacard;
 import org.arc4eclipse.repositoryFacard.IRepositoryFacardCallback;
 import org.arc4eclipse.repositoryFacardConstants.RepositoryFacardConstants;
-import org.arc4eclipse.utilities.collections.Lists;
+import org.arc4eclipse.utilities.callbacks.ICallback;
+import org.arc4eclipse.utilities.events.ListenerList;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.future.Futures;
 import org.arc4eclipse.utilities.maps.Maps;
@@ -31,8 +31,8 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 	private final IRepositoryFacard facard;
 	private final IUrlGenerator urlGenerator;
 
-	private final Collection<IArc4EclipseLogger> loggers = Collections.synchronizedList(Lists.<IArc4EclipseLogger> newList());
-	Collection<IStatusChangedListener> listeners = Collections.synchronizedList(Lists.<IStatusChangedListener> newList());
+	private final ListenerList<IArc4EclipseLogger> loggers = new ListenerList<IArc4EclipseLogger>();
+	ListenerList<IStatusChangedListener> listeners = new ListenerList<IStatusChangedListener>();
 
 	class CallbackForData implements IRepositoryFacardCallback {
 
@@ -47,6 +47,11 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 			Map<String, Object> madeData = RepositoryFacardConstants.okStatusCodes.contains(response.statusCode()) ? data : null;
 			fireResponse(response, madeData, context);
 			fireStatusChangedFromResponse(response.url(), madeData, context);
+		}
+
+		@Override
+		public String toString() {
+			return "GotData " + context;
 		}
 
 	}
@@ -74,6 +79,12 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 						} catch (Exception e) {
 							throw WrappedException.wrap(e);
 						}
+
+					}
+
+					@Override
+					public String toString() {
+						return "GotAfterModify " + context;
 					}
 				});
 				try {
@@ -85,6 +96,11 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 				throw new RuntimeException(MessageFormat.format(RepositoryConstants.failedToChange, response.url()));
 		}
 
+		@Override
+		public String toString() {
+			return "Modify " + context;
+		}
+
 	}
 
 	private void fireStatusChangedFromResponse(String url, Map<String, Object> data, Map<String, Object> context) {
@@ -92,14 +108,19 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 		fireStatusChanged(url, status, data, context);
 	}
 
-	private void fireStatusChanged(String rawUrl, RepositoryDataItemStatus status, Map<String, Object> data, Map<String, Object> context) {
-		String url = Urls.rip(rawUrl).resourcePath;
-		try {
-			for (IStatusChangedListener listener : listeners)
-				listener.statusChanged(url, status, data, context);
-		} catch (Exception e) {
-			throw WrappedException.wrap(e);
-		}
+	private void fireStatusChanged(final String rawUrl, final RepositoryDataItemStatus status, final Map<String, Object> data, final Map<String, Object> context) {
+		final String url = Urls.rip(rawUrl).resourcePath;
+		listeners.fire(new ICallback<IStatusChangedListener>() {
+			@Override
+			public void process(IStatusChangedListener t) throws Exception {
+				t.statusChanged(url, status, data, context);
+			}
+
+			@Override
+			public String toString() {
+				return "StatusChanged " + status + " " + rawUrl;
+			}
+		});
 	}
 
 	public Arc4EclipseRepository(IRepositoryFacard facard, IUrlGenerator urlGenerator, IJarDigester jarDigester) {
@@ -162,14 +183,32 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 		return urlGenerator;
 	}
 
-	private void fireRequest(String method, String url, Map<String, Object> parameters, Map<String, Object> context) {
-		for (IArc4EclipseLogger logger : loggers)
-			logger.sendingRequest(method, url, parameters, context);
+	private void fireRequest(final String method, final String url, final Map<String, Object> parameters, final Map<String, Object> context) {
+		loggers.fire(new ICallback<IArc4EclipseLogger>() {
+			@Override
+			public void process(IArc4EclipseLogger t) throws Exception {
+				t.sendingRequest(method, url, parameters, context);
+			}
+
+			@Override
+			public String toString() {
+				return "fireRequest: " + method + " " + url + " " + context;
+			}
+		});
 	}
 
-	private void fireResponse(IResponse response, Object data, Map<String, Object> context) {
-		for (IArc4EclipseLogger logger : loggers)
-			logger.receivedReply(response, data, context);
+	private void fireResponse(final IResponse response, final Object data, final Map<String, Object> context) {
+		loggers.fire(new ICallback<IArc4EclipseLogger>() {
+			@Override
+			public void process(IArc4EclipseLogger t) throws Exception {
+				t.receivedReply(response, data, context);
+			}
+
+			@Override
+			public String toString() {
+				return "fireResponse: " + response.statusCode() + " " + response.url() + " " + context;
+			}
+		});
 	}
 
 	@Override

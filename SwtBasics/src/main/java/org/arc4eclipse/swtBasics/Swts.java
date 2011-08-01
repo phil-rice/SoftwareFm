@@ -30,7 +30,7 @@ public class Swts {
 
 	public static String layoutAsString(Control control) {
 		StringBuffer buffer = new StringBuffer();
-		buffer.append(control.getClass().getSimpleName());
+		buffer.append(control);
 		Point size = control.getSize();
 		buffer.append(" Size: " + size.x + ", " + size.y);
 		if (control instanceof Composite)

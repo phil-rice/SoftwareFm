@@ -5,6 +5,7 @@ import java.util.List;
 import org.arc4eclipse.swtBasics.IHasControl;
 import org.arc4eclipse.swtBasics.Swts;
 import org.arc4eclipse.utilities.collections.Lists;
+import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
@@ -63,15 +64,19 @@ public class ImageButton implements IHasControl {
 		});
 	}
 
-	
-	public void setTooltipText(String tooltipText){
+	public void setTooltipText(String tooltipText) {
 		label.setToolTipText(tooltipText);
 	}
+
 	private void updateImage() {
-		if (state)
-			label.setImage(depressed);
-		else
-			label.setImage(main);
+		try {
+			if (state)
+				label.setImage(depressed);
+			else
+				label.setImage(main);
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
 	}
 
 	public void addListener(IImageButtonListener listener) {
