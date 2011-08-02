@@ -9,12 +9,14 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
 public class TitleAndTextField extends AbstractTitleAnd {
+	private final static boolean inLine = true;
 	private final Text txtText;
 	private final Color originalBackground;
 
@@ -24,14 +26,9 @@ public class TitleAndTextField extends AbstractTitleAnd {
 
 	public TitleAndTextField(Composite parent, int style, IImageFactory imageFactory, String title, boolean editable) {
 		super(parent, style, imageFactory, title);
+		Composite textParent = inLine ? compForTitle : parent;
 
-		txtText = new Text(this, SWT.BORDER);
-		FormData fd_txtValue = new FormData();
-		fd_txtValue.top = new FormAttachment(0, 20);
-		fd_txtValue.left = new FormAttachment(0);
-		fd_txtValue.bottom = new FormAttachment(100, 0);
-		fd_txtValue.right = new FormAttachment(100, 0);
-		txtText.setLayoutData(fd_txtValue);
+		txtText = new Text(textParent, SWT.BORDER);
 		txtText.setText("");
 		txtText.setEditable(false);
 
@@ -39,6 +36,17 @@ public class TitleAndTextField extends AbstractTitleAnd {
 		if (editable)
 			addEditButton();
 		updateBackground();
+		if (inLine) {
+			RowData rowData = new RowData(200, 12);
+			txtText.setLayoutData(rowData);
+		} else {
+			FormData fd_txtValue = new FormData();
+			fd_txtValue.top = new FormAttachment(0, 20);
+			fd_txtValue.left = new FormAttachment(0);
+			fd_txtValue.bottom = new FormAttachment(100, 0);
+			fd_txtValue.right = new FormAttachment(100, 0);
+			txtText.setLayoutData(fd_txtValue);
+		}
 	}
 
 	private void addEditButton() {

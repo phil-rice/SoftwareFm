@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.Label;
 public class AbstractTitleAnd extends Composite {
 
 	protected final Images images;
-	private final Composite compForTitle;
+	protected final Composite compForTitle;
 	private final Label lblTitle;
 
 	public AbstractTitleAnd(Composite parent, int style, IImageFactory imageFactory, String title) {
@@ -36,6 +36,7 @@ public class AbstractTitleAnd extends Composite {
 		layout.marginBottom = 0;
 
 		lblTitle = new Label(compForTitle, SWT.NONE);
+		lblTitle.setLayoutData(new RowData(100, SWT.DEFAULT));
 		lblTitle.setText(title == null ? "" : title);
 
 	}
