@@ -1,7 +1,6 @@
 package org.arc4eclipse.debugPanel.views;
 
 import org.arc4eclipse.debugMessagePanel.views.DebugMessagePanel;
-import org.arc4eclipse.swtBasics.images.Images;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
@@ -25,7 +24,7 @@ public class DebugMessageView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		Arc4EclipseCoreActivator activator = Arc4EclipseCoreActivator.getDefault();
-		new DebugMessagePanel(parent, SWT.NULL, new Images(parent.getDisplay()), activator.getRepository());
+		new DebugMessagePanel(parent, SWT.NULL, activator.getImageFactory(), activator.getRepository());
 	}
 
 	@Override

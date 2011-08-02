@@ -3,6 +3,7 @@ package org.arc4eclipse.selectedArtifact.plugin;
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactory;
 import org.arc4eclipse.panel.ISelectedBindingManager;
+import org.arc4eclipse.swtBasics.images.IImageFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -53,6 +54,10 @@ public class Activator extends AbstractUIPlugin {
 
 	public ISelectedBindingManager getSelectedBindingManager() {
 		return Arc4EclipseCoreActivator.getDefault().getSelectedBindingManager();
+	}
+
+	public IImageFactory getImageFactory() {
+		return Arc4EclipseCoreActivator.getDefault().getImageFactory();
 	}
 
 }

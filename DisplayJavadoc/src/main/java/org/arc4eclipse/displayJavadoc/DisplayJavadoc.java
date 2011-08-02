@@ -1,17 +1,15 @@
 package org.arc4eclipse.displayJavadoc;
 
 import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
+import org.arc4eclipse.displayCore.api.AbstractDisplayerWithLabel;
 import org.arc4eclipse.displayCore.api.BindingContext;
-import org.arc4eclipse.displayCore.api.BoundTitleAndTextField;
-import org.arc4eclipse.displayCore.api.IDisplayer;
-import org.arc4eclipse.displayCore.api.NameSpaceNameAndValue;
-import org.arc4eclipse.swtBasics.images.IImageButtonListener;
-import org.arc4eclipse.swtBasics.images.ImageButton;
-import org.arc4eclipse.swtBasics.text.TitleAndTextField;
+import org.arc4eclipse.displayCore.api.DisplayerContext;
+import org.arc4eclipse.displayCore.api.NameSpaceAndName;
+import org.arc4eclipse.utilities.strings.Strings;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 
-public class DisplayJavadoc implements IDisplayer {
+public class DisplayJavadoc extends AbstractDisplayerWithLabel<JavaDocPanel> {
 
 	@Override
 	public String getNameSpace() {
@@ -19,16 +17,13 @@ public class DisplayJavadoc implements IDisplayer {
 	}
 
 	@Override
-	public Control makeCompositeAsChildOf(Composite parent, final BindingContext bindingContext, final NameSpaceNameAndValue nameSpaceNameAndValue) {
-		final TitleAndTextField textField = new BoundTitleAndTextField(parent, bindingContext, nameSpaceNameAndValue);
-		ImageButton btnAttach = textField.addButton(bindingContext.images.getLinkImage(), "Attach", new IImageButtonListener() {
+	public JavaDocPanel createLargeControl(DisplayerContext context, Composite parent, NameSpaceAndName nameSpaceAndName, String title) {
+		return new JavaDocPanel(parent, SWT.BORDER, context, nameSpaceAndName, title);
+	}
 
-			@Override
-			public void buttonPressed(ImageButton button) {
-				System.out.println("Attaching javadoc");
-			}
-		});
-		btnAttach.setEnabled(!textField.getText().equals(""));
-		return textField;
+	@Override
+	public void populateLargeControl(BindingContext bindingContext, JavaDocPanel largeControl, Object value) {
+		largeControl.setValue(bindingContext.url, Strings.nullSafeToString(value));
+
 	}
 }

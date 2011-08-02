@@ -80,11 +80,11 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 				RepositoryConstants.organisationUrlKey, "orgUrl",//
 				"jcr:primaryType", "nt:unstructured",//
 				RepositoryConstants.organisationNameKey, "orgName"));
-		checkModifyAndGetData(url, RepositoryConstants.organisationDescriptionKey, "orgDesc", Maps.<String, Object> makeMap(//
+		checkModifyAndGetData(url, RepositoryConstants.descriptionKey, "orgDesc", Maps.<String, Object> makeMap(//
 				RepositoryConstants.organisationUrlKey, "orgUrl",//
 				RepositoryConstants.organisationNameKey, "orgName",//
 				"jcr:primaryType", "nt:unstructured",//
-				RepositoryConstants.organisationDescriptionKey, "orgDesc"));
+				RepositoryConstants.descriptionKey, "orgDesc"));
 	}
 
 	private void checkModifyAndGetData(String url, String key, String value, Map<String, Object> expected) throws Exception {

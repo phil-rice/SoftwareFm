@@ -1,11 +1,12 @@
 package org.arc4eclipse.selectedArtifactPlugin.views;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
+import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactory;
 import org.arc4eclipse.panel.ISelectedBindingManager;
 import org.arc4eclipse.panel.SelectedArtefactPanel;
 import org.arc4eclipse.selectedArtifact.plugin.Activator;
-import org.arc4eclipse.swtBasics.images.Images;
+import org.arc4eclipse.swtBasics.images.IImageFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
@@ -33,8 +34,9 @@ abstract public class AbstractSelectedArtifactView extends ViewPart {
 		final IArc4EclipseRepository repository = activator.getRepository();
 		IDisplayContainerFactory displayContainerFactory = activator.getDisplayManager();
 		ISelectedBindingManager selectedBindingManager = activator.getSelectedBindingManager();
-		Images images = new Images(parent.getDisplay());
-		new SelectedArtefactPanel(parent, SWT.NULL, entity(), displayContainerFactory, repository, selectedBindingManager, images);
+		IImageFactory imageFactory = activator.getImageFactory();
+		DisplayerContext context = new DisplayerContext(imageFactory, selectedBindingManager, repository);
+		new SelectedArtefactPanel(parent, SWT.NULL, displayContainerFactory, context, entity());
 	}
 
 	abstract protected String entity();

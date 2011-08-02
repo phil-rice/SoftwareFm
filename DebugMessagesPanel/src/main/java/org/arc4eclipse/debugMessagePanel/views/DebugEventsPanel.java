@@ -3,7 +3,7 @@ package org.arc4eclipse.debugMessagePanel.views;
 import java.util.Collections;
 import java.util.List;
 
-import org.arc4eclipse.swtBasics.images.Images;
+import org.arc4eclipse.swtBasics.images.IImageFactory;
 import org.arc4eclipse.swtBasics.text.TitleAndStyledTextField;
 import org.arc4eclipse.utilities.callbacks.ICallback;
 import org.arc4eclipse.utilities.collections.Lists;
@@ -21,12 +21,12 @@ public class DebugEventsPanel extends Composite implements IListenerListListener
 	private final List<String> log = Collections.synchronizedList(Lists.<String> newList());
 	private final TitleAndStyledTextField titleAndStyledTextField;
 
-	public DebugEventsPanel(Composite parent, int style, Images images, int logSize) {
+	public DebugEventsPanel(Composite parent, int style, IImageFactory imageFactory, int logSize) {
 		super(parent, style);
 		this.logSize = logSize;
 		setLayout(new FormLayout());
 
-		titleAndStyledTextField = new TitleAndStyledTextField(this, SWT.NONE, images, "Events");
+		titleAndStyledTextField = new TitleAndStyledTextField(this, SWT.NONE, imageFactory, "Events");
 		FormData fd_titleAndStyledTextField = new FormData();
 		fd_titleAndStyledTextField.bottom = new FormAttachment(100, 0);
 		fd_titleAndStyledTextField.right = new FormAttachment(100, 0);

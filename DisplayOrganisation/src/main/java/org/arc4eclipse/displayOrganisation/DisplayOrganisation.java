@@ -1,15 +1,14 @@
 package org.arc4eclipse.displayOrganisation;
 
+import org.arc4eclipse.displayCore.api.AbstractDisplayerWithLabel;
 import org.arc4eclipse.displayCore.api.BindingContext;
-import org.arc4eclipse.displayCore.api.BoundTitleAndTextField;
-import org.arc4eclipse.displayCore.api.IDisplayer;
-import org.arc4eclipse.displayCore.api.NameSpaceNameAndValue;
-import org.arc4eclipse.swtBasics.images.IImageButtonListener;
-import org.arc4eclipse.swtBasics.images.ImageButton;
+import org.arc4eclipse.displayCore.api.DisplayerContext;
+import org.arc4eclipse.displayCore.api.NameSpaceAndName;
+import org.arc4eclipse.utilities.strings.Strings;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 
-public class DisplayOrganisation implements IDisplayer {
+public class DisplayOrganisation extends AbstractDisplayerWithLabel<OrganisationPanel> {
 
 	@Override
 	public String getNameSpace() {
@@ -17,15 +16,12 @@ public class DisplayOrganisation implements IDisplayer {
 	}
 
 	@Override
-	public Control makeCompositeAsChildOf(Composite parent, final BindingContext bindingContext, final NameSpaceNameAndValue nameSpaceNameAndValue) {
-		BoundTitleAndTextField textField = new BoundTitleAndTextField(parent, bindingContext, nameSpaceNameAndValue);
-		ImageButton btnBrowse = textField.addButton(bindingContext.images.getBrowseImage(), "Browse", new IImageButtonListener() {
-			@Override
-			public void buttonPressed(ImageButton button) {
-				System.out.println("Browse");
-			}
-		});
-		btnBrowse.setEnabled(!textField.getText().equals(""));
-		return textField;
+	public OrganisationPanel createLargeControl(DisplayerContext context, Composite parent, NameSpaceAndName nameSpaceAndName, String title) {
+		return new OrganisationPanel(parent, SWT.BORDER, context, nameSpaceAndName, title);
+	}
+
+	@Override
+	public void populateLargeControl(BindingContext bindingContext, OrganisationPanel largeControl, Object value) {
+		largeControl.setValue(bindingContext.url, Strings.nullSafeToString(value));
 	}
 }

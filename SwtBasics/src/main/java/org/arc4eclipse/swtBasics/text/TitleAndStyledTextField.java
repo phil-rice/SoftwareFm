@@ -1,6 +1,6 @@
 package org.arc4eclipse.swtBasics.text;
 
-import org.arc4eclipse.swtBasics.images.Images;
+import org.arc4eclipse.swtBasics.images.IImageFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.FormAttachment;
@@ -11,8 +11,8 @@ public class TitleAndStyledTextField extends AbstractTitleAnd {
 
 	private final StyledText txtText;
 
-	public TitleAndStyledTextField(Composite arg0, int arg1, Images images, String title) {
-		super(arg0, arg1, images, title);
+	public TitleAndStyledTextField(Composite arg0, int arg1, IImageFactory imageFactory, String title) {
+		super(arg0, arg1, imageFactory, title);
 		txtText = new StyledText(this, SWT.BORDER);
 		FormData fd_styledText = new FormData();
 		fd_styledText.bottom = new FormAttachment(100, 0);

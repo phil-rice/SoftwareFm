@@ -8,15 +8,15 @@ public class RepositoryConstants {
 
 	public static final String organisationUrlKey = "organisation_organisationUrl";
 	public static final String organisationNameKey = "text_organisationName";
-	public static final String organisationDescriptionKey = "text_organisationDescription";
+	public static final String descriptionKey = "text_description";
 
 	public static final String projectUrlKey = "text_projectUrl";
-	public static final String projectNameKey = "text_projectName";
-	public static final String projectDescriptionKey = "text_projectDescription";
+	public static final String nameKey = "text_projectName";
 	public static final String projectLicenseKey = "text_projectLicense";
 	public static final String projectMailingListsKey = "text_projectMailingLists";
 	public static final String projectTutorialsKey = "text_projectTutorials";
 	public static final String projectJobsKey = "text_projectJobs";
+	public static final String merchantisingKey = "text_merchantising";
 
 	public static final String entity = "entity";
 	public static final String entityJarData = "jarData";
@@ -27,5 +27,17 @@ public class RepositoryConstants {
 	public static final String valueNotAString = "Value is not a string for key {0} It is of {1}. With value {2}. Map is {3}";
 	public static final String failedToChange = "Failed to change {0}";
 	public static final String cannotFindMapperFor = "Cannot find mapper for {0}";
+
+	public static final String tutorialsTitle = "Jar details";
+	public static final String sourceTitle = "Source Code";
+	public static final String javaDocTitle = "Java Doc";
+	public static final String organisationTitle = "Organisation";
+	public static final String projectTitle = "Project";
+	public static final String descriptionTitle = "Description";
+	public static final String nameTitle = "Name";
+	public static final String licenseTitle = "License";
+	public static final String mailingListTitle = "Mailing lists";
+	public static final String jobsTitle = "Jobs";
+	public static final String merchantisingTitle = "Merchantising";
 
 }

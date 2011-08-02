@@ -3,6 +3,7 @@ package org.arc4eclipse.swtBasics.text;
 import org.arc4eclipse.swtBasics.images.IImageButtonListener;
 import org.arc4eclipse.swtBasics.images.IImageFactory;
 import org.arc4eclipse.swtBasics.images.ImageButton;
+import org.arc4eclipse.utilities.strings.Strings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Color;
@@ -66,7 +67,7 @@ public class TitleAndTextField extends AbstractTitleAnd {
 	}
 
 	public void setText(String text) {
-		txtText.setText(text);
+		txtText.setText(Strings.nullSafeToString(text));
 	}
 
 	public String getText() {

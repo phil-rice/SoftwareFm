@@ -70,7 +70,8 @@ public class DisplayContainer implements IDisplayContainer {
 					@SuppressWarnings("unchecked")
 					@Override
 					public <L extends Control, S extends Control> void process(NameSpaceAndName nameSpaceAndName, IDisplayer<L, S> displayer) {
-						Object value = bindingContext.data.get(nameSpaceAndName.key);
+						Map<String, Object> data = bindingContext.data;
+						Object value = data == null ? null : data.get(nameSpaceAndName.key);
 						S smallControl = (S) smallControlMap.get(nameSpaceAndName);
 						displayer.populateSmallControl(bindingContext, smallControl, value);
 

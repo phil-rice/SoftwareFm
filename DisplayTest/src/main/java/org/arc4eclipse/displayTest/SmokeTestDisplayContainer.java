@@ -8,6 +8,7 @@ import org.arc4eclipse.displayCore.api.IDisplayContainer;
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactory;
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactoryBuilder;
 import org.arc4eclipse.displayText.DisplayText;
+import org.arc4eclipse.panel.ISelectedBindingManager;
 import org.arc4eclipse.swtBasics.Swts;
 import org.arc4eclipse.swtBasics.images.IImageFactory;
 import org.arc4eclipse.swtBasics.images.Images;
@@ -28,7 +29,7 @@ public class SmokeTestDisplayContainer {
 		Swts.display("DisplayContainer1", new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(final Composite from) throws Exception {
-				DisplayerContext displayerContext = new DisplayerContext(IImageFactory.Utils.imageFactory(), repository);
+				DisplayerContext displayerContext = new DisplayerContext(IImageFactory.Utils.imageFactory(), ISelectedBindingManager.Utils.noSelectedBindingManager(), repository);
 				final IDisplayContainer displayContainer = factory.create(displayerContext, from, "entity");
 
 				final BindingContext bindingContext1 = makeBindingContext(from, "entity", 1, "text_one", "value1");
@@ -52,5 +53,6 @@ public class SmokeTestDisplayContainer {
 						Maps.<String, Object> makeMap(RepositoryConstants.entity, entity, "context", "c" + count));
 			}
 		});
+		repository.shutdown();
 	}
 }

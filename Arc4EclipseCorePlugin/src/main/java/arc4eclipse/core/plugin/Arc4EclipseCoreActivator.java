@@ -1,6 +1,5 @@
 package arc4eclipse.core.plugin;
 
-import java.util.List;
 import java.util.Map;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
@@ -8,8 +7,7 @@ import org.arc4eclipse.arc4eclipseRepository.api.IStatusChangedListener;
 import org.arc4eclipse.arc4eclipseRepository.api.RepositoryDataItemStatus;
 import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactory;
-import org.arc4eclipse.displayCore.api.IModifiesToBeDisplayed;
-import org.arc4eclipse.displayCore.api.NameSpaceNameAndValue;
+import org.arc4eclipse.displayCore.api.IDisplayContainerFactoryBuilder;
 import org.arc4eclipse.displayCore.constants.DisplayCoreConstants;
 import org.arc4eclipse.displayJarPath.DisplayJarPath;
 import org.arc4eclipse.displayJavadoc.DisplayJavadoc;
@@ -19,7 +17,7 @@ import org.arc4eclipse.displayText.DisplayText;
 import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.arc4eclipse.jdtBinding.api.IBindingRipper;
 import org.arc4eclipse.panel.ISelectedBindingListener;
-import org.arc4eclipse.utilities.collections.Lists;
+import org.arc4eclipse.swtBasics.images.IImageFactory;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.arc4eclipse.utilities.maps.Maps;
@@ -47,6 +45,8 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 	private SelectedArtifactSelectionManager selectedBindingManager;
 
 	private IDisplayContainerFactory displayContainerFactory;
+
+	private IImageFactory imageFactory;
 
 	/**
 	 * The constructor
@@ -138,51 +138,43 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 		return selectedBindingManager;
 	}
 
+	// TODO This is better done with executable extension points
 	public IDisplayContainerFactory getDisplayManager() {
 		if (displayContainerFactory == null) {
-			displayContainerFactory = IDisplayContainerFactory.Utils.displayManager();
-			displayContainerFactory.addModifier(new IModifiesToBeDisplayed() {
-				@Override
-				public List<NameSpaceNameAndValue> add(Map<String, Object> data, Map<String, Object> context) {
-					List<NameSpaceNameAndValue> result = Lists.newList();
-					Object entity = context.get(RepositoryConstants.entity);
-					if (RepositoryConstants.entityJarData.equals(entity)) {
-						addDefault(result, data, RepositoryConstants.jarPathKey, "<ignored>");
-						addDefault(result, data, RepositoryConstants.sourceKey, "");
-						addDefault(result, data, RepositoryConstants.javadocKey, "");
-						addDefault(result, data, RepositoryConstants.organisationUrlKey, "<org>");
-						addDefault(result, data, RepositoryConstants.projectUrlKey, "<proj>");
-					}
-					if (RepositoryConstants.entityOrganisation.equals(entity)) {
-						addDefault(result, data, RepositoryConstants.organisationNameKey, "");
-						addDefault(result, data, RepositoryConstants.organisationDescriptionKey, "");
-					}
-					if (RepositoryConstants.entityProject.equals(entity)) {
-						addDefault(result, data, RepositoryConstants.projectUrlKey, "");
-						addDefault(result, data, RepositoryConstants.projectNameKey, "");
-						addDefault(result, data, RepositoryConstants.projectLicenseKey, "");
-						addDefault(result, data, RepositoryConstants.projectDescriptionKey, "");
-						addDefault(result, data, RepositoryConstants.projectMailingListsKey, "");
-						addDefault(result, data, RepositoryConstants.projectTutorialsKey, "");
-						addDefault(result, data, RepositoryConstants.projectJobsKey, "");
-					}
-					return result;
-				}
+			IDisplayContainerFactoryBuilder builder = IDisplayContainerFactoryBuilder.Utils.displayManager();
+			builder.registerDisplayer(new DisplayText());
 
-				private void addDefault(List<NameSpaceNameAndValue> result, Map<String, Object> data, String key, Object defaultValue) {
-					Object existing = data == null ? null : data.get(key);
-					if (existing == null)
-						result.add(NameSpaceNameAndValue.Utils.make(key, defaultValue));
-				}
-			});
-			// TODO This is better done with an executable extension point
-			displayContainerFactory.registerDisplayer(new DisplayText());
-			displayContainerFactory.registerDisplayer(new DisplayOrganisation());
-			displayContainerFactory.registerDisplayer(new DisplaySource());
-			displayContainerFactory.registerDisplayer(new DisplayJavadoc());
-			displayContainerFactory.registerDisplayer(new DisplayJarPath());
+			builder.registerDisplayer(new DisplayOrganisation());
+			builder.registerDisplayer(new DisplaySource());
+			builder.registerDisplayer(new DisplayJavadoc());
+			builder.registerDisplayer(new DisplayJarPath());
+
+			builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.jarPathKey, RepositoryConstants.tutorialsTitle);
+			builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.sourceKey, RepositoryConstants.sourceTitle);
+			builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.javadocKey, RepositoryConstants.javaDocTitle);
+			builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.organisationUrlKey, RepositoryConstants.organisationTitle);
+			builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.projectUrlKey, RepositoryConstants.projectTitle);
+
+			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.nameKey, RepositoryConstants.nameTitle);
+			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.descriptionKey, RepositoryConstants.descriptionTitle);
+			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.projectJobsKey, RepositoryConstants.jobsTitle);
+			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.merchantisingKey, RepositoryConstants.merchantisingTitle);
+
+			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.nameKey, RepositoryConstants.nameTitle);
+			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.descriptionKey, RepositoryConstants.descriptionTitle);
+			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.projectLicenseKey, RepositoryConstants.licenseTitle);
+			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.projectMailingListsKey, RepositoryConstants.mailingListTitle);
+			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.projectTutorialsKey, RepositoryConstants.tutorialsTitle);
+			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.projectJobsKey, RepositoryConstants.jobsTitle);
+			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.merchantisingKey, RepositoryConstants.merchantisingTitle);
+			displayContainerFactory = builder.build();
 		}
 		return displayContainerFactory;
 	}
 
+	public IImageFactory getImageFactory() {
+		if (imageFactory == null)
+			imageFactory = IImageFactory.Utils.imageFactory();
+		return imageFactory;
+	}
 }
