@@ -1,8 +1,8 @@
 package org.arc4eclipse.swtBasics.text;
 
 import org.arc4eclipse.swtBasics.images.IImageButtonListener;
+import org.arc4eclipse.swtBasics.images.IImageFactory;
 import org.arc4eclipse.swtBasics.images.ImageButton;
-import org.arc4eclipse.swtBasics.images.Images;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Color;
@@ -17,12 +17,12 @@ public class TitleAndTextField extends AbstractTitleAnd {
 	private final Text txtText;
 	private final Color originalBackground;
 
-	public TitleAndTextField(Composite parent, Images images, String title, boolean editable) {
-		this(parent, SWT.BORDER, images, title, editable);
+	public TitleAndTextField(Composite parent, IImageFactory imageFactory, String title, boolean editable) {
+		this(parent, SWT.BORDER, imageFactory, title, editable);
 	}
 
-	public TitleAndTextField(Composite parent, int style, Images images, String title, boolean editable) {
-		super(parent, style, images, title);
+	public TitleAndTextField(Composite parent, int style, IImageFactory imageFactory, String title, boolean editable) {
+		super(parent, style, imageFactory, title);
 
 		txtText = new Text(this, SWT.BORDER);
 		FormData fd_txtValue = new FormData();
@@ -36,11 +36,11 @@ public class TitleAndTextField extends AbstractTitleAnd {
 
 		originalBackground = getDisplay().getSystemColor(SWT.COLOR_WHITE);
 		if (editable)
-			addEditButton(images);
+			addEditButton();
 		updateBackground();
 	}
 
-	private void addEditButton(Images images) {
+	private void addEditButton() {
 		addCrListener(new Listener() {
 			@Override
 			public void handleEvent(Event event) {

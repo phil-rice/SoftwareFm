@@ -10,19 +10,23 @@ import org.eclipse.swt.widgets.Listener;
 
 public class BoundTitleAndTextField extends TitleAndTextField {
 
-	public BoundTitleAndTextField(Composite parent, final BindingContext bindingContext, final NameSpaceNameAndValue nameSpaceNameAndValue) {
-		this(parent, SWT.BORDER, bindingContext, nameSpaceNameAndValue);
+	private String url;
+
+	public BoundTitleAndTextField(Composite parent, DisplayerContext displayerContext, final NameSpaceAndName nameSpaceAndName, String title) {
+		this(parent, SWT.BORDER, displayerContext, nameSpaceAndName, title);
 	}
 
-	public BoundTitleAndTextField(Composite parent, int style, final BindingContext bindingContext, final NameSpaceNameAndValue nameSpaceNameAndValue) {
-		super(parent, style, bindingContext.images, bindingContext.titleLookup.getTitle(nameSpaceNameAndValue.nameSpace, nameSpaceNameAndValue.name), true);
-		setText(nameSpaceNameAndValue.value.toString());
+	public BoundTitleAndTextField(Composite parent, int style, final DisplayerContext displayerContext, final NameSpaceAndName nameSpaceAndName, String title) {
+		super(parent, style, displayerContext.imageFactory, title, true);
 		addCrListener(new Listener() {
 			@Override
 			public void handleEvent(Event e) {
-				bindingContext.repository.modifyData(bindingContext.url, nameSpaceNameAndValue.key, getText(), Collections.<String, Object> emptyMap());
+				displayerContext.repository.modifyData(url, nameSpaceAndName.key, getText(), Collections.<String, Object> emptyMap());
 			}
 		});
 	}
 
+	public void setUrl(String url) {
+		this.url = url;
+	}
 }

@@ -1,6 +1,7 @@
 package org.arc4eclipse.swtBasics.text;
 
 import org.arc4eclipse.swtBasics.images.IImageButtonListener;
+import org.arc4eclipse.swtBasics.images.IImageFactory;
 import org.arc4eclipse.swtBasics.images.ImageButton;
 import org.arc4eclipse.swtBasics.images.Images;
 import org.eclipse.swt.SWT;
@@ -15,13 +16,13 @@ import org.eclipse.swt.widgets.Label;
 
 public class AbstractTitleAnd extends Composite {
 
-	private final Images images;
+	protected final Images images;
 	private final Composite compForTitle;
 	private final Label lblTitle;
 
-	public AbstractTitleAnd(Composite parent, int style, Images images, String title) {
+	public AbstractTitleAnd(Composite parent, int style, IImageFactory imageFactory, String title) {
 		super(parent, style);
-		this.images = images;
+		this.images = imageFactory.makeImages(getDisplay());
 		setLayout(new FormLayout());
 
 		compForTitle = new Composite(this, SWT.NULL);

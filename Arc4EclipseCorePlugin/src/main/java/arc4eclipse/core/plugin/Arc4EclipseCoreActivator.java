@@ -7,7 +7,7 @@ import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
 import org.arc4eclipse.arc4eclipseRepository.api.IStatusChangedListener;
 import org.arc4eclipse.arc4eclipseRepository.api.RepositoryDataItemStatus;
 import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
-import org.arc4eclipse.displayCore.api.IDisplayManager;
+import org.arc4eclipse.displayCore.api.IDisplayContainerFactory;
 import org.arc4eclipse.displayCore.api.IModifiesToBeDisplayed;
 import org.arc4eclipse.displayCore.api.NameSpaceNameAndValue;
 import org.arc4eclipse.displayCore.constants.DisplayCoreConstants;
@@ -46,7 +46,7 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 
 	private SelectedArtifactSelectionManager selectedBindingManager;
 
-	private IDisplayManager displayManager;
+	private IDisplayContainerFactory displayContainerFactory;
 
 	/**
 	 * The constructor
@@ -138,10 +138,10 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 		return selectedBindingManager;
 	}
 
-	public IDisplayManager getDisplayManager() {
-		if (displayManager == null) {
-			displayManager = IDisplayManager.Utils.displayManager();
-			displayManager.addModifier(new IModifiesToBeDisplayed() {
+	public IDisplayContainerFactory getDisplayManager() {
+		if (displayContainerFactory == null) {
+			displayContainerFactory = IDisplayContainerFactory.Utils.displayManager();
+			displayContainerFactory.addModifier(new IModifiesToBeDisplayed() {
 				@Override
 				public List<NameSpaceNameAndValue> add(Map<String, Object> data, Map<String, Object> context) {
 					List<NameSpaceNameAndValue> result = Lists.newList();
@@ -176,13 +176,13 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 				}
 			});
 			// TODO This is better done with an executable extension point
-			displayManager.registerDisplayer(new DisplayText());
-			displayManager.registerDisplayer(new DisplayOrganisation());
-			displayManager.registerDisplayer(new DisplaySource());
-			displayManager.registerDisplayer(new DisplayJavadoc());
-			displayManager.registerDisplayer(new DisplayJarPath());
+			displayContainerFactory.registerDisplayer(new DisplayText());
+			displayContainerFactory.registerDisplayer(new DisplayOrganisation());
+			displayContainerFactory.registerDisplayer(new DisplaySource());
+			displayContainerFactory.registerDisplayer(new DisplayJavadoc());
+			displayContainerFactory.registerDisplayer(new DisplayJarPath());
 		}
-		return displayManager;
+		return displayContainerFactory;
 	}
 
 }

@@ -1,7 +1,7 @@
 package org.arc4eclipse.selectedArtifact.plugin;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
-import org.arc4eclipse.displayCore.api.IDisplayManager;
+import org.arc4eclipse.displayCore.api.IDisplayContainerFactory;
 import org.arc4eclipse.panel.ISelectedBindingManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -39,7 +39,7 @@ public class Activator extends AbstractUIPlugin {
 		return plugin;
 	}
 
-	public IDisplayManager getDisplayManager() {
+	public IDisplayContainerFactory getDisplayManager() {
 		return Arc4EclipseCoreActivator.getDefault().getDisplayManager();
 	}
 

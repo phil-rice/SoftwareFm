@@ -379,4 +379,12 @@ public class Maps {
 		result.put(key, value);
 		return result;
 	}
+
+	public static <K, V> void walkMapToList(Map<K, List<V>> map, IKeyValueCallback<K, V> keyValueCallback) {
+		if (map != null)
+			for (Entry<K, List<V>> entry : map.entrySet())
+				for (V value : entry.getValue())
+					keyValueCallback.process(entry.getKey(), value);
+
+	}
 }

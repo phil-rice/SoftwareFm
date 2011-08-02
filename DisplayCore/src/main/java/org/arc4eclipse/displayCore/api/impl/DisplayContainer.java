@@ -1,12 +1,15 @@
 package org.arc4eclipse.displayCore.api.impl;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.arc4eclipse.displayCore.api.BindingContext;
+import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.displayCore.api.IDisplayContainer;
-import org.arc4eclipse.displayCore.api.NameSpaceNameValueAndDisplayer;
+import org.arc4eclipse.displayCore.api.IDisplayer;
+import org.arc4eclipse.displayCore.api.NameSpaceAndName;
 import org.arc4eclipse.swtBasics.Swts;
+import org.arc4eclipse.utilities.maps.Maps;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -14,26 +17,43 @@ import org.eclipse.swt.widgets.Control;
 
 public class DisplayContainer implements IDisplayContainer {
 
-	private final Composite parent;
 	private final Composite content;
-	private Composite current;
-	private final int style;
+	private final Composite compButtons;
 
-	public DisplayContainer(Composite parent, int style) {
-		this.parent = parent;
-		this.style = style;
+	@SuppressWarnings("rawtypes")
+	private final Map<NameSpaceAndName, IDisplayer> toDisplayerMap;
+	private final Map<NameSpaceAndName, Control> smallControlMap = Maps.newMap();
+	private final Map<NameSpaceAndName, Control> largeControlMap = Maps.newMap();
+
+	@SuppressWarnings("rawtypes")
+	public DisplayContainer(final DisplayerContext displayerContext, final Composite parent, int style, final Map<NameSpaceAndName, IDisplayer> toDisplayers, final Map<NameSpaceAndName, String> toTitle) {
+		this.toDisplayerMap = Maps.copyMap(toDisplayers);
 		this.content = new Composite(parent, SWT.NULL);
-		GridLayout layout = new GridLayout();
-		layout.marginWidth = 0;
-		content.setLayout(layout);
+		this.compButtons = new Composite(content, SWT.NULL);
 
+		GridLayout compButtonsLayout = new GridLayout(toDisplayers.size(), false);
+		compButtonsLayout.marginWidth = 0;
+		compButtons.setLayout(compButtonsLayout);
+
+		GridLayout contentLayout = new GridLayout();
+		contentLayout.marginWidth = 0;
+		content.setLayout(contentLayout);
+
+		process(new IDisplayContainerCallback() {
+			@Override
+			public <L extends Control, S extends Control> void process(NameSpaceAndName nameSpaceAndName, IDisplayer<L, S> displayer) {
+				String title = toTitle.get(nameSpaceAndName);
+				smallControlMap.put(nameSpaceAndName, displayer.createSmallControl(displayerContext, compButtons, nameSpaceAndName, title));
+				largeControlMap.put(nameSpaceAndName, displayer.createLargeControl(displayerContext, content, nameSpaceAndName, title));
+			}
+		});
+		Swts.addGrabHorizontalAndFillGridDataToAllChildren(content);
+		// Swts.addGrabHorizontalAndFillGridDataToAllChildren(compButtons);
 	}
 
 	@Override
 	public void dispose() {
 		content.dispose();
-		if (current != null)
-			current.dispose();
 	}
 
 	@Override
@@ -42,38 +62,34 @@ public class DisplayContainer implements IDisplayContainer {
 	}
 
 	@Override
-	public void addDisplayers(final List<NameSpaceNameValueAndDisplayer> toBeDisplayed, final BindingContext bindingContext) {
-		parent.getDisplay().asyncExec(new Runnable() {
+	public void setValues(final BindingContext bindingContext) {
+		content.getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				Map<String, Object> data = bindingContext.data;
-				String url = bindingContext.url;
-				makeCurrent();
-				for (NameSpaceNameValueAndDisplayer nameSpaceNameValueAndDisplayer : toBeDisplayed)
-					nameSpaceNameValueAndDisplayer.displayer.makeCompositeAsChildOf(current, bindingContext, nameSpaceNameValueAndDisplayer);
-				Swts.addGrabHorizontalAndFillGridDataToAllChildren(current);
-				System.out.println("Parent " + Swts.layoutAsString(parent));
-				System.out.println("Current " + Swts.layoutAsString(current));
-				for (Control child : current.getChildren())
-					System.out.println("Child " + Swts.layoutAsString(child));
-				parent.layout();
-				parent.redraw();
-				current.layout();
-				content.redraw();
+				process(new IDisplayContainerCallback() {
+					@SuppressWarnings("unchecked")
+					@Override
+					public <L extends Control, S extends Control> void process(NameSpaceAndName nameSpaceAndName, IDisplayer<L, S> displayer) {
+						Object value = bindingContext.data.get(nameSpaceAndName.key);
+						S smallControl = (S) smallControlMap.get(nameSpaceAndName);
+						displayer.populateSmallControl(bindingContext, smallControl, value);
+
+						L largeControl = (L) largeControlMap.get(nameSpaceAndName);
+						displayer.populateLargeControl(bindingContext, largeControl, value);
+					}
+				});
 			}
 		});
+
 	}
 
-	private void makeCurrent() {
-		if (current != null) {
-			for (Control child : current.getChildren())
-				child.dispose();
-			current.dispose();
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private void process(IDisplayContainerCallback displayContainerCallback) {
+		for (Entry<NameSpaceAndName, IDisplayer> entry : toDisplayerMap.entrySet()) {
+			NameSpaceAndName nameSpaceAndName = entry.getKey();
+			IDisplayer displayer = entry.getValue();
+			displayContainerCallback.process(nameSpaceAndName, displayer);
 		}
-		current = new Composite(content, style);
-		GridLayout layout = new GridLayout();
-		layout.marginWidth = 0;
-		current.setLayout(layout);
-		current.setLayoutData(Swts.makeGrabHorizonalAndFillGridData());
 	}
+
 }

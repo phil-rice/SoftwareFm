@@ -1,6 +1,7 @@
 package org.arc4eclipse.displayTest;
 
-import org.arc4eclipse.displayCore.api.IDisplayManager;
+import org.arc4eclipse.displayCore.api.IDisplayContainerFactoryBuilder;
+import org.arc4eclipse.displayText.DisplayText;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
@@ -12,8 +13,11 @@ import org.eclipse.swt.widgets.Shell;
 public class Gash {
 
 	public static void main(String[] args) {
-		final IDisplayManager manager = IDisplayManager.Utils.displayManager();
-		manager.registerDisplayer(IManyDisplayers.Utils.textDisplay());
+		final IDisplayContainerFactoryBuilder manager = IDisplayContainerFactoryBuilder.Utils.displayManager();
+		manager.registerDisplayer(new DisplayText());
+		manager.registerForEntity("entity", "text_one", "One");
+		manager.registerForEntity("entity", "text_two", "|Two");
+		manager.registerForEntity("entity", "text_three", "Three");
 		try {
 			Display display = new Display();
 			final Shell shell = new Shell(display);
@@ -47,5 +51,4 @@ public class Gash {
 			throw WrappedException.wrap(e);
 		}
 	}
-
 }
