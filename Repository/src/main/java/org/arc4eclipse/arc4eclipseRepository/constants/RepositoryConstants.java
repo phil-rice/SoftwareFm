@@ -6,17 +6,19 @@ public class RepositoryConstants {
 	public static final String javadocKey = "javadoc";
 	public static final String sourceKey = "source";
 
-	public static final String organisationUrlKey = "organisation_organisationUrl";
+	public static final String organisationUrlKey = "organisationUrl_organisationUrl";
 	public static final String organisationNameKey = "text_organisationName";
 	public static final String descriptionKey = "text_description";
 
-	public static final String projectUrlKey = "text_projectUrl";
+	public static final String projectUrlKey = "projectUrl_projectUrl";
 	public static final String nameKey = "text_projectName";
 	public static final String projectLicenseKey = "text_projectLicense";
 	public static final String projectMailingListsKey = "text_projectMailingLists";
 	public static final String projectTutorialsKey = "text_projectTutorials";
 	public static final String projectJobsKey = "text_projectJobs";
-	public static final String merchantisingKey = "text_merchantising";
+	public static final String merchandisingKey = "text_merchandising";
+	public static final String forumsKey = "forums";
+	public static final String mailingListsKey = "mailingLists";
 
 	public static final String entity = "entity";
 	public static final String entityJarData = "jarData";
@@ -38,6 +40,11 @@ public class RepositoryConstants {
 	public static final String licenseTitle = "License";
 	public static final String mailingListTitle = "Mailing lists";
 	public static final String jobsTitle = "Jobs";
-	public static final String merchantisingTitle = "Merchantising";
+	public static final String merchandisingTitle = "Merchandising";
+	public static final String forumsTitle = "Forums";
+
+	public static final String action = "action";
+	public static final String actionGet = "get";
+	public static final String actionPost = "post";
 
 }

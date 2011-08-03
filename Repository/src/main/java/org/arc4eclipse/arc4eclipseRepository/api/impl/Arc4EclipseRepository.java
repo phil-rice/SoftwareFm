@@ -133,6 +133,7 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 		try {
 			Map<String, Object> context = new HashMap<String, Object>(rawContext);
 			context.put(RepositoryConstants.entity, RepositoryConstants.entityJarData);
+			context.put(RepositoryConstants.action, RepositoryConstants.actionGet);
 			if (jarDigest == null || jarDigest.equals("")) {
 				fireStatusChanged("", RepositoryDataItemStatus.PATH_NULL, null, context);
 				return Futures.doneFuture(null);
@@ -148,9 +149,12 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 	}
 
 	@Override
-	public Future<?> modifyJarData(String jarDigest, String name, Object value, Map<String, Object> context) {
+	public Future<?> modifyJarData(String jarDigest, String name, Object value, Map<String, Object> rawContext) {
 		try {
 			String url = urlGenerator.forJar().apply(jarDigest);
+			Map<String, Object> context = new HashMap<String, Object>(rawContext);
+			context.put(RepositoryConstants.entity, RepositoryConstants.entityJarData);
+			context.put(RepositoryConstants.action, RepositoryConstants.actionPost);
 			Map<String, Object> parameters = Maps.<String, Object> makeMap(name, value, RepositoryConstants.hexDigestKey, jarDigest);
 			fireRequest("modifyJarData", url, parameters, context);
 			return facard.post(url, parameters, new CallbackForModify(context));
@@ -160,14 +164,18 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 	}
 
 	@Override
-	public Future<?> getData(String url, Map<String, Object> context) {
+	public Future<?> getData(String url, Map<String, Object> rawContext) {
+		Map<String, Object> context = new HashMap<String, Object>(rawContext);
+		context.put(RepositoryConstants.action, RepositoryConstants.actionGet);
 		fireRequest("getData", url, emptyParameters, context);
 		fireStatusChanged(url, RepositoryDataItemStatus.REQUESTED, null, context);
 		return facard.get(url, new CallbackForData(context));
 	}
 
 	@Override
-	public Future<?> modifyData(String url, String name, Object value, Map<String, Object> context) {
+	public Future<?> modifyData(String url, String name, Object value, Map<String, Object> rawContext) {
+		Map<String, Object> context = new HashMap<String, Object>(rawContext);
+		context.put(RepositoryConstants.action, RepositoryConstants.actionPost);
 		Map<String, Object> parameters = Maps.<String, Object> makeMap(name, value);
 		fireRequest("modifyData", url, parameters, context);
 		return facard.post(url, parameters, new CallbackForModify(context));

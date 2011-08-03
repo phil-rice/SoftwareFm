@@ -15,6 +15,8 @@ public class Images {
 	private Image linkImage;
 	private Image browseImage;
 	private Image clearImage;
+	private Image helpImage;
+	private Image addImage;
 
 	public Images(Device device) {
 		this.device = device;
@@ -43,6 +45,12 @@ public class Images {
 		return editImage;
 	}
 
+	public Image getHelpImage() {
+		if (helpImage == null)
+			helpImage = makeImage("Help.png");
+		return helpImage;
+	}
+
 	public Image getLinkImage() {
 		if (linkImage == null)
 			linkImage = makeImage("Link.png");
@@ -55,7 +63,13 @@ public class Images {
 		return clearImage;
 	}
 
-	private Image makeImage(String string) {
+	public Image getAddImage() {
+		if (addImage == null)
+			addImage = makeImage("Add.png");
+		return addImage;
+	}
+
+	protected Image makeImage(String string) {
 		try {
 			InputStream inputStream = new ClassPathResource(string, getClass()).getInputStream();
 			return new Image(device, inputStream);

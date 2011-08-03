@@ -2,11 +2,14 @@ package org.arc4eclipse.swtBasics;
 
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -15,10 +18,26 @@ import org.eclipse.swt.widgets.Shell;
 public class Swts {
 
 	public static void addGrabHorizontalAndFillGridDataToAllChildren(Composite composite) {
+		GridLayout layout = new GridLayout();
+		layout.marginWidth = 0;
+		layout.verticalSpacing = 1;
+		layout.marginHeight = 1;
+		composite.setLayout(layout);
 		for (Control control : composite.getChildren()) {
 			GridData data = makeGrabHorizonalAndFillGridData();
 			control.setLayoutData(data);
 		}
+	}
+
+	public static RowLayout getHorizonalNoMarginRowLayout() {
+		RowLayout rowLayout = new RowLayout(SWT.HORIZONTAL);
+		rowLayout.marginWidth = 0;
+		rowLayout.marginHeight = 0;
+		rowLayout.marginTop = 0;
+		rowLayout.marginBottom = 0;
+		rowLayout.fill = false;
+		rowLayout.justify = false;
+		return rowLayout;
 	}
 
 	public static GridData makeGrabHorizonalAndFillGridData() {
@@ -62,6 +81,12 @@ public class Swts {
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
+	}
+
+	public static void removeAllChildren(Composite composite) {
+		for (Control control : composite.getChildren())
+			control.dispose();
+
 	}
 
 }

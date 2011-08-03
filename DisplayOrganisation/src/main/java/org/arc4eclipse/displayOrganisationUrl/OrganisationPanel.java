@@ -1,4 +1,4 @@
-package org.arc4eclipse.displayOrganisation;
+package org.arc4eclipse.displayOrganisationUrl;
 
 import org.arc4eclipse.displayCore.api.BoundTitleAndTextField;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
@@ -6,7 +6,7 @@ import org.arc4eclipse.displayCore.api.NameSpaceAndName;
 import org.arc4eclipse.swtBasics.Swts;
 import org.arc4eclipse.swtBasics.images.IImageButtonListener;
 import org.arc4eclipse.swtBasics.images.ImageButton;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 public class OrganisationPanel extends Composite {
@@ -16,14 +16,14 @@ public class OrganisationPanel extends Composite {
 
 	public OrganisationPanel(Composite parent, int style, DisplayerContext context, NameSpaceAndName nameSpaceAndName, String title) {
 		super(parent, style);
-		setLayout(new GridLayout());
-		orgField = new BoundTitleAndTextField(this, context, nameSpaceAndName, title);
+		orgField = new BoundTitleAndTextField(this, SWT.NULL, context, nameSpaceAndName, title);
 		btnBrowse = orgField.addButton(context.imageFactory.makeImages(getDisplay()).getBrowseImage(), "Browse", new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				System.out.println("Browse");
 			}
 		});
+		orgField.addHelpButton(DisplayOrganisationUrlConstants.helpOrganisationUrl);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 
 	}

@@ -22,13 +22,16 @@ public class SourcePanel extends Composite {
 		super(parent, style);
 		setLayout(new GridLayout());
 		txtRepository = new BoundTitleAndTextField(this, SWT.NULL, context, nameSpaceAndName, title);
-		txtLocal = new TitleAndTextField(this, SWT.NULL, context.imageFactory, "Current setting", false);
 		btnAttach = txtRepository.addButton(context.imageFactory.makeImages(getDisplay()).getLinkImage(), "Attach", new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				System.out.println("Linking");
 			}
 		});
+		txtRepository.addHelpButton(DisplaySourceConstants.helpValueInRepository);
+
+		txtLocal = new TitleAndTextField(this, SWT.NULL, context.imageFactory, "Current setting", false);
+		txtLocal.addHelpButton(DisplaySourceConstants.helpCurrentValue);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 	}
 

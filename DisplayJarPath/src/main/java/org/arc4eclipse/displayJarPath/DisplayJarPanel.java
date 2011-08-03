@@ -7,7 +7,6 @@ import org.arc4eclipse.swtBasics.images.IImageFactory;
 import org.arc4eclipse.swtBasics.text.TitleAndTextField;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 public class DisplayJarPanel extends Composite {
@@ -19,12 +18,15 @@ public class DisplayJarPanel extends Composite {
 
 	public DisplayJarPanel(Composite parent, int style, DisplayerContext context) {
 		super(parent, style);
-		setLayout(new GridLayout());
 		IImageFactory imageFactory = context.imageFactory;
 		pathField = new TitleAndTextField(this, SWT.NULL, imageFactory, "Jar Path", false);
+		pathField.addHelpButton(DisplayJarConstants.helpPathField);
 		nameField = new TitleAndTextField(this, SWT.NULL, imageFactory, "Jar Name", false);
+		nameField.addHelpButton(DisplayJarConstants.helpJarName);
 		digestField = new TitleAndTextField(this, SWT.NULL, imageFactory, "Digest", false);
+		digestField.addHelpButton(DisplayJarConstants.helpDigest);
 		urlField = new TitleAndTextField(this, SWT.NULL, imageFactory, "Url", false);
+		urlField.addHelpButton(DisplayJarConstants.helpUrl);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 	}
 
@@ -37,6 +39,7 @@ public class DisplayJarPanel extends Composite {
 				digestField.setText(ripped.hexDigest);
 				urlField.setText(url);
 				return;
+
 			}
 		}
 		pathField.setText("");

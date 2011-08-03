@@ -9,9 +9,12 @@ import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactory;
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactoryBuilder;
 import org.arc4eclipse.displayCore.constants.DisplayCoreConstants;
+import org.arc4eclipse.displayForums.DisplayForums;
 import org.arc4eclipse.displayJarPath.DisplayJarPath;
 import org.arc4eclipse.displayJavadoc.DisplayJavadoc;
-import org.arc4eclipse.displayOrganisation.DisplayOrganisation;
+import org.arc4eclipse.displayMailingLists.DisplayMailingLists;
+import org.arc4eclipse.displayOrganisationUrl.DisplayOrganisationUrl;
+import org.arc4eclipse.displayProjectUrl.DisplayProjectUrl;
 import org.arc4eclipse.displaySource.DisplaySource;
 import org.arc4eclipse.displayText.DisplayText;
 import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
@@ -86,13 +89,14 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 			repository.addStatusListener(new IStatusChangedListener() {
 				@Override
 				public void statusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> item, Map<String, Object> context) throws Exception {
+					Object actualEntity = context.get(RepositoryConstants.entity);
 					if (item != null) {
-						Object actualEntity = context.get(RepositoryConstants.entity);
 						if (RepositoryConstants.entityJarData.equals(actualEntity)) {
 							getDependantData(item, repository.generator().forOrganisation(), RepositoryConstants.entityOrganisation, RepositoryConstants.organisationUrlKey);
 							getDependantData(item, repository.generator().forProject(), RepositoryConstants.entityProject, RepositoryConstants.projectUrlKey);
 						}
 					}
+
 				}
 
 				private void getDependantData(Map<String, Object> item, IFunction1<String, String> urlConvertor, String entity, String key) {
@@ -144,10 +148,13 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 			IDisplayContainerFactoryBuilder builder = IDisplayContainerFactoryBuilder.Utils.displayManager();
 			builder.registerDisplayer(new DisplayText());
 
-			builder.registerDisplayer(new DisplayOrganisation());
+			builder.registerDisplayer(new DisplayOrganisationUrl());
+			builder.registerDisplayer(new DisplayProjectUrl());
 			builder.registerDisplayer(new DisplaySource());
 			builder.registerDisplayer(new DisplayJavadoc());
 			builder.registerDisplayer(new DisplayJarPath());
+			builder.registerDisplayer(new DisplayForums());
+			builder.registerDisplayer(new DisplayMailingLists());
 
 			builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.jarPathKey, RepositoryConstants.tutorialsTitle);
 			builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.sourceKey, RepositoryConstants.sourceTitle);
@@ -158,7 +165,9 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.nameKey, RepositoryConstants.nameTitle);
 			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.descriptionKey, RepositoryConstants.descriptionTitle);
 			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.projectJobsKey, RepositoryConstants.jobsTitle);
-			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.merchantisingKey, RepositoryConstants.merchantisingTitle);
+			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.merchandisingKey, RepositoryConstants.merchandisingTitle);
+			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.mailingListsKey, RepositoryConstants.mailingListTitle);
+			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.forumsKey, RepositoryConstants.forumsTitle);
 
 			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.nameKey, RepositoryConstants.nameTitle);
 			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.descriptionKey, RepositoryConstants.descriptionTitle);
@@ -166,7 +175,11 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.projectMailingListsKey, RepositoryConstants.mailingListTitle);
 			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.projectTutorialsKey, RepositoryConstants.tutorialsTitle);
 			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.projectJobsKey, RepositoryConstants.jobsTitle);
-			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.merchantisingKey, RepositoryConstants.merchantisingTitle);
+			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.merchandisingKey, RepositoryConstants.merchandisingTitle);
+			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.forumsKey, RepositoryConstants.forumsTitle);
+			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.mailingListsKey, RepositoryConstants.mailingListTitle);
+			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.forumsKey, RepositoryConstants.forumsTitle);
+
 			displayContainerFactory = builder.build();
 		}
 		return displayContainerFactory;
