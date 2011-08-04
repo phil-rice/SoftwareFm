@@ -14,9 +14,6 @@ import org.arc4eclipse.swtBasics.images.IImageFactory;
 import org.arc4eclipse.swtBasics.images.ImageButton;
 import org.arc4eclipse.swtBasics.images.Images;
 import org.arc4eclipse.swtBasics.text.TitleAndTextField;
-import org.eclipse.jface.dialogs.IInputValidator;
-import org.eclipse.jface.dialogs.InputDialog;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -48,21 +45,12 @@ public class ListPanel extends Composite {
 
 		@Override
 		public void buttonPressed(ImageButton button) {
-			InputDialog dialog = new InputDialog(getShell(), "data", "msg", listModel.get(index), new IInputValidator() {
-				@Override
-				public String isValid(String newText) {
-					if (newText.indexOf('$') == -1)
-						return "Need a $ to demark the name from the url";
-					else
-						return null;
-				}
-			});
-			if (dialog.open() == Window.OK) {
-				NameAndUrl name = encoder.fromString(dialog.getValue());
-				listModel.set(index, name.name, name.url);
+			NameAndUrlDialog dialog = new NameAndUrlDialog(getShell(), imageFactory);
+			NameAndUrl result = dialog.open(listModel.get(index));
+			if (result != null) {
+				listModel.set(index, result.name, result.url);
 				sendDataToServer();
 			}
-			dialog.close();
 		}
 	}
 
@@ -95,21 +83,11 @@ public class ListPanel extends Composite {
 
 			@Override
 			public void buttonPressed(ImageButton button) {
-				InputDialog dialog = new InputDialog(getShell(), "data", "msg", "name$url", new IInputValidator() {
-					@Override
-					public String isValid(String newText) {
-						if (newText.indexOf('$') == -1)
-							return "Need a $ to demark the name from the url";
-						else
-							return null;
-					}
-				});
-				if (dialog.open() == Window.OK) {
-					NameAndUrl name = encoder.fromString(dialog.getValue());
-					listModel.add(name.name, name.url);
-					sendDataToServer();
-				}
-				dialog.close();
+				NameAndUrlDialog dialog = new NameAndUrlDialog(getShell(), imageFactory);
+				NameAndUrl newDialog = dialog.open(new NameAndUrl("<EnterName>", "<Enter Url>"));
+				if (newDialog != null)
+					listModel.add(newDialog.name, newDialog.url);
+				sendDataToServer();
 			}
 		});
 		new ImageButton(compTitle, images.getHelpImage()).setTooltipText("Help");

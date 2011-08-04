@@ -67,7 +67,7 @@ public class ListModel implements Iterable<NameAndUrl> {
 		}
 	}
 
-	public String get(int index) {
-		return encoder.toString(data.get(index));
+	public NameAndUrl get(int index) {
+		return data.get(index);
 	}
 }

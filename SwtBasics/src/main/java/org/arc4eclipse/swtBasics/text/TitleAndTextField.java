@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Text;
 public class TitleAndTextField extends AbstractTitleAnd {
 	private final Text txtText;
 	private final Color originalBackground;
+	private boolean globalEditable;
 
 	public TitleAndTextField(Composite parent, IImageFactory imageFactory, String title, boolean editable) {
 		this(parent, SWT.BORDER, imageFactory, title, editable);
@@ -47,14 +48,14 @@ public class TitleAndTextField extends AbstractTitleAnd {
 		addCrListener(new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				txtText.setEditable(false);
+				txtText.setEditable(globalEditable);
 				updateBackground();
 			}
 		});
 		addButton(images.getEditImage(), "Toggles the editable state of this value", new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
-				txtText.setEditable(!txtText.getEditable());
+				txtText.setEditable(globalEditable || !txtText.getEditable());
 				updateBackground();
 			}
 		});
@@ -93,5 +94,11 @@ public class TitleAndTextField extends AbstractTitleAnd {
 
 	public void addCrListener(Listener listener) {
 		txtText.addListener(SWT.DefaultSelection, listener);
+	}
+
+	public void setEditable(boolean globalEditable) {
+		this.globalEditable = globalEditable;
+		txtText.setEditable(globalEditable);
+		updateBackground();
 	}
 }
