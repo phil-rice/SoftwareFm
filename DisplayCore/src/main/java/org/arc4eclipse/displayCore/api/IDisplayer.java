@@ -7,9 +7,9 @@ public interface IDisplayer<L extends Control, S extends Control> {
 
 	String getNameSpace();
 
-	S createSmallControl(DisplayerContext displayerContext, Composite parent, NameSpaceAndName nameSpaceAndName, String title);
+	S createSmallControl(DisplayerContext displayerContext, Composite parent, String entity, NameSpaceAndName nameSpaceAndName, String title);
 
-	L createLargeControl(DisplayerContext context, Composite parent, NameSpaceAndName nameSpaceAndName, String title);
+	L createLargeControl(DisplayerContext context, Composite parent, String entity, NameSpaceAndName nameSpaceAndName, String title);
 
 	void populateSmallControl(BindingContext bindingContext, S smallControl, Object value);
 

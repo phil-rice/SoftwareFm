@@ -164,18 +164,20 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 	}
 
 	@Override
-	public Future<?> getData(String url, Map<String, Object> rawContext) {
+	public Future<?> getData(String entity, String url, Map<String, Object> rawContext) {
 		Map<String, Object> context = new HashMap<String, Object>(rawContext);
 		context.put(RepositoryConstants.action, RepositoryConstants.actionGet);
+		context.put(RepositoryConstants.entity, entity);
 		fireRequest("getData", url, emptyParameters, context);
 		fireStatusChanged(url, RepositoryDataItemStatus.REQUESTED, null, context);
 		return facard.get(url, new CallbackForData(context));
 	}
 
 	@Override
-	public Future<?> modifyData(String url, String name, Object value, Map<String, Object> rawContext) {
+	public Future<?> modifyData(String entity, String url, String name, Object value, Map<String, Object> rawContext) {
 		Map<String, Object> context = new HashMap<String, Object>(rawContext);
 		context.put(RepositoryConstants.action, RepositoryConstants.actionPost);
+		context.put(RepositoryConstants.entity, entity);
 		Map<String, Object> parameters = Maps.<String, Object> makeMap(name, value);
 		fireRequest("modifyData", url, parameters, context);
 		return facard.post(url, parameters, new CallbackForModify(context));

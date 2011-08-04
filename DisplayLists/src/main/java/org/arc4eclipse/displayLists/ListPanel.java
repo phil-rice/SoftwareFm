@@ -63,9 +63,11 @@ public class ListPanel extends Composite {
 	private String url;
 	private final String key;
 	private final IEncodeDecodeNameAndUrl encoder;
+	private final String entity;
 
-	public ListPanel(Composite parent, int style, DisplayerContext context, NameSpaceAndName nameSpaceAndName, String title) {
+	public ListPanel(Composite parent, int style, DisplayerContext context, String entity, NameSpaceAndName nameSpaceAndName, String title) {
 		super(parent, style);
+		this.entity = entity;
 		this.title = title;
 		this.imageFactory = context.imageFactory;
 		this.repository = context.repository;
@@ -129,7 +131,7 @@ public class ListPanel extends Composite {
 	}
 
 	public void sendDataToServer() {
-		repository.modifyData(url, key, listModel.asDataForRepostory(), Collections.<String, Object> emptyMap());
+		repository.modifyData(entity, url, key, listModel.asDataForRepostory(), Collections.<String, Object> emptyMap());
 	}
 
 }

@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Label;
 public abstract class AbstractDisplayerWithLabel<L extends Control> implements IDisplayer<L, Label> {
 
 	@Override
-	public Label createSmallControl(DisplayerContext displayerContext, Composite parent, NameSpaceAndName nameSpaceAndName, String title) {
+	public Label createSmallControl(DisplayerContext displayerContext, Composite parent, String entity, NameSpaceAndName nameSpaceAndName, String title) {
 		Label label = new Label(parent, SWT.BORDER);
 		label.setText(nameSpaceAndName.name);
 		return label;

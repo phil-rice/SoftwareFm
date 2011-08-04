@@ -14,9 +14,9 @@ public class OrganisationPanel extends Composite {
 	private final BoundTitleAndTextField orgField;
 	private final ImageButton btnBrowse;
 
-	public OrganisationPanel(Composite parent, int style, DisplayerContext context, NameSpaceAndName nameSpaceAndName, String title) {
+	public OrganisationPanel(Composite parent, int style, DisplayerContext context, String entity, NameSpaceAndName nameSpaceAndName, String title) {
 		super(parent, style);
-		orgField = new BoundTitleAndTextField(this, SWT.NULL, context, nameSpaceAndName, title);
+		orgField = new BoundTitleAndTextField(this, SWT.NULL, context, entity, nameSpaceAndName, title);
 		btnBrowse = orgField.addButton(context.imageFactory.makeImages(getDisplay()).getBrowseImage(), "Browse", new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {

@@ -17,8 +17,8 @@ public class DisplaySource extends AbstractDisplayerWithLabel<SourcePanel> {
 	}
 
 	@Override
-	public SourcePanel createLargeControl(DisplayerContext context, Composite parent, NameSpaceAndName nameSpaceAndName, String title) {
-		return new SourcePanel(parent, SWT.BORDER, context, nameSpaceAndName, title);
+	public SourcePanel createLargeControl(DisplayerContext context, Composite parent, String entity, NameSpaceAndName nameSpaceAndName, String title) {
+		return new SourcePanel(parent, SWT.BORDER, context, entity, nameSpaceAndName, title);
 	}
 
 	@Override

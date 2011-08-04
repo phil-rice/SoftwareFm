@@ -104,7 +104,7 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 						String rawUrl = (String) item.get(key);
 						if (rawUrl != null && !rawUrl.equals("")) {
 							String url = urlConvertor.apply(rawUrl);
-							repository.getData(url, Maps.<String, Object> makeMap(RepositoryConstants.entity, entity));
+							repository.getData(entity, url, Maps.<String, Object> makeMap(RepositoryConstants.entity, entity));
 						}
 					} catch (Exception e) {
 						throw WrappedException.wrap(e);

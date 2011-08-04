@@ -17,7 +17,7 @@ public class DisplayJarPath extends AbstractDisplayerWithLabel<DisplayJarPanel> 
 	}
 
 	@Override
-	public DisplayJarPanel createLargeControl(DisplayerContext context, Composite parent, NameSpaceAndName nameSpaceAndName, String title) {
+	public DisplayJarPanel createLargeControl(DisplayerContext context, Composite parent, String entity, NameSpaceAndName nameSpaceAndName, String title) {
 		return new DisplayJarPanel(parent, SWT.BORDER, context);
 	}
 

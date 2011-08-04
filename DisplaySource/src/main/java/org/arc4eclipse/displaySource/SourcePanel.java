@@ -18,10 +18,10 @@ public class SourcePanel extends Composite {
 	private final TitleAndTextField txtLocal;
 	private final BoundTitleAndTextField txtRepository;
 
-	public SourcePanel(Composite parent, int style, DisplayerContext context, NameSpaceAndName nameSpaceAndName, String title) {
+	public SourcePanel(Composite parent, int style, DisplayerContext context, String entity, NameSpaceAndName nameSpaceAndName, String title) {
 		super(parent, style);
 		setLayout(new GridLayout());
-		txtRepository = new BoundTitleAndTextField(this, SWT.NULL, context, nameSpaceAndName, title);
+		txtRepository = new BoundTitleAndTextField(this, SWT.NULL, context, entity, nameSpaceAndName, title);
 		btnAttach = txtRepository.addButton(context.imageFactory.makeImages(getDisplay()).getLinkImage(), "Attach", new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {

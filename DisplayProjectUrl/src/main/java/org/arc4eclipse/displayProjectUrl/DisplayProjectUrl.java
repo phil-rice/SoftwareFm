@@ -16,8 +16,8 @@ public class DisplayProjectUrl extends AbstractDisplayerWithLabel<ProjectUrlPane
 	}
 
 	@Override
-	public ProjectUrlPanel createLargeControl(DisplayerContext context, Composite parent, NameSpaceAndName nameSpaceAndName, String title) {
-		return new ProjectUrlPanel(parent, SWT.BORDER, context, nameSpaceAndName, title);
+	public ProjectUrlPanel createLargeControl(DisplayerContext context, Composite parent, String entity, NameSpaceAndName nameSpaceAndName, String title) {
+		return new ProjectUrlPanel(parent, SWT.BORDER, context, entity, nameSpaceAndName, title);
 	}
 
 	@Override

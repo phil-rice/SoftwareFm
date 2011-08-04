@@ -16,8 +16,8 @@ public class DisplayText extends AbstractDisplayerWithLabel<BoundTitleAndTextFie
 	}
 
 	@Override
-	public BoundTitleAndTextField createLargeControl(DisplayerContext context, Composite parent, NameSpaceAndName nameSpaceAndName, String title) {
-		return new BoundTitleAndTextField(parent, context, nameSpaceAndName, title);
+	public BoundTitleAndTextField createLargeControl(DisplayerContext context, Composite parent, String entity, NameSpaceAndName nameSpaceAndName, String title) {
+		return new BoundTitleAndTextField(parent, context, entity, nameSpaceAndName, title);
 	}
 
 	@Override

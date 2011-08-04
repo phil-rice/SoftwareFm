@@ -14,9 +14,9 @@ public class ProjectUrlPanel extends Composite {
 	private final BoundTitleAndTextField urlField;
 	private final ImageButton btnBrowse;
 
-	public ProjectUrlPanel(Composite parent, int style, DisplayerContext context, NameSpaceAndName nameSpaceAndName, String title) {
+	public ProjectUrlPanel(Composite parent, int style, DisplayerContext context, String entity, NameSpaceAndName nameSpaceAndName, String title) {
 		super(parent, style);
-		urlField = new BoundTitleAndTextField(this, SWT.NULL, context, nameSpaceAndName, title);
+		urlField = new BoundTitleAndTextField(this, SWT.NULL, context, entity, nameSpaceAndName, title);
 		btnBrowse = urlField.addButton(context.imageFactory.makeImages(getDisplay()).getBrowseImage(), "Browse", new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {

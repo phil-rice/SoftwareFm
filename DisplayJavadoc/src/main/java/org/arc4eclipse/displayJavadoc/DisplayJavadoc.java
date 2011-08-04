@@ -17,8 +17,8 @@ public class DisplayJavadoc extends AbstractDisplayerWithLabel<JavadocPanel> {
 	}
 
 	@Override
-	public JavadocPanel createLargeControl(DisplayerContext context, Composite parent, NameSpaceAndName nameSpaceAndName, String title) {
-		return new JavadocPanel(parent, SWT.BORDER, context, nameSpaceAndName, title);
+	public JavadocPanel createLargeControl(DisplayerContext context, Composite parent, String entity, NameSpaceAndName nameSpaceAndName, String title) {
+		return new JavadocPanel(parent, SWT.BORDER, context, entity, nameSpaceAndName, title);
 	}
 
 	@Override

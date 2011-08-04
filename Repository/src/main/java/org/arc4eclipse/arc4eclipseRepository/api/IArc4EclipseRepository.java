@@ -14,9 +14,9 @@ public interface IArc4EclipseRepository {
 
 	Future<?> modifyJarData(String jarDigest, String name, Object value, Map<String, Object> context);
 
-	Future<?> getData(String url, Map<String, Object> context);
+	Future<?> getData(String entity, String url, Map<String, Object> context);
 
-	Future<?> modifyData(String url, String name, Object value, Map<String, Object> context);
+	Future<?> modifyData(String entity, String url, String name, Object value, Map<String, Object> context);
 
 	IUrlGenerator generator();
 

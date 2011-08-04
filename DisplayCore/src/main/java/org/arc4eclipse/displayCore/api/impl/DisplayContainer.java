@@ -26,7 +26,7 @@ public class DisplayContainer implements IDisplayContainer {
 	private final Map<NameSpaceAndName, Control> largeControlMap = Maps.newMap();
 
 	@SuppressWarnings("rawtypes")
-	public DisplayContainer(final DisplayerContext displayerContext, final Composite parent, int style, final Map<NameSpaceAndName, IDisplayer> toDisplayers, final Map<NameSpaceAndName, String> toTitle) {
+	public DisplayContainer(final DisplayerContext displayerContext, final Composite parent, int style, final String entity, final Map<NameSpaceAndName, IDisplayer> toDisplayers, final Map<NameSpaceAndName, String> toTitle) {
 		this.toDisplayerMap = Maps.copyMap(toDisplayers);
 		this.content = new Composite(parent, SWT.NULL);
 		this.compButtons = new Composite(content, SWT.NULL);
@@ -43,8 +43,8 @@ public class DisplayContainer implements IDisplayContainer {
 			@Override
 			public <L extends Control, S extends Control> void process(NameSpaceAndName nameSpaceAndName, IDisplayer<L, S> displayer) {
 				String title = toTitle.get(nameSpaceAndName);
-				smallControlMap.put(nameSpaceAndName, displayer.createSmallControl(displayerContext, compButtons, nameSpaceAndName, title));
-				largeControlMap.put(nameSpaceAndName, displayer.createLargeControl(displayerContext, content, nameSpaceAndName, title));
+				smallControlMap.put(nameSpaceAndName, displayer.createSmallControl(displayerContext, compButtons, entity, nameSpaceAndName, title));
+				largeControlMap.put(nameSpaceAndName, displayer.createLargeControl(displayerContext, content, entity, nameSpaceAndName, title));
 			}
 		});
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(content);

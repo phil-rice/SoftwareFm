@@ -16,8 +16,8 @@ public class DisplayMailingLists extends AbstractDisplayerWithLabel<ListPanel> {
 	}
 
 	@Override
-	public ListPanel createLargeControl(DisplayerContext context, Composite parent, NameSpaceAndName nameSpaceAndName, String title) {
-		return new ListPanel(parent, SWT.BORDER, context, nameSpaceAndName, title);
+	public ListPanel createLargeControl(DisplayerContext context, Composite parent, String entity, NameSpaceAndName nameSpaceAndName, String title) {
+		return new ListPanel(parent, SWT.BORDER, context, entity, nameSpaceAndName, title);
 	}
 
 	@Override

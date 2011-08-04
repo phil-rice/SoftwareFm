@@ -16,8 +16,8 @@ public class DisplayOrganisationUrl extends AbstractDisplayerWithLabel<Organisat
 	}
 
 	@Override
-	public OrganisationPanel createLargeControl(DisplayerContext context, Composite parent, NameSpaceAndName nameSpaceAndName, String title) {
-		return new OrganisationPanel(parent, SWT.BORDER, context, nameSpaceAndName, title);
+	public OrganisationPanel createLargeControl(DisplayerContext context, Composite parent, String entity, NameSpaceAndName nameSpaceAndName, String title) {
+		return new OrganisationPanel(parent, SWT.BORDER, context, entity, nameSpaceAndName, title);
 	}
 
 	@Override

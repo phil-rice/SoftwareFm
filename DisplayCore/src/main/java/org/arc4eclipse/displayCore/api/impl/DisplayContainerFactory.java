@@ -71,7 +71,7 @@ public class DisplayContainerFactory implements IDisplayContainerFactoryBuilder,
 				mapToDisplayer.put(nameSpaceAndName, displayer);
 			mapToTitle.put(nameSpaceAndName, keyAndTitle.title);
 		}
-		DisplayContainer displayContainer = new DisplayContainer(displayerContext, parent, SWT.NULL, mapToDisplayer, mapToTitle);
+		DisplayContainer displayContainer = new DisplayContainer(displayerContext, parent, SWT.NULL, entity, mapToDisplayer, mapToTitle);
 		return displayContainer;
 	}
 

@@ -39,8 +39,8 @@ public class ListenerListTest extends TestCase {
 		send(list, "2");
 		ListenerList.removeListenerListListener(mock2);
 		send(list, "-");
-		assertEquals(Arrays.asList("L1: <1>", "L2: <1>", "L1: <1&2>", "L2: <1&2>"), mock1.callbacks);
-		assertEquals(Arrays.asList("L1: <1&2>", "L2: <1&2>", "L1: <2>", "L2: <2>"), mock2.callbacks);
+		assertEquals(Arrays.asList("[L1, L2]: <1>", "[L1, L2]: <1&2>"), mock1.callbacks);
+		assertEquals(Arrays.asList("[L1, L2]: <1&2>", "[L1, L2]: <2>"), mock2.callbacks);
 	}
 
 	private void send(ListenerList<ListenerMock> list, final String message) {

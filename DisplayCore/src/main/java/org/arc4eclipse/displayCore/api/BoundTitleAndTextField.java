@@ -12,16 +12,16 @@ public class BoundTitleAndTextField extends TitleAndTextField {
 
 	private String url;
 
-	public BoundTitleAndTextField(Composite parent, DisplayerContext displayerContext, final NameSpaceAndName nameSpaceAndName, String title) {
-		this(parent, SWT.BORDER, displayerContext, nameSpaceAndName, title);
+	public BoundTitleAndTextField(Composite parent, DisplayerContext displayerContext, String entity, final NameSpaceAndName nameSpaceAndName, String title) {
+		this(parent, SWT.BORDER, displayerContext, entity, nameSpaceAndName, title);
 	}
 
-	public BoundTitleAndTextField(Composite parent, int style, final DisplayerContext displayerContext, final NameSpaceAndName nameSpaceAndName, String title) {
+	public BoundTitleAndTextField(Composite parent, int style, final DisplayerContext displayerContext, final String entity, final NameSpaceAndName nameSpaceAndName, String title) {
 		super(parent, style, displayerContext.imageFactory, title, true);
 		addCrListener(new Listener() {
 			@Override
 			public void handleEvent(Event e) {
-				displayerContext.repository.modifyData(url, nameSpaceAndName.key, getText(), Collections.<String, Object> emptyMap());
+				displayerContext.repository.modifyData(entity, url, nameSpaceAndName.key, getText(), Collections.<String, Object> emptyMap());
 			}
 		});
 	}
