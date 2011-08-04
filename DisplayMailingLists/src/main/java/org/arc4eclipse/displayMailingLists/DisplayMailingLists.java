@@ -1,6 +1,5 @@
 package org.arc4eclipse.displayMailingLists;
 
-import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
 import org.arc4eclipse.displayCore.api.AbstractDisplayerWithLabel;
 import org.arc4eclipse.displayCore.api.BindingContext;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
@@ -13,7 +12,7 @@ public class DisplayMailingLists extends AbstractDisplayerWithLabel<ListPanel> {
 
 	@Override
 	public String getNameSpace() {
-		return RepositoryConstants.mailingListsKey;
+		return "mailingLists";
 	}
 
 	@Override

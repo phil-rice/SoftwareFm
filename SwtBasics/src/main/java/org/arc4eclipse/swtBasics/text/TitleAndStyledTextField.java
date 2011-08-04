@@ -15,8 +15,8 @@ public class TitleAndStyledTextField extends AbstractTitleAnd {
 	public TitleAndStyledTextField(Composite arg0, int arg1, IImageFactory imageFactory, String title) {
 		super(arg0, arg1, imageFactory, title);
 		txtText = new StyledText(this, SWT.BORDER);
-		txtText.setLayoutData(new RowData(200, 200));
-
+		txtText.setLayoutData(new RowData(400, 400));
+		// Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 	}
 
 	public void setText(final String text) {

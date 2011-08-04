@@ -1,10 +1,11 @@
 package org.arc4eclipse.displayLists;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
+import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.displayCore.api.NameSpaceAndName;
 import org.arc4eclipse.swtBasics.Swts;
@@ -13,7 +14,9 @@ import org.arc4eclipse.swtBasics.images.IImageFactory;
 import org.arc4eclipse.swtBasics.images.ImageButton;
 import org.arc4eclipse.swtBasics.images.Images;
 import org.arc4eclipse.swtBasics.text.TitleAndTextField;
-import org.arc4eclipse.utilities.strings.Strings;
+import org.eclipse.jface.dialogs.IInputValidator;
+import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -21,57 +24,134 @@ import org.eclipse.swt.widgets.Label;
 
 public class ListPanel extends Composite {
 
+	private final class DeleteButtonListener implements IImageButtonListener {
+		private final int index;
+
+		public DeleteButtonListener(int index) {
+			this.index = index;
+		}
+
+		@Override
+		public void buttonPressed(ImageButton button) {
+			listModel.delete(index);
+			sendDataToServer();
+		}
+	}
+
+	private final class EditButtonListener implements IImageButtonListener {
+		private final int index;
+
+		public EditButtonListener(int index) {
+			this.index = index;
+
+		}
+
+		@Override
+		public void buttonPressed(ImageButton button) {
+			InputDialog dialog = new InputDialog(getShell(), "data", "msg", listModel.get(index), new IInputValidator() {
+				@Override
+				public String isValid(String newText) {
+					if (newText.indexOf('$') == -1)
+						return "Need a $ to demark the name from the url";
+					else
+						return null;
+				}
+			});
+			if (dialog.open() == Window.OK) {
+				NameAndUrl name = encoder.fromString(dialog.getValue());
+				listModel.set(index, name.name, name.url);
+				sendDataToServer();
+			}
+			dialog.close();
+		}
+	}
+
 	private final Composite compForums;
 	private final IImageFactory imageFactory;
 	private final Images images;
 	private final String title;
+	private final ListModel listModel;
+	private final IArc4EclipseRepository repository;
+	private String url;
+	private final String key;
+	private final IEncodeDecodeNameAndUrl encoder;
 
 	public ListPanel(Composite parent, int style, DisplayerContext context, NameSpaceAndName nameSpaceAndName, String title) {
 		super(parent, style);
 		this.title = title;
-		imageFactory = context.imageFactory;
+		this.imageFactory = context.imageFactory;
+		this.repository = context.repository;
+		this.key = nameSpaceAndName.key;
+		this.encoder = IEncodeDecodeNameAndUrl.Utils.defaultEncoder();
+		this.listModel = new ListModel(encoder);
 		images = imageFactory.makeImages(getDisplay());
 		Composite compTitle = new Composite(this, SWT.NULL);
 		compTitle.setLayout(new RowLayout(SWT.HORIZONTAL));
 		new Label(compTitle, SWT.NULL).setText(title);
 		compForums = new Composite(this, SWT.BORDER);
-		new ImageButton(compTitle, images.getAddImage()).setTooltipText(MessageFormat.format(DisplayListsConstants.add, title));
+		ImageButton addButton = new ImageButton(compTitle, images.getAddImage());
+		addButton.setTooltipText(MessageFormat.format(DisplayListsConstants.add, title));
+		addButton.addListener(new IImageButtonListener() {
+
+			@Override
+			public void buttonPressed(ImageButton button) {
+				InputDialog dialog = new InputDialog(getShell(), "data", "msg", "name$url", new IInputValidator() {
+					@Override
+					public String isValid(String newText) {
+						if (newText.indexOf('$') == -1)
+							return "Need a $ to demark the name from the url";
+						else
+							return null;
+					}
+				});
+				if (dialog.open() == Window.OK) {
+					NameAndUrl name = encoder.fromString(dialog.getValue());
+					listModel.add(name.name, name.url);
+					sendDataToServer();
+				}
+				dialog.close();
+			}
+		});
 		new ImageButton(compTitle, images.getHelpImage()).setTooltipText("Help");
+
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 		setSize(getSize().x, 1);
+		getParent().layout();
+		getParent().redraw();
 	}
 
 	public void setValue(String url, Object value) {
-		if (value != null && !(value instanceof List))
-			throw new IllegalArgumentException(MessageFormat.format(DisplayListsConstants.mustBeList, title, value.getClass(), value));
-		@SuppressWarnings("unchecked")
-		List<Object> list = value == null ? Collections.emptyList() : (List<Object>) value;
-
+		this.url = url;
+		List<String> values = getValues(value);
+		listModel.setData(values);
 		Swts.removeAllChildren(compForums);
-		for (Object item : list) {
-			if (!(item instanceof Map))
-				throw new IllegalArgumentException(MessageFormat.format(DisplayListsConstants.itemInListMustBeMap, title, item.getClass(), item));
-			Map<String, Object> map = (Map<String, Object>) item;
-			Object title = map.get(DisplayListsConstants.titleKey);
-			Object itemUrl = map.get(DisplayListsConstants.urlKey);
-			TitleAndTextField text = new TitleAndTextField(compForums, SWT.NULL, imageFactory, Strings.nullSafeToString(title), false);
-			text.setText(Strings.nullSafeToString(itemUrl));
-			text.addButton(images.getEditImage(), "Edit", new IImageButtonListener() {
-				@Override
-				public void buttonPressed(ImageButton button) {
-				}
-			});
-			text.addButton(images.getClearImage(), "Delete", new IImageButtonListener() {
-				@Override
-				public void buttonPressed(ImageButton button) {
-				}
-			});
+		int index = 0;
+		for (NameAndUrl nameAndUrl : listModel) {
+			TitleAndTextField text = new TitleAndTextField(compForums, SWT.NULL, imageFactory, nameAndUrl.name, false);
+			text.setText(nameAndUrl.url);
+			text.addButton(images.getEditImage(), "Edit", new EditButtonListener(index));
+			text.addButton(images.getClearImage(), "Delete", new DeleteButtonListener(index));
 			text.addHelpButton("Edits");
+			index += 1;
 		}
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(compForums);
-		if (list.size() == 0)
+		if (index == 0)
 			compForums.setSize(compForums.getSize().x, 22);
 		getParent().layout();
 		getParent().redraw();
 	}
+
+	private List<String> getValues(Object value) {
+		if (value instanceof String)
+			if ("".equals(((String) value).trim()))
+				return new ArrayList<String>();
+		if (value != null && !(value instanceof List))
+			throw new IllegalArgumentException(MessageFormat.format(DisplayListsConstants.mustBeStringList, title, value.getClass(), value));
+		return (List<String>) value;
+	}
+
+	public void sendDataToServer() {
+		repository.modifyData(url, key, listModel.asDataForRepostory(), Collections.<String, Object> emptyMap());
+	}
+
 }

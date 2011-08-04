@@ -2,7 +2,6 @@ package org.arc4eclipse.sample;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
 import org.arc4eclipse.arc4eclipseRepository.api.RepositoryDataItemStatus;
@@ -13,7 +12,6 @@ import org.arc4eclipse.displayCore.api.IDisplayContainerFactoryBuilder;
 import org.arc4eclipse.displayForums.DisplayForums;
 import org.arc4eclipse.displayJarPath.DisplayJarPath;
 import org.arc4eclipse.displayJavadoc.DisplayJavadoc;
-import org.arc4eclipse.displayLists.DisplayListsConstants;
 import org.arc4eclipse.displayMailingLists.DisplayMailingLists;
 import org.arc4eclipse.displayOrganisationUrl.DisplayOrganisationUrl;
 import org.arc4eclipse.displayProjectUrl.DisplayProjectUrl;
@@ -84,11 +82,8 @@ public class Sample {
 						try {
 							selectedArtefactPanel.statusChanged("someUrl", RepositoryDataItemStatus.FOUND, Maps.<String, Object> makeMap(//
 									"text_key1", "value1",//
-									RepositoryConstants.forumsKey, Arrays.asList(//
-											Maps.makeMap(DisplayListsConstants.titleKey, "User Forums", DisplayListsConstants.urlKey, "www.forums.org/x"),//
-											Maps.makeMap(DisplayListsConstants.titleKey, "Devs Forums", DisplayListsConstants.urlKey, "www.forums.org/y"//
-											))), Maps.<String, Object> makeMap(//
-									RepositoryConstants.entity, "entity"));
+									RepositoryConstants.forumsKey, new String[] { "User Forums$ww.forums.org/x", "Devs Forums$www.forums.org/y" }),//
+									Maps.<String, Object> makeMap(RepositoryConstants.entity, "entity"));
 						} catch (Exception e) {
 							throw WrappedException.wrap(e);
 						}

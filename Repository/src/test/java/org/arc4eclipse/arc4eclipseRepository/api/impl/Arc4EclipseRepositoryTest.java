@@ -2,6 +2,8 @@ package org.arc4eclipse.arc4eclipseRepository.api.impl;
 
 import static org.arc4eclipse.arc4eclipseRepository.api.RepositoryDataItemStatus.*;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import junit.framework.TestCase;
@@ -52,23 +54,6 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 				"name1", "value1"));
 	}
 
-	private void checkModifyAndGetJarData(String key, String value, Map<String, Object> expected) throws Exception {
-		Map<String, Object> context1 = Maps.makeMap("c", 1);
-		Map<String, Object> context2 = Maps.makeMap("c", 2);
-		MemoryStatusChangedListener validListener = IStatusChangedListener.Utils.memory();
-		repository.addStatusListener(validListener);
-		repository.modifyJarData(digest, key, value, context1).get();
-		validListener.assertEquals(//
-				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", REQUESTED, null, context1, //
-				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", FOUND, expected, context1);
-		repository.getJarData(digest, context2).get();
-		validListener.assertEquals(//
-				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", REQUESTED, null, context1,//
-				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", FOUND, expected, context1,//
-				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", REQUESTED, null, Maps.newMapWith(context2, RepositoryConstants.entity, RepositoryConstants.entityJarData),//
-				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", FOUND, expected, Maps.newMapWith(context2, RepositoryConstants.entity, RepositoryConstants.entityJarData));
-	}
-
 	@Test
 	public void testGetAndModifyData() throws Exception {
 		String url = "/tests/" + getClass().getSimpleName();
@@ -87,22 +72,63 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 				RepositoryConstants.descriptionKey, "orgDesc"));
 	}
 
-	private void checkModifyAndGetData(String url, String key, String value, Map<String, Object> expected) throws Exception {
+	public void testGetAndModifyDataWithListsAndMaps() throws Exception {
+		List<Integer> intList = Arrays.asList(1, 2, 3);
+		List<String> stringList = Arrays.asList("1", "2", "3");
+		Map<String, Object> m1 = Maps.makeMap("a", 1);
+		Map<String, Object> m2 = Maps.makeMap("b", "2", "c", 3);
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> listOfMaps = Arrays.<Map<String, Object>> asList(m1, m2);
+
+		String url = "/tests/" + getClass().getSimpleName();
+		facard.delete(url, IResponseCallback.Utils.memoryCallback()).get();
+		checkModifyAndGetData(url, "intList", intList, Maps.<String, Object> makeMap("intList", intList));
+		checkModifyAndGetData(url, "stringList", stringList, Maps.<String, Object> makeMap("intList", intList, "stringList", stringList));
+		checkModifyAndGetData(url, "mapList", listOfMaps, Maps.<String, Object> makeMap("intList", intList, "stringList", stringList, "mapList", listOfMaps));
+	}
+
+	@SuppressWarnings("unchecked")
+	private void checkModifyAndGetJarData(String key, String value, Map<String, Object> expected) throws Exception {
 		Map<String, Object> context1 = Maps.makeMap("c", 1);
 		Map<String, Object> context2 = Maps.makeMap("c", 2);
+		// Map<String, Object> entityDefn = Maps.makeMap();
+		Map<String, Object> actionGet = Maps.makeMap(RepositoryConstants.entity, RepositoryConstants.entityJarData, RepositoryConstants.action, RepositoryConstants.actionGet);
+		Map<String, Object> actionPost = Maps.makeMap(RepositoryConstants.entity, RepositoryConstants.entityJarData, RepositoryConstants.action, RepositoryConstants.actionPost);
+
+		MemoryStatusChangedListener validListener = IStatusChangedListener.Utils.memory();
+		repository.addStatusListener(validListener);
+		repository.modifyJarData(digest, key, value, context1).get();
+
+		validListener.assertEquals(//
+				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", REQUESTED, null, Maps.merge(context1, actionPost), //
+				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", FOUND, expected, Maps.merge(context1, actionPost));
+		repository.getJarData(digest, context2).get();
+		validListener.assertEquals(//
+				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", REQUESTED, null, Maps.merge(context1, actionPost),//
+				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", FOUND, expected, Maps.merge(context1, actionPost),//
+				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", REQUESTED, null, Maps.merge(context2, actionGet),//
+				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", FOUND, expected, Maps.merge(context2, actionGet));
+	}
+
+	private void checkModifyAndGetData(String url, String key, Object value, Map<String, Object> expected) throws Exception {
+		Map<String, Object> context1 = Maps.makeMap("c", 1);
+		Map<String, Object> context2 = Maps.makeMap("c", 2);
+		// Map<String, Object> entityDefn = Maps.makeMap();
+		Map<String, Object> actionGet = Maps.makeMap(RepositoryConstants.action, RepositoryConstants.actionGet);
+		Map<String, Object> actionPost = Maps.makeMap(RepositoryConstants.action, RepositoryConstants.actionPost);
 
 		MemoryStatusChangedListener validListener = IStatusChangedListener.Utils.memory();
 		repository.addStatusListener(validListener);
 		repository.modifyData(url, key, value, context1).get();
 		validListener.assertEquals(//
-				url, REQUESTED, null, context1, //
-				url, FOUND, expected, context1);
+				url, REQUESTED, null, Maps.merge(context1, actionPost), //
+				url, FOUND, expected, Maps.merge(context1, actionPost));
 		repository.getData(url, context2).get();
 		validListener.assertEquals(//
-				url, REQUESTED, null, context1,//
-				url, FOUND, expected, context1,//
-				url, REQUESTED, null, context2,//
-				url, FOUND, expected, context2);
+				url, REQUESTED, null, Maps.merge(context1, actionPost),//
+				url, FOUND, expected, Maps.merge(context1, actionPost),//
+				url, REQUESTED, null, Maps.merge(context2, actionGet),//
+				url, FOUND, expected, Maps.merge(context2, actionGet));
 
 	}
 

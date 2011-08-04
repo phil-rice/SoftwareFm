@@ -17,8 +17,8 @@ public class RepositoryConstants {
 	public static final String projectTutorialsKey = "text_projectTutorials";
 	public static final String projectJobsKey = "text_projectJobs";
 	public static final String merchandisingKey = "text_merchandising";
-	public static final String forumsKey = "forums";
-	public static final String mailingListsKey = "mailingLists";
+	public static final String forumsKey = "forums_forums";
+	public static final String mailingListsKey = "mailingLists_mailingLists";
 
 	public static final String entity = "entity";
 	public static final String entityJarData = "jarData";
