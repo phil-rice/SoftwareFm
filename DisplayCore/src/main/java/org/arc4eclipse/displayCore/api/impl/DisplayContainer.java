@@ -44,7 +44,7 @@ public class DisplayContainer implements IDisplayContainer, ITopButtonState {
 			@Override
 			public <L extends Control, S extends Control> void process(NameSpaceAndName nameSpaceAndName, IDisplayer<L, S> displayer) {
 				String title = toTitle.get(nameSpaceAndName);
-				smallControlMap.put(nameSpaceAndName, displayer.createSmallControl(displayerContext, compButtons, entity, nameSpaceAndName, title));
+				smallControlMap.put(nameSpaceAndName, displayer.createSmallControl(displayerContext, DisplayContainer.this, compButtons, entity, nameSpaceAndName, title));
 				largeControlMap.put(nameSpaceAndName, displayer.createLargeControl(displayerContext, content, entity, nameSpaceAndName, title));
 			}
 		});
@@ -100,8 +100,10 @@ public class DisplayContainer implements IDisplayContainer, ITopButtonState {
 	}
 
 	@Override
-	public void toogleState(NameSpaceAndName nameSpaceAndName) {
-		topButtonState.put(nameSpaceAndName, !state(nameSpaceAndName));
+	public boolean toogleState(NameSpaceAndName nameSpaceAndName) {
+		boolean result = !state(nameSpaceAndName);
+		topButtonState.put(nameSpaceAndName, result);
+		return result;
 	}
 
 }

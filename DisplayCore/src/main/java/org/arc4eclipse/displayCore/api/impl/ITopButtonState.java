@@ -6,5 +6,5 @@ public interface ITopButtonState {
 
 	boolean state(NameSpaceAndName nameSpaceAndName);
 
-	void toogleState(NameSpaceAndName nameSpaceAndName);
+	boolean toogleState(NameSpaceAndName nameSpaceAndName);
 }
