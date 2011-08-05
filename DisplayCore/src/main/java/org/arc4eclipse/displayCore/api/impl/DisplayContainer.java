@@ -1,5 +1,6 @@
 package org.arc4eclipse.displayCore.api.impl;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -9,13 +10,14 @@ import org.arc4eclipse.displayCore.api.IDisplayContainer;
 import org.arc4eclipse.displayCore.api.IDisplayer;
 import org.arc4eclipse.displayCore.api.NameSpaceAndName;
 import org.arc4eclipse.swtBasics.Swts;
+import org.arc4eclipse.utilities.collections.Lists;
 import org.arc4eclipse.utilities.maps.Maps;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-public class DisplayContainer implements IDisplayContainer {
+public class DisplayContainer implements IDisplayContainer, ITopButtonState {
 
 	private final Composite content;
 	private final Composite compButtons;
@@ -24,6 +26,7 @@ public class DisplayContainer implements IDisplayContainer {
 	private final Map<NameSpaceAndName, IDisplayer> toDisplayerMap;
 	private final Map<NameSpaceAndName, Control> smallControlMap = Maps.newMap();
 	private final Map<NameSpaceAndName, Control> largeControlMap = Maps.newMap();
+	private final Map<NameSpaceAndName, Boolean> topButtonState = Maps.newMap();
 
 	@SuppressWarnings("rawtypes")
 	public DisplayContainer(final DisplayerContext displayerContext, final Composite parent, int style, final String entity, final Map<NameSpaceAndName, IDisplayer> toDisplayers, final Map<NameSpaceAndName, String> toTitle) {
@@ -43,7 +46,7 @@ public class DisplayContainer implements IDisplayContainer {
 			@Override
 			public <L extends Control, S extends Control> void process(NameSpaceAndName nameSpaceAndName, IDisplayer<L, S> displayer) {
 				String title = toTitle.get(nameSpaceAndName);
-				smallControlMap.put(nameSpaceAndName, displayer.createSmallControl(displayerContext, compButtons, entity, nameSpaceAndName, title));
+				smallControlMap.put(nameSpaceAndName, displayer.createSmallControl(displayerContext, DisplayContainer.this, compButtons, entity, nameSpaceAndName, title));
 				largeControlMap.put(nameSpaceAndName, displayer.createLargeControl(displayerContext, content, entity, nameSpaceAndName, title));
 			}
 		});
@@ -79,9 +82,40 @@ public class DisplayContainer implements IDisplayContainer {
 						displayer.populateLargeControl(bindingContext, largeControl, value);
 					}
 				});
+				sortOutOrderVisibilityAndLayout();
 			}
+
 		});
 
+	}
+
+	private void sortOutOrderVisibilityAndLayout() {
+		final List<Control> visibleControls = Lists.newList();
+		final List<Control> invisibleControls = Lists.newList();
+		process(new IDisplayContainerCallback() {
+			@Override
+			public <L extends Control, S extends Control> void process(NameSpaceAndName nameSpaceAndName, IDisplayer<L, S> displayer) {
+				boolean state = state(nameSpaceAndName);
+				L largeControl = (L) largeControlMap.get(nameSpaceAndName);
+				largeControl.setVisible(state);
+				if (state)
+					visibleControls.add(largeControl);
+				else
+					invisibleControls.add(largeControl);
+
+			}
+		});
+		setAfter(invisibleControls, setAfter(visibleControls, compButtons));
+		content.layout();
+		content.redraw();
+	}
+
+	private Control setAfter(List<Control> controls, Control firstControl) {
+		for (Control control : controls) {
+			control.moveBelow(firstControl);
+			firstControl = control;
+		}
+		return firstControl;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -91,6 +125,19 @@ public class DisplayContainer implements IDisplayContainer {
 			IDisplayer displayer = entry.getValue();
 			displayContainerCallback.process(nameSpaceAndName, displayer);
 		}
+	}
+
+	@Override
+	public boolean state(NameSpaceAndName nameSpaceAndName) {
+		return Maps.booleanFor(topButtonState, nameSpaceAndName, true);
+	}
+
+	@Override
+	public boolean toogleState(NameSpaceAndName nameSpaceAndName) {
+		boolean result = !state(nameSpaceAndName);
+		topButtonState.put(nameSpaceAndName, result);
+		sortOutOrderVisibilityAndLayout();
+		return result;
 	}
 
 }
