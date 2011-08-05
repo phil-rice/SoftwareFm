@@ -293,6 +293,14 @@ public class Maps {
 		return existing == null ? 0 : existing;
 	}
 
+	public static <T> boolean booleanFor(Map<T, Boolean> map, T t, boolean defaultValue) {
+		Boolean value = map.get(t);
+		if (value == null)
+			return defaultValue;
+		else
+			return value;
+	}
+
 	public static <K, V> Map<K, V> with(Map<K, V> map, K key, V value) {
 		Map<K, V> newMap = copyMap(map);
 		newMap.put(key, value);
@@ -387,4 +395,5 @@ public class Maps {
 					keyValueCallback.process(entry.getKey(), value);
 
 	}
+
 }

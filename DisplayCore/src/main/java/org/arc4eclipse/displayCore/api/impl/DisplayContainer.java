@@ -15,7 +15,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-public class DisplayContainer implements IDisplayContainer {
+public class DisplayContainer implements IDisplayContainer, ITopButtonState {
 
 	private final Composite content;
 	private final Composite compButtons;
@@ -24,6 +24,7 @@ public class DisplayContainer implements IDisplayContainer {
 	private final Map<NameSpaceAndName, IDisplayer> toDisplayerMap;
 	private final Map<NameSpaceAndName, Control> smallControlMap = Maps.newMap();
 	private final Map<NameSpaceAndName, Control> largeControlMap = Maps.newMap();
+	private final Map<NameSpaceAndName, Boolean> topButtonState = Maps.newMap();
 
 	@SuppressWarnings("rawtypes")
 	public DisplayContainer(final DisplayerContext displayerContext, final Composite parent, int style, final String entity, final Map<NameSpaceAndName, IDisplayer> toDisplayers, final Map<NameSpaceAndName, String> toTitle) {
@@ -91,6 +92,16 @@ public class DisplayContainer implements IDisplayContainer {
 			IDisplayer displayer = entry.getValue();
 			displayContainerCallback.process(nameSpaceAndName, displayer);
 		}
+	}
+
+	@Override
+	public boolean state(NameSpaceAndName nameSpaceAndName) {
+		return Maps.booleanFor(topButtonState, nameSpaceAndName, true);
+	}
+
+	@Override
+	public void toogleState(NameSpaceAndName nameSpaceAndName) {
+		topButtonState.put(nameSpaceAndName, !state(nameSpaceAndName));
 	}
 
 }
