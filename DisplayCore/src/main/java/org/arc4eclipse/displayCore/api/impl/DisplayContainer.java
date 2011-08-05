@@ -1,5 +1,6 @@
 package org.arc4eclipse.displayCore.api.impl;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -9,6 +10,7 @@ import org.arc4eclipse.displayCore.api.IDisplayContainer;
 import org.arc4eclipse.displayCore.api.IDisplayer;
 import org.arc4eclipse.displayCore.api.NameSpaceAndName;
 import org.arc4eclipse.swtBasics.Swts;
+import org.arc4eclipse.utilities.collections.Lists;
 import org.arc4eclipse.utilities.maps.Maps;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
@@ -80,9 +82,40 @@ public class DisplayContainer implements IDisplayContainer, ITopButtonState {
 						displayer.populateLargeControl(bindingContext, largeControl, value);
 					}
 				});
+				sortOutOrderVisibilityAndLayout();
 			}
+
 		});
 
+	}
+
+	private void sortOutOrderVisibilityAndLayout() {
+		final List<Control> visibleControls = Lists.newList();
+		final List<Control> invisibleControls = Lists.newList();
+		process(new IDisplayContainerCallback() {
+			@Override
+			public <L extends Control, S extends Control> void process(NameSpaceAndName nameSpaceAndName, IDisplayer<L, S> displayer) {
+				boolean state = state(nameSpaceAndName);
+				L largeControl = (L) largeControlMap.get(nameSpaceAndName);
+				largeControl.setVisible(state);
+				if (state)
+					visibleControls.add(largeControl);
+				else
+					invisibleControls.add(largeControl);
+
+			}
+		});
+		setAfter(invisibleControls, setAfter(visibleControls, compButtons));
+		content.layout();
+		content.redraw();
+	}
+
+	private Control setAfter(List<Control> controls, Control firstControl) {
+		for (Control control : controls) {
+			control.moveBelow(firstControl);
+			firstControl = control;
+		}
+		return firstControl;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -103,6 +136,7 @@ public class DisplayContainer implements IDisplayContainer, ITopButtonState {
 	public boolean toogleState(NameSpaceAndName nameSpaceAndName) {
 		boolean result = !state(nameSpaceAndName);
 		topButtonState.put(nameSpaceAndName, result);
+		sortOutOrderVisibilityAndLayout();
 		return result;
 	}
 
