@@ -7,6 +7,8 @@ import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.displayCore.api.NameSpaceAndName;
 import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
 public class DisplayJarPath extends AbstractDisplayerWithLabel<DisplayJarPanel> {
@@ -25,5 +27,15 @@ public class DisplayJarPath extends AbstractDisplayerWithLabel<DisplayJarPanel> 
 	public void populateLargeControl(BindingContext bindingContext, DisplayJarPanel largeControl, Object value) {
 		BindingRipperResult ripped = getBindingRipperResult(bindingContext);
 		largeControl.setValue(bindingContext.url, ripped);
+	}
+
+	@Override
+	protected Image createMainImage(Device device) {
+		return makeImage(device, "red cross.png");
+	}
+
+	@Override
+	protected Image createDepressedImage(Device device) {
+		return makeImage(device, "red cross.png");
 	}
 }

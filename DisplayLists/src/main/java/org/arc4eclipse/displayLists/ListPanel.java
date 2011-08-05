@@ -121,6 +121,7 @@ public class ListPanel extends Composite {
 		getParent().redraw();
 	}
 
+	@SuppressWarnings("unchecked")
 	private List<String> getValues(Object value) {
 		if (value instanceof String)
 			if ("".equals(((String) value).trim()))

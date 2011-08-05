@@ -6,6 +6,8 @@ import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.displayCore.api.NameSpaceAndName;
 import org.arc4eclipse.utilities.strings.Strings;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
 public class DisplayOrganisationUrl extends AbstractDisplayerWithLabel<OrganisationPanel> {
@@ -23,5 +25,15 @@ public class DisplayOrganisationUrl extends AbstractDisplayerWithLabel<Organisat
 	@Override
 	public void populateLargeControl(BindingContext bindingContext, OrganisationPanel largeControl, Object value) {
 		largeControl.setValue(bindingContext.url, Strings.nullSafeToString(value));
+	}
+
+	@Override
+	protected Image createMainImage(Device device) {
+		return makeImage(device, "red cross.png");
+	}
+
+	@Override
+	protected Image createDepressedImage(Device device) {
+		return makeImage(device, "red cross.png");
 	}
 }

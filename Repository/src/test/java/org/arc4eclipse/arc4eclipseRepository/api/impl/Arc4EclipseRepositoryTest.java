@@ -93,6 +93,7 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 				"/jars/a48/a48292d38f6d060f873891171e1df689b3eaa0b37", FOUND, expected, Maps.merge(context2, actionGet));
 	}
 
+	@SuppressWarnings("unchecked")
 	private void checkModifyAndGetData(String url, String key, Object value, Map<String, Object> expected) throws Exception {
 		Map<String, Object> context1 = Maps.makeMap("c", 1);
 		Map<String, Object> context2 = Maps.makeMap("c", 2);

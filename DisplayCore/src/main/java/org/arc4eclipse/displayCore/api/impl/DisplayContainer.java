@@ -96,6 +96,7 @@ public class DisplayContainer implements IDisplayContainer, ITopButtonState {
 			@Override
 			public <L extends Control, S extends Control> void process(NameSpaceAndName nameSpaceAndName, IDisplayer<L, S> displayer) {
 				boolean state = state(nameSpaceAndName);
+				@SuppressWarnings("unchecked")
 				L largeControl = (L) largeControlMap.get(nameSpaceAndName);
 				largeControl.setVisible(state);
 				if (state)
@@ -106,8 +107,10 @@ public class DisplayContainer implements IDisplayContainer, ITopButtonState {
 			}
 		});
 		setAfter(invisibleControls, setAfter(visibleControls, compButtons));
+		Swts.addGrabHorizontalAndFillGridDataToAllChildren(content);
 		content.layout();
-		content.redraw();
+		content.getParent().layout();
+		content.getParent().redraw();
 	}
 
 	private Control setAfter(List<Control> controls, Control firstControl) {

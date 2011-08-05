@@ -13,7 +13,6 @@ public class RepositoryConstants {
 	public static final String projectUrlKey = "projectUrl_projectUrl";
 	public static final String nameKey = "text_projectName";
 	public static final String projectLicenseKey = "text_projectLicense";
-	public static final String projectMailingListsKey = "text_projectMailingLists";
 	public static final String projectTutorialsKey = "text_projectTutorials";
 	public static final String projectJobsKey = "text_projectJobs";
 	public static final String merchandisingKey = "text_merchandising";

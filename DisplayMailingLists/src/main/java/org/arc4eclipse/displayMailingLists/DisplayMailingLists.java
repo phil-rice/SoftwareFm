@@ -6,6 +6,8 @@ import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.displayCore.api.NameSpaceAndName;
 import org.arc4eclipse.displayLists.ListPanel;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
 public class DisplayMailingLists extends AbstractDisplayerWithLabel<ListPanel> {
@@ -23,5 +25,15 @@ public class DisplayMailingLists extends AbstractDisplayerWithLabel<ListPanel> {
 	@Override
 	public void populateLargeControl(BindingContext bindingContext, ListPanel largeControl, Object value) {
 		largeControl.setValue(bindingContext.url, value);
+	}
+
+	@Override
+	protected Image createMainImage(Device device) {
+		return makeImage(device, "mailing list.png");
+	}
+
+	@Override
+	protected Image createDepressedImage(Device device) {
+		return makeImage(device, "mailing list depress.png");
 	}
 }

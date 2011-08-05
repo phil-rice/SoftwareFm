@@ -164,21 +164,19 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 
 			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.nameKey, RepositoryConstants.nameTitle);
 			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.descriptionKey, RepositoryConstants.descriptionTitle);
+			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.forumsKey, RepositoryConstants.forumsTitle);
+			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.mailingListsKey, RepositoryConstants.mailingListTitle);
 			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.projectJobsKey, RepositoryConstants.jobsTitle);
 			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.merchandisingKey, RepositoryConstants.merchandisingTitle);
-			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.mailingListsKey, RepositoryConstants.mailingListTitle);
-			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.forumsKey, RepositoryConstants.forumsTitle);
 
 			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.nameKey, RepositoryConstants.nameTitle);
 			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.descriptionKey, RepositoryConstants.descriptionTitle);
 			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.projectLicenseKey, RepositoryConstants.licenseTitle);
-			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.projectMailingListsKey, RepositoryConstants.mailingListTitle);
 			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.projectTutorialsKey, RepositoryConstants.tutorialsTitle);
-			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.projectJobsKey, RepositoryConstants.jobsTitle);
-			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.merchandisingKey, RepositoryConstants.merchandisingTitle);
 			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.forumsKey, RepositoryConstants.forumsTitle);
 			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.mailingListsKey, RepositoryConstants.mailingListTitle);
-			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.forumsKey, RepositoryConstants.forumsTitle);
+			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.projectJobsKey, RepositoryConstants.jobsTitle);
+			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.merchandisingKey, RepositoryConstants.merchandisingTitle);
 
 			displayContainerFactory = builder.build();
 		}

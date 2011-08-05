@@ -6,6 +6,8 @@ import org.eclipse.swt.widgets.Control;
 
 public interface IDisplayer<L extends Control, S extends Control> {
 
+	void dispose();
+
 	String getNameSpace();
 
 	S createSmallControl(DisplayerContext displayerContext, ITopButtonState topButtonState, Composite parent, String entity, NameSpaceAndName nameSpaceAndName, String title);
