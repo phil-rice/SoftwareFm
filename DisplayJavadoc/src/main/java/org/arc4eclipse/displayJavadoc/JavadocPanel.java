@@ -25,7 +25,7 @@ public class JavadocPanel extends Composite {
 		btnAttach = txtRepository.addButton(context.imageFactory.makeImages(getDisplay()).getLinkImage(), "Attach", new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
-				System.out.println("Linking");
+				System.out.println("Linking ");
 			}
 		});
 		txtRepository.addHelpButton(DisplayJavadocConstants.helpValueInRepository);
