@@ -45,8 +45,8 @@ public class Strings {
 		return builder.toString();
 	}
 
-	public static String oneLine(String string) {
-		return string.replaceAll("\n", " ");
+	public static String oneLine(Object object) {
+		return nullSafeToString(object).replaceAll("\n", " ");
 	}
 
 	public static IAggregator<String, String> strJoin(final String separator) {

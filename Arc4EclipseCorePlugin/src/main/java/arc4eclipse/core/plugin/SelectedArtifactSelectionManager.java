@@ -73,7 +73,7 @@ public class SelectedArtifactSelectionManager implements ISelectedBindingManager
 
 	private void fireListeners(ITypeBinding binding, BindingRipperResult ripperResult) {
 		for (ISelectedBindingListener listener : listeners)
-			listener.selectionOccured(ripperResult);
+			listener.selectionOccured(binding, ripperResult);
 	}
 
 	ITypeRoot getJavaInput(IEditorPart part) {

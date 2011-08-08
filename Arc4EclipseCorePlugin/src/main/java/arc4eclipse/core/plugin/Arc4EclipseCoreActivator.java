@@ -24,6 +24,7 @@ import org.arc4eclipse.swtBasics.images.IImageFactory;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.arc4eclipse.utilities.maps.Maps;
+import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -126,7 +127,7 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 			selectedBindingManager = new SelectedArtifactSelectionManager(IBindingRipper.Utils.ripper());
 			selectedBindingManager.addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
 				@Override
-				public void selectionOccured(BindingRipperResult ripperResult) {
+				public void selectionOccured(ITypeBinding binding, BindingRipperResult ripperResult) {
 					Map<String, Object> context = Maps.makeMap(DisplayCoreConstants.ripperResult, ripperResult);
 					getRepository().getJarData(ripperResult.hexDigest, context);
 				}

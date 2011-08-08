@@ -9,6 +9,7 @@ Require-Bundle: org.junit4;bundle-version="4.8.1";visibility:=reexport,
  org.arc4eclipse.externals;bundle-version="1.0.0";visibility:=reexport
 Export-Package: org.arc4eclipse.utilities.aggregators,
  org.arc4eclipse.utilities.annotations,
+ org.arc4eclipse.utilities.arrays,
  org.arc4eclipse.utilities.callbacks,
  org.arc4eclipse.utilities.collections,
  org.arc4eclipse.utilities.constants,
