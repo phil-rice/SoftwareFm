@@ -9,11 +9,13 @@ import org.arc4eclipse.jdtBinding.api.IBindingRipper;
 import org.arc4eclipse.utilities.collections.Files;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.maps.Maps;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.IBinding;
@@ -30,10 +32,14 @@ public class BindingRipper implements IBindingRipper {
 			if (from != null) {
 				IJavaElement javaElement = from.getJavaElement();
 				if (javaElement != null) {
-					final IPath path = javaElement.getPath();
+					IResource resource = javaElement.getResource();
+					final IPath path = resource.getLocation();
 					IJavaProject project = javaElement.getJavaProject();
-					IPackageFragmentRoot root = project.findPackageFragmentRoot(path);
+					IPackageFragment packageFragment = project.findPackageFragment(javaElement.getPath());
+					IPackageFragmentRoot root = project.findPackageFragmentRoot(javaElement.getPath());
 					IPath attachmentPath = root == null ? null : root.getSourceAttachmentPath();
+					// IJavaElement foundElement = project.findElement(javaElement.getPath());
+					IPackageFragmentRoot[] allPackageFragmentRoots = project.getAllPackageFragmentRoots();
 					String digestAsHexString = Maps.findOrCreate(cache, path, new Callable<String>() {
 						@Override
 						public String call() throws Exception {

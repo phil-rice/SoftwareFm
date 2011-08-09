@@ -8,6 +8,7 @@ import org.arc4eclipse.panel.ISelectedBindingManager;
 import org.arc4eclipse.swtBasics.images.IImageFactory;
 import org.arc4eclipse.swtBasics.text.TitleAndStyledTextField;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
+import org.arc4eclipse.utilities.indent.Indent;
 import org.arc4eclipse.utilities.strings.Strings;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.IClasspathAttribute;
@@ -93,16 +94,7 @@ public class DebugBindingPanel extends Composite implements ISelectedBindingList
 										}
 									}
 								}
-								IClasspathEntry[] rawClasspath = javaProject.getRawClasspath();
-								for (IClasspathEntry rawCasspathEntry : rawClasspath) {
-									add("RawClassPathEntry", rawCasspathEntry);
-									if (rawCasspathEntry.getEntryKind() == IClasspathEntry.CPE_CONTAINER) {
-										IClasspathContainer classpathContainer = JavaCore.getClasspathContainer(rawCasspathEntry.getPath(), javaProject);
-										for (IClasspathEntry entry : classpathContainer.getClasspathEntries()) {
-											add("  childClassPathEntry", entry);
-										}
-									}
-								}
+								display(javaProject, javaProject.getRawClasspath(), new Indent());
 							}
 						}
 
@@ -111,6 +103,19 @@ public class DebugBindingPanel extends Composite implements ISelectedBindingList
 					throw WrappedException.wrap(e);
 				}
 				titleAndStyledTextField.setText(builder.toString() + "\n" + ripperResult.toString());
+			}
+
+			private void display(IJavaProject javaProject, IClasspathEntry[] rawClasspath, Indent indent) throws JavaModelException {
+				for (IClasspathEntry rawCasspathEntry : rawClasspath) {
+					add(indent.prefix() + "RawClassPathEntry", rawCasspathEntry);
+					IClasspathEntry resolvedClasspathEntry = JavaCore.getResolvedClasspathEntry(rawCasspathEntry);
+					if (resolvedClasspathEntry != rawCasspathEntry)
+						add(indent.prefix() + "--Resolved to ", resolvedClasspathEntry);
+					if (rawCasspathEntry.getEntryKind() == IClasspathEntry.CPE_CONTAINER) {
+						IClasspathContainer classpathContainer = JavaCore.getClasspathContainer(rawCasspathEntry.getPath(), javaProject);
+						display(javaProject, classpathContainer.getClasspathEntries(), indent.indent());
+					}
+				}
 			}
 
 			private void add(String name, Object element) {

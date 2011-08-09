@@ -3,10 +3,12 @@ package org.arc4eclipse.swtBasics.images;
 import java.util.List;
 
 import org.arc4eclipse.swtBasics.IHasControl;
+import org.arc4eclipse.swtBasics.SwtBasicConstants;
 import org.arc4eclipse.swtBasics.Swts;
 import org.arc4eclipse.utilities.collections.Lists;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
+import org.arc4eclipse.utilities.strings.Strings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -21,12 +23,23 @@ import org.eclipse.swt.widgets.Label;
 
 public class ImageButton implements IHasControl {
 
+	public static class Utils {
+		public static void setEnabledIfNotBlank(ImageButton button, String value) {
+			if (Strings.nullSafeToString(value).equals(""))
+				button.disableButton(SwtBasicConstants.noValueSet);
+			else
+				button.enableButton();
+		}
+	}
+
 	private final Label label;
 	private boolean state;
 	private final Image main;
 	private final Image depressed;
 	private final List<IImageButtonListener> listeners = Lists.newList();
 	private boolean enabled = true;
+	private String tooltipText;
+	private String reasonForDisable;
 
 	public ImageButton(Composite parent, Image main) {
 		this(parent, main, main, false);
@@ -65,7 +78,19 @@ public class ImageButton implements IHasControl {
 	}
 
 	public void setTooltipText(String tooltipText) {
-		label.setToolTipText(tooltipText);
+		this.tooltipText = tooltipText;
+		updateTooltipText();
+	}
+
+	private void updateTooltipText() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(Strings.nullSafeToString(tooltipText));
+		if (reasonForDisable != null) {
+			if (builder.length() > 0)
+				builder.append("\n");
+			builder.append(reasonForDisable);
+		}
+		label.setToolTipText(builder.toString());
 	}
 
 	private void updateImage() {
@@ -83,8 +108,18 @@ public class ImageButton implements IHasControl {
 		listeners.add(listener);
 	}
 
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
+	public void enableButton() {
+		this.enabled = true;
+		this.reasonForDisable = null;
+		updateTooltipText();
+
+	}
+
+	public void disableButton(String reason) {
+		this.reasonForDisable = reason;
+		this.enabled = false;
+		updateTooltipText();
+
 	}
 
 	public boolean getState() {

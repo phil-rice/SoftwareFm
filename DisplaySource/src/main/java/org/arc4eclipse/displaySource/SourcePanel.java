@@ -54,8 +54,8 @@ public class SourcePanel extends Composite {
 		this.value = value;
 		txtRepository.setUrl(url);
 		txtRepository.setText(value);
-		txtLocal.setText(Strings.nullSafeToString(ripped.sourceAttachmentPath));
-		btnAttach.setEnabled(!"".equals(value));
+		txtLocal.setText(Strings.nullSafeToString(ripped == null ? null : ripped.sourceAttachmentPath));
+		ImageButton.Utils.setEnabledIfNotBlank(btnAttach, value);
 	}
 
 }

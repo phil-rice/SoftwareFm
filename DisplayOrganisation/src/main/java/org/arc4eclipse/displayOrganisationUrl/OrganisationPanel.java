@@ -31,7 +31,7 @@ public class OrganisationPanel extends Composite {
 	public void setValue(String url, String value) {
 		orgField.setUrl(url);
 		orgField.setText(value);
-		btnBrowse.setEnabled(!orgField.getText().equals(""));
+		ImageButton.Utils.setEnabledIfNotBlank(btnBrowse, value);
 
 	}
 

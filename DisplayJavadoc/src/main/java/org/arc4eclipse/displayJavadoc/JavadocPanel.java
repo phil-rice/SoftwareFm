@@ -1,5 +1,7 @@
 package org.arc4eclipse.displayJavadoc;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,19 +10,26 @@ import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.displayCore.api.NameSpaceAndName;
 import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.arc4eclipse.jdtBinding.api.FoundClassPathEntry;
+import org.arc4eclipse.jdtBinding.api.FoundClassPathEntry.FoundIn;
 import org.arc4eclipse.jdtBinding.api.JavaProjects;
+import org.arc4eclipse.swtBasics.SwtBasicConstants;
 import org.arc4eclipse.swtBasics.Swts;
 import org.arc4eclipse.swtBasics.images.IImageButtonListener;
 import org.arc4eclipse.swtBasics.images.ImageButton;
 import org.arc4eclipse.swtBasics.text.TitleAndTextField;
+import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IClasspathAttribute;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 
 public class JavadocPanel extends Composite {
 
@@ -36,8 +45,13 @@ public class JavadocPanel extends Composite {
 		btnAttach = txtRepository.addButton(context.imageFactory.makeImages(getDisplay()).getLinkImage(), "Attach", new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
-				System.out.println("Linking ");
-				setJavadocLocationAttribute(ripped.javaProject, ripped.classpathEntry);
+				try {
+					new URL(txtRepository.getText());
+					setJavadocLocationAttribute(ripped.javaProject, ripped.classpathEntry, txtRepository.getText());
+				} catch (MalformedURLException e) {
+					throw WrappedException.wrap(e);
+				}
+
 			}
 		});
 		txtRepository.addHelpButton(DisplayJavadocConstants.helpValueInRepository);
@@ -51,21 +65,43 @@ public class JavadocPanel extends Composite {
 		this.ripped = ripped;
 		txtRepository.setUrl(url);
 		txtRepository.setText(value);
-		txtLocal.setText(value);
-		btnAttach.setEnabled(!"".equals(value));
+		txtLocal.setText(findCurrentValue());
+		updateButtonStatus(value);
 	}
 
-	private void setJavadocLocationAttribute(IJavaProject project, IClasspathEntry entry) {
+	private String findCurrentValue() {
+		return ripped == null ? null : JavaProjects.findJavadocFor(ripped.classpathEntry);
+	}
+
+	private void updateButtonStatus(String value) {
+		if ("".equals(value))
+			btnAttach.disableButton(SwtBasicConstants.noValueSet);
+		else {
+			try {
+				new URL(value);
+				btnAttach.enableButton();
+			} catch (MalformedURLException e) {
+				btnAttach.disableButton(DisplayJavadocConstants.valueNeedsToBeUrl);
+			}
+		}
+	}
+
+	private void setJavadocLocationAttribute(IJavaProject project, IClasspathEntry entry, final String value) {
 		assert ripped != null;
 		FoundClassPathEntry found = JavaProjects.findClassPathEntry(project, entry);
 		System.out.println("Setting. Found: " + found);
+		if (found.foundIn == FoundIn.NOT_FOUND) {
+			Status status = new Status(IStatus.ERROR, "My Plug-in ID", 0, "This is an annoying stale cache bug that will be fixed soon", null);
+			ErrorDialog.openError(Display.getCurrent().getActiveShell(), "I cannot do that Dave", "The underlying eclipse model has changed since you selected some java object", status);
+		}
+
 		JavaProjects.updateFoundClassPath(found, new IFunction1<IClasspathEntry, IClasspathEntry>() {
 			@Override
 			public IClasspathEntry apply(IClasspathEntry from) throws Exception {
 				IClasspathAttribute[] extraAttributes = from.getExtraAttributes();
 				List<IClasspathAttribute> newAttributes = new ArrayList<IClasspathAttribute>();
 				boolean found = false;
-				IClasspathAttribute newClasspathAttribute = JavaCore.newClasspathAttribute(IClasspathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME, txtRepository.getText());
+				IClasspathAttribute newClasspathAttribute = JavaCore.newClasspathAttribute(IClasspathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME, value);
 				for (IClasspathAttribute oldAttribute : extraAttributes)
 					if (oldAttribute.getName().equals(IClasspathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME)) {
 						newAttributes.add(newClasspathAttribute);
@@ -75,6 +111,7 @@ public class JavadocPanel extends Composite {
 				if (!found)
 					newAttributes.add(newClasspathAttribute);
 				IClasspathEntry newLibraryEntry = JavaCore.newLibraryEntry(from.getPath(), from.getSourceAttachmentPath(), from.getSourceAttachmentRootPath(), from.getAccessRules(), newAttributes.toArray(new IClasspathAttribute[0]), from.isExported());
+
 				return newLibraryEntry;
 			}
 		});

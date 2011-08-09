@@ -31,7 +31,7 @@ public class ProjectUrlPanel extends Composite {
 	public void setValue(String url, String value) {
 		urlField.setUrl(url);
 		urlField.setText(value);
-		btnBrowse.setEnabled(!urlField.getText().equals(""));
+		ImageButton.Utils.setEnabledIfNotBlank(btnBrowse, value);
 
 	}
 
