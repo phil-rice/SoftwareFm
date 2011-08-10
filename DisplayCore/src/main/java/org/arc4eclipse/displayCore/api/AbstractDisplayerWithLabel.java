@@ -32,16 +32,14 @@ public abstract class AbstractDisplayerWithLabel<L extends Control> implements I
 	}
 
 	@Override
-	public Control createSmallControl(DisplayerContext displayerContext, final ITopButtonState topButtonState, Composite parent, String entity, final NameSpaceAndName nameSpaceAndName, String title) {
+	public Control createSmallControl(DisplayerContext displayerContext, final ITopButtonState topButtonState, Composite parent, final DisplayerDetails displayerDetails) {
 		Device device = parent.getDisplay();
 		ImageButton button = new ImageButton(parent, getMainImage(device), getDepressedImage(device));
-		boolean intialState = topButtonState.state(nameSpaceAndName);
-		button.setTooltipText(title);
+		button.setTooltipText(displayerDetails.title);
 		button.addListener(new IImageButtonListener() {
-
 			@Override
 			public void buttonPressed(ImageButton button) {
-				boolean state = topButtonState.toogleState(nameSpaceAndName);
+				topButtonState.toogleState(displayerDetails.nameSpaceAndName);
 			}
 		});
 		return button.getControl();

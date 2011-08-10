@@ -23,21 +23,28 @@ public class DisplayContainerFactory implements IDisplayContainerFactoryBuilder,
 	@SuppressWarnings("rawtypes")
 	private final Map<String, IDisplayer> registeredDisplayers = Maps.newMap();
 
-	static class KeyAndTitle {
-		String key;
-		String title;
+	static class KeyTitleAndHelp {
+		final String key;
+		final String title;
+		final String help;
 
-		public KeyAndTitle(String key, String title) {
+		public KeyTitleAndHelp(String key, String title, String help) {
 			this.key = key;
 			this.title = title;
+			this.help = help;
+		}
+
+		@Override
+		public String toString() {
+			return "KeyTitleAndHelp [key=" + key + "]";
 		}
 	}
 
-	private final Map<String, List<KeyAndTitle>> entityToKeysMap = Maps.newMap();
+	private final Map<String, List<KeyTitleAndHelp>> entityToKeysMap = Maps.newMap();
 
 	@Override
-	public void registerForEntity(String entity, String key, String title) {
-		Maps.addToList(entityToKeysMap, entity, new KeyAndTitle(key, title));
+	public void registerForEntity(String entity, String key, String title, String help) {
+		Maps.addToList(entityToKeysMap, entity, new KeyTitleAndHelp(key, title, help));
 	}
 
 	@Override
@@ -56,22 +63,24 @@ public class DisplayContainerFactory implements IDisplayContainerFactoryBuilder,
 	@SuppressWarnings("rawtypes")
 	@Override
 	public IDisplayContainer create(DisplayerContext displayerContext, Composite parent, String entity) {
-		List<KeyAndTitle> keysForEntity = entityToKeysMap.get(entity);
+		List<KeyTitleAndHelp> keysForEntity = entityToKeysMap.get(entity);
 		if (keysForEntity == null)
 			throw new IllegalArgumentException(MessageFormat.format(DisplayCoreConstants.illegalEntityName, entity, entityToKeysMap.keySet()));
 		Map<NameSpaceAndName, IDisplayer> mapToDisplayer = Maps.newMap(LinkedHashMap.class);
 		Map<NameSpaceAndName, String> mapToTitle = Maps.newMap(LinkedHashMap.class);
-		for (KeyAndTitle keyAndTitle : keysForEntity) {
-			String key = keyAndTitle.key;
+		Map<NameSpaceAndName, String> mapToHelp = Maps.newMap(LinkedHashMap.class);
+		for (KeyTitleAndHelp keyTitleAndHelp : keysForEntity) {
+			String key = keyTitleAndHelp.key;
 			NameSpaceAndName nameSpaceAndName = NameSpaceAndName.Utils.rip(key);
 			IDisplayer displayer = registeredDisplayers.get(nameSpaceAndName.nameSpace);
 			if (displayer == null)
 				throw new IllegalArgumentException(MessageFormat.format(DisplayCoreConstants.illegalKey, key, entity, keysForEntity));
 			else
 				mapToDisplayer.put(nameSpaceAndName, displayer);
-			mapToTitle.put(nameSpaceAndName, keyAndTitle.title);
+			mapToTitle.put(nameSpaceAndName, keyTitleAndHelp.title);
+			mapToHelp.put(nameSpaceAndName, keyTitleAndHelp.help);
 		}
-		DisplayContainer displayContainer = new DisplayContainer(displayerContext, parent, SWT.NULL, entity, mapToDisplayer, mapToTitle);
+		DisplayContainer displayContainer = new DisplayContainer(displayerContext, parent, SWT.NULL, entity, mapToDisplayer, mapToTitle, mapToHelp);
 		return displayContainer;
 	}
 

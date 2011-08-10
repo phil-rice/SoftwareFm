@@ -1,29 +1,29 @@
-package org.arc4eclipse.displayOrganisationUrl;
+package org.arc4eclipse.displayUrl;
 
 import org.arc4eclipse.displayCore.api.BoundTitleAndTextField;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
-import org.arc4eclipse.displayCore.api.NameSpaceAndName;
+import org.arc4eclipse.displayCore.api.DisplayerDetails;
 import org.arc4eclipse.swtBasics.Swts;
 import org.arc4eclipse.swtBasics.images.IImageButtonListener;
 import org.arc4eclipse.swtBasics.images.ImageButton;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
-public class OrganisationPanel extends Composite {
+public class UrlPanel extends Composite {
 
 	private final BoundTitleAndTextField orgField;
 	private final ImageButton btnBrowse;
 
-	public OrganisationPanel(Composite parent, int style, DisplayerContext context, String entity, NameSpaceAndName nameSpaceAndName, String title) {
+	public UrlPanel(Composite parent, int style, DisplayerContext context, DisplayerDetails details) {
 		super(parent, style);
-		orgField = new BoundTitleAndTextField(this, SWT.NULL, context, entity, nameSpaceAndName, title);
+		orgField = new BoundTitleAndTextField(this, SWT.NULL, context, details);
 		btnBrowse = orgField.addButton(context.imageFactory.makeImages(getDisplay()).getBrowseImage(), "Browse", new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				System.out.println("Browse");
 			}
 		});
-		orgField.addHelpButton(DisplayOrganisationUrlConstants.helpOrganisationUrl);
+		orgField.addHelpButton(details.help);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 
 	}

@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.arc4eclipse.displayCore.api.BoundTitleAndTextField;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
-import org.arc4eclipse.displayCore.api.NameSpaceAndName;
+import org.arc4eclipse.displayCore.api.DisplayerDetails;
 import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.arc4eclipse.jdtBinding.api.FoundClassPathEntry;
 import org.arc4eclipse.jdtBinding.api.FoundClassPathEntry.FoundIn;
@@ -38,10 +38,10 @@ public class JavadocPanel extends Composite {
 	private final BoundTitleAndTextField txtRepository;
 	private BindingRipperResult ripped;
 
-	public JavadocPanel(Composite parent, int style, DisplayerContext context, String entity, NameSpaceAndName nameSpaceAndName, String title) {
+	public JavadocPanel(Composite parent, int style, DisplayerContext context, DisplayerDetails displayerDetails) {
 		super(parent, style);
 		setLayout(new GridLayout());
-		txtRepository = new BoundTitleAndTextField(this, SWT.NULL, context, entity, nameSpaceAndName, title);
+		txtRepository = new BoundTitleAndTextField(this, SWT.NULL, context, displayerDetails);
 		btnAttach = txtRepository.addButton(context.imageFactory.makeImages(getDisplay()).getLinkImage(), "Attach", new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {

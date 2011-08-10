@@ -4,7 +4,7 @@ import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
 import org.arc4eclipse.displayCore.api.AbstractDisplayerWithLabel;
 import org.arc4eclipse.displayCore.api.BindingContext;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
-import org.arc4eclipse.displayCore.api.NameSpaceAndName;
+import org.arc4eclipse.displayCore.api.DisplayerDetails;
 import org.arc4eclipse.utilities.strings.Strings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
@@ -19,8 +19,8 @@ public class DisplayJavadoc extends AbstractDisplayerWithLabel<JavadocPanel> {
 	}
 
 	@Override
-	public JavadocPanel createLargeControl(DisplayerContext context, Composite parent, String entity, NameSpaceAndName nameSpaceAndName, String title) {
-		return new JavadocPanel(parent, SWT.BORDER, context, entity, nameSpaceAndName, title);
+	public JavadocPanel createLargeControl(DisplayerContext context, Composite parent, DisplayerDetails displayerDetails) {
+		return new JavadocPanel(parent, SWT.BORDER, context, displayerDetails);
 	}
 
 	@Override

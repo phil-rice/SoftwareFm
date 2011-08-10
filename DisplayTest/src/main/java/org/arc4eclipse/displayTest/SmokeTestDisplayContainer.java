@@ -20,9 +20,9 @@ public class SmokeTestDisplayContainer {
 	public static void main(String[] args) {
 		final IDisplayContainerFactoryBuilder managerFactory = IDisplayContainerFactoryBuilder.Utils.displayManager();
 		managerFactory.registerDisplayer(new DisplayText());
-		managerFactory.registerForEntity("entity", "text_one", "One");
-		managerFactory.registerForEntity("entity", "text_two", "Two");
-		managerFactory.registerForEntity("entity", "text_three", "Three");
+		managerFactory.registerForEntity("entity", "text_one", "One", "Help1");
+		managerFactory.registerForEntity("entity", "text_two", "Two", "Help2");
+		managerFactory.registerForEntity("entity", "text_three", "Three", "Help3");
 		final IDisplayContainerFactory factory = managerFactory.build();
 		final IArc4EclipseRepository repository = IArc4EclipseRepository.Utils.repository();
 

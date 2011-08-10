@@ -7,6 +7,7 @@ import org.arc4eclipse.swtBasics.images.ImageButton;
 import org.arc4eclipse.swtBasics.images.Images;
 import org.arc4eclipse.utilities.exceptions.Exceptions;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
+import org.arc4eclipse.utilities.strings.Strings;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -99,7 +100,8 @@ public class AbstractTitleAnd extends Composite {
 
 	public void setHelpText(String helpText) {
 		this.helpText = helpText;
-		helpButton.setTooltipText(helpText);
+		if (helpButton != null)
+			helpButton.setTooltipText(Strings.nullSafeToString(helpText));
 	}
 
 	public String getTitle() {

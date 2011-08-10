@@ -77,6 +77,7 @@ public class SimpleLists {
 	public static <From, To, Result> Future<IAggregator<Result, Result>> mapTwoAggregators(final int maxForOneThread, ForkJoinPool pool, final ISimpleList<From> from, //
 			final IAggregator<Result, Result> middleAggregator, final Callable<IAggregator<To, Result>> leafAggregator, final IFunction1<From, To> mapFunction) {
 
+	
 		class AggregateProcess extends RecursiveTask<IAggregator<Result, Result>> {
 			private final int low;
 			private final int high;

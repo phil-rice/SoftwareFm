@@ -6,7 +6,7 @@ import org.eclipse.swt.widgets.Control;
 public interface IDisplayContainerFactoryBuilder {
 	<L extends Control, C extends Control> void registerDisplayer(IDisplayer<L, C> displayer);
 
-	void registerForEntity(String entity, String key, String title);
+	void registerForEntity(String entity, String key, String title, String help);
 
 	IDisplayContainerFactory build();
 

@@ -4,7 +4,7 @@ import org.arc4eclipse.displayCore.api.AbstractDisplayerWithLabel;
 import org.arc4eclipse.displayCore.api.BindingContext;
 import org.arc4eclipse.displayCore.api.BoundTitleAndTextField;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
-import org.arc4eclipse.displayCore.api.NameSpaceAndName;
+import org.arc4eclipse.displayCore.api.DisplayerDetails;
 import org.arc4eclipse.utilities.strings.Strings;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
@@ -18,8 +18,10 @@ public class DisplayText extends AbstractDisplayerWithLabel<BoundTitleAndTextFie
 	}
 
 	@Override
-	public BoundTitleAndTextField createLargeControl(DisplayerContext context, Composite parent, String entity, NameSpaceAndName nameSpaceAndName, String title) {
-		return new BoundTitleAndTextField(parent, context, entity, nameSpaceAndName, title);
+	public BoundTitleAndTextField createLargeControl(DisplayerContext context, Composite parent, DisplayerDetails displayerDetails) {
+		BoundTitleAndTextField boundTitleAndTextField = new BoundTitleAndTextField(parent, context, displayerDetails);
+
+		return boundTitleAndTextField;
 	}
 
 	@Override

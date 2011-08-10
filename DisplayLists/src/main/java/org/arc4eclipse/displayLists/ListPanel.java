@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
-import org.arc4eclipse.displayCore.api.NameSpaceAndName;
+import org.arc4eclipse.displayCore.api.DisplayerDetails;
 import org.arc4eclipse.swtBasics.Swts;
 import org.arc4eclipse.swtBasics.images.IImageButtonListener;
 import org.arc4eclipse.swtBasics.images.IImageFactory;
@@ -65,13 +65,13 @@ public class ListPanel extends Composite {
 	private final IEncodeDecodeNameAndUrl encoder;
 	private final String entity;
 
-	public ListPanel(Composite parent, int style, DisplayerContext context, String entity, NameSpaceAndName nameSpaceAndName, String title) {
+	public ListPanel(Composite parent, int style, DisplayerContext context, DisplayerDetails displayerDetails) {
 		super(parent, style);
-		this.entity = entity;
-		this.title = title;
+		this.entity = displayerDetails.entity;
+		this.title = displayerDetails.title;
 		this.imageFactory = context.imageFactory;
 		this.repository = context.repository;
-		this.key = nameSpaceAndName.key;
+		this.key = displayerDetails.nameSpaceAndName.key;
 		this.encoder = IEncodeDecodeNameAndUrl.Utils.defaultEncoder();
 		this.listModel = new ListModel(encoder);
 		images = imageFactory.makeImages(getDisplay());
@@ -92,7 +92,8 @@ public class ListPanel extends Composite {
 				sendDataToServer();
 			}
 		});
-		new ImageButton(compTitle, images.getHelpImage()).setTooltipText("Help");
+		if (displayerDetails.help != null)
+			new ImageButton(compTitle, images.getHelpImage()).setTooltipText(displayerDetails.help);
 
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 		setSize(getSize().x, 1);

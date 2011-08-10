@@ -4,7 +4,7 @@ import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
 import org.arc4eclipse.displayCore.api.AbstractDisplayerWithLabel;
 import org.arc4eclipse.displayCore.api.BindingContext;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
-import org.arc4eclipse.displayCore.api.NameSpaceAndName;
+import org.arc4eclipse.displayCore.api.DisplayerDetails;
 import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
@@ -15,11 +15,11 @@ public class DisplayJarPath extends AbstractDisplayerWithLabel<DisplayJarPanel> 
 
 	@Override
 	public String getNameSpace() {
-		return RepositoryConstants.jarPathKey;
+		return RepositoryConstants.jarDetailsKey;
 	}
 
 	@Override
-	public DisplayJarPanel createLargeControl(DisplayerContext context, Composite parent, String entity, NameSpaceAndName nameSpaceAndName, String title) {
+	public DisplayJarPanel createLargeControl(DisplayerContext context, Composite parent, DisplayerDetails displayerDetails) {
 		return new DisplayJarPanel(parent, SWT.BORDER, context);
 	}
 

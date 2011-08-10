@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import org.arc4eclipse.displayCore.api.BindingContext;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
+import org.arc4eclipse.displayCore.api.DisplayerDetails;
 import org.arc4eclipse.displayCore.api.IDisplayContainer;
 import org.arc4eclipse.displayCore.api.IDisplayer;
 import org.arc4eclipse.displayCore.api.NameSpaceAndName;
@@ -29,7 +30,7 @@ public class DisplayContainer implements IDisplayContainer, ITopButtonState {
 	private final Map<NameSpaceAndName, Boolean> topButtonState = Maps.newMap();
 
 	@SuppressWarnings("rawtypes")
-	public DisplayContainer(final DisplayerContext displayerContext, final Composite parent, int style, final String entity, final Map<NameSpaceAndName, IDisplayer> toDisplayers, final Map<NameSpaceAndName, String> toTitle) {
+	public DisplayContainer(final DisplayerContext displayerContext, final Composite parent, int style, final String entity, final Map<NameSpaceAndName, IDisplayer> toDisplayers, final Map<NameSpaceAndName, String> toTitle, final Map<NameSpaceAndName, String> toHelp) {
 		this.toDisplayerMap = Maps.copyMap(toDisplayers);
 		this.content = new Composite(parent, SWT.NULL);
 		this.compButtons = new Composite(content, SWT.NULL);
@@ -46,8 +47,10 @@ public class DisplayContainer implements IDisplayContainer, ITopButtonState {
 			@Override
 			public <L extends Control, S extends Control> void process(NameSpaceAndName nameSpaceAndName, IDisplayer<L, S> displayer) {
 				String title = toTitle.get(nameSpaceAndName);
-				smallControlMap.put(nameSpaceAndName, displayer.createSmallControl(displayerContext, DisplayContainer.this, compButtons, entity, nameSpaceAndName, title));
-				largeControlMap.put(nameSpaceAndName, displayer.createLargeControl(displayerContext, content, entity, nameSpaceAndName, title));
+				String help = toHelp.get(nameSpaceAndName);
+				DisplayerDetails displayerDetails = new DisplayerDetails(entity, nameSpaceAndName, title, help);
+				smallControlMap.put(nameSpaceAndName, displayer.createSmallControl(displayerContext, DisplayContainer.this, compButtons, displayerDetails));
+				largeControlMap.put(nameSpaceAndName, displayer.createLargeControl(displayerContext, content, displayerDetails));
 			}
 		});
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(content);
