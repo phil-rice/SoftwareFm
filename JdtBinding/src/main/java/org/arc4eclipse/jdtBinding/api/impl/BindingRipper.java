@@ -15,7 +15,6 @@ import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.IBinding;
@@ -33,14 +32,13 @@ public class BindingRipper implements IBindingRipper {
 				IJavaElement javaElement = from.getJavaElement();
 				if (javaElement != null) {
 					IResource resource = javaElement.getResource();
-					final IPath path = resource.getLocation();
+					IPath javaElementPath = javaElement.getPath();
+					final IPath path = resource == null ? javaElementPath : resource.getLocation();
 					IJavaProject project = javaElement.getJavaProject();
-					IPackageFragment packageFragment = project.findPackageFragment(javaElement.getPath());
-					IPackageFragmentRoot root = project.findPackageFragmentRoot(javaElement.getPath());
+					IPackageFragmentRoot root = project.findPackageFragmentRoot(javaElementPath);
 					IPath attachmentPath = root == null ? null : root.getSourceAttachmentPath();
 					// IJavaElement foundElement = project.findElement(javaElement.getPath());
-					IPackageFragmentRoot[] allPackageFragmentRoots = project.getAllPackageFragmentRoots();
-					String digestAsHexString = Maps.findOrCreate(cache, path, new Callable<String>() {
+					String digestAsHexString = path == null ? "" : Maps.findOrCreate(cache, path, new Callable<String>() {
 						@Override
 						public String call() throws Exception {
 							File file = path.toFile();

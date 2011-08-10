@@ -65,12 +65,8 @@ public class JavadocPanel extends Composite {
 		this.ripped = ripped;
 		txtRepository.setUrl(url);
 		txtRepository.setText(value);
-		txtLocal.setText(findCurrentValue());
+		txtLocal.setText(ripped == null || ripped.classpathEntry == null ? null : JavaProjects.findJavadocFor(ripped.classpathEntry));
 		updateButtonStatus(value);
-	}
-
-	private String findCurrentValue() {
-		return ripped == null ? null : JavaProjects.findJavadocFor(ripped.classpathEntry);
 	}
 
 	private void updateButtonStatus(String value) {

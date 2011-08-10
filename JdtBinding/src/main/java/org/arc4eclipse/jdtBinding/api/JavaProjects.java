@@ -37,7 +37,6 @@ public class JavaProjects {
 
 	public static void updateFoundClassPath(final FoundClassPathEntry found, final IFunction1<IClasspathEntry, IClasspathEntry> mutator) {
 		try {
-
 			switch (found.foundIn) {
 			case FOUND_IN_RAW: {
 				final IClasspathEntry[] newEntries = cloneWithChange(found.javaProject.getRawClasspath(), found, mutator);
