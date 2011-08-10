@@ -97,7 +97,7 @@ public class JavaProjects {
 	public static String findJavadocFor(IClasspathEntry classpathEntry) {
 		if (classpathEntry != null)
 			for (IClasspathAttribute attribute : classpathEntry.getExtraAttributes())
-				if (attribute.equals(IClasspathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME))
+				if (attribute.getName().equals(IClasspathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME))
 					return attribute.getValue();
 		return null;
 	}

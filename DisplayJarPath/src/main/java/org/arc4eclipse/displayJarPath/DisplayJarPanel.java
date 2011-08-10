@@ -15,10 +15,13 @@ public class DisplayJarPanel extends Composite {
 	private final TitleAndTextField nameField;
 	private final TitleAndTextField digestField;
 	private final TitleAndTextField urlField;
+	private final TitleAndTextField projectField;
 
 	public DisplayJarPanel(Composite parent, int style, DisplayerContext context) {
 		super(parent, style);
 		IImageFactory imageFactory = context.imageFactory;
+		projectField = new TitleAndTextField(this, SWT.NULL, imageFactory, "Project", false);
+		projectField.addHelpButton(DisplayJarConstants.helpProject);
 		pathField = new TitleAndTextField(this, SWT.NULL, imageFactory, "Jar Path", false);
 		pathField.addHelpButton(DisplayJarConstants.helpPathField);
 		nameField = new TitleAndTextField(this, SWT.NULL, imageFactory, "Jar Name", false);
@@ -38,6 +41,7 @@ public class DisplayJarPanel extends Composite {
 				nameField.setText(path.toFile().getName());
 				digestField.setText(ripped.hexDigest);
 				urlField.setText(url);
+				projectField.setText(ripped.javaProject == null ? null : ripped.javaProject.getElementName());
 				return;
 
 			}
@@ -46,6 +50,7 @@ public class DisplayJarPanel extends Composite {
 		nameField.setText("");
 		digestField.setText("");
 		urlField.setText(url);
+		projectField.setText("");
 	}
 
 }
