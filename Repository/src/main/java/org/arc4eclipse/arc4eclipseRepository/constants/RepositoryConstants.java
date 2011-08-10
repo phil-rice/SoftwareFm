@@ -12,7 +12,7 @@ public class RepositoryConstants {
 
 	public static final String projectUrlKey = "url_projectUrl";
 	public static final String nameKey = "text_projectName";
-	public static final String issuesKey = "url_issues";
+	public static final String issuesKey = "issues_issues";
 	public static final String projectLicenseKey = "text_projectLicense";
 	public static final String projectTutorialsKey = "text_projectTutorials";
 	public static final String projectJobsKey = "text_projectJobs";
@@ -50,22 +50,5 @@ public class RepositoryConstants {
 	public static final String action = "action";
 	public static final String actionGet = "get";
 	public static final String actionPost = "post";
-
-	public static final String sourceHelp = null;
-	public static final String javaDocHelp = null;
-	public static final String organisationHelp = null;
-	public static final String projectHelp = null;
-	public static final String organisationNameHelp = null;
-	public static final String organisationDescriptionTitle = null;
-	public static final String issuesHelp = null;
-	public static final String forumHelp = null;
-	public static final String mailingListsHelp = null;
-	public static final String tutorialsHelp = null;
-	public static final String projectJobsHelp = null;
-	public static final String merchandisingHelp = null;
-	public static final String projectNameHelp = null;
-	public static final String projectDescriptionHelp = null;
-	public static final String projectLicenseHelp = null;
-	public static final String forumsHelp = null;
 
 }
