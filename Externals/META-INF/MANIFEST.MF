@@ -16,7 +16,8 @@ Bundle-ClassPath: lib/cake-forkjoin-0.1.jar,
  lib/log4j-1.2.16.jar,
  lib/spring-asm-3.0.5.RELEASE.jar,
  lib/spring-core-3.0.5.RELEASE.jar,
- .
+ .,
+ lib/twitter4j-core-2.2.4.jar
 Export-Package: org.apache.commons.codec,
  org.apache.commons.codec.binary,
  org.apache.commons.codec.digest,
@@ -141,4 +142,11 @@ Export-Package: org.apache.commons.codec,
  org.springframework.core.type.filter,
  org.springframework.util,
  org.springframework.util.comparator,
- org.springframework.util.xml
+ org.springframework.util.xml,
+ twitter4j,
+ twitter4j.api,
+ twitter4j.auth,
+ twitter4j.conf,
+ twitter4j.json,
+ twitter4j.management,
+ twitter4j.util

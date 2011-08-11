@@ -36,6 +36,6 @@ public class DisplaySource extends AbstractDisplayerWithLabel<SourcePanel> {
 
 	@Override
 	protected Image createDepressedImage(Device device) {
-		return makeImage(device, "src.png");
+		return makeImage(device, "src depress.png");
 	}
 }

@@ -13,8 +13,11 @@ import org.arc4eclipse.displayCore.api.IDisplayer;
 import org.arc4eclipse.displayCore.api.NameSpaceAndName;
 import org.arc4eclipse.displayCore.constants.DisplayCoreConstants;
 import org.arc4eclipse.utilities.constants.UtilityMessages;
+import org.arc4eclipse.utilities.functions.IFunction1;
 import org.arc4eclipse.utilities.maps.Maps;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -23,28 +26,35 @@ public class DisplayContainerFactory implements IDisplayContainerFactoryBuilder,
 	@SuppressWarnings("rawtypes")
 	private final Map<String, IDisplayer> registeredDisplayers = Maps.newMap();
 
-	static class KeyTitleAndHelp {
+	static class KeyTitleHelpAndImage {
 		final String key;
 		final String title;
 		final String help;
+		final IFunction1<Device, Image> imageMaker;
 
-		public KeyTitleAndHelp(String key, String title, String help) {
+		public KeyTitleHelpAndImage(String key, String title, String help, IFunction1<Device, Image> imageMaker) {
 			this.key = key;
 			this.title = title;
 			this.help = help;
+			this.imageMaker = imageMaker;
 		}
 
 		@Override
 		public String toString() {
-			return "KeyTitleAndHelp [key=" + key + "]";
+			return "KeyTitleHelpAndImage [key=" + key + "]";
 		}
 	}
 
-	private final Map<String, List<KeyTitleAndHelp>> entityToKeysMap = Maps.newMap();
+	private final Map<String, List<KeyTitleHelpAndImage>> entityToKeysMap = Maps.newMap();
 
 	@Override
 	public void registerForEntity(String entity, String key, String title, String help) {
-		Maps.addToList(entityToKeysMap, entity, new KeyTitleAndHelp(key, title, help));
+		registerForEntity(entity, key, title, help, null);
+	}
+
+	@Override
+	public void registerForEntity(String entity, String key, String title, String help, IFunction1<Device, Image> imageMaker) {
+		Maps.addToList(entityToKeysMap, entity, new KeyTitleHelpAndImage(key, title, help, imageMaker));
 	}
 
 	@Override
@@ -63,24 +73,26 @@ public class DisplayContainerFactory implements IDisplayContainerFactoryBuilder,
 	@SuppressWarnings("rawtypes")
 	@Override
 	public IDisplayContainer create(DisplayerContext displayerContext, Composite parent, String entity) {
-		List<KeyTitleAndHelp> keysForEntity = entityToKeysMap.get(entity);
+		List<KeyTitleHelpAndImage> keysForEntity = entityToKeysMap.get(entity);
 		if (keysForEntity == null)
 			throw new IllegalArgumentException(MessageFormat.format(DisplayCoreConstants.illegalEntityName, entity, entityToKeysMap.keySet()));
 		Map<NameSpaceAndName, IDisplayer> mapToDisplayer = Maps.newMap(LinkedHashMap.class);
 		Map<NameSpaceAndName, String> mapToTitle = Maps.newMap(LinkedHashMap.class);
 		Map<NameSpaceAndName, String> mapToHelp = Maps.newMap(LinkedHashMap.class);
-		for (KeyTitleAndHelp keyTitleAndHelp : keysForEntity) {
-			String key = keyTitleAndHelp.key;
+		Map<NameSpaceAndName, IFunction1<Device, Image>> mapToImageMaker = Maps.newMap(LinkedHashMap.class);
+		for (KeyTitleHelpAndImage keyTitleHelpAndImage : keysForEntity) {
+			String key = keyTitleHelpAndImage.key;
 			NameSpaceAndName nameSpaceAndName = NameSpaceAndName.Utils.rip(key);
 			IDisplayer displayer = registeredDisplayers.get(nameSpaceAndName.nameSpace);
 			if (displayer == null)
-				throw new IllegalArgumentException(MessageFormat.format(DisplayCoreConstants.illegalKey, key, entity, keysForEntity));
+				throw new IllegalArgumentException(MessageFormat.format(DisplayCoreConstants.illegalKey, nameSpaceAndName.nameSpace, entity, registeredDisplayers.keySet()));
 			else
 				mapToDisplayer.put(nameSpaceAndName, displayer);
-			mapToTitle.put(nameSpaceAndName, keyTitleAndHelp.title);
-			mapToHelp.put(nameSpaceAndName, keyTitleAndHelp.help);
+			mapToTitle.put(nameSpaceAndName, keyTitleHelpAndImage.title);
+			mapToHelp.put(nameSpaceAndName, keyTitleHelpAndImage.help);
+			mapToImageMaker.put(nameSpaceAndName, keyTitleHelpAndImage.imageMaker);
 		}
-		DisplayContainer displayContainer = new DisplayContainer(displayerContext, parent, SWT.NULL, entity, mapToDisplayer, mapToTitle, mapToHelp);
+		DisplayContainer displayContainer = new DisplayContainer(displayerContext, parent, SWT.NULL, entity, mapToDisplayer, mapToTitle, mapToHelp, mapToImageMaker);
 		return displayContainer;
 	}
 

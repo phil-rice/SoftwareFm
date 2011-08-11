@@ -11,9 +11,13 @@ import org.arc4eclipse.displayCore.api.IDisplayContainerFactoryBuilder;
 import org.arc4eclipse.displayCore.constants.DisplayCoreConstants;
 import org.arc4eclipse.displayForums.DisplayForums;
 import org.arc4eclipse.displayForums.DisplayTutorials;
+import org.arc4eclipse.displayIssues.DisplayIssues;
 import org.arc4eclipse.displayJarPath.DisplayJarPath;
 import org.arc4eclipse.displayJavadoc.DisplayJavadoc;
+import org.arc4eclipse.displayJobs.DisplayJobs;
+import org.arc4eclipse.displayLicense.DisplayLicense;
 import org.arc4eclipse.displayMailingLists.DisplayMailingLists;
+import org.arc4eclipse.displayMerchandising.DisplayMerchandising;
 import org.arc4eclipse.displaySource.DisplaySource;
 import org.arc4eclipse.displayText.DisplayText;
 import org.arc4eclipse.displayUrl.DisplayUrl;
@@ -25,6 +29,8 @@ import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.arc4eclipse.utilities.maps.Maps;
 import org.eclipse.jdt.core.dom.ITypeBinding;
+import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -150,34 +156,60 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 			builder.registerDisplayer(new DisplayText());
 
 			builder.registerDisplayer(new DisplayUrl());
-			builder.registerDisplayer(new DisplaySource());
 			builder.registerDisplayer(new DisplayJavadoc());
 			builder.registerDisplayer(new DisplayJarPath());
 			builder.registerDisplayer(new DisplayForums());
-			builder.registerDisplayer(new DisplayTutorials());
+			builder.registerDisplayer(new DisplayLicense());
+			builder.registerDisplayer(new DisplayIssues());
+			builder.registerDisplayer(new DisplayJobs());
+			builder.registerDisplayer(new DisplayMerchandising());
 			builder.registerDisplayer(new DisplayMailingLists());
+			builder.registerDisplayer(new DisplaySource());
+			builder.registerDisplayer(new DisplayTutorials());
 
+			IFunction1<Device, Image> projectImageMaker = new IFunction1<Device, Image>() {
+				@Override
+				public Image apply(Device from) throws Exception {
+					final IImageFactory imageFactory = getImageFactory();
+					return imageFactory.makeImages(from).getProjectImage();
+				}
+			};
 			builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.jarDetailsKey, RepositoryConstants.jarDetailsTitle, null);
 			builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.sourceKey, RepositoryConstants.sourceTitle, CorePlugInConstants.sourceHelp);
 			builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.javadocKey, RepositoryConstants.javaDocTitle, CorePlugInConstants.javaDocHelp);
 			builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.organisationUrlKey, RepositoryConstants.organisationTitle, CorePlugInConstants.organisationHelp);
-			builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.projectUrlKey, RepositoryConstants.projectTitle, CorePlugInConstants.projectHelp);
+			builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.projectUrlKey, RepositoryConstants.projectTitle, CorePlugInConstants.projectHelp, projectImageMaker);
 
-			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.nameKey, RepositoryConstants.nameTitle, CorePlugInConstants.organisationNameHelp);
-			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.descriptionKey, RepositoryConstants.descriptionTitle, CorePlugInConstants.organisationDescriptionHelp);
+			IFunction1<Device, Image> nameImageMaker = new IFunction1<Device, Image>() {
+				@Override
+				public Image apply(Device from) throws Exception {
+					final IImageFactory imageFactory = getImageFactory();
+					return imageFactory.makeImages(from).getNameImage();
+				}
+			};
+			IFunction1<Device, Image> descriptionImageMaker = new IFunction1<Device, Image>() {
+				@Override
+				public Image apply(Device from) throws Exception {
+					final IImageFactory imageFactory = getImageFactory();
+					return imageFactory.makeImages(from).getDescriptionImage();
+				}
+			};
+			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.nameKey, RepositoryConstants.nameTitle, CorePlugInConstants.organisationNameHelp, nameImageMaker);
+			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.descriptionKey, RepositoryConstants.descriptionTitle, CorePlugInConstants.organisationDescriptionHelp, descriptionImageMaker);
 			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.forumsKey, RepositoryConstants.forumsTitle, CorePlugInConstants.forumsHelp);
 			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.mailingListsKey, RepositoryConstants.mailingListTitle, CorePlugInConstants.organisationMailingListHelp);
 			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.tutorialsKey, RepositoryConstants.tutorialsTitle, CorePlugInConstants.tutorialsHelp);
 			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.projectJobsKey, RepositoryConstants.jobsTitle, CorePlugInConstants.projectJobsHelp);
 			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.merchandisingKey, RepositoryConstants.merchandisingTitle, CorePlugInConstants.merchandisingHelp);
 
-			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.nameKey, RepositoryConstants.nameTitle, CorePlugInConstants.projectNameHelp);
-			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.descriptionKey, RepositoryConstants.descriptionTitle, CorePlugInConstants.projectDescriptionHelp);
+			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.nameKey, RepositoryConstants.nameTitle, CorePlugInConstants.projectNameHelp, nameImageMaker);
+			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.descriptionKey, RepositoryConstants.descriptionTitle, CorePlugInConstants.projectDescriptionHelp, descriptionImageMaker);
 			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.issuesKey, RepositoryConstants.issuesTitle, CorePlugInConstants.issuesHelp);
 			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.projectLicenseKey, RepositoryConstants.licenseTitle, CorePlugInConstants.projectLicenseHelp);
 			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.forumsKey, RepositoryConstants.forumsTitle, CorePlugInConstants.forumsHelp);
 			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.mailingListsKey, RepositoryConstants.mailingListTitle, CorePlugInConstants.projectsMailingList);
 			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.merchandisingKey, RepositoryConstants.merchandisingTitle, CorePlugInConstants.merchandisingHelp);
+			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.jobsKey, RepositoryConstants.jobsTitle, CorePlugInConstants.jobsProjectHelp);
 
 			displayContainerFactory = builder.build();
 		}

@@ -13,13 +13,14 @@ public class RepositoryConstants {
 	public static final String projectUrlKey = "url_projectUrl";
 	public static final String nameKey = "text_projectName";
 	public static final String issuesKey = "issues_issues";
-	public static final String projectLicenseKey = "text_projectLicense";
+	public static final String projectLicenseKey = "license_projectLicense";
 	public static final String projectTutorialsKey = "text_projectTutorials";
-	public static final String projectJobsKey = "text_projectJobs";
-	public static final String merchandisingKey = "text_merchandising";
+	public static final String projectJobsKey = "jobs_projectJobs";
+	public static final String merchandisingKey = "merchandising_merchandising";
 	public static final String forumsKey = "forums_forums";
 	public static final String mailingListsKey = "mailingLists_mailingLists";
 	public static final String tutorialsKey = "tutorials_tutorials";
+	public static final String jobsKey = "jobs_jobs";
 
 	public static final String entity = "entity";
 	public static final String entityJarData = "jarData";

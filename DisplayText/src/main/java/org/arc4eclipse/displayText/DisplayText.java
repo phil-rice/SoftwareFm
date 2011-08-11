@@ -20,7 +20,8 @@ public class DisplayText extends AbstractDisplayerWithLabel<BoundTitleAndTextFie
 	@Override
 	public BoundTitleAndTextField createLargeControl(DisplayerContext context, Composite parent, DisplayerDetails displayerDetails) {
 		BoundTitleAndTextField boundTitleAndTextField = new BoundTitleAndTextField(parent, context, displayerDetails);
-
+		if (displayerDetails.help != null)
+			boundTitleAndTextField.addHelpButton(displayerDetails.help);
 		return boundTitleAndTextField;
 	}
 
@@ -37,7 +38,7 @@ public class DisplayText extends AbstractDisplayerWithLabel<BoundTitleAndTextFie
 
 	@Override
 	protected Image createDepressedImage(Device device) {
-		return makeImage(device, "red cross.png");
+		return createMainImage(device);
 	}
 
 }

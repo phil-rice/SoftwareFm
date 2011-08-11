@@ -31,11 +31,11 @@ public class DisplayJarPath extends AbstractDisplayerWithLabel<DisplayJarPanel> 
 
 	@Override
 	protected Image createMainImage(Device device) {
-		return makeImage(device, "red cross.png");
+		return makeImage(device, "Jar.png");
 	}
 
 	@Override
 	protected Image createDepressedImage(Device device) {
-		return makeImage(device, "red cross.png");
+		return makeImage(device, "Jar depress.png");
 	}
 }

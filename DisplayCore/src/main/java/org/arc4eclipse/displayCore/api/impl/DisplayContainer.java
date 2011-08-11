@@ -12,8 +12,12 @@ import org.arc4eclipse.displayCore.api.IDisplayer;
 import org.arc4eclipse.displayCore.api.NameSpaceAndName;
 import org.arc4eclipse.swtBasics.Swts;
 import org.arc4eclipse.utilities.collections.Lists;
+import org.arc4eclipse.utilities.exceptions.WrappedException;
+import org.arc4eclipse.utilities.functions.IFunction1;
 import org.arc4eclipse.utilities.maps.Maps;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -30,7 +34,7 @@ public class DisplayContainer implements IDisplayContainer, ITopButtonState {
 	private final Map<NameSpaceAndName, Boolean> topButtonState = Maps.newMap();
 
 	@SuppressWarnings("rawtypes")
-	public DisplayContainer(final DisplayerContext displayerContext, final Composite parent, int style, final String entity, final Map<NameSpaceAndName, IDisplayer> toDisplayers, final Map<NameSpaceAndName, String> toTitle, final Map<NameSpaceAndName, String> toHelp) {
+	public DisplayContainer(final DisplayerContext displayerContext, final Composite parent, int style, final String entity, final Map<NameSpaceAndName, IDisplayer> toDisplayers, final Map<NameSpaceAndName, String> toTitle, final Map<NameSpaceAndName, String> toHelp, final Map<NameSpaceAndName, IFunction1<Device, Image>> mapToImageMaker) {
 		this.toDisplayerMap = Maps.copyMap(toDisplayers);
 		this.content = new Composite(parent, SWT.NULL);
 		this.compButtons = new Composite(content, SWT.NULL);
@@ -45,10 +49,12 @@ public class DisplayContainer implements IDisplayContainer, ITopButtonState {
 
 		process(new IDisplayContainerCallback() {
 			@Override
-			public <L extends Control, S extends Control> void process(NameSpaceAndName nameSpaceAndName, IDisplayer<L, S> displayer) {
+			public <L extends Control, S extends Control> void process(NameSpaceAndName nameSpaceAndName, IDisplayer<L, S> displayer) throws Exception {
 				String title = toTitle.get(nameSpaceAndName);
 				String help = toHelp.get(nameSpaceAndName);
-				DisplayerDetails displayerDetails = new DisplayerDetails(entity, nameSpaceAndName, title, help);
+				IFunction1<Device, Image> imageMaker = mapToImageMaker.get(nameSpaceAndName);
+				Image image = imageMaker == null ? null : imageMaker.apply(parent.getDisplay());
+				DisplayerDetails displayerDetails = new DisplayerDetails(entity, nameSpaceAndName, title, help, image);
 				smallControlMap.put(nameSpaceAndName, displayer.createSmallControl(displayerContext, DisplayContainer.this, compButtons, displayerDetails));
 				largeControlMap.put(nameSpaceAndName, displayer.createLargeControl(displayerContext, content, displayerDetails));
 			}
@@ -126,10 +132,14 @@ public class DisplayContainer implements IDisplayContainer, ITopButtonState {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void process(IDisplayContainerCallback displayContainerCallback) {
-		for (Entry<NameSpaceAndName, IDisplayer> entry : toDisplayerMap.entrySet()) {
-			NameSpaceAndName nameSpaceAndName = entry.getKey();
-			IDisplayer displayer = entry.getValue();
-			displayContainerCallback.process(nameSpaceAndName, displayer);
+		try {
+			for (Entry<NameSpaceAndName, IDisplayer> entry : toDisplayerMap.entrySet()) {
+				NameSpaceAndName nameSpaceAndName = entry.getKey();
+				IDisplayer displayer = entry.getValue();
+				displayContainerCallback.process(nameSpaceAndName, displayer);
+			}
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
 		}
 	}
 

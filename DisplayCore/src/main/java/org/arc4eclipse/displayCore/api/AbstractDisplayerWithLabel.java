@@ -34,7 +34,7 @@ public abstract class AbstractDisplayerWithLabel<L extends Control> implements I
 	@Override
 	public Control createSmallControl(DisplayerContext displayerContext, final ITopButtonState topButtonState, Composite parent, final DisplayerDetails displayerDetails) {
 		Device device = parent.getDisplay();
-		ImageButton button = new ImageButton(parent, getMainImage(device), getDepressedImage(device));
+		ImageButton button = new ImageButton(parent, getMainImage(displayerDetails, device), getDepressedImage(displayerDetails, device));
 		button.setTooltipText(displayerDetails.title);
 		button.addListener(new IImageButtonListener() {
 			@Override
@@ -53,13 +53,17 @@ public abstract class AbstractDisplayerWithLabel<L extends Control> implements I
 		return (BindingRipperResult) bindingContext.context.get(DisplayCoreConstants.ripperResult);
 	}
 
-	protected Image getMainImage(Device device) {
+	protected Image getMainImage(DisplayerDetails displayerDetails, Device device) {
+		if (displayerDetails.optionalImage != null)
+			return displayerDetails.optionalImage;
 		if (mainImage == null)
 			mainImage = createMainImage(device);
 		return mainImage;
 	}
 
-	protected Image getDepressedImage(Device device) {
+	protected Image getDepressedImage(DisplayerDetails displayerDetails, Device device) {
+		if (displayerDetails.optionalImage != null)
+			return displayerDetails.optionalImage;
 		if (depressedImage == null)
 			depressedImage = createDepressedImage(device);
 		return depressedImage;

@@ -17,6 +17,9 @@ public class Images {
 	private Image clearImage;
 	private Image helpImage;
 	private Image addImage;
+	private Image nameImage;
+	private Image projectImage;
+	private Image projectDepressedImage;
 
 	public Images(Device device) {
 		this.device = device;
@@ -41,7 +44,7 @@ public class Images {
 
 	public Image getEditImage() {
 		if (editImage == null)
-			editImage = makeImage("Edit.png");
+			editImage = makeImage("edit document.png");
 		return editImage;
 	}
 
@@ -53,20 +56,44 @@ public class Images {
 
 	public Image getLinkImage() {
 		if (linkImage == null)
-			linkImage = makeImage("Link.png");
+			linkImage = makeImage("link.png");
 		return linkImage;
 	}
 
 	public Image getClearImage() {
 		if (clearImage == null)
-			clearImage = makeImage("Clear.png");
+			clearImage = makeImage("delete document.png");
 		return clearImage;
 	}
 
 	public Image getAddImage() {
 		if (addImage == null)
-			addImage = makeImage("Add.png");
+			addImage = makeImage("+document.png");
 		return addImage;
+	}
+
+	public Image getNameImage() {
+		if (nameImage == null)
+			nameImage = makeImage("name.png");
+		return nameImage;
+	}
+
+	public Image getDescriptionImage() {
+		if (nameImage == null)
+			nameImage = makeImage("Description.png");
+		return nameImage;
+	}
+
+	public Image getProjectImage() {
+		if (projectImage == null)
+			projectImage = makeImage("Project.png");
+		return projectImage;
+	}
+
+	public Image getProjectDepressedImage() {
+		if (projectDepressedImage == null)
+			projectDepressedImage = makeImage("Project depress.png");
+		return projectDepressedImage;
 	}
 
 	protected Image makeImage(String string) {

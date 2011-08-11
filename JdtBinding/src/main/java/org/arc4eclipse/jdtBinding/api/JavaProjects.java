@@ -6,6 +6,7 @@ import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jdt.core.ClasspathContainerInitializer;
 import org.eclipse.jdt.core.IClasspathAttribute;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
@@ -68,8 +69,8 @@ public class JavaProjects {
 					}
 				};
 
-				// ClasspathContainerInitializer initializer = JavaCore.getClasspathContainerInitializer(found.container.getPath().segment(0));
-				// initializer.requestClasspathContainerUpdate(found.container.getPath(), found.javaProject, containerSuggestion);
+				ClasspathContainerInitializer initializer = JavaCore.getClasspathContainerInitializer(found.container.getPath().segment(0));
+				initializer.requestClasspathContainerUpdate(found.container.getPath(), found.javaProject, containerSuggestion);
 				JavaCore.setClasspathContainer(found.container.getPath(), new IJavaProject[] { found.javaProject }, new IClasspathContainer[] { containerSuggestion }, new NullProgressMonitor());
 				break;
 			}
@@ -85,7 +86,7 @@ public class JavaProjects {
 		final IClasspathEntry[] newEntries = ArrayHelper.map(IClasspathEntry.class, entriesToCopy, new IFunction1<IClasspathEntry, IClasspathEntry>() {
 			@Override
 			public IClasspathEntry apply(IClasspathEntry from) throws Exception {
-				if (from == found.classPathEntry)
+				if (from != null && from == found.classPathEntry)
 					return mutator.apply(from);
 				else
 					return from;

@@ -19,4 +19,5 @@ public class CorePlugInConstants {
 	public static final String organisationMailingListHelp = "This is for mailing lists associated with the organisation. For example the organisation may have an announce list.\nTo add one click the + button\nPlease don't use it for mailing lists about specific projects";
 	public static final String tutorialsHelp = "This is for tutorials.\nTo add one click the + button\nThe name should be a category:\n'Taster' for Intro tutorials. If its about a specific component of the project, include the component in the name";
 	public static final String projectsMailingList = "This is for mailing lists associated with the project.\nTo add one click the + button\nPlease don't use it for mailing lists about the organisation";
+	public static final String jobsProjectHelp = "This is for people looking to work with this project, or employers looking to hire for this project";
 }

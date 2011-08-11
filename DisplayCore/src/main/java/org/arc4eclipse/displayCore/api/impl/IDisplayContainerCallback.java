@@ -6,6 +6,6 @@ import org.eclipse.swt.widgets.Control;
 
 interface IDisplayContainerCallback {
 
-	<L extends Control, S extends Control> void process(NameSpaceAndName nameSpaceAndName, IDisplayer<L, S> displayer);
+	<L extends Control, S extends Control> void process(NameSpaceAndName nameSpaceAndName, IDisplayer<L, S> displayer) throws Exception;
 
 }
