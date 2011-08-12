@@ -1,10 +1,9 @@
 package arc4eclipse.core.plugin;
 
-import org.arc4eclipse.displayJavadoc.DisplayJavadocConstants;
 
 public class CorePlugInConstants {
 	public static final String sourceHelp = "A location where the source code can be found";
-	public static final String javaDocHelp = DisplayJavadocConstants.helpValueInRepository;
+	// public static final String javaDocHelp = DisplayJavadocConstants.helpValueInRepository;
 	public static final String organisationHelp = "The Url of the organisation that runs the project that this jar is associated with\nIt can be the same as the Project Url if there is no such organisation";
 	public static final String projectHelp = "The Url of the project that this jar is associated with";
 	public static final String organisationNameHelp = "A name used to reference the organisation";

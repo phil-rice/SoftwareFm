@@ -1,4 +1,4 @@
-package org.arc4eclipse.displayForums;
+package org.arc4eclipse.displayTutorials;
 
 import org.arc4eclipse.displayCore.api.AbstractDisplayerWithLabel;
 import org.arc4eclipse.displayCore.api.BindingContext;

@@ -9,18 +9,6 @@ import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactory;
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactoryBuilder;
 import org.arc4eclipse.displayCore.constants.DisplayCoreConstants;
-import org.arc4eclipse.displayForums.DisplayForums;
-import org.arc4eclipse.displayForums.DisplayTutorials;
-import org.arc4eclipse.displayIssues.DisplayIssues;
-import org.arc4eclipse.displayJarPath.DisplayJarPath;
-import org.arc4eclipse.displayJavadoc.DisplayJavadoc;
-import org.arc4eclipse.displayJobs.DisplayJobs;
-import org.arc4eclipse.displayLicense.DisplayLicense;
-import org.arc4eclipse.displayMailingLists.DisplayMailingLists;
-import org.arc4eclipse.displayMerchandising.DisplayMerchandising;
-import org.arc4eclipse.displaySource.DisplaySource;
-import org.arc4eclipse.displayText.DisplayText;
-import org.arc4eclipse.displayUrl.DisplayUrl;
 import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.arc4eclipse.jdtBinding.api.IBindingRipper;
 import org.arc4eclipse.panel.ISelectedBindingListener;
@@ -28,6 +16,8 @@ import org.arc4eclipse.swtBasics.images.IImageFactory;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.arc4eclipse.utilities.maps.Maps;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
@@ -68,6 +58,10 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor("org.arc4eclipse.displayers");
+		for (IConfigurationElement e : config) {
+			System.out.println(e.createExecutableExtension("class"));
+		}
 	}
 
 	@Override
@@ -153,19 +147,19 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 	public IDisplayContainerFactory getDisplayManager() {
 		if (displayContainerFactory == null) {
 			IDisplayContainerFactoryBuilder builder = IDisplayContainerFactoryBuilder.Utils.displayManager();
-			builder.registerDisplayer(new DisplayText());
-
-			builder.registerDisplayer(new DisplayUrl());
-			builder.registerDisplayer(new DisplayJavadoc());
-			builder.registerDisplayer(new DisplayJarPath());
-			builder.registerDisplayer(new DisplayForums());
-			builder.registerDisplayer(new DisplayLicense());
-			builder.registerDisplayer(new DisplayIssues());
-			builder.registerDisplayer(new DisplayJobs());
-			builder.registerDisplayer(new DisplayMerchandising());
-			builder.registerDisplayer(new DisplayMailingLists());
-			builder.registerDisplayer(new DisplaySource());
-			builder.registerDisplayer(new DisplayTutorials());
+			// builder.registerDisplayer(new DisplayText());
+			//
+			// builder.registerDisplayer(new DisplayUrl());
+			// builder.registerDisplayer(new DisplayJavadoc());
+			// builder.registerDisplayer(new DisplayJarPath());
+			// builder.registerDisplayer(new DisplayForums());
+			// builder.registerDisplayer(new DisplayLicense());
+			// builder.registerDisplayer(new DisplayIssues());
+			// builder.registerDisplayer(new DisplayJobs());
+			// builder.registerDisplayer(new DisplayMerchandising());
+			// builder.registerDisplayer(new DisplayMailingLists());
+			// builder.registerDisplayer(new DisplaySource());
+			// builder.registerDisplayer(new DisplayTutorials());
 
 			IFunction1<Device, Image> projectImageMaker = new IFunction1<Device, Image>() {
 				@Override
@@ -176,7 +170,7 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 			};
 			builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.jarDetailsKey, RepositoryConstants.jarDetailsTitle, null);
 			builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.sourceKey, RepositoryConstants.sourceTitle, CorePlugInConstants.sourceHelp);
-			builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.javadocKey, RepositoryConstants.javaDocTitle, CorePlugInConstants.javaDocHelp);
+			// builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.javadocKey, RepositoryConstants.javaDocTitle, CorePlugInConstants.javaDocHelp);
 			builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.organisationUrlKey, RepositoryConstants.organisationTitle, CorePlugInConstants.organisationHelp);
 			builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.projectUrlKey, RepositoryConstants.projectTitle, CorePlugInConstants.projectHelp, projectImageMaker);
 

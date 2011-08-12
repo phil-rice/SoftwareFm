@@ -11,19 +11,7 @@ Require-Bundle: org.eclipse.ui,
  org.arc4eclipse.selection;bundle-version="1.0.0",
  org.eclipse.jface.text;bundle-version="3.7.0",
  org.eclipse.jdt.ui;bundle-version="3.7.0",
- org.arc4eclipse.displayCore;bundle-version="1.0.0",
- org.arc4eclipse.displayText;bundle-version="1.0.0",
- org.arc4eclipse.displaySource;bundle-version="1.0.0",
- org.arc4eclipse.displayJavadoc;bundle-version="1.0.0",
- org.arc4eclipse.displayJarPath;bundle-version="1.0.0",
- org.arc4eclipse.displayForums;bundle-version="1.0.0",
- org.arc4eclipse.displayMailingLists;bundle-version="1.0.0",
- org.arc4eclipse.displayTutorials;bundle-version="1.0.0",
- org.arc4eclipse.displayUrl;bundle-version="1.0.0",
- org.arc4eclipse.displayIssues;bundle-version="1.0.0",
- org.arc4eclipse.displayLicense;bundle-version="1.0.0",
- org.arc4eclipse.displayJobs;bundle-version="1.0.0",
- org.arc4eclipse.displayMerchandising;bundle-version="1.0.0"
+ org.arc4eclipse.displayCore;bundle-version="1.0.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: arc4eclipse.core.plugin

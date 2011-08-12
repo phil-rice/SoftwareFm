@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.arc4eclipse.displayUrl
-Bundle-SymbolicName: org.arc4eclipse.displayUrl
+Bundle-SymbolicName: org.arc4eclipse.displayUrl;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Arc4Eclipse
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
