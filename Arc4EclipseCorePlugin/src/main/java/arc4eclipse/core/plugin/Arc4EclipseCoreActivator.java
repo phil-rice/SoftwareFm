@@ -8,16 +8,16 @@ import org.arc4eclipse.arc4eclipseRepository.api.RepositoryDataItemStatus;
 import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactory;
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactoryBuilder;
+import org.arc4eclipse.displayCore.api.IDisplayer;
 import org.arc4eclipse.displayCore.constants.DisplayCoreConstants;
 import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.arc4eclipse.jdtBinding.api.IBindingRipper;
 import org.arc4eclipse.panel.ISelectedBindingListener;
 import org.arc4eclipse.swtBasics.images.IImageFactory;
+import org.arc4eclipse.utilities.callbacks.ICallback;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.arc4eclipse.utilities.maps.Maps;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
@@ -36,6 +36,7 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.arc4Eclipse.core"; //$NON-NLS-1$
+	public static final String DISPLAYER_ID = "org.arc4eclipse.displayers";
 
 	// The shared instance
 	private static Arc4EclipseCoreActivator plugin;
@@ -58,10 +59,7 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor("org.arc4eclipse.displayers");
-		for (IConfigurationElement e : config) {
-			System.out.println(e.createExecutableExtension("class"));
-		}
+
 	}
 
 	@Override
@@ -146,20 +144,13 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 	// TODO This is better done with executable extension points
 	public IDisplayContainerFactory getDisplayManager() {
 		if (displayContainerFactory == null) {
-			IDisplayContainerFactoryBuilder builder = IDisplayContainerFactoryBuilder.Utils.displayManager();
-			// builder.registerDisplayer(new DisplayText());
-			//
-			// builder.registerDisplayer(new DisplayUrl());
-			// builder.registerDisplayer(new DisplayJavadoc());
-			// builder.registerDisplayer(new DisplayJarPath());
-			// builder.registerDisplayer(new DisplayForums());
-			// builder.registerDisplayer(new DisplayLicense());
-			// builder.registerDisplayer(new DisplayIssues());
-			// builder.registerDisplayer(new DisplayJobs());
-			// builder.registerDisplayer(new DisplayMerchandising());
-			// builder.registerDisplayer(new DisplayMailingLists());
-			// builder.registerDisplayer(new DisplaySource());
-			// builder.registerDisplayer(new DisplayTutorials());
+			final IDisplayContainerFactoryBuilder builder = IDisplayContainerFactoryBuilder.Utils.displayManager();
+			Plugins.useClasses(DISPLAYER_ID, new ICallback<IDisplayer<?, ?>>() {
+				@Override
+				public void process(IDisplayer<?, ?> t) throws Exception {
+					builder.registerDisplayer(t);
+				}
+			}, ICallback.Utils.sysErrCallback());
 
 			IFunction1<Device, Image> projectImageMaker = new IFunction1<Device, Image>() {
 				@Override
