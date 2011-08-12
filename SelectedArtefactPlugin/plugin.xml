@@ -10,14 +10,14 @@
       </category>
       <view
             name="Arc - Jar"
-            icon="icons/sample.gif"
+            icon="icons/Jar.gif"
             category="org.arc4eclipse"
             class="org.arc4eclipse.selectedArtifactPlugin.views.SelectedJarView"
             id="org.arc4eclipse.selectedArtifactPlugin.selectedJarView">
       </view>
       <view
             name="Arc - Org"
-            icon="icons/sample.gif"
+            icon="icons/Project.gif"
             category="org.arc4eclipse"
             class="org.arc4eclipse.selectedArtifactPlugin.views.SelectedOrganisationView"
             id="org.arc4eclipse.selectedArtifactPlugin.selectedOrganisationView">

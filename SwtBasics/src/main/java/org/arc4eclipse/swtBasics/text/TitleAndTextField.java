@@ -63,9 +63,9 @@ public class TitleAndTextField extends AbstractTitleAnd {
 
 	protected void updateBackground() {
 		if (txtText.getEditable())
-			txtText.setBackground(getDisplay().getSystemColor(SWT.COLOR_YELLOW));
+			txtText.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
 		else
-			txtText.setBackground(originalBackground);
+			txtText.setBackground(getDisplay().getSystemColor(SWT.COLOR_GRAY));// COLOR_YELLOW));//originalBackground);
 
 	}
 

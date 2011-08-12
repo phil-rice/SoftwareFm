@@ -39,6 +39,7 @@ public class DisplayContainer implements IDisplayContainer, ITopButtonState {
 		this.content = new Composite(parent, SWT.NULL);
 		this.compButtons = new Composite(content, SWT.NULL);
 
+		// new TitleAndTextField(compButtons, displayerContext.imageFactory, "SomeTItle", true);
 		GridLayout compButtonsLayout = new GridLayout(toDisplayers.size(), false);
 		compButtonsLayout.marginWidth = 0;
 		compButtons.setLayout(compButtonsLayout);
