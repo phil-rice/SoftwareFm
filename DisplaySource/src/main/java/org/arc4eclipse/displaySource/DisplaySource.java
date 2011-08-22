@@ -5,6 +5,7 @@ import org.arc4eclipse.displayCore.api.AbstractDisplayerWithLabel;
 import org.arc4eclipse.displayCore.api.BindingContext;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.displayCore.api.DisplayerDetails;
+import org.arc4eclipse.displayCore.api.IRegisteredItems;
 import org.arc4eclipse.utilities.strings.Strings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
@@ -19,7 +20,7 @@ public class DisplaySource extends AbstractDisplayerWithLabel<SourcePanel> {
 	}
 
 	@Override
-	public SourcePanel createLargeControl(DisplayerContext context, Composite parent, DisplayerDetails displayerDetails) {
+	public SourcePanel createLargeControl(DisplayerContext context, IRegisteredItems registeredItems, Composite parent, DisplayerDetails displayerDetails) {
 		return new SourcePanel(parent, SWT.BORDER, context, displayerDetails);
 	}
 

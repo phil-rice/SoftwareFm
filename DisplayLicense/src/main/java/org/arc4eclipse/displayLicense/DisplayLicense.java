@@ -4,6 +4,7 @@ import org.arc4eclipse.displayCore.api.AbstractDisplayerWithLabel;
 import org.arc4eclipse.displayCore.api.BindingContext;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.displayCore.api.DisplayerDetails;
+import org.arc4eclipse.displayCore.api.IRegisteredItems;
 import org.arc4eclipse.utilities.strings.Strings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
@@ -18,7 +19,7 @@ public class DisplayLicense extends AbstractDisplayerWithLabel<LicensePanel> {
 	}
 
 	@Override
-	public LicensePanel createLargeControl(DisplayerContext context, Composite parent, DisplayerDetails displayerDetails) {
+	public LicensePanel createLargeControl(DisplayerContext context, IRegisteredItems registeredItems, Composite parent, DisplayerDetails displayerDetails) {
 		return new LicensePanel(parent, SWT.BORDER, context, displayerDetails);
 	}
 

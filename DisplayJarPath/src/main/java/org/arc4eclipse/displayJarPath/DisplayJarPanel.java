@@ -20,15 +20,15 @@ public class DisplayJarPanel extends Composite {
 	public DisplayJarPanel(Composite parent, int style, DisplayerContext context) {
 		super(parent, style);
 		IImageFactory imageFactory = context.imageFactory;
-		projectField = new TitleAndTextField(this, SWT.NULL, imageFactory, "Project", false);
+		projectField = new TitleAndTextField(this, SWT.NULL, "Project", false);
 		projectField.addHelpButton(DisplayJarConstants.helpProject);
-		pathField = new TitleAndTextField(this, SWT.NULL, imageFactory, "Jar Path", false);
+		pathField = new TitleAndTextField(this, SWT.NULL, "Jar Path", false);
 		pathField.addHelpButton(DisplayJarConstants.helpPathField);
-		nameField = new TitleAndTextField(this, SWT.NULL, imageFactory, "Jar Name", false);
+		nameField = new TitleAndTextField(this, SWT.NULL, "Jar Name", false);
 		nameField.addHelpButton(DisplayJarConstants.helpJarName);
-		digestField = new TitleAndTextField(this, SWT.NULL, imageFactory, "Digest", false);
+		digestField = new TitleAndTextField(this, SWT.NULL, "Digest", false);
 		digestField.addHelpButton(DisplayJarConstants.helpDigest);
-		urlField = new TitleAndTextField(this, SWT.NULL, imageFactory, "Url", false);
+		urlField = new TitleAndTextField(this, SWT.NULL, "Url", false);
 		urlField.addHelpButton(DisplayJarConstants.helpUrl);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 	}

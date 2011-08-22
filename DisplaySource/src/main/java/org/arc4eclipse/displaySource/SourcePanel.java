@@ -44,7 +44,7 @@ public class SourcePanel extends Composite {
 		});
 		if (displayerDetails.help != null)
 			txtRepository.addHelpButton(displayerDetails.help);
-		txtLocal = new TitleAndTextField(this, SWT.NULL, context.imageFactory, "Current setting", false);
+		txtLocal = new TitleAndTextField(this, SWT.NULL, "Current setting", false);
 		txtLocal.addHelpButton(displayerDetails.help);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 	}

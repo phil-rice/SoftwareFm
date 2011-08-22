@@ -9,10 +9,10 @@ import org.arc4eclipse.utilities.collections.Lists;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.arc4eclipse.utilities.strings.Strings;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -34,25 +34,16 @@ public class ImageButton implements IHasControl {
 
 	private final Label label;
 	private boolean state;
-	private final Image main;
-	private final Image depressed;
 	private final List<IImageButtonListener> listeners = Lists.newList();
 	private boolean enabled = true;
 	private String tooltipText;
 	private String reasonForDisable;
+	private final ImageRegistry imageRegistry;
+	private final String key;
 
-	public ImageButton(Composite parent, Image main) {
-		this(parent, main, main, false);
-	}
-
-	public ImageButton(Composite parent, Image main, Image depressed) {
-		this(parent, main, depressed, true);
-
-	}
-
-	public ImageButton(Composite parent, Image main, Image depressed, final boolean toggle) {
-		this.main = main;
-		this.depressed = depressed;
+	public ImageButton(Composite parent, ImageRegistry imageRegistry, String key, final boolean toggle) {
+		this.imageRegistry = imageRegistry;
+		this.key = key;
 		this.label = new Label(parent, SWT.NULL);
 		updateImage();
 		label.addMouseListener(new MouseListener() {
@@ -96,9 +87,9 @@ public class ImageButton implements IHasControl {
 	private void updateImage() {
 		try {
 			if (state)
-				label.setImage(depressed);
+				label.setImage(Images.getMainImage(imageRegistry, key));
 			else
-				label.setImage(main);
+				label.setImage(Images.getDepressedImage(imageRegistry, key));
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
@@ -140,10 +131,17 @@ public class ImageButton implements IHasControl {
 		Swts.display("Label", new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				Images images = new Images(from.getDisplay());
 				Composite composite = new Composite(from, SWT.NULL);
 				composite.setLayout(new FormLayout());
-				ImageButton btn = new ImageButton(composite, images.getEditImage(), images.getLinkImage());
+				ImageRegistry imageRegistry = new ImageRegistry();
+				Images.registerImages(from.getDisplay(), imageRegistry, Images.class, SwtBasicConstants.editKey);
+				ImageButton btn = new ImageButton(composite, imageRegistry, SwtBasicConstants.editKey, true);
+				btn.addListener(new IImageButtonListener() {
+					@Override
+					public void buttonPressed(ImageButton button) {
+						System.out.println(button.getState());
+					}
+				});
 				FormData fd = new FormData();
 				fd.bottom = new FormAttachment(100, 0);
 				fd.right = new FormAttachment(100, 0);

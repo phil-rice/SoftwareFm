@@ -9,7 +9,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import junit.framework.Assert;
 
-import org.arc4eclipse.displayCore.api.impl.ITopButtonState;
 import org.arc4eclipse.utilities.collections.Lists;
 import org.arc4eclipse.utilities.maps.Maps;
 import org.arc4eclipse.utilities.strings.Strings;
@@ -36,7 +35,7 @@ public class DisplayerMock implements IDisplayer<Label, Label> {
 	public final List<DisplayerDetails> largeDisplayerDetails = Lists.newList();
 
 	@Override
-	public Label createSmallControl(DisplayerContext displayerContext, ITopButtonState topButtonState, Composite parent, DisplayerDetails displayerDetails) {
+	public Label createSmallControl(DisplayerContext displayerContext, IRegisteredItems registeredItems, ITopButtonState topButtonState, Composite parent, DisplayerDetails displayerDetails) {
 		this.topButtonState = topButtonState;
 		this.smallParent = parent;
 		checkDisplayedContext(displayerContext);
@@ -48,7 +47,7 @@ public class DisplayerMock implements IDisplayer<Label, Label> {
 	}
 
 	@Override
-	public Label createLargeControl(DisplayerContext context, Composite parent, DisplayerDetails displayerDetails) {
+	public Label createLargeControl(DisplayerContext context, IRegisteredItems registeredItems, Composite parent, DisplayerDetails displayerDetails) {
 		this.largeParent = parent;
 		checkDisplayedContext(displayerContext);
 		this.largeDisplayerDetails.add(displayerDetails);

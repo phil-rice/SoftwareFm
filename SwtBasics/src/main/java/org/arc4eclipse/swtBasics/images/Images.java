@@ -1,107 +1,77 @@
 package org.arc4eclipse.swtBasics.images;
 
-import java.io.IOException;
 import java.io.InputStream;
+import java.text.MessageFormat;
+import java.util.List;
 
-import org.arc4eclipse.utilities.exceptions.WrappedException;
+import org.arc4eclipse.swtBasics.SwtBasicConstants;
+import org.arc4eclipse.utilities.collections.Lists;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
 import org.springframework.core.io.ClassPathResource;
 
 public class Images {
 
-	private final Device device;
-	private Image editImage;
-	private Image linkImage;
-	private Image browseImage;
-	private Image clearImage;
-	private Image helpImage;
-	private Image addImage;
-	private Image nameImage;
-	private Image projectImage;
-	private Image projectDepressedImage;
+	private static List<Image> images = Lists.newList();
 
-	public Images(Device device) {
-		this.device = device;
+	public static ImageRegistry withBasics(Device device) {
+		ImageRegistry imageRegistry = new ImageRegistry();
+		registerImages(device, imageRegistry, Images.class, SwtBasicConstants.editKey);
+		registerImages(device, imageRegistry, Images.class, SwtBasicConstants.helpKey);
+		return imageRegistry;
 	}
 
-	public void dispose() {
-		dispose(editImage);
-		dispose(linkImage);
-		dispose(browseImage);
+	public static void registerImages(Device device, ImageRegistry imageRegistry, Class<?> clazz, String key) {
+		String mainName = Resources.getMainName(key);
+		String depressedName = Resources.getDepressedName(key);
+		Image mainImage = makeImage(device, clazz, mainName + ".png");
+		Image depressedImage = makeImage(device, clazz, depressedName + ".png");
+		imageRegistry.put(mainName, mainImage);
+		imageRegistry.put(depressedName, depressedImage);
+		System.out.println("Putting images: " + mainName + ", " + depressedName);
 	}
 
-	private void dispose(Image image) {
-		if (image != null)
+	public static void removeImages(ImageRegistry imageRegistry, String key) {
+		if (key == null)
+			return;
+		String mainName = Resources.getMainName(key);
+		String depressedName = Resources.getDepressedName(key);
+		imageRegistry.remove(mainName);
+		imageRegistry.remove(depressedName);
+		System.out.println("Removing images: " + mainName + ", " + depressedName);
+	}
+
+	public static Image getMainImage(ImageRegistry imageRegistry, String key) {
+		return getImage(imageRegistry, Resources.getMainName(key));
+	}
+
+	public static Image getDepressedImage(ImageRegistry imageRegistry, String key) {
+		return getImage(imageRegistry, Resources.getDepressedName(key));
+	}
+
+	public static Image getImage(ImageRegistry imageRegistry, String imageName) {
+		Image image = imageRegistry.get(imageName);
+		if (image == null)
+			throw new IllegalArgumentException(MessageFormat.format(SwtBasicConstants.cannotFindImage, imageName));
+		return image;
+	}
+
+	public static void disposeAllMadeImages() {
+		for (Image image : images)
 			image.dispose();
+		images.clear();
+
 	}
 
-	public Image getBrowseImage() {
-		if (browseImage == null)
-			browseImage = makeImage("Browse.png");
-		return browseImage;
-	}
-
-	public Image getEditImage() {
-		if (editImage == null)
-			editImage = makeImage("edit document.png");
-		return editImage;
-	}
-
-	public Image getHelpImage() {
-		if (helpImage == null)
-			helpImage = makeImage("Help.png");
-		return helpImage;
-	}
-
-	public Image getLinkImage() {
-		if (linkImage == null)
-			linkImage = makeImage("link.png");
-		return linkImage;
-	}
-
-	public Image getClearImage() {
-		if (clearImage == null)
-			clearImage = makeImage("delete document.png");
-		return clearImage;
-	}
-
-	public Image getAddImage() {
-		if (addImage == null)
-			addImage = makeImage("+document.png");
-		return addImage;
-	}
-
-	public Image getNameImage() {
-		if (nameImage == null)
-			nameImage = makeImage("name.png");
-		return nameImage;
-	}
-
-	public Image getDescriptionImage() {
-		if (nameImage == null)
-			nameImage = makeImage("Description.png");
-		return nameImage;
-	}
-
-	public Image getProjectImage() {
-		if (projectImage == null)
-			projectImage = makeImage("Project.png");
-		return projectImage;
-	}
-
-	public Image getProjectDepressedImage() {
-		if (projectDepressedImage == null)
-			projectDepressedImage = makeImage("Project depress.png");
-		return projectDepressedImage;
-	}
-
-	protected Image makeImage(String string) {
+	public static Image makeImage(Device device, Class<?> clazz, String classPath) {
 		try {
-			InputStream inputStream = new ClassPathResource(string, getClass()).getInputStream();
-			return new Image(device, inputStream);
-		} catch (IOException e) {
-			throw WrappedException.wrap(e);
+			InputStream inputStream = new ClassPathResource(classPath, clazz).getInputStream();
+			Image image = new Image(device, inputStream);
+			images.add(image);
+			return image;
+		} catch (Exception e) {
+			throw new RuntimeException(MessageFormat.format(SwtBasicConstants.errorMakingImage, classPath, clazz.getName()), e);
 		}
 	}
 

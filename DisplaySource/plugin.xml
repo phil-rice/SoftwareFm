@@ -3,7 +3,7 @@
 <plugin>
    <extension
          point="org.arc4eclipse.displayers" >
-         <display class ="org.arc4eclipse.displaySource.DisplaySource"/>
+         <display key="src" class ="org.arc4eclipse.displaySource.DisplaySource"/>
    </extension>
 
 </plugin>

@@ -10,7 +10,6 @@ import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.displayCore.api.DisplayerDetails;
 import org.arc4eclipse.swtBasics.Swts;
 import org.arc4eclipse.swtBasics.images.IImageButtonListener;
-import org.arc4eclipse.swtBasics.images.IImageFactory;
 import org.arc4eclipse.swtBasics.images.ImageButton;
 import org.arc4eclipse.swtBasics.images.Images;
 import org.arc4eclipse.swtBasics.text.TitleAndTextField;
@@ -108,7 +107,7 @@ public class ListPanel extends Composite {
 		Swts.removeAllChildren(compForums);
 		int index = 0;
 		for (NameAndUrl nameAndUrl : listModel) {
-			TitleAndTextField text = new TitleAndTextField(compForums, SWT.NULL, imageFactory, nameAndUrl.name, false);
+			TitleAndTextField text = new TitleAndTextField(compForums, SWT.NULL, nameAndUrl.name, false);
 			text.setText(nameAndUrl.url);
 			text.addButton(images.getEditImage(), "Edit", new EditButtonListener(index));
 			text.addButton(images.getClearImage(), "Delete", new DeleteButtonListener(index));

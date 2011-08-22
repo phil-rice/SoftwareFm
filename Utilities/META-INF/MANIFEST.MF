@@ -29,5 +29,6 @@ Export-Package: org.arc4eclipse.utilities.aggregators,
  org.arc4eclipse.utilities.pooling,
  org.arc4eclipse.utilities.profiling,
  org.arc4eclipse.utilities.reflection,
+ org.arc4eclipse.utilities.resources,
  org.arc4eclipse.utilities.strings,
  org.arc4eclipse.utilities.tests

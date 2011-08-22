@@ -49,9 +49,9 @@ public class NameAndUrlDialog extends Dialog {
 	}
 
 	private void createContents(final Shell shell, NameAndUrl initial) {
-		final TitleAndTextField txtName = new TitleAndTextField(shell, imageFactory, "Name", false);
+		final TitleAndTextField txtName = new TitleAndTextField(shell, "Name", false);
 		txtName.setEditable(true);
-		final TitleAndTextField txtUrl = new TitleAndTextField(shell, imageFactory, "Url", false);
+		final TitleAndTextField txtUrl = new TitleAndTextField(shell, "Url", false);
 		txtUrl.setEditable(true);
 		txtName.setText(initial.name);
 		txtUrl.setText(initial.url);

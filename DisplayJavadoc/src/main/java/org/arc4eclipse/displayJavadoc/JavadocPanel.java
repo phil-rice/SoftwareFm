@@ -56,7 +56,7 @@ public class JavadocPanel extends Composite {
 		});
 		txtRepository.addHelpButton(DisplayJavadocConstants.helpValueInRepository);
 
-		txtLocal = new TitleAndTextField(this, SWT.NULL, context.imageFactory, "Current setting", false);
+		txtLocal = new TitleAndTextField(this, SWT.NULL, "Current setting", false);
 		txtLocal.addHelpButton(DisplayJavadocConstants.helpCurrentValue);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 	}

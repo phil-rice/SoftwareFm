@@ -1,5 +1,7 @@
 package org.arc4eclipse.utilities.callbacks;
 
+import org.arc4eclipse.utilities.exceptions.WrappedException;
+
 public interface ICallback<T> {
 	void process(T t) throws Exception;
 
@@ -57,6 +59,15 @@ public interface ICallback<T> {
 				@Override
 				public void process(T t) throws Exception {
 					System.out.println(t);
+				}
+			};
+		}
+
+		public static ICallback<Throwable> rethrow() {
+			return new ICallback<Throwable>() {
+				@Override
+				public void process(Throwable t) throws Exception {
+					throw WrappedException.wrap(t);
 				}
 			};
 		}

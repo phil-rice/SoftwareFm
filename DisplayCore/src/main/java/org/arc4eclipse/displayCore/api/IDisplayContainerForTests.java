@@ -6,4 +6,8 @@ import org.eclipse.swt.widgets.Composite;
 public interface IDisplayContainerForTests extends IDisplayContainer {
 
 	Composite compButtons();
+
+	public <L> L getLargeControlFor(String key);
+
+	public <C> C getSmallControlFor(String key);
 }

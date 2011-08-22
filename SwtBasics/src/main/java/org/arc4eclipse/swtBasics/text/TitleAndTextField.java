@@ -1,13 +1,15 @@
 package org.arc4eclipse.swtBasics.text;
 
+import org.arc4eclipse.swtBasics.SwtBasicConstants;
+import org.arc4eclipse.swtBasics.Swts;
 import org.arc4eclipse.swtBasics.images.IImageButtonListener;
-import org.arc4eclipse.swtBasics.images.IImageFactory;
 import org.arc4eclipse.swtBasics.images.ImageButton;
+import org.arc4eclipse.utilities.functions.IFunction1;
 import org.arc4eclipse.utilities.strings.Strings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -16,25 +18,18 @@ import org.eclipse.swt.widgets.Text;
 
 public class TitleAndTextField extends AbstractTitleAnd {
 	private final Text txtText;
-	private final Color originalBackground;
 	private boolean globalEditable;
 
-	public TitleAndTextField(Composite parent, IImageFactory imageFactory, String title, boolean editable) {
-		this(parent, SWT.BORDER, imageFactory, title, editable);
-	}
-
-	public TitleAndTextField(Composite parent, int style, IImageFactory imageFactory, String title, boolean editable) {
-		super(parent, style, imageFactory, title);
+	public TitleAndTextField(ConfigForTitleAnd config, Composite parent, String title) {
+		super(config, parent, title);
 
 		txtText = new Text(this, SWT.BORDER);
 		txtText.setText("");
 		txtText.setEditable(false);
 
-		originalBackground = getDisplay().getSystemColor(SWT.COLOR_WHITE);
-		if (editable)
-			addEditButton();
 		updateBackground();
-		RowData rowData = new RowData(400, 12);
+		int titleAndButtonsWidth = config.titleHeight + config.buttonHeight;
+		RowData rowData = new RowData(titleAndButtonsWidth * 2, config.titleHeight);
 		txtText.setLayoutData(rowData);
 		txtText.addModifyListener(new ModifyListener() {
 			@Override
@@ -44,7 +39,7 @@ public class TitleAndTextField extends AbstractTitleAnd {
 		});
 	}
 
-	private void addEditButton() {
+	public void addEditButton(Image editImage) {
 		addCrListener(new Listener() {
 			@Override
 			public void handleEvent(Event event) {
@@ -52,7 +47,7 @@ public class TitleAndTextField extends AbstractTitleAnd {
 				updateBackground();
 			}
 		});
-		addButton(images.getEditImage(), "Toggles the editable state of this value", new IImageButtonListener() {
+		addButton(SwtBasicConstants.editKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				txtText.setEditable(globalEditable || !txtText.getEditable());
@@ -100,5 +95,14 @@ public class TitleAndTextField extends AbstractTitleAnd {
 		this.globalEditable = globalEditable;
 		txtText.setEditable(globalEditable);
 		updateBackground();
+	}
+
+	public static void main(String[] args) {
+		Swts.display("TitleAndTextField", new IFunction1<Composite, Composite>() {
+			@Override
+			public Composite apply(Composite from) throws Exception {
+				return new TitleAndTextField(ConfigForTitleAnd.createForBasics(from.getDisplay()), from, "Title");
+			}
+		});
 	}
 }

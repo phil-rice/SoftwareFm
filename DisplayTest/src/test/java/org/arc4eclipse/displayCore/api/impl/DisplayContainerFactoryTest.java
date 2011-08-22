@@ -108,6 +108,9 @@ public class DisplayContainerFactoryTest extends TestCase {
 		assertEquals(title, details.title);
 	}
 
+	public void testCanAccessImages() {
+	}
+
 	public void testButtonsAreAtTopFollowedByLargeControls() {
 		IDisplayContainerForTests container0 = (IDisplayContainerForTests) factory.create(displayerContext, shell);
 		Swts.assertHasChildrenInOrder(container0.getComposite(), container0.compButtons(), displayerA.largeControls.get(0), displayerB.largeControls.get(0));
@@ -147,8 +150,6 @@ public class DisplayContainerFactoryTest extends TestCase {
 		shell = SwtTestFixture.shell();
 
 		builder = IDisplayContainerFactoryBuilder.Utils.factoryBuilder();
-		builder.registerEntity("entity1");
-		builder.registerEntity("entity2");
 		builder.registerDisplayer("disp1", displayerA);
 		builder.registerDisplayer("disp2", displayerB);
 		builder.registerEditor("editor1", editor1);
@@ -165,6 +166,7 @@ public class DisplayContainerFactoryTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
+		factory.dispose();
 		shell.dispose();
 	}
 

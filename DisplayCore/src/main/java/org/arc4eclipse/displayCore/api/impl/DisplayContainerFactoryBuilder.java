@@ -1,40 +1,31 @@
 package org.arc4eclipse.displayCore.api.impl;
 
 import java.text.MessageFormat;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.arc4eclipse.displayCore.api.DisplayerContext;
-import org.arc4eclipse.displayCore.api.IDisplayContainer;
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactory;
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactoryBuilder;
 import org.arc4eclipse.displayCore.api.IDisplayer;
 import org.arc4eclipse.displayCore.api.IEditor;
 import org.arc4eclipse.displayCore.api.ILineEditor;
 import org.arc4eclipse.displayCore.api.IValidator;
-import org.arc4eclipse.displayCore.api.NameSpaceAndName;
-import org.arc4eclipse.displayCore.constants.DisplayCoreConstants;
-import org.arc4eclipse.utilities.collections.Sets;
 import org.arc4eclipse.utilities.constants.UtilityMessages;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.arc4eclipse.utilities.maps.Maps;
-import org.eclipse.swt.SWT;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 
 public class DisplayContainerFactoryBuilder implements IDisplayContainerFactoryBuilder {
 
-	@SuppressWarnings("rawtypes")
 	private final Map<String, IDisplayer<?, ?>> registeredDisplayers = Maps.newMap();
 	private final Map<String, IEditor> registeredEditors = Maps.newMap();
 	private final Map<String, ILineEditor> registeredLineEditors = Maps.newMap();
 	private final Map<String, IValidator> registeredValidators = Maps.newMap();
-
-	private final Set<String> entities = Sets.newSet();
+	private final Map<String, IFunction1<Display, Image>> imageMakers = Maps.newMap();
+	private final ImageRegistry imageRegistry;
 
 	static class KeyTitleHelpAndImage {
 		final String key;
@@ -55,18 +46,8 @@ public class DisplayContainerFactoryBuilder implements IDisplayContainerFactoryB
 		}
 	}
 
-	private final Map<String, List<KeyTitleHelpAndImage>> entityToKeysMap = Maps.newMap();
-
-	@Override
-	public void registerForEntity(String entity, String key, String title, String help) {
-		checkEntity(entity);
-		registerForEntity(entity, key, title, help, null);
-	}
-
-	@Override
-	public void registerForEntity(String entity, String key, String title, String help, IFunction1<Device, Image> imageMaker) {
-		checkEntity(entity);
-		Maps.addToList(entityToKeysMap, entity, new KeyTitleHelpAndImage(key, title, help, imageMaker));
+	public DisplayContainerFactoryBuilder(ImageRegistry imageRegistry) {
+		this.imageRegistry = imageRegistry;
 	}
 
 	@Override
@@ -89,6 +70,11 @@ public class DisplayContainerFactoryBuilder implements IDisplayContainerFactoryB
 		checkAndPut(registeredValidators, validatorName, validator);
 	}
 
+	@Override
+	public void registerImage(String name, IFunction1<Display, Image> imageMaker) {
+		checkAndPut(imageMakers, name, imageMaker);
+	}
+
 	private <V> void checkAndPut(Map<String, V> map, String name, V value) {
 		if (map.containsKey(name))
 			throw new IllegalArgumentException(MessageFormat.format(UtilityMessages.duplicateKey, name, map.get(name), value));
@@ -97,18 +83,7 @@ public class DisplayContainerFactoryBuilder implements IDisplayContainerFactoryB
 
 	@Override
 	public IDisplayContainerFactory build(String entity) {
-		checkEntity(entity);
 		return new DisplayContainerFactory(entity, registeredDisplayers, registeredEditors, registeredLineEditors, registeredValidators);
-	}
-
-	@Override
-	public void registerEntity(String string) {
-		entities.add(string);
-	}
-
-	private void checkEntity(String entity) {
-		if (!entities.contains(entity))
-			throw new IllegalArgumentException(MessageFormat.format(DisplayCoreConstants.illegalEntityName, entity, entities));
 	}
 
 }

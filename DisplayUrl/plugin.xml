@@ -3,7 +3,13 @@
 <plugin>
    <extension
          point="org.arc4eclipse.displayers" >
-         <display class ="org.arc4eclipse.displayUrl.DisplayUrl"/>
+         <display key="url" class="org.arc4eclipse.displayUrl.UrlDisplayer"/>
    </extension>
+	<extension  point="org.arc4eclipse.image">
+	      <image key="browse" class="org.arc4eclipse.displayUrl.UrlDisplayer"/>
+	</extension>
+	<extension  point="org.arc4eclipse.bundle">
+	      <bundle name="org.arc4eclipse.swtBasics.images.Basic"/>
+	</extension>
 
 </plugin>

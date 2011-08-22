@@ -3,7 +3,7 @@
 <plugin>
    <extension
          point="org.arc4eclipse.displayers" >
-         <display class ="org.arc4eclipse.displayForums.DisplayForums"/>
+         <display key="forum" class ="org.arc4eclipse.displayForums.ForumDisplayer"/>
    </extension>
 
 </plugin>

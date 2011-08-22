@@ -5,6 +5,7 @@ import org.arc4eclipse.displayCore.api.AbstractDisplayerWithLabel;
 import org.arc4eclipse.displayCore.api.BindingContext;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.displayCore.api.DisplayerDetails;
+import org.arc4eclipse.displayCore.api.IRegisteredItems;
 import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
@@ -19,7 +20,7 @@ public class DisplayJarPath extends AbstractDisplayerWithLabel<DisplayJarPanel> 
 	}
 
 	@Override
-	public DisplayJarPanel createLargeControl(DisplayerContext context, Composite parent, DisplayerDetails displayerDetails) {
+	public DisplayJarPanel createLargeControl(DisplayerContext context, IRegisteredItems registeredItems, Composite parent, DisplayerDetails displayerDetails) {
 		return new DisplayJarPanel(parent, SWT.BORDER, context);
 	}
 

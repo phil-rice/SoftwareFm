@@ -26,7 +26,7 @@ public class DisplayContainerFactory implements IDisplayContainerFactory, IRegis
 	private final Map<String, IValidator> registeredValidators;
 	private final List<Map<String, String>> displayDefinitions = Lists.newList();
 
-	public DisplayContainerFactory(String entity, @SuppressWarnings("rawtypes") Map<String, IDisplayer<?, ?>> registeredDisplayers, Map<String, IEditor> registeredEditors, Map<String, ILineEditor> registeredLineEditors, Map<String, IValidator> registeredValidators) {
+	public DisplayContainerFactory(String entity, Map<String, IDisplayer<?, ?>> registeredDisplayers, Map<String, IEditor> registeredEditors, Map<String, ILineEditor> registeredLineEditors, Map<String, IValidator> registeredValidators) {
 		this.entity = entity;
 		this.registeredDisplayers = registeredDisplayers;
 		this.registeredEditors = registeredEditors;
@@ -62,8 +62,6 @@ public class DisplayContainerFactory implements IDisplayContainerFactory, IRegis
 	@Override
 	public void register(Map<String, String> map) {
 		checkKeyPresent(map, DisplayCoreConstants.key);
-		checkKeyPresent(map, DisplayCoreConstants.title);
-		checkKeyPresent(map, DisplayCoreConstants.help);
 		checkKeyPresent(map, DisplayCoreConstants.displayer);
 		String displayerName = map.get(DisplayCoreConstants.displayer);
 		if (!registeredDisplayers.containsKey(displayerName))

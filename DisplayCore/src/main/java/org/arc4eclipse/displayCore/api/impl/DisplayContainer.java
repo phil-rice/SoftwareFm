@@ -11,12 +11,11 @@ import org.arc4eclipse.displayCore.api.DisplayerDetails;
 import org.arc4eclipse.displayCore.api.IDisplayContainerForTests;
 import org.arc4eclipse.displayCore.api.IDisplayer;
 import org.arc4eclipse.displayCore.api.IRegisteredItems;
-import org.arc4eclipse.displayCore.api.NameSpaceAndName;
+import org.arc4eclipse.displayCore.api.ITopButtonState;
 import org.arc4eclipse.displayCore.constants.DisplayCoreConstants;
 import org.arc4eclipse.swtBasics.Swts;
 import org.arc4eclipse.utilities.maps.Maps;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -25,7 +24,7 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 
 	private final Composite content;
 	private final Composite compButtons;
-	private final Map<NameSpaceAndName, Boolean> topButtonState = Maps.newMap();
+	private final Map<String, Boolean> topButtonState = Maps.newMap();
 	private final IRegisteredItems registeredItems;
 	private final List<Map<String, String>> displayDefinitions;
 	private final List<Control> smallControls;
@@ -48,14 +47,18 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 		smallControls = new ArrayList<Control>();
 		largeControls = new ArrayList<Control>();
 		for (Map<String, String> map : displayDefinitions) {
+			String key = map.get(DisplayCoreConstants.key);
+			if (key == null)
+				throw new NullPointerException(MessageFormat.format(DisplayCoreConstants.mustHaveKey, map));
 			String displayerName = map.get(DisplayCoreConstants.displayer);
 			if (displayerName == null)
 				throw new NullPointerException(MessageFormat.format(DisplayCoreConstants.mustHaveDisplayer, map));
 			IDisplayer<?, ?> displayer = registeredItems.getDisplayer(displayerName);
-			Image image = null;
-			DisplayerDetails displayerDetails = new DisplayerDetails(entity, image, map);
-			smallControls.add(displayer.createSmallControl(displayerContext, this, compButtons, displayerDetails));
-			largeControls.add(displayer.createLargeControl(displayerContext, content, displayerDetails));
+
+			DisplayerDetails displayerDetails = new DisplayerDetails(entity, map);
+
+			smallControls.add(displayer.createSmallControl(displayerContext, registeredItems, this, compButtons, displayerDetails));
+			largeControls.add(displayer.createLargeControl(displayerContext, registeredItems, content, displayerDetails));
 		}
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(content);
 	}
@@ -72,6 +75,7 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 			String displayerName = map.get(DisplayCoreConstants.displayer);
 			if (displayerName == null)
 				throw new NullPointerException(MessageFormat.format(DisplayCoreConstants.mustHaveDisplayer, map));
+			@SuppressWarnings("unchecked")
 			IDisplayer<Control, Control> displayer = (IDisplayer<Control, Control>) registeredItems.getDisplayer(displayerName);
 			Control largeControl = largeControls.get(i);
 			Control smallControl = smallControls.get(i++);
@@ -83,14 +87,14 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 	}
 
 	@Override
-	public boolean state(NameSpaceAndName nameSpaceAndName) {
-		return Maps.booleanFor(topButtonState, nameSpaceAndName, true);
+	public boolean state(String key) {
+		return Maps.booleanFor(topButtonState, key, true);
 	}
 
 	@Override
-	public boolean toogleState(NameSpaceAndName nameSpaceAndName) {
-		boolean result = !state(nameSpaceAndName);
-		topButtonState.put(nameSpaceAndName, result);
+	public boolean toogleState(String key) {
+		boolean result = !state(key);
+		topButtonState.put(key, result);
 		sortOutOrderVisibilityAndLayout();
 		return result;
 	}
@@ -103,4 +107,33 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 	public Composite compButtons() {
 		return compButtons;
 	}
+
+	@Override
+	public <L> L getLargeControlFor(String key) {
+		int index = indexOf(key);
+		if (index == -1)
+			return null;
+		else
+			return (L) largeControls.get(index);
+	}
+
+	@Override
+	public <C> C getSmallControlFor(String key) {
+		int index = indexOf(key);
+		if (index == -1)
+			return null;
+		else
+			return (C) smallControls.get(index);
+	}
+
+	public int indexOf(String key) {
+		int i = 0;
+		for (Map<String, String> map : displayDefinitions) {
+			String thisKey = map.get(DisplayCoreConstants.key);
+			if (thisKey.equals(key))
+				return i;
+		}
+		return -1;
+	}
+
 }

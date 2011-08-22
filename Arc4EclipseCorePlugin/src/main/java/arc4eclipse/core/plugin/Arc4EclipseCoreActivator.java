@@ -1,6 +1,8 @@
 package arc4eclipse.core.plugin;
 
+import java.text.MessageFormat;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
 import org.arc4eclipse.arc4eclipseRepository.api.IStatusChangedListener;
@@ -13,14 +15,17 @@ import org.arc4eclipse.displayCore.constants.DisplayCoreConstants;
 import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.arc4eclipse.jdtBinding.api.IBindingRipper;
 import org.arc4eclipse.panel.ISelectedBindingListener;
-import org.arc4eclipse.swtBasics.images.IImageFactory;
+import org.arc4eclipse.swtBasics.images.Images;
 import org.arc4eclipse.utilities.callbacks.ICallback;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.arc4eclipse.utilities.maps.Maps;
+import org.arc4eclipse.utilities.resources.IResourceGetter;
+import org.arc4eclipse.utilities.resources.IResourceGetterBuilder;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jdt.core.dom.ITypeBinding;
-import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -37,6 +42,8 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.arc4Eclipse.core"; //$NON-NLS-1$
 	public static final String DISPLAYER_ID = "org.arc4eclipse.displayers";
+	public static final String IMAGE_ID = "org.arc4eclipse.image";
+	public static final String BUNDLE_ID = "org.arc4eclipse.bundle";
 
 	// The shared instance
 	private static Arc4EclipseCoreActivator plugin;
@@ -46,8 +53,7 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 	private SelectedArtifactSelectionManager selectedBindingManager;
 
 	private IDisplayContainerFactory displayContainerFactory;
-
-	private IImageFactory imageFactory;
+	private IResourceGetter resourceGetter;
 
 	/**
 	 * The constructor
@@ -141,69 +147,102 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 		return selectedBindingManager;
 	}
 
-	// TODO This is better done with executable extension points
-	public IDisplayContainerFactory getDisplayManager() {
+	public IDisplayContainerFactory getDisplayContainerFactory(final Display display) {
 		if (displayContainerFactory == null) {
-			final IDisplayContainerFactoryBuilder builder = IDisplayContainerFactoryBuilder.Utils.factoryBuilder();
-			Plugins.useClasses(DISPLAYER_ID, new ICallback<IDisplayer<?, ?>>() {
+			final ImageRegistry imageRegistry = getImageRegistry();
+			Plugins.useConfigElements(IMAGE_ID, new ICallback<IConfigurationElement>() {
 				@Override
-				public void process(IDisplayer<?, ?> t) throws Exception {
-					builder.registerDisplayer(t);
+				public void process(IConfigurationElement t) throws Exception {
+					String key = t.getAttribute("key");
+					System.out.println("trying to register image " + key);
+					if (key == null)
+						throw new IllegalArgumentException(MessageFormat.format(DisplayCoreConstants.attributeMissing, key, t.getAttribute("class")));
+					Class<Object> clazz = Plugins.classFrom(t);
+					Images.registerImages(display, imageRegistry, clazz, key);
+					System.out.println("....registered image " + key);
 				}
 			}, ICallback.Utils.sysErrCallback());
-
-			IFunction1<Device, Image> projectImageMaker = new IFunction1<Device, Image>() {
+			final IDisplayContainerFactoryBuilder builder = IDisplayContainerFactoryBuilder.Utils.factoryBuilder(imageRegistry);
+			Plugins.useClasses(DISPLAYER_ID, new PlugInSysErrAdapter<IDisplayer<?, ?>>() {
 				@Override
-				public Image apply(Device from) throws Exception {
-					final IImageFactory imageFactory = getImageFactory();
-					return imageFactory.makeImages(from).getProjectImage();
+				public void process(IDisplayer<?, ?> t, IConfigurationElement element) {
+					String key = element.getAttribute(DisplayCoreConstants.key);
+					String clazz = element.getAttribute(DisplayCoreConstants.clazz);
+					if (key == null || clazz == null)
+						throw new NullPointerException(MessageFormat.format(DisplayCoreConstants.attributeMissing, key, clazz));
+					System.out.println("Registering Displayer " + key + ", " + t);
+					builder.registerDisplayer(key, t);
 				}
-			};
-			builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.jarDetailsKey, RepositoryConstants.jarDetailsTitle, null);
-			builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.sourceKey, RepositoryConstants.sourceTitle, CorePlugInConstants.sourceHelp);
-			// builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.javadocKey, RepositoryConstants.javaDocTitle, CorePlugInConstants.javaDocHelp);
-			builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.organisationUrlKey, RepositoryConstants.organisationTitle, CorePlugInConstants.organisationHelp);
-			builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.projectUrlKey, RepositoryConstants.projectTitle, CorePlugInConstants.projectHelp, projectImageMaker);
+			});
 
-			IFunction1<Device, Image> nameImageMaker = new IFunction1<Device, Image>() {
-				@Override
-				public Image apply(Device from) throws Exception {
-					final IImageFactory imageFactory = getImageFactory();
-					return imageFactory.makeImages(from).getNameImage();
-				}
-			};
-			IFunction1<Device, Image> descriptionImageMaker = new IFunction1<Device, Image>() {
-				@Override
-				public Image apply(Device from) throws Exception {
-					final IImageFactory imageFactory = getImageFactory();
-					return imageFactory.makeImages(from).getDescriptionImage();
-				}
-			};
-			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.nameKey, RepositoryConstants.nameTitle, CorePlugInConstants.organisationNameHelp, nameImageMaker);
-			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.descriptionKey, RepositoryConstants.descriptionTitle, CorePlugInConstants.organisationDescriptionHelp, descriptionImageMaker);
-			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.forumsKey, RepositoryConstants.forumsTitle, CorePlugInConstants.forumsHelp);
-			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.mailingListsKey, RepositoryConstants.mailingListTitle, CorePlugInConstants.organisationMailingListHelp);
-			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.tutorialsKey, RepositoryConstants.tutorialsTitle, CorePlugInConstants.tutorialsHelp);
-			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.projectJobsKey, RepositoryConstants.jobsTitle, CorePlugInConstants.projectJobsHelp);
-			builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.merchandisingKey, RepositoryConstants.merchandisingTitle, CorePlugInConstants.merchandisingHelp);
+			// builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.jarDetailsKey, RepositoryConstants.jarDetailsTitle, null);
+			// builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.sourceKey, RepositoryConstants.sourceTitle, CorePlugInConstants.sourceHelp);
+			// // builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.javadocKey, RepositoryConstants.javaDocTitle, CorePlugInConstants.javaDocHelp);
+			// builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.organisationUrlKey, RepositoryConstants.organisationTitle, CorePlugInConstants.organisationHelp);
+			// builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.projectUrlKey, RepositoryConstants.projectTitle, CorePlugInConstants.projectHelp, projectImageMaker);
+			//
+			// IFunction1<Device, Image> nameImageMaker = new IFunction1<Device, Image>() {
+			// @Override
+			// public Image apply(Device from) throws Exception {
+			// final IImageFactory imageFactory = getImageFactory();
+			// return imageFactory.makeImages(from).getNameImage();
+			// }
+			// };
+			// IFunction1<Device, Image> descriptionImageMaker = new IFunction1<Device, Image>() {
+			// @Override
+			// public Image apply(Device from) throws Exception {
+			// final IImageFactory imageFactory = getImageFactory();
+			// return imageFactory.makeImages(from).getDescriptionImage();
+			// }
+			// };
+			// builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.nameKey, RepositoryConstants.nameTitle, CorePlugInConstants.organisationNameHelp, nameImageMaker);
+			// builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.descriptionKey, RepositoryConstants.descriptionTitle, CorePlugInConstants.organisationDescriptionHelp, descriptionImageMaker);
+			// builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.forumsKey, RepositoryConstants.forumsTitle, CorePlugInConstants.forumsHelp);
+			// builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.mailingListsKey, RepositoryConstants.mailingListTitle, CorePlugInConstants.organisationMailingListHelp);
+			// builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.tutorialsKey, RepositoryConstants.tutorialsTitle, CorePlugInConstants.tutorialsHelp);
+			// builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.projectJobsKey, RepositoryConstants.jobsTitle, CorePlugInConstants.projectJobsHelp);
+			// builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.merchandisingKey, RepositoryConstants.merchandisingTitle, CorePlugInConstants.merchandisingHelp);
+			//
+			// builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.nameKey, RepositoryConstants.nameTitle, CorePlugInConstants.projectNameHelp, nameImageMaker);
+			// builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.descriptionKey, RepositoryConstants.descriptionTitle, CorePlugInConstants.projectDescriptionHelp, descriptionImageMaker);
+			// builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.issuesKey, RepositoryConstants.issuesTitle, CorePlugInConstants.issuesHelp);
+			// builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.projectLicenseKey, RepositoryConstants.licenseTitle, CorePlugInConstants.projectLicenseHelp);
+			// builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.forumsKey, RepositoryConstants.forumsTitle, CorePlugInConstants.forumsHelp);
+			// builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.mailingListsKey, RepositoryConstants.mailingListTitle, CorePlugInConstants.projectsMailingList);
+			// builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.merchandisingKey, RepositoryConstants.merchandisingTitle, CorePlugInConstants.merchandisingHelp);
+			// builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.jobsKey, RepositoryConstants.jobsTitle, CorePlugInConstants.jobsProjectHelp);
 
-			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.nameKey, RepositoryConstants.nameTitle, CorePlugInConstants.projectNameHelp, nameImageMaker);
-			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.descriptionKey, RepositoryConstants.descriptionTitle, CorePlugInConstants.projectDescriptionHelp, descriptionImageMaker);
-			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.issuesKey, RepositoryConstants.issuesTitle, CorePlugInConstants.issuesHelp);
-			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.projectLicenseKey, RepositoryConstants.licenseTitle, CorePlugInConstants.projectLicenseHelp);
-			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.forumsKey, RepositoryConstants.forumsTitle, CorePlugInConstants.forumsHelp);
-			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.mailingListsKey, RepositoryConstants.mailingListTitle, CorePlugInConstants.projectsMailingList);
-			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.merchandisingKey, RepositoryConstants.merchandisingTitle, CorePlugInConstants.merchandisingHelp);
-			builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.jobsKey, RepositoryConstants.jobsTitle, CorePlugInConstants.jobsProjectHelp);
-
-			displayContainerFactory = builder.build();
+			displayContainerFactory = builder.build("entity");
 		}
 		return displayContainerFactory;
 	}
 
-	public IImageFactory getImageFactory() {
-		if (imageFactory == null)
-			imageFactory = IImageFactory.Utils.imageFactory();
-		return imageFactory;
+	public IResourceGetter getResourceGetter() {
+		if (resourceGetter == null) {
+			final IResourceGetterBuilder builder = IResourceGetterBuilder.Utils.builder();
+			Plugins.useConfigElements(BUNDLE_ID, new ICallback<IConfigurationElement>() {
+				@Override
+				public void process(IConfigurationElement t) throws Exception {
+					String bundleName = t.getAttribute(DisplayCoreConstants.name);
+					if (bundleName == null)
+						throw new IllegalStateException(MessageFormat.format(DisplayCoreConstants.nameMissing, new Object[0]));
+					builder.register(ResourceBundle.getBundle(bundleName));
+				}
+			}, ICallback.Utils.rethrow());
+			resourceGetter = builder.build();
+		}
+		return resourceGetter;
 	}
+
+	public void clear() {
+		final ImageRegistry imageRegistry = getImageRegistry();
+		Plugins.useConfigElements(IMAGE_ID, new ICallback<IConfigurationElement>() {
+			@Override
+			public void process(IConfigurationElement t) throws Exception {
+				String key = t.getAttribute("key");
+				Images.removeImages(imageRegistry, key);
+			}
+		}, ICallback.Utils.sysErrCallback());
+	}
+
 }

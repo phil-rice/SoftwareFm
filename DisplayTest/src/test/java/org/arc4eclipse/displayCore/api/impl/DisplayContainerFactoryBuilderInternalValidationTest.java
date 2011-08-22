@@ -19,14 +19,7 @@ public class DisplayContainerFactoryBuilderInternalValidationTest extends TestCa
 	private IDisplayContainerFactoryBuilder factory;
 	private final IFunction1<Device, Image> nullImageMaker = null;
 
-	public void testCanOnlyUseRegisteredEntites() {
-		factory.registerEntity("entity");
-		Tests.assertThrows(true, IllegalArgumentException.class, new RegisterEntity("entity"));
-		Tests.assertThrows(false, IllegalArgumentException.class, new RegisterEntity("unknown"));
-		Tests.assertThrows(true, IllegalArgumentException.class, new RegisterEntityWithImageMaker("entity", nullImageMaker));
-		Throwable e = Tests.assertThrows(false, IllegalArgumentException.class, new RegisterEntityWithImageMaker("unknown", nullImageMaker));
-		assertEquals("Illegal Entity name unknown. Known values are [entity]", e.getMessage());
-	}
+
 
 	public void testCannotDuplicateDisplayName() {
 		factory.registerDisplayer("key1", new DisplayText());
@@ -37,7 +30,7 @@ public class DisplayContainerFactoryBuilderInternalValidationTest extends TestCa
 				factory.registerDisplayer("key1", new DisplayText());
 			}
 		});
-		assertEquals("Cannot have duplicate value for key key1. Existing value DisplayText. New value DisplayText", e.getMessage());
+		assertEquals("Cannot have duplicate value for key key1. Existing value TextDisplayer. New value TextDisplayer", e.getMessage());
 	}
 
 	public void testCannotDuplicateEditorName() {
@@ -85,34 +78,4 @@ public class DisplayContainerFactoryBuilderInternalValidationTest extends TestCa
 		factory = IDisplayContainerFactoryBuilder.Utils.factoryBuilder();
 	}
 
-	private final class RegisterEntity implements Runnable {
-		private final String entity;
-
-		public RegisterEntity(String entity) {
-			this.entity = entity;
-		}
-
-		@Override
-		public void run() {
-			int i = count.incrementAndGet();
-			factory.registerForEntity(entity, "key" + i, "title" + i, "help" + i);
-		}
-	}
-
-	private final class RegisterEntityWithImageMaker implements Runnable {
-		private final String entity;
-		private final IFunction1<Device, Image> imageMaker;
-
-		public RegisterEntityWithImageMaker(String entity, IFunction1<Device, Image> imageMaker) {
-			this.entity = entity;
-			this.imageMaker = imageMaker;
-		}
-
-		@Override
-		public void run() {
-			int i = count.incrementAndGet();
-			factory.registerForEntity(entity, "key" + i, "title" + i, "help" + i, imageMaker);
-		}
-	}
-
-}
+	

@@ -1,7 +1,6 @@
 package org.arc4eclipse.swtBasics.text;
 
 import org.arc4eclipse.swtBasics.Swts;
-import org.arc4eclipse.swtBasics.images.IImageFactory;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -15,8 +14,8 @@ public class TitleAndStyledTextField extends AbstractTitleAnd {
 
 	private final StyledText txtText;
 
-	public TitleAndStyledTextField(Composite arg0, int arg1, IImageFactory imageFactory, String title) {
-		super(arg0, arg1, imageFactory, title);
+	public TitleAndStyledTextField(ConfigForTitleAnd config, Composite parent, String title) {
+		super(config, parent, title);
 		txtText = new StyledText(this, SWT.BORDER);
 		txtText.setLayoutData(new RowData(400, 400));
 		setLayout(new FormLayout());
@@ -62,7 +61,7 @@ public class TitleAndStyledTextField extends AbstractTitleAnd {
 
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				return new TitleAndStyledTextField(from, SWT.NULL, IImageFactory.Utils.imageFactory(), "Title");
+				return new TitleAndStyledTextField(ConfigForTitleAnd.createForBasics(from.getDisplay()), from, "Title");
 			}
 		});
 	}

@@ -1,5 +1,6 @@
 package org.arc4eclipse.displayCore.api;
 
+
 public interface IRegisteredItems {
 
 	IValidator getValidator(String validatorName);
