@@ -1,4 +1,4 @@
-package org.arc4eclipse.displaySource;
+package org.arc4eclipse.displayJavadocAndSource;
 
 public class DisplaySourceConstants {
 

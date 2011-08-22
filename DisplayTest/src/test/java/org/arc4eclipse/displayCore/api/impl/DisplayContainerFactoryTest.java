@@ -21,6 +21,7 @@ import org.arc4eclipse.swtBasics.SwtTestFixture;
 import org.arc4eclipse.swtBasics.Swts;
 import org.arc4eclipse.utilities.maps.Maps;
 import org.arc4eclipse.utilities.tests.Tests;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
@@ -91,8 +92,8 @@ public class DisplayContainerFactoryTest extends TestCase {
 		assertSame(displayerDetailsA, displayerA.largeDisplayerDetails.get(0));
 		assertSame(displayerDetailsB, displayerB.largeDisplayerDetails.get(0));
 
-		checkDisplayerDetails(displayerDetailsA, "entity1", "keyA", "helpA", "titleA");
-		checkDisplayerDetails(displayerDetailsB, "entity1", "keyB", "helpB", "titleB");
+		checkDisplayerDetails(displayerDetailsA, "entity1", "keyA");
+		checkDisplayerDetails(displayerDetailsB, "entity1", "keyB");
 	}
 
 	public void testDisplayerContextSent() {
@@ -101,14 +102,9 @@ public class DisplayContainerFactoryTest extends TestCase {
 		assertSame(displayerContext, displayerB.displayerContext);
 	}
 
-	private void checkDisplayerDetails(DisplayerDetails details, String entity, String key, String help, String title) {
+	private void checkDisplayerDetails(DisplayerDetails details, String entity, String key) {
 		assertEquals(entity, details.entity);
 		assertEquals(key, details.key);
-		assertEquals(help, details.help);
-		assertEquals(title, details.title);
-	}
-
-	public void testCanAccessImages() {
 	}
 
 	public void testButtonsAreAtTopFollowedByLargeControls() {
@@ -126,7 +122,7 @@ public class DisplayContainerFactoryTest extends TestCase {
 		IDisplayContainer container = factory.create(displayerContext, shell);
 		Map<String, Object> data = Maps.makeMap("keyA", "value1", "keyB", "value2");
 		Map<String, Object> context = Maps.makeMap(RepositoryConstants.entity, "entity");
-		BindingContext bindingContext = new BindingContext(null, null, "url", data, context);
+		BindingContext bindingContext = new BindingContext(null, data, context);
 
 		container.setValues(bindingContext);
 
@@ -149,7 +145,7 @@ public class DisplayContainerFactoryTest extends TestCase {
 		super.setUp();
 		shell = SwtTestFixture.shell();
 
-		builder = IDisplayContainerFactoryBuilder.Utils.factoryBuilder();
+		builder = IDisplayContainerFactoryBuilder.Utils.factoryBuilder(new ImageRegistry());
 		builder.registerDisplayer("disp1", displayerA);
 		builder.registerDisplayer("disp2", displayerB);
 		builder.registerEditor("editor1", editor1);
@@ -166,7 +162,6 @@ public class DisplayContainerFactoryTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		factory.dispose();
 		shell.dispose();
 	}
 

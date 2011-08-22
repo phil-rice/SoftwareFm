@@ -1,0 +1,36 @@
+package org.arc4eclipse.displayJarPath;
+
+import org.arc4eclipse.displayCore.api.IDisplayer;
+import org.eclipse.swt.widgets.Control;
+
+import arc4eclipse.core.plugin.AbstractDisplayerTest;
+
+public class JarPathDisplayerTest extends AbstractDisplayerTest<DisplayJarPanel, Control> {
+
+	@Override
+	protected String getDisplayerKey() {
+		return DisplayJarConstants.jar;
+	}
+
+	@Override
+	protected String getDataKey() {
+		return "Key1";
+	}
+
+	@Override
+	protected Object getSampleData(String key) {
+		return null;
+	}
+
+	@Override
+	protected IDisplayer<DisplayJarPanel, Control> getDisplayer() {
+		return new JarPathDisplayer();
+	}
+
+	@Override
+	protected void checkData(Object sampleData, DisplayJarPanel largeControl, Control smallControl) {
+		fail();
+
+	}
+
+}

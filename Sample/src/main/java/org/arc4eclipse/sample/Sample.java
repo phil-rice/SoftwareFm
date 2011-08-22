@@ -10,7 +10,7 @@ import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactory;
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactoryBuilder;
 import org.arc4eclipse.displayForums.ForumDisplayer;
-import org.arc4eclipse.displayJarPath.DisplayJarPath;
+import org.arc4eclipse.displayJarPath.JarPathDisplayer;
 import org.arc4eclipse.displayJavadoc.DisplayJavadoc;
 import org.arc4eclipse.displayLists.ListDisplayer;
 import org.arc4eclipse.displaySource.DisplaySource;
@@ -56,7 +56,7 @@ public class Sample {
 				final DisplayerContext context = new DisplayerContext(imageFactory, ISelectedBindingManager.Utils.noSelectedBindingManager(), repository);
 				IDisplayContainerFactoryBuilder builder = IDisplayContainerFactoryBuilder.Utils.factoryBuilder();
 				builder.registerDisplayer(new TextDisplayer());
-				builder.registerDisplayer(new DisplayJarPath());
+				builder.registerDisplayer(new JarPathDisplayer());
 				builder.registerDisplayer(new UrlDisplayer());
 				builder.registerDisplayer(new DisplaySource());
 				builder.registerDisplayer(new DisplayJavadoc());

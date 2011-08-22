@@ -8,26 +8,27 @@ import org.arc4eclipse.displayCore.api.IDisplayContainerFactoryBuilder;
 import org.arc4eclipse.displayCore.api.IEditor;
 import org.arc4eclipse.displayCore.api.ILineEditor;
 import org.arc4eclipse.displayCore.api.IValidator;
-import org.arc4eclipse.displayText.DisplayText;
+import org.arc4eclipse.displayText.TextDisplayer;
+import org.arc4eclipse.swtBasics.SwtTestFixture;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.arc4eclipse.utilities.tests.Tests;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Shell;
 
 public class DisplayContainerFactoryBuilderInternalValidationTest extends TestCase {
 
 	private IDisplayContainerFactoryBuilder factory;
 	private final IFunction1<Device, Image> nullImageMaker = null;
 
-
-
 	public void testCannotDuplicateDisplayName() {
-		factory.registerDisplayer("key1", new DisplayText());
-		factory.registerDisplayer("key2", new DisplayText());
+		factory.registerDisplayer("key1", new TextDisplayer());
+		factory.registerDisplayer("key2", new TextDisplayer());
 		IllegalArgumentException e = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
 			@Override
 			public void run() {
-				factory.registerDisplayer("key1", new DisplayText());
+				factory.registerDisplayer("key1", new TextDisplayer());
 			}
 		});
 		assertEquals("Cannot have duplicate value for key key1. Existing value TextDisplayer. New value TextDisplayer", e.getMessage());
@@ -71,11 +72,19 @@ public class DisplayContainerFactoryBuilderInternalValidationTest extends TestCa
 	}
 
 	private final AtomicInteger count = new AtomicInteger();
+	private Shell shell;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		factory = IDisplayContainerFactoryBuilder.Utils.factoryBuilder();
+		shell = SwtTestFixture.shell();
+		factory = IDisplayContainerFactoryBuilder.Utils.factoryBuilder(new ImageRegistry());
 	}
 
-	
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		shell.dispose();
+	}
+
+}

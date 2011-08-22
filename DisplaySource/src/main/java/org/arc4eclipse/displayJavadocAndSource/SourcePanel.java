@@ -1,4 +1,4 @@
-package org.arc4eclipse.displaySource;
+package org.arc4eclipse.displayJavadocAndSource;
 
 import org.arc4eclipse.displayCore.api.BoundTitleAndTextField;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
@@ -7,13 +7,13 @@ import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.arc4eclipse.swtBasics.Swts;
 import org.arc4eclipse.swtBasics.images.IImageButtonListener;
 import org.arc4eclipse.swtBasics.images.ImageButton;
+import org.arc4eclipse.swtBasics.images.Resources;
 import org.arc4eclipse.swtBasics.text.TitleAndTextField;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.strings.Strings;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
@@ -25,11 +25,11 @@ public class SourcePanel extends Composite {
 	private BindingRipperResult ripped;
 	private String value;
 
-	public SourcePanel(Composite parent, int style, DisplayerContext context, DisplayerDetails displayerDetails) {
-		super(parent, style);
+	public SourcePanel(Composite parent, DisplayerContext context, DisplayerDetails displayerDetails) {
+		super(parent, context.configForTitleAnd.style);
 		setLayout(new GridLayout());
-		txtRepository = new BoundTitleAndTextField(this, SWT.NULL, context, displayerDetails);
-		btnAttach = txtRepository.addButton(context.imageFactory.makeImages(getDisplay()).getLinkImage(), "Attach", new IImageButtonListener() {
+		txtRepository = new BoundTitleAndTextField(parent, context, displayerDetails);
+		btnAttach = txtRepository.addButton(DisplayJavadocAndSourceConstants.link, DisplayJavadocAndSourceConstants.link, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				if (ripped != null) {
@@ -42,10 +42,10 @@ public class SourcePanel extends Composite {
 				}
 			}
 		});
-		if (displayerDetails.help != null)
-			txtRepository.addHelpButton(displayerDetails.help);
-		txtLocal = new TitleAndTextField(this, SWT.NULL, "Current setting", false);
-		txtLocal.addHelpButton(displayerDetails.help);
+		if (Resources.hasHelpText(context.resourceGetter, displayerDetails.key))
+			txtRepository.addHelpButton(displayerDetails.key);
+		txtLocal = new TitleAndTextField(context.configForTitleAnd, this, displayerDetails.key);
+		txtLocal.addHelpButton(displayerDetails.key);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 	}
 

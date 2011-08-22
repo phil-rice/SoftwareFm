@@ -1,4 +1,4 @@
-package org.arc4eclipse.displayJavadoc;
+package org.arc4eclipse.displayJavadocAndSource;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -26,7 +26,6 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -41,8 +40,8 @@ public class JavadocPanel extends Composite {
 	public JavadocPanel(Composite parent, int style, DisplayerContext context, DisplayerDetails displayerDetails) {
 		super(parent, style);
 		setLayout(new GridLayout());
-		txtRepository = new BoundTitleAndTextField(this, SWT.NULL, context, displayerDetails);
-		btnAttach = txtRepository.addButton(context.imageFactory.makeImages(getDisplay()).getLinkImage(), "Attach", new IImageButtonListener() {
+		txtRepository = new BoundTitleAndTextField(this, context, displayerDetails);
+		btnAttach = txtRepository.addButton(DisplayJavadocAndSourceConstants.link, DisplayJavadocAndSourceConstants.link, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				try {
@@ -56,7 +55,7 @@ public class JavadocPanel extends Composite {
 		});
 		txtRepository.addHelpButton(DisplayJavadocConstants.helpValueInRepository);
 
-		txtLocal = new TitleAndTextField(this, SWT.NULL, "Current setting", false);
+		txtLocal = new TitleAndTextField(context.configForTitleAnd, this, DisplayJavadocConstants.javadoc);
 		txtLocal.addHelpButton(DisplayJavadocConstants.helpCurrentValue);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 	}

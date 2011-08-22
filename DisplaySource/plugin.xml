@@ -3,7 +3,22 @@
 <plugin>
    <extension
          point="org.arc4eclipse.displayers" >
-         <display key="src" class ="org.arc4eclipse.displaySource.DisplaySource"/>
+         <display key="src" class ="org.arc4eclipse.displayJavadocAndSource.SourceDisplayer"/>
    </extension>
-
+   <extension
+         point="org.arc4eclipse.displayers" >
+         <display key="javadoc" class ="org.arc4eclipse.displayJavadocAndSource.JavadocDisplayer"/>
+   </extension>	
+   <extension  point="org.arc4eclipse.image">
+	      <image key="Javadoc" class="org.arc4eclipse.displayJavadocAndSource.JavadocDisplayer"/>
+	</extension>
+   <extension  point="org.arc4eclipse.image">
+	      <image key="Source" class="org.arc4eclipse.displayJavadocAndSource.SourceDisplayer"/>
+	</extension>
+   <extension  point="org.arc4eclipse.image">
+	      <image key="Link" class="org.arc4eclipse.displayJavadocAndSource.DisplayJavadocAndSourceConstants"/>
+	</extension>
+	<extension  point="org.arc4eclipse.bundle">
+	      <bundle name="org.arc4eclipse.swtBasics.images.Basic"/>
+	</extension>
 </plugin>

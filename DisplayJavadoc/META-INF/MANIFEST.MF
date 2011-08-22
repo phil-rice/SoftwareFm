@@ -8,4 +8,3 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.arc4eclipse.displayCore;bundle-version="1.0.0";visibility:=reexport,
  org.eclipse.core.runtime;bundle-version="3.7.0";visibility:=reexport,
  org.eclipse.jface;bundle-version="3.7.0"
-Export-Package: org.arc4eclipse.displayJavadoc
