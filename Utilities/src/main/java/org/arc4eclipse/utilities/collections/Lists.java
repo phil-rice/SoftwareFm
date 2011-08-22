@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -156,5 +157,12 @@ public class Lists {
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
+	}
+
+	public static <T> List<T> merge(Collection<T>... ts) {
+		List<T> result = newList();
+		for (Collection<T> t : ts)
+			result.addAll(t);
+		return result;
 	}
 }

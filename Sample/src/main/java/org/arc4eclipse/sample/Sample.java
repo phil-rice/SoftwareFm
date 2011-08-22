@@ -54,7 +54,7 @@ public class Sample {
 			public Composite apply(Composite from) throws Exception {
 				final IArc4EclipseRepository repository = IArc4EclipseRepository.Utils.repository();
 				final DisplayerContext context = new DisplayerContext(imageFactory, ISelectedBindingManager.Utils.noSelectedBindingManager(), repository);
-				IDisplayContainerFactoryBuilder builder = IDisplayContainerFactoryBuilder.Utils.displayManager();
+				IDisplayContainerFactoryBuilder builder = IDisplayContainerFactoryBuilder.Utils.factoryBuilder();
 				builder.registerDisplayer(new DisplayText());
 				builder.registerDisplayer(new DisplayJarPath());
 				builder.registerDisplayer(new DisplayUrl());

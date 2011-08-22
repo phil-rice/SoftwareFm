@@ -1,5 +1,11 @@
 package org.arc4eclipse.swtBasics;
 
+import java.util.Arrays;
+import java.util.List;
+
+import junit.framework.Assert;
+
+import org.arc4eclipse.utilities.collections.Lists;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.eclipse.swt.SWT;
@@ -86,6 +92,34 @@ public class Swts {
 	public static void removeAllChildren(Composite composite) {
 		for (Control control : composite.getChildren())
 			control.dispose();
+
+	}
+
+	public static List<Control> children(Composite composite) {
+		return Arrays.asList(composite.getChildren());
+	}
+
+	public static List<Control> allChildren(Composite composite) {
+		List<Control> result = Lists.newList();
+		for (Control c : composite.getChildren()) {
+			result.add(c);
+			if (c instanceof Composite)
+				result.addAll(allChildren((Composite) c));
+		}
+		return result;
+	}
+
+	public static void assertHasChildrenInOrder(Composite composite, Control... controls) {
+		List<Control> children = children(composite);
+		int lastIndex = -1;
+		for (Control c : controls) {
+			int index = children.indexOf(c);
+			if (index == -1)
+				Assert.fail("Could not find " + c + " in " + children);
+			if (index < lastIndex)
+				Assert.fail("Child " + index + "/" + c + " is in wrong order\nExpected " + controls + "\naActual: " + children);
+
+		}
 
 	}
 

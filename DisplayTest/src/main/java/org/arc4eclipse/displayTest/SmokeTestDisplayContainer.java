@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 
 public class SmokeTestDisplayContainer {
 	public static void main(String[] args) {
-		final IDisplayContainerFactoryBuilder managerFactory = IDisplayContainerFactoryBuilder.Utils.displayManager();
+		final IDisplayContainerFactoryBuilder managerFactory = IDisplayContainerFactoryBuilder.Utils.factoryBuilder();
 		managerFactory.registerDisplayer(new DisplayText());
 		managerFactory.registerForEntity("entity", "text_one", "One", "Help1");
 		managerFactory.registerForEntity("entity", "text_two", "Two", "Help2");

@@ -6,6 +6,21 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 
 public class Plugins {
+	public static <T> void useConfigElements(String id, ICallback<IConfigurationElement> callback, ICallback<Throwable> exceptions) {
+		ICallback<IConfigurationElement> safeCallback = ICallback.Utils.safeCallback(exceptions, callback);
+		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(id);
+		for (IConfigurationElement e : config)
+			try {
+				safeCallback.process(e);
+			} catch (Exception e1) {
+				try {
+					exceptions.process(e1);
+				} catch (Exception e2) {
+					throw WrappedException.wrap(e2);
+				}
+			}
+
+	}
 
 	@SuppressWarnings("unchecked")
 	public static <T> void useClasses(String id, ICallback<T> callback, ICallback<Throwable> exceptions) {

@@ -7,6 +7,7 @@ import junit.framework.TestSuite;
 
 import org.arc4eclipse.utilities.collections.Files;
 import org.arc4eclipse.utilities.collections.Iterables;
+import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.Functions;
 import org.arc4eclipse.utilities.reflection.Classes;
 import org.arc4eclipse.utilities.reflection.IClassAcceptor;
@@ -24,6 +25,22 @@ public class Tests {
 			Assert.fail(e.toString());
 		}
 		return null;
+	}
+
+	public static <E extends Throwable> E assertThrows(boolean expected, Class<E> clazz, Runnable runnable) {
+		try {
+			runnable.run();
+			if (!expected)
+				Assert.fail();
+			return null;
+		} catch (Throwable e) {
+			if (e.getClass() == clazz)
+				if (expected)
+					Assert.fail();
+				else
+					return (E) e;
+			throw WrappedException.wrap(e);
+		}
 	}
 
 	public static TestSuite makeSuiteUnder(Class<?> marker, File root, IClassAcceptor acceptor) {

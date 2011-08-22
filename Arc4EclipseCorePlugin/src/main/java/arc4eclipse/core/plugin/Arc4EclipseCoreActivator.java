@@ -144,7 +144,7 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 	// TODO This is better done with executable extension points
 	public IDisplayContainerFactory getDisplayManager() {
 		if (displayContainerFactory == null) {
-			final IDisplayContainerFactoryBuilder builder = IDisplayContainerFactoryBuilder.Utils.displayManager();
+			final IDisplayContainerFactoryBuilder builder = IDisplayContainerFactoryBuilder.Utils.factoryBuilder();
 			Plugins.useClasses(DISPLAYER_ID, new ICallback<IDisplayer<?, ?>>() {
 				@Override
 				public void process(IDisplayer<?, ?> t) throws Exception {

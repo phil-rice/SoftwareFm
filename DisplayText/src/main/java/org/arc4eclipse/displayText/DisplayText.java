@@ -41,4 +41,9 @@ public class DisplayText extends AbstractDisplayerWithLabel<BoundTitleAndTextFie
 		return createMainImage(device);
 	}
 
+	@Override
+	public String toString() {
+		return "DisplayText";
+	}
+
 }
