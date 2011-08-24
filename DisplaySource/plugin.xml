@@ -19,6 +19,6 @@
 	      <image key="Link" class="org.arc4eclipse.displayJavadocAndSource.DisplayJavadocAndSourceConstants"/>
 	</extension>
 	<extension  point="org.arc4eclipse.bundle">
-	      <bundle name="org.arc4eclipse.swtBasics.images.Basic"/>
+	      <bundle name="JavadocAndSource" class="org.arc4eclipse.displayJavadocAndSource.DisplayJavadocAndSourceConstants"/>
 	</extension>
 </plugin>

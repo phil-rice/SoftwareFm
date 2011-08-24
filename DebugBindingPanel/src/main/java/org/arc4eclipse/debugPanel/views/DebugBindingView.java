@@ -24,7 +24,7 @@ public class DebugBindingView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		Arc4EclipseCoreActivator activator = Arc4EclipseCoreActivator.getDefault();
-		new DebugBindingPanel(parent, SWT.NULL, activator.getImageFactory(), activator.getSelectedBindingManager());
+		new DebugBindingPanel(parent, SWT.NULL, activator.getConfigForTitleAnd(parent.getDisplay()), activator.getSelectedBindingManager());
 	}
 
 	@Override

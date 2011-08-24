@@ -27,6 +27,7 @@ public class Tests {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <E extends Throwable> E assertThrows(boolean expected, Class<E> clazz, Runnable runnable) {
 		try {
 			runnable.run();

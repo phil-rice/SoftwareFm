@@ -13,7 +13,8 @@ public abstract class AbstractDisplayerWithLabel<L extends Control> implements I
 	@Override
 	public Control createSmallControl(DisplayerContext displayerContext, IRegisteredItems registeredItems, final ITopButtonState topButtonState, Composite parent, final DisplayerDetails displayerDetails) {
 		final String key = displayerDetails.key;
-		ImageButton button = new ImageButton(parent, displayerContext.imageRegistry, key, true);
+		String smallImageKey = displayerDetails.map.get(DisplayCoreConstants.smallImageKey);
+		ImageButton button = new ImageButton(parent, displayerContext.imageRegistry, smallImageKey, true);
 		button.setTooltipText(Resources.getTooltip(displayerContext.resourceGetter, key));
 		button.addListener(new IImageButtonListener() {
 			@Override

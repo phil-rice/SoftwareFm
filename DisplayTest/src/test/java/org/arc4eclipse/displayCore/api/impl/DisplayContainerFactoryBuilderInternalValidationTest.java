@@ -1,7 +1,5 @@
 package org.arc4eclipse.displayCore.api.impl;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import junit.framework.TestCase;
 
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactoryBuilder;
@@ -10,17 +8,12 @@ import org.arc4eclipse.displayCore.api.ILineEditor;
 import org.arc4eclipse.displayCore.api.IValidator;
 import org.arc4eclipse.displayText.TextDisplayer;
 import org.arc4eclipse.swtBasics.SwtTestFixture;
-import org.arc4eclipse.utilities.functions.IFunction1;
 import org.arc4eclipse.utilities.tests.Tests;
-import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
 public class DisplayContainerFactoryBuilderInternalValidationTest extends TestCase {
 
 	private IDisplayContainerFactoryBuilder factory;
-	private final IFunction1<Device, Image> nullImageMaker = null;
 
 	public void testCannotDuplicateDisplayName() {
 		factory.registerDisplayer("key1", new TextDisplayer());
@@ -71,14 +64,13 @@ public class DisplayContainerFactoryBuilderInternalValidationTest extends TestCa
 		assertEquals("Cannot have duplicate value for key key1. Existing value noValidator. New value noValidator", e.getMessage());
 	}
 
-	private final AtomicInteger count = new AtomicInteger();
 	private Shell shell;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		shell = SwtTestFixture.shell();
-		factory = IDisplayContainerFactoryBuilder.Utils.factoryBuilder(new ImageRegistry());
+		factory = IDisplayContainerFactoryBuilder.Utils.factoryBuilder();
 	}
 
 	@Override

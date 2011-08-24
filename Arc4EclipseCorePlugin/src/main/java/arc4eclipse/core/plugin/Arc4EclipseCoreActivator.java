@@ -2,12 +2,14 @@ package arc4eclipse.core.plugin;
 
 import java.text.MessageFormat;
 import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.concurrent.Callable;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
 import org.arc4eclipse.arc4eclipseRepository.api.IStatusChangedListener;
 import org.arc4eclipse.arc4eclipseRepository.api.RepositoryDataItemStatus;
 import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
+import org.arc4eclipse.displayCore.api.DisplayerContext;
+import org.arc4eclipse.displayCore.api.IDisplayContainer;
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactory;
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactoryBuilder;
 import org.arc4eclipse.displayCore.api.IDisplayer;
@@ -22,10 +24,10 @@ import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.arc4eclipse.utilities.maps.Maps;
 import org.arc4eclipse.utilities.resources.IResourceGetter;
-import org.arc4eclipse.utilities.resources.IResourceGetterBuilder;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbench;
@@ -53,7 +55,6 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 
 	private SelectedArtifactSelectionManager selectedBindingManager;
 
-	private IDisplayContainerFactory displayContainerFactory;
 	private IResourceGetter resourceGetter;
 
 	/**
@@ -149,6 +150,8 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 	}
 
 	private boolean registeredExtraImages;
+	private IDisplayContainerFactoryBuilder displayContainerFactoryBuilder;
+	private final Map<String, IDisplayContainerFactory> displayContainerFactoryMap = Maps.newMap();
 
 	@Override
 	public ImageRegistry getImageRegistry() {
@@ -170,14 +173,55 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 					System.out.println("....registered image " + key);
 				}
 			}, ICallback.Utils.sysErrCallback());
+			registeredExtraImages = true;
 		}
 		return result;
 	}
 
-	public IDisplayContainerFactory getDisplayContainerFactory(final Display display) {
-		if (displayContainerFactory == null) {
-			final ImageRegistry imageRegistry = getImageRegistry(display);
-			final IDisplayContainerFactoryBuilder builder = IDisplayContainerFactoryBuilder.Utils.factoryBuilder(imageRegistry);
+	public IDisplayContainerFactory getDisplayContainerFactory(final Display display, final String entity) {
+		return Maps.findOrCreate(displayContainerFactoryMap, entity, new Callable<IDisplayContainerFactory>() {
+			@Override
+			public IDisplayContainerFactory call() throws Exception {
+				IDisplayContainerFactoryBuilder builder = getDisplayContainerFactoryBuilder(display);
+				IDisplayContainerFactory factory = builder.build(entity);
+				if (entity.equals(RepositoryConstants.entityJarData)) {
+					factory.register(makeMap("jarData", "jar"));
+					factory.register(makeMap("javadoc", "javadoc"));
+					factory.register(makeMap("source", "src"));
+					factory.register(makeMap("projectUrl", "url"));
+					factory.register(makeMap("organisationUrl", "url"));
+				} else if (entity.equals(RepositoryConstants.entityProject)) {
+					factory.register(makeMap("projectUrl", "url"));
+					factory.register(makeMap("name", "text"));
+					factory.register(makeMap("projectUrl", "url"));
+					factory.register(makeMap("mailingLists", "list"));
+					factory.register(makeMap("tutorials", "list"));
+				} else if (entity.equals(RepositoryConstants.entityOrganisation)) {
+					factory.register(makeMap("organisationUrl", "url"));
+					factory.register(makeMap("name", "text"));
+				}
+				return factory;
+			}
+
+			private Map<String, String> makeMap(String key, String displayer) {
+				return makeMap(key, displayer, "Clear");
+			}
+
+			private Map<String, String> makeMap(String key, String displayer, String smallImageKey) {
+				return Maps.<String, String> makeLinkedMap(DisplayCoreConstants.key, key, DisplayCoreConstants.displayer, displayer, DisplayCoreConstants.smallImageKey, smallImageKey);
+			}
+		});
+	}
+
+	public IDisplayContainer makeDisplayContainer(Composite parent, String entity) {
+		Display display = parent.getDisplay();
+		IDisplayContainerFactory factory = getDisplayContainerFactory(display, entity);
+		return factory.create(getDisplayerContext(display), parent);
+	}
+
+	private IDisplayContainerFactoryBuilder getDisplayContainerFactoryBuilder(final Display display) {
+		if (displayContainerFactoryBuilder == null) {
+			displayContainerFactoryBuilder = IDisplayContainerFactoryBuilder.Utils.factoryBuilder();
 			Plugins.useClasses(DISPLAYER_ID, new PlugInSysErrAdapter<IDisplayer<?, ?>>() {
 				@Override
 				public void process(IDisplayer<?, ?> t, IConfigurationElement element) {
@@ -186,65 +230,30 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 					if (key == null || clazz == null)
 						throw new NullPointerException(MessageFormat.format(DisplayCoreConstants.attributeMissing, key, clazz));
 					System.out.println("Registering Displayer " + key + ", " + t);
-					builder.registerDisplayer(key, t);
+					displayContainerFactoryBuilder.registerDisplayer(key, t);
 				}
 			});
-
-			// builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.jarDetailsKey, RepositoryConstants.jarDetailsTitle, null);
-			// builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.sourceKey, RepositoryConstants.sourceTitle, CorePlugInConstants.sourceHelp);
-			// // builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.javadocKey, RepositoryConstants.javaDocTitle, CorePlugInConstants.javaDocHelp);
-			// builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.organisationUrlKey, RepositoryConstants.organisationTitle, CorePlugInConstants.organisationHelp);
-			// builder.registerForEntity(RepositoryConstants.entityJarData, RepositoryConstants.projectUrlKey, RepositoryConstants.projectTitle, CorePlugInConstants.projectHelp, projectImageMaker);
-			//
-			// IFunction1<Device, Image> nameImageMaker = new IFunction1<Device, Image>() {
-			// @Override
-			// public Image apply(Device from) throws Exception {
-			// final IImageFactory imageFactory = getImageFactory();
-			// return imageFactory.makeImages(from).getNameImage();
-			// }
-			// };
-			// IFunction1<Device, Image> descriptionImageMaker = new IFunction1<Device, Image>() {
-			// @Override
-			// public Image apply(Device from) throws Exception {
-			// final IImageFactory imageFactory = getImageFactory();
-			// return imageFactory.makeImages(from).getDescriptionImage();
-			// }
-			// };
-			// builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.nameKey, RepositoryConstants.nameTitle, CorePlugInConstants.organisationNameHelp, nameImageMaker);
-			// builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.descriptionKey, RepositoryConstants.descriptionTitle, CorePlugInConstants.organisationDescriptionHelp, descriptionImageMaker);
-			// builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.forumsKey, RepositoryConstants.forumsTitle, CorePlugInConstants.forumsHelp);
-			// builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.mailingListsKey, RepositoryConstants.mailingListTitle, CorePlugInConstants.organisationMailingListHelp);
-			// builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.tutorialsKey, RepositoryConstants.tutorialsTitle, CorePlugInConstants.tutorialsHelp);
-			// builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.projectJobsKey, RepositoryConstants.jobsTitle, CorePlugInConstants.projectJobsHelp);
-			// builder.registerForEntity(RepositoryConstants.entityOrganisation, RepositoryConstants.merchandisingKey, RepositoryConstants.merchandisingTitle, CorePlugInConstants.merchandisingHelp);
-			//
-			// builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.nameKey, RepositoryConstants.nameTitle, CorePlugInConstants.projectNameHelp, nameImageMaker);
-			// builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.descriptionKey, RepositoryConstants.descriptionTitle, CorePlugInConstants.projectDescriptionHelp, descriptionImageMaker);
-			// builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.issuesKey, RepositoryConstants.issuesTitle, CorePlugInConstants.issuesHelp);
-			// builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.projectLicenseKey, RepositoryConstants.licenseTitle, CorePlugInConstants.projectLicenseHelp);
-			// builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.forumsKey, RepositoryConstants.forumsTitle, CorePlugInConstants.forumsHelp);
-			// builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.mailingListsKey, RepositoryConstants.mailingListTitle, CorePlugInConstants.projectsMailingList);
-			// builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.merchandisingKey, RepositoryConstants.merchandisingTitle, CorePlugInConstants.merchandisingHelp);
-			// builder.registerForEntity(RepositoryConstants.entityProject, RepositoryConstants.jobsKey, RepositoryConstants.jobsTitle, CorePlugInConstants.jobsProjectHelp);
-
-			displayContainerFactory = builder.build("entity");
 		}
-		return displayContainerFactory;
+		return displayContainerFactoryBuilder;
+	}
+
+	private DisplayerContext getDisplayerContext(Display display) {
+		return new DisplayerContext(getSelectedBindingManager(), getRepository(), getConfigForTitleAnd(display));
 	}
 
 	public IResourceGetter getResourceGetter() {
 		if (resourceGetter == null) {
-			final IResourceGetterBuilder builder = IResourceGetterBuilder.Utils.builder();
+			resourceGetter = IResourceGetter.Utils.noResources();
 			Plugins.useConfigElements(BUNDLE_ID, new ICallback<IConfigurationElement>() {
 				@Override
 				public void process(IConfigurationElement t) throws Exception {
-					String bundleName = t.getAttribute(DisplayCoreConstants.name);
-					if (bundleName == null)
-						throw new IllegalStateException(MessageFormat.format(DisplayCoreConstants.nameMissing, new Object[0]));
-					builder.register(ResourceBundle.getBundle(bundleName));
+					Class<? extends Object> anchorClass = t.createExecutableExtension("class").getClass();
+					String name = t.getAttribute("name");
+					if (name == null)
+						throw new RuntimeException(MessageFormat.format(DisplayCoreConstants.nameMissing, anchorClass));
+					resourceGetter = resourceGetter.with(anchorClass, name);
 				}
-			}, ICallback.Utils.rethrow());
-			resourceGetter = builder.build();
+			}, ICallback.Utils.sysErrCallback());
 		}
 		return resourceGetter;
 	}

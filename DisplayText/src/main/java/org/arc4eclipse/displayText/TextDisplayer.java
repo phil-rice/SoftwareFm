@@ -44,6 +44,6 @@ public class TextDisplayer extends AbstractDisplayerWithLabel<BoundTitleAndTextF
 	}
 
 	public static void main(String[] args) {
-		Displayers.displayWithKey1(new TextDisplayer(), Resources.builderWithBasics("DisplayForTest").build(), "text");
+		Displayers.displayWithKey1(new TextDisplayer(), Resources.resourceGetterWithBasics("DisplayForTest"), "text");
 	}
 }

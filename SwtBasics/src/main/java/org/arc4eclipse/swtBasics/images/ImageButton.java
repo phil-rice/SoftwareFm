@@ -134,8 +134,8 @@ public class ImageButton implements IHasControl {
 				Composite composite = new Composite(from, SWT.NULL);
 				composite.setLayout(new FormLayout());
 				ImageRegistry imageRegistry = new ImageRegistry();
-				Images.registerImages(from.getDisplay(), imageRegistry, Images.class, SwtBasicConstants.editKey);
-				ImageButton btn = new ImageButton(composite, imageRegistry, SwtBasicConstants.editKey, true);
+				Images.registerImages(from.getDisplay(), imageRegistry, Images.class, SwtBasicConstants.key);
+				ImageButton btn = new ImageButton(composite, imageRegistry, SwtBasicConstants.key, true);
 				btn.addListener(new IImageButtonListener() {
 					@Override
 					public void buttonPressed(ImageButton button) {

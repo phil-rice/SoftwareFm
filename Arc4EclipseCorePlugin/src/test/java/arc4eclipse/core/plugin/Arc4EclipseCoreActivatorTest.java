@@ -6,33 +6,41 @@ import junit.framework.TestCase;
 
 import org.arc4eclipse.swtBasics.SwtBasicConstants;
 import org.arc4eclipse.swtBasics.images.Images;
+import org.arc4eclipse.swtBasics.images.Resources;
 import org.arc4eclipse.utilities.callbacks.ICallback;
 import org.arc4eclipse.utilities.collections.Lists;
-import org.arc4eclipse.utilities.tests.Tests;
+import org.arc4eclipse.utilities.resources.IResourceGetter;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.internal.Workbench;
 
+@SuppressWarnings("restriction")
 public class Arc4EclipseCoreActivatorTest extends TestCase {
 
 	private Display display;
 
-	public void testGetDisplayManagerCreatedImages() {
+	public void testBasicResources() {
+		checkResource("Edit", SwtBasicConstants.key);
+	}
+
+	public void testBasicImages() {
+		checkImages(SwtBasicConstants.key);
+		checkImages(SwtBasicConstants.helpKey);
+		checkImages(SwtBasicConstants.browseKey);
+		checkImages(SwtBasicConstants.deleteKey);
+		checkImages(SwtBasicConstants.browseKey);
+	}
+
+	private void checkResource(String expected, String editkey) {
 		Arc4EclipseCoreActivator activator = Arc4EclipseCoreActivator.getDefault();
-		final ImageRegistry imageRegistry = activator.getImageRegistry(display);
-		IllegalArgumentException e = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
-			@Override
-			public void run() {
-				Images.getMainImage(imageRegistry, SwtBasicConstants.editKey);
-			}
-		});
-		assertEquals("Cannot find image with name Edit.main", e.getMessage());
-		checkImages(SwtBasicConstants.editKey);
+		IResourceGetter resourceGetter = activator.getConfigForTitleAnd(display).resourceGetter;
+		assertEquals(expected, Resources.getTooltip(resourceGetter, SwtBasicConstants.key));
+
 	}
 
 	public void testAllImagesCanBeGot() {
-		checkImages(SwtBasicConstants.editKey);
+		checkImages(SwtBasicConstants.key);
 		checkImages(SwtBasicConstants.helpKey);
 		final List<String> keys = Lists.newList();
 		Plugins.useConfigElements(Arc4EclipseCoreActivator.IMAGE_ID, new ICallback<IConfigurationElement>() {
@@ -47,8 +55,7 @@ public class Arc4EclipseCoreActivatorTest extends TestCase {
 
 	private void checkImages(String... keys) {
 		Arc4EclipseCoreActivator activator = Arc4EclipseCoreActivator.getDefault();
-		activator.getDisplayContainerFactory(display);
-		final ImageRegistry imageRegistry = activator.getImageRegistry(display);
+		ImageRegistry imageRegistry = activator.getConfigForTitleAnd(display).imageRegistry;
 		for (String key : keys) {
 			System.out.println("Checking image for: " + key);
 			assertNotNull(Images.getMainImage(imageRegistry, key));

@@ -108,6 +108,7 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 		return compButtons;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <L> L getLargeControlFor(String key) {
 		int index = indexOf(key);
@@ -117,6 +118,7 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 			return (L) largeControls.get(index);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <C> C getSmallControlFor(String key) {
 		int index = indexOf(key);

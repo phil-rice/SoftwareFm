@@ -44,7 +44,7 @@ public class Displayers {
 				IArc4EclipseRepository.Utils.repository(), //
 				ConfigForTitleAnd.create(display, resourceGetter, imageRegistry));
 
-		IDisplayContainerFactoryBuilder factoryBuilder = IDisplayContainerFactoryBuilder.Utils.factoryBuilder(imageRegistry);
+		IDisplayContainerFactoryBuilder factoryBuilder = IDisplayContainerFactoryBuilder.Utils.factoryBuilder();
 		factoryBuilder.registerDisplayer("displayer", displayer);
 		factoryBuilder.registerEditor("editor", editor);
 		IDisplayContainerFactory factory = factoryBuilder.build(entity);

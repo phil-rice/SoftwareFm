@@ -5,5 +5,9 @@
          point="org.arc4eclipse.displayers" >
          <display key="jar" class ="org.arc4eclipse.displayJarPath.JarPathDisplayer"/>
    </extension>
+   <extension  point="org.arc4eclipse.bundle">
+      <bundle name="DisplayJar" class="org.arc4eclipse.displayJarPath.DisplayJarConstants"/>
+</extension>
+   
 
 </plugin>

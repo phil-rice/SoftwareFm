@@ -15,12 +15,13 @@ public class DisplayCoreConstants {
 	public static final String illegalEntityName = "Illegal Entity name {0}. Known values are {1}";
 	public static final String illegalKey = "Illegal key {0} for entity {1}. Known values are {2}";
 	public static final String attributeMissing = "Attribute missing critical value. Key [{0}] Class[{1}]";
-	public static final String nameMissing = "Bundle missing a name";
+	public static final String nameMissing = "Bundle missing a name. Anchor class is {0}";
 
 	public static final String key = "key";
 	public static final String clazz = "class";
 	public static final String name = "name";
 
+	public static final Object smallImageKey = "smallImage";
 	public static final String displayer = "displayer";
 	public static final String title = "title";
 	public static final String help = "help";
@@ -29,6 +30,6 @@ public class DisplayCoreConstants {
 	public static final String mustHaveKey = "Must have a key in map {0}";
 	public static final String mustHaveDisplayer = "Must have displayer in map {0}";
 	public static final String missingValueInMap = "Must have a value for {0} in map {1}";
-	public static final String displayerNotFound = "Illegal value for displayer {0}. Legal values are {1} in map {2}";
+	public static final String displayerNotFound = "Illegal value for displayer [{0}]. Legal values are {1} in map {2}";
 
 }

@@ -35,7 +35,7 @@ public class UrlDisplayer extends AbstractDisplayerWithLabel<BoundTitleAndTextFi
 	}
 
 	public static void main(String[] args) {
-		Displayers.displayWithKey1(new UrlDisplayer(), Resources.builderWithBasics("DisplayForTest").build(), "www.google.com");
+		Displayers.displayWithKey1(new UrlDisplayer(), Resources.resourceGetterWithBasics("DisplayForTest"), "www.google.com");
 	}
 
 }

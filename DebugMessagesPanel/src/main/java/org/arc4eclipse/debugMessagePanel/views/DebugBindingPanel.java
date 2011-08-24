@@ -5,7 +5,7 @@ import org.arc4eclipse.jdtBinding.api.FoundClassPathEntry;
 import org.arc4eclipse.jdtBinding.api.JavaProjects;
 import org.arc4eclipse.panel.ISelectedBindingListener;
 import org.arc4eclipse.panel.ISelectedBindingManager;
-import org.arc4eclipse.swtBasics.images.IImageFactory;
+import org.arc4eclipse.swtBasics.text.ConfigForTitleAnd;
 import org.arc4eclipse.swtBasics.text.TitleAndStyledTextField;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.indent.Indent;
@@ -21,7 +21,6 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.ITypeBinding;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -30,11 +29,10 @@ import org.eclipse.swt.widgets.Composite;
 public class DebugBindingPanel extends Composite implements ISelectedBindingListener {
 	private final TitleAndStyledTextField titleAndStyledTextField;
 
-	public DebugBindingPanel(Composite parent, int style, IImageFactory imageFactory, ISelectedBindingManager selectedBindingManager) {
+	public DebugBindingPanel(Composite parent, int style, ConfigForTitleAnd config, ISelectedBindingManager selectedBindingManager) {
 		super(parent, style);
 		setLayout(new FormLayout());
-
-		titleAndStyledTextField = new TitleAndStyledTextField(this, SWT.NONE, imageFactory, "Binding");
+		titleAndStyledTextField = new TitleAndStyledTextField(config, this, "Binding");
 		FormData fd_titleAndStyledTextField = new FormData();
 		fd_titleAndStyledTextField.bottom = new FormAttachment(100, 0);
 		fd_titleAndStyledTextField.right = new FormAttachment(100, 0);

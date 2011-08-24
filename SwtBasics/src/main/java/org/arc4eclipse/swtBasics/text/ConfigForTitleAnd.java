@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Display;
 public class ConfigForTitleAnd {
 
 	public static ConfigForTitleAnd createForBasics(Display display) {
-		return ConfigForTitleAnd.create(display, Resources.builderWithBasics().build(), Images.withBasics(display));
+		return ConfigForTitleAnd.create(display, Resources.resourceGetterWithBasics(), Images.withBasics(display));
 	}
 
 	public static ConfigForTitleAnd create(Display display, IResourceGetter resourceGetter, ImageRegistry imageRegistry) {

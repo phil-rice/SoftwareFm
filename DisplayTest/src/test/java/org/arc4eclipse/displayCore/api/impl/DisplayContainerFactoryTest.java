@@ -21,7 +21,6 @@ import org.arc4eclipse.swtBasics.SwtTestFixture;
 import org.arc4eclipse.swtBasics.Swts;
 import org.arc4eclipse.utilities.maps.Maps;
 import org.arc4eclipse.utilities.tests.Tests;
-import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
@@ -145,7 +144,7 @@ public class DisplayContainerFactoryTest extends TestCase {
 		super.setUp();
 		shell = SwtTestFixture.shell();
 
-		builder = IDisplayContainerFactoryBuilder.Utils.factoryBuilder(new ImageRegistry());
+		builder = IDisplayContainerFactoryBuilder.Utils.factoryBuilder();
 		builder.registerDisplayer("disp1", displayerA);
 		builder.registerDisplayer("disp2", displayerB);
 		builder.registerEditor("editor1", editor1);
@@ -153,7 +152,7 @@ public class DisplayContainerFactoryTest extends TestCase {
 		builder.registerValidator("validator1", validator1);
 		builder.registerValidator("validator2", validator2);
 
-		factory = builder.build("entity1");
+		factory = builder.build("entity");
 		factory.register(Maps.<String, String> makeMap("key", "keyA", "displayer", "disp1", "title", "titleA", "help", "helpA", "editor", "editor1"));
 		factory.register(Maps.<String, String> makeMap("key", "keyB", "displayer", "disp2", "title", "titleB", "help", "helpB", "editor", "editor2"));
 		displayerContext = null;

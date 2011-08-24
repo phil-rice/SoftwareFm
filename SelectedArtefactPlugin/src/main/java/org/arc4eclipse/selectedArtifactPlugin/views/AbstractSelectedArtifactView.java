@@ -1,12 +1,6 @@
 package org.arc4eclipse.selectedArtifactPlugin.views;
 
-import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
-import org.arc4eclipse.displayCore.api.DisplayerContext;
-import org.arc4eclipse.displayCore.api.IDisplayContainerFactory;
-import org.arc4eclipse.panel.ISelectedBindingManager;
-import org.arc4eclipse.panel.SelectedArtefactPanel;
 import org.arc4eclipse.selectedArtifact.plugin.Activator;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
@@ -30,24 +24,13 @@ abstract public class AbstractSelectedArtifactView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		Activator activator = Activator.getDefault();
-		final IArc4EclipseRepository repository = activator.getRepository();
-		activator.getDisplayContainerFactory(parent.getDisplay());
-		IDisplayContainerFactory displayContainerFactory = activator.getDisplayManager();
-		ISelectedBindingManager selectedBindingManager = activator.getSelectedBindingManager();
-		DisplayerContext context = new DisplayerContext(imageFactory, selectedBindingManager, repository);
-		new SelectedArtefactPanel(parent, SWT.NULL, displayContainerFactory, context, entity());
+		activator.makeDisplayContainer(parent, entity());
 	}
 
 	abstract protected String entity();
 
 	@Override
-	public void dispose() {
-		super.dispose();
-	}
-
-	@Override
 	public void setFocus() {
-
 	}
 
 }

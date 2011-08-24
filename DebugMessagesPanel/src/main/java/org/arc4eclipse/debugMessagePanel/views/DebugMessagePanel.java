@@ -9,14 +9,14 @@ import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseLogger;
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
 import org.arc4eclipse.httpClient.response.IResponse;
 import org.arc4eclipse.repositoryFacardConstants.RepositoryFacardConstants;
+import org.arc4eclipse.swtBasics.SwtBasicConstants;
 import org.arc4eclipse.swtBasics.images.IImageButtonListener;
-import org.arc4eclipse.swtBasics.images.IImageFactory;
 import org.arc4eclipse.swtBasics.images.ImageButton;
-import org.arc4eclipse.swtBasics.images.Images;
+import org.arc4eclipse.swtBasics.images.ImageButtons;
+import org.arc4eclipse.swtBasics.text.ConfigForTitleAnd;
 import org.arc4eclipse.swtBasics.text.TitleAndStyledTextField;
 import org.arc4eclipse.utilities.collections.Lists;
 import org.arc4eclipse.utilities.strings.Strings;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -27,11 +27,11 @@ public class DebugMessagePanel extends Composite implements IArc4EclipseLogger {
 	private final List<String> log = Collections.synchronizedList(Lists.<String> newList());
 	private final TitleAndStyledTextField titleAndStyledTextField;
 
-	public DebugMessagePanel(Composite parent, int style, IImageFactory imageFactory, IArc4EclipseRepository repository) {
+	public DebugMessagePanel(Composite parent, int style, ConfigForTitleAnd config, IArc4EclipseRepository repository) {
 		super(parent, style);
 		setLayout(new FormLayout());
 
-		titleAndStyledTextField = new TitleAndStyledTextField(this, SWT.NONE, imageFactory, "Messages");
+		titleAndStyledTextField = new TitleAndStyledTextField(config, this, "Messages");
 		FormData fd_titleAndStyledTextField = new FormData();
 		fd_titleAndStyledTextField.bottom = new FormAttachment(100, 0);
 		fd_titleAndStyledTextField.right = new FormAttachment(100, 0);
@@ -39,8 +39,7 @@ public class DebugMessagePanel extends Composite implements IArc4EclipseLogger {
 		fd_titleAndStyledTextField.left = new FormAttachment(0, 0);
 		titleAndStyledTextField.setLayoutData(fd_titleAndStyledTextField);
 		repository.addLogger(this);
-		Images images = imageFactory.makeImages(getDisplay());
-		titleAndStyledTextField.addButton(images.getClearImage(), "Clear", new IImageButtonListener() {
+		ImageButtons.addRowButton(titleAndStyledTextField, SwtBasicConstants.clearKey, DebugPanelConstants.clearKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				log.clear();

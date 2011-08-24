@@ -11,17 +11,18 @@ import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
 import org.springframework.core.io.ClassPathResource;
 
-abstract public class Images {
+public class Images {
 
 	private static List<Image> images = Lists.newList();
 
 	public static ImageRegistry withBasics(Device device) {
 		ImageRegistry imageRegistry = new ImageRegistry();
-		registerImages(device, imageRegistry, Images.class, SwtBasicConstants.editKey);
+		registerImages(device, imageRegistry, Images.class, SwtBasicConstants.key);
 		registerImages(device, imageRegistry, Images.class, SwtBasicConstants.helpKey);
 		registerImages(device, imageRegistry, Images.class, SwtBasicConstants.addKey);
 		registerImages(device, imageRegistry, Images.class, SwtBasicConstants.deleteKey);
 		registerImages(device, imageRegistry, Images.class, SwtBasicConstants.browseKey);
+		registerImages(device, imageRegistry, Images.class, SwtBasicConstants.clearKey);
 		return imageRegistry;
 	}
 

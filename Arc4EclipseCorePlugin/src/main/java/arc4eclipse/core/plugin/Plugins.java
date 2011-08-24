@@ -33,7 +33,7 @@ public class Plugins {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> void useClasses(String id, IPlugInCreationCallback callback) {
+	public static <T> void useClasses(String id, IPlugInCreationCallback<T> callback) {
 		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(id);
 		for (IConfigurationElement element : config)
 			try {
@@ -41,7 +41,7 @@ public class Plugins {
 				callback.process(t, element);
 			} catch (Exception e1) {
 				try {
-					callback.onException(e1);
+					callback.onException(e1, element);
 				} catch (Exception e2) {
 					throw WrappedException.wrap(e2);
 				}

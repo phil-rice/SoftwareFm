@@ -24,7 +24,6 @@ import org.arc4eclipse.swtBasics.text.TitleAndTextField;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.arc4eclipse.utilities.maps.Maps;
 import org.arc4eclipse.utilities.resources.IResourceGetter;
-import org.arc4eclipse.utilities.resources.IResourceGetterBuilder;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowLayout;
@@ -159,9 +158,7 @@ public class ListPanel extends Composite implements IButtonParent {
 						IArc4EclipseRepository.Utils.repository(), //
 						ConfigForTitleAnd.create(//
 								from.getDisplay(), //
-								IResourceGetterBuilder.Utils.getter(//
-										SwtBasicConstants.basicResources, //
-										getClass().getPackage().getName() + ".ListAndPanelTest").build(), //
+								Resources.resourceGetterWithBasics(getClass().getPackage().getName() + ".ListAndPanelTest"),//
 								Images.withBasics(from.getDisplay())));
 				List<String> value = Arrays.asList("name1$value1", "name2$value2");
 				DisplayerDetails displayerDetails = new DisplayerDetails("entity", Maps.<String, String> makeMap(DisplayCoreConstants.key, "ListKey"));

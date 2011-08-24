@@ -1,12 +1,11 @@
 package org.arc4eclipse.swtBasics.images;
 
 import java.text.MessageFormat;
-import java.util.Arrays;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.arc4eclipse.swtBasics.SwtBasicConstants;
-import org.arc4eclipse.utilities.collections.Lists;
 import org.arc4eclipse.utilities.resources.IResourceGetter;
-import org.arc4eclipse.utilities.resources.IResourceGetterBuilder;
 
 public class Resources {
 
@@ -38,10 +37,12 @@ public class Resources {
 		return MessageFormat.format(SwtBasicConstants.depressedImagePattern, key);
 	}
 
-	public static IResourceGetterBuilder builderWithBasics(String... extras) {
-		String[] array = Lists.addAtStart(Arrays.asList(extras), SwtBasicConstants.basicResources).toArray(new String[0]);
-		IResourceGetterBuilder result = IResourceGetterBuilder.Utils.getter(array);
-		return result;
+	public static IResourceGetter resourceGetterWithBasics(String... extras) {
+		IResourceGetter getter = IResourceGetter.Utils.noResources().with(Images.class, "Basic");
+		for (String extra : extras) {
+			getter = getter.with(ResourceBundle.getBundle(extra, Locale.getDefault()));
+		}
+		return getter;
 	}
 
 	public static String getTitle(IResourceGetter resourceGetter, String key) {
@@ -57,7 +58,7 @@ public class Resources {
 	}
 
 	private static String getResource(IResourceGetter resourceGetter, String pattern, String key) {
-		return resourceGetter.getString(MessageFormat.format(pattern, key));
+		return resourceGetter.getStringOrNull(MessageFormat.format(pattern, key));
 	}
 
 	public static boolean hasHelpText(IResourceGetter resourceGetter, String key) {

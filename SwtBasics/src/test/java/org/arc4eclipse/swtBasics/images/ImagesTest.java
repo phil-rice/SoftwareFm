@@ -15,7 +15,7 @@ public class ImagesTest extends TestCase {
 
 		// its useful just creating them and checking they are not null
 		ImageRegistry registry = new ImageRegistry();
-		checkKey(display, registry, SwtBasicConstants.editKey);
+		checkKey(display, registry, SwtBasicConstants.key);
 		checkKey(display, registry, SwtBasicConstants.helpKey);
 	}
 
@@ -24,7 +24,7 @@ public class ImagesTest extends TestCase {
 		ImageRegistry withBasics = Images.withBasics(display);
 		checkCanGetImages(withBasics, SwtBasicConstants.helpKey);
 		checkCanGetImages(withBasics, SwtBasicConstants.addKey);
-		checkCanGetImages(withBasics, SwtBasicConstants.editKey);
+		checkCanGetImages(withBasics, SwtBasicConstants.key);
 		checkCanGetImages(withBasics, SwtBasicConstants.browseKey);
 		checkCanGetImages(withBasics, SwtBasicConstants.deleteKey);
 

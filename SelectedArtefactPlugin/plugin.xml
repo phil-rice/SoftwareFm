@@ -24,7 +24,7 @@
       </view>
       <view
             name="Arc - Proj"
-            icon="icons/sample.gif"
+            icon="icons/Project.gif"
             category="org.arc4eclipse"
             class="org.arc4eclipse.selectedArtifactPlugin.views.SelectedProjectView"
             id="org.arc4eclipse.selectedArtifactPlugin.selectedProjectView">

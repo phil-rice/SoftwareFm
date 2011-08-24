@@ -24,7 +24,7 @@ public class DebugEventView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		Arc4EclipseCoreActivator activator = Arc4EclipseCoreActivator.getDefault();
-		new DebugEventsPanel(parent, SWT.NULL, activator.getImageFactory(), 100);
+		new DebugEventsPanel(parent, SWT.NULL, activator.getConfigForTitleAnd(parent.getDisplay()), 100);
 	}
 
 	@Override

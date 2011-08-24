@@ -53,7 +53,7 @@ abstract public class ImageButtons {
 			}
 		});
 		String fullKey = MessageFormat.format(tooltipPattern, tooltipKey);
-		button.setTooltipText(parent.getResourceGetter().getString(fullKey));
+		button.setTooltipText(parent.getResourceGetter().getStringOrNull(fullKey));
 		RowData data = new RowData();
 		data.height = 18;
 		data.width = 18;
@@ -76,6 +76,6 @@ abstract public class ImageButtons {
 	}
 
 	public static void addEditButton(IButtonParent parent, IImageButtonListener listener) {
-		addRowButton(parent, SwtBasicConstants.editKey, SwtBasicConstants.editKey, listener);
+		addRowButton(parent, SwtBasicConstants.key, SwtBasicConstants.key, listener);
 	}
 }

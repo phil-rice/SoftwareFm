@@ -12,7 +12,6 @@ import org.arc4eclipse.displayCore.api.IValidator;
 import org.arc4eclipse.utilities.constants.UtilityMessages;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.arc4eclipse.utilities.maps.Maps;
-import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Control;
@@ -25,7 +24,6 @@ public class DisplayContainerFactoryBuilder implements IDisplayContainerFactoryB
 	private final Map<String, ILineEditor> registeredLineEditors = Maps.newMap();
 	private final Map<String, IValidator> registeredValidators = Maps.newMap();
 	private final Map<String, IFunction1<Display, Image>> imageMakers = Maps.newMap();
-	private final ImageRegistry imageRegistry;
 
 	static class KeyTitleHelpAndImage {
 		final String key;
@@ -44,10 +42,6 @@ public class DisplayContainerFactoryBuilder implements IDisplayContainerFactoryB
 		public String toString() {
 			return "KeyTitleHelpAndImage [key=" + key + "]";
 		}
-	}
-
-	public DisplayContainerFactoryBuilder(ImageRegistry imageRegistry) {
-		this.imageRegistry = imageRegistry;
 	}
 
 	@Override

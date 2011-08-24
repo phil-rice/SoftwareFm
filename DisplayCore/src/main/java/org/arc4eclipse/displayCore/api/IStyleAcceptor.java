@@ -25,10 +25,5 @@ public interface IStyleAcceptor {
 			};
 		}
 
-		public static IDisplayer entityField(String entityName, String fieldName) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
 	}
 }

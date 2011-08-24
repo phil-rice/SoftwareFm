@@ -8,10 +8,10 @@ import org.arc4eclipse.utilities.resources.IResourceGetter;
 public class ResourcesTest extends TestCase {
 
 	public void testBasic() {
-		IResourceGetter basics = Resources.builderWithBasics().build();
+		IResourceGetter basics = Resources.resourceGetterWithBasics();
 		String expected = "Edit";
-		assertEquals(expected, basics.getString(SwtBasicConstants.editKey + ".tooltip"));
-		assertEquals(expected, Resources.getTooltip(basics, SwtBasicConstants.editKey));
+		assertEquals(expected, basics.getStringOrNull(SwtBasicConstants.key + ".tooltip"));
+		assertEquals(expected, Resources.getTooltip(basics, SwtBasicConstants.key));
 	}
 
 }

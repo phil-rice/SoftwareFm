@@ -24,10 +24,12 @@ public class SwtBasicConstants {
 	public static final String errorMakingImage = "Error making image. Name {0} Anchor {1}";
 
 	// resource key prefixes
-	public static final String editKey = "Edit";
+	public static final String key = "Edit";
 	public static final String helpKey = "Help";
 	public static final String addKey = "Add";
 	public static final String deleteKey = "Delete";
 	public static final String browseKey = "Browse";
+
+	public static final String clearKey = "Clear";
 
 }

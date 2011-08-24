@@ -24,7 +24,7 @@ public class DebugMessageView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		Arc4EclipseCoreActivator activator = Arc4EclipseCoreActivator.getDefault();
-		new DebugMessagePanel(parent, SWT.NULL, activator.getImageFactory(), activator.getRepository());
+		new DebugMessagePanel(parent, SWT.NULL, activator.getConfigForTitleAnd(parent.getDisplay()), activator.getRepository());
 	}
 
 	@Override

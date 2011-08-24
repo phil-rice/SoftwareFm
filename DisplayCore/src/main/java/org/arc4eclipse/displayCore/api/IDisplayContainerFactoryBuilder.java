@@ -2,7 +2,6 @@ package org.arc4eclipse.displayCore.api;
 
 import org.arc4eclipse.displayCore.api.impl.DisplayContainerFactoryBuilder;
 import org.arc4eclipse.utilities.functions.IFunction1;
-import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -26,8 +25,8 @@ public interface IDisplayContainerFactoryBuilder {
 	IDisplayContainerFactory build(String entity);
 
 	public static class Utils {
-		public static IDisplayContainerFactoryBuilder factoryBuilder(ImageRegistry imageRegistry) {
-			return new DisplayContainerFactoryBuilder(imageRegistry);
+		public static IDisplayContainerFactoryBuilder factoryBuilder() {
+			return new DisplayContainerFactoryBuilder();
 		}
 	}
 

@@ -6,6 +6,6 @@ public interface IPlugInCreationCallback<T> {
 
 	void process(T t, IConfigurationElement element);
 
-	void onException(Throwable throwable);
+	void onException(Throwable throwable, IConfigurationElement element);
 
 }

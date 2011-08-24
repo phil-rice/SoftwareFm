@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.internal.Workbench;
 
+@SuppressWarnings("restriction")
 public abstract class AbstractDisplayerTest<L extends Control, C extends Control> extends TestCase {
 
 	protected Arc4EclipseCoreActivator activator;
@@ -45,7 +46,8 @@ public abstract class AbstractDisplayerTest<L extends Control, C extends Control
 	abstract protected void checkData(Object sampleData, L largeControl, C smallControl);
 
 	public void testRegisteredDisplayer() {
-		IDisplayContainerFactory displayContainerFactory = activator.getDisplayContainerFactory(display);
+		String entity = "entity";
+		IDisplayContainerFactory displayContainerFactory = activator.getDisplayContainerFactory(display, entity);
 		String key = getDataKey();
 		displayContainerFactory.register(Maps.<String, String> makeMap(//
 				DisplayCoreConstants.key, key,//
@@ -54,7 +56,7 @@ public abstract class AbstractDisplayerTest<L extends Control, C extends Control
 
 		Object sampleData = getSampleData(key);
 		Map<String, Object> data = Maps.makeLinkedMap(key, sampleData);
-		Map<String, Object> context = Maps.makeLinkedMap(RepositoryConstants.entity, "entity");
+		Map<String, Object> context = Maps.makeLinkedMap(RepositoryConstants.entity, entity);
 		IDisplayContainerForTests container = (IDisplayContainerForTests) displayContainerFactory.create(displayerContext, shell);
 		container.setValues(new BindingContext("some url", data, context));
 		L largeControl = container.getLargeControlFor(key);
@@ -62,7 +64,6 @@ public abstract class AbstractDisplayerTest<L extends Control, C extends Control
 		checkData(sampleData, largeControl, smallControl);
 	}
 
-	@SuppressWarnings("restriction")
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();

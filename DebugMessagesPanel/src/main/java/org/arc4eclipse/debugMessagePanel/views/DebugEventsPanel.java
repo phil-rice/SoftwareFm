@@ -3,14 +3,13 @@ package org.arc4eclipse.debugMessagePanel.views;
 import java.util.Collections;
 import java.util.List;
 
-import org.arc4eclipse.swtBasics.images.IImageFactory;
+import org.arc4eclipse.swtBasics.text.ConfigForTitleAnd;
 import org.arc4eclipse.swtBasics.text.TitleAndStyledTextField;
 import org.arc4eclipse.utilities.callbacks.ICallback;
 import org.arc4eclipse.utilities.collections.Lists;
 import org.arc4eclipse.utilities.events.IListenerListListener;
 import org.arc4eclipse.utilities.events.ListenerList;
 import org.arc4eclipse.utilities.strings.Strings;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -21,12 +20,12 @@ public class DebugEventsPanel extends Composite implements IListenerListListener
 	private final List<String> log = Collections.synchronizedList(Lists.<String> newList());
 	private final TitleAndStyledTextField titleAndStyledTextField;
 
-	public DebugEventsPanel(Composite parent, int style, IImageFactory imageFactory, int logSize) {
+	public DebugEventsPanel(Composite parent, int style, ConfigForTitleAnd config, int logSize) {
 		super(parent, style);
 		this.logSize = logSize;
 		setLayout(new FormLayout());
 
-		titleAndStyledTextField = new TitleAndStyledTextField(this, SWT.NONE, imageFactory, "Events");
+		titleAndStyledTextField = new TitleAndStyledTextField(config, this, "Events");
 		FormData fd_titleAndStyledTextField = new FormData();
 		fd_titleAndStyledTextField.bottom = new FormAttachment(100, 0);
 		fd_titleAndStyledTextField.right = new FormAttachment(100, 0);
