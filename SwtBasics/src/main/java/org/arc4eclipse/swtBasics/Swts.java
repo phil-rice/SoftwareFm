@@ -9,6 +9,7 @@ import org.arc4eclipse.utilities.collections.Lists;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -20,6 +21,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
 
 public class Swts {
 
@@ -33,6 +36,14 @@ public class Swts {
 			GridData data = makeGrabHorizonalAndFillGridData();
 			control.setLayoutData(data);
 		}
+	}
+
+	public static TableEditor addEditor(Table table, int row, int col, Control control) {
+		TableItem[] items = table.getItems();
+		TableEditor editor = new TableEditor(table);
+		editor.grabHorizontal = true;
+		editor.setEditor(control, items[row], col);
+		return editor;
 	}
 
 	public static RowLayout getHorizonalNoMarginRowLayout() {

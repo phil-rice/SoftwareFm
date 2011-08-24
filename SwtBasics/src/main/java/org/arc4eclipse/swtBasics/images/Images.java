@@ -11,7 +11,7 @@ import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
 import org.springframework.core.io.ClassPathResource;
 
-public class Images {
+abstract public class Images {
 
 	private static List<Image> images = Lists.newList();
 
@@ -19,6 +19,9 @@ public class Images {
 		ImageRegistry imageRegistry = new ImageRegistry();
 		registerImages(device, imageRegistry, Images.class, SwtBasicConstants.editKey);
 		registerImages(device, imageRegistry, Images.class, SwtBasicConstants.helpKey);
+		registerImages(device, imageRegistry, Images.class, SwtBasicConstants.addKey);
+		registerImages(device, imageRegistry, Images.class, SwtBasicConstants.deleteKey);
+		registerImages(device, imageRegistry, Images.class, SwtBasicConstants.browseKey);
 		return imageRegistry;
 	}
 

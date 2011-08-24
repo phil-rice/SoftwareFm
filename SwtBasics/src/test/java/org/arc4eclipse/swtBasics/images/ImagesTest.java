@@ -22,17 +22,22 @@ public class ImagesTest extends TestCase {
 	public void testWithBasics() {
 		Display display = SwtTestFixture.shell().getDisplay();
 		ImageRegistry withBasics = Images.withBasics(display);
-		assertNotNull(Images.getMainImage(withBasics, SwtBasicConstants.editKey));
-		assertNotNull(Images.getDepressedImage(withBasics, SwtBasicConstants.editKey));
-		assertNotNull(Images.getMainImage(withBasics, SwtBasicConstants.helpKey));
-		assertNotNull(Images.getDepressedImage(withBasics, SwtBasicConstants.helpKey));
+		checkCanGetImages(withBasics, SwtBasicConstants.helpKey);
+		checkCanGetImages(withBasics, SwtBasicConstants.addKey);
+		checkCanGetImages(withBasics, SwtBasicConstants.editKey);
+		checkCanGetImages(withBasics, SwtBasicConstants.browseKey);
+		checkCanGetImages(withBasics, SwtBasicConstants.deleteKey);
 
 	}
 
-	private void checkKey(Display display, ImageRegistry registry, String editkey) {
-		Images.registerImages(display, registry, getClass(), editkey);
-		assertNotNull(Images.getMainImage(registry, editkey));
-		assertNotNull(Images.getDepressedImage(registry, editkey));
+	private void checkKey(Display display, ImageRegistry registry, String key) {
+		Images.registerImages(display, registry, getClass(), key);
+		checkCanGetImages(registry, key);
+	}
+
+	private void checkCanGetImages(ImageRegistry registry, String key) {
+		assertNotNull(Images.getMainImage(registry, key));
+		assertNotNull(Images.getDepressedImage(registry, key));
 	}
 
 }

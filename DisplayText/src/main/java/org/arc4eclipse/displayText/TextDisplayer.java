@@ -1,19 +1,14 @@
 package org.arc4eclipse.displayText;
 
-import java.util.ResourceBundle;
-
 import org.arc4eclipse.displayCore.api.AbstractDisplayerWithLabel;
 import org.arc4eclipse.displayCore.api.BindingContext;
 import org.arc4eclipse.displayCore.api.BoundTitleAndTextField;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.displayCore.api.DisplayerDetails;
 import org.arc4eclipse.displayCore.api.Displayers;
-import org.arc4eclipse.displayCore.api.IEditor;
 import org.arc4eclipse.displayCore.api.IRegisteredItems;
 import org.arc4eclipse.displayCore.constants.DisplayCoreConstants;
-import org.arc4eclipse.swtBasics.SwtBasicConstants;
-import org.arc4eclipse.swtBasics.images.IImageButtonListener;
-import org.arc4eclipse.swtBasics.images.ImageButton;
+import org.arc4eclipse.swtBasics.images.ImageButtons;
 import org.arc4eclipse.swtBasics.images.Resources;
 import org.arc4eclipse.utilities.strings.Strings;
 import org.eclipse.swt.widgets.Composite;
@@ -25,15 +20,15 @@ public class TextDisplayer extends AbstractDisplayerWithLabel<BoundTitleAndTextF
 		BoundTitleAndTextField boundTitleAndTextField = new BoundTitleAndTextField(parent, context, displayerDetails);
 		final String editorName = displayerDetails.map.get(DisplayCoreConstants.editor);
 		if (editorName != null)
-			boundTitleAndTextField.addButton(SwtBasicConstants.editKey, SwtBasicConstants.editKey, new IImageButtonListener() {
-				@Override
-				public void buttonPressed(ImageButton button) {
-					IEditor editor = registeredItems.getEditor(editorName);
-					System.out.println("Found editor for " + editorName + ": " + editor);
-				}
-			});
-		if (Resources.hasHelpText(context.resourceGetter, displayerDetails.key))
-			boundTitleAndTextField.addHelpButton(displayerDetails.key);
+			boundTitleAndTextField.addEditButton();
+		// ImageButtons.addEditButton(boundTitleAndTextField, new IImageButtonListener() {
+		// @Override
+		// public void buttonPressed(ImageButton button) {
+		// IEditor editor = registeredItems.getEditor(editorName);
+		// System.out.println("Found editor for " + editorName + ": " + editor);
+		// }
+		// });
+		ImageButtons.addHelpButton(boundTitleAndTextField, displayerDetails.key);
 		return boundTitleAndTextField;
 	}
 
@@ -49,6 +44,6 @@ public class TextDisplayer extends AbstractDisplayerWithLabel<BoundTitleAndTextF
 	}
 
 	public static void main(String[] args) {
-		Displayers.displayWithKey1(new TextDisplayer(), ResourceBundle.getBundle("DisplayForTest"), "text");
+		Displayers.displayWithKey1(new TextDisplayer(), Resources.builderWithBasics("DisplayForTest").build(), "text");
 	}
 }

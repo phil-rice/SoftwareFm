@@ -6,9 +6,9 @@ import java.util.List;
 
 import org.arc4eclipse.utilities.collections.Lists;
 
-public class ListModel implements Iterable<NameAndUrl> {
+public class ListModel implements Iterable<NameAndValue> {
 
-	private final List<NameAndUrl> data = Lists.newList();
+	private final List<NameAndValue> data = Lists.newList();
 	private final IEncodeDecodeNameAndUrl encoder;
 
 	private final Object lock = new Object();
@@ -22,22 +22,22 @@ public class ListModel implements Iterable<NameAndUrl> {
 			this.data.clear();
 			if (data != null)
 				for (String item : data) {
-					NameAndUrl nameAndUrl = encoder.fromString(item);
-					if (nameAndUrl != null)
-						this.data.add(nameAndUrl);
+					NameAndValue nameAndValue = encoder.fromString(item);
+					if (nameAndValue != null)
+						this.data.add(nameAndValue);
 				}
 		}
 	}
 
 	public void add(String name, String url) {
 		synchronized (lock) {
-			data.add(new NameAndUrl(name, url));
+			data.add(new NameAndValue(name, url));
 		}
 	}
 
 	public void set(int index, String name, String url) {
 		synchronized (lock) {
-			data.set(index, new NameAndUrl(name, url));
+			data.set(index, new NameAndValue(name, url));
 		}
 
 	}
@@ -54,20 +54,20 @@ public class ListModel implements Iterable<NameAndUrl> {
 				return " ";
 			String[] result = new String[data.size()];
 			int i = 0;
-			for (NameAndUrl nameAndUrl : data)
-				result[i++] = encoder.toString(nameAndUrl);
+			for (NameAndValue nameAndValue : data)
+				result[i++] = encoder.toString(nameAndValue);
 			return result;
 		}
 	}
 
 	@Override
-	public Iterator<NameAndUrl> iterator() {
+	public Iterator<NameAndValue> iterator() {
 		synchronized (lock) {
-			return new ArrayList<NameAndUrl>(data).iterator();
+			return new ArrayList<NameAndValue>(data).iterator();
 		}
 	}
 
-	public NameAndUrl get(int index) {
+	public NameAndValue get(int index) {
 		return data.get(index);
 	}
 }

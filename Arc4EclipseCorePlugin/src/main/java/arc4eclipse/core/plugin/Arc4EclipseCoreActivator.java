@@ -16,6 +16,7 @@ import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.arc4eclipse.jdtBinding.api.IBindingRipper;
 import org.arc4eclipse.panel.ISelectedBindingListener;
 import org.arc4eclipse.swtBasics.images.Images;
+import org.arc4eclipse.swtBasics.text.ConfigForTitleAnd;
 import org.arc4eclipse.utilities.callbacks.ICallback;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
@@ -147,9 +148,16 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 		return selectedBindingManager;
 	}
 
-	public IDisplayContainerFactory getDisplayContainerFactory(final Display display) {
-		if (displayContainerFactory == null) {
-			final ImageRegistry imageRegistry = getImageRegistry();
+	private boolean registeredExtraImages;
+
+	@Override
+	public ImageRegistry getImageRegistry() {
+		throw new IllegalArgumentException("Use with display parameter");
+	}
+
+	public ImageRegistry getImageRegistry(final Display display) {
+		final ImageRegistry result = super.getImageRegistry();
+		if (!registeredExtraImages) {
 			Plugins.useConfigElements(IMAGE_ID, new ICallback<IConfigurationElement>() {
 				@Override
 				public void process(IConfigurationElement t) throws Exception {
@@ -158,10 +166,17 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 					if (key == null)
 						throw new IllegalArgumentException(MessageFormat.format(DisplayCoreConstants.attributeMissing, key, t.getAttribute("class")));
 					Class<Object> clazz = Plugins.classFrom(t);
-					Images.registerImages(display, imageRegistry, clazz, key);
+					Images.registerImages(display, result, clazz, key);
 					System.out.println("....registered image " + key);
 				}
 			}, ICallback.Utils.sysErrCallback());
+		}
+		return result;
+	}
+
+	public IDisplayContainerFactory getDisplayContainerFactory(final Display display) {
+		if (displayContainerFactory == null) {
+			final ImageRegistry imageRegistry = getImageRegistry(display);
 			final IDisplayContainerFactoryBuilder builder = IDisplayContainerFactoryBuilder.Utils.factoryBuilder(imageRegistry);
 			Plugins.useClasses(DISPLAYER_ID, new PlugInSysErrAdapter<IDisplayer<?, ?>>() {
 				@Override
@@ -235,7 +250,7 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 	}
 
 	public void clear() {
-		final ImageRegistry imageRegistry = getImageRegistry();
+		final ImageRegistry imageRegistry = super.getImageRegistry();
 		Plugins.useConfigElements(IMAGE_ID, new ICallback<IConfigurationElement>() {
 			@Override
 			public void process(IConfigurationElement t) throws Exception {
@@ -243,6 +258,10 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 				Images.removeImages(imageRegistry, key);
 			}
 		}, ICallback.Utils.sysErrCallback());
+	}
+
+	public ConfigForTitleAnd getConfigForTitleAnd(Display display) {
+		return ConfigForTitleAnd.create(display, getResourceGetter(), getImageRegistry(display));
 	}
 
 }

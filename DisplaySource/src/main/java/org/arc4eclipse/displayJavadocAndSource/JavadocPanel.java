@@ -16,6 +16,7 @@ import org.arc4eclipse.swtBasics.SwtBasicConstants;
 import org.arc4eclipse.swtBasics.Swts;
 import org.arc4eclipse.swtBasics.images.IImageButtonListener;
 import org.arc4eclipse.swtBasics.images.ImageButton;
+import org.arc4eclipse.swtBasics.images.ImageButtons;
 import org.arc4eclipse.swtBasics.text.TitleAndTextField;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
@@ -41,7 +42,7 @@ public class JavadocPanel extends Composite {
 		super(parent, style);
 		setLayout(new GridLayout());
 		txtRepository = new BoundTitleAndTextField(this, context, displayerDetails);
-		btnAttach = txtRepository.addButton(DisplayJavadocAndSourceConstants.link, DisplayJavadocAndSourceConstants.link, new IImageButtonListener() {
+		btnAttach = ImageButtons.addRowButton(txtRepository, DisplayJavadocAndSourceConstants.link, DisplayJavadocAndSourceConstants.link, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				try {
@@ -53,10 +54,10 @@ public class JavadocPanel extends Composite {
 
 			}
 		});
-		txtRepository.addHelpButton(DisplayJavadocConstants.helpValueInRepository);
+		ImageButtons.addHelpButton(txtRepository, DisplayJavadocConstants.helpValueInRepository);
 
 		txtLocal = new TitleAndTextField(context.configForTitleAnd, this, DisplayJavadocConstants.javadoc);
-		txtLocal.addHelpButton(DisplayJavadocConstants.helpCurrentValue);
+		ImageButtons.addHelpButton(txtLocal, DisplayJavadocConstants.helpCurrentValue);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 	}
 

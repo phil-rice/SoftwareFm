@@ -2,23 +2,36 @@ package org.arc4eclipse.displayLists;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.displayCore.api.DisplayerDetails;
+import org.arc4eclipse.displayCore.constants.DisplayCoreConstants;
+import org.arc4eclipse.panel.ISelectedBindingManager;
+import org.arc4eclipse.swtBasics.SwtBasicConstants;
 import org.arc4eclipse.swtBasics.Swts;
 import org.arc4eclipse.swtBasics.images.IImageButtonListener;
 import org.arc4eclipse.swtBasics.images.ImageButton;
+import org.arc4eclipse.swtBasics.images.ImageButtons;
 import org.arc4eclipse.swtBasics.images.Images;
+import org.arc4eclipse.swtBasics.images.Resources;
+import org.arc4eclipse.swtBasics.text.ConfigForTitleAnd;
+import org.arc4eclipse.swtBasics.text.IButtonParent;
 import org.arc4eclipse.swtBasics.text.TitleAndTextField;
+import org.arc4eclipse.utilities.functions.IFunction1;
+import org.arc4eclipse.utilities.maps.Maps;
+import org.arc4eclipse.utilities.resources.IResourceGetter;
+import org.arc4eclipse.utilities.resources.IResourceGetterBuilder;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-public class ListPanel extends Composite {
+public class ListPanel extends Composite implements IButtonParent {
 
 	private final class DeleteButtonListener implements IImageButtonListener {
 		private final int index;
@@ -44,8 +57,9 @@ public class ListPanel extends Composite {
 
 		@Override
 		public void buttonPressed(ImageButton button) {
-			NameAndUrlDialog dialog = new NameAndUrlDialog(getShell(), imageFactory);
-			NameAndUrl result = dialog.open(listModel.get(index));
+			ConfigForTitleAnd forDialogs = ConfigForTitleAnd.createForDialogs(getDisplay(), context.resourceGetter, context.imageRegistry);
+			NameAndValueDialog dialog = new NameAndValueDialog(getShell(), SWT.NULL, forDialogs, nameTitle, valueTitle);
+			NameAndValue result = dialog.open(listModel.get(index));
 			if (result != null) {
 				listModel.set(index, result.name, result.url);
 				sendDataToServer();
@@ -53,46 +67,47 @@ public class ListPanel extends Composite {
 		}
 	}
 
-	private final Composite compForums;
-	private final IImageFactory imageFactory;
-	private final Images images;
+	private final DisplayerContext context;
+	private final Composite compForList;
 	private final String title;
 	private final ListModel listModel;
 	private final IArc4EclipseRepository repository;
 	private String url;
-	private final String key;
 	private final IEncodeDecodeNameAndUrl encoder;
 	private final String entity;
+	private final String nameTitle;
+	private final String valueTitle;
+	private final String key;
+	private final Composite compTitle;
 
-	public ListPanel(Composite parent, int style, DisplayerContext context, DisplayerDetails displayerDetails) {
+	public ListPanel(Composite parent, int style, final DisplayerContext context, DisplayerDetails displayerDetails) {
 		super(parent, style);
+		this.key = displayerDetails.key;
+		this.context = context;
+		this.title = Resources.getTitle(context.resourceGetter, displayerDetails.key);
+		this.nameTitle = Resources.getNameAndValue_Name(context.resourceGetter, key);
+		this.valueTitle = Resources.getNameAndValue_Value(context.resourceGetter, key);
 		this.entity = displayerDetails.entity;
-		this.title = displayerDetails.title;
-		this.imageFactory = context.imageFactory;
 		this.repository = context.repository;
-		this.key = displayerDetails.nameSpaceAndName.key;
 		this.encoder = IEncodeDecodeNameAndUrl.Utils.defaultEncoder();
 		this.listModel = new ListModel(encoder);
-		images = imageFactory.makeImages(getDisplay());
-		Composite compTitle = new Composite(this, SWT.NULL);
+		this.compTitle = new Composite(this, SWT.NULL);
 		compTitle.setLayout(new RowLayout(SWT.HORIZONTAL));
 		new Label(compTitle, SWT.NULL).setText(title);
-		compForums = new Composite(this, SWT.BORDER);
-		ImageButton addButton = new ImageButton(compTitle, images.getAddImage());
-		addButton.setTooltipText(MessageFormat.format(DisplayListsConstants.add, title));
-		addButton.addListener(new IImageButtonListener() {
+		compForList = new Composite(this, SWT.BORDER);
+
+		ImageButtons.addRowButton(this, SwtBasicConstants.addKey, SwtBasicConstants.addKey, new IImageButtonListener() {
 
 			@Override
 			public void buttonPressed(ImageButton button) {
-				NameAndUrlDialog dialog = new NameAndUrlDialog(getShell(), imageFactory);
-				NameAndUrl newDialog = dialog.open(new NameAndUrl("<EnterName>", "<Enter Url>"));
+				NameAndValueDialog dialog = new NameAndValueDialog(getShell(), SWT.NULL, ConfigForTitleAnd.createForDialogs(getDisplay(), context.resourceGetter, context.imageRegistry), nameTitle, valueTitle);
+				NameAndValue newDialog = dialog.open(new NameAndValue("", ""));
 				if (newDialog != null)
 					listModel.add(newDialog.name, newDialog.url);
 				sendDataToServer();
 			}
 		});
-		if (displayerDetails.help != null)
-			new ImageButton(compTitle, images.getHelpImage()).setTooltipText(displayerDetails.help);
+		ImageButtons.addHelpButton(this, displayerDetails.key);
 
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 		setSize(getSize().x, 1);
@@ -104,19 +119,19 @@ public class ListPanel extends Composite {
 		this.url = url;
 		List<String> values = getValues(value);
 		listModel.setData(values);
-		Swts.removeAllChildren(compForums);
+		Swts.removeAllChildren(compForList);
 		int index = 0;
-		for (NameAndUrl nameAndUrl : listModel) {
-			TitleAndTextField text = new TitleAndTextField(compForums, SWT.NULL, nameAndUrl.name, false);
-			text.setText(nameAndUrl.url);
-			text.addButton(images.getEditImage(), "Edit", new EditButtonListener(index));
-			text.addButton(images.getClearImage(), "Delete", new DeleteButtonListener(index));
-			text.addHelpButton("Edits");
+		for (NameAndValue nameAndValue : listModel) {
+			TitleAndTextField text = new TitleAndTextField(context.configForTitleAnd, compForList, nameAndValue.name);
+			text.setText(nameAndValue.url);
+			ImageButtons.addEditButton(text, new EditButtonListener(index));
+			ImageButtons.addRowButton(text, SwtBasicConstants.deleteKey, SwtBasicConstants.deleteKey, new DeleteButtonListener(index));
+			ImageButtons.addHelpButton(text, Resources.getRowKey(key));
 			index += 1;
 		}
-		Swts.addGrabHorizontalAndFillGridDataToAllChildren(compForums);
+		Swts.addGrabHorizontalAndFillGridDataToAllChildren(compForList);
 		if (index == 0)
-			compForums.setSize(compForums.getSize().x, 22);
+			compForList.setSize(compForList.getSize().x, 22);
 		getParent().layout();
 		getParent().redraw();
 	}
@@ -133,6 +148,48 @@ public class ListPanel extends Composite {
 
 	public void sendDataToServer() {
 		repository.modifyData(entity, url, key, listModel.asDataForRepostory(), Collections.<String, Object> emptyMap());
+	}
+
+	public static void main(String[] args) {
+		Swts.display(ListPanel.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+			@Override
+			public Composite apply(Composite from) throws Exception {
+				DisplayerContext context = new DisplayerContext(//
+						ISelectedBindingManager.Utils.noSelectedBindingManager(), //
+						IArc4EclipseRepository.Utils.repository(), //
+						ConfigForTitleAnd.create(//
+								from.getDisplay(), //
+								IResourceGetterBuilder.Utils.getter(//
+										SwtBasicConstants.basicResources, //
+										getClass().getPackage().getName() + ".ListAndPanelTest").build(), //
+								Images.withBasics(from.getDisplay())));
+				List<String> value = Arrays.asList("name1$value1", "name2$value2");
+				DisplayerDetails displayerDetails = new DisplayerDetails("entity", Maps.<String, String> makeMap(DisplayCoreConstants.key, "ListKey"));
+				ListPanel result = new ListPanel(from, SWT.NULL, context, displayerDetails);
+				result.setValue("someurl", value);
+				return result;
+			}
+		});
+	}
+
+	@Override
+	public Composite getButtonComposte() {
+		return compTitle;
+	}
+
+	@Override
+	public ImageRegistry getImageRegistry() {
+		return context.imageRegistry;
+	}
+
+	@Override
+	public IResourceGetter getResourceGetter() {
+		return context.resourceGetter;
+	}
+
+	@Override
+	public void buttonAdded() {
+
 	}
 
 }

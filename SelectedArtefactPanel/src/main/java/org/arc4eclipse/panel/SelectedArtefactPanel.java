@@ -11,7 +11,6 @@ import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.displayCore.api.IDisplayContainer;
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactory;
 import org.arc4eclipse.swtBasics.Swts;
-import org.arc4eclipse.swtBasics.images.Images;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
@@ -20,7 +19,6 @@ public class SelectedArtefactPanel extends Composite implements IStatusChangedLi
 
 	private final String entity;
 	private final IArc4EclipseRepository repository;
-	private final Images images;
 	private final IDisplayContainer displayContainer;
 
 	/**
@@ -34,8 +32,7 @@ public class SelectedArtefactPanel extends Composite implements IStatusChangedLi
 		super(parent, style);
 		this.entity = entity;
 		this.repository = context.repository;
-		this.images = context.imageFactory.makeImages(getDisplay());
-		displayContainer = factory.create(context, this, entity);
+		displayContainer = factory.create(context, this);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 		Layout layout = new GridLayout();
 		// layout.numColumns = 1;
@@ -52,7 +49,7 @@ public class SelectedArtefactPanel extends Composite implements IStatusChangedLi
 	public void statusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> data, Map<String, Object> context) throws Exception {
 		Object actualEntity = context.get(RepositoryConstants.entity);
 		if (entity.equals(actualEntity)) {
-			BindingContext bindingContext = new BindingContext(repository, images, url, data, context);
+			BindingContext bindingContext = new BindingContext(url, data, context);
 			displayContainer.setValues(bindingContext);
 		}
 	}

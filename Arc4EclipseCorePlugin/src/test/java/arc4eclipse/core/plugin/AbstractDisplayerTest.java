@@ -66,11 +66,11 @@ public abstract class AbstractDisplayerTest<L extends Control, C extends Control
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		display = Workbench.getInstance().getDisplay();
 		activator = Arc4EclipseCoreActivator.getDefault();
-		imageRegistry = activator.getImageRegistry();
+		imageRegistry = activator.getImageRegistry(display);
 		repository = activator.getRepository();
 		selectedBindingManager = activator.getSelectedBindingManager();
-		display = Workbench.getInstance().getDisplay();
 		resourceGetter = Arc4EclipseCoreActivator.getDefault().getResourceGetter();
 		displayerContext = new DisplayerContext(selectedBindingManager, repository, ConfigForTitleAnd.create(display, resourceGetter, imageRegistry));
 		shell = new Shell(display);
@@ -80,9 +80,9 @@ public abstract class AbstractDisplayerTest<L extends Control, C extends Control
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
+		Images.removeImages(activator.getImageRegistry(display), "Key1");
 		shell.dispose();
 		activator.clear();
-		Images.removeImages(activator.getImageRegistry(), "Key1");
 	}
 
 }

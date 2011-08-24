@@ -16,5 +16,5 @@ public class UtilityMessages {
 	public static final String cannotWorkOutValue = "Cannot work out value.\nMap: {0}\n Last key: {1}\nKeys: {2}";
 	public static final String cannotFindMapForGet = "Cannot find map for get\nMap: {0}\n Keys: {2}";
 	public static final String errorParsingJson = "Error parsing object of {0} with value {1}";
-
+	public static final String missingResource = "Cannot find resource {0}";
 }

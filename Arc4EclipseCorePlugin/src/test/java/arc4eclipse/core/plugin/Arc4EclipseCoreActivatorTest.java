@@ -20,7 +20,7 @@ public class Arc4EclipseCoreActivatorTest extends TestCase {
 
 	public void testGetDisplayManagerCreatedImages() {
 		Arc4EclipseCoreActivator activator = Arc4EclipseCoreActivator.getDefault();
-		final ImageRegistry imageRegistry = activator.getImageRegistry();
+		final ImageRegistry imageRegistry = activator.getImageRegistry(display);
 		IllegalArgumentException e = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
 			@Override
 			public void run() {
@@ -48,7 +48,7 @@ public class Arc4EclipseCoreActivatorTest extends TestCase {
 	private void checkImages(String... keys) {
 		Arc4EclipseCoreActivator activator = Arc4EclipseCoreActivator.getDefault();
 		activator.getDisplayContainerFactory(display);
-		final ImageRegistry imageRegistry = activator.getImageRegistry();
+		final ImageRegistry imageRegistry = activator.getImageRegistry(display);
 		for (String key : keys) {
 			System.out.println("Checking image for: " + key);
 			assertNotNull(Images.getMainImage(imageRegistry, key));

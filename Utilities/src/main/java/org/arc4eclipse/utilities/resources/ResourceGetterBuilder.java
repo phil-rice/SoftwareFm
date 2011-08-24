@@ -1,9 +1,11 @@
 package org.arc4eclipse.utilities.resources;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import org.arc4eclipse.utilities.collections.Lists;
+import org.arc4eclipse.utilities.constants.UtilityMessages;
 
 public class ResourceGetterBuilder implements IResourceGetterBuilder {
 
@@ -25,7 +27,7 @@ public class ResourceGetterBuilder implements IResourceGetterBuilder {
 					if (bundle.containsKey(fullKey))
 						return bundle.getString(fullKey);
 				}
-				return null;
+				throw new IllegalArgumentException(MessageFormat.format(UtilityMessages.missingResource, fullKey));
 			}
 		};
 	}

@@ -7,7 +7,7 @@ import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.arc4eclipse.swtBasics.Swts;
 import org.arc4eclipse.swtBasics.images.IImageButtonListener;
 import org.arc4eclipse.swtBasics.images.ImageButton;
-import org.arc4eclipse.swtBasics.images.Resources;
+import org.arc4eclipse.swtBasics.images.ImageButtons;
 import org.arc4eclipse.swtBasics.text.TitleAndTextField;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.strings.Strings;
@@ -29,7 +29,7 @@ public class SourcePanel extends Composite {
 		super(parent, context.configForTitleAnd.style);
 		setLayout(new GridLayout());
 		txtRepository = new BoundTitleAndTextField(parent, context, displayerDetails);
-		btnAttach = txtRepository.addButton(DisplayJavadocAndSourceConstants.link, DisplayJavadocAndSourceConstants.link, new IImageButtonListener() {
+		btnAttach = ImageButtons.addRowButton(txtRepository, DisplayJavadocAndSourceConstants.link, DisplayJavadocAndSourceConstants.link, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				if (ripped != null) {
@@ -42,10 +42,9 @@ public class SourcePanel extends Composite {
 				}
 			}
 		});
-		if (Resources.hasHelpText(context.resourceGetter, displayerDetails.key))
-			txtRepository.addHelpButton(displayerDetails.key);
+		ImageButtons.addHelpButton(txtRepository, displayerDetails.key);
 		txtLocal = new TitleAndTextField(context.configForTitleAnd, this, displayerDetails.key);
-		txtLocal.addHelpButton(displayerDetails.key);
+		ImageButtons.addHelpButton(txtLocal, displayerDetails.key);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 	}
 

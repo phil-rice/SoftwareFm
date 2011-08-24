@@ -32,7 +32,7 @@ public class ConfigForTitleAnd {
 	public final int buttonHeight;
 
 	public ConfigForTitleAnd(IResourceGetter resourceGetter, ImageRegistry imageRegistry, Color normalBackground, Color editingBackground) {
-		this(resourceGetter, imageRegistry, normalBackground, editingBackground, SWT.NULL, 16, 100, 21, 100, 23);
+		this(resourceGetter, imageRegistry, normalBackground, editingBackground, SWT.NULL, 100, 100, 21, 16, 23);
 	}
 
 	public ConfigForTitleAnd(IResourceGetter resourceGetter, ImageRegistry imageRegistry, Color normalBackground, Color editingBackground, int style, int titleWidth, int buttonsWidth, int buttonSpacer, int titleHeight, int buttonHeight) {
@@ -66,6 +66,19 @@ public class ConfigForTitleAnd {
 
 	public ConfigForTitleAnd withButtonHeight(int buttonHeight) {
 		return new ConfigForTitleAnd(resourceGetter, imageRegistry, normalBackground, editingBackground, style, titleWidth, buttonsWidth, buttonSpacer, titleHeight, buttonHeight);
+	}
+
+	public ConfigForTitleAnd withNormalBackground(Color normalBackground) {
+		return new ConfigForTitleAnd(resourceGetter, imageRegistry, normalBackground, editingBackground, style, titleWidth, buttonsWidth, buttonSpacer, titleHeight, buttonHeight);
+	}
+
+	public ConfigForTitleAnd withEditingBackground(Color editingBackground) {
+		return new ConfigForTitleAnd(resourceGetter, imageRegistry, normalBackground, editingBackground, style, titleWidth, buttonsWidth, buttonSpacer, titleHeight, buttonHeight);
+	}
+
+	public static ConfigForTitleAnd createForDialogs(Display display, IResourceGetter resourceGetter, ImageRegistry imageRegistry) {
+		return create(display, resourceGetter, imageRegistry);
+
 	}
 
 }

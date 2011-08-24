@@ -1,10 +1,11 @@
 package org.arc4eclipse.selectedArtifact.plugin;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
+import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactory;
 import org.arc4eclipse.panel.ISelectedBindingManager;
-import org.arc4eclipse.swtBasics.images.IImageFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -40,8 +41,9 @@ public class Activator extends AbstractUIPlugin {
 		return plugin;
 	}
 
-	public IDisplayContainerFactory getDisplayManager() {
-		return Arc4EclipseCoreActivator.getDefault().getDisplayManager();
+	public DisplayerContext getContext() {
+		Arc4EclipseCoreActivator coreActivator = Arc4EclipseCoreActivator.getDefault();
+		return new DisplayerContext(coreActivator.getSelectedBindingManager(), coreActivator.getRepository(), coreActivator.getConfigForTitleAnd());
 	}
 
 	public IArc4EclipseRepository getRepository() {
@@ -56,8 +58,9 @@ public class Activator extends AbstractUIPlugin {
 		return Arc4EclipseCoreActivator.getDefault().getSelectedBindingManager();
 	}
 
-	public IImageFactory getImageFactory() {
-		return Arc4EclipseCoreActivator.getDefault().getImageFactory();
+	public IDisplayContainerFactory getDisplayContainerFactory(Display display) {
+		return Arc4EclipseCoreActivator.getDefault().getDisplayContainerFactory(display);
+
 	}
 
 }

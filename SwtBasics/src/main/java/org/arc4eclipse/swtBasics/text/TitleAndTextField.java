@@ -4,12 +4,12 @@ import org.arc4eclipse.swtBasics.SwtBasicConstants;
 import org.arc4eclipse.swtBasics.Swts;
 import org.arc4eclipse.swtBasics.images.IImageButtonListener;
 import org.arc4eclipse.swtBasics.images.ImageButton;
+import org.arc4eclipse.swtBasics.images.ImageButtons;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.arc4eclipse.utilities.strings.Strings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -28,7 +28,7 @@ public class TitleAndTextField extends AbstractTitleAnd {
 		txtText.setEditable(false);
 
 		updateBackground();
-		int titleAndButtonsWidth = config.titleHeight + config.buttonHeight;
+		int titleAndButtonsWidth = config.titleHeight + config.buttonsWidth;
 		RowData rowData = new RowData(titleAndButtonsWidth * 2, config.titleHeight);
 		txtText.setLayoutData(rowData);
 		txtText.addModifyListener(new ModifyListener() {
@@ -39,7 +39,7 @@ public class TitleAndTextField extends AbstractTitleAnd {
 		});
 	}
 
-	public void addEditButton(Image editImage) {
+	public void addEditButton() {
 		addCrListener(new Listener() {
 			@Override
 			public void handleEvent(Event event) {
@@ -47,7 +47,7 @@ public class TitleAndTextField extends AbstractTitleAnd {
 				updateBackground();
 			}
 		});
-		addButton(SwtBasicConstants.editKey, new IImageButtonListener() {
+		ImageButtons.addEditButton(this, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				txtText.setEditable(globalEditable || !txtText.getEditable());
@@ -101,7 +101,10 @@ public class TitleAndTextField extends AbstractTitleAnd {
 		Swts.display("TitleAndTextField", new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				return new TitleAndTextField(ConfigForTitleAnd.createForBasics(from.getDisplay()), from, "Title");
+				TitleAndTextField titleAndTextField = new TitleAndTextField(ConfigForTitleAnd.createForBasics(from.getDisplay()), from, "Title");
+				titleAndTextField.addEditButton();
+				ImageButtons.addHelpButton(titleAndTextField, SwtBasicConstants.helpKey);
+				return titleAndTextField;
 			}
 		});
 	}

@@ -17,9 +17,9 @@ public class IEncodeDecodeNameAndUrlTest extends TestCase {
 
 	private void checkEncoder(String expected, String name, String url) {
 		IEncodeDecodeNameAndUrl encoder = IEncodeDecodeNameAndUrl.Utils.defaultEncoder();
-		String actual = encoder.toString(new NameAndUrl(name, url));
+		String actual = encoder.toString(new NameAndValue(name, url));
 		assertEquals(expected, actual);
-		NameAndUrl back = encoder.fromString(actual);
+		NameAndValue back = encoder.fromString(actual);
 		String expectedName = expected.substring(0, expected.indexOf('$'));
 		assertEquals(expectedName, back.name);
 		assertEquals(url, back.url);

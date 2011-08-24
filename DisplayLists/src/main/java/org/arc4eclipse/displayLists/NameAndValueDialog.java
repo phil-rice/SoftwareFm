@@ -1,9 +1,7 @@
 package org.arc4eclipse.displayLists;
 
 import org.arc4eclipse.swtBasics.Swts;
-import org.arc4eclipse.swtBasics.images.IImageButtonListener;
-import org.arc4eclipse.swtBasics.images.IImageFactory;
-import org.arc4eclipse.swtBasics.images.ImageButton;
+import org.arc4eclipse.swtBasics.text.ConfigForTitleAnd;
 import org.arc4eclipse.swtBasics.text.TitleAndTextField;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.eclipse.swt.SWT;
@@ -17,21 +15,21 @@ import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-public class NameAndUrlDialog extends Dialog {
+public class NameAndValueDialog extends Dialog {
 
-	private final IImageFactory imageFactory;
-	protected NameAndUrl result;
+	protected NameAndValue result;
+	private final ConfigForTitleAnd config;
+	private final String nameTitle;
+	private final String valueTitle;
 
-	public NameAndUrlDialog(Shell parent, IImageFactory imageFactory) {
-		this(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, imageFactory);
-	}
-
-	public NameAndUrlDialog(Shell parent, int style, IImageFactory imageFactory) {
+	public NameAndValueDialog(Shell parent, int style, ConfigForTitleAnd config, String nameTitle, String valueTitle) {
 		super(parent, style);
-		this.imageFactory = imageFactory;
+		this.config = config;
+		this.nameTitle = nameTitle;
+		this.valueTitle = valueTitle;
 	}
 
-	public NameAndUrl open(NameAndUrl initial) {
+	public NameAndValue open(NameAndValue initial) {
 		// Create the dialog window
 		Shell shell = new Shell(getParent(), getStyle());
 		shell.setText(getText());
@@ -48,16 +46,16 @@ public class NameAndUrlDialog extends Dialog {
 		return result;
 	}
 
-	private void createContents(final Shell shell, NameAndUrl initial) {
-		final TitleAndTextField txtName = new TitleAndTextField(shell, "Name", false);
+	private void createContents(final Shell shell, NameAndValue initial) {
+		final TitleAndTextField txtName = new TitleAndTextField(config, shell, nameTitle);
 		txtName.setEditable(true);
-		final TitleAndTextField txtUrl = new TitleAndTextField(shell, "Url", false);
+		final TitleAndTextField txtUrl = new TitleAndTextField(config, shell, valueTitle);
 		txtUrl.setEditable(true);
 		txtName.setText(initial.name);
 		txtUrl.setText(initial.url);
 		Composite buttonComposite = new Composite(shell, SWT.NULL);
 		buttonComposite.setLayout(new GridLayout(2, false));
-		// Create the cancel button and add a handler
+		// Create the cancel button and addKey a handler
 		// so that pressing it will set input to null
 		Button cancel = new Button(buttonComposite, SWT.PUSH);
 		cancel.setText("Cancel");
@@ -75,7 +73,7 @@ public class NameAndUrlDialog extends Dialog {
 		ok.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
-				result = new NameAndUrl(txtName.getText(), txtUrl.getText());
+				result = new NameAndValue(txtName.getText(), txtUrl.getText());
 				shell.close();
 			}
 		});
@@ -88,18 +86,18 @@ public class NameAndUrlDialog extends Dialog {
 	}
 
 	public static void main(String[] args) {
-		final IImageFactory imageFactory = IImageFactory.Utils.imageFactory();
-		Swts.display("", new IFunction1<Composite, Composite>() {
+		Swts.display(NameAndValueDialog.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 
 			@Override
 			public Composite apply(final Composite from) throws Exception {
 				Composite composite = new Composite(from, SWT.NULL);
-				ImageButton imageButton = new ImageButton(composite, imageFactory.makeImages(from.getDisplay()).getEditImage());
-				imageButton.addListener(new IImageButtonListener() {
+				composite.setLayout(new GridLayout());
+				Button button = new Button(composite, SWT.PUSH);
+				button.addSelectionListener(new SelectionAdapter() {
 					@Override
-					public void buttonPressed(ImageButton button) {
-						NameAndUrlDialog nameAndUrlDialog = new NameAndUrlDialog(from.getShell(), imageFactory);
-						NameAndUrl open = nameAndUrlDialog.open(new NameAndUrl("name", "url"));
+					public void widgetSelected(SelectionEvent e) {
+						NameAndValueDialog nameAndValueDialog = new NameAndValueDialog(from.getShell(), SWT.NULL, ConfigForTitleAnd.createForBasics(from.getDisplay()), "Name", "Value");
+						NameAndValue open = nameAndValueDialog.open(new NameAndValue("name", "url"));
 						System.out.println("Result: " + open);
 					}
 				});

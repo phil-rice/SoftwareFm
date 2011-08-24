@@ -1,18 +1,18 @@
 package org.arc4eclipse.displayLists;
 
-public class NameAndUrl {
+public class NameAndValue {
 
 	public String name;
 	public String url;
 
-	public NameAndUrl(String name, String url) {
+	public NameAndValue(String name, String url) {
 		this.name = name;
 		this.url = url;
 	}
 
 	@Override
 	public String toString() {
-		return "NameAndUrl [name=" + name + ", url=" + url + "]";
+		return "NameAndValue [name=" + name + ", url=" + url + "]";
 	}
 
 }
