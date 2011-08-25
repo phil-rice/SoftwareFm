@@ -1,4 +1,4 @@
-package arc4eclipse.core.plugin;
+package org.arc4eclipse.core.plugin;
 
 import java.util.Map;
 
@@ -6,6 +6,8 @@ import junit.framework.TestCase;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
 import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
+import org.arc4eclipse.core.plugin.Arc4EclipseCoreActivator;
+import org.arc4eclipse.core.plugin.SelectedArtifactSelectionManager;
 import org.arc4eclipse.displayCore.api.BindingContext;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.displayCore.api.Displayers;

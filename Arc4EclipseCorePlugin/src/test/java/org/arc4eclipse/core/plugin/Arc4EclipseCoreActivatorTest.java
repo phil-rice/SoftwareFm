@@ -1,9 +1,11 @@
-package arc4eclipse.core.plugin;
+package org.arc4eclipse.core.plugin;
 
 import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.arc4eclipse.core.plugin.Arc4EclipseCoreActivator;
+import org.arc4eclipse.core.plugin.Plugins;
 import org.arc4eclipse.swtBasics.SwtBasicConstants;
 import org.arc4eclipse.swtBasics.images.Images;
 import org.arc4eclipse.swtBasics.images.Resources;

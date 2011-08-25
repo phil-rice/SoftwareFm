@@ -1,10 +1,10 @@
 package org.arc4eclipse.displayUrl;
 
+import org.arc4eclipse.core.plugin.AbstractDisplayerTest;
 import org.arc4eclipse.displayCore.api.BoundTitleAndTextField;
 import org.arc4eclipse.displayCore.api.IDisplayer;
 import org.eclipse.swt.widgets.Control;
 
-import arc4eclipse.core.plugin.AbstractDisplayerTest;
 
 public class UrlDisplayerTest extends AbstractDisplayerTest<BoundTitleAndTextField, Control> {
 

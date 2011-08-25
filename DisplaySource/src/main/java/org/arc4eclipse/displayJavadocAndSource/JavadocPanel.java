@@ -41,8 +41,8 @@ public class JavadocPanel extends Composite {
 	public JavadocPanel(Composite parent, int style, DisplayerContext context, DisplayerDetails displayerDetails) {
 		super(parent, style);
 		setLayout(new GridLayout());
-		txtRepository = new BoundTitleAndTextField(this, context, displayerDetails);
-		btnAttach = ImageButtons.addRowButton(txtRepository, DisplayJavadocAndSourceConstants.link, DisplayJavadocAndSourceConstants.link, new IImageButtonListener() {
+		txtRepository = new BoundTitleAndTextField(this, context, displayerDetails.withKey(DisplayJavadocConstants.repositoryKey));
+		btnAttach = ImageButtons.addRowButton(txtRepository, DisplayJavadocConstants.linkKey, DisplayJavadocConstants.linkKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				try {
@@ -54,10 +54,10 @@ public class JavadocPanel extends Composite {
 
 			}
 		});
-		ImageButtons.addHelpButton(txtRepository, DisplayJavadocConstants.helpValueInRepository);
+		ImageButtons.addHelpButton(txtRepository, DisplayJavadocConstants.repositoryKey);
 
-		txtLocal = new TitleAndTextField(context.configForTitleAnd, this, DisplayJavadocConstants.javadoc);
-		ImageButtons.addHelpButton(txtLocal, DisplayJavadocConstants.helpCurrentValue);
+		txtLocal = new TitleAndTextField(context.configForTitleAnd, this, DisplayJavadocConstants.localKey);
+		ImageButtons.addHelpButton(txtLocal, DisplayJavadocConstants.localKey);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 	}
 

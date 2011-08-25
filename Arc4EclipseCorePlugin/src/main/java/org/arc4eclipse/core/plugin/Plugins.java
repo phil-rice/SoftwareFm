@@ -1,4 +1,4 @@
-package arc4eclipse.core.plugin;
+package org.arc4eclipse.core.plugin;
 
 import org.arc4eclipse.utilities.callbacks.ICallback;
 import org.arc4eclipse.utilities.exceptions.WrappedException;

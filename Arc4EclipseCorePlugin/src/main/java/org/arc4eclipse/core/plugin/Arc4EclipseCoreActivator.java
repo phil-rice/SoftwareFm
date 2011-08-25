@@ -1,4 +1,4 @@
-package arc4eclipse.core.plugin;
+package org.arc4eclipse.core.plugin;
 
 import java.text.MessageFormat;
 import java.util.Map;
@@ -188,17 +188,16 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 					factory.register(makeMap("jarData", "jar"));
 					factory.register(makeMap("javadoc", "javadoc"));
 					factory.register(makeMap("source", "src"));
-					factory.register(makeMap("projectUrl", "url"));
-					factory.register(makeMap("organisationUrl", "url"));
+					factory.register(makeMap("project.url", "url"));
+					factory.register(makeMap("organisation.url", "url"));
 				} else if (entity.equals(RepositoryConstants.entityProject)) {
-					factory.register(makeMap("projectUrl", "url"));
-					factory.register(makeMap("name", "text"));
-					factory.register(makeMap("projectUrl", "url"));
+					factory.register(makeMap("project.url", "url"));
+					factory.register(makeMap("project.name", "text"));
 					factory.register(makeMap("mailingLists", "list"));
 					factory.register(makeMap("tutorials", "list"));
 				} else if (entity.equals(RepositoryConstants.entityOrganisation)) {
-					factory.register(makeMap("organisationUrl", "url"));
-					factory.register(makeMap("name", "text"));
+					factory.register(makeMap("organisation.url", "url"));
+					factory.register(makeMap("organisation.name", "text"));
 				}
 				return factory;
 			}

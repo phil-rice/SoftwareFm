@@ -1,4 +1,4 @@
-package arc4eclipse.core.plugin;
+package org.arc4eclipse.core.plugin;
 
 import java.util.List;
 

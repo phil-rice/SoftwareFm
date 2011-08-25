@@ -1,9 +1,9 @@
 package org.arc4eclipse.displayJarPath;
 
+import org.arc4eclipse.core.plugin.AbstractDisplayerTest;
 import org.arc4eclipse.displayCore.api.IDisplayer;
 import org.eclipse.swt.widgets.Control;
 
-import arc4eclipse.core.plugin.AbstractDisplayerTest;
 
 public class JarPathDisplayerTest extends AbstractDisplayerTest<DisplayJarPanel, Control> {
 

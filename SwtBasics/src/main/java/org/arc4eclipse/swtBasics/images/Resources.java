@@ -58,7 +58,9 @@ public class Resources {
 	}
 
 	private static String getResource(IResourceGetter resourceGetter, String pattern, String key) {
-		return resourceGetter.getStringOrNull(MessageFormat.format(pattern, key));
+		String fullKey = MessageFormat.format(pattern, key);
+		String result = IResourceGetter.Utils.get(resourceGetter, fullKey);
+		return result;
 	}
 
 	public static boolean hasHelpText(IResourceGetter resourceGetter, String key) {

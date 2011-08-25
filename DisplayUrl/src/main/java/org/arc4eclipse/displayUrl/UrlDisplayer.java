@@ -19,12 +19,15 @@ public class UrlDisplayer extends AbstractDisplayerWithLabel<BoundTitleAndTextFi
 	@Override
 	public BoundTitleAndTextField createLargeControl(DisplayerContext context, IRegisteredItems registeredItems, Composite parent, DisplayerDetails displayerDetails) {
 		final BoundTitleAndTextField boundTitleAndTextField = new BoundTitleAndTextField(parent, context, displayerDetails);
+		boundTitleAndTextField.addEditButton();
 		ImageButtons.addBrowseButton(boundTitleAndTextField, new Callable<String>() {
 			@Override
 			public String call() throws Exception {
 				return boundTitleAndTextField.getText();
 			}
 		});
+		ImageButtons.addHelpButton(boundTitleAndTextField, displayerDetails.key);
+
 		return boundTitleAndTextField;
 	}
 

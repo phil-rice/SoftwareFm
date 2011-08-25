@@ -1,6 +1,7 @@
 package org.arc4eclipse.selectedArtifact.plugin;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
+import org.arc4eclipse.core.plugin.Arc4EclipseCoreActivator;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.displayCore.api.IDisplayContainer;
 import org.arc4eclipse.panel.ISelectedBindingManager;
@@ -10,7 +11,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import arc4eclipse.core.plugin.Arc4EclipseCoreActivator;
 
 /**
  * The activator class controls the plug-in life cycle

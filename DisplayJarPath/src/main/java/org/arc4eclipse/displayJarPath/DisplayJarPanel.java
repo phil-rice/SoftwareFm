@@ -3,6 +3,7 @@ package org.arc4eclipse.displayJarPath;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.arc4eclipse.swtBasics.Swts;
+import org.arc4eclipse.swtBasics.images.ImageButtons;
 import org.arc4eclipse.swtBasics.text.ConfigForTitleAnd;
 import org.arc4eclipse.swtBasics.text.TitleAndTextField;
 import org.eclipse.core.runtime.IPath;
@@ -19,12 +20,18 @@ public class DisplayJarPanel extends Composite {
 	public DisplayJarPanel(Composite parent, int style, DisplayerContext context) {
 		super(parent, style);
 		ConfigForTitleAnd config = context.configForTitleAnd;
-		this.projectField = new TitleAndTextField(config, parent, DisplayJarConstants.project);
-		this.pathField = new TitleAndTextField(config, parent, DisplayJarConstants.path);
-		this.nameField = new TitleAndTextField(config, parent, DisplayJarConstants.name);
-		this.digestField = new TitleAndTextField(config, parent, DisplayJarConstants.digest);
-		this.urlField = new TitleAndTextField(config, parent, DisplayJarConstants.url);
+		this.projectField = addNameValue(parent, config, DisplayJarConstants.project);
+		this.pathField = addNameValue(parent, config, DisplayJarConstants.path);
+		this.nameField = addNameValue(parent, config, DisplayJarConstants.name);
+		this.digestField = addNameValue(parent, config, DisplayJarConstants.digest);
+		this.urlField = addNameValue(parent, config, DisplayJarConstants.url);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
+	}
+
+	private TitleAndTextField addNameValue(Composite parent, ConfigForTitleAnd config, String key) {
+		TitleAndTextField titleAndTextField = new TitleAndTextField(config, parent, key);
+		ImageButtons.addHelpButton(titleAndTextField, key);
+		return titleAndTextField;
 	}
 
 	public void setValue(String url, BindingRipperResult ripped) {

@@ -28,8 +28,8 @@ public class SourcePanel extends Composite {
 	public SourcePanel(Composite parent, DisplayerContext context, DisplayerDetails displayerDetails) {
 		super(parent, context.configForTitleAnd.style);
 		setLayout(new GridLayout());
-		txtRepository = new BoundTitleAndTextField(parent, context, displayerDetails);
-		btnAttach = ImageButtons.addRowButton(txtRepository, DisplayJavadocAndSourceConstants.link, DisplayJavadocAndSourceConstants.link, new IImageButtonListener() {
+		txtRepository = new BoundTitleAndTextField(parent, context, displayerDetails.withKey(DisplaySourceConstants.repositoryKey));
+		btnAttach = ImageButtons.addRowButton(txtRepository, DisplaySourceConstants.linkKey, DisplaySourceConstants.linkKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				if (ripped != null) {
@@ -42,9 +42,9 @@ public class SourcePanel extends Composite {
 				}
 			}
 		});
-		ImageButtons.addHelpButton(txtRepository, displayerDetails.key);
-		txtLocal = new TitleAndTextField(context.configForTitleAnd, this, displayerDetails.key);
-		ImageButtons.addHelpButton(txtLocal, displayerDetails.key);
+		ImageButtons.addHelpButton(txtRepository, DisplaySourceConstants.repositoryKey);
+		txtLocal = new TitleAndTextField(context.configForTitleAnd, this, DisplaySourceConstants.localKey);
+		ImageButtons.addHelpButton(txtLocal, DisplaySourceConstants.localKey);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 	}
 

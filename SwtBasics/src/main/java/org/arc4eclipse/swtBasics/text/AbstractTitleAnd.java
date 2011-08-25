@@ -1,6 +1,7 @@
 package org.arc4eclipse.swtBasics.text;
 
 import org.arc4eclipse.swtBasics.Swts;
+import org.arc4eclipse.swtBasics.images.Resources;
 import org.arc4eclipse.utilities.resources.IResourceGetter;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
@@ -18,7 +19,7 @@ public class AbstractTitleAnd extends Composite implements IButtonParent {
 	private final Label lblFiller;
 	protected final ConfigForTitleAnd config;
 
-	public AbstractTitleAnd(ConfigForTitleAnd config, Composite parent, String title) {
+	public AbstractTitleAnd(ConfigForTitleAnd config, Composite parent, String titleKey) {
 		super(parent, config.style);
 		this.config = config;
 
@@ -32,6 +33,7 @@ public class AbstractTitleAnd extends Composite implements IButtonParent {
 		int height = config.titleHeight;
 		compTitleAndButtons.setLayoutData(new RowData(config.titleWidth + config.buttonsWidth, height));
 
+		String title = Resources.getTitle(config.resourceGetter, titleKey);
 		lblTitle = new Label(compTitleAndButtons, SWT.NULL);
 		lblTitle.setLayoutData(new RowData(config.titleWidth, height));
 		lblTitle.setText(title == null ? "" : title);

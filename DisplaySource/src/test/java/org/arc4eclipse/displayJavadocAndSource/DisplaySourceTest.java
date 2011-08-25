@@ -1,11 +1,11 @@
 package org.arc4eclipse.displayJavadocAndSource;
 
+import org.arc4eclipse.core.plugin.AbstractDisplayerTest;
 import org.arc4eclipse.displayCore.api.IDisplayer;
 import org.arc4eclipse.displayJavadocAndSource.SourceDisplayer;
 import org.arc4eclipse.displayJavadocAndSource.SourcePanel;
 import org.eclipse.swt.widgets.Control;
 
-import arc4eclipse.core.plugin.AbstractDisplayerTest;
 
 public class DisplaySourceTest extends AbstractDisplayerTest<SourcePanel, Control> {
 

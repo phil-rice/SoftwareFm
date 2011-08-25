@@ -78,7 +78,6 @@ public class ConfigForTitleAnd {
 
 	public static ConfigForTitleAnd createForDialogs(Display display, IResourceGetter resourceGetter, ImageRegistry imageRegistry) {
 		return create(display, resourceGetter, imageRegistry);
-
 	}
 
 }
