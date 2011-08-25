@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.arc4eclipse.arc4eclipseRepository.api.RepositoryDataItemStatus;
+import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
 import org.arc4eclipse.displayCore.api.BindingContext;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.displayCore.api.DisplayerDetails;
@@ -29,8 +31,10 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 	private final List<Map<String, String>> displayDefinitions;
 	private final List<Control> smallControls;
 	private final List<Control> largeControls;
+	private final String entity;
 
 	public DisplayContainer(DisplayerContext displayerContext, Composite parent, int style, String entity, IRegisteredItems registeredItems, List<Map<String, String>> displayDefinitions) {
+		this.entity = entity;
 		this.registeredItems = registeredItems;
 		this.displayDefinitions = displayDefinitions;
 		content = new Composite(parent, style);
@@ -136,6 +140,13 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 				return i;
 		}
 		return -1;
+	}
+
+	@Override
+	public void statusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> item, Map<String, Object> context) throws Exception {
+		Object actualEntity = context.get(RepositoryConstants.entity);
+		if (entity.equals(actualEntity))
+			setValues(new BindingContext(url, item, context));
 	}
 
 }

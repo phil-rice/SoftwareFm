@@ -1,5 +1,6 @@
 package org.arc4eclipse.selectedArtifactPlugin.views;
 
+import org.arc4eclipse.displayCore.api.IDisplayContainer;
 import org.arc4eclipse.selectedArtifact.plugin.Activator;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
@@ -14,6 +15,7 @@ import org.eclipse.ui.part.ViewPart;
 abstract public class AbstractSelectedArtifactView extends ViewPart {
 
 	public static final String ID = "org.arc4eclipse.selectedArtifactPlugin.views.AbstractSelectedArtifactView";
+	private IDisplayContainer displayContainer;
 
 	public AbstractSelectedArtifactView() {
 	}
@@ -24,7 +26,14 @@ abstract public class AbstractSelectedArtifactView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		Activator activator = Activator.getDefault();
-		activator.makeDisplayContainer(parent, entity());
+		displayContainer = activator.makeDisplayContainer(parent, entity());
+		activator.getRepository().addStatusListener(displayContainer);
+	}
+
+	@Override
+	public void dispose() {
+		Activator.getDefault().getRepository().removeStatusListener(displayContainer);
+		super.dispose();
 	}
 
 	abstract protected String entity();
