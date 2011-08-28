@@ -20,11 +20,11 @@ public class DisplayJarPanel extends Composite {
 	public DisplayJarPanel(Composite parent, int style, DisplayerContext context) {
 		super(parent, style);
 		ConfigForTitleAnd config = context.configForTitleAnd;
-		this.projectField = addNameValue(parent, config, DisplayJarConstants.project);
-		this.pathField = addNameValue(parent, config, DisplayJarConstants.path);
-		this.nameField = addNameValue(parent, config, DisplayJarConstants.name);
-		this.digestField = addNameValue(parent, config, DisplayJarConstants.digest);
-		this.urlField = addNameValue(parent, config, DisplayJarConstants.url);
+		this.projectField = addNameValue(this, config, DisplayJarConstants.project);
+		this.pathField = addNameValue(this, config, DisplayJarConstants.path);
+		this.nameField = addNameValue(this, config, DisplayJarConstants.name);
+		this.digestField = addNameValue(this, config, DisplayJarConstants.digest);
+		this.urlField = addNameValue(this, config, DisplayJarConstants.url);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 	}
 

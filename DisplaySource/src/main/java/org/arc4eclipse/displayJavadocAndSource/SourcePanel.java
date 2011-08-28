@@ -28,7 +28,7 @@ public class SourcePanel extends Composite {
 	public SourcePanel(Composite parent, DisplayerContext context, DisplayerDetails displayerDetails) {
 		super(parent, context.configForTitleAnd.style);
 		setLayout(new GridLayout());
-		txtRepository = new BoundTitleAndTextField(parent, context, displayerDetails.withKey(DisplaySourceConstants.repositoryKey));
+		txtRepository = new BoundTitleAndTextField(this, context, displayerDetails.withKey(DisplaySourceConstants.repositoryKey));
 		btnAttach = ImageButtons.addRowButton(txtRepository, DisplaySourceConstants.linkImageKey, DisplaySourceConstants.linkKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {

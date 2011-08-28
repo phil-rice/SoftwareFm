@@ -16,6 +16,8 @@ import org.arc4eclipse.displayCore.api.IRegisteredItems;
 import org.arc4eclipse.displayCore.api.ITopButtonState;
 import org.arc4eclipse.displayCore.constants.DisplayCoreConstants;
 import org.arc4eclipse.swtBasics.Swts;
+import org.arc4eclipse.utilities.collections.Lists;
+import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.maps.Maps;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
@@ -75,21 +77,16 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 	@Override
 	public void setValues(final BindingContext bindingContext) {
 		content.getDisplay().asyncExec(new Runnable() {
+			@Override
 			public void run() {
-				int i = 0;
-				for (Map<String, String> map : displayDefinitions) {
-					String displayerName = map.get(DisplayCoreConstants.displayer);
-					if (displayerName == null)
-						throw new NullPointerException(MessageFormat.format(DisplayCoreConstants.mustHaveDisplayer, map));
-					@SuppressWarnings("unchecked")
-					IDisplayer<Control, Control> displayer = (IDisplayer<Control, Control>) registeredItems.getDisplayer(displayerName);
-					Control largeControl = largeControls.get(i);
-					Control smallControl = smallControls.get(i++);
-					String key = map.get(DisplayCoreConstants.key);
-					Object value = findValue(bindingContext, key);
-					displayer.populateLargeControl(bindingContext, largeControl, value);
-					displayer.populateSmallControl(bindingContext, smallControl, value);
-				}
+				process(new IDisplayContainerCallback() {
+					@Override
+					public <L extends Control, S extends Control> void process(int index, String key, IDisplayer<L, S> displayer, L largeControl, S smallControl) throws Exception {
+						Object value = findValue(bindingContext, key);
+						displayer.populateLargeControl(bindingContext, largeControl, value);
+						displayer.populateSmallControl(bindingContext, smallControl, value);
+					}
+				});
 			}
 		});
 	}
@@ -117,7 +114,56 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 	}
 
 	private void sortOutOrderVisibilityAndLayout() {
+		final List<Control> visibleControls = Lists.newList();
+		final List<Control> invisibleControls = Lists.newList();
+		content.getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				process(new IDisplayContainerCallback() {
+					@Override
+					public <L extends Control, S extends Control> void process(int index, String key, IDisplayer<L, S> displayer, L largeControl, S smallControl) throws Exception {
+						boolean state = state(key);
+						largeControl.setVisible(state);
+						if (state)
+							visibleControls.add(largeControl);
+						else
+							invisibleControls.add(largeControl);
+					}
+				});
+				setAfter(invisibleControls, setAfter(visibleControls, compButtons));
+				Swts.addGrabHorizontalAndFillGridDataToAllChildren(content);
+				content.layout();
+				content.getParent().layout();
+				content.getParent().redraw();
+			}
+		});
+	}
 
+	private Control setAfter(List<Control> controls, Control firstControl) {
+		for (Control control : controls) {
+			control.moveBelow(firstControl);
+			firstControl = control;
+		}
+		return firstControl;
+	}
+
+	@SuppressWarnings({ "unchecked" })
+	private void process(final IDisplayContainerCallback displayContainerCallback) {
+		try {
+			int i = 0;
+			for (Map<String, String> map : displayDefinitions) {
+				String displayerName = map.get(DisplayCoreConstants.displayer);
+				if (displayerName == null)
+					throw new NullPointerException(MessageFormat.format(DisplayCoreConstants.mustHaveDisplayer, map));
+				IDisplayer<Control, Control> displayer = (IDisplayer<Control, Control>) registeredItems.getDisplayer(displayerName);
+				Control largeControl = largeControls.get(i);
+				Control smallControl = smallControls.get(i++);
+				String key = map.get(DisplayCoreConstants.key);
+				displayContainerCallback.process(i, key, displayer, largeControl, smallControl);
+
+			}
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
 	}
 
 	@Override
