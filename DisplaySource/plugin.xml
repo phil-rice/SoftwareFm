@@ -10,16 +10,16 @@
          <display key="javadoc" class ="org.arc4eclipse.displayJavadocAndSource.JavadocDisplayer"/>
    </extension>	
    <extension  point="org.arc4eclipse.image">
-	      <image key="javadoc" class="org.arc4eclipse.displayJavadocAndSource.JavadocDisplayer"/>
+	      <image key="Javadoc" class="org.arc4eclipse.displayJavadocAndSource.JavadocDisplayer"/>
 	</extension>
    <extension  point="org.arc4eclipse.image">
-	      <image key="source" class="org.arc4eclipse.displayJavadocAndSource.SourceDisplayer"/>
+	      <image key="Source" class="org.arc4eclipse.displayJavadocAndSource.SourceDisplayer"/>
 	</extension>
    <extension  point="org.arc4eclipse.image">
-	      <image key="javadoc.link" class="org.arc4eclipse.displayJavadocAndSource.DisplayJavadocConstants"/>
+	      <image key="Javadoc.link" class="org.arc4eclipse.displayJavadocAndSource.DisplayJavadocConstants"/>
 	</extension>
    <extension  point="org.arc4eclipse.image">
-	      <image key="source.link" class="org.arc4eclipse.displayJavadocAndSource.DisplayJavadocConstants"/>
+	      <image key="Source.link" class="org.arc4eclipse.displayJavadocAndSource.DisplayJavadocConstants"/>
 	</extension>
 	<extension  point="org.arc4eclipse.bundle">
 	      <bundle name="JavadocAndSource" class="org.arc4eclipse.displayJavadocAndSource.SourceDisplayer"/>

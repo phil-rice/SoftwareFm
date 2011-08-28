@@ -13,6 +13,7 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -127,6 +128,10 @@ public class ImageButton implements IHasControl {
 		return label;
 	}
 
+	public Image getImage(){
+		return label.getImage();
+	}
+	
 	public static void main(String[] args) {
 		Swts.display("Label", new IFunction1<Composite, Composite>() {
 			@Override

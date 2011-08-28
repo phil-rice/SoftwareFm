@@ -29,7 +29,7 @@ public class SourcePanel extends Composite {
 		super(parent, context.configForTitleAnd.style);
 		setLayout(new GridLayout());
 		txtRepository = new BoundTitleAndTextField(parent, context, displayerDetails.withKey(DisplaySourceConstants.repositoryKey));
-		btnAttach = ImageButtons.addRowButton(txtRepository, DisplaySourceConstants.linkKey, DisplaySourceConstants.linkKey, new IImageButtonListener() {
+		btnAttach = ImageButtons.addRowButton(txtRepository, DisplaySourceConstants.linkImageKey, DisplaySourceConstants.linkKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				if (ripped != null) {

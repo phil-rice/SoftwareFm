@@ -1,5 +1,8 @@
 package org.arc4eclipse.displayCore.api;
 
+import java.text.MessageFormat;
+
+
 import org.arc4eclipse.displayCore.constants.DisplayCoreConstants;
 import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.arc4eclipse.swtBasics.images.IImageButtonListener;
@@ -14,6 +17,8 @@ public abstract class AbstractDisplayerWithLabel<L extends Control> implements I
 	public Control createSmallControl(DisplayerContext displayerContext, IRegisteredItems registeredItems, final ITopButtonState topButtonState, Composite parent, final DisplayerDetails displayerDetails) {
 		final String key = displayerDetails.key;
 		String smallImageKey = displayerDetails.map.get(DisplayCoreConstants.smallImageKey);
+		if (smallImageKey == null)
+			throw new IllegalArgumentException(MessageFormat.format(DisplayCoreConstants.smallImageKeyMissing, key, displayerDetails.map));
 		ImageButton button = new ImageButton(parent, displayerContext.imageRegistry, smallImageKey, true);
 		button.setTooltipText(Resources.getTooltip(displayerContext.resourceGetter, key));
 		button.addListener(new IImageButtonListener() {

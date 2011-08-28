@@ -8,6 +8,8 @@
    <extension  point="org.arc4eclipse.bundle">
       <bundle name="DisplayJar" class="org.arc4eclipse.displayJarPath.DisplayJarConstants"/>
 </extension>
-   
+   <extension  point="org.arc4eclipse.image">
+      <image key="Jar" class ="org.arc4eclipse.displayJarPath.DisplayJarConstants"/>
+   </extension>
 
 </plugin>

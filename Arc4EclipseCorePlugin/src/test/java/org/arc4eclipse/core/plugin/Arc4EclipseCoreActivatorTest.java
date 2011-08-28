@@ -4,8 +4,8 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.arc4eclipse.core.plugin.Arc4EclipseCoreActivator;
-import org.arc4eclipse.core.plugin.Plugins;
+import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
+import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.swtBasics.SwtBasicConstants;
 import org.arc4eclipse.swtBasics.images.Images;
 import org.arc4eclipse.swtBasics.images.Resources;
@@ -15,6 +15,7 @@ import org.arc4eclipse.utilities.resources.IResourceGetter;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.internal.Workbench;
 
 @SuppressWarnings("restriction")
@@ -39,6 +40,18 @@ public class Arc4EclipseCoreActivatorTest extends TestCase {
 		IResourceGetter resourceGetter = activator.getConfigForTitleAnd(display).resourceGetter;
 		assertEquals(expected, Resources.getTooltip(resourceGetter, SwtBasicConstants.key));
 
+	}
+
+	public void testCanMakeDisplayContainers() {
+		checkCanMakeDisplayContainers(RepositoryConstants.entityJarData);
+		checkCanMakeDisplayContainers(RepositoryConstants.entityOrganisation);
+		checkCanMakeDisplayContainers(RepositoryConstants.entityProject);
+	}
+
+	private void checkCanMakeDisplayContainers(String entity) {
+		Arc4EclipseCoreActivator activator = Arc4EclipseCoreActivator.getDefault();
+		DisplayerContext displayerContext = new DisplayerContext(activator.getSelectedBindingManager(), activator.getRepository(), activator.getConfigForTitleAnd(display));
+		activator.getDisplayContainerFactory(display, entity).create(displayerContext, new Shell(display));
 	}
 
 	public void testAllImagesCanBeGot() {

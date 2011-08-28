@@ -185,9 +185,9 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 				IDisplayContainerFactoryBuilder builder = getDisplayContainerFactoryBuilder(display);
 				IDisplayContainerFactory factory = builder.build(entity);
 				if (entity.equals(RepositoryConstants.entityJarData)) {
-					factory.register(makeMap("jarData", "jar"));
-					factory.register(makeMap("javadoc", "javadoc"));
-					factory.register(makeMap("source", "src"));
+					factory.register(makeMap("jarData", "jar", "Jar"));
+					factory.register(makeMap("javadoc", "javadoc", "Javadoc"));
+					factory.register(makeMap("source", "src", "Source"));
 					factory.register(makeMap("project.url", "url"));
 					factory.register(makeMap("organisation.url", "url"));
 				} else if (entity.equals(RepositoryConstants.entityProject)) {
@@ -266,6 +266,8 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 				Images.removeImages(imageRegistry, key);
 			}
 		}, ICallback.Utils.sysErrCallback());
+		registeredExtraImages = false;
+
 	}
 
 	public ConfigForTitleAnd getConfigForTitleAnd(Display display) {
