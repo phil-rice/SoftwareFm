@@ -42,6 +42,7 @@ public class SourcePanel extends Composite {
 				}
 			}
 		});
+		txtRepository.addEditButton();
 		ImageButtons.addHelpButton(txtRepository, DisplaySourceConstants.repositoryKey);
 		txtLocal = new TitleAndTextField(context.configForTitleAnd, this, DisplaySourceConstants.localKey);
 		ImageButtons.addHelpButton(txtLocal, DisplaySourceConstants.localKey);

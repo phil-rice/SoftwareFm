@@ -32,4 +32,9 @@ public class DisplayJavadocTest extends AbstractDisplayerTest<JavadocPanel, Cont
 		fail();
 	}
 
+	@Override
+	protected String getSmallImageKey() {
+		return "Javadoc";
+	}
+
 }

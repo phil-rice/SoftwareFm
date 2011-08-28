@@ -73,21 +73,34 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 	}
 
 	@Override
-	public void setValues(BindingContext bindingContext) {
-		int i = 0;
-		for (Map<String, String> map : displayDefinitions) {
-			String displayerName = map.get(DisplayCoreConstants.displayer);
-			if (displayerName == null)
-				throw new NullPointerException(MessageFormat.format(DisplayCoreConstants.mustHaveDisplayer, map));
-			@SuppressWarnings("unchecked")
-			IDisplayer<Control, Control> displayer = (IDisplayer<Control, Control>) registeredItems.getDisplayer(displayerName);
-			Control largeControl = largeControls.get(i);
-			Control smallControl = smallControls.get(i++);
-			String key = map.get(DisplayCoreConstants.key);
+	public void setValues(final BindingContext bindingContext) {
+		content.getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				int i = 0;
+				for (Map<String, String> map : displayDefinitions) {
+					String displayerName = map.get(DisplayCoreConstants.displayer);
+					if (displayerName == null)
+						throw new NullPointerException(MessageFormat.format(DisplayCoreConstants.mustHaveDisplayer, map));
+					@SuppressWarnings("unchecked")
+					IDisplayer<Control, Control> displayer = (IDisplayer<Control, Control>) registeredItems.getDisplayer(displayerName);
+					Control largeControl = largeControls.get(i);
+					Control smallControl = smallControls.get(i++);
+					String key = map.get(DisplayCoreConstants.key);
+					Object value = findValue(bindingContext, key);
+					displayer.populateLargeControl(bindingContext, largeControl, value);
+					displayer.populateSmallControl(bindingContext, smallControl, value);
+				}
+			}
+		});
+	}
+
+	private Object findValue(BindingContext bindingContext, String key) {
+		switch (bindingContext.status) {
+		case FOUND:
 			Object value = bindingContext.data.get(key);
-			displayer.populateLargeControl(bindingContext, largeControl, value);
-			displayer.populateSmallControl(bindingContext, smallControl, value);
+			return value;
 		}
+		return null;
 	}
 
 	@Override
@@ -146,7 +159,7 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 	public void statusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> item, Map<String, Object> context) throws Exception {
 		Object actualEntity = context.get(RepositoryConstants.entity);
 		if (entity.equals(actualEntity))
-			setValues(new BindingContext(url, item, context));
+			setValues(new BindingContext(status, url, item, context));
 	}
 
 }

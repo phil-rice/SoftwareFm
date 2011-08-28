@@ -5,6 +5,7 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.arc4eclipse.arc4eclipseRepository.api.RepositoryDataItemStatus;
 import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
 import org.arc4eclipse.displayCore.api.BindingContext;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
@@ -121,7 +122,7 @@ public class DisplayContainerFactoryTest extends TestCase {
 		IDisplayContainer container = factory.create(displayerContext, shell);
 		Map<String, Object> data = Maps.makeMap("keyA", "value1", "keyB", "value2");
 		Map<String, Object> context = Maps.makeMap(RepositoryConstants.entity, "entity");
-		BindingContext bindingContext = new BindingContext(null, data, context);
+		BindingContext bindingContext = new BindingContext(RepositoryDataItemStatus.FOUND, null, data, context);
 
 		container.setValues(bindingContext);
 

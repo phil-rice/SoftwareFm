@@ -37,4 +37,9 @@ public class UrlDisplayerTest extends AbstractDisplayerTest<BoundTitleAndTextFie
 		assertEquals(sampleData, largeControl.getText());
 	}
 
+	@Override
+	protected String getSmallImageKey() {
+		return "Clear";
+	}
+
 }

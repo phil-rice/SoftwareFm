@@ -1,6 +1,7 @@
 package org.arc4eclipse.displayCore.api;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
+import org.arc4eclipse.arc4eclipseRepository.api.RepositoryDataItemStatus;
 import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
 import org.arc4eclipse.displayCore.constants.DisplayCoreConstants;
 import org.arc4eclipse.panel.ISelectedBindingManager;
@@ -24,7 +25,7 @@ public class Displayers {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				IDisplayContainer container = makeContainer(displayer, IEditor.Utils.noEditor(), resourceGetter, from, "entity", imageAnchor, key);
-				BindingContext bindingContext = new BindingContext("someUrl", Maps.<String, Object> makeMap(key, data), Maps.<String, Object> makeMap(RepositoryConstants.entity, "entity"));
+				BindingContext bindingContext = new BindingContext(RepositoryDataItemStatus.FOUND, "someUrl", Maps.<String, Object> makeMap(key, data), Maps.<String, Object> makeMap(RepositoryConstants.entity, "entity"));
 				container.setValues(bindingContext);
 				return container.getComposite();
 			}

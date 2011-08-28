@@ -33,5 +33,10 @@ public class DisplaySourceTest extends AbstractDisplayerTest<SourcePanel, Contro
 	protected void checkData(Object sampleData, SourcePanel largeControl, Control smallControl) {
 		fail();
 	}
+	
+	@Override
+	protected String getSmallImageKey() {
+		return "Source";
+	}
 
 }

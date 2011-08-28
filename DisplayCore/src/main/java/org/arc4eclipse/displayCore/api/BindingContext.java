@@ -2,13 +2,17 @@ package org.arc4eclipse.displayCore.api;
 
 import java.util.Map;
 
+import org.arc4eclipse.arc4eclipseRepository.api.RepositoryDataItemStatus;
+
 public class BindingContext {
 
 	public final String url;
 	public final Map<String, Object> data;
 	public final Map<String, Object> context;
+	public final RepositoryDataItemStatus status;
 
-	public BindingContext(String url, Map<String, Object> data, Map<String, Object> context) {
+	public BindingContext(RepositoryDataItemStatus status, String url, Map<String, Object> data, Map<String, Object> context) {
+		this.status = status;
 		this.url = url;
 		this.data = data;
 		this.context = context;

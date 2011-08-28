@@ -5,9 +5,8 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
+import org.arc4eclipse.arc4eclipseRepository.api.RepositoryDataItemStatus;
 import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
-import org.arc4eclipse.core.plugin.Arc4EclipseCoreActivator;
-import org.arc4eclipse.core.plugin.SelectedArtifactSelectionManager;
 import org.arc4eclipse.displayCore.api.BindingContext;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.displayCore.api.Displayers;
@@ -15,7 +14,6 @@ import org.arc4eclipse.displayCore.api.IDisplayContainerFactory;
 import org.arc4eclipse.displayCore.api.IDisplayContainerForTests;
 import org.arc4eclipse.displayCore.api.IDisplayer;
 import org.arc4eclipse.displayCore.constants.DisplayCoreConstants;
-import org.arc4eclipse.swtBasics.images.ImageButton;
 import org.arc4eclipse.swtBasics.images.Images;
 import org.arc4eclipse.swtBasics.images.Resources;
 import org.arc4eclipse.swtBasics.text.ConfigForTitleAnd;
@@ -66,7 +64,7 @@ public abstract class AbstractDisplayerTest<L extends Control, C extends Control
 	private void setValues(IDisplayContainerForTests container, String entity, String key) {
 		Map<String, Object> data = Maps.makeLinkedMap(key, getSampleData(key));
 		Map<String, Object> context = Maps.makeLinkedMap(RepositoryConstants.entity, entity);
-		container.setValues(new BindingContext("some url", data, context));
+		container.setValues(new BindingContext(RepositoryDataItemStatus.FOUND, "some url", data, context));
 	}
 
 	private IDisplayContainerForTests makeContainer(String entity, String key, String smallImageKey) {

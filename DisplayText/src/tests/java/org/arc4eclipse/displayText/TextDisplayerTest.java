@@ -32,5 +32,9 @@ public class TextDisplayerTest extends AbstractDisplayerTest<BoundTitleAndTextFi
 	protected void checkData(Object sampleData, BoundTitleAndTextField largeControl, Control smallControl) {
 		assertEquals(sampleData, largeControl.getText());
 	}
+	@Override
+	protected String getSmallImageKey() {
+		return "Clear";
+	}
 
 }
