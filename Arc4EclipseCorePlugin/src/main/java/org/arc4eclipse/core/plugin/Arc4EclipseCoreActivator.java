@@ -99,8 +99,8 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 					Object actualEntity = context.get(RepositoryConstants.entity);
 					if (item != null) {
 						if (RepositoryConstants.entityJarData.equals(actualEntity)) {
-							getDependantData(item, repository.generator().forOrganisation(), RepositoryConstants.entityOrganisation, RepositoryConstants.organisationUrlKey);
-							getDependantData(item, repository.generator().forProject(), RepositoryConstants.entityProject, RepositoryConstants.projectUrlKey);
+							getDependantData(item, repository.generator().forOrganisation(), RepositoryConstants.entityOrganisation,"organisation.url");
+							getDependantData(item, repository.generator().forProject(), RepositoryConstants.entityProject, "project.url");
 						}
 					}
 

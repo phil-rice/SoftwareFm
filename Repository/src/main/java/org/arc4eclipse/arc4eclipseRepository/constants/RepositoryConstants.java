@@ -6,22 +6,6 @@ public class RepositoryConstants {
 	public static final String javadocKey = "javadoc";
 	public static final String sourceKey = "source";
 
-	public static final String organisationUrlKey = "url_organisationUrl";
-	public static final String organisationNameKey = "text_organisationName";
-	public static final String descriptionKey = "text_description";
-
-	public static final String projectUrlKey = "url_projectUrl";
-	public static final String nameKey = "text_projectName";
-	public static final String issuesKey = "issues_issues";
-	public static final String projectLicenseKey = "license_projectLicense";
-	public static final String projectTutorialsKey = "text_projectTutorials";
-	public static final String projectJobsKey = "jobs_projectJobs";
-	public static final String merchandisingKey = "merchandising_merchandising";
-	public static final String forumsKey = "forums_forums";
-	public static final String mailingListsKey = "mailingLists_mailingLists";
-	public static final String tutorialsKey = "tutorials_tutorials";
-	public static final String jobsKey = "jobs_jobs";
-
 	public static final String entity = "entity";
 	public static final String entityJarData = "jarData";
 	public static final String entityOrganisation = "Organisation";
@@ -32,21 +16,6 @@ public class RepositoryConstants {
 	public static final String failedToChange = "Failed to change {0}";
 	public static final String cannotFindMapperFor = "Cannot find mapper for {0}";
 
-	public static final String jarDetailsTitle = "Jar details";
-	public static final String sourceTitle = "Source Code";
-	public static final String javaDocTitle = "Java Doc";
-	public static final String organisationTitle = "Organisation";
-	public static final String projectTitle = "Project";
-	public static final String descriptionTitle = "Description";
-	public static final String nameTitle = "Name";
-	public static final String issuesTitle = "Issues";
-
-	public static final String licenseTitle = "License";
-	public static final String mailingListTitle = "Mailing lists";
-	public static final String tutorialsTitle = "Tutorials";
-	public static final String jobsTitle = "Jobs";
-	public static final String merchandisingTitle = "Merchandising";
-	public static final String forumsTitle = "Forums";
 
 	public static final String action = "action";
 	public static final String actionGet = "get";
