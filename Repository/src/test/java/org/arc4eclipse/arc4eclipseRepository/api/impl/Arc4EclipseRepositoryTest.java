@@ -18,16 +18,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class Arc4EclipseRepositoryTest extends TestCase {
-
+	
+	private String organisationUrlKey = "organisation.url";
+	private String projectUrlKey = "project.url";
+	private String organisationNameKey = "organisation.name";
+	private String descriptionKey = "description";
+	
 	private IArc4EclipseRepository repository;
-
 	private String digest;
-	// private Resource classWorldsDigest;
-
 	private UrlGenerator urlGenerator;
-
 	private IRepositoryFacard facard;
-
 	private IJarDigester jarDigestor;
 
 	@Test
@@ -38,16 +38,16 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 				"jcr:primaryType", "nt:unstructured",//
 				"name1", "value1"));
 
-		checkModifyAndGetJarData(RepositoryConstants.organisationUrlKey, "OrgUrl", Maps.<String, Object> makeMap(//
+		checkModifyAndGetJarData(organisationUrlKey, "OrgUrl", Maps.<String, Object> makeMap(//
 				RepositoryConstants.hexDigestKey, digest, //
-				RepositoryConstants.organisationUrlKey, "OrgUrl",//
+				organisationUrlKey, "OrgUrl",//
 				"jcr:primaryType", "nt:unstructured",//
 				"name1", "value1"));
 
-		checkModifyAndGetJarData(RepositoryConstants.projectUrlKey, "ProjName", Maps.<String, Object> makeMap(//
+		checkModifyAndGetJarData(projectUrlKey, "ProjName", Maps.<String, Object> makeMap(//
 				RepositoryConstants.hexDigestKey, digest, //
-				RepositoryConstants.organisationUrlKey, "OrgUrl",//
-				RepositoryConstants.projectUrlKey, "ProjName",//
+				organisationUrlKey, "OrgUrl",//
+				projectUrlKey, "ProjName",//
 				"jcr:primaryType", "nt:unstructured",//
 				"name1", "value1"));
 	}
@@ -56,18 +56,18 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 	public void testGetAndModifyData() throws Exception {
 		String url = "/tests/" + getClass().getSimpleName();
 		facard.delete(url, IResponseCallback.Utils.memoryCallback()).get();
-		checkModifyAndGetData(url, RepositoryConstants.organisationUrlKey, "orgUrl", Maps.<String, Object> makeMap(//
-				RepositoryConstants.organisationUrlKey, "orgUrl",//
+		checkModifyAndGetData(url, organisationUrlKey, "orgUrl", Maps.<String, Object> makeMap(//
+				organisationUrlKey, "orgUrl",//
 				"jcr:primaryType", "nt:unstructured"));
-		checkModifyAndGetData(url, RepositoryConstants.organisationNameKey, "orgName", Maps.<String, Object> makeMap(//
-				RepositoryConstants.organisationUrlKey, "orgUrl",//
+		checkModifyAndGetData(url, organisationNameKey, "orgName", Maps.<String, Object> makeMap(//
+				organisationUrlKey, "orgUrl",//
 				"jcr:primaryType", "nt:unstructured",//
-				RepositoryConstants.organisationNameKey, "orgName"));
-		checkModifyAndGetData(url, RepositoryConstants.descriptionKey, "orgDesc", Maps.<String, Object> makeMap(//
-				RepositoryConstants.organisationUrlKey, "orgUrl",//
-				RepositoryConstants.organisationNameKey, "orgName",//
+				organisationNameKey, "orgName"));
+		checkModifyAndGetData(url, descriptionKey, "orgDesc", Maps.<String, Object> makeMap(//
+				organisationUrlKey, "orgUrl",//
+				organisationNameKey, "orgName",//
 				"jcr:primaryType", "nt:unstructured",//
-				RepositoryConstants.descriptionKey, "orgDesc"));
+				descriptionKey, "orgDesc"));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -117,7 +117,7 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 
 	}
 
-	@Override
+	@Override 
 	@Before
 	protected void setUp() throws Exception {
 		super.setUp();
