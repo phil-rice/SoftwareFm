@@ -7,7 +7,7 @@ import org.arc4eclipse.arc4eclipseRepository.api.impl.StatusAndData;
 import org.arc4eclipse.utilities.collections.Lists;
 import org.junit.Assert;
 
-public class MemoryStatusChangedListener implements IStatusChangedListener {
+public class MemoryStatusChangedListener implements IRepositoryStatusListener {
 
 	private final List<StatusAndData> list = Lists.newList();
 

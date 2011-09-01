@@ -1,5 +1,6 @@
 package org.arc4eclipse.displayCore.api;
 
+import org.arc4eclipse.arc4eclipseRepository.api.IUrlGenerator;
 
 public interface IRegisteredItems {
 
@@ -10,5 +11,7 @@ public interface IRegisteredItems {
 	ILineEditor getLineEditor(String lineEditorName);
 
 	IDisplayer<?, ?> getDisplayer(String displayName);
+
+	IUrlGenerator getUrlGenerator(String entityName);
 
 }

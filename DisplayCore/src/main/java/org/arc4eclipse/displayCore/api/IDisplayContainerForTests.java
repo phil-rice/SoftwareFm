@@ -10,4 +10,6 @@ public interface IDisplayContainerForTests extends IDisplayContainer {
 	public <L> L getLargeControlFor(String key);
 
 	public <C> C getSmallControlFor(String key);
+
+	IRegisteredItems getRegisteredItems();
 }

@@ -4,6 +4,8 @@
    <extension-point id="org.arc4eclipse.displayers" name="Displayers" />
    <extension-point id="org.arc4eclipse.image" name="Image" />
    <extension-point id="org.arc4eclipse.bundle" name="Bundle" />
+   <extension-point id="org.arc4eclipse.urlGenerator" name="UrlGenerator" />
+   <extension-point id="org.arc4eclipse.repositoryPropogator" name="RepositoryStatusListenerS" />
 
 <extension  point="org.arc4eclipse.image">
       <image key="Edit" class ="org.arc4eclipse.swtBasics.images.Images"/>

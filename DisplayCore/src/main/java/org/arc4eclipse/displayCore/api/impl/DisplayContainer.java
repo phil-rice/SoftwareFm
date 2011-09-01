@@ -117,6 +117,7 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 		final List<Control> visibleControls = Lists.newList();
 		final List<Control> invisibleControls = Lists.newList();
 		content.getDisplay().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				process(new IDisplayContainerCallback() {
 					@Override
@@ -208,4 +209,8 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 			setValues(new BindingContext(status, url, item, context));
 	}
 
+	@Override
+	public IRegisteredItems getRegisteredItems() {
+		return registeredItems;
+	}
 }

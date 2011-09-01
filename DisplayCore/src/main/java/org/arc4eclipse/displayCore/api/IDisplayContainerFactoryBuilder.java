@@ -1,5 +1,6 @@
 package org.arc4eclipse.displayCore.api;
 
+import org.arc4eclipse.arc4eclipseRepository.api.IUrlGenerator;
 import org.arc4eclipse.displayCore.api.impl.DisplayContainerFactoryBuilder;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.eclipse.swt.graphics.Image;
@@ -21,6 +22,8 @@ public interface IDisplayContainerFactoryBuilder {
 	void registerValidator(String validatorName, IValidator validator);
 
 	void registerImage(String name, IFunction1<Display, Image> imageMaker);
+
+	void registerUrlGenerator(String name, IUrlGenerator generator);
 
 	IDisplayContainerFactory build(String entity);
 

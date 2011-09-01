@@ -2,13 +2,13 @@ package org.arc4eclipse.arc4eclipseRepository.api;
 
 import java.util.Map;
 
-public interface IStatusChangedListener {
+public interface IRepositoryStatusListener {
 
 	void statusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> item, Map<String, Object> context) throws Exception;
 
 	public static class Utils {
-		public static IStatusChangedListener sysout() {
-			return new IStatusChangedListener() {
+		public static IRepositoryStatusListener sysout() {
+			return new IRepositoryStatusListener() {
 				@Override
 				public void statusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> item, Map<String, Object> context) {
 					System.out.println(status + " " + url + " " + item + "  -------------  " + context);

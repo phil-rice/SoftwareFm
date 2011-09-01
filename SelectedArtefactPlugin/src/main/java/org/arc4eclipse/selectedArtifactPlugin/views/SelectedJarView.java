@@ -6,7 +6,7 @@ public class SelectedJarView extends AbstractSelectedArtifactView {
 
 	@Override
 	protected String entity() {
-		return RepositoryConstants.entityJarData;
+		return RepositoryConstants.entityJar;
 	}
 
 }

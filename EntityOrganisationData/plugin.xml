@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension    point="org.arc4eclipse.urlGenerator">
+         <UrlGenerator name="organisation" class= "org.arc4eclipse.entityOrganisationData.OrganisationUrlGenerator" />
+   </extension>
+   
+   <extension  point="org.arc4eclipse.repositoryPropogator">
+         <repositoryStatusPropogator class= "org.arc4eclipse.entityOrganisationData.OrganisationRepositoryStatusListenerPropogator" />
+   </extension>
+</plugin>

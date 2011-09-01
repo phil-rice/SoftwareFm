@@ -3,6 +3,7 @@ package org.arc4eclipse.displayCore.api.impl;
 import java.text.MessageFormat;
 import java.util.Map;
 
+import org.arc4eclipse.arc4eclipseRepository.api.IUrlGenerator;
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactory;
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactoryBuilder;
 import org.arc4eclipse.displayCore.api.IDisplayer;
@@ -24,6 +25,7 @@ public class DisplayContainerFactoryBuilder implements IDisplayContainerFactoryB
 	private final Map<String, ILineEditor> registeredLineEditors = Maps.newMap();
 	private final Map<String, IValidator> registeredValidators = Maps.newMap();
 	private final Map<String, IFunction1<Display, Image>> imageMakers = Maps.newMap();
+	private final Map<String, IUrlGenerator> registeredUrlGenerators = Maps.newMap();
 
 	static class KeyTitleHelpAndImage {
 		final String key;
@@ -69,6 +71,11 @@ public class DisplayContainerFactoryBuilder implements IDisplayContainerFactoryB
 		checkAndPut(imageMakers, name, imageMaker);
 	}
 
+	@Override
+	public void registerUrlGenerator(String name, IUrlGenerator generator) {
+		checkAndPut(registeredUrlGenerators, name, generator);
+	}
+
 	private <V> void checkAndPut(Map<String, V> map, String name, V value) {
 		if (map.containsKey(name))
 			throw new IllegalArgumentException(MessageFormat.format(UtilityMessages.duplicateKey, name, map.get(name), value));
@@ -77,7 +84,7 @@ public class DisplayContainerFactoryBuilder implements IDisplayContainerFactoryB
 
 	@Override
 	public IDisplayContainerFactory build(String entity) {
-		return new DisplayContainerFactory(entity, registeredDisplayers, registeredEditors, registeredLineEditors, registeredValidators);
+		return new DisplayContainerFactory(entity, registeredDisplayers, registeredEditors, registeredLineEditors, registeredValidators, registeredUrlGenerators);
 	}
 
 }

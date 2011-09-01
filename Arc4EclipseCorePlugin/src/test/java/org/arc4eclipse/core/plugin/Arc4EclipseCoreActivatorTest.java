@@ -4,6 +4,8 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.arc4eclipse.arc4eclipseRepository.api.IUrlGenerator;
+import org.arc4eclipse.arc4eclipseRepository.api.IUrlGeneratorMap;
 import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.swtBasics.SwtBasicConstants;
@@ -43,7 +45,7 @@ public class Arc4EclipseCoreActivatorTest extends TestCase {
 	}
 
 	public void testCanMakeDisplayContainers() {
-		checkCanMakeDisplayContainers(RepositoryConstants.entityJarData);
+		checkCanMakeDisplayContainers(RepositoryConstants.entityJar);
 		checkCanMakeDisplayContainers(RepositoryConstants.entityOrganisation);
 		checkCanMakeDisplayContainers(RepositoryConstants.entityProject);
 	}
@@ -52,6 +54,19 @@ public class Arc4EclipseCoreActivatorTest extends TestCase {
 		Arc4EclipseCoreActivator activator = Arc4EclipseCoreActivator.getDefault();
 		DisplayerContext displayerContext = new DisplayerContext(activator.getSelectedBindingManager(), activator.getRepository(), activator.getConfigForTitleAnd(display));
 		activator.getDisplayContainerFactory(display, entity).create(displayerContext, new Shell(display));
+	}
+
+	public void testUrlGenerators() throws Exception {
+		checkUrlGenerator("/jars/565/someurl", RepositoryConstants.entityJar);
+		checkUrlGenerator("/organisations/565/someurl", RepositoryConstants.entityOrganisation);
+		checkUrlGenerator("/projects/565/someurl", RepositoryConstants.entityProject);
+	}
+
+	private void checkUrlGenerator(String expected, String entity) throws Exception {
+		Arc4EclipseCoreActivator activator = Arc4EclipseCoreActivator.getDefault();
+		IUrlGeneratorMap urlGeneratorMap = activator.getUrlGeneratorMap();
+		IUrlGenerator urlGenerator = urlGeneratorMap.get(entity);
+		assertEquals(expected, urlGenerator.apply("someurl"));
 	}
 
 	public void testAllImagesCanBeGot() {

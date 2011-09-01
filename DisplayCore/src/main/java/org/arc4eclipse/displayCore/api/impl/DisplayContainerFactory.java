@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 
+import org.arc4eclipse.arc4eclipseRepository.api.IUrlGenerator;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.displayCore.api.IDisplayContainer;
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactory;
@@ -24,14 +25,16 @@ public class DisplayContainerFactory implements IDisplayContainerFactory, IRegis
 	private final Map<String, IEditor> registeredEditors;
 	private final Map<String, ILineEditor> registeredLineEditors;
 	private final Map<String, IValidator> registeredValidators;
+	private final Map<String, IUrlGenerator> registeredUrlGenerators;
 	private final List<Map<String, String>> displayDefinitions = Lists.newList();
 
-	public DisplayContainerFactory(String entity, Map<String, IDisplayer<?, ?>> registeredDisplayers, Map<String, IEditor> registeredEditors, Map<String, ILineEditor> registeredLineEditors, Map<String, IValidator> registeredValidators) {
+	public DisplayContainerFactory(String entity, Map<String, IDisplayer<?, ?>> registeredDisplayers, Map<String, IEditor> registeredEditors, Map<String, ILineEditor> registeredLineEditors, Map<String, IValidator> registeredValidators, Map<String, IUrlGenerator> registeredUrlGenerators) {
 		this.entity = entity;
 		this.registeredDisplayers = registeredDisplayers;
 		this.registeredEditors = registeredEditors;
 		this.registeredLineEditors = registeredLineEditors;
 		this.registeredValidators = registeredValidators;
+		this.registeredUrlGenerators = registeredUrlGenerators;
 	}
 
 	@Override
@@ -52,6 +55,11 @@ public class DisplayContainerFactory implements IDisplayContainerFactory, IRegis
 	@Override
 	public ILineEditor getLineEditor(String lineEditorName) {
 		return checkAndGet(registeredLineEditors, lineEditorName);
+	}
+
+	@Override
+	public IUrlGenerator getUrlGenerator(String generatorName) {
+		return checkAndGet(registeredUrlGenerators, generatorName);
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
+import org.arc4eclipse.arc4eclipseRepository.api.IUrlGeneratorMap;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.displayCore.api.DisplayerDetails;
 import org.arc4eclipse.displayCore.constants.DisplayCoreConstants;
@@ -155,7 +156,7 @@ public class ListPanel extends Composite implements IButtonParent {
 			public Composite apply(Composite from) throws Exception {
 				DisplayerContext context = new DisplayerContext(//
 						ISelectedBindingManager.Utils.noSelectedBindingManager(), //
-						IArc4EclipseRepository.Utils.repository(), //
+						IArc4EclipseRepository.Utils.repository(IUrlGeneratorMap.Utils.urlGeneratorMap()), //
 						ConfigForTitleAnd.create(//
 								from.getDisplay(), //
 								Resources.resourceGetterWithBasics(getClass().getPackage().getName() + ".ListAndPanelTest"),//

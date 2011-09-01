@@ -8,8 +8,7 @@ import java.util.concurrent.Future;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseLogger;
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
-import org.arc4eclipse.arc4eclipseRepository.api.IStatusChangedListener;
-import org.arc4eclipse.arc4eclipseRepository.api.IUrlGenerator;
+import org.arc4eclipse.arc4eclipseRepository.api.IRepositoryStatusListener;
 import org.arc4eclipse.arc4eclipseRepository.api.RepositoryDataItemStatus;
 import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
 import org.arc4eclipse.httpClient.requests.IResponseCallback;
@@ -21,7 +20,6 @@ import org.arc4eclipse.repositoryFacardConstants.RepositoryFacardConstants;
 import org.arc4eclipse.utilities.callbacks.ICallback;
 import org.arc4eclipse.utilities.events.ListenerList;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
-import org.arc4eclipse.utilities.future.Futures;
 import org.arc4eclipse.utilities.maps.Maps;
 import org.arc4eclipse.utilities.strings.Urls;
 
@@ -29,10 +27,9 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 	private final static Map<String, Object> emptyParameters = Collections.<String, Object> emptyMap();
 
 	private final IRepositoryFacard facard;
-	private final IUrlGenerator urlGenerator;
 
 	private final ListenerList<IArc4EclipseLogger> loggers = new ListenerList<IArc4EclipseLogger>();
-	ListenerList<IStatusChangedListener> listeners = new ListenerList<IStatusChangedListener>();
+	ListenerList<IRepositoryStatusListener> listeners = new ListenerList<IRepositoryStatusListener>();
 
 	class CallbackForData implements IRepositoryFacardCallback {
 
@@ -110,9 +107,9 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 
 	private void fireStatusChanged(final String rawUrl, final RepositoryDataItemStatus status, final Map<String, Object> data, final Map<String, Object> context) {
 		final String url = Urls.rip(rawUrl).resourcePath;
-		listeners.fire(new ICallback<IStatusChangedListener>() {
+		listeners.fire(new ICallback<IRepositoryStatusListener>() {
 			@Override
-			public void process(IStatusChangedListener t) throws Exception {
+			public void process(IRepositoryStatusListener t) throws Exception {
 				t.statusChanged(url, status, data, context);
 			}
 
@@ -123,45 +120,44 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 		});
 	}
 
-	public Arc4EclipseRepository(IRepositoryFacard facard, IUrlGenerator urlGenerator, IJarDigester jarDigester) {
+	public Arc4EclipseRepository(IRepositoryFacard facard, IJarDigester jarDigester) {
 		this.facard = facard;
-		this.urlGenerator = urlGenerator;
 	}
 
-	@Override
-	public Future<?> getJarData(String jarDigest, Map<String, Object> rawContext) {
-		try {
-			Map<String, Object> context = new HashMap<String, Object>(rawContext);
-			context.put(RepositoryConstants.entity, RepositoryConstants.entityJarData);
-			context.put(RepositoryConstants.action, RepositoryConstants.actionGet);
-			if (jarDigest == null || jarDigest.equals("")) {
-				fireStatusChanged("", RepositoryDataItemStatus.PATH_NULL, null, context);
-				return Futures.doneFuture(null);
-			}
-			String url = urlGenerator.forJar().apply(jarDigest);
-			fireRequest("getJarData", url, emptyParameters, context);
-			fireStatusChanged(url, RepositoryDataItemStatus.REQUESTED, null, context);
-			return facard.get(url, new CallbackForData(context));
-		} catch (Exception e) {
-			throw WrappedException.wrap(e);
-		}
-
-	}
-
-	@Override
-	public Future<?> modifyJarData(String jarDigest, String name, Object value, Map<String, Object> rawContext) {
-		try {
-			String url = urlGenerator.forJar().apply(jarDigest);
-			Map<String, Object> context = new HashMap<String, Object>(rawContext);
-			context.put(RepositoryConstants.entity, RepositoryConstants.entityJarData);
-			context.put(RepositoryConstants.action, RepositoryConstants.actionPost);
-			Map<String, Object> parameters = Maps.<String, Object> makeMap(name, value, RepositoryConstants.hexDigestKey, jarDigest);
-			fireRequest("modifyJarData", url, parameters, context);
-			return facard.post(url, parameters, new CallbackForModify(context));
-		} catch (Exception e) {
-			throw WrappedException.wrap(e);
-		}
-	}
+	// @Override
+	// public Future<?> getJarData(String jarDigest, Map<String, Object> rawContext) {
+	// try {
+	// Map<String, Object> context = new HashMap<String, Object>(rawContext);
+	// context.put(RepositoryConstants.entity, RepositoryConstants.entityJar);
+	// context.put(RepositoryConstants.action, RepositoryConstants.actionGet);
+	// if (jarDigest == null || jarDigest.equals("")) {
+	// fireStatusChanged("", RepositoryDataItemStatus.PATH_NULL, null, context);
+	// return Futures.doneFuture(null);
+	// }
+	// String url = urlGeneratorMap.forJar().apply(jarDigest);
+	// fireRequest("getJarData", url, emptyParameters, context);
+	// fireStatusChanged(url, RepositoryDataItemStatus.REQUESTED, null, context);
+	// return facard.get(url, new CallbackForData(context));
+	// } catch (Exception e) {
+	// throw WrappedException.wrap(e);
+	// }
+	//
+	// }
+	//
+	// @Override
+	// public Future<?> modifyJarData(String jarDigest, String name, Object value, Map<String, Object> rawContext) {
+	// try {
+	// String url = urlGeneratorMap.forJar().apply(jarDigest);
+	// Map<String, Object> context = new HashMap<String, Object>(rawContext);
+	// context.put(RepositoryConstants.entity, RepositoryConstants.entityJar);
+	// context.put(RepositoryConstants.action, RepositoryConstants.actionPost);
+	// Map<String, Object> parameters = Maps.<String, Object> makeMap(name, value, RepositoryConstants.hexDigestKey, jarDigest);
+	// fireRequest("modifyJarData", url, parameters, context);
+	// return facard.post(url, parameters, new CallbackForModify(context));
+	// } catch (Exception e) {
+	// throw WrappedException.wrap(e);
+	// }
+	// }
 
 	@Override
 	public Future<?> getData(String entity, String url, Map<String, Object> rawContext) {
@@ -186,11 +182,6 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 	@Override
 	public void addLogger(IArc4EclipseLogger logger) {
 		loggers.add(logger);
-	}
-
-	@Override
-	public IUrlGenerator generator() {
-		return urlGenerator;
 	}
 
 	private void fireRequest(final String method, final String url, final Map<String, Object> parameters, final Map<String, Object> context) {
@@ -222,13 +213,13 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 	}
 
 	@Override
-	public void addStatusListener(IStatusChangedListener listener) {
+	public void addStatusListener(IRepositoryStatusListener listener) {
 		listeners.add(listener);
 
 	}
 
 	@Override
-	public void removeStatusListener(IStatusChangedListener listener) {
+	public void removeStatusListener(IRepositoryStatusListener listener) {
 		listeners.remove(listener);
 
 	}

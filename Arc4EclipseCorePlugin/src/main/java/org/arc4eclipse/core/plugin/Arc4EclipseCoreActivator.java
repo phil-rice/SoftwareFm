@@ -5,14 +5,16 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
-import org.arc4eclipse.arc4eclipseRepository.api.IStatusChangedListener;
-import org.arc4eclipse.arc4eclipseRepository.api.RepositoryDataItemStatus;
+import org.arc4eclipse.arc4eclipseRepository.api.IUrlGenerator;
+import org.arc4eclipse.arc4eclipseRepository.api.IUrlGeneratorMap;
 import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.displayCore.api.IDisplayContainer;
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactory;
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactoryBuilder;
 import org.arc4eclipse.displayCore.api.IDisplayer;
+import org.arc4eclipse.displayCore.api.IRepositoryAndUrlGeneratorMapGetter;
+import org.arc4eclipse.displayCore.api.RepositoryStatusListenerPropogator;
 import org.arc4eclipse.displayCore.constants.DisplayCoreConstants;
 import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
 import org.arc4eclipse.jdtBinding.api.IBindingRipper;
@@ -20,8 +22,6 @@ import org.arc4eclipse.panel.ISelectedBindingListener;
 import org.arc4eclipse.swtBasics.images.Images;
 import org.arc4eclipse.swtBasics.text.ConfigForTitleAnd;
 import org.arc4eclipse.utilities.callbacks.ICallback;
-import org.arc4eclipse.utilities.exceptions.WrappedException;
-import org.arc4eclipse.utilities.functions.IFunction1;
 import org.arc4eclipse.utilities.maps.Maps;
 import org.arc4eclipse.utilities.resources.IResourceGetter;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -40,13 +40,15 @@ import org.osgi.framework.BundleContext;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
+public class Arc4EclipseCoreActivator extends AbstractUIPlugin implements IRepositoryAndUrlGeneratorMapGetter {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.arc4Eclipse.core"; //$NON-NLS-1$
 	public static final String DISPLAYER_ID = "org.arc4eclipse.displayers";
 	public static final String IMAGE_ID = "org.arc4eclipse.image";
 	public static final String BUNDLE_ID = "org.arc4eclipse.bundle";
+	public static final String URL_GENERATOR_ID = "org.arc4eclipse.urlGenerator";
+	public static final String REPOSITORY_PROPOGATOR = "org.arc4eclipse.repositoryPropogator";
 
 	// The shared instance
 	private static Arc4EclipseCoreActivator plugin;
@@ -56,6 +58,7 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 	private SelectedArtifactSelectionManager selectedBindingManager;
 
 	private IResourceGetter resourceGetter;
+	private IUrlGeneratorMap generatorMap;
 
 	/**
 	 * The constructor
@@ -90,42 +93,52 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 		return plugin;
 	}
 
-	public IArc4EclipseRepository getRepository() {
-		if (repository == null) {
-			repository = IArc4EclipseRepository.Utils.repository();
-			repository.addStatusListener(new IStatusChangedListener() {
+	@Override
+	public IUrlGeneratorMap getUrlGeneratorMap() {
+		if (generatorMap == null) {
+			final Map<String, IUrlGenerator> map = Maps.newMap();
+			Plugins.useClasses(URL_GENERATOR_ID, new IPlugInCreationCallback<IUrlGenerator>() {
+
 				@Override
-				public void statusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> item, Map<String, Object> context) throws Exception {
-					Object actualEntity = context.get(RepositoryConstants.entity);
-					if (item != null) {
-						if (RepositoryConstants.entityJarData.equals(actualEntity)) {
-							getDependantData(item, repository.generator().forOrganisation(), RepositoryConstants.entityOrganisation,"organisation.url");
-							getDependantData(item, repository.generator().forProject(), RepositoryConstants.entityProject, "project.url");
-						}
-					}
-
-				}
-
-				private void getDependantData(Map<String, Object> item, IFunction1<String, String> urlConvertor, String entity, String key) {
-					try {
-						String rawUrl = (String) item.get(key);
-						if (rawUrl != null && !rawUrl.equals("")) {
-							String url = urlConvertor.apply(rawUrl);
-							repository.getData(entity, url, Maps.<String, Object> makeMap(RepositoryConstants.entity, entity));
-						}
-					} catch (Exception e) {
-						throw WrappedException.wrap(e);
-					}
+				public void process(IUrlGenerator t, IConfigurationElement element) {
+					String name = element.getAttribute(CorePlugInConstants.urlGeneratorName);
+					map.put(name, t);
 				}
 
 				@Override
-				public String toString() {
-					return "GetOrgProjDataFromJarData";
+				public void onException(Throwable throwable, IConfigurationElement element) {
+					throwable.printStackTrace();
 				}
 			});
-			// repository.addStatusListener(IStatusChangedListener.Utils.sysout());
+			generatorMap = IUrlGeneratorMap.Utils.urlGeneratorMap(map);
+		}
+		return generatorMap;
+	}
+
+	@Override
+	public IArc4EclipseRepository getRepository() {
+		if (repository == null) {
+			IUrlGeneratorMap urlGeneratorMap = getUrlGeneratorMap();
+			repository = IArc4EclipseRepository.Utils.repository(urlGeneratorMap);
+			addRespositoryStatusPropogators(repository);
 		}
 		return repository;
+	}
+
+	private void addRespositoryStatusPropogators(final IArc4EclipseRepository repository2) {
+		Plugins.useClasses(REPOSITORY_PROPOGATOR, new IPlugInCreationCallback<RepositoryStatusListenerPropogator>() {
+
+			@Override
+			public void process(RepositoryStatusListenerPropogator t, IConfigurationElement element) {
+				t.setRepositoryAndUrlGeneratorMapGetter(Arc4EclipseCoreActivator.this);
+				repository2.addStatusListener(t);
+			}
+
+			@Override
+			public void onException(Throwable throwable, IConfigurationElement element) {
+				throwable.printStackTrace();
+			}
+		});
 	}
 
 	public SelectedArtifactSelectionManager getSelectedBindingManager() {
@@ -135,7 +148,8 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 				@Override
 				public void selectionOccured(ITypeBinding binding, BindingRipperResult ripperResult) {
 					Map<String, Object> context = Maps.makeMap(DisplayCoreConstants.ripperResult, ripperResult);
-					getRepository().getJarData(ripperResult.hexDigest, context);
+					String jarUrl = getUrlGeneratorMap().get(RepositoryConstants.entityJar).apply(ripperResult.hexDigest);
+					getRepository().getData(RepositoryConstants.entityJar, jarUrl, context);
 				}
 			});
 			IWorkbench workbench = PlatformUI.getWorkbench();
@@ -184,19 +198,19 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin {
 			public IDisplayContainerFactory call() throws Exception {
 				IDisplayContainerFactoryBuilder builder = getDisplayContainerFactoryBuilder(display);
 				IDisplayContainerFactory factory = builder.build(entity);
-				if (entity.equals(RepositoryConstants.entityJarData)) {
+				if (entity.equals(RepositoryConstants.entityJar)) {
 					factory.register(makeMap("jarData", "jar", "Jar"));
 					factory.register(makeMap("javadoc", "javadoc", "Javadoc"));
 					factory.register(makeMap("source", "src", "Source"));
 					factory.register(makeMap("project.url", "url"));
 					factory.register(makeMap("organisation.url", "url"));
 				} else if (entity.equals(RepositoryConstants.entityProject)) {
-					factory.register(makeMap("project.url", "url"));
+					factory.register(makeMap("project.url", "mainUrl"));
 					factory.register(makeMap("project.name", "text"));
 					factory.register(makeMap("mailingLists", "list"));
 					factory.register(makeMap("tutorials", "list"));
 				} else if (entity.equals(RepositoryConstants.entityOrganisation)) {
-					factory.register(makeMap("organisation.url", "url"));
+					factory.register(makeMap("organisation.url", "mainUrl"));
 					factory.register(makeMap("organisation.name", "text"));
 				}
 				return factory;

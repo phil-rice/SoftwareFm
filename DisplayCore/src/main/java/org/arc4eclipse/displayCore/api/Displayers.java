@@ -1,6 +1,7 @@
 package org.arc4eclipse.displayCore.api;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
+import org.arc4eclipse.arc4eclipseRepository.api.IUrlGeneratorMap;
 import org.arc4eclipse.arc4eclipseRepository.api.RepositoryDataItemStatus;
 import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
 import org.arc4eclipse.displayCore.constants.DisplayCoreConstants;
@@ -40,16 +41,23 @@ public class Displayers {
 		Display display = from.getDisplay();
 		ImageRegistry imageRegistry = Images.withBasics(display);
 		Images.registerImages(from.getDisplay(), imageRegistry, imageAnchor, key);
+		// Images.registerImages(from.getDisplay(), imageRegistry, Displayers.class, "Key1");
+		IUrlGeneratorMap urlGeneratorMap = IUrlGeneratorMap.Utils.urlGeneratorMap();
 		DisplayerContext context = new DisplayerContext(//
 				ISelectedBindingManager.Utils.noSelectedBindingManager(), //
-				IArc4EclipseRepository.Utils.repository(), //
+				IArc4EclipseRepository.Utils.repository(urlGeneratorMap), //
 				ConfigForTitleAnd.create(display, resourceGetter, imageRegistry));
 
 		IDisplayContainerFactoryBuilder factoryBuilder = IDisplayContainerFactoryBuilder.Utils.factoryBuilder();
 		factoryBuilder.registerDisplayer("displayer", displayer);
 		factoryBuilder.registerEditor("editor", editor);
 		IDisplayContainerFactory factory = factoryBuilder.build(entity);
-		factory.register(Maps.<String, String> makeMap(DisplayCoreConstants.key, key, DisplayCoreConstants.displayer, "displayer", DisplayCoreConstants.editor, "editor"));
+		factory.register(Maps.<String, String> makeMap(//
+				DisplayCoreConstants.key, key, //
+				DisplayCoreConstants.displayer, "displayer", //
+				DisplayCoreConstants.editor, "editor", //
+				DisplayCoreConstants.smallImageKey, "Clear"));
+
 		IDisplayContainer container = factory.create(context, from);
 		return container;
 	}

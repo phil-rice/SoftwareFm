@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension  point="org.arc4eclipse.urlGenerator">
+         <UrlGenerator name="jar" class= "org.arc4eclipse.entityJarData.JarUrlGenerator" />
+   </extension>
+
+
+</plugin>
