@@ -9,4 +9,8 @@
    <extension  point="org.arc4eclipse.repositoryPropogator">
          <repositoryStatusPropogator class= "org.arc4eclipse.entityProjectData.ProjectRepositoryStatusListenerPropogator" />
    </extension>
+   
+      <extension  point="org.arc4eclipse.displayContainerFactoryConfigurator">
+         <DisplayContainerFactoryConfigurator entity="project" class= "org.arc4eclipse.entityProjectData.ProjectConfigurer" />
+   </extension>
 </plugin>

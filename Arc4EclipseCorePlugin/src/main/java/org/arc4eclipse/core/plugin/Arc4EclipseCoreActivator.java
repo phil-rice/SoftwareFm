@@ -48,7 +48,8 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin implements IRepos
 	public static final String IMAGE_ID = "org.arc4eclipse.image";
 	public static final String BUNDLE_ID = "org.arc4eclipse.bundle";
 	public static final String URL_GENERATOR_ID = "org.arc4eclipse.urlGenerator";
-	public static final String REPOSITORY_PROPOGATOR = "org.arc4eclipse.repositoryPropogator";
+	public static final String REPOSITORY_PROPOGATOR_ID = "org.arc4eclipse.repositoryPropogator";
+	public static final String DISPLAY_CONTAINER_FACTORY_CONFIGURATOR_ID = "org.arc4eclipse.displayContainerFactoryConfigurator";
 
 	// The shared instance
 	private static Arc4EclipseCoreActivator plugin;
@@ -126,7 +127,7 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin implements IRepos
 	}
 
 	private void addRespositoryStatusPropogators(final IArc4EclipseRepository repository2) {
-		Plugins.useClasses(REPOSITORY_PROPOGATOR, new IPlugInCreationCallback<RepositoryStatusListenerPropogator>() {
+		Plugins.useClasses(REPOSITORY_PROPOGATOR_ID, new IPlugInCreationCallback<RepositoryStatusListenerPropogator>() {
 
 			@Override
 			public void process(RepositoryStatusListenerPropogator t, IConfigurationElement element) {
@@ -197,32 +198,23 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin implements IRepos
 			@Override
 			public IDisplayContainerFactory call() throws Exception {
 				IDisplayContainerFactoryBuilder builder = getDisplayContainerFactoryBuilder(display);
-				IDisplayContainerFactory factory = builder.build(entity);
-				if (entity.equals(RepositoryConstants.entityJar)) {
-					factory.register(makeMap("jarData", "jar", "Jar"));
-					factory.register(makeMap("javadoc", "javadoc", "Javadoc"));
-					factory.register(makeMap("source", "src", "Source"));
-					factory.register(makeMap("project.url", "url"));
-					factory.register(makeMap("organisation.url", "url"));
-				} else if (entity.equals(RepositoryConstants.entityProject)) {
-					factory.register(makeMap("project.url", "mainUrl"));
-					factory.register(makeMap("project.name", "text"));
-					factory.register(makeMap("mailingLists", "list"));
-					factory.register(makeMap("tutorials", "list"));
-				} else if (entity.equals(RepositoryConstants.entityOrganisation)) {
-					factory.register(makeMap("organisation.url", "mainUrl"));
-					factory.register(makeMap("organisation.name", "text"));
-				}
+				final IDisplayContainerFactory factory = builder.build(entity);
+				Plugins.useClasses(DISPLAY_CONTAINER_FACTORY_CONFIGURATOR_ID, new IPlugInCreationCallback<IDisplayContainerFactoryConfigurer>() {
+					@Override
+					public void process(IDisplayContainerFactoryConfigurer t, IConfigurationElement element) {
+						String thisEntity = element.getAttribute("entity");
+						if (entity.equals(thisEntity))
+							t.configure(factory);
+					}
+
+					@Override
+					public void onException(Throwable throwable, IConfigurationElement element) {
+						throwable.printStackTrace();
+					}
+				});
 				return factory;
 			}
 
-			private Map<String, String> makeMap(String key, String displayer) {
-				return makeMap(key, displayer, "Clear");
-			}
-
-			private Map<String, String> makeMap(String key, String displayer, String smallImageKey) {
-				return Maps.<String, String> makeLinkedMap(DisplayCoreConstants.key, key, DisplayCoreConstants.displayer, displayer, DisplayCoreConstants.smallImageKey, smallImageKey);
-			}
 		});
 	}
 

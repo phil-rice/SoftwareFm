@@ -19,7 +19,6 @@ public abstract class RepositoryStatusListenerPropogator implements IRepositoryS
 	private IRepositoryAndUrlGeneratorMapGetter repositoryAndUrlGeneratorMapGetter;
 
 	public RepositoryStatusListenerPropogator(String originalEntity, String dependantEntity, String urlKey) {
-		super();
 		this.originalEntity = originalEntity;
 		this.dependantEntity = dependantEntity;
 		this.urlKey = urlKey;

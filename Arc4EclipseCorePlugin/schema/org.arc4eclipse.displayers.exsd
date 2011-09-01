@@ -149,6 +149,28 @@
       </complexType>
    </element>
 
+   <element name="DisplayContainerFactoryConfigurator">
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.arc4eclipse.core.plugin.IDisplayContainerFactoryConfigurer"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="entity" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
    <annotation>
       <appinfo>
          <meta.section type="since"/>

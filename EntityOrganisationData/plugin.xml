@@ -7,5 +7,9 @@
    
    <extension  point="org.arc4eclipse.repositoryPropogator">
          <repositoryStatusPropogator class= "org.arc4eclipse.entityOrganisationData.OrganisationRepositoryStatusListenerPropogator" />
+   </extension>   
+   
+   <extension  point="org.arc4eclipse.displayContainerFactoryConfigurator">
+         <DisplayContainerFactoryConfigurator entity="organisation" class= "org.arc4eclipse.entityOrganisationData.OrganisationConfigurer" />
    </extension>
 </plugin>

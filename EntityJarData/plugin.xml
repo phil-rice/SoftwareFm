@@ -5,5 +5,13 @@
          <UrlGenerator name="jar" class= "org.arc4eclipse.entityJarData.JarUrlGenerator" />
    </extension>
 
+   <extension  point="org.arc4eclipse.displayContainerFactoryConfigurator">
+         <UrlGenerator name="jar" class= "org.arc4eclipse.entityJarData.JarConfigurer" />
+   </extension>
+
+   <extension  point="org.arc4eclipse.displayContainerFactoryConfigurator">
+         <DisplayContainerFactoryConfigurator entity="jar" class= "org.arc4eclipse.entityJarData.JarConfigurer" />
+   </extension>
+
 
 </plugin>
