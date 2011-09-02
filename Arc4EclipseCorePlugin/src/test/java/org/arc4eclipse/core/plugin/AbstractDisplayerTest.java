@@ -5,6 +5,7 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
+import org.arc4eclipse.arc4eclipseRepository.api.IUrlGeneratorMap;
 import org.arc4eclipse.arc4eclipseRepository.api.RepositoryDataItemStatus;
 import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
 import org.arc4eclipse.displayCore.api.BindingContext;
@@ -38,6 +39,7 @@ public abstract class AbstractDisplayerTest<L extends Control, C extends Control
 	private Shell shell;
 	private IArc4EclipseRepository repository;
 	private IResourceGetter resourceGetter;
+	private IUrlGeneratorMap urlGeneratorMap;
 
 	abstract protected String getDisplayerKey();
 
@@ -95,7 +97,8 @@ public abstract class AbstractDisplayerTest<L extends Control, C extends Control
 		repository = activator.getRepository();
 		selectedBindingManager = activator.getSelectedBindingManager();
 		resourceGetter = Arc4EclipseCoreActivator.getDefault().getResourceGetter();
-		displayerContext = new DisplayerContext(selectedBindingManager, repository, ConfigForTitleAnd.create(display, resourceGetter, imageRegistry));
+		urlGeneratorMap = activator.getUrlGeneratorMap();
+		displayerContext = new DisplayerContext(selectedBindingManager, repository, urlGeneratorMap, ConfigForTitleAnd.create(display, resourceGetter, imageRegistry));
 		shell = new Shell(display);
 		Images.registerImages(display, imageRegistry, Displayers.class, "Key1");
 	}

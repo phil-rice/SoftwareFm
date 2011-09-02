@@ -3,6 +3,7 @@ package org.arc4eclipse.displayMainUrl;
 import java.util.concurrent.Callable;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
+import org.arc4eclipse.arc4eclipseRepository.api.IUrlGenerator;
 import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
 import org.arc4eclipse.displayCore.api.AbstractDisplayerWithLabel;
 import org.arc4eclipse.displayCore.api.BindingContext;
@@ -34,8 +35,10 @@ public class MainUrlDisplayer extends AbstractDisplayerWithLabel<MainUrlPanel> {
 			@Override
 			public void handleEvent(Event event) {
 				final String entity = displayerDetails.entity;
-				String url = titleAndTextField.getText();
-				context.repository.getData(entity, url, IArc4EclipseRepository.Utils.makeSecondaryContext(entity, displayerDetails.key, url));
+				String rawUrl = titleAndTextField.getText();
+				IUrlGenerator urlGenerator = context.urlGeneratorMap.get(entity);
+				String url = urlGenerator.apply(rawUrl);
+				context.repository.getData(entity, url, IArc4EclipseRepository.Utils.makeSecondaryContext(entity, displayerDetails.key, rawUrl));
 			}
 		});
 		return titleAndTextField;
@@ -44,7 +47,9 @@ public class MainUrlDisplayer extends AbstractDisplayerWithLabel<MainUrlPanel> {
 	@Override
 	public void populateLargeControl(BindingContext bindingContext, MainUrlPanel largeControl, Object value) {
 		Object urlKey = bindingContext.context.get(RepositoryConstants.urlKey);
-		if (urlKey.equals(largeControl.key)) {
+		if (urlKey == null)
+			largeControl.setText("");
+		else if (urlKey.equals(largeControl.key)) {
 			Object rawUrl = bindingContext.context.get(RepositoryConstants.rawUrl);
 			largeControl.setText(Strings.nullSafeToString(rawUrl));
 		}

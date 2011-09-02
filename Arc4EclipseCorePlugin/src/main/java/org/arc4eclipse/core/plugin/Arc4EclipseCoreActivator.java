@@ -119,8 +119,7 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin implements IRepos
 	@Override
 	public IArc4EclipseRepository getRepository() {
 		if (repository == null) {
-			IUrlGeneratorMap urlGeneratorMap = getUrlGeneratorMap();
-			repository = IArc4EclipseRepository.Utils.repository(urlGeneratorMap);
+			repository = IArc4EclipseRepository.Utils.repository();
 			addRespositoryStatusPropogators(repository);
 		}
 		return repository;
@@ -243,7 +242,7 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin implements IRepos
 	}
 
 	private DisplayerContext getDisplayerContext(Display display) {
-		return new DisplayerContext(getSelectedBindingManager(), getRepository(), getConfigForTitleAnd(display));
+		return new DisplayerContext(getSelectedBindingManager(), getRepository(), getUrlGeneratorMap(), getConfigForTitleAnd(display));
 	}
 
 	public IResourceGetter getResourceGetter() {

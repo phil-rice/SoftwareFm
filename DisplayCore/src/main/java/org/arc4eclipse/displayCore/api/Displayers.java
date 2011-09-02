@@ -45,7 +45,8 @@ public class Displayers {
 		IUrlGeneratorMap urlGeneratorMap = IUrlGeneratorMap.Utils.urlGeneratorMap();
 		DisplayerContext context = new DisplayerContext(//
 				ISelectedBindingManager.Utils.noSelectedBindingManager(), //
-				IArc4EclipseRepository.Utils.repository(urlGeneratorMap), //
+				IArc4EclipseRepository.Utils.repository(), //
+				urlGeneratorMap,//
 				ConfigForTitleAnd.create(display, resourceGetter, imageRegistry));
 
 		IDisplayContainerFactoryBuilder factoryBuilder = IDisplayContainerFactoryBuilder.Utils.factoryBuilder();

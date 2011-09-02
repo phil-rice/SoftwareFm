@@ -8,8 +8,6 @@ import junit.framework.TestCase;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
 import org.arc4eclipse.arc4eclipseRepository.api.IRepositoryStatusListener;
-import org.arc4eclipse.arc4eclipseRepository.api.IUrlGenerator;
-import org.arc4eclipse.arc4eclipseRepository.api.IUrlGeneratorMap;
 import org.arc4eclipse.arc4eclipseRepository.api.MemoryStatusChangedListener;
 import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
 import org.arc4eclipse.httpClient.requests.IResponseCallback;
@@ -93,7 +91,6 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 		super.setUp();
 		facard = IRepositoryFacard.Utils.defaultFacard();
 		jarDigestor = IJarDigester.Utils.digester();
-		IUrlGeneratorMap urlGeneratorMap = IUrlGeneratorMap.Utils.urlGeneratorMap("someEntity", IUrlGenerator.Utils.urlGenerator("somePrefix"));
-		repository = IArc4EclipseRepository.Utils.repository(facard, urlGeneratorMap, jarDigestor);
+		repository = IArc4EclipseRepository.Utils.repository(facard, jarDigestor);
 	}
 }

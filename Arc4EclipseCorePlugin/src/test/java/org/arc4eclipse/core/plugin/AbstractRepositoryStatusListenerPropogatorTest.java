@@ -26,28 +26,55 @@ public abstract class AbstractRepositoryStatusListenerPropogatorTest extends Tes
 
 	private final AtomicInteger urlGeneratorCount = new AtomicInteger();
 	private final AtomicInteger getDataCount = new AtomicInteger();
+	private final AtomicInteger notifyCount = new AtomicInteger();
+
 	private final AtomicReference<String> entityRef = new AtomicReference<String>();
 	private final AtomicReference<String> urlRef = new AtomicReference<String>();
 	private final AtomicReference<Map<String, Object>> contextRef = new AtomicReference<Map<String, Object>>();
+	private RepositoryStatusListenerPropogator propogator;
+	private String originalEntity;
+	private String dependantEntity;
+	private String urlKey;
 
 	public void testListenerPropogatesWhenEverythingOk() throws Exception {
-		RepositoryStatusListenerPropogator propogator = getPropogator();
-		propogator.setRepositoryAndUrlGeneratorMapGetter(getGetter());
-
-		String originalEntity = propogator.getOriginalEntity();
-		String dependantEntity = propogator.getDependantEntity();
-		String urlKey = propogator.getUrlKey();
 		String dependantUrl = "dependantUrl";
 
 		Map<String, Object> context = IArc4EclipseRepository.Utils.makePrimaryContext(originalEntity);
 		Map<String, Object> item = Maps.makeMap(RepositoryConstants.entity, originalEntity, urlKey, dependantUrl);
 		propogator.statusChanged("someOriginalUrl", RepositoryDataItemStatus.FOUND, item, context);
 		assertEquals(1, urlGeneratorCount.get());
+		assertEquals(0, notifyCount.get());
 		assertEquals(1, getDataCount.get());
 		assertEquals(dependantEntity, entityRef.get());
 		Map<String, Object> expectedContext = IArc4EclipseRepository.Utils.makeSecondaryContext(dependantEntity, urlKey, dependantUrl);
 		assertEquals(expectedContext, contextRef.get());
 		assertEquals("/" + dependantEntity + "_s/276/dependanturl", urlRef.get());
+	}
+
+	public void testListenerPropogatesWhenThereIsNoData() throws Exception {
+		Map<String, Object> item = Maps.makeMap(RepositoryConstants.entity, originalEntity); // note that the urlKey is not here...
+		Map<String, Object> context = IArc4EclipseRepository.Utils.makePrimaryContext(originalEntity);
+
+		propogator.statusChanged("someOriginalUrl", RepositoryDataItemStatus.FOUND, item, context);
+
+		assertEquals(1, notifyCount.get());
+		assertEquals(0, urlGeneratorCount.get());
+		assertEquals(0, getDataCount.get());
+		assertEquals(dependantEntity, entityRef.get());
+		Map<String, Object> expectedContext = IArc4EclipseRepository.Utils.makeSecondaryNotFoundContext(dependantEntity);
+		assertEquals(expectedContext, contextRef.get());
+
+	}
+
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		propogator = getPropogator();
+		propogator.setRepositoryAndUrlGeneratorMapGetter(getGetter());
+
+		originalEntity = propogator.getOriginalEntity();
+		dependantEntity = propogator.getDependantEntity();
+		urlKey = propogator.getUrlKey();
 	}
 
 	protected IRepositoryAndUrlGeneratorMapGetter getGetter() {
@@ -113,7 +140,10 @@ public abstract class AbstractRepositoryStatusListenerPropogatorTest extends Tes
 
 					@Override
 					public void notifyListenersThereIsNoData(String entity, Map<String, Object> context) {
-						fail();
+						entityRef.set(entity);
+						contextRef.set(context);
+						notifyCount.incrementAndGet();
+
 					}
 				};
 			}

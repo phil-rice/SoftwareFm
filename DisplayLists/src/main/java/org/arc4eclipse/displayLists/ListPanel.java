@@ -154,9 +154,11 @@ public class ListPanel extends Composite implements IButtonParent {
 		Swts.display(ListPanel.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
+				IUrlGeneratorMap urlGeneratorMap = IUrlGeneratorMap.Utils.urlGeneratorMap();
 				DisplayerContext context = new DisplayerContext(//
 						ISelectedBindingManager.Utils.noSelectedBindingManager(), //
-						IArc4EclipseRepository.Utils.repository(IUrlGeneratorMap.Utils.urlGeneratorMap()), //
+						IArc4EclipseRepository.Utils.repository(), //
+						urlGeneratorMap,//
 						ConfigForTitleAnd.create(//
 								from.getDisplay(), //
 								Resources.resourceGetterWithBasics(getClass().getPackage().getName() + ".ListAndPanelTest"),//

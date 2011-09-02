@@ -1,6 +1,5 @@
 package org.arc4eclipse.displayCore.api;
 
-import java.text.MessageFormat;
 import java.util.Map;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
@@ -9,7 +8,6 @@ import org.arc4eclipse.arc4eclipseRepository.api.IUrlGenerator;
 import org.arc4eclipse.arc4eclipseRepository.api.IUrlGeneratorMap;
 import org.arc4eclipse.arc4eclipseRepository.api.RepositoryDataItemStatus;
 import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
-import org.arc4eclipse.displayCore.constants.DisplayCoreConstants;
 
 public abstract class RepositoryStatusListenerPropogator implements IRepositoryStatusListener {
 
@@ -29,16 +27,19 @@ public abstract class RepositoryStatusListenerPropogator implements IRepositoryS
 		IArc4EclipseRepository repository = repositoryAndUrlGeneratorMapGetter.getRepository();
 		IUrlGeneratorMap urlGeneratorMap = repositoryAndUrlGeneratorMapGetter.getUrlGeneratorMap();
 		Object actualEntity = context.get(RepositoryConstants.entity);
-		if (status == RepositoryDataItemStatus.FOUND)
-			if (actualEntity.equals(originalEntity))
-				if (item != null) {
+		if (actualEntity.equals(originalEntity))
+			if (status == RepositoryDataItemStatus.NOT_FOUND)
+				repository.notifyListenersThereIsNoData(dependantEntity, IArc4EclipseRepository.Utils.makeSecondaryNotFoundContext(dependantEntity));
+			else if (item != null) {
+				String reportedUrl = (String) item.get(urlKey);
+				if (reportedUrl == null)
+					repository.notifyListenersThereIsNoData(dependantEntity, IArc4EclipseRepository.Utils.makeSecondaryNotFoundContext(dependantEntity));
+				else {
 					IUrlGenerator urlGenerator = urlGeneratorMap.get(dependantEntity);
-					String reportedUrl = (String) item.get(urlKey);
-					if (reportedUrl == null)
-						throw new NullPointerException(MessageFormat.format(DisplayCoreConstants.missingValueInMap, urlKey, item));
 					String actualUrl = urlGenerator.apply(reportedUrl);
 					repository.getData(dependantEntity, actualUrl, IArc4EclipseRepository.Utils.makeSecondaryContext(dependantEntity, urlKey, reportedUrl));
 				}
+			}
 	}
 
 	public void setRepositoryAndUrlGeneratorMapGetter(IRepositoryAndUrlGeneratorMapGetter repositoryAndUrlGeneratorMapGetter) {

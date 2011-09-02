@@ -11,7 +11,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-
 /**
  * The activator class controls the plug-in life cycle
  */
@@ -44,7 +43,7 @@ public class Activator extends AbstractUIPlugin {
 
 	public DisplayerContext getContext(Display display) {
 		Arc4EclipseCoreActivator coreActivator = Arc4EclipseCoreActivator.getDefault();
-		return new DisplayerContext(coreActivator.getSelectedBindingManager(), coreActivator.getRepository(), coreActivator.getConfigForTitleAnd(display));
+		return new DisplayerContext(coreActivator.getSelectedBindingManager(), coreActivator.getRepository(), coreActivator.getUrlGeneratorMap(), coreActivator.getConfigForTitleAnd(display));
 	}
 
 	public IArc4EclipseRepository getRepository() {

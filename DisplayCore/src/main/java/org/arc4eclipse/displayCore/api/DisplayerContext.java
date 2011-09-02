@@ -1,6 +1,7 @@
 package org.arc4eclipse.displayCore.api;
 
 import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
+import org.arc4eclipse.arc4eclipseRepository.api.IUrlGeneratorMap;
 import org.arc4eclipse.panel.ISelectedBindingManager;
 import org.arc4eclipse.swtBasics.text.ConfigForTitleAnd;
 import org.arc4eclipse.utilities.resources.IResourceGetter;
@@ -12,8 +13,10 @@ public class DisplayerContext {
 	public final IArc4EclipseRepository repository;
 	public final ConfigForTitleAnd configForTitleAnd;
 	public final IResourceGetter resourceGetter;
+	public final IUrlGeneratorMap urlGeneratorMap;
 
-	public DisplayerContext(ISelectedBindingManager selectedBindingManager, IArc4EclipseRepository repository, ConfigForTitleAnd configForTitleAnd) {
+	public DisplayerContext(ISelectedBindingManager selectedBindingManager, IArc4EclipseRepository repository, IUrlGeneratorMap urlGeneratorMap, ConfigForTitleAnd configForTitleAnd) {
+		this.urlGeneratorMap = urlGeneratorMap;
 		this.imageRegistry = configForTitleAnd.imageRegistry;
 		this.selectedBindingManager = selectedBindingManager;
 		this.repository = repository;

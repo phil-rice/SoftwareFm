@@ -52,7 +52,7 @@ public class Arc4EclipseCoreActivatorTest extends TestCase {
 
 	private void checkCanMakeDisplayContainers(String entity) {
 		Arc4EclipseCoreActivator activator = Arc4EclipseCoreActivator.getDefault();
-		DisplayerContext displayerContext = new DisplayerContext(activator.getSelectedBindingManager(), activator.getRepository(), activator.getConfigForTitleAnd(display));
+		DisplayerContext displayerContext = new DisplayerContext(activator.getSelectedBindingManager(), activator.getRepository(), activator.getUrlGeneratorMap(), activator.getConfigForTitleAnd(display));
 		activator.getDisplayContainerFactory(display, entity).create(displayerContext, new Shell(display));
 	}
 

@@ -27,11 +27,11 @@ public interface IArc4EclipseRepository {
 
 	static class Utils {
 
-		public static IArc4EclipseRepository repository(IUrlGeneratorMap urlGeneratorMap) {
-			return repository(IRepositoryFacard.Utils.defaultFacard(), urlGeneratorMap, IJarDigester.Utils.digester());
+		public static IArc4EclipseRepository repository() {
+			return repository(IRepositoryFacard.Utils.defaultFacard(), IJarDigester.Utils.digester());
 		}
 
-		public static IArc4EclipseRepository repository(IRepositoryFacard facard, IUrlGeneratorMap urlGeneratorMap, IJarDigester jarDigester) {
+		public static IArc4EclipseRepository repository(IRepositoryFacard facard, IJarDigester jarDigester) {
 			return new Arc4EclipseRepository(facard, jarDigester);
 		}
 
@@ -43,6 +43,11 @@ public interface IArc4EclipseRepository {
 		}
 
 		public static Map<String, Object> makePrimaryContext(String entity) {
+			return Maps.<String, Object> makeMap(//
+					RepositoryConstants.entity, entity); //
+		}
+
+		public static Map<String, Object> makeSecondaryNotFoundContext(String entity) {
 			return Maps.<String, Object> makeMap(//
 					RepositoryConstants.entity, entity); //
 		}
