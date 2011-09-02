@@ -8,6 +8,9 @@ import org.arc4eclipse.utilities.exceptions.WrappedException;
 public class Urls {
 
 	public static UrlRipperResult rip(String url) {
+		if (url == null || url.equals("")) {
+			return new UrlRipperResult(url, "", "", "");
+		}
 		int firstIndexOfSlashSlash = url.indexOf("://");
 		boolean hasProtocol = firstIndexOfSlashSlash >= 0;
 		int protocolEnds = hasProtocol ? firstIndexOfSlashSlash : 0;

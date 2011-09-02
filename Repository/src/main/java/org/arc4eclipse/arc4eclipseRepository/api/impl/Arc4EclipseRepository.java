@@ -229,4 +229,11 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 		facard.shutdown();
 	}
 
+	@Override
+	public void notifyListenersThereIsNoData(String entity, Map<String, Object> context) {
+		Map<String, Object> fullContext = Maps.copyMap(context);
+		fullContext.put(RepositoryConstants.entity, entity);
+		fullContext.put(RepositoryConstants.action, RepositoryConstants.actionNotifyNoData);
+		fireStatusChanged(null, RepositoryDataItemStatus.NOT_FOUND, null, fullContext);
+	}
 }

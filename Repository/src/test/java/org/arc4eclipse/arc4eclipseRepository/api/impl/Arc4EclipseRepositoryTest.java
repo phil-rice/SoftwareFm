@@ -71,6 +71,22 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 
 	}
 
+	@SuppressWarnings("unchecked")
+	public void testNotifyListenersThereIsNoData() {
+		String entity = "someEntity";
+		Map<String, Object> actionNotifyNoData = Maps.makeMap(RepositoryConstants.action, RepositoryConstants.actionNotifyNoData, RepositoryConstants.entity, entity);
+
+		MemoryStatusChangedListener validListener1 = IRepositoryStatusListener.Utils.memory();
+		MemoryStatusChangedListener validListener2 = IRepositoryStatusListener.Utils.memory();
+		repository.addStatusListener(validListener1);
+		repository.addStatusListener(validListener2);
+
+		Map<String, Object> context = Maps.makeMap("a", 1, "b", 2);
+		repository.notifyListenersThereIsNoData(entity, context);
+
+		validListener1.assertEquals("", NOT_FOUND, null, Maps.<String, Object> merge(context, actionNotifyNoData));
+	}
+
 	@Override
 	@Before
 	protected void setUp() throws Exception {

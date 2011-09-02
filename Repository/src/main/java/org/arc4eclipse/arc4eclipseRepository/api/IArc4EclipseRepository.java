@@ -15,6 +15,8 @@ public interface IArc4EclipseRepository {
 
 	Future<?> modifyData(String entity, String url, String name, Object value, Map<String, Object> context);
 
+	void notifyListenersThereIsNoData(String entity, Map<String, Object> context);
+
 	void addStatusListener(IRepositoryStatusListener listener);
 
 	void removeStatusListener(IRepositoryStatusListener listener);

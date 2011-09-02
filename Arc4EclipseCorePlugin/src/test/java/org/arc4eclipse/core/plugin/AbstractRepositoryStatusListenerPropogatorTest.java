@@ -110,6 +110,11 @@ public abstract class AbstractRepositoryStatusListenerPropogatorTest extends Tes
 					public void shutdown() {
 						fail();
 					}
+
+					@Override
+					public void notifyListenersThereIsNoData(String entity, Map<String, Object> context) {
+						fail();
+					}
 				};
 			}
 		};

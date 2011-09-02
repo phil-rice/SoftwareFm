@@ -21,5 +21,6 @@ public class RepositoryConstants {
 	public static final String action = "action";
 	public static final String actionGet = "get";
 	public static final String actionPost = "post";
+	public static final String actionNotifyNoData = "notifyNoData";
 
 }

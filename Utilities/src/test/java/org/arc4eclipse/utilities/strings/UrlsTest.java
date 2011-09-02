@@ -15,6 +15,12 @@ public class UrlsTest extends TestCase {
 		checkUrlRipper("a.b.c/wibble", "", "a.b.c/wibble", "");
 	}
 
+	public void testWithNull() {
+		checkUrlRipper("", "", "", "");
+		checkUrlRipper(null, "", "", "");
+
+	}
+
 	public void testWithDefaultProtocol() {
 		checkWithDefaultProtocol("http://a", "a");
 		checkWithDefaultProtocol("http://a", "http://a");
