@@ -29,6 +29,7 @@ public class SourcePanel extends Composite {
 		super(parent, context.configForTitleAnd.style);
 		setLayout(new GridLayout());
 		txtRepository = new BoundTitleAndTextField(this, context, displayerDetails.withKey(DisplaySourceConstants.repositoryKey));
+		txtRepository.addEditButton();
 		btnAttach = ImageButtons.addRowButton(txtRepository, DisplaySourceConstants.linkImageKey, DisplaySourceConstants.linkKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
@@ -42,7 +43,6 @@ public class SourcePanel extends Composite {
 				}
 			}
 		});
-		txtRepository.addEditButton();
 		ImageButtons.addHelpButton(txtRepository, DisplaySourceConstants.repositoryKey);
 		txtLocal = new TitleAndTextField(context.configForTitleAnd, this, DisplaySourceConstants.localKey);
 		ImageButtons.addHelpButton(txtLocal, DisplaySourceConstants.localKey);

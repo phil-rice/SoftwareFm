@@ -42,6 +42,7 @@ public class JavadocPanel extends Composite {
 		super(parent, style);
 		setLayout(new GridLayout());
 		txtRepository = new BoundTitleAndTextField(this, context, displayerDetails.withKey(DisplayJavadocConstants.repositoryKey));
+		txtRepository.addEditButton();
 		btnAttach = ImageButtons.addRowButton(txtRepository, DisplayJavadocConstants.linkImageKey, DisplayJavadocConstants.linkKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {

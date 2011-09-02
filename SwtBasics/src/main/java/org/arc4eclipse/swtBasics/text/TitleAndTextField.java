@@ -20,8 +20,12 @@ public class TitleAndTextField extends AbstractTitleAnd {
 	private final Text txtText;
 	private boolean globalEditable;
 
-	public TitleAndTextField(ConfigForTitleAnd config, Composite parent, String title) {
-		super(config, parent, title);
+	public TitleAndTextField(ConfigForTitleAnd config, Composite parent, String titleKey) {
+		this(config, parent, titleKey, true);
+	}
+
+	public TitleAndTextField(ConfigForTitleAnd config, Composite parent, String titleOrTitleKey, boolean titleIsKey) {
+		super(config, parent, titleOrTitleKey, titleIsKey);
 
 		txtText = new Text(this, SWT.BORDER);
 		txtText.setText("");

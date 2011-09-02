@@ -15,7 +15,7 @@ public class TitleAndStyledTextField extends AbstractTitleAnd {
 	private final StyledText txtText;
 
 	public TitleAndStyledTextField(ConfigForTitleAnd config, Composite parent, String title) {
-		super(config, parent, title);
+		super(config, parent, title, true);
 		txtText = new StyledText(this, SWT.BORDER);
 		txtText.setLayoutData(new RowData(400, 400));
 		setLayout(new FormLayout());

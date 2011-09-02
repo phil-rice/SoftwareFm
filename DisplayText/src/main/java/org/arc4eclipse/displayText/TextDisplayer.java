@@ -19,8 +19,8 @@ public class TextDisplayer extends AbstractDisplayerWithLabel<BoundTitleAndTextF
 	public BoundTitleAndTextField createLargeControl(DisplayerContext context, final IRegisteredItems registeredItems, Composite parent, DisplayerDetails displayerDetails) {
 		BoundTitleAndTextField boundTitleAndTextField = new BoundTitleAndTextField(parent, context, displayerDetails);
 		final String editorName = displayerDetails.map.get(DisplayCoreConstants.editor);
-		if (editorName != null)
-			boundTitleAndTextField.addEditButton();
+		boundTitleAndTextField.addEditButton();
+
 		// ImageButtons.addEditButton(boundTitleAndTextField, new IImageButtonListener() {
 		// @Override
 		// public void buttonPressed(ImageButton button) {

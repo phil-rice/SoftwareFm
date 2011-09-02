@@ -19,7 +19,7 @@ public class AbstractTitleAnd extends Composite implements IButtonParent {
 	private final Label lblFiller;
 	protected final ConfigForTitleAnd config;
 
-	public AbstractTitleAnd(ConfigForTitleAnd config, Composite parent, String titleKey) {
+	public AbstractTitleAnd(ConfigForTitleAnd config, Composite parent, String titleOrTitleKey, boolean titleIsKey) {
 		super(parent, config.style);
 		this.config = config;
 
@@ -33,7 +33,7 @@ public class AbstractTitleAnd extends Composite implements IButtonParent {
 		int height = config.titleHeight;
 		compTitleAndButtons.setLayoutData(new RowData(config.titleWidth + config.buttonsWidth, height));
 
-		String title = Resources.getTitle(config.resourceGetter, titleKey);
+		String title = titleIsKey ? Resources.getTitle(config.resourceGetter, titleOrTitleKey) : titleOrTitleKey;
 		lblTitle = new Label(compTitleAndButtons, SWT.NULL);
 		lblTitle.setLayoutData(new RowData(config.titleWidth, height));
 		lblTitle.setText(title == null ? "" : title);

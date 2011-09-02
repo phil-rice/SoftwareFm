@@ -122,7 +122,7 @@ public class ListPanel extends Composite implements IButtonParent {
 		Swts.removeAllChildren(compForList);
 		int index = 0;
 		for (NameAndValue nameAndValue : listModel) {
-			TitleAndTextField text = new TitleAndTextField(context.configForTitleAnd, compForList, nameAndValue.name);
+			TitleAndTextField text = new TitleAndTextField(context.configForTitleAnd, compForList, nameAndValue.name, false);
 			text.setText(nameAndValue.url);
 			ImageButtons.addEditButton(text, new EditButtonListener(index));
 			ImageButtons.addRowButton(text, SwtBasicConstants.deleteKey, SwtBasicConstants.deleteKey, new DeleteButtonListener(index));

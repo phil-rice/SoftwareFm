@@ -6,6 +6,6 @@ public class DisplayListsConstants {
 	public static final Object titleKey = "title";
 	public static final Object urlKey = "name";
 	public static final String add = "Add {0}";
-	protected static final String cannotDecodeString = "Cannot decode string [{0}]";
+	public static final String cannotDecodeString = "Cannot decode string [{0}]";
 
 }
