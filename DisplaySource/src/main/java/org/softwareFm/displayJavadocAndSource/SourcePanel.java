@@ -3,23 +3,19 @@ package org.softwareFm.displayJavadocAndSource;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.displayCore.api.BoundTitleAndTextField;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
+import org.softwareFm.jdtBinding.api.JavaProjects;
 import org.softwareFm.swtBasics.SwtBasicConstants;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.IImageButtonListener;
 import org.softwareFm.swtBasics.images.ImageButton;
 import org.softwareFm.swtBasics.images.ImageButtons;
 import org.softwareFm.swtBasics.text.TitleAndTextField;
-import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.strings.Strings;
 
 public class SourcePanel extends Composite {
@@ -43,31 +39,16 @@ public class SourcePanel extends Composite {
 		btnAttach = ImageButtons.addRowButton(txtRepository, DisplaySourceConstants.linkImageKey, DisplaySourceConstants.linkKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
-				if (ripped != null) {
-					System.out.println("Linking");
-					try {
-						IPackageFragmentRoot packageFragment = ripped.packageFragment;
-						Path newValue = new Path(txtRepository.getText());
-						packageFragment.attachSource(newValue, null, new NullProgressMonitor());
-					} catch (JavaModelException e) {
-						throw WrappedException.wrap(e);
-					}
-				}
+				JavaProjects.setSourceAttachment(ripped.javaProject, ripped.classpathEntry, txtRepository.getText());
 			}
+
 		});
 		ImageButtons.addHelpButton(txtRepository, DisplaySourceConstants.repositoryKey);
 		txtLocal = new TitleAndTextField(context.configForTitleAnd, this, DisplaySourceConstants.localKey);
 		ImageButtons.addRowButton(txtLocal, SwtBasicConstants.clearKey, SourceConstants.clearHelpKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
-				System.out.println("Linking");
-				try {
-					IPackageFragmentRoot packageFragment = ripped.packageFragment;
-					packageFragment.attachSource(null, new Path(""), new NullProgressMonitor());
-				} catch (JavaModelException e) {
-					throw WrappedException.wrap(e);
-				}
-
+				JavaProjects.setSourceAttachment(ripped.javaProject, ripped.classpathEntry, null);
 			}
 		});
 		ImageButtons.addHelpButton(txtLocal, DisplaySourceConstants.localKey);
@@ -82,5 +63,4 @@ public class SourcePanel extends Composite {
 		txtLocal.setText(Strings.nullSafeToString(ripped == null ? null : ripped.sourceAttachmentPath));
 		ImageButton.Utils.setEnabledIfNotBlank(btnAttach, repositoryValue);
 	}
-
 }

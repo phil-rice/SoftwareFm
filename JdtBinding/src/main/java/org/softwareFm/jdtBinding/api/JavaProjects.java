@@ -1,7 +1,11 @@
 package org.softwareFm.jdtBinding.api;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.ClasspathContainerInitializer;
 import org.eclipse.jdt.core.IClasspathAttribute;
 import org.eclipse.jdt.core.IClasspathContainer;
@@ -93,6 +97,43 @@ public class JavaProjects {
 			}
 		});
 		return newEntries;
+	}
+
+	public static void setSourceAttachment(IJavaProject javaProject, IClasspathEntry classpathEntry, final String newValue) {
+		FoundClassPathEntry found = JavaProjects.findClassPathEntry(javaProject, classpathEntry);
+		JavaProjects.updateFoundClassPath(found, new IFunction1<IClasspathEntry, IClasspathEntry>() {
+			@Override
+			public IClasspathEntry apply(IClasspathEntry from) throws Exception {
+				IClasspathAttribute[] extraAttributes = from.getExtraAttributes();
+				IPath newPath = newValue == null ? null : new Path(newValue);
+				IClasspathEntry newLibraryEntry = JavaCore.newLibraryEntry(from.getPath(), newPath, from.getSourceAttachmentRootPath(), from.getAccessRules(), extraAttributes, from.isExported());
+				return newLibraryEntry;
+			}
+		});
+	}
+
+	public static void setJavadoc(IJavaProject javaProject, IClasspathEntry classpathEntry, final String newValue) {
+		FoundClassPathEntry found = JavaProjects.findClassPathEntry(javaProject, classpathEntry);
+
+		JavaProjects.updateFoundClassPath(found, new IFunction1<IClasspathEntry, IClasspathEntry>() {
+			@Override
+			public IClasspathEntry apply(IClasspathEntry from) throws Exception {
+				IClasspathAttribute[] extraAttributes = from.getExtraAttributes();
+				List<IClasspathAttribute> newAttributes = new ArrayList<IClasspathAttribute>();
+				boolean found = false;
+				IClasspathAttribute newClasspathAttribute = JavaCore.newClasspathAttribute(IClasspathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME, newValue);
+				for (IClasspathAttribute oldAttribute : extraAttributes)
+					if (oldAttribute.getName().equals(IClasspathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME)) {
+						newAttributes.add(newClasspathAttribute);
+						found = true;
+					} else
+						newAttributes.add(oldAttribute);
+				if (!found)
+					newAttributes.add(newClasspathAttribute);
+				IClasspathEntry newLibraryEntry = JavaCore.newLibraryEntry(from.getPath(), from.getSourceAttachmentPath(), from.getSourceAttachmentRootPath(), from.getAccessRules(), newAttributes.toArray(new IClasspathAttribute[0]), from.isExported());
+				return newLibraryEntry;
+			}
+		});
 	}
 
 	public static String findJavadocFor(IClasspathEntry classpathEntry) {

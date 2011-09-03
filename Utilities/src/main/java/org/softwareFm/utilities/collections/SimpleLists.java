@@ -1,6 +1,7 @@
 package org.softwareFm.utilities.collections;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -31,6 +32,7 @@ public class SimpleLists {
 	}
 
 	public static <T> ISimpleList<T> fromList(final List<T> list) {
+		new Date();
 		return new ISimpleList<T>() {
 			public int size() {
 				return list.size();

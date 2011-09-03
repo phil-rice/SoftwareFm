@@ -51,13 +51,13 @@ public class BindingRipper implements IBindingRipper {
 						String packageName = ((IMethodBinding) from).getDeclaringClass().getPackage().getName();
 						String className = javaElement.getParent().getElementName();
 						String methodName = javaElement.getElementName();
-						return new BindingRipperResult(project, root, path, digestAsHexString, attachmentPath, packageName, className, methodName);
+						return new BindingRipperResult(project, javaElement, root, path, digestAsHexString, attachmentPath, packageName, className, methodName);
 					} else if (javaElement instanceof IClassFile) {
 						String packageName = ((ITypeBinding) from).getPackage().getName();
 						String className = javaElement.getElementName();
-						return new BindingRipperResult(project, root, path, digestAsHexString, attachmentPath, packageName, className, null);
+						return new BindingRipperResult(project, javaElement, root, path, digestAsHexString, attachmentPath, packageName, className, null);
 					} else
-						return new BindingRipperResult(project, root, path, digestAsHexString, attachmentPath, "", "", "");
+						return new BindingRipperResult(project, javaElement, root, path, digestAsHexString, attachmentPath, "", "", "");
 				}
 			}
 			return BindingRipperResult.empty;

@@ -35,8 +35,8 @@ public class DisplayJarSummaryPanel extends Composite {
 		File file = ripped.path == null ? null : ripped.path.toFile();
 		String name = file == null ? "" : file.getName();
 		txtJar.setText(name);
-		txtProjectName.setText(Strings.nullSafeToString(data.get("project.url")));
-		txtOrganisationName.setText(Strings.nullSafeToString(data.get("organisation.url")));
+		txtProjectName.setText(Strings.nullSafeToString(data == null ? null : data.get("project.url")));
+		txtOrganisationName.setText(Strings.nullSafeToString(data == null ? null : data.get("organisation.url")));
 	}
 
 }

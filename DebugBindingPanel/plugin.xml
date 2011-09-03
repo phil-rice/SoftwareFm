@@ -8,37 +8,43 @@
             name="SoftwareFm - debug"
             id="org.softwareFm.debug">
       </category>
-      <view
-            name="S/W FM - Binding Debug"
+      <view            name="S/W FM - Binding Debug"
             icon="icons/sample.gif"
             category="org.softwareFm.debug"
             class="org.softwareFm.debugPanel.views.DebugBindingView"
             id="org.softwareFm.debugPanel.views.DebugBindingView">
       </view>
-      <view
-            name="S/W FM - Messages Debug"
+      <view            name="S/W FM - Src/Jar Debug"
+            icon="icons/sample.gif"
+            category="org.softwareFm.debug"
+            class="org.softwareFm.debugPanel.views.DebugSrcAndJarView"
+            id="org.softwareFm.debugPanel.views.DebugSrcAndJarView">
+      </view>
+      <view            name="S/W FM - Messages Debug"
             icon="icons/sample.gif"
             category="org.softwareFm.debug"
             class="org.softwareFm.debugPanel.views.DebugMessageView"
             id="org.softwareFm.debugPanel.views.DebugMessageView">
       </view>
-      <view
-            name="S/W FM - Events Debug"
+      <view            name="S/W FM - Events Debug"
             icon="icons/sample.gif"
             category="org.softwareFm.debug"
             class="org.softwareFm.debugPanel.views.DebugEventView"
             id="org.softwareFm.debugPanel.views.DebugEventView">
       </view>
    </extension>
-   <extension
-         point="org.eclipse.ui.perspectiveExtensions">
+   <extension         point="org.eclipse.ui.perspectiveExtensions">
       <perspectiveExtension
             targetID="org.eclipse.jdt.ui.JavaPerspective">
-         <view
-               ratio="0.5"
+         <view                ratio="0.5"
                relative="org.eclipse.ui.views.TaskList"
                relationship="right"
                id="org.softwareFm.debugPanel.views.DebugBindingView">
+         </view>
+         <view                ratio="0.5"
+               relative="org.eclipse.ui.views.TaskList"
+               relationship="right"
+               id="org.softwareFm.debugPanel.views.DebugSrcAndJarView">
          </view>
       </perspectiveExtension>
       <perspectiveExtension
