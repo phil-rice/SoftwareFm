@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.arc4eclipse.EntityOrganisationData
-Bundle-SymbolicName: org.arc4eclipse.EntityOrganisationData;singleton:=true
+Bundle-Name: org.softwareFm.EntityOrganisationData
+Bundle-SymbolicName: org.softwareFm.EntityOrganisationData;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: Arc4Eclipse
+Bundle-Vendor: softwareFm
 Require-Bundle: org.eclipse.core.runtime,
- org.arc4Eclipse.core;bundle-version="1.0.0"
+ org.softwareFm.core;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.arc4eclipse.entityOrganisationData
+Export-Package: org.softwareFm.entityOrganisationData

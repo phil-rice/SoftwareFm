@@ -1,9 +1,9 @@
 package selectedartefactplugin;
 
-import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
-import org.arc4eclipse.jdtBinding.api.BindingRipperResult;
-import org.arc4eclipse.jdtBinding.api.IBindingRipper;
-import org.arc4eclipse.utilities.functions.IFunction1;
+import org.softwareFm.arc4eclipseRepository.api.IArc4EclipseRepository;
+import org.softwareFm.jdtBinding.api.BindingRipperResult;
+import org.softwareFm.jdtBinding.api.IBindingRipper;
+import org.softwareFm.utilities.functions.IFunction1;
 import org.eclipse.jdt.core.dom.IBinding;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -15,7 +15,7 @@ import org.osgi.framework.BundleContext;
 public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.arc4eclipse.selectedArtefactPlugin"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "org.softwareFm.selectedArtefactPlugin"; //$NON-NLS-1$
 
 	// The shared instance
 	private static Activator plugin;

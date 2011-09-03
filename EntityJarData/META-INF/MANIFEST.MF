@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.arc4eclipse.EntityJarData
-Bundle-SymbolicName: org.arc4eclipse.EntityJarData;singleton:=true
+Bundle-Name: org.softwareFm.EntityJarData
+Bundle-SymbolicName: org.softwareFm.EntityJarData;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: Arc4Eclipse
+Bundle-Vendor: softwareFm
 Require-Bundle: org.eclipse.core.runtime,
- org.arc4Eclipse.core;bundle-version="1.0.0"
+ org.softwareFm.core;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy

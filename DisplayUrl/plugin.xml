@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension        point="org.arc4eclipse.displayers" >
-         <display key="url" class="org.arc4eclipse.displayUrl.UrlDisplayer"/>
+   <extension        point="org.softwareFm.displayers" >
+         <display key="url" class="org.softwareFm.displayUrl.UrlDisplayer"/>
    </extension>
 
 

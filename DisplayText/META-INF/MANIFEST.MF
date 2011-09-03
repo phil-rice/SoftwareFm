@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.arc4eclipse.displayText
-Bundle-SymbolicName: org.arc4eclipse.displayText;singleton:=true
+Bundle-Name: org.softwareFm.displayText
+Bundle-SymbolicName: org.softwareFm.displayText;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: Arc4Eclipse
+Bundle-Vendor: softwareFm
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.arc4Eclipse.core;bundle-version="1.0.0";visibility:=reexport
-Export-Package: org.arc4eclipse.displayText
+Require-Bundle: org.softwareFm.core;bundle-version="1.0.0";visibility:=reexport
+Export-Package: org.softwareFm.displayText

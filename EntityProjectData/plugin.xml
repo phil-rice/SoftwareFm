@@ -2,15 +2,15 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.arc4eclipse.urlGenerator">
-         <UrlGenerator name="project" class= "org.arc4eclipse.entityProjectData.ProjectUrlGenerator" />
+         point="org.softwareFm.urlGenerator">
+         <UrlGenerator name="project" class= "org.softwareFm.entityProjectData.ProjectUrlGenerator" />
    </extension>
    
-   <extension  point="org.arc4eclipse.repositoryPropogator">
-         <repositoryStatusPropogator class= "org.arc4eclipse.entityProjectData.ProjectRepositoryStatusListenerPropogator" />
+   <extension  point="org.softwareFm.repositoryPropogator">
+         <repositoryStatusPropogator class= "org.softwareFm.entityProjectData.ProjectRepositoryStatusListenerPropogator" />
    </extension>
    
-      <extension  point="org.arc4eclipse.displayContainerFactoryConfigurator">
-         <DisplayContainerFactoryConfigurator entity="project" class= "org.arc4eclipse.entityProjectData.ProjectConfigurer" />
+      <extension  point="org.softwareFm.displayContainerFactoryConfigurator">
+         <DisplayContainerFactoryConfigurator entity="project" class= "org.softwareFm.entityProjectData.ProjectConfigurer" />
    </extension>
 </plugin>

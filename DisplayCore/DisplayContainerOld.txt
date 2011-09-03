@@ -1,21 +1,21 @@
-package org.arc4eclipse.displayCore.api.impl;
+package org.softwareFm.displayCore.api.impl;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.arc4eclipse.displayCore.api.BindingContext;
-import org.arc4eclipse.displayCore.api.DisplayerContext;
-import org.arc4eclipse.displayCore.api.DisplayerDetails;
-import org.arc4eclipse.displayCore.api.IDisplayContainer;
-import org.arc4eclipse.displayCore.api.IDisplayer;
-import org.arc4eclipse.displayCore.api.ITopButtonState;
-import org.arc4eclipse.displayCore.api.NameSpaceAndName;
-import org.arc4eclipse.swtBasics.Swts;
-import org.arc4eclipse.utilities.collections.Lists;
-import org.arc4eclipse.utilities.exceptions.WrappedException;
-import org.arc4eclipse.utilities.functions.IFunction1;
-import org.arc4eclipse.utilities.maps.Maps;
+import org.softwareFm.displayCore.api.BindingContext;
+import org.softwareFm.displayCore.api.DisplayerContext;
+import org.softwareFm.displayCore.api.DisplayerDetails;
+import org.softwareFm.displayCore.api.IDisplayContainer;
+import org.softwareFm.displayCore.api.IDisplayer;
+import org.softwareFm.displayCore.api.ITopButtonState;
+import org.softwareFm.displayCore.api.NameSpaceAndName;
+import org.softwareFm.swtBasics.Swts;
+import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.maps.Maps;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;

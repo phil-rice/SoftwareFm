@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension   point="org.arc4eclipse.displayers" >
-         <display key="text" class ="org.arc4eclipse.displayText.TextDisplayer"/>
+   <extension   point="org.softwareFm.displayers" >
+         <display key="text" class ="org.softwareFm.displayText.TextDisplayer"/>
    </extension>
 
 </plugin>

@@ -3,7 +3,7 @@
 <schema targetNamespace="org.arc4Eclipse.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="org.arc4Eclipse.core" id="org.arc4eclipse.displayers" name="Displayers"/>
+         <meta.schema plugin="org.arc4Eclipse.core" id="org.softwareFm.displayers" name="Displayers"/>
       </appinfo>
       <documentation>
          [Enter description of this extension point.]
@@ -54,7 +54,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.arc4eclipse.displayCore.api.IDisplayer"/>
+                  <meta.attribute kind="java" basedOn=":org.softwareFm.displayCore.api.IDisplayer"/>
                </appinfo>
             </annotation>
          </attribute>
@@ -98,7 +98,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.arc4eclipse.utilities.resources.IResourceGetter"/>
+                  <meta.attribute kind="java" basedOn=":org.softwareFm.utilities.resources.IResourceGetter"/>
                </appinfo>
             </annotation>
          </attribute>
@@ -120,7 +120,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn="org.arc4eclipse.arc4eclipseRepository.api.IUrlGenerator:"/>
+                  <meta.attribute kind="java" basedOn="org.softwareFm.arc4eclipseRepository.api.IUrlGenerator:"/>
                </appinfo>
             </annotation>
          </attribute>
@@ -142,7 +142,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn="org.arc4eclipse.displayCore.api.RepositoryStatusListenerPropogator:"/>
+                  <meta.attribute kind="java" basedOn="org.softwareFm.displayCore.api.RepositoryStatusListenerPropogator:"/>
                </appinfo>
             </annotation>
          </attribute>
@@ -157,7 +157,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.arc4eclipse.core.plugin.IDisplayContainerFactoryConfigurer"/>
+                  <meta.attribute kind="java" basedOn=":org.softwareFm.core.plugin.IDisplayContainerFactoryConfigurer"/>
                </appinfo>
             </annotation>
          </attribute>
@@ -179,7 +179,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.arc4eclipse.displayCore.api.ILineEditor"/>
+                  <meta.attribute kind="java" basedOn=":org.softwareFm.displayCore.api.ILineEditor"/>
                </appinfo>
             </annotation>
          </attribute>

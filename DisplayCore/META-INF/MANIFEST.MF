@@ -1,14 +1,14 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.arc4eclipse.displayCore
-Bundle-SymbolicName: org.arc4eclipse.displayCore
+Bundle-Name: org.softwareFm.displayCore
+Bundle-SymbolicName: org.softwareFm.displayCore
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: Arc4Eclipse
-Require-Bundle: org.arc4eclipse.swtBasics;bundle-version="1.0.0";visibility:=reexport,
- org.arc4eclipse.repository;bundle-version="1.0.0";visibility:=reexport,
- org.arc4eclipse.selection;bundle-version="1.0.0";visibility:=reexport,
+Bundle-Vendor: softwareFm
+Require-Bundle: org.softwareFm.swtBasics;bundle-version="1.0.0";visibility:=reexport,
+ org.softwareFm.repository;bundle-version="1.0.0";visibility:=reexport,
+ org.softwareFm.selection;bundle-version="1.0.0";visibility:=reexport,
  org.eclipse.jface;bundle-version="3.7.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.arc4eclipse.displayCore.api,
- org.arc4eclipse.displayCore.constants
+Export-Package: org.softwareFm.displayCore.api,
+ org.softwareFm.displayCore.constants

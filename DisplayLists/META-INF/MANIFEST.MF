@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.arc4eclipse.displayLists
-Bundle-SymbolicName: org.arc4eclipse.displayLists;singleton:=true
+Bundle-Name: org.softwareFm.displayLists
+Bundle-SymbolicName: org.softwareFm.displayLists;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: Arc4Eclipse
+Bundle-Vendor: softwareFm
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.arc4eclipse.displayCore;bundle-version="1.0.0";visibility:=reexport,
+Require-Bundle: org.softwareFm.displayCore;bundle-version="1.0.0";visibility:=reexport,
  org.eclipse.core.runtime;bundle-version="3.7.0";visibility:=reexport,
  org.eclipse.jface;bundle-version="3.7.0";visibility:=reexport
-Export-Package: org.arc4eclipse.displayLists
+Export-Package: org.softwareFm.displayLists

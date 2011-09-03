@@ -6,28 +6,28 @@
          point="org.eclipse.ui.views">
       <category
             name="Arc4Eclipse"
-            id="org.arc4eclipse">
+            id="org.softwareFm">
       </category>
       <view
             name="Arc - Jar"
             icon="icons/Jar.gif"
-            category="org.arc4eclipse"
-            class="org.arc4eclipse.selectedArtifactPlugin.views.SelectedJarView"
-            id="org.arc4eclipse.selectedArtifactPlugin.selectedJarView">
+            category="org.softwareFm"
+            class="org.softwareFm.selectedArtifactPlugin.views.SelectedJarView"
+            id="org.softwareFm.selectedArtifactPlugin.selectedJarView">
       </view>
       <view
             name="Arc - Org"
             icon="icons/Project.gif"
-            category="org.arc4eclipse"
-            class="org.arc4eclipse.selectedArtifactPlugin.views.SelectedOrganisationView"
-            id="org.arc4eclipse.selectedArtifactPlugin.selectedOrganisationView">
+            category="org.softwareFm"
+            class="org.softwareFm.selectedArtifactPlugin.views.SelectedOrganisationView"
+            id="org.softwareFm.selectedArtifactPlugin.selectedOrganisationView">
       </view>
       <view
             name="Arc - Proj"
             icon="icons/Project.gif"
-            category="org.arc4eclipse"
-            class="org.arc4eclipse.selectedArtifactPlugin.views.SelectedProjectView"
-            id="org.arc4eclipse.selectedArtifactPlugin.selectedProjectView">
+            category="org.softwareFm"
+            class="org.softwareFm.selectedArtifactPlugin.views.SelectedProjectView"
+            id="org.softwareFm.selectedArtifactPlugin.selectedProjectView">
       </view>
    </extension>
    <extension
@@ -38,19 +38,19 @@
                ratio="0.5"
                relative="org.eclipse.ui.views.TaskList"
                relationship="right"
-               id="org.arc4eclipse.selectedArtifactPlugin.selectedJarView">
+               id="org.softwareFm.selectedArtifactPlugin.selectedJarView">
          </view>
          <view
                ratio="0.5"
                relative="org.eclipse.ui.views.TaskList"
                relationship="right"
-               id="org.arc4eclipse.selectedArtifactPlugin.selectedOrganisationView">
+               id="org.softwareFm.selectedArtifactPlugin.selectedOrganisationView">
          </view>
          <view
                ratio="0.5"
                relative="org.eclipse.ui.views.TaskList"
                relationship="right"
-               id="org.arc4eclipse.selectedArtifactPlugin.selectedProjectView">
+               id="org.softwareFm.selectedArtifactPlugin.selectedProjectView">
          </view>
       </perspectiveExtension>
    </extension>

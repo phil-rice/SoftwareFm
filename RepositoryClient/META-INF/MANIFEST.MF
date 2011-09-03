@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: RepositoryClient
-Bundle-SymbolicName: org.arc4eclipse.repositoryClient
+Bundle-SymbolicName: org.softwareFm.repositoryClient
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: org.arc4eclipse.arc4Eclipse
+Bundle-Vendor: org.softwareFm.softwareFm
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: orc.arc4eclipse.httpClient;bundle-version="1.0.0";visibility:=reexport
-Export-Package: org.arc4eclipse.repositoryFacard,
- org.arc4eclipse.repositoryFacardConstants
+Require-Bundle: orc.softwareFm.httpClient;bundle-version="1.0.0";visibility:=reexport
+Export-Package: org.softwareFm.repositoryFacard,
+ org.softwareFm.repositoryFacardConstants

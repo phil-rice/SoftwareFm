@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="org.arc4eclipse.displayers" name="Displayers" />
-   <extension-point id="org.arc4eclipse.image" name="Image" />
-   <extension-point id="org.arc4eclipse.bundle" name="Bundle" />
-   <extension-point id="org.arc4eclipse.urlGenerator" name="UrlGenerator" />
-   <extension-point id="org.arc4eclipse.repositoryPropogator" name="RepositoryStatusListenerS" />
-   <extension-point id="org.arc4eclipse.displayContainerFactoryConfigurator" name="DisplayContainerFactoryConfigurator" />
-   <extension-point id="org.arc4eclipse.lineEditor" name="LineEditor" />
+   <extension-point id="org.softwareFm.displayers" name="Displayers" />
+   <extension-point id="org.softwareFm.image" name="Image" />
+   <extension-point id="org.softwareFm.bundle" name="Bundle" />
+   <extension-point id="org.softwareFm.urlGenerator" name="UrlGenerator" />
+   <extension-point id="org.softwareFm.repositoryPropogator" name="RepositoryStatusListenerS" />
+   <extension-point id="org.softwareFm.displayContainerFactoryConfigurator" name="DisplayContainerFactoryConfigurator" />
+   <extension-point id="org.softwareFm.lineEditor" name="LineEditor" />
 
-<extension  point="org.arc4eclipse.image">
-      <image key="Edit" class ="org.arc4eclipse.swtBasics.images.Images"/>
-      <image key="Help" class ="org.arc4eclipse.swtBasics.images.Images"/>
-      <image key="Browse" class ="org.arc4eclipse.swtBasics.images.Images"/>
-      <image key="Add" class ="org.arc4eclipse.swtBasics.images.Images"/>
-      <image key="Delete" class ="org.arc4eclipse.swtBasics.images.Images"/>
-      <image key="Clear" class ="org.arc4eclipse.swtBasics.images.Images"/>
+<extension  point="org.softwareFm.image">
+      <image key="Edit" class ="org.softwareFm.swtBasics.images.Images"/>
+      <image key="Help" class ="org.softwareFm.swtBasics.images.Images"/>
+      <image key="Browse" class ="org.softwareFm.swtBasics.images.Images"/>
+      <image key="Add" class ="org.softwareFm.swtBasics.images.Images"/>
+      <image key="Delete" class ="org.softwareFm.swtBasics.images.Images"/>
+      <image key="Clear" class ="org.softwareFm.swtBasics.images.Images"/>
 </extension>
 
-<extension  point="org.arc4eclipse.bundle">
-      <bundle name ="Basic" class="org.arc4eclipse.swtBasics.images.Images"/>
-      <bundle name ="Core" class="org.arc4eclipse.core.plugin.Plugins"/>
+<extension  point="org.softwareFm.bundle">
+      <bundle name ="Basic" class="org.softwareFm.swtBasics.images.Images"/>
+      <bundle name ="Core" class="org.softwareFm.core.plugin.Plugins"/>
 </extension>
 
 

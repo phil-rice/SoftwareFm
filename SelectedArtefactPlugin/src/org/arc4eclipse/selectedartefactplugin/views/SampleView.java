@@ -1,8 +1,8 @@
-package org.arc4eclipse.selectedartefactplugin.views;
+package org.softwareFm.selectedartefactplugin.views;
 
-import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
-import org.arc4eclipse.displayCore.api.IDisplayManager;
-import org.arc4eclipse.panel.SelectedArtefactPanel;
+import org.softwareFm.arc4eclipseRepository.api.IArc4EclipseRepository;
+import org.softwareFm.displayCore.api.IDisplayManager;
+import org.softwareFm.panel.SelectedArtefactPanel;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.ITypeRoot;
@@ -36,7 +36,7 @@ import selectedartefactplugin.Activator;
 
 public class SampleView extends ViewPart {
 
-	public static final String ID = "org.arc4eclipse.selectedartefactplugin.views.SampleView";
+	public static final String ID = "org.softwareFm.selectedartefactplugin.views.SampleView";
 	private ISelectionListener listener;
 
 	public SampleView() {

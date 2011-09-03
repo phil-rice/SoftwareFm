@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Selection
-Bundle-SymbolicName: org.arc4eclipse.selection
+Bundle-SymbolicName: org.softwareFm.selection
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: Arc4Eclipse
+Bundle-Vendor: softwareFm
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.arc4eclipse.panel
-Require-Bundle: org.arc4eclipse.jdtBinding;bundle-version="1.0.0"
+Export-Package: org.softwareFm.panel
+Require-Bundle: org.softwareFm.jdtBinding;bundle-version="1.0.0"

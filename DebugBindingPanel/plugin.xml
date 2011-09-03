@@ -12,21 +12,21 @@
             name="Arc4Eclipse - Binding Debug"
             icon="icons/sample.gif"
             category="org.arc4eclipse.debug"
-            class="org.arc4eclipse.debugPanel.views.DebugBindingView"
+            class="org.softwareFm.debugPanel.views.DebugBindingView"
             id="org.arc4eclipse.debugPanel.views.DebugBindingView">
       </view>
       <view
             name="Arc4Eclipse - Messages Debug"
             icon="icons/sample.gif"
             category="org.arc4eclipse.debug"
-            class="org.arc4eclipse.debugPanel.views.DebugMessageView"
+            class="org.softwareFm.debugPanel.views.DebugMessageView"
             id="org.arc4eclipse.debugPanel.views.DebugMessageView">
       </view>
       <view
             name="Arc4Eclipse - Events Debug"
             icon="icons/sample.gif"
             category="org.arc4eclipse.debug"
-            class="org.arc4eclipse.debugPanel.views.DebugEventView"
+            class="org.softwareFm.debugPanel.views.DebugEventView"
             id="org.arc4eclipse.debugPanel.views.DebugEventView">
       </view>
    </extension>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension    point="org.arc4eclipse.urlGenerator">
-         <UrlGenerator name="organisation" class= "org.arc4eclipse.entityOrganisationData.OrganisationUrlGenerator" />
+   <extension    point="org.softwareFm.urlGenerator">
+         <UrlGenerator name="organisation" class= "org.softwareFm.entityOrganisationData.OrganisationUrlGenerator" />
    </extension>
    
-   <extension  point="org.arc4eclipse.repositoryPropogator">
-         <repositoryStatusPropogator class= "org.arc4eclipse.entityOrganisationData.OrganisationRepositoryStatusListenerPropogator" />
+   <extension  point="org.softwareFm.repositoryPropogator">
+         <repositoryStatusPropogator class= "org.softwareFm.entityOrganisationData.OrganisationRepositoryStatusListenerPropogator" />
    </extension>   
    
-   <extension  point="org.arc4eclipse.displayContainerFactoryConfigurator">
-         <DisplayContainerFactoryConfigurator entity="organisation" class= "org.arc4eclipse.entityOrganisationData.OrganisationConfigurer" />
+   <extension  point="org.softwareFm.displayContainerFactoryConfigurator">
+         <DisplayContainerFactoryConfigurator entity="organisation" class= "org.softwareFm.entityOrganisationData.OrganisationConfigurer" />
    </extension>
 </plugin>

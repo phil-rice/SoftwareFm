@@ -2,14 +2,14 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.arc4eclipse.displayers" >
-         <display key="jar" class ="org.arc4eclipse.displayJarPath.JarPathDisplayer"/>
+         point="org.softwareFm.displayers" >
+         <display key="jar" class ="org.softwareFm.displayJarPath.JarPathDisplayer"/>
    </extension>
-   <extension  point="org.arc4eclipse.bundle">
-      <bundle name="DisplayJar" class="org.arc4eclipse.displayJarPath.DisplayJarConstants"/>
+   <extension  point="org.softwareFm.bundle">
+      <bundle name="DisplayJar" class="org.softwareFm.displayJarPath.DisplayJarConstants"/>
    </extension>
-   <extension  point="org.arc4eclipse.image">
-      <image key="Jar" class ="org.arc4eclipse.displayJarPath.DisplayJarConstants"/>
+   <extension  point="org.softwareFm.image">
+      <image key="Jar" class ="org.softwareFm.displayJarPath.DisplayJarConstants"/>
    </extension>
 
 </plugin>

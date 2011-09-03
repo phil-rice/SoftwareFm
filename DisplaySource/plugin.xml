@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension  point="org.arc4eclipse.displayers" >
-         <display key="src" class ="org.arc4eclipse.displayJavadocAndSource.SourceDisplayer"/>
-         <display key="javadoc" class ="org.arc4eclipse.displayJavadocAndSource.JavadocDisplayer"/>
+   <extension  point="org.softwareFm.displayers" >
+         <display key="src" class ="org.softwareFm.displayJavadocAndSource.SourceDisplayer"/>
+         <display key="javadoc" class ="org.softwareFm.displayJavadocAndSource.JavadocDisplayer"/>
    </extension>	
 
-   <extension  point="org.arc4eclipse.image">
-	      <image key="Javadoc" class="org.arc4eclipse.displayJavadocAndSource.JavadocDisplayer"/>
-	      <image key="Source" class="org.arc4eclipse.displayJavadocAndSource.SourceDisplayer"/>
-	      <image key="Javadoc.link" class="org.arc4eclipse.displayJavadocAndSource.DisplayJavadocConstants"/>
-	      <image key="Source.link" class="org.arc4eclipse.displayJavadocAndSource.DisplayJavadocConstants"/>
+   <extension  point="org.softwareFm.image">
+	      <image key="Javadoc" class="org.softwareFm.displayJavadocAndSource.JavadocDisplayer"/>
+	      <image key="Source" class="org.softwareFm.displayJavadocAndSource.SourceDisplayer"/>
+	      <image key="Javadoc.link" class="org.softwareFm.displayJavadocAndSource.DisplayJavadocConstants"/>
+	      <image key="Source.link" class="org.softwareFm.displayJavadocAndSource.DisplayJavadocConstants"/>
 	</extension>
 
-	<extension  point="org.arc4eclipse.bundle">
-	      <bundle name="JavadocAndSource" class="org.arc4eclipse.displayJavadocAndSource.SourceDisplayer"/>
+	<extension  point="org.softwareFm.bundle">
+	      <bundle name="JavadocAndSource" class="org.softwareFm.displayJavadocAndSource.SourceDisplayer"/>
 	</extension>
 </plugin>
