@@ -15,6 +15,12 @@
             class="org.softwareFm.selectedArtifactPlugin.views.SelectedJarView"
             id="org.softwareFm.selectedArtifactPlugin.selectedJarView">
       </view>
+      <view     name="S/W FM - Summary"
+            icon="icons/Jar.gif"
+            category="org.softwareFm"
+            class="org.softwareFm.selectedArtifactPlugin.views.SelectedJarSummaryView"
+            id="org.softwareFm.selectedArtifactPlugin.selectedJarSummaryView">
+      </view>
       <view
             name="S/W FM - Org"
             icon="icons/Project.gif"

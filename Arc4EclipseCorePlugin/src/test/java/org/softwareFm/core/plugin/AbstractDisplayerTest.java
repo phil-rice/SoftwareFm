@@ -15,8 +15,6 @@ import org.softwareFm.arc4eclipseRepository.api.IArc4EclipseRepository;
 import org.softwareFm.arc4eclipseRepository.api.IUrlGeneratorMap;
 import org.softwareFm.arc4eclipseRepository.api.RepositoryDataItemStatus;
 import org.softwareFm.arc4eclipseRepository.constants.RepositoryConstants;
-import org.softwareFm.core.plugin.Arc4EclipseCoreActivator;
-import org.softwareFm.core.plugin.SelectedArtifactSelectionManager;
 import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.Displayers;
@@ -33,7 +31,7 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 @SuppressWarnings("restriction")
 public abstract class AbstractDisplayerTest<L extends Control, C extends Control> extends TestCase {
 
-	protected Arc4EclipseCoreActivator activator;
+	protected SoftwareFmActivator activator;
 	protected Display display;
 	private ImageRegistry imageRegistry;
 	private SelectedArtifactSelectionManager selectedBindingManager;
@@ -58,7 +56,8 @@ public abstract class AbstractDisplayerTest<L extends Control, C extends Control
 	public void testRegisteredDisplayer() {
 		String key = getDataKey();
 		String entity = "entity";
-		IDisplayContainerForTests container = makeContainer(entity, key, getSmallImageKey());
+		String viewName = "viewName";
+		IDisplayContainerForTests container = makeContainer(viewName, entity, key, getSmallImageKey());
 		setValues(container, entity, key);
 		L largeControl = container.getLargeControlFor(key);
 		C smallControl = container.getSmallControlFor(key);
@@ -71,8 +70,8 @@ public abstract class AbstractDisplayerTest<L extends Control, C extends Control
 		container.setValues(new BindingContext(RepositoryDataItemStatus.FOUND, "some url", data, context));
 	}
 
-	private IDisplayContainerForTests makeContainer(String entity, String key, String smallImageKey) {
-		IDisplayContainerFactory displayContainerFactory = activator.getDisplayContainerFactory(display, entity);
+	private IDisplayContainerForTests makeContainer(String viewName, String entity, String key, String smallImageKey) {
+		IDisplayContainerFactory displayContainerFactory = activator.getDisplayContainerFactory(display, viewName, entity);
 		displayContainerFactory.register(Maps.<String, String> makeMap(//
 				DisplayCoreConstants.key, key,//
 				DisplayCoreConstants.smallImageKey, smallImageKey,//
@@ -85,7 +84,7 @@ public abstract class AbstractDisplayerTest<L extends Control, C extends Control
 
 	public void testSmallControlIcon() {
 		Image expectedImage = imageRegistry.get(Resources.getDepressedName(getSmallImageKey()));
-		IDisplayContainerForTests container = makeContainer("entity", getDataKey(), getSmallImageKey());
+		IDisplayContainerForTests container = makeContainer("view", "entity", getDataKey(), getSmallImageKey());
 		Label button = container.getSmallControlFor(getDataKey());
 		assertSame(expectedImage, button.getImage());
 	}
@@ -94,11 +93,11 @@ public abstract class AbstractDisplayerTest<L extends Control, C extends Control
 	protected void setUp() throws Exception {
 		super.setUp();
 		display = Workbench.getInstance().getDisplay();
-		activator = Arc4EclipseCoreActivator.getDefault();
+		activator = SoftwareFmActivator.getDefault();
 		imageRegistry = activator.getImageRegistry(display);
 		repository = activator.getRepository();
 		selectedBindingManager = activator.getSelectedBindingManager();
-		resourceGetter = Arc4EclipseCoreActivator.getDefault().getResourceGetter();
+		resourceGetter = SoftwareFmActivator.getDefault().getResourceGetter();
 		urlGeneratorMap = activator.getUrlGeneratorMap();
 		displayerContext = new DisplayerContext(selectedBindingManager, repository, urlGeneratorMap, ConfigForTitleAnd.create(display, resourceGetter, imageRegistry));
 		shell = new Shell(display);

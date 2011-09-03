@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.softwareFm.core
 Bundle-SymbolicName: org.softwareFm.core;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.softwareFm.core.plugin.Arc4EclipseCoreActivator
+Bundle-Activator: org.softwareFm.core.plugin.SoftwareFmActivator
 Bundle-Vendor: softwareFm
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime;visibility:=reexport,

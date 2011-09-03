@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.softwareFm.EntityJarSummaryData
+Bundle-SymbolicName: org.softwareFm.EntityJarSummaryData;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: softwareFm
+Require-Bundle: org.eclipse.core.runtime,
+ org.softwareFm.core;bundle-version="1.0.0";visibility:=reexport
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy

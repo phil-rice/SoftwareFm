@@ -161,7 +161,7 @@
                </appinfo>
             </annotation>
          </attribute>
-         <attribute name="entity" type="string" use="required">
+         <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
                   

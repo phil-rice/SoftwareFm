@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.arc4eclipse.feature"
-      label="Arc4Eclipse"
+      id="org.softwareFm.feature"
+      label="softwareFm"
       version="1.0.0.qualifier"
-      provider-name="Arc4Eclipse">
+      provider-name="softwareFm">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -503,7 +503,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.arc4eclipse.swtBasics"
+         id="org.softwareFm.swtBasics"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -645,7 +645,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.arc4eclipse.externals"
+         id="org.softwareFm.externals"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -758,7 +758,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.arc4eclipse.repositoryClient"
+         id="org.softwareFm.repositoryClient"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -1574,7 +1574,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.arc4eclipse.displayTest"
+         id="org.softwareFm.displayTest"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -1743,7 +1743,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.arc4eclipse.utilities"
+         id="org.softwareFm.utilities"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -2078,7 +2078,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.arc4eclipse.selectedArtefactPlugin"
+         id="org.softwareFm.selectedArtefactPlugin"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -2119,7 +2119,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.arc4eclipse.repository"
+         id="org.softwareFm.repository"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -2568,7 +2568,7 @@
          unpack="false"/>
 
    <plugin
-         id="orc.arc4eclipse.httpClient"
+         id="orc.softwareFm.httpClient"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -2691,7 +2691,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.arc4eclipse.displayCore"
+         id="org.softwareFm.displayCore"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -3709,7 +3709,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.arc4eclipse.jdtBinding"
+         id="org.softwareFm.jdtBinding"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -3932,7 +3932,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.arc4eclipse.displayText"
+         id="org.softwareFm.displayText"
          download-size="0"
          install-size="0"
          version="0.0.0"

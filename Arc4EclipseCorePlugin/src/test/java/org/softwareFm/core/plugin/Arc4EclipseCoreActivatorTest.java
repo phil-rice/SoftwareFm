@@ -12,9 +12,8 @@ import org.eclipse.ui.internal.Workbench;
 import org.softwareFm.arc4eclipseRepository.api.IUrlGenerator;
 import org.softwareFm.arc4eclipseRepository.api.IUrlGeneratorMap;
 import org.softwareFm.arc4eclipseRepository.constants.RepositoryConstants;
-import org.softwareFm.core.plugin.Arc4EclipseCoreActivator;
-import org.softwareFm.core.plugin.Plugins;
 import org.softwareFm.displayCore.api.DisplayerContext;
+import org.softwareFm.displayCore.api.IDisplayContainerFactory;
 import org.softwareFm.displayCore.api.IDisplayContainerForTests;
 import org.softwareFm.displayCore.api.IRegisteredItems;
 import org.softwareFm.swtBasics.SwtBasicConstants;
@@ -42,22 +41,25 @@ public class Arc4EclipseCoreActivatorTest extends TestCase {
 	}
 
 	private void checkResource(String expected, String editkey) {
-		Arc4EclipseCoreActivator activator = Arc4EclipseCoreActivator.getDefault();
+		SoftwareFmActivator activator = SoftwareFmActivator.getDefault();
 		IResourceGetter resourceGetter = activator.getConfigForTitleAnd(display).resourceGetter;
 		assertEquals(expected, Resources.getTooltip(resourceGetter, SwtBasicConstants.key));
 
 	}
 
 	public void testCanMakeDisplayContainers() {
-		checkCanMakeDisplayContainers(RepositoryConstants.entityJar);
-		checkCanMakeDisplayContainers(RepositoryConstants.entityOrganisation);
-		checkCanMakeDisplayContainers(RepositoryConstants.entityProject);
+		checkCanMakeDisplayContainers(RepositoryConstants.viewJar, RepositoryConstants.entityJar);
+		checkCanMakeDisplayContainers(RepositoryConstants.viewSummaryJar, RepositoryConstants.entityJar);
+		checkCanMakeDisplayContainers(RepositoryConstants.viewOrganisation, RepositoryConstants.entityOrganisation);
+		checkCanMakeDisplayContainers(RepositoryConstants.viewProject, RepositoryConstants.entityProject);
 	}
 
-	private void checkCanMakeDisplayContainers(String entity) {
-		Arc4EclipseCoreActivator activator = Arc4EclipseCoreActivator.getDefault();
+	private void checkCanMakeDisplayContainers(String view, String entity) {
+		SoftwareFmActivator activator = SoftwareFmActivator.getDefault();
 		DisplayerContext displayerContext = new DisplayerContext(activator.getSelectedBindingManager(), activator.getRepository(), activator.getUrlGeneratorMap(), activator.getConfigForTitleAnd(display));
-		activator.getDisplayContainerFactory(display, entity).create(displayerContext, new Shell(display));
+		IDisplayContainerFactory displayContainerFactory = activator.getDisplayContainerFactory(display, view, entity);
+		Shell parent = new Shell(display);
+		displayContainerFactory.create(displayerContext, parent);
 	}
 
 	public void testUrlGenerators() throws Exception {
@@ -67,7 +69,7 @@ public class Arc4EclipseCoreActivatorTest extends TestCase {
 	}
 
 	private void checkUrlGenerator(String expected, String entity) throws Exception {
-		Arc4EclipseCoreActivator activator = Arc4EclipseCoreActivator.getDefault();
+		SoftwareFmActivator activator = SoftwareFmActivator.getDefault();
 		IUrlGeneratorMap urlGeneratorMap = activator.getUrlGeneratorMap();
 		IUrlGenerator urlGenerator = urlGeneratorMap.get(entity);
 		assertEquals(expected, urlGenerator.apply("someurl"));
@@ -80,9 +82,9 @@ public class Arc4EclipseCoreActivatorTest extends TestCase {
 	}
 
 	private void checkLineEditor(String name) {
-		Arc4EclipseCoreActivator activator = Arc4EclipseCoreActivator.getDefault();
+		SoftwareFmActivator activator = SoftwareFmActivator.getDefault();
 		DisplayerContext displayerContext = new DisplayerContext(activator.getSelectedBindingManager(), activator.getRepository(), activator.getUrlGeneratorMap(), activator.getConfigForTitleAnd(display));
-		IDisplayContainerForTests container = (IDisplayContainerForTests) activator.getDisplayContainerFactory(display, "entity").create(displayerContext, new Shell(display));
+		IDisplayContainerForTests container = (IDisplayContainerForTests) activator.getDisplayContainerFactory(display, "view", "entity").create(displayerContext, new Shell(display));
 		IRegisteredItems registeredItems = container.getRegisteredItems();
 		assertNotNull(registeredItems.getLineEditor(name));
 
@@ -92,7 +94,7 @@ public class Arc4EclipseCoreActivatorTest extends TestCase {
 		checkImages(SwtBasicConstants.key);
 		checkImages(SwtBasicConstants.helpKey);
 		final List<String> keys = Lists.newList();
-		Plugins.useConfigElements(Arc4EclipseCoreActivator.IMAGE_ID, new ICallback<IConfigurationElement>() {
+		Plugins.useConfigElements(SoftwareFmActivator.IMAGE_ID, new ICallback<IConfigurationElement>() {
 			@Override
 			public void process(IConfigurationElement t) throws Exception {
 				String key = t.getAttribute("key");
@@ -103,7 +105,7 @@ public class Arc4EclipseCoreActivatorTest extends TestCase {
 	}
 
 	private void checkImages(String... keys) {
-		Arc4EclipseCoreActivator activator = Arc4EclipseCoreActivator.getDefault();
+		SoftwareFmActivator activator = SoftwareFmActivator.getDefault();
 		ImageRegistry imageRegistry = activator.getConfigForTitleAnd(display).imageRegistry;
 		for (String key : keys) {
 			System.out.println("Checking image for: " + key);

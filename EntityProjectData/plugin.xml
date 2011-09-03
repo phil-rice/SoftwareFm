@@ -11,6 +11,6 @@
    </extension>
    
       <extension  point="org.softwareFm.displayContainerFactoryConfigurator">
-         <DisplayContainerFactoryConfigurator entity="project" class= "org.softwareFm.entityProjectData.ProjectConfigurer" />
+         <DisplayContainerFactoryConfigurator name="project" class= "org.softwareFm.entityProjectData.ProjectConfigurer" />
    </extension>
 </plugin>

@@ -6,7 +6,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.softwareFm.arc4eclipseRepository.api.IArc4EclipseRepository;
-import org.softwareFm.core.plugin.Arc4EclipseCoreActivator;
+import org.softwareFm.core.plugin.SoftwareFmActivator;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.IDisplayContainer;
 import org.softwareFm.panel.ISelectedBindingManager;
@@ -42,12 +42,12 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	public DisplayerContext getContext(Display display) {
-		Arc4EclipseCoreActivator coreActivator = Arc4EclipseCoreActivator.getDefault();
+		SoftwareFmActivator coreActivator = SoftwareFmActivator.getDefault();
 		return new DisplayerContext(coreActivator.getSelectedBindingManager(), coreActivator.getRepository(), coreActivator.getUrlGeneratorMap(), coreActivator.getConfigForTitleAnd(display));
 	}
 
 	public IArc4EclipseRepository getRepository() {
-		return Arc4EclipseCoreActivator.getDefault().getRepository();
+		return SoftwareFmActivator.getDefault().getRepository();
 	}
 
 	public static ImageDescriptor getImageDescriptor(String path) {
@@ -55,11 +55,11 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	public ISelectedBindingManager getSelectedBindingManager() {
-		return Arc4EclipseCoreActivator.getDefault().getSelectedBindingManager();
+		return SoftwareFmActivator.getDefault().getSelectedBindingManager();
 	}
 
-	public IDisplayContainer makeDisplayContainer(Composite parent, String entity) {
-		return Arc4EclipseCoreActivator.getDefault().makeDisplayContainer(parent, entity);
+	public IDisplayContainer makeDisplayContainer(Composite parent, String view, String entity) {
+		return SoftwareFmActivator.getDefault().makeDisplayContainer(parent, view, entity);
 	}
 
 }

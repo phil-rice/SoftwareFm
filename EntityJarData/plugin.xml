@@ -6,11 +6,8 @@
    </extension>
 
    <extension  point="org.softwareFm.displayContainerFactoryConfigurator">
-         <UrlGenerator name="jar" class= "org.softwareFm.entityJarData.JarConfigurer" />
-   </extension>
-
-   <extension  point="org.softwareFm.displayContainerFactoryConfigurator">
-         <DisplayContainerFactoryConfigurator entity="jar" class= "org.softwareFm.entityJarData.JarConfigurer" />
+         <DisplayContainerFactoryConfigurator name="jar" entity="jar" class= "org.softwareFm.entityJarData.JarConfigurer" />
+         <DisplayContainerFactoryConfigurator name="jarSummary" class= "org.softwareFm.entityJarData.JarSummaryConfigurer" />
    </extension>
 
 

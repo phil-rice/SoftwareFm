@@ -10,6 +10,6 @@
    </extension>   
    
    <extension  point="org.softwareFm.displayContainerFactoryConfigurator">
-         <DisplayContainerFactoryConfigurator entity="organisation" class= "org.softwareFm.entityOrganisationData.OrganisationConfigurer" />
+         <DisplayContainerFactoryConfigurator name="organisation" class= "org.softwareFm.entityOrganisationData.OrganisationConfigurer" />
    </extension>
 </plugin>

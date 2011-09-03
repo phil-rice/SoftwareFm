@@ -42,7 +42,7 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class Arc4EclipseCoreActivator extends AbstractUIPlugin implements IRepositoryAndUrlGeneratorMapGetter {
+public class SoftwareFmActivator extends AbstractUIPlugin implements IRepositoryAndUrlGeneratorMapGetter {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.arc4Eclipse.core"; //$NON-NLS-1$
@@ -55,7 +55,7 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin implements IRepos
 	public static final String DISPLAY_CONTAINER_FACTORY_CONFIGURATOR_ID = "org.softwareFm.displayContainerFactoryConfigurator";
 
 	// The shared instance
-	private static Arc4EclipseCoreActivator plugin;
+	private static SoftwareFmActivator plugin;
 
 	private IArc4EclipseRepository repository;
 
@@ -67,7 +67,7 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin implements IRepos
 	/**
 	 * The constructor
 	 */
-	public Arc4EclipseCoreActivator() {
+	public SoftwareFmActivator() {
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin implements IRepos
 		super.stop(context);
 	}
 
-	public static Arc4EclipseCoreActivator getDefault() {
+	public static SoftwareFmActivator getDefault() {
 		return plugin;
 	}
 
@@ -133,7 +133,7 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin implements IRepos
 
 			@Override
 			public void process(RepositoryStatusListenerPropogator t, IConfigurationElement element) {
-				t.setRepositoryAndUrlGeneratorMapGetter(Arc4EclipseCoreActivator.this);
+				t.setRepositoryAndUrlGeneratorMapGetter(SoftwareFmActivator.this);
 				repository2.addStatusListener(t);
 			}
 
@@ -195,8 +195,8 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin implements IRepos
 		return result;
 	}
 
-	public IDisplayContainerFactory getDisplayContainerFactory(final Display display, final String entity) {
-		return Maps.findOrCreate(displayContainerFactoryMap, entity, new Callable<IDisplayContainerFactory>() {
+	public IDisplayContainerFactory getDisplayContainerFactory(final Display display, final String viewName, final String entity) {
+		return Maps.findOrCreate(displayContainerFactoryMap, viewName, new Callable<IDisplayContainerFactory>() {
 			@Override
 			public IDisplayContainerFactory call() throws Exception {
 				IDisplayContainerFactoryBuilder builder = getDisplayContainerFactoryBuilder(display);
@@ -204,8 +204,8 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin implements IRepos
 				Plugins.useClasses(DISPLAY_CONTAINER_FACTORY_CONFIGURATOR_ID, new IPlugInCreationCallback<IDisplayContainerFactoryConfigurer>() {
 					@Override
 					public void process(IDisplayContainerFactoryConfigurer t, IConfigurationElement element) {
-						String thisEntity = element.getAttribute("entity");
-						if (entity.equals(thisEntity))
+						String thisViewName = element.getAttribute("name");
+						if (viewName.equals(thisViewName))
 							t.configure(factory);
 					}
 
@@ -220,9 +220,9 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin implements IRepos
 		});
 	}
 
-	public IDisplayContainer makeDisplayContainer(Composite parent, String entity) {
+	public IDisplayContainer makeDisplayContainer(Composite parent, String name, String entity) {
 		Display display = parent.getDisplay();
-		IDisplayContainerFactory factory = getDisplayContainerFactory(display, entity);
+		IDisplayContainerFactory factory = getDisplayContainerFactory(display, name, entity);
 		return factory.create(getDisplayerContext(display), parent);
 	}
 

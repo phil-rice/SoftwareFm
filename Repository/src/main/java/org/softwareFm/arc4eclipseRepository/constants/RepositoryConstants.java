@@ -10,6 +10,12 @@ public class RepositoryConstants {
 	public static final String entityJar = "jar";
 	public static final String entityOrganisation = "organisation";
 	public static final String entityProject = "project";
+
+	public static final String viewJar = "jar";
+	public static final String viewSummaryJar = "jarSummary";
+	public static final String viewOrganisation = "organisation";
+	public static final String viewProject = "project";
+
 	public static final Object urlKey = "urlKey";
 	public static final String rawUrl = "rawUrl";
 

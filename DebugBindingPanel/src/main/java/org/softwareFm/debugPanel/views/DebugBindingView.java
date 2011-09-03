@@ -3,7 +3,7 @@ package org.softwareFm.debugPanel.views;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
-import org.softwareFm.core.plugin.Arc4EclipseCoreActivator;
+import org.softwareFm.core.plugin.SoftwareFmActivator;
 import org.softwareFm.debugMessagePanel.views.DebugBindingPanel;
 
 /**
@@ -22,7 +22,7 @@ public class DebugBindingView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		Arc4EclipseCoreActivator activator = Arc4EclipseCoreActivator.getDefault();
+		SoftwareFmActivator activator = SoftwareFmActivator.getDefault();
 		new DebugBindingPanel(parent, SWT.NULL, activator.getConfigForTitleAnd(parent.getDisplay()), activator.getSelectedBindingManager());
 	}
 
