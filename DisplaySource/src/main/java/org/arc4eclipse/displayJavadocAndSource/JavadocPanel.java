@@ -4,6 +4,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
 
 import org.arc4eclipse.displayCore.api.BoundTitleAndTextField;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
@@ -20,6 +22,7 @@ import org.arc4eclipse.swtBasics.images.ImageButtons;
 import org.arc4eclipse.swtBasics.text.TitleAndTextField;
 import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.functions.IFunction1;
+import org.arc4eclipse.utilities.strings.Strings;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IClasspathAttribute;
@@ -42,6 +45,12 @@ public class JavadocPanel extends Composite {
 		super(parent, style);
 		setLayout(new GridLayout());
 		txtRepository = new BoundTitleAndTextField(this, context, displayerDetails.withKey(DisplayJavadocConstants.repositoryKey));
+		ImageButtons.addBrowseButton(txtRepository, new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				return txtRepository.getText();
+			}
+		});
 		txtRepository.addEditButton();
 		btnAttach = ImageButtons.addRowButton(txtRepository, DisplayJavadocConstants.linkImageKey, DisplayJavadocConstants.linkKey, new IImageButtonListener() {
 			@Override
@@ -62,12 +71,13 @@ public class JavadocPanel extends Composite {
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 	}
 
-	public void setValue(String url, BindingRipperResult ripped, String value) {
+	public void setValue(String url, BindingRipperResult ripped, Map<String, Object> data) {
 		this.ripped = ripped;
+		String repositoryValue = (String) (data == null ? null : data.get(DisplayJavadocConstants.repositoryKey));
 		txtRepository.setUrl(url);
-		txtRepository.setText(value);
+		txtRepository.setText(Strings.nullSafeToString(repositoryValue));
 		txtLocal.setText(ripped == null || ripped.classpathEntry == null ? null : JavaProjects.findJavadocFor(ripped.classpathEntry));
-		updateButtonStatus(value);
+		updateButtonStatus(repositoryValue);
 	}
 
 	private void updateButtonStatus(String value) {

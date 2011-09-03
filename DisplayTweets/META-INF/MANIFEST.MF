@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.arc4eclipse.displayTweets
+Bundle-SymbolicName: org.arc4eclipse.displayTweets;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Arc4Eclipse
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.eclipse.core.runtime;bundle-version="3.7.0";visibility:=reexport,
+ org.eclipse.jface;bundle-version="3.7.0";visibility:=reexport,
+ org.arc4eclipse.displayLists;bundle-version="1.0.0";visibility:=reexport
+Export-Package: org.arc4eclipse.displayTweets

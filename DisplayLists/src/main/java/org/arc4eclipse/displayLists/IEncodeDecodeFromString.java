@@ -2,15 +2,15 @@ package org.arc4eclipse.displayLists;
 
 import java.text.MessageFormat;
 
-public interface IEncodeDecodeNameAndUrl {
+public interface IEncodeDecodeFromString {
 
 	NameAndValue fromString(String encoded);
 
 	String toString(NameAndValue nameAndValue);
 
 	public static class Utils {
-		public static IEncodeDecodeNameAndUrl defaultEncoder() {
-			return new IEncodeDecodeNameAndUrl() {
+		public static IEncodeDecodeFromString defaultEncoder() {
+			return new IEncodeDecodeFromString() {
 
 				@Override
 				public NameAndValue fromString(String encoded) {

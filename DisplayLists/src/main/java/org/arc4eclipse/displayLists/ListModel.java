@@ -9,11 +9,11 @@ import org.arc4eclipse.utilities.collections.Lists;
 public class ListModel implements Iterable<NameAndValue> {
 
 	private final List<NameAndValue> data = Lists.newList();
-	private final IEncodeDecodeNameAndUrl encoder;
+	private final IEncodeDecodeFromString encoder;
 
 	private final Object lock = new Object();
 
-	public ListModel(IEncodeDecodeNameAndUrl encoder) {
+	public ListModel(IEncodeDecodeFromString encoder) {
 		this.encoder = encoder;
 	}
 

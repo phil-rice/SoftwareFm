@@ -25,6 +25,7 @@ import org.arc4eclipse.swtBasics.text.TitleAndTextField;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.arc4eclipse.utilities.maps.Maps;
 import org.arc4eclipse.utilities.resources.IResourceGetter;
+import org.arc4eclipse.utilities.strings.Strings;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowLayout;
@@ -73,7 +74,7 @@ public class ListPanel extends Composite implements IButtonParent {
 	private final ListModel listModel;
 	private final IArc4EclipseRepository repository;
 	private String url;
-	private final IEncodeDecodeNameAndUrl encoder;
+	private final IEncodeDecodeFromString encoder;
 	private final String entity;
 	private final String nameTitle;
 	private final String valueTitle;
@@ -89,11 +90,11 @@ public class ListPanel extends Composite implements IButtonParent {
 		this.valueTitle = Resources.getNameAndValue_Value(context.resourceGetter, key);
 		this.entity = displayerDetails.entity;
 		this.repository = context.repository;
-		this.encoder = IEncodeDecodeNameAndUrl.Utils.defaultEncoder();
+		this.encoder = IEncodeDecodeFromString.Utils.defaultEncoder();
 		this.listModel = new ListModel(encoder);
 		this.compTitle = new Composite(this, SWT.NULL);
 		compTitle.setLayout(new RowLayout(SWT.HORIZONTAL));
-		new Label(compTitle, SWT.NULL).setText(title);
+		new Label(compTitle, SWT.NULL).setText(Strings.nullSafeToString(title));
 		compForList = new Composite(this, SWT.BORDER);
 
 		ImageButtons.addRowButton(this, SwtBasicConstants.addKey, SwtBasicConstants.addKey, new IImageButtonListener() {
@@ -124,9 +125,7 @@ public class ListPanel extends Composite implements IButtonParent {
 		for (NameAndValue nameAndValue : listModel) {
 			TitleAndTextField text = new TitleAndTextField(context.configForTitleAnd, compForList, nameAndValue.name, false);
 			text.setText(nameAndValue.url);
-			ImageButtons.addEditButton(text, new EditButtonListener(index));
-			ImageButtons.addRowButton(text, SwtBasicConstants.deleteKey, SwtBasicConstants.deleteKey, new DeleteButtonListener(index));
-			ImageButtons.addHelpButton(text, Resources.getRowKey(key));
+			addButtonsToList(nameAndValue, text, index);
 			index += 1;
 		}
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(compForList);
@@ -134,6 +133,12 @@ public class ListPanel extends Composite implements IButtonParent {
 			compForList.setSize(compForList.getSize().x, 22);
 		getParent().layout();
 		getParent().redraw();
+	}
+
+	protected void addButtonsToList(NameAndValue nameAndValue, TitleAndTextField text, int index) {
+		ImageButtons.addEditButton(text, new EditButtonListener(index));
+		ImageButtons.addRowButton(text, SwtBasicConstants.deleteKey, SwtBasicConstants.deleteKey, new DeleteButtonListener(index));
+		ImageButtons.addHelpButton(text, Resources.getRowKey(key));
 	}
 
 	@SuppressWarnings("unchecked")

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension point="org.arc4eclipse.displayers" >
+         <display key="tweets" class ="org.arc4eclipse.displayTweets.TweetListDisplayer"/>
+   </extension>
+	<extension  point="org.arc4eclipse.bundle">
+	      <bundle name ="DisplayTweets" class="org.arc4eclipse.displayTweets.DisplayTweetListConstants"/>
+	</extension>
+</plugin>

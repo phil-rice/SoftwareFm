@@ -8,7 +8,8 @@ public class OrganisationConfigurer extends AbstractDisplayContainerFactoryConfi
 	@Override
 	public void configure(IDisplayContainerFactory factory) {
 		factory.register(makeMap("organisation.url", "mainUrl"));
-		factory.register(makeMap("organisation.name", "text"));
+		factory.register(makeMap("name", "text"));
+		factory.register(makeMap("tweets", "tweets"));
 	}
 
 }
