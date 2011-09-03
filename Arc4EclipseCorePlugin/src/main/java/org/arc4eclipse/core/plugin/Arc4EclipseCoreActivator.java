@@ -13,6 +13,7 @@ import org.arc4eclipse.displayCore.api.IDisplayContainer;
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactory;
 import org.arc4eclipse.displayCore.api.IDisplayContainerFactoryBuilder;
 import org.arc4eclipse.displayCore.api.IDisplayer;
+import org.arc4eclipse.displayCore.api.ILineEditor;
 import org.arc4eclipse.displayCore.api.IRepositoryAndUrlGeneratorMapGetter;
 import org.arc4eclipse.displayCore.api.RepositoryStatusListenerPropogator;
 import org.arc4eclipse.displayCore.constants.DisplayCoreConstants;
@@ -24,6 +25,7 @@ import org.arc4eclipse.swtBasics.text.ConfigForTitleAnd;
 import org.arc4eclipse.utilities.callbacks.ICallback;
 import org.arc4eclipse.utilities.maps.Maps;
 import org.arc4eclipse.utilities.resources.IResourceGetter;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jface.resource.ImageRegistry;
@@ -48,6 +50,7 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin implements IRepos
 	public static final String IMAGE_ID = "org.arc4eclipse.image";
 	public static final String BUNDLE_ID = "org.arc4eclipse.bundle";
 	public static final String URL_GENERATOR_ID = "org.arc4eclipse.urlGenerator";
+	public static final String LINE_EDITOR_ID = "org.arc4eclipse.lineEditor";
 	public static final String REPOSITORY_PROPOGATOR_ID = "org.arc4eclipse.repositoryPropogator";
 	public static final String DISPLAY_CONTAINER_FACTORY_CONFIGURATOR_ID = "org.arc4eclipse.displayContainerFactoryConfigurator";
 
@@ -223,6 +226,7 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin implements IRepos
 		return factory.create(getDisplayerContext(display), parent);
 	}
 
+	@SuppressWarnings("rawtypes")
 	private IDisplayContainerFactoryBuilder getDisplayContainerFactoryBuilder(final Display display) {
 		if (displayContainerFactoryBuilder == null) {
 			displayContainerFactoryBuilder = IDisplayContainerFactoryBuilder.Utils.factoryBuilder();
@@ -235,6 +239,19 @@ public class Arc4EclipseCoreActivator extends AbstractUIPlugin implements IRepos
 						throw new NullPointerException(MessageFormat.format(DisplayCoreConstants.attributeMissing, key, clazz));
 					System.out.println("Registering Displayer " + key + ", " + t);
 					displayContainerFactoryBuilder.registerDisplayer(key, t);
+				}
+			});
+			Plugins.useClasses(LINE_EDITOR_ID, new IPlugInCreationCallback<ILineEditor>() {
+				@Override
+				public void process(ILineEditor t, IConfigurationElement element) throws CoreException {
+					ILineEditor editor = (ILineEditor) element.createExecutableExtension("class");
+					String name = element.getAttribute("name");
+					displayContainerFactoryBuilder.registerLineEditor(name, editor);
+				}
+
+				@Override
+				public void onException(Throwable throwable, IConfigurationElement element) {
+					throwable.printStackTrace();
 				}
 			});
 		}

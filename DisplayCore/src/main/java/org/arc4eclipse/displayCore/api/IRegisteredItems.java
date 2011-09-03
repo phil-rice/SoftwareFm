@@ -8,7 +8,7 @@ public interface IRegisteredItems {
 
 	IEditor getEditor(String editorName);
 
-	ILineEditor getLineEditor(String lineEditorName);
+	<T> ILineEditor<T> getLineEditor(String lineEditorName);
 
 	IDisplayer<?, ?> getDisplayer(String displayName);
 

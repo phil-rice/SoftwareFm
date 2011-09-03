@@ -10,6 +10,10 @@ import org.arc4eclipse.arc4eclipseRepository.api.IArc4EclipseRepository;
 import org.arc4eclipse.arc4eclipseRepository.api.IUrlGeneratorMap;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
 import org.arc4eclipse.displayCore.api.DisplayerDetails;
+import org.arc4eclipse.displayCore.api.ILineEditable;
+import org.arc4eclipse.displayCore.api.ILineEditor;
+import org.arc4eclipse.displayCore.api.IRegisteredItems;
+import org.arc4eclipse.displayCore.api.RegisteredItemsAdapter;
 import org.arc4eclipse.displayCore.constants.DisplayCoreConstants;
 import org.arc4eclipse.panel.ISelectedBindingManager;
 import org.arc4eclipse.swtBasics.SwtBasicConstants;
@@ -21,7 +25,7 @@ import org.arc4eclipse.swtBasics.images.Images;
 import org.arc4eclipse.swtBasics.images.Resources;
 import org.arc4eclipse.swtBasics.text.ConfigForTitleAnd;
 import org.arc4eclipse.swtBasics.text.IButtonParent;
-import org.arc4eclipse.swtBasics.text.TitleAndTextField;
+import org.arc4eclipse.utilities.collections.ICrud;
 import org.arc4eclipse.utilities.functions.IFunction1;
 import org.arc4eclipse.utilities.maps.Maps;
 import org.arc4eclipse.utilities.resources.IResourceGetter;
@@ -32,80 +36,44 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-public class ListPanel extends Composite implements IButtonParent {
-
-	private final class DeleteButtonListener implements IImageButtonListener {
-		private final int index;
-
-		public DeleteButtonListener(int index) {
-			this.index = index;
-		}
-
-		@Override
-		public void buttonPressed(ImageButton button) {
-			listModel.delete(index);
-			sendDataToServer();
-		}
-	}
-
-	private final class EditButtonListener implements IImageButtonListener {
-		private final int index;
-
-		public EditButtonListener(int index) {
-			this.index = index;
-
-		}
-
-		@Override
-		public void buttonPressed(ImageButton button) {
-			ConfigForTitleAnd forDialogs = ConfigForTitleAnd.createForDialogs(getDisplay(), context.resourceGetter, context.imageRegistry);
-			NameAndValueDialog dialog = new NameAndValueDialog(getShell(), SWT.NULL, forDialogs, nameTitle, valueTitle);
-			NameAndValue result = dialog.open(listModel.get(index));
-			if (result != null) {
-				listModel.set(index, result.name, result.url);
-				sendDataToServer();
-			}
-		}
-	}
+public class ListPanel<T> extends Composite implements IButtonParent, ILineEditable<T> {
 
 	private final DisplayerContext context;
 	private final Composite compForList;
 	private final String title;
-	private final ListModel listModel;
+	private final ListModel<T> listModel;
 	private final IArc4EclipseRepository repository;
 	private String url;
-	private final IEncodeDecodeFromString encoder;
 	private final String entity;
-	private final String nameTitle;
-	private final String valueTitle;
 	private final String key;
 	private final Composite compTitle;
+	private final IRegisteredItems registeredItems;
+	private final ILineEditor<T> lineEditor;
+	private final DisplayerDetails displayerDetails;
 
-	public ListPanel(Composite parent, int style, final DisplayerContext context, DisplayerDetails displayerDetails) {
+	public ListPanel(Composite parent, int style, final DisplayerContext context, DisplayerDetails displayerDetails, IRegisteredItems registeredItems) {
 		super(parent, style);
+		this.displayerDetails = displayerDetails;
+		this.registeredItems = registeredItems;
 		this.key = displayerDetails.key;
 		this.context = context;
 		this.title = Resources.getTitle(context.resourceGetter, displayerDetails.key);
-		this.nameTitle = Resources.getNameAndValue_Name(context.resourceGetter, key);
-		this.valueTitle = Resources.getNameAndValue_Value(context.resourceGetter, key);
 		this.entity = displayerDetails.entity;
 		this.repository = context.repository;
-		this.encoder = IEncodeDecodeFromString.Utils.defaultEncoder();
-		this.listModel = new ListModel(encoder);
+		String lineEditorName = displayerDetails.map.get(DisplayCoreConstants.lineEditorKey);
+		if (lineEditorName == null)
+			throw new IllegalArgumentException(MessageFormat.format(DisplayCoreConstants.missingValueInMap, DisplayCoreConstants.lineEditorKey, displayerDetails.map));
+		lineEditor = registeredItems.<T> getLineEditor(lineEditorName);
+		this.listModel = new ListModel<T>(lineEditor.getCodec());
 		this.compTitle = new Composite(this, SWT.NULL);
 		compTitle.setLayout(new RowLayout(SWT.HORIZONTAL));
 		new Label(compTitle, SWT.NULL).setText(Strings.nullSafeToString(title));
 		compForList = new Composite(this, SWT.BORDER);
 
 		ImageButtons.addRowButton(this, SwtBasicConstants.addKey, SwtBasicConstants.addKey, new IImageButtonListener() {
-
 			@Override
 			public void buttonPressed(ImageButton button) {
-				NameAndValueDialog dialog = new NameAndValueDialog(getShell(), SWT.NULL, ConfigForTitleAnd.createForDialogs(getDisplay(), context.resourceGetter, context.imageRegistry), nameTitle, valueTitle);
-				NameAndValue newDialog = dialog.open(new NameAndValue("", ""));
-				if (newDialog != null)
-					listModel.add(newDialog.name, newDialog.url);
-				sendDataToServer();
+				lineEditor.add(ListPanel.this);
 			}
 		});
 		ImageButtons.addHelpButton(this, displayerDetails.key);
@@ -122,23 +90,13 @@ public class ListPanel extends Composite implements IButtonParent {
 		listModel.setData(values);
 		Swts.removeAllChildren(compForList);
 		int index = 0;
-		for (NameAndValue nameAndValue : listModel) {
-			TitleAndTextField text = new TitleAndTextField(context.configForTitleAnd, compForList, nameAndValue.name, false);
-			text.setText(nameAndValue.url);
-			addButtonsToList(nameAndValue, text, index);
-			index += 1;
-		}
+		for (T t : listModel)
+			lineEditor.makeLineControl(this, compForList, index++, t);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(compForList);
 		if (index == 0)
 			compForList.setSize(compForList.getSize().x, 22);
 		getParent().layout();
 		getParent().redraw();
-	}
-
-	protected void addButtonsToList(NameAndValue nameAndValue, TitleAndTextField text, int index) {
-		ImageButtons.addEditButton(text, new EditButtonListener(index));
-		ImageButtons.addRowButton(text, SwtBasicConstants.deleteKey, SwtBasicConstants.deleteKey, new DeleteButtonListener(index));
-		ImageButtons.addHelpButton(text, Resources.getRowKey(key));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -151,34 +109,13 @@ public class ListPanel extends Composite implements IButtonParent {
 		return (List<String>) value;
 	}
 
+	@Override
 	public void sendDataToServer() {
 		repository.modifyData(entity, url, key, listModel.asDataForRepostory(), Collections.<String, Object> emptyMap());
 	}
 
-	public static void main(String[] args) {
-		Swts.display(ListPanel.class.getSimpleName(), new IFunction1<Composite, Composite>() {
-			@Override
-			public Composite apply(Composite from) throws Exception {
-				IUrlGeneratorMap urlGeneratorMap = IUrlGeneratorMap.Utils.urlGeneratorMap();
-				DisplayerContext context = new DisplayerContext(//
-						ISelectedBindingManager.Utils.noSelectedBindingManager(), //
-						IArc4EclipseRepository.Utils.repository(), //
-						urlGeneratorMap,//
-						ConfigForTitleAnd.create(//
-								from.getDisplay(), //
-								Resources.resourceGetterWithBasics(getClass().getPackage().getName() + ".ListAndPanelTest"),//
-								Images.withBasics(from.getDisplay())));
-				List<String> value = Arrays.asList("name1$value1", "name2$value2");
-				DisplayerDetails displayerDetails = new DisplayerDetails("entity", Maps.<String, String> makeMap(DisplayCoreConstants.key, "ListKey"));
-				ListPanel result = new ListPanel(from, SWT.NULL, context, displayerDetails);
-				result.setValue("someurl", value);
-				return result;
-			}
-		});
-	}
-
 	@Override
-	public Composite getButtonComposte() {
+	public Composite getButtonComposite() {
 		return compTitle;
 	}
 
@@ -197,4 +134,64 @@ public class ListPanel extends Composite implements IButtonParent {
 
 	}
 
+	@Override
+	public DisplayerContext getDisplayerContext() {
+		return context;
+	}
+
+	@Override
+	public DisplayerDetails getDisplayerDetails() {
+		return displayerDetails;
+	}
+
+	@Override
+	public IRegisteredItems getRegisteredItems() {
+		return registeredItems;
+	}
+
+	@Override
+	public ICrud<T> getModel() {
+		return listModel;
+	}
+
+	@Override
+	public ConfigForTitleAnd getDialogConfig() {
+		return ConfigForTitleAnd.createForDialogs(getDisplay(), getResourceGetter(), getImageRegistry());
+	}
+
+	public static void main(String[] args) {
+		show(new NameAndValueLineEditor(), Arrays.asList("name1$value1", "name2$value2"));
+	}
+
+	public static <T> void show(final ILineEditor<T> lineEditor, final List<String> value) {
+		Swts.display(ListPanel.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+			@Override
+			public Composite apply(Composite from) throws Exception {
+				IUrlGeneratorMap urlGeneratorMap = IUrlGeneratorMap.Utils.urlGeneratorMap();
+				DisplayerContext context = new DisplayerContext(//
+						ISelectedBindingManager.Utils.noSelectedBindingManager(), //
+						IArc4EclipseRepository.Utils.repository(), //
+						urlGeneratorMap,//
+						ConfigForTitleAnd.create(//
+								from.getDisplay(), //
+								Resources.resourceGetterWithBasics(//
+										getClass().getPackage().getName() + ".ListAndPanelTest",//
+										getClass().getPackage().getName() + ".DisplayLists"),//
+								Images.withBasics(from.getDisplay())));
+				DisplayerDetails displayerDetails = new DisplayerDetails("entity", Maps.<String, String> makeMap(//
+						DisplayCoreConstants.key, "ListKey",//
+						DisplayCoreConstants.lineEditorKey, "ignored"));
+				ListPanel<NameAndValue> result = new ListPanel<NameAndValue>(from, SWT.NULL, context, displayerDetails, new RegisteredItemsAdapter() {
+					@SuppressWarnings({ "rawtypes", "unchecked" })
+					@Override
+					public ILineEditor getLineEditor(String lineEditorName) {
+						return lineEditor;
+					}
+				});
+
+				result.setValue("someurl", value);
+				return result;
+			}
+		});
+	}
 }

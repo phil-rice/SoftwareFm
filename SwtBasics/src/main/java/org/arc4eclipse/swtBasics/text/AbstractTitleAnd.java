@@ -63,7 +63,7 @@ public class AbstractTitleAnd extends Composite implements IButtonParent {
 	}
 
 	@Override
-	public Composite getButtonComposte() {
+	public Composite getButtonComposite() {
 		return compButtons;
 	}
 

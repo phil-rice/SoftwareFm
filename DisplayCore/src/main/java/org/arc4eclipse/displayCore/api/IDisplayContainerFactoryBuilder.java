@@ -16,7 +16,7 @@ public interface IDisplayContainerFactoryBuilder {
 	void registerEditor(String editorName, IEditor editor);
 
 	/** A mapping from the name of a line editor to the editor itself */
-	void registerLineEditor(String lineEditorName, ILineEditor editor);
+	void registerLineEditor(String lineEditorName, ILineEditor<?> editor);
 
 	/** A mapping from the name of a validator to the validator itself */
 	void registerValidator(String validatorName, IValidator validator);

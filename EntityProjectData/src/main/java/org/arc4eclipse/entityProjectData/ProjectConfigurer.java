@@ -9,8 +9,8 @@ public class ProjectConfigurer extends AbstractDisplayContainerFactoryConfigurer
 	public void configure(IDisplayContainerFactory factory) {
 		factory.register(makeMap("project.url", "mainUrl"));
 		factory.register(makeMap("project.name", "text"));
-		factory.register(makeMap("mailingLists", "list"));
-		factory.register(makeMap("tutorials", "list"));
+		factory.register(makeMapWithLineEditor("mailingLists", "list", "Clear", "nameValue"));
+		factory.register(makeMapWithLineEditor("tutorials", "list", "Clear", "nameUrl"));
 	}
 
 }

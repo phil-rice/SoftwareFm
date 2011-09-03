@@ -4,16 +4,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.arc4eclipse.displayCore.api.ICodec;
+import org.arc4eclipse.utilities.collections.ICrud;
 import org.arc4eclipse.utilities.collections.Lists;
 
-public class ListModel implements Iterable<NameAndValue> {
+public class ListModel<T> implements Iterable<T>, ICrud<T> {
 
-	private final List<NameAndValue> data = Lists.newList();
-	private final IEncodeDecodeFromString encoder;
+	private final List<T> data = Lists.newList();
+	private final ICodec<T> encoder;
 
 	private final Object lock = new Object();
 
-	public ListModel(IEncodeDecodeFromString encoder) {
+	public ListModel(ICodec<T> encoder) {
 		this.encoder = encoder;
 	}
 
@@ -22,26 +24,28 @@ public class ListModel implements Iterable<NameAndValue> {
 			this.data.clear();
 			if (data != null)
 				for (String item : data) {
-					NameAndValue nameAndValue = encoder.fromString(item);
+					T nameAndValue = encoder.fromString(item);
 					if (nameAndValue != null)
 						this.data.add(nameAndValue);
 				}
 		}
 	}
 
-	public void add(String name, String url) {
+	@Override
+	public void set(int index, T t) {
 		synchronized (lock) {
-			data.add(new NameAndValue(name, url));
+			data.set(index, t);
 		}
 	}
 
-	public void set(int index, String name, String url) {
+	@Override
+	public void add(T t) {
 		synchronized (lock) {
-			data.set(index, new NameAndValue(name, url));
+			data.add(t);
 		}
-
 	}
 
+	@Override
 	public void delete(int index) {
 		synchronized (lock) {
 			data.remove(index);
@@ -54,20 +58,22 @@ public class ListModel implements Iterable<NameAndValue> {
 				return " ";
 			String[] result = new String[data.size()];
 			int i = 0;
-			for (NameAndValue nameAndValue : data)
+			for (T nameAndValue : data)
 				result[i++] = encoder.toString(nameAndValue);
 			return result;
 		}
 	}
 
 	@Override
-	public Iterator<NameAndValue> iterator() {
+	public Iterator<T> iterator() {
 		synchronized (lock) {
-			return new ArrayList<NameAndValue>(data).iterator();
+			return new ArrayList<T>(data).iterator();
 		}
 	}
 
-	public NameAndValue get(int index) {
+	@Override
+	public T get(int index) {
 		return data.get(index);
 	}
+
 }

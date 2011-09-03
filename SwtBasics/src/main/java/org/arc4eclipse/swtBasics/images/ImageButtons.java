@@ -38,7 +38,7 @@ abstract public class ImageButtons {
 	}
 
 	private static ImageButton addRowButton(IButtonParent parent, String imageKey, String tooltipPattern, String tooltipKey, final IImageButtonListener listener) {
-		ImageButton button = new ImageButton(parent.getButtonComposte(), parent.getImageRegistry(), imageKey, false);
+		ImageButton button = new ImageButton(parent.getButtonComposite(), parent.getImageRegistry(), imageKey, false);
 		// button.setSize(new Point(35, 12));
 		button.addListener(new IImageButtonListener() {
 			@Override
@@ -69,7 +69,7 @@ abstract public class ImageButtons {
 			public void buttonPressed(ImageButton button) {
 				String detailed = Resources.getDetailedHelp(resourceGetter, helpKey);
 				if (detailed != null)
-					MessageDialog.openInformation(parent.getButtonComposte().getShell(), "Help", Resources.getDetailedHelp(resourceGetter, helpKey));
+					MessageDialog.openInformation(parent.getButtonComposite().getShell(), "Help", Resources.getDetailedHelp(resourceGetter, helpKey));
 			}
 		});
 		return helpButton;

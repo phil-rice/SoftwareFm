@@ -22,7 +22,7 @@ public class DisplayContainerFactoryBuilder implements IDisplayContainerFactoryB
 
 	private final Map<String, IDisplayer<?, ?>> registeredDisplayers = Maps.newMap();
 	private final Map<String, IEditor> registeredEditors = Maps.newMap();
-	private final Map<String, ILineEditor> registeredLineEditors = Maps.newMap();
+	private final Map<String, ILineEditor<?>> registeredLineEditors = Maps.newMap();
 	private final Map<String, IValidator> registeredValidators = Maps.newMap();
 	private final Map<String, IFunction1<Display, Image>> imageMakers = Maps.newMap();
 	private final Map<String, IUrlGenerator> registeredUrlGenerators = Maps.newMap();
@@ -57,7 +57,7 @@ public class DisplayContainerFactoryBuilder implements IDisplayContainerFactoryB
 	}
 
 	@Override
-	public void registerLineEditor(String lineEditorName, ILineEditor editor) {
+	public void registerLineEditor(String lineEditorName, ILineEditor<?> editor) {
 		checkAndPut(registeredLineEditors, lineEditorName, editor);
 	}
 

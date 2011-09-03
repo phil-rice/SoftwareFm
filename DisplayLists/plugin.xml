@@ -7,4 +7,8 @@
 	<extension  point="org.arc4eclipse.bundle">
 	      <bundle name ="DisplayLists" class="org.arc4eclipse.displayLists.DisplayListsConstants"/>
 	</extension>
+	<extension  point="org.arc4eclipse.lineEditor">
+	      <lineEditor name ="nameValue" class="org.arc4eclipse.displayLists.NameAndValueLineEditor"/>
+	      <lineEditor name ="nameUrl" class="org.arc4eclipse.displayLists.NameAndUrlLineEditor"/>
+	</extension>
 </plugin>

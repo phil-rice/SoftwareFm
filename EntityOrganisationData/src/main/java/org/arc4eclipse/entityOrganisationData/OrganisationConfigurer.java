@@ -9,7 +9,7 @@ public class OrganisationConfigurer extends AbstractDisplayContainerFactoryConfi
 	public void configure(IDisplayContainerFactory factory) {
 		factory.register(makeMap("organisation.url", "mainUrl"));
 		factory.register(makeMap("name", "text"));
-		factory.register(makeMap("tweets", "tweets"));
+		factory.register(makeMapWithLineEditor("tweets", "list", "Clear", "tweet"));
 	}
 
 }

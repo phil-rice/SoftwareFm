@@ -22,11 +22,13 @@ public class DisplayCoreConstants {
 	public static final String title = "title";
 	public static final String help = "help";
 	public static final String editor = "editor";
+	public static final Object lineEditorKey = "lineEditor";
 
 	public static final String mustHaveKey = "Must have a key in map {0}";
 	public static final String mustHaveDisplayer = "Must have displayer in map {0}";
 	public static final String missingValueInMap = "Must have a value for {0} in map {1}";
 	public static final String displayerNotFound = "Illegal value for displayer [{0}]. Legal values are {1} in map {2}";
 	public static final String smallImageKeyMissing = "Cannot find small image key for {0} in {1}";
+	public static final String exceptionInProcess = "Unexpected exception processing {0} {1} {2}";
 
 }

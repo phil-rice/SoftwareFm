@@ -8,6 +8,8 @@ import org.arc4eclipse.arc4eclipseRepository.api.IUrlGenerator;
 import org.arc4eclipse.arc4eclipseRepository.api.IUrlGeneratorMap;
 import org.arc4eclipse.arc4eclipseRepository.constants.RepositoryConstants;
 import org.arc4eclipse.displayCore.api.DisplayerContext;
+import org.arc4eclipse.displayCore.api.IDisplayContainerForTests;
+import org.arc4eclipse.displayCore.api.IRegisteredItems;
 import org.arc4eclipse.swtBasics.SwtBasicConstants;
 import org.arc4eclipse.swtBasics.images.Images;
 import org.arc4eclipse.swtBasics.images.Resources;
@@ -67,6 +69,21 @@ public class Arc4EclipseCoreActivatorTest extends TestCase {
 		IUrlGeneratorMap urlGeneratorMap = activator.getUrlGeneratorMap();
 		IUrlGenerator urlGenerator = urlGeneratorMap.get(entity);
 		assertEquals(expected, urlGenerator.apply("someurl"));
+	}
+
+	public void testLineEditors() {
+		checkLineEditor("nameUrl");
+		checkLineEditor("nameValue");
+		checkLineEditor("tweet");
+	}
+
+	private void checkLineEditor(String name) {
+		Arc4EclipseCoreActivator activator = Arc4EclipseCoreActivator.getDefault();
+		DisplayerContext displayerContext = new DisplayerContext(activator.getSelectedBindingManager(), activator.getRepository(), activator.getUrlGeneratorMap(), activator.getConfigForTitleAnd(display));
+		IDisplayContainerForTests container = (IDisplayContainerForTests) activator.getDisplayContainerFactory(display, "entity").create(displayerContext, new Shell(display));
+		IRegisteredItems registeredItems = container.getRegisteredItems();
+		assertNotNull(registeredItems.getLineEditor(name));
+
 	}
 
 	public void testAllImagesCanBeGot() {

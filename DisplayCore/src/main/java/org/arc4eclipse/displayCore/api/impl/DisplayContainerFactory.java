@@ -23,12 +23,12 @@ public class DisplayContainerFactory implements IDisplayContainerFactory, IRegis
 	private final String entity;
 	private final Map<String, IDisplayer<?, ?>> registeredDisplayers;
 	private final Map<String, IEditor> registeredEditors;
-	private final Map<String, ILineEditor> registeredLineEditors;
+	private final Map<String, ILineEditor<?>> registeredLineEditors;
 	private final Map<String, IValidator> registeredValidators;
 	private final Map<String, IUrlGenerator> registeredUrlGenerators;
 	private final List<Map<String, String>> displayDefinitions = Lists.newList();
 
-	public DisplayContainerFactory(String entity, Map<String, IDisplayer<?, ?>> registeredDisplayers, Map<String, IEditor> registeredEditors, Map<String, ILineEditor> registeredLineEditors, Map<String, IValidator> registeredValidators, Map<String, IUrlGenerator> registeredUrlGenerators) {
+	public DisplayContainerFactory(String entity, Map<String, IDisplayer<?, ?>> registeredDisplayers, Map<String, IEditor> registeredEditors, Map<String, ILineEditor<?>> registeredLineEditors, Map<String, IValidator> registeredValidators, Map<String, IUrlGenerator> registeredUrlGenerators) {
 		this.entity = entity;
 		this.registeredDisplayers = registeredDisplayers;
 		this.registeredEditors = registeredEditors;
@@ -52,9 +52,10 @@ public class DisplayContainerFactory implements IDisplayContainerFactory, IRegis
 		return checkAndGet(registeredEditors, editorName);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public ILineEditor getLineEditor(String lineEditorName) {
-		return checkAndGet(registeredLineEditors, lineEditorName);
+	public <T> ILineEditor<T> getLineEditor(String lineEditorName) {
+		return checkAndGet((Map) registeredLineEditors, lineEditorName);
 	}
 
 	@Override

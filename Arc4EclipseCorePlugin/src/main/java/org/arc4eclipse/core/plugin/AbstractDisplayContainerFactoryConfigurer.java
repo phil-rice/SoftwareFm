@@ -13,4 +13,11 @@ public abstract class AbstractDisplayContainerFactoryConfigurer implements IDisp
 	protected Map<String, String> makeMap(String key, String displayer, String smallImageKey) {
 		return Maps.<String, String> makeLinkedMap(DisplayCoreConstants.key, key, DisplayCoreConstants.displayer, displayer, DisplayCoreConstants.smallImageKey, smallImageKey);
 	}
+
+	protected Map<String, String> makeMapWithLineEditor(String key, String displayer, String smallImageKey, String lineEditor) {
+		return Maps.<String, String> makeLinkedMap(DisplayCoreConstants.key, key, //
+				DisplayCoreConstants.displayer, displayer, //
+				DisplayCoreConstants.smallImageKey, smallImageKey,//
+				DisplayCoreConstants.lineEditorKey, lineEditor);
+	}
 }

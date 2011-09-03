@@ -17,7 +17,6 @@ import org.arc4eclipse.displayCore.api.ITopButtonState;
 import org.arc4eclipse.displayCore.constants.DisplayCoreConstants;
 import org.arc4eclipse.swtBasics.Swts;
 import org.arc4eclipse.utilities.collections.Lists;
-import org.arc4eclipse.utilities.exceptions.WrappedException;
 import org.arc4eclipse.utilities.maps.Maps;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
@@ -86,6 +85,11 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 						displayer.populateLargeControl(bindingContext, largeControl, value);
 						displayer.populateSmallControl(bindingContext, smallControl, value);
 					}
+
+					@Override
+					public String toString() {
+						return "DisplayContainer.setValues";
+					}
 				});
 			}
 		});
@@ -149,10 +153,10 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 
 	@SuppressWarnings({ "unchecked" })
 	private void process(final IDisplayContainerCallback displayContainerCallback) {
-		try {
-			int i = 0;
-			for (Map<String, String> map : displayDefinitions) {
-				String displayerName = map.get(DisplayCoreConstants.displayer);
+		int i = 0;
+		for (Map<String, String> map : displayDefinitions) {
+			String displayerName = map.get(DisplayCoreConstants.displayer);
+			try {
 				if (displayerName == null)
 					throw new NullPointerException(MessageFormat.format(DisplayCoreConstants.mustHaveDisplayer, map));
 				IDisplayer<Control, Control> displayer = (IDisplayer<Control, Control>) registeredItems.getDisplayer(displayerName);
@@ -160,10 +164,10 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 				Control smallControl = smallControls.get(i++);
 				String key = map.get(DisplayCoreConstants.key);
 				displayContainerCallback.process(i, key, displayer, largeControl, smallControl);
-
+			} catch (Exception e) {
+				throw new RuntimeException(MessageFormat.format(DisplayCoreConstants.exceptionInProcess, i, displayerName, displayContainerCallback), e);
 			}
-		} catch (Exception e) {
-			throw WrappedException.wrap(e);
+
 		}
 	}
 

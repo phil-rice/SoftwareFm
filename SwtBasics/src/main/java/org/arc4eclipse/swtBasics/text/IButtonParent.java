@@ -6,7 +6,7 @@ import org.eclipse.swt.widgets.Composite;
 
 public interface IButtonParent {
 
-	Composite getButtonComposte();
+	Composite getButtonComposite();
 
 	ImageRegistry getImageRegistry();
 

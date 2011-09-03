@@ -2,9 +2,10 @@ package org.arc4eclipse.displayLists;
 
 import junit.framework.TestCase;
 
+import org.arc4eclipse.displayCore.api.ICodec;
 import org.junit.Test;
 
-public class IEncodeDecodeNameAndUrlTest extends TestCase {
+public class NameAndValueCodecTest extends TestCase {
 
 	@Test
 	public void testEncoder() {
@@ -16,7 +17,7 @@ public class IEncodeDecodeNameAndUrlTest extends TestCase {
 	}
 
 	private void checkEncoder(String expected, String name, String url) {
-		IEncodeDecodeFromString encoder = IEncodeDecodeFromString.Utils.defaultEncoder();
+		ICodec<NameAndValue> encoder = new NameAndValueCodec();
 		String actual = encoder.toString(new NameAndValue(name, url));
 		assertEquals(expected, actual);
 		NameAndValue back = encoder.fromString(actual);
