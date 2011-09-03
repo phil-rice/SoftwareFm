@@ -16,7 +16,7 @@ public class NameAndUrlLineEditor extends NameAndValueLineEditor {
 
 	@Override
 	protected void addButtons(ILineEditable<NameAndValue> lineEditable, Composite parent, int index, final TitleAndTextField text) {
-		ImageButtons.addBrowseButton(lineEditable, new Callable<String>() {
+		ImageButtons.addBrowseButton(text, new Callable<String>() {
 			@Override
 			public String call() throws Exception {
 				return text.getText();
