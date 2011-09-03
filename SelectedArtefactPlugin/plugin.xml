@@ -5,25 +5,25 @@
    <extension
          point="org.eclipse.ui.views">
       <category
-            name="Arc4Eclipse"
+            name="SoftwareFm"
             id="org.softwareFm">
       </category>
       <view
-            name="Arc - Jar"
+            name="S/W FM - Jar"
             icon="icons/Jar.gif"
             category="org.softwareFm"
             class="org.softwareFm.selectedArtifactPlugin.views.SelectedJarView"
             id="org.softwareFm.selectedArtifactPlugin.selectedJarView">
       </view>
       <view
-            name="Arc - Org"
+            name="S/W FM - Org"
             icon="icons/Project.gif"
             category="org.softwareFm"
             class="org.softwareFm.selectedArtifactPlugin.views.SelectedOrganisationView"
             id="org.softwareFm.selectedArtifactPlugin.selectedOrganisationView">
       </view>
       <view
-            name="Arc - Proj"
+            name="S/W FM - Proj"
             icon="icons/Project.gif"
             category="org.softwareFm"
             class="org.softwareFm.selectedArtifactPlugin.views.SelectedProjectView"

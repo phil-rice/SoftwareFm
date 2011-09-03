@@ -5,29 +5,29 @@
    <extension
          point="org.eclipse.ui.views">
       <category
-            name="Arc4Eclipse - debug"
-            id="org.arc4eclipse.debug">
+            name="SoftwareFm - debug"
+            id="org.softwareFm.debug">
       </category>
       <view
-            name="Arc4Eclipse - Binding Debug"
+            name="S/W FM - Binding Debug"
             icon="icons/sample.gif"
-            category="org.arc4eclipse.debug"
+            category="org.softwareFm.debug"
             class="org.softwareFm.debugPanel.views.DebugBindingView"
-            id="org.arc4eclipse.debugPanel.views.DebugBindingView">
+            id="org.softwareFm.debugPanel.views.DebugBindingView">
       </view>
       <view
-            name="Arc4Eclipse - Messages Debug"
+            name="S/W FM - Messages Debug"
             icon="icons/sample.gif"
-            category="org.arc4eclipse.debug"
+            category="org.softwareFm.debug"
             class="org.softwareFm.debugPanel.views.DebugMessageView"
-            id="org.arc4eclipse.debugPanel.views.DebugMessageView">
+            id="org.softwareFm.debugPanel.views.DebugMessageView">
       </view>
       <view
-            name="Arc4Eclipse - Events Debug"
+            name="S/W FM - Events Debug"
             icon="icons/sample.gif"
-            category="org.arc4eclipse.debug"
+            category="org.softwareFm.debug"
             class="org.softwareFm.debugPanel.views.DebugEventView"
-            id="org.arc4eclipse.debugPanel.views.DebugEventView">
+            id="org.softwareFm.debugPanel.views.DebugEventView">
       </view>
    </extension>
    <extension
@@ -38,7 +38,7 @@
                ratio="0.5"
                relative="org.eclipse.ui.views.TaskList"
                relationship="right"
-               id="org.arc4eclipse.debugPanel.views.DebugBindingView">
+               id="org.softwareFm.debugPanel.views.DebugBindingView">
          </view>
       </perspectiveExtension>
       <perspectiveExtension
@@ -47,7 +47,7 @@
                ratio="0.5"
                relative="org.eclipse.ui.views.TaskList"
                relationship="right"
-               id="org.arc4eclipse.debugPanel.views.DebugMessageView">
+               id="org.softwareFm.debugPanel.views.DebugMessageView">
          </view>
       </perspectiveExtension>
       <perspectiveExtension
@@ -56,7 +56,7 @@
                ratio="0.5"
                relative="org.eclipse.ui.views.TaskList"
                relationship="right"
-               id="org.arc4eclipse.debugPanel.views.DebugEventView">
+               id="org.softwareFm.debugPanel.views.DebugEventView">
          </view>
       </perspectiveExtension>
    </extension>
