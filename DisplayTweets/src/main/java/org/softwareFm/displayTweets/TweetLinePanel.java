@@ -23,6 +23,8 @@ public class TweetLinePanel extends Composite implements IButtonParent {
 		this.imageRegistry = displayerContext.imageRegistry;
 		this.resourceGetter = displayerContext.resourceGetter;
 		text = new Text(this, displayerContext.configForTitleAnd.style);
+		text.setEditable(false);
+		text.setBackground(displayerContext.configForTitleAnd.normalBackground);
 		ConfigForTitleAnd config = displayerContext.configForTitleAnd;
 		text.setLayoutData(new RowData(config.titleWidth, config.titleHeight));
 	}

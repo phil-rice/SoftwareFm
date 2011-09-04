@@ -15,7 +15,7 @@ public class ConfigForTitleAnd {
 	}
 
 	public static ConfigForTitleAnd create(Display display, IResourceGetter resourceGetter, ImageRegistry imageRegistry) {
-		return new ConfigForTitleAnd(resourceGetter, imageRegistry, display.getSystemColor(SWT.COLOR_WHITE), display.getSystemColor(SWT.COLOR_YELLOW));
+		return new ConfigForTitleAnd(resourceGetter, imageRegistry, display.getSystemColor(SWT.COLOR_GRAY), display.getSystemColor(SWT.COLOR_WHITE));
 	}
 
 	public final IResourceGetter resourceGetter;

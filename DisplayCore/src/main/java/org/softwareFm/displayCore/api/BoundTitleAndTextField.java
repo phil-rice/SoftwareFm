@@ -26,5 +26,6 @@ public class BoundTitleAndTextField extends TitleAndTextField {
 	public void setLastBindingContext(BindingContext bindingContext) {
 		this.url = bindingContext.url;
 		this.lastContext = bindingContext.context;
+		setEditable(false);
 	}
 }
