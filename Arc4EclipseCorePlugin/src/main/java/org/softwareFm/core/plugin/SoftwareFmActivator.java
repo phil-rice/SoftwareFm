@@ -158,7 +158,6 @@ public class SoftwareFmActivator extends AbstractUIPlugin implements IRepository
 			for (int i = 0; i < workbenchWindows.length; i++) {
 				IWorkbenchWindow workbenchWindow = workbench.getWorkbenchWindows()[i];
 				ISelectionService selectionService = workbenchWindow.getSelectionService();
-				// selectionService.addSelectionListener(selectedBindingManager);
 				selectionService.addPostSelectionListener(selectedBindingManager);
 			}
 		}

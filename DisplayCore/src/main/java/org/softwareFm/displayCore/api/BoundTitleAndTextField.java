@@ -21,7 +21,7 @@ public class BoundTitleAndTextField extends TitleAndTextField {
 		});
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setLastBindingContext(BindingContext bindingContext) {
+		this.url = bindingContext.url;
 	}
 }

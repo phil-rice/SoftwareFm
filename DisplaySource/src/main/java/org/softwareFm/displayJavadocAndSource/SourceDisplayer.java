@@ -16,6 +16,6 @@ public class SourceDisplayer extends AbstractDisplayerWithLabel<SourcePanel> {
 
 	@Override
 	public void populateLargeControl(BindingContext bindingContext, SourcePanel largeControl, Object value) {
-		largeControl.setValue(bindingContext.url, getBindingRipperResult(bindingContext), bindingContext.data);
+		largeControl.setValue(bindingContext, getBindingRipperResult(bindingContext));
 	}
 }

@@ -5,6 +5,7 @@ import java.util.concurrent.Callable;
 
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.BoundTitleAndTextField;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
@@ -40,6 +41,8 @@ public class SourcePanel extends Composite {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				JavaProjects.setSourceAttachment(ripped.javaProject, ripped.classpathEntry, txtRepository.getText());
+				txtLocal.setText(Strings.nullSafeToString(txtRepository.getText()));
+
 			}
 
 		});
@@ -49,16 +52,18 @@ public class SourcePanel extends Composite {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				JavaProjects.setSourceAttachment(ripped.javaProject, ripped.classpathEntry, null);
+				txtLocal.setText("");
 			}
 		});
 		ImageButtons.addHelpButton(txtLocal, DisplaySourceConstants.localKey);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 	}
 
-	public void setValue(String url, BindingRipperResult ripped, Map<String, Object> data) {
+	public void setValue(BindingContext bindingContext, BindingRipperResult ripped) {
 		this.ripped = ripped;
+		Map<String, Object> data = bindingContext.data;
 		String repositoryValue = (String) (data == null ? null : data.get(DisplaySourceConstants.repositoryKey));
-		txtRepository.setUrl(url);
+		txtRepository.setLastBindingContext(bindingContext);
 		txtRepository.setText(Strings.nullSafeToString(repositoryValue));
 		txtLocal.setText(Strings.nullSafeToString(ripped == null ? null : ripped.sourceAttachmentPath));
 		ImageButton.Utils.setEnabledIfNotBlank(btnAttach, repositoryValue);

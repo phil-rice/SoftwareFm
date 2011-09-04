@@ -34,7 +34,7 @@ public class TextDisplayer extends AbstractDisplayerWithLabel<BoundTitleAndTextF
 
 	@Override
 	public void populateLargeControl(BindingContext bindingContext, BoundTitleAndTextField largeControl, Object value) {
-		largeControl.setUrl(bindingContext.url);
+		largeControl.setLastBindingContext(bindingContext);
 		largeControl.setText(Strings.nullSafeToString(value));
 	}
 

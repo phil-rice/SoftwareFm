@@ -7,6 +7,7 @@ import java.util.concurrent.Callable;
 
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.BoundTitleAndTextField;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
@@ -46,6 +47,7 @@ public class JavadocPanel extends Composite {
 					new URL(txtRepository.getText());
 					assert ripped != null;
 					JavaProjects.setJavadoc(ripped.javaProject, ripped.classpathEntry, txtRepository.getText());
+					txtLocal.setText(txtRepository.getText());
 				} catch (MalformedURLException e) {
 					throw WrappedException.wrap(e);
 				}
@@ -59,16 +61,18 @@ public class JavadocPanel extends Composite {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				JavaProjects.setJavadoc(ripped.javaProject, ripped.classpathEntry, null);
+				txtLocal.setText("");
 			}
 		});
 		ImageButtons.addHelpButton(txtLocal, DisplayJavadocConstants.localKey);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 	}
 
-	public void setValue(String url, BindingRipperResult ripped, Map<String, Object> data) {
+	public void setValue(BindingContext bindingContext, BindingRipperResult ripped) {
 		this.ripped = ripped;
+		Map<String, Object> data = bindingContext.data;
 		String repositoryValue = (String) (data == null ? null : data.get(DisplayJavadocConstants.repositoryKey));
-		txtRepository.setUrl(url);
+		txtRepository.setLastBindingContext(bindingContext);
 		txtRepository.setText(Strings.nullSafeToString(repositoryValue));
 		txtLocal.setText(ripped == null || ripped.classpathEntry == null ? null : JavaProjects.findJavadocFor(ripped.classpathEntry));
 		updateButtonStatus(repositoryValue);
