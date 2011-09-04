@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
 import org.softwareFm.displayCore.api.ILineEditable;
@@ -21,6 +23,7 @@ import org.softwareFm.displayCore.constants.DisplayCoreConstants;
 import org.softwareFm.panel.ISelectedBindingManager;
 import org.softwareFm.repository.api.ISoftwareFmRepository;
 import org.softwareFm.repository.api.IUrlGeneratorMap;
+import org.softwareFm.repository.api.RepositoryDataItemStatus;
 import org.softwareFm.swtBasics.SwtBasicConstants;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.IImageButtonListener;
@@ -50,6 +53,7 @@ public class ListPanel<T> extends Composite implements IButtonParent, ILineEdita
 	private final IRegisteredItems registeredItems;
 	private final ILineEditor<T> lineEditor;
 	private final DisplayerDetails displayerDetails;
+	private Map<String, Object> lastContext = Collections.<String, Object> emptyMap();
 
 	public ListPanel(Composite parent, int style, final DisplayerContext context, DisplayerDetails displayerDetails, IRegisteredItems registeredItems) {
 		super(parent, style);
@@ -84,8 +88,9 @@ public class ListPanel<T> extends Composite implements IButtonParent, ILineEdita
 		getParent().redraw();
 	}
 
-	public void setValue(String url, Object value) {
-		this.url = url;
+	public void setValue(BindingContext bindingContext, Object value) {
+		this.url = bindingContext.url;
+		this.lastContext = bindingContext.context;
 		List<String> values = getValues(value);
 		listModel.setData(values);
 		Swts.removeAllChildren(compForList);
@@ -111,7 +116,7 @@ public class ListPanel<T> extends Composite implements IButtonParent, ILineEdita
 
 	@Override
 	public void sendDataToServer() {
-		repository.modifyData(entity, url, key, listModel.asDataForRepostory(), Collections.<String, Object> emptyMap());
+		repository.modifyData(entity, url, key, listModel.asDataForRepostory(), lastContext);
 	}
 
 	@Override
@@ -188,8 +193,8 @@ public class ListPanel<T> extends Composite implements IButtonParent, ILineEdita
 						return lineEditor;
 					}
 				});
-
-				result.setValue("someurl", value);
+				BindingContext bindingContext = new BindingContext(RepositoryDataItemStatus.FOUND, "someUrl", Maps.<String, Object> newMap(), Maps.<String, Object> newMap());
+				result.setValue(bindingContext, value);
 				return result;
 			}
 		});

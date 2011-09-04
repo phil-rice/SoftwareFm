@@ -6,4 +6,4 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: softwareFm
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.softwareFm.panel
-Require-Bundle: org.softwareFm.jdtBinding;bundle-version="1.0.0"
+Require-Bundle: org.softwareFm.jdtBinding;bundle-version="1.0.0";visibility:=reexport

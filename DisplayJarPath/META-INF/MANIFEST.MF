@@ -5,7 +5,5 @@ Bundle-SymbolicName: org.softwareFm.displayJarPath;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: softwareFm
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.softwareFm.displayCore;bundle-version="1.0.0";visibility:=reexport,
- org.eclipse.core.runtime;bundle-version="3.7.0",
- org.softwareFm.core;bundle-version="1.0.0";visibility:=reexport
+Require-Bundle: org.softwareFm.core;bundle-version="1.0.0";visibility:=reexport
 Export-Package: org.softwareFm.displayJarPath

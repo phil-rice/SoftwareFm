@@ -14,7 +14,6 @@ import org.softwareFm.selectedArtifact.plugin.Activator;
 
 abstract public class AbstractSelectedArtifactView extends ViewPart {
 
-	public static final String ID = "org.softwareFm.selectedArtifactPlugin.views.AbstractSelectedArtifactView";
 	private IDisplayContainer displayContainer;
 
 	public AbstractSelectedArtifactView() {

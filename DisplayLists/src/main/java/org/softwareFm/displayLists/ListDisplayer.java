@@ -17,7 +17,7 @@ public class ListDisplayer extends AbstractDisplayerWithLabel<ListPanel<?>> {
 
 	@Override
 	public void populateLargeControl(BindingContext bindingContext, ListPanel<?> largeControl, Object value) {
-		largeControl.setValue(bindingContext.url, value);
+		largeControl.setValue(bindingContext, value);
 	}
 
 }

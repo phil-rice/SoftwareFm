@@ -3,6 +3,8 @@ package org.softwareFm.jdtBinding.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -16,10 +18,15 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.softwareFm.jdtBinding.api.FoundClassPathEntry.FoundIn;
 import org.softwareFm.utilities.arrays.ArrayHelper;
+import org.softwareFm.utilities.collections.Iterables;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
 
 public class JavaProjects {
+
+	public static Iterable<IProject> allProjects() {
+		return Iterables.iterable(ResourcesPlugin.getWorkspace().getRoot().getProjects());
+	}
 
 	public static FoundClassPathEntry findClassPathEntry(IJavaProject project, IClasspathEntry entry) {
 		try {

@@ -41,6 +41,7 @@ public class AbstractTitleAnd extends Composite implements IButtonParent {
 		lblFiller = new Label(compTitleAndButtons, SWT.NULL);
 
 		compButtons = new Composite(compTitleAndButtons, SWT.NULL);
+
 		compButtons.setLayout(Swts.getHorizonalNoMarginRowLayout());
 		setLayoutData();
 	}
