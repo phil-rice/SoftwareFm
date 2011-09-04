@@ -60,7 +60,7 @@ public class JavadocPanel extends Composite {
 		ImageButtons.addRowButton(txtLocal, SwtBasicConstants.clearKey, SourceConstants.clearHelpKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
-				JavaProjects.setJavadoc(ripped.javaProject, ripped.classpathEntry, null);
+				JavaProjects.setJavadoc(ripped.javaProject, ripped.classpathEntry, "");
 				txtLocal.setText("");
 			}
 		});

@@ -10,6 +10,7 @@ import org.eclipse.jdt.core.ClasspathContainerInitializer;
 import org.eclipse.jdt.core.IClasspathAttribute;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
@@ -76,6 +77,8 @@ public class JavaProjects {
 				ClasspathContainerInitializer initializer = JavaCore.getClasspathContainerInitializer(found.container.getPath().segment(0));
 				initializer.requestClasspathContainerUpdate(found.container.getPath(), found.javaProject, containerSuggestion);
 				JavaCore.setClasspathContainer(found.container.getPath(), new IJavaProject[] { found.javaProject }, new IClasspathContainer[] { containerSuggestion }, new NullProgressMonitor());
+				found.javaProject.getJavaModel().refreshExternalArchives(new IJavaElement[] { found.javaProject }, new NullProgressMonitor());
+
 				break;
 			}
 			default:
