@@ -5,9 +5,9 @@ Bundle-SymbolicName: org.softwareFm.core;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.softwareFm.core.plugin.SoftwareFmActivator
 Bundle-Vendor: softwareFm
-Require-Bundle: org.eclipse.ui,
+Require-Bundle: org.eclipse.ui;visibility:=reexport,
  org.eclipse.jface.text;bundle-version="3.7.0";visibility:=reexport,
- org.eclipse.jdt.ui;bundle-version="3.7.0",
+ org.eclipse.jdt.ui;bundle-version="3.7.0";visibility:=reexport,
  org.softwareFm.displayCore;bundle-version="1.0.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy

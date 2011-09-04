@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.softwareFm.displayCore
-Bundle-SymbolicName: org.softwareFm.displayCore
+Bundle-SymbolicName: org.softwareFm.displayCore;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: softwareFm
 Require-Bundle: org.softwareFm.swtBasics;bundle-version="1.0.0";visibility:=reexport,

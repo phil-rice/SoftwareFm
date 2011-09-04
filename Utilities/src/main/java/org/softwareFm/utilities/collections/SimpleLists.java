@@ -32,7 +32,6 @@ public class SimpleLists {
 	}
 
 	public static <T> ISimpleList<T> fromList(final List<T> list) {
-		new Date();
 		return new ISimpleList<T>() {
 			public int size() {
 				return list.size();

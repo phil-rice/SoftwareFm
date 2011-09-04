@@ -4,7 +4,6 @@ Bundle-Name: org.softwareFm.EntityOrganisationData
 Bundle-SymbolicName: org.softwareFm.EntityOrganisationData;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: softwareFm
-Require-Bundle: org.eclipse.core.runtime,
- org.softwareFm.core;bundle-version="1.0.0"
+Require-Bundle: org.softwareFm.core;bundle-version="1.0.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.softwareFm.entityOrganisationData

@@ -75,24 +75,25 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 
 	@Override
 	public void setValues(final BindingContext bindingContext) {
-		content.getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				process(new IDisplayContainerCallback() {
-					@Override
-					public <L extends Control, S extends Control> void process(int index, String key, IDisplayer<L, S> displayer, L largeControl, S smallControl) throws Exception {
-						Object value = findValue(bindingContext, key);
-						displayer.populateLargeControl(bindingContext, largeControl, value);
-						displayer.populateSmallControl(bindingContext, smallControl, value);
-					}
+		if (!content.isDisposed())
+			content.getDisplay().asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					process(new IDisplayContainerCallback() {
+						@Override
+						public <L extends Control, S extends Control> void process(int index, String key, IDisplayer<L, S> displayer, L largeControl, S smallControl) throws Exception {
+							Object value = findValue(bindingContext, key);
+							displayer.populateLargeControl(bindingContext, largeControl, value);
+							displayer.populateSmallControl(bindingContext, smallControl, value);
+						}
 
-					@Override
-					public String toString() {
-						return "DisplayContainer.setValues";
-					}
-				});
-			}
-		});
+						@Override
+						public String toString() {
+							return "DisplayContainer.setValues";
+						}
+					});
+				}
+			});
 	}
 
 	private Object findValue(BindingContext bindingContext, String key) {
@@ -120,27 +121,28 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 	private void sortOutOrderVisibilityAndLayout() {
 		final List<Control> visibleControls = Lists.newList();
 		final List<Control> invisibleControls = Lists.newList();
-		content.getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				process(new IDisplayContainerCallback() {
-					@Override
-					public <L extends Control, S extends Control> void process(int index, String key, IDisplayer<L, S> displayer, L largeControl, S smallControl) throws Exception {
-						boolean state = state(key);
-						largeControl.setVisible(state);
-						if (state)
-							visibleControls.add(largeControl);
-						else
-							invisibleControls.add(largeControl);
-					}
-				});
-				setAfter(invisibleControls, setAfter(visibleControls, compButtons));
-				Swts.addGrabHorizontalAndFillGridDataToAllChildren(content);
-				content.layout();
-				content.getParent().layout();
-				content.getParent().redraw();
-			}
-		});
+		if (!content.isDisposed())
+			content.getDisplay().asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					process(new IDisplayContainerCallback() {
+						@Override
+						public <L extends Control, S extends Control> void process(int index, String key, IDisplayer<L, S> displayer, L largeControl, S smallControl) throws Exception {
+							boolean state = state(key);
+							largeControl.setVisible(state);
+							if (state)
+								visibleControls.add(largeControl);
+							else
+								invisibleControls.add(largeControl);
+						}
+					});
+					setAfter(invisibleControls, setAfter(visibleControls, compButtons));
+					Swts.addGrabHorizontalAndFillGridDataToAllChildren(content);
+					content.layout();
+					content.getParent().layout();
+					content.getParent().redraw();
+				}
+			});
 	}
 
 	private Control setAfter(List<Control> controls, Control firstControl) {

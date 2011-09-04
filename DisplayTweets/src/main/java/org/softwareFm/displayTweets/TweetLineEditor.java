@@ -42,10 +42,9 @@ public class TweetLineEditor extends AbstractLineEditor<String, TweetLinePanel> 
 		ConfigForTitleAnd forDialogs = lineEditable.getDialogConfig();
 		TweetDialog dialog = new TweetDialog(lineEditable.getShell(), SWT.NULL, forDialogs, DisplayTweetListConstants.tweetLineTitleKey);
 		String result = dialog.open("");
-		if (result != null) {
+		if (result != null && result.trim().length() > 0) {
 			lineEditable.getModel().add(result);
 			lineEditable.sendDataToServer();
-
 		}
 	}
 
@@ -56,10 +55,11 @@ public class TweetLineEditor extends AbstractLineEditor<String, TweetLinePanel> 
 		ICrud<String> model = lineEditable.getModel();
 		String result = dialog.open(model.get(index));
 		if (result != null) {
-			model.set(index, result);
+			if (result.trim().length() > 0)
+				model.set(index, result);
+			else
+				model.delete(index);
 			lineEditable.sendDataToServer();
-
 		}
 	}
-
 }

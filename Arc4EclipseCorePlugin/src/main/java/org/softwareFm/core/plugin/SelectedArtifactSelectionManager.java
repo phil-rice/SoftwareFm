@@ -1,6 +1,7 @@
 package org.softwareFm.core.plugin;
 
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
@@ -51,8 +52,9 @@ public class SelectedArtifactSelectionManager implements ISelectedBindingManager
 	}
 
 	public static BindingRipperResult reRip(BindingRipperResult result) {
-		TextSelection selection = (TextSelection) result.cargo.get(SelectionConstants.selectionKey);
-		IBindingRipper ripper = (IBindingRipper) result.cargo.get(SelectionConstants.ripperKey);
+		Map<String, Object> cargo = result.cargo;
+		TextSelection selection = (TextSelection) cargo.get(SelectionConstants.selectionKey);
+		IBindingRipper ripper = (IBindingRipper) cargo.get(SelectionConstants.ripperKey);
 		return selectToBindingResult(ripper, selection);
 	}
 

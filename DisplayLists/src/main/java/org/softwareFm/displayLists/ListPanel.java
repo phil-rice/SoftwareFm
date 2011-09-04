@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -84,6 +85,7 @@ public class ListPanel<T> extends Composite implements IButtonParent, ILineEdita
 
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 		setSize(getSize().x, 1);
+		setCompListHeightHint(5);
 		getParent().layout();
 		getParent().redraw();
 	}
@@ -92,16 +94,25 @@ public class ListPanel<T> extends Composite implements IButtonParent, ILineEdita
 		this.url = bindingContext.url;
 		this.lastContext = bindingContext.context;
 		List<String> values = getValues(value);
-		listModel.setData(values);
 		Swts.removeAllChildren(compForList);
 		int index = 0;
+		if (values == null || (values.size() == 1 && values.get(0).equals(" ")))
+			listModel.setData(Collections.<String> emptyList());
+		else
+			listModel.setData(values);
 		for (T t : listModel)
 			lineEditor.makeLineControl(this, compForList, index++, t);
+
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(compForList);
-		if (index == 0)
-			compForList.setSize(compForList.getSize().x, 22);
+		setCompListHeightHint(index == 0 ? 5 : SWT.DEFAULT);
 		getParent().layout();
 		getParent().redraw();
+	}
+
+	private void setCompListHeightHint(int hint) {
+		GridData data = (GridData) compForList.getLayoutData();
+		data.heightHint = hint;
+		compForList.setLayoutData(data);
 	}
 
 	@SuppressWarnings("unchecked")

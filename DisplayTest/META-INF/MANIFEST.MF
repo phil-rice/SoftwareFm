@@ -5,5 +5,5 @@ Bundle-SymbolicName: org.softwareFm.displayTest
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: softwareFm
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.softwareFm.displayText;bundle-version="1.0.0",
- org.softwareFm.repository;bundle-version="1.0.0"
+Require-Bundle: org.softwareFm.displayText;bundle-version="1.0.0";visibility:=reexport,
+ org.softwareFm.repository;bundle-version="1.0.0";visibility:=reexport

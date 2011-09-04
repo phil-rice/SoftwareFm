@@ -29,8 +29,10 @@ public class BindingRipperResult {
 
 	public BindingRipperResult(IBinding binding, IJavaProject javaProject, IJavaElement javaElement, IPackageFragmentRoot packageFragment, IPath path, String hexDigest, IPath sourceAttachmentPath, String packageName, String className, String methodName, Map<String, Object> cargo) {
 		super();
-		this.binding = binding;
 		try {
+			this.binding = binding;
+			if (cargo == null && binding != null)
+				throw new NullPointerException();
 			this.cargo = cargo;
 			this.javaElement = javaElement;
 			this.javaProject = javaProject;

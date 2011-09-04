@@ -5,7 +5,5 @@ Bundle-SymbolicName: org.softwareFm.displayTweets;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: softwareFm
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.eclipse.core.runtime;bundle-version="3.7.0";visibility:=reexport,
- org.eclipse.jface;bundle-version="3.7.0";visibility:=reexport,
- org.softwareFm.displayLists;bundle-version="1.0.0";visibility:=reexport
+Require-Bundle: org.softwareFm.displayLists;bundle-version="1.0.0";visibility:=reexport
 Export-Package: org.softwareFm.displayTweets

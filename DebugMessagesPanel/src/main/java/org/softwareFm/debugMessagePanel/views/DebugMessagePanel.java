@@ -61,14 +61,15 @@ public class DebugMessagePanel extends Composite implements ISoftwareFmLogger {
 	}
 
 	private void log(final String pattern, final Object... arguments) {
-		getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				String message = MessageFormat.format(pattern, arguments);
-				String text = Strings.addToRollingLog(log, logSize, "\n", message);
-				titleAndStyledTextField.setText(text);
-			}
-		});
+		if (!isDisposed())
+			getDisplay().asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					String message = MessageFormat.format(pattern, arguments);
+					String text = Strings.addToRollingLog(log, logSize, "\n", message);
+					titleAndStyledTextField.setText(text);
+				}
+			});
 	}
 
 }

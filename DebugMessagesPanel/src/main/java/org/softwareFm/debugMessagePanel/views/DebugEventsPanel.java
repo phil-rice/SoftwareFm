@@ -37,19 +37,20 @@ public class DebugEventsPanel extends Composite implements IListenerListListener
 
 	@Override
 	public <L, T> void eventOccured(final List<L> Listener, final ICallback<T> callback) {
-		getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				final StringBuilder builder = new StringBuilder();
-				builder.append(callback);
-				builder.append(" -----");
-				builder.append(Thread.currentThread().getName());
-				builder.append(" ----->");
-				builder.append(" \n");
-				for (L l : Listener)
-					builder.append("   " + l + "\n");
-				titleAndStyledTextField.setText(Strings.addToRollingLog(log, logSize, "\n", builder.toString()));
-			}
-		});
+		if (!isDisposed())
+			getDisplay().asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					final StringBuilder builder = new StringBuilder();
+					builder.append(callback);
+					builder.append(" -----");
+					builder.append(Thread.currentThread().getName());
+					builder.append(" ----->");
+					builder.append(" \n");
+					for (L l : Listener)
+						builder.append("   " + l + "\n");
+					titleAndStyledTextField.setText(Strings.addToRollingLog(log, logSize, "\n", builder.toString()));
+				}
+			});
 	}
 }

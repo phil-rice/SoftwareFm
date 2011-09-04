@@ -35,21 +35,23 @@ public class TitleAndStyledTextField extends AbstractTitleAnd {
 	}
 
 	public void setText(final String text) {
-		getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				txtText.setText(text);
-			}
-		});
+		if (!isDisposed())
+			getDisplay().asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					txtText.setText(text);
+				}
+			});
 	}
 
 	public void appendText(final String text) {
-		getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				txtText.append(text);
-			}
-		});
+		if (!isDisposed())
+			getDisplay().asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					txtText.append(text);
+				}
+			});
 	}
 
 	public String getText() {
