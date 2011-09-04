@@ -8,5 +8,5 @@ Require-Bundle: org.softwareFm.repositoryClient;bundle-version="1.0.0";visibilit
  org.softwareFm.jdtBinding;bundle-version="1.0.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.softwareFm.arc4eclipseRepository.api,
- org.softwareFm.arc4eclipseRepository.constants
+Export-Package: org.softwareFm.repository.api,
+ org.softwareFm.repository.constants

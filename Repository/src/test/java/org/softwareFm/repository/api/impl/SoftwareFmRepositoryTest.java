@@ -1,6 +1,6 @@
-package org.softwareFm.arc4eclipseRepository.api.impl;
+package org.softwareFm.repository.api.impl;
 
-import static org.softwareFm.arc4eclipseRepository.api.RepositoryDataItemStatus.*;
+import static org.softwareFm.repository.api.RepositoryDataItemStatus.*;
 
 import java.util.Map;
 
@@ -8,22 +8,22 @@ import junit.framework.TestCase;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.softwareFm.arc4eclipseRepository.api.IArc4EclipseRepository;
-import org.softwareFm.arc4eclipseRepository.api.IRepositoryStatusListener;
-import org.softwareFm.arc4eclipseRepository.api.MemoryStatusChangedListener;
-import org.softwareFm.arc4eclipseRepository.constants.RepositoryConstants;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.jdtBinding.api.IJarDigester;
+import org.softwareFm.repository.api.IRepositoryStatusListener;
+import org.softwareFm.repository.api.ISoftwareFmRepository;
+import org.softwareFm.repository.api.MemoryStatusChangedListener;
+import org.softwareFm.repository.constants.RepositoryConstants;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.maps.Maps;
 
-public class Arc4EclipseRepositoryTest extends TestCase {
+public class SoftwareFmRepositoryTest extends TestCase {
 
 	private final String organisationUrlKey = "organisation.url";
 	private final String organisationNameKey = "organisation.name";
 	private final String descriptionKey = "description";
 
-	private IArc4EclipseRepository repository;
+	private ISoftwareFmRepository repository;
 	private IRepositoryFacard facard;
 	private IJarDigester jarDigestor;
 
@@ -91,6 +91,6 @@ public class Arc4EclipseRepositoryTest extends TestCase {
 		super.setUp();
 		facard = IRepositoryFacard.Utils.defaultFacard();
 		jarDigestor = IJarDigester.Utils.digester();
-		repository = IArc4EclipseRepository.Utils.repository(facard, jarDigestor);
+		repository = ISoftwareFmRepository.Utils.repository(facard, jarDigestor);
 	}
 }

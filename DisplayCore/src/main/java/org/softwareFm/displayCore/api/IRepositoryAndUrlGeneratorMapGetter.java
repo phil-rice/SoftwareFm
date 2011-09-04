@@ -1,11 +1,11 @@
 package org.softwareFm.displayCore.api;
 
-import org.softwareFm.arc4eclipseRepository.api.IArc4EclipseRepository;
-import org.softwareFm.arc4eclipseRepository.api.IUrlGeneratorMap;
+import org.softwareFm.repository.api.ISoftwareFmRepository;
+import org.softwareFm.repository.api.IUrlGeneratorMap;
 
 public interface IRepositoryAndUrlGeneratorMapGetter {
 
-	IArc4EclipseRepository getRepository();
+	ISoftwareFmRepository getRepository();
 
 	IUrlGeneratorMap getUrlGeneratorMap();
 }

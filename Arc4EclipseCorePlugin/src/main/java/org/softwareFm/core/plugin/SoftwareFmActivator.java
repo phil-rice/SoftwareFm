@@ -17,10 +17,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.softwareFm.arc4eclipseRepository.api.IArc4EclipseRepository;
-import org.softwareFm.arc4eclipseRepository.api.IUrlGenerator;
-import org.softwareFm.arc4eclipseRepository.api.IUrlGeneratorMap;
-import org.softwareFm.arc4eclipseRepository.constants.RepositoryConstants;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.IDisplayContainer;
 import org.softwareFm.displayCore.api.IDisplayContainerFactory;
@@ -33,6 +29,10 @@ import org.softwareFm.displayCore.constants.DisplayCoreConstants;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.jdtBinding.api.IBindingRipper;
 import org.softwareFm.panel.ISelectedBindingListener;
+import org.softwareFm.repository.api.ISoftwareFmRepository;
+import org.softwareFm.repository.api.IUrlGenerator;
+import org.softwareFm.repository.api.IUrlGeneratorMap;
+import org.softwareFm.repository.constants.RepositoryConstants;
 import org.softwareFm.swtBasics.images.Images;
 import org.softwareFm.swtBasics.text.ConfigForTitleAnd;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -44,8 +44,6 @@ import org.softwareFm.utilities.resources.IResourceGetter;
  */
 public class SoftwareFmActivator extends AbstractUIPlugin implements IRepositoryAndUrlGeneratorMapGetter {
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "org.arc4Eclipse.core"; //$NON-NLS-1$
 	public static final String DISPLAYER_ID = "org.softwareFm.displayers";
 	public static final String IMAGE_ID = "org.softwareFm.image";
 	public static final String BUNDLE_ID = "org.softwareFm.bundle";
@@ -57,7 +55,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin implements IRepository
 	// The shared instance
 	private static SoftwareFmActivator plugin;
 
-	private IArc4EclipseRepository repository;
+	private ISoftwareFmRepository repository;
 
 	private SelectedArtifactSelectionManager selectedBindingManager;
 
@@ -120,15 +118,15 @@ public class SoftwareFmActivator extends AbstractUIPlugin implements IRepository
 	}
 
 	@Override
-	public IArc4EclipseRepository getRepository() {
+	public ISoftwareFmRepository getRepository() {
 		if (repository == null) {
-			repository = IArc4EclipseRepository.Utils.repository();
+			repository = ISoftwareFmRepository.Utils.repository();
 			addRespositoryStatusPropogators(repository);
 		}
 		return repository;
 	}
 
-	private void addRespositoryStatusPropogators(final IArc4EclipseRepository repository2) {
+	private void addRespositoryStatusPropogators(final ISoftwareFmRepository repository2) {
 		Plugins.useClasses(REPOSITORY_PROPOGATOR_ID, new IPlugInCreationCallback<RepositoryStatusListenerPropogator>() {
 
 			@Override

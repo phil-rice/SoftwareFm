@@ -1,8 +1,8 @@
-package org.softwareFm.arc4eclipseRepository.api.impl;
+package org.softwareFm.repository.api.impl;
 
 import java.util.Map;
 
-import org.softwareFm.arc4eclipseRepository.api.RepositoryDataItemStatus;
+import org.softwareFm.repository.api.RepositoryDataItemStatus;
 
 public class StatusAndData {
 	public final String url;

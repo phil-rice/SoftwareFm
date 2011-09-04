@@ -8,15 +8,15 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.TestCase;
 
-import org.softwareFm.arc4eclipseRepository.api.IArc4EclipseLogger;
-import org.softwareFm.arc4eclipseRepository.api.IArc4EclipseRepository;
-import org.softwareFm.arc4eclipseRepository.api.IRepositoryStatusListener;
-import org.softwareFm.arc4eclipseRepository.api.IUrlGenerator;
-import org.softwareFm.arc4eclipseRepository.api.IUrlGeneratorMap;
-import org.softwareFm.arc4eclipseRepository.api.RepositoryDataItemStatus;
-import org.softwareFm.arc4eclipseRepository.constants.RepositoryConstants;
 import org.softwareFm.displayCore.api.IRepositoryAndUrlGeneratorMapGetter;
 import org.softwareFm.displayCore.api.RepositoryStatusListenerPropogator;
+import org.softwareFm.repository.api.ISoftwareFmLogger;
+import org.softwareFm.repository.api.IRepositoryStatusListener;
+import org.softwareFm.repository.api.ISoftwareFmRepository;
+import org.softwareFm.repository.api.IUrlGenerator;
+import org.softwareFm.repository.api.IUrlGeneratorMap;
+import org.softwareFm.repository.api.RepositoryDataItemStatus;
+import org.softwareFm.repository.constants.RepositoryConstants;
 import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.maps.Maps;
 
@@ -39,21 +39,21 @@ public abstract class AbstractRepositoryStatusListenerPropogatorTest extends Tes
 	public void testListenerPropogatesWhenEverythingOk() throws Exception {
 		String dependantUrl = "dependantUrl";
 
-		Map<String, Object> context = IArc4EclipseRepository.Utils.makePrimaryContext(originalEntity);
+		Map<String, Object> context = ISoftwareFmRepository.Utils.makePrimaryContext(originalEntity);
 		Map<String, Object> item = Maps.makeMap(RepositoryConstants.entity, originalEntity, urlKey, dependantUrl);
 		propogator.statusChanged("someOriginalUrl", RepositoryDataItemStatus.FOUND, item, context);
 		assertEquals(1, urlGeneratorCount.get());
 		assertEquals(0, notifyCount.get());
 		assertEquals(1, getDataCount.get());
 		assertEquals(dependantEntity, entityRef.get());
-		Map<String, Object> expectedContext = IArc4EclipseRepository.Utils.makeSecondaryContext(dependantEntity, urlKey, dependantUrl);
+		Map<String, Object> expectedContext = ISoftwareFmRepository.Utils.makeSecondaryContext(dependantEntity, urlKey, dependantUrl);
 		assertEquals(expectedContext, contextRef.get());
 		assertEquals("/" + dependantEntity + "_s/276/dependanturl", urlRef.get());
 	}
 
 	public void testListenerPropogatesWhenThereIsNoData() throws Exception {
 		Map<String, Object> item = Maps.makeMap(RepositoryConstants.entity, originalEntity); // note that the urlKey is not here...
-		Map<String, Object> context = IArc4EclipseRepository.Utils.makePrimaryContext(originalEntity);
+		Map<String, Object> context = ISoftwareFmRepository.Utils.makePrimaryContext(originalEntity);
 
 		propogator.statusChanged("someOriginalUrl", RepositoryDataItemStatus.FOUND, item, context);
 
@@ -61,7 +61,7 @@ public abstract class AbstractRepositoryStatusListenerPropogatorTest extends Tes
 		assertEquals(0, urlGeneratorCount.get());
 		assertEquals(0, getDataCount.get());
 		assertEquals(dependantEntity, entityRef.get());
-		Map<String, Object> expectedContext = IArc4EclipseRepository.Utils.makeSecondaryNotFoundContext(dependantEntity);
+		Map<String, Object> expectedContext = ISoftwareFmRepository.Utils.makeSecondaryNotFoundContext(dependantEntity);
 		assertEquals(expectedContext, contextRef.get());
 
 	}
@@ -100,8 +100,8 @@ public abstract class AbstractRepositoryStatusListenerPropogatorTest extends Tes
 			}
 
 			@Override
-			public IArc4EclipseRepository getRepository() {
-				return new IArc4EclipseRepository() {
+			public ISoftwareFmRepository getRepository() {
+				return new ISoftwareFmRepository() {
 
 					@Override
 					public Future<?> getData(String entity, String url, Map<String, Object> context) {
@@ -129,7 +129,7 @@ public abstract class AbstractRepositoryStatusListenerPropogatorTest extends Tes
 					}
 
 					@Override
-					public void addLogger(IArc4EclipseLogger logger) {
+					public void addLogger(ISoftwareFmLogger logger) {
 						fail();
 					}
 

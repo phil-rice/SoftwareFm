@@ -1,4 +1,4 @@
-package org.softwareFm.arc4eclipseRepository.api.impl;
+package org.softwareFm.repository.api.impl;
 
 import java.text.MessageFormat;
 import java.util.Collections;
@@ -6,14 +6,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Future;
 
-import org.softwareFm.arc4eclipseRepository.api.IArc4EclipseLogger;
-import org.softwareFm.arc4eclipseRepository.api.IArc4EclipseRepository;
-import org.softwareFm.arc4eclipseRepository.api.IRepositoryStatusListener;
-import org.softwareFm.arc4eclipseRepository.api.RepositoryDataItemStatus;
-import org.softwareFm.arc4eclipseRepository.constants.RepositoryConstants;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.jdtBinding.api.IJarDigester;
+import org.softwareFm.repository.api.ISoftwareFmLogger;
+import org.softwareFm.repository.api.IRepositoryStatusListener;
+import org.softwareFm.repository.api.ISoftwareFmRepository;
+import org.softwareFm.repository.api.RepositoryDataItemStatus;
+import org.softwareFm.repository.constants.RepositoryConstants;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
 import org.softwareFm.repositoryFacardConstants.RepositoryFacardConstants;
@@ -23,12 +23,12 @@ import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.strings.Urls;
 
-public class Arc4EclipseRepository implements IArc4EclipseRepository {
+public class SoftwareFmRepository implements ISoftwareFmRepository {
 	private final static Map<String, Object> emptyParameters = Collections.<String, Object> emptyMap();
 
 	private final IRepositoryFacard facard;
 
-	private final ListenerList<IArc4EclipseLogger> loggers = new ListenerList<IArc4EclipseLogger>();
+	private final ListenerList<ISoftwareFmLogger> loggers = new ListenerList<ISoftwareFmLogger>();
 	ListenerList<IRepositoryStatusListener> listeners = new ListenerList<IRepositoryStatusListener>();
 
 	class CallbackForData implements IRepositoryFacardCallback {
@@ -120,7 +120,7 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 		});
 	}
 
-	public Arc4EclipseRepository(IRepositoryFacard facard, IJarDigester jarDigester) {
+	public SoftwareFmRepository(IRepositoryFacard facard, IJarDigester jarDigester) {
 		this.facard = facard;
 	}
 
@@ -180,14 +180,14 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 	}
 
 	@Override
-	public void addLogger(IArc4EclipseLogger logger) {
+	public void addLogger(ISoftwareFmLogger logger) {
 		loggers.add(logger);
 	}
 
 	private void fireRequest(final String method, final String url, final Map<String, Object> parameters, final Map<String, Object> context) {
-		loggers.fire(new ICallback<IArc4EclipseLogger>() {
+		loggers.fire(new ICallback<ISoftwareFmLogger>() {
 			@Override
-			public void process(IArc4EclipseLogger t) throws Exception {
+			public void process(ISoftwareFmLogger t) throws Exception {
 				t.sendingRequest(method, url, parameters, context);
 			}
 
@@ -199,9 +199,9 @@ public class Arc4EclipseRepository implements IArc4EclipseRepository {
 	}
 
 	private void fireResponse(final IResponse response, final Object data, final Map<String, Object> context) {
-		loggers.fire(new ICallback<IArc4EclipseLogger>() {
+		loggers.fire(new ICallback<ISoftwareFmLogger>() {
 			@Override
-			public void process(IArc4EclipseLogger t) throws Exception {
+			public void process(ISoftwareFmLogger t) throws Exception {
 				t.receivedReply(response, data, context);
 			}
 

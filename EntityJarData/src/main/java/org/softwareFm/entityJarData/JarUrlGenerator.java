@@ -1,7 +1,7 @@
 package org.softwareFm.entityJarData;
 
-import org.softwareFm.arc4eclipseRepository.api.IUrlGenerator;
-import org.softwareFm.arc4eclipseRepository.constants.RepositoryConstants;
+import org.softwareFm.repository.api.IUrlGenerator;
+import org.softwareFm.repository.constants.RepositoryConstants;
 
 
 public class JarUrlGenerator implements IUrlGenerator {

@@ -2,12 +2,12 @@ package org.softwareFm.displayCore.api;
 
 import java.util.Map;
 
-import org.softwareFm.arc4eclipseRepository.api.IArc4EclipseRepository;
-import org.softwareFm.arc4eclipseRepository.api.IRepositoryStatusListener;
-import org.softwareFm.arc4eclipseRepository.api.IUrlGenerator;
-import org.softwareFm.arc4eclipseRepository.api.IUrlGeneratorMap;
-import org.softwareFm.arc4eclipseRepository.api.RepositoryDataItemStatus;
-import org.softwareFm.arc4eclipseRepository.constants.RepositoryConstants;
+import org.softwareFm.repository.api.IRepositoryStatusListener;
+import org.softwareFm.repository.api.ISoftwareFmRepository;
+import org.softwareFm.repository.api.IUrlGenerator;
+import org.softwareFm.repository.api.IUrlGeneratorMap;
+import org.softwareFm.repository.api.RepositoryDataItemStatus;
+import org.softwareFm.repository.constants.RepositoryConstants;
 
 public abstract class RepositoryStatusListenerPropogator implements IRepositoryStatusListener {
 
@@ -24,20 +24,20 @@ public abstract class RepositoryStatusListenerPropogator implements IRepositoryS
 
 	@Override
 	public void statusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> item, Map<String, Object> context) throws Exception {
-		IArc4EclipseRepository repository = repositoryAndUrlGeneratorMapGetter.getRepository();
+		ISoftwareFmRepository repository = repositoryAndUrlGeneratorMapGetter.getRepository();
 		IUrlGeneratorMap urlGeneratorMap = repositoryAndUrlGeneratorMapGetter.getUrlGeneratorMap();
 		Object actualEntity = context.get(RepositoryConstants.entity);
 		if (actualEntity.equals(originalEntity))
 			if (status == RepositoryDataItemStatus.NOT_FOUND)
-				repository.notifyListenersThereIsNoData(dependantEntity, IArc4EclipseRepository.Utils.makeSecondaryNotFoundContext(dependantEntity));
+				repository.notifyListenersThereIsNoData(dependantEntity, ISoftwareFmRepository.Utils.makeSecondaryNotFoundContext(dependantEntity));
 			else if (item != null) {
 				String reportedUrl = (String) item.get(urlKey);
 				if (reportedUrl == null)
-					repository.notifyListenersThereIsNoData(dependantEntity, IArc4EclipseRepository.Utils.makeSecondaryNotFoundContext(dependantEntity));
+					repository.notifyListenersThereIsNoData(dependantEntity, ISoftwareFmRepository.Utils.makeSecondaryNotFoundContext(dependantEntity));
 				else {
 					IUrlGenerator urlGenerator = urlGeneratorMap.get(dependantEntity);
 					String actualUrl = urlGenerator.apply(reportedUrl);
-					repository.getData(dependantEntity, actualUrl, IArc4EclipseRepository.Utils.makeSecondaryContext(dependantEntity, urlKey, reportedUrl));
+					repository.getData(dependantEntity, actualUrl, ISoftwareFmRepository.Utils.makeSecondaryContext(dependantEntity, urlKey, reportedUrl));
 				}
 			}
 	}

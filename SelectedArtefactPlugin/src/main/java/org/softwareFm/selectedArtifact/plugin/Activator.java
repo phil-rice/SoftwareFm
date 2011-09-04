@@ -5,11 +5,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.softwareFm.arc4eclipseRepository.api.IArc4EclipseRepository;
 import org.softwareFm.core.plugin.SoftwareFmActivator;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.IDisplayContainer;
 import org.softwareFm.panel.ISelectedBindingManager;
+import org.softwareFm.repository.api.ISoftwareFmRepository;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -46,7 +46,7 @@ public class Activator extends AbstractUIPlugin {
 		return new DisplayerContext(coreActivator.getSelectedBindingManager(), coreActivator.getRepository(), coreActivator.getUrlGeneratorMap(), coreActivator.getConfigForTitleAnd(display));
 	}
 
-	public IArc4EclipseRepository getRepository() {
+	public ISoftwareFmRepository getRepository() {
 		return SoftwareFmActivator.getDefault().getRepository();
 	}
 

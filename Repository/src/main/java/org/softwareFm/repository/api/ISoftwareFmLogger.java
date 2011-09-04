@@ -1,10 +1,10 @@
-package org.softwareFm.arc4eclipseRepository.api;
+package org.softwareFm.repository.api;
 
 import java.util.Map;
 
 import org.softwareFm.httpClient.response.IResponse;
 
-public interface IArc4EclipseLogger {
+public interface ISoftwareFmLogger {
 
 	void sendingRequest(String method, String url, Map<String, Object> parameters, Map<String, Object> context);
 

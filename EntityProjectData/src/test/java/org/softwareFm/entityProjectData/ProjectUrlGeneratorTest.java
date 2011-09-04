@@ -1,7 +1,7 @@
 package org.softwareFm.entityProjectData;
 
-import org.softwareFm.arc4eclipseRepository.constants.RepositoryConstants;
 import org.softwareFm.core.plugin.AbstractUrlGeneratorTest;
+import org.softwareFm.repository.constants.RepositoryConstants;
 
 
 public class ProjectUrlGeneratorTest extends AbstractUrlGeneratorTest {

@@ -1,6 +1,6 @@
 package org.softwareFm.displayCore.api;
 
-import org.softwareFm.arc4eclipseRepository.api.IUrlGenerator;
+import org.softwareFm.repository.api.IUrlGenerator;
 
 public class RegisteredItemsAdapter implements IRegisteredItems {
 

@@ -1,4 +1,4 @@
-package org.softwareFm.arc4eclipseRepository.api;
+package org.softwareFm.repository.api;
 
 public enum RepositoryDataItemStatus {
 

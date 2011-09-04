@@ -3,8 +3,8 @@ package org.softwareFm.displayCore.api;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.softwareFm.arc4eclipseRepository.api.IUrlGenerator;
 import org.softwareFm.displayCore.api.impl.DisplayContainerFactoryBuilder;
+import org.softwareFm.repository.api.IUrlGenerator;
 import org.softwareFm.utilities.functions.IFunction1;
 
 public interface IDisplayContainerFactoryBuilder {

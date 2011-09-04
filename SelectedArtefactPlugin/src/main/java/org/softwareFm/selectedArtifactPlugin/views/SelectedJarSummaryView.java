@@ -1,6 +1,6 @@
 package org.softwareFm.selectedArtifactPlugin.views;
 
-import org.softwareFm.arc4eclipseRepository.constants.RepositoryConstants;
+import org.softwareFm.repository.constants.RepositoryConstants;
 
 public class SelectedJarSummaryView extends AbstractSelectedArtifactView {
 

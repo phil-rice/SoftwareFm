@@ -1,10 +1,10 @@
-package org.softwareFm.arc4eclipseRepository.api;
+package org.softwareFm.repository.api;
 
 import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
-import org.softwareFm.arc4eclipseRepository.api.impl.StatusAndData;
+import org.softwareFm.repository.api.impl.StatusAndData;
 import org.softwareFm.utilities.collections.Lists;
 
 public class MemoryStatusChangedListener implements IRepositoryStatusListener {

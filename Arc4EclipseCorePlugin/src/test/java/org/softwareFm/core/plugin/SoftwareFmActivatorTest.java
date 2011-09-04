@@ -9,13 +9,13 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.internal.Workbench;
-import org.softwareFm.arc4eclipseRepository.api.IUrlGenerator;
-import org.softwareFm.arc4eclipseRepository.api.IUrlGeneratorMap;
-import org.softwareFm.arc4eclipseRepository.constants.RepositoryConstants;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.IDisplayContainerFactory;
 import org.softwareFm.displayCore.api.IDisplayContainerForTests;
 import org.softwareFm.displayCore.api.IRegisteredItems;
+import org.softwareFm.repository.api.IUrlGenerator;
+import org.softwareFm.repository.api.IUrlGeneratorMap;
+import org.softwareFm.repository.constants.RepositoryConstants;
 import org.softwareFm.swtBasics.SwtBasicConstants;
 import org.softwareFm.swtBasics.images.Images;
 import org.softwareFm.swtBasics.images.Resources;
@@ -24,7 +24,7 @@ import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 @SuppressWarnings("restriction")
-public class Arc4EclipseCoreActivatorTest extends TestCase {
+public class SoftwareFmActivatorTest extends TestCase {
 
 	private Display display;
 

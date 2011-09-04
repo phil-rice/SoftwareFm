@@ -1,4 +1,4 @@
-package org.softwareFm.arc4eclipseRepository.constants;
+package org.softwareFm.repository.constants;
 
 public class RepositoryConstants {
 	public static final String hexDigestKey = "hexDigest";

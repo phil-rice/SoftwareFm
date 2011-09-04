@@ -3,12 +3,12 @@ package org.softwareFm.displayCore.api;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.softwareFm.arc4eclipseRepository.api.IArc4EclipseRepository;
-import org.softwareFm.arc4eclipseRepository.api.IUrlGeneratorMap;
-import org.softwareFm.arc4eclipseRepository.api.RepositoryDataItemStatus;
-import org.softwareFm.arc4eclipseRepository.constants.RepositoryConstants;
 import org.softwareFm.displayCore.constants.DisplayCoreConstants;
 import org.softwareFm.panel.ISelectedBindingManager;
+import org.softwareFm.repository.api.ISoftwareFmRepository;
+import org.softwareFm.repository.api.IUrlGeneratorMap;
+import org.softwareFm.repository.api.RepositoryDataItemStatus;
+import org.softwareFm.repository.constants.RepositoryConstants;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.Images;
 import org.softwareFm.swtBasics.text.ConfigForTitleAnd;
@@ -45,7 +45,7 @@ public class Displayers {
 		IUrlGeneratorMap urlGeneratorMap = IUrlGeneratorMap.Utils.urlGeneratorMap();
 		DisplayerContext context = new DisplayerContext(//
 				ISelectedBindingManager.Utils.noSelectedBindingManager(), //
-				IArc4EclipseRepository.Utils.repository(), //
+				ISoftwareFmRepository.Utils.repository(), //
 				urlGeneratorMap,//
 				ConfigForTitleAnd.create(display, resourceGetter, imageRegistry));
 

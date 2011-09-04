@@ -9,9 +9,9 @@ import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.arc4eclipseRepository.api.IArc4EclipseLogger;
-import org.softwareFm.arc4eclipseRepository.api.IArc4EclipseRepository;
 import org.softwareFm.httpClient.response.IResponse;
+import org.softwareFm.repository.api.ISoftwareFmLogger;
+import org.softwareFm.repository.api.ISoftwareFmRepository;
 import org.softwareFm.repositoryFacardConstants.RepositoryFacardConstants;
 import org.softwareFm.swtBasics.SwtBasicConstants;
 import org.softwareFm.swtBasics.images.IImageButtonListener;
@@ -22,12 +22,12 @@ import org.softwareFm.swtBasics.text.TitleAndStyledTextField;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.strings.Strings;
 
-public class DebugMessagePanel extends Composite implements IArc4EclipseLogger {
+public class DebugMessagePanel extends Composite implements ISoftwareFmLogger {
 	private final int logSize = 8;
 	private final List<String> log = Collections.synchronizedList(Lists.<String> newList());
 	private final TitleAndStyledTextField titleAndStyledTextField;
 
-	public DebugMessagePanel(Composite parent, int style, ConfigForTitleAnd config, IArc4EclipseRepository repository) {
+	public DebugMessagePanel(Composite parent, int style, ConfigForTitleAnd config, ISoftwareFmRepository repository) {
 		super(parent, style);
 		setLayout(new FormLayout());
 

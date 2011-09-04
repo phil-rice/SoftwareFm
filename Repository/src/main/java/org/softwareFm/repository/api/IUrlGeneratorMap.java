@@ -1,4 +1,4 @@
-package org.softwareFm.arc4eclipseRepository.api;
+package org.softwareFm.repository.api;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -2,7 +2,7 @@ package org.softwareFm.displayCore.api;
 
 import java.util.Map;
 
-import org.softwareFm.arc4eclipseRepository.api.RepositoryDataItemStatus;
+import org.softwareFm.repository.api.RepositoryDataItemStatus;
 
 public class BindingContext {
 

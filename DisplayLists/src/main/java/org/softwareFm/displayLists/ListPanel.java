@@ -11,8 +11,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.softwareFm.arc4eclipseRepository.api.IArc4EclipseRepository;
-import org.softwareFm.arc4eclipseRepository.api.IUrlGeneratorMap;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
 import org.softwareFm.displayCore.api.ILineEditable;
@@ -21,6 +19,8 @@ import org.softwareFm.displayCore.api.IRegisteredItems;
 import org.softwareFm.displayCore.api.RegisteredItemsAdapter;
 import org.softwareFm.displayCore.constants.DisplayCoreConstants;
 import org.softwareFm.panel.ISelectedBindingManager;
+import org.softwareFm.repository.api.ISoftwareFmRepository;
+import org.softwareFm.repository.api.IUrlGeneratorMap;
 import org.softwareFm.swtBasics.SwtBasicConstants;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.IImageButtonListener;
@@ -42,7 +42,7 @@ public class ListPanel<T> extends Composite implements IButtonParent, ILineEdita
 	private final Composite compForList;
 	private final String title;
 	private final ListModel<T> listModel;
-	private final IArc4EclipseRepository repository;
+	private final ISoftwareFmRepository repository;
 	private String url;
 	private final String entity;
 	private final String key;
@@ -170,7 +170,7 @@ public class ListPanel<T> extends Composite implements IButtonParent, ILineEdita
 				IUrlGeneratorMap urlGeneratorMap = IUrlGeneratorMap.Utils.urlGeneratorMap();
 				DisplayerContext context = new DisplayerContext(//
 						ISelectedBindingManager.Utils.noSelectedBindingManager(), //
-						IArc4EclipseRepository.Utils.repository(), //
+						ISoftwareFmRepository.Utils.repository(), //
 						urlGeneratorMap,//
 						ConfigForTitleAnd.create(//
 								from.getDisplay(), //

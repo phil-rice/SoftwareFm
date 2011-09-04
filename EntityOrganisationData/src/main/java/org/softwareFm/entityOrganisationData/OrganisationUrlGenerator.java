@@ -1,7 +1,7 @@
 package org.softwareFm.entityOrganisationData;
 
-import org.softwareFm.arc4eclipseRepository.api.IUrlGenerator;
-import org.softwareFm.arc4eclipseRepository.constants.RepositoryConstants;
+import org.softwareFm.repository.api.IUrlGenerator;
+import org.softwareFm.repository.constants.RepositoryConstants;
 
 
 public class OrganisationUrlGenerator implements IUrlGenerator {

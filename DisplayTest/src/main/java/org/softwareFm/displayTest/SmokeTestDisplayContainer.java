@@ -9,7 +9,7 @@ public class SmokeTestDisplayContainer {
 		// managerFactory.registerForEntity("entity", "text_two", "Two", "Help2");
 		// managerFactory.registerForEntity("entity", "text_three", "Three", "Help3");
 		// final IDisplayContainerFactory factory = managerFactory.build();
-		// final IArc4EclipseRepository repository = IArc4EclipseRepository.Utils.repository();
+		// final ISoftwareFmRepository repository = ISoftwareFmRepository.Utils.repository();
 		//
 		// Swts.display("DisplayContainer1", new IFunction1<Composite, Composite>() {
 		// @Override

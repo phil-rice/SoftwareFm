@@ -1,4 +1,4 @@
-package org.softwareFm.arc4eclipseRepository.api;
+package org.softwareFm.repository.api;
 
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.strings.Strings;

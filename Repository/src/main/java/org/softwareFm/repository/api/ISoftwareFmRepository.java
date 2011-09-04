@@ -1,15 +1,15 @@
-package org.softwareFm.arc4eclipseRepository.api;
+package org.softwareFm.repository.api;
 
 import java.util.Map;
 import java.util.concurrent.Future;
 
-import org.softwareFm.arc4eclipseRepository.api.impl.Arc4EclipseRepository;
-import org.softwareFm.arc4eclipseRepository.constants.RepositoryConstants;
 import org.softwareFm.jdtBinding.api.IJarDigester;
+import org.softwareFm.repository.api.impl.SoftwareFmRepository;
+import org.softwareFm.repository.constants.RepositoryConstants;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.maps.Maps;
 
-public interface IArc4EclipseRepository {
+public interface ISoftwareFmRepository {
 
 	Future<?> getData(String entity, String url, Map<String, Object> context);
 
@@ -21,18 +21,18 @@ public interface IArc4EclipseRepository {
 
 	void removeStatusListener(IRepositoryStatusListener listener);
 
-	void addLogger(IArc4EclipseLogger logger);
+	void addLogger(ISoftwareFmLogger logger);
 
 	void shutdown();
 
 	static class Utils {
 
-		public static IArc4EclipseRepository repository() {
+		public static ISoftwareFmRepository repository() {
 			return repository(IRepositoryFacard.Utils.defaultFacard(), IJarDigester.Utils.digester());
 		}
 
-		public static IArc4EclipseRepository repository(IRepositoryFacard facard, IJarDigester jarDigester) {
-			return new Arc4EclipseRepository(facard, jarDigester);
+		public static ISoftwareFmRepository repository(IRepositoryFacard facard, IJarDigester jarDigester) {
+			return new SoftwareFmRepository(facard, jarDigester);
 		}
 
 		public static Map<String, Object> makeSecondaryContext(String entity, String key, String rawUrl) {

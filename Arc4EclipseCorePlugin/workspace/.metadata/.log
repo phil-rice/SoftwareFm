@@ -3,8 +3,8 @@ eclipse.buildId=unknown
 java.version=1.6.0_24
 java.vendor=Sun Microsystems Inc.
 BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_GB
-Framework arguments:  -version 3 -port 61349 -testLoaderClass org.eclipse.jdt.internal.junit4.runner.JUnit4TestLoader -loaderpluginname org.eclipse.rap.junit.runtime -classNames org.softwareFm.core.plugin.Arc4EclipseCoreActivatorTest -testpluginname org.arc4Eclipse.core
-Command-line arguments:  -dev file:C:/Users/Phil/workspaces/arc4eclipse/.metadata/.plugins/org.eclipse.pde.core/pde-junit/dev.properties -os win32 -ws win32 -arch x86_64 -consoleLog -console -version 3 -port 61349 -testLoaderClass org.eclipse.jdt.internal.junit4.runner.JUnit4TestLoader -loaderpluginname org.eclipse.rap.junit.runtime -classNames org.softwareFm.core.plugin.Arc4EclipseCoreActivatorTest -testpluginname org.arc4Eclipse.core
+Framework arguments:  -version 3 -port 61349 -testLoaderClass org.eclipse.jdt.internal.junit4.runner.JUnit4TestLoader -loaderpluginname org.eclipse.rap.junit.runtime -classNames org.softwareFm.core.plugin.SoftwareFmActivatorTest -testpluginname org.arc4Eclipse.core
+Command-line arguments:  -dev file:C:/Users/Phil/workspaces/arc4eclipse/.metadata/.plugins/org.eclipse.pde.core/pde-junit/dev.properties -os win32 -ws win32 -arch x86_64 -consoleLog -console -version 3 -port 61349 -testLoaderClass org.eclipse.jdt.internal.junit4.runner.JUnit4TestLoader -loaderpluginname org.eclipse.rap.junit.runtime -classNames org.softwareFm.core.plugin.SoftwareFmActivatorTest -testpluginname org.arc4Eclipse.core
 
 !ENTRY org.softwareFm.selectedArtefactPlugin 4 0 2011-08-22 13:32:50.328
 !MESSAGE FrameworkEvent ERROR

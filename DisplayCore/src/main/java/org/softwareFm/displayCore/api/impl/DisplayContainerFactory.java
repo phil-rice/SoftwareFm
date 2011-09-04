@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.arc4eclipseRepository.api.IUrlGenerator;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.IDisplayContainer;
 import org.softwareFm.displayCore.api.IDisplayContainerFactory;
@@ -16,6 +15,7 @@ import org.softwareFm.displayCore.api.ILineEditor;
 import org.softwareFm.displayCore.api.IRegisteredItems;
 import org.softwareFm.displayCore.api.IValidator;
 import org.softwareFm.displayCore.constants.DisplayCoreConstants;
+import org.softwareFm.repository.api.IUrlGenerator;
 import org.softwareFm.utilities.collections.Lists;
 
 public class DisplayContainerFactory implements IDisplayContainerFactory, IRegisteredItems {

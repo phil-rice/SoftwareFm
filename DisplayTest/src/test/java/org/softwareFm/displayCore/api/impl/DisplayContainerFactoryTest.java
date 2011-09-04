@@ -7,8 +7,6 @@ import junit.framework.TestCase;
 
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.softwareFm.arc4eclipseRepository.api.RepositoryDataItemStatus;
-import org.softwareFm.arc4eclipseRepository.constants.RepositoryConstants;
 import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
@@ -20,6 +18,8 @@ import org.softwareFm.displayCore.api.IDisplayContainerForTests;
 import org.softwareFm.displayCore.api.IEditor;
 import org.softwareFm.displayCore.api.IValidator;
 import org.softwareFm.displayCore.constants.DisplayCoreConstants;
+import org.softwareFm.repository.api.RepositoryDataItemStatus;
+import org.softwareFm.repository.constants.RepositoryConstants;
 import org.softwareFm.swtBasics.SwtTestFixture;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.utilities.maps.Maps;

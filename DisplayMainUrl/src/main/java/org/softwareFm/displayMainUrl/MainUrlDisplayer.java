@@ -5,15 +5,15 @@ import java.util.concurrent.Callable;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.softwareFm.arc4eclipseRepository.api.IArc4EclipseRepository;
-import org.softwareFm.arc4eclipseRepository.api.IUrlGenerator;
-import org.softwareFm.arc4eclipseRepository.constants.RepositoryConstants;
 import org.softwareFm.displayCore.api.AbstractDisplayerWithLabel;
 import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
 import org.softwareFm.displayCore.api.Displayers;
 import org.softwareFm.displayCore.api.IRegisteredItems;
+import org.softwareFm.repository.api.ISoftwareFmRepository;
+import org.softwareFm.repository.api.IUrlGenerator;
+import org.softwareFm.repository.constants.RepositoryConstants;
 import org.softwareFm.swtBasics.images.ImageButtons;
 import org.softwareFm.swtBasics.images.Resources;
 import org.softwareFm.utilities.strings.Strings;
@@ -38,7 +38,7 @@ public class MainUrlDisplayer extends AbstractDisplayerWithLabel<MainUrlPanel> {
 				String rawUrl = titleAndTextField.getText();
 				IUrlGenerator urlGenerator = context.urlGeneratorMap.get(entity);
 				String url = urlGenerator.apply(rawUrl);
-				context.repository.getData(entity, url, IArc4EclipseRepository.Utils.makeSecondaryContext(entity, displayerDetails.key, rawUrl));
+				context.repository.getData(entity, url, ISoftwareFmRepository.Utils.makeSecondaryContext(entity, displayerDetails.key, rawUrl));
 			}
 		});
 		return titleAndTextField;
