@@ -10,7 +10,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.dom.ITypeBinding;
+import org.eclipse.jdt.core.dom.IBinding;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -43,13 +43,14 @@ public class DebugBindingPanel extends Composite implements ISelectedBindingList
 	}
 
 	@Override
-	public void selectionOccured(final ITypeBinding binding, final BindingRipperResult ripperResult) {
+	public void selectionOccured(final BindingRipperResult ripperResult) {
 		getDisplay().asyncExec(new Runnable() {
 			StringBuilder builder = new StringBuilder();
 
 			@Override
 			public void run() {
 				try {
+					IBinding binding = ripperResult.binding;
 					add("Binding", binding);
 					if (binding != null) {
 						IJavaElement element = binding.getJavaElement();

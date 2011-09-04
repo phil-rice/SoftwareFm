@@ -5,6 +5,7 @@ import java.util.concurrent.Callable;
 
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.core.plugin.SelectedArtifactSelectionManager;
 import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.BoundTitleAndTextField;
 import org.softwareFm.displayCore.api.DisplayerContext;
@@ -40,8 +41,11 @@ public class SourcePanel extends Composite {
 		btnAttach = ImageButtons.addRowButton(txtRepository, DisplaySourceConstants.linkImageKey, DisplaySourceConstants.linkKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
-				JavaProjects.setSourceAttachment(ripped.javaProject, ripped.classpathEntry, txtRepository.getText());
-				txtLocal.setText(Strings.nullSafeToString(txtRepository.getText()));
+				BindingRipperResult uptoDate = SelectedArtifactSelectionManager.reRip(ripped);
+				if (uptoDate != null) {
+					JavaProjects.setSourceAttachment(uptoDate.javaProject, uptoDate.classpathEntry, txtRepository.getText());
+					txtLocal.setText(Strings.nullSafeToString(txtRepository.getText()));
+				}
 
 			}
 
@@ -51,8 +55,11 @@ public class SourcePanel extends Composite {
 		ImageButtons.addRowButton(txtLocal, SwtBasicConstants.clearKey, SourceConstants.clearHelpKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
-				JavaProjects.setSourceAttachment(ripped.javaProject, ripped.classpathEntry, null);
-				txtLocal.setText("");
+				BindingRipperResult uptoDate = SelectedArtifactSelectionManager.reRip(ripped);
+				if (uptoDate != null) {
+					JavaProjects.setSourceAttachment(uptoDate.javaProject, uptoDate.classpathEntry, null);
+					txtLocal.setText("");
+				}
 			}
 		});
 		ImageButtons.addHelpButton(txtLocal, DisplaySourceConstants.localKey);

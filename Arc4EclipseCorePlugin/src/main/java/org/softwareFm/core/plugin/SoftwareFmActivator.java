@@ -6,7 +6,6 @@ import java.util.concurrent.Callable;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -147,7 +146,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin implements IRepository
 			selectedBindingManager = new SelectedArtifactSelectionManager(IBindingRipper.Utils.ripper());
 			selectedBindingManager.addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
 				@Override
-				public void selectionOccured(ITypeBinding binding, BindingRipperResult ripperResult) {
+				public void selectionOccured(BindingRipperResult ripperResult) {
 					Map<String, Object> context = Maps.makeMap(DisplayCoreConstants.ripperResult, ripperResult);
 					String jarUrl = getUrlGeneratorMap().get(RepositoryConstants.entityJar).apply(ripperResult.hexDigest);
 					getRepository().getData(RepositoryConstants.entityJar, jarUrl, context);

@@ -26,7 +26,7 @@ public class BindingRipper implements IBindingRipper {
 	private final Map<IPath, String> cache = Maps.newMap();
 
 	@Override
-	public BindingRipperResult apply(IBinding from) {
+	public BindingRipperResult rip(IBinding from, Map<String, Object> cargo) {
 		try {
 			if (from != null) {
 				IJavaElement javaElement = from.getJavaElement();
@@ -51,13 +51,13 @@ public class BindingRipper implements IBindingRipper {
 						String packageName = ((IMethodBinding) from).getDeclaringClass().getPackage().getName();
 						String className = javaElement.getParent().getElementName();
 						String methodName = javaElement.getElementName();
-						return new BindingRipperResult(project, javaElement, root, path, digestAsHexString, attachmentPath, packageName, className, methodName);
+						return new BindingRipperResult(from, project, javaElement, root, path, digestAsHexString, attachmentPath, packageName, className, methodName, cargo);
 					} else if (javaElement instanceof IClassFile) {
 						String packageName = ((ITypeBinding) from).getPackage().getName();
 						String className = javaElement.getElementName();
-						return new BindingRipperResult(project, javaElement, root, path, digestAsHexString, attachmentPath, packageName, className, null);
+						return new BindingRipperResult(from, project, javaElement, root, path, digestAsHexString, attachmentPath, packageName, className, null, cargo);
 					} else
-						return new BindingRipperResult(project, javaElement, root, path, digestAsHexString, attachmentPath, "", "", "");
+						return new BindingRipperResult(from, project, javaElement, root, path, digestAsHexString, attachmentPath, "", "", "", cargo);
 				}
 			}
 			return BindingRipperResult.empty;

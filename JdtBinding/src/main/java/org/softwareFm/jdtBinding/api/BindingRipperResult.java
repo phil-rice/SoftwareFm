@@ -1,16 +1,20 @@
 package org.softwareFm.jdtBinding.api;
 
+import java.util.Map;
+
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.dom.IBinding;
 import org.softwareFm.utilities.exceptions.WrappedException;
 
 /** this is my javadoc */
 public class BindingRipperResult {
 
-	public static final BindingRipperResult empty = new BindingRipperResult(null, null, null, null, null, null, null, null, null);
+	public static final BindingRipperResult empty = new BindingRipperResult(null, null, null, null, null, null, null, null, null, null, null);
+	public final IBinding binding;
 	public final IPath path;
 	public final IJavaElement javaElement;
 	public final IJavaProject javaProject;
@@ -21,10 +25,13 @@ public class BindingRipperResult {
 	public final IPackageFragmentRoot packageFragment;
 	public final IPath sourceAttachmentPath;
 	public final IClasspathEntry classpathEntry;
+	public final Map<String, Object> cargo;
 
-	public BindingRipperResult(IJavaProject javaProject, IJavaElement javaElement, IPackageFragmentRoot packageFragment, IPath path, String hexDigest, IPath sourceAttachmentPath, String packageName, String className, String methodName) {
+	public BindingRipperResult(IBinding binding, IJavaProject javaProject, IJavaElement javaElement, IPackageFragmentRoot packageFragment, IPath path, String hexDigest, IPath sourceAttachmentPath, String packageName, String className, String methodName, Map<String, Object> cargo) {
 		super();
+		this.binding = binding;
 		try {
+			this.cargo = cargo;
 			this.javaElement = javaElement;
 			this.javaProject = javaProject;
 			this.packageFragment = packageFragment;

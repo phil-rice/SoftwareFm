@@ -7,6 +7,7 @@ import java.util.concurrent.Callable;
 
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.core.plugin.SelectedArtifactSelectionManager;
 import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.BoundTitleAndTextField;
 import org.softwareFm.displayCore.api.DisplayerContext;
@@ -46,8 +47,11 @@ public class JavadocPanel extends Composite {
 				try {
 					new URL(txtRepository.getText());
 					assert ripped != null;
-					JavaProjects.setJavadoc(ripped.javaProject, ripped.classpathEntry, txtRepository.getText());
-					txtLocal.setText(txtRepository.getText());
+					BindingRipperResult uptoDate = SelectedArtifactSelectionManager.reRip(ripped);
+					if (uptoDate != null) {
+						JavaProjects.setJavadoc(uptoDate.javaProject, uptoDate.classpathEntry, txtRepository.getText());
+						txtLocal.setText(txtRepository.getText());
+					}
 				} catch (MalformedURLException e) {
 					throw WrappedException.wrap(e);
 				}
@@ -60,8 +64,11 @@ public class JavadocPanel extends Composite {
 		ImageButtons.addRowButton(txtLocal, SwtBasicConstants.clearKey, SourceConstants.clearHelpKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
-				JavaProjects.setJavadoc(ripped.javaProject, ripped.classpathEntry, "");
-				txtLocal.setText("");
+				BindingRipperResult uptoDate = SelectedArtifactSelectionManager.reRip(ripped);
+				if (uptoDate != null) {
+					JavaProjects.setJavadoc(uptoDate.javaProject, uptoDate.classpathEntry, "");
+					txtLocal.setText("");
+				}
 			}
 		});
 		ImageButtons.addHelpButton(txtLocal, DisplayJavadocConstants.localKey);
