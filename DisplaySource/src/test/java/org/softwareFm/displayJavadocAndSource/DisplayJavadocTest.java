@@ -4,7 +4,6 @@ import org.eclipse.swt.widgets.Control;
 import org.softwareFm.core.plugin.AbstractDisplayerTest;
 import org.softwareFm.displayCore.api.IDisplayer;
 
-
 public class DisplayJavadocTest extends AbstractDisplayerTest<JavadocPanel, Control> {
 
 	@Override

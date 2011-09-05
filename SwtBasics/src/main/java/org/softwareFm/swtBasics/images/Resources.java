@@ -68,7 +68,10 @@ public class Resources {
 	}
 
 	public static String getOrException(IResourceGetter resourceGetter, String key) {
-		return IResourceGetter.Utils.get(resourceGetter, key);
+		String result = IResourceGetter.Utils.get(resourceGetter, key);
+		if (result == null)
+			throw new RuntimeException(MessageFormat.format(SwtBasicConstants.missingResource, key));
+		return result;
 	}
 
 }

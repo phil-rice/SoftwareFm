@@ -1,6 +1,7 @@
 package org.softwareFm.displayCore.api;
 
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.widgets.Display;
 import org.softwareFm.panel.ISelectedBindingManager;
 import org.softwareFm.repository.api.ISoftwareFmRepository;
 import org.softwareFm.repository.api.IUrlGeneratorMap;
@@ -22,6 +23,18 @@ public class DisplayerContext {
 		this.repository = repository;
 		this.configForTitleAnd = configForTitleAnd;
 		this.resourceGetter = configForTitleAnd.resourceGetter;
+	}
+
+	public static class Utils {
+		public static DisplayerContext forTest(Display display, IResourceGetter resourceGetter, ImageRegistry imageRegistry) {
+			DisplayerContext displayerContext = new DisplayerContext(//
+					ISelectedBindingManager.Utils.noSelectedBindingManager(), //
+					ISoftwareFmRepository.Utils.repository(), //
+					IUrlGeneratorMap.Utils.urlGeneratorMap(), //
+					ConfigForTitleAnd.create(display, resourceGetter, imageRegistry));
+			return displayerContext;
+
+		}
 	}
 
 }

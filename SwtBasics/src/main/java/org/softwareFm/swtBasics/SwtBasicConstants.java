@@ -22,6 +22,7 @@ public class SwtBasicConstants {
 	public static final String noValueSet = "Cannot use this button because value is blank";
 	public static final String cannotFindImage = "Cannot find image with name {0}";
 	public static final String errorMakingImage = "Error making image. Name {0} Anchor {1}";
+	public static final String missingResource = "Cannot find a resource with name [{0}]";
 
 	// resource key prefixes
 	public static final String key = "Edit";
@@ -31,5 +32,7 @@ public class SwtBasicConstants {
 	public static final String browseKey = "Browse";
 
 	public static final String clearKey = "Clear";
+
+	public static final String folderKey = "Folder";
 
 }

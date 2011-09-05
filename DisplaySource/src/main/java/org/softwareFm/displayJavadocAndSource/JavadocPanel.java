@@ -1,101 +1,105 @@
 package org.softwareFm.displayJavadocAndSource;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
+import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.core.plugin.SelectedArtifactSelectionManager;
 import org.softwareFm.displayCore.api.BindingContext;
-import org.softwareFm.displayCore.api.BoundTitleAndTextField;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
+import org.softwareFm.displayCore.constants.DisplayCoreConstants;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.jdtBinding.api.JavaProjects;
+import org.softwareFm.repository.api.RepositoryDataItemStatus;
 import org.softwareFm.swtBasics.SwtBasicConstants;
 import org.softwareFm.swtBasics.Swts;
-import org.softwareFm.swtBasics.images.IImageButtonListener;
-import org.softwareFm.swtBasics.images.ImageButton;
-import org.softwareFm.swtBasics.images.ImageButtons;
-import org.softwareFm.swtBasics.text.TitleAndTextField;
-import org.softwareFm.utilities.exceptions.WrappedException;
-import org.softwareFm.utilities.strings.Strings;
+import org.softwareFm.swtBasics.images.Images;
+import org.softwareFm.swtBasics.images.Resources;
+import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.resources.IResourceGetter;
 
-public class JavadocPanel extends Composite {
+public class JavadocPanel extends JavadocOrSourcePanel {
 
-	private final ImageButton btnAttach;
-	private final TitleAndTextField txtLocal;
-	private final BoundTitleAndTextField txtRepository;
-	private BindingRipperResult ripped;
-
-	public JavadocPanel(Composite parent, int style, DisplayerContext context, DisplayerDetails displayerDetails) {
-		super(parent, style);
-		setLayout(new GridLayout());
-		txtRepository = new BoundTitleAndTextField(this, context, displayerDetails.withKey(DisplayJavadocConstants.repositoryKey));
-		ImageButtons.addBrowseButton(txtRepository, new Callable<String>() {
-			@Override
-			public String call() throws Exception {
-				return txtRepository.getText();
-			}
-		});
-		txtRepository.addEditButton();
-		btnAttach = ImageButtons.addRowButton(txtRepository, DisplayJavadocConstants.linkImageKey, DisplayJavadocConstants.linkKey, new IImageButtonListener() {
-			@Override
-			public void buttonPressed(ImageButton button) {
-				try {
-					new URL(txtRepository.getText());
-					assert ripped != null;
-					BindingRipperResult uptoDate = SelectedArtifactSelectionManager.reRip(ripped);
-					if (uptoDate != null) {
-						JavaProjects.setJavadoc(uptoDate.javaProject, uptoDate.classpathEntry, txtRepository.getText());
-						txtLocal.setText(txtRepository.getText());
-					}
-				} catch (MalformedURLException e) {
-					throw WrappedException.wrap(e);
-				}
-
-			}
-		});
-		ImageButtons.addHelpButton(txtRepository, DisplayJavadocConstants.repositoryKey);
-
-		txtLocal = new TitleAndTextField(context.configForTitleAnd, this, DisplayJavadocConstants.localKey);
-		ImageButtons.addRowButton(txtLocal, SwtBasicConstants.clearKey, SourceConstants.clearHelpKey, new IImageButtonListener() {
-			@Override
-			public void buttonPressed(ImageButton button) {
-				BindingRipperResult uptoDate = SelectedArtifactSelectionManager.reRip(ripped);
-				if (uptoDate != null) {
-					JavaProjects.setJavadoc(uptoDate.javaProject, uptoDate.classpathEntry, "");
-					txtLocal.setText("");
-				}
-			}
-		});
-		ImageButtons.addHelpButton(txtLocal, DisplayJavadocConstants.localKey);
-		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
+	public JavadocPanel(Composite parent, int style, DisplayerContext displayerContext, DisplayerDetails displayerDetails) {
+		super(parent, style, displayerContext, displayerDetails, DisplayJavadocConstants.linkKey);
 	}
 
-	public void setValue(BindingContext bindingContext, BindingRipperResult ripped) {
-		this.ripped = ripped;
-		Map<String, Object> data = bindingContext.data;
-		String repositoryValue = (String) (data == null ? null : data.get(DisplayJavadocConstants.repositoryKey));
-		txtRepository.setLastBindingContext(bindingContext);
-		txtRepository.setText(Strings.nullSafeToString(repositoryValue));
-		txtLocal.setText(ripped == null || ripped.classpathEntry == null ? null : JavaProjects.findJavadocFor(ripped.classpathEntry));
-		updateButtonStatus(repositoryValue);
+	@Override
+	public void sendToEclipse(String value) {
+		BindingRipperResult ripped = (BindingRipperResult) bindingContext.context.get(DisplayCoreConstants.ripperResult);
+		BindingRipperResult uptoDate = SelectedArtifactSelectionManager.reRip(ripped);
+		if (uptoDate != null)
+			JavaProjects.setJavadoc(uptoDate.javaProject, uptoDate.classpathEntry, value);
 	}
 
-	private void updateButtonStatus(String value) {
-		if ("".equals(value))
-			btnAttach.disableButton(SwtBasicConstants.noValueSet);
-		else {
-			try {
-				new URL(value);
-				btnAttach.enableButton();
-			} catch (MalformedURLException e) {
-				btnAttach.disableButton(DisplayJavadocConstants.valueNeedsToBeUrl);
-			}
+	@Override
+	protected String findEclipseValue(BindingContext bindingContext) throws Exception {
+		if (bindingContext != null) {
+			Map<String, Object> context = bindingContext.context;
+			BindingRipperResult ripped = (BindingRipperResult) context.get(DisplayCoreConstants.ripperResult);
+			BindingRipperResult updated = SelectedArtifactSelectionManager.reRip(ripped);
+			String javadoc = updated == null ? null : JavaProjects.findJavadocFor(updated.classpathEntry);
+			return javadoc;
 		}
+		return null;
+	}
+
+	@Override
+	protected void openEclipseValue(String eclipseValue) {
+		browseOrOpenFile(eclipseValue);
+	}
+
+	public static void main(String[] args) {
+		Swts.display("Javadoc", new IFunction1<Composite, Composite>() {
+			@Override
+			public Composite apply(Composite from) throws Exception {
+				ImageRegistry imageRegistry = Images.withBasics(from.getDisplay());
+				Images.registerImages(from.getDisplay(), imageRegistry, Images.class, SwtBasicConstants.folderKey);
+				Images.registerImages(from.getDisplay(), imageRegistry, DisplayJavadocConstants.class, "Javadoc.link");
+				IResourceGetter resourceGetter = Resources.resourceGetterWithBasics().with(DisplayJavadocConstants.class, "JavadocAndSource");
+				Composite composite = new Composite(from, SWT.NULL);
+				composite.setLayout(new GridLayout());
+				final String key = "javadoc.repository";
+
+				DisplayerContext displayerContext = DisplayerContext.Utils.forTest(from.getDisplay(), resourceGetter, imageRegistry);
+				DisplayerDetails displayerDetails = new DisplayerDetails("anyEntity", Maps.<String, String> makeMap(DisplayCoreConstants.key, key));
+
+				final JavadocPanel panel = new JavadocPanel(composite, SWT.NULL, displayerContext, displayerDetails);
+				addButton(composite, panel, "null/null", key, null, null);
+				addButton(composite, panel, "SFM/null", key, "SFM", null);
+				addButton(composite, panel, "null/Ecl", key, null, "C:\\");
+				addButton(composite, panel, "SFM/Ecl", key, "SFM", "C:\\");
+				Swts.addGrabHorizontalAndFillGridDataToAllChildren(composite);
+				return composite;
+			}
+
+			private void addButton(Composite composite, final JavadocOrSourcePanel panel, String label, final String key, final String softwareFmValue, final String eclipseValue) {
+				Button state1 = new Button(composite, SWT.PUSH);
+				state1.setText(label);
+				SelectionAdapter listener = new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						Map<String, Object> data = Maps.<String, Object> makeMap("x", eclipseValue, key, softwareFmValue);
+						Map<String, Object> context = Maps.<String, Object> newMap();
+						panel.setValue(new BindingContext(RepositoryDataItemStatus.FOUND, "url", data, context));
+					}
+
+				};
+				state1.addSelectionListener(listener);
+			}
+		});
+	}
+
+	@Override
+	public void clearEclipseValue() {
+		sendToEclipse("");
 	}
 
 }

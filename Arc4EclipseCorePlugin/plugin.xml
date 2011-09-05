@@ -16,6 +16,7 @@
       <image key="Add" class ="org.softwareFm.swtBasics.images.Images"/>
       <image key="Delete" class ="org.softwareFm.swtBasics.images.Images"/>
       <image key="Clear" class ="org.softwareFm.swtBasics.images.Images"/>
+      <image key="Folder" class ="org.softwareFm.swtBasics.images.Images"/>
 </extension>
 
 <extension  point="org.softwareFm.bundle">

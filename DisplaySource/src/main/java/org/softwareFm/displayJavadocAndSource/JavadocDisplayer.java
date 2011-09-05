@@ -17,7 +17,7 @@ public class JavadocDisplayer extends AbstractDisplayerWithLabel<JavadocPanel> {
 
 	@Override
 	public void populateLargeControl(BindingContext bindingContext, JavadocPanel largeControl, Object value) {
-		largeControl.setValue(bindingContext, getBindingRipperResult(bindingContext));
+		largeControl.setValue(bindingContext);
 
 	}
 }

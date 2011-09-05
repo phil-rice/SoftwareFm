@@ -1,6 +1,7 @@
 package org.softwareFm.swtBasics.images;
 
 import java.awt.Desktop;
+import java.io.File;
 import java.net.URI;
 import java.text.MessageFormat;
 import java.util.concurrent.Callable;
@@ -52,8 +53,10 @@ abstract public class ImageButtons {
 				}
 			}
 		});
-		String fullKey = MessageFormat.format(tooltipPattern, tooltipKey);
-		button.setTooltipText(IResourceGetter.Utils.get(parent.getResourceGetter(), fullKey));
+		if (tooltipKey != null) {
+			String fullKey = MessageFormat.format(tooltipPattern, tooltipKey);
+			button.setTooltipText(IResourceGetter.Utils.get(parent.getResourceGetter(), fullKey));
+		}
 		RowData data = new RowData();
 		data.height = 18;
 		data.width = 18;
@@ -75,7 +78,16 @@ abstract public class ImageButtons {
 		return helpButton;
 	}
 
-	public static void addEditButton(IButtonParent parent, IImageButtonListener listener) {
-		addRowButton(parent, SwtBasicConstants.key, SwtBasicConstants.key, listener);
+	public static ImageButton addEditButton(IButtonParent parent, IImageButtonListener listener) {
+		return addRowButton(parent, SwtBasicConstants.key, SwtBasicConstants.key, listener);
+	}
+
+	public static ImageButton addOpenFolderButton(IButtonParent buttonParent, String tooltipKey, final Callable<File> callable) {
+		return addRowButton(buttonParent, SwtBasicConstants.folderKey, tooltipKey, new IImageButtonListener() {
+			@Override
+			public void buttonPressed(ImageButton button) throws Exception {
+				Desktop.getDesktop().open(callable.call());
+			}
+		});
 	}
 }

@@ -59,7 +59,11 @@ public class ImageButton implements IHasControl {
 						state = !state;
 					updateImage();
 					for (IImageButtonListener listener : listeners)
-						listener.buttonPressed(ImageButton.this);
+						try {
+							listener.buttonPressed(ImageButton.this);
+						} catch (Exception e1) {
+							throw WrappedException.wrap(e1);
+						}
 				}
 			}
 
@@ -128,10 +132,10 @@ public class ImageButton implements IHasControl {
 		return label;
 	}
 
-	public Image getImage(){
+	public Image getImage() {
 		return label.getImage();
 	}
-	
+
 	public static void main(String[] args) {
 		Swts.display("Label", new IFunction1<Composite, Composite>() {
 			@Override
@@ -160,6 +164,11 @@ public class ImageButton implements IHasControl {
 
 	public void setLayoutData(RowData data) {
 		this.label.setLayoutData(data);
+
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 
 	}
 }

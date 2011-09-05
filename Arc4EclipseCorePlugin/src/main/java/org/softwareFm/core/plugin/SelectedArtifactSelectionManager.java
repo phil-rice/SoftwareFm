@@ -52,6 +52,8 @@ public class SelectedArtifactSelectionManager implements ISelectedBindingManager
 	}
 
 	public static BindingRipperResult reRip(BindingRipperResult result) {
+		if (result == null)
+			return null;
 		Map<String, Object> cargo = result.cargo;
 		TextSelection selection = (TextSelection) cargo.get(SelectionConstants.selectionKey);
 		IBindingRipper ripper = (IBindingRipper) cargo.get(SelectionConstants.ripperKey);

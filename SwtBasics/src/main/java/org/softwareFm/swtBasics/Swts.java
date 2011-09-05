@@ -13,6 +13,7 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -20,6 +21,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.softwareFm.swtBasics.images.ImageButton;
+import org.softwareFm.swtBasics.text.ConfigForTitleAnd;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -131,6 +134,17 @@ public class Swts {
 				Assert.fail("Child " + index + "/" + c + " is in wrong order\nExpected " + controls + "\naActual: " + children);
 
 		}
+
+	}
+
+	public static void setRowData(ConfigForTitleAnd config, ImageButton... buttons) {
+		for (ImageButton button : buttons)
+			button.setLayoutData(new RowData(config.buttonHeight, config.buttonHeight));
+	}
+
+	public static <C extends Control> void setRowDataFor(int width, int height, C... controls) {
+		for (Control control : controls)
+			control.setLayoutData(new RowData(width, height));
 
 	}
 
