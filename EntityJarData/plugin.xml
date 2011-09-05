@@ -7,7 +7,6 @@
 
    <extension  point="org.softwareFm.displayContainerFactoryConfigurator">
          <DisplayContainerFactoryConfigurator name="jar" entity="jar" class= "org.softwareFm.entityJarData.JarConfigurer" />
-         <DisplayContainerFactoryConfigurator name="jarSummary" class= "org.softwareFm.entityJarData.JarSummaryConfigurer" />
    </extension>
 
 

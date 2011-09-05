@@ -202,6 +202,8 @@ public class SoftwareFmActivator extends AbstractUIPlugin implements IRepository
 					@Override
 					public void process(IDisplayContainerFactoryConfigurer t, IConfigurationElement element) {
 						String thisViewName = element.getAttribute("name");
+						if (thisViewName == null)
+							throw new IllegalArgumentException(MessageFormat.format(DisplayCoreConstants.attributeMissing, "name", t.getClass()));
 						if (viewName.equals(thisViewName))
 							t.configure(factory);
 					}

@@ -25,7 +25,9 @@ abstract public class AbstractSelectedArtifactView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		Activator activator = Activator.getDefault();
-		displayContainer = activator.makeDisplayContainer(parent, getViewName(), getEntityName());
+		String viewName = getViewName();
+		String entityName = getEntityName();
+		displayContainer = activator.makeDisplayContainer(parent, viewName, entityName);
 		activator.getRepository().addStatusListener(displayContainer);
 	}
 

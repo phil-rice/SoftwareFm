@@ -3,8 +3,6 @@ package org.softwareFm.repository.constants;
 public class RepositoryConstants {
 	public static final String hexDigestKey = "hexDigest";
 	public static final String jarDetailsKey = "jarPath";
-	public static final String javadocKey = "javadoc";
-	public static final String sourceKey = "source";
 
 	public static final String entity = "entity";
 	public static final String entityJar = "jar";

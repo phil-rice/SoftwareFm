@@ -1,7 +1,6 @@
 package org.softwareFm.utilities.collections;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -19,10 +18,12 @@ public class SimpleLists {
 
 	public static <T> ISimpleList<T> simpleList(final T... ts) {
 		return new ISimpleList<T>() {
+			@Override
 			public int size() {
 				return ts.length;
 			}
 
+			@Override
 			public T get(int index) {
 				return ts[index];
 			}
@@ -33,10 +34,12 @@ public class SimpleLists {
 
 	public static <T> ISimpleList<T> fromList(final List<T> list) {
 		return new ISimpleList<T>() {
+			@Override
 			public int size() {
 				return list.size();
 			}
 
+			@Override
 			public T get(int index) {
 				return list.get(index);
 			}
@@ -52,18 +55,18 @@ public class SimpleLists {
 				super(low, high, maxForOneThread);
 			}
 
-			
+			@Override
 			protected IAggregator<To, Result> combine(IAggregator<To, Result> left, IAggregator<To, Result> right) {
 				assert left == right;
 				return left;
 			}
 
-			
+			@Override
 			protected RangeProcess<IAggregator<To, Result>> makeProcess(int low, int high) {
 				return new AggregateProcess(low, high);
 			}
 
-			
+			@Override
 			protected IAggregator<To, Result> doInRange() throws Exception {
 				for (int i = low; i < high; i++)
 					aggregator.add(mapFunction.apply(from.get(i)));
@@ -78,7 +81,6 @@ public class SimpleLists {
 	public static <From, To, Result> Future<IAggregator<Result, Result>> mapTwoAggregators(final int maxForOneThread, ForkJoinPool pool, final ISimpleList<From> from, //
 			final IAggregator<Result, Result> middleAggregator, final Callable<IAggregator<To, Result>> leafAggregator, final IFunction1<From, To> mapFunction) {
 
-	
 		class AggregateProcess extends RecursiveTask<IAggregator<Result, Result>> {
 			private final int low;
 			private final int high;
@@ -88,7 +90,7 @@ public class SimpleLists {
 				this.high = high;
 			}
 
-			
+			@Override
 			protected IAggregator<Result, Result> compute() {
 				try {
 					if (high - low <= maxForOneThread) {
@@ -123,17 +125,17 @@ public class SimpleLists {
 				super(low, high, maxForOneThread);
 			}
 
-			
+			@Override
 			protected Result combine(Result left, Result right) {
 				return aggregateFunction.apply(left, right);
 			}
 
-			
+			@Override
 			protected RangeProcess<Result> makeProcess(int low, int high) {
 				return new FoldRangeProcess(low, high);
 			}
 
-			
+			@Override
 			protected Result doInRange() throws Exception {
 				Result value = initial;
 				for (int i = low; i < high; i++) {
@@ -158,7 +160,8 @@ public class SimpleLists {
 
 	public static <T> Iterable<T> asIterable(final ISimpleList<T> simpleList) {
 		return new AbstractFindNextIterable<T, AtomicInteger>() {
-			
+
+			@Override
 			protected T findNext(AtomicInteger context) throws Exception {
 				int index = context.getAndIncrement();
 				if (index >= simpleList.size())
@@ -166,7 +169,7 @@ public class SimpleLists {
 				return simpleList.get(index);
 			}
 
-			
+			@Override
 			protected AtomicInteger reset() throws Exception {
 				return new AtomicInteger();
 			}
@@ -194,7 +197,7 @@ abstract class RangeProcess<Result> extends RecursiveTask<Result> {
 		this.max = max;
 	}
 
-	
+	@Override
 	protected Result compute() {
 		try {
 			if (high - low <= max) {
