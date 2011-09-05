@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
@@ -35,7 +34,6 @@ import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwareFm.utilities.strings.Strings;
 
 public abstract class JavadocOrSourcePanel extends Composite implements IButtonParent, ISendToEclipseOrRepository {
 
@@ -45,10 +43,10 @@ public abstract class JavadocOrSourcePanel extends Composite implements IButtonP
 	private String eclipseValue;
 	private String repositoryValue;
 
-	private ImageButton browseButton;
-	private ImageButton editButton;
-	private ImageButton folderButton;
-	private ImageButton attachButton;
+	private final ImageButton browseButton;
+	private final ImageButton editButton;
+	private final ImageButton folderButton;
+	private final ImageButton attachButton;
 	protected BindingContext bindingContext;
 	protected final DisplayerDetails displayerDetails;
 	protected final DisplayerContext displayerContext;
@@ -69,10 +67,10 @@ public abstract class JavadocOrSourcePanel extends Composite implements IButtonP
 		String title = Resources.getTitle(config.resourceGetter, key);
 		label.setText(title);
 		label.setLayoutData(new RowData(config.titleWidth, config.titleHeight));
-		browseButton = ImageButtons.addBrowseButton(this, new Callable<String>() {
+		browseButton = ImageButtons.addRowButton(this, SwtBasicConstants.browseKey, SwtBasicConstants.browseKey, new IImageButtonListener() {
 			@Override
-			public String call() throws Exception {
-				return Strings.nullSafeToString(repositoryValue);
+			public void buttonPressed(ImageButton button) {
+				browseOrOpenFile(repositoryValue);
 			}
 		});
 		folderButton = ImageButtons.addRowButton(this, SwtBasicConstants.folderKey, null, new IImageButtonListener() {
@@ -159,12 +157,10 @@ public abstract class JavadocOrSourcePanel extends Composite implements IButtonP
 			File file = new File(eclipseValue);
 			if (file.exists())
 				try {
-					if (file.isDirectory())
-						Desktop.getDesktop().open(file);
-					else
-						Desktop.getDesktop().open(file.getParentFile());
+					Desktop.getDesktop().open(file);
 				} catch (IOException e1) {
 					e.printStackTrace();
+					throw WrappedException.wrap(e1);
 				}
 		}
 	}

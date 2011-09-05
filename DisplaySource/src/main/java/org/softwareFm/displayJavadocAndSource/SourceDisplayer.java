@@ -12,7 +12,7 @@ public class SourceDisplayer extends AbstractDisplayerWithLabel<SourcePanel> {
 
 	@Override
 	public SourcePanel createLargeControl(DisplayerContext context, IRegisteredItems registeredItems, Composite parent, DisplayerDetails displayerDetails) {
-		return new SourcePanel(parent, SWT.NULL, context, displayerDetails, DisplaySourceConstants.repositoryKey);
+		return new SourcePanel(parent, SWT.NULL, context, displayerDetails, DisplaySourceConstants.linkKey);
 	}
 
 	@Override
