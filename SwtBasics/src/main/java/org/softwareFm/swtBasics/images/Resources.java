@@ -59,7 +59,7 @@ public class Resources {
 
 	private static String getResourceOrException(IResourceGetter resourceGetter, String pattern, String key) {
 		String fullKey = MessageFormat.format(pattern, key);
-		String result = IResourceGetter.Utils.get(resourceGetter, fullKey);
+		String result = getOrException(resourceGetter, fullKey);
 		return result;
 	}
 

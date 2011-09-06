@@ -13,4 +13,7 @@
       <extension  point="org.softwareFm.displayContainerFactoryConfigurator">
          <DisplayContainerFactoryConfigurator name="project" class= "org.softwareFm.entityProjectData.ProjectConfigurer" />
    </extension>
+   	<extension  point="org.softwareFm.bundle">
+	      <bundle name="EntityProject" class="org.softwareFm.entityProjectData.EntityProjectConstants"/>
+	</extension>
 </plugin>

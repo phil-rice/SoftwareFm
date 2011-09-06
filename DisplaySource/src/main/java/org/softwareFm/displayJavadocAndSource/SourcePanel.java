@@ -11,8 +11,8 @@ import org.softwareFm.jdtBinding.api.JavaProjects;
 
 public class SourcePanel extends JavadocOrSourcePanel {
 
-	public SourcePanel(Composite parent, int style, DisplayerContext displayerContext, DisplayerDetails displayerDetails, String linkKey) {
-		super(parent, style, displayerContext, displayerDetails, linkKey);
+	public SourcePanel(Composite parent, int style, DisplayerContext displayerContext, DisplayerDetails displayerDetails) {
+		super(parent, style, displayerContext, displayerDetails, DisplaySourceConstants.linkKey);
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class SourcePanel extends JavadocOrSourcePanel {
 	protected String findEclipseValue(BindingContext bindingContext) throws Exception {
 		BindingRipperResult ripped = (BindingRipperResult) bindingContext.context.get(DisplayCoreConstants.ripperResult);
 		BindingRipperResult uptoDate = SelectedArtifactSelectionManager.reRip(ripped);
-		if (uptoDate != null)
+		if (uptoDate != null && uptoDate.packageFragment != null && uptoDate.packageFragment.getSourceAttachmentPath() != null)
 			return uptoDate.packageFragment.getSourceAttachmentPath().toOSString();
 		else
 			return null;

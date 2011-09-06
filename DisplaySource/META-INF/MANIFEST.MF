@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.softwareFm.displaySource
-Bundle-SymbolicName: org.softwareFm.displaySource;singleton:=true
+Bundle-Name: org.softwareFm.displayJavadocAndSource
+Bundle-SymbolicName: org.softwareFm.displayJavadocAndSource;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: softwareFm
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

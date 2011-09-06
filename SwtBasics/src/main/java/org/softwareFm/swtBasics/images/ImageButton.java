@@ -43,6 +43,10 @@ public class ImageButton implements IHasControl {
 	private final String key;
 
 	public ImageButton(Composite parent, ImageRegistry imageRegistry, String key, final boolean toggle) {
+		this(parent, imageRegistry, key, null, toggle);
+	}
+
+	public ImageButton(Composite parent, ImageRegistry imageRegistry, String key, String overlayKey, final boolean toggle) {
 		this.imageRegistry = imageRegistry;
 		this.key = key;
 		this.label = new Label(parent, SWT.NULL);
@@ -71,6 +75,17 @@ public class ImageButton implements IHasControl {
 			public void mouseDoubleClick(MouseEvent e) {
 			}
 		});
+	}
+
+	public void setOverlayImage(String key) {
+
+	}
+
+	public void clearSmallIcons() {
+	}
+
+	public void setSmallIcon(SmallIconPosition position, String key) {
+
 	}
 
 	public void setTooltipText(String tooltipText) {

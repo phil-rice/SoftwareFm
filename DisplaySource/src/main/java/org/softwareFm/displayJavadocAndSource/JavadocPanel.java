@@ -62,11 +62,11 @@ public class JavadocPanel extends JavadocOrSourcePanel {
 			public Composite apply(Composite from) throws Exception {
 				ImageRegistry imageRegistry = Images.withBasics(from.getDisplay());
 				Images.registerImages(from.getDisplay(), imageRegistry, Images.class, SwtBasicConstants.folderKey);
-				Images.registerImages(from.getDisplay(), imageRegistry, DisplayJavadocConstants.class, "Javadoc.link");
+				Images.registerImages(from.getDisplay(), imageRegistry, DisplayJavadocConstants.class, "javadoc.link");
 				IResourceGetter resourceGetter = Resources.resourceGetterWithBasics().with(DisplayJavadocConstants.class, "JavadocAndSource");
 				Composite composite = new Composite(from, SWT.NULL);
 				composite.setLayout(new GridLayout());
-				final String key = "javadoc.repository";
+				final String key = "javadoc";
 
 				DisplayerContext displayerContext = DisplayerContext.Utils.forTest(from.getDisplay(), resourceGetter, imageRegistry);
 				DisplayerDetails displayerDetails = new DisplayerDetails("anyEntity", Maps.<String, String> makeMap(DisplayCoreConstants.key, key));

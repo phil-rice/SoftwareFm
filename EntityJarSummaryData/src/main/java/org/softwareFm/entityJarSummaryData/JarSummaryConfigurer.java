@@ -8,8 +8,6 @@ public class JarSummaryConfigurer extends AbstractDisplayContainerFactoryConfigu
 	@Override
 	public void configure(IDisplayContainerFactory factory) {
 		factory.register(makeMap("jarData", "jarSummary", "Jar"));
-		factory.register(makeMap("javadoc", "javadoc", "javadoc"));
-		factory.register(makeMap("source", "src", "source"));
 	}
 
 }

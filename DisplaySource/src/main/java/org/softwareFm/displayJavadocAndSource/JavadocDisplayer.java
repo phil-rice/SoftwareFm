@@ -12,7 +12,7 @@ public class JavadocDisplayer extends AbstractDisplayerWithLabel<JavadocPanel> {
 
 	@Override
 	public JavadocPanel createLargeControl(DisplayerContext context, IRegisteredItems registeredItems, Composite parent, DisplayerDetails displayerDetails) {
-		return new JavadocPanel(parent, SWT.BORDER, context, displayerDetails);
+		return new JavadocPanel(parent, SWT.NULL, context, displayerDetails);
 	}
 
 	@Override
