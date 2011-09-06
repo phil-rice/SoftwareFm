@@ -29,7 +29,6 @@ public class AbstractTitleAnd extends Composite implements IButtonParent {
 		setLayout(layout);
 
 		compTitleAndButtons = new Composite(this, SWT.NULL);
-		compTitleAndButtons.setLayout(Swts.getHorizonalNoMarginRowLayout());
 		int height = config.titleHeight;
 		compTitleAndButtons.setLayoutData(new RowData(config.titleWidth + config.buttonsWidth, height));
 

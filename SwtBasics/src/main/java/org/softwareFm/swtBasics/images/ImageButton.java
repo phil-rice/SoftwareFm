@@ -13,6 +13,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
@@ -48,6 +49,7 @@ public class ImageButton implements IHasControl {
 	private final String key;
 	private final String overlayKey;
 	private final Map<SmallIconPosition, String> smallIconMap = Maps.newMap();
+	private final Composite content;
 
 	public ImageButton(Composite parent, ImageRegistry imageRegistry, String key, final boolean toggle) {
 		this(parent, imageRegistry, key, null, toggle);
@@ -57,7 +59,7 @@ public class ImageButton implements IHasControl {
 		this.imageRegistry = imageRegistry;
 		this.key = key;
 		this.overlayKey = overlayKey;
-		Composite content = new Composite(parent, SWT.NULL);
+		content = new Composite(parent, SWT.NULL);
 		content.setLayout(new GridLayout());
 		this.label = new Label(content, SWT.NULL);
 		label.addPaintListener(new PaintListener() {
@@ -101,7 +103,9 @@ public class ImageButton implements IHasControl {
 			public void mouseDoubleClick(MouseEvent e) {
 			}
 		});
-		Swts.addGrabHorizontalAndFillGridDataToAllChildren(content);
+		GridData data = Swts.makeGrabHorizonalAndFillGridData();
+		data.widthHint = 16;
+		label.setLayoutData(data);
 	}
 
 	public void clearSmallIcons() {
@@ -204,7 +208,7 @@ public class ImageButton implements IHasControl {
 	}
 
 	public void setLayoutData(RowData data) {
-		this.label.setLayoutData(data);
+		this.content.setLayoutData(data);
 
 	}
 

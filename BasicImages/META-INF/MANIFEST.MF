@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.softwareFm.basicImages
+Bundle-SymbolicName: org.softwareFm.basicImages;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: softwareFm
+Require-Bundle: org.softwareFm.swtBasics.images;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.softwareFm.basicImages

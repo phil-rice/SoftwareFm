@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Stack;
 
 import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.utilities.functions.IFunction1;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -196,5 +197,14 @@ public class Files {
 	public static String justName(File file) {
 		String name = file.getName();
 		return noExtension(name);
+	}
+
+	public static IFunction1<String, String> noExtension() {
+		return new IFunction1<String, String>() {
+			@Override
+			public String apply(String from) throws Exception {
+				return noExtension(from);
+			}
+		};
 	}
 }
