@@ -45,8 +45,6 @@ public class ImageButton implements IHasControl {
 	private boolean enabled = true;
 	private String tooltipText;
 	private String reasonForDisable;
-	private final ImageRegistry imageRegistry;
-	private final String key;
 	private final String overlayKey;
 	private final Map<SmallIconPosition, String> smallIconMap = Maps.newMap();
 	private final Composite content;
@@ -55,29 +53,35 @@ public class ImageButton implements IHasControl {
 		this(parent, imageRegistry, key, null, toggle);
 	}
 
-	public ImageButton(Composite parent, final ImageRegistry imageRegistry, String key, String overlayKey, final boolean toggle) {
-		this.imageRegistry = imageRegistry;
-		this.key = key;
+	public ImageButton(Composite parent, final ImageRegistry imageRegistry, final String key, String overlayKey, final boolean toggle) {
 		this.overlayKey = overlayKey;
 		content = new Composite(parent, SWT.NULL);
 		content.setLayout(new GridLayout());
 		this.label = new Label(content, SWT.NULL);
+		label.setImage(imageRegistry.get("backdrop.main"));
 		label.addPaintListener(new PaintListener() {
 			@Override
 			public void paintControl(PaintEvent e) {
+				if (state) {
+					Image depressed = imageRegistry.get("backdrop.depressed");
+					if (depressed == null)
+						throw new NullPointerException();
+					e.gc.drawImage(depressed, 0, 0);
+				}
+				Image mainImage = Images.getImage(imageRegistry, key);
+				e.gc.drawImage(mainImage, 2, 2);
 				Image overLayImage = imageRegistry.get(ImageButton.this.overlayKey);
 				if (overLayImage != null)
-					e.gc.drawImage(overLayImage, 0, 0);
+					e.gc.drawImage(overLayImage, 2, 2);
 				for (SmallIconPosition pos : SmallIconPosition.values()) {
 					String key = smallIconMap.get(pos);
 					if (key != null) {
 						Image image = Images.getImage(imageRegistry, key);
-						e.gc.drawImage(image, pos.x, pos.y);
+						e.gc.drawImage(image, pos.x + 2, pos.y + 2);
 					}
 				}
 			}
 		});
-		label.setImage(Images.getImage(imageRegistry, key));
 		label.addMouseListener(new MouseListener() {
 
 			@Override
@@ -88,8 +92,7 @@ public class ImageButton implements IHasControl {
 			public void mouseDown(MouseEvent e) {
 				if (enabled) {
 					if (toggle)
-						state = !state;
-					updateImage();
+						setState(!state);
 					for (IImageButtonListener listener : listeners)
 						try {
 							listener.buttonPressed(ImageButton.this);
@@ -104,7 +107,7 @@ public class ImageButton implements IHasControl {
 			}
 		});
 		GridData data = Swts.makeGrabHorizonalAndFillGridData();
-		data.widthHint = 16;
+		data.widthHint = 20;
 		label.setLayoutData(data);
 	}
 
@@ -134,17 +137,6 @@ public class ImageButton implements IHasControl {
 		label.setToolTipText(builder.toString());
 	}
 
-	private void updateImage() {
-		try {
-			if (state)
-				label.setImage(Images.getDepressedImage(imageRegistry, key));
-			else
-				label.setImage(Images.getMainImage(imageRegistry, key));
-		} catch (Exception e) {
-			throw WrappedException.wrap(e);
-		}
-	}
-
 	public void addListener(IImageButtonListener listener) {
 		listeners.add(listener);
 	}
@@ -169,7 +161,8 @@ public class ImageButton implements IHasControl {
 
 	public void setState(boolean state) {
 		this.state = state;
-		updateImage();
+		label.redraw();
+		label.update();
 	}
 
 	@Override

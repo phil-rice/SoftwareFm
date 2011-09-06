@@ -1,5 +1,6 @@
 package org.softwareFm.swtBasics.images;
 
+import java.io.File;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.List;
@@ -13,7 +14,14 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Label;
 import org.softwareFm.swtBasics.SwtBasicConstants;
+import org.softwareFm.swtBasics.artifacts.ArtifactsAnchor;
+import org.softwareFm.swtBasics.backdrop.BackdropAnchor;
+import org.softwareFm.swtBasics.overlays.OverlaysAnchor;
+import org.softwareFm.swtBasics.smallIcons.SmallIconsAnchor;
+import org.softwareFm.utilities.collections.Files;
+import org.softwareFm.utilities.collections.Iterables;
 import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.utilities.exceptions.WrappedException;
 import org.springframework.core.io.ClassPathResource;
 
 public class Images {
@@ -28,7 +36,27 @@ public class Images {
 		registerImages(device, imageRegistry, Images.class, SwtBasicConstants.deleteKey);
 		registerImages(device, imageRegistry, Images.class, SwtBasicConstants.browseKey);
 		registerImages(device, imageRegistry, Images.class, SwtBasicConstants.clearKey);
+
+		registerImagesInDirectory(device, imageRegistry, ArtifactsAnchor.class, "artifact", "jar");
+		registerImagesInDirectory(device, imageRegistry, BackdropAnchor.class, "backdrop", "main");
+		registerImagesInDirectory(device, imageRegistry, OverlaysAnchor.class, "overlay", "add");
+		registerImagesInDirectory(device, imageRegistry, SmallIconsAnchor.class, "smallIcon", "javadoc");
 		return imageRegistry;
+	}
+
+	public static Iterable<String> getNamesFor(Class<?> anchor, String anImageName) {
+		try {
+			File aFile = new ClassPathResource(anImageName, anchor).getFile();
+			File directory = aFile.getParentFile();
+			return Iterables.map(Iterables.iterable(directory.list(Files.extensionFilter("png"))), Files.noExtension());
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+	}
+
+	public static void registerImagesInDirectory(Device device, ImageRegistry imageRegistry, Class<?> anchor, String prefix, String aName) {
+		for (String name : getNamesFor(anchor, aName + ".png"))
+			imageRegistry.put(prefix + "." + name, Images.makeImage(device, anchor, name + ".png"));
 	}
 
 	public static void registerImages(Device device, ImageRegistry imageRegistry, Class<?> clazz, String key) {
