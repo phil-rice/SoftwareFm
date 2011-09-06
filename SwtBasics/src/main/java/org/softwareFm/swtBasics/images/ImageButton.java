@@ -1,15 +1,19 @@
 package org.softwareFm.swtBasics.images;
 
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -20,6 +24,7 @@ import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.strings.Strings;
 
 public class ImageButton implements IHasControl {
@@ -41,17 +46,38 @@ public class ImageButton implements IHasControl {
 	private String reasonForDisable;
 	private final ImageRegistry imageRegistry;
 	private final String key;
+	private final String overlayKey;
+	private final Map<SmallIconPosition, String> smallIconMap = Maps.newMap();
 
 	public ImageButton(Composite parent, ImageRegistry imageRegistry, String key, final boolean toggle) {
 		this(parent, imageRegistry, key, null, toggle);
 	}
 
-	public ImageButton(Composite parent, ImageRegistry imageRegistry, String key, String overlayKey, final boolean toggle) {
+	public ImageButton(Composite parent, final ImageRegistry imageRegistry, String key, String overlayKey, final boolean toggle) {
 		this.imageRegistry = imageRegistry;
 		this.key = key;
-		this.label = new Label(parent, SWT.NULL);
-		updateImage();
+		this.overlayKey = overlayKey;
+		Composite content = new Composite(parent, SWT.NULL);
+		content.setLayout(new GridLayout());
+		this.label = new Label(content, SWT.NULL);
+		label.addPaintListener(new PaintListener() {
+			@Override
+			public void paintControl(PaintEvent e) {
+				Image overLayImage = imageRegistry.get(ImageButton.this.overlayKey);
+				if (overLayImage != null)
+					e.gc.drawImage(overLayImage, 0, 0);
+				for (SmallIconPosition pos : SmallIconPosition.values()) {
+					String key = smallIconMap.get(pos);
+					if (key != null) {
+						Image image = Images.getImage(imageRegistry, key);
+						e.gc.drawImage(image, pos.x, pos.y);
+					}
+				}
+			}
+		});
+		label.setImage(Images.getImage(imageRegistry, key));
 		label.addMouseListener(new MouseListener() {
+
 			@Override
 			public void mouseUp(MouseEvent e) {
 			}
@@ -75,17 +101,17 @@ public class ImageButton implements IHasControl {
 			public void mouseDoubleClick(MouseEvent e) {
 			}
 		});
-	}
-
-	public void setOverlayImage(String key) {
-
+		Swts.addGrabHorizontalAndFillGridDataToAllChildren(content);
 	}
 
 	public void clearSmallIcons() {
+		smallIconMap.clear();
+		label.redraw();
 	}
 
 	public void setSmallIcon(SmallIconPosition position, String key) {
-
+		smallIconMap.put(position, key);
+		label.redraw();
 	}
 
 	public void setTooltipText(String tooltipText) {
@@ -107,9 +133,9 @@ public class ImageButton implements IHasControl {
 	private void updateImage() {
 		try {
 			if (state)
-				label.setImage(Images.getMainImage(imageRegistry, key));
-			else
 				label.setImage(Images.getDepressedImage(imageRegistry, key));
+			else
+				label.setImage(Images.getMainImage(imageRegistry, key));
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}

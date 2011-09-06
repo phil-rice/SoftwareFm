@@ -5,8 +5,13 @@ import java.text.MessageFormat;
 import java.util.List;
 
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Label;
 import org.softwareFm.swtBasics.SwtBasicConstants;
 import org.softwareFm.utilities.collections.Lists;
 import org.springframework.core.io.ClassPathResource;
@@ -66,6 +71,24 @@ public class Images {
 			image.dispose();
 		images.clear();
 
+	}
+
+	public static Image makeTransparentImage(Device device, Class<?> clazz, String classPath) {
+		ImageData imageData = new ImageData(clazz.getResourceAsStream(classPath));
+		int whitePixel = imageData.palette.getPixel(new RGB(255, 255, 255));
+		imageData.transparentPixel = whitePixel;
+		Image transparentImage = new Image(device, imageData);
+		images.add(transparentImage);
+		return transparentImage;
+	}
+
+	public static void drawTransparentImageOver(Label label, final Image transparentImage) {
+		label.addPaintListener(new PaintListener() {
+			@Override
+			public void paintControl(PaintEvent e) {
+				e.gc.drawImage(transparentImage, 0, 0);
+			}
+		});
 	}
 
 	public static Image makeImage(Device device, Class<?> clazz, String classPath) {
