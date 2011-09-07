@@ -1,4 +1,4 @@
-package org.softwareFm.swtBasics.images;
+package org.softwareFm.softwareFmImages.images;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -9,8 +9,11 @@ import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
+import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 import org.softwareFm.swtBasics.Swts;
-import org.softwareFm.swtBasics.overlays.OverlaysAnchor;
+import org.softwareFm.swtBasics.images.ImageButton;
+import org.softwareFm.swtBasics.images.Images;
+import org.softwareFm.swtBasics.images.SmallIconPosition;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 
@@ -25,7 +28,7 @@ public class ShowAllImages {
 		Swts.display("Images", new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				ImageRegistry imageRegistry = Images.withBasics(from.getDisplay());
+				ImageRegistry imageRegistry = SoftwareFmImages.withBasics(from.getDisplay());
 				Composite composite = new Composite(from, SWT.NULL);
 				Composite jarComposite = new Composite(composite, SWT.BORDER);
 

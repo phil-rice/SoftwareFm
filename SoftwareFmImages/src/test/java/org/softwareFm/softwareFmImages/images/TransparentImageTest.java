@@ -1,4 +1,4 @@
-package org.softwareFm.swtBasics.images;
+package org.softwareFm.softwareFmImages.images;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
@@ -8,6 +8,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.softwareFm.swtBasics.Swts;
+import org.softwareFm.swtBasics.images.Images;
 import org.softwareFm.utilities.functions.IFunction1;
 
 public class TransparentImageTest {

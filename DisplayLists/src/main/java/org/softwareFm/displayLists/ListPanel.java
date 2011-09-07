@@ -25,12 +25,12 @@ import org.softwareFm.panel.ISelectedBindingManager;
 import org.softwareFm.repository.api.ISoftwareFmRepository;
 import org.softwareFm.repository.api.IUrlGeneratorMap;
 import org.softwareFm.repository.api.RepositoryDataItemStatus;
+import org.softwareFm.softwareFmImages.images.SoftwareFmImages;
 import org.softwareFm.swtBasics.SwtBasicConstants;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.IImageButtonListener;
 import org.softwareFm.swtBasics.images.ImageButton;
 import org.softwareFm.swtBasics.images.ImageButtons;
-import org.softwareFm.swtBasics.images.Images;
 import org.softwareFm.swtBasics.images.Resources;
 import org.softwareFm.swtBasics.text.ConfigForTitleAnd;
 import org.softwareFm.swtBasics.text.IButtonParent;
@@ -193,7 +193,7 @@ public class ListPanel<T> extends Composite implements IButtonParent, ILineEdita
 								Resources.resourceGetterWithBasics(//
 										getClass().getPackage().getName() + ".ListAndPanelTest",//
 										getClass().getPackage().getName() + ".DisplayLists"),//
-								Images.withBasics(from.getDisplay())));
+								SoftwareFmImages.withBasics(from.getDisplay())));
 				DisplayerDetails displayerDetails = new DisplayerDetails("entity", Maps.<String, String> makeMap(//
 						DisplayCoreConstants.key, "ListKey",//
 						DisplayCoreConstants.lineEditorKey, "ignored"));

@@ -21,6 +21,7 @@ import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
 import org.softwareFm.displayCore.constants.DisplayCoreConstants;
 import org.softwareFm.repository.api.RepositoryDataItemStatus;
+import org.softwareFm.softwareFmImages.images.SoftwareFmImages;
 import org.softwareFm.swtBasics.SwtBasicConstants;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.IImageButtonListener;
@@ -169,7 +170,7 @@ public abstract class JavadocOrSourcePanel extends Composite implements IButtonP
 		Swts.display("Javadoc or Source", new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				ImageRegistry imageRegistry = Images.withBasics(from.getDisplay());
+				ImageRegistry imageRegistry = SoftwareFmImages.withBasics(from.getDisplay());
 				Images.registerImages(from.getDisplay(), imageRegistry, Images.class, SwtBasicConstants.folderKey);
 				Images.registerImages(from.getDisplay(), imageRegistry, DisplayJavadocConstants.class, "Javadoc.link");
 				IResourceGetter resourceGetter = Resources.resourceGetterWithBasics().with(DisplayJavadocConstants.class, "JavadocAndSource");

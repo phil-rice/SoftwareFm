@@ -1,4 +1,4 @@
-package org.softwareFm.swtBasics.images;
+package org.softwareFm.softwareFmImages.images;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
@@ -8,6 +8,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.swtBasics.Swts;
+import org.softwareFm.swtBasics.images.ImageButton;
+import org.softwareFm.swtBasics.images.Images;
+import org.softwareFm.swtBasics.images.SmallIconPosition;
 import org.softwareFm.utilities.functions.IFunction1;
 
 public class ImageButtonDemo {
@@ -21,7 +24,7 @@ public class ImageButtonDemo {
 			public Composite apply(Composite from) throws Exception {
 				Composite content = new Composite(from, SWT.NULL);
 				content.setLayout(new GridLayout());
-				ImageRegistry imageRegistry = Images.withBasics(from.getDisplay());
+				ImageRegistry imageRegistry = SoftwareFmImages.withBasics(from.getDisplay());
 				imageRegistry.put(mainImage, Images.makeImage(from.getDisplay(), Images.class, mainImage + ".png"));
 				imageRegistry.put(overlayImage, Images.makeImage(from.getDisplay(), Images.class, "test.overlayImage.png"));
 				imageRegistry.put(smallIcon, Images.makeImage(from.getDisplay(), Images.class, "test.smallIcon.png"));

@@ -17,6 +17,7 @@ import org.softwareFm.displayCore.constants.DisplayCoreConstants;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.jdtBinding.api.JavaProjects;
 import org.softwareFm.repository.api.RepositoryDataItemStatus;
+import org.softwareFm.softwareFmImages.images.SoftwareFmImages;
 import org.softwareFm.swtBasics.SwtBasicConstants;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.Images;
@@ -60,7 +61,7 @@ public class JavadocPanel extends JavadocOrSourcePanel {
 		Swts.display("Javadoc", new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				ImageRegistry imageRegistry = Images.withBasics(from.getDisplay());
+				ImageRegistry imageRegistry = SoftwareFmImages.withBasics(from.getDisplay());
 				Images.registerImages(from.getDisplay(), imageRegistry, Images.class, SwtBasicConstants.folderKey);
 				Images.registerImages(from.getDisplay(), imageRegistry, DisplayJavadocConstants.class, "javadoc.link");
 				IResourceGetter resourceGetter = Resources.resourceGetterWithBasics().with(DisplayJavadocConstants.class, "JavadocAndSource");

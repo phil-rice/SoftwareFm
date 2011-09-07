@@ -24,18 +24,6 @@ public class Images {
 
 	private static List<Image> images = Lists.newList();
 
-	public static ImageRegistry withBasics(Device device) {
-		ImageRegistry imageRegistry = new ImageRegistry();
-		registerImages(device, imageRegistry, Images.class, SwtBasicConstants.key);
-		registerImages(device, imageRegistry, Images.class, SwtBasicConstants.helpKey);
-		registerImages(device, imageRegistry, Images.class, SwtBasicConstants.addKey);
-		registerImages(device, imageRegistry, Images.class, SwtBasicConstants.deleteKey);
-		registerImages(device, imageRegistry, Images.class, SwtBasicConstants.browseKey);
-		registerImages(device, imageRegistry, Images.class, SwtBasicConstants.clearKey);
-
-		return imageRegistry;
-	}
-
 	public static Iterable<String> getNamesFor(Class<?> anchor, String anImageName) {
 		try {
 			File aFile = new ClassPathResource(anImageName, anchor).getFile();
