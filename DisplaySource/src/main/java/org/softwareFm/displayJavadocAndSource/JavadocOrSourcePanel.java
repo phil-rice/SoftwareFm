@@ -11,24 +11,23 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowData;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
 import org.softwareFm.displayCore.constants.DisplayCoreConstants;
 import org.softwareFm.repository.api.RepositoryDataItemStatus;
+import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.images.SoftwareFmImages;
+import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 import org.softwareFm.swtBasics.SwtBasicConstants;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.IImageButtonListener;
 import org.softwareFm.swtBasics.images.ImageButton;
 import org.softwareFm.swtBasics.images.ImageButtons;
-import org.softwareFm.swtBasics.images.Images;
 import org.softwareFm.swtBasics.images.Resources;
+import org.softwareFm.swtBasics.images.SmallIconPosition;
 import org.softwareFm.swtBasics.text.ConfigForTitleAnd;
 import org.softwareFm.swtBasics.text.IButtonParent;
 import org.softwareFm.utilities.exceptions.WrappedException;
@@ -41,16 +40,16 @@ public abstract class JavadocOrSourcePanel extends Composite implements IButtonP
 	private final ConfigForTitleAnd config;
 	private final String key;
 
-	private String eclipseValue;
-	private String repositoryValue;
-
-	private final ImageButton browseButton;
-	private final ImageButton editButton;
-	private final ImageButton folderButton;
-	private final ImageButton attachButton;
+	protected final ImageButton repositoryButton;
+	protected final ImageButton editButton;
+	protected final ImageButton eclipseButton;
+	protected final ImageButton attachButton;
 	protected BindingContext bindingContext;
 	protected final DisplayerDetails displayerDetails;
 	protected final DisplayerContext displayerContext;
+	protected EclipseRepositoryState state;
+	private final String tooltipIfEclipseNotIn;
+	private final String tooltipIfRepositoryNotIn;
 
 	abstract protected void openEclipseValue(String eclipseValue);
 
@@ -63,66 +62,89 @@ public abstract class JavadocOrSourcePanel extends Composite implements IButtonP
 		this.displayerDetails = displayerDetails;
 		this.key = displayerDetails.key;
 		final ReconciliationDialog reconciliationDialog = new ReconciliationDialog(parent.getShell(), this, config, key);
-		setLayout(new RowLayout(SWT.HORIZONTAL));
-		Label label = new Label(this, SWT.NULL);
-		String title = Resources.getTitle(config.resourceGetter, key);
-		label.setText(title);
-		label.setLayoutData(new RowData(config.titleWidth, config.titleHeight));
-		browseButton = ImageButtons.addRowButton(this, SwtBasicConstants.browseKey, SwtBasicConstants.browseKey, new IImageButtonListener() {
+		setLayout(Swts.getHorizonalNoMarginRowLayout());
+		Swts.makeTitleLabel(this, config, key);
+		repositoryButton = ImageButtons.addRowButton(this, ArtifactsAnchor.jarKey, SwtBasicConstants.browseKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
-				browseOrOpenFile(repositoryValue);
+				browseOrOpenFile(state.repositoryValue);
 			}
 		});
-		folderButton = ImageButtons.addRowButton(this, SwtBasicConstants.folderKey, null, new IImageButtonListener() {
+		eclipseButton = ImageButtons.addRowButton(this, ArtifactsAnchor.jarKey, null, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) throws Exception {
-				openEclipseValue(eclipseValue);
+				openEclipseValue(state.eclipseValue);
 			}
 		});
-		attachButton = ImageButtons.addRowButton(this, linkKey, null, new IImageButtonListener() {
+		attachButton = ImageButtons.addRowButton(this, ArtifactsAnchor.jarKey, null, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) throws Exception {
-				reconciliationDialog.open(eclipseValue, repositoryValue);
+				reconciliationDialog.open(state.eclipseValue, state.repositoryValue);
 				refresh();
 			}
-
 		});
-		editButton = ImageButtons.addEditButton(this, new IImageButtonListener() {
+		editButton = ImageButtons.addEditButton(this, ArtifactsAnchor.jarKey, OverlaysAnchor.editKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) throws Exception {
 			}
 		});
-		Swts.setRowData(config, browseButton, editButton, folderButton);
+		tooltipIfEclipseNotIn = Resources.getOrException(config.resourceGetter, JavadocSourceConstants.noValueInRepository);
+		tooltipIfRepositoryNotIn = Resources.getOrException(config.resourceGetter, JavadocSourceConstants.noValueInEclipse);
+		state = new EclipseRepositoryState(null, null, tooltipIfEclipseNotIn, tooltipIfRepositoryNotIn);
+		updateFromState();
+		Swts.setRowData(config, repositoryButton, editButton, eclipseButton);
+	}
+
+	protected void updateFromState() {
+		repositoryButton.setEnabled(state.repositoryPresent);
+		repositoryButton.setTooltipText(state.repositoryTooltip());
+
+		attachButton.setEnabled(state.eclipsePresent || state.repositoryPresent);
+
+		eclipseButton.setEnabled(state.eclipsePresent);
+		eclipseButton.setTooltipText(state.eclipseTooltip());
+		updateSmallIconPositions();
 	}
 
 	private synchronized void refresh() throws Exception {
-		eclipseValue = findEclipseValue(bindingContext);
+		state = state.withEclipseValue(findEclipseValue(bindingContext));
+		updateSmallIconPositions();
+	}
+
+	abstract protected String getEclipseSmallIconKey();
+
+	abstract protected SmallIconPosition getLeftPosition();
+
+	abstract protected SmallIconPosition getRightPosition();
+
+	protected void updateSmallIconPositions() {
+		ImageButtons.clearSmallIcons(repositoryButton, eclipseButton, attachButton);
+		eclipseButton.clearSmallIcons();
+		if (state.eclipsePresent)
+			ImageButtons.setSmallIcon(getLeftPosition(), getEclipseSmallIconKey(), eclipseButton, attachButton);
+		if (state.repositoryPresent)
+			ImageButtons.setSmallIcon(getRightPosition(), getEclipseSmallIconKey(), repositoryButton, attachButton);
+		if (state.eclipsePresent && !state.repositoryPresent)
+			attachButton.setImage(ArtifactsAnchor.jarCopyToSoftwareFmKey);
+		else if (!state.eclipsePresent && state.repositoryPresent)
+			attachButton.setImage(ArtifactsAnchor.jarCopyFromSoftwareFmKey);
+		else
+			attachButton.setImage(ArtifactsAnchor.jarKey);
 	}
 
 	public synchronized void setValue(BindingContext bindingContext) {
 		this.bindingContext = bindingContext;
 		try {
-			eclipseValue = findEclipseValue(bindingContext);
+
+			String eclipseValue = findEclipseValue(bindingContext);
 			Map<String, Object> data = bindingContext.data;
-			repositoryValue = data == null ? null : (String) data.get(key);
+			String repositoryValue = data == null ? null : (String) data.get(key);
+			state = new EclipseRepositoryState(eclipseValue, repositoryValue, tooltipIfEclipseNotIn, tooltipIfRepositoryNotIn);
+			updateFromState();
 
-			browseButton.setEnabled(repositoryValue != null);
-			browseButton.setTooltipText(getTooltip(repositoryValue, "softwareFm.notPresent"));
-			attachButton.setEnabled(repositoryValue != null || eclipseValue != null);
-
-			folderButton.setEnabled(eclipseValue != null);
-			folderButton.setTooltipText(getTooltip(eclipseValue, "eclipse.notPresent"));
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
-	}
-
-	private String getTooltip(Object value, String notPresent) {
-		if (value == null)
-			return Resources.getOrException(config.resourceGetter, key + "." + notPresent);
-		else
-			return value.toString();
 	}
 
 	@Override
@@ -166,51 +188,24 @@ public abstract class JavadocOrSourcePanel extends Composite implements IButtonP
 		}
 	}
 
-	public static void main(String[] args) {
+	interface PanelMakerForTest {
+
+		JavadocOrSourcePanel make(Composite parent, DisplayerContext displayerContext, DisplayerDetails displayerDetails);
+	}
+
+	protected static void show(final PanelMakerForTest panelMaker) {
 		Swts.display("Javadoc or Source", new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				ImageRegistry imageRegistry = SoftwareFmImages.withBasics(from.getDisplay());
-				Images.registerImages(from.getDisplay(), imageRegistry, Images.class, SwtBasicConstants.folderKey);
-				Images.registerImages(from.getDisplay(), imageRegistry, DisplayJavadocConstants.class, "Javadoc.link");
-				IResourceGetter resourceGetter = Resources.resourceGetterWithBasics().with(DisplayJavadocConstants.class, "JavadocAndSource");
 
 				Composite composite = new Composite(from, SWT.NULL);
 				composite.setLayout(new GridLayout());
 				final String key = "javadoc";
+				IResourceGetter resourceGetter = Resources.resourceGetterWithBasics().with(JavadocSourceConstants.class, "JavadocAndSource");
+				ImageRegistry imageRegistry = SoftwareFmImages.withBasics(from.getDisplay());
 				DisplayerContext displayerContext = DisplayerContext.Utils.forTest(from.getDisplay(), resourceGetter, imageRegistry);
 				DisplayerDetails displayerDetails = new DisplayerDetails("anyEntity", Maps.<String, String> makeMap(DisplayCoreConstants.key, key));
-				final JavadocOrSourcePanel panel = new JavadocOrSourcePanel(composite, SWT.NULL, displayerContext, displayerDetails, "Javadoc.link") {
-					@Override
-					protected String findEclipseValue(BindingContext bindingContext) throws Exception {
-						return (String) bindingContext.data.get("x");
-					}
-
-					@Override
-					public void sendToEclipse(String value) {
-						System.out.println("Going to eclipse: " + value);
-					}
-
-					@Override
-					public void sendToRepository(String value) {
-						System.out.println("Going to repository: " + value);
-					}
-
-					@Override
-					protected void openEclipseValue(String eclipseValue) {
-						try {
-							Desktop.getDesktop().open(new File(eclipseValue));
-						} catch (IOException e) {
-							throw WrappedException.wrap(e);
-						}
-					}
-
-					@Override
-					public void clearEclipseValue() {
-						System.out.println("Clearing eclipse value");
-					}
-
-				};
+				JavadocOrSourcePanel panel = panelMaker.make(composite, displayerContext, displayerDetails);
 				addButton(composite, panel, "null/null", key, null, null);
 				addButton(composite, panel, "SFM/null", key, "SFM", null);
 				addButton(composite, panel, "null/Ecl", key, null, "C:\\");

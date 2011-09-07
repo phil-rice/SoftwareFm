@@ -1,5 +1,6 @@
 package org.softwareFm.swtBasics;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
@@ -7,6 +8,8 @@ import junit.framework.Assert;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -15,13 +18,17 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.swtBasics.images.ImageButton;
+import org.softwareFm.swtBasics.images.Resources;
 import org.softwareFm.swtBasics.text.ConfigForTitleAnd;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
@@ -40,6 +47,14 @@ public class Swts {
 			GridData data = makeGrabHorizonalAndFillGridData();
 			control.setLayoutData(data);
 		}
+	}
+
+	public static Label makeTitleLabel(Composite parent, ConfigForTitleAnd config, String key) {
+		Label label = new Label(parent, SWT.NULL);
+		String title = Resources.getTitle(config.resourceGetter, key);
+		label.setText(title);
+		label.setLayoutData(new RowData(config.titleWidth, config.titleHeight));
+		return label;
 	}
 
 	public static TableEditor addEditor(Table table, int row, int col, Control control) {
@@ -163,6 +178,36 @@ public class Swts {
 		for (Control control : controls)
 			control.setLayoutData(new RowData(width, height));
 
+	}
+
+	public static void makeButtonFromMainMethod(Composite composite, final Class<?> classWithMain) {
+		Button button = new Button(composite, SWT.PUSH);
+		button.setText(classWithMain.getSimpleName());
+		button.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				new Thread() {
+					@Override
+					public void run() {
+						try {
+							Method method = classWithMain.getMethod("main", String[].class);
+							method.invoke(null, new Object[] { new String[0] });
+						} catch (Exception e1) {
+							throw WrappedException.wrap(e1);
+						}
+					}
+				}.start();
+			}
+		});
+	}
+
+	public static Layout getGridLayoutWithoutMargins() {
+		GridLayout gridLayout = new GridLayout(1, false);
+		gridLayout.marginWidth = 0;
+		gridLayout.marginHeight = 0;
+		gridLayout.verticalSpacing = 0;
+		gridLayout.horizontalSpacing = 0;
+		return gridLayout;
 	}
 
 }

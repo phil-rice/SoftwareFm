@@ -1,6 +1,6 @@
 package org.softwareFm.displayCore.api;
 
-/** Can this style deal with this entity/key/clazz combination */
+/** Can this style deal with this entity/editKey/clazz combination */
 public interface IStyleAcceptor {
 
 	boolean canDealWith(String entity, String key, Class<?> clazz);

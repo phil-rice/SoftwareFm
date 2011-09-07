@@ -178,7 +178,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin implements IRepository
 			Plugins.useConfigElements(IMAGE_ID, new ICallback<IConfigurationElement>() {
 				@Override
 				public void process(IConfigurationElement t) throws Exception {
-					String key = t.getAttribute("key");
+					String key = t.getAttribute("editKey");
 					System.out.println("trying to register image " + key);
 					if (key == null)
 						throw new IllegalArgumentException(MessageFormat.format(DisplayCoreConstants.attributeMissing, key, t.getAttribute("class")));
@@ -283,7 +283,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin implements IRepository
 		Plugins.useConfigElements(IMAGE_ID, new ICallback<IConfigurationElement>() {
 			@Override
 			public void process(IConfigurationElement t) throws Exception {
-				String key = t.getAttribute("key");
+				String key = t.getAttribute("editKey");
 				Images.removeImages(imageRegistry, key);
 			}
 		}, ICallback.Utils.sysErrCallback());

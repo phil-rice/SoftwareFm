@@ -42,7 +42,7 @@ public class DisplayContainerFactoryBuilder implements IDisplayContainerFactoryB
 
 		@Override
 		public String toString() {
-			return "KeyTitleHelpAndImage [key=" + key + "]";
+			return "KeyTitleHelpAndImage [editKey=" + key + "]";
 		}
 	}
 

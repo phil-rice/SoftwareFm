@@ -9,6 +9,7 @@ import org.softwareFm.displayCore.api.DisplayerDetails;
 import org.softwareFm.displayCore.api.Displayers;
 import org.softwareFm.displayCore.api.IRegisteredItems;
 import org.softwareFm.displayCore.constants.DisplayCoreConstants;
+import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 import org.softwareFm.swtBasics.images.ImageButtons;
 import org.softwareFm.swtBasics.images.Resources;
 import org.softwareFm.utilities.strings.Strings;
@@ -19,7 +20,7 @@ public class TextDisplayer extends AbstractDisplayerWithLabel<BoundTitleAndTextF
 	public BoundTitleAndTextField createLargeControl(DisplayerContext context, final IRegisteredItems registeredItems, Composite parent, DisplayerDetails displayerDetails) {
 		BoundTitleAndTextField boundTitleAndTextField = new BoundTitleAndTextField(parent, context, displayerDetails);
 		final String editorName = displayerDetails.map.get(DisplayCoreConstants.editor);
-		boundTitleAndTextField.addEditButton();
+		boundTitleAndTextField.addEditButton(OverlaysAnchor.editKey);
 
 		// ImageButtons.addEditButton(boundTitleAndTextField, new IImageButtonListener() {
 		// @Override

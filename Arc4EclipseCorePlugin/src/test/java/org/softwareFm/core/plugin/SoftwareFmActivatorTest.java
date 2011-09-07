@@ -29,11 +29,11 @@ public class SoftwareFmActivatorTest extends TestCase {
 	private Display display;
 
 	public void testBasicResources() {
-		checkResource("Edit", SwtBasicConstants.key);
+		checkResource("Edit", SwtBasicConstants.editKey);
 	}
 
 	public void testBasicImages() {
-		checkImages(SwtBasicConstants.key);
+		checkImages(SwtBasicConstants.editKey);
 		checkImages(SwtBasicConstants.helpKey);
 		checkImages(SwtBasicConstants.browseKey);
 		checkImages(SwtBasicConstants.deleteKey);
@@ -43,7 +43,7 @@ public class SoftwareFmActivatorTest extends TestCase {
 	private void checkResource(String expected, String editkey) {
 		SoftwareFmActivator activator = SoftwareFmActivator.getDefault();
 		IResourceGetter resourceGetter = activator.getConfigForTitleAnd(display).resourceGetter;
-		assertEquals(expected, Resources.getTooltip(resourceGetter, SwtBasicConstants.key));
+		assertEquals(expected, Resources.getTooltip(resourceGetter, SwtBasicConstants.editKey));
 
 	}
 
@@ -91,13 +91,13 @@ public class SoftwareFmActivatorTest extends TestCase {
 	}
 
 	public void testAllImagesCanBeGot() {
-		checkImages(SwtBasicConstants.key);
+		checkImages(SwtBasicConstants.editKey);
 		checkImages(SwtBasicConstants.helpKey);
 		final List<String> keys = Lists.newList();
 		Plugins.useConfigElements(SoftwareFmActivator.IMAGE_ID, new ICallback<IConfigurationElement>() {
 			@Override
 			public void process(IConfigurationElement t) throws Exception {
-				String key = t.getAttribute("key");
+				String key = t.getAttribute("editKey");
 				keys.add(key);
 			}
 		}, ICallback.Utils.rethrow());

@@ -12,7 +12,6 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -46,6 +45,7 @@ public class ImageButton implements IHasControl {
 	private final Map<SmallIconPosition, String> smallIconMap = Maps.newMap();
 	private final Composite content;
 	private final ImageRegistry imageRegistry;
+	private String mainImageKey;
 
 	public ImageButton(Composite parent, ImageRegistry imageRegistry, String key, final boolean toggle) {
 		this(parent, imageRegistry, key, null, toggle);
@@ -55,19 +55,21 @@ public class ImageButton implements IHasControl {
 		this.imageRegistry = imageRegistry;
 		this.overlayKey = overlayKey;
 		content = new Composite(parent, SWT.NULL);
-		content.setLayout(new GridLayout());
+		content.setLayout(Swts.getGridLayoutWithoutMargins());
 		this.label = new Label(content, SWT.NULL);
 		label.setImage(imageRegistry.get("backdrop.main"));
+		this.mainImageKey = key;
 		label.addPaintListener(new PaintListener() {
 			@Override
 			public void paintControl(PaintEvent e) {
+				System.out.println("Painting button: " + mainImageKey + ", " + smallIconMap);
 				if (state) {
 					Image depressed = imageRegistry.get("backdrop.depressed");
 					if (depressed == null)
 						throw new NullPointerException();
 					e.gc.drawImage(depressed, 0, 0);
 				}
-				Image mainImage = getImage(key);
+				Image mainImage = getImage(mainImageKey);
 				e.gc.drawImage(mainImage, 2, 2);
 				Image overLayImage = imageRegistry.get(ImageButton.this.overlayKey);
 				if (overLayImage != null)
@@ -107,6 +109,7 @@ public class ImageButton implements IHasControl {
 		});
 		GridData data = Swts.makeGrabHorizonalAndFillGridData();
 		data.widthHint = 20;
+		data.heightHint = 20;
 		label.setLayoutData(data);
 	}
 
@@ -192,5 +195,10 @@ public class ImageButton implements IHasControl {
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 
+	}
+
+	public void setImage(String key) {
+		this.mainImageKey = key;
+		label.redraw();
 	}
 }

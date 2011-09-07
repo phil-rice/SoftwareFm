@@ -17,6 +17,7 @@ public class ImageButtonDemo {
 
 	public static void main(String[] args) {
 		final String mainImage = "test.mainImage";
+		final String alterativeImage = "test.alternativeImage";
 		final String overlayImage = "test.overlayImage";
 		final String smallIcon = "test.smallIcon";
 		Swts.display("ImageButtonDemo", new IFunction1<Composite, Composite>() {
@@ -26,19 +27,32 @@ public class ImageButtonDemo {
 				content.setLayout(new GridLayout());
 				ImageRegistry imageRegistry = SoftwareFmImages.withBasics(from.getDisplay());
 				imageRegistry.put(mainImage, Images.makeImage(from.getDisplay(), Images.class, mainImage + ".png"));
+				imageRegistry.put(alterativeImage, Images.makeImage(from.getDisplay(), Images.class, alterativeImage + ".png"));
 				imageRegistry.put(overlayImage, Images.makeImage(from.getDisplay(), Images.class, "test.overlayImage.png"));
 				imageRegistry.put(smallIcon, Images.makeImage(from.getDisplay(), Images.class, "test.smallIcon.png"));
 
 				final ImageButton imageButton = new ImageButton(content, imageRegistry, mainImage, true);
 				final ImageButton overlayImageButton = new ImageButton(content, imageRegistry, mainImage, overlayImage, true);
-				Button button = new Button(content, SWT.PUSH);
-				button.setText("Toggle");
-				button.addSelectionListener(new SelectionAdapter() {
+				Button toggleDepressedButton = new Button(content, SWT.PUSH);
+				toggleDepressedButton.setText("Toggle Depressed");
+				toggleDepressedButton.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
 						imageButton.setState(!imageButton.getState());
 						boolean newState = !overlayImageButton.getState();
 						overlayImageButton.setState(newState);
+					}
+				});
+				Button toggleMainImageButton = new Button(content, SWT.PUSH);
+				toggleMainImageButton.setText("Toggle Main Image");
+				toggleMainImageButton.addSelectionListener(new SelectionAdapter() {
+					boolean state = false;
+
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						state = !state;
+						imageButton.setImage(state ? alterativeImage : mainImage);
+						overlayImageButton.setImage(state ? alterativeImage : mainImage);
 					}
 				});
 				for (SmallIconPosition pos : SmallIconPosition.values())

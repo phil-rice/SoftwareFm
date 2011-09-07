@@ -44,7 +44,7 @@ public class TitleAndTextField extends AbstractTitleAnd {
 		layout();
 	}
 
-	public void addEditButton() {
+	public void addEditButton(String overlayKey) {
 		addCrListener(new Listener() {
 			@Override
 			public void handleEvent(Event event) {
@@ -52,7 +52,7 @@ public class TitleAndTextField extends AbstractTitleAnd {
 				updateBackground();
 			}
 		});
-		ImageButtons.addEditButton(this, new IImageButtonListener() {
+		ImageButtons.addEditButton(this, SwtBasicConstants.editKey, overlayKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				txtText.setEditable(globalEditable || !txtText.getEditable());
@@ -107,7 +107,7 @@ public class TitleAndTextField extends AbstractTitleAnd {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				TitleAndTextField titleAndTextField = new TitleAndTextField(ConfigForTitleAnd.createForBasics(from.getDisplay()), from, "Title");
-				titleAndTextField.addEditButton();
+				titleAndTextField.addEditButton(null);
 				ImageButtons.addHelpButton(titleAndTextField, SwtBasicConstants.helpKey);
 				titleAndTextField.setText("Some text");
 				return titleAndTextField;

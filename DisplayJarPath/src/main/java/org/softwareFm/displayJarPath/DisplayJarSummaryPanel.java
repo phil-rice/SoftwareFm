@@ -11,6 +11,7 @@ import org.softwareFm.displayCore.api.BoundTitleAndTextField;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
 import org.softwareFm.displayCore.constants.DisplayCoreConstants;
+import org.softwareFm.displayJavadocAndSource.JavadocOrSourcePanel;
 import org.softwareFm.displayJavadocAndSource.JavadocPanel;
 import org.softwareFm.displayJavadocAndSource.SourcePanel;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
@@ -23,7 +24,7 @@ public class DisplayJarSummaryPanel extends Composite {
 	private final TitleAndTextField txtJar;
 	private final BoundTitleAndTextField txtProjectName;
 	private final BoundTitleAndTextField txtOrganisationName;
-	private final JavadocPanel javadocPanel;
+	private final JavadocOrSourcePanel javadocPanel;
 	private final SourcePanel sourcePanel;
 
 	public DisplayJarSummaryPanel(Composite parent, int style, DisplayerContext displayerContext, DisplayerDetails displayerDetails) {

@@ -25,7 +25,7 @@ public class DisplayerDetails {
 
 	@Override
 	public String toString() {
-		return "DisplayerDetails [entity=" + entity + ", key=" + key + ", map=" + map + "]";
+		return "DisplayerDetails [entity=" + entity + ", editKey=" + key + ", map=" + map + "]";
 	}
 
 	public DisplayerDetails withKey(String key) {

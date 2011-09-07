@@ -34,17 +34,17 @@ public class Example {
 		// builder.registerAttributeValuePairValidator("valueIsUrl", new ValueIsUrlValidator());
 		// builder.registerAttributeValuePairValidator("valueIsMail", new ValueIsMailValidator());
 		//
-		// {"jar": [{"key":"digest", "display":"top"},
-		// {"key":"projectUrl", "display":"container", "entity":"project"},
-		// {"key":"organisationUrl", "display":"container", "entity":"organisation", "validator":"url"}],
-		// "project": [{"key":"url", "display":"top"},
-		// {"key":"name", "display":"text"},
-		// {"key":"description", "display": "styledText"},
-		// {"key":"issues", "display":"attributeValueList", "lineEditor":"attributeValuePair", "lineValidator":"valueIsMail"}]
-		// "organisation": [{"key":"url", "display":"top"},
-		// {"key":"name", "display":"text"},
-		// {"key":"description", "display": "styledText"},
-		// {"key":"issues", "display":"attributeValueList", "lineEditor":"attributeValuePair", "lineValidator":"valueIsMail"}]
+		// {"jar": [{"editKey":"digest", "display":"top"},
+		// {"editKey":"projectUrl", "display":"container", "entity":"project"},
+		// {"editKey":"organisationUrl", "display":"container", "entity":"organisation", "validator":"url"}],
+		// "project": [{"editKey":"url", "display":"top"},
+		// {"editKey":"name", "display":"text"},
+		// {"editKey":"description", "display": "styledText"},
+		// {"editKey":"issues", "display":"attributeValueList", "lineEditor":"attributeValuePair", "lineValidator":"valueIsMail"}]
+		// "organisation": [{"editKey":"url", "display":"top"},
+		// {"editKey":"name", "display":"text"},
+		// {"editKey":"description", "display": "styledText"},
+		// {"editKey":"issues", "display":"attributeValueList", "lineEditor":"attributeValuePair", "lineValidator":"valueIsMail"}]
 
 	}
 }

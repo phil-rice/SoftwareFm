@@ -55,10 +55,10 @@ public class ReconciliationDialog extends Dialog {
 		Composite buttons = new Composite(shell, SWT.NULL);
 		buttons.setLayout(new RowLayout());
 
-		Button copyToRepositoryButton = makeButton(buttons, DisplayJavadocConstants.copyToRepositoryKey, eclipseValue != null);
-		Button copyToEclipseButton = makeButton(buttons, DisplayJavadocConstants.copyToEclipseKey, repositoryValue != null);
-		Button clearEclipseButton = makeButton(buttons, DisplayJavadocConstants.clearEclipseKey, repositoryValue != null);
-		Button cancelButton = makeButton(buttons, DisplayJavadocConstants.reconciliationCancelKey, true);
+		Button copyToRepositoryButton = makeButton(buttons, JavadocSourceConstants.copyToRepositoryKey, eclipseValue != null);
+		Button copyToEclipseButton = makeButton(buttons, JavadocSourceConstants.copyToEclipseKey, repositoryValue != null);
+		Button clearEclipseButton = makeButton(buttons, JavadocSourceConstants.clearEclipseKey, repositoryValue != null);
+		Button cancelButton = makeButton(buttons, JavadocSourceConstants.reconciliationCancelKey, true);
 		Swts.<Button> setRowDataFor(100, config.buttonHeight, copyToRepositoryButton, copyToEclipseButton, clearEclipseButton);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(shell);
 

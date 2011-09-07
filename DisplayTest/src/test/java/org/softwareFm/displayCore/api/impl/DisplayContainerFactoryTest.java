@@ -60,11 +60,11 @@ public class DisplayContainerFactoryTest extends TestCase {
 	}
 
 	public void testThrowsExceptionsWhenInsufficentDetails() {
-		checkNoKey("Must have a value for key in map {}");
-		checkNoKey("Must have a value for title in map {key=key_new}", DisplayCoreConstants.key, "key_new");
-		checkNoKey("Must have a value for help in map {key=key_new, title=title_new}", DisplayCoreConstants.key, "key_new", DisplayCoreConstants.title, "title_new");
-		checkNoKey("Must have a value for help in map {key=key_new, title=title_new}", DisplayCoreConstants.key, "key_new", DisplayCoreConstants.title, "title_new");
-		checkNoKey("Must have a value for displayer in map {key=key_new, title=title_new, help=helpA}", DisplayCoreConstants.key, "key_new", DisplayCoreConstants.title, "title_new", DisplayCoreConstants.help, "helpA");
+		checkNoKey("Must have a value for editKey in map {}");
+		checkNoKey("Must have a value for title in map {editKey=key_new}", DisplayCoreConstants.key, "key_new");
+		checkNoKey("Must have a value for help in map {editKey=key_new, title=title_new}", DisplayCoreConstants.key, "key_new", DisplayCoreConstants.title, "title_new");
+		checkNoKey("Must have a value for help in map {editKey=key_new, title=title_new}", DisplayCoreConstants.key, "key_new", DisplayCoreConstants.title, "title_new");
+		checkNoKey("Must have a value for displayer in map {editKey=key_new, title=title_new, help=helpA}", DisplayCoreConstants.key, "key_new", DisplayCoreConstants.title, "title_new", DisplayCoreConstants.help, "helpA");
 	}
 
 	private void checkNoKey(String message, String... data) {
@@ -134,10 +134,10 @@ public class DisplayContainerFactoryTest extends TestCase {
 		IllegalArgumentException e = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
 			@Override
 			public void run() {
-				factory.register(Maps.<String, String> makeMap("key", "keyA", "displayer", "dispUnregistered", "title", "titleA", "help", "helpA", "editor", "editor1"));
+				factory.register(Maps.<String, String> makeMap("editKey", "keyA", "displayer", "dispUnregistered", "title", "titleA", "help", "helpA", "editor", "editor1"));
 			}
 		});
-		assertEquals("Illegal value for displayer dispUnregistered. Legal values are [disp1, disp2] in map {editor=editor1, help=helpA, title=titleA, displayer=dispUnregistered, key=keyA}", e.getMessage());
+		assertEquals("Illegal value for displayer dispUnregistered. Legal values are [disp1, disp2] in map {editor=editor1, help=helpA, title=titleA, displayer=dispUnregistered, editKey=keyA}", e.getMessage());
 	}
 
 	@Override
@@ -154,8 +154,8 @@ public class DisplayContainerFactoryTest extends TestCase {
 		builder.registerValidator("validator2", validator2);
 
 		factory = builder.build("entity");
-		factory.register(Maps.<String, String> makeMap("key", "keyA", "displayer", "disp1", "title", "titleA", "help", "helpA", "editor", "editor1"));
-		factory.register(Maps.<String, String> makeMap("key", "keyB", "displayer", "disp2", "title", "titleB", "help", "helpB", "editor", "editor2"));
+		factory.register(Maps.<String, String> makeMap("editKey", "keyA", "displayer", "disp1", "title", "titleA", "help", "helpA", "editor", "editor1"));
+		factory.register(Maps.<String, String> makeMap("editKey", "keyB", "displayer", "disp2", "title", "titleB", "help", "helpB", "editor", "editor2"));
 		displayerContext = null;
 	}
 

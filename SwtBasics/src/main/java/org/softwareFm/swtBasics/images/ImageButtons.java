@@ -21,7 +21,7 @@ import org.softwareFm.utilities.strings.Urls;
 
 abstract public class ImageButtons {
 	public static ImageButton addRowButton(IButtonParent parent, String imageKey, String tooltipKey, final IImageButtonListener listener) {
-		return addRowButton(parent, imageKey, SwtBasicConstants.tooltipPattern, tooltipKey, listener);
+		return addRowButton(parent, imageKey, null, SwtBasicConstants.tooltipPattern, tooltipKey, listener);
 	}
 
 	public static ImageButton addBrowseButton(IButtonParent parent, final Callable<String> urlGetter) {
@@ -38,8 +38,8 @@ abstract public class ImageButtons {
 		});
 	}
 
-	private static ImageButton addRowButton(IButtonParent parent, String imageKey, String tooltipPattern, String tooltipKey, final IImageButtonListener listener) {
-		ImageButton button = new ImageButton(parent.getButtonComposite(), parent.getImageRegistry(), imageKey, false);
+	private static ImageButton addRowButton(IButtonParent parent, String imageKey, String overlayKey, String tooltipPattern, String tooltipKey, final IImageButtonListener listener) {
+		ImageButton button = new ImageButton(parent.getButtonComposite(), parent.getImageRegistry(), imageKey, overlayKey, false);
 		// button.setSize(new Point(35, 12));
 		button.addListener(new IImageButtonListener() {
 			@Override
@@ -67,7 +67,7 @@ abstract public class ImageButtons {
 
 	public static ImageButton addHelpButton(final IButtonParent parent, final String helpKey) {
 		final IResourceGetter resourceGetter = parent.getResourceGetter();
-		ImageButton helpButton = addRowButton(parent, SwtBasicConstants.helpKey, SwtBasicConstants.summaryHelpPattern, helpKey, new IImageButtonListener() {
+		ImageButton helpButton = addRowButton(parent, SwtBasicConstants.helpKey, null, SwtBasicConstants.summaryHelpPattern, helpKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				String detailed = Resources.getDetailedHelp(resourceGetter, helpKey);
@@ -78,8 +78,8 @@ abstract public class ImageButtons {
 		return helpButton;
 	}
 
-	public static ImageButton addEditButton(IButtonParent parent, IImageButtonListener listener) {
-		return addRowButton(parent, SwtBasicConstants.key, SwtBasicConstants.key, listener);
+	public static ImageButton addEditButton(IButtonParent parent, String imageKey, String overlayKey, IImageButtonListener listener) {
+		return addRowButton(parent, imageKey, overlayKey, SwtBasicConstants.tooltipPattern, SwtBasicConstants.editKey, listener);
 	}
 
 	public static ImageButton addOpenFolderButton(IButtonParent buttonParent, String tooltipKey, final Callable<File> callable) {
@@ -89,5 +89,16 @@ abstract public class ImageButtons {
 				Desktop.getDesktop().open(callable.call());
 			}
 		});
+	}
+
+	public static void setSmallIcon(SmallIconPosition pos, String key, ImageButton... buttons) {
+		for (ImageButton imageButton : buttons)
+			imageButton.setSmallIcon(pos, key);
+	}
+
+	public static void clearSmallIcons(ImageButton... buttons) {
+		for (ImageButton imageButton : buttons)
+			imageButton.clearSmallIcons();
+
 	}
 }

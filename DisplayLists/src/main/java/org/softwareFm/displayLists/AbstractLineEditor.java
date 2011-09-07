@@ -4,6 +4,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.displayCore.api.ICodec;
 import org.softwareFm.displayCore.api.ILineEditable;
 import org.softwareFm.displayCore.api.ILineEditor;
+import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 import org.softwareFm.swtBasics.SwtBasicConstants;
 import org.softwareFm.swtBasics.images.IImageButtonListener;
 import org.softwareFm.swtBasics.images.ImageButton;
@@ -21,7 +22,7 @@ public abstract class AbstractLineEditor<T, Line extends IButtonParent> implemen
 	}
 
 	protected void addButtons(final ILineEditable<T> lineEditable, Composite parent, final int index, Line buttonParent) {
-		ImageButtons.addEditButton(buttonParent, new IImageButtonListener() {
+		ImageButtons.addEditButton(buttonParent, SwtBasicConstants.editKey, OverlaysAnchor.editKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				edit(lineEditable, index);

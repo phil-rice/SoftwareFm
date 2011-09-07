@@ -10,8 +10,8 @@ public class ResourcesTest extends TestCase {
 	public void testBasic() {
 		IResourceGetter basics = Resources.resourceGetterWithBasics();
 		String expected = "Edit";
-		assertEquals(expected, basics.getStringOrNull(SwtBasicConstants.key + ".tooltip"));
-		assertEquals(expected, Resources.getTooltip(basics, SwtBasicConstants.key));
+		assertEquals(expected, basics.getStringOrNull(SwtBasicConstants.editKey + ".tooltip"));
+		assertEquals(expected, Resources.getTooltip(basics, SwtBasicConstants.editKey));
 	}
 
 }

@@ -24,8 +24,8 @@ public class SwtBasicConstants {
 	public static final String errorMakingImage = "Error making image. Name {0} Anchor {1}";
 	public static final String missingResource = "Cannot find a resource with name [{0}]";
 
-	// resource key prefixes
-	public static final String key = "Edit";
+	// resource editKey prefixes
+	public static final String editKey = "Edit";
 	public static final String helpKey = "Help";
 	public static final String addKey = "Add";
 	public static final String deleteKey = "Delete";

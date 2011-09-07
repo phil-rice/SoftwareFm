@@ -24,7 +24,7 @@ public class DisplayContainerFactoryBuilderInternalValidationTest extends TestCa
 				factory.registerDisplayer("key1", new TextDisplayer());
 			}
 		});
-		assertEquals("Cannot have duplicate value for key key1. Existing value TextDisplayer. New value TextDisplayer", e.getMessage());
+		assertEquals("Cannot have duplicate value for editKey key1. Existing value TextDisplayer. New value TextDisplayer", e.getMessage());
 	}
 
 	public void testCannotDuplicateEditorName() {
@@ -36,7 +36,7 @@ public class DisplayContainerFactoryBuilderInternalValidationTest extends TestCa
 				factory.registerEditor("key1", IEditor.Utils.noEditor());
 			}
 		});
-		assertEquals("Cannot have duplicate value for key key1. Existing value noEditor. New value noEditor", e.getMessage());
+		assertEquals("Cannot have duplicate value for editKey key1. Existing value noEditor. New value noEditor", e.getMessage());
 	}
 
 	public void testCannotHaveDuplicateLineEditors() {
@@ -48,7 +48,7 @@ public class DisplayContainerFactoryBuilderInternalValidationTest extends TestCa
 				factory.registerLineEditor("key1", ILineEditor.Utils.noLineEditor());
 			}
 		});
-		assertEquals("Cannot have duplicate value for key key1. Existing value noLineEditor. New value noLineEditor", e.getMessage());
+		assertEquals("Cannot have duplicate value for editKey key1. Existing value noLineEditor. New value noLineEditor", e.getMessage());
 
 	}
 
@@ -61,7 +61,7 @@ public class DisplayContainerFactoryBuilderInternalValidationTest extends TestCa
 				factory.registerValidator("key1", IValidator.Utils.noValidator());
 			}
 		});
-		assertEquals("Cannot have duplicate value for key key1. Existing value noValidator. New value noValidator", e.getMessage());
+		assertEquals("Cannot have duplicate value for editKey key1. Existing value noValidator. New value noValidator", e.getMessage());
 	}
 
 	private Shell shell;

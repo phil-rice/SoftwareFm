@@ -1,13 +1,11 @@
 package org.softwareFm.displayJavadocAndSource;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
-import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.core.plugin.SelectedArtifactSelectionManager;
 import org.softwareFm.displayCore.api.BindingContext;
@@ -16,20 +14,14 @@ import org.softwareFm.displayCore.api.DisplayerDetails;
 import org.softwareFm.displayCore.constants.DisplayCoreConstants;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.jdtBinding.api.JavaProjects;
-import org.softwareFm.repository.api.RepositoryDataItemStatus;
-import org.softwareFm.softwareFmImages.images.SoftwareFmImages;
-import org.softwareFm.swtBasics.SwtBasicConstants;
-import org.softwareFm.swtBasics.Swts;
-import org.softwareFm.swtBasics.images.Images;
-import org.softwareFm.swtBasics.images.Resources;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.softwareFmImages.smallIcons.SmallIconsAnchor;
+import org.softwareFm.swtBasics.images.SmallIconPosition;
+import org.softwareFm.utilities.exceptions.WrappedException;
 
 public class JavadocPanel extends JavadocOrSourcePanel {
 
 	public JavadocPanel(Composite parent, int style, DisplayerContext displayerContext, DisplayerDetails displayerDetails) {
-		super(parent, style, displayerContext, displayerDetails, DisplayJavadocConstants.linkKey);
+		super(parent, style, displayerContext, displayerDetails, JavadocSourceConstants.linkKey);
 	}
 
 	@Override
@@ -57,50 +49,65 @@ public class JavadocPanel extends JavadocOrSourcePanel {
 		browseOrOpenFile(eclipseValue);
 	}
 
-	public static void main(String[] args) {
-		Swts.display("Javadoc", new IFunction1<Composite, Composite>() {
-			@Override
-			public Composite apply(Composite from) throws Exception {
-				ImageRegistry imageRegistry = SoftwareFmImages.withBasics(from.getDisplay());
-				Images.registerImages(from.getDisplay(), imageRegistry, Images.class, SwtBasicConstants.folderKey);
-				Images.registerImages(from.getDisplay(), imageRegistry, DisplayJavadocConstants.class, "javadoc.link");
-				IResourceGetter resourceGetter = Resources.resourceGetterWithBasics().with(DisplayJavadocConstants.class, "JavadocAndSource");
-				Composite composite = new Composite(from, SWT.NULL);
-				composite.setLayout(new GridLayout());
-				final String key = "javadoc";
-
-				DisplayerContext displayerContext = DisplayerContext.Utils.forTest(from.getDisplay(), resourceGetter, imageRegistry);
-				DisplayerDetails displayerDetails = new DisplayerDetails("anyEntity", Maps.<String, String> makeMap(DisplayCoreConstants.key, key));
-
-				final JavadocPanel panel = new JavadocPanel(composite, SWT.NULL, displayerContext, displayerDetails);
-				addButton(composite, panel, "null/null", key, null, null);
-				addButton(composite, panel, "SFM/null", key, "SFM", null);
-				addButton(composite, panel, "null/Ecl", key, null, "C:\\");
-				addButton(composite, panel, "SFM/Ecl", key, "SFM", "C:\\");
-				Swts.addGrabHorizontalAndFillGridDataToAllChildren(composite);
-				return composite;
-			}
-
-			private void addButton(Composite composite, final JavadocOrSourcePanel panel, String label, final String key, final String softwareFmValue, final String eclipseValue) {
-				Button state1 = new Button(composite, SWT.PUSH);
-				state1.setText(label);
-				SelectionAdapter listener = new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						Map<String, Object> data = Maps.<String, Object> makeMap("x", eclipseValue, key, softwareFmValue);
-						Map<String, Object> context = Maps.<String, Object> newMap();
-						panel.setValue(new BindingContext(RepositoryDataItemStatus.FOUND, "url", data, context));
-					}
-
-				};
-				state1.addSelectionListener(listener);
-			}
-		});
-	}
-
 	@Override
 	public void clearEclipseValue() {
 		sendToEclipse("");
 	}
 
+	@Override
+	protected String getEclipseSmallIconKey() {
+		return SmallIconsAnchor.javadocKey;
+	}
+
+	@Override
+	protected SmallIconPosition getLeftPosition() {
+		return SmallIconPosition.TopLeft;
+	}
+
+	@Override
+	protected SmallIconPosition getRightPosition() {
+		return SmallIconPosition.TopRight;
+	}
+
+	public static void main(String[] args) {
+		final PanelMakerForTest panelMaker = new PanelMakerForTest() {
+
+			@Override
+			public JavadocOrSourcePanel make(Composite parent, DisplayerContext displayerContext, DisplayerDetails displayerDetails) {
+				final JavadocPanel panel = new JavadocPanel(parent, SWT.NULL, displayerContext, displayerDetails) {
+					@Override
+					protected String findEclipseValue(BindingContext bindingContext) throws Exception {
+						return (String) bindingContext.data.get("x");
+					}
+
+					@Override
+					public void sendToEclipse(String value) {
+						System.out.println("Going to eclipse: " + value);
+					}
+
+					@Override
+					public void sendToRepository(String value) {
+						System.out.println("Going to repository: " + value);
+					}
+
+					@Override
+					protected void openEclipseValue(String eclipseValue) {
+						try {
+							Desktop.getDesktop().open(new File(eclipseValue));
+						} catch (IOException e) {
+							throw WrappedException.wrap(e);
+						}
+					}
+
+					@Override
+					public void clearEclipseValue() {
+						System.out.println("Clearing eclipse value");
+					}
+
+				};
+				return panel;
+			}
+		};
+		show(panelMaker);
+	}
 }
