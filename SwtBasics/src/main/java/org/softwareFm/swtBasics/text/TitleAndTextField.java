@@ -13,6 +13,7 @@ import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.IImageButtonListener;
 import org.softwareFm.swtBasics.images.ImageButton;
 import org.softwareFm.swtBasics.images.ImageButtons;
+import org.softwareFm.swtBasics.images.Images;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.strings.Strings;
 
@@ -106,7 +107,10 @@ public class TitleAndTextField extends AbstractTitleAnd {
 		Swts.display("TitleAndTextField", new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				TitleAndTextField titleAndTextField = new TitleAndTextField(ConfigForTitleAnd.createForBasics(from.getDisplay()), from, "Title");
+				ConfigForTitleAnd config = ConfigForTitleAnd.createForBasics(from.getDisplay());
+				Images.registerImagesInDirectory(from.getDisplay(), config.imageRegistry, Images.class, "test", "alternativeImage");
+				config.imageRegistry.put("backdrop.main", Images.makeImage(from.getDisplay(), Images.class, "main.png"));
+				TitleAndTextField titleAndTextField = new TitleAndTextField(config, from, "Title");
 				titleAndTextField.addEditButton("test.mainImage", "test.overlayImage");
 				ImageButtons.addHelpButton(titleAndTextField, SwtBasicConstants.helpKey, "test.smallIcon");
 				titleAndTextField.setText("Some text");

@@ -10,7 +10,8 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 public class ConfigForTitleAnd {
 
 	public static ConfigForTitleAnd createForBasics(Display display) {
-		return ConfigForTitleAnd.create(display, Resources.resourceGetterWithBasics(), new ImageRegistry(display));
+		ImageRegistry imageRegistry = new ImageRegistry(display);
+		return ConfigForTitleAnd.create(display, Resources.resourceGetterWithBasics(), imageRegistry);
 	}
 
 	public static ConfigForTitleAnd create(Display display, IResourceGetter resourceGetter, ImageRegistry imageRegistry) {
