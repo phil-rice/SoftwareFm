@@ -23,7 +23,12 @@ public class AbstractTitleAnd extends Composite implements IButtonParent {
 		this.config = config;
 		setLayout(Swts.getHorizonalNoMarginRowLayout());
 
-		compTitleAndButtons = new Composite(this, SWT.NULL);
+		compTitleAndButtons = new Composite(this, SWT.BORDER) {
+			@Override
+			public String toString() {
+				return "compTitleAndButtons " + super.toString();
+			}
+		};
 		int height = config.titleHeight;
 		compTitleAndButtons.setLayout(Swts.getHorizonalNoMarginRowLayout());
 		compTitleAndButtons.setLayoutData(new RowData(config.titleWidth + config.buttonsWidth, height));
@@ -34,16 +39,25 @@ public class AbstractTitleAnd extends Composite implements IButtonParent {
 		lblTitle.setText(title == null ? "" : title);
 
 		lblFiller = new Label(compTitleAndButtons, SWT.NULL);
-		compButtons = new Composite(compTitleAndButtons, SWT.NULL);
+		compButtons = new Composite(compTitleAndButtons, SWT.BORDER_DOT) {
+			@Override
+			public String toString() {
+				return "compButtons " + super.toString();
+			}
+		};
 		compButtons.setLayout(Swts.getHorizonalNoMarginRowLayout());
 		setLayoutData();
 	}
 
 	private void setLayoutData() {
 		int buttonsWidth = config.buttonSpacer * buttonCount;
-		int fillerWidth = config.buttonsWidth - 9 - buttonsWidth;
+		int fillerWidth = config.buttonsWidth - 22 - buttonsWidth;
+		System.out.println("setLayoutData: buttons: " + buttonsWidth + ", filler: " + fillerWidth);
 		compButtons.setLayoutData(new RowData(buttonsWidth, config.buttonHeight));
 		lblFiller.setLayoutData(new RowData(fillerWidth, config.buttonHeight));
+		compButtons.layout();
+		compTitleAndButtons.layout();
+		layout();
 	}
 
 	public String getTitle() {

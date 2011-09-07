@@ -10,7 +10,7 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 public class ConfigForTitleAnd {
 
 	public static ConfigForTitleAnd createForBasics(Display display) {
-		return ConfigForTitleAnd.create(display, Resources.resourceGetterWithBasics(),new ImageRegistry(display));
+		return ConfigForTitleAnd.create(display, Resources.resourceGetterWithBasics(), new ImageRegistry(display));
 	}
 
 	public static ConfigForTitleAnd create(Display display, IResourceGetter resourceGetter, ImageRegistry imageRegistry) {
@@ -31,7 +31,7 @@ public class ConfigForTitleAnd {
 	public final int buttonHeight;
 
 	public ConfigForTitleAnd(IResourceGetter resourceGetter, ImageRegistry imageRegistry, Color normalBackground, Color editingBackground) {
-		this(resourceGetter, imageRegistry, normalBackground, editingBackground, SWT.NULL, 100, 100, 21, 16, 23);
+		this(resourceGetter, imageRegistry, normalBackground, editingBackground, SWT.NULL, 100, 100, 24, 22, 20);
 	}
 
 	public ConfigForTitleAnd(IResourceGetter resourceGetter, ImageRegistry imageRegistry, Color normalBackground, Color editingBackground, int style, int titleWidth, int buttonsWidth, int buttonSpacer, int titleHeight, int buttonHeight) {

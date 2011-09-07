@@ -14,6 +14,7 @@ import org.softwareFm.displayCore.api.IRegisteredItems;
 import org.softwareFm.repository.api.ISoftwareFmRepository;
 import org.softwareFm.repository.api.IUrlGenerator;
 import org.softwareFm.repository.constants.RepositoryConstants;
+import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.swtBasics.images.ImageButtons;
 import org.softwareFm.swtBasics.images.Resources;
 import org.softwareFm.utilities.strings.Strings;
@@ -24,13 +25,13 @@ public class MainUrlDisplayer extends AbstractDisplayerWithLabel<MainUrlPanel> {
 	public MainUrlPanel createLargeControl(final DisplayerContext context, final IRegisteredItems registeredItems, Composite parent, final DisplayerDetails displayerDetails) {
 		final MainUrlPanel titleAndTextField = new MainUrlPanel(context.configForTitleAnd, parent, displayerDetails.key);
 		titleAndTextField.setEditable(true);
-		ImageButtons.addBrowseButton(titleAndTextField, new Callable<String>() {
+		ImageButtons.addBrowseButton(titleAndTextField, GeneralAnchor.browseKey, new Callable<String>() {
 			@Override
 			public String call() throws Exception {
 				return titleAndTextField.getText();
 			}
 		});
-		ImageButtons.addHelpButton(titleAndTextField, displayerDetails.key);
+		ImageButtons.addHelpButton(titleAndTextField, displayerDetails.key, GeneralAnchor.helpKey);
 		titleAndTextField.addCrListener(new Listener() {
 			@Override
 			public void handleEvent(Event event) {

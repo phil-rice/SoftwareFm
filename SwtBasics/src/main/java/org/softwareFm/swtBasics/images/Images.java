@@ -35,7 +35,8 @@ public class Images {
 	}
 
 	public static void registerImagesInDirectory(Device device, ImageRegistry imageRegistry, Class<?> anchor, String prefix, String aName) {
-		for (String name : getNamesFor(anchor, aName + ".png"))
+		Iterable<String> names = getNamesFor(anchor, aName + ".png");
+		for (String name : names)
 			imageRegistry.put(prefix + "." + name, Images.makeImage(device, anchor, name + ".png"));
 	}
 

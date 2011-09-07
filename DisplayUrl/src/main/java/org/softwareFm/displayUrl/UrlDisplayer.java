@@ -10,6 +10,7 @@ import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
 import org.softwareFm.displayCore.api.Displayers;
 import org.softwareFm.displayCore.api.IRegisteredItems;
+import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 import org.softwareFm.swtBasics.images.ImageButtons;
 import org.softwareFm.swtBasics.images.Resources;
@@ -20,14 +21,14 @@ public class UrlDisplayer extends AbstractDisplayerWithLabel<BoundTitleAndTextFi
 	@Override
 	public BoundTitleAndTextField createLargeControl(DisplayerContext context, IRegisteredItems registeredItems, Composite parent, DisplayerDetails displayerDetails) {
 		final BoundTitleAndTextField boundTitleAndTextField = new BoundTitleAndTextField(parent, context, displayerDetails);
-		boundTitleAndTextField.addEditButton(OverlaysAnchor.editKey);
-		ImageButtons.addBrowseButton(boundTitleAndTextField, new Callable<String>() {
+		boundTitleAndTextField.addEditButton(GeneralAnchor.helpKey, OverlaysAnchor.editKey);
+		ImageButtons.addBrowseButton(boundTitleAndTextField, GeneralAnchor.browseKey, new Callable<String>() {
 			@Override
 			public String call() throws Exception {
 				return boundTitleAndTextField.getText();
 			}
 		});
-		ImageButtons.addHelpButton(boundTitleAndTextField, displayerDetails.key);
+		ImageButtons.addHelpButton(boundTitleAndTextField, displayerDetails.key, GeneralAnchor.helpKey);
 
 		return boundTitleAndTextField;
 	}
@@ -39,7 +40,7 @@ public class UrlDisplayer extends AbstractDisplayerWithLabel<BoundTitleAndTextFi
 	}
 
 	public static void main(String[] args) {
-		Displayers.displayWithKey1(new UrlDisplayer(), Resources.resourceGetterWithBasics("DisplayForTest"), "www.google.com");
+		Displayers.displayWithKey1(new UrlDisplayer(), Resources.resourceGetterWithBasics("org.softwareFm.displayCore.api.DisplayForTest"), "www.google.com");
 	}
 
 }

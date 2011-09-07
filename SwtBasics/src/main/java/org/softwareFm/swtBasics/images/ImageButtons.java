@@ -24,8 +24,8 @@ abstract public class ImageButtons {
 		return addRowButton(parent, imageKey, null, SwtBasicConstants.tooltipPattern, tooltipKey, listener);
 	}
 
-	public static ImageButton addBrowseButton(IButtonParent parent, final Callable<String> urlGetter) {
-		return addRowButton(parent, SwtBasicConstants.browseKey, SwtBasicConstants.browseKey, new IImageButtonListener() {
+	public static ImageButton addBrowseButton(IButtonParent parent, String browseKey, final Callable<String> urlGetter) {
+		return addRowButton(parent, browseKey, SwtBasicConstants.browseKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				try {
@@ -58,16 +58,16 @@ abstract public class ImageButtons {
 			button.setTooltipText(IResourceGetter.Utils.get(parent.getResourceGetter(), fullKey));
 		}
 		RowData data = new RowData();
-		data.height = 18;
-		data.width = 18;
+		data.height = 20;
+		data.width = 20;
 		button.setLayoutData(data);
 		parent.buttonAdded();
 		return button;
 	}
 
-	public static ImageButton addHelpButton(final IButtonParent parent, final String helpKey) {
+	public static ImageButton addHelpButton(final IButtonParent parent, final String helpKey, final String helpImageKey) {
 		final IResourceGetter resourceGetter = parent.getResourceGetter();
-		ImageButton helpButton = addRowButton(parent, SwtBasicConstants.helpKey, null, SwtBasicConstants.summaryHelpPattern, helpKey, new IImageButtonListener() {
+		ImageButton helpButton = addRowButton(parent, helpImageKey, null, SwtBasicConstants.summaryHelpPattern, helpKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				String detailed = Resources.getDetailedHelp(resourceGetter, helpKey);

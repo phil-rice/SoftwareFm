@@ -25,6 +25,7 @@ import org.softwareFm.panel.ISelectedBindingManager;
 import org.softwareFm.repository.api.ISoftwareFmRepository;
 import org.softwareFm.repository.api.IUrlGeneratorMap;
 import org.softwareFm.repository.api.RepositoryDataItemStatus;
+import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.softwareFmImages.images.SoftwareFmImages;
 import org.softwareFm.swtBasics.SwtBasicConstants;
 import org.softwareFm.swtBasics.Swts;
@@ -81,7 +82,7 @@ public class ListPanel<T> extends Composite implements IButtonParent, ILineEdita
 				lineEditor.add(ListPanel.this);
 			}
 		});
-		ImageButtons.addHelpButton(this, displayerDetails.key);
+		ImageButtons.addHelpButton(this, displayerDetails.key, GeneralAnchor.helpKey);
 
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 		setSize(getSize().x, 1);

@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Control;
 import org.softwareFm.displayCore.api.ICodec;
 import org.softwareFm.displayCore.api.ILineEditable;
 import org.softwareFm.displayLists.AbstractLineEditor;
+import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.swtBasics.images.ImageButtons;
 import org.softwareFm.swtBasics.text.ConfigForTitleAnd;
 import org.softwareFm.utilities.collections.ICrud;
@@ -20,7 +21,7 @@ public class TweetLineEditor extends AbstractLineEditor<String, TweetLinePanel> 
 
 	@Override
 	protected void addButtons(ILineEditable<String> lineEditable, Composite parent, int index, final TweetLinePanel buttonParent) {
-		ImageButtons.addBrowseButton(buttonParent, new Callable<String>() {
+		ImageButtons.addBrowseButton(buttonParent, GeneralAnchor.browseKey, new Callable<String>() {
 			@Override
 			public String call() throws Exception {
 				return "http://mobile.twitter.com/" + buttonParent.getText();

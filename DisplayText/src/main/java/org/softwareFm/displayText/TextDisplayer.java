@@ -8,7 +8,8 @@ import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
 import org.softwareFm.displayCore.api.Displayers;
 import org.softwareFm.displayCore.api.IRegisteredItems;
-import org.softwareFm.displayCore.constants.DisplayCoreConstants;
+import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
+import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 import org.softwareFm.swtBasics.images.ImageButtons;
 import org.softwareFm.swtBasics.images.Resources;
@@ -19,8 +20,7 @@ public class TextDisplayer extends AbstractDisplayerWithLabel<BoundTitleAndTextF
 	@Override
 	public BoundTitleAndTextField createLargeControl(DisplayerContext context, final IRegisteredItems registeredItems, Composite parent, DisplayerDetails displayerDetails) {
 		BoundTitleAndTextField boundTitleAndTextField = new BoundTitleAndTextField(parent, context, displayerDetails);
-		final String editorName = displayerDetails.map.get(DisplayCoreConstants.editor);
-		boundTitleAndTextField.addEditButton(OverlaysAnchor.editKey);
+		boundTitleAndTextField.addEditButton(ArtifactsAnchor.documentKey, OverlaysAnchor.editKey);
 
 		// ImageButtons.addEditButton(boundTitleAndTextField, new IImageButtonListener() {
 		// @Override
@@ -29,7 +29,7 @@ public class TextDisplayer extends AbstractDisplayerWithLabel<BoundTitleAndTextF
 		// System.out.println("Found editor for " + editorName + ": " + editor);
 		// }
 		// });
-		ImageButtons.addHelpButton(boundTitleAndTextField, displayerDetails.key);
+		ImageButtons.addHelpButton(boundTitleAndTextField, displayerDetails.key, GeneralAnchor.helpKey);
 		return boundTitleAndTextField;
 	}
 
@@ -45,6 +45,6 @@ public class TextDisplayer extends AbstractDisplayerWithLabel<BoundTitleAndTextF
 	}
 
 	public static void main(String[] args) {
-		Displayers.displayWithKey1(new TextDisplayer(), Resources.resourceGetterWithBasics("DisplayForTest"), "text");
+		Displayers.displayWithKey1(new TextDisplayer(), Resources.resourceGetterWithBasics("org.softwareFm.displayCore.api.DisplayForTest"), "text");
 	}
 }

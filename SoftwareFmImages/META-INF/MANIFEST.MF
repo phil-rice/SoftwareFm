@@ -11,6 +11,7 @@ Require-Bundle: org.softwareFm.utilities;bundle-version="1.0.0";visibility:=reex
  org.softwareFm.swtBasics;bundle-version="1.0.0";visibility:=reexport
 Export-Package: org.softwareFm.softwareFmImages.artifacts,
  org.softwareFm.softwareFmImages.backdrop,
+ org.softwareFm.softwareFmImages.general,
  org.softwareFm.softwareFmImages.images,
  org.softwareFm.softwareFmImages.overlays,
  org.softwareFm.softwareFmImages.smallIcons

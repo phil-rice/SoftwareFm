@@ -9,6 +9,7 @@ import org.softwareFm.repository.api.ISoftwareFmRepository;
 import org.softwareFm.repository.api.IUrlGeneratorMap;
 import org.softwareFm.repository.api.RepositoryDataItemStatus;
 import org.softwareFm.repository.constants.RepositoryConstants;
+import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.images.SoftwareFmImages;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.Images;
@@ -58,7 +59,7 @@ public class Displayers {
 				DisplayCoreConstants.key, key, //
 				DisplayCoreConstants.displayer, "displayer", //
 				DisplayCoreConstants.editor, "editor", //
-				DisplayCoreConstants.smallImageKey, "Clear"));
+				DisplayCoreConstants.smallImageKey, ArtifactsAnchor.documentKey));
 
 		IDisplayContainer container = factory.create(context, from);
 		return container;

@@ -54,10 +54,18 @@ public class ImageButton implements IHasControl {
 	public ImageButton(Composite parent, final ImageRegistry imageRegistry, final String key, String overlayKey, final boolean toggle) {
 		this.imageRegistry = imageRegistry;
 		this.overlayKey = overlayKey;
-		content = new Composite(parent, SWT.NULL);
+		content = new Composite(parent, SWT.NULL) {
+			@Override
+			public String toString() {
+				return "[ImageButton " + mainImageKey + "] " + super.toString();
+			}
+		};
 		content.setLayout(Swts.getGridLayoutWithoutMargins());
 		this.label = new Label(content, SWT.NULL);
-		label.setImage(imageRegistry.get("backdrop.main"));
+		Image mainBackdrop = imageRegistry.get("backdrop.main");
+		if (mainBackdrop == null)
+			throw new NullPointerException();
+		label.setImage(mainBackdrop);
 		this.mainImageKey = key;
 		label.addPaintListener(new PaintListener() {
 			@Override

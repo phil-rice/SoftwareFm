@@ -4,6 +4,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
+import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.ImageButtons;
 import org.softwareFm.swtBasics.text.ConfigForTitleAnd;
@@ -30,7 +31,7 @@ public class DisplayJarPanel extends Composite {
 
 	private TitleAndTextField addNameValue(Composite parent, ConfigForTitleAnd config, String key) {
 		TitleAndTextField titleAndTextField = new TitleAndTextField(config, parent, key);
-		ImageButtons.addHelpButton(titleAndTextField, key);
+		ImageButtons.addHelpButton(titleAndTextField, key, GeneralAnchor.helpKey);
 		return titleAndTextField;
 	}
 

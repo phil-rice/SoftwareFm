@@ -4,6 +4,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.displayCore.api.ICodec;
 import org.softwareFm.displayCore.api.ILineEditable;
 import org.softwareFm.displayCore.api.ILineEditor;
+import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 import org.softwareFm.swtBasics.SwtBasicConstants;
 import org.softwareFm.swtBasics.images.IImageButtonListener;
@@ -38,7 +39,7 @@ public abstract class AbstractLineEditor<T, Line extends IButtonParent> implemen
 			}
 		});
 		String key = lineEditable.getDisplayerDetails().key;
-		ImageButtons.addHelpButton(buttonParent, Resources.getRowKey(key));
+		ImageButtons.addHelpButton(buttonParent, Resources.getRowKey(key), GeneralAnchor.helpKey);
 	}
 
 	@Override
