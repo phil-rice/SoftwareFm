@@ -8,6 +8,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.softwareFm.softwareFmImages.IImageRegister;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 import org.softwareFm.swtBasics.Swts;
@@ -28,7 +29,7 @@ public class ShowAllImages {
 		Swts.display("Images", new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				ImageRegistry imageRegistry = SoftwareFmImages.withBasics(from.getDisplay());
+				ImageRegistry imageRegistry = IImageRegister.Utils.withBasics(from.getDisplay());
 				Composite composite = new Composite(from, SWT.NULL);
 				Composite jarComposite = new Composite(composite, SWT.BORDER);
 

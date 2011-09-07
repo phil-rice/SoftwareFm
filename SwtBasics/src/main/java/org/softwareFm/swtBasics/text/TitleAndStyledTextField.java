@@ -63,7 +63,7 @@ public class TitleAndStyledTextField extends AbstractTitleAnd {
 
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				return new TitleAndStyledTextField(ConfigForTitleAnd.createForBasics(from.getDisplay()), from, "Title");
+				return new TitleAndStyledTextField(ConfigForTitleAnd.createForBasics(from.getDisplay()), from, "title");
 			}
 		});
 	}

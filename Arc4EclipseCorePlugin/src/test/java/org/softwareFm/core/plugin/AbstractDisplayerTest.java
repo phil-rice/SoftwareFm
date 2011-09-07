@@ -101,13 +101,13 @@ public abstract class AbstractDisplayerTest<L extends Control, C extends Control
 		urlGeneratorMap = activator.getUrlGeneratorMap();
 		displayerContext = new DisplayerContext(selectedBindingManager, repository, urlGeneratorMap, ConfigForTitleAnd.create(display, resourceGetter, imageRegistry));
 		shell = new Shell(display);
-		Images.registerImages(display, imageRegistry, Displayers.class, "Key1");
+		Images.registerImage(display, imageRegistry, Displayers.class, "Key1");
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		Images.removeImages(activator.getImageRegistry(display), "Key1");
+		Images.removeImage(activator.getImageRegistry(display), "Key1");
 		shell.dispose();
 		activator.clear();
 	}

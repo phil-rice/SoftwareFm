@@ -5,11 +5,10 @@ Bundle-SymbolicName: org.softwareFm.debugPanels;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Arc4Eclipse
 Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
  org.softwareFm.swtBasics;bundle-version="1.0.0";visibility:=reexport,
  org.softwareFm.selection;bundle-version="1.0.0";visibility:=reexport,
  org.softwareFm.repository;bundle-version="1.0.0";visibility:=reexport,
- org.eclipse.core.resources;bundle-version="3.7.100"
+ org.softwareFm.softwareFmImages;bundle-version="1.0.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.softwareFm.debugMessagePanel.views

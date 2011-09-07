@@ -8,11 +8,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
-import org.softwareFm.swtBasics.SwtBasicConstants;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.IImageButtonListener;
 import org.softwareFm.swtBasics.images.ImageButton;
-import org.softwareFm.swtBasics.images.ImageButtons;
 import org.softwareFm.swtBasics.images.Images;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.strings.Strings;
@@ -43,9 +41,6 @@ public class TitleAndTextField extends AbstractTitleAnd {
 			}
 		});
 		layout();
-	}
-
-	public void addEditButton(String mainKey, String overlayKey) {
 		addCrListener(new Listener() {
 			@Override
 			public void handleEvent(Event event) {
@@ -53,13 +48,17 @@ public class TitleAndTextField extends AbstractTitleAnd {
 				updateBackground();
 			}
 		});
-		ImageButtons.addEditButton(this, mainKey, overlayKey, new IImageButtonListener() {
+	}
+
+	public IImageButtonListener editButtonListener() {
+		return new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				txtText.setEditable(globalEditable || !txtText.getEditable());
 				updateBackground();
 			}
-		});
+		};
+
 	}
 
 	protected void updateBackground() {
@@ -110,9 +109,7 @@ public class TitleAndTextField extends AbstractTitleAnd {
 				ConfigForTitleAnd config = ConfigForTitleAnd.createForBasics(from.getDisplay());
 				Images.registerImagesInDirectory(from.getDisplay(), config.imageRegistry, Images.class, "test", "alternativeImage");
 				config.imageRegistry.put("backdrop.main", Images.makeImage(from.getDisplay(), Images.class, "main.png"));
-				TitleAndTextField titleAndTextField = new TitleAndTextField(config, from, "Title");
-				titleAndTextField.addEditButton("test.mainImage", "test.overlayImage");
-				ImageButtons.addHelpButton(titleAndTextField, SwtBasicConstants.helpKey, "test.smallIcon");
+				TitleAndTextField titleAndTextField = new TitleAndTextField(config, from, "title");
 				titleAndTextField.setText("Some text");
 				return titleAndTextField;
 			}

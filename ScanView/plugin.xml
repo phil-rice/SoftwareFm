@@ -22,9 +22,6 @@
       </perspectiveExtension>
    </extension>
     
-    <extension  point="org.softwareFm.image">
-      <image key="scanView.scan" class ="org.softwareFm.scanView.ScanViewConstants"/>
-   </extension>
    
   <extension  point="org.softwareFm.bundle">
       <bundle name="ScanView" class="org.softwareFm.scanView.ScanViewConstants"/>

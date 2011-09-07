@@ -7,6 +7,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.softwareFmImages.IImageRegister;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.ImageButton;
 import org.softwareFm.swtBasics.images.Images;
@@ -16,20 +17,20 @@ import org.softwareFm.utilities.functions.IFunction1;
 public class ImageButtonDemo {
 
 	public static void main(String[] args) {
-		final String mainImage = "test.mainImage";
-		final String alterativeImage = "test.alternativeImage";
-		final String overlayImage = "test.overlayImage";
-		final String smallIcon = "test.smallIcon";
+		final String mainImage = "mainImage";
+		final String alterativeImage = "alternativeImage";
+		final String overlayImage = "overlayImage";
+		final String smallIcon = "smallIcon";
 		Swts.display("ImageButtonDemo", new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				Composite content = new Composite(from, SWT.NULL);
 				content.setLayout(new GridLayout());
-				ImageRegistry imageRegistry = SoftwareFmImages.withBasics(from.getDisplay());
+				ImageRegistry imageRegistry = IImageRegister.Utils.withBasics(from.getDisplay());
 				imageRegistry.put(mainImage, Images.makeImage(from.getDisplay(), Images.class, mainImage + ".png"));
 				imageRegistry.put(alterativeImage, Images.makeImage(from.getDisplay(), Images.class, alterativeImage + ".png"));
-				imageRegistry.put(overlayImage, Images.makeImage(from.getDisplay(), Images.class, "test.overlayImage.png"));
-				imageRegistry.put(smallIcon, Images.makeImage(from.getDisplay(), Images.class, "test.smallIcon.png"));
+				imageRegistry.put(overlayImage, Images.makeImage(from.getDisplay(), Images.class, "overlayImage.png"));
+				imageRegistry.put(smallIcon, Images.makeImage(from.getDisplay(), Images.class, "smallIcon.png"));
 
 				final ImageButton imageButton = new ImageButton(content, imageRegistry, mainImage, true);
 				final ImageButton overlayImageButton = new ImageButton(content, imageRegistry, mainImage, overlayImage, true);

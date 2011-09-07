@@ -1,7 +1,6 @@
-package org.softwareFm.swtBasics.images;
+package org.softwareFm.softwareFmImages;
 
 import java.awt.Desktop;
-import java.io.File;
 import java.net.URI;
 import java.text.MessageFormat;
 import java.util.concurrent.Callable;
@@ -12,7 +11,12 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Display;
+import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.swtBasics.SwtBasicConstants;
+import org.softwareFm.swtBasics.images.IImageButtonListener;
+import org.softwareFm.swtBasics.images.ImageButton;
+import org.softwareFm.swtBasics.images.Resources;
+import org.softwareFm.swtBasics.images.SmallIconPosition;
 import org.softwareFm.swtBasics.text.IButtonParent;
 import org.softwareFm.utilities.exceptions.Exceptions;
 import org.softwareFm.utilities.exceptions.WrappedException;
@@ -25,7 +29,7 @@ abstract public class ImageButtons {
 	}
 
 	public static ImageButton addBrowseButton(IButtonParent parent, String browseKey, final Callable<String> urlGetter) {
-		return addRowButton(parent, browseKey, SwtBasicConstants.browseKey, new IImageButtonListener() {
+		return addRowButton(parent, browseKey, GeneralAnchor.browseKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				try {
@@ -79,16 +83,7 @@ abstract public class ImageButtons {
 	}
 
 	public static ImageButton addEditButton(IButtonParent parent, String imageKey, String overlayKey, IImageButtonListener listener) {
-		return addRowButton(parent, imageKey, overlayKey, SwtBasicConstants.tooltipPattern, SwtBasicConstants.editKey, listener);
-	}
-
-	public static ImageButton addOpenFolderButton(IButtonParent buttonParent, String tooltipKey, final Callable<File> callable) {
-		return addRowButton(buttonParent, SwtBasicConstants.folderKey, tooltipKey, new IImageButtonListener() {
-			@Override
-			public void buttonPressed(ImageButton button) throws Exception {
-				Desktop.getDesktop().open(callable.call());
-			}
-		});
+		return addRowButton(parent, imageKey, overlayKey, SwtBasicConstants.tooltipPattern, imageKey, listener);
 	}
 
 	public static void setSmallIcon(SmallIconPosition pos, String key, ImageButton... buttons) {

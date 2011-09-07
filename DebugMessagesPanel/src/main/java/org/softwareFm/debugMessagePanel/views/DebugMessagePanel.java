@@ -13,10 +13,10 @@ import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.repository.api.ISoftwareFmLogger;
 import org.softwareFm.repository.api.ISoftwareFmRepository;
 import org.softwareFm.repositoryFacardConstants.RepositoryFacardConstants;
-import org.softwareFm.swtBasics.SwtBasicConstants;
+import org.softwareFm.softwareFmImages.ImageButtons;
+import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.swtBasics.images.IImageButtonListener;
 import org.softwareFm.swtBasics.images.ImageButton;
-import org.softwareFm.swtBasics.images.ImageButtons;
 import org.softwareFm.swtBasics.text.ConfigForTitleAnd;
 import org.softwareFm.swtBasics.text.TitleAndStyledTextField;
 import org.softwareFm.utilities.collections.Lists;
@@ -39,7 +39,7 @@ public class DebugMessagePanel extends Composite implements ISoftwareFmLogger {
 		fd_titleAndStyledTextField.left = new FormAttachment(0, 0);
 		titleAndStyledTextField.setLayoutData(fd_titleAndStyledTextField);
 		repository.addLogger(this);
-		ImageButtons.addRowButton(titleAndStyledTextField, SwtBasicConstants.clearKey, DebugPanelConstants.clearKey, new IImageButtonListener() {
+		ImageButtons.addRowButton(titleAndStyledTextField, GeneralAnchor.clearKey, DebugPanelConstants.clearKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				log.clear();

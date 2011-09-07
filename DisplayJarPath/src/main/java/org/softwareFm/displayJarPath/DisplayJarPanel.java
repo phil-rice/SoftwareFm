@@ -4,9 +4,9 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
+import org.softwareFm.softwareFmImages.ImageButtons;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.swtBasics.Swts;
-import org.softwareFm.swtBasics.images.ImageButtons;
 import org.softwareFm.swtBasics.text.ConfigForTitleAnd;
 import org.softwareFm.swtBasics.text.TitleAndTextField;
 

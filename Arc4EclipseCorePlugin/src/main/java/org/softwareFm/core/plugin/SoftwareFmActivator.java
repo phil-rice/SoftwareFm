@@ -32,6 +32,7 @@ import org.softwareFm.repository.api.ISoftwareFmRepository;
 import org.softwareFm.repository.api.IUrlGenerator;
 import org.softwareFm.repository.api.IUrlGeneratorMap;
 import org.softwareFm.repository.constants.RepositoryConstants;
+import org.softwareFm.softwareFmImages.IImageRegister;
 import org.softwareFm.swtBasics.images.Images;
 import org.softwareFm.swtBasics.text.ConfigForTitleAnd;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -178,13 +179,9 @@ public class SoftwareFmActivator extends AbstractUIPlugin implements IRepository
 			Plugins.useConfigElements(IMAGE_ID, new ICallback<IConfigurationElement>() {
 				@Override
 				public void process(IConfigurationElement t) throws Exception {
-					String key = t.getAttribute("editKey");
-					System.out.println("trying to register image " + key);
-					if (key == null)
-						throw new IllegalArgumentException(MessageFormat.format(DisplayCoreConstants.attributeMissing, key, t.getAttribute("class")));
-					Class<Object> clazz = Plugins.classFrom(t);
-					Images.registerImages(display, result, clazz, key);
-					System.out.println("....registered image " + key);
+					Class<IImageRegister> clazz = Plugins.classFrom(t);
+					IImageRegister register = clazz.newInstance();
+					register.registerWith(display, result);
 				}
 			}, ICallback.Utils.sysErrCallback());
 			registeredExtraImages = true;
@@ -284,7 +281,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin implements IRepository
 			@Override
 			public void process(IConfigurationElement t) throws Exception {
 				String key = t.getAttribute("editKey");
-				Images.removeImages(imageRegistry, key);
+				Images.removeImage(imageRegistry, key);
 			}
 		}, ICallback.Utils.sysErrCallback());
 		registeredExtraImages = false;
@@ -295,4 +292,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin implements IRepository
 		return ConfigForTitleAnd.create(display, getResourceGetter(), getImageRegistry(display));
 	}
 
+	public static void createForTest() {
+		SoftwareFmActivator.plugin = new SoftwareFmActivator();
+	}
 }

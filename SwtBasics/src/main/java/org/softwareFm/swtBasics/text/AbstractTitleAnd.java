@@ -23,7 +23,7 @@ public class AbstractTitleAnd extends Composite implements IButtonParent {
 		this.config = config;
 		setLayout(Swts.getHorizonalNoMarginRowLayout());
 
-		compTitleAndButtons = new Composite(this, SWT.BORDER) {
+		compTitleAndButtons = new Composite(this, SWT.NULL) {
 			@Override
 			public String toString() {
 				return "compTitleAndButtons " + super.toString();

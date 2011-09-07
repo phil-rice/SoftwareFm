@@ -6,12 +6,6 @@
          <display key="javadoc" class ="org.softwareFm.displayJavadocAndSource.JavadocDisplayer"/>
    </extension>	
 
-   <extension  point="org.softwareFm.image">
-	      <image key="javadoc" class="org.softwareFm.displayJavadocAndSource.JavadocDisplayer"/>
-	      <image key="source" class="org.softwareFm.displayJavadocAndSource.SourceDisplayer"/>
-	      <image key="javadoc.link" class="org.softwareFm.displayJavadocAndSource.JavadocSourceConstants"/>
-	      <image key="source.link" class="org.softwareFm.displayJavadocAndSource.JavadocSourceConstants"/>
-	</extension>
 
 	<extension  point="org.softwareFm.bundle">
 	      <bundle name="JavadocAndSource" class="org.softwareFm.displayJavadocAndSource.SourceDisplayer"/>

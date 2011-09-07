@@ -10,9 +10,9 @@ import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
 import org.softwareFm.displayCore.api.Displayers;
 import org.softwareFm.displayCore.api.IRegisteredItems;
+import org.softwareFm.softwareFmImages.ImageButtons;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
-import org.softwareFm.swtBasics.images.ImageButtons;
 import org.softwareFm.swtBasics.images.Resources;
 import org.softwareFm.utilities.strings.Strings;
 
@@ -21,7 +21,7 @@ public class UrlDisplayer extends AbstractDisplayerWithLabel<BoundTitleAndTextFi
 	@Override
 	public BoundTitleAndTextField createLargeControl(DisplayerContext context, IRegisteredItems registeredItems, Composite parent, DisplayerDetails displayerDetails) {
 		final BoundTitleAndTextField boundTitleAndTextField = new BoundTitleAndTextField(parent, context, displayerDetails);
-		boundTitleAndTextField.addEditButton(GeneralAnchor.helpKey, OverlaysAnchor.editKey);
+		ImageButtons.addEditButton(boundTitleAndTextField, GeneralAnchor.helpKey, OverlaysAnchor.editKey, boundTitleAndTextField.editButtonListener());
 		ImageButtons.addBrowseButton(boundTitleAndTextField, GeneralAnchor.browseKey, new Callable<String>() {
 			@Override
 			public String call() throws Exception {

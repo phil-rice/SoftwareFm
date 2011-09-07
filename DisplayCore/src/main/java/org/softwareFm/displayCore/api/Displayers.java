@@ -9,8 +9,8 @@ import org.softwareFm.repository.api.ISoftwareFmRepository;
 import org.softwareFm.repository.api.IUrlGeneratorMap;
 import org.softwareFm.repository.api.RepositoryDataItemStatus;
 import org.softwareFm.repository.constants.RepositoryConstants;
+import org.softwareFm.softwareFmImages.IImageRegister;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
-import org.softwareFm.softwareFmImages.images.SoftwareFmImages;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.Images;
 import org.softwareFm.swtBasics.text.ConfigForTitleAnd;
@@ -41,7 +41,7 @@ public class Displayers {
 
 	public static IDisplayContainer makeContainer(final IDisplayer<?, ?> displayer, IEditor editor, final IResourceGetter resourceGetter, Composite from, String entity, Class<?> imageAnchor, String key) {
 		Display display = from.getDisplay();
-		ImageRegistry imageRegistry = SoftwareFmImages.withBasics(display);
+		ImageRegistry imageRegistry = IImageRegister.Utils.withBasics(display);
 		Images.registerImages(from.getDisplay(), imageRegistry, imageAnchor, key);
 		// Images.registerImages(from.getDisplay(), imageRegistry, Displayers.class, "Key1");
 		IUrlGeneratorMap urlGeneratorMap = IUrlGeneratorMap.Utils.urlGeneratorMap();

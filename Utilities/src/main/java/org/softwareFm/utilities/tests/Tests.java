@@ -3,7 +3,9 @@ package org.softwareFm.utilities.tests;
 import java.io.File;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import junit.textui.TestRunner;
 
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.collections.Iterables;
@@ -65,5 +67,11 @@ public class Tests {
 	public static void main(String[] args) {
 		for (Class<?> clazz : testsUnder(new File(".."), IClassAcceptor.Utils.isTest()))
 			System.out.println(clazz.getName());
+	}
+
+	public static void executeTest(Class<? extends TestCase> class1) {
+		TestSuite suite = new TestSuite("Tests");
+		suite.addTestSuite(class1);
+		new TestRunner().doRun(suite);
 	}
 }

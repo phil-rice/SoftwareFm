@@ -10,8 +10,6 @@
       <bundle name="DisplayJar" class="org.softwareFm.displayJarPath.DisplayJarConstants"/>
    </extension>
    
-   <extension  point="org.softwareFm.image">
-      <image key="Jar" class ="org.softwareFm.displayJarPath.DisplayJarConstants"/>
-   </extension>
+
 
 </plugin>

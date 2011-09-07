@@ -5,8 +5,8 @@ import java.util.concurrent.Callable;
 
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.displayCore.api.ILineEditable;
+import org.softwareFm.softwareFmImages.ImageButtons;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
-import org.softwareFm.swtBasics.images.ImageButtons;
 import org.softwareFm.swtBasics.text.TitleAndTextField;
 
 public class NameAndUrlLineEditor extends NameAndValueLineEditor {

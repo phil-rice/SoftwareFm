@@ -14,8 +14,8 @@ import org.softwareFm.displayCore.api.IRegisteredItems;
 import org.softwareFm.repository.api.ISoftwareFmRepository;
 import org.softwareFm.repository.api.IUrlGenerator;
 import org.softwareFm.repository.constants.RepositoryConstants;
+import org.softwareFm.softwareFmImages.ImageButtons;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
-import org.softwareFm.swtBasics.images.ImageButtons;
 import org.softwareFm.swtBasics.images.Resources;
 import org.softwareFm.utilities.strings.Strings;
 

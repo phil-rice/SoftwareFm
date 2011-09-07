@@ -18,14 +18,15 @@ import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
 import org.softwareFm.displayCore.constants.DisplayCoreConstants;
 import org.softwareFm.repository.api.RepositoryDataItemStatus;
+import org.softwareFm.softwareFmImages.IImageRegister;
+import org.softwareFm.softwareFmImages.ImageButtons;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
-import org.softwareFm.softwareFmImages.images.SoftwareFmImages;
+import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
-import org.softwareFm.swtBasics.SwtBasicConstants;
+import org.softwareFm.softwareFmImages.smallIcons.SmallIconsAnchor;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.IImageButtonListener;
 import org.softwareFm.swtBasics.images.ImageButton;
-import org.softwareFm.swtBasics.images.ImageButtons;
 import org.softwareFm.swtBasics.images.Resources;
 import org.softwareFm.swtBasics.images.SmallIconPosition;
 import org.softwareFm.swtBasics.text.ConfigForTitleAnd;
@@ -64,7 +65,7 @@ public abstract class JavadocOrSourcePanel extends Composite implements IButtonP
 		final ReconciliationDialog reconciliationDialog = new ReconciliationDialog(parent.getShell(), this, config, key);
 		setLayout(Swts.getHorizonalNoMarginRowLayout());
 		Swts.makeTitleLabel(this, config, key);
-		repositoryButton = ImageButtons.addRowButton(this, ArtifactsAnchor.jarKey, SwtBasicConstants.browseKey, new IImageButtonListener() {
+		repositoryButton = ImageButtons.addRowButton(this, ArtifactsAnchor.jarKey, GeneralAnchor.browseKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				browseOrOpenFile(state.repositoryValue);
@@ -123,7 +124,7 @@ public abstract class JavadocOrSourcePanel extends Composite implements IButtonP
 		if (state.eclipsePresent)
 			ImageButtons.setSmallIcon(getLeftPosition(), getEclipseSmallIconKey(), eclipseButton, attachButton);
 		if (state.repositoryPresent)
-			ImageButtons.setSmallIcon(getRightPosition(), getEclipseSmallIconKey(), repositoryButton, attachButton);
+			ImageButtons.setSmallIcon(getRightPosition(), SmallIconsAnchor.softwareFmKey, repositoryButton, attachButton);
 		if (state.eclipsePresent && !state.repositoryPresent)
 			attachButton.setImage(ArtifactsAnchor.jarCopyToSoftwareFmKey);
 		else if (!state.eclipsePresent && state.repositoryPresent)
@@ -202,7 +203,7 @@ public abstract class JavadocOrSourcePanel extends Composite implements IButtonP
 				composite.setLayout(new GridLayout());
 				final String key = "javadoc";
 				IResourceGetter resourceGetter = Resources.resourceGetterWithBasics().with(JavadocSourceConstants.class, "JavadocAndSource");
-				ImageRegistry imageRegistry = SoftwareFmImages.withBasics(from.getDisplay());
+				ImageRegistry imageRegistry = IImageRegister.Utils.withBasics(from.getDisplay());
 				DisplayerContext displayerContext = DisplayerContext.Utils.forTest(from.getDisplay(), resourceGetter, imageRegistry);
 				DisplayerDetails displayerDetails = new DisplayerDetails("anyEntity", Maps.<String, String> makeMap(DisplayCoreConstants.key, key));
 				JavadocOrSourcePanel panel = panelMaker.make(composite, displayerContext, displayerDetails);

@@ -25,13 +25,13 @@ import org.softwareFm.panel.ISelectedBindingManager;
 import org.softwareFm.repository.api.ISoftwareFmRepository;
 import org.softwareFm.repository.api.IUrlGeneratorMap;
 import org.softwareFm.repository.api.RepositoryDataItemStatus;
+import org.softwareFm.softwareFmImages.IImageRegister;
+import org.softwareFm.softwareFmImages.ImageButtons;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
-import org.softwareFm.softwareFmImages.images.SoftwareFmImages;
-import org.softwareFm.swtBasics.SwtBasicConstants;
+import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.IImageButtonListener;
 import org.softwareFm.swtBasics.images.ImageButton;
-import org.softwareFm.swtBasics.images.ImageButtons;
 import org.softwareFm.swtBasics.images.Resources;
 import org.softwareFm.swtBasics.text.ConfigForTitleAnd;
 import org.softwareFm.swtBasics.text.IButtonParent;
@@ -76,7 +76,7 @@ public class ListPanel<T> extends Composite implements IButtonParent, ILineEdita
 		new Label(compTitle, SWT.NULL).setText(Strings.nullSafeToString(title));
 		compForList = new Composite(this, SWT.BORDER);
 
-		ImageButtons.addRowButton(this, SwtBasicConstants.addKey, SwtBasicConstants.addKey, new IImageButtonListener() {
+		ImageButtons.addRowButton(this, key, OverlaysAnchor.addKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				lineEditor.add(ListPanel.this);
@@ -194,7 +194,7 @@ public class ListPanel<T> extends Composite implements IButtonParent, ILineEdita
 								Resources.resourceGetterWithBasics(//
 										getClass().getPackage().getName() + ".ListAndPanelTest",//
 										getClass().getPackage().getName() + ".DisplayLists"),//
-								SoftwareFmImages.withBasics(from.getDisplay())));
+								IImageRegister.Utils.withBasics(from.getDisplay())));
 				DisplayerDetails displayerDetails = new DisplayerDetails("entity", Maps.<String, String> makeMap(//
 						DisplayCoreConstants.key, "ListKey",//
 						DisplayCoreConstants.lineEditorKey, "ignored"));

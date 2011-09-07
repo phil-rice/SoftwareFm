@@ -10,17 +10,11 @@
    <extension-point id="org.softwareFm.lineEditor" name="LineEditor" />
 
 <extension  point="org.softwareFm.image">
-      <image key="Edit" class ="org.softwareFm.softwareFmImages.images.Images"/>
-      <image key="Help" class ="org.softwareFm.softwareFmImages.images.Images"/>
-      <image key="Browse" class ="org.softwareFm.softwareFmImages.images.Images"/>
-      <image key="Add" class ="org.softwareFm.softwareFmImages.images.Images"/>
-      <image key="Delete" class ="org.softwareFm.softwareFmImages.images.Images"/>
-      <image key="Clear" class ="org.softwareFm.softwareFmImages.images.Images"/>
-      <image key="Folder" class ="org.softwareFm.softwareFmImages.images.Images"/>
+      <image class ="org.softwareFm.softwareFmImages.BasicImageRegister"/>
 </extension>
 
 <extension  point="org.softwareFm.bundle">
-      <bundle name ="Basic" class="org.softwareFm.softwareFmImages.images.Images"/>
+      <bundle name ="Basic" class="org.softwareFm.swtBasics.images.Images"/>
       <bundle name ="Core" class="org.softwareFm.core.plugin.Plugins"/>
 </extension>
 

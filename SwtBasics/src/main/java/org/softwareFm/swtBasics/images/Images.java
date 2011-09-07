@@ -40,17 +40,13 @@ public class Images {
 			imageRegistry.put(prefix + "." + name, Images.makeImage(device, anchor, name + ".png"));
 	}
 
-	public static void registerImages(Device device, ImageRegistry imageRegistry, Class<?> clazz, String key) {
-		String mainName = Resources.getMainName(key);
-		String depressedName = Resources.getDepressedName(key);
-		Image mainImage = makeImage(device, clazz, mainName + ".png");
-		Image depressedImage = makeImage(device, clazz, depressedName + ".png");
-		imageRegistry.put(mainName, mainImage);
-		imageRegistry.put(depressedName, depressedImage);
-		System.out.println("Putting images: " + mainName + ", " + depressedName);
+	public static void registerImage(Device device, ImageRegistry imageRegistry, Class<?> clazz, String key) {
+		Image mainImage = makeImage(device, clazz, key + ".png");
+		imageRegistry.put(key, mainImage);
+		System.out.println("Putting image: " + key);
 	}
 
-	public static void removeImages(ImageRegistry imageRegistry, String key) {
+	public static void removeImage(ImageRegistry imageRegistry, String key) {
 		if (key == null)
 			return;
 		String mainName = Resources.getMainName(key);
@@ -108,6 +104,14 @@ public class Images {
 			return image;
 		} catch (Exception e) {
 			throw new RuntimeException(MessageFormat.format(SwtBasicConstants.errorMakingImage, classPath, clazz.getName()), e);
+		}
+	}
+
+	public static void registerImages(Device device, ImageRegistry imageRegistry, Class<?> anchor, String prefix, String... names) {
+		for (String name : names) {
+			String fullName = prefix + "." + name;
+			Image image = makeImage(device, anchor, name + ".png");
+			imageRegistry.put(fullName, image);
 		}
 	}
 
