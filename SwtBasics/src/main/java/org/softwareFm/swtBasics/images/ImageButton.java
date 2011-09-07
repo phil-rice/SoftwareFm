@@ -1,5 +1,6 @@
 package org.softwareFm.swtBasics.images;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -10,9 +11,6 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
@@ -24,7 +22,6 @@ import org.softwareFm.swtBasics.SwtBasicConstants;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
-import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.strings.Strings;
 
@@ -48,12 +45,14 @@ public class ImageButton implements IHasControl {
 	private final String overlayKey;
 	private final Map<SmallIconPosition, String> smallIconMap = Maps.newMap();
 	private final Composite content;
+	private final ImageRegistry imageRegistry;
 
 	public ImageButton(Composite parent, ImageRegistry imageRegistry, String key, final boolean toggle) {
 		this(parent, imageRegistry, key, null, toggle);
 	}
 
 	public ImageButton(Composite parent, final ImageRegistry imageRegistry, final String key, String overlayKey, final boolean toggle) {
+		this.imageRegistry = imageRegistry;
 		this.overlayKey = overlayKey;
 		content = new Composite(parent, SWT.NULL);
 		content.setLayout(new GridLayout());
@@ -68,7 +67,7 @@ public class ImageButton implements IHasControl {
 						throw new NullPointerException();
 					e.gc.drawImage(depressed, 0, 0);
 				}
-				Image mainImage = Images.getImage(imageRegistry, key);
+				Image mainImage = getImage(key);
 				e.gc.drawImage(mainImage, 2, 2);
 				Image overLayImage = imageRegistry.get(ImageButton.this.overlayKey);
 				if (overLayImage != null)
@@ -76,7 +75,7 @@ public class ImageButton implements IHasControl {
 				for (SmallIconPosition pos : SmallIconPosition.values()) {
 					String key = smallIconMap.get(pos);
 					if (key != null) {
-						Image image = Images.getImage(imageRegistry, key);
+						Image image = getImage(key);
 						e.gc.drawImage(image, pos.x + 2, pos.y + 2);
 					}
 				}
@@ -109,6 +108,13 @@ public class ImageButton implements IHasControl {
 		GridData data = Swts.makeGrabHorizonalAndFillGridData();
 		data.widthHint = 20;
 		label.setLayoutData(data);
+	}
+
+	private Image getImage(String key) {
+		Image result = imageRegistry.get(key);
+		if (result == null)
+			throw new NullPointerException(MessageFormat.format(SwtBasicConstants.cannotFindImage, key));
+		return result;
 	}
 
 	public void clearSmallIcons() {
@@ -175,29 +181,7 @@ public class ImageButton implements IHasControl {
 	}
 
 	public static void main(String[] args) {
-		Swts.display("Label", new IFunction1<Composite, Composite>() {
-			@Override
-			public Composite apply(Composite from) throws Exception {
-				Composite composite = new Composite(from, SWT.NULL);
-				composite.setLayout(new FormLayout());
-				ImageRegistry imageRegistry = new ImageRegistry();
-				Images.registerImages(from.getDisplay(), imageRegistry, Images.class, SwtBasicConstants.key);
-				ImageButton btn = new ImageButton(composite, imageRegistry, SwtBasicConstants.key, true);
-				btn.addListener(new IImageButtonListener() {
-					@Override
-					public void buttonPressed(ImageButton button) {
-						System.out.println(button.getState());
-					}
-				});
-				FormData fd = new FormData();
-				fd.bottom = new FormAttachment(100, 0);
-				fd.right = new FormAttachment(100, 0);
-				fd.top = new FormAttachment(0, 0);
-				fd.left = new FormAttachment(0, 0);
-				btn.getControl().setLayoutData(fd);
-				return composite;
-			}
-		});
+		System.out.println("See ImageButtonDemo");
 	}
 
 	public void setLayoutData(RowData data) {

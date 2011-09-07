@@ -2,7 +2,6 @@ package org.softwareFm.core.plugin;
 
 import junit.framework.TestCase;
 
-import org.softwareFm.core.plugin.SoftwareFmActivator;
 import org.softwareFm.repository.api.IUrlGenerator;
 
 public abstract class AbstractUrlGeneratorTest extends TestCase {

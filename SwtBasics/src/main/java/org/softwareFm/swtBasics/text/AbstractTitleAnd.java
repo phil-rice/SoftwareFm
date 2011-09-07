@@ -3,7 +3,6 @@ package org.softwareFm.swtBasics.text;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowData;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.softwareFm.swtBasics.Swts;
@@ -22,14 +21,11 @@ public class AbstractTitleAnd extends Composite implements IButtonParent {
 	public AbstractTitleAnd(ConfigForTitleAnd config, Composite parent, String titleOrTitleKey, boolean titleIsKey) {
 		super(parent, config.style);
 		this.config = config;
-
-		RowLayout layout = new RowLayout(SWT.HORIZONTAL);
-		layout.justify = false;
-		layout.pack = true;
-		setLayout(layout);
+		setLayout(Swts.getHorizonalNoMarginRowLayout());
 
 		compTitleAndButtons = new Composite(this, SWT.NULL);
 		int height = config.titleHeight;
+		compTitleAndButtons.setLayout(Swts.getHorizonalNoMarginRowLayout());
 		compTitleAndButtons.setLayoutData(new RowData(config.titleWidth + config.buttonsWidth, height));
 
 		String title = titleIsKey ? Resources.getTitle(config.resourceGetter, titleOrTitleKey) : titleOrTitleKey;
@@ -38,9 +34,7 @@ public class AbstractTitleAnd extends Composite implements IButtonParent {
 		lblTitle.setText(title == null ? "" : title);
 
 		lblFiller = new Label(compTitleAndButtons, SWT.NULL);
-
 		compButtons = new Composite(compTitleAndButtons, SWT.NULL);
-
 		compButtons.setLayout(Swts.getHorizonalNoMarginRowLayout());
 		setLayoutData();
 	}

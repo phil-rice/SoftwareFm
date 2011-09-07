@@ -4,14 +4,13 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
-import org.softwareFm.swtBasics.images.Images;
 import org.softwareFm.swtBasics.images.Resources;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class ConfigForTitleAnd {
 
 	public static ConfigForTitleAnd createForBasics(Display display) {
-		return ConfigForTitleAnd.create(display, Resources.resourceGetterWithBasics(), Images.withBasics(display));
+		return ConfigForTitleAnd.create(display, Resources.resourceGetterWithBasics(),new ImageRegistry(display));
 	}
 
 	public static ConfigForTitleAnd create(Display display, IResourceGetter resourceGetter, ImageRegistry imageRegistry) {

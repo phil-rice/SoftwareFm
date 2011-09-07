@@ -11,7 +11,7 @@ import org.softwareFm.displayCore.api.IDisplayContainer;
 import org.softwareFm.displayCore.api.IDisplayer;
 import org.softwareFm.displayCore.api.ITopButtonState;
 import org.softwareFm.displayCore.api.NameSpaceAndName;
-import org.softwareFm.swtBasics.Swts;
+import org.softwareFm.softwareFmImages.Swts;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;

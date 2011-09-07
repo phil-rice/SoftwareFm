@@ -41,6 +41,7 @@ public class TitleAndTextField extends AbstractTitleAnd {
 				txtText.setToolTipText(txtText.getText());
 			}
 		});
+		layout();
 	}
 
 	public void addEditButton() {
@@ -108,6 +109,7 @@ public class TitleAndTextField extends AbstractTitleAnd {
 				TitleAndTextField titleAndTextField = new TitleAndTextField(ConfigForTitleAnd.createForBasics(from.getDisplay()), from, "Title");
 				titleAndTextField.addEditButton();
 				ImageButtons.addHelpButton(titleAndTextField, SwtBasicConstants.helpKey);
+				titleAndTextField.setText("Some text");
 				return titleAndTextField;
 			}
 		});

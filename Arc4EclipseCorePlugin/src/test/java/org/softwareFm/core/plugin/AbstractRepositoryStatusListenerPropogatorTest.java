@@ -10,8 +10,8 @@ import junit.framework.TestCase;
 
 import org.softwareFm.displayCore.api.IRepositoryAndUrlGeneratorMapGetter;
 import org.softwareFm.displayCore.api.RepositoryStatusListenerPropogator;
-import org.softwareFm.repository.api.ISoftwareFmLogger;
 import org.softwareFm.repository.api.IRepositoryStatusListener;
+import org.softwareFm.repository.api.ISoftwareFmLogger;
 import org.softwareFm.repository.api.ISoftwareFmRepository;
 import org.softwareFm.repository.api.IUrlGenerator;
 import org.softwareFm.repository.api.IUrlGeneratorMap;

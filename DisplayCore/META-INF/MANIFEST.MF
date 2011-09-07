@@ -4,10 +4,12 @@ Bundle-Name: org.softwareFm.displayCore
 Bundle-SymbolicName: org.softwareFm.displayCore;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: softwareFm
-Require-Bundle: org.softwareFm.swtBasics;bundle-version="1.0.0";visibility:=reexport,
+Require-Bundle: org.softwareFm.softwareFmImages;bundle-version="1.0.0";visibility:=reexport,
  org.softwareFm.repository;bundle-version="1.0.0";visibility:=reexport,
  org.softwareFm.selection;bundle-version="1.0.0";visibility:=reexport,
- org.eclipse.jface;bundle-version="3.7.0";visibility:=reexport
+ org.eclipse.jface;bundle-version="3.7.0";visibility:=reexport,
+ org.softwareFm.softwareFmImages;bundle-version="1.0.0";visibility:=reexport,
+ org.softwareFm.swtBasics;bundle-version="1.0.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.softwareFm.displayCore.api,

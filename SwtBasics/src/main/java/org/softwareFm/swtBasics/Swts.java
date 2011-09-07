@@ -26,6 +26,7 @@ import org.softwareFm.swtBasics.text.ConfigForTitleAnd;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.indent.Indent;
 
 public class Swts {
 
@@ -78,6 +79,21 @@ public class Swts {
 		return buffer.toString();
 	}
 
+	public static void layoutDump(Control control) {
+		layoutDump(control, new Indent());
+	}
+
+	public static void layoutDump(Control control, Indent indent) {
+		System.out.println(indent + control.getClass().getSimpleName() + ": " + layoutAsString(control));
+		if (control instanceof Composite) {
+			Composite composite = (Composite) control;
+			for (Control nested : composite.getChildren()) {
+				Indent indented = indent.indent();
+				layoutDump(nested, indented);
+			}
+		}
+	}
+
 	public static void display(String title, IFunction1<Composite, Composite> builder) {
 		try {
 			Display display = new Display();
@@ -93,6 +109,7 @@ public class Swts {
 			fd.left = new FormAttachment(0, 0);
 			composite.setLayoutData(fd);
 			shell.open();
+			Swts.layoutDump(shell);
 			while (!shell.isDisposed()) {
 				if (!display.readAndDispatch())
 					display.sleep();

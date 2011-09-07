@@ -24,7 +24,7 @@ org.osgi.framework.BundleException: The activator org.softwareFm.selectedArtifac
 	at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:230)
 	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:340)
 Caused by: java.lang.Error: Unresolved compilation problems: 
-	The import org.softwareFm.swtBasics.images.IImageFactory cannot be resolved
+	The import org.softwareFm.softwareFmImages.images.IImageFactory cannot be resolved
 	The method getDisplayManager(Display) in the type Arc4EclipseCoreActivator is not applicable for the arguments ()
 	IImageFactory cannot be resolved to a type
 	The method getImageFactory() is undefined for the type Arc4EclipseCoreActivator
@@ -40,7 +40,7 @@ Caused by: java.lang.Error: Unresolved compilation problems:
 	... 12 more
 Root exception:
 java.lang.Error: Unresolved compilation problems: 
-	The import org.softwareFm.swtBasics.images.IImageFactory cannot be resolved
+	The import org.softwareFm.softwareFmImages.images.IImageFactory cannot be resolved
 	The method getDisplayManager(Display) in the type Arc4EclipseCoreActivator is not applicable for the arguments ()
 	IImageFactory cannot be resolved to a type
 	The method getImageFactory() is undefined for the type Arc4EclipseCoreActivator

@@ -38,7 +38,7 @@ public class Resources {
 	}
 
 	public static IResourceGetter resourceGetterWithBasics(String... extras) {
-		IResourceGetter getter = IResourceGetter.Utils.noResources().with(Images.class, "Basic");
+		IResourceGetter getter = IResourceGetter.Utils.noResources().with(Resources.class, "Basic");
 		for (String extra : extras) {
 			getter = getter.with(ResourceBundle.getBundle(extra, Locale.getDefault()));
 		}

@@ -28,4 +28,8 @@ public class Indent {
 		return builder.toString();
 	}
 
+	@Override
+	public String toString() {
+		return prefix();
+	}
 }

@@ -14,10 +14,6 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Label;
 import org.softwareFm.swtBasics.SwtBasicConstants;
-import org.softwareFm.swtBasics.artifacts.ArtifactsAnchor;
-import org.softwareFm.swtBasics.backdrop.BackdropAnchor;
-import org.softwareFm.swtBasics.overlays.OverlaysAnchor;
-import org.softwareFm.swtBasics.smallIcons.SmallIconsAnchor;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.collections.Iterables;
 import org.softwareFm.utilities.collections.Lists;
@@ -37,10 +33,6 @@ public class Images {
 		registerImages(device, imageRegistry, Images.class, SwtBasicConstants.browseKey);
 		registerImages(device, imageRegistry, Images.class, SwtBasicConstants.clearKey);
 
-		registerImagesInDirectory(device, imageRegistry, ArtifactsAnchor.class, "artifact", "jar");
-		registerImagesInDirectory(device, imageRegistry, BackdropAnchor.class, "backdrop", "main");
-		registerImagesInDirectory(device, imageRegistry, OverlaysAnchor.class, "overlay", "add");
-		registerImagesInDirectory(device, imageRegistry, SmallIconsAnchor.class, "smallIcon", "javadoc");
 		return imageRegistry;
 	}
 
