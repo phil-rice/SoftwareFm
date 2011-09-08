@@ -13,7 +13,7 @@ public class DisplayCoreConstants {
 	public static final String attributeMissing = "Attribute missing critical value. Key [{0}] Class[{1}]";
 	public static final String nameMissing = "Bundle missing a name. Anchor class is {0}";
 
-	public static final String key = "editKey";
+	public static final String key = "key";
 	public static final String clazz = "class";
 	public static final String name = "name";
 
