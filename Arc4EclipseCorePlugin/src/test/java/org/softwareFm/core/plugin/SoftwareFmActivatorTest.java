@@ -62,7 +62,7 @@ public class SoftwareFmActivatorTest extends TestCase {
 	// public void testLineEditors() {
 	// checkLineEditor("nameUrl");
 	// checkLineEditor("nameValue");
-	// checkLineEditor("tweetKey");
+	// checkLineEditor("twitterKey");
 	// }
 	//
 	// private void checkLineEditor(String name) {
@@ -76,7 +76,9 @@ public class SoftwareFmActivatorTest extends TestCase {
 
 	public void testAllImagesCanBeGot() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		checkImages("backdrop", "main", "depressed");
-		checkImages("artifact", "jar", "jarClearEclipse", "jarCopyFromSoftwareFm", "jarCopyToSoftwareFm", "organisation", "project");
+		checkImages("artifact", "jar", "jarClearEclipse", "jarCopyFromSoftwareFm", "jarCopyToSoftwareFm", //
+				"document", "issues", "license", "mailingList", "merchandise", "organisation", "project",//
+				"news", "recruitment", "tutorials", "twitter");
 		checkImages("smallIcon", "softwareFm", "javadoc", "source");
 		checkImages("overlay", "add", "delete", "edit");
 		checkImages("general", "browse", "help");

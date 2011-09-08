@@ -75,8 +75,9 @@ public class ListPanel<T> extends Composite implements IButtonParent, ILineEdita
 		compTitle.setLayout(new RowLayout(SWT.HORIZONTAL));
 		new Label(compTitle, SWT.NULL).setText(Strings.nullSafeToString(title));
 		compForList = new Composite(this, SWT.BORDER);
+		String imageKey = displayerDetails.getSmallImageKey();
 
-		ImageButtons.addRowButton(this, key, OverlaysAnchor.addKey, new IImageButtonListener() {
+		ImageButtons.addRowButtonWithOverlay(this, imageKey, OverlaysAnchor.addKey, displayerDetails.key, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				lineEditor.add(ListPanel.this);

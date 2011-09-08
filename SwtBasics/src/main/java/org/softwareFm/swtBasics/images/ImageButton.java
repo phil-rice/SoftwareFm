@@ -70,18 +70,17 @@ public class ImageButton implements IHasControl {
 		label.addPaintListener(new PaintListener() {
 			@Override
 			public void paintControl(PaintEvent e) {
-				System.out.println("Painting button: " + mainImageKey + ", " + smallIconMap);
+				System.out.println("Painting button: " + mainImageKey + ", " + ImageButton.this.overlayKey + ", " + smallIconMap);
 				if (state) {
-					Image depressed = imageRegistry.get("backdrop.depressed");
-					if (depressed == null)
-						throw new NullPointerException();
+					Image depressed = getImage("backdrop.depressed");
 					e.gc.drawImage(depressed, 0, 0);
 				}
 				Image mainImage = getImage(mainImageKey);
 				e.gc.drawImage(mainImage, 2, 2);
-				Image overLayImage = imageRegistry.get(ImageButton.this.overlayKey);
-				if (overLayImage != null)
+				if (ImageButton.this.overlayKey != null) {
+					Image overLayImage = imageRegistry.get(ImageButton.this.overlayKey);
 					e.gc.drawImage(overLayImage, 2, 2);
+				}
 				for (SmallIconPosition pos : SmallIconPosition.values()) {
 					String key = smallIconMap.get(pos);
 					if (key != null) {

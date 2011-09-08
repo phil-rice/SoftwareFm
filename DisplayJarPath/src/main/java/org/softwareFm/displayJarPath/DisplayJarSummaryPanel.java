@@ -2,6 +2,7 @@ package org.softwareFm.displayJarPath;
 
 import java.io.File;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
@@ -15,6 +16,9 @@ import org.softwareFm.displayJavadocAndSource.JavadocOrSourcePanel;
 import org.softwareFm.displayJavadocAndSource.JavadocPanel;
 import org.softwareFm.displayJavadocAndSource.SourcePanel;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
+import org.softwareFm.softwareFmImages.ImageButtons;
+import org.softwareFm.softwareFmImages.general.GeneralAnchor;
+import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.text.TitleAndTextField;
 import org.softwareFm.utilities.strings.Strings;
@@ -31,11 +35,23 @@ public class DisplayJarSummaryPanel extends Composite {
 		super(parent, style);
 		setLayout(new GridLayout());
 		txtJar = new TitleAndTextField(displayerContext.configForTitleAnd, this, DisplayJarConstants.name);
-		txtProjectName = new BoundTitleAndTextField(this, displayerContext, displayerDetails.withKey("project.url"));
-		txtOrganisationName = new BoundTitleAndTextField(this, displayerContext, displayerDetails.withKey("organisation.url"));
+		txtProjectName = makeLinkUrlField(displayerContext, displayerDetails, "project.url");
+		txtOrganisationName = makeLinkUrlField(displayerContext, displayerDetails, "organisation.url");
 		javadocPanel = new JavadocPanel(this, SWT.NULL, displayerContext, displayerDetails.withKey("javadoc"));
 		sourcePanel = new SourcePanel(this, SWT.NULL, displayerContext, displayerDetails.withKey("source"));
 		Swts.makeGrabHorizonalAndFillGridData();
+	}
+
+	private BoundTitleAndTextField makeLinkUrlField(DisplayerContext displayerContext, DisplayerDetails displayerDetails, String key) {
+		final BoundTitleAndTextField field = new BoundTitleAndTextField(this, displayerContext, displayerDetails.withKey(key));
+		ImageButtons.addEditButton(field, displayerDetails.getSmallImageKey(), OverlaysAnchor.editKey, field.editButtonListener());
+		ImageButtons.addBrowseButton(field, GeneralAnchor.browseKey, new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				return field.getText();
+			}
+		});
+		return field;
 	}
 
 	public void setValue(BindingContext bindingContext) {

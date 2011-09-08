@@ -149,7 +149,10 @@ public class SoftwareFmActivator extends AbstractUIPlugin implements IRepository
 				@Override
 				public void selectionOccured(BindingRipperResult ripperResult) {
 					Map<String, Object> context = Maps.makeMap(DisplayCoreConstants.ripperResult, ripperResult);
-					String jarUrl = getUrlGeneratorMap().get(RepositoryConstants.entityJar).apply(ripperResult.hexDigest);
+					IUrlGeneratorMap urlGeneratorMap = getUrlGeneratorMap();
+					IUrlGenerator urlGenerator = urlGeneratorMap.get(RepositoryConstants.entityJar);
+					String hexDigest = ripperResult.hexDigest;
+					String jarUrl = urlGenerator.apply(hexDigest);
 					getRepository().getData(RepositoryConstants.entityJar, jarUrl, context);
 				}
 			});

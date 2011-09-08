@@ -15,7 +15,10 @@ public class BasicImageRegister implements IImageRegister {
 	@Override
 	public void registerWith(Device device, ImageRegistry imageRegistry) {
 		Images.registerImages(device, imageRegistry, BackdropAnchor.class, "backdrop", "main", "depressed");
-		Images.registerImages(device, imageRegistry, ArtifactsAnchor.class, "artifact", "jar", "jarClearEclipse", "jarCopyFromSoftwareFm", "jarCopyToSoftwareFm", "organisation", "document", "project");
+		Images.registerImages(device, imageRegistry, ArtifactsAnchor.class, "artifact", //
+				"jar", "jarClearEclipse", "jarCopyFromSoftwareFm", "jarCopyToSoftwareFm", //
+				"document", "issues", "license", "mailingList", "merchandise", "organisation", "project",//
+				"news", "recruitment", "tutorials", "twitter");
 		Images.registerImages(device, imageRegistry, OverlaysAnchor.class, "overlay", "add", "delete", "edit");
 		Images.registerImages(device, imageRegistry, SmallIconsAnchor.class, "smallIcon", "softwareFm", "javadoc", "source");
 		Images.registerImages(device, imageRegistry, GeneralAnchor.class, "general", "browse", "help");

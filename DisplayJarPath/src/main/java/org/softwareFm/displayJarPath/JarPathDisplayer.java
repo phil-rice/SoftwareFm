@@ -2,6 +2,7 @@ package org.softwareFm.displayJarPath;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.softwareFm.displayCore.api.AbstractDisplayerWithLabel;
 import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.DisplayerContext;
@@ -22,4 +23,8 @@ public class JarPathDisplayer extends AbstractDisplayerWithLabel<DisplayJarPanel
 		largeControl.setValue(bindingContext.url, ripped);
 	}
 
+	@Override
+	public void populateSmallControl(BindingContext bindingContext, Control smallControl, Object value) {
+		// new EclipseRepositoryState(eclipseValue, repositoryValue, tooltipIfNotEclipseNotPresent, tooltipIfRepositoryNotPresent)
+	}
 }

@@ -24,6 +24,11 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Urls;
 
 abstract public class ImageButtons {
+
+	public static ImageButton addRowButtonWithOverlay(IButtonParent parent, String imageKey, String overlayKey, String tooltipKey, final IImageButtonListener listener) {
+		return addRowButton(parent, imageKey, overlayKey, SwtBasicConstants.tooltipPattern, tooltipKey, listener);
+	}
+
 	public static ImageButton addRowButton(IButtonParent parent, String imageKey, String tooltipKey, final IImageButtonListener listener) {
 		return addRowButton(parent, imageKey, null, SwtBasicConstants.tooltipPattern, tooltipKey, listener);
 	}

@@ -6,5 +6,7 @@
          <DisplayContainerFactoryConfigurator name="jarSummary" class= "org.softwareFm.entityJarSummaryData.JarSummaryConfigurer" />
    </extension>
 
-
+ <extension  point="org.softwareFm.urlGenerator">
+         <UrlGenerator name="jar" class= "org.softwareFm.entityJarSummaryData.JarUrlGenerator" />
+   </extension>
 </plugin>

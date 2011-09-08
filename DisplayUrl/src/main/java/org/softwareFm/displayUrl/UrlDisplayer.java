@@ -21,7 +21,7 @@ public class UrlDisplayer extends AbstractDisplayerWithLabel<BoundTitleAndTextFi
 	@Override
 	public BoundTitleAndTextField createLargeControl(DisplayerContext context, IRegisteredItems registeredItems, Composite parent, DisplayerDetails displayerDetails) {
 		final BoundTitleAndTextField boundTitleAndTextField = new BoundTitleAndTextField(parent, context, displayerDetails);
-		ImageButtons.addEditButton(boundTitleAndTextField, GeneralAnchor.helpKey, OverlaysAnchor.editKey, boundTitleAndTextField.editButtonListener());
+		ImageButtons.addEditButton(boundTitleAndTextField, displayerDetails.getSmallImageKey(), OverlaysAnchor.editKey, boundTitleAndTextField.editButtonListener());
 		ImageButtons.addBrowseButton(boundTitleAndTextField, GeneralAnchor.browseKey, new Callable<String>() {
 			@Override
 			public String call() throws Exception {

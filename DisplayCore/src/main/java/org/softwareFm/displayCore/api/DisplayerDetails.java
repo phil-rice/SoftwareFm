@@ -23,6 +23,10 @@ public class DisplayerDetails {
 			throw new IllegalArgumentException(MessageFormat.format(DisplayCoreConstants.missingValueInMap, DisplayCoreConstants.key, map));
 	}
 
+	public String getSmallImageKey() {
+		return map.get(DisplayCoreConstants.smallImageKey);
+	}
+
 	@Override
 	public String toString() {
 		return "DisplayerDetails [entity=" + entity + ", editKey=" + key + ", map=" + map + "]";

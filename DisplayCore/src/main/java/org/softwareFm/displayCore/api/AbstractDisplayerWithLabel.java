@@ -15,7 +15,7 @@ public abstract class AbstractDisplayerWithLabel<L extends Control> implements I
 	@Override
 	public Control createSmallControl(DisplayerContext displayerContext, IRegisteredItems registeredItems, final ITopButtonState topButtonState, Composite parent, final DisplayerDetails displayerDetails) {
 		final String key = displayerDetails.key;
-		String smallImageKey = displayerDetails.map.get(DisplayCoreConstants.smallImageKey);
+		String smallImageKey = displayerDetails.getSmallImageKey();
 		if (smallImageKey == null)
 			throw new IllegalArgumentException(MessageFormat.format(DisplayCoreConstants.smallImageKeyMissing, key, displayerDetails.map));
 		ImageButton button = new ImageButton(parent, displayerContext.imageRegistry, smallImageKey, true);

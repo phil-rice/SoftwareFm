@@ -4,7 +4,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.displayCore.api.ICodec;
 import org.softwareFm.displayCore.api.ILineEditable;
 import org.softwareFm.displayCore.api.ILineEditor;
-import org.softwareFm.displayCore.constants.DisplayCoreConstants;
 import org.softwareFm.softwareFmImages.ImageButtons;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
@@ -23,15 +22,15 @@ public abstract class AbstractLineEditor<T, Line extends IButtonParent> implemen
 	}
 
 	protected void addButtons(final ILineEditable<T> lineEditable, Composite parent, final int index, Line buttonParent) {
-		String key = lineEditable.getDisplayerDetails().map.get(DisplayCoreConstants.smallImageKey);
-		ImageButtons.addEditButton(buttonParent, key, OverlaysAnchor.editKey, new IImageButtonListener() {
+		String imageKey = lineEditable.getDisplayerDetails().getSmallImageKey();
+		ImageButtons.addEditButton(buttonParent, imageKey, OverlaysAnchor.editKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				edit(lineEditable, index);
 			}
 
 		});
-		ImageButtons.addRowButton(buttonParent, key, OverlaysAnchor.deleteKey, new IImageButtonListener() {
+		ImageButtons.addRowButtonWithOverlay(buttonParent, imageKey, OverlaysAnchor.deleteKey, lineEditable.getDisplayerDetails().key, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
 				lineEditable.getModel().delete(index);

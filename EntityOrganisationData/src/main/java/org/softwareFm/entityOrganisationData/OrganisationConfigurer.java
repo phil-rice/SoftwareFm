@@ -10,7 +10,7 @@ public class OrganisationConfigurer extends AbstractDisplayContainerFactoryConfi
 	public void configure(IDisplayContainerFactory factory) {
 		factory.register(makeMap("organisation.url", "mainUrl", "artifact.organisation"));
 		factory.register(makeMap("name", "text"));
-		factory.register(makeMapWithLineEditor("tweets", "list", ArtifactsAnchor.tweetKey, "tweet"));
+		factory.register(makeMapWithLineEditor("tweets", "list", ArtifactsAnchor.twitterKey, "tweet"));
 	}
 
 }
