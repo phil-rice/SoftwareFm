@@ -3,11 +3,12 @@ package org.softwareFm.core.plugin;
 import java.util.Map;
 
 import org.softwareFm.displayCore.constants.DisplayCoreConstants;
+import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.utilities.maps.Maps;
 
 public abstract class AbstractDisplayContainerFactoryConfigurer implements IDisplayContainerFactoryConfigurer {
 	protected Map<String, String> makeMap(String key, String displayer) {
-		return makeMap(key, displayer, "Clear");
+		return makeMap(key, displayer, ArtifactsAnchor.documentKey);
 	}
 
 	protected Map<String, String> makeMap(String key, String displayer, String smallImageKey) {

@@ -3,10 +3,10 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.softwareFm.debugBindingPanel
 Bundle-SymbolicName: org.softwareFm.debugBindingPanel;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.softwareFm.debugBindingPanel.Activator
+Bundle-Activator: org.softwareFm.debugPlugins.Activator
 Bundle-Vendor: softwareFm
 Require-Bundle: org.eclipse.ui;visibility:=reexport,
- org.softwareFm.debugPanels;bundle-version="1.0.0";visibility:=reexport,
  org.softwareFm.core;bundle-version="1.0.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
+Export-Package: org.softwareFm.debugPlugin.binding

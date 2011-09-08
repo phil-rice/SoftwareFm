@@ -62,7 +62,7 @@ public class SoftwareFmActivatorTest extends TestCase {
 	// public void testLineEditors() {
 	// checkLineEditor("nameUrl");
 	// checkLineEditor("nameValue");
-	// checkLineEditor("tweet");
+	// checkLineEditor("tweetKey");
 	// }
 	//
 	// private void checkLineEditor(String name) {

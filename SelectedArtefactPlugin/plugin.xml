@@ -9,27 +9,27 @@
             id="org.softwareFm">
       </category>
       <view
-            name="S/W FM - Jar"
+            name="OldJar"
             icon="icons/Jar.gif"
             category="org.softwareFm"
             class="org.softwareFm.selectedArtifactPlugin.views.SelectedJarView"
             id="org.softwareFm.selectedArtifactPlugin.selectedJarView">
       </view>
-      <view     name="S/W FM - Summary"
+      <view     name="SoftwareFm"
             icon="icons/Jar.gif"
             category="org.softwareFm"
             class="org.softwareFm.selectedArtifactPlugin.views.SelectedJarSummaryView"
             id="org.softwareFm.selectedArtifactPlugin.selectedJarSummaryView">
       </view>
       <view
-            name="S/W FM - Org"
+            name="Organisation"
             icon="icons/Project.gif"
             category="org.softwareFm"
             class="org.softwareFm.selectedArtifactPlugin.views.SelectedOrganisationView"
             id="org.softwareFm.selectedArtifactPlugin.selectedOrganisationView">
       </view>
       <view
-            name="S/W FM - Proj"
+            name="Project"
             icon="icons/Project.gif"
             category="org.softwareFm"
             class="org.softwareFm.selectedArtifactPlugin.views.SelectedProjectView"
