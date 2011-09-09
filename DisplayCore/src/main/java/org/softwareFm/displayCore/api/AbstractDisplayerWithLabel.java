@@ -18,7 +18,7 @@ public abstract class AbstractDisplayerWithLabel<L extends Control> implements I
 		String smallImageKey = displayerDetails.getSmallImageKey();
 		if (smallImageKey == null)
 			throw new IllegalArgumentException(MessageFormat.format(DisplayCoreConstants.smallImageKeyMissing, key, displayerDetails.map));
-		ImageButton button = new ImageButton(parent, displayerContext.imageRegistry, smallImageKey, true);
+		ImageButton button = makeImageButton(displayerContext, parent, smallImageKey);
 		button.setTooltipText(Resources.getTooltip(displayerContext.resourceGetter, key));
 		button.addListener(new IImageButtonListener() {
 			@Override
@@ -26,7 +26,11 @@ public abstract class AbstractDisplayerWithLabel<L extends Control> implements I
 				topButtonState.toogleState(key);
 			}
 		});
-		return button.getControl();
+		return button;
+	}
+
+	protected ImageButton makeImageButton(DisplayerContext displayerContext, Composite parent, String smallImageKey) {
+		return new ImageButton(parent, displayerContext.imageRegistry, smallImageKey, true);
 	}
 
 	@Override

@@ -21,7 +21,7 @@ public class BasicImageRegister implements IImageRegister {
 				"news", "recruitment", "tutorials", "twitter");
 		Images.registerImages(device, imageRegistry, OverlaysAnchor.class, "overlay", "add", "delete", "edit");
 		Images.registerImages(device, imageRegistry, SmallIconsAnchor.class, "smallIcon", "softwareFm", "javadoc", "source");
-		Images.registerImages(device, imageRegistry, GeneralAnchor.class, "general", "browse", "help");
+		Images.registerImages(device, imageRegistry, GeneralAnchor.class, "general", "browse", "help", "clear");
 
 	}
 

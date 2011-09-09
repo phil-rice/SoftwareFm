@@ -14,6 +14,7 @@ import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.softwareFm.jdtBinding.api.FoundClassPathEntry.FoundIn;
@@ -144,6 +145,19 @@ public class JavaProjects {
 				return newLibraryEntry;
 			}
 		});
+	}
+
+	public static String findSourceFor(IPackageFragmentRoot root) {
+		try {
+			if (root != null) {
+				IPath sourceAttachmentPath;
+				sourceAttachmentPath = root.getSourceAttachmentPath();
+				if (sourceAttachmentPath != null)
+					return sourceAttachmentPath.toOSString();
+			}
+		} catch (JavaModelException e) {
+		}
+		return null;
 	}
 
 	public static String findJavadocFor(IClasspathEntry classpathEntry) {

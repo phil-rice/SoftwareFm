@@ -3,6 +3,7 @@ package org.softwareFm.allTests;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.displayJavadocAndSource.JarSummaryImageButtonDemo;
 import org.softwareFm.displayJavadocAndSource.JavadocDisplayer;
 import org.softwareFm.displayJavadocAndSource.JavadocPanel;
 import org.softwareFm.displayJavadocAndSource.SourceDisplayer;
@@ -28,6 +29,7 @@ public class PersonUnit {
 				new Button(composite, SWT.NULL).setImage(Images.makeImage(from.getDisplay(), ArtifactsAnchor.class, "jar.png"));
 				Swts.makeButtonFromMainMethod(composite, ShowAllImages.class);
 				Swts.makeButtonFromMainMethod(composite, ImageButtonDemo.class);
+				Swts.makeButtonFromMainMethod(composite, JarSummaryImageButtonDemo.class);
 				Swts.makeButtonFromMainMethod(composite, TitleAndTextField.class);
 				Swts.makeButtonFromMainMethod(composite, TitleAndStyledTextField.class);
 				Swts.makeButtonFromMainMethod(composite, TextDisplayer.class);

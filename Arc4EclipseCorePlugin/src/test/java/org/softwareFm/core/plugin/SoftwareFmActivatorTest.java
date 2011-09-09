@@ -81,7 +81,7 @@ public class SoftwareFmActivatorTest extends TestCase {
 				"news", "recruitment", "tutorials", "twitter");
 		checkImages("smallIcon", "softwareFm", "javadoc", "source");
 		checkImages("overlay", "add", "delete", "edit");
-		checkImages("general", "browse", "help");
+		checkImages("general", "browse", "help", "clear");
 	}
 
 	private void checkImages(String prefix, String... names) {

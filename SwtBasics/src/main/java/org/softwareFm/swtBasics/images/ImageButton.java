@@ -12,11 +12,8 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.SwtBasicConstants;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.utilities.collections.Lists;
@@ -24,7 +21,7 @@ import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.strings.Strings;
 
-public class ImageButton implements IHasControl {
+public class ImageButton extends Composite {
 
 	public static class Utils {
 		public static void setEnabledIfNotBlank(ImageButton button, String value) {
@@ -43,7 +40,6 @@ public class ImageButton implements IHasControl {
 	private String reasonForDisable;
 	private final String overlayKey;
 	private final Map<SmallIconPosition, String> smallIconMap = Maps.newMap();
-	private final Composite content;
 	private final ImageRegistry imageRegistry;
 	private String mainImageKey;
 
@@ -52,16 +48,11 @@ public class ImageButton implements IHasControl {
 	}
 
 	public ImageButton(Composite parent, final ImageRegistry imageRegistry, final String key, String overlayKey, final boolean toggle) {
+		super(parent, SWT.NULL);
 		this.imageRegistry = imageRegistry;
 		this.overlayKey = overlayKey;
-		content = new Composite(parent, SWT.NULL) {
-			@Override
-			public String toString() {
-				return "[ImageButton " + mainImageKey + "] " + super.toString();
-			}
-		};
-		content.setLayout(Swts.getGridLayoutWithoutMargins());
-		this.label = new Label(content, SWT.NULL);
+		setLayout(Swts.getGridLayoutWithoutMargins());
+		this.label = new Label(this, SWT.NULL);
 		Image mainBackdrop = imageRegistry.get("backdrop.main");
 		if (mainBackdrop == null)
 			throw new NullPointerException();
@@ -181,24 +172,11 @@ public class ImageButton implements IHasControl {
 		label.update();
 	}
 
-	@Override
-	public Control getControl() {
-		return label;
-	}
-
 	public Image getImage() {
 		return label.getImage();
 	}
 
-	public static void main(String[] args) {
-		System.out.println("See ImageButtonDemo");
-	}
-
-	public void setLayoutData(RowData data) {
-		this.content.setLayoutData(data);
-
-	}
-
+	@Override
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 
@@ -207,5 +185,14 @@ public class ImageButton implements IHasControl {
 	public void setImage(String key) {
 		this.mainImageKey = key;
 		label.redraw();
+	}
+
+	@Override
+	public String toString() {
+		return "ImageButton: {" + mainImageKey + ", " + overlayKey + ", " + smallIconMap + "}";
+	}
+
+	public static void main(String[] args) {
+		System.out.println("See ImageButtonDemo");
 	}
 }

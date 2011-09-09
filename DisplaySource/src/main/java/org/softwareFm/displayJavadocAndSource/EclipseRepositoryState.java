@@ -1,5 +1,7 @@
 package org.softwareFm.displayJavadocAndSource;
 
+import org.softwareFm.utilities.strings.Strings;
+
 public class EclipseRepositoryState {
 
 	public boolean eclipsePresent;
@@ -32,7 +34,15 @@ public class EclipseRepositoryState {
 	}
 
 	public EclipseRepositoryState withEclipseValue(String eclipseValue) {
-		return new EclipseRepositoryState(repositoryValue, eclipseValue, tooltipIfNotEclipseNotPresent, tooltipIfRepositoryNotPresent);
+		if (!Strings.safeEquals(eclipseValue, this.eclipseValue))
+			return new EclipseRepositoryState(repositoryValue, eclipseValue, tooltipIfNotEclipseNotPresent, tooltipIfRepositoryNotPresent);
+		return this;
+	}
+
+	public EclipseRepositoryState withNewValues(String eclipseValue, String repositoryValue) {
+		if (Strings.safeEquals(eclipseValue, this.eclipseValue) && Strings.safeEquals(repositoryValue, this.repositoryValue))
+			return this;
+		return new EclipseRepositoryState(eclipseValue, repositoryValue, tooltipIfNotEclipseNotPresent, tooltipIfRepositoryNotPresent);
 	}
 
 }

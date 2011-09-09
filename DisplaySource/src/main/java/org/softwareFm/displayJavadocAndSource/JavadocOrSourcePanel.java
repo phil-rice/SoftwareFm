@@ -190,7 +190,6 @@ public abstract class JavadocOrSourcePanel extends Composite implements IButtonP
 	}
 
 	interface PanelMakerForTest {
-
 		JavadocOrSourcePanel make(Composite parent, DisplayerContext displayerContext, DisplayerDetails displayerDetails);
 	}
 

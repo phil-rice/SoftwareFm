@@ -1,5 +1,9 @@
 package org.softwareFm.swtBasics.images;
 
+import java.util.Set;
+
+import org.softwareFm.utilities.collections.Sets;
+
 public enum SmallIconPosition {
 
 	TopLeft(0, 0), //
@@ -14,4 +18,8 @@ public enum SmallIconPosition {
 		this.x = x;
 		this.y = y;
 	}
+
+	public final static Set<SmallIconPosition> allIcons = Sets.makeSet(values());
+	public final static Set<SmallIconPosition> allTop = Sets.makeSet(TopLeft, TopRight);
+	public final static Set<SmallIconPosition> allBottom = Sets.makeSet(BottomLeft, BottomRight);
 }

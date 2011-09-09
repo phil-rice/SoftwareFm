@@ -61,7 +61,7 @@ public class SourcePanel extends JavadocOrSourcePanel {
 		BindingRipperResult ripped = (BindingRipperResult) bindingContext.context.get(DisplayCoreConstants.ripperResult);
 		BindingRipperResult uptoDate = SelectedArtifactSelectionManager.reRip(ripped);
 		if (uptoDate != null && uptoDate.packageFragment != null && uptoDate.packageFragment.getSourceAttachmentPath() != null)
-			return uptoDate.packageFragment.getSourceAttachmentPath().toOSString();
+			return JavaProjects.findSourceFor(uptoDate.packageFragment);
 		else
 			return null;
 	}
