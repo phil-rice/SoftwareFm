@@ -8,6 +8,7 @@ import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
 import org.softwareFm.displayCore.api.Displayers;
 import org.softwareFm.displayCore.api.IRegisteredItems;
+import org.softwareFm.repository.api.RepositoryDataItemStatus;
 import org.softwareFm.softwareFmImages.ImageButtons;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
@@ -26,8 +27,10 @@ public class TextDisplayer extends AbstractDisplayerWithLabel<BoundTitleAndTextF
 
 	@Override
 	public void populateLargeControl(BindingContext bindingContext, BoundTitleAndTextField largeControl, Object value) {
-		largeControl.setLastBindingContext(bindingContext);
-		largeControl.setText(Strings.nullSafeToString(value));
+		if (RepositoryDataItemStatus.Utils.isResults(bindingContext.status)) {
+			largeControl.setLastBindingContext(bindingContext);
+			largeControl.setText(Strings.nullSafeToString(value));
+		}
 	}
 
 	@Override

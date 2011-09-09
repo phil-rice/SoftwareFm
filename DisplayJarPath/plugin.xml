@@ -3,7 +3,6 @@
 <plugin>
    <extension  point="org.softwareFm.displayers" >
          <display key="jar" class ="org.softwareFm.displayJarPath.JarPathDisplayer"/>
-         <display key="jarSummary" class ="org.softwareFm.displayJarPath.JarSummaryPathDisplayer"/>
    </extension>
    
    <extension  point="org.softwareFm.bundle">

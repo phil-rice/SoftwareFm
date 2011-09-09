@@ -17,6 +17,7 @@ public class JarSummaryImageButton extends ImageButton {
 	public JarSummaryImageButton(Composite parent, ImageRegistry imageRegistry, IResourceGetter resourceGetter, String key, Set<SmallIconPosition> filter, final boolean toggle) {
 		super(parent, imageRegistry, key, toggle);
 		this.filter = filter;
+		this.state = new SourceAndJavadocState(resourceGetter);
 	}
 
 	public void setSourceAndJavadocState(SourceAndJavadocState state) {

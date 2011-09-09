@@ -2,7 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension   point="org.softwareFm.displayers" >
-         <display key="text" class ="org.softwareFm.displayComposite.CompositeDisplayer"/>
+         <display key="composite" class ="org.softwareFm.displayComposite.CompositeDisplayer"/>
    </extension>
 
 </plugin>

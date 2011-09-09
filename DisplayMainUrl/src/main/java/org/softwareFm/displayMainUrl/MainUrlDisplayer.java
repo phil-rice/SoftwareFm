@@ -13,6 +13,7 @@ import org.softwareFm.displayCore.api.Displayers;
 import org.softwareFm.displayCore.api.IRegisteredItems;
 import org.softwareFm.repository.api.ISoftwareFmRepository;
 import org.softwareFm.repository.api.IUrlGenerator;
+import org.softwareFm.repository.api.RepositoryDataItemStatus;
 import org.softwareFm.repository.constants.RepositoryConstants;
 import org.softwareFm.softwareFmImages.ImageButtons;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
@@ -47,12 +48,14 @@ public class MainUrlDisplayer extends AbstractDisplayerWithLabel<MainUrlPanel> {
 
 	@Override
 	public void populateLargeControl(BindingContext bindingContext, MainUrlPanel largeControl, Object value) {
-		Object urlKey = bindingContext.context.get(RepositoryConstants.urlKey);
-		if (urlKey == null)
-			largeControl.setText("");
-		else if (urlKey.equals(largeControl.key)) {
-			Object rawUrl = bindingContext.context.get(RepositoryConstants.rawUrl);
-			largeControl.setText(Strings.nullSafeToString(rawUrl));
+		if (RepositoryDataItemStatus.Utils.isResults(bindingContext.status)) {
+			Object urlKey = bindingContext.context.get(RepositoryConstants.urlKey);
+			if (urlKey == null)
+				largeControl.setText("");
+			else if (urlKey.equals(largeControl.key)) {
+				Object rawUrl = bindingContext.context.get(RepositoryConstants.rawUrl);
+				largeControl.setText(Strings.nullSafeToString(rawUrl));
+			}
 		}
 	}
 

@@ -7,6 +7,7 @@ import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
 import org.softwareFm.displayCore.api.IRegisteredItems;
+import org.softwareFm.repository.api.RepositoryDataItemStatus;
 
 public class ListDisplayer extends AbstractDisplayerWithLabel<ListPanel<?>> {
 
@@ -17,7 +18,8 @@ public class ListDisplayer extends AbstractDisplayerWithLabel<ListPanel<?>> {
 
 	@Override
 	public void populateLargeControl(BindingContext bindingContext, ListPanel<?> largeControl, Object value) {
-		largeControl.setValue(bindingContext, value);
+		if (RepositoryDataItemStatus.Utils.isResults(bindingContext.status))
+			largeControl.setValue(bindingContext, value);
 	}
 
 }

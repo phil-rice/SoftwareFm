@@ -4,7 +4,7 @@ import org.eclipse.swt.widgets.Control;
 import org.softwareFm.core.plugin.AbstractDisplayerTest;
 import org.softwareFm.displayCore.api.IDisplayer;
 
-public class JarPathDisplayerTest extends AbstractDisplayerTest<DisplayJarPanel, Control> {
+public class JarPathDisplayerTest extends AbstractDisplayerTest<DisplayJarSummaryPanel, Control> {
 
 	@Override
 	protected String getDisplayerKey() {
@@ -22,12 +22,12 @@ public class JarPathDisplayerTest extends AbstractDisplayerTest<DisplayJarPanel,
 	}
 
 	@Override
-	protected IDisplayer<DisplayJarPanel, Control> getDisplayer() {
+	protected IDisplayer<DisplayJarSummaryPanel, Control> getDisplayer() {
 		return new JarPathDisplayer();
 	}
 
 	@Override
-	protected void checkData(Object sampleData, DisplayJarPanel largeControl, Control smallControl) {
+	protected void checkData(Object sampleData, DisplayJarSummaryPanel largeControl, Control smallControl) {
 		fail();
 
 	}
