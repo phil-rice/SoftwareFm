@@ -1,10 +1,10 @@
 package org.softwareFm.displayJarPath;
 
-import org.eclipse.swt.widgets.Control;
 import org.softwareFm.core.plugin.AbstractDisplayerTest;
 import org.softwareFm.displayCore.api.IDisplayer;
+import org.softwareFm.displayJavadocAndSource.JarSummaryImageButton;
 
-public class JarPathDisplayerTest extends AbstractDisplayerTest<DisplayJarSummaryPanel, Control> {
+public class JarPathDisplayerTest extends AbstractDisplayerTest<DisplayJarSummaryPanel, JarSummaryImageButton> {
 
 	@Override
 	protected String getDisplayerKey() {
@@ -22,12 +22,12 @@ public class JarPathDisplayerTest extends AbstractDisplayerTest<DisplayJarSummar
 	}
 
 	@Override
-	protected IDisplayer<DisplayJarSummaryPanel, Control> getDisplayer() {
+	protected IDisplayer<DisplayJarSummaryPanel, JarSummaryImageButton> getDisplayer() {
 		return new JarPathDisplayer();
 	}
 
 	@Override
-	protected void checkData(Object sampleData, DisplayJarSummaryPanel largeControl, Control smallControl) {
+	protected void checkData(Object sampleData, DisplayJarSummaryPanel largeControl, JarSummaryImageButton smallControl) {
 		fail();
 
 	}

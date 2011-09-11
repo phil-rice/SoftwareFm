@@ -10,12 +10,16 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.softwareFm.displayCore.api.DisplayerContext;
+import org.softwareFm.displayCore.api.DisplayerDetails;
+import org.softwareFm.displayCore.constants.DisplayCoreConstants;
 import org.softwareFm.softwareFmImages.IImageRegister;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.Resources;
 import org.softwareFm.swtBasics.images.SmallIconPosition;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class JarSummaryImageButtonDemo {
@@ -35,7 +39,9 @@ public class JarSummaryImageButtonDemo {
 				imageRegistry = IImageRegister.Utils.withBasics(from.getDisplay());
 				resourceGetter = Resources.resourceGetterWithBasics("org.softwareFm.displayJavadocAndSource.JavadocAndSource");
 				filter = SmallIconPosition.allIcons;
-				jarSummaryImageButton = new JarSummaryImageButton(parent, imageRegistry, resourceGetter, ArtifactsAnchor.jarKey, filter, true);
+				DisplayerContext context = DisplayerContext.Utils.forTest(from.getDisplay(), resourceGetter, imageRegistry);
+				DisplayerDetails displayerDetails = new DisplayerDetails("entity", Maps.<String, String> makeMap(DisplayCoreConstants.key, "jar", DisplayCoreConstants.smallImageKey, ArtifactsAnchor.jarKey));
+				jarSummaryImageButton = new JarSummaryImageButton(parent, context, displayerDetails, true, filter);
 
 				makeFilterButton("None", Collections.<SmallIconPosition> emptySet());
 				makeFilterButton("JavadocOnly", SmallIconPosition.allTop);

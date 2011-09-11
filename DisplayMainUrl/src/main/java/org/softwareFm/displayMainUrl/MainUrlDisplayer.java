@@ -5,12 +5,13 @@ import java.util.concurrent.Callable;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.softwareFm.displayCore.api.AbstractDisplayerWithLabel;
+import org.softwareFm.displayCore.api.AbstractDisplayerWithSummaryIcon;
 import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
 import org.softwareFm.displayCore.api.Displayers;
 import org.softwareFm.displayCore.api.IRegisteredItems;
+import org.softwareFm.displayCore.api.SummaryIcon;
 import org.softwareFm.repository.api.ISoftwareFmRepository;
 import org.softwareFm.repository.api.IUrlGenerator;
 import org.softwareFm.repository.api.RepositoryDataItemStatus;
@@ -20,7 +21,7 @@ import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.swtBasics.images.Resources;
 import org.softwareFm.utilities.strings.Strings;
 
-public class MainUrlDisplayer extends AbstractDisplayerWithLabel<MainUrlPanel> {
+public class MainUrlDisplayer extends AbstractDisplayerWithSummaryIcon<MainUrlPanel, SummaryIcon> {
 
 	@Override
 	public MainUrlPanel createLargeControl(final DisplayerContext context, final IRegisteredItems registeredItems, Composite parent, final DisplayerDetails displayerDetails) {

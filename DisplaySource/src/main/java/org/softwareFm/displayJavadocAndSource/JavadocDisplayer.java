@@ -2,15 +2,16 @@ package org.softwareFm.displayJavadocAndSource;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.displayCore.api.AbstractDisplayerWithLabel;
+import org.softwareFm.displayCore.api.AbstractDisplayerWithSummaryIcon;
 import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
 import org.softwareFm.displayCore.api.Displayers;
 import org.softwareFm.displayCore.api.IRegisteredItems;
+import org.softwareFm.displayCore.api.SummaryIcon;
 import org.softwareFm.swtBasics.images.Resources;
 
-public class JavadocDisplayer extends AbstractDisplayerWithLabel<JavadocPanel> {
+public class JavadocDisplayer extends AbstractDisplayerWithSummaryIcon<JavadocPanel, SummaryIcon> {
 
 	@Override
 	public JavadocPanel createLargeControl(DisplayerContext context, IRegisteredItems registeredItems, Composite parent, DisplayerDetails displayerDetails) {

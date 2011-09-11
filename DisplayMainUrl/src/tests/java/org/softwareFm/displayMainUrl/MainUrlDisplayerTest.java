@@ -1,10 +1,10 @@
 package org.softwareFm.displayMainUrl;
 
-import org.eclipse.swt.widgets.Control;
 import org.softwareFm.core.plugin.AbstractDisplayerTest;
 import org.softwareFm.displayCore.api.IDisplayer;
+import org.softwareFm.displayCore.api.SummaryIcon;
 
-public class MainUrlDisplayerTest extends AbstractDisplayerTest<MainUrlPanel, Control> {
+public class MainUrlDisplayerTest extends AbstractDisplayerTest<MainUrlPanel, SummaryIcon> {
 
 	@Override
 	protected String getDataKey() {
@@ -22,12 +22,12 @@ public class MainUrlDisplayerTest extends AbstractDisplayerTest<MainUrlPanel, Co
 	}
 
 	@Override
-	protected IDisplayer<MainUrlPanel, Control> getDisplayer() {
+	protected IDisplayer<MainUrlPanel, SummaryIcon> getDisplayer() {
 		return new MainUrlDisplayer();
 	}
 
 	@Override
-	protected void checkData(Object sampleData, MainUrlPanel largeControl, Control smallControl) {
+	protected void checkData(Object sampleData, MainUrlPanel largeControl, SummaryIcon smallControl) {
 		assertEquals(sampleData, largeControl.getText());
 	}
 

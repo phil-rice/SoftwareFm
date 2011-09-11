@@ -2,22 +2,22 @@ package org.softwareFm.displayJavadocAndSource;
 
 import java.util.Set;
 
-import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.displayCore.api.DisplayerContext;
+import org.softwareFm.displayCore.api.DisplayerDetails;
+import org.softwareFm.displayCore.api.SummaryIcon;
 import org.softwareFm.softwareFmImages.ImageButtons;
 import org.softwareFm.softwareFmImages.smallIcons.SmallIconsAnchor;
-import org.softwareFm.swtBasics.images.ImageButton;
 import org.softwareFm.swtBasics.images.SmallIconPosition;
-import org.softwareFm.utilities.resources.IResourceGetter;
 
-public class JarSummaryImageButton extends ImageButton {
+public class JarSummaryImageButton extends SummaryIcon {
 	private Set<SmallIconPosition> filter;
 	private SourceAndJavadocState state;
 
-	public JarSummaryImageButton(Composite parent, ImageRegistry imageRegistry, IResourceGetter resourceGetter, String key, Set<SmallIconPosition> filter, final boolean toggle) {
-		super(parent, imageRegistry, key, toggle);
+	public JarSummaryImageButton(Composite parent, DisplayerContext displayerContext, DisplayerDetails displayerDetails, boolean toggle, Set<SmallIconPosition> filter) {
+		super(parent, displayerContext.imageRegistry, displayerDetails, toggle);
 		this.filter = filter;
-		this.state = new SourceAndJavadocState(resourceGetter);
+		this.state = new SourceAndJavadocState(displayerContext.resourceGetter);
 	}
 
 	public void setSourceAndJavadocState(SourceAndJavadocState state) {

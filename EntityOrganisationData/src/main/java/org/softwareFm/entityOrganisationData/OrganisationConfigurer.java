@@ -8,9 +8,9 @@ public class OrganisationConfigurer extends AbstractDisplayContainerFactoryConfi
 
 	@Override
 	public void configure(IDisplayContainerFactory factory) {
-		factory.register(makeMap("organisation.url", "mainUrl", "artifact.organisation"));
-		factory.register(makeMap("name", "text"));
-		factory.register(makeMapWithLineEditor("tweets", "list", ArtifactsAnchor.twitterKey, "tweet"));
+		factory.register(makeMap("organisation", "organisation.url", "mainUrl", "artifact.organisation"));
+		factory.register(makeMap("organisation", "name", "text"));
+		factory.register(makeMapWithLineEditor("organisation", "tweets", "list", ArtifactsAnchor.twitterKey, "tweet"));
 	}
 
 }

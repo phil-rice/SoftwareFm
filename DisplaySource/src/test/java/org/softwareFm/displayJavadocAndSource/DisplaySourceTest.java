@@ -1,11 +1,10 @@
 package org.softwareFm.displayJavadocAndSource;
 
-import org.eclipse.swt.widgets.Control;
 import org.softwareFm.core.plugin.AbstractDisplayerTest;
 import org.softwareFm.displayCore.api.IDisplayer;
+import org.softwareFm.displayCore.api.SummaryIcon;
 
-
-public class DisplaySourceTest extends AbstractDisplayerTest<SourcePanel, Control> {
+public class DisplaySourceTest extends AbstractDisplayerTest<SourcePanel, SummaryIcon> {
 
 	@Override
 	protected String getDisplayerKey() {
@@ -23,15 +22,15 @@ public class DisplaySourceTest extends AbstractDisplayerTest<SourcePanel, Contro
 	}
 
 	@Override
-	protected IDisplayer<SourcePanel, Control> getDisplayer() {
+	protected IDisplayer<SourcePanel, SummaryIcon> getDisplayer() {
 		return new SourceDisplayer();
 	}
 
 	@Override
-	protected void checkData(Object sampleData, SourcePanel largeControl, Control smallControl) {
+	protected void checkData(Object sampleData, SourcePanel largeControl, SummaryIcon smallControl) {
 		fail();
 	}
-	
+
 	@Override
 	protected String getSmallImageKey() {
 		return "Source";

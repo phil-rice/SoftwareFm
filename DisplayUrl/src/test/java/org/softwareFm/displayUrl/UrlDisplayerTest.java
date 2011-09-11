@@ -1,12 +1,11 @@
 package org.softwareFm.displayUrl;
 
-import org.eclipse.swt.widgets.Control;
 import org.softwareFm.core.plugin.AbstractDisplayerTest;
 import org.softwareFm.displayCore.api.BoundTitleAndTextField;
 import org.softwareFm.displayCore.api.IDisplayer;
+import org.softwareFm.displayCore.api.SummaryIcon;
 
-
-public class UrlDisplayerTest extends AbstractDisplayerTest<BoundTitleAndTextField, Control> {
+public class UrlDisplayerTest extends AbstractDisplayerTest<BoundTitleAndTextField, SummaryIcon> {
 
 	public void testForName() throws ClassNotFoundException {
 		Class.forName("org.softwareFm.displayUrl.UrlDisplayer");
@@ -28,12 +27,12 @@ public class UrlDisplayerTest extends AbstractDisplayerTest<BoundTitleAndTextFie
 	}
 
 	@Override
-	protected IDisplayer<BoundTitleAndTextField, Control> getDisplayer() {
+	protected IDisplayer<BoundTitleAndTextField, SummaryIcon> getDisplayer() {
 		return new UrlDisplayer();
 	}
 
 	@Override
-	protected void checkData(Object sampleData, BoundTitleAndTextField largeControl, Control smallControl) {
+	protected void checkData(Object sampleData, BoundTitleAndTextField largeControl, SummaryIcon smallControl) {
 		assertEquals(sampleData, largeControl.getText());
 	}
 

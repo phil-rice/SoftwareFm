@@ -1,10 +1,10 @@
 package org.softwareFm.displayJavadocAndSource;
 
-import org.eclipse.swt.widgets.Control;
 import org.softwareFm.core.plugin.AbstractDisplayerTest;
 import org.softwareFm.displayCore.api.IDisplayer;
+import org.softwareFm.displayCore.api.SummaryIcon;
 
-public class DisplayJavadocTest extends AbstractDisplayerTest<JavadocPanel, Control> {
+public class DisplayJavadocTest extends AbstractDisplayerTest<JavadocPanel, SummaryIcon> {
 
 	@Override
 	protected String getDisplayerKey() {
@@ -22,12 +22,12 @@ public class DisplayJavadocTest extends AbstractDisplayerTest<JavadocPanel, Cont
 	}
 
 	@Override
-	protected IDisplayer<JavadocPanel, Control> getDisplayer() {
+	protected IDisplayer<JavadocPanel, SummaryIcon> getDisplayer() {
 		return new JavadocDisplayer();
 	}
 
 	@Override
-	protected void checkData(Object sampleData, JavadocPanel largeControl, Control smallControl) {
+	protected void checkData(Object sampleData, JavadocPanel largeControl, SummaryIcon smallControl) {
 		fail();
 	}
 

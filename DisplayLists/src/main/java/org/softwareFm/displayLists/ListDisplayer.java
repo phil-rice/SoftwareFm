@@ -2,14 +2,15 @@ package org.softwareFm.displayLists;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.displayCore.api.AbstractDisplayerWithLabel;
+import org.softwareFm.displayCore.api.AbstractDisplayerWithSummaryIcon;
 import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
 import org.softwareFm.displayCore.api.IRegisteredItems;
+import org.softwareFm.displayCore.api.SummaryIcon;
 import org.softwareFm.repository.api.RepositoryDataItemStatus;
 
-public class ListDisplayer extends AbstractDisplayerWithLabel<ListPanel<?>> {
+public class ListDisplayer extends AbstractDisplayerWithSummaryIcon<ListPanel<?>, SummaryIcon> {
 
 	@Override
 	public ListPanel<?> createLargeControl(DisplayerContext context, IRegisteredItems registeredItems, Composite parent, DisplayerDetails displayerDetails) {
