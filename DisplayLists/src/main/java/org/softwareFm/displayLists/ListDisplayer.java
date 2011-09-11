@@ -6,6 +6,7 @@ import org.softwareFm.displayCore.api.AbstractDisplayerWithSummaryIcon;
 import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
+import org.softwareFm.displayCore.api.IDisplayContainerFactoryGetter;
 import org.softwareFm.displayCore.api.IRegisteredItems;
 import org.softwareFm.displayCore.api.SummaryIcon;
 import org.softwareFm.repository.api.RepositoryDataItemStatus;
@@ -13,7 +14,7 @@ import org.softwareFm.repository.api.RepositoryDataItemStatus;
 public class ListDisplayer extends AbstractDisplayerWithSummaryIcon<ListPanel<?>, SummaryIcon> {
 
 	@Override
-	public ListPanel<?> createLargeControl(DisplayerContext context, IRegisteredItems registeredItems, Composite parent, DisplayerDetails displayerDetails) {
+	public ListPanel<?> createLargeControl(Composite parent, DisplayerContext context, IRegisteredItems registeredItems, IDisplayContainerFactoryGetter displayContainerFactoryGetter, DisplayerDetails displayerDetails) {
 		return new ListPanel<Object>(parent, SWT.BORDER, context, displayerDetails, registeredItems);
 	}
 

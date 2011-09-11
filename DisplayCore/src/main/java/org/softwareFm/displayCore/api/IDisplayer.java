@@ -8,7 +8,7 @@ public interface IDisplayer<L extends IHasControl, S extends IHasControl> {
 
 	S createSmallControl(DisplayerContext displayerContext, IRegisteredItems registeredItems, ITopButtonState topButtonState, Composite parent, DisplayerDetails displayerDetails);
 
-	L createLargeControl(DisplayerContext context, IRegisteredItems registeredItems, Composite parent, DisplayerDetails displayerDetails);
+	L createLargeControl(Composite parent, DisplayerContext context, IRegisteredItems registeredItems, IDisplayContainerFactoryGetter displayContainerFactoryGetter, DisplayerDetails displayerDetails);
 
 	void populateSmallControl(BindingContext bindingContext, S smallControl, Object value);
 

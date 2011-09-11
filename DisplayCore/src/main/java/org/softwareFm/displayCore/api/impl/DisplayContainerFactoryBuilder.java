@@ -8,6 +8,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.softwareFm.displayCore.api.IDisplayContainerFactory;
 import org.softwareFm.displayCore.api.IDisplayContainerFactoryBuilder;
+import org.softwareFm.displayCore.api.IDisplayContainerFactoryGetter;
 import org.softwareFm.displayCore.api.IDisplayer;
 import org.softwareFm.displayCore.api.IEditor;
 import org.softwareFm.displayCore.api.ILineEditor;
@@ -26,6 +27,7 @@ public class DisplayContainerFactoryBuilder implements IDisplayContainerFactoryB
 	private final Map<String, IValidator> registeredValidators = Maps.newMap();
 	private final Map<String, IFunction1<Display, Image>> imageMakers = Maps.newMap();
 	private final Map<String, IUrlGenerator> registeredUrlGenerators = Maps.newMap();
+	private final IDisplayContainerFactoryGetter displayContainerFactoryGetter;
 
 	static class KeyTitleHelpAndImage {
 		final String key;
@@ -44,6 +46,10 @@ public class DisplayContainerFactoryBuilder implements IDisplayContainerFactoryB
 		public String toString() {
 			return "KeyTitleHelpAndImage [editKey=" + key + "]";
 		}
+	}
+
+	public DisplayContainerFactoryBuilder(IDisplayContainerFactoryGetter displayContainerFactoryGetter) {
+		this.displayContainerFactoryGetter = displayContainerFactoryGetter;
 	}
 
 	@Override
@@ -83,8 +89,8 @@ public class DisplayContainerFactoryBuilder implements IDisplayContainerFactoryB
 	}
 
 	@Override
-	public IDisplayContainerFactory build(String entity) {
-		return new DisplayContainerFactory(registeredDisplayers, registeredEditors, registeredLineEditors, registeredValidators, registeredUrlGenerators);
+	public IDisplayContainerFactory build() {
+		return new DisplayContainerFactory(registeredDisplayers, registeredEditors, registeredLineEditors, registeredValidators, registeredUrlGenerators, displayContainerFactoryGetter);
 	}
 
 }

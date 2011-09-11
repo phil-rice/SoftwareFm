@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.IDisplayContainer;
 import org.softwareFm.displayCore.api.IDisplayContainerFactory;
+import org.softwareFm.displayCore.api.IDisplayContainerFactoryGetter;
 import org.softwareFm.displayCore.api.IDisplayer;
 import org.softwareFm.displayCore.api.IEditor;
 import org.softwareFm.displayCore.api.ILineEditor;
@@ -27,18 +28,20 @@ public class DisplayContainerFactory implements IDisplayContainerFactory, IRegis
 	private final Map<String, IValidator> registeredValidators;
 	private final Map<String, IUrlGenerator> registeredUrlGenerators;
 	private final List<Map<String, String>> displayDefinitions = Lists.newList();
+	private final IDisplayContainerFactoryGetter displayContainerFactoryGetter;
 
-	public DisplayContainerFactory(Map<String, IDisplayer<?, ?>> registeredDisplayers, Map<String, IEditor> registeredEditors, Map<String, ILineEditor<?>> registeredLineEditors, Map<String, IValidator> registeredValidators, Map<String, IUrlGenerator> registeredUrlGenerators) {
+	public DisplayContainerFactory(Map<String, IDisplayer<?, ?>> registeredDisplayers, Map<String, IEditor> registeredEditors, Map<String, ILineEditor<?>> registeredLineEditors, Map<String, IValidator> registeredValidators, Map<String, IUrlGenerator> registeredUrlGenerators, IDisplayContainerFactoryGetter displayContainerFactoryGetter) {
 		this.registeredDisplayers = registeredDisplayers;
 		this.registeredEditors = registeredEditors;
 		this.registeredLineEditors = registeredLineEditors;
 		this.registeredValidators = registeredValidators;
 		this.registeredUrlGenerators = registeredUrlGenerators;
+		this.displayContainerFactoryGetter = displayContainerFactoryGetter;
 	}
 
 	@Override
 	public IDisplayContainer create(DisplayerContext displayerContext, Composite parent) {
-		return new DisplayContainer(displayerContext, parent, SWT.NULL, this, displayDefinitions);
+		return new DisplayContainer(displayerContext, parent, SWT.NULL, this, displayContainerFactoryGetter, displayDefinitions);
 	}
 
 	@Override

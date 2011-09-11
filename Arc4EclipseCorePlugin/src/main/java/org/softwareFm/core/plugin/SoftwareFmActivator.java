@@ -20,6 +20,7 @@ import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.IDisplayContainer;
 import org.softwareFm.displayCore.api.IDisplayContainerFactory;
 import org.softwareFm.displayCore.api.IDisplayContainerFactoryBuilder;
+import org.softwareFm.displayCore.api.IDisplayContainerFactoryGetter;
 import org.softwareFm.displayCore.api.IDisplayer;
 import org.softwareFm.displayCore.api.ILineEditor;
 import org.softwareFm.displayCore.api.IRepositoryAndUrlGeneratorMapGetter;
@@ -42,7 +43,7 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class SoftwareFmActivator extends AbstractUIPlugin implements IRepositoryAndUrlGeneratorMapGetter {
+public class SoftwareFmActivator extends AbstractUIPlugin implements IRepositoryAndUrlGeneratorMapGetter, IDisplayContainerFactoryGetter {
 
 	public static final String DISPLAYER_ID = "org.softwareFm.displayers";
 	public static final String IMAGE_ID = "org.softwareFm.image";
@@ -192,12 +193,13 @@ public class SoftwareFmActivator extends AbstractUIPlugin implements IRepository
 		return result;
 	}
 
-	public IDisplayContainerFactory getDisplayContainerFactory(final Display display, final String viewName, final String entity) {
+	@Override
+	public IDisplayContainerFactory getDisplayContainerFactory(final Display display, final String viewName) {
 		return Maps.findOrCreate(displayContainerFactoryMap, viewName, new Callable<IDisplayContainerFactory>() {
 			@Override
 			public IDisplayContainerFactory call() throws Exception {
 				IDisplayContainerFactoryBuilder builder = getDisplayContainerFactoryBuilder(display);
-				final IDisplayContainerFactory factory = builder.build(entity);
+				final IDisplayContainerFactory factory = builder.build();
 				Plugins.useClasses(DISPLAY_CONTAINER_FACTORY_CONFIGURATOR_ID, new IPlugInCreationCallback<IDisplayContainerFactoryConfigurer>() {
 					@Override
 					public void process(IDisplayContainerFactoryConfigurer t, IConfigurationElement element) {
@@ -221,14 +223,14 @@ public class SoftwareFmActivator extends AbstractUIPlugin implements IRepository
 
 	public IDisplayContainer makeDisplayContainer(Composite parent, String name, String entity) {
 		Display display = parent.getDisplay();
-		IDisplayContainerFactory factory = getDisplayContainerFactory(display, name, entity);
+		IDisplayContainerFactory factory = getDisplayContainerFactory(display, name);
 		return factory.create(getDisplayerContext(display), parent);
 	}
 
 	@SuppressWarnings("rawtypes")
 	private IDisplayContainerFactoryBuilder getDisplayContainerFactoryBuilder(final Display display) {
 		if (displayContainerFactoryBuilder == null) {
-			displayContainerFactoryBuilder = IDisplayContainerFactoryBuilder.Utils.factoryBuilder();
+			displayContainerFactoryBuilder = IDisplayContainerFactoryBuilder.Utils.factoryBuilder(this);
 			Plugins.useClasses(DISPLAYER_ID, new PlugInSysErrAdapter<IDisplayer<?, ?>>() {
 				@Override
 				public void process(IDisplayer<?, ?> t, IConfigurationElement element) {

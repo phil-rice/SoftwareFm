@@ -40,9 +40,9 @@ public class DisplayContainerFactoryTest extends TestCase {
 	private DisplayerContext displayerContext;
 
 	public void testCreateProducesNewObjects() {
-		IDisplayContainerFactory factory1a = builder.build("entity1");
-		IDisplayContainerFactory factory1b = builder.build("entity1");
-		IDisplayContainerFactory factory2 = builder.build("entity2");
+		IDisplayContainerFactory factory1a = builder.build();
+		IDisplayContainerFactory factory1b = builder.build();
+		IDisplayContainerFactory factory2 = builder.build();
 		assertNotSame(factory1a, factory1b);
 		assertNotSame(factory1a, factory2);
 	}
@@ -145,7 +145,7 @@ public class DisplayContainerFactoryTest extends TestCase {
 		super.setUp();
 		shell = SwtTestFixture.shell();
 
-		builder = IDisplayContainerFactoryBuilder.Utils.factoryBuilder();
+		builder = IDisplayContainerFactoryBuilder.Utils.factoryBuilder(null);
 		builder.registerDisplayer("disp1", displayerA);
 		builder.registerDisplayer("disp2", displayerB);
 		builder.registerEditor("editor1", editor1);
@@ -153,7 +153,7 @@ public class DisplayContainerFactoryTest extends TestCase {
 		builder.registerValidator("validator1", validator1);
 		builder.registerValidator("validator2", validator2);
 
-		factory = builder.build("entity");
+		factory = builder.build();
 		factory.register(Maps.<String, String> makeMap("editKey", "keyA", "displayer", "disp1", "title", "titleA", "help", "helpA", "editor", "editor1"));
 		factory.register(Maps.<String, String> makeMap("editKey", "keyB", "displayer", "disp2", "title", "titleB", "help", "helpB", "editor", "editor2"));
 		displayerContext = null;

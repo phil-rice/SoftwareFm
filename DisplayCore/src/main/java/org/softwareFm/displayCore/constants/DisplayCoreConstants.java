@@ -23,6 +23,7 @@ public class DisplayCoreConstants {
 	public static final String help = "help";
 	public static final String editor = "editor";
 	public static final Object lineEditorKey = "lineEditor";
+	public static final Object viewKey = "view";
 
 	public static final String mustHaveKey = "Must have a editKey in map {0}";
 	public static final String mustHaveDisplayer = "Must have displayer in map {0}";

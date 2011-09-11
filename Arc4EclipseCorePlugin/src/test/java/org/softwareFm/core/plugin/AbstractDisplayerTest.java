@@ -56,7 +56,7 @@ public abstract class AbstractDisplayerTest<L extends IHasControl, C extends IHa
 	public void testRegisteredDisplayer() {
 		String key = getDataKey();
 		String entity = "entity";
-		String viewName = "viewName";
+		String viewName = "viewKey";
 		IDisplayContainerForTests container = makeContainer(viewName, entity, key, getSmallImageKey());
 		setValues(container, entity, key);
 		L largeControl = container.getLargeControlFor(key);
@@ -71,7 +71,7 @@ public abstract class AbstractDisplayerTest<L extends IHasControl, C extends IHa
 	}
 
 	private IDisplayContainerForTests makeContainer(String viewName, String entity, String key, String smallImageKey) {
-		IDisplayContainerFactory displayContainerFactory = activator.getDisplayContainerFactory(display, viewName, entity);
+		IDisplayContainerFactory displayContainerFactory = activator.getDisplayContainerFactory(display, viewName);
 		displayContainerFactory.register(Maps.<String, String> makeMap(//
 				DisplayCoreConstants.key, key,//
 				DisplayCoreConstants.smallImageKey, smallImageKey,//

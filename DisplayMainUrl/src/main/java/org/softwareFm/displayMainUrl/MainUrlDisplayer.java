@@ -10,6 +10,7 @@ import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
 import org.softwareFm.displayCore.api.Displayers;
+import org.softwareFm.displayCore.api.IDisplayContainerFactoryGetter;
 import org.softwareFm.displayCore.api.IDisplayer;
 import org.softwareFm.displayCore.api.IRegisteredItems;
 import org.softwareFm.displayCore.api.SummaryIcon;
@@ -25,7 +26,7 @@ import org.softwareFm.utilities.strings.Strings;
 public class MainUrlDisplayer extends AbstractDisplayerWithSummaryIcon<MainUrlPanel, SummaryIcon> {
 
 	@Override
-	public MainUrlPanel createLargeControl(final DisplayerContext context, final IRegisteredItems registeredItems, Composite parent, final DisplayerDetails displayerDetails) {
+	public MainUrlPanel createLargeControl(Composite parent, final DisplayerContext context, final IRegisteredItems registeredItems, IDisplayContainerFactoryGetter displayContainerFactoryGetter, final DisplayerDetails displayerDetails) {
 		final MainUrlPanel titleAndTextField = new MainUrlPanel(context.configForTitleAnd, parent, displayerDetails.entity, displayerDetails.key);
 		titleAndTextField.setEditable(true);
 		ImageButtons.addBrowseButton(titleAndTextField, GeneralAnchor.browseKey, new Callable<String>() {

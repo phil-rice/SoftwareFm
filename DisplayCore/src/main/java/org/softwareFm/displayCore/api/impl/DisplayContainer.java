@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Control;
 import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
+import org.softwareFm.displayCore.api.IDisplayContainerFactoryGetter;
 import org.softwareFm.displayCore.api.IDisplayContainerForTests;
 import org.softwareFm.displayCore.api.IDisplayer;
 import org.softwareFm.displayCore.api.IRegisteredItems;
@@ -33,7 +34,7 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 	private final List<IHasControl> smallControls;
 	private final List<IHasControl> largeControls;
 
-	public DisplayContainer(DisplayerContext displayerContext, Composite parent, int style, IRegisteredItems registeredItems, List<Map<String, String>> displayDefinitions) {
+	public DisplayContainer(DisplayerContext displayerContext, Composite parent, int style, IRegisteredItems registeredItems, IDisplayContainerFactoryGetter displayContainerFactoryGetter, List<Map<String, String>> displayDefinitions) {
 		this.registeredItems = registeredItems;
 		this.displayDefinitions = displayDefinitions;
 		content = new Composite(parent, style);
@@ -63,7 +64,7 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 			DisplayerDetails displayerDetails = new DisplayerDetails(entity, map);
 
 			smallControls.add(displayer.createSmallControl(displayerContext, registeredItems, this, compButtons, displayerDetails));
-			largeControls.add(displayer.createLargeControl(displayerContext, registeredItems, content, displayerDetails));
+			largeControls.add(displayer.createLargeControl(content, displayerContext, registeredItems, displayContainerFactoryGetter, displayerDetails));
 		}
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(content);
 	}

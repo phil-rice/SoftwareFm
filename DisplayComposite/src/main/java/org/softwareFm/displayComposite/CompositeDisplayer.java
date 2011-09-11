@@ -1,34 +1,36 @@
 package org.softwareFm.displayComposite;
 
+import java.text.MessageFormat;
+
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.displayCore.api.AbstractDisplayerWithSummaryIcon;
 import org.softwareFm.displayCore.api.BindingContext;
-import org.softwareFm.displayCore.api.BoundTitleAndTextField;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
 import org.softwareFm.displayCore.api.Displayers;
+import org.softwareFm.displayCore.api.IDisplayContainer;
+import org.softwareFm.displayCore.api.IDisplayContainerFactory;
+import org.softwareFm.displayCore.api.IDisplayContainerFactoryGetter;
 import org.softwareFm.displayCore.api.IRegisteredItems;
 import org.softwareFm.displayCore.api.SummaryIcon;
-import org.softwareFm.softwareFmImages.ImageButtons;
-import org.softwareFm.softwareFmImages.general.GeneralAnchor;
-import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
+import org.softwareFm.displayCore.constants.DisplayCoreConstants;
 import org.softwareFm.swtBasics.images.Resources;
-import org.softwareFm.utilities.strings.Strings;
 
-public class CompositeDisplayer extends AbstractDisplayerWithSummaryIcon<BoundTitleAndTextField, SummaryIcon> {
+public class CompositeDisplayer extends AbstractDisplayerWithSummaryIcon<IDisplayContainer, SummaryIcon> {
 
 	@Override
-	public BoundTitleAndTextField createLargeControl(DisplayerContext context, final IRegisteredItems registeredItems, Composite parent, DisplayerDetails displayerDetails) {
-		BoundTitleAndTextField boundTitleAndTextField = new BoundTitleAndTextField(parent, context, displayerDetails);
-		ImageButtons.addEditButton(boundTitleAndTextField, displayerDetails.getSmallImageKey(), OverlaysAnchor.editKey, boundTitleAndTextField.editButtonListener());
-		ImageButtons.addHelpButton(boundTitleAndTextField, displayerDetails.key, GeneralAnchor.helpKey);
-		return boundTitleAndTextField;
+	public IDisplayContainer createLargeControl(Composite parent, DisplayerContext displayerContext, final IRegisteredItems registeredItems, IDisplayContainerFactoryGetter displayContainerFactoryGetter, DisplayerDetails displayerDetails) {
+		String view = displayerDetails.map.get(DisplayCoreConstants.viewKey);
+		if (view == null)
+			throw new NullPointerException(MessageFormat.format(DisplayCoreConstants.missingValueInMap, DisplayCoreConstants.viewKey, displayerDetails.map));
+		IDisplayContainerFactory factory = displayContainerFactoryGetter.getDisplayContainerFactory(parent.getDisplay(), view);
+		IDisplayContainer displayContainer = factory.create(displayerContext, parent);
+		return displayContainer;
 	}
 
 	@Override
-	public void populateLargeControl(BindingContext bindingContext, BoundTitleAndTextField largeControl, Object value) {
-		largeControl.setLastBindingContext(bindingContext);
-		largeControl.setText(Strings.nullSafeToString(value));
+	public void populateLargeControl(BindingContext bindingContext, IDisplayContainer largeControl, Object value) {
+		largeControl.setValues(bindingContext);
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import org.softwareFm.displayCore.api.AbstractDisplayerWithSummaryIcon;
 import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
+import org.softwareFm.displayCore.api.IDisplayContainerFactoryGetter;
 import org.softwareFm.displayCore.api.IRegisteredItems;
 import org.softwareFm.displayJavadocAndSource.JarSummaryImageButton;
 import org.softwareFm.repository.api.RepositoryDataItemStatus;
@@ -14,7 +15,7 @@ import org.softwareFm.swtBasics.images.SmallIconPosition;
 public class JarPathDisplayer extends AbstractDisplayerWithSummaryIcon<DisplayJarSummaryPanel, JarSummaryImageButton> {
 
 	@Override
-	public DisplayJarSummaryPanel createLargeControl(DisplayerContext context, IRegisteredItems registeredItems, Composite parent, DisplayerDetails displayerDetails) {
+	public DisplayJarSummaryPanel createLargeControl(Composite parent, DisplayerContext context, IRegisteredItems registeredItems, IDisplayContainerFactoryGetter displayContainerFactoryGetter, DisplayerDetails displayerDetails) {
 		return new DisplayJarSummaryPanel(parent, SWT.BORDER, context, displayerDetails);
 	}
 

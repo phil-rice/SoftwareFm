@@ -7,6 +7,7 @@ import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
 import org.softwareFm.displayCore.api.Displayers;
+import org.softwareFm.displayCore.api.IDisplayContainerFactoryGetter;
 import org.softwareFm.displayCore.api.IRegisteredItems;
 import org.softwareFm.displayCore.api.SummaryIcon;
 import org.softwareFm.swtBasics.images.Resources;
@@ -14,7 +15,7 @@ import org.softwareFm.swtBasics.images.Resources;
 public class JavadocDisplayer extends AbstractDisplayerWithSummaryIcon<JavadocPanel, SummaryIcon> {
 
 	@Override
-	public JavadocPanel createLargeControl(DisplayerContext context, IRegisteredItems registeredItems, Composite parent, DisplayerDetails displayerDetails) {
+	public JavadocPanel createLargeControl(Composite parent, DisplayerContext context, IRegisteredItems registeredItems, IDisplayContainerFactoryGetter displayContainerFactoryGetter, DisplayerDetails displayerDetails) {
 		return new JavadocPanel(parent, SWT.NULL, context, displayerDetails);
 	}
 

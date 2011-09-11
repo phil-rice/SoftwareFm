@@ -70,7 +70,7 @@ public class DisplayContainerFactoryBuilderInternalValidationTest extends TestCa
 	protected void setUp() throws Exception {
 		super.setUp();
 		shell = SwtTestFixture.shell();
-		factory = IDisplayContainerFactoryBuilder.Utils.factoryBuilder();
+		factory = IDisplayContainerFactoryBuilder.Utils.factoryBuilder(null);
 	}
 
 	@Override

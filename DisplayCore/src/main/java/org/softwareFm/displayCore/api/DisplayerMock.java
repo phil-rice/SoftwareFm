@@ -48,7 +48,7 @@ public class DisplayerMock implements IDisplayer<IHasControl, IHasControl> {
 	}
 
 	@Override
-	public IHasControl createLargeControl(DisplayerContext context, IRegisteredItems registeredItems, Composite parent, DisplayerDetails displayerDetails) {
+	public IHasControl createLargeControl(Composite parent, DisplayerContext context, IRegisteredItems registeredItems, IDisplayContainerFactoryGetter displayContainerFactoryGetter, DisplayerDetails displayerDetails) {
 		this.largeParent = parent;
 		checkDisplayedContext(displayerContext);
 		this.largeDisplayerDetails.add(displayerDetails);

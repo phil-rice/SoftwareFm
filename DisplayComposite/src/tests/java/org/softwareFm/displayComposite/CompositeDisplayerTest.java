@@ -1,11 +1,11 @@
 package org.softwareFm.displayComposite;
 
 import org.softwareFm.core.plugin.AbstractDisplayerTest;
-import org.softwareFm.displayCore.api.BoundTitleAndTextField;
+import org.softwareFm.displayCore.api.IDisplayContainer;
 import org.softwareFm.displayCore.api.IDisplayer;
 import org.softwareFm.displayCore.api.SummaryIcon;
 
-public class CompositeDisplayerTest extends AbstractDisplayerTest<BoundTitleAndTextField, SummaryIcon> {
+public class CompositeDisplayerTest extends AbstractDisplayerTest<IDisplayContainer, SummaryIcon> {
 
 	@Override
 	protected String getDataKey() {
@@ -23,13 +23,13 @@ public class CompositeDisplayerTest extends AbstractDisplayerTest<BoundTitleAndT
 	}
 
 	@Override
-	protected IDisplayer<BoundTitleAndTextField, SummaryIcon> getDisplayer() {
+	protected IDisplayer<IDisplayContainer, SummaryIcon> getDisplayer() {
 		return new CompositeDisplayer();
 	}
 
 	@Override
-	protected void checkData(Object sampleData, BoundTitleAndTextField largeControl, SummaryIcon smallControl) {
-		assertEquals(sampleData, largeControl.getText());
+	protected void checkData(Object sampleData, IDisplayContainer largeControl, SummaryIcon smallControl) {
+		fail();
 	}
 
 	@Override

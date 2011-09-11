@@ -51,11 +51,12 @@ public class Displayers {
 				urlGeneratorMap,//
 				ConfigForTitleAnd.create(display, resourceGetter, imageRegistry));
 
-		IDisplayContainerFactoryBuilder factoryBuilder = IDisplayContainerFactoryBuilder.Utils.factoryBuilder();
+		IDisplayContainerFactoryBuilder factoryBuilder = IDisplayContainerFactoryBuilder.Utils.factoryBuilder(null);
 		factoryBuilder.registerDisplayer("displayer", displayer);
 		factoryBuilder.registerEditor("editor", editor);
-		IDisplayContainerFactory factory = factoryBuilder.build(entity);
+		IDisplayContainerFactory factory = factoryBuilder.build();
 		factory.register(Maps.<String, String> makeMap(//
+				RepositoryConstants.entity, entity,//
 				DisplayCoreConstants.key, key, //
 				DisplayCoreConstants.displayer, "displayer", //
 				DisplayCoreConstants.editor, "editor", //

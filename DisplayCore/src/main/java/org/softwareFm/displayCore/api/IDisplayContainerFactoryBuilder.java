@@ -25,11 +25,11 @@ public interface IDisplayContainerFactoryBuilder {
 
 	void registerUrlGenerator(String name, IUrlGenerator generator);
 
-	IDisplayContainerFactory build(String entity);
+	IDisplayContainerFactory build();
 
 	public static class Utils {
-		public static IDisplayContainerFactoryBuilder factoryBuilder() {
-			return new DisplayContainerFactoryBuilder();
+		public static IDisplayContainerFactoryBuilder factoryBuilder(IDisplayContainerFactoryGetter displayContainerFactoryGetter) {
+			return new DisplayContainerFactoryBuilder(displayContainerFactoryGetter);
 		}
 	}
 
