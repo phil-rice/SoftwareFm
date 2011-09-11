@@ -1,14 +1,14 @@
 package org.softwareFm.displayCore.api;
 
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.softwareFm.displayCore.constants.DisplayCoreConstants;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
+import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.images.IImageButtonListener;
 import org.softwareFm.swtBasics.images.ImageButton;
 import org.softwareFm.swtBasics.images.Resources;
 
-public abstract class AbstractDisplayerWithSummaryIcon<L extends Control, S extends SummaryIcon> implements IDisplayer<L, S> {
+public abstract class AbstractDisplayerWithSummaryIcon<L extends IHasControl, S extends SummaryIcon> implements IDisplayer<L, S> {
 
 	@Override
 	public S createSmallControl(DisplayerContext displayerContext, IRegisteredItems registeredItems, final ITopButtonState topButtonState, Composite parent, final DisplayerDetails displayerDetails) {

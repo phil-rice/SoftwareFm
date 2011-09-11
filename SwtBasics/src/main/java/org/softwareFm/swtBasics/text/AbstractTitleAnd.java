@@ -4,12 +4,14 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.softwareFm.swtBasics.IHasComposite;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.Resources;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
-public class AbstractTitleAnd extends Composite implements IButtonParent {
+public class AbstractTitleAnd implements IHasComposite, IButtonParent {
 
 	protected final Composite compTitleAndButtons;
 	protected final Label lblTitle;
@@ -17,13 +19,14 @@ public class AbstractTitleAnd extends Composite implements IButtonParent {
 	protected int buttonCount;
 	private final Label lblFiller;
 	protected final ConfigForTitleAnd config;
+	private Composite content;
 
 	public AbstractTitleAnd(ConfigForTitleAnd config, Composite parent, String titleOrTitleKey, boolean titleIsKey) {
-		super(parent, config.style);
+		this.content = new Composite(parent, config.style);
 		this.config = config;
-		setLayout(Swts.getHorizonalNoMarginRowLayout());
+		content.setLayout(Swts.getHorizonalNoMarginRowLayout());
 
-		compTitleAndButtons = new Composite(this, SWT.NULL) {
+		compTitleAndButtons = new Composite(content, SWT.NULL) {
 			@Override
 			public String toString() {
 				return "compTitleAndButtons " + super.toString();
@@ -57,7 +60,7 @@ public class AbstractTitleAnd extends Composite implements IButtonParent {
 		lblFiller.setLayoutData(new RowData(fillerWidth, config.buttonHeight));
 		compButtons.layout();
 		compTitleAndButtons.layout();
-		layout();
+		content.layout();
 	}
 
 	public String getTitle() {
@@ -83,5 +86,15 @@ public class AbstractTitleAnd extends Composite implements IButtonParent {
 	@Override
 	public IResourceGetter getResourceGetter() {
 		return config.resourceGetter;
+	}
+
+	@Override
+	public Control getControl() {
+		return content;
+	}
+
+	@Override
+	public Composite getComposite() {
+		return content;
 	}
 }

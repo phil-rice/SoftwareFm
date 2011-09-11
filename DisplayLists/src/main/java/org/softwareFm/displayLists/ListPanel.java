@@ -12,7 +12,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
@@ -29,6 +31,7 @@ import org.softwareFm.softwareFmImages.IImageRegister;
 import org.softwareFm.softwareFmImages.ImageButtons;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
+import org.softwareFm.swtBasics.IHasComposite;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.IImageButtonListener;
 import org.softwareFm.swtBasics.images.ImageButton;
@@ -41,7 +44,7 @@ import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
 
-public class ListPanel<T> extends Composite implements IButtonParent, ILineEditable<T> {
+public class ListPanel<T> implements IHasComposite, IButtonParent, ILineEditable<T> {
 
 	private final DisplayerContext context;
 	private final Composite compForList;
@@ -56,9 +59,10 @@ public class ListPanel<T> extends Composite implements IButtonParent, ILineEdita
 	private final ILineEditor<T> lineEditor;
 	private final DisplayerDetails displayerDetails;
 	private Map<String, Object> lastContext = Collections.<String, Object> emptyMap();
+	private final Composite content;
 
 	public ListPanel(Composite parent, int style, final DisplayerContext context, DisplayerDetails displayerDetails, IRegisteredItems registeredItems) {
-		super(parent, style);
+		this.content = new Composite(parent, style);
 		this.displayerDetails = displayerDetails;
 		this.registeredItems = registeredItems;
 		this.key = displayerDetails.key;
@@ -71,10 +75,10 @@ public class ListPanel<T> extends Composite implements IButtonParent, ILineEdita
 			throw new IllegalArgumentException(MessageFormat.format(DisplayCoreConstants.missingValueInMap, DisplayCoreConstants.lineEditorKey, displayerDetails.map));
 		lineEditor = registeredItems.<T> getLineEditor(lineEditorName);
 		this.listModel = new ListModel<T>(lineEditor.getCodec());
-		this.compTitle = new Composite(this, SWT.NULL);
+		this.compTitle = new Composite(content, SWT.NULL);
 		compTitle.setLayout(new RowLayout(SWT.HORIZONTAL));
 		new Label(compTitle, SWT.NULL).setText(Strings.nullSafeToString(title));
-		compForList = new Composite(this, SWT.BORDER);
+		compForList = new Composite(content, SWT.BORDER);
 		String imageKey = displayerDetails.getSmallImageKey();
 
 		ImageButtons.addRowButtonWithOverlay(this, imageKey, OverlaysAnchor.addKey, displayerDetails.key, new IImageButtonListener() {
@@ -85,11 +89,11 @@ public class ListPanel<T> extends Composite implements IButtonParent, ILineEdita
 		});
 		ImageButtons.addHelpButton(this, displayerDetails.key, GeneralAnchor.helpKey);
 
-		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
-		setSize(getSize().x, 1);
+		Swts.addGrabHorizontalAndFillGridDataToAllChildren(content);
+		content.setSize(content.getSize().x, 1);
 		setCompListHeightHint(5);
-		getParent().layout();
-		getParent().redraw();
+		content.getParent().layout();
+		content.getParent().redraw();
 	}
 
 	public void setValue(BindingContext bindingContext, Object value) {
@@ -107,8 +111,8 @@ public class ListPanel<T> extends Composite implements IButtonParent, ILineEdita
 
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(compForList);
 		setCompListHeightHint(index == 0 ? 5 : SWT.DEFAULT);
-		getParent().layout();
-		getParent().redraw();
+		content.getParent().layout();
+		content.getParent().redraw();
 	}
 
 	private void setCompListHeightHint(int hint) {
@@ -174,7 +178,17 @@ public class ListPanel<T> extends Composite implements IButtonParent, ILineEdita
 
 	@Override
 	public ConfigForTitleAnd getDialogConfig() {
-		return ConfigForTitleAnd.createForDialogs(getDisplay(), getResourceGetter(), getImageRegistry());
+		return ConfigForTitleAnd.createForDialogs(content.getDisplay(), getResourceGetter(), getImageRegistry());
+	}
+
+	@Override
+	public Control getControl() {
+		return content;
+	}
+
+	@Override
+	public Composite getComposite() {
+		return content;
 	}
 
 	public static void main(String[] args) {
@@ -208,8 +222,13 @@ public class ListPanel<T> extends Composite implements IButtonParent, ILineEdita
 				});
 				BindingContext bindingContext = new BindingContext(RepositoryDataItemStatus.FOUND, "someUrl", Maps.<String, Object> newMap(), Maps.<String, Object> newMap());
 				result.setValue(bindingContext, value);
-				return result;
+				return result.getComposite();
 			}
 		});
+	}
+
+	@Override
+	public Shell getShell() {
+		return content.getShell();
 	}
 }

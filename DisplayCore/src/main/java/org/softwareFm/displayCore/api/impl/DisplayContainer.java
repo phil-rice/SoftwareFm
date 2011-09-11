@@ -1,7 +1,6 @@
 package org.softwareFm.displayCore.api.impl;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +18,7 @@ import org.softwareFm.displayCore.api.ITopButtonState;
 import org.softwareFm.displayCore.constants.DisplayCoreConstants;
 import org.softwareFm.repository.api.RepositoryDataItemStatus;
 import org.softwareFm.repository.constants.RepositoryConstants;
+import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.maps.Maps;
@@ -30,8 +30,8 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 	private final Map<String, Boolean> topButtonState = Maps.newMap();
 	private final IRegisteredItems registeredItems;
 	private final List<Map<String, String>> displayDefinitions;
-	private final List<Control> smallControls;
-	private final List<Control> largeControls;
+	private final List<IHasControl> smallControls;
+	private final List<IHasControl> largeControls;
 	private final String entity;
 
 	public DisplayContainer(DisplayerContext displayerContext, Composite parent, int style, String entity, IRegisteredItems registeredItems, List<Map<String, String>> displayDefinitions) {
@@ -49,8 +49,8 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 		contentLayout.marginWidth = 0;
 		content.setLayout(contentLayout);
 
-		smallControls = new ArrayList<Control>();
-		largeControls = new ArrayList<Control>();
+		smallControls = Lists.newList();
+		largeControls = Lists.newList();
 		for (Map<String, String> map : displayDefinitions) {
 			String key = map.get(DisplayCoreConstants.key);
 			if (key == null)
@@ -81,7 +81,7 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 				public void run() {
 					process(new IDisplayContainerCallback() {
 						@Override
-						public <L extends Control, S extends Control> void process(int index, String key, IDisplayer<L, S> displayer, L largeControl, S smallControl) throws Exception {
+						public <L extends IHasControl, S extends IHasControl> void process(int index, String key, IDisplayer<L, S> displayer, L largeControl, S smallControl) throws Exception {
 							Object value = findValue(bindingContext, key);
 							displayer.populateLargeControl(bindingContext, largeControl, value);
 							displayer.populateSmallControl(bindingContext, smallControl, value);
@@ -119,24 +119,24 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 	}
 
 	private void sortOutOrderVisibilityAndLayout() {
-		final List<Control> visibleControls = Lists.newList();
-		final List<Control> invisibleControls = Lists.newList();
+		final List<IHasControl> visibleControls = Lists.newList();
+		final List<IHasControl> invisibleControls = Lists.newList();
 		if (!content.isDisposed())
 			content.getDisplay().asyncExec(new Runnable() {
 				@Override
 				public void run() {
 					process(new IDisplayContainerCallback() {
 						@Override
-						public <L extends Control, S extends Control> void process(int index, String key, IDisplayer<L, S> displayer, L largeControl, S smallControl) throws Exception {
+						public <L extends IHasControl, S extends IHasControl> void process(int index, String key, IDisplayer<L, S> displayer, L largeControl, S smallControl) throws Exception {
 							boolean state = state(key);
-							largeControl.setVisible(state);
+							largeControl.getControl().setVisible(state);
 							if (state)
 								visibleControls.add(largeControl);
 							else
 								invisibleControls.add(largeControl);
 						}
 					});
-					setAfter(invisibleControls, setAfter(visibleControls, compButtons));
+					setAfter(invisibleControls, setAfter(visibleControls, IHasControl.Utils.toHasControl(compButtons)));
 					Swts.addGrabHorizontalAndFillGridDataToAllChildren(content);
 					content.layout();
 					content.getParent().layout();
@@ -145,9 +145,9 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 			});
 	}
 
-	private Control setAfter(List<Control> controls, Control firstControl) {
-		for (Control control : controls) {
-			control.moveBelow(firstControl);
+	private IHasControl setAfter(List<IHasControl> controls, IHasControl firstControl) {
+		for (IHasControl control : controls) {
+			control.getControl().moveBelow(firstControl.getControl());
 			firstControl = control;
 		}
 		return firstControl;
@@ -161,9 +161,9 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 			try {
 				if (displayerName == null)
 					throw new NullPointerException(MessageFormat.format(DisplayCoreConstants.mustHaveDisplayer, map));
-				IDisplayer<Control, Control> displayer = (IDisplayer<Control, Control>) registeredItems.getDisplayer(displayerName);
-				Control largeControl = largeControls.get(i);
-				Control smallControl = smallControls.get(i++);
+				IDisplayer<IHasControl, IHasControl> displayer = (IDisplayer<IHasControl, IHasControl>) registeredItems.getDisplayer(displayerName);
+				IHasControl largeControl = largeControls.get(i);
+				IHasControl smallControl = smallControls.get(i++);
 				String key = map.get(DisplayCoreConstants.key);
 				displayContainerCallback.process(i, key, displayer, largeControl, smallControl);
 			} catch (Exception e) {
@@ -218,5 +218,10 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 	@Override
 	public IRegisteredItems getRegisteredItems() {
 		return registeredItems;
+	}
+
+	@Override
+	public Control getControl() {
+		return content;
 	}
 }

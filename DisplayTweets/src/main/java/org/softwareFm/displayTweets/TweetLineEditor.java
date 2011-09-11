@@ -4,12 +4,12 @@ import java.util.concurrent.Callable;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.softwareFm.displayCore.api.ICodec;
 import org.softwareFm.displayCore.api.ILineEditable;
 import org.softwareFm.displayLists.AbstractLineEditor;
 import org.softwareFm.softwareFmImages.ImageButtons;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
+import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.text.ConfigForTitleAnd;
 import org.softwareFm.utilities.collections.ICrud;
 
@@ -31,7 +31,7 @@ public class TweetLineEditor extends AbstractLineEditor<String, TweetLinePanel> 
 	}
 
 	@Override
-	public Control makeLineControl(final ILineEditable<String> lineEditable, Composite parent, final int index, String t) {
+	public IHasControl makeLineControl(final ILineEditable<String> lineEditable, Composite parent, final int index, String t) {
 		TweetLinePanel text = new TweetLinePanel(parent, SWT.NULL, lineEditable.getDisplayerContext());
 		text.setText(t);
 		addButtons(lineEditable, parent, index, text);

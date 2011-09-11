@@ -1,13 +1,13 @@
 package org.softwareFm.displayCore.api;
 
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import org.softwareFm.swtBasics.IHasControl;
 
 public interface ILineEditor<T> {
 
 	ICodec<T> getCodec();
 
-	Control makeLineControl(ILineEditable<T> lineEditable, Composite parent, int index, T t);
+	IHasControl makeLineControl(ILineEditable<T> lineEditable, Composite parent, int index, T t);
 
 	void add(ILineEditable<T> lineEditable);
 
@@ -37,7 +37,7 @@ public interface ILineEditor<T> {
 				}
 
 				@Override
-				public Control makeLineControl(ILineEditable<T> lineEditable, Composite parent, int index, T t) {
+				public IHasControl makeLineControl(ILineEditable<T> lineEditable, Composite parent, int index, T t) {
 					throw new UnsupportedOperationException();
 				};
 

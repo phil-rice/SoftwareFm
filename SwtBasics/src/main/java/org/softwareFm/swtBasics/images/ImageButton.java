@@ -12,8 +12,11 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.SwtBasicConstants;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.utilities.collections.Lists;
@@ -21,7 +24,7 @@ import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.strings.Strings;
 
-public class ImageButton extends Composite {
+public class ImageButton implements IHasControl {
 
 	public static class Utils {
 		public static void setEnabledIfNotBlank(ImageButton button, String value) {
@@ -42,17 +45,18 @@ public class ImageButton extends Composite {
 	private final Map<SmallIconPosition, String> smallIconMap = Maps.newMap();
 	private final ImageRegistry imageRegistry;
 	private String mainImageKey;
+	private final Composite content;
 
 	public ImageButton(Composite parent, ImageRegistry imageRegistry, String key, final boolean toggle) {
 		this(parent, imageRegistry, key, null, toggle);
 	}
 
 	public ImageButton(Composite parent, final ImageRegistry imageRegistry, final String key, String overlayKey, final boolean toggle) {
-		super(parent, SWT.NULL);
+		this.content = new Composite(parent, SWT.NULL);
 		this.imageRegistry = imageRegistry;
 		this.overlayKey = overlayKey;
-		setLayout(Swts.getGridLayoutWithoutMargins());
-		this.label = new Label(this, SWT.NULL);
+		content.setLayout(Swts.getGridLayoutWithoutMargins());
+		this.label = new Label(content, SWT.NULL);
 		Image mainBackdrop = imageRegistry.get("backdrop.main");
 		if (mainBackdrop == null)
 			throw new NullPointerException();
@@ -176,7 +180,6 @@ public class ImageButton extends Composite {
 		return label.getImage();
 	}
 
-	@Override
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 
@@ -194,5 +197,14 @@ public class ImageButton extends Composite {
 
 	public static void main(String[] args) {
 		System.out.println("See ImageButtonDemo");
+	}
+
+	@Override
+	public Control getControl() {
+		return content;
+	}
+
+	public void setLayoutData(RowData rowData) {
+		content.setLayoutData(rowData);
 	}
 }

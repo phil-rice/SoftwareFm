@@ -210,4 +210,10 @@ public class Swts {
 		return gridLayout;
 	}
 
+	public static void asyncExec(IHasControl hasControl, Runnable runnable) {
+		Control control = hasControl.getControl();
+		if (!control.isDisposed())
+			control.getDisplay().asyncExec(runnable);
+	}
+
 }

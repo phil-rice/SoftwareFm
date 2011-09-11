@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.softwareFm.displayCore.api.IDisplayContainerFactory;
 import org.softwareFm.displayCore.api.IDisplayContainerFactoryBuilder;
@@ -14,6 +13,7 @@ import org.softwareFm.displayCore.api.IEditor;
 import org.softwareFm.displayCore.api.ILineEditor;
 import org.softwareFm.displayCore.api.IValidator;
 import org.softwareFm.repository.api.IUrlGenerator;
+import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.utilities.constants.UtilityMessages;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
@@ -47,7 +47,7 @@ public class DisplayContainerFactoryBuilder implements IDisplayContainerFactoryB
 	}
 
 	@Override
-	public <L extends Control, C extends Control> void registerDisplayer(String displayerName, IDisplayer<L, C> displayer) {
+	public <L extends IHasControl, C extends IHasControl> void registerDisplayer(String displayerName, IDisplayer<L, C> displayer) {
 		checkAndPut(registeredDisplayers, displayerName, displayer);
 	}
 

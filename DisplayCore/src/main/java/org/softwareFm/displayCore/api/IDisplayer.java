@@ -1,9 +1,9 @@
 package org.softwareFm.displayCore.api;
 
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import org.softwareFm.swtBasics.IHasControl;
 
-public interface IDisplayer<L extends Control, S extends Control> {
+public interface IDisplayer<L extends IHasControl, S extends IHasControl> {
 
 	S createSmallControl(DisplayerContext displayerContext, IRegisteredItems registeredItems, ITopButtonState topButtonState, Composite parent, DisplayerDetails displayerDetails);
 

@@ -27,8 +27,8 @@ public class ScanComposite extends AbstractTitleAnd {
 
 	public ScanComposite(Composite parent, int style, ConfigForTitleAnd config) {
 		super(config, parent, ScanViewConstants.scanKey, true);
-		setLayout(new FormLayout());
-		final StyledText txtText = new StyledText(this, SWT.BORDER);
+		getComposite().setLayout(new FormLayout());
+		final StyledText txtText = new StyledText(getComposite(), SWT.BORDER);
 		txtText.setLayoutData(new RowData(400, 400));
 
 		FormData lblLayoutData = new FormData();

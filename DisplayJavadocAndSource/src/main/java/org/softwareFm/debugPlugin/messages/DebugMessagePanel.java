@@ -38,7 +38,7 @@ public class DebugMessagePanel extends Composite implements ISoftwareFmLogger {
 		fd_titleAndStyledTextField.right = new FormAttachment(100, 0);
 		fd_titleAndStyledTextField.top = new FormAttachment(0, 0);
 		fd_titleAndStyledTextField.left = new FormAttachment(0, 0);
-		titleAndStyledTextField.setLayoutData(fd_titleAndStyledTextField);
+		titleAndStyledTextField.getControl().setLayoutData(fd_titleAndStyledTextField);
 		repository.addLogger(this);
 		ImageButtons.addRowButton(titleAndStyledTextField, GeneralAnchor.clearKey, DebugPanelConstants.messageClearKey, new IImageButtonListener() {
 			@Override

@@ -16,9 +16,10 @@ public class TitleAndStyledTextField extends AbstractTitleAnd {
 
 	public TitleAndStyledTextField(ConfigForTitleAnd config, Composite parent, String title) {
 		super(config, parent, title, true);
-		txtText = new StyledText(this, SWT.BORDER);
+		Composite content = getComposite();
+		txtText = new StyledText(content, SWT.BORDER);
 		txtText.setLayoutData(new RowData(400, 400));
-		setLayout(new FormLayout());
+		content.setLayout(new FormLayout());
 
 		FormData lblLayoutData = new FormData();
 		lblLayoutData.top = new FormAttachment(0, 0);
@@ -35,23 +36,21 @@ public class TitleAndStyledTextField extends AbstractTitleAnd {
 	}
 
 	public void setText(final String text) {
-		if (!isDisposed())
-			getDisplay().asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					txtText.setText(text);
-				}
-			});
+		Swts.asyncExec(this, new Runnable() {
+			@Override
+			public void run() {
+				txtText.setText(text);
+			}
+		});
 	}
 
 	public void appendText(final String text) {
-		if (!isDisposed())
-			getDisplay().asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					txtText.append(text);
-				}
-			});
+		Swts.asyncExec(this, new Runnable() {
+			@Override
+			public void run() {
+				txtText.append(text);
+			}
+		});
 	}
 
 	public String getText() {
@@ -63,7 +62,7 @@ public class TitleAndStyledTextField extends AbstractTitleAnd {
 
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				return new TitleAndStyledTextField(ConfigForTitleAnd.createForBasics(from.getDisplay()), from, "title");
+				return new TitleAndStyledTextField(ConfigForTitleAnd.createForBasics(from.getDisplay()), from, "title").getComposite();
 			}
 		});
 	}

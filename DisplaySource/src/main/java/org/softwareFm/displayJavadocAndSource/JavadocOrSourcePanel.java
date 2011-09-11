@@ -13,6 +13,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
@@ -24,6 +25,7 @@ import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 import org.softwareFm.softwareFmImages.smallIcons.SmallIconsAnchor;
+import org.softwareFm.swtBasics.IHasComposite;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.IImageButtonListener;
 import org.softwareFm.swtBasics.images.ImageButton;
@@ -36,7 +38,7 @@ import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
-public abstract class JavadocOrSourcePanel extends Composite implements IButtonParent, ISendToEclipseOrRepository {
+public abstract class JavadocOrSourcePanel implements IHasComposite, IButtonParent, ISendToEclipseOrRepository {
 
 	private final ConfigForTitleAnd config;
 	private final String key;
@@ -51,20 +53,21 @@ public abstract class JavadocOrSourcePanel extends Composite implements IButtonP
 	protected EclipseRepositoryState state;
 	private final String tooltipIfEclipseNotIn;
 	private final String tooltipIfRepositoryNotIn;
+	private final Composite content;
 
 	abstract protected void openEclipseValue(String eclipseValue);
 
 	abstract protected String findEclipseValue(BindingContext bindingContext) throws Exception;
 
 	public JavadocOrSourcePanel(Composite parent, int style, DisplayerContext displayerContext, DisplayerDetails displayerDetails, String linkKey) {
-		super(parent, style);
+		this.content = new Composite(parent, style);
 		this.displayerContext = displayerContext;
 		this.config = displayerContext.configForTitleAnd;
 		this.displayerDetails = displayerDetails;
 		this.key = displayerDetails.key;
 		final ReconciliationDialog reconciliationDialog = new ReconciliationDialog(parent.getShell(), this, config, key);
-		setLayout(Swts.getHorizonalNoMarginRowLayout());
-		Swts.makeTitleLabel(this, config, key);
+		content.setLayout(Swts.getHorizonalNoMarginRowLayout());
+		Swts.makeTitleLabel(this.getComposite(), config, key);
 		repositoryButton = ImageButtons.addRowButton(this, ArtifactsAnchor.jarKey, GeneralAnchor.browseKey, new IImageButtonListener() {
 			@Override
 			public void buttonPressed(ImageButton button) {
@@ -150,7 +153,7 @@ public abstract class JavadocOrSourcePanel extends Composite implements IButtonP
 
 	@Override
 	public Composite getButtonComposite() {
-		return this;
+		return content;
 	}
 
 	@Override
@@ -229,5 +232,15 @@ public abstract class JavadocOrSourcePanel extends Composite implements IButtonP
 				state1.addSelectionListener(listener);
 			}
 		});
+	}
+
+	@Override
+	public Control getControl() {
+		return content;
+	}
+
+	@Override
+	public Composite getComposite() {
+		return content;
 	}
 }

@@ -32,7 +32,7 @@ public class ConfigForTitleAnd {
 	public final int buttonHeight;
 
 	public ConfigForTitleAnd(IResourceGetter resourceGetter, ImageRegistry imageRegistry, Color normalBackground, Color editingBackground) {
-		this(resourceGetter, imageRegistry, normalBackground, editingBackground, SWT.NULL, 100, 100, 24, 22, 20);
+		this(resourceGetter, imageRegistry, normalBackground, editingBackground, SWT.NULL, 100, 100, 24, 16, 20);
 	}
 
 	public ConfigForTitleAnd(IResourceGetter resourceGetter, ImageRegistry imageRegistry, Color normalBackground, Color editingBackground, int style, int titleWidth, int buttonsWidth, int buttonSpacer, int titleHeight, int buttonHeight) {

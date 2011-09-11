@@ -26,7 +26,7 @@ public class TitleAndTextField extends AbstractTitleAnd {
 	public TitleAndTextField(ConfigForTitleAnd config, Composite parent, String titleOrTitleKey, boolean titleIsKey) {
 		super(config, parent, titleOrTitleKey, titleIsKey);
 
-		txtText = new Text(this, SWT.BORDER);
+		txtText = new Text(getComposite(), SWT.BORDER);
 		txtText.setText("");
 		txtText.setEditable(false);
 
@@ -40,7 +40,7 @@ public class TitleAndTextField extends AbstractTitleAnd {
 				txtText.setToolTipText(txtText.getText());
 			}
 		});
-		layout();
+		getComposite().layout();
 		addCrListener(new Listener() {
 			@Override
 			public void handleEvent(Event event) {
@@ -111,7 +111,7 @@ public class TitleAndTextField extends AbstractTitleAnd {
 				config.imageRegistry.put("backdrop.main", Images.makeImage(from.getDisplay(), Images.class, "main.png"));
 				TitleAndTextField titleAndTextField = new TitleAndTextField(config, from, "title");
 				titleAndTextField.setText("Some text");
-				return titleAndTextField;
+				return titleAndTextField.getComposite();
 			}
 		});
 	}

@@ -6,7 +6,6 @@ import junit.framework.TestCase;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -22,6 +21,7 @@ import org.softwareFm.repository.api.ISoftwareFmRepository;
 import org.softwareFm.repository.api.IUrlGeneratorMap;
 import org.softwareFm.repository.api.RepositoryDataItemStatus;
 import org.softwareFm.repository.constants.RepositoryConstants;
+import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.images.Images;
 import org.softwareFm.swtBasics.images.Resources;
 import org.softwareFm.swtBasics.text.ConfigForTitleAnd;
@@ -29,7 +29,7 @@ import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 @SuppressWarnings("restriction")
-public abstract class AbstractDisplayerTest<L extends Control, C extends Control> extends TestCase {
+public abstract class AbstractDisplayerTest<L extends IHasControl, C extends IHasControl> extends TestCase {
 
 	protected SoftwareFmActivator activator;
 	protected Display display;

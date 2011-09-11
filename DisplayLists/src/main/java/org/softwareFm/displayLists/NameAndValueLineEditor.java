@@ -2,8 +2,8 @@ package org.softwareFm.displayLists;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.softwareFm.displayCore.api.ILineEditable;
+import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.images.Resources;
 import org.softwareFm.swtBasics.text.ConfigForTitleAnd;
 import org.softwareFm.swtBasics.text.TitleAndTextField;
@@ -25,7 +25,7 @@ public class NameAndValueLineEditor extends AbstractLineEditor<NameAndValue, Tit
 	}
 
 	@Override
-	public Control makeLineControl(final ILineEditable<NameAndValue> lineEditable, Composite parent, final int index, NameAndValue t) {
+	public IHasControl makeLineControl(final ILineEditable<NameAndValue> lineEditable, Composite parent, final int index, NameAndValue t) {
 		TitleAndTextField text = new TitleAndTextField(lineEditable.getDialogConfig(), parent, t.name, false);
 		text.setText(t.url);
 		addButtons(lineEditable, parent, index, text);
