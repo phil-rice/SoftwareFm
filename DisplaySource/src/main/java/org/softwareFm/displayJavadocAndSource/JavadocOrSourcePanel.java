@@ -209,7 +209,7 @@ public abstract class JavadocOrSourcePanel implements IHasComposite, IButtonPare
 				final String key = "javadoc";
 				IResourceGetter resourceGetter = Resources.resourceGetterWithBasics().with(JavadocSourceConstants.class, "JavadocAndSource");
 				ImageRegistry imageRegistry = IImageRegister.Utils.withBasics(from.getDisplay());
-				DisplayerContext displayerContext = DisplayerContext.Utils.forTest(from.getDisplay(), resourceGetter, imageRegistry);
+				DisplayerContext displayerContext = DisplayerContext.Utils.forTest(from, resourceGetter, imageRegistry);
 				DisplayerDetails displayerDetails = new DisplayerDetails("anyEntity", Maps.<String, String> makeMap(DisplayCoreConstants.key, key));
 				JavadocOrSourcePanel panel = panelMaker.make(composite, displayerContext, displayerDetails);
 				addButton(composite, panel, "null/null", key, null, null);

@@ -1,6 +1,7 @@
 package org.softwareFm.displayCore.api;
 
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.softwareFm.displayCore.constants.DisplayCoreConstants;
@@ -27,10 +28,12 @@ public class Displayers {
 		Swts.display(displayer.getClass().getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				IDisplayContainer container = makeContainer(displayer, IEditor.Utils.noEditor(), resourceGetter, from, "entity", imageAnchor, key);
+				Composite parent = new Composite(from, SWT.NULL);
+				IDisplayContainer container = makeContainer(displayer, IEditor.Utils.noEditor(), resourceGetter, parent, "entity", imageAnchor, key);
 				BindingContext bindingContext = new BindingContext(RepositoryDataItemStatus.FOUND, "someUrl", Maps.<String, Object> makeMap(key, data), Maps.<String, Object> makeMap(RepositoryConstants.entity, "entity"));
 				container.setValues(bindingContext);
-				return container.getComposite();
+				Swts.addGrabHorizontalAndFillGridDataToAllChildren(parent);
+				return parent;
 			}
 		});
 	}
@@ -39,17 +42,18 @@ public class Displayers {
 		return makeContainer(displayer, editor, resourceGetter, from, "entity", Displayers.class, "Key1");
 	}
 
-	public static IDisplayContainer makeContainer(final IDisplayer<?, ?> displayer, IEditor editor, final IResourceGetter resourceGetter, Composite from, String entity, Class<?> imageAnchor, String key) {
-		Display display = from.getDisplay();
+	public static IDisplayContainer makeContainer(final IDisplayer<?, ?> displayer, IEditor editor, final IResourceGetter resourceGetter, Composite parent, String entity, Class<?> imageAnchor, String key) {
+		Display display = parent.getDisplay();
 		ImageRegistry imageRegistry = IImageRegister.Utils.withBasics(display);
-		Images.registerImages(from.getDisplay(), imageRegistry, imageAnchor, key);
+		Images.registerImages(parent.getDisplay(), imageRegistry, imageAnchor, key);
 		// Images.registerImages(from.getDisplay(), imageRegistry, Displayers.class, "Key1");
 		IUrlGeneratorMap urlGeneratorMap = IUrlGeneratorMap.Utils.urlGeneratorMap();
 		DisplayerContext context = new DisplayerContext(//
 				ISelectedBindingManager.Utils.noSelectedBindingManager(), //
 				ISoftwareFmRepository.Utils.repository(), //
 				urlGeneratorMap,//
-				ConfigForTitleAnd.create(display, resourceGetter, imageRegistry));
+				ConfigForTitleAnd.create(display, resourceGetter, imageRegistry),//
+				IDisplayContainerButtons.Utils.makeButtons(parent, imageRegistry, resourceGetter));
 
 		IDisplayContainerFactoryBuilder factoryBuilder = IDisplayContainerFactoryBuilder.Utils.factoryBuilder(null);
 		factoryBuilder.registerDisplayer("displayer", displayer);
@@ -62,7 +66,7 @@ public class Displayers {
 				DisplayCoreConstants.editor, "editor", //
 				DisplayCoreConstants.smallImageKey, ArtifactsAnchor.documentKey));
 
-		IDisplayContainer container = factory.create(context, from);
+		IDisplayContainer container = factory.create(context, parent);
 		return container;
 	}
 }

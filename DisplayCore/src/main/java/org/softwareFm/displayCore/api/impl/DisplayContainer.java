@@ -4,13 +4,13 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
+import org.softwareFm.displayCore.api.IDisplayContainerButtons;
 import org.softwareFm.displayCore.api.IDisplayContainerFactoryGetter;
 import org.softwareFm.displayCore.api.IDisplayContainerForTests;
 import org.softwareFm.displayCore.api.IDisplayer;
@@ -34,15 +34,11 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 	private final List<IHasControl> smallControls;
 	private final List<IHasControl> largeControls;
 
-	public DisplayContainer(DisplayerContext displayerContext, Composite parent, int style, IRegisteredItems registeredItems, IDisplayContainerFactoryGetter displayContainerFactoryGetter, List<Map<String, String>> displayDefinitions) {
+	public DisplayContainer(DisplayerContext displayerContext, Composite parent, IDisplayContainerButtons displayContainerButtons, int style, IRegisteredItems registeredItems, IDisplayContainerFactoryGetter displayContainerFactoryGetter, List<Map<String, String>> displayDefinitions) {
 		this.registeredItems = registeredItems;
 		this.displayDefinitions = displayDefinitions;
 		content = new Composite(parent, style);
-		this.compButtons = new Composite(content, SWT.NULL);
-
-		GridLayout compButtonsLayout = new GridLayout(displayDefinitions.size(), false);
-		compButtonsLayout.marginWidth = 0;
-		compButtons.setLayout(compButtonsLayout);
+		this.compButtons = displayContainerButtons.getComposite();
 
 		GridLayout contentLayout = new GridLayout();
 		contentLayout.marginWidth = 0;

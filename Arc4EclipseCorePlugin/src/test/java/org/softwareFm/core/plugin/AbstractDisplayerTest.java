@@ -13,6 +13,7 @@ import org.eclipse.ui.internal.Workbench;
 import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.Displayers;
+import org.softwareFm.displayCore.api.IDisplayContainerButtons.Utils;
 import org.softwareFm.displayCore.api.IDisplayContainerFactory;
 import org.softwareFm.displayCore.api.IDisplayContainerForTests;
 import org.softwareFm.displayCore.api.IDisplayer;
@@ -99,8 +100,10 @@ public abstract class AbstractDisplayerTest<L extends IHasControl, C extends IHa
 		selectedBindingManager = activator.getSelectedBindingManager();
 		resourceGetter = SoftwareFmActivator.getDefault().getResourceGetter();
 		urlGeneratorMap = activator.getUrlGeneratorMap();
-		displayerContext = new DisplayerContext(selectedBindingManager, repository, urlGeneratorMap, ConfigForTitleAnd.create(display, resourceGetter, imageRegistry));
 		shell = new Shell(display);
+		displayerContext = new DisplayerContext(selectedBindingManager, repository, urlGeneratorMap,//
+				ConfigForTitleAnd.create(display, resourceGetter, imageRegistry), //
+				Utils.makeButtons(shell, imageRegistry, resourceGetter));
 		Images.registerImage(display, imageRegistry, Displayers.class, "Key1");
 	}
 

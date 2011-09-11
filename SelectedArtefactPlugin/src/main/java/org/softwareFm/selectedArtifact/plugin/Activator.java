@@ -2,7 +2,6 @@ package org.softwareFm.selectedArtifact.plugin;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.softwareFm.core.plugin.SoftwareFmActivator;
@@ -41,9 +40,9 @@ public class Activator extends AbstractUIPlugin {
 		return plugin;
 	}
 
-	public DisplayerContext getContext(Display display) {
+	public DisplayerContext getContext(Composite parent) {
 		SoftwareFmActivator coreActivator = SoftwareFmActivator.getDefault();
-		return new DisplayerContext(coreActivator.getSelectedBindingManager(), coreActivator.getRepository(), coreActivator.getUrlGeneratorMap(), coreActivator.getConfigForTitleAnd(display));
+		return coreActivator.getDisplayerContext(parent);
 	}
 
 	public ISoftwareFmRepository getRepository() {

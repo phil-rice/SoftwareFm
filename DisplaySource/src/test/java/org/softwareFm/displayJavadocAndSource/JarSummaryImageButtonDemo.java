@@ -39,7 +39,7 @@ public class JarSummaryImageButtonDemo {
 				imageRegistry = IImageRegister.Utils.withBasics(from.getDisplay());
 				resourceGetter = Resources.resourceGetterWithBasics("org.softwareFm.displayJavadocAndSource.JavadocAndSource");
 				filter = SmallIconPosition.allIcons;
-				DisplayerContext context = DisplayerContext.Utils.forTest(from.getDisplay(), resourceGetter, imageRegistry);
+				DisplayerContext context = DisplayerContext.Utils.forTest(from, resourceGetter, imageRegistry);
 				DisplayerDetails displayerDetails = new DisplayerDetails("entity", Maps.<String, String> makeMap(DisplayCoreConstants.key, "jar", DisplayCoreConstants.smallImageKey, ArtifactsAnchor.jarKey));
 				jarSummaryImageButton = new JarSummaryImageButton(parent, context, displayerDetails, true, filter);
 

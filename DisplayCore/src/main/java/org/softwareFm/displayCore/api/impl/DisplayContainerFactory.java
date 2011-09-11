@@ -41,7 +41,7 @@ public class DisplayContainerFactory implements IDisplayContainerFactory, IRegis
 
 	@Override
 	public IDisplayContainer create(DisplayerContext displayerContext, Composite parent) {
-		return new DisplayContainer(displayerContext, parent, SWT.NULL, this, displayContainerFactoryGetter, displayDefinitions);
+		return new DisplayContainer(displayerContext, parent, displayerContext.displayContainerButtons, SWT.NULL, this, displayContainerFactoryGetter, displayDefinitions);
 	}
 
 	@Override

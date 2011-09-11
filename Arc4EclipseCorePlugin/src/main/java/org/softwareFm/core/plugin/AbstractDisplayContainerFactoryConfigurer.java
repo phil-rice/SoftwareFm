@@ -20,6 +20,15 @@ public abstract class AbstractDisplayContainerFactoryConfigurer implements IDisp
 				DisplayCoreConstants.smallImageKey, smallImageKey);
 	}
 
+	protected Map<String, String> makeMapWithView(String entity, String key, String displayer, String smallImageKey, String viewName) {
+		return Maps.<String, String> makeLinkedMap(//
+				RepositoryConstants.entity, entity, //
+				DisplayCoreConstants.key, key, //
+				DisplayCoreConstants.displayer, displayer, //
+				DisplayCoreConstants.smallImageKey, smallImageKey,//
+				DisplayCoreConstants.viewKey, viewName);
+	}
+
 	protected Map<String, String> makeMapWithLineEditor(String entity, String key, String displayer, String smallImageKey, String lineEditor) {
 		return Maps.<String, String> makeLinkedMap(//
 				RepositoryConstants.entity, entity,//

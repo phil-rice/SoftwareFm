@@ -4,6 +4,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 import org.softwareFm.displayCore.api.IDisplayContainer;
 import org.softwareFm.selectedArtifact.plugin.Activator;
+import org.softwareFm.swtBasics.Swts;
 
 /**
  * This sample class demonstrates how to plug-in a new workbench view. The view shows data obtained from the model. The sample creates a dummy model on the fly, but a real implementation would connect to the model available either in this or another plug-in (e.g. the workspace). The view is connected to the model using a content provider.
@@ -29,6 +30,7 @@ abstract public class AbstractSelectedArtifactView extends ViewPart {
 		String entityName = getEntityName();
 		displayContainer = activator.makeDisplayContainer(parent, viewName, entityName);
 		activator.getRepository().addStatusListener(displayContainer);
+		Swts.addGrabHorizontalAndFillGridDataToAllChildren(parent);
 	}
 
 	@Override

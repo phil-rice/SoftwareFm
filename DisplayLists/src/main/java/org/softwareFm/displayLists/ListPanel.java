@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
+import org.softwareFm.displayCore.api.IDisplayContainerButtons;
 import org.softwareFm.displayCore.api.IDisplayer;
 import org.softwareFm.displayCore.api.ILineEditable;
 import org.softwareFm.displayCore.api.ILineEditor;
@@ -203,16 +204,18 @@ public class ListPanel<T> implements IHasComposite, IButtonParent, ILineEditable
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				IUrlGeneratorMap urlGeneratorMap = IUrlGeneratorMap.Utils.urlGeneratorMap();
+				ConfigForTitleAnd config = ConfigForTitleAnd.create(//
+						from.getDisplay(), //
+						Resources.resourceGetterWithBasics(//
+								getClass().getPackage().getName() + ".ListAndPanelTest",//
+								getClass().getPackage().getName() + ".DisplayLists"),//
+						IImageRegister.Utils.withBasics(from.getDisplay()));
 				DisplayerContext context = new DisplayerContext(//
 						ISelectedBindingManager.Utils.noSelectedBindingManager(), //
 						ISoftwareFmRepository.Utils.repository(), //
 						urlGeneratorMap,//
-						ConfigForTitleAnd.create(//
-								from.getDisplay(), //
-								Resources.resourceGetterWithBasics(//
-										getClass().getPackage().getName() + ".ListAndPanelTest",//
-										getClass().getPackage().getName() + ".DisplayLists"),//
-								IImageRegister.Utils.withBasics(from.getDisplay())));
+						config,//
+						IDisplayContainerButtons.Utils.makeButtons(from, config.imageRegistry, config.resourceGetter));
 				DisplayerDetails displayerDetails = new DisplayerDetails("entity", Maps.<String, String> makeMap(//
 						DisplayCoreConstants.key, "ListKey",//
 						DisplayCoreConstants.lineEditorKey, "ignored"));

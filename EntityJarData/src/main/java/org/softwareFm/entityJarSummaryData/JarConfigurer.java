@@ -8,6 +8,7 @@ public class JarConfigurer extends AbstractDisplayContainerFactoryConfigurer {
 	@Override
 	public void configure(IDisplayContainerFactory factory) {
 		factory.register(makeMap("jar", "jarData", "jar", "artifact.jar"));
+		// factory.register(makeMapWithView("jar", "project.url", "composite", ArtifactsAnchor.projectKey, "project"));
 	}
 
 }

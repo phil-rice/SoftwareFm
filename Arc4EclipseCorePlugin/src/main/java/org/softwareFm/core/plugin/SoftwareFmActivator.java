@@ -18,6 +18,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.IDisplayContainer;
+import org.softwareFm.displayCore.api.IDisplayContainerButtons.Utils;
 import org.softwareFm.displayCore.api.IDisplayContainerFactory;
 import org.softwareFm.displayCore.api.IDisplayContainerFactoryBuilder;
 import org.softwareFm.displayCore.api.IDisplayContainerFactoryGetter;
@@ -224,7 +225,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin implements IRepository
 	public IDisplayContainer makeDisplayContainer(Composite parent, String name, String entity) {
 		Display display = parent.getDisplay();
 		IDisplayContainerFactory factory = getDisplayContainerFactory(display, name);
-		return factory.create(getDisplayerContext(display), parent);
+		return factory.create(getDisplayerContext(parent), parent);
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -259,8 +260,9 @@ public class SoftwareFmActivator extends AbstractUIPlugin implements IRepository
 		return displayContainerFactoryBuilder;
 	}
 
-	private DisplayerContext getDisplayerContext(Display display) {
-		return new DisplayerContext(getSelectedBindingManager(), getRepository(), getUrlGeneratorMap(), getConfigForTitleAnd(display));
+	public DisplayerContext getDisplayerContext(Composite from) {
+		ConfigForTitleAnd config = getConfigForTitleAnd(from.getDisplay());
+		return new DisplayerContext(getSelectedBindingManager(), getRepository(), getUrlGeneratorMap(), config, Utils.makeButtons(from, config.imageRegistry, config.resourceGetter));
 	}
 
 	public IResourceGetter getResourceGetter() {
