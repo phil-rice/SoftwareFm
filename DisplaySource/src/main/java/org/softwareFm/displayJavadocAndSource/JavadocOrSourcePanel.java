@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Control;
 import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
+import org.softwareFm.displayCore.api.IDisplayer;
 import org.softwareFm.displayCore.constants.DisplayCoreConstants;
 import org.softwareFm.repository.api.RepositoryDataItemStatus;
 import org.softwareFm.softwareFmImages.IImageRegister;
@@ -137,17 +138,19 @@ public abstract class JavadocOrSourcePanel implements IHasComposite, IButtonPare
 	}
 
 	public synchronized void setValue(BindingContext bindingContext) {
-		this.bindingContext = bindingContext;
-		try {
+		if (IDisplayer.Utils.entitiesMatch(bindingContext, displayerDetails.entity)) {
+			this.bindingContext = bindingContext;
+			try {
 
-			String eclipseValue = findEclipseValue(bindingContext);
-			Map<String, Object> data = bindingContext.data;
-			String repositoryValue = data == null ? null : (String) data.get(key);
-			state = new EclipseRepositoryState(eclipseValue, repositoryValue, tooltipIfEclipseNotIn, tooltipIfRepositoryNotIn);
-			updateFromState();
+				String eclipseValue = findEclipseValue(bindingContext);
+				Map<String, Object> data = bindingContext.data;
+				String repositoryValue = data == null ? null : (String) data.get(key);
+				state = new EclipseRepositoryState(eclipseValue, repositoryValue, tooltipIfEclipseNotIn, tooltipIfRepositoryNotIn);
+				updateFromState();
 
-		} catch (Exception e) {
-			throw WrappedException.wrap(e);
+			} catch (Exception e) {
+				throw WrappedException.wrap(e);
+			}
 		}
 	}
 

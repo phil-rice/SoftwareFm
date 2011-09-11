@@ -10,6 +10,7 @@ import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
 import org.softwareFm.displayCore.api.Displayers;
+import org.softwareFm.displayCore.api.IDisplayer;
 import org.softwareFm.displayCore.api.IRegisteredItems;
 import org.softwareFm.displayCore.api.SummaryIcon;
 import org.softwareFm.repository.api.ISoftwareFmRepository;
@@ -25,7 +26,7 @@ public class MainUrlDisplayer extends AbstractDisplayerWithSummaryIcon<MainUrlPa
 
 	@Override
 	public MainUrlPanel createLargeControl(final DisplayerContext context, final IRegisteredItems registeredItems, Composite parent, final DisplayerDetails displayerDetails) {
-		final MainUrlPanel titleAndTextField = new MainUrlPanel(context.configForTitleAnd, parent, displayerDetails.key);
+		final MainUrlPanel titleAndTextField = new MainUrlPanel(context.configForTitleAnd, parent, displayerDetails.entity, displayerDetails.key);
 		titleAndTextField.setEditable(true);
 		ImageButtons.addBrowseButton(titleAndTextField, GeneralAnchor.browseKey, new Callable<String>() {
 			@Override
@@ -49,7 +50,7 @@ public class MainUrlDisplayer extends AbstractDisplayerWithSummaryIcon<MainUrlPa
 
 	@Override
 	public void populateLargeControl(BindingContext bindingContext, MainUrlPanel largeControl, Object value) {
-		if (RepositoryDataItemStatus.Utils.isResults(bindingContext.status)) {
+		if (RepositoryDataItemStatus.Utils.isResults(bindingContext.status) && IDisplayer.Utils.entitiesMatch(bindingContext, largeControl.getEntity())) {
 			Object urlKey = bindingContext.context.get(RepositoryConstants.urlKey);
 			if (urlKey == null)
 				largeControl.setText("");

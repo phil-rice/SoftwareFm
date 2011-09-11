@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
+import org.softwareFm.displayCore.api.IDisplayer;
 import org.softwareFm.displayCore.api.ILineEditable;
 import org.softwareFm.displayCore.api.ILineEditor;
 import org.softwareFm.displayCore.api.IRegisteredItems;
@@ -97,22 +98,24 @@ public class ListPanel<T> implements IHasComposite, IButtonParent, ILineEditable
 	}
 
 	public void setValue(BindingContext bindingContext, Object value) {
-		this.url = bindingContext.url;
-		this.lastContext = bindingContext.context;
-		List<String> values = getValues(value);
-		Swts.removeAllChildren(compForList);
-		int index = 0;
-		if (values == null || (values.size() == 1 && values.get(0).equals(" ")))
-			listModel.setData(Collections.<String> emptyList());
-		else
-			listModel.setData(values);
-		for (T t : listModel)
-			lineEditor.makeLineControl(this, compForList, index++, t);
+		if (IDisplayer.Utils.entitiesMatch(bindingContext, entity)) {
+			this.url = bindingContext.url;
+			this.lastContext = bindingContext.context;
+			List<String> values = getValues(value);
+			Swts.removeAllChildren(compForList);
+			int index = 0;
+			if (values == null || (values.size() == 1 && values.get(0).equals(" ")))
+				listModel.setData(Collections.<String> emptyList());
+			else
+				listModel.setData(values);
+			for (T t : listModel)
+				lineEditor.makeLineControl(this, compForList, index++, t);
 
-		Swts.addGrabHorizontalAndFillGridDataToAllChildren(compForList);
-		setCompListHeightHint(index == 0 ? 5 : SWT.DEFAULT);
-		content.getParent().layout();
-		content.getParent().redraw();
+			Swts.addGrabHorizontalAndFillGridDataToAllChildren(compForList);
+			setCompListHeightHint(index == 0 ? 5 : SWT.DEFAULT);
+			content.getParent().layout();
+			content.getParent().redraw();
+		}
 	}
 
 	private void setCompListHeightHint(int hint) {

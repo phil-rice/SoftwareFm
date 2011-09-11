@@ -26,6 +26,7 @@ public class DisplayCoreConstants {
 
 	public static final String mustHaveKey = "Must have a editKey in map {0}";
 	public static final String mustHaveDisplayer = "Must have displayer in map {0}";
+	public static final String mustHaveEntity = "Must have a value of Entity in map {0}";
 	public static final String missingValueInMap = "Must have a value for {0} in map {1}";
 	public static final String displayerNotFound = "Illegal value for displayer [{0}]. Legal values are {1} in map {2}";
 	public static final String smallImageKeyMissing = "Cannot find small image editKey for {0} in {1}";

@@ -32,10 +32,8 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 	private final List<Map<String, String>> displayDefinitions;
 	private final List<IHasControl> smallControls;
 	private final List<IHasControl> largeControls;
-	private final String entity;
 
-	public DisplayContainer(DisplayerContext displayerContext, Composite parent, int style, String entity, IRegisteredItems registeredItems, List<Map<String, String>> displayDefinitions) {
-		this.entity = entity;
+	public DisplayContainer(DisplayerContext displayerContext, Composite parent, int style, IRegisteredItems registeredItems, List<Map<String, String>> displayDefinitions) {
 		this.registeredItems = registeredItems;
 		this.displayDefinitions = displayDefinitions;
 		content = new Composite(parent, style);
@@ -56,10 +54,12 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 			if (key == null)
 				throw new NullPointerException(MessageFormat.format(DisplayCoreConstants.mustHaveKey, map));
 			String displayerName = map.get(DisplayCoreConstants.displayer);
+			String entity = map.get(RepositoryConstants.entity);
+			if (entity == null)
+				throw new NullPointerException(MessageFormat.format(DisplayCoreConstants.mustHaveEntity, map));
 			if (displayerName == null)
 				throw new NullPointerException(MessageFormat.format(DisplayCoreConstants.mustHaveDisplayer, map));
 			IDisplayer<?, ?> displayer = registeredItems.getDisplayer(displayerName);
-
 			DisplayerDetails displayerDetails = new DisplayerDetails(entity, map);
 
 			smallControls.add(displayer.createSmallControl(displayerContext, registeredItems, this, compButtons, displayerDetails));
@@ -75,25 +75,24 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 
 	@Override
 	public void setValues(final BindingContext bindingContext) {
-		if (!content.isDisposed())
-			content.getDisplay().asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					process(new IDisplayContainerCallback() {
-						@Override
-						public <L extends IHasControl, S extends IHasControl> void process(int index, String key, IDisplayer<L, S> displayer, L largeControl, S smallControl) throws Exception {
-							Object value = findValue(bindingContext, key);
-							displayer.populateLargeControl(bindingContext, largeControl, value);
-							displayer.populateSmallControl(bindingContext, smallControl, value);
-						}
+		Swts.asyncExec(this, new Runnable() {
+			@Override
+			public void run() {
+				process(new IDisplayContainerCallback() {
+					@Override
+					public <L extends IHasControl, S extends IHasControl> void process(int index, String key, IDisplayer<L, S> displayer, L largeControl, S smallControl) throws Exception {
+						Object value = findValue(bindingContext, key);
+						displayer.populateLargeControl(bindingContext, largeControl, value);
+						displayer.populateSmallControl(bindingContext, smallControl, value);
+					}
 
-						@Override
-						public String toString() {
-							return "DisplayContainer.setValues";
-						}
-					});
-				}
-			});
+					@Override
+					public String toString() {
+						return "DisplayContainer.setValues";
+					}
+				});
+			}
+		});
 	}
 
 	private Object findValue(BindingContext bindingContext, String key) {
@@ -210,9 +209,7 @@ public class DisplayContainer implements IDisplayContainerForTests, ITopButtonSt
 
 	@Override
 	public void statusChanged(String url, RepositoryDataItemStatus status, Map<String, Object> item, Map<String, Object> context) throws Exception {
-		Object actualEntity = context.get(RepositoryConstants.entity);
-		if (entity.equals(actualEntity))
-			setValues(new BindingContext(status, url, item, context));
+		setValues(new BindingContext(status, url, item, context));
 	}
 
 	@Override

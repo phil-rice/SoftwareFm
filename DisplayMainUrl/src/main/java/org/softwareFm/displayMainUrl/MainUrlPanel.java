@@ -7,10 +7,16 @@ import org.softwareFm.swtBasics.text.TitleAndTextField;
 public class MainUrlPanel extends TitleAndTextField {
 
 	public final String key;
+	private final String entity;
 
-	public MainUrlPanel(ConfigForTitleAnd config, Composite parent, String key) {
+	public MainUrlPanel(ConfigForTitleAnd config, Composite parent, String entity, String key) {
 		super(config, parent, key);
+		this.entity = entity;
 		this.key = key;
+	}
+
+	public String getEntity() {
+		return entity;
 	}
 
 }

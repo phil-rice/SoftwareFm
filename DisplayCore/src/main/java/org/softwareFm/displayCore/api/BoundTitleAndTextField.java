@@ -12,9 +12,11 @@ public class BoundTitleAndTextField extends TitleAndTextField {
 
 	private String url;
 	private Map<String, Object> lastContext = Collections.<String, Object> emptyMap();
+	private final String entity;
 
 	public BoundTitleAndTextField(Composite parent, final DisplayerContext displayerContext, final DisplayerDetails displayerDetails) {
 		super(displayerContext.configForTitleAnd, parent, displayerDetails.key);
+		this.entity = displayerDetails.entity;
 		addCrListener(new Listener() {
 			@Override
 			public void handleEvent(Event e) {
@@ -27,5 +29,9 @@ public class BoundTitleAndTextField extends TitleAndTextField {
 		this.url = bindingContext.url;
 		this.lastContext = bindingContext.context;
 		setEditable(false);
+	}
+
+	public String getEntity() {
+		return entity;
 	}
 }

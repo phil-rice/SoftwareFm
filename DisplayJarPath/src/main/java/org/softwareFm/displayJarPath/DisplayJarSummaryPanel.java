@@ -1,6 +1,7 @@
 package org.softwareFm.displayJarPath;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -12,6 +13,7 @@ import org.softwareFm.displayCore.api.BindingContext;
 import org.softwareFm.displayCore.api.BoundTitleAndTextField;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
+import org.softwareFm.displayCore.api.IDisplayer;
 import org.softwareFm.displayCore.constants.DisplayCoreConstants;
 import org.softwareFm.displayJavadocAndSource.JavadocOrSourcePanel;
 import org.softwareFm.displayJavadocAndSource.JavadocPanel;
@@ -33,9 +35,13 @@ public class DisplayJarSummaryPanel implements IHasControl {
 	private final JavadocOrSourcePanel javadocPanel;
 	private final SourcePanel sourcePanel;
 	private final Composite content;
+	private final String entity;
 
 	public DisplayJarSummaryPanel(Composite parent, int style, DisplayerContext displayerContext, DisplayerDetails displayerDetails) {
 		this.content = new Composite(parent, style);
+		this.entity = displayerDetails.entity;
+		if (entity == null)
+			throw new NullPointerException(MessageFormat.format(DisplayCoreConstants.mustHaveEntity, displayerDetails.map));
 		content.setLayout(new GridLayout());
 		txtJar = new TitleAndTextField(displayerContext.configForTitleAnd, content, DisplayJarConstants.name);
 		txtProjectName = makeLinkUrlField(displayerContext, displayerDetails, "project.url");
@@ -58,15 +64,17 @@ public class DisplayJarSummaryPanel implements IHasControl {
 	}
 
 	public void setValue(BindingContext bindingContext) {
-		BindingRipperResult ripped = (BindingRipperResult) bindingContext.context.get(DisplayCoreConstants.ripperResult);
-		Map<String, Object> data = bindingContext.data;
-		File file = ripped.path == null ? null : ripped.path.toFile();
-		String name = file == null ? "" : file.getName();
-		txtJar.setText(name);
-		txtProjectName.setText(Strings.nullSafeToString(data == null ? null : data.get("project.url")));
-		txtOrganisationName.setText(Strings.nullSafeToString(data == null ? null : data.get("organisation.url")));
-		javadocPanel.setValue(bindingContext);
-		sourcePanel.setValue(bindingContext);
+		if (IDisplayer.Utils.entitiesMatch(bindingContext, entity)) {
+			BindingRipperResult ripped = (BindingRipperResult) bindingContext.context.get(DisplayCoreConstants.ripperResult);
+			Map<String, Object> data = bindingContext.data;
+			File file = ripped.path == null ? null : ripped.path.toFile();
+			String name = file == null ? "" : file.getName();
+			txtJar.setText(name);
+			txtProjectName.setText(Strings.nullSafeToString(data == null ? null : data.get("project.url")));
+			txtOrganisationName.setText(Strings.nullSafeToString(data == null ? null : data.get("organisation.url")));
+			javadocPanel.setValue(bindingContext);
+			sourcePanel.setValue(bindingContext);
+		}
 	}
 
 	@Override

@@ -16,11 +16,11 @@ import org.softwareFm.displayCore.api.IRegisteredItems;
 import org.softwareFm.displayCore.api.IValidator;
 import org.softwareFm.displayCore.constants.DisplayCoreConstants;
 import org.softwareFm.repository.api.IUrlGenerator;
+import org.softwareFm.repository.constants.RepositoryConstants;
 import org.softwareFm.utilities.collections.Lists;
 
 public class DisplayContainerFactory implements IDisplayContainerFactory, IRegisteredItems {
 
-	private final String entity;
 	private final Map<String, IDisplayer<?, ?>> registeredDisplayers;
 	private final Map<String, IEditor> registeredEditors;
 	private final Map<String, ILineEditor<?>> registeredLineEditors;
@@ -28,8 +28,7 @@ public class DisplayContainerFactory implements IDisplayContainerFactory, IRegis
 	private final Map<String, IUrlGenerator> registeredUrlGenerators;
 	private final List<Map<String, String>> displayDefinitions = Lists.newList();
 
-	public DisplayContainerFactory(String entity, Map<String, IDisplayer<?, ?>> registeredDisplayers, Map<String, IEditor> registeredEditors, Map<String, ILineEditor<?>> registeredLineEditors, Map<String, IValidator> registeredValidators, Map<String, IUrlGenerator> registeredUrlGenerators) {
-		this.entity = entity;
+	public DisplayContainerFactory(Map<String, IDisplayer<?, ?>> registeredDisplayers, Map<String, IEditor> registeredEditors, Map<String, ILineEditor<?>> registeredLineEditors, Map<String, IValidator> registeredValidators, Map<String, IUrlGenerator> registeredUrlGenerators) {
 		this.registeredDisplayers = registeredDisplayers;
 		this.registeredEditors = registeredEditors;
 		this.registeredLineEditors = registeredLineEditors;
@@ -39,7 +38,7 @@ public class DisplayContainerFactory implements IDisplayContainerFactory, IRegis
 
 	@Override
 	public IDisplayContainer create(DisplayerContext displayerContext, Composite parent) {
-		return new DisplayContainer(displayerContext, parent, SWT.NULL, entity, this, displayDefinitions);
+		return new DisplayContainer(displayerContext, parent, SWT.NULL, this, displayDefinitions);
 	}
 
 	@Override
@@ -86,6 +85,7 @@ public class DisplayContainerFactory implements IDisplayContainerFactory, IRegis
 	private <V> V checkAndGet(Map<String, V> map, String name) {
 		if (map.containsKey(name))
 			return map.get(name);
+		String entity = (String) map.get(RepositoryConstants.entity);
 		throw new IllegalArgumentException(MessageFormat.format(DisplayCoreConstants.illegalKey, name, entity, map.keySet()));
 	}
 

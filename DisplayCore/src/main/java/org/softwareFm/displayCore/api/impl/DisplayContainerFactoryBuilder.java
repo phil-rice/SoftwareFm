@@ -84,7 +84,7 @@ public class DisplayContainerFactoryBuilder implements IDisplayContainerFactoryB
 
 	@Override
 	public IDisplayContainerFactory build(String entity) {
-		return new DisplayContainerFactory(entity, registeredDisplayers, registeredEditors, registeredLineEditors, registeredValidators, registeredUrlGenerators);
+		return new DisplayContainerFactory(registeredDisplayers, registeredEditors, registeredLineEditors, registeredValidators, registeredUrlGenerators);
 	}
 
 }
