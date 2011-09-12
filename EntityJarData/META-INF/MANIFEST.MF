@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.softwareFm.EntityJarSummaryData
-Bundle-SymbolicName: org.softwareFm.EntityJarSummaryData;singleton:=true
+Bundle-Name: org.softwareFm.EntityJarData
+Bundle-SymbolicName: org.softwareFm.EntityJarData;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: softwareFm
 Require-Bundle: org.softwareFm.core;bundle-version="1.0.0";visibility:=reexport

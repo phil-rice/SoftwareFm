@@ -3,7 +3,7 @@
 <plugin>
 
    <extension  point="org.softwareFm.displayContainerFactoryConfigurator">
-         <DisplayContainerFactoryConfigurator name="jarSummary" class= "org.softwareFm.entityJarSummaryData.JarConfigurer" />
+         <DisplayContainerFactoryConfigurator name="jarSummary" class= "org.softwareFm.entityJarSummaryData.JarConfigurer"  />
    </extension>
 
  <extension  point="org.softwareFm.urlGenerator">
