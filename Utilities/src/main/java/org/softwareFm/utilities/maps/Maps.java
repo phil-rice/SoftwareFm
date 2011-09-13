@@ -18,6 +18,7 @@ import java.util.concurrent.Callable;
 import junit.framework.Assert;
 
 import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.utilities.constants.UtilityConstants;
 import org.softwareFm.utilities.constants.UtilityMessages;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.Functions;
@@ -396,4 +397,20 @@ public class Maps {
 
 	}
 
+	public static <K, V> V getOrException(Map<K, V> map, K key) {
+		V result = map.get(key);
+		if (result == null)
+			if (!map.containsKey(key))
+				throw new IllegalArgumentException(MessageFormat.format(UtilityConstants.mapDoesntHaveKey, key, map.keySet(), map));
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <K, V> List<V> getOrEmptyList(Map<K, List<V>> map, K key) {
+		List<V> result = map.get(key);
+		if (result == null)
+			return Collections.EMPTY_LIST;
+		else
+			return result;
+	}
 }
