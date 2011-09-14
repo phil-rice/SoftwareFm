@@ -84,7 +84,8 @@ public class Sample {
 								guiBuilder.listDisplayer("displayer.readWrite.list", "lineEditor.nameAndEmail").data("data.organisation.twitter")),//
 						guiBuilder.smallButton("smallButton.organisation.facebook", "smallButton.normal", "artifact.facebook", //
 								guiBuilder.listDisplayer("displayer.readWrite.list", "lineEditor.nameAndEmail").data("data.organisation.facebook")));
-				return new SoftwareFmDataComposite(from, new SoftwareFmLayout(), jarButton, projectButton, organisationButton);
+				SoftwareFmDataComposite result = new SoftwareFmDataComposite(from, new SoftwareFmLayout(), jarButton, projectButton, organisationButton);
+				return result;
 			}
 		});
 	}

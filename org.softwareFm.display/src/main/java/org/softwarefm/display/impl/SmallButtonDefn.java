@@ -13,6 +13,11 @@ import org.softwarefm.display.smallButtons.ISmallButtonFactory;
 
 public class SmallButtonDefn {
 
+	@Override
+	public String toString() {
+		return "SmallButtonDefn [actionStore=" + actionStore + ", smallButtonFactory=" + smallButtonFactory + ", tooltip=" + tooltip + ", id=" + id + ", defns=" + defns + ", controlClickAction=" + controlClickAction + ", controlClickActionData=" + controlClickActionData + "]";
+	}
+
 	private final ActionStore actionStore;
 	public ISmallButtonFactory smallButtonFactory;
 

@@ -13,6 +13,11 @@ import org.softwarefm.display.displayer.IDisplayer;
 
 public class DisplayerDefn {
 
+	@Override
+	public String toString() {
+		return "DisplayerDefn [displayer=" + displayer + ", defns=" + defns + ", actionStore=" + actionStore + ", dataKey=" + dataKey + ", tooltip=" + tooltip + "]";
+	}
+
 	public final IDisplayer displayer;
 	public final List<ImageButtonDefn> defns = Lists.newList();
 	private final ActionStore actionStore;

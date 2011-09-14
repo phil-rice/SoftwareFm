@@ -41,9 +41,9 @@ public class SoftwareFmDataComposite extends Composite {
 					IDisplayer displayer = defn.displayer;
 					IHasControl hasControl = displayer.create(largeButtonComposite, defn, SWT.NULL);
 					Control control = hasControl.getControl();
-					control.setLayoutData(new RowData(SWT.DEFAULT, layout.displayerHeight));
 				}
 			}
+			Swts.addGrabHorizontalAndFillGridDataToAllChildren(largeButtonComposite);
 		}
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
 	}
