@@ -275,8 +275,8 @@ public class Maps {
 
 	public static <K, V> V findOrCreate(Map<K, V> map, K key, Callable<V> callable) {
 		try {
-			// if (map.containsKey(key))
-			// return map.get(key);
+			 if (map.containsKey(key))
+			 return map.get(key);
 			V v = callable.call();
 			map.put(key, v);
 			return v;

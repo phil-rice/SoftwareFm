@@ -15,7 +15,7 @@ public class SmallButtonDefn {
 
 	@Override
 	public String toString() {
-		return "SmallButtonDefn [actionStore=" + actionStore + ", smallButtonFactory=" + smallButtonFactory + ", tooltip=" + tooltip + ", id=" + id + ", defns=" + defns + ", controlClickAction=" + controlClickAction + ", controlClickActionData=" + controlClickActionData + "]";
+		return "SmallButtonDefn [id=" + id + ", tooltip=" + tooltip + ", actionStore=" + actionStore + ", smallButtonFactory=" + smallButtonFactory + ", defns=" + defns + ", controlClickAction=" + controlClickAction + ", controlClickActionData=" + controlClickActionData + "]";
 	}
 
 	private final ActionStore actionStore;

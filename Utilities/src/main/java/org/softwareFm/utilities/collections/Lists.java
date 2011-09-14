@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -122,7 +123,17 @@ public class Lists {
 			result.add(t);
 		Collections.sort(result);
 		return result;
-
+	}
+	
+	public static <T extends Comparable<T>> Comparator<T> byListOrder( final List<T> masterList){
+		return new Comparator<T>() {
+			@Override
+			public int compare(T arg0, T arg1) {
+				int i0 = masterList.indexOf(arg0);
+				int i1 = masterList.indexOf(arg1);
+				return i0-i1;
+			}
+		};
 	}
 
 	public static <T> List<T> append(List<T> initial, T... more) {

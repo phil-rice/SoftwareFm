@@ -11,5 +11,6 @@ public class DisplayConstants {
 	public static final String illegalPath = "Illegal path [{0}]";
 	public static final String cannotFindCachedDataFor = "Cannot find cached data for {0}.{1}";
 	public static final String cannotSetValueTwice = "Cannot set value of {0} twice. Current value [{1}]. New value [{2}]";
+	public static final String mustHaveSomeLargeButtons = "Must have some large buttons";
 
 }

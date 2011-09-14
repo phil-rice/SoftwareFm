@@ -23,6 +23,13 @@ public class ListsTest extends TestCase {
 	public void testNewList() {
 		assertEquals(Collections.EMPTY_LIST, Lists.newList());
 	}
+	
+	public void testOrderBy(){
+		List<Integer> masterList = Arrays.asList(4,3,2,1,5,6,7);
+		List<Integer>sort = Arrays.asList(1,6,2,4);
+		Collections.sort(sort, Lists.byListOrder(masterList));
+		assertEquals(Arrays.asList(4, 2, 1, 6), sort);
+	}
 
 	private <T> void checkMap(IFunction1<T, T> fn, T[] input, T[] expected) {
 		assertEquals(Arrays.asList(expected), Iterables.list(Iterables.map(Arrays.asList(input), fn)));
