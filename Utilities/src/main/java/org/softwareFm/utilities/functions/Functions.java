@@ -1,5 +1,6 @@
 package org.softwareFm.utilities.functions;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.softwareFm.utilities.collections.Lists;
@@ -179,6 +180,16 @@ public class Functions {
 					if (!fn.apply(from))
 						return false;
 				return true;
+			}
+		};
+	}
+
+	public static <K1,  K2> IFunction1<K1, List<K2>> toSingletonList() {
+		return new IFunction1<K1, List<K2>>() {
+			@SuppressWarnings("unchecked")
+			@Override
+			public List<K2> apply(K1 from) throws Exception {
+				return (List<K2>) Arrays.asList(from);
 			}
 		};
 	}

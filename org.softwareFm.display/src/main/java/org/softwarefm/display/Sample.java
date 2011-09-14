@@ -3,6 +3,7 @@ package org.softwarefm.display;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.swtBasics.Swts;
+import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwarefm.display.actions.ActionStore;
@@ -77,15 +78,15 @@ public class Sample {
 						guiBuilder.smallButton("smallButton.organisation.details", "smallButton.normal", "artifact.organisation",//
 								guiBuilder.displayer("displayer.readOnly.text").data("data.organisation.name"), //
 								guiBuilder.displayer("displayer.readWrite.url").data("data.jar.organisationUrl").action("action.text.externalBrowseFileOrUrl", "organisation.url", "artifact.browse")),//
-						guiBuilder.smallButton("smallButton.project.bugs", "smallButton.normal", "organisation.bugs",//
+						guiBuilder.smallButton("smallButton.organisation.bugs", "smallButton.normal", "organisation.bugs",//
 								guiBuilder.displayer("displayer.readWrite.url").data("data.project.issues"), //
 								guiBuilder.listDisplayer("displayer.readWrite.list", "lineEditor.nameAndEmail").data("data.organisation.mailingList")),//
 						guiBuilder.smallButton("smallButton.organisation.twitter", "smallButton.normal", "artifact.twitter", //
 								guiBuilder.listDisplayer("displayer.readWrite.list", "lineEditor.nameAndEmail").data("data.organisation.twitter")),//
 						guiBuilder.smallButton("smallButton.organisation.facebook", "smallButton.normal", "artifact.facebook", //
 								guiBuilder.listDisplayer("displayer.readWrite.list", "lineEditor.nameAndEmail").data("data.organisation.facebook")));
-				SoftwareFmDataComposite result = new SoftwareFmDataComposite(from, new SoftwareFmLayout(), jarButton, projectButton, organisationButton);
-				return result;
+				SoftwareFmDataComposite result = new SoftwareFmDataComposite(from, new SoftwareFmLayout(), ICallback.Utils.rethrow(),jarButton, projectButton, organisationButton);
+				return result.getComposite();
 			}
 		});
 	}

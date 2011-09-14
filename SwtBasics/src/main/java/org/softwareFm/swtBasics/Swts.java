@@ -3,6 +3,8 @@ package org.softwareFm.swtBasics;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import junit.framework.Assert;
 
@@ -32,6 +34,7 @@ import org.softwareFm.swtBasics.images.Resources;
 import org.softwareFm.swtBasics.text.ConfigForTitleAnd;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.indent.Indent;
 
@@ -46,6 +49,43 @@ public class Swts {
 		for (Control control : composite.getChildren()) {
 			GridData data = makeGrabHorizonalAndFillGridData();
 			control.setLayoutData(data);
+		}
+	}
+
+	public static Control setAfter(List<Control> controls, Control firstControl) {
+		for (Control control : controls) {
+			control.moveBelow(firstControl);
+			firstControl = control;
+		}
+		return firstControl;
+	}
+
+	public static <K> void sortVisibilityForComposites(Map<K, Composite> map, IFunction1<K, Boolean> acceptor) {
+		sortVisibility(map, Functions.<Composite, Control> toSingletonList(), acceptor);
+	}
+
+	public static <K> void sortVisibilityForHasControlList(Map<K, List<IHasControl>> map, IFunction1<K, Boolean> acceptor) {
+		sortVisibility(map, IHasControl.Utils.toListOfControls(), acceptor);
+	}
+
+	public static <K, V> void sortVisibility(Map<K, V> map, IFunction1<V, List<Control>> convertor, IFunction1<K, Boolean> acceptor) {
+		try {
+			final List<Control> visibleControls = Lists.newList();
+			final List<Control> invisibleControls = Lists.newList();
+			for (Entry<K, V> entry : map.entrySet()) {
+				V value = entry.getValue();
+				for (Control control : convertor.apply(value)) {
+					boolean isVisible = acceptor.apply(entry.getKey());
+					control.setVisible(isVisible);
+					if (isVisible)
+						visibleControls.add(control);
+					else
+						invisibleControls.add(control);
+				}
+			}
+			Swts.setAfter(invisibleControls, Swts.setAfter(visibleControls, null));
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
 		}
 	}
 
