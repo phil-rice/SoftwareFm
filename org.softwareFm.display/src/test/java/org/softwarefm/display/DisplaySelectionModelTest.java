@@ -26,7 +26,6 @@ public class DisplaySelectionModelTest extends TestCase {
 	public void testConstructor() {
 		DisplaySelectionModel model = new DisplaySelectionModel(ICallback.Utils.rethrow(), largeDefn1, largeDefn2);
 		checkButtons(model, "1", "1.a", "1.b");
-
 	}
 
 	public void testSelectInformsListeners() {
@@ -91,11 +90,11 @@ public class DisplaySelectionModelTest extends TestCase {
 		ActionStore store = new ActionStore().//
 				action("action1", action1);
 		smallButtonFactory = new SmallButtonFactoryMock("1");
-		defn1a = new SmallButtonDefn("1.a", store, smallButtonFactory);
-		defn1b = new SmallButtonDefn("1.b", store, smallButtonFactory);
-		defn2a = new SmallButtonDefn("2.a", store, smallButtonFactory);
-		defn2b = new SmallButtonDefn("2.b", store, smallButtonFactory);
-		defn2c = new SmallButtonDefn("2.c", store, smallButtonFactory);
+		defn1a = new SmallButtonDefn("1.a", "imageId", store, smallButtonFactory);
+		defn1b = new SmallButtonDefn("1.b", "imageId", store, smallButtonFactory);
+		defn2a = new SmallButtonDefn("2.a", "imageId", store, smallButtonFactory);
+		defn2b = new SmallButtonDefn("2.b", "imageId", store, smallButtonFactory);
+		defn2c = new SmallButtonDefn("2.c", "imageId", store, smallButtonFactory);
 
 		largeDefn1 = new LargeButtonDefn("1", defn1a, defn1b);
 		largeDefn2 = new LargeButtonDefn("2", defn2a, defn2b, defn2c);

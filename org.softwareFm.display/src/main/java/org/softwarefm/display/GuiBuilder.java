@@ -29,9 +29,9 @@ public class GuiBuilder {
 		return new DisplayerDefn(displayer, actionStore);
 	}
 
-	public SmallButtonDefn smallButton(final String id, String smallButtonId, String Id, DisplayerDefn... defns) {
+	public SmallButtonDefn smallButton(final String id, String smallButtonId, String mainImageId, DisplayerDefn... defns) {
 		ISmallButtonFactory smallButtonFactory = smallButtonStore.get(smallButtonId);
-		return new SmallButtonDefn(id, actionStore, smallButtonFactory, defns);
+		return new SmallButtonDefn(id, mainImageId, actionStore, smallButtonFactory, defns);
 	}
 
 	public LargeButtonDefn largeButton(String string, SmallButtonDefn... defns) {

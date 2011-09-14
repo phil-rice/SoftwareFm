@@ -24,6 +24,7 @@ public class SmallButtonDefnTest extends TestCase {
 		assertEquals(null, defn.tooltip);
 		assertEquals(smallButtonFactory, defn.smallButtonFactory);
 		assertEquals(Collections.EMPTY_LIST, defn.defns);
+		assertEquals("mainImageId", defn.mainImageId);
 	}
 
 	public void testAddingToolip() {
@@ -58,6 +59,6 @@ public class SmallButtonDefnTest extends TestCase {
 		ActionStore store = new ActionStore().//
 				action("action1", action1);
 		smallButtonFactory = new SmallButtonFactoryMock("1");
-		defn = new SmallButtonDefn("someId", store, smallButtonFactory);
+		defn = new SmallButtonDefn("someId", "mainImageId", store, smallButtonFactory);
 	}
 }

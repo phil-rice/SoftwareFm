@@ -6,6 +6,6 @@ import org.softwarefm.display.impl.SmallButtonDefn;
 
 public interface ISmallButtonFactory {
 
-	IHasControl create(Composite parent, SmallButtonDefn smallButtonDefn, int style);
+	IHasControl create(Composite parent, SmallButtonDefn smallButtonDefn, ImageButtonConfig config);
 
 }

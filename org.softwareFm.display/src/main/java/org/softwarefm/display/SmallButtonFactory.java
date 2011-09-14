@@ -1,18 +1,17 @@
 package org.softwarefm.display;
 
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.softwareFm.swtBasics.IHasControl;
 import org.softwarefm.display.impl.SmallButtonDefn;
 import org.softwarefm.display.smallButtons.ISmallButtonFactory;
+import org.softwarefm.display.smallButtons.ImageButtonConfig;
+import org.softwarefm.display.smallButtons.SimpleImageButton;
 
 public class SmallButtonFactory implements ISmallButtonFactory {
 
 	@Override
-	public IHasControl create(Composite parent, SmallButtonDefn smallButtonDefn, int style) {
-		Label control = new Label(parent, style);
-		control.setText("X");
-		return IHasControl.Utils.toHasControl(control);
+	public IHasControl create(Composite parent, SmallButtonDefn smallButtonDefn, ImageButtonConfig config) {
+		return new SimpleImageButton(parent, config);
 	}
 
 }

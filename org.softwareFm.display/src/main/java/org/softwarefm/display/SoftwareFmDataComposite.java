@@ -20,6 +20,7 @@ import org.softwarefm.display.displayer.IDisplayer;
 import org.softwarefm.display.impl.DisplayerDefn;
 import org.softwarefm.display.impl.LargeButtonDefn;
 import org.softwarefm.display.impl.SmallButtonDefn;
+import org.softwarefm.display.smallButtons.ImageButtonConfig;
 
 public class SoftwareFmDataComposite implements IHasComposite {
 
@@ -28,17 +29,18 @@ public class SoftwareFmDataComposite implements IHasComposite {
 	private final DisplaySelectionModel displaySelectionModel;
 	private final Map<String, List<IHasControl>> smallButtonIdToHasControlMap = Maps.newMap(LinkedHashMap.class);
 
-	public SoftwareFmDataComposite(Composite parent, SoftwareFmLayout layout, ICallback<Throwable> exceptionHandler, LargeButtonDefn... largeButtonDefns) {
+	public SoftwareFmDataComposite(Composite parent, ImageButtonConfig imageButtonConfig, ICallback<Throwable> exceptionHandler, LargeButtonDefn...largeButtonDefns) {
 		this.content = new Composite(parent, SWT.NULL);
 		displaySelectionModel = new DisplaySelectionModel(exceptionHandler, largeButtonDefns);
 		topRow = new Composite(content, SWT.BORDER);
 		topRow.setLayout(Swts.getHorizonalNoMarginRowLayout());
+		SoftwareFmLayout layout = imageButtonConfig.layout;
 		for (LargeButtonDefn largeButtonDefn : largeButtonDefns) {
 			Composite smallButtonComposite = new Composite(topRow, SWT.BORDER);
 			smallButtonComposite.setLayout(Swts.getHorizonalNoMarginRowLayout());
 			smallButtonComposite.setLayoutData(new RowData(SWT.DEFAULT, layout.smallButtonCompositeHeight));
 			for (final SmallButtonDefn smallButtonDefn : largeButtonDefn.defns) {
-				IHasControl hasControl = smallButtonDefn.smallButtonFactory.create(smallButtonComposite, smallButtonDefn, SWT.NULL);
+				IHasControl hasControl = smallButtonDefn.smallButtonFactory.create(smallButtonComposite, smallButtonDefn, imageButtonConfig.withImage(smallButtonDefn.mainImageId));
 				Control control = hasControl.getControl();
 				control.setLayoutData(new RowData(layout.smallButtonWidth, layout.smallButtonHeight));
 				control.addMouseListener(new MouseAdapter() {
@@ -67,6 +69,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 			}
 		});
 	}
+
 
 	private void updateVisibleData() {
 		Swts.asyncExec(this, new Runnable() {

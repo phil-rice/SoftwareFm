@@ -18,7 +18,7 @@ public class SmallButtonFactoryMock implements ISmallButtonFactory {
 	}
 
 	@Override
-	public IHasControl create(Composite parent, SmallButtonDefn smallButtonDefn, int style) {
+	public IHasControl create(Composite parent, SmallButtonDefn smallButtonDefn, ImageButtonConfig imageButtonConfig) {
 		throw new UnsupportedOperationException();
 	}
 

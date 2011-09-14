@@ -2,6 +2,8 @@ package org.softwarefm.display;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.softwareFmImages.BasicImageRegister;
+import org.softwareFm.softwareFmImages.backdrop.BackdropAnchor;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -13,6 +15,7 @@ import org.softwarefm.display.data.GuiDataStore;
 import org.softwarefm.display.displayer.DisplayerStore;
 import org.softwarefm.display.displayer.TextDisplayer;
 import org.softwarefm.display.impl.LargeButtonDefn;
+import org.softwarefm.display.smallButtons.ImageButtonConfig;
 import org.softwarefm.display.smallButtons.SmallButtonStore;
 import org.softwarefm.display.urlGenerator.JarUrlGenerator;
 import org.softwarefm.display.urlGenerator.UrlGenerator;
@@ -25,9 +28,12 @@ public class Sample {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				ImageRegistry imageRegistry = new ImageRegistry();
-
+				new BasicImageRegister().registerWith(from.getDisplay(), imageRegistry);
 				IResourceGetter resourceGetter = IResourceGetter.Utils.noResources();
 
+				SoftwareFmLayout layout = new SoftwareFmLayout();
+				ImageButtonConfig imageButtonConfig = new ImageButtonConfig(layout, imageRegistry, BackdropAnchor.depressed, BackdropAnchor.main, null, null);
+				
 				GuiDataStore dataStore = new GuiDataStore(IUrlToData.Utils.errorCallback()).//
 						urlGenerator("urlGenerator.jar", new JarUrlGenerator()).//
 						urlGenerator("urlGenerator.project", new UrlGenerator("project")).//
@@ -65,27 +71,23 @@ public class Sample {
 								guiBuilder.displayer("displayer.readOnly.text").data("data.project.name").tooltip("data.project.description"), //
 								guiBuilder.displayer("displayer.readWrite.url").data("data.jar.projectUrl")).//
 								ctrlClickAction("action.text.internalBrowseFileOrUrl", "data.jar.projectUrl").tooltip("smallButton.project.details.tooltip"),//
-						guiBuilder.smallButton("smallButton.project.bugs", "smallButton.normal", "artifact.bugs",//
+						guiBuilder.smallButton("smallButton.project.bugs", "smallButton.normal", "artifact.issues",//
 								guiBuilder.displayer("displayer.readWrite.url").data("data.project.issues").tooltip("project.issues.tooltip"),//
 								guiBuilder.listDisplayer("displayer.readWrite.list", "lineEditor.nameAndEmail").data("data.project.mailingList")).//
 								ctrlClickAction("action.text.internalBrowseFileOrUrl", "data.project.issues"),//
 						guiBuilder.smallButton("smallButton.project.twitter", "smallButton.normal", "artifact.twitter",//
 								guiBuilder.listDisplayer("displayer.readWrite.list", "lineEditor.nameAndEmail").data("data.project.twitter")).//
-								ctrlClickAction("action.list.internalBrowseFirstUrl", "data.project.twitter"),//
-						guiBuilder.smallButton("smallButton.project.facebook", "smallButton.normal", "artifact.facebook",//
-								guiBuilder.listDisplayer("displayer.readWrite.list", "lineEditor.nameAndEmail").data("data.project.facebook")));//
+								ctrlClickAction("action.list.internalBrowseFirstUrl", "data.project.twitter"));//
 				final LargeButtonDefn organisationButton = guiBuilder.largeButton("largeButton.organisation", //
 						guiBuilder.smallButton("smallButton.organisation.details", "smallButton.normal", "artifact.organisation",//
 								guiBuilder.displayer("displayer.readOnly.text").data("data.organisation.name"), //
 								guiBuilder.displayer("displayer.readWrite.url").data("data.jar.organisationUrl").action("action.text.externalBrowseFileOrUrl", "organisation.url", "artifact.browse")),//
-						guiBuilder.smallButton("smallButton.organisation.bugs", "smallButton.normal", "organisation.bugs",//
+						guiBuilder.smallButton("smallButton.organisation.bugs", "smallButton.normal", "artifact.issues",//
 								guiBuilder.displayer("displayer.readWrite.url").data("data.project.issues"), //
 								guiBuilder.listDisplayer("displayer.readWrite.list", "lineEditor.nameAndEmail").data("data.organisation.mailingList")),//
 						guiBuilder.smallButton("smallButton.organisation.twitter", "smallButton.normal", "artifact.twitter", //
-								guiBuilder.listDisplayer("displayer.readWrite.list", "lineEditor.nameAndEmail").data("data.organisation.twitter")),//
-						guiBuilder.smallButton("smallButton.organisation.facebook", "smallButton.normal", "artifact.facebook", //
-								guiBuilder.listDisplayer("displayer.readWrite.list", "lineEditor.nameAndEmail").data("data.organisation.facebook")));
-				SoftwareFmDataComposite result = new SoftwareFmDataComposite(from, new SoftwareFmLayout(), ICallback.Utils.rethrow(),jarButton, projectButton, organisationButton);
+								guiBuilder.listDisplayer("displayer.readWrite.list", "lineEditor.nameAndEmail").data("data.organisation.twitter")));//
+				SoftwareFmDataComposite result = new SoftwareFmDataComposite(from, imageButtonConfig, ICallback.Utils.rethrow(),jarButton, projectButton, organisationButton);
 				return result.getComposite();
 			}
 		});
