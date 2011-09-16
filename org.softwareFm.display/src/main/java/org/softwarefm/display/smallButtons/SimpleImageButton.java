@@ -10,24 +10,26 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.softwareFm.swtBasics.IControlWithToggle;
 import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.images.SmallIconPosition;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwarefm.display.data.DisplayConstants;
+import org.softwarefm.display.impl.SmallButtonDefn;
 
-public class SimpleImageButton implements IHasControl {
+public class SimpleImageButton implements IHasControl, IControlWithToggle {
 
-	private final Composite content;
+	private final Canvas content;
 	private final Map<SmallIconPosition, String> smallIconMap = Maps.newMap();
-	protected boolean state;
+	private boolean value;
 
-	public SimpleImageButton(Composite parent, final ImageButtonConfig config) {
+	public SimpleImageButton(Composite parent, SmallButtonDefn smallButtonDefn, final ImageButtonConfig config) {
 		this.content = new Canvas(parent, SWT.NULL);
 		config.validate();
 		content.addPaintListener(new PaintListener() {
 			@Override
 			public void paintControl(PaintEvent e) {
-				Image background = getImage(state ? config.depressedBackground : config.normalBackground);
+				Image background = getImage(value ? config.depressedBackground : config.normalBackground);
 				e.gc.drawImage(background, 0, 0);
 
 				Image mainImage = getImage(config.mainImage);
@@ -57,6 +59,18 @@ public class SimpleImageButton implements IHasControl {
 	@Override
 	public Control getControl() {
 		return content;
+	}
+
+	@Override
+	public boolean value() {
+		return value;
+	}
+
+	@Override
+	public void setValue(boolean value) {
+		this.value = value;
+		content.layout();
+		content.redraw();
 	}
 
 }

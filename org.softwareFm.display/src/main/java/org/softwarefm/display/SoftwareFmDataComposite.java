@@ -10,6 +10,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.softwareFm.swtBasics.IControlWithToggle;
 import org.softwareFm.swtBasics.IHasComposite;
 import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.Swts;
@@ -27,7 +28,8 @@ public class SoftwareFmDataComposite implements IHasComposite {
 	private final Composite content;
 	private final Composite topRow;
 	private final DisplaySelectionModel displaySelectionModel;
-	private final Map<String, List<IHasControl>> smallButtonIdToHasControlMap = Maps.newMap(LinkedHashMap.class);
+	private final Map<String, IControlWithToggle> smallButtonIdToControlWithToggleMap = Maps.newMap(LinkedHashMap.class);
+	private final Map<String, List<IHasControl>> smallButtonIdToLargeHasControlMap = Maps.newMap(LinkedHashMap.class);
 
 	public SoftwareFmDataComposite(Composite parent, ImageButtonConfig imageButtonConfig, ICallback<Throwable> exceptionHandler, LargeButtonDefn...largeButtonDefns) {
 		this.content = new Composite(parent, SWT.NULL);
@@ -40,7 +42,8 @@ public class SoftwareFmDataComposite implements IHasComposite {
 			smallButtonComposite.setLayout(Swts.getHorizonalNoMarginRowLayout());
 			smallButtonComposite.setLayoutData(new RowData(SWT.DEFAULT, layout.smallButtonCompositeHeight));
 			for (final SmallButtonDefn smallButtonDefn : largeButtonDefn.defns) {
-				IHasControl hasControl = smallButtonDefn.smallButtonFactory.create(smallButtonComposite, smallButtonDefn, imageButtonConfig.withImage(smallButtonDefn.mainImageId));
+				IControlWithToggle hasControl = smallButtonDefn.smallButtonFactory.create(smallButtonComposite, smallButtonDefn, imageButtonConfig.withImage(smallButtonDefn.mainImageId));
+				smallButtonIdToControlWithToggleMap.put(smallButtonDefn.id, hasControl);
 				Control control = hasControl.getControl();
 				control.setLayoutData(new RowData(layout.smallButtonWidth, layout.smallButtonHeight));
 				control.addMouseListener(new MouseAdapter() {
@@ -49,6 +52,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 					displaySelectionModel.select(smallButtonDefn.id);
 					System.out.println("Selected: " + smallButtonDefn.id);
 				}});
+			
 			}
 		}
 		for (final LargeButtonDefn largeButtonDefn : largeButtonDefns) {
@@ -56,7 +60,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 				for (DisplayerDefn defn : smallButtonDefn.defns) {
 					IDisplayer displayer = defn.displayer;
 					IHasControl hasControl = displayer.create(content, defn, SWT.NULL);
-					Maps.addToList(smallButtonIdToHasControlMap,smallButtonDefn.id, hasControl);
+					Maps.addToList(smallButtonIdToLargeHasControlMap,smallButtonDefn.id, hasControl);
 				}
 			}
 		}
@@ -66,6 +70,9 @@ public class SoftwareFmDataComposite implements IHasComposite {
 			@Override
 			public void smallButtonPressed(DisplaySelectionModel model, LargeButtonDefn largeButtonDefn, SmallButtonDefn smallButtonDefn) {
 				updateVisibleData();
+				boolean visible = displaySelectionModel.getVisibleSmallButtonsId().contains(smallButtonDefn.id);
+				IControlWithToggle control = smallButtonIdToControlWithToggleMap.get(smallButtonDefn.id);
+				control.setValue(!visible);
 			}
 		});
 	}
@@ -76,7 +83,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 			@Override
 			public void run() {
 				final List<String> visible = displaySelectionModel.getVisibleSmallButtonsId();
-				Swts.sortVisibilityForHasControlList(smallButtonIdToHasControlMap, new IFunction1<String,Boolean>() {
+				Swts.sortVisibilityForHasControlList(smallButtonIdToLargeHasControlMap, new IFunction1<String,Boolean>() {
 					@Override
 					public Boolean apply(String from) throws Exception {
 						return visible.contains(from);

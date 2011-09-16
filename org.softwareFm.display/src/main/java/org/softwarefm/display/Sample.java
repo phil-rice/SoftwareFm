@@ -43,7 +43,6 @@ public class Sample {
 						dependant("jar", "organisation", "jar.organisationUrl", "urlGenerator.organisation");
 
 				SmallButtonStore smallButtonStore = new SmallButtonStore().//
-						smallButton("smallButton.jarSummary", new JarSmallButtonFactory()).//
 						smallButton("smallButton.normal", new SmallButtonFactory());
 
 				ActionStore actionStore = new ActionStore().//
@@ -61,7 +60,7 @@ public class Sample {
 				GuiBuilder guiBuilder = new GuiBuilder(resourceGetter, imageRegistry, smallButtonStore, dataStore, actionStore, displayerStore);
 
 				final LargeButtonDefn jarButton = guiBuilder.largeButton("largeButton.jar",//
-						guiBuilder.smallButton("smallButton.jar.details", "smallButton.jarSummary", "artifact.jar", //
+						guiBuilder.smallButton("smallButton.jar.details", "smallButton.normal", "artifact.jar", //
 								guiBuilder.displayer("displayer.readOnly.text").data("jar.jarName").tooltip("jar.jarPath"), //
 								guiBuilder.displayer("displayer.readOnly.text").data("project.name").action("action.text.externalBrowseFileOrUrl", "project.url", "artifact.project").tooltip("data.project.url"),//
 								guiBuilder.displayer("displayer.readOnly.text").data("organisation.name").action("action.text.externalBrowseFileOrUrl", "organisation.url", "artifact.organisation").tooltip("data.organisation.url")).//
