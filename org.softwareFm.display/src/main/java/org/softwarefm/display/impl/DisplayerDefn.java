@@ -15,7 +15,7 @@ public class DisplayerDefn {
 
 	@Override
 	public String toString() {
-		return "DisplayerDefn [displayer=" + displayer + ", defns=" + defns + ", actionStore=" + actionStore + ", dataKey=" + dataKey + ", tooltip=" + tooltip + "]";
+		return "DisplayerDefn [displayer=" + displayer + ", defns=" + defns + ", actionStore=" + actionStore + ", dataKey=" + dataKey + ", title=" + title + ", tooltip=" + tooltip + "]";
 	}
 
 	public final IDisplayer displayer;
@@ -23,6 +23,7 @@ public class DisplayerDefn {
 	private final ActionStore actionStore;
 
 	public String dataKey;
+	public String title;
 	public String tooltip;
 
 	public DisplayerDefn(IDisplayer displayer, ActionStore actionStore) {
@@ -30,6 +31,13 @@ public class DisplayerDefn {
 		this.actionStore = actionStore;
 	}
 
+	public DisplayerDefn title(String title) {
+		if (this.title != null)
+			throw new IllegalStateException(MessageFormat.format(DisplayConstants.cannotSetValueTwice, "title", this.title, title));
+		this.title = title;
+		return this;
+		
+	}
 	public DisplayerDefn data(String dataKey) {
 		if (this.dataKey != null)
 			throw new IllegalStateException(MessageFormat.format(DisplayConstants.cannotSetValueTwice, "data", this.dataKey, dataKey));

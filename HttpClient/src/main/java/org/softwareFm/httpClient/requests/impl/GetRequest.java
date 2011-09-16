@@ -26,10 +26,12 @@ public class GetRequest extends AbstractRequestBuilder {
 				String protocolHostAndUrl = protocolHostAndUrl();
 				HttpGet get = new HttpGet(protocolHostAndUrl);
 				HttpResponse httpResponse = client.execute(get);
-				Response response = new Response(url, httpResponse.getStatusLine().getStatusCode(), EntityUtils.toString(httpResponse.getEntity()));
+				Response response = new Response(url,//
+						httpResponse.getStatusLine().getStatusCode(), //
+						EntityUtils.toString(httpResponse.getEntity()));
 				callback.process(response);
 				return null;
 			}
 		});
 	}
-}
+}  

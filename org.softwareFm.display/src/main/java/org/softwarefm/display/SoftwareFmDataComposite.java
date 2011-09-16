@@ -10,6 +10,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.softwareFm.swtBasics.IControlWithToggle;
 import org.softwareFm.swtBasics.IHasComposite;
 import org.softwareFm.swtBasics.IHasControl;
@@ -17,6 +18,7 @@ import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwarefm.display.composites.CompositeConfig;
 import org.softwarefm.display.displayer.IDisplayer;
 import org.softwarefm.display.impl.DisplayerDefn;
 import org.softwarefm.display.impl.LargeButtonDefn;
@@ -30,12 +32,14 @@ public class SoftwareFmDataComposite implements IHasComposite {
 	private final DisplaySelectionModel displaySelectionModel;
 	private final Map<String, IControlWithToggle> smallButtonIdToControlWithToggleMap = Maps.newMap(LinkedHashMap.class);
 	private final Map<String, List<IHasControl>> smallButtonIdToLargeHasControlMap = Maps.newMap(LinkedHashMap.class);
+	private final Map<String, Group> smallButtonIdToGroupMap = Maps.newMap(LinkedHashMap.class);
 
-	public SoftwareFmDataComposite(Composite parent, ImageButtonConfig imageButtonConfig, ICallback<Throwable> exceptionHandler, LargeButtonDefn...largeButtonDefns) {
+	public SoftwareFmDataComposite(final Composite parent, CompositeConfig compositeConfig, ICallback<Throwable> exceptionHandler, LargeButtonDefn... largeButtonDefns) {
 		this.content = new Composite(parent, SWT.NULL);
 		displaySelectionModel = new DisplaySelectionModel(exceptionHandler, largeButtonDefns);
 		topRow = new Composite(content, SWT.BORDER);
 		topRow.setLayout(Swts.getHorizonalNoMarginRowLayout());
+		ImageButtonConfig imageButtonConfig = compositeConfig.imageButtonConfig;
 		SoftwareFmLayout layout = imageButtonConfig.layout;
 		for (LargeButtonDefn largeButtonDefn : largeButtonDefns) {
 			Composite smallButtonComposite = new Composite(topRow, SWT.BORDER);
@@ -47,21 +51,28 @@ public class SoftwareFmDataComposite implements IHasComposite {
 				Control control = hasControl.getControl();
 				control.setLayoutData(new RowData(layout.smallButtonWidth, layout.smallButtonHeight));
 				control.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseDown(MouseEvent e) {
-					displaySelectionModel.select(smallButtonDefn.id);
-					System.out.println("Selected: " + smallButtonDefn.id);
-				}});
-			
+					@Override
+					public void mouseDown(MouseEvent e) {
+						displaySelectionModel.select(smallButtonDefn.id);
+						System.out.println("Selected: " + smallButtonDefn.id);
+						Swts.layoutDump(parent);
+					}
+				});
+
 			}
 		}
 		for (final LargeButtonDefn largeButtonDefn : largeButtonDefns) {
 			for (SmallButtonDefn smallButtonDefn : largeButtonDefn.defns) {
+				Group group = new Group(content, SWT.SHADOW_ETCHED_IN);
+				group.setVisible(false);
+				smallButtonIdToGroupMap.put(smallButtonDefn.id, group);
+				group.setText(smallButtonDefn.id);
 				for (DisplayerDefn defn : smallButtonDefn.defns) {
 					IDisplayer displayer = defn.displayer;
-					IHasControl hasControl = displayer.create(content, defn, SWT.NULL);
-					Maps.addToList(smallButtonIdToLargeHasControlMap,smallButtonDefn.id, hasControl);
+					IHasControl hasControl = displayer.create(group, defn, SWT.NULL, compositeConfig);
+					Maps.addToList(smallButtonIdToLargeHasControlMap, smallButtonDefn.id, hasControl);
 				}
+				Swts.addGrabHorizontalAndFillGridDataToAllChildren(group);
 			}
 		}
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(content);
@@ -77,13 +88,12 @@ public class SoftwareFmDataComposite implements IHasComposite {
 		});
 	}
 
-
 	private void updateVisibleData() {
 		Swts.asyncExec(this, new Runnable() {
 			@Override
 			public void run() {
 				final List<String> visible = displaySelectionModel.getVisibleSmallButtonsId();
-				Swts.sortVisibilityForHasControlList(smallButtonIdToLargeHasControlMap, new IFunction1<String,Boolean>() {
+				Swts.sortVisibilityForComposites(smallButtonIdToGroupMap, new IFunction1<String, Boolean>() {
 					@Override
 					public Boolean apply(String from) throws Exception {
 						return visible.contains(from);

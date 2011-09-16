@@ -11,7 +11,7 @@ public class SmallButtonFactory implements ISmallButtonFactory {
 
 	@Override
 	public IControlWithToggle create(Composite parent, SmallButtonDefn smallButtonDefn, ImageButtonConfig config) {
-		return new SimpleImageButton(parent,smallButtonDefn,  config);
+		return new SimpleImageButton(parent,  config);
 	}
 
 }

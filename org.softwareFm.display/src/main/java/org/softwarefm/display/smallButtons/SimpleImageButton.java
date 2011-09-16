@@ -12,19 +12,26 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.swtBasics.IControlWithToggle;
 import org.softwareFm.swtBasics.IHasControl;
+import org.softwareFm.swtBasics.images.IImageButtonListener;
 import org.softwareFm.swtBasics.images.SmallIconPosition;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwarefm.display.data.DisplayConstants;
-import org.softwarefm.display.impl.SmallButtonDefn;
 
 public class SimpleImageButton implements IHasControl, IControlWithToggle {
 
 	private final Canvas content;
 	private final Map<SmallIconPosition, String> smallIconMap = Maps.newMap();
 	private boolean value;
+	private final ImageButtonConfig config;
 
-	public SimpleImageButton(Composite parent, SmallButtonDefn smallButtonDefn, final ImageButtonConfig config) {
-		this.content = new Canvas(parent, SWT.NULL);
+	public SimpleImageButton(Composite parent, final ImageButtonConfig config) {
+		this.config = config;
+		this.content = new Canvas(parent, SWT.NULL){
+			@Override
+			public String toString() {
+				return getClass().getSimpleName() +"[main=" + config.mainImage + ",overlay=" + config.overlayImage +"]"+super.toString();
+		}
+		};
 		config.validate();
 		content.addPaintListener(new PaintListener() {
 			@Override
@@ -71,6 +78,10 @@ public class SimpleImageButton implements IHasControl, IControlWithToggle {
 		this.value = value;
 		content.layout();
 		content.redraw();
+	}
+
+	public void addListener(IImageButtonListener imageButtonListener) {
+		
 	}
 
 }

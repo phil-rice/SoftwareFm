@@ -6,5 +6,11 @@ public class SoftwareFmLayout {
 	public int smallButtonHeight = 18;
 	public int smallButtonWidth = 18;
 	public int displayerHeight = 18;
+	public int titleHeight = 18;
+	public int titleWidth = 100;
+	public int buttonsWidth = 100;
+	public int buttonSpacer = 2;
+	public int valueWidth = titleHeight + buttonsWidth + 20;
+	public int textHeight = smallButtonHeight;
 
 }

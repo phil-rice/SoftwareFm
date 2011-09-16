@@ -60,8 +60,8 @@ public class Swts {
 		return firstControl;
 	}
 
-	public static <K> void sortVisibilityForComposites(Map<K, Composite> map, IFunction1<K, Boolean> acceptor) {
-		sortVisibility(map, Functions.<Composite, Control> toSingletonList(), acceptor);
+	public static <K, V extends Composite> void sortVisibilityForComposites(Map<K, V> map, IFunction1<K, Boolean> acceptor) {
+		sortVisibility(map, Functions.<V, Control> toSingletonList(), acceptor);
 	}
 
 	public static <K> void sortVisibilityForHasControlList(Map<K, List<IHasControl>> map, IFunction1<K, Boolean> acceptor) {
@@ -83,7 +83,9 @@ public class Swts {
 						invisibleControls.add(control);
 				}
 			}
-			Swts.setAfter(invisibleControls, Swts.setAfter(visibleControls, null));
+			Control lastVisible = Swts.setAfter(visibleControls, null);
+			for (Control control : invisibleControls) 
+				control.moveBelow(lastVisible);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}

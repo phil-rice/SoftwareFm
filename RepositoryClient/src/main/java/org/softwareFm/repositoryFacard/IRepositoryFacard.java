@@ -5,7 +5,7 @@ import java.util.concurrent.Future;
 
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.requests.IResponseCallback;
-import org.softwareFm.repositoryFacard.impl.RepositoryFrontEnd;
+import org.softwareFm.repositoryFacard.impl.RepositoryFacard;
 
 public interface IRepositoryFacard {
 
@@ -33,11 +33,11 @@ public interface IRepositoryFacard {
 	public static class Utils {
 
 		public static IRepositoryFacard defaultFacard() {
-			return new RepositoryFrontEnd(IHttpClient.Utils.defaultClient());
+			return new RepositoryFacard(IHttpClient.Utils.defaultClient());
 		}
 
 		public static IRepositoryFacard frontEnd(String host, int port, String userName, String password) {
-			return new RepositoryFrontEnd(IHttpClient.Utils.builder(host, port).withCredentials(userName, password));
+			return new RepositoryFacard(IHttpClient.Utils.builder(host, port).withCredentials(userName, password));
 		}
 
 	}

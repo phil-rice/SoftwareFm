@@ -68,7 +68,8 @@ public class ClientBuilder implements IClientBuilder {
 		DefaultHttpClient rawClient = new DefaultHttpClient();
 		ClientConnectionManager mgr = rawClient.getConnectionManager();
 
-		DefaultHttpClient actualClient = new DefaultHttpClient(new ThreadSafeClientConnManager(mgr.getSchemeRegistry()));
+		DefaultHttpClient actualClient = new DefaultHttpClient(//
+				new ThreadSafeClientConnManager(mgr.getSchemeRegistry()));
 
 		actualClient.addRequestInterceptor(new PreemptiveAuthInterceptor(), 0);
 		return actualClient;
