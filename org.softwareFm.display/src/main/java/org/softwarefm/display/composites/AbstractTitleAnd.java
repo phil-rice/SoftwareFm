@@ -9,11 +9,11 @@ import org.eclipse.swt.widgets.Label;
 import org.softwareFm.swtBasics.IHasComposite;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.Resources;
-import org.softwareFm.swtBasics.text.IButtonParent;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwarefm.display.SoftwareFmLayout;
+import org.softwarefm.display.displayer.IDisplayer;
 
-public class AbstractTitleAnd implements IHasComposite, IButtonParent {
+public class AbstractTitleAnd implements IDisplayer, IHasComposite {
 
 	protected final CompositeConfig config;
 	protected final Composite compTitleAndButtons;

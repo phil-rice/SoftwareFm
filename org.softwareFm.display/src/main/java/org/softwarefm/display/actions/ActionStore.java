@@ -15,7 +15,7 @@ public class ActionStore implements ISimpleMap<String, IAction> {
 
 	private final Map<String, IAction> map = Maps.newMap(LinkedHashMap.class);
 
-	public ActionStore action(String string, IAction action) {
+	public ActionStore action(String string, String tooltip, IAction action) {
 		if (map.containsKey(string))
 			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.cannotSetValueTwice, "action", map.get(string), action));
 		map.put(string, action);

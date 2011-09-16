@@ -3,7 +3,7 @@ package org.softwarefm.display.displayer;
 import org.softwareFm.utilities.maps.AbstractSimpleMapTest;
 import org.softwareFm.utilities.maps.ISimpleMap;
 
-public class DisplayerStoreTest extends AbstractSimpleMapTest<String, IDisplayer> {
+public class DisplayerStoreTest extends AbstractSimpleMapTest<String, IDisplayerFactory> {
 
 	@Override
 	protected String makeKey(String seed) {
@@ -11,17 +11,17 @@ public class DisplayerStoreTest extends AbstractSimpleMapTest<String, IDisplayer
 	}
 
 	@Override
-	protected IDisplayer makeValue(String seed) {
+	protected IDisplayerFactory makeValue(String seed) {
 		return new DisplayerMock(seed);
 	}
 
 	@Override
-	protected ISimpleMap<String, IDisplayer> blankMap() {
+	protected ISimpleMap<String, IDisplayerFactory> blankMap() {
 		return new DisplayerStore();
 	}
 
 	@Override
-	protected void put(ISimpleMap<String, IDisplayer> map, String key, IDisplayer value) {
+	protected void put(ISimpleMap<String, IDisplayerFactory> map, String key, IDisplayerFactory value) {
 		assertSame(map, ((DisplayerStore) map).displayer(key, value));
 	}
 

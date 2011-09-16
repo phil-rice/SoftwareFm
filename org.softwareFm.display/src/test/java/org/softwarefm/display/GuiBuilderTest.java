@@ -21,8 +21,9 @@ public class GuiBuilderTest extends TestCase {
 	private ActionStore actionStore;
 
 	public void testSmallButtonNoDisplayerDefns() {
-		SmallButtonDefn smallButton = builder.smallButton("someId", "smallButton.validId", "mainImageId");
+		SmallButtonDefn smallButton = builder.smallButton("someId", "titleId", "smallButton.validId", "mainImageId");
 		assertEquals("someId", smallButton.id);
+		assertEquals("titleId", smallButton.titleId);
 		assertEquals(null, smallButton.tooltip);
 		assertEquals(smallButtonFactory1, smallButton.smallButtonFactory);
 		assertEquals(null, smallButton.controlClickActionData);
@@ -32,7 +33,7 @@ public class GuiBuilderTest extends TestCase {
 	public void testSmallButtonWithDisplayerDefns() {
 		DisplayerDefn defn1 = new DisplayerDefn(displayer, actionStore);
 		DisplayerDefn defn2 = new DisplayerDefn(displayer, actionStore);
-		SmallButtonDefn smallButton = builder.smallButton("someId", "smallButton.validId", "mainImageId", defn1, defn2);
+		SmallButtonDefn smallButton = builder.smallButton("someId", "titleId", "smallButton.validId", "mainImageId", defn1, defn2);
 		assertEquals("someId", smallButton.id);
 		assertEquals(null, smallButton.tooltip);
 		assertEquals(smallButtonFactory1, smallButton.smallButtonFactory);

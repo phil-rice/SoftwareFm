@@ -1,12 +1,8 @@
 package org.softwarefm.display.displayer;
 
-import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.swtBasics.IHasControl;
-import org.softwarefm.display.composites.CompositeConfig;
-import org.softwarefm.display.impl.DisplayerDefn;
+import org.softwareFm.swtBasics.text.IButtonParent;
 
-public interface IDisplayer {
-
-	IHasControl create(Composite largeButtonComposite, DisplayerDefn defn, int style, CompositeConfig compositeConfig);
+public interface IDisplayer extends IHasControl, IButtonParent{
 
 }

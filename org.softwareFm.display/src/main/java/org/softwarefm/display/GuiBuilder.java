@@ -5,7 +5,7 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwarefm.display.actions.ActionStore;
 import org.softwarefm.display.data.GuiDataStore;
 import org.softwarefm.display.displayer.DisplayerStore;
-import org.softwarefm.display.displayer.IDisplayer;
+import org.softwarefm.display.displayer.IDisplayerFactory;
 import org.softwarefm.display.impl.DisplayerDefn;
 import org.softwarefm.display.impl.LargeButtonDefn;
 import org.softwarefm.display.impl.SmallButtonDefn;
@@ -25,13 +25,13 @@ public class GuiBuilder {
 	}
 
 	public DisplayerDefn displayer(String displayerId) {
-		IDisplayer displayer = displayerStore.get(displayerId);
+		IDisplayerFactory displayer = displayerStore.get(displayerId);
 		return new DisplayerDefn(displayer, actionStore);
 	}
 
-	public SmallButtonDefn smallButton(final String id, String smallButtonId, String mainImageId, DisplayerDefn... defns) {
+	public SmallButtonDefn smallButton(final String id,String titleId, String smallButtonId, String mainImageId, DisplayerDefn... defns) {
 		ISmallButtonFactory smallButtonFactory = smallButtonStore.get(smallButtonId);
-		return new SmallButtonDefn(id, mainImageId, actionStore, smallButtonFactory, defns);
+		return new SmallButtonDefn(id, titleId, mainImageId, actionStore, smallButtonFactory, defns);
 	}
 
 	public LargeButtonDefn largeButton(String string, SmallButtonDefn... defns) {
@@ -40,8 +40,15 @@ public class GuiBuilder {
 	}
 
 	public DisplayerDefn listDisplayer(String listDisplayId, String lineEditorId) {
-		IDisplayer displayer = displayerStore.get(listDisplayId);
+		IDisplayerFactory displayer = displayerStore.get(listDisplayId);
 		return new DisplayerDefn(displayer, actionStore);
+	}
+
+	public ActionDefn action(String actionId, String mainImageId) {
+		return new ActionDefn();
+	}
+	public ActionDefn action(String actionId, String mainImageId, String overlayId) {
+		return new ActionDefn();
 	}
 
 }

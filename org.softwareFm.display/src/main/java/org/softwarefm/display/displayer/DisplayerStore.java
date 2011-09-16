@@ -9,11 +9,11 @@ import org.softwareFm.utilities.maps.ISimpleMap;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwarefm.display.data.DisplayConstants;
 
-public class DisplayerStore implements ISimpleMap<String, IDisplayer> {
+public class DisplayerStore implements ISimpleMap<String, IDisplayerFactory> {
 
-	private final Map<String, IDisplayer> map = Maps.newMap();
+	private final Map<String, IDisplayerFactory> map = Maps.newMap();
 
-	public DisplayerStore displayer(String key, IDisplayer value) {
+	public DisplayerStore displayer(String key, IDisplayerFactory value) {
 		if (map.containsKey(key))
 			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.cannotSetValueTwice, "displayer", map.get(key), value));
 		map.put(key, value);
@@ -21,7 +21,7 @@ public class DisplayerStore implements ISimpleMap<String, IDisplayer> {
 	}
 
 	@Override
-	public IDisplayer get(String key) {
+	public IDisplayerFactory get(String key) {
 		return Maps.getOrException(map, key);
 	}
 

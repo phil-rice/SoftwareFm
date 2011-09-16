@@ -15,11 +15,13 @@ import org.softwareFm.swtBasics.IControlWithToggle;
 import org.softwareFm.swtBasics.IHasComposite;
 import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.Swts;
+import org.softwareFm.swtBasics.images.Resources;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwarefm.display.composites.CompositeConfig;
-import org.softwarefm.display.displayer.IDisplayer;
+import org.softwarefm.display.displayer.IDisplayerFactory;
 import org.softwarefm.display.impl.DisplayerDefn;
 import org.softwarefm.display.impl.LargeButtonDefn;
 import org.softwarefm.display.impl.SmallButtonDefn;
@@ -36,6 +38,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 
 	public SoftwareFmDataComposite(final Composite parent, CompositeConfig compositeConfig, ICallback<Throwable> exceptionHandler, LargeButtonDefn... largeButtonDefns) {
 		this.content = new Composite(parent, SWT.NULL);
+		IResourceGetter resourceGetter = compositeConfig.resourceGetter;
 		displaySelectionModel = new DisplaySelectionModel(exceptionHandler, largeButtonDefns);
 		topRow = new Composite(content, SWT.BORDER);
 		topRow.setLayout(Swts.getHorizonalNoMarginRowLayout());
@@ -66,9 +69,9 @@ public class SoftwareFmDataComposite implements IHasComposite {
 				Group group = new Group(content, SWT.SHADOW_ETCHED_IN);
 				group.setVisible(false);
 				smallButtonIdToGroupMap.put(smallButtonDefn.id, group);
-				group.setText(smallButtonDefn.id);
+				group.setText(Resources.getOrException(resourceGetter, smallButtonDefn.titleId));
 				for (DisplayerDefn defn : smallButtonDefn.defns) {
-					IDisplayer displayer = defn.displayer;
+					IDisplayerFactory displayer = defn.displayer;
 					IHasControl hasControl = displayer.create(group, defn, SWT.NULL, compositeConfig);
 					Maps.addToList(smallButtonIdToLargeHasControlMap, smallButtonDefn.id, hasControl);
 				}

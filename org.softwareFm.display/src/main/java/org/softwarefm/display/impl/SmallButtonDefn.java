@@ -27,8 +27,10 @@ public class SmallButtonDefn {
 	public IAction controlClickAction;
 	public String controlClickActionData;
 	public String mainImageId;
+	public final String titleId;
 
-	public SmallButtonDefn(String id, String mainImageId, ActionStore store, ISmallButtonFactory smallButtonFactory, DisplayerDefn... defns) {
+	public SmallButtonDefn(String id, String titleId, String mainImageId, ActionStore store, ISmallButtonFactory smallButtonFactory, DisplayerDefn... defns) {
+		this.titleId = titleId;
 		this.mainImageId = mainImageId;
 		this.actionStore = store;
 		this.id = id;

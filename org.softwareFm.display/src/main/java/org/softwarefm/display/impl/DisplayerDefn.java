@@ -3,13 +3,11 @@ package org.softwarefm.display.impl;
 import java.text.MessageFormat;
 import java.util.List;
 
-import org.softwareFm.swtBasics.images.SmallIconPosition;
 import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.maps.Maps;
-import org.softwarefm.display.IAction;
+import org.softwarefm.display.ActionDefn;
 import org.softwarefm.display.actions.ActionStore;
 import org.softwarefm.display.data.DisplayConstants;
-import org.softwarefm.display.displayer.IDisplayer;
+import org.softwarefm.display.displayer.IDisplayerFactory;
 
 public class DisplayerDefn {
 
@@ -18,7 +16,7 @@ public class DisplayerDefn {
 		return "DisplayerDefn [displayer=" + displayer + ", defns=" + defns + ", actionStore=" + actionStore + ", dataKey=" + dataKey + ", title=" + title + ", tooltip=" + tooltip + "]";
 	}
 
-	public final IDisplayer displayer;
+	public final IDisplayerFactory displayer;
 	public final List<ImageButtonDefn> defns = Lists.newList();
 	private final ActionStore actionStore;
 
@@ -26,7 +24,7 @@ public class DisplayerDefn {
 	public String title;
 	public String tooltip;
 
-	public DisplayerDefn(IDisplayer displayer, ActionStore actionStore) {
+	public DisplayerDefn(IDisplayerFactory displayer, ActionStore actionStore) {
 		this.displayer = displayer;
 		this.actionStore = actionStore;
 	}
@@ -52,9 +50,13 @@ public class DisplayerDefn {
 		return this;
 	}
 
-	public DisplayerDefn action(String actionId, String data, String mainImage) {
-		IAction action = actionStore.get(actionId);
-		defns.add(new ImageButtonDefn(mainImage, null, data, Maps.<SmallIconPosition, String> newMap(), action));
+//	public DisplayerDefn action(String actionId, String data, String mainImage) {
+//		IAction action = actionStore.get(actionId);
+//		defns.add(new ImageButtonDefn(mainImage, null, data, Maps.<SmallIconPosition, String> newMap(), action));
+//		return this;
+//	}
+
+	public DisplayerDefn actions(ActionDefn ...actionDefns) {
 		return this;
 	}
 }
