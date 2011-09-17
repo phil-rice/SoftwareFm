@@ -113,8 +113,11 @@ public class Swts {
 		rowLayout.marginHeight = 0;
 		rowLayout.marginTop = 0;
 		rowLayout.marginBottom = 0;
-		rowLayout.fill = false;
+		rowLayout.marginLeft = 0;
+		rowLayout.marginRight = 0;
+		rowLayout.fill = true;
 		rowLayout.justify = false;
+		rowLayout.spacing=0;
 		return rowLayout;
 	}
 

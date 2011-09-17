@@ -5,6 +5,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.displayCore.api.IDisplayContainerButtons;
+import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
@@ -51,7 +52,7 @@ public class DisplayContainerButtons implements IDisplayContainerButtons {
 	}
 
 	@Override
-	public void buttonAdded() {
+	public void buttonAdded(IHasControl button) {
 	}
 
 }

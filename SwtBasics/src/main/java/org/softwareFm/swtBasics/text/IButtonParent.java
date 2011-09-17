@@ -2,6 +2,7 @@ package org.softwareFm.swtBasics.text;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public interface IButtonParent {
@@ -12,5 +13,5 @@ public interface IButtonParent {
 
 	IResourceGetter getResourceGetter();
 
-	void buttonAdded();
+	void buttonAdded(IHasControl button);
 }

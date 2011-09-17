@@ -9,7 +9,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Display;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.swtBasics.SwtBasicConstants;
@@ -66,11 +65,7 @@ abstract public class ImageButtons {
 			String fullKey = MessageFormat.format(tooltipPattern, tooltipKey);
 			button.setTooltipText(IResourceGetter.Utils.get(parent.getResourceGetter(), fullKey));
 		}
-		RowData data = new RowData();
-		data.height = 20;
-		data.width = 20;
-		button.setLayoutData(data);
-		parent.buttonAdded();
+		parent.buttonAdded(button);
 		return button;
 	}
 

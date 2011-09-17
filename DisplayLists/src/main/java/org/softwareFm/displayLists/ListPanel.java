@@ -34,6 +34,7 @@ import org.softwareFm.softwareFmImages.ImageButtons;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 import org.softwareFm.swtBasics.IHasComposite;
+import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.IImageButtonListener;
 import org.softwareFm.swtBasics.images.ImageButton;
@@ -156,7 +157,7 @@ public class ListPanel<T> implements IHasComposite, IButtonParent, ILineEditable
 	}
 
 	@Override
-	public void buttonAdded() {
+	public void buttonAdded(IHasControl button) {
 
 	}
 

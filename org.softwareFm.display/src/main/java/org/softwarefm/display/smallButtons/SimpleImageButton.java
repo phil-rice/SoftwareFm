@@ -8,12 +8,12 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.swtBasics.IControlWithToggle;
 import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.images.IImageButtonListener;
 import org.softwareFm.swtBasics.images.SmallIconPosition;
+import org.softwareFm.swtBasics.text.IButtonParent;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwarefm.display.data.DisplayConstants;
 
@@ -23,8 +23,8 @@ public class SimpleImageButton implements IHasControl, IControlWithToggle {
 	private final Map<SmallIconPosition, String> smallIconMap = Maps.newMap();
 	private boolean value;
 
-	public SimpleImageButton(Composite parent, final ImageButtonConfig config) {
-		this.content = new Canvas(parent, SWT.BORDER){
+	public SimpleImageButton(IButtonParent parent, final ImageButtonConfig config) {
+		this.content = new Canvas(parent.getButtonComposite(), SWT.NULL){
 			@Override
 			public String toString() {
 				return getClass().getSimpleName() +"[main=" + config.mainImage + ",overlay=" + config.overlayImage +"]"+super.toString();
@@ -59,6 +59,7 @@ public class SimpleImageButton implements IHasControl, IControlWithToggle {
 				return result;
 			}
 		});
+		parent.buttonAdded(this);
 	}
 
 	@Override

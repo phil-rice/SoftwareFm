@@ -51,8 +51,7 @@ public class ActionDefn {
 	}
 
 	public IHasControl createButton(ImageButtonConfig config, IButtonParent buttonParent) {
-		SimpleImageButton simpleImageButton = new SimpleImageButton(buttonParent.getButtonComposite(), config.withImage(mainImageId, overlayId));
-		buttonParent.buttonAdded();
+		SimpleImageButton simpleImageButton = new SimpleImageButton(buttonParent, config.withImage(mainImageId, overlayId));
 		return simpleImageButton;
 		
 	}

@@ -45,9 +45,8 @@ public class SoftwareFmDataComposite implements IHasComposite {
 		ImageButtonConfig imageButtonConfig = compositeConfig.imageButtonConfig;
 		SoftwareFmLayout layout = imageButtonConfig.layout;
 		for (LargeButtonDefn largeButtonDefn : largeButtonDefns) {
-			Composite smallButtonComposite = new Composite(topRow, SWT.BORDER);
-			smallButtonComposite.setLayout(Swts.getHorizonalNoMarginRowLayout());
-			smallButtonComposite.setLayoutData(new RowData(SWT.DEFAULT, layout.smallButtonCompositeHeight));
+			SimpleButtonParent smallButtonComposite = new SimpleButtonParent(topRow, layout, SWT.BORDER);
+			smallButtonComposite.getButtonComposite().setLayoutData(new RowData(SWT.DEFAULT, layout.smallButtonCompositeHeight));
 			for (final SmallButtonDefn smallButtonDefn : largeButtonDefn.defns) {
 				IControlWithToggle hasControl = smallButtonDefn.smallButtonFactory.create(smallButtonComposite, smallButtonDefn, imageButtonConfig.withImage(smallButtonDefn.mainImageId));
 				smallButtonIdToControlWithToggleMap.put(smallButtonDefn.id, hasControl);

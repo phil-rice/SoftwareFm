@@ -48,7 +48,7 @@ public class TweetLinePanel implements IHasControl, IButtonParent {
 	}
 
 	@Override
-	public void buttonAdded() {
+	public void buttonAdded(IHasControl button) {
 	}
 
 	public void setText(String newText) {

@@ -7,6 +7,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.softwareFm.swtBasics.IHasComposite;
+import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.Resources;
 import org.softwareFm.utilities.resources.IResourceGetter;
@@ -68,7 +69,7 @@ public class AbstractTitleAnd implements IHasComposite, IButtonParent {
 	}
 
 	@Override
-	public void buttonAdded() {
+	public void buttonAdded(IHasControl button) {
 		buttonCount++;
 		setLayoutData();
 	}

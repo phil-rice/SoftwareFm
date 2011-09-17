@@ -2,16 +2,17 @@ package org.softwarefm.display.smallButtons;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
-import org.softwareFm.softwareFmImages.backdrop.BackdropAnchor;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwarefm.display.SoftwareFmLayout;
+import org.softwarefm.display.composites.CompositeConfig;
+import org.softwarefm.display.composites.TitleAndText;
 
 public class ImagesInALine {
 	public static void main(String[] args) {
@@ -20,17 +21,17 @@ public class ImagesInALine {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				Composite composite = new Composite(from, SWT.NULL);
-				Composite parent = new Composite(composite, SWT.NULL);
-				parent.setLayout(Swts.getHorizonalNoMarginRowLayout());
 				ImageRegistry imageRegistry = new ImageRegistry();
 				new BasicImageRegisterConfigurator().registerWith(from.getDisplay(), imageRegistry);
-				ImageButtonConfig config = new ImageButtonConfig(new SoftwareFmLayout(), imageRegistry, BackdropAnchor.depressed, BackdropAnchor.main, null, null);
-				new SimpleImageButton(parent, config.withImage(ArtifactsAnchor.projectKey)).getControl().setLayoutData(new RowData(18, 18));
-				new SimpleImageButton(parent, config.withImage(ArtifactsAnchor.projectKey, OverlaysAnchor.editKey)).getControl().setLayoutData(new RowData(18, 18));
-				new SimpleImageButton(parent, config.withImage(GeneralAnchor.browseKey)).getControl().setLayoutData(new RowData(18, 18));
+				CompositeConfig config = new CompositeConfig(from.getDisplay(), new SoftwareFmLayout(), imageRegistry, IResourceGetter.Utils.noResources());
+				TitleAndText titleAndText = new TitleAndText(config, composite, "Title", false);
+				new SimpleImageButton(titleAndText, config.imageButtonConfig.withImage(ArtifactsAnchor.projectKey));
+				new SimpleImageButton(titleAndText, config.imageButtonConfig.withImage(ArtifactsAnchor.projectKey, OverlaysAnchor.editKey));
+				new SimpleImageButton(titleAndText, config.imageButtonConfig.withImage(GeneralAnchor.browseKey));
 				Swts.addGrabHorizontalAndFillGridDataToAllChildren(composite);
 				return composite;
 			}
+
 		});
 	}
 }

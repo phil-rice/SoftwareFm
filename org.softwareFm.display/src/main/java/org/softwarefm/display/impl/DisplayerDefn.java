@@ -4,7 +4,6 @@ import java.text.MessageFormat;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwarefm.display.ActionDefn;
@@ -40,8 +39,9 @@ public class DisplayerDefn {
 			throw new IllegalStateException(MessageFormat.format(DisplayConstants.cannotSetValueTwice, "title", this.title, title));
 		this.title = title;
 		return this;
-		
+
 	}
+
 	public DisplayerDefn data(String dataKey) {
 		if (this.dataKey != null)
 			throw new IllegalStateException(MessageFormat.format(DisplayConstants.cannotSetValueTwice, "data", this.dataKey, dataKey));
@@ -56,24 +56,23 @@ public class DisplayerDefn {
 		return this;
 	}
 
-//	public DisplayerDefn action(String actionId, String data, String mainImage) {
-//		IAction action = actionStore.get(actionId);
-//		defns.add(new ImageButtonDefn(mainImage, null, data, Maps.<SmallIconPosition, String> newMap(), action));
-//		return this;
-//	}
+	// public DisplayerDefn action(String actionId, String data, String mainImage) {
+	// IAction action = actionStore.get(actionId);
+	// defns.add(new ImageButtonDefn(mainImage, null, data, Maps.<SmallIconPosition, String> newMap(), action));
+	// return this;
+	// }
 
-	public DisplayerDefn actions(ActionDefn ...actionDefns) {
+	public DisplayerDefn actions(ActionDefn... actionDefns) {
 		this.actionDefns = Lists.fromArray(actionDefns);
 		return this;
 	}
 
 	public IDisplayer createDisplayer(Composite parent, CompositeConfig compositeConfig) {
-		 IDisplayer displayer = displayerFactory.create(parent, this, SWT.NULL, compositeConfig);
-		 SoftwareFmLayout layout = compositeConfig.imageButtonConfig.layout;
-		 for (ActionDefn actionDefn: actionDefns) 
-			actionDefn.createButton(compositeConfig.imageButtonConfig, displayer).getControl().setLayoutData(new RowData(layout.smallButtonWidth, layout.smallButtonHeight));
+		IDisplayer displayer = displayerFactory.create(parent, this, SWT.NULL, compositeConfig);
+		SoftwareFmLayout layout = compositeConfig.imageButtonConfig.layout;
+		for (ActionDefn actionDefn : actionDefns)
+			actionDefn.createButton(compositeConfig.imageButtonConfig, displayer);
 		return displayer;
 	}
-	
-	
+
 }
