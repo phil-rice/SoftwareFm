@@ -5,33 +5,35 @@ import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.utilities.functions.IFunction1;
 import org.softwarefm.display.ActionDefn;
-import org.softwarefm.display.SoftwareFmLayout;
+import org.softwarefm.display.IAction;
+import org.softwarefm.display.actions.ActionContext;
 import org.softwarefm.display.actions.ActionStore;
 import org.softwarefm.display.composites.CompositeConfig;
 import org.softwarefm.display.data.DisplayConstants;
 import org.softwarefm.display.displayer.IDisplayer;
 import org.softwarefm.display.displayer.IDisplayerFactory;
+import org.softwarefm.display.smallButtons.IImageButtonListener;
 
 public class DisplayerDefn {
 
 	@Override
 	public String toString() {
-		return "DisplayerDefn [displayer=" + displayerFactory + ", defns=" + actionDefns + ", actionStore=" + actionStore + ", dataKey=" + dataKey + ", title=" + title + ", tooltip=" + tooltip + "]";
+		return "DisplayerDefn [displayer=" + displayerFactory + ", defns=" + actionDefns + ", dataKey=" + dataKey + ", title=" + title + ", tooltip=" + tooltip + "]";
 	}
 
 	public final IDisplayerFactory displayerFactory;
 	public List<ActionDefn> actionDefns = Lists.newList();
-	private final ActionStore actionStore;
 
 	public String dataKey;
 	public String title;
 	public String tooltip;
 
-	public DisplayerDefn(IDisplayerFactory displayer, ActionStore actionStore) {
+	public DisplayerDefn(IDisplayerFactory displayer) {
 		this.displayerFactory = displayer;
-		this.actionStore = actionStore;
 	}
 
 	public DisplayerDefn title(String title) {
@@ -67,11 +69,23 @@ public class DisplayerDefn {
 		return this;
 	}
 
-	public IDisplayer createDisplayer(Composite parent, CompositeConfig compositeConfig) {
-		IDisplayer displayer = displayerFactory.create(parent, this, SWT.NULL, compositeConfig);
-		SoftwareFmLayout layout = compositeConfig.imageButtonConfig.layout;
-		for (ActionDefn actionDefn : actionDefns)
-			actionDefn.createButton(compositeConfig.imageButtonConfig, displayer);
+	public IDisplayer createDisplayer(Composite parent, final ActionStore actionStore, final ActionContext actionContext) {
+		CompositeConfig compositeConfig = actionContext.compositeConfig;
+		final IDisplayer displayer = displayerFactory.create(parent, this, SWT.NULL, compositeConfig);
+		for (final ActionDefn actionDefn : actionDefns)
+			actionDefn.createButton(compositeConfig.imageButtonConfig, displayer, new IImageButtonListener() {
+				private final IAction action = actionStore.get(actionDefn.id);
+				@Override
+				public void buttonPressed(IHasControl button) throws Exception {
+					List<Object> actualParams = Lists.map(actionDefn.params, new IFunction1<String	, Object>() {
+						@Override
+						public Object apply(String key) throws Exception {
+							return actionContext.dataGetter.getDataFor(key);
+						}
+					});
+					action.execute(displayer, actionDefn.params, actualParams);
+				}
+			});
 		return displayer;
 	}
 

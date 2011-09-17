@@ -1,5 +1,5 @@
 package org.softwarefm.display.actions;
 
-public class ExternalBrowseFileOrUrlAction extends InternalBrowseFileOrUrlAction {
+public class ExternalBrowseFileOrUrlAction extends BrowseAction {
 
 }

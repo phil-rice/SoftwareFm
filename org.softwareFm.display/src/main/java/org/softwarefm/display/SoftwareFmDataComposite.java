@@ -20,7 +20,11 @@ import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwarefm.display.actions.ActionContext;
+import org.softwarefm.display.actions.ActionStore;
 import org.softwarefm.display.composites.CompositeConfig;
+import org.softwarefm.display.data.DataGetter;
+import org.softwarefm.display.data.GuiDataStore;
 import org.softwarefm.display.displayer.IDisplayer;
 import org.softwarefm.display.impl.DisplayerDefn;
 import org.softwarefm.display.impl.LargeButtonDefn;
@@ -36,7 +40,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 	private final Map<String, List<IHasControl>> smallButtonIdToLargeHasControlMap = Maps.newMap(LinkedHashMap.class);
 	private final Map<String, Group> smallButtonIdToGroupMap = Maps.newMap(LinkedHashMap.class);
 
-	public SoftwareFmDataComposite(final Composite parent, CompositeConfig compositeConfig, ICallback<Throwable> exceptionHandler, LargeButtonDefn... largeButtonDefns) {
+	public SoftwareFmDataComposite(final Composite parent, GuiDataStore guiDataStore, CompositeConfig compositeConfig,ActionStore actionStore, ICallback<Throwable> exceptionHandler, LargeButtonDefn... largeButtonDefns) {
 		this.content = new Composite(parent, SWT.NULL);
 		IResourceGetter resourceGetter = compositeConfig.resourceGetter;
 		displaySelectionModel = new DisplaySelectionModel(exceptionHandler, largeButtonDefns);
@@ -63,6 +67,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 
 			}
 		}
+		ActionContext actionContext = new ActionContext(new DataGetter(guiDataStore, resourceGetter), compositeConfig);
 		for (final LargeButtonDefn largeButtonDefn : largeButtonDefns) {
 			for (SmallButtonDefn smallButtonDefn : largeButtonDefn.defns) {
 				Group group = new Group(content, SWT.SHADOW_ETCHED_IN);
@@ -70,7 +75,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 				smallButtonIdToGroupMap.put(smallButtonDefn.id, group);
 				group.setText(Resources.getOrException(resourceGetter, smallButtonDefn.titleId));
 				for (DisplayerDefn defn : smallButtonDefn.defns) {
-					IDisplayer displayer = defn.createDisplayer(group, compositeConfig);
+					IDisplayer displayer = defn.createDisplayer(group, actionStore, actionContext);
 					Maps.addToList(smallButtonIdToLargeHasControlMap, smallButtonDefn.id, displayer);
 				}
 				Swts.addGrabHorizontalAndFillGridDataToAllChildren(group);

@@ -8,7 +8,7 @@ import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwarefm.display.actions.ActionStore;
-import org.softwarefm.display.actions.InternalBrowseFileOrUrlAction;
+import org.softwarefm.display.actions.BrowseAction;
 import org.softwarefm.display.actions.TextEditAction;
 import org.softwarefm.display.composites.CompositeConfig;
 import org.softwarefm.display.data.GuiDataStore;
@@ -45,7 +45,7 @@ public class Sample {
 
 				ActionStore actionStore = new ActionStore().//
 						action("action.text.edit", new TextEditAction()).//
-						action("action.text.internalBrowseFileOrUrl", new InternalBrowseFileOrUrlAction());//
+						action("action.text.externalBrowseFileOrUrl", new BrowseAction());//
 
 				DisplayerStore displayerStore = new DisplayerStore().//
 						displayer("displayer.readOnly.text", new TextDisplayer(false)).//
@@ -65,20 +65,20 @@ public class Sample {
 								guiBuilder.displayer("displayer.readOnly.text").title("organisation.name.title").data("organisation.name").actions(//
 										guiBuilder.action("action.text.externalBrowseFileOrUrl", "artifact.organisation", "overlay.edit").tooltip("action.browse.tooltip").params("organisation.url")//
 										).tooltip("data.organisation.url")).//
-								ctrlClickAction("action.text.internalBrowseFileOrUrl", "data.jar.jarPath"));//
+								ctrlClickAction("action.text.externalBrowseFileOrUrl", "data.jar.jarPath"));//
 				final LargeButtonDefn projectButton = guiBuilder.largeButton("largeButton.project", //
 						guiBuilder.smallButton("smallButton.project.details", "smallButton.project.details.title", "smallButton.normal", "artifact.project", //
 								guiBuilder.displayer("displayer.readOnly.text").title("project.name.title").data("data.project.name").tooltip("data.project.description").actions(//
 										guiBuilder.action("action.text.edit", "artifact.project", "overlay.edit")
 										), //
 								guiBuilder.displayer("displayer.readWrite.url").title("project.url.title").data("data.jar.projectUrl")).//
-								ctrlClickAction("action.text.internalBrowseFileOrUrl", "data.jar.projectUrl").tooltip("smallButton.project.details.tooltip"),//
+								ctrlClickAction("action.text.externalBrowseFileOrUrl", "data.jar.projectUrl").tooltip("smallButton.project.details.tooltip"),//
 						guiBuilder.smallButton("smallButton.project.bugs", "smallButton.project.bugs.title", "smallButton.normal", "artifact.issues",//
 								guiBuilder.displayer("displayer.readWrite.url").title("project.issues.title").data("data.project.issues").tooltip("project.issues.tooltip").actions(//
 										guiBuilder.action("action.text.edit", "artifact.project", "overlay.edit")
 										), //,//
 								guiBuilder.listDisplayer("displayer.readWrite.list", "lineEditor.nameAndEmail").title("project.mailingList.title").data("data.project.mailingList")).//
-								ctrlClickAction("action.text.internalBrowseFileOrUrl", "data.project.issues"),//
+								ctrlClickAction("action.text.externalBrowseFileOrUrl", "data.project.issues"),//
 						guiBuilder.smallButton("smallButton.project.twitter", "smallButton.project.twitter.title", "smallButton.normal", "artifact.twitter",//
 								guiBuilder.listDisplayer("displayer.readWrite.list", "lineEditor.nameAndEmail").title("project.twitter.title").data("data.project.twitter")));//
 				final LargeButtonDefn organisationButton = guiBuilder.largeButton("largeButton.organisation", //
@@ -90,7 +90,7 @@ public class Sample {
 										guiBuilder.action("action.text.externalBrowseFileOrUrl", "general.browse").params("organisation.url"))),//
 						guiBuilder.smallButton("smallButton.organisation.twitter", "smallButton.organisation.twitter.title", "smallButton.normal", "artifact.twitter", //
 								guiBuilder.listDisplayer("displayer.readWrite.list", "lineEditor.nameAndEmail").title("organisation.twitter.title").data("data.organisation.twitter")));//
-				SoftwareFmDataComposite result = new SoftwareFmDataComposite(from, compositeConfig, ICallback.Utils.rethrow(), jarButton, projectButton, organisationButton);
+				SoftwareFmDataComposite result = new SoftwareFmDataComposite(from, dataStore, compositeConfig, actionStore,ICallback.Utils.rethrow(), jarButton, projectButton, organisationButton);
 				return result.getComposite();
 			}
 		});

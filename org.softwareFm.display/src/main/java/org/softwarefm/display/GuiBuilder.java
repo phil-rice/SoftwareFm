@@ -26,7 +26,7 @@ public class GuiBuilder {
 
 	public DisplayerDefn displayer(String displayerId) {
 		IDisplayerFactory displayer = displayerStore.get(displayerId);
-		return new DisplayerDefn(displayer, actionStore);
+		return new DisplayerDefn(displayer);
 	}
 
 	public SmallButtonDefn smallButton(final String id,String titleId, String smallButtonId, String mainImageId, DisplayerDefn... defns) {
@@ -41,7 +41,7 @@ public class GuiBuilder {
 
 	public DisplayerDefn listDisplayer(String listDisplayId, String lineEditorId) {
 		IDisplayerFactory displayer = displayerStore.get(listDisplayId);
-		return new DisplayerDefn(displayer, actionStore);
+		return new DisplayerDefn(displayer);
 	}
 
 	public ActionDefn action(String actionId, String mainImageId) {

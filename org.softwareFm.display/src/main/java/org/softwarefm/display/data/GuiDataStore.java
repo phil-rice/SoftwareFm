@@ -14,7 +14,7 @@ import org.softwareFm.utilities.maps.Maps;
 import org.softwarefm.display.IUrlDataCallback;
 import org.softwarefm.display.IUrlToData;
 
-public class GuiDataStore {
+public class GuiDataStore implements IDataGetter {
 	private final IUrlToData urlToData;
 	private String mainEntity;
 	private final Map<String, IUrlGenerator> urlGeneratorMap = Maps.newMap(LinkedHashMap.class);
@@ -109,7 +109,7 @@ public class GuiDataStore {
 		IUrlDataCallback callback = new IUrlDataCallback() {
 			@Override
 			public void processData(String entity, String url, Map<String, Object> context, Map<String, Object> data) {
-				fireListeners(entity, url, context,data);
+				fireListeners(entity, url, context, data);
 				entityCachedData.put(url, data);
 				lastUrlFor.put(entity, url);
 				for (DependantData dependantData : Maps.getOrEmptyList(entityToDependantMap, entity)) {
@@ -120,9 +120,9 @@ public class GuiDataStore {
 
 		};
 		if (entityCachedData.containsKey(url)) {
-//			fireListeners(entity, url, context, entityCachedData.get(url));
+			// fireListeners(entity, url, context, entityCachedData.get(url));
 			callback.processData(entity, url, context, entityCachedData.get(url));
-		} else 
+		} else
 			urlToData.getData(entity, url, context, callback);
 	}
 
@@ -140,7 +140,8 @@ public class GuiDataStore {
 
 	}
 
-	public Object data(String path) {
+	@Override
+	public Object getDataFor(String path) {
 		String[] segments = path.split("\\.");
 		if (segments.length != 2)
 			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.illegalPath, path));
@@ -149,7 +150,7 @@ public class GuiDataStore {
 		checkEntityExists(entity);
 		EntityCachedData entityCachedData = cache.get(entity);
 		if (entityCachedData == null)
-			throw new NullPointerException(MessageFormat.format(DisplayConstants.cannotFindCachedDataFor, entity, key));
+			return null;
 		String url = lastUrlFor(entity);
 		Map<String, Object> map = entityCachedData.get(url);
 		return map.get(key);

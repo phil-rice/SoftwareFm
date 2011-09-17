@@ -69,10 +69,10 @@ public class GuiDataStoreTest extends TestCase {
 		makeRosyView();
 		store.processData("rawData", context1);
 
-		assertEquals("one", store.data("entity1.linkData1"));
-		assertEquals("two", store.data("entity1.linkData2"));
-		assertEquals(1, store.data("entityd1.ent1"));
-		assertEquals(2, store.data("entityd2.ent2"));
+		assertEquals("one", store.getDataFor("entity1.linkData1"));
+		assertEquals("two", store.getDataFor("entity1.linkData2"));
+		assertEquals(1, store.getDataFor("entityd1.ent1"));
+		assertEquals(2, store.getDataFor("entityd2.ent2"));
 	}
 
 	private void makeRosyView() {

@@ -4,6 +4,8 @@ import java.text.MessageFormat;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Image;
@@ -11,9 +13,9 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.swtBasics.IControlWithToggle;
 import org.softwareFm.swtBasics.IHasControl;
-import org.softwareFm.swtBasics.images.IImageButtonListener;
 import org.softwareFm.swtBasics.images.SmallIconPosition;
 import org.softwareFm.swtBasics.text.IButtonParent;
+import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwarefm.display.data.DisplayConstants;
 
@@ -24,11 +26,11 @@ public class SimpleImageButton implements IHasControl, IControlWithToggle {
 	private boolean value;
 
 	public SimpleImageButton(IButtonParent parent, final ImageButtonConfig config) {
-		this.content = new Canvas(parent.getButtonComposite(), SWT.NULL){
+		this.content = new Canvas(parent.getButtonComposite(), SWT.NULL) {
 			@Override
 			public String toString() {
-				return getClass().getSimpleName() +"[main=" + config.mainImage + ",overlay=" + config.overlayImage +"]"+super.toString();
-		}
+				return getClass().getSimpleName() + "[main=" + config.mainImage + ",overlay=" + config.overlayImage + "]" + super.toString();
+			}
 		};
 		config.validate();
 		content.addPaintListener(new PaintListener() {
@@ -79,8 +81,18 @@ public class SimpleImageButton implements IHasControl, IControlWithToggle {
 		content.redraw();
 	}
 
-	public void addListener(IImageButtonListener imageButtonListener) {
-		
+	public void addListener(final IImageButtonListener imageButtonListener) {
+		content.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				try {
+					imageButtonListener.buttonPressed(SimpleImageButton.this);
+				} catch (Exception e1) {
+					throw WrappedException.wrap(e1);
+				}
+			}
+		});
+
 	}
 
 }

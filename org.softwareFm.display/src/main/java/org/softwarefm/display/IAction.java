@@ -1,5 +1,10 @@
 package org.softwarefm.display;
 
-public interface IAction {
+import java.util.List;
 
+import org.softwarefm.display.displayer.IDisplayer;
+
+
+public interface IAction {
+	void execute(IDisplayer displayer, List<String> formalParameters, List<Object> actualParameters);
 }

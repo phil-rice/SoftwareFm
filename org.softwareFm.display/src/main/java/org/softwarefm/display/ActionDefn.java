@@ -8,6 +8,7 @@ import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.text.IButtonParent;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwarefm.display.data.DisplayConstants;
+import org.softwarefm.display.smallButtons.IImageButtonListener;
 import org.softwarefm.display.smallButtons.ImageButtonConfig;
 import org.softwarefm.display.smallButtons.SimpleImageButton;
 
@@ -50,8 +51,9 @@ public class ActionDefn {
 			throw new IllegalStateException(MessageFormat.format(DisplayConstants.mustHaveA, "params", id));
 	}
 
-	public IHasControl createButton(ImageButtonConfig config, IButtonParent buttonParent) {
+	public IHasControl createButton(ImageButtonConfig config, IButtonParent buttonParent, IImageButtonListener imageButtonListener) {
 		SimpleImageButton simpleImageButton = new SimpleImageButton(buttonParent, config.withImage(mainImageId, overlayId));
+		simpleImageButton.addListener(imageButtonListener);
 		return simpleImageButton;
 		
 	}

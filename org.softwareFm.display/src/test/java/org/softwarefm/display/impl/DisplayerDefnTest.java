@@ -7,7 +7,6 @@ import junit.framework.TestCase;
 import org.softwareFm.utilities.tests.Tests;
 import org.softwarefm.display.ActionDefn;
 import org.softwarefm.display.actions.ActionMock;
-import org.softwarefm.display.actions.ActionStore;
 import org.softwarefm.display.displayer.DisplayerMock;
 
 public class DisplayerDefnTest extends TestCase {
@@ -77,7 +76,7 @@ public class DisplayerDefnTest extends TestCase {
 		displayer = new DisplayerMock("1");
 		action1 = new ActionMock("1");
 		action2 = new ActionMock("1");
-		displayerDefn = new DisplayerDefn(displayer, new ActionStore().action("action1", action1).action("action2", action2));
+		displayerDefn = new DisplayerDefn(displayer);
 	}
 
 }

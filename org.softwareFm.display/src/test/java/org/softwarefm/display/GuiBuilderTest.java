@@ -31,8 +31,8 @@ public class GuiBuilderTest extends TestCase {
 	}
 
 	public void testSmallButtonWithDisplayerDefns() {
-		DisplayerDefn defn1 = new DisplayerDefn(displayer, actionStore);
-		DisplayerDefn defn2 = new DisplayerDefn(displayer, actionStore);
+		DisplayerDefn defn1 = new DisplayerDefn(displayer);
+		DisplayerDefn defn2 = new DisplayerDefn(displayer);
 		SmallButtonDefn smallButton = builder.smallButton("someId", "titleId", "smallButton.validId", "mainImageId", defn1, defn2);
 		assertEquals("someId", smallButton.id);
 		assertEquals(null, smallButton.tooltip);
