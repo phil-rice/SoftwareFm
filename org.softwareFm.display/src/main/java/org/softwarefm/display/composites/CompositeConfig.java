@@ -5,7 +5,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
 import org.softwareFm.softwareFmImages.backdrop.BackdropAnchor;
-import org.softwareFm.swtBasics.SwtBasicConstants;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwarefm.display.SoftwareFmLayout;
 import org.softwarefm.display.smallButtons.ImageButtonConfig;

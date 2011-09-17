@@ -32,7 +32,7 @@ public class Sample {
 
 				SoftwareFmLayout layout = new SoftwareFmLayout();
 				CompositeConfig compositeConfig = new CompositeConfig(from.getDisplay(), layout, imageRegistry, resourceGetter);
-				GuiDataStore dataStore = new GuiDataStore(IUrlToData.Utils.errorCallback(), ICallback.Utils.rethrow()).//
+				GuiDataStore dataStore = new GuiDataStore(IUrlToData.Utils.errorCallback()).//
 						urlGenerator("urlGenerator.jar", new JarUrlGenerator()).//
 						urlGenerator("urlGenerator.project", new UrlGenerator("project")).//
 						urlGenerator("urlGenerator.organisation", new UrlGenerator("organisation")).//

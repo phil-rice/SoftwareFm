@@ -22,10 +22,8 @@ public class SimpleImageButton implements IHasControl, IControlWithToggle {
 	private final Canvas content;
 	private final Map<SmallIconPosition, String> smallIconMap = Maps.newMap();
 	private boolean value;
-	private final ImageButtonConfig config;
 
 	public SimpleImageButton(Composite parent, final ImageButtonConfig config) {
-		this.config = config;
 		this.content = new Canvas(parent, SWT.NULL){
 			@Override
 			public String toString() {

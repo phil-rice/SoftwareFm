@@ -1,12 +1,9 @@
 package org.softwarefm.display.impl;
 
 import java.util.Collections;
-import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.softwareFm.swtBasics.images.SmallIconPosition;
-import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.tests.Tests;
 import org.softwarefm.display.actions.ActionMock;
 import org.softwarefm.display.actions.ActionStore;
@@ -14,7 +11,6 @@ import org.softwarefm.display.smallButtons.SmallButtonFactoryMock;
 
 public class SmallButtonDefnTest extends TestCase {
 
-	private final Map<SmallIconPosition, String> emptyMap = Maps.newMap();
 	private SmallButtonDefn defn;
 	private ActionMock action1;
 	private SmallButtonFactoryMock smallButtonFactory;

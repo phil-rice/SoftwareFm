@@ -26,11 +26,9 @@ public class GuiDataStore {
 
 	private final CopyOnWriteArrayList<IGuiDataListener> listeners = new CopyOnWriteArrayList<IGuiDataListener>();
 	private ICallback<Throwable> onException;
-	private final ICallback<Throwable> onException2;
 
-	public GuiDataStore(IUrlToData urlToData, ICallback<Throwable> onException) {
+	public GuiDataStore(IUrlToData urlToData) {
 		this.urlToData = urlToData;
-		onException2 = onException;
 	}
 
 	/** Really a map from Url to data for a given entity */

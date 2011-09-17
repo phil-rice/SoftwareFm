@@ -5,7 +5,6 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.tests.Tests;
 
@@ -172,7 +171,7 @@ public class GuiDataStoreTest extends TestCase {
 				"entity1", Arrays.asList(data1),//
 				"entityd1", Arrays.asList(datad1),//
 				"entityd2", Arrays.asList(datad2));
-		store = new GuiDataStore(urlToData, ICallback.Utils.rethrow());
+		store = new GuiDataStore(urlToData);
 		listener1 = new GuiDataListenerMock();
 		listener2 = new GuiDataListenerMock();
 		store.addGuiDataListener(listener1);
