@@ -41,7 +41,7 @@ public class DisplayerDefnIntegrationTest extends TestCase {
 	}
 
 	public void testWithOneButton() {
-		DisplayerDefn dispDefnWithButton = displayerDefn.actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey));
+		DisplayerDefn dispDefnWithButton = displayerDefn.actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).tooltip("tooltip0"));
 		TitleAndText displayer = (TitleAndText) dispDefnWithButton.createDisplayer(shell, actionStore, actionContext);
 		assertEquals("registeredTitle", displayer.getTitle());
 		checkButtons(displayer, ArtifactsAnchor.projectKey + ":" + OverlaysAnchor.deleteKey);
@@ -49,8 +49,8 @@ public class DisplayerDefnIntegrationTest extends TestCase {
 
 	public void testWithTwoButton() {
 		DisplayerDefn dispDefnWithButton = displayerDefn.actions(//
-				new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey),//
-				new ActionDefn("someId", ArtifactsAnchor.projectKey, null));
+				new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).tooltip("tooltip0"),//
+				new ActionDefn("someId", ArtifactsAnchor.projectKey, null).tooltip("tooltip1"));
 		TitleAndText displayer = (TitleAndText) dispDefnWithButton.createDisplayer(shell, actionStore, actionContext);
 		assertEquals("registeredTitle", displayer.getTitle());
 		checkButtons(displayer, ArtifactsAnchor.projectKey + ":" + OverlaysAnchor.deleteKey, ArtifactsAnchor.projectKey);
@@ -79,6 +79,7 @@ public class DisplayerDefnIntegrationTest extends TestCase {
 			NameAndValue nameAndValue = NameAndValue.fromString(mainAndBackground[i]);
 			assertEquals(nameAndValue.name, control.config.mainImage);
 			assertEquals(nameAndValue.value, control.config.overlayImage);
+			assertEquals("tooltip"+ i, control.getToolTipText());
 		}
 	}
 

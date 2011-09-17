@@ -99,12 +99,7 @@ public class GuiDataStore implements IDataGetter {
 		if (urlGenerator == null)
 			throw new IllegalStateException(MessageFormat.format(DisplayConstants.unrecognisedUrlGenerator, entity, entityToUrlGeneratorMap.keySet()));
 		String url = urlGenerator.findUrlFor(entity, data);
-		final EntityCachedData entityCachedData = Maps.findOrCreate(cache, entity, new Callable<EntityCachedData>() {
-			@Override
-			public EntityCachedData call() throws Exception {
-				return new EntityCachedData();
-			}
-		});
+		final EntityCachedData entityCachedData = getFromCache(entity);
 
 		IUrlDataCallback callback = new IUrlDataCallback() {
 			@Override
@@ -124,6 +119,16 @@ public class GuiDataStore implements IDataGetter {
 			callback.processData(entity, url, context, entityCachedData.get(url));
 		} else
 			urlToData.getData(entity, url, context, callback);
+	}
+
+	private EntityCachedData getFromCache(String entity) {
+		final EntityCachedData entityCachedData = Maps.findOrCreate(cache, entity, new Callable<EntityCachedData>() {
+			@Override
+			public EntityCachedData call() throws Exception {
+				return new EntityCachedData();
+			}
+		});
+		return entityCachedData;
 	}
 
 	private void fireListeners(String entity, String url, Map<String, Object> context, Map<String, Object> data) {
@@ -158,6 +163,13 @@ public class GuiDataStore implements IDataGetter {
 
 	public String lastUrlFor(String entity) {
 		return lastUrlFor.get(entity);
+	}
+
+	public void forceData(String url, String entity, Map<String, Object> data, Map<String, Object> context) {
+		lastUrlFor.put(entity, url);
+		final EntityCachedData entityCachedData = getFromCache(entity);
+		entityCachedData.put(url, data);
+		fireListeners(entity, url, context, data);
 	}
 
 }

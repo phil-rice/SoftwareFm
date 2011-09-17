@@ -1,5 +1,6 @@
 package org.softwareFm.utilities.resources;
 
+import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -41,10 +42,14 @@ class ResourceGetter implements IResourceGetter {
 		return new ResourceGetter(this) {
 			@Override
 			protected String localGet(String fullKey) {
-				if (bundle.containsKey(fullKey))
-					return bundle.getString(fullKey);
-				else
-					return null;
+				try {
+					if (bundle.containsKey(fullKey))
+						return bundle.getString(fullKey);
+					else
+						return null;
+				} catch (Exception e) {
+					throw new RuntimeException("Key: "+ fullKey, e);
+				}
 			}
 		};
 	}

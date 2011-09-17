@@ -25,6 +25,7 @@ import org.softwarefm.display.actions.ActionStore;
 import org.softwarefm.display.composites.CompositeConfig;
 import org.softwarefm.display.data.DataGetter;
 import org.softwarefm.display.data.GuiDataStore;
+import org.softwarefm.display.data.IGuiDataListener;
 import org.softwarefm.display.displayer.IDisplayer;
 import org.softwarefm.display.impl.DisplayerDefn;
 import org.softwarefm.display.impl.LargeButtonDefn;
@@ -90,6 +91,13 @@ public class SoftwareFmDataComposite implements IHasComposite {
 				boolean visible = displaySelectionModel.getVisibleSmallButtonsId().contains(smallButtonDefn.id);
 				IControlWithToggle control = smallButtonIdToControlWithToggleMap.get(smallButtonDefn.id);
 				control.setValue(!visible);
+			}
+		});
+		guiDataStore.addGuiDataListener(new IGuiDataListener() {
+			@Override
+			public void data(String entity, String url, Map<String, Object> context, Map<String, Object> data) {
+				updateVisibleData();
+				
 			}
 		});
 	}
