@@ -3,6 +3,7 @@ package org.softwareFm.displayLists;
 import java.text.MessageFormat;
 
 import org.softwareFm.displayCore.api.ICodec;
+import org.softwareFm.utilities.strings.NameAndValue;
 
 final class NameAndValueCodec implements ICodec<NameAndValue> {
 	@Override
@@ -19,7 +20,7 @@ final class NameAndValueCodec implements ICodec<NameAndValue> {
 
 	@Override
 	public String toString(NameAndValue nameAndValue) {
-		return nameAndValue.name.replaceAll("\\$", "") + "$" + nameAndValue.url;
+		return nameAndValue.name.replaceAll("\\$", "") + "$" + nameAndValue.value;
 
 	}
 }

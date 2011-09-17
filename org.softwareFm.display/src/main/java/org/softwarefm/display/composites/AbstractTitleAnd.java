@@ -33,8 +33,10 @@ public class AbstractTitleAnd implements IDisplayer, IHasComposite {
 
 		layout = config.layout;
 		int height = layout.titleHeight;
+		if (titleOrTitleKey == null)
+			throw new NullPointerException();
 
-		String title = titleIsKey ? Resources.getOrException(config.resourceGetter,  titleOrTitleKey) : titleOrTitleKey;
+		String title = titleIsKey ? Resources.getOrException(config.resourceGetter, titleOrTitleKey) : titleOrTitleKey;
 		lblTitle = new Label(content, SWT.NULL);
 		lblTitle.setLayoutData(new RowData(layout.titleWidth, height));
 		lblTitle.setText(title == null ? "" : title);
@@ -50,25 +52,19 @@ public class AbstractTitleAnd implements IDisplayer, IHasComposite {
 	}
 
 	private void setLayoutData() {
-		int buttonsWidth = (config.layout.buttonSpacer + config.layout.smallButtonWidth)* buttonCount;
-		int fillerWidth = config.layout.buttonsWidth - buttonsWidth-9;
-		System.out.println("setLayoutData: buttons: " + buttonsWidth + ", filler: " + fillerWidth);
+		int buttonsWidth = (config.layout.buttonSpacer + config.layout.smallButtonWidth) * buttonCount;
+		int fillerWidth = config.layout.buttonsWidth - buttonsWidth ;
 		compButtons.setLayoutData(new RowData(buttonsWidth, config.layout.displayerHeight));
 		lblFiller.setLayoutData(new RowData(fillerWidth, config.layout.displayerHeight));
 		compButtons.setLayout(new GridLayout(buttonCount, false));
 		compButtons.layout();
 		content.layout();
-		Swts.layoutDump(this.getControl());
-	}
-
-	public String getTitle() {
-		return lblTitle.getText();
 	}
 
 	@Override
 	public void buttonAdded(IHasControl button) {
 		buttonCount++;
-		button.getControl().setLayoutData(new GridData(config.layout.smallButtonWidth,config.layout.smallButtonHeight));
+		button.getControl().setLayoutData(new GridData(config.layout.smallButtonWidth, config.layout.smallButtonHeight));
 		setLayoutData();
 	}
 
@@ -95,5 +91,9 @@ public class AbstractTitleAnd implements IDisplayer, IHasComposite {
 	@Override
 	public Composite getComposite() {
 		return content;
+	}
+	
+	public String getTitle(){
+		return lblTitle.getText();
 	}
 }

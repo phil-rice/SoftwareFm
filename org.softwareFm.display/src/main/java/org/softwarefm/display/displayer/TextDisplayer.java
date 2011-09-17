@@ -1,8 +1,11 @@
 package org.softwarefm.display.displayer;
 
+import java.text.MessageFormat;
+
 import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.display.composites.CompositeConfig;
 import org.softwarefm.display.composites.TitleAndText;
+import org.softwarefm.display.data.DisplayConstants;
 import org.softwarefm.display.impl.DisplayerDefn;
 
 public class TextDisplayer implements IDisplayerFactory {
@@ -15,6 +18,8 @@ public class TextDisplayer implements IDisplayerFactory {
 
 	@Override
 	public IDisplayer create(Composite parent, final DisplayerDefn defn, int style, CompositeConfig compositeConfig) {
+		if (defn.title == null)
+			throw new NullPointerException(MessageFormat.format(DisplayConstants.mustHaveA, "title", getClass().getSimpleName()));
 		TitleAndText titleAndText = new TitleAndText(compositeConfig, parent, defn.title, true);
 		titleAndText.setGlobalEdit(mutable);
 		return titleAndText;

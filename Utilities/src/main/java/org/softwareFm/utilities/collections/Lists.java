@@ -180,4 +180,9 @@ public class Lists {
 	public static <T>List<T> fromArray(T[] ts) {
 		return new ArrayList<T>(Arrays.asList(ts));
 	}
+
+	@SuppressWarnings("unchecked")
+	public static<T> List<T> nullSafe(List<T> ts) {
+		return ts == null?Collections.EMPTY_LIST: ts;
+	}
 }

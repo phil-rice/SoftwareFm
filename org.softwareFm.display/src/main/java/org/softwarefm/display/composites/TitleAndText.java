@@ -7,13 +7,13 @@ import org.eclipse.swt.widgets.Text;
 
 public class TitleAndText extends AbstractTitleAnd {
 
-	private Text text;
+	private final Text text;
 	private boolean globalEdit;
 
 	public TitleAndText(CompositeConfig config, Composite parent, String titleOrTitleKey, boolean titleIsKey) {
 		super(config, parent, titleOrTitleKey, titleIsKey);
 		text = new Text(getComposite(), SWT.NULL);
-		text.setLayoutData(new RowData(SWT.DEFAULT, config.layout.textHeight));
+		text.setLayoutData(new RowData(config.layout.valueWidth, config.layout.textHeight));
 	}
 
 	public void setText(String text) {
@@ -31,7 +31,7 @@ public class TitleAndText extends AbstractTitleAnd {
 			text.setBackground(config.editingBackground);
 		else
 			text.setBackground(config.notEditingBackground);
-		
 	}
+	
 
 }

@@ -8,6 +8,7 @@ import org.softwareFm.swtBasics.images.Resources;
 import org.softwareFm.swtBasics.text.ConfigForTitleAnd;
 import org.softwareFm.swtBasics.text.TitleAndTextField;
 import org.softwareFm.utilities.collections.ICrud;
+import org.softwareFm.utilities.strings.NameAndValue;
 
 public class NameAndValueLineEditor extends AbstractLineEditor<NameAndValue, TitleAndTextField> {
 
@@ -27,7 +28,7 @@ public class NameAndValueLineEditor extends AbstractLineEditor<NameAndValue, Tit
 	@Override
 	public IHasControl makeLineControl(final ILineEditable<NameAndValue> lineEditable, Composite parent, final int index, NameAndValue t) {
 		TitleAndTextField text = new TitleAndTextField(lineEditable.getDialogConfig(), parent, t.name, false);
-		text.setText(t.url);
+		text.setText(t.value);
 		addButtons(lineEditable, parent, index, text);
 		return text;
 	}
@@ -40,7 +41,7 @@ public class NameAndValueLineEditor extends AbstractLineEditor<NameAndValue, Tit
 		NameAndValueDialog dialog = new NameAndValueDialog(lineEditable.getShell(), SWT.NULL, forDialogs, nameTitle, valueTitle);
 		NameAndValue result = dialog.open(new NameAndValue("", ""));
 		if (result != null) {
-			lineEditable.getModel().add(new NameAndValue(result.name, result.url));
+			lineEditable.getModel().add(new NameAndValue(result.name, result.value));
 			lineEditable.sendDataToServer();
 		}
 	}

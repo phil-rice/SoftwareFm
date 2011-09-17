@@ -6,16 +6,12 @@ import junit.framework.TestCase;
 
 import org.softwareFm.utilities.tests.Tests;
 import org.softwarefm.display.ActionDefn;
-import org.softwarefm.display.actions.ActionMock;
 import org.softwarefm.display.displayer.DisplayerMock;
 
 public class DisplayerDefnTest extends TestCase {
 
 	private DisplayerMock displayer;
 	private DisplayerDefn displayerDefn;
-
-	private ActionMock action1;
-	private ActionMock action2;
 
 	ActionDefn actionDefn1 = new ActionDefn("action1", "mainImageLink1", "ovelayId1");
 	ActionDefn actionDefn2 = new ActionDefn("action2", "mainImageLink2", "ovelayId2");
@@ -43,6 +39,7 @@ public class DisplayerDefnTest extends TestCase {
 		assertEquals(Arrays.asList(actionDefn1, actionDefn2), displayerDefn.actionDefns);
 	}
 
+	
 
 	public void testDataThrowsExceptionIfCalledTwice() {
 		displayerDefn.data("dataKey1");
@@ -74,8 +71,6 @@ public class DisplayerDefnTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		displayer = new DisplayerMock("1");
-		action1 = new ActionMock("1");
-		action2 = new ActionMock("1");
 		displayerDefn = new DisplayerDefn(displayer);
 	}
 

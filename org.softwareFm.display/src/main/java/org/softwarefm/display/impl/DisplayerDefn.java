@@ -77,7 +77,7 @@ public class DisplayerDefn {
 				private final IAction action = actionStore.get(actionDefn.id);
 				@Override
 				public void buttonPressed(IHasControl button) throws Exception {
-					List<Object> actualParams = Lists.map(actionDefn.params, new IFunction1<String	, Object>() {
+					List<Object> actualParams = Lists.map(Lists.nullSafe(actionDefn.params), new IFunction1<String	, Object>() {
 						@Override
 						public Object apply(String key) throws Exception {
 							return actionContext.dataGetter.getDataFor(key);

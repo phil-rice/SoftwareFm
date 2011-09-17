@@ -14,6 +14,7 @@ import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.text.ConfigForTitleAnd;
 import org.softwareFm.swtBasics.text.TitleAndTextField;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.strings.NameAndValue;
 
 public class NameAndValueDialog extends Dialog {
 
@@ -52,7 +53,7 @@ public class NameAndValueDialog extends Dialog {
 		final TitleAndTextField txtUrl = new TitleAndTextField(config, shell, valueTitle, false);
 		txtUrl.setEditable(true);
 		txtName.setText(initial.name);
-		txtUrl.setText(initial.url);
+		txtUrl.setText(initial.value);
 		Composite buttonComposite = new Composite(shell, SWT.NULL);
 		buttonComposite.setLayout(new GridLayout(2, false));
 		// Create the cancel button and addKey a handler

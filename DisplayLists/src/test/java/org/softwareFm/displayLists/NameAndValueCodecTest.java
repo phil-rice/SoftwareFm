@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.softwareFm.displayCore.api.ICodec;
+import org.softwareFm.utilities.strings.NameAndValue;
 
 public class NameAndValueCodecTest extends TestCase {
 
@@ -23,6 +24,6 @@ public class NameAndValueCodecTest extends TestCase {
 		NameAndValue back = encoder.fromString(actual);
 		String expectedName = expected.substring(0, expected.indexOf('$'));
 		assertEquals(expectedName, back.name);
-		assertEquals(url, back.url);
+		assertEquals(url, back.value);
 	}
 }

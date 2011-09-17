@@ -8,6 +8,7 @@ import org.softwareFm.displayCore.api.ILineEditable;
 import org.softwareFm.softwareFmImages.ImageButtons;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.swtBasics.text.TitleAndTextField;
+import org.softwareFm.utilities.strings.NameAndValue;
 
 public class NameAndUrlLineEditor extends NameAndValueLineEditor {
 

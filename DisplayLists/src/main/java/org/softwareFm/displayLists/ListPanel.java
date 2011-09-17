@@ -45,6 +45,7 @@ import org.softwareFm.utilities.collections.ICrud;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.strings.NameAndValue;
 import org.softwareFm.utilities.strings.Strings;
 
 public class ListPanel<T> implements IHasComposite, IButtonParent, ILineEditable<T> {
