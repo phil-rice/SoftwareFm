@@ -13,5 +13,6 @@ public class DisplayConstants {
 	public static final String cannotSetValueTwice = "Cannot set value of {0} twice. Current value [{1}]. New value [{2}]";
 	public static final String mustHaveSomeLargeButtons = "Must have some large buttons";
 	public static final String imageNotFound = "Cannot find image {0}";
+	public static String mustHaveA = "Must have a {0} in {1}";
 
 }

@@ -22,6 +22,7 @@ public class SmallButtonDefnTest extends TestCase {
 	public void testSmallButtonDefn() {
 		assertEquals("someId", defn.id);
 		assertEquals(null, defn.tooltip);
+		assertEquals("titleId", defn.titleId);
 		assertEquals(smallButtonFactory, defn.smallButtonFactory);
 		assertEquals(Collections.EMPTY_LIST, defn.defns);
 		assertEquals("mainImageId", defn.mainImageId);
@@ -57,8 +58,8 @@ public class SmallButtonDefnTest extends TestCase {
 		super.setUp();
 		action1 = new ActionMock("1");
 		ActionStore store = new ActionStore().//
-				action("action1", action1);
+				action("action1",  action1);
 		smallButtonFactory = new SmallButtonFactoryMock("1");
-		defn = new SmallButtonDefn("someId", "mainImageId", store, smallButtonFactory);
+		defn = new SmallButtonDefn("someId", "titleId", "mainImageId", store, smallButtonFactory);
 	}
 }

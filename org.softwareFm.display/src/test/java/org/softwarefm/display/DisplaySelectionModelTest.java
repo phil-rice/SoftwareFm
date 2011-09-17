@@ -88,13 +88,13 @@ public class DisplaySelectionModelTest extends TestCase {
 
 		action1 = new ActionMock("1");
 		ActionStore store = new ActionStore().//
-				action("action1", action1);
+				action("action1",action1);
 		smallButtonFactory = new SmallButtonFactoryMock("1");
-		defn1a = new SmallButtonDefn("1.a", "imageId", store, smallButtonFactory);
-		defn1b = new SmallButtonDefn("1.b", "imageId", store, smallButtonFactory);
-		defn2a = new SmallButtonDefn("2.a", "imageId", store, smallButtonFactory);
-		defn2b = new SmallButtonDefn("2.b", "imageId", store, smallButtonFactory);
-		defn2c = new SmallButtonDefn("2.c", "imageId", store, smallButtonFactory);
+		defn1a = new SmallButtonDefn("1.a", "title1a", "imageId", store, smallButtonFactory);
+		defn1b = new SmallButtonDefn("1.b", "title1b", "imageId", store, smallButtonFactory);
+		defn2a = new SmallButtonDefn("2.a", "title2a", "imageId", store, smallButtonFactory);
+		defn2b = new SmallButtonDefn("2.b", "title2b", "imageId", store, smallButtonFactory);
+		defn2c = new SmallButtonDefn("2.c", "title2c", "imageId", store, smallButtonFactory);
 
 		largeDefn1 = new LargeButtonDefn("1", defn1a, defn1b);
 		largeDefn2 = new LargeButtonDefn("2", defn2a, defn2b, defn2c);

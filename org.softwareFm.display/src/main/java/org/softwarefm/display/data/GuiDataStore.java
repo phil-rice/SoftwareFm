@@ -6,7 +6,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwarefm.display.IUrlDataCallback;
 import org.softwarefm.display.IUrlToData;
@@ -21,8 +24,13 @@ public class GuiDataStore {
 	private final Map<String, String> lastUrlFor = Maps.newMap();
 	private final Map<String, EntityCachedData> cache = Maps.newMap();
 
-	public GuiDataStore(IUrlToData urlToData) {
+	private final CopyOnWriteArrayList<IGuiDataListener> listeners = new CopyOnWriteArrayList<IGuiDataListener>();
+	private ICallback<Throwable> onException;
+	private final ICallback<Throwable> onException2;
+
+	public GuiDataStore(IUrlToData urlToData, ICallback<Throwable> onException) {
 		this.urlToData = urlToData;
+		onException2 = onException;
 	}
 
 	/** Really a map from Url to data for a given entity */
@@ -46,6 +54,14 @@ public class GuiDataStore {
 		mainEntity = entity;
 		checkAndPut(entity, urlGeneratorId);
 		return this;
+	}
+
+	public void addGuiDataListener(IGuiDataListener listener) {
+		listeners.add(listener);
+	}
+
+	public void removeGuiDataListener(IGuiDataListener listener) {
+		listeners.remove(listener);
 	}
 
 	public GuiDataStore dependant(String entity, String dependantEntity, String linkData, String urlGeneratorId) {
@@ -95,6 +111,7 @@ public class GuiDataStore {
 		IUrlDataCallback callback = new IUrlDataCallback() {
 			@Override
 			public void processData(String entity, String url, Map<String, Object> context, Map<String, Object> data) {
+				fireListeners(entity, url, context,data);
 				entityCachedData.put(url, data);
 				lastUrlFor.put(entity, url);
 				for (DependantData dependantData : Maps.getOrEmptyList(entityToDependantMap, entity)) {
@@ -104,10 +121,25 @@ public class GuiDataStore {
 			}
 
 		};
-		if (entityCachedData.containsKey(url))
+		if (entityCachedData.containsKey(url)) {
+//			fireListeners(entity, url, context, entityCachedData.get(url));
 			callback.processData(entity, url, context, entityCachedData.get(url));
-		else
+		} else 
 			urlToData.getData(entity, url, context, callback);
+	}
+
+	private void fireListeners(String entity, String url, Map<String, Object> context, Map<String, Object> data) {
+		for (IGuiDataListener listener : listeners)
+			try {
+				listener.data(entity, url, context, data);
+			} catch (Throwable t) {
+				try {
+					onException.process(t);
+				} catch (Exception e) {
+					throw WrappedException.wrap(e);
+				}
+			}
+
 	}
 
 	public Object data(String path) {
@@ -128,4 +160,5 @@ public class GuiDataStore {
 	public String lastUrlFor(String entity) {
 		return lastUrlFor.get(entity);
 	}
+
 }

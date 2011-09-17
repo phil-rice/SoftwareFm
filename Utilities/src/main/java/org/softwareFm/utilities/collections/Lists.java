@@ -176,4 +176,8 @@ public class Lists {
 			result.addAll(t);
 		return result;
 	}
+
+	public static <T>List<T> fromArray(T[] ts) {
+		return new ArrayList<T>(Arrays.asList(ts));
+	}
 }

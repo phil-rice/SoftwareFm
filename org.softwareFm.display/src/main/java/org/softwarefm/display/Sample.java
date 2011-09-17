@@ -32,7 +32,7 @@ public class Sample {
 
 				SoftwareFmLayout layout = new SoftwareFmLayout();
 				CompositeConfig compositeConfig = new CompositeConfig(from.getDisplay(), layout, imageRegistry, resourceGetter);
-				GuiDataStore dataStore = new GuiDataStore(IUrlToData.Utils.errorCallback()).//
+				GuiDataStore dataStore = new GuiDataStore(IUrlToData.Utils.errorCallback(), ICallback.Utils.rethrow()).//
 						urlGenerator("urlGenerator.jar", new JarUrlGenerator()).//
 						urlGenerator("urlGenerator.project", new UrlGenerator("project")).//
 						urlGenerator("urlGenerator.organisation", new UrlGenerator("organisation")).//
@@ -44,8 +44,8 @@ public class Sample {
 						smallButton("smallButton.normal", new SmallButtonFactory());
 
 				ActionStore actionStore = new ActionStore().//
-						action("action.text.edit", "action.edit.tooltip", new TextEditAction()).//
-						action("action.text.internalBrowseFileOrUrl", "action.browse.tooltip", new InternalBrowseFileOrUrlAction());//
+						action("action.text.edit", new TextEditAction()).//
+						action("action.text.internalBrowseFileOrUrl", new InternalBrowseFileOrUrlAction());//
 
 				DisplayerStore displayerStore = new DisplayerStore().//
 						displayer("displayer.readOnly.text", new TextDisplayer(false)).//
@@ -59,11 +59,11 @@ public class Sample {
 						guiBuilder.smallButton("smallButton.jar.details","smallButton.jar.details.title","smallButton.normal", "artifact.jar", //
 								guiBuilder.displayer("displayer.readOnly.text").title("jar.jarName.title").data("data.jar.jarName").tooltip("jar.jarPath.tooltip"), //
 								guiBuilder.displayer("displayer.readOnly.text").title("project.name.title").data("data.project.name").actions(//
-										guiBuilder.action("action.text.edit", "artifact.project").params("data.project.url"),//
-										guiBuilder.action("action.text.externalBrowseFileOrUrl", "artifact.project").params("data.project.url")//
+										guiBuilder.action("action.text.edit", "artifact.project").tooltip("action.edit.tooltip").params("data.project.url"),//
+										guiBuilder.action("action.text.externalBrowseFileOrUrl", "artifact.project").tooltip("action.browse.tooltip").params("data.project.url")//
 										).tooltip("data.project.url"),//
 								guiBuilder.displayer("displayer.readOnly.text").title("organisation.name.title").data("organisation.name").actions(//
-										guiBuilder.action("action.text.externalBrowseFileOrUrl", "artifact.organisation").params("organisation.url")//
+										guiBuilder.action("action.text.externalBrowseFileOrUrl", "artifact.organisation").tooltip("action.browse.tooltip").params("organisation.url")//
 										).tooltip("data.organisation.url")).//
 								ctrlClickAction("action.text.internalBrowseFileOrUrl", "data.jar.jarPath"));//
 				final LargeButtonDefn projectButton = guiBuilder.largeButton("largeButton.project", //

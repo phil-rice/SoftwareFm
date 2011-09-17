@@ -5,6 +5,7 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.tests.Tests;
 
@@ -13,6 +14,11 @@ public class GuiDataStoreTest extends TestCase {
 	private GuiDataStore store;
 	private UrlToDataMock urlToData;
 	private final Map<String, Object> context1 = Maps.makeMap("a", 1);
+	private GuiDataListenerMock listener2;
+	private GuiDataListenerMock listener1;
+	private Map<String, Object> data1;
+	private Map<String, Object> datad1;
+	private Map<String, Object> datad2;
 
 	@SuppressWarnings("unchecked")
 	public void testProcessDataCallsDependantEntities() {
@@ -30,19 +36,34 @@ public class GuiDataStoreTest extends TestCase {
 		assertEquals("<Url entity1: rawData>", store.lastUrlFor("entity1"));
 		assertEquals("<Url entityd1: one>", store.lastUrlFor("entityd1"));
 		assertEquals("<Url entityd2: two>", store.lastUrlFor("entityd2"));
-
 	}
 
 	@SuppressWarnings("unchecked")
-	public void testProcessDataCallsDependantEntitiesOnSecondProcessDataEvenIfCached() {
+	public void testProcessDataDoesntCallUrlToDataWhenUrlCached() {
 		makeRosyView();
 
 		store.processData("rawData", context1);
 		store.processData("rawData", context1);
-		assertEquals(Arrays.asList("entity1", "entityd1", "entityd2", "entity1", "entityd1", "entityd2"), urlToData.entities);
-		assertEquals(Arrays.asList(context1, context1, context1, context1, context1, context1), urlToData.contexts);
-		assertEquals(Arrays.asList("<Url entity1: rawData>", "<Url entityd1: one>", "<Url entityd2: two>", "<Url entity1: rawData>", "<Url entityd1: one>", "<Url entityd2: two>"), urlToData.urls);
+		assertEquals(Arrays.asList("entity1", "entityd1", "entityd2"), urlToData.entities);
+		assertEquals(Arrays.asList(context1, context1, context1), urlToData.contexts);
+		assertEquals(Arrays.asList("<Url entity1: rawData>", "<Url entityd1: one>", "<Url entityd2: two>"), urlToData.urls);
+	}
 
+	public void testListenersNotified() {
+		makeRosyView();
+
+		store.processData("rawData", context1);
+		store.processData("rawData", context1);
+		checkListener(listener1);
+		checkListener(listener2);
+	}
+
+	@SuppressWarnings("unchecked")
+	private void checkListener(GuiDataListenerMock listener) {
+		assertEquals(Arrays.asList("entity1", "entityd1", "entityd2", "entity1", "entityd1", "entityd2"), listener.entities);
+		assertEquals(Arrays.asList(context1, context1, context1, context1, context1, context1), listener.contexts);
+		assertEquals(Arrays.asList("<Url entity1: rawData>", "<Url entityd1: one>", "<Url entityd2: two>", "<Url entity1: rawData>", "<Url entityd1: one>", "<Url entityd2: two>"), listener.urls);
+		assertEquals(Arrays.asList(data1, datad1, datad2, data1, datad1, datad2), listener.datas);
 	}
 
 	public void testGettingData() {
@@ -144,10 +165,17 @@ public class GuiDataStoreTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		data1 = Maps.<String, Object> makeLinkedMap("linkData1", "one", "linkData2", "two");
+		datad1 = Maps.<String, Object> makeLinkedMap("ent1", 1);
+		datad2 = Maps.<String, Object> makeLinkedMap("ent2", 2);
 		urlToData = new UrlToDataMock(//
-				"entity1", Arrays.asList(Maps.<String, Object> makeLinkedMap("linkData1", "one", "linkData2", "two")),//
-				"entityd1", Arrays.asList(Maps.<String, Object> makeLinkedMap("ent1", 1)),//
-				"entityd2", Arrays.asList(Maps.<String, Object> makeLinkedMap("ent2", 2)));
-		store = new GuiDataStore(urlToData);
+				"entity1", Arrays.asList(data1),//
+				"entityd1", Arrays.asList(datad1),//
+				"entityd2", Arrays.asList(datad2));
+		store = new GuiDataStore(urlToData, ICallback.Utils.rethrow());
+		listener1 = new GuiDataListenerMock();
+		listener2 = new GuiDataListenerMock();
+		store.addGuiDataListener(listener1);
+		store.addGuiDataListener(listener2);
 	}
 }

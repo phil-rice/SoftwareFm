@@ -45,10 +45,10 @@ public class GuiBuilder {
 	}
 
 	public ActionDefn action(String actionId, String mainImageId) {
-		return new ActionDefn();
+		return new ActionDefn(actionId, mainImageId, null);
 	}
 	public ActionDefn action(String actionId, String mainImageId, String overlayId) {
-		return new ActionDefn();
+		return new ActionDefn(actionId, mainImageId, overlayId);
 	}
 
 }

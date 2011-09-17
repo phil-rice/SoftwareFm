@@ -13,11 +13,11 @@ public class DisplayerDefn {
 
 	@Override
 	public String toString() {
-		return "DisplayerDefn [displayer=" + displayer + ", defns=" + defns + ", actionStore=" + actionStore + ", dataKey=" + dataKey + ", title=" + title + ", tooltip=" + tooltip + "]";
+		return "DisplayerDefn [displayer=" + displayer + ", defns=" + actionDefns + ", actionStore=" + actionStore + ", dataKey=" + dataKey + ", title=" + title + ", tooltip=" + tooltip + "]";
 	}
 
 	public final IDisplayerFactory displayer;
-	public final List<ImageButtonDefn> defns = Lists.newList();
+	public List<ActionDefn> actionDefns = Lists.newList();
 	private final ActionStore actionStore;
 
 	public String dataKey;
@@ -57,6 +57,7 @@ public class DisplayerDefn {
 //	}
 
 	public DisplayerDefn actions(ActionDefn ...actionDefns) {
+		this.actionDefns = Lists.fromArray(actionDefns);
 		return this;
 	}
 }

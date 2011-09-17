@@ -4,9 +4,8 @@ import java.util.Arrays;
 
 import junit.framework.TestCase;
 
-import org.softwareFm.swtBasics.images.SmallIconPosition;
-import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.tests.Tests;
+import org.softwarefm.display.ActionDefn;
 import org.softwarefm.display.actions.ActionMock;
 import org.softwarefm.display.actions.ActionStore;
 import org.softwarefm.display.displayer.DisplayerMock;
@@ -15,7 +14,13 @@ public class DisplayerDefnTest extends TestCase {
 
 	private DisplayerMock displayer;
 	private DisplayerDefn displayerDefn;
-	private ActionMock action;
+
+	private ActionMock action1;
+	private ActionMock action2;
+
+	ActionDefn actionDefn1 = new ActionDefn("action1", "mainImageLink1", "ovelayId1");
+	ActionDefn actionDefn2 = new ActionDefn("action2", "mainImageLink2", "ovelayId2");
+	ActionDefn actionDefnUnknown = new ActionDefn("actionU", "mainImageLinkU", "ovelayIdU");
 
 	public void testConstructor() {
 		assertEquals(displayer, displayerDefn.displayer);
@@ -35,21 +40,10 @@ public class DisplayerDefnTest extends TestCase {
 	}
 
 	public void testButton() {
-		assertSame(displayerDefn, displayerDefn.action("action1", "dataLink", "image1"));
-		assertEquals(Arrays.asList(new ImageButtonDefn("image1", null, "dataLink", Maps.<SmallIconPosition, String> newMap(), action)), displayerDefn.defns);
+		assertSame(displayerDefn, displayerDefn.actions(actionDefn1, actionDefn2));
+		assertEquals(Arrays.asList(actionDefn1, actionDefn2), displayerDefn.actionDefns);
 	}
 
-	public void testMustUseKnownButton() {
-		displayerDefn.action("action1", "dataLink", "image1");
-		IllegalArgumentException e = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
-			@Override
-			public void run() {
-				displayerDefn.action("unknownAction", "dataLink", "image1");
-			}
-		});
-		assertEquals("Map doesn't have key unknownAction. Legal keys are [action1]. Map is {action1=ActionMock [name=1]}", e.getMessage());
-		assertEquals(Arrays.asList(new ImageButtonDefn("image1", null, "dataLink", Maps.<SmallIconPosition, String> newMap(), action)), displayerDefn.defns);
-	}
 
 	public void testDataThrowsExceptionIfCalledTwice() {
 		displayerDefn.data("dataKey1");
@@ -81,8 +75,9 @@ public class DisplayerDefnTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		displayer = new DisplayerMock("1");
-		action = new ActionMock("1");
-		displayerDefn = new DisplayerDefn(displayer, new ActionStore().action("action1", action));
+		action1 = new ActionMock("1");
+		action2 = new ActionMock("1");
+		displayerDefn = new DisplayerDefn(displayer, new ActionStore().action("action1", action1).action("action2", action2));
 	}
 
 }
