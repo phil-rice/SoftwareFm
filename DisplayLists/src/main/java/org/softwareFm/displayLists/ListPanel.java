@@ -29,7 +29,7 @@ import org.softwareFm.panel.ISelectedBindingManager;
 import org.softwareFm.repository.api.ISoftwareFmRepository;
 import org.softwareFm.repository.api.IUrlGeneratorMap;
 import org.softwareFm.repository.api.RepositoryDataItemStatus;
-import org.softwareFm.softwareFmImages.IImageRegister;
+import org.softwareFm.softwareFmImages.IImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.ImageButtons;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
@@ -209,7 +209,7 @@ public class ListPanel<T> implements IHasComposite, IButtonParent, ILineEditable
 						Resources.resourceGetterWithBasics(//
 								getClass().getPackage().getName() + ".ListAndPanelTest",//
 								getClass().getPackage().getName() + ".DisplayLists"),//
-						IImageRegister.Utils.withBasics(from.getDisplay()));
+						IImageRegisterConfigurator.Utils.withBasics(from.getDisplay()));
 				DisplayerContext context = new DisplayerContext(//
 						ISelectedBindingManager.Utils.noSelectedBindingManager(), //
 						ISoftwareFmRepository.Utils.repository(), //

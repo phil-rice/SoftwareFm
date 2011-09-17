@@ -3,6 +3,7 @@ package org.softwarefm.display.composites;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -24,11 +25,11 @@ public class AbstractTitleAnd implements IDisplayer, IHasComposite {
 	private Composite content;
 
 	public AbstractTitleAnd(CompositeConfig config, Composite parent, String titleOrTitleKey, boolean titleIsKey) {
-		this.content = new Composite(parent, SWT.NULL);
+		this.content = new Composite(parent, SWT.BORDER);
 		this.config = config;
 		content.setLayout(Swts.getHorizonalNoMarginRowLayout());
 
-		compTitleAndButtons = new Composite(content, SWT.NULL) {
+		compTitleAndButtons = new Composite(content, SWT.BORDER) {
 			@Override
 			public String toString() {
 				return "compTitleAndButtons " + super.toString();
@@ -44,20 +45,21 @@ public class AbstractTitleAnd implements IDisplayer, IHasComposite {
 		lblTitle.setLayoutData(new RowData(layout.titleWidth, height));
 		lblTitle.setText(title == null ? "" : title);
 
-		lblFiller = new Label(compTitleAndButtons, SWT.NULL);
-		compButtons = new Composite(compTitleAndButtons, SWT.BORDER_DOT) {
+		lblFiller = new Label(compTitleAndButtons, SWT.BORDER);
+		compButtons = new Composite(compTitleAndButtons, SWT.BORDER) {
 			@Override
 			public String toString() {
 				return "compButtons " + super.toString();
 			}
 		};
-		compButtons.setLayout(Swts.getHorizonalNoMarginRowLayout());
+		RowLayout compButtonsLayout=Swts.getHorizonalNoMarginRowLayout();
+		compButtons.setLayout(compButtonsLayout);
 		setLayoutData();
 	}
 
 	private void setLayoutData() {
-		int buttonsWidth = (config.layout.buttonSpacer + config.layout.smallButtonWidth)* buttonCount;
-		int fillerWidth = config.layout.buttonsWidth - buttonsWidth-9;
+		int buttonsWidth = (config.layout.buttonSpacer + config.layout.smallButtonWidth)* buttonCount+10;
+		int fillerWidth = config.layout.buttonsWidth - buttonsWidth-20;
 		System.out.println("setLayoutData: buttons: " + buttonsWidth + ", filler: " + fillerWidth);
 		compButtons.setLayoutData(new RowData(buttonsWidth, config.layout.smallButtonHeight));
 		lblFiller.setLayoutData(new RowData(fillerWidth, config.layout.smallButtonHeight));

@@ -23,7 +23,7 @@ public class DisplayerDefnTest extends TestCase {
 	ActionDefn actionDefnUnknown = new ActionDefn("actionU", "mainImageLinkU", "ovelayIdU");
 
 	public void testConstructor() {
-		assertEquals(displayer, displayerDefn.displayer);
+		assertEquals(displayer, displayerDefn.displayerFactory);
 		assertEquals(null, displayerDefn.dataKey);
 		assertEquals(null, displayerDefn.tooltip);
 	}

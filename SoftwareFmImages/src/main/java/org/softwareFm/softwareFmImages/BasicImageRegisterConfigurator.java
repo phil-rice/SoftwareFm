@@ -10,7 +10,7 @@ import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 import org.softwareFm.softwareFmImages.smallIcons.SmallIconsAnchor;
 import org.softwareFm.swtBasics.images.Images;
 
-public class BasicImageRegister implements IImageRegister {
+public class BasicImageRegisterConfigurator implements IImageRegisterConfigurator {
 
 	@Override
 	public void registerWith(Device device, ImageRegistry imageRegistry) {
@@ -28,7 +28,7 @@ public class BasicImageRegister implements IImageRegister {
 	public static void main(String[] args) {
 		Display device = new Display();
 		ImageRegistry imageRegistry = new ImageRegistry();
-		new BasicImageRegister().registerWith(device, imageRegistry);
+		new BasicImageRegisterConfigurator().registerWith(device, imageRegistry);
 		System.out.println(imageRegistry.get("artifact.jar"));
 		System.out.println(imageRegistry.get("backdrop.main"));
 		System.out.println(imageRegistry.get("general.browse"));

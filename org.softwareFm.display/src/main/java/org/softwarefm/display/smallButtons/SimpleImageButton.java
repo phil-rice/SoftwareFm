@@ -24,7 +24,7 @@ public class SimpleImageButton implements IHasControl, IControlWithToggle {
 	private boolean value;
 
 	public SimpleImageButton(Composite parent, final ImageButtonConfig config) {
-		this.content = new Canvas(parent, SWT.NULL){
+		this.content = new Canvas(parent, SWT.BORDER){
 			@Override
 			public String toString() {
 				return getClass().getSimpleName() +"[main=" + config.mainImage + ",overlay=" + config.overlayImage +"]"+super.toString();

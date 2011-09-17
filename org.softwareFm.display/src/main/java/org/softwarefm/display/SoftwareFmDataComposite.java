@@ -21,7 +21,7 @@ import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwarefm.display.composites.CompositeConfig;
-import org.softwarefm.display.displayer.IDisplayerFactory;
+import org.softwarefm.display.displayer.IDisplayer;
 import org.softwarefm.display.impl.DisplayerDefn;
 import org.softwarefm.display.impl.LargeButtonDefn;
 import org.softwarefm.display.impl.SmallButtonDefn;
@@ -71,9 +71,8 @@ public class SoftwareFmDataComposite implements IHasComposite {
 				smallButtonIdToGroupMap.put(smallButtonDefn.id, group);
 				group.setText(Resources.getOrException(resourceGetter, smallButtonDefn.titleId));
 				for (DisplayerDefn defn : smallButtonDefn.defns) {
-					IDisplayerFactory displayer = defn.displayer;
-					IHasControl hasControl = displayer.create(group, defn, SWT.NULL, compositeConfig);
-					Maps.addToList(smallButtonIdToLargeHasControlMap, smallButtonDefn.id, hasControl);
+					IDisplayer displayer = defn.createDisplayer(group, compositeConfig);
+					Maps.addToList(smallButtonIdToLargeHasControlMap, smallButtonDefn.id, displayer);
 				}
 				Swts.addGrabHorizontalAndFillGridDataToAllChildren(group);
 			}

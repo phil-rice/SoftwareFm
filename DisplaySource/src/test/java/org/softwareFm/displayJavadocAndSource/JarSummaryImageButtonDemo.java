@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Label;
 import org.softwareFm.displayCore.api.DisplayerContext;
 import org.softwareFm.displayCore.api.DisplayerDetails;
 import org.softwareFm.displayCore.constants.DisplayCoreConstants;
-import org.softwareFm.softwareFmImages.IImageRegister;
+import org.softwareFm.softwareFmImages.IImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.Resources;
@@ -36,7 +36,7 @@ public class JarSummaryImageButtonDemo {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				parent = new Composite(from, SWT.NULL);
-				imageRegistry = IImageRegister.Utils.withBasics(from.getDisplay());
+				imageRegistry = IImageRegisterConfigurator.Utils.withBasics(from.getDisplay());
 				resourceGetter = Resources.resourceGetterWithBasics("org.softwareFm.displayJavadocAndSource.JavadocAndSource");
 				filter = SmallIconPosition.allIcons;
 				DisplayerContext context = DisplayerContext.Utils.forTest(from, resourceGetter, imageRegistry);

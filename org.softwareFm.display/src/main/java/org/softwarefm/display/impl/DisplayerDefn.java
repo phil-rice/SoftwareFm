@@ -3,20 +3,26 @@ package org.softwarefm.display.impl;
 import java.text.MessageFormat;
 import java.util.List;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwarefm.display.ActionDefn;
+import org.softwarefm.display.SoftwareFmLayout;
 import org.softwarefm.display.actions.ActionStore;
+import org.softwarefm.display.composites.CompositeConfig;
 import org.softwarefm.display.data.DisplayConstants;
+import org.softwarefm.display.displayer.IDisplayer;
 import org.softwarefm.display.displayer.IDisplayerFactory;
 
 public class DisplayerDefn {
 
 	@Override
 	public String toString() {
-		return "DisplayerDefn [displayer=" + displayer + ", defns=" + actionDefns + ", actionStore=" + actionStore + ", dataKey=" + dataKey + ", title=" + title + ", tooltip=" + tooltip + "]";
+		return "DisplayerDefn [displayer=" + displayerFactory + ", defns=" + actionDefns + ", actionStore=" + actionStore + ", dataKey=" + dataKey + ", title=" + title + ", tooltip=" + tooltip + "]";
 	}
 
-	public final IDisplayerFactory displayer;
+	public final IDisplayerFactory displayerFactory;
 	public List<ActionDefn> actionDefns = Lists.newList();
 	private final ActionStore actionStore;
 
@@ -25,7 +31,7 @@ public class DisplayerDefn {
 	public String tooltip;
 
 	public DisplayerDefn(IDisplayerFactory displayer, ActionStore actionStore) {
-		this.displayer = displayer;
+		this.displayerFactory = displayer;
 		this.actionStore = actionStore;
 	}
 
@@ -60,4 +66,14 @@ public class DisplayerDefn {
 		this.actionDefns = Lists.fromArray(actionDefns);
 		return this;
 	}
+
+	public IDisplayer createDisplayer(Composite parent, CompositeConfig compositeConfig) {
+		 IDisplayer displayer = displayerFactory.create(parent, this, SWT.NULL, compositeConfig);
+		 SoftwareFmLayout layout = compositeConfig.imageButtonConfig.layout;
+		 for (ActionDefn actionDefn: actionDefns) 
+			actionDefn.createButton(compositeConfig.imageButtonConfig, displayer).getControl().setLayoutData(new RowData(layout.smallButtonWidth, layout.smallButtonHeight));
+		return displayer;
+	}
+	
+	
 }

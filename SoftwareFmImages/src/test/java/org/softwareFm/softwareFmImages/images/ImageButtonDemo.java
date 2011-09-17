@@ -7,7 +7,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.softwareFmImages.IImageRegister;
+import org.softwareFm.softwareFmImages.IImageRegisterConfigurator;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.ImageButton;
 import org.softwareFm.swtBasics.images.Images;
@@ -26,7 +26,7 @@ public class ImageButtonDemo {
 			public Composite apply(Composite from) throws Exception {
 				Composite content = new Composite(from, SWT.NULL);
 				content.setLayout(new GridLayout());
-				ImageRegistry imageRegistry = IImageRegister.Utils.withBasics(from.getDisplay());
+				ImageRegistry imageRegistry = IImageRegisterConfigurator.Utils.withBasics(from.getDisplay());
 				imageRegistry.put(mainImage, Images.makeImage(from.getDisplay(), Images.class, mainImage + ".png"));
 				imageRegistry.put(alterativeImage, Images.makeImage(from.getDisplay(), Images.class, alterativeImage + ".png"));
 				imageRegistry.put(overlayImage, Images.makeImage(from.getDisplay(), Images.class, "overlayImage.png"));

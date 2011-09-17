@@ -34,7 +34,7 @@ import org.softwareFm.repository.api.ISoftwareFmRepository;
 import org.softwareFm.repository.api.IUrlGenerator;
 import org.softwareFm.repository.api.IUrlGeneratorMap;
 import org.softwareFm.repository.constants.RepositoryConstants;
-import org.softwareFm.softwareFmImages.IImageRegister;
+import org.softwareFm.softwareFmImages.IImageRegisterConfigurator;
 import org.softwareFm.swtBasics.images.Images;
 import org.softwareFm.swtBasics.text.ConfigForTitleAnd;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -184,8 +184,8 @@ public class SoftwareFmActivator extends AbstractUIPlugin implements IRepository
 			Plugins.useConfigElements(IMAGE_ID, new ICallback<IConfigurationElement>() {
 				@Override
 				public void process(IConfigurationElement t) throws Exception {
-					Class<IImageRegister> clazz = Plugins.classFrom(t);
-					IImageRegister register = clazz.newInstance();
+					Class<IImageRegisterConfigurator> clazz = Plugins.classFrom(t);
+					IImageRegisterConfigurator register = clazz.newInstance();
 					register.registerWith(display, result);
 				}
 			}, ICallback.Utils.sysErrCallback());

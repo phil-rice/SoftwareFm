@@ -4,8 +4,12 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 
+import org.softwareFm.swtBasics.IHasControl;
+import org.softwareFm.swtBasics.text.IButtonParent;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwarefm.display.data.DisplayConstants;
+import org.softwarefm.display.smallButtons.ImageButtonConfig;
+import org.softwarefm.display.smallButtons.SimpleImageButton;
 
 public class ActionDefn {
 
@@ -44,6 +48,13 @@ public class ActionDefn {
 			throw new IllegalStateException(MessageFormat.format(DisplayConstants.mustHaveA, "tooltip", id));
 		if (params == null)
 			throw new IllegalStateException(MessageFormat.format(DisplayConstants.mustHaveA, "params", id));
+	}
+
+	public IHasControl createButton(ImageButtonConfig config, IButtonParent buttonParent) {
+		SimpleImageButton simpleImageButton = new SimpleImageButton(buttonParent.getButtonComposite(), config.withImage(mainImageId, overlayId));
+		buttonParent.buttonAdded();
+		return simpleImageButton;
+		
 	}
 
 }

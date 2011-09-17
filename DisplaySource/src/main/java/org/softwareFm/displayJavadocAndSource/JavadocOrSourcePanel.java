@@ -20,7 +20,7 @@ import org.softwareFm.displayCore.api.DisplayerDetails;
 import org.softwareFm.displayCore.api.IDisplayer;
 import org.softwareFm.displayCore.constants.DisplayCoreConstants;
 import org.softwareFm.repository.api.RepositoryDataItemStatus;
-import org.softwareFm.softwareFmImages.IImageRegister;
+import org.softwareFm.softwareFmImages.IImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.ImageButtons;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
@@ -208,7 +208,7 @@ public abstract class JavadocOrSourcePanel implements IHasComposite, IButtonPare
 				composite.setLayout(new GridLayout());
 				final String key = "javadoc";
 				IResourceGetter resourceGetter = Resources.resourceGetterWithBasics().with(JavadocSourceConstants.class, "JavadocAndSource");
-				ImageRegistry imageRegistry = IImageRegister.Utils.withBasics(from.getDisplay());
+				ImageRegistry imageRegistry = IImageRegisterConfigurator.Utils.withBasics(from.getDisplay());
 				DisplayerContext displayerContext = DisplayerContext.Utils.forTest(from, resourceGetter, imageRegistry);
 				DisplayerDetails displayerDetails = new DisplayerDetails("anyEntity", Maps.<String, String> makeMap(DisplayCoreConstants.key, key));
 				JavadocOrSourcePanel panel = panelMaker.make(composite, displayerContext, displayerDetails);
