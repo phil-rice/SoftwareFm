@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.softwareFm.swtBasics.IHasControl;
-import org.softwareFm.swtBasics.images.Resources;
 import org.softwareFm.swtBasics.text.IButtonParent;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwarefm.display.data.DisplayConstants;
@@ -54,8 +53,6 @@ public class ActionDefn {
 
 	public IHasControl createButton(ImageButtonConfig config, IButtonParent buttonParent, IImageButtonListener imageButtonListener) {
 		SimpleImageButton simpleImageButton = new SimpleImageButton(buttonParent, config.withImage(mainImageId, overlayId));
-		if (tooltip != null)
-			simpleImageButton.getControl().setToolTipText(Resources.getOrException(buttonParent.getResourceGetter(), tooltip));
 		simpleImageButton.addListener(imageButtonListener);
 		return simpleImageButton;
 	}

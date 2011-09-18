@@ -24,7 +24,7 @@ public class ActionMock implements IAction {
 	}
 
 	@Override
-	public void execute(IDisplayer displayer, List<String> formalParameters, List<Object> actualParameters) {
+	public void execute(ActionContext actionContext, IDisplayer displayer, List<String> formalParameters, List<Object> actualParameters) {
 		displayers.add(displayer);
 		formalParams.add(formalParameters);
 		actualParams.add(actualParameters);

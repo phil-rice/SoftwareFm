@@ -71,5 +71,15 @@ public interface ICallback<T> {
 				}
 			};
 		}
+		
+		public static <T>ICallback<T> exception(final String message){
+			return new ICallback<T>(){
+				@Override
+				public void process(T t) throws Exception {
+					throw new RuntimeException(message);
+					
+				}};
+			
+		}
 	}
 }

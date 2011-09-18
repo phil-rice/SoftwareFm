@@ -1,6 +1,5 @@
 package org.softwareFm.utilities.resources;
 
-import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 

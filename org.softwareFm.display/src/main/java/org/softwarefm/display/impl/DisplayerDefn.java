@@ -2,6 +2,7 @@ package org.softwarefm.display.impl;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -14,6 +15,7 @@ import org.softwarefm.display.actions.ActionContext;
 import org.softwarefm.display.actions.ActionStore;
 import org.softwarefm.display.composites.CompositeConfig;
 import org.softwarefm.display.data.DisplayConstants;
+import org.softwarefm.display.data.IDataGetter;
 import org.softwarefm.display.displayer.IDisplayer;
 import org.softwarefm.display.displayer.IDisplayerFactory;
 import org.softwarefm.display.smallButtons.IImageButtonListener;
@@ -22,7 +24,7 @@ public class DisplayerDefn {
 
 	@Override
 	public String toString() {
-		return "DisplayerDefn [displayer=" + displayerFactory + ", defns=" + actionDefns + ", dataKey=" + dataKey + ", title=" + title + ", tooltip=" + tooltip + "]";
+		return "DisplayerDefn [dataKey=" + dataKey + ", title=" + title + ", tooltip=" + tooltip + ", displayerFactory=" + displayerFactory + ", actionDefns=" + actionDefns + "]";
 	}
 
 	public final IDisplayerFactory displayerFactory;
@@ -83,10 +85,15 @@ public class DisplayerDefn {
 							return actionContext.dataGetter.getDataFor(key);
 						}
 					});
-					action.execute(displayer, actionDefn.params, actualParams);
+					action.execute(actionContext, displayer, actionDefn.params, actualParams);
 				}
 			});
 		return displayer;
+	}
+
+	public void data(IDataGetter dataGetter, DisplayerDefn defn, IDisplayer displayer, String entity, String url, Map<String, Object> context, Map<String, Object> data) {
+		displayerFactory.data(dataGetter, this, displayer, entity, url, context, data);
+		
 	}
 
 }

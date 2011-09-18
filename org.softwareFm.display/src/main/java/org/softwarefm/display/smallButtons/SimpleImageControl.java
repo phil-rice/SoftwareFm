@@ -67,5 +67,9 @@ public class SimpleImageControl extends Canvas {
 		layout();
 		redraw();
 	}
+	@Override
+	public void setToolTipText(String string) {
+		super.setToolTipText(string);
+	}
 
 }

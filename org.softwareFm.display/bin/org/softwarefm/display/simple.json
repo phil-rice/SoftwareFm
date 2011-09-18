@@ -1,2 +1,8 @@
-{"project": {"projectName": "SomeProject1",
-             "project.url": "Some Url"}}
+{"jar":           {"project.url": "Some Proj sUrl",
+                   "organisation.url": "Some Org Url"},
+ "project":       {"name": "SomeProject1", 
+  	               "project.url": "Some Url",
+	               "mailingLists": ["a$b"],
+	               "tweets": ["tweet1", "tweet2"]},
+ "organisation": {"name": "Some Organisation"}
+ }

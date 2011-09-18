@@ -27,8 +27,9 @@ public class GuiDataStore implements IDataGetter {
 	private final CopyOnWriteArrayList<IGuiDataListener> listeners = new CopyOnWriteArrayList<IGuiDataListener>();
 	private ICallback<Throwable> onException;
 
-	public GuiDataStore(IUrlToData urlToData) {
+	public GuiDataStore(IUrlToData urlToData, ICallback<Throwable> onException) {
 		this.urlToData = urlToData;
+		this.onException = onException;
 	}
 
 	/** Really a map from Url to data for a given entity */
@@ -147,17 +148,25 @@ public class GuiDataStore implements IDataGetter {
 
 	@Override
 	public Object getDataFor(String path) {
-		String[] segments = path.split("\\.");
-		if (segments.length != 2)
+		int index = path.indexOf('.');
+		if (index == -1)
 			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.illegalPath, path));
-		String entity = segments[0];
-		String key = segments[1];
+		String entity = path.substring(0, index);
+		String key = path.substring(index+1);
+		Object result = getDataFor(entity, key);
+		System.out.println("GetDataFor " + entity +", " + key +" -> " + result);
+		return result;
+	}
+
+	private Object getDataFor(String entity, String key) {
 		checkEntityExists(entity);
 		EntityCachedData entityCachedData = cache.get(entity);
 		if (entityCachedData == null)
 			return null;
 		String url = lastUrlFor(entity);
 		Map<String, Object> map = entityCachedData.get(url);
+		if (map == null)
+			return null;
 		return map.get(key);
 	}
 

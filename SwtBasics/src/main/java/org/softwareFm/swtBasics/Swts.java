@@ -37,6 +37,7 @@ import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.indent.Indent;
+import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class Swts {
 
@@ -52,6 +53,28 @@ public class Swts {
 		}
 	}
 
+	public static Composite makeAcceptCancelComposite(Composite parent, int style, IResourceGetter resourceGetter, final Runnable onAccept, final Runnable onCancel){
+		Composite result = new Composite(parent, style);
+		result.setLayout(new GridLayout(2, true));
+		Button okButton = new Button(result, SWT.PUSH);
+		okButton.setText(Resources.getOrException(resourceGetter, "button.ok.title"));
+		okButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				onAccept.run();
+			}
+		});
+		Button cancelButton = new Button(result, SWT.PUSH);
+		cancelButton.setText(Resources.getOrException(resourceGetter, "button.cancel.title"));
+		cancelButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				onCancel.run();
+			}
+		});
+		return result;
+	}
+	
 	public static Control setAfter(List<Control> controls, Control firstControl) {
 		for (Control control : controls) {
 			control.moveBelow(firstControl);

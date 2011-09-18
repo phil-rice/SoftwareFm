@@ -5,6 +5,7 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.tests.Tests;
 
@@ -72,7 +73,9 @@ public class GuiDataStoreTest extends TestCase {
 		assertEquals("one", store.getDataFor("entity1.linkData1"));
 		assertEquals("two", store.getDataFor("entity1.linkData2"));
 		assertEquals(1, store.getDataFor("entityd1.ent1"));
+		assertEquals(11, store.getDataFor("entityd1.ent1.sub"));
 		assertEquals(2, store.getDataFor("entityd2.ent2"));
+		assertEquals(21, store.getDataFor("entityd2.ent2.sub1.sub2"));
 	}
 
 	private void makeRosyView() {
@@ -165,13 +168,13 @@ public class GuiDataStoreTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		data1 = Maps.<String, Object> makeLinkedMap("linkData1", "one", "linkData2", "two");
-		datad1 = Maps.<String, Object> makeLinkedMap("ent1", 1);
-		datad2 = Maps.<String, Object> makeLinkedMap("ent2", 2);
+		datad1 = Maps.<String, Object> makeLinkedMap("ent1", 1, "ent1.sub", 11);
+		datad2 = Maps.<String, Object> makeLinkedMap("ent2", 2, "ent2.sub1.sub2", 21);
 		urlToData = new UrlToDataMock(//
 				"entity1", Arrays.asList(data1),//
 				"entityd1", Arrays.asList(datad1),//
 				"entityd2", Arrays.asList(datad2));
-		store = new GuiDataStore(urlToData);
+		store = new GuiDataStore(urlToData, ICallback.Utils.rethrow());
 		listener1 = new GuiDataListenerMock();
 		listener2 = new GuiDataListenerMock();
 		store.addGuiDataListener(listener1);

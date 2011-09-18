@@ -93,7 +93,7 @@ public class DisplayerDefnIntegrationTest extends TestCase {
 		ImageRegistry imageRegistry = new ImageRegistry();
 		new BasicImageRegisterConfigurator().registerWith(shell.getDisplay(), imageRegistry);
 		IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(new ResourceGetterMock("someTitle", "registeredTitle"));
-		actionContext = new ActionContext(new DataGetterMock("a", 1), new CompositeConfig(shell.getDisplay(), new SoftwareFmLayout(), imageRegistry, resourceGetter));
+		actionContext = new ActionContext(new DataGetterMock("a", 1), new CompositeConfig(shell.getDisplay(), new SoftwareFmLayout(), imageRegistry, resourceGetter), null);
 		displayerDefn = new DisplayerDefn(new TextDisplayer(true)).title("someTitle");
 
 	}

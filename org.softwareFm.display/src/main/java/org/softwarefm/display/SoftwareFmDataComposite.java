@@ -13,24 +13,26 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.softwareFm.swtBasics.IControlWithToggle;
 import org.softwareFm.swtBasics.IHasComposite;
-import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.Swts;
-import org.softwareFm.swtBasics.images.Resources;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.strings.Strings;
 import org.softwarefm.display.actions.ActionContext;
 import org.softwarefm.display.actions.ActionStore;
 import org.softwarefm.display.composites.CompositeConfig;
 import org.softwarefm.display.data.DataGetter;
 import org.softwarefm.display.data.GuiDataStore;
+import org.softwarefm.display.data.IDataGetter;
 import org.softwarefm.display.data.IGuiDataListener;
 import org.softwarefm.display.displayer.IDisplayer;
+import org.softwarefm.display.editor.IEditorFactory;
 import org.softwarefm.display.impl.DisplayerDefn;
 import org.softwarefm.display.impl.LargeButtonDefn;
 import org.softwarefm.display.impl.SmallButtonDefn;
 import org.softwarefm.display.smallButtons.ImageButtonConfig;
+import org.softwarefm.display.smallButtons.SimpleImageControl;
 
 public class SoftwareFmDataComposite implements IHasComposite {
 
@@ -38,17 +40,19 @@ public class SoftwareFmDataComposite implements IHasComposite {
 	private final Composite topRow;
 	private final DisplaySelectionModel displaySelectionModel;
 	private final Map<String, IControlWithToggle> smallButtonIdToControlWithToggleMap = Maps.newMap(LinkedHashMap.class);
-	private final Map<String, List<IHasControl>> smallButtonIdToLargeHasControlMap = Maps.newMap(LinkedHashMap.class);
+	private final Map<DisplayerDefn, IDisplayer> displayDefnToDisplayerMap = Maps.newMap(LinkedHashMap.class);
+	// private final Map<String, List<IDisplayer>> smallButtonIdToDisplayerMap = Maps.newMap(LinkedHashMap.class);
 	private final Map<String, Group> smallButtonIdToGroupMap = Maps.newMap(LinkedHashMap.class);
 
-	public SoftwareFmDataComposite(final Composite parent, GuiDataStore guiDataStore, CompositeConfig compositeConfig,ActionStore actionStore, ICallback<Throwable> exceptionHandler, LargeButtonDefn... largeButtonDefns) {
+	public SoftwareFmDataComposite(final Composite parent, GuiDataStore guiDataStore, CompositeConfig compositeConfig, final ActionStore actionStore,IEditorFactory editorFactory,  ICallback<Throwable> exceptionHandler, final LargeButtonDefn... largeButtonDefns) {
 		this.content = new Composite(parent, SWT.NULL);
-		IResourceGetter resourceGetter = compositeConfig.resourceGetter;
+		final IResourceGetter resourceGetter = compositeConfig.resourceGetter;
 		displaySelectionModel = new DisplaySelectionModel(exceptionHandler, largeButtonDefns);
 		topRow = new Composite(content, SWT.BORDER);
 		topRow.setLayout(Swts.getHorizonalNoMarginRowLayout());
 		ImageButtonConfig imageButtonConfig = compositeConfig.imageButtonConfig;
 		SoftwareFmLayout layout = imageButtonConfig.layout;
+		final IDataGetter dataGetter = new DataGetter(guiDataStore, compositeConfig.resourceGetter);
 		for (LargeButtonDefn largeButtonDefn : largeButtonDefns) {
 			SimpleButtonParent smallButtonComposite = new SimpleButtonParent(topRow, layout, SWT.BORDER);
 			smallButtonComposite.getButtonComposite().setLayoutData(new RowData(SWT.DEFAULT, layout.smallButtonCompositeHeight));
@@ -68,16 +72,16 @@ public class SoftwareFmDataComposite implements IHasComposite {
 
 			}
 		}
-		ActionContext actionContext = new ActionContext(new DataGetter(guiDataStore, resourceGetter), compositeConfig);
+		final ActionContext actionContext = new ActionContext(new DataGetter(guiDataStore, resourceGetter), compositeConfig, editorFactory);
 		for (final LargeButtonDefn largeButtonDefn : largeButtonDefns) {
 			for (SmallButtonDefn smallButtonDefn : largeButtonDefn.defns) {
 				Group group = new Group(content, SWT.SHADOW_ETCHED_IN);
 				group.setVisible(false);
 				smallButtonIdToGroupMap.put(smallButtonDefn.id, group);
-				group.setText(Resources.getOrException(resourceGetter, smallButtonDefn.titleId));
+				group.setText(Strings.nullSafeToString(dataGetter.getDataFor(smallButtonDefn.titleId)));
 				for (DisplayerDefn defn : smallButtonDefn.defns) {
 					IDisplayer displayer = defn.createDisplayer(group, actionStore, actionContext);
-					Maps.addToList(smallButtonIdToLargeHasControlMap, smallButtonDefn.id, displayer);
+					displayDefnToDisplayerMap.put(defn, displayer);
 				}
 				Swts.addGrabHorizontalAndFillGridDataToAllChildren(group);
 			}
@@ -96,8 +100,22 @@ public class SoftwareFmDataComposite implements IHasComposite {
 		guiDataStore.addGuiDataListener(new IGuiDataListener() {
 			@Override
 			public void data(String entity, String url, Map<String, Object> context, Map<String, Object> data) {
-				updateVisibleData();
-				
+				for (final LargeButtonDefn largeButtonDefn : largeButtonDefns) {
+					for (SmallButtonDefn smallButtonDefn : largeButtonDefn.defns)
+						for (DisplayerDefn defn : smallButtonDefn.defns) {
+							IDisplayer displayer = displayDefnToDisplayerMap.get(defn);
+							defn.data(dataGetter, defn, displayer, entity, url, context, data);
+							int i = 0;
+							Control[] children = displayer.getButtonComposite().getChildren();
+							for (ActionDefn actionDefn : defn.actionDefns)
+								if (actionDefn.tooltip != null) {
+									SimpleImageControl control = (SimpleImageControl) children[i];
+									Object tooltipValue = dataGetter.getDataFor(actionDefn.tooltip);
+									control.setToolTipText(Strings.nullSafeToString(tooltipValue));
+									i++;
+								}
+						}
+				}
 			}
 		});
 	}

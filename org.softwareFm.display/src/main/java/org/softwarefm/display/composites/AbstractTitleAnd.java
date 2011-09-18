@@ -16,7 +16,7 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwarefm.display.SoftwareFmLayout;
 import org.softwarefm.display.displayer.IDisplayer;
 
-public class AbstractTitleAnd implements IDisplayer, IHasComposite {
+public abstract class AbstractTitleAnd implements IDisplayer, IHasComposite {
 
 	protected final CompositeConfig config;
 	protected final Label lblTitle;

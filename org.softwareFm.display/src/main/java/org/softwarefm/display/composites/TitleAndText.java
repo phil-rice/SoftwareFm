@@ -32,6 +32,10 @@ public class TitleAndText extends AbstractTitleAnd {
 		else
 			text.setBackground(config.notEditingBackground);
 	}
+
+	public String getText() {
+		return text.getText();
+	}
 	
 
 }
