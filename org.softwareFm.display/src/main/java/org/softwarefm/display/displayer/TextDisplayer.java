@@ -13,18 +13,12 @@ import org.softwarefm.display.impl.DisplayerDefn;
 
 public class TextDisplayer implements IDisplayerFactory {
 
-	private final boolean mutable;
-
-	public TextDisplayer(boolean mutable) {
-		this.mutable = mutable;
-	}
 
 	@Override
 	public IDisplayer create(Composite parent, final DisplayerDefn defn, int style, CompositeConfig compositeConfig) {
 		if (defn.title == null)
 			throw new NullPointerException(MessageFormat.format(DisplayConstants.mustHaveA, "title", getClass().getSimpleName()));
 		TitleAndText titleAndText = new TitleAndText(compositeConfig, parent, defn.title, true);
-		titleAndText.setGlobalEdit(mutable);
 		return titleAndText;
 	}
 

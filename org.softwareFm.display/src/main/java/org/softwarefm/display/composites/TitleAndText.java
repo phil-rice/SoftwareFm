@@ -8,7 +8,6 @@ import org.eclipse.swt.widgets.Text;
 public class TitleAndText extends AbstractTitleAnd {
 
 	private final Text text;
-	private boolean globalEdit;
 
 	public TitleAndText(CompositeConfig config, Composite parent, String titleOrTitleKey, boolean titleIsKey) {
 		super(config, parent, titleOrTitleKey, titleIsKey);
@@ -20,18 +19,7 @@ public class TitleAndText extends AbstractTitleAnd {
 		this.text.setText(text);
 	}
 
-	public void setGlobalEdit(boolean mutable) {
-		this.globalEdit = mutable;
-		this.text.setEditable(false);
-		updateDisplay();
-	}
 
-	private void updateDisplay() {
-		if (text.getEditable())
-			text.setBackground(config.editingBackground);
-		else
-			text.setBackground(config.notEditingBackground);
-	}
 
 	public String getText() {
 		return text.getText();

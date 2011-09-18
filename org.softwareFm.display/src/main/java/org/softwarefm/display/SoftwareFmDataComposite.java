@@ -32,7 +32,6 @@ import org.softwarefm.display.impl.DisplayerDefn;
 import org.softwarefm.display.impl.LargeButtonDefn;
 import org.softwarefm.display.impl.SmallButtonDefn;
 import org.softwarefm.display.smallButtons.ImageButtonConfig;
-import org.softwarefm.display.smallButtons.SimpleImageControl;
 
 public class SoftwareFmDataComposite implements IHasComposite {
 
@@ -105,15 +104,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 						for (DisplayerDefn defn : smallButtonDefn.defns) {
 							IDisplayer displayer = displayDefnToDisplayerMap.get(defn);
 							defn.data(dataGetter, defn, displayer, entity, url, context, data);
-							int i = 0;
-							Control[] children = displayer.getButtonComposite().getChildren();
-							for (ActionDefn actionDefn : defn.actionDefns)
-								if (actionDefn.tooltip != null) {
-									SimpleImageControl control = (SimpleImageControl) children[i];
-									Object tooltipValue = dataGetter.getDataFor(actionDefn.tooltip);
-									control.setToolTipText(Strings.nullSafeToString(tooltipValue));
-									i++;
-								}
+							
 						}
 				}
 			}

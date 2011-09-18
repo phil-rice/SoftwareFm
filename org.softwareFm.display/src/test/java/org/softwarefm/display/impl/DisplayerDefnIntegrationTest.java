@@ -1,6 +1,7 @@
 package org.softwarefm.display.impl;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -12,6 +13,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
+import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.NameAndValue;
 import org.softwarefm.display.ActionDefn;
@@ -22,6 +24,7 @@ import org.softwarefm.display.actions.ActionStore;
 import org.softwarefm.display.composites.CompositeConfig;
 import org.softwarefm.display.composites.TitleAndText;
 import org.softwarefm.display.data.DataGetterMock;
+import org.softwarefm.display.data.IDataGetter;
 import org.softwarefm.display.data.ResourceGetterMock;
 import org.softwarefm.display.displayer.TextDisplayer;
 import org.softwarefm.display.smallButtons.SimpleImageControl;
@@ -33,6 +36,8 @@ public class DisplayerDefnIntegrationTest extends TestCase {
 	private ActionContext actionContext;
 	private ActionStore actionStore;
 	private ActionMock actionMock;
+	private Map<String, Object> context = Maps.makeMap("a", 1);
+	private Map<String, Object> data = Maps.makeMap("b", 2);
 
 	public void testCreateWithNoButtons() {
 		TitleAndText displayer = (TitleAndText) displayerDefn.createDisplayer(shell, actionStore, actionContext);
@@ -55,9 +60,9 @@ public class DisplayerDefnIntegrationTest extends TestCase {
 		assertEquals("registeredTitle", displayer.getTitle());
 		checkButtons(displayer, ArtifactsAnchor.projectKey + ":" + OverlaysAnchor.deleteKey, ArtifactsAnchor.projectKey);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public void testPressingButtonCausesActionToFireWithParametersFromDataGetter(){
+	public void testPressingButtonCausesActionToFireWithParametersFromDataGetter() {
 		DisplayerDefn dispDefnWithButton = displayerDefn.//
 				actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("a"));
 		TitleAndText displayer = (TitleAndText) dispDefnWithButton.createDisplayer(shell, actionStore, actionContext);
@@ -67,7 +72,7 @@ public class DisplayerDefnIntegrationTest extends TestCase {
 		assertEquals(Arrays.asList(displayer), actionMock.displayers);
 		assertEquals(Arrays.asList(Arrays.asList("a")), actionMock.formalParams);
 		assertEquals(Arrays.asList(Arrays.asList(1)), actionMock.actualParams);
-		
+
 	}
 
 	private void checkButtons(TitleAndText displayer, String... mainAndBackground) {
@@ -79,10 +84,29 @@ public class DisplayerDefnIntegrationTest extends TestCase {
 			NameAndValue nameAndValue = NameAndValue.fromString(mainAndBackground[i]);
 			assertEquals(nameAndValue.name, control.config.mainImage);
 			assertEquals(nameAndValue.value, control.config.overlayImage);
-			assertEquals("tooltip"+ i, control.getToolTipText());
+			assertNull(control.getToolTipText());
 		}
 	}
 
+	public void testTooltipsAreSetWithData() {
+		DisplayerDefn dispDefnWithButton = displayerDefn.//
+				data("dataKey").//
+				actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
+		TitleAndText displayer = (TitleAndText) dispDefnWithButton.createDisplayer(shell, actionStore, actionContext);
+		Control[] children = displayer.getButtonComposite().getChildren();
+		SimpleImageControl control = (SimpleImageControl) children[0];
+		assertEquals(null, control.getToolTipText());
+
+		IDataGetter dataGetter = new DataGetterMock(//
+				"someActionTooltip", "someActionTooltipValue",// 
+				"someDataTooltip", "someDataTooltipValue",// 
+				"dataKey", "value1");
+		dispDefnWithButton.data(dataGetter, dispDefnWithButton, displayer, "someENtity", "someUrl", context, data);
+		assertEquals("someActionTooltipValue", control.getToolTipText());
+		
+		assertEquals("value1", displayer.getText());
+		assertEquals("someDataTooltipValue", displayer.getControl().getToolTipText());
+	}
 
 	@Override
 	protected void setUp() throws Exception {
@@ -94,7 +118,7 @@ public class DisplayerDefnIntegrationTest extends TestCase {
 		new BasicImageRegisterConfigurator().registerWith(shell.getDisplay(), imageRegistry);
 		IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(new ResourceGetterMock("someTitle", "registeredTitle"));
 		actionContext = new ActionContext(new DataGetterMock("a", 1), new CompositeConfig(shell.getDisplay(), new SoftwareFmLayout(), imageRegistry, resourceGetter), null);
-		displayerDefn = new DisplayerDefn(new TextDisplayer(true)).title("someTitle");
+		displayerDefn = new DisplayerDefn(new TextDisplayer()).title("someTitle");
 
 	}
 

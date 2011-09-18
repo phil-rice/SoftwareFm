@@ -6,9 +6,11 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.strings.Strings;
 import org.softwarefm.display.ActionDefn;
 import org.softwarefm.display.IAction;
 import org.softwarefm.display.actions.ActionContext;
@@ -19,6 +21,7 @@ import org.softwarefm.display.data.IDataGetter;
 import org.softwarefm.display.displayer.IDisplayer;
 import org.softwarefm.display.displayer.IDisplayerFactory;
 import org.softwarefm.display.smallButtons.IImageButtonListener;
+import org.softwarefm.display.smallButtons.SimpleImageControl;
 
 public class DisplayerDefn {
 
@@ -93,7 +96,17 @@ public class DisplayerDefn {
 
 	public void data(IDataGetter dataGetter, DisplayerDefn defn, IDisplayer displayer, String entity, String url, Map<String, Object> context, Map<String, Object> data) {
 		displayerFactory.data(dataGetter, this, displayer, entity, url, context, data);
-		
+		String tooltip= defn.tooltip == null?"":Strings.nullSafeToString(dataGetter.getDataFor(defn.tooltip));
+		displayer.getControl().setToolTipText(tooltip);
+		int i = 0;
+		Control[] children = displayer.getButtonComposite().getChildren();
+		for (ActionDefn actionDefn : defn.actionDefns)
+			if (actionDefn.tooltip != null) {
+				SimpleImageControl control = (SimpleImageControl) children[i];
+				Object tooltipValue = dataGetter.getDataFor(actionDefn.tooltip);
+				control.setToolTipText(Strings.nullSafeToString(tooltipValue));
+				i++;
+			}
 	}
 
 }
