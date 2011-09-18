@@ -1,4 +1,4 @@
-package org.softwarefm.display;
+package org.softwarefm.display.samples;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,6 +18,7 @@ import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.json.Json;
+import org.softwarefm.display.SoftwareFmFixture;
 
 public class SoftwareFmDisplaySamples {
 

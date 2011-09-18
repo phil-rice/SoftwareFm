@@ -14,4 +14,30 @@ public interface IButtonParent {
 	IResourceGetter getResourceGetter();
 
 	void buttonAdded(IHasControl button);
+
+	public static class Utils {
+		public static IButtonParent buttonParent(final Composite parent, final ImageRegistry imageRegistry, final IResourceGetter resourceGetter) {
+			return new IButtonParent() {
+
+				@Override
+				public IResourceGetter getResourceGetter() {
+					return resourceGetter;
+				}
+
+				@Override
+				public ImageRegistry getImageRegistry() {
+					return imageRegistry;
+				}
+
+				@Override
+				public Composite getButtonComposite() {
+					return parent;
+				}
+
+				@Override
+				public void buttonAdded(IHasControl button) {
+				}
+			};
+		}
+	}
 }

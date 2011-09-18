@@ -2,6 +2,7 @@ package org.softwareFm.softwareFmImages;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.backdrop.BackdropAnchor;
@@ -32,5 +33,11 @@ public class BasicImageRegisterConfigurator implements IImageRegisterConfigurato
 		System.out.println(imageRegistry.get("artifact.jar"));
 		System.out.println(imageRegistry.get("backdrop.main"));
 		System.out.println(imageRegistry.get("general.browse"));
+	}
+
+	public static ImageRegistry forTests(Composite from) {
+		ImageRegistry imageRegistry = new ImageRegistry();
+		new BasicImageRegisterConfigurator().registerWith(from.getDisplay(), imageRegistry);
+		return imageRegistry;
 	}
 }

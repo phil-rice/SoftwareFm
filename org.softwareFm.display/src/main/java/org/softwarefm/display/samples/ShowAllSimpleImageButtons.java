@@ -1,8 +1,6 @@
-package org.softwareFm.softwareFmImages.images;
+package org.softwarefm.display.samples;
 
 import java.util.Map;
-
-import java.util.Map.Entry;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
@@ -12,14 +10,18 @@ import org.eclipse.swt.widgets.Label;
 import org.softwareFm.softwareFmImages.IImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
+import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.Swts;
-import org.softwareFm.swtBasics.images.ImageButton;
 import org.softwareFm.swtBasics.images.Images;
 import org.softwareFm.swtBasics.images.SmallIconPosition;
+import org.softwareFm.swtBasics.text.IButtonParent;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwarefm.display.smallButtons.ImageButtonConfig;
+import org.softwarefm.display.smallButtons.SimpleImageButton;
 
-public class ShowAllImages {
+public class ShowAllSimpleImageButtons {
 
 	interface Acceptor {
 
@@ -31,28 +33,29 @@ public class ShowAllImages {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				ImageRegistry imageRegistry = IImageRegisterConfigurator.Utils.withBasics(from.getDisplay());
+				ImageButtonConfig imageButtonConfig = ImageButtonConfig.forTests(imageRegistry);
 				Composite composite = new Composite(from, SWT.NULL);
 				Composite jarComposite = new Composite(composite, SWT.BORDER);
 
-				addJarVariants(imageRegistry, jarComposite, "jar", new Acceptor() {
+				addJarVariants(imageButtonConfig, jarComposite, "jar", new Acceptor() {
 					@Override
 					public boolean accept(boolean source, boolean javadoc, boolean sourceFm, boolean javadocFm) {
 						return true;
 					}
 				});
-				addJarVariants(imageRegistry, jarComposite, "jarClearEclipse", new Acceptor() {
+				addJarVariants(imageButtonConfig, jarComposite, "jarClearEclipse", new Acceptor() {
 					@Override
 					public boolean accept(boolean source, boolean javadoc, boolean sourceFm, boolean javadocFm) {
 						return source;
 					}
 				});
-				addJarVariants(imageRegistry, jarComposite, "jarCopyFromSoftwareFm", new Acceptor() {
+				addJarVariants(imageButtonConfig, jarComposite, "jarCopyFromSoftwareFm", new Acceptor() {
 					@Override
 					public boolean accept(boolean source, boolean javadoc, boolean sourceFm, boolean javadocFm) {
 						return !source && sourceFm;
 					}
 				});
-				addJarVariants(imageRegistry, jarComposite, "jarCopyToSoftwareFm", new Acceptor() {
+				addJarVariants(imageButtonConfig, jarComposite, "jarCopyToSoftwareFm", new Acceptor() {
 					@Override
 					public boolean accept(boolean source, boolean javadoc, boolean sourceFm, boolean javadocFm) {
 						return source && !sourceFm;
@@ -60,7 +63,7 @@ public class ShowAllImages {
 				});
 
 				Composite artifactsComposite = new Composite(composite, SWT.BORDER);
-				crossProductArtifactsAndOverlays(imageRegistry, artifactsComposite);
+				crossProductArtifactsAndOverlays(artifactsComposite, imageButtonConfig);
 
 				Swts.addGrabHorizontalAndFillGridDataToAllChildren(jarComposite);
 				Swts.addGrabHorizontalAndFillGridDataToAllChildren(artifactsComposite);
@@ -71,8 +74,9 @@ public class ShowAllImages {
 
 			boolean[] falseTrue = new boolean[] { false, true };
 
-			private void addJarVariants(ImageRegistry imageRegistry, Composite composite, String key, Acceptor acceptor) {
-				Composite rowComposite = new Composite(composite, SWT.NULL);
+			private void addJarVariants(final ImageButtonConfig imageButtonConfig, Composite composite, String key, Acceptor acceptor) {
+				final Composite rowComposite = new Composite(composite, SWT.NULL);
+				IButtonParent buttonParent = IButtonParent.Utils.buttonParent(rowComposite, imageButtonConfig.imageRegistry, IResourceGetter.Utils.noResources());
 				rowComposite.setLayout(Swts.getHorizonalNoMarginRowLayout());
 				addTitle(rowComposite, key);
 				for (boolean state : falseTrue)
@@ -83,15 +87,15 @@ public class ShowAllImages {
 									if (acceptor.accept(source, javadoc, sourceFm, javadocFm)) {
 										Map<SmallIconPosition, String> map = Maps.newMap();
 										if (javadoc)
-											map.put(SmallIconPosition.TopLeft, "javadoc");
+											map.put(SmallIconPosition.TopLeft, "smallIcon.javadoc");
 										if (source)
-											map.put(SmallIconPosition.BottomLeft, "source");
+											map.put(SmallIconPosition.BottomLeft, "smallIcon.source");
 										if (javadocFm)
-											map.put(SmallIconPosition.TopRight, "softwareFm");
+											map.put(SmallIconPosition.TopRight, "smallIcon.softwareFm");
 										if (sourceFm)
-											map.put(SmallIconPosition.BottomRight, "softwareFm");
-										ImageButton button = makeJarVarient(rowComposite, imageRegistry, key, map);
-										button.setState(state);
+											map.put(SmallIconPosition.BottomRight, "smallIcon.softwareFm");
+										SimpleImageButton button = makeJarVarient(buttonParent, imageButtonConfig.withImage("artifact." + key), map, state);
+
 									}
 			}
 
@@ -101,15 +105,16 @@ public class ShowAllImages {
 				label.setLayoutData(new RowData(150, SWT.DEFAULT));
 			}
 
-			private ImageButton makeJarVarient(Composite rowComposite, ImageRegistry imageRegistry, String key, Map<SmallIconPosition, String> map) {
-				ImageButton button = new ImageButton(rowComposite, imageRegistry, "artifact." + key, false);
-				for (Entry<SmallIconPosition, String> entry : map.entrySet()) {
-					button.setSmallIcon(entry.getKey(), "smallIcon." + entry.getValue());
-				}
+			private SimpleImageButton makeJarVarient(IButtonParent buttonParent, ImageButtonConfig config, Map<SmallIconPosition, String> map, boolean state) {
+				SimpleImageButton button = new SimpleImageButton(buttonParent, config);
+				button.setSmallIconMap(map);
+				button.getControl().setLayoutData(new RowData(config.layout.smallButtonWidth, config.layout.smallButtonHeight));
+				button.setValue(state);
 				return button;
 			}
 
-			private void crossProductArtifactsAndOverlays(ImageRegistry imageRegistry, Composite composite) {
+			private void crossProductArtifactsAndOverlays(Composite composite, ImageButtonConfig config) {
+				ImageRegistry imageRegistry = config.imageRegistry;
 				for (String name : Images.getNamesFor(ArtifactsAnchor.class, "jar.png")) {
 					if (name.startsWith("jar") && name.length() > 3)
 						continue;
@@ -117,19 +122,24 @@ public class ShowAllImages {
 					rowComposite.setLayout(Swts.getHorizonalNoMarginRowLayout());
 					addTitle(rowComposite, name);
 					String artifactKey = "artifact." + name;
+					IButtonParent buttonParent = IButtonParent.Utils.buttonParent(rowComposite, imageRegistry, IResourceGetter.Utils.noResources());
 					for (boolean state : falseTrue)
-						makeOneRow(imageRegistry, rowComposite, artifactKey, state);
+						makeOneRow(buttonParent, config, artifactKey, state);
 				}
 			}
 
-			private void makeOneRow(ImageRegistry imageRegistry, Composite rowComposite, String artifactKey, boolean state) {
-				new ImageButton(rowComposite, imageRegistry, artifactKey, false).setState(state);
-
-				for (String overlay : Images.getNamesFor(OverlaysAnchor.class, "add.png"))
-					new ImageButton(rowComposite, imageRegistry, artifactKey, "overlay." + overlay, false).setState(state);
+			private void makeOneRow(IButtonParent buttonParent, ImageButtonConfig config, String artifactKey, boolean state) {
+				SimpleImageButton button = new SimpleImageButton(buttonParent, config.withImage(artifactKey));
+				button.setValue(state);
+				button.getControl().setLayoutData(new RowData(config.layout.smallButtonWidth, config.layout.smallButtonHeight));
+				for (String overlay : Images.getNamesFor(OverlaysAnchor.class, "add.png")) {
+					SimpleImageButton overlayButton = new SimpleImageButton(buttonParent, config.withImage(artifactKey, "overlay." + overlay));
+					overlayButton.setValue(state);
+					overlayButton.getControl().setLayoutData(new RowData(config.layout.smallButtonWidth, config.layout.smallButtonHeight));
+					
+				}
 			}
 
 		});
 	}
-
 }

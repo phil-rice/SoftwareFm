@@ -14,8 +14,8 @@ import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwarefm.display.Sample;
 import org.softwarefm.display.SoftwareFmLayout;
+import org.softwarefm.display.SoftwareFmPropertyAnchor;
 import org.softwarefm.display.composites.CompositeConfig;
 
 public class Editors {
@@ -27,7 +27,7 @@ public class Editors {
 				Composite composite = new Composite(from, SWT.NULL);
 				ImageRegistry imageRegistry = new ImageRegistry();
 				new BasicImageRegisterConfigurator().registerWith(from.getDisplay(), imageRegistry);
-				IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(Sample.class, "SoftwareFmDisplay");
+				IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(SoftwareFmPropertyAnchor.class, "SoftwareFmDisplay");
 				final EditorContext editorContext = new EditorContext(new CompositeConfig(from.getDisplay(), new SoftwareFmLayout(), imageRegistry, resourceGetter));
 				final IEditorFactory editorFactory = new EditorFactory(editorContext).register("someName", editor);
 				Button button = new Button(composite, SWT.PUSH);

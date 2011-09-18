@@ -3,6 +3,7 @@ package org.softwarefm.display.smallButtons;
 import java.text.MessageFormat;
 
 import org.eclipse.jface.resource.ImageRegistry;
+import org.softwareFm.softwareFmImages.backdrop.BackdropAnchor;
 import org.softwarefm.display.SoftwareFmLayout;
 import org.softwarefm.display.data.DisplayConstants;
 
@@ -33,7 +34,6 @@ public class ImageButtonConfig {
 			if (image != null)
 				if (imageRegistry.get(image) == null)
 					throw new IllegalStateException(MessageFormat.format(DisplayConstants.imageNotFound, image));
-
 	}
 
 	public ImageButtonConfig withImage(String mainImage) {
@@ -42,5 +42,9 @@ public class ImageButtonConfig {
 
 	public ImageButtonConfig withImage(String mainImage, String overlayImage) {
 		return new ImageButtonConfig(layout, imageRegistry, depressedBackground, normalBackground, mainImage, overlayImage);
+	}
+	
+	public static ImageButtonConfig forTests(ImageRegistry imageRegistry){
+		return new ImageButtonConfig(new SoftwareFmLayout(), imageRegistry, BackdropAnchor.depressed, BackdropAnchor.main, null, null);
 	}
 }

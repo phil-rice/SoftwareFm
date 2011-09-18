@@ -6,6 +6,8 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
+import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
+import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
@@ -21,6 +23,7 @@ import org.softwarefm.display.editor.EditorFactory;
 import org.softwarefm.display.editor.IEditorFactory;
 import org.softwarefm.display.editor.TextEditor;
 import org.softwarefm.display.impl.LargeButtonDefn;
+import org.softwarefm.display.samples.Sample;
 import org.softwarefm.display.smallButtons.SmallButtonStore;
 import org.softwarefm.display.urlGenerator.JarUrlGenerator;
 import org.softwarefm.display.urlGenerator.UrlGenerator;
@@ -47,7 +50,7 @@ public class SoftwareFmFixture {
 	public SoftwareFmFixture(Display display) {
 		imageRegistry = new ImageRegistry();
 		new BasicImageRegisterConfigurator().registerWith(display, imageRegistry);
-		resourceGetter = IResourceGetter.Utils.noResources().with(Sample.class, "SoftwareFmDisplay");
+		resourceGetter = IResourceGetter.Utils.noResources().with(SoftwareFmPropertyAnchor.class, "SoftwareFmDisplay");
 
 		layout = new SoftwareFmLayout();
 		compositeConfig = new CompositeConfig(display, layout, imageRegistry, resourceGetter);
@@ -76,39 +79,39 @@ public class SoftwareFmFixture {
 		guiBuilder = new GuiBuilder(resourceGetter, imageRegistry, smallButtonStore, dataStore, actionStore, displayerStore);
 
 		jarButton = guiBuilder.largeButton("largeButton.jar",//
-				guiBuilder.smallButton("smallButton.jar.details", "smallButton.jar.details.title", "smallButton.normal", "artifact.jar", //
+				guiBuilder.smallButton("smallButton.jar.details", "smallButton.jar.details.title", "smallButton.normal", ArtifactsAnchor.jarKey, //
 						guiBuilder.displayer("displayer.text").title("jar.jarName.title").data("data.jar.jarName").tooltip("jar.jarPath.tooltip"), //
 						guiBuilder.displayer("displayer.text").title("project.name.title").data("data.project.name").actions(//
-								guiBuilder.action("action.text.edit", "artifact.project", "overlay.edit").tooltip("action.edit.tooltip").params("data.jar.project.url"),//
-								guiBuilder.action("action.text.externalBrowseFileOrUrl", "general.browse").tooltip("data.jar.project.url").params("data.jar.project.url")//
+								guiBuilder.action("action.text.edit", ArtifactsAnchor.projectKey, "overlay.edit").tooltip("action.edit.tooltip").params("data.jar.project.url"),//
+								guiBuilder.action("action.text.externalBrowseFileOrUrl", GeneralAnchor.browseKey).tooltip("data.jar.project.url").params("data.jar.project.url")//
 								).tooltip("data.jar.project.url"),//
 						guiBuilder.displayer("displayer.text").title("organisation.name.title").data("data.organisation.name").actions(//
-								guiBuilder.action("action.text.externalBrowseFileOrUrl", "general.browse").tooltip("data.jar.organisation.url").params("data.jar.organisation.url")//
+								guiBuilder.action("action.text.externalBrowseFileOrUrl", GeneralAnchor.browseKey).tooltip("data.jar.organisation.url").params("data.jar.organisation.url")//
 								).tooltip("data.organisation.url")).//
 						ctrlClickAction("action.text.externalBrowseFileOrUrl", "data.jar.jarPath"));
 
 		projectButton = guiBuilder.largeButton("largeButton.project", //
-				guiBuilder.smallButton("smallButton.project.details", "smallButton.project.details.title", "smallButton.normal", "artifact.project", //
+				guiBuilder.smallButton("smallButton.project.details", "smallButton.project.details.title", "smallButton.normal", ArtifactsAnchor.projectKey, //
 						guiBuilder.displayer("displayer.text").title("project.name.title").data("data.project.name").tooltip("data.project.description").actions(//
-								guiBuilder.action("action.text.edit", "artifact.project", "overlay.edit").tooltip("action.edit.tooltip").params("data.project.name")), //
+								guiBuilder.action("action.text.edit", ArtifactsAnchor.projectKey, "overlay.edit").tooltip("action.edit.tooltip").params("data.project.name")), //
 						guiBuilder.displayer("displayer.url").title("project.url.title").data("data.jar.project.url")).//
 						ctrlClickAction("action.text.externalBrowseFileOrUrl", "data.jar.projectUrl").tooltip("smallButton.project.details.tooltip"),//
-				guiBuilder.smallButton("smallButton.project.bugs", "smallButton.project.bugs.title", "smallButton.normal", "artifact.issues",//
+				guiBuilder.smallButton("smallButton.project.bugs", "smallButton.project.bugs.title", "smallButton.normal", ArtifactsAnchor.issuesKey,//
 						guiBuilder.displayer("displayer.url").title("project.issues.title").data("data.project.issues").tooltip("project.issues.tooltip").actions(//
 								guiBuilder.action("action.text.edit", "artifact.issues", "overlay.edit").tooltip("action.edit.tooltip").params("data.project.issues")), // ,//
 						guiBuilder.listDisplayer("displayer.list", "lineEditor.nameAndEmail").title("project.mailingList.title").data("data.project.mailingList")).//
 						ctrlClickAction("action.text.externalBrowseFileOrUrl", "data.project.issues"),//
-				guiBuilder.smallButton("smallButton.project.twitter", "smallButton.project.twitter.title", "smallButton.normal", "artifact.twitter",//
+				guiBuilder.smallButton("smallButton.project.twitter", "smallButton.project.twitter.title", "smallButton.normal", ArtifactsAnchor.twitterKey,//
 						guiBuilder.listDisplayer("displayer.list", "lineEditor.nameAndEmail").title("project.twitter.title").data("data.project.twitter")));
 
 		organisationButton = guiBuilder.largeButton("largeButton.organisation", //
-				guiBuilder.smallButton("smallButton.organisation.details", "smallButton.organisation.details.title", "smallButton.normal", "artifact.organisation",//
+				guiBuilder.smallButton("smallButton.organisation.details", "smallButton.organisation.details.title", "smallButton.normal",ArtifactsAnchor.organisationKey,//
 						guiBuilder.displayer("displayer.text").title("organisation.name.title").data("data.organisation.name").actions(//
-								guiBuilder.action("action.text.edit", "artifact.organisation", "overlay.edit").tooltip("action.edit.tooltip").params("data.organisation.name")), // , //
+								guiBuilder.action("action.text.edit",ArtifactsAnchor.organisationKey, "overlay.edit").tooltip("action.edit.tooltip").params("data.organisation.name")), // , //
 						guiBuilder.displayer("displayer.url").title("organisation.url.title").data("data.jar.organisation.url").actions(//
-								guiBuilder.action("action.text.edit", "artifact.organisation", "overlay.edit").tooltip("action.edit.tooltip").params("data.organisation.url"),//
-								guiBuilder.action("action.text.externalBrowseFileOrUrl", "general.browse").tooltip("data.jar.organisation.url").params("data.jar.organisation.url"))),//
-				guiBuilder.smallButton("smallButton.organisation.twitter", "smallButton.organisation.twitter.title", "smallButton.normal", "artifact.twitter", //
+								guiBuilder.action("action.text.edit",ArtifactsAnchor.organisationKey, "overlay.edit").tooltip("action.edit.tooltip").params("data.organisation.url"),//
+								guiBuilder.action("action.text.externalBrowseFileOrUrl", GeneralAnchor.browseKey).tooltip("data.jar.organisation.url").params("data.jar.organisation.url"))),//
+				guiBuilder.smallButton("smallButton.organisation.twitter", "smallButton.organisation.twitter.title", "smallButton.normal", ArtifactsAnchor.twitterKey, //
 						guiBuilder.listDisplayer("displayer.list", "lineEditor.nameAndEmail").title("organisation.twitter.title").data("data.organisation.twitter")));
 	}
 

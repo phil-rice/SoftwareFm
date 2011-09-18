@@ -71,5 +71,11 @@ public class SimpleImageControl extends Canvas {
 	public void setToolTipText(String string) {
 		super.setToolTipText(string);
 	}
+	
+	public void setSmallIcon(SmallIconPosition key, String string) {
+		this.smallIconMap.put(key, string);
+		layout();
+		redraw();
+	}
 
 }

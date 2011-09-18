@@ -10,3 +10,12 @@ Require-Bundle: org.eclipse.core.runtime,
  org.softwareFm.softwareFmImages;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.softwarefm.display.actions,
+ org.softwarefm.display.composites,
+ org.softwarefm.display.data,
+ org.softwarefm.display.displayer,
+ org.softwarefm.display.editor,
+ org.softwarefm.display.impl,
+ org.softwarefm.display.samples,
+ org.softwarefm.display.smallButtons,
+ org.softwarefm.display.urlGenerator

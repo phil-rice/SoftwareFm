@@ -10,7 +10,7 @@ public class SoftwareFmLayout {
 	public int titleWidth = 100;
 	public int buttonsWidth = 100;
 	public int buttonSpacer = 3;
-	public int valueWidth = titleWidth + buttonsWidth ;
+	public int valueWidth = titleWidth + buttonsWidth+100 ;
 	public int textHeight = smallButtonHeight;
 
 }
