@@ -15,5 +15,6 @@ public class DisplayConstants {
 	public static final String imageNotFound = "Cannot find image {0}";
 	public static final String mustHaveA = "Must have a {0} in {1}";
 	public static final String expectedAList = "Expected a List. Value is {0}. Class is {1}. DisplayDefn is {2}";
+	public static final String expectedAMap ="Expected a List. Value is {0}. Class is {1}";
 
 }

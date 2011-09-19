@@ -1,4 +1,4 @@
-package org.softwarefm.display.samples;
+package org.softwarefm.display;
 
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.swtBasics.Swts;

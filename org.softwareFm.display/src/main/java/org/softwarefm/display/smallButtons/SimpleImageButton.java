@@ -6,13 +6,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.swtBasics.IControlWithToggle;
 import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.images.SmallIconPosition;
 import org.softwareFm.swtBasics.text.IButtonParent;
 import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwarefm.display.data.IDataGetter;
+import org.softwarefm.display.displayer.ISmallDisplayer;
 
-public class SimpleImageButton implements IHasControl, IControlWithToggle {
+public class SimpleImageButton implements IHasControl, ISmallDisplayer {
 
 	private final SimpleImageControl content;
 
@@ -60,6 +61,10 @@ public class SimpleImageButton implements IHasControl, IControlWithToggle {
 	public void setSmallIcon(SmallIconPosition key, String string) {
 		content.setSmallIcon(key, string);
 
+	}
+
+	@Override
+	public void data(IDataGetter dataGetter, String entity, String url, Map<String, Object> context, Map<String, Object> data) {
 	}
 
 }

@@ -15,11 +15,12 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwarefm.display.ActionDefn;
 import org.softwarefm.display.GuiBuilder;
 import org.softwarefm.display.IUrlToData;
+import org.softwarefm.display.JarSimpleButtonFactory;
+import org.softwarefm.display.JarSimpleImageButton;
 import org.softwarefm.display.SmallButtonFactory;
 import org.softwarefm.display.SoftwareFmDataComposite;
 import org.softwarefm.display.SoftwareFmLayout;
 import org.softwarefm.display.SoftwareFmPropertyAnchor;
-import org.softwarefm.display.IUrlToData.Utils;
 import org.softwarefm.display.actions.ActionStore;
 import org.softwarefm.display.actions.BrowseAction;
 import org.softwarefm.display.actions.ListAddAction;
@@ -80,7 +81,8 @@ public class SoftwareFmFixture {
 				dependant("jar", "organisation", "jar.organisationUrl", "urlGenerator.organisation");
 
 		smallButtonStore = new SmallButtonStore().//
-				smallButton("smallButton.normal", new SmallButtonFactory());
+				smallButton("smallButton.normal", new SmallButtonFactory()).//
+				smallButton("smallButton.jar", new JarSimpleButtonFactory());
 
 		actionStore = new ActionStore().//
 				action("action.text.edit", new TextEditAction()).//
@@ -105,16 +107,17 @@ public class SoftwareFmFixture {
 		guiBuilder = new GuiBuilder(resourceGetter, imageRegistry, smallButtonStore, dataStore, actionStore, displayerStore, listEditorStore);
 
 		jarButton = guiBuilder.largeButton("largeButton.jar",//
-				guiBuilder.smallButton("smallButton.jar.details", "smallButton.jar.details.title", "smallButton.normal", ArtifactsAnchor.jarKey, //
-						guiBuilder.displayer("displayer.text").title("jar.jarName.title").data("data.jar.jarName").tooltip("jar.jarPath.tooltip"), //
+				guiBuilder.smallButton("smallButton.jar.details", "smallButton.jar.details.title", "smallButton.jar", ArtifactsAnchor.jarKey, //
+						guiBuilder.displayer("displayer.text").title("jar.jarName.title").data("data.raw.jarPath").tooltip("jar.jarPath.tooltip"), //
 						guiBuilder.displayer("displayer.text").title("project.name.title").data("data.project.name").actions(//
 								guiBuilder.action("action.text.edit", ArtifactsAnchor.projectKey, "overlay.edit").tooltip("action.edit.tooltip").params("data.jar.project.url"),//
 								guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).tooltip("data.jar.project.url").params("data.jar.project.url")//
 								).tooltip("data.jar.project.url"),//
 						guiBuilder.displayer("displayer.text").title("organisation.name.title").data("data.organisation.name").actions(//
 								guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).tooltip("data.jar.organisation.url").params("data.jar.organisation.url")//
-								).tooltip("data.organisation.url")).//
-						ctrlClickAction("action.text.browse", "data.jar.jarPath"));
+								).tooltip("data.organisation.url"),//
+						guiBuilder.displayer("displayer.text").title("jar.javadoc.title").data("data.raw.javadoc").tooltip("data.raw.javadoc"), //
+						guiBuilder.displayer("displayer.text").title("jar.source.title").data("data.raw.source").tooltip("data.raw.source")));
 
 		projectButton = guiBuilder.largeButton("largeButton.project", //
 				guiBuilder.smallButton("smallButton.project.details", "smallButton.project.details.title", "smallButton.normal", ArtifactsAnchor.projectKey, //
@@ -161,14 +164,8 @@ public class SoftwareFmFixture {
 		return result;
 	}
 
-	public void forceData(String url, Map<String, Object> map) {
-		forceData(url, "jar", map);
-		forceData(url, "project", map);
-		forceData(url, "organisation", map);
-	}
-
 	@SuppressWarnings("unchecked")
-	private void forceData(String url, String entity, Map<String, Object> map) {
+	public void forceData(String url, String entity, Map<String, Object> map) {
 		Map<String, Object> data = (Map<String, Object>) map.get(entity);
 		Map<String, Object> context = Maps.newMap();
 		dataStore.forceData(url, entity, data, context);

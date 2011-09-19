@@ -93,6 +93,7 @@ public class GuiDataStore implements IDataGetter {
 	}
 
 	public void processData(Object data, Map<String, Object> context) {
+		this.rawData = data;
 		processOneData(mainEntity, data, context);
 	}
 
@@ -153,10 +154,21 @@ public class GuiDataStore implements IDataGetter {
 		if (index == -1)
 			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.illegalPath, path));
 		String entity = path.substring(0, index);
-		String key = path.substring(index+1);
+		String key = path.substring(index + 1);
+		if (entity.equals("raw"))
+			return getRawData(key);
 		Object result = getDataFor(entity, key);
-		System.out.println("GetDataFor " + entity +", " + key +" -> " + result);
+		System.out.println("GetDataFor " + entity + ", " + key + " -> " + result);
 		return result;
+	}
+
+	@SuppressWarnings("rawtypes")
+	private Object getRawData(String key) {
+		if (rawData == null)
+			return null;
+		if (!(rawData instanceof Map))
+			throw new IllegalStateException(MessageFormat.format(DisplayConstants.expectedAMap, rawData, rawData.getClass()));
+		return ((Map) rawData).get(key);
 	}
 
 	private Object getDataFor(String entity, String key) {
@@ -190,7 +202,7 @@ public class GuiDataStore implements IDataGetter {
 	@Override
 	public void setRawData(Object rawData) {
 		this.rawData = rawData;
-		
+
 	}
 
 }

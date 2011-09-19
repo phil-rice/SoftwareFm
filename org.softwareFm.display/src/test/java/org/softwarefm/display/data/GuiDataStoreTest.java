@@ -49,6 +49,17 @@ public class GuiDataStoreTest extends TestCase {
 		assertEquals(Arrays.asList("<Url entity1: rawData>", "<Url entityd1: one>", "<Url entityd2: two>"), urlToData.urls);
 	}
 
+	public void testRawData() {
+		makeRosyView();
+
+		Map<String, Object>rawData = Maps.makeMap("a", 1, "b", 2);
+		store.processData(rawData, context1);
+		assertEquals(rawData, store.getLastRawData());
+		assertEquals(1, store.getDataFor("raw.a"));
+		assertEquals(2, store.getDataFor("raw.b"));
+
+	}
+
 	public void testListenersNotified() {
 		makeRosyView();
 

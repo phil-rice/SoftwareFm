@@ -1,7 +1,7 @@
 package org.softwarefm.display.smallButtons;
 
-import org.softwareFm.swtBasics.IControlWithToggle;
 import org.softwareFm.swtBasics.text.IButtonParent;
+import org.softwarefm.display.displayer.ISmallDisplayer;
 import org.softwarefm.display.impl.SmallButtonDefn;
 
 public class SmallButtonFactoryMock implements ISmallButtonFactory {
@@ -18,7 +18,7 @@ public class SmallButtonFactoryMock implements ISmallButtonFactory {
 	}
 
 	@Override
-	public IControlWithToggle create(IButtonParent parent, SmallButtonDefn smallButtonDefn, ImageButtonConfig imageButtonConfig) {
+	public ISmallDisplayer create(IButtonParent parent, SmallButtonDefn smallButtonDefn, ImageButtonConfig imageButtonConfig) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -13,7 +13,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
+import org.softwareFm.jdtBinding.api.BindingRipperResult;
+import org.softwareFm.jdtBinding.api.RippedResult;
 import org.softwareFm.swtBasics.Swts;
+import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -61,7 +64,12 @@ public class SoftwareFmDisplaySamples {
 					private void setText(String url, String text) {
 						styledText.setText(text);
 						Map<String, Object> map = Json.mapFromString(text);
-						softwareFmFixture.forceData(url, map);
+						Map<String,String> rippedMap = (Map<String, String>) map.get("ripped");
+						RippedResult result = rippedMap == null?null:new RippedResult(rippedMap.get("hexDigest"), rippedMap.get("jarPath"), rippedMap.get("jarName"), rippedMap.get("javadoc"), rippedMap.get("source"), ICallback.Utils.<String>sysoutCallback(), ICallback.Utils.<String>sysoutCallback());
+						softwareFmFixture.dataStore.setRawData(result);
+						softwareFmFixture.forceData(url, "jar", map);
+						softwareFmFixture.forceData(url, "project", map);
+						softwareFmFixture.forceData(url, "organisation", map);
 					}
 				});
 

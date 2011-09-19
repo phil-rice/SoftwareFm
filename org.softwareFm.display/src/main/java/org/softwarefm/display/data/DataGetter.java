@@ -6,7 +6,6 @@ public class DataGetter implements IDataGetter {
 
 	private final IDataGetter nestedDataGetter;
 	private final IResourceGetter resourceGetter;
-	private Object rawData;
 
 	public DataGetter(IDataGetter nestedDataGetter, IResourceGetter resourceGetter) {
 		this.nestedDataGetter = nestedDataGetter;
@@ -24,11 +23,11 @@ public class DataGetter implements IDataGetter {
 
 	@Override
 	public Object getLastRawData() {
-		return rawData;
+		return nestedDataGetter.getLastRawData();
 	}
 
 	public void setRawData(Object rawData) {
-		this.rawData = rawData;
+		nestedDataGetter.setRawData( rawData);
 	}
 
 }

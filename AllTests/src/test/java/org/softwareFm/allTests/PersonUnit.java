@@ -4,10 +4,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwarefm.display.Sample;
 import org.softwarefm.display.SoftwareFmDisplaySamples;
 import org.softwarefm.display.composites.TitleAndText;
 import org.softwarefm.display.editor.TextEditor;
-import org.softwarefm.display.samples.Sample;
 import org.softwarefm.display.samples.ShowAllSimpleImageButtons;
 
 public class PersonUnit {

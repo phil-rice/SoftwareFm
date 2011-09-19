@@ -5,13 +5,12 @@ import org.softwarefm.display.displayer.ISmallDisplayer;
 import org.softwarefm.display.impl.SmallButtonDefn;
 import org.softwarefm.display.smallButtons.ISmallButtonFactory;
 import org.softwarefm.display.smallButtons.ImageButtonConfig;
-import org.softwarefm.display.smallButtons.SimpleImageButton;
 
-public class SmallButtonFactory implements ISmallButtonFactory {
+public class JarSimpleButtonFactory implements ISmallButtonFactory {
 
 	@Override
 	public ISmallDisplayer create(IButtonParent parent, SmallButtonDefn smallButtonDefn, ImageButtonConfig config) {
-		return new SimpleImageButton(parent,  config);
+		return new JarSimpleImageButton(parent, config);
 	}
 
 }

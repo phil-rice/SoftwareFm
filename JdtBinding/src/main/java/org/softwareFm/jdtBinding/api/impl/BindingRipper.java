@@ -46,7 +46,7 @@ public class BindingRipper implements IBindingRipper {
 				JavaProjects.setJavadoc(ripped.javaProject, ripped.classpathEntry, newValue);
 			}
 		};
-		return new RippedResult(ripped.hexDigest, ripped.path.toOSString(), javadoc, source, javadocMutator, sourceMutator);
+		return new RippedResult(ripped.hexDigest, ripped.path.toOSString(),ripped.path.lastSegment().toString(), javadoc, source, javadocMutator, sourceMutator);
 	}
 
 	@Override

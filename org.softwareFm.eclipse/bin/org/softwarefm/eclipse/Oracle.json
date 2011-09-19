@@ -1,9 +1,15 @@
-{"jar":           {"project.url": "http://www.oracle.com/us/technologies/java/index.html",
-                   "organisation.url": "www.oracle.com"},
- "project":       {"name": "J2Se", 
-  	               "project.url": "Some Url",
-	               "mailingLists": ["a$b"],
-	               "issues": "http://bugs.sun.com/bugdatabase/index.jsp"
-	               "twitter": ["tweet1", "tweet2"]},
- "organisation": {"name": "Oracle"}
+{
+	"ripped":        {"hexDigest" : "digest",
+	                  "jarName" : "jarName",
+	                  "jarPath" : "jarPath",
+	                  "javadoc": "someJavadocUrl",
+	                  "source" : "someSourceUrl"}
+	"jar":           {"project.url": "http://www.oracle.com/us/technologies/java/index.html",
+	                  "organisation.url": "www.oracle.com"},
+	"project":       {"name": "J2Se", 
+	  	              "project.url": "Some Url",
+		              "mailingLists": ["a$b"],
+		              "issues": "http://bugs.sun.com/bugdatabase/index.jsp"
+		              "twitter": ["tweet1", "tweet2"]},
+	"organisation":  {"name": "Oracle"}
  }

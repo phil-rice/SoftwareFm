@@ -8,4 +8,5 @@ Require-Bundle: org.softwareFm.jdtBinding;bundle-version="1.0.0",
  org.softwareFm.display;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.softwarefm.display
+Export-Package: org.softwarefm.display,
+ org.softwarefm.display.fixture
