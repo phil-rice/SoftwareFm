@@ -13,7 +13,7 @@ import org.softwarefm.display.data.DisplayConstants;
 import org.softwarefm.display.data.IDataGetter;
 import org.softwarefm.display.impl.DisplayerDefn;
 
-public class TextDisplayerFactory implements IDisplayerFactory {
+public class TextDisplayerFactory  implements IDisplayerFactory {
 
 
 	@Override
@@ -25,7 +25,7 @@ public class TextDisplayerFactory implements IDisplayerFactory {
 	}
 
 	@Override
-	public void data(IDataGetter dataGetter, DisplayerDefn defn, IDisplayer displayer, String entity, String url, Map<String, Object> context, Map<String, Object> data) {
+	public void data(IDataGetter  dataGetter, DisplayerDefn defn, IDisplayer displayer, String entity, String url, Map<String, Object> context, Map<String, Object> data) {
 		Object value = dataGetter.getDataFor(defn.dataKey);
 		if (value != null)
 			System.out.println("Setting text for " + displayer + "\n" + value);

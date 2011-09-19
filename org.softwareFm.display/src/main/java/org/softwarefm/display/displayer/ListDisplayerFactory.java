@@ -18,7 +18,7 @@ public class ListDisplayerFactory implements IDisplayerFactory {
 
 	@Override
 	public void data(IDataGetter dataGetter, DisplayerDefn defn, IDisplayer displayer, String entity, String url, Map<String, Object> context, Map<String, Object> data) {
-		((ListDisplayer)displayer).data(dataGetter, defn, entity, url, context, data);
+		((ListDisplayer) displayer).data(dataGetter, defn, entity, url, context, data);
 	}
 
 }

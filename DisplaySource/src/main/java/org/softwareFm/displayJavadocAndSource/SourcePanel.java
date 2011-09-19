@@ -60,8 +60,8 @@ public class SourcePanel extends JavadocOrSourcePanel {
 	protected String findEclipseValue(BindingContext bindingContext) throws Exception {
 		BindingRipperResult ripped = (BindingRipperResult) bindingContext.context.get(DisplayCoreConstants.ripperResult);
 		BindingRipperResult uptoDate = SelectedArtifactSelectionManager.reRip(ripped);
-		if (uptoDate != null && uptoDate.packageFragment != null && uptoDate.packageFragment.getSourceAttachmentPath() != null)
-			return JavaProjects.findSourceFor(uptoDate.packageFragment);
+		if (uptoDate != null && uptoDate.packageFragmentRoot != null && uptoDate.packageFragmentRoot.getSourceAttachmentPath() != null)
+			return JavaProjects.findSourceFor(uptoDate.packageFragmentRoot);
 		else
 			return null;
 	}

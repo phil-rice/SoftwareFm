@@ -17,4 +17,14 @@ public class DataGetterMock implements IDataGetter {
 		return map.get(key);
 	}
 
+	@Override
+	public Object getLastRawData() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setRawData(Object rawData) {
+		throw new UnsupportedOperationException();
+	}
+
 }

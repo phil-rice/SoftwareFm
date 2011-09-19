@@ -1,6 +1,7 @@
 package org.softwareFm.jdtBinding.api.impl;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -17,6 +18,9 @@ import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.jdtBinding.api.IBindingRipper;
+import org.softwareFm.jdtBinding.api.JavaProjects;
+import org.softwareFm.jdtBinding.api.RippedResult;
+import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.maps.Maps;
@@ -24,6 +28,26 @@ import org.softwareFm.utilities.maps.Maps;
 public class BindingRipper implements IBindingRipper {
 
 	private final Map<IPath, String> cache = Maps.newMap();
+
+	@Override
+	public RippedResult rip(IBinding binding) {
+		final BindingRipperResult ripped = rip(binding, Collections.<String, Object> emptyMap());
+		String javadoc = JavaProjects.findJavadocFor(ripped.classpathEntry);
+		String source = JavaProjects.findSourceFor(ripped.packageFragmentRoot);
+		ICallback<String> sourceMutator = new ICallback<String>() {
+			@Override
+			public void process(String newValue) throws Exception {
+				JavaProjects.setSourceAttachment(ripped.javaProject, ripped.classpathEntry, newValue);
+			}
+		};
+		ICallback<String> javadocMutator = new ICallback<String>() {
+			@Override
+			public void process(String newValue) throws Exception {
+				JavaProjects.setJavadoc(ripped.javaProject, ripped.classpathEntry, newValue);
+			}
+		};
+		return new RippedResult(ripped.hexDigest, ripped.path.toOSString(), javadoc, source, javadocMutator, sourceMutator);
+	}
 
 	@Override
 	public BindingRipperResult rip(IBinding from, Map<String, Object> cargo) {

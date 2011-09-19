@@ -26,6 +26,7 @@ public class GuiDataStore implements IDataGetter {
 
 	private final CopyOnWriteArrayList<IGuiDataListener> listeners = new CopyOnWriteArrayList<IGuiDataListener>();
 	private ICallback<Throwable> onException;
+	private Object rawData;
 
 	public GuiDataStore(IUrlToData urlToData, ICallback<Throwable> onException) {
 		this.urlToData = urlToData;
@@ -179,6 +180,17 @@ public class GuiDataStore implements IDataGetter {
 		final EntityCachedData entityCachedData = getFromCache(entity);
 		entityCachedData.put(url, data);
 		fireListeners(entity, url, context, data);
+	}
+
+	@Override
+	public Object getLastRawData() {
+		return rawData;
+	}
+
+	@Override
+	public void setRawData(Object rawData) {
+		this.rawData = rawData;
+		
 	}
 
 }

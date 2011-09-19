@@ -9,6 +9,8 @@ public interface IBindingRipper {
 
 	BindingRipperResult rip(IBinding binding, Map<String, Object> cargo);
 
+	RippedResult rip(IBinding binding);
+
 	public static class Utils {
 		public static IBindingRipper ripper() {
 			return new BindingRipper();

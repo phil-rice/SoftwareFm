@@ -22,7 +22,7 @@ public class BindingRipperResult {
 	public final String packageName;
 	public final String className;
 	public final String methodName;
-	public final IPackageFragmentRoot packageFragment;
+	public final IPackageFragmentRoot packageFragmentRoot;
 	public final IPath sourceAttachmentPath;
 	public final IClasspathEntry classpathEntry;
 	public final Map<String, Object> cargo;
@@ -31,12 +31,12 @@ public class BindingRipperResult {
 		super();
 		try {
 			this.binding = binding;
-			if (cargo == null && binding != null)
+			if (cargo == null && binding != null)//allows tests where both are null..
 				throw new NullPointerException();
 			this.cargo = cargo;
 			this.javaElement = javaElement;
 			this.javaProject = javaProject;
-			this.packageFragment = packageFragment;
+			this.packageFragmentRoot = packageFragment;
 			this.path = path;
 			this.hexDigest = hexDigest;
 			this.sourceAttachmentPath = sourceAttachmentPath;
@@ -51,7 +51,7 @@ public class BindingRipperResult {
 
 	@Override
 	public String toString() {
-		return "BindingRipperResult [path=" + path + "\npackageFragment=" + packageFragment + "\nHexDigest=" + hexDigest + "\nSrcAttachment = " + sourceAttachmentPath + "\nPackageName=" + packageName + "\nClassName=" + className + "\nMethodName=" + methodName + "]";
+		return "BindingRipperResult [path=" + path + "\npackageFragment=" + packageFragmentRoot + "\nHexDigest=" + hexDigest + "\nSrcAttachment = " + sourceAttachmentPath + "\nPackageName=" + packageName + "\nClassName=" + className + "\nMethodName=" + methodName + "]";
 	}
 
 }

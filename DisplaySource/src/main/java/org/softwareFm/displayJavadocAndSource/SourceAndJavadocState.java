@@ -34,7 +34,7 @@ public class SourceAndJavadocState {
 				BindingRipperResult ripped = (BindingRipperResult) bindingContext.context.get(DisplayCoreConstants.ripperResult);
 				BindingRipperResult updated = SelectedArtifactSelectionManager.reRip(ripped);
 				String eclipseJavadoc = JavaProjects.findJavadocFor(updated.classpathEntry);
-				String eclipseSource = JavaProjects.findSourceFor(updated.packageFragment);
+				String eclipseSource = JavaProjects.findSourceFor(updated.packageFragmentRoot);
 				boolean hasData = bindingContext.data != null;
 				String repositoryJavadoc = hasData ? (String) bindingContext.data.get("javadoc") : null;
 				String repositorySource = hasData ? (String) bindingContext.data.get("source") : null;

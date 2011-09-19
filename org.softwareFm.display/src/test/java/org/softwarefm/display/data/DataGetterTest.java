@@ -12,4 +12,11 @@ public class DataGetterTest extends TestCase {
 		assertEquals(2, dataGetter.getDataFor("data.b.2"));
 	}
 
+	public void testSetAndGetRawData(){
+		DataGetter dataGetter = new DataGetter(null, null);
+		dataGetter.setRawData("rawData1");
+		assertEquals("rawData1", dataGetter.getLastRawData());
+		dataGetter.setRawData("rawData2");
+		assertEquals("rawData2", dataGetter.getLastRawData());
+	}
 }

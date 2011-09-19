@@ -52,11 +52,19 @@ public  class TitleAnd implements IDisplayer, IHasComposite {
 	}
 
 	private void setLayoutData() {
-		int buttonsWidth = (config.layout.buttonSpacer + config.layout.smallButtonWidth) * buttonCount;
+		int buttonsWidth = (config.layout.buttonSpacer + config.layout.smallButtonWidth) * buttonCount ;
 		int fillerWidth = config.layout.buttonsWidth - buttonsWidth ;
 		compButtons.setLayoutData(new RowData(buttonsWidth, config.layout.displayerHeight));
 		lblFiller.setLayoutData(new RowData(fillerWidth, config.layout.displayerHeight));
-		compButtons.setLayout(new GridLayout(buttonCount, false));
+		GridLayout layout = new GridLayout(buttonCount, false);
+		layout.marginBottom = 0;
+		layout.marginTop = 0;
+		layout.marginLeft = 0;
+		layout.marginRight = 0;
+		layout.marginWidth = 0;
+		layout.marginHeight = 0;
+		layout.horizontalSpacing=0;
+		compButtons.setLayout(layout);
 		compButtons.layout();
 		content.layout();
 	}

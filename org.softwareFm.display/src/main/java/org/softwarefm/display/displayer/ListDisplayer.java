@@ -21,7 +21,7 @@ import org.softwarefm.display.data.IDataGetter;
 import org.softwarefm.display.impl.DisplayerDefn;
 import org.softwarefm.display.lists.IListEditor;
 
-public class ListDisplayer implements IDisplayer {
+public class ListDisplayer  implements IDisplayer {
 
 	private final CompositeConfig compositeConfig;
 	private Composite content;
@@ -45,7 +45,7 @@ public class ListDisplayer implements IDisplayer {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void data(IDataGetter dataGetter, DisplayerDefn defn, String entity, String url, Map<String, Object> context, Map<String, Object> data) {
+	public void data(IDataGetter  dataGetter, DisplayerDefn defn, String entity, String url, Map<String, Object> context, Map<String, Object> data) {
 		Swts.removeAllChildren(listComposite);
 		Object dataFor = dataGetter.getDataFor(defn.dataKey);
 		if (dataFor != null) {
