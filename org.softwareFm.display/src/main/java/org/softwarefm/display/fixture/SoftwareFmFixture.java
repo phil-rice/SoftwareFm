@@ -1,4 +1,4 @@
-package org.softwarefm.display;
+package org.softwarefm.display.fixture;
 
 import java.util.Map;
 
@@ -12,6 +12,14 @@ import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwarefm.display.ActionDefn;
+import org.softwarefm.display.GuiBuilder;
+import org.softwarefm.display.IUrlToData;
+import org.softwarefm.display.SmallButtonFactory;
+import org.softwarefm.display.SoftwareFmDataComposite;
+import org.softwarefm.display.SoftwareFmLayout;
+import org.softwarefm.display.SoftwareFmPropertyAnchor;
+import org.softwarefm.display.IUrlToData.Utils;
 import org.softwarefm.display.actions.ActionStore;
 import org.softwarefm.display.actions.BrowseAction;
 import org.softwarefm.display.actions.ListAddAction;

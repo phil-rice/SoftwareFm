@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.softwareFm.eclipse
+Bundle-SymbolicName: org.softwareFm.eclipse
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.softwarefm.display.Activator
+Require-Bundle: org.softwareFm.jdtBinding;bundle-version="1.0.0",
+ org.softwareFm.display;bundle-version="1.0.0"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.softwarefm.display

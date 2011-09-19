@@ -1,4 +1,4 @@
-package org.softwarefm.display.samples;
+package org.softwarefm.display;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,12 +18,12 @@ import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.json.Json;
-import org.softwarefm.display.SoftwareFmFixture;
+import org.softwarefm.display.fixture.SoftwareFmFixture;
 
 public class SoftwareFmDisplaySamples {
 
 	public static void main(String[] args) {
-		final File root = new File("../org.softwareFm.display/src/test/resources/org/softwareFm/display");
+		final File root = new File("../org.softwareFm.eclipse/src/test/resources/org/softwareFm/eclipse");
 		Swts.display("Software FM Displays", new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {

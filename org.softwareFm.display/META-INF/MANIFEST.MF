@@ -4,19 +4,18 @@ Bundle-Name: org.softwareFm.display
 Bundle-SymbolicName: org.softwareFm.display
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.softwarefm.display.Activator
-Require-Bundle: org.eclipse.core.runtime,
- org.softwareFm.swtBasics;bundle-version="1.0.0",
- org.eclipse.jface;bundle-version="3.7.0",
- org.softwareFm.softwareFmImages;bundle-version="1.0.0",
- org.softwareFm.jdtBinding;bundle-version="1.0.0"
+Require-Bundle: org.softwareFm.softwareFmImages;bundle-version="1.0.0";visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.softwarefm.display.actions,
+Export-Package: org.softwarefm.display,
+ org.softwarefm.display.actions,
  org.softwarefm.display.composites,
  org.softwarefm.display.data,
  org.softwarefm.display.displayer,
  org.softwarefm.display.editor,
+ org.softwarefm.display.fixture,
  org.softwarefm.display.impl,
+ org.softwarefm.display.lists,
  org.softwarefm.display.samples,
  org.softwarefm.display.smallButtons,
  org.softwarefm.display.urlGenerator
