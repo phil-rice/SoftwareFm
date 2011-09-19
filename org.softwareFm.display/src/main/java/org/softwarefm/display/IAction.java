@@ -7,5 +7,5 @@ import org.softwarefm.display.displayer.IDisplayer;
 
 
 public interface IAction {
-	void execute(ActionContext actionContext, IDisplayer displayer, List<String> formalParameters, List<Object> actualParameters);
+	void execute(ActionContext actionContext, IDisplayer displayer, int index, List<String> formalParameters, List<Object> actualParameters) throws Exception;
 }

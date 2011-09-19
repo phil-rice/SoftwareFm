@@ -2,7 +2,6 @@ package org.softwareFm.allTests;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.displayJavadocAndSource.JarSummaryImageButtonDemo;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwarefm.display.composites.TitleAndText;

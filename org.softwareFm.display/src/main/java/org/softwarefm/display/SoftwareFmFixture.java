@@ -15,7 +15,9 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwarefm.display.actions.ActionStore;
 import org.softwarefm.display.actions.BrowseAction;
 import org.softwarefm.display.actions.ListAddAction;
+import org.softwarefm.display.actions.ListDeleteAction;
 import org.softwarefm.display.actions.TextEditAction;
+import org.softwarefm.display.actions.ViewTweetsAction;
 import org.softwarefm.display.composites.CompositeConfig;
 import org.softwarefm.display.data.GuiDataStore;
 import org.softwarefm.display.displayer.DisplayerStore;
@@ -30,7 +32,6 @@ import org.softwarefm.display.lists.ListEditorStore;
 import org.softwarefm.display.lists.NameAndUrlListEditor;
 import org.softwarefm.display.lists.NameAndValueListEditor;
 import org.softwarefm.display.lists.ValueListEditor;
-import org.softwarefm.display.samples.Sample;
 import org.softwarefm.display.smallButtons.SmallButtonStore;
 import org.softwarefm.display.urlGenerator.JarUrlGenerator;
 import org.softwarefm.display.urlGenerator.UrlGenerator;
@@ -76,7 +77,9 @@ public class SoftwareFmFixture {
 		actionStore = new ActionStore().//
 				action("action.text.edit", new TextEditAction()).//
 				action("action.list.add", new ListAddAction()).//
-				action("action.text.externalBrowseFileOrUrl", new BrowseAction());
+				action("action.list.delete", new ListDeleteAction()).//
+				action("action.list.viewTweets", new ViewTweetsAction()).//
+				action("action.text.browse", new BrowseAction());
 
 		displayerStore = new DisplayerStore().//
 				displayer("displayer.text", new TextDisplayerFactory()).//
@@ -84,10 +87,10 @@ public class SoftwareFmFixture {
 				displayer("displayer.list", new ListDisplayerFactory());
 
 		listEditorStore = new ListEditorStore().//
-				register("listEditor.nameAndValue", new NameAndValueListEditor()).//
-				register("listEditor.nameAndUrl", new NameAndUrlListEditor()).//
-				register("listEditor.nameAndEmail", new NameAndValueListEditor()).//
-				register("listEditor.tweet", new ValueListEditor());
+				register("listEditor.nameAndValue", new NameAndValueListEditor("")).//
+				register("listEditor.nameAndUrl", new NameAndUrlListEditor("")).//
+				register("listEditor.nameAndEmail", new NameAndValueListEditor("")).//
+				register("listEditor.tweet", new ValueListEditor("tweet.line.title"));
 
 		EditorContext editorContext = new EditorContext(compositeConfig);
 		editorFactory = new EditorFactory(editorContext).register("editor.text", new TextEditor());
@@ -98,41 +101,49 @@ public class SoftwareFmFixture {
 						guiBuilder.displayer("displayer.text").title("jar.jarName.title").data("data.jar.jarName").tooltip("jar.jarPath.tooltip"), //
 						guiBuilder.displayer("displayer.text").title("project.name.title").data("data.project.name").actions(//
 								guiBuilder.action("action.text.edit", ArtifactsAnchor.projectKey, "overlay.edit").tooltip("action.edit.tooltip").params("data.jar.project.url"),//
-								guiBuilder.action("action.text.externalBrowseFileOrUrl", GeneralAnchor.browseKey).tooltip("data.jar.project.url").params("data.jar.project.url")//
+								guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).tooltip("data.jar.project.url").params("data.jar.project.url")//
 								).tooltip("data.jar.project.url"),//
 						guiBuilder.displayer("displayer.text").title("organisation.name.title").data("data.organisation.name").actions(//
-								guiBuilder.action("action.text.externalBrowseFileOrUrl", GeneralAnchor.browseKey).tooltip("data.jar.organisation.url").params("data.jar.organisation.url")//
+								guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).tooltip("data.jar.organisation.url").params("data.jar.organisation.url")//
 								).tooltip("data.organisation.url")).//
-						ctrlClickAction("action.text.externalBrowseFileOrUrl", "data.jar.jarPath"));
+						ctrlClickAction("action.text.browse", "data.jar.jarPath"));
 
 		projectButton = guiBuilder.largeButton("largeButton.project", //
 				guiBuilder.smallButton("smallButton.project.details", "smallButton.project.details.title", "smallButton.normal", ArtifactsAnchor.projectKey, //
 						guiBuilder.displayer("displayer.text").title("project.name.title").data("data.project.name").tooltip("data.project.description").actions(//
 								guiBuilder.action("action.text.edit", ArtifactsAnchor.projectKey, "overlay.edit").tooltip("action.edit.tooltip").params("data.project.name")), //
 						guiBuilder.displayer("displayer.url").title("project.url.title").data("data.jar.project.url")).//
-						ctrlClickAction("action.text.externalBrowseFileOrUrl", "data.jar.projectUrl").tooltip("smallButton.project.details.tooltip"),//
+						ctrlClickAction("action.text.browse", "data.jar.projectUrl").tooltip("smallButton.project.details.tooltip"),//
 				guiBuilder.smallButton("smallButton.project.bugs", "smallButton.project.bugs.title", "smallButton.normal", ArtifactsAnchor.issuesKey,//
 						guiBuilder.displayer("displayer.url").title("project.issues.title").data("data.project.issues").tooltip("project.issues.tooltip").actions(//
 								guiBuilder.action("action.text.edit", "artifact.issues", "overlay.edit").tooltip("action.edit.tooltip").params("data.project.issues")), // ,//
-						guiBuilder.listDisplayer("displayer.list", "listEditor.nameAndEmail").title("project.mailingList.title").data("data.project.mailingList").actions(makeListActions(ArtifactsAnchor.mailingListKey))).//
-						ctrlClickAction("action.text.externalBrowseFileOrUrl", "data.project.issues"),//
+						guiBuilder.listDisplayer("displayer.list", "listEditor.nameAndEmail").title("project.mailingList.title").data("data.project.mailingList").//
+								actions(makeMainListActions(ArtifactsAnchor.mailingListKey)).listActions(listDeleteAction(ArtifactsAnchor.mailingListKey))).//
+						ctrlClickAction("action.text.browse", "data.project.issues"),//
 				guiBuilder.smallButton("smallButton.project.twitter", "smallButton.project.twitter.title", "smallButton.normal", ArtifactsAnchor.twitterKey,//
-						guiBuilder.listDisplayer("displayer.list", "listEditor.tweet").title("project.twitter.title").data("data.project.twitter").actions(makeListActions(ArtifactsAnchor.twitterKey))));
+						guiBuilder.listDisplayer("displayer.list", "listEditor.tweet").title("project.twitter.title").data("data.project.twitter").//
+								actions(makeMainListActions(ArtifactsAnchor.twitterKey)).//
+								listActions(guiBuilder.action("action.list.viewTweets", GeneralAnchor.browseKey).params("project.twitter.lineTitle"), listDeleteAction(ArtifactsAnchor.twitterKey))));
 
 		organisationButton = guiBuilder.largeButton("largeButton.organisation", //
 				guiBuilder.smallButton("smallButton.organisation.details", "smallButton.organisation.details.title", "smallButton.normal", ArtifactsAnchor.organisationKey,//
 						guiBuilder.displayer("displayer.text").title("organisation.name.title").data("data.organisation.name").actions(//
 								guiBuilder.action("action.text.edit", ArtifactsAnchor.organisationKey, "overlay.edit").tooltip("action.edit.tooltip").params("data.organisation.name")), // , //
 						guiBuilder.displayer("displayer.url").title("organisation.url.title").data("data.jar.organisation.url").actions(//
-								guiBuilder.action("action.text.edit", ArtifactsAnchor.organisationKey, "overlay.edit").tooltip("action.edit.tooltip").params("data.organisation.url"),//
-								guiBuilder.action("action.text.externalBrowseFileOrUrl", GeneralAnchor.browseKey).tooltip("data.jar.organisation.url").params("data.jar.organisation.url"))),//
+								guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).tooltip("data.jar.organisation.url").params("data.jar.organisation.url"),//
+								guiBuilder.action("action.text.edit", ArtifactsAnchor.organisationKey, "overlay.edit").tooltip("action.edit.tooltip").params("data.organisation.url"))),//
 				guiBuilder.smallButton("smallButton.organisation.twitter", "smallButton.organisation.twitter.title", "smallButton.normal", ArtifactsAnchor.twitterKey, //
-						guiBuilder.listDisplayer("displayer.list", "listEditor.nameAndEmail").title("organisation.twitter.title").data("data.organisation.twitter").actions(makeListActions(ArtifactsAnchor.twitterKey))));
+						guiBuilder.listDisplayer("displayer.list", "listEditor.nameAndEmail").title("organisation.twitter.title").data("data.organisation.twitter").//
+								actions(makeMainListActions(ArtifactsAnchor.twitterKey)).listActions(listDeleteAction(ArtifactsAnchor.twitterKey))));
 	}
 
-	public ActionDefn[] makeListActions(String artifactId) {
+	public ActionDefn[] makeMainListActions(String artifactId) {
 		return new ActionDefn[] {//
 		guiBuilder.action("action.list.add", artifactId, OverlaysAnchor.addKey).tooltip("action.add.tooltip") };
+	}
+
+	public ActionDefn listDeleteAction(String artifactId) {
+		return guiBuilder.action("action.list.delete", artifactId, OverlaysAnchor.deleteKey).tooltip("action.delete.tooltip");
 	}
 
 	public SoftwareFmDataComposite makeComposite(Composite parent) {

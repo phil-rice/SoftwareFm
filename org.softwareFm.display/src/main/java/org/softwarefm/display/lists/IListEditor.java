@@ -1,11 +1,11 @@
 package org.softwarefm.display.lists;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.swtBasics.IHasControl;
+import org.softwareFm.swtBasics.text.IButtonParent;
 import org.softwarefm.display.composites.CompositeConfig;
 import org.softwarefm.display.impl.DisplayerDefn;
 
 public interface IListEditor {
 
-	 IHasControl makeLineHasControl(DisplayerDefn displayDefn, CompositeConfig config, Composite listComposite, int index, Object value);
+	 IButtonParent makeLineHasControl(DisplayerDefn displayDefn, CompositeConfig config, Composite listComposite, int index, Object value);
 }

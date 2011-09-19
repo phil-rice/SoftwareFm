@@ -8,6 +8,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.swtBasics.IHasControl;
+import org.softwareFm.swtBasics.text.IButtonParent;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.strings.Strings;
@@ -38,6 +39,7 @@ public class DisplayerDefn {
 	public String title;
 	public String tooltip;
 	public IListEditor listEditor;
+	public List<ActionDefn> listActionDefns;
 
 	public DisplayerDefn(IDisplayerFactory displayer) {
 		this.displayerFactory = displayer;
@@ -82,9 +84,14 @@ public class DisplayerDefn {
 
 	public IDisplayer createDisplayer(Composite parent, final ActionStore actionStore, final ActionContext actionContext) {
 		CompositeConfig compositeConfig = actionContext.compositeConfig;
-		final IDisplayer displayer = displayerFactory.create(parent, this, SWT.NULL, compositeConfig);
+		final IDisplayer displayer = displayerFactory.create(parent, this, SWT.NULL, compositeConfig,actionStore, actionContext);
+		createActions(actionStore, actionContext, displayer, displayer, actionDefns, -1);
+		return displayer;
+	}
+	public void createActions(final ActionStore actionStore,final ActionContext actionContext, final IDisplayer displayer, final IButtonParent buttonParent, List<ActionDefn> actionDefns, final int index) {
+		CompositeConfig compositeConfig = actionContext.compositeConfig;
 		for (final ActionDefn actionDefn : actionDefns)
-			actionDefn.createButton(compositeConfig.imageButtonConfig, displayer, new IImageButtonListener() {
+			actionDefn.createButton(compositeConfig.imageButtonConfig, buttonParent, new IImageButtonListener() {
 				private final IAction action = actionStore.get(actionDefn.id);
 
 				@Override
@@ -95,10 +102,9 @@ public class DisplayerDefn {
 							return actionContext.dataGetter.getDataFor(key);
 						}
 					});
-					action.execute(actionContext, displayer, actionDefn.params, actualParams);
+					action.execute(actionContext, displayer, index, actionDefn.params, actualParams);
 				}
 			});
-		return displayer;
 	}
 
 	public void data(IDataGetter dataGetter, DisplayerDefn defn, IDisplayer displayer, String entity, String url, Map<String, Object> context, Map<String, Object> data) {
@@ -114,6 +120,10 @@ public class DisplayerDefn {
 				control.setToolTipText(Strings.nullSafeToString(tooltipValue));
 				i++;
 			}
+	}
+	public DisplayerDefn listActions(ActionDefn...listActionDefns) {
+		this.listActionDefns = Lists.fromArray(listActionDefns);
+		return this;
 	}
 
 }

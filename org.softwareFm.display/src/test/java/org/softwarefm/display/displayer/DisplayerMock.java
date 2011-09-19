@@ -3,6 +3,8 @@ package org.softwarefm.display.displayer;
 import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
+import org.softwarefm.display.actions.ActionContext;
+import org.softwarefm.display.actions.ActionStore;
 import org.softwarefm.display.composites.CompositeConfig;
 import org.softwarefm.display.data.IDataGetter;
 import org.softwarefm.display.impl.DisplayerDefn;
@@ -21,7 +23,7 @@ public class DisplayerMock implements IDisplayerFactory {
 	}
 
 	@Override
-	public IDisplayer create(Composite largeButtonComposite, DisplayerDefn defn, int style, CompositeConfig compositeConfig) {
+	public IDisplayer create(Composite largeButtonComposite, DisplayerDefn defn, int style, CompositeConfig compositeConfig, ActionStore actionStore, ActionContext actionContext) {
 		throw new UnsupportedOperationException();
 	}
 

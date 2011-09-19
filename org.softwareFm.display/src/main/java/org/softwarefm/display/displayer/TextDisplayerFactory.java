@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.utilities.strings.Strings;
+import org.softwarefm.display.actions.ActionContext;
+import org.softwarefm.display.actions.ActionStore;
 import org.softwarefm.display.composites.CompositeConfig;
 import org.softwarefm.display.composites.TitleAndText;
 import org.softwarefm.display.data.DisplayConstants;
@@ -15,7 +17,7 @@ public class TextDisplayerFactory implements IDisplayerFactory {
 
 
 	@Override
-	public IDisplayer create(Composite parent, final DisplayerDefn defn, int style, CompositeConfig compositeConfig) {
+	public IDisplayer create(Composite parent, final DisplayerDefn defn, int style, CompositeConfig compositeConfig, ActionStore actionStore, ActionContext actionContext) {
 		if (defn.title == null)
 			throw new NullPointerException(MessageFormat.format(DisplayConstants.mustHaveA, "title", getClass().getSimpleName()));
 		TitleAndText titleAndText = new TitleAndText(compositeConfig, parent, defn.title, true);

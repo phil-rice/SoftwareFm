@@ -10,7 +10,6 @@ import org.eclipse.swt.widgets.Label;
 import org.softwareFm.softwareFmImages.IImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
-import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.Images;
 import org.softwareFm.swtBasics.images.SmallIconPosition;

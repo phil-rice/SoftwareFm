@@ -8,13 +8,13 @@ import org.softwarefm.display.displayer.IDisplayer;
 
 public class TextEditAction implements IAction {
 	@Override
-	public void execute(ActionContext actionContext, IDisplayer displayer, List<String> formalParameters, List<Object> actualParameters) {
-		actionContext.editorFactory.displayEditor(displayer.getButtonComposite().getShell(), "editor.text", formalParameters, actualParameters, new ICallback<Object>(){
+	public void execute(ActionContext actionContext, IDisplayer displayer, int index, List<String> formalParameters, List<Object> actualParameters) {
+		actionContext.editorFactory.displayEditor(displayer.getButtonComposite().getShell(), "editor.text", formalParameters, actualParameters, new ICallback<Object>() {
 			@Override
 			public void process(Object t) throws Exception {
 				System.out.println("Result: " + t);
-			}});
+			}
+		});
 	}
-
 
 }
