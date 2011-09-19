@@ -48,7 +48,7 @@ public class GuiBuilderTest extends TestCase {
 		smallButtonFactory1 = new SmallButtonFactoryMock("validId");
 		displayer = new DisplayerMock("1");
 		SmallButtonStore smallButtonStore = new SmallButtonStore().smallButton("smallButton.validId", smallButtonFactory1);
-		builder = new GuiBuilder(null, null, smallButtonStore, null, actionStore, null);
+		builder = new GuiBuilder(null, null, smallButtonStore, null, actionStore, null, null);
 	}
 
 }

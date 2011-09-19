@@ -14,7 +14,7 @@ import org.softwarefm.display.SoftwareFmLayout;
 import org.softwarefm.display.smallButtons.ImageButtonConfig;
 import org.softwarefm.display.smallButtons.SimpleImageButton;
 
-public class TitleAndText extends AbstractTitleAnd {
+public class TitleAndText extends TitleAnd {
 
 	private final Text text;
 

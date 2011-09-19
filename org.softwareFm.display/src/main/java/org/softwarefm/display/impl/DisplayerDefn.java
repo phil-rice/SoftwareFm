@@ -20,6 +20,7 @@ import org.softwarefm.display.data.DisplayConstants;
 import org.softwarefm.display.data.IDataGetter;
 import org.softwarefm.display.displayer.IDisplayer;
 import org.softwarefm.display.displayer.IDisplayerFactory;
+import org.softwarefm.display.lists.IListEditor;
 import org.softwarefm.display.smallButtons.IImageButtonListener;
 import org.softwarefm.display.smallButtons.SimpleImageControl;
 
@@ -27,7 +28,7 @@ public class DisplayerDefn {
 
 	@Override
 	public String toString() {
-		return "DisplayerDefn [dataKey=" + dataKey + ", title=" + title + ", tooltip=" + tooltip + ", displayerFactory=" + displayerFactory + ", actionDefns=" + actionDefns + "]";
+		return "DisplayerDefn [dataKey=" + dataKey + ", listEditor=" + this.listEditor + ", title=" + title + ", tooltip=" + tooltip + ", displayerFactory=" + displayerFactory + ", actionDefns=" + actionDefns + "]";
 	}
 
 	public final IDisplayerFactory displayerFactory;
@@ -36,9 +37,14 @@ public class DisplayerDefn {
 	public String dataKey;
 	public String title;
 	public String tooltip;
+	public IListEditor listEditor;
 
 	public DisplayerDefn(IDisplayerFactory displayer) {
 		this.displayerFactory = displayer;
+	}
+	public DisplayerDefn(IDisplayerFactory displayer, IListEditor listEditor) {
+		this.displayerFactory = displayer;
+		this.listEditor = listEditor;
 	}
 
 	public DisplayerDefn title(String title) {
@@ -80,9 +86,10 @@ public class DisplayerDefn {
 		for (final ActionDefn actionDefn : actionDefns)
 			actionDefn.createButton(compositeConfig.imageButtonConfig, displayer, new IImageButtonListener() {
 				private final IAction action = actionStore.get(actionDefn.id);
+
 				@Override
 				public void buttonPressed(IHasControl button) throws Exception {
-					List<Object> actualParams = Lists.map(Lists.nullSafe(actionDefn.params), new IFunction1<String	, Object>() {
+					List<Object> actualParams = Lists.map(Lists.nullSafe(actionDefn.params), new IFunction1<String, Object>() {
 						@Override
 						public Object apply(String key) throws Exception {
 							return actionContext.dataGetter.getDataFor(key);
@@ -96,7 +103,7 @@ public class DisplayerDefn {
 
 	public void data(IDataGetter dataGetter, DisplayerDefn defn, IDisplayer displayer, String entity, String url, Map<String, Object> context, Map<String, Object> data) {
 		displayerFactory.data(dataGetter, this, displayer, entity, url, context, data);
-		String tooltip= defn.tooltip == null?"":Strings.nullSafeToString(dataGetter.getDataFor(defn.tooltip));
+		String tooltip = defn.tooltip == null ? "" : Strings.nullSafeToString(dataGetter.getDataFor(defn.tooltip));
 		displayer.getControl().setToolTipText(tooltip);
 		int i = 0;
 		Control[] children = displayer.getButtonComposite().getChildren();

@@ -26,7 +26,7 @@ import org.softwarefm.display.composites.TitleAndText;
 import org.softwarefm.display.data.DataGetterMock;
 import org.softwarefm.display.data.IDataGetter;
 import org.softwarefm.display.data.ResourceGetterMock;
-import org.softwarefm.display.displayer.TextDisplayer;
+import org.softwarefm.display.displayer.TextDisplayerFactory;
 import org.softwarefm.display.smallButtons.SimpleImageControl;
 
 public class DisplayerDefnIntegrationTest extends TestCase {
@@ -118,7 +118,7 @@ public class DisplayerDefnIntegrationTest extends TestCase {
 		new BasicImageRegisterConfigurator().registerWith(shell.getDisplay(), imageRegistry);
 		IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(new ResourceGetterMock("someTitle", "registeredTitle"));
 		actionContext = new ActionContext(new DataGetterMock("a", 1), new CompositeConfig(shell.getDisplay(), new SoftwareFmLayout(), imageRegistry, resourceGetter), null);
-		displayerDefn = new DisplayerDefn(new TextDisplayer()).title("someTitle");
+		displayerDefn = new DisplayerDefn(new TextDisplayerFactory()).title("someTitle");
 
 	}
 

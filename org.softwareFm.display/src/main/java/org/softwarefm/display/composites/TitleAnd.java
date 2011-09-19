@@ -16,7 +16,7 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwarefm.display.SoftwareFmLayout;
 import org.softwarefm.display.displayer.IDisplayer;
 
-public abstract class AbstractTitleAnd implements IDisplayer, IHasComposite {
+public  class TitleAnd implements IDisplayer, IHasComposite {
 
 	protected final CompositeConfig config;
 	protected final Label lblTitle;
@@ -26,7 +26,7 @@ public abstract class AbstractTitleAnd implements IDisplayer, IHasComposite {
 	private Composite content;
 	private SoftwareFmLayout layout;
 
-	public AbstractTitleAnd(CompositeConfig config, Composite parent, String titleOrTitleKey, boolean titleIsKey) {
+	public TitleAnd(CompositeConfig config, Composite parent, String titleOrTitleKey, boolean titleIsKey) {
 		this.content = new Composite(parent, SWT.NULL);
 		this.config = config;
 		content.setLayout(Swts.getHorizonalNoMarginRowLayout());

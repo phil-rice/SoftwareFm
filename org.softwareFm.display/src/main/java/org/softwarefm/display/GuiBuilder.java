@@ -9,6 +9,8 @@ import org.softwarefm.display.displayer.IDisplayerFactory;
 import org.softwarefm.display.impl.DisplayerDefn;
 import org.softwarefm.display.impl.LargeButtonDefn;
 import org.softwarefm.display.impl.SmallButtonDefn;
+import org.softwarefm.display.lists.IListEditor;
+import org.softwarefm.display.lists.ListEditorStore;
 import org.softwarefm.display.smallButtons.ISmallButtonFactory;
 import org.softwarefm.display.smallButtons.SmallButtonStore;
 
@@ -17,11 +19,13 @@ public class GuiBuilder {
 	private final ActionStore actionStore;
 	private final SmallButtonStore smallButtonStore;
 	private final DisplayerStore displayerStore;
+	private final ListEditorStore listEditorStore;
 
-	public GuiBuilder(IResourceGetter resourceGetter, ImageRegistry imageRegistry, SmallButtonStore smallButtonStore, GuiDataStore dataStore, ActionStore actionStore, DisplayerStore displayerStore) {
+	public GuiBuilder(IResourceGetter resourceGetter, ImageRegistry imageRegistry, SmallButtonStore smallButtonStore, GuiDataStore dataStore, ActionStore actionStore, DisplayerStore displayerStore, ListEditorStore listEditorStore) {
 		this.smallButtonStore = smallButtonStore;
 		this.actionStore = actionStore;
 		this.displayerStore = displayerStore;
+		this.listEditorStore = listEditorStore;
 	}
 
 	public DisplayerDefn displayer(String displayerId) {
@@ -39,9 +43,10 @@ public class GuiBuilder {
 
 	}
 
-	public DisplayerDefn listDisplayer(String listDisplayId, String lineEditorId) {
+	public DisplayerDefn listDisplayer(String listDisplayId, String listEditorId) {
 		IDisplayerFactory displayer = displayerStore.get(listDisplayId);
-		return new DisplayerDefn(displayer);
+		IListEditor listEditor = listEditorStore.get(listEditorId);
+		return new DisplayerDefn(displayer, listEditor);
 	}
 
 	public ActionDefn action(String actionId, String mainImageId) {

@@ -4,6 +4,6 @@
   	               "project.url": "Some Url",
 	               "mailingLists": ["a$b"],
 	               "issues": "http://bugs.sun.com/bugdatabase/index.jsp"
-	               "tweets": ["tweet1", "tweet2"]},
+	               "twitter": ["tweet1", "tweet2"]},
  "organisation": {"name": "Some Organisation"}
  }

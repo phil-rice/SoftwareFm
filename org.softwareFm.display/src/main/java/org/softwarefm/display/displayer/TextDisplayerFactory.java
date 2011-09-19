@@ -11,7 +11,7 @@ import org.softwarefm.display.data.DisplayConstants;
 import org.softwarefm.display.data.IDataGetter;
 import org.softwarefm.display.impl.DisplayerDefn;
 
-public class TextDisplayer implements IDisplayerFactory {
+public class TextDisplayerFactory implements IDisplayerFactory {
 
 
 	@Override

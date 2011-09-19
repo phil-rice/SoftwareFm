@@ -8,21 +8,28 @@ import org.eclipse.swt.widgets.Display;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
+import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwarefm.display.actions.ActionStore;
 import org.softwarefm.display.actions.BrowseAction;
+import org.softwarefm.display.actions.ListAddAction;
 import org.softwarefm.display.actions.TextEditAction;
 import org.softwarefm.display.composites.CompositeConfig;
 import org.softwarefm.display.data.GuiDataStore;
 import org.softwarefm.display.displayer.DisplayerStore;
-import org.softwarefm.display.displayer.TextDisplayer;
+import org.softwarefm.display.displayer.ListDisplayerFactory;
+import org.softwarefm.display.displayer.TextDisplayerFactory;
 import org.softwarefm.display.editor.EditorContext;
 import org.softwarefm.display.editor.EditorFactory;
 import org.softwarefm.display.editor.IEditorFactory;
 import org.softwarefm.display.editor.TextEditor;
 import org.softwarefm.display.impl.LargeButtonDefn;
+import org.softwarefm.display.lists.ListEditorStore;
+import org.softwarefm.display.lists.NameAndUrlListEditor;
+import org.softwarefm.display.lists.NameAndValueListEditor;
+import org.softwarefm.display.lists.ValueListEditor;
 import org.softwarefm.display.samples.Sample;
 import org.softwarefm.display.smallButtons.SmallButtonStore;
 import org.softwarefm.display.urlGenerator.JarUrlGenerator;
@@ -46,6 +53,7 @@ public class SoftwareFmFixture {
 	public final LargeButtonDefn projectButton;
 	public final LargeButtonDefn organisationButton;
 	private IEditorFactory editorFactory;
+	private ListEditorStore listEditorStore;
 
 	public SoftwareFmFixture(Display display) {
 		imageRegistry = new ImageRegistry();
@@ -67,16 +75,23 @@ public class SoftwareFmFixture {
 
 		actionStore = new ActionStore().//
 				action("action.text.edit", new TextEditAction()).//
+				action("action.list.add", new ListAddAction()).//
 				action("action.text.externalBrowseFileOrUrl", new BrowseAction());
 
 		displayerStore = new DisplayerStore().//
-				displayer("displayer.text", new TextDisplayer()).//
-				displayer("displayer.url", new TextDisplayer()).//
-				displayer("displayer.list", new TextDisplayer());
+				displayer("displayer.text", new TextDisplayerFactory()).//
+				displayer("displayer.url", new TextDisplayerFactory()).//
+				displayer("displayer.list", new ListDisplayerFactory());
+
+		listEditorStore = new ListEditorStore().//
+				register("listEditor.nameAndValue", new NameAndValueListEditor()).//
+				register("listEditor.nameAndUrl", new NameAndUrlListEditor()).//
+				register("listEditor.nameAndEmail", new NameAndValueListEditor()).//
+				register("listEditor.tweet", new ValueListEditor());
 
 		EditorContext editorContext = new EditorContext(compositeConfig);
 		editorFactory = new EditorFactory(editorContext).register("editor.text", new TextEditor());
-		guiBuilder = new GuiBuilder(resourceGetter, imageRegistry, smallButtonStore, dataStore, actionStore, displayerStore);
+		guiBuilder = new GuiBuilder(resourceGetter, imageRegistry, smallButtonStore, dataStore, actionStore, displayerStore, listEditorStore);
 
 		jarButton = guiBuilder.largeButton("largeButton.jar",//
 				guiBuilder.smallButton("smallButton.jar.details", "smallButton.jar.details.title", "smallButton.normal", ArtifactsAnchor.jarKey, //
@@ -99,20 +114,25 @@ public class SoftwareFmFixture {
 				guiBuilder.smallButton("smallButton.project.bugs", "smallButton.project.bugs.title", "smallButton.normal", ArtifactsAnchor.issuesKey,//
 						guiBuilder.displayer("displayer.url").title("project.issues.title").data("data.project.issues").tooltip("project.issues.tooltip").actions(//
 								guiBuilder.action("action.text.edit", "artifact.issues", "overlay.edit").tooltip("action.edit.tooltip").params("data.project.issues")), // ,//
-						guiBuilder.listDisplayer("displayer.list", "lineEditor.nameAndEmail").title("project.mailingList.title").data("data.project.mailingList")).//
+						guiBuilder.listDisplayer("displayer.list", "listEditor.nameAndEmail").title("project.mailingList.title").data("data.project.mailingList").actions(makeListActions(ArtifactsAnchor.mailingListKey))).//
 						ctrlClickAction("action.text.externalBrowseFileOrUrl", "data.project.issues"),//
 				guiBuilder.smallButton("smallButton.project.twitter", "smallButton.project.twitter.title", "smallButton.normal", ArtifactsAnchor.twitterKey,//
-						guiBuilder.listDisplayer("displayer.list", "lineEditor.nameAndEmail").title("project.twitter.title").data("data.project.twitter")));
+						guiBuilder.listDisplayer("displayer.list", "listEditor.tweet").title("project.twitter.title").data("data.project.twitter").actions(makeListActions(ArtifactsAnchor.twitterKey))));
 
 		organisationButton = guiBuilder.largeButton("largeButton.organisation", //
-				guiBuilder.smallButton("smallButton.organisation.details", "smallButton.organisation.details.title", "smallButton.normal",ArtifactsAnchor.organisationKey,//
+				guiBuilder.smallButton("smallButton.organisation.details", "smallButton.organisation.details.title", "smallButton.normal", ArtifactsAnchor.organisationKey,//
 						guiBuilder.displayer("displayer.text").title("organisation.name.title").data("data.organisation.name").actions(//
-								guiBuilder.action("action.text.edit",ArtifactsAnchor.organisationKey, "overlay.edit").tooltip("action.edit.tooltip").params("data.organisation.name")), // , //
+								guiBuilder.action("action.text.edit", ArtifactsAnchor.organisationKey, "overlay.edit").tooltip("action.edit.tooltip").params("data.organisation.name")), // , //
 						guiBuilder.displayer("displayer.url").title("organisation.url.title").data("data.jar.organisation.url").actions(//
-								guiBuilder.action("action.text.edit",ArtifactsAnchor.organisationKey, "overlay.edit").tooltip("action.edit.tooltip").params("data.organisation.url"),//
+								guiBuilder.action("action.text.edit", ArtifactsAnchor.organisationKey, "overlay.edit").tooltip("action.edit.tooltip").params("data.organisation.url"),//
 								guiBuilder.action("action.text.externalBrowseFileOrUrl", GeneralAnchor.browseKey).tooltip("data.jar.organisation.url").params("data.jar.organisation.url"))),//
 				guiBuilder.smallButton("smallButton.organisation.twitter", "smallButton.organisation.twitter.title", "smallButton.normal", ArtifactsAnchor.twitterKey, //
-						guiBuilder.listDisplayer("displayer.list", "lineEditor.nameAndEmail").title("organisation.twitter.title").data("data.organisation.twitter")));
+						guiBuilder.listDisplayer("displayer.list", "listEditor.nameAndEmail").title("organisation.twitter.title").data("data.organisation.twitter").actions(makeListActions(ArtifactsAnchor.twitterKey))));
+	}
+
+	public ActionDefn[] makeListActions(String artifactId) {
+		return new ActionDefn[] {//
+		guiBuilder.action("action.list.add", artifactId, OverlaysAnchor.addKey).tooltip("action.add.tooltip") };
 	}
 
 	public SoftwareFmDataComposite makeComposite(Composite parent) {
