@@ -23,9 +23,9 @@ public class ProjectLargeButtonFactory implements ILargeButtonFactory {
 								actions(LargeButtonMakers.makeMainListActions(guiBuilder, ArtifactsAnchor.mailingListKey)).listActions(LargeButtonMakers.listDeleteAction(guiBuilder, ArtifactsAnchor.mailingListKey))).//
 						ctrlClickAction("action.text.browse", "data.project.issues"),//
 				guiBuilder.smallButton("smallButton.project.twitter", "smallButton.project.twitter.title", "smallButton.normal", ArtifactsAnchor.twitterKey,//
-						guiBuilder.listDisplayer("displayer.list", "listEditor.tweet").title("project.twitter.title").data("data.project.tweets").//
+						guiBuilder.listDisplayer("displayer.list", "listEditor.tweet").title("project.twitter.add").data("data.project.tweets").//
 								actions(LargeButtonMakers.makeMainListActions(guiBuilder, ArtifactsAnchor.twitterKey)).//
-								listActions(guiBuilder.action("action.list.viewTweets", GeneralAnchor.browseKey).params("project.twitter.lineTitle"), //
+								listActions(guiBuilder.action("action.list.viewTweets", GeneralAnchor.browseKey).params("project.twitter.lineTitle").tooltip("action.browse.tooltip"), //
 										LargeButtonMakers.listDeleteAction(guiBuilder, ArtifactsAnchor.twitterKey))));
 	}
 

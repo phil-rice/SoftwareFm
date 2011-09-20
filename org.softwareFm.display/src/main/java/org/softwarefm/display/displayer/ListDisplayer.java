@@ -38,8 +38,8 @@ public class ListDisplayer  implements IDisplayer {
 		if (listEditor == null)
 			throw new IllegalStateException(MessageFormat.format(DisplayConstants.mustHaveA, "listEditor", defn));
 		this.content = new Composite(parent, SWT.BORDER);
-		this.mainLine = new TitleAnd(compositeConfig, content, defn.title, true);
 		this.listComposite = new Composite(content, SWT.NULL);
+		this.mainLine = new TitleAnd(compositeConfig, content, defn.title, true);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(content);
 	}
 

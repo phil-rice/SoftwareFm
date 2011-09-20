@@ -18,9 +18,9 @@ public class OrganisationLargeButtonFactory implements ILargeButtonFactory {
 								guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).tooltip("data.jar.organisation.url").params("data.jar.organisation.url"),//
 								guiBuilder.action("action.text.edit", ArtifactsAnchor.organisationKey, "overlay.edit").tooltip("action.edit.tooltip").params("data.organisation.url"))),//
 				guiBuilder.smallButton("smallButton.organisation.twitter", "smallButton.organisation.twitter.title", "smallButton.normal", ArtifactsAnchor.twitterKey, //
-						guiBuilder.listDisplayer("displayer.list", "listEditor.tweet").title("organisation.twitter.title").data("data.organisation.tweets").//
+						guiBuilder.listDisplayer("displayer.list", "listEditor.tweet").title("organisation.twitter.add").data("data.organisation.tweets").//
 								actions(LargeButtonMakers.makeMainListActions(guiBuilder, ArtifactsAnchor.twitterKey)).//
-								listActions(guiBuilder.action("action.list.viewTweets", GeneralAnchor.browseKey).params("project.twitter.lineTitle"), //
+								listActions(guiBuilder.action("action.list.viewTweets", GeneralAnchor.browseKey).params("data.organisation.tweets").tooltip("action.browse.tooltip"), //
 										LargeButtonMakers.listDeleteAction(guiBuilder, ArtifactsAnchor.twitterKey))));
 	}
 
