@@ -5,6 +5,7 @@ import java.util.Arrays;
 import junit.framework.TestCase;
 
 import org.softwareFm.display.ActionDefn;
+import org.softwareFm.display.displayer.DisplayerDefn;
 import org.softwareFm.display.displayer.DisplayerMock;
 import org.softwareFm.utilities.tests.Tests;
 

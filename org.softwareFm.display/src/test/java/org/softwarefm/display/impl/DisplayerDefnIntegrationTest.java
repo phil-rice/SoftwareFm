@@ -20,6 +20,7 @@ import org.softwareFm.display.composites.TitleAndText;
 import org.softwareFm.display.data.DataGetterMock;
 import org.softwareFm.display.data.IDataGetter;
 import org.softwareFm.display.data.ResourceGetterMock;
+import org.softwareFm.display.displayer.DisplayerDefn;
 import org.softwareFm.display.displayer.TextDisplayerFactory;
 import org.softwareFm.display.smallButtons.SimpleImageControl;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;

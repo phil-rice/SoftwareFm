@@ -9,8 +9,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.softwareFm.display.data.DisplayConstants;
-import org.softwareFm.display.impl.LargeButtonDefn;
-import org.softwareFm.display.impl.SmallButtonDefn;
+import org.softwareFm.display.largeButton.LargeButtonDefn;
+import org.softwareFm.display.smallButtons.SmallButtonDefn;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Iterables;
 import org.softwareFm.utilities.collections.Lists;

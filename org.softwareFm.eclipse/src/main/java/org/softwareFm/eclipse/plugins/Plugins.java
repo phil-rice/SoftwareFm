@@ -29,7 +29,18 @@ public class Plugins {
 					throw WrappedException.wrap(e2);
 				}
 			}
+	}
 
+	public static <T> T configureMainWithCallbacks(final T main, String id, final String propertyName, ICallback<Throwable> exceptions) {
+		useConfigElements(id, new ICallback<IConfigurationElement>() {
+			@Override
+			public void process(IConfigurationElement t) throws Exception {
+				ICallback<T> callback = (ICallback<T>) t.createExecutableExtension(propertyName);
+				callback.process(main);
+
+			}
+		}, exceptions);
+		return main;
 	}
 
 	@SuppressWarnings("unchecked")

@@ -1,18 +1,15 @@
 package org.softwareFm.display;
 
-import org.eclipse.jface.resource.ImageRegistry;
 import org.softwareFm.display.actions.ActionStore;
-import org.softwareFm.display.data.GuiDataStore;
+import org.softwareFm.display.displayer.DisplayerDefn;
 import org.softwareFm.display.displayer.DisplayerStore;
 import org.softwareFm.display.displayer.IDisplayerFactory;
-import org.softwareFm.display.impl.DisplayerDefn;
-import org.softwareFm.display.impl.LargeButtonDefn;
-import org.softwareFm.display.impl.SmallButtonDefn;
+import org.softwareFm.display.largeButton.LargeButtonDefn;
 import org.softwareFm.display.lists.IListEditor;
 import org.softwareFm.display.lists.ListEditorStore;
 import org.softwareFm.display.smallButtons.ISmallButtonFactory;
+import org.softwareFm.display.smallButtons.SmallButtonDefn;
 import org.softwareFm.display.smallButtons.SmallButtonStore;
-import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class GuiBuilder {
 
@@ -21,7 +18,7 @@ public class GuiBuilder {
 	private final DisplayerStore displayerStore;
 	private final ListEditorStore listEditorStore;
 
-	public GuiBuilder(IResourceGetter resourceGetter, ImageRegistry imageRegistry, SmallButtonStore smallButtonStore, GuiDataStore dataStore, ActionStore actionStore, DisplayerStore displayerStore, ListEditorStore listEditorStore) {
+	public GuiBuilder(SmallButtonStore smallButtonStore, ActionStore actionStore, DisplayerStore displayerStore, ListEditorStore listEditorStore) {
 		this.smallButtonStore = smallButtonStore;
 		this.actionStore = actionStore;
 		this.displayerStore = displayerStore;
@@ -56,4 +53,16 @@ public class GuiBuilder {
 		return new ActionDefn(actionId, mainImageId, overlayId);
 	}
 
+	public ActionStore getActionStore() {
+		return actionStore;
+	}
+	public DisplayerStore getDisplayerStore() {
+		return displayerStore;
+	}
+	public ListEditorStore getListEditorStore() {
+		return listEditorStore;
+	}
+	public SmallButtonStore getSmallButtonStore() {
+		return smallButtonStore;
+	}
 }

@@ -1,4 +1,4 @@
-package org.softwareFm.display.impl;
+package org.softwareFm.display.displayer;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -14,8 +14,6 @@ import org.softwareFm.display.actions.ActionStore;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.data.DisplayConstants;
 import org.softwareFm.display.data.IDataGetter;
-import org.softwareFm.display.displayer.IDisplayer;
-import org.softwareFm.display.displayer.IDisplayerFactory;
 import org.softwareFm.display.lists.IListEditor;
 import org.softwareFm.display.smallButtons.IImageButtonListener;
 import org.softwareFm.display.smallButtons.SimpleImageControl;

@@ -1,4 +1,4 @@
-package org.softwareFm.eclipse;
+package org.softwareFm.eclipse.configurators;
 
 import org.softwareFm.display.data.GuiDataStore;
 import org.softwareFm.display.data.IGuiDataStoreConfigurator;
@@ -6,7 +6,7 @@ import org.softwareFm.display.urlGenerator.JarUrlGenerator;
 import org.softwareFm.display.urlGenerator.UrlGenerator;
 
 
-public class SoftwareFmDataStoreConfigurator implements IGuiDataStoreConfigurator {
+public class DataStoreConfigurator implements IGuiDataStoreConfigurator {
 
 	@Override
 	public void process(GuiDataStore dataStore) {

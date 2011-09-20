@@ -7,7 +7,6 @@ import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.actions.ActionStore;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.data.IDataGetter;
-import org.softwareFm.display.impl.DisplayerDefn;
 
 public class DisplayerMock implements IDisplayerFactory {
 

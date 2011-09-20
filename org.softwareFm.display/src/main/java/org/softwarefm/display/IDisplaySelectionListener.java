@@ -1,7 +1,7 @@
 package org.softwareFm.display;
 
-import org.softwareFm.display.impl.LargeButtonDefn;
-import org.softwareFm.display.impl.SmallButtonDefn;
+import org.softwareFm.display.largeButton.LargeButtonDefn;
+import org.softwareFm.display.smallButtons.SmallButtonDefn;
 
 public interface IDisplaySelectionListener {
 

@@ -6,9 +6,9 @@ import junit.framework.TestCase;
 
 import org.softwareFm.display.actions.ActionMock;
 import org.softwareFm.display.actions.ActionStore;
+import org.softwareFm.display.displayer.DisplayerDefn;
 import org.softwareFm.display.displayer.DisplayerMock;
-import org.softwareFm.display.impl.DisplayerDefn;
-import org.softwareFm.display.impl.SmallButtonDefn;
+import org.softwareFm.display.smallButtons.SmallButtonDefn;
 import org.softwareFm.display.smallButtons.SmallButtonFactoryMock;
 import org.softwareFm.display.smallButtons.SmallButtonStore;
 
@@ -48,7 +48,7 @@ public class GuiBuilderTest extends TestCase {
 		smallButtonFactory1 = new SmallButtonFactoryMock("validId");
 		displayer = new DisplayerMock("1");
 		SmallButtonStore smallButtonStore = new SmallButtonStore().smallButton("smallButton.validId", smallButtonFactory1);
-		builder = new GuiBuilder(null, null, smallButtonStore, null, actionStore, null, null);
+		builder = new GuiBuilder(smallButtonStore, actionStore, null, null);
 	}
 
 }

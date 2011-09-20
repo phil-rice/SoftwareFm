@@ -14,7 +14,6 @@ import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.TitleAnd;
 import org.softwareFm.display.data.DisplayConstants;
 import org.softwareFm.display.data.IDataGetter;
-import org.softwareFm.display.impl.DisplayerDefn;
 import org.softwareFm.display.lists.IListEditor;
 import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.Swts;

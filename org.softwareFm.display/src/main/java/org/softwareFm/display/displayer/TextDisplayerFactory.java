@@ -10,7 +10,6 @@ import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.TitleAndText;
 import org.softwareFm.display.data.DisplayConstants;
 import org.softwareFm.display.data.IDataGetter;
-import org.softwareFm.display.impl.DisplayerDefn;
 import org.softwareFm.utilities.strings.Strings;
 
 public class TextDisplayerFactory  implements IDisplayerFactory {

@@ -1,9 +1,11 @@
-package org.softwareFm.display.impl;
+package org.softwareFm.display.largeButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import org.softwareFm.display.smallButtons.SmallButtonDefn;
 
 public class LargeButtonDefn {
 
