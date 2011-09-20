@@ -13,7 +13,7 @@ public class JarLargeButtonFactory implements ILargeButtonFactory {
 		return guiBuilder.largeButton("largeButton.jar",//
 				guiBuilder.smallButton("smallButton.jar.details", "smallButton.jar.details.title", "smallButton.jar", ArtifactsAnchor.jarKey, //
 						guiBuilder.displayer("displayer.text").title("jar.jarName.title").data("data.raw.jarPath").tooltip("jar.jarPath.tooltip"), //
-						guiBuilder.displayer("displayer.text").title("project.name.title").data("data.project.name").actions(//
+						guiBuilder.displayer("displayer.text").title("project.name.title").data("data.project.project.name").actions(//
 								guiBuilder.action("action.text.edit", ArtifactsAnchor.projectKey, "overlay.edit").tooltip("action.edit.tooltip").params("data.jar.project.url"),//
 								guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).tooltip("data.jar.project.url").params("data.jar.project.url")//
 								).tooltip("data.jar.project.url"),//

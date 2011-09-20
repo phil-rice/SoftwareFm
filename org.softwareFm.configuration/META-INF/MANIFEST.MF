@@ -10,6 +10,5 @@ Export-Package: org.softwareFm.configuration,
  org.softwareFm.configuration.configurators,
  org.softwareFm.configuration.fixture,
  org.softwareFm.configuration.jar,
- org.softwareFm.configuration.plugins,
  org.softwareFm.configuration.sample
 Bundle-SymbolicName: org.softwareFm.configuration

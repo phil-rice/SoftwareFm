@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: org.softwareFm.ScanView
-Bundle-SymbolicName: org.softwareFm.ScanView;singleton:=true
-Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: SoftwareFm
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.softwareFm.core;bundle-version="1.0.0";visibility:=reexport

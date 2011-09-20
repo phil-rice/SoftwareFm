@@ -18,6 +18,8 @@ public class UrlGenerator implements IUrlGenerator {
 
 	@Override
 	public String findUrlFor(String entity, Object data) {
+		if (data == null)
+			return null;
 		if (!(data instanceof String))
 			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.mustBeAString, data, data.getClass().getName()));
 		UrlRipperResult ripperResult = Urls.rip((String) data);

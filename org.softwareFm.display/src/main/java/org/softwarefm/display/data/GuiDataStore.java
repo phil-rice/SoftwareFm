@@ -39,7 +39,7 @@ public class GuiDataStore implements IDataGetter {
 
 	}
 
-public	static class DependantData {
+	public static class DependantData {
 		public String entity;
 		public String linkData;
 
@@ -112,13 +112,15 @@ public	static class DependantData {
 				entityCachedData.put(url, data);
 				lastUrlFor.put(entity, url);
 				for (DependantData dependantData : Maps.getOrEmptyList(entityToDependantMap, entity)) {
-					Object linkObject = data.get(dependantData.linkData);
+					Object linkObject = data == null ? null : data.get(dependantData.linkData);
 					processOneData(dependantData.entity, linkObject, context);
 				}
 			}
 
 		};
-		if (entityCachedData.containsKey(url)) {
+		if (url == null)
+			callback.processData(entity, url, context, Collections.<String, Object> emptyMap());
+		else if (entityCachedData.containsKey(url)) {
 			// fireListeners(entity, url, context, entityCachedData.get(url));
 			callback.processData(entity, url, context, entityCachedData.get(url));
 		} else
@@ -209,11 +211,11 @@ public	static class DependantData {
 	public Map<String, IUrlGenerator> getUrlGeneratorMap() {
 		return Collections.unmodifiableMap(urlGeneratorMap);
 	}
-	
+
 	public Map<String, List<DependantData>> getEntityToDependantMap() {
 		return Collections.unmodifiableMap(entityToDependantMap);
 	}
-	
+
 	public String getMainEntity() {
 		return mainEntity;
 	}

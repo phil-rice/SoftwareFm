@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: org.softwareFm.entityProjectData
-Bundle-SymbolicName: org.softwareFm.entityProjectData;singleton:=true
-Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: softwareFm
-Require-Bundle: org.softwareFm.core;bundle-version="1.0.0";visibility:=reexport
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.softwareFm.entityProjectData

@@ -20,7 +20,7 @@
 </extension>
 
 <extension  point="org.softwareFm.eclipse.dataStore">
-      <item class="org.softwareFm.configuration.configurators.DataStoreConfigurator"/>
+      <item class="org.softwareFm.eclipse.DataStoreConfigurator"/>
 </extension>
 
 <extension  point="org.softwareFm.eclipse.smallButton">
@@ -49,5 +49,9 @@
       <item class="org.softwareFm.configuration.configurators.OrganisationLargeButtonFactory"/>
 </extension>
 
-
+ <extension  point="org.eclipse.ui.views">
+      <category  name="SoftwareFm" id="org.softwareFm" />
+      <view  name="SoftwareFm" icon="icons/Jar.gif" category="org.softwareFm"   
+             class="org.softwareFm.eclipse.SoftwareFmView"   id="org.softwareFm.eclipse.SoftwareFmView" />
+   </extension>
 </plugin>

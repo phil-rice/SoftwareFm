@@ -43,7 +43,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 	// private final Map<String, List<IDisplayer>> smallButtonIdToDisplayerMap = Maps.newMap(LinkedHashMap.class);
 	private final Map<String, Group> smallButtonIdToGroupMap = Maps.newMap(LinkedHashMap.class);
 
-	public SoftwareFmDataComposite(final Composite parent, GuiDataStore guiDataStore, CompositeConfig compositeConfig, final ActionStore actionStore, IEditorFactory editorFactory, ICallback<Throwable> exceptionHandler, final LargeButtonDefn... largeButtonDefns) {
+	public SoftwareFmDataComposite(final Composite parent, GuiDataStore guiDataStore, CompositeConfig compositeConfig, final ActionStore actionStore, IEditorFactory editorFactory, ICallback<Throwable> exceptionHandler, final List<LargeButtonDefn> largeButtonDefns) {
 		this.content = new Composite(parent, SWT.NULL);
 		final IResourceGetter resourceGetter = compositeConfig.resourceGetter;
 		displaySelectionModel = new DisplaySelectionModel(exceptionHandler, largeButtonDefns);
@@ -98,17 +98,21 @@ public class SoftwareFmDataComposite implements IHasComposite {
 		});
 		guiDataStore.addGuiDataListener(new IGuiDataListener() {
 			@Override
-			public void data(String entity, String url, Map<String, Object> context, Map<String, Object> data) {
-				for (final LargeButtonDefn largeButtonDefn : largeButtonDefns) {
-					for (SmallButtonDefn smallButtonDefn : largeButtonDefn.defns) {
-						ISmallDisplayer smallDisplayer = smallButtonIdToSmallDisplayerMap.get(smallButtonDefn.id);
-						smallDisplayer.data(dataGetter, entity, url, context, data);
-						for (DisplayerDefn defn : smallButtonDefn.defns) {
-							IDisplayer displayer = displayDefnToDisplayerMap.get(defn);
-							defn.data(dataGetter, defn, displayer, entity, url, context, data);
+			public void data(final String entity, final String url, final Map<String, Object> context, final Map<String, Object> data) {
+				Swts.asyncExec(SoftwareFmDataComposite.this, new Runnable() {
+					public void run() {
+						for (final LargeButtonDefn largeButtonDefn : largeButtonDefns) {
+							for (SmallButtonDefn smallButtonDefn : largeButtonDefn.defns) {
+								ISmallDisplayer smallDisplayer = smallButtonIdToSmallDisplayerMap.get(smallButtonDefn.id);
+								smallDisplayer.data(dataGetter, entity, url, context, data);
+								for (DisplayerDefn defn : smallButtonDefn.defns) {
+									IDisplayer displayer = displayDefnToDisplayerMap.get(defn);
+									defn.data(dataGetter, defn, displayer, entity, url, context, data);
+								}
+							}
 						}
 					}
-				}
+				});
 			}
 		});
 	}

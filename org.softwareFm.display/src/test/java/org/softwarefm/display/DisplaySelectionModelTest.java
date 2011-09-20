@@ -24,12 +24,12 @@ public class DisplaySelectionModelTest extends TestCase {
 	private LargeButtonDefn largeDefn2;
 
 	public void testConstructor() {
-		DisplaySelectionModel model = new DisplaySelectionModel(ICallback.Utils.rethrow(), largeDefn1, largeDefn2);
+		DisplaySelectionModel model = new DisplaySelectionModel(ICallback.Utils.rethrow(),Arrays.asList(largeDefn1, largeDefn2));
 		checkButtons(model, "1", "1.a", "1.b");
 	}
 
 	public void testSelectInformsListeners() {
-		DisplaySelectionModel model = new DisplaySelectionModel(ICallback.Utils.rethrow(), largeDefn1, largeDefn2);
+		DisplaySelectionModel model = new DisplaySelectionModel(ICallback.Utils.rethrow(), Arrays.asList(largeDefn1, largeDefn2));
 		DisplaySelectionListenerMock listener1 = new DisplaySelectionListenerMock();
 		DisplaySelectionListenerMock listener2 = new DisplaySelectionListenerMock();
 		model.addDisplaySelectionListener(listener1);
@@ -44,7 +44,7 @@ public class DisplaySelectionModelTest extends TestCase {
 	}
 
 	public void testSelectChangesLargeButtonWhenSmallButtonFromDifferentLargeButtonIsPressed() {
-		DisplaySelectionModel model = new DisplaySelectionModel(ICallback.Utils.rethrow(), largeDefn1, largeDefn2);
+		DisplaySelectionModel model = new DisplaySelectionModel(ICallback.Utils.rethrow(), Arrays.asList(largeDefn1, largeDefn2));
 		model.select("2.a");
 		checkButtons(model, "2", "2.a", "2.b", "2.c");
 		model.select("1.b");
@@ -54,7 +54,7 @@ public class DisplaySelectionModelTest extends TestCase {
 	}
 
 	public void testSelectChangesButtonVisibilityWhenSmallButtonFromSelectedLargeButtonIsPressed() {
-		DisplaySelectionModel model = new DisplaySelectionModel(ICallback.Utils.rethrow(), largeDefn1, largeDefn2);
+		DisplaySelectionModel model = new DisplaySelectionModel(ICallback.Utils.rethrow(), Arrays.asList(largeDefn1, largeDefn2));
 		model.select("2.a");
 		checkButtons(model, "2", "2.a", "2.b", "2.c");
 		model.select("2.a");
@@ -68,7 +68,7 @@ public class DisplaySelectionModelTest extends TestCase {
 	}
 	
 	public void testRemembersSelectionStateWhenSwappingLargeButtons(){
-		DisplaySelectionModel model = new DisplaySelectionModel(ICallback.Utils.rethrow(), largeDefn1, largeDefn2);
+		DisplaySelectionModel model = new DisplaySelectionModel(ICallback.Utils.rethrow(), Arrays.asList(largeDefn1, largeDefn2));
 		model.select("2.a");
 		model.select("2.a");
 		checkButtons(model, "2", "2.b", "2.c");

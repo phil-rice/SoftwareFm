@@ -6,15 +6,16 @@ import java.util.Map;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.softwareFm.configuration.SoftwareFmPropertyAnchor;
-import org.softwareFm.configuration.plugins.IPlugInCreationCallback;
-import org.softwareFm.configuration.plugins.Plugins;
 import org.softwareFm.display.GuiBuilder;
 import org.softwareFm.display.IUrlDataCallback;
 import org.softwareFm.display.IUrlToData;
+import org.softwareFm.display.SoftwareFmDataComposite;
 import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.actions.ActionStore;
 import org.softwareFm.display.composites.CompositeConfig;
@@ -27,10 +28,18 @@ import org.softwareFm.display.largeButton.ILargeButtonFactory;
 import org.softwareFm.display.largeButton.LargeButtonDefn;
 import org.softwareFm.display.lists.ListEditorStore;
 import org.softwareFm.display.smallButtons.SmallButtonStore;
+import org.softwareFm.httpClient.response.IResponse;
+import org.softwareFm.jdtBinding.api.BindingRipperResult;
+import org.softwareFm.jdtBinding.api.IBindingRipper;
+import org.softwareFm.jdtBinding.api.JavaProjects;
+import org.softwareFm.jdtBinding.api.RippedResult;
+import org.softwareFm.repositoryFacard.IRepositoryFacard;
+import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 /**
@@ -61,6 +70,8 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	private GuiDataStore guiDataStore;
 	private IEditorFactory editorFactory;
 	private List<LargeButtonDefn> largeButtonDefns;
+	private SelectedArtifactSelectionManager selectedArtifactSelectionManager;
+	private IRepositoryFacard repository;
 
 	public SoftwareFmActivator() {
 	}
@@ -83,6 +94,17 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		smallButtonStore = null;
 		listEditorStore = null;
 		guiDataStore = null;
+		if (selectedArtifactSelectionManager != null) {
+			Plugins.walkSelectionServices(new ICallback<ISelectionService>() {
+				@Override
+				public void process(ISelectionService t) throws Exception {
+					t.removePostSelectionListener(selectedArtifactSelectionManager);
+				}
+			});
+		}
+		if (repository != null)
+			repository.shutdown();
+		repository = null;
 	}
 
 	public static SoftwareFmActivator getDefault() {
@@ -133,9 +155,18 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	}
 
 	public GuiDataStore getGuiDataStore() {
+		final IRepositoryFacard repository = getRepository();
 		return guiDataStore == null ? guiDataStore = Plugins.configureMainWithCallbacks(new GuiDataStore(new IUrlToData() {
 			@Override
-			public void getData(String entity, String url, Map<String, Object> context, IUrlDataCallback callback) {
+			public void getData(final String entity, final String url, final Map<String, Object> context, final IUrlDataCallback callback) {
+				System.out.println("Requesting data: " + url);
+				repository.get(url, new IRepositoryFacardCallback() {
+					@Override
+					public void process(IResponse response, Map<String, Object> data) {
+						callback.processData(entity, url, context, data);
+						
+					}
+				});
 			}
 		}, onException()), dataStoreConfiguratorId, "class", onException()) : guiDataStore;
 	}
@@ -166,5 +197,55 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 			});
 		}
 		return largeButtonDefns;
+	}
+
+	public ISelectedBindingManager getSelectedBindingManager() {
+		return selectedArtifactSelectionManager == null ? selectedArtifactSelectionManager = makeNewSelectedArtifactManager() : selectedArtifactSelectionManager;
+
+	}
+
+	private SelectedArtifactSelectionManager makeNewSelectedArtifactManager() {
+		final SelectedArtifactSelectionManager result = new SelectedArtifactSelectionManager(IBindingRipper.Utils.ripper());
+		Plugins.walkSelectionServices(new ICallback<ISelectionService>() {
+			@Override
+			public void process(ISelectionService t) throws Exception {
+				t.addPostSelectionListener(result);
+			}
+		});
+		return result;
+	}
+
+	public IRepositoryFacard getRepository() {
+		return repository == null ? IRepositoryFacard.Utils.defaultFacard() : repository;
+	}
+
+	public SoftwareFmDataComposite makeComposite(Composite parent) {
+		Display display = parent.getDisplay();
+		final GuiDataStore guiDataStore = getGuiDataStore();
+		getSelectedBindingManager().addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
+			@Override
+			public void selectionOccured(final BindingRipperResult rippedResult) {
+				String javadoc = JavaProjects.findJavadocFor(rippedResult.classpathEntry);
+				String source = JavaProjects.findSourceFor(rippedResult.packageFragmentRoot);
+				ICallback<String> sourceMutator = new ICallback<String>() {
+					@Override
+					public void process(String newValue) throws Exception {
+						JavaProjects.setSourceAttachment(rippedResult.javaProject, rippedResult.classpathEntry, newValue);
+					}
+				};
+				ICallback<String> javadocMutator = new ICallback<String>() {
+					@Override
+					public void process(String newValue) throws Exception {
+						JavaProjects.setJavadoc(rippedResult.javaProject, rippedResult.classpathEntry, newValue);
+					}
+				};
+				RippedResult result = new RippedResult(rippedResult.hexDigest, rippedResult.path.toOSString(), rippedResult.path.lastSegment().toString(), javadoc, source, javadocMutator, sourceMutator);
+				System.out.println("About to processData: " + result);
+				guiDataStore.processData(result, Maps.<String, Object> newMap());
+			}
+		});
+		SoftwareFmDataComposite composite = new SoftwareFmDataComposite(parent, guiDataStore, getCompositeConfig(display), getActionStore(), getEditorFactory(display), onException(), getLargeButtonDefns());
+		return composite;
+
 	}
 }

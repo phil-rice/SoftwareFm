@@ -12,8 +12,8 @@ public class ProjectLargeButtonFactory implements ILargeButtonFactory {
 	public LargeButtonDefn apply(GuiBuilder guiBuilder) throws Exception {
 		return guiBuilder.largeButton("largeButton.project", //
 				guiBuilder.smallButton("smallButton.project.details", "smallButton.project.details.title", "smallButton.normal", ArtifactsAnchor.projectKey, //
-						guiBuilder.displayer("displayer.text").title("project.name.title").data("data.project.name").tooltip("data.project.description").actions(//
-								guiBuilder.action("action.text.edit", ArtifactsAnchor.projectKey, "overlay.edit").tooltip("action.edit.tooltip").params("data.project.name")), //
+						guiBuilder.displayer("displayer.text").title("project.name.title").data("data.project.project.name").tooltip("data.project.description").actions(//
+								guiBuilder.action("action.text.edit", ArtifactsAnchor.projectKey, "overlay.edit").tooltip("action.edit.tooltip").params("data.project.project.name")), //
 						guiBuilder.displayer("displayer.url").title("project.url.title").data("data.jar.project.url")).//
 						ctrlClickAction("action.text.browse", "data.jar.projectUrl").tooltip("smallButton.project.details.tooltip"),//
 				guiBuilder.smallButton("smallButton.project.bugs", "smallButton.project.bugs.title", "smallButton.normal", ArtifactsAnchor.issuesKey,//
@@ -23,9 +23,10 @@ public class ProjectLargeButtonFactory implements ILargeButtonFactory {
 								actions(LargeButtonMakers.makeMainListActions(guiBuilder, ArtifactsAnchor.mailingListKey)).listActions(LargeButtonMakers.listDeleteAction(guiBuilder, ArtifactsAnchor.mailingListKey))).//
 						ctrlClickAction("action.text.browse", "data.project.issues"),//
 				guiBuilder.smallButton("smallButton.project.twitter", "smallButton.project.twitter.title", "smallButton.normal", ArtifactsAnchor.twitterKey,//
-						guiBuilder.listDisplayer("displayer.list", "listEditor.tweet").title("project.twitter.title").data("data.project.twitter").//
+						guiBuilder.listDisplayer("displayer.list", "listEditor.tweet").title("project.twitter.title").data("data.project.tweets").//
 								actions(LargeButtonMakers.makeMainListActions(guiBuilder, ArtifactsAnchor.twitterKey)).//
-								listActions(guiBuilder.action("action.list.viewTweets", GeneralAnchor.browseKey).params("project.twitter.lineTitle"), LargeButtonMakers.listDeleteAction(guiBuilder, ArtifactsAnchor.twitterKey))));
+								listActions(guiBuilder.action("action.list.viewTweets", GeneralAnchor.browseKey).params("project.twitter.lineTitle"), //
+										LargeButtonMakers.listDeleteAction(guiBuilder, ArtifactsAnchor.twitterKey))));
 	}
 
 }

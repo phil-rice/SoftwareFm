@@ -1,7 +1,6 @@
 package org.softwareFm.display;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -26,12 +25,12 @@ public class DisplaySelectionModel {
 	private final ICallback<Throwable> exceptionHandler;
 	private final List<LargeButtonDefn> largeButtonDefns;
 
-	public DisplaySelectionModel(ICallback<Throwable> exceptionHandler, LargeButtonDefn... largeButtonDefns) {
-		if (largeButtonDefns.length == 0)
+	public DisplaySelectionModel(ICallback<Throwable> exceptionHandler, List<LargeButtonDefn>largeButtonDefns) {
+		if (largeButtonDefns.size() == 0)
 			throw new IllegalArgumentException(DisplayConstants.mustHaveSomeLargeButtons);
 		this.exceptionHandler = exceptionHandler;
-		this.largeButtonDefns = new ArrayList<LargeButtonDefn>(Arrays.asList(largeButtonDefns));
-		populateVisible(largeButtonDefns[0]);
+		this.largeButtonDefns = new ArrayList<LargeButtonDefn>(largeButtonDefns);
+		populateVisible(largeButtonDefns.get(0));
 
 	}
 
