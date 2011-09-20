@@ -9,7 +9,7 @@ import org.softwareFm.display.urlGenerator.UrlGenerator;
 public class SoftwareFmDataStoreConfigurator implements IGuiDataStoreConfigurator {
 
 	@Override
-	public void configure(GuiDataStore dataStore) {
+	public void process(GuiDataStore dataStore) {
 		dataStore.//
 				urlGenerator("urlGenerator.jar", new JarUrlGenerator()).//
 				urlGenerator("urlGenerator.project", new UrlGenerator("project")).//

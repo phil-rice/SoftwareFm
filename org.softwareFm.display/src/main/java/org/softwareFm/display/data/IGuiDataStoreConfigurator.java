@@ -1,6 +1,7 @@
 package org.softwareFm.display.data;
 
-public interface IGuiDataStoreConfigurator {
+import org.softwareFm.utilities.callbacks.ICallback;
 
-	void configure(GuiDataStore dataStore);
+public interface IGuiDataStoreConfigurator extends ICallback<GuiDataStore> {
+
 }

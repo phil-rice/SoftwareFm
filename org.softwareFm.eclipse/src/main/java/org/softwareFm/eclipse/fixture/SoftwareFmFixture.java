@@ -34,6 +34,7 @@ import org.softwareFm.display.lists.ValueListEditor;
 import org.softwareFm.display.smallButtons.SmallButtonStore;
 import org.softwareFm.display.urlGenerator.JarUrlGenerator;
 import org.softwareFm.display.urlGenerator.UrlGenerator;
+import org.softwareFm.eclipse.SoftwareFmDataStoreConfigurator;
 import org.softwareFm.eclipse.SoftwareFmPropertyAnchor;
 import org.softwareFm.eclipse.jar.JarSimpleButtonFactory;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
@@ -71,13 +72,8 @@ public class SoftwareFmFixture {
 
 		layout = new SoftwareFmLayout();
 		compositeConfig = new CompositeConfig(display, layout, imageRegistry, resourceGetter);
-		dataStore = new GuiDataStore(IUrlToData.Utils.errorCallback(), ICallback.Utils.rethrow()).//
-				urlGenerator("urlGenerator.jar", new JarUrlGenerator()).//
-				urlGenerator("urlGenerator.project", new UrlGenerator("project")).//
-				urlGenerator("urlGenerator.organisation", new UrlGenerator("organisation")).//
-				entity("jar", "urlGenerator.jar").//
-				dependant("jar", "project", "jar.projectUrl", "urlGenerator.project").//
-				dependant("jar", "organisation", "jar.organisationUrl", "urlGenerator.organisation");
+		dataStore = new GuiDataStore(IUrlToData.Utils.errorCallback(), ICallback.Utils.rethrow());
+		new SoftwareFmDataStoreConfigurator().process(dataStore);
 
 		smallButtonStore = new SmallButtonStore().//
 				smallButton("smallButton.normal", new SmallButtonFactory()).//

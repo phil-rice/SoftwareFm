@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.softwareFm.eclipse
 Bundle-SymbolicName: org.softwareFm.eclipse;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.softwarefm.eclipse.Activator
+Bundle-Activator: org.softwareFm.eclipse.SoftwareFmActivator
 Require-Bundle: org.softwareFm.jdtBinding;bundle-version="1.0.0",
  org.softwareFm.display;bundle-version="1.0.0",
  org.eclipse.ui;bundle-version="3.7.0"

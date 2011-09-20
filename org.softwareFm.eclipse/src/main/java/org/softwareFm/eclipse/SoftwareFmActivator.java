@@ -16,18 +16,18 @@ import org.softwareFm.utilities.callbacks.ICallback;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class Activator extends AbstractUIPlugin {
+public class SoftwareFmActivator extends AbstractUIPlugin {
 	public static String dataStoreConfiguratorId = "org.softwareFm.dataStoreConfigurator";
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.softwareFm.eclipse";
 
 	// The shared instance
-	private static Activator plugin;
+	private static SoftwareFmActivator plugin;
 
 	private static GuiDataStore guiDataStore;
 
-	public Activator() {
+	public SoftwareFmActivator() {
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class Activator extends AbstractUIPlugin {
 		super.stop(context);
 	}
 
-	public static Activator getDefault() {
+	public static SoftwareFmActivator getDefault() {
 		return plugin;
 	}
 
@@ -62,7 +62,7 @@ public class Activator extends AbstractUIPlugin {
 				@Override
 				public void process(IConfigurationElement t) throws Exception {
 					IGuiDataStoreConfigurator configurator = (IGuiDataStoreConfigurator) t.createExecutableExtension("class");
-					configurator.configure(guiDataStore);
+					configurator.process(guiDataStore);
 				}}, onException());
 		}
 		return guiDataStore;

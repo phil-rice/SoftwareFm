@@ -39,9 +39,9 @@ public class GuiDataStore implements IDataGetter {
 
 	}
 
-	static class DependantData {
-		String entity;
-		String linkData;
+public	static class DependantData {
+		public String entity;
+		public String linkData;
 
 		public DependantData(String entity, String linkData) {
 			this.entity = entity;
