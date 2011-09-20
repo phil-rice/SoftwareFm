@@ -9,7 +9,7 @@ public class EditorFactoryConfigurator implements IEditorFactoryConfigurator{
 
 	@Override
 	public void process(IEditorFactory editorFactory) throws Exception {
-		editorFactory.register("editor.test", new TextEditor());
+		editorFactory.register("editor.text", new TextEditor());
 		
 	}
 

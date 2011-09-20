@@ -31,8 +31,22 @@
       <item class="org.softwareFm.eclipse.configurators.ListEditorConfigurator"/>
 </extension>
 
+<extension  point="org.softwareFm.action">
+      <item class="org.softwareFm.eclipse.configurators.ActionStoreConfigurator"/>
+</extension>
+
 <extension  point="org.softwareFm.displayer">
       <item class="org.softwareFm.eclipse.configurators.DisplayerStoreConfigurator"/>
+</extension>
+
+<extension  point="org.softwareFm.editor">
+      <item class="org.softwareFm.eclipse.configurators.EditorFactoryConfigurator"/>
+</extension>
+
+<extension  point="org.softwareFm.largeButton">
+      <item class="org.softwareFm.eclipse.configurators.JarLargeButtonFactory"/>
+      <item class="org.softwareFm.eclipse.configurators.ProjectLargeButtonFactory"/>
+      <item class="org.softwareFm.eclipse.configurators.OrganisationLargeButtonFactory"/>
 </extension>
 
 

@@ -1,5 +1,6 @@
 package org.softwareFm.eclipse;
 
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -19,6 +20,9 @@ import org.softwareFm.display.data.IGuiDataStoreConfigurator;
 import org.softwareFm.display.displayer.DisplayerStore;
 import org.softwareFm.display.editor.EditorContext;
 import org.softwareFm.display.editor.EditorFactory;
+import org.softwareFm.display.editor.IEditorFactory;
+import org.softwareFm.display.largeButton.ILargeButtonFactory;
+import org.softwareFm.display.largeButton.LargeButtonDefn;
 import org.softwareFm.display.lists.ListEditorStore;
 import org.softwareFm.display.smallButtons.SmallButtonStore;
 import org.softwareFm.eclipse.configurators.ActionStoreConfigurator;
@@ -27,9 +31,12 @@ import org.softwareFm.eclipse.configurators.DisplayerStoreConfigurator;
 import org.softwareFm.eclipse.configurators.EditorFactoryConfigurator;
 import org.softwareFm.eclipse.configurators.ListEditorConfigurator;
 import org.softwareFm.eclipse.configurators.SmallButtonConfigurator;
+import org.softwareFm.eclipse.plugins.IPlugInCreationCallback;
 import org.softwareFm.eclipse.plugins.Plugins;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 /**
@@ -41,6 +48,8 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	public static String actionStoreConfiguratorId = "org.softwareFm.action";
 	public static String displayerStoreConfiguratorId = "org.softwareFm.displayer";
 	public static String listEditorStoreConfiguratorId = "org.softwareFm.listEditor";
+	public static String editorConfiguratorId = "org.softwareFm.editor";
+	public static String largeButtonConfiguratorId = "org.softwareFm.largeButton";
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.softwareFm.eclipse";
@@ -56,6 +65,8 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	private SmallButtonStore smallButtonStore;
 	private ListEditorStore listEditorStore;
 	private GuiDataStore guiDataStore;
+	private IEditorFactory editorFactory;
+	private List<LargeButtonDefn> largeButtonDefns;
 
 	public SoftwareFmActivator() {
 	}
@@ -133,5 +144,33 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 			public void getData(String entity, String url, Map<String, Object> context, IUrlDataCallback callback) {
 			}
 		}, onException()), dataStoreConfiguratorId, "class", onException()) : guiDataStore;
+	}
+
+	public IEditorFactory getEditorFactory(Display display) {
+		return editorFactory == null ? editorFactory = Plugins.configureMainWithCallbacks(new EditorFactory(getEditorContext(display)), editorConfiguratorId, "class", onException()) : editorFactory;
+	}
+
+	public List<LargeButtonDefn> getLargeButtonDefns() {
+		if (largeButtonDefns == null) {
+			largeButtonDefns = Lists.newList();
+			final GuiBuilder guiBuilder = getGuiBuilder();
+			Plugins.useClasses(largeButtonConfiguratorId, new IPlugInCreationCallback<ILargeButtonFactory>() {
+
+				@Override
+				public void process(ILargeButtonFactory t, IConfigurationElement element) throws Exception {
+					largeButtonDefns.add(t.apply(guiBuilder));
+				}
+
+				@Override
+				public void onException(Throwable throwable, IConfigurationElement element) {
+					try {
+						SoftwareFmActivator.this.onException().process(throwable);
+					} catch (Exception e) {
+						throw WrappedException.wrap(e);
+					}
+				}
+			});
+		}
+		return largeButtonDefns;
 	}
 }

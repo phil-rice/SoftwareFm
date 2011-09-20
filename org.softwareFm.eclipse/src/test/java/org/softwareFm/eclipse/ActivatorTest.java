@@ -9,10 +9,13 @@ import junit.framework.TestCase;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.softwareFm.display.GuiBuilder;
+import org.softwareFm.display.actions.ActionStore;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.data.GuiDataStore;
 import org.softwareFm.display.data.GuiDataStore.DependantData;
 import org.softwareFm.display.displayer.DisplayerStore;
+import org.softwareFm.display.editor.EditorFactory;
+import org.softwareFm.display.largeButton.LargeButtonDefn;
 import org.softwareFm.display.lists.ListEditorStore;
 import org.softwareFm.display.smallButtons.SmallButtonStore;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
@@ -61,8 +64,18 @@ public class ActivatorTest extends TestCase {
 		assertSame(store, softwareFmActivator.getGuiBuilder().getDisplayerStore());
 		assertNotNull(store.get("displayer.text"));
 	}
-	
+	public void testEditorStore(){
+		EditorFactory store = (EditorFactory) softwareFmActivator.getEditorFactory(display);
+		assertSame(store, softwareFmActivator.getEditorFactory(display));
+		assertNotNull(store.get("editor.text"));
+	}
 
+	public void testActionStore(){
+		ActionStore store = softwareFmActivator.getGuiBuilder().getActionStore();
+		assertSame(store, softwareFmActivator.getGuiBuilder().getActionStore());
+		assertNotNull(store.get("action.text.browse"));
+	}
+	
 	public void testGetGuiDataStore() {
 		GuiDataStore dataStore = softwareFmActivator.getGuiDataStore();
 		assertSame(dataStore, softwareFmActivator.getGuiDataStore());
@@ -79,6 +92,18 @@ public class ActivatorTest extends TestCase {
 		assertEquals(Sets.makeSet("urlGenerator.jar", "urlGenerator.project", "urlGenerator.organisation"), dataStore.getUrlGeneratorMap().keySet());
 	}
 
+	public void testGetLargeButtons(){
+		List<LargeButtonDefn> largeButtons = softwareFmActivator.getLargeButtonDefns();
+		assertSame(largeButtons, softwareFmActivator.getLargeButtonDefns());
+		
+		assertEquals(Arrays.asList("largeButton.jar", "largeButton.project", "largeButton.organisation"), Lists.map(largeButtons, new IFunction1<LargeButtonDefn, String>() {
+			@Override
+			public String apply(LargeButtonDefn from) throws Exception {
+				return from.id;
+			}
+		}));
+	}
+	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -90,7 +115,6 @@ public class ActivatorTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		shell.dispose();
-
 		super.tearDown();
 	}
 }
