@@ -6,9 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: softwareFm
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.softwareFm.selectedArtefactPlugin;bundle-version="1.0.0",
- org.softwareFm.displayJarPath;bundle-version="1.0.0",
  org.softwareFm.displayLists;bundle-version="1.0.0",
  org.softwareFm.displayText;bundle-version="1.0.0",
  org.softwareFm.displayUrl;bundle-version="1.0.0",
  org.softwareFm.display;bundle-version="1.0.0",
- org.softwareFm.eclipse;bundle-version="1.0.0"
+ org.softwareFm.configuration;bundle-version="1.0.0"

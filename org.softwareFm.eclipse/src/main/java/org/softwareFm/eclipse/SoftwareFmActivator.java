@@ -9,6 +9,9 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.softwareFm.configuration.SoftwareFmPropertyAnchor;
+import org.softwareFm.configuration.plugins.IPlugInCreationCallback;
+import org.softwareFm.configuration.plugins.Plugins;
 import org.softwareFm.display.GuiBuilder;
 import org.softwareFm.display.IUrlDataCallback;
 import org.softwareFm.display.IUrlToData;
@@ -16,7 +19,6 @@ import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.actions.ActionStore;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.data.GuiDataStore;
-import org.softwareFm.display.data.IGuiDataStoreConfigurator;
 import org.softwareFm.display.displayer.DisplayerStore;
 import org.softwareFm.display.editor.EditorContext;
 import org.softwareFm.display.editor.EditorFactory;
@@ -25,14 +27,6 @@ import org.softwareFm.display.largeButton.ILargeButtonFactory;
 import org.softwareFm.display.largeButton.LargeButtonDefn;
 import org.softwareFm.display.lists.ListEditorStore;
 import org.softwareFm.display.smallButtons.SmallButtonStore;
-import org.softwareFm.eclipse.configurators.ActionStoreConfigurator;
-import org.softwareFm.eclipse.configurators.DataStoreConfigurator;
-import org.softwareFm.eclipse.configurators.DisplayerStoreConfigurator;
-import org.softwareFm.eclipse.configurators.EditorFactoryConfigurator;
-import org.softwareFm.eclipse.configurators.ListEditorConfigurator;
-import org.softwareFm.eclipse.configurators.SmallButtonConfigurator;
-import org.softwareFm.eclipse.plugins.IPlugInCreationCallback;
-import org.softwareFm.eclipse.plugins.Plugins;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
@@ -43,16 +37,16 @@ import org.softwareFm.utilities.resources.IResourceGetter;
  * The activator class controls the plug-in life cycle
  */
 public class SoftwareFmActivator extends AbstractUIPlugin {
-	public static String dataStoreConfiguratorId = "org.softwareFm.dataStore";
-	public static String smallButtonStoreConfiguratorId = "org.softwareFm.smallButton";
-	public static String actionStoreConfiguratorId = "org.softwareFm.action";
-	public static String displayerStoreConfiguratorId = "org.softwareFm.displayer";
-	public static String listEditorStoreConfiguratorId = "org.softwareFm.listEditor";
-	public static String editorConfiguratorId = "org.softwareFm.editor";
-	public static String largeButtonConfiguratorId = "org.softwareFm.largeButton";
+	public static String dataStoreConfiguratorId = "org.softwareFm.eclipse.dataStore";
+	public static String smallButtonStoreConfiguratorId = "org.softwareFm.eclipse.smallButton";
+	public static String actionStoreConfiguratorId = "org.softwareFm.eclipse.action";
+	public static String displayerStoreConfiguratorId = "org.softwareFm.eclipse.displayer";
+	public static String listEditorStoreConfiguratorId = "org.softwareFm.eclipse.listEditor";
+	public static String editorConfiguratorId = "org.softwareFm.eclipse.editor";
+	public static String largeButtonConfiguratorId = "org.softwareFm.eclipse.largeButton";
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.softwareFm.eclipse";
+	public static final String PLUGIN_ID = "org.softwareFm.eclipse.configuration";
 
 	// The shared instance
 	private static SoftwareFmActivator plugin;

@@ -93,7 +93,7 @@ public class ShowAllSimpleImageButtons {
 											map.put(SmallIconPosition.TopRight, "smallIcon.softwareFm");
 										if (sourceFm)
 											map.put(SmallIconPosition.BottomRight, "smallIcon.softwareFm");
-										SimpleImageButton button = makeJarVarient(buttonParent, imageButtonConfig.withImage("artifact." + key), map, state);
+										makeJarVarient(buttonParent, imageButtonConfig.withImage("artifact." + key), map, state);
 
 									}
 			}

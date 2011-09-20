@@ -2,7 +2,6 @@ package org.softwareFm.jdtBinding.api;
 
 import java.util.HashMap;
 
-import org.eclipse.core.runtime.IPath;
 import org.softwareFm.utilities.callbacks.ICallback;
 
 public class RippedResult extends HashMap<String, Object> {

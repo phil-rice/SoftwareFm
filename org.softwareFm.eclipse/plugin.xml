@@ -1,52 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="org.softwareFm.image" name="Image" schema="schema/org.softwareFm.eclipse.exsd"/>
-   <extension-point id="org.softwareFm.bundle" name="Bundle" schema="schema/org.softwareFm.eclipse.exsd"/>
-   <extension-point id="org.softwareFm.dataStore" name="dataStoreConfigurator" schema="schema/org.softwareFm.eclipse.exsd"/>
-   <extension-point id="org.softwareFm.smallButton" name="smallButton" schema="schema/org.softwareFm.eclipse.exsd"/>
-   <extension-point id="org.softwareFm.action" name="action" schema="schema/org.softwareFm.eclipse.exsd"/>
-   <extension-point id="org.softwareFm.displayer" name="displayer" schema="schema/org.softwareFm.eclipse.exsd"/>
-   <extension-point id="org.softwareFm.listEditor" name="listEditor" schema="schema/org.softwareFm.eclipse.exsd"/>
-   <extension-point id="org.softwareFm.editor" name="editor" schema="schema/org.softwareFm.eclipse.exsd"/>
-   <extension-point id="org.softwareFm.largeButton" name="largeButton" schema="schema/org.softwareFm.eclipse.exsd"/>
+   <extension-point id="org.softwareFm.eclipse.image" name="Image" schema="schema/org.softwareFm.eclipse.exsd"/>
+   <extension-point id="org.softwareFm.eclipse.bundle" name="Bundle" schema="schema/org.softwareFm.eclipse.exsd"/>
+   <extension-point id="org.softwareFm.eclipse.dataStore" name="dataStoreConfigurator" schema="schema/org.softwareFm.eclipse.exsd"/>
+   <extension-point id="org.softwareFm.eclipse.smallButton" name="smallButton" schema="schema/org.softwareFm.eclipse.exsd"/>
+   <extension-point id="org.softwareFm.eclipse.action" name="action" schema="schema/org.softwareFm.eclipse.exsd"/>
+   <extension-point id="org.softwareFm.eclipse.displayer" name="displayer" schema="schema/org.softwareFm.eclipse.exsd"/>
+   <extension-point id="org.softwareFm.eclipse.listEditor" name="listEditor" schema="schema/org.softwareFm.eclipse.exsd"/>
+   <extension-point id="org.softwareFm.eclipse.editor" name="editor" schema="schema/org.softwareFm.eclipse.exsd"/>
+   <extension-point id="org.softwareFm.eclipse.largeButton" name="largeButton" schema="schema/org.softwareFm.eclipse.exsd"/>
 
-<extension  point="org.softwareFm.image">
+<extension  point="org.softwareFm.eclipse.image">
       <item class ="org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator"/>
 </extension>
 
-<extension  point="org.softwareFm.bundle">
-      <item name ="SoftwareFmDisplay" class="org.softwareFm.eclipse.Activator"/>
+<extension  point="org.softwareFm.eclipse.bundle">
+      <item name ="SoftwareFmDisplay" class="org.softwareFm.configuration.SoftwareFmPropertyAnchor"/>
 </extension>
 
-<extension  point="org.softwareFm.dataStore">
-      <item class="org.softwareFm.eclipse.configurators.DataStoreConfigurator"/>
+<extension  point="org.softwareFm.eclipse.dataStore">
+      <item class="org.softwareFm.configuration.configurators.DataStoreConfigurator"/>
 </extension>
 
-<extension  point="org.softwareFm.smallButton">
-      <item class="org.softwareFm.eclipse.configurators.SmallButtonConfigurator"/>
+<extension  point="org.softwareFm.eclipse.smallButton">
+      <item class="org.softwareFm.configuration.configurators.SmallButtonConfigurator"/>
 </extension>
 
-<extension  point="org.softwareFm.listEditor">
-      <item class="org.softwareFm.eclipse.configurators.ListEditorConfigurator"/>
+<extension  point="org.softwareFm.eclipse.listEditor">
+      <item class="org.softwareFm.configuration.configurators.ListEditorConfigurator"/>
 </extension>
 
-<extension  point="org.softwareFm.action">
-      <item class="org.softwareFm.eclipse.configurators.ActionStoreConfigurator"/>
+<extension  point="org.softwareFm.eclipse.action">
+      <item class="org.softwareFm.configuration.configurators.ActionStoreConfigurator"/>
 </extension>
 
-<extension  point="org.softwareFm.displayer">
-      <item class="org.softwareFm.eclipse.configurators.DisplayerStoreConfigurator"/>
+<extension  point="org.softwareFm.eclipse.displayer">
+      <item class="org.softwareFm.configuration.configurators.DisplayerStoreConfigurator"/>
 </extension>
 
-<extension  point="org.softwareFm.editor">
-      <item class="org.softwareFm.eclipse.configurators.EditorFactoryConfigurator"/>
+<extension  point="org.softwareFm.eclipse.editor">
+      <item class="org.softwareFm.configuration.configurators.EditorFactoryConfigurator"/>
 </extension>
 
-<extension  point="org.softwareFm.largeButton">
-      <item class="org.softwareFm.eclipse.configurators.JarLargeButtonFactory"/>
-      <item class="org.softwareFm.eclipse.configurators.ProjectLargeButtonFactory"/>
-      <item class="org.softwareFm.eclipse.configurators.OrganisationLargeButtonFactory"/>
+<extension  point="org.softwareFm.eclipse.largeButton">
+      <item class="org.softwareFm.configuration.configurators.JarLargeButtonFactory"/>
+      <item class="org.softwareFm.configuration.configurators.ProjectLargeButtonFactory"/>
+      <item class="org.softwareFm.configuration.configurators.OrganisationLargeButtonFactory"/>
 </extension>
 
 
