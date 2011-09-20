@@ -1,4 +1,4 @@
-package org.softwarefm.display.impl;
+package org.softwareFm.display.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;

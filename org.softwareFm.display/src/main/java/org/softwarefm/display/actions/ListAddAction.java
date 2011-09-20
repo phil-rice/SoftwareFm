@@ -1,9 +1,9 @@
-package org.softwarefm.display.actions;
+package org.softwareFm.display.actions;
 
 import java.util.List;
 
-import org.softwarefm.display.IAction;
-import org.softwarefm.display.displayer.IDisplayer;
+import org.softwareFm.display.IAction;
+import org.softwareFm.display.displayer.IDisplayer;
 
 public class ListAddAction implements IAction {
 

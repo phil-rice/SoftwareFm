@@ -1,6 +1,6 @@
-package org.softwarefm.display.urlGenerator;
+package org.softwareFm.display.urlGenerator;
 
-import org.softwarefm.display.data.IUrlGenerator;
+import org.softwareFm.display.data.IUrlGenerator;
 
 public class JarUrlGenerator implements IUrlGenerator {
 

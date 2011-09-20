@@ -1,18 +1,18 @@
-package org.softwarefm.display;
+package org.softwareFm.display;
 
 import org.eclipse.jface.resource.ImageRegistry;
+import org.softwareFm.display.actions.ActionStore;
+import org.softwareFm.display.data.GuiDataStore;
+import org.softwareFm.display.displayer.DisplayerStore;
+import org.softwareFm.display.displayer.IDisplayerFactory;
+import org.softwareFm.display.impl.DisplayerDefn;
+import org.softwareFm.display.impl.LargeButtonDefn;
+import org.softwareFm.display.impl.SmallButtonDefn;
+import org.softwareFm.display.lists.IListEditor;
+import org.softwareFm.display.lists.ListEditorStore;
+import org.softwareFm.display.smallButtons.ISmallButtonFactory;
+import org.softwareFm.display.smallButtons.SmallButtonStore;
 import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwarefm.display.actions.ActionStore;
-import org.softwarefm.display.data.GuiDataStore;
-import org.softwarefm.display.displayer.DisplayerStore;
-import org.softwarefm.display.displayer.IDisplayerFactory;
-import org.softwarefm.display.impl.DisplayerDefn;
-import org.softwarefm.display.impl.LargeButtonDefn;
-import org.softwarefm.display.impl.SmallButtonDefn;
-import org.softwarefm.display.lists.IListEditor;
-import org.softwarefm.display.lists.ListEditorStore;
-import org.softwarefm.display.smallButtons.ISmallButtonFactory;
-import org.softwarefm.display.smallButtons.SmallButtonStore;
 
 public class GuiBuilder {
 

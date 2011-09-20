@@ -1,4 +1,4 @@
-package org.softwarefm.display.impl;
+package org.softwareFm.display.impl;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -10,24 +10,24 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.softwareFm.display.ActionDefn;
+import org.softwareFm.display.SoftwareFmLayout;
+import org.softwareFm.display.actions.ActionContext;
+import org.softwareFm.display.actions.ActionMock;
+import org.softwareFm.display.actions.ActionStore;
+import org.softwareFm.display.composites.CompositeConfig;
+import org.softwareFm.display.composites.TitleAndText;
+import org.softwareFm.display.data.DataGetterMock;
+import org.softwareFm.display.data.IDataGetter;
+import org.softwareFm.display.data.ResourceGetterMock;
+import org.softwareFm.display.displayer.TextDisplayerFactory;
+import org.softwareFm.display.smallButtons.SimpleImageControl;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.NameAndValue;
-import org.softwarefm.display.ActionDefn;
-import org.softwarefm.display.SoftwareFmLayout;
-import org.softwarefm.display.actions.ActionContext;
-import org.softwarefm.display.actions.ActionMock;
-import org.softwarefm.display.actions.ActionStore;
-import org.softwarefm.display.composites.CompositeConfig;
-import org.softwarefm.display.composites.TitleAndText;
-import org.softwarefm.display.data.DataGetterMock;
-import org.softwarefm.display.data.IDataGetter;
-import org.softwarefm.display.data.ResourceGetterMock;
-import org.softwarefm.display.displayer.TextDisplayerFactory;
-import org.softwarefm.display.smallButtons.SimpleImageControl;
 
 public class DisplayerDefnIntegrationTest extends TestCase {
 

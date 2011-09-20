@@ -1,10 +1,10 @@
-package org.softwarefm.display;
+package org.softwareFm.eclipse.jar;
 
+import org.softwareFm.display.displayer.ISmallDisplayer;
+import org.softwareFm.display.impl.SmallButtonDefn;
+import org.softwareFm.display.smallButtons.ISmallButtonFactory;
+import org.softwareFm.display.smallButtons.ImageButtonConfig;
 import org.softwareFm.swtBasics.text.IButtonParent;
-import org.softwarefm.display.displayer.ISmallDisplayer;
-import org.softwarefm.display.impl.SmallButtonDefn;
-import org.softwarefm.display.smallButtons.ISmallButtonFactory;
-import org.softwarefm.display.smallButtons.ImageButtonConfig;
 
 public class JarSimpleButtonFactory implements ISmallButtonFactory {
 

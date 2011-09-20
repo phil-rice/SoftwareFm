@@ -1,9 +1,9 @@
-package org.softwarefm.display.lists;
+package org.softwareFm.display.lists;
 
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.display.composites.CompositeConfig;
+import org.softwareFm.display.impl.DisplayerDefn;
 import org.softwareFm.swtBasics.text.IButtonParent;
-import org.softwarefm.display.composites.CompositeConfig;
-import org.softwarefm.display.impl.DisplayerDefn;
 
 public class ListEditorMock implements IListEditor {
 

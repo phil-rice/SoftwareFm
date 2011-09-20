@@ -1,4 +1,4 @@
-package org.softwarefm.display.impl;
+package org.softwareFm.display.impl;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -6,10 +6,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.softwarefm.display.IAction;
-import org.softwarefm.display.actions.ActionStore;
-import org.softwarefm.display.data.DisplayConstants;
-import org.softwarefm.display.smallButtons.ISmallButtonFactory;
+import org.softwareFm.display.IAction;
+import org.softwareFm.display.actions.ActionStore;
+import org.softwareFm.display.data.DisplayConstants;
+import org.softwareFm.display.smallButtons.ISmallButtonFactory;
 
 public class SmallButtonDefn {
 

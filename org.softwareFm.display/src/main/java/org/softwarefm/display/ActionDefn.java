@@ -1,16 +1,16 @@
-package org.softwarefm.display;
+package org.softwareFm.display;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 
+import org.softwareFm.display.data.DisplayConstants;
+import org.softwareFm.display.smallButtons.IImageButtonListener;
+import org.softwareFm.display.smallButtons.ImageButtonConfig;
+import org.softwareFm.display.smallButtons.SimpleImageButton;
 import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.text.IButtonParent;
 import org.softwareFm.utilities.collections.Lists;
-import org.softwarefm.display.data.DisplayConstants;
-import org.softwarefm.display.smallButtons.IImageButtonListener;
-import org.softwarefm.display.smallButtons.ImageButtonConfig;
-import org.softwarefm.display.smallButtons.SimpleImageButton;
 
 public class ActionDefn {
 

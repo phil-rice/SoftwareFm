@@ -1,13 +1,13 @@
-package org.softwarefm.display.editor;
+package org.softwareFm.display.editor;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Shell;
+import org.softwareFm.display.data.DisplayConstants;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.strings.Strings;
-import org.softwarefm.display.data.DisplayConstants;
 
 public class TextEditor implements IEditor {
 

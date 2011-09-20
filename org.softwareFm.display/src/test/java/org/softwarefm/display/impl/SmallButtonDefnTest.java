@@ -1,13 +1,13 @@
-package org.softwarefm.display.impl;
+package org.softwareFm.display.impl;
 
 import java.util.Collections;
 
 import junit.framework.TestCase;
 
+import org.softwareFm.display.actions.ActionMock;
+import org.softwareFm.display.actions.ActionStore;
+import org.softwareFm.display.smallButtons.SmallButtonFactoryMock;
 import org.softwareFm.utilities.tests.Tests;
-import org.softwarefm.display.actions.ActionMock;
-import org.softwarefm.display.actions.ActionStore;
-import org.softwarefm.display.smallButtons.SmallButtonFactoryMock;
 
 public class SmallButtonDefnTest extends TestCase {
 

@@ -1,4 +1,4 @@
-package org.softwarefm.display.smallButtons;
+package org.softwareFm.display.smallButtons;
 
 import org.junit.Test;
 import org.softwareFm.utilities.maps.AbstractSimpleMapTest;

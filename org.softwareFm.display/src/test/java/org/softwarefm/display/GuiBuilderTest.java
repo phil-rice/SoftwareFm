@@ -1,16 +1,16 @@
-package org.softwarefm.display;
+package org.softwareFm.display;
 
 import java.util.Arrays;
 
 import junit.framework.TestCase;
 
-import org.softwarefm.display.actions.ActionMock;
-import org.softwarefm.display.actions.ActionStore;
-import org.softwarefm.display.displayer.DisplayerMock;
-import org.softwarefm.display.impl.DisplayerDefn;
-import org.softwarefm.display.impl.SmallButtonDefn;
-import org.softwarefm.display.smallButtons.SmallButtonFactoryMock;
-import org.softwarefm.display.smallButtons.SmallButtonStore;
+import org.softwareFm.display.actions.ActionMock;
+import org.softwareFm.display.actions.ActionStore;
+import org.softwareFm.display.displayer.DisplayerMock;
+import org.softwareFm.display.impl.DisplayerDefn;
+import org.softwareFm.display.impl.SmallButtonDefn;
+import org.softwareFm.display.smallButtons.SmallButtonFactoryMock;
+import org.softwareFm.display.smallButtons.SmallButtonStore;
 
 public class GuiBuilderTest extends TestCase {
 

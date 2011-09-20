@@ -1,4 +1,4 @@
-package org.softwarefm.display.impl;
+package org.softwareFm.display.impl;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -7,23 +7,23 @@ import java.util.Map;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.softwareFm.display.ActionDefn;
+import org.softwareFm.display.IAction;
+import org.softwareFm.display.actions.ActionContext;
+import org.softwareFm.display.actions.ActionStore;
+import org.softwareFm.display.composites.CompositeConfig;
+import org.softwareFm.display.data.DisplayConstants;
+import org.softwareFm.display.data.IDataGetter;
+import org.softwareFm.display.displayer.IDisplayer;
+import org.softwareFm.display.displayer.IDisplayerFactory;
+import org.softwareFm.display.lists.IListEditor;
+import org.softwareFm.display.smallButtons.IImageButtonListener;
+import org.softwareFm.display.smallButtons.SimpleImageControl;
 import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.text.IButtonParent;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.strings.Strings;
-import org.softwarefm.display.ActionDefn;
-import org.softwarefm.display.IAction;
-import org.softwarefm.display.actions.ActionContext;
-import org.softwarefm.display.actions.ActionStore;
-import org.softwarefm.display.composites.CompositeConfig;
-import org.softwarefm.display.data.DisplayConstants;
-import org.softwarefm.display.data.IDataGetter;
-import org.softwarefm.display.displayer.IDisplayer;
-import org.softwarefm.display.displayer.IDisplayerFactory;
-import org.softwarefm.display.lists.IListEditor;
-import org.softwarefm.display.smallButtons.IImageButtonListener;
-import org.softwarefm.display.smallButtons.SimpleImageControl;
 
 public class DisplayerDefn {
 

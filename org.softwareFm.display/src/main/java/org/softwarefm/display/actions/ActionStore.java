@@ -1,4 +1,4 @@
-package org.softwarefm.display.actions;
+package org.softwareFm.display.actions;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -6,10 +6,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.softwareFm.display.IAction;
+import org.softwareFm.display.data.DisplayConstants;
 import org.softwareFm.utilities.maps.ISimpleMap;
 import org.softwareFm.utilities.maps.Maps;
-import org.softwarefm.display.IAction;
-import org.softwarefm.display.data.DisplayConstants;
 
 public class ActionStore implements ISimpleMap<String, IAction> {
 

@@ -1,4 +1,4 @@
-package org.softwarefm.display;
+package org.softwareFm.eclipse;
 
 public class SoftwareFmPropertyAnchor {
 

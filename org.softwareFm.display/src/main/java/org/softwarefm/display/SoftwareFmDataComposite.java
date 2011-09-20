@@ -1,4 +1,4 @@
-package org.softwarefm.display;
+package org.softwareFm.display;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -11,6 +11,20 @@ import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.softwareFm.display.actions.ActionContext;
+import org.softwareFm.display.actions.ActionStore;
+import org.softwareFm.display.composites.CompositeConfig;
+import org.softwareFm.display.data.DataGetter;
+import org.softwareFm.display.data.GuiDataStore;
+import org.softwareFm.display.data.IDataGetter;
+import org.softwareFm.display.data.IGuiDataListener;
+import org.softwareFm.display.displayer.IDisplayer;
+import org.softwareFm.display.displayer.ISmallDisplayer;
+import org.softwareFm.display.editor.IEditorFactory;
+import org.softwareFm.display.impl.DisplayerDefn;
+import org.softwareFm.display.impl.LargeButtonDefn;
+import org.softwareFm.display.impl.SmallButtonDefn;
+import org.softwareFm.display.smallButtons.ImageButtonConfig;
 import org.softwareFm.swtBasics.IHasComposite;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -18,20 +32,6 @@ import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
-import org.softwarefm.display.actions.ActionContext;
-import org.softwarefm.display.actions.ActionStore;
-import org.softwarefm.display.composites.CompositeConfig;
-import org.softwarefm.display.data.DataGetter;
-import org.softwarefm.display.data.GuiDataStore;
-import org.softwarefm.display.data.IDataGetter;
-import org.softwarefm.display.data.IGuiDataListener;
-import org.softwarefm.display.displayer.ISmallDisplayer;
-import org.softwarefm.display.displayer.IDisplayer;
-import org.softwarefm.display.editor.IEditorFactory;
-import org.softwarefm.display.impl.DisplayerDefn;
-import org.softwarefm.display.impl.LargeButtonDefn;
-import org.softwarefm.display.impl.SmallButtonDefn;
-import org.softwarefm.display.smallButtons.ImageButtonConfig;
 
 public class SoftwareFmDataComposite implements IHasComposite {
 

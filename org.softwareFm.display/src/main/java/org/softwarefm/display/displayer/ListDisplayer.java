@@ -1,4 +1,4 @@
-package org.softwarefm.display.displayer;
+package org.softwareFm.display.displayer;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -8,18 +8,18 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.softwareFm.display.actions.ActionContext;
+import org.softwareFm.display.actions.ActionStore;
+import org.softwareFm.display.composites.CompositeConfig;
+import org.softwareFm.display.composites.TitleAnd;
+import org.softwareFm.display.data.DisplayConstants;
+import org.softwareFm.display.data.IDataGetter;
+import org.softwareFm.display.impl.DisplayerDefn;
+import org.softwareFm.display.lists.IListEditor;
 import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.text.IButtonParent;
 import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwarefm.display.actions.ActionContext;
-import org.softwarefm.display.actions.ActionStore;
-import org.softwarefm.display.composites.CompositeConfig;
-import org.softwarefm.display.composites.TitleAnd;
-import org.softwarefm.display.data.DisplayConstants;
-import org.softwarefm.display.data.IDataGetter;
-import org.softwarefm.display.impl.DisplayerDefn;
-import org.softwarefm.display.lists.IListEditor;
 
 public class ListDisplayer  implements IDisplayer {
 

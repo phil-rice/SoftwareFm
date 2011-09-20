@@ -1,13 +1,13 @@
-package org.softwarefm.display.displayer;
+package org.softwareFm.display.displayer;
 
 import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwarefm.display.actions.ActionContext;
-import org.softwarefm.display.actions.ActionStore;
-import org.softwarefm.display.composites.CompositeConfig;
-import org.softwarefm.display.data.IDataGetter;
-import org.softwarefm.display.impl.DisplayerDefn;
+import org.softwareFm.display.actions.ActionContext;
+import org.softwareFm.display.actions.ActionStore;
+import org.softwareFm.display.composites.CompositeConfig;
+import org.softwareFm.display.data.IDataGetter;
+import org.softwareFm.display.impl.DisplayerDefn;
 
 public class DisplayerMock implements IDisplayerFactory {
 

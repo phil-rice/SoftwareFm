@@ -1,17 +1,17 @@
-package org.softwarefm.display.displayer;
+package org.softwareFm.display.displayer;
 
 import java.text.MessageFormat;
 import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.display.actions.ActionContext;
+import org.softwareFm.display.actions.ActionStore;
+import org.softwareFm.display.composites.CompositeConfig;
+import org.softwareFm.display.composites.TitleAndText;
+import org.softwareFm.display.data.DisplayConstants;
+import org.softwareFm.display.data.IDataGetter;
+import org.softwareFm.display.impl.DisplayerDefn;
 import org.softwareFm.utilities.strings.Strings;
-import org.softwarefm.display.actions.ActionContext;
-import org.softwarefm.display.actions.ActionStore;
-import org.softwarefm.display.composites.CompositeConfig;
-import org.softwarefm.display.composites.TitleAndText;
-import org.softwarefm.display.data.DisplayConstants;
-import org.softwarefm.display.data.IDataGetter;
-import org.softwarefm.display.impl.DisplayerDefn;
 
 public class TextDisplayerFactory  implements IDisplayerFactory {
 

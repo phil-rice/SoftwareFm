@@ -1,13 +1,13 @@
-package org.softwarefm.display.composites;
+package org.softwareFm.display.composites;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
+import org.softwareFm.display.SoftwareFmLayout;
+import org.softwareFm.display.smallButtons.ImageButtonConfig;
 import org.softwareFm.softwareFmImages.backdrop.BackdropAnchor;
 import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwarefm.display.SoftwareFmLayout;
-import org.softwarefm.display.smallButtons.ImageButtonConfig;
 
 public class CompositeConfig {
 	public final SoftwareFmLayout layout;

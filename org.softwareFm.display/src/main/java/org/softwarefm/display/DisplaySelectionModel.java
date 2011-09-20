@@ -1,4 +1,4 @@
-package org.softwarefm.display;
+package org.softwareFm.display;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,15 +8,15 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.softwareFm.display.data.DisplayConstants;
+import org.softwareFm.display.impl.LargeButtonDefn;
+import org.softwareFm.display.impl.SmallButtonDefn;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Iterables;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
-import org.softwarefm.display.data.DisplayConstants;
-import org.softwarefm.display.impl.LargeButtonDefn;
-import org.softwarefm.display.impl.SmallButtonDefn;
 
 public class DisplaySelectionModel {
 

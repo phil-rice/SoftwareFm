@@ -1,10 +1,10 @@
-package org.softwarefm.display.actions;
+package org.softwareFm.display.actions;
 
 import java.util.List;
 
+import org.softwareFm.display.IAction;
+import org.softwareFm.display.displayer.IDisplayer;
 import org.softwareFm.utilities.collections.Lists;
-import org.softwarefm.display.IAction;
-import org.softwarefm.display.displayer.IDisplayer;
 
 public class ActionMock implements IAction {
 

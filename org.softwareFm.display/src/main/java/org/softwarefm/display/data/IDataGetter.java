@@ -1,4 +1,4 @@
-package org.softwarefm.display.data;
+package org.softwareFm.display.data;
 
 public interface IDataGetter {
 	Object getDataFor(String key);

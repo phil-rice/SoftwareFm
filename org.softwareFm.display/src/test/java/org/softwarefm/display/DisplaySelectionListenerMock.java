@@ -1,10 +1,10 @@
-package org.softwarefm.display;
+package org.softwareFm.display;
 
 import java.util.List;
 
+import org.softwareFm.display.impl.LargeButtonDefn;
+import org.softwareFm.display.impl.SmallButtonDefn;
 import org.softwareFm.utilities.collections.Lists;
-import org.softwarefm.display.impl.LargeButtonDefn;
-import org.softwarefm.display.impl.SmallButtonDefn;
 
 public class DisplaySelectionListenerMock implements IDisplaySelectionListener {
 

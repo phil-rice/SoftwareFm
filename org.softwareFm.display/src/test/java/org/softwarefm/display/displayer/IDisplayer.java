@@ -1,4 +1,4 @@
-package org.softwarefm.display.displayer;
+package org.softwareFm.display.displayer;
 
 import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.text.IButtonParent;

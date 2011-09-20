@@ -1,4 +1,4 @@
-package org.softwarefm.display;
+package org.softwareFm.display;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.widgets.Composite;

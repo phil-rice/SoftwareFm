@@ -1,13 +1,11 @@
-package org.softwarefm.display.actions;
+package org.softwareFm.display.actions;
 
 import java.awt.Desktop;
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
-import org.softwarefm.display.IAction;
-import org.softwarefm.display.displayer.IDisplayer;
+import org.softwareFm.display.IAction;
+import org.softwareFm.display.displayer.IDisplayer;
 
 public class ViewTweetsAction implements IAction {
 

@@ -1,4 +1,4 @@
-package org.softwarefm.display.samples;
+package org.softwareFm.display.samples;
 
 import java.util.Map;
 
@@ -7,6 +7,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.softwareFm.display.smallButtons.ImageButtonConfig;
+import org.softwareFm.display.smallButtons.SimpleImageButton;
 import org.softwareFm.softwareFmImages.IImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
@@ -17,8 +19,6 @@ import org.softwareFm.swtBasics.text.IButtonParent;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwarefm.display.smallButtons.ImageButtonConfig;
-import org.softwarefm.display.smallButtons.SimpleImageButton;
 
 public class ShowAllSimpleImageButtons {
 

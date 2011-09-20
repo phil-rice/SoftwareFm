@@ -1,4 +1,4 @@
-package org.softwarefm.display.smallButtons;
+package org.softwareFm.display.smallButtons;
 
 import org.softwareFm.swtBasics.IHasControl;
 

@@ -1,4 +1,4 @@
-package org.softwarefm.display.actions;
+package org.softwareFm.display.actions;
 
 import java.util.Arrays;
 import java.util.List;
@@ -6,16 +6,16 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.widgets.Shell;
+import org.softwareFm.display.SoftwareFmLayout;
+import org.softwareFm.display.composites.CompositeConfig;
+import org.softwareFm.display.editor.EditorContext;
+import org.softwareFm.display.editor.EditorFactory;
+import org.softwareFm.display.editor.IEditor;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.maps.AbstractSimpleMapTest;
 import org.softwareFm.utilities.maps.ISimpleMap;
 import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwarefm.display.SoftwareFmLayout;
-import org.softwarefm.display.composites.CompositeConfig;
-import org.softwarefm.display.editor.EditorContext;
-import org.softwarefm.display.editor.EditorFactory;
-import org.softwarefm.display.editor.IEditor;
 
 public class EditorFactoryTest extends AbstractSimpleMapTest<String, IEditor> {
 

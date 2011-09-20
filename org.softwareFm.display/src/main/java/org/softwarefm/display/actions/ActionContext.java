@@ -1,8 +1,8 @@
-package org.softwarefm.display.actions;
+package org.softwareFm.display.actions;
 
-import org.softwarefm.display.composites.CompositeConfig;
-import org.softwarefm.display.data.IDataGetter;
-import org.softwarefm.display.editor.IEditorFactory;
+import org.softwareFm.display.composites.CompositeConfig;
+import org.softwareFm.display.data.IDataGetter;
+import org.softwareFm.display.editor.IEditorFactory;
 
 public class ActionContext {
 	public final IDataGetter dataGetter;

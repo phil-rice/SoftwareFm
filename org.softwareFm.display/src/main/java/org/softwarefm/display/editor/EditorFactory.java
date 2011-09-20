@@ -1,4 +1,4 @@
-package org.softwarefm.display.editor;
+package org.softwareFm.display.editor;
 
 import java.text.MessageFormat;
 import java.util.LinkedHashMap;
@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.widgets.Shell;
+import org.softwareFm.display.data.DisplayConstants;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Iterables;
 import org.softwareFm.utilities.maps.ISimpleMap;
 import org.softwareFm.utilities.maps.Maps;
-import org.softwarefm.display.data.DisplayConstants;
 
 public class EditorFactory implements IEditorFactory, ISimpleMap<String, IEditor> {
 

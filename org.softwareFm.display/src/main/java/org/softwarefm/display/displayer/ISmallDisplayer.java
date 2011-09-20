@@ -1,9 +1,9 @@
-package org.softwarefm.display.displayer;
+package org.softwareFm.display.displayer;
 
 import java.util.Map;
 
+import org.softwareFm.display.data.IDataGetter;
 import org.softwareFm.swtBasics.IHasControl;
-import org.softwarefm.display.data.IDataGetter;
 
 public interface ISmallDisplayer extends IHasControl {
 

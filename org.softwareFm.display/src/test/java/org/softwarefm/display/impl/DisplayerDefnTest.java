@@ -1,12 +1,12 @@
-package org.softwarefm.display.impl;
+package org.softwareFm.display.impl;
 
 import java.util.Arrays;
 
 import junit.framework.TestCase;
 
+import org.softwareFm.display.ActionDefn;
+import org.softwareFm.display.displayer.DisplayerMock;
 import org.softwareFm.utilities.tests.Tests;
-import org.softwarefm.display.ActionDefn;
-import org.softwarefm.display.displayer.DisplayerMock;
 
 public class DisplayerDefnTest extends TestCase {
 

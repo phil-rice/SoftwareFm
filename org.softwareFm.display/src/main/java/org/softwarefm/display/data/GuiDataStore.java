@@ -1,6 +1,7 @@
-package org.softwarefm.display.data;
+package org.softwareFm.display.data;
 
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -8,11 +9,11 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.softwareFm.display.IUrlDataCallback;
+import org.softwareFm.display.IUrlToData;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.maps.Maps;
-import org.softwarefm.display.IUrlDataCallback;
-import org.softwarefm.display.IUrlToData;
 
 public class GuiDataStore implements IDataGetter {
 	private final IUrlToData urlToData;
@@ -205,4 +206,15 @@ public class GuiDataStore implements IDataGetter {
 
 	}
 
+	public Map<String, IUrlGenerator> getUrlGeneratorMap() {
+		return Collections.unmodifiableMap(urlGeneratorMap);
+	}
+	
+	public Map<String, List<DependantData>> getEntityToDependantMap() {
+		return Collections.unmodifiableMap(entityToDependantMap);
+	}
+	
+	public String getMainEntity() {
+		return mainEntity;
+	}
 }

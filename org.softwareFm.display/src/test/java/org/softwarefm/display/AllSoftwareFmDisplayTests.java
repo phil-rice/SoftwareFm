@@ -1,4 +1,4 @@
-package org.softwarefm.display;
+package org.softwareFm.display;
 
 import java.io.File;
 

@@ -1,13 +1,13 @@
-package org.softwarefm.display.smallButtons;
+package org.softwareFm.display.smallButtons;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.softwareFm.display.data.DisplayConstants;
 import org.softwareFm.utilities.maps.ISimpleMap;
 import org.softwareFm.utilities.maps.Maps;
-import org.softwarefm.display.data.DisplayConstants;
 
 public class SmallButtonStore implements ISimpleMap<String, ISmallButtonFactory> {
 

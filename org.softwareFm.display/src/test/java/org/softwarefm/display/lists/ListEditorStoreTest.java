@@ -1,4 +1,4 @@
-package org.softwarefm.display.lists;
+package org.softwareFm.display.lists;
 
 import org.softwareFm.utilities.maps.AbstractSimpleMapTest;
 import org.softwareFm.utilities.maps.ISimpleMap;

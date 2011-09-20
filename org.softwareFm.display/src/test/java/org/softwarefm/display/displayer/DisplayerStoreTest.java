@@ -1,4 +1,4 @@
-package org.softwarefm.display.displayer;
+package org.softwareFm.display.displayer;
 
 import org.softwareFm.utilities.maps.AbstractSimpleMapTest;
 import org.softwareFm.utilities.maps.ISimpleMap;

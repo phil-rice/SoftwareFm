@@ -2,13 +2,13 @@ package org.softwareFm.allTests;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.display.composites.TitleAndText;
+import org.softwareFm.display.editor.TextEditor;
+import org.softwareFm.display.samples.ShowAllSimpleImageButtons;
+import org.softwareFm.eclipse.sample.Sample;
+import org.softwareFm.eclipse.sample.SoftwareFmDisplaySamples;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.utilities.functions.IFunction1;
-import org.softwarefm.display.Sample;
-import org.softwarefm.display.SoftwareFmDisplaySamples;
-import org.softwarefm.display.composites.TitleAndText;
-import org.softwarefm.display.editor.TextEditor;
-import org.softwarefm.display.samples.ShowAllSimpleImageButtons;
 
 public class PersonUnit {
 

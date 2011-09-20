@@ -1,15 +1,15 @@
-package org.softwarefm.display;
+package org.softwareFm.display;
 
 import java.util.Arrays;
 
 import junit.framework.TestCase;
 
+import org.softwareFm.display.actions.ActionMock;
+import org.softwareFm.display.actions.ActionStore;
+import org.softwareFm.display.impl.LargeButtonDefn;
+import org.softwareFm.display.impl.SmallButtonDefn;
+import org.softwareFm.display.smallButtons.SmallButtonFactoryMock;
 import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwarefm.display.actions.ActionMock;
-import org.softwarefm.display.actions.ActionStore;
-import org.softwarefm.display.impl.LargeButtonDefn;
-import org.softwarefm.display.impl.SmallButtonDefn;
-import org.softwarefm.display.smallButtons.SmallButtonFactoryMock;
 
 public class DisplaySelectionModelTest extends TestCase {
 

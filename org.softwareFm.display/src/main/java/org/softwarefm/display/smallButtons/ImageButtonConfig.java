@@ -1,11 +1,11 @@
-package org.softwarefm.display.smallButtons;
+package org.softwareFm.display.smallButtons;
 
 import java.text.MessageFormat;
 
 import org.eclipse.jface.resource.ImageRegistry;
+import org.softwareFm.display.SoftwareFmLayout;
+import org.softwareFm.display.data.DisplayConstants;
 import org.softwareFm.softwareFmImages.backdrop.BackdropAnchor;
-import org.softwarefm.display.SoftwareFmLayout;
-import org.softwarefm.display.data.DisplayConstants;
 
 public class ImageButtonConfig {
 	public final SoftwareFmLayout layout;

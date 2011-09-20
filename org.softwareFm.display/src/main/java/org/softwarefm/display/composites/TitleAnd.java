@@ -1,4 +1,4 @@
-package org.softwarefm.display.composites;
+package org.softwareFm.display.composites;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
@@ -8,13 +8,13 @@ import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.softwareFm.display.SoftwareFmLayout;
+import org.softwareFm.display.displayer.IDisplayer;
 import org.softwareFm.swtBasics.IHasComposite;
 import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.Resources;
 import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwarefm.display.SoftwareFmLayout;
-import org.softwarefm.display.displayer.IDisplayer;
 
 public  class TitleAnd implements IDisplayer, IHasComposite {
 

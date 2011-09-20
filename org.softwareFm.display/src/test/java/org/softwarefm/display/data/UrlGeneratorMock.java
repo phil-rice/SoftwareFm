@@ -1,4 +1,5 @@
-package org.softwarefm.display.data;
+package org.softwareFm.display.data;
+
 
 public class UrlGeneratorMock implements IUrlGenerator {
 

@@ -1,4 +1,4 @@
-package org.softwarefm.display.actions;
+package org.softwareFm.display.actions;
 
 public class ExternalBrowseFileOrUrlAction extends BrowseAction {
 

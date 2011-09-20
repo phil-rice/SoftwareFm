@@ -1,4 +1,4 @@
-package org.softwarefm.display.editor;
+package org.softwareFm.display.editor;
 
 import java.util.List;
 
@@ -9,14 +9,14 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
+import org.softwareFm.display.SoftwareFmLayout;
+import org.softwareFm.display.composites.CompositeConfig;
+import org.softwareFm.eclipse.SoftwareFmPropertyAnchor;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwarefm.display.SoftwareFmLayout;
-import org.softwarefm.display.SoftwareFmPropertyAnchor;
-import org.softwarefm.display.composites.CompositeConfig;
 
 public class Editors {
 

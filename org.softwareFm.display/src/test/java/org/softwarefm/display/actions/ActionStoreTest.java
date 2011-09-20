@@ -1,8 +1,8 @@
-package org.softwarefm.display.actions;
+package org.softwareFm.display.actions;
 
+import org.softwareFm.display.IAction;
 import org.softwareFm.utilities.maps.AbstractSimpleMapTest;
 import org.softwareFm.utilities.maps.ISimpleMap;
-import org.softwarefm.display.IAction;
 
 public class ActionStoreTest extends AbstractSimpleMapTest<String, IAction> {
 

@@ -1,12 +1,12 @@
-package org.softwarefm.display.actions;
+package org.softwareFm.display.actions;
 
 import java.awt.Desktop;
 import java.net.URI;
 import java.util.List;
 
+import org.softwareFm.display.IAction;
+import org.softwareFm.display.displayer.IDisplayer;
 import org.softwareFm.utilities.exceptions.WrappedException;
-import org.softwarefm.display.IAction;
-import org.softwarefm.display.displayer.IDisplayer;
 
 public class BrowseAction implements IAction {
 

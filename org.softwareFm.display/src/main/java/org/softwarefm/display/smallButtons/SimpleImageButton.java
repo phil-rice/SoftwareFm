@@ -1,4 +1,4 @@
-package org.softwarefm.display.smallButtons;
+package org.softwareFm.display.smallButtons;
 
 import java.util.Map;
 
@@ -6,12 +6,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.Control;
+import org.softwareFm.display.data.IDataGetter;
+import org.softwareFm.display.displayer.ISmallDisplayer;
 import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.images.SmallIconPosition;
 import org.softwareFm.swtBasics.text.IButtonParent;
 import org.softwareFm.utilities.exceptions.WrappedException;
-import org.softwarefm.display.data.IDataGetter;
-import org.softwarefm.display.displayer.ISmallDisplayer;
 
 public class SimpleImageButton implements IHasControl, ISmallDisplayer {
 

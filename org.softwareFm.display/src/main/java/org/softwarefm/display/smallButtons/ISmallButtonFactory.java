@@ -1,8 +1,8 @@
-package org.softwarefm.display.smallButtons;
+package org.softwareFm.display.smallButtons;
 
+import org.softwareFm.display.displayer.ISmallDisplayer;
+import org.softwareFm.display.impl.SmallButtonDefn;
 import org.softwareFm.swtBasics.text.IButtonParent;
-import org.softwarefm.display.displayer.ISmallDisplayer;
-import org.softwarefm.display.impl.SmallButtonDefn;
 
 public interface ISmallButtonFactory {
 

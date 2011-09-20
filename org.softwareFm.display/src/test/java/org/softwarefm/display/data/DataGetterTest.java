@@ -1,4 +1,4 @@
-package org.softwarefm.display.data;
+package org.softwareFm.display.data;
 
 import junit.framework.TestCase;
 

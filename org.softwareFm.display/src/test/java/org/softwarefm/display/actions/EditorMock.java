@@ -1,14 +1,14 @@
-package org.softwarefm.display.actions;
+package org.softwareFm.display.actions;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.swt.widgets.Shell;
+import org.softwareFm.display.editor.EditorContext;
+import org.softwareFm.display.editor.IEditor;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
-import org.softwarefm.display.editor.EditorContext;
-import org.softwarefm.display.editor.IEditor;
 
 public class EditorMock implements IEditor {
 

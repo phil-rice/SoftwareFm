@@ -1,12 +1,12 @@
-package org.softwarefm.display.urlGenerator;
+package org.softwareFm.display.urlGenerator;
 
 import java.text.MessageFormat;
 
+import org.softwareFm.display.data.DisplayConstants;
+import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.utilities.strings.Strings;
 import org.softwareFm.utilities.strings.UrlRipperResult;
 import org.softwareFm.utilities.strings.Urls;
-import org.softwarefm.display.data.DisplayConstants;
-import org.softwarefm.display.data.IUrlGenerator;
 
 public class UrlGenerator implements IUrlGenerator {
 

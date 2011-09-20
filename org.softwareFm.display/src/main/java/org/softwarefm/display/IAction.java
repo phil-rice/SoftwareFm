@@ -1,9 +1,9 @@
-package org.softwarefm.display;
+package org.softwareFm.display;
 
 import java.util.List;
 
-import org.softwarefm.display.actions.ActionContext;
-import org.softwarefm.display.displayer.IDisplayer;
+import org.softwareFm.display.actions.ActionContext;
+import org.softwareFm.display.displayer.IDisplayer;
 
 
 public interface IAction {

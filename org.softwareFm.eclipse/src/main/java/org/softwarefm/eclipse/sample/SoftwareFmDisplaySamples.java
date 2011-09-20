@@ -1,4 +1,4 @@
-package org.softwarefm.display;
+package org.softwareFm.eclipse.sample;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,7 +13,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
-import org.softwareFm.jdtBinding.api.BindingRipperResult;
+import org.softwareFm.eclipse.fixture.SoftwareFmFixture;
 import org.softwareFm.jdtBinding.api.RippedResult;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -21,7 +21,6 @@ import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.json.Json;
-import org.softwarefm.display.fixture.SoftwareFmFixture;
 
 public class SoftwareFmDisplaySamples {
 

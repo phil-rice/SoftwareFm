@@ -1,4 +1,4 @@
-package org.softwarefm.display.lists;
+package org.softwareFm.display.lists;
 
 
 public class NameAndValueListEditor extends ValueListEditor{

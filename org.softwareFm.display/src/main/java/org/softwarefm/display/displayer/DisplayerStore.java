@@ -1,13 +1,13 @@
-package org.softwarefm.display.displayer;
+package org.softwareFm.display.displayer;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.softwareFm.display.data.DisplayConstants;
 import org.softwareFm.utilities.maps.ISimpleMap;
 import org.softwareFm.utilities.maps.Maps;
-import org.softwarefm.display.data.DisplayConstants;
 
 public class DisplayerStore implements ISimpleMap<String, IDisplayerFactory> {
 

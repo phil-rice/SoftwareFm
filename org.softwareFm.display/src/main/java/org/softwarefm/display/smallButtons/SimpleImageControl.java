@@ -1,4 +1,4 @@
-package org.softwarefm.display.smallButtons;
+package org.softwareFm.display.smallButtons;
 
 import java.text.MessageFormat;
 import java.util.Map;
@@ -8,9 +8,9 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.display.data.DisplayConstants;
 import org.softwareFm.swtBasics.images.SmallIconPosition;
 import org.softwareFm.utilities.maps.Maps;
-import org.softwarefm.display.data.DisplayConstants;
 
 public class SimpleImageControl extends Canvas {
 

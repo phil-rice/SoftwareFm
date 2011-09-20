@@ -1,4 +1,4 @@
-package org.softwarefm.display.editor;
+package org.softwareFm.display.editor;
 
 import java.util.List;
 

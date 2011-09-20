@@ -1,14 +1,14 @@
-package org.softwarefm.display.data;
+package org.softwareFm.display.data;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.softwareFm.display.IUrlDataCallback;
+import org.softwareFm.display.IUrlToData;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.maps.Maps;
-import org.softwarefm.display.IUrlDataCallback;
-import org.softwarefm.display.IUrlToData;
 
 public class UrlToDataMock implements IUrlToData {
 

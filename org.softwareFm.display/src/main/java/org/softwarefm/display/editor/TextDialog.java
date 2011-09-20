@@ -1,15 +1,15 @@
-package org.softwarefm.display.editor;
+package org.softwareFm.display.editor;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.softwareFm.display.composites.CompositeConfig;
+import org.softwareFm.display.composites.TitleAndText;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
-import org.softwarefm.display.composites.CompositeConfig;
-import org.softwarefm.display.composites.TitleAndText;
 
 public class TextDialog extends Dialog {
 

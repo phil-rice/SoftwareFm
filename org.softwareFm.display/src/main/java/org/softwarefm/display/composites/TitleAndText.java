@@ -1,18 +1,18 @@
-package org.softwarefm.display.composites;
+package org.softwareFm.display.composites;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
+import org.softwareFm.display.SoftwareFmLayout;
+import org.softwareFm.display.smallButtons.ImageButtonConfig;
+import org.softwareFm.display.smallButtons.SimpleImageButton;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwarefm.display.SoftwareFmLayout;
-import org.softwarefm.display.smallButtons.ImageButtonConfig;
-import org.softwarefm.display.smallButtons.SimpleImageButton;
 
 public class TitleAndText extends TitleAnd {
 

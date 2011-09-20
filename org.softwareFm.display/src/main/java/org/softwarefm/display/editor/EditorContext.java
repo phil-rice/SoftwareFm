@@ -1,6 +1,6 @@
-package org.softwarefm.display.editor;
+package org.softwareFm.display.editor;
 
-import org.softwarefm.display.composites.CompositeConfig;
+import org.softwareFm.display.composites.CompositeConfig;
 
 public class EditorContext {
 

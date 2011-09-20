@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="org.softwareFm.image" name="Image" schema="schema/org.softwareFm.eclipse.exsd"/>
+   <extension-point id="org.softwareFm.bundle" name="Bundle" schema="schema/org.softwareFm.eclipse.exsd"/>
+   <extension-point id="org.softwareFm.dataStoreConfigurator" name="dataStoreConfigurator" schema="schema/org.softwareFm.eclipse.exsd"/>
+   <extension-point id="org.softwareFm.smallButton" name="smallButton" schema="schema/org.softwareFm.eclipse.exsd"/>
+   <extension-point id="org.softwareFm.action" name="action" schema="schema/org.softwareFm.eclipse.exsd"/>
+   <extension-point id="org.softwareFm.displayer" name="displayer" schema="schema/org.softwareFm.eclipse.exsd"/>
+   <extension-point id="org.softwareFm.listEditor" name="listEditor" schema="schema/org.softwareFm.eclipse.exsd"/>
+   <extension-point id="org.softwareFm.editor" name="editor" schema="schema/org.softwareFm.eclipse.exsd"/>
+   <extension-point id="org.softwareFm.largeButton" name="largeButton" schema="schema/org.softwareFm.eclipse.exsd"/>
+
+<extension  point="org.softwareFm.image">
+      <item class ="org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator"/>
+</extension>
+
+<extension  point="org.softwareFm.bundle">
+      <item name ="SoftwareFmDisplay" class="org.softwareFm.eclipse.Activator"/>
+</extension>
+
+<extension  point="org.softwareFm.dataStoreConfigurator">
+      <item class="org.softwareFm.eclipse.SoftwareFmDataStoreConfigurator"/>
+</extension>
+
+
+</plugin>
