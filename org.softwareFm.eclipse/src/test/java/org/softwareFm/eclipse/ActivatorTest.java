@@ -22,8 +22,10 @@ import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.collections.Sets;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.tests.IDontRunAutomaticallyTest;
 
-public class ActivatorTest extends TestCase {
+public class ActivatorTest extends TestCase implements IDontRunAutomaticallyTest{
 
 	private SoftwareFmActivator softwareFmActivator;
 	private Shell shell;
@@ -38,10 +40,17 @@ public class ActivatorTest extends TestCase {
 		assertSame(guiBuilder, softwareFmActivator.getGuiBuilder());
 	}
 
+	public void testResourceGetter() {
+		IResourceGetter resourceGetter = softwareFmActivator.getResourceGetter();
+		assertSame(resourceGetter, softwareFmActivator.getResourceGetter());
+		assertEquals("Edit", resourceGetter.getStringOrNull("action.edit.tooltip"));
+
+	}
+
 	public void testGetCompositeConfig() {
 		CompositeConfig config = softwareFmActivator.getCompositeConfig(display);
 		assertSame(config, softwareFmActivator.getCompositeConfig(display));
-
+		assertSame(config.resourceGetter, softwareFmActivator.getResourceGetter());
 		assertNotNull(config.layout);
 		assertNotNull(config.imageRegistry.get(ArtifactsAnchor.jarKey));
 		assertNotNull(config.imageButtonConfig);
@@ -64,18 +73,19 @@ public class ActivatorTest extends TestCase {
 		assertSame(store, softwareFmActivator.getGuiBuilder().getDisplayerStore());
 		assertNotNull(store.get("displayer.text"));
 	}
-	public void testEditorStore(){
+
+	public void testEditorStore() {
 		EditorFactory store = (EditorFactory) softwareFmActivator.getEditorFactory(display);
 		assertSame(store, softwareFmActivator.getEditorFactory(display));
 		assertNotNull(store.get("editor.text"));
 	}
 
-	public void testActionStore(){
+	public void testActionStore() {
 		ActionStore store = softwareFmActivator.getGuiBuilder().getActionStore();
 		assertSame(store, softwareFmActivator.getGuiBuilder().getActionStore());
 		assertNotNull(store.get("action.text.browse"));
 	}
-	
+
 	public void testGetGuiDataStore() {
 		GuiDataStore dataStore = softwareFmActivator.getGuiDataStore();
 		assertSame(dataStore, softwareFmActivator.getGuiDataStore());
@@ -92,10 +102,10 @@ public class ActivatorTest extends TestCase {
 		assertEquals(Sets.makeSet("urlGenerator.jar", "urlGenerator.project", "urlGenerator.organisation"), dataStore.getUrlGeneratorMap().keySet());
 	}
 
-	public void testGetLargeButtons(){
+	public void testGetLargeButtons() {
 		List<LargeButtonDefn> largeButtons = softwareFmActivator.getLargeButtonDefns();
 		assertSame(largeButtons, softwareFmActivator.getLargeButtonDefns());
-		
+
 		assertEquals(Arrays.asList("largeButton.jar", "largeButton.project", "largeButton.organisation"), Lists.map(largeButtons, new IFunction1<LargeButtonDefn, String>() {
 			@Override
 			public String apply(LargeButtonDefn from) throws Exception {
@@ -103,7 +113,7 @@ public class ActivatorTest extends TestCase {
 			}
 		}));
 	}
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();

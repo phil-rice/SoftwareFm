@@ -18,5 +18,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/spring-asm-3.0.5.RELEASE.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/spring-core-3.0.5.RELEASE.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/twitter4j-core-2.2.4.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.17-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

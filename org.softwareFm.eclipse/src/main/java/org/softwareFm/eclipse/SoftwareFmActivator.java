@@ -24,6 +24,7 @@ import org.softwareFm.display.displayer.DisplayerStore;
 import org.softwareFm.display.editor.EditorContext;
 import org.softwareFm.display.editor.EditorFactory;
 import org.softwareFm.display.editor.IEditorFactory;
+import org.softwareFm.display.editor.IUpdateStore;
 import org.softwareFm.display.largeButton.ILargeButtonFactory;
 import org.softwareFm.display.largeButton.LargeButtonDefn;
 import org.softwareFm.display.lists.ListEditorStore;
@@ -72,6 +73,8 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	private List<LargeButtonDefn> largeButtonDefns;
 	private SelectedArtifactSelectionManager selectedArtifactSelectionManager;
 	private IRepositoryFacard repository;
+	private IUpdateStore updateStore;
+	private IResourceGetter resourceGetter;
 
 	public SoftwareFmActivator() {
 	}
@@ -119,11 +122,15 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		if (compositeConfig == null) {
 			ImageRegistry imageRegistry = getImageRegistry();
 			new BasicImageRegisterConfigurator().registerWith(display, imageRegistry);
-			IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(SoftwareFmPropertyAnchor.class, "SoftwareFmDisplay");
+			IResourceGetter resourceGetter = getResourceGetter();
 			SoftwareFmLayout layout = new SoftwareFmLayout();
 			compositeConfig = new CompositeConfig(display, layout, imageRegistry, resourceGetter);
 		}
 		return compositeConfig;
+	}
+
+	public IResourceGetter getResourceGetter() {
+		return resourceGetter == null?resourceGetter = IResourceGetter.Utils.noResources().with(SoftwareFmPropertyAnchor.class, "SoftwareFmDisplay") : resourceGetter;
 	}
 
 	public EditorContext getEditorContext(Display display) {
@@ -149,6 +156,10 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	private SmallButtonStore getSmallButtonStore() {
 		return smallButtonStore == null ? smallButtonStore = Plugins.configureMainWithCallbacks(new SmallButtonStore(), smallButtonStoreConfiguratorId, "class", onException()) : smallButtonStore;
 	}
+	private IUpdateStore getUpdateStore() {
+		return updateStore ==null? updateStore = new IUpdateStore() {
+		}: updateStore;
+	}
 
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
@@ -168,7 +179,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 					}
 				});
 			}
-		}, onException()), dataStoreConfiguratorId, "class", onException()) : guiDataStore;
+		}, getResourceGetter(), onException()), dataStoreConfiguratorId, "class", onException()) : guiDataStore;
 	}
 
 	public IEditorFactory getEditorFactory(Display display) {
@@ -244,8 +255,9 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 				guiDataStore.processData(result, Maps.<String, Object> newMap());
 			}
 		});
-		SoftwareFmDataComposite composite = new SoftwareFmDataComposite(parent, guiDataStore, getCompositeConfig(display), getActionStore(), getEditorFactory(display), onException(), getLargeButtonDefns());
+		SoftwareFmDataComposite composite = new SoftwareFmDataComposite(parent, guiDataStore, getCompositeConfig(display), getActionStore(), getEditorFactory(display), getUpdateStore(), onException(), getLargeButtonDefns());
 		return composite;
 
 	}
+
 }

@@ -11,7 +11,7 @@ import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.swtBasics.images.Images;
 import org.softwareFm.utilities.functions.IFunction1;
 
-public class TransparentImageTest {
+public class TransparentImageDemo {
 
 	public static void main(String[] args) {
 

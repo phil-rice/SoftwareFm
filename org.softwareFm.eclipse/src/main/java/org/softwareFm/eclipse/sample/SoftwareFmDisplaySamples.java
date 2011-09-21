@@ -1,4 +1,4 @@
-package org.softwareFm.configuration.sample;
+package org.softwareFm.eclipse.sample;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,7 +13,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
-import org.softwareFm.configuration.fixture.SoftwareFmFixture;
+import org.softwareFm.eclipse.fixture.SoftwareFmFixture;
 import org.softwareFm.jdtBinding.api.RippedResult;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.utilities.callbacks.ICallback;

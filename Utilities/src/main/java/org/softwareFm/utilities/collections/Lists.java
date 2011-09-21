@@ -185,4 +185,11 @@ public class Lists {
 	public static<T> List<T> nullSafe(List<T> ts) {
 		return ts == null?Collections.EMPTY_LIST: ts;
 	}
+
+	public static List<Byte> asList(byte[] data) {
+		ArrayList<Byte> result = new ArrayList<Byte>(data.length);
+		for (byte b : data) 
+			result.add(b);
+		return result;
+	}
 }

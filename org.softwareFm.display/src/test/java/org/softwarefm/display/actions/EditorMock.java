@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.swt.widgets.Shell;
+import org.softwareFm.display.data.ActionData;
 import org.softwareFm.display.editor.EditorContext;
 import org.softwareFm.display.editor.IEditor;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -29,11 +30,11 @@ public class EditorMock implements IEditor {
 	}
 	
 	@Override
-	public void edit(Shell parent, EditorContext editorContext, List<String> formalParameters, List<Object> actualParameters, ICallback<Object> onCompletion) {
+	public void edit(Shell parent, EditorContext editorContext, ActionData actionData, ICallback<Object> onCompletion) {
 		this.onCompletion = onCompletion;
 		this.parents.add(parent);
-		this.formalParams.add(formalParameters);
-		this.actualParams.add(actualParameters);
+		this.formalParams.add(actionData.formalParams);
+		this.actualParams.add(actionData.actualParams);
 	}
 
 	@Override

@@ -8,7 +8,5 @@ Require-Bundle: org.softwareFm.jdtBinding;bundle-version="1.0.0";visibility:=ree
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.softwareFm.configuration,
  org.softwareFm.configuration.configurators,
- org.softwareFm.configuration.fixture,
- org.softwareFm.configuration.jar,
- org.softwareFm.configuration.sample
+ org.softwareFm.configuration.jar
 Bundle-SymbolicName: org.softwareFm.configuration

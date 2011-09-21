@@ -1,5 +1,6 @@
 package org.softwareFm.display.data;
 
+import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.utilities.maps.Maps;
@@ -25,6 +26,11 @@ public class DataGetterMock implements IDataGetter {
 	@Override
 	public void setRawData(Object rawData) {
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public ActionData getActionDataFor(List<String> params) {
+		return new ActionData(Maps.<String,String>newMap(), params	, null);
 	}
 
 }

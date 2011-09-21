@@ -12,6 +12,7 @@ import org.softwareFm.display.IAction;
 import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.actions.ActionStore;
 import org.softwareFm.display.composites.CompositeConfig;
+import org.softwareFm.display.data.ActionData;
 import org.softwareFm.display.data.DisplayConstants;
 import org.softwareFm.display.data.IDataGetter;
 import org.softwareFm.display.lists.IListEditor;
@@ -94,13 +95,8 @@ public class DisplayerDefn {
 
 				@Override
 				public void buttonPressed(IHasControl button) throws Exception {
-					List<Object> actualParams = Lists.map(Lists.nullSafe(actionDefn.params), new IFunction1<String, Object>() {
-						@Override
-						public Object apply(String key) throws Exception {
-							return actionContext.dataGetter.getDataFor(key);
-						}
-					});
-					action.execute(actionContext, displayer, index, actionDefn.params, actualParams);
+					ActionData actionData= actionContext.dataGetter.getActionDataFor(actionDefn.params);
+					action.execute(actionContext, displayer, index, actionData);
 				}
 			});
 	}

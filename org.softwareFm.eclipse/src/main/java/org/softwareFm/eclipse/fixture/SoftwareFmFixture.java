@@ -1,4 +1,4 @@
-package org.softwareFm.configuration.fixture;
+package org.softwareFm.eclipse.fixture;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -26,6 +26,7 @@ import org.softwareFm.display.displayer.DisplayerStore;
 import org.softwareFm.display.editor.EditorContext;
 import org.softwareFm.display.editor.EditorFactory;
 import org.softwareFm.display.editor.IEditorFactory;
+import org.softwareFm.display.editor.IUpdateStore;
 import org.softwareFm.display.largeButton.LargeButtonDefn;
 import org.softwareFm.display.lists.ListEditorStore;
 import org.softwareFm.display.smallButtons.SmallButtonStore;
@@ -77,12 +78,13 @@ public class SoftwareFmFixture {
 		projectButton = new ProjectLargeButtonFactory().apply(guiBuilder);
 		organisationButton = new OrganisationLargeButtonFactory().apply(guiBuilder);
 
-		new DataStoreConfigurator().process(dataStore = new GuiDataStore(IUrlToData.Utils.errorCallback(), ICallback.Utils.rethrow()));
+		new DataStoreConfigurator().process(dataStore = new GuiDataStore(IUrlToData.Utils.errorCallback(), resourceGetter, ICallback.Utils.rethrow()));
 	}
 
 	public SoftwareFmDataComposite makeComposite(Composite parent) {
 		SoftwareFmDataComposite result = new SoftwareFmDataComposite(parent, //
-				dataStore, compositeConfig, actionStore, editorFactory, ICallback.Utils.rethrow(), //
+				dataStore, compositeConfig, actionStore, editorFactory, new IUpdateStore() {
+				}, ICallback.Utils.rethrow(), //
 				Arrays.asList(jarButton, projectButton, organisationButton));
 		return result;
 	}

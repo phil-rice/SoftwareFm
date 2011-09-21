@@ -27,6 +27,15 @@ import org.softwareFm.utilities.indent.Indent;
 
 public class Maps {
 
+	public static <K, V> ContainsAndValue<V> containsAndValue(Object lock, Map<K, V> map, K key) {
+		synchronized (lock) {
+			boolean contained = map.containsKey(key);
+			V value = contained ? map.get(key) : null;
+			return new ContainsAndValue<V>(contained, value);
+		}
+
+	}
+
 	public static <KV> KV[] toArray(final Map<? extends KV, ? extends KV> map, KV[] baseArray) {
 		List<KV> result = new ArrayList<KV>();
 		for (Entry<? extends KV, ? extends KV> entry : map.entrySet()) {
@@ -275,8 +284,8 @@ public class Maps {
 
 	public static <K, V> V findOrCreate(Map<K, V> map, K key, Callable<V> callable) {
 		try {
-			 if (map.containsKey(key))
-			 return map.get(key);
+			if (map.containsKey(key))
+				return map.get(key);
 			V v = callable.call();
 			map.put(key, v);
 			return v;

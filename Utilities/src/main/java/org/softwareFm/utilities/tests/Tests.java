@@ -11,6 +11,7 @@ import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.collections.Iterables;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.Functions;
+import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.reflection.Classes;
 import org.softwareFm.utilities.reflection.IClassAcceptor;
 
@@ -58,7 +59,13 @@ public class Tests {
 		// System.out.println();
 		Iterable<Class<?>> classes = Iterables.map(children, Classes.asClass(acceptor));
 		// System.out.println(Iterables.list(classes));
-		Iterable<Class<?>> result = Iterables.remove(classes, Functions.<Class<?>> isNull());
+		Iterable<Class<?>> notNullClasses = Iterables.remove(classes, Functions.<Class<?>> isNull());
+		Iterable<Class<?>> result = Iterables.remove(notNullClasses, new IFunction1<Class<?>, Boolean>() {
+			@Override
+			public Boolean apply(Class<?> from) throws Exception {
+				return IDontRunAutomaticallyTest.class.isAssignableFrom(from);
+			}
+		});
 		// System.out.println();
 		// System.out.println(Iterables.list(result));
 		return result;

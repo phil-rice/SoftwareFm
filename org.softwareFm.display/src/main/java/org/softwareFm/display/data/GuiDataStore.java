@@ -11,13 +11,19 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.softwareFm.display.IUrlDataCallback;
 import org.softwareFm.display.IUrlToData;
+import org.softwareFm.swtBasics.images.Resources;
 import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.maps.ContainsAndValue;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class GuiDataStore implements IDataGetter {
 	private final IUrlToData urlToData;
 	private String mainEntity;
+	private Object lock = new Object();
 	private final Map<String, IUrlGenerator> urlGeneratorMap = Maps.newMap(LinkedHashMap.class);
 	private final Map<String, IUrlGenerator> entityToUrlGeneratorMap = Maps.newMap(LinkedHashMap.class);
 	private final Map<String, List<DependantData>> entityToDependantMap = Maps.newMap();
@@ -28,9 +34,11 @@ public class GuiDataStore implements IDataGetter {
 	private final CopyOnWriteArrayList<IGuiDataListener> listeners = new CopyOnWriteArrayList<IGuiDataListener>();
 	private ICallback<Throwable> onException;
 	private Object rawData;
+	private final IResourceGetter resourceGetter;
 
-	public GuiDataStore(IUrlToData urlToData, ICallback<Throwable> onException) {
+	public GuiDataStore(IUrlToData urlToData, IResourceGetter resourceGetter, ICallback<Throwable> onException) {
 		this.urlToData = urlToData;
+		this.resourceGetter = resourceGetter;
 		this.onException = onException;
 	}
 
@@ -109,8 +117,11 @@ public class GuiDataStore implements IDataGetter {
 			@Override
 			public void processData(String entity, String url, Map<String, Object> context, Map<String, Object> data) {
 				fireListeners(entity, url, context, data);
-				entityCachedData.put(url, data);
-				lastUrlFor.put(entity, url);
+				synchronized (lock) {
+					lastUrlFor.put(entity, url);
+					entityCachedData.put(url, data);
+				}
+				// TODO is there some unpleasant race condition here...Probably need to rewrite
 				for (DependantData dependantData : Maps.getOrEmptyList(entityToDependantMap, entity)) {
 					Object linkObject = data == null ? null : data.get(dependantData.linkData);
 					processOneData(dependantData.entity, linkObject, context);
@@ -120,11 +131,13 @@ public class GuiDataStore implements IDataGetter {
 		};
 		if (url == null)
 			callback.processData(entity, url, context, Collections.<String, Object> emptyMap());
-		else if (entityCachedData.containsKey(url)) {
-			// fireListeners(entity, url, context, entityCachedData.get(url));
-			callback.processData(entity, url, context, entityCachedData.get(url));
-		} else
-			urlToData.getData(entity, url, context, callback);
+		else {
+			ContainsAndValue<Map<String, Object>> containsAndValue = Maps.containsAndValue(lock, entityCachedData, url);
+			if (containsAndValue.contained) {
+				callback.processData(entity, url, context, containsAndValue.value);
+			} else
+				urlToData.getData(entity, url, context, callback);
+		}
 	}
 
 	private EntityCachedData getFromCache(String entity) {
@@ -152,49 +165,75 @@ public class GuiDataStore implements IDataGetter {
 	}
 
 	@Override
-	public Object getDataFor(String path) {
-		int index = path.indexOf('.');
-		if (index == -1)
-			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.illegalPath, path));
-		String entity = path.substring(0, index);
-		String key = path.substring(index + 1);
-		if (entity.equals("raw"))
-			return getRawData(key);
-		Object result = getDataFor(entity, key);
-		System.out.println("GetDataFor " + entity + ", " + key + " -> " + result);
-		return result;
+	public Object getDataFor(String pathOrKey) {
+		if (pathOrKey.startsWith("data."))
+			synchronized (lock) {
+				String path = pathOrKey.substring(5);
+				int index = path.indexOf('.');
+				if (index == -1)
+					throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.illegalPath, path));
+				String entity = path.substring(0, index);
+				String key = path.substring(index + 1);
+				if (entity.equals("raw"))
+					return getRawData(key);
+				Object result = getDataFor(entity, key);
+				System.out.println("GetDataFor " + entity + ", " + key + " -> " + result);
+				return result;
+			}
+		else
+			return Resources.getOrException(resourceGetter, pathOrKey);
 	}
 
 	@SuppressWarnings("rawtypes")
 	private Object getRawData(String key) {
-		if (rawData == null)
-			return null;
-		if (!(rawData instanceof Map))
-			throw new IllegalStateException(MessageFormat.format(DisplayConstants.expectedAMap, rawData, rawData.getClass()));
-		return ((Map) rawData).get(key);
+		synchronized (lock) {
+			if (rawData == null)
+				return null;
+			if (!(rawData instanceof Map))
+				throw new IllegalStateException(MessageFormat.format(DisplayConstants.expectedAMap, rawData, rawData.getClass()));
+			return ((Map) rawData).get(key);
+		}
 	}
 
 	private Object getDataFor(String entity, String key) {
-		checkEntityExists(entity);
-		EntityCachedData entityCachedData = cache.get(entity);
-		if (entityCachedData == null)
-			return null;
-		String url = lastUrlFor(entity);
-		Map<String, Object> map = entityCachedData.get(url);
-		if (map == null)
-			return null;
-		return map.get(key);
+		synchronized (lock) {
+			checkEntityExists(entity);
+			EntityCachedData entityCachedData = cache.get(entity);
+			if (entityCachedData == null)
+				return null;
+			String url = lastUrlFor(entity);
+			Map<String, Object> map = entityCachedData.get(url);
+			if (map == null)
+				return null;
+			return map.get(key);
+		}
 	}
 
 	public String lastUrlFor(String entity) {
-		return lastUrlFor.get(entity);
+		synchronized (lock) {
+			return lastUrlFor.get(entity);
+		}
+	}
+
+	@Override
+	public ActionData getActionDataFor(List<String> params) {
+		synchronized (lock) {
+			return new ActionData(lastUrlFor, params, Lists.map(params, new IFunction1<String, Object>() {
+				@Override
+				public Object apply(String from) throws Exception {
+					return getDataFor(from);
+				}
+			}));
+		}
 	}
 
 	public void forceData(String url, String entity, Map<String, Object> data, Map<String, Object> context) {
-		lastUrlFor.put(entity, url);
-		final EntityCachedData entityCachedData = getFromCache(entity);
-		entityCachedData.put(url, data);
-		fireListeners(entity, url, context, data);
+		synchronized (lock) {
+			lastUrlFor.put(entity, url);
+			final EntityCachedData entityCachedData = getFromCache(entity);
+			entityCachedData.put(url, data);
+			fireListeners(entity, url, context, data);
+		}
 	}
 
 	@Override
@@ -219,4 +258,5 @@ public class GuiDataStore implements IDataGetter {
 	public String getMainEntity() {
 		return mainEntity;
 	}
+
 }

@@ -3,6 +3,7 @@ package org.softwareFm.display.actions;
 import java.util.List;
 
 import org.softwareFm.display.IAction;
+import org.softwareFm.display.data.ActionData;
 import org.softwareFm.display.displayer.IDisplayer;
 import org.softwareFm.utilities.collections.Lists;
 
@@ -12,7 +13,6 @@ public class ActionMock implements IAction {
 
 	public final List<IDisplayer> displayers = Lists.newList();
 	public final List<List<String>> formalParams = Lists.newList();
-	public final List<List<Object>> actualParams = Lists.newList();
 
 	public ActionMock(String name) {
 		this.name = name;
@@ -24,10 +24,9 @@ public class ActionMock implements IAction {
 	}
 
 	@Override
-	public void execute(ActionContext actionContext, IDisplayer displayer,int index,  List<String> formalParameters, List<Object> actualParameters) {
+	public void execute(ActionContext actionContext, IDisplayer displayer,int index,  ActionData actionData) {
 		displayers.add(displayer);
-		formalParams.add(formalParameters);
-		actualParams.add(actualParameters);
+		formalParams.add(actionData.formalParams);
 	}
 
 }

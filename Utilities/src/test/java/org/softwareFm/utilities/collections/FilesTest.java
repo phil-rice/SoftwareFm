@@ -19,8 +19,8 @@ public class FilesTest extends TestCase {
 		byte[] digest1 = Files.digest(inputStream);
 		byte[] digest2 = Files.digest(resource.getFile());
 		assertTrue(Arrays.equals(digest1, digest2));
-		assertTrue(Arrays.equals(new byte[] { 5, 46, -78, -74, -122, 112, 88, 73, 56, -63, 109, -55, 87, 74, -9, 90, -99, -90, -47, -57 }, digest2));
-	}
+		assertTrue(Lists.asList(digest2).toString(), Arrays.equals(new byte[] { 52, -40, 102, -11, 21, 8, 98, -19, -24, 55, 11, -102, 59, -88, 63, -123, 77, -11, -32, 14 }, digest2));
+}
 
 	@Test
 	public void testNameWithoutExtension() {

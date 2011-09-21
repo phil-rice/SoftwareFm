@@ -12,10 +12,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.softwareFm.display.AllSoftwareFmDisplayTests;
 import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.composites.CompositeConfig;
+import org.softwareFm.display.data.ActionData;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class Editors {
@@ -41,7 +43,8 @@ public class Editors {
 							public void process(Object t) throws Exception {
 								System.out.println("Result: " + t);
 							}};
-						editorFactory.displayEditor(shell, "someName",formalParameters, actualParameters, onCompletion);
+							ActionData actionData = new ActionData(Maps.<String,String>newMap(), formalParameters, actualParameters);
+						editorFactory.displayEditor(shell, "someName",actionData, onCompletion);
 					}
 				});
 				Swts.addGrabHorizontalAndFillGridDataToAllChildren(composite);
