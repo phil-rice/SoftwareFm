@@ -133,7 +133,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	}
 
 	public EditorContext getEditorContext(Display display) {
-		return editorContext == null ? new EditorContext(getCompositeConfig(display), getUpdateStore()) : editorContext;
+		return editorContext == null ? new EditorContext(getCompositeConfig(display)) : editorContext;
 	}
 
 	public GuiBuilder getGuiBuilder() {
@@ -264,7 +264,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 				guiDataStore.processData(result, Maps.<String, Object> newMap());
 			}
 		});
-		SoftwareFmDataComposite composite = new SoftwareFmDataComposite(parent, guiDataStore, getCompositeConfig(display), getActionStore(), getEditorFactory(display), onException(), getLargeButtonDefns());
+		SoftwareFmDataComposite composite = new SoftwareFmDataComposite(parent, guiDataStore, getCompositeConfig(display), getActionStore(), getEditorFactory(display), getUpdateStore(), onException(), getLargeButtonDefns());
 		return composite;
 
 	}

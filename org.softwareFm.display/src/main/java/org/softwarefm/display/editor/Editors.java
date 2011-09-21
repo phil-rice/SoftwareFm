@@ -30,7 +30,7 @@ public class Editors {
 				ImageRegistry imageRegistry = new ImageRegistry();
 				new BasicImageRegisterConfigurator().registerWith(from.getDisplay(), imageRegistry);
 				IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(AllSoftwareFmDisplayTests.class, "Test");
-				final EditorContext editorContext = new EditorContext(new CompositeConfig(from.getDisplay(), new SoftwareFmLayout(), imageRegistry, resourceGetter), IUpdateStore.Utils.sysoutUpdateStore());
+				final EditorContext editorContext = new EditorContext(new CompositeConfig(from.getDisplay(), new SoftwareFmLayout(), imageRegistry, resourceGetter));
 				final IEditorFactory editorFactory = new EditorFactory(editorContext).register("someName", editor);
 				Button button = new Button(composite, SWT.PUSH);
 				button.setText("Edit");
@@ -44,7 +44,7 @@ public class Editors {
 								System.out.println("Result: " + t);
 							}};
 							ActionData actionData = new ActionData(Maps.<String,String>newMap(), formalParameters, actualParameters);
-						editorFactory.displayEditor(shell, "someName",actionData, onCompletion);
+						editorFactory.displayEditor(shell, "someName",null, actionData, onCompletion);
 					}
 				});
 				Swts.addGrabHorizontalAndFillGridDataToAllChildren(composite);

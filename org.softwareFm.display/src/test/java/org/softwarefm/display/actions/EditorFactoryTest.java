@@ -12,7 +12,6 @@ import org.softwareFm.display.data.ActionData;
 import org.softwareFm.display.editor.EditorContext;
 import org.softwareFm.display.editor.EditorFactory;
 import org.softwareFm.display.editor.IEditor;
-import org.softwareFm.display.editor.IUpdateStore;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.maps.AbstractSimpleMapTest;
@@ -30,12 +29,13 @@ public class EditorFactoryTest extends AbstractSimpleMapTest<String, IEditor> {
 	private ActionData actionData1 = new ActionData(Maps.<String,String>newMap(), formalParams1, actualParams1);
 	private ActionData actionData2 = new ActionData(Maps.<String,String>newMap(), formalParams2, actualParams2);
 	private EditorContext editorContext;
+	ActionContext actionContext = null;
 
 	@SuppressWarnings("unchecked")
 	public void testOpeningEditor() {
 		EditorMock editorMock1 = new EditorMock("1");
 		EditorFactory factory = new EditorFactory(editorContext).register("name1", editorMock1);
-		factory.displayEditor(shell, "name1", actionData1, ICallback.Utils.exception("shouldn't close"));
+		factory.displayEditor(shell, "name1", actionContext, actionData1, ICallback.Utils.exception("shouldn't close"));
 		assertEquals(Arrays.asList(formalParams1), editorMock1.formalParams);
 		assertEquals(Arrays.asList(actualParams1), editorMock1.actualParams);
 		assertEquals(Arrays.asList(shell), editorMock1.parents);
@@ -47,9 +47,9 @@ public class EditorFactoryTest extends AbstractSimpleMapTest<String, IEditor> {
 		EditorMock editorMock1 = new EditorMock("1");
 		EditorMock editorMock2 = new EditorMock("2");
 		EditorFactory factory = new EditorFactory(editorContext).register("name1", editorMock1).register("name2", editorMock2);
-		factory.displayEditor(shell, "name1",actionData1,  ICallback.Utils.exception("shouldn't close"));
+		factory.displayEditor(shell, "name1",actionContext,  actionData1, ICallback.Utils.exception("shouldn't close"));
 		assertEquals(0, editorMock1.cancelCount.get());
-		factory.displayEditor(shell, "name2", actionData2,  ICallback.Utils.exception("shouldn't close"));
+		factory.displayEditor(shell, "name2", actionContext,  actionData2, ICallback.Utils.exception("shouldn't close"));
 		assertEquals(1, editorMock1.cancelCount.get());
 		assertEquals(0, editorMock2.cancelCount.get());
 	}
@@ -58,7 +58,7 @@ public class EditorFactoryTest extends AbstractSimpleMapTest<String, IEditor> {
 		EditorMock editorMock1 = new EditorMock("1");
 		EditorFactory factory = new EditorFactory(editorContext).register("name1", editorMock1);
 		final AtomicReference<Object> ref = new AtomicReference<Object>();
-		factory.displayEditor(shell, "name1",  actionData1, new ICallback<Object>() {
+		factory.displayEditor(shell, "name1",  actionContext, actionData1, new ICallback<Object>() {
 			@Override
 			public void process(Object t) throws Exception {
 				ref.set(t);
@@ -107,7 +107,7 @@ public class EditorFactoryTest extends AbstractSimpleMapTest<String, IEditor> {
 		new BasicImageRegisterConfigurator().registerWith(shell.getDisplay(), imageRegistry);
 		
 		CompositeConfig compositeConfig = new CompositeConfig(shell.getDisplay(), new SoftwareFmLayout(), imageRegistry, IResourceGetter.Utils.noResources());
-		editorContext = new EditorContext(compositeConfig, IUpdateStore.Utils.errorUpdateStore());
+		editorContext = new EditorContext(compositeConfig);
 		super.setUp();
 	}
 

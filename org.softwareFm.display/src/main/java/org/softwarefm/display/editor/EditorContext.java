@@ -5,11 +5,9 @@ import org.softwareFm.display.composites.CompositeConfig;
 public class EditorContext {
 
 	public CompositeConfig compositeConfig;
-	public IUpdateStore updateStore;
 
-	public EditorContext(CompositeConfig compositeConfig, IUpdateStore updateStore) {
+	public EditorContext(CompositeConfig compositeConfig) {
 		this.compositeConfig = compositeConfig;
-		this.updateStore = updateStore;
 	}
 
 }

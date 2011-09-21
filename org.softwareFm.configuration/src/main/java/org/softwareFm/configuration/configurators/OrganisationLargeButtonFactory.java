@@ -11,11 +11,11 @@ public class OrganisationLargeButtonFactory extends LargeButtonFactory {
 	public LargeButtonDefn apply(GuiBuilder guiBuilder) throws Exception {
 		return guiBuilder.largeButton("largeButton.organisation", //
 				guiBuilder.smallButton("smallButton.organisation.details", "smallButton.organisation.details.title", "smallButton.normal", ArtifactsAnchor.organisationKey,//
-						guiBuilder.displayer("displayer.text").title("organisation.name.title").data(dataOrganisationName).actions(//
-								guiBuilder.action("action.text.edit", ArtifactsAnchor.organisationKey, "overlay.edit").tooltip("action.edit.tooltip").params(dataOrganisationName)), // , //
 						guiBuilder.displayer("displayer.url").title("organisation.url.title").data(dataJarOrganisationUrl).actions(//
 								guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).tooltip("action.browse.tooltip").params(dataJarOrganisationUrl),//
-								guiBuilder.action("action.text.edit", ArtifactsAnchor.organisationKey, "overlay.edit").tooltip("action.edit.tooltip").params(dataJarOrganisationUrl))),//
+								guiBuilder.action("action.text.edit", ArtifactsAnchor.organisationKey, "overlay.edit").tooltip("action.edit.tooltip").params(dataJarOrganisationUrl)), //
+						guiBuilder.displayer("displayer.text").title("organisation.name.title").data(dataOrganisationName).actions(//
+								guiBuilder.action("action.text.edit", ArtifactsAnchor.organisationKey, "overlay.edit").tooltip("action.edit.tooltip").params(dataOrganisationName))),//
 				guiBuilder.smallButton("smallButton.organisation.twitter", "smallButton.organisation.twitter.title", "smallButton.normal", ArtifactsAnchor.twitterKey, //
 						guiBuilder.listDisplayer("displayer.list", "listEditor.tweet").title("organisation.twitter.add").data(dataOrganisationTweets).//
 								actions(makeMainListActions(guiBuilder, ArtifactsAnchor.twitterKey, dataOrganisationTweets)).//

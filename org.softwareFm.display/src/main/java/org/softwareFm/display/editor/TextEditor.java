@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Shell;
+import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.data.ActionData;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -15,7 +16,7 @@ public class TextEditor implements IEditor {
 	private TextDialog textDialog;
 
 	@Override
-	public void edit(Shell parent, EditorContext editorContext, ActionData actionData, ICallback<Object> onCompletion) {
+	public void edit(Shell parent, EditorContext editorContext, ActionContext actionContext, ActionData actionData, ICallback<Object> onCompletion) {
 		List<Object> actualParameters = actionData.actualParams;
 		textDialog = new TextDialog(parent);
 		if (actualParameters.size()<1)
@@ -24,7 +25,7 @@ public class TextEditor implements IEditor {
 		String initialValue = Strings.nullSafeToString(actualParameters.get(0));
 		String result = textDialog.open(editorContext.compositeConfig, "Value", Strings.nullSafeToString(initialValue), onCompletion);
 		if (result != null){
-			editorContext.updateStore.update(actionData, key, result);
+			actionContext.updateStore.update(actionData, key, result);
 		}
 	}
 

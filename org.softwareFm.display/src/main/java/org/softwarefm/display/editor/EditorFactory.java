@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.widgets.Shell;
+import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.data.ActionData;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -24,11 +25,11 @@ public class EditorFactory implements IEditorFactory, ISimpleMap<String, IEditor
 	}
 
 	@Override
-	public void displayEditor(Shell parent, String editorName, ActionData actionData,  final ICallback<Object> onCompletion) {
+	public void displayEditor(Shell parent, String editorName, ActionContext actionContext,  ActionData actionData, final ICallback<Object> onCompletion) {
 		if (editor != null)
 			editor.cancel();
 		editor = get(editorName);
-		editor.edit(parent, editorContext, actionData, new ICallback<Object>() {
+		editor.edit(parent, editorContext, actionContext, actionData, new ICallback<Object>() {
 			@Override
 			public void process(Object t) throws Exception {
 				editor.cancel();

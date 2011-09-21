@@ -13,6 +13,7 @@ public class ProjectLargeButtonFactory extends LargeButtonFactory {
 		return guiBuilder.largeButton("largeButton.project", //
 				guiBuilder.smallButton("smallButton.project.details", "smallButton.project.details.title", "smallButton.normal", ArtifactsAnchor.projectKey, //
 						guiBuilder.displayer("displayer.url").title("project.url.title").data(dataJarProjectUrl).actions(//
+								guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).tooltip("action.browse.tooltip").params(dataJarProjectUrl),//
 								editTextButton(guiBuilder, ArtifactsAnchor.projectKey, dataJarProjectUrl)),//
 						guiBuilder.displayer("displayer.text").title("project.name.title").data(dataProjectName).tooltip("data.project.description").actions(//
 								editTextButton(guiBuilder, ArtifactsAnchor.projectKey, dataProjectName))).//

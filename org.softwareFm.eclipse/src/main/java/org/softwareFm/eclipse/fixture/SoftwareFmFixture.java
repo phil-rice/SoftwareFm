@@ -66,7 +66,7 @@ public class SoftwareFmFixture {
 		layout = new SoftwareFmLayout();
 		compositeConfig = new CompositeConfig(display, layout, imageRegistry, resourceGetter);
 		updateStore = IUpdateStore.Utils.sysoutUpdateStore();
-		editorContext = new EditorContext(compositeConfig, updateStore);
+		editorContext = new EditorContext(compositeConfig);
 
 		new SmallButtonConfigurator().process(smallButtonStore = new SmallButtonStore());
 		new ActionStoreConfigurator().process(actionStore = new ActionStore());
@@ -86,7 +86,8 @@ public class SoftwareFmFixture {
 	public SoftwareFmDataComposite makeComposite(Composite parent) {
 		SoftwareFmDataComposite result = new SoftwareFmDataComposite(parent, //
 				dataStore, compositeConfig, //
-				actionStore, editorFactory, ICallback.Utils.rethrow(), Arrays.asList(jarButton, projectButton, organisationButton));
+				actionStore, editorFactory, updateStore, //
+				ICallback.Utils.rethrow(), Arrays.asList(jarButton, projectButton, organisationButton));
 		return result;
 	}
 
