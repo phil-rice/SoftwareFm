@@ -13,7 +13,7 @@ public class SimpleButtonParent implements IButtonParent{
 
 	public SimpleButtonParent(Composite parent, SoftwareFmLayout layout, int style) {
 		this.content = new Composite(parent,style);
-		content.setLayout(Swts.getHorizonalNoMarginRowLayout());
+		content.setLayout(Swts.getHorizonalMarginRowLayout(3));
 		}
 
 	@Override
@@ -34,6 +34,10 @@ public class SimpleButtonParent implements IButtonParent{
 	@Override
 	public void buttonAdded(IHasControl button) {
 		
+	}
+
+	public int size() {
+		return content.getChildren().length;
 	}
 
 }

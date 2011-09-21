@@ -15,7 +15,7 @@ public class ListDeleteAction implements IAction {
 	@Override
 	public void execute(ActionContext actionContext, DisplayerDefn displayerDefn, IDisplayer displayer, int index, ActionData actionData) {
 		if (MessageDialog.openConfirm(displayer.getControl().getShell(), "Delete", "delete")) {
-			String key = displayerDefn.dataKey;
+			final String key = Actions.getDataKey(displayerDefn, actionData);
 			List<String> currentList =Lists.nullSafe((List<String>) actionContext.dataGetter.getDataFor(key));
 			List<String> newList = Lists.remove(currentList, index);
 			if (newList.size()==0)

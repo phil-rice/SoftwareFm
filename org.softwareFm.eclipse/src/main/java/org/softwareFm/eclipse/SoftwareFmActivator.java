@@ -133,7 +133,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	}
 
 	public EditorContext getEditorContext(Display display) {
-		return editorContext == null ? new EditorContext(getCompositeConfig(display)) : editorContext;
+		return editorContext == null ? editorContext = new EditorContext(getCompositeConfig(display)) : editorContext;
 	}
 
 	public GuiBuilder getGuiBuilder() {
@@ -141,7 +141,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	}
 
 	ListEditorStore getListEditorStore() {
-		return listEditorStore == null ? Plugins.configureMainWithCallbacks(new ListEditorStore(), listEditorStoreConfiguratorId, "class", onException()) : listEditorStore;
+		return listEditorStore == null ? listEditorStore = Plugins.configureMainWithCallbacks(new ListEditorStore(), listEditorStoreConfiguratorId, "class", onException()) : listEditorStore;
 	}
 
 	private DisplayerStore getDisplayerStore() {

@@ -14,7 +14,14 @@ public class BasicImageRegisterConfigurator implements IImageRegisterConfigurato
 
 	@Override
 	public void registerWith(Device device, ImageRegistry imageRegistry) {
-		Images.registerImages(device, imageRegistry, BackdropAnchor.class, "backdrop", "main", "depressed");
+		Images.registerImages(device, imageRegistry, BackdropAnchor.class, "backdrop", //
+				"main", "depressed", //
+				"group1", "group1Active",//
+				"group2", "group2Active",//
+				"group3", "group3Active",//
+				"group4", "group4Active",//
+				"group5", "group5Active",//
+				"group6", "group6Active");
 		Images.registerImages(device, imageRegistry, ArtifactsAnchor.class, "artifact", //
 				"jar", "jarClearEclipse", "jarCopyFromSoftwareFm", "jarCopyToSoftwareFm", //
 				"document", "issues", "license", "mailingList", "merchandise", "organisation", "project",//

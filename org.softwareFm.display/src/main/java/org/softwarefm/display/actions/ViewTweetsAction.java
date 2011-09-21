@@ -13,7 +13,7 @@ public class ViewTweetsAction implements IAction {
 	@Override
 	@SuppressWarnings("rawtypes")
 	public void execute(ActionContext actionContext, DisplayerDefn displayerDefn, IDisplayer displayer,int index, ActionData actionData) throws Exception {
-		String key = displayerDefn.dataKey;
+		final String key = Actions.getDataKey(displayerDefn, actionData);
 		Object data =actionContext.dataGetter.getDataFor(key);
 		if (data instanceof List && data != null){
 			Object tweet = ((List)data).get(index);

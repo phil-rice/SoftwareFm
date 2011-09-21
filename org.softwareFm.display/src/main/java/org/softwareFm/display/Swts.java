@@ -50,7 +50,7 @@ public class Swts {
 		}
 	}
 
-	public static Composite makeAcceptCancelComposite(Composite parent, int style, IResourceGetter resourceGetter, final Runnable onAccept, final Runnable onCancel){
+	public static Composite makeAcceptCancelComposite(Composite parent, int style, IResourceGetter resourceGetter, final Runnable onAccept, final Runnable onCancel) {
 		Composite result = new Composite(parent, style);
 		result.setLayout(new GridLayout(2, true));
 		Button cancelButton = new Button(result, SWT.PUSH);
@@ -71,7 +71,7 @@ public class Swts {
 		});
 		return result;
 	}
-	
+
 	public static Control setAfter(List<Control> controls, Control firstControl) {
 		for (Control control : controls) {
 			control.moveBelow(firstControl);
@@ -104,13 +104,12 @@ public class Swts {
 				}
 			}
 			Control lastVisible = Swts.setAfter(visibleControls, null);
-			for (Control control : invisibleControls) 
+			for (Control control : invisibleControls)
 				control.moveBelow(lastVisible);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
 	}
-
 
 	public static TableEditor addEditor(Table table, int row, int col, Control control) {
 		TableItem[] items = table.getItems();
@@ -120,18 +119,22 @@ public class Swts {
 		return editor;
 	}
 
-	public static RowLayout getHorizonalNoMarginRowLayout() {
+	public static Layout getHorizonalMarginRowLayout(int margin) {
 		RowLayout rowLayout = new RowLayout(SWT.HORIZONTAL);
 		rowLayout.marginWidth = 0;
 		rowLayout.marginHeight = 0;
-		rowLayout.marginTop = 0;
-		rowLayout.marginBottom = 0;
-		rowLayout.marginLeft = 0;
-		rowLayout.marginRight = 0;
+		rowLayout.marginTop = margin;
+		rowLayout.marginBottom = margin;
+		rowLayout.marginLeft = margin;
+		rowLayout.marginRight = margin;
 		rowLayout.fill = true;
 		rowLayout.justify = false;
-		rowLayout.spacing=0;
+		rowLayout.spacing = 0;
 		return rowLayout;
+	}
+
+	public static Layout getHorizonalNoMarginRowLayout() {
+		return getHorizonalMarginRowLayout(0);
 	}
 
 	public static GridData makeGrabHorizonalAndFillGridData() {
@@ -226,7 +229,6 @@ public class Swts {
 		}
 
 	}
-
 
 	public static <C extends Control> void setRowDataFor(int width, int height, C... controls) {
 		for (Control control : controls)

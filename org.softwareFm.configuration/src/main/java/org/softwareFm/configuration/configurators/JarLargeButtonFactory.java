@@ -14,11 +14,11 @@ public class JarLargeButtonFactory extends LargeButtonFactory {
 				guiBuilder.smallButton("smallButton.jar.details", "smallButton.jar.details.title", "smallButton.jar", ArtifactsAnchor.jarKey, //
 						guiBuilder.displayer("displayer.text").title("jar.jarName.title").data(dataRawJarPath).tooltip("jar.jarPath.tooltip"), //
 						guiBuilder.displayer("displayer.text").title("project.name.title").data(dataProjectName).actions(//
-								editTextButton(guiBuilder, ArtifactsAnchor.projectKey),//
+								editUrlButton(guiBuilder, ArtifactsAnchor.projectKey, dataJarProjectUrl),//
 								guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).tooltip("data.jar.project.url")//
 								).tooltip("data.jar.project.url"),//
 						guiBuilder.displayer("displayer.text").title("organisation.name.title").data(dataOrganisationName).actions(//
-								editTextButton(guiBuilder, ArtifactsAnchor.organisationKey),//
+								editUrlButton(guiBuilder, ArtifactsAnchor.organisationKey, dataJarOrganisationUrl),//
 								guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).tooltip(dataJarOrganisationUrl)//
 								).tooltip("data.organisation.url"),//
 						guiBuilder.displayer("displayer.text").title("jar.javadoc.title").data(dataRawJavadoc).tooltip(dataRawJavadoc), //

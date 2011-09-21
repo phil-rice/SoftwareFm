@@ -14,7 +14,7 @@ public class ListAddAction implements IAction {
 	@Override
 	@SuppressWarnings("unchecked")
 	public void execute(final ActionContext actionContext, DisplayerDefn displayerDefn, IDisplayer displayer, int index, final ActionData actionData) {
-		final String key = displayerDefn.dataKey;
+		final String key = Actions.getDataKey(displayerDefn, actionData);
 		final List<String> currentList =Lists.nullSafe((List<String>) actionContext.dataGetter.getDataFor(key));
 		actionContext.editorFactory.displayEditor(displayer.getButtonComposite().getShell(), "editor.text", displayerDefn, actionContext, actionData, new ICallback<Object>() {
 			@Override

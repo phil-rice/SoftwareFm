@@ -14,6 +14,7 @@ import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.data.GuiDataStore;
 import org.softwareFm.display.data.GuiDataStore.DependantData;
 import org.softwareFm.display.displayer.DisplayerStore;
+import org.softwareFm.display.editor.EditorContext;
 import org.softwareFm.display.editor.EditorFactory;
 import org.softwareFm.display.largeButton.LargeButtonDefn;
 import org.softwareFm.display.lists.ListEditorStore;
@@ -72,6 +73,12 @@ public class ActivatorTest extends TestCase implements IDontRunAutomaticallyTest
 		ListEditorStore store = softwareFmActivator.getListEditorStore();
 		assertSame(store, softwareFmActivator.getListEditorStore());
 		assertNotNull(store.get("listEditorId.nameAndValue"));
+	}
+	
+	public void testEditorContext(){
+		EditorContext editorContext = softwareFmActivator.getEditorContext(display);
+		assertSame(editorContext, softwareFmActivator.getEditorContext(display));
+		assertNotNull(editorContext);
 	}
 
 	public void testDisplayerStore() {
