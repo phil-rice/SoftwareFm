@@ -69,9 +69,9 @@ public class ActivatorTest extends TestCase implements IDontRunAutomaticallyTest
 	}
 
 	public void testListEditorStore() {
-		ListEditorStore store = softwareFmActivator.getGuiBuilder().getListEditorStore();
-		assertSame(store, softwareFmActivator.getGuiBuilder().getListEditorStore());
-		assertNotNull(store.get("listEditor.nameAndValue"));
+		ListEditorStore store = softwareFmActivator.getListEditorStore();
+		assertSame(store, softwareFmActivator.getListEditorStore());
+		assertNotNull(store.get("listEditorId.nameAndValue"));
 	}
 
 	public void testDisplayerStore() {

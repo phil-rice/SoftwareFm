@@ -44,7 +44,7 @@ public class Editors {
 								System.out.println("Result: " + t);
 							}};
 							ActionData actionData = new ActionData(Maps.<String,String>newMap(), formalParameters, actualParameters);
-						editorFactory.displayEditor(shell, "someName",null, actionData, onCompletion);
+						editorFactory.displayEditor(shell, "someName",null, null, actionData, onCompletion);
 					}
 				});
 				Swts.addGrabHorizontalAndFillGridDataToAllChildren(composite);

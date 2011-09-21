@@ -26,7 +26,7 @@ public class DisplayerDefn {
 
 	@Override
 	public String toString() {
-		return "DisplayerDefn [dataKey=" + dataKey + ", listEditor=" + this.listEditor + ", title=" + title + ", tooltip=" + tooltip + ", displayerFactory=" + displayerFactory + ", actionDefns=" + actionDefns + "]";
+		return "DisplayerDefn [dataKey=" + dataKey + ", listEditorId=" + this.listEditorId + ", title=" + title + ", tooltip=" + tooltip + ", displayerFactory=" + displayerFactory + ", actionDefns=" + actionDefns + "]";
 	}
 
 	public final IDisplayerFactory displayerFactory;
@@ -35,16 +35,16 @@ public class DisplayerDefn {
 	public String dataKey;
 	public String title;
 	public String tooltip;
-	public IListEditor listEditor;
+	public String listEditorId;
 	public List<ActionDefn> listActionDefns;
 
 	public DisplayerDefn(IDisplayerFactory displayer) {
 		this.displayerFactory = displayer;
 	}
 
-	public DisplayerDefn(IDisplayerFactory displayer, IListEditor listEditor) {
+	public DisplayerDefn(IDisplayerFactory displayer, String listEditorId) {
 		this.displayerFactory = displayer;
-		this.listEditor = listEditor;
+		this.listEditorId = listEditorId;
 	}
 
 	public DisplayerDefn title(String title) {
@@ -90,15 +90,13 @@ public class DisplayerDefn {
 	public void createActions(final ActionStore actionStore, final ActionContext actionContext, final IDisplayer displayer, final IButtonParent buttonParent, List<ActionDefn> actionDefns, final int index) {
 		CompositeConfig compositeConfig = actionContext.compositeConfig;
 		for (final ActionDefn actionDefn : actionDefns) {
-			if (actionDefn.params == null)
-				throw new NullPointerException(MessageFormat.format(DisplayConstants.mustHaveA, "params", actionDefn));
 			actionDefn.createButton(compositeConfig.imageButtonConfig, buttonParent, new IImageButtonListener() {
 				private final IAction action = actionStore.get(actionDefn.id);
 
 				@Override
 				public void buttonPressed(IHasControl button) throws Exception {
 					ActionData actionData = actionContext.dataGetter.getActionDataFor(actionDefn.params);
-					action.execute(actionContext, displayer, index, actionData);
+					action.execute(actionContext, DisplayerDefn.this, displayer, index, actionData);
 				}
 			});
 		}

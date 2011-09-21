@@ -23,6 +23,7 @@ import org.softwareFm.display.displayer.ISmallDisplayer;
 import org.softwareFm.display.editor.IEditorFactory;
 import org.softwareFm.display.editor.IUpdateStore;
 import org.softwareFm.display.largeButton.LargeButtonDefn;
+import org.softwareFm.display.lists.ListEditorStore;
 import org.softwareFm.display.selection.DisplaySelectionModel;
 import org.softwareFm.display.selection.IDisplaySelectionListener;
 import org.softwareFm.display.simpleButtons.SimpleButtonParent;
@@ -43,7 +44,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 	// private final Map<String, List<IDisplayer>> smallButtonIdToDisplayerMap = Maps.newMap(LinkedHashMap.class);
 	private final Map<String, Group> smallButtonIdToGroupMap = Maps.newMap(LinkedHashMap.class);
 
-	public SoftwareFmDataComposite(final Composite parent, final GuiDataStore guiDataStore, CompositeConfig compositeConfig, final ActionStore actionStore, IEditorFactory editorFactory, IUpdateStore updateStore, ICallback<Throwable> exceptionHandler, final List<LargeButtonDefn> largeButtonDefns) {
+	public SoftwareFmDataComposite(final Composite parent, final GuiDataStore guiDataStore, CompositeConfig compositeConfig, final ActionStore actionStore, IEditorFactory editorFactory, IUpdateStore updateStore,ListEditorStore listEditorStore,  ICallback<Throwable> exceptionHandler, final List<LargeButtonDefn> largeButtonDefns) {
 		this.content = new Composite(parent, SWT.NULL);
 		displaySelectionModel = new DisplaySelectionModel(exceptionHandler, largeButtonDefns);
 		topRow = new Composite(content, SWT.BORDER);
@@ -69,7 +70,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 
 			}
 		}
-		final ActionContext actionContext = new ActionContext(guiDataStore, compositeConfig, editorFactory, updateStore);
+		final ActionContext actionContext = new ActionContext(guiDataStore, compositeConfig, editorFactory, updateStore, listEditorStore);
 		for (final LargeButtonDefn largeButtonDefn : largeButtonDefns) {
 			for (SmallButtonDefn smallButtonDefn : largeButtonDefn.defns) {
 				Group group = new Group(content, SWT.SHADOW_ETCHED_IN);

@@ -192,4 +192,11 @@ public class Lists {
 			result.add(b);
 		return result;
 	}
+
+	public static <T>List<T> remove(List<T> oldList, int index) {
+		List<T> newList = Lists.newList();
+		newList.addAll(oldList);
+		newList.remove(index);
+		return newList;
+	}
 }

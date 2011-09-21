@@ -14,7 +14,7 @@ public class JarLargeButtonFactory extends LargeButtonFactory {
 				guiBuilder.smallButton("smallButton.jar.details", "smallButton.jar.details.title", "smallButton.jar", ArtifactsAnchor.jarKey, //
 						guiBuilder.displayer("displayer.text").title("jar.jarName.title").data(dataRawJarPath).tooltip("jar.jarPath.tooltip"), //
 						guiBuilder.displayer("displayer.text").title("project.name.title").data(dataProjectName).actions(//
-								editTextButton(guiBuilder, ArtifactsAnchor.projectKey, dataJarProjectUrl),//
+								editTextButton(guiBuilder, ArtifactsAnchor.projectKey),//
 								guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).tooltip("data.jar.project.url").params("data.jar.project.url")//
 								).tooltip("data.jar.project.url"),//
 						guiBuilder.displayer("displayer.text").title("organisation.name.title").data(dataOrganisationName).actions(//

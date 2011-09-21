@@ -2,8 +2,12 @@ package org.softwareFm.display.composites;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.Swts;
@@ -51,6 +55,15 @@ public class TitleAndText extends TitleAnd {
 				return titleAndText.getComposite();
 			}
 		}) ;
+	}
+
+	public void addCrListener(final Listener listener) {
+		text.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				listener.handleEvent(new Event());
+			}
+		});
 	}
 
 

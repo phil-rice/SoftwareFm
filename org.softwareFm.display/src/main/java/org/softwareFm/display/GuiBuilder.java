@@ -17,13 +17,11 @@ public class GuiBuilder {
 	private final ActionStore actionStore;
 	private final SmallButtonStore smallButtonStore;
 	private final DisplayerStore displayerStore;
-	private final ListEditorStore listEditorStore;
 
 	public GuiBuilder(SmallButtonStore smallButtonStore, ActionStore actionStore, DisplayerStore displayerStore, ListEditorStore listEditorStore) {
 		this.smallButtonStore = smallButtonStore;
 		this.actionStore = actionStore;
 		this.displayerStore = displayerStore;
-		this.listEditorStore = listEditorStore;
 	}
 
 	public DisplayerDefn displayer(String displayerId) {
@@ -43,8 +41,7 @@ public class GuiBuilder {
 
 	public DisplayerDefn listDisplayer(String listDisplayId, String listEditorId) {
 		IDisplayerFactory displayer = displayerStore.get(listDisplayId);
-		IListEditor listEditor = listEditorStore.get(listEditorId);
-		return new DisplayerDefn(displayer, listEditor);
+		return new DisplayerDefn(displayer, listEditorId);
 	}
 
 	public ActionDefn action(String actionId, String mainImageId) {
@@ -59,9 +56,6 @@ public class GuiBuilder {
 	}
 	public DisplayerStore getDisplayerStore() {
 		return displayerStore;
-	}
-	public ListEditorStore getListEditorStore() {
-		return listEditorStore;
 	}
 	public SmallButtonStore getSmallButtonStore() {
 		return smallButtonStore;

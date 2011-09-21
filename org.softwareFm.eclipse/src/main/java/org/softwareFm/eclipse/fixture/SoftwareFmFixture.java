@@ -87,7 +87,8 @@ public class SoftwareFmFixture {
 		SoftwareFmDataComposite result = new SoftwareFmDataComposite(parent, //
 				dataStore, compositeConfig, //
 				actionStore, editorFactory, updateStore, //
-				ICallback.Utils.rethrow(), Arrays.asList(jarButton, projectButton, organisationButton));
+				listEditorStore, ICallback.Utils.rethrow(), //
+				Arrays.asList(jarButton, projectButton, organisationButton));
 		return result;
 	}
 

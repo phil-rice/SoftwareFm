@@ -25,17 +25,15 @@ public class ListDisplayer  implements IDisplayer {
 	private Composite content;
 	private TitleAnd mainLine;
 	private Composite listComposite;
-	private IListEditor listEditor;
 	private final ActionStore actionStore;
 	private final ActionContext actionContext;
+	private IListEditor listEditor;
 
 	public ListDisplayer(Composite parent, DisplayerDefn defn, int style, CompositeConfig compositeConfig, ActionStore actionStore, ActionContext actionContext) {
 		this.compositeConfig = compositeConfig;
 		this.actionStore = actionStore;
 		this.actionContext = actionContext;
-		this.listEditor = defn.listEditor;
-		if (listEditor == null)
-			throw new IllegalStateException(MessageFormat.format(DisplayConstants.mustHaveA, "listEditor", defn));
+		this.listEditor = actionContext.listEditorStore.get(defn.listEditorId);
 		this.content = new Composite(parent, SWT.BORDER);
 		this.listComposite = new Composite(content, SWT.NULL);
 		this.mainLine = new TitleAnd(compositeConfig, content, defn.title, true);

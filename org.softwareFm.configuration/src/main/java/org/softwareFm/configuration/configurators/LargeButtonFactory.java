@@ -31,8 +31,8 @@ public abstract class LargeButtonFactory implements ILargeButtonFactory {
 		return guiBuilder.action("action.list.delete", artifactId, OverlaysAnchor.deleteKey).tooltip("action.delete.tooltip").params(dataId);
 	}
 
-	protected ActionDefn editTextButton(GuiBuilder guiBuilder, String artifactId, String dataId) {
-		return guiBuilder.action("action.text.edit", artifactId, "overlay.edit").tooltip("action.edit.tooltip").params(dataId);
+	protected ActionDefn editTextButton(GuiBuilder guiBuilder, String artifactId) {
+		return guiBuilder.action("action.text.edit", artifactId, "overlay.edit").tooltip("action.edit.tooltip");
 	}
 
 }

@@ -17,7 +17,7 @@ public class OrganisationLargeButtonFactory extends LargeButtonFactory {
 						guiBuilder.displayer("displayer.text").title("organisation.name.title").data(dataOrganisationName).actions(//
 								guiBuilder.action("action.text.edit", ArtifactsAnchor.organisationKey, "overlay.edit").tooltip("action.edit.tooltip").params(dataOrganisationName))),//
 				guiBuilder.smallButton("smallButton.organisation.twitter", "smallButton.organisation.twitter.title", "smallButton.normal", ArtifactsAnchor.twitterKey, //
-						guiBuilder.listDisplayer("displayer.list", "listEditor.tweet").title("organisation.twitter.add").data(dataOrganisationTweets).//
+						guiBuilder.listDisplayer("displayer.list", "listEditorId.tweet").title("organisation.twitter.add").data(dataOrganisationTweets).//
 								actions(makeMainListActions(guiBuilder, ArtifactsAnchor.twitterKey, dataOrganisationTweets)).//
 								listActions(guiBuilder.action("action.list.viewTweets", GeneralAnchor.browseKey).params(dataOrganisationTweets).tooltip("action.browse.tooltip"), //
 										listDeleteAction(guiBuilder, ArtifactsAnchor.twitterKey, dataOrganisationTweets))));

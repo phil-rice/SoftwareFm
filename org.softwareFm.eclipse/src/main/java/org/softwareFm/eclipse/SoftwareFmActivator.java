@@ -140,7 +140,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		return guiBuilder == null ? guiBuilder = new GuiBuilder(getSmallButtonStore(), getActionStore(), getDisplayerStore(), getListEditorStore()) : guiBuilder;
 	}
 
-	private ListEditorStore getListEditorStore() {
+	ListEditorStore getListEditorStore() {
 		return listEditorStore == null ? Plugins.configureMainWithCallbacks(new ListEditorStore(), listEditorStoreConfiguratorId, "class", onException()) : listEditorStore;
 	}
 
@@ -264,7 +264,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 				guiDataStore.processData(result, Maps.<String, Object> newMap());
 			}
 		});
-		SoftwareFmDataComposite composite = new SoftwareFmDataComposite(parent, guiDataStore, getCompositeConfig(display), getActionStore(), getEditorFactory(display), getUpdateStore(), onException(), getLargeButtonDefns());
+		SoftwareFmDataComposite composite = new SoftwareFmDataComposite(parent, guiDataStore, getCompositeConfig(display), getActionStore(), getEditorFactory(display), getUpdateStore(), getListEditorStore(), onException(), getLargeButtonDefns());
 		return composite;
 
 	}

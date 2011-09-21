@@ -215,7 +215,7 @@ public class GuiDataStore implements IDataGetter {
 	@Override
 	public ActionData getActionDataFor(List<String> params) {
 		synchronized (lock) {
-			return new ActionData(lastUrlFor, params, Lists.map(params, new IFunction1<String, Object>() {
+			return new ActionData(lastUrlFor, params, Lists.map(Lists.nullSafe(params), new IFunction1<String, Object>() {
 				@Override
 				public Object apply(String from) throws Exception {
 					return getDataFor(from);

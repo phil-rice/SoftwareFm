@@ -3,6 +3,7 @@ package org.softwareFm.display.actions;
 import java.util.List;
 
 import org.softwareFm.display.data.ActionData;
+import org.softwareFm.display.displayer.DisplayerDefn;
 import org.softwareFm.display.displayer.IDisplayer;
 import org.softwareFm.utilities.collections.Lists;
 
@@ -23,7 +24,7 @@ public class ActionMock implements IAction {
 	}
 
 	@Override
-	public void execute(ActionContext actionContext, IDisplayer displayer,int index,  ActionData actionData) {
+	public void execute(ActionContext actionContext, DisplayerDefn displayerDefn,IDisplayer displayer,  int index, ActionData actionData) {
 		displayers.add(displayer);
 		formalParams.add(actionData.formalParams);
 	}

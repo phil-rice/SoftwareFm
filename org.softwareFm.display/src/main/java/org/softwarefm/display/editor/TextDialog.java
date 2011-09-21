@@ -4,6 +4,8 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.softwareFm.display.Swts;
 import org.softwareFm.display.composites.CompositeConfig;
@@ -43,8 +45,7 @@ public class TextDialog extends Dialog {
 
 	private void createContents(Composite parent, CompositeConfig compositeConfig, String title, String initialValue, final ICallback<Object> onCompletion) {
 		final TitleAndText txt = new TitleAndText(compositeConfig, parent, title, false);
-		txt.setText(initialValue);
-		Swts.makeAcceptCancelComposite(parent, SWT.NULL, compositeConfig.resourceGetter, new Runnable() {
+		final Runnable okRunnable = new Runnable() {
 			public void run() {
 				try {
 					result = txt.getText();
@@ -53,7 +54,15 @@ public class TextDialog extends Dialog {
 					throw WrappedException.wrap(e);
 				}
 			}
-		}, new Runnable() {
+		};
+		txt.setText(initialValue);
+		txt.addCrListener(new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				okRunnable.run();
+			}
+		});
+		Swts.makeAcceptCancelComposite(parent, SWT.NULL, compositeConfig.resourceGetter, okRunnable, new Runnable() {
 			public void run() {
 				shell.close();
 			}
