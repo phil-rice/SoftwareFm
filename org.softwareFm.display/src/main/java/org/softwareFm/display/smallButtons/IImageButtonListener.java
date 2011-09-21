@@ -1,6 +1,6 @@
 package org.softwareFm.display.smallButtons;
 
-import org.softwareFm.swtBasics.IHasControl;
+import org.softwareFm.display.composites.IHasControl;
 
 public interface IImageButtonListener {
 

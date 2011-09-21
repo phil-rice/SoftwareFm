@@ -1,6 +1,7 @@
 package org.softwareFm.utilities.resources;
 
 import java.text.MessageFormat;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.softwareFm.utilities.constants.UtilityMessages;
@@ -20,12 +21,21 @@ public interface IResourceGetter {
 			return new ResourceGetter(null);
 		}
 
+		public static String getOrException(IResourceGetter resourceGetter, String key) {
+			String string = resourceGetter.getStringOrNull(key);
+			if (string == null) {
+				String message = MessageFormat.format(UtilityMessages.missingResource, key);
+				throw new MissingResourceException(message, IResourceGetter.class.getSimpleName(), key);
+			}
+			return string;
+
+		}
+
 		public static String get(IResourceGetter resourceGetter, String key) {
 			String string = resourceGetter.getStringOrNull(key);
 			if (string == null) {
 				String message = MessageFormat.format(UtilityMessages.missingResource, key);
 				System.err.println(message);
-				// throw new MissingResourceException(message, IResourceGetter.class.getSimpleName(), key);
 			}
 			return string;
 		}

@@ -7,7 +7,7 @@ import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.actions.ActionStore;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.TitleAndText;
-import org.softwareFm.display.data.DisplayConstants;
+import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.data.IDataGetter;
 import org.softwareFm.utilities.strings.Strings;
 
@@ -18,6 +18,7 @@ public class TextDisplayerFactory implements IDisplayerFactory {
 		if (defn.title == null)
 			throw new NullPointerException(MessageFormat.format(DisplayConstants.mustHaveA, "title", getClass().getSimpleName()));
 		TitleAndText titleAndText = new TitleAndText(compositeConfig, parent, defn.title, true);
+		titleAndText.setEditable(false);
 		return titleAndText;
 	}
 

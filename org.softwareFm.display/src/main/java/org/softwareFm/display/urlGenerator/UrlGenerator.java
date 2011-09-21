@@ -2,7 +2,7 @@ package org.softwareFm.display.urlGenerator;
 
 import java.text.MessageFormat;
 
-import org.softwareFm.display.data.DisplayConstants;
+import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.utilities.strings.Strings;
 import org.softwareFm.utilities.strings.UrlRipperResult;

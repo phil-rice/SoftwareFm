@@ -8,8 +8,8 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.display.data.DisplayConstants;
-import org.softwareFm.swtBasics.images.SmallIconPosition;
+import org.softwareFm.display.constants.DisplayConstants;
+import org.softwareFm.display.simpleButtons.SmallIconPosition;
 import org.softwareFm.utilities.maps.Maps;
 
 public class SimpleImageControl extends Canvas {

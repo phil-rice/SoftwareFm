@@ -9,11 +9,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.softwareFm.display.SoftwareFmLayout;
+import org.softwareFm.display.Swts;
 import org.softwareFm.display.displayer.IDisplayer;
-import org.softwareFm.swtBasics.IHasComposite;
-import org.softwareFm.swtBasics.IHasControl;
-import org.softwareFm.swtBasics.Swts;
-import org.softwareFm.swtBasics.images.Resources;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public  class TitleAnd implements IDisplayer, IHasComposite {
@@ -36,7 +33,7 @@ public  class TitleAnd implements IDisplayer, IHasComposite {
 		if (titleOrTitleKey == null)
 			throw new NullPointerException();
 
-		String title = titleIsKey ? Resources.getOrException(config.resourceGetter, titleOrTitleKey) : titleOrTitleKey;
+		String title = titleIsKey ? IResourceGetter.Utils.getOrException(config.resourceGetter, titleOrTitleKey) : titleOrTitleKey;
 		lblTitle = new Label(content, SWT.NULL);
 		lblTitle.setLayoutData(new RowData(layout.titleWidth, height));
 		lblTitle.setText(title == null ? "" : title);

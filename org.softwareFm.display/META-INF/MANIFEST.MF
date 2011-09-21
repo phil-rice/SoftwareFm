@@ -17,5 +17,6 @@ Export-Package: org.softwareFm.display,
  org.softwareFm.display.largeButton,
  org.softwareFm.display.lists,
  org.softwareFm.display.samples,
+ org.softwareFm.display.simpleButtons,
  org.softwareFm.display.smallButtons,
  org.softwareFm.display.urlGenerator

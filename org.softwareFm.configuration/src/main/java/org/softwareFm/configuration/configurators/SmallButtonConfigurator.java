@@ -1,8 +1,8 @@
 package org.softwareFm.configuration.configurators;
 
 import org.softwareFm.configuration.jar.JarSimpleButtonFactory;
-import org.softwareFm.display.SmallButtonFactory;
 import org.softwareFm.display.smallButtons.ISmallButtonConfigurator;
+import org.softwareFm.display.smallButtons.SmallButtonFactory;
 import org.softwareFm.display.smallButtons.SmallButtonStore;
 
 public class SmallButtonConfigurator implements ISmallButtonConfigurator{

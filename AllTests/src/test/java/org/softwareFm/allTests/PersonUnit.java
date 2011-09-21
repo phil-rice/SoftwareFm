@@ -4,11 +4,11 @@ import java.awt.image.SampleModel;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.display.Swts;
 import org.softwareFm.display.composites.TitleAndText;
 import org.softwareFm.display.editor.TextEditor;
 import org.softwareFm.display.samples.ShowAllSimpleImageButtons;
 import org.softwareFm.eclipse.sample.SoftwareFmDisplaySamples;
-import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.utilities.functions.IFunction1;
 
 public class PersonUnit {

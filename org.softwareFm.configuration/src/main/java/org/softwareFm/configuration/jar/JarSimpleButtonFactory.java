@@ -1,10 +1,10 @@
 package org.softwareFm.configuration.jar;
 
 import org.softwareFm.display.displayer.ISmallDisplayer;
+import org.softwareFm.display.simpleButtons.IButtonParent;
 import org.softwareFm.display.smallButtons.ISmallButtonFactory;
 import org.softwareFm.display.smallButtons.ImageButtonConfig;
 import org.softwareFm.display.smallButtons.SmallButtonDefn;
-import org.softwareFm.swtBasics.text.IButtonParent;
 
 public class JarSimpleButtonFactory implements ISmallButtonFactory {
 

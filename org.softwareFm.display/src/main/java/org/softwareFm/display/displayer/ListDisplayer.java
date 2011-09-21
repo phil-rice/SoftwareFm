@@ -7,16 +7,16 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.softwareFm.display.Swts;
 import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.actions.ActionStore;
 import org.softwareFm.display.composites.CompositeConfig;
+import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.composites.TitleAnd;
-import org.softwareFm.display.data.DisplayConstants;
+import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.data.IDataGetter;
 import org.softwareFm.display.lists.IListEditor;
-import org.softwareFm.swtBasics.IHasControl;
-import org.softwareFm.swtBasics.Swts;
-import org.softwareFm.swtBasics.text.IButtonParent;
+import org.softwareFm.display.simpleButtons.IButtonParent;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class ListDisplayer  implements IDisplayer {

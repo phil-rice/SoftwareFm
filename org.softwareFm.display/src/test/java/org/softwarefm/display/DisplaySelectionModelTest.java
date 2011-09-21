@@ -7,6 +7,7 @@ import junit.framework.TestCase;
 import org.softwareFm.display.actions.ActionMock;
 import org.softwareFm.display.actions.ActionStore;
 import org.softwareFm.display.largeButton.LargeButtonDefn;
+import org.softwareFm.display.selection.DisplaySelectionModel;
 import org.softwareFm.display.smallButtons.SmallButtonDefn;
 import org.softwareFm.display.smallButtons.SmallButtonFactoryMock;
 import org.softwareFm.utilities.callbacks.ICallback;

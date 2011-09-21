@@ -6,9 +6,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.softwareFm.display.IAction;
 import org.softwareFm.display.actions.ActionStore;
-import org.softwareFm.display.data.DisplayConstants;
+import org.softwareFm.display.actions.IAction;
+import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.displayer.DisplayerDefn;
 
 public class SmallButtonDefn {

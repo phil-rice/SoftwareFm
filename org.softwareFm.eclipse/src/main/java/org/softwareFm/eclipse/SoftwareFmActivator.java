@@ -13,13 +13,13 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.softwareFm.configuration.SoftwareFmPropertyAnchor;
 import org.softwareFm.display.GuiBuilder;
-import org.softwareFm.display.IUrlDataCallback;
-import org.softwareFm.display.IUrlToData;
 import org.softwareFm.display.SoftwareFmDataComposite;
 import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.actions.ActionStore;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.data.GuiDataStore;
+import org.softwareFm.display.data.IUrlDataCallback;
+import org.softwareFm.display.data.IUrlToData;
 import org.softwareFm.display.displayer.DisplayerStore;
 import org.softwareFm.display.editor.EditorContext;
 import org.softwareFm.display.editor.EditorFactory;
@@ -36,7 +36,6 @@ import org.softwareFm.jdtBinding.api.JavaProjects;
 import org.softwareFm.jdtBinding.api.RippedResult;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
-import org.softwareFm.repositoryFacardConstants.RepositoryFacardConstants;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
@@ -58,7 +57,6 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.softwareFm.eclipse.configuration";
-
 	// The shared instance
 	private static SoftwareFmActivator plugin;
 

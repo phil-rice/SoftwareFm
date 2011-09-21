@@ -1,8 +1,8 @@
 package org.softwareFm.eclipse.sample;
 
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.display.Swts;
 import org.softwareFm.eclipse.fixture.SoftwareFmFixture;
-import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.utilities.functions.IFunction1;
 
 public class Sample {

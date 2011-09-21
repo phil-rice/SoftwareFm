@@ -3,7 +3,7 @@ package org.softwareFm.display.lists;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.displayer.DisplayerDefn;
-import org.softwareFm.swtBasics.text.IButtonParent;
+import org.softwareFm.display.simpleButtons.IButtonParent;
 
 public class ListEditorMock implements IListEditor {
 

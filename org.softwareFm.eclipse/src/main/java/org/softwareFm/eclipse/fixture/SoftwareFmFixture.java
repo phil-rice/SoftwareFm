@@ -16,12 +16,12 @@ import org.softwareFm.configuration.configurators.OrganisationLargeButtonFactory
 import org.softwareFm.configuration.configurators.ProjectLargeButtonFactory;
 import org.softwareFm.configuration.configurators.SmallButtonConfigurator;
 import org.softwareFm.display.GuiBuilder;
-import org.softwareFm.display.IUrlToData;
 import org.softwareFm.display.SoftwareFmDataComposite;
 import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.actions.ActionStore;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.data.GuiDataStore;
+import org.softwareFm.display.data.IUrlToData;
 import org.softwareFm.display.displayer.DisplayerStore;
 import org.softwareFm.display.editor.EditorContext;
 import org.softwareFm.display.editor.EditorFactory;

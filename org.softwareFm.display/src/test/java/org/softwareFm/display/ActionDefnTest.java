@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import junit.framework.TestCase;
 
+import org.softwareFm.display.actions.ActionDefn;
 import org.softwareFm.utilities.tests.Tests;
 
 public class ActionDefnTest extends TestCase {

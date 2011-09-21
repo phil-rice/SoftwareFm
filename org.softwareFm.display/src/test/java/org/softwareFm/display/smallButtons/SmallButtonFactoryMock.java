@@ -1,7 +1,7 @@
 package org.softwareFm.display.smallButtons;
 
 import org.softwareFm.display.displayer.ISmallDisplayer;
-import org.softwareFm.swtBasics.text.IButtonParent;
+import org.softwareFm.display.simpleButtons.IButtonParent;
 
 public class SmallButtonFactoryMock implements ISmallButtonFactory {
 

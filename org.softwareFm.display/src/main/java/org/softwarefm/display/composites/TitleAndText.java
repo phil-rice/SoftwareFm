@@ -6,11 +6,11 @@ import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.softwareFm.display.SoftwareFmLayout;
+import org.softwareFm.display.Swts;
 import org.softwareFm.display.smallButtons.ImageButtonConfig;
 import org.softwareFm.display.smallButtons.SimpleImageButton;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
-import org.softwareFm.swtBasics.Swts;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
@@ -28,6 +28,9 @@ public class TitleAndText extends TitleAnd {
 		this.text.setText(text);
 	}
 
+	public void setEditable(boolean editable) {
+		text.setEditable(editable);
+	}
 
 
 	public String getText() {
@@ -49,5 +52,6 @@ public class TitleAndText extends TitleAnd {
 			}
 		}) ;
 	}
+
 
 }

@@ -1,6 +1,5 @@
 package org.softwareFm.display.actions;
 
-import org.softwareFm.display.IAction;
 import org.softwareFm.utilities.maps.AbstractSimpleMapTest;
 import org.softwareFm.utilities.maps.ISimpleMap;
 

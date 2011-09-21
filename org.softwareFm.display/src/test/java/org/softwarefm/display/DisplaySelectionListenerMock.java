@@ -3,6 +3,8 @@ package org.softwareFm.display;
 import java.util.List;
 
 import org.softwareFm.display.largeButton.LargeButtonDefn;
+import org.softwareFm.display.selection.DisplaySelectionModel;
+import org.softwareFm.display.selection.IDisplaySelectionListener;
 import org.softwareFm.display.smallButtons.SmallButtonDefn;
 import org.softwareFm.utilities.collections.Lists;
 

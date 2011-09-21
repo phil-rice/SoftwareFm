@@ -3,11 +3,11 @@ package org.softwareFm.configuration.jar;
 import java.util.Map;
 
 import org.softwareFm.display.data.IDataGetter;
+import org.softwareFm.display.simpleButtons.IButtonParent;
+import org.softwareFm.display.simpleButtons.SmallIconPosition;
 import org.softwareFm.display.smallButtons.ImageButtonConfig;
 import org.softwareFm.display.smallButtons.SimpleImageButton;
 import org.softwareFm.softwareFmImages.smallIcons.SmallIconsAnchor;
-import org.softwareFm.swtBasics.images.SmallIconPosition;
-import org.softwareFm.swtBasics.text.IButtonParent;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.strings.Strings;
 

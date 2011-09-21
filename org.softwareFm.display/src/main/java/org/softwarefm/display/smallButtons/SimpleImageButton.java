@@ -6,11 +6,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.Control;
+import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.data.IDataGetter;
 import org.softwareFm.display.displayer.ISmallDisplayer;
-import org.softwareFm.swtBasics.IHasControl;
-import org.softwareFm.swtBasics.images.SmallIconPosition;
-import org.softwareFm.swtBasics.text.IButtonParent;
+import org.softwareFm.display.simpleButtons.IButtonParent;
+import org.softwareFm.display.simpleButtons.SmallIconPosition;
 import org.softwareFm.utilities.exceptions.WrappedException;
 
 public class SimpleImageButton implements IHasControl, ISmallDisplayer {

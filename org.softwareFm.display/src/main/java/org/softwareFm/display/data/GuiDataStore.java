@@ -9,9 +9,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.softwareFm.display.IUrlDataCallback;
-import org.softwareFm.display.IUrlToData;
-import org.softwareFm.swtBasics.images.Resources;
+import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
@@ -180,7 +178,7 @@ public class GuiDataStore implements IDataGetter {
 				return result;
 			}
 		else
-			return Resources.getOrException(resourceGetter, pathOrKey);
+			return IResourceGetter.Utils.getOrException(resourceGetter, pathOrKey);
 	}
 
 	@SuppressWarnings("rawtypes")

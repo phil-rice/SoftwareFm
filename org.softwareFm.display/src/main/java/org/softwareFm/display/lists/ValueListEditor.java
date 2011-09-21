@@ -4,7 +4,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.TitleAndText;
 import org.softwareFm.display.displayer.DisplayerDefn;
-import org.softwareFm.swtBasics.text.IButtonParent;
+import org.softwareFm.display.simpleButtons.IButtonParent;
 import org.softwareFm.utilities.strings.Strings;
 
 public class ValueListEditor implements IListEditor{

@@ -3,7 +3,6 @@ package org.softwareFm.display.actions;
 import java.awt.Desktop;
 import java.net.URI;
 
-import org.softwareFm.display.IAction;
 import org.softwareFm.display.data.ActionData;
 import org.softwareFm.display.displayer.IDisplayer;
 import org.softwareFm.utilities.exceptions.WrappedException;

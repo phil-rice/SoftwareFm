@@ -4,7 +4,7 @@ import java.text.MessageFormat;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.softwareFm.display.SoftwareFmLayout;
-import org.softwareFm.display.data.DisplayConstants;
+import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.softwareFmImages.backdrop.BackdropAnchor;
 
 public class ImageButtonConfig {

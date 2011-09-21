@@ -1,6 +1,5 @@
 package org.softwareFm.display.actions;
 
-import org.softwareFm.display.IAction;
 import org.softwareFm.display.data.ActionData;
 import org.softwareFm.display.displayer.IDisplayer;
 import org.softwareFm.utilities.callbacks.ICallback;

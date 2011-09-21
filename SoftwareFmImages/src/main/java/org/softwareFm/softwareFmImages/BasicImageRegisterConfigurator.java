@@ -9,7 +9,6 @@ import org.softwareFm.softwareFmImages.backdrop.BackdropAnchor;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 import org.softwareFm.softwareFmImages.smallIcons.SmallIconsAnchor;
-import org.softwareFm.swtBasics.images.Images;
 
 public class BasicImageRegisterConfigurator implements IImageRegisterConfigurator {
 
@@ -20,7 +19,7 @@ public class BasicImageRegisterConfigurator implements IImageRegisterConfigurato
 				"jar", "jarClearEclipse", "jarCopyFromSoftwareFm", "jarCopyToSoftwareFm", //
 				"document", "issues", "license", "mailingList", "merchandise", "organisation", "project",//
 				"news", "recruitment", "tutorials", "twitter");
-		Images.registerImages(device, imageRegistry, OverlaysAnchor.class, "overlay", "add", "delete", "edit");
+		Images.registerImages(device, imageRegistry, OverlaysAnchor.class, "overlay", "add", "delete", "edit", "properties");
 		Images.registerImages(device, imageRegistry, SmallIconsAnchor.class, "smallIcon", "softwareFm", "javadoc", "source");
 		Images.registerImages(device, imageRegistry, GeneralAnchor.class, "general", "browse", "help", "clear");
 
