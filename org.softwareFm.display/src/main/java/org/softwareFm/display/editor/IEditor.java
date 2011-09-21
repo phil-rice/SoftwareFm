@@ -8,7 +8,7 @@ import org.softwareFm.utilities.callbacks.ICallback;
 
 public interface IEditor {
 
-	void edit(Shell parent, DisplayerDefn displayerDefn, EditorContext editorContext, ActionContext actionContext,  ActionData actionData, ICallback<Object> onCompletion);
+	void edit(Shell parent, DisplayerDefn displayerDefn, EditorContext editorContext, ActionContext actionContext,  ActionData actionData, ICallback<Object> onCompletion, Object initialValue);
 
 	void cancel();
 

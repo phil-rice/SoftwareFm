@@ -13,8 +13,8 @@ public class ViewTweetsAction implements IAction {
 	@Override
 	@SuppressWarnings("rawtypes")
 	public void execute(ActionContext actionContext, DisplayerDefn displayerDefn, IDisplayer displayer,int index, ActionData actionData) throws Exception {
-		List<Object> actualParameters = actionData.actualParams;
-		Object data = actualParameters.get(0);
+		String key = displayerDefn.dataKey;
+		Object data =actionContext.dataGetter.getDataFor(key);
 		if (data instanceof List && data != null){
 			Object tweet = ((List)data).get(index);
 			Desktop.getDesktop().browse(new URI("http://mobile.twitter.com/" + tweet));

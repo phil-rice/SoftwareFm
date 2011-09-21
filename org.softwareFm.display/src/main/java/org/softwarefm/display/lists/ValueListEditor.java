@@ -24,6 +24,7 @@ public class ValueListEditor implements IListEditor{
 	public IButtonParent makeLineHasControl(DisplayerDefn displayDefn, CompositeConfig config, Composite listComposite, int index, Object value) {
 		TitleAndText result = new TitleAndText(config, listComposite, lineTitleKey, true);
 		result.setText(Strings.nullSafeToString(value));
+		result.setEditable(false);
 		return result;
 	}
 

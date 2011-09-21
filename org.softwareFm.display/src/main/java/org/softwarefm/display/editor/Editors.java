@@ -22,7 +22,7 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class Editors {
 
-	public static void display(String title, final IEditor editor, final List<String> formalParameters, final List<Object>actualParameters) {
+	public static void display(String title, final IEditor editor, final List<String> formalParameters, final List<Object>actualParameters, final Object initialValue) {
 		Swts.display(title, new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(final Composite from) throws Exception {
@@ -44,7 +44,7 @@ public class Editors {
 								System.out.println("Result: " + t);
 							}};
 							ActionData actionData = new ActionData(Maps.<String,String>newMap(), formalParameters, actualParameters);
-						editorFactory.displayEditor(shell, "someName",null, null, actionData, onCompletion);
+						editorFactory.displayEditor(shell, "someName",null, null, actionData, onCompletion, initialValue);
 					}
 				});
 				Swts.addGrabHorizontalAndFillGridDataToAllChildren(composite);

@@ -9,6 +9,6 @@ import org.softwareFm.utilities.callbacks.ICallback;
 public interface IEditorFactory {
 	IEditorFactory register(String name, IEditor editor);
 
-	void displayEditor(Shell parent, String editorName, DisplayerDefn displayerDefn, ActionContext actionContext, ActionData actionData, final ICallback<Object> onCompletion);
+	void displayEditor(Shell parent, String editorName, DisplayerDefn displayerDefn, ActionContext actionContext, ActionData actionData, final ICallback<Object> onCompletion, Object initialValue);
 
 }

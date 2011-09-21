@@ -26,7 +26,7 @@ public class EditorFactory implements IEditorFactory, ISimpleMap<String, IEditor
 	}
 
 	@Override
-	public void displayEditor(Shell parent, String editorName, DisplayerDefn displayerDefn,  ActionContext actionContext, ActionData actionData, final ICallback<Object> onCompletion) {
+	public void displayEditor(Shell parent, String editorName, DisplayerDefn displayerDefn,  ActionContext actionContext, ActionData actionData, final ICallback<Object> onCompletion, Object initialValue) {
 		if (editor != null)
 			editor.cancel();
 		editor = get(editorName);
@@ -37,7 +37,7 @@ public class EditorFactory implements IEditorFactory, ISimpleMap<String, IEditor
 				editor = null;
 				onCompletion.process(t);
 			}
-		});
+		}, initialValue);
 
 	}
 

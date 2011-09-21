@@ -37,7 +37,7 @@ public class EditorFactoryTest extends AbstractSimpleMapTest<String, IEditor> {
 	public void testOpeningEditor() {
 		EditorMock editorMock1 = new EditorMock("1");
 		EditorFactory factory = new EditorFactory(editorContext).register("name1", editorMock1);
-		factory.displayEditor(shell, "name1", displayerDefn, actionContext, actionData1, ICallback.Utils.exception("shouldn't close"));
+		factory.displayEditor(shell, "name1", displayerDefn, actionContext, actionData1, ICallback.Utils.exception("shouldn't close"), "initial");
 		assertEquals(Arrays.asList(formalParams1), editorMock1.formalParams);
 		assertEquals(Arrays.asList(actualParams1), editorMock1.actualParams);
 		assertEquals(Arrays.asList(shell), editorMock1.parents);
@@ -49,9 +49,9 @@ public class EditorFactoryTest extends AbstractSimpleMapTest<String, IEditor> {
 		EditorMock editorMock1 = new EditorMock("1");
 		EditorMock editorMock2 = new EditorMock("2");
 		EditorFactory factory = new EditorFactory(editorContext).register("name1", editorMock1).register("name2", editorMock2);
-		factory.displayEditor(shell, "name1",displayerDefn,  actionContext, actionData1, ICallback.Utils.exception("shouldn't close"));
+		factory.displayEditor(shell, "name1",displayerDefn,  actionContext, actionData1, ICallback.Utils.exception("shouldn't close"), "initial");
 		assertEquals(0, editorMock1.cancelCount.get());
-		factory.displayEditor(shell, "name2", displayerDefn,  actionContext, actionData2, ICallback.Utils.exception("shouldn't close"));
+		factory.displayEditor(shell, "name2", displayerDefn,  actionContext, actionData2, ICallback.Utils.exception("shouldn't close"), "initial");
 		assertEquals(1, editorMock1.cancelCount.get());
 		assertEquals(0, editorMock2.cancelCount.get());
 	}
@@ -65,7 +65,7 @@ public class EditorFactoryTest extends AbstractSimpleMapTest<String, IEditor> {
 			public void process(Object t) throws Exception {
 				ref.set(t);
 			}
-		});
+		}, "initial");
 		assertNull(ref.get());
 		assertSame(editorMock1, factory.getEditor());
 		editorMock1.finish("finalValue");

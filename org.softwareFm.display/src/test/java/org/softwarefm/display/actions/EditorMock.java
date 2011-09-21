@@ -31,7 +31,7 @@ public class EditorMock implements IEditor {
 	}
 	
 	@Override
-	public void edit(Shell parent, DisplayerDefn displayerDefn,EditorContext editorContext,  ActionContext actionContext, ActionData actionData, ICallback<Object> onCompletion) {
+	public void edit(Shell parent, DisplayerDefn displayerDefn,EditorContext editorContext,  ActionContext actionContext, ActionData actionData, ICallback<Object> onCompletion, Object initialValue) {
 		this.onCompletion = onCompletion;
 		this.parents.add(parent);
 		this.formalParams.add(actionData.formalParams);

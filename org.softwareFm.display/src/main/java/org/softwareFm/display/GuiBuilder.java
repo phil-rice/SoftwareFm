@@ -6,7 +6,6 @@ import org.softwareFm.display.displayer.DisplayerDefn;
 import org.softwareFm.display.displayer.DisplayerStore;
 import org.softwareFm.display.displayer.IDisplayerFactory;
 import org.softwareFm.display.largeButton.LargeButtonDefn;
-import org.softwareFm.display.lists.IListEditor;
 import org.softwareFm.display.lists.ListEditorStore;
 import org.softwareFm.display.smallButtons.ISmallButtonFactory;
 import org.softwareFm.display.smallButtons.SmallButtonDefn;
