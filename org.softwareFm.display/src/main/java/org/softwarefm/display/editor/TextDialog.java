@@ -14,12 +14,14 @@ import org.softwareFm.utilities.exceptions.WrappedException;
 public class TextDialog extends Dialog {
 
 	private Shell shell;
+	public String result;
 
 	public TextDialog(Shell parent) {
 		super(parent);
 	}
 
-	public void open(CompositeConfig compositeConfig, String title, String initialValue, ICallback<Object> onCompletion) {
+	public String open(CompositeConfig compositeConfig, String title, String initialValue, ICallback<Object> onCompletion) {
+		this.result = null;
 		shell = new Shell(getParentShell(), SWT.NULL);
 		createContents(shell, compositeConfig, title, initialValue, onCompletion);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(shell);
@@ -31,6 +33,7 @@ public class TextDialog extends Dialog {
 				display.sleep();
 			}
 		}
+		return result;
 	}
 
 	@Override
@@ -44,6 +47,7 @@ public class TextDialog extends Dialog {
 		Swts.makeAcceptCancelComposite(parent, SWT.NULL, compositeConfig.resourceGetter, new Runnable() {
 			public void run() {
 				try {
+					result = txt.getText();
 					onCompletion.process(txt.getText());
 				} catch (Exception e) {
 					throw WrappedException.wrap(e);

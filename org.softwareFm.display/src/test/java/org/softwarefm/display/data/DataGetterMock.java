@@ -33,4 +33,9 @@ public class DataGetterMock implements IDataGetter {
 		return new ActionData(Maps.<String,String>newMap(), params	, null);
 	}
 
+	@Override
+	public void clearCache(String url, String entity, String attribute) {
+		throw new UnsupportedOperationException();
+	}
+
 }

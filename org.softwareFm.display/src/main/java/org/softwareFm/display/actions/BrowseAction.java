@@ -2,7 +2,6 @@ package org.softwareFm.display.actions;
 
 import java.awt.Desktop;
 import java.net.URI;
-import java.util.List;
 
 import org.softwareFm.display.IAction;
 import org.softwareFm.display.data.ActionData;

@@ -12,6 +12,7 @@ import org.softwareFm.display.data.ActionData;
 import org.softwareFm.display.editor.EditorContext;
 import org.softwareFm.display.editor.EditorFactory;
 import org.softwareFm.display.editor.IEditor;
+import org.softwareFm.display.editor.IUpdateStore;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.maps.AbstractSimpleMapTest;
@@ -105,7 +106,8 @@ public class EditorFactoryTest extends AbstractSimpleMapTest<String, IEditor> {
 		ImageRegistry imageRegistry = new ImageRegistry();
 		new BasicImageRegisterConfigurator().registerWith(shell.getDisplay(), imageRegistry);
 		
-		editorContext = new EditorContext(new CompositeConfig(shell.getDisplay(), new SoftwareFmLayout(), imageRegistry, IResourceGetter.Utils.noResources()));
+		CompositeConfig compositeConfig = new CompositeConfig(shell.getDisplay(), new SoftwareFmLayout(), imageRegistry, IResourceGetter.Utils.noResources());
+		editorContext = new EditorContext(compositeConfig, IUpdateStore.Utils.errorUpdateStore());
 		super.setUp();
 	}
 

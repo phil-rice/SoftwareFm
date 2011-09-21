@@ -2,7 +2,6 @@ package org.softwareFm.eclipse;
 
 import java.text.MessageFormat;
 
-import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.display.urlGenerator.UrlGenerator;
 import org.softwareFm.jdtBinding.api.JdtConstants;
 import org.softwareFm.jdtBinding.api.RippedResult;

@@ -1,6 +1,8 @@
 package org.softwareFm.repository.api.impl;
 
-import static org.softwareFm.repository.api.RepositoryDataItemStatus.*;
+import static org.softwareFm.repository.api.RepositoryDataItemStatus.FOUND;
+import static org.softwareFm.repository.api.RepositoryDataItemStatus.NOT_FOUND;
+import static org.softwareFm.repository.api.RepositoryDataItemStatus.REQUESTED;
 
 import java.util.Map;
 

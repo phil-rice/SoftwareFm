@@ -134,7 +134,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	}
 
 	public EditorContext getEditorContext(Display display) {
-		return editorContext == null ? new EditorContext(getCompositeConfig(display)) : editorContext;
+		return editorContext == null ? new EditorContext(getCompositeConfig(display),getUpdateStore()) : editorContext;
 	}
 
 	public GuiBuilder getGuiBuilder() {
@@ -157,8 +157,13 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		return smallButtonStore == null ? smallButtonStore = Plugins.configureMainWithCallbacks(new SmallButtonStore(), smallButtonStoreConfiguratorId, "class", onException()) : smallButtonStore;
 	}
 	private IUpdateStore getUpdateStore() {
-		return updateStore ==null? updateStore = new IUpdateStore() {
-		}: updateStore;
+		return updateStore ==null? updateStore = new RepositoryUpdateStore(getRepository(), new IStoreUpdatedCallback() {
+			@Override
+			public void storeUpdates(String url, String entity, String attribute, Object newValue) {
+				guiDataStore.clearCache(url, entity, attribute);
+				
+			}
+		}): updateStore;
 	}
 
 	public static ImageDescriptor getImageDescriptor(String path) {
@@ -255,7 +260,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 				guiDataStore.processData(result, Maps.<String, Object> newMap());
 			}
 		});
-		SoftwareFmDataComposite composite = new SoftwareFmDataComposite(parent, guiDataStore, getCompositeConfig(display), getActionStore(), getEditorFactory(display), getUpdateStore(), onException(), getLargeButtonDefns());
+		SoftwareFmDataComposite composite = new SoftwareFmDataComposite(parent, guiDataStore, getCompositeConfig(display), getActionStore(), getEditorFactory(display), onException(), getLargeButtonDefns());
 		return composite;
 
 	}

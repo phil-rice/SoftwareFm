@@ -18,6 +18,15 @@ public class Strings {
 		return builder.toString();
 	}
 
+	public static PreAndPost split(String value, char separator) {
+		int index = value.indexOf(separator);
+		if (index == -1)
+			return new PreAndPost(value, null);
+		else
+			return new PreAndPost(value.substring(0, index), value.substring(index + 1));
+
+	}
+
 	public static String join(List<String> from, List<Integer> indicies, String separator) {
 		StringBuilder builder = new StringBuilder();
 		boolean addSeparator = false;

@@ -15,4 +15,9 @@ public class ActionData {
 		this.actualParams = actualParams;
 	}
 
+	@Override
+	public String toString() {
+		return "ActionData [url=" + url + ", formalParams=" + formalParams + ", actualParams=" + actualParams + "]";
+	}
+
 }

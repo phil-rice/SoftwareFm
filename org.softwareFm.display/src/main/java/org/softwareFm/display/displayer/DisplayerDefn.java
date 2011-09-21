@@ -21,7 +21,6 @@ import org.softwareFm.display.smallButtons.SimpleImageControl;
 import org.softwareFm.swtBasics.IHasControl;
 import org.softwareFm.swtBasics.text.IButtonParent;
 import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.strings.Strings;
 
 public class DisplayerDefn {

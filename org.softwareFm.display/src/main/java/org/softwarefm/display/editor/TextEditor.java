@@ -20,7 +20,12 @@ public class TextEditor implements IEditor {
 		textDialog = new TextDialog(parent);
 		if (actualParameters.size()<1)
 			throw new IllegalStateException(MessageFormat.format(DisplayConstants.mustHaveA, "params", getClass().getSimpleName()));
-		textDialog.open(editorContext.compositeConfig, "Value", Strings.nullSafeToString(actualParameters.get(0)), onCompletion);
+		String key = Strings.nullSafeToString(actionData.formalParams.get(0));
+		String initialValue = Strings.nullSafeToString(actualParameters.get(0));
+		String result = textDialog.open(editorContext.compositeConfig, "Value", Strings.nullSafeToString(initialValue), onCompletion);
+		if (result != null){
+			editorContext.updateStore.update(actionData, key, result);
+		}
 	}
 
 	@Override

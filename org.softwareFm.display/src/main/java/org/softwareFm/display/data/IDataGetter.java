@@ -10,4 +10,5 @@ public interface IDataGetter {
 	Object getLastRawData();
 
 	void setRawData(Object rawData);
+	void clearCache(String url, String entity, String attribute) ;
 }

@@ -1,7 +1,6 @@
 package org.softwareFm.softwareFmImages.images;
 
 import java.util.Map;
-
 import java.util.Map.Entry;
 
 import org.eclipse.jface.resource.ImageRegistry;

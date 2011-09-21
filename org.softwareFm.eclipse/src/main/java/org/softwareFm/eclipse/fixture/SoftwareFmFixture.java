@@ -56,6 +56,7 @@ public class SoftwareFmFixture {
 	private IEditorFactory editorFactory;
 	private ListEditorStore listEditorStore;
 	private EditorContext editorContext;
+	private IUpdateStore updateStore;
 
 	public SoftwareFmFixture(Display display) throws Exception {
 		imageRegistry = new ImageRegistry();
@@ -64,7 +65,8 @@ public class SoftwareFmFixture {
 		resourceGetter = IResourceGetter.Utils.noResources().with(SoftwareFmPropertyAnchor.class, "SoftwareFmDisplay");
 		layout = new SoftwareFmLayout();
 		compositeConfig = new CompositeConfig(display, layout, imageRegistry, resourceGetter);
-		editorContext = new EditorContext(compositeConfig);
+		updateStore = IUpdateStore.Utils.sysoutUpdateStore();
+		editorContext = new EditorContext(compositeConfig, updateStore);
 
 		new SmallButtonConfigurator().process(smallButtonStore = new SmallButtonStore());
 		new ActionStoreConfigurator().process(actionStore = new ActionStore());
@@ -83,9 +85,8 @@ public class SoftwareFmFixture {
 
 	public SoftwareFmDataComposite makeComposite(Composite parent) {
 		SoftwareFmDataComposite result = new SoftwareFmDataComposite(parent, //
-				dataStore, compositeConfig, actionStore, editorFactory, new IUpdateStore() {
-				}, ICallback.Utils.rethrow(), //
-				Arrays.asList(jarButton, projectButton, organisationButton));
+				dataStore, compositeConfig, //
+				actionStore, editorFactory, ICallback.Utils.rethrow(), Arrays.asList(jarButton, projectButton, organisationButton));
 		return result;
 	}
 

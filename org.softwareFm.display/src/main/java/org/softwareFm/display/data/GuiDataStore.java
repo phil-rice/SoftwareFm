@@ -259,4 +259,11 @@ public class GuiDataStore implements IDataGetter {
 		return mainEntity;
 	}
 
+	@Override
+	public void clearCache(String url, String entity, String attribute) {
+		final EntityCachedData entityCachedData = getFromCache(entity);
+		entityCachedData.remove(url);
+	}
+
+
 }

@@ -1,7 +1,5 @@
 package org.softwareFm.display.actions;
 
-import java.util.List;
-
 import org.softwareFm.display.IAction;
 import org.softwareFm.display.data.ActionData;
 import org.softwareFm.display.displayer.IDisplayer;

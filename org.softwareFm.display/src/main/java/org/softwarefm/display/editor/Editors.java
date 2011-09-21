@@ -30,7 +30,7 @@ public class Editors {
 				ImageRegistry imageRegistry = new ImageRegistry();
 				new BasicImageRegisterConfigurator().registerWith(from.getDisplay(), imageRegistry);
 				IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(AllSoftwareFmDisplayTests.class, "Test");
-				final EditorContext editorContext = new EditorContext(new CompositeConfig(from.getDisplay(), new SoftwareFmLayout(), imageRegistry, resourceGetter));
+				final EditorContext editorContext = new EditorContext(new CompositeConfig(from.getDisplay(), new SoftwareFmLayout(), imageRegistry, resourceGetter), IUpdateStore.Utils.sysoutUpdateStore());
 				final IEditorFactory editorFactory = new EditorFactory(editorContext).register("someName", editor);
 				Button button = new Button(composite, SWT.PUSH);
 				button.setText("Edit");

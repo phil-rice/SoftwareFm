@@ -1,6 +1,5 @@
 package org.softwareFm.jdtBinding.api;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import org.softwareFm.utilities.callbacks.ICallback;
