@@ -53,20 +53,20 @@ public class Swts {
 	public static Composite makeAcceptCancelComposite(Composite parent, int style, IResourceGetter resourceGetter, final Runnable onAccept, final Runnable onCancel){
 		Composite result = new Composite(parent, style);
 		result.setLayout(new GridLayout(2, true));
-		Button okButton = new Button(result, SWT.PUSH);
-		okButton.setText(IResourceGetter.Utils.getOrException(resourceGetter, "button.ok.title"));
-		okButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				onAccept.run();
-			}
-		});
 		Button cancelButton = new Button(result, SWT.PUSH);
 		cancelButton.setText(IResourceGetter.Utils.getOrException(resourceGetter, "button.cancel.title"));
 		cancelButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				onCancel.run();
+			}
+		});
+		Button okButton = new Button(result, SWT.PUSH);
+		okButton.setText(IResourceGetter.Utils.getOrException(resourceGetter, "button.ok.title"));
+		okButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				onAccept.run();
 			}
 		});
 		return result;

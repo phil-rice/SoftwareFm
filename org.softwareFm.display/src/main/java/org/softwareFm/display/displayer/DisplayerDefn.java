@@ -41,6 +41,7 @@ public class DisplayerDefn {
 	public DisplayerDefn(IDisplayerFactory displayer) {
 		this.displayerFactory = displayer;
 	}
+
 	public DisplayerDefn(IDisplayerFactory displayer, IListEditor listEditor) {
 		this.displayerFactory = displayer;
 		this.listEditor = listEditor;
@@ -81,22 +82,26 @@ public class DisplayerDefn {
 
 	public IDisplayer createDisplayer(Composite parent, final ActionStore actionStore, final ActionContext actionContext) {
 		CompositeConfig compositeConfig = actionContext.compositeConfig;
-		final IDisplayer displayer = displayerFactory.create(parent, this, SWT.NULL, compositeConfig,actionStore, actionContext);
+		final IDisplayer displayer = displayerFactory.create(parent, this, SWT.NULL, compositeConfig, actionStore, actionContext);
 		createActions(actionStore, actionContext, displayer, displayer, actionDefns, -1);
 		return displayer;
 	}
-	public void createActions(final ActionStore actionStore,final ActionContext actionContext, final IDisplayer displayer, final IButtonParent buttonParent, List<ActionDefn> actionDefns, final int index) {
+
+	public void createActions(final ActionStore actionStore, final ActionContext actionContext, final IDisplayer displayer, final IButtonParent buttonParent, List<ActionDefn> actionDefns, final int index) {
 		CompositeConfig compositeConfig = actionContext.compositeConfig;
-		for (final ActionDefn actionDefn : actionDefns)
+		for (final ActionDefn actionDefn : actionDefns) {
+			if (actionDefn.params == null)
+				throw new NullPointerException(MessageFormat.format(DisplayConstants.mustHaveA, "params", actionDefn));
 			actionDefn.createButton(compositeConfig.imageButtonConfig, buttonParent, new IImageButtonListener() {
 				private final IAction action = actionStore.get(actionDefn.id);
 
 				@Override
 				public void buttonPressed(IHasControl button) throws Exception {
-					ActionData actionData= actionContext.dataGetter.getActionDataFor(actionDefn.params);
+					ActionData actionData = actionContext.dataGetter.getActionDataFor(actionDefn.params);
 					action.execute(actionContext, displayer, index, actionData);
 				}
 			});
+		}
 	}
 
 	public void data(IDataGetter dataGetter, DisplayerDefn defn, IDisplayer displayer, String entity, String url) {
@@ -113,7 +118,8 @@ public class DisplayerDefn {
 				i++;
 			}
 	}
-	public DisplayerDefn listActions(ActionDefn...listActionDefns) {
+
+	public DisplayerDefn listActions(ActionDefn... listActionDefns) {
 		this.listActionDefns = Lists.fromArray(listActionDefns);
 		return this;
 	}

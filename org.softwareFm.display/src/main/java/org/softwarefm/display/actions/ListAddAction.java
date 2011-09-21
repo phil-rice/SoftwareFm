@@ -7,7 +7,7 @@ public class ListAddAction implements IAction {
 
 	@Override
 	public void execute(ActionContext actionContext, IDisplayer displayer, int index, ActionData actionData) {
-
+		System.out.println("Adding to: "+index +","+ actionData.formalParams+", " +actionData. actualParams);
 	}
 
 }

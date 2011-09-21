@@ -22,7 +22,7 @@ public class TextDialog extends Dialog {
 
 	public String open(CompositeConfig compositeConfig, String title, String initialValue, ICallback<Object> onCompletion) {
 		this.result = null;
-		shell = new Shell(getParentShell(), SWT.NULL);
+		shell = new Shell(getParentShell(), SWT.DIALOG_TRIM|SWT.APPLICATION_MODAL);
 		createContents(shell, compositeConfig, title, initialValue, onCompletion);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(shell);
 		shell.pack();

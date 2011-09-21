@@ -57,4 +57,9 @@ public class ActionDefn {
 		return simpleImageButton;
 	}
 
+	@Override
+	public String toString() {
+		return "ActionDefn [id=" + id + ", tooltip=" + tooltip + ", mainImageId=" + mainImageId + ", overlayId=" + overlayId + ", params=" + params + "]";
+	}
+
 }
