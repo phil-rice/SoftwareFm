@@ -18,6 +18,7 @@ import org.softwareFm.display.editor.EditorFactory;
 import org.softwareFm.display.largeButton.LargeButtonDefn;
 import org.softwareFm.display.lists.ListEditorStore;
 import org.softwareFm.display.smallButtons.SmallButtonStore;
+import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.collections.Sets;
@@ -25,7 +26,7 @@ import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.tests.IDontRunAutomaticallyTest;
 
-public class ActivatorTest extends TestCase implements IDontRunAutomaticallyTest{
+public class ActivatorTest extends TestCase implements IDontRunAutomaticallyTest {
 
 	private SoftwareFmActivator softwareFmActivator;
 	private Shell shell;
@@ -44,7 +45,12 @@ public class ActivatorTest extends TestCase implements IDontRunAutomaticallyTest
 		IResourceGetter resourceGetter = softwareFmActivator.getResourceGetter();
 		assertSame(resourceGetter, softwareFmActivator.getResourceGetter());
 		assertEquals("Edit", resourceGetter.getStringOrNull("action.edit.tooltip"));
+	}
 
+	public void testGetRepository() {
+		IRepositoryFacard repository = softwareFmActivator.getRepository();
+		assertSame(repository, softwareFmActivator.getRepository());
+		assertNotNull(repository);
 	}
 
 	public void testGetCompositeConfig() {
@@ -124,6 +130,8 @@ public class ActivatorTest extends TestCase implements IDontRunAutomaticallyTest
 
 	@Override
 	protected void tearDown() throws Exception {
+		if (softwareFmActivator.repository != null)
+			softwareFmActivator.repository.shutdown();
 		shell.dispose();
 		super.tearDown();
 	}

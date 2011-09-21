@@ -1,6 +1,5 @@
 package org.softwareFm.display.displayer;
 
-import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.display.actions.ActionContext;
@@ -27,7 +26,7 @@ public class DisplayerMock implements IDisplayerFactory {
 	}
 
 	@Override
-	public void data(IDataGetter dataGetter, DisplayerDefn defn, IDisplayer displayer, String entity, String url, Map<String, Object> context, Map<String, Object> data) {
+	public void data(IDataGetter dataGetter, DisplayerDefn defn, IDisplayer displayer, String entity, String url) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -2,7 +2,6 @@ package org.softwareFm.display.displayer;
 
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
@@ -44,7 +43,7 @@ public class ListDisplayer  implements IDisplayer {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void data(IDataGetter  dataGetter, DisplayerDefn defn, String entity, String url, Map<String, Object> context, Map<String, Object> data) {
+	public void data(IDataGetter  dataGetter, DisplayerDefn defn, String entity, String url) {
 		Swts.removeAllChildren(listComposite);
 		Object dataFor = dataGetter.getDataFor(defn.dataKey);
 		if (dataFor != null) {

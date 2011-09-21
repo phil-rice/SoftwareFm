@@ -64,7 +64,7 @@ public class SimpleImageButton implements IHasControl, ISmallDisplayer {
 	}
 
 	@Override
-	public void data(IDataGetter dataGetter, String entity, String url, Map<String, Object> context, Map<String, Object> data) {
+	public void data(IDataGetter dataGetter, String entity, String url) {
 	}
 
 }

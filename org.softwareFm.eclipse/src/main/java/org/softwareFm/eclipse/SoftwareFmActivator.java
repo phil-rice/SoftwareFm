@@ -36,6 +36,7 @@ import org.softwareFm.jdtBinding.api.JavaProjects;
 import org.softwareFm.jdtBinding.api.RippedResult;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
+import org.softwareFm.repositoryFacardConstants.RepositoryFacardConstants;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
@@ -72,7 +73,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	private IEditorFactory editorFactory;
 	private List<LargeButtonDefn> largeButtonDefns;
 	private SelectedArtifactSelectionManager selectedArtifactSelectionManager;
-	private IRepositoryFacard repository;
+	IRepositoryFacard repository;
 	private IUpdateStore updateStore;
 	private IResourceGetter resourceGetter;
 
@@ -130,11 +131,11 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	}
 
 	public IResourceGetter getResourceGetter() {
-		return resourceGetter == null?resourceGetter = IResourceGetter.Utils.noResources().with(SoftwareFmPropertyAnchor.class, "SoftwareFmDisplay") : resourceGetter;
+		return resourceGetter == null ? resourceGetter = IResourceGetter.Utils.noResources().with(SoftwareFmPropertyAnchor.class, "SoftwareFmDisplay") : resourceGetter;
 	}
 
 	public EditorContext getEditorContext(Display display) {
-		return editorContext == null ? new EditorContext(getCompositeConfig(display),getUpdateStore()) : editorContext;
+		return editorContext == null ? new EditorContext(getCompositeConfig(display), getUpdateStore()) : editorContext;
 	}
 
 	public GuiBuilder getGuiBuilder() {
@@ -156,14 +157,20 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	private SmallButtonStore getSmallButtonStore() {
 		return smallButtonStore == null ? smallButtonStore = Plugins.configureMainWithCallbacks(new SmallButtonStore(), smallButtonStoreConfiguratorId, "class", onException()) : smallButtonStore;
 	}
+
 	private IUpdateStore getUpdateStore() {
-		return updateStore ==null? updateStore = new RepositoryUpdateStore(getRepository(), new IStoreUpdatedCallback() {
+		return updateStore == null ? updateStore = new RepositoryUpdateStore(getRepository(), new IStoreUpdatedCallback() {
 			@Override
 			public void storeUpdates(String url, String entity, String attribute, Object newValue) {
+				System.out.println("Storing updates: " + url +", " + attribute + "," + newValue);
 				guiDataStore.clearCache(url, entity, attribute);
-				
+				Object lastRawData = guiDataStore.getLastRawData();
+				System.out.println("Cache cleared. Last raw data: " + lastRawData);
+				guiDataStore.processData(lastRawData, Maps.<String, Object> newMap());
+				System.out.println("Processed data");
+
 			}
-		}): updateStore;
+		}) : updateStore;
 	}
 
 	public static ImageDescriptor getImageDescriptor(String path) {
@@ -180,7 +187,6 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 					@Override
 					public void process(IResponse response, Map<String, Object> data) {
 						callback.processData(entity, url, context, data);
-						
 					}
 				});
 			}
@@ -232,7 +238,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	}
 
 	public IRepositoryFacard getRepository() {
-		return repository == null ? IRepositoryFacard.Utils.defaultFacard() : repository;
+		return repository == null ? repository = IRepositoryFacard.Utils.defaultFacard() : repository;
 	}
 
 	public SoftwareFmDataComposite makeComposite(Composite parent) {

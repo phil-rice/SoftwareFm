@@ -87,12 +87,9 @@ public class GuiDataStoreTest extends TestCase {
 		checkListener(listener2);
 	}
 
-	@SuppressWarnings("unchecked")
 	private void checkListener(GuiDataListenerMock listener) {
 		assertEquals(Arrays.asList("entity1", "entityd1", "entityd2", "entity1", "entityd1", "entityd2"), listener.entities);
-		assertEquals(Arrays.asList(context1, context1, context1, context1, context1, context1), listener.contexts);
 		assertEquals(Arrays.asList("<Url entity1: rawData>", "<Url entityd1: one>", "<Url entityd2: two>", "<Url entity1: rawData>", "<Url entityd1: one>", "<Url entityd2: two>"), listener.urls);
-		assertEquals(Arrays.asList(data1, datad1, datad2, data1, datad1, datad2), listener.datas);
 	}
 
 	private void makeRosyView() {

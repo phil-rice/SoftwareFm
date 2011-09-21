@@ -116,7 +116,7 @@ public class GuiDataStore implements IDataGetter {
 		IUrlDataCallback callback = new IUrlDataCallback() {
 			@Override
 			public void processData(String entity, String url, Map<String, Object> context, Map<String, Object> data) {
-				fireListeners(entity, url, context, data);
+				fireListeners(entity, url);
 				synchronized (lock) {
 					lastUrlFor.put(entity, url);
 					entityCachedData.put(url, data);
@@ -150,10 +150,10 @@ public class GuiDataStore implements IDataGetter {
 		return entityCachedData;
 	}
 
-	private void fireListeners(String entity, String url, Map<String, Object> context, Map<String, Object> data) {
+	public void fireListeners(String entity, String url) {
 		for (IGuiDataListener listener : listeners)
 			try {
-				listener.data(entity, url, context, data);
+				listener.data(entity, url);
 			} catch (Throwable t) {
 				try {
 					onException.process(t);
@@ -177,7 +177,6 @@ public class GuiDataStore implements IDataGetter {
 				if (entity.equals("raw"))
 					return getRawData(key);
 				Object result = getDataFor(entity, key);
-				System.out.println("GetDataFor " + entity + ", " + key + " -> " + result);
 				return result;
 			}
 		else
@@ -232,7 +231,7 @@ public class GuiDataStore implements IDataGetter {
 			lastUrlFor.put(entity, url);
 			final EntityCachedData entityCachedData = getFromCache(entity);
 			entityCachedData.put(url, data);
-			fireListeners(entity, url, context, data);
+			fireListeners(entity, url);
 		}
 	}
 

@@ -18,8 +18,8 @@ public class JarSimpleImageButton extends SimpleImageButton{
 	}
 	
 	@Override
-	public void data(IDataGetter dataGetter, String entity, String url, Map<String, Object> context, Map<String, Object> data) {
-		super.data(dataGetter, entity, url, context, data);
+	public void data(IDataGetter dataGetter, String entity, String url) {
+		super.data(dataGetter, entity, url);
 		Map<SmallIconPosition, String> map = makeMap(dataGetter);
 		setSmallIconMap(map);
 	}

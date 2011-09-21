@@ -93,16 +93,16 @@ public class SoftwareFmDataComposite implements IHasComposite {
 		});
 		guiDataStore.addGuiDataListener(new IGuiDataListener() {
 			@Override
-			public void data(final String entity, final String url, final Map<String, Object> context, final Map<String, Object> data) {
+			public void data(final String entity, final String url) {
 				Swts.asyncExec(SoftwareFmDataComposite.this, new Runnable() {
 					public void run() {
 						for (final LargeButtonDefn largeButtonDefn : largeButtonDefns) {
 							for (SmallButtonDefn smallButtonDefn : largeButtonDefn.defns) {
 								ISmallDisplayer smallDisplayer = smallButtonIdToSmallDisplayerMap.get(smallButtonDefn.id);
-								smallDisplayer.data(guiDataStore, entity, url, context, data);
+								smallDisplayer.data(guiDataStore, entity, url);
 								for (DisplayerDefn defn : smallButtonDefn.defns) {
 									IDisplayer displayer = displayDefnToDisplayerMap.get(defn);
-									defn.data(guiDataStore, defn, displayer, entity, url, context, data);
+									defn.data(guiDataStore, defn, displayer, entity, url);
 								}
 							}
 						}

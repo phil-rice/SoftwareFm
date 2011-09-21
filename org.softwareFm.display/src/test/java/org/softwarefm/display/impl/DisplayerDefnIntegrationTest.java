@@ -1,7 +1,6 @@
 package org.softwareFm.display.impl;
 
 import java.util.Arrays;
-import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -26,7 +25,6 @@ import org.softwareFm.display.smallButtons.SimpleImageControl;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
-import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.NameAndValue;
 
@@ -37,8 +35,6 @@ public class DisplayerDefnIntegrationTest extends TestCase {
 	private ActionContext actionContext;
 	private ActionStore actionStore;
 	private ActionMock actionMock;
-	private Map<String, Object> context = Maps.makeMap("a", 1);
-	private Map<String, Object> data = Maps.makeMap("b", 2);
 
 	public void testCreateWithNoButtons() {
 		TitleAndText displayer = (TitleAndText) displayerDefn.createDisplayer(shell, actionStore, actionContext);
@@ -102,7 +98,7 @@ public class DisplayerDefnIntegrationTest extends TestCase {
 				"someActionTooltip", "someActionTooltipValue",// 
 				"someDataTooltip", "someDataTooltipValue",// 
 				"dataKey", "value1");
-		dispDefnWithButton.data(dataGetter, dispDefnWithButton, displayer, "someENtity", "someUrl", context, data);
+		dispDefnWithButton.data(dataGetter, dispDefnWithButton, displayer, "someENtity", "someUrl");
 		assertEquals("someActionTooltipValue", control.getToolTipText());
 		
 		assertEquals("value1", displayer.getText());
