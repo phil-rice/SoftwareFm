@@ -36,6 +36,7 @@ public class DisplayerDefn {
 	public String tooltip;
 	public String listEditorId;
 	public List<ActionDefn> listActionDefns;
+	public String ifDataMissing;
 
 	public DisplayerDefn(IDisplayerFactory displayer) {
 		this.displayerFactory = displayer;
@@ -55,12 +56,17 @@ public class DisplayerDefn {
 	}
 
 	public DisplayerDefn data(String dataKey) {
+		return data(dataKey, null);
+	}
+
+	public DisplayerDefn data(String dataKey, String ifDataMissing) {
+		this.ifDataMissing = ifDataMissing;
 		if (this.dataKey != null)
 			throw new IllegalStateException(MessageFormat.format(DisplayConstants.cannotSetValueTwice, "data", this.dataKey, dataKey));
 		this.dataKey = dataKey;
 		return this;
 	}
-
+	
 	public DisplayerDefn tooltip(String tooltip) {
 		if (this.tooltip != null)
 			throw new IllegalStateException(MessageFormat.format(DisplayConstants.cannotSetValueTwice, "tooltip", this.tooltip, tooltip));

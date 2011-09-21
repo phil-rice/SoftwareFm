@@ -25,6 +25,8 @@ public class TextDisplayerFactory implements IDisplayerFactory {
 	@Override
 	public void data(IDataGetter dataGetter, DisplayerDefn defn, IDisplayer displayer, String entity, String url) {
 		Object value = dataGetter.getDataFor(defn.dataKey);
+		if (value == null && defn.ifDataMissing != null)
+			value = dataGetter.getDataFor(defn.ifDataMissing);
 		((TitleAndText) displayer).setText(Strings.nullSafeToString(value));
 	}
 

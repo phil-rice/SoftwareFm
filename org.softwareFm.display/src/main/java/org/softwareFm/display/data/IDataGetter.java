@@ -6,9 +6,10 @@ public interface IDataGetter {
 	Object getDataFor(String key);
 
 	ActionData getActionDataFor(List<String> params);
-	
+
 	Object getLastRawData();
 
 	void setRawData(Object rawData);
-	void clearCache(String url, String entity, String attribute) ;
+
+	void clearCache(String url, String entity, String attribute);
 }
