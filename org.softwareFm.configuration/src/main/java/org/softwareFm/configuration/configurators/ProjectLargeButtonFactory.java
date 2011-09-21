@@ -18,7 +18,9 @@ public class ProjectLargeButtonFactory implements ILargeButtonFactory {
 						ctrlClickAction("action.text.browse", "data.jar.projectUrl").tooltip("smallButton.project.details.tooltip"),//
 				guiBuilder.smallButton("smallButton.project.bugs", "smallButton.project.bugs.title", "smallButton.normal", ArtifactsAnchor.issuesKey,//
 						guiBuilder.displayer("displayer.url").title("project.issues.title").data("data.project.issues").tooltip("project.issues.tooltip").actions(//
-								guiBuilder.action("action.text.edit", "artifact.issues", "overlay.edit").tooltip("action.edit.tooltip").params("data.project.issues")), // ,//
+								guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).tooltip("action.browse.tooltip").params("data.project.issues"), //
+								guiBuilder.action("action.text.edit", "artifact.issues", "overlay.edit").tooltip("action.edit.tooltip").params("data.project.issues")//
+								), // ,//
 						guiBuilder.listDisplayer("displayer.list", "listEditor.nameAndEmail").title("project.mailingList.title").data("data.project.mailingList").//
 								actions(LargeButtonMakers.makeMainListActions(guiBuilder, ArtifactsAnchor.mailingListKey)).listActions(LargeButtonMakers.listDeleteAction(guiBuilder, ArtifactsAnchor.mailingListKey))).//
 						ctrlClickAction("action.text.browse", "data.project.issues"),//

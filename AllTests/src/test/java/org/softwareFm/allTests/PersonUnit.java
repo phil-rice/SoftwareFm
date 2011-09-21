@@ -1,7 +1,5 @@
 package org.softwareFm.allTests;
 
-import java.awt.image.SampleModel;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.display.Swts;
@@ -21,7 +19,6 @@ public class PersonUnit {
 				Swts.makeButtonFromMainMethod(composite, ShowAllSimpleImageButtons.class);
 				Swts.makeButtonFromMainMethod(composite, TitleAndText.class);
 				Swts.makeButtonFromMainMethod(composite, TextEditor.class);
-				Swts.makeButtonFromMainMethod(composite, SampleModel.class);
 				Swts.makeButtonFromMainMethod(composite, SoftwareFmDisplaySamples.class);
 				Swts.addGrabHorizontalAndFillGridDataToAllChildren(composite);
 				return composite;
