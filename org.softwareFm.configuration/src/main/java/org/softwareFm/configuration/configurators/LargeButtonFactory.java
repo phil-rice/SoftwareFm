@@ -7,13 +7,19 @@ import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 
 public abstract class LargeButtonFactory implements ILargeButtonFactory {
 
+	public static final String blankKey = "blank.title";
+
 	public static final String dataRawJarPath = "data.raw.jarPath";
 	public static final String dataJarProjectUrl = "data.jar.project.url";
 	public static final String dataJarOrganisationUrl = "data.jar.organisation.url";
 	public static final String dataRawJavadoc = "data.raw.javadoc";
 	public static final String dataRawSource = "data.raw.source";
-	public static final String organisationNameMissingTitle = "organisation.name.missing.title";
+
+	public static final String jarMissingTitle = "raw.jawPath.missing.title";
+	public static final String projectUrlMissingTitle = "project.url.missing.title";
 	public static final String projectNameMissingTitle = "project.name.missing.title";
+	public static final String organisationUrlMissingTitle = "organisation.url.missing.title";
+	public static final String organisationNameMissingTitle = "organisation.name.missing.title";
 
 	public static final String dataProjectName = "data.project.project.name";
 	public static final String dataProjectMailingList = "data.project.mailingLists";

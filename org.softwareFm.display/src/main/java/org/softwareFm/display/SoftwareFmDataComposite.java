@@ -35,7 +35,6 @@ import org.softwareFm.softwareFmImages.backdrop.BackdropAnchor;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.strings.Strings;
 
 public class SoftwareFmDataComposite implements IHasComposite {
 
@@ -82,7 +81,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 				Group group = new Group(content, SWT.SHADOW_ETCHED_IN);
 				group.setVisible(false);
 				smallButtonIdToGroupMap.put(smallButtonDefn.id, group);
-				group.setText(Strings.nullSafeToString(guiDataStore.getDataFor(smallButtonDefn.titleId)));
+//				group.setText(Strings.nullSafeToString(guiDataStore.getDataFor(smallButtonDefn.titleId)));
 				for (DisplayerDefn defn : smallButtonDefn.defns) {
 					IDisplayer displayer = defn.createDisplayer(group, actionStore, actionContext);
 					displayDefnToDisplayerMap.put(defn, displayer);

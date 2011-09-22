@@ -1,6 +1,7 @@
 package org.softwareFm.display.displayer;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -9,6 +10,7 @@ import org.eclipse.swt.widgets.Control;
 import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.actions.ActionDefn;
 import org.softwareFm.display.actions.ActionStore;
+import org.softwareFm.display.actions.Actions;
 import org.softwareFm.display.actions.IAction;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.IHasControl;
@@ -19,6 +21,7 @@ import org.softwareFm.display.simpleButtons.IButtonParent;
 import org.softwareFm.display.smallButtons.IImageButtonListener;
 import org.softwareFm.display.smallButtons.SimpleImageControl;
 import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.utilities.strings.NameAndValue;
 import org.softwareFm.utilities.strings.Strings;
 
 public class DisplayerDefn {
@@ -36,7 +39,7 @@ public class DisplayerDefn {
 	public String tooltip;
 	public String listEditorId;
 	public List<ActionDefn> listActionDefns;
-	public String ifDataMissing;
+	public List<NameAndValue> guardKeys;
 
 	public DisplayerDefn(IDisplayerFactory displayer) {
 		this.displayerFactory = displayer;
@@ -55,18 +58,25 @@ public class DisplayerDefn {
 
 	}
 
-	public DisplayerDefn data(String dataKey) {
-		return data(dataKey, null);
+	public DisplayerDefn guard(String... guardKeys) {
+		if (this.guardKeys != null)
+			throw new IllegalStateException(MessageFormat.format(DisplayConstants.cannotSetValueTwice, "guard", this.guardKeys, Arrays.asList(guardKeys)));
+		if (guardKeys.length %2 != 0)
+			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.guardMustHaveEvenParameters, dataKey, guardKeys.length, Arrays.asList(guardKeys)));
+		this .guardKeys = Lists.newList();
+		for (int i = 0 ; i<guardKeys.length; i+=2)
+			this.guardKeys.add(new NameAndValue(guardKeys[i+0], guardKeys[i+1]));
+		return this;
+
 	}
 
-	public DisplayerDefn data(String dataKey, String ifDataMissing) {
-		this.ifDataMissing = ifDataMissing;
+	public DisplayerDefn data(String dataKey) {
 		if (this.dataKey != null)
 			throw new IllegalStateException(MessageFormat.format(DisplayConstants.cannotSetValueTwice, "data", this.dataKey, dataKey));
 		this.dataKey = dataKey;
 		return this;
 	}
-	
+
 	public DisplayerDefn tooltip(String tooltip) {
 		if (this.tooltip != null)
 			throw new IllegalStateException(MessageFormat.format(DisplayConstants.cannotSetValueTwice, "tooltip", this.tooltip, tooltip));
@@ -101,7 +111,9 @@ public class DisplayerDefn {
 				@Override
 				public void buttonPressed(IHasControl button) throws Exception {
 					ActionData actionData = actionContext.dataGetter.getActionDataFor(actionDefn.params);
-					action.execute(actionContext, DisplayerDefn.this, displayer, index, actionData);
+					String actionDataKey = Actions.getDataKey(DisplayerDefn.this, actionData);
+					if (Actions.guardConditionPresent(actionContext.dataGetter, DisplayerDefn.this, actionDataKey) == null)
+						action.execute(actionContext, DisplayerDefn.this, displayer, index, actionData);
 				}
 			});
 		}

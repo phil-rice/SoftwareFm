@@ -5,6 +5,7 @@ import java.text.MessageFormat;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.actions.ActionStore;
+import org.softwareFm.display.actions.Actions;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.TitleAndText;
 import org.softwareFm.display.constants.DisplayConstants;
@@ -24,9 +25,7 @@ public class TextDisplayerFactory implements IDisplayerFactory {
 
 	@Override
 	public void data(IDataGetter dataGetter, DisplayerDefn defn, IDisplayer displayer, String entity, String url) {
-		Object value = dataGetter.getDataFor(defn.dataKey);
-		if (value == null && defn.ifDataMissing != null)
-			value = dataGetter.getDataFor(defn.ifDataMissing);
+		Object value = Actions.getValueFor(dataGetter, defn);
 		((TitleAndText) displayer).setText(Strings.nullSafeToString(value));
 	}
 

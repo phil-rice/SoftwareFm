@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.widgets.Composite;
@@ -160,7 +161,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		return updateStore == null ? updateStore = new RepositoryUpdateStore(getRepository(), new IStoreUpdatedCallback() {
 			@Override
 			public void storeUpdates(String url, String entity, String attribute, Object newValue) {
-				System.out.println("Storing updates: " + url +", " + attribute + "," + newValue);
+				System.out.println("Storing updates: " + url + ", " + attribute + "," + newValue);
 				guiDataStore.clearCache(url, entity, attribute);
 				Object lastRawData = guiDataStore.getLastRawData();
 				System.out.println("Cache cleared. Last raw data: " + lastRawData);
@@ -259,9 +260,12 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 						JavaProjects.setJavadoc(rippedResult.javaProject, rippedResult.classpathEntry, newValue);
 					}
 				};
-				RippedResult result = new RippedResult(rippedResult.hexDigest, rippedResult.path.toOSString(), rippedResult.path.lastSegment().toString(), javadoc, source, javadocMutator, sourceMutator);
-				System.out.println("About to processData: " + result);
-				guiDataStore.processData(result, Maps.<String, Object> newMap());
+				IPath path = rippedResult.path;
+				if (path != null) {
+					RippedResult result = new RippedResult(rippedResult.hexDigest, path.toOSString(), path.lastSegment().toString(), javadoc, source, javadocMutator, sourceMutator);
+					System.out.println("About to processData: " + result);
+					guiDataStore.processData(result, Maps.<String, Object> newMap());
+				}
 			}
 		});
 		SoftwareFmDataComposite composite = new SoftwareFmDataComposite(parent, guiDataStore, getCompositeConfig(display), getActionStore(), getEditorFactory(display), getUpdateStore(), getListEditorStore(), onException(), getLargeButtonDefns());
