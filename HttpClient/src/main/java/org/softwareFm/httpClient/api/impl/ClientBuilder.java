@@ -11,17 +11,20 @@ import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.softwareFm.httpClient.api.IClientBuilder;
+import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.api.IServiceExecutor;
 import org.softwareFm.httpClient.constants.HttpClientConstants;
 import org.softwareFm.httpClient.requests.IRequestBuilder;
 import org.softwareFm.httpClient.requests.impl.DeleteRequest;
 import org.softwareFm.httpClient.requests.impl.GetRequest;
 import org.softwareFm.httpClient.requests.impl.PostRequest;
+import org.softwareFm.utilities.collections.Lists;
 
 public class ClientBuilder implements IClientBuilder {
 	public final HttpHost host;
 	public final DefaultHttpClient client;
 	private final IServiceExecutor executor;
+	public List<NameValuePair> defaultHeaders;
 
 	public ClientBuilder() {
 		this(HttpClientConstants.defaultHost, HttpClientConstants.defaultPort);
@@ -47,17 +50,17 @@ public class ClientBuilder implements IClientBuilder {
 
 	@Override
 	public IRequestBuilder post(String url) {
-		return new PostRequest(executor, host, client, url);
+		return new PostRequest(executor, host, client, defaultHeaders, url);
 	}
 
 	@Override
 	public IRequestBuilder get(String url) {
-		return new GetRequest(executor, host, client, url);
+		return new GetRequest(executor, host, client, defaultHeaders, url);
 	}
 
 	@Override
 	public IRequestBuilder delete(String url) {
-		return new DeleteRequest(executor, host, client, url);
+		return new DeleteRequest(executor, host, client, defaultHeaders, url);
 	}
 
 	public AuthScope makeAuthScope() {
@@ -78,5 +81,12 @@ public class ClientBuilder implements IClientBuilder {
 	@Override
 	public void shutdown() {
 		executor.shutdown();
+	}
+
+	@Override
+	public IHttpClient setDefaultHeaders(List<NameValuePair> headers) {
+		this.defaultHeaders = Lists.immutableCopy(headers);
+		return this;
+		
 	}
 }

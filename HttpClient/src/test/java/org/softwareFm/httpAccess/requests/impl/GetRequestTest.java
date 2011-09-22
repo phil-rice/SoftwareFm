@@ -8,7 +8,6 @@ import org.softwareFm.httpClient.requests.impl.GetRequest;
 public class GetRequestTest extends AbstractRequestTest {
 	@Test
 	public void testGet() {
-		ClientBuilder builder = (ClientBuilder) IHttpClient.Utils.builder();
 		checkRequest(GetRequest.class, builder.get("someUrl"), builder);
 		checkRequest(GetRequest.class, builder.get("/someUrl"), builder);
 	}

@@ -9,6 +9,9 @@ import org.softwareFm.repositoryFacard.impl.RepositoryFacard;
 
 public interface IRepositoryFacard {
 
+	/** adds this as an Http header to all requests */
+	void addHeader(String name, String value);
+	
 	/** This will delete the node at the Url */
 	Future<?> delete(String url, IResponseCallback callback);
 

@@ -199,4 +199,8 @@ public class Lists {
 		newList.remove(index);
 		return newList;
 	}
+
+	public static <T>List<T> immutableCopy(List<T> ts) {
+		return ts==null?null:Collections.unmodifiableList(new ArrayList<T>(ts));
+	}
 }

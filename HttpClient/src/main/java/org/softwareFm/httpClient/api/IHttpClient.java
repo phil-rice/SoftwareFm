@@ -1,5 +1,8 @@
 package org.softwareFm.httpClient.api;
 
+import java.util.List;
+
+import org.apache.http.NameValuePair;
 import org.softwareFm.httpClient.api.impl.ClientBuilder;
 import org.softwareFm.httpClient.constants.HttpClientConstants;
 import org.softwareFm.httpClient.requests.IRequestBuilder;
@@ -18,6 +21,8 @@ public interface IHttpClient {
 			return builder().withCredentials(HttpClientConstants.userName, HttpClientConstants.password);
 		}
 	}
+	
+	IHttpClient setDefaultHeaders(List<NameValuePair> headers);
 
 	IRequestBuilder post(String url);
 

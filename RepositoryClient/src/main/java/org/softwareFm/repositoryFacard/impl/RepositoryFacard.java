@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.httpClient.response.IResponse;
@@ -12,6 +13,7 @@ import org.softwareFm.repositoryFacard.IAspectToParameters;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
 import org.softwareFm.repositoryFacardConstants.RepositoryFacardConstants;
+import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.json.Json;
 
@@ -19,6 +21,7 @@ public class RepositoryFacard implements IRepositoryFacard {
 
 	private final IHttpClient client;
 	private final IAspectToParameters parameterMaker;
+	private final List<NameValuePair> headers = Lists.newList();
 
 	public RepositoryFacard(IHttpClient client) {
 		this(client, new AspectToParameters());
@@ -89,5 +92,10 @@ public class RepositoryFacard implements IRepositoryFacard {
 	@Override
 	public void shutdown() {
 		client.shutdown();
+	}
+
+	@Override
+	public void addHeader(String name, String value) {
+		headers.add(new BasicNameValuePair(name, value));
 	}
 }

@@ -8,7 +8,6 @@ import org.softwareFm.httpClient.requests.impl.PostRequest;
 public class PostRequestTest extends AbstractRequestTest {
 	@Test
 	public void testPost() {
-		ClientBuilder builder = (ClientBuilder) IHttpClient.Utils.builder();
 		checkRequest(PostRequest.class, builder.post("someUrl"), builder);
 		checkRequest(PostRequest.class, builder.post("/someUrl"), builder);
 	}

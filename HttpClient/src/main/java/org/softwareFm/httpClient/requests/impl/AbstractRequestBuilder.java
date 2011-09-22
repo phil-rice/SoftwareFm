@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -22,14 +23,15 @@ public abstract class AbstractRequestBuilder implements IRequestBuilder {
 	public final HttpHost host;
 	public final HttpClient client;
 	public final String url;
-	public final List<NameValuePair> headers = Lists.newList();
 	public final List<NameValuePair> parameters = Lists.newList();
 	public final IServiceExecutor executor;
+	public final List<NameValuePair> defaultHeaders;
 
-	public AbstractRequestBuilder(IServiceExecutor executor, HttpHost host, HttpClient client, String url) {
+	public AbstractRequestBuilder(IServiceExecutor executor, HttpHost host, HttpClient client, List<NameValuePair> defaultHeaders, String url) {
 		this.executor = executor;
 		this.host = host;
 		this.client = client;
+		this.defaultHeaders = Lists.immutableCopy(defaultHeaders);
 		this.url = url.startsWith("/") ? url : "/" + url;
 	}
 
@@ -52,12 +54,6 @@ public abstract class AbstractRequestBuilder implements IRequestBuilder {
 		return this;
 	}
 
-	@Override
-	public IRequestBuilder addHeader(String name, String value) {
-		headers.add(new BasicNameValuePair(name, value));
-		return this;
-	}
-
 	protected String protocolHostAndUrl() {
 		return "http://" + host.getHostName() + ":" + host.getPort() + url;
 	}
@@ -74,13 +70,14 @@ public abstract class AbstractRequestBuilder implements IRequestBuilder {
 			public Void call() throws Exception {
 				String protocolHostAndUrl = protocolHostAndUrl();
 				HttpRequestBase base = getRequestBase(protocolHostAndUrl);
-				for(NameValuePair pair: headers)
+				for (NameValuePair pair : Lists.nullSafe(defaultHeaders))
 					base.addHeader(pair.getName(), pair.getValue());
-				
+
 				HttpResponse httpResponse = client.execute(base);
+				HttpEntity entity = httpResponse.getEntity();
 				Response response = new Response(url,//
 						httpResponse.getStatusLine().getStatusCode(), //
-						EntityUtils.toString(httpResponse.getEntity()));
+						entity == null ? "" : EntityUtils.toString(entity));
 				callback.process(response);
 				return null;
 			}
