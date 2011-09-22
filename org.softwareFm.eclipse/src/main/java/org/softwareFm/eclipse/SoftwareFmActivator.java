@@ -2,9 +2,12 @@ package org.softwareFm.eclipse;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.widgets.Composite;
@@ -12,6 +15,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.osgi.service.prefs.BackingStoreException;
 import org.softwareFm.configuration.SoftwareFmPropertyAnchor;
 import org.softwareFm.display.GuiBuilder;
 import org.softwareFm.display.SoftwareFmDataComposite;
@@ -58,7 +62,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	public static String largeButtonConfiguratorId = "org.softwareFm.eclipse.largeButton";
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.softwareFm.eclipse.configuration";
+	public static final String PLUGIN_ID = "org.softwareFm.eclipse.eclipse";
 	// The shared instance
 	private static SoftwareFmActivator plugin;
 
@@ -76,6 +80,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	IRepositoryFacard repository;
 	private IUpdateStore updateStore;
 	private IResourceGetter resourceGetter;
+	private String uuid;
 
 	public SoftwareFmActivator() {
 	}
@@ -84,6 +89,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+
 	}
 
 	@Override
@@ -109,6 +115,26 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		if (repository != null)
 			repository.shutdown();
 		repository = null;
+	}
+
+	public String getUuid() {
+		return uuid == null ? uuid=findOrMakeUuid() : uuid;
+	}
+
+	private String findOrMakeUuid() {
+		try {
+			@SuppressWarnings("deprecation")
+			IEclipsePreferences prefs = new InstanceScope().getNode(PLUGIN_ID);
+			String uuid = prefs.get("Uuid", null);
+			if (uuid == null) {
+				uuid = UUID.randomUUID().toString();
+				prefs.put("Uuid", uuid);
+				prefs.flush();
+			}
+			return uuid;
+		} catch (BackingStoreException e) {
+			throw WrappedException.wrap(e);
+		}
 	}
 
 	public static SoftwareFmActivator getDefault() {
@@ -261,7 +287,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 				if (path != null) {
 					String name = path.lastSegment().toString();
 					String extension = Files.extension(name);
-					String hexDigest = extension.equals("jar")?rippedResult.hexDigest:null;
+					String hexDigest = extension.equals("jar") ? rippedResult.hexDigest : null;
 					RippedResult result = new RippedResult(hexDigest, path.toOSString(), name, javadoc, source, javadocMutator, sourceMutator);
 					guiDataStore.processData(result, Maps.<String, Object> newMap());
 				}

@@ -11,6 +11,8 @@
    <extension-point id="org.softwareFm.eclipse.editor" name="editor" schema="schema/org.softwareFm.eclipse.exsd"/>
    <extension-point id="org.softwareFm.eclipse.largeButton" name="largeButton" schema="schema/org.softwareFm.eclipse.exsd"/>
 
+
+
 <extension  point="org.softwareFm.eclipse.image">
       <item class ="org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator"/>
 </extension>
@@ -30,6 +32,7 @@
 <extension  point="org.softwareFm.eclipse.listEditor">
       <item class="org.softwareFm.configuration.configurators.ListEditorConfigurator"/>
 </extension>
+
 
 <extension  point="org.softwareFm.eclipse.action">
       <item class="org.softwareFm.configuration.configurators.ActionStoreConfigurator"/>

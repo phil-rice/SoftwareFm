@@ -48,6 +48,11 @@ public class ActivatorTest extends TestCase implements IDontRunAutomaticallyTest
 		assertEquals("Edit", resourceGetter.getStringOrNull("action.edit.tooltip"));
 	}
 
+	public void testUuid(){
+		String uuid = softwareFmActivator.getUuid();
+		assertSame(uuid, softwareFmActivator.getUuid());
+	}
+	
 	public void testGetRepository() {
 		IRepositoryFacard repository = softwareFmActivator.getRepository();
 		assertSame(repository, softwareFmActivator.getRepository());
@@ -112,7 +117,7 @@ public class ActivatorTest extends TestCase implements IDontRunAutomaticallyTest
 				return from.entity;
 			}
 		}));
-		assertEquals(Sets.makeSet("urlGenerator.jar", "urlGenerator.project", "urlGenerator.organisation"), dataStore.getUrlGeneratorMap().keySet());
+		assertEquals(Sets.makeSet("urlGenerator.jar", "urlGenerator.project", "urlGenerator.organisation", "urlGenerator.user"), dataStore.getUrlGeneratorMap().keySet());
 	}
 
 	public void testGetLargeButtons() {
