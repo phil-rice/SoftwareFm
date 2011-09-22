@@ -13,12 +13,12 @@ public class ProjectLargeButtonFactory extends LargeButtonFactory {
 		return guiBuilder.largeButton("largeButton.project", //
 				guiBuilder.smallButton("smallButton.project.details", "smallButton.project.details.title", "smallButton.project", ArtifactsAnchor.projectKey, //
 						guiBuilder.displayer("displayer.url").title("project.url.title").data(dataJarProjectUrl).//
-						guard(dataRawJarPath, jarMissingTitle, dataJarProjectUrl, projectUrlMissingTitle).actions(//
-								guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).tooltip("action.browse.tooltip"),//
-								editTextButton(guiBuilder, ArtifactsAnchor.projectKey)),//
+								guard(dataRawHexDigest, hexDigestMissingTitle, dataJarProjectUrl, projectUrlMissingTitle).actions(//
+										guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).tooltip("action.browse.tooltip"),//
+										editTextButton(guiBuilder, ArtifactsAnchor.projectKey)),//
 						guiBuilder.displayer("displayer.text").//
-						guard(dataJarProjectUrl,blankKey, dataProjectName, projectNameMissingTitle).title("project.name.title").data(dataProjectName).tooltip("data.project.description").actions(//
-								editTextButton(guiBuilder, ArtifactsAnchor.projectKey))).//
+								guard(dataJarProjectUrl, blankKey, dataProjectName, projectNameMissingTitle).title("project.name.title").data(dataProjectName).tooltip("data.project.description").actions(//
+										editTextButton(guiBuilder, ArtifactsAnchor.projectKey))).//
 						ctrlClickAction("action.text.browse", "data.jar.projectUrl").tooltip("smallButton.project.details.tooltip"),//
 				guiBuilder.smallButton("smallButton.project.bugs", "smallButton.project.bugs.title", "smallButton.normal", ArtifactsAnchor.issuesKey,//
 						guiBuilder.displayer("displayer.url").guard(dataJarProjectUrl, blankKey).title("project.issues.title").data(dataProjectIssues).tooltip("project.issues.tooltip").actions(//

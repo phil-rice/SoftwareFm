@@ -39,6 +39,7 @@ import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.maps.Maps;
@@ -262,7 +263,10 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 				};
 				IPath path = rippedResult.path;
 				if (path != null) {
-					RippedResult result = new RippedResult(rippedResult.hexDigest, path.toOSString(), path.lastSegment().toString(), javadoc, source, javadocMutator, sourceMutator);
+					String name = path.lastSegment().toString();
+					String extension = Files.extension(name);
+					String hexDigest = extension.equals("jar")?rippedResult.hexDigest:null;
+					RippedResult result = new RippedResult(hexDigest, path.toOSString(), name, javadoc, source, javadocMutator, sourceMutator);
 					System.out.println("About to processData: " + result);
 					guiDataStore.processData(result, Maps.<String, Object> newMap());
 				}

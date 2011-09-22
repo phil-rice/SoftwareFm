@@ -1,0 +1,7 @@
+{
+	"ripped":        {"hexDigest" : "",
+	                  "jarName" : "jarName.java",
+	                  "jarPath" : "a/b/jarPath.java",
+	                  "javadoc": "someJavadocUrl",
+	                  "source" : "someSourceUrl"}
+ }

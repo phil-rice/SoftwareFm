@@ -31,9 +31,14 @@ public class FilesTest extends TestCase {
 
 	@Test
 	public void testNoExtension() {
-		assertEquals("Fred", Files.noExtension("Fred.a.b.class"));
-		assertEquals("a", Files.noExtension("a.b.c/W/Fred.class"));
-		assertEquals("a", Files.noExtension("a.b.c/W/Fred.a.b.class"));
+		assertEquals("Fred.a.b", Files.noExtension("Fred.a.b.class"));
+		assertEquals("a.b.c/W/Fred", Files.noExtension("a.b.c/W/Fred.class"));
+		assertEquals("a.b.c/W/Fred.a.b", Files.noExtension("a.b.c/W/Fred.a.b.class"));
+	}
+	public void testExtension() {
+		assertEquals("class", Files.extension("Fred.a.b.class"));
+		assertEquals("class", Files.extension("a.b.c/W/Fred.class"));
+		assertEquals("class", Files.extension("a.b.c/W/Fred.a.b.class"));
 	}
 
 	public static void main(String[] args) throws IOException {

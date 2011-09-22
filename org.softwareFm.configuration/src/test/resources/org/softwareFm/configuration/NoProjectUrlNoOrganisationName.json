@@ -1,0 +1,10 @@
+{
+	"ripped":        {"hexDigest" : "somedigest",
+	                  "jarName" : "jarName.java",
+	                  "jarPath" : "a/b/jarPath.java",
+	                  "javadoc": "someJavadocUrl",
+	                  "source" : "someSourceUrl"}
+    "jar":           { "organisation.url": "www.oracle.com"   },
+	"project":       { },
+	"organisation":  {}
+ }

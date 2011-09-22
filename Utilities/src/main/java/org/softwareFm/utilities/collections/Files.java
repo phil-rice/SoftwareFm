@@ -186,7 +186,7 @@ public class Files {
 	}
 
 	public static String noExtension(String raw) {
-		int index = raw.indexOf('.');
+		int index = raw.lastIndexOf('.');
 		if (index == -1)
 			return raw;
 		else
@@ -194,6 +194,13 @@ public class Files {
 
 	}
 
+	public static String extension(String name) {
+		int index = name.lastIndexOf('.');
+		if (index == -1)
+			return "";
+		else
+			return name.substring(index+1);
+	}
 	public static String justName(File file) {
 		String name = file.getName();
 		return noExtension(name);
@@ -207,4 +214,5 @@ public class Files {
 			}
 		};
 	}
+
 }

@@ -1,0 +1,13 @@
+{
+	"ripped":        {"hexDigest" : "somedigest",
+	                  "jarName" : "jarName.java",
+	                  "jarPath" : "a/b/jarPath.java",
+	                  "javadoc": "someJavadocUrl",
+	                  "source" : "someSourceUrl"}
+    "jar":           {"project.url": "http://www.oracle.com/us/technologies/java/index.html"     },
+	"project":       { "project.url": "Some Url",
+		              "mailingLists": ["a$b"],
+		              "issues": "http://bugs.sun.com/bugdatabase/index.jsp"
+		              "tweets": ["tweet1", "tweet2"]},
+	"organisation":  {}
+ }
