@@ -11,6 +11,7 @@ import org.softwareFm.configuration.configurators.ActionStoreConfigurator;
 import org.softwareFm.configuration.configurators.DisplayerStoreConfigurator;
 import org.softwareFm.configuration.configurators.EditorFactoryConfigurator;
 import org.softwareFm.configuration.configurators.JarLargeButtonFactory;
+import org.softwareFm.configuration.configurators.JavadocAndSourceActionStoreConfigurator;
 import org.softwareFm.configuration.configurators.ListEditorConfigurator;
 import org.softwareFm.configuration.configurators.OrganisationLargeButtonFactory;
 import org.softwareFm.configuration.configurators.ProjectLargeButtonFactory;
@@ -55,8 +56,8 @@ public class SoftwareFmFixture {
 	public final LargeButtonDefn organisationButton;
 	private IEditorFactory editorFactory;
 	private ListEditorStore listEditorStore;
-	private EditorContext editorContext;
-	private IUpdateStore updateStore;
+	private final EditorContext editorContext;
+	private final IUpdateStore updateStore;
 
 	public SoftwareFmFixture(Display display) throws Exception {
 		imageRegistry = new ImageRegistry();
@@ -68,8 +69,10 @@ public class SoftwareFmFixture {
 		updateStore = IUpdateStore.Utils.sysoutUpdateStore();
 		editorContext = new EditorContext(compositeConfig);
 
-		new SmallButtonConfigurator().process(smallButtonStore = new SmallButtonStore());
 		new ActionStoreConfigurator().process(actionStore = new ActionStore());
+		new JavadocAndSourceActionStoreConfigurator().process(actionStore);
+		
+		new SmallButtonConfigurator().process(smallButtonStore = new SmallButtonStore());
 		new DisplayerStoreConfigurator().process(displayerStore = new DisplayerStore());
 		new ListEditorConfigurator().process(listEditorStore = new ListEditorStore());
 		new EditorFactoryConfigurator().process(editorFactory = new EditorFactory(editorContext));

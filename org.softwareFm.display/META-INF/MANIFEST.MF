@@ -10,6 +10,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.softwareFm.display,
  org.softwareFm.display.actions,
  org.softwareFm.display.composites,
+ org.softwareFm.display.constants,
  org.softwareFm.display.data,
  org.softwareFm.display.displayer,
  org.softwareFm.display.editor,

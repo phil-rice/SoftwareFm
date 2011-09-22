@@ -42,7 +42,6 @@ public class SelectedArtifactSelectionManager implements ISelectedBindingManager
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		System.out.println(selection.getClass() + " " + selection);
 		if (selection instanceof ITextSelection) {
 			ITextSelection textSelection = (ITextSelection) selection;
 			BindingRipperResult ripperResult = selectToBindingResult(bindingRipper, textSelection);

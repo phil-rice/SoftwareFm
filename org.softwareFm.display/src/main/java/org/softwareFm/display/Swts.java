@@ -272,4 +272,16 @@ public class Swts {
 			control.getDisplay().asyncExec(runnable);
 	}
 
+	public static Button makePushButton(Composite parent, IResourceGetter resourceGetter, String titleKey, final Runnable runnable) {
+		Button button = new Button(parent, SWT.PUSH);
+		button.setText(IResourceGetter.Utils.getOrException(resourceGetter, titleKey));
+		button.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				runnable.run();
+			}
+		});
+		return button;
+	}
+
 }

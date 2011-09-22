@@ -14,7 +14,7 @@ public class ProjectLargeButtonFactory extends LargeButtonFactory {
 				guiBuilder.smallButton("smallButton.project.details", "smallButton.project.details.title", "smallButton.project", ArtifactsAnchor.projectKey, //
 						guiBuilder.displayer("displayer.url").title("project.url.title").data(dataJarProjectUrl).//
 								guard(dataRawHexDigest, hexDigestMissingTitle, dataJarProjectUrl, projectUrlMissingTitle).actions(//
-										guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).tooltip("action.browse.tooltip"),//
+										browseButton(guiBuilder),//
 										editTextButton(guiBuilder, ArtifactsAnchor.projectKey)),//
 						guiBuilder.displayer("displayer.text").//
 								guard(dataJarProjectUrl, blankKey, dataProjectName, projectNameMissingTitle).title("project.name.title").data(dataProjectName).tooltip("data.project.description").actions(//
@@ -22,7 +22,7 @@ public class ProjectLargeButtonFactory extends LargeButtonFactory {
 						ctrlClickAction("action.text.browse", "data.jar.projectUrl").tooltip("smallButton.project.details.tooltip"),//
 				guiBuilder.smallButton("smallButton.project.bugs", "smallButton.project.bugs.title", "smallButton.normal", ArtifactsAnchor.issuesKey,//
 						guiBuilder.displayer("displayer.url").guard(dataJarProjectUrl, blankKey).title("project.issues.title").data(dataProjectIssues).tooltip("project.issues.tooltip").actions(//
-								guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).tooltip("action.browse.tooltip"), //
+								browseButton(guiBuilder), //
 								editTextButton(guiBuilder, ArtifactsAnchor.issuesKey))), // ,//
 				guiBuilder.smallButton("smallButton.project.mailingLists", "smallButton.project.mailingLists.title", "smallButton.normal", ArtifactsAnchor.mailingListKey,//
 						guiBuilder.listDisplayer("displayer.list", "listEditorId.nameAndEmail").guard(dataJarProjectUrl, blankKey).title("project.mailingList.title").data(dataProjectMailingList).//

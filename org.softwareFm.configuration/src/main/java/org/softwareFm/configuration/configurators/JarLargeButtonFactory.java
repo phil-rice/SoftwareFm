@@ -26,8 +26,10 @@ public class JarLargeButtonFactory extends LargeButtonFactory {
 								editUrlButton(guiBuilder, ArtifactsAnchor.organisationKey, dataJarOrganisationUrl),//
 								guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).tooltip(dataJarOrganisationUrl)//
 								).tooltip("data.organisation.url"),//
-						guiBuilder.displayer("displayer.text").title("jar.javadoc.title").data(dataRawJavadoc).tooltip(dataRawJavadoc), //
-						guiBuilder.displayer("displayer.text").title("jar.source.title").data(dataRawSource).tooltip(dataRawSource)));
+						guiBuilder.displayer("displayer.text").title("jar.javadoc.title").data(dataRawJavadoc).tooltip(dataRawJavadoc).//
+								actions(guiBuilder.action("action.javadoc.view", ArtifactsAnchor.jarKey), browseButton(guiBuilder, dataRawJavadoc)), //
+						guiBuilder.displayer("displayer.text").title("jar.source.title").data(dataRawSource).tooltip(dataRawSource).//
+								actions(guiBuilder.action("action.source.view", ArtifactsAnchor.jarKey), browseButton(guiBuilder, dataRawJavadoc))));
 	}
 
 }

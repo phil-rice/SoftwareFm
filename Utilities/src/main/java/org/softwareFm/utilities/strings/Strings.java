@@ -151,4 +151,11 @@ public class Strings {
 		return string1.equals(string2);
 	}
 
+	public static boolean hasValue(Object object) {
+		if (object == null)
+			return false;
+		String toString = object.toString();
+		return toString.length() > 0;
+	}
+
 }

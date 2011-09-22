@@ -162,12 +162,9 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		return updateStore == null ? updateStore = new RepositoryUpdateStore(getRepository(), new IStoreUpdatedCallback() {
 			@Override
 			public void storeUpdates(String url, String entity, String attribute, Object newValue) {
-				System.out.println("Storing updates: " + url + ", " + attribute + "," + newValue);
 				guiDataStore.clearCache(url, entity, attribute);
 				Object lastRawData = guiDataStore.getLastRawData();
-				System.out.println("Cache cleared. Last raw data: " + lastRawData);
 				guiDataStore.processData(lastRawData, Maps.<String, Object> newMap());
-				System.out.println("Processed data");
 
 			}
 		}) : updateStore;
@@ -182,7 +179,6 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		return guiDataStore == null ? guiDataStore = Plugins.configureMainWithCallbacks(new GuiDataStore(new IUrlToData() {
 			@Override
 			public void getData(final String entity, final String url, final Map<String, Object> context, final IUrlDataCallback callback) {
-				System.out.println("Requesting data: " + url);
 				repository.get(url, new IRepositoryFacardCallback() {
 					@Override
 					public void process(IResponse response, Map<String, Object> data) {
@@ -267,7 +263,6 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 					String extension = Files.extension(name);
 					String hexDigest = extension.equals("jar")?rippedResult.hexDigest:null;
 					RippedResult result = new RippedResult(hexDigest, path.toOSString(), name, javadoc, source, javadocMutator, sourceMutator);
-					System.out.println("About to processData: " + result);
 					guiDataStore.processData(result, Maps.<String, Object> newMap());
 				}
 			}

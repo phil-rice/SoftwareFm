@@ -3,6 +3,7 @@ package org.softwareFm.configuration.configurators;
 import org.softwareFm.display.GuiBuilder;
 import org.softwareFm.display.actions.ActionDefn;
 import org.softwareFm.display.largeButton.ILargeButtonFactory;
+import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 
 public abstract class LargeButtonFactory implements ILargeButtonFactory {
@@ -51,6 +52,13 @@ public abstract class LargeButtonFactory implements ILargeButtonFactory {
 
 	protected ActionDefn editUrlButton(GuiBuilder guiBuilder, String artifactId, String alternativeDataId) {
 		return guiBuilder.action("action.text.edit", artifactId, "overlay.edit").tooltip("action.edit.url.tooltip").params(alternativeDataId);
+	}
+	protected ActionDefn browseButton(GuiBuilder guiBuilder) {
+		return browseButton(guiBuilder, "action.browse.tooltip");
+	}
+	protected ActionDefn browseButton(GuiBuilder guiBuilder, String tooltipId) {
+		return guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).tooltip(tooltipId);
+		
 	}
 
 }
