@@ -11,4 +11,6 @@ public interface IRequestBuilder extends IRequest {
 	IRequestBuilder addParam(String name, String value);
 
 	IRequestBuilder addParams(String... nameAndValue);
+
+	IRequestBuilder addHeader(String string, String string2);
 }

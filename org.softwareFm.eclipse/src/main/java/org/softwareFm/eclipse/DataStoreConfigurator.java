@@ -13,6 +13,7 @@ public class DataStoreConfigurator implements IGuiDataStoreConfigurator {
 				urlGenerator("urlGenerator.jar", new JarUrlGenerator()).//
 				urlGenerator("urlGenerator.project", new UrlGenerator("project")).//
 				urlGenerator("urlGenerator.organisation", new UrlGenerator("organisation")).//
+				urlGenerator("urlGenerator.user", new UrlGenerator("user")).//
 				entity("jar", "urlGenerator.jar").//
 				dependant("jar", "project", "project.url", "urlGenerator.project").//
 				dependant("jar", "organisation", "organisation.url", "urlGenerator.organisation");
