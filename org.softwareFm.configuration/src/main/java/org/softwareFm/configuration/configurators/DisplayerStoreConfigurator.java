@@ -1,5 +1,7 @@
 package org.softwareFm.configuration.configurators;
 
+import org.softwareFm.configuration.displayers.JavadocOrSourceButtonDisplayerFactory;
+import org.softwareFm.display.displayer.ButtonDisplayerFactory;
 import org.softwareFm.display.displayer.DisplayerStore;
 import org.softwareFm.display.displayer.IDisplayerStoreConfigurator;
 import org.softwareFm.display.displayer.ListDisplayerFactory;
@@ -12,6 +14,9 @@ public class DisplayerStoreConfigurator implements IDisplayerStoreConfigurator {
 		displayerStore.//
 				displayer("displayer.text", new TextDisplayerFactory()).//
 				displayer("displayer.url", new TextDisplayerFactory()).//
+				displayer("displayer.button", new ButtonDisplayerFactory()).//
+				displayer("displayer.button.javadoc", new JavadocOrSourceButtonDisplayerFactory("javadoc")).//
+				displayer("displayer.button.source", new JavadocOrSourceButtonDisplayerFactory("source")).//
 				displayer("displayer.list", new ListDisplayerFactory());
 	}
 

@@ -30,5 +30,6 @@ Export-Package: org.softwareFm.utilities.aggregators,
  org.softwareFm.utilities.profiling,
  org.softwareFm.utilities.reflection,
  org.softwareFm.utilities.resources,
+ org.softwareFm.utilities.runnable,
  org.softwareFm.utilities.strings,
  org.softwareFm.utilities.tests

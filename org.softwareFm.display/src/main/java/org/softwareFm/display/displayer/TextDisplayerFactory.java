@@ -26,7 +26,10 @@ public class TextDisplayerFactory implements IDisplayerFactory {
 	@Override
 	public void data(IDataGetter dataGetter, DisplayerDefn defn, IDisplayer displayer, String entity, String url) {
 		Object value = Actions.getValueFor(dataGetter, defn);
-		((TitleAndText) displayer).setText(Strings.nullSafeToString(value));
+		TitleAndText titleAndText = (TitleAndText) displayer;
+		titleAndText.setText(Strings.nullSafeToString(value));
+		String tooltip = defn.tooltip == null ? "" : Strings.nullSafeToString(dataGetter.getDataFor(defn.tooltip));
+		titleAndText.setTooltip(tooltip);
 	}
 
 }

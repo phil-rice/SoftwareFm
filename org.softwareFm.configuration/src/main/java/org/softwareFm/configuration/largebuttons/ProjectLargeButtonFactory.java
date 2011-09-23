@@ -1,5 +1,6 @@
-package org.softwareFm.configuration.configurators;
+package org.softwareFm.configuration.largebuttons;
 
+import org.softwareFm.configuration.configurators.LargeButtonFactory;
 import org.softwareFm.display.GuiBuilder;
 import org.softwareFm.display.largeButton.LargeButtonDefn;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;

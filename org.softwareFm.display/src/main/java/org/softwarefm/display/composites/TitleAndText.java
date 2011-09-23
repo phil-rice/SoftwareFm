@@ -66,5 +66,10 @@ public class TitleAndText extends TitleAnd {
 		});
 	}
 
+	public void setTooltip(String tooltip) {
+		text.setToolTipText(tooltip);
+		
+	}
+
 
 }
