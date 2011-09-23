@@ -30,6 +30,12 @@ public class SmallButtonDefnTest extends TestCase {
 		assertEquals("someTooltip", defn.tooltip);
 	}
 
+	public void testAddingDataId() {
+		assertSame(defn, defn.data("someData"));
+		assertEquals("someData", defn.dataId);
+
+	}
+
 	public void testCannotAddSecondTooltip() {
 		defn.tooltip("someTooltip");
 		IllegalArgumentException e = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
@@ -37,6 +43,18 @@ public class SmallButtonDefnTest extends TestCase {
 			public void run() {
 				defn.tooltip("someOtherTooltip");
 
+			}
+		});
+		assertEquals("Cannot set value of tooltip twice. Current value [someTooltip]. New value [someOtherTooltip]", e.getMessage());
+		assertEquals("someTooltip", defn.tooltip);
+	}
+
+	public void testCannotAddSecondData() {
+		defn.data("someData");
+		IllegalArgumentException e = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
+			@Override
+			public void run() {
+				defn.data("someData");
 			}
 		});
 		assertEquals("Cannot set value of tooltip twice. Current value [someTooltip]. New value [someOtherTooltip]", e.getMessage());
@@ -55,7 +73,7 @@ public class SmallButtonDefnTest extends TestCase {
 		super.setUp();
 		action1 = new ActionMock("1");
 		ActionStore store = new ActionStore().//
-				action("action1",  action1);
+				action("action1", action1);
 		smallButtonFactory = new SmallButtonFactoryMock("1");
 		defn = new SmallButtonDefn("someId", "titleId", "mainImageId", store, smallButtonFactory);
 	}

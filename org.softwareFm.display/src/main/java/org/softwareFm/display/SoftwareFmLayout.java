@@ -2,8 +2,8 @@ package org.softwareFm.display;
 
 public class SoftwareFmLayout {
 
-	public final int smallButtonCompositeHeight = 20;
-	public int smallButtonHeight = 20;
+	public final int largeButtonHeight = 28;
+	public int smallButtonHeight = 23;
 	public int smallButtonWidth = smallButtonHeight;
 	public int displayerHeight = smallButtonHeight;
 	public int titleHeight = smallButtonHeight;

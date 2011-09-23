@@ -24,10 +24,14 @@ public abstract class LargeButtonFactory implements ILargeButtonFactory {
 	public static final String organisationUrlMissingTitle = "organisation.url.missing.title";
 	public static final String organisationNameMissingTitle = "organisation.name.missing.title";
 
+	public static final String dataProjectBlogs = "data.project.project.blogs";
 	public static final String dataProjectName = "data.project.project.name";
 	public static final String dataProjectMailingList = "data.project.mailingLists";
 	public static final String dataProjectIssues = "data.project.issues";
+	public static final String dataProjectRss = "data.project.rss";
+	public static final String dataProjectTutorials = "data.project.tutorials";
 	public static final String dataProjectTweets = "data.project.tweets";
+	public static final String dataProjectFacebook = "data.project.facebook";
 
 	public static final String dataOrganisationName = "data.organisation.name";
 	public static final String dataOrganisationTweets = "data.organisation.tweets";

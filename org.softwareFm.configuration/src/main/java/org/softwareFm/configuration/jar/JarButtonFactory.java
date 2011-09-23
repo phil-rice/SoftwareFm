@@ -9,7 +9,7 @@ import org.softwareFm.display.smallButtons.SmallButtonDefn;
 public class JarButtonFactory implements ISmallButtonFactory {
 
 	@Override
-	public ISmallDisplayer create(IButtonParent parent, SmallButtonDefn smallButtonDefn, ImageButtonConfig config) {
+	public ISmallDisplayer create( IButtonParent parent, SmallButtonDefn smallButtonDefn, ImageButtonConfig config) {
 		return new JarSimpleImageButton(parent, config);
 	}
 

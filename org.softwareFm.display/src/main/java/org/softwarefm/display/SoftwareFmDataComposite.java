@@ -52,16 +52,16 @@ public class SoftwareFmDataComposite implements IHasComposite {
 		this.compositeConfig = compositeConfig;
 		this.content = new Composite(parent, SWT.NULL);
 		displaySelectionModel = new DisplaySelectionModel(exceptionHandler, largeButtonDefns);
-		topRow = new Composite(content, SWT.BORDER);
+		topRow = new Composite(content, SWT.NULL);
 		topRow.setLayout(Swts.getHorizonalNoMarginRowLayout());
 		ImageButtonConfig imageButtonConfig = compositeConfig.imageButtonConfig;
 		SoftwareFmLayout layout = imageButtonConfig.layout;
 		for (LargeButtonDefn largeButtonDefn : largeButtonDefns) {
-			SimpleButtonParent smallButtonComposite = new SimpleButtonParent(topRow, layout, SWT.BORDER);
-			largeButtonidToButtonParent.put(largeButtonDefn, smallButtonComposite);
-			smallButtonComposite.getButtonComposite().setLayoutData(new RowData(SWT.DEFAULT, layout.smallButtonCompositeHeight));
+			SimpleButtonParent largeButton = new SimpleButtonParent(topRow, layout, SWT.BORDER);
+			largeButtonidToButtonParent.put(largeButtonDefn, largeButton);
+			largeButton.getButtonComposite().setLayoutData(new RowData(SWT.DEFAULT, layout.largeButtonHeight));
 			for (final SmallButtonDefn smallButtonDefn : largeButtonDefn.defns) {
-				ISmallDisplayer smallDisplayer = smallButtonDefn.smallButtonFactory.create(smallButtonComposite, smallButtonDefn, imageButtonConfig.withImage(smallButtonDefn.mainImageId));
+				ISmallDisplayer smallDisplayer = smallButtonDefn.smallButtonFactory.create( largeButton, smallButtonDefn, imageButtonConfig.withImage(smallButtonDefn.mainImageId));
 				smallButtonIdToSmallDisplayerMap.put(smallButtonDefn.id, smallDisplayer);
 				Control control = smallDisplayer.getControl();
 				control.setLayoutData(new RowData(layout.smallButtonWidth, layout.smallButtonHeight));

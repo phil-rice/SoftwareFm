@@ -2,8 +2,8 @@
 	"ripped":        {"hexDigest" : "digest",
 	                  "jarName" : "jarName",
 	                  "jarPath" : "jarPath",
-	                  "javadoc" : "javadoc path",
-	                  "source" : "source path"}
+	                  "javadoc" : "http://javadoc path",
+	                  "source" : "http://source path"}
 	"jar":           {"project.url": "http://www.oracle.com/us/technologies/java/index.html",
 	                  "organisation.url": "www.oracle.com"            },
 	"project":       {"project.name": "J2Se", 

@@ -15,7 +15,7 @@ public class SmallButtonDefn {
 
 	@Override
 	public String toString() {
-		return "SmallButtonDefn [id=" + id + ", tooltip=" + tooltip + ", actionStore=" + actionStore + ", smallButtonFactory=" + smallButtonFactory + ", defns=" + defns + ", controlClickAction=" + controlClickAction + ", controlClickActionData=" + controlClickActionData + "]";
+		return "SmallButtonDefn [id=" + id + ", dataId=" + dataId + ", titleId=" + titleId + ", tooltip=" + tooltip + ", defns=" + defns + ", smallButtonFactory=" + smallButtonFactory + ", controlClickAction=" + controlClickAction + ", controlClickActionData=" + controlClickActionData + ", mainImageId=" + mainImageId + ", actionStore=" + actionStore + "]";
 	}
 
 	private final ActionStore actionStore;
@@ -23,6 +23,7 @@ public class SmallButtonDefn {
 
 	public String tooltip;
 	public String id;
+	public String dataId;
 	public final List<DisplayerDefn> defns;
 	public IAction controlClickAction;
 	public String controlClickActionData;
@@ -38,6 +39,13 @@ public class SmallButtonDefn {
 		this.defns = Collections.unmodifiableList(new ArrayList<DisplayerDefn>(Arrays.asList(defns)));
 	}
 
+	public SmallButtonDefn data(String dataId) {
+		if (this.dataId != null)
+			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.cannotSetValueTwice, "dataId", this.dataId, dataId));
+		this.dataId = dataId;
+		return this;
+		
+	}
 	public SmallButtonDefn tooltip(String tooltip) {
 		if (this.tooltip != null)
 			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.cannotSetValueTwice, "tooltip", this.tooltip, tooltip));

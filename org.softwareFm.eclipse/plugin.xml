@@ -49,13 +49,15 @@
 
 <extension  point="org.softwareFm.eclipse.largeButton">
       <item class="org.softwareFm.configuration.largebuttons.JarLargeButtonFactory"/>
-      <item class="org.softwareFm.configuration.largebuttons.ProjectLargeButtonFactory"/>
+      <item class="org.softwareFm.configuration.largebuttons.ProjectDetailsLargeButtonFactory"/>
+      <item class="org.softwareFm.configuration.largebuttons.ProjectSocialLargeButtonFactory"/>
+      <item class="org.softwareFm.configuration.largebuttons.ProjectTrainingLargeButtonFactory"/>
       <item class="org.softwareFm.configuration.largebuttons.OrganisationLargeButtonFactory"/>
 </extension>
 
  <extension  point="org.eclipse.ui.views">
       <category  name="SoftwareFm" id="org.softwareFm" />
-      <view  name="SoftwareFm" icon="icons/Jar.gif" category="org.softwareFm"   
+      <view  name="SoftwareFm" icon="icons/sfm.gif" category="org.softwareFm"   
              class="org.softwareFm.eclipse.SoftwareFmView"   id="org.softwareFm.eclipse.SoftwareFmView" />
    </extension>
 </plugin>

@@ -36,7 +36,7 @@ public class SoftwareFmView extends ViewPart {
 		composite.setLayout(new GridLayout(2, true));
 		SoftwareFmActivator activator = SoftwareFmActivator.getDefault();
 
-		SoftwareFmDataComposite dataComposite = activator.makeComposite(composite);
+		final SoftwareFmDataComposite dataComposite = activator.makeComposite(composite);
 		
 		final GuiDataStore guiDataStore = activator.getGuiDataStore();
 		final Browser browser = new Browser(composite, SWT.BORDER);
@@ -46,9 +46,14 @@ public class SoftwareFmView extends ViewPart {
 				if (entity.equals("project")) {
 					Object tweets = guiDataStore.getDataFor("data.project.tweets");
 					if (tweets != null && tweets instanceof List) {
-						String firstTweet = Strings.nullSafeToString(((List<Object>) tweets).get(0));
+						final String firstTweet = Strings.nullSafeToString(((List<Object>) tweets).get(0));
 						if (firstTweet.trim().length() > 0)
-							browser.setUrl("http://mobile.twitter.com/" + firstTweet);
+							Swts.asyncExec(dataComposite, new Runnable() {
+								@Override
+								public void run() {
+									browser.setUrl("http://mobile.twitter.com/" + firstTweet);
+								}
+							});
 					}
 				}
 			}

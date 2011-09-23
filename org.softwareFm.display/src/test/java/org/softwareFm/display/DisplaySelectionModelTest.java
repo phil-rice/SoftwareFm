@@ -77,6 +77,7 @@ public class DisplaySelectionModelTest extends TestCase {
 		model.select("2.a");
 		checkButtons(model, "2", "2.b", "2.c");
 	}
+	
 
 	private void checkButtons(DisplaySelectionModel model, String largeButtonId, String... smallButtonIds) {
 		assertEquals(largeButtonId, model.getLargeButtonSelectedId());
@@ -97,7 +98,7 @@ public class DisplaySelectionModelTest extends TestCase {
 		defn2b = new SmallButtonDefn("2.b", "title2b", "imageId", store, smallButtonFactory);
 		defn2c = new SmallButtonDefn("2.c", "title2c", "imageId", store, smallButtonFactory);
 
-		largeDefn1 = new LargeButtonDefn("1", defn1a, defn1b);
+		largeDefn1 = new LargeButtonDefn("1",defn1a, defn1b);
 		largeDefn2 = new LargeButtonDefn("2", defn2a, defn2b, defn2c);
 	}
 }

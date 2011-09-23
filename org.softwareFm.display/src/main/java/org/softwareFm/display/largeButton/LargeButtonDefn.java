@@ -12,7 +12,7 @@ public class LargeButtonDefn {
 	public final List<SmallButtonDefn> defns;
 	public final String id;
 
-	public LargeButtonDefn(String id, SmallButtonDefn... defns) {
+	public LargeButtonDefn(String id,  SmallButtonDefn... defns) {
 		this.id = id;
 		this.defns = Collections.unmodifiableList(new ArrayList<SmallButtonDefn>(Arrays.asList(defns)));
 	}

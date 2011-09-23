@@ -15,7 +15,9 @@ import org.softwareFm.configuration.configurators.ListEditorConfigurator;
 import org.softwareFm.configuration.configurators.SmallButtonConfigurator;
 import org.softwareFm.configuration.largebuttons.JarLargeButtonFactory;
 import org.softwareFm.configuration.largebuttons.OrganisationLargeButtonFactory;
-import org.softwareFm.configuration.largebuttons.ProjectLargeButtonFactory;
+import org.softwareFm.configuration.largebuttons.ProjectDetailsLargeButtonFactory;
+import org.softwareFm.configuration.largebuttons.ProjectSocialLargeButtonFactory;
+import org.softwareFm.configuration.largebuttons.ProjectTrainingLargeButtonFactory;
 import org.softwareFm.display.GuiBuilder;
 import org.softwareFm.display.SoftwareFmDataComposite;
 import org.softwareFm.display.SoftwareFmLayout;
@@ -52,12 +54,14 @@ public class SoftwareFmFixture {
 	public final DisplayerStore displayerStore;
 	public final GuiBuilder guiBuilder;
 	public final LargeButtonDefn jarButton;
-	public final LargeButtonDefn projectButton;
+	public final LargeButtonDefn projectSocialButton;
 	public final LargeButtonDefn organisationButton;
 	private IEditorFactory editorFactory;
 	private ListEditorStore listEditorStore;
 	private final EditorContext editorContext;
 	private final IUpdateStore updateStore;
+	private final LargeButtonDefn projectDetailsButton;
+	private final LargeButtonDefn projectTrainingButton;
 
 	public SoftwareFmFixture(Display display) throws Exception {
 		imageRegistry = new ImageRegistry();
@@ -80,7 +84,9 @@ public class SoftwareFmFixture {
 		guiBuilder = new GuiBuilder(smallButtonStore, actionStore, displayerStore, listEditorStore);
 
 		jarButton = new JarLargeButtonFactory().apply(guiBuilder);
-		projectButton = new ProjectLargeButtonFactory().apply(guiBuilder);
+		projectDetailsButton = new ProjectDetailsLargeButtonFactory().apply(guiBuilder);
+		projectSocialButton = new ProjectSocialLargeButtonFactory().apply(guiBuilder);
+		projectTrainingButton = new ProjectTrainingLargeButtonFactory().apply(guiBuilder);
 		organisationButton = new OrganisationLargeButtonFactory().apply(guiBuilder);
 
 		new DataStoreConfigurator().process(dataStore = new GuiDataStore(IUrlToData.Utils.errorCallback(), resourceGetter, ICallback.Utils.rethrow()));
@@ -91,7 +97,7 @@ public class SoftwareFmFixture {
 				dataStore, compositeConfig, //
 				actionStore, editorFactory, updateStore, //
 				listEditorStore, ICallback.Utils.rethrow(), //
-				Arrays.asList(jarButton, projectButton, organisationButton));
+				Arrays.asList(jarButton, projectDetailsButton, projectSocialButton, projectTrainingButton, organisationButton));
 		return result;
 	}
 

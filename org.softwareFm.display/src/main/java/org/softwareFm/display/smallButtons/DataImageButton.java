@@ -1,20 +1,18 @@
-package org.softwareFm.configuration.jar;
+package org.softwareFm.display.smallButtons;
 
 import java.util.Map;
 
 import org.softwareFm.display.data.IDataGetter;
 import org.softwareFm.display.simpleButtons.IButtonParent;
 import org.softwareFm.display.simpleButtons.SmallIconPosition;
-import org.softwareFm.display.smallButtons.ImageButtonConfig;
-import org.softwareFm.display.smallButtons.SimpleImageButton;
 import org.softwareFm.softwareFmImages.smallIcons.SmallIconsAnchor;
 import org.softwareFm.utilities.maps.Maps;
 
-public class ProjectOrOrganisationImageButton extends SimpleImageButton{
+public class DataImageButton extends SimpleImageButton{
 
 	private final String dataKey;
 
-	public ProjectOrOrganisationImageButton(IButtonParent parent, ImageButtonConfig config, String dataKey) {
+	public DataImageButton(IButtonParent parent, ImageButtonConfig config, String dataKey) {
 		super(parent, config);
 		this.dataKey = dataKey;
 	}

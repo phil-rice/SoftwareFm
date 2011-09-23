@@ -17,7 +17,7 @@ public class SmallButtonFactoryMock implements ISmallButtonFactory {
 	}
 
 	@Override
-	public ISmallDisplayer create(IButtonParent parent, SmallButtonDefn smallButtonDefn, ImageButtonConfig imageButtonConfig) {
+	public ISmallDisplayer create( IButtonParent parent, SmallButtonDefn smallButtonDefn, ImageButtonConfig imageButtonConfig) {
 		throw new UnsupportedOperationException();
 	}
 
