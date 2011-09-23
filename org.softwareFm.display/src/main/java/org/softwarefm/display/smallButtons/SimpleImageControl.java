@@ -82,4 +82,10 @@ public class SimpleImageControl extends Canvas {
 		redraw();
 	}
 
+	@Override
+	public void setEnabled(boolean enabled) {
+		if (enabled != isEnabled())
+			redraw();
+		super.setEnabled(enabled);
+	}
 }
