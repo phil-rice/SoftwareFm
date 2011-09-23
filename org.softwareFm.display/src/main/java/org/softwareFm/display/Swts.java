@@ -185,7 +185,7 @@ public class Swts {
 			fd.left = new FormAttachment(0, 0);
 			composite.setLayoutData(fd);
 			shell.open();
-			Swts.layoutDump(shell);
+//			Swts.layoutDump(shell);
 			while (!shell.isDisposed()) {
 				if (!display.readAndDispatch())
 					display.sleep();

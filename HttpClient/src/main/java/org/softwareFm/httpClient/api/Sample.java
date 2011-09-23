@@ -13,7 +13,7 @@ public class Sample {
 		IHttpClient client = IHttpClient.Utils.defaultClient();
 		try {
 			client.setDefaultHeaders(Arrays.<NameValuePair>asList(new BasicNameValuePair("SoftwareFm", "Value")));
-			client.get("projects/934/javaruntime.Hello").execute(new IResponseCallback() {
+			client.get("projects/934/javaruntime.sfm").execute(new IResponseCallback() {
 				@Override
 				public void process(IResponse response) {
 					System.out.println(response);

@@ -70,7 +70,6 @@ public class SoftwareFmDataComposite implements IHasComposite {
 					public void mouseDown(MouseEvent e) {
 						displaySelectionModel.select(smallButtonDefn.id);
 						System.out.println("Selected: " + smallButtonDefn.id);
-						Swts.layoutDump(parent);
 					}
 				});
 			}
