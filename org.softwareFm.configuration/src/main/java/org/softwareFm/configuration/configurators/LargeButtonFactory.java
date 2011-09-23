@@ -10,13 +10,13 @@ public abstract class LargeButtonFactory implements ILargeButtonFactory {
 
 	public static final String blankKey = "blank.title";
 
-	public static final String dataRawHexDigest= "data.raw.hexDigest";
-	public static final String dataRawJarName= "data.raw.jarName";
-	public static final String dataRawJarPath = "data.raw.jarPath";
+	public static final String dataRawHexDigest= "data.raw.jar.hexDigest";
+	public static final String dataRawJarName= "data.raw.jar.jarName";
+	public static final String dataRawJarPath = "data.raw.jar.jarPath";
 	public static final String dataJarProjectUrl = "data.jar.project.url";
 	public static final String dataJarOrganisationUrl = "data.jar.organisation.url";
-	public static final String dataRawJavadoc = "data.raw.javadoc";
-	public static final String dataRawSource = "data.raw.source";
+	public static final String dataRawJavadoc = "data.raw.jar.javadoc";
+	public static final String dataRawSource = "data.raw.jar.source";
 
 	public static final String hexDigestMissingTitle = "hexDigest.missing.title";
 	public static final String projectUrlMissingTitle = "project.url.missing.title";

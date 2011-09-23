@@ -17,11 +17,12 @@ import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.ContainsAndValue;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.strings.PreAndPost;
+import org.softwareFm.utilities.strings.Strings;
 
 public class GuiDataStore implements IDataGetter {
 	private final IUrlToData urlToData;
-	private String mainEntity;
-	private Object lock = new Object();
+	private final Object lock = new Object();
 	private final Map<String, IUrlGenerator> urlGeneratorMap = Maps.newMap(LinkedHashMap.class);
 	private final Map<String, IUrlGenerator> entityToUrlGeneratorMap = Maps.newMap(LinkedHashMap.class);
 	private final Map<String, List<DependantData>> entityToDependantMap = Maps.newMap();
@@ -30,8 +31,8 @@ public class GuiDataStore implements IDataGetter {
 	private final Map<String, EntityCachedData> cache = Maps.newMap();
 
 	private final CopyOnWriteArrayList<IGuiDataListener> listeners = new CopyOnWriteArrayList<IGuiDataListener>();
-	private ICallback<Throwable> onException;
-	private Object rawData;
+	private final ICallback<Throwable> onException;
+	private final Map<String,Object> entityToLastRawDataMap = Maps.newMap();
 	private final IResourceGetter resourceGetter;
 
 	public GuiDataStore(IUrlToData urlToData, IResourceGetter resourceGetter, ICallback<Throwable> onException) {
@@ -58,7 +59,6 @@ public class GuiDataStore implements IDataGetter {
 	public GuiDataStore entity(String entity, String urlGeneratorId) {
 		if (entityToUrlGeneratorMap.containsKey(entity))
 			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.duplicateEntity, entity));
-		mainEntity = entity;
 		checkAndPut(entity, urlGeneratorId);
 		return this;
 	}
@@ -99,8 +99,8 @@ public class GuiDataStore implements IDataGetter {
 		return this;
 	}
 
-	public void processData(Object data, Map<String, Object> context) {
-		this.rawData = data;
+	public void processData(String mainEntity, Object data, Map<String, Object> context) {
+		this.entityToLastRawDataMap.put(mainEntity, data);
 		processOneData(mainEntity, data, context);
 	}
 
@@ -182,13 +182,15 @@ public class GuiDataStore implements IDataGetter {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private Object getRawData(String key) {
+	private Object getRawData(String path) {
 		synchronized (lock) {
+			PreAndPost entityAndKey = Strings.split(path, '.');
+			Object rawData = entityToLastRawDataMap.get(entityAndKey.pre);
 			if (rawData == null)
 				return null;
 			if (!(rawData instanceof Map))
 				throw new IllegalStateException(MessageFormat.format(DisplayConstants.expectedAMap, rawData, rawData.getClass()));
-			return ((Map) rawData).get(key);
+			return ((Map) rawData).get(entityAndKey.post);
 		}
 	}
 
@@ -234,13 +236,13 @@ public class GuiDataStore implements IDataGetter {
 	}
 
 	@Override
-	public Object getLastRawData() {
-		return rawData;
+	public Object getLastRawData(String entity) {
+		return entityToLastRawDataMap.get(entity);
 	}
 
 	@Override
-	public void setRawData(Object rawData) {
-		this.rawData = rawData;
+	public void setRawData(String entity, Object rawData) {
+		this.entityToLastRawDataMap.put(entity, rawData);
 
 	}
 
@@ -250,10 +252,6 @@ public class GuiDataStore implements IDataGetter {
 
 	public Map<String, List<DependantData>> getEntityToDependantMap() {
 		return Collections.unmodifiableMap(entityToDependantMap);
-	}
-
-	public String getMainEntity() {
-		return mainEntity;
 	}
 
 	@Override

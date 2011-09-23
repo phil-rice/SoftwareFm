@@ -108,7 +108,6 @@ public class ActivatorTest extends TestCase implements IDontRunAutomaticallyTest
 		GuiDataStore dataStore = softwareFmActivator.getGuiDataStore();
 		assertSame(dataStore, softwareFmActivator.getGuiDataStore());
 
-		assertEquals("jar", dataStore.getMainEntity());
 		Map<String, List<DependantData>> entityToDependantMap = dataStore.getEntityToDependantMap();
 		assertEquals(Sets.makeSet("jar"), entityToDependantMap.keySet());
 		assertEquals(Arrays.asList("project", "organisation"), Lists.map(entityToDependantMap.get("jar"), new IFunction1<DependantData, String>() {

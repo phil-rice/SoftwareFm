@@ -19,7 +19,7 @@ public class GuiDataStoreTest extends TestCase {
 	private Map<String, Object> data1;
 	private Map<String, Object> datad1;
 	private Map<String, Object> datad2;
-	private ResourceGetterMock resourceGetterMock = new ResourceGetterMock("a.1", "x", "b.2", "y");
+	private final ResourceGetterMock resourceGetterMock = new ResourceGetterMock("a.1", "x", "b.2", "y");
 
 	public void testNoneDataRequestsGoToResourceGetter() {
 		assertEquals("x", store.getDataFor("a.1"));
@@ -28,7 +28,7 @@ public class GuiDataStoreTest extends TestCase {
 
 	public void testGettingData() {
 		makeRosyView();
-		store.processData("rawData", context1);
+		store.processData("entity1", "rawData", context1);
 
 		assertEquals("one", store.getDataFor("data.entity1.linkData1"));
 		assertEquals("two", store.getDataFor("data.entity1.linkData2"));
@@ -42,7 +42,7 @@ public class GuiDataStoreTest extends TestCase {
 	public void testProcessDataCallsDependantEntities() {
 		makeRosyView();
 
-		store.processData("rawData", context1);
+		store.processData("entity1", "rawData", context1);
 		assertEquals(Arrays.asList("entity1", "entityd1", "entityd2"), urlToData.entities);
 		assertEquals(Arrays.asList(context1, context1, context1), urlToData.contexts);
 		assertEquals(Arrays.asList("<Url entity1: rawData>", "<Url entityd1: one>", "<Url entityd2: two>"), urlToData.urls);
@@ -50,7 +50,7 @@ public class GuiDataStoreTest extends TestCase {
 
 	public void testProcessDataSetsLastUrlFor() {
 		makeRosyView();
-		store.processData("rawData", context1);
+		store.processData("entity1", "rawData", context1);
 		assertEquals("<Url entity1: rawData>", store.lastUrlFor("entity1"));
 		assertEquals("<Url entityd1: one>", store.lastUrlFor("entityd1"));
 		assertEquals("<Url entityd2: two>", store.lastUrlFor("entityd2"));
@@ -60,8 +60,8 @@ public class GuiDataStoreTest extends TestCase {
 	public void testProcessDataDoesntCallUrlToDataWhenUrlCached() {
 		makeRosyView();
 
-		store.processData("rawData", context1);
-		store.processData("rawData", context1);
+		store.processData("entity1", "rawData", context1);
+		store.processData("entity1", "rawData", context1);
 		assertEquals(Arrays.asList("entity1", "entityd1", "entityd2"), urlToData.entities);
 		assertEquals(Arrays.asList(context1, context1, context1), urlToData.contexts);
 		assertEquals(Arrays.asList("<Url entity1: rawData>", "<Url entityd1: one>", "<Url entityd2: two>"), urlToData.urls);
@@ -70,19 +70,19 @@ public class GuiDataStoreTest extends TestCase {
 	public void testRawData() {
 		makeRosyView();
 
-		Map<String, Object>rawData = Maps.makeMap("a", 1, "b", 2);
-		store.processData(rawData, context1);
-		assertEquals(rawData, store.getLastRawData());
-		assertEquals(1, store.getDataFor("data.raw.a"));
-		assertEquals(2, store.getDataFor("data.raw.b"));
+		Map<String, Object>rawData1 = Maps.makeMap("a", 1, "b", 2);
+		store.processData("entity1", rawData1, context1);
+		assertEquals(rawData1, store.getLastRawData("entity1"));
+		assertEquals(1, store.getDataFor("data.raw.entity1.a"));
+		assertEquals(2, store.getDataFor("data.raw.entity1.b"));
 
 	}
 
 	public void testListenersNotified() {
 		makeRosyView();
 
-		store.processData("rawData", context1);
-		store.processData("rawData", context1);
+		store.processData("entity1", "rawData", context1);
+		store.processData("entity1", "rawData", context1);
 		checkListener(listener1);
 		checkListener(listener2);
 	}

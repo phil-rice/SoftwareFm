@@ -7,9 +7,9 @@ public interface IDataGetter {
 
 	ActionData getActionDataFor(List<String> params);
 
-	Object getLastRawData();
+	Object getLastRawData(String entity);
 
-	void setRawData(Object rawData);
+	void setRawData(String entity, Object rawData);
 
 	void clearCache(String url, String entity, String attribute);
 }
