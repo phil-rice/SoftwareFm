@@ -24,7 +24,8 @@ public class TextDisplayerFactory implements IDisplayerFactory {
 	}
 
 	@Override
-	public void data(IDataGetter dataGetter, DisplayerDefn defn, IDisplayer displayer, String entity, String url) {
+	public void data(ActionContext actionContext, DisplayerDefn defn, IDisplayer displayer, String entity, String url) {
+		IDataGetter dataGetter=actionContext.dataGetter;
 		Object value = Actions.getValueFor(dataGetter, defn);
 		TitleAndText titleAndText = (TitleAndText) displayer;
 		titleAndText.setText(Strings.nullSafeToString(value));

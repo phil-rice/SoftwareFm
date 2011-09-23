@@ -58,10 +58,10 @@ public abstract class LargeButtonFactory implements ILargeButtonFactory {
 		return guiBuilder.action("action.text.edit", artifactId, "overlay.edit").tooltip("action.edit.url.tooltip").params(alternativeDataId);
 	}
 	protected ActionDefn browseButton(GuiBuilder guiBuilder) {
-		return browseButton(guiBuilder, "action.browse.tooltip");
+		return guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).tooltip("action.browse.tooltip");
 	}
-	protected ActionDefn browseButton(GuiBuilder guiBuilder, String tooltipId) {
-		return guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).tooltip(tooltipId);
+	protected ActionDefn browseButton(GuiBuilder guiBuilder, String dataId) {
+		return guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).params(dataId).tooltip(dataId);
 		
 	}
 

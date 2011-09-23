@@ -112,15 +112,16 @@ public class DisplayerDefn {
 				public void buttonPressed(IHasControl button) throws Exception {
 					ActionData actionData = actionContext.dataGetter.getActionDataFor(actionDefn.params);
 					String actionDataKey = Actions.getDataKey(DisplayerDefn.this, actionData.formalParams);
-					if (Actions.guardConditionPresent(actionContext.dataGetter, DisplayerDefn.this, actionDataKey) == null)
+					if (actionDefn.ignoreGuard ||Actions.guardConditionPresent(actionContext.dataGetter, DisplayerDefn.this, actionDataKey) == null)
 						action.execute(actionContext, DisplayerDefn.this, displayer, index, actionData);
 				}
 			});
 		}
 	}
 
-	public void data(IDataGetter dataGetter, DisplayerDefn defn, IDisplayer displayer, String entity, String url) {
-		displayerFactory.data(dataGetter, this, displayer, entity, url);
+	public void data(ActionContext actionContext, DisplayerDefn defn, IDisplayer displayer, String entity, String url) {
+		IDataGetter dataGetter = actionContext.dataGetter;
+		displayerFactory.data(actionContext, this, displayer, entity, url);
 		String tooltip = defn.tooltip == null ? "" : Strings.nullSafeToString(dataGetter.getDataFor(defn.tooltip));
 		displayer.getControl().setToolTipText(tooltip);
 		int i = 0;
@@ -128,7 +129,7 @@ public class DisplayerDefn {
 		for (ActionDefn actionDefn : defn.actionDefns) {
 			SimpleImageControl control = (SimpleImageControl) children[i++];
 			String actionDataKey = Actions.getDataKey(this, actionDefn.params);
-			boolean canUseAction = Actions.guardConditionPresent(dataGetter, this, actionDataKey) == null;
+			boolean canUseAction = actionDefn.ignoreGuard || Actions.guardConditionPresent(dataGetter, this, actionDataKey) == null;
 			control.setEnabled(canUseAction);
 			if (actionDefn.tooltip != null) {
 				Object tooltipValue = dataGetter.getDataFor(actionDefn.tooltip);

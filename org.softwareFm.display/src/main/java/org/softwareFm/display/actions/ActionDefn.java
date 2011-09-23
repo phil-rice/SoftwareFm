@@ -19,6 +19,7 @@ public class ActionDefn {
 	public final String id;
 	public final String mainImageId;
 	public final String overlayId;
+	public boolean ignoreGuard;
 
 	public ActionDefn(String id, String mainImageId, String overlayId) {
 		this.id = id;
@@ -30,6 +31,11 @@ public class ActionDefn {
 			throw new NullPointerException(MessageFormat.format(DisplayConstants.mustHaveA, "mainImageId", id));
 	}
 
+	
+	public ActionDefn ignoreGuard() {
+		this.ignoreGuard = true;
+		return this;
+	}
 	public ActionDefn params(String... paramNames) {
 		if (this.params != null)
 			throw new IllegalStateException(MessageFormat.format(DisplayConstants.cannotSetValueTwice, "params", this.params, Arrays.asList(paramNames)));

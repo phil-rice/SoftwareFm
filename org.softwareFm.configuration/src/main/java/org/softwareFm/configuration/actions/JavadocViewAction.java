@@ -10,20 +10,15 @@ import org.softwareFm.display.displayer.DisplayerDefn;
 import org.softwareFm.display.displayer.IDisplayer;
 import org.softwareFm.utilities.strings.Strings;
 
-public class JavadocOrSourceViewAction implements IAction {
+public class JavadocViewAction implements IAction {
 
-	private final String artifact;
-
-	public JavadocOrSourceViewAction(String artifact) {
-		this.artifact = artifact;
-	}
 
 	@Override
 	public void execute(ActionContext actionContext, DisplayerDefn displayerDefn, IDisplayer displayer, int index, ActionData actionData) throws Exception {
 		if (!Strings.hasValue(actionContext.dataGetter.getDataFor("data.raw.jar.hexDigest")))
 			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.mustHaveA, "hexDigest", getClass().getSimpleName()));
-		JavadocOrSourceDialog dialog = new JavadocOrSourceDialog(displayer.getControl().getShell(), artifact);
-		dialog.open(actionContext.compositeConfig, actionContext.dataGetter);
+		JavadocDialog dialog = new JavadocDialog(displayer.getControl().getShell());
+		dialog.open(actionContext.compositeConfig, actionContext, actionData);
 	}
 
 }

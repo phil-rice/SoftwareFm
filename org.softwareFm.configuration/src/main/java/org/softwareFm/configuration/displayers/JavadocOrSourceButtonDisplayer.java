@@ -1,9 +1,15 @@
 package org.softwareFm.configuration.displayers;
 
 import java.text.MessageFormat;
+import java.util.Collections;
+import java.util.Map;
 
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.composites.CompositeConfig;
+import org.softwareFm.display.data.ActionData;
 import org.softwareFm.display.data.IDataGetter;
 import org.softwareFm.display.displayer.ButtonDisplayer;
 import org.softwareFm.display.displayer.DisplayerDefn;
@@ -21,14 +27,21 @@ public class JavadocOrSourceButtonDisplayer extends ButtonDisplayer {
 		super(config, parent, titleOrTitleKey, titleIsKey);
 		this.artifact = artifact;
 		runnable = Runnables.noRunnable;
-	}
+		button.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				runnable.run();
+			}
+		});	}
 
 	@Override
-	public void data(final IDataGetter dataGetter, DisplayerDefn defn, String entity) {
+	public void data(final ActionContext actionContext, DisplayerDefn defn, String entity) {
+		final IDataGetter dataGetter = actionContext.dataGetter;
 		final String eclipseValue = Strings.nullSafeToString(dataGetter.getDataFor("data.raw.jar." + artifact));
-		String repositoryValue = Strings.nullSafeToString(dataGetter.getDataFor("data.jar." + artifact));
+		final String repositoryValue = Strings.nullSafeToString(dataGetter.getDataFor("data.jar." + artifact));
 		String tooltip = MessageFormat.format(dataGetter.getDataFor("button.javadocSource.tooltip").toString(), eclipseValue, repositoryValue);
 		button.setToolTipText(tooltip);
+
 		if (eclipseValue.equals(""))
 			if (repositoryValue.equals(""))
 				setButton(dataGetter, false, Runnables.noRunnable, "button.noData.title");
@@ -39,7 +52,11 @@ public class JavadocOrSourceButtonDisplayer extends ButtonDisplayer {
 					public void run() {
 						try {
 							ICallback<String> callback = (ICallback<String>) dataGetter.getDataFor("data.raw.jar." + artifact + "Mutator");
-							callback.process(eclipseValue);
+							callback.process(repositoryValue);
+							Map<String,Object> rawData = (Map<String, Object>) dataGetter.getLastRawData("jar");
+							rawData.put(artifact,  repositoryValue);
+							dataGetter.setRawData("jar", rawData);
+							
 						} catch (Exception e) {
 							throw WrappedException.wrap(e);
 						}
@@ -50,6 +67,8 @@ public class JavadocOrSourceButtonDisplayer extends ButtonDisplayer {
 				setButton(dataGetter, true, new Runnable() {
 					@Override
 					public void run() {
+						ActionData actionData = dataGetter.getActionDataFor(Collections.<String>emptyList());
+						actionContext.updateStore.update(actionData, "data.jar.javadoc", eclipseValue);
 					}
 				}, "button.copyToSoftwareFm.title");
 			else

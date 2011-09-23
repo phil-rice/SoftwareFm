@@ -243,6 +243,7 @@ public class GuiDataStore implements IDataGetter {
 	@Override
 	public void setRawData(String entity, Object rawData) {
 		this.entityToLastRawDataMap.put(entity, rawData);
+		fireListeners(entity, lastUrlFor(entity));
 
 	}
 

@@ -36,7 +36,6 @@
 
 <extension  point="org.softwareFm.eclipse.action">
       <item class="org.softwareFm.configuration.configurators.ActionStoreConfigurator"/>
-      <item class="org.softwareFm.configuration.configurators.JavadocAndSourceActionStoreConfigurator"/>
 </extension>
 
 <extension  point="org.softwareFm.eclipse.displayer">

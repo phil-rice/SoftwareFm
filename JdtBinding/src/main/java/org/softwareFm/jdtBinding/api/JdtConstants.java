@@ -9,5 +9,6 @@ public class JdtConstants {
 	public final static String sourceKey = "source";
 	public final static String javadocMutatorKey = "javadocMutator";
 	public final static String sourceMutatorKey ="sourceMutator";
+	public static final String javaProjectKey = "javaProject";
 
 }

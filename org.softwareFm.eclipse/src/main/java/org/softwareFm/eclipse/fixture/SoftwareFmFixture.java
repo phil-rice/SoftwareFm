@@ -10,7 +10,6 @@ import org.softwareFm.configuration.SoftwareFmPropertyAnchor;
 import org.softwareFm.configuration.configurators.ActionStoreConfigurator;
 import org.softwareFm.configuration.configurators.DisplayerStoreConfigurator;
 import org.softwareFm.configuration.configurators.EditorFactoryConfigurator;
-import org.softwareFm.configuration.configurators.JavadocAndSourceActionStoreConfigurator;
 import org.softwareFm.configuration.configurators.ListEditorConfigurator;
 import org.softwareFm.configuration.configurators.SmallButtonConfigurator;
 import org.softwareFm.configuration.largebuttons.JarLargeButtonFactory;
@@ -74,7 +73,6 @@ public class SoftwareFmFixture {
 		editorContext = new EditorContext(compositeConfig);
 
 		new ActionStoreConfigurator().process(actionStore = new ActionStore());
-		new JavadocAndSourceActionStoreConfigurator().process(actionStore);
 		
 		new SmallButtonConfigurator().process(smallButtonStore = new SmallButtonStore());
 		new DisplayerStoreConfigurator().process(displayerStore = new DisplayerStore());

@@ -98,7 +98,8 @@ public class DisplayerDefnIntegrationTest extends TestCase {
 				"someActionTooltip", "someActionTooltipValue",// 
 				"someDataTooltip", "someDataTooltipValue",// 
 				"dataKey", "value1");
-		dispDefnWithButton.data(dataGetter, dispDefnWithButton, displayer, "someENtity", "someUrl");
+		ActionContext actionContext = new ActionContext(dataGetter, null, null, null, null);
+		dispDefnWithButton.data(actionContext, dispDefnWithButton, displayer, "someENtity", "someUrl");
 		assertEquals("someActionTooltipValue", control.getToolTipText());
 		
 		assertEquals("value1", displayer.getText());

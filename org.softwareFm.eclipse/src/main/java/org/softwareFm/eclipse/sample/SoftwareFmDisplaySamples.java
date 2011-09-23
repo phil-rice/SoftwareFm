@@ -64,8 +64,8 @@ public class SoftwareFmDisplaySamples {
 						styledText.setText(text);
 						Map<String, Object> map = Json.mapFromString(text);
 						@SuppressWarnings("unchecked")
-						Map<String,String> rippedMap = (Map<String, String>) map.get("ripped");
-						RippedResult result = rippedMap == null?null:new RippedResult(rippedMap.get("hexDigest"), rippedMap.get("jarPath"), rippedMap.get("jarName"), rippedMap.get("javadoc"), rippedMap.get("source"), ICallback.Utils.<String>sysoutCallback(), ICallback.Utils.<String>sysoutCallback());
+						Map<String, String> rippedMap = (Map<String, String>) map.get("ripped");
+						RippedResult result = rippedMap == null ? null : new RippedResult(rippedMap.get("hexDigest"), rippedMap.get("javaProject"), rippedMap.get("jarPath"), rippedMap.get("jarName"), rippedMap.get("javadoc"), rippedMap.get("source"), ICallback.Utils.<String> sysoutCallback(), ICallback.Utils.<String> sysoutCallback());
 						softwareFmFixture.dataStore.setRawData("jar", result);
 						softwareFmFixture.forceData(url, "jar", map);
 						softwareFmFixture.forceData(url, "project", map);

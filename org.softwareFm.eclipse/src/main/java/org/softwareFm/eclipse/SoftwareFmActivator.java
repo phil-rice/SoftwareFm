@@ -38,6 +38,7 @@ import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.jdtBinding.api.IBindingRipper;
 import org.softwareFm.jdtBinding.api.JavaProjects;
+import org.softwareFm.jdtBinding.api.JdtConstants;
 import org.softwareFm.jdtBinding.api.RippedResult;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
@@ -118,7 +119,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	}
 
 	public String getUuid() {
-		return uuid == null ? uuid=findOrMakeUuid() : uuid;
+		return uuid == null ? uuid = findOrMakeUuid() : uuid;
 	}
 
 	private String findOrMakeUuid() {
@@ -269,28 +270,40 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		getSelectedBindingManager().addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
 			@Override
 			public void selectionOccured(final BindingRipperResult rippedResult) {
+				IPath path = rippedResult.path;
+				if (path != null) {
+					final Map<String, Object> context = Maps.<String, Object> newMap();
+					final RippedResult result = makeRippedResult(guiDataStore, rippedResult, context);
+					guiDataStore.processData("jar", result, context);
+				}
+			}
+
+			private RippedResult makeRippedResult(final GuiDataStore guiDataStore, final BindingRipperResult rippedResult, final Map<String, Object> context) {
+				IPath path = rippedResult.path;
 				String javadoc = JavaProjects.findJavadocFor(rippedResult.classpathEntry);
 				String source = JavaProjects.findSourceFor(rippedResult.packageFragmentRoot);
+				String name = path.lastSegment().toString();
+				String extension = Files.extension(name);
+				String hexDigest = extension.equals("jar") ? rippedResult.hexDigest : null;
+				String javaProject = rippedResult.javaProject == null ? null : rippedResult.javaProject.getElementName();
+				final RippedResult result = new RippedResult(hexDigest, javaProject, path.toOSString(), name, javadoc, source, null, null);
 				ICallback<String> sourceMutator = new ICallback<String>() {
 					@Override
 					public void process(String newValue) throws Exception {
-						JavaProjects.setSourceAttachment(rippedResult.javaProject, rippedResult.classpathEntry, newValue);
+						BindingRipperResult reripped = SelectedArtifactSelectionManager.reRip(rippedResult);
+						JavaProjects.setSourceAttachment(reripped.javaProject, reripped.classpathEntry, newValue);
 					}
 				};
 				ICallback<String> javadocMutator = new ICallback<String>() {
 					@Override
 					public void process(String newValue) throws Exception {
-						JavaProjects.setJavadoc(rippedResult.javaProject, rippedResult.classpathEntry, newValue);
+						BindingRipperResult reripped = SelectedArtifactSelectionManager.reRip(rippedResult);
+						JavaProjects.setJavadoc(reripped.javaProject, reripped.classpathEntry, newValue);
 					}
 				};
-				IPath path = rippedResult.path;
-				if (path != null) {
-					String name = path.lastSegment().toString();
-					String extension = Files.extension(name);
-					String hexDigest = extension.equals("jar") ? rippedResult.hexDigest : null;
-					RippedResult result = new RippedResult(hexDigest, path.toOSString(), name, javadoc, source, javadocMutator, sourceMutator);
-					guiDataStore.processData("jar", result, Maps.<String, Object> newMap());
-				}
+				result.put(JdtConstants.javadocMutatorKey, javadocMutator);
+				result.put(JdtConstants.sourceMutatorKey, sourceMutator);
+				return result;
 			}
 		});
 		SoftwareFmDataComposite composite = new SoftwareFmDataComposite(parent, guiDataStore, getCompositeConfig(display), getActionStore(), getEditorFactory(display), getUpdateStore(), getListEditorStore(), onException(), getLargeButtonDefns());

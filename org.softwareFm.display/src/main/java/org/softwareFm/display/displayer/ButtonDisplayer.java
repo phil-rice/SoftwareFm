@@ -6,10 +6,10 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.actions.Actions;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.TitleAnd;
-import org.softwareFm.display.data.IDataGetter;
 import org.softwareFm.utilities.strings.Strings;
 
 public class ButtonDisplayer extends TitleAnd implements IDisplayer{
@@ -31,8 +31,8 @@ public class ButtonDisplayer extends TitleAnd implements IDisplayer{
 	protected void buttonPressed() {
 	}
 
-	public void data(IDataGetter dataGetter, DisplayerDefn defn, String entity) {
-		Object data = Actions.getValueFor(dataGetter, defn);
+	public void data(ActionContext actionContext, DisplayerDefn defn, String entity) {
+		Object data = Actions.getValueFor(actionContext.dataGetter, defn);
 		button.setText(Strings.nullSafeToString(data));
 	}
 }
