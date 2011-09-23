@@ -20,7 +20,7 @@ public class JavadocOrSourceViewAction implements IAction {
 
 	@Override
 	public void execute(ActionContext actionContext, DisplayerDefn displayerDefn, IDisplayer displayer, int index, ActionData actionData) throws Exception {
-		if (!Strings.hasValue(actionContext.dataGetter.getDataFor("data.raw.hexDigest")))
+		if (!Strings.hasValue(actionContext.dataGetter.getDataFor("data.raw.jar.hexDigest")))
 			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.mustHaveA, "hexDigest", getClass().getSimpleName()));
 		JavadocOrSourceDialog dialog = new JavadocOrSourceDialog(displayer.getControl().getShell(), artifact);
 		dialog.open(actionContext.compositeConfig, actionContext.dataGetter);

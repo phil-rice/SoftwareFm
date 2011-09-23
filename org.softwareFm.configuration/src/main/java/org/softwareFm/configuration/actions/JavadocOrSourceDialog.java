@@ -47,7 +47,7 @@ public class JavadocOrSourceDialog extends Dialog {
 
 	private void createContents(Shell parent, CompositeConfig compositeConfig, IDataGetter dataGetter) {
 		IResourceGetter resourceGetter = compositeConfig.resourceGetter;
-		String eclipseValue = Strings.nullSafeToString(dataGetter.getDataFor("data.raw." + artefact));
+		String eclipseValue = Strings.nullSafeToString(dataGetter.getDataFor("data.raw.jar." + artefact));
 		String softwareFmValue = Strings.nullSafeToString(dataGetter.getDataFor("data.jar." + artefact));
 		
 		txtEclipse = new TitleAndText(compositeConfig, parent, "dialog.eclipseValue.title", true);

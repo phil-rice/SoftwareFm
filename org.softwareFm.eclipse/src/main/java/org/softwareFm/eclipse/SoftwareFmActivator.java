@@ -260,7 +260,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	}
 
 	public IRepositoryFacard getRepository() {
-		return repository == null ? repository = IRepositoryFacard.Utils.defaultFacard() : repository;
+		return repository == null ? repository = IRepositoryFacard.Utils.defaultFacardWithHeaders("SoftwareFm", getUuid()) : repository;
 	}
 
 	public SoftwareFmDataComposite makeComposite(Composite parent) {

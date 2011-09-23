@@ -1,8 +1,11 @@
 package org.softwareFm.repositoryFacard;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.Future;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.repositoryFacard.impl.RepositoryFacard;
@@ -38,6 +41,9 @@ public interface IRepositoryFacard {
 
 		public static IRepositoryFacard defaultFacard() {
 			return new RepositoryFacard(IHttpClient.Utils.defaultClient(), "sfm");
+		}
+		public static IRepositoryFacard defaultFacardWithHeaders(String name, String value) {
+			return new RepositoryFacard(IHttpClient.Utils.defaultClient().setDefaultHeaders(Arrays.<NameValuePair>asList(new BasicNameValuePair(name, value))), "sfm");
 		}
 
 		public static IRepositoryFacard frontEnd(String host, int port, String userName, String password) {

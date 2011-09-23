@@ -27,8 +27,8 @@ public class JarSimpleImageButton extends SimpleImageButton{
 	private Map<SmallIconPosition, String> makeMap(IDataGetter dataGetter) {
 		String repositoryJavadoc = Strings.nullSafeToString(dataGetter.getDataFor("data.jar.javadoc"));
 		String repositorySource = Strings.nullSafeToString(dataGetter.getDataFor("data.jar.source"));
-		String eclipseJavadoc = Strings.nullSafeToString(dataGetter.getDataFor("data.raw.javadoc"));
-		String eclipseSource = Strings.nullSafeToString(dataGetter.getDataFor("data.raw.source"));
+		String eclipseJavadoc = Strings.nullSafeToString(dataGetter.getDataFor("data.raw.jar.javadoc"));
+		String eclipseSource = Strings.nullSafeToString(dataGetter.getDataFor("data.raw.jar.source"));
 		Map<SmallIconPosition, String> map = Maps.newMap();
 		if (eclipseJavadoc.length()>0)
 			map.put(SmallIconPosition.TopLeft, SmallIconsAnchor.javadocKey);
