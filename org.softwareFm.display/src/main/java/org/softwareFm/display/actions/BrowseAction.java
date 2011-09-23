@@ -13,7 +13,7 @@ public class BrowseAction implements IAction {
 
 	@Override
 	public void execute(ActionContext actionContext, DisplayerDefn displayerDefn, IDisplayer displayer, int index, ActionData actionData) {
-		final String key = Actions.getDataKey(displayerDefn, actionData);
+		final String key = Actions.getDataKey(displayerDefn, actionData.formalParams);
 		String param = Strings.nullSafeToString(actionContext.dataGetter.getDataFor(key));
 		if (param != null) {
 			try {

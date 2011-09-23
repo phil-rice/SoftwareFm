@@ -28,7 +28,7 @@ public class SimpleImageControl extends Canvas {
 				Image background = getImage(value ? config.depressedBackground : config.normalBackground);
 				e.gc.drawImage(background, 0, 0);
 
-				Image mainImage = getImage(config.mainImage);
+				Image mainImage = getImage(config.mainImage, isEnabled());
 				e.gc.drawImage(mainImage, 2, 2);
 				if (config.overlayImage != null) {
 					Image overLayImage = getImage(config.overlayImage);
@@ -44,9 +44,13 @@ public class SimpleImageControl extends Canvas {
 			}
 
 			private Image getImage(String string) {
-				Image result = config.imageRegistry.get(string);
+				return getImage(string, true);
+			}
+			private Image getImage(String string, boolean enabled) {
+				String fullName = enabled?string: string+".inactive";
+				Image result = config.imageRegistry.get(fullName);
 				if (result == null)
-					throw new IllegalStateException(MessageFormat.format(DisplayConstants.imageNotFound, string));
+					throw new IllegalStateException(MessageFormat.format(DisplayConstants.imageNotFound, fullName));
 				return result;
 			}
 		});

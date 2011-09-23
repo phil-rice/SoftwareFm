@@ -61,11 +61,11 @@ public class DisplayerDefn {
 	public DisplayerDefn guard(String... guardKeys) {
 		if (this.guardKeys != null)
 			throw new IllegalStateException(MessageFormat.format(DisplayConstants.cannotSetValueTwice, "guard", this.guardKeys, Arrays.asList(guardKeys)));
-		if (guardKeys.length %2 != 0)
+		if (guardKeys.length % 2 != 0)
 			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.guardMustHaveEvenParameters, dataKey, guardKeys.length, Arrays.asList(guardKeys)));
-		this .guardKeys = Lists.newList();
-		for (int i = 0 ; i<guardKeys.length; i+=2)
-			this.guardKeys.add(new NameAndValue(guardKeys[i+0], guardKeys[i+1]));
+		this.guardKeys = Lists.newList();
+		for (int i = 0; i < guardKeys.length; i += 2)
+			this.guardKeys.add(new NameAndValue(guardKeys[i + 0], guardKeys[i + 1]));
 		return this;
 
 	}
@@ -111,7 +111,7 @@ public class DisplayerDefn {
 				@Override
 				public void buttonPressed(IHasControl button) throws Exception {
 					ActionData actionData = actionContext.dataGetter.getActionDataFor(actionDefn.params);
-					String actionDataKey = Actions.getDataKey(DisplayerDefn.this, actionData);
+					String actionDataKey = Actions.getDataKey(DisplayerDefn.this, actionData.formalParams);
 					if (Actions.guardConditionPresent(actionContext.dataGetter, DisplayerDefn.this, actionDataKey) == null)
 						action.execute(actionContext, DisplayerDefn.this, displayer, index, actionData);
 				}
@@ -125,13 +125,16 @@ public class DisplayerDefn {
 		displayer.getControl().setToolTipText(tooltip);
 		int i = 0;
 		Control[] children = displayer.getButtonComposite().getChildren();
-		for (ActionDefn actionDefn : defn.actionDefns)
+		for (ActionDefn actionDefn : defn.actionDefns) {
+			SimpleImageControl control = (SimpleImageControl) children[i++];
+			String actionDataKey = Actions.getDataKey(this, actionDefn.params);
+			boolean canUseAction = Actions.guardConditionPresent(dataGetter, this, actionDataKey) == null;
+			control.setEnabled(canUseAction);
 			if (actionDefn.tooltip != null) {
-				SimpleImageControl control = (SimpleImageControl) children[i];
 				Object tooltipValue = dataGetter.getDataFor(actionDefn.tooltip);
 				control.setToolTipText(Strings.nullSafeToString(tooltipValue));
-				i++;
 			}
+		}
 	}
 
 	public DisplayerDefn listActions(ActionDefn... listActionDefns) {

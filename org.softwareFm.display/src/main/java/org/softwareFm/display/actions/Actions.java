@@ -1,17 +1,18 @@
 package org.softwareFm.display.actions;
 
-import org.softwareFm.display.data.ActionData;
+import java.util.List;
+
 import org.softwareFm.display.data.IDataGetter;
 import org.softwareFm.display.displayer.DisplayerDefn;
 import org.softwareFm.utilities.strings.NameAndValue;
 import org.softwareFm.utilities.strings.Strings;
 
 public class Actions {
-	public static String getDataKey(DisplayerDefn displayerDefn, ActionData actionData) {
-		if (actionData.actualParams.size() == 0)
+	public static String getDataKey(DisplayerDefn displayerDefn, List<String> formalParams) {
+		if (formalParams == null|| formalParams.size() == 0)
 			return displayerDefn.dataKey;
 		else
-			return actionData.formalParams.get(0);
+			return formalParams.get(0);
 	}
 
 	public static String guardConditionPresent(IDataGetter dataGetter, DisplayerDefn displayerDefn) {

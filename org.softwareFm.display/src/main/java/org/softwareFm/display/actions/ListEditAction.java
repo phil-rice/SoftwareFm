@@ -15,7 +15,7 @@ public class ListEditAction implements IAction {
 	@Override
 	@SuppressWarnings("unchecked")
 	public void execute(final ActionContext actionContext, DisplayerDefn displayerDefn, IDisplayer displayer, final int index, final ActionData actionData) {
-		final String key = Actions.getDataKey(displayerDefn, actionData);
+		final String key = Actions.getDataKey(displayerDefn, actionData.formalParams);
 		final List<String> currentList = Lists.nullSafe((List<String>) actionContext.dataGetter.getDataFor(key));
 		String initialValue = currentList.get(index);
 
