@@ -45,7 +45,6 @@ public class Images {
 		System.out.println("Putting image: " + key);
 	}
 
-
 	public static Image getImage(ImageRegistry imageRegistry, String imageName) {
 		Image image = imageRegistry.get(imageName);
 		if (image == null)
@@ -78,6 +77,20 @@ public class Images {
 		});
 	}
 
+	public static Image makeImageOrNull(Device device, Class<?> clazz, String classPath) {
+		try {
+			ClassPathResource resource = new ClassPathResource(classPath, clazz);
+			if (!resource.exists())
+				return null;
+			InputStream inputStream = resource.getInputStream();
+			Image image = new Image(device, inputStream);
+			images.add(image);
+			return image;
+		} catch (Exception e) {
+			throw new RuntimeException(MessageFormat.format(SoftwareFmImageConstants.errorMakingImage, classPath, clazz.getName()), e);
+		}
+	}
+
 	public static Image makeImage(Device device, Class<?> clazz, String classPath) {
 		try {
 			InputStream inputStream = new ClassPathResource(classPath, clazz).getInputStream();
@@ -94,6 +107,9 @@ public class Images {
 			String fullName = prefix + "." + name;
 			Image image = makeImage(device, anchor, name + ".png");
 			imageRegistry.put(fullName, image);
+			Image imageInactive = makeImageOrNull(device, anchor, name + "Inactive.png");
+			if (imageInactive != null)
+				imageRegistry.put(fullName+".inactive", imageInactive);
 		}
 	}
 
