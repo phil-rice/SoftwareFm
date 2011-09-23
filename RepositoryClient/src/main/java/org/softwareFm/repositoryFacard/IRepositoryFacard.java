@@ -12,6 +12,7 @@ public interface IRepositoryFacard {
 	/** adds this as an Http header to all requests */
 	void addHeader(String name, String value);
 	
+	
 	/** This will delete the node at the Url */
 	Future<?> delete(String url, IResponseCallback callback);
 
@@ -36,11 +37,11 @@ public interface IRepositoryFacard {
 	public static class Utils {
 
 		public static IRepositoryFacard defaultFacard() {
-			return new RepositoryFacard(IHttpClient.Utils.defaultClient());
+			return new RepositoryFacard(IHttpClient.Utils.defaultClient(), "sfm");
 		}
 
 		public static IRepositoryFacard frontEnd(String host, int port, String userName, String password) {
-			return new RepositoryFacard(IHttpClient.Utils.builder(host, port).withCredentials(userName, password));
+			return new RepositoryFacard(IHttpClient.Utils.builder(host, port).withCredentials(userName, password), "sfm");
 		}
 
 	}

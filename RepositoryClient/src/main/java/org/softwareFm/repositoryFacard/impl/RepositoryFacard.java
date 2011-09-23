@@ -22,19 +22,21 @@ public class RepositoryFacard implements IRepositoryFacard {
 	private final IHttpClient client;
 	private final IAspectToParameters parameterMaker;
 	private final List<NameValuePair> headers = Lists.newList();
+	private final String getExtension;
 
-	public RepositoryFacard(IHttpClient client) {
-		this(client, new AspectToParameters());
+	public RepositoryFacard(IHttpClient client, String getExtension) {
+		this(client, getExtension, new AspectToParameters());
 	}
 
-	public RepositoryFacard(IHttpClient client, IAspectToParameters parameters) {
+	public RepositoryFacard(IHttpClient client, String getExtension, IAspectToParameters parameters) {
 		this.client = client;
 		this.parameterMaker = parameters;
+		this.getExtension = "."+getExtension;
 	}
 
 	@Override
 	public Future<?> get(String url, final IRepositoryFacardCallback callback) {
-		return client.get(url + ".json").execute(new IResponseCallback() {
+		return client.get(url + getExtension).execute(new IResponseCallback() {
 			@Override
 			public void process(IResponse response) {
 				try {
@@ -75,7 +77,7 @@ public class RepositoryFacard implements IRepositoryFacard {
 
 	@Override
 	public Future<?> getDepth(String url, int depth, final IRepositoryFacardCallback callback) {
-		return client.get(url + "." + depth + ".json").execute(new IResponseCallback() {
+		return client.get(url + "." + depth + getExtension).execute(new IResponseCallback() {
 			@Override
 			public void process(IResponse response) {
 				try {
