@@ -114,11 +114,11 @@ public class GuiDataStore implements IDataGetter {
 		IUrlDataCallback callback = new IUrlDataCallback() {
 			@Override
 			public void processData(String entity, String url, Map<String, Object> context, Map<String, Object> data) {
-				fireListeners(entity, url);
 				synchronized (lock) {
 					lastUrlFor.put(entity, url);
 					entityCachedData.put(url, data);
 				}
+				fireListeners(entity, url);
 				// TODO is there some unpleasant race condition here...Probably need to rewrite
 				for (DependantData dependantData : Maps.getOrEmptyList(entityToDependantMap, entity)) {
 					Object linkObject = data == null ? null : data.get(dependantData.linkData);

@@ -189,8 +189,8 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 			@Override
 			public void storeUpdates(String url, String entity, String attribute, Object newValue) {
 				guiDataStore.clearCache(url, entity, attribute);
-				Object lastRawData = guiDataStore.getLastRawData(entity);
-				guiDataStore.processData(entity, lastRawData, Maps.<String, Object> newMap());
+				Object lastRawData = guiDataStore.getLastRawData("jar");
+				guiDataStore.processData("jar", lastRawData, Maps.<String, Object> newMap());
 
 			}
 		}) : updateStore;
