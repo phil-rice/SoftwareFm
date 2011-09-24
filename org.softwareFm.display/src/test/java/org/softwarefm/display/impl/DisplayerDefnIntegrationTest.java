@@ -98,7 +98,7 @@ public class DisplayerDefnIntegrationTest extends TestCase {
 				"someActionTooltip", "someActionTooltipValue",// 
 				"someDataTooltip", "someDataTooltipValue",// 
 				"dataKey", "value1");
-		ActionContext actionContext = new ActionContext(dataGetter, null, null, null, null);
+		ActionContext actionContext = new ActionContext(dataGetter, null, null, null, null, null, null);
 		dispDefnWithButton.data(actionContext, dispDefnWithButton, displayer, "someENtity", "someUrl");
 		assertEquals("someActionTooltipValue", control.getToolTipText());
 		
@@ -115,7 +115,7 @@ public class DisplayerDefnIntegrationTest extends TestCase {
 		ImageRegistry imageRegistry = new ImageRegistry();
 		new BasicImageRegisterConfigurator().registerWith(shell.getDisplay(), imageRegistry);
 		IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(new ResourceGetterMock("someTitle", "registeredTitle"));
-		actionContext = new ActionContext(new DataGetterMock("a", 1), new CompositeConfig(shell.getDisplay(), new SoftwareFmLayout(), imageRegistry, resourceGetter), null, null, null);
+		actionContext = new ActionContext(new DataGetterMock("a", 1), new CompositeConfig(shell.getDisplay(), new SoftwareFmLayout(), imageRegistry, resourceGetter), null, null, null, null, null);
 		displayerDefn = new DisplayerDefn(new TextDisplayerFactory()).title("someTitle");
 
 	}

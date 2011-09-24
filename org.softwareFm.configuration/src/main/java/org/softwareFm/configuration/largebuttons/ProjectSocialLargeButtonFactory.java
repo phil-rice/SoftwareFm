@@ -14,7 +14,7 @@ public class ProjectSocialLargeButtonFactory extends LargeButtonFactory {
 				guiBuilder.smallButton("smallButton.project.rss", "smallButton.project.rss.title", "smallButton.data", ArtifactsAnchor.rssKey,//
 						guiBuilder.listDisplayer("displayer.list", "listEditorId.tweet").guard(dataJarProjectUrl, blankKey).title("project.rss.add").data(dataProjectRss).//
 								actions(makeMainListActions(guiBuilder, ArtifactsAnchor.rssKey, dataProjectRss)).//
-								listActions(guiBuilder.action("action.list.viewTweets", GeneralAnchor.browseKey).tooltip("action.browse.tooltip"), //
+								listActions(guiBuilder.action("action.text.internal.browse", GeneralAnchor.browseKey).tooltip("action.browse.tooltip"), //
 										listEditAction(guiBuilder, ArtifactsAnchor.rssKey),//
 										listDeleteAction(guiBuilder, ArtifactsAnchor.rssKey))).data(dataProjectRss),//
 				guiBuilder.smallButton("smallButton.project.twitter", "smallButton.project.twitter.title", "smallButton.data", ArtifactsAnchor.twitterKey,//

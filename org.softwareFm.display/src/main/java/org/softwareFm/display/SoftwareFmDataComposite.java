@@ -48,7 +48,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 	private final Map<LargeButtonDefn, SimpleButtonParent> largeButtonidToButtonParent = Maps.newMap(LinkedHashMap.class);
 	private final CompositeConfig compositeConfig;
 
-	public SoftwareFmDataComposite(final Composite parent, final GuiDataStore guiDataStore, final CompositeConfig compositeConfig, final ActionStore actionStore, final IEditorFactory editorFactory, final IUpdateStore updateStore, final ListEditorStore listEditorStore, ICallback<Throwable> exceptionHandler, final List<LargeButtonDefn> largeButtonDefns) {
+	public SoftwareFmDataComposite(final Composite parent, ICallback<String> internalBrowser, IBrowserService browserService, final GuiDataStore guiDataStore, final CompositeConfig compositeConfig, final ActionStore actionStore, final IEditorFactory editorFactory, final IUpdateStore updateStore, final ListEditorStore listEditorStore, ICallback<Throwable> exceptionHandler, final List<LargeButtonDefn> largeButtonDefns) {
 		this.compositeConfig = compositeConfig;
 		this.content = new Composite(parent, SWT.NULL);
 		displaySelectionModel = new DisplaySelectionModel(exceptionHandler, largeButtonDefns);
@@ -74,7 +74,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 				});
 			}
 		}
-		final ActionContext actionContext = new ActionContext(guiDataStore, compositeConfig, editorFactory, updateStore, listEditorStore);
+		final ActionContext actionContext = new ActionContext(guiDataStore, compositeConfig, editorFactory, updateStore, listEditorStore, browserService, internalBrowser);
 		for (final LargeButtonDefn largeButtonDefn : largeButtonDefns) {
 			for (SmallButtonDefn smallButtonDefn : largeButtonDefn.defns) {
 				Group group = new Group(content, SWT.SHADOW_ETCHED_IN);

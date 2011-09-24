@@ -1,5 +1,6 @@
 package org.softwareFm.eclipse;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -12,6 +13,7 @@ import org.softwareFm.display.SoftwareFmDataComposite;
 import org.softwareFm.display.Swts;
 import org.softwareFm.display.data.GuiDataStore;
 import org.softwareFm.display.data.IGuiDataListener;
+import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.strings.Strings;
 
 /**
@@ -23,6 +25,8 @@ import org.softwareFm.utilities.strings.Strings;
 
 public class SoftwareFmView extends ViewPart {
 
+	private Browser browser;
+
 	public SoftwareFmView() {
 	}
 
@@ -31,31 +35,44 @@ public class SoftwareFmView extends ViewPart {
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
-
 		Composite composite = new Composite(parent, SWT.NULL);
 		composite.setLayout(new GridLayout(2, true));
 		SoftwareFmActivator activator = SoftwareFmActivator.getDefault();
 
-		final SoftwareFmDataComposite dataComposite = activator.makeComposite(composite);
-		
+		final SoftwareFmDataComposite dataComposite = activator.makeComposite(composite, new ICallback<String>() {
+			@Override
+			public void process(String t) throws Exception {
+				browser.setUrl(t);
+			}
+		});
+
 		final GuiDataStore guiDataStore = activator.getGuiDataStore();
-		final Browser browser = new Browser(composite, SWT.BORDER);
+		browser = new Browser(composite, SWT.BORDER);
 		guiDataStore.addGuiDataListener(new IGuiDataListener() {
 			@Override
 			public void data(String entity, String url) {
 				if (entity.equals("project")) {
-					Object tweets = guiDataStore.getDataFor("data.project.tweets");
-					if (tweets != null && tweets instanceof List) {
-						final String firstTweet = Strings.nullSafeToString(((List<Object>) tweets).get(0));
-						if (firstTweet.trim().length() > 0)
-							Swts.asyncExec(dataComposite, new Runnable() {
-								@Override
-								public void run() {
-									browser.setUrl("http://mobile.twitter.com/" + firstTweet);
-								}
-							});
+					if (!display(dataComposite, guiDataStore, "data.project.rss", "{0}"))
+						display(dataComposite, guiDataStore, "data.project.tweets", "http://mobile.twitter.com/{0}");
+				}
+			}
+
+			private boolean display(final SoftwareFmDataComposite dataComposite, final GuiDataStore guiDataStore, String pathOrKey, final String pattern) {
+				Object list = guiDataStore.getDataFor(pathOrKey);
+				if (list != null && list instanceof List) {
+					final String firstItem = Strings.nullSafeToString(((List<Object>) list).get(0));
+					if (firstItem.trim().length() > 0) {
+						Swts.asyncExec(dataComposite, new Runnable() {
+							@Override
+							public void run() {
+								String url = MessageFormat.format(pattern, firstItem);
+								browser.setUrl(url);
+							}
+						});
+						return true;
 					}
 				}
+				return false;
 			}
 		});
 		dataComposite.getComposite().setLayoutData(Swts.makeGrabHorizonalAndFillGridData());

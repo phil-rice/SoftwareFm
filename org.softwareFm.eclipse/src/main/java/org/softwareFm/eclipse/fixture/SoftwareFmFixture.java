@@ -18,6 +18,7 @@ import org.softwareFm.configuration.largebuttons.ProjectDetailsLargeButtonFactor
 import org.softwareFm.configuration.largebuttons.ProjectSocialLargeButtonFactory;
 import org.softwareFm.configuration.largebuttons.ProjectTrainingLargeButtonFactory;
 import org.softwareFm.display.GuiBuilder;
+import org.softwareFm.display.IBrowserService;
 import org.softwareFm.display.SoftwareFmDataComposite;
 import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.actions.ActionStore;
@@ -61,6 +62,7 @@ public class SoftwareFmFixture {
 	private final IUpdateStore updateStore;
 	private final LargeButtonDefn projectDetailsButton;
 	private final LargeButtonDefn projectTrainingButton;
+	private final IBrowserService browserService;
 
 	public SoftwareFmFixture(Display display) throws Exception {
 		imageRegistry = new ImageRegistry();
@@ -71,6 +73,7 @@ public class SoftwareFmFixture {
 		compositeConfig = new CompositeConfig(display, layout, imageRegistry, resourceGetter);
 		updateStore = IUpdateStore.Utils.sysoutUpdateStore();
 		editorContext = new EditorContext(compositeConfig);
+		browserService= new BrowserService();
 
 		new ActionStoreConfigurator().process(actionStore = new ActionStore());
 		
@@ -91,8 +94,8 @@ public class SoftwareFmFixture {
 	}
 
 	public SoftwareFmDataComposite makeComposite(Composite parent) {
-		SoftwareFmDataComposite result = new SoftwareFmDataComposite(parent, //
-				dataStore, compositeConfig, //
+		SoftwareFmDataComposite result = new SoftwareFmDataComposite(parent, ICallback.Utils.<String>exception("Cannot internal browse"),//
+				browserService, dataStore, compositeConfig, //
 				actionStore, editorFactory, updateStore, //
 				listEditorStore, ICallback.Utils.rethrow(), //
 				Arrays.asList(jarButton, projectDetailsButton, projectSocialButton, projectTrainingButton, organisationButton));

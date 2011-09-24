@@ -18,6 +18,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.service.prefs.BackingStoreException;
 import org.softwareFm.configuration.SoftwareFmPropertyAnchor;
 import org.softwareFm.display.GuiBuilder;
+import org.softwareFm.display.IBrowserService;
 import org.softwareFm.display.SoftwareFmDataComposite;
 import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.actions.ActionStore;
@@ -34,6 +35,7 @@ import org.softwareFm.display.largeButton.ILargeButtonFactory;
 import org.softwareFm.display.largeButton.LargeButtonDefn;
 import org.softwareFm.display.lists.ListEditorStore;
 import org.softwareFm.display.smallButtons.SmallButtonStore;
+import org.softwareFm.eclipse.fixture.BrowserService;
 import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.jdtBinding.api.IBindingRipper;
@@ -82,6 +84,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	private IUpdateStore updateStore;
 	private IResourceGetter resourceGetter;
 	private String uuid;
+	private BrowserService browserService;
 
 	public SoftwareFmActivator() {
 	}
@@ -105,6 +108,10 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		smallButtonStore = null;
 		listEditorStore = null;
 		guiDataStore = null;
+		if (browserService != null) {
+			browserService.shutDown();
+			browserService = null;
+		}
 		if (selectedArtifactSelectionManager != null) {
 			Plugins.walkSelectionServices(new ICallback<ISelectionService>() {
 				@Override
@@ -179,6 +186,10 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 
 	private ActionStore getActionStore() {
 		return actionStore == null ? actionStore = Plugins.configureMainWithCallbacks(new ActionStore(), actionStoreConfiguratorId, "class", onException()) : actionStore;
+	}
+
+	private IBrowserService getFeedTransformer() {
+		return browserService == null ? browserService = new BrowserService() : browserService;
 	}
 
 	private SmallButtonStore getSmallButtonStore() {
@@ -264,7 +275,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		return repository == null ? repository = IRepositoryFacard.Utils.defaultFacardWithHeaders("SoftwareFm", getUuid()) : repository;
 	}
 
-	public SoftwareFmDataComposite makeComposite(Composite parent) {
+	public SoftwareFmDataComposite makeComposite(Composite parent, ICallback<String> internalBrowser) {
 		Display display = parent.getDisplay();
 		final GuiDataStore guiDataStore = getGuiDataStore();
 		getSelectedBindingManager().addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
@@ -306,7 +317,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 				return result;
 			}
 		});
-		SoftwareFmDataComposite composite = new SoftwareFmDataComposite(parent, guiDataStore, getCompositeConfig(display), getActionStore(), getEditorFactory(display), getUpdateStore(), getListEditorStore(), onException(), getLargeButtonDefns());
+		SoftwareFmDataComposite composite = new SoftwareFmDataComposite(parent, internalBrowser, getFeedTransformer(), guiDataStore, getCompositeConfig(display), getActionStore(), getEditorFactory(display), getUpdateStore(), getListEditorStore(), onException(), getLargeButtonDefns());
 		return composite;
 
 	}
