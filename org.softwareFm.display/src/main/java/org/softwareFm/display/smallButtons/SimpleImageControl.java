@@ -15,19 +15,22 @@ import org.softwareFm.utilities.maps.Maps;
 public class SimpleImageControl extends Canvas {
 
 	private boolean value;
-	private Map<SmallIconPosition, String> smallIconMap =Maps.newMap();
+	private Map<SmallIconPosition, String> smallIconMap = Maps.newMap();
 	public final ImageButtonConfig config;
+	private final boolean showBackground;
 
-	public SimpleImageControl(Composite parent, int style, final ImageButtonConfig config) {
+	public SimpleImageControl(Composite parent, int style, final ImageButtonConfig config, final boolean showBackground) {
 		super(parent, style);
 		this.config = config;
+		this.showBackground = showBackground;
 		addPaintListener(new PaintListener() {
 
 			@Override
 			public void paintControl(PaintEvent e) {
-				Image background = getImage(value ? config.depressedBackground : config.normalBackground);
-				e.gc.drawImage(background, 0, 0);
-
+				if (showBackground) {
+					Image background = getImage(value ? config.depressedBackground : config.normalBackground);
+					e.gc.drawImage(background, 0, 0);
+				}
 				Image mainImage = getImage(config.mainImage, isEnabled());
 				e.gc.drawImage(mainImage, 2, 2);
 				if (config.overlayImage != null) {
@@ -46,8 +49,9 @@ public class SimpleImageControl extends Canvas {
 			private Image getImage(String string) {
 				return getImage(string, true);
 			}
+
 			private Image getImage(String string, boolean enabled) {
-				String fullName = enabled?string: string+".inactive";
+				String fullName = enabled ? string : string + ".inactive";
 				Image result = config.imageRegistry.get(fullName);
 				if (result == null)
 					throw new IllegalStateException(MessageFormat.format(DisplayConstants.imageNotFound, fullName));
@@ -56,7 +60,7 @@ public class SimpleImageControl extends Canvas {
 		});
 	}
 
-	public void setSmallIconMap( Map<SmallIconPosition, String> smallIconMap) {
+	public void setSmallIconMap(Map<SmallIconPosition, String> smallIconMap) {
 		this.smallIconMap = smallIconMap;
 		layout();
 		redraw();
@@ -67,15 +71,16 @@ public class SimpleImageControl extends Canvas {
 	}
 
 	public void setValue(boolean value) {
-		this.value  =value;
+		this.value = value;
 		layout();
 		redraw();
 	}
+
 	@Override
 	public void setToolTipText(String string) {
 		super.setToolTipText(string);
 	}
-	
+
 	public void setSmallIcon(SmallIconPosition key, String string) {
 		this.smallIconMap.put(key, string);
 		layout();

@@ -17,9 +17,9 @@ public class SimpleImageButton implements IHasControl, ISmallDisplayer {
 
 	private final SimpleImageControl content;
 
-	public SimpleImageButton(IButtonParent parent, final ImageButtonConfig config) {
+	public SimpleImageButton(IButtonParent parent, final ImageButtonConfig config, boolean showBackground) {
 		config.validate();
-		this.content = new SimpleImageControl(parent.getButtonComposite(), SWT.NULL, config);
+		this.content = new SimpleImageControl(parent.getButtonComposite(), SWT.NULL, config, showBackground);
 		parent.buttonAdded(this);
 	}
 

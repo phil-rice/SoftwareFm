@@ -7,7 +7,7 @@ public class SmallButtonFactory implements ISmallButtonFactory {
 
 	@Override
 	public ISmallDisplayer create(IButtonParent parent, SmallButtonDefn smallButtonDefn, ImageButtonConfig config) {
-		return new SimpleImageButton(parent,  config);
+		return new SimpleImageButton(parent,  config, true);
 	}
 
 }

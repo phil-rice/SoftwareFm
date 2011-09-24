@@ -34,15 +34,23 @@ public class SoftwareFmView extends ViewPart {
 	 * This is a callback that will allow us to create the viewer and initialize it.
 	 */
 	@Override
-	public void createPartControl(Composite parent) {
+	public void createPartControl(final Composite parent) {
 		Composite composite = new Composite(parent, SWT.NULL);
 		composite.setLayout(new GridLayout(2, true));
 		SoftwareFmActivator activator = SoftwareFmActivator.getDefault();
 
 		final SoftwareFmDataComposite dataComposite = activator.makeComposite(composite, new ICallback<String>() {
 			@Override
-			public void process(String t) throws Exception {
-				browser.setUrl(t);
+			public void process(final String t) throws Exception {
+				parent.getDisplay().asyncExec(new Runnable() {
+					@Override
+					public void run() {
+						if (!browser.isDisposed()){
+							browser.setText(t);
+							System.out.println("browser.setText:\n" + t);
+						}
+					}
+				});
 			}
 		});
 
@@ -66,6 +74,7 @@ public class SoftwareFmView extends ViewPart {
 							@Override
 							public void run() {
 								String url = MessageFormat.format(pattern, firstItem);
+								System.out.println("Browser.setUrl(" + url +")");
 								browser.setUrl(url);
 							}
 						});

@@ -82,7 +82,7 @@ public class JavadocDialog extends Dialog {
 	}
 
 	private SimpleImageButton addCopyToEclipseButton(CompositeConfig compositeConfig, final IDataGetter dataGetter, final TitleAndText parent, boolean onlyEnableIfHasValue) {
-		SimpleImageButton simpleImageButton = new SimpleImageButton(parent, compositeConfig.imageButtonConfig.withImage(ArtifactsAnchor.jarCopyFromSoftwareFmKey));
+		SimpleImageButton simpleImageButton = new SimpleImageButton(parent, compositeConfig.imageButtonConfig.withImage(ArtifactsAnchor.jarCopyFromSoftwareFmKey), false);
 		simpleImageButton.addListener(new IImageButtonListener() {
 			@Override
 			public void buttonPressed(IHasControl button) throws Exception {
@@ -98,7 +98,7 @@ public class JavadocDialog extends Dialog {
 	}
 
 	private SimpleImageButton addCopyToSoftwareFmButton(CompositeConfig compositeConfig, final ActionContext actionContext, final ActionData actionData, final TitleAndText parent, boolean onlyEnableIfHasValue) {
-		SimpleImageButton simpleImageButton = new SimpleImageButton(parent, compositeConfig.imageButtonConfig.withImage(ArtifactsAnchor.jarCopyToSoftwareFmKey));
+		SimpleImageButton simpleImageButton = new SimpleImageButton(parent, compositeConfig.imageButtonConfig.withImage(ArtifactsAnchor.jarCopyToSoftwareFmKey) ,false);
 		simpleImageButton.addListener(new IImageButtonListener() {
 			@Override
 			public void buttonPressed(IHasControl button) throws Exception {

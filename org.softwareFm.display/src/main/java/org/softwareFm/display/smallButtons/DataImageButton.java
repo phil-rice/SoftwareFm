@@ -13,7 +13,7 @@ public class DataImageButton extends SimpleImageButton{
 	private final String dataKey;
 
 	public DataImageButton(IButtonParent parent, ImageButtonConfig config, String dataKey) {
-		super(parent, config);
+		super(parent, config, true);
 		this.dataKey = dataKey;
 	}
 	

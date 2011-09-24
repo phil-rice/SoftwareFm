@@ -50,8 +50,8 @@ public class TitleAndText extends TitleAnd {
 				IResourceGetter resourceGetter = IResourceGetter.Utils.noResources();
 				ImageButtonConfig config = ImageButtonConfig.forTests(imageRegistry);
 				TitleAndText titleAndText = new TitleAndText(new CompositeConfig(from.getDisplay(), new SoftwareFmLayout(), imageRegistry, resourceGetter), from, "Value", false);
-				new SimpleImageButton(titleAndText, config.withImage(ArtifactsAnchor.jarKey));
-				new SimpleImageButton(titleAndText, config.withImage(ArtifactsAnchor.projectKey));
+				new SimpleImageButton(titleAndText, config.withImage(ArtifactsAnchor.jarKey), false);
+				new SimpleImageButton(titleAndText, config.withImage(ArtifactsAnchor.projectKey), false);
 				return titleAndText.getComposite();
 			}
 		}) ;

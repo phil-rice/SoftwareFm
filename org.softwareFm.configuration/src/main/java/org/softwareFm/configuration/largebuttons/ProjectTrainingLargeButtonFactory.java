@@ -10,6 +10,12 @@ public class ProjectTrainingLargeButtonFactory extends LargeButtonFactory {
 	@Override
 	public LargeButtonDefn apply(GuiBuilder guiBuilder) throws Exception {
 		return guiBuilder.largeButton("largeButton.project.training", //
+				guiBuilder.smallButton("smallButton.project.training.details", "smallButton.project.details.title", "smallButton.data", ArtifactsAnchor.projectKey, //
+						guiBuilder.displayer("displayer.url").title("project.name.title").data(dataProjectName).tooltip(dataJarProjectUrl).//
+								guard(dataRawHexDigest, hexDigestMissingTitle, dataJarProjectUrl, projectUrlMissingTitle).actions(//
+										browseButton(guiBuilder, dataJarProjectUrl),//
+										editTextButton(guiBuilder, ArtifactsAnchor.projectKey))).data(dataJarProjectUrl),//
+				
 				guiBuilder.smallButton("smallButton.project.tutorials", "smallButton.project.tutorials.title", "smallButton.data", ArtifactsAnchor.tutorialsKey,//
 						guiBuilder.listDisplayer("displayer.list", "listEditorId.nameAndEmail").guard(dataJarProjectUrl, blankKey).title("project.tutorials.title").data(dataProjectTutorials).//
 								actions(makeMainListActions(guiBuilder, ArtifactsAnchor.tutorialsKey, dataProjectTutorials)).//

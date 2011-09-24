@@ -11,10 +11,15 @@ public class ProjectSocialLargeButtonFactory extends LargeButtonFactory {
 	@Override
 	public LargeButtonDefn apply(GuiBuilder guiBuilder) throws Exception {
 		return guiBuilder.largeButton("largeButton.project.social", //
+				guiBuilder.smallButton("smallButton.project.social.details", "smallButton.project.details.title", "smallButton.data", ArtifactsAnchor.projectKey, //
+						guiBuilder.displayer("displayer.url").title("project.name.title").data(dataProjectName).tooltip(dataJarProjectUrl).//
+								guard(dataRawHexDigest, hexDigestMissingTitle, dataJarProjectUrl, projectUrlMissingTitle).actions(//
+										browseButton(guiBuilder, dataJarProjectUrl),//
+										editTextButton(guiBuilder, ArtifactsAnchor.projectKey))).data(dataJarProjectUrl),//
 				guiBuilder.smallButton("smallButton.project.rss", "smallButton.project.rss.title", "smallButton.data", ArtifactsAnchor.rssKey,//
 						guiBuilder.listDisplayer("displayer.list", "listEditorId.tweet").guard(dataJarProjectUrl, blankKey).title("project.rss.add").data(dataProjectRss).//
 								actions(makeMainListActions(guiBuilder, ArtifactsAnchor.rssKey, dataProjectRss)).//
-								listActions(guiBuilder.action("action.text.internal.browse", GeneralAnchor.browseKey).tooltip("action.browse.tooltip"), //
+								listActions(guiBuilder.action("action.rss.browse", GeneralAnchor.browseKey).tooltip("action.browse.tooltip"), //
 										listEditAction(guiBuilder, ArtifactsAnchor.rssKey),//
 										listDeleteAction(guiBuilder, ArtifactsAnchor.rssKey))).data(dataProjectRss),//
 				guiBuilder.smallButton("smallButton.project.twitter", "smallButton.project.twitter.title", "smallButton.data", ArtifactsAnchor.twitterKey,//

@@ -58,7 +58,7 @@ public class ActionDefn {
 	}
 
 	public IHasControl createButton(ImageButtonConfig config, IButtonParent buttonParent, IImageButtonListener imageButtonListener) {
-		SimpleImageButton simpleImageButton = new SimpleImageButton(buttonParent, config.withImage(mainImageId, overlayId));
+		SimpleImageButton simpleImageButton = new SimpleImageButton(buttonParent, config.withImage(mainImageId, overlayId), false);
 		simpleImageButton.addListener(imageButtonListener);
 		return simpleImageButton;
 	}

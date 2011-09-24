@@ -14,7 +14,7 @@ import org.softwareFm.utilities.strings.Strings;
 public class JarSimpleImageButton extends SimpleImageButton{
 
 	public JarSimpleImageButton(IButtonParent parent, ImageButtonConfig config) {
-		super(parent, config);
+		super(parent, config, true);
 	}
 	
 	@Override

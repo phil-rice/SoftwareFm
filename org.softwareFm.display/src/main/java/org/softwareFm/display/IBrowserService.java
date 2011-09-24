@@ -5,7 +5,7 @@ import java.util.concurrent.Future;
 
 public interface IBrowserService {
 
-	Future<String> processRssUrl(String url, IFeedCallback callback);
+	Future<String> processUrl(String url, IFeedCallback callback);
 
 
 }

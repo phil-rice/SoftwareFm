@@ -105,7 +105,7 @@ public class ShowAllSimpleImageButtons {
 			}
 
 			private SimpleImageButton makeJarVarient(IButtonParent buttonParent, ImageButtonConfig config, Map<SmallIconPosition, String> map, boolean state) {
-				SimpleImageButton button = new SimpleImageButton(buttonParent, config);
+				SimpleImageButton button = new SimpleImageButton(buttonParent, config, true);
 				button.setSmallIconMap(map);
 				button.getControl().setLayoutData(new RowData(config.layout.smallButtonWidth, config.layout.smallButtonHeight));
 				button.setValue(state);
@@ -128,14 +128,14 @@ public class ShowAllSimpleImageButtons {
 			}
 
 			private void makeOneRow(IButtonParent buttonParent, ImageButtonConfig config, String artifactKey, boolean state) {
-				SimpleImageButton button = new SimpleImageButton(buttonParent, config.withImage(artifactKey));
+				SimpleImageButton button = new SimpleImageButton(buttonParent, config.withImage(artifactKey), true);
 				button.setValue(state);
 				button.getControl().setLayoutData(new RowData(config.layout.smallButtonWidth, config.layout.smallButtonHeight));
 				for (String overlay : Images.getNamesFor(OverlaysAnchor.class, "add.png")) {
-					SimpleImageButton overlayButton = new SimpleImageButton(buttonParent, config.withImage(artifactKey, "overlay." + overlay));
+					SimpleImageButton overlayButton = new SimpleImageButton(buttonParent, config.withImage(artifactKey, "overlay." + overlay), true);
 					overlayButton.setValue(state);
 					overlayButton.getControl().setLayoutData(new RowData(config.layout.smallButtonWidth, config.layout.smallButtonHeight));
-					
+
 				}
 			}
 

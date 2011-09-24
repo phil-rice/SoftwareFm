@@ -55,7 +55,7 @@ public class Strings {
 	}
 
 	public static String oneLine(Object object) {
-		return nullSafeToString(object).replaceAll("\n", " ");
+		return nullSafeToString(object).replaceAll("\n", " ").replaceAll("\r"," ");
 	}
 
 	public static IAggregator<String, String> strJoin(final String separator) {

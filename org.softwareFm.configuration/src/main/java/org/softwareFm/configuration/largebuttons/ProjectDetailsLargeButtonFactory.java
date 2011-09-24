@@ -14,8 +14,7 @@ public class ProjectDetailsLargeButtonFactory extends LargeButtonFactory {
 						guiBuilder.displayer("displayer.url").title("project.name.title").data(dataProjectName).tooltip(dataJarProjectUrl).//
 								guard(dataRawHexDigest, hexDigestMissingTitle, dataJarProjectUrl, projectUrlMissingTitle).actions(//
 										browseButton(guiBuilder, dataJarProjectUrl),//
-										editTextButton(guiBuilder, ArtifactsAnchor.projectKey))).data(dataJarProjectUrl).//
-						ctrlClickAction("action.text.browse", "data.jar.projectUrl").tooltip("smallButton.project.details.tooltip"),//
+										editTextButton(guiBuilder, ArtifactsAnchor.projectKey))).data(dataJarProjectUrl),//
 				guiBuilder.smallButton("smallButton.project.issues", "smallButton.project.issues.title", "smallButton.data", ArtifactsAnchor.issuesKey,//
 						guiBuilder.displayer("displayer.url").guard(dataJarProjectUrl, blankKey).title("project.issues.title").data(dataProjectIssues).tooltip("project.issues.tooltip").actions(//
 								browseButton(guiBuilder), //
