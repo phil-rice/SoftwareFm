@@ -35,6 +35,7 @@ public abstract class LargeButtonFactory implements ILargeButtonFactory {
 
 	public static final String dataOrganisationName = "data.organisation.name";
 	public static final String dataOrganisationTweets = "data.organisation.tweets";
+	public static final String dataOrganisationRss = "data.organisation.rss";
 
 	protected ActionDefn[] makeMainListActions(GuiBuilder guiBuilder, String artifactId, String dataId) {
 		return new ActionDefn[] { guiBuilder.//
@@ -54,8 +55,11 @@ public abstract class LargeButtonFactory implements ILargeButtonFactory {
 		return guiBuilder.action("action.text.edit", artifactId, "overlay.edit").tooltip("action.edit.tooltip");
 	}
 
-	protected ActionDefn editUrlButton(GuiBuilder guiBuilder, String artifactId, String alternativeDataId) {
-		return guiBuilder.action("action.text.edit", artifactId, "overlay.edit").tooltip("action.edit.url.tooltip").params(alternativeDataId);
+	protected ActionDefn editNameButton(GuiBuilder guiBuilder, String artifactId) {
+		return guiBuilder.action("action.text.edit", artifactId, "overlay.edit").tooltip("action.edit.name.tooltip");
+	}
+	protected ActionDefn editUrlButton(GuiBuilder guiBuilder,  String dataId) {
+		return guiBuilder.action("action.text.edit", GeneralAnchor.browseKey, "overlay.edit").tooltip("action.edit.url.tooltip").params(dataId);
 	}
 	protected ActionDefn browseButton(GuiBuilder guiBuilder) {
 		return guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).tooltip("action.browse.tooltip");

@@ -23,13 +23,16 @@ public class JarLargeButtonFactory extends LargeButtonFactory {
 								actions(browseButton(guiBuilder, dataRawJavadoc)), //
 						guiBuilder.displayer("displayer.text").title("project.name.title").data(dataProjectName).//
 								guard(dataRawHexDigest, blankKey, dataJarProjectUrl, projectUrlMissingTitle, dataProjectName, projectNameMissingTitle).//
-								actions(editUrlButton(guiBuilder, ArtifactsAnchor.projectKey, dataJarProjectUrl),//
+								actions(
+										editUrlButton(guiBuilder, dataJarProjectUrl),//
+										editNameButton(guiBuilder,  ArtifactsAnchor.projectKey),//
 										browseButton(guiBuilder, dataJarProjectUrl)//
 								).tooltip("data.jar.project.url"),//
 						guiBuilder.displayer("displayer.text").title("organisation.name.title").data(dataOrganisationName).//
 								guard(dataRawHexDigest, blankKey, dataJarOrganisationUrl, organisationUrlMissingTitle, dataOrganisationName, organisationNameMissingTitle).//
 								actions(//
-								editUrlButton(guiBuilder, ArtifactsAnchor.organisationKey, dataJarOrganisationUrl),//
+								editUrlButton(guiBuilder, dataJarOrganisationUrl),//
+								editNameButton(guiBuilder,  ArtifactsAnchor.organisationKey),//
 								browseButton(guiBuilder, dataJarOrganisationUrl)).//
 								tooltip("data.jar.organisation.url")//
 						));

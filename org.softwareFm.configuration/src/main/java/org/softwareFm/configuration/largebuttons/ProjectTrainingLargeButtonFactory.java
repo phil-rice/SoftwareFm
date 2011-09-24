@@ -12,10 +12,11 @@ public class ProjectTrainingLargeButtonFactory extends LargeButtonFactory {
 		return guiBuilder.largeButton("largeButton.project.training", //
 				guiBuilder.smallButton("smallButton.project.training.details", "smallButton.project.details.title", "smallButton.data", ArtifactsAnchor.projectKey, //
 						guiBuilder.displayer("displayer.url").title("project.name.title").data(dataProjectName).tooltip(dataJarProjectUrl).//
-								guard(dataRawHexDigest, hexDigestMissingTitle, dataJarProjectUrl, projectUrlMissingTitle).actions(//
-										browseButton(guiBuilder, dataJarProjectUrl),//
-										editTextButton(guiBuilder, ArtifactsAnchor.projectKey))).data(dataJarProjectUrl),//
-				
+								guard(dataRawHexDigest, hexDigestMissingTitle, dataJarProjectUrl, projectUrlMissingTitle).actions(
+										editUrlButton(guiBuilder, dataJarProjectUrl),//
+										editNameButton(guiBuilder,  ArtifactsAnchor.projectKey),//
+										browseButton(guiBuilder, dataJarProjectUrl)//
+								)).data(dataProjectName),//
 				guiBuilder.smallButton("smallButton.project.tutorials", "smallButton.project.tutorials.title", "smallButton.data", ArtifactsAnchor.tutorialsKey,//
 						guiBuilder.listDisplayer("displayer.list", "listEditorId.tutorials").guard(dataJarProjectUrl, blankKey).title("project.tutorials.title").data(dataProjectTutorials).//
 								actions(makeMainListActions(guiBuilder, ArtifactsAnchor.tutorialsKey, dataProjectTutorials)).//

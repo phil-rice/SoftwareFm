@@ -13,9 +13,11 @@ public class ProjectSocialLargeButtonFactory extends LargeButtonFactory {
 		return guiBuilder.largeButton("largeButton.project.social", //
 				guiBuilder.smallButton("smallButton.project.social.details", "smallButton.project.details.title", "smallButton.data", ArtifactsAnchor.projectKey, //
 						guiBuilder.displayer("displayer.url").title("project.name.title").data(dataProjectName).tooltip(dataJarProjectUrl).//
-								guard(dataRawHexDigest, hexDigestMissingTitle, dataJarProjectUrl, projectUrlMissingTitle).actions(//
-										browseButton(guiBuilder, dataJarProjectUrl),//
-										editTextButton(guiBuilder, ArtifactsAnchor.projectKey))).data(dataJarProjectUrl),//
+								guard(dataRawHexDigest, hexDigestMissingTitle, dataJarProjectUrl, projectUrlMissingTitle).actions(
+										editUrlButton(guiBuilder, dataJarProjectUrl),//
+										editNameButton(guiBuilder,  ArtifactsAnchor.projectKey),//
+										browseButton(guiBuilder, dataJarProjectUrl)//
+								)).data(dataProjectName),//
 				guiBuilder.smallButton("smallButton.project.rss", "smallButton.project.rss.title", "smallButton.data", ArtifactsAnchor.rssKey,//
 						guiBuilder.listDisplayer("displayer.list", "listEditorId.rss").guard(dataJarProjectUrl, blankKey).title("project.rss.add").data(dataProjectRss).//
 								actions(makeMainListActions(guiBuilder, ArtifactsAnchor.rssKey, dataProjectRss)).//

@@ -19,7 +19,7 @@ import org.softwareFm.display.lists.IListEditor;
 import org.softwareFm.display.simpleButtons.IButtonParent;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
-public class ListDisplayer  implements IDisplayer {
+public class ListDisplayer implements IDisplayer {
 
 	private final CompositeConfig compositeConfig;
 	private final Composite content;
@@ -41,22 +41,24 @@ public class ListDisplayer  implements IDisplayer {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void data(IDataGetter  dataGetter, DisplayerDefn defn, String entity, String url) {
+	public void data(IDataGetter dataGetter, DisplayerDefn defn, String entity, String url) {
 		Swts.removeAllChildren(listComposite);
 		Object dataFor = dataGetter.getDataFor(defn.dataKey);
 		if (dataFor != null) {
 			if (!(dataFor instanceof List))
 				throw new IllegalStateException(MessageFormat.format(DisplayConstants.expectedAList, dataFor, dataFor.getClass(), defn));
-			List<Object> dataList = (List<Object>) dataFor;
+			List<String> dataList = (List<String>) dataFor;
+			boolean actuallyEmpty = dataList.size() == 1 && dataList.get(0).trim().length() == 0;
 			int index = 0;
-			for (Object value : dataList) {
-				IButtonParent buttonParent = listEditor.makeLineHasControl(defn, compositeConfig, listComposite, index, value);
-				defn.createActions(actionStore, actionContext, this, buttonParent, defn.listActionDefns, index);
-				index++;
-			}
+			if (!actuallyEmpty)
+				for (Object value : dataList) {
+					IButtonParent buttonParent = listEditor.makeLineHasControl(defn, compositeConfig, listComposite, index, value);
+					defn.createActions(actionStore, actionContext, this, buttonParent, defn.listActionDefns, index);
+					index++;
+				}
 		}
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(listComposite);
-		
+
 		content.getParent().getParent().layout();
 		content.getParent().getParent().redraw();
 

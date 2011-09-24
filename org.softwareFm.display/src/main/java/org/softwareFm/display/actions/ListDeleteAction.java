@@ -20,7 +20,8 @@ public class ListDeleteAction implements IAction {
 			List<String> newList = Lists.remove(currentList, index);
 			if (newList.size()==0)
 				newList = Arrays.asList(" ");
-			actionContext.updateStore.update(actionData, key, newList.toArray(new String[0]));
+			String[] array = newList.toArray(new String[0]);
+			actionContext.updateStore.update(actionData, key, array);
 		}
 	}
 
