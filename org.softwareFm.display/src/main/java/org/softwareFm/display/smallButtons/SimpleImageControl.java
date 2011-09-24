@@ -34,7 +34,7 @@ public class SimpleImageControl extends Canvas {
 				Image mainImage = getImage(config.mainImage, isEnabled());
 				e.gc.drawImage(mainImage, 2, 2);
 				if (config.overlayImage != null) {
-					Image overLayImage = getImage(config.overlayImage);
+					Image overLayImage = getImage(config.overlayImage, isEnabled());
 					e.gc.drawImage(overLayImage, 2, 2);
 				}
 				for (SmallIconPosition pos : SmallIconPosition.values()) {

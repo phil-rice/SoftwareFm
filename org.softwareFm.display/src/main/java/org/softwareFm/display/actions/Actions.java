@@ -43,9 +43,13 @@ public class Actions {
 
 	public static String getString(ActionContext actionContext, String key, int index) {
 		Object data = actionContext.dataGetter.getDataFor(key);
+		return getStringOrItemOfList(data, index);
+	}
+	public static String getStringOrItemOfList(Object data, int index) {
 		if (data instanceof List)
 			return Lists.nullSafe((List<String>) data).get(index);
 		else
 			return Strings.nullSafeToString(data);
 	}
+
 }

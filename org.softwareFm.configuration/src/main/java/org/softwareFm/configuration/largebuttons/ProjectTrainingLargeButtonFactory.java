@@ -17,12 +17,12 @@ public class ProjectTrainingLargeButtonFactory extends LargeButtonFactory {
 										editTextButton(guiBuilder, ArtifactsAnchor.projectKey))).data(dataJarProjectUrl),//
 				
 				guiBuilder.smallButton("smallButton.project.tutorials", "smallButton.project.tutorials.title", "smallButton.data", ArtifactsAnchor.tutorialsKey,//
-						guiBuilder.listDisplayer("displayer.list", "listEditorId.nameAndEmail").guard(dataJarProjectUrl, blankKey).title("project.tutorials.title").data(dataProjectTutorials).//
+						guiBuilder.listDisplayer("displayer.list", "listEditorId.tutorials").guard(dataJarProjectUrl, blankKey).title("project.tutorials.title").data(dataProjectTutorials).//
 								actions(makeMainListActions(guiBuilder, ArtifactsAnchor.tutorialsKey, dataProjectTutorials)).//
 								listActions(listEditAction(guiBuilder, ArtifactsAnchor.tutorialsKey), listDeleteAction(guiBuilder, ArtifactsAnchor.tutorialsKey))).data(dataProjectTutorials),// ), //
 
 				guiBuilder.smallButton("smallButton.project.blogs", "smallButton.project.blogs.title", "smallButton.data", ArtifactsAnchor.tutorialsKey,//
-						guiBuilder.listDisplayer("displayer.list", "listEditorId.nameAndEmail").guard(dataJarProjectUrl, blankKey).title("project.blogs.title").data(dataProjectBlogs).//
+						guiBuilder.listDisplayer("displayer.list", "listEditorId.blogs").guard(dataJarProjectUrl, blankKey).title("project.blogs.title").data(dataProjectBlogs).//
 								actions(makeMainListActions(guiBuilder, ArtifactsAnchor.tutorialsKey, dataProjectBlogs)).//
 								listActions(listEditAction(guiBuilder, ArtifactsAnchor.tutorialsKey), listDeleteAction(guiBuilder, ArtifactsAnchor.tutorialsKey))).data(dataProjectBlogs).//
 						ctrlClickAction("action.text.browse", dataProjectIssues));

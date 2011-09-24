@@ -10,6 +10,10 @@
 	  	              "project.url": "Some Url",
 		              "mailingLists": ["a$b"],
 		              "issues": "http://bugs.sun.com/bugdatabase/index.jsp"
-		              "tweets": ["tweet1", "tweet2"]},
+		              "tweets": ["tweet1", "tweet2"],
+			      "rss": ["someRssFeed"],
+	                      "tutorials": ["tut1", "tut2"],
+                              "blogs":["blog1", "blog2"]
+},
 	"organisation":  {"name": "Oracle"}
  }

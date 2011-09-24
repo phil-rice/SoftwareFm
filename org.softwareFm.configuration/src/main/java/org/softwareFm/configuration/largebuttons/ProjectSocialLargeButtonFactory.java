@@ -17,7 +17,7 @@ public class ProjectSocialLargeButtonFactory extends LargeButtonFactory {
 										browseButton(guiBuilder, dataJarProjectUrl),//
 										editTextButton(guiBuilder, ArtifactsAnchor.projectKey))).data(dataJarProjectUrl),//
 				guiBuilder.smallButton("smallButton.project.rss", "smallButton.project.rss.title", "smallButton.data", ArtifactsAnchor.rssKey,//
-						guiBuilder.listDisplayer("displayer.list", "listEditorId.tweet").guard(dataJarProjectUrl, blankKey).title("project.rss.add").data(dataProjectRss).//
+						guiBuilder.listDisplayer("displayer.list", "listEditorId.rss").guard(dataJarProjectUrl, blankKey).title("project.rss.add").data(dataProjectRss).//
 								actions(makeMainListActions(guiBuilder, ArtifactsAnchor.rssKey, dataProjectRss)).//
 								listActions(guiBuilder.action("action.rss.browse", GeneralAnchor.browseKey).tooltip("action.browse.tooltip"), //
 										listEditAction(guiBuilder, ArtifactsAnchor.rssKey),//
@@ -29,7 +29,7 @@ public class ProjectSocialLargeButtonFactory extends LargeButtonFactory {
 										listEditAction(guiBuilder, ArtifactsAnchor.twitterKey),//
 										listDeleteAction(guiBuilder, ArtifactsAnchor.twitterKey))).data(dataProjectTweets),//
 				guiBuilder.smallButton("smallButton.project.facebook", "smallButton.project.facebook.title", "smallButton.data", ArtifactsAnchor.facebookKey,//
-						guiBuilder.listDisplayer("displayer.list", "listEditorId.tweet").guard(dataJarProjectUrl, blankKey).title("project.facebook.add").data(dataProjectFacebook).//
+						guiBuilder.listDisplayer("displayer.list", "listEditorId.facebook").guard(dataJarProjectUrl, blankKey).title("project.facebook.add").data(dataProjectFacebook).//
 								actions(makeMainListActions(guiBuilder, ArtifactsAnchor.facebookKey, dataProjectFacebook)).//
 								listActions(guiBuilder.action("action.list.viewTweets", GeneralAnchor.browseKey).tooltip("action.browse.tooltip"), //
 										listEditAction(guiBuilder, ArtifactsAnchor.facebookKey),//
