@@ -54,11 +54,11 @@ public class SmallButtonDefnTest extends TestCase {
 		IllegalArgumentException e = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
 			@Override
 			public void run() {
-				defn.data("someData");
+				defn.data("someOtherData");
 			}
 		});
-		assertEquals("Cannot set value of tooltip twice. Current value [someTooltip]. New value [someOtherTooltip]", e.getMessage());
-		assertEquals("someTooltip", defn.tooltip);
+		assertEquals("Cannot set value of dataId twice. Current value [someData]. New value [someOtherData]", e.getMessage());
+		assertEquals("someData", defn.dataId);
 	}
 
 	public void testControlClickAction() {

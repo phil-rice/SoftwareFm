@@ -13,7 +13,8 @@ public class OrganisationLargeButtonFactory extends LargeButtonFactory {
 		return guiBuilder.largeButton("largeButton.organisation", //
 				guiBuilder.smallButton("smallButton.organisation.details", "smallButton.organisation.details.title", "smallButton.data", ArtifactsAnchor.organisationKey,//
 						guiBuilder.displayer("displayer.url").title("organisation.url.title").data(dataOrganisationName).//
-								guard(dataRawHexDigest, hexDigestMissingTitle, dataJarOrganisationUrl, organisationUrlMissingTitle).actions(//
+						guard(dataRawHexDigest, blankKey, dataJarOrganisationUrl, organisationUrlMissingTitle, dataOrganisationName, organisationNameMissingTitle).//
+						actions(//
 										editUrlButton(guiBuilder, dataJarOrganisationUrl),//
 										editNameButton(guiBuilder, ArtifactsAnchor.organisationKey),//
 										browseButton(guiBuilder, dataJarOrganisationUrl)), //
