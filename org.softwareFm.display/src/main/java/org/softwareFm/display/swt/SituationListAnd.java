@@ -15,16 +15,20 @@ import org.softwareFm.utilities.functions.IFunction1;
 
 public class SituationListAnd implements IHasComposite {
 	private final Composite content;
+	private List situationList;
+	private ISituationDisplayer situationDisplayer;
 
-	public SituationListAnd(Composite parent, boolean selectFirst, Callable<? extends Iterable<String>> situations, IFunction1<Composite, IHasControlWithSelectedItemListener> childWindowCreator) {
+	public SituationListAnd(Composite parent, Callable<? extends Iterable<String>> situations, IFunction1<Composite, ISituationDisplayer> childWindowCreator) {
 		this.content = new Composite(parent, SWT.NULL);
 		try {
 			content.setLayout(new GridLayout(2, true));
-			final List situationList = new List(content, SWT.NULL);
+			situationList = new List(content, SWT.NULL);
 			Iterable<String> list = situations.call();
 			for (String object : list)
 				situationList.add(object);
-			final IHasControlWithSelectedItemListener situationDisplayer = childWindowCreator.apply(content);
+			situationDisplayer = childWindowCreator.apply(content);
+			Control control = situationDisplayer.getControl();
+			control.setLayoutData(Swts.makeGrabHorizonalAndFillGridData());
 			SelectionAdapter listener = new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -33,17 +37,16 @@ public class SituationListAnd implements IHasComposite {
 			};
 			situationList.addSelectionListener(listener);
 			situationList.setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
-			Control control = situationDisplayer.getControl();
-			control.setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
-			if (selectFirst) {
-				situationList.select(0);
-				updateSituation(situationList, situationDisplayer);
-			}
-			control.setLayoutData(Swts.makeGrabHorizonalAndFillGridData());
+
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
 
+	}
+
+	public void selectFirst() {
+		situationList.select(0);
+		updateSituation(situationList, situationDisplayer);
 	}
 
 	@Override
@@ -56,7 +59,7 @@ public class SituationListAnd implements IHasComposite {
 		return content;
 	}
 
-	private void updateSituation(final List situationList, final IHasControlWithSelectedItemListener situationDisplayer) {
+	private void updateSituation(final List situationList, final ISituationDisplayer situationDisplayer) {
 		try {
 			int index = situationList.getSelectionIndex();
 			String item = index == -1 ? null : situationList.getItem(index);

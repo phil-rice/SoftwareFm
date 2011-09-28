@@ -21,6 +21,7 @@ public class NukeJavadocAndSourceAction implements IAction {
 		nuke(actionContext, "source");
 	}
 
+	@SuppressWarnings("unchecked")
 	private void nuke(ActionContext actionContext, String artifact) throws Exception {
 		IDataGetter dataGetter = actionContext.dataGetter;
 		ICallback<String> callback = (ICallback<String>) dataGetter.getDataFor("data.raw.jar." + artifact + "Mutator");

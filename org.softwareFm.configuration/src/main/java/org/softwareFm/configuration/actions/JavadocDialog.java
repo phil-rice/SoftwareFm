@@ -84,6 +84,7 @@ public class JavadocDialog extends Dialog {
 	private SimpleImageButton addCopyToEclipseButton(CompositeConfig compositeConfig, final IDataGetter dataGetter, final TitleAndText parent, boolean onlyEnableIfHasValue) {
 		SimpleImageButton simpleImageButton = new SimpleImageButton(parent, compositeConfig.imageButtonConfig.withImage(ArtifactsAnchor.jarCopyFromSoftwareFmKey), false);
 		simpleImageButton.addListener(new IImageButtonListener() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public void buttonPressed(IHasControl button) throws Exception {
 				ICallback<String> javadocMutator = (ICallback<String>) dataGetter.getDataFor("data.raw.jar.javadocMutator");

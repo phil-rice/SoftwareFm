@@ -1,8 +1,10 @@
 package org.softwareFm.utilities.strings;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.softwareFm.utilities.aggregators.IAggregator;
+import org.softwareFm.utilities.collections.Iterables;
 import org.softwareFm.utilities.functions.IFunction1;
 
 public class Strings {
@@ -55,7 +57,7 @@ public class Strings {
 	}
 
 	public static String oneLine(Object object) {
-		return nullSafeToString(object).replaceAll("\n", " ").replaceAll("\r"," ");
+		return nullSafeToString(object).replaceAll("\n", " ").replaceAll("\r", " ");
 	}
 
 	public static IAggregator<String, String> strJoin(final String separator) {
@@ -157,5 +159,27 @@ public class Strings {
 		String toString = object.toString();
 		return toString.length() > 0;
 	}
+
+	public static String oneLineLowWhiteSpace(String value) {
+		return Iterables.aggregate(Arrays.asList(value.split("\n")), new IAggregator<String, String>() {
+			private final StringBuilder builder = new StringBuilder();
+
+			@Override
+			public void add(String t) {
+				String trimmed = t.trim();
+				if (trimmed.length() > 0) {
+					if (builder.length() > 0)
+						builder.append(" ");
+					builder.append(trimmed);
+				}
+			}
+
+			@Override
+			public String result() {
+				return builder.toString();
+			}
+		});
+	}
+
 
 }

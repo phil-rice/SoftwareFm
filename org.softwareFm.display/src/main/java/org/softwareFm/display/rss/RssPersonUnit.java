@@ -6,7 +6,7 @@ import java.util.concurrent.Callable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.display.AllSoftwareFmDisplayTests;
-import org.softwareFm.display.swt.IHasControlWithSelectedItemListener;
+import org.softwareFm.display.swt.ISituationDisplayer;
 import org.softwareFm.display.swt.SituationListAnd;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.collections.Files;
@@ -16,7 +16,7 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class RssPersonUnit {
 	public static void main(String[] args) {
-		final File root = new File("src/test/resources/org/softwareFm/display/rss");
+		final File root = new File("../org.softwareFm.display/src/test/resources/org/softwareFm/display/rss");
 		Swts.display("Rss Person Unit", new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
@@ -26,14 +26,16 @@ public class RssPersonUnit {
 						return Iterables.map(Files.walkChildrenOf(root, Files.extensionFilter("xml")), Files.toFileName());
 					}
 				};
-				IFunction1<Composite, IHasControlWithSelectedItemListener> childWindowCreator = new IFunction1<Composite, IHasControlWithSelectedItemListener>() {
+				IFunction1<Composite, ISituationDisplayer> childWindowCreator = new IFunction1<Composite, ISituationDisplayer>() {
 					@Override
-					public IHasControlWithSelectedItemListener apply(final Composite from) throws Exception {
+					public ISituationDisplayer apply(final Composite from) throws Exception {
 						RssDisplay rssDisplay = new RssDisplay(from, SWT.BORDER, root, IResourceGetter.Utils.noResources().with(AllSoftwareFmDisplayTests.class, "Test"));
 						return rssDisplay;
 					}
 				};
-				return new SituationListAnd(from, true, situations, childWindowCreator).getComposite();
+				SituationListAnd result = new SituationListAnd(from,  situations, childWindowCreator);
+				result.selectFirst();
+				return result.getComposite();
 			}
 		});
 	}

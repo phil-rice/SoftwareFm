@@ -13,12 +13,11 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.softwareFm.display.constants.DisplayConstants;
-import org.softwareFm.display.swt.IHasControlWithSelectedItemListener;
+import org.softwareFm.display.swt.ISituationDisplayer;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.utilities.indent.Indent;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
-public class RssDisplay implements IHasControlWithSelectedItemListener {
+public class RssDisplay implements ISituationDisplayer {
 
 	private final Composite content;
 	private final File root;
@@ -36,12 +35,12 @@ public class RssDisplay implements IHasControlWithSelectedItemListener {
 			};
 		};
 		label = new Label(main, SWT.NULL);
-		this.content = new Composite(main, SWT.NULL){
+		this.content = new Composite(main, SWT.NULL) {
 			@Override
 			public String toString() {
 				return "rssDisplay.content: " + super.toString();
 			};
-			
+
 		};
 		content.setLayoutData(Swts.makeGrabHorizonalAndFillGridData());
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(main);
@@ -65,9 +64,9 @@ public class RssDisplay implements IHasControlWithSelectedItemListener {
 		}
 		Element root = doc.getRootElement();
 		Element channel = root.getChild("channel");
-		String text = getTitle(channel);
-		label.setText(MessageFormat.format(IResourceGetter.Utils.getOrException(resourceGetter, DisplayConstants.rssTitleKey), text));
+		populateTopRow(channel);
 		if (channel != null) {
+			@SuppressWarnings("unchecked")
 			List<Element> items = channel.getChildren("item");
 			for (Element itemElement : items)
 				new RssItemComposite(content, SWT.BORDER, itemElement);
@@ -77,24 +76,22 @@ public class RssDisplay implements IHasControlWithSelectedItemListener {
 		content.getParent().redraw();
 		content.layout();
 		content.redraw();
+		System.out.println("Computed: " + content.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 	}
 
-	private String getTitle(Element channel) {
+	private void populateTopRow(Element channel) {
+		String text = getValue(channel, "title");
+		label.setText(MessageFormat.format(IResourceGetter.Utils.getOrException(resourceGetter, DisplayConstants.rssTitleKey), text));
+	}
+
+	private String getValue(Element channel, String name) {
 		if (channel != null) {
-			Element title = channel.getChild("title");
-			if (title != null)
-				return title.getText();
+			Element child = channel.getChild(name);
+			if (child != null)
+				return child.getText();
 		}
 		return "";
 	}
 
-	private void addItems(Element element, Indent indent) {
-		if (element == null)
-			return;
-		// if (element.getName().equals("item"))
-		List<Element> children = element.getChildren();
-		for (Element child : children)
-			addItems(child, indent.indent());
-	}
 
 }

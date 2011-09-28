@@ -17,12 +17,10 @@ public class SimpleImageControl extends Canvas {
 	private boolean value;
 	private Map<SmallIconPosition, String> smallIconMap = Maps.newMap();
 	public final ImageButtonConfig config;
-	private final boolean showBackground;
 
 	public SimpleImageControl(Composite parent, int style, final ImageButtonConfig config, final boolean showBackground) {
 		super(parent, style);
 		this.config = config;
-		this.showBackground = showBackground;
 		addPaintListener(new PaintListener() {
 
 			@Override

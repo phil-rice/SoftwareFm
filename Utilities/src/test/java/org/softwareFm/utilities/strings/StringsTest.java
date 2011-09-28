@@ -13,6 +13,17 @@ public class StringsTest extends TestCase {
 		assertEquals(new PreAndPost("", ""), Strings.split(".", '.'));
 	}
 	
+	
+
+	public void testOneLineLowWhiteSpace(){
+		checkOneLineLowWhiteSpace("a b c", "   \n   a  \n\nb\n  c");
+	}
+	
+	private void checkOneLineLowWhiteSpace(String expected, String input) {
+		assertEquals(expected, Strings.oneLineLowWhiteSpace(input));
+		
+	}
+
 	public void testKeepOnly() {
 		assertEquals("1234", Strings.onlyKeep("raw12and3,4", "4231"));
 	}
