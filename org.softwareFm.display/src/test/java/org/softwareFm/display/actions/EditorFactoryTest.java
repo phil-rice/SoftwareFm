@@ -23,12 +23,12 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 public class EditorFactoryTest extends AbstractSimpleMapTest<String, IEditor> {
 
 	private Shell shell;
-	private List<String> formalParams1 = Arrays.asList("fp1");
-	private List<String> formalParams2 = Arrays.asList("fp2");
-	private List<Object> actualParams1 = Arrays.<Object>asList("ap1");
-	private List<Object> actualParams2 = Arrays.<Object>asList("ap2");
-	private ActionData actionData1 = new ActionData(Maps.<String,String>newMap(), formalParams1, actualParams1);
-	private ActionData actionData2 = new ActionData(Maps.<String,String>newMap(), formalParams2, actualParams2);
+	private final List<String> formalParams1 = Arrays.asList("fp1");
+	private final List<String> formalParams2 = Arrays.asList("fp2");
+	private final List<Object> actualParams1 = Arrays.<Object>asList("ap1");
+	private final List<Object> actualParams2 = Arrays.<Object>asList("ap2");
+	private final ActionData actionData1 = new ActionData(Maps.<String,String>newMap(), formalParams1, actualParams1);
+	private final ActionData actionData2 = new ActionData(Maps.<String,String>newMap(), formalParams2, actualParams2);
 	private EditorContext editorContext;
 	ActionContext actionContext = null;
 	private DisplayerDefn displayerDefn;
@@ -74,7 +74,7 @@ public class EditorFactoryTest extends AbstractSimpleMapTest<String, IEditor> {
 	}
 
 	public void testThrowsExceptionIfKeyNotThere() {
-		checkThrowsExceptionIfKeyNotThere();
+		checkThrowsExceptionIfKeyNotThere("Map doesn't have key b. Legal keys are [a]. Map is {a=EditorMock [seed=1]}");
 	}
 
 	@Override

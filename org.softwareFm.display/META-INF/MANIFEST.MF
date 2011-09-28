@@ -9,6 +9,7 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.softwareFm.display,
  org.softwareFm.display.actions,
+ org.softwareFm.display.browser,
  org.softwareFm.display.composites,
  org.softwareFm.display.constants,
  org.softwareFm.display.data,
@@ -17,7 +18,9 @@ Export-Package: org.softwareFm.display,
  org.softwareFm.display.impl,
  org.softwareFm.display.largeButton,
  org.softwareFm.display.lists,
+ org.softwareFm.display.rss,
  org.softwareFm.display.samples,
  org.softwareFm.display.simpleButtons,
  org.softwareFm.display.smallButtons,
+ org.softwareFm.display.swt,
  org.softwareFm.display.urlGenerator

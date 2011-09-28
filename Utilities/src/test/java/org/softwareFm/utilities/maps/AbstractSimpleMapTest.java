@@ -63,7 +63,7 @@ public abstract class AbstractSimpleMapTest<K, V> extends TestCase {
 		assertEquals(Sets.<K> makeSet(key1, key2), new HashSet<K>(map.keys()));
 	}
 
-	protected IllegalArgumentException checkThrowsExceptionIfKeyNotThere() {
+	protected IllegalArgumentException checkThrowsExceptionIfKeyNotThere(String message) {
 		final ISimpleMap<K, V> map = blankMap();
 		put(map, key1, value1);
 		IllegalArgumentException e = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
@@ -72,6 +72,7 @@ public abstract class AbstractSimpleMapTest<K, V> extends TestCase {
 				map.get(key2);
 			}
 		});
+		assertEquals(message, e.getMessage());
 		return e;
 	}
 

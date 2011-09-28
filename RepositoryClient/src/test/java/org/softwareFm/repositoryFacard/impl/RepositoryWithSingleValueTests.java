@@ -3,6 +3,7 @@ package org.softwareFm.repositoryFacard.impl;
 import java.util.Map;
 
 import org.softwareFm.httpClient.requests.IResponseCallback;
+import org.softwareFm.repositoryFacard.AbstractRepositoryFacardTest;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.maps.Maps;
 

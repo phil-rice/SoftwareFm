@@ -9,8 +9,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.softwareFm.display.SoftwareFmLayout;
-import org.softwareFm.display.Swts;
 import org.softwareFm.display.displayer.IDisplayer;
+import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public  class TitleAnd implements IDisplayer, IHasComposite {

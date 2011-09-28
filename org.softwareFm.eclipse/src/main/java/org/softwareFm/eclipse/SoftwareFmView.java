@@ -9,10 +9,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 import org.softwareFm.display.SoftwareFmDataComposite;
-import org.softwareFm.display.Swts;
 import org.softwareFm.display.actions.Actions;
 import org.softwareFm.display.data.GuiDataStore;
 import org.softwareFm.display.data.IGuiDataListener;
+import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.callbacks.ICallback;
 
 /**

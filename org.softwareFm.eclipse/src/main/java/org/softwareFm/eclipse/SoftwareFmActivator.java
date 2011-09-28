@@ -18,11 +18,13 @@ import org.osgi.framework.BundleContext;
 import org.osgi.service.prefs.BackingStoreException;
 import org.softwareFm.configuration.SoftwareFmPropertyAnchor;
 import org.softwareFm.display.GuiBuilder;
-import org.softwareFm.display.IBrowserService;
 import org.softwareFm.display.SoftwareFmDataComposite;
 import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.actions.ActionStore;
+import org.softwareFm.display.browser.IBrowserService;
+import org.softwareFm.display.browser.RssFeedTransformer;
 import org.softwareFm.display.composites.CompositeConfig;
+import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.data.GuiDataStore;
 import org.softwareFm.display.data.IUrlDataCallback;
 import org.softwareFm.display.data.IUrlToData;
@@ -189,7 +191,11 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	}
 
 	private IBrowserService getFeedTransformer() {
-		return browserService == null ? browserService = new BrowserService() : browserService;
+		return browserService == null ? browserService = makeBrowserService() : browserService;
+	}
+
+	private BrowserService makeBrowserService() {
+		return new BrowserService().register(DisplayConstants.rssFeedType, new RssFeedTransformer());
 	}
 
 	private SmallButtonStore getSmallButtonStore() {

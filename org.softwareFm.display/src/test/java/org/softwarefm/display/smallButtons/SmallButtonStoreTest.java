@@ -8,7 +8,7 @@ public class SmallButtonStoreTest extends AbstractSimpleMapTest<String, ISmallBu
 
 	@Test
 	public void testThrowsExceptionIfKeyNotThere() {
-		checkThrowsExceptionIfKeyNotThere();
+		checkThrowsExceptionIfKeyNotThere("Map doesn't have key b. Legal keys are [a]. Map is {a=SmallButtonFactoryMock [seed=1]}");
 	}
 
 	@Override

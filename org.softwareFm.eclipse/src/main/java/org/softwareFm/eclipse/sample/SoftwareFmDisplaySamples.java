@@ -13,7 +13,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
-import org.softwareFm.display.Swts;
+import org.softwareFm.display.swt.Swts;
 import org.softwareFm.eclipse.fixture.SoftwareFmFixture;
 import org.softwareFm.jdtBinding.api.RippedResult;
 import org.softwareFm.utilities.callbacks.ICallback;

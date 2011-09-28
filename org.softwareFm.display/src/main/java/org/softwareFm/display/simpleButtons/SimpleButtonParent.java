@@ -3,8 +3,8 @@ package org.softwareFm.display.simpleButtons;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.display.SoftwareFmLayout;
-import org.softwareFm.display.Swts;
 import org.softwareFm.display.composites.IHasControl;
+import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class SimpleButtonParent implements IButtonParent{

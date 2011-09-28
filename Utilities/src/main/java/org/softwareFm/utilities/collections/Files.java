@@ -13,11 +13,13 @@ import java.math.BigInteger;
 import java.net.URL;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
+import org.softwareFm.utilities.constants.UtilityConstants;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.springframework.core.io.ClassPathResource;
@@ -54,7 +56,10 @@ public class Files {
 			}
 
 			private void push(Stack<Iterator<File>> stack, final File file) {
-				List<File> files = Arrays.asList(file.listFiles());
+				File[] listFiles = file.listFiles();
+				if (listFiles == null)
+					throw new NullPointerException(MessageFormat.format(UtilityConstants.directoryNotFound, file.getAbsoluteFile()));
+				List<File> files = Arrays.asList(listFiles);
 				stack.push(files.iterator());
 			}
 		};
@@ -211,6 +216,16 @@ public class Files {
 			@Override
 			public String apply(String from) throws Exception {
 				return noExtension(from);
+			}
+		};
+	}
+
+	public static IFunction1< File, String> toFileName() {
+		return new IFunction1<File, String>() {
+			@Override
+			public String apply(File from) throws Exception {
+				String result = from.getName();
+				return result;
 			}
 		};
 	}

@@ -1,14 +1,15 @@
-package org.softwareFm.repositoryFacard.impl;
+package org.softwareFm.repositoryFacard;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.softwareFm.repositoryFacard.IRepositoryFacard;
+import org.softwareFm.repositoryFacard.impl.ResponseFacardCallbackRecordingStatus;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.tests.IIntegrationTest;
 
-public abstract class AbstractRepositoryFacardTest extends TestCase {
+public abstract class AbstractRepositoryFacardTest extends TestCase implements IIntegrationTest {
 	protected IRepositoryFacard facard;
 
 	@Override

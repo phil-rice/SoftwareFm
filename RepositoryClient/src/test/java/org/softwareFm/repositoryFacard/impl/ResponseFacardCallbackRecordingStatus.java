@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
 
-final class ResponseFacardCallbackRecordingStatus implements IRepositoryFacardCallback {
+public class ResponseFacardCallbackRecordingStatus implements IRepositoryFacardCallback {
 	public AtomicInteger statusCode = new AtomicInteger();
 	public AtomicReference<IResponse> response = new AtomicReference<IResponse>();
 	public AtomicReference<Map<String, Object>> data = new AtomicReference<Map<String, Object>>();

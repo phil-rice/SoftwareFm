@@ -1,4 +1,4 @@
-package org.softwareFm.display;
+package org.softwareFm.display.swt;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -143,6 +143,14 @@ public class Swts {
 		data.grabExcessHorizontalSpace = true;
 		return data;
 	}
+	public static GridData makeGrabHorizonalVerticalAndFillGridData() {
+		GridData data = new GridData();
+		data.horizontalAlignment = GridData.FILL;
+		data.verticalAlignment = GridData.FILL;
+		data.grabExcessHorizontalSpace = true;
+		data.grabExcessVerticalSpace = true;
+		return data;
+	}
 
 	public static String layoutAsString(Control control) {
 		StringBuffer buffer = new StringBuffer();
@@ -185,7 +193,7 @@ public class Swts {
 			fd.left = new FormAttachment(0, 0);
 			composite.setLayoutData(fd);
 			shell.open();
-//			Swts.layoutDump(shell);
+			Swts.layoutDump(shell);
 			while (!shell.isDisposed()) {
 				if (!display.readAndDispatch())
 					display.sleep();

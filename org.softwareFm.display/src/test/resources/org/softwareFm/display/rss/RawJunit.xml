@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xml:base="http://www.junit.org" xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel>
+ <title>JUnit.org - Resources for Test Driven Development</title>
+ <link>http://www.junit.org</link>
+ <description></description>
+ <language>en</language>
+<item>
+ <title>Would you be a beta-tester if betas were announced here?</title>
+ <link>http://www.junit.org/node/598</link>
+ <description>&lt;p&gt;I&#039;m considering moving to a model where new JUnit release candidates are only announced at our main user mailing list, &lt;a href=&quot;mailto:junit@yahoogroups.com&quot;&gt;junit@yahoogroups.com&lt;/a&gt;.  If you are motivated to test new release candidates, but don&#039;t subscribe to that list, please mail me at &lt;a href=&quot;mailto:david@saff.net&quot;&gt;david@saff.net&lt;/a&gt; to let me know.  Thanks,&lt;/p&gt;
+&lt;p&gt;   David Saff, on behalf of a merry band of JUnit contributors.&lt;/p&gt;
+</description>
+ <comments>http://www.junit.org/node/598#comments</comments>
+ <category domain="http://www.junit.org/taxonomy/term/12">Article</category>
+ <pubDate>Thu, 22 Sep 2011 13:14:52 -0500</pubDate>
+ <dc:creator>dsaff</dc:creator>
+ <guid isPermaLink="false">598 at http://www.junit.org</guid>
+</item>
+<item>
+ <title>JUnit 4.9 released</title>
+ <link>http://www.junit.org/node/597</link>
+ <description>&lt;p&gt;Over a year in the making, we are happy to announce the release of JUnit 4.9.&lt;/p&gt;
+&lt;p&gt;This release&#039;s theme is Test-class and suite level Rules.  Details are &lt;a href=&quot;http://saffgreenbar.blogspot.com/2011/08/junit-49-released.html&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+</description>
+ <comments>http://www.junit.org/node/597#comments</comments>
+ <category domain="http://www.junit.org/taxonomy/term/11">JUnit Annoucements</category>
+ <pubDate>Mon, 19 Sep 2011 15:57:32 -0500</pubDate>
+ <dc:creator>dsaff</dc:creator>
+ <guid isPermaLink="false">597 at http://www.junit.org</guid>
+</item>
+<item>
+ <title>JUnit 4.9b4 (beta-)released</title>
+ <link>http://www.junit.org/node/596</link>
+ <description>&lt;p&gt;This release&#039;s theme is Test-class and suite level Rules.  Please read the &lt;a href=&quot;https://github.com/KentBeck/junit/blob/master/doc/ReleaseNotes4.9.txt&quot;&gt;release notes&lt;/a&gt;, &lt;a href=&quot;https://github.com/KentBeck/junit/downloads&quot;&gt;download&lt;/a&gt;, and &lt;a href=&quot;http://tech.groups.yahoo.com/group/junit/&quot;&gt;give feedback&lt;/a&gt; before the final release.&lt;/p&gt;
+</description>
+ <comments>http://www.junit.org/node/596#comments</comments>
+ <category domain="http://www.junit.org/taxonomy/term/11">JUnit Annoucements</category>
+ <pubDate>Fri, 12 Aug 2011 15:56:15 -0500</pubDate>
+ <dc:creator>dsaff</dc:creator>
+ <guid isPermaLink="false">596 at http://www.junit.org</guid>
+</item>
+<item>
+ <title>JUnit 4.9b3 released</title>
+ <link>http://www.junit.org/node/595</link>
+ <description>&lt;p&gt;Five months and a dozen regression errors later, JUnit 4.9b3 is now ready for your testing pleasure.  This release&#039;s theme is Test-class and suite level Rules.  Please read the &lt;a href=&quot;https://github.com/KentBeck/junit/blob/master/doc/ReleaseNotes4.9.txt&quot;&gt;release notes&lt;/a&gt;, &lt;a href=&quot;https://github.com/KentBeck/junit/downloads&quot;&gt;download&lt;/a&gt; or slurp from &lt;a href=&quot;https://oss.sonatype.org/index.html#nexus-search;gav~junit~junit~~~~kw,versionexpand&quot;&gt;Maven&lt;/a&gt;, and &lt;a href=&quot;http://tech.groups.yahoo.com/group/junit/&quot;&gt;give feedback&lt;/a&gt; before the final release.&lt;/p&gt;
+</description>
+ <comments>http://www.junit.org/node/595#comments</comments>
+ <category domain="http://www.junit.org/taxonomy/term/11">JUnit Annoucements</category>
+ <pubDate>Wed, 06 Jul 2011 16:59:32 -0500</pubDate>
+ <dc:creator>dsaff</dc:creator>
+ <guid isPermaLink="false">595 at http://www.junit.org</guid>
+</item>
+<item>
+ <title>tempus-fugit 1.1 released</title>
+ <link>http://www.junit.org/node/594</link>
+ <description>&lt;p&gt;The new version of the tempus-fugit micro library has just been released. The library is focused around building and testing concurrent and time-sensitive code, some of the highlights include JUnit extensions below.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Running all tests in a class in parallel with &lt;code&gt;@RunWith(ConcurrentTestRunner.class)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Run a test method across multiple threads, multiple times with &lt;code&gt;ConcurrentRule &lt;/codE&gt; and &lt;code&gt;RepeatingRule&lt;/code&gt; rules&lt;/li&gt;
+&lt;li&gt;Wait for asynchronous events with &lt;code&gt;WaitFor.waitForOrTimeout&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Running tests repeatedly with &lt;code&gt;@Intermittent&lt;/code&gt; and a custom runner (for flickering tests)&lt;/li&gt;
+&lt;li&gt;A bunch more common patterns and utility classes including ThreadUtils&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Take a look the project page at &lt;a href=&quot;http://tempus-fugit.googlecode.com/svn/site/documentation/index.html&quot; title=&quot;http://tempus-fugit.googlecode.com/svn/site/documentation/index.html&quot;&gt;http://tempus-fugit.googlecode.com/svn/site/documentation/index.html&lt;/a&gt;&lt;/p&gt;
+</description>
+ <comments>http://www.junit.org/node/594#comments</comments>
+ <category domain="http://www.junit.org/taxonomy/term/5">Testing News</category>
+ <pubDate>Tue, 28 Jun 2011 03:39:27 -0500</pubDate>
+ <dc:creator>diyfiesta</dc:creator>
+ <guid isPermaLink="false">594 at http://www.junit.org</guid>
+</item>
+<item>
+ <title>PODAM - POjo DAta Mocker</title>
+ <link>http://www.junit.org/node/593</link>
+ <description>&lt;p&gt;New - Version 2.3.12.RELEASE has been released. This mini-release fixes bug PDM-42 (&lt;a href=&quot;http://www.jemos.eu/jira/browse/PDM-42&quot; title=&quot;http://www.jemos.eu/jira/browse/PDM-42&quot;&gt;http://www.jemos.eu/jira/browse/PDM-42&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;PODAM is a Java tool to auto-fill POJOs / JavaBeans with data. &lt;/p&gt;
+&lt;p&gt;The full documentation can be found on &lt;a href=&quot;http://www.jemos.eu/projects/podam/&quot;&gt;PODAM&lt;/a&gt; home page&lt;/p&gt;
+&lt;p&gt;The source code is available at &lt;a href=&quot;https://github.com/mtedone/podam&quot;&gt;GitHub&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;the Maven dependencies can be found at &lt;a href=&quot;http://repo2.maven.org/maven2/uk/co/jemos/podam/podam/&quot;&gt;Maven Central&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;To file bugs or to request new features, please visit &lt;a href=&quot;http://www.jemos.eu/jira&quot;&gt;Jemos JIRA&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Feel free to join PODAM community at &lt;a href=&quot;http://groups.google.com/group/podam&quot;&gt;PODAM Google Group&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;PODAM runs under the MIT license. &lt;/p&gt;
+&lt;p&gt;Feedbacks, comments, bugs, code reviews, etc are welcome. You can contact me at: marco.tedone at gmail.com&lt;/p&gt;
+</description>
+ <comments>http://www.junit.org/node/593#comments</comments>
+ <category domain="http://www.junit.org/taxonomy/term/1">OSI Approved</category>
+ <category domain="http://www.junit.org/taxonomy/term/10">Testing Tools</category>
+ <pubDate>Sun, 01 May 2011 16:32:32 -0500</pubDate>
+ <dc:creator>mtedone</dc:creator>
+ <guid isPermaLink="false">593 at http://www.junit.org</guid>
+</item>
+<item>
+ <title>Run a collection of full qualified method names</title>
+ <link>http://www.junit.org/node/592</link>
+ <description>&lt;p&gt;With this junit core extension, you can specify the methods to be run in a collection of full qualified method names. Take a look at the following example to get an idea on how this works:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;public class RunSome {&lt;/p&gt;
+&lt;p&gt; public static void main(String[] args) throws SecurityException,&lt;br /&gt;
+ ClassNotFoundException, NoSuchMethodException {&lt;br /&gt;
+ MethodRunnerJUnitCore methodRunner = new MethodRunnerJUnitCore();&lt;br /&gt;
+ String[] methods = new String[] { &quot;ch.rethab.TestClass.someMethod&quot;,&lt;br /&gt;
+ &quot;ch.rethab.AnotherClass.anotherMethod&quot; };&lt;br /&gt;
+ methodRunner.runMethods(Arrays.asList(methods));&lt;br /&gt;
+ }&lt;/p&gt;
+&lt;p&gt;}&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Find more information on my blog: &lt;a href=&quot;http://docode.rethab.ch/2011/02/28/custom-junit-method-runner/&quot; title=&quot;http://docode.rethab.ch/2011/02/28/custom-junit-method-runner/&quot;&gt;http://docode.rethab.ch/2011/02/28/custom-junit-method-runner/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Source code:&lt;br /&gt;
+&lt;code&gt;&lt;br /&gt;
+package ch.rethab.junit;&lt;/p&gt;
+&lt;p&gt;import java.util.Collection;&lt;br /&gt;
+import java.util.HashSet;&lt;br /&gt;
+import java.util.Set;&lt;/p&gt;
+&lt;p&gt;import org.junit.runner.Description;&lt;br /&gt;
+import org.junit.runner.JUnitCore;&lt;br /&gt;
+import org.junit.runner.Request;&lt;br /&gt;
+import org.junit.runner.Result;&lt;br /&gt;
+import org.junit.runner.manipulation.Filter;&lt;/p&gt;
+&lt;p&gt;/**&lt;br /&gt;
+ * Extension of {@link JUnitCore}, which provides a method to invoke multiple&lt;br /&gt;
+ * methods from various classes at once.&lt;br /&gt;
+ *&lt;br /&gt;
+ * @author rethab&lt;br /&gt;
+ *&lt;br /&gt;
+ */&lt;br /&gt;
+public class MethodRunnerJUnitCore extends JUnitCore {&lt;/p&gt;
+&lt;p&gt;	/**&lt;br /&gt;
+	 * run certain methods defined in a collection with the following pattern:&lt;br /&gt;
+	 * &lt;code&gt;mycompany.myapp.MyClass.myMethod&lt;/code&gt;&lt;br /&gt;
+	 *&lt;br /&gt;
+	 * @param fullQualifiedMethods&lt;br /&gt;
+	 *            Collection of methods to be run&lt;br /&gt;
+	 * @throws ClassNotFoundException&lt;br /&gt;
+	 *             if one of the classes doesn&#039;t exist&lt;br /&gt;
+	 * @throws NoSuchMethodException&lt;br /&gt;
+	 *             if one of the methods doesn&#039;t exist&lt;br /&gt;
+	 * @throws SecurityException&lt;br /&gt;
+	 *             see Class.getMethod for reasons on this one&lt;br /&gt;
+	 */&lt;br /&gt;
+	public Result runMethods(Collection fullQualifiedMethods)&lt;br /&gt;
+			throws ClassNotFoundException, SecurityException,&lt;br /&gt;
+			NoSuchMethodException {&lt;br /&gt;
+		Class&amp;lt;?&amp;gt;[] classes = getClasses(fullQualifiedMethods);&lt;br /&gt;
+		Request request = Request.classes(classes);&lt;br /&gt;
+		request = request.filterWith(new MethodFilter(fullQualifiedMethods));&lt;br /&gt;
+		return run(request);&lt;br /&gt;
+	}&lt;/p&gt;
+&lt;p&gt;	/**&lt;br /&gt;
+	 * convert all classes of the provided methods to an array of classes&lt;br /&gt;
+	 *&lt;br /&gt;
+	 * @param fullQualifiedMethods&lt;br /&gt;
+	 *            collection of full qualified method names (e.g.&lt;br /&gt;
+	 *            &lt;code&gt;mycompany.myapp.MyClass.myMethod&lt;/code&gt;)&lt;br /&gt;
+	 * @return an array of the classes provided in the collection&lt;br /&gt;
+	 * @throws ClassNotFoundException&lt;br /&gt;
+	 *             if one of the classes does not exist&lt;br /&gt;
+	 * @throws NoSuchMethodException&lt;br /&gt;
+	 *             if one of the methods doesn&#039;t exist&lt;br /&gt;
+	 * @throws SecurityException&lt;br /&gt;
+	 *             see Class.getMethod for reasons on this one&lt;br /&gt;
+	 */&lt;br /&gt;
+	private static Class&amp;lt;?&amp;gt;[] getClasses(final Collection fullQualifiedMethods)&lt;br /&gt;
+			throws ClassNotFoundException, SecurityException,&lt;br /&gt;
+			NoSuchMethodException {&lt;br /&gt;
+		Set classes = new HashSet();&lt;br /&gt;
+		for (String method : fullQualifiedMethods) {&lt;br /&gt;
+			String className = method.substring(0, method.lastIndexOf(&#039;.&#039;));&lt;br /&gt;
+			String methodName = method.substring(method.lastIndexOf(&#039;.&#039;) + 1,&lt;br /&gt;
+					method.length());&lt;br /&gt;
+			Class&amp;lt;?&amp;gt; klass = Class.forName(className);&lt;br /&gt;
+			classes.add(klass);&lt;br /&gt;
+			// check if method exists. throws NoSuchMethodException otherwise&lt;br /&gt;
+			klass.getMethod(methodName, new Class[0]);&lt;br /&gt;
+		}&lt;br /&gt;
+		return classes.toArray(new Class&amp;lt;?&amp;gt;[0]);&lt;br /&gt;
+	}&lt;/p&gt;
+&lt;p&gt;}&lt;/p&gt;
+&lt;p&gt;/**&lt;br /&gt;
+ * This class filters certain methods. This is done by submitting a Collection&lt;br /&gt;
+ * of methods to be run when constructing the class. The methods have to be in&lt;br /&gt;
+ * the following pattern: &lt;code&gt;mycompany.myapp.MyClass.myMethod&lt;/code&gt;&lt;br /&gt;
+ *&lt;br /&gt;
+ * @author rethab&lt;br /&gt;
+ *&lt;br /&gt;
+ */&lt;br /&gt;
+class MethodFilter extends Filter {&lt;/p&gt;
+&lt;p&gt;	/**&lt;br /&gt;
+	 * stored methods that have to be filtered later&lt;br /&gt;
+	 */&lt;br /&gt;
+	private Collection methods;&lt;/p&gt;
+&lt;p&gt;	/**&lt;br /&gt;
+	 * constructor. submit the methods that have to be run later.&lt;br /&gt;
+	 *&lt;br /&gt;
+	 * @param methods&lt;br /&gt;
+	 *            collection of full qualified methods separated by dots with&lt;br /&gt;
+	 *            their class. (e.g.&lt;br /&gt;
+	 *            &lt;code&gt;mycompany.myapp.MyClass.myMethod&lt;/code&gt;)&lt;br /&gt;
+	 * @throws IllegalArgumentException&lt;br /&gt;
+	 *             if the collection submitted is null&lt;br /&gt;
+	 */&lt;br /&gt;
+	public MethodFilter(Collection methods) {&lt;br /&gt;
+		if (methods == null) {&lt;br /&gt;
+			throw new IllegalArgumentException(&quot;methods must not be null&quot;);&lt;br /&gt;
+		}&lt;br /&gt;
+		this.methods = methods;&lt;br /&gt;
+	}&lt;/p&gt;
+&lt;p&gt;	@Override&lt;br /&gt;
+	public String describe() {&lt;br /&gt;
+		return &quot;Filters tests by full qualified method names.&quot;;&lt;br /&gt;
+	}&lt;/p&gt;
+&lt;p&gt;	/**&lt;br /&gt;
+	 * Determines based on the stored methods whether or not the provided&lt;br /&gt;
+	 * description has to be run.&lt;br /&gt;
+	 */&lt;br /&gt;
+	@Override&lt;br /&gt;
+	public boolean shouldRun(Description classDescription) {&lt;br /&gt;
+		if (classDescription.getChildren().size() != 0) {&lt;br /&gt;
+			for (Description methodDescription : classDescription.getChildren()) {&lt;br /&gt;
+				String methodName = methodDescription.getMethodName();&lt;br /&gt;
+				String className = methodDescription.getClassName();&lt;br /&gt;
+				if (this.methods.contains(String.format(&quot;%s.%s&quot;, className,&lt;br /&gt;
+						methodName))) {&lt;br /&gt;
+					return true;&lt;br /&gt;
+				}&lt;br /&gt;
+			}&lt;br /&gt;
+			return false;&lt;br /&gt;
+		} else {&lt;br /&gt;
+			String methodName = classDescription.getMethodName();&lt;br /&gt;
+			String className = classDescription.getClassName();&lt;br /&gt;
+			return methods.contains(String.format(&quot;%s.%s&quot;, className,&lt;br /&gt;
+					methodName));&lt;br /&gt;
+		}&lt;br /&gt;
+	}&lt;br /&gt;
+}&lt;/code&gt;&lt;/p&gt;
+</description>
+ <comments>http://www.junit.org/node/592#comments</comments>
+ <category domain="http://www.junit.org/taxonomy/term/1">OSI Approved</category>
+ <category domain="http://www.junit.org/taxonomy/term/10">Testing Tools</category>
+ <pubDate>Wed, 09 Mar 2011 02:54:00 -0600</pubDate>
+ <dc:creator>rethab.ch</dc:creator>
+ <guid isPermaLink="false">592 at http://www.junit.org</guid>
+</item>
+<item>
+ <title>dp4j - Test Private Methods w/o writing extra code</title>
+ <link>http://www.junit.org/node/591</link>
+ <description>&lt;p&gt;With &lt;a href=&quot;http://www.dp4j.com&quot;&gt;dp4j.jar&lt;/a&gt; as a library of your project you can DIRECTLY ACCESS private methods in your tests. Reflection API code will be injected directly into the AST (i.e during compilation). For example, the following will work:&lt;br /&gt;
+&lt;code&gt;&lt;br /&gt;
+&lt;dl&gt;
+&lt;dt&gt;class Junit11 {&lt;/dt&gt;
+&lt;dd&gt;private int one = 1;&lt;/dd&gt;
+&lt;dd&gt;private static void p(int i, Double d, String... s){}&lt;/dd&gt;
+&lt;p&gt;}&lt;/dl&gt;
+&lt;dl&gt;public class JunitTest11{&lt;/p&gt;
+&lt;dd&gt;
+&lt;dl&gt;@org.junit.Test public void t() {&lt;/dd&gt;
+&lt;dd&gt;final int two = new Junit11().one + 1;&lt;/dd&gt;
+&lt;dd&gt;org.junit.Assert.assertEquals(2,two);&lt;/dd&gt;
+&lt;dd&gt;Junit11.p(two,new Double(2),&quot;who&quot;, &quot;said&quot;, &quot;varargs are difficult to test with the reflection API?&quot;);&lt;/dd&gt;
+&lt;dd&gt;// assertEquals(&quot;generate and validate my Patterns implementations&quot;, &lt;a href=&quot;http://www.dp4j.com&quot;&gt;dp4j.com&lt;/a&gt;);&lt;/dd&gt;
+&lt;p&gt;   }&lt;/dl&gt;
+&lt;p&gt;}&lt;/dl&gt;
+&lt;p&gt; &lt;/code&gt;&lt;/p&gt;
+</description>
+ <comments>http://www.junit.org/node/591#comments</comments>
+ <category domain="http://www.junit.org/taxonomy/term/7">Code Generators</category>
+ <category domain="http://www.junit.org/taxonomy/term/1">OSI Approved</category>
+ <pubDate>Tue, 01 Mar 2011 12:55:59 -0600</pubDate>
+ <dc:creator>simpatico</dc:creator>
+ <guid isPermaLink="false">591 at http://www.junit.org</guid>
+</item>
+<item>
+ <title>Scheduling Junit tests with RunnerScheduler for a concurrent execution</title>
+ <link>http://www.junit.org/node/589</link>
+ <description>&lt;p&gt;JUnit has a very cool feature called &lt;strong&gt;RunnerScheduler&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;A custom RunnerScheduler can be set on a &lt;strong&gt;ParentRunner&lt;/strong&gt; to control how child elements are executed. If you are on a Suite, the child elements would be each test class. If you are on a simple class (Junit4 runner) the child elements are all the test methods. Thus, with a RunnerScheduler you are able to control the overall execution of your test flow.&lt;/p&gt;
+&lt;p&gt;As an example, suppose you want to execute your test methods concurrently on a given test. You could have a runner called &lt;a href=&quot;http://mycila.googlecode.com/svn/sandbox/src/main/java/com/mycila/sandbox/junit/runner/ConcurrentJunitRunner.java&quot;&gt;ConcurrentJunitRunner&lt;/a&gt;.&lt;br /&gt;
+&lt;code&gt;&lt;br /&gt;
+@RunWith(ConcurrentJunitRunner.class)&lt;br /&gt;
+@Concurrent(threads = 6)&lt;br /&gt;
+public final class ATest {&lt;/p&gt;
+&lt;p&gt;    @Test public void test0() throws Throwable { printAndWait(); }&lt;br /&gt;
+    @Test public void test1() throws Throwable { printAndWait(); }&lt;br /&gt;
+    @Test public void test2() throws Throwable { printAndWait(); }&lt;br /&gt;
+    @Test public void test3() throws Throwable { printAndWait(); }&lt;br /&gt;
+    @Test public void test4() throws Throwable { printAndWait(); }&lt;br /&gt;
+    @Test public void test5() throws Throwable { printAndWait(); }&lt;br /&gt;
+    @Test public void test6() throws Throwable { printAndWait(); }&lt;br /&gt;
+    @Test public void test7() throws Throwable { printAndWait(); }&lt;br /&gt;
+    @Test public void test8() throws Throwable { printAndWait(); }&lt;br /&gt;
+    @Test public void test9() throws Throwable { printAndWait(); }&lt;/p&gt;
+&lt;p&gt;    void printAndWait() throws Throwable {&lt;br /&gt;
+        int w = new Random().nextInt(1000);&lt;br /&gt;
+        System.out.println(String.format(&quot;[%s] %s %s %s&quot;, Thread.currentThread().getName(), getClass().getName(), new Throwable().getStackTrace()[1].getMethodName(), w));&lt;br /&gt;
+        Thread.sleep(w);&lt;br /&gt;
+    }&lt;br /&gt;
+}&lt;br /&gt;
+&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;The &lt;a href=&quot;http://mycila.googlecode.com/svn/sandbox/src/main/java/com/mycila/sandbox/junit/runner/Concurrent.java&quot;&gt;@Concurrent&lt;/a&gt; annotation controls the thread count. &lt;/p&gt;
+&lt;p&gt;The runner implements a custom RunnerScheduler which delegates to a thread pool and Java Concurrent API each test method. Thus all test are executed concurrently and the RunnerScheduler waits for all tests to finish.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;But wait ! There&#039;s even more !&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;This runner just make the test methods of a class runnable concurrently. But if you have a lot of tests in your project, you would probably want to also run all these tests concurrently !&lt;/p&gt;
+&lt;p&gt;Here come the &lt;a href=&quot;http://mycila.googlecode.com/svn/sandbox/src/main/java/com/mycila/sandbox/junit/runner/ConcurrentSuite.java&quot;&gt;ConcurrentSuite&lt;/a&gt; runner !&lt;br /&gt;
+&lt;code&gt;&lt;br /&gt;
+@RunWith(ConcurrentSuite.class)&lt;br /&gt;
+@Suite.SuiteClasses({ATest.class, ATest2.class, ATest3.class})&lt;br /&gt;
+public class MySuite {&lt;br /&gt;
+}&lt;br /&gt;
+&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;This runner will run all the tests in your suite. If a test class uses the &lt;a href=&quot;http://mycila.googlecode.com/svn/sandbox/src/main/java/com/mycila/sandbox/junit/runner/ConcurrentJunitRunner.java&quot;&gt;ConcurrentJunitRunner&lt;/a&gt; or is annotated by &lt;a href=&quot;http://mycila.googlecode.com/svn/sandbox/src/main/java/com/mycila/sandbox/junit/runner/Concurrent.java&quot;&gt;@Concurrent&lt;/a&gt; then its method will be run concurrently. Otherwise it will be run sequentially.&lt;/p&gt;
+&lt;p&gt;The runners provided on this article demonstrates how to use a custom RunnerScheduler, but can be safely used in any projects and be modified according to your needs.&lt;/p&gt;
+&lt;p&gt;All the code for this article can be found &lt;a href=&quot;http://mycila.googlecode.com/svn/sandbox/src/main/java/com/mycila/sandbox/junit/runner/&quot;&gt;here&lt;/a&gt;. You can also checkout the classes:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;svn co &lt;a href=&quot;http://mycila.googlecode.com/svn/sandbox/&quot; title=&quot;http://mycila.googlecode.com/svn/sandbox/&quot;&gt;http://mycila.googlecode.com/svn/sandbox/&lt;/a&gt; sandbox&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Mathieu Carbou&lt;br /&gt;
+&lt;a href=&quot;http://blog.mycila.com/&quot;&gt;http://blog.mycila.com/&lt;/a&gt;&lt;/p&gt;
+</description>
+ <comments>http://www.junit.org/node/589#comments</comments>
+ <category domain="http://www.junit.org/taxonomy/term/12">Article</category>
+ <pubDate>Sat, 08 May 2010 22:07:24 -0500</pubDate>
+ <dc:creator>mathieu.carbou</dc:creator>
+ <guid isPermaLink="false">589 at http://www.junit.org</guid>
+</item>
+<item>
+ <title>JUnit 4.8.2 released </title>
+ <link>http://www.junit.org/node/588</link>
+ <description>&lt;p&gt;This is a small bugfix release:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://kentbeck.github.com/junit/doc/ReleaseNotes4.8.2.html&quot; title=&quot;http://kentbeck.github.com/junit/doc/ReleaseNotes4.8.2.html&quot;&gt;http://kentbeck.github.com/junit/doc/ReleaseNotes4.8.2.html&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Download from &lt;a href=&quot;http://github.com/KentBeck/junit/downloads&quot; title=&quot;http://github.com/KentBeck/junit/downloads&quot;&gt;http://github.com/KentBeck/junit/downloads&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;  David Saff&lt;/p&gt;
+</description>
+ <comments>http://www.junit.org/node/588#comments</comments>
+ <category domain="http://www.junit.org/taxonomy/term/11">JUnit Annoucements</category>
+ <pubDate>Thu, 08 Apr 2010 12:33:35 -0500</pubDate>
+ <dc:creator>dsaff</dc:creator>
+ <guid isPermaLink="false">588 at http://www.junit.org</guid>
+</item>
+</channel>
+</rss>

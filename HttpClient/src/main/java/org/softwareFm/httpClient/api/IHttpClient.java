@@ -22,6 +22,7 @@ public interface IHttpClient {
 		}
 	}
 	
+	
 	IHttpClient setDefaultHeaders(List<NameValuePair> headers);
 
 	IRequestBuilder post(String url);

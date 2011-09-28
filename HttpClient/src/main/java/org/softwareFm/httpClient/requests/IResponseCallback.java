@@ -7,6 +7,14 @@ public interface IResponseCallback {
 	void process(IResponse response);
 
 	public static class Utils {
+		public static IResponseCallback noCallback(){
+			return new IResponseCallback() {
+				@Override
+				public void process(IResponse response) {
+				}
+			};
+		}
+		
 		public static <Thing, Aspect> MemoryResponseCallback<Thing, Aspect> memoryCallback() {
 			return new MemoryResponseCallback<Thing, Aspect>();
 		}

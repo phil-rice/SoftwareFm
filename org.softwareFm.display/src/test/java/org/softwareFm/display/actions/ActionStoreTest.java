@@ -6,8 +6,7 @@ import org.softwareFm.utilities.maps.ISimpleMap;
 public class ActionStoreTest extends AbstractSimpleMapTest<String, IAction> {
 
 	public void testThrowsExceptionIfKeyNotThere() {
-		IllegalArgumentException e = checkThrowsExceptionIfKeyNotThere();
-		assertEquals("Map doesn't have key b. Legal keys are [a]. Map is {a=ActionMock [name=1]}", e.getMessage());
+		IllegalArgumentException e = checkThrowsExceptionIfKeyNotThere("Map doesn't have key b. Legal keys are [a]. Map is {a=ActionMock [name=1]}");
 	}
 
 	@Override

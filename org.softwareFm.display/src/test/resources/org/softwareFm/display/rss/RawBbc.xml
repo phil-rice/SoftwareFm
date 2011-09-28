@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet title="XSL_formatting" type="text/xsl" href="/shared/bsp/xsl/rss/nolsol.xsl"?>
+
+<rss xmlns:media="http://search.yahoo.com/mrss/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">  
+  <channel> 
+    <title>BBC News - UK</title>  
+    <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk/</link>  
+    <description>The latest stories from the UK section of the BBC News web site.</description>  
+    <language>en-gb</language>  
+    <lastBuildDate>Mon, 26 Sep 2011 13:15:29 GMT</lastBuildDate>  
+    <copyright>Copyright: (C) British Broadcasting Corporation, see http://news.bbc.co.uk/2/hi/help/rss/4498287.stm for terms and conditions of reuse.</copyright>  
+    <image> 
+      <url>http://news.bbcimg.co.uk/nol/shared/img/bbc_news_120x60.gif</url>  
+      <title>BBC News - UK</title>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk/</link>  
+      <width>120</width>  
+      <height>60</height> 
+    </image>  
+    <ttl>15</ttl>  
+    <atom:link href="http://feeds.bbci.co.uk/news/uk/rss.xml" rel="self" type="application/rss+xml"/>  
+    <item> 
+      <title>Balls urges VAT cuts for growth</title>  
+      <description>Shadow chancellor Ed Balls unveils a five-point plan to kick-start Britain's economy in a speech to the Labour Party conference.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-politics-15054705</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-politics-15054705</guid>  
+      <pubDate>Mon, 26 Sep 2011 12:17:02 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55591000/jpg/_55591778_013020896-1.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55591000/jpg/_55591827_013020895-1.jpg"/> 
+    </item>  
+    <item> 
+      <title>Knox is diabolical, lawyer says</title>  
+      <description>A lawyer has described Amanda Knox, who is appealing over the murder of Briton Meredith Kercher, as "diabolical" and "a witch of deception".</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-15059817</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-15059817</guid>  
+      <pubDate>Mon, 26 Sep 2011 13:09:46 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55593000/jpg/_55593038_013020805-1.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55593000/jpg/_55593036_013020805-1.jpg"/> 
+    </item>  
+    <item> 
+      <title>Six charged with terror offences</title>  
+      <description>Six men are charged with terrorism offences, including a suspected suicide bombing campaign, following last week's police operation in Birmingham.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-15054790</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-15054790</guid>  
+      <pubDate>Sun, 25 Sep 2011 21:50:00 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55449000/jpg/_55449199_009320805-1.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55449000/jpg/_55449198_009320805-1.jpg"/> 
+    </item>  
+    <item> 
+      <title>NI seeks lower drink-drive limit</title>  
+      <description>Northern Ireland's environment minister Alex Attwood outlines his proposals to change the drink-driving laws, almost halving the legal limit.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-northern-ireland-15053560</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-northern-ireland-15053560</guid>  
+      <pubDate>Mon, 26 Sep 2011 06:30:09 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55576000/jpg/_55576007_tdudag88.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55593000/jpg/_55593279_boozers.jpg"/> 
+    </item>  
+    <item> 
+      <title>Man denies furniture store arson</title>  
+      <description>A man accused of starting a fire which destroyed a furniture store in Croydon during the London riots pleads not guilty to two counts of arson.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-england-london-15064265</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-england-london-15064265</guid>  
+      <pubDate>Mon, 26 Sep 2011 13:09:26 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/54504000/jpg/_54504824__54493794_croydon-1.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55592000/jpg/_55592885_013019782-1.jpg"/> 
+    </item>  
+    <item> 
+      <title>Prisoners' wages to help victims</title>  
+      <description>The wages of 500 prisoners who work in communities are to be cut and used to raise £1m to support victims of crime, the government announces.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-15054263</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-15054263</guid>  
+      <pubDate>Mon, 26 Sep 2011 12:59:34 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55593000/jpg/_55593001_011566597-1.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55593000/jpg/_55593064_011566597-1.jpg"/> 
+    </item>  
+    <item> 
+      <title>Judge ponders Dale Farm evictions</title>  
+      <description>A High Court judge is to rule on whether evictions at Dale Farm traveller site should go ahead according to a plan proposed by Basildon Council in Essex.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-england-essex-15057483</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-england-essex-15057483</guid>  
+      <pubDate>Mon, 26 Sep 2011 07:13:25 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55582000/jpg/_55582502_dalefarm.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55582000/jpg/_55582449_dalefarm.jpg"/> 
+    </item>  
+    <item> 
+      <title>Man remanded over damaged Nurofen</title>  
+      <description>A man accused of contaminating packs of painkiller with powerful anti-psychotic drugs is remanded in custody.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-england-london-15063118</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-england-london-15063118</guid>  
+      <pubDate>Mon, 26 Sep 2011 12:38:57 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55553000/jpg/_55553577_nurofen.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55553000/jpg/_55553574_nurofen.jpg"/> 
+    </item>  
+    <item> 
+      <title>Lockerbie evidence plea to Libya</title>  
+      <description>The Crown Office formally contacts Libya's new government to ask for help with the Lockerbie inquiry.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-scotland-south-scotland-15057662</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-scotland-south-scotland-15057662</guid>  
+      <pubDate>Mon, 26 Sep 2011 09:07:41 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55583000/jpg/_55583960_012706997-1.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55583000/jpg/_55583858_012706997-1.jpg"/> 
+    </item>  
+    <item> 
+      <title>Boy, 2, dies after balcony fall</title>  
+      <description>A two-year-old boy dies after falling from a third-floor balcony in Torquay, police say.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-england-devon-15058097</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-england-devon-15058097</guid>  
+      <pubDate>Mon, 26 Sep 2011 08:34:44 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55588000/jpg/_55588159_jex_10410_de27-1.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55588000/jpg/_55588160_jex_10410_de27-1.jpg"/> 
+    </item>  
+    <item> 
+      <title>School remembers fire death girls</title>  
+      <description>A memorial is held at a school to remember two teenagers killed in a fire at their north-west London home along with their mother and three siblings.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-england-london-15057319</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-england-london-15057319</guid>  
+      <pubDate>Mon, 26 Sep 2011 12:47:12 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55590000/jpg/_55590761_013020594-2.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55583000/jpg/_55583372_013020594-1.jpg"/> 
+    </item>  
+    <item> 
+      <title>Teenager jailed over court photo</title>  
+      <description>A teenager is jailed for two months for taking a picture on his phone during proceedings at Luton Crown Court and sending it to a girl.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-england-beds-bucks-herts-15057842</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-england-beds-bucks-herts-15057842</guid>  
+      <pubDate>Mon, 26 Sep 2011 09:59:05 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/51359000/jpg/_51359633_45025356.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/51359000/jpg/_51359631_45025356.jpg"/> 
+    </item>  
+    <item> 
+      <title>Snowdon 4x4 on sale for charity</title>  
+      <description>A 4x4 vehicle which was driven up Snowdon goes on sale on eBay, with the owner promising the money to mountain rescuers.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-wales-north-west-wales-15062078</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-wales-north-west-wales-15062078</guid>  
+      <pubDate>Mon, 26 Sep 2011 11:45:24 GMT</pubDate>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55178000/jpg/_55178472_car3042.jpg"/> 
+    </item>  
+    <item> 
+      <title>Revamped Blue Peter moves north</title>  
+      <description>Children's TV programme Blue Peter will be broadcast from its new home of Salford for the first time later, with a new set and a remixed theme tune.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/entertainment-arts-15027778</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/entertainment-arts-15027778</guid>  
+      <pubDate>Mon, 26 Sep 2011 05:37:37 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55574000/jpg/_55574499_bluepeter1_66.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55573000/jpg/_55573704_bluepeter1_144.jpg"/> 
+    </item>  
+    <item> 
+      <title>School closures possible: O'Dowd</title>  
+      <description>The education minister is determined to improve the quality of education even if it means having to close a number of schools.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-northern-ireland-15058230</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-northern-ireland-15058230</guid>  
+      <pubDate>Mon, 26 Sep 2011 12:31:59 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55586000/jpg/_55586979__53462241__53286229_johno'dowd-1-1.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55592000/jpg/_55592420__53462241__53286229_johno'dowd-1-1.jpg"/> 
+    </item>  
+    <item> 
+      <title>DNA on victim 'that of accused'</title>  
+      <description>A DNA expert tells a murder trial the chances of DNA on the victim's chin coming from someone other than the alleged killer is one in a billion.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-northern-ireland-15062985</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-northern-ireland-15062985</guid>  
+      <pubDate>Mon, 26 Sep 2011 12:58:28 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55518000/jpg/_55518724__55502445_karenwalsh-mairerankinmurderaccused-1.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55518000/jpg/_55518722__55502445_karenwalsh-mairerankinmurderaccused-1.jpg"/> 
+    </item>  
+    <item> 
+      <title>Labour shows alternative - Jones</title>  
+      <description>Labour will not let the tide of the world's economy wash over Wales, says First Minister Carwyn Jones.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-wales-politics-15038435</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-wales-politics-15038435</guid>  
+      <pubDate>Mon, 26 Sep 2011 11:25:22 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55589000/jpg/_55589817_013020468-1.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55589000/jpg/_55589815_013020468-1.jpg"/> 
+    </item>  
+    <item> 
+      <title>Plan suggests third Menai bridge</title>  
+      <description>A third bridge across the Menai Strait could be needed when a new nuclear plant is built on Anglesey, a transport plan suggests.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-wales-north-west-wales-15058487</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-wales-north-west-wales-15058487</guid>  
+      <pubDate>Mon, 26 Sep 2011 13:09:18 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55586000/jpg/_55586180_006967701-1.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55593000/jpg/_55593493_menai304.jpg"/> 
+    </item>  
+    <item> 
+      <title>Scots nurses fear job insecurity</title>  
+      <description>A Royal College of Nursing study claims less than a third of Scotland's nurses feel they are in a secure job.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-scotland-15052253</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-scotland-15052253</guid>  
+      <pubDate>Sun, 25 Sep 2011 23:10:09 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/53736000/jpg/_53736170_007680931-1.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/53736000/jpg/_53736172_007680931-1.jpg"/> 
+    </item>  
+    <item> 
+      <title>Fans in court on sectarian charge</title>  
+      <description>Three football fans are due to appear in court in connection with allegations of sectarianism at a match in Fife.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-scotland-edinburgh-east-fife-15059353</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-scotland-edinburgh-east-fife-15059353</guid>  
+      <pubDate>Mon, 26 Sep 2011 09:00:03 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55483000/jpg/_55483961__52271779_eastendpark-1.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55483000/jpg/_55483962__52271779_eastendpark-1.jpg"/> 
+    </item>  
+    <item> 
+      <title>Police face £1.3m bill for riots</title>  
+      <description>North Yorkshire Police face a bill of £1.3m for the cost of sending officers to London and other cities hit by August's riots.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-england-york-north-yorkshire-15057248</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-england-york-north-yorkshire-15057248</guid>  
+      <pubDate>Mon, 26 Sep 2011 07:28:43 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55396000/jpg/_55396694_jacket.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55395000/jpg/_55395179_jacket.jpg"/> 
+    </item>  
+    <item> 
+      <title>Stolen £5m antique haul recovered</title>  
+      <description>Millions of pounds worth of stolen antiques, which have significant cultural and historic value, are recovered in a raid by police.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-england-15054329</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-england-15054329</guid>  
+      <pubDate>Mon, 26 Sep 2011 00:07:22 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55577000/jpg/_55577652_vase.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55577000/jpg/_55577637_vase.jpg"/> 
+    </item>  
+    <item> 
+      <title>Wales 81-7 Namibia</title>  
+      <description>Wales stay on course for a World Cup quarter-final place with a 12-tries-to-one Pool D win over Namibia.</description>  
+      <link>http://news.bbc.co.uk/go/rss/int/news/-/sport1/hi/rugby_union/welsh/14783195.stm</link>  
+      <guid isPermaLink="false">http://news.bbc.co.uk/sport1/hi/rugby_union/welsh/14783195.stm</guid>  
+      <pubDate>Mon, 26 Sep 2011 08:19:16 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55582000/jpg/_55582149_55581149.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55582000/jpg/_55582147_55581149.jpg"/> 
+    </item>  
+    <item> 
+      <title>TV has too much power - Ferguson</title>  
+      <description>Manchester United boss Sir Alex Ferguson believes television has too much power over the English game.</description>  
+      <link>http://news.bbc.co.uk/go/rss/int/news/-/sport1/hi/football/15059636.stm</link>  
+      <guid isPermaLink="false">http://news.bbc.co.uk/sport1/hi/football/15059636.stm</guid>  
+      <pubDate>Mon, 26 Sep 2011 12:23:03 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55586000/jpg/_55586155_55584451.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55586000/jpg/_55586157_55584451.jpg"/> 
+    </item>  
+    <item> 
+      <title>No rush for new deal - Van Persie</title>  
+      <description>Arsenal striker Robin van Persie says he is in no rush to commit his long-term future to the club.</description>  
+      <link>http://news.bbc.co.uk/go/rss/int/news/-/sport1/hi/football/15057779.stm</link>  
+      <guid isPermaLink="false">http://news.bbc.co.uk/sport1/hi/football/15057779.stm</guid>  
+      <pubDate>Mon, 26 Sep 2011 09:39:52 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55584000/jpg/_55584385_55584384.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55584000/jpg/_55584382_55582781.jpg"/> 
+    </item>  
+    <item> 
+      <title>Churchill, chance and the 'black dog'</title>  
+      <description>The wartime prime minister's dark moods, plus a series of lucky encounters, may have transformed the course of human history, writes John Gray.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/magazine-15033046</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/magazine-15033046</guid>  
+      <pubDate>Fri, 23 Sep 2011 13:47:58 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55543000/jpg/_55543777_003325692-2.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55543000/jpg/_55543770_003325692-2.jpg"/> 
+    </item>  
+    <item> 
+      <title>The SAS secret hidden since World War II</title>  
+      <description>A secret World War II diary of the SAS, created in 1946 and kept hidden ever since, is being published to mark the 70th anniversary of the regiment.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/magazine-14952939</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/magazine-14952939</guid>  
+      <pubDate>Fri, 23 Sep 2011 00:01:04 GMT</pubDate>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55537000/jpg/_55537701_comp.464.jpg"/> 
+    </item>  
+    <item> 
+      <title>Quiz of the week's news</title>  
+      <description>The Magazine's weekly quiz of the news, 7 days 7 questions.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/magazine-15021842</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/magazine-15021842</guid>  
+      <pubDate>Fri, 23 Sep 2011 00:43:36 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55531000/jpg/_55531262_stipe_getty.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55531000/jpg/_55531260_rem2_ap.jpg"/> 
+    </item>  
+    <item> 
+      <title>Government urged to boost growth</title>  
+      <description>The British Chambers of Commerce calls on the government to do more to stimulate growth, while continuing with its austerity programme.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/business-15056311</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/business-15056311</guid>  
+      <pubDate>Mon, 26 Sep 2011 05:15:53 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55580000/jpg/_55580794_012838995-1.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55580000/jpg/_55580792_012838995-1.jpg"/> 
+    </item>  
+    <item> 
+      <title>Prescott urges Labour reshuffle</title>  
+      <description>Lord Prescott urges Labour leader Ed Miliband to use new rules to change his shadow cabinet.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-politics-15056108</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-politics-15056108</guid>  
+      <pubDate>Mon, 26 Sep 2011 05:39:53 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55580000/jpg/_55580757_009783714-1.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55580000/jpg/_55580755_009783714-1.jpg"/> 
+    </item>  
+    <item> 
+      <title>Shadow cabinet elections scrapped</title>  
+      <description>Delegates at the Labour conference vote to allow the party's leader - rather than its MPs - to choose its front bench in opposition.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-politics-15054351</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-politics-15054351</guid>  
+      <pubDate>Mon, 26 Sep 2011 09:22:48 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55585000/jpg/_55585333_013017331-1.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55585000/jpg/_55585288_013017331-1.jpg"/> 
+    </item>  
+    <item> 
+      <title>Week ahead: European Parliament</title>  
+      <description>A guide to the coming week's session of the European Parliament - with the euro crisis and President Barroso's State of the Union speech set to dominate.</description>  
+      <link>http://news.bbc.co.uk/go/rss/int/news/-/democracylive/hi/europe/newsid_9596000/9596588.stm</link>  
+      <guid isPermaLink="false">http://news.bbc.co.uk/democracylive/hi/europe/newsid_9596000/9596588.stm</guid>  
+      <pubDate>Fri, 23 Sep 2011 10:54:36 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55523000/jpg/_55523308_-13.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55523000/jpg/_55523309_-13.jpg"/> 
+    </item>  
+    <item> 
+      <title>VIDEO: Early SAS recruits on their experience</title>  
+      <description>Seventy years ago, at the height of World War II, a young British officer called David Stirling came up with the idea of forming a specialist force to operate deep behind enemy lines.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-15057491</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-15057491</guid>  
+      <pubDate>Mon, 26 Sep 2011 07:09:53 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55582000/jpg/_55582249_jex_1178970_de28-1.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55582000/jpg/_55582247_jex_1178970_de28-1.jpg"/> 
+    </item>  
+    <item> 
+      <title>VIDEO: Teen steals the show at Labour conference</title>  
+      <description>An impassioned speech by 16-year-old Rory Weal wowed delegates at the Labour Party conference.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-politics-15064396</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-politics-15064396</guid>  
+      <pubDate>Mon, 26 Sep 2011 12:52:55 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55592000/jpg/_55592772_jex_1179511_de28-1.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55591000/jpg/_55591187_jex_1179511_de28-1.jpg"/> 
+    </item>  
+    <item> 
+      <title>VIDEO: 'I couldn't feed my young family'</title>  
+      <description>Thousands more young people like Paddy Haines are turning to food banks because they can't afford to feed themselves or their families.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/newsbeat/15016977</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/newsbeat/15016977</guid>  
+      <pubDate>Mon, 26 Sep 2011 05:10:57 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55516000/jpg/_55516133_foodbank.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55516000/jpg/_55516131_foodbank.jpg"/> 
+    </item>  
+    <item> 
+      <title>VIDEO: Charlie Chaplin's London on film</title>  
+      <description>A film, made in 1966, about Charlie Chaplin's life in London has had its first public screening.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/entertainment-arts-15062389</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/entertainment-arts-15062389</guid>  
+      <pubDate>Mon, 26 Sep 2011 11:48:05 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55589000/jpg/_55589862_jex_1179368_de27-1.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55591000/jpg/_55591871_jex_1179369_de38-1.jpg"/> 
+    </item>  
+    <item> 
+      <title>VIDEO: How to be an air traffic controller</title>  
+      <description>A state of the art facility has just opened in Hampshire to train the air traffic controllers of the future.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-15033976</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-15033976</guid>  
+      <pubDate>Mon, 26 Sep 2011 05:27:24 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55553000/jpg/_55553148_nats2.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55553000/jpg/_55553150_nats2.jpg"/> 
+    </item>  
+    <item> 
+      <title>VIDEO: NI plans for lower drink-drive limit</title>  
+      <description>Northern Ireland's environment minister has outlined his proposals to change the drink-driving laws.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-15057066</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-15057066</guid>  
+      <pubDate>Mon, 26 Sep 2011 05:50:19 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55581000/jpg/_55581366_jex_1178947_de37-1.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55581000/jpg/_55581364_jex_1178947_de37-1.jpg"/> 
+    </item>  
+    <item> 
+      <title>VIDEO: The Big Issue's 20th anniversary</title>  
+      <description>The Big Issue is publishing its 20th anniversary edition. The magazine was formed in London and has been a leading campaigner for the homeless.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-15057699</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-15057699</guid>  
+      <pubDate>Mon, 26 Sep 2011 09:13:55 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55583000/jpg/_55583906_000050531-1.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55583000/jpg/_55583904_000050531-1.jpg"/> 
+    </item>  
+    <item> 
+      <title>VIDEO: Has life improved for working mothers?</title>  
+      <description>Allison Pearson, author of the novel that inspired the film I Don't Know How She Does It, talked to BBC Breakfast to talk about what has changed for working mothers since the book was written in 2002.</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-15059791</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-15059791</guid>  
+      <pubDate>Mon, 26 Sep 2011 10:48:08 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55585000/jpg/_55585615_55585614.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55585000/jpg/_55585611_55585610.jpg"/> 
+    </item>  
+    <item> 
+      <title>Winning British wildlife images</title>  
+      <description>Winning British wildlife images</description>  
+      <link>http://www.bbc.co.uk/nature/15061273</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/nature/15061273</guid>  
+      <pubDate>Mon, 26 Sep 2011 11:59:12 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55591000/jpg/_55591009_youngwinneroliverwilks7448-3099small.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55591000/jpg/_55591007_youngwinneroliverwilks7448-3099small.jpg"/> 
+    </item>  
+    <item> 
+      <title>Should you test-drive your first tattoo?</title>  
+      <description>How do people avoid getting ink they regret?</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/magazine-15060691</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/magazine-15060691</guid>  
+      <pubDate>Mon, 26 Sep 2011 10:47:41 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55585000/jpg/_55585655_ind_thinks.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55585000/jpg/_55585653_ind_thinks.jpg"/> 
+    </item>  
+    <item> 
+      <title>David Miliband back in Labour spotlight</title>  
+      <description>Labour views on David Miliband's return to the conference fray</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-politics-15054711</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-politics-15054711</guid>  
+      <pubDate>Mon, 26 Sep 2011 03:11:39 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55580000/jpg/_55580676_013017353-1.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55580000/jpg/_55580678_013017353-1.jpg"/> 
+    </item>  
+    <item> 
+      <title>How to kick start the UK economy</title>  
+      <description>How to bring the UK's economy back to life</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/business-15003833</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/business-15003833</guid>  
+      <pubDate>Sun, 25 Sep 2011 16:10:08 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55557000/jpg/_55557850_heartmonitor_getty.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55557000/jpg/_55557848_heartmonitor_getty.jpg"/> 
+    </item>  
+    <item> 
+      <title>Muslim men who love 'both wives'</title>  
+      <description>The British men who have two wives</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-15032947</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-15032947</guid>  
+      <pubDate>Mon, 26 Sep 2011 09:29:18 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55554000/jpg/_55554928_100191247.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55554000/jpg/_55554926_100191247.jpg"/> 
+    </item>  
+    <item> 
+      <title>Selling the Tottenham Hotspur brand</title>  
+      <description>Spurs looks to sell brand to fans and sponsors</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/business-15017076</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/business-15017076</guid>  
+      <pubDate>Sun, 25 Sep 2011 16:10:14 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/55519000/jpg/_55519463_spursgoal_getty464.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/55519000/jpg/_55519460_spursgoal_getty464.jpg"/> 
+    </item>  
+    <item> 
+      <title>Papers judge Miliband performance</title>  
+      <description>Papers judge Miliband performance</description>  
+      <link>http://www.bbc.co.uk/go/rss/int/news/-/news/uk-15056524</link>  
+      <guid isPermaLink="false">http://www.bbc.co.uk/news/uk-15056524</guid>  
+      <pubDate>Mon, 26 Sep 2011 05:30:47 GMT</pubDate>  
+      <media:thumbnail width="66" height="49" url="http://news.bbcimg.co.uk/media/images/48275000/jpg/_48275571_44568615.jpg"/>  
+      <media:thumbnail width="144" height="81" url="http://news.bbcimg.co.uk/media/images/49077000/jpg/_49077188_papers304x171_close.jpg"/> 
+    </item> 
+  </channel> 
+</rss>

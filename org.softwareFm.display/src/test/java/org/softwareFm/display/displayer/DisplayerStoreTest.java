@@ -26,8 +26,7 @@ public class DisplayerStoreTest extends AbstractSimpleMapTest<String, IDisplayer
 	}
 
 	public void testThrowsExceptionIfKeyNotThere() {
-		IllegalArgumentException e = checkThrowsExceptionIfKeyNotThere();
-		assertEquals("Map doesn't have key b. Legal keys are [a]. Map is {a=DisplayerMock [seed=1]}", e.getMessage());
+		checkThrowsExceptionIfKeyNotThere("Map doesn't have key b. Legal keys are [a]. Map is {a=DisplayerMock [seed=1]}");
 	}
 
 	@Override

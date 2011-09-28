@@ -2,6 +2,7 @@ package org.softwareFm.repositoryFacard.impl;
 
 import java.util.Map;
 
+import org.softwareFm.repositoryFacard.AbstractRepositoryFacardTest;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.maps.Maps;
 

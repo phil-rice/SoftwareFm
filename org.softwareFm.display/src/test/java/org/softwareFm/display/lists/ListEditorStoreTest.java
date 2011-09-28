@@ -6,7 +6,7 @@ import org.softwareFm.utilities.maps.ISimpleMap;
 public class ListEditorStoreTest extends AbstractSimpleMapTest<String, IListEditor> {
 
 	public void testThrowsExceptionIfKeyNotThere() {
-		checkThrowsExceptionIfKeyNotThere();
+		checkThrowsExceptionIfKeyNotThere("Map doesn't have key b. Legal keys are [a]. Map is {a=ListEditorMock [seed=1]}");
 	}
 
 	@Override

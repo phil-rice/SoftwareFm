@@ -1,6 +1,6 @@
 package org.softwareFm.display.actions;
 
-import org.softwareFm.display.IBrowserService;
+import org.softwareFm.display.browser.IBrowserService;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.data.IDataGetter;
 import org.softwareFm.display.editor.IEditorFactory;

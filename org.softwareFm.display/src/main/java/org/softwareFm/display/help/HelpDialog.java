@@ -6,7 +6,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.display.Swts;
+import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.functions.IFunction1;
 
 public class HelpDialog extends Composite {
