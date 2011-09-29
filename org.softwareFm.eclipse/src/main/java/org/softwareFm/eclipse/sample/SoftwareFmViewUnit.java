@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.display.SoftwareFmDataComposite;
+import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.swt.ISituationListAndBuilder;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.eclipse.fixture.SoftwareFmFixture;
@@ -22,7 +23,13 @@ public class SoftwareFmViewUnit {
 			@Override
 			public SoftwareFmDataComposite makeChild(Composite from) throws Exception {
 				softwareFmFixture = new SoftwareFmFixture(from.getDisplay());
-				SoftwareFmDataComposite composite = softwareFmFixture.makeComposite(from);
+				final SoftwareFmDataComposite composite = softwareFmFixture.makeComposite(from);
+				Swts.asyncExec(composite, new Runnable() {
+					@Override
+					public void run() {
+						composite.browserComposite.processUrl(DisplayConstants.browserFeedType, "www.bbc.co.uk");
+					}
+				});
 				return composite;
 			}
 

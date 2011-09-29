@@ -1,6 +1,7 @@
 package org.softwareFm.eclipse.fixture;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.resource.ImageRegistry;
@@ -21,6 +22,9 @@ import org.softwareFm.display.GuiBuilder;
 import org.softwareFm.display.SoftwareFmDataComposite;
 import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.actions.ActionStore;
+import org.softwareFm.display.browser.BrowserFeedConfigurator;
+import org.softwareFm.display.browser.IBrowserConfigurator;
+import org.softwareFm.display.browser.RssFeedConfigurator;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.data.GuiDataStore;
 import org.softwareFm.display.data.IUrlToData;
@@ -61,6 +65,7 @@ public class SoftwareFmFixture {
 	private final IUpdateStore updateStore;
 	private final LargeButtonDefn projectDetailsButton;
 	private final LargeButtonDefn projectTrainingButton;
+	private final List<IBrowserConfigurator> browserConfigurators;
 
 	public SoftwareFmFixture(Display display) throws Exception {
 		imageRegistry = new ImageRegistry();
@@ -73,7 +78,7 @@ public class SoftwareFmFixture {
 		editorContext = new EditorContext(compositeConfig);
 
 		new ActionStoreConfigurator().process(actionStore = new ActionStore());
-		
+
 		new SmallButtonConfigurator().process(smallButtonStore = new SmallButtonStore());
 		new DisplayerStoreConfigurator().process(displayerStore = new DisplayerStore());
 		new ListEditorConfigurator().process(listEditorStore = new ListEditorStore());
@@ -86,15 +91,16 @@ public class SoftwareFmFixture {
 		projectSocialButton = new ProjectSocialLargeButtonFactory().apply(guiBuilder);
 		projectTrainingButton = new ProjectTrainingLargeButtonFactory().apply(guiBuilder);
 		organisationButton = new OrganisationLargeButtonFactory().apply(guiBuilder);
+		
+		browserConfigurators = Arrays.asList(new BrowserFeedConfigurator(), new RssFeedConfigurator());
 
 		new DataStoreConfigurator().process(dataStore = new GuiDataStore(IUrlToData.Utils.errorCallback(), resourceGetter, ICallback.Utils.rethrow()));
 	}
 
 	public SoftwareFmDataComposite makeComposite(Composite parent) {
-		SoftwareFmDataComposite result = new SoftwareFmDataComposite(parent, ICallback.Utils.<String>exception("Cannot internal browse"),//
-				dataStore, compositeConfig, actionStore, //
+		SoftwareFmDataComposite result = new SoftwareFmDataComposite(parent, dataStore, compositeConfig, actionStore, //
 				editorFactory, updateStore, listEditorStore, //
-				ICallback.Utils.rethrow(), Arrays.asList(jarButton, projectDetailsButton, projectSocialButton, projectTrainingButton, organisationButton));
+				ICallback.Utils.rethrow(), Arrays.asList(jarButton, projectDetailsButton, projectSocialButton, projectTrainingButton, organisationButton), browserConfigurators);
 		return result;
 	}
 

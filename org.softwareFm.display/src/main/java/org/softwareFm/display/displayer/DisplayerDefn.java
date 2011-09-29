@@ -95,8 +95,9 @@ public class DisplayerDefn {
 		return this;
 	}
 
-	public IDisplayer createDisplayer(Composite parent, final ActionStore actionStore, final ActionContext actionContext) {
+	public IDisplayer createDisplayer(Composite parent, final ActionContext actionContext) {
 		CompositeConfig compositeConfig = actionContext.compositeConfig;
+		ActionStore actionStore= actionContext.actionStore;
 		final IDisplayer displayer = displayerFactory.create(parent, this, SWT.NULL, compositeConfig, actionStore, actionContext);
 		createActions(actionStore, actionContext, displayer, displayer, actionDefns, -1);
 		return displayer;

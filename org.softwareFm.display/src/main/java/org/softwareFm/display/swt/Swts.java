@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
@@ -42,8 +43,8 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class Swts {
 
-	public static Composite newComposite(Composite parent, int sytle, final String description) {
-		return new Composite(parent, sytle) {
+	public static Composite newComposite(Composite parent, int style, final String description) {
+		return new Composite(parent, style) {
 			@Override
 			public String toString() {
 				return description + "." + super.toString();
@@ -51,6 +52,19 @@ public class Swts {
 		};
 	}
 
+	public static Group newGroup(Composite parent, int style, final String description) {
+		return new Group(parent, style) {
+			@Override
+			public String toString() {
+				return description + "." + super.toString();
+			}
+			@Override
+			protected void checkSubclass() {
+			}
+		};
+	}
+
+	
 	public static void addGrabHorizontalAndFillGridDataToAllChildren(Composite composite) {
 		GridLayout layout = new GridLayout();
 		layout.marginWidth = 0;
@@ -359,5 +373,6 @@ public class Swts {
 		while (display.readAndDispatch())
 			;
 	}
+
 
 }

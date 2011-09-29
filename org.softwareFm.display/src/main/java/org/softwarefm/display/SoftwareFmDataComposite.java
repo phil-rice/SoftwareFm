@@ -5,9 +5,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -15,7 +18,7 @@ import org.eclipse.swt.widgets.Group;
 import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.actions.ActionStore;
 import org.softwareFm.display.browser.BrowserComposite;
-import org.softwareFm.display.browser.IBrowserComposite;
+import org.softwareFm.display.browser.IBrowserConfigurator;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.data.GuiDataStore;
@@ -36,26 +39,37 @@ import org.softwareFm.display.swt.Swts;
 import org.softwareFm.softwareFmImages.Images;
 import org.softwareFm.softwareFmImages.backdrop.BackdropAnchor;
 import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.maps.Maps;
 
 public class SoftwareFmDataComposite implements IHasComposite {
 
-	private final Composite content;
-	private final Composite topRow;
-	private final DisplaySelectionModel displaySelectionModel;
-	private final Map<String, ISmallDisplayer> smallButtonIdToSmallDisplayerMap = Maps.newMap(LinkedHashMap.class);
-	private final Map<DisplayerDefn, IDisplayer> displayDefnToDisplayerMap = Maps.newMap(LinkedHashMap.class);
-	// private final Map<String, List<IDisplayer>> smallButtonIdToDisplayerMap = Maps.newMap(LinkedHashMap.class);
-	private final Map<String, Group> smallButtonIdToGroupMap = Maps.newMap(LinkedHashMap.class);
 	private final Map<LargeButtonDefn, SimpleButtonParent> largeButtonidToButtonParent = Maps.newMap(LinkedHashMap.class);
-	private final CompositeConfig compositeConfig;
+	private final Map<LargeButtonDefn, Composite> largeButtonDefnToComposite = Maps.newMap(LinkedHashMap.class);
+	private final Map<SmallButtonDefn, ISmallDisplayer> smallButtonToSmallDisplayerMap = Maps.newMap(LinkedHashMap.class);
+	private final Map<DisplayerDefn, IDisplayer> displayDefnToDisplayerMap = Maps.newMap(LinkedHashMap.class);
+	private final Map<SmallButtonDefn, Group> smallButtonDefnToGroupMap = Maps.newMap(LinkedHashMap.class);
 
-	public SoftwareFmDataComposite(final Composite parent, ICallback<String> internalBrowser, final GuiDataStore guiDataStore, final CompositeConfig compositeConfig, final ActionStore actionStore, final IEditorFactory editorFactory, final IUpdateStore updateStore, final ListEditorStore listEditorStore, ICallback<Throwable> exceptionHandler, final List<LargeButtonDefn> largeButtonDefns) {
-		this.compositeConfig = compositeConfig;
-		this.content = Swts.newComposite(parent, SWT.NULL, "SoftwareFmDataComposite.content");
-		displaySelectionModel = new DisplaySelectionModel(exceptionHandler, largeButtonDefns);
-		topRow =  Swts.newComposite(content, SWT.NULL, "topRow");
+	private final Composite content;
+	public BrowserComposite browserComposite;
+
+	public SoftwareFmDataComposite(final Composite parent, final GuiDataStore guiDataStore, final CompositeConfig compositeConfig, final ActionStore actionStore, final IEditorFactory editorFactory, final IUpdateStore updateStore, final ListEditorStore listEditorStore, ICallback<Throwable> exceptionHandler, final List<LargeButtonDefn> largeButtonDefns, final List<IBrowserConfigurator> browserConfigurators) {
+		content = Swts.newComposite(parent, SWT.NULL, "SoftwareFmDataComposite.content");
+		content.setLayout(new GridLayout(1, false));
+		ActionContext actionContext = new ActionContext(actionStore, guiDataStore, compositeConfig, editorFactory, updateStore, listEditorStore, new ICallback<String>() {
+			@Override
+			public void process(String t) throws Exception {
+				System.out.println("Trying to browse: t");
+			}
+		}, exceptionHandler);
+		makeTopRow(content, compositeConfig, largeButtonDefns).setLayoutData(Swts.makeGrabHorizonalAndFillGridData());
+		StackLayout stackLayout = new StackLayout();
+		makeSecondRow(content, largeButtonDefns, actionContext, stackLayout, browserConfigurators).setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
+		setUpListeners(largeButtonDefns, actionContext, stackLayout);
+	}
+
+	private Composite makeTopRow(Composite content, final CompositeConfig compositeConfig, final List<LargeButtonDefn> largeButtonDefns) {
+		Composite topRow = Swts.newComposite(content, SWT.NULL, "topRow");
 		topRow.setLayout(Swts.getHorizonalNoMarginRowLayout());
 		ImageButtonConfig imageButtonConfig = compositeConfig.imageButtonConfig;
 		SoftwareFmLayout layout = imageButtonConfig.layout;
@@ -65,42 +79,54 @@ public class SoftwareFmDataComposite implements IHasComposite {
 			largeButton.getButtonComposite().setLayoutData(new RowData(SWT.DEFAULT, layout.largeButtonHeight));
 			for (final SmallButtonDefn smallButtonDefn : largeButtonDefn.defns) {
 				ISmallDisplayer smallDisplayer = smallButtonDefn.smallButtonFactory.create(largeButton, smallButtonDefn, imageButtonConfig.withImage(smallButtonDefn.mainImageId));
-				smallButtonIdToSmallDisplayerMap.put(smallButtonDefn.id, smallDisplayer);
+				smallButtonToSmallDisplayerMap.put(smallButtonDefn, smallDisplayer);
 				Control control = smallDisplayer.getControl();
 				control.setLayoutData(new RowData(layout.smallButtonWidth, layout.smallButtonHeight));
-				control.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseDown(MouseEvent e) {
-						displaySelectionModel.select(smallButtonDefn.id);
-						System.out.println("Selected: " + smallButtonDefn.id);
-					}
-				});
 			}
 		}
-		IBrowserComposite browserComposite = new BrowserComposite(content, SWT.NULL);
-		final ActionContext actionContext = new ActionContext(guiDataStore, compositeConfig, editorFactory, updateStore, listEditorStore, browserComposite, internalBrowser);
+		return topRow;
+	}
+
+	private Composite makeSecondRow(final Composite parent, final List<LargeButtonDefn> largeButtonDefns, final ActionContext actionContext, StackLayout stackLayout, List<IBrowserConfigurator> browserConfigurators) {
+		Composite secondRow = Swts.newComposite(parent, SWT.NULL, "SecondRow");
+		secondRow.setLayout(new GridLayout(2, true));
+		Composite displayerComposite = Swts.newComposite(secondRow, SWT.NULL, "displayers");
+		displayerComposite.setLayout(stackLayout);
 		for (final LargeButtonDefn largeButtonDefn : largeButtonDefns) {
+			Composite largeButtonComposite = Swts.newComposite(displayerComposite, SWT.NULL, largeButtonDefn.id);
+			largeButtonDefnToComposite.put(largeButtonDefn, largeButtonComposite);
 			for (SmallButtonDefn smallButtonDefn : largeButtonDefn.defns) {
-				Group group = new Group(content, SWT.SHADOW_ETCHED_IN);
-				group.setVisible(false);
-				smallButtonIdToGroupMap.put(smallButtonDefn.id, group);
+				Group group = Swts.newGroup(largeButtonComposite, SWT.SHADOW_ETCHED_IN, smallButtonDefn.id);
+				smallButtonDefnToGroupMap.put(smallButtonDefn, group);
 				// group.setText(Strings.nullSafeToString(guiDataStore.getDataFor(smallButtonDefn.titleId)));
 				for (DisplayerDefn defn : smallButtonDefn.defns) {
-					IDisplayer displayer = defn.createDisplayer(group, actionStore, actionContext);
+					IDisplayer displayer = defn.createDisplayer(group, actionContext);
 					displayDefnToDisplayerMap.put(defn, displayer);
 				}
 				Swts.addGrabHorizontalAndFillGridDataToAllChildren(group);
 			}
+			Swts.addGrabHorizontalAndFillGridDataToAllChildren(largeButtonComposite);
 		}
-		Swts.addGrabHorizontalAndFillGridDataToAllChildren(content);
-		updateVisibleData(largeButtonDefns.get(0));
+		browserComposite = new BrowserComposite(secondRow, SWT.BORDER);
+		for (IBrowserConfigurator configurator : browserConfigurators)
+			configurator.configure(actionContext.compositeConfig, browserComposite);
+		((Composite) browserComposite.getControl()).layout();
+		displayerComposite.setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
+		browserComposite.getControl().setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
+		return secondRow;
+	}
+
+	private void setUpListeners(final List<LargeButtonDefn> largeButtonDefns, final ActionContext actionContext, final StackLayout stackLayout) {
+		final GuiDataStore guiDataStore = (GuiDataStore) actionContext.dataGetter;
+		ICallback<Throwable> exceptionHandler = actionContext.exceptionHandler;
+		final DisplaySelectionModel displaySelectionModel = new DisplaySelectionModel(exceptionHandler, largeButtonDefns);
 		displaySelectionModel.addDisplaySelectionListener(new IDisplaySelectionListener() {
 			@Override
 			public void smallButtonPressed(DisplaySelectionModel model, LargeButtonDefn largeButtonDefn, SmallButtonDefn smallButtonDefn) {
-				updateVisibleData(largeButtonDefn);
-
+				ImageRegistry imageRegistry = actionContext.compositeConfig.imageRegistry;
+				updateVisibleData(imageRegistry, largeButtonDefn, displaySelectionModel.getVisibleSmallButtonsId(), stackLayout);
 				boolean visible = displaySelectionModel.getVisibleSmallButtonsId().contains(smallButtonDefn.id);
-				ISmallDisplayer control = smallButtonIdToSmallDisplayerMap.get(smallButtonDefn.id);
+				ISmallDisplayer control = smallButtonToSmallDisplayerMap.get(smallButtonDefn);
 				control.setValue(!visible);
 			}
 		});
@@ -112,7 +138,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 					public void run() {
 						for (final LargeButtonDefn largeButtonDefn : largeButtonDefns) {
 							for (SmallButtonDefn smallButtonDefn : largeButtonDefn.defns) {
-								ISmallDisplayer smallDisplayer = smallButtonIdToSmallDisplayerMap.get(smallButtonDefn.id);
+								ISmallDisplayer smallDisplayer = smallButtonToSmallDisplayerMap.get(smallButtonDefn);
 								smallDisplayer.data(guiDataStore, entity, url);
 								for (DisplayerDefn defn : smallButtonDefn.defns) {
 									IDisplayer displayer = displayDefnToDisplayerMap.get(defn);
@@ -124,26 +150,57 @@ public class SoftwareFmDataComposite implements IHasComposite {
 				});
 			}
 		});
+		for (LargeButtonDefn largeButtonDefn : largeButtonDefns) {
+			for (final SmallButtonDefn smallButtonDefn : largeButtonDefn.defns) {
+				ISmallDisplayer smallDisplayer = smallButtonToSmallDisplayerMap.get(smallButtonDefn);
+				Control control = smallDisplayer.getControl();
+				control.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseDown(MouseEvent e) {
+						displaySelectionModel.select(smallButtonDefn.id);
+					}
+				});
+			}
+		}
+		LargeButtonDefn firstButton = largeButtonDefns.get(0);
+		updateVisibleData(actionContext.compositeConfig.imageRegistry, firstButton, displaySelectionModel.getVisibleSmallButtonsId(), stackLayout);
 	}
 
-	private void updateVisibleData(final LargeButtonDefn largeButtonDefn) {
+	private void updateVisibleData(final ImageRegistry imageRegistry, final LargeButtonDefn largeButtonDefn, final List<String> visibleIds, final StackLayout stackLayout) {
 		Swts.asyncExec(this, new Runnable() {
 			@Override
 			public void run() {
+				Composite composite = largeButtonDefnToComposite.get(largeButtonDefn);
+				stackLayout.topControl = composite;
 				for (Entry<LargeButtonDefn, SimpleButtonParent> entry : largeButtonidToButtonParent.entrySet()) {
 					String imageName = BackdropAnchor.group(entry.getValue().size(), entry.getKey() != largeButtonDefn);
-					entry.getValue().getButtonComposite().setBackgroundImage(Images.getImage(compositeConfig.imageRegistry, imageName));
+					entry.getValue().getButtonComposite().setBackgroundImage(Images.getImage(imageRegistry, imageName));
 				}
-				final List<String> visible = displaySelectionModel.getVisibleSmallButtonsId();
-				Swts.sortVisibilityForComposites(smallButtonIdToGroupMap, new IFunction1<String, Boolean>() {
-					@Override
-					public Boolean apply(String from) throws Exception {
-						return visible.contains(from);
-					}
-				});
-				content.layout();
-				content.getParent().layout();
-				content.getParent().redraw();
+
+				List<Control> visible = Lists.newList();
+				List<Control> inVisible = Lists.newList();
+				for (SmallButtonDefn smallButtonDefn : largeButtonDefn.defns) {
+					Group group = smallButtonDefnToGroupMap.get(smallButtonDefn);
+					boolean b = visibleIds.contains(smallButtonDefn.id);
+					group.setVisible(b);
+					if (b)
+						visible.add(group);
+					else
+						inVisible.add(group);
+				}
+
+				Control lastVisible = Swts.setAfter(visible, null);
+				Swts.setAfter(inVisible, lastVisible);
+				composite.getParent().layout();
+				composite.getParent().redraw();
+				composite.layout();
+				composite.redraw();
+//				Swts.asyncExec(SoftwareFmDataComposite.this, new Runnable() {
+//					@Override
+//					public void run() {
+//						Swts.layoutDump(content);
+//					}
+//				});
 			}
 
 		});

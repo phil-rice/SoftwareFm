@@ -37,14 +37,14 @@ public class DisplayerDefnIntegrationTest extends TestCase {
 	private ActionMock actionMock;
 
 	public void testCreateWithNoButtons() {
-		TitleAndText displayer = (TitleAndText) displayerDefn.createDisplayer(shell, actionStore, actionContext);
+		TitleAndText displayer = (TitleAndText) displayerDefn.createDisplayer(shell, actionContext);
 		checkButtons(displayer);
 		assertEquals("registeredTitle", displayer.getTitle());
 	}
 
 	public void testWithOneButton() {
 		DisplayerDefn dispDefnWithButton = displayerDefn.actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).tooltip("tooltip0"));
-		TitleAndText displayer = (TitleAndText) dispDefnWithButton.createDisplayer(shell, actionStore, actionContext);
+		TitleAndText displayer = (TitleAndText) dispDefnWithButton.createDisplayer(shell, actionContext);
 		assertEquals("registeredTitle", displayer.getTitle());
 		checkButtons(displayer, ArtifactsAnchor.projectKey + ":" + OverlaysAnchor.deleteKey);
 	}
@@ -53,7 +53,7 @@ public class DisplayerDefnIntegrationTest extends TestCase {
 		DisplayerDefn dispDefnWithButton = displayerDefn.actions(//
 				new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).tooltip("tooltip0"),//
 				new ActionDefn("someId", ArtifactsAnchor.projectKey, null).tooltip("tooltip1"));
-		TitleAndText displayer = (TitleAndText) dispDefnWithButton.createDisplayer(shell, actionStore, actionContext);
+		TitleAndText displayer = (TitleAndText) dispDefnWithButton.createDisplayer(shell, actionContext);
 		assertEquals("registeredTitle", displayer.getTitle());
 		checkButtons(displayer, ArtifactsAnchor.projectKey + ":" + OverlaysAnchor.deleteKey, ArtifactsAnchor.projectKey);
 	}
@@ -62,7 +62,7 @@ public class DisplayerDefnIntegrationTest extends TestCase {
 	public void testPressingButtonCausesActionToFireWithParametersFromDataGetter() {
 		DisplayerDefn dispDefnWithButton = displayerDefn.//
 				actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("a"));
-		TitleAndText displayer = (TitleAndText) dispDefnWithButton.createDisplayer(shell, actionStore, actionContext);
+		TitleAndText displayer = (TitleAndText) dispDefnWithButton.createDisplayer(shell, actionContext);
 		Control[] children = displayer.getButtonComposite().getChildren();
 		SimpleImageControl control = (SimpleImageControl) children[0];
 		control.notifyListeners(SWT.MouseDown, new Event());
@@ -89,7 +89,7 @@ public class DisplayerDefnIntegrationTest extends TestCase {
 		DisplayerDefn dispDefnWithButton = displayerDefn.//
 				data("dataKey").//
 				actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
-		TitleAndText displayer = (TitleAndText) dispDefnWithButton.createDisplayer(shell, actionStore, actionContext);
+		TitleAndText displayer = (TitleAndText) dispDefnWithButton.createDisplayer(shell, actionContext);
 		Control[] children = displayer.getButtonComposite().getChildren();
 		SimpleImageControl control = (SimpleImageControl) children[0];
 		assertEquals(null, control.getToolTipText());

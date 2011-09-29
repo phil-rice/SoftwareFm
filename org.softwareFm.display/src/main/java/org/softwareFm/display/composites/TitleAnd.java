@@ -24,7 +24,7 @@ public  class TitleAnd implements IDisplayer, IHasComposite {
 	private SoftwareFmLayout layout;
 
 	public TitleAnd(CompositeConfig config, Composite parent, String titleOrTitleKey, boolean titleIsKey) {
-		this.content = new Composite(parent, SWT.NULL);
+		this.content = Swts.newComposite(parent, SWT.NULL, titleOrTitleKey);
 		this.config = config;
 		content.setLayout(Swts.getHorizonalNoMarginRowLayout());
 

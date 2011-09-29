@@ -37,7 +37,7 @@ public class BrowserComposite implements IBrowserCompositeBuilder, ISimpleMap<St
 	private final StackLayout stackLayout;
 
 	public BrowserComposite(Composite parent, int style) {
-		this.content = Swts.newComposite(parent, style, "BrowserComposite.content");
+		this.content = Swts.newComposite(parent, style, "BrowserComposite");
 		stackLayout = new StackLayout();
 		content.setLayout(stackLayout);
 		DefaultHttpClient rawClient = new DefaultHttpClient();
@@ -93,6 +93,8 @@ public class BrowserComposite implements IBrowserCompositeBuilder, ISimpleMap<St
 		try {
 			IBrowserPart part = feedPostProcessor.apply(content);
 			transformerMap.put(feedType, part);
+			content.layout();
+			content.redraw();
 			return part;
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
