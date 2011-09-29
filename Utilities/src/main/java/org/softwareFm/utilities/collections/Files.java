@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -69,6 +70,14 @@ public class Files {
 		try {
 			InputStream inputStream = resource.getInputStream();
 			return getText(inputStream);
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+	}
+	public static String getText(File file) {
+		try {
+			FileReader reader = new FileReader(file);
+			return getText(reader);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}

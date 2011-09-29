@@ -2,6 +2,7 @@ package org.softwareFm.allTests;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.display.browser.BrowserUnit;
 import org.softwareFm.display.composites.TitleAndText;
 import org.softwareFm.display.editor.TextEditor;
 import org.softwareFm.display.rss.RssPersonUnit;
@@ -22,6 +23,7 @@ public class PersonUnit {
 				Swts.makeButtonFromMainMethod(composite, TextEditor.class);
 				Swts.makeButtonFromMainMethod(composite, SoftwareFmDisplaySamples.class);
 				Swts.makeButtonFromMainMethod(composite, RssPersonUnit.class);
+				Swts.makeButtonFromMainMethod(composite, BrowserUnit.class);
 				Swts.addGrabHorizontalAndFillGridDataToAllChildren(composite);
 				return composite;
 			}

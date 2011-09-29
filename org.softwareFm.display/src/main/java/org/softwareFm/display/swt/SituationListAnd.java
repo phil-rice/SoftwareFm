@@ -10,15 +10,19 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.List;
 import org.softwareFm.display.composites.IHasComposite;
+import org.softwareFm.display.composites.IHasControl;
+import org.softwareFm.display.rss.ISituationListCallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
 
-public class SituationListAnd implements IHasComposite {
+public class SituationListAnd <T extends IHasControl>implements IHasComposite {
 	private final Composite content;
 	private List situationList;
-	private ISituationDisplayer situationDisplayer;
+	private T situationDisplayer;
+	private final ISituationListCallback<T> callback;
 
-	public SituationListAnd(Composite parent, Callable<? extends Iterable<String>> situations, IFunction1<Composite, ISituationDisplayer> childWindowCreator) {
+	public SituationListAnd(Composite parent, Callable<? extends Iterable<String>> situations, IFunction1<Composite, T> childWindowCreator, ISituationListCallback<T> callback) {
+		this.callback = callback;
 		this.content = new Composite(parent, SWT.NULL);
 		try {
 			content.setLayout(new GridLayout(2, true));
@@ -28,11 +32,11 @@ public class SituationListAnd implements IHasComposite {
 				situationList.add(object);
 			situationDisplayer = childWindowCreator.apply(content);
 			Control control = situationDisplayer.getControl();
-			control.setLayoutData(Swts.makeGrabHorizonalAndFillGridData());
+			control.setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
 			SelectionAdapter listener = new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					updateSituation(situationList, situationDisplayer);
+					updateSituation();
 				}
 			};
 			situationList.addSelectionListener(listener);
@@ -44,9 +48,10 @@ public class SituationListAnd implements IHasComposite {
 
 	}
 
+
 	public void selectFirst() {
 		situationList.select(0);
-		updateSituation(situationList, situationDisplayer);
+		updateSituation();
 	}
 
 	@Override
@@ -59,11 +64,11 @@ public class SituationListAnd implements IHasComposite {
 		return content;
 	}
 
-	private void updateSituation(final List situationList, final ISituationDisplayer situationDisplayer) {
+	private void updateSituation() {
 		try {
 			int index = situationList.getSelectionIndex();
 			String item = index == -1 ? null : situationList.getItem(index);
-			situationDisplayer.itemSelected(item);
+			callback.selected(situationDisplayer, item);
 		} catch (Exception e1) {
 			throw WrappedException.wrap(e1);
 		}

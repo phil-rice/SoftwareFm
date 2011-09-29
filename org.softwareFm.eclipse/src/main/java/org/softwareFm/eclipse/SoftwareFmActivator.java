@@ -21,10 +21,8 @@ import org.softwareFm.display.GuiBuilder;
 import org.softwareFm.display.SoftwareFmDataComposite;
 import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.actions.ActionStore;
-import org.softwareFm.display.browser.IBrowserService;
-import org.softwareFm.display.browser.RssFeedTransformer;
+import org.softwareFm.display.browser.BrowserComposite;
 import org.softwareFm.display.composites.CompositeConfig;
-import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.data.GuiDataStore;
 import org.softwareFm.display.data.IUrlDataCallback;
 import org.softwareFm.display.data.IUrlToData;
@@ -37,7 +35,6 @@ import org.softwareFm.display.largeButton.ILargeButtonFactory;
 import org.softwareFm.display.largeButton.LargeButtonDefn;
 import org.softwareFm.display.lists.ListEditorStore;
 import org.softwareFm.display.smallButtons.SmallButtonStore;
-import org.softwareFm.eclipse.fixture.BrowserService;
 import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.jdtBinding.api.IBindingRipper;
@@ -86,7 +83,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	private IUpdateStore updateStore;
 	private IResourceGetter resourceGetter;
 	private String uuid;
-	private BrowserService browserService;
+	private BrowserComposite browserComposite;
 
 	public SoftwareFmActivator() {
 	}
@@ -110,9 +107,9 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		smallButtonStore = null;
 		listEditorStore = null;
 		guiDataStore = null;
-		if (browserService != null) {
-			browserService.shutDown();
-			browserService = null;
+		if (browserComposite != null) {
+			browserComposite.shutDown();
+			browserComposite = null;
 		}
 		if (selectedArtifactSelectionManager != null) {
 			Plugins.walkSelectionServices(new ICallback<ISelectionService>() {
@@ -190,13 +187,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		return actionStore == null ? actionStore = Plugins.configureMainWithCallbacks(new ActionStore(), actionStoreConfiguratorId, "class", onException()) : actionStore;
 	}
 
-	private IBrowserService getFeedTransformer() {
-		return browserService == null ? browserService = makeBrowserService() : browserService;
-	}
 
-	private BrowserService makeBrowserService() {
-		return new BrowserService().register(DisplayConstants.rssFeedType, new RssFeedTransformer());
-	}
 
 	private SmallButtonStore getSmallButtonStore() {
 		return smallButtonStore == null ? smallButtonStore = Plugins.configureMainWithCallbacks(new SmallButtonStore(), smallButtonStoreConfiguratorId, "class", onException()) : smallButtonStore;
@@ -323,7 +314,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 				return result;
 			}
 		});
-		SoftwareFmDataComposite composite = new SoftwareFmDataComposite(parent, internalBrowser, getFeedTransformer(), guiDataStore, getCompositeConfig(display), getActionStore(), getEditorFactory(display), getUpdateStore(), getListEditorStore(), onException(), getLargeButtonDefns());
+		SoftwareFmDataComposite composite = new SoftwareFmDataComposite(parent, internalBrowser, guiDataStore, getCompositeConfig(display), getActionStore(), getEditorFactory(display), getUpdateStore(), getListEditorStore(), onException(), getLargeButtonDefns());
 		return composite;
 
 	}

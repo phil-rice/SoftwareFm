@@ -40,7 +40,7 @@ public class SoftwareFmDisplaySamples {
 				final StyledText styledText = new StyledText(leftSide, SWT.BORDER);
 				styledText.setLayoutData(makeGridLayoutData());
 
-				final SoftwareFmFixture softwareFmFixture = new SoftwareFmFixture(parent.getDisplay());
+				final SoftwareFmFixture softwareFmFixture = new SoftwareFmFixture(parent);
 				softwareFmFixture.makeComposite(parent).getComposite().setLayoutData(makeGridLayoutData());
 				situationlist.addSelectionListener(new SelectionAdapter() {
 					@Override

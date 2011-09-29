@@ -1,7 +1,6 @@
 package org.softwareFm.display.rss;
 
-import java.io.File;
-import java.io.FileReader;
+import java.io.StringReader;
 import java.text.MessageFormat;
 import java.util.List;
 
@@ -12,26 +11,24 @@ import org.eclipse.swt.widgets.Label;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import org.softwareFm.display.browser.IBrowserPart;
 import org.softwareFm.display.constants.DisplayConstants;
-import org.softwareFm.display.swt.ISituationDisplayer;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
-public class RssDisplay implements ISituationDisplayer {
+public class RssDisplay implements IBrowserPart {
 
 	private final Composite content;
-	private final File root;
 	private final Composite main;
 	private final Label label;
 	private final IResourceGetter resourceGetter;
 
-	public RssDisplay(Composite parent, int style, File root, IResourceGetter resourceGetter) {
-		this.root = root;
+	public RssDisplay(Composite parent, int style, IResourceGetter resourceGetter) {
 		this.resourceGetter = resourceGetter;
 		this.main = new Composite(parent, style) {
 			@Override
 			public String toString() {
-				return "rssDisplay.main: " + super.toString();
+				return "rssDisplay.main: " + isVisible() + super.toString();
 			};
 		};
 		label = new Label(main, SWT.NULL);
@@ -53,30 +50,32 @@ public class RssDisplay implements ISituationDisplayer {
 	}
 
 	@Override
-	public void itemSelected(String item) {
+	public void displayReply(int statusCode, String reply) {
 		Swts.removeAllChildren(content);
-		SAXBuilder builder = new SAXBuilder();
-		Document doc;
-		try {
-			doc = builder.build(new FileReader(new File(root, item)));
-		} catch (Exception e) {
-			throw new RuntimeException(MessageFormat.format(DisplayConstants.cannotParseRssFeed, item), e);
+		if (statusCode == 200) {
+			SAXBuilder builder = new SAXBuilder();
+			Document doc;
+			try {
+				doc = builder.build(new StringReader(reply));
+			} catch (Exception e) {
+				throw new RuntimeException(MessageFormat.format(DisplayConstants.cannotParseRssFeed, reply), e);
+			}
+			Element root = doc.getRootElement();
+			Element channel = root.getChild("channel");
+			populateTopRow(channel);
+			if (channel != null) {
+				@SuppressWarnings("unchecked")
+				List<Element> items = channel.getChildren("item");
+				for (Element itemElement : items)
+					new RssItemComposite(content, SWT.BORDER, itemElement);
+			}
+			Swts.addGrabHorizontalAndFillGridDataToAllChildren(content);
+			content.getParent().layout();
+			content.getParent().redraw();
+			content.layout();
+			content.redraw();
+			System.out.println("Computed: " + content.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		}
-		Element root = doc.getRootElement();
-		Element channel = root.getChild("channel");
-		populateTopRow(channel);
-		if (channel != null) {
-			@SuppressWarnings("unchecked")
-			List<Element> items = channel.getChildren("item");
-			for (Element itemElement : items)
-				new RssItemComposite(content, SWT.BORDER, itemElement);
-		}
-		Swts.addGrabHorizontalAndFillGridDataToAllChildren(content);
-		content.getParent().layout();
-		content.getParent().redraw();
-		content.layout();
-		content.redraw();
-		System.out.println("Computed: " + content.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 	}
 
 	private void populateTopRow(Element channel) {
@@ -93,5 +92,18 @@ public class RssDisplay implements ISituationDisplayer {
 		return "";
 	}
 
+	@Override
+	public boolean usesUrl() {
+		return false;
+	}
 
+	@Override
+	public void displayUrl(String url) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Composite getComposite() {
+		return main;
+	}
 }

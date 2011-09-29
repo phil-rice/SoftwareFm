@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.softwareFm.configuration.SoftwareFmPropertyAnchor;
@@ -21,7 +22,8 @@ import org.softwareFm.display.GuiBuilder;
 import org.softwareFm.display.SoftwareFmDataComposite;
 import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.actions.ActionStore;
-import org.softwareFm.display.browser.IBrowserService;
+import org.softwareFm.display.browser.BrowserComposite;
+import org.softwareFm.display.browser.IBrowserComposite;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.data.GuiDataStore;
 import org.softwareFm.display.data.IUrlToData;
@@ -41,7 +43,7 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class SoftwareFmFixture {
 	public static SoftwareFmDataComposite makeSoftwareFmComposite(Composite parent) throws Exception {
-		return new SoftwareFmFixture(parent.getDisplay()).makeComposite(parent);
+		return new SoftwareFmFixture(parent).makeComposite(parent);
 	}
 
 	public final ImageRegistry imageRegistry;
@@ -62,9 +64,10 @@ public class SoftwareFmFixture {
 	private final IUpdateStore updateStore;
 	private final LargeButtonDefn projectDetailsButton;
 	private final LargeButtonDefn projectTrainingButton;
-	private final IBrowserService browserService;
+	private final IBrowserComposite browserComposite;
 
-	public SoftwareFmFixture(Display display) throws Exception {
+	public SoftwareFmFixture(Composite parent) throws Exception {
+		Display display = parent.getDisplay();
 		imageRegistry = new ImageRegistry();
 		new BasicImageRegisterConfigurator().registerWith(display, imageRegistry);
 
@@ -73,7 +76,7 @@ public class SoftwareFmFixture {
 		compositeConfig = new CompositeConfig(display, layout, imageRegistry, resourceGetter);
 		updateStore = IUpdateStore.Utils.sysoutUpdateStore();
 		editorContext = new EditorContext(compositeConfig);
-		browserService= new BrowserService();
+		browserComposite= new BrowserComposite(parent, SWT.NULL);
 
 		new ActionStoreConfigurator().process(actionStore = new ActionStore());
 		
@@ -95,10 +98,9 @@ public class SoftwareFmFixture {
 
 	public SoftwareFmDataComposite makeComposite(Composite parent) {
 		SoftwareFmDataComposite result = new SoftwareFmDataComposite(parent, ICallback.Utils.<String>exception("Cannot internal browse"),//
-				browserService, dataStore, compositeConfig, //
-				actionStore, editorFactory, updateStore, //
-				listEditorStore, ICallback.Utils.rethrow(), //
-				Arrays.asList(jarButton, projectDetailsButton, projectSocialButton, projectTrainingButton, organisationButton));
+				dataStore, compositeConfig, actionStore, //
+				editorFactory, updateStore, listEditorStore, //
+				ICallback.Utils.rethrow(), Arrays.asList(jarButton, projectDetailsButton, projectSocialButton, projectTrainingButton, organisationButton));
 		return result;
 	}
 

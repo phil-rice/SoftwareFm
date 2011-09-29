@@ -14,7 +14,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.actions.ActionStore;
-import org.softwareFm.display.browser.IBrowserService;
+import org.softwareFm.display.browser.BrowserComposite;
+import org.softwareFm.display.browser.IBrowserComposite;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.data.GuiDataStore;
@@ -50,7 +51,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 	private final Map<LargeButtonDefn, SimpleButtonParent> largeButtonidToButtonParent = Maps.newMap(LinkedHashMap.class);
 	private final CompositeConfig compositeConfig;
 
-	public SoftwareFmDataComposite(final Composite parent, ICallback<String> internalBrowser, IBrowserService browserService, final GuiDataStore guiDataStore, final CompositeConfig compositeConfig, final ActionStore actionStore, final IEditorFactory editorFactory, final IUpdateStore updateStore, final ListEditorStore listEditorStore, ICallback<Throwable> exceptionHandler, final List<LargeButtonDefn> largeButtonDefns) {
+	public SoftwareFmDataComposite(final Composite parent, ICallback<String> internalBrowser, final GuiDataStore guiDataStore, final CompositeConfig compositeConfig, final ActionStore actionStore, final IEditorFactory editorFactory, final IUpdateStore updateStore, final ListEditorStore listEditorStore, ICallback<Throwable> exceptionHandler, final List<LargeButtonDefn> largeButtonDefns) {
 		this.compositeConfig = compositeConfig;
 		this.content = new Composite(parent, SWT.NULL);
 		displaySelectionModel = new DisplaySelectionModel(exceptionHandler, largeButtonDefns);
@@ -76,7 +77,8 @@ public class SoftwareFmDataComposite implements IHasComposite {
 				});
 			}
 		}
-		final ActionContext actionContext = new ActionContext(guiDataStore, compositeConfig, editorFactory, updateStore, listEditorStore, browserService, internalBrowser);
+		IBrowserComposite browserComposite = new BrowserComposite(content, SWT.NULL);
+		final ActionContext actionContext = new ActionContext(guiDataStore, compositeConfig, editorFactory, updateStore, listEditorStore, browserComposite, internalBrowser);
 		for (final LargeButtonDefn largeButtonDefn : largeButtonDefns) {
 			for (SmallButtonDefn smallButtonDefn : largeButtonDefn.defns) {
 				Group group = new Group(content, SWT.SHADOW_ETCHED_IN);

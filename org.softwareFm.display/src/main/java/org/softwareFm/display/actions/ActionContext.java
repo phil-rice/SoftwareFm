@@ -1,6 +1,6 @@
 package org.softwareFm.display.actions;
 
-import org.softwareFm.display.browser.IBrowserService;
+import org.softwareFm.display.browser.IBrowserComposite;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.data.IDataGetter;
 import org.softwareFm.display.editor.IEditorFactory;
@@ -14,15 +14,15 @@ public class ActionContext {
 	public final IEditorFactory editorFactory;
 	public final IUpdateStore updateStore;
 	public final ListEditorStore listEditorStore;
-	public final IBrowserService browserService;
+	public final IBrowserComposite browserComposite;
 	public final ICallback<String> internalBrowser;
-	public ActionContext(IDataGetter dataGetter, CompositeConfig compositeConfig, IEditorFactory editorFactory, IUpdateStore updateStore, ListEditorStore listEditorStore, IBrowserService browserService, ICallback<String> internalBrowser) {
+	public ActionContext(IDataGetter dataGetter, CompositeConfig compositeConfig, IEditorFactory editorFactory, IUpdateStore updateStore, ListEditorStore listEditorStore, IBrowserComposite browserComposite, ICallback<String> internalBrowser) {
 		this.dataGetter = dataGetter;
 		this.compositeConfig = compositeConfig;
 		this.editorFactory = editorFactory;
 		this.updateStore = updateStore;
 		this.listEditorStore = listEditorStore;
-		this.browserService = browserService;
+		this.browserComposite = browserComposite;
 		this.internalBrowser = internalBrowser;
 	}
 

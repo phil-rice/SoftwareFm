@@ -21,6 +21,7 @@ public class DisplayConstants {
 	public static final String cannotParseRssFeed = "Cannot Parse Rss Feed:\n {0}\n";
 
 	public static final String rssFeedType = "feedType.rss";
+	public static final String browserFeedType = "feedType.browser";
 	
 	public static final String rssTitleKey = "rss.title";
 	

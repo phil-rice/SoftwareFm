@@ -1,10 +1,12 @@
 package org.softwareFm.display.swt;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.Callable;
 
 import junit.framework.Assert;
 
@@ -29,6 +31,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.display.composites.IHasControl;
+import org.softwareFm.display.rss.ISituationListCallback;
+import org.softwareFm.utilities.collections.Files;
+import org.softwareFm.utilities.collections.Iterables;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.Functions;
@@ -111,6 +116,22 @@ public class Swts {
 		}
 	}
 
+	public static void makeOnlyOneVisible(Composite content, Control control) {
+		final List<Control> visibleControls = Lists.newList();
+		final List<Control> invisibleControls = Lists.newList();
+		for (Control child : content.getChildren()) {
+			boolean visible = child == control;
+			child.setVisible(visible);
+			if (visible)
+				visibleControls.add(child);
+			else
+				invisibleControls.add(child);
+		}
+		Control lastVisible = Swts.setAfter(visibleControls, null);
+		for (Control invisibleControl : invisibleControls)
+			invisibleControl.moveBelow(lastVisible);
+	}
+
 	public static TableEditor addEditor(Table table, int row, int col, Control control) {
 		TableItem[] items = table.getItems();
 		TableEditor editor = new TableEditor(table);
@@ -143,6 +164,7 @@ public class Swts {
 		data.grabExcessHorizontalSpace = true;
 		return data;
 	}
+
 	public static GridData makeGrabHorizonalVerticalAndFillGridData() {
 		GridData data = new GridData();
 		data.horizontalAlignment = GridData.FILL;
@@ -168,7 +190,7 @@ public class Swts {
 	}
 
 	public static void layoutDump(Control control, Indent indent) {
-		System.out.println(indent + control.getClass().getSimpleName() + ": " + layoutAsString(control));
+		System.out.println(indent + control.getClass().getSimpleName() + "(Visible: " + control.isVisible()+": " + layoutAsString(control));
 		if (control instanceof Composite) {
 			Composite composite = (Composite) control;
 			for (Control nested : composite.getChildren()) {
@@ -202,6 +224,23 @@ public class Swts {
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
+	}
+
+	public static <T extends IHasControl> void xUnit(String title, final File root, final String extension, final IFunction1<Composite, T> childWindowCreator, final ISituationListCallback<T> selectionCallback) {
+		Swts.display(title, new IFunction1<Composite, Composite>() {
+			@Override
+			public Composite apply(Composite from) throws Exception {
+				Callable<? extends Iterable<String>> situations = new Callable<Iterable<String>>() {
+					@Override
+					public Iterable<String> call() throws Exception {
+						return Iterables.map(Files.walkChildrenOf(root, Files.extensionFilter(extension)), Files.toFileName());
+					}
+				};
+				SituationListAnd<T> result = new SituationListAnd<T>(from, situations, childWindowCreator, selectionCallback);
+				result.selectFirst();
+				return result.getComposite();
+			}
+		});
 	}
 
 	public static void removeAllChildren(Composite composite) {
@@ -280,6 +319,12 @@ public class Swts {
 			control.getDisplay().asyncExec(runnable);
 	}
 
+	public static void syncExec(IHasControl hasControl, Runnable runnable) {
+		Control control = hasControl.getControl();
+		if (!control.isDisposed())
+			control.getDisplay().syncExec(runnable);
+	}
+
 	public static Button makePushButton(Composite parent, IResourceGetter resourceGetter, String titleKey, final Runnable runnable) {
 		Button button = new Button(parent, SWT.PUSH);
 		button.setText(IResourceGetter.Utils.getOrException(resourceGetter, titleKey));
@@ -290,6 +335,11 @@ public class Swts {
 			}
 		});
 		return button;
+	}
+
+	public static void dispatchUntilQueueEmpty(Display display) {
+		while (display.readAndDispatch())
+			;
 	}
 
 }
