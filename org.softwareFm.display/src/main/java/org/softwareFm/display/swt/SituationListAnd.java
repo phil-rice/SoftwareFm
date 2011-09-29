@@ -1,8 +1,10 @@
 package org.softwareFm.display.swt;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
@@ -11,36 +13,44 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.List;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.composites.IHasControl;
-import org.softwareFm.display.rss.ISituationListCallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
-import org.softwareFm.utilities.functions.IFunction1;
 
-public class SituationListAnd <T extends IHasControl>implements IHasComposite {
+public class SituationListAnd<T extends IHasControl> implements IHasComposite {
 	private final Composite content;
 	private List situationList;
 	private T situationDisplayer;
-	private final ISituationListCallback<T> callback;
 
-	public SituationListAnd(Composite parent, Callable<? extends Iterable<String>> situations, IFunction1<Composite, T> childWindowCreator, ISituationListCallback<T> callback) {
-		this.callback = callback;
-		this.content = new Composite(parent, SWT.NULL);
+	CopyOnWriteArrayList<ISituationListListener<T>> listeners = new CopyOnWriteArrayList<ISituationListListener<T>>();
+	private StyledText situationContents;
+
+	public SituationListAnd(Composite parent, Callable<? extends Iterable<String>> situations, ISituationListAndBuilder<T> builder) {
+		this.content = new Composite(parent, SWT.NULL) {
+			@Override
+			public String toString() {
+				return "situationListAnd.content" + super.toString();
+			}
+		};
 		try {
 			content.setLayout(new GridLayout(2, true));
-			situationList = new List(content, SWT.NULL);
+			Composite leftColumn = new Composite(content, SWT.NULL);
+			situationList = new List(leftColumn, SWT.NULL);
+			situationContents = new StyledText(leftColumn, SWT.NULL);
+			Swts.addGrabHorizontalAndFillGridDataToAllChildren(leftColumn);
+			
 			Iterable<String> list = situations.call();
 			for (String object : list)
 				situationList.add(object);
-			situationDisplayer = childWindowCreator.apply(content);
+			situationDisplayer = builder.makeChild(content);
 			Control control = situationDisplayer.getControl();
-			control.setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
-			SelectionAdapter listener = new SelectionAdapter() {
+			situationList.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					updateSituation();
+					fire();
 				}
-			};
-			situationList.addSelectionListener(listener);
-			situationList.setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
+
+			});
+			leftColumn.setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
+			control.setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
 
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
@@ -49,9 +59,24 @@ public class SituationListAnd <T extends IHasControl>implements IHasComposite {
 	}
 
 
+	public void setText(String text){
+		situationContents.setText(text);
+	}
+	
+	private void fire() {
+		try {
+			int index = situationList.getSelectionIndex();
+			String value = index == -1 ? null : situationList.getItem(index);
+			for (ISituationListListener<T> listener : listeners)
+				listener.selected(situationDisplayer, value);
+		} catch (Exception e1) {
+			throw WrappedException.wrap(e1);
+		}
+	};
+
 	public void selectFirst() {
-		situationList.select(0);
-		updateSituation();
+		situationList.setSelection(0);
+		fire();
 	}
 
 	@Override
@@ -64,14 +89,9 @@ public class SituationListAnd <T extends IHasControl>implements IHasComposite {
 		return content;
 	}
 
-	private void updateSituation() {
-		try {
-			int index = situationList.getSelectionIndex();
-			String item = index == -1 ? null : situationList.getItem(index);
-			callback.selected(situationDisplayer, item);
-		} catch (Exception e1) {
-			throw WrappedException.wrap(e1);
-		}
+	public void addListener(ISituationListListener<T> listener) {
+		listeners.add(listener);
+
 	}
 
 }

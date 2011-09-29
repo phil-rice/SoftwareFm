@@ -11,7 +11,7 @@ public class Sample {
 		Swts.display("Sample", new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				return new SoftwareFmFixture(from).makeComposite(from).getComposite();
+				return new SoftwareFmFixture(from.getDisplay()).makeComposite(from).getComposite();
 			}
 		});
 	}

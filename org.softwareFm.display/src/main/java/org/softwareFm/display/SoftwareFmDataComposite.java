@@ -53,9 +53,9 @@ public class SoftwareFmDataComposite implements IHasComposite {
 
 	public SoftwareFmDataComposite(final Composite parent, ICallback<String> internalBrowser, final GuiDataStore guiDataStore, final CompositeConfig compositeConfig, final ActionStore actionStore, final IEditorFactory editorFactory, final IUpdateStore updateStore, final ListEditorStore listEditorStore, ICallback<Throwable> exceptionHandler, final List<LargeButtonDefn> largeButtonDefns) {
 		this.compositeConfig = compositeConfig;
-		this.content = new Composite(parent, SWT.NULL);
+		this.content = Swts.newComposite(parent, SWT.NULL, "SoftwareFmDataComposite.content");
 		displaySelectionModel = new DisplaySelectionModel(exceptionHandler, largeButtonDefns);
-		topRow = new Composite(content, SWT.NULL);
+		topRow =  Swts.newComposite(content, SWT.NULL, "topRow");
 		topRow.setLayout(Swts.getHorizonalNoMarginRowLayout());
 		ImageButtonConfig imageButtonConfig = compositeConfig.imageButtonConfig;
 		SoftwareFmLayout layout = imageButtonConfig.layout;
@@ -64,7 +64,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 			largeButtonidToButtonParent.put(largeButtonDefn, largeButton);
 			largeButton.getButtonComposite().setLayoutData(new RowData(SWT.DEFAULT, layout.largeButtonHeight));
 			for (final SmallButtonDefn smallButtonDefn : largeButtonDefn.defns) {
-				ISmallDisplayer smallDisplayer = smallButtonDefn.smallButtonFactory.create( largeButton, smallButtonDefn, imageButtonConfig.withImage(smallButtonDefn.mainImageId));
+				ISmallDisplayer smallDisplayer = smallButtonDefn.smallButtonFactory.create(largeButton, smallButtonDefn, imageButtonConfig.withImage(smallButtonDefn.mainImageId));
 				smallButtonIdToSmallDisplayerMap.put(smallButtonDefn.id, smallDisplayer);
 				Control control = smallDisplayer.getControl();
 				control.setLayoutData(new RowData(layout.smallButtonWidth, layout.smallButtonHeight));
@@ -84,7 +84,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 				Group group = new Group(content, SWT.SHADOW_ETCHED_IN);
 				group.setVisible(false);
 				smallButtonIdToGroupMap.put(smallButtonDefn.id, group);
-//				group.setText(Strings.nullSafeToString(guiDataStore.getDataFor(smallButtonDefn.titleId)));
+				// group.setText(Strings.nullSafeToString(guiDataStore.getDataFor(smallButtonDefn.titleId)));
 				for (DisplayerDefn defn : smallButtonDefn.defns) {
 					IDisplayer displayer = defn.createDisplayer(group, actionStore, actionContext);
 					displayDefnToDisplayerMap.put(defn, displayer);

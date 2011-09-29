@@ -37,7 +37,7 @@ public class BrowserComposite implements IBrowserCompositeBuilder, ISimpleMap<St
 	private final StackLayout stackLayout;
 
 	public BrowserComposite(Composite parent, int style) {
-		this.content = new Composite(parent, style);
+		this.content = Swts.newComposite(parent, style, "BrowserComposite.content");
 		stackLayout = new StackLayout();
 		content.setLayout(stackLayout);
 		DefaultHttpClient rawClient = new DefaultHttpClient();

@@ -31,7 +31,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.display.composites.IHasControl;
-import org.softwareFm.display.rss.ISituationListCallback;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.collections.Iterables;
 import org.softwareFm.utilities.collections.Lists;
@@ -42,6 +41,15 @@ import org.softwareFm.utilities.indent.Indent;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class Swts {
+
+	public static Composite newComposite(Composite parent, int sytle, final String description) {
+		return new Composite(parent, sytle) {
+			@Override
+			public String toString() {
+				return description + "." + super.toString();
+			}
+		};
+	}
 
 	public static void addGrabHorizontalAndFillGridDataToAllChildren(Composite composite) {
 		GridLayout layout = new GridLayout();
@@ -190,7 +198,7 @@ public class Swts {
 	}
 
 	public static void layoutDump(Control control, Indent indent) {
-		System.out.println(indent + control.getClass().getSimpleName() + "(Visible: " + control.isVisible()+": " + layoutAsString(control));
+		System.out.println(indent + control.getClass().getSimpleName() + "(Visible: " + control.isVisible() + ": " + layoutAsString(control));
 		if (control instanceof Composite) {
 			Composite composite = (Composite) control;
 			for (Control nested : composite.getChildren()) {
@@ -226,7 +234,7 @@ public class Swts {
 		}
 	}
 
-	public static <T extends IHasControl> void xUnit(String title, final File root, final String extension, final IFunction1<Composite, T> childWindowCreator, final ISituationListCallback<T> selectionCallback) {
+	public static <T extends IHasControl> void xUnit(String title, final File root, final String extension, final ISituationListAndBuilder<T> builder) {
 		Swts.display(title, new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
@@ -236,7 +244,17 @@ public class Swts {
 						return Iterables.map(Files.walkChildrenOf(root, Files.extensionFilter(extension)), Files.toFileName());
 					}
 				};
-				SituationListAnd<T> result = new SituationListAnd<T>(from, situations, childWindowCreator, selectionCallback);
+				final SituationListAnd<T> result = new SituationListAnd<T>(from, situations, builder);
+				result.addListener(new ISituationListListener<T>() {
+					@Override
+					public void selected(T hasControl, String selectedItem) throws Exception {
+						File file = new File(root, selectedItem);
+						String value = Files.getText(file);
+						builder.selected(hasControl, selectedItem, value);
+						result.setText(value);
+					}
+				});
+
 				result.selectFirst();
 				return result.getComposite();
 			}
