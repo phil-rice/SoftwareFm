@@ -19,6 +19,9 @@ public class DisplayConstants {
 	public static final String expectedAMap ="Expected a List. Value is {0}. Class is {1}";
 	public static final String guardMustHaveEvenParameters ="Expected even number of parameters for guard condition to {0}. Actually had {1}. Which were {2}";
 	public static final String cannotParseRssFeed = "Cannot Parse Rss Feed:\n {0}\n";
+	public static final String playListMustHaveSomeContent = "Play list {0} must have some content";
+	public static final String mustHaveSelectedPlayList = "Time line must have a selected play list";
+	public static final String noPreviousItemInPlayList = "No previous item in play list";
 
 	public static final String rssFeedType = "feedType.rss";
 	public static final String browserFeedType = "feedType.browser";
