@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.Future;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
@@ -18,6 +19,7 @@ import org.eclipse.swt.widgets.Group;
 import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.actions.ActionStore;
 import org.softwareFm.display.browser.BrowserComposite;
+import org.softwareFm.display.browser.IBrowser;
 import org.softwareFm.display.browser.IBrowserConfigurator;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.IHasComposite;
@@ -56,10 +58,10 @@ public class SoftwareFmDataComposite implements IHasComposite {
 	public SoftwareFmDataComposite(final Composite parent, final GuiDataStore guiDataStore, final CompositeConfig compositeConfig, final ActionStore actionStore, final IEditorFactory editorFactory, final IUpdateStore updateStore, final ListEditorStore listEditorStore, ICallback<Throwable> exceptionHandler, final List<LargeButtonDefn> largeButtonDefns, final List<IBrowserConfigurator> browserConfigurators) {
 		content = Swts.newComposite(parent, SWT.NULL, "SoftwareFmDataComposite.content");
 		content.setLayout(new GridLayout(1, false));
-		ActionContext actionContext = new ActionContext(actionStore, guiDataStore, compositeConfig, editorFactory, updateStore, listEditorStore, new ICallback<String>() {
+		ActionContext actionContext = new ActionContext(actionStore, guiDataStore, compositeConfig, editorFactory, updateStore, listEditorStore, new IBrowser() {
 			@Override
-			public void process(String t) throws Exception {
-				System.out.println("Trying to browse: t");
+			public Future<String> processUrl(String feedType, String url) {
+				return browserComposite.processUrl(feedType, url);
 			}
 		}, exceptionHandler);
 		makeTopRow(content, compositeConfig, largeButtonDefns).setLayoutData(Swts.makeGrabHorizonalAndFillGridData());
@@ -195,12 +197,12 @@ public class SoftwareFmDataComposite implements IHasComposite {
 				composite.getParent().redraw();
 				composite.layout();
 				composite.redraw();
-//				Swts.asyncExec(SoftwareFmDataComposite.this, new Runnable() {
-//					@Override
-//					public void run() {
-//						Swts.layoutDump(content);
-//					}
-//				});
+				// Swts.asyncExec(SoftwareFmDataComposite.this, new Runnable() {
+				// @Override
+				// public void run() {
+				// Swts.layoutDump(content);
+				// }
+				// });
 			}
 
 		});

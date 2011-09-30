@@ -10,6 +10,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.softwareFm.display.GuiBuilder;
 import org.softwareFm.display.actions.ActionStore;
+import org.softwareFm.display.browser.BrowserFeedConfigurator;
+import org.softwareFm.display.browser.IBrowserConfigurator;
+import org.softwareFm.display.browser.RssFeedConfigurator;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.data.GuiDataStore;
 import org.softwareFm.display.data.GuiDataStore.DependantData;
@@ -23,6 +26,7 @@ import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.collections.Sets;
+import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.tests.IDontRunAutomaticallyTest;
@@ -123,12 +127,17 @@ public class ActivatorTest extends TestCase implements IDontRunAutomaticallyTest
 		List<LargeButtonDefn> largeButtons = softwareFmActivator.getLargeButtonDefns();
 		assertSame(largeButtons, softwareFmActivator.getLargeButtonDefns());
 
-		assertEquals(Arrays.asList("largeButton.jar", "largeButton.project", "largeButton.organisation"), Lists.map(largeButtons, new IFunction1<LargeButtonDefn, String>() {
+		assertEquals(Arrays.asList("largeButton.jar", "largeButton.project.details","largeButton.project.social", "largeButton.project.training","largeButton.organisation"), Lists.map(largeButtons, new IFunction1<LargeButtonDefn, String>() {
 			@Override
 			public String apply(LargeButtonDefn from) throws Exception {
 				return from.id;
 			}
 		}));
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void testBrowserConfigurators(){
+		assertEquals(Arrays.asList(RssFeedConfigurator.class, BrowserFeedConfigurator.class), Lists.map(softwareFmActivator.getBrowserConfigurators(),Functions.<IBrowserConfigurator>toClass()));
 	}
 
 	@Override

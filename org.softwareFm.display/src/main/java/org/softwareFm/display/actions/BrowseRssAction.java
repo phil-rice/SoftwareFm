@@ -16,7 +16,7 @@ public class BrowseRssAction implements IAction {
 		final String key = Actions.getDataKey(displayerDefn, actionData.formalParams);
 		final String param = Actions.getString(actionContext, key, index);
 		if (param != null) {
-			actionContext.browserComposite.processUrl(DisplayConstants.rssFeedType, param);
+			actionContext.internalBrowser.processUrl(DisplayConstants.rssFeedType, param);
 		}
 	}
 

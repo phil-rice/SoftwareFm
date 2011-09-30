@@ -1,5 +1,7 @@
 package org.softwareFm.eclipse;
 
+import java.util.List;
+
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.ISelectionService;
@@ -7,6 +9,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
 
 public class Plugins {
@@ -25,6 +28,28 @@ public class Plugins {
 		}
 	}
 
+	public static <T> List<T> makeListFrom(String id, final ICallback<Throwable> exceptions){
+		final List<T> result = Lists.newList();
+		useClasses(id, new IPlugInCreationCallback<T>() {
+
+			@Override
+			public void process(T t, IConfigurationElement element) throws Exception {
+				result.add(t);
+				
+			}
+
+			@Override
+			public void onException(Throwable throwable, IConfigurationElement element) {
+				try {
+					exceptions.process(throwable);
+				} catch (Exception e) {
+					throw WrappedException.wrap(e);
+				}
+			}
+		});
+		return result;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static <T> Class<T> classFrom(IConfigurationElement element) {
 		try {

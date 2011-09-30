@@ -17,6 +17,7 @@ import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.collections.Iterables;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.utilities.functions.IFunction1;
 import org.springframework.core.io.ClassPathResource;
 
 public class Images {
@@ -27,7 +28,13 @@ public class Images {
 		try {
 			File aFile = new ClassPathResource(anImageName, anchor).getFile();
 			File directory = aFile.getParentFile();
-			return Iterables.map(Iterables.iterable(directory.list(Files.extensionFilter("png"))), Files.noExtension());
+			return Iterables.remove(//
+					Iterables.map(Iterables.iterable(directory.list(Files.extensionFilter("png"))), Files.noExtension()),new IFunction1<String,Boolean>() {
+						@Override
+						public Boolean apply(String from) throws Exception {
+							return from.endsWith("Inactive");
+						}
+					});
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}

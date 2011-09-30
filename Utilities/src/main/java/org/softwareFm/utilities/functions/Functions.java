@@ -193,4 +193,13 @@ public class Functions {
 			}
 		};
 	}
+
+	public static<T> IFunction1<T, Class<?>> toClass() {
+		return new IFunction1<T, Class<?>>() {
+			@Override
+			public Class<?> apply(T from) throws Exception {
+				return from.getClass();
+			}
+		};
+	}
 }

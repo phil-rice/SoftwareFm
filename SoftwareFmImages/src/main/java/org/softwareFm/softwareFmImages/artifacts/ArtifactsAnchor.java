@@ -8,7 +8,7 @@ public class ArtifactsAnchor {
 	public static String jarCopyFromSoftwareFmKey = prefix + "jarCopyFromSoftwareFm";
 	public static String jarCopyToSoftwareFmKey = prefix + "jarCopyToSoftwareFm";
 	public static String documentKey = prefix + "document";
-	public static final String facebookKey = prefix + "facebook";
+	public static final String facebookKey = prefix + "faceBook";
 	public static final String issuesKey = prefix + "issues";
 	public static final String organisationKey = prefix + "organisation";
 	public static final String projectKey = prefix + "project";

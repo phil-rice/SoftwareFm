@@ -122,4 +122,8 @@ public class BrowserComposite implements IBrowserCompositeBuilder, ISimpleMap<St
 	public Control getControl() {
 		return content;
 	}
+	
+	public Control getStackLayoutTopControlForTests(){
+		return stackLayout.topControl;
+	}
 }

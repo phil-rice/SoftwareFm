@@ -16,13 +16,13 @@ public class BrowserPartMock implements IBrowserPart {
 	private final Composite control;
 	private final boolean usesUrl;
 
-	public BrowserPartMock(Composite from, boolean usesUrl) {
+	public BrowserPartMock(Composite from, final String name, boolean usesUrl) {
 		this.from = from;
 		this.usesUrl = usesUrl;
 		control = new Composite(from, SWT.NULL) {
 			@Override
 			public String toString() {
-				return super.toString() + "visible: " + isVisible();
+				return name + " " + super.toString() + "visible: " + isVisible();
 			}
 		};
 	}

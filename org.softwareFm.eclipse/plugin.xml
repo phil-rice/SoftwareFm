@@ -10,6 +10,7 @@
    <extension-point id="org.softwareFm.eclipse.listEditor" name="listEditor" schema="schema/org.softwareFm.eclipse.exsd"/>
    <extension-point id="org.softwareFm.eclipse.editor" name="editor" schema="schema/org.softwareFm.eclipse.exsd"/>
    <extension-point id="org.softwareFm.eclipse.largeButton" name="largeButton" schema="schema/org.softwareFm.eclipse.exsd"/>
+   <extension-point id="org.softwareFm.eclipse.browserConfiguration" name="largeButton" schema="schema/org.softwareFm.eclipse.exsd"/>
 
 
 
@@ -52,6 +53,11 @@
       <item class="org.softwareFm.configuration.largebuttons.ProjectSocialLargeButtonFactory"/>
       <item class="org.softwareFm.configuration.largebuttons.ProjectTrainingLargeButtonFactory"/>
       <item class="org.softwareFm.configuration.largebuttons.OrganisationLargeButtonFactory"/>
+</extension>
+
+<extension  point="org.softwareFm.eclipse.browserConfiguration">
+      <item class="org.softwareFm.display.browser.RssFeedConfigurator"/>
+      <item class="org.softwareFm.display.browser.BrowserFeedConfigurator"/>
 </extension>
 
  <extension  point="org.eclipse.ui.views">

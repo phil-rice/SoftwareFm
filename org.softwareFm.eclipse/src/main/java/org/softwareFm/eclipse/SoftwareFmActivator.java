@@ -22,6 +22,7 @@ import org.softwareFm.display.SoftwareFmDataComposite;
 import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.actions.ActionStore;
 import org.softwareFm.display.browser.BrowserComposite;
+import org.softwareFm.display.browser.IBrowserConfigurator;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.data.GuiDataStore;
 import org.softwareFm.display.data.IUrlDataCallback;
@@ -62,6 +63,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	public static String listEditorStoreConfiguratorId = "org.softwareFm.eclipse.listEditor";
 	public static String editorConfiguratorId = "org.softwareFm.eclipse.editor";
 	public static String largeButtonConfiguratorId = "org.softwareFm.eclipse.largeButton";
+	private static final String browserConfigurationId = "org.softwareFm.eclipse.browserConfiguration";
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.softwareFm.eclipse.eclipse";
@@ -272,7 +274,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		return repository == null ? repository = IRepositoryFacard.Utils.defaultFacardWithHeaders("SoftwareFm", getUuid()) : repository;
 	}
 
-	public SoftwareFmDataComposite makeComposite(Composite parent, ICallback<String> internalBrowser) {
+	public SoftwareFmDataComposite makeComposite(Composite parent) {
 		Display display = parent.getDisplay();
 		final GuiDataStore guiDataStore = getGuiDataStore();
 		getSelectedBindingManager().addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
@@ -314,9 +316,15 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 				return result;
 			}
 		});
-		SoftwareFmDataComposite composite = new SoftwareFmDataComposite(parent, internalBrowser, guiDataStore, getCompositeConfig(display), getActionStore(), getEditorFactory(display), getUpdateStore(), getListEditorStore(), onException(), getLargeButtonDefns());
+		List<IBrowserConfigurator> browserConfigurators = getBrowserConfigurators();
+		SoftwareFmDataComposite composite = new SoftwareFmDataComposite(parent,  guiDataStore, getCompositeConfig(display), getActionStore(), getEditorFactory(display), getUpdateStore(), getListEditorStore(), onException(), getLargeButtonDefns(), browserConfigurators);
 		return composite;
 
+	}
+
+	public List<IBrowserConfigurator> getBrowserConfigurators() {
+		List<IBrowserConfigurator> browserConfigurators = Plugins.makeListFrom(browserConfigurationId, onException());
+		return browserConfigurators;
 	}
 
 }

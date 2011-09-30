@@ -6,7 +6,6 @@ import java.util.concurrent.ExecutionException;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.softwareFm.display.browser.BrowserComposite;
 import org.softwareFm.display.browser.IBrowserPart;
@@ -15,7 +14,6 @@ import org.softwareFm.httpClient.constants.HttpClientConstants;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.repositoryFacard.AbstractRepositoryFacardTest;
 import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.collections.Sets;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 
@@ -31,12 +29,12 @@ public class BrowserServiceTest extends AbstractRepositoryFacardTest {
 	}
 
 	public void testCompositePassedToBrowserPartCreator() {
-		BrowserPartMock one = (BrowserPartMock) browserComposite.register("one", makeBrowserCreator());
+		BrowserPartMock one = (BrowserPartMock) browserComposite.register("one", makeBrowserCreator("one"));
 		assertEquals(browserComposite.getControl(), one.from);
 	}
 
 	public void testWithUsingUrl() throws InterruptedException, ExecutionException {
-		BrowserPartMock one = (BrowserPartMock) browserComposite.register("one", makeBrowserCreator(true));
+		BrowserPartMock one = (BrowserPartMock) browserComposite.register("one", makeBrowserCreator("one", true));
 		assertEquals(Arrays.asList(one), parts);
 		String actual = browserComposite.processUrl("one", url).get();
 		Swts.dispatchUntilQueueEmpty(shell.getDisplay());
@@ -46,8 +44,8 @@ public class BrowserServiceTest extends AbstractRepositoryFacardTest {
 	}
 
 	public void testAccessingUrlPassesResultToBrowserPart() throws Exception {
-		BrowserPartMock one = (BrowserPartMock) browserComposite.register("one", makeBrowserCreator());
-		BrowserPartMock two = (BrowserPartMock) browserComposite.register("two", makeBrowserCreator());
+		BrowserPartMock one = (BrowserPartMock) browserComposite.register("one", makeBrowserCreator("one"));
+		BrowserPartMock two = (BrowserPartMock) browserComposite.register("two", makeBrowserCreator("two"));
 		assertEquals(Arrays.asList(one, two), parts);
 		String expected = "{'B':2,'A':1,'jcr:primaryType':'nt:unstructured'}".replaceAll("'", "\"");
 		String actual = browserComposite.processUrl("one", url).get();
@@ -60,25 +58,19 @@ public class BrowserServiceTest extends AbstractRepositoryFacardTest {
 	}
 
 	public void testAccessingUrlChangesVisibilityToOnlyRegisteredService() throws InterruptedException, ExecutionException {
-		BrowserPartMock one = (BrowserPartMock) browserComposite.register("one", makeBrowserCreator());
-		BrowserPartMock two = (BrowserPartMock) browserComposite.register("two", makeBrowserCreator());
-		BrowserPartMock three = (BrowserPartMock) browserComposite.register("three", makeBrowserCreator());
-		List<Control> all = Arrays.asList(one.getControl(), two.getControl(), three.getControl());
-		checkVisibility("one", all, one);
-		checkVisibility("two", all, two);
-		checkVisibility("three", all, three);
+		BrowserPartMock one = (BrowserPartMock) browserComposite.register("one", makeBrowserCreator("one"));
+		BrowserPartMock two = (BrowserPartMock) browserComposite.register("two", makeBrowserCreator("two"));
+		BrowserPartMock three = (BrowserPartMock) browserComposite.register("three", makeBrowserCreator("three"));
+		checkVisibility("one", one);
+		checkVisibility("two", two);
+		checkVisibility("three", three);
 
 	}
 
-	private void checkVisibility(String feedType, List<Control> all, BrowserPartMock mock) throws InterruptedException, ExecutionException {
+	private void checkVisibility(String feedType, BrowserPartMock mock) throws InterruptedException, ExecutionException {
 		browserComposite.processUrl(feedType, url).get();
 		Swts.dispatchUntilQueueEmpty(shell.getDisplay());
-		Composite parent = (Composite) browserComposite.getControl();
-		assertEquals(Sets.set(all), Sets.makeSet(parent.getChildren()));
-		assertEquals(mock.getControl(), parent.getChildren()[0]);
-		// assertTrue(parent.getChildren()[0].isVisible()); //hard to assert this as it's not actually visible in the test...
-		for (int i = 1; i < all.size(); i++)
-			assertFalse(parent.getChildren()[i].isVisible());
+		assertEquals(mock.getControl(), browserComposite.getStackLayoutTopControlForTests());
 	}
 
 	@Override
@@ -91,15 +83,15 @@ public class BrowserServiceTest extends AbstractRepositoryFacardTest {
 		browserComposite = new BrowserComposite(shell, SWT.NULL);
 	}
 
-	private IFunction1<Composite, IBrowserPart> makeBrowserCreator() {
-		return makeBrowserCreator(false);
+	private IFunction1<Composite, IBrowserPart> makeBrowserCreator(String name) {
+		return makeBrowserCreator(name, false);
 	}
 
-	private IFunction1<Composite, IBrowserPart> makeBrowserCreator(final boolean useUrl) {
+	private IFunction1<Composite, IBrowserPart> makeBrowserCreator(final String name, final boolean useUrl) {
 		return new IFunction1<Composite, IBrowserPart>() {
 			@Override
 			public IBrowserPart apply(Composite from) throws Exception {
-				BrowserPartMock result = new BrowserPartMock(from, useUrl);
+				BrowserPartMock result = new BrowserPartMock(from, name, useUrl);
 				parts.add(result);
 				return result;
 			}
