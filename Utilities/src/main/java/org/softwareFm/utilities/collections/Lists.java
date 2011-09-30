@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.softwareFm.utilities.constants.UtilityMessages;
 import org.softwareFm.utilities.exceptions.WrappedException;
@@ -30,6 +31,25 @@ public class Lists {
 		for (T t : toBeAdded)
 			if (!target.contains(t))
 				target.add(t);
+	}
+
+	private final static Random random = new Random(System.nanoTime());
+	public static <T> List<T> shuffle(List<T> list) {
+		return shuffle(random, list);
+	}
+	public static <T> List<T> shuffle(Random random, List<T> list) {
+		List<T> result = new ArrayList<T>(list);
+		for (int i = result.size() - 1; i > 0; i--) {
+			int n = random.nextInt(i + 1);
+			swap(result, i, n);
+		}
+		return result;
+	}
+	
+	public static <T> void swap(List<T> list, int i, int j){
+		T temp = list.get(i);
+		list.set(i, list.get(j));
+		list.set(j, temp);
 	}
 
 	public static <T> int indexOf(List<T> listOne, List<T> listTwo, T object) {
@@ -124,14 +144,14 @@ public class Lists {
 		Collections.sort(result);
 		return result;
 	}
-	
-	public static <T extends Comparable<T>> Comparator<T> byListOrder( final List<T> masterList){
+
+	public static <T extends Comparable<T>> Comparator<T> byListOrder(final List<T> masterList) {
 		return new Comparator<T>() {
 			@Override
 			public int compare(T arg0, T arg1) {
 				int i0 = masterList.indexOf(arg0);
 				int i1 = masterList.indexOf(arg1);
-				return i0-i1;
+				return i0 - i1;
 			}
 		};
 	}
@@ -177,30 +197,30 @@ public class Lists {
 		return result;
 	}
 
-	public static <T>List<T> fromArray(T[] ts) {
+	public static <T> List<T> fromArray(T[] ts) {
 		return new ArrayList<T>(Arrays.asList(ts));
 	}
 
 	@SuppressWarnings("unchecked")
-	public static<T> List<T> nullSafe(List<T> ts) {
-		return ts == null?Collections.EMPTY_LIST: ts;
+	public static <T> List<T> nullSafe(List<T> ts) {
+		return ts == null ? Collections.EMPTY_LIST : ts;
 	}
 
 	public static List<Byte> asList(byte[] data) {
 		ArrayList<Byte> result = new ArrayList<Byte>(data.length);
-		for (byte b : data) 
+		for (byte b : data)
 			result.add(b);
 		return result;
 	}
 
-	public static <T>List<T> remove(List<T> oldList, int index) {
+	public static <T> List<T> remove(List<T> oldList, int index) {
 		List<T> newList = Lists.newList();
 		newList.addAll(oldList);
 		newList.remove(index);
 		return newList;
 	}
 
-	public static <T>List<T> immutableCopy(List<T> ts) {
-		return ts==null?null:Collections.unmodifiableList(new ArrayList<T>(ts));
+	public static <T> List<T> immutableCopy(List<T> ts) {
+		return ts == null ? null : Collections.unmodifiableList(new ArrayList<T>(ts));
 	}
 }

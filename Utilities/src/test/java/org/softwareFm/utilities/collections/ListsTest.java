@@ -1,10 +1,13 @@
 package org.softwareFm.utilities.collections;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import junit.framework.TestCase;
 
@@ -23,12 +26,25 @@ public class ListsTest extends TestCase {
 	public void testNewList() {
 		assertEquals(Collections.EMPTY_LIST, Lists.newList());
 	}
-	
-	public void testOrderBy(){
-		List<Integer> masterList = Arrays.asList(4,3,2,1,5,6,7);
-		List<Integer>sort = Arrays.asList(1,6,2,4);
+
+	public void testOrderBy() {
+		List<Integer> masterList = Arrays.asList(4, 3, 2, 1, 5, 6, 7);
+		List<Integer> sort = Arrays.asList(1, 6, 2, 4);
 		Collections.sort(sort, Lists.byListOrder(masterList));
 		assertEquals(Arrays.asList(4, 2, 1, 6), sort);
+	}
+
+	public void testShuffle() {
+		Random random = new Random();
+		List<Integer> original = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
+		HashSet<Integer> originalAsSet = new HashSet<Integer>(original);
+		List<Integer> master = new ArrayList<Integer>(original);
+		for (int i = 0; i < 10; i++) {
+			List<Integer> newList = Lists.shuffle(random, master);
+			assertEquals(original, master);
+			assertFalse(original.equals(newList));// this will fail very very rarely 1 in 15! time
+			assertEquals(originalAsSet, new HashSet<Integer>(newList));
+		}
 	}
 
 	private <T> void checkMap(IFunction1<T, T> fn, T[] input, T[] expected) {
@@ -40,7 +56,7 @@ public class ListsTest extends TestCase {
 		checkPartition(2, new String[] { "1", "2", "3", "4" }, new String[] { "1", "3" }, new String[] { "2", "4" });
 		checkPartition(3, new String[] { "1", "2", "3", "4", "5", "6" }, new String[] { "1", "4" }, new String[] { "2", "5" }, new String[] { "3", "6" });
 
-//		checkPartitionFails(0);
+		// checkPartitionFails(0);
 		checkPartitionFails(-1);
 		checkPartitionFails(-10);
 	}

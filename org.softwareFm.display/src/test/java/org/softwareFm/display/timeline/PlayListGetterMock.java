@@ -20,8 +20,9 @@ public class PlayListGetterMock implements IPlayListGetter{
 	}
 	
 	@Override
-	public Future<IPlayList> getPlayListFor(String playListName, ICallback<IPlayList> iCallback) {
+	public Future<IPlayList> getPlayListFor(String playListName,ICallback<IPlayList> iCallback) {
 		try {
+			playListNames.add(playListName);
 			IPlayList playList = playLists.get(index++);
 			iCallback.process(playList);
 			return Futures.doneFuture(playList);

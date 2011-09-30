@@ -32,7 +32,7 @@ public class GuiDataStore implements IDataGetter {
 
 	private final CopyOnWriteArrayList<IGuiDataListener> listeners = new CopyOnWriteArrayList<IGuiDataListener>();
 	private final ICallback<Throwable> onException;
-	private final Map<String,Object> entityToLastRawDataMap = Maps.newMap();
+	private final Map<String, Object> entityToLastRawDataMap = Maps.newMap();
 	private final IResourceGetter resourceGetter;
 
 	public GuiDataStore(IUrlToData urlToData, IResourceGetter resourceGetter, ICallback<Throwable> onException) {
@@ -61,6 +61,11 @@ public class GuiDataStore implements IDataGetter {
 			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.duplicateEntity, entity));
 		checkAndPut(entity, urlGeneratorId);
 		return this;
+	}
+
+	public Map<String, Object> getAnyExistingDataFor(String entity, String url) {
+		EntityCachedData cachedData = cache.get(entity);
+		return cachedData == null ? null : cachedData.get(url);
 	}
 
 	public void addGuiDataListener(IGuiDataListener listener) {
@@ -260,6 +265,5 @@ public class GuiDataStore implements IDataGetter {
 		final EntityCachedData entityCachedData = getFromCache(entity);
 		entityCachedData.remove(url);
 	}
-
 
 }

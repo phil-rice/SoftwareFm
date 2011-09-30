@@ -48,7 +48,6 @@ public class TimeLineUnit {
 		Swts.xUnit("Timeline Unit", root, "txt", //
 				new ISituationListAndBuilder<BrowserPlusNextPrevButtons>() {
 
-
 					@Override
 					public BrowserPlusNextPrevButtons makeChild(Composite from) throws Exception {
 						Display display = from.getDisplay();

@@ -6,6 +6,6 @@ import org.softwareFm.utilities.callbacks.ICallback;
 
 public interface IPlayListGetter {
 
-	Future<IPlayList> getPlayListFor(String playListName, ICallback<IPlayList> iCallback) ;
+	Future<IPlayList> getPlayListFor(String playListName,  ICallback<IPlayList> iCallback) ;
 
 }
