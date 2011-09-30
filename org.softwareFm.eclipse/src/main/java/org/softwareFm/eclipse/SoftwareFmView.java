@@ -1,7 +1,7 @@
 package org.softwareFm.eclipse;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
@@ -24,10 +24,11 @@ public class SoftwareFmView extends ViewPart {
 	@Override
 	public void createPartControl(final Composite parent) {
 		Composite composite = new Composite(parent, SWT.NULL);
-		composite.setLayout(new GridLayout(2, true));
+		composite.setLayout(new FillLayout());
 		SoftwareFmActivator activator = SoftwareFmActivator.getDefault();
 
 		activator.makeComposite(composite);
+		
 
 //		final GuiDataStore guiDataStore = activator.getGuiDataStore();
 //		guiDataStore.addGuiDataListener(new IGuiDataListener() {

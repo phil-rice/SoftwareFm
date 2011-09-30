@@ -3,6 +3,7 @@ package org.softwareFm.eclipse.fixture;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.widgets.Composite;
@@ -36,6 +37,8 @@ import org.softwareFm.display.editor.IUpdateStore;
 import org.softwareFm.display.largeButton.LargeButtonDefn;
 import org.softwareFm.display.lists.ListEditorStore;
 import org.softwareFm.display.smallButtons.SmallButtonStore;
+import org.softwareFm.display.timeline.IPlayList;
+import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.eclipse.DataStoreConfigurator;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -66,6 +69,7 @@ public class SoftwareFmFixture {
 	private final LargeButtonDefn projectDetailsButton;
 	private final LargeButtonDefn projectTrainingButton;
 	private final List<IBrowserConfigurator> browserConfigurators;
+	private final IPlayListGetter playListGetter;
 
 	public SoftwareFmFixture(Display display) throws Exception {
 		imageRegistry = new ImageRegistry();
@@ -91,16 +95,24 @@ public class SoftwareFmFixture {
 		projectSocialButton = new ProjectSocialLargeButtonFactory().apply(guiBuilder);
 		projectTrainingButton = new ProjectTrainingLargeButtonFactory().apply(guiBuilder);
 		organisationButton = new OrganisationLargeButtonFactory().apply(guiBuilder);
-		
+
 		browserConfigurators = Arrays.asList(new BrowserFeedConfigurator(), new RssFeedConfigurator());
+		playListGetter = new IPlayListGetter() {
+
+			@Override
+			public Future<IPlayList> getPlayListFor(String playListName, ICallback<IPlayList> iCallback) {
+				throw new UnsupportedOperationException();
+			}
+		};
 
 		new DataStoreConfigurator().process(dataStore = new GuiDataStore(IUrlToData.Utils.errorCallback(), resourceGetter, ICallback.Utils.rethrow()));
 	}
 
 	public SoftwareFmDataComposite makeComposite(Composite parent) {
 		SoftwareFmDataComposite result = new SoftwareFmDataComposite(parent, dataStore, compositeConfig, actionStore, //
-				editorFactory, updateStore, listEditorStore, //
-				ICallback.Utils.rethrow(), Arrays.asList(jarButton, projectDetailsButton, projectSocialButton, projectTrainingButton, organisationButton), browserConfigurators);
+				editorFactory, updateStore, listEditorStore, ICallback.Utils.rethrow(), //
+				Arrays.asList(jarButton, projectDetailsButton, projectSocialButton, projectTrainingButton, organisationButton), //
+				browserConfigurators, playListGetter);
 		return result;
 	}
 

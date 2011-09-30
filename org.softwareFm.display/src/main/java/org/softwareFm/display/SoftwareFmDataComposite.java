@@ -38,6 +38,8 @@ import org.softwareFm.display.simpleButtons.SimpleButtonParent;
 import org.softwareFm.display.smallButtons.ImageButtonConfig;
 import org.softwareFm.display.smallButtons.SmallButtonDefn;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.timeline.IPlayListGetter;
+import org.softwareFm.display.timeline.TimeLine;
 import org.softwareFm.softwareFmImages.Images;
 import org.softwareFm.softwareFmImages.backdrop.BackdropAnchor;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -55,7 +57,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 	private final Composite content;
 	public BrowserComposite browserComposite;
 
-	public SoftwareFmDataComposite(final Composite parent, final GuiDataStore guiDataStore, final CompositeConfig compositeConfig, final ActionStore actionStore, final IEditorFactory editorFactory, final IUpdateStore updateStore, final ListEditorStore listEditorStore, ICallback<Throwable> exceptionHandler, final List<LargeButtonDefn> largeButtonDefns, final List<IBrowserConfigurator> browserConfigurators) {
+	public SoftwareFmDataComposite(final Composite parent, final GuiDataStore guiDataStore, final CompositeConfig compositeConfig, final ActionStore actionStore, final IEditorFactory editorFactory, final IUpdateStore updateStore, final ListEditorStore listEditorStore, ICallback<Throwable> exceptionHandler, final List<LargeButtonDefn> largeButtonDefns, final List<IBrowserConfigurator> browserConfigurators, IPlayListGetter playListGetter) {
 		content = Swts.newComposite(parent, SWT.NULL, "SoftwareFmDataComposite.content");
 		content.setLayout(new GridLayout(1, false));
 		ActionContext actionContext = new ActionContext(actionStore, guiDataStore, compositeConfig, editorFactory, updateStore, listEditorStore, new IBrowser() {
@@ -67,7 +69,8 @@ public class SoftwareFmDataComposite implements IHasComposite {
 		makeTopRow(content, compositeConfig, largeButtonDefns).setLayoutData(Swts.makeGrabHorizonalAndFillGridData());
 		StackLayout stackLayout = new StackLayout();
 		makeSecondRow(content, largeButtonDefns, actionContext, stackLayout, browserConfigurators).setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
-		setUpListeners(largeButtonDefns, actionContext, stackLayout);
+		TimeLine timeLine = new TimeLine(browserComposite, playListGetter);
+		setUpListeners(largeButtonDefns, actionContext, stackLayout, timeLine);
 	}
 
 	private Composite makeTopRow(Composite content, final CompositeConfig compositeConfig, final List<LargeButtonDefn> largeButtonDefns) {
@@ -118,7 +121,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 		return secondRow;
 	}
 
-	private void setUpListeners(final List<LargeButtonDefn> largeButtonDefns, final ActionContext actionContext, final StackLayout stackLayout) {
+	private void setUpListeners(final List<LargeButtonDefn> largeButtonDefns, final ActionContext actionContext, final StackLayout stackLayout, final TimeLine timeLine) {
 		final GuiDataStore guiDataStore = (GuiDataStore) actionContext.dataGetter;
 		ICallback<Throwable> exceptionHandler = actionContext.exceptionHandler;
 		final DisplaySelectionModel displaySelectionModel = new DisplaySelectionModel(exceptionHandler, largeButtonDefns);
@@ -150,6 +153,10 @@ public class SoftwareFmDataComposite implements IHasComposite {
 						}
 					}
 				});
+				if (entity.equals("project")){
+					timeLine.forgetPlayList(url);
+					timeLine.selectAndNext(url);
+				}
 			}
 		});
 		for (LargeButtonDefn largeButtonDefn : largeButtonDefns) {

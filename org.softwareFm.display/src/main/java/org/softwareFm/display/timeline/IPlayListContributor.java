@@ -1,9 +1,8 @@
-package org.softwareFm.configuration.playlists;
+package org.softwareFm.display.timeline;
 
 import java.util.List;
 import java.util.Map;
 
-import org.softwareFm.display.timeline.PlayItem;
 
 public interface IPlayListContributor {
 

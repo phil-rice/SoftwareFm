@@ -9,5 +9,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.softwareFm.configuration,
  org.softwareFm.configuration.configurators,
  org.softwareFm.configuration.jar,
- org.softwareFm.configuration.largebuttons
+ org.softwareFm.configuration.largebuttons,
+ org.softwareFm.configuration.playlists
 Bundle-SymbolicName: org.softwareFm.configuration

@@ -4,6 +4,7 @@ import java.util.concurrent.Future;
 
 import org.softwareFm.display.browser.IBrowser;
 import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.future.Futures;
 
 public class TimeLine implements ITimeLine {
@@ -32,24 +33,33 @@ public class TimeLine implements ITimeLine {
 
 	@Override
 	public Future<?> selectAndNext(final String playListName) {
-		if (timeLineData.hasPlayListName(playListName)) {
-			IPlayList playList = timeLineData.select(playListName);
-			next();
-			return Futures.doneFuture(playList);
-		} else {
-			return playListGetter.getPlayListFor(playListName, new ICallback<IPlayList>() {
-				@Override
-				public void process(IPlayList t) throws Exception {
-					timeLineData.addPlayList(playListName, t);
-					timeLineData.select(playListName);
-					next();
-				}
-			});
+		try {
+			if (timeLineData.hasPlayListName(playListName)) {
+				IPlayList playList = timeLineData.select(playListName);
+				next();
+				return Futures.doneFuture(playList);
+			} else {
+				return playListGetter.getPlayListFor(playListName, new ICallback<IPlayList>() {
+					@Override
+					public void process(IPlayList t) throws Exception {
+						timeLineData.addPlayList(playListName, t);
+						timeLineData.select(playListName);
+						next();
+					}
+				});
+			}
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
 		}
 	}
 
 	public boolean hasPrevious() {
 		return timeLineData.hasPrevious();
+	}
+
+	public void forgetPlayList(String playListName) {
+		timeLineData.forgetPlayList(playListName);
+		
 	}
 
 }

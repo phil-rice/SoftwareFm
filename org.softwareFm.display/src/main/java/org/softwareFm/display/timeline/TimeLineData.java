@@ -81,4 +81,10 @@ public class TimeLineData {
 		return history.size();
 	}
 
+	public void forgetPlayList(String playListName) {
+		synchronized (lock) {
+			nameToPlayList.remove(playListName);
+		}
+	}
+
 }

@@ -1,5 +1,6 @@
 package org.softwareFm.eclipse;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -17,6 +18,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.prefs.BackingStoreException;
 import org.softwareFm.configuration.SoftwareFmPropertyAnchor;
+import org.softwareFm.configuration.playlists.BasicPlaylistContributor;
 import org.softwareFm.display.GuiBuilder;
 import org.softwareFm.display.SoftwareFmDataComposite;
 import org.softwareFm.display.SoftwareFmLayout;
@@ -36,6 +38,9 @@ import org.softwareFm.display.largeButton.ILargeButtonFactory;
 import org.softwareFm.display.largeButton.LargeButtonDefn;
 import org.softwareFm.display.lists.ListEditorStore;
 import org.softwareFm.display.smallButtons.SmallButtonStore;
+import org.softwareFm.display.timeline.IPlayListContributor;
+import org.softwareFm.display.timeline.IPlayListGetter;
+import org.softwareFm.display.timeline.PlayListGenerator;
 import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.jdtBinding.api.IBindingRipper;
@@ -189,8 +194,6 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		return actionStore == null ? actionStore = Plugins.configureMainWithCallbacks(new ActionStore(), actionStoreConfiguratorId, "class", onException()) : actionStore;
 	}
 
-
-
 	private SmallButtonStore getSmallButtonStore() {
 		return smallButtonStore == null ? smallButtonStore = Plugins.configureMainWithCallbacks(new SmallButtonStore(), smallButtonStoreConfiguratorId, "class", onException()) : smallButtonStore;
 	}
@@ -317,7 +320,8 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 			}
 		});
 		List<IBrowserConfigurator> browserConfigurators = getBrowserConfigurators();
-		SoftwareFmDataComposite composite = new SoftwareFmDataComposite(parent,  guiDataStore, getCompositeConfig(display), getActionStore(), getEditorFactory(display), getUpdateStore(), getListEditorStore(), onException(), getLargeButtonDefns(), browserConfigurators);
+		IPlayListGetter playListGetter = new PlayListGenerator(guiDataStore, Arrays.<IPlayListContributor> asList(new BasicPlaylistContributor()));
+		SoftwareFmDataComposite composite = new SoftwareFmDataComposite(parent, guiDataStore, getCompositeConfig(display), getActionStore(), getEditorFactory(display), getUpdateStore(), getListEditorStore(), onException(), getLargeButtonDefns(), browserConfigurators, playListGetter);
 		return composite;
 
 	}

@@ -1,13 +1,10 @@
-package org.softwareFm.configuration.playlists;
+package org.softwareFm.display.timeline;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 
 import org.softwareFm.display.data.GuiDataStore;
-import org.softwareFm.display.timeline.IPlayList;
-import org.softwareFm.display.timeline.IPlayListGetter;
-import org.softwareFm.display.timeline.PlayItem;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.future.Futures;
@@ -24,7 +21,7 @@ public class PlayListGenerator implements IPlayListGetter {
 	}
 
 	@Override
-	public Future<IPlayList> getPlayListFor(String playListName, ICallback<IPlayList> iCallback) {
+	public Future<IPlayList> getPlayListFor(String playListName, ICallback<IPlayList> iCallback) throws Exception {
 		Map<String, Object> data = guiDataStore.getAnyExistingDataFor("project", playListName);
 		if (data == null)
 			return Futures.doneFuture(null);
@@ -32,7 +29,9 @@ public class PlayListGenerator implements IPlayListGetter {
 		for (IPlayListContributor contributor: contributors)
 			items.addAll(contributor.items(data));
 				
-		return Futures.doneFuture(IPlayList.Utils.make(playListName, Lists.shuffle(items)));
+		IPlayList result = IPlayList.Utils.make(playListName, Lists.shuffle(items));
+				iCallback.process(result);
+		return Futures.doneFuture(result);
 	}
 
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.display.constants.DisplayConstants;
+import org.softwareFm.display.timeline.IPlayListContributor;
 import org.softwareFm.display.timeline.PlayItem;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.strings.Strings;
@@ -17,8 +18,8 @@ public class BasicPlaylistContributor implements IPlayListContributor {
 		if (dataAboutProject == null)
 			return Collections.EMPTY_LIST;
 		List<PlayItem> result = Lists.newList();
-		addItem(result, dataAboutProject, DisplayConstants.browserFeedType, "project.url");
-		addList(result, dataAboutProject, DisplayConstants.browserFeedType, "tweet", "http://mobile.twitter.com/{0}");
+		addItem(result, dataAboutProject, DisplayConstants.browserFeedType, "project.url"); //<--- won't work
+		addList(result, dataAboutProject, DisplayConstants.browserFeedType, "tweets", "http://mobile.twitter.com/{0}");
 		addList(result, dataAboutProject, DisplayConstants.rssFeedType, "rss", "{0}");
 		return result;
 	}
