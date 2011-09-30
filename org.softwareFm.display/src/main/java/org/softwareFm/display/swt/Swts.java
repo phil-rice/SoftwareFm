@@ -58,13 +58,13 @@ public class Swts {
 			public String toString() {
 				return description + "." + super.toString();
 			}
+
 			@Override
 			protected void checkSubclass() {
 			}
 		};
 	}
 
-	
 	public static void addGrabHorizontalAndFillGridDataToAllChildren(Composite composite) {
 		GridLayout layout = new GridLayout();
 		layout.marginWidth = 0;
@@ -358,8 +358,13 @@ public class Swts {
 	}
 
 	public static Button makePushButton(Composite parent, IResourceGetter resourceGetter, String titleKey, final Runnable runnable) {
+		return makePushButton(parent, resourceGetter, titleKey, true, runnable);
+	}
+
+	public static Button makePushButton(Composite parent, IResourceGetter resourceGetter, String titleOrKey, boolean titleIsKey, final Runnable runnable) {
 		Button button = new Button(parent, SWT.PUSH);
-		button.setText(IResourceGetter.Utils.getOrException(resourceGetter, titleKey));
+		String title = titleIsKey ? IResourceGetter.Utils.getOrException(resourceGetter, titleOrKey) : titleOrKey;
+		button.setText(title);
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -373,6 +378,5 @@ public class Swts {
 		while (display.readAndDispatch())
 			;
 	}
-
 
 }

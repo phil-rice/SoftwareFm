@@ -48,4 +48,8 @@ public class TimeLine implements ITimeLine {
 		}
 	}
 
+	public boolean hasPrevious() {
+		return timeLineData.hasPrevious();
+	}
+
 }

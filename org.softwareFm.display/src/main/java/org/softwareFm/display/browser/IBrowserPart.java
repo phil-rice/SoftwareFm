@@ -8,6 +8,6 @@ public interface IBrowserPart extends IHasComposite{
 	
 	void displayUrl(String url);
 	
-	void displayReply(int statusCode, String reply);
+	void displayReply(int statusCode, String reply) throws Exception;
 
 }

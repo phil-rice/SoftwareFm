@@ -30,8 +30,7 @@ public class BrowserPart implements IBrowserPart{
 
 	@Override
 	public void displayReply(int statusCode, String reply) {
-		throw new UnsupportedOperationException();
-		
+		browser.setText(reply);
 	}
 
 	@Override

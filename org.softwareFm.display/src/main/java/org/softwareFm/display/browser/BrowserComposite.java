@@ -54,8 +54,13 @@ public class BrowserComposite implements IBrowserCompositeBuilder, ISimpleMap<St
 			Swts.asyncExec(transformer, new Runnable() {
 				@Override
 				public void run() {
-					transformer.displayUrl(url);
-					makeOnlyVisible(transformer);
+					try {
+						transformer.displayReply(200, "");
+						transformer.displayUrl(url);
+						makeOnlyVisible(transformer);
+					} catch (Exception e) {
+						throw WrappedException.wrap(e);
+					}
 				}
 
 			});
@@ -71,8 +76,12 @@ public class BrowserComposite implements IBrowserCompositeBuilder, ISimpleMap<St
 					Swts.asyncExec(transformer, new Runnable() {
 						@Override
 						public void run() {
-							transformer.displayReply(httpResponse.getStatusLine().getStatusCode(), reply);
-							makeOnlyVisible(transformer);
+							try {
+								transformer.displayReply(httpResponse.getStatusLine().getStatusCode(), reply);
+								makeOnlyVisible(transformer);
+							} catch (Exception e) {
+								throw WrappedException.wrap(e);
+							}
 						}
 					});
 					return reply;
