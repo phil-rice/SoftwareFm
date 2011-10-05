@@ -42,6 +42,8 @@ public class ConfigurationConstants {
 	public static final String dataArtifactGroupId = "data.artifact.groupId";
 	public static final String dataArtifactUrl = "data.artifact.url";
 
+	public static final String dataArtifactJavadoc = "data.artifact.javadoc";
+	public static final String dataArtifactSource = "data.artifact.source";
 	public static final String dataArtifactName = "data.artifact.name";
 	public static final String dataArtifactDescription = "data.artifact.description";
 	public static final String dataArtifactIssues = "data.artifact.issues";

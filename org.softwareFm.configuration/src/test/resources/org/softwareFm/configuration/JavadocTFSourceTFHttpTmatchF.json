@@ -19,7 +19,7 @@
 "tweet2"],
 "mailingLists":["a$b"]},
 "ripped":{"jarPath":"a\\b\\jarPath.java",
+"source":"http:\/\/someSourceUrl.jar",
 "hexDigest":"somedigest",
-"source":"someSourceUrl",
-"javadoc":"http:\/\/someJavadocUrl.html",
+"javadoc":"http:\/\/someJavadocUrl.jar",
 "jarName":"jarName.java"}}

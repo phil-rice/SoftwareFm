@@ -6,6 +6,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.softwareFm.configuration.ConfigurationConstants;
 import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.IHasControl;
@@ -53,8 +54,8 @@ public class JavadocDialog extends Dialog {
 	private void createContents(Shell parent, CompositeConfig compositeConfig, final ActionContext actionContext, final ActionData actionData) {
 		final IDataGetter dataGetter = actionContext.dataGetter;
 		IResourceGetter resourceGetter = compositeConfig.resourceGetter;
-		String eclipseValue = Strings.nullSafeToString(dataGetter.getDataFor("data.raw.jar.javadoc"));
-		String softwareFmValue = Strings.nullSafeToString(dataGetter.getDataFor("data.jar.javadoc"));
+		String eclipseValue = Strings.nullSafeToString(dataGetter.getDataFor(ConfigurationConstants.dataRawJavadoc));
+		String softwareFmValue = Strings.nullSafeToString(dataGetter.getDataFor(ConfigurationConstants.dataArtifactJavadoc));
 
 		txtEclipse = new TitleAndText(compositeConfig, parent, "dialog.eclipseValue.title", true);
 		txtEclipse.setText(eclipseValue);

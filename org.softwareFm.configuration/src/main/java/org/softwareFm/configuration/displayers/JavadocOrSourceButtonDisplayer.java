@@ -45,49 +45,44 @@ public class JavadocOrSourceButtonDisplayer extends ButtonDisplayer {
 		final IDataGetter dataGetter = actionContext.dataGetter;
 		final String eclipseValue = Strings.nullSafeToString(dataGetter.getDataFor(artifactEclipseKey));
 		final String repositoryValue = Strings.nullSafeToString(dataGetter.getDataFor(artifactSoftwareFmKey));
+		
 		String tooltip = MessageFormat.format(dataGetter.getDataFor("button.javadocSource.tooltip").toString(), eclipseValue, repositoryValue);
 		button.setToolTipText(tooltip);
 
-		if (eclipseValue.equals(""))
-			if (repositoryValue.equals(""))
-				setButton(dataGetter, false, Runnables.noRunnable, "button.noData.title");
-			else
-				setButton(dataGetter, true, new Runnable() {
-					@SuppressWarnings("unchecked")
-					@Override
-					public void run() {
-						try {
-							ICallback<String> callback = (ICallback<String>) dataGetter.getDataFor(eclipseMutatorKey);
-							callback.process(repositoryValue);
-							Map<String,Object> rawData = (Map<String, Object>) dataGetter.getLastRawData("jar");
-							rawData.put(artifactKey,  repositoryValue);
-							dataGetter.setRawData("jar", rawData);
-							
-						} catch (Exception e) {
-							throw WrappedException.wrap(e);
-						}
-					}
-				}, "button.copyToEclipse.title");
-		else if (repositoryValue.equals(""))
-			if (eclipseValue.startsWith("http:"))
-				setButton(dataGetter, true, new Runnable() {
-					@Override
-					public void run() {
-						ActionData actionData = dataGetter.getActionDataFor(Collections.<String>emptyList());
-						actionContext.updateStore.update(actionData, "data.jar.javadoc", eclipseValue);
-					}
-				}, "button.copyToSoftwareFm.title");
-			else
-				setButton(dataGetter, false, Runnables.noRunnable, "button.eclipseNotUrl.title");
-		else if (eclipseValue.equals(repositoryValue))
-			setButton(dataGetter, false, Runnables.noRunnable, "button.matches.title");
-		else
-			setButton(dataGetter, false, Runnables.noRunnable, "button.doesntMatches.title");
+		JavadocOrSourceButtonTitleCalculator calculator = new JavadocOrSourceButtonTitleCalculator( new Runnable() {
+			@SuppressWarnings("unchecked")
+			@Override
+			public void run() {
+				try {
+					ICallback<String> callback = (ICallback<String>) dataGetter.getDataFor(eclipseMutatorKey);
+					callback.process(repositoryValue);
+					Map<String,Object> rawData = (Map<String, Object>) dataGetter.getLastRawData("jar");
+					rawData.put(artifactKey,  repositoryValue);
+					dataGetter.setRawData("jar", rawData);
+					
+				} catch (Exception e) {
+					throw WrappedException.wrap(e);
+				}
+			}
+		}, new Runnable() {
+			@Override
+			public void run() {
+				ActionData actionData = dataGetter.getActionDataFor(Collections.<String>emptyList());
+				actionContext.updateStore.update(actionData, "data.jar.javadoc", eclipseValue);
+			}
+		});
 
+		try {
+			JavadocOrSourceState state = new JavadocOrSourceState(eclipseValue, repositoryValue);
+			TitleAndRunnable titleAndRunnable = calculator.apply(state);
+			setButton(dataGetter, titleAndRunnable.runnable, titleAndRunnable.title);
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
 	}
 
-	private void setButton(IDataGetter dataGetter, boolean enabled, Runnable runnable, String title) {
-		button.setEnabled(enabled);
+	private void setButton(IDataGetter dataGetter, Runnable runnable, String title) {
+		button.setEnabled(runnable!= null);
 		this.runnable = runnable;
 		String text = Strings.nullSafeToString(dataGetter.getDataFor(title));
 		button.setText(text);

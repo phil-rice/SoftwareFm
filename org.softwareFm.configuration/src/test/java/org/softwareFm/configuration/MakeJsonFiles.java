@@ -13,14 +13,19 @@ import org.softwareFm.utilities.maps.Maps;
 public class MakeJsonFiles {
 	private final static File root = new File("../org.softwareFm.configuration/src/test/resources/org/softwareFm/configuration");
 
-	private final static String javadocJar = "http://someJavadocUrl.jar";
-	private final static String javadocUrl = "http://someJavadocUrl.html";
+	private final static String javadocJar = "someJavadocUrl.jar";
+	private final static String javadocJar2 = "someOtherJavadocUrl.jar";
+	private final static String javadocUrl = "someJavadocUrl.html";
+	private final static String javadocUrl2 = "someOtherJavadocUrl.html";
+	private final static String sourceJar = "someSourceUrl.jar";
+	private final static String sourceJar2 = "someOtherSourceUrl.jar";
+	private final static String sourceUrl = "someSourceUrl.html";
+	private final static String sourceUrl2 = "someOtherSourceUrl.html";
 
 	private final static Map<String, Object> ripped = Maps.makeMap(//
 			"hexDigest", "somedigest",//
 			"jarName", "jarName.java",//
 			"jarPath", "a\\b\\jarPath.java",//
-			"javadoc", javadocJar,//
 			"source", "someSourceUrl");
 
 	private final static Map<String, Object> artifact = Maps.makeMap(//
@@ -30,7 +35,6 @@ public class MakeJsonFiles {
 			"name", "Java Language main Runtime Jar",//
 			"url", "http://www.oracle.com/us/technologies/java/index.html",//
 			"javadoc", javadocJar,//
-			"source", "http://someSource/url.jar",//
 			"mailingLists", Arrays.asList("a$b"),//
 			"issues", "http://bugs.sun.com/bugdatabase/index.jsp",//
 			"tweets", Arrays.asList("tweet1", "tweet2"),//
@@ -48,9 +52,11 @@ public class MakeJsonFiles {
 		for (boolean eclipse : Booleans.falseTrue) {
 			makeJavaFile(eclipse);
 			for (boolean softwareFm : Booleans.falseTrue)
-				for (boolean javadocIsJar : Booleans.falseTrue)
-					for (boolean eclipseAndSoftwareFmMatch : Booleans.falseTrue)
-						makeJavadocSource(eclipse, softwareFm, javadocIsJar, eclipseAndSoftwareFmMatch);
+				for (boolean http : Booleans.falseTrue) {
+					makeJavadocSource(eclipse, softwareFm, http);
+					if (eclipse && softwareFm)
+						makeJavadocSource(eclipse, softwareFm, http, true);
+				}
 		}
 		for (boolean artifactId : Booleans.falseTrue)
 			for (boolean artifactName : Booleans.falseTrue)
@@ -74,7 +80,7 @@ public class MakeJsonFiles {
 		if (!groupName)
 			localGroup.remove("name");
 		makeFile(fileName, localRipped, localArtifact, localGroup);
-		
+
 	}
 
 	private static void makeJavaFile(boolean eclipse) {
@@ -102,21 +108,44 @@ public class MakeJsonFiles {
 
 	}
 
-	private static void makeJavadocSource(boolean eclipse, boolean softwareFm, boolean javadocIsJar, boolean eclipseAndSoftwareFmMatch) {
-		if (!eclipseAndSoftwareFmMatch)
-			if (!eclipse || !softwareFm)
-				return;
-		String pattern = "Javadoc{0}{1}Source{0}{1}isJar{2}match{3}.json";
-		String fileName = MessageFormat.format(pattern, Booleans.toTf(eclipse), Booleans.toTf(softwareFm), Booleans.toTf(javadocIsJar), Booleans.toTf(eclipseAndSoftwareFmMatch));
+	private static void makeJavadocSource(boolean eclipse, boolean softwareFm, boolean http) {
+		makeJavadocSource(eclipse, softwareFm, http, false);
+	}
+
+	private static void makeJavadocSource(boolean eclipse, boolean softwareFm, boolean http, boolean match) {
+		String pattern = "Javadoc{0}{1}Source{0}{1}Http{2}match{3}.json";
+		String fileName = MessageFormat.format(pattern, Booleans.toTf(eclipse), Booleans.toTf(softwareFm), Booleans.toTf(http), Booleans.toTf(match));
 		Map<String, Object> localRipped = Maps.copyMap(ripped);
 		Map<String, Object> localArtifact = Maps.copyMap(artifact);
-		if (javadocIsJar) {
+		if (http) {
+			localRipped.put("javadoc", javadocJar);
+			localRipped.put("source", sourceJar);
+			if (match) {
+				localArtifact.put("javadoc", javadocJar);
+				localArtifact.put("source", sourceJar);
+			} else {
+				localArtifact.put("javadoc", javadocJar2);
+				localArtifact.put("source", sourceJar2);
+
+			}
+		} else {
 			localRipped.put("javadoc", javadocUrl);
-			localArtifact.put("javadoc", javadocUrl);
+			localRipped.put("source", sourceUrl);
+			if (match) {
+				localArtifact.put("javadoc", javadocUrl);
+				localArtifact.put("source", sourceUrl);
+			} else {
+				localArtifact.put("javadoc", javadocUrl2);
+				localArtifact.put("source", sourceUrl2);
+			}
+
 		}
-		if (!eclipseAndSoftwareFmMatch) {
-			localArtifact.put("javadoc", "softwareFmValue.jar");
-			localArtifact.put("source", "softwareFmValue.jar");
+		if (http) {
+			localRipped.put("javadoc", "http://" + localRipped.get("javadoc"));
+			localArtifact.put("javadoc", "http://" + localArtifact.get("javadoc"));
+
+			localRipped.put("source", "http://" + localRipped.get("source"));
+			localArtifact.put("source", "http://" + localArtifact.get("source"));
 		}
 		if (!eclipse) {
 			localRipped.remove("javadoc");
