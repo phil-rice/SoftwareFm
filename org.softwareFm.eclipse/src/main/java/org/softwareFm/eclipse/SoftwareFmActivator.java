@@ -204,7 +204,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 			@Override
 			public void storeUpdates(String url, String entity, String attribute, Object newValue) {
 				guiDataStore.clearCache(url, entity, attribute);
-				Object lastRawData = guiDataStore.getLastRawData(ConfigurationConstants.artifact);
+				Map<String,Object> lastRawData = guiDataStore.getLastRawData(ConfigurationConstants.artifact);
 				guiDataStore.processData(ConfigurationConstants.artifact, lastRawData, Maps.<String, Object> newMap());
 
 			}

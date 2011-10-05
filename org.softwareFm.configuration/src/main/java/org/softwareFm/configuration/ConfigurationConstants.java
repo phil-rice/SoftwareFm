@@ -25,6 +25,7 @@ public class ConfigurationConstants {
 
 	public static final String groupIdTitle = "group.groupId.title";
 	public static final String groupNameTitle = "group.name.title";
+	public static final 	String groupVersionTitle ="group.version.title";
 	public static final String groupDescriptionTitle = "group.description.title";
 
 	public static final String dataGroupName = "data.group.name";
@@ -37,9 +38,12 @@ public class ConfigurationConstants {
 	public static final String dataRawJarPath = "data.raw.artifact.jarPath";
 	public static final String dataRawJavadoc = "data.raw.artifact.javadoc";
 	public static final String dataRawSource = "data.raw.artifact.source";
+	public static final String dataRawJavadocMutator = "data.raw.artifact.javadocMutator";
+	public static final String dataRawSourceMutator = "data.raw.artifact.sourceMutator";
 
 	public static final String dataArtifactArtifactId = "data.artifact.artifactId";
 	public static final String dataArtifactGroupId = "data.artifact.groupId";
+	public static final String dataArtifactVersion = "data.artifact.version";
 	public static final String dataArtifactUrl = "data.artifact.url";
 
 	public static final String dataArtifactJavadoc = "data.artifact.javadoc";

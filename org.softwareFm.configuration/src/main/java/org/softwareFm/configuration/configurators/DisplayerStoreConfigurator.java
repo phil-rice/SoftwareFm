@@ -16,8 +16,8 @@ public class DisplayerStoreConfigurator implements IDisplayerStoreConfigurator {
 				displayer("displayer.text", new TextDisplayerFactory()).//
 				displayer("displayer.url", new TextDisplayerFactory()).//
 				displayer("displayer.button", new ButtonDisplayerFactory()).//
-				displayer("displayer.button.javadoc", new JavadocOrSourceButtonDisplayerFactory("javadoc", ConfigurationConstants.dataRawJavadoc, ConfigurationConstants.dataArtifactJavadoc, "javadocMutator")).//
-				displayer("displayer.button.source", new JavadocOrSourceButtonDisplayerFactory("source", ConfigurationConstants.dataRawSource, ConfigurationConstants.dataArtifactSource, "sourceMutator")).//
+				displayer("displayer.button.javadoc", new JavadocOrSourceButtonDisplayerFactory("javadoc", ConfigurationConstants.dataRawJavadoc, ConfigurationConstants.dataArtifactJavadoc, ConfigurationConstants.dataRawJavadocMutator)).//
+				displayer("displayer.button.source", new JavadocOrSourceButtonDisplayerFactory("source", ConfigurationConstants.dataRawSource, ConfigurationConstants.dataArtifactSource,   ConfigurationConstants.dataRawSourceMutator)).//
 				displayer("displayer.list", new ListDisplayerFactory());
 	}
 

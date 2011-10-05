@@ -2,6 +2,7 @@ package org.softwareFm.configuration.configurators;
 
 import org.softwareFm.configuration.actions.JavadocViewAction;
 import org.softwareFm.configuration.actions.NukeJavadocAndSourceAction;
+import org.softwareFm.configuration.actions.SourceViewAction;
 import org.softwareFm.display.actions.ActionStore;
 import org.softwareFm.display.actions.BrowseAction;
 import org.softwareFm.display.actions.BrowseRssAction;
@@ -21,6 +22,7 @@ public class ActionStoreConfigurator implements IActionStoreConfigurator {
 				action("action.text.edit", new TextEditAction()).//
 				action("action.javadocSource.nuke", new NukeJavadocAndSourceAction()).//
 				action("action.javadoc.view", new JavadocViewAction()).//
+				action("action.source.view", new SourceViewAction()).//
 				action("action.url.search", new SearchForAction()).//
 				action("action.rss.browse", new BrowseRssAction()).//
 				action("action.text.browse", new BrowseAction()).//

@@ -28,18 +28,21 @@ public class UrlToDataMock implements IUrlToData {
 
 	@Override
 	public void getData(String entity, String url, Map<String, Object> context, IUrlDataCallback callback) {
-		entities.add(entity);
-		urls.add(url);
-		contexts.add(context);
-		mockData.get(entity);
-		AtomicInteger integer = Maps.findOrCreate(count, entity, new Callable<AtomicInteger>() {
-			@Override
-			public AtomicInteger call() throws Exception {
-				return new AtomicInteger();
-			}
-		});
-		List<Map<String, Object>> list = mockData.get(entity);
-		Map<String, Object> data = list.get(integer.getAndIncrement());
-		callback.processData(entity, url, context, data);
+		try {
+			entities.add(entity);
+			urls.add(url);
+			contexts.add(context);
+			AtomicInteger integer = Maps.findOrCreate(count, entity, new Callable<AtomicInteger>() {
+				@Override
+				public AtomicInteger call() throws Exception {
+					return new AtomicInteger();
+				}
+			});
+			List<Map<String, Object>> list = mockData.get(entity);
+			Map<String, Object> data = list.get(integer.getAndIncrement());
+			callback.processData(entity, url, context, data);
+		} catch (Exception e) {
+			throw new RuntimeException("Entity: "+ entity + ", Url: " + url, e);
+		}
 	}
 }

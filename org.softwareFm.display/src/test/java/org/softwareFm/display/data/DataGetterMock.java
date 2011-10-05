@@ -19,12 +19,12 @@ public class DataGetterMock implements IDataGetter {
 	}
 
 	@Override
-	public Object getLastRawData(String entity) {
+	public Map<String, Object> getLastRawData(String entity) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setRawData(String entity, Object rawData) {
+	public void setRawData(String entity, Map<String, Object> rawData) {
 		throw new UnsupportedOperationException();
 	}
 

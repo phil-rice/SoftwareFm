@@ -139,7 +139,9 @@ public class JavaProjects {
 						found = true;
 					} else
 						newAttributes.add(oldAttribute);
-				if (!found)
+				if (newValue == null || newValue.equals(""))
+					newAttributes.remove(newClasspathAttribute);
+				else if (!found)
 					newAttributes.add(newClasspathAttribute);
 				IClasspathEntry newLibraryEntry = JavaCore.newLibraryEntry(from.getPath(), from.getSourceAttachmentPath(), from.getSourceAttachmentRootPath(), from.getAccessRules(), newAttributes.toArray(new IClasspathAttribute[0]), from.isExported());
 				return newLibraryEntry;

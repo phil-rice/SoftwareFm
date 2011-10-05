@@ -7,6 +7,7 @@ import java.util.Map;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.configuration.ConfigurationConstants;
 import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.data.ActionData;
@@ -56,9 +57,9 @@ public class JavadocOrSourceButtonDisplayer extends ButtonDisplayer {
 				try {
 					ICallback<String> callback = (ICallback<String>) dataGetter.getDataFor(eclipseMutatorKey);
 					callback.process(repositoryValue);
-					Map<String,Object> rawData = (Map<String, Object>) dataGetter.getLastRawData("jar");
+					Map<String,Object> rawData = (Map<String, Object>) dataGetter.getLastRawData(ConfigurationConstants.artifact);
 					rawData.put(artifactKey,  repositoryValue);
-					dataGetter.setRawData("jar", rawData);
+					dataGetter.setRawData(ConfigurationConstants.artifact, rawData);
 					
 				} catch (Exception e) {
 					throw WrappedException.wrap(e);
@@ -68,7 +69,7 @@ public class JavadocOrSourceButtonDisplayer extends ButtonDisplayer {
 			@Override
 			public void run() {
 				ActionData actionData = dataGetter.getActionDataFor(Collections.<String>emptyList());
-				actionContext.updateStore.update(actionData, "data.jar.javadoc", eclipseValue);
+				actionContext.updateStore.update(actionData, artifactSoftwareFmKey, eclipseValue);
 			}
 		});
 

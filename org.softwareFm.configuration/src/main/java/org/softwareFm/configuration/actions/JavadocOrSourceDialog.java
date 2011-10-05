@@ -6,7 +6,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.softwareFm.configuration.ConfigurationConstants;
 import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.IHasControl;
@@ -21,15 +20,22 @@ import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
 
-public class JavadocDialog extends Dialog {
+public class JavadocOrSourceDialog extends Dialog {
 
 	private Shell shell;
 	private TitleAndText txtEclipse;
 	private TitleAndText txtSoftwareFm;
 	private TitleAndText txtExperiment;
+	private final String eclipseKey;
+	private final String softwareFmKey;
+	private final String mutatorKey;
 
-	public JavadocDialog(Shell parent) {
+	public JavadocOrSourceDialog(Shell parent, String eclipseKey, String softwareFmKey, String mutatorKey ) {
 		super(parent);
+		this.eclipseKey = eclipseKey;
+		this.softwareFmKey = softwareFmKey;
+		this.mutatorKey = mutatorKey;
+
 	}
 
 	public void open(CompositeConfig compositeConfig, ActionContext actionContext, ActionData actionData) {
@@ -54,8 +60,8 @@ public class JavadocDialog extends Dialog {
 	private void createContents(Shell parent, CompositeConfig compositeConfig, final ActionContext actionContext, final ActionData actionData) {
 		final IDataGetter dataGetter = actionContext.dataGetter;
 		IResourceGetter resourceGetter = compositeConfig.resourceGetter;
-		String eclipseValue = Strings.nullSafeToString(dataGetter.getDataFor(ConfigurationConstants.dataRawJavadoc));
-		String softwareFmValue = Strings.nullSafeToString(dataGetter.getDataFor(ConfigurationConstants.dataArtifactJavadoc));
+		String eclipseValue = Strings.nullSafeToString(dataGetter.getDataFor(eclipseKey));
+		String softwareFmValue = Strings.nullSafeToString(dataGetter.getDataFor(softwareFmKey));
 
 		txtEclipse = new TitleAndText(compositeConfig, parent, "dialog.eclipseValue.title", true);
 		txtEclipse.setText(eclipseValue);
@@ -88,7 +94,7 @@ public class JavadocDialog extends Dialog {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void buttonPressed(IHasControl button) throws Exception {
-				ICallback<String> javadocMutator = (ICallback<String>) dataGetter.getDataFor("data.raw.jar.javadocMutator");
+				ICallback<String> javadocMutator = (ICallback<String>) dataGetter.getDataFor(mutatorKey);
 				javadocMutator.process(parent.getText());
 				getShell().close();
 			}
@@ -104,7 +110,7 @@ public class JavadocDialog extends Dialog {
 		simpleImageButton.addListener(new IImageButtonListener() {
 			@Override
 			public void buttonPressed(IHasControl button) throws Exception {
-				actionContext.updateStore.update(actionData, "data.jar.javadoc", parent.getText());
+				actionContext.updateStore.update(actionData, softwareFmKey,  parent.getText());
 				getShell().close();
 			}
 		});

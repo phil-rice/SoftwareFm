@@ -5,6 +5,7 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.softwareFm.display.urlGenerator.UrlGenerator;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.tests.Tests;
@@ -20,6 +21,7 @@ public class GuiDataStoreTest extends TestCase {
 	private Map<String, Object> datad1;
 	private Map<String, Object> datad2;
 	private final ResourceGetterMock resourceGetterMock = new ResourceGetterMock("a.1", "x", "b.2", "y");
+	private final Map<String, Object> rawData1 = Maps.makeImmutableMap("rawDataKey", "rawDataValue", "a", 1, "b", 2);
 
 	public void testNoneDataRequestsGoToResourceGetter() {
 		assertEquals("x", store.getDataFor("a.1"));
@@ -28,7 +30,7 @@ public class GuiDataStoreTest extends TestCase {
 
 	public void testGettingData() {
 		makeRosyView();
-		store.processData("entity1", "rawData", context1);
+		store.processData("entity1", rawData1, context1);
 
 		assertEquals("one", store.getDataFor("data.entity1.linkData1"));
 		assertEquals("two", store.getDataFor("data.entity1.linkData2"));
@@ -42,35 +44,35 @@ public class GuiDataStoreTest extends TestCase {
 	public void testProcessDataCallsDependantEntities() {
 		makeRosyView();
 
-		store.processData("entity1", "rawData", context1);
+		store.processData("entity1",rawData1, context1);
 		assertEquals(Arrays.asList("entity1", "entityd1", "entityd2"), urlToData.entities);
 		assertEquals(Arrays.asList(context1, context1, context1), urlToData.contexts);
-		assertEquals(Arrays.asList("<Url entity1: rawData>", "<Url entityd1: one>", "<Url entityd2: two>"), urlToData.urls);
+		assertEquals(Arrays.asList("original/rawdatavalue", "depOne/one", "depTwo/two"), urlToData.urls);
 	}
 
 	public void testProcessDataSetsLastUrlFor() {
 		makeRosyView();
-		store.processData("entity1", "rawData", context1);
-		assertEquals("<Url entity1: rawData>", store.lastUrlFor("entity1"));
-		assertEquals("<Url entityd1: one>", store.lastUrlFor("entityd1"));
-		assertEquals("<Url entityd2: two>", store.lastUrlFor("entityd2"));
+
+		store.processData("entity1", rawData1, context1);
+		assertEquals("original/rawdatavalue", store.lastUrlFor("entity1"));
+		assertEquals("depOne/one", store.lastUrlFor("entityd1"));
+		assertEquals("depTwo/two", store.lastUrlFor("entityd2"));
 	}
 
 	@SuppressWarnings("unchecked")
 	public void testProcessDataDoesntCallUrlToDataWhenUrlCached() {
 		makeRosyView();
 
-		store.processData("entity1", "rawData", context1);
-		store.processData("entity1", "rawData", context1);
+		store.processData("entity1", rawData1, context1);
+		store.processData("entity1", rawData1, context1);
 		assertEquals(Arrays.asList("entity1", "entityd1", "entityd2"), urlToData.entities);
 		assertEquals(Arrays.asList(context1, context1, context1), urlToData.contexts);
-		assertEquals(Arrays.asList("<Url entity1: rawData>", "<Url entityd1: one>", "<Url entityd2: two>"), urlToData.urls);
+		assertEquals(Arrays.asList("original/rawdatavalue", "depOne/one", "depTwo/two"), urlToData.urls);
 	}
 
 	public void testRawData() {
 		makeRosyView();
 
-		Map<String, Object>rawData1 = Maps.makeMap("a", 1, "b", 2);
 		store.processData("entity1", rawData1, context1);
 		assertEquals(rawData1, store.getLastRawData("entity1"));
 		assertEquals(1, store.getDataFor("data.raw.entity1.a"));
@@ -81,28 +83,28 @@ public class GuiDataStoreTest extends TestCase {
 	public void testListenersNotified() {
 		makeRosyView();
 
-		store.processData("entity1", "rawData", context1);
-		store.processData("entity1", "rawData", context1);
+		store.processData("entity1", rawData1, context1);
+		store.processData("entity1", rawData1, context1);
 		checkListener(listener1);
 		checkListener(listener2);
 	}
 
 	private void checkListener(GuiDataListenerMock listener) {
 		assertEquals(Arrays.asList("entity1", "entityd1", "entityd2", "entity1", "entityd1", "entityd2"), listener.entities);
-		assertEquals(Arrays.asList("<Url entity1: rawData>", "<Url entityd1: one>", "<Url entityd2: two>", "<Url entity1: rawData>", "<Url entityd1: one>", "<Url entityd2: two>"), listener.urls);
+		assertEquals(Arrays.asList("original/rawdatavalue", "depOne/one", "depTwo/two", "original/rawdatavalue", "depOne/one", "depTwo/two"), listener.urls);
 	}
 
 	private void makeRosyView() {
-		store.urlGenerator("urlKey1", new UrlGeneratorMock("1"));
-		store.urlGenerator("urlKey2", new UrlGeneratorMock("2"));
-		store.urlGenerator("urlKey3", new UrlGeneratorMock("3"));
+		store.urlGenerator("urlKey1", new UrlGenerator("original/{1}", "rawDataKey"));
+		store.urlGenerator("urlKey2", new UrlGenerator("depOne/{1}", "linkData1"));
+		store.urlGenerator("urlKey3", new UrlGenerator("depTwo/{1}", "linkData2"));
 		store.entity("entity1", "urlKey1");
-		store.dependant("entity1", "entityd1", "linkData1", "urlKey2");
-		store.dependant("entity1", "entityd2", "linkData2", "urlKey3");
+		store.dependant("entity1", "entityd1", "urlKey2");
+		store.dependant("entity1", "entityd2", "urlKey3");
 	}
 
 	public void testThrowsExceptionIfReferencingUrlGeneratorThatDoesntExist() {
-		store.urlGenerator("urlKey2", new UrlGeneratorMock("2"));
+		store.urlGenerator("urlKey2", new UrlGenerator("two/{1}", "rawDataKey"));
 		IllegalArgumentException e = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
 			@Override
 			public void run() {
@@ -114,12 +116,12 @@ public class GuiDataStoreTest extends TestCase {
 	}
 
 	public void testThrowsExceptionIfDependantEntityReferencesNotExistantEntity() {
-		store.urlGenerator("urlKey1", new UrlGeneratorMock("1"));
+		store.urlGenerator("urlKey1",new UrlGenerator("two/{1}", "rawDataKey"));
 		store.entity("entity1", "urlKey1");
 		IllegalArgumentException e2 = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
 			@Override
 			public void run() {
-				store.dependant("entity2", "entityd1", "asdy1", "asdjk");
+				store.dependant("entity2", "entityd1", "asdjk");
 			}
 		});
 		assertEquals("Unrecognised entity entity2. Legal values are [entity1]", e2.getMessage());
@@ -127,19 +129,19 @@ public class GuiDataStoreTest extends TestCase {
 	}
 
 	public void testThrowsExceptionWithDuplicateUrlGenerator() {
-		store.urlGenerator("urlKey1", new UrlGeneratorMock("1"));
-		store.urlGenerator("key1", new UrlGeneratorMock("1"));
+		store.urlGenerator("urlKey1",new UrlGenerator("one/{1}", "rawDataKey"));
+		store.urlGenerator("key1", new UrlGenerator("two/{1}", "rawDataKey"));
 		IllegalArgumentException e = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
 			@Override
 			public void run() {
-				store.urlGenerator("key1", new UrlGeneratorMock("2"));
+				store.urlGenerator("key1", new UrlGenerator("two/{1}", "rawDataKey"));
 			}
 		});
 		assertEquals("Duplicate UrlGenerator key1", e.getMessage());
 	}
 
 	public void testThrowsExceptionIfSameEntityRegisteredTwice() {
-		store.urlGenerator("urlKey1", new UrlGeneratorMock("1"));
+		store.urlGenerator("urlKey1",new UrlGenerator("one/{1}", "rawDataKey"));
 		store.entity("entity1", "urlKey1");
 		IllegalArgumentException e1 = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
 			@Override
@@ -151,16 +153,16 @@ public class GuiDataStoreTest extends TestCase {
 		IllegalArgumentException e2 = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
 			@Override
 			public void run() {
-				store.dependant("entity1", "entity1", "entity1", "asdjk");
+				store.dependant("entity1", "entity1", "asdjk");
 			}
 		});
 		assertEquals("Duplicate Entity entity1", e2.getMessage());
 	}
 
 	public void testThrowsExceptionIfDependantRegisteredTwice() {
-		store.urlGenerator("urlKey1", new UrlGeneratorMock("1"));
+		store.urlGenerator("urlKey1", new UrlGenerator("one/{1}", "rawDataKey"));
 		store.entity("entity1", "urlKey1");
-		store.dependant("entity1", "entityd1", "link", "urlKey1");
+		store.dependant("entity1", "entityd1", "urlKey1");
 		IllegalArgumentException e1 = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
 			@Override
 			public void run() {
@@ -171,7 +173,7 @@ public class GuiDataStoreTest extends TestCase {
 		IllegalArgumentException e2 = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
 			@Override
 			public void run() {
-				store.dependant("entity1", "entityd1", "asd", "asdjk");
+				store.dependant("entity1", "entityd1", "asdjk");
 			}
 		});
 		assertEquals("Duplicate Entity entity1", e2.getMessage());

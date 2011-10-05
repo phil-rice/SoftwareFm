@@ -32,7 +32,7 @@ public class GuiDataStore implements IDataGetter {
 
 	private final CopyOnWriteArrayList<IGuiDataListener> listeners = new CopyOnWriteArrayList<IGuiDataListener>();
 	private final ICallback<Throwable> onException;
-	private final Map<String, Object> entityToLastRawDataMap = Maps.newMap();
+	private final Map<String, Map<String, Object>> entityToLastRawDataMap = Maps.newMap();
 	private final IResourceGetter resourceGetter;
 
 	public GuiDataStore(IUrlToData urlToData, IResourceGetter resourceGetter, ICallback<Throwable> onException) {
@@ -50,7 +50,7 @@ public class GuiDataStore implements IDataGetter {
 		public String entity;
 		public String linkData;
 
-		public DependantData(String entity, String linkData) {
+		public DependantData(String entity) {
 			this.entity = entity;
 			this.linkData = linkData;
 		}
@@ -76,12 +76,12 @@ public class GuiDataStore implements IDataGetter {
 		listeners.remove(listener);
 	}
 
-	public GuiDataStore dependant(String entity, String dependantEntity, String linkData, String urlGeneratorId) {
+	public GuiDataStore dependant(String entity, String dependantEntity, String urlGeneratorId) {
 		checkEntityExists(entity);
 		if (entityToUrlGeneratorMap.containsKey(dependantEntity))
 			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.duplicateEntity, entity));
 		checkAndPut(dependantEntity, urlGeneratorId);
-		Maps.addToList(entityToDependantMap, entity, new DependantData(dependantEntity, linkData));
+		Maps.addToList(entityToDependantMap, entity, new DependantData(dependantEntity));
 		return this;
 	}
 
@@ -104,16 +104,16 @@ public class GuiDataStore implements IDataGetter {
 		return this;
 	}
 
-	public void processData(String mainEntity, Object data, Map<String, Object> context) {
+	public void processData(String mainEntity,  Map<String,Object> data, Map<String, Object> context) {
 		this.entityToLastRawDataMap.put(mainEntity, data);
 		processOneData(mainEntity, data, context);
 	}
 
-	public void processOneData(String entity, Object data, Map<String, Object> context) {
+	public void processOneData(String entity, Map<String,Object> data, Map<String, Object> context) {
 		IUrlGenerator urlGenerator = entityToUrlGeneratorMap.get(entity);
 		if (urlGenerator == null)
 			throw new IllegalStateException(MessageFormat.format(DisplayConstants.unrecognisedUrlGenerator, entity, entityToUrlGeneratorMap.keySet()));
-		String url = urlGenerator.findUrlFor(entity, data);
+		String url = urlGenerator.findUrlFor(data);
 		final EntityCachedData entityCachedData = getFromCache(entity);
 
 		IUrlDataCallback callback = new IUrlDataCallback() {
@@ -127,7 +127,7 @@ public class GuiDataStore implements IDataGetter {
 				// TODO is there some unpleasant race condition here...Probably need to rewrite
 				for (DependantData dependantData : Maps.getOrEmptyList(entityToDependantMap, entity)) {
 					Object linkObject = data == null ? null : data.get(dependantData.linkData);
-					processOneData(dependantData.entity, linkObject, context);
+					processOneData(dependantData.entity, data, context);
 				}
 			}
 
@@ -245,12 +245,12 @@ public class GuiDataStore implements IDataGetter {
 	}
 
 	@Override
-	public Object getLastRawData(String entity) {
+	public Map<String, Object> getLastRawData(String entity) {
 		return entityToLastRawDataMap.get(entity);
 	}
 
 	@Override
-	public void setRawData(String entity, Object rawData) {
+	public void setRawData(String entity, Map<String, Object> rawData) {
 		this.entityToLastRawDataMap.put(entity, rawData);
 		fireListeners(entity, lastUrlFor(entity));
 

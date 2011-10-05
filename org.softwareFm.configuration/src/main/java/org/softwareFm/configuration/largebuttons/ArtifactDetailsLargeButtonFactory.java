@@ -38,12 +38,13 @@ public class ArtifactDetailsLargeButtonFactory extends LargeButtonFactory {
 								guard(dataRawHexDigest, hexDigestMissingTitle).actions(//
 										guiBuilder.action("action.url.search", GeneralAnchor.searchKey).tooltip("action.search.tooltip")), //
 						guiBuilder.displayer("displayer.button.javadoc").title(artifactJavadocTitle).guard(dataRawJavadoc, blankKey).tooltip(dataRawJavadoc).//
-								actions(guiBuilder.action("action.javadoc.view", ArtifactsAnchor.jarKey).tooltip("action.javadoc.view.tooltip").ignoreGuard(),//
-										guiBuilder.action("action.javadocSource.nuke", GeneralAnchor.clearKey),//
+								actions(guiBuilder.action("action.javadocSource.nuke", GeneralAnchor.clearKey),//
+										guiBuilder.action("action.javadoc.view", ArtifactsAnchor.jarKey).tooltip("action.javadoc.view.tooltip").ignoreGuard(),//
 										browseButton(guiBuilder, dataRawJavadoc)), //
 
 						guiBuilder.displayer("displayer.button.source").title(artifactSourceTitle).guard(dataRawSource, blankKey).tooltip(dataRawSource).//
-								actions(browseButton(guiBuilder, dataRawJavadoc))), //
+								actions(guiBuilder.action("action.source.view", ArtifactsAnchor.jarKey).tooltip("action.source.view.tooltip").ignoreGuard(),//
+										browseButton(guiBuilder, dataRawJavadoc))), //
 
 				guiBuilder.smallButton("smallButton.jar.identifiers", "smallButton.jar.identifiers.title", "smallButton.jar", ArtifactsAnchor.jarKey, //
 						guiBuilder.displayer("displayer.text").title(artifactIdTitle).data(dataArtifactArtifactId).//
@@ -52,7 +53,12 @@ public class ArtifactDetailsLargeButtonFactory extends LargeButtonFactory {
 								), //
 						guiBuilder.displayer("displayer.text").title(groupIdTitle).data(dataArtifactGroupId).//
 								guard(dataRawHexDigest, blankKey, dataArtifactGroupId, groupIdMissingTitle).//
-								actions(editValueButton(guiBuilder, ArtifactsAnchor.projectKey))),//
+								actions(editValueButton(guiBuilder, ArtifactsAnchor.projectKey)),//
+						guiBuilder.displayer("displayer.text").title(groupVersionTitle).data(dataArtifactVersion).//
+								guard(dataRawHexDigest, blankKey, dataArtifactVersion, groupIdMissingTitle).//
+								actions(editValueButton(guiBuilder, ArtifactsAnchor.projectKey))
+
+				),//
 
 				guiBuilder.smallButton("smallButton.project.issues", "smallButton.project.issues.title", "smallButton.data", ArtifactsAnchor.issuesKey,//
 						guiBuilder.displayer("displayer.url").guard(dataArtifactGroupId, blankKey).title(artifactIssuesTitle).data(dataArtifactIssues).tooltip(artifactIssuesTitle).actions(//

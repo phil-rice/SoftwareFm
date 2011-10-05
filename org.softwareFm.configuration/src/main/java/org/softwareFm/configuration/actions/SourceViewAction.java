@@ -12,14 +12,14 @@ import org.softwareFm.display.displayer.IDisplayer;
 import org.softwareFm.jdtBinding.api.JdtConstants;
 import org.softwareFm.utilities.strings.Strings;
 
-public class JavadocViewAction implements IAction {
-
+public class SourceViewAction implements IAction {
 
 	@Override
 	public void execute(ActionContext actionContext, DisplayerDefn displayerDefn, IDisplayer displayer, int index, ActionData actionData) throws Exception {
 		if (!Strings.hasValue(actionContext.dataGetter.getDataFor(ConfigurationConstants.dataRawHexDigest)))
 			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.mustHaveA, "hexDigest", getClass().getSimpleName()));
-		JavadocOrSourceDialog dialog = new JavadocOrSourceDialog(displayer.getControl().getShell(), ConfigurationConstants.dataRawJavadoc, ConfigurationConstants.dataArtifactJavadoc, JdtConstants.javadocMutatorKey);
+		JavadocOrSourceDialog dialog = new JavadocOrSourceDialog(displayer.getControl().getShell(), ConfigurationConstants.dataRawSource, ConfigurationConstants.dataArtifactSource, JdtConstants.sourceMutatorKey);
+
 		dialog.open(actionContext.compositeConfig, actionContext, actionData);
 	}
 
