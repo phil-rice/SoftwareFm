@@ -32,7 +32,9 @@ public class ArtifactDetailsLargeButtonFactory extends LargeButtonFactory {
 								actions(editValueButton(guiBuilder, ArtifactsAnchor.projectKey))),//
 
 				guiBuilder.smallButton("smallButton.jar.details", "smallButton.jar.details.title", "smallButton.jar", ArtifactsAnchor.jarKey, //
-						guiBuilder.displayer("displayer.text").title("jar.jarName.title").data(dataRawJarName).tooltip(dataRawJarPath).//
+						guiBuilder.displayer("displayer.text").title(jarHexDigestTitle).data(dataRawHexDigest).//
+								guard(dataRawHexDigest, hexDigestMissingTitle), //
+						guiBuilder.displayer("displayer.text").title(jarNameTitle).data(dataRawJarName).tooltip(dataRawJarPath).//
 								guard(dataRawHexDigest, hexDigestMissingTitle).actions(//
 										guiBuilder.action("action.url.search", GeneralAnchor.searchKey).tooltip("action.search.tooltip")), //
 						guiBuilder.displayer("displayer.button.javadoc").title(artifactJavadocTitle).guard(dataRawJavadoc, blankKey).tooltip(dataRawJavadoc).//

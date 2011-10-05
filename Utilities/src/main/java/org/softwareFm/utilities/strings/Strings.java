@@ -185,4 +185,8 @@ public class Strings {
 		return raw.replaceAll("'", "''").replaceAll("\\\\", "\\\\");
 	}
 
+	public static String forUrl(String raw) {
+		String cleanUrl = Strings.onlyKeep(raw.toLowerCase(), "abcdefghijklmnopqrstuvwxyz0123456789._");
+		return cleanUrl;
+	}
 }

@@ -44,7 +44,7 @@ public class SoftwareFmViewUnit {
 			Map<String, Object> map = Json.mapFromString(text);
 			Map<String, String> rippedMap = (Map<String, String>) map.get("ripped");
 			RippedResult result = rippedMap == null ? null : new RippedResult(rippedMap.get("hexDigest"), rippedMap.get("javaProject"), rippedMap.get("jarPath"), rippedMap.get("jarName"), rippedMap.get("javadoc"), rippedMap.get("source"), ICallback.Utils.<String> sysoutCallback(), ICallback.Utils.<String> sysoutCallback());
-			softwareFmFixture.dataStore.setRawData("jar", result);
+			softwareFmFixture.dataStore.setRawData("artifact", result);
 			softwareFmFixture.forceData(fileName, "artifact", map);
 			softwareFmFixture.forceData(fileName, "group", map);
 		}

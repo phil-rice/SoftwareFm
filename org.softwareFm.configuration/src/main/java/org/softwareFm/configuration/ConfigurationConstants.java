@@ -3,6 +3,8 @@ package org.softwareFm.configuration;
 public class ConfigurationConstants {
 
 	public static final String blankKey = "blank.title";
+	public static final String jarNameTitle = "jar.jarName.title";
+	public static final String jarHexDigestTitle = "jar.hexDigest.title";
 
 	public static final String artifactIdTitle = "artifact.artifactId.title";
 	public static final String artifactUrlTitle = "artifact.url.title";
@@ -29,11 +31,12 @@ public class ConfigurationConstants {
 	public static final String groupRssAdd = "group.rss.add";
 	public static final String groupTwitterAdd = "group.twitter.add";
 
-	public static final String dataRawHexDigest = "data.raw.jar.hexDigest";
-	public static final String dataRawJarName = "data.raw.jar.jarName";
-	public static final String dataRawJarPath = "data.raw.jar.jarPath";
-	public static final String dataRawJavadoc = "data.raw.jar.javadoc";
-	public static final String dataRawSource = "data.raw.jar.source";
+
+	public static final String dataRawHexDigest = "data.raw.artifact.hexDigest";
+	public static final String dataRawJarName = "data.raw.artifact.jarName";
+	public static final String dataRawJarPath = "data.raw.artifact.jarPath";
+	public static final String dataRawJavadoc = "data.raw.artifact.javadoc";
+	public static final String dataRawSource = "data.raw.artifact.source";
 
 	public static final String dataArtifactArtifactId = "data.artifact.artifactId";
 	public static final String dataArtifactGroupId = "data.artifact.groupId";
@@ -61,5 +64,7 @@ public class ConfigurationConstants {
 	public static final String groupNameMissingTitle = "group.name.missing.title";
 
 	public static final String expectedRippedResult = "Expected a RippedResult. Value = {0}. Class = {1)";
+
+	public static final String artifact = "artifact";
 
 }

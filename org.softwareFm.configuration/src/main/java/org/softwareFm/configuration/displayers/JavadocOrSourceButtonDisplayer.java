@@ -89,7 +89,8 @@ public class JavadocOrSourceButtonDisplayer extends ButtonDisplayer {
 	private void setButton(IDataGetter dataGetter, boolean enabled, Runnable runnable, String title) {
 		button.setEnabled(enabled);
 		this.runnable = runnable;
-		button.setText(Strings.nullSafeToString(dataGetter.getDataFor(title)));
+		String text = Strings.nullSafeToString(dataGetter.getDataFor(title));
+		button.setText(text);
 	}
 
 	@Override

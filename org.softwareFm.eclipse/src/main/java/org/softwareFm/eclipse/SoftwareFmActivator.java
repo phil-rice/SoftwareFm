@@ -17,6 +17,7 @@ import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.prefs.BackingStoreException;
+import org.softwareFm.configuration.ConfigurationConstants;
 import org.softwareFm.configuration.SoftwareFmPropertyAnchor;
 import org.softwareFm.configuration.playlists.BasicPlaylistContributor;
 import org.softwareFm.display.GuiBuilder;
@@ -203,8 +204,8 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 			@Override
 			public void storeUpdates(String url, String entity, String attribute, Object newValue) {
 				guiDataStore.clearCache(url, entity, attribute);
-				Object lastRawData = guiDataStore.getLastRawData("jar");
-				guiDataStore.processData("jar", lastRawData, Maps.<String, Object> newMap());
+				Object lastRawData = guiDataStore.getLastRawData(ConfigurationConstants.artifact);
+				guiDataStore.processData(ConfigurationConstants.artifact, lastRawData, Maps.<String, Object> newMap());
 
 			}
 		}) : updateStore;
@@ -287,7 +288,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 				if (path != null) {
 					final Map<String, Object> context = Maps.<String, Object> newMap();
 					final RippedResult result = makeRippedResult(guiDataStore, rippedResult, context);
-					guiDataStore.processData("jar", result, context);
+					guiDataStore.processData("artifact", result, context);
 				}
 			}
 

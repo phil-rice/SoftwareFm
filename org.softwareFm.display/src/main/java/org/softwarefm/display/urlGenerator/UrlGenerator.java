@@ -5,8 +5,6 @@ import java.text.MessageFormat;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.utilities.strings.Strings;
-import org.softwareFm.utilities.strings.UrlRipperResult;
-import org.softwareFm.utilities.strings.Urls;
 
 public class UrlGenerator implements IUrlGenerator {
 
@@ -22,10 +20,10 @@ public class UrlGenerator implements IUrlGenerator {
 			return null;
 		if (!(data instanceof String))
 			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.mustBeAString, data, data.getClass().getName()));
-		UrlRipperResult ripperResult = Urls.rip((String) data);
-		String cleanUrl = Strings.onlyKeep(ripperResult.resourcePath.toLowerCase(), "abcdefghijklmnopqrstuvwxyz0123456789._");
+		String cleanUrl = Strings.forUrl((String) data);
 		if (cleanUrl.length() < 2)
 			return "";
-		return "/" + prefix + "s/" + Math.abs(cleanUrl.hashCode()) % 1000 + "/" + cleanUrl;
+		return "/softwareFm/" + prefix + "s/" + Math.abs(cleanUrl.hashCode()) % 1000 + "/" + cleanUrl;
 	}
+
 }
