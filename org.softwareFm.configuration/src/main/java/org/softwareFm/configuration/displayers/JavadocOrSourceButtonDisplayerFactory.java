@@ -10,15 +10,22 @@ import org.softwareFm.display.displayer.IDisplayerFactory;
 
 public class JavadocOrSourceButtonDisplayerFactory implements IDisplayerFactory {
 
-	private final String artifact;
 
-	public JavadocOrSourceButtonDisplayerFactory(String artifact) {
-		this.artifact = artifact;
+	private final String artifactKey;
+	private final String artifactEclipseKey;
+	private final String artifactSoftwareFmKey;
+	private final String eclipseMutatorKey;
+
+	public JavadocOrSourceButtonDisplayerFactory( String artifactKey, String artifactEclipseKey, String artifactSoftwareFmKey, String eclipseMutatorKey) {
+		this.artifactKey = artifactKey;
+		this.artifactEclipseKey = artifactEclipseKey;
+		this.artifactSoftwareFmKey = artifactSoftwareFmKey;
+		this.eclipseMutatorKey = eclipseMutatorKey;
 	}
 
 	@Override
 	public IDisplayer create(Composite largeButtonComposite, DisplayerDefn defn, int style, CompositeConfig compositeConfig, ActionStore actionStore, ActionContext actionContext) {
-		return new JavadocOrSourceButtonDisplayer(compositeConfig, largeButtonComposite, defn.title, true, artifact);
+		return new JavadocOrSourceButtonDisplayer(compositeConfig, largeButtonComposite, defn.title, true, artifactKey, artifactEclipseKey, artifactSoftwareFmKey, eclipseMutatorKey);
 	}
 
 	@Override

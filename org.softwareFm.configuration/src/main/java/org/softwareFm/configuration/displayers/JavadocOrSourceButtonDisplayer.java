@@ -21,11 +21,17 @@ import org.softwareFm.utilities.strings.Strings;
 public class JavadocOrSourceButtonDisplayer extends ButtonDisplayer {
 
 	protected Runnable runnable;
-	private final String artifact;
+	private final String artifactEclipseKey;
+	private final String artifactSoftwareFmKey;
+	private final String eclipseMutatorKey;
+	private final String artifactKey;
 
-	public JavadocOrSourceButtonDisplayer(CompositeConfig config, Composite parent, String titleOrTitleKey, boolean titleIsKey, String artifact) {
+	public JavadocOrSourceButtonDisplayer(CompositeConfig config, Composite parent, String titleOrTitleKey, boolean titleIsKey, String artifactKey, String artifactEclipseKey, String artifactSoftwareFmKey, String eclipseMutatorKey) {
 		super(config, parent, titleOrTitleKey, titleIsKey);
-		this.artifact = artifact;
+		this.artifactKey = artifactKey;
+		this.artifactEclipseKey = artifactEclipseKey;
+		this.artifactSoftwareFmKey = artifactSoftwareFmKey;
+		this.eclipseMutatorKey = eclipseMutatorKey;
 		runnable = Runnables.noRunnable;
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -37,8 +43,8 @@ public class JavadocOrSourceButtonDisplayer extends ButtonDisplayer {
 	@Override
 	public void data(final ActionContext actionContext, DisplayerDefn defn, String entity) {
 		final IDataGetter dataGetter = actionContext.dataGetter;
-		final String eclipseValue = Strings.nullSafeToString(dataGetter.getDataFor("data.raw.jar." + artifact));
-		final String repositoryValue = Strings.nullSafeToString(dataGetter.getDataFor("data.jar." + artifact));
+		final String eclipseValue = Strings.nullSafeToString(dataGetter.getDataFor(artifactEclipseKey));
+		final String repositoryValue = Strings.nullSafeToString(dataGetter.getDataFor(artifactSoftwareFmKey));
 		String tooltip = MessageFormat.format(dataGetter.getDataFor("button.javadocSource.tooltip").toString(), eclipseValue, repositoryValue);
 		button.setToolTipText(tooltip);
 
@@ -51,10 +57,10 @@ public class JavadocOrSourceButtonDisplayer extends ButtonDisplayer {
 					@Override
 					public void run() {
 						try {
-							ICallback<String> callback = (ICallback<String>) dataGetter.getDataFor("data.raw.jar." + artifact + "Mutator");
+							ICallback<String> callback = (ICallback<String>) dataGetter.getDataFor(eclipseMutatorKey);
 							callback.process(repositoryValue);
 							Map<String,Object> rawData = (Map<String, Object>) dataGetter.getLastRawData("jar");
-							rawData.put(artifact,  repositoryValue);
+							rawData.put(artifactKey,  repositoryValue);
 							dataGetter.setRawData("jar", rawData);
 							
 						} catch (Exception e) {

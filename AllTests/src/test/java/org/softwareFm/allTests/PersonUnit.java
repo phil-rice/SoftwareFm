@@ -2,6 +2,9 @@ package org.softwareFm.allTests;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.configuration.largebuttons.ArtifactDetailsLargeButtonFactory;
+import org.softwareFm.configuration.largebuttons.GroupLargeButtonFactory;
+import org.softwareFm.configuration.largebuttons.ArtifactSocialLargeButtonFactory;
 import org.softwareFm.display.browser.BrowserUnit;
 import org.softwareFm.display.composites.TitleAndText;
 import org.softwareFm.display.editor.TextEditor;
@@ -23,6 +26,9 @@ public class PersonUnit {
 				Swts.makeButtonFromMainMethod(composite, ShowAllSimpleImageButtons.class);
 				Swts.makeButtonFromMainMethod(composite, TitleAndText.class);
 				Swts.makeButtonFromMainMethod(composite, TextEditor.class);
+				Swts.makeButtonFromMainMethod(composite, ArtifactDetailsLargeButtonFactory.class);
+				Swts.makeButtonFromMainMethod(composite, ArtifactSocialLargeButtonFactory.class);
+				Swts.makeButtonFromMainMethod(composite, GroupLargeButtonFactory.class);
 				Swts.makeButtonFromMainMethod(composite, SoftwareFmViewUnit.class);
 				Swts.makeButtonFromMainMethod(composite, RssPersonUnit.class);
 				Swts.makeButtonFromMainMethod(composite, RssBrowserPersonUnit.class);

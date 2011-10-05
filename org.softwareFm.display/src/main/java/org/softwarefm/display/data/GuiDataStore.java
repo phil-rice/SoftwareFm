@@ -201,7 +201,11 @@ public class GuiDataStore implements IDataGetter {
 
 	private Object getDataFor(String entity, String key) {
 		synchronized (lock) {
-			checkEntityExists(entity);
+			try {
+				checkEntityExists(entity);
+			} catch (IllegalArgumentException e) {
+				throw new IllegalArgumentException(key, e);
+			}
 			EntityCachedData entityCachedData = cache.get(entity);
 			if (entityCachedData == null)
 				return null;

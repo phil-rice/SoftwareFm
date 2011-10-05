@@ -1,15 +1,20 @@
 package org.softwareFm.utilities.collections;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.math.BigInteger;
 import java.net.URL;
 import java.security.DigestInputStream;
@@ -28,6 +33,36 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 
 public class Files {
+
+	public static int downLoadFile(URL url, File target) {
+		try {
+			File tempFile = new File(target.getCanonicalFile().toString() + "_temp");
+			target.delete();
+			tempFile.delete();
+			// URLConnection urlC = url.openConnection();
+			// Copy resource to local file, use remote file
+			// if no local file name specified
+			InputStream is = url.openStream();
+			// Print info about resource
+			FileOutputStream fos = new FileOutputStream(tempFile);
+			int oneChar, count = 0;
+			while ((oneChar = is.read()) != -1) {
+				fos.write(oneChar);
+				count++;
+			}
+			is.close();
+			fos.close();
+			tempFile.renameTo(target);
+			return count;
+		} catch (Exception e) {
+			try {
+				target.delete();
+			} catch (Exception e1) {
+			}
+			throw WrappedException.wrap(e);
+
+		}
+	}
 
 	public static Iterable<File> walkChildrenOf(final File root, final FilenameFilter filter) {
 		return new AbstractFindNextIterable<File, Stack<Iterator<File>>>() {
@@ -74,6 +109,7 @@ public class Files {
 			throw WrappedException.wrap(e);
 		}
 	}
+
 	public static String getText(File file) {
 		try {
 			FileReader reader = new FileReader(file);
@@ -93,25 +129,29 @@ public class Files {
 	}
 
 	public static String getText(InputStream inputStream) {
-		InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-		return getText(inputStreamReader);
+		try {
+			InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+			try {
+				return getText(inputStreamReader);
+			} finally {
+				inputStream.close();
+			}
+		} catch (IOException e) {
+			throw WrappedException.wrap(e);
+		}
 	}
 
 	public static String getText(Reader rawReader) {
-		BufferedReader reader = new BufferedReader(rawReader);
-		StringBuffer stringBuffer = new StringBuffer();
 		try {
-			try {
-				while (reader.ready()) {
-					String string = reader.readLine();
-					stringBuffer.append(string);
-					stringBuffer.append("\n");
-				}
-				return stringBuffer.toString();
-			} finally {
-				reader.close();
+			Writer writer = new StringWriter();
+			char[] buffer = new char[1024];
+			Reader reader = new BufferedReader(rawReader);
+			int n;
+			while ((n = reader.read(buffer)) != -1) {
+				writer.write(buffer, 0, n);
 			}
-		} catch (Exception e) {
+			return writer.toString();
+		} catch (IOException e) {
 			throw WrappedException.wrap(e);
 		}
 	}
@@ -213,8 +253,9 @@ public class Files {
 		if (index == -1)
 			return "";
 		else
-			return name.substring(index+1);
+			return name.substring(index + 1);
 	}
+
 	public static String justName(File file) {
 		String name = file.getName();
 		return noExtension(name);
@@ -229,7 +270,7 @@ public class Files {
 		};
 	}
 
-	public static IFunction1< File, String> toFileName() {
+	public static IFunction1<File, String> toFileName() {
 		return new IFunction1<File, String>() {
 			@Override
 			public String apply(File from) throws Exception {
@@ -237,6 +278,24 @@ public class Files {
 				return result;
 			}
 		};
+	}
+
+	public static void makeDirectoryForFile(File file) {
+		file.getParentFile().mkdirs();
+
+	}
+
+	public static void setText(File file, String text) {
+		try {
+			BufferedWriter out = new BufferedWriter(new FileWriter(file));
+			try {
+				out.write(text);
+			} finally {
+				out.close();
+			}
+		} catch (IOException e) {
+			throw WrappedException.wrap(e);
+		}
 	}
 
 }

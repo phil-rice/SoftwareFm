@@ -26,7 +26,7 @@ public interface IUrlGenerator extends IFunction1<String, String> {
 			String cleanUrl = Strings.onlyKeep(ripperResult.resourcePath.toLowerCase(), "abcdefghijklmnopqrstuvwxyz0123456789._");
 			if (cleanUrl.length() < 2)
 				return "";
-			return "/" + name + "s/" + Math.abs(cleanUrl.hashCode()) % 1000 + "/" + cleanUrl;
+			return "/softwareFm/" + name + "s/" + Math.abs(cleanUrl.hashCode()) % 1000 + "/" + cleanUrl;
 		}
 	}
 }

@@ -181,5 +181,8 @@ public class Strings {
 		});
 	}
 
+	public static String sqlEscape(String raw) {
+		return raw.replaceAll("'", "''").replaceAll("\\\\", "\\\\");
+	}
 
 }

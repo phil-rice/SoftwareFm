@@ -14,6 +14,14 @@ public class StringsTest extends TestCase {
 	}
 	
 	
+	public void testSqlEscape(){
+		assertEquals("abc", Strings.sqlEscape("abc"));
+		assertEquals("a''bc", Strings.sqlEscape("a'bc"));
+		assertEquals("a''''bc", Strings.sqlEscape("a''bc"));
+		assertEquals("a''bc", Strings.sqlEscape("a\'bc"));
+		assertEquals("a\\''bc", Strings.sqlEscape("a\\'bc"));
+	}
+	
 
 	public void testOneLineLowWhiteSpace(){
 		checkOneLineLowWhiteSpace("a b c", "   \n   a  \n\nb\n  c");

@@ -1,0 +1,7 @@
+{"group":{},
+"artifact":{},
+"ripped":{"jarPath":"a\\b\\jarpath.java",
+"hexDigest":"somedigest",
+"source":"someSourceUrl",
+"javadoc":"http:\/\/someJavadocUrl.jar",
+"jarName":"jarName.java"}}

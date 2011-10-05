@@ -10,5 +10,6 @@ Export-Package: org.softwareFm.configuration,
  org.softwareFm.configuration.configurators,
  org.softwareFm.configuration.jar,
  org.softwareFm.configuration.largebuttons,
- org.softwareFm.configuration.playlists
+ org.softwareFm.configuration.playlists,
+ org.softwareFm.eclipse.sample
 Bundle-SymbolicName: org.softwareFm.configuration

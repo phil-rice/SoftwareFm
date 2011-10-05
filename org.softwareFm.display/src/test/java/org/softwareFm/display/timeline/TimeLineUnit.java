@@ -66,6 +66,7 @@ public class TimeLineUnit {
 						}, playListGetter);
 					}
 
+					@SuppressWarnings("unchecked")
 					@Override
 					public void selected(BrowserPlusNextPrevButtons hasControl, String fileName, String json) throws Exception {
 						playListGetterSource.clear();

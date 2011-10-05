@@ -16,14 +16,15 @@ public class BasicPlaylistContributor implements IPlayListContributor {
 	@Override
 	public List<PlayItem> items(Map<String, Object> dataAboutProject) {
 		if (dataAboutProject == null)
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		List<PlayItem> result = Lists.newList();
-		addItem(result, dataAboutProject, DisplayConstants.browserFeedType, "project.url"); //<--- won't work
+//		addItem(result, dataAboutProject, DisplayConstants.browserFeedType, "projec"); //<--- won't work
 		addList(result, dataAboutProject, DisplayConstants.browserFeedType, "tweets", "http://mobile.twitter.com/{0}");
 		addList(result, dataAboutProject, DisplayConstants.rssFeedType, "rss", "{0}");
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
 	private void addList(List<PlayItem> result, Map<String, Object> data, String feedtype, String key, String pattern) {
 		Object value = data.get(key);
 		if (value != null && value instanceof List)
@@ -35,11 +36,11 @@ public class BasicPlaylistContributor implements IPlayListContributor {
 
 	}
 
-	private void addItem(List<PlayItem> result, Map<String, Object> data, String feedtype, String key) {
-		Object value = data.get(key);
-		if (value != null)
-			result.add(new PlayItem(feedtype, value.toString()));
-
-	}
+//	private void addItem(List<PlayItem> result, Map<String, Object> data, String feedtype, String key) {
+//		Object value = data.get(key);
+//		if (value != null)
+//			result.add(new PlayItem(feedtype, value.toString()));
+//
+//	}
 
 }

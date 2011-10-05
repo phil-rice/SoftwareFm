@@ -422,4 +422,10 @@ public class Maps {
 		else
 			return result;
 	}
+
+	public static <K,V>void putIfNotNull(Map<K, V> map, K key, V value) {
+		if (value != null)
+			map.put(key, value);
+		
+	}
 }

@@ -11,4 +11,3 @@ Require-Bundle: org.softwareFm.configuration;bundle-version="1.0.0",
  org.softwareFm.repository;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.softwareFm.eclipse.sample

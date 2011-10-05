@@ -1,41 +1,14 @@
 package org.softwareFm.configuration.configurators;
 
+import org.softwareFm.configuration.ConfigurationConstants;
 import org.softwareFm.display.GuiBuilder;
 import org.softwareFm.display.actions.ActionDefn;
 import org.softwareFm.display.largeButton.ILargeButtonFactory;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 
-public abstract class LargeButtonFactory implements ILargeButtonFactory {
+public abstract class LargeButtonFactory extends ConfigurationConstants implements ILargeButtonFactory {
 
-	public static final String blankKey = "blank.title";
-
-	public static final String dataRawHexDigest= "data.raw.jar.hexDigest";
-	public static final String dataRawJarName= "data.raw.jar.jarName";
-	public static final String dataRawJarPath = "data.raw.jar.jarPath";
-	public static final String dataJarProjectUrl = "data.jar.project.url";
-	public static final String dataJarOrganisationUrl = "data.jar.organisation.url";
-	public static final String dataRawJavadoc = "data.raw.jar.javadoc";
-	public static final String dataRawSource = "data.raw.jar.source";
-
-	public static final String hexDigestMissingTitle = "hexDigest.missing.title";
-	public static final String projectUrlMissingTitle = "project.url.missing.title";
-	public static final String projectNameMissingTitle = "project.name.missing.title";
-	public static final String organisationUrlMissingTitle = "organisation.url.missing.title";
-	public static final String organisationNameMissingTitle = "organisation.name.missing.title";
-
-	public static final String dataProjectBlogs = "data.project.project.blogs";
-	public static final String dataProjectName = "data.project.project.name";
-	public static final String dataProjectMailingList = "data.project.mailingLists";
-	public static final String dataProjectIssues = "data.project.issues";
-	public static final String dataProjectRss = "data.project.rss";
-	public static final String dataProjectTutorials = "data.project.tutorials";
-	public static final String dataProjectTweets = "data.project.tweets";
-	public static final String dataProjectFacebook = "data.project.facebook";
-
-	public static final String dataOrganisationName = "data.organisation.name";
-	public static final String dataOrganisationTweets = "data.organisation.tweets";
-	public static final String dataOrganisationRss = "data.organisation.rss";
 
 	protected ActionDefn[] makeMainListActions(GuiBuilder guiBuilder, String artifactId, String dataId) {
 		return new ActionDefn[] { guiBuilder.//
@@ -55,18 +28,21 @@ public abstract class LargeButtonFactory implements ILargeButtonFactory {
 		return guiBuilder.action("action.text.edit", artifactId, "overlay.edit").tooltip("action.edit.tooltip");
 	}
 
-	protected ActionDefn editNameButton(GuiBuilder guiBuilder, String artifactId) {
+	protected ActionDefn editValueButton(GuiBuilder guiBuilder, String artifactId) {
 		return guiBuilder.action("action.text.edit", artifactId, "overlay.edit").tooltip("action.edit.name.tooltip");
 	}
-	protected ActionDefn editUrlButton(GuiBuilder guiBuilder,  String dataId) {
+
+	protected ActionDefn editUrlButton(GuiBuilder guiBuilder, String dataId) {
 		return guiBuilder.action("action.text.edit", GeneralAnchor.browseKey, "overlay.edit").tooltip("action.edit.url.tooltip").params(dataId);
 	}
+
 	protected ActionDefn browseButton(GuiBuilder guiBuilder) {
 		return guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).tooltip("action.browse.tooltip");
 	}
+
 	protected ActionDefn browseButton(GuiBuilder guiBuilder, String dataId) {
 		return guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).params(dataId).tooltip(dataId);
-		
+
 	}
 
 }

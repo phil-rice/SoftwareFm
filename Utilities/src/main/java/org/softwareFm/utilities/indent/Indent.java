@@ -32,4 +32,10 @@ public class Indent {
 	public String toString() {
 		return prefix();
 	}
+
+	public Indent unindent() {
+		if (depth == 0)
+			throw new IllegalStateException();
+		return new Indent(fillChar, depth - 1, perDepth);
+	}
 }

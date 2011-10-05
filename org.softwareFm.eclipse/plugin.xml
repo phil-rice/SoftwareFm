@@ -23,7 +23,7 @@
 </extension>
 
 <extension  point="org.softwareFm.eclipse.dataStore">
-      <item class="org.softwareFm.eclipse.DataStoreConfigurator"/>
+      <item class="org.softwareFm.configuration.configurators.DataStoreConfigurator"/>
 </extension>
 
 <extension  point="org.softwareFm.eclipse.smallButton">
@@ -48,11 +48,10 @@
 </extension>
 
 <extension  point="org.softwareFm.eclipse.largeButton">
-      <item class="org.softwareFm.configuration.largebuttons.JarLargeButtonFactory"/>
-      <item class="org.softwareFm.configuration.largebuttons.ProjectDetailsLargeButtonFactory"/>
-      <item class="org.softwareFm.configuration.largebuttons.ProjectSocialLargeButtonFactory"/>
-      <item class="org.softwareFm.configuration.largebuttons.ProjectTrainingLargeButtonFactory"/>
-      <item class="org.softwareFm.configuration.largebuttons.OrganisationLargeButtonFactory"/>
+      <item class="org.softwareFm.configuration.largebuttons.ArtifactDetailsLargeButtonFactory"/>
+      <item class="org.softwareFm.configuration.largebuttons.ArtifactSocialLargeButtonFactory"/>
+      <item class="org.softwareFm.configuration.largebuttons.ArtifactTrainingLargeButtonFactory"/>
+      <item class="org.softwareFm.configuration.largebuttons.GroupLargeButtonFactory"/>
 </extension>
 
 <extension  point="org.softwareFm.eclipse.browserConfiguration">
