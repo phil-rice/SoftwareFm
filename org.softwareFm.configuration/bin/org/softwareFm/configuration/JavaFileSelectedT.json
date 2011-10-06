@@ -1,6 +1,5 @@
 {"ripped":{"jarPath":"a\\b\\jarpath.java",
 "source":"someSourceUrl",
-"hexDigest":"somedigest",
 "jarName":"jarName.java"},
 "jar":{},
 "artifact":{},

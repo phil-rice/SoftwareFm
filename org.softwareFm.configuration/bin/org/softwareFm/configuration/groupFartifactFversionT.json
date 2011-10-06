@@ -5,6 +5,7 @@
 "jar":{"version":24},
 "artifact":{"tutorials":["tut1",
 "tut2"],
+"description":"This is the main\nrun time jar for\nthe java language",
 "issues":"http:\/\/bugs.sun.com\/bugdatabase\/index.jsp",
 "name":"Java Language main Runtime Jar",
 "rss":["someRssFeed"],
