@@ -204,8 +204,8 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 			@Override
 			public void storeUpdates(String url, String entity, String attribute, Object newValue) {
 				guiDataStore.clearCache(url, entity, attribute);
-				Map<String,Object> lastRawData = guiDataStore.getLastRawData(ConfigurationConstants.artifact);
-				guiDataStore.processData(ConfigurationConstants.artifact, lastRawData, Maps.<String, Object> newMap());
+				Map<String,Object> lastRawData = guiDataStore.getLastRawData(ConfigurationConstants.primaryEntity);
+				guiDataStore.processData(ConfigurationConstants.primaryEntity, lastRawData, Maps.<String, Object> newMap());
 
 			}
 		}) : updateStore;
@@ -288,7 +288,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 				if (path != null) {
 					final Map<String, Object> context = Maps.<String, Object> newMap();
 					final RippedResult result = makeRippedResult(guiDataStore, rippedResult, context);
-					guiDataStore.processData("artifact", result, context);
+					guiDataStore.processData(ConfigurationConstants.primaryEntity, result, context);
 				}
 			}
 

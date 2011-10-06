@@ -311,9 +311,9 @@ public class Maps {
 			return value;
 	}
 
-	public static <K, V> Map<K, V> with(Map<K, V> map, K key, V value) {
+	public static <K, V> Map<K, V> with(Map<K, V> map,Object...keysAndValues) {
 		Map<K, V> newMap = copyMap(map);
-		newMap.put(key, value);
+		newMap.putAll(Maps.<K,V>makeLinkedMap(keysAndValues));
 		return newMap;
 	}
 
@@ -427,5 +427,12 @@ public class Maps {
 		if (value != null)
 			map.put(key, value);
 		
+	}
+
+	public static <K,V>Map<K,V> copyWithout(Map<K,V> map, K ... keys) {
+		Map<K, V> result = Maps.copyMap(map);
+		for (K key: keys)
+			result.remove(key);
+		return result;
 	}
 }

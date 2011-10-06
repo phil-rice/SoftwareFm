@@ -48,6 +48,7 @@
 </extension>
 
 <extension  point="org.softwareFm.eclipse.largeButton">
+      <item class="org.softwareFm.configuration.largebuttons.JarDetailsLargeButtonFactory"/>
       <item class="org.softwareFm.configuration.largebuttons.ArtifactDetailsLargeButtonFactory"/>
       <item class="org.softwareFm.configuration.largebuttons.ArtifactSocialLargeButtonFactory"/>
       <item class="org.softwareFm.configuration.largebuttons.ArtifactTrainingLargeButtonFactory"/>

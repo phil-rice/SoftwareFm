@@ -16,22 +16,22 @@ public class GroupLargeButtonFactory extends LargeButtonFactory {
 
 	@Override
 	public LargeButtonDefn apply(GuiBuilder guiBuilder) throws Exception {
-		return guiBuilder.largeButton("largeButton.organisation", //
-				guiBuilder.smallButton("smallButton.organisation.details", "smallButton.organisation.details.title", "smallButton.data", ArtifactsAnchor.organisationKey,//
-						guiBuilder.displayer("displayer.text").title(groupIdTitle).data(dataArtifactGroupId).//
-								guard(dataRawHexDigest, blankKey, dataArtifactGroupId, groupIdMissingTitle).//
+		return guiBuilder.largeButton("largeButton.group", //
+				guiBuilder.smallButton("smallButton.group.details", "smallButton.group.details.title", "smallButton.data", ArtifactsAnchor.organisationKey,//
+						guiBuilder.displayer("displayer.text").title(groupIdTitle).data(dataJarGroupId).//
+								guard(dataRawHexDigest, blankKey, dataJarGroupId, groupIdMissingTitle).//
 								actions(editValueButton(guiBuilder, ArtifactsAnchor.organisationKey)), //
-						guiBuilder.displayer("displayer.text").title(groupNameTitle).data(dataGroupName).guard(dataRawHexDigest, blankKey, dataArtifactGroupId, groupIdMissingTitle, dataGroupName, groupNameMissingTitle).actions(//
-								editTextButton(guiBuilder, ArtifactsAnchor.organisationKey))).data(dataArtifactArtifactId),//
+						guiBuilder.displayer("displayer.text").title(groupNameTitle).data(dataGroupName).guard(dataRawHexDigest, blankKey, dataJarGroupId, groupIdMissingTitle, dataGroupName, groupNameMissingTitle).actions(//
+								editTextButton(guiBuilder, ArtifactsAnchor.organisationKey))).data(dataJarArtifactId),//
 
-				guiBuilder.smallButton("smallButton.organisation.rss", "smallButton.project.rss.title", "smallButton.data", ArtifactsAnchor.rssKey,//
-						guiBuilder.listDisplayer("displayer.list", "listEditorId.rss").guard(dataArtifactGroupId, blankKey).title(groupRssAdd).data(dataGroupRss).//
+				guiBuilder.smallButton("smallButton.group.rss", "smallButton.project.rss.title", "smallButton.data", ArtifactsAnchor.rssKey,//
+						guiBuilder.listDisplayer("displayer.list", "listEditorId.rss").guard(dataJarGroupId, blankKey).title(groupRssAdd).data(dataGroupRss).//
 								actions(makeMainListActions(guiBuilder, ArtifactsAnchor.rssKey, dataGroupRss)).//
 								listActions(guiBuilder.action("action.rss.browse", GeneralAnchor.browseKey).tooltip("action.browse.tooltip"), //
 										listEditAction(guiBuilder, ArtifactsAnchor.rssKey),//
 										listDeleteAction(guiBuilder, ArtifactsAnchor.rssKey))).data(dataGroupRss), //
 										
-				guiBuilder.smallButton("smallButton.organisation.twitter", "smallButton.organisation.twitter.title", "smallButton.data", ArtifactsAnchor.twitterKey, //
+				guiBuilder.smallButton("smallButton.group.twitter", "smallButton.group.twitter.title", "smallButton.data", ArtifactsAnchor.twitterKey, //
 						guiBuilder.listDisplayer("displayer.list", "listEditorId.tweet").guard(dataGroupTweets, blankKey).title(groupTwitterAdd).data(dataGroupTweets).//
 								actions(makeMainListActions(guiBuilder, ArtifactsAnchor.twitterKey, dataGroupTweets)).//
 								listActions(guiBuilder.action("action.list.viewTweets", GeneralAnchor.browseKey).params(dataGroupTweets).tooltip("action.browse.tooltip"), //

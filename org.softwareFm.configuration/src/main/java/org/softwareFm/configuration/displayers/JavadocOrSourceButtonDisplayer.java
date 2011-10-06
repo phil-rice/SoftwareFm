@@ -57,9 +57,9 @@ public class JavadocOrSourceButtonDisplayer extends ButtonDisplayer {
 				try {
 					ICallback<String> callback = (ICallback<String>) dataGetter.getDataFor(eclipseMutatorKey);
 					callback.process(repositoryValue);
-					Map<String,Object> rawData = (Map<String, Object>) dataGetter.getLastRawData(ConfigurationConstants.artifact);
+					Map<String,Object> rawData = (Map<String, Object>) dataGetter.getLastRawData(ConfigurationConstants.primaryEntity);
 					rawData.put(artifactKey,  repositoryValue);
-					dataGetter.setRawData(ConfigurationConstants.artifact, rawData);
+					dataGetter.setRawData(ConfigurationConstants.primaryEntity, rawData);
 					
 				} catch (Exception e) {
 					throw WrappedException.wrap(e);

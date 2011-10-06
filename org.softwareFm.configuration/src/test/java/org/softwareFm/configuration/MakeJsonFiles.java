@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import org.json.simple.JSONValue;
+import org.softwareFm.jdtBinding.api.JdtConstants;
 import org.softwareFm.utilities.booleans.Booleans;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.maps.Maps;
@@ -24,15 +25,18 @@ public class MakeJsonFiles {
 
 	private final static Map<String, Object> ripped = Maps.makeMap(//
 			"hexDigest", "somedigest",//
-			"jarName", "jarName.java",//
-			"jarPath", "a\\b\\jarPath.java",//
+			"jarName", "jarName.jar",//
+			"jarPath", "a\\b\\jarPath.jar",//
 			"source", "someSourceUrl");
 
-	private final static Map<String, Object> artifact = Maps.makeMap(//
+	private final static Map<String, Object> jar = Maps.makeMap(//
 			"artifactId", "RunTime",//
 			"groupId", "oracle.com",//
-			"version", 24,//
+			"version", 24);
+
+	private final static Map<String, Object> artifact = Maps.makeMap(//
 			"name", "Java Language main Runtime Jar",//
+			"description", "This is the main\nrun time jar for\nthe java language",//
 			"url", "http://www.oracle.com/us/technologies/java/index.html",//
 			"javadoc", javadocJar,//
 			"mailingLists", Arrays.asList("a$b"),//
@@ -51,70 +55,54 @@ public class MakeJsonFiles {
 	public static void main(String[] args) {
 		for (boolean eclipse : Booleans.falseTrue) {
 			makeJavaFile(eclipse);
-			for (boolean softwareFm : Booleans.falseTrue)
-				for (boolean http : Booleans.falseTrue) {
-					makeJavadocSource(eclipse, softwareFm, http);
-					if (eclipse && softwareFm)
-						makeJavadocSource(eclipse, softwareFm, http, true);
-				}
+			for (boolean softwareFmHasLink : Booleans.falseTrue)
+				for (boolean softwareFm : Booleans.falseTrue)
+					for (boolean http : Booleans.falseTrue) {
+						makeJavadocSource(softwareFmHasLink, eclipse, softwareFm, http);
+						if (eclipse && softwareFm)
+							makeJavadocSource(softwareFmHasLink, eclipse, softwareFm, http, true);
+					}
 		}
-		for (boolean artifactId : Booleans.falseTrue)
-			for (boolean artifactName : Booleans.falseTrue)
-				for (boolean groupId : Booleans.falseTrue)
-					makeFileForArtifactGroup(artifactId, groupId, artifactName);
 		for (boolean groupId : Booleans.falseTrue)
-			for (boolean groupName : Booleans.falseTrue)
-				makeFileForGroup(groupId, groupName);
+			for (boolean artifactId : Booleans.falseTrue)
+				for (boolean version : Booleans.falseTrue)
+					makeFileForJar(groupId, artifactId, version);
 
-		makeFile("oracle.json", ripped, artifact, group);
-	}
-
-	private static void makeFileForGroup(boolean groupId, boolean groupName) {
-		String pattern = "groupIdName{0}{1}.json";
-		String fileName = MessageFormat.format(pattern, Booleans.toTf(groupId), Booleans.toTf(groupName));
-		Map<String, Object> localRipped = Maps.copyMap(ripped);
-		Map<String, Object> localArtifact = Maps.copyMap(artifact);
-		Map<String, Object> localGroup = Maps.copyMap(group);
-		if (!groupId)
-			localArtifact.remove("groupId");
-		if (!groupName)
-			localGroup.remove("name");
-		makeFile(fileName, localRipped, localArtifact, localGroup);
-
+		makeFile("NoGroupName.json", ripped, jar, artifact, Maps.copyWithout(group, "name"));
+		makeFile("oracle.json", ripped, jar, artifact, group);
 	}
 
 	private static void makeJavaFile(boolean eclipse) {
-		Map<String, Object> localRipped = Maps.with(ripped, "jarPath", "a\\b\\jarpath.java");
+		Map<String, Object> localRipped = Maps.with(ripped, "jarPath", "a\\b\\jarpath.java", "jarName", "jarName.java");
 		if (!eclipse) {
 			localRipped.remove("javadoc");
 			localRipped.remove("source");
 		}
+		localRipped.remove(JdtConstants.hexDigestKey);
 		String fileName = MessageFormat.format("JavaFileSelected{0}.json", Booleans.toTf(eclipse));
-		makeFile(fileName, localRipped, Maps.<String, Object> newMap(), Maps.<String, Object> newMap());
+		makeFile(fileName, localRipped, Maps.<String, Object> newMap(), Maps.<String, Object> newMap(), Maps.<String, Object> newMap());
 	}
 
-	private static void makeFileForArtifactGroup(boolean artifactId, boolean groupId, boolean artifactName) {
-		String pattern = "artifactId{0}GroupId{1}Name{2}.json";
-		String fileName = MessageFormat.format(pattern, Booleans.toTf(artifactId), Booleans.toTf(groupId), Booleans.toTf(artifactName));
-		Map<String, Object> localRipped = Maps.copyMap(ripped);
-		Map<String, Object> localArtifact = Maps.copyMap(artifact);
-		if (!artifactId)
-			localArtifact.remove("artifactId");
+	private static void makeFileForJar(boolean groupId, boolean artifactId, boolean version) {
+		String pattern = "group{0}artifact{1}version{2}.json";
+		String fileName = MessageFormat.format(pattern, Booleans.toTf(groupId), Booleans.toTf(artifactId), Booleans.toTf(version));
+		Map<String, Object> localJar = Maps.copyMap(jar);
 		if (!groupId)
-			localArtifact.remove("groupId");
-		if (!artifactName)
-			localArtifact.remove("name");
-		makeFile(fileName, localRipped, localArtifact, group);
-
+			localJar.remove("groupId");
+		if (!artifactId)
+			localJar.remove("artifactId");
+		if (!version)
+			localJar.remove("version");
+		makeFile(fileName, ripped, localJar, artifact, group);
 	}
 
-	private static void makeJavadocSource(boolean eclipse, boolean softwareFm, boolean http) {
-		makeJavadocSource(eclipse, softwareFm, http, false);
+	private static void makeJavadocSource(boolean softwareFmHasLink, boolean eclipse, boolean softwareFm, boolean http) {
+		makeJavadocSource(softwareFmHasLink, eclipse, softwareFm, http, false);
 	}
 
-	private static void makeJavadocSource(boolean eclipse, boolean softwareFm, boolean http, boolean match) {
-		String pattern = "Javadoc{0}{1}Source{0}{1}Http{2}match{3}.json";
-		String fileName = MessageFormat.format(pattern, Booleans.toTf(eclipse), Booleans.toTf(softwareFm), Booleans.toTf(http), Booleans.toTf(match));
+	private static void makeJavadocSource(boolean softwareFmHasLink,boolean eclipse, boolean softwareFm, boolean http, boolean match) {
+		String pattern = "Link{0}Javadoc{1}{2}Source{1}{2}Http{3}match{4}.json";
+		String fileName = MessageFormat.format(pattern, Booleans.toTf(softwareFmHasLink),Booleans.toTf(eclipse), Booleans.toTf(softwareFm), Booleans.toTf(http), Booleans.toTf(match));
 		Map<String, Object> localRipped = Maps.copyMap(ripped);
 		Map<String, Object> localArtifact = Maps.copyMap(artifact);
 		if (http) {
@@ -140,6 +128,7 @@ public class MakeJsonFiles {
 			}
 
 		}
+		Map<String, Object> localJar = softwareFmHasLink ? Maps.copyMap(jar) : Maps.<String, Object> newMap();
 		if (http) {
 			localRipped.put("javadoc", "http://" + localRipped.get("javadoc"));
 			localArtifact.put("javadoc", "http://" + localArtifact.get("javadoc"));
@@ -155,13 +144,13 @@ public class MakeJsonFiles {
 			localArtifact.remove("javadoc");
 			localArtifact.remove("source");
 		}
-		makeFile(fileName, localRipped, localArtifact, group);
+		makeFile(fileName, localRipped, localJar, localArtifact, group);
 	}
 
-	private static void makeFile(String fileName, Map<String, Object> localRipped, Map<String, Object> localArtifact, Map<String, Object> localGroup) {
+	private static void makeFile(String fileName, Map<String, Object> localRipped, Map<String, Object> localJar, Map<String, Object> localArtifact, Map<String, Object> localGroup) {
 		File file = new File(root, fileName);
 		file.delete();
-		Map<String, Object> data = Maps.makeMap("ripped", localRipped, "artifact", localArtifact, "group", localGroup);
+		Map<String, Object> data = Maps.makeLinkedMap("ripped", localRipped, "jar", localJar, "artifact", localArtifact, "group", localGroup);
 		String text = JSONValue.toJSONString(data).replaceAll(",", ",\n");
 		Files.setText(file, text);
 	}

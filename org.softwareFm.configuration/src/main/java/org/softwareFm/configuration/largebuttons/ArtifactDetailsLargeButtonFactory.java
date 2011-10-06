@@ -17,26 +17,20 @@ public class ArtifactDetailsLargeButtonFactory extends LargeButtonFactory {
 	@Override
 	public LargeButtonDefn apply(GuiBuilder guiBuilder) throws Exception {
 
-		return guiBuilder.largeButton("largeButton.jar",//
+		return guiBuilder.largeButton("largeButton.artifact.details",//
 
-				guiBuilder.smallButton("smallButton.jar.nameAndDescription", "smallButton.jar.identifiers.title", "smallButton.jar", ArtifactsAnchor.jarKey, //
+				guiBuilder.smallButton("smallButton.artifact.nameAndDescription", "smallButton.jar.identifiers.title", "smallButton.jar", ArtifactsAnchor.jarKey, //
 						guiBuilder.displayer("displayer.text").title(artifactNameTitle).data(dataArtifactName).//
-								guard(dataRawHexDigest, blankKey, dataArtifactArtifactId, artifactIdMissingTitle, dataArtifactName, artifactNameMissingTitle).//
-								actions(editValueButton(guiBuilder, ArtifactsAnchor.projectKey)//
+								guard(dataRawHexDigest, blankKey, dataJarArtifactId, artifactIdMissingTitle, dataArtifactName, artifactNameMissingTitle).//
+								actions(editTextButton(guiBuilder, ArtifactsAnchor.projectKey)//
 								), //
-						guiBuilder.displayer("displayer.text").title(artifactDescriptionTitle).data(dataArtifactDescription).//
-								guard(dataRawHexDigest, blankKey, dataArtifactArtifactId, artifactIdMissingTitle).//
-								actions(editValueButton(guiBuilder, ArtifactsAnchor.projectKey)),//
 						guiBuilder.displayer("displayer.text").title(artifactUrlTitle).data(dataArtifactUrl).//
-								guard(dataRawHexDigest, blankKey, dataArtifactArtifactId, artifactIdMissingTitle).//
-								actions(editValueButton(guiBuilder, ArtifactsAnchor.projectKey))),//
+								guard(dataRawHexDigest, blankKey, dataJarArtifactId, artifactIdMissingTitle).//
+								actions(editUrlButton(guiBuilder))),//
 
-				guiBuilder.smallButton("smallButton.jar.details", "smallButton.jar.details.title", "smallButton.jar", ArtifactsAnchor.jarKey, //
-						guiBuilder.displayer("displayer.text").title(jarHexDigestTitle).data(dataRawHexDigest).//
-								guard(dataRawHexDigest, hexDigestMissingTitle), //
-						guiBuilder.displayer("displayer.text").title(jarNameTitle).data(dataRawJarName).tooltip(dataRawJarPath).//
-								guard(dataRawHexDigest, hexDigestMissingTitle).actions(//
-										guiBuilder.action("action.url.search", GeneralAnchor.searchKey).tooltip("action.search.tooltip")), //
+				guiBuilder.smallButton("smallButton.artifact.details", "smallButton.jar.details.title", "smallButton.jar", ArtifactsAnchor.jarKey, //
+						guiBuilder.displayer("displayer.text").title(jarHexDigestTitle).data(dataRawHexDigest), guiBuilder.displayer("displayer.text").title(jarNameTitle).data(dataRawJarName).tooltip(dataRawJarPath).actions(//
+								guiBuilder.action("action.url.search", GeneralAnchor.searchKey).tooltip("action.search.tooltip")), //
 						guiBuilder.displayer("displayer.button.javadoc").title(artifactJavadocTitle).guard(dataRawJavadoc, blankKey).tooltip(dataRawJavadoc).//
 								actions(guiBuilder.action("action.javadocSource.nuke", GeneralAnchor.clearKey),//
 										guiBuilder.action("action.javadoc.view", ArtifactsAnchor.jarKey).tooltip("action.javadoc.view.tooltip").ignoreGuard(),//
@@ -44,29 +38,15 @@ public class ArtifactDetailsLargeButtonFactory extends LargeButtonFactory {
 
 						guiBuilder.displayer("displayer.button.source").title(artifactSourceTitle).guard(dataRawSource, blankKey).tooltip(dataRawSource).//
 								actions(guiBuilder.action("action.source.view", ArtifactsAnchor.jarKey).tooltip("action.source.view.tooltip").ignoreGuard(),//
-										browseButton(guiBuilder, dataRawJavadoc))), //
-
-				guiBuilder.smallButton("smallButton.jar.identifiers", "smallButton.jar.identifiers.title", "smallButton.jar", ArtifactsAnchor.jarKey, //
-						guiBuilder.displayer("displayer.text").title(artifactIdTitle).data(dataArtifactArtifactId).//
-								guard(dataRawHexDigest, blankKey, dataArtifactArtifactId, artifactIdMissingTitle).//
-								actions(editValueButton(guiBuilder, ArtifactsAnchor.projectKey)//
-								), //
-						guiBuilder.displayer("displayer.text").title(groupIdTitle).data(dataArtifactGroupId).//
-								guard(dataRawHexDigest, blankKey, dataArtifactGroupId, groupIdMissingTitle).//
-								actions(editValueButton(guiBuilder, ArtifactsAnchor.projectKey)),//
-						guiBuilder.displayer("displayer.text").title(groupVersionTitle).data(dataArtifactVersion).//
-								guard(dataRawHexDigest, blankKey, dataArtifactVersion, groupIdMissingTitle).//
-								actions(editValueButton(guiBuilder, ArtifactsAnchor.projectKey))
-
-				),//
+										browseButton(guiBuilder, dataRawJavadoc))),//
 
 				guiBuilder.smallButton("smallButton.project.issues", "smallButton.project.issues.title", "smallButton.data", ArtifactsAnchor.issuesKey,//
-						guiBuilder.displayer("displayer.url").guard(dataArtifactGroupId, blankKey).title(artifactIssuesTitle).data(dataArtifactIssues).tooltip(artifactIssuesTitle).actions(//
+						guiBuilder.displayer("displayer.url").guard(dataJarGroupId, blankKey).title(artifactIssuesTitle).data(dataArtifactIssues).tooltip(artifactIssuesTitle).actions(//
 								browseButton(guiBuilder), //
 								editTextButton(guiBuilder, ArtifactsAnchor.issuesKey))).data(dataArtifactIssues).tooltip(dataArtifactIssues), // ,//
 
 				guiBuilder.smallButton("smallButton.project.mailingLists", "smallButton.project.mailingLists.title", "smallButton.data", ArtifactsAnchor.mailingListKey,//
-						guiBuilder.listDisplayer("displayer.list", "listEditorId.nameAndEmail").guard(dataArtifactGroupId, blankKey).title(artifactMailingListTitle).data(dataArtifactMailingList).//
+						guiBuilder.listDisplayer("displayer.list", "listEditorId.nameAndEmail").guard(dataJarGroupId, blankKey).title(artifactMailingListTitle).data(dataArtifactMailingList).//
 								actions(makeMainListActions(guiBuilder, ArtifactsAnchor.mailingListKey, dataArtifactMailingList)).//
 								listActions(listEditAction(guiBuilder, ArtifactsAnchor.mailingListKey), listDeleteAction(guiBuilder, ArtifactsAnchor.mailingListKey))).//
 						ctrlClickAction("action.text.browse", dataArtifactMailingList).data(dataArtifactMailingList));

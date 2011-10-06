@@ -19,6 +19,7 @@ import org.softwareFm.configuration.largebuttons.ArtifactDetailsLargeButtonFacto
 import org.softwareFm.configuration.largebuttons.ArtifactSocialLargeButtonFactory;
 import org.softwareFm.configuration.largebuttons.ArtifactTrainingLargeButtonFactory;
 import org.softwareFm.configuration.largebuttons.GroupLargeButtonFactory;
+import org.softwareFm.configuration.largebuttons.JarDetailsLargeButtonFactory;
 import org.softwareFm.display.GuiBuilder;
 import org.softwareFm.display.SoftwareFmDataComposite;
 import org.softwareFm.display.SoftwareFmLayout;
@@ -74,6 +75,7 @@ public class SoftwareFmFixture {
 	private final List<IBrowserConfigurator> browserConfigurators;
 	private final IPlayListGetter playListGetter;
 	public LargeButtonDefn[] allLargeButtons;
+	private LargeButtonDefn jarDetailsButton;
 
 	public SoftwareFmFixture(Display display) throws Exception {
 		imageRegistry = new ImageRegistry();
@@ -94,12 +96,13 @@ public class SoftwareFmFixture {
 
 		guiBuilder = new GuiBuilder(smallButtonStore, actionStore, displayerStore, listEditorStore);
 
+		jarDetailsButton = new JarDetailsLargeButtonFactory().apply(guiBuilder);
 		artifactDetailsButton = new ArtifactDetailsLargeButtonFactory().apply(guiBuilder);
 		artifactSocialButton = new ArtifactSocialLargeButtonFactory().apply(guiBuilder);
 		artifactTrainingButton = new ArtifactTrainingLargeButtonFactory().apply(guiBuilder);
 		groupLargeButtonFactory = new GroupLargeButtonFactory().apply(guiBuilder);
 
-		allLargeButtons = new LargeButtonDefn[] { artifactDetailsButton, artifactSocialButton, artifactTrainingButton, groupLargeButtonFactory };
+		allLargeButtons = new LargeButtonDefn[] { jarDetailsButton, artifactDetailsButton, artifactSocialButton, artifactTrainingButton, groupLargeButtonFactory };
 		browserConfigurators = Arrays.asList(new BrowserFeedConfigurator(), new RssFeedConfigurator());
 		playListGetter = new IPlayListGetter() {
 

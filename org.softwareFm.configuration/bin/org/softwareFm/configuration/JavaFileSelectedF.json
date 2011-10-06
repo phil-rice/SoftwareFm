@@ -1,5 +1,6 @@
-{"group":{},
-"artifact":{},
-"ripped":{"jarPath":"a\\b\\jarpath.java",
+{"ripped":{"jarPath":"a\\b\\jarpath.java",
 "hexDigest":"somedigest",
-"jarName":"jarName.java"}}
+"jarName":"jarName.java"},
+"jar":{},
+"artifact":{},
+"group":{}}

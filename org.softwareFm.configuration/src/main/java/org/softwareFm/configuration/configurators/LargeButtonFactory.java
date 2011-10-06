@@ -35,6 +35,9 @@ public abstract class LargeButtonFactory extends ConfigurationConstants implemen
 	protected ActionDefn editUrlButton(GuiBuilder guiBuilder, String dataId) {
 		return guiBuilder.action("action.text.edit", GeneralAnchor.browseKey, "overlay.edit").tooltip("action.edit.url.tooltip").params(dataId);
 	}
+	protected ActionDefn editUrlButton(GuiBuilder guiBuilder) {
+		return guiBuilder.action("action.text.edit", GeneralAnchor.browseKey, "overlay.edit").tooltip("action.edit.url.tooltip");
+	}
 
 	protected ActionDefn browseButton(GuiBuilder guiBuilder) {
 		return guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).tooltip("action.browse.tooltip");

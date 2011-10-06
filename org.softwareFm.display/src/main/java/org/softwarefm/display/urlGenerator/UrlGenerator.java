@@ -23,26 +23,20 @@ public class UrlGenerator implements IUrlGenerator {
 	public String findUrlFor(Map<String, Object> data) {
 		if (data == null)
 			return null;
-		Object[] values = new String[keys.length + 1];
+		Object[] values = new String[keys.length +2];
 		for (int i = 0; i < keys.length; i++) {
 			Object key = keys[i];
 			Object value = data.get(key);
 			if (value == null)
 				throw new NullPointerException(MessageFormat.format(DisplayConstants.cannotFindValueForKey, key, data));
 			String cleaned = Strings.forUrl(value.toString());
-			values[i + 1] = cleaned;
+			values[i + 2] = cleaned;
 
 		}
-		values[0] = Integer.toString(Math.abs(values[1].hashCode() % 1000));
+		values[0] = Integer.toString(Math.abs(values[2].hashCode() % 1000));
+		values[1] = ((String)values[2]).substring(0, 3);
 		return MessageFormat.format(pattern, values);
 	}
 
-	public String[] cleanKeysWithHashOfFirst(String[] keys) {
-		String[] result = new String[keys.length + 1];
-		result[0] = Integer.toString(Math.abs(keys[0].hashCode() % 1000));
-		for (int i = 0; i < result.length; i++)
-			result[i + 1] = Strings.forUrl(keys[i]);
-		return result;
-	}
 
 }

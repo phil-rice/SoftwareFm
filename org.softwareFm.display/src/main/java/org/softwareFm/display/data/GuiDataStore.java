@@ -48,11 +48,9 @@ public class GuiDataStore implements IDataGetter {
 
 	public static class DependantData {
 		public String entity;
-		public String linkData;
 
 		public DependantData(String entity) {
 			this.entity = entity;
-			this.linkData = linkData;
 		}
 	}
 
@@ -124,11 +122,9 @@ public class GuiDataStore implements IDataGetter {
 					entityCachedData.put(url, data);
 				}
 				fireListeners(entity, url);
-				// TODO is there some unpleasant race condition here...Probably need to rewrite
-				for (DependantData dependantData : Maps.getOrEmptyList(entityToDependantMap, entity)) {
-					Object linkObject = data == null ? null : data.get(dependantData.linkData);
+				// TODO is there some unpleasant race condition here?...Probably need to rewrite. Intension to to rewrite on server end so it's just one query...
+				for (DependantData dependantData : Maps.getOrEmptyList(entityToDependantMap, entity)) 
 					processOneData(dependantData.entity, data, context);
-				}
 			}
 
 		};

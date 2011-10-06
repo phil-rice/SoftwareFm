@@ -95,16 +95,16 @@ public class GuiDataStoreTest extends TestCase {
 	}
 
 	private void makeRosyView() {
-		store.urlGenerator("urlKey1", new UrlGenerator("original/{1}", "rawDataKey"));
-		store.urlGenerator("urlKey2", new UrlGenerator("depOne/{1}", "linkData1"));
-		store.urlGenerator("urlKey3", new UrlGenerator("depTwo/{1}", "linkData2"));
+		store.urlGenerator("urlKey1", new UrlGenerator("original/{2}", "rawDataKey"));
+		store.urlGenerator("urlKey2", new UrlGenerator("depOne/{2}", "linkData1"));
+		store.urlGenerator("urlKey3", new UrlGenerator("depTwo/{2}", "linkData2"));
 		store.entity("entity1", "urlKey1");
 		store.dependant("entity1", "entityd1", "urlKey2");
 		store.dependant("entity1", "entityd2", "urlKey3");
 	}
 
 	public void testThrowsExceptionIfReferencingUrlGeneratorThatDoesntExist() {
-		store.urlGenerator("urlKey2", new UrlGenerator("two/{1}", "rawDataKey"));
+		store.urlGenerator("urlKey2", new UrlGenerator("two/{2}", "rawDataKey"));
 		IllegalArgumentException e = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
 			@Override
 			public void run() {
@@ -116,7 +116,7 @@ public class GuiDataStoreTest extends TestCase {
 	}
 
 	public void testThrowsExceptionIfDependantEntityReferencesNotExistantEntity() {
-		store.urlGenerator("urlKey1",new UrlGenerator("two/{1}", "rawDataKey"));
+		store.urlGenerator("urlKey1",new UrlGenerator("two/{2}", "rawDataKey"));
 		store.entity("entity1", "urlKey1");
 		IllegalArgumentException e2 = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
 			@Override
@@ -129,19 +129,19 @@ public class GuiDataStoreTest extends TestCase {
 	}
 
 	public void testThrowsExceptionWithDuplicateUrlGenerator() {
-		store.urlGenerator("urlKey1",new UrlGenerator("one/{1}", "rawDataKey"));
-		store.urlGenerator("key1", new UrlGenerator("two/{1}", "rawDataKey"));
+		store.urlGenerator("urlKey1",new UrlGenerator("one/{2}", "rawDataKey"));
+		store.urlGenerator("key1", new UrlGenerator("two/{2}", "rawDataKey"));
 		IllegalArgumentException e = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
 			@Override
 			public void run() {
-				store.urlGenerator("key1", new UrlGenerator("two/{1}", "rawDataKey"));
+				store.urlGenerator("key1", new UrlGenerator("two/{2}", "rawDataKey"));
 			}
 		});
 		assertEquals("Duplicate UrlGenerator key1", e.getMessage());
 	}
 
 	public void testThrowsExceptionIfSameEntityRegisteredTwice() {
-		store.urlGenerator("urlKey1",new UrlGenerator("one/{1}", "rawDataKey"));
+		store.urlGenerator("urlKey1",new UrlGenerator("one/{2}", "rawDataKey"));
 		store.entity("entity1", "urlKey1");
 		IllegalArgumentException e1 = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
 			@Override
@@ -160,7 +160,7 @@ public class GuiDataStoreTest extends TestCase {
 	}
 
 	public void testThrowsExceptionIfDependantRegisteredTwice() {
-		store.urlGenerator("urlKey1", new UrlGenerator("one/{1}", "rawDataKey"));
+		store.urlGenerator("urlKey1", new UrlGenerator("one/{2}", "rawDataKey"));
 		store.entity("entity1", "urlKey1");
 		store.dependant("entity1", "entityd1", "urlKey1");
 		IllegalArgumentException e1 = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {

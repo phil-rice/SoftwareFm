@@ -27,9 +27,9 @@ public class NukeJavadocAndSourceAction implements IAction {
 		IDataGetter dataGetter = actionContext.dataGetter;
 		ICallback<String> callback = (ICallback<String>) dataGetter.getDataFor(mutatorKey);
 		callback.process("");
-		Map<String, Object> rawData = (Map<String, Object>) dataGetter.getLastRawData(ConfigurationConstants.artifact);
+		Map<String, Object> rawData = (Map<String, Object>) dataGetter.getLastRawData(ConfigurationConstants.primaryEntity);
 		rawData.put(artifact, null);
-		dataGetter.setRawData(ConfigurationConstants.artifact, rawData);
+		dataGetter.setRawData(ConfigurationConstants.primaryEntity, rawData);
 	}
 
 }

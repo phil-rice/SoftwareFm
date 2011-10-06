@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.configuration.ConfigurationConstants;
 import org.softwareFm.configuration.fixture.SoftwareFmFixture;
 import org.softwareFm.display.SoftwareFmDataComposite;
 import org.softwareFm.display.constants.DisplayConstants;
@@ -44,7 +45,8 @@ public class SoftwareFmViewUnit {
 			Map<String, Object> map = Json.mapFromString(text);
 			Map<String, String> rippedMap = (Map<String, String>) map.get("ripped");
 			RippedResult result = rippedMap == null ? null : new RippedResult(rippedMap.get("hexDigest"), rippedMap.get("javaProject"), rippedMap.get("jarPath"), rippedMap.get("jarName"), rippedMap.get("javadoc"), rippedMap.get("source"), ICallback.Utils.<String> sysoutCallback(), ICallback.Utils.<String> sysoutCallback());
-			softwareFmFixture.dataStore.setRawData("artifact", result);
+			softwareFmFixture.dataStore.setRawData(ConfigurationConstants.primaryEntity, result);
+			softwareFmFixture.forceData(fileName, "jar", map);
 			softwareFmFixture.forceData(fileName, "artifact", map);
 			softwareFmFixture.forceData(fileName, "group", map);
 		}

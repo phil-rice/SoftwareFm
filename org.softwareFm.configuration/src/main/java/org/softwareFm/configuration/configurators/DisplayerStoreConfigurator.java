@@ -6,6 +6,7 @@ import org.softwareFm.display.displayer.ButtonDisplayerFactory;
 import org.softwareFm.display.displayer.DisplayerStore;
 import org.softwareFm.display.displayer.IDisplayerStoreConfigurator;
 import org.softwareFm.display.displayer.ListDisplayerFactory;
+import org.softwareFm.display.displayer.StyledTextDisplayerFactory;
 import org.softwareFm.display.displayer.TextDisplayerFactory;
 
 public class DisplayerStoreConfigurator implements IDisplayerStoreConfigurator {
@@ -14,6 +15,7 @@ public class DisplayerStoreConfigurator implements IDisplayerStoreConfigurator {
 	public void process(DisplayerStore displayerStore) throws Exception {
 		displayerStore.//
 				displayer("displayer.text", new TextDisplayerFactory()).//
+				displayer("displayer.styled.text", new StyledTextDisplayerFactory()).//
 				displayer("displayer.url", new TextDisplayerFactory()).//
 				displayer("displayer.button", new ButtonDisplayerFactory()).//
 				displayer("displayer.button.javadoc", new JavadocOrSourceButtonDisplayerFactory("javadoc", ConfigurationConstants.dataRawJavadoc, ConfigurationConstants.dataArtifactJavadoc, ConfigurationConstants.dataRawJavadocMutator)).//
