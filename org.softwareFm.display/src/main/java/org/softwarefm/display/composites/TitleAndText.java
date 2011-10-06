@@ -4,7 +4,6 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -19,45 +18,13 @@ import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
-public class TitleAndText extends TitleAnd {
-
-	private final Text text;
+public class TitleAndText extends AbstractTitleAndText<Text> {
 
 	public TitleAndText(CompositeConfig config, Composite parent, String titleOrTitleKey, boolean titleIsKey) {
-		super(config, parent, titleOrTitleKey, titleIsKey);
-		text = new Text(getComposite(), SWT.NULL);
-		text.setLayoutData(new RowData(config.layout.valueWidth, config.layout.textHeight));
+		super(config, parent, titleOrTitleKey, titleIsKey, config.layout.textHeight);
 	}
 
-	public void setText(String text) {
-		this.text.setText(text);
-	}
-
-	public void setEditable(boolean editable) {
-		text.setEditable(editable);
-	}
-
-
-	public String getText() {
-		return text.getText();
-	}
-	
-	
-	public static void main(String[] args) {
-		Swts.display("TitleAndText", new IFunction1<Composite, Composite>() {
-			@Override
-			public Composite apply(Composite from) throws Exception {
-				ImageRegistry imageRegistry = BasicImageRegisterConfigurator.forTests(from);
-				IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(AllSoftwareFmDisplayTests.class, "Test");;
-				ImageButtonConfig config = ImageButtonConfig.forTests(imageRegistry);
-				TitleAndText titleAndText = new TitleAndText(new CompositeConfig(from.getDisplay(), new SoftwareFmLayout(), imageRegistry, resourceGetter), from, "Value", false);
-				new SimpleImageButton(titleAndText, config.withImage(ArtifactsAnchor.jarKey), false);
-				new SimpleImageButton(titleAndText, config.withImage(ArtifactsAnchor.projectKey), false);
-				return titleAndText.getComposite();
-			}
-		}) ;
-	}
-
+	@Override
 	public void addCrListener(final Listener listener) {
 		text.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -67,10 +34,39 @@ public class TitleAndText extends TitleAnd {
 		});
 	}
 
-	public void setTooltip(String tooltip) {
-		text.setToolTipText(tooltip);
-		
+	@Override
+	protected Text makeText() {
+		return new Text(getComposite(), SWT.NULL);
 	}
 
+	@Override
+	public void setText(String text) {
+		this.text.setText(text);
+	}
+
+	public void setEditable(boolean editable) {
+		text.setEditable(editable);
+	}
+
+	@Override
+	public String getText() {
+		return text.getText();
+	}
+
+	public static void main(String[] args) {
+		Swts.display("TitleAndText", new IFunction1<Composite, Composite>() {
+			@Override
+			public Composite apply(Composite from) throws Exception {
+				ImageRegistry imageRegistry = BasicImageRegisterConfigurator.forTests(from);
+				IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(AllSoftwareFmDisplayTests.class, "Test");
+				;
+				ImageButtonConfig config = ImageButtonConfig.forTests(imageRegistry);
+				TitleAndText titleAndText = new TitleAndText(new CompositeConfig(from.getDisplay(), new SoftwareFmLayout(), imageRegistry, resourceGetter), from, "Value", false);
+				new SimpleImageButton(titleAndText, config.withImage(ArtifactsAnchor.jarKey), false);
+				new SimpleImageButton(titleAndText, config.withImage(ArtifactsAnchor.projectKey), false);
+				return titleAndText.getComposite();
+			}
+		});
+	}
 
 }

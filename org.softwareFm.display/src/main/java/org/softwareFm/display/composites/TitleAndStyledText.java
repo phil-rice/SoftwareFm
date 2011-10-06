@@ -3,7 +3,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -17,17 +16,20 @@ import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
-public class TitleAndStyledText extends TitleAnd {
+public class TitleAndStyledText extends AbstractTitleAndText<StyledText> {
 
-	private final StyledText text;
 
 	public TitleAndStyledText(CompositeConfig config, Composite parent, String titleOrTitleKey, boolean titleIsKey) {
-		super(config, parent, titleOrTitleKey, titleIsKey);
-		text = new StyledText(getComposite(), SWT.BORDER| SWT.H_SCROLL | SWT.V_SCROLL);
+		super(config, parent, titleOrTitleKey, titleIsKey, config.layout.styledTextHeight);
 		text.setWordWrap(true);
-		text.setLayoutData(new RowData(config.layout.valueWidth, config.layout.styledTextHeight));
 	}
 
+	@Override
+	protected StyledText makeText() {
+		return new StyledText(getComposite(), SWT.NULL);
+	}
+
+	@Override
 	public void setText(String text) {
 		this.text.setText(text);
 	}
@@ -37,6 +39,7 @@ public class TitleAndStyledText extends TitleAnd {
 	}
 
 
+	@Override
 	public String getText() {
 		return text.getText();
 	}
@@ -57,6 +60,7 @@ public class TitleAndStyledText extends TitleAnd {
 		}) ;
 	}
 
+	@Override
 	public void addCrListener(final Listener listener) {
 		text.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -64,10 +68,6 @@ public class TitleAndStyledText extends TitleAnd {
 				listener.handleEvent(new Event());
 			}
 		});
-	}
-
-	public void setTooltip(String tooltip) {
-		text.setToolTipText(tooltip);
 	}
 
 

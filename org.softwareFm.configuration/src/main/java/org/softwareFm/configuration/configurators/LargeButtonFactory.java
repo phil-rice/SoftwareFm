@@ -27,6 +27,9 @@ public abstract class LargeButtonFactory extends ConfigurationConstants implemen
 	protected ActionDefn editTextButton(GuiBuilder guiBuilder, String artifactId) {
 		return guiBuilder.action("action.text.edit", artifactId, "overlay.edit").tooltip("action.edit.tooltip");
 	}
+	protected ActionDefn editStyledTextButton(GuiBuilder guiBuilder, String artifactId) {
+		return guiBuilder.action("action.styled.text.edit", artifactId, "overlay.edit").tooltip("action.edit.tooltip");
+	}
 
 	protected ActionDefn editValueButton(GuiBuilder guiBuilder, String artifactId) {
 		return guiBuilder.action("action.text.edit", artifactId, "overlay.edit").tooltip("action.edit.name.tooltip");

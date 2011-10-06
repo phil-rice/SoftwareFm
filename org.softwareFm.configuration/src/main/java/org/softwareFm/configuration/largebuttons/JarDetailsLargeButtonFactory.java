@@ -20,13 +20,12 @@ public class JarDetailsLargeButtonFactory extends LargeButtonFactory {
 		return guiBuilder.largeButton("largeButton.jar",//
 
 				guiBuilder.smallButton("smallButton.jar.identifiers", "smallButton.jar.identifiers.title", "smallButton.jar", GeneralAnchor.sfmKey, //
-						guiBuilder.displayer("displayer.text").title(artifactIdTitle).data(dataJarArtifactId).//
-								guard(dataRawHexDigest, blankKey, dataJarArtifactId, artifactIdMissingTitle).//
-								actions(editTextButton(guiBuilder, GeneralAnchor.sfmKey)//
-								), //
 						guiBuilder.displayer("displayer.text").title(groupIdTitle).data(dataJarGroupId).//
 								guard(dataRawHexDigest, blankKey, dataJarGroupId, groupIdMissingTitle).//
 								actions(editTextButton(guiBuilder, GeneralAnchor.sfmKey)),//
+						guiBuilder.displayer("displayer.text").title(artifactIdTitle).data(dataJarArtifactId).//
+								guard(dataRawHexDigest, blankKey, dataJarArtifactId, artifactIdMissingTitle).//
+								actions(editTextButton(guiBuilder, GeneralAnchor.sfmKey)), //
 						guiBuilder.displayer("displayer.text").title(groupVersionTitle).data(dataJarVersion).//
 								guard(dataRawHexDigest, blankKey, dataJarVersion, versionMissingTitle).//
 								actions(editTextButton(guiBuilder, GeneralAnchor.sfmKey))),
@@ -38,9 +37,10 @@ public class JarDetailsLargeButtonFactory extends LargeButtonFactory {
 								), //
 						guiBuilder.displayer("displayer.text").title(artifactUrlTitle).data(dataArtifactUrl).//
 								guard(dataRawHexDigest, blankKey, dataJarArtifactId, artifactIdMissingTitle).//
-								actions(editUrlButton(guiBuilder)), guiBuilder.displayer("displayer.styled.text").title(artifactDescriptionTitle).data(dataArtifactDescription).//
+								actions(editUrlButton(guiBuilder)), //
+						guiBuilder.displayer("displayer.styled.text").title(artifactDescriptionTitle).data(dataArtifactDescription).//
 								guard(dataRawHexDigest, descriptionOfNoneJarFile, dataJarArtifactId, descriptionWhenIdsNotDefined).//
-								actions(editTextButton(guiBuilder, ArtifactsAnchor.projectKey)))//
+								actions(browseButton(guiBuilder), editStyledTextButton(guiBuilder, ArtifactsAnchor.projectKey)))//
 				);//
 
 	}

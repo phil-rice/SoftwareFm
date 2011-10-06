@@ -19,7 +19,8 @@ public class ActionStoreConfigurator implements IActionStoreConfigurator {
 	@Override
 	public void process(ActionStore actionStore) throws Exception {
 		actionStore.//
-				action("action.text.edit", new TextEditAction()).//
+				action("action.text.edit", new TextEditAction("editor.text")).//
+				action("action.styled.text.edit", new TextEditAction("editor.styled.text")).//
 				action("action.javadocSource.nuke", new NukeJavadocAndSourceAction()).//
 				action("action.javadoc.view", new JavadocViewAction()).//
 				action("action.source.view", new SourceViewAction()).//

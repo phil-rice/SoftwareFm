@@ -21,6 +21,7 @@ public class SoftwareFmViewUnit {
 	public static final class SoftwareFmViewUnitBuilder implements ISituationListAndBuilder<SoftwareFmDataComposite> {
 		private SoftwareFmFixture softwareFmFixture;
 		private final IFunction1<SoftwareFmFixture, LargeButtonDefn[]> largeButtons;
+		private SoftwareFmDataComposite softwareFmComposite;
 
 	public 	SoftwareFmViewUnitBuilder(IFunction1<SoftwareFmFixture, LargeButtonDefn[]> largeButtons) {
 		this.largeButtons = largeButtons;
@@ -29,14 +30,14 @@ public class SoftwareFmViewUnit {
 		@Override
 		public SoftwareFmDataComposite makeChild(Composite from) throws Exception {
 			softwareFmFixture = new SoftwareFmFixture(from.getDisplay());
-			final SoftwareFmDataComposite composite = softwareFmFixture.makeComposite(from, largeButtons.apply(softwareFmFixture));
-			Swts.asyncExec(composite, new Runnable() {
+			softwareFmComposite = softwareFmFixture.makeComposite(from, largeButtons.apply(softwareFmFixture));
+			Swts.asyncExec(softwareFmComposite, new Runnable() {
 				@Override
 				public void run() {
-					composite.browserComposite.processUrl(DisplayConstants.browserFeedType, "www.bbc.co.uk");
+					softwareFmComposite.browserComposite.processUrl(DisplayConstants.browserFeedType, "www.bbc.co.uk");
 				}
 			});
-			return composite;
+			return softwareFmComposite;
 		}
 
 		@SuppressWarnings("unchecked")
@@ -51,16 +52,25 @@ public class SoftwareFmViewUnit {
 			softwareFmFixture.forceData(fileName, "group", map);
 			softwareFmFixture.editorFactory.cancel();
 		}
+
+		public void shutDown() {
+			softwareFmComposite.shutDown();
+		}
 	}
 
 	public static void main(String[] args) {
 		final File root = new File("../org.softwareFm.configuration/src/test/resources/org/softwareFm/configuration");
-		Swts.xUnit("View", root, "json", new SoftwareFmViewUnitBuilder(new IFunction1<SoftwareFmFixture, LargeButtonDefn[]>() {
+		SoftwareFmViewUnitBuilder builder = new SoftwareFmViewUnitBuilder(new IFunction1<SoftwareFmFixture, LargeButtonDefn[]>() {
 			@Override
 			public LargeButtonDefn[] apply(SoftwareFmFixture from) throws Exception {
 				return from.allLargeButtons;
 			}
-		}));
+		});
+		try {
+			Swts.xUnit("View", root, "json", builder);
+		} finally{
+			builder.shutDown();
+		}
 	}
 
 }

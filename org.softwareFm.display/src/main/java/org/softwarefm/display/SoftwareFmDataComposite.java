@@ -255,4 +255,8 @@ public class SoftwareFmDataComposite implements IHasComposite {
 		return content;
 	}
 
+	public void shutDown() {
+		browserComposite.shutDown();
+	}
+
 }
