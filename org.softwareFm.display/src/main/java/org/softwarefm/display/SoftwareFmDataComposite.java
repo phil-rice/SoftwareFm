@@ -56,11 +56,36 @@ public class SoftwareFmDataComposite implements IHasComposite {
 
 	private final Composite content;
 	public BrowserComposite browserComposite;
+	private StackLayout rightHandSideLayout;
+	private Composite rightHandSide;
 
 	public SoftwareFmDataComposite(final Composite parent, final GuiDataStore guiDataStore, final CompositeConfig compositeConfig, final ActionStore actionStore, final IEditorFactory editorFactory, final IUpdateStore updateStore, final ListEditorStore listEditorStore, ICallback<Throwable> exceptionHandler, final List<LargeButtonDefn> largeButtonDefns, final List<IBrowserConfigurator> browserConfigurators, IPlayListGetter playListGetter) {
 		content = Swts.newComposite(parent, SWT.NULL, "SoftwareFmDataComposite.content");
 		content.setLayout(new GridLayout(1, false));
-		ActionContext actionContext = new ActionContext(actionStore, guiDataStore, compositeConfig, editorFactory, updateStore, listEditorStore, new IBrowser() {
+		ActionContext actionContext = new ActionContext(new IHasRightHandSide() {
+			
+			@Override
+			public Control getControl() {
+				return rightHandSide;
+			}
+			
+			@Override
+			public Composite getComposite() {
+				return rightHandSide;
+			}
+			
+			@Override
+			public void makeVisible(Control control) {
+				rightHandSideLayout.topControl = control;
+				rightHandSide.layout();
+				
+			}
+
+			@Override
+			public Control getVisibleControl() {
+				return rightHandSideLayout.topControl;
+			}
+		}, actionStore, guiDataStore, compositeConfig, editorFactory, updateStore, listEditorStore, new IBrowser() {
 			@Override
 			public Future<String> processUrl(String feedType, String url) {
 				return browserComposite.processUrl(feedType, url);
@@ -112,7 +137,12 @@ public class SoftwareFmDataComposite implements IHasComposite {
 			}
 			Swts.addGrabHorizontalAndFillGridDataToAllChildren(largeButtonComposite);
 		}
-		browserComposite = new BrowserComposite(secondRow, SWT.BORDER);
+		rightHandSide = Swts.newComposite(secondRow, SWT.NULL, "RightHandSide");
+		rightHandSideLayout = new StackLayout();
+		rightHandSide.setLayout(rightHandSideLayout);
+		rightHandSide.setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
+		browserComposite = new BrowserComposite(rightHandSide, SWT.BORDER);
+		rightHandSideLayout.topControl= browserComposite.getControl();
 		for (IBrowserConfigurator configurator : browserConfigurators)
 			configurator.configure(actionContext.compositeConfig, browserComposite);
 		((Composite) browserComposite.getControl()).layout();
@@ -153,7 +183,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 						}
 					}
 				});
-				if (entity.equals("project")){
+				if (entity.equals("artifact")) {
 					timeLine.forgetPlayList(url);
 					timeLine.selectAndNext(url);
 				}
@@ -224,4 +254,5 @@ public class SoftwareFmDataComposite implements IHasComposite {
 	public Composite getComposite() {
 		return content;
 	}
+
 }

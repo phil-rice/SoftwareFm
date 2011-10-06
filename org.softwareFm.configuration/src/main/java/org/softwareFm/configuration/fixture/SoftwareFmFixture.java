@@ -62,7 +62,7 @@ public class SoftwareFmFixture {
 	public final ActionStore actionStore;
 	public final DisplayerStore displayerStore;
 	public final GuiBuilder guiBuilder;
-	private IEditorFactory editorFactory;
+	public IEditorFactory editorFactory;
 	private ListEditorStore listEditorStore;
 	private final EditorContext editorContext;
 	private final IUpdateStore updateStore;

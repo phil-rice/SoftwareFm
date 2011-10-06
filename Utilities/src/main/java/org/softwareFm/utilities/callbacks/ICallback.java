@@ -81,5 +81,13 @@ public interface ICallback<T> {
 				}};
 			
 		}
+
+		public static<T>void processWithWrap(ICallback<T> callback, T value) {
+			try {
+				callback.process(value);
+			} catch (Exception e) {
+				throw WrappedException.wrap(e);
+			}
+		}
 	}
 }

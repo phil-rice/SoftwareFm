@@ -10,19 +10,21 @@ import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.future.Futures;
 
 /** Makes playlists based on the url of a project */
-public class PlayListGenerator implements IPlayListGetter {
+public class PlayListFromArtifactGetter implements IPlayListFromEntityMapGetter {
 
 	private final GuiDataStore guiDataStore;
 	private final List<IPlayListContributor> contributors;
+	private final String entityName;
 
-	public PlayListGenerator(GuiDataStore guiDataStore, List<IPlayListContributor> contributors) {
+	public PlayListFromArtifactGetter(GuiDataStore guiDataStore, String entityName, List<IPlayListContributor> contributors) {
 		this.guiDataStore = guiDataStore;
+		this.entityName = entityName;
 		this.contributors = contributors;
 	}
 
 	@Override
 	public Future<IPlayList> getPlayListFor(String playListName, ICallback<IPlayList> iCallback) throws Exception {
-		Map<String, Object> data = guiDataStore.getAnyExistingDataFor("project", playListName);
+		Map<String, Object> data = guiDataStore.getAnyExistingDataFor(entityName, playListName);
 		if (data == null)
 			return Futures.doneFuture(null);
 		List<PlayItem> items = Lists.newList();
@@ -32,6 +34,11 @@ public class PlayListGenerator implements IPlayListGetter {
 		IPlayList result = IPlayList.Utils.make(playListName, Lists.shuffle(items));
 				iCallback.process(result);
 		return Futures.doneFuture(result);
+	}
+
+	@Override
+	public String entity() {
+		return entityName;
 	}
 
 }

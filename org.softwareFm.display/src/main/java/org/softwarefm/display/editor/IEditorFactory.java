@@ -11,4 +11,6 @@ public interface IEditorFactory {
 
 	void displayEditor(Shell parent, String editorName, DisplayerDefn displayerDefn, ActionContext actionContext, ActionData actionData, final ICallback<Object> onCompletion, Object initialValue);
 
+	void cancel();
+
 }

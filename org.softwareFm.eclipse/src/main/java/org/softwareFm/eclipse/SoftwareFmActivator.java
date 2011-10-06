@@ -41,7 +41,7 @@ import org.softwareFm.display.lists.ListEditorStore;
 import org.softwareFm.display.smallButtons.SmallButtonStore;
 import org.softwareFm.display.timeline.IPlayListContributor;
 import org.softwareFm.display.timeline.IPlayListGetter;
-import org.softwareFm.display.timeline.PlayListGenerator;
+import org.softwareFm.display.timeline.PlayListFromArtifactGetter;
 import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.jdtBinding.api.IBindingRipper;
@@ -278,7 +278,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		return repository == null ? repository = IRepositoryFacard.Utils.defaultFacardWithHeaders("SoftwareFm", getUuid()) : repository;
 	}
 
-	public SoftwareFmDataComposite makeComposite(Composite parent) {
+	public SoftwareFmDataComposite makeComposite(final Composite parent) {
 		Display display = parent.getDisplay();
 		final GuiDataStore guiDataStore = getGuiDataStore();
 		getSelectedBindingManager().addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
@@ -288,6 +288,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 				if (path != null) {
 					final Map<String, Object> context = Maps.<String, Object> newMap();
 					final RippedResult result = makeRippedResult(guiDataStore, rippedResult, context);
+					getEditorFactory(parent.getDisplay()).cancel();
 					guiDataStore.processData(ConfigurationConstants.primaryEntity, result, context);
 				}
 			}
@@ -321,7 +322,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 			}
 		});
 		List<IBrowserConfigurator> browserConfigurators = getBrowserConfigurators();
-		IPlayListGetter playListGetter = new PlayListGenerator(guiDataStore, Arrays.<IPlayListContributor> asList(new BasicPlaylistContributor()));
+		IPlayListGetter playListGetter = new PlayListFromArtifactGetter(guiDataStore, ConfigurationConstants.entityForPlayList, Arrays.<IPlayListContributor> asList(new BasicPlaylistContributor()));
 		SoftwareFmDataComposite composite = new SoftwareFmDataComposite(parent, guiDataStore, getCompositeConfig(display), getActionStore(), getEditorFactory(display), getUpdateStore(), getListEditorStore(), onException(), getLargeButtonDefns(), browserConfigurators, playListGetter);
 		return composite;
 

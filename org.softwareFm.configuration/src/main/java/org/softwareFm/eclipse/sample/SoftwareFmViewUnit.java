@@ -49,6 +49,7 @@ public class SoftwareFmViewUnit {
 			softwareFmFixture.forceData(fileName, "jar", map);
 			softwareFmFixture.forceData(fileName, "artifact", map);
 			softwareFmFixture.forceData(fileName, "group", map);
+			softwareFmFixture.editorFactory.cancel();
 		}
 	}
 

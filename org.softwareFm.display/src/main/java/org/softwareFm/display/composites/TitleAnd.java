@@ -48,6 +48,10 @@ public  class TitleAnd implements IDisplayer, IHasComposite {
 		setLayoutData();
 	}
 
+	public void setTitle(String string) {
+		lblTitle.setText(string);
+	}
+
 	private void setLayoutData() {
 		int buttonsWidth = (config.layout.buttonSpacer + config.layout.smallButtonWidth) * buttonCount ;
 		int fillerWidth = config.layout.buttonsWidth - buttonsWidth ;
