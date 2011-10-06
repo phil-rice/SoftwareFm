@@ -4,10 +4,11 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.List;
@@ -16,7 +17,7 @@ import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.utilities.exceptions.WrappedException;
 
 public class SituationListAnd<T extends IHasControl> implements IHasComposite {
-	private final Composite content;
+	private final SashForm content;
 	private List situationList;
 	private T situationDisplayer;
 
@@ -24,14 +25,14 @@ public class SituationListAnd<T extends IHasControl> implements IHasComposite {
 	private StyledText situationContents;
 
 	public SituationListAnd(Composite parent, Callable<? extends Iterable<String>> situations, ISituationListAndBuilder<T> builder) {
-		this.content = new Composite(parent, SWT.NULL) {
+		this.content = new SashForm(parent, SWT.HORIZONTAL) {
 			@Override
 			public String toString() {
 				return "situationListAnd.content" + super.toString();
 			}
 		};
+		content.setLayout(new FillLayout());
 		try {
-			content.setLayout(new GridLayout(2, false));
 			Composite leftColumn = new Composite(content, SWT.NULL);
 			situationList = new List(leftColumn, SWT.BORDER);
 			situationContents = new StyledText(leftColumn, SWT.BORDER);
@@ -51,6 +52,7 @@ public class SituationListAnd<T extends IHasControl> implements IHasComposite {
 			});
 			leftColumn.setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
 			control.setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
+			content.setWeights(new int[]{1, 2});
 
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);

@@ -23,8 +23,8 @@ public class SoftwareFmViewUnit {
 		private final IFunction1<SoftwareFmFixture, LargeButtonDefn[]> largeButtons;
 		private SoftwareFmDataComposite softwareFmComposite;
 
-	public 	SoftwareFmViewUnitBuilder(IFunction1<SoftwareFmFixture, LargeButtonDefn[]> largeButtons) {
-		this.largeButtons = largeButtons;
+		public SoftwareFmViewUnitBuilder(IFunction1<SoftwareFmFixture, LargeButtonDefn[]> largeButtons) {
+			this.largeButtons = largeButtons;
 		}
 
 		@Override
@@ -54,7 +54,8 @@ public class SoftwareFmViewUnit {
 		}
 
 		public void shutDown() {
-			softwareFmComposite.shutDown();
+			if (softwareFmComposite != null)
+				softwareFmComposite.shutDown();
 		}
 	}
 
@@ -68,7 +69,7 @@ public class SoftwareFmViewUnit {
 		});
 		try {
 			Swts.xUnit("View", root, "json", builder);
-		} finally{
+		} finally {
 			builder.shutDown();
 		}
 	}

@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
@@ -45,6 +46,14 @@ public class Swts {
 
 	public static Composite newComposite(Composite parent, int style, final String description) {
 		return new Composite(parent, style) {
+			@Override
+			public String toString() {
+				return description + "." + super.toString();
+			}
+		};
+	}
+	public static Sash newSash(Composite parent, int style, final String description) {
+		return new Sash(parent, style) {
 			@Override
 			public String toString() {
 				return description + "." + super.toString();

@@ -8,9 +8,11 @@ import java.util.concurrent.Future;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
@@ -118,8 +120,8 @@ public class SoftwareFmDataComposite implements IHasComposite {
 	}
 
 	private Composite makeSecondRow(final Composite parent, final List<LargeButtonDefn> largeButtonDefns, final ActionContext actionContext, StackLayout stackLayout, List<IBrowserConfigurator> browserConfigurators) {
-		Composite secondRow = Swts.newComposite(parent, SWT.NULL, "SecondRow");
-		secondRow.setLayout(new GridLayout(2, true));
+		SashForm secondRow =new SashForm(parent, SWT.HORIZONTAL);
+		secondRow.setLayout(new FillLayout());
 		Composite displayerComposite = Swts.newComposite(secondRow, SWT.NULL, "displayers");
 		displayerComposite.setLayout(stackLayout);
 		for (final LargeButtonDefn largeButtonDefn : largeButtonDefns) {
@@ -148,6 +150,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 		((Composite) browserComposite.getControl()).layout();
 		displayerComposite.setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
 		browserComposite.getControl().setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
+		secondRow.setWeights(new int[]{1, 2});
 		return secondRow;
 	}
 
