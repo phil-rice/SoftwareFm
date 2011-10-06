@@ -2,6 +2,7 @@ package org.softwareFm.configuration.playlists;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -21,7 +22,8 @@ public class BasicPlaylistContributorTest extends TestCase {
 	}
 
 	public void testAddsProjectUrl() {
-		assertEquals(Arrays.asList(new PlayItem(DisplayConstants.browserFeedType, "purl")), contributor.items(Maps.<String, Object> makeMap("project.url", "purl")));
+		List<PlayItem> actual = contributor.items(Maps.<String, Object> makeMap("project.url", "purl"));
+		assertEquals(Arrays.asList(new PlayItem(DisplayConstants.browserFeedType, "purl")), actual);
 	}
 
 	public void testAddsRssFeeds() {

@@ -24,6 +24,7 @@ public class EditorFactory implements IEditorFactory, ISimpleMap<String, IEditor
 	private IEditor editor;
 	private final EditorContext editorContext;
 	private Control rememberedControl;
+	private IHasRightHandSide rightHandSide;
 
 	public EditorFactory(EditorContext editorContext) {
 		this.editorContext = editorContext;
@@ -32,8 +33,8 @@ public class EditorFactory implements IEditorFactory, ISimpleMap<String, IEditor
 	@Override
 	public void displayEditor(Shell parent, String editorName, DisplayerDefn displayerDefn,  final ActionContext actionContext, ActionData actionData, final ICallback<Object> onCompletion, Object initialValue) {
 		if (editor != null)
-			editor.cancel();
-		final IHasRightHandSide rightHandSide = actionContext.rightHandSide;
+			cancel();
+		rightHandSide = actionContext.rightHandSide;
 		rememberedControl = rightHandSide.getVisibleControl();
 		Swts.layoutDump(rememberedControl);
 		editor = get(editorName);
@@ -83,6 +84,8 @@ public class EditorFactory implements IEditorFactory, ISimpleMap<String, IEditor
 	public void cancel(){
 		if (editor != null){
 			editor.cancel();
+			rightHandSide.makeVisible(rememberedControl);
+			rememberedControl = null;
 			editor = null;
 		}
 	}

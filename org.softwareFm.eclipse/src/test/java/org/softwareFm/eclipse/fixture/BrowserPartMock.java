@@ -15,6 +15,7 @@ public class BrowserPartMock implements IBrowserPart {
 
 	private final Composite control;
 	private final boolean usesUrl;
+	public int replyCount;
 
 	public BrowserPartMock(Composite from, final String name, boolean usesUrl) {
 		this.from = from;
@@ -38,7 +39,7 @@ public class BrowserPartMock implements IBrowserPart {
 	public void displayReply(int statusCode, String reply) {
 		this.statusCode = statusCode;
 		this.reply = reply;
-		count++;
+		replyCount++;
 	}
 
 	@Override

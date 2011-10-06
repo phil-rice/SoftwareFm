@@ -184,8 +184,12 @@ public class SoftwareFmDataComposite implements IHasComposite {
 					}
 				});
 				if (entity.equals("artifact")) {
-					timeLine.forgetPlayList(url);
-					timeLine.selectAndNext(url);
+					try {
+						timeLine.forgetPlayList(url);
+						timeLine.selectAndNext(url);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		});

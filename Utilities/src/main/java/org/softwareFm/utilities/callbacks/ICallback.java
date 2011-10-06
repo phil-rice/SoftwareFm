@@ -77,7 +77,6 @@ public interface ICallback<T> {
 				@Override
 				public void process(T t) throws Exception {
 					throw new RuntimeException(message);
-					
 				}};
 			
 		}

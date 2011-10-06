@@ -36,8 +36,8 @@ public abstract class AbstractTextEditor<T extends Control> implements IEditor {
 	}
 
 	@Override
-	public void createControl(ActionContext actionContext) {
-		composite = new Composite(actionContext.rightHandSide.getComposite(), SWT.NULL);
+	public Control createControl(ActionContext actionContext) {
+		composite =Swts. newComposite(actionContext.rightHandSide.getComposite(), SWT.NULL, getClass().getSimpleName());
 		text = makeTitleAnd(composite, actionContext.compositeConfig);
 		text.addCrListener(new Listener() {
 			@Override
@@ -57,6 +57,7 @@ public abstract class AbstractTextEditor<T extends Control> implements IEditor {
 			}
 		});
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(composite);
+		return composite;
 	}
 
 	@Override

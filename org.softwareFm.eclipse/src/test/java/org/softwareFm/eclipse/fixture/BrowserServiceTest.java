@@ -36,10 +36,13 @@ public class BrowserServiceTest extends AbstractRepositoryFacardTest {
 	public void testWithUsingUrl() throws InterruptedException, ExecutionException {
 		BrowserPartMock one = (BrowserPartMock) browserComposite.register("one", makeBrowserCreator("one", true));
 		assertEquals(Arrays.asList(one), parts);
+		assertEquals(0, one.count);
 		String actual = browserComposite.processUrl("one", url).get();
+		assertEquals(0, one.count);
 		Swts.dispatchUntilQueueEmpty(shell.getDisplay());
 		assertNull( actual);
 		assertEquals(1, one.count);
+		assertEquals(1, one.replyCount);
 		assertEquals(url, one.url);
 	}
 
@@ -51,7 +54,8 @@ public class BrowserServiceTest extends AbstractRepositoryFacardTest {
 		String actual = browserComposite.processUrl("one", url).get();
 		Swts.dispatchUntilQueueEmpty(shell.getDisplay());
 		assertEquals(expected, actual);
-		assertEquals(1, one.count);
+		assertEquals(0, one.count);
+		assertEquals(1, one.replyCount);
 		assertEquals(expected, one.reply);
 		assertEquals(200, one.statusCode);
 		assertEquals(0, two.count);
