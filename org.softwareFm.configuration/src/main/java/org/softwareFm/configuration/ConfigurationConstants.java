@@ -6,7 +6,10 @@ public class ConfigurationConstants {
 	public static final String jarNameTitle = "jar.jarName.title";
 	public static final String jarHexDigestTitle = "jar.hexDigest.title";
 
-	public static final String artifactIdTitle = "artifact.artifactId.title";
+	public static final String versionTitle = "jar.version.title";
+	public static final String artifactIdTitle = "jar.artifactId.title";
+	public static final String groupIdTitle = "jar.groupId.title";
+	
 	public static final String artifactUrlTitle = "artifact.url.title";
 	public static final String artifactJavadocTitle = "artifact.javadoc.title";
 	public static final String artifactSourceTitle = "artifact.source.title";
@@ -23,7 +26,6 @@ public class ConfigurationConstants {
 	public static final String artifactTwitterAdd = "artifact.twitter.add";
 	public static final String artifactFacebookAdd = "artifact.facebook.add";
 
-	public static final String groupIdTitle = "group.groupId.title";
 	public static final String groupNameTitle = "group.name.title";
 	public static final String groupVersionTitle = "group.version.title";
 	public static final String groupDescriptionTitle = "group.description.title";
@@ -69,6 +71,7 @@ public class ConfigurationConstants {
 	public static final String versionMissingTitle = "jar.version.missing.title";
 	public static final String groupNameMissingTitle = "group.name.missing.title";
 
+	public static final String artifactUrlMissingTitle = "artifact.url.missing.title";
 	public static final String descriptionOfNoneJarFile = "description.noneJarFile.text";
 	public static final String descriptionWhenIdsNotDefined = "description.idsNotDefined.text";
 	public static final String expectedRippedResult = "Expected a RippedResult. Value = {0}. Class = {1)";
