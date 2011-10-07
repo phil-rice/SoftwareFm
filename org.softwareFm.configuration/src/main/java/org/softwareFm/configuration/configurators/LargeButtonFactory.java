@@ -58,12 +58,12 @@ public abstract class LargeButtonFactory extends ConfigurationConstants implemen
 		return guiBuilder.smallButton(id, title, "smallButton.data", GeneralAnchor.sfmKey, //
 				guiBuilder.displayer("displayer.sfm.id").title(groupIdTitle).data(dataJarGroupId).//
 						guard(dataRawHexDigest, hexDigestMissingTitle, //
-								dataJarGroupId, groupIdMissingTitle, //
-								dataJarArtifactId, artifactIdMissingTitle, //
-								dataJarVersion, versionMissingTitle).//
+								dataJarGroupId, softwareFmIdMissingTitle, //
+								dataJarArtifactId, softwareFmIdMissingTitle, //
+								dataJarVersion, softwareFmIdMissingTitle).//
 						actions(guiBuilder.action("action.softwareFm.id.edit", GeneralAnchor.sfmKey, "overlay.edit").tooltip("action.edit.tooltip")), //
 				guiBuilder.displayer("displayer.compressed.text").title(artifactNameTitle).data(dataArtifactName).tooltip(artifactNameTitle).//
-						guard(dataRawHexDigest, blankKey, dataJarArtifactId, artifactIdMissingTitle, dataArtifactName, artifactNameMissingTitle).//
+						guard(dataRawHexDigest, blankKey, dataJarArtifactId, softwareFmIdMissingTitle, dataArtifactName, artifactNameMissingTitle).//
 						actions(editTextButton(guiBuilder, ArtifactsAnchor.projectKey)//
 						)).data(ConfigurationConstants.dataJarGroupId);
 	}

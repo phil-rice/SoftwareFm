@@ -19,13 +19,13 @@ public class JarDetailsLargeButtonFactory extends LargeButtonFactory {
 		return guiBuilder.largeButton("largeButton.jar",//
 				makeSfmSmallButton(guiBuilder, "smallButton.jar.identifiers", "smallButton.jar.identifiers.title"),//
 
-				guiBuilder.smallButton("smallButton.jar.nameAndDescription", "smallButton.jar.identifiers.title", "smallButton.jar", ArtifactsAnchor.projectKey, //
+				guiBuilder.smallButton("smallButton.jar.nameAndDescription", "smallButton.jar.identifiers.title", "smallButton.data", ArtifactsAnchor.projectKey, //
 						guiBuilder.displayer("displayer.compressed.text").title(artifactUrlTitle).data(dataArtifactUrl).tooltip(artifactUrlTitle).//
-								guard(dataRawHexDigest, blankKey, dataJarArtifactId, artifactIdMissingTitle).//
+								guard(dataRawHexDigest, blankKey, dataJarArtifactId, softwareFmIdMissingTitle).//
 								actions(editUrlButton(guiBuilder)), //
 						guiBuilder.displayer("displayer.compressed.styled.text").title(artifactDescriptionTitle).data(dataArtifactDescription).//
 								guard(dataRawHexDigest, descriptionOfNoneJarFile, dataJarArtifactId, descriptionWhenIdsNotDefined).//
-								actions(browseButton(guiBuilder), editStyledTextButton(guiBuilder, ArtifactsAnchor.projectKey)))//
+								actions(browseButton(guiBuilder), editStyledTextButton(guiBuilder, ArtifactsAnchor.projectKey))).data(dataArtifactName)//
 				);//
 
 	}

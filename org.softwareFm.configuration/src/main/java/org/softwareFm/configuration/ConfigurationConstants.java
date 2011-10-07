@@ -65,10 +65,8 @@ public class ConfigurationConstants {
 	public static final String dataGroupFacebook = "data.group.facebook";
 
 	public static final String hexDigestMissingTitle = "hexDigest.missing.title";
-	public static final String artifactIdMissingTitle = "jar.artifactId.missing.title";
 	public static final String artifactNameMissingTitle = "artifact.name.missing.title";
-	public static final String groupIdMissingTitle = "jar.groupId.missing.title";
-	public static final String versionMissingTitle = "jar.version.missing.title";
+	public static final String softwareFmIdMissingTitle = "jar.softwareFmId.missing.title";
 	public static final String groupNameMissingTitle = "group.name.missing.title";
 
 	public static final String artifactUrlMissingTitle = "artifact.url.missing.title";
