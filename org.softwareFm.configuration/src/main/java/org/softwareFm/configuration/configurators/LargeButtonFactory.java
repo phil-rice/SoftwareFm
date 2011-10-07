@@ -4,6 +4,8 @@ import org.softwareFm.configuration.ConfigurationConstants;
 import org.softwareFm.display.GuiBuilder;
 import org.softwareFm.display.actions.ActionDefn;
 import org.softwareFm.display.largeButton.ILargeButtonFactory;
+import org.softwareFm.display.smallButtons.SmallButtonDefn;
+import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 
@@ -49,6 +51,20 @@ public abstract class LargeButtonFactory extends ConfigurationConstants implemen
 	protected ActionDefn browseButton(GuiBuilder guiBuilder, String dataId) {
 		return guiBuilder.action("action.text.browse", GeneralAnchor.browseKey).params(dataId).tooltip(dataId);
 
+	}
+
+	protected SmallButtonDefn makeSfmSmallButton(GuiBuilder guiBuilder, String id, String title) {
+		return guiBuilder.smallButton(id, title, "smallButton.jar", GeneralAnchor.sfmKey, //
+				guiBuilder.displayer("displayer.sfm.id").title(groupIdTitle).data(dataJarGroupId).//
+						guard(dataRawHexDigest, hexDigestMissingTitle, //
+								dataJarGroupId, groupIdMissingTitle, //
+								dataJarArtifactId, artifactIdMissingTitle, //
+								dataJarVersion, versionMissingTitle).//
+						actions(editTextButton(guiBuilder, GeneralAnchor.sfmKey)), guiBuilder.displayer("displayer.compressed.text").title(artifactNameTitle).data(dataArtifactName).tooltip(artifactNameTitle).//
+						guard(dataRawHexDigest, blankKey, dataJarArtifactId, artifactIdMissingTitle, dataArtifactName, artifactNameMissingTitle).//
+						actions(editTextButton(guiBuilder, ArtifactsAnchor.projectKey)//
+						)
+		);
 	}
 
 }

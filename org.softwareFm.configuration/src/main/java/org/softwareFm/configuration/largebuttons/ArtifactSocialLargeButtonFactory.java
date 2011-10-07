@@ -17,24 +17,22 @@ public class ArtifactSocialLargeButtonFactory extends LargeButtonFactory {
 	@Override
 	public LargeButtonDefn apply(GuiBuilder guiBuilder) throws Exception {
 		return guiBuilder.largeButton("largeButton.artifact.social", //
-				guiBuilder.smallButton("smallButton.artifact.social.details", "smallButton.artifact.details.title", "smallButton.data", ArtifactsAnchor.projectKey, //
-						guiBuilder.displayer("displayer.url").title(artifactNameTitle).data(dataArtifactName).tooltip(dataJarGroupId).//
-								guard(dataRawHexDigest, hexDigestMissingTitle, dataJarGroupId, artifactIdMissingTitle).actions(editUrlButton(guiBuilder, dataJarGroupId),//
-										editValueButton(guiBuilder, ArtifactsAnchor.projectKey),//
-										browseButton(guiBuilder, dataJarGroupId)//
-								)).data(dataArtifactName),//
+				makeSfmSmallButton(guiBuilder, "smallButton.artifact.social.details", "smallButton.jar.identifiers.title"),//
+
 				guiBuilder.smallButton("smallButton.artifact.rss", "smallButton.artifact.rss.title", "smallButton.data", ArtifactsAnchor.rssKey,//
 						guiBuilder.listDisplayer("displayer.list", "listEditorId.rss").guard(dataJarArtifactId, blankKey).title(artifactRssAdd).data(dataArtifactRss).//
 								actions(makeMainListActions(guiBuilder, ArtifactsAnchor.rssKey, dataArtifactRss)).//
 								listActions(guiBuilder.action("action.rss.browse", GeneralAnchor.browseKey).tooltip("action.browse.tooltip"), //
 										listEditAction(guiBuilder, ArtifactsAnchor.rssKey),//
 										listDeleteAction(guiBuilder, ArtifactsAnchor.rssKey))).data(dataArtifactRss),//
+
 				guiBuilder.smallButton("smallButton.artifact.twitter", "smallButton.artifact.twitter.title", "smallButton.data", ArtifactsAnchor.twitterKey,//
 						guiBuilder.listDisplayer("displayer.list", "listEditorId.tweet").guard(dataJarArtifactId, blankKey).title(artifactTwitterAdd).data(dataArtifactTweets).//
 								actions(makeMainListActions(guiBuilder, ArtifactsAnchor.twitterKey, dataArtifactTweets)).//
 								listActions(guiBuilder.action("action.list.viewTweets", GeneralAnchor.browseKey).tooltip("action.browse.tooltip"), //
 										listEditAction(guiBuilder, ArtifactsAnchor.twitterKey),//
 										listDeleteAction(guiBuilder, ArtifactsAnchor.twitterKey))).data(dataArtifactTweets),//
+
 				guiBuilder.smallButton("smallButton.artifact.facebook", "smallButton.artifact.facebook.title", "smallButton.data", ArtifactsAnchor.facebookKey,//
 						guiBuilder.listDisplayer("displayer.list", "listEditorId.facebook").guard(dataJarArtifactId, blankKey).title(artifactFacebookAdd).data(dataArtifactFacebook).//
 								actions(makeMainListActions(guiBuilder, ArtifactsAnchor.facebookKey, dataArtifactFacebook)).//

@@ -19,17 +19,12 @@ public class ArtifactDetailsLargeButtonFactory extends LargeButtonFactory {
 
 		return guiBuilder.largeButton("largeButton.artifact.details",//
 
-				guiBuilder.smallButton("smallButton.artifact.nameAndDescription", "smallButton.jar.identifiers.title", "smallButton.jar", ArtifactsAnchor.projectKey, //
-						guiBuilder.displayer("displayer.text").title(artifactNameTitle).data(dataArtifactName).//
-								guard(dataRawHexDigest, blankKey, dataJarArtifactId, artifactIdMissingTitle, dataArtifactName, artifactNameMissingTitle).//
-								actions(editTextButton(guiBuilder, ArtifactsAnchor.projectKey)//
-								) //
-						),//
+				makeSfmSmallButton(guiBuilder, "smallButton.artifact.nameAndDescription", "smallButton.jar.identifiers.title"),//
 
 				guiBuilder.smallButton("smallButton.artifact.details", "smallButton.jar.details.title", "smallButton.jar", ArtifactsAnchor.jarKey, //
 						guiBuilder.displayer("displayer.text").title(jarHexDigestTitle).data(dataRawHexDigest), guiBuilder.displayer("displayer.text").title(jarNameTitle).data(dataRawJarName).tooltip(dataRawJarPath).actions(//
 								guiBuilder.action("action.url.search", GeneralAnchor.searchKey).tooltip("action.search.tooltip")), //
-								
+
 						guiBuilder.displayer("displayer.button.javadoc").title(artifactJavadocTitle).guard(dataRawJavadoc, blankKey).tooltip(dataRawJavadoc).//
 								actions(guiBuilder.action("action.javadocSource.nuke", GeneralAnchor.clearKey),//
 										guiBuilder.action("action.javadoc.view", ArtifactsAnchor.jarKey).tooltip("action.javadoc.view.tooltip").ignoreGuard(),//

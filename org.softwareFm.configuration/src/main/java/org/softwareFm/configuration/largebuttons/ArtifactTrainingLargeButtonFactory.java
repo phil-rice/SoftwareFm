@@ -17,12 +17,8 @@ public class ArtifactTrainingLargeButtonFactory extends LargeButtonFactory {
 	public LargeButtonDefn apply(GuiBuilder guiBuilder) throws Exception {
 
 		return guiBuilder.largeButton("largeButton.artifact.training", //
-				guiBuilder.smallButton("smallButton.artifact.training.details", "smallButton.artifact.details.title", "smallButton.data", ArtifactsAnchor.projectKey, //
-						guiBuilder.displayer("displayer.url").title(artifactNameTitle).data(dataArtifactName).tooltip(dataJarGroupId).//
-								guard(dataRawHexDigest, hexDigestMissingTitle, dataJarGroupId, artifactIdMissingTitle).actions(editUrlButton(guiBuilder, dataJarGroupId),//
-										editValueButton(guiBuilder, ArtifactsAnchor.projectKey),//
-										browseButton(guiBuilder, dataJarGroupId)//
-								)).data(dataArtifactName),//
+				makeSfmSmallButton(guiBuilder, "smallButton.artifact.training.details", "smallButton.artifact.details.title"),//
+				
 				guiBuilder.smallButton("smallButton.artifact.tutorials", "smallButton.artifact.tutorials.title", "smallButton.data", ArtifactsAnchor.tutorialsKey,//
 						guiBuilder.listDisplayer("displayer.list", "listEditorId.tutorials").guard(dataJarGroupId, blankKey).title(artifactTutorialsTitle).data(dataArtifactTutorials).//
 								actions(makeMainListActions(guiBuilder, ArtifactsAnchor.tutorialsKey, dataArtifactTutorials)).//

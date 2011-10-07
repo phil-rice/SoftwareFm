@@ -71,7 +71,6 @@ public class ConfigurationConstants {
 
 	public static final String descriptionOfNoneJarFile = "description.noneJarFile.text";
 	public static final String descriptionWhenIdsNotDefined = "description.idsNotDefined.text";
-
 	public static final String expectedRippedResult = "Expected a RippedResult. Value = {0}. Class = {1)";
 
 	public static final String primaryEntity = "jar";
@@ -79,5 +78,6 @@ public class ConfigurationConstants {
 	public static final String groupId = "groupId";
 	public static final String version = "version";
 	public static final String entityForPlayList = "artifact";
+	public static final String sfmIdPattern = "id.sfm.pattern";
 
 }

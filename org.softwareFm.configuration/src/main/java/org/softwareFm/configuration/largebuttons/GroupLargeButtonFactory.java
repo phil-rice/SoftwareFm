@@ -17,13 +17,9 @@ public class GroupLargeButtonFactory extends LargeButtonFactory {
 	@Override
 	public LargeButtonDefn apply(GuiBuilder guiBuilder) throws Exception {
 		return guiBuilder.largeButton("largeButton.group", //
-				guiBuilder.smallButton("smallButton.group.details", "smallButton.group.details.title", "smallButton.data", ArtifactsAnchor.organisationKey,//
-						guiBuilder.displayer("displayer.text").title(groupIdTitle).data(dataJarGroupId).//
-								guard(dataRawHexDigest, blankKey, dataJarGroupId, groupIdMissingTitle).//
-								actions(editValueButton(guiBuilder, ArtifactsAnchor.organisationKey)), //
-						guiBuilder.displayer("displayer.text").title(groupNameTitle).data(dataGroupName).guard(dataRawHexDigest, blankKey, dataJarGroupId, groupIdMissingTitle, dataGroupName, groupNameMissingTitle).actions(//
-								editTextButton(guiBuilder, ArtifactsAnchor.organisationKey))).data(dataJarArtifactId),//
-
+	
+				makeSfmSmallButton(guiBuilder, "smallButton.group.details", "smallButton.group.details.title"),//
+				
 				guiBuilder.smallButton("smallButton.group.rss", "smallButton.project.rss.title", "smallButton.data", ArtifactsAnchor.rssKey,//
 						guiBuilder.listDisplayer("displayer.list", "listEditorId.rss").guard(dataJarGroupId, blankKey).title(groupRssAdd).data(dataGroupRss).//
 								actions(makeMainListActions(guiBuilder, ArtifactsAnchor.rssKey, dataGroupRss)).//
