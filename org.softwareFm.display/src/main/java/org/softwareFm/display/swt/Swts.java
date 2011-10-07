@@ -86,6 +86,17 @@ public class Swts {
 			control.setLayoutData(data);
 		}
 	}
+	public static void addGrabHorizontalAndFillGridDataToAllChildrenWithHeightHint(Composite composite, int heightHint) {
+		GridLayout layout = new GridLayout();
+		layout.marginWidth = 0;
+		layout.verticalSpacing = 0;
+		layout.marginHeight = 0;
+		composite.setLayout(layout);
+		for (Control control : composite.getChildren()) {
+			GridData data = makeGrabHorizonalAndFillGridDataWithHeight(heightHint);
+			control.setLayoutData(data);
+		}
+	}
 
 	public static Composite makeAcceptCancelComposite(Composite parent, int style, IResourceGetter resourceGetter, final Runnable onAccept, final Runnable onCancel) {
 		Composite result = new Composite(parent, style);

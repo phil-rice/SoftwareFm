@@ -3,6 +3,7 @@ package org.softwareFm.configuration.editor;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -40,7 +41,7 @@ public class SoftwareFmIdEditor implements IEditor {
 		artifactIdText = new TitleAndText(actionContext.compositeConfig, composite, ConfigurationConstants.artifactIdTitle, true);
 		versionText = new TitleAndText(actionContext.compositeConfig, composite, ConfigurationConstants.versionTitle, true);
 		addCrListeners(groupIdText, artifactIdText, versionText);
-		Swts.makeAcceptCancelComposite(composite, SWT.NULL, actionContext.compositeConfig.resourceGetter, new Runnable() {
+		Composite acceptCancelComposite = Swts.makeAcceptCancelComposite(composite, SWT.NULL, actionContext.compositeConfig.resourceGetter, new Runnable() {
 			@Override
 			public void run() {
 				sendResult();
@@ -52,7 +53,11 @@ public class SoftwareFmIdEditor implements IEditor {
 					completion.cancel();
 			}
 		});
-		Swts.addGrabHorizontalAndFillGridDataToAllChildren(composite);
+		Swts.addGrabHorizontalAndFillGridDataToAllChildrenWithHeightHint(composite, actionContext.compositeConfig.layout.smallButtonHeight); //to line up with the lhs
+		GridLayout layoutData = (GridLayout) composite.getLayout();
+		layoutData.marginHeight=5;
+		
+		acceptCancelComposite.setLayoutData(Swts.makeGrabHorizonalAndFillGridData());
 		return composite;
 	}
 

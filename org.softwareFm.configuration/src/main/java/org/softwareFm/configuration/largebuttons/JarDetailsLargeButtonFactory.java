@@ -8,6 +8,7 @@ import org.softwareFm.display.GuiBuilder;
 import org.softwareFm.display.largeButton.LargeButtonDefn;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.eclipse.sample.SoftwareFmViewUnit;
+import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.utilities.functions.IFunction1;
 
@@ -24,8 +25,9 @@ public class JarDetailsLargeButtonFactory extends LargeButtonFactory {
 										dataJarArtifactId, softwareFmIdMissingTitle,//
 										dataArtifactUrl, artifactUrlMissingTitle).//
 								actions(editUrlButton(guiBuilder)), //
-						guiBuilder.displayer("displayer.compressed.styled.text").title(blankKey).data(dataArtifactDescription).//
-								guard(dataRawHexDigest, descriptionOfNoneJarFile, dataJarArtifactId, descriptionWhenIdsNotDefined)//
+						guiBuilder.displayer("displayer.compressed.styled.text").title(artifactDescriptionTitle).data(dataArtifactDescription).//
+								guard(dataRawHexDigest, descriptionOfNoneJarFile, dataJarArtifactId, descriptionWhenIdsNotDefined).//
+								actions(editStyledTextButton(guiBuilder, ArtifactsAnchor.projectKey))
 								));//
 
 	}

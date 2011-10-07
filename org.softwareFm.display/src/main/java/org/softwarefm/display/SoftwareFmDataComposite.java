@@ -17,7 +17,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
 import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.actions.ActionStore;
 import org.softwareFm.display.browser.BrowserComposite;
@@ -54,7 +53,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 	private final Map<LargeButtonDefn, Composite> largeButtonDefnToComposite = Maps.newMap(LinkedHashMap.class);
 	private final Map<SmallButtonDefn, ISmallDisplayer> smallButtonToSmallDisplayerMap = Maps.newMap(LinkedHashMap.class);
 	private final Map<DisplayerDefn, IDisplayer> displayDefnToDisplayerMap = Maps.newMap(LinkedHashMap.class);
-	private final Map<SmallButtonDefn, Group> smallButtonDefnToGroupMap = Maps.newMap(LinkedHashMap.class);
+	private final Map<SmallButtonDefn, Composite> smallButtonDefnToCompositeMap = Maps.newMap(LinkedHashMap.class);
 
 	private final Composite content;
 	public BrowserComposite browserComposite;
@@ -121,15 +120,16 @@ public class SoftwareFmDataComposite implements IHasComposite {
 
 	private Composite makeSecondRow(final Composite parent, final List<LargeButtonDefn> largeButtonDefns, final ActionContext actionContext, StackLayout stackLayout, List<IBrowserConfigurator> browserConfigurators) {
 		SashForm secondRow =new SashForm(parent, SWT.HORIZONTAL);
-		secondRow.setLayout(new FillLayout());
+		FillLayout layout = new FillLayout();
+		secondRow.setLayout(layout);
 		Composite displayerComposite = Swts.newComposite(secondRow, SWT.BORDER, "displayers");
 		displayerComposite.setLayout(stackLayout);
 		for (final LargeButtonDefn largeButtonDefn : largeButtonDefns) {
 			Composite largeButtonComposite = Swts.newComposite(displayerComposite, SWT.NULL, largeButtonDefn.id);
 			largeButtonDefnToComposite.put(largeButtonDefn, largeButtonComposite);
 			for (SmallButtonDefn smallButtonDefn : largeButtonDefn.defns) {
-				Group group = Swts.newGroup(largeButtonComposite, SWT.SHADOW_ETCHED_IN, smallButtonDefn.id);
-				smallButtonDefnToGroupMap.put(smallButtonDefn, group);
+				Composite group = Swts.newComposite(largeButtonComposite, SWT.SHADOW_ETCHED_IN, smallButtonDefn.id);
+				smallButtonDefnToCompositeMap.put(smallButtonDefn, group);
 				// group.setText(Strings.nullSafeToString(guiDataStore.getDataFor(smallButtonDefn.titleId)));
 				for (DisplayerDefn defn : smallButtonDefn.defns) {
 					IDisplayer displayer = defn.createDisplayer(group, actionContext);
@@ -139,7 +139,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 			}
 			Swts.addGrabHorizontalAndFillGridDataToAllChildren(largeButtonComposite);
 		}
-		rightHandSide = Swts.newComposite(secondRow, SWT.NULL, "RightHandSide");
+		rightHandSide = Swts.newComposite(secondRow, SWT.BORDER, "RightHandSide");
 		rightHandSideLayout = new StackLayout();
 		rightHandSide.setLayout(rightHandSideLayout);
 		rightHandSide.setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
@@ -226,7 +226,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 				List<Control> visible = Lists.newList();
 				List<Control> inVisible = Lists.newList();
 				for (SmallButtonDefn smallButtonDefn : largeButtonDefn.defns) {
-					Group group = smallButtonDefnToGroupMap.get(smallButtonDefn);
+					Composite group = smallButtonDefnToCompositeMap.get(smallButtonDefn);
 					boolean b = visibleIds.contains(smallButtonDefn.id);
 					group.setVisible(b);
 					if (b)
