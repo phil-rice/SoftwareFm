@@ -122,7 +122,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 	private Composite makeSecondRow(final Composite parent, final List<LargeButtonDefn> largeButtonDefns, final ActionContext actionContext, StackLayout stackLayout, List<IBrowserConfigurator> browserConfigurators) {
 		SashForm secondRow =new SashForm(parent, SWT.HORIZONTAL);
 		secondRow.setLayout(new FillLayout());
-		Composite displayerComposite = Swts.newComposite(secondRow, SWT.NULL, "displayers");
+		Composite displayerComposite = Swts.newComposite(secondRow, SWT.BORDER, "displayers");
 		displayerComposite.setLayout(stackLayout);
 		for (final LargeButtonDefn largeButtonDefn : largeButtonDefns) {
 			Composite largeButtonComposite = Swts.newComposite(displayerComposite, SWT.NULL, largeButtonDefn.id);

@@ -10,7 +10,10 @@ public class ConfigurationConstants {
 	public static final String versionTitle = "jar.version.title";
 	public static final String artifactIdTitle = "jar.artifactId.title";
 	public static final String groupIdTitle = "jar.groupId.title";
-	
+
+	public static final String artifactJobTitle = "artifact.job.title";
+	public static final String dataArtifactJob = "data.artifact.job";
+
 	public static final String artifactUrlTitle = "artifact.url.title";
 	public static final String artifactJavadocTitle = "artifact.javadoc.title";
 	public static final String artifactSourceTitle = "artifact.source.title";

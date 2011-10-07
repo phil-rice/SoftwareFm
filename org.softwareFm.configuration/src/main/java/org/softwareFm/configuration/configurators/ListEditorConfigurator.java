@@ -14,6 +14,7 @@ public class ListEditorConfigurator implements IListEditorStoreConfigurator {
 				register("listEditorId.nameAndValue", new NameAndValueListEditor("nameAndValue.line.title")).//
 				register("listEditorId.nameAndUrl", new NameAndUrlListEditor("nameAndUrl.line.title")).//
 				register("listEditorId.nameAndEmail", new NameAndValueListEditor("nameAndEmail.line.title")).//
+				register("listEditorId.job", new NameAndValueListEditor("job.line.title")).//
 				register("listEditorId.tweet", new ValueListEditor("tweet.line.title")).//
 				register("listEditorId.facebook", new ValueListEditor("facebook.line.title")).//
 				register("listEditorId.rss", new ValueListEditor("rss.line.title")).//

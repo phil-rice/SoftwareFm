@@ -24,6 +24,12 @@ public class ArtifactTrainingLargeButtonFactory extends LargeButtonFactory {
 						guiBuilder.listDisplayer("displayer.list", "listEditorId.tutorials").guard(dataJarGroupId, blankKey).title(artifactTutorialsTitle).data(dataArtifactTutorials).//
 								actions(makeMainListActions(guiBuilder, ArtifactsAnchor.tutorialsKey, dataArtifactTutorials)).//
 								listActions(listEditAction(guiBuilder, ArtifactsAnchor.tutorialsKey), listDeleteAction(guiBuilder, ArtifactsAnchor.tutorialsKey))).data(dataArtifactTutorials),// ), //
+								
+				guiBuilder.smallButton("smallButton.artifact.jobs", "smallButton.artifact.jobs.title", "smallButton.data", ArtifactsAnchor.jobKey,//
+						guiBuilder.listDisplayer("displayer.list", "listEditorId.job").title(artifactJobTitle).data(dataArtifactJob).//
+								actions(//
+										makeMainListActions(guiBuilder, ArtifactsAnchor.jobKey, dataArtifactJob)).//
+								listActions(listEditAction(guiBuilder, ArtifactsAnchor.jobKey), listDeleteAction(guiBuilder, ArtifactsAnchor.jobKey))).data(dataArtifactJob),// ), //
 
 				guiBuilder.smallButton("smallButton.artifact.blogs", "smallButton.artifact.blogs.title", "smallButton.data", ArtifactsAnchor.tutorialsKey,//
 						guiBuilder.listDisplayer("displayer.list", "listEditorId.blogs").guard(dataJarGroupId, blankKey).title(artifactBlogsTitle).data(dataArtifactBlogs).//

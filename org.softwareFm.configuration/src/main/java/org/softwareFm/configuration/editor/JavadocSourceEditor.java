@@ -1,7 +1,5 @@
 package org.softwareFm.configuration.editor;
 
-import java.util.Map;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -116,7 +114,6 @@ public class JavadocSourceEditor implements IEditor {
 	public void edit(Shell parent, DisplayerDefn displayerDefn, EditorContext editorContext, ActionContext actionContext, ActionData actionData, IEditorCompletion completion, Object initialValue) {
 		IDataGetter dataGetter = actionContext.dataGetter;
 		this.completion = completion;
-		Map<String, Object> initialMap = (Map<String, Object>) initialValue;
 		
 		String eclipseValue = Strings.nullSafeToString(dataGetter.getDataFor(eclipseKey));
 		txtEclipse.setText(eclipseValue);

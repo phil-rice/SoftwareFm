@@ -12,7 +12,6 @@ import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.data.ActionData;
 import org.softwareFm.display.displayer.DisplayerDefn;
-import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Iterables;
 import org.softwareFm.utilities.maps.ISimpleMap;
@@ -36,7 +35,6 @@ public class EditorFactory implements IEditorFactory, ISimpleMap<String, IEditor
 			cancel();
 		rightHandSide = actionContext.rightHandSide;
 		rememberedControl = rightHandSide.getVisibleControl();
-		Swts.layoutDump(rememberedControl);
 		editor = get(editorName);
 		if (editor.getControl() == null)
 			editor.createControl(actionContext, actionData);
