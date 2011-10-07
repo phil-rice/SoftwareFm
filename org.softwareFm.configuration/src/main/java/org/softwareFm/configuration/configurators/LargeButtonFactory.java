@@ -56,10 +56,7 @@ public abstract class LargeButtonFactory extends ConfigurationConstants implemen
 
 	}
 
-	protected SmallButtonDefn makeSfmSmallButton(GuiBuilder guiBuilder, String id, String title, DisplayerDefn... moreDefns) {
-		return makeSfmSmallButton(guiBuilder, id, title, false, moreDefns);
-	}
-	protected SmallButtonDefn makeSfmSmallButton(GuiBuilder guiBuilder, String id, String title, boolean includeJar, DisplayerDefn... moreDefns) {
+	protected SmallButtonDefn makeSfmSmallButton(GuiBuilder guiBuilder, String smallButtonId, String smallButtonIcon, String id, String title, boolean includeJar, DisplayerDefn... moreDefns) {
 		DisplayerDefn sfmId = guiBuilder.displayer("displayer.sfm.id").title(softwareFmIdTitle).data(dataJarGroupId).//
 				guard(dataRawHexDigest, hexDigestMissingTitle, //
 						dataJarGroupId, softwareFmIdMissingTitle, //
@@ -74,7 +71,7 @@ public abstract class LargeButtonFactory extends ConfigurationConstants implemen
 				guiBuilder.action("action.url.search", GeneralAnchor.searchKey).tooltip("action.search.tooltip"));
 		DisplayerDefn[] baseDefns = includeJar? new DisplayerDefn[] { sfmId, jarName, sfmName }:new DisplayerDefn[] { sfmId, sfmName };
 		DisplayerDefn[] defns = ArrayHelper.append(baseDefns, moreDefns);
-		return guiBuilder.smallButton(id, title, "smallButton.data", GeneralAnchor.sfmKey, defns).data(ConfigurationConstants.dataJarGroupId);
+		return guiBuilder.smallButton(id, title, smallButtonId,smallButtonIcon, defns).data(ConfigurationConstants.dataJarGroupId);
 	}
 
 }

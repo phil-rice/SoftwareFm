@@ -4,8 +4,7 @@ import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.Map;
 
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.configuration.ConfigurationConstants;
 import org.softwareFm.display.actions.ActionContext;
@@ -28,39 +27,39 @@ public class JavadocOrSourceButtonDisplayer extends ButtonDisplayer {
 	private final String artifactKey;
 
 	public JavadocOrSourceButtonDisplayer(CompositeConfig config, Composite parent, String titleOrTitleKey, boolean titleIsKey, String artifactKey, String artifactEclipseKey, String artifactSoftwareFmKey, String eclipseMutatorKey) {
-		super(config, parent, titleOrTitleKey, titleIsKey);
+		super(parent, SWT.NULL, config);
 		this.artifactKey = artifactKey;
 		this.artifactEclipseKey = artifactEclipseKey;
 		this.artifactSoftwareFmKey = artifactSoftwareFmKey;
 		this.eclipseMutatorKey = eclipseMutatorKey;
 		runnable = Runnables.noRunnable;
-		button.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				runnable.run();
-			}
-		});	}
+		
+	}
+	@Override
+	protected void buttonPressed() {
+		runnable.run();
+	}
 
 	@Override
 	public void data(final ActionContext actionContext, DisplayerDefn defn, String entity) {
 		final IDataGetter dataGetter = actionContext.dataGetter;
 		final String eclipseValue = Strings.nullSafeToString(dataGetter.getDataFor(artifactEclipseKey));
 		final String repositoryValue = Strings.nullSafeToString(dataGetter.getDataFor(artifactSoftwareFmKey));
-		
-		String tooltip = MessageFormat.format(dataGetter.getDataFor("button.javadocSource.tooltip").toString(), eclipseValue, repositoryValue);
-		button.setToolTipText(tooltip);
 
-		JavadocOrSourceButtonTitleCalculator calculator = new JavadocOrSourceButtonTitleCalculator( new Runnable() {
+		String tooltip = MessageFormat.format(dataGetter.getDataFor("button.javadocSource.tooltip").toString(), eclipseValue, repositoryValue);
+		control.setToolTipText(tooltip);
+
+		JavadocOrSourceButtonTitleCalculator calculator = new JavadocOrSourceButtonTitleCalculator(new Runnable() {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void run() {
 				try {
 					ICallback<String> callback = (ICallback<String>) dataGetter.getDataFor(eclipseMutatorKey);
 					callback.process(repositoryValue);
-					Map<String,Object> rawData = (Map<String, Object>) dataGetter.getLastRawData(ConfigurationConstants.primaryEntity);
-					rawData.put(artifactKey,  repositoryValue);
+					Map<String, Object> rawData = dataGetter.getLastRawData(ConfigurationConstants.primaryEntity);
+					rawData.put(artifactKey, repositoryValue);
 					dataGetter.setRawData(ConfigurationConstants.primaryEntity, rawData);
-					
+
 				} catch (Exception e) {
 					throw WrappedException.wrap(e);
 				}
@@ -68,7 +67,7 @@ public class JavadocOrSourceButtonDisplayer extends ButtonDisplayer {
 		}, new Runnable() {
 			@Override
 			public void run() {
-				ActionData actionData = dataGetter.getActionDataFor(Collections.<String>emptyList());
+				ActionData actionData = dataGetter.getActionDataFor(Collections.<String> emptyList());
 				actionContext.updateStore.update(actionData, artifactSoftwareFmKey, eclipseValue);
 			}
 		});
@@ -83,14 +82,10 @@ public class JavadocOrSourceButtonDisplayer extends ButtonDisplayer {
 	}
 
 	private void setButton(IDataGetter dataGetter, Runnable runnable, String title) {
-		button.setEnabled(runnable!= null);
+		control.setEnabled(runnable != null);
 		this.runnable = runnable;
 		String text = Strings.nullSafeToString(dataGetter.getDataFor(title));
-		button.setText(text);
+		control.setText(text);
 	}
-
-	@Override
-	protected void buttonPressed() {
-	};
 
 }

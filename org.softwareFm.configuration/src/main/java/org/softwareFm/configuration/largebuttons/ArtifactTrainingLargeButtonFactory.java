@@ -9,6 +9,7 @@ import org.softwareFm.display.largeButton.LargeButtonDefn;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.eclipse.sample.SoftwareFmViewUnit;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
+import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.utilities.functions.IFunction1;
 
 public class ArtifactTrainingLargeButtonFactory extends LargeButtonFactory {
@@ -17,7 +18,7 @@ public class ArtifactTrainingLargeButtonFactory extends LargeButtonFactory {
 	public LargeButtonDefn apply(GuiBuilder guiBuilder) throws Exception {
 
 		return guiBuilder.largeButton("largeButton.artifact.training", //
-				makeSfmSmallButton(guiBuilder, "smallButton.artifact.training.details", "smallButton.artifact.details.title"),//
+				makeSfmSmallButton(guiBuilder,"smallButton.data", GeneralAnchor.sfmKey, "smallButton.artifact.training.details", "smallButton.artifact.details.title", false),//
 				
 				guiBuilder.smallButton("smallButton.artifact.tutorials", "smallButton.artifact.tutorials.title", "smallButton.data", ArtifactsAnchor.tutorialsKey,//
 						guiBuilder.listDisplayer("displayer.list", "listEditorId.tutorials").guard(dataJarGroupId, blankKey).title(artifactTutorialsTitle).data(dataArtifactTutorials).//

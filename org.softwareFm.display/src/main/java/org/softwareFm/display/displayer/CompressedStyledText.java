@@ -21,10 +21,6 @@ public class CompressedStyledText extends AbstractCompressedText<StyledText> {
 		super(parent, style, config);
 	}
 
-	@Override
-	protected Composite makeButtonAndTitlePanel(Composite parent) {
-		return parent;
-	}
 	
 	@Override
 	public void setEnabled(boolean enabled) {
@@ -35,12 +31,12 @@ public class CompressedStyledText extends AbstractCompressedText<StyledText> {
 	protected void setLayout() {
 		content.setLayout(Swts.getGridLayoutWithoutMargins(1));
 		buttonPanel.setLayout(Swts.getHorizonalNoMarginRowLayout());
-		text.setLayoutData(Swts.makeGrabHorizonalAndFillGridDataWithHeight(config.layout.styledTextHeight));
+		control.setLayoutData(Swts.makeGrabHorizonalAndFillGridDataWithHeight(config.layout.styledTextHeight));
 	}
 
 	@Override
-	protected StyledText makeTextControl(Composite parent, int style) {
-		StyledText styledText = new StyledText(parent, style | SWT.VERTICAL);
+	protected StyledText makeControl(Composite parent) {
+		StyledText styledText = new StyledText(parent,  SWT.VERTICAL);
 		styledText.setEditable(false);
 		styledText.setWordWrap(true);
 		return styledText;
@@ -48,7 +44,7 @@ public class CompressedStyledText extends AbstractCompressedText<StyledText> {
 
 	@Override
 	protected void updateText() {
-		text.setText(rawText);
+		control.setText(rawText);
 	}
 
 	public static void main(String[] args) {

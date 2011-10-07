@@ -67,6 +67,7 @@ public class SoftwareFmIdEditor implements IEditor {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void edit(Shell parent, DisplayerDefn displayerDefn, EditorContext editorContext, ActionContext actionContext, ActionData actionData, IEditorCompletion completion, Object initialValue) {
 		this.completion = completion;

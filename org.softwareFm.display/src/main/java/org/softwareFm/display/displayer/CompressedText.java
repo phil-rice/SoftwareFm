@@ -26,17 +26,17 @@ public class CompressedText extends AbstractCompressedText<Label> {
 	protected void setLayout() {
 		content.setLayout(Swts.getGridLayoutWithoutMargins(2));
 		buttonPanel.setLayout(Swts.getHorizonalNoMarginRowLayout());
-		text.setLayoutData(Swts.makeGrabHorizonalAndFillGridData());
+		control.setLayoutData(Swts.makeGrabHorizonalAndFillGridData());
 	}
 
 	@Override
 	protected void updateText() {
-		text.setText(MessageFormat.format("{0}: {1}", title, rawText));
+		control.setText(MessageFormat.format("{0}: {1}", title, rawText));
 	}
 
 	@Override
-	protected Label makeTextControl(Composite parent, int style) {
-		return new Label(parent, style);
+	protected Label makeControl(Composite parent) {
+		return new Label(parent, SWT.NULL);
 	}
 
 	public static void main(String[] args) {
@@ -54,9 +54,5 @@ public class CompressedText extends AbstractCompressedText<Label> {
 		});
 	}
 
-	@Override
-	protected Composite makeButtonAndTitlePanel(Composite parent) {
-		return parent;
-	}
 
 }
