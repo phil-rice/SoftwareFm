@@ -26,8 +26,10 @@ public abstract class AbstractTextEditor<T extends Control> implements IEditor {
 	@Override
 	public void edit(Shell parent, DisplayerDefn displayerDefn, EditorContext editorContext, ActionContext actionContext, ActionData actionData, IEditorCompletion completion, Object initialValue) {
 		this.completion = completion;
-		text.setTitle(IResourceGetter.Utils.getOrException(actionContext.compositeConfig.resourceGetter, displayerDefn.title));
-		text.setText( Strings.nullSafeToString(initialValue));
+		String title = IResourceGetter.Utils.getOrException(actionContext.compositeConfig.resourceGetter, displayerDefn.title);
+		String rawText = Strings.nullSafeToString(initialValue);
+		text.setTitle(title);
+		text.setText( rawText);
 	}
 
 	@Override

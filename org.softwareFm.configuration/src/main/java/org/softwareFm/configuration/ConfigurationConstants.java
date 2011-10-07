@@ -6,6 +6,7 @@ public class ConfigurationConstants {
 	public static final String jarNameTitle = "jar.jarName.title";
 	public static final String jarHexDigestTitle = "jar.hexDigest.title";
 
+	public static final String softwareFmIdTitle = "jar.softwareFmId.title";
 	public static final String versionTitle = "jar.version.title";
 	public static final String artifactIdTitle = "jar.artifactId.title";
 	public static final String groupIdTitle = "jar.groupId.title";

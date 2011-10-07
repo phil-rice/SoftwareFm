@@ -1,5 +1,7 @@
 package org.softwareFm.display.displayer;
 
+import java.text.MessageFormat;
+
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -28,18 +30,13 @@ public class CompressedText extends AbstractCompressedText<Label> {
 	}
 
 	@Override
+	protected void updateText() {
+		text.setText(MessageFormat.format("{0}: {1}", title, rawText));
+	}
+
+	@Override
 	protected Label makeTextControl(Composite parent, int style) {
 		return new Label(parent, style);
-	}
-
-	@Override
-	public void setText(String text) {
-		this.text.setText(text);
-	}
-
-	@Override
-	public String getText() {
-		return text.getText();
 	}
 
 	public static void main(String[] args) {
@@ -55,6 +52,11 @@ public class CompressedText extends AbstractCompressedText<Label> {
 				return (Composite) compressedText.getControl();
 			}
 		});
+	}
+
+	@Override
+	protected Composite makeButtonAndTitlePanel(Composite parent) {
+		return parent;
 	}
 
 }

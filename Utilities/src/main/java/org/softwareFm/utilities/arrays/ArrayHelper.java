@@ -1,11 +1,23 @@
 package org.softwareFm.utilities.arrays;
 
 import java.lang.reflect.Array;
+import java.util.List;
 
+import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
 
 public class ArrayHelper {
+
+	public static <T> T[] append(T[] raw, T... more) {
+		List<T> result = Lists.newList();
+		for (T t : raw)
+			result.add(t);
+		for (T t : more)
+			result.add(t);
+		return result.toArray(raw);
+
+	}
 
 	public static <From, To> To[] map(Class<To> clazz, From[] old, IFunction1<From, To> mutator) {
 		try {

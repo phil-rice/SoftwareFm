@@ -52,6 +52,7 @@ public class Swts {
 			}
 		};
 	}
+
 	public static Sash newSash(Composite parent, int style, final String description) {
 		return new Sash(parent, style) {
 			@Override
@@ -187,6 +188,13 @@ public class Swts {
 
 	public static Layout getHorizonalNoMarginRowLayout() {
 		return getHorizonalMarginRowLayout(0);
+	}
+
+	public static GridData makeGrabHorizonalAndFillGridDataWithHeight(int heightHint) {
+		GridData result = makeGrabHorizonalAndFillGridData();
+		result.heightHint = heightHint;
+		return result;
+
 	}
 
 	public static GridData makeGrabHorizonalAndFillGridData() {

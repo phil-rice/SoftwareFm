@@ -3,7 +3,6 @@ package org.softwareFm.display.displayer;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.composites.CompositeConfig;
@@ -17,35 +16,39 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class CompressedStyledText extends AbstractCompressedText<StyledText> {
 
+
 	public CompressedStyledText(Composite parent, int style, CompositeConfig config) {
 		super(parent, style, config);
+	}
+
+	@Override
+	protected Composite makeButtonAndTitlePanel(Composite parent) {
+		return parent;
+	}
+	
+	@Override
+	public void setEnabled(boolean enabled) {
+		super.setEnabled(enabled);
 	}
 
 	@Override
 	protected void setLayout() {
 		content.setLayout(Swts.getGridLayoutWithoutMargins(1));
 		buttonPanel.setLayout(Swts.getHorizonalNoMarginRowLayout());
-		GridData gridData = Swts.makeGrabHorizonalAndFillGridData();
-		gridData.heightHint = config.layout.styledTextHeight;
-		text.setLayoutData(gridData);
+		text.setLayoutData(Swts.makeGrabHorizonalAndFillGridDataWithHeight(config.layout.styledTextHeight));
 	}
 
 	@Override
 	protected StyledText makeTextControl(Composite parent, int style) {
-		StyledText styledText = new StyledText(parent, style|SWT.VERTICAL);
+		StyledText styledText = new StyledText(parent, style | SWT.VERTICAL);
 		styledText.setEditable(false);
 		styledText.setWordWrap(true);
 		return styledText;
 	}
 
 	@Override
-	public void setText(String text) {
-		this.text.setText(text);
-	}
-
-	@Override
-	public String getText() {
-		return text.getText();
+	protected void updateText() {
+		text.setText(rawText);
 	}
 
 	public static void main(String[] args) {

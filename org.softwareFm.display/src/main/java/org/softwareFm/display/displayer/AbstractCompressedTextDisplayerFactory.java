@@ -28,10 +28,13 @@ public abstract class AbstractCompressedTextDisplayerFactory<T extends AbstractC
 	@Override
 	public void data(ActionContext actionContext, DisplayerDefn defn, IDisplayer displayer, String entity, String url) {
 		IDataGetter dataGetter=actionContext.dataGetter;
-		Object value = Actions.getValueFor(dataGetter, defn);
+		String guard = Actions.guardConditionPresent(dataGetter, defn);
+		Object value = guard == null? dataGetter.getDataFor(defn.dataKey): dataGetter.getDataFor(guard);
 		AbstractCompressedText<?> titleAndText = (AbstractCompressedText<?>) displayer;
-//		String title = Strings.nullSafeToString(dataGetter.getDataFor(defn.title));
+		titleAndText.setEnabled(guard==null);
+		String title = Strings.nullSafeToString(dataGetter.getDataFor(defn.title));
 		titleAndText.setText (Strings.nullSafeToString(value));
+		titleAndText.setTitle(title);
 		String tooltip = defn.tooltip == null ? "" : Strings.nullSafeToString(dataGetter.getDataFor(defn.tooltip));
 		titleAndText.setTooltip(tooltip);
 	}

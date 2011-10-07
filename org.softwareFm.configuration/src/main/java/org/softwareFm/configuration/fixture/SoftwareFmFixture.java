@@ -67,6 +67,7 @@ public class SoftwareFmFixture {
 	private final EditorContext editorContext;
 	private final IUpdateStore updateStore;
 
+	public LargeButtonDefn jarDetailsButton;
 	public final LargeButtonDefn artifactDetailsButton;
 	public final LargeButtonDefn artifactTrainingButton;
 	public final LargeButtonDefn artifactSocialButton;
@@ -75,7 +76,6 @@ public class SoftwareFmFixture {
 	private final List<IBrowserConfigurator> browserConfigurators;
 	private final IPlayListGetter playListGetter;
 	public LargeButtonDefn[] allLargeButtons;
-	private LargeButtonDefn jarDetailsButton;
 
 	public SoftwareFmFixture(Display display) throws Exception {
 		imageRegistry = new ImageRegistry();

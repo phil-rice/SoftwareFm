@@ -24,12 +24,13 @@ public class SoftwareFmIdEditAction implements IAction {
 		IDataGetter dataGetter = actionContext.dataGetter;
 		Object initialValue = Maps.makeMap(ConfigurationConstants.groupId, dataGetter.getDataFor(ConfigurationConstants.dataJarGroupId),//
 				ConfigurationConstants.artifactId, dataGetter.getDataFor(ConfigurationConstants.dataJarArtifactId),//
-				ConfigurationConstants.version, ConfigurationConstants.dataJarVersion);
+				ConfigurationConstants.version,dataGetter.getDataFor( ConfigurationConstants.dataJarVersion));
 
 		actionContext.editorFactory.displayEditor(displayer.getButtonComposite().getShell(), editorKey, displayerDefn, actionContext, actionData, new ICallback<Object>() {
 			@Override
 			public void process(Object t) throws Exception {
 				String url = actionData.urlMap.get(ConfigurationConstants.primaryEntity);
+				@SuppressWarnings("unchecked")
 				Map<String,Object> map = (Map<String, Object>) t;
 				actionContext.updateStore.update(ConfigurationConstants.primaryEntity, url, map);
 			}

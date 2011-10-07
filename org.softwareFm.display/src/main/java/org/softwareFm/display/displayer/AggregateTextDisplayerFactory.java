@@ -35,6 +35,8 @@ public class AggregateTextDisplayerFactory implements IDisplayerFactory {
 			args[i] = value;
 		}
 		CompressedText compressedText = (CompressedText) displayer;
+		String title = Strings.nullSafeToString(dataGetter.getDataFor(defn.title));
+		compressedText.setTitle(title);
 		String guardCondition = Actions.guardConditionPresent(dataGetter, defn);
 		if (guardCondition != null)
 			compressedText.setText(Strings.nullSafeToString(dataGetter.getDataFor(guardCondition)));

@@ -48,7 +48,8 @@ public class SoftwareFmIdEditor implements IEditor {
 		}, new Runnable() {
 			@Override
 			public void run() {
-				completion.cancel();
+				if (completion != null)
+					completion.cancel();
 			}
 		});
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(composite);
@@ -69,7 +70,7 @@ public class SoftwareFmIdEditor implements IEditor {
 	@Override
 	public void edit(Shell parent, DisplayerDefn displayerDefn, EditorContext editorContext, ActionContext actionContext, ActionData actionData, IEditorCompletion completion, Object initialValue) {
 		this.completion = completion;
-		Map<String,Object> initialMap = (Map<String, Object>) initialValue;
+		Map<String, Object> initialMap = (Map<String, Object>) initialValue;
 		groupIdText.setText(Strings.nullSafeToString(initialMap.get(ConfigurationConstants.groupId)));
 		artifactIdText.setText(Strings.nullSafeToString(initialMap.get(ConfigurationConstants.artifactId)));
 		versionText.setText(Strings.nullSafeToString(initialMap.get(ConfigurationConstants.version)));
@@ -77,7 +78,8 @@ public class SoftwareFmIdEditor implements IEditor {
 
 	@Override
 	public void cancel() {
-		completion.cancel();
+		if (completion != null)
+			completion.cancel();
 	}
 
 	private void sendResult() {

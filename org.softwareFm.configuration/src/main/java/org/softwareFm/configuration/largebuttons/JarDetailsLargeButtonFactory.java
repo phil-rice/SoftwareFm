@@ -8,35 +8,38 @@ import org.softwareFm.display.GuiBuilder;
 import org.softwareFm.display.largeButton.LargeButtonDefn;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.eclipse.sample.SoftwareFmViewUnit;
-import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.utilities.functions.IFunction1;
 
 public class JarDetailsLargeButtonFactory extends LargeButtonFactory {
 
 	@Override
 	public LargeButtonDefn apply(GuiBuilder guiBuilder) throws Exception {
-
 		return guiBuilder.largeButton("largeButton.jar",//
-				makeSfmSmallButton(guiBuilder, "smallButton.jar.identifiers", "smallButton.jar.identifiers.title"),//
-
-				guiBuilder.smallButton("smallButton.jar.nameAndDescription", "smallButton.jar.identifiers.title", "smallButton.data", ArtifactsAnchor.projectKey, //
-						guiBuilder.displayer("displayer.compressed.text").title(artifactUrlTitle).data(dataArtifactUrl).tooltip(artifactUrlTitle).//
-								guard(dataRawHexDigest, blankKey, dataJarArtifactId, softwareFmIdMissingTitle).//
+				makeSfmSmallButton(guiBuilder, "smallButton.jar.identifiers", "smallButton.jar.identifiers.title", true,//
+						//
+						guiBuilder.displayer("displayer.compressed.text").title(artifactUrlTitle).data(dataArtifactUrl).tooltip(dataArtifactUrl).//
+								guard(dataRawHexDigest, blankKey, //
+										dataJarArtifactId, softwareFmIdMissingTitle,//
+										dataArtifactUrl, artifactUrlMissingTitle).//
 								actions(editUrlButton(guiBuilder)), //
-						guiBuilder.displayer("displayer.compressed.styled.text").title(artifactDescriptionTitle).data(dataArtifactDescription).//
-								guard(dataRawHexDigest, descriptionOfNoneJarFile, dataJarArtifactId, descriptionWhenIdsNotDefined).//
-								actions(browseButton(guiBuilder), editStyledTextButton(guiBuilder, ArtifactsAnchor.projectKey))).data(dataArtifactName)//
-				);//
+						guiBuilder.displayer("displayer.compressed.styled.text").title(blankKey).data(dataArtifactDescription).//
+								guard(dataRawHexDigest, descriptionOfNoneJarFile, dataJarArtifactId, descriptionWhenIdsNotDefined)//
+								));//
 
 	}
 
 	public static void main(String[] args) {
 		final File root = new File("../org.softwareFm.configuration/src/test/resources/org/softwareFm/configuration");
-		Swts.xUnit(JarDetailsLargeButtonFactory.class.getSimpleName(), root, "json", new SoftwareFmViewUnit.SoftwareFmViewUnitBuilder(new IFunction1<SoftwareFmFixture, LargeButtonDefn[]>() {
+		SoftwareFmViewUnit.SoftwareFmViewUnitBuilder builder = new SoftwareFmViewUnit.SoftwareFmViewUnitBuilder(new IFunction1<SoftwareFmFixture, LargeButtonDefn[]>() {
 			@Override
 			public LargeButtonDefn[] apply(SoftwareFmFixture from) throws Exception {
-				return new LargeButtonDefn[] { from.artifactDetailsButton };
+				return new LargeButtonDefn[] { from.jarDetailsButton };
 			}
-		}));
+		});
+		try {
+			Swts.xUnit(JarDetailsLargeButtonFactory.class.getSimpleName(), root, "json", builder);
+		} finally {
+			builder.shutDown();
+		}
 	}
 }

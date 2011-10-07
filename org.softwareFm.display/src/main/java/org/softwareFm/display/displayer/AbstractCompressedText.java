@@ -15,29 +15,46 @@ public abstract class AbstractCompressedText<T extends Control> implements IDisp
 	protected final Composite content;
 	protected final Composite buttonPanel;
 	protected final T text;
+	protected String rawText ="";
+	protected String title ="";
+	protected final Composite buttonAndTitlePanel;
 
 	public AbstractCompressedText(Composite parent, int style, CompositeConfig config) {
 		this.config = config;
-		this.content = Swts.newComposite(parent, style, CompressedText.class.getSimpleName());
-		this.buttonPanel = Swts.newComposite(content, style, "ButtonPanel");
+		this.content = Swts.newComposite(parent, style, getClass().getSimpleName());
+		this.buttonAndTitlePanel = makeButtonAndTitlePanel(content);
+		this.buttonPanel = Swts.newComposite(buttonAndTitlePanel, style, "ButtonPanel");
 		this.text = makeTextControl(content, SWT.NULL);
-
 		setLayout();
-		
 	}
+
+	abstract protected Composite makeButtonAndTitlePanel(Composite parent);
 
 	abstract protected void setLayout();
 
 	abstract protected T makeTextControl(Composite parent, int style);
 
-	abstract public void setText(String text);
+	abstract protected void updateText();
 
-	abstract public String getText();
+	public void setText(String rawText) {
+		this.rawText = rawText;
+		updateText();
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+		updateText();
+	}
+
+	public String getText() {
+		return rawText;
+	}
 
 	@Override
 	public void buttonAdded(IHasControl button) {
 		button.getControl().setLayoutData(new RowData(config.layout.smallButtonWidth, config.layout.smallButtonHeight));
 	}
+
 	public void setTooltip(String tooltip) {
 		text.setToolTipText(tooltip);
 	}
@@ -57,10 +74,13 @@ public abstract class AbstractCompressedText<T extends Control> implements IDisp
 		return config.resourceGetter;
 	}
 
-
 	@Override
 	public Control getControl() {
 		return content;
+	}
+
+	public void setEnabled(boolean enabled) {
+		text.setEnabled(enabled);
 	}
 
 }
