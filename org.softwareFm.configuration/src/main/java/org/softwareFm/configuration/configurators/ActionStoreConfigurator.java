@@ -1,9 +1,8 @@
 package org.softwareFm.configuration.configurators;
 
-import org.softwareFm.configuration.actions.JavadocViewAction;
+import org.softwareFm.configuration.actions.JavadocSourceViewAction;
 import org.softwareFm.configuration.actions.NukeJavadocAndSourceAction;
 import org.softwareFm.configuration.actions.SoftwareFmIdEditAction;
-import org.softwareFm.configuration.actions.SourceViewAction;
 import org.softwareFm.display.actions.ActionStore;
 import org.softwareFm.display.actions.BrowseAction;
 import org.softwareFm.display.actions.BrowseRssAction;
@@ -24,8 +23,8 @@ public class ActionStoreConfigurator implements IActionStoreConfigurator {
 				action("action.styled.text.edit", new TextEditAction("editor.styled.text")).//
 				action("action.softwareFm.id.edit", new SoftwareFmIdEditAction("editor.softwareFm.id")).//
 				action("action.javadocSource.nuke", new NukeJavadocAndSourceAction()).//
-				action("action.javadoc.view", new JavadocViewAction()).//
-				action("action.source.view", new SourceViewAction()).//
+				action("action.javadoc.view", new JavadocSourceViewAction("editor.javadoc")).//
+				action("action.source.view", new JavadocSourceViewAction("editor.source")).//
 				action("action.url.search", new SearchForAction()).//
 				action("action.rss.browse", new BrowseRssAction()).//
 				action("action.text.browse", new BrowseAction()).//

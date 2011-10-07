@@ -61,7 +61,7 @@ public class EditorMock implements IEditor {
 	}
 
 	@Override
-	public Control createControl(ActionContext actionContext) {
+	public Control createControl(ActionContext actionContext, ActionData actionData) {
 		 this.control = new Label(actionContext.rightHandSide.getComposite(), SWT.NULL);
 		 control.setText(seed);
 		 return control;

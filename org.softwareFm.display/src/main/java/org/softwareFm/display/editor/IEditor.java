@@ -9,7 +9,7 @@ import org.softwareFm.display.displayer.DisplayerDefn;
 
 public interface IEditor extends IHasControl {
 
-	Control createControl(ActionContext actionContext);
+	Control createControl(ActionContext actionContext, ActionData actionData);
 
 	void edit(Shell parent, DisplayerDefn displayerDefn, EditorContext editorContext, ActionContext actionContext, ActionData actionData, IEditorCompletion completion, Object initialValue);
 

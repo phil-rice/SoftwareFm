@@ -34,7 +34,7 @@ public class SoftwareFmIdEditor implements IEditor {
 	}
 
 	@Override
-	public Control createControl(ActionContext actionContext) {
+	public Control createControl(ActionContext actionContext, ActionData actionData) {
 		composite = Swts.newComposite(actionContext.rightHandSide.getComposite(), SWT.NULL, getClass().getSimpleName());
 		groupIdText = new TitleAndText(actionContext.compositeConfig, composite, ConfigurationConstants.groupIdTitle, true);
 		artifactIdText = new TitleAndText(actionContext.compositeConfig, composite, ConfigurationConstants.artifactIdTitle, true);

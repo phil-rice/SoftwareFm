@@ -12,6 +12,6 @@ public class SoftwareFmLayout {
 	public int buttonSpacer = 0;
 	public int valueWidth = titleWidth + buttonsWidth+100 ;
 	public int textHeight = smallButtonHeight;
-	public int styledTextHeight = 3* textHeight;
+	public int styledTextHeight = 6* textHeight;
 
 }

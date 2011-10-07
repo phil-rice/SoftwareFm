@@ -32,7 +32,7 @@ public class ArtifactDetailsLargeButtonFactory extends LargeButtonFactory {
 								)),//
 
 				guiBuilder.smallButton("smallButton.project.issues", "smallButton.project.issues.title", "smallButton.data", ArtifactsAnchor.issuesKey,//
-						guiBuilder.displayer("displayer.url").guard(dataJarGroupId, blankKey).title(artifactIssuesTitle).data(dataArtifactIssues).tooltip(artifactIssuesTitle).actions(//
+						guiBuilder.displayer("displayer.compressed.text").guard(dataJarGroupId, blankKey).title(artifactIssuesTitle).data(dataArtifactIssues).tooltip(artifactIssuesTitle).actions(//
 								browseButton(guiBuilder), //
 								editTextButton(guiBuilder, ArtifactsAnchor.issuesKey))).data(dataArtifactIssues).tooltip(dataArtifactIssues), // ,//
 

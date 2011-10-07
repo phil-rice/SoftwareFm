@@ -39,7 +39,7 @@ public class EditorFactory implements IEditorFactory, ISimpleMap<String, IEditor
 		Swts.layoutDump(rememberedControl);
 		editor = get(editorName);
 		if (editor.getControl() == null)
-			editor.createControl(actionContext);
+			editor.createControl(actionContext, actionData);
 		rightHandSide.makeVisible(editor.getControl());
 		editor.edit(parent, displayerDefn, editorContext, actionContext, actionData, new IEditorCompletion() {
 			@Override

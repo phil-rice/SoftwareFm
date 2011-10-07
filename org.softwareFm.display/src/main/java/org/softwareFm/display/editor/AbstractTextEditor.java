@@ -38,7 +38,7 @@ public abstract class AbstractTextEditor<T extends Control> implements IEditor {
 	}
 
 	@Override
-	public Control createControl(ActionContext actionContext) {
+	public Control createControl(ActionContext actionContext, ActionData actionData) {
 		composite =Swts. newComposite(actionContext.rightHandSide.getComposite(), SWT.NULL, getClass().getSimpleName());
 		text = makeTitleAnd(composite, actionContext.compositeConfig);
 		text.addCrListener(new Listener() {
