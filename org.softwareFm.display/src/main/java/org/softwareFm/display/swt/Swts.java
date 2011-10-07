@@ -77,8 +77,8 @@ public class Swts {
 	public static void addGrabHorizontalAndFillGridDataToAllChildren(Composite composite) {
 		GridLayout layout = new GridLayout();
 		layout.marginWidth = 0;
-		layout.verticalSpacing = 1;
-		layout.marginHeight = 1;
+		layout.verticalSpacing = 0;
+		layout.marginHeight = 0;
 		composite.setLayout(layout);
 		for (Control control : composite.getChildren()) {
 			GridData data = makeGrabHorizonalAndFillGridData();
@@ -345,8 +345,8 @@ public class Swts {
 		});
 	}
 
-	public static Layout getGridLayoutWithoutMargins() {
-		GridLayout gridLayout = new GridLayout(1, false);
+	public static Layout getGridLayoutWithoutMargins(int columns) {
+		GridLayout gridLayout = new GridLayout(columns, false);
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 0;
 		gridLayout.verticalSpacing = 0;

@@ -3,8 +3,6 @@ package org.softwareFm.display.displayer;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.layout.RowData;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.composites.CompositeConfig;
@@ -24,9 +22,9 @@ public class CompressedStyledText extends AbstractCompressedText<StyledText> {
 
 	@Override
 	protected void setLayout() {
-		content.setLayout(new RowLayout(SWT.VERTICAL));
+		content.setLayout(Swts.getGridLayoutWithoutMargins(1));
 		buttonPanel.setLayout(Swts.getHorizonalNoMarginRowLayout());
-		text.setLayoutData(new RowData(config.layout.valueWidth,config.layout.styledTextHeight));
+		text.setLayoutData(Swts.makeGrabHorizonalAndFillGridData());
 	}
 
 	@Override

@@ -2,7 +2,6 @@ package org.softwareFm.display.displayer;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.softwareFm.display.SoftwareFmLayout;
@@ -23,7 +22,7 @@ public class CompressedText extends AbstractCompressedText<Label> {
 
 	@Override
 	protected void setLayout() {
-		content.setLayout(new GridLayout(2, false));
+		content.setLayout(Swts.getGridLayoutWithoutMargins(2));
 		buttonPanel.setLayout(Swts.getHorizonalNoMarginRowLayout());
 		text.setLayoutData(Swts.makeGrabHorizonalAndFillGridData());
 	}

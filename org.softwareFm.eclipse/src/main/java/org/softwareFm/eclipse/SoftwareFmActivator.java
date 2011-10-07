@@ -202,9 +202,11 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	private IUpdateStore getUpdateStore() {
 		return updateStore == null ? updateStore = new RepositoryUpdateStore(getRepository(), new IStoreUpdatedCallback() {
 			@Override
-			public void storeUpdates(String url, String entity, String attribute, Object newValue) {
-				guiDataStore.clearCache(url, entity, attribute);
-				Map<String,Object> lastRawData = guiDataStore.getLastRawData(ConfigurationConstants.primaryEntity);
+			public void storeUpdates(String url, String entity, Map<String, Object> data) {
+				for (String attribute : data.keySet())
+					guiDataStore.clearCache(url, entity, attribute);
+				Map<String, Object> lastRawData = guiDataStore.getLastRawData(ConfigurationConstants.primaryEntity);
+				// TODO is there a hideous race condition here?
 				guiDataStore.processData(ConfigurationConstants.primaryEntity, lastRawData, Maps.<String, Object> newMap());
 
 			}

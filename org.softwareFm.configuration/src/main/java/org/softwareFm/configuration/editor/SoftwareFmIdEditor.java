@@ -1,5 +1,7 @@
 package org.softwareFm.configuration.editor;
 
+import java.util.Map;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -16,6 +18,7 @@ import org.softwareFm.display.editor.IEditor;
 import org.softwareFm.display.editor.IEditorCompletion;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.strings.Strings;
 
 public class SoftwareFmIdEditor implements IEditor {
 
@@ -27,7 +30,7 @@ public class SoftwareFmIdEditor implements IEditor {
 
 	@Override
 	public Control getControl() {
-		return null;
+		return composite;
 	}
 
 	@Override
@@ -66,6 +69,10 @@ public class SoftwareFmIdEditor implements IEditor {
 	@Override
 	public void edit(Shell parent, DisplayerDefn displayerDefn, EditorContext editorContext, ActionContext actionContext, ActionData actionData, IEditorCompletion completion, Object initialValue) {
 		this.completion = completion;
+		Map<String,Object> initialMap = (Map<String, Object>) initialValue;
+		groupIdText.setText(Strings.nullSafeToString(initialMap.get(ConfigurationConstants.groupId)));
+		artifactIdText.setText(Strings.nullSafeToString(initialMap.get(ConfigurationConstants.artifactId)));
+		versionText.setText(Strings.nullSafeToString(initialMap.get(ConfigurationConstants.version)));
 	}
 
 	@Override
