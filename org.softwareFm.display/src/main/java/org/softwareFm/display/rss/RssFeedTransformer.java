@@ -44,9 +44,12 @@ public class RssFeedTransformer implements IFunction1<String, String> {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				Browser browser = new Browser(from, SWT.NULL);
-				String rss = Files.getTextFromClassPath(getClass(), "RawJunit.xml");
-				String html = new RssFeedTransformer().apply(rss);
+				String rss = Files.getTextFromClassPath(getClass(), "RawRegister.xml");
+				System.out.println(rss);
+				RssFeedTransformer rssFeedTransformer = new RssFeedTransformer();
+				String html = rssFeedTransformer.apply(rss);
 				browser.setText(html);
+				System.out.println(html);
 				return browser;
 			}
 		});
