@@ -1,5 +1,7 @@
 package org.softwareFm.configuration;
 
+import java.io.File;
+
 public class ConfigurationConstants {
 
 	public static final String blankKey = "blank.title";
@@ -84,5 +86,7 @@ public class ConfigurationConstants {
 	public static final String version = "version";
 	public static final String entityForPlayList = "artifact";
 	public static final String sfmIdPattern = "id.sfm.pattern";
+
+	public static final File defaultDirectoryForDownloads = new File(System.getProperty("user.home"), "softwareFm");
 
 }

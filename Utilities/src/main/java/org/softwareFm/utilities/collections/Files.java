@@ -16,6 +16,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.math.BigInteger;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
@@ -34,6 +35,14 @@ import org.springframework.core.io.UrlResource;
 
 public class Files {
 
+	public static int downLoadFile(String url, File target) {
+		try {
+			return downLoadFile(new URL(url), target);
+		} catch (MalformedURLException e) {
+			throw WrappedException.wrap(e);
+		}
+		
+	}
 	public static int downLoadFile(URL url, File target) {
 		try {
 			File tempFile = new File(target.getCanonicalFile().toString() + "_temp");
@@ -296,6 +305,17 @@ public class Files {
 		} catch (IOException e) {
 			throw WrappedException.wrap(e);
 		}
+	}
+
+	public static File downloadAndPutIndirectory(String url, File directory) {
+		directory.mkdirs();
+		int index = url.lastIndexOf('/');
+		if (index == -1)
+			throw new IllegalArgumentException(MessageFormat.format(UtilityConstants.cannotParseUrl, url));
+		String lastSegment = url.substring(index);
+		File file = new File(directory, lastSegment);
+		downLoadFile(url, file);
+		return file;
 	}
 
 }

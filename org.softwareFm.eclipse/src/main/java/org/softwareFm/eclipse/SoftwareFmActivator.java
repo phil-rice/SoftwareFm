@@ -1,5 +1,6 @@
 package org.softwareFm.eclipse;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -308,14 +309,22 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 					@Override
 					public void process(String newValue) throws Exception {
 						BindingRipperResult reripped = SelectedArtifactSelectionManager.reRip(rippedResult);
-						JavaProjects.setSourceAttachment(reripped.javaProject, reripped.classpathEntry, newValue);
+						if (newValue.endsWith(".jar")) {
+							File file = Files.downloadAndPutIndirectory(newValue, ConfigurationConstants.defaultDirectoryForDownloads);
+							JavaProjects.setSourceAttachment(reripped.javaProject, reripped.classpathEntry, file.getCanonicalPath());
+						} else
+							JavaProjects.setSourceAttachment(reripped.javaProject, reripped.classpathEntry, newValue);
 					}
 				};
 				ICallback<String> javadocMutator = new ICallback<String>() {
 					@Override
 					public void process(String newValue) throws Exception {
 						BindingRipperResult reripped = SelectedArtifactSelectionManager.reRip(rippedResult);
-						JavaProjects.setJavadoc(reripped.javaProject, reripped.classpathEntry, newValue);
+						if (newValue.endsWith(".jar")) {
+							File file = Files.downloadAndPutIndirectory(newValue, ConfigurationConstants.defaultDirectoryForDownloads);
+							JavaProjects.setJavadoc(reripped.javaProject, reripped.classpathEntry, "jar:file:" + file.getCanonicalPath()+"!/");
+						} else
+							JavaProjects.setJavadoc(reripped.javaProject, reripped.classpathEntry, newValue);
 					}
 				};
 				result.put(JdtConstants.javadocMutatorKey, javadocMutator);
