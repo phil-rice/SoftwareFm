@@ -21,7 +21,7 @@ public class UrlGenerator implements IUrlGenerator {
 
 	@Override
 	public String findUrlFor(Map<String, Object> data) {
-		if (data == null)
+		if (data == null || data.isEmpty())
 			return null;
 		Object[] values = new String[keys.length + 2];
 		for (int i = 0; i < keys.length; i++) {

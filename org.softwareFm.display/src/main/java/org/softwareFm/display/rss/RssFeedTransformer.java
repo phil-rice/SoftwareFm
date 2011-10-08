@@ -27,7 +27,9 @@ public class RssFeedTransformer implements IFunction1<String, String> {
 	@Override
 	public String apply(String page) throws Exception {
 		SAXBuilder builder = new SAXBuilder();
-		Document doc = builder.build(new StringReader(page));
+		String clean = page.replaceAll("<\\?xml-stylesheet.*\\?>", "").trim();
+
+		Document doc = builder.build(new StringReader(clean));
 
 		XSLTransformer transformer = new XSLTransformer(transformerResource.getInputStream());
 		Document doc2 = transformer.transform(doc);
@@ -44,7 +46,7 @@ public class RssFeedTransformer implements IFunction1<String, String> {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				Browser browser = new Browser(from, SWT.NULL);
-				String rss = Files.getTextFromClassPath(getClass(), "RawRegister.xml");
+				String rss = Files.getTextFromClassPath(getClass(), "RawGeekzone.xml");
 				System.out.println(rss);
 				RssFeedTransformer rssFeedTransformer = new RssFeedTransformer();
 				String html = rssFeedTransformer.apply(rss);

@@ -28,5 +28,18 @@ public class DisplayConstants {
 	
 	public static final String rssTitleKey = "rss.title";
 	public static final String cannotFindValueForKey = "Cannot find value for key {0} in {1}";
+	public static final String defaultPlayListName = "defaultPlayListName";
+	public static String []defaultPlayList = new String[]{
+		rssFeedType, "http://www.theregister.co.uk/headlines.atom",//
+		rssFeedType, "http://www.theregister.co.uk/hardware/pc_chips/headlines.atom",//
+		rssFeedType, "http://www.theregister.co.uk/hardware/servers/headlines.atom",//
+		rssFeedType, "http://www.theregister.co.uk/hardware/virtualization/headlines.atom",//
+		rssFeedType, "http://www.theregister.co.uk/hardware/sysadmin_blog/headlines.atom",//
+		rssFeedType, "http://www.theregister.co.uk/security/crime/headlines.atom",//
+		rssFeedType, "http://www.theregister.co.uk/business/finance/headlines.atom",//
+		rssFeedType, "http://www.theregister.co.uk/business/cio/headlines.atom",//
+		rssFeedType, "http://www.theregister.co.uk/cloud/headlines.atom",//
+		rssFeedType, "http://www.theregister.co.uk/science/headlines.atom",//
+		rssFeedType, "http://feeds.geekzone.co.nz/GeekzoneBlogUsers"};//
 	
 }

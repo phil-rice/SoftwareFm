@@ -3,6 +3,7 @@ package org.softwareFm.display.timeline;
 import java.util.concurrent.Future;
 
 import org.softwareFm.display.browser.IBrowser;
+import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.future.Futures;
@@ -16,7 +17,8 @@ public class TimeLine implements ITimeLine {
 	public TimeLine(IBrowser browser, IPlayListGetter playListGetter) {
 		this.browser = browser;
 		this.playListGetter = playListGetter;
-
+		timeLineData.addPlayList(DisplayConstants.defaultPlayListName, IPlayList.Utils.make(DisplayConstants.defaultPlayListName, DisplayConstants.defaultPlayList));
+		timeLineData.select(DisplayConstants.defaultPlayListName);
 	}
 
 	@Override
@@ -39,14 +41,21 @@ public class TimeLine implements ITimeLine {
 				next();
 				return Futures.doneFuture(playList);
 			} else {
-				return playListGetter.getPlayListFor(playListName, new ICallback<IPlayList>() {
-					@Override
-					public void process(IPlayList t) throws Exception {
-						timeLineData.addPlayList(playListName, t);
-						timeLineData.select(playListName);
-						next();
-					}
-				});
+				try {
+					return playListGetter.getPlayListFor(playListName, new ICallback<IPlayList>() {
+						@Override
+						public void process(IPlayList t) throws Exception {
+							if (t == null) {
+								selectAndNext(DisplayConstants.defaultPlayListName);
+							}
+							timeLineData.addPlayList(playListName, t);
+							timeLineData.select(playListName);
+							next();
+						}
+					});
+				} catch (Exception e) {
+					return selectAndNext(DisplayConstants.defaultPlayListName);
+				}
 			}
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
@@ -59,7 +68,7 @@ public class TimeLine implements ITimeLine {
 
 	public void forgetPlayList(String playListName) {
 		timeLineData.forgetPlayList(playListName);
-		
+
 	}
 
 }
