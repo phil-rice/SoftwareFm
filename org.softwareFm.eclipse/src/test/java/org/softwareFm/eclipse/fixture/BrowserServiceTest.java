@@ -2,7 +2,11 @@ package org.softwareFm.eclipse.fixture;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -23,6 +27,7 @@ public class BrowserServiceTest extends AbstractRepositoryFacardTest {
 	private BrowserComposite browserComposite;
 	private Shell shell;
 	private final List<IBrowserPart> parts = Lists.newList();
+	private ExecutorService service;
 
 	public void testSetup() {
 		assertEquals(0, parts.size());
@@ -84,7 +89,8 @@ public class BrowserServiceTest extends AbstractRepositoryFacardTest {
 		String name = "tests/" + getClass().getSimpleName();
 		facard.post(name, Maps.<String, Object> makeMap("A", 1, "B", 2), IResponseCallback.Utils.noCallback()).get();
 		url = "http://" + HttpClientConstants.defaultHost + ":" + HttpClientConstants.defaultPort + "/" + name + ".json";
-		browserComposite = new BrowserComposite(shell, SWT.NULL);
+		service = new ThreadPoolExecutor(2, 10, 2, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(10));
+		browserComposite = new BrowserComposite(shell, SWT.NULL, service);
 	}
 
 	private IFunction1<Composite, IBrowserPart> makeBrowserCreator(String name) {
@@ -106,6 +112,7 @@ public class BrowserServiceTest extends AbstractRepositoryFacardTest {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
+		service.shutdown();
 		shell.dispose();
 
 	}

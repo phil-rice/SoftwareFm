@@ -54,7 +54,7 @@ public class ArtifactDetailsLargeButtonFactory extends LargeButtonFactory {
 		try {
 			Swts.xUnit(ArtifactDetailsLargeButtonFactory.class.getSimpleName(), root, "json", builder);
 		} finally {
-			builder.shutDown();
+			builder.shutdown();
 		}
 	}
 }

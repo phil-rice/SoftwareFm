@@ -2,6 +2,10 @@ package org.softwareFm.eclipse.sample;
 
 import java.io.File;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.configuration.ConfigurationConstants;
@@ -22,14 +26,16 @@ public class SoftwareFmViewUnit {
 		private SoftwareFmFixture softwareFmFixture;
 		private final IFunction1<SoftwareFmFixture, LargeButtonDefn[]> largeButtons;
 		private SoftwareFmDataComposite softwareFmComposite;
+		private final ExecutorService service;
 
 		public SoftwareFmViewUnitBuilder(IFunction1<SoftwareFmFixture, LargeButtonDefn[]> largeButtons) {
 			this.largeButtons = largeButtons;
+			service = new ThreadPoolExecutor(2, 10, 2, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(10));
 		}
 
 		@Override
 		public SoftwareFmDataComposite makeChild(Composite from) throws Exception {
-			softwareFmFixture = new SoftwareFmFixture(from.getDisplay());
+			softwareFmFixture = new SoftwareFmFixture(from.getDisplay(), service);
 			softwareFmComposite = softwareFmFixture.makeComposite(from, largeButtons.apply(softwareFmFixture));
 			Swts.asyncExec(softwareFmComposite, new Runnable() {
 				@Override
@@ -53,9 +59,8 @@ public class SoftwareFmViewUnit {
 			softwareFmFixture.editorFactory.cancel();
 		}
 
-		public void shutDown() {
-			if (softwareFmComposite != null)
-				softwareFmComposite.shutDown();
+		public void shutdown() {
+			service.shutdown();
 		}
 	}
 
@@ -70,7 +75,7 @@ public class SoftwareFmViewUnit {
 		try {
 			Swts.xUnit("View", root, "json", builder);
 		} finally {
-			builder.shutDown();
+			builder.shutdown();
 		}
 	}
 

@@ -2,6 +2,10 @@ package org.softwareFm.display.browser;
 
 import java.io.File;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
@@ -20,31 +24,35 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 public class BrowserUnit {
 	public static void main(String[] args) {
 		final File root = new File("../org.softwareFm.display/src/test/resources/org/softwareFm/display/browser");
-		Swts.xUnit("Browser Unit", root, "txt", //
-				new ISituationListAndBuilder<BrowserComposite>() {
+		final ExecutorService service = new ThreadPoolExecutor(2, 10, 2, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(10));
+		try {
+			Swts.xUnit("Browser Unit", root, "txt", //
+					new ISituationListAndBuilder<BrowserComposite>() {
 
-					@Override
-					public BrowserComposite makeChild(Composite from) {
-						Display display = from.getDisplay();
-						IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(AllSoftwareFmDisplayTests.class, "Test");
-						ImageRegistry imageRegistry = new ImageRegistry();
-						new BasicImageRegisterConfigurator().registerWith(display, imageRegistry);
-						CompositeConfig config = new CompositeConfig(display, new SoftwareFmLayout(), imageRegistry, resourceGetter);
+						@Override
+						public BrowserComposite makeChild(Composite from) {
+							Display display = from.getDisplay();
+							IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(AllSoftwareFmDisplayTests.class, "Test");
+							ImageRegistry imageRegistry = new ImageRegistry();
+							new BasicImageRegisterConfigurator().registerWith(display, imageRegistry);
+							CompositeConfig config = new CompositeConfig(display, new SoftwareFmLayout(), imageRegistry, resourceGetter);
+							BrowserComposite composite = new BrowserComposite(from, SWT.NULL, service);
+							new RssFeedConfigurator().configure(config, composite);
+							new BrowserFeedConfigurator().configure(config, composite);
+							return composite;
+						}
 
-						BrowserComposite composite = new BrowserComposite(from, SWT.NULL);
-						new RssFeedConfigurator().configure(config, composite);
-						new BrowserFeedConfigurator().configure(config, composite);
-						return composite;
-					}
+						@Override
+						public void selected(BrowserComposite hasControl, String fileName, String json) throws Exception {
+							Map<String, Object> map = Json.mapFromString(json);
 
-					@Override
-					public void selected(BrowserComposite hasControl, String fileName, String json) throws Exception {
-						Map<String, Object> map = Json.mapFromString(json);
-
-						String feedType = (String) Maps.getOrException(map, "feedType");
-						String url = (String) Maps.getOrException(map, "url");
-						hasControl.processUrl(feedType, url);
-					}
-				});
+							String feedType = (String) Maps.getOrException(map, "feedType");
+							String url = (String) Maps.getOrException(map, "url");
+							hasControl.processUrl(feedType, url);
+						}
+					});
+		} finally {
+			service.shutdown();
+		}
 	}
 }

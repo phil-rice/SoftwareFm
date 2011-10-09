@@ -88,5 +88,7 @@ public class ConfigurationConstants {
 	public static final String sfmIdPattern = "id.sfm.pattern";
 
 	public static final File defaultDirectoryForDownloads = new File(System.getProperty("user.home"), "softwareFm");
+	public static final String javadocKey = "javadoc.title";
+	public static final String sourceKey = "source.title";
 
 }

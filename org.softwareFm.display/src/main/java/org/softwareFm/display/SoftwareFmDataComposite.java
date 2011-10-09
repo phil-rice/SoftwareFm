@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import org.eclipse.jface.resource.ImageRegistry;
@@ -59,8 +60,10 @@ public class SoftwareFmDataComposite implements IHasComposite {
 	public BrowserComposite browserComposite;
 	private StackLayout rightHandSideLayout;
 	private Composite rightHandSide;
+	private ExecutorService service;
 
-	public SoftwareFmDataComposite(final Composite parent, final GuiDataStore guiDataStore, final CompositeConfig compositeConfig, final ActionStore actionStore, final IEditorFactory editorFactory, final IUpdateStore updateStore, final ListEditorStore listEditorStore, ICallback<Throwable> exceptionHandler, final List<LargeButtonDefn> largeButtonDefns, final List<IBrowserConfigurator> browserConfigurators, IPlayListGetter playListGetter) {
+	public SoftwareFmDataComposite(final Composite parent, ExecutorService service, final GuiDataStore guiDataStore, final CompositeConfig compositeConfig, final ActionStore actionStore, final IEditorFactory editorFactory, final IUpdateStore updateStore, final ListEditorStore listEditorStore, ICallback<Throwable> exceptionHandler, final List<LargeButtonDefn> largeButtonDefns, final List<IBrowserConfigurator> browserConfigurators, IPlayListGetter playListGetter) {
+		this.service = service;
 		content = Swts.newComposite(parent, SWT.NULL, "SoftwareFmDataComposite.content");
 		content.setLayout(new GridLayout(1, false));
 		ActionContext actionContext = new ActionContext(new IHasRightHandSide() {
@@ -143,7 +146,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 		rightHandSideLayout = new StackLayout();
 		rightHandSide.setLayout(rightHandSideLayout);
 		rightHandSide.setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
-		browserComposite = new BrowserComposite(rightHandSide, SWT.BORDER);
+		browserComposite = new BrowserComposite(rightHandSide, SWT.BORDER, service);
 		rightHandSideLayout.topControl= browserComposite.getControl();
 		for (IBrowserConfigurator configurator : browserConfigurators)
 			configurator.configure(actionContext.compositeConfig, browserComposite);
@@ -262,8 +265,5 @@ public class SoftwareFmDataComposite implements IHasComposite {
 		return content;
 	}
 
-	public void shutDown() {
-		browserComposite.shutDown();
-	}
 
 }

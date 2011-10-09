@@ -3,12 +3,9 @@ package org.softwareFm.display.browser;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -30,13 +27,14 @@ import org.softwareFm.utilities.maps.Maps;
 
 public class BrowserComposite implements IBrowserCompositeBuilder, ISimpleMap<String, IBrowserPart> {
 
-	private final ExecutorService service = new ThreadPoolExecutor(2, 10, 2, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(10));
+	private final ExecutorService service ;
 	private final DefaultHttpClient client;
 	private final Map<String, IBrowserPart> transformerMap = Maps.newMap();
 	private final Composite content;
 	private final StackLayout stackLayout;
 
-	public BrowserComposite(Composite parent, int style) {
+	public BrowserComposite(Composite parent, int style, ExecutorService service) {
+		this.service = service;
 		this.content = Swts.newComposite(parent, style, "BrowserComposite");
 		stackLayout = new StackLayout();
 		content.setLayout(stackLayout);
@@ -121,10 +119,6 @@ public class BrowserComposite implements IBrowserCompositeBuilder, ISimpleMap<St
 	@Override
 	public List<String> keys() {
 		return Lists.sort(transformerMap.keySet());
-	}
-
-	public void shutDown() {
-		service.shutdown();
 	}
 
 	@Override

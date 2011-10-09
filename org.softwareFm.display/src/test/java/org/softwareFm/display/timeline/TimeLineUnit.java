@@ -4,7 +4,11 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
@@ -45,40 +49,45 @@ public class TimeLineUnit {
 				}
 			}
 		};
-		Swts.xUnit("Timeline Unit", root, "txt", //
-				new ISituationListAndBuilder<BrowserPlusNextPrevButtons>() {
+		final ExecutorService service = new ThreadPoolExecutor(2, 10, 2, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(10));
+		try {
+			Swts.xUnit("Timeline Unit", root, "txt", //
+					new ISituationListAndBuilder<BrowserPlusNextPrevButtons>() {
 
-					@Override
-					public BrowserPlusNextPrevButtons makeChild(Composite from) throws Exception {
-						Display display = from.getDisplay();
-						IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(AllSoftwareFmDisplayTests.class, "Test");
-						ImageRegistry imageRegistry = new ImageRegistry();
-						new BasicImageRegisterConfigurator().registerWith(display, imageRegistry);
-						final CompositeConfig config = new CompositeConfig(display, new SoftwareFmLayout(), imageRegistry, resourceGetter);
-						return new BrowserPlusNextPrevButtons(from, SWT.NULL, config, new IFunction1<Composite, IBrowserComposite>() {
-							@Override
-							public IBrowserComposite apply(Composite from) throws Exception {
-								BrowserComposite composite = new BrowserComposite(from, SWT.NULL);
-								new RssFeedConfigurator().configure(config, composite);
-								new BrowserFeedConfigurator().configure(config, composite);
-								return composite;
-							}
-						}, playListGetter);
-					}
-
-					@SuppressWarnings("unchecked")
-					@Override
-					public void selected(BrowserPlusNextPrevButtons hasControl, String fileName, String json) throws Exception {
-						playListGetterSource.clear();
-						Map<String, Object> map = Json.mapFromString(json);
-						for (Entry<String, Object> entry : map.entrySet()) {
-							String playListName = entry.getKey();
-							List<String> items = (List<String>) entry.getValue();
-							IPlayList playList = IPlayList.Utils.make(playListName, items.toArray(new String[0]));
-							playListGetterSource.put(playListName, playList);
-							hasControl.addPlayLists(playListGetterSource.keySet());
+						@Override
+						public BrowserPlusNextPrevButtons makeChild(Composite from) throws Exception {
+							Display display = from.getDisplay();
+							IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(AllSoftwareFmDisplayTests.class, "Test");
+							ImageRegistry imageRegistry = new ImageRegistry();
+							new BasicImageRegisterConfigurator().registerWith(display, imageRegistry);
+							final CompositeConfig config = new CompositeConfig(display, new SoftwareFmLayout(), imageRegistry, resourceGetter);
+							return new BrowserPlusNextPrevButtons(from, SWT.NULL, config, new IFunction1<Composite, IBrowserComposite>() {
+								@Override
+								public IBrowserComposite apply(Composite from) throws Exception {
+									BrowserComposite composite = new BrowserComposite(from, SWT.NULL, service);
+									new RssFeedConfigurator().configure(config, composite);
+									new BrowserFeedConfigurator().configure(config, composite);
+									return composite;
+								}
+							}, playListGetter);
 						}
-					}
-				});
+
+						@SuppressWarnings("unchecked")
+						@Override
+						public void selected(BrowserPlusNextPrevButtons hasControl, String fileName, String json) throws Exception {
+							playListGetterSource.clear();
+							Map<String, Object> map = Json.mapFromString(json);
+							for (Entry<String, Object> entry : map.entrySet()) {
+								String playListName = entry.getKey();
+								List<String> items = (List<String>) entry.getValue();
+								IPlayList playList = IPlayList.Utils.make(playListName, items.toArray(new String[0]));
+								playListGetterSource.put(playListName, playList);
+								hasControl.addPlayLists(playListGetterSource.keySet());
+							}
+						}
+					});
+		} finally {
+			service.shutdown();
+		}
 	}
 }

@@ -4,6 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.composites.CompositeConfig;
@@ -20,6 +21,7 @@ import org.softwareFm.display.smallButtons.SimpleImageButton;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
 
 public class JavadocSourceEditor implements IEditor {
@@ -31,8 +33,10 @@ public class JavadocSourceEditor implements IEditor {
 	private final String eclipseKey;
 	private final String softwareFmKey;
 	private final String mutatorKey;
+	private final String titleKey;
 
-	public JavadocSourceEditor(String eclipseKey, String softwareFmKey, String mutatorKey) {
+	public JavadocSourceEditor(String titleKey, String eclipseKey, String softwareFmKey, String mutatorKey) {
+		this.titleKey = titleKey;
 		this.eclipseKey = eclipseKey;
 		this.softwareFmKey = softwareFmKey;
 		this.mutatorKey = mutatorKey;
@@ -50,6 +54,7 @@ public class JavadocSourceEditor implements IEditor {
 		CompositeConfig compositeConfig = actionContext.compositeConfig;
 
 
+		new Label(contents, SWT.NULL).setText(IResourceGetter.Utils.getOrException(actionContext.compositeConfig.resourceGetter, titleKey));
 		txtEclipse = new TitleAndText(compositeConfig, contents, "dialog.eclipseValue.title", true);
 		txtEclipse.setEditable(false);
 		addCopyToSoftwareFmButton(compositeConfig, actionContext, actionData, txtEclipse, false);

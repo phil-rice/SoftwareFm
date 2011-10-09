@@ -1,10 +1,15 @@
 package org.softwareFm.eclipse;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
@@ -25,7 +30,6 @@ import org.softwareFm.display.GuiBuilder;
 import org.softwareFm.display.SoftwareFmDataComposite;
 import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.actions.ActionStore;
-import org.softwareFm.display.browser.BrowserComposite;
 import org.softwareFm.display.browser.IBrowserConfigurator;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.data.GuiDataStore;
@@ -92,7 +96,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	private IUpdateStore updateStore;
 	private IResourceGetter resourceGetter;
 	private String uuid;
-	private BrowserComposite browserComposite;
+	private ExecutorService service;
 
 	public SoftwareFmActivator() {
 	}
@@ -116,10 +120,6 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		smallButtonStore = null;
 		listEditorStore = null;
 		guiDataStore = null;
-		if (browserComposite != null) {
-			browserComposite.shutDown();
-			browserComposite = null;
-		}
 		if (selectedArtifactSelectionManager != null) {
 			Plugins.walkSelectionServices(new ICallback<ISelectionService>() {
 				@Override
@@ -131,6 +131,9 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		if (repository != null)
 			repository.shutdown();
 		repository = null;
+		if (service != null)
+			service.shutdown();
+		service = null;
 	}
 
 	public String getUuid() {
@@ -307,24 +310,44 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 				final RippedResult result = new RippedResult(hexDigest, javaProject, path.toOSString(), name, javadoc, source, null, null);
 				ICallback<String> sourceMutator = new ICallback<String>() {
 					@Override
-					public void process(String newValue) throws Exception {
-						BindingRipperResult reripped = SelectedArtifactSelectionManager.reRip(rippedResult);
-						if (newValue.endsWith(".jar")) {
-							File file = Files.downloadAndPutIndirectory(newValue, ConfigurationConstants.defaultDirectoryForDownloads);
-							JavaProjects.setSourceAttachment(reripped.javaProject, reripped.classpathEntry, file.getCanonicalPath());
-						} else
-							JavaProjects.setSourceAttachment(reripped.javaProject, reripped.classpathEntry, newValue);
+					public void process(final String newValue) throws Exception {
+						final BindingRipperResult reripped = SelectedArtifactSelectionManager.reRip(rippedResult);
+						getExecutorService().submit(new Runnable() {
+							@Override
+							public void run() {
+								try {
+									if (newValue.endsWith(".jar")) {
+										File file = Files.downloadAndPutIndirectory(newValue, ConfigurationConstants.defaultDirectoryForDownloads);
+										JavaProjects.setSourceAttachment(reripped.javaProject, reripped.classpathEntry, file.getCanonicalPath());
+									} else
+										JavaProjects.setSourceAttachment(reripped.javaProject, reripped.classpathEntry, newValue);
+								} catch (IOException e) {
+									e.printStackTrace();
+									throw WrappedException.wrap(e);
+								}
+							}
+						});
 					}
 				};
 				ICallback<String> javadocMutator = new ICallback<String>() {
 					@Override
-					public void process(String newValue) throws Exception {
-						BindingRipperResult reripped = SelectedArtifactSelectionManager.reRip(rippedResult);
-						if (newValue.endsWith(".jar")) {
-							File file = Files.downloadAndPutIndirectory(newValue, ConfigurationConstants.defaultDirectoryForDownloads);
-							JavaProjects.setJavadoc(reripped.javaProject, reripped.classpathEntry, "jar:file:" + file.getCanonicalPath()+"!/");
-						} else
-							JavaProjects.setJavadoc(reripped.javaProject, reripped.classpathEntry, newValue);
+					public void process(final String newValue) throws Exception {
+						final BindingRipperResult reripped = SelectedArtifactSelectionManager.reRip(rippedResult);
+						getExecutorService().submit(new Runnable() {
+							@Override
+							public void run() {
+								try {
+									if (newValue.endsWith(".jar")) {
+										File file = Files.downloadAndPutIndirectory(newValue, ConfigurationConstants.defaultDirectoryForDownloads);
+										JavaProjects.setJavadoc(reripped.javaProject, reripped.classpathEntry, "jar:file:" + file.getCanonicalPath() + "!/");
+									} else
+										JavaProjects.setJavadoc(reripped.javaProject, reripped.classpathEntry, newValue);
+								} catch (IOException e) {
+									e.printStackTrace();
+									throw WrappedException.wrap(e);
+								}
+							}
+						});
 					}
 				};
 				result.put(JdtConstants.javadocMutatorKey, javadocMutator);
@@ -334,9 +357,13 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		});
 		List<IBrowserConfigurator> browserConfigurators = getBrowserConfigurators();
 		IPlayListGetter playListGetter = new PlayListFromArtifactGetter(guiDataStore, ConfigurationConstants.entityForPlayList, Arrays.<IPlayListContributor> asList(new BasicPlaylistContributor()));
-		SoftwareFmDataComposite composite = new SoftwareFmDataComposite(parent, guiDataStore, getCompositeConfig(display), getActionStore(), getEditorFactory(display), getUpdateStore(), getListEditorStore(), onException(), getLargeButtonDefns(), browserConfigurators, playListGetter);
+		SoftwareFmDataComposite composite = new SoftwareFmDataComposite(parent, getExecutorService(), guiDataStore, getCompositeConfig(display), getActionStore(), getEditorFactory(display), getUpdateStore(), getListEditorStore(), onException(), getLargeButtonDefns(), browserConfigurators, playListGetter);
 		return composite;
 
+	}
+
+	private ExecutorService getExecutorService() {
+		return service == null ? service = new ThreadPoolExecutor(2, 10, 2, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(10)) : service;
 	}
 
 	public List<IBrowserConfigurator> getBrowserConfigurators() {

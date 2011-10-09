@@ -3,6 +3,7 @@ package org.softwareFm.configuration.fixture;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import org.eclipse.jface.resource.ImageRegistry;
@@ -49,8 +50,8 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class SoftwareFmFixture {
 
-	public static SoftwareFmDataComposite makeSoftwareFmComposite(Composite parent) throws Exception {
-		return new SoftwareFmFixture(parent.getDisplay()).makeComposite(parent);
+	public static SoftwareFmDataComposite makeSoftwareFmComposite(Composite parent, ExecutorService service) throws Exception {
+		return new SoftwareFmFixture(parent.getDisplay(), service).makeComposite(parent);
 	}
 
 	public final ImageRegistry imageRegistry;
@@ -76,8 +77,10 @@ public class SoftwareFmFixture {
 	private final List<IBrowserConfigurator> browserConfigurators;
 	private final IPlayListGetter playListGetter;
 	public LargeButtonDefn[] allLargeButtons;
+	private final ExecutorService service;
 
-	public SoftwareFmFixture(Display display) throws Exception {
+	public SoftwareFmFixture(Display display, ExecutorService service) throws Exception {
+		this.service = service;
 		imageRegistry = new ImageRegistry();
 		new BasicImageRegisterConfigurator().registerWith(display, imageRegistry);
 
@@ -122,7 +125,7 @@ public class SoftwareFmFixture {
 	}
 
 	public SoftwareFmDataComposite makeComposite(Composite parent, LargeButtonDefn... largeButtons) {
-		SoftwareFmDataComposite result = new SoftwareFmDataComposite(parent, dataStore, compositeConfig, actionStore, //
+		SoftwareFmDataComposite result = new SoftwareFmDataComposite(parent, service, dataStore, compositeConfig, actionStore, //
 				editorFactory, updateStore, listEditorStore, ICallback.Utils.rethrow(), //
 				Arrays.asList(largeButtons), //
 				browserConfigurators, playListGetter);

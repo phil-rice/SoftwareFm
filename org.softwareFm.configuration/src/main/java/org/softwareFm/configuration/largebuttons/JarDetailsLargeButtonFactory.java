@@ -43,7 +43,7 @@ public class JarDetailsLargeButtonFactory extends LargeButtonFactory {
 		try {
 			Swts.xUnit(JarDetailsLargeButtonFactory.class.getSimpleName(), root, "json", builder);
 		} finally {
-			builder.shutDown();
+			builder.shutdown();
 		}
 	}
 }
