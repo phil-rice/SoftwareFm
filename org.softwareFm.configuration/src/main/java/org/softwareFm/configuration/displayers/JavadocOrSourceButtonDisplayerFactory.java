@@ -2,7 +2,6 @@ package org.softwareFm.configuration.displayers;
 
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.display.actions.ActionContext;
-import org.softwareFm.display.actions.ActionStore;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.displayer.DisplayerDefn;
 import org.softwareFm.display.displayer.IDisplayer;
@@ -24,7 +23,7 @@ public class JavadocOrSourceButtonDisplayerFactory implements IDisplayerFactory 
 	}
 
 	@Override
-	public IDisplayer create(Composite largeButtonComposite, DisplayerDefn defn, int style, CompositeConfig compositeConfig, ActionStore actionStore, ActionContext actionContext) {
+	public IDisplayer create(Composite largeButtonComposite, DisplayerDefn defn, int style, CompositeConfig compositeConfig, ActionContext actionContext) {
 		return new JavadocOrSourceButtonDisplayer(compositeConfig, largeButtonComposite, defn.title, true, artifactKey, artifactEclipseKey, artifactSoftwareFmKey, eclipseMutatorKey);
 	}
 

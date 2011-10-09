@@ -22,6 +22,8 @@ public class DisplayConstants {
 	public static final String playListMustHaveSomeContent = "Play list {0} must have some content";
 	public static final String mustHaveSelectedPlayList = "Time line must have a selected play list";
 	public static final String noPreviousItemInPlayList = "No previous item in play list";
+	public static final String cannotHaveTwoDefaultActions = "Cannot have two default actions in displayer defn for data {0}.\nExisting value{1}\nNew value{2}";
+	public static final String cannotDefineActionsTwice = "Cannot define actions twice in displayer defn for data {0}.\nExisting value{1}\nNew value{2}";
 
 	public static final String rssFeedType = "feedType.rss";
 	public static final String browserFeedType = "feedType.browser";

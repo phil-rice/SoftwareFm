@@ -6,7 +6,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.display.actions.ActionContext;
-import org.softwareFm.display.actions.ActionStore;
 import org.softwareFm.display.actions.Actions;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.constants.DisplayConstants;
@@ -16,7 +15,7 @@ import org.softwareFm.utilities.strings.Strings;
 public abstract class AbstractCompressedTextDisplayerFactory<T extends AbstractCompressedText<? extends Control>> implements IDisplayerFactory {
 
 	@Override
-	public IDisplayer create(Composite parent, final DisplayerDefn defn, int style, CompositeConfig compositeConfig, ActionStore actionStore, ActionContext actionContext) {
+	public IDisplayer create(Composite parent, final DisplayerDefn defn, int style, CompositeConfig compositeConfig, ActionContext actionContext) {
 		if (defn.title == null)
 			throw new NullPointerException(MessageFormat.format(DisplayConstants.mustHaveA, "title", getClass().getSimpleName()));
 		T text = makeText(parent, SWT.NULL, compositeConfig);

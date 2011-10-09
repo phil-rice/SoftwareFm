@@ -20,6 +20,7 @@ public class ActionDefn {
 	public final String mainImageId;
 	public final String overlayId;
 	public boolean ignoreGuard;
+	public boolean defaultAction;
 
 	public ActionDefn(String id, String mainImageId, String overlayId) {
 		this.id = id;
@@ -36,6 +37,13 @@ public class ActionDefn {
 		this.ignoreGuard = true;
 		return this;
 	}
+	public ActionDefn thisIsDefault(){
+		this.defaultAction = true;
+		return this;
+	}
+	
+	
+	
 	public ActionDefn params(String... paramNames) {
 		if (this.params != null)
 			throw new IllegalStateException(MessageFormat.format(DisplayConstants.cannotSetValueTwice, "params", this.params, Arrays.asList(paramNames)));
@@ -65,7 +73,7 @@ public class ActionDefn {
 
 	@Override
 	public String toString() {
-		return "ActionDefn [id=" + id + ", tooltip=" + tooltip + ", mainImageId=" + mainImageId + ", overlayId=" + overlayId + ", params=" + params + "]";
+		return "ActionDefn [id=" + id + ", mainImageId=" + mainImageId + ", tooltip=" + tooltip + ", overlayId=" + overlayId + ", ignoreGuard=" + ignoreGuard + ", defaultAction=" + defaultAction + ", params=" + params + "]";
 	}
 
 }

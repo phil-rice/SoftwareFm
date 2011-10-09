@@ -16,6 +16,7 @@ public class ActionDefnTest extends TestCase {
 		assertEquals("overlayId", actionDefn.overlayId);
 		assertEquals(null, actionDefn.tooltip);
 		assertEquals(null, actionDefn.params);
+		assertFalse(actionDefn.defaultAction);
 	}
 
 	public void testTooltip() {
@@ -29,8 +30,15 @@ public class ActionDefnTest extends TestCase {
 		assertSame(actionDefn, actionDefn.params("p1", "p2"));
 		assertEquals(Arrays.asList("p1", "p2"), actionDefn.params);
 	}
-	
-	public void testCannotUseTooltipTwice(){
+
+	public void testDefaultAction() {
+		ActionDefn actionDefn = new ActionDefn("id", "mainImageId", "overlayId");
+		assertFalse(actionDefn.defaultAction);
+		assertSame(actionDefn, actionDefn.thisIsDefault());
+		assertTrue(actionDefn.defaultAction);
+	}
+
+	public void testCannotUseTooltipTwice() {
 		final ActionDefn actionDefn = new ActionDefn("id", "mainImageId", "overlayId").tooltip("t");
 		IllegalStateException e = Tests.assertThrows(IllegalStateException.class, new Runnable() {
 			@Override
@@ -41,8 +49,8 @@ public class ActionDefnTest extends TestCase {
 		assertEquals("t", actionDefn.tooltip);
 		assertEquals("Cannot set value of tooltip twice. Current value [t]. New value [another]", e.getMessage());
 	}
-	
-	public void testCannotUseParamsTwice(){
+
+	public void testCannotUseParamsTwice() {
 		final ActionDefn actionDefn = new ActionDefn("id", "mainImageId", "overlayId").params("p1");
 		IllegalStateException e = Tests.assertThrows(IllegalStateException.class, new Runnable() {
 			@Override
@@ -52,7 +60,7 @@ public class ActionDefnTest extends TestCase {
 		});
 		assertEquals(Arrays.asList("p1"), actionDefn.params);
 		assertEquals("Cannot set value of params twice. Current value [[p1]]. New value [[p2]]", e.getMessage());
-		
+
 	}
 
 	public void testConstructorWithNullArguments() {

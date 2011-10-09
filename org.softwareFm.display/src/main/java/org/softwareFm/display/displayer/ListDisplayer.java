@@ -8,7 +8,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.display.actions.ActionContext;
-import org.softwareFm.display.actions.ActionStore;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.composites.TitleAnd;
@@ -25,13 +24,11 @@ public class ListDisplayer implements IDisplayer {
 	private final Composite content;
 	private final TitleAnd mainLine;
 	private final Composite listComposite;
-	private final ActionStore actionStore;
 	private final ActionContext actionContext;
 	private final IListEditor listEditor;
 
-	public ListDisplayer(Composite parent, DisplayerDefn defn, int style, CompositeConfig compositeConfig, ActionStore actionStore, ActionContext actionContext) {
+	public ListDisplayer(Composite parent, DisplayerDefn defn, int style, CompositeConfig compositeConfig, ActionContext actionContext) {
 		this.compositeConfig = compositeConfig;
-		this.actionStore = actionStore;
 		this.actionContext = actionContext;
 		this.listEditor = actionContext.listEditorStore.get(defn.listEditorId);
 		this.content = new Composite(parent, SWT.NULL);
@@ -53,7 +50,7 @@ public class ListDisplayer implements IDisplayer {
 			if (!actuallyEmpty)
 				for (Object value : dataList) {
 					IButtonParent buttonParent = listEditor.makeLineHasControl(defn, compositeConfig, listComposite, index, value);
-					defn.createActions(actionStore, actionContext, this, buttonParent, defn.listActionDefns, index);
+					defn.createDefaultAction(actionContext, this, buttonParent, index);
 					index++;
 				}
 		}

@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import junit.framework.TestCase;
 
-public class PlayListTest extends TestCase {
+public abstract class PlayListTest extends TestCase {
 	public final static PlayItem playItem1_1 = new PlayItem("ft1_1", "url1");
 	public final static PlayItem playItem1_2 = new PlayItem("ft1_2", "url2");
 	public final static PlayItem playItem1_3 = new PlayItem("ft1_3", "url3");

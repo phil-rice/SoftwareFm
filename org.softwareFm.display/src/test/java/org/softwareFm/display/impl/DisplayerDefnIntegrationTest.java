@@ -26,9 +26,9 @@ import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwareFm.utilities.strings.NameAndValue;
+import org.softwareFm.utilities.tests.IIntegrationTest;
 
-public class DisplayerDefnIntegrationTest extends TestCase {
+public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrationTest {
 
 	private Shell shell;
 	private DisplayerDefn displayerDefn;
@@ -38,7 +38,7 @@ public class DisplayerDefnIntegrationTest extends TestCase {
 
 	public void testCreateWithNoButtons() {
 		TitleAndText displayer = (TitleAndText) displayerDefn.createDisplayer(shell, actionContext);
-		checkButtons(displayer);
+		checkNoButtons(displayer);
 		assertEquals("registeredTitle", displayer.getTitle());
 	}
 
@@ -46,16 +46,25 @@ public class DisplayerDefnIntegrationTest extends TestCase {
 		DisplayerDefn dispDefnWithButton = displayerDefn.actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).tooltip("tooltip0"));
 		TitleAndText displayer = (TitleAndText) dispDefnWithButton.createDisplayer(shell, actionContext);
 		assertEquals("registeredTitle", displayer.getTitle());
-		checkButtons(displayer, ArtifactsAnchor.projectKey + ":" + OverlaysAnchor.deleteKey);
+		checkButtons(displayer, ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey);
 	}
 
 	public void testWithTwoButton() {
 		DisplayerDefn dispDefnWithButton = displayerDefn.actions(//
 				new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).tooltip("tooltip0"),//
-				new ActionDefn("someId", ArtifactsAnchor.projectKey, null).tooltip("tooltip1"));
+				new ActionDefn("someId", ArtifactsAnchor.facebookKey, OverlaysAnchor.addKey).tooltip("tooltip1"));
 		TitleAndText displayer = (TitleAndText) dispDefnWithButton.createDisplayer(shell, actionContext);
 		assertEquals("registeredTitle", displayer.getTitle());
-		checkButtons(displayer, ArtifactsAnchor.projectKey + ":" + OverlaysAnchor.deleteKey, ArtifactsAnchor.projectKey);
+		checkButtons(displayer, ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey);
+	}
+
+	public void testWithDefaultButtonNotTheFirstOne() {
+		DisplayerDefn dispDefnWithButton = displayerDefn.actions(//
+				new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).tooltip("tooltip0"),//
+				new ActionDefn("someId", ArtifactsAnchor.facebookKey, null).tooltip("tooltip1").thisIsDefault());
+		TitleAndText displayer = (TitleAndText) dispDefnWithButton.createDisplayer(shell, actionContext);
+		assertEquals("registeredTitle", displayer.getTitle());
+		checkButtons(displayer, ArtifactsAnchor.facebookKey, null);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -67,22 +76,24 @@ public class DisplayerDefnIntegrationTest extends TestCase {
 		SimpleImageControl control = (SimpleImageControl) children[0];
 		control.notifyListeners(SWT.MouseDown, new Event());
 		assertEquals(Arrays.asList(displayer), actionMock.displayers);
-		assertEquals(Arrays.asList(Arrays.asList("a")), actionMock.formalParams); 
-//		assertEquals(Arrays.asList(Arrays.asList(1)), actionMock.actualParams);
+		assertEquals(Arrays.asList(Arrays.asList("a")), actionMock.formalParams);
+		// assertEquals(Arrays.asList(Arrays.asList(1)), actionMock.actualParams);
 
 	}
 
-	private void checkButtons(TitleAndText displayer, String... mainAndBackground) {
+	private void checkNoButtons(TitleAndText displayer) {
 		Control[] children = displayer.getButtonComposite().getChildren();
-		assertEquals(mainAndBackground.length, children.length);
-		for (int i = 0; i < children.length; i++) {
-			SimpleImageControl control = (SimpleImageControl) children[i];
-			assertEquals(false, control.value());
-			NameAndValue nameAndValue = NameAndValue.fromString(mainAndBackground[i]);
-			assertEquals(nameAndValue.name, control.config.mainImage);
-			assertEquals(nameAndValue.value, control.config.overlayImage);
-			assertNull(control.getToolTipText());
-		}
+		assertEquals(0, children.length);
+	}
+
+	private void checkButtons(TitleAndText displayer, String main, String overlay) {
+		Control[] children = displayer.getButtonComposite().getChildren();
+		assertEquals(1, children.length);
+		SimpleImageControl control = (SimpleImageControl) children[0];
+		assertEquals(false, control.value());
+		assertEquals(main, control.config.mainImage);
+		assertEquals(overlay, control.config.overlayImage);
+		assertNull(control.getToolTipText());
 	}
 
 	public void testTooltipsAreSetWithData() {
@@ -95,13 +106,13 @@ public class DisplayerDefnIntegrationTest extends TestCase {
 		assertEquals(null, control.getToolTipText());
 
 		IDataGetter dataGetter = new DataGetterMock(//
-				"someActionTooltip", "someActionTooltipValue",// 
-				"someDataTooltip", "someDataTooltipValue",// 
+				"someActionTooltip", "someActionTooltipValue",//
+				"someDataTooltip", "someDataTooltipValue",//
 				"dataKey", "value1");
 		ActionContext actionContext = new ActionContext(null, actionStore, dataGetter, null, null, null, null, null, null);
 		dispDefnWithButton.data(actionContext, dispDefnWithButton, displayer, "someENtity", "someUrl");
 		assertEquals("someActionTooltipValue", control.getToolTipText());
-		
+
 		assertEquals("value1", displayer.getText());
 		assertEquals("someDataTooltipValue", displayer.getControl().getToolTipText());
 	}

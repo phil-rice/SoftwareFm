@@ -4,7 +4,6 @@ import java.text.MessageFormat;
 
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.display.actions.ActionContext;
-import org.softwareFm.display.actions.ActionStore;
 import org.softwareFm.display.actions.Actions;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.TitleAndStyledText;
@@ -15,7 +14,7 @@ import org.softwareFm.utilities.strings.Strings;
 public class StyledTextDisplayerFactory implements IDisplayerFactory {
 
 	@Override
-	public IDisplayer create(Composite parent, final DisplayerDefn defn, int style, CompositeConfig compositeConfig, ActionStore actionStore, ActionContext actionContext) {
+	public IDisplayer create(Composite parent, final DisplayerDefn defn, int style, CompositeConfig compositeConfig, ActionContext actionContext) {
 		if (defn.title == null)
 			throw new NullPointerException(MessageFormat.format(DisplayConstants.mustHaveA, "title", getClass().getSimpleName()));
 		TitleAndStyledText titleAndText = new TitleAndStyledText(compositeConfig, parent, defn.title, true);

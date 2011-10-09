@@ -33,7 +33,7 @@ public class DisplayerDefn {
 
 	public final IDisplayerFactory displayerFactory;
 	public List<ActionDefn> actionDefns = Lists.newList();
-
+	public ActionDefn defaultAction;
 	public String dataKey;
 	public String title;
 	public String tooltip;
@@ -91,33 +91,47 @@ public class DisplayerDefn {
 	// }
 
 	public DisplayerDefn actions(ActionDefn... actionDefns) {
+		if (!this.actionDefns.isEmpty())
+			throw new IllegalStateException(MessageFormat.format(DisplayConstants.cannotDefineActionsTwice, this.dataKey, this.actionDefns, Arrays.asList(actionDefns)));
 		this.actionDefns = Lists.fromArray(actionDefns);
+		for (ActionDefn actionDefn : actionDefns)
+			if (actionDefn.defaultAction)
+				if (defaultAction != null)
+					throw new IllegalStateException(MessageFormat.format(DisplayConstants.cannotHaveTwoDefaultActions, this.dataKey, defaultAction, actionDefn));
+				else
+					defaultAction = actionDefn;
+		if (defaultAction == null)
+			defaultAction = actionDefns[0];
 		return this;
 	}
 
 	public IDisplayer createDisplayer(Composite parent, final ActionContext actionContext) {
 		CompositeConfig compositeConfig = actionContext.compositeConfig;
-		ActionStore actionStore= actionContext.actionStore;
-		final IDisplayer displayer = displayerFactory.create(parent, this, SWT.NULL, compositeConfig, actionStore, actionContext);
-		createActions(actionStore, actionContext, displayer, displayer, actionDefns, -1);
+		final IDisplayer displayer = displayerFactory.create(parent, this, SWT.NULL, compositeConfig, actionContext);
+		createDefaultAction(actionContext, displayer, displayer, -1);
 		return displayer;
 	}
 
-	public void createActions(final ActionStore actionStore, final ActionContext actionContext, final IDisplayer displayer, final IButtonParent buttonParent, List<ActionDefn> actionDefns, final int index) {
-		CompositeConfig compositeConfig = actionContext.compositeConfig;
-		for (final ActionDefn actionDefn : actionDefns) {
-			actionDefn.createButton(compositeConfig.imageButtonConfig, buttonParent, new IImageButtonListener() {
-				private final IAction action = actionStore.get(actionDefn.id);
+	public void createDefaultAction(final ActionContext actionContext, final IDisplayer displayer, final IButtonParent buttonParent, final int index) {
+		if (defaultAction == null)
+			return;
+		createButtonForAction(buttonParent, actionContext, displayer, index, defaultAction);
+	}
 
-				@Override
-				public void buttonPressed(IHasControl button) throws Exception {
-					ActionData actionData = actionContext.dataGetter.getActionDataFor(actionDefn.params);
-					String actionDataKey = Actions.getDataKey(DisplayerDefn.this, actionData.formalParams);
-					if (actionDefn.ignoreGuard ||Actions.guardConditionPresent(actionContext.dataGetter, DisplayerDefn.this, actionDataKey) == null)
-						action.execute(actionContext, DisplayerDefn.this, displayer, index, actionData);
-				}
-			});
-		}
+	private void createButtonForAction(final IButtonParent buttonParent, final ActionContext actionContext, final IDisplayer displayer, final int index, final ActionDefn actionDefn) {
+		CompositeConfig compositeConfig = actionContext.compositeConfig;
+		final ActionStore actionStore = actionContext.actionStore;
+		actionDefn.createButton(compositeConfig.imageButtonConfig, buttonParent, new IImageButtonListener() {
+			private final IAction action = actionStore.get(actionDefn.id);
+
+			@Override
+			public void buttonPressed(IHasControl button) throws Exception {
+				ActionData actionData = actionContext.dataGetter.getActionDataFor(actionDefn.params);
+				String actionDataKey = Actions.getDataKey(DisplayerDefn.this, actionData.formalParams);
+				if (actionDefn.ignoreGuard || Actions.guardConditionPresent(actionContext.dataGetter, DisplayerDefn.this, actionDataKey) == null)
+					action.execute(actionContext, DisplayerDefn.this, displayer, index, actionData);
+			}
+		});
 	}
 
 	public void data(ActionContext actionContext, DisplayerDefn defn, IDisplayer displayer, String entity, String url) {
@@ -125,9 +139,12 @@ public class DisplayerDefn {
 		displayerFactory.data(actionContext, this, displayer, entity, url);
 		String tooltip = defn.tooltip == null ? "" : Strings.nullSafeToString(dataGetter.getDataFor(defn.tooltip));
 		displayer.getControl().setToolTipText(tooltip);
-		int i = 0;
 		Control[] children = displayer.getButtonComposite().getChildren();
-		for (ActionDefn actionDefn : defn.actionDefns) {
+		sendDataToActionButton(dataGetter, children, defn.defaultAction, 0);
+	}
+
+	private void sendDataToActionButton(IDataGetter dataGetter, Control[] children, ActionDefn actionDefn, int i) {
+		if (actionDefn != null) {
 			SimpleImageControl control = (SimpleImageControl) children[i++];
 			String actionDataKey = Actions.getDataKey(this, actionDefn.params);
 			boolean canUseAction = actionDefn.ignoreGuard || Actions.guardConditionPresent(dataGetter, this, actionDataKey) == null;
@@ -142,6 +159,10 @@ public class DisplayerDefn {
 	public DisplayerDefn listActions(ActionDefn... listActionDefns) {
 		this.listActionDefns = Lists.fromArray(listActionDefns);
 		return this;
+	}
+
+	public ActionDefn getDefaultActionDefn() {
+		return defaultAction;
 	}
 
 }

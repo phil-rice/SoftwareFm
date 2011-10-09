@@ -2,7 +2,6 @@ package org.softwareFm.configuration.playlists;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -21,10 +20,10 @@ public class BasicPlaylistContributorTest extends TestCase {
 		assertEquals(Collections.emptyList(), contributor.items(Maps.<String, Object> makeMap("a", 1, "b", 2)));
 	}
 
-	public void testAddsProjectUrl() {
-		List<PlayItem> actual = contributor.items(Maps.<String, Object> makeMap("project.url", "purl"));
-		assertEquals(Arrays.asList(new PlayItem(DisplayConstants.browserFeedType, "purl")), actual);
-	}
+//	public void testAddsProjectUrl() {
+//		List<PlayItem> actual = contributor.items(Maps.<String, Object> makeMap("project.url", "purl"));
+//		assertEquals(Arrays.asList(new PlayItem(DisplayConstants.browserFeedType, "purl")), actual);
+//	}
 
 	public void testAddsRssFeeds() {
 		assertEquals(Arrays.asList(new PlayItem(DisplayConstants.rssFeedType, "rss1"),//
@@ -33,12 +32,12 @@ public class BasicPlaylistContributorTest extends TestCase {
 				), contributor.items(Maps.<String, Object> makeMap("rss", Arrays.asList("rss1", "rss2", "rss3"))));
 	}
 
-	public void testAddsTweetFeeds() {
-		assertEquals(Arrays.asList(new PlayItem(DisplayConstants.browserFeedType, "http://mobile.twitter.com/tweet1"),//
-				new PlayItem(DisplayConstants.browserFeedType, "http://mobile.twitter.com/tweet2"),//
-				new PlayItem(DisplayConstants.browserFeedType, "http://mobile.twitter.com/tweet3")//
-				), contributor.items(Maps.<String, Object> makeMap("tweet", Arrays.asList("tweet1", "tweet2", "tweet3"))));
-	}
+//	public void testAddsTweetFeeds() {
+//		assertEquals(Arrays.asList(new PlayItem(DisplayConstants.browserFeedType, "http://mobile.twitter.com/tweet1"),//
+//				new PlayItem(DisplayConstants.browserFeedType, "http://mobile.twitter.com/tweet2"),//
+//				new PlayItem(DisplayConstants.browserFeedType, "http://mobile.twitter.com/tweet3")//
+//				), contributor.items(Maps.<String, Object> makeMap("tweet", Arrays.asList("tweet1", "tweet2", "tweet3"))));
+//	}
 
 	@Override
 	protected void setUp() throws Exception {

@@ -114,7 +114,6 @@ public class JavadocSourceEditor implements IEditor {
 		return simpleImageButton;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void edit(Shell parent, DisplayerDefn displayerDefn, EditorContext editorContext, ActionContext actionContext, ActionData actionData, IEditorCompletion completion, Object initialValue) {
 		IDataGetter dataGetter = actionContext.dataGetter;
