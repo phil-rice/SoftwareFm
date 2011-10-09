@@ -1,9 +1,13 @@
 package org.softwareFm.display.displayer;
 
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
@@ -27,6 +31,15 @@ public abstract class AbstractCompressed<T extends Control> implements IDisplaye
 
 	abstract protected T makeControl(Composite parent);
 
+	@Override
+	public void addClickListener(final Listener listener) {
+		control.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				listener.handleEvent(new Event());
+			}
+		});
+	}
 
 	@Override
 	public void buttonAdded(IHasControl button) {

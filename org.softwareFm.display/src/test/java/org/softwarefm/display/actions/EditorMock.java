@@ -6,12 +6,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 import org.softwareFm.display.data.ActionData;
 import org.softwareFm.display.displayer.DisplayerDefn;
+import org.softwareFm.display.displayer.IDisplayer;
 import org.softwareFm.display.editor.EditorContext;
 import org.softwareFm.display.editor.IEditor;
 import org.softwareFm.display.editor.IEditorCompletion;
+import org.softwareFm.display.simpleButtons.IButtonParent;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
 
@@ -19,7 +20,7 @@ public class EditorMock implements IEditor {
 
 	private final String seed;
 	public final AtomicInteger cancelCount = new AtomicInteger();
-	public final List<Shell> parents = Lists.newList();
+	public final List<IDisplayer> parents = Lists.newList();
 	public List<String> formalParams = Lists.newList();
 	public List<Object> actualParams = Lists.newList();
 	private IEditorCompletion onCompletion;
@@ -33,12 +34,13 @@ public class EditorMock implements IEditor {
 	public String toString() {
 		return "EditorMock [seed=" + seed + "]";
 	}
+
 	@Override
-	public void edit(Shell parent, DisplayerDefn displayerDefn, EditorContext editorContext, ActionContext actionContext, ActionData actionData, IEditorCompletion completion, Object initialValue) {
+	public void edit(IDisplayer parent, DisplayerDefn displayerDefn, EditorContext editorContext, ActionContext actionContext, ActionData actionData, IEditorCompletion completion, Object initialValue) {
 		this.onCompletion = completion;
 		this.parents.add(parent);
-		this.formalParams=actionData.formalParams;
-		this.actualParams= actionData.actualParams;
+		this.formalParams = actionData.formalParams;
+		this.actualParams = actionData.actualParams;
 	}
 
 	@Override
@@ -52,7 +54,7 @@ public class EditorMock implements IEditor {
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
-		
+
 	}
 
 	@Override
@@ -62,9 +64,14 @@ public class EditorMock implements IEditor {
 
 	@Override
 	public Control createControl(ActionContext actionContext, ActionData actionData) {
-		 this.control = new Label(actionContext.rightHandSide.getComposite(), SWT.NULL);
-		 control.setText(seed);
-		 return control;
+		this.control = new Label(actionContext.rightHandSide.getComposite(), SWT.NULL);
+		control.setText(seed);
+		return control;
+	}
+
+	@Override
+	public IButtonParent actionButtonParent() {
+		throw new UnsupportedOperationException();
 	}
 
 }

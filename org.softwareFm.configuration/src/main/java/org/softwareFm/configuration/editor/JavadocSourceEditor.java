@@ -5,7 +5,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.IHasControl;
@@ -13,9 +12,12 @@ import org.softwareFm.display.composites.TitleAndText;
 import org.softwareFm.display.data.ActionData;
 import org.softwareFm.display.data.IDataGetter;
 import org.softwareFm.display.displayer.DisplayerDefn;
+import org.softwareFm.display.displayer.IDisplayer;
 import org.softwareFm.display.editor.EditorContext;
 import org.softwareFm.display.editor.IEditor;
 import org.softwareFm.display.editor.IEditorCompletion;
+import org.softwareFm.display.simpleButtons.ButtonParent;
+import org.softwareFm.display.simpleButtons.IButtonParent;
 import org.softwareFm.display.smallButtons.IImageButtonListener;
 import org.softwareFm.display.smallButtons.SimpleImageButton;
 import org.softwareFm.display.swt.Swts;
@@ -34,6 +36,7 @@ public class JavadocSourceEditor implements IEditor {
 	private final String softwareFmKey;
 	private final String mutatorKey;
 	private final String titleKey;
+	private ButtonParent buttonParent;
 
 	public JavadocSourceEditor(String titleKey, String eclipseKey, String softwareFmKey, String mutatorKey) {
 		this.titleKey = titleKey;
@@ -51,21 +54,23 @@ public class JavadocSourceEditor implements IEditor {
 	public Control createControl(ActionContext actionContext, ActionData actionData) {
 		contents = Swts.newComposite(actionContext.rightHandSide.getComposite(), SWT.NULL, getClass().getSimpleName());
 		final IDataGetter dataGetter = actionContext.dataGetter;
-		CompositeConfig compositeConfig = actionContext.compositeConfig;
-
+		CompositeConfig config = actionContext.compositeConfig;
 
 		new Label(contents, SWT.NULL).setText(IResourceGetter.Utils.getOrException(actionContext.compositeConfig.resourceGetter, titleKey));
-		txtEclipse = new TitleAndText(compositeConfig, contents, "dialog.eclipseValue.title", true);
+		buttonParent = new ButtonParent(contents, config, SWT.NULL);
+		
+		
+		txtEclipse = new TitleAndText(config, contents, "dialog.eclipseValue.title", true);
 		txtEclipse.setEditable(false);
-		addCopyToSoftwareFmButton(compositeConfig, actionContext, actionData, txtEclipse, false);
+		addCopyToSoftwareFmButton(config, actionContext, actionData, txtEclipse, false);
 
-		txtSoftwareFm = new TitleAndText(compositeConfig, contents, "dialog.softwareFmValue.title", true);
+		txtSoftwareFm = new TitleAndText(config, contents, "dialog.softwareFmValue.title", true);
 		txtSoftwareFm.setEditable(false);
-		addCopyToEclipseButton(compositeConfig, dataGetter, txtSoftwareFm, false);
+		addCopyToEclipseButton(config, dataGetter, txtSoftwareFm, false);
 
-		txtExperiment = new TitleAndText(compositeConfig, contents, "dialog.experiment.title", true);
-		addCopyToEclipseButton(compositeConfig, dataGetter, txtExperiment, true);
-		addCopyToSoftwareFmButton(compositeConfig, actionContext, actionData, txtExperiment, true);
+		txtExperiment = new TitleAndText(config, contents, "dialog.experiment.title", true);
+		addCopyToEclipseButton(config, dataGetter, txtExperiment, true);
+		addCopyToSoftwareFmButton(config, actionContext, actionData, txtExperiment, true);
 
 		Composite buttonPanel = new Composite(contents, SWT.NULL);
 		buttonPanel.setLayout(new GridLayout(3, true));
@@ -115,7 +120,7 @@ public class JavadocSourceEditor implements IEditor {
 	}
 
 	@Override
-	public void edit(Shell parent, DisplayerDefn displayerDefn, EditorContext editorContext, ActionContext actionContext, ActionData actionData, IEditorCompletion completion, Object initialValue) {
+	public void edit(IDisplayer parent, DisplayerDefn displayerDefn, EditorContext editorContext, ActionContext actionContext, ActionData actionData, IEditorCompletion completion, Object initialValue) {
 		IDataGetter dataGetter = actionContext.dataGetter;
 		this.completion = completion;
 		
@@ -134,5 +139,10 @@ public class JavadocSourceEditor implements IEditor {
 
 	private void sendResult() {
 		completion.cancel();
+	}
+
+	@Override
+	public IButtonParent actionButtonParent() {
+		return buttonParent;
 	}
 }

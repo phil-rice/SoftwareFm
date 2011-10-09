@@ -7,6 +7,7 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Listener;
 import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.IHasControl;
@@ -89,6 +90,11 @@ public class ListDisplayer implements IDisplayer {
 	@Override
 	public void buttonAdded(IHasControl button) {
 		mainLine.buttonAdded(button);
+	}
+
+	@Override
+	public void addClickListener(Listener listener) {
+		
 	}
 
 }

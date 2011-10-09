@@ -26,7 +26,7 @@ public class JavadocSourceViewAction implements IAction {
 		if (!Strings.hasValue(actionContext.dataGetter.getDataFor(ConfigurationConstants.dataRawHexDigest)))
 			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.mustHaveA, "hexDigest", getClass().getSimpleName()));
 
-		actionContext.editorFactory.displayEditor(displayer.getButtonComposite().getShell(), editorKey, displayerDefn, actionContext, actionData, new ICallback<Object>() {
+		actionContext.editorFactory.displayEditor(displayer, editorKey, displayerDefn, actionContext, actionData, new ICallback<Object>() {
 			@Override
 			public void process(Object t) throws Exception {
 				throw new UnsupportedOperationException();

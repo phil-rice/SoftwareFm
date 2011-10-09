@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Shell;
 import org.softwareFm.display.IHasRightHandSide;
 import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.data.ActionData;
 import org.softwareFm.display.displayer.DisplayerDefn;
+import org.softwareFm.display.displayer.IDisplayer;
+import org.softwareFm.display.simpleButtons.IButtonParent;
+import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Iterables;
 import org.softwareFm.utilities.maps.ISimpleMap;
@@ -30,7 +32,7 @@ public class EditorFactory implements IEditorFactory, ISimpleMap<String, IEditor
 	}
 
 	@Override
-	public void displayEditor(Shell parent, String editorName, DisplayerDefn displayerDefn,  final ActionContext actionContext, ActionData actionData, final ICallback<Object> onCompletion, Object initialValue) {
+	public void displayEditor(IDisplayer parent, String editorName, DisplayerDefn displayerDefn,  final ActionContext actionContext, ActionData actionData, final ICallback<Object> onCompletion, Object initialValue) {
 		if (editor != null)
 			cancel();
 		rightHandSide = actionContext.rightHandSide;
@@ -39,7 +41,10 @@ public class EditorFactory implements IEditorFactory, ISimpleMap<String, IEditor
 		if (editor.getControl() == null)
 			editor.createControl(actionContext, actionData);
 		rightHandSide.makeVisible(editor.getControl());
-		editor.edit(parent, displayerDefn, editorContext, actionContext, actionData, new IEditorCompletion() {
+		IButtonParent actionButtonParent = editor.actionButtonParent();
+		Swts.removeAllChildren(actionButtonParent.getButtonComposite());
+		displayerDefn.createButtons(actionButtonParent, actionContext, parent);
+		final IEditorCompletion completion = new IEditorCompletion() {
 			@Override
 			public void ok(Object value) {
 				editor = null;
@@ -52,7 +57,9 @@ public class EditorFactory implements IEditorFactory, ISimpleMap<String, IEditor
 				editor = null;
 				rightHandSide.makeVisible(rememberedControl);
 			}
-		}, initialValue);
+		};
+
+		editor.edit(parent, displayerDefn, editorContext, actionContext, actionData, completion, initialValue);
 
 	}
 

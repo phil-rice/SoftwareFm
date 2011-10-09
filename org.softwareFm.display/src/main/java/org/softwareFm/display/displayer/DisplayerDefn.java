@@ -7,6 +7,8 @@ import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.actions.ActionDefn;
 import org.softwareFm.display.actions.ActionStore;
@@ -37,6 +39,8 @@ public class DisplayerDefn {
 	public String dataKey;
 	public String title;
 	public String tooltip;
+
+	public String editorId;
 	public String listEditorId;
 	public List<ActionDefn> listActionDefns;
 	public List<NameAndValue> guardKeys;
@@ -56,6 +60,13 @@ public class DisplayerDefn {
 		this.title = title;
 		return this;
 
+	}
+
+	public DisplayerDefn editor(String editorId) {
+		if (this.editorId != null)
+			throw new IllegalStateException(MessageFormat.format(DisplayConstants.cannotSetEditorTwice, dataKey, this.editorId, editorId));
+		this.editorId = editorId;
+		return this;
 	}
 
 	public DisplayerDefn guard(String... guardKeys) {
@@ -109,6 +120,14 @@ public class DisplayerDefn {
 		CompositeConfig compositeConfig = actionContext.compositeConfig;
 		final IDisplayer displayer = displayerFactory.create(parent, this, SWT.NULL, compositeConfig, actionContext);
 		createDefaultAction(actionContext, displayer, displayer, -1);
+		displayer.addClickListener(new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				System.out.println("Clicked");
+				ActionData actionData = actionContext.dataGetter.getActionDataFor(Lists.<String>newList());
+				actionContext.editorFactory.displayEditor(displayer, editorId, this, actionContext, actionData, onCompletion, initialValue);
+			}
+		});
 		return displayer;
 	}
 
@@ -118,7 +137,12 @@ public class DisplayerDefn {
 		createButtonForAction(buttonParent, actionContext, displayer, index, defaultAction);
 	}
 
-	private void createButtonForAction(final IButtonParent buttonParent, final ActionContext actionContext, final IDisplayer displayer, final int index, final ActionDefn actionDefn) {
+	public void createButtons(final IButtonParent buttonParent, final ActionContext actionContext, final IDisplayer displayer) {
+		for (ActionDefn actionDefn : actionDefns)
+			createButtonForAction(buttonParent, actionContext, displayer, -1, actionDefn);
+	}
+
+	public void createButtonForAction(final IButtonParent buttonParent, final ActionContext actionContext, final IDisplayer displayer, final int index, final ActionDefn actionDefn) {
 		CompositeConfig compositeConfig = actionContext.compositeConfig;
 		final ActionStore actionStore = actionContext.actionStore;
 		actionDefn.createButton(compositeConfig.imageButtonConfig, buttonParent, new IImageButtonListener() {

@@ -26,7 +26,7 @@ public class SoftwareFmIdEditAction implements IAction {
 				ConfigurationConstants.artifactId, dataGetter.getDataFor(ConfigurationConstants.dataJarArtifactId),//
 				ConfigurationConstants.version,dataGetter.getDataFor( ConfigurationConstants.dataJarVersion));
 
-		actionContext.editorFactory.displayEditor(displayer.getButtonComposite().getShell(), editorKey, displayerDefn, actionContext, actionData, new ICallback<Object>() {
+		actionContext.editorFactory.displayEditor(displayer, editorKey, displayerDefn, actionContext, actionData, new ICallback<Object>() {
 			@Override
 			public void process(Object t) throws Exception {
 				String url = actionData.urlMap.get(ConfigurationConstants.primaryEntity);

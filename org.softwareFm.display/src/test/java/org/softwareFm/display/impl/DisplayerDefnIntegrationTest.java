@@ -15,12 +15,13 @@ import org.softwareFm.display.actions.ActionDefn;
 import org.softwareFm.display.actions.ActionMock;
 import org.softwareFm.display.actions.ActionStore;
 import org.softwareFm.display.composites.CompositeConfig;
-import org.softwareFm.display.composites.TitleAndText;
 import org.softwareFm.display.data.DataGetterMock;
 import org.softwareFm.display.data.IDataGetter;
 import org.softwareFm.display.data.ResourceGetterMock;
+import org.softwareFm.display.displayer.CompressedText;
+import org.softwareFm.display.displayer.CompressedTextDisplayerFactory;
 import org.softwareFm.display.displayer.DisplayerDefn;
-import org.softwareFm.display.displayer.TextDisplayerFactory;
+import org.softwareFm.display.displayer.IDisplayer;
 import org.softwareFm.display.smallButtons.SimpleImageControl;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
@@ -35,17 +36,19 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 	private ActionContext actionContext;
 	private ActionStore actionStore;
 	private ActionMock actionMock;
+	IDataGetter dataGetter = new DataGetterMock(//
+			"someActionTooltip", "someActionTooltipValue",//
+			"someDataTooltip", "someDataTooltipValue",//
+			"dataKey", "value1");
 
 	public void testCreateWithNoButtons() {
-		TitleAndText displayer = (TitleAndText) displayerDefn.createDisplayer(shell, actionContext);
+		IDisplayer displayer = displayerDefn.createDisplayer(shell, actionContext);
 		checkNoButtons(displayer);
-		assertEquals("registeredTitle", displayer.getTitle());
 	}
 
 	public void testWithOneButton() {
 		DisplayerDefn dispDefnWithButton = displayerDefn.actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).tooltip("tooltip0"));
-		TitleAndText displayer = (TitleAndText) dispDefnWithButton.createDisplayer(shell, actionContext);
-		assertEquals("registeredTitle", displayer.getTitle());
+		IDisplayer displayer = dispDefnWithButton.createDisplayer(shell, actionContext);
 		checkButtons(displayer, ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey);
 	}
 
@@ -53,8 +56,7 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 		DisplayerDefn dispDefnWithButton = displayerDefn.actions(//
 				new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).tooltip("tooltip0"),//
 				new ActionDefn("someId", ArtifactsAnchor.facebookKey, OverlaysAnchor.addKey).tooltip("tooltip1"));
-		TitleAndText displayer = (TitleAndText) dispDefnWithButton.createDisplayer(shell, actionContext);
-		assertEquals("registeredTitle", displayer.getTitle());
+		IDisplayer displayer = dispDefnWithButton.createDisplayer(shell, actionContext);
 		checkButtons(displayer, ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey);
 	}
 
@@ -62,8 +64,7 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 		DisplayerDefn dispDefnWithButton = displayerDefn.actions(//
 				new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).tooltip("tooltip0"),//
 				new ActionDefn("someId", ArtifactsAnchor.facebookKey, null).tooltip("tooltip1").thisIsDefault());
-		TitleAndText displayer = (TitleAndText) dispDefnWithButton.createDisplayer(shell, actionContext);
-		assertEquals("registeredTitle", displayer.getTitle());
+		IDisplayer displayer = dispDefnWithButton.createDisplayer(shell, actionContext);
 		checkButtons(displayer, ArtifactsAnchor.facebookKey, null);
 	}
 
@@ -71,7 +72,7 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 	public void testPressingButtonCausesActionToFireWithParametersFromDataGetter() {
 		DisplayerDefn dispDefnWithButton = displayerDefn.//
 				actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("a"));
-		TitleAndText displayer = (TitleAndText) dispDefnWithButton.createDisplayer(shell, actionContext);
+		IDisplayer displayer = dispDefnWithButton.createDisplayer(shell, actionContext);
 		Control[] children = displayer.getButtonComposite().getChildren();
 		SimpleImageControl control = (SimpleImageControl) children[0];
 		control.notifyListeners(SWT.MouseDown, new Event());
@@ -81,12 +82,42 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 
 	}
 
-	private void checkNoButtons(TitleAndText displayer) {
+	public void testTooltipisSetSetWithData() {
+		DisplayerDefn dispDefnWithButton = displayerDefn.//
+				data("dataKey").//
+				actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
+		IDisplayer displayer = dispDefnWithButton.createDisplayer(shell, actionContext);
+		SimpleImageControl control = (SimpleImageControl) displayer.getButtonComposite().getChildren()[0];
+		assertEquals(null, control.getToolTipText());
+
+		ActionContext actionContext = new ActionContext(null, actionStore, dataGetter, null, null, null, null, null, null);
+		dispDefnWithButton.data(actionContext, dispDefnWithButton, displayer, "someENtity", "someUrl");
+		assertEquals("someActionTooltipValue", control.getToolTipText());
+
+		assertEquals("someDataTooltipValue", displayer.getControl().getToolTipText());
+	}
+
+	public void testTextIsSetWithData() {
+		DisplayerDefn dispDefnWithButton = displayerDefn.//
+				data("dataKey").//
+				actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
+		IDisplayer displayer = dispDefnWithButton.createDisplayer(shell, actionContext);
+		SimpleImageControl control = (SimpleImageControl) displayer.getButtonComposite().getChildren()[0];
+		assertEquals(null, control.getToolTipText());
+
+		ActionContext actionContext = new ActionContext(null, actionStore, dataGetter, null, null, null, null, null, null);
+		dispDefnWithButton.data(actionContext, dispDefnWithButton, displayer, "someENtity", "someUrl");
+		assertEquals("someActionTooltipValue", control.getToolTipText());
+
+		assertEquals("value1", ((CompressedText)displayer).getText());
+	}
+
+	private void checkNoButtons(IDisplayer displayer) {
 		Control[] children = displayer.getButtonComposite().getChildren();
 		assertEquals(0, children.length);
 	}
 
-	private void checkButtons(TitleAndText displayer, String main, String overlay) {
+	private void checkButtons(IDisplayer displayer, String main, String overlay) {
 		Control[] children = displayer.getButtonComposite().getChildren();
 		assertEquals(1, children.length);
 		SimpleImageControl control = (SimpleImageControl) children[0];
@@ -94,27 +125,6 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 		assertEquals(main, control.config.mainImage);
 		assertEquals(overlay, control.config.overlayImage);
 		assertNull(control.getToolTipText());
-	}
-
-	public void testTooltipsAreSetWithData() {
-		DisplayerDefn dispDefnWithButton = displayerDefn.//
-				data("dataKey").//
-				actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
-		TitleAndText displayer = (TitleAndText) dispDefnWithButton.createDisplayer(shell, actionContext);
-		Control[] children = displayer.getButtonComposite().getChildren();
-		SimpleImageControl control = (SimpleImageControl) children[0];
-		assertEquals(null, control.getToolTipText());
-
-		IDataGetter dataGetter = new DataGetterMock(//
-				"someActionTooltip", "someActionTooltipValue",//
-				"someDataTooltip", "someDataTooltipValue",//
-				"dataKey", "value1");
-		ActionContext actionContext = new ActionContext(null, actionStore, dataGetter, null, null, null, null, null, null);
-		dispDefnWithButton.data(actionContext, dispDefnWithButton, displayer, "someENtity", "someUrl");
-		assertEquals("someActionTooltipValue", control.getToolTipText());
-
-		assertEquals("value1", displayer.getText());
-		assertEquals("someDataTooltipValue", displayer.getControl().getToolTipText());
 	}
 
 	@Override
@@ -127,7 +137,7 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 		new BasicImageRegisterConfigurator().registerWith(shell.getDisplay(), imageRegistry);
 		IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(new ResourceGetterMock("someTitle", "registeredTitle"));
 		actionContext = new ActionContext(null, actionStore, new DataGetterMock("a", 1), new CompositeConfig(shell.getDisplay(), new SoftwareFmLayout(), imageRegistry, resourceGetter), null, null, null, null, null);
-		displayerDefn = new DisplayerDefn(new TextDisplayerFactory()).title("someTitle");
+		displayerDefn = new DisplayerDefn(new CompressedTextDisplayerFactory()).title("someTitle");
 
 	}
 

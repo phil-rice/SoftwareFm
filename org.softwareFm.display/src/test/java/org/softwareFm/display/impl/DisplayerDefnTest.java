@@ -34,7 +34,12 @@ public class DisplayerDefnTest extends TestCase {
 	public void testTooltip() {
 		assertSame(displayerDefn, displayerDefn.tooltip("tooltip"));
 		assertEquals("tooltip", displayerDefn.tooltip);
-
+	}
+	
+	public void testEditor(){
+		assertSame(displayerDefn, displayerDefn.editor("editorId"));
+		assertEquals("editorId", displayerDefn.editorId);
+		
 	}
 
 	public void testButton() {
@@ -104,6 +109,19 @@ public class DisplayerDefnTest extends TestCase {
 		assertEquals("tooltip1", displayerDefn.tooltip);
 	}
 
+	
+	public void testEditorThrowsExceptionIfCalledTwice() {
+		displayerDefn.editor("id1");
+		IllegalStateException e = Tests.assertThrows(IllegalStateException.class, new Runnable() {
+			@Override
+			public void run() {
+				displayerDefn.editor("id1");
+			}
+		});
+		assertEquals("Cannot define editor twice in displayer defn for data null.\nExisting valueid1\nNew valueid1", e.getMessage());
+		assertEquals("id1", displayerDefn.editorId);
+	}
+	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();

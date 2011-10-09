@@ -8,6 +8,7 @@ import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.displayer.IDisplayer;
 import org.softwareFm.display.swt.Swts;
@@ -24,7 +25,7 @@ public  class TitleAnd implements IDisplayer, IHasComposite {
 	private SoftwareFmLayout layout;
 
 	public TitleAnd(CompositeConfig config, Composite parent, String titleOrTitleKey, boolean titleIsKey) {
-		this.content = Swts.newComposite(parent, SWT.NULL, titleOrTitleKey);
+		this.content = Swts.newComposite(parent, SWT.NULL, getClass().getSimpleName() +"/"+ titleOrTitleKey);
 		this.config = config;
 		content.setLayout(Swts.getHorizonalNoMarginRowLayout());
 
@@ -104,5 +105,10 @@ public  class TitleAnd implements IDisplayer, IHasComposite {
 	
 	public String getTitle(){
 		return lblTitle.getText();
+	}
+
+	@Override
+	public void addClickListener(Listener listener) {
+		throw new UnsupportedOperationException();
 	}
 }

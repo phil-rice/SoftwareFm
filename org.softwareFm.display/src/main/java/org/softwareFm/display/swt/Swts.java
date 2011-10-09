@@ -32,7 +32,9 @@ import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.IHasControl;
+import org.softwareFm.display.simpleButtons.IButtonParent;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.collections.Iterables;
 import org.softwareFm.utilities.collections.Lists;
@@ -86,6 +88,7 @@ public class Swts {
 			control.setLayoutData(data);
 		}
 	}
+
 	public static void addGrabHorizontalAndFillGridDataToAllChildrenWithHeightHint(Composite composite, int heightHint) {
 		GridLayout layout = new GridLayout();
 		layout.marginWidth = 0;
@@ -98,8 +101,33 @@ public class Swts {
 		}
 	}
 
+	public static void addAcceptCancel(IButtonParent buttonParent, CompositeConfig config, final Runnable onCancel, final Runnable onAccept) {
+		IResourceGetter resourceGetter = config.resourceGetter;
+		Button cancelButton = new Button(buttonParent.getButtonComposite(), SWT.PUSH);
+		cancelButton.setText(IResourceGetter.Utils.getOrException(resourceGetter, "button.cancel.title"));
+		cancelButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				onCancel.run();
+			}
+		});
+		Button okButton = new Button(buttonParent.getButtonComposite(), SWT.PUSH);
+		okButton.setText(IResourceGetter.Utils.getOrException(resourceGetter, "button.ok.title"));
+		okButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				onAccept.run();
+			}
+		});
+
+		cancelButton.setLayoutData(new RowData(config.layout.okCancelWidth, config.layout.okCancelHeight));
+		okButton.setLayoutData(new RowData(config.layout.okCancelWidth, config.layout.okCancelHeight));
+		buttonParent.getButtonComposite().layout();
+
+	}
+
 	public static Composite makeAcceptCancelComposite(Composite parent, int style, IResourceGetter resourceGetter, final Runnable onAccept, final Runnable onCancel) {
-		Composite result = new Composite(parent, style);
+		Composite result = newComposite(parent, style, "acceptCancel");
 		result.setLayout(new GridLayout(2, true));
 		Button cancelButton = new Button(result, SWT.PUSH);
 		cancelButton.setText(IResourceGetter.Utils.getOrException(resourceGetter, "button.cancel.title"));
@@ -241,6 +269,12 @@ public class Swts {
 
 	public static void layoutDump(Control control, Indent indent) {
 		System.out.println(indent + control.getClass().getSimpleName() + "(Visible: " + control.isVisible() + ": " + layoutAsString(control));
+		if (control.getLayoutData() instanceof GridData)
+			if (!(control.getParent().getLayout() instanceof GridLayout))
+				System.err.println("Layout issues: child has GridData parent not GridLayout");
+		if (control.getLayoutData() instanceof RowData)
+			if (!(control.getParent().getLayout() instanceof RowLayout))
+				System.err.println("Layout issues: child has RowData parent not RowLayout");
 		if (control instanceof Composite) {
 			Composite composite = (Composite) control;
 			for (Control nested : composite.getChildren()) {

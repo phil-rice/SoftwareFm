@@ -16,7 +16,7 @@ public class TextEditAction implements IAction {
 		final String key = Actions.getDataKey(displayerDefn, actionData.formalParams);
 		Object initialValue = actionContext.dataGetter.getDataFor(key);
 
-		actionContext.editorFactory.displayEditor(displayer.getButtonComposite().getShell(), editorKey, displayerDefn, actionContext, actionData, new ICallback<Object>() {
+		actionContext.editorFactory.displayEditor(displayer, editorKey, displayerDefn, actionContext, actionData, new ICallback<Object>() {
 			@Override
 			public void process(Object t) throws Exception {
 				actionContext.updateStore.update(actionData, key, t);

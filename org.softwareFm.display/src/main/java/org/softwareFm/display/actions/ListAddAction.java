@@ -18,7 +18,7 @@ public class ListAddAction implements IAction {
 		final String key = Actions.getDataKey(displayerDefn, actionData.formalParams);
 		final List<String> currentList = Lists.nullSafe((List<String>) actionContext.dataGetter.getDataFor(key));
 
-		actionContext.editorFactory.displayEditor(displayer.getButtonComposite().getShell(), "editor.text", displayerDefn, actionContext, actionData, new ICallback<Object>() {
+		actionContext.editorFactory.displayEditor(displayer, "editor.text", displayerDefn, actionContext, actionData, new ICallback<Object>() {
 			@Override
 			public void process(Object t) throws Exception {
 				String string = Strings.nullSafeToString(t);

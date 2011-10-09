@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.softwareFm.display.AllSoftwareFmDisplayTests;
 import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.composites.CompositeConfig;
+import org.softwareFm.display.composites.TitleAnd;
 import org.softwareFm.display.data.ActionData;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
@@ -30,7 +31,8 @@ public class Editors {
 				ImageRegistry imageRegistry = new ImageRegistry();
 				new BasicImageRegisterConfigurator().registerWith(from.getDisplay(), imageRegistry);
 				IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(AllSoftwareFmDisplayTests.class, "Test");
-				final EditorContext editorContext = new EditorContext(new CompositeConfig(from.getDisplay(), new SoftwareFmLayout(), imageRegistry, resourceGetter));
+				final CompositeConfig compositeConfig = new CompositeConfig(from.getDisplay(), new SoftwareFmLayout(), imageRegistry, resourceGetter);
+				final EditorContext editorContext = new EditorContext(compositeConfig);
 				final IEditorFactory editorFactory = new EditorFactory(editorContext).register("someName", editor);
 				Button button = new Button(composite, SWT.PUSH);
 				button.setText("Edit");
@@ -44,7 +46,8 @@ public class Editors {
 								System.out.println("Result: " + t);
 							}};
 							ActionData actionData = new ActionData(Maps.<String,String>newMap(), formalParameters, actualParameters);
-						editorFactory.displayEditor(shell, "someName",null, null, actionData, onCompletion, initialValue);
+							TitleAnd displayer = new TitleAnd(compositeConfig, shell, "", false);
+						editorFactory.displayEditor(displayer, "someName",null, null, actionData, onCompletion, initialValue);
 					}
 				});
 				Swts.addGrabHorizontalAndFillGridDataToAllChildren(composite);
