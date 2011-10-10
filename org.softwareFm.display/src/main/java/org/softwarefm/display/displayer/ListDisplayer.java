@@ -14,8 +14,6 @@ import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.composites.TitleAnd;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.data.IDataGetter;
-import org.softwareFm.display.lists.IListEditor;
-import org.softwareFm.display.simpleButtons.IButtonParent;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
@@ -26,12 +24,10 @@ public class ListDisplayer implements IDisplayer {
 	private final TitleAnd mainLine;
 	private final Composite listComposite;
 	private final ActionContext actionContext;
-	private final IListEditor listEditor;
 
 	public ListDisplayer(Composite parent, DisplayerDefn defn, int style, CompositeConfig compositeConfig, ActionContext actionContext) {
 		this.compositeConfig = compositeConfig;
 		this.actionContext = actionContext;
-		this.listEditor = actionContext.listEditorStore.get(defn.listEditorId);
 		this.content = new Composite(parent, SWT.NULL);
 		this.listComposite = new Composite(content, SWT.NULL);
 		this.mainLine = new TitleAnd(compositeConfig, content, defn.title, true);
@@ -48,12 +44,12 @@ public class ListDisplayer implements IDisplayer {
 			List<String> dataList = (List<String>) dataFor;
 			boolean actuallyEmpty = dataList.size() == 1 && dataList.get(0).trim().length() == 0;
 			int index = 0;
-			if (!actuallyEmpty)
-				for (Object value : dataList) {
-					IButtonParent buttonParent = listEditor.makeLineHasControl(defn, compositeConfig, listComposite, index, value);
-					defn.createDefaultAction(actionContext, this, buttonParent, index);
-					index++;
-				}
+//			if (!actuallyEmpty)
+//				for (Object value : dataList) {
+//					IButtonParent buttonParent = listEditor.makeLineHasControl(defn, compositeConfig, listComposite, index, value);
+//					defn.createDefaultAction(actionContext, this, buttonParent, index);
+//					index++;
+//				}
 		}
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(listComposite);
 

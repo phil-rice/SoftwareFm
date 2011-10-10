@@ -89,7 +89,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 			public Control getVisibleControl() {
 				return rightHandSideLayout.topControl;
 			}
-		}, actionStore, guiDataStore, compositeConfig, editorFactory, updateStore, listEditorStore, new IBrowser() {
+		}, actionStore, guiDataStore, guiDataStore.getEntityToUrlGetter(), compositeConfig, editorFactory, updateStore, new IBrowser() {
 			@Override
 			public Future<String> processUrl(String feedType, String url) {
 				return browserComposite.processUrl(feedType, url);
@@ -97,7 +97,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 		}, exceptionHandler);
 		makeTopRow(content, compositeConfig, largeButtonDefns).setLayoutData(Swts.makeGrabHorizonalAndFillGridData());
 		StackLayout stackLayout = new StackLayout();
-		makeSecondRow(content, largeButtonDefns, actionContext, stackLayout, browserConfigurators).setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
+		makeSecondRow(content, guiDataStore, largeButtonDefns, actionContext, stackLayout, browserConfigurators).setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
 		TimeLine timeLine = new TimeLine(browserComposite, playListGetter);
 		setUpListeners(largeButtonDefns, actionContext, stackLayout, timeLine);
 	}
@@ -121,7 +121,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 		return topRow;
 	}
 
-	private Composite makeSecondRow(final Composite parent, final List<LargeButtonDefn> largeButtonDefns, final ActionContext actionContext, StackLayout stackLayout, List<IBrowserConfigurator> browserConfigurators) {
+	private Composite makeSecondRow(final Composite parent, final GuiDataStore guiDataStore, final List<LargeButtonDefn> largeButtonDefns, final ActionContext actionContext, StackLayout stackLayout, List<IBrowserConfigurator> browserConfigurators) {
 		SashForm secondRow =new SashForm(parent, SWT.HORIZONTAL);
 		FillLayout layout = new FillLayout();
 		secondRow.setLayout(layout);

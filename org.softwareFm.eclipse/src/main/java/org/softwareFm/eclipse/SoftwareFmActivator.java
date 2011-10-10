@@ -36,7 +36,6 @@ import org.softwareFm.display.data.GuiDataStore;
 import org.softwareFm.display.data.IUrlDataCallback;
 import org.softwareFm.display.data.IUrlToData;
 import org.softwareFm.display.displayer.DisplayerStore;
-import org.softwareFm.display.editor.EditorContext;
 import org.softwareFm.display.editor.EditorFactory;
 import org.softwareFm.display.editor.IEditorFactory;
 import org.softwareFm.display.editor.IUpdateStore;
@@ -82,7 +81,6 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	private static SoftwareFmActivator plugin;
 
 	private CompositeConfig compositeConfig;
-	private EditorContext editorContext;
 	private GuiBuilder guiBuilder;
 	private DisplayerStore displayerStore;
 	private ActionStore actionStore;
@@ -113,7 +111,6 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		plugin = null;
 		super.stop(context);
 		compositeConfig = null;
-		editorContext = null;
 		guiBuilder = null;
 		displayerStore = null;
 		actionStore = null;
@@ -179,9 +176,6 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		return resourceGetter == null ? resourceGetter = IResourceGetter.Utils.noResources().with(SoftwareFmPropertyAnchor.class, "SoftwareFmDisplay") : resourceGetter;
 	}
 
-	public EditorContext getEditorContext(Display display) {
-		return editorContext == null ? editorContext = new EditorContext(getCompositeConfig(display)) : editorContext;
-	}
 
 	public GuiBuilder getGuiBuilder() {
 		return guiBuilder == null ? guiBuilder = new GuiBuilder(getSmallButtonStore(), getActionStore(), getDisplayerStore(), getListEditorStore()) : guiBuilder;
@@ -237,7 +231,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	}
 
 	public IEditorFactory getEditorFactory(Display display) {
-		return editorFactory == null ? editorFactory = Plugins.configureMainWithCallbacks(new EditorFactory(getEditorContext(display)), editorConfiguratorId, "class", onException()) : editorFactory;
+		return editorFactory == null ? editorFactory = Plugins.configureMainWithCallbacks(new EditorFactory(), editorConfiguratorId, "class", onException()) : editorFactory;
 	}
 
 	public List<LargeButtonDefn> getLargeButtonDefns() {

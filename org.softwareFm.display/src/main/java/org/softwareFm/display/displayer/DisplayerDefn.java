@@ -124,8 +124,7 @@ public class DisplayerDefn {
 			@Override
 			public void handleEvent(Event event) {
 				System.out.println("Clicked");
-				ActionData actionData = actionContext.dataGetter.getActionDataFor(Lists.<String>newList());
-				actionContext.editorFactory.displayEditor(displayer, editorId, this, actionContext, actionData, onCompletion, initialValue);
+				actionContext.editorFactory.displayEditor(actionContext, DisplayerDefn.this, displayer);
 			}
 		});
 		return displayer;

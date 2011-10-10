@@ -100,10 +100,12 @@ public class Swts {
 			control.setLayoutData(data);
 		}
 	}
+	
 
-	public static void addAcceptCancel(IButtonParent buttonParent, CompositeConfig config, final Runnable onCancel, final Runnable onAccept) {
+	public static void addAcceptCancel(IButtonParent buttonParent, CompositeConfig config, final Runnable onAccept, final Runnable onCancel) {
 		IResourceGetter resourceGetter = config.resourceGetter;
-		Button cancelButton = new Button(buttonParent.getButtonComposite(), SWT.PUSH);
+		Composite buttonComposite = buttonParent.getButtonComposite();
+		Button cancelButton = new Button(buttonComposite, SWT.PUSH);
 		cancelButton.setText(IResourceGetter.Utils.getOrException(resourceGetter, "button.cancel.title"));
 		cancelButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -111,7 +113,7 @@ public class Swts {
 				onCancel.run();
 			}
 		});
-		Button okButton = new Button(buttonParent.getButtonComposite(), SWT.PUSH);
+		Button okButton = new Button(buttonComposite, SWT.PUSH);
 		okButton.setText(IResourceGetter.Utils.getOrException(resourceGetter, "button.ok.title"));
 		okButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -122,7 +124,9 @@ public class Swts {
 
 		cancelButton.setLayoutData(new RowData(config.layout.okCancelWidth, config.layout.okCancelHeight));
 		okButton.setLayoutData(new RowData(config.layout.okCancelWidth, config.layout.okCancelHeight));
-		buttonParent.getButtonComposite().layout();
+		buttonComposite.layout();
+		buttonComposite.getParent().layout(); //only needed I think if there are no other buttons on the button composite
+		
 
 	}
 

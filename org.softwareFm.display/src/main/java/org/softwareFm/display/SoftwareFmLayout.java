@@ -11,7 +11,7 @@ public class SoftwareFmLayout {
 	public int buttonsWidth = 100;
 	public int buttonSpacer = 0;
 	public int valueWidth = titleWidth + buttonsWidth+100 ;
-	public int textHeight = smallButtonHeight;
+	public int textHeight = 20;
 	public int styledTextHeight = 6* textHeight;
 	public int okCancelHeight= 24;
 	public int okCancelWidth = 40;

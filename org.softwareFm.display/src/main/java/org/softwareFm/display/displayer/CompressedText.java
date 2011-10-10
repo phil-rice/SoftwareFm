@@ -18,6 +18,8 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class CompressedText extends AbstractCompressedText<Label> {
 
+	private Label label;
+
 	public CompressedText(Composite parent, int style, CompositeConfig config) {
 		super(parent, style, config);
 	}
@@ -26,17 +28,24 @@ public class CompressedText extends AbstractCompressedText<Label> {
 	protected void setLayout() {
 		content.setLayout(Swts.getGridLayoutWithoutMargins(2));
 		buttonPanel.setLayout(Swts.getHorizonalNoMarginRowLayout());
-		control.setLayoutData(Swts.makeGrabHorizonalAndFillGridData());
+		control.setLayoutData(Swts.makeGrabHorizonalAndFillGridDataWithHeight(config.layout.textHeight));
 	}
 
 	@Override
 	protected void updateText() {
-		control.setText(MessageFormat.format("{0}: {1}", title, rawText));
+		if (title == null || title.length() == 0)
+			control.setText(rawText);
+		else
+			control.setText(MessageFormat.format("{0}: {1}", title, rawText));
 	}
 
 	@Override
 	protected Label makeControl(Composite parent) {
-		return new Label(parent, SWT.NULL);
+		return label = new Label(parent, SWT.NULL);
+	}
+
+	public Label getLabel() {
+		return label;
 	}
 
 	public static void main(String[] args) {
@@ -53,6 +62,5 @@ public class CompressedText extends AbstractCompressedText<Label> {
 			}
 		});
 	}
-
 
 }

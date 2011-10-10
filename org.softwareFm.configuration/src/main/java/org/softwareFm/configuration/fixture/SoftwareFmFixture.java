@@ -33,7 +33,6 @@ import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.data.GuiDataStore;
 import org.softwareFm.display.data.IUrlToData;
 import org.softwareFm.display.displayer.DisplayerStore;
-import org.softwareFm.display.editor.EditorContext;
 import org.softwareFm.display.editor.EditorFactory;
 import org.softwareFm.display.editor.IEditorFactory;
 import org.softwareFm.display.editor.IUpdateStore;
@@ -65,7 +64,6 @@ public class SoftwareFmFixture {
 	public final GuiBuilder guiBuilder;
 	public IEditorFactory editorFactory;
 	private ListEditorStore listEditorStore;
-	private final EditorContext editorContext;
 	private final IUpdateStore updateStore;
 
 	public LargeButtonDefn jarDetailsButton;
@@ -88,14 +86,13 @@ public class SoftwareFmFixture {
 		layout = new SoftwareFmLayout();
 		compositeConfig = new CompositeConfig(display, layout, imageRegistry, resourceGetter);
 		updateStore = IUpdateStore.Utils.sysoutUpdateStore();
-		editorContext = new EditorContext(compositeConfig);
 
 		new ActionStoreConfigurator().process(actionStore = new ActionStore());
 
 		new SmallButtonConfigurator().process(smallButtonStore = new SmallButtonStore());
 		new DisplayerStoreConfigurator().process(displayerStore = new DisplayerStore());
 		new ListEditorConfigurator().process(listEditorStore = new ListEditorStore());
-		new EditorFactoryConfigurator().process(editorFactory = new EditorFactory(editorContext));
+		new EditorFactoryConfigurator().process(editorFactory = new EditorFactory());
 
 		guiBuilder = new GuiBuilder(smallButtonStore, actionStore, displayerStore, listEditorStore);
 

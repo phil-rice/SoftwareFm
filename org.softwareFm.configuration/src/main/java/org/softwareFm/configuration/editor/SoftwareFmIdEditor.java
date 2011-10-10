@@ -1,7 +1,5 @@
 package org.softwareFm.configuration.editor;
 
-import java.util.Map;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -11,10 +9,9 @@ import org.softwareFm.configuration.ConfigurationConstants;
 import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.TitleAndText;
-import org.softwareFm.display.data.ActionData;
 import org.softwareFm.display.displayer.DisplayerDefn;
 import org.softwareFm.display.displayer.IDisplayer;
-import org.softwareFm.display.editor.EditorContext;
+import org.softwareFm.display.editor.Editors;
 import org.softwareFm.display.editor.IEditor;
 import org.softwareFm.display.editor.IEditorCompletion;
 import org.softwareFm.display.simpleButtons.ButtonParent;
@@ -36,9 +33,8 @@ public class SoftwareFmIdEditor implements IEditor {
 	public Control getControl() {
 		return content;
 	}
-
 	@Override
-	public Control createControl(ActionContext actionContext, ActionData actionData) {
+	public Control createControl(ActionContext actionContext) {
 		content = Swts.newComposite(actionContext.rightHandSide.getComposite(), SWT.NULL, getClass().getSimpleName());
 		CompositeConfig config = actionContext.compositeConfig;
 		groupIdText = new TitleAndText(config, content, ConfigurationConstants.groupIdTitle, true);
@@ -47,11 +43,15 @@ public class SoftwareFmIdEditor implements IEditor {
 		addCrListeners(groupIdText, artifactIdText, versionText);
 		buttonParent = new ButtonParent(content, config, SWT.NULL);
 
-		Swts.addGrabHorizontalAndFillGridDataToAllChildrenWithHeightHint(content, config.layout.smallButtonHeight); // to line up with the lhs
+		Swts.addGrabHorizontalAndFillGridDataToAllChildren(content);
+//		content.setLayout(Swts.getHorizonalNoMarginRowLayout());
+//		for (Control child: content.getChildren())
+//			child.setLayoutData(new RowData());
 
 		return content;
 	}
 
+	
 	private void addCrListeners(TitleAndText... texts) {
 		for (final TitleAndText text : texts)
 			text.addCrListener(new Listener() {
@@ -63,14 +63,16 @@ public class SoftwareFmIdEditor implements IEditor {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void edit(IDisplayer parent, DisplayerDefn displayerDefn, EditorContext editorContext, ActionContext actionContext, ActionData actionData, final IEditorCompletion completion, Object initialValue) {
+	public void edit(IDisplayer parent, DisplayerDefn displayerDefn, ActionContext actionContext, final IEditorCompletion completion) {
 		this.completion = completion;
-		Map<String, Object> initialMap = (Map<String, Object>) initialValue;
-		groupIdText.setText(Strings.nullSafeToString(initialMap.get(ConfigurationConstants.groupId)));
-		artifactIdText.setText(Strings.nullSafeToString(initialMap.get(ConfigurationConstants.artifactId)));
-		versionText.setText(Strings.nullSafeToString(initialMap.get(ConfigurationConstants.version)));
+		Swts.layoutDump(content);
+		Object groupId = actionContext.dataGetter.getDataFor(ConfigurationConstants.dataJarGroupId);
+		Object artifactId = actionContext.dataGetter.getDataFor(ConfigurationConstants.dataJarArtifactId);
+		Object versionId = actionContext.dataGetter.getDataFor(ConfigurationConstants.dataJarVersion);
+		groupIdText.setText(Strings.nullSafeToString(groupId));
+		artifactIdText.setText(Strings.nullSafeToString(artifactId));
+		versionText.setText(Strings.nullSafeToString(versionId));
 		Swts.addAcceptCancel(buttonParent, actionContext.compositeConfig, new Runnable() {
 			@Override
 			public void run() {
@@ -85,12 +87,6 @@ public class SoftwareFmIdEditor implements IEditor {
 		});
 	}
 
-	@Override
-	public void cancel() {
-		if (completion != null)
-			completion.cancel();
-	}
-
 	private void sendResult() {
 		completion.ok(Maps.<String, Object> makeMap(//
 				ConfigurationConstants.groupId, groupIdText.getText(),//
@@ -101,6 +97,13 @@ public class SoftwareFmIdEditor implements IEditor {
 	@Override
 	public IButtonParent actionButtonParent() {
 		return buttonParent;
+	}
+	public static void main(String[] args) {
+		Editors.display(SoftwareFmIdEditor.class.getSimpleName(), new SoftwareFmIdEditor(), //
+				ConfigurationConstants.dataJarGroupId, "GroupId",//
+				ConfigurationConstants.dataJarArtifactId, "ArtifactId",//
+				ConfigurationConstants.dataJarVersion, "Version"//
+				);
 	}
 
 }

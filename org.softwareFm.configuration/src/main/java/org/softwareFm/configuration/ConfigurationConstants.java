@@ -3,6 +3,11 @@ package org.softwareFm.configuration;
 import java.io.File;
 
 public class ConfigurationConstants {
+	public static final String editorSfmIdKey = "editor.softwareFm.id";
+	public static final String editorTextKey = "editor.text";
+	public static final String editorStyledTextKey ="editor.styled.text";
+	public static final String editorJavadocKey ="editor.javadoc";
+	public static final String editorSourceKey ="editor.source";
 
 	public static final String blankKey = "blank.title";
 	public static final String jarNameTitle = "jar.jarName.title";

@@ -6,8 +6,8 @@ import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.data.IDataGetter;
 import org.softwareFm.display.editor.IEditorFactory;
 import org.softwareFm.display.editor.IUpdateStore;
-import org.softwareFm.display.lists.ListEditorStore;
 import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.functions.IFunction1;
 
 public class ActionContext {
 	public final IHasRightHandSide rightHandSide;
@@ -16,20 +16,22 @@ public class ActionContext {
 	public final CompositeConfig compositeConfig;
 	public final IEditorFactory editorFactory;
 	public final IUpdateStore updateStore;
-	public final ListEditorStore listEditorStore;
 	public final IBrowser internalBrowser;
 	public final ICallback<Throwable> exceptionHandler;
+	public final IFunction1<String, String> entityToUrlGetter;
+	
 
-	public ActionContext(IHasRightHandSide rightHandSide, ActionStore actionStore, IDataGetter dataGetter, CompositeConfig compositeConfig, IEditorFactory editorFactory, IUpdateStore updateStore, ListEditorStore listEditorStore, IBrowser internalBrowser, ICallback<Throwable> exceptionHandler) {
+	public ActionContext(IHasRightHandSide rightHandSide, ActionStore actionStore, IDataGetter dataGetter,IFunction1<String, String> entityToUrlGetter,  CompositeConfig compositeConfig, IEditorFactory editorFactory, IUpdateStore updateStore, IBrowser internalBrowser, ICallback<Throwable> exceptionHandler) {
 		this.rightHandSide = rightHandSide;
 		this.actionStore = actionStore;
 		this.dataGetter = dataGetter;
+		this.entityToUrlGetter = entityToUrlGetter;
 		this.compositeConfig = compositeConfig;
 		this.editorFactory = editorFactory;
 		this.updateStore = updateStore;
-		this.listEditorStore = listEditorStore;
 		this.internalBrowser = internalBrowser;
 		this.exceptionHandler = exceptionHandler;
 	}
+	
 
 }

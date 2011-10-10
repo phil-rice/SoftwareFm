@@ -1,30 +1,33 @@
 package org.softwareFm.display.actions;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Map;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.softwareFm.display.data.ActionData;
 import org.softwareFm.display.displayer.DisplayerDefn;
 import org.softwareFm.display.displayer.IDisplayer;
-import org.softwareFm.display.editor.EditorContext;
 import org.softwareFm.display.editor.IEditor;
 import org.softwareFm.display.editor.IEditorCompletion;
+import org.softwareFm.display.simpleButtons.ButtonParent;
 import org.softwareFm.display.simpleButtons.IButtonParent;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.utilities.maps.Maps;
 
 public class EditorMock implements IEditor {
 
+	public static final  Map<String, Object> finishedData = Maps.<String,Object>makeMap("Finished", "It");
+
 	private final String seed;
-	public final AtomicInteger cancelCount = new AtomicInteger();
 	public final List<IDisplayer> parents = Lists.newList();
-	public List<String> formalParams = Lists.newList();
-	public List<Object> actualParams = Lists.newList();
+	public List<DisplayerDefn> displayDefns= Lists.newList();
+	public final List<ActionContext> actionsContexts = Lists.newList();
 	private IEditorCompletion onCompletion;
 	public Label control;
+	private ButtonParent actionButtonParent;
 
 	public EditorMock(String seed) {
 		this.seed = seed;
@@ -36,21 +39,18 @@ public class EditorMock implements IEditor {
 	}
 
 	@Override
-	public void edit(IDisplayer parent, DisplayerDefn displayerDefn, EditorContext editorContext, ActionContext actionContext, ActionData actionData, IEditorCompletion completion, Object initialValue) {
+	public void edit(IDisplayer parent, DisplayerDefn displayerDefn, ActionContext actionContext, IEditorCompletion completion) {
 		this.onCompletion = completion;
 		this.parents.add(parent);
-		this.formalParams = actionData.formalParams;
-		this.actualParams = actionData.actualParams;
+		this.displayDefns.add(displayerDefn);
+		this.actionsContexts.add(actionContext);
 	}
 
-	@Override
-	public void cancel() {
-		cancelCount.incrementAndGet();
-	}
 
-	public void finish(String string) {
+	public void finish() {
 		try {
-			onCompletion.ok(string);
+			
+			onCompletion.ok(finishedData);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
@@ -63,15 +63,18 @@ public class EditorMock implements IEditor {
 	}
 
 	@Override
-	public Control createControl(ActionContext actionContext, ActionData actionData) {
-		this.control = new Label(actionContext.rightHandSide.getComposite(), SWT.NULL);
+	public Control createControl(ActionContext actionContext) {
+		Composite holder = actionContext.rightHandSide.getComposite();
+		Composite composite = new Composite(holder, SWT.NULL);
+		this.control = new Label(composite, SWT.NULL);
 		control.setText(seed);
+		this.actionButtonParent = new ButtonParent(composite, actionContext.compositeConfig, SWT.NULL);
 		return control;
 	}
 
 	@Override
 	public IButtonParent actionButtonParent() {
-		throw new UnsupportedOperationException();
+		return actionButtonParent;
 	}
 
 }

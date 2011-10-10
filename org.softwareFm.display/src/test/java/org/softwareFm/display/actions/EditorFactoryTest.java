@@ -1,13 +1,12 @@
 package org.softwareFm.display.actions;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.softwareFm.display.IHasRightHandSide;
@@ -16,14 +15,13 @@ import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.TitleAnd;
 import org.softwareFm.display.data.ActionData;
 import org.softwareFm.display.displayer.DisplayerDefn;
-import org.softwareFm.display.editor.EditorContext;
 import org.softwareFm.display.editor.EditorFactory;
 import org.softwareFm.display.editor.IEditor;
+import org.softwareFm.display.editor.IUpdateStore;
+import org.softwareFm.display.editor.RememberUpdateStore;
+import org.softwareFm.display.impl.EntityToUrlMock;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
-import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.callbacks.MemoryCallback;
-import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.maps.AbstractSimpleMapTest;
 import org.softwareFm.utilities.maps.ISimpleMap;
 import org.softwareFm.utilities.maps.Maps;
@@ -38,79 +36,77 @@ public class EditorFactoryTest extends AbstractSimpleMapTest<String, IEditor> {
 	private final List<Object> actualParams2 = Arrays.<Object> asList("ap2");
 	private final ActionData actionData1 = new ActionData(Maps.<String, String> newMap(), formalParams1, actualParams1);
 	private final ActionData actionData2 = new ActionData(Maps.<String, String> newMap(), formalParams2, actualParams2);
-	private EditorContext editorContext;
 	ActionContext actionContext = null;
-	private DisplayerDefn displayerDefn;
+	private DisplayerDefn displayerDefn1;
 	private Label original;
-	private List<Control> visible;
 	private TitleAnd displayer;
+	private IHasRightHandSide rightHandSide;
+	private DisplayerDefn displayerDefn2;
+	private EditorMock editorMock1;
+	private EditorMock editorMock2;
+	private EditorFactory editorFactory;
+	private RememberUpdateStore updateStore;
 
 	public void testOpeningEditor() {
-		EditorMock editorMock1 = new EditorMock("1");
-		EditorFactory factory = new EditorFactory(editorContext).register("name1", editorMock1);
-		factory.displayEditor(displayer, "name1", displayerDefn, actionContext, actionData1, ICallback.Utils.exception("shouldn't close"), "initial");
-		assertEquals(formalParams1, editorMock1.formalParams);
-		assertEquals(actualParams1, editorMock1.actualParams);
-		assertEquals(Arrays.asList(shell), editorMock1.parents);
-		assertEquals(0, editorMock1.cancelCount.get());
-		assertSame(editorMock1, factory.getEditor());
+		editorFactory.displayEditor(actionContext, displayerDefn1, displayer);
 
-		assertEquals(Arrays.asList(original, editorMock1.control), visible);
+		assertEquals(Arrays.asList(displayer), editorMock1.parents);
+		assertEquals(Arrays.asList(actionContext), editorMock1.actionsContexts);
+		assertSame(editorMock1, editorFactory.getEditor());
+		assertEquals(editorMock1.getControl(), rightHandSide.getVisibleControl());
 	}
 
-	public void testOpeningSecondEditorCancelsFirst() {
-		EditorMock editorMock1 = new EditorMock("1");
-		EditorMock editorMock2 = new EditorMock("2");
-		EditorFactory factory = new EditorFactory(editorContext).register("name1", editorMock1).register("name2", editorMock2);
-		factory.displayEditor(displayer, "name1", displayerDefn, actionContext, actionData1, ICallback.Utils.exception("shouldn't close"), "initial");
-		assertEquals(0, editorMock1.cancelCount.get());
-		factory.displayEditor(displayer, "name2", displayerDefn, actionContext, actionData2, ICallback.Utils.exception("shouldn't close"), "initial");
-		assertEquals(1, editorMock1.cancelCount.get());
-		assertEquals(0, editorMock2.cancelCount.get());
+	public void testOpeningSecondEditorMakesItVisible() {
+		editorFactory.displayEditor(actionContext, displayerDefn1, displayer);
+		editorFactory.displayEditor(actionContext, displayerDefn2, displayer);
 
-		assertEquals(Arrays.asList(original, editorMock1.control, original, editorMock2.control), visible);
+		assertEquals(editorMock2.getControl(), rightHandSide.getVisibleControl());
+
+	}
+	public void testOpeningSecondEditorDoesntUpdateStore() {
+		editorFactory.displayEditor(actionContext, displayerDefn1, displayer);
+		editorFactory.displayEditor(actionContext, displayerDefn2, displayer);
+		
+		assertEquals(editorMock2.getControl(), rightHandSide.getVisibleControl());
+		assertEquals(Collections.emptyList(), updateStore.datas);
 	}
 
-	public void testCancelOnSecondEditorReplacesOriginal() {
-		EditorMock editorMock1 = new EditorMock("1");
-		EditorMock editorMock2 = new EditorMock("2");
-		EditorFactory factory = new EditorFactory(editorContext).register("name1", editorMock1).register("name2", editorMock2);
-		factory.displayEditor(displayer, "name1", displayerDefn, actionContext, actionData1, ICallback.Utils.exception("shouldn't close"), "initial");
-		factory.displayEditor(displayer, "name2", displayerDefn, actionContext, actionData2, ICallback.Utils.exception("shouldn't close"), "initial");
-		factory.cancel();
-		assertEquals(Arrays.asList(original, editorMock1.control, original, editorMock2.control, original), visible);
-	}
-	
-	public void testFinishOnSecondEditorREplacesOriginal(){
-		EditorMock editorMock1 = new EditorMock("1");
-		EditorMock editorMock2 = new EditorMock("2");
-		EditorFactory factory = new EditorFactory(editorContext).register("name1", editorMock1).register("name2", editorMock2);
-		factory.displayEditor(displayer, "name1", displayerDefn, actionContext, actionData1, ICallback.Utils.exception("shouldn't close"), "initial");
-		MemoryCallback<Object> memoryCallback = new MemoryCallback<Object>();
-		factory.displayEditor(displayer, "name2", displayerDefn, actionContext, actionData2, memoryCallback, "initial");
-		editorMock2.finish("some string");
-		assertEquals(Arrays.asList("some string"), memoryCallback.getResult());
-		assertEquals(Arrays.asList(original, editorMock1.control, original, editorMock2.control, original), visible);
+	public void testCancelDoesntUpdateStore(){
+		editorFactory.displayEditor(actionContext, displayerDefn1, displayer);
+		editorFactory.cancel();
+		
+		assertEquals(Collections.emptyList(), updateStore.datas);
 		
 	}
-
-	public void testEditorCloseCallsOnCompletion() {
-		EditorMock editorMock1 = new EditorMock("1");
-		EditorFactory factory = new EditorFactory(editorContext).register("name1", editorMock1);
-		final AtomicReference<Object> ref = new AtomicReference<Object>();
-		factory.displayEditor(displayer, "name1", displayerDefn, actionContext, actionData1, new ICallback<Object>() {
-			@Override
-			public void process(Object t) throws Exception {
-				ref.set(t);
-			}
-		}, "initial");
-		assertNull(ref.get());
-		assertSame(editorMock1, factory.getEditor());
-		editorMock1.finish("finalValue");
-		assertNull(factory.getEditor());
-		assertEquals("finalValue", ref.get());
-		assertEquals(original, visible.get(visible.size() - 1));
+	
+	public void testCancelOnSecondEditorReplacesOriginal() {
+		editorFactory.displayEditor(actionContext, displayerDefn1, displayer);
+		editorFactory.displayEditor(actionContext, displayerDefn2, displayer);
+		editorFactory.cancel();
+		assertEquals(original, rightHandSide.getVisibleControl());
 	}
+
+	public void testFinishOnSecondEditorReplacesOriginal() {
+		editorFactory.displayEditor(actionContext, displayerDefn1, displayer);
+		editorFactory.displayEditor(actionContext, displayerDefn2, displayer);
+		editorMock2.finish();
+		assertEquals(original, rightHandSide.getVisibleControl());
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testFinishSendsData(){
+		editorFactory.displayEditor(actionContext, displayerDefn1, displayer);
+		editorFactory.displayEditor(actionContext, displayerDefn2, displayer);
+		editorMock2.finish();
+		assertEquals(original, rightHandSide.getVisibleControl());
+		
+		assertEquals(Arrays.asList("entity"), updateStore.entities);
+		assertEquals(Arrays.asList("lastUrlForEntity"), updateStore.urls);
+		assertEquals(Arrays.asList(EditorMock.finishedData), updateStore.datas);
+		
+	}
+	
+	
 
 	public void testThrowsExceptionIfKeyNotThere() {
 		checkThrowsExceptionIfKeyNotThere("Map doesn't have key b. Legal keys are [a]. Map is {a=EditorMock [seed=1]}");
@@ -128,7 +124,7 @@ public class EditorFactoryTest extends AbstractSimpleMapTest<String, IEditor> {
 
 	@Override
 	protected ISimpleMap<String, IEditor> blankMap() {
-		return new EditorFactory(editorContext);
+		return new EditorFactory();
 	}
 
 	@Override
@@ -144,40 +140,26 @@ public class EditorFactoryTest extends AbstractSimpleMapTest<String, IEditor> {
 	@Override
 	protected void setUp() throws Exception {
 		shell = new Shell();
+
+		displayerDefn1 = new DisplayerDefn(null).editor("mockEditor1").data("data.entity.key1");
+		displayerDefn2 = new DisplayerDefn(null).editor("mockEditor2").data("data.entity.key2");
+		editorMock1 = new EditorMock("1");
+		editorMock2 = new EditorMock("2");
+		editorFactory = new EditorFactory().register(displayerDefn1.editorId, editorMock1).register(displayerDefn2.editorId, editorMock2);
+
 		ImageRegistry imageRegistry = new ImageRegistry();
 		new BasicImageRegisterConfigurator().registerWith(shell.getDisplay(), imageRegistry);
 
 		CompositeConfig compositeConfig = new CompositeConfig(shell.getDisplay(), new SoftwareFmLayout(), imageRegistry, IResourceGetter.Utils.noResources());
 		displayer = new TitleAnd(compositeConfig, shell, "", false);
-		editorContext = new EditorContext(compositeConfig);
 		final Composite rightHandSideComposite = Swts.newComposite(shell, SWT.NULL, "RHS Composite");
-		visible = Lists.newList();
-		IHasRightHandSide rightHandSide = new IHasRightHandSide() {
-
-			@Override
-			public Control getControl() {
-				return rightHandSideComposite;
-			}
-
-			@Override
-			public Composite getComposite() {
-				return rightHandSideComposite;
-			}
-
-			@Override
-			public void makeVisible(Control control) {
-				visible.add(control);
-			}
-
-			@Override
-			public Control getVisibleControl() {
-				return visible.get(visible.size() - 1);
-			}
-		};
+		rightHandSide = IHasRightHandSide.Utils.makeRightHandSide(shell);
 		original = new Label(rightHandSideComposite, SWT.NULL);
 		original.setText("original");
 		rightHandSide.makeVisible(original);
-		actionContext = new ActionContext(rightHandSide, null, null, compositeConfig, null, null, null, null, null);
+		updateStore = IUpdateStore.Utils.rememberUpdateStore();
+		EntityToUrlMock entityToUrl = new EntityToUrlMock("entity", "lastUrlForEntity");
+		actionContext = new ActionContext(rightHandSide, null, null, entityToUrl, compositeConfig, null, updateStore, null, null);
 		super.setUp();
 	}
 

@@ -13,9 +13,9 @@ public class EditorFactoryConfigurator implements IEditorFactoryConfigurator{
 
 	@Override
 	public void process(IEditorFactory editorFactory) throws Exception {
-		editorFactory.register("editor.text", new TextEditor());
-		editorFactory.register("editor.styled.text", new StyledTextEditor());
-		editorFactory.register("editor.softwareFm.id", new SoftwareFmIdEditor());
+		editorFactory.register(ConfigurationConstants.editorTextKey, new TextEditor());
+		editorFactory.register(ConfigurationConstants.editorStyledTextKey, new StyledTextEditor());
+		editorFactory.register(ConfigurationConstants.editorSfmIdKey, new SoftwareFmIdEditor());
 		editorFactory.register("editor.javadoc", new JavadocSourceEditor(ConfigurationConstants.javadocKey, ConfigurationConstants.dataRawJavadoc, ConfigurationConstants.dataArtifactJavadoc, ConfigurationConstants.dataRawJavadocMutator));
 		editorFactory.register("editor.source", new JavadocSourceEditor(ConfigurationConstants.sourceKey, ConfigurationConstants.dataRawSource, ConfigurationConstants.dataArtifactSource, ConfigurationConstants.dataRawSourceMutator));
 		

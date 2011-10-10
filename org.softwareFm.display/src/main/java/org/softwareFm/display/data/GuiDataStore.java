@@ -10,6 +10,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.softwareFm.display.constants.DisplayConstants;
+import org.softwareFm.display.displayer.EditorIds;
+import org.softwareFm.display.displayer.RippedEditorId;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
@@ -17,8 +19,6 @@ import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.ContainsAndValue;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwareFm.utilities.strings.PreAndPost;
-import org.softwareFm.utilities.strings.Strings;
 
 public class GuiDataStore implements IDataGetter {
 	private final IUrlToData urlToData;
@@ -165,17 +165,12 @@ public class GuiDataStore implements IDataGetter {
 
 	@Override
 	public Object getDataFor(String pathOrKey) {
-		if (pathOrKey.startsWith("data."))
+		RippedEditorId ripped = EditorIds.rip(pathOrKey);
+		if (ripped.isData())
 			synchronized (lock) {
-				String path = pathOrKey.substring(5);
-				int index = path.indexOf('.');
-				if (index == -1)
-					throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.illegalPath, path));
-				String entity = path.substring(0, index);
-				String key = path.substring(index + 1);
-				if (entity.equals("raw"))
-					return getRawData(key);
-				Object result = getDataFor(entity, key);
+				if (ripped.isRaw())
+					return getRawData(ripped.entity, ripped.key);
+				Object result = getDataFor(ripped.entity, ripped.key);
 				return result;
 			}
 		else
@@ -183,15 +178,14 @@ public class GuiDataStore implements IDataGetter {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private Object getRawData(String path) {
+	private Object getRawData(String entity, String key) {
 		synchronized (lock) {
-			PreAndPost entityAndKey = Strings.split(path, '.');
-			Object rawData = entityToLastRawDataMap.get(entityAndKey.pre);
+			Object rawData = entityToLastRawDataMap.get(entity);
 			if (rawData == null)
 				return null;
 			if (!(rawData instanceof Map))
 				throw new IllegalStateException(MessageFormat.format(DisplayConstants.expectedAMap, rawData, rawData.getClass()));
-			return ((Map) rawData).get(entityAndKey.post);
+			return ((Map) rawData).get(key);
 		}
 	}
 
@@ -264,6 +258,15 @@ public class GuiDataStore implements IDataGetter {
 	public void clearCache(String url, String entity, String attribute) {
 		final EntityCachedData entityCachedData = getFromCache(entity);
 		entityCachedData.remove(url);
+	}
+
+	public IFunction1<String, String> getEntityToUrlGetter() {
+		return new IFunction1<String, String>() {
+			@Override
+			public String apply(String from) throws Exception {
+				return lastUrlFor(from);
+			}
+		};
 	}
 
 }

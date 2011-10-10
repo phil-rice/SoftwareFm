@@ -5,15 +5,15 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.softwareFm.configuration.ConfigurationConstants;
 import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.composites.TitleAndText;
-import org.softwareFm.display.data.ActionData;
 import org.softwareFm.display.data.IDataGetter;
 import org.softwareFm.display.displayer.DisplayerDefn;
 import org.softwareFm.display.displayer.IDisplayer;
-import org.softwareFm.display.editor.EditorContext;
+import org.softwareFm.display.editor.Editors;
 import org.softwareFm.display.editor.IEditor;
 import org.softwareFm.display.editor.IEditorCompletion;
 import org.softwareFm.display.simpleButtons.ButtonParent;
@@ -37,6 +37,7 @@ public class JavadocSourceEditor implements IEditor {
 	private final String mutatorKey;
 	private final String titleKey;
 	private ButtonParent buttonParent;
+	private Runnable okRunnable;
 
 	public JavadocSourceEditor(String titleKey, String eclipseKey, String softwareFmKey, String mutatorKey) {
 		this.titleKey = titleKey;
@@ -51,18 +52,17 @@ public class JavadocSourceEditor implements IEditor {
 	}
 
 	@Override
-	public Control createControl(ActionContext actionContext, ActionData actionData) {
+	public Control createControl(ActionContext actionContext) {
 		contents = Swts.newComposite(actionContext.rightHandSide.getComposite(), SWT.NULL, getClass().getSimpleName());
 		final IDataGetter dataGetter = actionContext.dataGetter;
 		CompositeConfig config = actionContext.compositeConfig;
 
 		new Label(contents, SWT.NULL).setText(IResourceGetter.Utils.getOrException(actionContext.compositeConfig.resourceGetter, titleKey));
 		buttonParent = new ButtonParent(contents, config, SWT.NULL);
-		
-		
+
 		txtEclipse = new TitleAndText(config, contents, "dialog.eclipseValue.title", true);
 		txtEclipse.setEditable(false);
-		addCopyToSoftwareFmButton(config, actionContext, actionData, txtEclipse, false);
+		addCopyToSoftwareFmButton(config, actionContext, txtEclipse, false);
 
 		txtSoftwareFm = new TitleAndText(config, contents, "dialog.softwareFmValue.title", true);
 		txtSoftwareFm.setEditable(false);
@@ -70,24 +70,26 @@ public class JavadocSourceEditor implements IEditor {
 
 		txtExperiment = new TitleAndText(config, contents, "dialog.experiment.title", true);
 		addCopyToEclipseButton(config, dataGetter, txtExperiment, true);
-		addCopyToSoftwareFmButton(config, actionContext, actionData, txtExperiment, true);
+		addCopyToSoftwareFmButton(config, actionContext, txtExperiment, true);
 
 		Composite buttonPanel = new Composite(contents, SWT.NULL);
 		buttonPanel.setLayout(new GridLayout(3, true));
-		Swts.makeAcceptCancelComposite(contents, SWT.NULL, actionContext.compositeConfig.resourceGetter, new Runnable() {
+		okRunnable = new Runnable() {
 			@Override
 			public void run() {
 				sendResult();
 			}
-		}, new Runnable() {
+		};
+		Swts.makeAcceptCancelComposite(contents, SWT.NULL, actionContext.compositeConfig.resourceGetter, okRunnable, new Runnable() {
 			@Override
 			public void run() {
-					cancel();
+				cancel();
 			}
 		});
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(contents);
 		return contents;
 	}
+
 	private SimpleImageButton addCopyToEclipseButton(CompositeConfig compositeConfig, final IDataGetter dataGetter, final TitleAndText parent, boolean onlyEnableIfHasValue) {
 		SimpleImageButton simpleImageButton = new SimpleImageButton(parent, compositeConfig.imageButtonConfig.withImage(ArtifactsAnchor.jarCopyFromSoftwareFmKey), false);
 		simpleImageButton.addListener(new IImageButtonListener() {
@@ -105,13 +107,13 @@ public class JavadocSourceEditor implements IEditor {
 
 	}
 
-	private SimpleImageButton addCopyToSoftwareFmButton(CompositeConfig compositeConfig, final ActionContext actionContext, final ActionData actionData, final TitleAndText parent, boolean onlyEnableIfHasValue) {
-		SimpleImageButton simpleImageButton = new SimpleImageButton(parent, compositeConfig.imageButtonConfig.withImage(ArtifactsAnchor.jarCopyToSoftwareFmKey) ,false);
+	private SimpleImageButton addCopyToSoftwareFmButton(CompositeConfig compositeConfig, final ActionContext actionContext, final TitleAndText parent, boolean onlyEnableIfHasValue) {
+		SimpleImageButton simpleImageButton = new SimpleImageButton(parent, compositeConfig.imageButtonConfig.withImage(ArtifactsAnchor.jarCopyToSoftwareFmKey), false);
 		simpleImageButton.addListener(new IImageButtonListener() {
 			@Override
 			public void buttonPressed(IHasControl button) throws Exception {
-				actionContext.updateStore.update(actionData, softwareFmKey,  parent.getText());
-				cancel();
+				if (okRunnable != null)
+					okRunnable.run();
 			}
 		});
 		simpleImageButton.getControl().setEnabled(onlyEnableIfHasValue || parent.getText().length() > 0);
@@ -120,10 +122,10 @@ public class JavadocSourceEditor implements IEditor {
 	}
 
 	@Override
-	public void edit(IDisplayer parent, DisplayerDefn displayerDefn, EditorContext editorContext, ActionContext actionContext, ActionData actionData, IEditorCompletion completion, Object initialValue) {
+	public void edit(IDisplayer parent, DisplayerDefn displayerDefn, ActionContext actionContext, IEditorCompletion completion) {
 		IDataGetter dataGetter = actionContext.dataGetter;
 		this.completion = completion;
-		
+
 		String eclipseValue = Strings.nullSafeToString(dataGetter.getDataFor(eclipseKey));
 		txtEclipse.setText(eclipseValue);
 
@@ -131,18 +133,26 @@ public class JavadocSourceEditor implements IEditor {
 		txtSoftwareFm.setText(softwareFmValue);
 	}
 
-	@Override
-	public void cancel() {
-		if (completion != null)
-			completion.cancel();
+	private void cancel() {
+		completion.cancel();
+		okRunnable = null;
 	}
 
 	private void sendResult() {
 		completion.cancel();
+		okRunnable = null;
 	}
 
 	@Override
 	public IButtonParent actionButtonParent() {
 		return buttonParent;
+	}
+
+	public static void main(String[] args) {
+		Editors.display(JavadocSourceEditor.class.getSimpleName(),//
+				new JavadocSourceEditor(ConfigurationConstants.javadocKey, ConfigurationConstants.dataRawJavadoc, ConfigurationConstants.dataArtifactJavadoc, ConfigurationConstants.dataRawJavadocMutator), //
+				ConfigurationConstants.dataRawJavadoc, "rawJavadoc",//
+				ConfigurationConstants.dataArtifactJavadoc, "SfmJavadoc"
+				);
 	}
 }

@@ -8,12 +8,16 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+import org.softwareFm.display.IHasRightHandSide;
 import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.actions.ActionDefn;
 import org.softwareFm.display.actions.ActionMock;
 import org.softwareFm.display.actions.ActionStore;
+import org.softwareFm.display.composites.AbstractTitleAndText;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.data.DataGetterMock;
 import org.softwareFm.display.data.IDataGetter;
@@ -22,6 +26,9 @@ import org.softwareFm.display.displayer.CompressedText;
 import org.softwareFm.display.displayer.CompressedTextDisplayerFactory;
 import org.softwareFm.display.displayer.DisplayerDefn;
 import org.softwareFm.display.displayer.IDisplayer;
+import org.softwareFm.display.editor.EditorFactory;
+import org.softwareFm.display.editor.IEditorFactory;
+import org.softwareFm.display.editor.TextEditor;
 import org.softwareFm.display.smallButtons.SimpleImageControl;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
@@ -40,6 +47,8 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 			"someActionTooltip", "someActionTooltipValue",//
 			"someDataTooltip", "someDataTooltipValue",//
 			"dataKey", "value1");
+	private TextEditor editor;
+	private IHasRightHandSide rightHandSide;
 
 	public void testCreateWithNoButtons() {
 		IDisplayer displayer = displayerDefn.createDisplayer(shell, actionContext);
@@ -109,7 +118,22 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 		dispDefnWithButton.data(actionContext, dispDefnWithButton, displayer, "someENtity", "someUrl");
 		assertEquals("someActionTooltipValue", control.getToolTipText());
 
-		assertEquals("value1", ((CompressedText)displayer).getText());
+		assertEquals("value1", ((CompressedText) displayer).getText());
+	}
+
+	public void testMainControlCausesEditorToBeDisplayer() {
+		DisplayerDefn dispDefnWithButton = displayerDefn.//
+				data("data.entity.key").//
+				editor("someEditor").
+				actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
+		CompressedText displayer = (CompressedText) dispDefnWithButton.createDisplayer(shell, actionContext);
+		Label label = displayer.getLabel();
+		assertFalse(editor.getControl().isVisible());
+		label.notifyListeners(SWT.MouseDown, new Event());
+		AbstractTitleAndText<Text> text = editor.getText();
+		assertEquals("value", text.getText()); //extracted from data getter
+		assertEquals(editor.getControl(), rightHandSide.getVisibleControl());
+
 	}
 
 	private void checkNoButtons(IDisplayer displayer) {
@@ -135,9 +159,15 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 		actionStore = new ActionStore().action("someId", actionMock);
 		ImageRegistry imageRegistry = new ImageRegistry();
 		new BasicImageRegisterConfigurator().registerWith(shell.getDisplay(), imageRegistry);
-		IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(new ResourceGetterMock("someTitle", "registeredTitle"));
-		actionContext = new ActionContext(null, actionStore, new DataGetterMock("a", 1), new CompositeConfig(shell.getDisplay(), new SoftwareFmLayout(), imageRegistry, resourceGetter), null, null, null, null, null);
+		IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(new ResourceGetterMock("someTitle", "registeredTitle", "button.cancel.title" ,"cancelValue", "button.ok.title", "okValue"));
+		editor = new TextEditor();
+		IEditorFactory editorFactory = new EditorFactory().register("someEditor", editor);
+		rightHandSide = IHasRightHandSide.Utils.makeRightHandSide(shell);
+		EntityToUrlMock entityToUrl = new EntityToUrlMock("entity", "urlForEntity");
+		actionContext = new ActionContext(rightHandSide, actionStore, new DataGetterMock("data.entity.key", "value"), entityToUrl, new CompositeConfig(shell.getDisplay(), new SoftwareFmLayout(), imageRegistry, resourceGetter), editorFactory, null, null, null);
+		editor.createControl(actionContext);
 		displayerDefn = new DisplayerDefn(new CompressedTextDisplayerFactory()).title("someTitle");
+
 
 	}
 

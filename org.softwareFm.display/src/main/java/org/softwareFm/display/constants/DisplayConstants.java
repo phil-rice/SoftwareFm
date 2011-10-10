@@ -25,6 +25,8 @@ public class DisplayConstants {
 	public static final String cannotHaveTwoDefaultActions = "Cannot have two default actions in displayer defn for data {0}.\nExisting value{1}\nNew value{2}";
 	public static final String cannotDefineActionsTwice = "Cannot define actions twice in displayer defn for data {0}.\nExisting value{1}\nNew value{2}";
 	public static final String cannotSetEditorTwice= "Cannot define editor twice in displayer defn for data {0}.\nExisting value{1}\nNew value{2}";
+	public static final String displayDefnMustHaveLegalDataKey = "Display defn must have legal data key {0}";
+	public static final String urlCannotBeFoundForEntity = "Url cannot be found for entity {0}";
 
 	public static final String rssFeedType = "feedType.rss";
 	public static final String browserFeedType = "feedType.browser";

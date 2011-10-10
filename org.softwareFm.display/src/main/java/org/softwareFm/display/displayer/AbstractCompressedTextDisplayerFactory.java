@@ -28,6 +28,8 @@ public abstract class AbstractCompressedTextDisplayerFactory<T extends AbstractC
 	public void data(ActionContext actionContext, DisplayerDefn defn, IDisplayer displayer, String entity, String url) {
 		IDataGetter dataGetter=actionContext.dataGetter;
 		String guard = Actions.guardConditionPresent(dataGetter, defn);
+		if (defn.dataKey == null)
+			throw new NullPointerException(MessageFormat.format(DisplayConstants.mustHaveA, "dataKey", defn));
 		Object value = guard == null? dataGetter.getDataFor(defn.dataKey): dataGetter.getDataFor(guard);
 		AbstractCompressedText<?> titleAndText = (AbstractCompressedText<?>) displayer;
 		titleAndText.setEnabled(guard==null);

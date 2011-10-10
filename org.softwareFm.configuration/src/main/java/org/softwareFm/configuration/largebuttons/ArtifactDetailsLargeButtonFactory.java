@@ -18,18 +18,8 @@ public class ArtifactDetailsLargeButtonFactory extends LargeButtonFactory {
 
 		return guiBuilder.largeButton("largeButton.artifact.details",//
 				makeSfmSmallButton(guiBuilder, "smallButton.jar", ArtifactsAnchor.jarKey, "smallButton.artifact.nameAndDescription", "smallButton.jar.identifiers.title", false,//
-
-						guiBuilder.displayer("displayer.button.javadoc").title(artifactJavadocTitle).guard(dataRawJavadoc, blankKey).tooltip(dataRawJavadoc).//
-								actions(
-								// guiBuilder.action("action.javadocSource.nuke", GeneralAnchor.clearKey),//
-								guiBuilder.action("action.javadoc.view", ArtifactsAnchor.jarKey).tooltip("action.javadoc.view.tooltip").ignoreGuard()//
-								// browseButton(guiBuilder, dataRawJavadoc)
-								), //
-
-						guiBuilder.displayer("displayer.button.source").title(artifactSourceTitle).guard(dataRawSource, blankKey).tooltip(dataRawSource).//
-								actions(guiBuilder.action("action.source.view", ArtifactsAnchor.jarKey).tooltip("action.source.view.tooltip").ignoreGuard()
-								// , browseButton(guiBuilder, dataRawJavadoc)
-								)),//
+						guiBuilder.displayer("displayer.summary.javadoc").editor(editorJavadocKey).title(artifactJavadocTitle).guard(dataRawJavadoc, blankKey).tooltip(dataRawJavadoc), //
+						guiBuilder.displayer("displayer.summary.javadoc").editor(editorSourceKey).title(artifactSourceTitle).guard(dataRawSource, blankKey).tooltip(dataRawSource)),//
 
 				guiBuilder.smallButton("smallButton.project.issues", "smallButton.project.issues.title", "smallButton.data", ArtifactsAnchor.issuesKey,//
 						guiBuilder.displayer("displayer.compressed.text").guard(dataJarGroupId, blankKey).title(artifactIssuesTitle).data(dataArtifactIssues).tooltip(artifactIssuesTitle).actions(//

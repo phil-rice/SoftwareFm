@@ -17,7 +17,6 @@ import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.data.GuiDataStore;
 import org.softwareFm.display.data.GuiDataStore.DependantData;
 import org.softwareFm.display.displayer.DisplayerStore;
-import org.softwareFm.display.editor.EditorContext;
 import org.softwareFm.display.editor.EditorFactory;
 import org.softwareFm.display.largeButton.LargeButtonDefn;
 import org.softwareFm.display.lists.ListEditorStore;
@@ -84,16 +83,11 @@ public class ActivatorTest extends TestCase implements IDontRunAutomaticallyTest
 		assertNotNull(store.get("listEditorId.nameAndValue"));
 	}
 	
-	public void testEditorContext(){
-		EditorContext editorContext = softwareFmActivator.getEditorContext(display);
-		assertSame(editorContext, softwareFmActivator.getEditorContext(display));
-		assertNotNull(editorContext);
-	}
 
 	public void testDisplayerStore() {
 		DisplayerStore store = softwareFmActivator.getGuiBuilder().getDisplayerStore();
 		assertSame(store, softwareFmActivator.getGuiBuilder().getDisplayerStore());
-		assertNotNull(store.get("displayer.text"));
+		assertNotNull(store.get("displayer.compressed.text"));
 	}
 
 	public void testEditorStore() {
@@ -114,7 +108,7 @@ public class ActivatorTest extends TestCase implements IDontRunAutomaticallyTest
 
 		Map<String, List<DependantData>> entityToDependantMap = dataStore.getEntityToDependantMap();
 		assertEquals(Sets.makeSet("jar"), entityToDependantMap.keySet());
-		assertEquals(Arrays.asList("project", "organisation"), Lists.map(entityToDependantMap.get("jar"), new IFunction1<DependantData, String>() {
+		assertEquals(Arrays.asList("group", "artifact", "version"), Lists.map(entityToDependantMap.get("jar"), new IFunction1<DependantData, String>() {
 			@Override
 			public String apply(DependantData from) throws Exception {
 				return from.entity;

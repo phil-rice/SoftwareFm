@@ -1,7 +1,7 @@
 package org.softwareFm.configuration.configurators;
 
 import org.softwareFm.configuration.ConfigurationConstants;
-import org.softwareFm.configuration.displayers.JavadocOrSourceButtonDisplayerFactory;
+import org.softwareFm.configuration.displayers.JavadocSourceSummaryDisplayerFactory;
 import org.softwareFm.display.displayer.AggregateTextDisplayerFactory;
 import org.softwareFm.display.displayer.CompressedStyledTextDisplayerFactory;
 import org.softwareFm.display.displayer.CompressedTextDisplayerFactory;
@@ -18,9 +18,8 @@ public class DisplayerStoreConfigurator implements IDisplayerStoreConfigurator {
 				displayer("displayer.compressed.text", new CompressedTextDisplayerFactory()).//
 				displayer("displayer.compressed.styled.text", new CompressedStyledTextDisplayerFactory()).//
 				displayer("displayer.sfm.id", new AggregateTextDisplayerFactory(ConfigurationConstants.sfmIdPattern, ConfigurationConstants.dataJarGroupId, ConfigurationConstants.dataJarArtifactId, ConfigurationConstants.dataJarVersion)).//
-
-				displayer("displayer.button.javadoc", new JavadocOrSourceButtonDisplayerFactory("javadoc", ConfigurationConstants.dataRawJavadoc, ConfigurationConstants.dataArtifactJavadoc, ConfigurationConstants.dataRawJavadocMutator)).//
-				displayer("displayer.button.source", new JavadocOrSourceButtonDisplayerFactory("source", ConfigurationConstants.dataRawSource, ConfigurationConstants.dataArtifactSource, ConfigurationConstants.dataRawSourceMutator)).//
+				displayer("displayer.summary.javadoc", new JavadocSourceSummaryDisplayerFactory(ConfigurationConstants.dataRawJavadoc, ConfigurationConstants.dataArtifactJavadoc)).//
+				displayer("displayer.summary.source", new JavadocSourceSummaryDisplayerFactory(ConfigurationConstants.dataRawSource, ConfigurationConstants.dataArtifactSource)).//
 				displayer("displayer.list", new ListDisplayerFactory());
 	}
 

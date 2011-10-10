@@ -1,6 +1,5 @@
 package org.softwareFm.display.editor;
 
-import java.util.Arrays;
 
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
@@ -16,7 +15,7 @@ public class StyledTextEditor extends AbstractTextEditor<StyledText> {
 	}
 
 	public static void main(String[] args) {
-		Editors.display("TextEditor", new StyledTextEditor(), Arrays.asList("one", "two"), Arrays.<Object> asList("1", "2"), "Text");
+		Editors.display("TextEditor", new StyledTextEditor(), "Text");
 	}
 
 }

@@ -40,5 +40,9 @@ public interface IUpdateStore {
 				}
 			};
 		}
+
+		public static RememberUpdateStore rememberUpdateStore() {
+			return new RememberUpdateStore();
+		}
 	}
 }
