@@ -47,6 +47,18 @@ public class CompressedText extends AbstractCompressedText<Label> {
 	public Label getLabel() {
 		return label;
 	}
+	
+
+	@Override
+	public void highlight() {
+		Swts.setFontStyle(label,  SWT.BOLD);
+	}
+
+
+	@Override
+	public void unhighlight() {
+		Swts.setFontStyle(label, SWT.NULL);
+	}
 
 	public static void main(String[] args) {
 		Swts.display(CompressedText.class.getSimpleName(), new IFunction1<Composite, Composite>() {

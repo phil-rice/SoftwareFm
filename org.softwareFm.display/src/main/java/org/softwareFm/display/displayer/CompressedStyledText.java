@@ -62,4 +62,18 @@ public class CompressedStyledText extends AbstractCompressedText<StyledText> {
 		});
 	}
 
+
+	@Override
+	public void highlight() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void unhighlight() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

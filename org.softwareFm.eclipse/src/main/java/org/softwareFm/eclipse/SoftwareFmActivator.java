@@ -284,6 +284,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		getSelectedBindingManager().addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
 			@Override
 			public void selectionOccured(final BindingRipperResult rippedResult) {
+				getEditorFactory(parent.getDisplay()).cancel();
 				IPath path = rippedResult.path;
 				if (path != null) {
 					final Map<String, Object> context = Maps.<String, Object> newMap();

@@ -7,6 +7,10 @@ import org.softwareFm.display.simpleButtons.IButtonParent;
 public interface IDisplayer extends IHasControl, IButtonParent{
 	
 	void addClickListener(Listener listener);
+	
+	void highlight();
+	
+	void unhighlight();
 
 
 

@@ -93,4 +93,21 @@ public class ListDisplayer implements IDisplayer {
 		
 	}
 
+	public ListDisplayer(CompositeConfig compositeConfig, Composite content, TitleAnd mainLine, Composite listComposite, ActionContext actionContext) {
+		super();
+		this.compositeConfig = compositeConfig;
+		this.content = content;
+		this.mainLine = mainLine;
+		this.listComposite = listComposite;
+		this.actionContext = actionContext;
+	}
+
+	@Override
+	public void highlight() {
+	}
+
+	@Override
+	public void unhighlight() {
+	}
+
 }

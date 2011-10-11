@@ -111,4 +111,13 @@ public  class TitleAnd implements IDisplayer, IHasComposite {
 	public void addClickListener(Listener listener) {
 		throw new UnsupportedOperationException();
 	}
+
+	@Override
+	public void highlight() {
+		
+	}
+
+	@Override
+	public void unhighlight() {
+	}
 }

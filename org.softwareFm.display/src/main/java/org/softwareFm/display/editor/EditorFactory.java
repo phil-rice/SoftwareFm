@@ -26,16 +26,20 @@ public class EditorFactory implements IEditorFactory, ISimpleMap<String, IEditor
 	private final Map<String, IEditor> map = Maps.newMap(LinkedHashMap.class);
 	private IEditor editor;
 	private Control rememberedControl;
+	private IDisplayer rememberedDisplayer;
 	private IHasRightHandSide rightHandSide;
+
 	@Override
 	public void displayEditor(final ActionContext actionContext, final DisplayerDefn displayerDefn, IDisplayer displayer) {
 		try {
 			if (editor != null)
 				cancel();
-			if (displayerDefn.editorId==null)
+			if (displayerDefn.editorId == null)
 				return;
 			rightHandSide = actionContext.rightHandSide;
 			rememberedControl = rightHandSide.getVisibleControl();
+			rememberedDisplayer = displayer;
+			displayer.highlight();
 			editor = get(displayerDefn.editorId);
 			if (editor.getControl() == null)
 				editor.createControl(actionContext);
@@ -46,27 +50,29 @@ public class EditorFactory implements IEditorFactory, ISimpleMap<String, IEditor
 			String dataKey = displayerDefn.dataKey;
 			final RippedEditorId rip = EditorIds.rip(dataKey);
 			IFunction1<String, String> entityToUrlGetter = actionContext.entityToUrlGetter;
-			final String url = rip.entity==null?null:entityToUrlGetter.apply(rip.entity);
+			final String url = rip.entity == null ? null : entityToUrlGetter.apply(rip.entity);
 			final IEditorCompletion completion = new IEditorCompletion() {
 				@Override
 				public void ok(Map<String, Object> value) {
 					editor = null;
 					rightHandSide.makeVisible(rememberedControl);
 					actionContext.updateStore.update(rip.entity, url, value);
+					rememberedDisplayer.unhighlight();
 				}
-				
+
 				@Override
 				public void cancel() {
 					editor = null;
 					rightHandSide.makeVisible(rememberedControl);
+					rememberedDisplayer.unhighlight();
 				}
 			};
-			
+
 			editor.edit(displayer, displayerDefn, actionContext, completion);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
-		
+
 	}
 
 	public IEditor getEditor() {
@@ -90,14 +96,15 @@ public class EditorFactory implements IEditorFactory, ISimpleMap<String, IEditor
 	public List<String> keys() {
 		return Iterables.list(map.keySet());
 	}
-	
-	@Override
-	public void cancel(){
-		if (editor != null){
-			rightHandSide.makeVisible(rememberedControl);
-			rememberedControl = null;
-			editor = null;
-		}
-	}
 
+	@Override
+	public void cancel() {
+		if (rememberedControl != null)
+			rightHandSide.makeVisible(rememberedControl);
+		if (rememberedDisplayer != null)
+			rememberedDisplayer.unhighlight();
+		rememberedDisplayer = null;
+		rememberedControl = null;
+		editor = null;
+	}
 }

@@ -170,6 +170,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 				boolean visible = displaySelectionModel.getVisibleSmallButtonsId().contains(smallButtonDefn.id);
 				ISmallDisplayer control = smallButtonToSmallDisplayerMap.get(smallButtonDefn);
 				control.setValue(!visible);
+				actionContext.editorFactory.cancel();
 			}
 		});
 		guiDataStore.addGuiDataListener(new IGuiDataListener() {
