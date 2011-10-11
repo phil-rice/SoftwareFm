@@ -1,6 +1,7 @@
 package org.softwareFm.configuration.editor;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.configuration.ConfigurationConstants;
@@ -23,6 +24,7 @@ public class JarEditor implements IEditor {
 	private TitleAndText jarPathText;
 	private TitleAndText jarNameText;
 	private ButtonParent buttonParent;
+	private StyledText helpText;
 
 	@Override
 	public Control getControl() {
@@ -32,6 +34,7 @@ public class JarEditor implements IEditor {
 	public Control createControl(ActionContext actionContext) {
 		content = Swts.newComposite(actionContext.rightHandSide.getComposite(), SWT.NULL, getClass().getSimpleName());
 		CompositeConfig config = actionContext.compositeConfig;
+		helpText = Swts.makeHelpDisplayer(content);
 		jarPathText = new TitleAndText(config, content, ConfigurationConstants.jarPathTitle, true);
 		jarNameText = new TitleAndText(config, content, ConfigurationConstants.jarNameTitle, true);
 		jarPathText.setEditable(false);
@@ -50,6 +53,7 @@ public class JarEditor implements IEditor {
 	@Override
 	public void edit(IDisplayer parent, DisplayerDefn displayerDefn, ActionContext actionContext, final IEditorCompletion completion) {
 		Swts.layoutDump(content);
+		Swts.setHelpText(helpText, actionContext.compositeConfig.resourceGetter, displayerDefn.helpKey);
 		Object jarPath = actionContext.dataGetter.getDataFor(ConfigurationConstants.dataRawJarPath);
 		Object jarName = actionContext.dataGetter.getDataFor(ConfigurationConstants.dataRawJarName);
 		jarPathText.setText(Strings.nullSafeToString(jarPath));

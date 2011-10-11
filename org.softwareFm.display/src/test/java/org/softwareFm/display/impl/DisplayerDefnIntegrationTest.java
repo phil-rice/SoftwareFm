@@ -52,7 +52,6 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 	private TextEditor editor;
 	private IHasRightHandSide rightHandSide;
 
-
 	public void testCreateWithNoButtonsAndIconSet() {
 		IDisplayer displayer = displayerDefn.icon(ArtifactsAnchor.projectKey).createDisplayer(shell, actionContext);
 		checkNoButtons(displayer, ArtifactsAnchor.projectKey, null);
@@ -63,13 +62,13 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 		checkNoButtons(displayer, ArtifactsAnchor.issuesKey, OverlaysAnchor.deleteKey);
 	}
 
-	public void testNoIconIfNoIconSet(){
+	public void testNoIconIfNoIconSet() {
 		IDisplayer displayer = displayerDefn.noIcon().createDisplayer(shell, actionContext);
 		Control[] children = displayer.getButtonComposite().getChildren();
 		assertEquals(0, children.length);
-		
+
 	}
-	
+
 	public void testIconMustBeSetIfNoDefaultAction() {
 		IllegalStateException e = Tests.assertThrows(IllegalStateException.class, new Runnable() {
 			@Override
@@ -78,6 +77,21 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 			}
 		});
 		assertEquals("Must have a iconImage in DisplayerDefn [title=someTitle, dataKey=null, defaultAction=null, tooltip=null, editorId=null, listEditorId=null, listActionDefns=null, guardKeys=null, iconImageId=null, iconOverlayId=null, actionDefns=[]]", e.getMessage());
+	}
+
+	public void testHelpAppearsInHelpArea(){
+		DisplayerDefn defn = displayerDefn.help("helpKey").noIcon().editor("someEditor");
+		CompressedText displayer = (CompressedText) defn.createDisplayer(shell, actionContext);
+		Label label = displayer.getLabel();
+		label.notifyListeners(SWT.MouseDown, new Event());
+		assertEquals("helpValue", editor.getHelpControl().getText());
+	}
+	public void testBlankAppearsInHelpAreaWhenHelpNotSpecified(){
+		DisplayerDefn defn = displayerDefn.noIcon().editor("someEditor");
+		CompressedText displayer = (CompressedText) defn.createDisplayer(shell, actionContext);
+		Label label = displayer.getLabel();
+		label.notifyListeners(SWT.MouseDown, new Event());
+		assertEquals("", editor.getHelpControl().getText());
 	}
 
 	public void testWithOneAction() {
@@ -187,7 +201,9 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 		actionStore = new ActionStore().action("someId", actionMock).action("action.no.operation", new NoOperationAction());
 		ImageRegistry imageRegistry = new ImageRegistry();
 		new BasicImageRegisterConfigurator().registerWith(shell.getDisplay(), imageRegistry);
-		IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(new ResourceGetterMock("someTitle", "registeredTitle", "button.cancel.title", "cancelValue", "button.ok.title", "okValue"));
+		IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(new ResourceGetterMock(//
+				"someTitle", "registeredTitle", "button.cancel.title", "cancelValue", //
+				"button.ok.title", "okValue", "helpKey", "helpValue"));
 		editor = new TextEditor();
 		IEditorFactory editorFactory = new EditorFactory().register("someEditor", editor);
 		rightHandSide = IHasRightHandSide.Utils.makeRightHandSide(shell);

@@ -1,6 +1,7 @@
 package org.softwareFm.configuration.editor;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -28,6 +29,7 @@ public class SoftwareFmIdEditor implements IEditor {
 	private TitleAndText versionText;
 	private ButtonParent buttonParent;
 	private IEditorCompletion completion;
+	private StyledText helpText;
 
 	@Override
 	public Control getControl() {
@@ -37,6 +39,7 @@ public class SoftwareFmIdEditor implements IEditor {
 	public Control createControl(ActionContext actionContext) {
 		content = Swts.newComposite(actionContext.rightHandSide.getComposite(), SWT.NULL, getClass().getSimpleName());
 		CompositeConfig config = actionContext.compositeConfig;
+		helpText = Swts.makeHelpDisplayer(content);
 		groupIdText = new TitleAndText(config, content, ConfigurationConstants.groupIdTitle, true);
 		artifactIdText = new TitleAndText(config, content, ConfigurationConstants.artifactIdTitle, true);
 		versionText = new TitleAndText(config, content, ConfigurationConstants.versionTitle, true);
@@ -66,6 +69,8 @@ public class SoftwareFmIdEditor implements IEditor {
 	public void edit(IDisplayer parent, DisplayerDefn displayerDefn, ActionContext actionContext, final IEditorCompletion completion) {
 		this.completion = completion;
 		Swts.layoutDump(content);
+
+		Swts.setHelpText(helpText, actionContext.compositeConfig.resourceGetter, displayerDefn.helpKey);
 		Object groupId = actionContext.dataGetter.getDataFor(ConfigurationConstants.dataJarGroupId);
 		Object artifactId = actionContext.dataGetter.getDataFor(ConfigurationConstants.dataJarArtifactId);
 		Object versionId = actionContext.dataGetter.getDataFor(ConfigurationConstants.dataJarVersion);

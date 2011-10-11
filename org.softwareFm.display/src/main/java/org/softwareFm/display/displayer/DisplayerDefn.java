@@ -50,6 +50,7 @@ public class DisplayerDefn {
 	public String iconImageId;
 	public String iconOverlayId;
 	public boolean noIcon;
+	public String helpKey;
 
 	public DisplayerDefn(IDisplayerFactory displayer) {
 		this.displayerFactory = displayer;
@@ -222,6 +223,11 @@ public class DisplayerDefn {
 	public DisplayerDefn icon(String iconId, String overlayId) {
 		iconImageId = iconId;
 		iconOverlayId = overlayId;
+		return this;
+	}
+
+	public DisplayerDefn help(String helpKey) {
+		this.helpKey = helpKey;
 		return this;
 	}
 

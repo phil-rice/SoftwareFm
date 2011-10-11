@@ -1,6 +1,7 @@
 package org.softwareFm.display.editor;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -24,6 +25,7 @@ public abstract class AbstractTextEditor<T extends Control> implements IEditor {
 	protected AbstractTitleAndText<T> text;
 	private ButtonParent buttonParent;
 	private Runnable okRunnable;
+	private StyledText help;
 
 	abstract protected AbstractTitleAndText<T> makeTitleAnd(Composite parent, CompositeConfig config);
 
@@ -31,13 +33,14 @@ public abstract class AbstractTextEditor<T extends Control> implements IEditor {
 	public void edit(IDisplayer parent, final DisplayerDefn displayerDefn, ActionContext actionContext, final IEditorCompletion completion) {
 		String title = IResourceGetter.Utils.getOrException(actionContext.compositeConfig.resourceGetter, displayerDefn.title);
 		String rawText = Strings.nullSafeToString(actionContext.dataGetter.getDataFor(displayerDefn.dataKey));
+		Swts.setHelpText(help, actionContext.compositeConfig.resourceGetter, displayerDefn.helpKey);
 		text.setTitle(title);
 		text.setText(rawText);
 		okRunnable = new Runnable() {
 			@Override
 			public void run() {
 				RippedEditorId rip = EditorIds.rip(displayerDefn.editorId);
-				completion.ok(Maps.<String,Object>makeMap(rip.key, text.getText()));
+				completion.ok(Maps.<String, Object> makeMap(rip.key, text.getText()));
 				okRunnable = null;
 			}
 		};
@@ -47,9 +50,14 @@ public abstract class AbstractTextEditor<T extends Control> implements IEditor {
 				completion.cancel();
 			}
 		});
-		
 	}
-	
+
+
+
+	public StyledText getHelpControl() {
+		return help;
+	}
+
 	public AbstractTitleAndText<T> getText() {
 		return text;
 	}
@@ -58,10 +66,11 @@ public abstract class AbstractTextEditor<T extends Control> implements IEditor {
 	public Control getControl() {
 		return content;
 	}
-	
+
 	@Override
 	public Control createControl(ActionContext actionContext) {
 		content = Swts.newComposite(actionContext.rightHandSide.getComposite(), SWT.NULL, getClass().getSimpleName());
+		help = Swts.makeHelpDisplayer(content);
 		text = makeTitleAnd(content, actionContext.compositeConfig);
 		text.addCrListener(new Listener() {
 			@Override
@@ -75,7 +84,6 @@ public abstract class AbstractTextEditor<T extends Control> implements IEditor {
 		Swts.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(content, actionContext.compositeConfig.layout.dataMargin);
 		return content;
 	}
-
 
 	@Override
 	public IButtonParent actionButtonParent() {

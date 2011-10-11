@@ -16,12 +16,10 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class CompressedStyledText extends AbstractCompressedText<StyledText> {
 
-
 	public CompressedStyledText(Composite parent, int style, CompositeConfig config) {
 		super(parent, style, config);
 	}
 
-	
 	@Override
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
@@ -36,7 +34,7 @@ public class CompressedStyledText extends AbstractCompressedText<StyledText> {
 
 	@Override
 	protected StyledText makeControl(Composite parent) {
-		StyledText styledText = new StyledText(parent,  SWT.VERTICAL);
+		StyledText styledText = new StyledText(parent, SWT.VERTICAL);
 		styledText.setEditable(false);
 		styledText.setWordWrap(true);
 		return styledText;
@@ -62,18 +60,14 @@ public class CompressedStyledText extends AbstractCompressedText<StyledText> {
 		});
 	}
 
-
 	@Override
 	public void highlight() {
-		// TODO Auto-generated method stub
-		
+		Swts.setFontStyle(control, SWT.BOLD);
 	}
-
 
 	@Override
 	public void unhighlight() {
-		// TODO Auto-generated method stub
-		
+		Swts.setFontStyle(control, SWT.NULL);
 	}
 
 }

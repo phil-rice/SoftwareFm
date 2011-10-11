@@ -18,4 +18,5 @@ public class TextEditor extends AbstractTextEditor<Text> {
 		Editors.display("TextEditor", new TextEditor(), "data.entity.title1", "Text1", "data.entity.title2", "Text2");
 	}
 
+
 }

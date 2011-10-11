@@ -58,16 +58,18 @@ public abstract class LargeButtonFactory extends ConfigurationConstants implemen
 
 	protected SmallButtonDefn makeSfmSmallButton(GuiBuilder guiBuilder, String smallButtonId, String smallButtonIcon, String id, String title, boolean includeJar, DisplayerDefn... moreDefns) {
 
-		DisplayerDefn sfmId = guiBuilder.displayer("displayer.sfm.id").icon(GeneralAnchor.sfmKey).editor(editorSfmIdKey).title(softwareFmIdTitle).data(dataJarGroupId).//
+		DisplayerDefn sfmId = guiBuilder.displayer("displayer.sfm.id").icon(GeneralAnchor.sfmKey).editor(editorSfmIdKey).//
+				title(softwareFmIdTitle).data(dataJarGroupId).help("softwareFm.id.help").//
 				guard(dataRawHexDigest, hexDigestMissingTitle, //
 						dataJarGroupId, softwareFmIdMissingTitle, //
 						dataJarArtifactId, softwareFmIdMissingTitle, //
 						dataJarVersion, softwareFmIdMissingTitle);
 
-		DisplayerDefn sfmName = guiBuilder.displayer("displayer.compressed.text").icon(ArtifactsAnchor.projectKey).editor(editorTextKey).title(artifactNameTitle).data(dataArtifactName).//
+		DisplayerDefn sfmName = guiBuilder.displayer("displayer.compressed.text").icon(ArtifactsAnchor.projectKey).//
+				editor(editorTextKey).title(artifactNameTitle).data(dataArtifactName).help("softwareFm.name.help").
 				guard(dataRawHexDigest, blankKey, dataJarArtifactId, softwareFmIdMissingTitle, dataArtifactName, artifactNameMissingTitle);
 		
-		DisplayerDefn jarName = guiBuilder.displayer("displayer.compressed.text").icon(ArtifactsAnchor.jarKey).editor(editorJarKey).title(jarNameTitle).data(dataRawJarName).tooltip(dataRawJarPath).actions(//
+		DisplayerDefn jarName = guiBuilder.displayer("displayer.compressed.text").icon(ArtifactsAnchor.jarKey).editor(editorJarKey).help("jar.help").title(jarNameTitle).data(dataRawJarName).tooltip(dataRawJarPath).actions(//
 				guiBuilder.action("action.url.search", GeneralAnchor.searchKey).tooltip("action.search.tooltip"));
 		
 		DisplayerDefn[] baseDefns = includeJar ? new DisplayerDefn[] { sfmId, jarName, sfmName } : new DisplayerDefn[] { sfmId, sfmName };

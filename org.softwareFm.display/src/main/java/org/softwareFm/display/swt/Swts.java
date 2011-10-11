@@ -11,6 +11,7 @@ import java.util.concurrent.Callable;
 import junit.framework.Assert;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -46,6 +47,7 @@ import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.indent.Indent;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.strings.Strings;
 
 public class Swts {
 
@@ -80,11 +82,30 @@ public class Swts {
 		};
 	}
 
+	public static StyledText makeHelpDisplayer(Composite parent) {
+		StyledText text = new StyledText(parent, SWT.WRAP);
+		text.setEditable(false);
+		return text;
+
+	}
+
+	public static void setHelpText(StyledText help, IResourceGetter resourceGetter, String helpKey) {
+		help.setText(helpKey == null ? "" : Strings.nullSafeToString(resourceGetter.getStringOrNull(helpKey)));
+		help.getParent().layout();
+	}
+
 	public static void setFontStyle(Label label, int fontStyle) {
 		Font font = label.getFont();
 		FontData fontData = font.getFontData()[0];
 		Font newFont = new Font(label.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(), fontStyle));
 		label.setFont(newFont);
+	}
+
+	public static void setFontStyle(StyledText text, int fontStyle) {
+		Font font = text.getFont();
+		FontData fontData = font.getFontData()[0];
+		Font newFont = new Font(text.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(), fontStyle));
+		text.setFont(newFont);
 	}
 
 	public static void addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(Composite composite, int margin) {

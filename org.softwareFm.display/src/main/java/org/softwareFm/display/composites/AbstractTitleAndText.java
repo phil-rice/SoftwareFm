@@ -25,4 +25,5 @@ public abstract class AbstractTitleAndText<T extends Control> extends TitleAnd {
 	abstract public String getText();
 	
 	abstract public void setText(String text);
+
 }

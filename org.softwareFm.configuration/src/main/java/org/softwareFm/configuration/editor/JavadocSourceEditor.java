@@ -1,10 +1,10 @@
 package org.softwareFm.configuration.editor;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.softwareFm.configuration.ConfigurationConstants;
 import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.composites.CompositeConfig;
@@ -23,7 +23,6 @@ import org.softwareFm.display.smallButtons.SimpleImageButton;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
 
 public class JavadocSourceEditor implements IEditor {
@@ -35,12 +34,11 @@ public class JavadocSourceEditor implements IEditor {
 	private final String eclipseKey;
 	private final String softwareFmKey;
 	private final String mutatorKey;
-	private final String titleKey;
 	private ButtonParent buttonParent;
 	private Runnable okRunnable;
+	private StyledText helpText;
 
-	public JavadocSourceEditor(String titleKey, String eclipseKey, String softwareFmKey, String mutatorKey) {
-		this.titleKey = titleKey;
+	public JavadocSourceEditor(String eclipseKey, String softwareFmKey, String mutatorKey) {
 		this.eclipseKey = eclipseKey;
 		this.softwareFmKey = softwareFmKey;
 		this.mutatorKey = mutatorKey;
@@ -54,10 +52,11 @@ public class JavadocSourceEditor implements IEditor {
 	@Override
 	public Control createControl(ActionContext actionContext) {
 		content = Swts.newComposite(actionContext.rightHandSide.getComposite(), SWT.NULL, getClass().getSimpleName());
+		helpText = Swts.makeHelpDisplayer(content);
+		
 		final IDataGetter dataGetter = actionContext.dataGetter;
 		CompositeConfig config = actionContext.compositeConfig;
 
-		new Label(content, SWT.NULL).setText(IResourceGetter.Utils.getOrException(actionContext.compositeConfig.resourceGetter, titleKey));
 		buttonParent = new ButtonParent(content, config, SWT.NULL);
 
 		txtEclipse = new TitleAndText(config, content, "dialog.eclipseValue.title", true);
@@ -131,6 +130,8 @@ public class JavadocSourceEditor implements IEditor {
 
 		String softwareFmValue = Strings.nullSafeToString(dataGetter.getDataFor(softwareFmKey));
 		txtSoftwareFm.setText(softwareFmValue);
+		
+		Swts.setHelpText(helpText, actionContext.compositeConfig.resourceGetter, displayerDefn.helpKey);
 	}
 
 	private void cancel() {
@@ -150,7 +151,7 @@ public class JavadocSourceEditor implements IEditor {
 
 	public static void main(String[] args) {
 		Editors.display(JavadocSourceEditor.class.getSimpleName(),//
-				new JavadocSourceEditor(ConfigurationConstants.javadocKey, ConfigurationConstants.dataRawJavadoc, ConfigurationConstants.dataArtifactJavadoc, ConfigurationConstants.dataRawJavadocMutator), //
+				new JavadocSourceEditor(ConfigurationConstants.dataRawJavadoc, ConfigurationConstants.dataArtifactJavadoc, ConfigurationConstants.dataRawJavadocMutator), //
 				ConfigurationConstants.dataRawJavadoc, "rawJavadoc",//
 				ConfigurationConstants.dataArtifactJavadoc, "SfmJavadoc"
 				);

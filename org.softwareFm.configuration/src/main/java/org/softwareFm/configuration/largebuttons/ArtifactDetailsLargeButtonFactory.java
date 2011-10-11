@@ -18,13 +18,13 @@ public class ArtifactDetailsLargeButtonFactory extends LargeButtonFactory {
 
 		return guiBuilder.largeButton("largeButton.artifact.details",//
 				makeSfmSmallButton(guiBuilder, "smallButton.jar", ArtifactsAnchor.jarKey, "smallButton.artifact.nameAndDescription", "smallButton.jar.identifiers.title", false,//
-						guiBuilder.displayer("displayer.summary.javadoc").icon(ArtifactsAnchor.javadocKey).editor(editorJavadocKey).title(artifactJavadocTitle).guard(dataRawJavadoc, blankKey).tooltip(dataRawJavadoc), //
-						guiBuilder.displayer("displayer.summary.javadoc").icon(ArtifactsAnchor.sourceKey).editor(editorSourceKey).title(artifactSourceTitle).guard(dataRawSource, blankKey).tooltip(dataRawSource)),//
+						guiBuilder.displayer("displayer.summary.javadoc").icon(ArtifactsAnchor.javadocKey).editor(editorJavadocKey).help("javadoc.help").title(artifactJavadocTitle).guard(dataRawJavadoc, blankKey).tooltip(dataRawJavadoc), //
+						guiBuilder.displayer("displayer.summary.javadoc").icon(ArtifactsAnchor.sourceKey).editor(editorSourceKey).help("source.help").title(artifactSourceTitle).guard(dataRawSource, blankKey).tooltip(dataRawSource)),//
 
 				guiBuilder.smallButton("smallButton.project.issues", "smallButton.project.issues.title", "smallButton.data", ArtifactsAnchor.issuesKey,//
-						guiBuilder.displayer("displayer.compressed.text").guard(dataJarGroupId, blankKey).title(artifactIssuesTitle).data(dataArtifactIssues).tooltip(artifactIssuesTitle).actions(//
-								browseButton(guiBuilder), //
-								editTextButton(guiBuilder, ArtifactsAnchor.issuesKey))).data(dataArtifactIssues).tooltip(dataArtifactIssues), // ,//
+						guiBuilder.displayer("displayer.compressed.text").guard(dataJarGroupId, blankKey).editor(editorTextKey).title(artifactIssuesTitle).help("issues.help").//
+						data(dataArtifactIssues).tooltip(artifactIssuesTitle).actions(//
+								browseButton(guiBuilder))).data(dataArtifactIssues).tooltip(dataArtifactIssues), // ,//
 
 				guiBuilder.smallButton("smallButton.project.mailingLists", "smallButton.project.mailingLists.title", "smallButton.data", ArtifactsAnchor.mailingListKey,//
 						guiBuilder.listDisplayer("displayer.list", "listEditorId.nameAndEmail").guard(dataJarGroupId, blankKey).title(artifactMailingListTitle).data(dataArtifactMailingList).//

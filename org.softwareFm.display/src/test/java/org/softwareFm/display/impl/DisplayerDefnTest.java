@@ -24,6 +24,7 @@ public class DisplayerDefnTest extends TestCase {
 		assertEquals(displayer, displayerDefn.displayerFactory);
 		assertEquals(null, displayerDefn.dataKey);
 		assertEquals(null, displayerDefn.tooltip);
+		assertEquals(null, displayerDefn.helpKey);
 		assertEquals(null, displayerDefn.iconImageId);
 		assertEquals(null, displayerDefn.iconOverlayId);
 		assertEquals(false, displayerDefn.noIcon);
@@ -45,6 +46,12 @@ public class DisplayerDefnTest extends TestCase {
 		assertSame(displayerDefn, displayerDefn.noIcon());
 		assertTrue(displayerDefn.noIcon);
 	}
+	public void testHelp(){
+		assertSame(displayerDefn, displayerDefn.help("helpKey"));
+		assertEquals("helpKey", displayerDefn.helpKey);
+		
+	}
+	
 	public void testData() {
 		assertSame(displayerDefn, displayerDefn.data("dataKey"));
 		assertEquals("dataKey", displayerDefn.dataKey);
