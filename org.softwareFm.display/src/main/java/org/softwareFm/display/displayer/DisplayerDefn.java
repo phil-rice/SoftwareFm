@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -27,10 +29,11 @@ import org.softwareFm.utilities.strings.NameAndValue;
 import org.softwareFm.utilities.strings.Strings;
 
 public class DisplayerDefn {
+	private final static String noActionKey = "action.no.operation";
 
 	@Override
 	public String toString() {
-		return "DisplayerDefn [dataKey=" + dataKey + ", listEditorId=" + this.listEditorId + ", title=" + title + ", tooltip=" + tooltip + ", displayerFactory=" + displayerFactory + ", actionDefns=" + actionDefns + "]";
+		return "DisplayerDefn [title=" + title + ", dataKey=" + dataKey + ", defaultAction=" + defaultAction + ", tooltip=" + tooltip + ", editorId=" + editorId + ", listEditorId=" + listEditorId + ", listActionDefns=" + listActionDefns + ", guardKeys=" + guardKeys + ", iconImageId=" + iconImageId + ", iconOverlayId=" + iconOverlayId + ", actionDefns=" + actionDefns + "]";
 	}
 
 	public final IDisplayerFactory displayerFactory;
@@ -44,6 +47,9 @@ public class DisplayerDefn {
 	public String listEditorId;
 	public List<ActionDefn> listActionDefns;
 	public List<NameAndValue> guardKeys;
+	public String iconImageId;
+	public String iconOverlayId;
+	public boolean noIcon;
 
 	public DisplayerDefn(IDisplayerFactory displayer) {
 		this.displayerFactory = displayer;
@@ -131,9 +137,24 @@ public class DisplayerDefn {
 	}
 
 	public void createDefaultAction(final ActionContext actionContext, final IDisplayer displayer, final IButtonParent buttonParent, final int index) {
+
 		if (defaultAction == null)
-			return;
-		createButtonForAction(buttonParent, actionContext, displayer, index, defaultAction);
+			if (iconImageId == null)
+				if (noIcon)
+					return;
+				else
+					throw new IllegalStateException(MessageFormat.format(DisplayConstants.mustHaveA, "iconImage", this));
+			else {
+				IHasControl control = createButtonForAction(buttonParent, actionContext, displayer, index, new ActionDefn(noActionKey, iconImageId, iconOverlayId));
+				control.getControl().addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseDown(MouseEvent e) {
+						actionContext.editorFactory.displayEditor(actionContext, DisplayerDefn.this, displayer);
+					}
+				});
+			}
+		else
+			createButtonForAction(buttonParent, actionContext, displayer, index, defaultAction);
 	}
 
 	public void createButtons(final IButtonParent buttonParent, final ActionContext actionContext, final IDisplayer displayer) {
@@ -141,10 +162,10 @@ public class DisplayerDefn {
 			createButtonForAction(buttonParent, actionContext, displayer, -1, actionDefn);
 	}
 
-	public void createButtonForAction(final IButtonParent buttonParent, final ActionContext actionContext, final IDisplayer displayer, final int index, final ActionDefn actionDefn) {
+	public IHasControl createButtonForAction(final IButtonParent buttonParent, final ActionContext actionContext, final IDisplayer displayer, final int index, final ActionDefn actionDefn) {
 		CompositeConfig compositeConfig = actionContext.compositeConfig;
 		final ActionStore actionStore = actionContext.actionStore;
-		actionDefn.createButton(compositeConfig.imageButtonConfig, buttonParent, new IImageButtonListener() {
+		return actionDefn.createButton(compositeConfig.imageButtonConfig, buttonParent, new IImageButtonListener() {
 			private final IAction action = actionStore.get(actionDefn.id);
 
 			@Override
@@ -186,6 +207,22 @@ public class DisplayerDefn {
 
 	public ActionDefn getDefaultActionDefn() {
 		return defaultAction;
+	}
+
+	public DisplayerDefn noIcon() {
+		noIcon = true;
+		return this;
+	}
+
+	public DisplayerDefn icon(String iconId) {
+		iconImageId = iconId;
+		return this;
+	}
+
+	public DisplayerDefn icon(String iconId, String overlayId) {
+		iconImageId = iconId;
+		iconOverlayId = overlayId;
+		return this;
 	}
 
 }

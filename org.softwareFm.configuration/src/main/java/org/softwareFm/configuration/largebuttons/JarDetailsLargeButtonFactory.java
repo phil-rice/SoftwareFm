@@ -21,9 +21,9 @@ public class JarDetailsLargeButtonFactory extends LargeButtonFactory {
 						guiBuilder.displayer("displayer.compressed.text").editor(editorTextKey).title(artifactUrlTitle).data(dataArtifactUrl).tooltip(dataArtifactUrl).//
 								guard(dataRawHexDigest, blankKey, //
 										dataJarArtifactId, softwareFmIdMissingTitle,//
-										dataArtifactUrl, artifactUrlMissingTitle),//
+										dataArtifactUrl, artifactUrlMissingTitle).actions(browseButton(guiBuilder)),//
 
-						guiBuilder.displayer("displayer.compressed.styled.text").editor(editorStyledTextKey).title(artifactDescriptionTitle).data(dataArtifactDescription).//
+						guiBuilder.displayer("displayer.compressed.styled.text").noIcon().editor(editorStyledTextKey).title(artifactDescriptionTitle).data(dataArtifactDescription).//
 								guard(dataRawHexDigest, descriptionOfNoneJarFile, dataJarArtifactId, descriptionWhenIdsNotDefined)));
 
 	}

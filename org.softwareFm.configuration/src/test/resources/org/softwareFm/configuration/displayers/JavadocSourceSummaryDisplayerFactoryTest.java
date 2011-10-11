@@ -29,7 +29,7 @@ public class JavadocSourceSummaryDisplayerFactoryTest extends TestCase {
 
 	private void checkTitle(String eclipse, String softwareFm, String expected) {
 		JavadocSourceSummaryDisplayerFactory displayerFactory = new JavadocSourceSummaryDisplayerFactory("data.raw.jar.javadoc", "data.jar.javadoc");
-		DisplayerDefn defn = new DisplayerDefn(displayerFactory);
+		DisplayerDefn defn = new DisplayerDefn(displayerFactory).noIcon();
 		DataGetterMock dataGetter = new DataGetterMock("data.raw.jar.javadoc", eclipse, "data.jar.javadoc", softwareFm);
 		ActionContext actionContext = new ActionContext(null, null, dataGetter, null, compositeConfig, null, null, null, null);
 		

@@ -30,10 +30,10 @@ public class EditorFactory implements IEditorFactory, ISimpleMap<String, IEditor
 	@Override
 	public void displayEditor(final ActionContext actionContext, final DisplayerDefn displayerDefn, IDisplayer displayer) {
 		try {
-			if (displayerDefn.editorId==null)
-				throw new IllegalStateException(MessageFormat.format(DisplayConstants.mustHaveA, "editorId", displayerDefn));
 			if (editor != null)
 				cancel();
+			if (displayerDefn.editorId==null)
+				return;
 			rightHandSide = actionContext.rightHandSide;
 			rememberedControl = rightHandSide.getVisibleControl();
 			editor = get(displayerDefn.editorId);

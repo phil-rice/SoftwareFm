@@ -18,8 +18,8 @@ public class ArtifactDetailsLargeButtonFactory extends LargeButtonFactory {
 
 		return guiBuilder.largeButton("largeButton.artifact.details",//
 				makeSfmSmallButton(guiBuilder, "smallButton.jar", ArtifactsAnchor.jarKey, "smallButton.artifact.nameAndDescription", "smallButton.jar.identifiers.title", false,//
-						guiBuilder.displayer("displayer.summary.javadoc").editor(editorJavadocKey).title(artifactJavadocTitle).guard(dataRawJavadoc, blankKey).tooltip(dataRawJavadoc), //
-						guiBuilder.displayer("displayer.summary.javadoc").editor(editorSourceKey).title(artifactSourceTitle).guard(dataRawSource, blankKey).tooltip(dataRawSource)),//
+						guiBuilder.displayer("displayer.summary.javadoc").icon(ArtifactsAnchor.jarKey).editor(editorJavadocKey).title(artifactJavadocTitle).guard(dataRawJavadoc, blankKey).tooltip(dataRawJavadoc), //
+						guiBuilder.displayer("displayer.summary.javadoc").icon(ArtifactsAnchor.jarKey).editor(editorSourceKey).title(artifactSourceTitle).guard(dataRawSource, blankKey).tooltip(dataRawSource)),//
 
 				guiBuilder.smallButton("smallButton.project.issues", "smallButton.project.issues.title", "smallButton.data", ArtifactsAnchor.issuesKey,//
 						guiBuilder.displayer("displayer.compressed.text").guard(dataJarGroupId, blankKey).title(artifactIssuesTitle).data(dataArtifactIssues).tooltip(artifactIssuesTitle).actions(//

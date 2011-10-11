@@ -17,6 +17,7 @@ import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.actions.ActionDefn;
 import org.softwareFm.display.actions.ActionMock;
 import org.softwareFm.display.actions.ActionStore;
+import org.softwareFm.display.actions.NoOperationAction;
 import org.softwareFm.display.composites.AbstractTitleAndText;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.data.DataGetterMock;
@@ -35,6 +36,7 @@ import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.tests.IIntegrationTest;
+import org.softwareFm.utilities.tests.Tests;
 
 public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrationTest {
 
@@ -50,18 +52,41 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 	private TextEditor editor;
 	private IHasRightHandSide rightHandSide;
 
-	public void testCreateWithNoButtons() {
-		IDisplayer displayer = displayerDefn.createDisplayer(shell, actionContext);
-		checkNoButtons(displayer);
+
+	public void testCreateWithNoButtonsAndIconSet() {
+		IDisplayer displayer = displayerDefn.icon(ArtifactsAnchor.projectKey).createDisplayer(shell, actionContext);
+		checkNoButtons(displayer, ArtifactsAnchor.projectKey, null);
 	}
 
-	public void testWithOneButton() {
+	public void testCreateWithNoButtonsAndIconAndOverlaySet() {
+		IDisplayer displayer = displayerDefn.icon(ArtifactsAnchor.issuesKey, OverlaysAnchor.deleteKey).createDisplayer(shell, actionContext);
+		checkNoButtons(displayer, ArtifactsAnchor.issuesKey, OverlaysAnchor.deleteKey);
+	}
+
+	public void testNoIconIfNoIconSet(){
+		IDisplayer displayer = displayerDefn.noIcon().createDisplayer(shell, actionContext);
+		Control[] children = displayer.getButtonComposite().getChildren();
+		assertEquals(0, children.length);
+		
+	}
+	
+	public void testIconMustBeSetIfNoDefaultAction() {
+		IllegalStateException e = Tests.assertThrows(IllegalStateException.class, new Runnable() {
+			@Override
+			public void run() {
+				displayerDefn.createDisplayer(shell, actionContext);
+			}
+		});
+		assertEquals("Must have a iconImage in DisplayerDefn [title=someTitle, dataKey=null, defaultAction=null, tooltip=null, editorId=null, listEditorId=null, listActionDefns=null, guardKeys=null, iconImageId=null, iconOverlayId=null, actionDefns=[]]", e.getMessage());
+	}
+
+	public void testWithOneAction() {
 		DisplayerDefn dispDefnWithButton = displayerDefn.actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).tooltip("tooltip0"));
 		IDisplayer displayer = dispDefnWithButton.createDisplayer(shell, actionContext);
 		checkButtons(displayer, ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey);
 	}
 
-	public void testWithTwoButton() {
+	public void testWithTwoActions() {
 		DisplayerDefn dispDefnWithButton = displayerDefn.actions(//
 				new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).tooltip("tooltip0"),//
 				new ActionDefn("someId", ArtifactsAnchor.facebookKey, OverlaysAnchor.addKey).tooltip("tooltip1"));
@@ -69,7 +94,7 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 		checkButtons(displayer, ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey);
 	}
 
-	public void testWithDefaultButtonNotTheFirstOne() {
+	public void testWithDefaultActionNotTheFirstOne() {
 		DisplayerDefn dispDefnWithButton = displayerDefn.actions(//
 				new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).tooltip("tooltip0"),//
 				new ActionDefn("someId", ArtifactsAnchor.facebookKey, null).tooltip("tooltip1").thisIsDefault());
@@ -124,21 +149,24 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 	public void testMainControlCausesEditorToBeDisplayer() {
 		DisplayerDefn dispDefnWithButton = displayerDefn.//
 				data("data.entity.key").//
-				editor("someEditor").
-				actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
+				editor("someEditor").actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
 		CompressedText displayer = (CompressedText) dispDefnWithButton.createDisplayer(shell, actionContext);
 		Label label = displayer.getLabel();
 		assertFalse(editor.getControl().isVisible());
 		label.notifyListeners(SWT.MouseDown, new Event());
 		AbstractTitleAndText<Text> text = editor.getText();
-		assertEquals("value", text.getText()); //extracted from data getter
+		assertEquals("value", text.getText()); // extracted from data getter
 		assertEquals(editor.getControl(), rightHandSide.getVisibleControl());
 
 	}
 
-	private void checkNoButtons(IDisplayer displayer) {
+	private void checkNoButtons(IDisplayer displayer, String expectedIcon, String expectedOverlay) {
 		Control[] children = displayer.getButtonComposite().getChildren();
-		assertEquals(0, children.length);
+		assertEquals(1, children.length);
+		SimpleImageControl control = (SimpleImageControl) children[0];
+		assertEquals(expectedIcon, control.config.mainImage);
+		assertEquals(expectedOverlay, control.config.overlayImage);
+
 	}
 
 	private void checkButtons(IDisplayer displayer, String main, String overlay) {
@@ -156,10 +184,10 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 		super.setUp();
 		shell = new Shell();
 		actionMock = new ActionMock("someAction");
-		actionStore = new ActionStore().action("someId", actionMock);
+		actionStore = new ActionStore().action("someId", actionMock).action("action.no.operation", new NoOperationAction());
 		ImageRegistry imageRegistry = new ImageRegistry();
 		new BasicImageRegisterConfigurator().registerWith(shell.getDisplay(), imageRegistry);
-		IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(new ResourceGetterMock("someTitle", "registeredTitle", "button.cancel.title" ,"cancelValue", "button.ok.title", "okValue"));
+		IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(new ResourceGetterMock("someTitle", "registeredTitle", "button.cancel.title", "cancelValue", "button.ok.title", "okValue"));
 		editor = new TextEditor();
 		IEditorFactory editorFactory = new EditorFactory().register("someEditor", editor);
 		rightHandSide = IHasRightHandSide.Utils.makeRightHandSide(shell);
@@ -167,8 +195,6 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 		actionContext = new ActionContext(rightHandSide, actionStore, new DataGetterMock("data.entity.key", "value"), entityToUrl, new CompositeConfig(shell.getDisplay(), new SoftwareFmLayout(), imageRegistry, resourceGetter), editorFactory, null, null, null);
 		editor.createControl(actionContext);
 		displayerDefn = new DisplayerDefn(new CompressedTextDisplayerFactory()).title("someTitle");
-
-
 	}
 
 	@Override

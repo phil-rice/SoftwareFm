@@ -7,6 +7,7 @@ import org.softwareFm.display.actions.IActionStoreConfigurator;
 import org.softwareFm.display.actions.ListAddAction;
 import org.softwareFm.display.actions.ListDeleteAction;
 import org.softwareFm.display.actions.ListEditAction;
+import org.softwareFm.display.actions.NoOperationAction;
 import org.softwareFm.display.actions.SearchForAction;
 import org.softwareFm.display.actions.ViewTweetsAction;
 
@@ -15,10 +16,11 @@ public class ActionStoreConfigurator implements IActionStoreConfigurator {
 	@Override
 	public void process(ActionStore actionStore) throws Exception {
 		actionStore.//
+				action("action.no.operation", new NoOperationAction()).//
 				action("action.url.search", new SearchForAction()).//
 				action("action.rss.browse", new BrowseRssAction()).//
 				action("action.text.browse", new BrowseAction()).//
-		
+
 				action("action.list.add", new ListAddAction()).//
 				action("action.list.edit", new ListEditAction()).//
 				action("action.list.delete", new ListDeleteAction()).//
