@@ -23,7 +23,6 @@ public class JarEditor implements IEditor {
 	private TitleAndText jarPathText;
 	private TitleAndText jarNameText;
 	private ButtonParent buttonParent;
-	private IEditorCompletion completion;
 
 	@Override
 	public Control getControl() {
@@ -50,7 +49,6 @@ public class JarEditor implements IEditor {
 	
 	@Override
 	public void edit(IDisplayer parent, DisplayerDefn displayerDefn, ActionContext actionContext, final IEditorCompletion completion) {
-		this.completion = completion;
 		Swts.layoutDump(content);
 		Object jarPath = actionContext.dataGetter.getDataFor(ConfigurationConstants.dataRawJarPath);
 		Object jarName = actionContext.dataGetter.getDataFor(ConfigurationConstants.dataRawJarName);

@@ -13,7 +13,7 @@ public class EntityToUrlMock implements IFunction1<String, String> {
 	public List<String> entities = Lists.newList();
 
 	public EntityToUrlMock(String... namesAndValues) {
-		map = Maps.makeMap(namesAndValues);
+		map = Maps.makeMap((Object[])namesAndValues);
 	}
 
 	@Override

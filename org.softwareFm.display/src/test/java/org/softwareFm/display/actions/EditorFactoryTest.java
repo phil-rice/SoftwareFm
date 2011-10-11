@@ -2,7 +2,6 @@ package org.softwareFm.display.actions;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
@@ -13,7 +12,6 @@ import org.softwareFm.display.IHasRightHandSide;
 import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.TitleAnd;
-import org.softwareFm.display.data.ActionData;
 import org.softwareFm.display.displayer.DisplayerDefn;
 import org.softwareFm.display.editor.EditorFactory;
 import org.softwareFm.display.editor.IEditor;
@@ -24,18 +22,11 @@ import org.softwareFm.display.swt.Swts;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.utilities.maps.AbstractSimpleMapTest;
 import org.softwareFm.utilities.maps.ISimpleMap;
-import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class EditorFactoryTest extends AbstractSimpleMapTest<String, IEditor> {
 
 	private Shell shell;
-	private final List<String> formalParams1 = Arrays.asList("fp1");
-	private final List<String> formalParams2 = Arrays.asList("fp2");
-	private final List<Object> actualParams1 = Arrays.<Object> asList("ap1");
-	private final List<Object> actualParams2 = Arrays.<Object> asList("ap2");
-	private final ActionData actionData1 = new ActionData(Maps.<String, String> newMap(), formalParams1, actualParams1);
-	private final ActionData actionData2 = new ActionData(Maps.<String, String> newMap(), formalParams2, actualParams2);
 	ActionContext actionContext = null;
 	private DisplayerDefn displayerDefn1;
 	private Label original;

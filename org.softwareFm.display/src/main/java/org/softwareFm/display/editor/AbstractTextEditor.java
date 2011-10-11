@@ -22,7 +22,6 @@ import org.softwareFm.utilities.strings.Strings;
 public abstract class AbstractTextEditor<T extends Control> implements IEditor {
 	private Composite content;
 	protected AbstractTitleAndText<T> text;
-	private IEditorCompletion completion;
 	private ButtonParent buttonParent;
 	private Runnable okRunnable;
 
@@ -30,7 +29,6 @@ public abstract class AbstractTextEditor<T extends Control> implements IEditor {
 
 	@Override
 	public void edit(IDisplayer parent, final DisplayerDefn displayerDefn, ActionContext actionContext, final IEditorCompletion completion) {
-		this.completion = completion;
 		String title = IResourceGetter.Utils.getOrException(actionContext.compositeConfig.resourceGetter, displayerDefn.title);
 		String rawText = Strings.nullSafeToString(actionContext.dataGetter.getDataFor(displayerDefn.dataKey));
 		text.setTitle(title);
