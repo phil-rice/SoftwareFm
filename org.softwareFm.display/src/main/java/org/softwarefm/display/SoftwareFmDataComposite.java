@@ -140,7 +140,8 @@ public class SoftwareFmDataComposite implements IHasComposite {
 				}
 				Swts.addGrabHorizontalAndFillGridDataToAllChildren(group);
 			}
-			Swts.addGrabHorizontalAndFillGridDataToAllChildren(largeButtonComposite);
+			Swts.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(largeButtonComposite,actionContext.compositeConfig.layout.dataMargin);
+			
 		}
 		rightHandSide = Swts.newComposite(secondRow, SWT.BORDER, "RightHandSide");
 		rightHandSideLayout = new StackLayout();

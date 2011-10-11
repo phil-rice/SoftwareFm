@@ -74,7 +74,7 @@ public abstract class AbstractTextEditor<T extends Control> implements IEditor {
 		});
 		buttonParent = new ButtonParent(content, actionContext.compositeConfig, SWT.NULL);
 
-		Swts.addGrabHorizontalAndFillGridDataToAllChildren(content);
+		Swts.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(content, actionContext.compositeConfig.layout.dataMargin);
 		return content;
 	}
 

@@ -28,7 +28,7 @@ import org.softwareFm.utilities.strings.Strings;
 
 public class JavadocSourceEditor implements IEditor {
 	private IEditorCompletion completion;
-	private Composite contents;
+	private Composite content;
 	private TitleAndText txtEclipse;
 	private TitleAndText txtSoftwareFm;
 	private TitleAndText txtExperiment;
@@ -48,31 +48,31 @@ public class JavadocSourceEditor implements IEditor {
 
 	@Override
 	public Control getControl() {
-		return contents;
+		return content;
 	}
 
 	@Override
 	public Control createControl(ActionContext actionContext) {
-		contents = Swts.newComposite(actionContext.rightHandSide.getComposite(), SWT.NULL, getClass().getSimpleName());
+		content = Swts.newComposite(actionContext.rightHandSide.getComposite(), SWT.NULL, getClass().getSimpleName());
 		final IDataGetter dataGetter = actionContext.dataGetter;
 		CompositeConfig config = actionContext.compositeConfig;
 
-		new Label(contents, SWT.NULL).setText(IResourceGetter.Utils.getOrException(actionContext.compositeConfig.resourceGetter, titleKey));
-		buttonParent = new ButtonParent(contents, config, SWT.NULL);
+		new Label(content, SWT.NULL).setText(IResourceGetter.Utils.getOrException(actionContext.compositeConfig.resourceGetter, titleKey));
+		buttonParent = new ButtonParent(content, config, SWT.NULL);
 
-		txtEclipse = new TitleAndText(config, contents, "dialog.eclipseValue.title", true);
+		txtEclipse = new TitleAndText(config, content, "dialog.eclipseValue.title", true);
 		txtEclipse.setEditable(false);
 		addCopyToSoftwareFmButton(config, actionContext, txtEclipse, false);
 
-		txtSoftwareFm = new TitleAndText(config, contents, "dialog.softwareFmValue.title", true);
+		txtSoftwareFm = new TitleAndText(config, content, "dialog.softwareFmValue.title", true);
 		txtSoftwareFm.setEditable(false);
 		addCopyToEclipseButton(config, dataGetter, txtSoftwareFm, false);
 
-		txtExperiment = new TitleAndText(config, contents, "dialog.experiment.title", true);
+		txtExperiment = new TitleAndText(config, content, "dialog.experiment.title", true);
 		addCopyToEclipseButton(config, dataGetter, txtExperiment, true);
 		addCopyToSoftwareFmButton(config, actionContext, txtExperiment, true);
 
-		Composite buttonPanel = new Composite(contents, SWT.NULL);
+		Composite buttonPanel = new Composite(content, SWT.NULL);
 		buttonPanel.setLayout(new GridLayout(3, true));
 		okRunnable = new Runnable() {
 			@Override
@@ -80,14 +80,14 @@ public class JavadocSourceEditor implements IEditor {
 				sendResult();
 			}
 		};
-		Swts.makeAcceptCancelComposite(contents, SWT.NULL, actionContext.compositeConfig.resourceGetter, okRunnable, new Runnable() {
+		Swts.makeAcceptCancelComposite(content, SWT.NULL, actionContext.compositeConfig.resourceGetter, okRunnable, new Runnable() {
 			@Override
 			public void run() {
 				cancel();
 			}
 		});
-		Swts.addGrabHorizontalAndFillGridDataToAllChildren(contents);
-		return contents;
+		Swts.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(content, actionContext.compositeConfig.layout.dataMargin);
+		return content;
 	}
 
 	private SimpleImageButton addCopyToEclipseButton(CompositeConfig compositeConfig, final IDataGetter dataGetter, final TitleAndText parent, boolean onlyEnableIfHasValue) {

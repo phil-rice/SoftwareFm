@@ -15,5 +15,6 @@ public class SoftwareFmLayout {
 	public int styledTextHeight = 6* textHeight;
 	public int okCancelHeight= 24;
 	public int okCancelWidth = 40;
+	public int dataMargin = 3;
 
 }

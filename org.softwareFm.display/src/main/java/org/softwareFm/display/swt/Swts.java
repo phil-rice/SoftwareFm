@@ -77,16 +77,20 @@ public class Swts {
 		};
 	}
 
-	public static void addGrabHorizontalAndFillGridDataToAllChildren(Composite composite) {
+	public static void addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(Composite composite, int margin) {
 		GridLayout layout = new GridLayout();
-		layout.marginWidth = 0;
+		layout.marginWidth = margin;
+		layout.marginHeight = margin;
 		layout.verticalSpacing = 0;
-		layout.marginHeight = 0;
 		composite.setLayout(layout);
 		for (Control control : composite.getChildren()) {
 			GridData data = makeGrabHorizonalAndFillGridData();
 			control.setLayoutData(data);
 		}
+	}
+
+	public static void addGrabHorizontalAndFillGridDataToAllChildren(Composite composite) {
+		addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(composite, 0);
 	}
 
 	public static void addGrabHorizontalAndFillGridDataToAllChildrenWithHeightHint(Composite composite, int heightHint) {
@@ -100,7 +104,6 @@ public class Swts {
 			control.setLayoutData(data);
 		}
 	}
-	
 
 	public static void addAcceptCancel(IButtonParent buttonParent, CompositeConfig config, final Runnable onAccept, final Runnable onCancel) {
 		IResourceGetter resourceGetter = config.resourceGetter;
@@ -125,8 +128,7 @@ public class Swts {
 		cancelButton.setLayoutData(new RowData(config.layout.okCancelWidth, config.layout.okCancelHeight));
 		okButton.setLayoutData(new RowData(config.layout.okCancelWidth, config.layout.okCancelHeight));
 		buttonComposite.layout();
-		buttonComposite.getParent().layout(); //only needed I think if there are no other buttons on the button composite
-		
+		buttonComposite.getParent().layout(); // only needed I think if there are no other buttons on the button composite
 
 	}
 

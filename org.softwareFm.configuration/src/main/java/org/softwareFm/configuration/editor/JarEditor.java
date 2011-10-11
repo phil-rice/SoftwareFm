@@ -38,8 +38,8 @@ public class JarEditor implements IEditor {
 		jarPathText.setEditable(false);
 		jarNameText.setEditable(false);
 		buttonParent = new ButtonParent(content, config, SWT.NULL);
-
-		Swts.addGrabHorizontalAndFillGridDataToAllChildren(content);
+	
+		Swts.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(content, actionContext.compositeConfig.layout.dataMargin);
 //		content.setLayout(Swts.getHorizonalNoMarginRowLayout());
 //		for (Control child: content.getChildren())
 //			child.setLayoutData(new RowData());
