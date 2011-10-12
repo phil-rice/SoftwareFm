@@ -18,6 +18,7 @@ public abstract class AbstractCompressed<T extends Control> implements IDisplaye
 	protected final Composite content;
 	protected final Composite buttonPanel;
 	protected final T control;
+	private boolean shouldBeEnabled;
 
 	public AbstractCompressed(Composite parent, int style, CompositeConfig config) {
 		this.config = config;
@@ -71,7 +72,12 @@ public abstract class AbstractCompressed<T extends Control> implements IDisplaye
 	}
 
 	public void setEnabled(boolean enabled) {
+		this.shouldBeEnabled = enabled;
 		control.setEnabled(enabled);
+	}
+	
+	public boolean isShouldBeEnabled() {
+		return shouldBeEnabled;
 	}
 
 }

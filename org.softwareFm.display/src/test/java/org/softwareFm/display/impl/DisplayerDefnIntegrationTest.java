@@ -79,14 +79,15 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 		assertEquals("Must have a iconImage in DisplayerDefn [title=someTitle, dataKey=null, defaultAction=null, tooltip=null, editorId=null, listEditorId=null, listActionDefns=null, guardKeys=null, iconImageId=null, iconOverlayId=null, actionDefns=[]]", e.getMessage());
 	}
 
-	public void testHelpAppearsInHelpArea(){
+	public void testHelpAppearsInHelpArea() {
 		DisplayerDefn defn = displayerDefn.help("helpKey").noIcon().editor("someEditor");
 		CompressedText displayer = (CompressedText) defn.createDisplayer(shell, actionContext);
 		Label label = displayer.getLabel();
 		label.notifyListeners(SWT.MouseDown, new Event());
 		assertEquals("helpValue", editor.getHelpControl().getText());
 	}
-	public void testBlankAppearsInHelpAreaWhenHelpNotSpecified(){
+
+	public void testBlankAppearsInHelpAreaWhenHelpNotSpecified() {
 		DisplayerDefn defn = displayerDefn.noIcon().editor("someEditor");
 		CompressedText displayer = (CompressedText) defn.createDisplayer(shell, actionContext);
 		Label label = displayer.getLabel();
@@ -171,7 +172,54 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 		AbstractTitleAndText<Text> text = editor.getText();
 		assertEquals("value", text.getText()); // extracted from data getter
 		assertEquals(editor.getControl(), rightHandSide.getVisibleControl());
+		assertTrue(editor.getControl().isEnabled());
 
+	}
+
+	public void testEditorIsDisabledIfGuardPresent() {
+		DisplayerDefn defn = displayerDefn.//
+				guard("data.entity.notIn", "guardKey").//
+				data("data.entity.key").//
+				editor("someEditor").actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
+		CompressedText displayer = (CompressedText) defn.createDisplayer(shell, actionContext);
+		defn.data(actionContext, defn, displayer, "entity", "url");
+		Label label = displayer.getLabel();
+		assertEquals("guardTitle", label.getText()); // extracted from data getter
+		assertFalse(displayer.isShouldBeEnabled());// cannot actually tell if it is enabled. Think this is because the control is invisible
+	}
+
+	public void testEditorIsEnabledIfToldToIgnoreMissingGuard() {
+		DisplayerDefn defn = displayerDefn.//
+				guard("data.entity.notIn", "guardKey").//
+				data("data.entity.key").//
+				editor("someEditor").editorIgnoreGuard("data.entity.notIn").actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
+		CompressedText displayer = (CompressedText) defn.createDisplayer(shell, actionContext);
+		defn.data(actionContext, defn, displayer, "entity", "url");
+		Label label = displayer.getLabel();
+		assertEquals("guardTitle", label.getText()); // extracted from data getter
+		assertTrue(displayer.isShouldBeEnabled());// cannot actually tell if it is enabled. Think this is because the control is invisible
+	}
+	public void testEditorIsDisabledIfToldToIgnoreMissingGuardButOtherGuardExists() {
+		DisplayerDefn defn = displayerDefn.//
+				guard("data.entity.alsoNotIn", "guardKey2","data.entity.notIn", "guardKey").//
+				data("data.entity.key").//
+				editor("someEditor").editorIgnoreGuard("data.entity.notIn").actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
+		CompressedText displayer = (CompressedText) defn.createDisplayer(shell, actionContext);
+		defn.data(actionContext, defn, displayer, "entity", "url");
+		Label label = displayer.getLabel();
+		assertEquals("guardTitle2", label.getText()); // extracted from data getter
+		assertFalse(displayer.isShouldBeEnabled());// cannot actually tell if it is enabled. Think this is because the control is invisible
+	}
+	public void testEditorIsDisabledIfToldToIgnoreMissingGuardButOtherGuardExistsWithGuardsInDifferentOrder() {
+		DisplayerDefn defn = displayerDefn.//
+				guard("data.entity.notIn", "guardKey","data.entity.alsoNotIn", "guardKey2").//
+				data("data.entity.key").//
+				editor("someEditor").editorIgnoreGuard("data.entity.notIn").actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
+		CompressedText displayer = (CompressedText) defn.createDisplayer(shell, actionContext);
+		defn.data(actionContext, defn, displayer, "entity", "url");
+		Label label = displayer.getLabel();
+		assertEquals("guardTitle", label.getText()); // extracted from data getter
+		assertFalse(displayer.isShouldBeEnabled());// cannot actually tell if it is enabled. Think this is because the control is invisible
 	}
 
 	private void checkNoButtons(IDisplayer displayer, String expectedIcon, String expectedOverlay) {
@@ -203,12 +251,13 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 		new BasicImageRegisterConfigurator().registerWith(shell.getDisplay(), imageRegistry);
 		IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(new ResourceGetterMock(//
 				"someTitle", "registeredTitle", "button.cancel.title", "cancelValue", //
+
 				"button.ok.title", "okValue", "helpKey", "helpValue"));
 		editor = new TextEditor();
 		IEditorFactory editorFactory = new EditorFactory().register("someEditor", editor);
 		rightHandSide = IHasRightHandSide.Utils.makeRightHandSide(shell);
 		EntityToUrlMock entityToUrl = new EntityToUrlMock("entity", "urlForEntity");
-		actionContext = new ActionContext(rightHandSide, actionStore, new DataGetterMock("data.entity.key", "value"), entityToUrl, new CompositeConfig(shell.getDisplay(), new SoftwareFmLayout(), imageRegistry, resourceGetter), editorFactory, null, null, null);
+		actionContext = new ActionContext(rightHandSide, actionStore, new DataGetterMock("data.entity.key", "value", "guardKey", "guardTitle",  "guardKey2", "guardTitle2"), entityToUrl, new CompositeConfig(shell.getDisplay(), new SoftwareFmLayout(), imageRegistry, resourceGetter), editorFactory, null, null, null);
 		editor.createControl(actionContext);
 		displayerDefn = new DisplayerDefn(new CompressedTextDisplayerFactory()).title("someTitle");
 	}

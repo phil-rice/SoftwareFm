@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.display.IHasRightHandSide;
@@ -56,6 +57,11 @@ public class EditorFactory implements IEditorFactory, ISimpleMap<String, IEditor
 				public void ok(Map<String, Object> value) {
 					editor = null;
 					rightHandSide.makeVisible(rememberedControl);
+					for (Entry<String, Object> entry : value.entrySet()) {
+						if (entry.getKey() == null)
+							throw new NullPointerException(value.toString());
+					}
+
 					actionContext.updateStore.update(rip.entity, url, value);
 					rememberedDisplayer.unhighlight();
 				}

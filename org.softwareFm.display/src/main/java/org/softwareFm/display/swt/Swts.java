@@ -83,8 +83,9 @@ public class Swts {
 	}
 
 	public static StyledText makeHelpDisplayer(Composite parent) {
-		StyledText text = new StyledText(parent, SWT.WRAP);
+		StyledText text = new StyledText(parent, SWT.WRAP|SWT.BORDER);
 		text.setEditable(false);
+		text.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 		return text;
 
 	}
@@ -112,7 +113,7 @@ public class Swts {
 		GridLayout layout = new GridLayout();
 		layout.marginWidth = margin;
 		layout.marginHeight = margin;
-		layout.verticalSpacing = 0;
+		layout.verticalSpacing = 5;
 		composite.setLayout(layout);
 		for (Control control : composite.getChildren()) {
 			GridData data = makeGrabHorizonalAndFillGridData();

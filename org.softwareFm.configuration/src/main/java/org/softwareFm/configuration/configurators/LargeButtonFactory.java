@@ -66,10 +66,11 @@ public abstract class LargeButtonFactory extends ConfigurationConstants implemen
 						dataJarVersion, softwareFmIdMissingTitle);
 
 		DisplayerDefn sfmName = guiBuilder.displayer("displayer.compressed.text").icon(ArtifactsAnchor.projectKey).//
-				editor(editorTextKey).title(artifactNameTitle).data(dataArtifactName).help("softwareFm.name.help").
+				editor(editorTextKey).editorIgnoreGuard(dataArtifactName).title(artifactNameTitle).data(dataArtifactName).help("softwareFm.name.help").
 				guard(dataRawHexDigest, blankKey, dataJarArtifactId, softwareFmIdMissingTitle, dataArtifactName, artifactNameMissingTitle);
 		
-		DisplayerDefn jarName = guiBuilder.displayer("displayer.compressed.text").icon(ArtifactsAnchor.jarKey).editor(editorJarKey).help("jar.help").title(jarNameTitle).data(dataRawJarName).tooltip(dataRawJarPath).actions(//
+		DisplayerDefn jarName = guiBuilder.displayer("displayer.compressed.text").icon(ArtifactsAnchor.jarKey).//
+				editor(editorJarKey).help("jar.help").title(jarNameTitle).data(dataRawJarName).tooltip(dataRawJarPath).actions(//
 				guiBuilder.action("action.url.search", GeneralAnchor.searchKey).tooltip("action.search.tooltip"));
 		
 		DisplayerDefn[] baseDefns = includeJar ? new DisplayerDefn[] { sfmId, jarName, sfmName } : new DisplayerDefn[] { sfmId, sfmName };

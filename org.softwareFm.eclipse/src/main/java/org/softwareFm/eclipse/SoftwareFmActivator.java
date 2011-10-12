@@ -11,6 +11,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -46,6 +48,8 @@ import org.softwareFm.display.smallButtons.SmallButtonStore;
 import org.softwareFm.display.timeline.IPlayListContributor;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.display.timeline.PlayListFromArtifactGetter;
+import org.softwareFm.httpClient.api.IHttpClient;
+import org.softwareFm.httpClient.constants.HttpClientConstants;
 import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.jdtBinding.api.IBindingRipper;
@@ -54,6 +58,7 @@ import org.softwareFm.jdtBinding.api.JdtConstants;
 import org.softwareFm.jdtBinding.api.RippedResult;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
+import org.softwareFm.repositoryFacard.impl.RepositoryFacard;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Files;
@@ -176,7 +181,6 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		return resourceGetter == null ? resourceGetter = IResourceGetter.Utils.noResources().with(SoftwareFmPropertyAnchor.class, "SoftwareFmDisplay") : resourceGetter;
 	}
 
-
 	public GuiBuilder getGuiBuilder() {
 		return guiBuilder == null ? guiBuilder = new GuiBuilder(getSmallButtonStore(), getActionStore(), getDisplayerStore(), getListEditorStore()) : guiBuilder;
 	}
@@ -275,7 +279,16 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	}
 
 	public IRepositoryFacard getRepository() {
-		return repository == null ? repository = IRepositoryFacard.Utils.defaultFacardWithHeaders("SoftwareFm", getUuid()) : repository;
+		if (repository == null) {
+			//String host = HttpClientConstants.defaultHost;// "178.79.180.172";
+//			int port = HttpClientConstants.defaultPort;// 8080;
+			String host =  "178.79.180.172";
+			int port =  8080;
+			IHttpClient client = IHttpClient.Utils.builder(host, port).withCredentials(HttpClientConstants.userName, HttpClientConstants.password).//
+					setDefaultHeaders(Arrays.<NameValuePair> asList(new BasicNameValuePair("SoftwareFm", getUuid())));
+			repository = new RepositoryFacard(client, "sfm");
+		}
+		return repository;
 	}
 
 	public SoftwareFmDataComposite makeComposite(final Composite parent) {

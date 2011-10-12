@@ -34,12 +34,12 @@ public class JarEditor implements IEditor {
 	public Control createControl(ActionContext actionContext) {
 		content = Swts.newComposite(actionContext.rightHandSide.getComposite(), SWT.NULL, getClass().getSimpleName());
 		CompositeConfig config = actionContext.compositeConfig;
-		helpText = Swts.makeHelpDisplayer(content);
 		jarPathText = new TitleAndText(config, content, ConfigurationConstants.jarPathTitle, true);
 		jarNameText = new TitleAndText(config, content, ConfigurationConstants.jarNameTitle, true);
 		jarPathText.setEditable(false);
 		jarNameText.setEditable(false);
 		buttonParent = new ButtonParent(content, config, SWT.NULL);
+		helpText = Swts.makeHelpDisplayer(content);
 	
 		Swts.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(content, actionContext.compositeConfig.layout.dataMargin);
 //		content.setLayout(Swts.getHorizonalNoMarginRowLayout());

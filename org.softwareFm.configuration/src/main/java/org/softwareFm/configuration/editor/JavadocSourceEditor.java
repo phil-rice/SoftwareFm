@@ -52,7 +52,6 @@ public class JavadocSourceEditor implements IEditor {
 	@Override
 	public Control createControl(ActionContext actionContext) {
 		content = Swts.newComposite(actionContext.rightHandSide.getComposite(), SWT.NULL, getClass().getSimpleName());
-		helpText = Swts.makeHelpDisplayer(content);
 		
 		final IDataGetter dataGetter = actionContext.dataGetter;
 		CompositeConfig config = actionContext.compositeConfig;
@@ -85,6 +84,7 @@ public class JavadocSourceEditor implements IEditor {
 				cancel();
 			}
 		});
+		helpText = Swts.makeHelpDisplayer(content);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(content, actionContext.compositeConfig.layout.dataMargin);
 		return content;
 	}

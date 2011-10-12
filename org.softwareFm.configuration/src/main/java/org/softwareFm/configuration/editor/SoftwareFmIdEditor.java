@@ -39,12 +39,12 @@ public class SoftwareFmIdEditor implements IEditor {
 	public Control createControl(ActionContext actionContext) {
 		content = Swts.newComposite(actionContext.rightHandSide.getComposite(), SWT.NULL, getClass().getSimpleName());
 		CompositeConfig config = actionContext.compositeConfig;
-		helpText = Swts.makeHelpDisplayer(content);
 		groupIdText = new TitleAndText(config, content, ConfigurationConstants.groupIdTitle, true);
 		artifactIdText = new TitleAndText(config, content, ConfigurationConstants.artifactIdTitle, true);
 		versionText = new TitleAndText(config, content, ConfigurationConstants.versionTitle, true);
 		addCrListeners(groupIdText, artifactIdText, versionText);
 		buttonParent = new ButtonParent(content, config, SWT.NULL);
+		helpText = Swts.makeHelpDisplayer(content);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(content, actionContext.compositeConfig.layout.dataMargin);
 //		content.setLayout(Swts.getHorizonalNoMarginRowLayout());
 //		for (Control child: content.getChildren())

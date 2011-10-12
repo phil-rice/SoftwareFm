@@ -33,13 +33,12 @@ public abstract class AbstractTextEditor<T extends Control> implements IEditor {
 	public void edit(IDisplayer parent, final DisplayerDefn displayerDefn, ActionContext actionContext, final IEditorCompletion completion) {
 		String title = IResourceGetter.Utils.getOrException(actionContext.compositeConfig.resourceGetter, displayerDefn.title);
 		String rawText = Strings.nullSafeToString(actionContext.dataGetter.getDataFor(displayerDefn.dataKey));
-		Swts.setHelpText(help, actionContext.compositeConfig.resourceGetter, displayerDefn.helpKey);
 		text.setTitle(title);
 		text.setText(rawText);
 		okRunnable = new Runnable() {
 			@Override
 			public void run() {
-				RippedEditorId rip = EditorIds.rip(displayerDefn.editorId);
+				RippedEditorId rip = EditorIds.rip(displayerDefn.dataKey);
 				completion.ok(Maps.<String, Object> makeMap(rip.key, text.getText()));
 				okRunnable = null;
 			}
@@ -50,6 +49,7 @@ public abstract class AbstractTextEditor<T extends Control> implements IEditor {
 				completion.cancel();
 			}
 		});
+		Swts.setHelpText(help, actionContext.compositeConfig.resourceGetter, displayerDefn.helpKey);
 	}
 
 
@@ -70,7 +70,6 @@ public abstract class AbstractTextEditor<T extends Control> implements IEditor {
 	@Override
 	public Control createControl(ActionContext actionContext) {
 		content = Swts.newComposite(actionContext.rightHandSide.getComposite(), SWT.NULL, getClass().getSimpleName());
-		help = Swts.makeHelpDisplayer(content);
 		text = makeTitleAnd(content, actionContext.compositeConfig);
 		text.addCrListener(new Listener() {
 			@Override
@@ -80,6 +79,7 @@ public abstract class AbstractTextEditor<T extends Control> implements IEditor {
 			}
 		});
 		buttonParent = new ButtonParent(content, actionContext.compositeConfig, SWT.NULL);
+		help = Swts.makeHelpDisplayer(content);
 
 		Swts.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(content, actionContext.compositeConfig.layout.dataMargin);
 		return content;

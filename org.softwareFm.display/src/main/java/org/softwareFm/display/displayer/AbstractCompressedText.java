@@ -28,5 +28,6 @@ public abstract class AbstractCompressedText<T extends Control> extends Abstract
 		return rawText;
 	}
 
+	
 
 }

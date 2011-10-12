@@ -25,7 +25,7 @@ public class Actions {
 		if (displayerDefn.guardKeys != null)
 			for (NameAndValue guard : displayerDefn.guardKeys) {
 				if (idToIgnore != null && idToIgnore.equals(guard.name))
-					return null;
+					continue;
 				String guardValue = Strings.nullSafeToString(dataGetter.getDataFor(guard.name));
 				if (guardValue == null || guardValue.length() == 0)
 					return guard.value;

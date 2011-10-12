@@ -51,6 +51,7 @@ public class DisplayerDefn {
 	public String iconOverlayId;
 	public boolean noIcon;
 	public String helpKey;
+	public String editorIgnoresGuardKey;
 
 	public DisplayerDefn(IDisplayerFactory displayer) {
 		this.displayerFactory = displayer;
@@ -216,11 +217,15 @@ public class DisplayerDefn {
 	}
 
 	public DisplayerDefn icon(String iconId) {
+		if (iconImageId!= null)
+			throw new IllegalStateException(MessageFormat.format(DisplayConstants.cannotSetValueTwice, "icon", this.iconImageId, iconId));
 		iconImageId = iconId;
 		return this;
 	}
 
 	public DisplayerDefn icon(String iconId, String overlayId) {
+		if (iconImageId!= null)
+			throw new IllegalStateException(MessageFormat.format(DisplayConstants.cannotSetValueTwice, "icon", this.iconImageId, iconId));
 		iconImageId = iconId;
 		iconOverlayId = overlayId;
 		return this;
@@ -228,6 +233,13 @@ public class DisplayerDefn {
 
 	public DisplayerDefn help(String helpKey) {
 		this.helpKey = helpKey;
+		return this;
+	}
+
+	public DisplayerDefn editorIgnoreGuard(String editorIgnoresGuardKey) {
+		if (this.editorIgnoresGuardKey!= null)
+			throw new IllegalStateException(MessageFormat.format(DisplayConstants.cannotSetValueTwice, "editorIgnoreGuard", this.editorIgnoresGuardKey, editorIgnoresGuardKey));
+		this.editorIgnoresGuardKey = editorIgnoresGuardKey;
 		return this;
 	}
 

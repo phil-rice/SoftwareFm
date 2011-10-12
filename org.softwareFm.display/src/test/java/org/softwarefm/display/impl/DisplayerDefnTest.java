@@ -29,29 +29,30 @@ public class DisplayerDefnTest extends TestCase {
 		assertEquals(null, displayerDefn.iconOverlayId);
 		assertEquals(false, displayerDefn.noIcon);
 	}
-	
-	public void testIcon(){
+
+	public void testIcon() {
 		assertSame(displayerDefn, displayerDefn.icon("iconId"));
 		assertEquals("iconId", displayerDefn.iconImageId);
 		assertEquals(null, displayerDefn.iconOverlayId);
 	}
-	public void testIconWithOverlay(){
+
+	public void testIconWithOverlay() {
 		assertSame(displayerDefn, displayerDefn.icon("iconId", "overlayId"));
 		assertEquals("iconId", displayerDefn.iconImageId);
 		assertEquals("overlayId", displayerDefn.iconOverlayId);
 	}
 
-	
-	public void testNoIcon(){
+	public void testNoIcon() {
 		assertSame(displayerDefn, displayerDefn.noIcon());
 		assertTrue(displayerDefn.noIcon);
 	}
-	public void testHelp(){
+
+	public void testHelp() {
 		assertSame(displayerDefn, displayerDefn.help("helpKey"));
 		assertEquals("helpKey", displayerDefn.helpKey);
-		
+
 	}
-	
+
 	public void testData() {
 		assertSame(displayerDefn, displayerDefn.data("dataKey"));
 		assertEquals("dataKey", displayerDefn.dataKey);
@@ -61,11 +62,11 @@ public class DisplayerDefnTest extends TestCase {
 		assertSame(displayerDefn, displayerDefn.tooltip("tooltip"));
 		assertEquals("tooltip", displayerDefn.tooltip);
 	}
-	
-	public void testEditor(){
+
+	public void testEditor() {
 		assertSame(displayerDefn, displayerDefn.editor("editorId"));
 		assertEquals("editorId", displayerDefn.editorId);
-		
+
 	}
 
 	public void testButton() {
@@ -74,12 +75,13 @@ public class DisplayerDefnTest extends TestCase {
 	}
 
 	public void testDefaultActionIsNullWhenNoActions() {
-		assertNull( displayerDefn.getDefaultActionDefn());
-		
+		assertNull(displayerDefn.getDefaultActionDefn());
+
 	}
+
 	public void testDefaultActionIsNormallyFirstAction() {
-		 displayerDefn.actions(actionDefn1, actionDefn2);
-		 assertEquals(actionDefn1, displayerDefn.getDefaultActionDefn());
+		displayerDefn.actions(actionDefn1, actionDefn2);
+		assertEquals(actionDefn1, displayerDefn.getDefaultActionDefn());
 	}
 
 	public void testActionWithDefaultActionOverridesFirst() {
@@ -97,8 +99,8 @@ public class DisplayerDefnTest extends TestCase {
 		});
 		assertEquals("Cannot have two default actions in displayer defn for data null.\nExisting valueActionDefn [id=actionDefault1, mainImageId=mainImageLinkDefault1, tooltip=null, overlayId=overlayIdDefault1, ignoreGuard=false, defaultAction=true, params=null]\nNew valueActionDefn [id=actionDefault2, mainImageId=mainImageLinkDefault2, tooltip=null, overlayId=overlayIdDefault2, ignoreGuard=false, defaultAction=true, params=null]", exception.getMessage());
 	}
-	
-	public void testCannotSetActionsTwice(){
+
+	public void testCannotSetActionsTwice() {
 		displayerDefn.actions(actionDefn1, actionDefn2);
 		IllegalStateException exception = Tests.assertThrows(IllegalStateException.class, new Runnable() {
 			@Override
@@ -107,6 +109,65 @@ public class DisplayerDefnTest extends TestCase {
 			}
 		});
 		assertEquals("Cannot define actions twice in displayer defn for data null.\nExisting value[ActionDefn [id=action1, mainImageId=mainImageLink1, tooltip=null, overlayId=overlayId1, ignoreGuard=false, defaultAction=false, params=null], ActionDefn [id=action2, mainImageId=mainImageLink2, tooltip=null, overlayId=overlayId2, ignoreGuard=false, defaultAction=false, params=null]]\nNew value[ActionDefn [id=action1, mainImageId=mainImageLink1, tooltip=null, overlayId=overlayId1, ignoreGuard=false, defaultAction=false, params=null], ActionDefn [id=action2, mainImageId=mainImageLink2, tooltip=null, overlayId=overlayId2, ignoreGuard=false, defaultAction=false, params=null]]", exception.getMessage());
+	}
+
+	public void testEditorIgnoresGuard() {
+		assertEquals(null, displayerDefn.editorIgnoresGuardKey);
+		assertSame(displayerDefn, displayerDefn.editorIgnoreGuard("xxx"));
+		assertEquals("xxx", displayerDefn.editorIgnoresGuardKey);
+	}
+	
+	public void testCannotSetEditorIgnoresGuardTwice(){
+		 displayerDefn.editorIgnoreGuard("xxx");
+		 IllegalStateException e = Tests.assertThrows(IllegalStateException.class, new Runnable() {
+			 @Override
+			 public void run() {
+				 displayerDefn.editorIgnoreGuard("yyy");
+			 }
+		 });
+		 assertEquals("Cannot set value of editorIgnoreGuard twice. Current value [xxx]. New value [yyy]", e.getMessage());
+		assertEquals("xxx", displayerDefn.editorIgnoresGuardKey);
+	}
+
+	public void testThrowsExceptionIfIconCalledAfterIcon() {
+		displayerDefn.icon("icon");
+		IllegalStateException e = Tests.assertThrows(IllegalStateException.class, new Runnable() {
+			@Override
+			public void run() {
+				displayerDefn.icon("iconX");
+			}
+		});
+		assertEquals("Cannot set value of icon twice. Current value [icon]. New value [iconX]", e.getMessage());
+		IllegalStateException e1 = Tests.assertThrows(IllegalStateException.class, new Runnable() {
+			@Override
+			public void run() {
+				displayerDefn.icon("iconX", "a");
+			}
+		});
+		assertEquals("Cannot set value of icon twice. Current value [icon]. New value [iconX]", e1.getMessage());
+		assertEquals("icon", displayerDefn.iconImageId);
+		assertEquals(null, displayerDefn.iconOverlayId);
+	}
+
+	public void testThrowsExceptionIfIconWithOverlayCalledAfterIconWithOverlay() {
+		displayerDefn.icon("icon", "overlay");
+		IllegalStateException e = Tests.assertThrows(IllegalStateException.class, new Runnable() {
+			@Override
+			public void run() {
+				displayerDefn.icon("iconx");
+			}
+		});
+		assertEquals("Cannot set value of icon twice. Current value [icon]. New value [iconx]", e.getMessage());
+		IllegalStateException e1 = Tests.assertThrows(IllegalStateException.class, new Runnable() {
+			@Override
+			public void run() {
+				displayerDefn.icon("icony", "z");
+			}
+		});
+		assertEquals("Cannot set value of icon twice. Current value [icon]. New value [icony]", e1.getMessage());
+
+		assertEquals("icon", displayerDefn.iconImageId);
+		assertEquals("overlay", displayerDefn.iconOverlayId);
 	}
 
 	public void testDataThrowsExceptionIfCalledTwice() {
@@ -135,7 +196,6 @@ public class DisplayerDefnTest extends TestCase {
 		assertEquals("tooltip1", displayerDefn.tooltip);
 	}
 
-	
 	public void testEditorThrowsExceptionIfCalledTwice() {
 		displayerDefn.editor("id1");
 		IllegalStateException e = Tests.assertThrows(IllegalStateException.class, new Runnable() {
@@ -147,7 +207,7 @@ public class DisplayerDefnTest extends TestCase {
 		assertEquals("Cannot define editor twice in displayer defn for data null.\nExisting valueid1\nNew valueid1", e.getMessage());
 		assertEquals("id1", displayerDefn.editorId);
 	}
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
