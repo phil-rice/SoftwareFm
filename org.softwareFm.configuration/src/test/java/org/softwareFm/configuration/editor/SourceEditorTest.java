@@ -5,10 +5,10 @@ import org.softwareFm.display.data.DataGetterMock;
 
 public class SourceEditorTest extends AbstractJavadocSourceEditorTest {
 
-	
+
 	@Override
 	protected DataGetterMock makeDataGetter(String eclipseValue, String softwareFmValue) {
-		return new DataGetterMock(ConfigurationConstants.dataRawSource, eclipseValue, ConfigurationConstants.dataArtifactSource, softwareFmValue);
+		return new DataGetterMock(ConfigurationConstants.dataRawSourceMutator, makeMutator(), ConfigurationConstants.dataRawSource, eclipseValue, ConfigurationConstants.dataArtifactSource, softwareFmValue);
 	}
 
 	@Override
@@ -24,6 +24,10 @@ public class SourceEditorTest extends AbstractJavadocSourceEditorTest {
 	@Override
 	protected String getMutatorKey() {
 		return  ConfigurationConstants.dataRawSourceMutator;
+	}
+	@Override
+	protected String getUrlTitleKey() {
+		return ConfigurationConstants.urlSourceTitle;
 	}
 
 

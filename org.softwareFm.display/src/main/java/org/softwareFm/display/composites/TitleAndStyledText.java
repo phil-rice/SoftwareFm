@@ -22,7 +22,10 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 public class TitleAndStyledText extends AbstractTitleAndText<StyledText> {
 
 	public TitleAndStyledText(CompositeConfig config, Composite parent, String titleOrTitleKey, boolean titleIsKey) {
-		super(config, parent, titleOrTitleKey, titleIsKey, config.layout.styledTextHeight);
+		this(config, parent, titleOrTitleKey, titleIsKey, config.layout.styledTextHeight);
+	}
+	public TitleAndStyledText(CompositeConfig config, Composite parent, String titleOrTitleKey, boolean titleIsKey, int height) {
+		super(config, parent, titleOrTitleKey, titleIsKey, height);
 		text.setWordWrap(true);
 	}
 

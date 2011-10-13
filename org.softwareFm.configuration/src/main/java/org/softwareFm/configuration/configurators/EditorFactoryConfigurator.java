@@ -17,8 +17,8 @@ public class EditorFactoryConfigurator implements IEditorFactoryConfigurator{
 		editorFactory.register(ConfigurationConstants.editorTextKey, new TextEditor());
 		editorFactory.register(ConfigurationConstants.editorStyledTextKey, new StyledTextEditor());
 		editorFactory.register(ConfigurationConstants.editorSfmIdKey, new SoftwareFmIdEditor());
-		editorFactory.register("editor.javadoc", new JavadocSourceEditor(ConfigurationConstants.dataRawJavadoc, ConfigurationConstants.dataArtifactJavadoc, ConfigurationConstants.dataRawJavadocMutator));
-		editorFactory.register("editor.source", new JavadocSourceEditor(ConfigurationConstants.dataRawSource, ConfigurationConstants.dataArtifactSource, ConfigurationConstants.dataRawSourceMutator));
+		editorFactory.register("editor.javadoc", new JavadocSourceEditor(ConfigurationConstants.urlJavadocTitle, ConfigurationConstants.dataArtifactJavadoc, ConfigurationConstants.dataRawJavadoc, ConfigurationConstants.dataRawJavadocMutator));
+		editorFactory.register("editor.source", new JavadocSourceEditor(ConfigurationConstants.urlSourceTitle, ConfigurationConstants.dataArtifactSource, ConfigurationConstants.dataRawSource, ConfigurationConstants.dataRawSourceMutator));
 		editorFactory.register("editor.jar", new JarEditor());
 		
 	}

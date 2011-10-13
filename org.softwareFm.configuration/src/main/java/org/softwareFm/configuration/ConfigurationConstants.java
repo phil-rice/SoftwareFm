@@ -95,8 +95,15 @@ public class ConfigurationConstants {
 	public static final String entityForPlayList = "artifact";
 	public static final String sfmIdPattern = "id.sfm.pattern";
 
+	public static final String buttonCopyToEclipseTitle = "button.copyToEclipse.title";
+	public static final String buttonCopyToSoftwareFmTitle = "button.copyToSoftwareFm.title";
+	public static final String buttonCopyToBothTitle = "button.copyToBoth.title";
+	public static final String buttonTestTitle = "button.test.title";
 	public static final File defaultDirectoryForDownloads = new File(System.getProperty("user.home"), "softwareFm");
 	public static final String javadocKey = "javadoc.title";
 	public static final String sourceKey = "source.title";
+
+	public final static String urlJavadocTitle = "url.javadoc.title";
+	public final static String urlSourceTitle = "url.source.title";
 
 }

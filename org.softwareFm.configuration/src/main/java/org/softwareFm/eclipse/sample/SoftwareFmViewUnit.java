@@ -15,8 +15,8 @@ import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.largeButton.LargeButtonDefn;
 import org.softwareFm.display.swt.ISituationListAndBuilder;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.jdtBinding.api.IJavadocSourceMutator;
 import org.softwareFm.jdtBinding.api.RippedResult;
-import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.json.Json;
 
@@ -51,7 +51,7 @@ public class SoftwareFmViewUnit {
 		public void selected(SoftwareFmDataComposite hasControl, String fileName, String text) throws Exception {
 			Map<String, Object> map = Json.mapFromString(text);
 			Map<String, String> rippedMap = (Map<String, String>) map.get("ripped");
-			RippedResult result = rippedMap == null ? null : new RippedResult(rippedMap.get("hexDigest"), rippedMap.get("javaProject"), rippedMap.get("jarPath"), rippedMap.get("jarName"), rippedMap.get("javadoc"), rippedMap.get("source"), ICallback.Utils.<String> sysoutCallback(), ICallback.Utils.<String> sysoutCallback());
+			RippedResult result = rippedMap == null ? null : new RippedResult(rippedMap.get("hexDigest"), rippedMap.get("javaProject"), rippedMap.get("jarPath"), rippedMap.get("jarName"), rippedMap.get("javadoc"), rippedMap.get("source"), IJavadocSourceMutator.Utils.sysout("set javadoc in eclipse to : {0}" ), IJavadocSourceMutator.Utils.sysout("set source in eclipse to: {0}") );
 			softwareFmFixture.dataStore.setRawData(ConfigurationConstants.primaryEntity, result);
 			softwareFmFixture.forceData(fileName, "jar", map);
 			softwareFmFixture.forceData(fileName, "artifact", map);

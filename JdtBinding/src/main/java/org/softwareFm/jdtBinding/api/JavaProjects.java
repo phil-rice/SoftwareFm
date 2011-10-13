@@ -2,6 +2,7 @@ package org.softwareFm.jdtBinding.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -108,6 +109,29 @@ public class JavaProjects {
 			}
 		});
 		return newEntries;
+	}
+
+	public static IJavadocSourceMutator sourceMutator(final IPackageFragmentRoot root, final IJavaProject javaProject, final IClasspathEntry classpathEntry) {
+		return new IJavadocSourceMutator() {
+			@Override
+			public void setNewValue(String newValue, IJavadocSourceMutatorCallback whenComplete) {
+				setSourceAttachment(javaProject, classpathEntry, newValue);
+				String actual = findSourceFor(root);
+				whenComplete.process(newValue, actual);
+			}
+		};
+
+	}
+	public static IJavadocSourceMutator javadocMutator(final IPackageFragmentRoot root, final IJavaProject javaProject, final IClasspathEntry classpathEntry,final Callable<String> findNewValue) {
+		return new IJavadocSourceMutator() {
+			@Override
+			public void setNewValue(String newValue, IJavadocSourceMutatorCallback whenComplete) throws Exception {
+				setJavadoc(javaProject, classpathEntry, newValue);
+				String actual = findNewValue.call();
+				whenComplete.process(newValue, actual);
+			}
+		};
+		
 	}
 
 	public static void setSourceAttachment(IJavaProject javaProject, IClasspathEntry classpathEntry, final String newValue) {

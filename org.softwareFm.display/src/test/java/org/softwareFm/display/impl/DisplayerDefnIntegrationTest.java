@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Text;
 import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.actions.ActionDefn;
 import org.softwareFm.display.composites.AbstractTitleAndText;
+import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.data.DataGetterMock;
 import org.softwareFm.display.data.IDataGetter;
 import org.softwareFm.display.data.ResourceGetterMock;
@@ -243,9 +244,9 @@ public class DisplayerDefnIntegrationTest extends AbstractDisplayerEditorIntegra
 	@Override
 	protected IResourceGetter makeResources() {
 		IResourceGetter resourceGetter = new ResourceGetterMock(//
-				"someTitle", "registeredTitle", "button.cancel.title", "cancelValue", //
-
-				"button.ok.title", "okValue", "helpKey", "helpValue");
+				"someTitle", "registeredTitle", //
+				DisplayConstants.buttonCancelsTitle, "cancelValue", //
+				DisplayConstants.buttonOkTitle, "okValue", "helpKey", "helpValue");
 		return resourceGetter;
 	}
 }

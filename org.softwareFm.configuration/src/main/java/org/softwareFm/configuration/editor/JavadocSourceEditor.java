@@ -1,5 +1,7 @@
 package org.softwareFm.configuration.editor;
 
+import java.text.MessageFormat;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ModifyEvent;
@@ -9,9 +11,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.configuration.ConfigurationConstants;
 import org.softwareFm.display.actions.ActionContext;
+import org.softwareFm.display.composites.AbstractTitleAndText;
 import org.softwareFm.display.composites.CompositeConfig;
-import org.softwareFm.display.composites.IHasControl;
+import org.softwareFm.display.composites.TitleAndStyledText;
 import org.softwareFm.display.composites.TitleAndText;
+import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.data.IDataGetter;
 import org.softwareFm.display.displayer.DisplayerDefn;
 import org.softwareFm.display.displayer.IDisplayer;
@@ -20,29 +24,30 @@ import org.softwareFm.display.editor.IEditor;
 import org.softwareFm.display.editor.IEditorCompletion;
 import org.softwareFm.display.simpleButtons.ButtonParent;
 import org.softwareFm.display.simpleButtons.IButtonParent;
-import org.softwareFm.display.smallButtons.IImageButtonListener;
-import org.softwareFm.display.smallButtons.SimpleImageButton;
-import org.softwareFm.display.swt.OkCancel;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
-import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.jdtBinding.api.IJavadocSourceMutator;
+import org.softwareFm.jdtBinding.api.IJavadocSourceMutatorCallback;
+import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.strings.Strings;
 
 public class JavadocSourceEditor implements IEditor {
 	private IEditorCompletion completion;
 	private Composite content;
 	private TitleAndText txtEclipse;
-	private TitleAndText txtSoftwareFm;
 	private final String eclipseKey;
 	private final String softwareFmKey;
 	private final String mutatorKey;
 	private ButtonParent buttonParent;
-	private Runnable okRunnable;
 	private StyledText helpText;
-	private OkCancel okCancel;
 	private ModifyListener modifyListener;
+	private JavadocSourceButtons javadocSourceButtons;
+	private TitleAndStyledText txtUrl;
+	private final String urlTitle;
+	private String originalEclipseValue;
+	private String originalSoftwareFmValue;
 
-	public JavadocSourceEditor(String eclipseKey, String softwareFmKey, String mutatorKey) {
+	public JavadocSourceEditor(String urlTitle, String softwareFmKey, String eclipseKey, String mutatorKey) {
+		this.urlTitle = urlTitle;
 		this.eclipseKey = eclipseKey;
 		this.softwareFmKey = softwareFmKey;
 		this.mutatorKey = mutatorKey;
@@ -57,14 +62,11 @@ public class JavadocSourceEditor implements IEditor {
 	public Control createControl(ActionContext actionContext) {
 		content = Swts.newComposite(actionContext.rightHandSide.getComposite(), SWT.NULL, getClass().getSimpleName());
 
-		final IDataGetter dataGetter = actionContext.dataGetter;
 		CompositeConfig config = actionContext.compositeConfig;
 
+		txtUrl = new TitleAndStyledText(config, content, urlTitle, true, 2 * config.layout.textHeight);
 		txtEclipse = new TitleAndText(config, content, "dialog.eclipseValue.title", true);
-		addCopyToSoftwareFmButton(config, actionContext, txtEclipse, false);
-
-		txtSoftwareFm = new TitleAndText(config, content, "dialog.softwareFmValue.title", true);
-		addCopyToEclipseButton(config, dataGetter, txtSoftwareFm, false);
+		txtEclipse.setEditable(false);
 
 		buttonParent = new ButtonParent(content, config, SWT.NULL);
 		// addCopyToEclipseButton(config, dataGetter, txtExperiment, true);
@@ -73,99 +75,87 @@ public class JavadocSourceEditor implements IEditor {
 		Composite buttonPanel = new Composite(content, SWT.NULL);
 		// new SimpleImageButton(parent, config, showBackground);
 		buttonPanel.setLayout(new GridLayout(3, true));
-		okRunnable = new Runnable() {
-			@Override
-			public void run() {
-				sendResult();
-			}
-		};
 		helpText = Swts.makeHelpDisplayer(content);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(content, actionContext.compositeConfig.layout.dataMargin);
 		return content;
 	}
 
-	public OkCancel getOkCancel() {
-		return okCancel;
-	}
-
-	private SimpleImageButton addCopyToEclipseButton(CompositeConfig compositeConfig, final IDataGetter dataGetter, final TitleAndText parent, boolean onlyEnableIfHasValue) {
-		SimpleImageButton simpleImageButton = new SimpleImageButton(parent, compositeConfig.imageButtonConfig.withImage(ArtifactsAnchor.jarCopyFromSoftwareFmKey), false);
-		simpleImageButton.addListener(new IImageButtonListener() {
-			@SuppressWarnings("unchecked")
-			@Override
-			public void buttonPressed(IHasControl button) throws Exception {
-				ICallback<String> javadocMutator = (ICallback<String>) dataGetter.getDataFor(mutatorKey);
-				javadocMutator.process(parent.getText());
-				cancel();
-			}
-		});
-		simpleImageButton.getControl().setEnabled(onlyEnableIfHasValue || parent.getText().length() > 0);
-		simpleImageButton.getControl().setToolTipText(Strings.nullSafeToString(dataGetter.getDataFor("button.copyToEclipse.title")));
-		return simpleImageButton;
-
-	}
-
-	private SimpleImageButton addCopyToSoftwareFmButton(CompositeConfig compositeConfig, final ActionContext actionContext, final TitleAndText parent, boolean onlyEnableIfHasValue) {
-		SimpleImageButton simpleImageButton = new SimpleImageButton(parent, compositeConfig.imageButtonConfig.withImage(ArtifactsAnchor.jarCopyToSoftwareFmKey), false);
-		simpleImageButton.addListener(new IImageButtonListener() {
-			@Override
-			public void buttonPressed(IHasControl button) throws Exception {
-				if (okRunnable != null)
-					okRunnable.run();
-			}
-		});
-		simpleImageButton.getControl().setEnabled(onlyEnableIfHasValue || parent.getText().length() > 0);
-		simpleImageButton.getControl().setToolTipText(Strings.nullSafeToString(actionContext.dataGetter.getDataFor("button.copyToSoftwareFm.title")));
-		return simpleImageButton;
-	}
-
 	@Override
 	public void edit(IDisplayer parent, DisplayerDefn displayerDefn, ActionContext actionContext, IEditorCompletion completion) {
-		if (modifyListener != null) {
-			txtEclipse.removeModifyListener(modifyListener);
-			txtSoftwareFm.removeModifyListener(modifyListener);
-		}
-		okCancel = Swts.addOkCancel(buttonParent, actionContext.compositeConfig, okRunnable, new Runnable() {
+		this.completion = completion;
+		if (modifyListener != null)
+			txtUrl.removeModifyListener(modifyListener);
+		IDataGetter dataGetter = actionContext.dataGetter;
+		originalEclipseValue = Strings.nullSafeToString(dataGetter.getDataFor(eclipseKey));
+		originalSoftwareFmValue = Strings.nullSafeToString(dataGetter.getDataFor(softwareFmKey));
+		final IJavadocSourceMutator mutator = (IJavadocSourceMutator) dataGetter.getDataFor(mutatorKey);
+		if (mutator == null)
+			throw new IllegalStateException(MessageFormat.format(DisplayConstants.mustHaveA, mutatorKey, dataGetter));
+		txtUrl.setText(originalSoftwareFmValue);
+		javadocSourceButtons = new JavadocSourceButtons(buttonParent, actionContext.compositeConfig, new Runnable() {
 			@Override
 			public void run() {
 				cancel();
 			}
+		}, new ITester() {
+			@Override
+			public String test() {
+				return null;
+			}
+
+			@Override
+			public void processResults(String result) {
+				boolean resultOk = result == null;
+				javadocSourceButtons.setCopyButtonsEnabled(resultOk & true, resultOk & !originalSoftwareFmValue.equals(txtUrl.getText()));
+			}
+
+		}, new Runnable() {
+			@Override
+			public void run() {
+				try {
+					String eclipseValue = txtUrl.getText();
+					mutator.setNewValue(eclipseValue, new IJavadocSourceMutatorCallback() {
+						@Override
+						public void process(String requested, String actual) {
+							txtEclipse.setText(actual);
+							originalEclipseValue = actual;
+							setButtonValuesAfterMutate(originalEclipseValue, originalSoftwareFmValue);
+						}
+
+					});
+				} catch (Exception e) {
+					throw WrappedException.wrap(e);
+				}
+			}
+		}, new Runnable() {
+			@Override
+			public void run() {
+				setButtonValuesAfterMutate(originalEclipseValue, originalSoftwareFmValue);
+			}
 		});
-		okCancel.setOkEnabled(false);
 
-		IDataGetter dataGetter = actionContext.dataGetter;
-		this.completion = completion;
-
-		final String eclipseValue = Strings.nullSafeToString(dataGetter.getDataFor(eclipseKey));
-		txtEclipse.setText(eclipseValue);
-
-		final String softwareFmValue = Strings.nullSafeToString(dataGetter.getDataFor(softwareFmKey));
-		txtSoftwareFm.setText(softwareFmValue);
+		txtEclipse.setText(originalEclipseValue);
 
 		modifyListener = new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
-				boolean eclipseChanged = !txtEclipse.getText().equals(eclipseValue);
-				boolean softwareFmChanged = !txtSoftwareFm.getText().equals(softwareFmValue);
-				boolean enable = eclipseChanged | softwareFmChanged;
-				txtEclipse.setEditable(!softwareFmChanged);
-				txtSoftwareFm.setEditable(!eclipseChanged);
-				okCancel.setOkEnabled(enable);
+				setButtonValuesAfterMutate(originalEclipseValue, originalSoftwareFmValue);
 			}
 		};
-		txtEclipse.addModifyListener(modifyListener);
-		txtSoftwareFm.addModifyListener(modifyListener);
+		txtUrl.addModifyListener(modifyListener);
 		Swts.setHelpText(helpText, actionContext.compositeConfig.resourceGetter, displayerDefn.helpKey);
+		setButtonValuesAfterMutate(originalEclipseValue, originalSoftwareFmValue);
+	}
+
+	private void setButtonValuesAfterMutate(final String originalEclipseValue, final String originalSoftwareFmValue) {
+		boolean hasSomeValue = txtUrl.getText().length() > 0;
+		boolean changedFromSfm = !originalSoftwareFmValue.equals(txtUrl.getText());
+		boolean changedFromEclipse = !originalEclipseValue.equals(txtUrl.getText());
+		javadocSourceButtons.setCopyButtonsEnabled(hasSomeValue & changedFromEclipse, hasSomeValue & changedFromSfm);
 	}
 
 	private void cancel() {
 		completion.cancel();
-		okRunnable = null;
-	}
-
-	private void sendResult() {
-		completion.cancel();
-		okRunnable = null;
 	}
 
 	@Override
@@ -177,13 +167,17 @@ public class JavadocSourceEditor implements IEditor {
 		return txtEclipse;
 	}
 
-	public TitleAndText getTxtSoftwareFm() {
-		return txtSoftwareFm;
+	public AbstractTitleAndText<?> getTxtUrl() {
+		return txtUrl;
+	}
+
+	public JavadocSourceButtons getJavadocSourceButtons() {
+		return javadocSourceButtons;
 	}
 
 	public static void main(String[] args) {
 		Editors.display(JavadocSourceEditor.class.getSimpleName(),//
-				new JavadocSourceEditor(ConfigurationConstants.dataRawJavadoc, ConfigurationConstants.dataArtifactJavadoc, ConfigurationConstants.dataRawJavadocMutator), //
+				new JavadocSourceEditor(ConfigurationConstants.urlJavadocTitle, ConfigurationConstants.dataArtifactJavadoc, ConfigurationConstants.dataRawJavadoc, ConfigurationConstants.dataRawJavadocMutator), //
 				ConfigurationConstants.dataRawJavadoc, "rawJavadoc",//
 				ConfigurationConstants.dataArtifactJavadoc, "SfmJavadoc");
 	}

@@ -14,6 +14,7 @@ import org.softwareFm.display.actions.ActionMock;
 import org.softwareFm.display.actions.ActionStore;
 import org.softwareFm.display.actions.NoOperationAction;
 import org.softwareFm.display.composites.CompositeConfig;
+import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.data.DataGetterMock;
 import org.softwareFm.display.data.IDataGetter;
 import org.softwareFm.display.data.ResourceGetterMock;
@@ -53,7 +54,7 @@ public abstract class AbstractDisplayerEditorIntegrationTest<D extends IDisplaye
 		imageRegistry = new ImageRegistry();
 		new BasicImageRegisterConfigurator().registerWith(shell.getDisplay(), imageRegistry);
 		resourceGetter = IResourceGetter.Utils.noResources().//
-				with(new ResourceGetterMock("button.cancel.title", "cancelValue", "button.ok.title", "okValue")).//
+				with(new ResourceGetterMock(DisplayConstants.buttonCancelsTitle, "cancelValue", DisplayConstants.buttonOkTitle, "okValue")).//
 				with(makeResources());
 		editor = makeEditor();
 		rightHandSide = IHasRightHandSide.Utils.makeRightHandSide(shell);
