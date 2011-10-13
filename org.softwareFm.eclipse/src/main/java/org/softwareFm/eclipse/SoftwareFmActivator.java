@@ -53,6 +53,8 @@ import org.softwareFm.httpClient.constants.HttpClientConstants;
 import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.jdtBinding.api.IBindingRipper;
+import org.softwareFm.jdtBinding.api.IJavadocSourceMutator;
+import org.softwareFm.jdtBinding.api.IJavadocSourceMutatorCallback;
 import org.softwareFm.jdtBinding.api.JavaProjects;
 import org.softwareFm.jdtBinding.api.JdtConstants;
 import org.softwareFm.jdtBinding.api.RippedResult;
@@ -280,10 +282,10 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 
 	public IRepositoryFacard getRepository() {
 		if (repository == null) {
-			//String host = HttpClientConstants.defaultHost;// "178.79.180.172";
-//			int port = HttpClientConstants.defaultPort;// 8080;
-			String host =  "178.79.180.172";
-			int port =  8080;
+			// String host = HttpClientConstants.defaultHost;// "178.79.180.172";
+			// int port = HttpClientConstants.defaultPort;// 8080;
+			String host = "178.79.180.172";
+			int port = 8080;
 			IHttpClient client = IHttpClient.Utils.builder(host, port).withCredentials(HttpClientConstants.userName, HttpClientConstants.password).//
 					setDefaultHeaders(Arrays.<NameValuePair> asList(new BasicNameValuePair("SoftwareFm", getUuid())));
 			repository = new RepositoryFacard(client, "sfm");
@@ -316,9 +318,9 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 				String hexDigest = extension.equals("jar") ? rippedResult.hexDigest : null;
 				String javaProject = rippedResult.javaProject == null ? null : rippedResult.javaProject.getElementName();
 				final RippedResult result = new RippedResult(hexDigest, javaProject, path.toOSString(), name, javadoc, source, null, null);
-				ICallback<String> sourceMutator = new ICallback<String>() {
+				IJavadocSourceMutator sourceMutator = new IJavadocSourceMutator() {
 					@Override
-					public void process(final String newValue) throws Exception {
+					public void setNewValue(final String newValue, final IJavadocSourceMutatorCallback whenComplete) throws Exception {
 						final BindingRipperResult reripped = SelectedArtifactSelectionManager.reRip(rippedResult);
 						getExecutorService().submit(new Runnable() {
 							@Override
@@ -329,17 +331,20 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 										JavaProjects.setSourceAttachment(reripped.javaProject, reripped.classpathEntry, file.getCanonicalPath());
 									} else
 										JavaProjects.setSourceAttachment(reripped.javaProject, reripped.classpathEntry, newValue);
+									whenComplete.process(newValue, newValue);
 								} catch (IOException e) {
 									e.printStackTrace();
 									throw WrappedException.wrap(e);
 								}
 							}
 						});
+						// TODO Auto-generated method stub
+
 					}
 				};
-				ICallback<String> javadocMutator = new ICallback<String>() {
+				IJavadocSourceMutator javadocMutator = new IJavadocSourceMutator() {
 					@Override
-					public void process(final String newValue) throws Exception {
+					public void setNewValue(final String newValue, final IJavadocSourceMutatorCallback whenComplete) throws Exception {
 						final BindingRipperResult reripped = SelectedArtifactSelectionManager.reRip(rippedResult);
 						getExecutorService().submit(new Runnable() {
 							@Override
@@ -350,6 +355,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 										JavaProjects.setJavadoc(reripped.javaProject, reripped.classpathEntry, "jar:file:" + file.getCanonicalPath() + "!/");
 									} else
 										JavaProjects.setJavadoc(reripped.javaProject, reripped.classpathEntry, newValue);
+									whenComplete.process(newValue, newValue);
 								} catch (IOException e) {
 									e.printStackTrace();
 									throw WrappedException.wrap(e);

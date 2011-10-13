@@ -6,6 +6,7 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -82,6 +83,10 @@ public class TitleAndStyledText extends AbstractTitleAndText<StyledText> {
 	@Override
 	public void removeModifyListener(ModifyListener listener) {
 		text.removeModifyListener(listener);
+	}
+	
+	public void setBackground(Color color){
+		text.setBackground(color);
 	}
 
 }

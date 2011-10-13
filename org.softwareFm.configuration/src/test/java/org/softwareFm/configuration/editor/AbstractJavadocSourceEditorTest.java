@@ -15,8 +15,10 @@ import org.softwareFm.display.displayer.CompressedText;
 import org.softwareFm.display.displayer.DisplayerDefn;
 import org.softwareFm.display.displayer.IDisplayer;
 import org.softwareFm.display.impl.AbstractDisplayerEditorIntegrationTest;
+import org.softwareFm.display.swt.Swts;
 import org.softwareFm.jdtBinding.api.IJavadocSourceMutator;
 import org.softwareFm.jdtBinding.api.IJavadocSourceMutatorCallback;
+import org.softwareFm.jdtBinding.api.JdtConstants;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.resources.IResourceGetter;
@@ -57,7 +59,7 @@ public abstract class AbstractJavadocSourceEditorTest extends AbstractDisplayerE
 		assertEquals(0, mutatorValues.size());
 	}
 
-	public void testNoCopyButtonEnabledIfNotLegalUrl(){
+	public void testNoCopyButtonEnabledIfNotLegalUrl() {
 		checkNoCopyButtonEnabled("", "", "");
 		checkNoCopyButtonEnabled("", "http://something", "");
 		checkNoCopyButtonEnabled("http://something", "http://something", "");
@@ -68,7 +70,7 @@ public abstract class AbstractJavadocSourceEditorTest extends AbstractDisplayerE
 		checkNoCopyButtonEnabled("http://something", "http://something", "notlegal");
 		checkNoCopyButtonEnabled("http://something", "", "notlegal");
 	}
-	
+
 	private void checkNoCopyButtonEnabled(String eclipse, String softwareFm, String url) {
 		createDisplayerAndEditor(eclipse, softwareFm);
 		editor.getTxtUrl().setText(url);
@@ -77,7 +79,7 @@ public abstract class AbstractJavadocSourceEditorTest extends AbstractDisplayerE
 		assertFalse(javadocSourceButtons.copyToEclipseEnabled);
 		assertFalse(javadocSourceButtons.copyToSoftwareFmEnabled);
 		assertFalse(javadocSourceButtons.copyEclipseToSoftwareFmEnabled);
-		
+
 	}
 
 	public void testInitialButtonStateWithBlanks() {
@@ -229,7 +231,8 @@ public abstract class AbstractJavadocSourceEditorTest extends AbstractDisplayerE
 
 		JavadocSourceButtons javadocSourceButtons = editor.getJavadocSourceButtons();
 		javadocSourceButtons.copyToEclipseButton.notifyListeners(SWT.Selection, new Event());
-
+		Swts.dispatchUntilQueueEmpty(shell.getDisplay());
+		
 		assertFalse(javadocSourceButtons.copyToEclipseAndSfmEnabled);
 		assertFalse(javadocSourceButtons.copyToEclipseEnabled);
 		assertFalse(javadocSourceButtons.copyToSoftwareFmEnabled);
@@ -241,7 +244,8 @@ public abstract class AbstractJavadocSourceEditorTest extends AbstractDisplayerE
 
 		JavadocSourceButtons javadocSourceButtons = editor.getJavadocSourceButtons();
 		javadocSourceButtons.copyToEclipseButton.notifyListeners(SWT.Selection, new Event());
-
+		Swts.dispatchUntilQueueEmpty(shell.getDisplay());
+		
 		assertFalse(javadocSourceButtons.copyToEclipseAndSfmEnabled);
 		assertFalse(javadocSourceButtons.copyToEclipseEnabled);
 		assertFalse(javadocSourceButtons.copyToSoftwareFmEnabled);
@@ -253,7 +257,7 @@ public abstract class AbstractJavadocSourceEditorTest extends AbstractDisplayerE
 
 		JavadocSourceButtons javadocSourceButtons = editor.getJavadocSourceButtons();
 		javadocSourceButtons.copyToEclipseAndSoftwareFmButton.notifyListeners(SWT.Selection, new Event());
-
+		Swts.dispatchUntilQueueEmpty(shell.getDisplay());
 		assertFalse(javadocSourceButtons.copyToEclipseAndSfmEnabled);
 		assertFalse(javadocSourceButtons.copyToEclipseEnabled);
 		assertFalse(javadocSourceButtons.copyToSoftwareFmEnabled);
@@ -266,7 +270,6 @@ public abstract class AbstractJavadocSourceEditorTest extends AbstractDisplayerE
 		editor.getJavadocSourceButtons().copyToEclipseAndSoftwareFmButton.notifyListeners(SWT.Selection, new Event());
 		assertEquals(Arrays.asList("http://someOtherValue"), mutatorValues);
 	}
-	
 
 	public void testUpdatesSfm() {
 		fail("Need to write this");
@@ -280,11 +283,7 @@ public abstract class AbstractJavadocSourceEditorTest extends AbstractDisplayerE
 		return (CompressedText) displayer;
 	}
 
-	private void updateDisplayerAndClickEditor(String eclipseValue, String softwareFmValue, IDisplayer displayer) {
-		ActionContext actionContext = makeActionContext(makeDataGetter(eclipseValue, softwareFmValue));
-		displayerDefn.data(actionContext, displayerDefn, displayer, "entity", "url");
-		clickOnEditor(displayer);
-	}
+
 
 	private void checkTitle(IDisplayer displayer, String softwareFmValue, String eclipseValue, String expectedText) {
 		ActionContext actionContext = makeActionContext(makeDataGetter(eclipseValue, softwareFmValue));
@@ -299,6 +298,11 @@ public abstract class AbstractJavadocSourceEditorTest extends AbstractDisplayerE
 		mutatorValues.clear();
 	}
 
+	@Override
+	protected void tearDown() throws Exception {
+		Swts.dispatchUntilQueueEmpty(shell.getDisplay());
+		super.tearDown();
+	}
 	protected IJavadocSourceMutator makeMutator() {
 		return new IJavadocSourceMutator() {
 			@Override
@@ -335,7 +339,7 @@ public abstract class AbstractJavadocSourceEditorTest extends AbstractDisplayerE
 
 	@Override
 	protected JavadocSourceEditor makeEditor() {
-		return new JavadocSourceEditor(getUrlTitleKey(), getSoftwareFmValueKey(), getEclipseValueKey(), getMutatorKey());
+		return new JavadocSourceEditor(getUrlTitleKey(), getSoftwareFmValueKey(), getEclipseValueKey(), getMutatorKey(), JdtConstants.javadocKey);
 	}
 
 	@Override

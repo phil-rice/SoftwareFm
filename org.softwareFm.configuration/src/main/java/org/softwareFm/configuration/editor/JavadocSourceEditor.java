@@ -15,7 +15,6 @@ import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.composites.AbstractTitleAndText;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.TitleAndStyledText;
-import org.softwareFm.display.composites.TitleAndText;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.data.IDataGetter;
 import org.softwareFm.display.displayer.DisplayerDefn;
@@ -28,13 +27,14 @@ import org.softwareFm.display.swt.Swts;
 import org.softwareFm.jdtBinding.api.IJavadocSourceMutator;
 import org.softwareFm.jdtBinding.api.IJavadocSourceMutatorCallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
 
 public class JavadocSourceEditor implements IEditor {
 	private IEditorCompletion completion;
 	private Composite content;
-	private TitleAndText txtEclipse;
+	private TitleAndStyledText txtEclipse;
 	private final String eclipseKey;
 	private final String softwareFmKey;
 	private final String mutatorKey;
@@ -48,12 +48,14 @@ public class JavadocSourceEditor implements IEditor {
 	private String originalSoftwareFmValue;
 	private Text txtText;
 	private final JavadocSourceUrlTester urlTester = new JavadocSourceUrlTester();
+	private final String keyWhenSaving;
 
-	public JavadocSourceEditor(String urlTitle, String softwareFmKey, String eclipseKey, String mutatorKey) {
+	public JavadocSourceEditor(String urlTitle, String softwareFmKey, String eclipseKey, String mutatorKey, String keyWhenSaving) {
 		this.urlTitle = urlTitle;
 		this.eclipseKey = eclipseKey;
 		this.softwareFmKey = softwareFmKey;
 		this.mutatorKey = mutatorKey;
+		this.keyWhenSaving = keyWhenSaving;
 	}
 
 	@Override
@@ -67,9 +69,11 @@ public class JavadocSourceEditor implements IEditor {
 
 		CompositeConfig config = actionContext.compositeConfig;
 
-		txtUrl = new TitleAndStyledText(config, content, urlTitle, true, 2 * config.layout.textHeight);
-		txtEclipse = new TitleAndText(config, content, "dialog.eclipseValue.title", true);
+		int height = 2 * config.layout.textHeight;
+		txtUrl = new TitleAndStyledText(config, content, urlTitle, true, height);
+		txtEclipse = new TitleAndStyledText(config, content, "dialog.eclipseValue.title", true, height);
 		txtEclipse.setEditable(false);
+		txtEclipse.setBackground(content.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 
 		// addCopyToEclipseButton(config, dataGetter, txtExperiment, true);
 		// addCopyToSoftwareFmButton(config, actionContext, txtExperiment, true);
@@ -109,15 +113,20 @@ public class JavadocSourceEditor implements IEditor {
 			@Override
 			public void run() {
 				try {
-					txtText.setText(IResourceGetter.Utils.getOrException(actionContext.compositeConfig.resourceGetter,ConfigurationConstants.settingEclipseValue));
+					txtText.setText(IResourceGetter.Utils.getOrException(actionContext.compositeConfig.resourceGetter, ConfigurationConstants.settingEclipseValue));
 					String eclipseValue = txtUrl.getText();
 					mutator.setNewValue(eclipseValue, new IJavadocSourceMutatorCallback() {
 						@Override
-						public void process(String requested, String actual) {
-							txtEclipse.setText(actual);
-							setOriginalEclipseValue(actual);
-							setButtonValuesAfterMutate(originalEclipseValue, originalSoftwareFmValue);
-							txtText.setText(IResourceGetter.Utils.getOrException(actionContext.compositeConfig.resourceGetter,ConfigurationConstants.setEclipseValue));
+						public void process(String requested, final String actual) {
+							Swts.asyncExec(txtEclipse, new Runnable() {
+								@Override
+								public void run() {
+									txtEclipse.setText(actual);
+									setOriginalEclipseValue(actual);
+									setButtonValuesAfterMutate(originalEclipseValue, originalSoftwareFmValue);
+									txtText.setText(IResourceGetter.Utils.getOrException(actionContext.compositeConfig.resourceGetter, ConfigurationConstants.setEclipseValue));
+								}
+							});
 						}
 
 					});
@@ -128,8 +137,14 @@ public class JavadocSourceEditor implements IEditor {
 		}, new Runnable() {
 			@Override
 			public void run() {
-				setOriginalSoftwareFmValue(txtUrl.getText());
-				setButtonValuesAfterMutate(originalEclipseValue, originalSoftwareFmValue);
+				try {
+					String url = actionContext.entityToUrlGetter.apply("artifact");
+					actionContext.updateStore.update("artifact", url, Maps.<String, Object> makeMap(keyWhenSaving, txtUrl.getText()));
+					setOriginalSoftwareFmValue(txtUrl.getText());
+					setButtonValuesAfterMutate(originalEclipseValue, originalSoftwareFmValue);
+				} catch (Exception e) {
+					throw WrappedException.wrap(e);
+				}
 			}
 		}, new Runnable() {
 
@@ -140,6 +155,16 @@ public class JavadocSourceEditor implements IEditor {
 				txtUrl.setText(originalSoftwareFmValue);
 				setButtonValuesAfterMutate(originalEclipseValue, originalSoftwareFmValue);
 
+			}
+		}, new Runnable() {
+			@Override
+			public void run() {
+				try {
+					mutator.setNewValue("", IJavadocSourceMutatorCallback.Utils.blank());
+				} catch (Exception e) {
+					throw WrappedException.wrap(e);
+				}
+				cancel();
 			}
 		});
 
@@ -182,7 +207,7 @@ public class JavadocSourceEditor implements IEditor {
 		return buttonParent;
 	}
 
-	public TitleAndText getTxtEclipse() {
+	public TitleAndStyledText getTxtEclipse() {
 		return txtEclipse;
 	}
 

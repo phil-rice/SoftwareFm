@@ -17,13 +17,13 @@ public class JavadocSourceButtons {
 	final Button copyToSoftwareFmButton;
 	final Button copyToEclipseAndSoftwareFmButton;
 	final Button copyFromEclipseToSoftwareFmButton;
-	private String testResult;
 	boolean copyToEclipseAndSfmEnabled;
 	boolean copyToEclipseEnabled;
 	boolean copyToSoftwareFmEnabled;
 	boolean copyEclipseToSoftwareFmEnabled;
+	private final Button nukeButton;
 
-	public JavadocSourceButtons(IButtonParent buttonParent, CompositeConfig config, Runnable onCancel, final Runnable copyToEclipse, final Runnable copyToSoftwareFm, Runnable copyEclipseToSoftwareFm) {
+	public JavadocSourceButtons(IButtonParent buttonParent, CompositeConfig config, Runnable onCancel, final Runnable copyToEclipse, final Runnable copyToSoftwareFm, Runnable copyEclipseToSoftwareFm, Runnable nuke) {
 		IResourceGetter resourceGetter = config.resourceGetter;
 		Composite buttonComposite = buttonParent.getButtonComposite();
 		cancelButton = Swts.makePushButton(buttonComposite, resourceGetter, DisplayConstants.buttonCancelsTitle, onCancel);
@@ -37,6 +37,7 @@ public class JavadocSourceButtons {
 			}
 		});
 		copyFromEclipseToSoftwareFmButton = Swts.makePushButton(buttonComposite, resourceGetter, ConfigurationConstants.buttonCopyEclipseToSoftwareFmTitle, copyEclipseToSoftwareFm);
+		nukeButton = Swts.makePushButton(buttonComposite, resourceGetter, "Nuke", false, nuke);
 		setLayoutData(config, cancelButton, copyToEclipseButton, copyToSoftwareFmButton);
 		buttonComposite.layout();
 		buttonComposite.getParent().layout(); // only needed I think if there are no other buttons on the button composite
