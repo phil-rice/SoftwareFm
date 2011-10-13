@@ -98,7 +98,10 @@ public class ConfigurationConstants {
 	public static final String buttonCopyToEclipseTitle = "button.copyToEclipse.title";
 	public static final String buttonCopyToSoftwareFmTitle = "button.copyToSoftwareFm.title";
 	public static final String buttonCopyToBothTitle = "button.copyToBoth.title";
+	public static final String buttonCopyEclipseToSoftwareFmTitle = "button.copyEclipseToSoftwareFm.title";
 	public static final String buttonTestTitle = "button.test.title";
+	public static final String settingEclipseValue = "javadocSource.settingEclipseValue.text";
+	public static final String setEclipseValue = "javadocSource.setEclipseValue.text";
 	public static final File defaultDirectoryForDownloads = new File(System.getProperty("user.home"), "softwareFm");
 	public static final String javadocKey = "javadoc.title";
 	public static final String sourceKey = "source.title";
@@ -106,4 +109,5 @@ public class ConfigurationConstants {
 	public final static String urlJavadocTitle = "url.javadoc.title";
 	public final static String urlSourceTitle = "url.source.title";
 
+	public static final String groupReferenceTitle = "group.reference.title";
 }

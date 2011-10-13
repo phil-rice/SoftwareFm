@@ -16,25 +16,27 @@ public class JavadocSourceButtons {
 	final Button copyToEclipseButton;
 	final Button copyToSoftwareFmButton;
 	final Button copyToEclipseAndSoftwareFmButton;
-	private final Button testButton;
+	final Button copyFromEclipseToSoftwareFmButton;
 	private String testResult;
 	boolean copyToEclipseAndSfmEnabled;
 	boolean copyToEclipseEnabled;
 	boolean copyToSoftwareFmEnabled;
+	boolean copyEclipseToSoftwareFmEnabled;
 
-	public JavadocSourceButtons(IButtonParent buttonParent, CompositeConfig config, Runnable onCancel, final ITester tester, Runnable copyToEclipse, Runnable copyToSoftwareFm) {
+	public JavadocSourceButtons(IButtonParent buttonParent, CompositeConfig config, Runnable onCancel, final Runnable copyToEclipse, final Runnable copyToSoftwareFm, Runnable copyEclipseToSoftwareFm) {
 		IResourceGetter resourceGetter = config.resourceGetter;
 		Composite buttonComposite = buttonParent.getButtonComposite();
 		cancelButton = Swts.makePushButton(buttonComposite, resourceGetter, DisplayConstants.buttonCancelsTitle, onCancel);
-		testButton = Swts.makePushButton(buttonComposite, resourceGetter, ConfigurationConstants.buttonTestTitle, new Runnable() {
-			@Override
-			public void run() {
-				testResult = ITester.Utils.test(tester);
-			}
-		});
 		copyToEclipseButton = Swts.makePushButton(buttonComposite, resourceGetter, ConfigurationConstants.buttonCopyToEclipseTitle, copyToEclipse);
 		copyToSoftwareFmButton = Swts.makePushButton(buttonComposite, resourceGetter, ConfigurationConstants.buttonCopyToSoftwareFmTitle, copyToSoftwareFm);
-		copyToEclipseAndSoftwareFmButton = Swts.makePushButton(buttonComposite, resourceGetter, ConfigurationConstants.buttonCopyToBothTitle, copyToSoftwareFm);
+		copyToEclipseAndSoftwareFmButton = Swts.makePushButton(buttonComposite, resourceGetter, ConfigurationConstants.buttonCopyToBothTitle, new Runnable() {
+			@Override
+			public void run() {
+				copyToSoftwareFm.run();
+				copyToEclipse.run();
+			}
+		});
+		copyFromEclipseToSoftwareFmButton = Swts.makePushButton(buttonComposite, resourceGetter, ConfigurationConstants.buttonCopyEclipseToSoftwareFmTitle, copyEclipseToSoftwareFm);
 		setLayoutData(config, cancelButton, copyToEclipseButton, copyToSoftwareFmButton);
 		buttonComposite.layout();
 		buttonComposite.getParent().layout(); // only needed I think if there are no other buttons on the button composite
@@ -45,13 +47,15 @@ public class JavadocSourceButtons {
 			button.setLayoutData(new RowData(config.layout.okCancelWidth, config.layout.okCancelHeight));
 	}
 
-	public void setCopyButtonsEnabled(boolean copyToEclipse, boolean copyToSoftwareFm) {
+	public void setCopyButtonsEnabled(boolean copyToEclipse, boolean copyToSoftwareFm, boolean copyEclipseToSoftwareFm) {
 		this.copyToEclipseEnabled = copyToEclipse;
 		this.copyToSoftwareFmEnabled = copyToSoftwareFm;
+		this.copyEclipseToSoftwareFmEnabled = copyEclipseToSoftwareFm;
 		this.copyToEclipseAndSfmEnabled = copyToEclipse && copyToSoftwareFm;
 		copyToEclipseAndSoftwareFmButton.setEnabled(copyToEclipseAndSfmEnabled);
 		copyToEclipseButton.setEnabled(copyToEclipse);
 		copyToSoftwareFmButton.setEnabled(copyToSoftwareFm);
+		copyFromEclipseToSoftwareFmButton.setEnabled(copyEclipseToSoftwareFm);
 	}
 
 }

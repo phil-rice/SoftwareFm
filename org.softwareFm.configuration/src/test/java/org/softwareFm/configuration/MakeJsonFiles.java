@@ -100,12 +100,12 @@ public class MakeJsonFiles {
 		makeJavadocSource(softwareFmHasLink, eclipse, softwareFm, http, false);
 	}
 
-	private static void makeJavadocSource(boolean softwareFmHasLink,boolean eclipse, boolean softwareFm, boolean http, boolean match) {
-		String pattern = "Link{0}Javadoc{1}{2}Source{1}{2}Http{3}match{4}.json";
-		String fileName = MessageFormat.format(pattern, Booleans.toTf(softwareFmHasLink),Booleans.toTf(eclipse), Booleans.toTf(softwareFm), Booleans.toTf(http), Booleans.toTf(match));
+	private static void makeJavadocSource(boolean softwareFmHasLink,boolean eclipse, boolean softwareFm, boolean notHttp, boolean match) {
+		String pattern = "Link{0}Javadoc{1}{2}Source{1}{2}Jar{3}match{4}.json";
+		String fileName = MessageFormat.format(pattern, Booleans.toTf(softwareFmHasLink),Booleans.toTf(eclipse), Booleans.toTf(softwareFm), Booleans.toTf(notHttp), Booleans.toTf(match));
 		Map<String, Object> localRipped = Maps.copyMap(ripped);
 		Map<String, Object> localArtifact = Maps.copyMap(artifact);
-		if (http) {
+		if (notHttp) {
 			localRipped.put("javadoc", javadocJar);
 			localRipped.put("source", sourceJar);
 			if (match) {
@@ -129,7 +129,7 @@ public class MakeJsonFiles {
 
 		}
 		Map<String, Object> localJar = softwareFmHasLink ? Maps.copyMap(jar) : Maps.<String, Object> newMap();
-		if (http) {
+		if (notHttp) {
 			localRipped.put("javadoc", "http://" + localRipped.get("javadoc"));
 			localArtifact.put("javadoc", "http://" + localArtifact.get("javadoc"));
 

@@ -39,7 +39,7 @@ public abstract class AbstractJavadocSourceEditorTest extends AbstractDisplayerE
 	public void testDisplayerTitle() {
 		ActionContext actionContext = makeActionContext(new DataGetterMock());
 		IDisplayer displayer = displayerDefn.createDisplayer(shell, actionContext);
-		checkTitle(displayer, "sfm", "ecl", "doesnt_match");
+		checkTitle(displayer, "http://sfm", "http://ecl", "doesnt_match");
 		checkTitle(displayer, "data", "data", "matches");
 		checkTitle(displayer, "data", "", "copy_to_eclipse");
 		checkTitle(displayer, "", "data", "notUrl");
@@ -47,14 +47,37 @@ public abstract class AbstractJavadocSourceEditorTest extends AbstractDisplayerE
 	}
 
 	public void testEditorText() {
-		createDisplayerAndEditor("ecl", "sfm");
-		assertEquals("ecl", editor.getTxtEclipse().getText());
-		assertEquals("sfm", editor.getTxtUrl().getText());
+		createDisplayerAndEditor("http://ecl", "http://sfm");
+		assertEquals("http://ecl", editor.getTxtEclipse().getText());
+		assertEquals("http://sfm", editor.getTxtUrl().getText());
 	}
 
 	public void testCreatingEditorDoesntMutate() {
-		createDisplayerAndEditor("ecl", "sfm");
+		createDisplayerAndEditor("http://ecl", "http://sfm");
 		assertEquals(0, mutatorValues.size());
+	}
+
+	public void testNoCopyButtonEnabledIfNotLegalUrl(){
+		checkNoCopyButtonEnabled("", "", "");
+		checkNoCopyButtonEnabled("", "http://something", "");
+		checkNoCopyButtonEnabled("http://something", "http://something", "");
+		checkNoCopyButtonEnabled("http://something", "", "");
+
+		checkNoCopyButtonEnabled("", "", "notlegal");
+		checkNoCopyButtonEnabled("", "http://something", "notlegal");
+		checkNoCopyButtonEnabled("http://something", "http://something", "notlegal");
+		checkNoCopyButtonEnabled("http://something", "", "notlegal");
+	}
+	
+	private void checkNoCopyButtonEnabled(String eclipse, String softwareFm, String url) {
+		createDisplayerAndEditor(eclipse, softwareFm);
+		editor.getTxtUrl().setText(url);
+		JavadocSourceButtons javadocSourceButtons = editor.getJavadocSourceButtons();
+		assertFalse(javadocSourceButtons.copyToEclipseAndSfmEnabled);
+		assertFalse(javadocSourceButtons.copyToEclipseEnabled);
+		assertFalse(javadocSourceButtons.copyToSoftwareFmEnabled);
+		assertFalse(javadocSourceButtons.copyEclipseToSoftwareFmEnabled);
+		
 	}
 
 	public void testInitialButtonStateWithBlanks() {
@@ -63,14 +86,16 @@ public abstract class AbstractJavadocSourceEditorTest extends AbstractDisplayerE
 		assertFalse(javadocSourceButtons.copyToEclipseAndSfmEnabled);
 		assertFalse(javadocSourceButtons.copyToEclipseEnabled);
 		assertFalse(javadocSourceButtons.copyToSoftwareFmEnabled);
+		assertFalse(javadocSourceButtons.copyEclipseToSoftwareFmEnabled);
 	}
 
 	public void testInitialButtonStateWithEclipseAndSoftwareFmNotMatching() {
-		createDisplayerAndEditor("ecl", "sfm");
+		createDisplayerAndEditor("http://ecl", "http://sfm");
 		JavadocSourceButtons javadocSourceButtons = editor.getJavadocSourceButtons();
 		assertFalse(javadocSourceButtons.copyToEclipseAndSfmEnabled);
 		assertTrue(javadocSourceButtons.copyToEclipseEnabled);
 		assertFalse(javadocSourceButtons.copyToSoftwareFmEnabled);
+		assertFalse(javadocSourceButtons.copyEclipseToSoftwareFmEnabled);
 	}
 
 	public void testInitialButtonStateWithEclipseAndSoftwareFmMatching() {
@@ -79,6 +104,7 @@ public abstract class AbstractJavadocSourceEditorTest extends AbstractDisplayerE
 		assertFalse(javadocSourceButtons.copyToEclipseAndSfmEnabled);
 		assertFalse(javadocSourceButtons.copyToEclipseEnabled);
 		assertFalse(javadocSourceButtons.copyToSoftwareFmEnabled);
+		assertFalse(javadocSourceButtons.copyEclipseToSoftwareFmEnabled);
 	}
 
 	public void testInitialButtonStateWithEclipseAndSoftwareFmBlank() {
@@ -87,14 +113,16 @@ public abstract class AbstractJavadocSourceEditorTest extends AbstractDisplayerE
 		assertFalse(javadocSourceButtons.copyToEclipseAndSfmEnabled);
 		assertFalse(javadocSourceButtons.copyToEclipseEnabled);
 		assertFalse(javadocSourceButtons.copyToSoftwareFmEnabled);
+		assertFalse(javadocSourceButtons.copyEclipseToSoftwareFmEnabled);
 	}
 
 	public void testInitialButtonStateWithJustEclipse() {
-		createDisplayerAndEditor("ecl", "");
+		createDisplayerAndEditor("http://ecl", "");
 		JavadocSourceButtons javadocSourceButtons = editor.getJavadocSourceButtons();
 		assertFalse(javadocSourceButtons.copyToEclipseAndSfmEnabled);
 		assertFalse(javadocSourceButtons.copyToEclipseEnabled);
 		assertFalse(javadocSourceButtons.copyToSoftwareFmEnabled);
+		assertFalse(javadocSourceButtons.copyEclipseToSoftwareFmEnabled);
 	}
 
 	public void testInitialButtonStateWithJustEclipseJar() {
@@ -103,6 +131,23 @@ public abstract class AbstractJavadocSourceEditorTest extends AbstractDisplayerE
 		assertFalse(javadocSourceButtons.copyToEclipseAndSfmEnabled);
 		assertFalse(javadocSourceButtons.copyToEclipseEnabled);
 		assertFalse(javadocSourceButtons.copyToSoftwareFmEnabled);
+		assertFalse(javadocSourceButtons.copyEclipseToSoftwareFmEnabled);
+	}
+
+	public void testInitialButtonStateWithJustEclipseHtml() {
+		createDisplayerAndEditor("http://ecl.html", "");
+		JavadocSourceButtons javadocSourceButtons = editor.getJavadocSourceButtons();
+		assertFalse(javadocSourceButtons.copyToEclipseAndSfmEnabled);
+		assertFalse(javadocSourceButtons.copyToEclipseEnabled);
+		assertTrue(javadocSourceButtons.copyEclipseToSoftwareFmEnabled);
+	}
+
+	public void testInitialButtonStateWithEclipseHtmlAndSfm() {
+		createDisplayerAndEditor("http://ecl.html", "http://sfm");
+		JavadocSourceButtons javadocSourceButtons = editor.getJavadocSourceButtons();
+		assertFalse(javadocSourceButtons.copyToEclipseAndSfmEnabled);
+		assertTrue(javadocSourceButtons.copyToEclipseEnabled);
+		assertFalse(javadocSourceButtons.copyEclipseToSoftwareFmEnabled);
 	}
 
 	public void testInitialButtonStateWithJustSfm() {
@@ -111,6 +156,7 @@ public abstract class AbstractJavadocSourceEditorTest extends AbstractDisplayerE
 		assertFalse(javadocSourceButtons.copyToEclipseAndSfmEnabled);
 		assertTrue(javadocSourceButtons.copyToEclipseEnabled);
 		assertFalse(javadocSourceButtons.copyToSoftwareFmEnabled);
+		assertFalse(javadocSourceButtons.copyEclipseToSoftwareFmEnabled);
 	}
 
 	public void testInitialButtonStateWithJustSfmHtml() {
@@ -119,62 +165,67 @@ public abstract class AbstractJavadocSourceEditorTest extends AbstractDisplayerE
 		assertFalse(javadocSourceButtons.copyToEclipseAndSfmEnabled);
 		assertTrue(javadocSourceButtons.copyToEclipseEnabled);
 		assertFalse(javadocSourceButtons.copyToSoftwareFmEnabled);
+		assertFalse(javadocSourceButtons.copyEclipseToSoftwareFmEnabled);
 	}
 
 	public void testButtonsWhenChangeToBlank() {
-		createDisplayerAndEditor("ecl", "sfm");
+		createDisplayerAndEditor("http://ecl", "http://sfm");
 		JavadocSourceButtons javadocSourceButtons = editor.getJavadocSourceButtons();
 		editor.getTxtUrl().setText("");
 		assertFalse(javadocSourceButtons.copyToEclipseAndSfmEnabled);
 		assertFalse(javadocSourceButtons.copyToEclipseEnabled);
 		assertFalse(javadocSourceButtons.copyToSoftwareFmEnabled);
+		assertFalse(javadocSourceButtons.copyEclipseToSoftwareFmEnabled);
 	}
 
 	public void testButtonsWhenChangeToNewValue() {
-		createDisplayerAndEditor("ecl", "sfm");
+		createDisplayerAndEditor("http://ecl", "http://sfm");
 		JavadocSourceButtons javadocSourceButtons = editor.getJavadocSourceButtons();
-		editor.getTxtUrl().setText("newvalue");
+		editor.getTxtUrl().setText("http://newvalue");
 		assertTrue(javadocSourceButtons.copyToEclipseAndSfmEnabled);
 		assertTrue(javadocSourceButtons.copyToEclipseEnabled);
 		assertTrue(javadocSourceButtons.copyToSoftwareFmEnabled);
+		assertFalse(javadocSourceButtons.copyEclipseToSoftwareFmEnabled);
 	}
 
 	public void testButtonsWhenChangeToSfmValue() {
-		createDisplayerAndEditor("ecl", "sfm");
+		createDisplayerAndEditor("http://ecl", "http://sfm");
 		JavadocSourceButtons javadocSourceButtons = editor.getJavadocSourceButtons();
-		editor.getTxtUrl().setText("newvalue");
-		editor.getTxtUrl().setText("sfm");
+		editor.getTxtUrl().setText("http://newvalue");
+		editor.getTxtUrl().setText("http://sfm");
 		assertFalse(javadocSourceButtons.copyToEclipseAndSfmEnabled);
 		assertTrue(javadocSourceButtons.copyToEclipseEnabled);
 		assertFalse(javadocSourceButtons.copyToSoftwareFmEnabled);
+		assertFalse(javadocSourceButtons.copyEclipseToSoftwareFmEnabled);
 	}
 
 	public void testButtonsWhenChangeToEclValue() {
-		createDisplayerAndEditor("ecl", "sfm");
+		createDisplayerAndEditor("http://ecl", "http://sfm");
 		JavadocSourceButtons javadocSourceButtons = editor.getJavadocSourceButtons();
-		editor.getTxtUrl().setText("ecl");
+		editor.getTxtUrl().setText("http://ecl");
 		assertFalse(javadocSourceButtons.copyToEclipseAndSfmEnabled);
 		assertFalse(javadocSourceButtons.copyToEclipseEnabled);
 		assertTrue(javadocSourceButtons.copyToSoftwareFmEnabled);
+		assertFalse(javadocSourceButtons.copyEclipseToSoftwareFmEnabled);
 	}
 
 	public void testCopyToEclipseButtonFromSfmValueMutatesValue() {
-		createDisplayerAndEditor("ecl", "sfm");
+		createDisplayerAndEditor("http://ecl", "http://sfm");
 
 		editor.getJavadocSourceButtons().copyToEclipseButton.notifyListeners(SWT.Selection, new Event());
-		assertEquals(Arrays.asList("sfm"), mutatorValues);
+		assertEquals(Arrays.asList("http://sfm"), mutatorValues);
 	}
 
 	public void testCopyToEclipseButtonFromNonSfmValueMutatesValue() {
-		createDisplayerAndEditor("ecl", "sfm");
-		editor.getTxtUrl().setText("someOtherValue");
+		createDisplayerAndEditor("http://ecl", "http://sfm");
+		editor.getTxtUrl().setText("http://someOtherValue");
 
 		editor.getJavadocSourceButtons().copyToEclipseButton.notifyListeners(SWT.Selection, new Event());
-		assertEquals(Arrays.asList("someOtherValue"), mutatorValues);
+		assertEquals(Arrays.asList("http://someOtherValue"), mutatorValues);
 	}
 
 	public void testButtonStateAFterCopyToEclipseFromSfmButton() {
-		createDisplayerAndEditor("ecl", "sfm");
+		createDisplayerAndEditor("http://ecl", "http://sfm");
 
 		JavadocSourceButtons javadocSourceButtons = editor.getJavadocSourceButtons();
 		javadocSourceButtons.copyToEclipseButton.notifyListeners(SWT.Selection, new Event());
@@ -185,20 +236,20 @@ public abstract class AbstractJavadocSourceEditorTest extends AbstractDisplayerE
 	}
 
 	public void testButtonStateAFterCopyToEclipseFromNoneSfmButton() {
-		createDisplayerAndEditor("ecl", "sfm");
-		editor.getTxtUrl().setText("someOtherValue");
+		createDisplayerAndEditor("http://ecl", "http://sfm");
+		editor.getTxtUrl().setText("http://someOtherValue");
 
 		JavadocSourceButtons javadocSourceButtons = editor.getJavadocSourceButtons();
 		javadocSourceButtons.copyToEclipseButton.notifyListeners(SWT.Selection, new Event());
 
 		assertFalse(javadocSourceButtons.copyToEclipseAndSfmEnabled);
 		assertFalse(javadocSourceButtons.copyToEclipseEnabled);
-		assertTrue(javadocSourceButtons.copyToSoftwareFmEnabled);
+		assertFalse(javadocSourceButtons.copyToSoftwareFmEnabled);
 	}
 
 	public void testCopyToBothButtonMutatesValue() {
-		createDisplayerAndEditor("ecl", "sfm");
-		editor.getTxtUrl().setText("someOtherValue");
+		createDisplayerAndEditor("http://ecl", "http://sfm");
+		editor.getTxtUrl().setText("http://someOtherValue");
 
 		JavadocSourceButtons javadocSourceButtons = editor.getJavadocSourceButtons();
 		javadocSourceButtons.copyToEclipseAndSoftwareFmButton.notifyListeners(SWT.Selection, new Event());
@@ -209,12 +260,13 @@ public abstract class AbstractJavadocSourceEditorTest extends AbstractDisplayerE
 	}
 
 	public void testButtonStateAfterCopyToBothButtonMutatesValue() {
-		createDisplayerAndEditor("ecl", "sfm");
-		editor.getTxtUrl().setText("someOtherValue");
+		createDisplayerAndEditor("http://ecl", "http://sfm");
+		editor.getTxtUrl().setText("http://someOtherValue");
 
 		editor.getJavadocSourceButtons().copyToEclipseAndSoftwareFmButton.notifyListeners(SWT.Selection, new Event());
-		assertEquals(Arrays.asList("someOtherValue"), mutatorValues);
+		assertEquals(Arrays.asList("http://someOtherValue"), mutatorValues);
 	}
+	
 
 	public void testUpdatesSfm() {
 		fail("Need to write this");
@@ -268,9 +320,12 @@ public abstract class AbstractJavadocSourceEditorTest extends AbstractDisplayerE
 				ConfigurationConstants.buttonCopyToEclipseTitle, "copy_to_eclipse",//
 				ConfigurationConstants.buttonCopyToSoftwareFmTitle, "copy_to_sfm",//
 				ConfigurationConstants.buttonCopyToBothTitle, "copy_to_both",//
+				ConfigurationConstants.buttonCopyEclipseToSoftwareFmTitle, "e->sfm",//
 				ConfigurationConstants.urlJavadocTitle, "JavadocUrlTitle",//
 				ConfigurationConstants.urlSourceTitle, "SourceUrlTitle",//
 				ConfigurationConstants.buttonTestTitle, "ButtonTestTitle",//
+				ConfigurationConstants.settingEclipseValue, "SettingEclipseValue",//
+				ConfigurationConstants.setEclipseValue, "SetEclipseValue",//
 				"button.eclipseNotUrl.title", "notUrl",//
 				"button.matches.title", "matches",//
 				DisplayConstants.buttonCancelsTitle, "cancelValue", //
