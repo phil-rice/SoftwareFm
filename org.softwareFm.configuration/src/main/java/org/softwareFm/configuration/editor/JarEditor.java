@@ -58,7 +58,7 @@ public class JarEditor implements IEditor {
 		Object jarName = actionContext.dataGetter.getDataFor(ConfigurationConstants.dataRawJarName);
 		jarPathText.setText(Strings.nullSafeToString(jarPath));
 		jarNameText.setText(Strings.nullSafeToString(jarName));
-		Swts.addAcceptCancel(buttonParent, actionContext.compositeConfig, new Runnable() {
+		Swts.addOkCancel(buttonParent, actionContext.compositeConfig, new Runnable() {
 			@Override
 			public void run() {
 				if (completion != null)
@@ -70,7 +70,8 @@ public class JarEditor implements IEditor {
 				if (completion != null)
 					completion.cancel();
 			}
-		});
+		}).setOkEnabled(false);
+		
 	}
 
 

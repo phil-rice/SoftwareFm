@@ -2,24 +2,14 @@ package org.softwareFm.display.impl;
 
 import java.util.Arrays;
 
-import junit.framework.TestCase;
-
-import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.softwareFm.display.IHasRightHandSide;
-import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.actions.ActionDefn;
-import org.softwareFm.display.actions.ActionMock;
-import org.softwareFm.display.actions.ActionStore;
-import org.softwareFm.display.actions.NoOperationAction;
 import org.softwareFm.display.composites.AbstractTitleAndText;
-import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.data.DataGetterMock;
 import org.softwareFm.display.data.IDataGetter;
 import org.softwareFm.display.data.ResourceGetterMock;
@@ -27,30 +17,18 @@ import org.softwareFm.display.displayer.CompressedText;
 import org.softwareFm.display.displayer.CompressedTextDisplayerFactory;
 import org.softwareFm.display.displayer.DisplayerDefn;
 import org.softwareFm.display.displayer.IDisplayer;
-import org.softwareFm.display.editor.EditorFactory;
-import org.softwareFm.display.editor.IEditorFactory;
 import org.softwareFm.display.editor.TextEditor;
 import org.softwareFm.display.smallButtons.SimpleImageControl;
-import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.tests.IIntegrationTest;
 import org.softwareFm.utilities.tests.Tests;
 
-public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrationTest {
+public class DisplayerDefnIntegrationTest extends AbstractDisplayerEditorIntegrationTest<CompressedText, TextEditor> implements IIntegrationTest {
 
-	private Shell shell;
-	private DisplayerDefn displayerDefn;
 	private ActionContext actionContext;
-	private ActionStore actionStore;
-	private ActionMock actionMock;
-	IDataGetter dataGetter = new DataGetterMock(//
-			"someActionTooltip", "someActionTooltipValue",//
-			"someDataTooltip", "someDataTooltipValue",//
-			"dataKey", "value1");
-	private TextEditor editor;
-	private IHasRightHandSide rightHandSide;
+	private IDataGetter dataGetter;
 
 	public void testCreateWithNoButtonsAndIconSet() {
 		IDisplayer displayer = displayerDefn.icon(ArtifactsAnchor.projectKey).createDisplayer(shell, actionContext);
@@ -122,9 +100,7 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 		DisplayerDefn dispDefnWithButton = displayerDefn.//
 				actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("a"));
 		IDisplayer displayer = dispDefnWithButton.createDisplayer(shell, actionContext);
-		Control[] children = displayer.getButtonComposite().getChildren();
-		SimpleImageControl control = (SimpleImageControl) children[0];
-		control.notifyListeners(SWT.MouseDown, new Event());
+		clickOnEditor(displayer);
 		assertEquals(Arrays.asList(displayer), actionMock.displayers);
 		assertEquals(Arrays.asList(Arrays.asList("a")), actionMock.formalParams);
 		// assertEquals(Arrays.asList(Arrays.asList(1)), actionMock.actualParams);
@@ -161,18 +137,16 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 		assertEquals("value1", ((CompressedText) displayer).getText());
 	}
 
-	public void testMainControlCausesEditorToBeDisplayer() {
+	public void testMainControlCausesEditorToBeDisplayed() {
 		DisplayerDefn dispDefnWithButton = displayerDefn.//
 				data("data.entity.key").//
 				editor("someEditor").actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
 		CompressedText displayer = (CompressedText) dispDefnWithButton.createDisplayer(shell, actionContext);
 		Label label = displayer.getLabel();
-		assertFalse(editor.getControl().isVisible());
 		label.notifyListeners(SWT.MouseDown, new Event());
 		AbstractTitleAndText<Text> text = editor.getText();
 		assertEquals("value", text.getText()); // extracted from data getter
 		assertEquals(editor.getControl(), rightHandSide.getVisibleControl());
-		assertTrue(editor.getControl().isEnabled());
 
 	}
 
@@ -199,9 +173,10 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 		assertEquals("guardTitle", label.getText()); // extracted from data getter
 		assertTrue(displayer.isShouldBeEnabled());// cannot actually tell if it is enabled. Think this is because the control is invisible
 	}
+
 	public void testEditorIsDisabledIfToldToIgnoreMissingGuardButOtherGuardExists() {
 		DisplayerDefn defn = displayerDefn.//
-				guard("data.entity.alsoNotIn", "guardKey2","data.entity.notIn", "guardKey").//
+				guard("data.entity.alsoNotIn", "guardKey2", "data.entity.notIn", "guardKey").//
 				data("data.entity.key").//
 				editor("someEditor").editorIgnoreGuard("data.entity.notIn").actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
 		CompressedText displayer = (CompressedText) defn.createDisplayer(shell, actionContext);
@@ -210,9 +185,10 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 		assertEquals("guardTitle2", label.getText()); // extracted from data getter
 		assertFalse(displayer.isShouldBeEnabled());// cannot actually tell if it is enabled. Think this is because the control is invisible
 	}
+
 	public void testEditorIsDisabledIfToldToIgnoreMissingGuardButOtherGuardExistsWithGuardsInDifferentOrder() {
 		DisplayerDefn defn = displayerDefn.//
-				guard("data.entity.notIn", "guardKey","data.entity.alsoNotIn", "guardKey2").//
+				guard("data.entity.notIn", "guardKey", "data.entity.alsoNotIn", "guardKey2").//
 				data("data.entity.key").//
 				editor("someEditor").editorIgnoreGuard("data.entity.notIn").actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
 		CompressedText displayer = (CompressedText) defn.createDisplayer(shell, actionContext);
@@ -242,29 +218,34 @@ public class DisplayerDefnIntegrationTest extends TestCase implements IIntegrati
 	}
 
 	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		shell = new Shell();
-		actionMock = new ActionMock("someAction");
-		actionStore = new ActionStore().action("someId", actionMock).action("action.no.operation", new NoOperationAction());
-		ImageRegistry imageRegistry = new ImageRegistry();
-		new BasicImageRegisterConfigurator().registerWith(shell.getDisplay(), imageRegistry);
-		IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(new ResourceGetterMock(//
-				"someTitle", "registeredTitle", "button.cancel.title", "cancelValue", //
-
-				"button.ok.title", "okValue", "helpKey", "helpValue"));
-		editor = new TextEditor();
-		IEditorFactory editorFactory = new EditorFactory().register("someEditor", editor);
-		rightHandSide = IHasRightHandSide.Utils.makeRightHandSide(shell);
-		EntityToUrlMock entityToUrl = new EntityToUrlMock("entity", "urlForEntity");
-		actionContext = new ActionContext(rightHandSide, actionStore, new DataGetterMock("data.entity.key", "value", "guardKey", "guardTitle",  "guardKey2", "guardTitle2"), entityToUrl, new CompositeConfig(shell.getDisplay(), new SoftwareFmLayout(), imageRegistry, resourceGetter), editorFactory, null, null, null);
-		editor.createControl(actionContext);
-		displayerDefn = new DisplayerDefn(new CompressedTextDisplayerFactory()).title("someTitle");
+	protected TextEditor makeEditor() {
+		return new TextEditor();
 	}
 
 	@Override
-	protected void tearDown() throws Exception {
-		shell.dispose();
-		super.tearDown();
+	protected DisplayerDefn makeBaseDisplayDefn() {
+		return new DisplayerDefn(new CompressedTextDisplayerFactory()).title("someTitle");
+	}
+
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		dataGetter = new DataGetterMock(//
+				"data.entity.key", "value",//
+				"guardKey", "guardTitle",//
+				"guardKey2", "guardTitle2",//
+				"someActionTooltip", "someActionTooltipValue",//
+				"someDataTooltip", "someDataTooltipValue",//
+				"dataKey", "value1");
+		actionContext = makeActionContext(dataGetter);
+	}
+
+	@Override
+	protected IResourceGetter makeResources() {
+		IResourceGetter resourceGetter = new ResourceGetterMock(//
+				"someTitle", "registeredTitle", "button.cancel.title", "cancelValue", //
+
+				"button.ok.title", "okValue", "helpKey", "helpValue");
+		return resourceGetter;
 	}
 }

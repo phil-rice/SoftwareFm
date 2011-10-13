@@ -137,54 +137,10 @@ public class Swts {
 		}
 	}
 
-	public static void addAcceptCancel(IButtonParent buttonParent, CompositeConfig config, final Runnable onAccept, final Runnable onCancel) {
-		IResourceGetter resourceGetter = config.resourceGetter;
-		Composite buttonComposite = buttonParent.getButtonComposite();
-		Button cancelButton = new Button(buttonComposite, SWT.PUSH);
-		cancelButton.setText(IResourceGetter.Utils.getOrException(resourceGetter, "button.cancel.title"));
-		cancelButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				onCancel.run();
-			}
-		});
-		Button okButton = new Button(buttonComposite, SWT.PUSH);
-		okButton.setText(IResourceGetter.Utils.getOrException(resourceGetter, "button.ok.title"));
-		okButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				onAccept.run();
-			}
-		});
-
-		cancelButton.setLayoutData(new RowData(config.layout.okCancelWidth, config.layout.okCancelHeight));
-		okButton.setLayoutData(new RowData(config.layout.okCancelWidth, config.layout.okCancelHeight));
-		buttonComposite.layout();
-		buttonComposite.getParent().layout(); // only needed I think if there are no other buttons on the button composite
-
+	public static OkCancel addOkCancel(IButtonParent buttonParent, CompositeConfig config, final Runnable onAccept, final Runnable onCancel) {
+		return new OkCancel(buttonParent, config, onAccept, onCancel);
 	}
 
-	public static Composite makeAcceptCancelComposite(Composite parent, int style, IResourceGetter resourceGetter, final Runnable onAccept, final Runnable onCancel) {
-		Composite result = newComposite(parent, style, "acceptCancel");
-		result.setLayout(new GridLayout(2, true));
-		Button cancelButton = new Button(result, SWT.PUSH);
-		cancelButton.setText(IResourceGetter.Utils.getOrException(resourceGetter, "button.cancel.title"));
-		cancelButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				onCancel.run();
-			}
-		});
-		Button okButton = new Button(result, SWT.PUSH);
-		okButton.setText(IResourceGetter.Utils.getOrException(resourceGetter, "button.ok.title"));
-		okButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				onAccept.run();
-			}
-		});
-		return result;
-	}
 
 	public static Control setAfter(List<Control> controls, Control firstControl) {
 		for (Control control : controls) {

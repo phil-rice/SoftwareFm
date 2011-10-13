@@ -2,6 +2,8 @@ package org.softwareFm.configuration.editor;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -17,6 +19,7 @@ import org.softwareFm.display.editor.IEditor;
 import org.softwareFm.display.editor.IEditorCompletion;
 import org.softwareFm.display.simpleButtons.ButtonParent;
 import org.softwareFm.display.simpleButtons.IButtonParent;
+import org.softwareFm.display.swt.OkCancel;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.strings.Strings;
@@ -30,11 +33,13 @@ public class SoftwareFmIdEditor implements IEditor {
 	private ButtonParent buttonParent;
 	private IEditorCompletion completion;
 	private StyledText helpText;
+	private ModifyListener modifyListener;
 
 	@Override
 	public Control getControl() {
 		return content;
 	}
+
 	@Override
 	public Control createControl(ActionContext actionContext) {
 		content = Swts.newComposite(actionContext.rightHandSide.getComposite(), SWT.NULL, getClass().getSimpleName());
@@ -46,14 +51,14 @@ public class SoftwareFmIdEditor implements IEditor {
 		buttonParent = new ButtonParent(content, config, SWT.NULL);
 		helpText = Swts.makeHelpDisplayer(content);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(content, actionContext.compositeConfig.layout.dataMargin);
-//		content.setLayout(Swts.getHorizonalNoMarginRowLayout());
-//		for (Control child: content.getChildren())
-//			child.setLayoutData(new RowData());
+
+		// content.setLayout(Swts.getHorizonalNoMarginRowLayout());
+		// for (Control child: content.getChildren())
+		// child.setLayoutData(new RowData());
 
 		return content;
 	}
 
-	
 	private void addCrListeners(TitleAndText... texts) {
 		for (final TitleAndText text : texts)
 			text.addCrListener(new Listener() {
@@ -70,14 +75,16 @@ public class SoftwareFmIdEditor implements IEditor {
 		this.completion = completion;
 		Swts.layoutDump(content);
 
+		removeModifyListeners();
+
 		Swts.setHelpText(helpText, actionContext.compositeConfig.resourceGetter, displayerDefn.helpKey);
-		Object groupId = actionContext.dataGetter.getDataFor(ConfigurationConstants.dataJarGroupId);
-		Object artifactId = actionContext.dataGetter.getDataFor(ConfigurationConstants.dataJarArtifactId);
-		Object versionId = actionContext.dataGetter.getDataFor(ConfigurationConstants.dataJarVersion);
+		final Object groupId = actionContext.dataGetter.getDataFor(ConfigurationConstants.dataJarGroupId);
+		final Object artifactId = actionContext.dataGetter.getDataFor(ConfigurationConstants.dataJarArtifactId);
+		final Object versionId = actionContext.dataGetter.getDataFor(ConfigurationConstants.dataJarVersion);
 		groupIdText.setText(Strings.nullSafeToString(groupId));
 		artifactIdText.setText(Strings.nullSafeToString(artifactId));
 		versionText.setText(Strings.nullSafeToString(versionId));
-		Swts.addAcceptCancel(buttonParent, actionContext.compositeConfig, new Runnable() {
+		final OkCancel okCancel = Swts.addOkCancel(buttonParent, actionContext.compositeConfig, new Runnable() {
 			@Override
 			public void run() {
 				sendResult();
@@ -89,6 +96,33 @@ public class SoftwareFmIdEditor implements IEditor {
 					completion.cancel();
 			}
 		});
+		okCancel.setOkEnabled(false);
+		modifyListener = new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				boolean groupIdChanged = !groupIdText.getText().equals(groupId);
+				boolean artifactIdChanged = !artifactIdText.getText().equals(artifactId);
+				boolean versionChanged = !versionText.getText().equals(versionId);
+				boolean anyChanged = groupIdChanged | artifactIdChanged | versionChanged;
+				boolean notNull = groupIdText.getText().trim().length() > 0 && //
+						artifactIdText.getText().trim().length() > 0 && versionText.getText().trim().length() > 0;
+
+				boolean enabled = anyChanged & notNull;
+				okCancel.setOkEnabled(enabled);
+			}
+		};
+		groupIdText.addModifyListener(modifyListener);
+		artifactIdText.addModifyListener(modifyListener);
+		versionText.addModifyListener(modifyListener);
+	}
+
+	protected void removeModifyListeners() {
+		if (modifyListener != null) {
+			groupIdText.removeModifyListener(modifyListener);
+			artifactIdText.removeModifyListener(modifyListener);
+			versionText.removeModifyListener(modifyListener);
+		}
+		modifyListener = null;
 	}
 
 	private void sendResult() {
@@ -102,12 +136,13 @@ public class SoftwareFmIdEditor implements IEditor {
 	public IButtonParent actionButtonParent() {
 		return buttonParent;
 	}
+
 	public static void main(String[] args) {
 		Editors.display(SoftwareFmIdEditor.class.getSimpleName(), new SoftwareFmIdEditor(), //
 				ConfigurationConstants.dataJarGroupId, "GroupId",//
 				ConfigurationConstants.dataJarArtifactId, "ArtifactId",//
 				ConfigurationConstants.dataJarVersion, "Version"//
-				);
+		);
 	}
 
 }

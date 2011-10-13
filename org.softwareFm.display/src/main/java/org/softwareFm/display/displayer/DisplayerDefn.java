@@ -169,7 +169,9 @@ public class DisplayerDefn {
 		final ActionStore actionStore = actionContext.actionStore;
 		return actionDefn.createButton(compositeConfig.imageButtonConfig, buttonParent, new IImageButtonListener() {
 			private final IAction action = actionStore.get(actionDefn.id);
-
+			{
+				if (action==null) throw new NullPointerException(MessageFormat.format(DisplayConstants.cannotFindValueForKey, actionDefn.id, actionStore));
+			}
 			@Override
 			public void buttonPressed(IHasControl button) throws Exception {
 				ActionData actionData = actionContext.dataGetter.getActionDataFor(actionDefn.params);

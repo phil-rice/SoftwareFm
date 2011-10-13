@@ -2,6 +2,7 @@ package org.softwareFm.display.composites;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
@@ -53,6 +54,14 @@ public class TitleAndText extends AbstractTitleAndText<Text> {
 		return text.getText();
 	}
 
+	@Override
+	public void addModifyListener(ModifyListener listener) {
+		text.addModifyListener(listener);
+	}
+	@Override
+	public void removeModifyListener(ModifyListener listener) {
+		text.removeModifyListener(listener);
+	}
 	public static void main(String[] args) {
 		Swts.display("TitleAndText", new IFunction1<Composite, Composite>() {
 			@Override
@@ -67,6 +76,10 @@ public class TitleAndText extends AbstractTitleAndText<Text> {
 				return titleAndText.getComposite();
 			}
 		});
+	}
+
+	public boolean isEditable() {
+		return text.getEditable();
 	}
 
 }

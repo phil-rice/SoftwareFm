@@ -1,5 +1,6 @@
 package org.softwareFm.display.composites;
 
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -20,10 +21,14 @@ public abstract class AbstractTitleAndText<T extends Control> extends TitleAnd {
 
 	abstract protected T makeText();
 
+	abstract public void addModifyListener(final ModifyListener listener);
+
+	abstract public void removeModifyListener(final ModifyListener listener);
+
 	abstract public void addCrListener(final Listener listener);
 
 	abstract public String getText();
-	
+
 	abstract public void setText(String text);
 
 }

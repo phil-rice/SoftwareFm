@@ -31,4 +31,9 @@ public class ActionStore implements ISimpleMap<String, IAction> {
 		return new ArrayList<String>(map.keySet());
 	}
 
+	@Override
+	public String toString() {
+		return "ActionStore [map=" + map + "]";
+	}
+
 }

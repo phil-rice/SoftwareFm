@@ -2,6 +2,8 @@ package org.softwareFm.display.editor;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -15,6 +17,7 @@ import org.softwareFm.display.displayer.IDisplayer;
 import org.softwareFm.display.displayer.RippedEditorId;
 import org.softwareFm.display.simpleButtons.ButtonParent;
 import org.softwareFm.display.simpleButtons.IButtonParent;
+import org.softwareFm.display.swt.OkCancel;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
@@ -26,13 +29,16 @@ public abstract class AbstractTextEditor<T extends Control> implements IEditor {
 	private ButtonParent buttonParent;
 	private Runnable okRunnable;
 	private StyledText help;
+	private ModifyListener listener;
 
 	abstract protected AbstractTitleAndText<T> makeTitleAnd(Composite parent, CompositeConfig config);
 
 	@Override
 	public void edit(IDisplayer parent, final DisplayerDefn displayerDefn, ActionContext actionContext, final IEditorCompletion completion) {
 		String title = IResourceGetter.Utils.getOrException(actionContext.compositeConfig.resourceGetter, displayerDefn.title);
-		String rawText = Strings.nullSafeToString(actionContext.dataGetter.getDataFor(displayerDefn.dataKey));
+		final String rawText = Strings.nullSafeToString(actionContext.dataGetter.getDataFor(displayerDefn.dataKey));
+		if (listener != null)
+			text.removeModifyListener(listener);
 		text.setTitle(title);
 		text.setText(rawText);
 		okRunnable = new Runnable() {
@@ -43,16 +49,22 @@ public abstract class AbstractTextEditor<T extends Control> implements IEditor {
 				okRunnable = null;
 			}
 		};
-		Swts.addAcceptCancel(buttonParent, actionContext.compositeConfig, okRunnable, new Runnable() {
+		final OkCancel okCancel = Swts.addOkCancel(buttonParent, actionContext.compositeConfig, okRunnable, new Runnable() {
 			@Override
 			public void run() {
 				completion.cancel();
 			}
 		});
+		okCancel.setOkEnabled(false);
+		listener = new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				okCancel.setOkEnabled(!rawText.equals(text.getText()));
+			}
+		};
+		text.addModifyListener(listener);
 		Swts.setHelpText(help, actionContext.compositeConfig.resourceGetter, displayerDefn.helpKey);
 	}
-
-
 
 	public StyledText getHelpControl() {
 		return help;

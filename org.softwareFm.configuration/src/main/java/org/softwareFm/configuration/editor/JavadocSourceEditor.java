@@ -2,6 +2,8 @@ package org.softwareFm.configuration.editor;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -20,6 +22,7 @@ import org.softwareFm.display.simpleButtons.ButtonParent;
 import org.softwareFm.display.simpleButtons.IButtonParent;
 import org.softwareFm.display.smallButtons.IImageButtonListener;
 import org.softwareFm.display.smallButtons.SimpleImageButton;
+import org.softwareFm.display.swt.OkCancel;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -30,13 +33,14 @@ public class JavadocSourceEditor implements IEditor {
 	private Composite content;
 	private TitleAndText txtEclipse;
 	private TitleAndText txtSoftwareFm;
-	private TitleAndText txtExperiment;
 	private final String eclipseKey;
 	private final String softwareFmKey;
 	private final String mutatorKey;
 	private ButtonParent buttonParent;
 	private Runnable okRunnable;
 	private StyledText helpText;
+	private OkCancel okCancel;
+	private ModifyListener modifyListener;
 
 	public JavadocSourceEditor(String eclipseKey, String softwareFmKey, String mutatorKey) {
 		this.eclipseKey = eclipseKey;
@@ -52,25 +56,22 @@ public class JavadocSourceEditor implements IEditor {
 	@Override
 	public Control createControl(ActionContext actionContext) {
 		content = Swts.newComposite(actionContext.rightHandSide.getComposite(), SWT.NULL, getClass().getSimpleName());
-		
+
 		final IDataGetter dataGetter = actionContext.dataGetter;
 		CompositeConfig config = actionContext.compositeConfig;
 
-		buttonParent = new ButtonParent(content, config, SWT.NULL);
-
 		txtEclipse = new TitleAndText(config, content, "dialog.eclipseValue.title", true);
-		txtEclipse.setEditable(false);
 		addCopyToSoftwareFmButton(config, actionContext, txtEclipse, false);
 
 		txtSoftwareFm = new TitleAndText(config, content, "dialog.softwareFmValue.title", true);
-		txtSoftwareFm.setEditable(false);
 		addCopyToEclipseButton(config, dataGetter, txtSoftwareFm, false);
 
-		txtExperiment = new TitleAndText(config, content, "dialog.experiment.title", true);
-		addCopyToEclipseButton(config, dataGetter, txtExperiment, true);
-		addCopyToSoftwareFmButton(config, actionContext, txtExperiment, true);
+		buttonParent = new ButtonParent(content, config, SWT.NULL);
+		// addCopyToEclipseButton(config, dataGetter, txtExperiment, true);
+		// addCopyToSoftwareFmButton(config, actionContext, txtExperiment, true);
 
 		Composite buttonPanel = new Composite(content, SWT.NULL);
+		// new SimpleImageButton(parent, config, showBackground);
 		buttonPanel.setLayout(new GridLayout(3, true));
 		okRunnable = new Runnable() {
 			@Override
@@ -78,15 +79,13 @@ public class JavadocSourceEditor implements IEditor {
 				sendResult();
 			}
 		};
-		Swts.makeAcceptCancelComposite(content, SWT.NULL, actionContext.compositeConfig.resourceGetter, okRunnable, new Runnable() {
-			@Override
-			public void run() {
-				cancel();
-			}
-		});
 		helpText = Swts.makeHelpDisplayer(content);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(content, actionContext.compositeConfig.layout.dataMargin);
 		return content;
+	}
+
+	public OkCancel getOkCancel() {
+		return okCancel;
 	}
 
 	private SimpleImageButton addCopyToEclipseButton(CompositeConfig compositeConfig, final IDataGetter dataGetter, final TitleAndText parent, boolean onlyEnableIfHasValue) {
@@ -122,15 +121,40 @@ public class JavadocSourceEditor implements IEditor {
 
 	@Override
 	public void edit(IDisplayer parent, DisplayerDefn displayerDefn, ActionContext actionContext, IEditorCompletion completion) {
+		if (modifyListener != null) {
+			txtEclipse.removeModifyListener(modifyListener);
+			txtSoftwareFm.removeModifyListener(modifyListener);
+		}
+		okCancel = Swts.addOkCancel(buttonParent, actionContext.compositeConfig, okRunnable, new Runnable() {
+			@Override
+			public void run() {
+				cancel();
+			}
+		});
+		okCancel.setOkEnabled(false);
+
 		IDataGetter dataGetter = actionContext.dataGetter;
 		this.completion = completion;
 
-		String eclipseValue = Strings.nullSafeToString(dataGetter.getDataFor(eclipseKey));
+		final String eclipseValue = Strings.nullSafeToString(dataGetter.getDataFor(eclipseKey));
 		txtEclipse.setText(eclipseValue);
 
-		String softwareFmValue = Strings.nullSafeToString(dataGetter.getDataFor(softwareFmKey));
+		final String softwareFmValue = Strings.nullSafeToString(dataGetter.getDataFor(softwareFmKey));
 		txtSoftwareFm.setText(softwareFmValue);
-		
+
+		modifyListener = new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				boolean eclipseChanged = !txtEclipse.getText().equals(eclipseValue);
+				boolean softwareFmChanged = !txtSoftwareFm.getText().equals(softwareFmValue);
+				boolean enable = eclipseChanged | softwareFmChanged;
+				txtEclipse.setEditable(!softwareFmChanged);
+				txtSoftwareFm.setEditable(!eclipseChanged);
+				okCancel.setOkEnabled(enable);
+			}
+		};
+		txtEclipse.addModifyListener(modifyListener);
+		txtSoftwareFm.addModifyListener(modifyListener);
 		Swts.setHelpText(helpText, actionContext.compositeConfig.resourceGetter, displayerDefn.helpKey);
 	}
 
@@ -149,11 +173,18 @@ public class JavadocSourceEditor implements IEditor {
 		return buttonParent;
 	}
 
+	public TitleAndText getTxtEclipse() {
+		return txtEclipse;
+	}
+
+	public TitleAndText getTxtSoftwareFm() {
+		return txtSoftwareFm;
+	}
+
 	public static void main(String[] args) {
 		Editors.display(JavadocSourceEditor.class.getSimpleName(),//
 				new JavadocSourceEditor(ConfigurationConstants.dataRawJavadoc, ConfigurationConstants.dataArtifactJavadoc, ConfigurationConstants.dataRawJavadocMutator), //
 				ConfigurationConstants.dataRawJavadoc, "rawJavadoc",//
-				ConfigurationConstants.dataArtifactJavadoc, "SfmJavadoc"
-				);
+				ConfigurationConstants.dataArtifactJavadoc, "SfmJavadoc");
 	}
 }
