@@ -2,13 +2,18 @@ package org.softwareFm.configuration.editor;
 
 import org.softwareFm.configuration.ConfigurationConstants;
 import org.softwareFm.display.data.DataGetterMock;
+import org.softwareFm.jdtBinding.api.JdtConstants;
 
 public class JavadocEditorTest extends AbstractJavadocSourceEditorTest {
 
-
 	@Override
 	protected DataGetterMock makeDataGetter(String eclipseValue, String softwareFmValue) {
-		return new DataGetterMock(ConfigurationConstants.dataRawJavadocMutator, makeMutator(), ConfigurationConstants.dataRawJavadoc, eclipseValue, ConfigurationConstants.dataArtifactJavadoc, softwareFmValue);
+		return new DataGetterMock(ConfigurationConstants.dataRawJavadocMutator, makeMutator(), ConfigurationConstants.dataRawJavadoc, eclipseValue, ConfigurationConstants.dataJarJavadoc, softwareFmValue);
+	}
+
+	@Override
+	protected String getKeyForUpdateing() {
+		return JdtConstants.javadocKey;
 	}
 
 	@Override
@@ -18,7 +23,7 @@ public class JavadocEditorTest extends AbstractJavadocSourceEditorTest {
 
 	@Override
 	protected String getSoftwareFmValueKey() {
-		return ConfigurationConstants.dataArtifactJavadoc;
+		return ConfigurationConstants.dataJarJavadoc;
 	}
 
 	@Override

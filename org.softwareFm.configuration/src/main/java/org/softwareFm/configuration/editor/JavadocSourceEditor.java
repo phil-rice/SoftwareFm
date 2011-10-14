@@ -93,93 +93,97 @@ public class JavadocSourceEditor implements IEditor {
 
 	@Override
 	public void edit(IDisplayer parent, DisplayerDefn displayerDefn, final ActionContext actionContext, IEditorCompletion completion) {
-		this.completion = completion;
-		txtText.setText("");
-		if (modifyListener != null)
-			txtUrl.removeModifyListener(modifyListener);
-		IDataGetter dataGetter = actionContext.dataGetter;
-		setOriginalEclipseValue(Strings.nullSafeToString(dataGetter.getDataFor(eclipseKey)));
-		setOriginalSoftwareFmValue(Strings.nullSafeToString(dataGetter.getDataFor(softwareFmKey)));
-		final IJavadocSourceMutator mutator = (IJavadocSourceMutator) dataGetter.getDataFor(mutatorKey);
-		if (mutator == null)
-			throw new IllegalStateException(MessageFormat.format(DisplayConstants.mustHaveA, mutatorKey, dataGetter));
-		txtUrl.setText(originalSoftwareFmValue);
-		javadocSourceButtons = new JavadocSourceButtons(buttonParent, actionContext.compositeConfig, new Runnable() {
-			@Override
-			public void run() {
-				cancel();
-			}
-		}, new Runnable() {
-			@Override
-			public void run() {
-				try {
-					txtText.setText(IResourceGetter.Utils.getOrException(actionContext.compositeConfig.resourceGetter, ConfigurationConstants.settingEclipseValue));
-					String eclipseValue = txtUrl.getText();
-					mutator.setNewValue(eclipseValue, new IJavadocSourceMutatorCallback() {
-						@Override
-						public void process(String requested, final String actual) {
-							Swts.asyncExec(txtEclipse, new Runnable() {
-								@Override
-								public void run() {
-									txtEclipse.setText(actual);
-									setOriginalEclipseValue(actual);
-									setButtonValuesAfterMutate(originalEclipseValue, originalSoftwareFmValue);
-									txtText.setText(IResourceGetter.Utils.getOrException(actionContext.compositeConfig.resourceGetter, ConfigurationConstants.setEclipseValue));
-								}
-							});
-						}
-
-					});
-				} catch (Exception e) {
-					throw WrappedException.wrap(e);
+		try {
+			this.completion = completion;
+			txtText.setText("");
+			if (modifyListener != null)
+				txtUrl.removeModifyListener(modifyListener);
+			IDataGetter dataGetter = actionContext.dataGetter;
+			setOriginalEclipseValue(Strings.nullSafeToString(dataGetter.getDataFor(eclipseKey)));
+			setOriginalSoftwareFmValue(Strings.nullSafeToString(dataGetter.getDataFor(softwareFmKey)));
+			final IJavadocSourceMutator mutator = (IJavadocSourceMutator) dataGetter.getDataFor(mutatorKey);
+			if (mutator == null)
+				throw new IllegalStateException(MessageFormat.format(DisplayConstants.mustHaveA, mutatorKey, dataGetter));
+			txtUrl.setText(originalSoftwareFmValue);
+			final String entity = ConfigurationConstants.entityForJavadocSource;
+			final String url = actionContext.entityToUrlGetter.apply(entity);
+			javadocSourceButtons = new JavadocSourceButtons(buttonParent, actionContext.compositeConfig, new Runnable() {
+				@Override
+				public void run() {
+					cancel();
 				}
-			}
-		}, new Runnable() {
-			@Override
-			public void run() {
-				try {
-					String url = actionContext.entityToUrlGetter.apply("artifact");
-					actionContext.updateStore.update("artifact", url, Maps.<String, Object> makeMap(keyWhenSaving, txtUrl.getText()));
-					setOriginalSoftwareFmValue(txtUrl.getText());
+			}, new Runnable() {
+				@Override
+				public void run() {
+					try {
+						txtText.setText(IResourceGetter.Utils.getOrException(actionContext.compositeConfig.resourceGetter, ConfigurationConstants.settingEclipseValue));
+						String eclipseValue = txtUrl.getText();
+						mutator.setNewValue(eclipseValue, new IJavadocSourceMutatorCallback() {
+							@Override
+							public void process(String requested, final String actual) {
+								Swts.asyncExec(txtEclipse, new Runnable() {
+									@Override
+									public void run() {
+										txtEclipse.setText(actual);
+										setOriginalEclipseValue(actual);
+										setButtonValuesAfterMutate(originalEclipseValue, originalSoftwareFmValue);
+										txtText.setText(IResourceGetter.Utils.getOrException(actionContext.compositeConfig.resourceGetter, ConfigurationConstants.setEclipseValue));
+									}
+								});
+							}
+
+						});
+					} catch (Exception e) {
+						throw WrappedException.wrap(e);
+					}
+				}
+			}, new Runnable() {
+				@Override
+				public void run() {
+					try {
+						actionContext.updateStore.update(entity, url, Maps.<String, Object> makeMap(keyWhenSaving, txtUrl.getText()));
+						setOriginalSoftwareFmValue(txtUrl.getText());
+						setButtonValuesAfterMutate(originalEclipseValue, originalSoftwareFmValue);
+					} catch (Exception e) {
+						throw WrappedException.wrap(e);
+					}
+				}
+			}, new Runnable() {
+				@Override
+				public void run() {
 					setButtonValuesAfterMutate(originalEclipseValue, originalSoftwareFmValue);
-				} catch (Exception e) {
-					throw WrappedException.wrap(e);
+					setOriginalSoftwareFmValue(originalEclipseValue);
+					txtUrl.setText(originalSoftwareFmValue);
+					setButtonValuesAfterMutate(originalEclipseValue, originalSoftwareFmValue);
+
 				}
-			}
-		}, new Runnable() {
-
-			@Override
-			public void run() {
-				setButtonValuesAfterMutate(originalEclipseValue, originalSoftwareFmValue);
-				setOriginalSoftwareFmValue(originalEclipseValue);
-				txtUrl.setText(originalSoftwareFmValue);
-				setButtonValuesAfterMutate(originalEclipseValue, originalSoftwareFmValue);
-
-			}
-		}, new Runnable() {
-			@Override
-			public void run() {
-				try {
-					mutator.setNewValue("", IJavadocSourceMutatorCallback.Utils.blank());
-				} catch (Exception e) {
-					throw WrappedException.wrap(e);
+			}, new Runnable() {
+				@Override
+				public void run() {
+					try {
+						mutator.setNewValue("", IJavadocSourceMutatorCallback.Utils.blank());
+					} catch (Exception e) {
+						throw WrappedException.wrap(e);
+					}
+					cancel();
 				}
-				cancel();
-			}
-		});
+			});
 
-		txtEclipse.setText(originalEclipseValue);
+			txtEclipse.setText(originalEclipseValue);
 
-		modifyListener = new ModifyListener() {
-			@Override
-			public void modifyText(ModifyEvent e) {
-				textModified();
-			}
+			modifyListener = new ModifyListener() {
+				@Override
+				public void modifyText(ModifyEvent e) {
+					textModified();
+				}
 
-		};
-		txtUrl.addModifyListener(modifyListener);
-		Swts.setHelpText(helpText, actionContext.compositeConfig.resourceGetter, displayerDefn.helpKey);
-		textModified();
+			};
+			txtUrl.addModifyListener(modifyListener);
+			Swts.setHelpText(helpText, actionContext.compositeConfig.resourceGetter, displayerDefn.helpKey);
+			textModified();
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
 	}
 
 	private void setButtonValuesAfterMutate(final String originalEclipseValue, final String originalSoftwareFmValue) {

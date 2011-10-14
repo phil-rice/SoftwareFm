@@ -18,11 +18,11 @@ public class EditorFactoryConfigurator implements IEditorFactoryConfigurator {
 		editorFactory.register(ConfigurationConstants.editorStyledTextKey, new StyledTextEditor());
 		editorFactory.register(ConfigurationConstants.editorSfmIdKey, new SoftwareFmIdEditor());
 		editorFactory.register("editor.javadoc", new JavadocSourceEditor(//
-				ConfigurationConstants.urlJavadocTitle, ConfigurationConstants.dataArtifactJavadoc,//
+				ConfigurationConstants.urlJavadocTitle, ConfigurationConstants.dataJarJavadoc,//
 				ConfigurationConstants.dataRawJavadoc, ConfigurationConstants.dataRawJavadocMutator,//
 				JdtConstants.javadocKey));
 		editorFactory.register("editor.source", new JavadocSourceEditor(//
-				ConfigurationConstants.urlSourceTitle, ConfigurationConstants.dataArtifactSource, //
+				ConfigurationConstants.urlSourceTitle, ConfigurationConstants.dataJarSource, //
 				ConfigurationConstants.dataRawSource, ConfigurationConstants.dataRawSourceMutator,//
 				JdtConstants.sourceKey));
 		editorFactory.register("editor.jar", new JarEditor());

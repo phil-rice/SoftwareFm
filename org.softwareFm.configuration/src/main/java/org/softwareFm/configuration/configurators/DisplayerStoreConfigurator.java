@@ -18,8 +18,8 @@ public class DisplayerStoreConfigurator implements IDisplayerStoreConfigurator {
 				displayer("displayer.compressed.text", new CompressedTextDisplayerFactory()).//
 				displayer("displayer.compressed.styled.text", new CompressedStyledTextDisplayerFactory()).//
 				displayer("displayer.sfm.id", new AggregateTextDisplayerFactory(ConfigurationConstants.sfmIdPattern, ConfigurationConstants.dataJarGroupId, ConfigurationConstants.dataJarArtifactId, ConfigurationConstants.dataJarVersion)).//
-				displayer("displayer.summary.javadoc", new JavadocSourceSummaryDisplayerFactory(ConfigurationConstants.dataRawJavadoc, ConfigurationConstants.dataArtifactJavadoc)).//
-				displayer("displayer.summary.source", new JavadocSourceSummaryDisplayerFactory(ConfigurationConstants.dataRawSource, ConfigurationConstants.dataArtifactSource)).//
+				displayer("displayer.summary.javadoc", new JavadocSourceSummaryDisplayerFactory(ConfigurationConstants.dataRawJavadoc, ConfigurationConstants.dataJarJavadoc)).//
+				displayer("displayer.summary.source", new JavadocSourceSummaryDisplayerFactory(ConfigurationConstants.dataRawSource, ConfigurationConstants.dataJarSource)).//
 				displayer("displayer.list", new ListDisplayerFactory());
 	}
 

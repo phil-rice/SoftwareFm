@@ -23,8 +23,10 @@ import org.softwareFm.display.displayer.IDisplayer;
 import org.softwareFm.display.editor.EditorFactory;
 import org.softwareFm.display.editor.IEditor;
 import org.softwareFm.display.editor.IEditorFactory;
+import org.softwareFm.display.editor.IUpdateStore;
 import org.softwareFm.display.smallButtons.SimpleImageControl;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
+import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.tests.IIntegrationTest;
 
@@ -75,9 +77,18 @@ public abstract class AbstractDisplayerEditorIntegrationTest<D extends IDisplaye
 	}
 
 	protected ActionContext makeActionContext(IDataGetter dataGetter) {
-		EntityToUrlMock entityToUrl = new EntityToUrlMock("entity", "urlForEntity");
+		return makeActionContext(dataGetter, null);
+	}
+
+	protected ActionContext makeActionContext(IDataGetter dataGetter, IUpdateStore updateStore) {
+		IFunction1<String, String> entityToUrl = new IFunction1<String,String>() {
+			@Override
+			public String apply(String from) throws Exception {
+				return "UrlFor" + from;
+			}
+		};
 		IEditorFactory editorFactory = new EditorFactory().register("someEditor", editor);
-		return new ActionContext(rightHandSide, actionStore, dataGetter, entityToUrl, new CompositeConfig(shell.getDisplay(), new SoftwareFmLayout(), imageRegistry, resourceGetter), editorFactory, null, null, null);
+		return new ActionContext(rightHandSide, actionStore, dataGetter, entityToUrl, new CompositeConfig(shell.getDisplay(), new SoftwareFmLayout(), imageRegistry, resourceGetter), editorFactory, updateStore, null, null);
 	}
 
 	@Override

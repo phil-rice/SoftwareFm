@@ -16,9 +16,8 @@ public class DataStoreConfigurator implements IGuiDataStoreConfigurator {
 				urlGenerator("urlGenerator.jar", new UrlGenerator("/softwareFm/jars/{1}/{2}", JdtConstants.hexDigestKey)).// hash, digest
 				urlGenerator("urlGenerator.user", new UrlGenerator("/softwareFm/users/guid/{0}/{2}", "notSure")).// hash and guid
 				entity("jar", "urlGenerator.jar").//
-				dependant("jar", "group", "urlGenerator.group").//
 				dependant("jar", "artifact", "urlGenerator.artifact").//
-				dependant("jar", "version", "urlGenerator.version");
+				dependant("jar", "group", "urlGenerator.group");
 	}
 
 }

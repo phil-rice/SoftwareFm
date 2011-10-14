@@ -59,10 +59,10 @@ public class ConfigurationConstants {
 	public static final String dataJarArtifactId = "data.jar.artifactId";
 	public static final String dataJarGroupId = "data.jar.groupId";
 	public static final String dataJarVersion = "data.jar.version";
+	public static final String dataJarJavadoc = "data.jar.javadoc";
+	public static final String dataJarSource = "data.jar.source";
 
 	public static final String dataArtifactUrl = "data.artifact.url";
-	public static final String dataArtifactJavadoc = "data.artifact.javadoc";
-	public static final String dataArtifactSource = "data.artifact.source";
 	public static final String dataArtifactName = "data.artifact.name";
 	public static final String dataArtifactDescription = "data.artifact.description";
 	public static final String dataArtifactIssues = "data.artifact.issues";
@@ -90,9 +90,13 @@ public class ConfigurationConstants {
 
 	public static final String primaryEntity = "jar";
 	public static final String artifactId = "artifactId";
+	
 	public static final String groupId = "groupId";
 	public static final String version = "version";
+	
 	public static final String entityForPlayList = "artifact";
+	public static final String entityForJavadocSource = "jar";
+	
 	public static final String sfmIdPattern = "id.sfm.pattern";
 
 	public static final String buttonCopyToEclipseTitle = "button.copyToEclipse.title";
@@ -102,6 +106,7 @@ public class ConfigurationConstants {
 	public static final String buttonTestTitle = "button.test.title";
 	public static final String settingEclipseValue = "javadocSource.settingEclipseValue.text";
 	public static final String setEclipseValue = "javadocSource.setEclipseValue.text";
+
 	public static final File defaultDirectoryForDownloads = new File(System.getProperty("user.home"), "softwareFm");
 	public static final String javadocKey = "javadoc.title";
 	public static final String sourceKey = "source.title";
