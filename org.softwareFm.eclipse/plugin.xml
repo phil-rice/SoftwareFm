@@ -52,7 +52,7 @@
       <item class="org.softwareFm.configuration.largebuttons.ArtifactDetailsLargeButtonFactory"/>
       <item class="org.softwareFm.configuration.largebuttons.ArtifactSocialLargeButtonFactory"/>
       <item class="org.softwareFm.configuration.largebuttons.ArtifactTrainingLargeButtonFactory"/>
-      <item class="org.softwareFm.configuration.largebuttons.GroupLargeButtonFactory"/>
+      <!-- item class="org.softwareFm.configuration.largebuttons.GroupLargeButtonFactory"/ -->
 </extension>
 
 <extension  point="org.softwareFm.eclipse.browserConfiguration">

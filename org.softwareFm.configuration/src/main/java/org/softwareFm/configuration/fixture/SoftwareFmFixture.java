@@ -19,7 +19,6 @@ import org.softwareFm.configuration.configurators.SmallButtonConfigurator;
 import org.softwareFm.configuration.largebuttons.ArtifactDetailsLargeButtonFactory;
 import org.softwareFm.configuration.largebuttons.ArtifactSocialLargeButtonFactory;
 import org.softwareFm.configuration.largebuttons.ArtifactTrainingLargeButtonFactory;
-import org.softwareFm.configuration.largebuttons.GroupLargeButtonFactory;
 import org.softwareFm.configuration.largebuttons.JarDetailsLargeButtonFactory;
 import org.softwareFm.display.GuiBuilder;
 import org.softwareFm.display.SoftwareFmDataComposite;
@@ -70,7 +69,7 @@ public class SoftwareFmFixture {
 	public final LargeButtonDefn artifactDetailsButton;
 	public final LargeButtonDefn artifactTrainingButton;
 	public final LargeButtonDefn artifactSocialButton;
-	public final LargeButtonDefn groupLargeButtonFactory;
+//	public final LargeButtonDefn groupLargeButtonFactory;
 
 	private final List<IBrowserConfigurator> browserConfigurators;
 	private final IPlayListGetter playListGetter;
@@ -100,9 +99,9 @@ public class SoftwareFmFixture {
 		artifactDetailsButton = new ArtifactDetailsLargeButtonFactory().apply(guiBuilder);
 		artifactSocialButton = new ArtifactSocialLargeButtonFactory().apply(guiBuilder);
 		artifactTrainingButton = new ArtifactTrainingLargeButtonFactory().apply(guiBuilder);
-		groupLargeButtonFactory = new GroupLargeButtonFactory().apply(guiBuilder);
+//		groupLargeButtonFactory = new GroupLargeButtonFactory().apply(guiBuilder);
 
-		allLargeButtons = new LargeButtonDefn[] { jarDetailsButton, artifactDetailsButton, artifactSocialButton, artifactTrainingButton, groupLargeButtonFactory };
+		allLargeButtons = new LargeButtonDefn[] { jarDetailsButton, artifactDetailsButton, artifactSocialButton, artifactTrainingButton };
 		browserConfigurators = Arrays.asList(new BrowserFeedConfigurator(), new RssFeedConfigurator());
 		playListGetter = new IPlayListGetter() {
 
