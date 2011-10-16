@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
@@ -30,7 +31,6 @@ public class Card implements ICard {
 	static class CardComposite extends Group {
 		List<ILine> lines = Lists.newList();
 		private final CardConfig cardConfig;
-		private final Listener listener;
 		private Rectangle lastParentClientArea;
 		private final List<ILineSelectedListener> listeners = new CopyOnWriteArrayList<ILineSelectedListener>();
 		private Point lastSize;
@@ -43,19 +43,14 @@ public class Card implements ICard {
 			if (cardConfig.debugLayout)
 				setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_BLUE));
 			lines.add(new TextLine(this, cardConfig, "loading"));
-			listener = new Listener() {
-				@Override
-				public void handleEvent(Event event) {
-					layoutOutCard();
-				}
-			};
-			getParent().addListener(SWT.Resize, listener);
-			layoutOutCard();
 		}
 
-		public void layoutOutCard() {
-			Point size = computeSize(SWT.DEFAULT,SWT.DEFAULT);
-			setSize(size);
+		@Override
+		public void setLayout(Layout layout) {
+		}
+
+		@Override
+		public void layout(boolean changed) {
 			Rectangle clientArea = getClientArea();
 
 			int lineWidth = clientArea.width - cardConfig.lineMarginX * 2;
@@ -63,9 +58,9 @@ public class Card implements ICard {
 			int y = clientArea.y + cardConfig.lineMarginY;
 
 			if (cardConfig.debugLayout)
-				System.out.println("raw: " + clientArea + " actual: " + clientArea.width + ", " + size.y + " line: " + titleWidth);
+				System.out.println("raw: " + clientArea + " actual: " + clientArea.width + ", " + clientArea.height + " line: " + titleWidth);
 			for (ILine line : lines) {
-				line.getControl().setVisible(y + cardConfig.lineHeight < size.y);
+				line.getControl().setVisible(y + cardConfig.lineHeight < clientArea.height);
 				line.setWidth(lineWidth, titleWidth);
 				line.getControl().setLocation(clientArea.x + cardConfig.lineMarginX, y);
 				y += cardConfig.lineHeight + cardConfig.lineToLineGap;
@@ -74,24 +69,31 @@ public class Card implements ICard {
 
 		@Override
 		public Point computeSize(int wHint, int hHint, boolean changed) {
-			Rectangle parentClientArea = getParent().getClientArea();
-			if (parentClientArea.equals(lastParentClientArea))
-				return lastSize;
-			this.lastParentClientArea = parentClientArea;
-			int maxWidth = cardConfig.cardHeightWeigth * parentClientArea.height / cardConfig.cardWidthWeight;
-			int maxHeight = cardConfig.cardWidthWeight * parentClientArea.width / cardConfig.cardHeightWeigth;
-
-			int width = Math.min(parentClientArea.width, maxWidth);
-			int height = Math.min(parentClientArea.height, maxHeight);
-			Point size = new Point(width, height);
-			lastSize = size;
-			return size;
+			int idealHeight = getChildren().length * (cardConfig.lineHeight + cardConfig.lineToLineGap);
+			int idealWidth = heightToWidth(idealHeight);
+			if (wHint == SWT.DEFAULT)
+				if (hHint == SWT.DEFAULT) {
+					return new Point(idealHeight, idealWidth);
+				} else {
+					int width = heightToWidth(hHint);
+					return new Point(width, hHint);
+				}
+			else if (hHint == SWT.DEFAULT) {
+				int height = widthToHeight(wHint);
+				return new Point(wHint, height);
+			} else {
+				int widthForHeight = widthToHeight(wHint);
+				int heightForWidth = heightToWidth(hHint);
+				return new Point(Math.min(wHint, widthForHeight), Math.min(hHint, heightForWidth));
+			}
 		}
 
-		@Override
-		public void dispose() {
-			getParent().removeListener(SWT.Resize, listener);
-			super.dispose();
+		private int widthToHeight(int wHint) {
+			return wHint * cardConfig.cardHeightWeigth / cardConfig.cardWidthWeight;
+		}
+
+		private int heightToWidth(int hHint) {
+			return hHint * cardConfig.cardWidthWeight / cardConfig.cardHeightWeigth;
 		}
 
 		public void populate(ILineFactory lineFactory, List<KeyValue> list) {
@@ -110,7 +112,7 @@ public class Card implements ICard {
 				lines.add(line);
 
 			}
-			layoutOutCard();
+			layout();
 		}
 
 		@Override
@@ -148,5 +150,7 @@ public class Card implements ICard {
 		return url;
 	}
 
-
-}
+@Override
+public Composite getComposite() {
+	return content;
+}}

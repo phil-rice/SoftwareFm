@@ -27,12 +27,17 @@ import org.softwareFm.utilities.strings.Strings;
 public class CardFactory implements ICardFactoryWithAggregateAndSort {
 
 	private final String tagName;
-	 final Comparator<KeyValue> comparator;
+	final Comparator<KeyValue> comparator;
 	private final CardConfig cardConfig;
 	private final IFunction1<String, String> urlToTitle;
 
 	public CardFactory() {
 		this(new CardConfig(), null, Strings.lastSegmentFn("/"));
+	}
+
+	@Override
+	public CardConfig getCardConfig() {
+		return cardConfig;
 	}
 
 	public CardFactory(CardConfig cardConfig, String tagName, IFunction1<String, String> urlToTitle, String... order) {

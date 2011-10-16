@@ -4,11 +4,16 @@ import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Listener;
 import org.json.simple.JSONValue;
 import org.softwareFm.card.api.CardDataStoreMock;
+import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardFactoryWithAggregateAndSort;
@@ -22,31 +27,53 @@ public class CardUnit {
 		final ICardFactoryWithAggregateAndSort cardFactory = ICardFactory.Utils.cardFactoryWithAggregateAndSort();
 		Swts.xUnit(CardUnit.class.getSimpleName(), root, "json", new ISituationListAndBuilder<IHasComposite>() {
 
+			private Listener listener;
+			private Group group;
+
 			@Override
 			public void selected(IHasComposite hasControl, String context, Object value) throws Exception {
 				Composite content = hasControl.getComposite();
+				if (listener != null)
+					group.removeListener(SWT.Resize, listener);
 				Swts.removeAllChildren(content);
+
 				ICardDataStore cardDataStore = new CardDataStoreMock(context, JSONValue.parse(value.toString()));
-				cardFactory.makeCard(content, cardDataStore, context);
+				ICard card = cardFactory.makeCard(content, cardDataStore, context);
+				final Composite cardComposite = card.getComposite();
+				listener = new Listener() {
+					@Override
+					public void handleEvent(Event event) {
+						layoutCard(cardComposite);
+					}
+				};
+				group.addListener(SWT.Resize, listener);
+				layoutCard(cardComposite);
 				System.out.println();
 				Swts.layoutAsString(content);
 			}
 
+			private void layoutCard(final Composite cardComposite) {
+				Rectangle clientArea = group.getClientArea();
+				Point size = cardComposite.computeSize(clientArea.width, clientArea.height);
+				cardComposite.setSize(size);
+				cardComposite.layout();
+			}
+
 			@Override
 			public IHasComposite makeChild(Composite parent) throws Exception {
-				final Group result = new Group(parent, SWT.NULL);
-				result.setText("parent");
-				Swts.resizeMeToParentsSize(result);
+				group = new Group(parent, SWT.NULL);
+				group.setText("parent");
+				Swts.resizeMeToParentsSize(group);
 				return new IHasComposite() {
 
 					@Override
 					public Control getControl() {
-						return result;
+						return group;
 					}
 
 					@Override
 					public Composite getComposite() {
-						return result;
+						return group;
 					}
 				};
 			}

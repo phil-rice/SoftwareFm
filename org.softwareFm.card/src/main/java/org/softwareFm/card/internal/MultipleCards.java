@@ -47,7 +47,6 @@ public class MultipleCards implements IHasControl {
 	}
 
 	protected void layoutCards() {
-
 	}
 
 	public void openCardAsChildOf(ICard parent, String childNodeName) {

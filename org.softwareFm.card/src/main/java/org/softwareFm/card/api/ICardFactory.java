@@ -7,6 +7,8 @@ public interface ICardFactory extends ILineFactory {
 
 	ICard makeCard(Composite parent, ICardDataStore cardDataStore, String url);
 
+	
+	
 	CardConfig getCardConfig();
 
 	public static class Utils {

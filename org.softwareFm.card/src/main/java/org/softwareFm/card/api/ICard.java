@@ -1,11 +1,10 @@
 package org.softwareFm.card.api;
 
-import org.softwareFm.display.composites.IHasControl;
+import org.softwareFm.display.composites.IHasComposite;
 
-public interface ICard extends IHasControl {
+public interface ICard extends IHasComposite {
 
 	void addLineSelectedListener(ILineSelectedListener listener);
-
 
 	String url();
 
