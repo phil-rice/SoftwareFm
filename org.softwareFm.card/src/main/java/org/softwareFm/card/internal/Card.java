@@ -46,6 +46,11 @@ public class Card implements ICard {
 		}
 
 		@Override
+		public void setSize(int width, int height) {
+			super.setSize(width, height);
+			System.out.println("card.setSize: " + width+"," + height +" result " + getSize());
+		}
+		@Override
 		public void setLayout(Layout layout) {
 		}
 
@@ -73,7 +78,7 @@ public class Card implements ICard {
 			int idealWidth = heightToWidth(idealHeight);
 			if (wHint == SWT.DEFAULT)
 				if (hHint == SWT.DEFAULT) {
-					return new Point(idealHeight, idealWidth);
+					return new Point(idealWidth, idealHeight);
 				} else {
 					int width = heightToWidth(hHint);
 					return new Point(width, hHint);
@@ -82,9 +87,13 @@ public class Card implements ICard {
 				int height = widthToHeight(wHint);
 				return new Point(wHint, height);
 			} else {
-				int widthForHeight = widthToHeight(wHint);
-				int heightForWidth = heightToWidth(hHint);
-				return new Point(Math.min(wHint, widthForHeight), Math.min(hHint, heightForWidth));
+				int heightForwHint = widthToHeight(wHint);
+				int clippedheight = Math.min(heightForwHint, hHint);
+				int widthForClippedHeight = heightToWidth(clippedheight);
+				int width = Math.min(wHint, widthForClippedHeight);
+				int height = widthToHeight(width);
+				Point result = new Point(width, height);
+				return result;
 			}
 		}
 

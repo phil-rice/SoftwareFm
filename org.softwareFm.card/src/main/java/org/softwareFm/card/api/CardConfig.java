@@ -15,7 +15,7 @@ public class CardConfig {
 	public final int nameWeight = 1;
 	public final int valueWeight = 3;
 
-	public final int cardWidthWeight = 2;
-	public final int cardHeightWeigth = 3;
+	public  int cardWidthWeight = 2;
+	public  int cardHeightWeigth = 1;
 
 }

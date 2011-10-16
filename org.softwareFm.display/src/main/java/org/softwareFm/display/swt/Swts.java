@@ -518,8 +518,9 @@ public class Swts {
 			@Override
 			public void handleEvent(Event event) {
 				Rectangle clientArea = control.getParent().getClientArea();
+				System.out.println("Swts.Resizing " + control.hashCode() + "/" + control +"/" + control.hashCode() + " to " + clientArea);
 				control.setSize(clientArea.width, clientArea.height);
-
+				System.out.println("Swts.finished " + control.hashCode() + "/" + control.getSize());
 			}
 		});
 	}

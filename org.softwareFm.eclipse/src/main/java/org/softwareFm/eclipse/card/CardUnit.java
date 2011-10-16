@@ -43,6 +43,7 @@ public class CardUnit {
 				listener = new Listener() {
 					@Override
 					public void handleEvent(Event event) {
+						System.out.println("cardunit resize listener." + group.hashCode() + "/group size " + group.getSize() + "/" + group.getClientArea());
 						layoutCard(cardComposite);
 					}
 				};
@@ -56,12 +57,22 @@ public class CardUnit {
 				Rectangle clientArea = group.getClientArea();
 				Point size = cardComposite.computeSize(clientArea.width, clientArea.height);
 				cardComposite.setSize(size);
-				cardComposite.layout();
+//				cardComposite.layout();
 			}
 
 			@Override
 			public IHasComposite makeChild(Composite parent) throws Exception {
-				group = new Group(parent, SWT.NULL);
+				group = new Group(parent, SWT.NULL) {
+					@Override
+					protected void checkSubclass() {
+					}
+
+					@Override
+					public void setSize(int width, int height) {
+						super.setSize(width, height);
+						System.out.println("group " + group.hashCode() +" setSize: " + width + "," + height + "/" + getSize());
+					}
+				};
 				group.setText("parent");
 				Swts.resizeMeToParentsSize(group);
 				return new IHasComposite() {
