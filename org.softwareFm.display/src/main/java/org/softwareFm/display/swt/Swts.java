@@ -11,6 +11,7 @@ import java.util.concurrent.Callable;
 import junit.framework.Assert;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -51,6 +52,15 @@ import org.softwareFm.utilities.strings.Strings;
 
 public class Swts {
 
+	public static ScrolledComposite newScrolledComposite(Composite parent, int style, final String description) {
+		return new ScrolledComposite(parent, style) {
+			@Override
+			public String toString() {
+				return description + "." + super.toString();
+			}
+		};
+	}
+
 	public static Composite newComposite(Composite parent, int style, final String description) {
 		return new Composite(parent, style) {
 			@Override
@@ -83,7 +93,7 @@ public class Swts {
 	}
 
 	public static StyledText makeHelpDisplayer(Composite parent) {
-		StyledText text = new StyledText(parent, SWT.WRAP|SWT.BORDER);
+		StyledText text = new StyledText(parent, SWT.WRAP | SWT.BORDER);
 		text.setEditable(false);
 		text.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 		return text;
@@ -137,10 +147,21 @@ public class Swts {
 		}
 	}
 
+	public static void addGrabHorizontalAndFillGridDataToAllChildrenWithHeightWidthHint(Composite composite, int heightHint, int widthHint) {
+		GridLayout layout = new GridLayout();
+		layout.marginWidth = 0;
+		layout.verticalSpacing = 0;
+		layout.marginHeight = 0;
+		composite.setLayout(layout);
+		for (Control control : composite.getChildren()) {
+			GridData data = makeGrabHorizonalAndFillGridDataWithHeightWidth(heightHint, widthHint);
+			control.setLayoutData(data);
+		}
+	}
+
 	public static OkCancel addOkCancel(IButtonParent buttonParent, CompositeConfig config, final Runnable onAccept, final Runnable onCancel) {
 		return new OkCancel(buttonParent, config, onAccept, onCancel);
 	}
-
 
 	public static Control setAfter(List<Control> controls, Control firstControl) {
 		for (Control control : controls) {
@@ -230,6 +251,14 @@ public class Swts {
 
 	}
 
+	private static GridData makeGrabHorizonalAndFillGridDataWithHeightWidth(int heightHint, int widthHint) {
+		GridData result = makeGrabHorizonalAndFillGridData();
+		result.heightHint = heightHint;
+		result.widthHint = widthHint;
+		return result;
+
+	}
+
 	public static GridData makeGrabHorizonalAndFillGridData() {
 		GridData data = new GridData();
 		data.horizontalAlignment = GridData.FILL;
@@ -278,6 +307,25 @@ public class Swts {
 		}
 	}
 
+	public static void displayNoLayout(String title, IFunction1<Composite, Composite> builder) {
+		try {
+			Display display = new Display();
+			Shell shell = new Shell(display);
+			shell.setSize(600, 400);
+			shell.setText(title);
+			builder.apply(shell);
+			shell.open();
+			Swts.layoutDump(shell);
+			while (!shell.isDisposed()) {
+				if (!display.readAndDispatch())
+					display.sleep();
+			}
+			display.dispose();
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+	}
+
 	public static void display(String title, IFunction1<Composite, Composite> builder) {
 		try {
 			Display display = new Display();
@@ -322,6 +370,32 @@ public class Swts {
 						String value = Files.getText(file);
 						builder.selected(hasControl, selectedItem, value);
 						result.setText(value);
+					}
+				});
+
+				result.selectFirst();
+				return result.getComposite();
+			}
+		});
+	}
+
+	public static void xUnit(String title, final ISituationListAndBuilder<IHasControl> builder, final Map<String, Object> situationMap) {
+		Swts.display(title, new IFunction1<Composite, Composite>() {
+			@Override
+			public Composite apply(Composite from) throws Exception {
+				final Callable<? extends Iterable<String>> situationsCallable = new Callable<Iterable<String>>() {
+					@Override
+					public Iterable<String> call() throws Exception {
+						return situationMap.keySet();
+					}
+				};
+				final SituationListAnd<IHasControl> result = new SituationListAnd<IHasControl>(from, situationsCallable, builder);
+				result.addListener(new ISituationListListener<IHasControl>() {
+					@Override
+					public void selected(IHasControl hasControl, String selectedItem) throws Exception {
+						Object value = situationMap.get(selectedItem);
+						builder.selected(hasControl, selectedItem, value);
+						result.setText(value.toString());
 					}
 				});
 

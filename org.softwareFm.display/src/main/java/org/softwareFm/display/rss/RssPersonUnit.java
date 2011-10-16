@@ -23,8 +23,8 @@ public class RssPersonUnit {
 					}
 
 					@Override
-					public void selected(RssDisplay hasControl, String fileName, String value) throws Exception {
-						hasControl.displayReply(200, value);
+					public void selected(RssDisplay hasControl, String context, Object value) throws Exception {
+						hasControl.displayReply(200, value.toString());
 					}
 				});
 	}

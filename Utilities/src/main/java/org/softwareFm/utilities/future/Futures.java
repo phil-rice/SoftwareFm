@@ -5,6 +5,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.softwareFm.utilities.callbacks.ICallback;
+
 public class Futures {
 
 	public static <T> Future<T> doneFuture(final T value) {
@@ -35,6 +37,10 @@ public class Futures {
 				return value;
 			}
 		};
+	}
+
+	public static <T> GatedMockFuture<T> gatedMock(ICallback<T> callback, final T value) {
+		return new GatedMockFuture<T>(callback, value);
 	}
 
 }

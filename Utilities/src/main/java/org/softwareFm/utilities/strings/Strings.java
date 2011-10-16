@@ -190,4 +190,18 @@ public class Strings {
 		return cleanUrl;
 	}
 
+	public static IFunction1<String, String> lastSegmentFn(final String separator) {
+		return new IFunction1<String, String>() {
+
+			@Override
+			public String apply(String from) throws Exception {
+				int index = from.lastIndexOf(separator);
+				if (index == -1)
+					return from;
+				else
+					return from.substring(index+1);
+			}
+		};
+	}
+
 }

@@ -35,7 +35,7 @@ public class SituationListAnd<T extends IHasControl> implements IHasComposite {
 		try {
 			Composite leftColumn = new Composite(content, SWT.NULL);
 			situationList = new List(leftColumn, SWT.BORDER);
-			situationContents = new StyledText(leftColumn, SWT.BORDER);
+			situationContents = new StyledText(leftColumn, SWT.BORDER|SWT.WRAP);
 			Swts.addGrabHorizontalAndFillGridDataToAllChildren(leftColumn);
 			
 			Iterable<String> list = situations.call();

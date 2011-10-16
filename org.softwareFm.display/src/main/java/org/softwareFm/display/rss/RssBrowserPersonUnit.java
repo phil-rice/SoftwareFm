@@ -20,8 +20,8 @@ public class RssBrowserPersonUnit {
 					}
 
 					@Override
-					public void selected(RssDisplayByBrowser hasControl, String fileName, String value) throws Exception {
-						hasControl.displayReply(200, value);
+					public void selected(RssDisplayByBrowser hasControl, String context, Object value) throws Exception {
+						hasControl.displayReply(200, value.toString());
 					}
 				});
 	}

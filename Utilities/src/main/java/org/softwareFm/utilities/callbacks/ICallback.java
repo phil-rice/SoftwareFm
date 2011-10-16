@@ -44,6 +44,10 @@ public interface ICallback<T> {
 			return new NoCallback<T>();
 		};
 
+		public static final <T> MemoryCallback<T> memory() {
+			return new MemoryCallback<T>();
+		};
+
 		public static ICallback<Integer> count = new ICallback<Integer>() {
 			@Override
 			public void process(Integer count) throws Exception {
@@ -71,17 +75,18 @@ public interface ICallback<T> {
 				}
 			};
 		}
-		
-		public static <T>ICallback<T> exception(final String message){
-			return new ICallback<T>(){
+
+		public static <T> ICallback<T> exception(final String message) {
+			return new ICallback<T>() {
 				@Override
 				public void process(T t) throws Exception {
 					throw new RuntimeException(message);
-				}};
-			
+				}
+			};
+
 		}
 
-		public static<T>void processWithWrap(ICallback<T> callback, T value) {
+		public static <T> void processWithWrap(ICallback<T> callback, T value) {
 			try {
 				callback.process(value);
 			} catch (Exception e) {

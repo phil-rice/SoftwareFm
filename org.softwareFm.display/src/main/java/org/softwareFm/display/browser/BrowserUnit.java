@@ -43,8 +43,8 @@ public class BrowserUnit {
 						}
 
 						@Override
-						public void selected(BrowserComposite hasControl, String fileName, String json) throws Exception {
-							Map<String, Object> map = Json.mapFromString(json);
+						public void selected(BrowserComposite hasControl, String fileName, Object json) throws Exception {
+							Map<String, Object> map = Json.mapFromString(json.toString());
 
 							String feedType = (String) Maps.getOrException(map, "feedType");
 							String url = (String) Maps.getOrException(map, "url");

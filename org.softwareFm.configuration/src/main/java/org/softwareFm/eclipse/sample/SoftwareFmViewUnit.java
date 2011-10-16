@@ -48,8 +48,8 @@ public class SoftwareFmViewUnit {
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public void selected(SoftwareFmDataComposite hasControl, String fileName, String text) throws Exception {
-			Map<String, Object> map = Json.mapFromString(text);
+		public void selected(SoftwareFmDataComposite hasControl, String fileName, Object text) throws Exception {
+			Map<String, Object> map = Json.mapFromString(text.toString());
 			Map<String, String> rippedMap = (Map<String, String>) map.get("ripped");
 			RippedResult result = rippedMap == null ? null : new RippedResult(rippedMap.get("hexDigest"), rippedMap.get("javaProject"), rippedMap.get("jarPath"), rippedMap.get("jarName"), rippedMap.get("javadoc"), rippedMap.get("source"), IJavadocSourceMutator.Utils.sysout("set javadoc in eclipse to : {0}" ), IJavadocSourceMutator.Utils.sysout("set source in eclipse to: {0}") );
 			softwareFmFixture.dataStore.setRawData(ConfigurationConstants.primaryEntity, result);

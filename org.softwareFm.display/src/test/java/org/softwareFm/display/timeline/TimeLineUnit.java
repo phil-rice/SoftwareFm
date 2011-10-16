@@ -74,9 +74,9 @@ public class TimeLineUnit {
 
 						@SuppressWarnings("unchecked")
 						@Override
-						public void selected(BrowserPlusNextPrevButtons hasControl, String fileName, String json) throws Exception {
+						public void selected(BrowserPlusNextPrevButtons hasControl, String context, Object json) throws Exception {
 							playListGetterSource.clear();
-							Map<String, Object> map = Json.mapFromString(json);
+							Map<String, Object> map = Json.mapFromString(json.toString());
 							for (Entry<String, Object> entry : map.entrySet()) {
 								String playListName = entry.getKey();
 								List<String> items = (List<String>) entry.getValue();
