@@ -40,7 +40,8 @@ public class MultipleCardsTest extends SwtIntegrationTest {
 		
 		checkComputedSize(SWT.DEFAULT, SWT.DEFAULT, 189*3*2, 189);
 		
-		checkComputedSize(SWT.DEFAULT, 200, 200*3*2, 200);
+		checkComputedSize(SWT.DEFAULT, 2000, 189*3*2, 189);
+		checkComputedSize(SWT.DEFAULT, 200, 189*3*2, 189);
 		checkComputedSize(SWT.DEFAULT, 189, 189*3*2, 189);
 		checkComputedSize(SWT.DEFAULT, 50, 50*3*2, 50);
 		

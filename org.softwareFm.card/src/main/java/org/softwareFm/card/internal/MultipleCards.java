@@ -16,6 +16,7 @@ import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
 
 public class MultipleCards implements IHasControl {
@@ -24,7 +25,7 @@ public class MultipleCards implements IHasControl {
 	private final ICardDataStore cardDataStore;
 	private final ICardFactory cardFactory;
 
-	static class MultipleCardsComposite extends ScrolledComposite {
+	static class MultipleCardsComposite extends Composite {
 
 		private final CardConfig cardConfig;
 
@@ -43,8 +44,10 @@ public class MultipleCards implements IHasControl {
 		public void layout(boolean changed) {
 			Rectangle clientArea = getClientArea();
 			int x = 0;
+			System.out.println("MultipleCards/layout.clientArea: "+ clientArea);
 			for (Control control : getChildren()) {
 				Point size = control.computeSize(SWT.DEFAULT, clientArea.height);
+				System.out.println("MultipleCards/layout.size: "+ size);
 				control.setSize(size);
 				if (control instanceof Composite)
 					((Composite) control).layout();
@@ -55,13 +58,13 @@ public class MultipleCards implements IHasControl {
 
 		@Override
 		public Point computeSize(int wHint, int hHint) {
+			int idealHeight = idealHeight();
+			int idealWidth = calculateWidth(idealHeight);
 			if (hHint == SWT.DEFAULT) {
-				int idealHeight = idealHeight();
-				int idealWidth = calculateWidth(idealHeight);
 				return new Point(idealWidth, idealHeight);
 			} else {
 				int width = hHint * getChildren().length * cardConfig.cardWidthWeight / cardConfig.cardHeightWeigth;
-				return new Point(width, hHint);
+				return new Point(Math.min(width, idealWidth), Math.min(hHint, idealHeight));
 			}
 		}
 
@@ -77,7 +80,7 @@ public class MultipleCards implements IHasControl {
 
 		private int calculateWidth(int height) {
 			int width = 0;
-			for (Control control : getChildren()) {
+			for (Control control :  getChildren()) {
 				Point size = control.computeSize(SWT.DEFAULT, height);
 				width += size.x;
 			}
@@ -88,21 +91,33 @@ public class MultipleCards implements IHasControl {
 	public MultipleCards(Composite parent, ICardDataStore cardDataStore, ICardFactory cardFactory) {
 		this.cardDataStore = cardDataStore;
 		this.cardFactory = cardFactory;
-		content = new MultipleCardsComposite(parent, cardFactory.getCardConfig(), SWT.H_SCROLL);
+		content = new MultipleCardsComposite(parent, cardFactory.getCardConfig(), SWT.NULL);
 	}
 
 	protected void layoutCards() {
+		content.layout();
 	}
 
 	public ICard openCardAsChildOf(ICard parent, String childNodeName) {
-		if (parent != null)
-			Swts.removeChildrenAfter(content, parent.getControl());
-		String url = parent == null ? childNodeName : parent.url() + "/" + childNodeName;
-		ICard result = cardFactory.makeCard(content, cardDataStore, url);
-		Point size = content.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-		content.setSize(size);
-		layoutCards();
-		return result;
+		try {
+			if (parent != null)
+				Swts.removeChildrenAfter(content, parent.getControl());
+			String url = parent == null ? childNodeName : parent.url() + "/" + childNodeName;
+			ICard result = cardFactory.makeCard(content, cardDataStore, url);
+			Swts.asyncExec(result, new Runnable() {
+				@Override
+				public void run() {
+					// this exists because the makeCard method has an asyncexec which must have finished before we start.
+					Point size = content.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+					content.setSize(size);
+					System.out.println("Setting  content size: "+ content.getSize() );
+					content.layout();
+				}
+			});
+			return result;
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
 	}
 
 	@Override
@@ -116,16 +131,20 @@ public class MultipleCards implements IHasControl {
 		Swts.displayNoLayout(MultipleCards.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(final Composite from) throws Exception {
-				MultipleCards multipleCards = new MultipleCards(from, cardDataStore, cardFactory);
+				final ScrolledComposite content = new ScrolledComposite(from, SWT.H_SCROLL|SWT.BORDER);
+				final MultipleCards multipleCards = new MultipleCards(content, cardDataStore, cardFactory);
+				content.setContent(multipleCards.getControl());
 				multipleCards.openCardAsChildOf(null, CardDataStoreFixture.url);
 				multipleCards.openCardAsChildOf(null, CardDataStoreFixture.url1a);
-				final Composite control = (Composite) multipleCards.getControl();
-				control.getParent().addListener(SWT.Resize, new Listener() {
+				multipleCards.layoutCards();
+				from.addListener(SWT.Resize, new Listener() {
 					@Override
 					public void handleEvent(Event event) {
 						Rectangle clientArea = from.getClientArea();
-						control.setSize(clientArea.width, clientArea.height);
-						control.layout();
+						Point size = multipleCards.content.computeSize(SWT.DEFAULT, clientArea.height);
+						multipleCards.content.setSize(size);
+						content.setSize(clientArea.width, clientArea.height);
+						multipleCards.content.layout();
 					}
 				});
 				return (Composite) multipleCards.getControl();

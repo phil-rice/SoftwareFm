@@ -74,7 +74,6 @@ public class CardUnit {
 					}
 				};
 				group.setText("parent");
-				Swts.resizeMeToParentsSize(group);
 				return new IHasComposite() {
 
 					@Override

@@ -48,8 +48,9 @@ public class Card implements ICard {
 		@Override
 		public void setSize(int width, int height) {
 			super.setSize(width, height);
-			System.out.println("card.setSize: " + width+"," + height +" result " + getSize());
+			System.out.println("card.setSize: " + width + "," + height + " result " + getSize());
 		}
+
 		@Override
 		public void setLayout(Layout layout) {
 		}
@@ -159,7 +160,13 @@ public class Card implements ICard {
 		return url;
 	}
 
-@Override
-public Composite getComposite() {
-	return content;
-}}
+	@Override
+	public Future<?> getPopulateFuture() {
+		return future;
+	}
+
+	@Override
+	public Composite getComposite() {
+		return content;
+	}
+}
