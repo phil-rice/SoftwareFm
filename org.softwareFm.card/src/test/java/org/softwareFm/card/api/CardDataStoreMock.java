@@ -1,13 +1,10 @@
-package org.softwareFm.card.internal;
+package org.softwareFm.card.api;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-import org.softwareFm.card.api.ICardDataStoreCallback;
-import org.softwareFm.card.api.IMutableCardDataStore;
-import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.maps.Maps;
 

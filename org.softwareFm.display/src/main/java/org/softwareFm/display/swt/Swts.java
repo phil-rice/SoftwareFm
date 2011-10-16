@@ -19,6 +19,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -30,9 +31,11 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
@@ -508,5 +511,17 @@ public class Swts {
 		while (display.readAndDispatch())
 			;
 	}
+
+	public static void resizeMeToParentsSize(final Composite composite) {
+		composite.getParent().addListener(SWT.Resize, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				Rectangle clientArea = composite.getParent().getClientArea();
+				composite.setSize(clientArea.width, clientArea.height);
+
+			}
+		});
+	}
+
 
 }

@@ -40,7 +40,7 @@ public interface IRepositoryFacard {
 	public static class Utils {
 
 		public static IRepositoryFacard defaultFacard() {
-			return new RepositoryFacard(IHttpClient.Utils.defaultClient(), "sfm");
+			return new RepositoryFacard(IHttpClient.Utils.defaultClient(), "1.json");
 		}
 		public static IRepositoryFacard defaultFacardWithHeaders(String name, String value) {
 			return new RepositoryFacard(IHttpClient.Utils.defaultClient().setDefaultHeaders(Arrays.<NameValuePair>asList(new BasicNameValuePair(name, value))), "sfm");

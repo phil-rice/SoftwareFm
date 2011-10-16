@@ -14,7 +14,7 @@ import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardDataStoreCallback;
-import org.softwareFm.card.api.ICardFactory;
+import org.softwareFm.card.api.ICardFactoryWithAggregateAndSort;
 import org.softwareFm.card.api.ILine;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.display.swt.Swts;
@@ -24,7 +24,7 @@ import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.strings.Strings;
 
-public class CardFactory implements ICardFactory {
+public class CardFactory implements ICardFactoryWithAggregateAndSort {
 
 	private final String tagName;
 	 final Comparator<KeyValue> comparator;
@@ -50,14 +50,13 @@ public class CardFactory implements ICardFactory {
 			Future<?> future = cardDataStore.processDataFor(url, new ICardDataStoreCallback() {
 				@Override
 				public void process(String url, final Map<String, Object> result) {
+					if (result == null)
+						throw new NullPointerException();
 					Swts.asyncExec(card, new Runnable() {
 						@Override
 						public void run() {
-							if (result == null)
-								throw new NullPointerException();
-							List<KeyValue> list = aggregate(result);
-							Collections.sort(list, comparator);
-							card.populate(CardFactory.this, list);
+							List<KeyValue> sorted = aggregateAndSort(result);
+							card.populate(CardFactory.this, sorted);
 						}
 					});
 				}
@@ -72,6 +71,13 @@ public class CardFactory implements ICardFactory {
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
+	}
+
+	@Override
+	public List<KeyValue> aggregateAndSort(Map<String, Object> raw) {
+		List<KeyValue> list = aggregate(raw);
+		Collections.sort(list, comparator);
+		return list;
 	}
 
 	List<KeyValue> aggregate(Map<String, Object> rawMap) {
@@ -122,7 +128,8 @@ public class CardFactory implements ICardFactory {
 
 	@Override
 	public ILine make(Composite parent, KeyValue keyValue) {
-		return new NameValue(parent, cardConfig, keyValue.key, Strings.nullSafeToString(keyValue.value));
+		NameValue result = new NameValue(parent, cardConfig, keyValue.key, Strings.nullSafeToString(keyValue.value));
+		return result;
 	}
 
 }

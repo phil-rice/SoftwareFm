@@ -5,7 +5,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -17,7 +16,7 @@ import org.softwareFm.card.api.ILine;
 
 public class NameValue implements ILine {
 
-	 final NameValueComposite content;
+	final NameValueComposite content;
 
 	public NameValue(Composite parent, CardConfig cardConfig, String name, String value) {
 		content = new NameValueComposite(parent, SWT.NULL, cardConfig, name, value);
@@ -29,28 +28,24 @@ public class NameValue implements ILine {
 		final String name;
 		final String value;
 		final CopyOnWriteArrayList<Listener> listeners = new CopyOnWriteArrayList<Listener>();
+		 final Label lblName;
+		 final Text txtValue;
 
 		public NameValueComposite(Composite parent, int style, CardConfig cardConfig, String name, String value) {
 			super(parent, style);
+			if (cardConfig.debugLayout)
+				setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_GREEN));
 			this.cardConfig = cardConfig;
 			this.name = name;
 			this.value = value;
-			Rectangle clientArea = getClientArea();
 
-			Label lblName = new Label(this, SWT.NULL);
+			lblName = new Label(this, SWT.NULL);
 			lblName.setText(name);
-			lblName.setLocation(clientArea.x + cardConfig.nameOffsetX, clientArea.y + cardConfig.nameOffsetY);
-			lblName.setSize(cardConfig.nameWidth, cardConfig.textHeight);
 
-			Text lblValue = new Text(this, SWT.NULL);
-			lblValue.setText(value);
-			lblValue.setLocation(clientArea.x + cardConfig.valueOffsetX, clientArea.y + cardConfig.valueOffsetY);
-			lblValue.setSize(cardConfig.valueWidth, cardConfig.textHeight);
-			addListeners(lblName, lblValue);
-		}
+			txtValue = new Text(this, SWT.NULL);
+			txtValue.setText(value);
 
-		private Rectangle getChildAreaAllowingForTests() {
-			return content.getClientArea();
+			addListeners(this, lblName, txtValue);
 		}
 
 		private void addListeners(Control... controls) {
@@ -76,6 +71,23 @@ public class NameValue implements ILine {
 	@Override
 	public Control getControl() {
 		return content;
+	}
+
+	@Override
+	public void setWidth(int width, int titleWidth) {
+		content.setSize(width, content.cardConfig.lineHeight);
+		int valueWidth = width - titleWidth - content.cardConfig.nameValueGap - 2 * content.cardConfig.lineMarginX;
+
+		content.lblName.setSize(titleWidth, content.cardConfig.textHeight);
+		content.lblName.setLocation(content.cardConfig.lineMarginX, content.cardConfig.lineMarginY);
+		content.txtValue.setSize(valueWidth, content.cardConfig.textHeight);
+		content.txtValue.setLocation(titleWidth + content.cardConfig.nameValueGap, content.cardConfig.lineMarginY);
+
+	}
+
+	@Override
+	public int preferredTitleWidth() {
+		return content.lblName.computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
 	}
 
 }

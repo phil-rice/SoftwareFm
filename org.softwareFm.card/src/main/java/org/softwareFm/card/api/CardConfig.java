@@ -1,28 +1,21 @@
 package org.softwareFm.card.api;
 
-
 public class CardConfig {
 
-	public final int cardWidth = 250;
-	public final int cardHeight = 110;
-
-	public int lineWidth = 240;
-	public final int lineHeight = 22;
+	public final boolean debugLayout = false;
 	public final int textHeight = 20;
 
-	public final int nameWidth = 80;
-	public final int valueWidth = 140;
+	public final int lineMarginX = 3;
+	public final int lineMarginY = 3;
+	public final int lineHeight = 22;
 
-	public int nameOffsetX = 3;
-	public int nameOffsetY = 3;
+	public final int lineToLineGap = 5;
+	public final int nameValueGap = 10;
 
-	public final int valueOffsetX = 100;
-	public final int valueOffsetY = 3;
+	public final int nameWeight = 1;
+	public final int valueWeight = 3;
 
-	public final int heightSpacer = 3;
-
-	public int cardSpacerX = 3;
-
-	public int scrollBarHeight = 21;
+	public final int cardWidthWeight = 2;
+	public final int cardHeightWeigth = 3;
 
 }

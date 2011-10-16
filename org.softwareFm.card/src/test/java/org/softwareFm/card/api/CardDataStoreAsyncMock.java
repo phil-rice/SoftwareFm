@@ -1,4 +1,4 @@
-package org.softwareFm.card.internal;
+package org.softwareFm.card.api;
 
 import java.text.MessageFormat;
 import java.util.List;

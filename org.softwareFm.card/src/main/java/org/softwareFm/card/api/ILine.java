@@ -7,4 +7,8 @@ public interface ILine extends IHasControl{
 
 	void addSelectedListener(Listener listener);
 	
+	void setWidth(int width, int titleWidth);
+	
+	int preferredTitleWidth();
+	
 }
