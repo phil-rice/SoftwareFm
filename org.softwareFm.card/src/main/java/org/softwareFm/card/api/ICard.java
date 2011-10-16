@@ -6,4 +6,7 @@ public interface ICard extends IHasControl {
 
 	void addLineSelectedListener(ILineSelectedListener listener);
 
+
+	String url();
+
 }

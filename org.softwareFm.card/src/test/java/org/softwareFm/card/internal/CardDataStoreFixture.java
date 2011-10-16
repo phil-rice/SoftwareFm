@@ -20,6 +20,7 @@ public class CardDataStoreFixture {
 	public final static Map<String, Object> data2b = Maps.makeLinkedMap("tag", "two", "value", "valueb");
 	public final static Map<String, Object> data2c = Maps.makeLinkedMap("tag", "two", "value", "valuec");
 
+	public final static List<KeyValue> kvFromData1a = Arrays.asList(new KeyValue("tag", "one"), new KeyValue("value", "valuea"));
 	public final static List<KeyValue> p1q2 = Arrays.asList(new KeyValue("p", 1), new KeyValue("q", 2));
 	public final static Map<String, Object> mapP1Q2 = Maps.makeLinkedMap("p", 1, "q", 2);
 	public final static Map<String, Object> data1aWithP1Q2 = Maps.makeLinkedMap("tag", "one", "value", "valuea", "p", 1, "q", 2);

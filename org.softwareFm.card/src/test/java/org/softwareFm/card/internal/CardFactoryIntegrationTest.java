@@ -75,7 +75,7 @@ public class CardFactoryIntegrationTest extends SwtIntegrationTest {
 	}
 
 	private void checkListenersCalled(ICallback<NameValue> callback) throws Exception {
-		List<String> expected = Arrays.asList("tag", "value");
+		List<String> expectedNames = Arrays.asList("tag", "value");
 		CardFactory factory = new CardFactory();
 		Card card = (Card) factory.makeCard(shell, CardDataStoreFixture.rawCardStore(), CardDataStoreFixture.url1a);
 		dispatchUntilQueueEmpty();
@@ -90,8 +90,10 @@ public class CardFactoryIntegrationTest extends SwtIntegrationTest {
 		}
 		dispatchUntilQueueEmpty();
 
-		assertEquals(expected, mock1.names);
-		assertEquals(expected, mock2.names);
+		assertEquals(expectedNames, mock1.names);
+		assertEquals(expectedNames, mock2.names);
+		assertEquals(CardDataStoreFixture.kvFromData1a, mock1.keyValues);
+		assertEquals(CardDataStoreFixture.kvFromData1a, mock2.keyValues);
 	}
 
 }

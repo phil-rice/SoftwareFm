@@ -2,6 +2,6 @@ package org.softwareFm.card.api;
 
 public interface ILineSelectedListener {
 
-	void selected(ILine line);
+	void selected(KeyValue keyValue, ILine line);
 
 }

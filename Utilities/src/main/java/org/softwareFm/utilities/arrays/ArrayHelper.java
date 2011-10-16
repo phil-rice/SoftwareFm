@@ -30,4 +30,11 @@ public class ArrayHelper {
 			throw WrappedException.wrap(e);
 		}
 	}
+
+	public static <T>int findIndexOf(T[] array, T item) {
+		for (int i = 0; i<array.length; i++)
+			if (array[i] == item)
+				return i;
+		return -1;
+	}
 }

@@ -2,7 +2,7 @@ package org.softwareFm.card.api;
 
 public class CardConfig {
 
-	public final boolean debugLayout = false;
+	public final boolean debugLayout = true;
 	public final int textHeight = 20;
 
 	public final int lineMarginX = 3;

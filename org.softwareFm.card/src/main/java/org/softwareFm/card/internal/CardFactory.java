@@ -51,11 +51,11 @@ public class CardFactory implements ICardFactoryWithAggregateAndSort {
 				@Override
 				public void process(String url, final Map<String, Object> result) {
 					if (result == null)
-						throw new NullPointerException();
+						throw new NullPointerException(url);
+					final List<KeyValue> sorted = aggregateAndSort(result);
 					Swts.asyncExec(card, new Runnable() {
 						@Override
 						public void run() {
-							List<KeyValue> sorted = aggregateAndSort(result);
 							card.populate(CardFactory.this, sorted);
 						}
 					});

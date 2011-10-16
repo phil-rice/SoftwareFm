@@ -43,6 +43,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.simpleButtons.IButtonParent;
+import org.softwareFm.utilities.arrays.ArrayHelper;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.collections.Iterables;
 import org.softwareFm.utilities.collections.Lists;
@@ -512,16 +513,23 @@ public class Swts {
 			;
 	}
 
-	public static void resizeMeToParentsSize(final Composite composite) {
-		composite.getParent().addListener(SWT.Resize, new Listener() {
+	public static void resizeMeToParentsSize(final Control control) {
+		control.getParent().addListener(SWT.Resize, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				Rectangle clientArea = composite.getParent().getClientArea();
-				composite.setSize(clientArea.width, clientArea.height);
+				Rectangle clientArea = control.getParent().getClientArea();
+				control.setSize(clientArea.width, clientArea.height);
 
 			}
 		});
 	}
 
+	public static void removeChildrenAfter(Composite composite, Control control) {
+		Control[] children = composite.getChildren();
+		int index = ArrayHelper.findIndexOf(children, control);
+		if (index != -1)
+			for (int i = index; i < children.length; i++)
+				children[i].dispose();
+	}
 
 }

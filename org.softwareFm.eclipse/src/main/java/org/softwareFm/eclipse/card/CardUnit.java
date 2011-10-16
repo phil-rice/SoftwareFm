@@ -18,7 +18,7 @@ import org.softwareFm.display.swt.Swts;
 
 public class CardUnit {
 	public static void main(String[] args) throws IOException {
-		final File root = new File("../org.softwareFm.card/src/test/resources/org/softwareFm/card.json").getCanonicalFile();
+		final File root = new File("../org.softwareFm.card/src/test/resources/org/softwareFm/card/json").getCanonicalFile();
 		final ICardFactoryWithAggregateAndSort cardFactory = ICardFactory.Utils.cardFactoryWithAggregateAndSort();
 		Swts.xUnit(CardUnit.class.getSimpleName(), root, "json", new ISituationListAndBuilder<IHasComposite>() {
 

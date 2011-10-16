@@ -9,10 +9,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardDataStoreCallback;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardFactoryWithAggregateAndSort;
+import org.softwareFm.card.api.ILine;
+import org.softwareFm.card.api.ILineSelectedListener;
+import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.ISituationListAndBuilder;
 import org.softwareFm.display.swt.Swts;
@@ -25,47 +29,56 @@ public class CardFromUrlUnit {
 		final File root = new File("../org.softwareFm.card/src/test/resources/org/softwareFm/card/url").getCanonicalFile();
 		final ICardFactoryWithAggregateAndSort cardFactory = ICardFactory.Utils.cardFactoryWithAggregateAndSort();
 		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacard();
-		Swts.xUnit(CardFromUrlUnit.class.getSimpleName(), root, "sfm", new ISituationListAndBuilder<IHasComposite>() {
+		try {
+			Swts.xUnit(CardFromUrlUnit.class.getSimpleName(), root, "sfm", new ISituationListAndBuilder<IHasComposite>() {
 
-			@Override
-			public void selected(IHasComposite hasControl, String context, final Object value) throws Exception {
-				Composite content = hasControl.getComposite();
-				Swts.removeAllChildren(content);
-				String url = value.toString();
-				ICardDataStore cardDataStore = new ICardDataStore() {
-					@Override
-					public Future<?> processDataFor(final String url, final ICardDataStoreCallback callback) {
-						return facard.get(url, new IRepositoryFacardCallback() {
-							@Override
-							public void process(IResponse response, Map<String, Object> data) {
-								callback.process(url, data);
-							}
-						});
-					}
-				};
-				cardFactory.makeCard(content, cardDataStore, url);
-				System.out.println();
-				Swts.layoutAsString(content);
-			}
+				@Override
+				public void selected(IHasComposite hasControl, String context, final Object value) throws Exception {
+					String url = value.toString();
+					Composite content = hasControl.getComposite();
+					Swts.removeAllChildren(content);
+					ICardDataStore cardDataStore = new ICardDataStore() {
+						@Override
+						public Future<?> processDataFor(final String url, final ICardDataStoreCallback callback) {
+							return facard.get(url, new IRepositoryFacardCallback() {
+								@Override
+								public void process(IResponse response, Map<String, Object> data) {
+									callback.process(url, data);
+								}
+							});
+						}
+					};
+					ICard card = cardFactory.makeCard(content, cardDataStore, url);
+					card.addLineSelectedListener(new ILineSelectedListener() {
+						@Override
+						public void selected(KeyValue keyValue, ILine line) {
+							System.out.println(keyValue);
+						}
+					});
+					Swts.layoutAsString(content);
+				}
 
-			@Override
-			public IHasComposite makeChild(Composite parent) throws Exception {
-				final Group result = new Group(parent, SWT.NULL);
-				result.setText("parent");
-				Swts.resizeMeToParentsSize(result);
-				return new IHasComposite() {
+				@Override
+				public IHasComposite makeChild(Composite parent) throws Exception {
+					final Group result = new Group(parent, SWT.NULL);
+					result.setText("parent");
+					Swts.resizeMeToParentsSize(result);
+					return new IHasComposite() {
 
-					@Override
-					public Control getControl() {
-						return result;
-					}
+						@Override
+						public Control getControl() {
+							return result;
+						}
 
-					@Override
-					public Composite getComposite() {
-						return result;
-					}
-				};
-			}
-		});
+						@Override
+						public Composite getComposite() {
+							return result;
+						}
+					};
+				}
+			});
+		} finally {
+			facard.shutdown();
+		}
 	}
 }

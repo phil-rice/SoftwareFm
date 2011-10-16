@@ -5,6 +5,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -24,6 +25,7 @@ public class Card implements ICard {
 
 	final CardComposite content;
 	Future<?> future;
+	private final String url;
 
 	static class CardComposite extends Group {
 		List<ILine> lines = Lists.newList();
@@ -31,10 +33,12 @@ public class Card implements ICard {
 		private final Listener listener;
 		private Rectangle lastParentClientArea;
 		private final List<ILineSelectedListener> listeners = new CopyOnWriteArrayList<ILineSelectedListener>();
+		private Point lastSize;
 
 		public CardComposite(Composite parent, CardConfig cardConfig, String url, String title) {
 			super(parent, SWT.NULL);
 			this.cardConfig = cardConfig;
+
 			setText(title);
 			if (cardConfig.debugLayout)
 				setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_BLUE));
@@ -46,19 +50,12 @@ public class Card implements ICard {
 				}
 			};
 			getParent().addListener(SWT.Resize, listener);
+			layoutOutCard();
 		}
 
-		private void layoutOutCard() {
-			Rectangle parentClientArea = getParent().getClientArea();
-			if (parentClientArea.equals(lastParentClientArea))
-				return;
-			this.lastParentClientArea = parentClientArea;
-			int maxWidth = cardConfig.cardHeightWeigth * parentClientArea.height / cardConfig.cardWidthWeight;
-			int maxHeight = cardConfig.cardWidthWeight * parentClientArea.width / cardConfig.cardHeightWeigth;
-
-			int width = Math.min(parentClientArea.width, maxWidth);
-			int height = Math.min(parentClientArea.height, maxHeight);
-			setSize(width, height);
+		public void layoutOutCard() {
+			Point size = computeSize(SWT.DEFAULT,SWT.DEFAULT);
+			setSize(size);
 			Rectangle clientArea = getClientArea();
 
 			int lineWidth = clientArea.width - cardConfig.lineMarginX * 2;
@@ -66,13 +63,29 @@ public class Card implements ICard {
 			int y = clientArea.y + cardConfig.lineMarginY;
 
 			if (cardConfig.debugLayout)
-				System.out.println("raw: " + clientArea + " actual: " + clientArea.width + ", " + height + " line: " + titleWidth);
+				System.out.println("raw: " + clientArea + " actual: " + clientArea.width + ", " + size.y + " line: " + titleWidth);
 			for (ILine line : lines) {
-				line.getControl().setVisible(y + cardConfig.lineHeight < height);
+				line.getControl().setVisible(y + cardConfig.lineHeight < size.y);
 				line.setWidth(lineWidth, titleWidth);
 				line.getControl().setLocation(clientArea.x + cardConfig.lineMarginX, y);
 				y += cardConfig.lineHeight + cardConfig.lineToLineGap;
 			}
+		}
+
+		@Override
+		public Point computeSize(int wHint, int hHint, boolean changed) {
+			Rectangle parentClientArea = getParent().getClientArea();
+			if (parentClientArea.equals(lastParentClientArea))
+				return lastSize;
+			this.lastParentClientArea = parentClientArea;
+			int maxWidth = cardConfig.cardHeightWeigth * parentClientArea.height / cardConfig.cardWidthWeight;
+			int maxHeight = cardConfig.cardWidthWeight * parentClientArea.width / cardConfig.cardHeightWeigth;
+
+			int width = Math.min(parentClientArea.width, maxWidth);
+			int height = Math.min(parentClientArea.height, maxHeight);
+			Point size = new Point(width, height);
+			lastSize = size;
+			return size;
 		}
 
 		@Override
@@ -85,17 +98,17 @@ public class Card implements ICard {
 			lastParentClientArea = null;
 			Swts.removeAllChildren(this);
 			lines.clear();
-			for (KeyValue keyValue : list) {
+			for (final KeyValue keyValue : list) {
 				final ILine line = lineFactory.make(this, keyValue);
 				line.addSelectedListener(new Listener() {
 					@Override
 					public void handleEvent(Event event) {
-						for (ILineSelectedListener listener: listeners)
-							listener.selected(line);
+						for (ILineSelectedListener listener : listeners)
+							listener.selected(keyValue, line);
 					}
 				});
 				lines.add(line);
-				
+
 			}
 			layoutOutCard();
 		}
@@ -108,6 +121,7 @@ public class Card implements ICard {
 
 	public Card(Composite parent, final CardConfig cardConfig, String url, String title) { // order matters in the map, so it's likely to be a linked map
 		content = new CardComposite(parent, cardConfig, url, title);
+		this.url = url;
 	}
 
 	@Override
@@ -127,13 +141,12 @@ public class Card implements ICard {
 
 	public void populate(ILineFactory lineFactory, List<KeyValue> list) {
 		content.populate(lineFactory, list);
-		Swts.asyncExec(this, new Runnable() {
-			@Override
-			public void run() {
-				content.redraw();
-			}
-		});
-
 	}
+
+	@Override
+	public String url() {
+		return url;
+	}
+
 
 }
