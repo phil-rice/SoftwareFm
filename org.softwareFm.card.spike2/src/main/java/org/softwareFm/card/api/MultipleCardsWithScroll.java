@@ -13,7 +13,7 @@ import org.softwareFm.utilities.functions.IFunction1;
 
 public class MultipleCardsWithScroll implements IHasComposite {
 
-	private final ScrolledComposite scroll;
+	public final ScrolledComposite scroll;
 	public final MultipleCards content;
 
 	public MultipleCardsWithScroll(Composite parent, ICardDataStore cardDataStore, ICardFactory cardFactory) {

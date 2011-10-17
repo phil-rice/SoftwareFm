@@ -1,15 +1,15 @@
 package org.softwareFm.card.internal;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ILine;
+import org.softwareFm.display.swt.Swts;
 
 public class TextLine implements ILine {
 
@@ -21,15 +21,11 @@ public class TextLine implements ILine {
 			label = new Label(this, SWT.NULL);
 			label.setText(text);
 			label.setLocation(cardConfig.lineMarginX, cardConfig.lineMarginY);
-			Rectangle clientArea = label.getParent().getClientArea();
-			label.getParent().addListener(SWT.Resize, new Listener() {
-				@Override
-				public void handleEvent(Event event) {
-					Rectangle clientArea = label.getParent().getClientArea();
-					label.setSize(clientArea.width, clientArea.height);
-				}
-			});
-
+		}
+		
+		@Override
+		public Point computeSize(int wHint, int hHint) {
+			return new Point(100, 40);
 		}
 
 		@Override
@@ -38,6 +34,7 @@ public class TextLine implements ILine {
 
 		@Override
 		public void layout(boolean changed) {
+			Swts.setSizeFromClientArea(this, label);
 		}
 	}
 

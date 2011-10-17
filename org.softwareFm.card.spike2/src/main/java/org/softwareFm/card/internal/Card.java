@@ -41,7 +41,9 @@ public class Card implements ICard {
 			setText(title);
 			if (cardConfig.debugLayout)
 				setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_BLUE));
-			lines.add(new TextLine(this, cardConfig, "loading"));
+			TextLine textLine = new TextLine(this, cardConfig, "loading");
+			textLine.getControl().setSize(100, 50);
+			lines.add(textLine);
 		}
 
 		@Override

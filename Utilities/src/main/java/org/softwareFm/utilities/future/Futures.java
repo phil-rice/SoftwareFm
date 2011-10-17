@@ -6,6 +6,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.utilities.functions.IFunction1;
 
 public class Futures {
 
@@ -39,6 +41,44 @@ public class Futures {
 		};
 	}
 
+	public static <From,To> Future<To> transformed(final Future<From> future, final IFunction1<From, To> transformer){
+		return new Future<To>() {
+
+			@Override
+			public boolean cancel(boolean mayInterruptIfRunning) {
+				return future.cancel(mayInterruptIfRunning);
+			}
+
+			@Override
+			public To get() throws InterruptedException, ExecutionException {
+				try {
+					return transformer.apply(future.get());
+				} catch (Exception e) {
+					throw WrappedException.wrap(e);
+				}
+			}
+
+			@Override
+			public To get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+				try {
+					return transformer.apply(future.get(timeout, unit));
+				} catch (Exception e) {
+					throw WrappedException.wrap(e);
+				}
+			}
+
+			@Override
+			public boolean isCancelled() {
+				return future.isCancelled();
+			}
+
+			@Override
+			public boolean isDone() {
+				return future.isDone();
+			}
+		};
+	}
+	
 	public static <T> GatedMockFuture<T> gatedMock(ICallback<T> callback, final T value) {
 		return new GatedMockFuture<T>(callback, value);
 	}

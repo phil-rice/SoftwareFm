@@ -2,11 +2,12 @@ package org.softwareFm.eclipse.card;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.api.ICard;
@@ -33,39 +34,40 @@ public class PathAndDetails implements IHasComposite {
 
 	static class PathAndDetailsComposite extends SashForm {
 		private final List<String> urls = Lists.newList();
-		private final Composite details;
 		private final MultipleCardsWithScroll multipleCards;
 
 		public PathAndDetailsComposite(Composite parent, ICardDataStore cardDataStore, ICardFactory cardFactory, final String initialUrl) {
 			super(parent, SWT.NULL);
 			final ICard card = cardFactory.makeCard(this, cardDataStore, initialUrl);
-			details = new Composite(this, SWT.NULL);
-			details.setLayout(new StackLayout());
-
-			multipleCards = new MultipleCardsWithScroll(details, cardDataStore, cardFactory);
+			multipleCards = new MultipleCardsWithScroll(this, cardDataStore, cardFactory);
 			setWeights(new int[] { 1, 3 });
 			card.addLineSelectedListener(new ILineSelectedListener() {
 				@Override
 				public void selected(KeyValue keyValue, ILine line) {
-					String newUrl = initialUrl + "/" + keyValue.key;
-					openChild(card, newUrl, multipleCards);
+					try {
+						String newUrl = initialUrl + "/" + keyValue.key;
+						System.out.println("opening cards. Content: " + multipleCards.getComposite().getClientArea());
+						Object value = keyValue.value;
+						if (value instanceof Map) {
+							Map<String, Object> map = (Map<String, Object>) value;
+							for (Entry<String, Object> entry : map.entrySet())
+								if (entry.getValue() instanceof Map)
+									multipleCards.openCardAsChildOf(null, newUrl + "/" + entry.getKey()).getPopulateFuture().get();
+						}
+					} catch (Exception e) {
+						throw WrappedException.wrap(e);
+					}
 				}
 			});
 		}
 
-		private ICard openChild(ICard parent, final String url, final MultipleCardsWithScroll content) {
-			System.out.println("opening cards. Content: " + content.getComposite().getClientArea());
-			final ICard card = content.openCardAsChildOf(parent, url);
-			card.addLineSelectedListener(new ILineSelectedListener() {
-				@Override
-				public void selected(KeyValue keyValue, ILine line) {
-					String newUrl = url + "/" + keyValue.key;
-					openChild(card, newUrl, content);
-				}
-			});
-			content.getComposite().layout();
-			return card;
+		private void layoutScrolledArea() {
+			Rectangle clientArea = getClientArea();
+			Swts.setSizeToComputedAndLayout(multipleCards, clientArea);
+			Swts.setSizeToComputedAndLayout(multipleCards.content, SWT.DEFAULT, SWT.DEFAULT);
+			System.out.println("Scroll: " + multipleCards.scroll.getClientArea() + ", cards: " + multipleCards.content.getControl().getSize());
 		}
+
 	}
 
 	public PathAndDetails(Composite parent, ICardDataStore cardDataStore, ICardFactory cardFactory, String initialUrl) {

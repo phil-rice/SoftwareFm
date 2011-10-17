@@ -57,7 +57,6 @@ import org.softwareFm.utilities.strings.Strings;
 
 public class Swts {
 
-	
 	public static ScrolledComposite newScrolledComposite(Composite parent, int style, final String description) {
 		return new ScrolledComposite(parent, style) {
 			@Override
@@ -284,7 +283,9 @@ public class Swts {
 	public static String layoutAsString(Control control) {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(control);
+		Point location = control.getLocation();
 		Point size = control.getSize();
+		buffer.append(" Loc: " + location.x + ", " + location.y);
 		buffer.append(" Size: " + size.x + ", " + size.y);
 		if (control instanceof Composite)
 			buffer.append(" Layout: " + ((Composite) control).getLayout());
@@ -319,7 +320,7 @@ public class Swts {
 			Shell shell = new Shell(display);
 			shell.setSize(600, 400);
 			shell.setText(title);
-		 builder.apply(shell);
+			builder.apply(shell);
 			shell.open();
 			while (!shell.isDisposed()) {
 				if (!display.readAndDispatch())
@@ -330,7 +331,6 @@ public class Swts {
 			throw WrappedException.wrap(e);
 		}
 	}
-
 
 	public static void display(String title, IFunction1<Composite, Composite> builder) {
 		try {
@@ -487,6 +487,12 @@ public class Swts {
 			control.getDisplay().asyncExec(runnable);
 	}
 
+	public static void asyncExec(Control control, Runnable runnable) {
+		if (!control.isDisposed())
+			control.getDisplay().asyncExec(runnable);
+
+	}
+
 	public static void syncExec(IHasControl hasControl, Runnable runnable) {
 		Control control = hasControl.getControl();
 		if (!control.isDisposed())
@@ -531,7 +537,7 @@ public class Swts {
 		Control[] children = composite.getChildren();
 		int index = ArrayHelper.findIndexOf(children, control);
 		if (index != -1)
-			for (int i = index+1; i < children.length; i++)
+			for (int i = index + 1; i < children.length; i++)
 				children[i].dispose();
 	}
 
@@ -555,10 +561,11 @@ public class Swts {
 		Rectangle clientArea = parent.getComposite().getClientArea();
 		child.getControl().setSize(clientArea.width, clientArea.height);
 	}
+
 	public static void setSizeFromClientArea(Composite parent, Control child) {
 		Rectangle clientArea = parent.getClientArea();
 		child.setSize(clientArea.width, clientArea.height);
-		
+
 	}
 
 }

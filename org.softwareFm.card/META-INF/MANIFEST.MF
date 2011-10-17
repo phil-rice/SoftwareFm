@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Card
-Bundle-SymbolicName: org.softwareFm.card
-Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: SoftwareFm
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.softwareFm.display;bundle-version="1.0.0"
-Export-Package: org.softwareFm.card.api
