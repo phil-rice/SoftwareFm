@@ -34,7 +34,7 @@ public class TextLine implements ILine {
 
 		@Override
 		public void layout(boolean changed) {
-			Swts.setSizeFromClientArea(this, label);
+			Swts.setSizeFromClientArea(label);
 		}
 	}
 

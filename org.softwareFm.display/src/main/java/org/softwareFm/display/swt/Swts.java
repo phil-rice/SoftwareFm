@@ -521,16 +521,23 @@ public class Swts {
 			;
 	}
 
-	public static void resizeMeToParentsSize(final Control control) {
-		control.getParent().addListener(SWT.Resize, new Listener() {
+	public static Listener resizeMeToParentsSize(final Control control) {
+		Swts.setSizeFromClientArea(control);
+
+		Listener listener = new Listener() {
 			@Override
 			public void handleEvent(Event event) {
 				Rectangle clientArea = control.getParent().getClientArea();
-				System.out.println("Swts.Resizing " + control.hashCode() + "/" + control + "/" + control.hashCode() + " to " + clientArea);
 				control.setSize(clientArea.width, clientArea.height);
-				System.out.println("Swts.finished " + control.hashCode() + "/" + control.getSize());
 			}
-		});
+		};
+		control.getParent().addListener(SWT.Resize, listener);
+		return listener;
+	}
+
+	public static void removeOldResizeListener(final Control control, Listener listener) {
+		if (listener != null)
+			control.removeListener(SWT.Resize, listener);
 	}
 
 	public static void removeChildrenAfter(Composite composite, Control control) {
@@ -562,8 +569,8 @@ public class Swts {
 		child.getControl().setSize(clientArea.width, clientArea.height);
 	}
 
-	public static void setSizeFromClientArea(Composite parent, Control child) {
-		Rectangle clientArea = parent.getClientArea();
+	public static void setSizeFromClientArea(Control child) {
+		Rectangle clientArea = child.getParent().getClientArea();
 		child.setSize(clientArea.width, clientArea.height);
 
 	}
