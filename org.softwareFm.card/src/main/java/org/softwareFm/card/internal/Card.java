@@ -32,9 +32,7 @@ public class Card implements ICard {
 	static class CardComposite extends Group {
 		List<ILine> lines = Lists.newList();
 		private final CardConfig cardConfig;
-		private Rectangle lastParentClientArea;
 		private final List<ILineSelectedListener> listeners = new CopyOnWriteArrayList<ILineSelectedListener>();
-		private Point lastSize;
 
 		public CardComposite(Composite parent, CardConfig cardConfig, String url, String title) {
 			super(parent, SWT.NULL);
@@ -47,12 +45,8 @@ public class Card implements ICard {
 		}
 
 		@Override
-		public void setSize(int width, int height) {
-			super.setSize(width, height);
-		}
-
-		@Override
 		public void setLayout(Layout layout) {
+			throw new UnsupportedOperationException();
 		}
 
 		@Override
@@ -107,7 +101,6 @@ public class Card implements ICard {
 		}
 
 		public void populate(ILineFactory lineFactory, List<KeyValue> list) {
-			lastParentClientArea = null;
 			Swts.removeAllChildren(this);
 			lines.clear();
 			for (final KeyValue keyValue : list) {

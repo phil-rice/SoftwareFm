@@ -59,6 +59,7 @@ public class CardUnit {
 				Rectangle clientArea = group.getClientArea();
 				Point size = cardComposite.computeSize(clientArea.width, clientArea.height);
 				cardComposite.setSize(size);
+				cardComposite.layout();
 			}
 
 			@Override

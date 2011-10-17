@@ -6,6 +6,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ILine;
@@ -28,6 +29,15 @@ public class TextLine implements ILine {
 					label.setSize(clientArea.width, clientArea.height);
 				}
 			});
+
+		}
+
+		@Override
+		public void setLayout(Layout layout) {
+		}
+
+		@Override
+		public void layout(boolean changed) {
 		}
 	}
 
@@ -51,7 +61,7 @@ public class TextLine implements ILine {
 	@Override
 	public void setWidth(int width, int titleWidth) {
 		content.setSize(width, cardConfig.lineHeight);
-		content.label.setSize(width-cardConfig.lineMarginX*2, cardConfig.textHeight);
+		content.label.setSize(width - cardConfig.lineMarginX * 2, cardConfig.textHeight);
 	}
 
 	@Override
