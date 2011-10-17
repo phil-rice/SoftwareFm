@@ -20,7 +20,6 @@ import org.softwareFm.card.api.ILineSelectedListener;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.strings.Strings;
 
 public class Card implements ICard {
 	private Future<?> populateFuture;
@@ -31,8 +30,6 @@ public class Card implements ICard {
 	private final TableColumn nameColumn;
 	private final TableColumn valueColumn;
 	private final List<ILineSelectedListener> lineSelectedListeners = new CopyOnWriteArrayList<ILineSelectedListener>();
-
-	private boolean reported;
 
 	public Card(Composite parent, int style, final boolean allowSelection, ICardDataStore cardDataStore, final String url, final List<KeyValue> data) {
 		this.url = url;
@@ -49,7 +46,8 @@ public class Card implements ICard {
 		table.setDragDetect(true);
 		for (KeyValue keyValue : data) {
 			TableItem tableItem = new TableItem(table, SWT.NULL);
-			tableItem.setText(new String[] { keyValue.key, Strings.nullSafeToString(keyValue.value) });
+			String displayValue = keyValue.value instanceof List? "Children: " + ((List)keyValue.value).size(): keyValue.value.toString();
+			tableItem.setText(new String[] { keyValue.key, displayValue });
 		}
 
 		nameColumn.pack();

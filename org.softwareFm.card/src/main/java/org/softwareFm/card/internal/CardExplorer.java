@@ -21,6 +21,7 @@ import org.softwareFm.card.api.ICardSelectedListener;
 import org.softwareFm.card.api.IDetailFactory;
 import org.softwareFm.card.api.ILineSelectedListener;
 import org.softwareFm.card.api.KeyValue;
+import org.softwareFm.card.gestures.GestureLeftRightListener;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.httpClient.response.IResponse;
@@ -41,9 +42,12 @@ public class CardExplorer implements IHasComposite {
 		final ScrolledComposite detail;
 		final ScrolledComposite comments;
 		private Listener detailResizeListener;
+		private final History<String> urls = new History<String>();
+		private final String initialUrl;
 
 		public CardExplorerComposite(final Composite parent, final ICardFactory cardFactory, final IDetailFactory detailFactory, final String initialUrl) {
 			super(parent, SWT.HORIZONTAL);
+			this.initialUrl = initialUrl;
 			left = new CardHolder(this, "");
 			right = new SashForm(this, SWT.VERTICAL);
 			right.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_BLUE));
@@ -53,14 +57,31 @@ public class CardExplorer implements IHasComposite {
 			comments = new ScrolledComposite(right, SWT.H_SCROLL);
 			this.setWeights(new int[] { 2, 3 });
 			right.setWeights(new int[] { 1, 2 });
+			urls.push(initialUrl);
 			selectUrl(parent, cardFactory, detailFactory, initialUrl);
 		}
 
+
 		private void selectUrl(final Composite parent, final ICardFactory cardFactory, final IDetailFactory detailFactory, final String url) {
+			System.out.println("Url: " + url);
 			cardFactory.makeCard(left.getComposite(), SWT.FULL_SELECTION, true, url, new ICallback<ICard>() {
 				@Override
 				public void process(ICard card) throws Exception {
 					System.out.println("In callback");
+					new GestureLeftRightListener(card.getControl(), 100) {
+						@Override
+						public void goLeft() {
+							String url = urls.prev();
+							selectUrl(parent, cardFactory, detailFactory, url);
+						}
+
+						@Override
+						public void goRight() {
+							String url = urls.next();
+							selectUrl(parent, cardFactory, detailFactory, url);
+						}
+
+					};
 					Swts.resizeMeToParentsSize(card.getControl());
 					card.addLineSelectedListener(new ILineSelectedListener() {
 
@@ -70,10 +91,11 @@ public class CardExplorer implements IHasComposite {
 							Swts.removeAllChildren(detail);
 							detail.setContent(null);
 							final Composite madeDetail = detailFactory.makeDetail(detail, SWT.FULL_SELECTION, cardFactory, new ICardSelectedListener() {
-
 								@Override
 								public void mouseDown(ICard card, MouseEvent e) {
-									selectUrl(parent, cardFactory, detailFactory, card.url());
+									String cardUrl = card.url();
+									urls.push(cardUrl);
+									selectUrl(parent, cardFactory, detailFactory, cardUrl);
 								}
 							}, url, keyValue);
 							Rectangle clientArea = detail.getClientArea();
@@ -127,7 +149,7 @@ public class CardExplorer implements IHasComposite {
 		try {
 			final ICardDataStore cardDataStore = new ICardDataStore() {
 				@Override
-				public <T>Future<T> processDataFor(final String url, final ICardDataStoreCallback<T> callback) {
+				public <T> Future<T> processDataFor(final String url, final ICardDataStoreCallback<T> callback) {
 					Future future = facard.get(url, new IRepositoryFacardCallback() {
 						@Override
 						public void process(IResponse response, Map<String, Object> data) {

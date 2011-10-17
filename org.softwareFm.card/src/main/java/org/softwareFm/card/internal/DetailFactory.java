@@ -17,6 +17,7 @@ import org.softwareFm.card.api.ICardSelectedListener;
 import org.softwareFm.card.api.IDetailFactory;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.strings.Strings;
 
@@ -24,7 +25,7 @@ public class DetailFactory implements IDetailFactory {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Composite makeDetail(Composite parent, int style, ICardFactory cardFactory, final ICardSelectedListener listener, String url, KeyValue keyValue) {
+	public Composite makeDetail(Composite parent, final int style, final ICardFactory cardFactory, final ICardSelectedListener listener, final String url, KeyValue keyValue) {
 		Object value = keyValue.value;
 		if (value instanceof String) {
 			Composite composite = new Composite(parent, SWT.NULL);
@@ -39,24 +40,32 @@ public class DetailFactory implements IDetailFactory {
 			for (Object object : list)
 				if (object instanceof KeyValue)
 					keyValues.add((KeyValue) object);
-					Collections.sort(keyValues, cardFactory.comparator());
-					for (KeyValue childKeyValue : keyValues){
-					CardHolder holder = new CardHolder(composite, childKeyValue.key);
-					holder.getControl().addPaintListener(new PaintListener() {
-						private boolean reported;
-						@Override
-						public void paintControl(PaintEvent e) {
-						}
-					});
-					final ICard card = cardFactory.makeCard(holder.getComposite(), style, false, url + "/" + childKeyValue.key, (Map<String, Object>) childKeyValue.value);
-					card.getControl().addMouseListener(new MouseAdapter() {
-						@Override
-						public void mouseDown(MouseEvent e) {
-							listener.mouseDown(card, e);
-						}
-					});
-					holder.setCard(card);
-				}
+			Collections.sort(keyValues, cardFactory.comparator());
+			for (final KeyValue childKeyValue : keyValues) {
+				final CardHolder holder = new CardHolder(composite, childKeyValue.key);
+				holder.getControl().addPaintListener(new PaintListener() {
+					private boolean reported;
+
+					@Override
+					public void paintControl(PaintEvent e) {
+						if (reported)
+							return;
+						cardFactory.makeCard(holder.getComposite(), style, false, url +"/"+ childKeyValue.key, new ICallback<ICard>(){
+							@Override
+							public void process(final ICard card) throws Exception {
+								card.getControl().addMouseListener(new MouseAdapter() {
+									@Override
+									public void mouseDown(MouseEvent e) {
+										listener.mouseDown(card, e);
+									}
+								});
+								holder.setCard(card);
+								
+							}});
+						reported = true;
+					}
+				});
+			}
 			return composite;
 		} else if (value instanceof Map) {
 			return makeDetail(parent, style, cardFactory, listener, url, new KeyValue(keyValue.key, Arrays.asList(keyValue)));

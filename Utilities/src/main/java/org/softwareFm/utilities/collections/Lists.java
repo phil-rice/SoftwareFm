@@ -223,4 +223,9 @@ public class Lists {
 	public static <T> List<T> immutableCopy(List<T> ts) {
 		return ts == null ? null : Collections.unmodifiableList(new ArrayList<T>(ts));
 	}
+
+	public static <T>void removeAllAfter(List<T> list, int lastToKeep) {
+		while (list.size()> lastToKeep+1)
+			list.remove(list.size()-1);
+	}
 }

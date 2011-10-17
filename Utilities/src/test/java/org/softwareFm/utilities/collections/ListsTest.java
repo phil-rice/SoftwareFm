@@ -27,6 +27,12 @@ public class ListsTest extends TestCase {
 		assertEquals(Collections.EMPTY_LIST, Lists.newList());
 	}
 
+	public void testRemoveAllAfter() {
+		ArrayList<String> list = new ArrayList<String>(Arrays.asList("1", "2", "3", "4", "5"));
+		Lists.removeAllAfter(list, 2);
+		assertEquals(Arrays.asList("1", "2", "3"), list);
+	}
+
 	public void testOrderBy() {
 		List<Integer> masterList = Arrays.asList(4, 3, 2, 1, 5, 6, 7);
 		List<Integer> sort = Arrays.asList(1, 6, 2, 4);
