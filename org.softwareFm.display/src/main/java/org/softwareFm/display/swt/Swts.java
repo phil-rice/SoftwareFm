@@ -41,6 +41,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.display.composites.CompositeConfig;
+import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.simpleButtons.IButtonParent;
 import org.softwareFm.utilities.arrays.ArrayHelper;
@@ -56,6 +57,7 @@ import org.softwareFm.utilities.strings.Strings;
 
 public class Swts {
 
+	
 	public static ScrolledComposite newScrolledComposite(Composite parent, int style, final String description) {
 		return new ScrolledComposite(parent, style) {
 			@Override
@@ -317,9 +319,8 @@ public class Swts {
 			Shell shell = new Shell(display);
 			shell.setSize(600, 400);
 			shell.setText(title);
-			builder.apply(shell);
+		 builder.apply(shell);
 			shell.open();
-			Swts.layoutDump(shell);
 			while (!shell.isDisposed()) {
 				if (!display.readAndDispatch())
 					display.sleep();
@@ -329,6 +330,7 @@ public class Swts {
 			throw WrappedException.wrap(e);
 		}
 	}
+
 
 	public static void display(String title, IFunction1<Composite, Composite> builder) {
 		try {
@@ -547,6 +549,16 @@ public class Swts {
 		control.setSize(computedSize);
 		if (control instanceof Composite)
 			((Composite) control).layout();
+	}
+
+	public static void setSizeFromClientArea(IHasComposite parent, IHasControl child) {
+		Rectangle clientArea = parent.getComposite().getClientArea();
+		child.getControl().setSize(clientArea.width, clientArea.height);
+	}
+	public static void setSizeFromClientArea(Composite parent, Control child) {
+		Rectangle clientArea = parent.getClientArea();
+		child.setSize(clientArea.width, clientArea.height);
+		
 	}
 
 }

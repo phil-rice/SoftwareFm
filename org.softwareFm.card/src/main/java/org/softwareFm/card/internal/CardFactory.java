@@ -18,7 +18,6 @@ import org.softwareFm.card.api.ICardFactoryWithAggregateAndSort;
 import org.softwareFm.card.api.ILine;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -49,7 +48,7 @@ public class CardFactory implements ICardFactoryWithAggregateAndSort {
 	}
 
 	@Override
-	public ICard makeCard(Composite parent, final ICardDataStore cardDataStore, final String url, final ICallback<ICard> callbackWhenPopulated) {
+	public ICard makeCard(Composite parent, final ICardDataStore cardDataStore, final String url) {
 		try {
 			String title = urlToTitle.apply(url);
 			final Card card = new Card(parent, cardConfig, url, title);
@@ -64,7 +63,6 @@ public class CardFactory implements ICardFactoryWithAggregateAndSort {
 						public void run() {
 							try {
 								card.populate(CardFactory.this, sorted);
-								callbackWhenPopulated.process(card);
 							} catch (Exception e) {
 								throw WrappedException.wrap(e);
 							}

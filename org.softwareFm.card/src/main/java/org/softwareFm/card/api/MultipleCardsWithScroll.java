@@ -9,7 +9,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.IFunction1;
 
 public class MultipleCardsWithScroll implements IHasComposite {
@@ -40,18 +39,12 @@ public class MultipleCardsWithScroll implements IHasComposite {
 			@Override
 			public Composite apply(final Composite from) throws Exception {
 				final MultipleCardsWithScroll content = new MultipleCardsWithScroll(from, cardDataStore, cardFactory);
-				ICallback<ICard> callbackWhenPopulated = new ICallback<ICard>() {
-					@Override
-					public void process(ICard t) throws Exception {
-						layout(content.scroll, content);
-					}
-				};
-				content.openCardAsChildOf(null, CardDataStoreFixture.url, callbackWhenPopulated);
-				content.openCardAsChildOf(null, CardDataStoreFixture.url1a, callbackWhenPopulated);
-				content.openCardAsChildOf(null, CardDataStoreFixture.url1b, callbackWhenPopulated);
-				content.openCardAsChildOf(null, CardDataStoreFixture.url1a, callbackWhenPopulated);
-				content.openCardAsChildOf(null, CardDataStoreFixture.url1b, callbackWhenPopulated);
-				content.openCardAsChildOf(null, CardDataStoreFixture.url, callbackWhenPopulated);
+				content.openCardAsChildOf(null, CardDataStoreFixture.url);
+				content.openCardAsChildOf(null, CardDataStoreFixture.url1a);
+				content.openCardAsChildOf(null, CardDataStoreFixture.url1b);
+				content.openCardAsChildOf(null, CardDataStoreFixture.url1a);
+				content.openCardAsChildOf(null, CardDataStoreFixture.url1b);
+				content.openCardAsChildOf(null, CardDataStoreFixture.url);
 				final Control control = content.getControl();
 				from.addListener(SWT.Resize, new Listener() {
 					@Override
@@ -66,7 +59,14 @@ public class MultipleCardsWithScroll implements IHasComposite {
 						layout(content.scroll, content);
 					}
 				});
-				layout(content.scroll, content);
+				Swts.asyncExec(content, new Runnable() {
+					@Override
+					public void run() {
+						Rectangle clientArea = from.getClientArea();
+						control.setSize(clientArea.width, clientArea.height);
+						layout(content.scroll, content);
+					}
+				});
 				return (Composite) control;
 			}
 
@@ -79,7 +79,7 @@ public class MultipleCardsWithScroll implements IHasComposite {
 		});
 	}
 
-	public ICard openCardAsChildOf(ICard parent, String url, ICallback<ICard> callbackWhenPopulated) {
-		return content.openCardAsChildOf(parent, url, callbackWhenPopulated);
+	public ICard openCardAsChildOf(ICard parent, String url) {
+		return content.openCardAsChildOf(parent, url);
 	}
 }

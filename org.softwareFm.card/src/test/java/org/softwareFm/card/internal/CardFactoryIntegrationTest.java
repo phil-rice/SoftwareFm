@@ -7,7 +7,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.softwareFm.card.api.CardDataStoreFixture;
-import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ILine;
 import org.softwareFm.card.internal.NameValue.NameValueComposite;
 import org.softwareFm.card.internal.TextLine.LoadingComposite;
@@ -19,14 +18,14 @@ public class CardFactoryIntegrationTest extends SwtIntegrationTest {
 
 	public void testDefaultTitleBasedOnUrl() {
 		CardFactory factory = new CardFactory();
-		Card card = (Card) factory.makeCard(shell, CardDataStoreFixture.rawAsyncCardStore(), CardDataStoreFixture.url1a, ICallback.Utils.<ICard>noCallback());
+		Card card = (Card) factory.makeCard(shell, CardDataStoreFixture.rawAsyncCardStore(), CardDataStoreFixture.url1a);
 		assertEquals("1a", card.content.getText());
 	}
 
 	@SuppressWarnings("unused")
 	public void testDefaultWithJustAttributeValuePairsBeforeFutureFinishes() {
 		CardFactory factory = new CardFactory();
-		Card card = (Card) factory.makeCard(shell, CardDataStoreFixture.rawAsyncCardStore(), CardDataStoreFixture.url1a, ICallback.Utils.<ICard>noCallback());
+		Card card = (Card) factory.makeCard(shell, CardDataStoreFixture.rawAsyncCardStore(), CardDataStoreFixture.url1a);
 		Control[] children = card.content.getChildren();
 		assertEquals(1, children.length);
 		LoadingComposite loading = (LoadingComposite) children[0];
@@ -34,7 +33,7 @@ public class CardFactoryIntegrationTest extends SwtIntegrationTest {
 
 	public void testDefaultWithJustAttributeValuePairsAfterFutureFinishes() {
 		CardFactory factory = new CardFactory();
-		Card card = (Card) factory.makeCard(shell, CardDataStoreFixture.rawAsyncCardStore(), CardDataStoreFixture.url1a, ICallback.Utils.<ICard>noCallback());
+		Card card = (Card) factory.makeCard(shell, CardDataStoreFixture.rawAsyncCardStore(), CardDataStoreFixture.url1a);
 		GatedMockFuture<?> future = (GatedMockFuture<?>) card.future;
 		future.kick();
 		dispatchUntilQueueEmpty();
@@ -79,7 +78,7 @@ public class CardFactoryIntegrationTest extends SwtIntegrationTest {
 	private void checkListenersCalled(ICallback<NameValue> callback) throws Exception {
 		List<String> expectedNames = Arrays.asList("tag", "value");
 		CardFactory factory = new CardFactory();
-		Card card = (Card) factory.makeCard(shell, CardDataStoreFixture.rawCardStore(), CardDataStoreFixture.url1a, ICallback.Utils.<ICard>noCallback());
+		Card card = (Card) factory.makeCard(shell, CardDataStoreFixture.rawCardStore(), CardDataStoreFixture.url1a);
 		dispatchUntilQueueEmpty();
 
 		LineSelectedListenerMock mock1 = new LineSelectedListenerMock();

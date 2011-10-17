@@ -5,16 +5,13 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
-import org.eclipse.swt.widgets.Listener;
-import org.softwareFm.display.composites.IHasControl;
+import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
 
-public class MultipleCards implements IHasControl {
+public class MultipleCards implements IHasComposite {
 
 	private final MultipleCardsComposite content;
 	private final ICardDataStore cardDataStore;
@@ -89,19 +86,19 @@ public class MultipleCards implements IHasControl {
 		content = new MultipleCardsComposite(parent, cardFactory.getCardConfig(), SWT.NULL);
 	}
 
-	protected void layoutCards() {
-		content.layout();
-	}
-
-	public ICard openCardAsChildOf(ICard parent, String url, ICallback<ICard>callbackWhenPopulated) {
+	public ICard openCardAsChildOf(ICard parent, String url) {
 		try {
 			if (parent != null)
 				Swts.removeChildrenAfter(content, parent.getControl());
-			ICard result = cardFactory.makeCard(content, cardDataStore, url, callbackWhenPopulated);
+			ICard result = cardFactory.makeCard(content, cardDataStore, url);
 			return result;
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
+	}
+	@Override
+	public Composite getComposite() {
+		return content;
 	}
 
 	@Override
@@ -116,32 +113,23 @@ public class MultipleCards implements IHasControl {
 			@Override
 			public Composite apply(final Composite from) throws Exception {
 				final MultipleCards multipleCards = new MultipleCards(from, cardDataStore, cardFactory);
-				ICallback<ICard> callback = new ICallback<ICard>(){
+				multipleCards.openCardAsChildOf(null, CardDataStoreFixture.url);
+				multipleCards.openCardAsChildOf(null, CardDataStoreFixture.url1a);
+				multipleCards.openCardAsChildOf(null, CardDataStoreFixture.url1b);
+				multipleCards.openCardAsChildOf(null, CardDataStoreFixture.url1a);
+				multipleCards.openCardAsChildOf(null, CardDataStoreFixture.url1b);
+				multipleCards.openCardAsChildOf(null, CardDataStoreFixture.url);
+				multipleCards.getComposite().layout();
+				Swts.asyncExec(multipleCards, new Runnable() {
 					@Override
-					public void process(ICard t) throws Exception {
-						layout(from, multipleCards);
-					}};
-				multipleCards.openCardAsChildOf(null, CardDataStoreFixture.url, callback);
-				multipleCards.openCardAsChildOf(null, CardDataStoreFixture.url1a, callback);
-				multipleCards.openCardAsChildOf(null, CardDataStoreFixture.url1b, callback);
-				multipleCards.openCardAsChildOf(null, CardDataStoreFixture.url1a, callback);
-				multipleCards.openCardAsChildOf(null, CardDataStoreFixture.url1b, callback);
-				multipleCards.openCardAsChildOf(null, CardDataStoreFixture.url, callback);
-				multipleCards.layoutCards();
-				from.addListener(SWT.Resize, new Listener() {
-					@Override
-					public void handleEvent(Event event) {
-						layout(from, multipleCards);
+					public void run() {
+						Rectangle clientArea = from.getClientArea();
+						Swts.setSizeToComputedAndLayout(multipleCards, clientArea);
 					}
-
 				});
-				layout(from, multipleCards);
 				return (Composite) multipleCards.getControl();
 			}
-			private void layout(final Composite from, final MultipleCards multipleCards) {
-				Rectangle clientArea = from.getClientArea();
-				Swts.setSizeToComputedAndLayout(multipleCards, clientArea);
-			}
+
 		});
 	}
 

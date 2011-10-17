@@ -14,7 +14,6 @@ import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardDataStoreCallback;
 import org.softwareFm.card.api.ICardFactory;
-import org.softwareFm.card.api.ICardFactoryWithAggregateAndSort;
 import org.softwareFm.card.api.ILine;
 import org.softwareFm.card.api.ILineSelectedListener;
 import org.softwareFm.card.api.KeyValue;
@@ -30,7 +29,7 @@ import org.softwareFm.utilities.functions.IFunction1;
 
 public class CardExplorer {
 	public static void main(String[] args) throws IOException {
-		final ICardFactoryWithAggregateAndSort cardFactory = ICardFactory.Utils.cardFactoryWithAggregateAndSort();
+		final ICardFactory cardFactory = ICardFactory.Utils.cardFactoryWithAggregateAndSort();
 		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacard();
 		try {
 			final ICardDataStore cardDataStore =  ICardDataStore.Utils.cache(new ICardDataStore() {
@@ -84,7 +83,7 @@ public class CardExplorer {
 				}
 
 				private void openChild(ICard parent, final String url, final MultipleCardsWithScroll content, final ICallback<ICard> callback) {
-					final ICard card = content.openCardAsChildOf(parent, url, callback);
+					final ICard card = content.openCardAsChildOf(parent, url);
 					card.addLineSelectedListener(new ILineSelectedListener() {
 						@Override
 						public void selected(KeyValue keyValue, ILine line) {
