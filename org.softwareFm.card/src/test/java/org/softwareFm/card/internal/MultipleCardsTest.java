@@ -5,8 +5,10 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.api.CardConfig;
+import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardFactory;
+import org.softwareFm.card.api.MultipleCards;
 import org.softwareFm.display.swt.SwtIntegrationTest;
 
 public class MultipleCardsTest extends SwtIntegrationTest {

@@ -518,7 +518,7 @@ public class Swts {
 			@Override
 			public void handleEvent(Event event) {
 				Rectangle clientArea = control.getParent().getClientArea();
-				System.out.println("Swts.Resizing " + control.hashCode() + "/" + control +"/" + control.hashCode() + " to " + clientArea);
+				System.out.println("Swts.Resizing " + control.hashCode() + "/" + control + "/" + control.hashCode() + " to " + clientArea);
 				control.setSize(clientArea.width, clientArea.height);
 				System.out.println("Swts.finished " + control.hashCode() + "/" + control.getSize());
 			}
@@ -529,8 +529,24 @@ public class Swts {
 		Control[] children = composite.getChildren();
 		int index = ArrayHelper.findIndexOf(children, control);
 		if (index != -1)
-			for (int i = index; i < children.length; i++)
+			for (int i = index+1; i < children.length; i++)
 				children[i].dispose();
+	}
+
+	public static void setSizeToComputedAndLayout(IHasControl left, int wHint, int hHint) {
+		Control control = left.getControl();
+		Point computedSize = control.computeSize(wHint, hHint);
+		control.setSize(computedSize);
+		if (control instanceof Composite)
+			((Composite) control).layout();
+	}
+
+	public static void setSizeToComputedAndLayout(IHasControl left, Rectangle rectangle) {
+		Control control = left.getControl();
+		Point computedSize = control.computeSize(rectangle.width, rectangle.height);
+		control.setSize(computedSize);
+		if (control instanceof Composite)
+			((Composite) control).layout();
 	}
 
 }

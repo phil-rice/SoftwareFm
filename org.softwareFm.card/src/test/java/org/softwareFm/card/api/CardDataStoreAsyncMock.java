@@ -6,9 +6,6 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-import org.softwareFm.card.api.ICardDataStoreCallback;
-import org.softwareFm.card.api.IMutableCardDataStore;
-import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.constants.UtilityConstants;
@@ -25,7 +22,7 @@ public class CardDataStoreAsyncMock implements IMutableCardDataStore {
 	}
 
 	@Override
-	public Future<?> processDataFor(final String url, final ICardDataStoreCallback callback) {
+	public Future<Map<String,Object>> processDataFor(final String url, final ICardDataStoreCallback callback) {
 		Maps.add(counts, url, 1);
 		final Map<String, Object> result = map.get(url);
 		if (result == null)

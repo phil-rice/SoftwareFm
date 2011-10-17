@@ -27,6 +27,7 @@ public class Card implements ICard {
 	final CardComposite content;
 	Future<?> future;
 	private final String url;
+	private List<KeyValue> data;
 
 	static class CardComposite extends Group {
 		List<ILine> lines = Lists.newList();
@@ -48,7 +49,6 @@ public class Card implements ICard {
 		@Override
 		public void setSize(int width, int height) {
 			super.setSize(width, height);
-			System.out.println("card.setSize: " + width + "," + height + " result " + getSize());
 		}
 
 		@Override
@@ -152,6 +152,7 @@ public class Card implements ICard {
 	}
 
 	public void populate(ILineFactory lineFactory, List<KeyValue> list) {
+		this.data = list;
 		content.populate(lineFactory, list);
 	}
 
@@ -168,5 +169,10 @@ public class Card implements ICard {
 	@Override
 	public Composite getComposite() {
 		return content;
+	}
+
+	@Override
+	public List<KeyValue> data() {
+		return data;
 	}
 }

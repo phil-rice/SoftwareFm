@@ -4,8 +4,8 @@ import java.util.Map;
 
 public interface ICardDataStoreCallback {
 
-	void process(String url, Map<String, Object> result);
+	void process(String url, Map<String, Object> result) throws Exception;
 	
-	void noData(String url);
+	void noData(String url) throws Exception;
 
 }

@@ -1,7 +1,6 @@
-package org.softwareFm.card.internal;
+package org.softwareFm.card.api;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
@@ -9,13 +8,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
-import org.softwareFm.card.api.CardConfig;
-import org.softwareFm.card.api.CardDataStoreMock;
-import org.softwareFm.card.api.ICard;
-import org.softwareFm.card.api.ICardDataStore;
-import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
 
@@ -44,10 +39,10 @@ public class MultipleCards implements IHasControl {
 		public void layout(boolean changed) {
 			Rectangle clientArea = getClientArea();
 			int x = 0;
-			System.out.println("MultipleCards/layout.clientArea: "+ clientArea);
+			System.out.println("MultipleCards/layout.clientArea: " + clientArea);
 			for (Control control : getChildren()) {
 				Point size = control.computeSize(SWT.DEFAULT, clientArea.height);
-				System.out.println("MultipleCards/layout.size: "+ size);
+				System.out.println("MultipleCards/layout.size: " + size);
 				control.setSize(size);
 				if (control instanceof Composite)
 					((Composite) control).layout();
@@ -80,7 +75,7 @@ public class MultipleCards implements IHasControl {
 
 		private int calculateWidth(int height) {
 			int width = 0;
-			for (Control control :  getChildren()) {
+			for (Control control : getChildren()) {
 				Point size = control.computeSize(SWT.DEFAULT, height);
 				width += size.x;
 			}
@@ -98,22 +93,11 @@ public class MultipleCards implements IHasControl {
 		content.layout();
 	}
 
-	public ICard openCardAsChildOf(ICard parent, String childNodeName) {
+	public ICard openCardAsChildOf(ICard parent, String url, ICallback<ICard>callbackWhenPopulated) {
 		try {
 			if (parent != null)
 				Swts.removeChildrenAfter(content, parent.getControl());
-			String url = parent == null ? childNodeName : parent.url() + "/" + childNodeName;
-			ICard result = cardFactory.makeCard(content, cardDataStore, url);
-			Swts.asyncExec(result, new Runnable() {
-				@Override
-				public void run() {
-					// this exists because the makeCard method has an asyncexec which must have finished before we start.
-					Point size = content.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-					content.setSize(size);
-					System.out.println("Setting  content size: "+ content.getSize() );
-					content.layout();
-				}
-			});
+			ICard result = cardFactory.makeCard(content, cardDataStore, url, callbackWhenPopulated);
 			return result;
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
@@ -131,23 +115,32 @@ public class MultipleCards implements IHasControl {
 		Swts.displayNoLayout(MultipleCards.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(final Composite from) throws Exception {
-				final ScrolledComposite content = new ScrolledComposite(from, SWT.H_SCROLL|SWT.BORDER);
-				final MultipleCards multipleCards = new MultipleCards(content, cardDataStore, cardFactory);
-				content.setContent(multipleCards.getControl());
-				multipleCards.openCardAsChildOf(null, CardDataStoreFixture.url);
-				multipleCards.openCardAsChildOf(null, CardDataStoreFixture.url1a);
+				final MultipleCards multipleCards = new MultipleCards(from, cardDataStore, cardFactory);
+				ICallback<ICard> callback = new ICallback<ICard>(){
+					@Override
+					public void process(ICard t) throws Exception {
+						layout(from, multipleCards);
+					}};
+				multipleCards.openCardAsChildOf(null, CardDataStoreFixture.url, callback);
+				multipleCards.openCardAsChildOf(null, CardDataStoreFixture.url1a, callback);
+				multipleCards.openCardAsChildOf(null, CardDataStoreFixture.url1b, callback);
+				multipleCards.openCardAsChildOf(null, CardDataStoreFixture.url1a, callback);
+				multipleCards.openCardAsChildOf(null, CardDataStoreFixture.url1b, callback);
+				multipleCards.openCardAsChildOf(null, CardDataStoreFixture.url, callback);
 				multipleCards.layoutCards();
 				from.addListener(SWT.Resize, new Listener() {
 					@Override
 					public void handleEvent(Event event) {
-						Rectangle clientArea = from.getClientArea();
-						Point size = multipleCards.content.computeSize(SWT.DEFAULT, clientArea.height);
-						multipleCards.content.setSize(size);
-						content.setSize(clientArea.width, clientArea.height);
-						multipleCards.content.layout();
+						layout(from, multipleCards);
 					}
+
 				});
+				layout(from, multipleCards);
 				return (Composite) multipleCards.getControl();
+			}
+			private void layout(final Composite from, final MultipleCards multipleCards) {
+				Rectangle clientArea = from.getClientArea();
+				Swts.setSizeToComputedAndLayout(multipleCards, clientArea);
 			}
 		});
 	}

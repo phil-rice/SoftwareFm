@@ -2,7 +2,7 @@ package org.softwareFm.card.api;
 
 public class CardConfig {
 
-	public final boolean debugLayout = true;
+	public final boolean debugLayout = false;
 	public final int textHeight = 20;
 
 	public final int lineMarginX = 3;
@@ -15,7 +15,7 @@ public class CardConfig {
 	public final int nameWeight = 1;
 	public final int valueWeight = 3;
 
-	public  int cardWidthWeight = 2;
+	public  int cardWidthWeight = 1;
 	public  int cardHeightWeigth = 1;
 
 }

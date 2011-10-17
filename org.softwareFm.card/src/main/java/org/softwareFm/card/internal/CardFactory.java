@@ -18,6 +18,7 @@ import org.softwareFm.card.api.ICardFactoryWithAggregateAndSort;
 import org.softwareFm.card.api.ILine;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -48,26 +49,31 @@ public class CardFactory implements ICardFactoryWithAggregateAndSort {
 	}
 
 	@Override
-	public ICard makeCard(Composite parent, final ICardDataStore cardDataStore, final String url) {
+	public ICard makeCard(Composite parent, final ICardDataStore cardDataStore, final String url, final ICallback<ICard> callbackWhenPopulated) {
 		try {
 			String title = urlToTitle.apply(url);
 			final Card card = new Card(parent, cardConfig, url, title);
 			Future<?> future = cardDataStore.processDataFor(url, new ICardDataStoreCallback() {
 				@Override
-				public void process(String url, final Map<String, Object> result) {
+				public void process(String url, final Map<String, Object> result) throws Exception {
 					if (result == null)
 						throw new NullPointerException(url);
 					final List<KeyValue> sorted = aggregateAndSort(result);
 					Swts.asyncExec(card, new Runnable() {
 						@Override
 						public void run() {
-							card.populate(CardFactory.this, sorted);
+							try {
+								card.populate(CardFactory.this, sorted);
+								callbackWhenPopulated.process(card);
+							} catch (Exception e) {
+								throw WrappedException.wrap(e);
+							}
 						}
 					});
 				}
 
 				@Override
-				public void noData(String url) {
+				public void noData(String url) throws Exception {
 					process(url, Collections.<String, Object> emptyMap());
 				}
 			});

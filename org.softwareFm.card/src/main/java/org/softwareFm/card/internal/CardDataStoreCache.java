@@ -10,6 +10,7 @@ import org.softwareFm.card.api.ICardDataStoreCallback;
 import org.softwareFm.card.api.IMutableCardDataStore;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.utilities.collections.Sets;
+import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.maps.Maps;
 
@@ -25,28 +26,32 @@ public class CardDataStoreCache implements IMutableCardDataStore {
 
 	@Override
 	public Future<?> processDataFor(String url, final ICardDataStoreCallback callback) {
-		if (urlsWithNoData.contains(url)) {
-			callback.noData(url);
-			return Futures.doneFuture(null);
-		}
-		Map<String, Object> result = cache.get(url);
-		if (result == null)
-			return raw.processDataFor(url, new ICardDataStoreCallback() {
-				@Override
-				public void process(String url, Map<String, Object> result) {
-					cache.put(url, result);
-					callback.process(url, result);
-				}
+		try {
+			if (urlsWithNoData.contains(url)) {
+				callback.noData(url);
+				return Futures.doneFuture(null);
+			}
+			Map<String, Object> result = cache.get(url);
+			if (result == null)
+				return raw.processDataFor(url, new ICardDataStoreCallback() {
+					@Override
+					public void process(String url, Map<String, Object> result) throws Exception {
+						cache.put(url, result);
+						callback.process(url, result);
+					}
 
-				@Override
-				public void noData(String url) {
-					urlsWithNoData.add(url);
-					callback.noData(url);
-				}
-			});
-		else {
-			callback.process(url, result);
-			return Futures.doneFuture(result);
+					@Override
+					public void noData(String url) throws Exception {
+						urlsWithNoData.add(url);
+						callback.noData(url);
+					}
+				});
+			else {
+				callback.process(url, result);
+				return Futures.doneFuture(result);
+			}
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
 		}
 	}
 

@@ -6,6 +6,7 @@ import java.util.Collections;
 import junit.framework.TestCase;
 
 import org.softwareFm.card.api.CacheDataStoreCallbackMock;
+import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.CardDataStoreMock;
 import org.softwareFm.utilities.maps.Maps;
 

@@ -6,6 +6,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.softwareFm.card.api.CardConfig;
+import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.KeyValue;
 
 public class CardFactoryTest extends TestCase {

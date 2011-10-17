@@ -4,9 +4,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.api.CardConfig;
+import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.display.swt.SwtIntegrationTest;
+import org.softwareFm.utilities.callbacks.ICallback;
 
 public class CardTest extends SwtIntegrationTest {
 
@@ -14,7 +16,7 @@ public class CardTest extends SwtIntegrationTest {
 	private CardConfig cardConfig;
 
 	public void testCardGetsNameValueChildren() {
-		ICard card = cardFactory.makeCard(shell, CardDataStoreFixture.rawCardStore(), CardDataStoreFixture.url);
+		ICard card = cardFactory.makeCard(shell, CardDataStoreFixture.rawCardStore(), CardDataStoreFixture.url, ICallback.Utils.<ICard>noCallback());
 		dispatchUntilQueueEmpty();
 		Control[] children = card.getComposite().getChildren();
 		assertEquals(7, children.length);
@@ -42,7 +44,7 @@ public class CardTest extends SwtIntegrationTest {
 	}
 
 	private void checkComputeSize(int expectedWidth, int expectedHeight, int wHint, int hHint) {
-		ICard card = cardFactory.makeCard(shell, CardDataStoreFixture.rawCardStore(), CardDataStoreFixture.url);
+		ICard card = cardFactory.makeCard(shell, CardDataStoreFixture.rawCardStore(), CardDataStoreFixture.url, ICallback.Utils.<ICard>noCallback());
 		dispatchUntilQueueEmpty();
 		Control control = card.getControl();
 		Point size = control.computeSize(wHint, hHint);

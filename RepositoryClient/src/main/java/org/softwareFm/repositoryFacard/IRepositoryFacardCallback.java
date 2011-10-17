@@ -6,5 +6,5 @@ import org.softwareFm.httpClient.response.IResponse;
 
 public interface IRepositoryFacardCallback {
 
-	void process(IResponse response, Map<String, Object> data);
+	void process(IResponse response, Map<String, Object> data) throws Exception;
 }

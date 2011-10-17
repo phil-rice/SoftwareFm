@@ -35,8 +35,8 @@ public class RepositoryFacard implements IRepositoryFacard {
 	}
 
 	@Override
-	public Future<?> get(String url, final IRepositoryFacardCallback callback) {
-		return client.get(url + getExtension).execute(new IResponseCallback() {
+	public Future<Map<String, Object>> get(String url, final IRepositoryFacardCallback callback) {
+		Future<?> future = client.get(url + getExtension).execute(new IResponseCallback() {
 			@Override
 			public void process(IResponse response) {
 				try {
@@ -51,6 +51,7 @@ public class RepositoryFacard implements IRepositoryFacard {
 				}
 			}
 		});
+		return (Future<Map<String, Object>>) future;
 	}
 
 	@Override

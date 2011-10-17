@@ -20,6 +20,7 @@ import org.softwareFm.card.api.ICardFactoryWithAggregateAndSort;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.ISituationListAndBuilder;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.utilities.callbacks.ICallback;
 
 public class CardUnit {
 	public static void main(String[] args) throws IOException {
@@ -38,26 +39,26 @@ public class CardUnit {
 				Swts.removeAllChildren(content);
 
 				ICardDataStore cardDataStore = new CardDataStoreMock(context, JSONValue.parse(value.toString()));
-				ICard card = cardFactory.makeCard(content, cardDataStore, context);
-				final Composite cardComposite = card.getComposite();
+				final ICard card = cardFactory.makeCard(content, cardDataStore, context, new ICallback<ICard>(){
+					@Override
+					public void process(ICard t) throws Exception {
+						layoutCard(t.getComposite());
+						
+					}});
 				listener = new Listener() {
 					@Override
 					public void handleEvent(Event event) {
-						System.out.println("cardunit resize listener." + group.hashCode() + "/group size " + group.getSize() + "/" + group.getClientArea());
+						final Composite cardComposite = card.getComposite();
 						layoutCard(cardComposite);
 					}
 				};
 				group.addListener(SWT.Resize, listener);
-				layoutCard(cardComposite);
-				System.out.println();
-				Swts.layoutAsString(content);
 			}
 
 			private void layoutCard(final Composite cardComposite) {
 				Rectangle clientArea = group.getClientArea();
 				Point size = cardComposite.computeSize(clientArea.width, clientArea.height);
 				cardComposite.setSize(size);
-//				cardComposite.layout();
 			}
 
 			@Override
