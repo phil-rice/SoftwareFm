@@ -150,6 +150,7 @@ public class CardExplorer implements IHasComposite {
 		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacard();
 		final String rootUrl = "/softwareFm/repository";
 		final String firstUrl = "/softwareFm/repository/org";
+		final int navBarHeight = 25;
 		try {
 			Swts.display(CardExplorer.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 				@Override
@@ -160,7 +161,7 @@ public class CardExplorer implements IHasComposite {
 						IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "navBar.prev.title");
 						Composite composite = new Composite(from, SWT.NULL);
 						final CardExplorer cardExplorer = new CardExplorer(composite, cardConfig, rootUrl, firstUrl);
-						final NavBar navBar = new NavBar(composite, rootUrl, cardConfig.resourceGetter, new ICallback<String>() {
+						final NavBar navBar = new NavBar(composite, navBarHeight, rootUrl, cardConfig.resourceGetter, new ICallback<String>() {
 							@Override
 							public void process(String t) throws Exception {
 								cardExplorer.content.selectUrl(cardConfig, t);
@@ -179,7 +180,8 @@ public class CardExplorer implements IHasComposite {
 
 					cardExplorer.getControl().moveBelow(navBar.getControl());
 					Swts.addGrabHorizontalAndFillGridDataToAllChildren(composite);
-					cardExplorer.getControl().setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
+					
+					composite.layout();
 					return composite;
 				}
 			});

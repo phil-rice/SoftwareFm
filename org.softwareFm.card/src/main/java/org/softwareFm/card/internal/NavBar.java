@@ -8,12 +8,13 @@ import java.util.Map.Entry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Layout;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardDataStoreCallback;
 import org.softwareFm.display.composites.IHasComposite;
@@ -28,12 +29,13 @@ public class NavBar implements IHasComposite {
 	static class NavControl extends Composite {
 
 		private final Combo combo;
-		private final String title;
+		private Button button;
+		private final int height;
 
-		public NavControl(Composite parent, final String title, final String url, final ICallback<String> callbackToGotoUrl) {
-			super(parent, SWT.PUSH);
-			this.title = title;
-			combo = new Combo(this, SWT.DROP_DOWN);
+		public NavControl(Composite parent, int height, final String title, final String url, final ICallback<String> callbackToGotoUrl) {
+			super(parent, SWT.NULL);
+			this.height = height;
+			combo = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
 			combo.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -47,22 +49,44 @@ public class NavBar implements IHasComposite {
 				}
 
 				private void select(final String url, final ICallback<String> callbackToGotoUrl, String postFix) {
-					System.out.println("select: " + url);
-					int index = url.lastIndexOf('/');
-					String prefix = index == -1 ? "" : url.substring(0, index);
-					String newUrl = prefix + "/" + postFix;
+					String newUrl = url + "/" + postFix;
 					pack();
 					getParent().layout();
 					ICallback.Utils.call(callbackToGotoUrl, newUrl);
 				}
-
-				@Override
-				public void widgetDefaultSelected(SelectionEvent e) {
-					select(url, callbackToGotoUrl, combo.getText());
-
-				}
 			});
-			setLayout(new FillLayout());
+			if (title != null) {
+				button = Swts.makePushButton(parent, null, title, false, new Runnable() {
+					@Override
+					public void run() {
+						ICallback.Utils.call(callbackToGotoUrl, url);
+					}
+				});
+			}
+		}
+
+		@Override
+		public void setLayout(Layout layout) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Point computeSize(int wHint, int hHint) {
+			int width = 18;
+			if (button != null)
+				width += button.computeSize(wHint, hHint).x;
+			return new Point(width, height);
+		}
+
+		@Override
+		public void layout() {
+			Rectangle clientArea = getClientArea();
+			combo.setLocation(clientArea.x, clientArea.y+1);
+			combo.setSize(18, 50);
+			if (button != null) {
+				button.setLocation(clientArea.x + 18, clientArea.y ); 
+				button.setSize(button.computeSize(SWT.DEFAULT, height));
+			}
 		}
 
 		@Override
@@ -70,21 +94,17 @@ public class NavBar implements IHasComposite {
 		}
 
 		public void setDropdownItems(List<String> items) {
-			String text = combo.getText();
 			combo.removeAll();
+			// if (!items.contains(title))
+			// combo.add(title);
 			for (int i = 0; i < items.size(); i++) {
 				String item = items.get(i);
 				combo.add(item);
 			}
-			combo.setText(title);
-			combo.pack();
+			// combo.setText(title);
 			pack();
 			layout();
-			getParent().pack();
 			getParent().layout();
-			if (items.size()==0)
-				combo.setEnabled(false);
-			combo.forceFocus();
 		}
 
 	}
@@ -97,9 +117,11 @@ public class NavBar implements IHasComposite {
 		private final Button prevButton;
 		private final Button nextButton;
 		private final ICardDataStore cardDataStore;
+		private final int height;
 
-		public NavBarComposite(Composite parent, IResourceGetter resourceGetter, ICardDataStore cardDataStore, int style, String rootUrl, final ICallback<String> callbackToGotoUrl) {
-			super(parent, style | SWT.BORDER);
+		public NavBarComposite(Composite parent, int height, IResourceGetter resourceGetter, ICardDataStore cardDataStore, String rootUrl, final ICallback<String> callbackToGotoUrl) {
+			super(parent, SWT.BORDER);
+			this.height = height;
 			this.cardDataStore = cardDataStore;
 			this.rootUrl = rootUrl;
 			this.callbackToGotoUrl = callbackToGotoUrl;
@@ -122,6 +144,37 @@ public class NavBar implements IHasComposite {
 			updateNextPrevButtons();
 		}
 
+		@Override
+		public void setLayout(Layout layout) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Point computeSize(int wHint, int hHint) {
+			int x = 0;
+			for (Control control : getChildren())
+				x += control.computeSize(wHint, hHint).x;
+			return new Point(x + 1000, height);
+		}
+
+		@Override
+		public void layout() {
+			Rectangle clientArea = getClientArea();
+			int x = clientArea.x;
+			int y = clientArea.y;
+			for (Control control : getChildren()) {
+				if (control instanceof NavControl) {
+					control.setLocation(x, y);
+					control.pack();
+					x += control.getSize().x;
+				} else if (control instanceof Button) {
+					control.setLocation(x, y);
+					control.setSize(control.computeSize(SWT.DEFAULT, height));
+					x += control.getSize().x;
+				}
+			}
+		}
+
 		public void noteUrlHasChanged(String url) {
 			if (!url.startsWith(rootUrl))
 				throw new IllegalArgumentException();
@@ -137,14 +190,13 @@ public class NavBar implements IHasComposite {
 					thisUrl += "/" + string;
 					makeNavButton(parentUrl, thisUrl, string);
 				}
-			makeNavButton(thisUrl, thisUrl + "/<junk>", "<Select>");
-			setLayout(new GridLayout(getChildren().length, false));
+			makeNavButton(thisUrl, thisUrl, null);
 			layout();
 			getParent().layout();
 		}
 
 		private void makeNavButton(String parentUrl, String thisUrl, final String string) {
-			final NavControl navControl = new NavControl(this, string, thisUrl, callbackToGotoUrl);
+			final NavControl navControl = new NavControl(this, height, string, thisUrl, callbackToGotoUrl);
 			cardDataStore.processDataFor(parentUrl, new ICardDataStoreCallback<Void>() {
 				@Override
 				public Void process(String url, Map<String, Object> result) throws Exception {
@@ -171,8 +223,8 @@ public class NavBar implements IHasComposite {
 
 	}
 
-	public NavBar(Composite parent, String rootUrl, IResourceGetter resourceGetter, ICallback<String> callbackToGotoUrl, ICardDataStore cardDataStore) {
-		content = new NavBarComposite(parent, resourceGetter, cardDataStore, SWT.NULL, rootUrl, callbackToGotoUrl);
+	public NavBar(Composite parent, int height, String rootUrl, IResourceGetter resourceGetter, ICallback<String> callbackToGotoUrl, ICardDataStore cardDataStore) {
+		content = new NavBarComposite(parent, height, resourceGetter, cardDataStore, rootUrl, callbackToGotoUrl);
 	}
 
 	@Override
