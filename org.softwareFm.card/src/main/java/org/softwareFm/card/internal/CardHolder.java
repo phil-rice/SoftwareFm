@@ -42,7 +42,7 @@ public class CardHolder implements IHasComposite {
 	CardHolderComposite content;
 
 	/** for once the style matters: set the scrolling options here */
-	public CardHolder(Composite parent,  String title) {
+	public CardHolder(Composite parent, String title) {
 		content = new CardHolderComposite(parent, SWT.NULL, title);
 		Label label = new Label(content, SWT.NULL);
 		label.setLocation(100, 100);
@@ -51,11 +51,12 @@ public class CardHolder implements IHasComposite {
 		content.layout.topControl = label;
 	}
 
-
 	public void setCard(final ICard card) {
-		Swts.asyncExec(card, new Runnable() {
+		Swts.asyncExec(this, new Runnable() {
 			@Override
 			public void run() {
+				if (card.getControl().isDisposed())
+					return;
 				content.layout.topControl = card.getControl();
 				content.layout();
 			}
@@ -79,9 +80,11 @@ public class CardHolder implements IHasComposite {
 			@Override
 			public Composite apply(final Composite from) throws Exception {
 				final CardHolder cardHolder = new CardHolder(from, "title");
-				final Future<ICard> future = cardFactory.makeCard(cardHolder.getComposite(),SWT.FULL_SELECTION, true, CardDataStoreFixture.url, new ICallback<ICard>() {
+				final Future<ICard> future = cardFactory.makeCard(cardHolder.getComposite(), SWT.FULL_SELECTION, true, CardDataStoreFixture.url, new ICallback<ICard>() {
 					@Override
 					public void process(ICard card) throws Exception {
+						if (card == null)
+							return;
 						cardHolder.setCard(card);
 						Swts.layoutDump(from);
 					}

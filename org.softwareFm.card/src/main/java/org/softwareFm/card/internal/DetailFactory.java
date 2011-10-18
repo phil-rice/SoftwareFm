@@ -41,8 +41,9 @@ public class DetailFactory implements IDetailFactory {
 				if (object instanceof KeyValue)
 					keyValues.add((KeyValue) object);
 			Collections.sort(keyValues, cardFactory.comparator());
+			int i = 0;
 			for (final KeyValue childKeyValue : keyValues) {
-				final CardHolder holder = new CardHolder(composite, childKeyValue.key);
+				final CardHolder holder = new CardHolder(composite, childKeyValue.key + "/" + i++);
 				holder.getControl().addPaintListener(new PaintListener() {
 					private boolean reported;
 
@@ -50,9 +51,11 @@ public class DetailFactory implements IDetailFactory {
 					public void paintControl(PaintEvent e) {
 						if (reported)
 							return;
-						cardFactory.makeCard(holder.getComposite(), style, false, url +"/"+ childKeyValue.key, new ICallback<ICard>(){
+						cardFactory.makeCard(holder.getComposite(), style, false, url + "/" + childKeyValue.key, new ICallback<ICard>() {
 							@Override
 							public void process(final ICard card) throws Exception {
+								if (card == null)
+									return;
 								card.getControl().addMouseListener(new MouseAdapter() {
 									@Override
 									public void mouseDown(MouseEvent e) {
@@ -60,8 +63,9 @@ public class DetailFactory implements IDetailFactory {
 									}
 								});
 								holder.setCard(card);
-								
-							}});
+
+							}
+						});
 						reported = true;
 					}
 				});

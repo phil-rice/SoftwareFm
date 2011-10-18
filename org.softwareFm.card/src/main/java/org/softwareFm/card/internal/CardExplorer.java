@@ -61,14 +61,17 @@ public class CardExplorer implements IHasComposite {
 			selectUrl(parent, cardFactory, detailFactory, initialUrl);
 		}
 
-
 		private void selectUrl(final Composite parent, final ICardFactory cardFactory, final IDetailFactory detailFactory, final String url) {
 			System.out.println("Url: " + url);
 			cardFactory.makeCard(left.getComposite(), SWT.FULL_SELECTION, true, url, new ICallback<ICard>() {
 				@Override
-				public void process(ICard card) throws Exception {
+				public void process(final ICard card) throws Exception {
+					if (card == null)
+						return;
 					System.out.println("In callback");
-					new GestureLeftRightListener(card.getControl(), 100) {
+					new GestureLeftRightListener(card.getControl(), 50, 10) {
+						private Point start;
+
 						@Override
 						public void goLeft() {
 							String url = urls.prev();
@@ -77,55 +80,85 @@ public class CardExplorer implements IHasComposite {
 
 						@Override
 						public void goRight() {
-							String url = urls.next();
-							selectUrl(parent, cardFactory, detailFactory, url);
+							Control control = card.getControl();
+							if (!control.isDisposed()) {
+								selectUrl(parent, cardFactory, detailFactory, url);
+								String url = urls.next();
+							}
 						}
 
+						@Override
+						public void starting() {
+							Control control = card.getControl();
+							if (!control.isDisposed())
+								start = control.getLocation();
+						}
+
+						@Override
+						public void moving(int delta) {
+							Control control = card.getControl();
+							if (!control.isDisposed())
+								control.setLocation(start.x - delta / 2, start.y);
+						}
+
+						@Override
+						public void stopping() {
+							Control control = card.getControl();
+							if (!control.isDisposed())
+								if (start != null)
+									control.setLocation(start);
+
+						}
 					};
 					Swts.resizeMeToParentsSize(card.getControl());
 					card.addLineSelectedListener(new ILineSelectedListener() {
-
 						@Override
 						public void selected(KeyValue keyValue) {
-							Swts.removeOldResizeListener(detail, detailResizeListener);
-							Swts.removeAllChildren(detail);
-							detail.setContent(null);
-							final Composite madeDetail = detailFactory.makeDetail(detail, SWT.FULL_SELECTION, cardFactory, new ICardSelectedListener() {
-								@Override
-								public void mouseDown(ICard card, MouseEvent e) {
-									String cardUrl = card.url();
-									urls.push(cardUrl);
-									selectUrl(parent, cardFactory, detailFactory, cardUrl);
-								}
-							}, url, keyValue);
-							Rectangle clientArea = detail.getClientArea();
-							Point size = madeDetail.computeSize(SWT.DEFAULT, clientArea.height);
-							madeDetail.setSize(size);
-							detail.setContent(madeDetail);
-
-							detailResizeListener = new Listener() {
-								@Override
-								public void handleEvent(Event event) {
-									Rectangle clientArea = detail.getClientArea();
-									Point size = madeDetail.computeSize(SWT.DEFAULT, clientArea.height);
-									madeDetail.setSize(size);
-								}
-							};
-							detail.addListener(SWT.Resize, detailResizeListener);
-							// detail.setSize(detail.getSize());
-							// detail.layout();
-							detail.layout();
-							detail.getParent().layout();
-							detail.getParent().redraw();
-							System.out.println("Detail: " + detail.getClientArea() + " Made: " + madeDetail.getSize());
+							showDetailsFor(parent, cardFactory, detailFactory, url, keyValue);
 						}
 					});
+					for (KeyValue keyValue : card.data())
+						if (keyValue.key.equals("nt:unstructured"))
+							showDetailsFor(parent, cardFactory, detailFactory, url, keyValue);
 					left.setCard(card);
 					System.out.println("End callback");
 				}
 			});
 		}
 
+		private void showDetailsFor(final Composite parent, final ICardFactory cardFactory, final IDetailFactory detailFactory, final String url, KeyValue keyValue) {
+			Swts.removeOldResizeListener(detail, detailResizeListener);
+			Swts.removeAllChildren(detail);
+			detail.setContent(null);
+			final Composite madeDetail = detailFactory.makeDetail(detail, SWT.FULL_SELECTION|SWT.NO_SCROLL, cardFactory, new ICardSelectedListener() {
+				@Override
+				public void mouseDown(ICard card, MouseEvent e) {
+					String cardUrl = card.url();
+					urls.push(cardUrl);
+					selectUrl(parent, cardFactory, detailFactory, cardUrl);
+				}
+			}, url, keyValue);
+			Rectangle clientArea = detail.getClientArea();
+			Point size = madeDetail.computeSize(SWT.DEFAULT, clientArea.height);
+			madeDetail.setSize(size);
+			detail.setContent(madeDetail);
+
+			detailResizeListener = new Listener() {
+				@Override
+				public void handleEvent(Event event) {
+					Rectangle clientArea = detail.getClientArea();
+					Point size = madeDetail.computeSize(SWT.DEFAULT, clientArea.height);
+					madeDetail.setSize(size);
+				}
+			};
+			detail.addListener(SWT.Resize, detailResizeListener);
+			// detail.setSize(detail.getSize());
+			// detail.layout();
+			detail.layout();
+			detail.getParent().layout();
+			detail.getParent().redraw();
+			System.out.println("Detail: " + detail.getClientArea() + " Made: " + madeDetail.getSize());
+		}
 	}
 
 	public CardExplorer(Composite parent, final ICardFactory cardFactory, IDetailFactory detailFactory, String initialUrl) {

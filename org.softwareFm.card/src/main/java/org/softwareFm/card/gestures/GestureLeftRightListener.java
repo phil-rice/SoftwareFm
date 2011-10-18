@@ -14,19 +14,22 @@ abstract public class GestureLeftRightListener {
 	private int originalX = -1;
 	protected int originalY;
 
-	public GestureLeftRightListener(Control control, final int sensitivity) {
+	public GestureLeftRightListener(Control control, final int sensitivity, final int start) {
 		this.control = control;
+		if (start > sensitivity)
+			throw new IllegalArgumentException();
 		mouseListener = new MouseListener() {
-
 			@Override
 			public void mouseUp(MouseEvent e) {
 				originalX = -1;
+				stopping();
 			}
 
 			@Override
 			public void mouseDown(MouseEvent e) {
 				originalX = e.x;
 				originalY = e.y;
+				starting();
 			}
 
 			@Override
@@ -34,22 +37,25 @@ abstract public class GestureLeftRightListener {
 			}
 		};
 		mouseMoveListener = new MouseMoveListener() {
-
 			@Override
 			public void mouseMove(MouseEvent e) {
 				if (originalX == -1)
 					return;
 				int deltaX = originalX - e.x;
-				if (Math.abs(deltaX)> sensitivity){
-					if (deltaX>0){
-						System.out.println("left");
-						goLeft();
-						originalX = -1;
-					}else{
-						System.out.println("right");
-						goRight();
-						originalX = -1;
-						
+				int abs = Math.abs(deltaX);
+				if (abs > start) {
+					moving(deltaX);
+					if (abs > sensitivity) {
+						if (deltaX > 0) {
+							System.out.println("left");
+							goLeft();
+							originalX = -1;
+						} else {
+							System.out.println("right");
+							goRight();
+							originalX = -1;
+
+						}
 					}
 				}
 			}
@@ -61,6 +67,17 @@ abstract public class GestureLeftRightListener {
 	public void dispose() {
 		control.removeMouseListener(mouseListener);
 		control.removeMouseMoveListener(mouseMoveListener);
+	}
+
+	public void starting() {
+
+	}
+
+	public void moving(int delta) {
+	}
+
+	public void stopping() {
+
 	}
 
 	public void goLeft() {

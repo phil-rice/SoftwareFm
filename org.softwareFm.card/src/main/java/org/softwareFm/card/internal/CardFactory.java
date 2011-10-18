@@ -76,15 +76,20 @@ public class CardFactory implements ICardFactoryWithAggregateAndSort {
 	}
 
 	@Override
-	public ICard makeCard(Composite parent, int style, boolean allowSelection,  String url, Map<String, Object> map) {
+	public ICard makeCard(Composite parent, int style, boolean allowSelection, String url, Map<String, Object> map) {
 		try {
 			List<KeyValue> keyValues = aggregateAndSort(map);
-			final Card card = new Card(parent, style, allowSelection, cardDataStore, url, keyValues);
-			return card;
+			if (parent.isDisposed())
+				return null;
+			else {
+				final Card card = new Card(parent, style, allowSelection, cardDataStore, url, keyValues);
+				return card;
+			}
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
 	}
+
 	@Override
 	public Comparator<KeyValue> comparator() {
 		return comparator;
