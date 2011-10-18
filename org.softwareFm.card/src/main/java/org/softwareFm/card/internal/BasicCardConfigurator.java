@@ -76,7 +76,7 @@ public class BasicCardConfigurator implements ICardConfigurator {
 			}
 		};
 
-		return config.withNameFn(nameFn).withValueFn(valueFn).withHideFn(hideFn).withCardIconFn(cardIconFn);
+		return config.withNameFn(nameFn).withValueFn(valueFn).withHideFn(hideFn).withCardIconFn(cardIconFn).withResourceGetter(resourceGetter);
 	}
 
 	private String findKey(KeyValue from) {

@@ -25,6 +25,7 @@ import org.softwareFm.display.swt.Swts;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class CardExplorer implements IHasComposite {
 
@@ -86,11 +87,11 @@ public class CardExplorer implements IHasComposite {
 						if (keyValue.key.equals("nt:unstructured"))
 							showDetailsCard(card, url, keyValue);
 					left.setCard(card);
-							for (IUrlChangedListener listener: listeners)
-								listener.urlChanged(url);
+					for (IUrlChangedListener listener : listeners)
+						listener.urlChanged(url);
 				}
 			});
-			
+
 		}
 
 		private void showDetailsCard(final ICard parentCard, final String url, KeyValue keyValue) {
@@ -146,33 +147,38 @@ public class CardExplorer implements IHasComposite {
 
 	public static void main(String[] args) {
 		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacard();
-		final String url = "/softwareFm/repository/org";
+		final String rootUrl = "/softwareFm/repository";
+		final String firstUrl = "/softwareFm/repository/org";
 		try {
 			Swts.display(CardExplorer.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 				@Override
 				public Composite apply(final Composite from) throws Exception {
 					final ICardDataStore cardDataStore = new CardDataStoreForRepository(from, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory(cardDataStore, "jcr:primaryType");
-					final CardConfig cardConfig = new BasicCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
+						final CardConfig cardConfig = new BasicCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
+						IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "navBar.prev.title");
+						Composite composite = new Composite(from, SWT.NULL);
+						final CardExplorer cardExplorer = new CardExplorer(composite, cardConfig, firstUrl);
+						final NavBar navBar = new NavBar(composite, rootUrl, cardConfig.resourceGetter, new ICallback<String>() {
+							@Override
+							public void process(String t) throws Exception {
+								cardExplorer.content.selectUrl(cardConfig, t);
+						}
+					});
 
-					Composite composite = new Composite(from, SWT.NULL);
-					final CardExplorer cardExplorer = new CardExplorer(composite, cardConfig, url);
-					final NavBar navBar = new NavBar(composite, url, cardConfig.resourceGetter, new ICallback<String>(){
-						@Override
-						public void process(String t) throws Exception {
-							cardExplorer.setUrl(t);
-						}});
-					
 					cardExplorer.addUrlChangedListener(new IUrlChangedListener() {
 						@Override
 						public void urlChanged(String url) {
 							navBar.noteUrlHasChanged(url);
+							System.out.println();
+							System.out.println();
+							Swts.layoutDump(from);
 						}
 					});
 
 					cardExplorer.getControl().moveBelow(navBar.getControl());
 					Swts.addGrabHorizontalAndFillGridDataToAllChildren(composite);
-					cardExplorer.getComposite().setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
+					cardExplorer.getControl().setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
 					return composite;
 				}
 			});
@@ -180,10 +186,9 @@ public class CardExplorer implements IHasComposite {
 			facard.shutdown();
 		}
 	}
+
 	public void addUrlChangedListener(IUrlChangedListener listener) {
 		content.addUrlChangedListener(listener);
 	}
 
-	public void setUrl(String url) {
-	}
 }

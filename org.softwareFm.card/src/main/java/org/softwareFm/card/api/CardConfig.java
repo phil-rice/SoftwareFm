@@ -90,4 +90,8 @@ public class CardConfig {
 		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, hideFn);
 	}
 
+	public CardConfig withResourceGetter(IResourceGetter resourceGetter) {
+		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, hideFn);
+	}
+
 }
