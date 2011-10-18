@@ -38,4 +38,12 @@ public class History<T> {
 			return result;
 		}
 	}
+
+	public boolean hasNext() {
+		return index<history.size()-1;
+	}
+
+	public boolean hasPrev() {
+		return index>0;
+	}
 }

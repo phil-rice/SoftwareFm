@@ -4,8 +4,18 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.utilities.exceptions.WrappedException;
 
 public class Functions {
+
+	public static <From, To> To call(final IFunction1<From, To> fn, From value) {
+		try {
+			return fn.apply(value);
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+
+	}
 
 	public static <From, Middle, To> IFunction1<From, To> compose(final IFunction1<From, Middle> one, final IFunction1<Middle, To> two) {
 		return new IFunction1<From, To>() {
@@ -184,7 +194,7 @@ public class Functions {
 		};
 	}
 
-	public static <K1,  K2> IFunction1<K1, List<K2>> toSingletonList() {
+	public static <K1, K2> IFunction1<K1, List<K2>> toSingletonList() {
 		return new IFunction1<K1, List<K2>>() {
 			@SuppressWarnings("unchecked")
 			@Override
@@ -194,7 +204,7 @@ public class Functions {
 		};
 	}
 
-	public static<T> IFunction1<T, Class<?>> toClass() {
+	public static <T> IFunction1<T, Class<?>> toClass() {
 		return new IFunction1<T, Class<?>>() {
 			@Override
 			public Class<?> apply(T from) throws Exception {
@@ -203,7 +213,7 @@ public class Functions {
 		};
 	}
 
-	public static <From,To>IFunction1<From,To> constant(final To object) {
+	public static <From, To> IFunction1<From, To> constant(final To object) {
 		return new IFunction1<From, To>() {
 			@Override
 			public To apply(From from) throws Exception {

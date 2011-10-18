@@ -199,9 +199,45 @@ public class Strings {
 				if (index == -1)
 					return from;
 				else
-					return from.substring(index+1);
+					return from.substring(index + 1);
 			}
 		};
+	}
+
+	public static IFunction1<String, String> camelCaseToPrettyFn() {
+		return new IFunction1<String, String>() {
+			@Override
+			public String apply(String from) throws Exception {
+				return camelCaseToPretty(from);
+			}
+		};
+		
+	}
+	public static String camelCaseToPretty(String raw) {
+		StringBuilder result = new StringBuilder();
+		for (int i = 0; i < raw.length(); i++) {
+			char ch = raw.charAt(i);
+			if (result.length() == 0) {
+				if (Character.isLetter(ch))
+					result.append(Character.toUpperCase(ch));
+				else
+					if (ch != ' ')
+						result.append(ch);
+			} else {
+				if (ch == ' ')
+					if (result.length() == 0 || result.charAt(result.length() - 1) == ' ')
+						;// ignore
+					else
+						result.append(' ');
+				else if (Character.isUpperCase(ch)) {
+					if (result.length() > 0 && result.charAt(result.length() - 1) != ' ')
+						result.append(' ');
+					result.append(ch);
+				} else
+					result.append(ch);
+			}
+		}
+		return result.toString();
 	}
 
 }

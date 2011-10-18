@@ -1,6 +1,7 @@
 package org.softwareFm.card.internal;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
 
@@ -20,6 +21,7 @@ import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ILineSelectedListener;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 
 public class Card implements ICard {
@@ -32,10 +34,12 @@ public class Card implements ICard {
 	private final TableColumn valueColumn;
 	private final List<ILineSelectedListener> lineSelectedListeners = new CopyOnWriteArrayList<ILineSelectedListener>();
 	private final CardConfig cardConfig;
+	private final Map<String, Object> rawData;
 
-	public Card(Composite parent, final CardConfig cardConfig, final String url, final List<KeyValue> data) {
+	public Card(Composite parent, final CardConfig cardConfig, final String url, Map<String, Object> rawData, final List<KeyValue> data) {
 		this.cardConfig = cardConfig;
 		this.url = url;
+		this.rawData = rawData;
 		this.data = data;
 		this.table = new Table(parent, cardConfig.style);
 		this.nameColumn = new TableColumn(table, SWT.NONE);
@@ -47,10 +51,16 @@ public class Card implements ICard {
 		nameColumn.setWidth(100);
 		valueColumn.setWidth(100);
 		table.setDragDetect(true);
+		int i = 0;
 		for (KeyValue keyValue : data) {
-			TableItem tableItem = new TableItem(table, SWT.NULL);
-			String displayValue = keyValue.value instanceof List ? "Children: " + ((List<?>) keyValue.value).size() : keyValue.value.toString();
-			tableItem.setText(new String[] { keyValue.key, displayValue });
+			if (!Functions.call(cardConfig.hideFn, keyValue)) {
+				TableItem tableItem = new TableItem(table, SWT.NULL);
+				String displayValue = Functions.call(cardConfig.valueFn, keyValue);
+				String name = Functions.call(cardConfig.nameFn, keyValue);
+				tableItem.setText(new String[] { name, displayValue });
+				tableItem.setData(i);
+			}
+			i++;
 		}
 
 		nameColumn.pack();
@@ -62,7 +72,8 @@ public class Card implements ICard {
 				int index = table.getSelectionIndex();
 				if (index == -1)
 					return;
-				KeyValue keyValue = data.get(index);
+				Integer dataIndex = (Integer) table.getItem(index).getData();
+				KeyValue keyValue = data.get(dataIndex);
 				for (ILineSelectedListener lineSelectedListener : lineSelectedListeners) {
 					lineSelectedListener.selected(keyValue);
 				}
@@ -100,6 +111,11 @@ public class Card implements ICard {
 	@Override
 	public List<KeyValue> data() {
 		return data;
+	}
+
+	@Override
+	public Map<String, Object> rawData() {
+		return rawData;
 	}
 
 	public static void main(String[] args) {

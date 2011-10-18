@@ -4,9 +4,12 @@ import java.util.concurrent.Future;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
@@ -17,25 +20,57 @@ import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.future.GatedMockFuture;
 
 public class CardHolder implements IHasComposite {
 
-	static class CardHolderComposite extends Group {
+	static class CardHolderComposite extends Composite {
+
+		private final static int topMargin = 20;
+		private final static int bottomMargin = 5;
+		private final static int leftMargin = 5;
+		private final static int rightMargin = 5;
+		private final int iconToText = 5;
 
 		private final StackLayout layout;
+		private String title;
+		private Image icon;
 
-		public CardHolderComposite(Composite parent, int style, String title) {
+		public CardHolderComposite(Composite parent, int style) {
 			super(parent, style);
-
-			setText(title);
+			setText("loading");
 			layout = new StackLayout();
 			setLayout(layout);
+			addPaintListener(new PaintListener() {
+
+				@Override
+				public void paintControl(PaintEvent e) {
+					int x = 0;
+					if (icon != null){
+						e.gc.drawImage(icon, 0, 0);
+						x+= icon.getImageData().width + iconToText;
+					}
+					e.gc.drawText(title, x, 0);
+				}
+			});
 		}
 
 		@Override
-		protected void checkSubclass() {
+		public Rectangle getClientArea() {
+			Rectangle clientArea = super.getClientArea();
+			int width = Math.max(clientArea.width - leftMargin - rightMargin, 0);
+			int height = Math.max(clientArea.height - topMargin - bottomMargin, 0);
+			return new Rectangle(clientArea.x + leftMargin, clientArea.y + topMargin, width, height);
+		}
+
+		public void setText(String title) {
+			this.title = title;
+		}
+
+		public void setIcon(Image icon) {
+			this.icon = icon;
 		}
 
 	}
@@ -44,7 +79,7 @@ public class CardHolder implements IHasComposite {
 
 	/** for once the style matters: set the scrolling options here */
 	public CardHolder(Composite parent, String title) {
-		content = new CardHolderComposite(parent, SWT.NULL, title);
+		content = new CardHolderComposite(parent, SWT.BORDER);
 		Label label = new Label(content, SWT.NULL);
 		label.setLocation(100, 100);
 		label.setText("Loading");
@@ -55,6 +90,9 @@ public class CardHolder implements IHasComposite {
 	public void setCard(final ICard card) {
 		content.layout.topControl = card.getControl();
 		content.layout();
+		String title = Functions.call(card.cardConfig().cardTitleFn, card.url());
+		content.setText(title);
+		content.setIcon(Functions.call(card.cardConfig().cardIconFn, card.rawData()));
 	}
 
 	@Override

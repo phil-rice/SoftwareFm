@@ -4,6 +4,24 @@ import junit.framework.TestCase;
 
 public class StringsTest extends TestCase {
 
+	public void testCamelCaseToPretty() {
+		assertEquals("G", Strings.camelCaseToPretty("G"));
+		assertEquals("", Strings.camelCaseToPretty(""));
+		assertEquals("G", Strings.camelCaseToPretty("g"));
+		assertEquals("G", Strings.camelCaseToPretty(" g"));
+		assertEquals("G", Strings.camelCaseToPretty(" G"));
+
+		assertEquals("Group", Strings.camelCaseToPretty("group"));
+		assertEquals("Group Id", Strings.camelCaseToPretty("groupId"));
+		assertEquals("Group Id Again", Strings.camelCaseToPretty("groupIdAgain"));
+		assertEquals("Group Id Again", Strings.camelCaseToPretty("GroupIdAgain"));
+		assertEquals("Group Id Again And Again", Strings.camelCaseToPretty("GroupIdAgain And Again"));
+		assertEquals("Group Id Again And Again", Strings.camelCaseToPretty("GroupIdAgain     And   Again"));
+
+	}
+
+	
+	
 	public void testSplit(){
 		assertEquals(new PreAndPost("a", "b"), Strings.split("a.b", '.'));
 		assertEquals(new PreAndPost("a", "b"), Strings.split("a$b", '$'));

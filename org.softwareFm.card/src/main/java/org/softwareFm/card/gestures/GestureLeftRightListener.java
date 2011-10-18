@@ -47,11 +47,9 @@ abstract public class GestureLeftRightListener {
 					moving(deltaX);
 					if (abs > sensitivity) {
 						if (deltaX > 0) {
-							System.out.println("left");
 							goLeft();
 							originalX = -1;
 						} else {
-							System.out.println("right");
 							goRight();
 							originalX = -1;
 

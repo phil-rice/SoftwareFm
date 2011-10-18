@@ -45,7 +45,7 @@ public class CardFactory implements ICardFactoryWithAggregateAndSort {
 			if (parent.isDisposed())
 				return null;
 			else {
-				final Card card = new Card(parent, cardConfig, url, keyValues);
+				final Card card = new Card(parent, cardConfig, url, map, keyValues);
 				return card;
 			}
 		} catch (Exception e) {
