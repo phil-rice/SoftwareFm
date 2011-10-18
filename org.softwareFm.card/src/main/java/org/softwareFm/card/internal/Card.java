@@ -23,6 +23,7 @@ import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class Card implements ICard {
 	private Future<?> populateFuture;
@@ -46,8 +47,8 @@ public class Card implements ICard {
 		this.valueColumn = new TableColumn(table, SWT.NONE);
 
 		table.setHeaderVisible(true);
-		nameColumn.setText("Name");
-		valueColumn.setText("Value");
+		nameColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter,"card.name.title"));
+		valueColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter,"card.value.title"));
 		nameColumn.setWidth(100);
 		valueColumn.setWidth(3000);
 		table.setDragDetect(true);

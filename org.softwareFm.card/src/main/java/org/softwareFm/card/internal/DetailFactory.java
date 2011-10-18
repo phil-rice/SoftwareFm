@@ -20,6 +20,7 @@ import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
 
 public class DetailFactory implements IDetailFactory {
@@ -44,13 +45,13 @@ public class DetailFactory implements IDetailFactory {
 			Collections.sort(keyValues, cardConfig.cardFactory.comparator());
 			int i = 0;
 			for (final KeyValue childKeyValue : keyValues) {
-				final CardHolder holder = new CardHolder(composite, childKeyValue.key + "/" + i++);
+				final CardHolder holder = new CardHolder(composite, IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "detail.factory.loading.text"), childKeyValue.key + "/" + i++);
 				holder.getControl().addPaintListener(new PaintListener() {
 
 					@Override
 					public void paintControl(PaintEvent e) {
 						holder.getControl().removePaintListener(this);
-						ICardFactory.Utils.makeCard(holder.getComposite(), cardConfig.withStyleAndSelection(SWT.NO_SCROLL|SWT.FULL_SELECTION,false), parentCard.url() + "/" + childKeyValue.key, new ICallback<ICard>() {
+						ICardFactory.Utils.makeCard(holder.getComposite(), cardConfig.withStyleAndSelection(SWT.NO_SCROLL | SWT.FULL_SELECTION, false), parentCard.url() + "/" + childKeyValue.key, new ICallback<ICard>() {
 							@Override
 							public void process(final ICard card) throws Exception {
 								if (card == null)
@@ -60,6 +61,7 @@ public class DetailFactory implements IDetailFactory {
 									public void mouseDown(MouseEvent e) {
 										listener.cardSelectedDown(card, e);
 									}
+
 									@Override
 									public void mouseUp(MouseEvent e) {
 										listener.cardSelectedUp(card, e);

@@ -42,7 +42,8 @@ public class CardExplorer implements IHasComposite {
 		public CardExplorerComposite(final Composite parent, final CardConfig cardConfig, final String rootUrl) {
 			super(parent, SWT.HORIZONTAL);
 			this.initialUrl = rootUrl;
-			left = new CardHolder(this, "");
+			String loadingText = IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "card.holder.loading.text");
+			left = new CardHolder(this, loadingText, "");
 			right = new SashForm(this, SWT.VERTICAL);
 			right.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_BLUE));
 			detail = new ScrolledComposite(right, SWT.H_SCROLL);

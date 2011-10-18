@@ -10,7 +10,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICard;
@@ -38,9 +37,9 @@ public class CardHolder implements IHasComposite {
 		private String title;
 		private Image icon;
 
-		public CardHolderComposite(Composite parent, int style) {
+		public CardHolderComposite(Composite parent, int style, String loadingText) {
 			super(parent, style);
-			setText("loading");
+			setText(loadingText);
 			layout = new StackLayout();
 			setLayout(layout);
 			addPaintListener(new PaintListener() {
@@ -78,13 +77,8 @@ public class CardHolder implements IHasComposite {
 	CardHolderComposite content;
 
 	/** for once the style matters: set the scrolling options here */
-	public CardHolder(Composite parent, String title) {
-		content = new CardHolderComposite(parent, SWT.BORDER);
-		Label label = new Label(content, SWT.NULL);
-		label.setLocation(100, 100);
-		label.setText("Loading");
-		label.pack();
-		content.layout.topControl = label;
+	public CardHolder(Composite parent, String loadingText, String title) {
+		content = new CardHolderComposite(parent, SWT.BORDER, loadingText);
 	}
 
 	public void setCard(final ICard card) {
@@ -112,7 +106,7 @@ public class CardHolder implements IHasComposite {
 		Swts.display(CardHolder.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(final Composite from) throws Exception {
-				final CardHolder cardHolder = new CardHolder(from, "title");
+				final CardHolder cardHolder = new CardHolder(from, "Loading", "title");
 				final Future<ICard> future = ICardFactory.Utils.makeCard(cardHolder.getComposite(), cardConfig, CardDataStoreFixture.url, new ICallback<ICard>() {
 					@Override
 					public void process(ICard card) throws Exception {
