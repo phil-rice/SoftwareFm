@@ -4,5 +4,5 @@ import org.eclipse.swt.widgets.Composite;
 
 public interface IDetailFactory {
 
-	Composite makeDetail(Composite parent, int style, ICardFactory cardFactory, ICardSelectedListener listener, String url, KeyValue keyValue);
+	Composite makeDetail(Composite parentComposite, ICard parentCard, CardConfig cardConfig, KeyValue keyValue, ICardSelectedListener listener);
 }

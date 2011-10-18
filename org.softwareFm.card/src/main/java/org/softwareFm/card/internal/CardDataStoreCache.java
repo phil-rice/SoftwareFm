@@ -26,29 +26,31 @@ public class CardDataStoreCache implements IMutableCardDataStore {
 	}
 
 	@Override
-	public Future<?> processDataFor(String url, final ICardDataStoreCallback callback) {
+	public <T>Future<T> processDataFor(String url, final ICardDataStoreCallback<T> callback) {
 		try {
 			if (urlsWithNoData.contains(url)) {
 				callback.noData(url);
 				return Futures.doneFuture(null);
 			}
-			Map<String, Object> result = cache.get(url);
-			if (result == null)
-				return raw.processDataFor(url, new ICardDataStoreCallback() {
+			Map<String, Object> map = cache.get(url);
+			if (map == null)
+				return raw.processDataFor(url, new ICardDataStoreCallback<T>() {
 					@Override
-					public void process(String url, Map<String, Object> result) throws Exception {
-						cache.put(url, result);
-						callback.process(url, result);
+					public T process(String url, Map<String, Object> map) throws Exception {
+						cache.put(url, map);
+						T result = callback.process(url, map);
+						return result;
 					}
 
 					@Override
-					public void noData(String url) throws Exception {
+					public T noData(String url) throws Exception {
 						urlsWithNoData.add(url);
-						callback.noData(url);
+						T result = callback.noData(url);
+						return result;
 					}
 				});
 			else {
-				callback.process(url, result);
+				T result = callback.process(url, map);
 				return Futures.doneFuture(result);
 			}
 		} catch (Exception e) {

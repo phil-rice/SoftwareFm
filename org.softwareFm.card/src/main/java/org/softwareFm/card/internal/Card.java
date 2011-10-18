@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardDataStore;
@@ -30,11 +31,13 @@ public class Card implements ICard {
 	private final TableColumn nameColumn;
 	private final TableColumn valueColumn;
 	private final List<ILineSelectedListener> lineSelectedListeners = new CopyOnWriteArrayList<ILineSelectedListener>();
+	private final CardConfig cardConfig;
 
-	public Card(Composite parent, int style, final boolean allowSelection, ICardDataStore cardDataStore, final String url, final List<KeyValue> data) {
+	public Card(Composite parent, final CardConfig cardConfig, final String url, final List<KeyValue> data) {
+		this.cardConfig = cardConfig;
 		this.url = url;
 		this.data = data;
-		this.table = new Table(parent, style);
+		this.table = new Table(parent, cardConfig.style);
 		this.nameColumn = new TableColumn(table, SWT.NONE);
 		this.valueColumn = new TableColumn(table, SWT.NONE);
 
@@ -46,7 +49,7 @@ public class Card implements ICard {
 		table.setDragDetect(true);
 		for (KeyValue keyValue : data) {
 			TableItem tableItem = new TableItem(table, SWT.NULL);
-			String displayValue = keyValue.value instanceof List? "Children: " + ((List)keyValue.value).size(): keyValue.value.toString();
+			String displayValue = keyValue.value instanceof List ? "Children: " + ((List<?>) keyValue.value).size() : keyValue.value.toString();
 			tableItem.setText(new String[] { keyValue.key, displayValue });
 		}
 
@@ -63,7 +66,7 @@ public class Card implements ICard {
 				for (ILineSelectedListener lineSelectedListener : lineSelectedListeners) {
 					lineSelectedListener.selected(keyValue);
 				}
-				if (!allowSelection)
+				if (!cardConfig.allowSelection)
 					table.deselectAll();
 			}
 		});
@@ -85,8 +88,8 @@ public class Card implements ICard {
 	}
 
 	@Override
-	public Future<?> getPopulateFuture() {
-		return populateFuture;
+	public CardConfig cardConfig() {
+		return cardConfig;
 	}
 
 	@Override
@@ -102,11 +105,12 @@ public class Card implements ICard {
 	public static void main(String[] args) {
 		final ICardDataStore cardDataStore = CardDataStoreFixture.rawCardStore();
 		final ICardFactory cardFactory = ICardFactory.Utils.cardFactory(cardDataStore);
+		final CardConfig cardConfig = new CardConfig(cardFactory, cardDataStore);
 
 		Swts.display(Card.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				ICard card = cardFactory.makeCard(from, SWT.FULL_SELECTION | SWT.NO_SCROLL, true, CardDataStoreFixture.url, CardDataStoreFixture.data1a);
+				ICard card = cardFactory.makeCard(from, cardConfig, CardDataStoreFixture.url, CardDataStoreFixture.data1a);
 				return card.getComposite();
 			}
 		});

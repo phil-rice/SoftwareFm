@@ -7,17 +7,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardDataStore;
-import org.softwareFm.card.api.ICardDataStoreCallback;
 import org.softwareFm.card.api.ICardFactoryWithAggregateAndSort;
 import org.softwareFm.card.api.KeyValue;
-import org.softwareFm.display.swt.Swts;
-import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -43,46 +39,13 @@ public class CardFactory implements ICardFactoryWithAggregateAndSort {
 	}
 
 	@Override
-	public Future<ICard> makeCard(final Composite parent, final int style, final boolean allowSelection, String url, final ICallback<ICard> callback) {
-		try {
-			Future<ICard> future = cardDataStore.processDataFor(url, new ICardDataStoreCallback<ICard>() {
-				@Override
-				public ICard process(final String url, final Map<String, Object> result) throws Exception {
-					final AtomicReference<ICard> ref = new AtomicReference<ICard>();
-					Swts.asyncExec(parent, new Runnable() {
-						@Override
-						public void run() {
-							try {
-								ICard card = makeCard(parent, style, allowSelection, url, result);
-								callback.process(card);
-								ref.set(card);
-							} catch (Exception e) {
-								throw WrappedException.wrap(e);
-							}
-						}
-					});
-					return ref.get();
-				}
-
-				@Override
-				public ICard noData(String url) throws Exception {
-					return process(url, Collections.<String, Object> emptyMap());
-				}
-			});
-			return future;
-		} catch (Exception e) {
-			throw WrappedException.wrap(e);
-		}
-	}
-
-	@Override
-	public ICard makeCard(Composite parent, int style, boolean allowSelection, String url, Map<String, Object> map) {
+	public ICard makeCard(Composite parent, CardConfig cardConfig, String url, Map<String, Object> map) {
 		try {
 			List<KeyValue> keyValues = aggregateAndSort(map);
 			if (parent.isDisposed())
 				return null;
 			else {
-				final Card card = new Card(parent, style, allowSelection, cardDataStore, url, keyValues);
+				final Card card = new Card(parent, cardConfig, url, keyValues);
 				return card;
 			}
 		} catch (Exception e) {

@@ -7,6 +7,7 @@ import org.softwareFm.card.internal.CardDataStoreCache;
 
 public interface ICardDataStore {
 
+	
 	<T>Future<T> processDataFor(String url, ICardDataStoreCallback <T>callback);
 
 	public static class Utils{

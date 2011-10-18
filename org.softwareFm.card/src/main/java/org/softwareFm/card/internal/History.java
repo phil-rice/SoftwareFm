@@ -14,6 +14,7 @@ public class History<T> {
 		synchronized (lock) {
 			if (history.size() > 0 && newItem.equals(history.get(index)))
 				return;
+			Lists.removeAllAfter(history, index);
 			index = history.size();
 			history.add(newItem);
 		}

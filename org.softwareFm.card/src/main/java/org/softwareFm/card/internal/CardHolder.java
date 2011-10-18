@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardDataStore;
@@ -52,15 +53,8 @@ public class CardHolder implements IHasComposite {
 	}
 
 	public void setCard(final ICard card) {
-		Swts.asyncExec(this, new Runnable() {
-			@Override
-			public void run() {
-				if (card.getControl().isDisposed())
-					return;
-				content.layout.topControl = card.getControl();
-				content.layout();
-			}
-		});
+		content.layout.topControl = card.getControl();
+		content.layout();
 	}
 
 	@Override
@@ -76,11 +70,12 @@ public class CardHolder implements IHasComposite {
 	public static void main(String[] args) {
 		final ICardDataStore cardDataStore = CardDataStoreFixture.rawAsyncCardStore();
 		final ICardFactory cardFactory = ICardFactory.Utils.cardFactory(cardDataStore);
+		final CardConfig cardConfig = new CardConfig(cardFactory, cardDataStore);
 		Swts.display(CardHolder.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(final Composite from) throws Exception {
 				final CardHolder cardHolder = new CardHolder(from, "title");
-				final Future<ICard> future = cardFactory.makeCard(cardHolder.getComposite(), SWT.FULL_SELECTION, true, CardDataStoreFixture.url, new ICallback<ICard>() {
+				final Future<ICard> future = ICardFactory.Utils.makeCard(cardHolder.getComposite(), cardConfig, CardDataStoreFixture.url, new ICallback<ICard>() {
 					@Override
 					public void process(ICard card) throws Exception {
 						if (card == null)
