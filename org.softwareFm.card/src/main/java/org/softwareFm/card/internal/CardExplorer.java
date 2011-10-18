@@ -49,8 +49,8 @@ public class CardExplorer implements IHasComposite {
 			detail.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_RED));
 
 			comments = new ScrolledComposite(right, SWT.H_SCROLL);
-			this.setWeights(new int[] { 2, 3 });
-			right.setWeights(new int[] { 1, 2 });
+			this.setWeights(new int[] { 2, 5 });
+			right.setWeights(new int[] { 1, 1 });
 			selectUrl(cardConfig, initialUrl);
 		}
 

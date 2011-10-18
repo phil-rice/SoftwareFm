@@ -16,7 +16,6 @@ import org.softwareFm.card.api.ICardConfigurator;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
-import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
@@ -65,9 +64,7 @@ public class BasicCardConfigurator implements ICardConfigurator {
 		IFunction1<Map<String, Object>, Image> cardIconFn = new IFunction1<Map<String, Object>, Image>() {
 			@Override
 			public Image apply(Map<String, Object> from) throws Exception {
-				if (from.containsKey("url"))
-					return imageRegistry.get(GeneralAnchor.browseKey);
-				else if (from.containsKey("name"))
+				if (from.containsKey("name"))
 					return imageRegistry.get(ArtifactsAnchor.projectKey);
 				else if (from.containsKey("version"))
 					return imageRegistry.get(ArtifactsAnchor.jarKey);

@@ -49,7 +49,7 @@ public class Card implements ICard {
 		nameColumn.setText("Name");
 		valueColumn.setText("Value");
 		nameColumn.setWidth(100);
-		valueColumn.setWidth(100);
+		valueColumn.setWidth(3000);
 		table.setDragDetect(true);
 		int i = 0;
 		for (KeyValue keyValue : data) {
@@ -64,7 +64,6 @@ public class Card implements ICard {
 		}
 
 		nameColumn.pack();
-		valueColumn.pack();
 		table.pack();
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
