@@ -1,6 +1,5 @@
 package org.softwareFm.card.api;
 
-import java.util.Comparator;
 import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
@@ -15,8 +14,6 @@ import org.softwareFm.utilities.maps.Maps;
 public interface ICardFactory {
 
 	ICard makeCard(Composite parent, CardConfig cardConfig, String url, Map<String, Object> map);
-
-	Comparator<KeyValue> comparator();
 
 	public static class Utils {
 		public static Future<ICard> makeCard(final Composite parent, final CardConfig cardConfig, String url, final ICallback<ICard> callback) {
@@ -48,17 +45,10 @@ public interface ICardFactory {
 
 		}
 
-		public static ICardFactory cardFactory(ICardDataStore cardDataStore) {
-			return new CardFactory(cardDataStore, null);
+		public static ICardFactory cardFactory() {
+			return new CardFactory();
 		};
 
-		public static ICardFactory cardFactory(ICardDataStore cardDataStore, String tag) {
-			return new CardFactory(cardDataStore, tag);
-		};
-
-		public static ICardFactoryWithAggregateAndSort cardFactoryWithAggregateAndSort(ICardDataStore cardDataStore) {
-			return new CardFactory(cardDataStore, null);
-		};
 
 	}
 

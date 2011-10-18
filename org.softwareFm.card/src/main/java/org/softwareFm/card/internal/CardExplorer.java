@@ -39,7 +39,7 @@ public class CardExplorer implements IHasComposite {
 
 		private final List<IUrlChangedListener> listeners = new CopyOnWriteArrayList<IUrlChangedListener>();
 
-		public CardExplorerComposite(final Composite parent, final CardConfig cardConfig, final String rootUrl) {
+		public CardExplorerComposite(final Composite parent, final CardConfig cardConfig, final String rootUrl, String initialUrl) {
 			super(parent, SWT.HORIZONTAL);
 			this.initialUrl = rootUrl;
 			String loadingText = IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "card.holder.loading.text");
@@ -132,8 +132,8 @@ public class CardExplorer implements IHasComposite {
 
 	private final CardExplorerComposite content;
 
-	public CardExplorer(Composite parent, CardConfig cardConfig, String initialUrl) {
-		content = new CardExplorerComposite(parent, cardConfig, initialUrl);
+	public CardExplorer(Composite parent, CardConfig cardConfig, String rootUrl, String initialUrl) {
+		content = new CardExplorerComposite(parent, cardConfig, rootUrl, initialUrl);
 	}
 
 	@Override
@@ -155,17 +155,17 @@ public class CardExplorer implements IHasComposite {
 				@Override
 				public Composite apply(final Composite from) throws Exception {
 					final ICardDataStore cardDataStore = new CardDataStoreForRepository(from, facard);
-					ICardFactory cardFactory = ICardFactory.Utils.cardFactory(cardDataStore, "jcr:primaryType");
+					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 						final CardConfig cardConfig = new BasicCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 						IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "navBar.prev.title");
 						Composite composite = new Composite(from, SWT.NULL);
-						final CardExplorer cardExplorer = new CardExplorer(composite, cardConfig, firstUrl);
+						final CardExplorer cardExplorer = new CardExplorer(composite, cardConfig, rootUrl, firstUrl);
 						final NavBar navBar = new NavBar(composite, rootUrl, cardConfig.resourceGetter, new ICallback<String>() {
 							@Override
 							public void process(String t) throws Exception {
 								cardExplorer.content.selectUrl(cardConfig, t);
 						}
-					});
+					}, cardDataStore);
 
 					cardExplorer.addUrlChangedListener(new IUrlChangedListener() {
 						@Override

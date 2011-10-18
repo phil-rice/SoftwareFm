@@ -1,8 +1,39 @@
 package org.softwareFm.card.api;
 
+import java.util.Comparator;
+
+import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.strings.Strings;
+
 public class KeyValue {
-	public	final String key;
-	public	final Object value;
+	public final String key;
+	public final Object value;
+
+	public static class Utils {
+		public static IFunction1<KeyValue, String> keyFn() {
+			return new IFunction1<KeyValue, String>() {
+				@Override
+				public String apply(KeyValue from) throws Exception {
+					return from.key;
+				}
+			};
+		}
+
+		public static Comparator<KeyValue> orderedKeyComparator(String... order) {
+			return Lists.comparator(keyFn(), Lists.orderedComparator(order));
+		}
+
+		public static IFunction1<KeyValue, String> valueAsStrFn() {
+			return new IFunction1<KeyValue, String>() {
+				
+				@Override
+				public String apply(KeyValue from) throws Exception {
+					return Strings.nullSafeToString(from.value);
+				}
+			};
+		}
+	}
 
 	public KeyValue(String key, Object value) {
 		this.key = key;

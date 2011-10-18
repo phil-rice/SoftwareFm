@@ -42,7 +42,7 @@ public class DetailFactory implements IDetailFactory {
 			for (Object object : list)
 				if (object instanceof KeyValue)
 					keyValues.add((KeyValue) object);
-			Collections.sort(keyValues, cardConfig.cardFactory.comparator());
+			Collections.sort(keyValues, cardConfig.comparator);
 			int i = 0;
 			for (final KeyValue childKeyValue : keyValues) {
 				final CardHolder holder = new CardHolder(composite, IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "detail.factory.loading.text"), childKeyValue.key + "/" + i++);

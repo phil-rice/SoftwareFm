@@ -14,6 +14,7 @@ import java.util.Random;
 
 import org.softwareFm.utilities.constants.UtilityMessages;
 import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 
@@ -34,9 +35,11 @@ public class Lists {
 	}
 
 	private final static Random random = new Random(System.nanoTime());
+
 	public static <T> List<T> shuffle(List<T> list) {
 		return shuffle(random, list);
 	}
+
 	public static <T> List<T> shuffle(Random random, List<T> list) {
 		List<T> result = new ArrayList<T>(list);
 		for (int i = result.size() - 1; i > 0; i--) {
@@ -45,8 +48,8 @@ public class Lists {
 		}
 		return result;
 	}
-	
-	public static <T> void swap(List<T> list, int i, int j){
+
+	public static <T> void swap(List<T> list, int i, int j) {
 		T temp = list.get(i);
 		list.set(i, list.get(j));
 		list.set(j, temp);
@@ -224,8 +227,74 @@ public class Lists {
 		return ts == null ? null : Collections.unmodifiableList(new ArrayList<T>(ts));
 	}
 
-	public static <T>void removeAllAfter(List<T> list, int lastToKeep) {
-		while (list.size()> lastToKeep+1)
-			list.remove(list.size()-1);
+	public static <T> void removeAllAfter(List<T> list, int lastToKeep) {
+		while (list.size() > lastToKeep + 1)
+			list.remove(list.size() - 1);
 	}
+
+	public static <T extends Comparable<T>> Comparator<T> orderedComparator(T... order) {
+		final List<T> list = Arrays.asList(order);
+		return new Comparator<T>() {
+			@Override
+			public int compare(T left, T right) {
+				int leftIndex = list.indexOf(left);
+				int rightIndex = list.indexOf(right);
+				if (leftIndex == -1)
+					if (rightIndex == -1)
+						return left.compareTo(right);
+					else
+						return 1;
+				else if (rightIndex == -1)
+					return -1;
+				else
+					return leftIndex - rightIndex;
+			}
+		};
+
+	}
+
+	public static <From, To>Comparator<From> comparator(final IFunction1<From, To> transformer, final Comparator<To> comparator) {
+		return new Comparator<From>() {
+			@Override
+			public int compare(From o1, From o2) {
+				To left = Functions.call(transformer, o1);
+				To right = Functions.call(transformer, o2);
+				return comparator.compare(left, right);
+			}
+		};
+
+	}
+	public static <From, To extends Comparable<To>>Comparator<From> comparator(final IFunction1<From, To> transformer) {
+		return new Comparator<From>() {
+			@Override
+			public int compare(From o1, From o2) {
+				To left = Functions.call(transformer, o1);
+				To right = Functions.call(transformer, o2);
+				return left.compareTo(right);
+			}
+		};
+		
+	}
+
+	// final List<String> list = Arrays.asList(order);
+	// return new Comparator<KeyValue>() {
+	//
+	// @Override
+	// public int compare(KeyValue o1, KeyValue o2) {
+	// String left = o1.key;
+	// String right = o2.key;
+	// int leftIndex = list.indexOf(left);
+	// int rightIndex = list.indexOf(right);
+	// if (leftIndex == -1)
+	// if (rightIndex == -1)
+	// return left.compareTo(right);
+	// else
+	// return 1;
+	// else if (rightIndex == -1)
+	// return -1;
+	// else
+	// return leftIndex - rightIndex;
+	// }
+	// };
+	// }
 }

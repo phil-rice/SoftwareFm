@@ -101,7 +101,7 @@ public class CardHolder implements IHasComposite {
 
 	public static void main(String[] args) {
 		final ICardDataStore cardDataStore = CardDataStoreFixture.rawAsyncCardStore();
-		final ICardFactory cardFactory = ICardFactory.Utils.cardFactory(cardDataStore);
+		final ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 		final CardConfig cardConfig = new CardConfig(cardFactory, cardDataStore);
 		Swts.display(CardHolder.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override

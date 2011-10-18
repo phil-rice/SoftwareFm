@@ -1,113 +1,22 @@
 package org.softwareFm.card.internal;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
-import org.softwareFm.card.api.ICardDataStore;
-import org.softwareFm.card.api.ICardFactoryWithAggregateAndSort;
-import org.softwareFm.card.api.KeyValue;
-import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.exceptions.WrappedException;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.strings.Strings;
+import org.softwareFm.card.api.ICardFactory;
 
-public class CardFactory implements ICardFactoryWithAggregateAndSort {
-
-	private final String tagName;
-	final Comparator<KeyValue> comparator;
-	private final IFunction1<String, String> urlToTitle;
-	private final ICardDataStore cardDataStore;
-
-	public CardFactory(ICardDataStore cardDataStore, String tag) {
-		this(cardDataStore, tag, Strings.lastSegmentFn("/"), new String[0]);
-	}
-
-	public CardFactory(ICardDataStore cardDataStore, String tagName, IFunction1<String, String> urlToTitle, String... order) {
-		this.cardDataStore = cardDataStore;
-		this.tagName = tagName;
-		this.urlToTitle = urlToTitle;
-		this.comparator = comparator(order);
-	}
+public class CardFactory implements ICardFactory {
 
 	@Override
 	public ICard makeCard(Composite parent, CardConfig cardConfig, String url, Map<String, Object> map) {
-		try {
-			List<KeyValue> keyValues = aggregateAndSort(map);
-			if (parent.isDisposed())
-				return null;
-			else {
-				final Card card = new Card(parent, cardConfig, url, map, keyValues);
-				return card;
-			}
-		} catch (Exception e) {
-			throw WrappedException.wrap(e);
+		if (parent.isDisposed())
+			return null;
+		else {
+			final Card card = new Card(parent, cardConfig, url, map);
+			return card;
 		}
-	}
-
-	@Override
-	public Comparator<KeyValue> comparator() {
-		return comparator;
-	}
-
-	@Override
-	public List<KeyValue> aggregateAndSort(Map<String, Object> raw) {
-		List<KeyValue> list = aggregate(raw);
-		Collections.sort(list, comparator);
-		return list;
-	}
-
-	List<KeyValue> aggregate(Map<String, Object> rawMap) {
-		List<KeyValue> result = Lists.newList();
-		Map<String, List<Object>> aggregates = Maps.newMap(LinkedHashMap.class);
-		for (Entry<String, Object> entry : rawMap.entrySet()) {
-			String key = entry.getKey();
-			Object value = entry.getValue();
-			if (value instanceof Map) {
-				Map<String, Object> valueMap = (Map<String, Object>) value;
-				String tag = (String) valueMap.get(tagName);
-				if (tag == null)
-					result.add(new KeyValue(key, value));
-				else
-					Maps.addToList(aggregates, tag, new KeyValue(key, value));
-			} else
-				result.add(new KeyValue(key, value));
-
-		}
-		for (Entry<String, List<Object>> entry : aggregates.entrySet())
-			result.add(new KeyValue(entry.getKey(), entry.getValue()));
-		return result;
-	}
-
-	private Comparator<KeyValue> comparator(String... order) {
-		final List<String> list = Arrays.asList(order);
-		return new Comparator<KeyValue>() {
-
-			@Override
-			public int compare(KeyValue o1, KeyValue o2) {
-				String left = o1.key;
-				String right = o2.key;
-				int leftIndex = list.indexOf(left);
-				int rightIndex = list.indexOf(right);
-				if (leftIndex == -1)
-					if (rightIndex == -1)
-						return left.compareTo(right);
-					else
-						return 1;
-				else if (rightIndex == -1)
-					return -1;
-				else
-					return leftIndex - rightIndex;
-			}
-		};
 	}
 
 }

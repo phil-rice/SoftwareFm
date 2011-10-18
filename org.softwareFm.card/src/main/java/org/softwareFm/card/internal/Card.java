@@ -1,5 +1,6 @@
 package org.softwareFm.card.internal;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -37,14 +38,15 @@ public class Card implements ICard {
 	private final CardConfig cardConfig;
 	private final Map<String, Object> rawData;
 
-	public Card(Composite parent, final CardConfig cardConfig, final String url, Map<String, Object> rawData, final List<KeyValue> data) {
+	public Card(Composite parent, final CardConfig cardConfig, final String url, Map<String, Object> rawData) {
 		this.cardConfig = cardConfig;
 		this.url = url;
 		this.rawData = rawData;
-		this.data = data;
 		this.table = new Table(parent, cardConfig.style);
 		this.nameColumn = new TableColumn(table, SWT.NONE);
 		this.valueColumn = new TableColumn(table, SWT.NONE);
+		data = Functions.call(cardConfig.aggregator, rawData);
+		Collections.sort(data, cardConfig.comparator);
 
 		table.setHeaderVisible(true);
 		nameColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter,"card.name.title"));
@@ -120,7 +122,8 @@ public class Card implements ICard {
 
 	public static void main(String[] args) {
 		final ICardDataStore cardDataStore = CardDataStoreFixture.rawCardStore();
-		final ICardFactory cardFactory = ICardFactory.Utils.cardFactory(cardDataStore);
+		final ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
+		
 		final CardConfig cardConfig = new CardConfig(cardFactory, cardDataStore);
 
 		Swts.display(Card.class.getSimpleName(), new IFunction1<Composite, Composite>() {
