@@ -102,21 +102,39 @@ public class NavBar implements IHasComposite {
 		@Override
 		public void layout() {
 			Rectangle clientArea = getClientArea();
-			int x = clientArea.x;
-			int y = clientArea.y;
-			for (Control control : getChildren()) {
+			Control[] children = getChildren();
 
+			for (Control control : children) {
 				if (control instanceof Combo) {
-					control.setLocation(x, y);
-					control.setBounds(x, y, 16, height);
-					x += control.getSize().x;
+					control.setSize(16, height);
 				} else {
-					control.setLocation(x, y - 1);
 					int width = control.computeSize(SWT.DEFAULT, clientArea.height).x;
-					control.setBounds(x, y, width, clientArea.height);
-					x += control.getSize().x;
+					control.setSize(width, clientArea.height);
 				}
 			}
+			int i = 2;
+			if (isTooBig(clientArea)) {
+				while (isTooBig(clientArea) && i < children.length) {
+					children[i++].setSize(height, height);
+				}
+			}
+			int x = clientArea.x;
+			int y = clientArea.y;
+			for (Control control : getChildren())
+				if (control instanceof Combo) {
+					control.setLocation(x, y);
+					x += height;
+				} else {
+					control.setLocation(x, y - 1);
+					x += control.getSize().x;
+				}
+		}
+
+		private boolean isTooBig(Rectangle clientArea) {
+			int width = 0;
+			for (Control child : getChildren())
+				width += child.getSize().x;
+			return width > clientArea.x + clientArea.width;
 		}
 
 	}

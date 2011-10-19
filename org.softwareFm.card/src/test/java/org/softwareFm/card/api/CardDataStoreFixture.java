@@ -23,7 +23,7 @@ public class CardDataStoreFixture {
 	public final static Map<String, Object> data1aWithP1Q2 = Maps.makeLinkedMap("tag", "one", "value", "valuea", "p", 1, "q", 2);
 
 	public static final String url = "some/url";
-	public static final String url1a = "some/url/1a";
+	public static final String url1a = "some/url/largeName";
 	public static final String url1b = "some/url/1b";
 
 	public final static Map<String, Object> dataUrl1 = Maps.makeLinkedMap(//
