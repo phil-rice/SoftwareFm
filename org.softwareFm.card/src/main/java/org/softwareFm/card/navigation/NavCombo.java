@@ -116,6 +116,8 @@ public class NavCombo implements IHasControl {
 	}
 
 	public void setDropdownItems(List<String> items) {
+		if (combo.isDisposed())
+			return;
 		combo.removeAll();
 		for (String item : items)
 			combo.add(item);

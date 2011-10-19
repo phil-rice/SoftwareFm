@@ -1,6 +1,8 @@
 package org.softwareFm.card.navigation;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
@@ -27,6 +29,7 @@ public class NavBar implements IHasComposite {
 		private final Button nextButton;
 		private final int height;
 		private final CardConfig cardConfig;
+		private final NavHistoryCombo navCombo;
 
 		public NavBarComposite(Composite parent, int height, CardConfig cardConfig, String rootUrl, final ICallback<String> callbackToGotoUrl) {
 			super(parent, SWT.BORDER);
@@ -44,6 +47,18 @@ public class NavBar implements IHasComposite {
 					updateNextPrevButtons();
 				}
 			});
+			navCombo = new NavHistoryCombo(this, history, callbackToGotoUrl);
+			navCombo.getControl().addPaintListener(new PaintListener() {
+				@Override
+				public void paintControl(PaintEvent e) {
+					Combo combo = navCombo.combo;
+					Rectangle clientArea = combo.getClientArea();
+					e.gc.setBackground(combo.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+					e.gc.fillRectangle(clientArea);
+					e.gc.drawText("V", 6, 0);
+					e.gc.drawRectangle(clientArea.x, clientArea.y, clientArea.width - 1, clientArea.height);
+				}
+			});
 			nextButton = Swts.makePushButton(this, resourceGetter, "navBar.next.title", new Runnable() {
 				@Override
 				public void run() {
@@ -58,6 +73,7 @@ public class NavBar implements IHasComposite {
 			if (!url.startsWith(rootUrl))
 				throw new IllegalArgumentException();
 			history.push(url);
+			navCombo.updateFromHistory();
 			updateNextPrevButtons();
 			String endOfUrl = url.substring(rootUrl.length());
 			String[] fragments = endOfUrl.split("/");
@@ -112,7 +128,7 @@ public class NavBar implements IHasComposite {
 					control.setSize(width, clientArea.height);
 				}
 			}
-			int i = 2;
+			int i = 3;
 			if (isTooBig(clientArea)) {
 				while (isTooBig(clientArea) && i < children.length) {
 					children[i++].setSize(height, height);

@@ -154,7 +154,7 @@ public class CardExplorer implements IHasComposite {
 	public static void main(String[] args) {
 		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacard();
 		final String rootUrl = "/softwareFm/content";
-		final String firstUrl = "/softwareFm/content";
+		final String firstUrl = "/softwareFm/content/org";
 		try {
 			Swts.display(CardExplorer.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 				@Override

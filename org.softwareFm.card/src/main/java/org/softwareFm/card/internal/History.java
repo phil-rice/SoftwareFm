@@ -46,4 +46,9 @@ public class History<T> {
 	public boolean hasPrev() {
 		return index>0;
 	}
+
+	public List<T> items() {
+		return history;
+	}
+
 }
