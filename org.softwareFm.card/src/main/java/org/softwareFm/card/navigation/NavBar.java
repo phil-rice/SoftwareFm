@@ -1,4 +1,4 @@
-package org.softwareFm.card.internal;
+package org.softwareFm.card.navigation;
 
 import java.util.Collections;
 import java.util.List;
@@ -6,17 +6,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardDataStoreCallback;
+import org.softwareFm.card.internal.History;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -25,89 +23,6 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class NavBar implements IHasComposite {
 	private final NavBarComposite content;
-
-	static class NavControl extends Composite {
-
-		private final Combo combo;
-		private Button button;
-		private final int height;
-
-		public NavControl(Composite parent, int height, final String title, final String url, final ICallback<String> callbackToGotoUrl) {
-			super(parent, SWT.NULL);
-			this.height = height;
-			combo = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
-			combo.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					int selectionIndex = combo.getSelectionIndex();
-					if (selectionIndex == -1) {
-						return;
-					}
-					String postFix = combo.getItem(selectionIndex);
-					if (!postFix.equals(title))
-						select(url, callbackToGotoUrl, postFix);
-				}
-
-				private void select(final String url, final ICallback<String> callbackToGotoUrl, String postFix) {
-					String newUrl = url + "/" + postFix;
-					pack();
-					getParent().layout();
-					ICallback.Utils.call(callbackToGotoUrl, newUrl);
-				}
-			});
-			if (title != null) {
-				button = Swts.makePushButton(parent, null, title, false, new Runnable() {
-					@Override
-					public void run() {
-						ICallback.Utils.call(callbackToGotoUrl, url);
-					}
-				});
-			}
-		}
-
-		@Override
-		public void setLayout(Layout layout) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public Point computeSize(int wHint, int hHint) {
-			int width = 18;
-			if (button != null)
-				width += button.computeSize(wHint, hHint).x;
-			return new Point(width, height);
-		}
-
-		@Override
-		public void layout() {
-			Rectangle clientArea = getClientArea();
-			combo.setLocation(clientArea.x, clientArea.y+1);
-			combo.setSize(18, 50);
-			if (button != null) {
-				button.setLocation(clientArea.x + 18, clientArea.y ); 
-				button.setSize(button.computeSize(SWT.DEFAULT, height));
-			}
-		}
-
-		@Override
-		protected void checkSubclass() {
-		}
-
-		public void setDropdownItems(List<String> items) {
-			combo.removeAll();
-			// if (!items.contains(title))
-			// combo.add(title);
-			for (int i = 0; i < items.size(); i++) {
-				String item = items.get(i);
-				combo.add(item);
-			}
-			// combo.setText(title);
-			pack();
-			layout();
-			getParent().layout();
-		}
-
-	}
 
 	static class NavBarComposite extends Composite {
 
@@ -140,8 +55,28 @@ public class NavBar implements IHasComposite {
 					updateNextPrevButtons();
 				}
 			});
-
 			updateNextPrevButtons();
+		}
+
+		public void noteUrlHasChanged(String url) {
+			if (!url.startsWith(rootUrl))
+				throw new IllegalArgumentException();
+			history.push(url);
+			updateNextPrevButtons();
+			String endOfUrl = url.substring(rootUrl.length());
+			String[] fragments = endOfUrl.split("/");
+			Swts.removeChildrenAfter(this, nextButton);
+			String thisUrl = rootUrl;
+			for (final String string : fragments)
+				if (string.length() > 0) {
+					String parentUrl = thisUrl;
+					new NavCombo(this, cardDataStore, parentUrl, callbackToGotoUrl);
+					thisUrl += "/" + string;
+					new NavButton(this, thisUrl, callbackToGotoUrl);
+				}
+			makeNavButton(thisUrl, thisUrl, null);
+			layout();
+			getParent().layout();
 		}
 
 		@Override
@@ -173,26 +108,6 @@ public class NavBar implements IHasComposite {
 					x += control.getSize().x;
 				}
 			}
-		}
-
-		public void noteUrlHasChanged(String url) {
-			if (!url.startsWith(rootUrl))
-				throw new IllegalArgumentException();
-			history.push(url);
-			updateNextPrevButtons();
-			String endOfUrl = url.substring(rootUrl.length());
-			String[] fragments = endOfUrl.split("/");
-			Swts.removeChildrenAfter(this, nextButton);
-			String thisUrl = rootUrl;
-			for (final String string : fragments)
-				if (string.length() > 0) {
-					String parentUrl = thisUrl;
-					thisUrl += "/" + string;
-					makeNavButton(parentUrl, thisUrl, string);
-				}
-			makeNavButton(thisUrl, thisUrl, null);
-			layout();
-			getParent().layout();
 		}
 
 		private void makeNavButton(String parentUrl, String thisUrl, final String string) {

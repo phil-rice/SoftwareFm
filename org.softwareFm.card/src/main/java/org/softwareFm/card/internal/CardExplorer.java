@@ -20,6 +20,7 @@ import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ILineSelectedListener;
 import org.softwareFm.card.api.KeyValue;
+import org.softwareFm.card.navigation.NavBar;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
@@ -179,8 +180,9 @@ public class CardExplorer implements IHasComposite {
 					});
 
 					cardExplorer.getControl().moveBelow(navBar.getControl());
-					Swts.addGrabHorizontalAndFillGridDataToAllChildren(composite);
 					
+					Swts.addGrabHorizontalAndFillGridDataToAllChildren(composite);
+					cardExplorer.getControl().setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
 					composite.layout();
 					return composite;
 				}
