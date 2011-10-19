@@ -183,7 +183,7 @@ public class CardExplorer implements IHasComposite {
 					
 					Listener listener = new Listener() {
 						@Override
-						public void handleEvent(Event event) {
+						public void handleEvent(Event event) { 
 							Rectangle parentClientArea = composite.getParent().getClientArea();
 							composite.setSize(parentClientArea.width, parentClientArea.height);
 							Rectangle clientArea = composite.getClientArea();
@@ -191,10 +191,8 @@ public class CardExplorer implements IHasComposite {
 							Composite composite2 = navBar.getComposite();
 							composite2.layout();
 							cardExplorer.getControl().setBounds(clientArea.x, clientArea.y+navBarHeight, clientArea.width, clientArea.height-navBarHeight);
-							
 						}
 					};
-					
 					
 					Swts.setSizeFromClientArea(composite);
 					composite.getParent().addListener(SWT.Resize, listener);

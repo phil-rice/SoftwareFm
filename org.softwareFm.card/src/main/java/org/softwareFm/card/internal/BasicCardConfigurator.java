@@ -16,6 +16,7 @@ import org.softwareFm.card.api.ICardConfigurator;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
+import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
@@ -64,17 +65,24 @@ public class BasicCardConfigurator implements ICardConfigurator {
 		IFunction1<Map<String, Object>, Image> cardIconFn = new IFunction1<Map<String, Object>, Image>() {
 			@Override
 			public Image apply(Map<String, Object> from) throws Exception {
-				if (from.containsKey("name"))
+				Object object = from.get("sling:resourceType");
+				if (object == null)
+					return null;
+				if (object.equals("softwareFm_group"))
+					return imageRegistry.get(ArtifactsAnchor.organisationKey);
+				else if (object.equals("softwareFm_artifact"))
 					return imageRegistry.get(ArtifactsAnchor.projectKey);
-				else if (from.containsKey("version"))
+				else if (object.equals("softwareFm_version"))
+					return imageRegistry.get(ArtifactsAnchor.jarKey);
+				else if (object.equals("softwareFm_version_jar"))
 					return imageRegistry.get(ArtifactsAnchor.jarKey);
 				else
-					return imageRegistry.get(ArtifactsAnchor.organisationKey);
+					return imageRegistry.get(GeneralAnchor.helpKey);
 			}
 		};
 
 		String tag = resourceGetter.getStringOrNull("card.aggregator.tag");
-		String orderAsString= resourceGetter.getStringOrNull("card.order");
+		String orderAsString = resourceGetter.getStringOrNull("card.order");
 		String[] order = orderAsString.split(",");
 		return config.withNameFn(nameFn).withValueFn(valueFn).withHideFn(hideFn).//
 				withCardIconFn(cardIconFn).withResourceGetter(resourceGetter).withAggregatorTag(tag).withSorter(KeyValue.Utils.orderedKeyComparator(order));
