@@ -1,0 +1,623 @@
+<feed xmlns="http://www.w3.org/2005/Atom">
+	<id>https://issues.apache.org/jira/activity?maxResults=10&amp;streams=key+IS+MATH</id>
+	<title type="text">ASF JIRA - Activity Stream</title>
+	<link
+		href="https://issues.apache.org/jira/activity?maxResults=10&amp;streams=key+IS+MATH"
+		rel="self" />
+	<updated>2011-10-07T09:29:58.165Z</updated>
+	<entry xmlns:atlassian="http://streams.atlassian.com/syndication/general/1.0"
+		xmlns:thr="http://purl.org/syndication/thread/1.0" xmlns:activity="http://activitystrea.ms/spec/1.0/">
+		<id>urn:uuid:26852dee-60c5-3427-a090-7fa12686512b</id>
+		<title type="html">&lt;a
+			href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=romdicos"
+			class="activity-item-user activity-item-author">DI COSTANZO&lt;/a>
+			commented on &lt;a
+			href="https://issues.apache.org/jira/browse/MATH-683"
+			class="issue-link">&lt;span class='resolved-link'>MATH-683&lt;/span>
+			- Create a method shift in the PolynomialFunction class&lt;/a>
+		</title>
+		<content type="html">&lt;blockquote>
+			&lt;p>Thanks !&lt;br/>
+			I didn't know for the patch, I'll provide one next time. And I'll will
+			also check the CheckStyle warnings. &lt;/p> &lt;/blockquote>
+		</content>
+		<author xmlns:usr="http://streams.atlassian.com/syndication/username/1.0">
+			<name>DI COSTANZO</name>
+			<email>romain.di-costanzo@c-s.fr</email>
+			<uri>https://issues.apache.org/jira/secure/ViewProfile.jspa?name=romdicos</uri>
+			<link xmlns:media="http://purl.org/syndication/atommedia" rel="photo"
+				href="https://issues.apache.org/jira/secure/useravatar?avatarId=10452&amp;s=16"
+				media:height="16" media:width="16" />
+			<link xmlns:media="http://purl.org/syndication/atommedia" rel="photo"
+				href="https://issues.apache.org/jira/secure/useravatar?avatarId=10452&amp;s=48"
+				media:height="48" media:width="48" />
+			<usr:username>romdicos</usr:username>
+			<activity:object-type>http://activitystrea.ms/schema/1.0/person</activity:object-type>
+		</author>
+		<published>2011-10-07T09:29:58.165Z</published>
+		<updated>2011-10-07T09:29:58.165Z</updated>
+		<category term="comment" />
+		<link
+			href="https://issues.apache.org/jira/browse/MATH-683?focusedCommentId=13122664&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-13122664"
+			rel="alternate" />
+		<link href="https://issues.apache.org/jira/images/icons/newfeature.gif"
+			rel="http://streams.atlassian.com/syndication/icon" />
+		<link
+			href="https://issues.apache.org/jira/s/en_UK-kk11f0/660/2/1.0/_/download/resources/jira.webresources:global-static/wiki-renderer.css"
+			rel="http://streams.atlassian.com/syndication/css" />
+		<thr:in-reply-to ref="urn:uuid:4804b5ee-a45e-3ac1-9a12-70187ba98adb" />
+		<generator uri="https://issues.apache.org/jira" />
+		<atlassian:application>com.atlassian.jira</atlassian:application>
+		<activity:verb>http://activitystrea.ms/schema/1.0/post</activity:verb>
+		<activity:object>
+			<id>urn:uuid:84e89a6a-822f-34d6-8735-317ba19eb261</id>
+			<link rel="alternate"
+				href="https://issues.apache.org/jira/browse/MATH-683?focusedCommentId=13122664&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-13122664" />
+			<activity:object-type>http://activitystrea.ms/schema/1.0/comment</activity:object-type>
+		</activity:object>
+		<activity:target>
+			<id>urn:uuid:4804b5ee-a45e-3ac1-9a12-70187ba98adb</id>
+			<title type="text">MATH-683</title>
+			<summary type="text">Create a method shift in the PolynomialFunction
+				class</summary>
+			<link rel="alternate" href="https://issues.apache.org/jira/browse/MATH-683" />
+			<activity:object-type>http://streams.atlassian.com/syndication/types/issue</activity:object-type>
+		</activity:target>
+	</entry>
+	<entry xmlns:atlassian="http://streams.atlassian.com/syndication/general/1.0"
+		xmlns:thr="http://purl.org/syndication/thread/1.0" xmlns:activity="http://activitystrea.ms/spec/1.0/">
+		<id>urn:uuid:36c88ed3-79b4-3ba5-8186-55b1893e4998</id>
+		<title type="html">&lt;a
+			href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=erans"
+			class="activity-item-user activity-item-author">Gilles&lt;/a>
+			commented on &lt;a
+			href="https://issues.apache.org/jira/browse/MATH-683"
+			class="issue-link">&lt;span class='resolved-link'>MATH-683&lt;/span>
+			- Create a method shift in the PolynomialFunction class&lt;/a>
+		</title>
+		<content type="html">&lt;blockquote>
+			&lt;p>I also changed the return type of the method, in order to emphasize
+			the transformation of the coefficients. It is trivial for the user to
+			create the "PolynomialFunction".&lt;/p> &lt;/blockquote>
+		</content>
+		<author xmlns:usr="http://streams.atlassian.com/syndication/username/1.0">
+			<name>Gilles</name>
+			<email>gilles@harfang.homelinux.org</email>
+			<uri>https://issues.apache.org/jira/secure/ViewProfile.jspa?name=erans</uri>
+			<link xmlns:media="http://purl.org/syndication/atommedia" rel="photo"
+				href="https://issues.apache.org/jira/secure/useravatar?avatarId=10452&amp;s=16"
+				media:height="16" media:width="16" />
+			<link xmlns:media="http://purl.org/syndication/atommedia" rel="photo"
+				href="https://issues.apache.org/jira/secure/useravatar?avatarId=10452&amp;s=48"
+				media:height="48" media:width="48" />
+			<usr:username>erans</usr:username>
+			<activity:object-type>http://activitystrea.ms/schema/1.0/person</activity:object-type>
+		</author>
+		<published>2011-10-06T15:49:26.455Z</published>
+		<updated>2011-10-06T15:49:26.455Z</updated>
+		<category term="comment" />
+		<link
+			href="https://issues.apache.org/jira/browse/MATH-683?focusedCommentId=13122018&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-13122018"
+			rel="alternate" />
+		<link href="https://issues.apache.org/jira/images/icons/newfeature.gif"
+			rel="http://streams.atlassian.com/syndication/icon" />
+		<link
+			href="https://issues.apache.org/jira/s/en_UK-kk11f0/660/2/1.0/_/download/resources/jira.webresources:global-static/wiki-renderer.css"
+			rel="http://streams.atlassian.com/syndication/css" />
+		<thr:in-reply-to ref="urn:uuid:4804b5ee-a45e-3ac1-9a12-70187ba98adb" />
+		<generator uri="https://issues.apache.org/jira" />
+		<atlassian:application>com.atlassian.jira</atlassian:application>
+		<activity:verb>http://activitystrea.ms/schema/1.0/post</activity:verb>
+		<activity:object>
+			<id>urn:uuid:c6c470e4-58aa-379c-91c3-4b42a3f4f45a</id>
+			<link rel="alternate"
+				href="https://issues.apache.org/jira/browse/MATH-683?focusedCommentId=13122018&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-13122018" />
+			<activity:object-type>http://activitystrea.ms/schema/1.0/comment</activity:object-type>
+		</activity:object>
+		<activity:target>
+			<id>urn:uuid:4804b5ee-a45e-3ac1-9a12-70187ba98adb</id>
+			<title type="text">MATH-683</title>
+			<summary type="text">Create a method shift in the PolynomialFunction
+				class</summary>
+			<link rel="alternate" href="https://issues.apache.org/jira/browse/MATH-683" />
+			<activity:object-type>http://streams.atlassian.com/syndication/types/issue</activity:object-type>
+		</activity:target>
+	</entry>
+	<entry xmlns:atlassian="http://streams.atlassian.com/syndication/general/1.0"
+		xmlns:activity="http://activitystrea.ms/spec/1.0/">
+		<id>urn:uuid:7fa6837c-c364-36c7-9de7-e849c92de0e9</id>
+		<title type="html">&lt;a
+			href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=erans"
+			class="activity-item-user activity-item-author">Gilles&lt;/a>
+			resolved &lt;a href="https://issues.apache.org/jira/browse/MATH-683"
+			class="issue-link">&lt;span class='resolved-link'>MATH-683&lt;/span>
+			- Create a method shift in the PolynomialFunction class&lt;/a>
+			as 'Fixed'</title>
+		<summary type="html">&lt;blockquote>
+			&lt;p>Committed (with some stylistic changes) in revision 1179671.&lt;/p>
+
+			&lt;p>Thanks for the contribution. But when submitting changes to an
+			existing file, it is better to provide a "patch". Also, do not forget
+			to check whether there are any warnings generated by&lt;/p> &lt;a
+			href="https://issues.apache.org/jira/browse/MATH-683?focusedCommentId=13122014&amp;amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-13122014"
+			class='content-more'>Read more&lt;/a>&lt;/blockquote>
+		</summary>
+		<content type="html">&lt;blockquote>
+			&lt;p>Committed (with some stylistic changes) in revision 1179671.&lt;/p>
+
+			&lt;p>Thanks for the contribution. But when submitting changes to an
+			existing file, it is better to provide a "patch". Also, do not forget
+			to check whether there are any warnings generated by the "CheckStyle"
+			tool.&lt;/p> &lt;/blockquote>
+		</content>
+		<author xmlns:usr="http://streams.atlassian.com/syndication/username/1.0">
+			<name>Gilles</name>
+			<email>gilles@harfang.homelinux.org</email>
+			<uri>https://issues.apache.org/jira/secure/ViewProfile.jspa?name=erans</uri>
+			<link xmlns:media="http://purl.org/syndication/atommedia" rel="photo"
+				href="https://issues.apache.org/jira/secure/useravatar?avatarId=10452&amp;s=16"
+				media:height="16" media:width="16" />
+			<link xmlns:media="http://purl.org/syndication/atommedia" rel="photo"
+				href="https://issues.apache.org/jira/secure/useravatar?avatarId=10452&amp;s=48"
+				media:height="48" media:width="48" />
+			<usr:username>erans</usr:username>
+			<activity:object-type>http://activitystrea.ms/schema/1.0/person</activity:object-type>
+		</author>
+		<published>2011-10-06T15:47:45.091Z</published>
+		<updated>2011-10-06T15:47:45.091Z</updated>
+		<category term="resolved" />
+		<link href="https://issues.apache.org/jira/browse/MATH-683" rel="alternate" />
+		<link href="https://issues.apache.org/jira/images/icons/newfeature.gif"
+			rel="http://streams.atlassian.com/syndication/icon" />
+		<link
+			href="https://issues.apache.org/jira/s/en_UK-kk11f0/660/2/1.0/_/download/resources/jira.webresources:global-static/wiki-renderer.css"
+			rel="http://streams.atlassian.com/syndication/css" />
+		<generator uri="https://issues.apache.org/jira" />
+		<atlassian:application>com.atlassian.jira</atlassian:application>
+		<activity:verb>http://activitystrea.ms/schema/1.0/update</activity:verb>
+		<activity:verb>http://streams.atlassian.com/syndication/verbs/jira/transition</activity:verb>
+		<activity:verb>http://streams.atlassian.com/syndication/verbs/jira/resolve</activity:verb>
+		<activity:object>
+			<id>urn:uuid:4804b5ee-a45e-3ac1-9a12-70187ba98adb</id>
+			<title type="text">MATH-683</title>
+			<summary type="text">Create a method shift in the PolynomialFunction
+				class</summary>
+			<link rel="alternate" href="https://issues.apache.org/jira/browse/MATH-683" />
+			<activity:object-type>http://streams.atlassian.com/syndication/types/issue</activity:object-type>
+		</activity:object>
+	</entry>
+	<entry xmlns:atlassian="http://streams.atlassian.com/syndication/general/1.0"
+		xmlns:activity="http://activitystrea.ms/spec/1.0/">
+		<id>urn:uuid:f0c7c07a-b059-318c-9100-6a874e99b2cf</id>
+		<title type="html">&lt;a
+			href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=romdicos"
+			class="activity-item-user activity-item-author">DI COSTANZO&lt;/a>
+			attached 2 files to &lt;a
+			href="https://issues.apache.org/jira/browse/MATH-683"
+			class="issue-link">&lt;span class='resolved-link'>MATH-683&lt;/span>
+			- Create a method shift in the PolynomialFunction class&lt;/a>
+		</title>
+		<content type="html">&lt;blockquote>&lt;p>Hello,&lt;/p>
+
+			&lt;p>Here is the code for the shift method described above, and its associated
+			test. As wanted, I add this functionnality in the PolynomailsUtils
+			class.&lt;br/>
+			Romain&lt;/p>&lt;/blockquote>
+			&lt;ul class="attachments activity-list">
+			&lt;li>&lt;a
+			href="https://issues.apache.org/jira/secure/attachment/12497967/PolynomialsUtilsTest.java">PolynomialsUtilsTest.java&lt;/a>&lt;/li>
+			&lt;li>&lt;a
+			href="https://issues.apache.org/jira/secure/attachment/12497966/PolynomialsUtils.java">PolynomialsUtils.java&lt;/a>&lt;/li>
+			&lt;/ul>
+		</content>
+		<author xmlns:usr="http://streams.atlassian.com/syndication/username/1.0">
+			<name>DI COSTANZO</name>
+			<email>romain.di-costanzo@c-s.fr</email>
+			<uri>https://issues.apache.org/jira/secure/ViewProfile.jspa?name=romdicos</uri>
+			<link xmlns:media="http://purl.org/syndication/atommedia" rel="photo"
+				href="https://issues.apache.org/jira/secure/useravatar?avatarId=10452&amp;s=16"
+				media:height="16" media:width="16" />
+			<link xmlns:media="http://purl.org/syndication/atommedia" rel="photo"
+				href="https://issues.apache.org/jira/secure/useravatar?avatarId=10452&amp;s=48"
+				media:height="48" media:width="48" />
+			<usr:username>romdicos</usr:username>
+			<activity:object-type>http://activitystrea.ms/schema/1.0/person</activity:object-type>
+		</author>
+		<published>2011-10-06T09:52:54.004Z</published>
+		<updated>2011-10-06T09:52:54.004Z</updated>
+		<link href="https://issues.apache.org/jira/browse/MATH-683" rel="alternate" />
+		<link href="https://issues.apache.org/jira/images/icons/newfeature.gif"
+			rel="http://streams.atlassian.com/syndication/icon" />
+		<link
+			href="https://issues.apache.org/jira/s/en_UK-kk11f0/660/2/1.0/_/download/resources/jira.webresources:global-static/wiki-renderer.css"
+			rel="http://streams.atlassian.com/syndication/css" />
+		<generator uri="https://issues.apache.org/jira" />
+		<atlassian:application>com.atlassian.jira</atlassian:application>
+		<activity:verb>http://activitystrea.ms/schema/1.0/post</activity:verb>
+		<activity:object>
+			<id>urn:uuid:e77ef369-a93a-3a54-af36-f313c9b9dde6</id>
+			<title type="text">PolynomialsUtilsTest.java</title>
+			<link rel="alternate"
+				href="https://issues.apache.org/jira/secure/attachment/12497967/PolynomialsUtilsTest.java" />
+			<activity:object-type>http://activitystrea.ms/schema/1.0/file</activity:object-type>
+		</activity:object>
+		<activity:object>
+			<id>urn:uuid:03aa8325-7176-398d-b499-7235f12aa337</id>
+			<title type="text">PolynomialsUtils.java</title>
+			<link rel="alternate"
+				href="https://issues.apache.org/jira/secure/attachment/12497966/PolynomialsUtils.java" />
+			<activity:object-type>http://activitystrea.ms/schema/1.0/file</activity:object-type>
+		</activity:object>
+		<activity:target>
+			<id>urn:uuid:4804b5ee-a45e-3ac1-9a12-70187ba98adb</id>
+			<title type="text">MATH-683</title>
+			<summary type="text">Create a method shift in the PolynomialFunction
+				class</summary>
+			<link rel="alternate" href="https://issues.apache.org/jira/browse/MATH-683" />
+			<activity:object-type>http://streams.atlassian.com/syndication/types/issue</activity:object-type>
+		</activity:target>
+	</entry>
+	<entry xmlns:atlassian="http://streams.atlassian.com/syndication/general/1.0"
+		xmlns:activity="http://activitystrea.ms/spec/1.0/">
+		<id>urn:uuid:f7abdcb5-0683-3886-a4ab-9b2de722e44d</id>
+		<title type="html">&lt;a
+			href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=erans"
+			class="activity-item-user activity-item-author">Gilles&lt;/a> created
+			&lt;a href="https://issues.apache.org/jira/browse/MATH-685"
+			class="issue-link">MATH-685 - Add method
+			&amp;quot;addToEntry&amp;quot; to the &amp;quot;RealVector&amp;quot;
+			interface&lt;/a>
+		</title>
+		<summary type="html">&lt;div class="user-content">
+			&lt;p>Method "addToEntry":&lt;/p>
+			&lt;div class="code panel" style="border-width: 1px;">&lt;div
+			class="codeContent panelContent">
+			&lt;pre class="code-java">m.addToEntry(i, j, addend);&lt;/pre>
+			&lt;/div>&lt;/div>
+			&lt;p>as a shortcut to:&lt;/p>
+			&lt;div class="code panel" style="border-width: 1px;">&lt;div
+			class="codeContent panelContent">
+			&lt;pre class="code-java">m.setEntry(i, j, m.getEntry(i, j) +
+			addend);&lt;/pre>
+			&lt;/div>&lt;/div>
+
+			&lt;p>It has been argued (on the "dev" ML) that some functional style would
+			be a powerful and elegant way to implement a whole set of&lt;/p>
+			&lt;a href="https://issues.apache.org/jira/browse/MATH-685"
+			class='content-more'>Read more&lt;/a>&lt;/div>
+		</summary>
+		<content type="html">&lt;div class="user-content">
+			&lt;p>Method "addToEntry":&lt;/p>
+			&lt;div class="code panel" style="border-width: 1px;">&lt;div
+			class="codeContent panelContent">
+			&lt;pre class="code-java">m.addToEntry(i, j, addend);&lt;/pre>
+			&lt;/div>&lt;/div>
+			&lt;p>as a shortcut to:&lt;/p>
+			&lt;div class="code panel" style="border-width: 1px;">&lt;div
+			class="codeContent panelContent">
+			&lt;pre class="code-java">m.setEntry(i, j, m.getEntry(i, j) +
+			addend);&lt;/pre>
+			&lt;/div>&lt;/div>
+
+			&lt;p>It has been argued (on the "dev" ML) that some functional style would
+			be a powerful and elegant way to implement a whole set of related
+			functionality ("scale", "scaleAndAdd", etc.). However some simple
+			things (like when the "addend" depends on "i" and "j") cannot be
+			achieved without writing many more lines of code.&lt;/p>
+
+			&lt;p>Method "addToEntry" exists in "RealMatrix". If and when some satisfactory
+			solution is found in order to remove it there, "RealVector" can
+			always be aligned with it.&lt;/p> &lt;/div>
+		</content>
+		<author xmlns:usr="http://streams.atlassian.com/syndication/username/1.0">
+			<name>Gilles</name>
+			<email>gilles@harfang.homelinux.org</email>
+			<uri>https://issues.apache.org/jira/secure/ViewProfile.jspa?name=erans</uri>
+			<link xmlns:media="http://purl.org/syndication/atommedia" rel="photo"
+				href="https://issues.apache.org/jira/secure/useravatar?avatarId=10452&amp;s=16"
+				media:height="16" media:width="16" />
+			<link xmlns:media="http://purl.org/syndication/atommedia" rel="photo"
+				href="https://issues.apache.org/jira/secure/useravatar?avatarId=10452&amp;s=48"
+				media:height="48" media:width="48" />
+			<usr:username>erans</usr:username>
+			<activity:object-type>http://activitystrea.ms/schema/1.0/person</activity:object-type>
+		</author>
+		<published>2011-10-05T14:13:40.000Z</published>
+		<updated>2011-10-05T14:13:40.000Z</updated>
+		<category term="created" />
+		<link href="https://issues.apache.org/jira/browse/MATH-685" rel="alternate" />
+		<link href="https://issues.apache.org/jira/images/icons/improvement.gif"
+			rel="http://streams.atlassian.com/syndication/icon" />
+		<link
+			href="https://issues.apache.org/jira/s/en_UK-kk11f0/660/2/1.0/_/download/resources/jira.webresources:global-static/wiki-renderer.css"
+			rel="http://streams.atlassian.com/syndication/css" />
+		<generator uri="https://issues.apache.org/jira" />
+		<atlassian:application>com.atlassian.jira</atlassian:application>
+		<activity:verb>http://activitystrea.ms/schema/1.0/post</activity:verb>
+		<activity:object>
+			<id>urn:uuid:f7abdcb5-0683-3886-a4ab-9b2de722e44d</id>
+			<title type="text">MATH-685</title>
+			<summary type="text">Add method "addToEntry" to the "RealVector"
+				interface</summary>
+			<link rel="alternate" href="https://issues.apache.org/jira/browse/MATH-685" />
+			<activity:object-type>http://streams.atlassian.com/syndication/types/issue</activity:object-type>
+		</activity:object>
+	</entry>
+	<entry xmlns:atlassian="http://streams.atlassian.com/syndication/general/1.0"
+		xmlns:activity="http://activitystrea.ms/spec/1.0/">
+		<id>urn:uuid:0a3a9376-fe67-3d95-9627-6fda0412de89</id>
+		<title type="html">&lt;a
+			href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=celestin"
+			class="activity-item-user activity-item-author">Sébastien
+			Brisard&lt;/a> resolved &lt;a
+			href="https://issues.apache.org/jira/browse/MATH-684"
+			class="issue-link">&lt;span class='resolved-link'>MATH-684&lt;/span>
+			- Add method multiply(int) to FieldElement&lt;/a>
+			as 'Fixed'</title>
+		<author xmlns:usr="http://streams.atlassian.com/syndication/username/1.0">
+			<name>Sébastien Brisard</name>
+			<email>sebastien.brisard@m4x.org</email>
+			<uri>https://issues.apache.org/jira/secure/ViewProfile.jspa?name=celestin</uri>
+			<link xmlns:media="http://purl.org/syndication/atommedia" rel="photo"
+				href="https://issues.apache.org/jira/secure/useravatar?avatarId=10452&amp;s=16"
+				media:height="16" media:width="16" />
+			<link xmlns:media="http://purl.org/syndication/atommedia" rel="photo"
+				href="https://issues.apache.org/jira/secure/useravatar?avatarId=10452&amp;s=48"
+				media:height="48" media:width="48" />
+			<usr:username>celestin</usr:username>
+			<activity:object-type>http://activitystrea.ms/schema/1.0/person</activity:object-type>
+		</author>
+		<published>2011-10-04T08:13:27.565Z</published>
+		<updated>2011-10-04T08:13:27.565Z</updated>
+		<category term="resolved" />
+		<link href="https://issues.apache.org/jira/browse/MATH-684" rel="alternate" />
+		<link href="https://issues.apache.org/jira/images/icons/newfeature.gif"
+			rel="http://streams.atlassian.com/syndication/icon" />
+		<link
+			href="https://issues.apache.org/jira/s/en_UK-kk11f0/660/2/1.0/_/download/resources/jira.webresources:global-static/wiki-renderer.css"
+			rel="http://streams.atlassian.com/syndication/css" />
+		<generator uri="https://issues.apache.org/jira" />
+		<atlassian:application>com.atlassian.jira</atlassian:application>
+		<activity:verb>http://activitystrea.ms/schema/1.0/update</activity:verb>
+		<activity:verb>http://streams.atlassian.com/syndication/verbs/jira/transition</activity:verb>
+		<activity:verb>http://streams.atlassian.com/syndication/verbs/jira/resolve</activity:verb>
+		<activity:object>
+			<id>urn:uuid:3754b738-c8a6-3fa6-8a99-1d1729fd713e</id>
+			<title type="text">MATH-684</title>
+			<summary type="text">Add method multiply(int) to FieldElement</summary>
+			<link rel="alternate" href="https://issues.apache.org/jira/browse/MATH-684" />
+			<activity:object-type>http://streams.atlassian.com/syndication/types/issue</activity:object-type>
+		</activity:object>
+	</entry>
+	<entry xmlns:atlassian="http://streams.atlassian.com/syndication/general/1.0"
+		xmlns:thr="http://purl.org/syndication/thread/1.0" xmlns:activity="http://activitystrea.ms/spec/1.0/">
+		<id>urn:uuid:747e75a2-a110-3aa3-99aa-597f127c71b1</id>
+		<title type="html">&lt;a
+			href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=celestin"
+			class="activity-item-user activity-item-author">Sébastien
+			Brisard&lt;/a> commented on &lt;a
+			href="https://issues.apache.org/jira/browse/MATH-684"
+			class="issue-link">&lt;span class='resolved-link'>MATH-684&lt;/span>
+			- Add method multiply(int) to FieldElement&lt;/a>
+		</title>
+		<content type="html">&lt;blockquote>
+			&lt;p>Done in rev r1178715.&lt;/p> &lt;/blockquote>
+		</content>
+		<author xmlns:usr="http://streams.atlassian.com/syndication/username/1.0">
+			<name>Sébastien Brisard</name>
+			<email>sebastien.brisard@m4x.org</email>
+			<uri>https://issues.apache.org/jira/secure/ViewProfile.jspa?name=celestin</uri>
+			<link xmlns:media="http://purl.org/syndication/atommedia" rel="photo"
+				href="https://issues.apache.org/jira/secure/useravatar?avatarId=10452&amp;s=16"
+				media:height="16" media:width="16" />
+			<link xmlns:media="http://purl.org/syndication/atommedia" rel="photo"
+				href="https://issues.apache.org/jira/secure/useravatar?avatarId=10452&amp;s=48"
+				media:height="48" media:width="48" />
+			<usr:username>celestin</usr:username>
+			<activity:object-type>http://activitystrea.ms/schema/1.0/person</activity:object-type>
+		</author>
+		<published>2011-10-04T08:13:14.439Z</published>
+		<updated>2011-10-04T08:13:14.439Z</updated>
+		<category term="comment" />
+		<link
+			href="https://issues.apache.org/jira/browse/MATH-684?focusedCommentId=13119954&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-13119954"
+			rel="alternate" />
+		<link href="https://issues.apache.org/jira/images/icons/newfeature.gif"
+			rel="http://streams.atlassian.com/syndication/icon" />
+		<link
+			href="https://issues.apache.org/jira/s/en_UK-kk11f0/660/2/1.0/_/download/resources/jira.webresources:global-static/wiki-renderer.css"
+			rel="http://streams.atlassian.com/syndication/css" />
+		<thr:in-reply-to ref="urn:uuid:3754b738-c8a6-3fa6-8a99-1d1729fd713e" />
+		<generator uri="https://issues.apache.org/jira" />
+		<atlassian:application>com.atlassian.jira</atlassian:application>
+		<activity:verb>http://activitystrea.ms/schema/1.0/post</activity:verb>
+		<activity:object>
+			<id>urn:uuid:f105e2d0-bf63-35f1-a814-1ef2cab8ef7d</id>
+			<link rel="alternate"
+				href="https://issues.apache.org/jira/browse/MATH-684?focusedCommentId=13119954&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-13119954" />
+			<activity:object-type>http://activitystrea.ms/schema/1.0/comment</activity:object-type>
+		</activity:object>
+		<activity:target>
+			<id>urn:uuid:3754b738-c8a6-3fa6-8a99-1d1729fd713e</id>
+			<title type="text">MATH-684</title>
+			<summary type="text">Add method multiply(int) to FieldElement</summary>
+			<link rel="alternate" href="https://issues.apache.org/jira/browse/MATH-684" />
+			<activity:object-type>http://streams.atlassian.com/syndication/types/issue</activity:object-type>
+		</activity:target>
+	</entry>
+	<entry xmlns:atlassian="http://streams.atlassian.com/syndication/general/1.0"
+		xmlns:activity="http://activitystrea.ms/spec/1.0/">
+		<id>urn:uuid:3754b738-c8a6-3fa6-8a99-1d1729fd713e</id>
+		<title type="html">&lt;a
+			href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=celestin"
+			class="activity-item-user activity-item-author">Sébastien
+			Brisard&lt;/a> created &lt;a
+			href="https://issues.apache.org/jira/browse/MATH-684"
+			class="issue-link">&lt;span class='resolved-link'>MATH-684&lt;/span>
+			- Add method multiply(int) to FieldElement&lt;/a>
+		</title>
+		<content type="html">&lt;div class="user-content">
+			&lt;p>As discussed on the ML. n * x := x + x + ... + x (n times) is always
+			meaningful.&lt;/p> &lt;/div>
+		</content>
+		<author xmlns:usr="http://streams.atlassian.com/syndication/username/1.0">
+			<name>Sébastien Brisard</name>
+			<email>sebastien.brisard@m4x.org</email>
+			<uri>https://issues.apache.org/jira/secure/ViewProfile.jspa?name=celestin</uri>
+			<link xmlns:media="http://purl.org/syndication/atommedia" rel="photo"
+				href="https://issues.apache.org/jira/secure/useravatar?avatarId=10452&amp;s=16"
+				media:height="16" media:width="16" />
+			<link xmlns:media="http://purl.org/syndication/atommedia" rel="photo"
+				href="https://issues.apache.org/jira/secure/useravatar?avatarId=10452&amp;s=48"
+				media:height="48" media:width="48" />
+			<usr:username>celestin</usr:username>
+			<activity:object-type>http://activitystrea.ms/schema/1.0/person</activity:object-type>
+		</author>
+		<published>2011-10-04T08:10:32.000Z</published>
+		<updated>2011-10-04T08:10:32.000Z</updated>
+		<category term="created" />
+		<link href="https://issues.apache.org/jira/browse/MATH-684" rel="alternate" />
+		<link href="https://issues.apache.org/jira/images/icons/newfeature.gif"
+			rel="http://streams.atlassian.com/syndication/icon" />
+		<link
+			href="https://issues.apache.org/jira/s/en_UK-kk11f0/660/2/1.0/_/download/resources/jira.webresources:global-static/wiki-renderer.css"
+			rel="http://streams.atlassian.com/syndication/css" />
+		<generator uri="https://issues.apache.org/jira" />
+		<atlassian:application>com.atlassian.jira</atlassian:application>
+		<activity:verb>http://activitystrea.ms/schema/1.0/post</activity:verb>
+		<activity:object>
+			<id>urn:uuid:3754b738-c8a6-3fa6-8a99-1d1729fd713e</id>
+			<title type="text">MATH-684</title>
+			<summary type="text">Add method multiply(int) to FieldElement</summary>
+			<link rel="alternate" href="https://issues.apache.org/jira/browse/MATH-684" />
+			<activity:object-type>http://streams.atlassian.com/syndication/types/issue</activity:object-type>
+		</activity:object>
+	</entry>
+	<entry xmlns:atlassian="http://streams.atlassian.com/syndication/general/1.0"
+		xmlns:thr="http://purl.org/syndication/thread/1.0" xmlns:activity="http://activitystrea.ms/spec/1.0/">
+		<id>urn:uuid:1320a77a-932d-3a34-bf1c-3dbcdc4b0d19</id>
+		<title type="html">&lt;a
+			href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=romdicos"
+			class="activity-item-user activity-item-author">DI COSTANZO&lt;/a>
+			commented on &lt;a
+			href="https://issues.apache.org/jira/browse/MATH-682"
+			class="issue-link">MATH-682 - Pascal triangle &lt;/a>
+		</title>
+		<summary type="html">&lt;blockquote>
+			&lt;p>Effectively, this is a way to get Pascal triangle elements. I didn't know this
+			method was existing and it fulfil my need. &lt;br/>
+			Actually, I was thinking to create method to retrieve every element at once
+			for given order, but I can build it by myself from&lt;/p> &lt;a
+			href="https://issues.apache.org/jira/browse/MATH-682?focusedCommentId=13119358&amp;amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-13119358"
+			class='comment-more'>Read more&lt;/a>&lt;/blockquote>
+		</summary>
+		<content type="html">&lt;blockquote>
+			&lt;p>Effectively, this is a way to get Pascal triangle elements. I didn't know this
+			method was existing and it fulfil my need. &lt;br/>
+			Actually, I was thinking to create method to retrieve every element at once
+			for given order, but I can build it by myself from those binomial
+			coefficient method. &lt;br/>
+			Thanks,&lt;br/>
+			Regards,&lt;/p>
+
+			&lt;p>Romain&lt;/p> &lt;/blockquote>
+		</content>
+		<author xmlns:usr="http://streams.atlassian.com/syndication/username/1.0">
+			<name>DI COSTANZO</name>
+			<email>romain.di-costanzo@c-s.fr</email>
+			<uri>https://issues.apache.org/jira/secure/ViewProfile.jspa?name=romdicos</uri>
+			<link xmlns:media="http://purl.org/syndication/atommedia" rel="photo"
+				href="https://issues.apache.org/jira/secure/useravatar?avatarId=10452&amp;s=16"
+				media:height="16" media:width="16" />
+			<link xmlns:media="http://purl.org/syndication/atommedia" rel="photo"
+				href="https://issues.apache.org/jira/secure/useravatar?avatarId=10452&amp;s=48"
+				media:height="48" media:width="48" />
+			<usr:username>romdicos</usr:username>
+			<activity:object-type>http://activitystrea.ms/schema/1.0/person</activity:object-type>
+		</author>
+		<published>2011-10-03T15:24:52.491Z</published>
+		<updated>2011-10-03T15:24:52.491Z</updated>
+		<category term="comment" />
+		<link
+			href="https://issues.apache.org/jira/browse/MATH-682?focusedCommentId=13119358&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-13119358"
+			rel="alternate" />
+		<link href="https://issues.apache.org/jira/images/icons/newfeature.gif"
+			rel="http://streams.atlassian.com/syndication/icon" />
+		<link
+			href="https://issues.apache.org/jira/s/en_UK-kk11f0/660/2/1.0/_/download/resources/jira.webresources:global-static/wiki-renderer.css"
+			rel="http://streams.atlassian.com/syndication/css" />
+		<thr:in-reply-to ref="urn:uuid:fa534c2c-cebd-34ba-b07e-1b422e7591d6" />
+		<generator uri="https://issues.apache.org/jira" />
+		<atlassian:application>com.atlassian.jira</atlassian:application>
+		<activity:verb>http://activitystrea.ms/schema/1.0/post</activity:verb>
+		<activity:object>
+			<id>urn:uuid:71f2547b-b5d4-35d1-a033-0346f57990a0</id>
+			<link rel="alternate"
+				href="https://issues.apache.org/jira/browse/MATH-682?focusedCommentId=13119358&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-13119358" />
+			<activity:object-type>http://activitystrea.ms/schema/1.0/comment</activity:object-type>
+		</activity:object>
+		<activity:target>
+			<id>urn:uuid:fa534c2c-cebd-34ba-b07e-1b422e7591d6</id>
+			<title type="text">MATH-682</title>
+			<summary type="text">Pascal triangle </summary>
+			<link rel="alternate" href="https://issues.apache.org/jira/browse/MATH-682" />
+			<activity:object-type>http://streams.atlassian.com/syndication/types/issue</activity:object-type>
+		</activity:target>
+	</entry>
+	<entry xmlns:atlassian="http://streams.atlassian.com/syndication/general/1.0"
+		xmlns:thr="http://purl.org/syndication/thread/1.0" xmlns:activity="http://activitystrea.ms/spec/1.0/">
+		<id>urn:uuid:71bb77cc-fe1b-3e79-bd1b-e8adb3b71931</id>
+		<title type="html">&lt;a
+			href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=psteitz"
+			class="activity-item-user activity-item-author">Phil Steitz&lt;/a>
+			commented on &lt;a
+			href="https://issues.apache.org/jira/browse/MATH-682"
+			class="issue-link">MATH-682 - Pascal triangle &lt;/a>
+		</title>
+		<content type="html">&lt;blockquote>
+			&lt;p>This is already available via the various binomial coefficient methods.
+			What am I missing here?&lt;/p> &lt;/blockquote>
+		</content>
+		<author xmlns:usr="http://streams.atlassian.com/syndication/username/1.0">
+			<name>Phil Steitz</name>
+			<email>psteitz@apache.org</email>
+			<uri>https://issues.apache.org/jira/secure/ViewProfile.jspa?name=psteitz</uri>
+			<link xmlns:media="http://purl.org/syndication/atommedia" rel="photo"
+				href="https://issues.apache.org/jira/secure/useravatar?avatarId=10452&amp;s=16"
+				media:height="16" media:width="16" />
+			<link xmlns:media="http://purl.org/syndication/atommedia" rel="photo"
+				href="https://issues.apache.org/jira/secure/useravatar?avatarId=10452&amp;s=48"
+				media:height="48" media:width="48" />
+			<usr:username>psteitz</usr:username>
+			<activity:object-type>http://activitystrea.ms/schema/1.0/person</activity:object-type>
+		</author>
+		<published>2011-10-03T15:04:30.724Z</published>
+		<updated>2011-10-03T15:04:30.724Z</updated>
+		<category term="comment" />
+		<link
+			href="https://issues.apache.org/jira/browse/MATH-682?focusedCommentId=13119349&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-13119349"
+			rel="alternate" />
+		<link href="https://issues.apache.org/jira/images/icons/newfeature.gif"
+			rel="http://streams.atlassian.com/syndication/icon" />
+		<link
+			href="https://issues.apache.org/jira/s/en_UK-kk11f0/660/2/1.0/_/download/resources/jira.webresources:global-static/wiki-renderer.css"
+			rel="http://streams.atlassian.com/syndication/css" />
+		<thr:in-reply-to ref="urn:uuid:fa534c2c-cebd-34ba-b07e-1b422e7591d6" />
+		<generator uri="https://issues.apache.org/jira" />
+		<atlassian:application>com.atlassian.jira</atlassian:application>
+		<activity:verb>http://activitystrea.ms/schema/1.0/post</activity:verb>
+		<activity:object>
+			<id>urn:uuid:ea46ff6b-de9e-35d8-808c-c9346a6efe30</id>
+			<link rel="alternate"
+				href="https://issues.apache.org/jira/browse/MATH-682?focusedCommentId=13119349&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-13119349" />
+			<activity:object-type>http://activitystrea.ms/schema/1.0/comment</activity:object-type>
+		</activity:object>
+		<activity:target>
+			<id>urn:uuid:fa534c2c-cebd-34ba-b07e-1b422e7591d6</id>
+			<title type="text">MATH-682</title>
+			<summary type="text">Pascal triangle </summary>
+			<link rel="alternate" href="https://issues.apache.org/jira/browse/MATH-682" />
+			<activity:object-type>http://streams.atlassian.com/syndication/types/issue</activity:object-type>
+		</activity:target>
+	</entry>
+</feed>

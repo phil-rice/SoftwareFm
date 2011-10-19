@@ -56,6 +56,8 @@ public class RepositoryFacard implements IRepositoryFacard {
 
 	@Override
 	public Future<?> post(String url, Map<String, Object> map, IResponseCallback callback) {
+		// System.out.println(url+" <--------- " + map);
+		// return Futures.doneFuture(null);
 		List<NameValuePair> nameValuePairs = parameterMaker.makeParameters(map);
 		return client.post(url).addParams(nameValuePairs).execute(callback);
 	}

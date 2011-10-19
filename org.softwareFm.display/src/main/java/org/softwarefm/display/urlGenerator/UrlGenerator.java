@@ -23,8 +23,8 @@ public class UrlGenerator implements IUrlGenerator {
 	public String findUrlFor(Map<String, Object> data) {
 		if (data == null || data.isEmpty())
 			return null;
-		Object[] values = new String[keys.length + 2];
-		for (int i = 0; i < keys.length; i++) {
+		Object[] values = new String[2 * keys.length + 2];
+		for (int i = 0; i <  keys.length; i ++) {
 			Object key = keys[i];
 			Object value = data.get(key);
 			if (value == null)
@@ -33,12 +33,21 @@ public class UrlGenerator implements IUrlGenerator {
 				else
 					throw new NullPointerException(MessageFormat.format(DisplayConstants.cannotFindValueForKey, key, data));
 			String cleaned = Strings.forUrl(value.toString());
-			values[i + 2] = cleaned;
+			values[2*i + 2] = cleaned;
+			values[2*i + 3] = cleaned.replace(".", "/");
 
 		}
-		values[0] = Integer.toString(Math.abs(values[2].hashCode() % 1000));
-		values[1] = ((String) values[2]).substring(0, 3);
+		values[0] = subString(values[2], 0, 2);
+		values[1] = subString(values[2], 2,4);
 		return MessageFormat.format(pattern, values);
+	}
+
+	private Object subString(Object object, int i, int j) {
+		String raw = Strings.nullSafeToString(object);
+		if (raw.length() < j)
+			return "x";
+		else
+			return raw.substring(i, j);
 	}
 
 }
