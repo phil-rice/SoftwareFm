@@ -39,7 +39,7 @@ public class CardConfig {
 	public final int defaultHeightWeight = 2;
 
 	public CardConfig(ICardFactory cardFactory, ICardDataStore cardDataStore) {
-		this.resourceGetter = IResourceGetter.Utils.noResources().with(new ResourceGetterMock("card.name.title", "Name", "card.value.title", "Value"));
+		this.resourceGetter = IResourceGetter.Utils.noResources().with(new ResourceGetterMock("card.name.title", "Name", "card.value.title", "Value", "navBar.prev.title","<","navBar.next.title",">"));
 		this.selector = ICardConfigSelector.Utils.defaultSelector(this);
 		this.detailFactory = new DetailFactory();
 		this.cardFactory = cardFactory;

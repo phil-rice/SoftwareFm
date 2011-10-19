@@ -36,7 +36,7 @@ public class NavBar implements IHasComposite {
 			this.callbackToGotoUrl = callbackToGotoUrl;
 			IResourceGetter resourceGetter = cardConfig.resourceGetter;
 			history = new History<String>();
-			
+
 			prevButton = Swts.makePushButton(this, resourceGetter, "navBar.prev.title", new Runnable() {
 				@Override
 				public void run() {
@@ -66,12 +66,12 @@ public class NavBar implements IHasComposite {
 			for (final String string : fragments)
 				if (string.length() > 0) {
 					String parentUrl = thisUrl;
-					new NavCombo(this, cardConfig, parentUrl,string, callbackToGotoUrl);
+					new NavCombo(this, cardConfig, parentUrl, string, callbackToGotoUrl);
 					thisUrl += "/" + string;
 					new NavButton(this, thisUrl, callbackToGotoUrl);
 
 				}
-			new NavCombo(this, cardConfig, url,"", callbackToGotoUrl);
+			new NavCombo(this, cardConfig, url, "", callbackToGotoUrl);
 			System.out.println();
 			layout();
 			getParent().layout();
@@ -92,8 +92,11 @@ public class NavBar implements IHasComposite {
 		public Point computeSize(int wHint, int hHint) {
 			int x = 0;
 			for (Control control : getChildren())
-				x += control.computeSize(wHint, hHint).x;
-			return new Point(x + 1000, height);
+				if (control instanceof Combo)
+					x += 16;
+				else
+					x += control.computeSize(wHint, hHint).x;
+			return new Point(x, height);
 		}
 
 		@Override

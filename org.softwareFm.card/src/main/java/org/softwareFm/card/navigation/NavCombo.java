@@ -62,7 +62,7 @@ public class NavCombo implements IHasControl {
 				e.gc.fillRectangle(clientArea);
 				if (image == null) {
 					e.gc.drawText("/", 6, 0);
-					e.gc.drawRectangle(clientArea.x,clientArea.y,clientArea.width-1, clientArea.width-2);
+//					e.gc.drawRectangle(clientArea.x,clientArea.y,clientArea.width-1, clientArea.width-2);
 				} else
 					e.gc.drawImage(image, 0, 0);
 			}

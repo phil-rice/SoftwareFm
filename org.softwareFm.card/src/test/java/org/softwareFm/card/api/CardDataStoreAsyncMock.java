@@ -9,6 +9,7 @@ import java.util.concurrent.Future;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.constants.UtilityConstants;
+import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.maps.Maps;
 
@@ -22,16 +23,22 @@ public class CardDataStoreAsyncMock implements IMutableCardDataStore {
 	}
 
 	@Override
-	public Future<Map<String,Object>> processDataFor(final String url, final ICardDataStoreCallback callback) {
-		Maps.add(counts, url, 1);
-		final Map<String, Object> result = map.get(url);
-		if (result == null)
-			throw new NullPointerException(MessageFormat.format(UtilityConstants.mapDoesntHaveKey, url, Lists.sort(map.keySet()), map));
-		return Futures.gatedMock(new ICallback<Map<String,Object>>(){
-			@Override
-			public void process(Map<String, Object> t) throws Exception {
-				callback.process(url, result);
-			}}, result);
+	public Future<Map<String, Object>> processDataFor(final String url, final ICardDataStoreCallback callback) {
+		try {
+			Maps.add(counts, url, 1);
+			final Map<String, Object> result = map.get(url);
+			if (result == null)
+				throw new NullPointerException(MessageFormat.format(UtilityConstants.mapDoesntHaveKey, url, Lists.sort(map.keySet()), map));
+			callback.process(url, result);
+			return Futures.gatedMock(new ICallback<Map<String, Object>>() {
+				@Override
+				public void process(Map<String, Object> t) throws Exception {
+					callback.process(url, result);
+				}
+			}, result);
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
 	}
 
 	@Override

@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.utilities.maps.Maps;
 
 public class CardDataStoreFixture {
@@ -36,7 +35,8 @@ public class CardDataStoreFixture {
 			"data2b", data2b,//
 			"data2c", data2c);
 
-	private static final Object[] dataForMocks = new Object[] { url, dataUrl1, //
+	private static final Object[] dataForMocks = new Object[] { "some", Maps.newMap(),//
+			url, dataUrl1, //
 			url1a, data1a, //
 			url1b, data1b
 

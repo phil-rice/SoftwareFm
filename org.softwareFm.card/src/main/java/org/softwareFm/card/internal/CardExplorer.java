@@ -20,7 +20,6 @@ import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ILineSelectedListener;
 import org.softwareFm.card.api.KeyValue;
-import org.softwareFm.card.navigation.NavBar;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
@@ -44,8 +43,13 @@ public class CardExplorer implements IHasComposite {
 			super(parent, SWT.HORIZONTAL);
 			this.initialUrl = rootUrl;
 			String loadingText = IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "card.holder.loading.text");
-			left = new CardHolder(this, loadingText, "");
-		 	right = new SashForm(this, SWT.VERTICAL);
+			left = new CardHolder(this, loadingText, loadingText, cardConfig, rootUrl, new ICallback<String>() {
+				@Override
+				public void process(String t) throws Exception {
+					selectUrl(cardConfig, t);
+				}
+			});
+			right = new SashForm(this, SWT.VERTICAL);
 			right.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_BLUE));
 			detail = new ScrolledComposite(right, SWT.H_SCROLL);
 			detail.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_RED));
@@ -151,7 +155,6 @@ public class CardExplorer implements IHasComposite {
 		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacard();
 		final String rootUrl = "/softwareFm/content";
 		final String firstUrl = "/softwareFm/content";
-		final int navBarHeight = 20;
 		try {
 			Swts.display(CardExplorer.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 				@Override
@@ -160,43 +163,9 @@ public class CardExplorer implements IHasComposite {
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 					final CardConfig cardConfig = new BasicCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 					IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "navBar.prev.title");
-					final Composite composite = new Composite(from, SWT.NULL);
-					final CardExplorer cardExplorer = new CardExplorer(composite, cardConfig, rootUrl, firstUrl);
-					final NavBar navBar = new NavBar(composite, navBarHeight, cardConfig, rootUrl, new ICallback<String>() {
-						@Override
-						public void process(String t) throws Exception {
-							cardExplorer.content.selectUrl(cardConfig, t);
-						}
-					});
-
-					cardExplorer.addUrlChangedListener(new IUrlChangedListener() {
-						@Override
-						public void urlChanged(String url) {
-							navBar.noteUrlHasChanged(url);
-							System.out.println();
-							System.out.println();
-							Swts.layoutDump(from);
-						}
-					});
-
-					cardExplorer.getControl().moveBelow(navBar.getControl());
-					
-					Listener listener = new Listener() {
-						@Override
-						public void handleEvent(Event event) { 
-							Rectangle parentClientArea = composite.getParent().getClientArea();
-							composite.setSize(parentClientArea.width, parentClientArea.height);
-							Rectangle clientArea = composite.getClientArea();
-							navBar.getControl().setBounds(clientArea.x, clientArea.y, clientArea.width, navBarHeight);
-							Composite composite2 = navBar.getComposite();
-							composite2.layout();
-							cardExplorer.getControl().setBounds(clientArea.x, clientArea.y+navBarHeight, clientArea.width, clientArea.height-navBarHeight);
-						}
-					};
-					
-					Swts.setSizeFromClientArea(composite);
-					composite.getParent().addListener(SWT.Resize, listener);
-					return composite;
+					final CardExplorer cardExplorer = new CardExplorer(from, cardConfig, rootUrl, firstUrl);
+					Swts.resizeMeToParentsSize(cardExplorer.getControl());
+					return cardExplorer.getComposite();
 				}
 			});
 		} finally {
