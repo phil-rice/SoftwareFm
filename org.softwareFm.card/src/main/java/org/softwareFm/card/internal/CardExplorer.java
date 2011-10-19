@@ -151,7 +151,7 @@ public class CardExplorer implements IHasComposite {
 		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacard();
 		final String rootUrl = "/softwareFm/content";
 		final String firstUrl = "/softwareFm/content";
-		final int navBarHeight = 25;
+		final int navBarHeight = 20;
 		try {
 			Swts.display(CardExplorer.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 				@Override
@@ -160,14 +160,14 @@ public class CardExplorer implements IHasComposite {
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 					final CardConfig cardConfig = new BasicCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 					IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "navBar.prev.title");
-					Composite composite = new Composite(from, SWT.NULL);
+					final Composite composite = new Composite(from, SWT.NULL);
 					final CardExplorer cardExplorer = new CardExplorer(composite, cardConfig, rootUrl, firstUrl);
-					final NavBar navBar = new NavBar(composite, navBarHeight, rootUrl, cardConfig.resourceGetter, new ICallback<String>() {
+					final NavBar navBar = new NavBar(composite, navBarHeight, cardConfig, rootUrl, new ICallback<String>() {
 						@Override
 						public void process(String t) throws Exception {
 							cardExplorer.content.selectUrl(cardConfig, t);
 						}
-					}, cardDataStore);
+					});
 
 					cardExplorer.addUrlChangedListener(new IUrlChangedListener() {
 						@Override
@@ -180,10 +180,24 @@ public class CardExplorer implements IHasComposite {
 					});
 
 					cardExplorer.getControl().moveBelow(navBar.getControl());
-
-					Swts.addGrabHorizontalAndFillGridDataToAllChildren(composite);
-					cardExplorer.getControl().setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
-					composite.layout();
+					
+					Listener listener = new Listener() {
+						@Override
+						public void handleEvent(Event event) {
+							Rectangle parentClientArea = composite.getParent().getClientArea();
+							composite.setSize(parentClientArea.width, parentClientArea.height);
+							Rectangle clientArea = composite.getClientArea();
+							navBar.getControl().setBounds(clientArea.x, clientArea.y, clientArea.width, navBarHeight);
+							Composite composite2 = navBar.getComposite();
+							composite2.layout();
+							cardExplorer.getControl().setBounds(clientArea.x, clientArea.y+navBarHeight, clientArea.width, clientArea.height-navBarHeight);
+							
+						}
+					};
+					
+					
+					Swts.setSizeFromClientArea(composite);
+					composite.getParent().addListener(SWT.Resize, listener);
 					return composite;
 				}
 			});

@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
-import org.softwareFm.card.api.ICardDataStore;
+import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.internal.History;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
@@ -25,15 +25,16 @@ public class NavBar implements IHasComposite {
 		private final ICallback<String> callbackToGotoUrl;
 		private final Button prevButton;
 		private final Button nextButton;
-		private final ICardDataStore cardDataStore;
 		private final int height;
+		private final CardConfig cardConfig;
 
-		public NavBarComposite(Composite parent, int height, IResourceGetter resourceGetter, ICardDataStore cardDataStore, String rootUrl, final ICallback<String> callbackToGotoUrl) {
+		public NavBarComposite(Composite parent, int height, CardConfig cardConfig, String rootUrl, final ICallback<String> callbackToGotoUrl) {
 			super(parent, SWT.BORDER);
 			this.height = height;
-			this.cardDataStore = cardDataStore;
+			this.cardConfig = cardConfig;
 			this.rootUrl = rootUrl;
 			this.callbackToGotoUrl = callbackToGotoUrl;
+			IResourceGetter resourceGetter = cardConfig.resourceGetter;
 			history = new History<String>();
 			prevButton = Swts.makePushButton(this, resourceGetter, "navBar.prev.title", new Runnable() {
 				@Override
@@ -64,12 +65,12 @@ public class NavBar implements IHasComposite {
 			for (final String string : fragments)
 				if (string.length() > 0) {
 					String parentUrl = thisUrl;
-					new NavCombo(this, cardDataStore, parentUrl, callbackToGotoUrl);
+					new NavCombo(this, cardConfig, parentUrl, callbackToGotoUrl);
 					thisUrl += "/" + string;
 					new NavButton(this, thisUrl, callbackToGotoUrl);
 
 				}
-			new NavCombo(this, cardDataStore, url, callbackToGotoUrl);
+			new NavCombo(this, cardConfig, url, callbackToGotoUrl);
 			System.out.println();
 			layout();
 			getParent().layout();
@@ -100,14 +101,15 @@ public class NavBar implements IHasComposite {
 			int x = clientArea.x;
 			int y = clientArea.y;
 			for (Control control : getChildren()) {
-				if (control instanceof Button) {
-					control.setLocation(x, y-1);
-					control.pack();
-					x += control.getSize().x;
-				} else if (control instanceof Combo) {
+
+				if (control instanceof Combo) {
 					control.setLocation(x, y);
-					Point computeSize = control.computeSize(SWT.DEFAULT, height);
-					control.setSize(computeSize.y, computeSize.y);//a square equal to height
+					control.setBounds(x, y, clientArea.height, clientArea.height);
+					x += control.getSize().x;
+				} else {
+					control.setLocation(x, y - 1);
+					int width = control.computeSize(SWT.DEFAULT, clientArea.height).x;
+					control.setBounds(x, y, width, clientArea.height);
 					x += control.getSize().x;
 				}
 			}
@@ -115,8 +117,8 @@ public class NavBar implements IHasComposite {
 
 	}
 
-	public NavBar(Composite parent, int height, String rootUrl, IResourceGetter resourceGetter, ICallback<String> callbackToGotoUrl, ICardDataStore cardDataStore) {
-		content = new NavBarComposite(parent, height, resourceGetter, cardDataStore, rootUrl, callbackToGotoUrl);
+	public NavBar(Composite parent, int height, CardConfig cardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
+		content = new NavBarComposite(parent, height, cardConfig, rootUrl, callbackToGotoUrl);
 	}
 
 	@Override
