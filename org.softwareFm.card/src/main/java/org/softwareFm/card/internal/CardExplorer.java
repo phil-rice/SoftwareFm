@@ -20,6 +20,7 @@ import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ILineSelectedListener;
 import org.softwareFm.card.api.KeyValue;
+import org.softwareFm.card.navigation.NavBar;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
@@ -44,7 +45,7 @@ public class CardExplorer implements IHasComposite {
 			this.initialUrl = rootUrl;
 			String loadingText = IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "card.holder.loading.text");
 			left = new CardHolder(this, loadingText, "");
-			right = new SashForm(this, SWT.VERTICAL);
+		 	right = new SashForm(this, SWT.VERTICAL);
 			right.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_BLUE));
 			detail = new ScrolledComposite(right, SWT.H_SCROLL);
 			detail.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_RED));
@@ -161,24 +162,24 @@ public class CardExplorer implements IHasComposite {
 					IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "navBar.prev.title");
 					Composite composite = new Composite(from, SWT.NULL);
 					final CardExplorer cardExplorer = new CardExplorer(composite, cardConfig, rootUrl, firstUrl);
-//					final NavBar navBar = new NavBar(composite, navBarHeight, rootUrl, cardConfig.resourceGetter, new ICallback<String>() {
-//						@Override
-//						public void process(String t) throws Exception {
-//							cardExplorer.content.selectUrl(cardConfig, t);
-//						}
-//					}, cardDataStore);
+					final NavBar navBar = new NavBar(composite, navBarHeight, rootUrl, cardConfig.resourceGetter, new ICallback<String>() {
+						@Override
+						public void process(String t) throws Exception {
+							cardExplorer.content.selectUrl(cardConfig, t);
+						}
+					}, cardDataStore);
 
 					cardExplorer.addUrlChangedListener(new IUrlChangedListener() {
 						@Override
 						public void urlChanged(String url) {
-//							navBar.noteUrlHasChanged(url);
+							navBar.noteUrlHasChanged(url);
 							System.out.println();
 							System.out.println();
 							Swts.layoutDump(from);
 						}
 					});
 
-//					cardExplorer.getControl().moveBelow(navBar.getControl());
+					cardExplorer.getControl().moveBelow(navBar.getControl());
 
 					Swts.addGrabHorizontalAndFillGridDataToAllChildren(composite);
 					cardExplorer.getControl().setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());

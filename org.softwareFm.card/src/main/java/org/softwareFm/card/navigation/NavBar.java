@@ -1,24 +1,18 @@
 package org.softwareFm.card.navigation;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
 import org.softwareFm.card.api.ICardDataStore;
-import org.softwareFm.card.api.ICardDataStoreCallback;
 import org.softwareFm.card.internal.History;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class NavBar implements IHasComposite {
@@ -73,10 +67,18 @@ public class NavBar implements IHasComposite {
 					new NavCombo(this, cardDataStore, parentUrl, callbackToGotoUrl);
 					thisUrl += "/" + string;
 					new NavButton(this, thisUrl, callbackToGotoUrl);
+
 				}
-			makeNavButton(thisUrl, thisUrl, null);
+			new NavCombo(this, cardDataStore, url, callbackToGotoUrl);
+			System.out.println();
 			layout();
 			getParent().layout();
+			Swts.layoutDump(this);
+		}
+
+		private void updateNextPrevButtons() {
+			nextButton.setEnabled(history.hasNext());
+			prevButton.setEnabled(history.hasPrev());
 		}
 
 		@Override
@@ -98,42 +100,17 @@ public class NavBar implements IHasComposite {
 			int x = clientArea.x;
 			int y = clientArea.y;
 			for (Control control : getChildren()) {
-				if (control instanceof NavControl) {
-					control.setLocation(x, y);
+				if (control instanceof Button) {
+					control.setLocation(x, y-1);
 					control.pack();
 					x += control.getSize().x;
-				} else if (control instanceof Button) {
+				} else if (control instanceof Combo) {
 					control.setLocation(x, y);
-					control.setSize(control.computeSize(SWT.DEFAULT, height));
+					Point computeSize = control.computeSize(SWT.DEFAULT, height);
+					control.setSize(computeSize.y, computeSize.y);//a square equal to height
 					x += control.getSize().x;
 				}
 			}
-		}
-
-		private void makeNavButton(String parentUrl, String thisUrl, final String string) {
-			final NavControl navControl = new NavControl(this, height, string, thisUrl, callbackToGotoUrl);
-			cardDataStore.processDataFor(parentUrl, new ICardDataStoreCallback<Void>() {
-				@Override
-				public Void process(String url, Map<String, Object> result) throws Exception {
-					List<String> items = Lists.newList();
-					for (Entry<String, Object> entry : result.entrySet())
-						if (entry.getValue() instanceof Map<?, ?>)
-							items.add(entry.getKey());
-					Collections.sort(items);
-					navControl.setDropdownItems(items);
-					return null;
-				}
-
-				@Override
-				public Void noData(String url) throws Exception {
-					return process(url, Collections.<String, Object> emptyMap());
-				}
-			});
-		}
-
-		private void updateNextPrevButtons() {
-			nextButton.setEnabled(history.hasNext());
-			prevButton.setEnabled(history.hasPrev());
 		}
 
 	}
