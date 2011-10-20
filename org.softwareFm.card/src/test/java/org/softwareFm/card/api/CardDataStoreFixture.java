@@ -16,6 +16,12 @@ public class CardDataStoreFixture {
 	public final static Map<String, Object> data2a = Maps.makeLinkedMap("tag", "two", "value", "2a");
 	public final static Map<String, Object> data2b = Maps.makeLinkedMap("tag", "two", "value", "2b");
 	public final static Map<String, Object> data2c = Maps.makeLinkedMap("tag", "two", "value", "2c");
+	
+	public final static Map<String, Object> data1ap = Maps.makeLinkedMap("tag", "one", "value", "1a", "p", 1);
+	public final static Map<String, Object> data1bp = Maps.makeLinkedMap("tag", "one", "value", "1b", "p", 2);
+	public final static Map<String, Object> data2ap = Maps.makeLinkedMap("tag", "two", "value", "2a", "q", 1);
+	public final static Map<String, Object> data2bp = Maps.makeLinkedMap("tag", "two", "value", "2b", "q", 2);
+	public final static Map<String, Object> data2cp = Maps.makeLinkedMap("tag", "two", "value", "2c", "q", 3);
 
 	public final static List<KeyValue> kvFromData1a = Arrays.asList(new KeyValue("tag", "one"), new KeyValue("value", "valuea"));
 	public final static List<KeyValue> p1q2 = Arrays.asList(new KeyValue("p", 1), new KeyValue("q", 2));
@@ -40,11 +46,11 @@ public class CardDataStoreFixture {
 
 	private static final Object[] dataForMocks = new Object[] { "some", Maps.newMap(),//
 			url, dataUrl1, //
-			url1a, data1a, //
-			url1b, data1b,//
-			url2a, data2a,//
-			url2b, data2b,//
-			url2c, data2c,//
+			url1a, data1ap, //
+			url1b, data1bp,//
+			url2a, data2ap,//
+			url2b, data2bp,//
+			url2c, data2cp,//
 
 	};
 

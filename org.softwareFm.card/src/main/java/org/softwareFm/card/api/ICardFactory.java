@@ -20,7 +20,7 @@ public interface ICardFactory {
 				@Override
 				public ICard process(final String url, final Map<String, Object> result) throws Exception {
 					final AtomicReference<ICard> ref = new AtomicReference<ICard>();
-					Swts.asyncExec(cardHolder, new Runnable() {
+					Swts.syncExec(cardHolder, new Runnable() {
 						@Override
 						public void run() {
 							try {

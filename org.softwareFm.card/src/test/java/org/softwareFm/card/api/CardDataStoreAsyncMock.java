@@ -32,7 +32,8 @@ public class CardDataStoreAsyncMock implements IMutableCardDataStore {
 			return Futures.gatedMock(new IFunction1<Map<String, Object>, T>() {
 				@Override
 				public T apply(Map<String, Object> from) throws Exception {
-					 T process = callback.process(url, result);
+					 T process = callback.process(url, from);
+					 System.out.println("CardAysnc: " + url +"=>" + from + "=> " + process);
 					return process;
 				}
 			}, result);

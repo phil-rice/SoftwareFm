@@ -6,7 +6,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.softwareFm.card.api.CardConfig;
-import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.display.composites.IHasComposite;
@@ -15,7 +14,6 @@ import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwareFm.utilities.strings.Strings;
 
 public class SingleCardExplorer implements IHasComposite {
 
@@ -23,19 +21,14 @@ public class SingleCardExplorer implements IHasComposite {
 	private final ICallback<String> callbackToGotoUrl;
 	private final SashForm sashForm;
 	private final Text text;
+	private final CardCollectionsDataStore cardCollectionsDataStore = new CardCollectionsDataStore();
 
-	public SingleCardExplorer(Composite parent, final CardConfig cardConfig, String rootUrl) {
+	public SingleCardExplorer(Composite parent, final CardConfig cardConfig, final String rootUrl) {
 		sashForm = new SashForm(parent, SWT.VERTICAL);
 		callbackToGotoUrl = new ICallback<String>() {
 			@Override
 			public void process(String url) throws Exception {
-				ICardFactory.Utils.makeCard(cardHolder, cardConfig, url, new ICallback<ICard>() {
-					@Override
-					public void process(ICard card) throws Exception {
-						cardHolder.setCard(card);
-						text.setText(Strings.nullSafeToString(card.rawData()));
-					}
-				});
+				cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url);
 			}
 		};
 		cardHolder = new CardHolder(sashForm, "loading", "Some title", cardConfig, rootUrl, callbackToGotoUrl);

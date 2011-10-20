@@ -20,7 +20,6 @@ import org.softwareFm.utilities.future.GatedFuture;
 /** Note that the callback is called early, but the card may get prodded with valueHasChanged, and the future isn't done until all values have been changed */
 public class CardCollectionsDataStore implements ICardAndCollectionsDataStore {
 
-
 	@Override
 	public CardAndCollectionsStatus processDataFor(final ICardHolder cardHolder, final CardConfig cardConfig, final String url) {
 		final GatedFuture<Void> future = Futures.gatedFuture();
@@ -32,12 +31,13 @@ public class CardCollectionsDataStore implements ICardAndCollectionsDataStore {
 				cardHolder.setCard(card);
 				for (final KeyValue keyValue : card.data()) {
 					String followOnUrlFragment = findFollowOnUrlFragment(keyValue);
-					if (followOnUrlFragment!= null) {
+					if (followOnUrlFragment != null) {
 						count.incrementAndGet();
 						Future<KeyValue> future = cardConfig.cardDataStore.processDataFor(url + "/" + followOnUrlFragment, new ICardDataStoreCallback<KeyValue>() {
 							@Override
 							public KeyValue process(String url, Map<String, Object> result) throws Exception {
-								card.valueChanged(keyValue, result);
+								if (!cardHolder.getControl().isDisposed())
+									card.valueChanged(keyValue, result);
 								finish(card);
 								return keyValue;
 							}

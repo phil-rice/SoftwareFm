@@ -52,7 +52,7 @@ public class CardExplorerTest extends SwtIntegrationTest {
 		causeCardDataStoreToRespond();
 		ICard card = cardHolder.content.card;
 		assertEquals(CardDataStoreFixture.url1a, card.url());
-		assertEquals(CardDataStoreFixture.data1a, card.rawData());
+		assertEquals(CardDataStoreFixture.data1ap, card.rawData());
 	}
 
 	private void causeCardDataStoreToRespond() {

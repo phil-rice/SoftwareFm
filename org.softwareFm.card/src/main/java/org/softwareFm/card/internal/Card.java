@@ -82,17 +82,21 @@ public class Card implements ICard {
 	}
 
 	private void setTableItem(final CardConfig cardConfig, TableItem tableItem, KeyValue keyValue) {
+		System.out.println("Setting table item: " + keyValue);
 		String displayValue = Functions.call(cardConfig.valueFn, keyValue);
 		String name = Functions.call(cardConfig.nameFn, keyValue);
 		tableItem.setText(new String[] { name, displayValue });
+		Swts.layoutDump(table.getParent().getParent());
 	}
 
 	@Override
 	public void valueChanged(final KeyValue keyValue, final Object newValue) {
 		int index = data.indexOf(keyValue);
 		TableItem item = table.getItem(index);
-		data.set(index, new KeyValue(keyValue.key, newValue));
-		setTableItem(cardConfig, item, keyValue);
+		KeyValue newKeyValue = new KeyValue(keyValue.key, newValue);
+		data.set(index, newKeyValue);
+		setTableItem(cardConfig, item, newKeyValue);
+		table.redraw();
 	}
 
 	@Override

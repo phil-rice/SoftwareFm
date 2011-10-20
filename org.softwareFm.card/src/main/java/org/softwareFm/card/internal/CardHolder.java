@@ -152,11 +152,11 @@ public class CardHolder implements ICardHolder {
 					@Override
 					public void run() {
 						try {
-							Thread.sleep(3000);
+							Thread.sleep(2000);
 						} catch (InterruptedException e) {
 							throw WrappedException.wrap(e);
 						}
-						((GatedMockFuture<ICard>) future).kick();
+						((GatedMockFuture<?,?>) future).kick();
 					};
 				}.start();
 				Swts.resizeMeToParentsSize(cardHolder.getControl());
