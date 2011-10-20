@@ -28,21 +28,22 @@ final class CardDataStoreForRepository implements ICardDataStore {
 		Future future = facard.get(url, new IRepositoryFacardCallback() {
 			@Override
 			public void process(final IResponse response, final Map<String, Object> data) {
-				from.getDisplay().asyncExec(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							if (RepositoryFacardConstants.okStatusCodes.contains(response.statusCode()))
-								callback.process(url, data);
-							else {
-								System.out.println(response.asString());
-								callback.noData(url);
+				if (!from.isDisposed())
+					from.getDisplay().asyncExec(new Runnable() {
+						@Override
+						public void run() {
+							try {
+								if (RepositoryFacardConstants.okStatusCodes.contains(response.statusCode()))
+									callback.process(url, data);
+								else {
+									System.out.println(response.asString());
+									callback.noData(url);
+								}
+							} catch (Exception e) {
+								throw WrappedException.wrap(e);
 							}
-						} catch (Exception e) {
-							throw WrappedException.wrap(e);
 						}
-					}
-				});
+					});
 			}
 		});
 		return future;

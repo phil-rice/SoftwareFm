@@ -22,6 +22,7 @@ public class CardDataStoreAsyncMock implements IMutableCardDataStore {
 		map = Maps.makeMap(urlsAndMaps);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Future<Map<String, Object>> processDataFor(final String url, final ICardDataStoreCallback callback) {
 		try {

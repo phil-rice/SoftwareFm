@@ -341,6 +341,7 @@ public abstract class AbstractJavadocSourceEditorTest extends AbstractDisplayerE
 		assertEquals(0, entities.size());
 	}
 
+	@SuppressWarnings("unchecked")
 	private void checkOneThingSentToSoftwareFm(String url, String entity, Map<String, Object> data) {
 		assertEquals(Arrays.asList(url), urls);
 		assertEquals(Arrays.asList(entity), entities);

@@ -65,7 +65,7 @@ public class CardExplorer implements IHasComposite {
 		}
 
 		private void selectUrl(final CardConfig cardConfig, final String url) {
-			ICardFactory.Utils.makeCard(left.getComposite(), cardConfig.withTitleFn(new IFunction1<String, String>() {
+			ICardFactory.Utils.makeCard(left, cardConfig.withTitleFn(new IFunction1<String, String>() {
 				@Override
 				public String apply(String from) throws Exception {
 					return from.substring(initialUrl.length());
@@ -75,6 +75,7 @@ public class CardExplorer implements IHasComposite {
 				public void process(final ICard card) throws Exception {
 					if (card == null)
 						return;
+//					Strings.setClipboard(JSONValue.toJSONString(card.rawData()));
 					new HistoryGestureListener<String>(card.getControl(), 40, 10, new History<String>(), new ICallback<String>() {
 						@Override
 						public void process(String t) throws Exception {
@@ -152,7 +153,7 @@ public class CardExplorer implements IHasComposite {
 	}
 
 	public static void main(String[] args) {
-		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacard();
+		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacardForCardExplorer();
 		final String rootUrl = "/softwareFm/content";
 		final String firstUrl = "/softwareFm/content/org";
 		try {

@@ -30,10 +30,11 @@ public class NavBar implements IHasComposite {
 		private final int height;
 		private final CardConfig cardConfig;
 		private final NavHistoryCombo navCombo;
+		private String url;
 
-		public NavBarComposite(Composite parent, int height, CardConfig cardConfig, String rootUrl, final ICallback<String> callbackToGotoUrl) {
+		public NavBarComposite(Composite parent, CardConfig cardConfig, String rootUrl, final ICallback<String> callbackToGotoUrl) {
 			super(parent, SWT.BORDER);
-			this.height = height;
+			this.height = cardConfig.titleHeight;
 			this.cardConfig = cardConfig;
 			this.rootUrl = rootUrl;
 			this.callbackToGotoUrl = callbackToGotoUrl;
@@ -70,6 +71,7 @@ public class NavBar implements IHasComposite {
 		}
 
 		public void noteUrlHasChanged(String url) {
+			this.url = url;
 			if (!url.startsWith(rootUrl))
 				throw new IllegalArgumentException();
 			history.push(url);
@@ -155,8 +157,8 @@ public class NavBar implements IHasComposite {
 
 	}
 
-	public NavBar(Composite parent, int height, CardConfig cardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
-		content = new NavBarComposite(parent, height, cardConfig, rootUrl, callbackToGotoUrl);
+	public NavBar(Composite parent, CardConfig cardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
+		content = new NavBarComposite(parent, cardConfig, rootUrl, callbackToGotoUrl);
 	}
 
 	@Override
@@ -172,5 +174,18 @@ public class NavBar implements IHasComposite {
 	public void noteUrlHasChanged(String url) {
 		content.noteUrlHasChanged(url);
 	}
+
+	public String getRootUrl() {
+		return content.rootUrl;
+	}
+
+	public String getCurrentUrl() {
+		return content.url;
+	}
+
+	public History<String> getHistory() {
+		return content.history;
+	}
+	
 
 }

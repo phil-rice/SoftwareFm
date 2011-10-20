@@ -3,13 +3,12 @@ package org.softwareFm.card.internal;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 import org.softwareFm.card.api.CardConfig;
@@ -30,32 +29,24 @@ public class CardHolder implements IHasComposite {
 
 	static class CardHolderComposite extends Composite {
 
-		private final static int topMargin = 20;
-		private final static int bottomMargin = 5;
-		private final static int leftMargin = 5;
-		private final static int rightMargin = 5;
-		private final NavBar navBar;
-		private ICard card;
-		protected String title;
+		final NavBar navBar;
+		final Label lblTitle;
+		ICard card;
+		private final CardConfig navBarCardConfig;
 
-		public CardHolderComposite(Composite parent, int style, final String loadingText, CardConfig cardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
-			super(parent, style);
-			if (callbackToGotoUrl == null)
+		public CardHolderComposite(Composite parent, final String loadingText, CardConfig navBarCardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
+			super(parent, SWT.NULL);
+			this.navBarCardConfig = navBarCardConfig;
+			if (navBarCardConfig == null)
+				throw new NullPointerException();
+			if (callbackToGotoUrl == null) {
+				lblTitle = new Label(this, SWT.NULL);
+				lblTitle.setText(loadingText);
 				navBar = null;
-			else
-				navBar = new NavBar(this, topMargin, cardConfig, rootUrl, callbackToGotoUrl);
-			addPaintListener(new PaintListener() {
-
-				@Override
-				public void paintControl(PaintEvent e) {
-					int x = 0;
-					if (navBar == null)
-						if (title == null)
-							e.gc.drawText(loadingText, x, 0);
-						else
-							e.gc.drawText(title, x, 0);
-				}
-			});
+			} else {
+				navBar = new NavBar(this, navBarCardConfig, rootUrl, callbackToGotoUrl);
+				lblTitle = null;
+			}
 			addListener(SWT.Resize, new Listener() {
 				@Override
 				public void handleEvent(Event event) {
@@ -66,11 +57,19 @@ public class CardHolder implements IHasComposite {
 
 		@Override
 		public Rectangle getClientArea() {
+			CardConfig cardConfig = getCardConfig();
+			if (cardConfig == null)
+				throw new NullPointerException();
 			Rectangle clientArea = super.getClientArea();
-			int width = Math.max(clientArea.width - leftMargin - rightMargin, 0);
-			int height = Math.max(clientArea.height - bottomMargin, 0);
-			Rectangle result = new Rectangle(clientArea.x + leftMargin, clientArea.y, width, height);
+			int cardWidth = clientArea.width - cardConfig.leftMargin - cardConfig.rightMargin;
+			int cardHeight = clientArea.height - cardConfig.topMargin - cardConfig.bottomMargin;
+			Rectangle result = new Rectangle(clientArea.x + cardConfig.leftMargin, clientArea.y + cardConfig.topMargin, cardWidth, cardHeight);
 			return result;
+		}
+
+		private CardConfig getCardConfig() {
+			CardConfig cardConfig = card == null ? navBarCardConfig : card.cardConfig();
+			return cardConfig;
 		}
 
 		@Override
@@ -81,19 +80,25 @@ public class CardHolder implements IHasComposite {
 		@Override
 		public void layout(boolean changed) {
 			Rectangle clientArea = getClientArea();
+			int titleHeight = getCardConfig().titleHeight;
+			if (card != null) {
+				card.getControl().setBounds(clientArea.x, clientArea.y + titleHeight, clientArea.width, clientArea.height - titleHeight);
+				card.getComposite().layout();
+			}
 			if (navBar == null) {
-				if (card != null)
-					card.getControl().setBounds(0, topMargin, clientArea.width, clientArea.height - topMargin - bottomMargin);
-				return;
+				lblTitle.setBounds(clientArea.x, clientArea.y, clientArea.width, titleHeight);
+				lblTitle.setVisible(card == null);
+			} else {
+				Control navControl = navBar.getControl();
+				navControl.setBounds(clientArea.x, clientArea.y, clientArea.width, titleHeight);
+				if (navBar != null)
+					navBar.getComposite().layout();
 			}
 
-			Control navControl = navBar.getControl();
-			int navHeight = navControl.computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
-			navControl.setBounds(0, 0, clientArea.width, navHeight);
-			if (navBar != null)
-				navBar.getComposite().layout();
-			if (card != null)
-				card.getControl().setBounds(0, navHeight + 1, clientArea.width, clientArea.height - 1 - navHeight - bottomMargin);
+			String cardString = card == null ? "null" : Strings.nullSafeToString(card.getControl().getBounds());
+			Rectangle titleString = navBar == null ? lblTitle.getBounds() : navBar.getControl().getBounds();
+			System.out.println("ClientArea: " + clientArea + " card: " + cardString + " title: " + titleString);
+			redraw();
 		}
 
 		@Override
@@ -103,28 +108,26 @@ public class CardHolder implements IHasComposite {
 
 		public void setCard(ICard card) {
 			try {
+				if (card.cardConfig() == null)
+					throw new NullPointerException();
 				this.card = card;
 				if (navBar != null)
 					navBar.noteUrlHasChanged(card.url());
 				layout();
-				title = Strings.lastSegmentFn("/").apply(card.url());
+				if (lblTitle != null)
+					lblTitle.setText(card.cardConfig().cardTitleFn.apply(card.url()));
 				Swts.layoutDump(this);
 			} catch (Exception e) {
 				throw WrappedException.wrap(e);
 			}
 
 		}
-
 	}
 
 	CardHolderComposite content;
 
 	public CardHolder(Composite parent, String loadingText, String title, CardConfig cardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
-		content = new CardHolderComposite(parent, SWT.BORDER, loadingText, cardConfig, rootUrl, callbackToGotoUrl);
-	}
-
-	public CardHolder(Composite parent, String loadingText, String rootUrl) {
-		content = new CardHolderComposite(parent, SWT.BORDER, loadingText, null, rootUrl, null);
+		content = new CardHolderComposite(parent, loadingText, cardConfig, rootUrl, callbackToGotoUrl);
 	}
 
 	public void setCard(final ICard card) {
@@ -149,7 +152,7 @@ public class CardHolder implements IHasComposite {
 			@Override
 			public Composite apply(final Composite from) throws Exception {
 				final CardHolder cardHolder = new CardHolder(from, "Loading", "title", cardConfig, CardDataStoreFixture.url, ICallback.Utils.<String> noCallback());
-				final Future<ICard> future = ICardFactory.Utils.makeCard(cardHolder.getComposite(), cardConfig, CardDataStoreFixture.url1a, new ICallback<ICard>() {
+				final Future<ICard> future = ICardFactory.Utils.makeCard(cardHolder, cardConfig, CardDataStoreFixture.url1a, new ICallback<ICard>() {
 					@Override
 					public void process(ICard card) throws Exception {
 						if (card == null)
@@ -162,7 +165,7 @@ public class CardHolder implements IHasComposite {
 					@Override
 					public void run() {
 						try {
-							Thread.sleep(2000);
+							Thread.sleep(3000);
 						} catch (InterruptedException e) {
 							throw WrappedException.wrap(e);
 						}

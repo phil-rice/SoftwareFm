@@ -18,6 +18,7 @@ public class KeyValueAggregator implements IFunction1<Map<String, Object>, List<
 		this.tagName = tagName;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<KeyValue> apply(Map<String, Object> rawMap) throws Exception {
 		List<KeyValue> result = Lists.newList();

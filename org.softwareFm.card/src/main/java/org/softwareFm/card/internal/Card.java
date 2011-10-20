@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.Future;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -27,7 +26,6 @@ import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class Card implements ICard {
-	private Future<?> populateFuture;
 	private final List<KeyValue> data;
 	private final String url;
 
@@ -49,8 +47,8 @@ public class Card implements ICard {
 		Collections.sort(data, cardConfig.comparator);
 
 		table.setHeaderVisible(true);
-		nameColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter,"card.name.title"));
-		valueColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter,"card.value.title"));
+		nameColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "card.name.title"));
+		valueColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "card.value.title"));
 		nameColumn.setWidth(100);
 		valueColumn.setWidth(3000);
 		table.setDragDetect(true);
@@ -84,6 +82,7 @@ public class Card implements ICard {
 			}
 		});
 	}
+
 
 	@Override
 	public Composite getComposite() {
@@ -123,13 +122,13 @@ public class Card implements ICard {
 	public static void main(String[] args) {
 		final ICardDataStore cardDataStore = CardDataStoreFixture.rawCardStore();
 		final ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
-		
+
 		final CardConfig cardConfig = new CardConfig(cardFactory, cardDataStore);
 
 		Swts.display(Card.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				ICard card = cardFactory.makeCard(from, cardConfig, CardDataStoreFixture.url, CardDataStoreFixture.data1a);
+				ICard card = new Card(from, cardConfig, CardDataStoreFixture.url, CardDataStoreFixture.data1a);
 				return card.getComposite();
 			}
 		});

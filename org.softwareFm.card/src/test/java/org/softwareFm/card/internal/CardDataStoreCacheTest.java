@@ -10,15 +10,15 @@ import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.CardDataStoreMock;
 import org.softwareFm.utilities.maps.Maps;
 
-public class CardDataStoreCacheTest extends TestCase {
+@SuppressWarnings({"unchecked","rawtypes"})
+public abstract class CardDataStoreCacheTest extends TestCase {
 
 	private CardDataStoreMock raw;
 	private CardDataStoreCache cache;
 
-	@SuppressWarnings("unchecked")
 	public void testCallsRaw() {
 		CacheDataStoreCallbackMock mock = new CacheDataStoreCallbackMock();
-		
+
 		cache.processDataFor(CardDataStoreFixture.url1a, mock);
 		cache.processDataFor(CardDataStoreFixture.url1b, mock);
 		assertEquals(Arrays.asList(CardDataStoreFixture.url1a, CardDataStoreFixture.url1b), mock.urls);
@@ -26,7 +26,6 @@ public class CardDataStoreCacheTest extends TestCase {
 		assertEquals(Maps.makeMap(CardDataStoreFixture.url1a, 1, CardDataStoreFixture.url1b, 1), raw.counts);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testCallsCallbackButDoesntCallRawIfHasCachedValue() {
 		CacheDataStoreCallbackMock mock = new CacheDataStoreCallbackMock();
 		cache.processDataFor(CardDataStoreFixture.url1a, mock);
@@ -80,7 +79,6 @@ public class CardDataStoreCacheTest extends TestCase {
 		assertEquals(Collections.emptyList(), mock.urls);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testReturnsNewValueWhenPutWhenInitiallyIn() {
 		CacheDataStoreCallbackMock mock = new CacheDataStoreCallbackMock();
 		cache.processDataFor(CardDataStoreFixture.url1a, mock);
@@ -91,7 +89,6 @@ public class CardDataStoreCacheTest extends TestCase {
 		assertEquals(Maps.makeMap(CardDataStoreFixture.url1a, 2), raw.counts);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testReturnsNewValueWhenNotInitiallyIn() {
 		CacheDataStoreCallbackMock mock = new CacheDataStoreCallbackMock();
 		cache.processDataFor("url", mock);

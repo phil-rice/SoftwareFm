@@ -1,5 +1,7 @@
 package org.softwareFm.utilities.strings;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.util.Arrays;
 import java.util.List;
 
@@ -211,8 +213,9 @@ public class Strings {
 				return camelCaseToPretty(from);
 			}
 		};
-		
+
 	}
+
 	public static String camelCaseToPretty(String raw) {
 		StringBuilder result = new StringBuilder();
 		for (int i = 0; i < raw.length(); i++) {
@@ -220,9 +223,8 @@ public class Strings {
 			if (result.length() == 0) {
 				if (Character.isLetter(ch))
 					result.append(Character.toUpperCase(ch));
-				else
-					if (ch != ' ')
-						result.append(ch);
+				else if (ch != ' ')
+					result.append(ch);
 			} else {
 				if (ch == ' ')
 					if (result.length() == 0 || result.charAt(result.length() - 1) == ' ')
@@ -240,4 +242,8 @@ public class Strings {
 		return result.toString();
 	}
 
+	public static void setClipboard(String str) {
+		StringSelection ss = new StringSelection(str);
+		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
+	}
 }

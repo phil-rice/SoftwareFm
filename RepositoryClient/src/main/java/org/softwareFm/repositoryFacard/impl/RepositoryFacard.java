@@ -34,6 +34,7 @@ public class RepositoryFacard implements IRepositoryFacard {
 		this.getExtension = "."+getExtension;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Future<Map<String, Object>> get(String url, final IRepositoryFacardCallback callback) {
 		Future<?> future = client.get(url + getExtension).execute(new IResponseCallback() {

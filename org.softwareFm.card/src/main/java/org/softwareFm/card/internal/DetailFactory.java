@@ -45,13 +45,14 @@ public class DetailFactory implements IDetailFactory {
 			Collections.sort(keyValues, cardConfig.comparator);
 			int i = 0;
 			for (final KeyValue childKeyValue : keyValues) {
-				final CardHolder holder = new CardHolder(composite, IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "detail.factory.loading.text"), childKeyValue.key + "/" + i++);
+				String loadingText = IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "detail.factory.loading.text");
+				final CardHolder holder = new CardHolder(composite, loadingText, childKeyValue.key + "/" + i++, cardConfig, loadingText, null);
 				holder.getControl().addPaintListener(new PaintListener() {
 
 					@Override
 					public void paintControl(PaintEvent e) {
 						holder.getControl().removePaintListener(this);
-						ICardFactory.Utils.makeCard(holder.getComposite(), cardConfig.withStyleAndSelection(SWT.NO_SCROLL | SWT.FULL_SELECTION, false), parentCard.url() + "/" + childKeyValue.key, new ICallback<ICard>() {
+						ICardFactory.Utils.makeCard(holder, cardConfig.withStyleAndSelection(SWT.NO_SCROLL | SWT.FULL_SELECTION, false), parentCard.url() + "/" + childKeyValue.key, new ICallback<ICard>() {
 							@Override
 							public void process(final ICard card) throws Exception {
 								if (card == null)
