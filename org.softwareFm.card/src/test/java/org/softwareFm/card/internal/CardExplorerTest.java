@@ -56,7 +56,7 @@ public class CardExplorerTest extends SwtIntegrationTest {
 	}
 
 	private void causeCardDataStoreToRespond() {
-		((GatedMockFuture<?>) cardExplorerComposite.cardFuture).kick();
+		((GatedMockFuture<?,?>) cardExplorerComposite.cardFuture).kick();
 		dispatchUntilQueueEmpty();
 	}
 

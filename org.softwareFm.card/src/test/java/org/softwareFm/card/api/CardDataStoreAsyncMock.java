@@ -6,10 +6,10 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.constants.UtilityConstants;
 import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.maps.Maps;
 
@@ -22,19 +22,18 @@ public class CardDataStoreAsyncMock implements IMutableCardDataStore {
 		map = Maps.makeMap(urlsAndMaps);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public Future<Map<String, Object>> processDataFor(final String url, final ICardDataStoreCallback callback) {
+	public<T> Future<T> processDataFor(final String url, final ICardDataStoreCallback<T> callback) {
 		try {
 			Maps.add(counts, url, 1);
 			final Map<String, Object> result = map.get(url);
 			if (result == null)
 				throw new NullPointerException(MessageFormat.format(UtilityConstants.mapDoesntHaveKey, url, Lists.sort(map.keySet()), map));
-			callback.process(url, result);
-			return Futures.gatedMock(new ICallback<Map<String, Object>>() {
+			return Futures.gatedMock(new IFunction1<Map<String, Object>, T>() {
 				@Override
-				public void process(Map<String, Object> t) throws Exception {
-					callback.process(url, result);
+				public T apply(Map<String, Object> from) throws Exception {
+					 T process = callback.process(url, result);
+					return process;
 				}
 			}, result);
 		} catch (Exception e) {

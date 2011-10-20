@@ -5,7 +5,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
 
@@ -79,8 +78,12 @@ public class Futures {
 		};
 	}
 	
-	public static <T> GatedMockFuture<T> gatedMock(ICallback<T> callback, final T value) {
-		return new GatedMockFuture<T>(callback, value);
+	public static <From,To> GatedMockFuture<From,To>gatedMock(IFunction1<From,To> function, final From result) {
+		return new GatedMockFuture<From,To>(function, result);
+	}
+
+	public static <T>GatedFuture<T> gatedFuture() {
+		return new GatedFuture<T>();
 	}
 
 }

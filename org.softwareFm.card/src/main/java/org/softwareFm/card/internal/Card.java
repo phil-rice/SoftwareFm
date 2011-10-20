@@ -56,9 +56,7 @@ public class Card implements ICard {
 		for (KeyValue keyValue : data) {
 			if (!Functions.call(cardConfig.hideFn, keyValue)) {
 				TableItem tableItem = new TableItem(table, SWT.NULL);
-				String displayValue = Functions.call(cardConfig.valueFn, keyValue);
-				String name = Functions.call(cardConfig.nameFn, keyValue);
-				tableItem.setText(new String[] { name, displayValue });
+				setTableItem(cardConfig, tableItem, keyValue);
 				tableItem.setData(i);
 			}
 			i++;
@@ -83,6 +81,19 @@ public class Card implements ICard {
 		});
 	}
 
+	private void setTableItem(final CardConfig cardConfig, TableItem tableItem, KeyValue keyValue) {
+		String displayValue = Functions.call(cardConfig.valueFn, keyValue);
+		String name = Functions.call(cardConfig.nameFn, keyValue);
+		tableItem.setText(new String[] { name, displayValue });
+	}
+
+	@Override
+	public void valueChanged(final KeyValue keyValue, final Object newValue) {
+		int index = data.indexOf(keyValue);
+		TableItem item = table.getItem(index);
+		data.set(index, new KeyValue(keyValue.key, newValue));
+		setTableItem(cardConfig, item, keyValue);
+	}
 
 	@Override
 	public Composite getComposite() {

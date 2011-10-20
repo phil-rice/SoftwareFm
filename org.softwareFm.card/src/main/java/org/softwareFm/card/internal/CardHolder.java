@@ -15,6 +15,7 @@ import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
+import org.softwareFm.card.api.ICardHolder;
 import org.softwareFm.card.navigation.ITitleBarForCard;
 import org.softwareFm.card.navigation.NavBar;
 import org.softwareFm.card.navigation.NavTitle;
@@ -26,7 +27,7 @@ import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.future.GatedMockFuture;
 import org.softwareFm.utilities.strings.Strings;
 
-public class CardHolder implements IHasComposite {
+public class CardHolder implements ICardHolder {
 
 	static class CardHolderComposite extends Composite {
 
@@ -111,6 +112,11 @@ public class CardHolder implements IHasComposite {
 		content = new CardHolderComposite(parent, loadingText, cardConfig, rootUrl, callbackToGotoUrl);
 	}
 
+	public ICard getCard() {
+		return content.card;
+	}
+
+	@Override
 	public void setCard(final ICard card) {
 		content.setCard(card);
 	}

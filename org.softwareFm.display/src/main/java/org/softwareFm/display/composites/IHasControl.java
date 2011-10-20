@@ -8,6 +8,8 @@ import org.softwareFm.utilities.functions.IFunction1;
 
 public interface IHasControl {
 
+
+
 	Control getControl();
 
 	public static class Utils {
@@ -31,7 +33,7 @@ public interface IHasControl {
 
 		public static IFunction1<IHasControl, Control> toControl() {
 			return new IFunction1<IHasControl, Control>() {
-				
+
 				@Override
 				public Control apply(IHasControl from) throws Exception {
 					return from.getControl();

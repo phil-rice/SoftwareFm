@@ -5,7 +5,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.softwareFm.card.internal.CardFactory;
-import org.softwareFm.card.internal.CardHolder;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
@@ -13,10 +12,10 @@ import org.softwareFm.utilities.maps.Maps;
 
 public interface ICardFactory {
 
-	ICard makeCard(CardHolder cardHolder, CardConfig cardConfig, String url, Map<String, Object> map);
+	ICard makeCard(ICardHolder cardHolder, CardConfig cardConfig, String url, Map<String, Object> map);
 
 	public static class Utils {
-		public static Future<ICard> makeCard(final CardHolder cardHolder,  final CardConfig cardConfig, String url, final ICallback<ICard> callback) {
+		public static Future<ICard> makeCard(final ICardHolder cardHolder,  final CardConfig cardConfig, String url, final ICallback<ICard> callback) {
 			Future<ICard> cardFuture = cardConfig.cardDataStore.processDataFor(url, new ICardDataStoreCallback<ICard>() {
 				@Override
 				public ICard process(final String url, final Map<String, Object> result) throws Exception {
@@ -47,6 +46,9 @@ public interface ICardFactory {
 
 		public static ICardFactory cardFactory() {
 			return new CardFactory();
+		};
+		public static CardFactoryMock mockCardFactory() {
+			return new CardFactoryMock();
 		};
 
 

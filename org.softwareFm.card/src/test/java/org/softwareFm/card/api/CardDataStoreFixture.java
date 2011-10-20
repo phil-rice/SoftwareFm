@@ -11,11 +11,11 @@ public class CardDataStoreFixture {
 	public final static String url1 = "prefix1/prefix2/org/softwareFm/url1";
 	public final static String url2 = "prefix1/prefix2/org/softwareFm/url2";
 
-	public final static Map<String, Object> data1a = Maps.makeLinkedMap("tag", "one", "value", "valuea");
-	public final static Map<String, Object> data1b = Maps.makeLinkedMap("tag", "one", "value", "valueb");
-	public final static Map<String, Object> data2a = Maps.makeLinkedMap("tag", "two", "value", "valuea");
-	public final static Map<String, Object> data2b = Maps.makeLinkedMap("tag", "two", "value", "valueb");
-	public final static Map<String, Object> data2c = Maps.makeLinkedMap("tag", "two", "value", "valuec");
+	public final static Map<String, Object> data1a = Maps.makeLinkedMap("tag", "one", "value", "1a");
+	public final static Map<String, Object> data1b = Maps.makeLinkedMap("tag", "one", "value", "1b");
+	public final static Map<String, Object> data2a = Maps.makeLinkedMap("tag", "two", "value", "2a");
+	public final static Map<String, Object> data2b = Maps.makeLinkedMap("tag", "two", "value", "2b");
+	public final static Map<String, Object> data2c = Maps.makeLinkedMap("tag", "two", "value", "2c");
 
 	public final static List<KeyValue> kvFromData1a = Arrays.asList(new KeyValue("tag", "one"), new KeyValue("value", "valuea"));
 	public final static List<KeyValue> p1q2 = Arrays.asList(new KeyValue("p", 1), new KeyValue("q", 2));
@@ -23,8 +23,11 @@ public class CardDataStoreFixture {
 	public final static Map<String, Object> data1aWithP1Q2 = Maps.makeLinkedMap("tag", "one", "value", "valuea", "p", 1, "q", 2);
 
 	public static final String url = "some/url";
-	public static final String url1a = "some/url/largeName";
+	public static final String url1a = "some/url/1a";
 	public static final String url1b = "some/url/1b";
+	public static final String url2a = "some/url/2a";
+	public static final String url2b = "some/url/2b";
+	public static final String url2c = "some/url/2c";
 
 	public final static Map<String, Object> dataUrl1 = Maps.makeLinkedMap(//
 			"name1", "value1", //
@@ -38,7 +41,10 @@ public class CardDataStoreFixture {
 	private static final Object[] dataForMocks = new Object[] { "some", Maps.newMap(),//
 			url, dataUrl1, //
 			url1a, data1a, //
-			url1b, data1b
+			url1b, data1b,//
+			url2a, data2a,//
+			url2b, data2b,//
+			url2c, data2c,//
 
 	};
 

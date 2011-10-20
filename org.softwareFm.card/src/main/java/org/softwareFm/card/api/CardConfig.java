@@ -1,5 +1,6 @@
 package org.softwareFm.card.api;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +64,7 @@ public class CardConfig {
 		this.valueFn = KeyValue.Utils.valueAsStrFn();
 		this.hideFn = Functions.constant(false);
 		this.comparator = KeyValue.Utils.orderedKeyComparator();
-		this.aggregator = new KeyValueAggregator(null);
+		this.aggregator = new KeyValueAggregator(Collections.<String>emptyList());
 		this.leftMargin = 5;
 		this.rightMargin = 5;
 		this.topMargin = 5;
