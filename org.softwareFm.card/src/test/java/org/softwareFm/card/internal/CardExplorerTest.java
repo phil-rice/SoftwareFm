@@ -25,13 +25,13 @@ public class CardExplorerTest extends SwtIntegrationTest {
 	}
 
 	public void testConstructorCreatesANavBarInTheCardHolder() {
-		NavBar navBar = cardHolder.content.navBar;
+		NavBar navBar = (NavBar) cardHolder.content.title;
 		assertNotNull(navBar);
 		assertEquals(CardDataStoreFixture.url, navBar.getRootUrl());
 	}
 
 	public void testConstructorDoesntPopulateTheNavBarUntil() {
-		NavBar navBar = cardHolder.content.navBar;
+		NavBar navBar = (NavBar) cardHolder.content.title;
 		assertNull(navBar.getCurrentUrl());
 	}
 

@@ -8,3 +8,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.softwareFm.display;bundle-version="1.0.0",
  org.softwareFm.repositoryClient;bundle-version="1.0.0",
  org.eclipse.ui.forms;bundle-version="3.5.100"
+Export-Package: org.softwareFm.card.internal

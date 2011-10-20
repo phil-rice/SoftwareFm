@@ -385,7 +385,7 @@ public class Swts {
 		});
 	}
 
-	public static void xUnit(String title, final ISituationListAndBuilder<IHasControl> builder, final Map<String, Object> situationMap) {
+	public static <T extends IHasControl>void xUnit(String title, final ISituationListAndBuilder<T> builder, final Map<String, Object> situationMap) {
 		Swts.display(title, new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
@@ -395,10 +395,10 @@ public class Swts {
 						return situationMap.keySet();
 					}
 				};
-				final SituationListAnd<IHasControl> result = new SituationListAnd<IHasControl>(from, situationsCallable, builder);
-				result.addListener(new ISituationListListener<IHasControl>() {
+				final SituationListAnd<T> result = new SituationListAnd<T>(from, situationsCallable, builder);
+				result.addListener(new ISituationListListener<T>() {
 					@Override
-					public void selected(IHasControl hasControl, String selectedItem) throws Exception {
+					public void selected(T hasControl, String selectedItem) throws Exception {
 						Object value = situationMap.get(selectedItem);
 						builder.selected(hasControl, selectedItem, value);
 						result.setText(value.toString());

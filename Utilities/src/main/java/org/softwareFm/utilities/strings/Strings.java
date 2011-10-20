@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.softwareFm.utilities.aggregators.IAggregator;
 import org.softwareFm.utilities.collections.Iterables;
+import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.functions.IFunction1;
 
 public class Strings {
@@ -20,6 +21,14 @@ public class Strings {
 			addSeparator = true;
 		}
 		return builder.toString();
+	}
+
+	public static List<String> splitIgnoreBlanks(String raw, String separator) {
+		List<String> result = Lists.newList();
+		for (String string : raw.split(separator))
+			if (string.length() > 0)
+				result.add(string);
+		return result;
 	}
 
 	public static PreAndPost split(String value, char separator) {

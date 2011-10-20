@@ -82,10 +82,11 @@ public class BasicCardConfigurator implements ICardConfigurator {
 		};
 
 		String tag = resourceGetter.getStringOrNull("card.aggregator.tag");
+		List<String> tagNames = Strings.splitIgnoreBlanks(tag, ",");
 		String orderAsString = resourceGetter.getStringOrNull("card.order");
 		String[] order = orderAsString.split(",");
 		return config.withNameFn(nameFn).withValueFn(valueFn).withHideFn(hideFn).//
-				withCardIconFn(cardIconFn).withResourceGetter(resourceGetter).withAggregatorTag(tag).withSorter(KeyValue.Utils.orderedKeyComparator(order));
+				withCardIconFn(cardIconFn).withResourceGetter(resourceGetter).withAggregatorTags(tagNames).withSorter(KeyValue.Utils.orderedKeyComparator(order));
 	}
 
 	private String findKey(KeyValue from) {

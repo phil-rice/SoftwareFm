@@ -8,7 +8,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 import org.softwareFm.card.api.CardConfig;
@@ -16,7 +15,9 @@ import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
+import org.softwareFm.card.navigation.IHasUrl;
 import org.softwareFm.card.navigation.NavBar;
+import org.softwareFm.card.navigation.NavTitle;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -29,8 +30,7 @@ public class CardHolder implements IHasComposite {
 
 	static class CardHolderComposite extends Composite {
 
-		final NavBar navBar;
-		final Label lblTitle;
+		final IHasUrl title;
 		ICard card;
 		private final CardConfig navBarCardConfig;
 
@@ -39,14 +39,10 @@ public class CardHolder implements IHasComposite {
 			this.navBarCardConfig = navBarCardConfig;
 			if (navBarCardConfig == null)
 				throw new NullPointerException();
-			if (callbackToGotoUrl == null) {
-				lblTitle = new Label(this, SWT.NULL);
-				lblTitle.setText(loadingText);
-				navBar = null;
-			} else {
-				navBar = new NavBar(this, navBarCardConfig, rootUrl, callbackToGotoUrl);
-				lblTitle = null;
-			}
+			if (callbackToGotoUrl == null)
+				title = new NavTitle(this, loadingText, navBarCardConfig.cardTitleFn);
+			else
+				title = new NavBar(this, navBarCardConfig, rootUrl, callbackToGotoUrl);
 			addListener(SWT.Resize, new Listener() {
 				@Override
 				public void handleEvent(Event event) {
@@ -58,8 +54,6 @@ public class CardHolder implements IHasComposite {
 		@Override
 		public Rectangle getClientArea() {
 			CardConfig cardConfig = getCardConfig();
-			if (cardConfig == null)
-				throw new NullPointerException();
 			Rectangle clientArea = super.getClientArea();
 			int cardWidth = clientArea.width - cardConfig.leftMargin - cardConfig.rightMargin;
 			int cardHeight = clientArea.height - cardConfig.topMargin - cardConfig.bottomMargin;
@@ -85,19 +79,12 @@ public class CardHolder implements IHasComposite {
 				card.getControl().setBounds(clientArea.x, clientArea.y + titleHeight, clientArea.width, clientArea.height - titleHeight);
 				card.getComposite().layout();
 			}
-			if (navBar == null) {
-				lblTitle.setBounds(clientArea.x, clientArea.y, clientArea.width, titleHeight);
-			} else {
-				Control navControl = navBar.getControl();
-				navControl.setBounds(clientArea.x, clientArea.y, clientArea.width, titleHeight);
-				if (navBar != null)
-					navBar.getComposite().layout();
-			}
+			title.getControl().setBounds(clientArea.x, clientArea.y, clientArea.width, titleHeight);
+			if (title instanceof IHasComposite)
+				((IHasComposite) title).getComposite().layout();
 
 			String cardString = card == null ? "null" : Strings.nullSafeToString(card.getControl().getBounds());
-			Rectangle titleString = navBar == null ? lblTitle.getBounds() : navBar.getControl().getBounds();
-			System.out.println("ClientArea: " + clientArea + " card: " + cardString + " title: " + titleString);
-			redraw();
+			System.out.println("ClientArea: " + clientArea + " card: " + cardString + " title: " + title.getControl().getBounds());
 		}
 
 		@Override
@@ -106,15 +93,14 @@ public class CardHolder implements IHasComposite {
 		}
 
 		public void setCard(ICard card) {
+			if (this.card != null)
+				this.card.getComposite().dispose();
 			try {
 				if (card.cardConfig() == null)
 					throw new NullPointerException();
 				this.card = card;
-				if (navBar != null)
-					navBar.noteUrlHasChanged(card.url());
+				title.setUrl(card.url());
 				layout();
-				if (lblTitle != null)
-					lblTitle.setText(card.cardConfig().cardTitleFn.apply(card.url()));
 				Swts.layoutDump(this);
 			} catch (Exception e) {
 				throw WrappedException.wrap(e);

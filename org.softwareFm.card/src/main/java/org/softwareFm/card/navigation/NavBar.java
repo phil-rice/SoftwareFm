@@ -17,7 +17,7 @@ import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
-public class NavBar implements IHasComposite {
+public class NavBar implements IHasComposite, IHasUrl {
 	private final NavBarComposite content;
 
 	static class NavBarComposite extends Composite {
@@ -70,7 +70,7 @@ public class NavBar implements IHasComposite {
 			updateNextPrevButtons();
 		}
 
-		public void noteUrlHasChanged(String url) {
+		public void setUrl(String url) {
 			this.url = url;
 			if (!url.startsWith(rootUrl))
 				throw new IllegalArgumentException();
@@ -171,9 +171,6 @@ public class NavBar implements IHasComposite {
 		return content;
 	}
 
-	public void noteUrlHasChanged(String url) {
-		content.noteUrlHasChanged(url);
-	}
 
 	public String getRootUrl() {
 		return content.rootUrl;
@@ -186,6 +183,10 @@ public class NavBar implements IHasComposite {
 	public History<String> getHistory() {
 		return content.history;
 	}
-	
+
+	@Override
+	public void setUrl(String url) {
+		content.setUrl(url);
+	}
 
 }

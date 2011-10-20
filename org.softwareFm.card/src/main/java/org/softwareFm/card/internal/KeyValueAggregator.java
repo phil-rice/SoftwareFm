@@ -9,13 +9,14 @@ import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.strings.Strings;
 
 public class KeyValueAggregator implements IFunction1<Map<String, Object>, List<KeyValue>> {
 
-	private final String tagName;
+	private final List<String> tagNames;
 
-	public KeyValueAggregator(String tagName) {
-		this.tagName = tagName;
+	public KeyValueAggregator(List<String> tagNames) {
+		this.tagNames = tagNames;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -28,7 +29,7 @@ public class KeyValueAggregator implements IFunction1<Map<String, Object>, List<
 			Object value = entry.getValue();
 			if (value instanceof Map) {
 				Map<String, Object> valueMap = (Map<String, Object>) value;
-				String tag = (String) valueMap.get(tagName);
+				String tag = findAnyTag(valueMap);
 				if (tag == null)
 					result.add(new KeyValue(key, value));
 				else
@@ -40,6 +41,15 @@ public class KeyValueAggregator implements IFunction1<Map<String, Object>, List<
 		for (Entry<String, List<Object>> entry : aggregates.entrySet())
 			result.add(new KeyValue(entry.getKey(), entry.getValue()));
 		return result;
+	}
+
+	private String findAnyTag(Map<String, Object> valueMap) {
+		for (String tagName : tagNames) {
+			Object value = valueMap.get(tagName);
+			if (value != null)
+				return Strings.nullSafeToString(value);
+		}
+		return null;
 	}
 
 }

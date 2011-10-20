@@ -2,6 +2,9 @@ package org.softwareFm.allTests;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.card.internal.CardHolder;
+import org.softwareFm.card.internal.SingleCardExplorer;
+import org.softwareFm.card.internal.SingleCardExplorerUnit;
 import org.softwareFm.configuration.largebuttons.ArtifactDetailsLargeButtonFactory;
 import org.softwareFm.configuration.largebuttons.ArtifactSocialLargeButtonFactory;
 import org.softwareFm.configuration.largebuttons.GroupLargeButtonFactory;
@@ -38,10 +41,13 @@ public class PersonUnit {
 				Swts.makeButtonFromMainMethod(composite, RssBrowserPersonUnit.class);
 				Swts.makeButtonFromMainMethod(composite, BrowserUnit.class);
 				Swts.makeButtonFromMainMethod(composite, TimeLineUnit.class);
+				Swts.makeButtonFromMainMethod(composite, SingleCardExplorer.class);
+				Swts.makeButtonFromMainMethod(composite, SingleCardExplorerUnit.class);
+				Swts.makeButtonFromMainMethod(composite, CardHolder.class);
 				Swts.addGrabHorizontalAndFillGridDataToAllChildren(composite);
+				from.pack();
 				return composite;
 			}
-
 		});
 	}
 }

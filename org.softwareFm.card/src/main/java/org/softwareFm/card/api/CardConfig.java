@@ -124,8 +124,8 @@ public class CardConfig {
 		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight);
 	}
 
-	public CardConfig withAggregatorTag(String tag) {
-		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, hideFn, comparator, new KeyValueAggregator(tag), leftMargin, rightMargin, topMargin, bottomMargin, titleHeight);
+	public CardConfig withAggregatorTags(List<String> tagNames) {
+		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, hideFn, comparator, new KeyValueAggregator(tagNames), leftMargin, rightMargin, topMargin, bottomMargin, titleHeight);
 	}
 
 	public CardConfig withSorter(Comparator<KeyValue> comparator) {
