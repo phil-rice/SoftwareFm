@@ -11,13 +11,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
 import org.softwareFm.card.api.CardConfig;
+import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.internal.History;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
-public class NavBar implements IHasComposite, IHasUrl {
+public class NavBar implements IHasComposite, ITitleBarForCard {
 	private final NavBarComposite content;
 
 	static class NavBarComposite extends Composite {
@@ -185,8 +186,8 @@ public class NavBar implements IHasComposite, IHasUrl {
 	}
 
 	@Override
-	public void setUrl(String url) {
-		content.setUrl(url);
+	public void setUrl(ICard card) {
+		content.setUrl(card.url());
 	}
 
 }

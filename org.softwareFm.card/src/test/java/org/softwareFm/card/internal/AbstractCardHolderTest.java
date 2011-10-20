@@ -19,8 +19,6 @@ public abstract class AbstractCardHolderTest extends SwtIntegrationTest {
 
 	abstract protected CardHolder makeCardHolder(Composite parent, CardConfig cardConfig);
 
-	abstract protected Control getTitleControl();
-
 	public void testCardIsNullWhenConstructed() {
 		assertNull(cardHolder.content.card);
 	}
@@ -126,6 +124,10 @@ public abstract class AbstractCardHolderTest extends SwtIntegrationTest {
 				110 - cardConfig.leftMargin - cardConfig.rightMargin,//
 				220 - cardConfig.topMargin - cardConfig.bottomMargin);
 		cardHolder.getControl().setBounds(10, 20, 110, 220);
+	}
+
+	protected Control getTitleControl() {
+		return cardHolder.content.title.getControl();
 	}
 
 }

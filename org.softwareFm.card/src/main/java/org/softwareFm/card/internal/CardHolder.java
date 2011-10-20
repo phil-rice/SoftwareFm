@@ -15,7 +15,7 @@ import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
-import org.softwareFm.card.navigation.IHasUrl;
+import org.softwareFm.card.navigation.ITitleBarForCard;
 import org.softwareFm.card.navigation.NavBar;
 import org.softwareFm.card.navigation.NavTitle;
 import org.softwareFm.display.composites.IHasComposite;
@@ -30,7 +30,7 @@ public class CardHolder implements IHasComposite {
 
 	static class CardHolderComposite extends Composite {
 
-		final IHasUrl title;
+		final ITitleBarForCard title;
 		ICard card;
 		private final CardConfig navBarCardConfig;
 
@@ -40,7 +40,7 @@ public class CardHolder implements IHasComposite {
 			if (navBarCardConfig == null)
 				throw new NullPointerException();
 			if (callbackToGotoUrl == null)
-				title = new NavTitle(this, loadingText, navBarCardConfig.cardTitleFn);
+				title = new NavTitle(this, loadingText);
 			else
 				title = new NavBar(this, navBarCardConfig, rootUrl, callbackToGotoUrl);
 			addListener(SWT.Resize, new Listener() {
@@ -82,9 +82,7 @@ public class CardHolder implements IHasComposite {
 			title.getControl().setBounds(clientArea.x, clientArea.y, clientArea.width, titleHeight);
 			if (title instanceof IHasComposite)
 				((IHasComposite) title).getComposite().layout();
-
 			String cardString = card == null ? "null" : Strings.nullSafeToString(card.getControl().getBounds());
-			System.out.println("ClientArea: " + clientArea + " card: " + cardString + " title: " + title.getControl().getBounds());
 		}
 
 		@Override
@@ -99,13 +97,11 @@ public class CardHolder implements IHasComposite {
 				if (card.cardConfig() == null)
 					throw new NullPointerException();
 				this.card = card;
-				title.setUrl(card.url());
+				title.setUrl(card);
 				layout();
-				Swts.layoutDump(this);
 			} catch (Exception e) {
 				throw WrappedException.wrap(e);
 			}
-
 		}
 	}
 
