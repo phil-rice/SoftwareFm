@@ -2,6 +2,7 @@ package org.softwareFm.card.internal;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Future;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -38,6 +39,7 @@ public class CardExplorer implements IHasComposite {
 		private final String initialUrl;
 
 		private final List<IUrlChangedListener> listeners = new CopyOnWriteArrayList<IUrlChangedListener>();
+		 Future<ICard> cardFuture;
 
 		public CardExplorerComposite(final Composite parent, final CardConfig cardConfig, final String rootUrl, String initialUrl) {
 			super(parent, SWT.HORIZONTAL);
@@ -65,7 +67,7 @@ public class CardExplorer implements IHasComposite {
 		}
 
 		private void selectUrl(final CardConfig cardConfig, final String url) {
-			ICardFactory.Utils.makeCard(left, cardConfig.withTitleFn(new IFunction1<String, String>() {
+			cardFuture = ICardFactory.Utils.makeCard(left, cardConfig.withTitleFn(new IFunction1<String, String>() {
 				@Override
 				public String apply(String from) throws Exception {
 					return from.substring(initialUrl.length());

@@ -44,7 +44,12 @@ public class CardConfig {
 	public final int defaultHeightWeight = 2;
 
 	public CardConfig(ICardFactory cardFactory, ICardDataStore cardDataStore) {
-		this.resourceGetter = IResourceGetter.Utils.noResources().with(new ResourceGetterMock("card.name.title", "Name", "card.value.title", "Value", "navBar.prev.title", "<", "navBar.next.title", ">"));
+		this.resourceGetter = IResourceGetter.Utils.noResources().with(//
+				new ResourceGetterMock("card.name.title", "Name", //
+						"card.value.title", "Value", //
+						"navBar.prev.title", "<", //
+						"navBar.next.title", ">",//
+						"card.holder.loading.text", "loading"));
 		this.selector = ICardConfigSelector.Utils.defaultSelector(this);
 		this.detailFactory = new DetailFactory();
 		this.cardFactory = cardFactory;
@@ -130,6 +135,7 @@ public class CardConfig {
 	public CardConfig withMargins(int leftMargin, int rightMargin, int topMargin, int bottomMargin) {
 		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight);
 	}
+
 	public CardConfig withTitleHeight(int titleHeight) {
 		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight);
 	}

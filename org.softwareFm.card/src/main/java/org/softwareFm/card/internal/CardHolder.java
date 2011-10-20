@@ -87,7 +87,6 @@ public class CardHolder implements IHasComposite {
 			}
 			if (navBar == null) {
 				lblTitle.setBounds(clientArea.x, clientArea.y, clientArea.width, titleHeight);
-				lblTitle.setVisible(card == null);
 			} else {
 				Control navControl = navBar.getControl();
 				navControl.setBounds(clientArea.x, clientArea.y, clientArea.width, titleHeight);

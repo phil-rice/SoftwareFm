@@ -46,7 +46,7 @@ public class Card implements ICard {
 		data = Functions.call(cardConfig.aggregator, rawData);
 		Collections.sort(data, cardConfig.comparator);
 
-		table.setHeaderVisible(true);
+		table.setHeaderVisible(false);
 		nameColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "card.name.title"));
 		valueColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "card.value.title"));
 		nameColumn.setWidth(100);
