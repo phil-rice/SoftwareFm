@@ -36,8 +36,7 @@ public class CardHolderTestWithTitleTest extends AbstractCardHolderTest {
 
 	String getTitleText() {
 		NavTitle navTitle = (NavTitle) cardHolder.content.title;
-		Label label = (Label) navTitle.getControl();
-		return label.getText();
+		return navTitle.getText();
 	}
 
 }

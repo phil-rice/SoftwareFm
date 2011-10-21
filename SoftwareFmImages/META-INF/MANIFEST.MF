@@ -15,6 +15,7 @@ Export-Package: org.softwareFm.softwareFmImages;
    org.eclipse.swt.graphics",
  org.softwareFm.softwareFmImages.artifacts,
  org.softwareFm.softwareFmImages.backdrop,
+ org.softwareFm.softwareFmImages.title,
  org.softwareFm.softwareFmImages.general,
  org.softwareFm.softwareFmImages.overlays,
  org.softwareFm.softwareFmImages.smallIcons

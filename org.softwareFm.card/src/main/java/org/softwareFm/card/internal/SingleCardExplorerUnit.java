@@ -13,8 +13,8 @@ public class SingleCardExplorerUnit {
 
 	public static void main(String[] args) {
 		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacardForCardExplorer();
-		final String rootUrl = "/softwareFm/content";
-		final String firstUrl = "/softwareFm/content/org";
+		final String rootUrl = "/softwareFm/data";
+		final String firstUrl = "/softwareFm/data/org";
 		try {
 			Swts.xUnit(SingleCardExplorerUnit.class.getSimpleName(), new ISituationListAndBuilder<SingleCardExplorer>() {
 				@Override

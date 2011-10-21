@@ -50,7 +50,6 @@ public class CardMock implements ICard {
 
 	@Override
 	public void addLineSelectedListener(ILineSelectedListener listener) {
-		throw new UnsupportedOperationException();
 	}
 
 	@Override

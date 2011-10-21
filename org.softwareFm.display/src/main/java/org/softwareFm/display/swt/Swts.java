@@ -14,10 +14,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.custom.TableEditor;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FormAttachment;
@@ -499,12 +502,28 @@ public class Swts {
 			control.getDisplay().syncExec(runnable);
 	}
 
+	public static Label makeImageButton(Composite parent, Image image, final Runnable runnable) {
+		Label label = new Label(parent, SWT.NULL);
+		label.setImage(image);
+		label.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent e) {
+				runnable.run();
+			}
+		});
+		return label;
+	}
+
 	public static Button makePushButton(Composite parent, IResourceGetter resourceGetter, String titleKey, final Runnable runnable) {
 		return makePushButton(parent, resourceGetter, titleKey, true, runnable);
 	}
 
 	public static Button makePushButton(Composite parent, IResourceGetter resourceGetter, String titleOrKey, boolean titleIsKey, final Runnable runnable) {
-		Button button = new Button(parent, SWT.PUSH);
+		return makePushButton(parent, SWT.PUSH, resourceGetter, titleOrKey, titleIsKey, runnable);
+	}
+
+	public static Button makePushButton(Composite parent, int style, IResourceGetter resourceGetter, String titleOrKey, boolean titleIsKey, final Runnable runnable) {
+		Button button = new Button(parent, style);
 		String title = titleIsKey ? IResourceGetter.Utils.getOrException(resourceGetter, titleOrKey) : titleOrKey;
 		button.setText(title);
 		button.addSelectionListener(new SelectionAdapter() {

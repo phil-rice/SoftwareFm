@@ -17,6 +17,7 @@ import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
+import org.softwareFm.softwareFmImages.title.TitleAnchor;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
@@ -80,13 +81,33 @@ public class BasicCardConfigurator implements ICardConfigurator {
 					return imageRegistry.get(GeneralAnchor.helpKey);
 			}
 		};
+		IFunction1<Map<String, Object>, Image> navIconFn = new IFunction1<Map<String, Object>, Image>() {
+			@Override
+			public Image apply(Map<String, Object> from) throws Exception {
+				Object object = from.get("sling:resourceType");
+				if (object == null)
+					return null;//imageRegistry.get(TitleAnchor.folderKey);
+				if (object.equals("softwareFm_group"))
+					return imageRegistry.get(TitleAnchor.groupKey);
+				else if (object.equals("softwareFm_artifact"))
+					return imageRegistry.get(TitleAnchor.artifactKey);
+				else if (object.equals("softwareFm_version"))
+					return imageRegistry.get(TitleAnchor.versionKey);
+				else if (object.equals("softwareFm_version_jar"))
+					return imageRegistry.get(TitleAnchor.jarKey);
+				else
+					return null;
+			}
+		};
 
 		String tag = resourceGetter.getStringOrNull("card.aggregator.tag");
 		List<String> tagNames = Strings.splitIgnoreBlanks(tag, ",");
 		String orderAsString = resourceGetter.getStringOrNull("card.order");
 		String[] order = orderAsString.split(",");
 		return config.withNameFn(nameFn).withValueFn(valueFn).withHideFn(hideFn).//
-				withCardIconFn(cardIconFn).withResourceGetter(resourceGetter).withAggregatorTags(tagNames).withSorter(KeyValue.Utils.orderedKeyComparator(order));
+				withCardIconFn(cardIconFn).withResourceGetter(resourceGetter).withAggregatorTags(tagNames).//
+				withNavIconFn(navIconFn).
+				withSorter(KeyValue.Utils.orderedKeyComparator(order));
 	}
 
 	private String findKey(KeyValue from) {

@@ -49,4 +49,8 @@ public class NavTitle implements ITitleBarForCard {
 		return canvas;
 	}
 
+	public String getText() {
+		return title;
+	}
+
 }

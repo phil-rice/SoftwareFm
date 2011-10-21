@@ -12,13 +12,14 @@ import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.strings.Strings;
 
 public class NavButton implements IHasControl {
-	private final Label button;
+	private final Label label;
 
 	public NavButton(Composite parent, final String url, final ICallback<String> callbackToGotoUrl) {
 		String title = Functions.call(Strings.lastSegmentFn("/"), url);
-		button = new Label(parent, SWT.NULL);
-		button.setText(title);
-		button.addMouseListener(new MouseAdapter() {
+		label = new Label(parent, SWT.NULL);
+		label.setAlignment(SWT.LEFT);
+		label.setText(title);
+		label.addMouseListener(new MouseAdapter() {
 		@Override
 		public void mouseUp(MouseEvent e) {
 			ICallback.Utils.call(callbackToGotoUrl, url);
@@ -27,6 +28,6 @@ public class NavButton implements IHasControl {
 
 	@Override
 	public Control getControl() {
-		return button;
+		return label;
 	}
 }

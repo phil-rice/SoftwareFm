@@ -2,6 +2,7 @@ package org.softwareFm.card.internal;
 
 import java.util.concurrent.ExecutionException;
 
+import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMock;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreAsyncMock;
 import org.softwareFm.card.api.CardDataStoreFixture;
@@ -11,8 +12,6 @@ import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.display.swt.SwtIntegrationTest;
-import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.callbacks.MemoryCallback;
 
 public abstract class AbstractCardCollectionsDataStoreTest extends SwtIntegrationTest {
 
@@ -23,15 +22,16 @@ public abstract class AbstractCardCollectionsDataStoreTest extends SwtIntegratio
 	protected CardAndCollectionsStatus status;
 	protected CardAndCollectionsStatus followUpQueryStatus;
 	private CardFactoryMock mockCardFactory;
-	protected MemoryCallback<ICard> memory;
+	protected CardAndCollectionDataStoreVisitorMock memory;
 
 	public void testNothingHappenBeforeInitialQueryReturns() throws InterruptedException, ExecutionException {
+		assertEquals(1, memory.initialUrlCount);
 		dispatchUntilQueueEmpty();
 		assertFalse(status.mainFuture.isDone());
 		assertEquals(0, status.keyValueFutures.size());
 		assertEquals(1, status.count.get());
 		assertEquals(0, mockCardFactory.count);
-		assertEquals(0, memory.getResult().size());
+		assertEquals(0, memory.initialCardCount);
 	}
 
 	public void testCardCreatedAfterInitialQueryReturns() {
@@ -63,7 +63,7 @@ public abstract class AbstractCardCollectionsDataStoreTest extends SwtIntegratio
 				return AbstractCardCollectionsDataStoreTest.this.findFollowOnUrlFragment(keyValue);
 			}
 		};
-		memory = ICallback.Utils.memory();
+		memory = new CardAndCollectionDataStoreVisitorMock();
 		status = cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, CardDataStoreFixture.url, memory);
 	}
 

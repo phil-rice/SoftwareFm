@@ -1,6 +1,5 @@
 package org.softwareFm.card.internal;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -14,9 +13,10 @@ import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICard;
+import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMock;
 import org.softwareFm.card.api.ICardDataStore;
-import org.softwareFm.card.api.ICardDataStoreCallback;
 import org.softwareFm.card.api.ICardFactory;
+import org.softwareFm.card.api.ICardHolder;
 import org.softwareFm.card.api.ICardSelectedListener;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.display.composites.IHasComposite;
@@ -33,6 +33,7 @@ public class CardCollectionHolder implements IHasComposite {
 
 		private final CardConfig cardConfig;
 		private final List<ICardSelectedListener> listeners = new CopyOnWriteArrayList<ICardSelectedListener>();
+		private final CardCollectionsDataStore cardCollectionsDataStore = new CardCollectionsDataStore();
 
 		public CardCollectionHolderComposite(Composite parent, CardConfig cardConfig) {
 			super(parent, SWT.NULL);
@@ -50,37 +51,49 @@ public class CardCollectionHolder implements IHasComposite {
 						@Override
 						public void paintControl(PaintEvent e) {
 							cardHolder.getControl().removePaintListener(this);
-							cardConfig.cardDataStore.processDataFor(rootUrl + "/" + childKeyValue.key, new ICardDataStoreCallback<Void>() {
-								@Override
-								public Void process(String url, Map<String, Object> result) throws Exception {
-									if (!cardHolder.getControl().isDisposed()) {
-										final ICard card = cardConfig.cardFactory.makeCard(cardHolder, cardConfig, url, result);
+							if (!cardHolder.getControl().isDisposed()) {
+								CardAndCollectionDataStoreVisitorMock visitor = new CardAndCollectionDataStoreVisitorMock() {
+									@Override
+									public void initialUrl(ICardHolder cardHolder, CardConfig cardConfig, String url) {
+									}
+
+									@Override
+									public void initialCard(ICardHolder cardHolder, CardConfig cardConfig, String url, final ICard card) {
 										card.getControl().addMouseListener(new MouseAdapter() {
 											@Override
 											public void mouseUp(org.eclipse.swt.events.MouseEvent e) {
 												for (ICardSelectedListener listener : listeners) {
 													listener.cardSelected(card);
 												}
-											};
+											}
 										});
 									}
 
-//									System.out.println("setting card in card holder in collection holder: " + url + "   " + result);
-									return null;
-								}
+									@Override
+									public void requestingFollowup(ICardHolder cardHolder, String url, ICard card, String followOnUrlFragment) {
+									}
 
-								@Override
-								public Void noData(String url) throws Exception {
-									return process(url, Collections.<String, Object> emptyMap());
-								}
-							});
-						}
+									@Override
+									public void followedUp(ICardHolder cardHolder, String url, ICard card, String followUpUrl, Map<String, Object> result) {
+									}
+
+									@Override
+									public void noData(ICardHolder cardHolder, String url, ICard card, String followUpUrl) {
+									}
+
+									@Override
+									public void finished(ICardHolder cardHolder, String url, ICard card) {
+									}
+								};
+								cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, rootUrl+ "/" + childKeyValue.key, visitor);
+							}
+						};
+
 					});
 				}
 			}
 			layout();
 		}
-
 	}
 
 	public void addCardSelectedListener(ICardSelectedListener listener) {

@@ -1,22 +1,25 @@
 package org.softwareFm.card.navigation;
 
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.internal.History;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
+import org.softwareFm.softwareFmImages.title.TitleAnchor;
 import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class NavBar implements IHasComposite, ITitleBarForCard {
 	private final NavBarComposite content;
@@ -26,8 +29,8 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 		private final History<String> history;
 		private final String rootUrl;
 		private final ICallback<String> callbackToGotoUrl;
-		private final Button prevButton;
-		private final Button nextButton;
+		private final Label prevButton;
+		private final Label nextButton;
 		private final int height;
 		private final CardConfig cardConfig;
 		private final NavHistoryCombo navCombo;
@@ -35,14 +38,15 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 
 		public NavBarComposite(Composite parent, CardConfig cardConfig, String rootUrl, final ICallback<String> callbackToGotoUrl) {
 			super(parent, SWT.BORDER);
+			final ImageRegistry imageRegistry = new ImageRegistry();
+			new BasicImageRegisterConfigurator().registerWith(parent.getDisplay(), imageRegistry);
 			this.height = cardConfig.titleHeight;
 			this.cardConfig = cardConfig;
 			this.rootUrl = rootUrl;
 			this.callbackToGotoUrl = callbackToGotoUrl;
-			IResourceGetter resourceGetter = cardConfig.resourceGetter;
 			history = new History<String>();
 
-			prevButton = Swts.makePushButton(this, resourceGetter, "navBar.prev.title", new Runnable() {
+			prevButton = Swts.makeImageButton(this,imageRegistry.get(TitleAnchor.previousKey), new Runnable() {
 				@Override
 				public void run() {
 					ICallback.Utils.call(callbackToGotoUrl, history.prev());
@@ -57,24 +61,26 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 					Rectangle clientArea = combo.getClientArea();
 					e.gc.setBackground(combo.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 					e.gc.fillRectangle(clientArea);
-					e.gc.drawText("V", 6, 0);
-					e.gc.drawRectangle(clientArea.x, clientArea.y, clientArea.width - 1, clientArea.height);
+					Image image = imageRegistry.get(TitleAnchor.historyKey);
+					e.gc.drawImage(image, 0, 0);
+					// e.gc.drawRectangle(clientArea.x, clientArea.y, clientArea.width - 1, clientArea.height);
 				}
 			});
-			nextButton = Swts.makePushButton(this, resourceGetter, "navBar.next.title", new Runnable() {
+			nextButton = Swts.makeImageButton(this,imageRegistry.get(TitleAnchor.nextKey), new Runnable() {
 				@Override
 				public void run() {
 					ICallback.Utils.call(callbackToGotoUrl, history.next());
 					updateNextPrevButtons();
 				}
 			});
+			nextButton.setImage(imageRegistry.get(TitleAnchor.nextKey));
 			updateNextPrevButtons();
 		}
 
 		public void setUrl(String url) {
 			this.url = url;
 			if (!url.startsWith(rootUrl))
-				throw new IllegalArgumentException();
+				throw new IllegalArgumentException("rooturl: " + rootUrl +" url: " + url);
 			history.push(url);
 			navCombo.updateFromHistory();
 			updateNextPrevButtons();
@@ -109,9 +115,9 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 		public Point computeSize(int wHint, int hHint) {
 			int x = 0;
 			for (Control control : getChildren())
-				if (control instanceof Combo)
-					x += 16;
-				else
+				if (control instanceof Combo) {
+					x += cardConfig.navIconWidth;
+				} else
 					x += control.computeSize(wHint, hHint).x;
 			return new Point(x, height);
 		}
@@ -123,7 +129,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 
 			for (Control control : children) {
 				if (control instanceof Combo) {
-					control.setSize(16, height);
+					control.setSize(cardConfig.navIconWidth, height);
 				} else {
 					int width = control.computeSize(SWT.DEFAULT, clientArea.height).x;
 					control.setSize(width, clientArea.height);
@@ -140,7 +146,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 			for (Control control : getChildren())
 				if (control instanceof Combo) {
 					control.setLocation(x, y);
-					x += height;
+					x += cardConfig.navIconWidth;
 				} else {
 					control.setLocation(x, y - 1);
 					x += control.getSize().x;
@@ -169,7 +175,6 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 	public Composite getComposite() {
 		return content;
 	}
-
 
 	public String getRootUrl() {
 		return content.rootUrl;

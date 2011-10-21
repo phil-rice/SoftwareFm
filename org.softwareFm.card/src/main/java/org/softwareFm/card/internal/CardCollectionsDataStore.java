@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
-import org.softwareFm.card.api.ICardAndCollectionDataStoreVisitor;
+import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMock;
 import org.softwareFm.card.api.ICardAndCollectionsDataStore;
 import org.softwareFm.card.api.ICardDataStoreCallback;
 import org.softwareFm.card.api.ICardFactory;
@@ -24,7 +24,7 @@ import org.softwareFm.utilities.future.GatedFuture;
 public class CardCollectionsDataStore implements ICardAndCollectionsDataStore {
 
 	@Override
-	public CardAndCollectionsStatus processDataFor(final ICardHolder cardHolder, final CardConfig cardConfig, final String url, final ICardAndCollectionDataStoreVisitor visitor) {
+	public CardAndCollectionsStatus processDataFor(final ICardHolder cardHolder, final CardConfig cardConfig, final String url, final CardAndCollectionDataStoreVisitorMock visitor) {
 		final GatedFuture<Void> future = Futures.gatedFuture();
 		final AtomicInteger count = new AtomicInteger(1);
 		final List<Future<KeyValue>> keyValueFutures = new CopyOnWriteArrayList<Future<KeyValue>>();

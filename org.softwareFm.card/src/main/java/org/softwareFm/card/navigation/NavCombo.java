@@ -61,10 +61,10 @@ public class NavCombo implements IHasControl {
 				e.gc.setBackground(combo.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 				e.gc.fillRectangle(clientArea);
 				if (image == null) {
-					e.gc.drawText("/", 6, 0);
+					e.gc.drawText("/", 3, 0);
 //					e.gc.drawRectangle(clientArea.x,clientArea.y,clientArea.width-1, clientArea.width-2);
 				} else
-					e.gc.drawImage(image, 0, 0);
+					e.gc.drawImage(image, 1, 0);
 			}
 		});
 		cardDataStore.processDataFor(rootUrl, new ICardDataStoreCallback<Void>() {
@@ -95,7 +95,7 @@ public class NavCombo implements IHasControl {
 		cardConfig.cardDataStore.processDataFor(url, new ICardDataStoreCallback<Void>() {
 			@Override
 			public Void process(String url, Map<String, Object> result) throws Exception {
-				image = cardConfig.cardIconFn.apply(result);
+				image = cardConfig.navIconFn.apply(result);
 				if (!combo.isDisposed())
 					combo.redraw();
 				return null;
