@@ -46,7 +46,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 			this.callbackToGotoUrl = callbackToGotoUrl;
 			history = new History<String>();
 
-			prevButton = Swts.makeImageButton(this,imageRegistry.get(TitleAnchor.previousKey), new Runnable() {
+			prevButton = Swts.makeImageButton(this, imageRegistry.get(TitleAnchor.previousKey), new Runnable() {
 				@Override
 				public void run() {
 					ICallback.Utils.call(callbackToGotoUrl, history.prev());
@@ -66,7 +66,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 					// e.gc.drawRectangle(clientArea.x, clientArea.y, clientArea.width - 1, clientArea.height);
 				}
 			});
-			nextButton = Swts.makeImageButton(this,imageRegistry.get(TitleAnchor.nextKey), new Runnable() {
+			nextButton = Swts.makeImageButton(this, imageRegistry.get(TitleAnchor.nextKey), new Runnable() {
 				@Override
 				public void run() {
 					ICallback.Utils.call(callbackToGotoUrl, history.next());
@@ -80,7 +80,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 		public void setUrl(String url) {
 			this.url = url;
 			if (!url.startsWith(rootUrl))
-				throw new IllegalArgumentException("rooturl: " + rootUrl +" url: " + url);
+				throw new IllegalArgumentException("rooturl: " + rootUrl + " url: " + url);
 			history.push(url);
 			navCombo.updateFromHistory();
 			updateNextPrevButtons();
@@ -138,7 +138,12 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 			int i = 3;
 			if (isTooBig(clientArea)) {
 				while (isTooBig(clientArea) && i < children.length) {
-					children[i++].setSize(height, height);
+					Control child = children[i];
+					if (child instanceof Label) {
+						child.setSize(cardConfig.compressedNavTitleWidth, height);
+						child.setToolTipText(((Label) child).getText());
+					}
+					i++;
 				}
 			}
 			int x = clientArea.x;
@@ -149,7 +154,8 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 					x += cardConfig.navIconWidth;
 				} else {
 					control.setLocation(x, y - 1);
-					x += control.getSize().x;
+					int width = control.getSize().x;
+					x += width;
 				}
 		}
 

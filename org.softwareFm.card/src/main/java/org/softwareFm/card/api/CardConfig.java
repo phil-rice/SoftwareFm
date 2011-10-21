@@ -47,13 +47,12 @@ public class CardConfig {
 
 	public int iconToTextSpacer = 3;
 
+	public int compressedNavTitleWidth = 12;
 	public int navIconWidth = 10;
 	public final static List<String> defaultBodgedUrlFragments = Arrays.asList("version", "artifact", "group", "usedby", "dependency");
 
-	public static final List<String> anotherBodge = Arrays.asList("softwareFm_artifact","softwareFm_group","softwareFm_dependancy","softwareFm_version","softwareFm_usedBy");
+	public static final List<String> anotherBodge = Arrays.asList("softwareFm_artifact", "softwareFm_group", "softwareFm_dependancy", "softwareFm_version", "softwareFm_usedBy");
 
-	
-	
 	public CardConfig(ICardFactory cardFactory, ICardDataStore cardDataStore) {
 		this.resourceGetter = IResourceGetter.Utils.noResources().with(//
 				new ResourceGetterMock("card.name.title", "Name", //
@@ -75,7 +74,7 @@ public class CardConfig {
 		this.valueFn = KeyValue.Utils.valueAsStrFn();
 		this.hideFn = Functions.constant(false);
 		this.comparator = KeyValue.Utils.orderedKeyComparator();
-		this.aggregator = new KeyValueAggregator(Arrays.asList( "jcr:primaryType"), defaultBodgedUrlFragments);//later "sling:resourceType",
+		this.aggregator = new KeyValueAggregator(Arrays.asList("jcr:primaryType"), defaultBodgedUrlFragments);// later "sling:resourceType",
 		this.leftMargin = 5;
 		this.rightMargin = 5;
 		this.topMargin = 5;

@@ -1,5 +1,8 @@
 package org.softwareFm.card.internal;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.SWT;
@@ -10,11 +13,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMock;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
-import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMock;
 import org.softwareFm.card.api.ICardChangedListener;
 import org.softwareFm.card.api.ICardDataStore;
+import org.softwareFm.card.api.ICardDataStoreCallback;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardHolder;
 import org.softwareFm.card.api.ICardSelectedListener;
@@ -24,6 +28,7 @@ import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
@@ -65,11 +70,9 @@ public class CardExplorer implements IHasComposite {
 			cardHolder.addCardChangedListener(new ICardChangedListener() {
 				@Override
 				public void cardChanged(ICardHolder cardHolder, ICard card) {
-					KeyValue keyValue = selectDefaultChild(card);
+					KeyValue keyValue = findDefaultChild(card);
 					setDetailCard(card, keyValue);
 				}
-
-				
 
 			});
 			cardHolder.addLineSelectedListener(new ILineSelectedListener() {
@@ -81,15 +84,44 @@ public class CardExplorer implements IHasComposite {
 			});
 		}
 
+		private void setDetailCard(final ICard card, final KeyValue keyValue) {
+			rawSetDetail(card, keyValue);
+			if (keyValue != null)
+				if (CardConfig.defaultBodgedUrlFragments.contains(keyValue.key)) {
+					final String newUrl = card.url() + "/" + keyValue.key;
+					card.cardConfig().cardDataStore.processDataFor(newUrl, new ICardDataStoreCallback<Void>() {
+						@Override
+						public Void process(String url, Map<String, Object> result) throws Exception {
+							List<KeyValue> list = card.cardConfig().aggregator.apply(result);
+							Collections.sort(list, card.cardConfig().comparator);
+							for (KeyValue nextKeyValue : list)
+								if (CardConfig.anotherBodge.contains(nextKeyValue.key)) {
+									List<KeyValue> list2 = Lists.newList();
+									for (KeyValue kv : (List<KeyValue>) nextKeyValue.value)
+										list2.add(new KeyValue(keyValue.key + "/" + kv.key, kv.value));
+									KeyValue keyValue2 = new KeyValue(keyValue.key, list2);
+									rawSetDetail(card, keyValue2);
+									return null;
+								}
+							return null;
+						}
 
-		private void setDetailCard(ICard card, KeyValue keyValue) {
+						@Override
+						public Void noData(String url) throws Exception {
+							return null;
+						}
+					});
+				}
+		}
+
+		private void rawSetDetail(final ICard card, final KeyValue keyValue) {
 			detail.setContent(null);
 			Swts.removeAllChildren(detail);
 			Swts.removeOldResizeListener(detail, listener);
 			// System.out.println("makeDetailCard: " + Strings.join(card.data(), "\n  "));
 			if (keyValue == null)
 				return;
-			
+
 			final CardCollectionHolder detailChild = new CardCollectionHolder(detail, card.cardConfig());
 			detailChild.addCardSelectedListener(new ICardSelectedListener() {
 				@Override
@@ -122,12 +154,14 @@ public class CardExplorer implements IHasComposite {
 			}
 		}
 
-		private KeyValue selectDefaultChild(ICard card) {
+		private KeyValue findDefaultChild(ICard card) {
+			for (KeyValue keyValue : card.data())
+				if (CardConfig.defaultBodgedUrlFragments.contains(keyValue.key)) {
+					Object value = keyValue.value;
+					return keyValue;
+				}
 			for (KeyValue keyValue : card.data())
 				if (keyValue.key.equals("nt:unstructured"))
-					return keyValue;
-			for (KeyValue keyValue : card.data())
-				if (CardConfig.defaultBodgedUrlFragments.contains(keyValue.key))
 					return keyValue;
 			for (KeyValue keyValue : card.data())
 				if (CardConfig.anotherBodge.contains(keyValue.key))

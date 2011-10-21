@@ -7,9 +7,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMock;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
-import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMock;
 import org.softwareFm.card.api.ICardAndCollectionsDataStore;
 import org.softwareFm.card.api.ICardDataStoreCallback;
 import org.softwareFm.card.api.ICardFactory;
@@ -35,7 +35,7 @@ public class CardCollectionsDataStore implements ICardAndCollectionsDataStore {
 				visitor.initialCard(cardHolder, cardConfig, url, card);
 				cardHolder.setCard(card);
 				for (final KeyValue keyValue : card.data()) {
-					String followOnUrlFragment = findFollowOnUrlFragment(keyValue);
+					final String followOnUrlFragment = findFollowOnUrlFragment(keyValue);
 					if (followOnUrlFragment != null) {
 						count.incrementAndGet();
 						visitor.requestingFollowup(cardHolder, url, card, followOnUrlFragment);
@@ -48,7 +48,7 @@ public class CardCollectionsDataStore implements ICardAndCollectionsDataStore {
 									// the card is expecting a list of key values for each child (probably each child of a type...but lets not go there yet)
 									for (Entry<String, Object> entry : result.entrySet())
 										if (entry.getValue() instanceof Map<?, ?>)
-											list.add(new KeyValue(entry.getKey(), entry.getValue()));
+											list.add(new KeyValue(followOnUrlFragment+"/"+entry.getKey(), entry.getValue()));
 									card.valueChanged(keyValue, list);
 								}
 								finish(card);

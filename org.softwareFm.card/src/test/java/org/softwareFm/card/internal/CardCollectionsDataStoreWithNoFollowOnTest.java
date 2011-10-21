@@ -16,8 +16,14 @@ public class CardCollectionsDataStoreWithNoFollowOnTest extends AbstractCardColl
 
 	@Override
 	public void testCallbackNotCalledUntilAnyFollowUpQueriesFinished() {
-		assertEquals(0, memory.getResult().size());
+		checkFuturesCount(0);
 		kickAndDispatch(status.initialFuture);
-		assertEquals(1, memory.getResult().size());
+		checkFuturesCount(1);
+	}
+
+	private void checkFuturesCount(int expected) {
+		assertEquals(expected, memory.finishedCount);
+		assertEquals(0, memory.followedUpCount);
+
 	}
 }
