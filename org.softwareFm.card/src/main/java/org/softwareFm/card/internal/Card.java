@@ -73,7 +73,7 @@ public class Card implements ICard {
 					return;
 				KeyValue keyValue = (KeyValue) table.getItem(index).getData();
 				for (ILineSelectedListener lineSelectedListener : lineSelectedListeners) {
-					lineSelectedListener.selected(keyValue);
+					lineSelectedListener.selected(Card.this, keyValue);
 				}
 				if (!cardConfig.allowSelection)
 					table.deselectAll();
@@ -82,7 +82,7 @@ public class Card implements ICard {
 	}
 
 	private void setTableItem(int i, final CardConfig cardConfig, TableItem tableItem, KeyValue keyValue) {
-		System.out.println("Setting table item[" + i + "]: " + keyValue);
+//		System.out.println("Setting table item[" + i + "]: " + keyValue);
 		String displayValue = Functions.call(cardConfig.valueFn, keyValue);
 		String name = Functions.call(cardConfig.nameFn, keyValue);
 		tableItem.setText(new String[] { name, displayValue });

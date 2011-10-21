@@ -5,6 +5,7 @@ import java.util.concurrent.Future;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -17,15 +18,14 @@ import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardHolder;
 import org.softwareFm.card.api.ICardSelectedListener;
+import org.softwareFm.card.api.ILineSelectedListener;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.display.composites.IHasComposite;
-import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwareFm.utilities.strings.Strings;
 
 public class CardExplorer implements IHasComposite {
 
@@ -65,47 +65,61 @@ public class CardExplorer implements IHasComposite {
 			cardHolder.addCardChangedListener(new ICardChangedListener() {
 				@Override
 				public void cardChanged(ICardHolder cardHolder, ICard card) {
-					detail.setContent(null);
-					Swts.removeAllChildren(detail);
-
-					IHasControl detailChild = makeDetailChild(card);
-
-					Swts.setSizeToComputedSize(detailChild, SWT.DEFAULT, detail.getClientArea().height);// calculate size
-					detail.setContent(detailChild.getControl());// this may add scroll bars
-					Swts.setSizeToComputedSize(detailChild, SWT.DEFAULT, detail.getClientArea().height); // so this resets the size if scroll bars were added
+					KeyValue keyValue = selectDefaultChild(card);
+					setDetailCard(card, keyValue);
 				}
 
+				
+
+			});
+			cardHolder.addLineSelectedListener(new ILineSelectedListener() {
+				@Override
+				public void selected(ICard card, KeyValue keyValue) {
+					System.out.println("Card keyvalue: " + keyValue);
+					setDetailCard(card, keyValue);
+				}
 			});
 		}
 
-		private IHasControl makeDetailChild(ICard card) {
+
+		private void setDetailCard(ICard card, KeyValue keyValue) {
+			detail.setContent(null);
+			Swts.removeAllChildren(detail);
 			Swts.removeOldResizeListener(detail, listener);
-			System.out.println("makeDetailCard: " + Strings.join(card.data(), "\n  "));
-			KeyValue keyValue = selectDefaultChild(card);
+			// System.out.println("makeDetailCard: " + Strings.join(card.data(), "\n  "));
 			if (keyValue == null)
-				return null;
-			final CardCollectionHolder holder = new CardCollectionHolder(detail, card.cardConfig());
-			holder.addCardSelectedListener(new ICardSelectedListener() {
+				return;
+			
+			final CardCollectionHolder detailChild = new CardCollectionHolder(detail, card.cardConfig());
+			detailChild.addCardSelectedListener(new ICardSelectedListener() {
 				@Override
 				public void cardSelected(ICard card) {
 					ICallback.Utils.call(callbackToGotoUrl, card.url());
 				}
 			});
-			final Composite composite = holder.getComposite();
+			final Composite composite = detailChild.getComposite();
 			composite.setBackground(composite.getDisplay().getSystemColor(SWT.COLOR_GREEN));
-			holder.setKeyValue(card.url(), keyValue);
+			detailChild.setKeyValue(card.url(), keyValue);
 
 			listener = new Listener() {
 				@Override
 				public void handleEvent(Event event) {
-					System.out.println("Resizine: " + detail.getClientArea());
-					Swts.setSizeToComputedSize(holder, SWT.DEFAULT, detail.getClientArea().height);
+					// System.out.println("Resizing: " + detail.getClientArea());
+					Swts.setSizeToComputedSize(detailChild, SWT.DEFAULT, detail.getClientArea().height);
 					composite.layout();
 				}
 			};
 			detail.addListener(SWT.Resize, listener);
 
-			return holder;
+			if (detailChild != null) {
+				Rectangle initialClientArea = detail.getClientArea();
+				Swts.setSizeToComputedSize(detailChild, SWT.DEFAULT, initialClientArea.height);// calculate size
+
+				detail.setContent(detailChild.getControl());// this may add scroll bars
+
+				Rectangle afterPotentialScrollBarsAddedClientArea = detail.getClientArea();
+				Swts.setSizeToComputedSize(detailChild, SWT.DEFAULT, afterPotentialScrollBarsAddedClientArea.height); // so this resets the size if scroll bars were added
+			}
 		}
 
 		private KeyValue selectDefaultChild(ICard card) {
@@ -144,8 +158,8 @@ public class CardExplorer implements IHasComposite {
 
 	public static void main(String[] args) {
 		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacardForCardExplorer();
-		final String rootUrl = "/softwareFm/content";
-		final String firstUrl = "/softwareFm/content/org";
+		final String rootUrl = "/softwareFm/data";
+		final String firstUrl = "/softwareFm/data/org";
 		try {
 			Swts.display(CardExplorer.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 				@Override

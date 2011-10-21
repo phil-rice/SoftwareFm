@@ -91,7 +91,6 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 
 				}
 			new NavCombo(this, cardConfig, url, "", callbackToGotoUrl);
-			System.out.println();
 			layout();
 			getParent().layout();
 		}

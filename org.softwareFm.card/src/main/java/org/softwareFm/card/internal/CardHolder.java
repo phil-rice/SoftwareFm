@@ -19,6 +19,8 @@ import org.softwareFm.card.api.ICardChangedListener;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardHolder;
+import org.softwareFm.card.api.ILineSelectedListener;
+import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.card.navigation.ITitleBarForCard;
 import org.softwareFm.card.navigation.NavBar;
 import org.softwareFm.card.navigation.NavTitle;
@@ -37,6 +39,7 @@ public class CardHolder implements ICardHolder {
 		final ITitleBarForCard title;
 		ICard card;
 		private final CardConfig navBarCardConfig;
+		private final List<ILineSelectedListener> lineListeners = new CopyOnWriteArrayList<ILineSelectedListener>();
 
 		public CardHolderComposite(Composite parent, final String loadingText, CardConfig navBarCardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
 			super(parent, SWT.BORDER);
@@ -105,6 +108,14 @@ public class CardHolder implements ICardHolder {
 				this.card = card;
 				title.setUrl(card);
 				layout();
+
+				card.addLineSelectedListener(new ILineSelectedListener() {
+					@Override
+					public void selected(ICard card , KeyValue keyValue) {
+						for (ILineSelectedListener listener: lineListeners)
+							listener.selected(card, keyValue);
+					}
+				});
 			} catch (Exception e) {
 				throw WrappedException.wrap(e);
 			}
@@ -112,7 +123,7 @@ public class CardHolder implements ICardHolder {
 	}
 
 	CardHolderComposite content;
-	private final List<ICardChangedListener> listeners = new CopyOnWriteArrayList<ICardChangedListener>();
+	private final List<ICardChangedListener> cardListeners = new CopyOnWriteArrayList<ICardChangedListener>();
 
 	public CardHolder(Composite parent, String loadingText, String title, CardConfig cardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
 		content = new CardHolderComposite(parent, loadingText, cardConfig, rootUrl, callbackToGotoUrl);
@@ -125,12 +136,16 @@ public class CardHolder implements ICardHolder {
 	@Override
 	public void setCard(final ICard card) {
 		content.setCard(card);
-		for (ICardChangedListener listener: listeners)
+		for (ICardChangedListener listener : cardListeners)
 			listener.cardChanged(this, card);
 	}
 
 	public void addCardChangedListener(ICardChangedListener listener) {
-		listeners.add(listener);
+		cardListeners.add(listener);
+	}
+
+	public void addLineSelectedListener(ILineSelectedListener listener) {
+		content.lineListeners.add(listener);
 	}
 
 	@Override

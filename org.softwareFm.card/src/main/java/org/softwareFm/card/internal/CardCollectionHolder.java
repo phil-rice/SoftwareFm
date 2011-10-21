@@ -65,7 +65,7 @@ public class CardCollectionHolder implements IHasComposite {
 										});
 									}
 
-									System.out.println("seting card in card holder in collection holder: " + url + "   " + result);
+//									System.out.println("setting card in card holder in collection holder: " + url + "   " + result);
 									return null;
 								}
 
