@@ -43,7 +43,11 @@ public class CardConfig {
 
 	public final int defaultWidthWeight = 3;
 	public final int defaultHeightWeight = 2;
+
+	public int iconToTextSpacer = 3;
 	public final static List<String> defaultBodgedUrlFragments = Arrays.asList("version", "artifact", "group", "usedby", "dependency");
+
+	public static final List<String> anotherBodge = Arrays.asList("softwareFm_artifact","softwareFm_group","softwareFm_dependancy","softwareFm_version","softwareFm_usedBy");
 
 	public CardConfig(ICardFactory cardFactory, ICardDataStore cardDataStore) {
 		this.resourceGetter = IResourceGetter.Utils.noResources().with(//

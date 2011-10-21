@@ -1,5 +1,7 @@
 package org.softwareFm.card.internal;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.SWT;
@@ -13,6 +15,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICard;
+import org.softwareFm.card.api.ICardChangedListener;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardHolder;
@@ -41,7 +44,7 @@ public class CardHolder implements ICardHolder {
 			if (navBarCardConfig == null)
 				throw new NullPointerException();
 			if (callbackToGotoUrl == null)
-				title = new NavTitle(this, loadingText);
+				title = new NavTitle(this, navBarCardConfig, loadingText);
 			else
 				title = new NavBar(this, navBarCardConfig, rootUrl, callbackToGotoUrl);
 			addListener(SWT.Resize, new Listener() {
@@ -94,7 +97,7 @@ public class CardHolder implements ICardHolder {
 		public void setCard(ICard card) {
 			if (this.card == card)
 				return;
-			if (this.card != null )
+			if (this.card != null)
 				this.card.getComposite().dispose();
 			try {
 				if (card.cardConfig() == null)
@@ -109,10 +112,9 @@ public class CardHolder implements ICardHolder {
 	}
 
 	CardHolderComposite content;
-	final CardConfig cardConfig;
+	private final List<ICardChangedListener> listeners = new CopyOnWriteArrayList<ICardChangedListener>();
 
 	public CardHolder(Composite parent, String loadingText, String title, CardConfig cardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
-		this.cardConfig = cardConfig;
 		content = new CardHolderComposite(parent, loadingText, cardConfig, rootUrl, callbackToGotoUrl);
 	}
 
@@ -123,6 +125,12 @@ public class CardHolder implements ICardHolder {
 	@Override
 	public void setCard(final ICard card) {
 		content.setCard(card);
+		for (ICardChangedListener listener: listeners)
+			listener.cardChanged(this, card);
+	}
+
+	public void addCardChangedListener(ICardChangedListener listener) {
+		listeners.add(listener);
 	}
 
 	@Override

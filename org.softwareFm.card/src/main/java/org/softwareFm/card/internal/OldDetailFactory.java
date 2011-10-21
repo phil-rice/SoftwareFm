@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.widgets.Composite;
@@ -72,17 +70,17 @@ public class OldDetailFactory implements IDetailFactory {
 			public void process(final ICard card) throws Exception {
 				if (card == null)
 					return;
-				card.getControl().addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseDown(MouseEvent e) {
-						listener.cardSelectedDown(card, e);
-					}
-
-					@Override
-					public void mouseUp(MouseEvent e) {
-						listener.cardSelectedUp(card, e);
-					}
-				});
+//				card.getControl().addMouseListener(new MouseAdapter() {
+//					@Override
+//					public void mouseDown(MouseEvent e) {
+//						listener.cardSelectedDown(card);
+//					}
+//
+//					@Override
+//					public void mouseUp(MouseEvent e) {
+//						listener.cardSelectedUp(card, e);
+//					}
+//				});
 				holder.setCard(card);
 
 			}

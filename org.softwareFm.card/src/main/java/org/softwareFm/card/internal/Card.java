@@ -1,5 +1,6 @@
 package org.softwareFm.card.internal;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,7 @@ public class Card implements ICard {
 	private final List<ILineSelectedListener> lineSelectedListeners = new CopyOnWriteArrayList<ILineSelectedListener>();
 	private final CardConfig cardConfig;
 	private final Map<String, Object> rawData;
+	private final Object lock = new Object();
 
 	public Card(Composite parent, final CardConfig cardConfig, final String url, Map<String, Object> rawData) {
 		this.cardConfig = cardConfig;
@@ -89,16 +91,18 @@ public class Card implements ICard {
 
 	@Override
 	public KeyValue valueChanged(final KeyValue keyValue, final Object newValue) {
-		int index = data.indexOf(keyValue);
-		try {
-			TableItem item = findTableItem(keyValue); //cannot go via index, as not all data items are displayed
-			KeyValue newKeyValue = new KeyValue(keyValue.key, newValue);
-			data.set(index, newKeyValue); //just keeping it around for debugging purposes
-			setTableItem(index, cardConfig, item, newKeyValue);
-			table.redraw();
-			return newKeyValue;
-		} catch (IllegalArgumentException e) {
-			throw new RuntimeException("Index: " + index + ", \nKeyValue: " + keyValue + "\nNewValue: " + newValue, e);
+		synchronized (lock) {
+			int index = data.indexOf(keyValue);
+			try {
+				TableItem item = findTableItem(keyValue); // cannot go via index, as not all data items are displayed
+				KeyValue newKeyValue = new KeyValue(keyValue.key, newValue);
+				data.set(index, newKeyValue); // just keeping it around for debugging purposes
+				setTableItem(index, cardConfig, item, newKeyValue);
+				table.redraw();
+				return newKeyValue;
+			} catch (IllegalArgumentException e) {
+				throw new RuntimeException("Index: " + index + ", \nKeyValue: " + keyValue + "\nNewValue: " + newValue, e);
+			}
 		}
 	}
 
@@ -136,7 +140,9 @@ public class Card implements ICard {
 
 	@Override
 	public List<KeyValue> data() {
-		return data;
+		synchronized (lock) {
+			return new ArrayList<KeyValue>(data);
+		}
 	}
 
 	@Override

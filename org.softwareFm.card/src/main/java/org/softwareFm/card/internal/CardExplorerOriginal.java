@@ -11,8 +11,6 @@ import java.util.concurrent.Future;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Point;
@@ -23,7 +21,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.json.simple.JSONValue;
 import org.softwareFm.card.api.CardConfig;
-import org.softwareFm.card.api.CardSelectedAdapter;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
@@ -123,11 +120,13 @@ public class CardExplorerOriginal implements IHasComposite {
 			Swts.removeOldResizeListener(detail, detailResizeListener);
 			Swts.removeAllChildren(detail);
 			detail.setContent(null);
-			final Composite madeDetail = makeDetail(detail, parentCard, childCardConfig, keyValue, new CardSelectedAdapter() {
+			final Composite madeDetail = makeDetail(detail, parentCard, childCardConfig, keyValue, new ICardSelectedListener() {
+
 				@Override
-				public void cardSelectedUp(ICard card, MouseEvent e) {
+				public void cardSelected(ICard card) {
 					String cardUrl = card.url();
 					selectUrl(childCardConfig, cardUrl);
+
 				}
 			});
 			Rectangle clientArea = detail.getClientArea();
@@ -208,17 +207,17 @@ public class CardExplorerOriginal implements IHasComposite {
 						if (cardKv.key.equals("nt:unstructured"))
 							content.showDetailsFor(card, cardConfig, cardKv);
 				} else {
-					card.getControl().addMouseListener(new MouseAdapter() {
-						@Override
-						public void mouseDown(MouseEvent e) {
-							listener.cardSelectedDown(card, e);
-						}
-
-						@Override
-						public void mouseUp(MouseEvent e) {
-							listener.cardSelectedUp(card, e);
-						}
-					});
+//					card.getControl().addMouseListener(new MouseAdapter() {
+//						@Override
+//						public void mouseDown(MouseEvent e) {
+//							listener.cardSelectedDown(card);
+//						}
+//
+//						@Override
+//						public void mouseUp(MouseEvent e) {
+//							listener.cardSelectedUp(card, e);
+//						}
+//					});
 					holder.setCard(card);
 				}
 			}

@@ -385,7 +385,7 @@ public class Swts {
 		});
 	}
 
-	public static <T extends IHasControl>void xUnit(String title, final ISituationListAndBuilder<T> builder, final Map<String, Object> situationMap) {
+	public static <T extends IHasControl> void xUnit(String title, final ISituationListAndBuilder<T> builder, final Map<String, Object> situationMap) {
 		Swts.display(title, new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
@@ -527,12 +527,31 @@ public class Swts {
 		Listener listener = new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				Rectangle clientArea = control.getParent().getClientArea();
-				control.setSize(clientArea.width, clientArea.height);
+				Swts.setSizeFromClientArea(control);
 			}
 		};
 		control.getParent().addListener(SWT.Resize, listener);
 		return listener;
+	}
+
+	public static Listener resizeMeToParentsSizeWithTopMargin(final Control control, final int topMargin) {
+		setSizeAndLocationFromParentsSizeWithTopMargin(control, topMargin);
+
+		Listener listener = new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				setSizeAndLocationFromParentsSizeWithTopMargin(control, topMargin);
+			}
+
+		};
+		control.getParent().addListener(SWT.Resize, listener);
+		return listener;
+	}
+
+	private static void setSizeAndLocationFromParentsSizeWithTopMargin(final Control control, final int topMargin) {
+		Rectangle clientArea = control.getParent().getClientArea();
+		control.setLocation(clientArea.x, clientArea.y + topMargin);
+		control.setSize(clientArea.width, clientArea.height - topMargin);
 	}
 
 	public static void removeOldResizeListener(final Control control, Listener listener) {
@@ -573,6 +592,12 @@ public class Swts {
 		Rectangle clientArea = child.getParent().getClientArea();
 		child.setSize(clientArea.width, clientArea.height);
 
+	}
+
+	public static void setSizeToComputedSize(IHasControl control, int wHint, int hHint) {
+		Control c = control.getControl();
+		Point size = c.computeSize(wHint, hHint);
+		c.setSize(size);
 	}
 
 }

@@ -6,9 +6,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.softwareFm.card.api.CardConfig;
+import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardAndCollectionDataStoreVisitor;
+import org.softwareFm.card.api.ICardChangedListener;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
+import org.softwareFm.card.api.ICardHolder;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
@@ -41,6 +44,12 @@ public class SingleCardExplorer implements IHasComposite {
 		cardHolder = new CardHolder(sashForm, "loading", "Some title", cardConfig, rootUrl, callbackToGotoUrl);
 		text = new Text(sashForm, SWT.H_SCROLL | SWT.WRAP);
 		Swts.resizeMeToParentsSize(cardHolder.getControl());
+		cardHolder.addCardChangedListener(new ICardChangedListener() {
+			@Override
+			public void cardChanged(ICardHolder cardHolder, ICard card) {
+				text.setText(card.rawData().toString());
+			}
+		});
 	}
 
 	protected void setUrl(String firstUrl) {

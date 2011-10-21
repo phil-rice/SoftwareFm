@@ -64,7 +64,7 @@ public class CardExplorerTest extends SwtIntegrationTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		cardDataStore = CardDataStoreFixture.rawAsyncCardStore();
-		cardExplorer = new CardExplorer(shell, new CardConfig(ICardFactory.Utils.cardFactory(), cardDataStore), CardDataStoreFixture.url, CardDataStoreFixture.url1a);
+		cardExplorer = new CardExplorer(shell, new CardConfig(ICardFactory.Utils.cardFactory(), cardDataStore), CardDataStoreFixture.url);
 		cardExplorerComposite = (CardExplorer.CardExplorerComposite) cardExplorer.getComposite();
 		cardHolder = cardExplorerComposite.left;
 		

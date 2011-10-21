@@ -67,7 +67,7 @@ public class BasicCardConfigurator implements ICardConfigurator {
 			public Image apply(Map<String, Object> from) throws Exception {
 				Object object = from.get("sling:resourceType");
 				if (object == null)
-					return null;
+					return imageRegistry.get(GeneralAnchor.helpKey);
 				if (object.equals("softwareFm_group"))
 					return imageRegistry.get(ArtifactsAnchor.organisationKey);
 				else if (object.equals("softwareFm_artifact"))

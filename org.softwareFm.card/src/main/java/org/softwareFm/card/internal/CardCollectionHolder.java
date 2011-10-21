@@ -1,19 +1,23 @@
 package org.softwareFm.card.internal;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
+import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardDataStoreCallback;
 import org.softwareFm.card.api.ICardFactory;
+import org.softwareFm.card.api.ICardSelectedListener;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
@@ -28,6 +32,7 @@ public class CardCollectionHolder implements IHasComposite {
 	static class CardCollectionHolderComposite extends Composite {
 
 		private final CardConfig cardConfig;
+		private final List<ICardSelectedListener> listeners = new CopyOnWriteArrayList<ICardSelectedListener>();
 
 		public CardCollectionHolderComposite(Composite parent, CardConfig cardConfig) {
 			super(parent, SWT.NULL);
@@ -38,18 +43,27 @@ public class CardCollectionHolder implements IHasComposite {
 		protected void setKeyValue(final String rootUrl, KeyValue keyValue) {
 			Object value = keyValue.value;
 			Swts.removeAllChildren(this);
-			if (value instanceof Map<?, ?>) {
-				for (final Entry<String, Object> entry : ((Map<String, Object>) value).entrySet()) {
-					final CardHolder cardHolder = new CardHolder(this, "loading", entry.getKey(), cardConfig, rootUrl, null);
+			if (value instanceof List<?>) {
+				for (final KeyValue childKeyValue : ((List<KeyValue>) value)) {
+					final CardHolder cardHolder = new CardHolder(this, "loading", childKeyValue.key, cardConfig, rootUrl, null);
 					cardHolder.getControl().addPaintListener(new PaintListener() {
 						@Override
 						public void paintControl(PaintEvent e) {
 							cardHolder.getControl().removePaintListener(this);
-							cardConfig.cardDataStore.processDataFor(rootUrl + "/" + entry.getKey(), new ICardDataStoreCallback<Void>() {
+							cardConfig.cardDataStore.processDataFor(rootUrl + "/" + childKeyValue.key, new ICardDataStoreCallback<Void>() {
 								@Override
 								public Void process(String url, Map<String, Object> result) throws Exception {
-									if (!cardHolder.getControl().isDisposed())
-										cardConfig.cardFactory.makeCard(cardHolder, cardConfig, url, result);
+									if (!cardHolder.getControl().isDisposed()) {
+										final ICard card = cardConfig.cardFactory.makeCard(cardHolder, cardConfig, url, result);
+										card.getControl().addMouseListener(new MouseAdapter() {
+											@Override
+											public void mouseUp(org.eclipse.swt.events.MouseEvent e) {
+												for (ICardSelectedListener listener : listeners) {
+													listener.cardSelected(card);
+												}
+											};
+										});
+									}
 
 									System.out.println("seting card in card holder in collection holder: " + url + "   " + result);
 									return null;
@@ -66,6 +80,11 @@ public class CardCollectionHolder implements IHasComposite {
 			}
 			layout();
 		}
+
+	}
+
+	public void addCardSelectedListener(ICardSelectedListener listener) {
+		content.listeners.add(listener);
 	}
 
 	public CardCollectionHolder(Composite parent, CardConfig cardConfig) {
