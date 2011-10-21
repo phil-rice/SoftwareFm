@@ -149,7 +149,6 @@ public class CardHolder implements ICardHolder {
 						if (card == null)
 							return;
 						cardHolder.setCard(card);
-						Swts.layoutDump(from);
 					}
 				});
 				new Thread() {

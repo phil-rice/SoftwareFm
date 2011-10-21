@@ -65,8 +65,6 @@ public class CardCollectionHolder implements IHasComposite {
 				}
 			}
 			layout();
-			System.out.println("set data: ");
-			Swts.layoutDump(this);
 		}
 	}
 

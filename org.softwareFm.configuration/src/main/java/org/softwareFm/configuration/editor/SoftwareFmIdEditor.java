@@ -73,7 +73,6 @@ public class SoftwareFmIdEditor implements IEditor {
 	@Override
 	public void edit(IDisplayer parent, DisplayerDefn displayerDefn, ActionContext actionContext, final IEditorCompletion completion) {
 		this.completion = completion;
-		Swts.layoutDump(content);
 
 		removeModifyListeners();
 

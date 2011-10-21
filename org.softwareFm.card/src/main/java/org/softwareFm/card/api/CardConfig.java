@@ -1,6 +1,6 @@
 package org.softwareFm.card.api;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +43,7 @@ public class CardConfig {
 
 	public final int defaultWidthWeight = 3;
 	public final int defaultHeightWeight = 2;
+	public final static List<String> defaultBodgedUrlFragments = Arrays.asList("version", "artifact", "group", "usedby", "dependency");
 
 	public CardConfig(ICardFactory cardFactory, ICardDataStore cardDataStore) {
 		this.resourceGetter = IResourceGetter.Utils.noResources().with(//
@@ -64,7 +65,7 @@ public class CardConfig {
 		this.valueFn = KeyValue.Utils.valueAsStrFn();
 		this.hideFn = Functions.constant(false);
 		this.comparator = KeyValue.Utils.orderedKeyComparator();
-		this.aggregator = new KeyValueAggregator(Collections.<String>emptyList());
+		this.aggregator = new KeyValueAggregator(Arrays.asList( "jcr:primaryType"), defaultBodgedUrlFragments);//later "sling:resourceType",
 		this.leftMargin = 5;
 		this.rightMargin = 5;
 		this.topMargin = 5;
@@ -126,7 +127,7 @@ public class CardConfig {
 	}
 
 	public CardConfig withAggregatorTags(List<String> tagNames) {
-		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, hideFn, comparator, new KeyValueAggregator(tagNames), leftMargin, rightMargin, topMargin, bottomMargin, titleHeight);
+		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, hideFn, comparator, new KeyValueAggregator(tagNames, defaultBodgedUrlFragments), leftMargin, rightMargin, topMargin, bottomMargin, titleHeight);
 	}
 
 	public CardConfig withSorter(Comparator<KeyValue> comparator) {

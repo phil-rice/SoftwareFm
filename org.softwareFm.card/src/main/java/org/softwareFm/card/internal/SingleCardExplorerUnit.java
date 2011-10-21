@@ -7,7 +7,6 @@ import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.display.swt.ISituationListAndBuilder;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
-import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.strings.Strings;
 
 public class SingleCardExplorerUnit {
@@ -30,9 +29,7 @@ public class SingleCardExplorerUnit {
 					final CardConfig cardConfig = new BasicCardConfigurator().configure(parent.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 					return new SingleCardExplorer(parent, cardConfig, rootUrl);
 				}
-			}, Maps.<String, Object> makeMap("First", firstUrl, //
-					"Antlr", "/softwareFm/content/org/antlr",
-					"Ant", "/softwareFm/content/org/apache/ant"));
+			}, CardUnit.urls);
 		} finally {
 			facard.shutdown();
 		}

@@ -94,7 +94,6 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 			System.out.println();
 			layout();
 			getParent().layout();
-			Swts.layoutDump(this);
 		}
 
 		private void updateNextPrevButtons() {

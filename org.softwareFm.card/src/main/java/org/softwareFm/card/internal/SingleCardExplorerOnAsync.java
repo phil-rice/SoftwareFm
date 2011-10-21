@@ -6,7 +6,7 @@ import java.util.concurrent.Future;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
-import org.softwareFm.card.api.ICard;
+import org.softwareFm.card.api.ICardAndCollectionDataStoreVisitor;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.KeyValue;
@@ -45,7 +45,7 @@ public class SingleCardExplorerOnAsync {
 					public void run() {
 						try {
 							while (true) {
-								final CardAndCollectionsStatus status = dataStore.processDataFor(cardHolder, cardConfig, rootUrl, ICallback.Utils.<ICard> noCallback());
+								final CardAndCollectionsStatus status = dataStore.processDataFor(cardHolder, cardConfig, rootUrl, ICardAndCollectionDataStoreVisitor.Utils.sysout());
 								int delay = 1000;
 								Thread.sleep(delay);
 								((GatedMockFuture<?, ?>) status.initialFuture).kick();

@@ -40,7 +40,7 @@ public class Card implements ICard {
 		this.cardConfig = cardConfig;
 		this.url = url;
 		this.rawData = rawData;
-		this.table = new Table(parent, cardConfig.style|SWT.BORDER);
+		this.table = new Table(parent, cardConfig.style | SWT.BORDER);
 		this.nameColumn = new TableColumn(table, SWT.NONE);
 		this.valueColumn = new TableColumn(table, SWT.NONE);
 		data = Functions.call(cardConfig.aggregator, rawData);
@@ -56,8 +56,7 @@ public class Card implements ICard {
 		for (KeyValue keyValue : data) {
 			if (!Functions.call(cardConfig.hideFn, keyValue)) {
 				TableItem tableItem = new TableItem(table, SWT.NULL);
-				setTableItem(cardConfig, tableItem, keyValue);
-				tableItem.setData(i);
+				setTableItem(i, cardConfig, tableItem, keyValue);
 			}
 			i++;
 		}
@@ -70,8 +69,7 @@ public class Card implements ICard {
 				int index = table.getSelectionIndex();
 				if (index == -1)
 					return;
-				Integer dataIndex = (Integer) table.getItem(index).getData();
-				KeyValue keyValue = data.get(dataIndex);
+				KeyValue keyValue = (KeyValue) table.getItem(index).getData();
 				for (ILineSelectedListener lineSelectedListener : lineSelectedListeners) {
 					lineSelectedListener.selected(keyValue);
 				}
@@ -81,22 +79,34 @@ public class Card implements ICard {
 		});
 	}
 
-	private void setTableItem(final CardConfig cardConfig, TableItem tableItem, KeyValue keyValue) {
-		System.out.println("Setting table item: " + keyValue);
+	private void setTableItem(int i, final CardConfig cardConfig, TableItem tableItem, KeyValue keyValue) {
+		System.out.println("Setting table item[" + i + "]: " + keyValue);
 		String displayValue = Functions.call(cardConfig.valueFn, keyValue);
 		String name = Functions.call(cardConfig.nameFn, keyValue);
 		tableItem.setText(new String[] { name, displayValue });
-		Swts.layoutDump(table.getParent().getParent());
+		tableItem.setData(keyValue);
 	}
 
 	@Override
-	public void valueChanged(final KeyValue keyValue, final Object newValue) {
+	public KeyValue valueChanged(final KeyValue keyValue, final Object newValue) {
 		int index = data.indexOf(keyValue);
-		TableItem item = table.getItem(index);
-		KeyValue newKeyValue = new KeyValue(keyValue.key, newValue);
-		data.set(index, newKeyValue);
-		setTableItem(cardConfig, item, newKeyValue);
-		table.redraw();
+		try {
+			TableItem item = findTableItem(keyValue); //cannot go via index, as not all data items are displayed
+			KeyValue newKeyValue = new KeyValue(keyValue.key, newValue);
+			data.set(index, newKeyValue); //just keeping it around for debugging purposes
+			setTableItem(index, cardConfig, item, newKeyValue);
+			table.redraw();
+			return newKeyValue;
+		} catch (IllegalArgumentException e) {
+			throw new RuntimeException("Index: " + index + ", \nKeyValue: " + keyValue + "\nNewValue: " + newValue, e);
+		}
+	}
+
+	private TableItem findTableItem(KeyValue keyValue) {
+		for (TableItem item : table.getItems())
+			if (item.getData() == keyValue)
+				return item;
+		throw new RuntimeException("KeyValue: " + keyValue);
 	}
 
 	@Override

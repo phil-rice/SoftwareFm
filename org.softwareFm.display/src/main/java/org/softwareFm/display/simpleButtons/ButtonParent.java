@@ -58,7 +58,6 @@ public class ButtonParent implements IButtonParent {
 //		layout.horizontalSpacing = 0;
 //		content.setLayout(layout);
 		System.out.println("setLayoutdata");
-		Swts.layoutDump(content.getParent());
 		content.layout();
 		content.getParent().layout();
 	}

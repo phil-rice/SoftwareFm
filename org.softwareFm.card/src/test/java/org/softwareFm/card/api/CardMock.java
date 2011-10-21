@@ -32,9 +32,10 @@ public class CardMock implements ICard {
 	}
 
 	@Override
-	public void valueChanged(KeyValue keyValue, Object newValue) {
+	public KeyValue valueChanged(KeyValue keyValue, Object newValue) {
 		keyValues.add(keyValue);
 		newValues.add(newValue);
+		return keyValue;
 	}
 
 	@Override

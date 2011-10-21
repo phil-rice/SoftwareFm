@@ -21,7 +21,10 @@ import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.strings.Strings;
 
 public class CardUnit implements IHasComposite {
-
+	public final static String rootUrl = "/softwareFm/content";
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public final static Map<String,Object> urls = (Map)Maps.makeLinkedMapFromArray(Functions.addToStart(rootUrl),//
+			"/org/apache/ant/artifact/ant-antlr", "/", "/org/antlr", "/org/apache/ant", "/org/apache/ant/artifact/ant");
 	private final SashForm sashForm;
 	private final CardHolder cardHolder;
 	private final Text text;
@@ -37,9 +40,8 @@ public class CardUnit implements IHasComposite {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void main(String[] args) {
 		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacardForCardExplorer();
-		final String rootUrl = "/softwareFm/content";
-		final String firstUrl = "/softwareFm/content/org";
 		try {
+
 			Swts.xUnit(CardUnit.class.getSimpleName(), new ISituationListAndBuilder<CardUnit>() {
 				@Override
 				public void selected(final CardUnit cardunit, String context, Object value) throws Exception {
@@ -59,8 +61,7 @@ public class CardUnit implements IHasComposite {
 					CardUnit cardUnit = new CardUnit(parent, cardConfig, rootUrl);
 					return cardUnit;
 				}
-			},(Map) Maps.makeLinkedMapFromArray(Functions.addToStart(rootUrl),//
-					"/", "/org/antlr", "/org/apache/ant", "/org/apache/ant/artifact/ant"));
+			}, urls);
 		} finally {
 			facard.shutdown();
 		}

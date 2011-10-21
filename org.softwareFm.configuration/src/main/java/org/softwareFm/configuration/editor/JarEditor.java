@@ -52,7 +52,6 @@ public class JarEditor implements IEditor {
 	
 	@Override
 	public void edit(IDisplayer parent, DisplayerDefn displayerDefn, ActionContext actionContext, final IEditorCompletion completion) {
-		Swts.layoutDump(content);
 		Swts.setHelpText(helpText, actionContext.compositeConfig.resourceGetter, displayerDefn.helpKey);
 		Object jarPath = actionContext.dataGetter.getDataFor(ConfigurationConstants.dataRawJarPath);
 		Object jarName = actionContext.dataGetter.getDataFor(ConfigurationConstants.dataRawJarName);
