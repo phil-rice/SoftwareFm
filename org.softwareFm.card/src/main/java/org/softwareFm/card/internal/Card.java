@@ -40,7 +40,7 @@ public class Card implements ICard {
 		this.cardConfig = cardConfig;
 		this.url = url;
 		this.rawData = rawData;
-		this.table = new Table(parent, cardConfig.style);
+		this.table = new Table(parent, cardConfig.style|SWT.BORDER);
 		this.nameColumn = new TableColumn(table, SWT.NONE);
 		this.valueColumn = new TableColumn(table, SWT.NONE);
 		data = Functions.call(cardConfig.aggregator, rawData);

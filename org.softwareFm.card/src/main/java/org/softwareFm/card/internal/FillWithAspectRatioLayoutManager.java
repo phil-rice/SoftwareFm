@@ -65,6 +65,8 @@ public class FillWithAspectRatioLayoutManager extends Layout {
 		for (Control control : composite.getChildren()) {
 			control.setLocation(x, clientArea.y);
 			control.setSize(width, height);
+			if (control instanceof Composite)
+				((Composite) control).layout();
 			x += width;
 		}
 	}

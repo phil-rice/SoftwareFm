@@ -21,7 +21,7 @@ import org.softwareFm.utilities.future.GatedFuture;
 public class CardCollectionsDataStore implements ICardAndCollectionsDataStore {
 
 	@Override
-	public CardAndCollectionsStatus processDataFor(final ICardHolder cardHolder, final CardConfig cardConfig, final String url) {
+	public CardAndCollectionsStatus processDataFor(final ICardHolder cardHolder, final CardConfig cardConfig, final String url, final ICallback<ICard> whenFinished) {
 		final GatedFuture<Void> future = Futures.gatedFuture();
 		final AtomicInteger count = new AtomicInteger(1);
 		final List<Future<KeyValue>> keyValueFutures = new CopyOnWriteArrayList<Future<KeyValue>>();
@@ -56,8 +56,10 @@ public class CardCollectionsDataStore implements ICardAndCollectionsDataStore {
 			}
 
 			private void finish(ICard card) {
-				if (count.decrementAndGet() == 0)
+				if (count.decrementAndGet() == 0) {
+					ICallback.Utils.call(whenFinished, card);
 					future.done(null);
+				}
 			}
 		});
 		final CardAndCollectionsStatus status = new CardAndCollectionsStatus(future, cardFuture, keyValueFutures, count);

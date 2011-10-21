@@ -99,6 +99,12 @@ public class Maps {
 		Map<K, V> result = new LinkedHashMap<K, V>(attributesAndValues.length / 2);
 		return putInto(result, attributesAndValues);
 	}
+	public static <K, V> Map<K, V> makeLinkedMapFromArray(IFunction1<K, V> fn, K... keys) {
+		Map<K, V> result = new LinkedHashMap<K, V>(keys.length);
+		for (K key: keys)
+			result.put(key, Functions.call(fn, key));
+		return result;
+	}
 
 	public static <K, V> Map<K, V> merge(Map<K, V>... maps) {
 		Map<K, V> result = new HashMap<K, V>();

@@ -36,7 +36,7 @@ public class CardHolder implements ICardHolder {
 		private final CardConfig navBarCardConfig;
 
 		public CardHolderComposite(Composite parent, final String loadingText, CardConfig navBarCardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
-			super(parent, SWT.NULL);
+			super(parent, SWT.BORDER);
 			this.navBarCardConfig = navBarCardConfig;
 			if (navBarCardConfig == null)
 				throw new NullPointerException();
@@ -92,7 +92,9 @@ public class CardHolder implements ICardHolder {
 		}
 
 		public void setCard(ICard card) {
-			if (this.card != null)
+			if (this.card == card)
+				return;
+			if (this.card != null )
 				this.card.getComposite().dispose();
 			try {
 				if (card.cardConfig() == null)
@@ -107,8 +109,10 @@ public class CardHolder implements ICardHolder {
 	}
 
 	CardHolderComposite content;
+	final CardConfig cardConfig;
 
 	public CardHolder(Composite parent, String loadingText, String title, CardConfig cardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
+		this.cardConfig = cardConfig;
 		content = new CardHolderComposite(parent, loadingText, cardConfig, rootUrl, callbackToGotoUrl);
 	}
 
@@ -156,7 +160,7 @@ public class CardHolder implements ICardHolder {
 						} catch (InterruptedException e) {
 							throw WrappedException.wrap(e);
 						}
-						((GatedMockFuture<?,?>) future).kick();
+						((GatedMockFuture<?, ?>) future).kick();
 					};
 				}.start();
 				Swts.resizeMeToParentsSize(cardHolder.getControl());

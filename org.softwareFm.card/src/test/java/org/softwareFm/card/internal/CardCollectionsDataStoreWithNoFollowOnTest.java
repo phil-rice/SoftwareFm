@@ -13,4 +13,11 @@ public class CardCollectionsDataStoreWithNoFollowOnTest extends AbstractCardColl
 	protected String findFollowOnUrlFragment(KeyValue keyValue) {
 		return null;
 	}
+
+	@Override
+	public void testCallbackNotCalledUntilAnyFollowUpQueriesFinished() {
+		assertEquals(0, memory.getResult().size());
+		kickAndDispatch(status.initialFuture);
+		assertEquals(1, memory.getResult().size());
+	}
 }

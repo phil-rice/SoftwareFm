@@ -44,15 +44,25 @@ public class CardDataStoreFixture {
 			"data2b", data2b,//
 			"data2c", data2c);
 
-	private static final Object[] dataForMocks = new Object[] { "some", Maps.newMap(),//
+	public static final Object[] dataForMocks = new Object[] { "some", Maps.newMap(),//
 			url, dataUrl1, //
 			url1a, data1ap, //
 			url1b, data1bp,//
 			url2a, data2ap,//
 			url2b, data2bp,//
 			url2c, data2cp,//
-
 	};
+	public static final Object[] dataIndexedByUrlFragment = new Object[] { "some", Maps.newMap(),//
+		"1a", data1a, //
+		"1b", data1b,//
+		"2a", data2a,//
+		"2b", data2b,//
+		"2c", data2c,//
+	};
+	
+	
+	
+			
 
 	public static final CardDataStoreMock rawCardStore() {
 		return new CardDataStoreMock(dataForMocks);

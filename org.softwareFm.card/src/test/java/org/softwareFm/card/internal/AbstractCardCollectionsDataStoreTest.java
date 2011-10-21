@@ -11,6 +11,8 @@ import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.display.swt.SwtIntegrationTest;
+import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.callbacks.MemoryCallback;
 
 public abstract class AbstractCardCollectionsDataStoreTest extends SwtIntegrationTest {
 
@@ -21,6 +23,7 @@ public abstract class AbstractCardCollectionsDataStoreTest extends SwtIntegratio
 	protected CardAndCollectionsStatus status;
 	protected CardAndCollectionsStatus followUpQueryStatus;
 	private CardFactoryMock mockCardFactory;
+	protected MemoryCallback<ICard> memory;
 
 	public void testNothingHappenBeforeInitialQueryReturns() throws InterruptedException, ExecutionException {
 		dispatchUntilQueueEmpty();
@@ -28,23 +31,24 @@ public abstract class AbstractCardCollectionsDataStoreTest extends SwtIntegratio
 		assertEquals(0, status.keyValueFutures.size());
 		assertEquals(1, status.count.get());
 		assertEquals(0, mockCardFactory.count);
+		assertEquals(0, memory.getResult().size());
 	}
 
-	
-	public void testCardCreatedAfterInitialQueryReturns(){
+	public void testCardCreatedAfterInitialQueryReturns() {
 		kickAndDispatch(status.initialFuture);
 		assertEquals(1, mockCardFactory.count);
 		ICard card = cardHolder.getCard();
 		assertEquals(CardDataStoreFixture.url, card.url());
 		assertEquals(CardDataStoreFixture.dataUrl1, card.rawData());
 	}
-	
-	public void testFollowOnQueriesDontSendKeyValuesToCardBeforeAnyFollowOnQueries(){
+
+	public void testFollowOnQueriesDontSendKeyValuesToCardBeforeAnyFollowOnQueries() {
 		kickAndDispatch(status.initialFuture);
 		CardMock card = (CardMock) cardHolder.getCard();
 		assertEquals(0, card.keyValues.size());
 	}
-	
+
+	abstract public void testCallbackNotCalledUntilAnyFollowUpQueriesFinished();
 
 	@Override
 	protected void setUp() throws Exception {
@@ -59,7 +63,8 @@ public abstract class AbstractCardCollectionsDataStoreTest extends SwtIntegratio
 				return AbstractCardCollectionsDataStoreTest.this.findFollowOnUrlFragment(keyValue);
 			}
 		};
-		status = cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, CardDataStoreFixture.url);
+		memory = ICallback.Utils.memory();
+		status = cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, CardDataStoreFixture.url, memory);
 	}
 
 	abstract protected String findFollowOnUrlFragment(KeyValue keyValue);
