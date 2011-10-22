@@ -19,7 +19,6 @@ import org.softwareFm.card.internal.modifiers.KeyValueListSorter;
 import org.softwareFm.card.internal.modifiers.KeyValueMissingItemsAdder;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
-import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.softwareFmImages.title.TitleAnchor;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
@@ -71,7 +70,7 @@ public class BasicCardConfigurator implements ICardConfigurator {
 			public Image apply(Map<String, Object> from) throws Exception {
 				Object object = from.get("sling:resourceType");
 				if (object == null)
-					return imageRegistry.get(GeneralAnchor.helpKey);
+					return imageRegistry.get(TitleAnchor.folderKey);
 				if (object.equals("softwareFm_group"))
 					return imageRegistry.get(ArtifactsAnchor.organisationKey);
 				else if (object.equals("softwareFm_artifact"))
@@ -81,7 +80,7 @@ public class BasicCardConfigurator implements ICardConfigurator {
 				else if (object.equals("softwareFm_version_jar"))
 					return imageRegistry.get(ArtifactsAnchor.jarKey);
 				else
-					return imageRegistry.get(GeneralAnchor.helpKey);
+					return imageRegistry.get(TitleAnchor.folderKey);
 			}
 		};
 		IFunction1<Map<String, Object>, Image> navIconFn = new IFunction1<Map<String, Object>, Image>() {
