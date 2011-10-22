@@ -9,8 +9,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -52,7 +55,7 @@ public class Card implements ICard {
 		nameColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "card.name.title"));
 		valueColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "card.value.title"));
 		nameColumn.setWidth(100);
-		valueColumn.setWidth(3000);
+		valueColumn.setWidth(100);
 		table.setDragDetect(true);
 		int i = 0;
 		for (KeyValue keyValue : data) {
@@ -64,6 +67,7 @@ public class Card implements ICard {
 		}
 
 		nameColumn.pack();
+		valueColumn.pack();
 		table.pack();
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -79,10 +83,31 @@ public class Card implements ICard {
 					table.deselectAll();
 			}
 		});
+		table.addListener(SWT.Resize, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				layout();
+			}
+		});
+	}
+
+	public void layout() {
+		Point size = table.getSize();
+		if (size.x == 0)
+			return;
+		nameColumn.pack();
+		int idealNameWidth = nameColumn.getWidth();
+		int newNameWidth = (size.x * cardConfig.cardNameWeight) / (cardConfig.cardNameWeight + cardConfig.cardValueWeight);
+		int maxNameValue = (int) (idealNameWidth * cardConfig.cardMaxNameSizeRatio);
+		if (newNameWidth > maxNameValue)
+			newNameWidth = maxNameValue;
+		int newValueWidth = size.x - newNameWidth;
+		nameColumn.setWidth(newNameWidth);
+		valueColumn.setWidth(newValueWidth);
 	}
 
 	private void setTableItem(int i, final CardConfig cardConfig, TableItem tableItem, KeyValue keyValue) {
-//		System.out.println("Setting table item[" + i + "]: " + keyValue);
+		// System.out.println("Setting table item[" + i + "]: " + keyValue);
 		String displayValue = Functions.call(cardConfig.valueFn, keyValue);
 		String name = Functions.call(cardConfig.nameFn, keyValue);
 		tableItem.setText(new String[] { name, displayValue });

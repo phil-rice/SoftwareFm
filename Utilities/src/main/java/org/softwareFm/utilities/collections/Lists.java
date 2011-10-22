@@ -148,6 +148,14 @@ public class Lists {
 		return result;
 	}
 
+	public static <T > List<T> sort(Iterable<T> from, Comparator<T> comparator) {
+		List<T> result = makeListFor(from);
+		for (T t : from)
+			result.add(t);
+		Collections.sort(result, comparator);
+		return result;
+	}
+
 	public static <T extends Comparable<T>> Comparator<T> byListOrder(final List<T> masterList) {
 		return new Comparator<T>() {
 			@Override
@@ -253,7 +261,7 @@ public class Lists {
 
 	}
 
-	public static <From, To>Comparator<From> comparator(final IFunction1<From, To> transformer, final Comparator<To> comparator) {
+	public static <From, To> Comparator<From> comparator(final IFunction1<From, To> transformer, final Comparator<To> comparator) {
 		return new Comparator<From>() {
 			@Override
 			public int compare(From o1, From o2) {
@@ -264,7 +272,8 @@ public class Lists {
 		};
 
 	}
-	public static <From, To extends Comparable<To>>Comparator<From> comparator(final IFunction1<From, To> transformer) {
+
+	public static <From, To extends Comparable<To>> Comparator<From> comparator(final IFunction1<From, To> transformer) {
 		return new Comparator<From>() {
 			@Override
 			public int compare(From o1, From o2) {
@@ -273,7 +282,7 @@ public class Lists {
 				return left.compareTo(right);
 			}
 		};
-		
+
 	}
 
 	// final List<String> list = Arrays.asList(order);

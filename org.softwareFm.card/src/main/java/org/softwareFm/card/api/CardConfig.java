@@ -19,6 +19,9 @@ public class CardConfig {
 
 	public static final IFunction1<String, String> defaultCardTitleFn = Strings.lastSegmentFn("/");
 
+	public final int cardNameWeight = 8;
+	public final int cardValueWeight = 8;
+	public final float cardMaxNameSizeRatio = 1.5f;
 	public final int leftMargin;
 	public final int rightMargin;
 	public final int topMargin;

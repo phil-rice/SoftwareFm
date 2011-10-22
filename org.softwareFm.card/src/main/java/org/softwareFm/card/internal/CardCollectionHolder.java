@@ -10,10 +10,10 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMock;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICard;
-import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMock;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardHolder;
@@ -21,6 +21,7 @@ import org.softwareFm.card.api.ICardSelectedListener;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
@@ -45,7 +46,7 @@ public class CardCollectionHolder implements IHasComposite {
 			Object value = keyValue.value;
 			Swts.removeAllChildren(this);
 			if (value instanceof List<?>) {
-				for (final KeyValue childKeyValue : ((List<KeyValue>) value)) {
+				for (final KeyValue childKeyValue : Lists.sort((List<KeyValue>) value, cardConfig.comparator)) {
 					final CardHolder cardHolder = new CardHolder(this, "loading", childKeyValue.key, cardConfig, rootUrl, null);
 					cardHolder.getControl().addPaintListener(new PaintListener() {
 						@Override

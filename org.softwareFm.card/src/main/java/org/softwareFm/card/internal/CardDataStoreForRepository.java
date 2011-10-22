@@ -3,7 +3,7 @@ package org.softwareFm.card.internal;
 import java.util.Map;
 import java.util.concurrent.Future;
 
-import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardDataStoreCallback;
 import org.softwareFm.httpClient.response.IResponse;
@@ -12,11 +12,11 @@ import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
 import org.softwareFm.repositoryFacardConstants.RepositoryFacardConstants;
 import org.softwareFm.utilities.exceptions.WrappedException;
 
-final class CardDataStoreForRepository implements ICardDataStore {
-	private final Composite from;
+public class CardDataStoreForRepository implements ICardDataStore {
+	private final Control from;
 	private final IRepositoryFacard facard;
 
-	CardDataStoreForRepository(Composite from, IRepositoryFacard facard) {
+	public CardDataStoreForRepository(Control from, IRepositoryFacard facard) {
 		this.from = from;
 		this.facard = facard;
 	}
