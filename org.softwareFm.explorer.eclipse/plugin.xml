@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+ <extension  point="org.eclipse.ui.views">
+       <category  name="SoftwareFm" id="org.softwareFm" />
+      <view  name="Explorer" icon="icons/sfm.gif" category="org.softwareFm"   
+             class="org.softwareFm.explorer.eclipse.ExplorerView"   id="org.softwareFm.explorer.eclipse.ExplorerView" />
+   </extension>
+</plugin>

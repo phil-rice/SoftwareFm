@@ -3,6 +3,7 @@ package org.softwareFm.allTests;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.internal.CardCollectionHolder;
+import org.softwareFm.card.internal.CardExplorer;
 import org.softwareFm.card.internal.CardHolder;
 import org.softwareFm.card.internal.CardUnit;
 import org.softwareFm.card.internal.SingleCardExplorer;
@@ -45,6 +46,7 @@ public class PersonUnit {
 				Swts.makeButtonFromMainMethod(composite, BrowserUnit.class);
 				Swts.makeButtonFromMainMethod(composite, TimeLineUnit.class);
 				Swts.makeButtonFromMainMethod(composite, CardUnit.class);
+				Swts.makeButtonFromMainMethod(composite, CardExplorer.class);
 				Swts.makeButtonFromMainMethod(composite, SingleCardExplorer.class);
 				Swts.makeButtonFromMainMethod(composite, SingleCardExplorerUnit.class);
 				Swts.makeButtonFromMainMethod(composite, SingleCardExplorerOnAsync.class);

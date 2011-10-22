@@ -292,6 +292,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		}
 		return repository;
 	}
+	
 
 	public SoftwareFmDataComposite makeComposite(final Composite parent) {
 		Display display = parent.getDisplay();

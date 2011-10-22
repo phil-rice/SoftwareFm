@@ -1,7 +1,6 @@
 package org.softwareFm.card.internal;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -48,9 +47,8 @@ public class Card implements ICard {
 		this.table = new Table(parent, cardConfig.style | SWT.BORDER);
 		this.nameColumn = new TableColumn(table, SWT.NONE);
 		this.valueColumn = new TableColumn(table, SWT.NONE);
-		data = Functions.call(cardConfig.aggregator, rawData);
-		Collections.sort(data, cardConfig.comparator);
-
+		data = cardConfig.modify(this, rawData);
+		
 		table.setHeaderVisible(false);
 		nameColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "card.name.title"));
 		valueColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "card.value.title"));

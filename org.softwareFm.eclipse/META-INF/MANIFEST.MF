@@ -5,10 +5,10 @@ Bundle-SymbolicName: org.softwareFm.eclipse;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.softwareFm.eclipse.SoftwareFmActivator
 Bundle-Vendor: SoftwareFm
-Require-Bundle: org.softwareFm.configuration;bundle-version="1.0.0",
+Require-Bundle: org.softwareFm.configuration;bundle-version="1.0.0";visibility:=reexport,
  org.eclipse.jdt.ui;bundle-version="3.7.0",
  org.eclipse.jface.text;bundle-version="3.7.0",
- org.softwareFm.repository;bundle-version="1.0.0",
- org.softwareFm.card;bundle-version="1.0.0"
+ org.softwareFm.repository;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
+Export-Package: org.softwareFm.eclipse

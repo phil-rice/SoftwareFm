@@ -33,7 +33,7 @@ public abstract class AbstractCompressedTextDisplayerFactory<T extends AbstractC
 		Object value = guard == null? dataGetter.getDataFor(defn.dataKey): dataGetter.getDataFor(guard);
 		AbstractCompressedText<?> titleAndText = (AbstractCompressedText<?>) displayer;
 		titleAndText.setEnabled(Actions.guardConditionPresent(dataGetter, defn, defn.editorIgnoresGuardKey)==null);
-		System.out.println("Enabled: " + titleAndText.getControl().isEnabled());
+//		System.out.println("Enabled: " + titleAndText.getControl().isEnabled());
 		String title = Strings.nullSafeToString(dataGetter.getDataFor(defn.title));
 		titleAndText.setText (Strings.nullSafeToString(value));
 		titleAndText.setTitle(title);

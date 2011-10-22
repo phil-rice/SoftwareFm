@@ -13,7 +13,10 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICardConfigurator;
+import org.softwareFm.card.api.IKeyValueListModifier;
 import org.softwareFm.card.api.KeyValue;
+import org.softwareFm.card.internal.modifiers.KeyValueListSorter;
+import org.softwareFm.card.internal.modifiers.KeyValueMissingItemsAdder;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
@@ -86,7 +89,7 @@ public class BasicCardConfigurator implements ICardConfigurator {
 			public Image apply(Map<String, Object> from) throws Exception {
 				Object object = from.get("sling:resourceType");
 				if (object == null)
-					return null;//imageRegistry.get(TitleAnchor.folderKey);
+					return null;// imageRegistry.get(TitleAnchor.folderKey);
 				if (object.equals("softwareFm_group"))
 					return imageRegistry.get(TitleAnchor.groupKey);
 				else if (object.equals("softwareFm_artifact"))
@@ -104,10 +107,14 @@ public class BasicCardConfigurator implements ICardConfigurator {
 		List<String> tagNames = Strings.splitIgnoreBlanks(tag, ",");
 		String orderAsString = resourceGetter.getStringOrNull("card.order");
 		String[] order = orderAsString.split(",");
+
+		List<IKeyValueListModifier> modifiers = Arrays.asList(new KeyValueMissingItemsAdder(), new KeyValueListSorter());
+
 		return config.withNameFn(nameFn).withValueFn(valueFn).withHideFn(hideFn).//
 				withCardIconFn(cardIconFn).withResourceGetter(resourceGetter).withAggregatorTags(tagNames).//
-				withNavIconFn(navIconFn).
-				withSorter(KeyValue.Utils.orderedKeyComparator(order));
+				withNavIconFn(navIconFn).//
+				withSorter(KeyValue.Utils.orderedKeyComparator(order)).//
+				withKeyValues(modifiers);
 	}
 
 	private String findKey(KeyValue from) {
