@@ -47,17 +47,6 @@ public class ButtonParent implements IButtonParent {
 
 	private void setLayoutData() {
 		content.setLayout(Swts.getHorizonalNoMarginRowLayout());
-//		content.setLayoutData(new RowData(buttonsWidth, layout.displayerHeight));
-//		GridLayout layout = new GridLayout(size, false);
-//		layout.marginBottom = 0;
-//		layout.marginTop = 0;
-//		layout.marginLeft = 0;
-//		layout.marginRight = 0;
-//		layout.marginWidth = 0;
-//		layout.marginHeight = 0;
-//		layout.horizontalSpacing = 0;
-//		content.setLayout(layout);
-		System.out.println("setLayoutdata");
 		content.layout();
 		content.getParent().layout();
 	}

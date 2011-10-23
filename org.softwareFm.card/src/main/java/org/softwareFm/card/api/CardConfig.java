@@ -1,14 +1,16 @@
 package org.softwareFm.card.api;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-import org.softwareFm.card.internal.DetailFactory;
 import org.softwareFm.card.internal.KeyValueAggregator;
+import org.softwareFm.card.internal.details.DetailFactory;
+import org.softwareFm.card.internal.details.IDetailAdder;
 import org.softwareFm.card.internal.modifiers.KeyValueListSorter;
 import org.softwareFm.display.data.ResourceGetterMock;
 import org.softwareFm.utilities.functions.Functions;
@@ -65,7 +67,7 @@ public class CardConfig {
 						"navBar.next.title", ">",//
 						"card.holder.loading.text", "loading"));
 		this.selector = ICardConfigSelector.Utils.defaultSelector(this);
-		this.detailFactory = new DetailFactory();
+		this.detailFactory = new DetailFactory(Collections.<IDetailAdder>emptyList());
 		this.cardFactory = cardFactory;
 		this.cardDataStore = cardDataStore;
 		this.style = SWT.FULL_SELECTION | SWT.NO_SCROLL;
