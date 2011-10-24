@@ -22,7 +22,7 @@ public class HistoryGestureListener<T> extends GestureLeftRightListener {
 	@Override
 	public void goLeft() {
 		if (history.hasPrev())
-		ICallback.Utils.call(callback, history.prev());
+			ICallback.Utils.call(callback, history.prev());
 	}
 
 	@Override

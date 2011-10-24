@@ -11,6 +11,7 @@ public interface IExtractorCallback {
 	void process(String project, String version, String jarUrl, Model model) throws Exception;
 
 	void finished();
+
 	public static class Utils {
 		public static IExtractorCallback summary() {
 			return new IExtractorCallback() {
@@ -21,7 +22,7 @@ public interface IExtractorCallback {
 				int blankJarCount = 0;
 
 				public void process(String project, String version, String jarUrl, Model model) {
-					if (jarUrl.equals(MavenImporterConstants.baseUrl)||jarUrl.length()==0)
+					if (jarUrl.equals(MavenImporterConstants.baseUrl) || jarUrl.length() == 0)
 						blankJarCount++;
 					if (model.getUrl() != null) {
 						urlCount++;
@@ -37,11 +38,11 @@ public interface IExtractorCallback {
 				}
 
 				public void finished() {
-					System.out.println("Count: "+ count);
-					System.out.println("mailingListCount: "+ mailingListCount);
-					System.out.println("issuesCount: "+ issuesCount);
-					System.out.println("urlCount: "+ urlCount);
-					System.out.println("blankJarCount: "+ blankJarCount);
+					System.out.println("Count: " + count);
+					System.out.println("mailingListCount: " + mailingListCount);
+					System.out.println("issuesCount: " + issuesCount);
+					System.out.println("urlCount: " + urlCount);
+					System.out.println("blankJarCount: " + blankJarCount);
 				}
 			};
 		}

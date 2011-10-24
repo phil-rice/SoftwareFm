@@ -81,7 +81,7 @@ public abstract class AbstractDisplayerEditorIntegrationTest<D extends IDisplaye
 	}
 
 	protected ActionContext makeActionContext(IDataGetter dataGetter, IUpdateStore updateStore) {
-		IFunction1<String, String> entityToUrl = new IFunction1<String,String>() {
+		IFunction1<String, String> entityToUrl = new IFunction1<String, String>() {
 			@Override
 			public String apply(String from) throws Exception {
 				return "UrlFor" + from;

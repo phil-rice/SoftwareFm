@@ -39,12 +39,12 @@ public class GuiDataStoreTest extends TestCase {
 		assertEquals(2, store.getDataFor("data.entityd2.ent2"));
 		assertEquals(21, store.getDataFor("data.entityd2.ent2.sub1.sub2"));
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void testProcessDataCallsDependantEntities() {
 		makeRosyView();
 
-		store.processData("entity1",rawData1, context1);
+		store.processData("entity1", rawData1, context1);
 		assertEquals(Arrays.asList("entity1", "entityd1", "entityd2"), urlToData.entities);
 		assertEquals(Arrays.asList(context1, context1, context1), urlToData.contexts);
 		assertEquals(Arrays.asList("original/rawdatavalue", "depOne/one", "depTwo/two"), urlToData.urls);
@@ -116,7 +116,7 @@ public class GuiDataStoreTest extends TestCase {
 	}
 
 	public void testThrowsExceptionIfDependantEntityReferencesNotExistantEntity() {
-		store.urlGenerator("urlKey1",new UrlGenerator("two/{2}", "rawDataKey"));
+		store.urlGenerator("urlKey1", new UrlGenerator("two/{2}", "rawDataKey"));
 		store.entity("entity1", "urlKey1");
 		IllegalArgumentException e2 = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
 			@Override
@@ -129,7 +129,7 @@ public class GuiDataStoreTest extends TestCase {
 	}
 
 	public void testThrowsExceptionWithDuplicateUrlGenerator() {
-		store.urlGenerator("urlKey1",new UrlGenerator("one/{2}", "rawDataKey"));
+		store.urlGenerator("urlKey1", new UrlGenerator("one/{2}", "rawDataKey"));
 		store.urlGenerator("key1", new UrlGenerator("two/{2}", "rawDataKey"));
 		IllegalArgumentException e = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
 			@Override
@@ -141,7 +141,7 @@ public class GuiDataStoreTest extends TestCase {
 	}
 
 	public void testThrowsExceptionIfSameEntityRegisteredTwice() {
-		store.urlGenerator("urlKey1",new UrlGenerator("one/{2}", "rawDataKey"));
+		store.urlGenerator("urlKey1", new UrlGenerator("one/{2}", "rawDataKey"));
 		store.entity("entity1", "urlKey1");
 		IllegalArgumentException e1 = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
 			@Override

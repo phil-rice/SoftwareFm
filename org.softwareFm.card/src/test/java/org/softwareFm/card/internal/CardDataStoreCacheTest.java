@@ -10,7 +10,7 @@ import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.CardDataStoreMock;
 import org.softwareFm.utilities.maps.Maps;
 
-@SuppressWarnings({"unchecked","rawtypes"})
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public abstract class CardDataStoreCacheTest extends TestCase {
 
 	private CardDataStoreMock raw;

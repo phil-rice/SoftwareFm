@@ -1,15 +1,7 @@
 package org.softwareFm.card.internal.details;
 
-import static org.junit.Assert.*;
 
-import org.junit.Test;
-import org.softwareFm.card.api.ICardSelectedListener;
-import org.softwareFm.card.internal.CardCollectionHolder;
-import org.softwareFm.display.composites.IHasControl;
-import org.softwareFm.display.swt.SwtIntegrationTest;
-
-public class CollectionsDetailAdderTest extends
-		AbstractDetailsAdderTest<CollectionsDetailAdder> {
+public class CollectionsDetailAdderTest extends AbstractDetailsAdderTest<CollectionsDetailAdder> {
 
 	public void testWithNonListGetNull() {
 		checkGetNull(detailFactory, stringValue);
@@ -22,7 +14,7 @@ public class CollectionsDetailAdderTest extends
 	}
 
 	public void testNeedsCollectionToMakeACardHolder() {
-		checkGetCardCollectionsHolder(collectionValue, parentCard.url()+"/"+collectionValue.key);
+		checkGetCardCollectionsHolder(collectionValue, parentCard.url() + "/" + collectionValue.key);
 	}
 
 	@Override

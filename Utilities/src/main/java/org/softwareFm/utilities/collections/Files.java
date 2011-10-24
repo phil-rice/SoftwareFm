@@ -41,8 +41,9 @@ public class Files {
 		} catch (MalformedURLException e) {
 			throw WrappedException.wrap(e);
 		}
-		
+
 	}
+
 	public static int downLoadFile(URL url, File target) {
 		try {
 			File tempFile = new File(target.getCanonicalFile().toString() + "_temp");

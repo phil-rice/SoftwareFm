@@ -11,7 +11,7 @@ public class CrossThreadAggregator<T> implements Iterable<T> {
 	private final List<T>[] results;
 	private final AtomicInteger index = new AtomicInteger(0);
 	private final ThreadLocal<List<T>> lists = new ThreadLocal<List<T>>() {
-		
+
 		protected java.util.List<T> initialValue() {
 			ArrayList<T> list = new ArrayList<T>();
 			results[index.getAndIncrement()] = list;

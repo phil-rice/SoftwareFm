@@ -12,7 +12,6 @@ public class ThreadUnsafePool<T> extends AbstractThinPool<T> {
 		next = 0;
 	}
 
-	
 	protected int makeNewObjectIndex() {
 		return next++;
 	}

@@ -47,7 +47,7 @@ class ResourceGetter implements IResourceGetter {
 					else
 						return null;
 				} catch (Exception e) {
-					throw new RuntimeException("Key: "+ fullKey, e);
+					throw new RuntimeException("Key: " + fullKey, e);
 				}
 			}
 		};

@@ -12,10 +12,10 @@ public class Sets {
 	public static <T> Set<T> makeSet(T... ts) {
 		return new HashSet<T>(Arrays.asList(ts));
 	}
+
 	public static <T> Set<T> makeImmutableSet(T... ts) {
 		return Collections.unmodifiableSet(new HashSet<T>(Arrays.asList(ts)));
 	}
-
 
 	public static <T> Set<T> set(Iterable<T> iterable) {
 		Set<T> result = new HashSet<T>();

@@ -36,7 +36,7 @@ public class TimeLineDataTest extends PlayListTest {
 		timeLineData.select("list2");
 		checkTimeLine(timeLineData, 10, playItem2_1, playItem2_2, playItem2_1, playItem2_2);
 		rewind(timeLineData);
-		checkTimeLine(timeLineData, 10,playItem1_2, playItem1_3, playItem1_1, playItem1_2, playItem1_3, playItem2_1, playItem2_2, playItem2_1, playItem2_2);
+		checkTimeLine(timeLineData, 10, playItem1_2, playItem1_3, playItem1_1, playItem1_2, playItem1_3, playItem2_1, playItem2_2, playItem2_1, playItem2_2);
 	}
 
 	public void testSelectMovesToEndOfHistory() {
@@ -47,7 +47,6 @@ public class TimeLineDataTest extends PlayListTest {
 		timeLineData.select("list2");
 		checkTimeLine(timeLineData, 10, playItem2_1, playItem2_2, playItem2_1, playItem2_2);
 	}
-
 
 	private TimeLineData makePlayListWithTwoLists() {
 		final TimeLineData timeLineData = new TimeLineData();

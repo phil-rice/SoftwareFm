@@ -1,6 +1,5 @@
 package org.softwareFm.display.editor;
 
-
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.display.composites.AbstractTitleAndText;

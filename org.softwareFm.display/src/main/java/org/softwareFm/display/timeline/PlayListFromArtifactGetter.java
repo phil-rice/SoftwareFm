@@ -28,11 +28,11 @@ public class PlayListFromArtifactGetter implements IPlayListFromEntityMapGetter 
 		if (data == null)
 			return Futures.doneFuture(null);
 		List<PlayItem> items = Lists.newList();
-		for (IPlayListContributor contributor: contributors)
+		for (IPlayListContributor contributor : contributors)
 			items.addAll(contributor.items(data));
-				
+
 		IPlayList result = IPlayList.Utils.make(playListName, Lists.shuffle(items));
-				iCallback.process(result);
+		iCallback.process(result);
 		return Futures.doneFuture(result);
 	}
 

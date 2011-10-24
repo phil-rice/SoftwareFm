@@ -33,8 +33,6 @@ public class MavenImporterConstants {
 	public static final String versionResourceType = "softwareFm_version";
 	public static final String versionJarResourceType = "softwareFm_version_jar";
 
-
-
 	static {
 		BasicDataSource basicDataSource = new BasicDataSource();
 		basicDataSource.setDriverClassName("com.mysql.jdbc.Driver");

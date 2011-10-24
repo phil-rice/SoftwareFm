@@ -25,7 +25,7 @@ public class DisplaySelectionModel {
 	private final ICallback<Throwable> exceptionHandler;
 	private final List<LargeButtonDefn> largeButtonDefns;
 
-	public DisplaySelectionModel(ICallback<Throwable> exceptionHandler, List<LargeButtonDefn>largeButtonDefns) {
+	public DisplaySelectionModel(ICallback<Throwable> exceptionHandler, List<LargeButtonDefn> largeButtonDefns) {
 		if (largeButtonDefns.size() == 0)
 			throw new IllegalArgumentException(DisplayConstants.mustHaveSomeLargeButtons);
 		this.exceptionHandler = exceptionHandler;

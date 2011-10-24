@@ -30,6 +30,7 @@ public class JarEditor implements IEditor {
 	public Control getControl() {
 		return content;
 	}
+
 	@Override
 	public Control createControl(ActionContext actionContext) {
 		content = Swts.newComposite(actionContext.rightHandSide.getComposite(), SWT.NULL, getClass().getSimpleName());
@@ -40,16 +41,15 @@ public class JarEditor implements IEditor {
 		jarNameText.setEditable(false);
 		buttonParent = new ButtonParent(content, config, SWT.NULL);
 		helpText = Swts.makeHelpDisplayer(content);
-	
+
 		Swts.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(content, actionContext.compositeConfig.layout.dataMargin);
-//		content.setLayout(Swts.getHorizonalNoMarginRowLayout());
-//		for (Control child: content.getChildren())
-//			child.setLayoutData(new RowData());
+		// content.setLayout(Swts.getHorizonalNoMarginRowLayout());
+		// for (Control child: content.getChildren())
+		// child.setLayoutData(new RowData());
 
 		return content;
 	}
 
-	
 	@Override
 	public void edit(IDisplayer parent, DisplayerDefn displayerDefn, ActionContext actionContext, final IEditorCompletion completion) {
 		Swts.setHelpText(helpText, actionContext.compositeConfig.resourceGetter, displayerDefn.helpKey);
@@ -70,19 +70,19 @@ public class JarEditor implements IEditor {
 					completion.cancel();
 			}
 		}).setOkEnabled(false);
-		
-	}
 
+	}
 
 	@Override
 	public IButtonParent actionButtonParent() {
 		return buttonParent;
 	}
+
 	public static void main(String[] args) {
 		Editors.display(JarEditor.class.getSimpleName(), new JarEditor(), //
 				ConfigurationConstants.dataRawJarPath, "some/jar/path/name.jar",//
 				ConfigurationConstants.dataRawJarName, "name.jar"//
-				);
+		);
 	}
 
 }

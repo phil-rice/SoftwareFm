@@ -148,7 +148,7 @@ public class Lists {
 		return result;
 	}
 
-	public static <T > List<T> sort(Iterable<T> from, Comparator<T> comparator) {
+	public static <T> List<T> sort(Iterable<T> from, Comparator<T> comparator) {
 		List<T> result = makeListFor(from);
 		for (T t : from)
 			result.add(t);

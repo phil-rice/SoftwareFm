@@ -17,7 +17,6 @@ public class MapDiff<K> {
 		this.indent = indent;
 	}
 
-	
 	public String toString() {
 		String prefix = indent.prefix();
 		StringBuilder builder = new StringBuilder();

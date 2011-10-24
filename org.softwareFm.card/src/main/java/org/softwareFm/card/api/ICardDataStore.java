@@ -21,7 +21,7 @@ public interface ICardDataStore {
 		}
 
 		/** The control is used to ensure that call backs are in the correct thread, and everything ceases to work if the control is disposed */
-		public static ICardDataStore repositoryCardDataStore(Control from, IRepositoryFacard repository){
+		public static ICardDataStore repositoryCardDataStore(Control from, IRepositoryFacard repository) {
 			return new CardDataStoreForRepository(from, repository);
 		}
 	}

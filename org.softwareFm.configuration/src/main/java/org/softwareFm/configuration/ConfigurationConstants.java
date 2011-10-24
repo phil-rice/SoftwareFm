@@ -90,13 +90,13 @@ public class ConfigurationConstants {
 
 	public static final String primaryEntity = "jar";
 	public static final String artifactId = "artifactId";
-	
+
 	public static final String groupId = "groupId";
 	public static final String version = "version";
-	
+
 	public static final String entityForPlayList = "artifact";
 	public static final String entityForJavadocSource = "jar";
-	
+
 	public static final String sfmIdPattern = "id.sfm.pattern";
 
 	public static final String buttonCopyToEclipseTitle = "button.copyToEclipse.title";

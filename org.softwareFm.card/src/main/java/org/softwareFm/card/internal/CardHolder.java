@@ -111,8 +111,8 @@ public class CardHolder implements ICardHolder {
 
 				card.addLineSelectedListener(new ILineSelectedListener() {
 					@Override
-					public void selected(ICard card , KeyValue keyValue) {
-						for (ILineSelectedListener listener: lineListeners)
+					public void selected(ICard card, KeyValue keyValue) {
+						for (ILineSelectedListener listener : lineListeners)
 							listener.selected(card, keyValue);
 					}
 				});

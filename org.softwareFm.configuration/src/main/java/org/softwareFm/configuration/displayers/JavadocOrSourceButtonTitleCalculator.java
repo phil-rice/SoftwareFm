@@ -24,11 +24,10 @@ public class JavadocOrSourceButtonTitleCalculator implements IFunction1<JavadocO
 				return new TitleAndRunnable("button.copyToSoftwareFm.title", copyToSoftwareFm);
 			else
 				return new TitleAndRunnable("button.eclipseNotUrl.title", null);
-		else
-			if (from.hasSoftwareFm)
+		else if (from.hasSoftwareFm)
 			return new TitleAndRunnable("button.copyToEclipse.title", copyToEclipse);
-			else
-				return new TitleAndRunnable("button.noData.title", null);
+		else
+			return new TitleAndRunnable("button.noData.title", null);
 	}
 
 }

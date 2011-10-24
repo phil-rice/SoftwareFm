@@ -23,7 +23,7 @@ public class CardDataStoreAsyncMock implements IMutableCardDataStore {
 	}
 
 	@Override
-	public<T> Future<T> processDataFor(final String url, final ICardDataStoreCallback<T> callback) {
+	public <T> Future<T> processDataFor(final String url, final ICardDataStoreCallback<T> callback) {
 		try {
 			Maps.add(counts, url, 1);
 			final Map<String, Object> result = map.get(url);
@@ -32,8 +32,8 @@ public class CardDataStoreAsyncMock implements IMutableCardDataStore {
 			return Futures.gatedMock(new IFunction1<Map<String, Object>, T>() {
 				@Override
 				public T apply(Map<String, Object> from) throws Exception {
-					 T process = callback.process(url, from);
-					 System.out.println("CardAysnc: " + url +"=>" + from + "=> " + process);
+					T process = callback.process(url, from);
+					System.out.println("CardAysnc: " + url + "=>" + from + "=> " + process);
 					return process;
 				}
 			}, result);

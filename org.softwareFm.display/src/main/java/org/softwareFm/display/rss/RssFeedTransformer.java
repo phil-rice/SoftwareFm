@@ -40,7 +40,7 @@ public class RssFeedTransformer implements IFunction1<String, String> {
 		out.output(doc2, stringWriter);
 		return stringWriter.toString();
 	}
-	
+
 	public static void main(String[] args) {
 		Swts.display("Browser", new IFunction1<Composite, Composite>() {
 			@Override

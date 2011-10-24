@@ -84,7 +84,7 @@ public class SlingImporterextractor implements IExtractorCallback {
 		addFileIfExists(model, map, file, jarUrl, "source", "-sources");
 		String url = jarUrlGenerator.findUrlFor(Maps.<String, Object> makeMap(JdtConstants.hexDigestKey, digest));
 		facard.post(url, map, IResponseCallback.Utils.noCallback()).get();
-		}
+	}
 
 	private void importGroup(Model model) throws Exception {
 		Map<String, Object> map = Maps.newMap();
@@ -109,7 +109,7 @@ public class SlingImporterextractor implements IExtractorCallback {
 			addIfExists(model, map, MavenImporterConstants.issueManagementUrlKey, issueManagement.getUrl());
 		String url = artifactUrlGenerator.findUrlFor(Maps.<String, Object> makeMap(ConfigurationConstants.groupId, groupId, ConfigurationConstants.artifactId, artifactId));
 		facard.post(url, map, IResponseCallback.Utils.noCallback()).get();
-	
+
 	}
 
 	private void importVersion(String jarUrl, Model model, File file, String digest) throws InterruptedException, ExecutionException {
@@ -126,7 +126,7 @@ public class SlingImporterextractor implements IExtractorCallback {
 		String digestUrl = url + "/" + digest;
 		facard.post(digestUrl, Maps.<String, Object> makeMap(JdtConstants.hexDigestKey, digest, //
 				MavenImporterConstants.jarUrl, jarUrl,//
-				 MavenImporterConstants.slingResourceTypeKey, MavenImporterConstants.versionJarResourceType,//
+				MavenImporterConstants.slingResourceTypeKey, MavenImporterConstants.versionJarResourceType,//
 				MavenImporterConstants.found, "Spidered from Maven Repository"), IResponseCallback.Utils.noCallback()).get();
 
 	}

@@ -154,11 +154,12 @@ public class Functions {
 			}
 		};
 	}
+
 	public static IFunction1<String, String> addToStart(final String string) {
 		return new IFunction1<String, String>() {
 			@Override
 			public String apply(String from) throws Exception {
-				return string + from ;
+				return string + from;
 			}
 		};
 	}

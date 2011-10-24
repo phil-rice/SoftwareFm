@@ -4,9 +4,9 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMock;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
-import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMock;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.KeyValue;

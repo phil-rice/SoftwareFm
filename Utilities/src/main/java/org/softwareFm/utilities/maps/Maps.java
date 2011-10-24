@@ -99,9 +99,10 @@ public class Maps {
 		Map<K, V> result = new LinkedHashMap<K, V>(attributesAndValues.length / 2);
 		return putInto(result, attributesAndValues);
 	}
+
 	public static <K, V> Map<K, V> makeLinkedMapFromArray(IFunction1<K, V> fn, K... keys) {
 		Map<K, V> result = new LinkedHashMap<K, V>(keys.length);
-		for (K key: keys)
+		for (K key : keys)
 			result.put(key, Functions.call(fn, key));
 		return result;
 	}
@@ -317,9 +318,9 @@ public class Maps {
 			return value;
 	}
 
-	public static <K, V> Map<K, V> with(Map<K, V> map,Object...keysAndValues) {
+	public static <K, V> Map<K, V> with(Map<K, V> map, Object... keysAndValues) {
 		Map<K, V> newMap = copyMap(map);
-		newMap.putAll(Maps.<K,V>makeLinkedMap(keysAndValues));
+		newMap.putAll(Maps.<K, V> makeLinkedMap(keysAndValues));
 		return newMap;
 	}
 
@@ -429,15 +430,15 @@ public class Maps {
 			return result;
 	}
 
-	public static <K,V>void putIfNotNull(Map<K, V> map, K key, V value) {
+	public static <K, V> void putIfNotNull(Map<K, V> map, K key, V value) {
 		if (value != null)
 			map.put(key, value);
-		
+
 	}
 
-	public static <K,V>Map<K,V> copyWithout(Map<K,V> map, K ... keys) {
+	public static <K, V> Map<K, V> copyWithout(Map<K, V> map, K... keys) {
 		Map<K, V> result = Maps.copyMap(map);
-		for (K key: keys)
+		for (K key : keys)
 			result.remove(key);
 		return result;
 	}

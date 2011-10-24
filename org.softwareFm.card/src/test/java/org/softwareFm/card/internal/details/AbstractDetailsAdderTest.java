@@ -7,8 +7,7 @@ import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.card.internal.CardCollectionHolder;
 import org.softwareFm.display.composites.IHasControl;
 
-public abstract class AbstractDetailsAdderTest<T extends IDetailAdder> extends
-		AbstractDetailTest {
+public abstract class AbstractDetailsAdderTest<T extends IDetailAdder> extends AbstractDetailTest {
 
 	private T adder;
 	protected DetailFactory detailFactory;

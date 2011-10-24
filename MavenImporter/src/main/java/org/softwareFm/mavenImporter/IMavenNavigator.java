@@ -35,6 +35,7 @@ public interface IMavenNavigator extends IMavenVisitor {
 					System.err.println("Error loading project url: " + throwable.getMessage());
 					indent = indent.unindent();
 				}
+
 				public void finishedProject(String baseUrl, String tagName, String projectName, String projectUrl) {
 					indent = indent.unindent();
 				}

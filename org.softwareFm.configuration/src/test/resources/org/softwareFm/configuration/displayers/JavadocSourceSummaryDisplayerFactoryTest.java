@@ -32,7 +32,7 @@ public class JavadocSourceSummaryDisplayerFactoryTest extends TestCase {
 		DisplayerDefn defn = new DisplayerDefn(displayerFactory).noIcon();
 		DataGetterMock dataGetter = new DataGetterMock("data.raw.jar.javadoc", eclipse, "data.jar.javadoc", softwareFm);
 		ActionContext actionContext = new ActionContext(null, null, dataGetter, null, compositeConfig, null, null, null, null);
-		
+
 		CompressedText displayer = (CompressedText) defn.createDisplayer(shell, actionContext);
 		displayerFactory.data(actionContext, defn, displayer, "entity", "some url");
 
@@ -46,8 +46,7 @@ public class JavadocSourceSummaryDisplayerFactoryTest extends TestCase {
 		resourceGetter = IResourceGetter.Utils.noResources().with(new ResourceGetterMock(//
 				"button.doesntMatches.title", "doesntMatchValue",//
 				"button.eclipseNotUrl.title", "eclipseNotUrl",//
-				"button.noData.title", "noData"
-				));
+				"button.noData.title", "noData"));
 		compositeConfig = new CompositeConfig(shell.getDisplay(), new SoftwareFmLayout(), BasicImageRegisterConfigurator.forTests(shell), resourceGetter);
 	}
 

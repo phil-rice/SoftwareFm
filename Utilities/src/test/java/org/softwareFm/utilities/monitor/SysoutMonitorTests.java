@@ -49,7 +49,7 @@ public class SysoutMonitorTests extends TestCase {
 	private void checkQuanta(int quanta, Integer... expected) {
 		final Collection<Integer> actual = Lists.newList();
 		SysoutMonitor monitor = new SysoutMonitor("", quanta) {
-			
+
 			protected void display(String pattern, int done, int max) {
 				actual.add(done);
 			}

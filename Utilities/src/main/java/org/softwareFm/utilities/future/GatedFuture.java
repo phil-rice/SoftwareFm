@@ -11,10 +11,11 @@ public class GatedFuture<T> implements Future<T> {
 	private final CountDownLatch latch = new CountDownLatch(1);
 	private T value;
 
-	public void done(T value){
+	public void done(T value) {
 		this.value = value;
 		this.latch.countDown();
 	}
+
 	@Override
 	public boolean cancel(boolean mayInterruptIfRunning) {
 		return false;

@@ -16,7 +16,7 @@ public class JavadocOrSourceState {
 		hasEclipse = eclipseValue != null && eclipseValue.length() > 0;
 		hasSoftwareFm = softwareFmValue != null && softwareFmValue.length() > 0;
 		matches = hasEclipse && hasSoftwareFm && eclipseValue.equals(softwareFmValue);
-		eclipseValueIsHttp = hasEclipse&& eclipseValue.startsWith("http://");
+		eclipseValueIsHttp = hasEclipse && eclipseValue.startsWith("http://");
 		eclipseValueIsJar = hasEclipse && eclipseValue.endsWith("jar");
 	}
 

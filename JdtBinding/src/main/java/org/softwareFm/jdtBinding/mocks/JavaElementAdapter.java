@@ -23,102 +23,82 @@ public class JavaElementAdapter implements IJavaElement {
 		this.path = path;
 	}
 
-	
 	public IJavaElement getParent() {
 		return parent;
 	}
 
-	
 	public IPath getPath() {
 		return path;
 	}
 
-	
 	public String getElementName() {
 		return childData.name;
 	}
 
-	
 	public String toString() {
 		return childData.name;
 	}
 
-	
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class arg0) {
 		throw new UnsupportedOperationException();
 	}
 
-	
 	public boolean exists() {
 		throw new UnsupportedOperationException();
 	}
 
-	
 	public IJavaElement getAncestor(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
-	
 	public String getAttachedJavadoc(IProgressMonitor arg0) throws JavaModelException {
 		throw new UnsupportedOperationException();
 	}
 
-	
 	public IResource getCorrespondingResource() throws JavaModelException {
 		throw new UnsupportedOperationException();
 	}
 
-	
 	public int getElementType() {
 		throw new UnsupportedOperationException();
 	}
 
-	
 	public String getHandleIdentifier() {
 		throw new UnsupportedOperationException();
 	}
 
-	
 	public IJavaModel getJavaModel() {
 		throw new UnsupportedOperationException();
 	}
 
-	
 	public IJavaProject getJavaProject() {
 		throw new UnsupportedOperationException();
 	}
 
-	
 	public IOpenable getOpenable() {
 		throw new UnsupportedOperationException();
 	}
 
-	
 	public IJavaElement getPrimaryElement() {
 		throw new UnsupportedOperationException();
 	}
 
-	
 	public IResource getResource() {
 		throw new UnsupportedOperationException();
 	}
 
-	
 	public ISchedulingRule getSchedulingRule() {
 		throw new UnsupportedOperationException();
 	}
 
-	
 	public IResource getUnderlyingResource() throws JavaModelException {
 		throw new UnsupportedOperationException();
 	}
 
-	
 	public boolean isReadOnly() {
 		throw new UnsupportedOperationException();
 	}
 
-	
 	public boolean isStructureKnown() throws JavaModelException {
 		throw new UnsupportedOperationException();
 	}

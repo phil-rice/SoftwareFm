@@ -45,7 +45,7 @@ public class DependanciesToMysql implements IExtractorCallback {
 		final String groupId = getGroupId(model);
 		final String artifactId = model.getArtifactId();
 		final String version = getVersion(model);
-		System.out.println(String.format("%6d",count)+toString(groupId, artifactId, version));
+		System.out.println(String.format("%6d", count) + toString(groupId, artifactId, version));
 		for (Dependency dependency : model.getDependencies()) {
 			final String childGroupId = dependency.getGroupId();
 			final String childArtifactId = dependency.getArtifactId();

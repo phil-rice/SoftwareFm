@@ -43,12 +43,12 @@ public class CardCollectionsDataStore implements ICardAndCollectionsDataStore {
 							@Override
 							public KeyValue process(String followUpUrl, Map<String, Object> result) throws Exception {
 								visitor.followedUp(cardHolder, url, card, followUpUrl, result);
-								if (!cardHolder.getControl().isDisposed()&& ! card.getControl().isDisposed()) {
+								if (!cardHolder.getControl().isDisposed() && !card.getControl().isDisposed()) {
 									List<KeyValue> list = Lists.newList();
 									// the card is expecting a list of key values for each child (probably each child of a type...but lets not go there yet)
 									for (Entry<String, Object> entry : result.entrySet())
 										if (entry.getValue() instanceof Map<?, ?>)
-											list.add(new KeyValue(followOnUrlFragment+"/"+entry.getKey(), entry.getValue()));
+											list.add(new KeyValue(followOnUrlFragment + "/" + entry.getKey(), entry.getValue()));
 									card.valueChanged(keyValue, list);
 								}
 								finish(card);

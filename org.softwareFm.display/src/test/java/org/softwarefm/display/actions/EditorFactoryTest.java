@@ -54,22 +54,23 @@ public class EditorFactoryTest extends AbstractSimpleMapTest<String, IEditor> {
 		assertEquals(editorMock2.getControl(), rightHandSide.getVisibleControl());
 
 	}
+
 	public void testOpeningSecondEditorDoesntUpdateStore() {
 		editorFactory.displayEditor(actionContext, displayerDefn1, displayer);
 		editorFactory.displayEditor(actionContext, displayerDefn2, displayer);
-		
+
 		assertEquals(editorMock2.getControl(), rightHandSide.getVisibleControl());
 		assertEquals(Collections.emptyList(), updateStore.datas);
 	}
 
-	public void testCancelDoesntUpdateStore(){
+	public void testCancelDoesntUpdateStore() {
 		editorFactory.displayEditor(actionContext, displayerDefn1, displayer);
 		editorFactory.cancel();
-		
+
 		assertEquals(Collections.emptyList(), updateStore.datas);
-		
+
 	}
-	
+
 	public void testCancelOnSecondEditorReplacesOriginal() {
 		editorFactory.displayEditor(actionContext, displayerDefn1, displayer);
 		editorFactory.displayEditor(actionContext, displayerDefn2, displayer);
@@ -85,19 +86,17 @@ public class EditorFactoryTest extends AbstractSimpleMapTest<String, IEditor> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void testFinishSendsData(){
+	public void testFinishSendsData() {
 		editorFactory.displayEditor(actionContext, displayerDefn1, displayer);
 		editorFactory.displayEditor(actionContext, displayerDefn2, displayer);
 		editorMock2.finish();
 		assertEquals(original, rightHandSide.getVisibleControl());
-		
+
 		assertEquals(Arrays.asList("entity"), updateStore.entities);
 		assertEquals(Arrays.asList("lastUrlForEntity"), updateStore.urls);
 		assertEquals(Arrays.asList(EditorMock.finishedData), updateStore.datas);
-		
+
 	}
-	
-	
 
 	public void testThrowsExceptionIfKeyNotThere() {
 		checkThrowsExceptionIfKeyNotThere("Map doesn't have key b. Legal keys are [a]. Map is {a=EditorMock [seed=1]}");

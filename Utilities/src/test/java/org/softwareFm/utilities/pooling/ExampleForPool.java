@@ -12,7 +12,6 @@ public class ExampleForPool implements IExampleForPool {
 		this.value = value;
 	}
 
-	
 	public String toString() {
 		return "ExampleForPool [value=" + value + "]";
 	}

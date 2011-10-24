@@ -9,18 +9,18 @@ import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.future.Futures;
 
-public class PlayListGetterMock implements IPlayListGetter{
+public class PlayListGetterMock implements IPlayListGetter {
 
 	private List<IPlayList> playLists = Lists.newList();
-	private int index; 
+	private int index;
 	public final List<String> playListNames = Lists.newList();
-	
-	public PlayListGetterMock(IPlayList...playLists) {
+
+	public PlayListGetterMock(IPlayList... playLists) {
 		this.playLists = Arrays.asList(playLists);
 	}
-	
+
 	@Override
-	public Future<IPlayList> getPlayListFor(String playListName,ICallback<IPlayList> iCallback) {
+	public Future<IPlayList> getPlayListFor(String playListName, ICallback<IPlayList> iCallback) {
 		try {
 			playListNames.add(playListName);
 			IPlayList playList = playLists.get(index++);

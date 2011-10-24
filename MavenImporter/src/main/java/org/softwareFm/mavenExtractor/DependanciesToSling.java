@@ -34,7 +34,7 @@ public class DependanciesToSling implements IArtifactDependancyVisitor {
 	public void vist(String groupid, String artifactid, String childgroupid, String childartifactid) throws Exception {
 		String url = artifactUrlGenerator.findUrlFor(makeMap(groupid, artifactid));
 		UUID uuid = UUID.randomUUID();
-		String fullUrl = url+"/"+"dependancy"+"/"+ uuid;
+		String fullUrl = url + "/" + "dependancy" + "/" + uuid;
 		Map<String, Object> data = makeMap(childgroupid, childartifactid);
 		data.put(MavenImporterConstants.slingResourceTypeKey, "dependancy");
 		System.out.println(fullUrl + "<-------" + data);

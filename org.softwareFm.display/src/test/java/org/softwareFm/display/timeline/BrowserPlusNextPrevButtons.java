@@ -12,7 +12,7 @@ import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.functions.IFunction1;
 
-public class BrowserPlusNextPrevButtons implements IHasControl{
+public class BrowserPlusNextPrevButtons implements IHasControl {
 
 	private final Composite content;
 	private final Composite playlist;
@@ -21,7 +21,7 @@ public class BrowserPlusNextPrevButtons implements IHasControl{
 	private final IPlayListGetter playListGetter;
 	private final IBrowserComposite browser;
 
-	public BrowserPlusNextPrevButtons(Composite parent, int style, CompositeConfig config, IFunction1<Composite	, IBrowserComposite> browserCreator, IPlayListGetter playListGetter) throws Exception {
+	public BrowserPlusNextPrevButtons(Composite parent, int style, CompositeConfig config, IFunction1<Composite, IBrowserComposite> browserCreator, IPlayListGetter playListGetter) throws Exception {
 		this.config = config;
 		this.playListGetter = playListGetter;
 		content = Swts.newComposite(parent, style, getClass().getSimpleName());
@@ -39,7 +39,7 @@ public class BrowserPlusNextPrevButtons implements IHasControl{
 			@Override
 			public void run() {
 				if (timeLine.hasPrevious())
-				timeLine.previous();
+					timeLine.previous();
 			}
 		});
 		buttons.setLayout(new RowLayout());
@@ -56,7 +56,7 @@ public class BrowserPlusNextPrevButtons implements IHasControl{
 	public void addPlayLists(Set<String> keySet) {
 		timeLine = new TimeLine(browser, playListGetter);
 		Swts.removeAllChildren(playlist);
-		for (final String key: keySet)
+		for (final String key : keySet)
 			Swts.makePushButton(playlist, config.resourceGetter, key, false, new Runnable() {
 				@Override
 				public void run() {
@@ -64,5 +64,5 @@ public class BrowserPlusNextPrevButtons implements IHasControl{
 				}
 			});
 	}
-	
+
 }

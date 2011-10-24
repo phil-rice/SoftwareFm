@@ -21,8 +21,7 @@ public interface IHttpClient {
 			return builder().withCredentials(HttpClientConstants.userName, HttpClientConstants.password);
 		}
 	}
-	
-	
+
 	IHttpClient setDefaultHeaders(List<NameValuePair> headers);
 
 	IRequestBuilder post(String url);

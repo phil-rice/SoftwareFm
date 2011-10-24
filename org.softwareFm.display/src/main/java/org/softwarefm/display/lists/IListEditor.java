@@ -7,5 +7,5 @@ import org.softwareFm.display.simpleButtons.IButtonParent;
 
 public interface IListEditor {
 
-	 IButtonParent makeLineHasControl(DisplayerDefn displayDefn, CompositeConfig config, Composite listComposite, int index, Object value);
+	IButtonParent makeLineHasControl(DisplayerDefn displayDefn, CompositeConfig config, Composite listComposite, int index, Object value);
 }

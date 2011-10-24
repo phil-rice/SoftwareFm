@@ -17,10 +17,10 @@ public class RippedEditorId {
 		this.editorId = editorId;
 		if (isData()) {
 			String path = editorId.substring(5);
-			PreAndPost firstSplit = Strings.split(path	, '.');
+			PreAndPost firstSplit = Strings.split(path, '.');
 			if (firstSplit.post == null)
 				throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.illegalPath, path));
-			 raw = "raw".equals(firstSplit.pre);
+			raw = "raw".equals(firstSplit.pre);
 			if (raw) {
 				PreAndPost entityAndKey = Strings.split(firstSplit.post, '.');
 				entity = entityAndKey.pre;

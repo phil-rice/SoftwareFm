@@ -48,7 +48,7 @@ public class Card implements ICard {
 		this.nameColumn = new TableColumn(table, SWT.NONE);
 		this.valueColumn = new TableColumn(table, SWT.NONE);
 		data = cardConfig.modify(this, rawData);
-		
+
 		table.setHeaderVisible(false);
 		nameColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "card.name.title"));
 		valueColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "card.value.title"));

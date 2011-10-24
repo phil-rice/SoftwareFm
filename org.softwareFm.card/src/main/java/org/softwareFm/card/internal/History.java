@@ -40,11 +40,11 @@ public class History<T> {
 	}
 
 	public boolean hasNext() {
-		return index<history.size()-1;
+		return index < history.size() - 1;
 	}
 
 	public boolean hasPrev() {
-		return index>0;
+		return index > 0;
 	}
 
 	public List<T> items() {

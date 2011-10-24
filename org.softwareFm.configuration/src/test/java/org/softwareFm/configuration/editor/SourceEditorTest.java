@@ -6,7 +6,6 @@ import org.softwareFm.jdtBinding.api.JdtConstants;
 
 public class SourceEditorTest extends AbstractJavadocSourceEditorTest {
 
-
 	@Override
 	protected DataGetterMock makeDataGetter(String eclipseValue, String softwareFmValue) {
 		return new DataGetterMock(ConfigurationConstants.dataRawSourceMutator, makeMutator(), ConfigurationConstants.dataRawSource, eclipseValue, ConfigurationConstants.dataJarSource, softwareFmValue);
@@ -24,8 +23,9 @@ public class SourceEditorTest extends AbstractJavadocSourceEditorTest {
 
 	@Override
 	protected String getMutatorKey() {
-		return  ConfigurationConstants.dataRawSourceMutator;
+		return ConfigurationConstants.dataRawSourceMutator;
 	}
+
 	@Override
 	protected String getUrlTitleKey() {
 		return ConfigurationConstants.urlSourceTitle;
@@ -35,6 +35,5 @@ public class SourceEditorTest extends AbstractJavadocSourceEditorTest {
 	protected String getKeyForUpdateing() {
 		return JdtConstants.sourceKey;
 	}
-
 
 }

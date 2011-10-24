@@ -16,15 +16,15 @@ public class ListEditAction implements IAction {
 		final List<String> currentList = Lists.nullSafe((List<String>) actionContext.dataGetter.getDataFor(key));
 		String initialValue = currentList.get(index);
 
-//		actionContext.editorFactory.displayEditor(displayer, "editor.text", displayerDefn, actionContext, actionData, new ICallback<Object>() {
-//			@Override
-//			public void process(Object t) throws Exception {
-//				String string = Strings.nullSafeToString(t);
-//				List<String> newList = new ArrayList<String>(currentList);
-//				newList.set(index, string);
-//				actionContext.updateStore.update(actionData, key, newList.toArray(new String[0]));
-//			}
-//		}, initialValue);
+		// actionContext.editorFactory.displayEditor(displayer, "editor.text", displayerDefn, actionContext, actionData, new ICallback<Object>() {
+		// @Override
+		// public void process(Object t) throws Exception {
+		// String string = Strings.nullSafeToString(t);
+		// List<String> newList = new ArrayList<String>(currentList);
+		// newList.set(index, string);
+		// actionContext.updateStore.update(actionData, key, newList.toArray(new String[0]));
+		// }
+		// }, initialValue);
 
 	}
 

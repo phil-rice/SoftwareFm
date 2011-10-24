@@ -31,8 +31,8 @@ public class ArrayHelper {
 		}
 	}
 
-	public static <T>int findIndexOf(T[] array, T item) {
-		for (int i = 0; i<array.length; i++)
+	public static <T> int findIndexOf(T[] array, T item) {
+		for (int i = 0; i < array.length; i++)
 			if (array[i] == item)
 				return i;
 		return -1;

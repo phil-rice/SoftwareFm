@@ -170,8 +170,10 @@ public class DisplayerDefn {
 		return actionDefn.createButton(compositeConfig.imageButtonConfig, buttonParent, new IImageButtonListener() {
 			private final IAction action = actionStore.get(actionDefn.id);
 			{
-				if (action==null) throw new NullPointerException(MessageFormat.format(DisplayConstants.cannotFindValueForKey, actionDefn.id, actionStore));
+				if (action == null)
+					throw new NullPointerException(MessageFormat.format(DisplayConstants.cannotFindValueForKey, actionDefn.id, actionStore));
 			}
+
 			@Override
 			public void buttonPressed(IHasControl button) throws Exception {
 				ActionData actionData = actionContext.dataGetter.getActionDataFor(actionDefn.params);
@@ -219,14 +221,14 @@ public class DisplayerDefn {
 	}
 
 	public DisplayerDefn icon(String iconId) {
-		if (iconImageId!= null)
+		if (iconImageId != null)
 			throw new IllegalStateException(MessageFormat.format(DisplayConstants.cannotSetValueTwice, "icon", this.iconImageId, iconId));
 		iconImageId = iconId;
 		return this;
 	}
 
 	public DisplayerDefn icon(String iconId, String overlayId) {
-		if (iconImageId!= null)
+		if (iconImageId != null)
 			throw new IllegalStateException(MessageFormat.format(DisplayConstants.cannotSetValueTwice, "icon", this.iconImageId, iconId));
 		iconImageId = iconId;
 		iconOverlayId = overlayId;
@@ -239,7 +241,7 @@ public class DisplayerDefn {
 	}
 
 	public DisplayerDefn editorIgnoreGuard(String editorIgnoresGuardKey) {
-		if (this.editorIgnoresGuardKey!= null)
+		if (this.editorIgnoresGuardKey != null)
 			throw new IllegalStateException(MessageFormat.format(DisplayConstants.cannotSetValueTwice, "editorIgnoreGuard", this.editorIgnoresGuardKey, editorIgnoresGuardKey));
 		this.editorIgnoresGuardKey = editorIgnoresGuardKey;
 		return this;

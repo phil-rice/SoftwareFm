@@ -38,14 +38,14 @@ public class RssDisplayByBrowser implements IBrowserPart {
 	public void displayReply(int statusCode, String reply) throws Exception {
 		int index1 = reply.indexOf("<rss");
 		int index2 = reply.indexOf("<feed");
-		if (index1 == -1 && index2 == -1  )
+		if (index1 == -1 && index2 == -1)
 			browser.setText("<h1>Not an RSS Feed</h1>");
-		else{
+		else {
 			try {
 				String html = new RssFeedTransformer().apply(reply);
 				browser.setText(html);
 			} catch (Exception e) {
-				throw new RuntimeException("\n" + reply+"\n", e);
+				throw new RuntimeException("\n" + reply + "\n", e);
 			}
 		}
 

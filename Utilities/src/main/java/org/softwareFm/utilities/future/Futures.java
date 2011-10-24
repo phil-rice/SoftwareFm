@@ -40,7 +40,7 @@ public class Futures {
 		};
 	}
 
-	public static <From,To> Future<To> transformed(final Future<From> future, final IFunction1<From, To> transformer){
+	public static <From, To> Future<To> transformed(final Future<From> future, final IFunction1<From, To> transformer) {
 		return new Future<To>() {
 
 			@Override
@@ -77,12 +77,12 @@ public class Futures {
 			}
 		};
 	}
-	
-	public static <From,To> GatedMockFuture<From,To>gatedMock(IFunction1<From,To> function, final From result) {
-		return new GatedMockFuture<From,To>(function, result);
+
+	public static <From, To> GatedMockFuture<From, To> gatedMock(IFunction1<From, To> function, final From result) {
+		return new GatedMockFuture<From, To>(function, result);
 	}
 
-	public static <T>GatedFuture<T> gatedFuture() {
+	public static <T> GatedFuture<T> gatedFuture() {
 		return new GatedFuture<T>();
 	}
 

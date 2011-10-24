@@ -18,7 +18,7 @@ public class BasicPlaylistContributor implements IPlayListContributor {
 		if (dataAboutProject == null)
 			return Collections.emptyList();
 		List<PlayItem> result = Lists.newList();
-//		addItem(result, dataAboutProject, DisplayConstants.browserFeedType, "projec"); //<--- won't work
+		// addItem(result, dataAboutProject, DisplayConstants.browserFeedType, "projec"); //<--- won't work
 		addList(result, dataAboutProject, DisplayConstants.browserFeedType, "tweets", "http://mobile.twitter.com/{0}");
 		addList(result, dataAboutProject, DisplayConstants.rssFeedType, "rss", "{0}");
 		return result;
@@ -36,11 +36,11 @@ public class BasicPlaylistContributor implements IPlayListContributor {
 
 	}
 
-//	private void addItem(List<PlayItem> result, Map<String, Object> data, String feedtype, String key) {
-//		Object value = data.get(key);
-//		if (value != null)
-//			result.add(new PlayItem(feedtype, value.toString()));
-//
-//	}
+	// private void addItem(List<PlayItem> result, Map<String, Object> data, String feedtype, String key) {
+	// Object value = data.get(key);
+	// if (value != null)
+	// result.add(new PlayItem(feedtype, value.toString()));
+	//
+	// }
 
 }

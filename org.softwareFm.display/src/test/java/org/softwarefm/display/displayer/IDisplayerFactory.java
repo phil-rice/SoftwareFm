@@ -1,6 +1,5 @@
 package org.softwareFm.display.displayer;
 
-
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.composites.CompositeConfig;

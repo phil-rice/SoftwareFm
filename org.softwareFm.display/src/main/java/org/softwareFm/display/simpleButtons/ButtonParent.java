@@ -16,7 +16,7 @@ public class ButtonParent implements IButtonParent {
 	private final SoftwareFmLayout layout;
 
 	public ButtonParent(Composite parent, CompositeConfig config, int style) {
-		this.content =Swts.newComposite(parent, style, getClass().getSimpleName());
+		this.content = Swts.newComposite(parent, style, getClass().getSimpleName());
 		imageRegistry = config.imageRegistry;
 		resourceGetter = config.resourceGetter;
 		layout = config.layout;

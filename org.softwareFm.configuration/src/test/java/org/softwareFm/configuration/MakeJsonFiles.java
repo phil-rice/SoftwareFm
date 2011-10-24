@@ -100,9 +100,9 @@ public class MakeJsonFiles {
 		makeJavadocSource(softwareFmHasLink, eclipse, softwareFm, http, false);
 	}
 
-	private static void makeJavadocSource(boolean softwareFmHasLink,boolean eclipse, boolean softwareFm, boolean notHttp, boolean match) {
+	private static void makeJavadocSource(boolean softwareFmHasLink, boolean eclipse, boolean softwareFm, boolean notHttp, boolean match) {
 		String pattern = "Link{0}Javadoc{1}{2}Source{1}{2}Jar{3}match{4}.json";
-		String fileName = MessageFormat.format(pattern, Booleans.toTf(softwareFmHasLink),Booleans.toTf(eclipse), Booleans.toTf(softwareFm), Booleans.toTf(notHttp), Booleans.toTf(match));
+		String fileName = MessageFormat.format(pattern, Booleans.toTf(softwareFmHasLink), Booleans.toTf(eclipse), Booleans.toTf(softwareFm), Booleans.toTf(notHttp), Booleans.toTf(match));
 		Map<String, Object> localRipped = Maps.copyMap(ripped);
 		Map<String, Object> localArtifact = Maps.copyMap(artifact);
 		if (notHttp) {

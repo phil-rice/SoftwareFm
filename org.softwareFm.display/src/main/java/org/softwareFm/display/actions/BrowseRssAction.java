@@ -7,7 +7,6 @@ import org.softwareFm.display.displayer.IDisplayer;
 
 public class BrowseRssAction implements IAction {
 
-
 	public BrowseRssAction() {
 	}
 
@@ -20,5 +19,4 @@ public class BrowseRssAction implements IAction {
 		}
 	}
 
-	
 }

@@ -3,14 +3,13 @@ package org.softwareFm.utilities.pooling;
 import org.softwareFm.utilities.strings.ISimpleStringWithSetters;
 
 public abstract class AbstractStringPoolTest<T extends ISimpleStringWithSetters> extends AbstractPoolTest<T> {
-	
+
 	public void testMakesObjects() {
 		IPool<T> pool = makePool();
 		T object = pool.newObject();
 		assertEquals(0, object.length());
 	}
 
-	
 	protected IPoolCleanTestCallback<T> makeCleanTestCallback() {
 		return new IPoolCleanTestCallback<T>() {
 			public void setData(T item) {

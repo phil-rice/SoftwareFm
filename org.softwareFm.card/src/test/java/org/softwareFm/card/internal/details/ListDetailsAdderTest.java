@@ -1,13 +1,7 @@
 package org.softwareFm.card.internal.details;
 
-import java.util.Arrays;
-import java.util.List;
 
-import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.api.CardConfig;
-import org.softwareFm.card.api.ICard;
-
-public class ListDetailsAdderTest extends AbstractDetailsAdderTest {
+public class ListDetailsAdderTest extends AbstractDetailsAdderTest<ListDetailAdder> {
 
 	public void testWithNonListGetNull() {
 		checkGetNull(detailFactory, stringValue);
@@ -21,7 +15,7 @@ public class ListDetailsAdderTest extends AbstractDetailsAdderTest {
 	}
 
 	@Override
-	protected IDetailAdder makeDetailsAdder() {
+	protected ListDetailAdder makeDetailsAdder() {
 		return new ListDetailAdder();
 	}
 }

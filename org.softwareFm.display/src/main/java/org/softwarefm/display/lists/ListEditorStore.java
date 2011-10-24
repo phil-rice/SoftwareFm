@@ -9,9 +9,10 @@ import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.utilities.maps.ISimpleMap;
 import org.softwareFm.utilities.maps.Maps;
 
-public class ListEditorStore implements ISimpleMap<String, IListEditor>{
+public class ListEditorStore implements ISimpleMap<String, IListEditor> {
 
 	private Map<String, IListEditor> map = Maps.newMap();
+
 	@Override
 	public IListEditor get(String key) {
 		return Maps.getOrException(map, key);
@@ -24,7 +25,7 @@ public class ListEditorStore implements ISimpleMap<String, IListEditor>{
 
 	public ListEditorStore register(String key, IListEditor value) {
 		if (map.containsKey(key))
-			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.cannotSetValueTwice,key, map.get(key), value));
+			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.cannotSetValueTwice, key, map.get(key), value));
 		map.put(key, value);
 		return this;
 	}

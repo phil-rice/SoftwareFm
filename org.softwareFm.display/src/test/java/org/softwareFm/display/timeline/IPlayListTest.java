@@ -16,7 +16,7 @@ public class IPlayListTest extends TestCase {
 		checkPlayItems(IPlayList.Utils.make("title", "ft1", "url1", "ft2", "url2"), playItem1, playItem2);
 	}
 
-	public void testMustHaveSomeContent(){
+	public void testMustHaveSomeContent() {
 		IllegalArgumentException e = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
 			@Override
 			public void run() {
@@ -25,6 +25,7 @@ public class IPlayListTest extends TestCase {
 		});
 		assertEquals("Play list someTitle must have some content", e.getMessage());
 	}
+
 	private void checkPlayItems(PlayItem... items) {
 		IPlayList playList = IPlayList.Utils.make("title", Arrays.asList(items));
 		checkPlayItems(playList, items);

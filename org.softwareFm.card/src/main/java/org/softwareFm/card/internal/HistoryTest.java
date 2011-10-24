@@ -46,7 +46,7 @@ public class HistoryTest extends TestCase {
 		next(2, 3, 6, 7);
 	}
 
-	public void testHasNextIsFalseIfHaveJustPushed(){
+	public void testHasNextIsFalseIfHaveJustPushed() {
 		push(1, 2, 3, 4, 5);
 		hasNext(false);
 
@@ -54,53 +54,53 @@ public class HistoryTest extends TestCase {
 		push(6);
 		hasNext(false);
 	}
-	
-	public void testHasNextIsTrueIfHavePrevAndThereIsSomethingThere(){
+
+	public void testHasNextIsTrueIfHavePrevAndThereIsSomethingThere() {
 		push(1, 2, 3, 4, 5);
 		hasNext(false);
-		
+
 		prev(4);
 		hasNext(true);
-		
+
 		prev(3, 2, 1);
 		hasNext(true);
-		
+
 		prev(1, 1);
 		hasNext(true);
 	}
-	
-	public void testHasPrevIsTrueIfHaveJustPushed(){
+
+	public void testHasPrevIsTrueIfHaveJustPushed() {
 		hasPrev(false);
 		push(1);
 		hasPrev(false);
 		push(2);
 		hasPrev(true);
-		push( 3, 4, 5);
+		push(3, 4, 5);
 		hasPrev(true);
 		prev(4, 3, 2);
 		hasPrev(true);
 		prev(1);
 		hasPrev(false);
 	}
-	
+
 	private void hasPrev(boolean b) {
 		assertEquals(b, history.hasPrev());
 	}
 
-	public void testHasPrevIsTrueIfHaveNextedAndThereIsSomethingThere(){
+	public void testHasPrevIsTrueIfHaveNextedAndThereIsSomethingThere() {
 		push(1, 2, 3, 4, 5);
 		hasNext(false);
-		
+
 		prev(4);
 		hasNext(true);
-		
+
 		prev(3, 2, 1);
 		hasNext(true);
-		
+
 		prev(1, 1);
 		hasNext(true);
 	}
-	
+
 	private void hasNext(boolean b) {
 		assertEquals(b, history.hasNext());
 	}

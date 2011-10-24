@@ -20,11 +20,11 @@ public class CardDataStoreMock implements IMutableCardDataStore {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public Future<Map<String,Object>> processDataFor(String url, ICardDataStoreCallback callback) {
+	public Future<Map<String, Object>> processDataFor(String url, ICardDataStoreCallback callback) {
 		try {
 			Maps.add(counts, url, 1);
 			Map<String, Object> result = map.get(url);
-			
+
 			if (result == null)
 				callback.noData(url);
 			else
@@ -43,7 +43,7 @@ public class CardDataStoreMock implements IMutableCardDataStore {
 				return Maps.newMap();
 			}
 		});
-		for (KeyValue keyValue : keyValues) 
+		for (KeyValue keyValue : keyValues)
 			contents.put(keyValue.key, keyValue.value);
 	}
 

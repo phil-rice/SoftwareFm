@@ -8,8 +8,6 @@ import org.softwareFm.utilities.functions.IFunction1;
 
 public interface IHasControl {
 
-
-
 	Control getControl();
 
 	public static class Utils {

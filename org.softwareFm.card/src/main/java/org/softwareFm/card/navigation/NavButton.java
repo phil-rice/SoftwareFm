@@ -20,10 +20,11 @@ public class NavButton implements IHasControl {
 		label.setAlignment(SWT.LEFT);
 		label.setText(title);
 		label.addMouseListener(new MouseAdapter() {
-		@Override
-		public void mouseUp(MouseEvent e) {
-			ICallback.Utils.call(callbackToGotoUrl, url);
-		}});
+			@Override
+			public void mouseUp(MouseEvent e) {
+				ICallback.Utils.call(callbackToGotoUrl, url);
+			}
+		});
 	}
 
 	@Override

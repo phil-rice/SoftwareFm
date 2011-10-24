@@ -26,16 +26,16 @@ public abstract class AbstractCompressedTextDisplayerFactory<T extends AbstractC
 
 	@Override
 	public void data(ActionContext actionContext, DisplayerDefn defn, IDisplayer displayer, String entity, String url) {
-		IDataGetter dataGetter=actionContext.dataGetter;
+		IDataGetter dataGetter = actionContext.dataGetter;
 		String guard = Actions.guardConditionPresent(dataGetter, defn);
 		if (defn.dataKey == null)
 			throw new NullPointerException(MessageFormat.format(DisplayConstants.mustHaveA, "dataKey", defn));
-		Object value = guard == null? dataGetter.getDataFor(defn.dataKey): dataGetter.getDataFor(guard);
+		Object value = guard == null ? dataGetter.getDataFor(defn.dataKey) : dataGetter.getDataFor(guard);
 		AbstractCompressedText<?> titleAndText = (AbstractCompressedText<?>) displayer;
-		titleAndText.setEnabled(Actions.guardConditionPresent(dataGetter, defn, defn.editorIgnoresGuardKey)==null);
-//		System.out.println("Enabled: " + titleAndText.getControl().isEnabled());
+		titleAndText.setEnabled(Actions.guardConditionPresent(dataGetter, defn, defn.editorIgnoresGuardKey) == null);
+		// System.out.println("Enabled: " + titleAndText.getControl().isEnabled());
 		String title = Strings.nullSafeToString(dataGetter.getDataFor(defn.title));
-		titleAndText.setText (Strings.nullSafeToString(value));
+		titleAndText.setText(Strings.nullSafeToString(value));
 		titleAndText.setTitle(title);
 		String tooltip = defn.tooltip == null ? "" : Strings.nullSafeToString(dataGetter.getDataFor(defn.tooltip));
 		titleAndText.setTooltip(tooltip);

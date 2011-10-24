@@ -17,7 +17,7 @@ public class ArtifactSocialLargeButtonFactory extends LargeButtonFactory {
 	@Override
 	public LargeButtonDefn apply(GuiBuilder guiBuilder) throws Exception {
 		return guiBuilder.largeButton("largeButton.artifact.social", //
-				makeSfmSmallButton(guiBuilder,"smallButton.data", GeneralAnchor.sfmKey, "smallButton.artifact.social.details", "smallButton.jar.identifiers.title", false),//
+				makeSfmSmallButton(guiBuilder, "smallButton.data", GeneralAnchor.sfmKey, "smallButton.artifact.social.details", "smallButton.jar.identifiers.title", false),//
 
 				guiBuilder.smallButton("smallButton.artifact.rss", "smallButton.artifact.rss.title", "smallButton.data", ArtifactsAnchor.rssKey,//
 						guiBuilder.listDisplayer("displayer.list", "listEditorId.rss").guard(dataJarArtifactId, blankKey).title(artifactRssAdd).data(dataArtifactRss).//

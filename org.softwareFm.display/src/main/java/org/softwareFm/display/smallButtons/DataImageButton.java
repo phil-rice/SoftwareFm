@@ -8,7 +8,7 @@ import org.softwareFm.display.simpleButtons.SmallIconPosition;
 import org.softwareFm.softwareFmImages.smallIcons.SmallIconsAnchor;
 import org.softwareFm.utilities.maps.Maps;
 
-public class DataImageButton extends SimpleImageButton{
+public class DataImageButton extends SimpleImageButton {
 
 	private final String dataKey;
 
@@ -16,7 +16,7 @@ public class DataImageButton extends SimpleImageButton{
 		super(parent, config, true);
 		this.dataKey = dataKey;
 	}
-	
+
 	@Override
 	public void data(IDataGetter dataGetter, String entity, String url) {
 		super.data(dataGetter, entity, url);
@@ -28,9 +28,8 @@ public class DataImageButton extends SimpleImageButton{
 		Object data = dataGetter.getDataFor(dataKey);
 		Map<SmallIconPosition, String> map = Maps.newMap();
 		if (data != null)
-			map .put(SmallIconPosition.TopRight, SmallIconsAnchor.softwareFmKey);
+			map.put(SmallIconPosition.TopRight, SmallIconsAnchor.softwareFmKey);
 		return map;
 	}
-
 
 }

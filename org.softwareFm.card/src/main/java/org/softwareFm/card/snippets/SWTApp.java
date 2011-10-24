@@ -10,64 +10,61 @@ import org.eclipse.swt.widgets.Shell;
 
 public class SWTApp {
 
-    Shell shell;
+	Shell shell;
 
-    public SWTApp(Display display) {
+	public SWTApp(Display display) {
 
-        shell = new Shell(display);
+		shell = new Shell(display);
 
-        shell.setText("Combo");
+		shell.setText("Combo");
 
-        initUI();
+		initUI();
 
-        shell.setSize(300, 250);
-        shell.setLocation(300, 300);
+		shell.setSize(300, 250);
+		shell.setLocation(300, 300);
 
-        shell.open();
+		shell.open();
 
-        while (!shell.isDisposed()) {
-          if (!display.readAndDispatch()) {
-            display.sleep();
-          }
-        }
-    }
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch()) {
+				display.sleep();
+			}
+		}
+	}
 
+	public void initUI() {
 
-    public void initUI() {
+		final Label label = new Label(shell, SWT.LEFT);
+		label.setText("...");
 
-        final Label label = new Label(shell, SWT.LEFT);
-        label.setText("...");
+		label.setLocation(50, 100);
+		label.pack();
 
-        label.setLocation(50, 100);
-        label.pack();
+		final Combo combo = new Combo(shell, SWT.DROP_DOWN);
+		combo.add("Ubuntu");
+		combo.add("Fedora");
+		combo.add("Mandriva");
+		combo.add("Red Hat");
+		combo.add("Mint");
 
-        final Combo combo = new Combo(shell, SWT.DROP_DOWN);
-        combo.add("Ubuntu");
-        combo.add("Fedora");
-        combo.add("Mandriva");
-        combo.add("Red Hat");
-        combo.add("Mint");
+		combo.addSelectionListener(new SelectionAdapter() {
 
-        combo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				label.setText(combo.getText());
+				label.pack();
+			};
+		});
 
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                label.setText(combo.getText());
-                label.pack();
-            };
-        });
+		combo.setLocation(50, 30);
+		combo.pack();
+		combo.setSize(18, combo.getSize().y);
 
+	}
 
-        combo.setLocation(50, 30);
-        combo.pack();
-        combo.setSize(18,combo.getSize().y);
-
-    }
-
-
-    public static void main(String[] args) {
-        Display display = new Display();
-        new SWTApp(display);
-        display.dispose();
-    }
+	public static void main(String[] args) {
+		Display display = new Display();
+		new SWTApp(display);
+		display.dispose();
+	}
 }

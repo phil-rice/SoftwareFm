@@ -14,8 +14,7 @@ public interface IRepositoryFacard {
 
 	/** adds this as an Http header to all requests */
 	void addHeader(String name, String value);
-	
-	
+
 	/** This will delete the node at the Url */
 	Future<?> delete(String url, IResponseCallback callback);
 
@@ -42,11 +41,13 @@ public interface IRepositoryFacard {
 		public static IRepositoryFacard defaultFacard() {
 			return new RepositoryFacard(IHttpClient.Utils.defaultClient(), "sfm");
 		}
+
 		public static IRepositoryFacard defaultFacardForCardExplorer() {
 			return new RepositoryFacard(IHttpClient.Utils.defaultClient(), "1.json");
 		}
+
 		public static IRepositoryFacard defaultFacardWithHeaders(String name, String value) {
-			return new RepositoryFacard(IHttpClient.Utils.defaultClient().setDefaultHeaders(Arrays.<NameValuePair>asList(new BasicNameValuePair(name, value))), "sfm");
+			return new RepositoryFacard(IHttpClient.Utils.defaultClient().setDefaultHeaders(Arrays.<NameValuePair> asList(new BasicNameValuePair(name, value))), "sfm");
 		}
 
 		public static IRepositoryFacard frontEnd(String host, int port, String userName, String password) {

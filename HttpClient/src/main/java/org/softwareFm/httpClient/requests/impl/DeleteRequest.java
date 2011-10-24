@@ -15,7 +15,6 @@ public class DeleteRequest extends AbstractRequestBuilder {
 		super(executor, host, client, defaultHeaders, url);
 	}
 
-
 	@Override
 	protected HttpRequestBase getRequestBase(String protocolHostAndUrl) {
 		HttpDelete delete = new HttpDelete(protocolHostAndUrl);

@@ -7,10 +7,10 @@ public class AllUtilitiesMapsTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite(AllUtilitiesMapsTests.class.getName());
-		//$JUnit-BEGIN$
+		// $JUnit-BEGIN$
 		suite.addTestSuite(MapsTest.class);
 		suite.addTestSuite(ArraySimpleMapTest.class);
-		//$JUnit-END$
+		// $JUnit-END$
 		return suite;
 	}
 

@@ -1,4 +1,5 @@
 package org.softwareFm.mavenImporter;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -15,6 +16,6 @@ public class Hello {
 		System.out.println("artefactId: " + model.getArtifactId());
 		System.out.println("name: " + model.getName());
 		System.out.println("url: " + model.getUrl());
-		
+
 	}
 }

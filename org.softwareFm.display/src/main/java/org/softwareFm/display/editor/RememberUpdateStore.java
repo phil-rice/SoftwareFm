@@ -8,9 +8,9 @@ import org.softwareFm.utilities.collections.Lists;
 
 public class RememberUpdateStore implements IUpdateStore {
 
-	public final List<String> entities=Lists.newList();
-	public final List<String> urls=Lists.newList();
-	public final List<Map<String,Object>> datas=Lists.newList();
+	public final List<String> entities = Lists.newList();
+	public final List<String> urls = Lists.newList();
+	public final List<Map<String, Object>> datas = Lists.newList();
 
 	@Override
 	public void update(ActionData actionData, String key, Object newValue) {

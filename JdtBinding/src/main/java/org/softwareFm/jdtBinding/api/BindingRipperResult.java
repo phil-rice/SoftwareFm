@@ -31,7 +31,7 @@ public class BindingRipperResult {
 		super();
 		try {
 			this.binding = binding;
-			if (cargo == null && binding != null)//allows tests where both are null..
+			if (cargo == null && binding != null)// allows tests where both are null..
 				throw new NullPointerException();
 			this.cargo = cargo;
 			this.javaElement = javaElement;

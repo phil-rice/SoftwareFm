@@ -14,7 +14,7 @@ import org.softwareFm.display.displayer.IDisplayer;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
-public  class TitleAnd implements IDisplayer, IHasComposite {
+public class TitleAnd implements IDisplayer, IHasComposite {
 
 	protected final CompositeConfig config;
 	protected final Label lblTitle;
@@ -25,7 +25,7 @@ public  class TitleAnd implements IDisplayer, IHasComposite {
 	private SoftwareFmLayout layout;
 
 	public TitleAnd(CompositeConfig config, Composite parent, String titleOrTitleKey, boolean titleIsKey) {
-		this.content = Swts.newComposite(parent, SWT.NULL, getClass().getSimpleName() +"/"+ titleOrTitleKey);
+		this.content = Swts.newComposite(parent, SWT.NULL, getClass().getSimpleName() + "/" + titleOrTitleKey);
 		this.config = config;
 		content.setLayout(Swts.getHorizonalNoMarginRowLayout());
 
@@ -54,8 +54,8 @@ public  class TitleAnd implements IDisplayer, IHasComposite {
 	}
 
 	private void setLayoutData() {
-		int buttonsWidth = (config.layout.buttonSpacer + config.layout.smallButtonWidth) * buttonCount ;
-		int fillerWidth = config.layout.buttonsWidth - buttonsWidth ;
+		int buttonsWidth = (config.layout.buttonSpacer + config.layout.smallButtonWidth) * buttonCount;
+		int fillerWidth = config.layout.buttonsWidth - buttonsWidth;
 		compButtons.setLayoutData(new RowData(buttonsWidth, config.layout.displayerHeight));
 		lblFiller.setLayoutData(new RowData(fillerWidth, config.layout.displayerHeight));
 		GridLayout layout = new GridLayout(buttonCount, false);
@@ -65,7 +65,7 @@ public  class TitleAnd implements IDisplayer, IHasComposite {
 		layout.marginRight = 0;
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
-		layout.horizontalSpacing=0;
+		layout.horizontalSpacing = 0;
 		compButtons.setLayout(layout);
 		compButtons.layout();
 		content.layout();
@@ -102,8 +102,8 @@ public  class TitleAnd implements IDisplayer, IHasComposite {
 	public Composite getComposite() {
 		return content;
 	}
-	
-	public String getTitle(){
+
+	public String getTitle() {
 		return lblTitle.getText();
 	}
 
@@ -114,7 +114,7 @@ public  class TitleAnd implements IDisplayer, IHasComposite {
 
 	@Override
 	public void highlight() {
-		
+
 	}
 
 	@Override

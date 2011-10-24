@@ -14,5 +14,4 @@ public interface IMavenVisitor {
 
 	void version(String baseUrl, String projectName, String version, String versionUrl, String jarUrl, String pomUrl, String pom, List<String> packages);
 
-
 }

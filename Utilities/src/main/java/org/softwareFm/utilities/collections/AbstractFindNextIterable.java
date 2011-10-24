@@ -41,7 +41,6 @@ public abstract class AbstractFindNextIterable<T, Context> implements Iterable<T
 					return next;
 				}
 
-				
 				public String toString() {
 					return "[context=" + context + ", usedNext=" + usedNext + ", next=" + next + "]";
 				}

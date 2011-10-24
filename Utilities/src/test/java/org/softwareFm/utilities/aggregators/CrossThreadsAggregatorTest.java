@@ -30,7 +30,6 @@ public class CrossThreadsAggregatorTest extends TestCase {
 				Thread thread = new Thread() {
 					private final List<Integer> list = lists.myList();
 
-					
 					public void run() {
 						for (int i : from)
 							list.add(i);

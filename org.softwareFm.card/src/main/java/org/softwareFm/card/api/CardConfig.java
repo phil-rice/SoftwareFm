@@ -67,7 +67,7 @@ public class CardConfig {
 						"navBar.next.title", ">",//
 						"card.holder.loading.text", "loading"));
 		this.selector = ICardConfigSelector.Utils.defaultSelector(this);
-		this.detailFactory = new DetailFactory(Collections.<IDetailAdder>emptyList());
+		this.detailFactory = new DetailFactory(Collections.<IDetailAdder> emptyList());
 		this.cardFactory = cardFactory;
 		this.cardDataStore = cardDataStore;
 		this.style = SWT.FULL_SELECTION | SWT.NO_SCROLL;

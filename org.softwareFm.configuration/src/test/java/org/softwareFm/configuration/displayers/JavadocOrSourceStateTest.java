@@ -25,22 +25,23 @@ public class JavadocOrSourceStateTest extends TestCase {
 		checkMatches("", "softwareFm", false);
 		checkMatches(null, "softwareFm", false);
 
-	} 
-	public void testMatchesOnlyWhenHasBoth(){
+	}
+
+	public void testMatchesOnlyWhenHasBoth() {
 		checkMatches("", "", false);
 		checkMatches(null, null, false);
 	}
-	
-	public void testEclipseValueIsJar(){
+
+	public void testEclipseValueIsJar() {
 		checkEclipseValueIsJar("http://eclipse.jar", null, true);
 		checkEclipseValueIsJar("eclipse.jar", null, true);
-		
+
 		checkEclipseValueIsJar("eclipse", null, false);
 		checkEclipseValueIsJar("", null, false);
 		checkEclipseValueIsJar(null, null, false);
 	}
 
-	public void testEclipseValueIsHttp(){
+	public void testEclipseValueIsHttp() {
 		checkEclipseValueIsHttp("http://eclipse.jar", null, true);
 		checkEclipseValueIsHttp("file://eclipse.jar", null, false);
 		checkEclipseValueIsHttp("eclipse.jar", null, false);
@@ -48,21 +49,22 @@ public class JavadocOrSourceStateTest extends TestCase {
 		checkEclipseValueIsHttp(null, null, false);
 	}
 
-	private void checkEclipseValueIsJar(String eclipse, String softwareFm,  boolean expected) {
+	private void checkEclipseValueIsJar(String eclipse, String softwareFm, boolean expected) {
 		JavadocOrSourceState state = new JavadocOrSourceState(eclipse, softwareFm);
 		assertEquals(expected, state.eclipseValueIsJar);
-		
-	}
-	private void checkEclipseValueIsHttp(String eclipse, String softwareFm,  boolean expected) {
-		JavadocOrSourceState state = new JavadocOrSourceState(eclipse, softwareFm);
-		assertEquals(expected, state.eclipseValueIsHttp);
-		
+
 	}
 
-	private void checkMatches(String eclipse, String softwareFm,  boolean expected) {
+	private void checkEclipseValueIsHttp(String eclipse, String softwareFm, boolean expected) {
+		JavadocOrSourceState state = new JavadocOrSourceState(eclipse, softwareFm);
+		assertEquals(expected, state.eclipseValueIsHttp);
+
+	}
+
+	private void checkMatches(String eclipse, String softwareFm, boolean expected) {
 		JavadocOrSourceState state = new JavadocOrSourceState(eclipse, softwareFm);
 		assertEquals(expected, state.matches);
-		
+
 	}
 
 	private void checkHasXX(String eclipse, boolean hasEclipse, String softwareFm, boolean hasSoftwareFm) {

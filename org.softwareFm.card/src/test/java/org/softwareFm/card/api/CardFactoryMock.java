@@ -2,7 +2,7 @@ package org.softwareFm.card.api;
 
 import java.util.Map;
 
-public class CardFactoryMock implements ICardFactory{
+public class CardFactoryMock implements ICardFactory {
 
 	public int count;
 

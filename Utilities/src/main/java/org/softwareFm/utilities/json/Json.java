@@ -24,7 +24,6 @@ public class Json {
 		throw new IllegalArgumentException(MessageFormat.format(UtilityConstants.notAMap, jsonString.getClass(), jsonString));
 	}
 
-	
 	public static Object parse(Object jsonObject) {
 		try {
 			Object result = JSONValue.parseWithException((String) jsonObject);

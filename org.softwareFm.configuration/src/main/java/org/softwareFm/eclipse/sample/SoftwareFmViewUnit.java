@@ -51,7 +51,7 @@ public class SoftwareFmViewUnit {
 		public void selected(SoftwareFmDataComposite hasControl, String fileName, Object text) throws Exception {
 			Map<String, Object> map = Json.mapFromString(text.toString());
 			Map<String, String> rippedMap = (Map<String, String>) map.get("ripped");
-			RippedResult result = rippedMap == null ? null : new RippedResult(rippedMap.get("hexDigest"), rippedMap.get("javaProject"), rippedMap.get("jarPath"), rippedMap.get("jarName"), rippedMap.get("javadoc"), rippedMap.get("source"), IJavadocSourceMutator.Utils.sysout("set javadoc in eclipse to : {0}" ), IJavadocSourceMutator.Utils.sysout("set source in eclipse to: {0}") );
+			RippedResult result = rippedMap == null ? null : new RippedResult(rippedMap.get("hexDigest"), rippedMap.get("javaProject"), rippedMap.get("jarPath"), rippedMap.get("jarName"), rippedMap.get("javadoc"), rippedMap.get("source"), IJavadocSourceMutator.Utils.sysout("set javadoc in eclipse to : {0}"), IJavadocSourceMutator.Utils.sysout("set source in eclipse to: {0}"));
 			softwareFmFixture.dataStore.setRawData(ConfigurationConstants.primaryEntity, result);
 			softwareFmFixture.forceData(fileName, "jar", map);
 			softwareFmFixture.forceData(fileName, "artifact", map);

@@ -19,7 +19,7 @@ public class ExtractProjectStuff {
 	public ExtractProjectStuff() {
 	}
 
-	public void walk(DataSource dataSource, final IExtractorCallback callback, final ICallback<Throwable>exceptions) {
+	public void walk(DataSource dataSource, final IExtractorCallback callback, final ICallback<Throwable> exceptions) {
 		JdbcTemplate template = new JdbcTemplate(dataSource);
 		template.query("select * from version", new ResultSetExtractor<Void>() {
 

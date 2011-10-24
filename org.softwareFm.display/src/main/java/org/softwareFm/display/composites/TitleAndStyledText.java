@@ -25,6 +25,7 @@ public class TitleAndStyledText extends AbstractTitleAndText<StyledText> {
 	public TitleAndStyledText(CompositeConfig config, Composite parent, String titleOrTitleKey, boolean titleIsKey) {
 		this(config, parent, titleOrTitleKey, titleIsKey, config.layout.styledTextHeight);
 	}
+
 	public TitleAndStyledText(CompositeConfig config, Composite parent, String titleOrTitleKey, boolean titleIsKey, int height) {
 		super(config, parent, titleOrTitleKey, titleIsKey, height);
 		text.setWordWrap(true);
@@ -84,8 +85,8 @@ public class TitleAndStyledText extends AbstractTitleAndText<StyledText> {
 	public void removeModifyListener(ModifyListener listener) {
 		text.removeModifyListener(listener);
 	}
-	
-	public void setBackground(Color color){
+
+	public void setBackground(Color color) {
 		text.setBackground(color);
 	}
 

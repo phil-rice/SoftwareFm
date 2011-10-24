@@ -20,7 +20,7 @@ public class NavTitle implements ITitleBarForCard {
 	private String title;
 	private Image image;
 
-	public NavTitle(Composite parent, final CardConfig cardConfig,String initialLabel) {
+	public NavTitle(Composite parent, final CardConfig cardConfig, String initialLabel) {
 		this.title = initialLabel;
 		canvas = new Canvas(parent, SWT.NULL);
 		canvas.addPaintListener(new PaintListener() {
@@ -30,7 +30,7 @@ public class NavTitle implements ITitleBarForCard {
 					e.gc.drawText(title, 0, 0);
 				else {
 					e.gc.drawImage(image, 0, 0);
-					e.gc.drawText(title, image.getImageData().width+cardConfig.iconToTextSpacer, 0);
+					e.gc.drawText(title, image.getImageData().width + cardConfig.iconToTextSpacer, 0);
 				}
 			}
 		});

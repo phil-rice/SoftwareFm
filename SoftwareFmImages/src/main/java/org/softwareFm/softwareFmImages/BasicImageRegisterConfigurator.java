@@ -25,12 +25,12 @@ public class BasicImageRegisterConfigurator implements IImageRegisterConfigurato
 				"group6", "group6Active");
 		Images.registerImages(device, imageRegistry, ArtifactsAnchor.class, "artifact", //
 				"jar", "jarClearEclipse", "jarCopyFromSoftwareFm", "jarCopyToSoftwareFm", //
-				"blog", "document", "faceBook","forum", "javadoc", "issues", "license", "mailingList", "merchandise", "organisation", "project",//
+				"blog", "document", "faceBook", "forum", "javadoc", "issues", "license", "mailingList", "merchandise", "organisation", "project",//
 				"news", "rss", "recruitment", "src", "tutorials", "twitter");
 		Images.registerImages(device, imageRegistry, OverlaysAnchor.class, "overlay", "add", "delete", "edit", "properties");
 		Images.registerImages(device, imageRegistry, SmallIconsAnchor.class, "smallIcon", "softwareFm", "javadoc", "source");
 		Images.registerImages(device, imageRegistry, GeneralAnchor.class, "general", "browse", "help", "clear", "search", "maven", "sfmLogo");
-		Images.registerImages(device, imageRegistry, TitleAnchor.class, "title", "artifact", "folder", "group", "history", "jar2", "next", "previous", "refresh","version" );
+		Images.registerImages(device, imageRegistry, TitleAnchor.class, "title", "artifact", "folder", "group", "history", "jar2", "next", "previous", "refresh", "version");
 
 	}
 

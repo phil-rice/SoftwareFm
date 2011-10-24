@@ -26,7 +26,7 @@ public class KeyValue {
 
 		public static IFunction1<KeyValue, String> valueAsStrFn() {
 			return new IFunction1<KeyValue, String>() {
-				
+
 				@Override
 				public String apply(KeyValue from) throws Exception {
 					return Strings.nullSafeToString(from.value);

@@ -23,8 +23,8 @@ public class ArtifactDetailsLargeButtonFactory extends LargeButtonFactory {
 
 				guiBuilder.smallButton("smallButton.project.issues", "smallButton.project.issues.title", "smallButton.data", ArtifactsAnchor.issuesKey,//
 						guiBuilder.displayer("displayer.compressed.text").guard(dataJarGroupId, blankKey).editor(editorTextKey).title(artifactIssuesTitle).help("issues.help").//
-						data(dataArtifactIssues).tooltip(artifactIssuesTitle).actions(//
-								browseButton(guiBuilder))).data(dataArtifactIssues).tooltip(dataArtifactIssues), // ,//
+								data(dataArtifactIssues).tooltip(artifactIssuesTitle).actions(//
+										browseButton(guiBuilder))).data(dataArtifactIssues).tooltip(dataArtifactIssues), // ,//
 
 				guiBuilder.smallButton("smallButton.project.mailingLists", "smallButton.project.mailingLists.title", "smallButton.data", ArtifactsAnchor.mailingListKey,//
 						guiBuilder.listDisplayer("displayer.list", "listEditorId.nameAndEmail").guard(dataJarGroupId, blankKey).title(artifactMailingListTitle).data(dataArtifactMailingList).//

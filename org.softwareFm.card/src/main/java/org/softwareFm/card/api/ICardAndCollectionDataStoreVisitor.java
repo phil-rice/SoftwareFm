@@ -68,7 +68,8 @@ public interface ICardAndCollectionDataStoreVisitor {
 
 				@Override
 				public void followedUp(ICardHolder cardHolder, String url, ICard card, String followUpUrl, Map<String, Object> result) {
-					System.out.println(String.format("%5d       Have More %40s   %s", h(cardHolder), url, result.toString()));}
+					System.out.println(String.format("%5d       Have More %40s   %s", h(cardHolder), url, result.toString()));
+				}
 
 				@Override
 				public void noData(ICardHolder cardHolder, String url, ICard card, String followUpUrl) {

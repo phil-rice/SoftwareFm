@@ -16,7 +16,7 @@ public class CardDataStoreFixture {
 	public final static Map<String, Object> data2a = Maps.makeLinkedMap("tag", "two", "value", "2a");
 	public final static Map<String, Object> data2b = Maps.makeLinkedMap("tag", "two", "value", "2b");
 	public final static Map<String, Object> data2c = Maps.makeLinkedMap("tag", "two", "value", "2c");
-	
+
 	public final static Map<String, Object> data1ap = Maps.makeLinkedMap("tag", "one", "value", "1a", "p", 1);
 	public final static Map<String, Object> data1bp = Maps.makeLinkedMap("tag", "one", "value", "1b", "p", 2);
 	public final static Map<String, Object> data2ap = Maps.makeLinkedMap("tag", "two", "value", "2a", "q", 1);
@@ -53,16 +53,12 @@ public class CardDataStoreFixture {
 			url2c, data2cp,//
 	};
 	public static final Object[] dataIndexedByUrlFragment = new Object[] { "some", Maps.newMap(),//
-		"1a", data1a, //
-		"1b", data1b,//
-		"2a", data2a,//
-		"2b", data2b,//
-		"2c", data2c,//
+			"1a", data1a, //
+			"1b", data1b,//
+			"2a", data2a,//
+			"2b", data2b,//
+			"2c", data2c,//
 	};
-	
-	
-	
-			
 
 	public static final CardDataStoreMock rawCardStore() {
 		return new CardDataStoreMock(dataForMocks);

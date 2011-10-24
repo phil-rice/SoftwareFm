@@ -87,6 +87,6 @@ public class ClientBuilder implements IClientBuilder {
 	public IHttpClient setDefaultHeaders(List<NameValuePair> headers) {
 		this.defaultHeaders = Lists.immutableCopy(headers);
 		return this;
-		
+
 	}
 }

@@ -71,7 +71,6 @@ public class DependancyBuilderTest extends TestCase {
 		assertEquals(4, result.size());
 	}
 
-	
 	protected void setUp() throws Exception {
 		super.setUp();
 		dependancy = IDependancyBuilder.Utils.<String> newBuilder().//

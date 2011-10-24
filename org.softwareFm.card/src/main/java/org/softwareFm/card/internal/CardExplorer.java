@@ -60,9 +60,9 @@ public class CardExplorer implements IHasComposite {
 			};
 			cardHolder = new CardHolder(this, "loading", "Some title", cardConfig, rootUrl, callbackToGotoUrl);
 			right = new SashForm(this, SWT.VERTICAL);
-//			right.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_BLUE));
+			// right.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_BLUE));
 			detail = new ScrolledComposite(right, SWT.H_SCROLL);
-//			detail.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_RED));
+			// detail.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_RED));
 
 			comments = new ScrolledComposite(right, SWT.H_SCROLL);
 			this.setWeights(new int[] { 2, 5 });

@@ -11,12 +11,12 @@ import org.softwareFm.softwareFmImages.smallIcons.SmallIconsAnchor;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.strings.Strings;
 
-public class JarSimpleImageButton extends SimpleImageButton{
+public class JarSimpleImageButton extends SimpleImageButton {
 
 	public JarSimpleImageButton(IButtonParent parent, ImageButtonConfig config) {
 		super(parent, config, true);
 	}
-	
+
 	@Override
 	public void data(IDataGetter dataGetter, String entity, String url) {
 		super.data(dataGetter, entity, url);
@@ -30,16 +30,15 @@ public class JarSimpleImageButton extends SimpleImageButton{
 		String eclipseJavadoc = Strings.nullSafeToString(dataGetter.getDataFor("data.raw.jar.javadoc"));
 		String eclipseSource = Strings.nullSafeToString(dataGetter.getDataFor("data.raw.jar.source"));
 		Map<SmallIconPosition, String> map = Maps.newMap();
-		if (eclipseJavadoc.length()>0)
+		if (eclipseJavadoc.length() > 0)
 			map.put(SmallIconPosition.TopLeft, SmallIconsAnchor.javadocKey);
-		if (eclipseSource.length()>0)
+		if (eclipseSource.length() > 0)
 			map.put(SmallIconPosition.BottomLeft, SmallIconsAnchor.sourceKey);
-		if (repositoryJavadoc.length()>0)
+		if (repositoryJavadoc.length() > 0)
 			map.put(SmallIconPosition.TopRight, SmallIconsAnchor.softwareFmKey);
-		if (repositorySource.length()>0)
+		if (repositorySource.length() > 0)
 			map.put(SmallIconPosition.BottomRight, SmallIconsAnchor.softwareFmKey);
 		return map;
 	}
-
 
 }

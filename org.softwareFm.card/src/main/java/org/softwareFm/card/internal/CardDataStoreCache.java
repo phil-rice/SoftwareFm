@@ -1,6 +1,5 @@
 package org.softwareFm.card.internal;
 
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,7 +25,7 @@ public class CardDataStoreCache implements IMutableCardDataStore {
 	}
 
 	@Override
-	public <T>Future<T> processDataFor(String url, final ICardDataStoreCallback<T> callback) {
+	public <T> Future<T> processDataFor(String url, final ICardDataStoreCallback<T> callback) {
 		try {
 			if (urlsWithNoData.contains(url)) {
 				callback.noData(url);

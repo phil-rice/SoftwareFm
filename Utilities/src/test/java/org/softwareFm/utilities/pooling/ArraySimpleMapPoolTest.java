@@ -13,12 +13,10 @@ public class ArraySimpleMapPoolTest extends AbstractPoolTest<ArraySimpleMap<Stri
 	private final List<String> keys = Arrays.asList(key1, key2, key3);
 	private final List<String> values = Arrays.asList("v1", "v2", "v3");
 
-	
 	protected IPool<ArraySimpleMap<String, String>> makePool(PoolOptions poolOptions) {
 		return IPool.Utils.makeArraySimpleMapPool(poolOptions, keys, String.class);
 	}
 
-	
 	protected IPoolCleanTestCallback<ArraySimpleMap<String, String>> makeCleanTestCallback() {
 		return new IPoolCleanTestCallback<ArraySimpleMap<String, String>>() {
 			public void setData(ArraySimpleMap<String, String> item) {
@@ -40,7 +38,6 @@ public class ArraySimpleMapPoolTest extends AbstractPoolTest<ArraySimpleMap<Stri
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	
 	protected Class<ArraySimpleMap<String, String>> classBeingTested() {
 		return (Class) ArraySimpleMap.class;
 	}

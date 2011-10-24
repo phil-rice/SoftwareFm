@@ -27,7 +27,7 @@ import org.softwareFm.utilities.maps.Maps;
 
 public class BrowserComposite implements IBrowserCompositeBuilder, ISimpleMap<String, IBrowserPart> {
 
-	private final ExecutorService service ;
+	private final ExecutorService service;
 	private final DefaultHttpClient client;
 	private final Map<String, IBrowserPart> transformerMap = Maps.newMap();
 	private final Composite content;
@@ -90,7 +90,7 @@ public class BrowserComposite implements IBrowserCompositeBuilder, ISimpleMap<St
 	private void makeOnlyVisible(final IBrowserPart transformer) {
 		stackLayout.topControl = transformer.getControl();
 		content.layout();
-//		Swts.layoutDump(content);
+		// Swts.layoutDump(content);
 	}
 
 	@Override
@@ -125,8 +125,8 @@ public class BrowserComposite implements IBrowserCompositeBuilder, ISimpleMap<St
 	public Control getControl() {
 		return content;
 	}
-	
-	public Control getStackLayoutTopControlForTests(){
+
+	public Control getStackLayoutTopControlForTests() {
 		return stackLayout.topControl;
 	}
 }

@@ -13,12 +13,11 @@ public class AbstractFindNextIterableTest extends TestCase {
 
 	private void checkIterable(final Integer... ints) {
 		Iterable<Integer> iterable = new AbstractFindNextIterable<Integer, Iterator<Integer>>() {
-			
+
 			protected Integer findNext(Iterator<Integer> context) {
 				return context.hasNext() ? context.next() : null;
 			}
 
-			
 			protected Iterator<Integer> reset() {
 				return Arrays.asList(ints).iterator();
 			}

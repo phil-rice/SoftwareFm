@@ -289,16 +289,16 @@ public abstract class AbstractJavadocSourceEditorTest extends AbstractDisplayerE
 
 		JavadocSourceButtons javadocSourceButtons = editor.getJavadocSourceButtons();
 		javadocSourceButtons.copyToSoftwareFmButton.notifyListeners(SWT.Selection, new Event());
-		checkOneThingSentToSoftwareFm("UrlForjar", ConfigurationConstants.entityForJavadocSource, Maps.<String,Object>makeMap(getKeyForUpdateing(), "http://someOtherValue"));
+		checkOneThingSentToSoftwareFm("UrlForjar", ConfigurationConstants.entityForJavadocSource, Maps.<String, Object> makeMap(getKeyForUpdateing(), "http://someOtherValue"));
 	}
-	
+
 	public void testCopyToBothButtonUpdatesSfm() {
 		createDisplayerAndEditor("http://ecl", "http://sfm");
 		editor.getTxtUrl().setText("http://someOtherValue");
-		
+
 		JavadocSourceButtons javadocSourceButtons = editor.getJavadocSourceButtons();
 		javadocSourceButtons.copyToEclipseAndSoftwareFmButton.notifyListeners(SWT.Selection, new Event());
-		checkOneThingSentToSoftwareFm("UrlForjar", ConfigurationConstants.entityForJavadocSource, Maps.<String,Object>makeMap(getKeyForUpdateing(), "http://someOtherValue"));
+		checkOneThingSentToSoftwareFm("UrlForjar", ConfigurationConstants.entityForJavadocSource, Maps.<String, Object> makeMap(getKeyForUpdateing(), "http://someOtherValue"));
 	}
 
 	private CompressedText createDisplayerAndEditor(String eclipseValue, String softwareFmValue) {

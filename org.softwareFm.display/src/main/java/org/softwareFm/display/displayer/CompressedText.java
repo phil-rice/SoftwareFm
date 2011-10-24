@@ -47,13 +47,11 @@ public class CompressedText extends AbstractCompressedText<Label> {
 	public Label getLabel() {
 		return label;
 	}
-	
 
 	@Override
 	public void highlight() {
-		Swts.setFontStyle(label,  SWT.BOLD);
+		Swts.setFontStyle(label, SWT.BOLD);
 	}
-
 
 	@Override
 	public void unhighlight() {

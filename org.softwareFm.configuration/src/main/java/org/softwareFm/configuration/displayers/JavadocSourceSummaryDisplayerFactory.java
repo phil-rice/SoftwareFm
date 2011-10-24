@@ -14,11 +14,10 @@ import org.softwareFm.utilities.strings.Strings;
 
 public class JavadocSourceSummaryDisplayerFactory implements IDisplayerFactory {
 
-
 	private final String artifactEclipseKey;
 	private final String artifactSoftwareFmKey;
 
-	public JavadocSourceSummaryDisplayerFactory( String artifactEclipseKey, String artifactSoftwareFmKey) {
+	public JavadocSourceSummaryDisplayerFactory(String artifactEclipseKey, String artifactSoftwareFmKey) {
 		this.artifactEclipseKey = artifactEclipseKey;
 		this.artifactSoftwareFmKey = artifactSoftwareFmKey;
 	}
@@ -39,11 +38,11 @@ public class JavadocSourceSummaryDisplayerFactory implements IDisplayerFactory {
 			JavadocOrSourceButtonTitleCalculator calculator = new JavadocOrSourceButtonTitleCalculator(null, null);
 			String titleKey = calculator.apply(state).title;
 			String title = IResourceGetter.Utils.getOrException(actionContext.compositeConfig.resourceGetter, titleKey);
-			((CompressedText)displayer).setText(title);
+			((CompressedText) displayer).setText(title);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
-		
+
 	}
 
 }

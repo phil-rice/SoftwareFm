@@ -11,10 +11,10 @@ public class KeyValueTest extends TestCase {
 		assertEquals("key", keyValue.key);
 		assertEquals("value", keyValue.value);
 	}
-	
-	public void testKeyFunctio() throws Exception{
+
+	public void testKeyFunctio() throws Exception {
 		assertEquals("key", KeyValue.Utils.keyFn().apply(new KeyValue("key", "value")));
-		
+
 	}
 
 	public void testForItemsInSortOrder() {

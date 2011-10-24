@@ -1,6 +1,5 @@
 package org.softwareFm.panel;
 
-
 public interface ISelectedBindingManager {
 
 	void addSelectedArtifactSelectionListener(ISelectedBindingListener listener);

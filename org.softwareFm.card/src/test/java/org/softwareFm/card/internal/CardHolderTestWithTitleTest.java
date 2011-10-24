@@ -1,7 +1,6 @@
 package org.softwareFm.card.internal;
 
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICard;
@@ -27,7 +26,7 @@ public class CardHolderTestWithTitleTest extends AbstractCardHolderTest {
 	private void checkTitleBasedOnUrlIsDisplayed(String expected, String url) throws Exception {
 		ICard cardWithLastSegmentAsTitle = cardFactory.makeCard(cardHolder, cardConfig, url, CardDataStoreFixture.data1a);
 		cardHolder.setCard(cardWithLastSegmentAsTitle);
-		assertEquals(cardConfig.cardTitleFn.apply(url),getTitleText());
+		assertEquals(cardConfig.cardTitleFn.apply(url), getTitleText());
 
 		ICard cardWithUrlAsTitle = cardFactory.makeCard(cardHolder, cardConfig.withTitleFn(Functions.<String, String> identity()), url, CardDataStoreFixture.data1a);
 		cardHolder.setCard(cardWithUrlAsTitle);

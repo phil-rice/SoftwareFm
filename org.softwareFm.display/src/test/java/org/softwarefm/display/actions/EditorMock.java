@@ -19,11 +19,11 @@ import org.softwareFm.utilities.maps.Maps;
 
 public class EditorMock implements IEditor {
 
-	public static final  Map<String, Object> finishedData = Maps.<String,Object>makeMap("Finished", "It");
+	public static final Map<String, Object> finishedData = Maps.<String, Object> makeMap("Finished", "It");
 
 	private final String seed;
 	public final List<IDisplayer> parents = Lists.newList();
-	public List<DisplayerDefn> displayDefns= Lists.newList();
+	public List<DisplayerDefn> displayDefns = Lists.newList();
 	public final List<ActionContext> actionsContexts = Lists.newList();
 	private IEditorCompletion onCompletion;
 	public Label control;
@@ -46,10 +46,9 @@ public class EditorMock implements IEditor {
 		this.actionsContexts.add(actionContext);
 	}
 
-
 	public void finish() {
 		try {
-			
+
 			onCompletion.ok(finishedData);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);

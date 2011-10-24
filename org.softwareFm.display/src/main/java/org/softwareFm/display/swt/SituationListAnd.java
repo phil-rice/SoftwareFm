@@ -37,7 +37,7 @@ public class SituationListAnd<T extends IHasControl> implements IHasComposite {
 			situationList = new List(leftColumn, SWT.BORDER);
 			situationContents = new StyledText(leftColumn, SWT.BORDER);
 			Swts.addGrabHorizontalAndFillGridDataToAllChildren(leftColumn);
-			
+
 			Iterable<String> list = situations.call();
 			for (String object : list)
 				situationList.add(object);
@@ -52,7 +52,7 @@ public class SituationListAnd<T extends IHasControl> implements IHasComposite {
 			});
 			leftColumn.setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
 			control.setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
-			content.setWeights(new int[]{1, 2});
+			content.setWeights(new int[] { 1, 2 });
 
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
@@ -60,11 +60,10 @@ public class SituationListAnd<T extends IHasControl> implements IHasComposite {
 
 	}
 
-
-	public void setText(String text){
+	public void setText(String text) {
 		situationContents.setText(text);
 	}
-	
+
 	private void fire() {
 		try {
 			int index = situationList.getSelectionIndex();

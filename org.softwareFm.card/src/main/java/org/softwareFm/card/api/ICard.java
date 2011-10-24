@@ -8,7 +8,7 @@ import org.softwareFm.display.composites.IHasComposite;
 public interface ICard extends IHasComposite {
 
 	KeyValue valueChanged(KeyValue keyValue, Object newValue);
-	
+
 	void addLineSelectedListener(ILineSelectedListener listener);
 
 	CardConfig cardConfig();

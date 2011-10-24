@@ -44,8 +44,9 @@ public class SmallButtonDefn {
 			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.cannotSetValueTwice, "dataId", this.dataId, dataId));
 		this.dataId = dataId;
 		return this;
-		
+
 	}
+
 	public SmallButtonDefn tooltip(String tooltip) {
 		if (this.tooltip != null)
 			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.cannotSetValueTwice, "tooltip", this.tooltip, tooltip));

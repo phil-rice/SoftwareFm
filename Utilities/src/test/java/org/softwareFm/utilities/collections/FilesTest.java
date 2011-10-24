@@ -20,7 +20,7 @@ public class FilesTest extends TestCase {
 		byte[] digest2 = Files.digest(resource.getFile());
 		assertTrue(Arrays.equals(digest1, digest2));
 		assertTrue(Lists.asList(digest2).toString(), Arrays.equals(new byte[] { 52, -40, 102, -11, 21, 8, 98, -19, -24, 55, 11, -102, 59, -88, 63, -123, 77, -11, -32, 14 }, digest2));
-}
+	}
 
 	@Test
 	public void testNameWithoutExtension() {
@@ -35,6 +35,7 @@ public class FilesTest extends TestCase {
 		assertEquals("a.b.c/W/Fred", Files.noExtension("a.b.c/W/Fred.class"));
 		assertEquals("a.b.c/W/Fred.a.b", Files.noExtension("a.b.c/W/Fred.a.b.class"));
 	}
+
 	public void testExtension() {
 		assertEquals("class", Files.extension("Fred.a.b.class"));
 		assertEquals("class", Files.extension("a.b.c/W/Fred.class"));

@@ -29,7 +29,7 @@ public class Images {
 			File aFile = new ClassPathResource(anImageName, anchor).getFile();
 			File directory = aFile.getParentFile();
 			return Iterables.remove(//
-					Iterables.map(Iterables.iterable(directory.list(Files.extensionFilter("png"))), Files.noExtension()),new IFunction1<String,Boolean>() {
+					Iterables.map(Iterables.iterable(directory.list(Files.extensionFilter("png"))), Files.noExtension()), new IFunction1<String, Boolean>() {
 						@Override
 						public Boolean apply(String from) throws Exception {
 							return from.endsWith("Inactive");
@@ -116,7 +116,7 @@ public class Images {
 			imageRegistry.put(fullName, image);
 			Image imageInactive = makeImageOrNull(device, anchor, name + "Inactive.png");
 			if (imageInactive != null)
-				imageRegistry.put(fullName+".inactive", imageInactive);
+				imageRegistry.put(fullName + ".inactive", imageInactive);
 		}
 	}
 

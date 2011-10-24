@@ -4,14 +4,14 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-public class BrowserPart implements IBrowserPart{
+public class BrowserPart implements IBrowserPart {
 
 	private final Browser browser;
 
 	public BrowserPart(Composite parent, int style) {
 		browser = new Browser(parent, style);
 	}
-	
+
 	@Override
 	public Control getControl() {
 		return browser;
@@ -25,7 +25,7 @@ public class BrowserPart implements IBrowserPart{
 	@Override
 	public void displayUrl(String url) {
 		browser.setUrl(url);
-		
+
 	}
 
 	@Override

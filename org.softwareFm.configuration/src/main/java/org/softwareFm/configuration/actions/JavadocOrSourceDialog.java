@@ -30,7 +30,7 @@ public class JavadocOrSourceDialog extends Dialog {
 	private final String softwareFmKey;
 	private final String mutatorKey;
 
-	public JavadocOrSourceDialog(Shell parent, String eclipseKey, String softwareFmKey, String mutatorKey ) {
+	public JavadocOrSourceDialog(Shell parent, String eclipseKey, String softwareFmKey, String mutatorKey) {
 		super(parent);
 		this.eclipseKey = eclipseKey;
 		this.softwareFmKey = softwareFmKey;
@@ -106,11 +106,11 @@ public class JavadocOrSourceDialog extends Dialog {
 	}
 
 	private SimpleImageButton addCopyToSoftwareFmButton(CompositeConfig compositeConfig, final ActionContext actionContext, final ActionData actionData, final TitleAndText parent, boolean onlyEnableIfHasValue) {
-		SimpleImageButton simpleImageButton = new SimpleImageButton(parent, compositeConfig.imageButtonConfig.withImage(ArtifactsAnchor.jarCopyToSoftwareFmKey) ,false);
+		SimpleImageButton simpleImageButton = new SimpleImageButton(parent, compositeConfig.imageButtonConfig.withImage(ArtifactsAnchor.jarCopyToSoftwareFmKey), false);
 		simpleImageButton.addListener(new IImageButtonListener() {
 			@Override
 			public void buttonPressed(IHasControl button) throws Exception {
-				actionContext.updateStore.update(actionData, softwareFmKey,  parent.getText());
+				actionContext.updateStore.update(actionData, softwareFmKey, parent.getText());
 				getShell().close();
 			}
 		});

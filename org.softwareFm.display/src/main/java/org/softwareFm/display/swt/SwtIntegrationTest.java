@@ -26,7 +26,7 @@ abstract public class SwtIntegrationTest extends TestCase implements IIntegratio
 	}
 
 	protected void kickAndDispatch(Future<?> future) {
-		GatedMockFuture<?,?> gatedMockFuture = (GatedMockFuture<?,?>) future;
+		GatedMockFuture<?, ?> gatedMockFuture = (GatedMockFuture<?, ?>) future;
 		gatedMockFuture.kick();
 		dispatchUntilQueueEmpty();
 	}

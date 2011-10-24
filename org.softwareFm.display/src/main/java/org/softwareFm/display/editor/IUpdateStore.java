@@ -36,7 +36,7 @@ public interface IUpdateStore {
 				@Override
 				public void update(String entity, String url, Map<String, Object> data) {
 					System.out.println("Updateing: " + entity + " url " + url + " with data: " + data);
-					
+
 				}
 			};
 		}

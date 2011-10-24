@@ -31,7 +31,7 @@ public class RepositoryFacard implements IRepositoryFacard {
 	public RepositoryFacard(IHttpClient client, String getExtension, IAspectToParameters parameters) {
 		this.client = client;
 		this.parameterMaker = parameters;
-		this.getExtension = "."+getExtension;
+		this.getExtension = "." + getExtension;
 	}
 
 	@SuppressWarnings("unchecked")

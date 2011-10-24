@@ -13,7 +13,6 @@ public class ThreadSaferPool<T> extends AbstractThinPool<T> {
 		next.set(0);
 	}
 
-	
 	protected int makeNewObjectIndex() {
 		int objectId = next.getAndIncrement();
 		return objectId;

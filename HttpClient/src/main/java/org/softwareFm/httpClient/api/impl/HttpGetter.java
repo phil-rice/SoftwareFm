@@ -35,8 +35,8 @@ public class HttpGetter implements IHttpGetter {
 				HttpGet get = new HttpGet(url.trim());
 				HttpResponse httpResponse = client.execute(get);
 				HttpEntity entity = httpResponse.getEntity();
-				String reply = entity == null?"":EntityUtils.toString(entity);
-				
+				String reply = entity == null ? "" : EntityUtils.toString(entity);
+
 				Response response = new Response(url, httpResponse.getStatusLine().getStatusCode(), reply);
 				callback.processGet(url, response);
 				return response;

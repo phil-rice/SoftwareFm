@@ -6,14 +6,15 @@ public interface ICallback<T> {
 	void process(T t) throws Exception;
 
 	static class Utils {
-		
-		public static <T> void call(ICallback<T> callback, T value){
+
+		public static <T> void call(ICallback<T> callback, T value) {
 			try {
 				callback.process(value);
 			} catch (Exception e) {
 				throw WrappedException.wrap(e);
 			}
 		}
+
 		public static <T> ICallback<T> safeSysErrCallback(final ICallback<T> callback) {
 			return safeCallback(new ICallback<Throwable>() {
 				@Override

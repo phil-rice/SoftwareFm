@@ -12,12 +12,9 @@ import org.softwareFm.display.composites.IHasControl;
 
 public class ListDetailAdder implements IDetailAdder {
 	@Override
-	public IHasControl add(Composite parentComposite, ICard parentCard,
-			CardConfig cardConfig, KeyValue keyValue,
-			ICardSelectedListener listener) {
+	public IHasControl add(Composite parentComposite, ICard parentCard, CardConfig cardConfig, KeyValue keyValue, ICardSelectedListener listener) {
 		if (keyValue.value instanceof List<?>) {
-			CardCollectionHolder result = new CardCollectionHolder(
-					parentComposite, cardConfig);
+			CardCollectionHolder result = new CardCollectionHolder(parentComposite, cardConfig);
 			result.setKeyValue(parentCard.url(), keyValue);
 			return result;
 		} else

@@ -7,9 +7,9 @@ public class AllUtilitiesMonitorTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite(AllUtilitiesMonitorTests.class.getName());
-		//$JUnit-BEGIN$
+		// $JUnit-BEGIN$
 		suite.addTestSuite(SysoutMonitorTests.class);
-		//$JUnit-END$
+		// $JUnit-END$
 		return suite;
 	}
 

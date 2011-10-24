@@ -5,8 +5,8 @@ import org.eclipse.swt.widgets.Control;
 import org.softwareFm.display.composites.CompositeConfig;
 
 public abstract class AbstractCompressedText<T extends Control> extends AbstractCompressed<T> {
-	protected String rawText ="";
-	protected String title ="";
+	protected String rawText = "";
+	protected String title = "";
 
 	public AbstractCompressedText(Composite parent, int style, CompositeConfig config) {
 		super(parent, style, config);
@@ -27,7 +27,5 @@ public abstract class AbstractCompressedText<T extends Control> extends Abstract
 	public String getText() {
 		return rawText;
 	}
-
-	
 
 }

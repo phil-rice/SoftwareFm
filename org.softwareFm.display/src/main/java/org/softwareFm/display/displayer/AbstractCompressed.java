@@ -75,7 +75,7 @@ public abstract class AbstractCompressed<T extends Control> implements IDisplaye
 		this.shouldBeEnabled = enabled;
 		control.setEnabled(enabled);
 	}
-	
+
 	public boolean isShouldBeEnabled() {
 		return shouldBeEnabled;
 	}

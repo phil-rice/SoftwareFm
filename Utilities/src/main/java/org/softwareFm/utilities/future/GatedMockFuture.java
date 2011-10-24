@@ -8,7 +8,7 @@ import java.util.concurrent.TimeoutException;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
 
-public class GatedMockFuture<From,To> implements Future<To> {
+public class GatedMockFuture<From, To> implements Future<To> {
 
 	private final From from;
 	private boolean done;

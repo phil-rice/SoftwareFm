@@ -12,12 +12,12 @@ import org.softwareFm.utilities.callbacks.ICallback;
 
 public class NavHistoryCombo implements IHasControl {
 
-	 final Combo combo;
+	final Combo combo;
 	private final History<String> history;
 
-	public NavHistoryCombo(Composite composite, History <String>history, final ICallback<String> callbackToGotoUrl) {
+	public NavHistoryCombo(Composite composite, History<String> history, final ICallback<String> callbackToGotoUrl) {
 		this.history = history;
-		combo = new Combo(composite, SWT.DROP_DOWN|SWT.NO_FOCUS);
+		combo = new Combo(composite, SWT.DROP_DOWN | SWT.NO_FOCUS);
 		combo.addSelectionListener(new SelectionListener() {
 
 			@Override
@@ -34,19 +34,17 @@ public class NavHistoryCombo implements IHasControl {
 			}
 		});
 	}
-	
 
 	@Override
 	public Control getControl() {
 		return combo;
 	}
 
-
 	public void updateFromHistory() {
 		combo.removeAll();
-		for (String item: history.items())
+		for (String item : history.items())
 			combo.add(item);
-		
+
 	}
 
 }

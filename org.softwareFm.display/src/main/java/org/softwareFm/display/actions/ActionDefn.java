@@ -32,18 +32,16 @@ public class ActionDefn {
 			throw new NullPointerException(MessageFormat.format(DisplayConstants.mustHaveA, "mainImageId", id));
 	}
 
-	
 	public ActionDefn ignoreGuard() {
 		this.ignoreGuard = true;
 		return this;
 	}
-	public ActionDefn thisIsDefault(){
+
+	public ActionDefn thisIsDefault() {
 		this.defaultAction = true;
 		return this;
 	}
-	
-	
-	
+
 	public ActionDefn params(String... paramNames) {
 		if (this.params != null)
 			throw new IllegalStateException(MessageFormat.format(DisplayConstants.cannotSetValueTwice, "params", this.params, Arrays.asList(paramNames)));

@@ -45,6 +45,7 @@ public class Actions {
 		Object data = actionContext.dataGetter.getDataFor(key);
 		return getStringOrItemOfList(data, index);
 	}
+
 	@SuppressWarnings("unchecked")
 	public static String getStringOrItemOfList(Object data, int index) {
 		if (data instanceof List)

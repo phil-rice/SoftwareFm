@@ -122,7 +122,8 @@ public class JavaProjects {
 		};
 
 	}
-	public static IJavadocSourceMutator javadocMutator(final IPackageFragmentRoot root, final IJavaProject javaProject, final IClasspathEntry classpathEntry,final Callable<String> findNewValue) {
+
+	public static IJavadocSourceMutator javadocMutator(final IPackageFragmentRoot root, final IJavaProject javaProject, final IClasspathEntry classpathEntry, final Callable<String> findNewValue) {
 		return new IJavadocSourceMutator() {
 			@Override
 			public void setNewValue(String newValue, IJavadocSourceMutatorCallback whenComplete) throws Exception {
@@ -131,7 +132,7 @@ public class JavaProjects {
 				whenComplete.process(newValue, actual);
 			}
 		};
-		
+
 	}
 
 	public static void setSourceAttachment(IJavaProject javaProject, IClasspathEntry classpathEntry, final String newValue) {

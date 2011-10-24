@@ -24,9 +24,9 @@ public abstract class AbstractCardHolderTest extends SwtIntegrationTest {
 		assertNull(cardHolder.content.card);
 	}
 
-	public void testDisplaysTitleOrNavBarWhenConstructed(){
+	public void testDisplaysTitleOrNavBarWhenConstructed() {
 		cardHolder.getComposite().layout();
-//		assertTrue(getTitleControl().isVisible()); sadly cannot test this in integration test as...well..it's not actually visible
+		// assertTrue(getTitleControl().isVisible()); sadly cannot test this in integration test as...well..it's not actually visible
 		checkTitleLayout(cardConfig);
 	}
 
@@ -46,7 +46,6 @@ public abstract class AbstractCardHolderTest extends SwtIntegrationTest {
 		checkClientArea(cardConfig);
 		checkClientArea(cardConfig.withMargins(1, 2, 3, 4));
 	}
-
 
 	private void checkClientArea(CardConfig cardConfig) {
 		Rectangle clientArea = cardHolder.getComposite().getClientArea();
@@ -71,8 +70,8 @@ public abstract class AbstractCardHolderTest extends SwtIntegrationTest {
 		Rectangle bounds = cardHolder.content.card.getComposite().getBounds();
 		assertEquals(cardConfig.leftMargin, bounds.x);
 		assertEquals(cardConfig.topMargin + cardConfig.titleHeight, bounds.y);
-		assertEquals(110 - cardConfig.leftMargin - cardConfig.rightMargin-borderThickness*2, bounds.width);
-		assertEquals(220 - cardConfig.topMargin - cardConfig.bottomMargin - cardConfig.titleHeight-borderThickness*2, bounds.height);
+		assertEquals(110 - cardConfig.leftMargin - cardConfig.rightMargin - borderThickness * 2, bounds.width);
+		assertEquals(220 - cardConfig.topMargin - cardConfig.bottomMargin - cardConfig.titleHeight - borderThickness * 2, bounds.height);
 	}
 
 	public void testLayoutPutsTitleIntoPositionSpecifiedByCardConfigAfterSetCard() {
@@ -94,7 +93,7 @@ public abstract class AbstractCardHolderTest extends SwtIntegrationTest {
 		Rectangle bounds = getTitleControl().getBounds();
 		assertEquals(cardConfig.leftMargin, bounds.x);
 		assertEquals(cardConfig.topMargin, bounds.y);
-		assertEquals(110 - cardConfig.leftMargin - cardConfig.rightMargin-borderThickness*2, bounds.width);
+		assertEquals(110 - cardConfig.leftMargin - cardConfig.rightMargin - borderThickness * 2, bounds.width);
 		assertEquals(cardConfig.titleHeight, bounds.height);
 	}
 
@@ -107,7 +106,7 @@ public abstract class AbstractCardHolderTest extends SwtIntegrationTest {
 		cardHolder.setCard(card);
 		return card;
 	}
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -123,8 +122,8 @@ public abstract class AbstractCardHolderTest extends SwtIntegrationTest {
 		borderThickness = 2;
 		expectedClientArea = new Rectangle(cardConfig.leftMargin, //
 				cardConfig.topMargin,//
-				110 - cardConfig.leftMargin - cardConfig.rightMargin-borderThickness*2,//
-				220 - cardConfig.topMargin - cardConfig.bottomMargin-borderThickness*2);
+				110 - cardConfig.leftMargin - cardConfig.rightMargin - borderThickness * 2,//
+				220 - cardConfig.topMargin - cardConfig.bottomMargin - borderThickness * 2);
 		cardHolder.getControl().setBounds(10, 20, 110, 220);
 	}
 

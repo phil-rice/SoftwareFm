@@ -102,7 +102,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 		makeActionButtons(leftHandside, compositeConfig, largeButtonDefns).setLayoutData(Swts.makeGrabHorizonalAndFillGridData());
 		makeDisplayers(leftHandside, largeButtonDefns, actionContext, stackLayout);
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(leftHandside);
-		
+
 		makeRightHandSide(sash, actionContext, browserConfigurators);
 		sash.setWeights(new int[] { 1, 2 });
 

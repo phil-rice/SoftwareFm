@@ -14,7 +14,6 @@ public class ByteBufferSimpleString extends AbstractSimpleString {
 		return byteBuffer.get(start + offset);
 	}
 
-	
 	public int length() {
 		return size;
 	}

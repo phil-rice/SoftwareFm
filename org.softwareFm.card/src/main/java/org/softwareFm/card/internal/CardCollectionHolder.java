@@ -38,8 +38,7 @@ public class CardCollectionHolder implements IHasComposite {
 		private final List<ICardSelectedListener> listeners = new CopyOnWriteArrayList<ICardSelectedListener>();
 		private final CardCollectionsDataStore cardCollectionsDataStore = new CardCollectionsDataStore();
 
-		public CardCollectionHolderComposite(Composite parent,
-				CardConfig cardConfig) {
+		public CardCollectionHolderComposite(Composite parent, CardConfig cardConfig) {
 			super(parent, SWT.NULL);
 			this.cardConfig = cardConfig;
 			setLayout(new FillWithAspectRatioLayoutManager(3, 2));
@@ -49,84 +48,51 @@ public class CardCollectionHolder implements IHasComposite {
 			Object value = keyValue.value;
 			Swts.removeAllChildren(this);
 			if (value instanceof List<?>) {
-				for (final KeyValue childKeyValue : Lists.sort(
-						(List<KeyValue>) value, cardConfig.comparator)) {
-					final CardHolder cardHolder = new CardHolder(this,
-							"loading", childKeyValue.key, cardConfig, rootUrl,
-							null);
-					cardHolder.getControl().addPaintListener(
-							new PaintListener() {
-								@Override
-								public void paintControl(PaintEvent e) {
-									cardHolder.getControl()
-											.removePaintListener(this);
-									if (!cardHolder.getControl().isDisposed()) {
-										CardAndCollectionDataStoreVisitorMock visitor = new CardAndCollectionDataStoreVisitorMock() {
-											@Override
-											public void initialUrl(
-													ICardHolder cardHolder,
-													CardConfig cardConfig,
-													String url) {
-											}
+				for (final KeyValue childKeyValue : Lists.sort((List<KeyValue>) value, cardConfig.comparator)) {
+					final CardHolder cardHolder = new CardHolder(this, "loading", childKeyValue.key, cardConfig, rootUrl, null);
+					cardHolder.getControl().addPaintListener(new PaintListener() {
+						@Override
+						public void paintControl(PaintEvent e) {
+							cardHolder.getControl().removePaintListener(this);
+							if (!cardHolder.getControl().isDisposed()) {
+								CardAndCollectionDataStoreVisitorMock visitor = new CardAndCollectionDataStoreVisitorMock() {
+									@Override
+									public void initialUrl(ICardHolder cardHolder, CardConfig cardConfig, String url) {
+									}
 
+									@Override
+									public void initialCard(ICardHolder cardHolder, CardConfig cardConfig, String url, final ICard card) {
+										card.getControl().addMouseListener(new MouseAdapter() {
 											@Override
-											public void initialCard(
-													ICardHolder cardHolder,
-													CardConfig cardConfig,
-													String url, final ICard card) {
-												card.getControl()
-														.addMouseListener(
-																new MouseAdapter() {
-																	@Override
-																	public void mouseUp(
-																			org.eclipse.swt.events.MouseEvent e) {
-																		for (ICardSelectedListener listener : listeners) {
-																			listener.cardSelected(card);
-																		}
-																	}
-																});
+											public void mouseUp(org.eclipse.swt.events.MouseEvent e) {
+												for (ICardSelectedListener listener : listeners) {
+													listener.cardSelected(card);
+												}
 											}
+										});
+									}
 
-											@Override
-											public void requestingFollowup(
-													ICardHolder cardHolder,
-													String url, ICard card,
-													String followOnUrlFragment) {
-											}
+									@Override
+									public void requestingFollowup(ICardHolder cardHolder, String url, ICard card, String followOnUrlFragment) {
+									}
 
-											@Override
-											public void followedUp(
-													ICardHolder cardHolder,
-													String url, ICard card,
-													String followUpUrl,
-													Map<String, Object> result) {
-											}
+									@Override
+									public void followedUp(ICardHolder cardHolder, String url, ICard card, String followUpUrl, Map<String, Object> result) {
+									}
 
-											@Override
-											public void noData(
-													ICardHolder cardHolder,
-													String url, ICard card,
-													String followUpUrl) {
-											}
+									@Override
+									public void noData(ICardHolder cardHolder, String url, ICard card, String followUpUrl) {
+									}
 
-											@Override
-											public void finished(
-													ICardHolder cardHolder,
-													String url, ICard card) {
-											}
-										};
-										cardCollectionsDataStore
-												.processDataFor(
-														cardHolder,
-														cardConfig,
-														rootUrl
-																+ "/"
-																+ childKeyValue.key,
-														visitor);
+									@Override
+									public void finished(ICardHolder cardHolder, String url, ICard card) {
 									}
 								};
+								cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, rootUrl + "/" + childKeyValue.key, visitor);
+							}
+						};
 
-							});
+					});
 				}
 			}
 			layout();
@@ -171,32 +137,18 @@ public class CardCollectionHolder implements IHasComposite {
 	}
 
 	public static void main(String[] args) {
-		Swts.displayNoLayout(CardCollectionHolder.class.getSimpleName(),
-				new IFunction1<Composite, Composite>() {
-					@Override
-					public Composite apply(final Composite from)
-							throws Exception {
-						final ICardDataStore cardDataStore = CardDataStoreFixture
-								.rawCardStore();
-						ICardFactory cardFactory = ICardFactory.Utils
-								.cardFactory();
-						final CardConfig cardConfig = new BasicCardConfigurator()
-								.configure(from.getDisplay(), new CardConfig(
-										cardFactory, cardDataStore));
-						IResourceGetter.Utils.getOrException(
-								cardConfig.resourceGetter, "navBar.prev.title");
-						final CardCollectionHolder cardCollectionHolder = new CardCollectionHolder(
-								from, cardConfig);
-						cardCollectionHolder
-								.setKeyValue(
-										CardDataStoreFixture.url,
-										new KeyValue(
-												"stugg",
-												Maps.makeMap(CardDataStoreFixture.dataIndexedByUrlFragment)));
-						Swts.resizeMeToParentsSize(cardCollectionHolder
-								.getControl());
-						return cardCollectionHolder.getComposite();
-					}
-				});
+		Swts.displayNoLayout(CardCollectionHolder.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+			@Override
+			public Composite apply(final Composite from) throws Exception {
+				final ICardDataStore cardDataStore = CardDataStoreFixture.rawCardStore();
+				ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
+				final CardConfig cardConfig = new BasicCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
+				IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "navBar.prev.title");
+				final CardCollectionHolder cardCollectionHolder = new CardCollectionHolder(from, cardConfig);
+				cardCollectionHolder.setKeyValue(CardDataStoreFixture.url, new KeyValue("stugg", Maps.makeMap(CardDataStoreFixture.dataIndexedByUrlFragment)));
+				Swts.resizeMeToParentsSize(cardCollectionHolder.getControl());
+				return cardCollectionHolder.getComposite();
+			}
+		});
 	}
 }

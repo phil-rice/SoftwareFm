@@ -35,8 +35,8 @@ public class PurgeJavadocSourceThatAreIdenticalToJar implements IExtractorCallba
 		File targetFile = new File(directory, DownloadJarsExtractor.append(rawTargetFile, embed));
 		if (!jarFile.exists())
 			System.err.println("Cannot find: " + jarFile);
-		if (targetFile.exists()&& rawTargetFile.endsWith(".jar"))
-			if ((jarFile.length() == targetFile.length()) ) {
+		if (targetFile.exists() && rawTargetFile.endsWith(".jar"))
+			if ((jarFile.length() == targetFile.length())) {
 				System.err.println("Found duplicate: " + targetFile);
 				targetFile.delete();
 				deleted++;

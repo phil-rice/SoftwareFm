@@ -25,7 +25,6 @@ public class JavaElementData {
 		this.type = type;
 	}
 
-	
 	public String toString() {
 		return "JavaElementData [name=" + name + ", type=" + type + "]";
 	}

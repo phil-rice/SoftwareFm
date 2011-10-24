@@ -7,14 +7,14 @@ import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
-public class SimpleButtonParent implements IButtonParent{
+public class SimpleButtonParent implements IButtonParent {
 
 	private final Composite content;
 
 	public SimpleButtonParent(Composite parent, SoftwareFmLayout layout, int style) {
-		this.content = new Composite(parent,style);
+		this.content = new Composite(parent, style);
 		content.setLayout(Swts.getHorizonalMarginRowLayout(3));
-		}
+	}
 
 	@Override
 	public Composite getButtonComposite() {
@@ -33,7 +33,7 @@ public class SimpleButtonParent implements IButtonParent{
 
 	@Override
 	public void buttonAdded(IHasControl button) {
-		
+
 	}
 
 	public int size() {

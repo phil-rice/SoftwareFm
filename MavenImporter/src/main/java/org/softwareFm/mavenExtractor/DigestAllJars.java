@@ -25,8 +25,8 @@ public class DigestAllJars implements IExtractorCallback {
 			return;
 		String targetFile = jarUrl.substring(MavenImporterConstants.baseUrl.length());
 		final File file = new File(directory, targetFile);
-		System.out.println(file.exists() +" " + Files.digestAsHexString(file) + " "+ file);
-		template.update("update version set digest = '" + Files.digestAsHexString(file) +"' where project ='" + project + "' and version='" + version +"'");
+		System.out.println(file.exists() + " " + Files.digestAsHexString(file) + " " + file);
+		template.update("update version set digest = '" + Files.digestAsHexString(file) + "' where project ='" + project + "' and version='" + version + "'");
 	}
 
 	public void finished() {

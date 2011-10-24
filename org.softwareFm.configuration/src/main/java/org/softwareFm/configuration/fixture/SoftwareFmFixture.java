@@ -69,7 +69,7 @@ public class SoftwareFmFixture {
 	public final LargeButtonDefn artifactDetailsButton;
 	public final LargeButtonDefn artifactTrainingButton;
 	public final LargeButtonDefn artifactSocialButton;
-//	public final LargeButtonDefn groupLargeButtonFactory;
+	// public final LargeButtonDefn groupLargeButtonFactory;
 
 	private final List<IBrowserConfigurator> browserConfigurators;
 	private final IPlayListGetter playListGetter;
@@ -99,7 +99,7 @@ public class SoftwareFmFixture {
 		artifactDetailsButton = new ArtifactDetailsLargeButtonFactory().apply(guiBuilder);
 		artifactSocialButton = new ArtifactSocialLargeButtonFactory().apply(guiBuilder);
 		artifactTrainingButton = new ArtifactTrainingLargeButtonFactory().apply(guiBuilder);
-//		groupLargeButtonFactory = new GroupLargeButtonFactory().apply(guiBuilder);
+		// groupLargeButtonFactory = new GroupLargeButtonFactory().apply(guiBuilder);
 
 		allLargeButtons = new LargeButtonDefn[] { jarDetailsButton, artifactDetailsButton, artifactSocialButton, artifactTrainingButton };
 		browserConfigurators = Arrays.asList(new BrowserFeedConfigurator(), new RssFeedConfigurator());
