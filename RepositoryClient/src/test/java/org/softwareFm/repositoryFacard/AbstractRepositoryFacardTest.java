@@ -7,9 +7,9 @@ import junit.framework.TestCase;
 
 import org.softwareFm.repositoryFacard.impl.ResponseFacardCallbackRecordingStatus;
 import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.tests.IIntegrationTest;
+import org.softwareFm.utilities.tests.INeedsServerTest;
 
-public abstract class AbstractRepositoryFacardTest extends TestCase implements IIntegrationTest {
+public abstract class AbstractRepositoryFacardTest extends TestCase implements INeedsServerTest {
 	protected IRepositoryFacard facard;
 
 	@Override

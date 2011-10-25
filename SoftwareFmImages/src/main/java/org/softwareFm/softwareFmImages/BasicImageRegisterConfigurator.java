@@ -26,7 +26,7 @@ public class BasicImageRegisterConfigurator implements IImageRegisterConfigurato
 		Images.registerImages(device, imageRegistry, ArtifactsAnchor.class, "artifact", //
 				"jar", "jarClearEclipse", "jarCopyFromSoftwareFm", "jarCopyToSoftwareFm", //
 				"blog", "document", "faceBook", "forum", "javadoc", "issues", "license", "mailingList", "merchandise", "organisation", "project",//
-				"news", "rss", "recruitment", "src", "tutorials", "twitter");
+				"news", "rss", "recruitment", "source", "tutorials", "twitter");
 		Images.registerImages(device, imageRegistry, OverlaysAnchor.class, "overlay", "add", "delete", "edit", "properties");
 		Images.registerImages(device, imageRegistry, SmallIconsAnchor.class, "smallIcon", "softwareFm", "javadoc", "source");
 		Images.registerImages(device, imageRegistry, GeneralAnchor.class, "general", "browse", "help", "clear", "search", "maven", "sfmLogo");

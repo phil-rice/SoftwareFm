@@ -18,9 +18,9 @@ import org.softwareFm.repository.api.MemoryStatusChangedListener;
 import org.softwareFm.repository.constants.RepositoryConstants;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.tests.IIntegrationTest;
+import org.softwareFm.utilities.tests.INeedsServerTest;
 
-public class SoftwareFmRepositoryTest extends TestCase implements IIntegrationTest {
+public class SoftwareFmRepositoryTest extends TestCase implements INeedsServerTest {
 
 	private final String organisationUrlKey = "organisation.url";
 	private final String organisationNameKey = "organisation.name";

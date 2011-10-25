@@ -5,7 +5,7 @@ public class ArtifactsAnchor {
 	public static String prefix = "artifact.";
 	public static String jarKey = prefix + "jar";
 	public static String javadocKey = prefix + "javadoc";
-	public static String sourceKey = prefix + "src";
+	public static String sourceKey = prefix + "source";
 	public static String jarClearEclipseKey = prefix + "jarClearEclipse";
 	public static String jarCopyFromSoftwareFmKey = prefix + "jarCopyFromSoftwareFm";
 	public static String jarCopyToSoftwareFmKey = prefix + "jarCopyToSoftwareFm";
