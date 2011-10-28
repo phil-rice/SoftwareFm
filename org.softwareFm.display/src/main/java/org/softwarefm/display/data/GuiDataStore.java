@@ -102,12 +102,12 @@ public class GuiDataStore implements IDataGetter {
 		return this;
 	}
 
-	public void processData(String mainEntity, Map<String, Object> data, Map<String, Object> context) {
+	public void processData(String mainEntity,  Map<String,Object> data, Map<String, Object> context) {
 		this.entityToLastRawDataMap.put(mainEntity, data);
 		processOneData(mainEntity, data, context);
 	}
 
-	public void processOneData(String entity, Map<String, Object> data, Map<String, Object> context) {
+	public void processOneData(String entity, Map<String,Object> data, Map<String, Object> context) {
 		IUrlGenerator urlGenerator = entityToUrlGeneratorMap.get(entity);
 		if (urlGenerator == null)
 			throw new IllegalStateException(MessageFormat.format(DisplayConstants.unrecognisedUrlGenerator, entity, entityToUrlGeneratorMap.keySet()));
@@ -123,7 +123,7 @@ public class GuiDataStore implements IDataGetter {
 				}
 				fireListeners(entity, url);
 				// TODO is there some unpleasant race condition here?...Probably need to rewrite. Intension to to rewrite on server end so it's just one query...
-				for (DependantData dependantData : Maps.getOrEmptyList(entityToDependantMap, entity))
+				for (DependantData dependantData : Maps.getOrEmptyList(entityToDependantMap, entity)) 
 					processOneData(dependantData.entity, data, context);
 			}
 

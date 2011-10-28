@@ -30,7 +30,7 @@ public class DataGetterMock implements IDataGetter {
 
 	@Override
 	public ActionData getActionDataFor(List<String> params) {
-		return new ActionData(Maps.<String, String> newMap(), params, null);
+		return new ActionData(Maps.<String,String>newMap(), params	, null);
 	}
 
 	@Override

@@ -44,12 +44,12 @@ public class ListDisplayer implements IDisplayer {
 			List<String> dataList = (List<String>) dataFor;
 			boolean actuallyEmpty = dataList.size() == 1 && dataList.get(0).trim().length() == 0;
 			int index = 0;
-			// if (!actuallyEmpty)
-			// for (Object value : dataList) {
-			// IButtonParent buttonParent = listEditor.makeLineHasControl(defn, compositeConfig, listComposite, index, value);
-			// defn.createDefaultAction(actionContext, this, buttonParent, index);
-			// index++;
-			// }
+//			if (!actuallyEmpty)
+//				for (Object value : dataList) {
+//					IButtonParent buttonParent = listEditor.makeLineHasControl(defn, compositeConfig, listComposite, index, value);
+//					defn.createDefaultAction(actionContext, this, buttonParent, index);
+//					index++;
+//				}
 		}
 		Swts.addGrabHorizontalAndFillGridDataToAllChildren(listComposite);
 
@@ -90,7 +90,7 @@ public class ListDisplayer implements IDisplayer {
 
 	@Override
 	public void addClickListener(Listener listener) {
-
+		
 	}
 
 	public ListDisplayer(CompositeConfig compositeConfig, Composite content, TitleAnd mainLine, Composite listComposite, ActionContext actionContext) {

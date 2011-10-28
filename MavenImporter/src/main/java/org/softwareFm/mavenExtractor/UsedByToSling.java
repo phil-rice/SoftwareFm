@@ -16,13 +16,13 @@ import org.softwareFm.utilities.maps.Maps;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @SuppressWarnings("unused")
-public class DependanciesToSling implements IArtifactDependancyVisitor {
+public class UsedByToSling implements IArtifactDependancyVisitor {
 	private final IUrlGenerator artifactUrlGenerator;
 	private final IRepositoryFacard repository;
 	private final int maxCount;
 	private int count;
 
-	public DependanciesToSling(IRepositoryFacard repository, int count) {
+	public UsedByToSling(IRepositoryFacard repository, int count) {
 		this.repository = repository;
 		this.maxCount = count;
 		GuiDataStore guiDataStore = new GuiDataStore(null, null, ICallback.Utils.rethrow());
@@ -32,13 +32,13 @@ public class DependanciesToSling implements IArtifactDependancyVisitor {
 	}
 
 	public void vist(String groupid, String artifactid, String childgroupid, String childartifactid) throws Exception {
-		String url = artifactUrlGenerator.findUrlFor(makeMap(groupid, artifactid));
+		String url = artifactUrlGenerator.findUrlFor(makeMap(childgroupid, childartifactid));
 		UUID uuid = UUID.randomUUID();
-		String fullUrl = url + "/" + "dependancy" + "/" + uuid;
-		Map<String, Object> data = makeMap(childgroupid, childartifactid);
-		data.put(MavenImporterConstants.slingResourceTypeKey, "dependancy");
+		String fullUrl = url+"/"+"usedby"+"/"+ uuid;
+		Map<String, Object> data = makeMap(groupid, artifactid);
+		data.put(MavenImporterConstants.slingResourceTypeKey, MavenImporterConstants.usedByResourceType);
 		System.out.println(fullUrl + "<-------" + data);
-		repository.post(fullUrl, data,  IResponseCallback.Utils.noCallback()).get();
+		repository.post(fullUrl, data, new IResponseCallback.Utils().noCallback()).get();
 		if (count++ > maxCount)
 			System.exit(0);
 	}
@@ -51,7 +51,7 @@ public class DependanciesToSling implements IArtifactDependancyVisitor {
 		DataSource dataSource = MavenImporterConstants.dataSource;
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		IRepositoryFacard repository = IRepositoryFacard.Utils.defaultFacard();
-		new DependancyWalker().walk(MavenImporterConstants.dataSource, new DependanciesToSling(repository, 100), ICallback.Utils.sysErrCallback());
+		new DependancyWalker().walk(MavenImporterConstants.dataSource, new UsedByToSling(repository, 10), ICallback.Utils.sysErrCallback());
 	}
 
 }

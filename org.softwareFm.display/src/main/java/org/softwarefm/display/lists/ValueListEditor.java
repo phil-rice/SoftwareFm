@@ -10,13 +10,13 @@ import org.softwareFm.display.displayer.DisplayerDefn;
 import org.softwareFm.display.simpleButtons.IButtonParent;
 import org.softwareFm.utilities.strings.Strings;
 
-public class ValueListEditor implements IListEditor {
+public class ValueListEditor implements IListEditor{
 
 	private final String lineTitleKey;
 
 	public ValueListEditor(String lineTitleKey) {
 		this.lineTitleKey = lineTitleKey;
-		if (lineTitleKey == null || lineTitleKey.length() == 0)
+		if (lineTitleKey==null||lineTitleKey.length()==0)
 			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.mustHaveA, "lineTitleKey", getClass().getSimpleName()));
 	}
 

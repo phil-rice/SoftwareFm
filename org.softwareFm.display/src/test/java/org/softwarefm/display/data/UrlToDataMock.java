@@ -42,7 +42,7 @@ public class UrlToDataMock implements IUrlToData {
 			Map<String, Object> data = list.get(integer.getAndIncrement());
 			callback.processData(entity, url, context, data);
 		} catch (Exception e) {
-			throw new RuntimeException("Entity: " + entity + ", Url: " + url, e);
+			throw new RuntimeException("Entity: "+ entity + ", Url: " + url, e);
 		}
 	}
 }

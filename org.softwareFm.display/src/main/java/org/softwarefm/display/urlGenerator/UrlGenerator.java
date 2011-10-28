@@ -24,7 +24,7 @@ public class UrlGenerator implements IUrlGenerator {
 		if (data == null || data.isEmpty())
 			return null;
 		Object[] values = new String[2 * keys.length + 2];
-		for (int i = 0; i < keys.length; i++) {
+		for (int i = 0; i <  keys.length; i ++) {
 			Object key = keys[i];
 			Object value = data.get(key);
 			if (value == null)
@@ -33,12 +33,12 @@ public class UrlGenerator implements IUrlGenerator {
 				else
 					throw new NullPointerException(MessageFormat.format(DisplayConstants.cannotFindValueForKey, key, data));
 			String cleaned = Strings.forUrl(value.toString());
-			values[2 * i + 2] = cleaned;
-			values[2 * i + 3] = cleaned.replace(".", "/");
+			values[2*i + 2] = cleaned;
+			values[2*i + 3] = cleaned.replace(".", "/");
 
 		}
 		values[0] = subString(values[2], 0, 2);
-		values[1] = subString(values[2], 2, 4);
+		values[1] = subString(values[2], 2,4);
 		return MessageFormat.format(pattern, values);
 	}
 

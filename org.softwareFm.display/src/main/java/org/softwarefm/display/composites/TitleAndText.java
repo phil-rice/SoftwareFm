@@ -58,12 +58,10 @@ public class TitleAndText extends AbstractTitleAndText<Text> {
 	public void addModifyListener(ModifyListener listener) {
 		text.addModifyListener(listener);
 	}
-
 	@Override
 	public void removeModifyListener(ModifyListener listener) {
 		text.removeModifyListener(listener);
 	}
-
 	public static void main(String[] args) {
 		Swts.display("TitleAndText", new IFunction1<Composite, Composite>() {
 			@Override

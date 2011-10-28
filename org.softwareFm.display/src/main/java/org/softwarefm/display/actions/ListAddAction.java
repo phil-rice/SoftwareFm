@@ -16,15 +16,15 @@ public class ListAddAction implements IAction {
 		final List<String> currentList = Lists.nullSafe((List<String>) actionContext.dataGetter.getDataFor(key));
 
 		actionContext.editorFactory.displayEditor(actionContext, displayerDefn, displayer);
-		// actionContext.editorFactory.displayEditor(displayer, "editor.text", displayerDefn, actionContext, actionData, new ICallback<Object>() {
-		// @Override
-		// public void process(Object t) throws Exception {
-		// String string = Strings.nullSafeToString(t);
-		// boolean actuallyEmpty = currentList.size() == 1 && currentList.get(0).trim().length() == 0;
-		// List<String> newList = actuallyEmpty ? Arrays.asList(string) : Lists.append(currentList, string);
-		// actionContext.updateStore.update(actionData, key, newList.toArray(new String[0]));
-		// }
-		// }, "");
+//		actionContext.editorFactory.displayEditor(displayer, "editor.text", displayerDefn, actionContext, actionData, new ICallback<Object>() {
+//			@Override
+//			public void process(Object t) throws Exception {
+//				String string = Strings.nullSafeToString(t);
+//				boolean actuallyEmpty = currentList.size() == 1 && currentList.get(0).trim().length() == 0;
+//				List<String> newList = actuallyEmpty ? Arrays.asList(string) : Lists.append(currentList, string);
+//				actionContext.updateStore.update(actionData, key, newList.toArray(new String[0]));
+//			}
+//		}, "");
 	}
 
 }

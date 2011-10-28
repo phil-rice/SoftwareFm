@@ -7,6 +7,7 @@ import org.softwareFm.display.displayer.IDisplayer;
 public interface IEditorFactory {
 	IEditorFactory register(String name, IEditor editor);
 
+
 	void cancel();
 
 	void displayEditor(ActionContext actionContext, DisplayerDefn displayerDefn, IDisplayer displayer);

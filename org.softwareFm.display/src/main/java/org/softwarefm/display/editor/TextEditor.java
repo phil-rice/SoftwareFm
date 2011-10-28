@@ -1,5 +1,6 @@
 package org.softwareFm.display.editor;
 
+
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.softwareFm.display.composites.AbstractTitleAndText;
@@ -16,5 +17,6 @@ public class TextEditor extends AbstractTextEditor<Text> {
 	public static void main(String[] args) {
 		Editors.display("TextEditor", new TextEditor(), "data.entity.title1", "Text1", "data.entity.title2", "Text2");
 	}
+
 
 }

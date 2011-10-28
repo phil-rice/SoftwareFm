@@ -15,4 +15,5 @@ public interface IEditor extends IHasControl {
 
 	IButtonParent actionButtonParent();
 
+
 }

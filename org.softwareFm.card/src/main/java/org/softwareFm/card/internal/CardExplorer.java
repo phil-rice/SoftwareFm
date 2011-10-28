@@ -90,6 +90,7 @@ public class CardExplorer implements IHasComposite {
 				if (CardConfig.defaultBodgedUrlFragments.contains(keyValue.key)) {
 					final String newUrl = card.url() + "/" + keyValue.key;
 					card.cardConfig().cardDataStore.processDataFor(newUrl, new ICardDataStoreCallback<Void>() {
+						@SuppressWarnings("unchecked")
 						@Override
 						public Void process(String url, Map<String, Object> result) throws Exception {
 							List<KeyValue> list = card.cardConfig().aggregator.apply(result);

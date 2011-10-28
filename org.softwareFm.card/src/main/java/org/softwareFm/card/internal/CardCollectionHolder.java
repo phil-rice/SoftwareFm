@@ -44,6 +44,7 @@ public class CardCollectionHolder implements IHasComposite {
 			setLayout(new FillWithAspectRatioLayoutManager(3, 2));
 		}
 
+		@SuppressWarnings("unchecked")
 		protected void setKeyValue(final String rootUrl, KeyValue keyValue) {
 			Object value = keyValue.value;
 			Swts.removeAllChildren(this);

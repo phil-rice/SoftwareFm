@@ -11,7 +11,7 @@ public class ResourceGetterMock implements IResourceGetter {
 	private final Map<String, String> map;
 
 	public ResourceGetterMock(String... namesAndValues) {
-		this.map = Maps.<String, String> makeLinkedMap((Object[]) namesAndValues);
+		this.map = Maps.<String,String>makeLinkedMap((Object[])namesAndValues);
 	}
 
 	@Override

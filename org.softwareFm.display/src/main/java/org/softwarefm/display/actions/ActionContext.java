@@ -19,8 +19,9 @@ public class ActionContext {
 	public final IBrowser internalBrowser;
 	public final ICallback<Throwable> exceptionHandler;
 	public final IFunction1<String, String> entityToUrlGetter;
+	
 
-	public ActionContext(IHasRightHandSide rightHandSide, ActionStore actionStore, IDataGetter dataGetter, IFunction1<String, String> entityToUrlGetter, CompositeConfig compositeConfig, IEditorFactory editorFactory, IUpdateStore updateStore, IBrowser internalBrowser, ICallback<Throwable> exceptionHandler) {
+	public ActionContext(IHasRightHandSide rightHandSide, ActionStore actionStore, IDataGetter dataGetter,IFunction1<String, String> entityToUrlGetter,  CompositeConfig compositeConfig, IEditorFactory editorFactory, IUpdateStore updateStore, IBrowser internalBrowser, ICallback<Throwable> exceptionHandler) {
 		this.rightHandSide = rightHandSide;
 		this.actionStore = actionStore;
 		this.dataGetter = dataGetter;
@@ -31,5 +32,6 @@ public class ActionContext {
 		this.internalBrowser = internalBrowser;
 		this.exceptionHandler = exceptionHandler;
 	}
+	
 
 }

@@ -25,10 +25,10 @@ public class ImageButtonConfig {
 		checkImages(true, depressedBackground, normalBackground, mainImage, overlayImage);
 	}
 
-	public void validate() {
+	
+	public void validate(){
 		checkImages(false, depressedBackground, normalBackground, mainImage);
 	}
-
 	private void checkImages(boolean allowNull, String... imageNames) {
 		for (String image : imageNames)
 			if (image != null)
@@ -43,8 +43,8 @@ public class ImageButtonConfig {
 	public ImageButtonConfig withImage(String mainImage, String overlayImage) {
 		return new ImageButtonConfig(layout, imageRegistry, depressedBackground, normalBackground, mainImage, overlayImage);
 	}
-
-	public static ImageButtonConfig forTests(ImageRegistry imageRegistry) {
+	
+	public static ImageButtonConfig forTests(ImageRegistry imageRegistry){
 		return new ImageButtonConfig(new SoftwareFmLayout(), imageRegistry, BackdropAnchor.depressed, BackdropAnchor.main, null, null);
 	}
 }

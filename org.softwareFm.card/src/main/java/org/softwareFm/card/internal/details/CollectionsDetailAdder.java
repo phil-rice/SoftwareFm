@@ -11,6 +11,7 @@ import org.softwareFm.card.internal.CardCollectionHolder;
 import org.softwareFm.display.composites.IHasControl;
 
 public class CollectionsDetailAdder implements IDetailAdder {
+	@SuppressWarnings("unchecked")
 	@Override
 	public IHasControl add(Composite parentComposite, ICard parentCard, CardConfig cardConfig, KeyValue keyValue, ICardSelectedListener listener) {
 		if (keyValue.value instanceof List<?>)

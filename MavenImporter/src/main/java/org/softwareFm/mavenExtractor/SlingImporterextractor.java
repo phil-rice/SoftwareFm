@@ -35,6 +35,7 @@ public class SlingImporterextractor implements IExtractorCallback {
 	private int count;
 	private int postedCount;
 	private final List<String> missingProperties = Lists.newList();
+	private final IUrlGenerator digestUrlGenerator;
 
 	public SlingImporterextractor(File directory, IRepositoryFacard facard, int maxCount) {
 		this.directory = directory;
@@ -45,6 +46,7 @@ public class SlingImporterextractor implements IExtractorCallback {
 		Map<String, IUrlGenerator> urlGeneratorMap = guiDataStore.getUrlGeneratorMap();
 		jarUrlGenerator = urlGeneratorMap.get("urlGenerator.jar");
 		versionUrlGenerator = urlGeneratorMap.get("urlGenerator.version");
+		digestUrlGenerator = urlGeneratorMap.get("urlGenerator.digest");
 		artifactUrlGenerator = urlGeneratorMap.get("urlGenerator.artifact");
 		groupUrlGenerator = urlGeneratorMap.get("urlGenerator.group");
 	}
@@ -62,9 +64,9 @@ public class SlingImporterextractor implements IExtractorCallback {
 		if (file.exists()) {
 			String digest = Files.digestAsHexString(file);
 			importJar(jarUrl, model, file, digest);
-			importVersion(jarUrl, model, file, digest);
-			importArtifact(jarUrl, model, file, digest);
 			importGroup(model);
+			importArtifact(jarUrl, model, file, digest);
+			importVersion(jarUrl, model, file, digest);
 			postedCount++;
 		}
 	}
@@ -93,6 +95,8 @@ public class SlingImporterextractor implements IExtractorCallback {
 		addMustExist(model, map, MavenImporterConstants.slingResourceTypeKey, MavenImporterConstants.groupResourceType);
 		String url = groupUrlGenerator.findUrlFor(Maps.<String, Object> makeMap(ConfigurationConstants.groupId, groupId));
 		facard.post(url, map, IResponseCallback.Utils.noCallback()).get(); // ok so we need a bit more data here...
+		noteAsCollection(url, "artifact");
+
 	}
 
 	private void importArtifact(String jarUrl, Model model, File file, String digest) throws Exception {
@@ -107,8 +111,10 @@ public class SlingImporterextractor implements IExtractorCallback {
 		IssueManagement issueManagement = model.getIssueManagement();
 		if (issueManagement != null)
 			addIfExists(model, map, MavenImporterConstants.issueManagementUrlKey, issueManagement.getUrl());
+
 		String url = artifactUrlGenerator.findUrlFor(Maps.<String, Object> makeMap(ConfigurationConstants.groupId, groupId, ConfigurationConstants.artifactId, artifactId));
 		facard.post(url, map, IResponseCallback.Utils.noCallback()).get();
+		noteAsCollection(url, "version");
 
 	}
 
@@ -121,14 +127,28 @@ public class SlingImporterextractor implements IExtractorCallback {
 		addMustExist(model, map, MavenImporterConstants.artifactIdKey, artifactId);
 		addMustExist(model, map, MavenImporterConstants.versionKey, version);
 		addMustExist(model, map, MavenImporterConstants.slingResourceTypeKey, MavenImporterConstants.versionResourceType);
+
+		String urlForVersion = artifactUrlGenerator.findUrlFor(Maps.<String, Object> makeMap(ConfigurationConstants.groupId, groupId, ConfigurationConstants.artifactId, artifactId, ConfigurationConstants.version, ""));
+		facard.post(urlForVersion, Maps.<String, Object> makeMap(MavenImporterConstants.slingResourceTypeKey, MavenImporterConstants.collectionResourceType), IResponseCallback.Utils.noCallback());
+
 		String url = versionUrlGenerator.findUrlFor(Maps.<String, Object> makeMap(ConfigurationConstants.groupId, groupId, ConfigurationConstants.artifactId, artifactId, ConfigurationConstants.version, version));
 		facard.post(url, map, IResponseCallback.Utils.noCallback()).get();
-		String digestUrl = url + "/" + digest;
+
+		String urlForDigest = digestUrlGenerator.findUrlFor(Maps.<String, Object> makeMap(ConfigurationConstants.groupId, groupId, ConfigurationConstants.artifactId, artifactId, ConfigurationConstants.version, version, JdtConstants.hexDigestKey, digest));
+		facard.post(urlForDigest, Maps.<String, Object> makeMap(MavenImporterConstants.slingResourceTypeKey, MavenImporterConstants.collectionResourceType), IResponseCallback.Utils.noCallback());
+		noteAsCollection(url, "digest");
+
+		String digestUrl = digestUrlGenerator.findUrlFor(Maps.<String, Object> makeMap(ConfigurationConstants.groupId, groupId, ConfigurationConstants.artifactId, artifactId, ConfigurationConstants.version, version, JdtConstants.hexDigestKey, digest));
 		facard.post(digestUrl, Maps.<String, Object> makeMap(JdtConstants.hexDigestKey, digest, //
 				MavenImporterConstants.jarUrl, jarUrl,//
 				MavenImporterConstants.slingResourceTypeKey, MavenImporterConstants.versionJarResourceType,//
 				MavenImporterConstants.found, "Spidered from Maven Repository"), IResponseCallback.Utils.noCallback()).get();
 
+	}
+
+	private void noteAsCollection(String url, String... collections) {
+		for (String collection : collections)
+			facard.post(url + "/" + collection, Maps.<String, Object> makeMap(MavenImporterConstants.slingResourceTypeKey, MavenImporterConstants.collectionResourceType), IResponseCallback.Utils.noCallback());
 	}
 
 	private void addMustExist(Model model, Map<String, Object> map, String key, String value) {

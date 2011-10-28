@@ -37,7 +37,6 @@ public class CardUnit implements IHasComposite {
 		text = new Text(sashForm, SWT.WRAP);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void main(String[] args) {
 		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacardForCardExplorer();
 		try {

@@ -11,6 +11,7 @@ public class MavenImporterConstants {
 	public static DataSource dataSource;
 	public static String slingResourceTypeKey = "sling:resourceType";
 
+
 	public static final String artifactIdKey = "artifactId";
 	public static final String groupIdKey = "groupId";
 	public static final String versionKey = "version";
@@ -27,11 +28,24 @@ public class MavenImporterConstants {
 	public static final String jarUrl = "url";
 	public static final String found = "found";
 
-	public static final String jarResourceType = "softwareFm_jar";
-	public static final String groupResourceType = "softwareFm_group";
-	public static final String artifactResourceType = "softwareFm_artifact";
-	public static final String versionResourceType = "softwareFm_version";
-	public static final String versionJarResourceType = "softwareFm_version_jar";
+	public static final String collectionResourceType = "collection";
+	public static final String jarResourceType = "jar";
+	public static final String groupResourceType = "group";
+	public static final String artifactResourceType = "artifact";
+	public static final String versionResourceType = "version";
+	public static final String versionJarResourceType = "jar";
+	public static final String usesResourceType = "uses";
+	public static final String usedByResourceType = "usedBy";
+
+	public static final String mailingListNameKey = "name";
+	public static final String mailingListArchiveKey = "archive";
+	public static final String mailingListOtherArchivesKey = "otherArchives";
+	public static final String mailingListPostKey = "post";
+	public static final String mailingListSubscribeKey = "subscribe";
+	public static final String mailingListUnsubscribeKey = "unsubscribe";
+
+
+
 
 	static {
 		BasicDataSource basicDataSource = new BasicDataSource();

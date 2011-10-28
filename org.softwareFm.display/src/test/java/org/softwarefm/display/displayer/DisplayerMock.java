@@ -1,5 +1,6 @@
 package org.softwareFm.display.displayer;
 
+
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.display.actions.ActionContext;
 import org.softwareFm.display.composites.CompositeConfig;
@@ -26,5 +27,6 @@ public class DisplayerMock implements IDisplayerFactory {
 	public void data(ActionContext actionContext, DisplayerDefn defn, IDisplayer displayer, String entity, String url) {
 		throw new UnsupportedOperationException();
 	}
+
 
 }

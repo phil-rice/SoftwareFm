@@ -28,7 +28,7 @@ public class GuiBuilder {
 		return new DisplayerDefn(displayer);
 	}
 
-	public SmallButtonDefn smallButton(final String id, String titleId, String smallButtonId, String mainImageId, DisplayerDefn... defns) {
+	public SmallButtonDefn smallButton(final String id,String titleId, String smallButtonId, String mainImageId, DisplayerDefn... defns) {
 		ISmallButtonFactory smallButtonFactory = smallButtonStore.get(smallButtonId);
 		return new SmallButtonDefn(id, titleId, mainImageId, actionStore, smallButtonFactory, defns);
 	}
@@ -46,7 +46,6 @@ public class GuiBuilder {
 	public ActionDefn action(String actionId, String mainImageId) {
 		return new ActionDefn(actionId, mainImageId, null);
 	}
-
 	public ActionDefn action(String actionId, String mainImageId, String overlayId) {
 		return new ActionDefn(actionId, mainImageId, overlayId);
 	}
@@ -54,11 +53,9 @@ public class GuiBuilder {
 	public ActionStore getActionStore() {
 		return actionStore;
 	}
-
 	public DisplayerStore getDisplayerStore() {
 		return displayerStore;
 	}
-
 	public SmallButtonStore getSmallButtonStore() {
 		return smallButtonStore;
 	}

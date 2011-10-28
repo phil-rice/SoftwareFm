@@ -116,16 +116,16 @@ public class DisplayerDefnTest extends TestCase {
 		assertSame(displayerDefn, displayerDefn.editorIgnoreGuard("xxx"));
 		assertEquals("xxx", displayerDefn.editorIgnoresGuardKey);
 	}
-
-	public void testCannotSetEditorIgnoresGuardTwice() {
-		displayerDefn.editorIgnoreGuard("xxx");
-		IllegalStateException e = Tests.assertThrows(IllegalStateException.class, new Runnable() {
-			@Override
-			public void run() {
-				displayerDefn.editorIgnoreGuard("yyy");
-			}
-		});
-		assertEquals("Cannot set value of editorIgnoreGuard twice. Current value [xxx]. New value [yyy]", e.getMessage());
+	
+	public void testCannotSetEditorIgnoresGuardTwice(){
+		 displayerDefn.editorIgnoreGuard("xxx");
+		 IllegalStateException e = Tests.assertThrows(IllegalStateException.class, new Runnable() {
+			 @Override
+			 public void run() {
+				 displayerDefn.editorIgnoreGuard("yyy");
+			 }
+		 });
+		 assertEquals("Cannot set value of editorIgnoreGuard twice. Current value [xxx]. New value [yyy]", e.getMessage());
 		assertEquals("xxx", displayerDefn.editorIgnoresGuardKey);
 	}
 
