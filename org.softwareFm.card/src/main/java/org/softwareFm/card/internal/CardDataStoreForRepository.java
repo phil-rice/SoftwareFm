@@ -4,15 +4,16 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardDataStoreCallback;
+import org.softwareFm.card.api.IMutableCardDataStore;
+import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
 import org.softwareFm.repositoryFacardConstants.RepositoryFacardConstants;
 import org.softwareFm.utilities.exceptions.WrappedException;
 
-public class CardDataStoreForRepository implements ICardDataStore {
+public class CardDataStoreForRepository implements IMutableCardDataStore {
 	private final Control from;
 	private final IRepositoryFacard facard;
 
@@ -47,5 +48,10 @@ public class CardDataStoreForRepository implements ICardDataStore {
 			}
 		});
 		return future;
+	}
+
+	@Override
+	public void put(String url, Map<String, Object> map) {
+		this.facard.post(url, map, IResponseCallback.Utils.noCallback());
 	}
 }

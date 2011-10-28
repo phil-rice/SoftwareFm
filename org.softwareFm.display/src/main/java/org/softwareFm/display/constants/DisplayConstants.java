@@ -45,7 +45,7 @@ public class DisplayConstants {
 			rssFeedType, "http://www.theregister.co.uk/cloud/headlines.atom",//
 			rssFeedType, "http://www.theregister.co.uk/science/headlines.atom",//
 			rssFeedType, "http://feeds.geekzone.co.nz/GeekzoneBlogUsers" };//
-	public static final String buttonCancelsTitle = "button.cancel.title";
+	public static final String buttonCancelTitle = "button.cancel.title";
 	public static final String buttonOkTitle = "button.ok.title";
 
 }

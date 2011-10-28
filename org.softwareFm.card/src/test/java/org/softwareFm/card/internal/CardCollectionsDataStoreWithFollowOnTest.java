@@ -59,8 +59,8 @@ public class CardCollectionsDataStoreWithFollowOnTest extends AbstractCardCollec
 		for (int i = 0; i < status.keyValueFutures.size(); i++) {
 			Future<KeyValue> f = status.keyValueFutures.get(i);
 			kickAndDispatch(f);
+			assertEquals("I: " + i, i != status.keyValueFutures.size() - 1, memory.finishedCount == 0);
 		}
-		CardMock card = (CardMock) cardHolder.getCard();
 	}
 
 	@Override

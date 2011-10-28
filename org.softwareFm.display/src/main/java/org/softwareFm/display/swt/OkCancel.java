@@ -16,7 +16,7 @@ public class OkCancel {
 	public OkCancel(IButtonParent buttonParent, CompositeConfig config, final Runnable onAccept, final Runnable onCancel) {
 		IResourceGetter resourceGetter = config.resourceGetter;
 		Composite buttonComposite = buttonParent.getButtonComposite();
-		Button cancelButton = Swts.makePushButton(buttonComposite, resourceGetter, DisplayConstants.buttonCancelsTitle, onCancel);
+		Button cancelButton = Swts.makePushButton(buttonComposite, resourceGetter, DisplayConstants.buttonCancelTitle, onCancel);
 		okButton = Swts.makePushButton(buttonComposite, resourceGetter, DisplayConstants.buttonOkTitle, onAccept);
 		cancelButton.setLayoutData(new RowData(config.layout.okCancelWidth, config.layout.okCancelHeight));
 		okButton.setLayoutData(new RowData(config.layout.okCancelWidth, config.layout.okCancelHeight));

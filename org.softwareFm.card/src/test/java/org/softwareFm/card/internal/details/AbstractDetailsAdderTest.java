@@ -6,10 +6,12 @@ import org.softwareFm.card.api.ICardSelectedListener;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.card.internal.CardCollectionHolder;
 import org.softwareFm.display.composites.IHasControl;
+import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.strings.Strings;
 
 public abstract class AbstractDetailsAdderTest<T extends IDetailAdder> extends AbstractDetailTest {
 
-	private T adder;
+	protected T adder;
 	protected DetailFactory detailFactory;
 
 	@Override
@@ -28,5 +30,18 @@ public abstract class AbstractDetailsAdderTest<T extends IDetailAdder> extends A
 		assertSame(keyValue, holder.getKeyValue());
 		assertEquals(expectedUrl, holder.getRootUrl());
 	}
+	
+	protected IFunction1<KeyValue, String> justValue= new IFunction1<KeyValue, String>() {
+		@Override
+		public String apply(KeyValue from) throws Exception {
+			return Strings.nullSafeToString(from.value);
+		}
+	};
+	protected IFunction1<KeyValue, String> addPrefixToValue= new IFunction1<KeyValue, String>() {
+		@Override
+		public String apply(KeyValue from) throws Exception {
+			return "pre_"+ from.value;
+		}
+	};
 
 }

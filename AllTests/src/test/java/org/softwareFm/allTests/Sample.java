@@ -14,11 +14,11 @@ public class Sample {
 	
 	@SuppressWarnings("unused")
 	/** This is my comment about x*/
-
 	public static void main(String[] args) {
 		Logger logger = Logger.getLogger(Sample.class);
 		new Ant();
 		new TestSuite();
+		Math.random();
 		File file = new File("");
 		RecursiveTask<String> task;
 	}

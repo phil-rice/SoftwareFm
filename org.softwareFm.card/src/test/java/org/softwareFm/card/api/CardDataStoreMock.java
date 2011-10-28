@@ -1,8 +1,6 @@
 package org.softwareFm.card.api;
 
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 import org.softwareFm.utilities.exceptions.WrappedException;
@@ -35,16 +33,10 @@ public class CardDataStoreMock implements IMutableCardDataStore {
 		}
 	}
 
+
 	@Override
-	public void put(String url, List<KeyValue> keyValues) {
-		Map<String, Object> contents = Maps.findOrCreate(map, url, new Callable<Map<String, Object>>() {
-			@Override
-			public Map<String, Object> call() throws Exception {
-				return Maps.newMap();
-			}
-		});
-		for (KeyValue keyValue : keyValues)
-			contents.put(keyValue.key, keyValue.value);
+	public void put(String url, Map<String, Object> map) {
+		throw new UnsupportedOperationException();
 	}
 
 }

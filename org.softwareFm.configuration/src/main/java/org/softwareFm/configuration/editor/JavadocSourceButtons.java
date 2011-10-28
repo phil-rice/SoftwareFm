@@ -26,7 +26,7 @@ public class JavadocSourceButtons {
 	public JavadocSourceButtons(IButtonParent buttonParent, CompositeConfig config, Runnable onCancel, final Runnable copyToEclipse, final Runnable copyToSoftwareFm, Runnable copyEclipseToSoftwareFm, Runnable nuke) {
 		IResourceGetter resourceGetter = config.resourceGetter;
 		Composite buttonComposite = buttonParent.getButtonComposite();
-		cancelButton = Swts.makePushButton(buttonComposite, resourceGetter, DisplayConstants.buttonCancelsTitle, onCancel);
+		cancelButton = Swts.makePushButton(buttonComposite, resourceGetter, DisplayConstants.buttonCancelTitle, onCancel);
 		copyToEclipseButton = Swts.makePushButton(buttonComposite, resourceGetter, ConfigurationConstants.buttonCopyToEclipseTitle, copyToEclipse);
 		copyToSoftwareFmButton = Swts.makePushButton(buttonComposite, resourceGetter, ConfigurationConstants.buttonCopyToSoftwareFmTitle, copyToSoftwareFm);
 		copyToEclipseAndSoftwareFmButton = Swts.makePushButton(buttonComposite, resourceGetter, ConfigurationConstants.buttonCopyToBothTitle, new Runnable() {

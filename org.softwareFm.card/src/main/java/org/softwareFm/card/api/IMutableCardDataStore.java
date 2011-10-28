@@ -1,9 +1,9 @@
 package org.softwareFm.card.api;
 
-import java.util.List;
+import java.util.Map;
 
 public interface IMutableCardDataStore extends ICardDataStore {
 
-	void put(String url, List<KeyValue> keyValues);
+	void put(String url, Map<String,Object> map);
 
 }

@@ -56,7 +56,7 @@ public abstract class AbstractDisplayerEditorIntegrationTest<D extends IDisplaye
 		imageRegistry = new ImageRegistry();
 		new BasicImageRegisterConfigurator().registerWith(shell.getDisplay(), imageRegistry);
 		resourceGetter = IResourceGetter.Utils.noResources().//
-				with(new ResourceGetterMock(DisplayConstants.buttonCancelsTitle, "cancelValue", DisplayConstants.buttonOkTitle, "okValue")).//
+				with(new ResourceGetterMock(DisplayConstants.buttonCancelTitle, "cancelValue", DisplayConstants.buttonOkTitle, "okValue")).//
 				with(makeResources());
 		editor = makeEditor();
 		rightHandSide = IHasRightHandSide.Utils.makeRightHandSide(shell);

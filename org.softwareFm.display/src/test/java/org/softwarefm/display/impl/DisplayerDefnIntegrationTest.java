@@ -245,7 +245,7 @@ public class DisplayerDefnIntegrationTest extends AbstractDisplayerEditorIntegra
 	protected IResourceGetter makeResources() {
 		IResourceGetter resourceGetter = new ResourceGetterMock(//
 				"someTitle", "registeredTitle", //
-				DisplayConstants.buttonCancelsTitle, "cancelValue", //
+				DisplayConstants.buttonCancelTitle, "cancelValue", //
 				DisplayConstants.buttonOkTitle, "okValue", "helpKey", "helpValue");
 		return resourceGetter;
 	}

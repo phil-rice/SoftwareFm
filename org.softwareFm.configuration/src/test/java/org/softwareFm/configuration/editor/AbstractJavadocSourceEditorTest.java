@@ -383,7 +383,7 @@ public abstract class AbstractJavadocSourceEditorTest extends AbstractDisplayerE
 				ConfigurationConstants.setEclipseValue, "SetEclipseValue",//
 				"button.eclipseNotUrl.title", "notUrl",//
 				"button.matches.title", "matches",//
-				DisplayConstants.buttonCancelsTitle, "cancelValue", //
+				DisplayConstants.buttonCancelTitle, "cancelValue", //
 				DisplayConstants.buttonOkTitle, "okValue", //
 				"helpKey", "helpValue"));
 	}

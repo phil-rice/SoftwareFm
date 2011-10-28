@@ -12,6 +12,7 @@ import org.softwareFm.card.internal.KeyValueAggregator;
 import org.softwareFm.card.internal.details.DetailFactory;
 import org.softwareFm.card.internal.details.IDetailAdder;
 import org.softwareFm.card.internal.modifiers.KeyValueListSorter;
+import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.data.ResourceGetterMock;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -63,6 +64,8 @@ public class CardConfig {
 		this.resourceGetter = IResourceGetter.Utils.noResources().with(//
 				new ResourceGetterMock("card.name.title", "Name", //
 						"card.value.title", "Value", //
+						DisplayConstants.buttonOkTitle, "Ok",//
+						DisplayConstants.buttonCancelTitle, "Cancel",//
 						"navBar.prev.title", "<", //
 						"navBar.next.title", ">",//
 						"card.holder.loading.text", "loading"));
