@@ -13,8 +13,11 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICardConfigurator;
+import org.softwareFm.card.api.IDetailFactory;
 import org.softwareFm.card.api.IKeyValueListModifier;
 import org.softwareFm.card.api.KeyValue;
+import org.softwareFm.card.internal.details.CollectionsDetailAdder;
+import org.softwareFm.card.internal.details.ListDetailAdder;
 import org.softwareFm.card.internal.modifiers.KeyValueListSorter;
 import org.softwareFm.card.internal.modifiers.KeyValueMissingItemsAdder;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
@@ -109,9 +112,12 @@ public class BasicCardConfigurator implements ICardConfigurator {
 
 		List<IKeyValueListModifier> modifiers = Arrays.asList(new KeyValueMissingItemsAdder(), new KeyValueListSorter());
 
+		IDetailFactory detailFactory = IDetailFactory.Utils.detailsFactory(new CollectionsDetailAdder(), new ListDetailAdder());
+
 		return config.withNameFn(nameFn).withValueFn(valueFn).withHideFn(hideFn).//
 				withCardIconFn(cardIconFn).withResourceGetter(resourceGetter).withAggregatorTags(tagNames).//
 				withNavIconFn(navIconFn).//
+				withDetailsFactory(detailFactory).//
 				withSorter(KeyValue.Utils.orderedKeyComparator(order)).//
 				withKeyValues(modifiers);
 	}

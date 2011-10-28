@@ -16,6 +16,7 @@ public class ListDetailAdder implements IDetailAdder {
 		if (keyValue.value instanceof List<?>) {
 			CardCollectionHolder result = new CardCollectionHolder(parentComposite, cardConfig);
 			result.setKeyValue(parentCard.url(), keyValue);
+			result.addCardSelectedListener(listener);
 			return result;
 		} else
 			return null;

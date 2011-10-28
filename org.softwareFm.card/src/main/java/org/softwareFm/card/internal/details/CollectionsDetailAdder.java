@@ -20,6 +20,7 @@ public class CollectionsDetailAdder implements IDetailAdder {
 					if (kv.value.equals("collection")) {
 						CardCollectionHolder result = new CardCollectionHolder(parentComposite, cardConfig);
 						result.setKeyValue(parentCard.url() + "/" + keyValue.key, keyValue);
+						result.addCardSelectedListener(listener);
 						return result;
 					}
 		return null;
