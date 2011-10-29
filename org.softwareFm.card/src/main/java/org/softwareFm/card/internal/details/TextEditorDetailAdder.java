@@ -11,9 +11,9 @@ import org.softwareFm.display.composites.IHasControl;
 public class TextEditorDetailAdder implements IDetailAdder {
 
 	@Override
-	public IHasControl add(Composite parentComposite, ICard parentCard, CardConfig cardConfig, KeyValue keyValue, ICardSelectedListener listener) {
+	public IHasControl add(Composite parentComposite, ICard parentCard, CardConfig cardConfig, KeyValue keyValue, ICardSelectedListener listener, Runnable afterEdit) {
 		if (keyValue.value instanceof String)
-			return new TextEditor(parentComposite, parentCard,cardConfig, keyValue);
+			return new TextEditor(parentComposite, parentCard,cardConfig, keyValue, afterEdit);
 		else
 			return null;
 	}

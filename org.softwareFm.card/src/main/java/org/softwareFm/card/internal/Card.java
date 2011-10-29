@@ -23,6 +23,7 @@ import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ILineSelectedListener;
 import org.softwareFm.card.api.KeyValue;
+import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -39,6 +40,7 @@ public class Card implements ICard {
 	private final CardConfig cardConfig;
 	private final Map<String, Object> rawData;
 	private final Object lock = new Object();
+	private String cardType;
 
 	public Card(Composite parent, final CardConfig cardConfig, final String url, Map<String, Object> rawData) {
 		this.cardConfig = cardConfig;
@@ -47,6 +49,7 @@ public class Card implements ICard {
 		this.table = new Table(parent, cardConfig.style | SWT.BORDER);
 		this.nameColumn = new TableColumn(table, SWT.NONE);
 		this.valueColumn = new TableColumn(table, SWT.NONE);
+		this.cardType = (String) rawData.get(CardConstants.slingResourceType);
 		data = cardConfig.modify(this, rawData);
 
 		table.setHeaderVisible(false);
@@ -186,6 +189,11 @@ public class Card implements ICard {
 				return card.getComposite();
 			}
 		});
+	}
+
+	@Override
+	public String cardType() {
+		return cardType;
 	}
 
 }

@@ -48,7 +48,6 @@ public class TextEditorDetailAdderTest extends AbstractDetailsAdderTest<TextEdit
 		checkHasTextBasedOnCardConfigValueFn("stringValue", justValue);
 		checkHasTextBasedOnCardConfigValueFn("pre_stringValue", addPrefixToValue);
 	}
-	
 
 	public void testHasOkButtonWithNameFromCardConfigResourceGetter() {
 		checkHasOkButtonWithNameFromCardConfigResourceGetter("ok");
@@ -104,7 +103,7 @@ public class TextEditorDetailAdderTest extends AbstractDetailsAdderTest<TextEdit
 		checkPressCausesDispose(textEditor, textEditor.getCancelButton());
 	}
 
-	public void testDoesntUpdateWhenPressed() {
+	public void testDoesntUpdateWhenCancelPressed() {
 		TextEditor textEditor = makeHolder(stringValue);
 		textEditor.getText().setText("some other value");
 		checkPressCausesDispose(textEditor, textEditor.getCancelButton());

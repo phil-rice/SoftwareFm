@@ -1,14 +1,10 @@
 package org.softwareFm.card.internal;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -18,17 +14,17 @@ import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardChangedListener;
 import org.softwareFm.card.api.ICardDataStore;
-import org.softwareFm.card.api.ICardDataStoreCallback;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardHolder;
 import org.softwareFm.card.api.ICardSelectedListener;
 import org.softwareFm.card.api.ILineSelectedListener;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.display.composites.IHasComposite;
+import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
@@ -49,9 +45,11 @@ public class CardExplorer implements IHasComposite {
 		};
 		ICallback<String> callbackToGotoUrl;
 		private Listener listener;
+		private final CardConfig cardConfig;
 
 		public CardExplorerComposite(final Composite parent, final CardConfig cardConfig, final String rootUrl) {
 			super(parent, SWT.H_SCROLL);
+			this.cardConfig = cardConfig;
 			callbackToGotoUrl = new ICallback<String>() {
 				@Override
 				public void process(String url) throws Exception {
@@ -71,103 +69,72 @@ public class CardExplorer implements IHasComposite {
 				@Override
 				public void cardChanged(ICardHolder cardHolder, ICard card) {
 					KeyValue keyValue = findDefaultChild(card);
-					setDetailCard(card, keyValue);
+					setDetail(card, keyValue);
 				}
-
 			});
 			cardHolder.addLineSelectedListener(new ILineSelectedListener() {
 				@Override
 				public void selected(ICard card, KeyValue keyValue) {
 					System.out.println("Card keyvalue: " + keyValue);
-					setDetailCard(card, keyValue);
+					setDetail(card, keyValue);
+					// setDetailCard(card, keyValue);
 				}
+
 			});
 		}
 
-		private void setDetailCard(final ICard card, final KeyValue keyValue) {
-			rawSetDetail(card, keyValue);
-			if (keyValue != null)
-				if (CardConfig.defaultBodgedUrlFragments.contains(keyValue.key)) {
-					final String newUrl = card.url() + "/" + keyValue.key;
-					card.cardConfig().cardDataStore.processDataFor(newUrl, new ICardDataStoreCallback<Void>() {
-						@SuppressWarnings("unchecked")
-						@Override
-						public Void process(String url, Map<String, Object> result) throws Exception {
-							List<KeyValue> list = card.cardConfig().aggregator.apply(result);
-							Collections.sort(list, card.cardConfig().comparator);
-							for (KeyValue nextKeyValue : list)
-								if (CardConfig.anotherBodge.contains(nextKeyValue.key)) {
-									List<KeyValue> list2 = Lists.newList();
-									for (KeyValue kv : (List<KeyValue>) nextKeyValue.value)
-										list2.add(new KeyValue(keyValue.key + "/" + kv.key, kv.value));
-									KeyValue keyValue2 = new KeyValue(keyValue.key, list2);
-									rawSetDetail(card, keyValue2);
-									return null;
-								}
-							return null;
-						}
-
-						@Override
-						public Void noData(String url) throws Exception {
-							return null;
-						}
-					});
-				}
-		}
-
-		private void rawSetDetail(final ICard card, final KeyValue keyValue) {
-			detail.setContent(null);
-			Swts.removeAllChildren(detail);
-			Swts.removeOldResizeListener(detail, listener);
-			// System.out.println("makeDetailCard: " + Strings.join(card.data(), "\n  "));
-			if (keyValue == null)
-				return;
-
-			final CardCollectionHolder detailChild = new CardCollectionHolder(detail, card.cardConfig());
-			detailChild.addCardSelectedListener(new ICardSelectedListener() {
+		private void setDetail(final ICard card, KeyValue keyValue) {
+			removeDetailContents();
+			final IHasControl newControl = cardConfig.detailFactory.makeDetail(detail, card, cardConfig, keyValue, new ICardSelectedListener() {
 				@Override
 				public void cardSelected(ICard card) {
 					ICallback.Utils.call(callbackToGotoUrl, card.url());
 				}
-			});
-			final Composite composite = detailChild.getComposite();
-			composite.setBackground(composite.getDisplay().getSystemColor(SWT.COLOR_GREEN));
-			detailChild.setKeyValue(card.url(), keyValue);
-
-			listener = new Listener() {
+			}, new Runnable() {
 				@Override
-				public void handleEvent(Event event) {
-					// System.out.println("Resizing: " + detail.getClientArea());
-					Swts.setSizeToComputedSize(detailChild, SWT.DEFAULT, detail.getClientArea().height);
-					composite.layout();
+				public void run() {
+					ICallback.Utils.call(callbackToGotoUrl, card.url());
 				}
-			};
-			detail.addListener(SWT.Resize, listener);
-
-			if (detailChild != null) {
-				Rectangle initialClientArea = detail.getClientArea();
-				Swts.setSizeToComputedSize(detailChild, SWT.DEFAULT, initialClientArea.height);// calculate size
-
-				detail.setContent(detailChild.getControl());// this may add scroll bars
-
-				Rectangle afterPotentialScrollBarsAddedClientArea = detail.getClientArea();
-				Swts.setSizeToComputedSize(detailChild, SWT.DEFAULT, afterPotentialScrollBarsAddedClientArea.height); // so this resets the size if scroll bars were added
+			});
+			if (newControl != null) {
+				listener = new Listener() {
+					@Override
+					public void handleEvent(Event event) {
+						// System.out.println("Resizing: " + detail.getClientArea());
+						Swts.setSizeToComputedSize(newControl, SWT.DEFAULT, detail.getClientArea().height);
+						detail.layout();
+					}
+				};
+				detail.addListener(SWT.Resize, listener);
+				detail.setContent(null);
+				Swts.setSizeToComputedSize(newControl, SWT.DEFAULT, detail.getClientArea().height);
+				detail.setContent(newControl.getControl());
+				detail.layout();
 			}
 		}
 
+
+		private void removeDetailContents() {
+			detail.setContent(null);
+			Swts.removeAllChildren(detail);
+			Swts.removeOldResizeListener(detail, listener);
+		}
+
 		private KeyValue findDefaultChild(ICard card) {
-			for (KeyValue keyValue : card.data())
-				if (CardConfig.defaultBodgedUrlFragments.contains(keyValue.key)) {
-					Object value = keyValue.value;
-					return keyValue;
-				}
-			for (KeyValue keyValue : card.data())
-				if (keyValue.key.equals("nt:unstructured"))
-					return keyValue;
-			for (KeyValue keyValue : card.data())
-				if (CardConfig.anotherBodge.contains(keyValue.key))
-					return keyValue;
-			return null;
+			KeyValue result = Functions.call(card.cardConfig().defaultChildFn, card);
+			return result;
+//			for (KeyValue keyValue : card.data())
+//				if (CardConfig.defaultBodgedUrlFragments.contains(keyValue.key)) {
+//					Object value = keyValue.value;
+//					return keyValue;
+//				}
+//			for (KeyValue keyValue : card.data())
+//				if (keyValue.key.equals("nt:unstructured"))
+//					return keyValue;
+//			for (KeyValue keyValue : card.data())
+//				if (CardConfig.anotherBodge.contains(keyValue.key))
+//					return keyValue;
+//			return null;
 		}
 	}
 

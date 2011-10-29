@@ -12,15 +12,21 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.softwareFm.card.api.CardConfig;
+import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardConfigurator;
+import org.softwareFm.card.api.IDetailFactory;
 import org.softwareFm.card.api.IKeyValueListModifier;
 import org.softwareFm.card.api.KeyValue;
+import org.softwareFm.card.internal.details.CollectionsDetailAdder;
+import org.softwareFm.card.internal.details.ListDetailAdder;
+import org.softwareFm.card.internal.details.TextEditorDetailAdder;
 import org.softwareFm.card.internal.modifiers.KeyValueListSorter;
 import org.softwareFm.card.internal.modifiers.KeyValueMissingItemsAdder;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.title.TitleAnchor;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
 
@@ -109,11 +115,41 @@ public class BasicCardConfigurator implements ICardConfigurator {
 
 		List<IKeyValueListModifier> modifiers = Arrays.asList(new KeyValueMissingItemsAdder(), new KeyValueListSorter());
 
+		IDetailFactory detailFactory = IDetailFactory.Utils.detailsFactory(new CollectionsDetailAdder(), new ListDetailAdder(), new TextEditorDetailAdder());
+		IFunction1<ICard, KeyValue> defaultChildFn = new IFunction1<ICard, KeyValue>() {
+			final Map<String, String> typeToDefaultChildMap = Maps.makeMap("group", "artifact", "artifact", "version");
+
+			@Override
+			public KeyValue apply(ICard from) throws Exception {
+				String cardType = typeToDefaultChildMap.get(from.cardType());
+				for (KeyValue keyValue : from.data())
+					if (keyValue.key.equals(cardType))
+						return keyValue;
+				for (KeyValue keyValue : from.data())
+					if (keyValue.key.equals("nt:unstructured"))
+						return keyValue;
+				for (KeyValue keyValue : from.data())
+					if (keyValue.key.equals("group"))
+						return keyValue;
+				return null;
+			}
+
+			private KeyValue onlyItem(KeyValue keyValue) {
+				if (keyValue.value instanceof List) {
+					List<KeyValue> list = (List<KeyValue>) keyValue.value;
+					if (list.size() == 1)
+						return list.get(0);
+				}
+				return keyValue;
+			}
+		};
 		return config.withNameFn(nameFn).withValueFn(valueFn).withHideFn(hideFn).//
 				withCardIconFn(cardIconFn).withResourceGetter(resourceGetter).withAggregatorTags(tagNames).//
 				withNavIconFn(navIconFn).//
+				withDetailsFactory(detailFactory).//
+				withDefaultChildFn(defaultChildFn).//
 				withSorter(KeyValue.Utils.orderedKeyComparator(order)).//
-				withKeyValues(modifiers);
+				withKeyValueModifiers(modifiers);
 	}
 
 	private String findKey(KeyValue from) {

@@ -7,7 +7,6 @@ import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.IKeyValueListModifier;
 import org.softwareFm.card.api.KeyValue;
-import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.strings.Strings;
 
 public class KeyValueMissingItemsAdder implements IKeyValueListModifier {
@@ -17,9 +16,9 @@ public class KeyValueMissingItemsAdder implements IKeyValueListModifier {
 		String missing = cardConfig.resourceGetter.getStringOrNull("missing.list");
 		if (missing != null) {
 			List<String> artifacts = Strings.splitIgnoreBlanks(missing, ",");
-			String lastSegment = Functions.call(Strings.lastSegmentFn("/"), card.url());
-			if (artifacts.contains(lastSegment)) {
-				String missingForSegment = cardConfig.resourceGetter.getStringOrNull("missing." + lastSegment + ".list");
+			String cardType = card.cardType();
+			if (artifacts.contains(cardType)) {
+				String missingForSegment = cardConfig.resourceGetter.getStringOrNull("missing." + cardType + ".list");
 				if (missingForSegment != null) {
 					List<String> missingList = Strings.splitIgnoreBlanks(missingForSegment, ",");
 					for (KeyValue kv : rawList) {
