@@ -42,7 +42,11 @@ public class SlingWalker {
 					else
 						for (Entry<String, Object> entry : data.entrySet())
 							if (entry.getValue() instanceof Map)
-								walk(repository, client, url + "/" + entry.getKey(), depth + 1, visitor);
+								try {
+									walk(repository, client, url + "/" + entry.getKey(), depth + 1, visitor);
+								} catch (Exception e) {
+									visitor.exception(url,e);
+								}
 
 				}
 			}).get();
