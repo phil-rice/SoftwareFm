@@ -19,9 +19,11 @@ public class DetailFactory implements IDetailFactory {
 	}
 
 	@Override
-	public IHasControl makeDetail(Composite parentComposite, ICard parentCard, CardConfig cardConfig, KeyValue keyValue, ICardSelectedListener listener) {
+	public IHasControl makeDetail(Composite parentComposite, ICard parentCard, CardConfig cardConfig, KeyValue keyValue, ICardSelectedListener listener, Runnable afterEdit) {
+		if (keyValue == null)
+			return null;
 		for (IDetailAdder adder : detailAdders) {
-			IHasControl result = adder.add(parentComposite, parentCard, cardConfig, keyValue, listener);
+			IHasControl result = adder.add(parentComposite, parentCard, cardConfig, keyValue, listener, afterEdit);
 			if (result != null)
 				return result;
 		}

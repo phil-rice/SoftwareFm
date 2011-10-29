@@ -9,7 +9,7 @@ import org.softwareFm.display.composites.IHasControl;
 
 public interface IDetailFactory {
 
-	IHasControl makeDetail(Composite parentComposite, ICard parentCard, CardConfig cardConfig, KeyValue keyValue, ICardSelectedListener listener);
+	IHasControl makeDetail(Composite parentComposite, ICard parentCard, CardConfig cardConfig, KeyValue keyValue, ICardSelectedListener listener, Runnable afterEdit);
 
 	public static class Utils {
 		public static IDetailFactory detailsFactory(IDetailAdder... adders) {

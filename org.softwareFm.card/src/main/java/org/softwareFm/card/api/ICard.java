@@ -13,6 +13,8 @@ public interface ICard extends IHasComposite {
 
 	CardConfig cardConfig();
 
+	String cardType();
+
 	String url();
 
 	Map<String, Object> rawData();

@@ -30,17 +30,19 @@ public abstract class AbstractDetailsAdderTest<T extends IDetailAdder> extends A
 		assertSame(keyValue, holder.getKeyValue());
 		assertEquals(expectedUrl, holder.getRootUrl());
 	}
-	
-	protected IFunction1<KeyValue, String> justValue= new IFunction1<KeyValue, String>() {
+
+	abstract public void testAfterEditHappensAfterCardDataStoreUpdated();
+
+	protected IFunction1<KeyValue, String> justValue = new IFunction1<KeyValue, String>() {
 		@Override
 		public String apply(KeyValue from) throws Exception {
 			return Strings.nullSafeToString(from.value);
 		}
 	};
-	protected IFunction1<KeyValue, String> addPrefixToValue= new IFunction1<KeyValue, String>() {
+	protected IFunction1<KeyValue, String> addPrefixToValue = new IFunction1<KeyValue, String>() {
 		@Override
 		public String apply(KeyValue from) throws Exception {
-			return "pre_"+ from.value;
+			return "pre_" + from.value;
 		}
 	};
 

@@ -34,7 +34,7 @@ public class TextEditor implements IHasControl {
 		private final KeyValue keyValue;
 		private final String originalValue;
 
-		public TextEditorComposite(Composite parent, int style, final ICard card, final CardConfig cardConfig, final KeyValue keyValue) {
+		public TextEditorComposite(Composite parent, int style, final ICard card, final CardConfig cardConfig, final KeyValue keyValue, final Runnable afterEdit) {
 			super(parent, style);
 			this.keyValue = keyValue;
 			titleLabel = new Label(this, SWT.NULL);
@@ -44,9 +44,9 @@ public class TextEditor implements IHasControl {
 			text = new Text(this, SWT.WRAP);
 			originalValue = Functions.call(cardConfig.valueFn, keyValue);
 			text.setText(originalValue);
-			okButton = new Button(parent, SWT.PUSH);
+			okButton = new Button(this, SWT.PUSH);
 			okButton.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, DisplayConstants.buttonOkTitle));
-			cancelButton = new Button(parent, SWT.PUSH);
+			cancelButton = new Button(this, SWT.PUSH);
 			cancelButton.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, DisplayConstants.buttonCancelTitle));
 
 			Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
@@ -61,7 +61,7 @@ public class TextEditor implements IHasControl {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					IMutableCardDataStore cardDataStore = (IMutableCardDataStore) cardConfig.cardDataStore;
-					cardDataStore.put(card.url(), Maps.<String, Object> makeMap(keyValue.key, text.getText()));
+					cardDataStore.put(card.url(), Maps.<String, Object> makeMap(keyValue.key, text.getText()), afterEdit);
 					TextEditorComposite.this.dispose();
 				}
 
@@ -83,8 +83,8 @@ public class TextEditor implements IHasControl {
 		}
 	}
 
-	public TextEditor(Composite parentComposite, ICard card, CardConfig cardConfig, KeyValue keyValue) {
-		content = new TextEditorComposite(parentComposite, SWT.NULL, card, cardConfig, keyValue);
+	public TextEditor(Composite parentComposite, ICard card, CardConfig cardConfig, KeyValue keyValue, Runnable afterEdit) {
+		content = new TextEditorComposite(parentComposite, SWT.NULL, card, cardConfig, keyValue, afterEdit);
 	}
 
 	@Override

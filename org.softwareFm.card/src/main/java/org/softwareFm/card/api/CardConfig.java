@@ -45,6 +45,7 @@ public class CardConfig {
 	public final IFunction1<KeyValue, String> nameFn;
 	public final IFunction1<KeyValue, String> valueFn;
 	public final IFunction1<KeyValue, Boolean> hideFn;
+	public final IFunction1<ICard, KeyValue> defaultChildFn;
 	public final Comparator<KeyValue> comparator;
 	public final IFunction1<Map<String, Object>, List<KeyValue>> aggregator;
 	public final IFunction1<Map<String, Object>, Image> navIconFn;
@@ -82,6 +83,7 @@ public class CardConfig {
 		this.nameFn = KeyValue.Utils.keyFn();
 		this.valueFn = KeyValue.Utils.valueAsStrFn();
 		this.hideFn = Functions.constant(false);
+		this.defaultChildFn = Functions.constant(null);
 		this.comparator = KeyValue.Utils.orderedKeyComparator();
 		this.aggregator = new KeyValueAggregator(Arrays.asList("jcr:primaryType"), defaultBodgedUrlFragments);// later "sling:resourceType",
 		this.leftMargin = 5;
@@ -93,7 +95,7 @@ public class CardConfig {
 
 	}
 
-	private CardConfig(IResourceGetter resourceGetter, ICardConfigSelector selector, IDetailFactory detailFactory, ICardFactory cardFactory, ICardDataStore cardDataStore, int style, boolean allowSelection, IFunction1<Map<String, Object>, Image> cardIconFn, IFunction1<String, String> cardTitleFn, IFunction1<KeyValue, Image> iconFn, IFunction1<KeyValue, String> nameFn, IFunction1<KeyValue, String> valueFn, IFunction1<KeyValue, Boolean> hideFn, Comparator<KeyValue> comparator, IFunction1<Map<String, Object>, List<KeyValue>> aggregator, int leftMargin, int rightMargin, int topMargin, int bottomMargin, int navBarHeight, IFunction1<Map<String, Object>, Image> navIconFn, List<IKeyValueListModifier> keyValueModifiers) {
+	private CardConfig(IResourceGetter resourceGetter, ICardConfigSelector selector, IDetailFactory detailFactory, ICardFactory cardFactory, ICardDataStore cardDataStore, int style, boolean allowSelection, IFunction1<Map<String, Object>, Image> cardIconFn, IFunction1<String, String> cardTitleFn, IFunction1<KeyValue, Image> iconFn, IFunction1<KeyValue, String> nameFn, IFunction1<KeyValue, String> valueFn, IFunction1<ICard, KeyValue> defaultChildFn, IFunction1<KeyValue, Boolean> hideFn, Comparator<KeyValue> comparator, IFunction1<Map<String, Object>, List<KeyValue>> aggregator, int leftMargin, int rightMargin, int topMargin, int bottomMargin, int navBarHeight, IFunction1<Map<String, Object>, Image> navIconFn, List<IKeyValueListModifier> keyValueModifiers) {
 		this.resourceGetter = resourceGetter;
 		this.selector = selector;
 		this.detailFactory = detailFactory;
@@ -106,6 +108,7 @@ public class CardConfig {
 		this.iconFn = iconFn;
 		this.nameFn = nameFn;
 		this.valueFn = valueFn;
+		this.defaultChildFn = defaultChildFn;
 		this.hideFn = hideFn;
 		this.comparator = comparator;
 		this.aggregator = aggregator;
@@ -119,52 +122,64 @@ public class CardConfig {
 	}
 
 	public CardConfig withTitleFn(IFunction1<String, String> cardTitleFn) {
-		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
+		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
 
 	}
 
 	public CardConfig withStyleAndSelection(int style, boolean allowSelection) {
-		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
+		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
 	}
 
 	public CardConfig withNameFn(IFunction1<KeyValue, String> nameFn) {
-		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
+		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
 	}
 
 	public CardConfig withHideFn(IFunction1<KeyValue, Boolean> hideFn) {
-		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
+		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
 	}
 
 	public CardConfig withValueFn(IFunction1<KeyValue, String> valueFn) {
-		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
+		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
 	}
 
 	public CardConfig withCardIconFn(IFunction1<Map<String, Object>, Image> cardIconFn) {
-		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
+		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
 	}
 
 	public CardConfig withResourceGetter(IResourceGetter resourceGetter) {
-		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
+		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
 	}
 
 	public CardConfig withAggregatorTags(List<String> tagNames) {
-		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, hideFn, comparator, new KeyValueAggregator(tagNames, defaultBodgedUrlFragments), leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
+		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, comparator, new KeyValueAggregator(tagNames, defaultBodgedUrlFragments), leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
 	}
 
 	public CardConfig withSorter(Comparator<KeyValue> comparator) {
-		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
+		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
 	}
 
 	public CardConfig withMargins(int leftMargin, int rightMargin, int topMargin, int bottomMargin) {
-		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
+		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
 	}
 
 	public CardConfig withTitleHeight(int titleHeight) {
-		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
+		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
 	}
 
 	public CardConfig withNavIconFn(IFunction1<Map<String, Object>, Image> navIconFn) {
-		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
+		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
+	}
+
+	public CardConfig withKeyValueModifiers(List<IKeyValueListModifier> keyValueModifiers) {
+		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
+	}
+
+	public CardConfig withDetailsFactory(IDetailFactory detailFactory) {
+		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
+	}
+	
+	public CardConfig withDefaultChildFn(IFunction1<ICard, KeyValue> defaultChildFn) {
+		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
 	}
 
 	public List<KeyValue> modify(ICard card, Map<String, Object> rawData) {
@@ -172,14 +187,6 @@ public class CardConfig {
 		for (IKeyValueListModifier modifer : keyValueModifiers)
 			raw = modifer.modify(this, card, raw);
 		return raw;
-	}
-
-	public CardConfig withKeyValues(List<IKeyValueListModifier> keyValueModifiers) {
-		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
-	}
-
-	public CardConfig withDetailsFactory(IDetailFactory detailFactory) {
-		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, hideFn, comparator, aggregator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
 	}
 
 }

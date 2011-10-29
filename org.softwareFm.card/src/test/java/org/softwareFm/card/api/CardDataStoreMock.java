@@ -35,7 +35,7 @@ public class CardDataStoreMock implements IMutableCardDataStore {
 
 
 	@Override
-	public void put(String url, Map<String, Object> map) {
+	public void put(String url, Map<String, Object> map, Runnable afterEdit) {
 		throw new UnsupportedOperationException();
 	}
 
