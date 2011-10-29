@@ -22,4 +22,9 @@ public class CollectionsDetailAdderTest extends AbstractDetailsAdderTest<Collect
 		return new CollectionsDetailAdder();
 	}
 
+	@Override
+	public void testAfterEditHappensAfterCardDataStoreUpdated() {
+		noEdittingHappensWithThisDetail();
+	}
+
 }

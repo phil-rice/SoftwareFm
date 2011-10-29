@@ -18,6 +18,8 @@ import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.runnable.Runnables;
+import org.softwareFm.utilities.runnable.Runnables.CountRunnable;
 
 public class TextEditorDetailAdderTest extends AbstractDetailsAdderTest<TextEditorDetailAdder> {
 
@@ -103,6 +105,22 @@ public class TextEditorDetailAdderTest extends AbstractDetailsAdderTest<TextEdit
 		checkPressCausesDispose(textEditor, textEditor.getCancelButton());
 	}
 
+	@Override
+	public void testAfterEditHappensAfterCardDataStoreUpdated() {
+		CountRunnable count = new CountRunnable(){
+			@Override
+			protected void detail() {
+				assertEquals(getCount(), cardDataStore.rememberedPuts.size());
+			}
+		};
+		TextEditor textEditor = makeHolder(cardConfig, stringValue, count);
+		Button okButton = textEditor.getOkButton();
+		textEditor.getText().setText("some other value");
+		assertEquals(0, count.getCount());
+		okButton.notifyListeners(SWT.Selection, new Event());
+		assertEquals(1, count.getCount());
+	}
+
 	public void testDoesntUpdateWhenCancelPressed() {
 		TextEditor textEditor = makeHolder(stringValue);
 		textEditor.getText().setText("some other value");
@@ -152,7 +170,12 @@ public class TextEditorDetailAdderTest extends AbstractDetailsAdderTest<TextEdit
 	}
 
 	private TextEditor makeHolder(CardConfig cardConfig, KeyValue keyValue) {
-		IHasControl actual = adder.add(shell, parentCard, cardConfig, keyValue, ICardSelectedListener.Utils.noListener());
+		return makeHolder(cardConfig, keyValue, Runnables.noRunnable);
+
+	}
+
+	private TextEditor makeHolder(CardConfig cardConfig, KeyValue keyValue, Runnable afterEdit) {
+		IHasControl actual = adder.add(shell, parentCard, cardConfig, keyValue, ICardSelectedListener.Utils.noListener(), afterEdit);
 		TextEditor holder = (TextEditor) actual;
 		return holder;
 	}

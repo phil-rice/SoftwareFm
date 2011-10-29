@@ -7,6 +7,7 @@ import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.card.internal.CardCollectionHolder;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.runnable.Runnables;
 import org.softwareFm.utilities.strings.Strings;
 
 public abstract class AbstractDetailsAdderTest<T extends IDetailAdder> extends AbstractDetailTest {
@@ -24,7 +25,7 @@ public abstract class AbstractDetailsAdderTest<T extends IDetailAdder> extends A
 	abstract protected T makeDetailsAdder();
 
 	protected void checkGetCardCollectionsHolder(KeyValue keyValue, String expectedUrl) {
-		IHasControl actual = adder.add(shell, parentCard, cardConfig, keyValue, ICardSelectedListener.Utils.noListener());
+		IHasControl actual = adder.add(shell, parentCard, cardConfig, keyValue, ICardSelectedListener.Utils.noListener(), Runnables.noRunnable);
 		CardCollectionHolder holder = (CardCollectionHolder) actual;
 		assertSame(cardConfig, holder.getCardConfig());
 		assertSame(keyValue, holder.getKeyValue());
@@ -32,6 +33,10 @@ public abstract class AbstractDetailsAdderTest<T extends IDetailAdder> extends A
 	}
 
 	abstract public void testAfterEditHappensAfterCardDataStoreUpdated();
+
+	protected void noEdittingHappensWithThisDetail() {
+		
+	}
 
 	protected IFunction1<KeyValue, String> justValue = new IFunction1<KeyValue, String>() {
 		@Override

@@ -12,6 +12,7 @@ import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.card.internal.Card;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.SwtIntegrationTest;
+import org.softwareFm.utilities.runnable.Runnables;
 
 abstract public class AbstractDetailTest extends SwtIntegrationTest {
 	protected static KeyValue stringValue = new KeyValue("key", "stringValue");
@@ -35,7 +36,7 @@ abstract public class AbstractDetailTest extends SwtIntegrationTest {
 	}
 
 	protected void checkGetNull(DetailFactory detailFactory, KeyValue keyValue) {
-		IHasControl actual = detailFactory.makeDetail(shell, parentCard, cardConfig, keyValue, ICardSelectedListener.Utils.noListener());
+		IHasControl actual = detailFactory.makeDetail(shell, parentCard, cardConfig, keyValue, ICardSelectedListener.Utils.noListener(), Runnables.noRunnable);
 		assertNull(actual);
 	}
 

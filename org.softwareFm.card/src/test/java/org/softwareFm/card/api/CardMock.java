@@ -72,4 +72,9 @@ public class CardMock implements ICard {
 		return data;
 	}
 
+	@Override
+	public String cardType() {
+		throw new UnsupportedOperationException();
+	}
+
 }
