@@ -6,7 +6,7 @@ public class DetailsFactoryTest extends AbstractDetailTest {
 
 	public void testWithNoAddersGetNull() {
 		DetailFactory detailFactory = new DetailFactory(Collections.<IDetailAdder> emptyList());
-		checkGetNull(detailFactory, listValue);
+		checkGetNull(detailFactory, mapValue);
 	}
 
 }

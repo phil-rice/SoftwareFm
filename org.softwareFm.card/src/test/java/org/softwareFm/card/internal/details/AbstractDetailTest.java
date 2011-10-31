@@ -1,6 +1,5 @@
 package org.softwareFm.card.internal.details;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 import org.softwareFm.card.api.CardConfig;
@@ -12,14 +11,15 @@ import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.card.internal.Card;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.SwtIntegrationTest;
+import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.runnable.Runnables;
 
 abstract public class AbstractDetailTest extends SwtIntegrationTest {
 	protected static KeyValue stringValue = new KeyValue("key", "stringValue");
 	protected static KeyValue intValue = new KeyValue("key", 0);
-	protected static KeyValue listValue = new KeyValue("key", Arrays.asList(new KeyValue("k1", "v1"), new KeyValue("k2", "v2")));
-	protected static KeyValue collectionValue = new KeyValue("key", Arrays.asList(new KeyValue("k1", "v1"), new KeyValue("k2", "v2"), new KeyValue("sling:resourceType", "collection")));
-	protected static KeyValue folderValue = new KeyValue("key", Arrays.asList(new KeyValue("k1", "v1"), new KeyValue("k2", "v2"), new KeyValue("sling:resourceType", "folder")));
+	protected static KeyValue mapValue = new KeyValue("key", Maps.stringObjectMap("k1", "v1", "k2", "v2"));
+	protected static KeyValue collectionValue = new KeyValue("key", Maps.stringObjectMap("k1", "v1", "k2", "v2", "sling:resourceType", "collection"));
+	protected static KeyValue folderValue = new KeyValue("key", Maps.stringObjectMap("k1", "v1", "k2", "v2", "sling:resourceType", "folder"));
 
 	protected CardConfig parentCardConfig;
 	protected CardConfig cardConfig;
@@ -36,7 +36,7 @@ abstract public class AbstractDetailTest extends SwtIntegrationTest {
 	}
 
 	protected void checkGetNull(DetailFactory detailFactory, KeyValue keyValue) {
-		IHasControl actual = detailFactory.makeDetail(shell, parentCard, cardConfig, keyValue, value, ICardSelectedListener.Utils.noListener(), Runnables.noRunnable);
+		IHasControl actual = detailFactory.makeDetail(shell, parentCard, cardConfig, keyValue.key, keyValue.value, ICardSelectedListener.Utils.noListener(), Runnables.noRunnable);
 		assertNull(actual);
 	}
 

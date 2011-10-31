@@ -9,12 +9,12 @@ public class CollectionsDetailAdderTest extends AbstractDetailsAdderTest<Collect
 	}
 
 	public void testNeedMoreThanItBeingAList() {
-		checkGetNull(detailFactory, listValue);
+		checkGetNull(detailFactory, mapValue);
 		checkGetNull(detailFactory, folderValue);
 	}
 
 	public void testNeedsCollectionToMakeACardHolder() {
-		checkGetCardCollectionsHolder(collectionValue, parentCard.url() + "/" + collectionValue.key);
+		checkGetCardCollectionsHolder(collectionValue, parentCard.url());
 	}
 
 	@Override

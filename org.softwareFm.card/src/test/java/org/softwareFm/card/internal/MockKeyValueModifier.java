@@ -1,25 +1,24 @@
 package org.softwareFm.card.internal;
 
-import java.util.List;
+import java.util.Map;
 
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardDataModifier;
-import org.softwareFm.card.api.KeyValue;
 
 public class MockKeyValueModifier implements ICardDataModifier {
-	public List<KeyValue> result;
-	public List<KeyValue> rawList;
+	public Map<String, Object> result;
 	public ICard card;
+	public Map<String, Object> rawData;
 
-	public MockKeyValueModifier(List<KeyValue> result) {
+	public MockKeyValueModifier(Map<String,Object> result) {
 		this.result = result;
 	}
 
 	@Override
-	public List<KeyValue> modify(CardConfig cardConfig, ICard card, List<KeyValue> rawList) {
+	public Map<String, Object> modify(CardConfig cardConfig, ICard card, Map<String, Object> rawData) {
 		this.card = card;
-		this.rawList = rawList;
+		this.rawData = rawData;
 		return result;
 	}
 

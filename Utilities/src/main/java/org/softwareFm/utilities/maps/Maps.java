@@ -451,4 +451,8 @@ public class Maps {
 			result.put(key, map.get(key));
 		return result;
 	}
+
+	public static Map<String,Object> stringObjectMap(Object...attributesAndValues) {
+		return makeMap(attributesAndValues);
+	}
 }

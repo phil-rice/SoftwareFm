@@ -45,7 +45,6 @@ public class BasicCardConfigurator implements ICardConfigurator {
 			public String apply(KeyValue from) throws Exception {
 				String key = findKey(from);
 				String prettyKey = Strings.camelCaseToPretty(from.key);
-
 				String pattern = resourceGetter.getStringOrNull(key + ".name");
 				if (pattern == null)
 					return prettyKey;
@@ -58,7 +57,7 @@ public class BasicCardConfigurator implements ICardConfigurator {
 			public String apply(KeyValue from) throws Exception {
 				String key = findKey(from);
 				String pattern = resourceGetter.getStringOrNull(key + ".value");
-				int size = from.value instanceof List ? ((List<?>) from.value).size() : 0;
+				int size = from.value instanceof Map<?, ?> ? ((Map<?, ?>) from.value).size() : 0;
 				if (pattern == null)
 					return Strings.nullSafeToString(from.value);
 				else
@@ -129,17 +128,17 @@ public class BasicCardConfigurator implements ICardConfigurator {
 				if (data.containsKey(cardType))
 					return cardType;
 				if (data.containsKey("nt:unstructured"))
-					return "nt:unstructured"; 
-				
-//				for (KeyValue keyValue : from.data())
-//					if (keyValue.key.equals(cardType))
-//						return keyValue;
-//				for (KeyValue keyValue : from.data())
-//					if (keyValue.key.equals("nt:unstructured"))
-//						return keyValue;
-//				for (KeyValue keyValue : from.data())
-//					if (keyValue.key.equals("group"))
-//						return keyValue;
+					return "nt:unstructured";
+
+				// for (KeyValue keyValue : from.data())
+				// if (keyValue.key.equals(cardType))
+				// return keyValue;
+				// for (KeyValue keyValue : from.data())
+				// if (keyValue.key.equals("nt:unstructured"))
+				// return keyValue;
+				// for (KeyValue keyValue : from.data())
+				// if (keyValue.key.equals("group"))
+				// return keyValue;
 				return null;
 			}
 

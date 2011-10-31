@@ -9,7 +9,7 @@ public class ListDetailsAdderTest extends AbstractDetailsAdderTest<ListDetailAdd
 	}
 
 	public void testWithListAdderWithListGetCardCollectionsHolder() {
-		checkGetCardCollectionsHolder(listValue, parentCard.url());
+		checkGetCardCollectionsHolder(mapValue, parentCard.url());
 		checkGetCardCollectionsHolder(collectionValue, parentCard.url());
 		checkGetCardCollectionsHolder(folderValue, parentCard.url());
 	}

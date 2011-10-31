@@ -1,5 +1,6 @@
 package org.softwareFm.card.internal.modifiers;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +9,6 @@ import java.util.Map.Entry;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardDataModifier;
-import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.strings.Strings;
 
@@ -22,7 +22,7 @@ public class AggregatorModifier implements ICardDataModifier {
 
 	@Override
 	public Map<String, Object> modify(CardConfig cardConfig, ICard card, Map<String, Object> rawData) {
-		Map<String, List<Object>> aggregates = Maps.newMap(LinkedHashMap.class);
+		Map<String, Map<String, Object>> aggregates = Maps.newMap(LinkedHashMap.class);
 		Map<String, Object> result = Maps.newMap();
 		for (Entry<String, Object> entry : rawData.entrySet()) {
 			String key = entry.getKey();
@@ -33,7 +33,7 @@ public class AggregatorModifier implements ICardDataModifier {
 				if (tag == null)
 					result.put(key, value);
 				else
-					Maps.addToList(aggregates, tag, new KeyValue(key, value));
+					Maps.addToMapOfMaps(aggregates, HashMap.class, tag, key, value);
 			} else
 				result.put(key, value);
 		}

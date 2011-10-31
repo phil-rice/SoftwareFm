@@ -25,7 +25,7 @@ public class TextEditorDetailAdderTest extends AbstractDetailsAdderTest<TextEdit
 
 	@Test
 	public void testWithNoneStringReturnsNull() {
-		checkGetNull(detailFactory, listValue);
+		checkGetNull(detailFactory, mapValue);
 		checkGetNull(detailFactory, collectionValue);
 		checkGetNull(detailFactory, folderValue);
 		checkGetNull(detailFactory, intValue);
@@ -175,7 +175,7 @@ public class TextEditorDetailAdderTest extends AbstractDetailsAdderTest<TextEdit
 	}
 
 	private TextEditor makeHolder(CardConfig cardConfig, KeyValue keyValue, Runnable afterEdit) {
-		IHasControl actual = adder.add(shell, parentCard, cardConfig, keyValue, ICardSelectedListener.Utils.noListener(), afterEdit);
+		IHasControl actual = adder.add(shell, parentCard, cardConfig, keyValue.key, keyValue.value,ICardSelectedListener.Utils.noListener(), afterEdit);
 		TextEditor holder = (TextEditor) actual;
 		return holder;
 	}

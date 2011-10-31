@@ -25,10 +25,11 @@ public abstract class AbstractDetailsAdderTest<T extends IDetailAdder> extends A
 	abstract protected T makeDetailsAdder();
 
 	protected void checkGetCardCollectionsHolder(KeyValue keyValue, String expectedUrl) {
-		IHasControl actual = adder.add(shell, parentCard, cardConfig, keyValue, ICardSelectedListener.Utils.noListener(), Runnables.noRunnable);
+		IHasControl actual = adder.add(shell, parentCard, cardConfig, keyValue.key, keyValue.value,ICardSelectedListener.Utils.noListener(), Runnables.noRunnable);
 		CardCollectionHolder holder = (CardCollectionHolder) actual;
 		assertSame(cardConfig, holder.getCardConfig());
-		assertSame(keyValue, holder.getKeyValue());
+		assertSame(keyValue.key, holder.getKey());
+		assertSame(keyValue.value, holder.getValue());
 		assertEquals(expectedUrl, holder.getRootUrl());
 	}
 

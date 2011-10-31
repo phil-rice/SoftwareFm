@@ -30,7 +30,7 @@ public class CardCollectionsDataStoreWithFollowOnTest extends AbstractCardCollec
 		for (int i = 0; i < status.keyValueFutures.size(); i++)
 			assertFalse(status.keyValueFutures.get(i).isDone());
 		for (int i = 0; i < status.keyValueFutures.size(); i++) {
-			Future<KeyValue> f = status.keyValueFutures.get(i);
+			Future<?> f = status.keyValueFutures.get(i);
 			assertFalse("i: " + i, f.isDone());
 			kickAndDispatch(f);
 			assertTrue(f.isDone());
@@ -42,12 +42,12 @@ public class CardCollectionsDataStoreWithFollowOnTest extends AbstractCardCollec
 		kickAndDispatch(status.initialFuture);
 		CardMock card = (CardMock) cardHolder.getCard();
 		for (int i = 0; i < status.keyValueFutures.size(); i++) {
-			Future<KeyValue> f = status.keyValueFutures.get(i);
-			int start = card.keyValues.size();
+			Future<?> f = status.keyValueFutures.get(i);
+			int start = card.keys.size();
 			kickAndDispatch(f);
-			KeyValue keyValue = f.get(1, TimeUnit.SECONDS);
-			assertEquals(start + 1, card.keyValues.size());
-			assertEquals(keyValue, card.keyValues.get(i));
+			KeyValue keyValue = (KeyValue) f.get(1, TimeUnit.SECONDS);
+			assertEquals(start + 1, card.keys.size());
+			assertEquals(keyValue.key, card.keys.get(i));
 			// should really test value
 		}
 	}
@@ -57,16 +57,16 @@ public class CardCollectionsDataStoreWithFollowOnTest extends AbstractCardCollec
 		assertEquals(0, memory.initialCardCount);
 		kickAndDispatch(status.initialFuture);
 		for (int i = 0; i < status.keyValueFutures.size(); i++) {
-			Future<KeyValue> f = status.keyValueFutures.get(i);
+			Future<?> f = status.keyValueFutures.get(i);
 			kickAndDispatch(f);
 			assertEquals("I: " + i, i != status.keyValueFutures.size() - 1, memory.finishedCount == 0);
 		}
 	}
 
 	@Override
-	protected String findFollowOnUrlFragment(KeyValue keyValue) {
-		if (keyValue.value instanceof Map<?, ?>) {
-			Map<?, ?> map = (Map<?, ?>) keyValue.value;
+	protected String findFollowOnUrlFragment(Map.Entry<String, Object> entry) {
+		if (entry.getValue() instanceof Map<?, ?>) {
+			Map<?, ?> map = (Map<?, ?>) entry.getValue();
 			return (String) map.get("value");
 		} else
 			return null;

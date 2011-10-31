@@ -18,10 +18,8 @@ import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardHolder;
 import org.softwareFm.card.api.ICardSelectedListener;
-import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
@@ -36,6 +34,8 @@ public class CardCollectionHolder implements IHasComposite {
 		private final CardConfig cardConfig;
 		private final List<ICardSelectedListener> listeners = new CopyOnWriteArrayList<ICardSelectedListener>();
 		private final CardCollectionsDataStore cardCollectionsDataStore = new CardCollectionsDataStore();
+		private String key;
+		private Object value;
 
 		public CardCollectionHolderComposite(Composite parent, CardConfig cardConfig) {
 			super(parent, SWT.NULL);
@@ -45,10 +45,13 @@ public class CardCollectionHolder implements IHasComposite {
 
 		@SuppressWarnings("unchecked")
 		protected void setKeyValue(final String rootUrl, String key, Object value) {
+			this.key = key;
+			this.value = value;
 			Swts.removeAllChildren(this);
-			if (value instanceof List<?>) {
-				for (final KeyValue childKeyValue : Lists.sort((List<KeyValue>) value, Lists.comparator( KeyValue.Utils.keyFn(),cardConfig.comparator))) {
-					final CardHolder cardHolder = new CardHolder(this, "loading", childKeyValue.key, cardConfig, rootUrl, null);
+			if (value instanceof Map<?,?>) {
+				Map<String, ?> map = Maps.sortByKey((Map<String,?>) value, cardConfig.comparator);
+				for (final Map.Entry<String, ?> childEntry: map.entrySet()){
+					final CardHolder cardHolder = new CardHolder(this, "loading", childEntry.getKey(), cardConfig, rootUrl, null);
 					cardHolder.getControl().addPaintListener(new PaintListener() {
 						@Override
 						public void paintControl(PaintEvent e) {
@@ -87,7 +90,7 @@ public class CardCollectionHolder implements IHasComposite {
 									public void finished(ICardHolder cardHolder, String url, ICard card) {
 									}
 								};
-								cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, rootUrl + "/" + childKeyValue.key, visitor);
+								cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, rootUrl + "/" + childEntry.getKey(), visitor);
 							}
 						};
 
@@ -128,6 +131,14 @@ public class CardCollectionHolder implements IHasComposite {
 	public CardConfig getCardConfig() {
 		return content.cardConfig;
 
+	}
+
+	public String getKey() {
+		return content.key;
+	}
+
+	public Object getValue() {
+		return content.value;
 	}
 
 	public static void main(String[] args) {

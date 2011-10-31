@@ -1,17 +1,14 @@
 package org.softwareFm.card.internal;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
 import org.junit.Test;
 import org.softwareFm.card.api.CardConfig;
-import org.softwareFm.card.api.ICard;
+import org.softwareFm.card.api.ICardDataModifier;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
-import org.softwareFm.card.api.ICardDataModifier;
-import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.display.swt.SwtIntegrationTest;
 import org.softwareFm.utilities.maps.Maps;
@@ -19,13 +16,12 @@ import org.softwareFm.utilities.maps.Maps;
 public class CardTest extends SwtIntegrationTest {
 
 	private final Map<String, Object> rawData = Maps.<String, Object> makeLinkedMap("a", 1, "b", 2);
-	private final List<KeyValue> rawDataAsKeyValues = Arrays.asList(new KeyValue("a", 1), new KeyValue("b", 2));
-	private final List<KeyValue> rawDataAsKeyValuesWithA3 = Arrays.asList(new KeyValue("a", 3), new KeyValue("b", 2));
+	private final Map<String, Object> rawDataWithA3 = Maps.<String, Object> makeLinkedMap("a", 3,"b", 2);
 	private CardConfig cardConfig;
 
 	@Test
 	public void testConstructor() {
-		ICard card = new Card(shell, cardConfig, "someUrl", rawData);
+		Card card = new Card(shell, cardConfig, "someUrl", rawData);
 		assertSame(rawData, card.rawData());
 		assertSame(cardConfig, card.cardConfig());
 		Composite cardComposite = card.getComposite();
@@ -35,21 +31,31 @@ public class CardTest extends SwtIntegrationTest {
 	}
 
 	public void testKeyValuesAreTheRawDataModifiedByTheCardConfig() {
-		List<KeyValue> result = Arrays.asList(new KeyValue("some", "result"));
+		Map<String, Object> result = Maps.<String,Object>makeMap("some", "result");
 		MockKeyValueModifier mock = new MockKeyValueModifier(result);
 		CardConfig cardConfig2 = cardConfig.withKeyValueModifiers(Arrays.<ICardDataModifier> asList(mock));
 		Card card = new Card(shell, cardConfig2, "someUrl", rawData);
 		assertEquals(result, card.data());
-		assertEquals(rawDataAsKeyValues, mock.rawList);
+		assertEquals(rawData, mock.rawData);
 	}
 
 	public void testValueChangedDoesntAffectRawDataButUpdatesData() {
+		Map<String, Object> copy = Maps.copyMap(rawData);
 		Card card = new Card(shell, cardConfig, "someUrl", rawData);
-		assertEquals(rawDataAsKeyValues, card.data());
+		assertEquals(rawData, card.data());
 
-		card.valueChanged(card.data().get(0), 3);
-		assertEquals(rawDataAsKeyValuesWithA3, card.data());
+		card.valueChanged("a", 3);
+		assertEquals(rawDataWithA3, card.data());
 		assertSame(rawData, card.rawData());
+	}
+	
+	public void testRawDataNotMessedWithByConstructorOrValueChanged(){
+		Map<String, Object> copy = Maps.copyMap(rawData);
+		Card card = new Card(shell, cardConfig, "someUrl", rawData);
+		card.valueChanged("a", 3);
+		assertEquals(rawDataWithA3, card.data());
+		assertEquals(rawData, card.rawData());
+		
 	}
 
 	public void testCardTypeIsBasedOnSlingResourceTypeInRawData() {
