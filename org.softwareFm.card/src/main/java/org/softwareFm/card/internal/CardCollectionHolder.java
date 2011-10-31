@@ -30,7 +30,6 @@ public class CardCollectionHolder implements IHasComposite {
 
 	private final CardCollectionHolderComposite content;
 	String rootUrl;
-	KeyValue keyValue;
 
 	static class CardCollectionHolderComposite extends Composite {
 
@@ -45,11 +44,10 @@ public class CardCollectionHolder implements IHasComposite {
 		}
 
 		@SuppressWarnings("unchecked")
-		protected void setKeyValue(final String rootUrl, KeyValue keyValue) {
-			Object value = keyValue.value;
+		protected void setKeyValue(final String rootUrl, String key, Object value) {
 			Swts.removeAllChildren(this);
 			if (value instanceof List<?>) {
-				for (final KeyValue childKeyValue : Lists.sort((List<KeyValue>) value, cardConfig.comparator)) {
+				for (final KeyValue childKeyValue : Lists.sort((List<KeyValue>) value, Lists.comparator( KeyValue.Utils.keyFn(),cardConfig.comparator))) {
 					final CardHolder cardHolder = new CardHolder(this, "loading", childKeyValue.key, cardConfig, rootUrl, null);
 					cardHolder.getControl().addPaintListener(new PaintListener() {
 						@Override
@@ -108,14 +106,9 @@ public class CardCollectionHolder implements IHasComposite {
 		content = new CardCollectionHolderComposite(parent, cardConfig);
 	}
 
-	public void setKeyValue(final String rootUrl, KeyValue keyValue) {
+	public void setKeyValue(final String rootUrl, String key, Object value) {
 		this.rootUrl = rootUrl;
-		this.keyValue = keyValue;
-		content.setKeyValue(rootUrl, keyValue);
-	}
-
-	public KeyValue getKeyValue() {
-		return keyValue;
+		content.setKeyValue(rootUrl, key, value);
 	}
 
 	public String getRootUrl() {
@@ -146,7 +139,7 @@ public class CardCollectionHolder implements IHasComposite {
 				final CardConfig cardConfig = new BasicCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 				IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "navBar.prev.title");
 				final CardCollectionHolder cardCollectionHolder = new CardCollectionHolder(from, cardConfig);
-				cardCollectionHolder.setKeyValue(CardDataStoreFixture.url, new KeyValue("stugg", Maps.makeMap(CardDataStoreFixture.dataIndexedByUrlFragment)));
+				cardCollectionHolder.setKeyValue(CardDataStoreFixture.url, "stuff", Maps.makeMap(CardDataStoreFixture.dataIndexedByUrlFragment));
 				Swts.resizeMeToParentsSize(cardCollectionHolder.getControl());
 				return cardCollectionHolder.getComposite();
 			}

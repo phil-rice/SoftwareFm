@@ -18,7 +18,6 @@ import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardHolder;
 import org.softwareFm.card.api.ICardSelectedListener;
 import org.softwareFm.card.api.ILineSelectedListener;
-import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
@@ -39,8 +38,8 @@ public class CardExplorer implements IHasComposite {
 		private final CardHolder cardHolder;
 		private final CardCollectionsDataStore cardCollectionsDataStore = new CardCollectionsDataStore() {
 			@Override
-			protected String findFollowOnUrlFragment(KeyValue keyValue) {
-				return CardConfig.defaultBodgedUrlFragments.contains(keyValue.key) ? keyValue.key : null;
+			protected String findFollowOnUrlFragment(java.util.Map.Entry<String, Object> entry) {
+				return CardConfig.defaultBodgedUrlFragments.contains(entry.getKey()) ? entry.getKey() : null;
 			};
 		};
 		ICallback<String> callbackToGotoUrl;
@@ -68,24 +67,24 @@ public class CardExplorer implements IHasComposite {
 			cardHolder.addCardChangedListener(new ICardChangedListener() {
 				@Override
 				public void cardChanged(ICardHolder cardHolder, ICard card) {
-					KeyValue keyValue = findDefaultChild(card);
-					setDetail(card, keyValue);
+					String key = findDefaultChild(card);
+					setDetail(card, key, card.data().get(key));
 				}
 			});
 			cardHolder.addLineSelectedListener(new ILineSelectedListener() {
 				@Override
-				public void selected(ICard card, KeyValue keyValue) {
-					System.out.println("Card keyvalue: " + keyValue);
-					setDetail(card, keyValue);
+				public void selected(ICard card, String key, Object value) {
+					System.out.println("Card keyvalue: " + key);
+					setDetail(card, key, value);
 					// setDetailCard(card, keyValue);
 				}
 
 			});
 		}
 
-		private void setDetail(final ICard card, KeyValue keyValue) {
+		private void setDetail(final ICard card, String key, Object value) {
 			removeDetailContents();
-			final IHasControl newControl = cardConfig.detailFactory.makeDetail(detail, card, cardConfig, keyValue, new ICardSelectedListener() {
+			final IHasControl newControl = cardConfig.detailFactory.makeDetail(detail, card, cardConfig, key, value, new ICardSelectedListener() {
 				@Override
 				public void cardSelected(ICard card) {
 					ICallback.Utils.call(callbackToGotoUrl, card.url());
@@ -113,28 +112,27 @@ public class CardExplorer implements IHasComposite {
 			}
 		}
 
-
 		private void removeDetailContents() {
 			detail.setContent(null);
 			Swts.removeAllChildren(detail);
 			Swts.removeOldResizeListener(detail, listener);
 		}
 
-		private KeyValue findDefaultChild(ICard card) {
-			KeyValue result = Functions.call(card.cardConfig().defaultChildFn, card);
+		private String findDefaultChild(ICard card) {
+			String result = Functions.call(card.cardConfig().defaultChildFn, card);
 			return result;
-//			for (KeyValue keyValue : card.data())
-//				if (CardConfig.defaultBodgedUrlFragments.contains(keyValue.key)) {
-//					Object value = keyValue.value;
-//					return keyValue;
-//				}
-//			for (KeyValue keyValue : card.data())
-//				if (keyValue.key.equals("nt:unstructured"))
-//					return keyValue;
-//			for (KeyValue keyValue : card.data())
-//				if (CardConfig.anotherBodge.contains(keyValue.key))
-//					return keyValue;
-//			return null;
+			// for (KeyValue keyValue : card.data())
+			// if (CardConfig.defaultBodgedUrlFragments.contains(keyValue.key)) {
+			// Object value = keyValue.value;
+			// return keyValue;
+			// }
+			// for (KeyValue keyValue : card.data())
+			// if (keyValue.key.equals("nt:unstructured"))
+			// return keyValue;
+			// for (KeyValue keyValue : card.data())
+			// if (CardConfig.anotherBodge.contains(keyValue.key))
+			// return keyValue;
+			// return null;
 		}
 	}
 

@@ -58,7 +58,7 @@ public interface ICardAndCollectionDataStoreVisitor {
 
 				@Override
 				public void initialCard(ICardHolder cardHolder, CardConfig cardConfig, String url, ICard card) {
-					System.out.println(String.format("%5d    Initial   %40s   %s", h(cardHolder), url, card.rawData().toString()));
+					System.out.println(String.format("%5d    Initial   %40s   %s", h(cardHolder), url, card.data().toString()));
 				}
 
 				@Override
@@ -78,7 +78,7 @@ public interface ICardAndCollectionDataStoreVisitor {
 
 				@Override
 				public void finished(ICardHolder cardHolder, String url, ICard card) {
-					System.out.println(String.format("%5d Finished    %40s  %s", h(cardHolder), url, card.rawData().toString()));
+					System.out.println(String.format("%5d Finished    %40s  %s", h(cardHolder), url, card.data().toString()));
 				}
 			};
 		}

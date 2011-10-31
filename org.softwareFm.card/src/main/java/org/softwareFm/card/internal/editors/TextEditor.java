@@ -31,13 +31,12 @@ public class TextEditor implements IHasControl {
 		private final Text text;
 		public Button okButton;
 		private final Button cancelButton;
-		private final KeyValue keyValue;
 		private final String originalValue;
 
-		public TextEditorComposite(Composite parent, int style, final ICard card, final CardConfig cardConfig, final KeyValue keyValue, final Runnable afterEdit) {
+		public TextEditorComposite(Composite parent, int style, final ICard card, final CardConfig cardConfig, final String key, Object value, final Runnable afterEdit) {
 			super(parent, style);
-			this.keyValue = keyValue;
 			titleLabel = new Label(this, SWT.NULL);
+			KeyValue keyValue = new KeyValue(key, value);
 			String name = Functions.call(cardConfig.nameFn, keyValue);
 			titleLabel.setText(name);
 
@@ -61,7 +60,7 @@ public class TextEditor implements IHasControl {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					IMutableCardDataStore cardDataStore = (IMutableCardDataStore) cardConfig.cardDataStore;
-					cardDataStore.put(card.url(), Maps.<String, Object> makeMap(keyValue.key, text.getText()), afterEdit);
+					cardDataStore.put(card.url(), Maps.<String, Object> makeMap(key, text.getText()), afterEdit);
 					TextEditorComposite.this.dispose();
 				}
 
@@ -83,8 +82,8 @@ public class TextEditor implements IHasControl {
 		}
 	}
 
-	public TextEditor(Composite parentComposite, ICard card, CardConfig cardConfig, KeyValue keyValue, Runnable afterEdit) {
-		content = new TextEditorComposite(parentComposite, SWT.NULL, card, cardConfig, keyValue, afterEdit);
+	public TextEditor(Composite parentComposite, ICard card, CardConfig cardConfig, String key, Object value, Runnable afterEdit) {
+		content = new TextEditorComposite(parentComposite, SWT.NULL, card, cardConfig, key, value, afterEdit);
 	}
 
 	@Override

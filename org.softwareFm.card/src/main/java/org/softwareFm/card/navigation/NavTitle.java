@@ -39,7 +39,7 @@ public class NavTitle implements ITitleBarForCard {
 	@Override
 	public void setUrl(ICard card) {
 		IFunction1<Map<String, Object>, Image> cardIconFn = card.cardConfig().cardIconFn;
-		image = Functions.call(cardIconFn, card.rawData());
+		image = Functions.call(cardIconFn, card.data());
 		title = (Functions.call(card.cardConfig().cardTitleFn, card.url()));
 		canvas.redraw();
 	}

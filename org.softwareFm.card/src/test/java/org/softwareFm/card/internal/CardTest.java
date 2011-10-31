@@ -10,7 +10,7 @@ import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
-import org.softwareFm.card.api.IKeyValueListModifier;
+import org.softwareFm.card.api.ICardDataModifier;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.display.swt.SwtIntegrationTest;
@@ -37,7 +37,7 @@ public class CardTest extends SwtIntegrationTest {
 	public void testKeyValuesAreTheRawDataModifiedByTheCardConfig() {
 		List<KeyValue> result = Arrays.asList(new KeyValue("some", "result"));
 		MockKeyValueModifier mock = new MockKeyValueModifier(result);
-		CardConfig cardConfig2 = cardConfig.withKeyValueModifiers(Arrays.<IKeyValueListModifier> asList(mock));
+		CardConfig cardConfig2 = cardConfig.withKeyValueModifiers(Arrays.<ICardDataModifier> asList(mock));
 		Card card = new Card(shell, cardConfig2, "someUrl", rawData);
 		assertEquals(result, card.data());
 		assertEquals(rawDataAsKeyValues, mock.rawList);

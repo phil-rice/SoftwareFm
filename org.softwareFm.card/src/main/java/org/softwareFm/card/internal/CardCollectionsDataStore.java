@@ -27,32 +27,35 @@ public class CardCollectionsDataStore implements ICardAndCollectionsDataStore {
 	public CardAndCollectionsStatus processDataFor(final ICardHolder cardHolder, final CardConfig cardConfig, final String url, final ICardAndCollectionDataStoreVisitor visitor) {
 		final GatedFuture<Void> future = Futures.gatedFuture();
 		final AtomicInteger count = new AtomicInteger(1);
-		final List<Future<KeyValue>> keyValueFutures = new CopyOnWriteArrayList<Future<KeyValue>>();
+		final List<Future<Object>> keyValueFutures = new CopyOnWriteArrayList<Future<Object>>();
 		visitor.initialUrl(cardHolder, cardConfig, url);
 		Future<ICard> cardFuture = ICardFactory.Utils.makeCard(cardHolder, cardConfig, url, new ICallback<ICard>() {
 			@Override
 			public void process(final ICard card) throws Exception {
 				visitor.initialCard(cardHolder, cardConfig, url, card);
 				cardHolder.setCard(card);
-				for (final KeyValue keyValue : card.data()) {
-					final String followOnUrlFragment = findFollowOnUrlFragment(keyValue);
+				for (final Entry<String, Object> entry : card.data().entrySet()) {
+					final String followOnUrlFragment = findFollowOnUrlFragment(entry);
 					if (followOnUrlFragment != null) {
 						count.incrementAndGet();
 						visitor.requestingFollowup(cardHolder, url, card, followOnUrlFragment);
-						Future<KeyValue> future = cardConfig.cardDataStore.processDataFor(url + "/" + followOnUrlFragment, new ICardDataStoreCallback<KeyValue>() {
+						Future<Object> future = cardConfig.cardDataStore.processDataFor(url + "/" + followOnUrlFragment, new ICardDataStoreCallback<Object>() {
 							@Override
-							public KeyValue process(String followUpUrl, Map<String, Object> result) throws Exception {
+							public Object process(String followUpUrl, Map<String, Object> result) throws Exception {
 								visitor.followedUp(cardHolder, url, card, followUpUrl, result);
-								if (!cardHolder.getControl().isDisposed() && !card.getControl().isDisposed()) {
-									List<KeyValue> list = Lists.newList();
-									// the card is expecting a list of key values for each child (probably each child of a type...but lets not go there yet)
-									for (Entry<String, Object> entry : result.entrySet())
-										if (entry.getValue() instanceof Map<?, ?>)
-											list.add(new KeyValue(followOnUrlFragment + "/" + entry.getKey(), entry.getValue()));
-									card.valueChanged(keyValue, list);
+								try {
+									if (!cardHolder.getControl().isDisposed() && !card.getControl().isDisposed()) {
+										List<KeyValue> list = Lists.newList();
+										for (Entry<String, Object> entry : result.entrySet())
+											if (entry.getValue() instanceof Map<?, ?>)
+												list.add(new KeyValue(followOnUrlFragment + "/" + entry.getKey(), entry.getValue()));
+										card.valueChanged(entry.getKey(), list);
+										return new KeyValue(entry.getKey(), list);
+									}
+									return null;
+								} finally {
+									finish(card);
 								}
-								finish(card);
-								return keyValue;
 							}
 
 							@Override
@@ -80,7 +83,7 @@ public class CardCollectionsDataStore implements ICardAndCollectionsDataStore {
 		return status;
 	}
 
-	protected String findFollowOnUrlFragment(KeyValue keyValue) {
+	protected String findFollowOnUrlFragment(Entry<String, Object> entry) {
 		return null;
 	}
 

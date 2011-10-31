@@ -24,7 +24,7 @@ public class CardUnit implements IHasComposite {
 	public final static String rootUrl = "/softwareFm/data";
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public final static Map<String, Object> urls = (Map) Maps.makeLinkedMapFromArray(Functions.addToStart(rootUrl),//
-			"/org/apache/ant/artifact/ant-antlr", "/", "/org/antlr", "/org/apache/ant", "/org/apache/ant/artifact/ant");
+			"/org/apache/org.apache", "/", "/org/antlr/org.antlr", "/org/apache/ant/org.apache.ant", "/org/apache/ant/org.apache.ant/artifact/ant");
 	private final SashForm sashForm;
 	private final CardHolder cardHolder;
 	private final Text text;
@@ -47,7 +47,7 @@ public class CardUnit implements IHasComposite {
 					ICardFactory.Utils.makeCard(cardunit.cardHolder, cardunit.cardConfig, Strings.nullSafeToString(value), new ICallback<ICard>() {
 						@Override
 						public void process(ICard t) throws Exception {
-							cardunit.text.setText(t.rawData().toString());
+							cardunit.text.setText(t.data().toString());
 						}
 					});
 				}

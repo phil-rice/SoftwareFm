@@ -7,7 +7,6 @@ import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardSelectedListener;
 import org.softwareFm.card.api.IDetailFactory;
-import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.display.composites.IHasControl;
 
 public class DetailFactory implements IDetailFactory {
@@ -19,11 +18,11 @@ public class DetailFactory implements IDetailFactory {
 	}
 
 	@Override
-	public IHasControl makeDetail(Composite parentComposite, ICard parentCard, CardConfig cardConfig, KeyValue keyValue, ICardSelectedListener listener, Runnable afterEdit) {
-		if (keyValue == null)
+	public IHasControl makeDetail(Composite parentComposite, ICard parentCard, CardConfig cardConfig, String key, Object value, ICardSelectedListener listener, Runnable afterEdit) {
+		if (key == null)
 			return null;
 		for (IDetailAdder adder : detailAdders) {
-			IHasControl result = adder.add(parentComposite, parentCard, cardConfig, keyValue, listener, afterEdit);
+			IHasControl result = adder.add(parentComposite, parentCard, cardConfig, key, value, listener, afterEdit);
 			if (result != null)
 				return result;
 		}

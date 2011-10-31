@@ -1,13 +1,15 @@
 package org.softwareFm.card.api;
 
-import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.display.composites.IHasComposite;
 
 public interface ICard extends IHasComposite {
 
-	KeyValue valueChanged(KeyValue keyValue, Object newValue);
+	void valueChanged(String key, Object newValue);
+
+	/** A copy of the data that the card is displaying: thread safe, and changes to this map have no impact */
+	Map<String, Object> data();
 
 	void addLineSelectedListener(ILineSelectedListener listener);
 
@@ -16,9 +18,5 @@ public interface ICard extends IHasComposite {
 	String cardType();
 
 	String url();
-
-	Map<String, Object> rawData();
-
-	List<KeyValue> data();
 
 }

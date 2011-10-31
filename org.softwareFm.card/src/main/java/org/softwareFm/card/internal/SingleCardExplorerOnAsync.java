@@ -1,6 +1,7 @@
 package org.softwareFm.card.internal;
 
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.widgets.Composite;
@@ -9,7 +10,6 @@ import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
-import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
@@ -30,9 +30,9 @@ public class SingleCardExplorerOnAsync {
 				final CardHolder cardHolder = new CardHolder(from, "Loading", "title", cardConfig, CardDataStoreFixture.url, ICallback.Utils.<String> noCallback());
 				final CardCollectionsDataStore dataStore = new CardCollectionsDataStore() {
 					@Override
-					protected String findFollowOnUrlFragment(KeyValue keyValue) {
-						if (keyValue.value instanceof Map<?, ?>) {
-							Map<?, ?> map = (Map<?, ?>) keyValue.value;
+					protected String findFollowOnUrlFragment(Entry<String, Object> entry) {
+						if (entry.getValue() instanceof Map<?, ?>) {
+							Map<?, ?> map = (Map<?, ?>) entry.getValue();
 							String result = (String) map.get("value");
 							return result;
 						} else
@@ -40,7 +40,7 @@ public class SingleCardExplorerOnAsync {
 					}
 				};
 
-				new Thread() {
+				Thread thread = new Thread() {
 					@Override
 					public void run() {
 						try {
@@ -51,7 +51,7 @@ public class SingleCardExplorerOnAsync {
 								((GatedMockFuture<?, ?>) status.initialFuture).kick();
 								Thread.sleep(delay);
 								for (int i = 0; i < status.keyValueFutures.size(); i++) {
-									final Future<KeyValue> f = status.keyValueFutures.get(i);
+									final Future<Object> f = status.keyValueFutures.get(i);
 									Swts.asyncExec(cardHolder, new Runnable() {
 										@Override
 										public void run() {
@@ -70,7 +70,9 @@ public class SingleCardExplorerOnAsync {
 							e.printStackTrace();
 						}
 					};
-				}.start();
+				};
+				thread.setDaemon(true);
+				thread.start();
 				Swts.resizeMeToParentsSize(cardHolder.getControl());
 				return cardHolder.getComposite();
 			}

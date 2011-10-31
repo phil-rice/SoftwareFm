@@ -1,18 +1,19 @@
 package org.softwareFm.card.internal.modifiers;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
-import org.softwareFm.card.api.IKeyValueListModifier;
-import org.softwareFm.card.api.KeyValue;
+import org.softwareFm.card.api.ICardDataModifier;
+import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
 
-public class KeyValueMissingItemsAdder implements IKeyValueListModifier {
-
+public class KeyValueMissingItemsAdder implements ICardDataModifier {
+	
 	@Override
-	public List<KeyValue> modify(CardConfig cardConfig, ICard card, List<KeyValue> rawList) {
+	public Map<String, Object> modify(CardConfig cardConfig, ICard card, Map<String, Object> rawData) {
 		String missing = cardConfig.resourceGetter.getStringOrNull("missing.list");
 		if (missing != null) {
 			List<String> artifacts = Strings.splitIgnoreBlanks(missing, ",");
@@ -21,22 +22,18 @@ public class KeyValueMissingItemsAdder implements IKeyValueListModifier {
 				String missingForSegment = cardConfig.resourceGetter.getStringOrNull("missing." + cardType + ".list");
 				if (missingForSegment != null) {
 					List<String> missingList = Strings.splitIgnoreBlanks(missingForSegment, ",");
-					for (KeyValue kv : rawList) {
-						if (missingList.contains(kv.key))
-							missingList.remove(kv.key);
-					}
+					missingList.removeAll(rawData.keySet());
 					if (!missingList.isEmpty()) {
-						List<KeyValue> results = new ArrayList<KeyValue>(rawList);
+						Map<String, Object> result = Maps.copyMap(rawData);
 						for (String missingItem : missingList) {
-							String value = cardConfig.resourceGetter.getStringOrNull("missing." + missingItem + ".default");
-							results.add(new KeyValue(missingItem, Strings.nullSafeToString(value)));
+							String value = IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "missing." + missingItem + ".default");
+							result.put(missingItem, value);
 						}
-						return results;
+						return result;
 					}
 				}
-
 			}
 		}
-		return rawList;
+		return rawData;
 	}
 }

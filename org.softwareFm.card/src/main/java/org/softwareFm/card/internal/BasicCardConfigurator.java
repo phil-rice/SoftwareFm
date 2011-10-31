@@ -14,17 +14,20 @@ import org.eclipse.swt.widgets.Display;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardConfigurator;
+import org.softwareFm.card.api.ICardDataModifier;
 import org.softwareFm.card.api.IDetailFactory;
-import org.softwareFm.card.api.IKeyValueListModifier;
 import org.softwareFm.card.api.KeyValue;
+import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.internal.details.CollectionsDetailAdder;
 import org.softwareFm.card.internal.details.ListDetailAdder;
 import org.softwareFm.card.internal.details.TextEditorDetailAdder;
-import org.softwareFm.card.internal.modifiers.KeyValueListSorter;
+import org.softwareFm.card.internal.modifiers.AggregatorModifier;
+import org.softwareFm.card.internal.modifiers.CardMapSorter;
 import org.softwareFm.card.internal.modifiers.KeyValueMissingItemsAdder;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.title.TitleAnchor;
+import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
@@ -95,13 +98,13 @@ public class BasicCardConfigurator implements ICardConfigurator {
 				Object object = from.get("sling:resourceType");
 				if (object == null)
 					return null;// imageRegistry.get(TitleAnchor.folderKey);
-				if (object.equals("softwareFm_group"))
+				if (object.equals(CardConstants.group))
 					return imageRegistry.get(TitleAnchor.groupKey);
-				else if (object.equals("softwareFm_artifact"))
+				else if (object.equals(CardConstants.artifact))
 					return imageRegistry.get(TitleAnchor.artifactKey);
-				else if (object.equals("softwareFm_version"))
+				else if (object.equals(CardConstants.version))
 					return imageRegistry.get(TitleAnchor.versionKey);
-				else if (object.equals("softwareFm_version_jar"))
+				else if (object.equals(CardConstants.versionJar))
 					return imageRegistry.get(TitleAnchor.jarKey);
 				else
 					return null;
@@ -113,24 +116,30 @@ public class BasicCardConfigurator implements ICardConfigurator {
 		String orderAsString = resourceGetter.getStringOrNull("card.order");
 		String[] order = orderAsString.split(",");
 
-		List<IKeyValueListModifier> modifiers = Arrays.asList(new KeyValueMissingItemsAdder(), new KeyValueListSorter());
+		List<ICardDataModifier> modifiers = Arrays.asList(new AggregatorModifier(Arrays.asList("jcr:primaryType")), new KeyValueMissingItemsAdder(), new CardMapSorter());
 
 		IDetailFactory detailFactory = IDetailFactory.Utils.detailsFactory(new CollectionsDetailAdder(), new ListDetailAdder(), new TextEditorDetailAdder());
-		IFunction1<ICard, KeyValue> defaultChildFn = new IFunction1<ICard, KeyValue>() {
+		IFunction1<ICard, String> defaultChildFn = new IFunction1<ICard, String>() {
 			final Map<String, String> typeToDefaultChildMap = Maps.makeMap("group", "artifact", "artifact", "version");
 
 			@Override
-			public KeyValue apply(ICard from) throws Exception {
+			public String apply(ICard from) throws Exception {
 				String cardType = typeToDefaultChildMap.get(from.cardType());
-				for (KeyValue keyValue : from.data())
-					if (keyValue.key.equals(cardType))
-						return keyValue;
-				for (KeyValue keyValue : from.data())
-					if (keyValue.key.equals("nt:unstructured"))
-						return keyValue;
-				for (KeyValue keyValue : from.data())
-					if (keyValue.key.equals("group"))
-						return keyValue;
+				Map<String, Object> data = from.data();
+				if (data.containsKey(cardType))
+					return cardType;
+				if (data.containsKey("nt:unstructured"))
+					return "nt:unstructured"; 
+				
+//				for (KeyValue keyValue : from.data())
+//					if (keyValue.key.equals(cardType))
+//						return keyValue;
+//				for (KeyValue keyValue : from.data())
+//					if (keyValue.key.equals("nt:unstructured"))
+//						return keyValue;
+//				for (KeyValue keyValue : from.data())
+//					if (keyValue.key.equals("group"))
+//						return keyValue;
 				return null;
 			}
 
@@ -148,7 +157,7 @@ public class BasicCardConfigurator implements ICardConfigurator {
 				withNavIconFn(navIconFn).//
 				withDetailsFactory(detailFactory).//
 				withDefaultChildFn(defaultChildFn).//
-				withSorter(KeyValue.Utils.orderedKeyComparator(order)).//
+				withSorter(Lists.orderedComparator(order)).//
 				withKeyValueModifiers(modifiers);
 	}
 

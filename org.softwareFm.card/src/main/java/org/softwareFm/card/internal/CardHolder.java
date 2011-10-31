@@ -20,7 +20,6 @@ import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardHolder;
 import org.softwareFm.card.api.ILineSelectedListener;
-import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.card.navigation.ITitleBarForCard;
 import org.softwareFm.card.navigation.NavBar;
 import org.softwareFm.card.navigation.NavTitle;
@@ -111,9 +110,9 @@ public class CardHolder implements ICardHolder {
 
 				card.addLineSelectedListener(new ILineSelectedListener() {
 					@Override
-					public void selected(ICard card, KeyValue keyValue) {
+					public void selected(ICard card, String key, Object value) {
 						for (ILineSelectedListener listener : lineListeners)
-							listener.selected(card, keyValue);
+							listener.selected(card, key, value);
 					}
 				});
 			} catch (Exception e) {

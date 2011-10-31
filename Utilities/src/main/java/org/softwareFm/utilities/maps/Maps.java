@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
@@ -440,6 +441,14 @@ public class Maps {
 		Map<K, V> result = Maps.copyMap(map);
 		for (K key : keys)
 			result.remove(key);
+		return result;
+	}
+
+	public static<K,V> Map<K, V> sortByKey(Map<K,V> map, Comparator<K> comparator) {
+		List<K> sortedKeys = Lists.sort(map.keySet(), comparator);
+		Map<K, V> result = new LinkedHashMap<K, V>();
+		for (K key: sortedKeys)
+			result.put(key, map.get(key));
 		return result;
 	}
 }

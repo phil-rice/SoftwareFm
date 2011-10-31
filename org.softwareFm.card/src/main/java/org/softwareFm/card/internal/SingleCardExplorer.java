@@ -12,7 +12,6 @@ import org.softwareFm.card.api.ICardChangedListener;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardHolder;
-import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
@@ -28,8 +27,8 @@ public class SingleCardExplorer implements IHasComposite {
 	private final Text text;
 	private final CardCollectionsDataStore cardCollectionsDataStore = new CardCollectionsDataStore() {
 		@Override
-		protected String findFollowOnUrlFragment(KeyValue keyValue) {
-			return CardConfig.defaultBodgedUrlFragments.contains(keyValue.key) ? keyValue.key : null;
+		protected String findFollowOnUrlFragment(java.util.Map.Entry<String,Object> entry) {
+			return CardConfig.defaultBodgedUrlFragments.contains(entry.getKey()) ? entry.getKey() : null;
 		};
 	};
 
@@ -47,7 +46,7 @@ public class SingleCardExplorer implements IHasComposite {
 		cardHolder.addCardChangedListener(new ICardChangedListener() {
 			@Override
 			public void cardChanged(ICardHolder cardHolder, ICard card) {
-				text.setText(card.rawData().toString());
+				text.setText(card.data().toString());
 			}
 		});
 	}
@@ -68,8 +67,8 @@ public class SingleCardExplorer implements IHasComposite {
 
 	public static void main(String[] args) {
 		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacardForCardExplorer();
-		final String rootUrl = "/softwareFm/content";
-		final String firstUrl = "/softwareFm/content/org";
+		final String rootUrl = "/softwareFm/data";
+		final String firstUrl = "/softwareFm/data/org";
 		try {
 			Swts.display(SingleCardExplorer.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 				@Override

@@ -1,8 +1,9 @@
 package org.softwareFm.card.internal;
 
-import java.util.ArrayList;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.swt.SWT;
@@ -27,19 +28,31 @@ import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class Card implements ICard {
-	private final List<KeyValue> data;
+	/** Holds strategies and values to control how the card is displayed */
+	private final CardConfig cardConfig;
+	/**The original data passed to you. Kept for debugging / tests */
+	private final Map<String, Object> rawData;
+	/** the current view of the data. It may change as more information is acquired from the server. It will often have been aggregated */
+	private final Map<String, Object> data;
+
+	/**The url that this card is a representation of */
 	private final String url;
 
+	/** The gui component that displays the data */
 	private final Table table;
 	private final TableColumn nameColumn;
 	private final TableColumn valueColumn;
+	
+	/**If a line is selected by the user, then these listeners are informed */
 	private final List<ILineSelectedListener> lineSelectedListeners = new CopyOnWriteArrayList<ILineSelectedListener>();
-	private final CardConfig cardConfig;
-	private final Map<String, Object> rawData;
+	/** Controls access to data */
 	private final Object lock = new Object();
+	
+	/** What type of card is this? Examples are the strings 'collection', 'group', 'artifact'*/
 	private String cardType;
 
 	public Card(Composite parent, final CardConfig cardConfig, final String url, Map<String, Object> rawData) {
@@ -59,8 +72,9 @@ public class Card implements ICard {
 		valueColumn.setWidth(100);
 		table.setDragDetect(true);
 		int i = 0;
-		for (KeyValue keyValue : data) {
-			if (!Functions.call(cardConfig.hideFn, keyValue)) {
+		for (Entry<String, Object> entry : data.entrySet()) {
+			KeyValue keyValue = new KeyValue(entry.getKey(), entry.getValue());
+			if (!Functions.call(cardConfig.hideFn, keyValue)) { //Have to make an object here, but we are decoupling how we store the data, and the JVM probably optimises it away anyway
 				TableItem tableItem = new TableItem(table, SWT.NULL);
 				setTableItem(i, cardConfig, tableItem, keyValue);
 			}
@@ -76,9 +90,9 @@ public class Card implements ICard {
 				int index = table.getSelectionIndex();
 				if (index == -1)
 					return;
-				KeyValue keyValue = (KeyValue) table.getItem(index).getData();
+				String key = (String) table.getItem(index).getData();
 				for (ILineSelectedListener lineSelectedListener : lineSelectedListeners) {
-					lineSelectedListener.selected(Card.this, keyValue);
+					lineSelectedListener.selected(Card.this, key, data.get(key));
 				}
 				if (!cardConfig.allowSelection)
 					table.deselectAll();
@@ -112,31 +126,29 @@ public class Card implements ICard {
 		String displayValue = Functions.call(cardConfig.valueFn, keyValue);
 		String name = Functions.call(cardConfig.nameFn, keyValue);
 		tableItem.setText(new String[] { name, displayValue });
-		tableItem.setData(keyValue);
+		tableItem.setData(keyValue.key);
 	}
-
+	
 	@Override
-	public KeyValue valueChanged(final KeyValue keyValue, final Object newValue) {
+	public void valueChanged(String key, Object newValue) {
+		int index = findTableItem(key);
 		synchronized (lock) {
-			int index = data.indexOf(keyValue);
 			try {
-				TableItem item = findTableItem(keyValue); // cannot go via index, as not all data items are displayed
-				KeyValue newKeyValue = new KeyValue(keyValue.key, newValue);
-				data.set(index, newKeyValue); // just keeping it around for debugging purposes
-				setTableItem(index, cardConfig, item, newKeyValue);
+				TableItem item = table.getItem(index);
+				data.put(key, newValue);
+				setTableItem(index, cardConfig, item, new KeyValue(key, newValue));
 				table.redraw();
-				return newKeyValue;
 			} catch (IllegalArgumentException e) {
-				throw new RuntimeException("Index: " + index + ", \nKeyValue: " + keyValue + "\nNewValue: " + newValue, e);
+				throw new RuntimeException(MessageFormat.format(CardConstants.exceptionChangingValue, key, index, newValue));
 			}
 		}
 	}
 
-	private TableItem findTableItem(KeyValue keyValue) {
-		for (TableItem item : table.getItems())
-			if (item.getData() == keyValue)
-				return item;
-		throw new RuntimeException("KeyValue: " + keyValue);
+	private int findTableItem(String key) {
+		for (int i = 0; i<table.getItemCount(); i++)
+			if (table.getItem(i).getData() == key)
+				return i;
+		throw new RuntimeException(MessageFormat.format(CardConstants.cannotFindTableItemWithKey,  key));
 	}
 
 	@Override
@@ -165,13 +177,12 @@ public class Card implements ICard {
 	}
 
 	@Override
-	public List<KeyValue> data() {
+	public Map<String, Object> data() {
 		synchronized (lock) {
-			return new ArrayList<KeyValue>(data);
+			return Maps.copyMap(data);
 		}
 	}
 
-	@Override
 	public Map<String, Object> rawData() {
 		return rawData;
 	}

@@ -9,6 +9,6 @@ import org.softwareFm.display.composites.IHasControl;
 
 public interface IDetailAdder {
 
-	IHasControl add(Composite parentComposite, ICard parentCard, CardConfig cardConfig, KeyValue keyValue, ICardSelectedListener listener, Runnable afterEdit);
+	IHasControl add(Composite parentComposite, ICard parentCard, CardConfig cardConfig, String key, Object value, ICardSelectedListener listener, Runnable afterEdit);
 
 }

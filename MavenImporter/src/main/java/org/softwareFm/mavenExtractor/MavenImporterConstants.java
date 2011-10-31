@@ -30,6 +30,7 @@ public class MavenImporterConstants {
 
 	public static final String collectionResourceType = "collection";
 	public static final String jarResourceType = "jar";
+	//TODO Merge these with CardConstants, and remove any literals
 	public static final String groupResourceType = "group";
 	public static final String artifactResourceType = "artifact";
 	public static final String versionResourceType = "version";

@@ -36,7 +36,7 @@ abstract public class AbstractDetailTest extends SwtIntegrationTest {
 	}
 
 	protected void checkGetNull(DetailFactory detailFactory, KeyValue keyValue) {
-		IHasControl actual = detailFactory.makeDetail(shell, parentCard, cardConfig, keyValue, ICardSelectedListener.Utils.noListener(), Runnables.noRunnable);
+		IHasControl actual = detailFactory.makeDetail(shell, parentCard, cardConfig, keyValue, value, ICardSelectedListener.Utils.noListener(), Runnables.noRunnable);
 		assertNull(actual);
 	}
 
