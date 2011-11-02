@@ -20,7 +20,7 @@ public class CardMock implements ICard {
 	private final Composite mockComposite;
 
 	public CardMock(ICardHolder cardHolder, CardConfig cardConfig, String url, Map<String, Object> map) {
-		mockComposite = new Composite(cardHolder.getComposite(), SWT.NULL);
+		mockComposite = cardHolder == null?null:new Composite(cardHolder.getComposite(), SWT.NULL);
 		this.cardHolder = cardHolder;
 		this.cardConfig = cardConfig;
 		this.url = url;

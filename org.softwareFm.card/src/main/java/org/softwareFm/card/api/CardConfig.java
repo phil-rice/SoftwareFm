@@ -22,6 +22,7 @@ import org.softwareFm.utilities.strings.Strings;
 public class CardConfig {
 
 	public static final IFunction1<String, String> defaultCardTitleFn = Strings.lastSegmentFn("/");
+	public final boolean debugModifiers = true;
 
 	public final int cardNameWeight = 8;
 	public final int cardValueWeight = 8;
@@ -172,16 +173,25 @@ public class CardConfig {
 	public CardConfig withDetailsFactory(IDetailFactory detailFactory) {
 		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, comparator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
 	}
-	
+
 	public CardConfig withDefaultChildFn(IFunction1<ICard, String> defaultChildFn) {
 		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, comparator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers);
 	}
 
 	public Map<String, Object> modify(ICard card, Map<String, Object> rawData) {
 		Map<String, Object> value = rawData;
-		for (ICardDataModifier modifer : keyValueModifiers)
-			value = modifer.modify(this, card, value);
+		debugModifiers("Initial " + card.url(), value);
+		for (ICardDataModifier modifier : keyValueModifiers) {
+			value = modifier.modify(this, card, value);
+			debugModifiers(modifier.getClass().getSimpleName(), value);
+		}
 		return value;
+	}
+
+	private void debugModifiers(String message, Map<String, Object> value) {
+		System.out.println(message);
+		System.out.println(value);
+		System.out.println();
 	}
 
 }

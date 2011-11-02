@@ -21,8 +21,9 @@ import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.internal.details.CollectionsDetailAdder;
 import org.softwareFm.card.internal.details.ListDetailAdder;
 import org.softwareFm.card.internal.details.TextEditorDetailAdder;
-import org.softwareFm.card.internal.modifiers.AggregatorModifier;
 import org.softwareFm.card.internal.modifiers.CardMapSorter;
+import org.softwareFm.card.internal.modifiers.CollectionsAggregatorModifier;
+import org.softwareFm.card.internal.modifiers.FolderAggregatorModifier;
 import org.softwareFm.card.internal.modifiers.KeyValueMissingItemsAdder;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
@@ -115,7 +116,7 @@ public class BasicCardConfigurator implements ICardConfigurator {
 		String orderAsString = resourceGetter.getStringOrNull("card.order");
 		String[] order = orderAsString.split(",");
 
-		List<ICardDataModifier> modifiers = Arrays.asList(new AggregatorModifier(Arrays.asList("jcr:primaryType")), new KeyValueMissingItemsAdder(), new CardMapSorter());
+		List<ICardDataModifier> modifiers = Arrays.asList(new CollectionsAggregatorModifier(CardConstants.slingResourceType), new FolderAggregatorModifier(CardConstants.jcrPrimaryType, CardConstants.ntUnstructured), new KeyValueMissingItemsAdder(), new CardMapSorter());
 
 		IDetailFactory detailFactory = IDetailFactory.Utils.detailsFactory(new CollectionsDetailAdder(), new ListDetailAdder(), new TextEditorDetailAdder());
 		IFunction1<ICard, String> defaultChildFn = new IFunction1<ICard, String>() {
