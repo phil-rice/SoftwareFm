@@ -50,23 +50,21 @@ public class CollectionsAggregatorModifierTest extends TestCase {
 		check(item1_t2, item1_t2);
 	}
 
-	// So {k1 -> v1, k2 -> v2, where v1 and v2 are tagged, we end up with tag -> {k1->v1, k2->v2}
-	// If the tag is the same as the key, then it will appear to be redundant
-	// this does mean that if you have a key with the same value as a tag, then problems will occur: however I think that we deal with that by sfm_ prefix
+	//TODO Come back and sort this out...
 	public void testTransformsKeyValueWhenValueHasTagIntoTagAndListOfValuesThatShareTag() {
 		check(compWithOneTaggedChildren, Maps.stringObjectMap(//
-				"t1", Maps.stringObjectMap("ct1", item1_t1), //
+				"ct1", item1_t1, //
 				"tag", "irrelevant"));
 		check(compWithTwoDifferentlyTaggedChildren, Maps.stringObjectMap(//
-				"t1", Maps.stringObjectMap("ct1", item1_t1), //
-				"t2", Maps.stringObjectMap("ct2", item1_t2), //
+				"ct1", item1_t1, //
+				"ct2", item1_t2, //
 				"tag", "irrelevant"));
 		check(compWithTwoSameTaggedChildren, Maps.stringObjectMap(//
-				"t1", Maps.stringObjectMap("ct1", item1_t1, "ct2", item2_t1), //
+				"ct1", item1_t1, "ct2", item2_t1, //
 				"tag", "irrelevant"));
 		check(compWithFourTaggedChildren, Maps.stringObjectMap(//
-				"t1", Maps.stringObjectMap("ct11", item1_t1, "ct21", item2_t1), //
-				"t2", Maps.stringObjectMap("ct12", item1_t2, "ct22", item2_t2), //
+				"ct11", item1_t1, "ct21", item2_t1, //
+				"ct12", item1_t2, "ct22", item2_t2, //
 				"tag", "irrelevant"));
 	}
 

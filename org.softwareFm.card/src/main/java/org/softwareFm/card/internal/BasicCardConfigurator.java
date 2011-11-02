@@ -2,10 +2,12 @@ package org.softwareFm.card.internal;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.jface.resource.ImageRegistry;
@@ -58,11 +60,25 @@ public class BasicCardConfigurator implements ICardConfigurator {
 			public String apply(KeyValue from) throws Exception {
 				String key = findKey(from);
 				String pattern = resourceGetter.getStringOrNull(key + ".value");
-				int size = from.value instanceof Map<?, ?> ? ((Map<?, ?>) from.value).size() : 0;
+				int size = findSize(from);
 				if (pattern == null)
 					return Strings.nullSafeToString(from.value);
 				else
 					return MessageFormat.format(pattern, key, size);
+			}
+
+			private int findSize(KeyValue from) {
+				Object value = from.value;
+				if (value instanceof Collection<?>)
+					throw new IllegalStateException();
+				else if (value instanceof Map<?, ?>) {
+					int i = 0;
+					for (Entry<?, ?> entry : ((Map<?, ?>) value).entrySet())
+						if (entry.getValue() instanceof Map<?, ?>)
+							i++;
+					return i;
+				} else
+					return 0;
 			}
 		};
 		IFunction1<KeyValue, Boolean> hideFn = new IFunction1<KeyValue, Boolean>() {
@@ -116,9 +132,12 @@ public class BasicCardConfigurator implements ICardConfigurator {
 		String orderAsString = resourceGetter.getStringOrNull("card.order");
 		String[] order = orderAsString.split(",");
 
-		List<ICardDataModifier> modifiers = Arrays.asList(new CollectionsAggregatorModifier(CardConstants.slingResourceType), new FolderAggregatorModifier(CardConstants.jcrPrimaryType, CardConstants.ntUnstructured), new KeyValueMissingItemsAdder(), new CardMapSorter());
+		List<ICardDataModifier> modifiers = Arrays.asList(new CollectionsAggregatorModifier(CardConstants.slingResourceType), new FolderAggregatorModifier(CardConstants.jcrPrimaryType, CardConstants.ntUnstructured, CardConstants.slingResourceType), new KeyValueMissingItemsAdder(), new CardMapSorter());
 
-		IDetailFactory detailFactory = IDetailFactory.Utils.detailsFactory(new CollectionsDetailAdder(), new ListDetailAdder(), new TextEditorDetailAdder());
+		IDetailFactory detailFactory = IDetailFactory.Utils.detailsFactory(//
+				new CollectionsDetailAdder(), //
+				new ListDetailAdder(), //
+				new TextEditorDetailAdder());
 		IFunction1<ICard, String> defaultChildFn = new IFunction1<ICard, String>() {
 			final Map<String, String> typeToDefaultChildMap = Maps.makeMap("group", "artifact", "artifact", "version");
 

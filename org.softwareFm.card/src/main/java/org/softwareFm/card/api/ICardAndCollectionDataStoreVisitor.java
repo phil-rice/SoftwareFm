@@ -17,8 +17,8 @@ public interface ICardAndCollectionDataStoreVisitor {
 	void finished(ICardHolder cardHolder, String url, ICard card);
 
 	public static class Utils {
-		public static CardAndCollectionDataStoreVisitorMock noVisitor() {
-			return new CardAndCollectionDataStoreVisitorMock() {
+		public static CardAndCollectionDataStoreVisitorMonitored noVisitor() {
+			return new CardAndCollectionDataStoreVisitorMonitored() {
 				@Override
 				public void initialUrl(ICardHolder cardHolder, CardConfig cardConfig, String url) {
 				}
@@ -45,8 +45,8 @@ public interface ICardAndCollectionDataStoreVisitor {
 			};
 		}
 
-		public static CardAndCollectionDataStoreVisitorMock sysout() {
-			return new CardAndCollectionDataStoreVisitorMock() {
+		public static CardAndCollectionDataStoreVisitorMonitored sysout() {
+			return new CardAndCollectionDataStoreVisitorMonitored() {
 				private int h(Object object) {
 					return object.hashCode() % 1000;
 				}

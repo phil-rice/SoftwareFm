@@ -16,7 +16,6 @@ import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardHolder;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.future.GatedFuture;
 
@@ -45,12 +44,9 @@ public class CardCollectionsDataStore implements ICardAndCollectionsDataStore {
 								visitor.followedUp(cardHolder, url, card, followUpUrl, result);
 								try {
 									if (!cardHolder.getControl().isDisposed() && !card.getControl().isDisposed()) {
-										List<KeyValue> list = Lists.newList();
-										for (Entry<String, Object> entry : result.entrySet())
-											if (entry.getValue() instanceof Map<?, ?>)
-												list.add(new KeyValue(followOnUrlFragment + "/" + entry.getKey(), entry.getValue()));
-										card.valueChanged(entry.getKey(), list);
-										return new KeyValue(entry.getKey(), list);
+										Map<String, Object> moreData = cardConfig.modify(card, result);
+										card.valueChanged(entry.getKey(), moreData);
+										return new KeyValue(entry.getKey(), moreData);
 									}
 									return null;
 								} finally {

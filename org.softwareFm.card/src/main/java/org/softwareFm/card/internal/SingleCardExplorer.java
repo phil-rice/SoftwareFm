@@ -5,7 +5,7 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
-import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMock;
+import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMonitored;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardChangedListener;
@@ -37,7 +37,7 @@ public class SingleCardExplorer implements IHasComposite {
 		callbackToGotoUrl = new ICallback<String>() {
 			@Override
 			public void process(String url) throws Exception {
-				cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, CardAndCollectionDataStoreVisitorMock.Utils.sysout());
+				cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, CardAndCollectionDataStoreVisitorMonitored.Utils.sysout());
 			}
 		};
 		cardHolder = new CardHolder(sashForm, "loading", "Some title", cardConfig, rootUrl, callbackToGotoUrl);

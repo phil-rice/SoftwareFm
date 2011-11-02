@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 
+import org.softwareFm.card.internal.details.IAfterEditCallback;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.constants.UtilityConstants;
 import org.softwareFm.utilities.exceptions.WrappedException;
@@ -43,9 +44,9 @@ public class CardDataStoreAsyncMock implements IMutableCardDataStore {
 	}
 
 	@Override
-	public void put(String url, Map<String, Object> map, Runnable afterEdit) {
+	public void put(String url, Map<String, Object> map, IAfterEditCallback afterEdit) {
 		Maps.addToList(rememberedPuts, url, map);
-		afterEdit.run();
+		afterEdit.afterEdit();
 	}
 
 }

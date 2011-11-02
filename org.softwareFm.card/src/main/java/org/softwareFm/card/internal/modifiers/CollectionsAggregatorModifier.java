@@ -34,7 +34,8 @@ public class CollectionsAggregatorModifier implements ICardDataModifier {
 			} else
 				result.put(key, value);
 		}
-		result.putAll(aggregates);// note that this means that we cannot have a key with the same name as a tag.
+		for (Entry<String, Map<String, Object>> entry : aggregates.entrySet())
+			result.putAll(entry.getValue());
 		return result;
 	}
 

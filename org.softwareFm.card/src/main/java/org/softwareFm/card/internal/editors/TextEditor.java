@@ -14,6 +14,7 @@ import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.IMutableCardDataStore;
 import org.softwareFm.card.api.KeyValue;
+import org.softwareFm.card.internal.details.IDetailsFactoryCallback;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.swt.Swts;
@@ -33,7 +34,7 @@ public class TextEditor implements IHasControl {
 		private final Button cancelButton;
 		private final String originalValue;
 
-		public TextEditorComposite(Composite parent, int style, final ICard card, final CardConfig cardConfig, final String key, Object value, final Runnable afterEdit) {
+		public TextEditorComposite(Composite parent, int style, final ICard card, final CardConfig cardConfig, final String key, Object value, final IDetailsFactoryCallback callback) {
 			super(parent, style);
 			titleLabel = new Label(this, SWT.NULL);
 			KeyValue keyValue = new KeyValue(key, value);
@@ -60,7 +61,7 @@ public class TextEditor implements IHasControl {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					IMutableCardDataStore cardDataStore = (IMutableCardDataStore) cardConfig.cardDataStore;
-					cardDataStore.put(card.url(), Maps.<String, Object> makeMap(key, text.getText()), afterEdit);
+					cardDataStore.put(card.url(), Maps.<String, Object> makeMap(key, text.getText()), callback);
 					TextEditorComposite.this.dispose();
 				}
 
@@ -82,8 +83,8 @@ public class TextEditor implements IHasControl {
 		}
 	}
 
-	public TextEditor(Composite parentComposite, ICard card, CardConfig cardConfig, String key, Object value, Runnable afterEdit) {
-		content = new TextEditorComposite(parentComposite, SWT.NULL, card, cardConfig, key, value, afterEdit);
+	public TextEditor(Composite parentComposite, ICard card, CardConfig cardConfig, String key, Object value, IDetailsFactoryCallback callback) {
+		content = new TextEditorComposite(parentComposite, SWT.NULL, card, cardConfig, key, value, callback);
 	}
 
 	@Override

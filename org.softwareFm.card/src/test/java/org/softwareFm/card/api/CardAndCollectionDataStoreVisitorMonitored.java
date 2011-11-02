@@ -2,7 +2,7 @@ package org.softwareFm.card.api;
 
 import java.util.Map;
 
-public class CardAndCollectionDataStoreVisitorMock implements ICardAndCollectionDataStoreVisitor {
+public class CardAndCollectionDataStoreVisitorMonitored implements ICardAndCollectionDataStoreVisitor {
 
 	public int initialUrlCount;
 	public int initialCardCount;

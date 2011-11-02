@@ -3,7 +3,7 @@ package org.softwareFm.card.internal;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
 
-import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMock;
+import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMonitored;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreAsyncMock;
 import org.softwareFm.card.api.CardDataStoreFixture;
@@ -21,7 +21,7 @@ public abstract class AbstractCardCollectionsDataStoreTest extends SwtIntegratio
 	protected CardAndCollectionsStatus status;
 	protected CardAndCollectionsStatus followUpQueryStatus;
 	private CardFactoryMock mockCardFactory;
-	protected CardAndCollectionDataStoreVisitorMock memory;
+	protected CardAndCollectionDataStoreVisitorMonitored memory;
 
 	public void testNothingHappenBeforeInitialQueryReturns() throws InterruptedException, ExecutionException {
 		assertEquals(1, memory.initialUrlCount);
@@ -62,7 +62,7 @@ public abstract class AbstractCardCollectionsDataStoreTest extends SwtIntegratio
 				return AbstractCardCollectionsDataStoreTest.this.findFollowOnUrlFragment(entry);
 			}
 		};
-		memory = new CardAndCollectionDataStoreVisitorMock();
+		memory = new CardAndCollectionDataStoreVisitorMonitored();
 		status = cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, CardDataStoreFixture.url, memory);
 	}
 

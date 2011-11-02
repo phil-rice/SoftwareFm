@@ -2,12 +2,10 @@ package org.softwareFm.card.internal.details;
 
 import java.util.Arrays;
 
-import org.softwareFm.card.api.ICardSelectedListener;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.card.internal.CardCollectionHolder;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.runnable.Runnables;
 import org.softwareFm.utilities.strings.Strings;
 
 public abstract class AbstractDetailsAdderTest<T extends IDetailAdder> extends AbstractDetailTest {
@@ -25,7 +23,7 @@ public abstract class AbstractDetailsAdderTest<T extends IDetailAdder> extends A
 	abstract protected T makeDetailsAdder();
 
 	protected void checkGetCardCollectionsHolder(KeyValue keyValue, String expectedUrl) {
-		IHasControl actual = adder.add(shell, parentCard, cardConfig, keyValue.key, keyValue.value,ICardSelectedListener.Utils.noListener(), Runnables.noRunnable);
+		IHasControl actual = adder.add(shell, parentCard, cardConfig, keyValue.key, keyValue.value,IDetailsFactoryCallback.Utils.noCallback());
 		CardCollectionHolder holder = (CardCollectionHolder) actual;
 		assertSame(cardConfig, holder.getCardConfig());
 		assertSame(keyValue.key, holder.getKey());

@@ -6,6 +6,7 @@ import java.util.concurrent.Future;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.api.ICardDataStoreCallback;
 import org.softwareFm.card.api.IMutableCardDataStore;
+import org.softwareFm.card.internal.details.IAfterEditCallback;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
@@ -51,11 +52,11 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 	}
 
 	@Override
-	public void put(String url, Map<String, Object> map, final Runnable afterEdit) {
+	public void put(String url, Map<String, Object> map, final IAfterEditCallback afterEdit) {
 		this.facard.post(url, map, new IResponseCallback() {
 			@Override
 			public void process(IResponse response) {
-				afterEdit.run();
+				afterEdit.afterEdit();
 			}
 		});
 	}

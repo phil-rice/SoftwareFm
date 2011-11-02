@@ -12,10 +12,12 @@ public class FolderAggregatorModifier implements ICardDataModifier {
 
 	private final String tagName;
 	private final String lookedFor;
+	private final String ignoreTag;
 
-	public FolderAggregatorModifier(String tagName, String lookedFor) {
+	public FolderAggregatorModifier(String tagName, String lookedFor, String ignoreTag) {
 		this.tagName = tagName;
 		this.lookedFor = lookedFor;
+		this.ignoreTag = ignoreTag;
 	}
 
 	@Override
@@ -28,7 +30,8 @@ public class FolderAggregatorModifier implements ICardDataModifier {
 			if (value instanceof Map) {
 				Map<String, Object> valueMap = (Map<String, Object>) value;
 				Object tag = valueMap.get(tagName);
-				if (lookedFor.equals(tag)) {
+				
+				if (!valueMap.containsKey(ignoreTag)&&lookedFor.equals(tag)) {
 					aggregates.put(key, value);
 					continue;
 				}

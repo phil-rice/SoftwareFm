@@ -5,10 +5,11 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.junit.Test;
 import org.softwareFm.card.api.CardConfig;
-import org.softwareFm.card.api.ICardSelectedListener;
+import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.card.internal.editors.TextEditor;
 import org.softwareFm.display.composites.IHasControl;
@@ -174,8 +175,20 @@ public class TextEditorDetailAdderTest extends AbstractDetailsAdderTest<TextEdit
 
 	}
 
-	private TextEditor makeHolder(CardConfig cardConfig, KeyValue keyValue, Runnable afterEdit) {
-		IHasControl actual = adder.add(shell, parentCard, cardConfig, keyValue.key, keyValue.value,ICardSelectedListener.Utils.noListener(), afterEdit);
+	private TextEditor makeHolder(CardConfig cardConfig, KeyValue keyValue, final Runnable afterEdit) {
+		IHasControl actual = adder.add(shell, parentCard, cardConfig, keyValue.key, keyValue.value,new IDetailsFactoryCallback(){
+			@Override
+			public void cardSelected(ICard card) {
+			}
+
+			@Override
+			public void gotData(Control hasControl) {
+			}
+
+			@Override
+			public void afterEdit() {
+				afterEdit.run();
+			}});
 		TextEditor holder = (TextEditor) actual;
 		return holder;
 	}

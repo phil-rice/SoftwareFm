@@ -5,7 +5,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMock;
+import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMonitored;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICardDataStore;
@@ -45,7 +45,7 @@ public class SingleCardExplorerOnAsync {
 					public void run() {
 						try {
 							while (true) {
-								final CardAndCollectionsStatus status = dataStore.processDataFor(cardHolder, cardConfig, rootUrl, CardAndCollectionDataStoreVisitorMock.Utils.sysout());
+								final CardAndCollectionsStatus status = dataStore.processDataFor(cardHolder, cardConfig, rootUrl, CardAndCollectionDataStoreVisitorMonitored.Utils.sysout());
 								int delay = 1000;
 								Thread.sleep(delay);
 								((GatedMockFuture<?, ?>) status.initialFuture).kick();

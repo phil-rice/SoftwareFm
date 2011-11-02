@@ -588,8 +588,7 @@ public class Swts {
 
 	public static void setSizeToComputedAndLayout(IHasControl left, int wHint, int hHint) {
 		Control control = left.getControl();
-		Point computedSize = control.computeSize(wHint, hHint);
-		control.setSize(computedSize);
+		setSizeToComputedSize(control, wHint, hHint);
 		if (control instanceof Composite)
 			((Composite) control).layout();
 	}
@@ -613,8 +612,12 @@ public class Swts {
 
 	}
 
-	public static void setSizeToComputedSize(IHasControl control, int wHint, int hHint) {
+	public static void S(IHasControl control, int wHint, int hHint) {
 		Control c = control.getControl();
+		setSizeToComputedSize(c, wHint, hHint);
+	}
+
+	public static void setSizeToComputedSize(Control c, int wHint, int hHint) {
 		Point size = c.computeSize(wHint, hHint);
 		c.setSize(size);
 	}

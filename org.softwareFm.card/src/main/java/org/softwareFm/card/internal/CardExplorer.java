@@ -9,17 +9,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMock;
+import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMonitored;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardChangedListener;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardHolder;
-import org.softwareFm.card.api.ICardSelectedListener;
 import org.softwareFm.card.api.ILineSelectedListener;
+import org.softwareFm.card.internal.details.IDetailsFactoryCallback;
 import org.softwareFm.display.composites.IHasComposite;
-import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -52,7 +51,7 @@ public class CardExplorer implements IHasComposite {
 			callbackToGotoUrl = new ICallback<String>() {
 				@Override
 				public void process(String url) throws Exception {
-					cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, CardAndCollectionDataStoreVisitorMock.Utils.sysout());
+					cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, CardAndCollectionDataStoreVisitorMonitored.Utils.sysout());
 				}
 			};
 			cardHolder = new CardHolder(this, "loading", "Some title", cardConfig, rootUrl, callbackToGotoUrl);
@@ -84,32 +83,36 @@ public class CardExplorer implements IHasComposite {
 
 		private void setDetail(final ICard card, String key, Object value) {
 			removeDetailContents();
-			final IHasControl newControl = cardConfig.detailFactory.makeDetail(detail, card, cardConfig, key, value, new ICardSelectedListener() {
+			cardConfig.detailFactory.makeDetail(detail, card, cardConfig, key, value, new IDetailsFactoryCallback() {
+
+				@Override
+				public void afterEdit() {
+					ICallback.Utils.call(callbackToGotoUrl, card.url());
+				}
+
+				@Override
+				public void gotData(final Control control) {
+					listener = new Listener() {
+						@Override
+						public void handleEvent(Event event) {
+							// System.out.println("Resizing: " + detail.getClientArea());
+							Swts.setSizeToComputedSize(control, SWT.DEFAULT, detail.getClientArea().height);
+							detail.layout();
+						}
+					};
+					Swts.setSizeToComputedSize(control, SWT.DEFAULT, detail.getClientArea().height);
+					detail.addListener(SWT.Resize, listener);
+					detail.setContent(null);
+
+					detail.setContent(control);
+					detail.layout();
+				}
+
 				@Override
 				public void cardSelected(ICard card) {
 					ICallback.Utils.call(callbackToGotoUrl, card.url());
 				}
-			}, new Runnable() {
-				@Override
-				public void run() {
-					ICallback.Utils.call(callbackToGotoUrl, card.url());
-				}
 			});
-			if (newControl != null) {
-				listener = new Listener() {
-					@Override
-					public void handleEvent(Event event) {
-						// System.out.println("Resizing: " + detail.getClientArea());
-						Swts.setSizeToComputedSize(newControl, SWT.DEFAULT, detail.getClientArea().height);
-						detail.layout();
-					}
-				};
-				detail.addListener(SWT.Resize, listener);
-				detail.setContent(null);
-				Swts.setSizeToComputedSize(newControl, SWT.DEFAULT, detail.getClientArea().height);
-				detail.setContent(newControl.getControl());
-				detail.layout();
-			}
 		}
 
 		private void removeDetailContents() {

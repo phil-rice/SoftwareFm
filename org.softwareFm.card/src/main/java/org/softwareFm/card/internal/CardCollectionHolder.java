@@ -1,23 +1,29 @@
 package org.softwareFm.card.internal;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Future;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMock;
+import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMonitored;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardDataStore;
+import org.softwareFm.card.api.ICardDataStoreCallback;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardHolder;
 import org.softwareFm.card.api.ICardSelectedListener;
+import org.softwareFm.card.internal.details.IDetailsFactoryCallback;
+import org.softwareFm.card.internal.details.IGotDataCallback;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -43,21 +49,34 @@ public class CardCollectionHolder implements IHasComposite {
 			setLayout(new FillWithAspectRatioLayoutManager(3, 2));
 		}
 
-		@SuppressWarnings("unchecked")
-		protected void setKeyValue(final String rootUrl, String key, Object value) {
+		protected Future<?> setKeyValue(final String rootUrl, String key, Object value, final IGotDataCallback callback) {
 			this.key = key;
 			this.value = value;
 			Swts.removeAllChildren(this);
-			if (value instanceof Map<?,?>) {
-				Map<String, ?> map = Maps.sortByKey((Map<String,?>) value, cardConfig.comparator);
-				for (final Map.Entry<String, ?> childEntry: map.entrySet()){
-					final CardHolder cardHolder = new CardHolder(this, "loading", childEntry.getKey(), cardConfig, rootUrl, null);
-					cardHolder.getControl().addPaintListener(new PaintListener() {
+			final String thisUrl = rootUrl;
+			return cardConfig.cardDataStore.processDataFor(thisUrl, new ICardDataStoreCallback<Void>() {
+				@Override
+				public Void process(String url, Map<String, Object> result) throws Exception {
+					if (isDisposed())
+						return null;
+					Map<String, ?> map = Maps.sortByKey((Map<String, ?>) result, cardConfig.comparator);
+					for (final Map.Entry<String, ?> childEntry : map.entrySet()) {
+						if (childEntry.getValue() instanceof Map<?, ?>) {
+							final CardHolder cardHolder = new CardHolder(CardCollectionHolderComposite.this, "loading", childEntry.getKey(), cardConfig, rootUrl, null);
+							addPaintListenerThatGetsMoreData(rootUrl, childEntry, cardHolder);
+						}
+					}
+					callback.gotData(CardCollectionHolderComposite.this);
+					return null;
+				}
+
+				private void addPaintListenerThatGetsMoreData(final String rootUrl, final Map.Entry<String, ?> childEntry, final CardHolder cardHolder) {
+					PaintListener listener = new PaintListener() {
 						@Override
 						public void paintControl(PaintEvent e) {
 							cardHolder.getControl().removePaintListener(this);
 							if (!cardHolder.getControl().isDisposed()) {
-								CardAndCollectionDataStoreVisitorMock visitor = new CardAndCollectionDataStoreVisitorMock() {
+								CardAndCollectionDataStoreVisitorMonitored visitor = new CardAndCollectionDataStoreVisitorMonitored() {
 									@Override
 									public void initialUrl(ICardHolder cardHolder, CardConfig cardConfig, String url) {
 									}
@@ -66,7 +85,7 @@ public class CardCollectionHolder implements IHasComposite {
 									public void initialCard(ICardHolder cardHolder, CardConfig cardConfig, String url, final ICard card) {
 										card.getControl().addMouseListener(new MouseAdapter() {
 											@Override
-											public void mouseUp(org.eclipse.swt.events.MouseEvent e) {
+											public void mouseUp(MouseEvent e) {
 												for (ICardSelectedListener listener : listeners) {
 													listener.cardSelected(card);
 												}
@@ -90,14 +109,19 @@ public class CardCollectionHolder implements IHasComposite {
 									public void finished(ICardHolder cardHolder, String url, ICard card) {
 									}
 								};
-								cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, rootUrl + "/" + childEntry.getKey(), visitor);
+								String detailUrl = thisUrl + "/" + childEntry.getKey();
+								cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, detailUrl, visitor);
 							}
-						};
-
-					});
+						}
+					};
+					cardHolder.getControl().addPaintListener(listener);
 				}
-			}
-			layout();
+
+				@Override
+				public Void noData(String url) throws Exception {
+					return process(url, Collections.<String, Object> emptyMap());
+				}
+			});
 		}
 	}
 
@@ -109,9 +133,9 @@ public class CardCollectionHolder implements IHasComposite {
 		content = new CardCollectionHolderComposite(parent, cardConfig);
 	}
 
-	public void setKeyValue(final String rootUrl, String key, Object value) {
+	public void setKeyValue(final String rootUrl, String key, Object value, IGotDataCallback callback) {
 		this.rootUrl = rootUrl;
-		content.setKeyValue(rootUrl, key, value);
+		content.setKeyValue(rootUrl, key, value, callback);
 	}
 
 	public String getRootUrl() {
@@ -150,8 +174,7 @@ public class CardCollectionHolder implements IHasComposite {
 				final CardConfig cardConfig = new BasicCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 				IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "navBar.prev.title");
 				final CardCollectionHolder cardCollectionHolder = new CardCollectionHolder(from, cardConfig);
-				cardCollectionHolder.setKeyValue(CardDataStoreFixture.url, "stuff", Maps.makeMap(CardDataStoreFixture.dataIndexedByUrlFragment));
-				Swts.resizeMeToParentsSize(cardCollectionHolder.getControl());
+				cardCollectionHolder.setKeyValue(CardDataStoreFixture.url, "stuff", Maps.makeMap(CardDataStoreFixture.dataIndexedByUrlFragment), IDetailsFactoryCallback.Utils.resizeAfterGotData(cardCollectionHolder));
 				return cardCollectionHolder.getComposite();
 			}
 		});
