@@ -17,7 +17,7 @@ public class CollectionsDetailAdder implements IDetailAdder {
 			Object type = map.get("sling:resourceType");
 			if ("collection".equals(type)) {
 				CardCollectionHolder result = new CardCollectionHolder(parentComposite, cardConfig);
-				String newUrl = parentCard.url();
+				String newUrl = parentCard.url() +"/" + key;
 				result.setKeyValue(newUrl, key, value, callback);
 				return result;
 			}

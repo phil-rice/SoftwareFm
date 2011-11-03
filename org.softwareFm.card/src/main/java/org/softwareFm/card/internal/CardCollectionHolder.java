@@ -1,6 +1,5 @@
 package org.softwareFm.card.internal;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -18,7 +17,6 @@ import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardDataStore;
-import org.softwareFm.card.api.ICardDataStoreCallback;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardHolder;
 import org.softwareFm.card.api.ICardSelectedListener;
@@ -39,7 +37,7 @@ public class CardCollectionHolder implements IHasComposite {
 
 		private final CardConfig cardConfig;
 		private final List<ICardSelectedListener> listeners = new CopyOnWriteArrayList<ICardSelectedListener>();
-		private final CardCollectionsDataStore cardCollectionsDataStore = new CardCollectionsDataStore();
+	
 		private String key;
 		private Object value;
 
@@ -50,79 +48,72 @@ public class CardCollectionHolder implements IHasComposite {
 		}
 
 		protected Future<?> setKeyValue(final String rootUrl, String key, Object value, final IGotDataCallback callback) {
+			if (isDisposed())
+				return null;
 			this.key = key;
 			this.value = value;
 			Swts.removeAllChildren(this);
-			final String thisUrl = rootUrl;
-			return cardConfig.cardDataStore.processDataFor(thisUrl, new ICardDataStoreCallback<Void>() {
-				@Override
-				public Void process(String url, Map<String, Object> result) throws Exception {
-					if (isDisposed())
-						return null;
-					Map<String, ?> map = Maps.sortByKey((Map<String, ?>) result, cardConfig.comparator);
-					for (final Map.Entry<String, ?> childEntry : map.entrySet()) {
-						if (childEntry.getValue() instanceof Map<?, ?>) {
-							final CardHolder cardHolder = new CardHolder(CardCollectionHolderComposite.this, "loading", childEntry.getKey(), cardConfig, rootUrl, null);
-							addPaintListenerThatGetsMoreData(rootUrl, childEntry, cardHolder);
-						}
+			if (value instanceof Map<?, ?>) {
+				Map<String, ?> map = Maps.sortByKey((Map<String, ?>) value, cardConfig.comparator);
+				for (final Map.Entry<String, ?> childEntry : map.entrySet()) {
+					if (childEntry.getValue() instanceof Map<?, ?>) {
+						String detailUrl = rootUrl + "/" + childEntry.getKey();
+						final CardHolder cardHolder = new CardHolder(CardCollectionHolderComposite.this, "loading", childEntry.getKey(), cardConfig, detailUrl, null);
+						addPaintListenerThatGetsMoreData(detailUrl, childEntry, cardHolder);
 					}
-					callback.gotData(CardCollectionHolderComposite.this);
-					return null;
 				}
-
-				private void addPaintListenerThatGetsMoreData(final String rootUrl, final Map.Entry<String, ?> childEntry, final CardHolder cardHolder) {
-					PaintListener listener = new PaintListener() {
-						@Override
-						public void paintControl(PaintEvent e) {
-							cardHolder.getControl().removePaintListener(this);
-							if (!cardHolder.getControl().isDisposed()) {
-								CardAndCollectionDataStoreVisitorMonitored visitor = new CardAndCollectionDataStoreVisitorMonitored() {
-									@Override
-									public void initialUrl(ICardHolder cardHolder, CardConfig cardConfig, String url) {
-									}
-
-									@Override
-									public void initialCard(ICardHolder cardHolder, CardConfig cardConfig, String url, final ICard card) {
-										card.getControl().addMouseListener(new MouseAdapter() {
-											@Override
-											public void mouseUp(MouseEvent e) {
-												for (ICardSelectedListener listener : listeners) {
-													listener.cardSelected(card);
-												}
-											}
-										});
-									}
-
-									@Override
-									public void requestingFollowup(ICardHolder cardHolder, String url, ICard card, String followOnUrlFragment) {
-									}
-
-									@Override
-									public void followedUp(ICardHolder cardHolder, String url, ICard card, String followUpUrl, Map<String, Object> result) {
-									}
-
-									@Override
-									public void noData(ICardHolder cardHolder, String url, ICard card, String followUpUrl) {
-									}
-
-									@Override
-									public void finished(ICardHolder cardHolder, String url, ICard card) {
-									}
-								};
-								String detailUrl = thisUrl + "/" + childEntry.getKey();
-								cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, detailUrl, visitor);
-							}
-						}
-					};
-					cardHolder.getControl().addPaintListener(listener);
-				}
-
-				@Override
-				public Void noData(String url) throws Exception {
-					return process(url, Collections.<String, Object> emptyMap());
-				}
-			});
+				callback.gotData(CardCollectionHolderComposite.this);
+			}
+			return null;
 		}
+
+		private void addPaintListenerThatGetsMoreData(final String url, final Map.Entry<String, ?> childEntry, final CardHolder cardHolder) {
+			PaintListener listener = new PaintListener() {
+				@Override
+				public void paintControl(PaintEvent e) {
+					cardHolder.getControl().removePaintListener(this);
+					if (!cardHolder.getControl().isDisposed()) {
+						CardAndCollectionDataStoreVisitorMonitored visitor = new CardAndCollectionDataStoreVisitorMonitored() {
+							@Override
+							public void initialUrl(ICardHolder cardHolder, CardConfig cardConfig, String url) {
+							}
+
+							@Override
+							public void initialCard(ICardHolder cardHolder, CardConfig cardConfig, String url, final ICard card) {
+								card.getControl().addMouseListener(new MouseAdapter() {
+									@Override
+									public void mouseUp(MouseEvent e) {
+										for (ICardSelectedListener listener : listeners) {
+											listener.cardSelected(card);
+										}
+									}
+								});
+							}
+
+							@Override
+							public void requestingFollowup(ICardHolder cardHolder, String url, ICard card, String followOnUrlFragment) {
+							}
+
+							@Override
+							public void followedUp(ICardHolder cardHolder, String url, ICard card, String followUpUrl, Map<String, Object> result) {
+							}
+
+							@Override
+							public void noData(ICardHolder cardHolder, String url, ICard card, String followUpUrl) {
+							}
+
+							@Override
+							public void finished(ICardHolder cardHolder, String url, ICard card) {
+							}
+						};
+	
+						cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, visitor);
+					}
+				}
+			};
+			cardHolder.getControl().addPaintListener(listener);
+		}
+
 	}
 
 	public void addCardSelectedListener(ICardSelectedListener listener) {
@@ -133,9 +124,10 @@ public class CardCollectionHolder implements IHasComposite {
 		content = new CardCollectionHolderComposite(parent, cardConfig);
 	}
 
-	public void setKeyValue(final String rootUrl, String key, Object value, IGotDataCallback callback) {
+	public void setKeyValue(final String rootUrl, String key, Object value, IDetailsFactoryCallback callback) {
 		this.rootUrl = rootUrl;
 		content.setKeyValue(rootUrl, key, value, callback);
+		addCardSelectedListener(callback);
 	}
 
 	public String getRootUrl() {

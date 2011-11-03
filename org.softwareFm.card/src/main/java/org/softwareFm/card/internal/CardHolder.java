@@ -46,7 +46,7 @@ public class CardHolder implements ICardHolder {
 			if (navBarCardConfig == null)
 				throw new NullPointerException();
 			if (callbackToGotoUrl == null)
-				title = new NavTitle(this, navBarCardConfig, loadingText);
+				title = new NavTitle(this, navBarCardConfig, loadingText, rootUrl);
 			else
 				title = new NavBar(this, navBarCardConfig, rootUrl, callbackToGotoUrl);
 			addListener(SWT.Resize, new Listener() {
@@ -135,8 +135,11 @@ public class CardHolder implements ICardHolder {
 	@Override
 	public void setCard(final ICard card) {
 		content.setCard(card);
-		for (ICardChangedListener listener : cardListeners)
+		for (ICardChangedListener listener : cardListeners) {
 			listener.cardChanged(this, card);
+			card.addValueChangedListener(listener);
+		}
+
 	}
 
 	public void addCardChangedListener(ICardChangedListener listener) {

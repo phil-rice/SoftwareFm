@@ -18,6 +18,7 @@ import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardConfigurator;
 import org.softwareFm.card.api.ICardDataModifier;
 import org.softwareFm.card.api.IDetailFactory;
+import org.softwareFm.card.api.IFollowOnFragment;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.internal.details.CollectionsDetailAdder;
@@ -139,7 +140,10 @@ public class BasicCardConfigurator implements ICardConfigurator {
 				new ListDetailAdder(), //
 				new TextEditorDetailAdder());
 		IFunction1<ICard, String> defaultChildFn = new IFunction1<ICard, String>() {
-			final Map<String, String> typeToDefaultChildMap = Maps.makeMap("group", "artifact", "artifact", "version");
+			final Map<String, String> typeToDefaultChildMap = Maps.makeMap(//
+					CardConstants.group, CardConstants.artifact,//
+					CardConstants.artifact, CardConstants.version,//
+					CardConstants.version, CardConstants.digest);
 
 			@Override
 			public String apply(ICard from) throws Exception {
@@ -149,27 +153,16 @@ public class BasicCardConfigurator implements ICardConfigurator {
 					return cardType;
 				if (data.containsKey("nt:unstructured"))
 					return "nt:unstructured";
-
-				// for (KeyValue keyValue : from.data())
-				// if (keyValue.key.equals(cardType))
-				// return keyValue;
-				// for (KeyValue keyValue : from.data())
-				// if (keyValue.key.equals("nt:unstructured"))
-				// return keyValue;
-				// for (KeyValue keyValue : from.data())
-				// if (keyValue.key.equals("group"))
-				// return keyValue;
 				return null;
 			}
-
-			private KeyValue onlyItem(KeyValue keyValue) {
-				if (keyValue.value instanceof List) {
-					List<KeyValue> list = (List<KeyValue>) keyValue.value;
-					if (list.size() == 1)
-						return list.get(0);
-				}
-				return keyValue;
-			}
+		};
+		IFollowOnFragment followOnFragment = new IFollowOnFragment() {
+			@Override
+			public String findFollowOnFragment(String key, Object value) {
+				if (value instanceof Map<?, ?>)
+					return key;
+				else
+					return null;			}
 		};
 		return config.withNameFn(nameFn).withValueFn(valueFn).withHideFn(hideFn).//
 				withCardIconFn(cardIconFn).withResourceGetter(resourceGetter).withAggregatorTags(tagNames).//
@@ -177,7 +170,8 @@ public class BasicCardConfigurator implements ICardConfigurator {
 				withDetailsFactory(detailFactory).//
 				withDefaultChildFn(defaultChildFn).//
 				withSorter(Lists.orderedComparator(order)).//
-				withKeyValueModifiers(modifiers);
+				withKeyValueModifiers(modifiers).//
+				withFollowOn(followOnFragment);
 	}
 
 	private String findKey(KeyValue from) {

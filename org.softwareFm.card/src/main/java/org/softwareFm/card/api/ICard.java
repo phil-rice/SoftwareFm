@@ -12,6 +12,8 @@ public interface ICard extends IHasComposite {
 	Map<String, Object> data();
 
 	void addLineSelectedListener(ILineSelectedListener listener);
+	
+	void addValueChangedListener(ICardValueChangedListener listener);
 
 	CardConfig cardConfig();
 

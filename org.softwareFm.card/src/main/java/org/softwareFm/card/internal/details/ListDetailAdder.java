@@ -14,7 +14,6 @@ public class ListDetailAdder implements IDetailAdder {
 		if (value instanceof Map<?,?>) {
 			CardCollectionHolder result = new CardCollectionHolder(parentComposite, cardConfig);
 			result.setKeyValue(parentCard.url(), key, value,callback);
-			result.addCardSelectedListener(callback);
 			return result;
 		} else
 			return null;

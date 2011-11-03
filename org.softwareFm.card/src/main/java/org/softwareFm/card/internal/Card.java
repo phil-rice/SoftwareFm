@@ -22,6 +22,7 @@ import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
+import org.softwareFm.card.api.ICardValueChangedListener;
 import org.softwareFm.card.api.ILineSelectedListener;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.card.constants.CardConstants;
@@ -54,6 +55,7 @@ public class Card implements ICard {
 	
 	/** What type of card is this? Examples are the strings 'collection', 'group', 'artifact'*/
 	private String cardType;
+	private final List<ICardValueChangedListener> valueChangedListeners = new CopyOnWriteArrayList<ICardValueChangedListener>();
 
 	public Card(Composite parent, final CardConfig cardConfig, final String url, Map<String, Object> rawData) {
 		this.cardConfig = cardConfig;
@@ -142,6 +144,8 @@ public class Card implements ICard {
 				throw new RuntimeException(MessageFormat.format(CardConstants.exceptionChangingValue, key, index, newValue));
 			}
 		}
+		for (ICardValueChangedListener listener: valueChangedListeners)
+			listener.valueChanged(this, key, newValue);
 	}
 
 	private int findTableItem(String key) {
@@ -164,6 +168,10 @@ public class Card implements ICard {
 	@Override
 	public void addLineSelectedListener(final ILineSelectedListener listener) {
 		lineSelectedListeners.add(listener);
+	}
+	@Override
+	public void addValueChangedListener(ICardValueChangedListener listener) {
+		valueChangedListeners.add(listener);
 	}
 
 	@Override
@@ -205,6 +213,11 @@ public class Card implements ICard {
 	@Override
 	public String cardType() {
 		return cardType;
+	}
+
+	@Override
+	public String toString() {
+		return "Card [url=" + url + ", cardType=" + cardType + ", data=" + data + "]";
 	}
 
 }

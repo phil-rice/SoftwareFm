@@ -20,9 +20,10 @@ public class NavTitle implements ITitleBarForCard {
 	private String title;
 	private Image image;
 
-	public NavTitle(Composite parent, final CardConfig cardConfig, String initialLabel) {
+	public NavTitle(Composite parent, final CardConfig cardConfig, String initialLabel, String tooltip) {
 		this.title = initialLabel;
 		canvas = new Canvas(parent, SWT.NULL);
+		canvas.setToolTipText(tooltip);
 		canvas.addPaintListener(new PaintListener() {
 			@Override
 			public void paintControl(PaintEvent e) {
