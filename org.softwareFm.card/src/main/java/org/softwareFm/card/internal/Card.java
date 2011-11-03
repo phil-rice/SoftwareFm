@@ -9,6 +9,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -61,7 +62,7 @@ public class Card implements ICard {
 		this.cardConfig = cardConfig;
 		this.url = url;
 		this.rawData = rawData;
-		this.table = new Table(parent, cardConfig.style | SWT.BORDER);
+		this.table = new Table(parent, cardConfig.style | SWT.NULL);
 		this.nameColumn = new TableColumn(table, SWT.NONE);
 		this.valueColumn = new TableColumn(table, SWT.NONE);
 		this.cardType = (String) rawData.get(CardConstants.slingResourceType);
@@ -73,6 +74,7 @@ public class Card implements ICard {
 		nameColumn.setWidth(100);
 		valueColumn.setWidth(100);
 		table.setDragDetect(true);
+		table.setBackground(new Color(getControl().getDisplay(), 230,230,230));
 		int i = 0;
 		for (Entry<String, Object> entry : data.entrySet()) {
 			KeyValue keyValue = new KeyValue(entry.getKey(), entry.getValue());

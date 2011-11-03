@@ -167,8 +167,8 @@ public class Swts {
 		}
 	}
 
-	public static OkCancel addOkCancel(IButtonParent buttonParent, CompositeConfig config, final Runnable onAccept, final Runnable onCancel) {
-		return new OkCancel(buttonParent, config, onAccept, onCancel);
+	public static OkCancelLegacy addOkCancel(IButtonParent buttonParent, CompositeConfig config, final Runnable onAccept, final Runnable onCancel) {
+		return new OkCancelLegacy(buttonParent, config, onAccept, onCancel);
 	}
 
 	public static Control setAfter(List<Control> controls, Control firstControl) {
@@ -550,6 +550,20 @@ public class Swts {
 			}
 		};
 		control.getParent().addListener(SWT.Resize, listener);
+		return listener;
+	}
+	public static Listener resizeMeToParentsSizeWithLayout(final IHasComposite hasComposite) {
+		final Composite composite = hasComposite.getComposite();
+		Swts.setSizeFromClientArea(composite);
+		
+		Listener listener = new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				Swts.setSizeFromClientArea(composite);
+				composite.layout();
+			}
+		};
+		composite.getParent().addListener(SWT.Resize, listener);
 		return listener;
 	}
 

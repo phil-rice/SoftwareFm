@@ -105,6 +105,9 @@ public class CardExplorer implements IHasComposite {
 					System.out.println("detail: " + detail.isDisposed() + ", control: " + control.isDisposed());
 					detail.setContent(control);
 					Swts.setSizeToComputedSize(control, SWT.DEFAULT, detail.getClientArea().height); //needed again if the scroll bar popped in
+					if (control instanceof Composite)
+						if (((Composite) control).getLayout()==null)
+							((Composite) control).layout();
 					detail.layout();
 					detail.addListener(SWT.Resize, detailResizeListener);
 				}

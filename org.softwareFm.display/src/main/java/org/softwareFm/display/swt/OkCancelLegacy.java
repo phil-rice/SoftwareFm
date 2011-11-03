@@ -8,12 +8,12 @@ import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.simpleButtons.IButtonParent;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
-public class OkCancel {
+public class OkCancelLegacy {
 
 	private final Button okButton;
 	private boolean enabled = true;
 
-	public OkCancel(IButtonParent buttonParent, CompositeConfig config, final Runnable onAccept, final Runnable onCancel) {
+	public OkCancelLegacy(IButtonParent buttonParent, CompositeConfig config, final Runnable onAccept, final Runnable onCancel) {
 		IResourceGetter resourceGetter = config.resourceGetter;
 		Composite buttonComposite = buttonParent.getButtonComposite();
 		Button cancelButton = Swts.makePushButton(buttonComposite, resourceGetter, DisplayConstants.buttonCancelTitle, onCancel);

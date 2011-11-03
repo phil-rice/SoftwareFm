@@ -19,7 +19,7 @@ import org.softwareFm.display.editor.IEditor;
 import org.softwareFm.display.editor.IEditorCompletion;
 import org.softwareFm.display.simpleButtons.ButtonParent;
 import org.softwareFm.display.simpleButtons.IButtonParent;
-import org.softwareFm.display.swt.OkCancel;
+import org.softwareFm.display.swt.OkCancelLegacy;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.strings.Strings;
@@ -83,7 +83,7 @@ public class SoftwareFmIdEditor implements IEditor {
 		groupIdText.setText(Strings.nullSafeToString(groupId));
 		artifactIdText.setText(Strings.nullSafeToString(artifactId));
 		versionText.setText(Strings.nullSafeToString(versionId));
-		final OkCancel okCancel = Swts.addOkCancel(buttonParent, actionContext.compositeConfig, new Runnable() {
+		final OkCancelLegacy okCancelLegacy = Swts.addOkCancel(buttonParent, actionContext.compositeConfig, new Runnable() {
 			@Override
 			public void run() {
 				sendResult();
@@ -95,7 +95,7 @@ public class SoftwareFmIdEditor implements IEditor {
 					completion.cancel();
 			}
 		});
-		okCancel.setOkEnabled(false);
+		okCancelLegacy.setOkEnabled(false);
 		modifyListener = new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
@@ -107,7 +107,7 @@ public class SoftwareFmIdEditor implements IEditor {
 						artifactIdText.getText().trim().length() > 0 && versionText.getText().trim().length() > 0;
 
 				boolean enabled = anyChanged & notNull;
-				okCancel.setOkEnabled(enabled);
+				okCancelLegacy.setOkEnabled(enabled);
 			}
 		};
 		groupIdText.addModifyListener(modifyListener);

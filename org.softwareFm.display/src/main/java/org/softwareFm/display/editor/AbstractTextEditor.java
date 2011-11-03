@@ -17,7 +17,7 @@ import org.softwareFm.display.displayer.IDisplayer;
 import org.softwareFm.display.displayer.RippedEditorId;
 import org.softwareFm.display.simpleButtons.ButtonParent;
 import org.softwareFm.display.simpleButtons.IButtonParent;
-import org.softwareFm.display.swt.OkCancel;
+import org.softwareFm.display.swt.OkCancelLegacy;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
@@ -49,17 +49,17 @@ public abstract class AbstractTextEditor<T extends Control> implements IEditor {
 				okRunnable = null;
 			}
 		};
-		final OkCancel okCancel = Swts.addOkCancel(buttonParent, actionContext.compositeConfig, okRunnable, new Runnable() {
+		final OkCancelLegacy okCancelLegacy = Swts.addOkCancel(buttonParent, actionContext.compositeConfig, okRunnable, new Runnable() {
 			@Override
 			public void run() {
 				completion.cancel();
 			}
 		});
-		okCancel.setOkEnabled(false);
+		okCancelLegacy.setOkEnabled(false);
 		listener = new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
-				okCancel.setOkEnabled(!rawText.equals(text.getText()));
+				okCancelLegacy.setOkEnabled(!rawText.equals(text.getText()));
 			}
 		};
 		text.addModifyListener(listener);

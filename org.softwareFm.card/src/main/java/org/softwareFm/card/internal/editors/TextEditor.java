@@ -3,53 +3,64 @@ package org.softwareFm.card.internal.editors;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
 import org.softwareFm.card.api.CardConfig;
-import org.softwareFm.card.api.ICard;
+import org.softwareFm.card.api.CardDataStoreFixture;
+import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.IMutableCardDataStore;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.card.internal.details.IDetailsFactoryCallback;
-import org.softwareFm.display.composites.IHasControl;
-import org.softwareFm.display.constants.DisplayConstants;
+import org.softwareFm.card.navigation.NavTitle;
+import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.functions.Functions;
+import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.resources.IResourceGetter;
 
-public class TextEditor implements IHasControl {
+public class TextEditor implements IHasComposite {
 
 	private final TextEditorComposite content;
 
 	static class TextEditorComposite extends Composite {
 
-		public Label titleLabel;
+		public NavTitle titleLabel;
 		private final Text text;
-		public Button okButton;
-		private final Button cancelButton;
 		private final String originalValue;
+		private final OkCancel okCancel;
+		private final CardConfig cardConfig;
 
-		public TextEditorComposite(Composite parent, int style, final ICard card, final CardConfig cardConfig, final String key, Object value, final IDetailsFactoryCallback callback) {
+		public TextEditorComposite(Composite parent, int style, final CardConfig cardConfig, final String url, final String key, Object initialValue, final IDetailsFactoryCallback callback) {
 			super(parent, style);
-			titleLabel = new Label(this, SWT.NULL);
-			KeyValue keyValue = new KeyValue(key, value);
+			this.cardConfig = cardConfig;
+			KeyValue keyValue = new KeyValue(key, initialValue);
 			String name = Functions.call(cardConfig.nameFn, keyValue);
-			titleLabel.setText(name);
+			titleLabel = new NavTitle(this, cardConfig, name, "");
+			setBackground(new Color(getDisplay(), 255, 255, 255));
 
-			text = new Text(this, SWT.WRAP);
+			text = new Text(this, SWT.WRAP | SWT.BORDER);
 			originalValue = Functions.call(cardConfig.valueFn, keyValue);
 			text.setText(originalValue);
-			okButton = new Button(this, SWT.PUSH);
-			okButton.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, DisplayConstants.buttonOkTitle));
-			cancelButton = new Button(this, SWT.PUSH);
-			cancelButton.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, DisplayConstants.buttonCancelTitle));
+			okCancel = new OkCancel(this, cardConfig, new Runnable() {
+				@Override
+				public void run() {
+					IMutableCardDataStore cardDataStore = (IMutableCardDataStore) cardConfig.cardDataStore;
+					cardDataStore.put(url, Maps.<String, Object> makeMap(key, text.getText()), callback);
+					TextEditorComposite.this.dispose();
 
-			Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
+				}
+			}, new Runnable() {
+				@Override
+				public void run() {
+					TextEditorComposite.this.dispose();
+				}
+			});
+
 			updateEnabledStatusOfButtons();
 			text.addModifyListener(new ModifyListener() {
 				@Override
@@ -57,34 +68,52 @@ public class TextEditor implements IHasControl {
 					updateEnabledStatusOfButtons();
 				}
 			});
-			okButton.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					IMutableCardDataStore cardDataStore = (IMutableCardDataStore) cardConfig.cardDataStore;
-					cardDataStore.put(card.url(), Maps.<String, Object> makeMap(key, text.getText()), callback);
-					TextEditorComposite.this.dispose();
-				}
+		}
 
-				@Override
-				public void widgetDefaultSelected(SelectionEvent e) {
-					widgetSelected(e);
-				}
-			});
-			cancelButton.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					TextEditorComposite.this.dispose();
-				}
-			});
+		@Override
+		public void setLayout(Layout layout) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Point computeSize(int wHint, int hHint) {
+			Point textSize = text.computeSize(wHint, hHint);
+			Point okCancelSize = okCancel.getControl().computeSize(wHint, hHint);
+			int height = cardConfig.titleHeight + textSize.y + okCancelSize.y;
+			int width = getParent().getClientArea().width;
+			return new Point(width, height);
+		}
+
+		@Override
+		public void layout(boolean changed) {
+			Rectangle clientArea = getClientArea();
+			int width = clientArea.width - cardConfig.leftMargin - cardConfig.rightMargin;
+			titleLabel.getControl().setSize(width, cardConfig.titleHeight);
+			int startY = clientArea.y + cardConfig.topMargin;
+			int x = clientArea.x + cardConfig.leftMargin;
+
+			titleLabel.getControl().setLocation(x, startY);
+
+			int textY = startY + cardConfig.titleHeight;
+			text.setLocation(x, textY);
+			int textHeight = text.computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
+			text.setSize(width, textHeight);
+
+			Control okCancelControl = okCancel.getControl();
+			okCancelControl.pack();
+			int okCancelWidth = okCancelControl.getSize().x;
+			int okCancelY = textY + textHeight;
+			okCancelControl.setLocation(x + width - okCancelWidth, okCancelY);
+
 		}
 
 		private void updateEnabledStatusOfButtons() {
-			okButton.setEnabled(!originalValue.equals(text.getText()));
+			okCancel.setOkEnabled(!originalValue.equals(text.getText()));
 		}
 	}
 
-	public TextEditor(Composite parentComposite, ICard card, CardConfig cardConfig, String key, Object value, IDetailsFactoryCallback callback) {
-		content = new TextEditorComposite(parentComposite, SWT.NULL, card, cardConfig, key, value, callback);
+	public TextEditor(Composite parentComposite, CardConfig cardConfig, String url, String key, Object value, IDetailsFactoryCallback callback) {
+		content = new TextEditorComposite(parentComposite, SWT.NULL, cardConfig, url, key, value, callback);
 	}
 
 	@Override
@@ -92,20 +121,28 @@ public class TextEditor implements IHasControl {
 		return content;
 	}
 
-	public Label getTitleLabel() {
-		return content.titleLabel;
+	@Override
+	public Composite getComposite() {
+		return content;
 	}
 
 	public Text getText() {
 		return content.text;
 	}
 
-	public Button getOkButton() {
-		return content.okButton;
-	}
-
-	public Button getCancelButton() {
-		return content.cancelButton;
+	public static void main(String[] args) {
+		Swts.displayNoLayout(TextEditor.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+			@Override
+			public Composite apply(Composite from) throws Exception {
+				CardConfig cardConfig = new CardConfig(ICardFactory.Utils.cardFactory(), CardDataStoreFixture.rawCardStore());
+				TextEditor textEditor = new TextEditor(from, cardConfig, "someUrl", "key", "value", IDetailsFactoryCallback.Utils.resizeAfterGotData());
+				Swts.resizeMeToParentsSize(textEditor.getControl());
+				textEditor.content.layout();
+				Swts.layoutDump(from);
+				Swts.resizeMeToParentsSizeWithLayout(textEditor);
+				return textEditor.content;
+			}
+		});
 	}
 
 }

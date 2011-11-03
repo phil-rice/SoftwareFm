@@ -10,9 +10,11 @@ public class TextEditorDetailAdder implements IDetailAdder {
 
 	@Override
 	public IHasControl add(Composite parentComposite, ICard parentCard, CardConfig cardConfig, String  key, Object value,IDetailsFactoryCallback callback) {
-		if (value instanceof String)
-			return new TextEditor(parentComposite, parentCard,cardConfig, key, value, callback);
-		else
+		if (value instanceof String) {
+			TextEditor result = new TextEditor(parentComposite, cardConfig, parentCard.url(),key, value, callback);
+			callback.gotData(result.getControl());
+			return result;
+		} else
 			return null;
 	}
 

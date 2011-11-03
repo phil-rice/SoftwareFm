@@ -3,7 +3,6 @@ package org.softwareFm.card.internal.details;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardSelectedListener;
-import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
 
 public interface IDetailsFactoryCallback extends ICardSelectedListener, IGotDataCallback, IAfterEditCallback {
@@ -26,7 +25,7 @@ public static class Utils{
 		};
 	}
 
-	public static IDetailsFactoryCallback resizeAfterGotData(final IHasControl hasControl) {
+	public static IDetailsFactoryCallback resizeAfterGotData() {
 		return new IDetailsFactoryCallback(){
 			@Override
 			public void cardSelected(ICard card) {
@@ -34,7 +33,7 @@ public static class Utils{
 
 			@Override
 			public void gotData(Control control) {
-				Swts.setSizeFromClientArea(hasControl.getControl());
+				Swts.setSizeFromClientArea(control);
 			}
 
 			@Override

@@ -103,7 +103,7 @@ public class CardCollectionHolder implements IHasComposite {
 				final CardConfig cardConfig = new BasicCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 				IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "navBar.prev.title");
 				final CardCollectionHolder cardCollectionHolder = new CardCollectionHolder(from, cardConfig);
-				cardCollectionHolder.setKeyValue(CardDataStoreFixture.url, "stuff", Maps.makeMap(CardDataStoreFixture.dataIndexedByUrlFragment), IDetailsFactoryCallback.Utils.resizeAfterGotData(cardCollectionHolder));
+				cardCollectionHolder.setKeyValue(CardDataStoreFixture.url, "stuff", Maps.makeMap(CardDataStoreFixture.dataIndexedByUrlFragment), IDetailsFactoryCallback.Utils.resizeAfterGotData());
 				return cardCollectionHolder.getComposite();
 			}
 		});
