@@ -2,6 +2,7 @@ package org.softwareFm.display.swt;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,8 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
@@ -46,6 +49,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.composites.IHasControl;
+import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.simpleButtons.IButtonParent;
 import org.softwareFm.utilities.arrays.ArrayHelper;
 import org.softwareFm.utilities.collections.Files;
@@ -552,10 +556,11 @@ public class Swts {
 		control.getParent().addListener(SWT.Resize, listener);
 		return listener;
 	}
+
 	public static Listener resizeMeToParentsSizeWithLayout(final IHasComposite hasComposite) {
 		final Composite composite = hasComposite.getComposite();
 		Swts.setSizeFromClientArea(composite);
-		
+
 		Listener listener = new Listener() {
 			@Override
 			public void handleEvent(Event event) {
@@ -634,6 +639,17 @@ public class Swts {
 	public static void setSizeToComputedSize(Control c, int wHint, int hHint) {
 		Point size = c.computeSize(wHint, hHint);
 		c.setSize(size);
+	}
+
+	public static Color makeColor(Device device, IResourceGetter resourceGetter, String colorKey) {
+		String raw = IResourceGetter.Utils.getOrException(resourceGetter, colorKey);
+		List<String> strings = Strings.splitIgnoreBlanks(raw, ",");
+		if (strings.size()!= 3)
+			throw new IllegalStateException(MessageFormat.format(DisplayConstants.illegalColorString, colorKey, raw));
+		int r = Integer.parseInt(strings.get(0));
+		int g = Integer.parseInt(strings.get(1));
+		int b = Integer.parseInt(strings.get(2));
+		return new Color(device, r,g,b);
 	}
 
 }

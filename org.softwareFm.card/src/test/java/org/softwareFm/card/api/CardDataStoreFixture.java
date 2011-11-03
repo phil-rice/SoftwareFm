@@ -60,6 +60,7 @@ public class CardDataStoreFixture {
 			"2b", data2b,//
 			"2c", data2c,//
 	};
+	public static CardConfig cardConfigSync = new CardConfig(ICardFactory.Utils.cardFactory(), rawCardStore());
 
 	public static final CardDataStoreMock rawCardStore() {
 		return new CardDataStoreMock(dataForMocks);

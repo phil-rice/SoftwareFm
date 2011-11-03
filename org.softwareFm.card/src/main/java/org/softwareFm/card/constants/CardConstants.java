@@ -13,5 +13,6 @@ public class CardConstants {
 	public static final String ntUnstructured = "nt:unstructured";
 	public static final String jcrPrimaryType = "jcr:primaryType";
 	public static final String collection = "collection";
+	public static final String editorStyledText = "editor.styledText";
 
 }

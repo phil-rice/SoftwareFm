@@ -5,5 +5,6 @@ import org.softwareFm.display.composites.IHasControl;
 
 public interface ITitleBarForCard extends IHasControl {
 
-	public void setUrl(ICard card);
+
+	void setUrl(ICard card);
 }

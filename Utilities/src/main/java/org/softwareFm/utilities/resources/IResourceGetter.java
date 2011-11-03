@@ -40,5 +40,10 @@ public interface IResourceGetter {
 			return string;
 		}
 
+		public static int getIntegerOrException(IResourceGetter resourceGetter, String indentKey) {
+			String raw = getOrException(resourceGetter, indentKey);
+			return Integer.parseInt(raw);
+		}
+
 	}
 }

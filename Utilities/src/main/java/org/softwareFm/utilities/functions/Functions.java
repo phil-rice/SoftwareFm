@@ -230,4 +230,13 @@ public class Functions {
 			}
 		};
 	}
+
+	public static <From,To>IFunction1<From,To> expectionIfCalled() {
+		return new IFunction1<From, To>() {
+			@Override
+			public To apply(From from) throws Exception {
+				throw new RuntimeException();
+			}
+		};
+	}
 }

@@ -1,9 +1,9 @@
 package org.softwareFm.card.internal.editors;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Text;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICardFactory;
@@ -13,11 +13,11 @@ import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.functions.IFunction1;
 
-public class TextEditor implements IHasComposite {
+public class StyledTextEditor implements IHasComposite {
 
 	private final TextEditorComposite content;
 
-	static class TextEditorComposite extends ValueEditorComposite<Text> {
+	static class TextEditorComposite extends ValueEditorComposite<StyledText> {
 
 		public TextEditorComposite(Composite parent, int style, final CardConfig cardConfig, final String url, final String key, Object initialValue, TitleSpec titleSpec, final IDetailsFactoryCallback callback) {
 			super(parent, style, cardConfig, url, key, initialValue, titleSpec, callback);
@@ -29,15 +29,15 @@ public class TextEditor implements IHasComposite {
 		}
 
 		@Override
-		protected Text makeEditorControl(String originalValue) {
-			Text result = new Text(this, SWT.NULL);
+		protected StyledText makeEditorControl(String originalValue) {
+			StyledText result = new StyledText(this, SWT.NULL);
 			result.setText(originalValue);
 			return result;
 		}
 
 		@Override
 		protected boolean useAllHeight() {
-			return false;
+			return true;
 		}
 
 		@Override
@@ -46,7 +46,7 @@ public class TextEditor implements IHasComposite {
 		}
 	}
 
-	public TextEditor(Composite parentComposite, CardConfig cardConfig, String url, String key, Object value, IDetailsFactoryCallback callback, TitleSpec titleSpec) {
+	public StyledTextEditor(Composite parentComposite, CardConfig cardConfig, String url, String key, Object value, IDetailsFactoryCallback callback, TitleSpec titleSpec) {
 		content = new TextEditorComposite(parentComposite, SWT.NULL, cardConfig, url, key, value, titleSpec, callback);
 	}
 
@@ -60,16 +60,16 @@ public class TextEditor implements IHasComposite {
 		return content;
 	}
 
-	public Text getText() {
+	public StyledText getText() {
 		return content.editorControl;
 	}
 
 	public static void main(String[] args) {
-		Swts.displayNoLayout(TextEditor.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+		Swts.displayNoLayout(StyledTextEditor.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				CardConfig cardConfig = new CardConfig(ICardFactory.Utils.cardFactory(), CardDataStoreFixture.rawCardStore());
-				TextEditor textEditor = new TextEditor(from, cardConfig, "someUrl", "key", "value", IDetailsFactoryCallback.Utils.resizeAfterGotData(), TitleSpec.noTitleSpec(from.getBackground()));
+				StyledTextEditor textEditor = new StyledTextEditor(from, cardConfig, "someUrl", "key", "value", IDetailsFactoryCallback.Utils.resizeAfterGotData(), TitleSpec.noTitleSpec(from.getBackground()));
 				Swts.resizeMeToParentsSize(textEditor.getControl());
 				textEditor.content.layout();
 				Swts.layoutDump(from);

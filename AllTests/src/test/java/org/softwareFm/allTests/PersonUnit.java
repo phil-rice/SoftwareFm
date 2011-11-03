@@ -16,6 +16,7 @@ import org.softwareFm.configuration.largebuttons.JarDetailsLargeButtonFactory;
 import org.softwareFm.display.browser.BrowserUnit;
 import org.softwareFm.display.composites.TitleAndStyledText;
 import org.softwareFm.display.composites.TitleAndText;
+import org.softwareFm.display.editor.StyledTextEditor;
 import org.softwareFm.display.editor.TextEditor;
 import org.softwareFm.display.rss.RssBrowserPersonUnit;
 import org.softwareFm.display.rss.RssPersonUnit;
@@ -52,6 +53,8 @@ public class PersonUnit {
 				Swts.makeButtonFromMainMethod(composite, SingleCardExplorerOnAsync.class);
 				Swts.makeButtonFromMainMethod(composite, CardCollectionHolder.class);
 				Swts.makeButtonFromMainMethod(composite, CardHolder.class);
+				Swts.makeButtonFromMainMethod(composite, TextEditor.class);
+				Swts.makeButtonFromMainMethod(composite, StyledTextEditor.class);
 				Swts.addGrabHorizontalAndFillGridDataToAllChildren(composite);
 				from.pack();
 				return composite;

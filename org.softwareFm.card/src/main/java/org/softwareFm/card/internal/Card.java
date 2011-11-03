@@ -7,10 +7,13 @@ import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -27,6 +30,7 @@ import org.softwareFm.card.api.ICardValueChangedListener;
 import org.softwareFm.card.api.ILineSelectedListener;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.card.constants.CardConstants;
+import org.softwareFm.card.internal.details.TitleSpec;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -36,25 +40,25 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 public class Card implements ICard {
 	/** Holds strategies and values to control how the card is displayed */
 	private final CardConfig cardConfig;
-	/**The original data passed to you. Kept for debugging / tests */
+	/** The original data passed to you. Kept for debugging / tests */
 	private final Map<String, Object> rawData;
 	/** the current view of the data. It may change as more information is acquired from the server. It will often have been aggregated */
 	private final Map<String, Object> data;
 
-	/**The url that this card is a representation of */
+	/** The url that this card is a representation of */
 	private final String url;
 
 	/** The gui component that displays the data */
 	private final Table table;
 	private final TableColumn nameColumn;
 	private final TableColumn valueColumn;
-	
-	/**If a line is selected by the user, then these listeners are informed */
+
+	/** If a line is selected by the user, then these listeners are informed */
 	private final List<ILineSelectedListener> lineSelectedListeners = new CopyOnWriteArrayList<ILineSelectedListener>();
 	/** Controls access to data */
 	private final Object lock = new Object();
-	
-	/** What type of card is this? Examples are the strings 'collection', 'group', 'artifact'*/
+
+	/** What type of card is this? Examples are the strings 'collection', 'group', 'artifact' */
 	private String cardType;
 	private final List<ICardValueChangedListener> valueChangedListeners = new CopyOnWriteArrayList<ICardValueChangedListener>();
 
@@ -74,11 +78,12 @@ public class Card implements ICard {
 		nameColumn.setWidth(100);
 		valueColumn.setWidth(100);
 		table.setDragDetect(true);
-		table.setBackground(new Color(getControl().getDisplay(), 230,230,230));
+		final TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, this);
+		table.setBackground(titleSpec.background);
 		int i = 0;
 		for (Entry<String, Object> entry : data.entrySet()) {
 			KeyValue keyValue = new KeyValue(entry.getKey(), entry.getValue());
-			if (!Functions.call(cardConfig.hideFn, keyValue)) { //Have to make an object here, but we are decoupling how we store the data, and the JVM probably optimises it away anyway
+			if (!Functions.call(cardConfig.hideFn, keyValue)) { // Have to make an object here, but we are decoupling how we store the data, and the JVM probably optimises it away anyway
 				TableItem tableItem = new TableItem(table, SWT.NULL);
 				setTableItem(i, cardConfig, tableItem, keyValue);
 			}
@@ -100,6 +105,23 @@ public class Card implements ICard {
 				}
 				if (!cardConfig.allowSelection)
 					table.deselectAll();
+			}
+		});
+		table.addPaintListener(new PaintListener() {
+			@Override
+			public void paintControl(PaintEvent e) {
+				Rectangle clientArea = table.getClientArea();
+				e.gc.setClipping(clientArea.x, clientArea.y+cardConfig.cornerRadius, clientArea.width-cardConfig.cornerRadius, clientArea.height);
+				e.gc.drawRoundRectangle(clientArea.x, clientArea.y - cardConfig.cornerRadius, clientArea.width - 1, clientArea.height - 1 + cardConfig.cornerRadius, cardConfig.cornerRadius, cardConfig.cornerRadius);
+
+				e.gc.setClipping(clientArea.x+clientArea.width-titleSpec.rightIndent, clientArea.y, clientArea.width, clientArea.height); //way to wide...but who cares
+				e.gc.drawRoundRectangle(clientArea.x, clientArea.y , clientArea.width - 1, clientArea.height - 1 , cardConfig.cornerRadius, cardConfig.cornerRadius);
+				
+				e.gc.setClipping((Rectangle) null);
+				e.gc.drawLine(clientArea.x, clientArea.y, clientArea.x, clientArea.y+cardConfig.cornerRadius);
+//				e.gc.drawLine(clientArea.x + clientArea.width - titleSpec.rightIndent, clientArea.y, clientArea.x + clientArea.width, clientArea.y);
+				e.gc.setForeground(new Color(e.display, 200, 200, 200));
+				e.gc.drawLine(clientArea.x+1, clientArea.y, clientArea.width-titleSpec.rightIndent-1, clientArea.y);
 			}
 		});
 		table.addListener(SWT.Resize, new Listener() {
@@ -132,7 +154,7 @@ public class Card implements ICard {
 		tableItem.setText(new String[] { name, displayValue });
 		tableItem.setData(keyValue.key);
 	}
-	
+
 	@Override
 	public void valueChanged(String key, Object newValue) {
 		int index = findTableItem(key);
@@ -146,15 +168,15 @@ public class Card implements ICard {
 				throw new RuntimeException(MessageFormat.format(CardConstants.exceptionChangingValue, key, index, newValue));
 			}
 		}
-		for (ICardValueChangedListener listener: valueChangedListeners)
+		for (ICardValueChangedListener listener : valueChangedListeners)
 			listener.valueChanged(this, key, newValue);
 	}
 
 	private int findTableItem(String key) {
-		for (int i = 0; i<table.getItemCount(); i++)
+		for (int i = 0; i < table.getItemCount(); i++)
 			if (table.getItem(i).getData() == key)
 				return i;
-		throw new RuntimeException(MessageFormat.format(CardConstants.cannotFindTableItemWithKey,  key));
+		throw new RuntimeException(MessageFormat.format(CardConstants.cannotFindTableItemWithKey, key));
 	}
 
 	@Override
@@ -171,6 +193,7 @@ public class Card implements ICard {
 	public void addLineSelectedListener(final ILineSelectedListener listener) {
 		lineSelectedListeners.add(listener);
 	}
+
 	@Override
 	public void addValueChangedListener(ICardValueChangedListener listener) {
 		valueChangedListeners.add(listener);
@@ -201,11 +224,15 @@ public class Card implements ICard {
 		final ICardDataStore cardDataStore = CardDataStoreFixture.rawCardStore();
 		final ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 
-		final CardConfig cardConfig = new CardConfig(cardFactory, cardDataStore);
-
 		Swts.display(Card.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
-			public Composite apply(Composite from) throws Exception {
+			public Composite apply(final Composite from) throws Exception {
+				final CardConfig cardConfig = new CardConfig(cardFactory, cardDataStore).withTitleSpecFn(new IFunction1<ICard, TitleSpec>() {
+					@Override
+					public TitleSpec apply(ICard card) throws Exception {
+						return TitleSpec.noTitleSpec(from.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+					}
+				});
 				ICard card = new Card(from, cardConfig, CardDataStoreFixture.url, CardDataStoreFixture.data1a);
 				return card.getComposite();
 			}

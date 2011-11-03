@@ -5,13 +5,15 @@ import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.internal.editors.TextEditor;
 import org.softwareFm.display.composites.IHasControl;
+import org.softwareFm.utilities.functions.Functions;
 
 public class TextEditorDetailAdder implements IDetailAdder {
 
 	@Override
 	public IHasControl add(Composite parentComposite, ICard parentCard, CardConfig cardConfig, String  key, Object value,IDetailsFactoryCallback callback) {
 		if (value instanceof String) {
-			TextEditor result = new TextEditor(parentComposite, cardConfig, parentCard.url(),key, value, callback);
+			TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, parentCard);
+			TextEditor result = new TextEditor(parentComposite, cardConfig, parentCard.url(),key, value, callback, titleSpec);
 			callback.gotData(result.getControl());
 			return result;
 		} else

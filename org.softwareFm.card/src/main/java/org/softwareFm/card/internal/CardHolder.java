@@ -20,6 +20,7 @@ import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardHolder;
 import org.softwareFm.card.api.ILineSelectedListener;
+import org.softwareFm.card.internal.details.TitleSpec;
 import org.softwareFm.card.navigation.ITitleBarForCard;
 import org.softwareFm.card.navigation.NavBar;
 import org.softwareFm.card.navigation.NavTitle;
@@ -40,12 +41,12 @@ public class CardHolder implements ICardHolder {
 		private final List<ILineSelectedListener> lineListeners = new CopyOnWriteArrayList<ILineSelectedListener>();
 
 		public CardHolderComposite(Composite parent, final String loadingText, CardConfig navBarCardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
-			super(parent, SWT.BORDER);
+			super(parent, SWT.NULL);
 			this.navBarCardConfig = navBarCardConfig;
 			if (navBarCardConfig == null)
 				throw new NullPointerException();
 			if (callbackToGotoUrl == null)
-				title = new NavTitle(this, navBarCardConfig, loadingText, rootUrl);
+				title = new NavTitle(this, navBarCardConfig, TitleSpec.noTitleSpec(parent.getBackground()), rootUrl, rootUrl);
 			else
 				title = new NavBar(this, navBarCardConfig, rootUrl, callbackToGotoUrl);
 			addListener(SWT.Resize, new Listener() {

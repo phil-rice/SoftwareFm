@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.softwareFm.card.api.CardConfig;
@@ -24,11 +25,14 @@ import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.internal.details.CollectionItemDetailAdder;
 import org.softwareFm.card.internal.details.CollectionsDetailAdder;
 import org.softwareFm.card.internal.details.ListDetailAdder;
+import org.softwareFm.card.internal.details.StyledTextEditorDetailAdder;
 import org.softwareFm.card.internal.details.TextEditorDetailAdder;
+import org.softwareFm.card.internal.details.TitleSpec;
 import org.softwareFm.card.internal.modifiers.CardMapSorter;
 import org.softwareFm.card.internal.modifiers.CollectionsAggregatorModifier;
 import org.softwareFm.card.internal.modifiers.FolderAggregatorModifier;
 import org.softwareFm.card.internal.modifiers.KeyValueMissingItemsAdder;
+import org.softwareFm.display.swt.Swts;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.title.TitleAnchor;
@@ -41,7 +45,7 @@ import org.softwareFm.utilities.strings.Strings;
 public class BasicCardConfigurator implements ICardConfigurator {
 
 	@Override
-	public CardConfig configure(Display display, CardConfig config) {
+	public CardConfig configure(final Display display, CardConfig config) {
 		final IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(CardConfig.class, "Card");
 		String keysToHide = resourceGetter.getStringOrNull("keys.hide");
 		final Set<String> ignoredNamed = keysToHide == null ? Collections.<String> emptySet() : new HashSet<String>(Arrays.asList(keysToHide.split(",")));
@@ -101,6 +105,32 @@ public class BasicCardConfigurator implements ICardConfigurator {
 		};
 		final ImageRegistry imageRegistry = new ImageRegistry(display);
 		new BasicImageRegisterConfigurator().registerWith(display, imageRegistry);
+		IFunction1<ICard, TitleSpec> titleSpecFn = new IFunction1<ICard, TitleSpec>() {
+
+			@Override
+			public TitleSpec apply(ICard from) throws Exception {
+				String cardType = from.cardType();
+				if (cardType == null)
+					return makeTitleSpec("title.folder.color", "title.folder.indent", TitleAnchor.folderKey);
+				else if (cardType.equals(CardConstants.group))
+					return makeTitleSpec("title.group.color", "title.folder.indent", ArtifactsAnchor.organisationKey);
+				else if (cardType.equals(CardConstants.artifact))
+					return makeTitleSpec("title.artifact.color", "title.folder.indent", ArtifactsAnchor.projectKey);
+				else if (cardType.equals(CardConstants.version))
+					return makeTitleSpec("title.version.color", "title.folder.indent", ArtifactsAnchor.jarKey);
+				else if (cardType.equals(CardConstants.versionJar))
+					return makeTitleSpec("title.jar.color", "title.folder.indent", TitleAnchor.folderKey);
+				else
+					return makeTitleSpec("title.folder.color", "title.folder.indent", TitleAnchor.folderKey);
+			}
+
+			private TitleSpec makeTitleSpec(String colorKey, String indentKey, String iconKey) {
+				Color color = Swts.makeColor(display, resourceGetter, colorKey);
+				int indent = IResourceGetter.Utils.getIntegerOrException(resourceGetter, indentKey);
+				Image icon = imageRegistry.get(iconKey);
+				return new TitleSpec(icon, color, indent);
+			}
+		};
 
 		IFunction1<Map<String, Object>, Image> cardIconFn = new IFunction1<Map<String, Object>, Image>() {
 			@Override
@@ -151,6 +181,7 @@ public class BasicCardConfigurator implements ICardConfigurator {
 				// new GroupDetailAdder(),//
 				new CollectionItemDetailAdder(),//
 				new ListDetailAdder(), //
+				new StyledTextEditorDetailAdder(),//
 				new TextEditorDetailAdder());
 		IFunction1<ICard, String> defaultChildFn = new IFunction1<ICard, String>() {
 			final Map<String, String> typeToDefaultChildMap = Maps.makeMap(//
@@ -185,7 +216,9 @@ public class BasicCardConfigurator implements ICardConfigurator {
 				withDefaultChildFn(defaultChildFn).//
 				withSorter(Lists.orderedComparator(order)).//
 				withKeyValueModifiers(modifiers).//
-				withFollowOn(followOnFragment);
+				withFollowOn(followOnFragment).//
+
+				withTitleSpecFn(titleSpecFn);
 	}
 
 	private String findKey(KeyValue from) {
