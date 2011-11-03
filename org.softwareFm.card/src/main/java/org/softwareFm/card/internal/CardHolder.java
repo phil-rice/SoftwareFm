@@ -29,7 +29,6 @@ import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.future.GatedMockFuture;
-import org.softwareFm.utilities.strings.Strings;
 
 public class CardHolder implements ICardHolder {
 
@@ -88,7 +87,6 @@ public class CardHolder implements ICardHolder {
 			title.getControl().setBounds(clientArea.x, clientArea.y, clientArea.width, titleHeight);
 			if (title instanceof IHasComposite)
 				((IHasComposite) title).getComposite().layout();
-			String cardString = card == null ? "null" : Strings.nullSafeToString(card.getControl().getBounds());
 		}
 
 		@Override
@@ -121,8 +119,8 @@ public class CardHolder implements ICardHolder {
 		}
 	}
 
-	CardHolderComposite content;
 	private final List<ICardChangedListener> cardListeners = new CopyOnWriteArrayList<ICardChangedListener>();
+	final CardHolderComposite content;
 
 	public CardHolder(Composite parent, String loadingText, String title, CardConfig cardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
 		content = new CardHolderComposite(parent, loadingText, cardConfig, rootUrl, callbackToGotoUrl);

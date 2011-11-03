@@ -56,12 +56,6 @@ public abstract class AbstractCardCollectionsDataStoreTest extends SwtIntegratio
 		mockCardFactory = ICardFactory.Utils.mockCardFactory();
 		cardConfig = new CardConfig(mockCardFactory, rawAsyncCardStore);
 		cardHolder = new CardHolder(shell, "loading", "title", cardConfig, CardDataStoreFixture.url, null);
-		cardCollectionsDataStore = new CardCollectionsDataStore() {
-			@Override
-			protected String findFollowOnUrlFragment(Entry<String, Object> entry) {
-				return AbstractCardCollectionsDataStoreTest.this.findFollowOnUrlFragment(entry);
-			}
-		};
 		memory = new CardAndCollectionDataStoreVisitorMonitored();
 		status = cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, CardDataStoreFixture.url, memory);
 	}

@@ -55,11 +55,11 @@ public class SoftwareFmDataComposite implements IHasComposite {
 	private final Map<DisplayerDefn, IDisplayer> displayDefnToDisplayerMap = Maps.newMap(LinkedHashMap.class);
 	private final Map<SmallButtonDefn, Composite> smallButtonDefnToCompositeMap = Maps.newMap(LinkedHashMap.class);
 
-	private final Composite content;
 	public BrowserComposite browserComposite;
 	private StackLayout rightHandSideLayout;
 	private Composite rightHandSide;
 	private ExecutorService service;
+	private Composite content;
 
 	public SoftwareFmDataComposite(final Composite parent, ExecutorService service, final GuiDataStore guiDataStore, final CompositeConfig compositeConfig, final ActionStore actionStore, final IEditorFactory editorFactory, final IUpdateStore updateStore, final ListEditorStore listEditorStore, ICallback<Throwable> exceptionHandler, final List<LargeButtonDefn> largeButtonDefns, final List<IBrowserConfigurator> browserConfigurators, IPlayListGetter playListGetter) {
 		this.service = service;
@@ -272,5 +272,6 @@ public class SoftwareFmDataComposite implements IHasComposite {
 	public Composite getComposite() {
 		return content;
 	}
+
 
 }

@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
+import org.softwareFm.card.api.ICardSelectedListener;
 import org.softwareFm.card.internal.History;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
@@ -22,8 +23,6 @@ import org.softwareFm.softwareFmImages.title.TitleAnchor;
 import org.softwareFm.utilities.callbacks.ICallback;
 
 public class NavBar implements IHasComposite, ITitleBarForCard {
-	private final NavBarComposite content;
-
 	static class NavBarComposite extends Composite {
 
 		private final History<String> history;
@@ -168,6 +167,8 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 
 	}
 
+	private final NavBarComposite content;
+
 	public NavBar(Composite parent, CardConfig cardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
 		content = new NavBarComposite(parent, cardConfig, rootUrl, callbackToGotoUrl);
 	}
@@ -197,6 +198,9 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 	@Override
 	public void setUrl(ICard card) {
 		content.setUrl(card.url());
+	}
+
+	public void addCardSelectedListener(ICardSelectedListener listener) {
 	}
 
 }

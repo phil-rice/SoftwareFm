@@ -9,8 +9,9 @@ public class CardConstants {
 	public static final String artifact = "artifact";
 	public static final String version = "version";
 	public static final String digest = "digest";
-	public static final String versionJar = "versionJar";
+	public static final String versionJar = "jar";
 	public static final String ntUnstructured = "nt:unstructured";
 	public static final String jcrPrimaryType = "jcr:primaryType";
+	public static final String collection = "collection";
 
 }

@@ -10,7 +10,6 @@ import org.softwareFm.utilities.collections.Lists;
 
 public class CardMock implements ICard {
 
-	private final ICardHolder cardHolder;
 	private final CardConfig cardConfig;
 	private final String url;
 	public final Map<String, Object> map;
@@ -21,7 +20,6 @@ public class CardMock implements ICard {
 
 	public CardMock(ICardHolder cardHolder, CardConfig cardConfig, String url, Map<String, Object> map) {
 		mockComposite = cardHolder == null?null:new Composite(cardHolder.getComposite(), SWT.NULL);
-		this.cardHolder = cardHolder;
 		this.cardConfig = cardConfig;
 		this.url = url;
 		this.map = map;
@@ -66,6 +64,11 @@ public class CardMock implements ICard {
 
 	@Override
 	public String cardType() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void addValueChangedListener(ICardValueChangedListener listener) {
 		throw new UnsupportedOperationException();
 	}
 

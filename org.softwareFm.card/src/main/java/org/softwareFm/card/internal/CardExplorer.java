@@ -14,6 +14,7 @@ import org.softwareFm.card.api.ICardChangedListener;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardHolder;
+import org.softwareFm.card.api.ICardSelectedListener;
 import org.softwareFm.card.api.ILineSelectedListener;
 import org.softwareFm.card.internal.details.IDetailsFactoryCallback;
 import org.softwareFm.display.composites.IHasComposite;
@@ -65,7 +66,7 @@ public class CardExplorer implements IHasComposite {
 				@Override
 				public void valueChanged(ICard card, String key, Object newValue) {
 					String defaultChild = findDefaultChild(card);
-					if (defaultChild.equals(key))
+					if (defaultChild != null && defaultChild.equals(key))
 						setDetail(card, key, card.data().get(key));
 				}
 			});
@@ -100,8 +101,10 @@ public class CardExplorer implements IHasComposite {
 						}
 					};
 					detail.setContent(null);
-					Swts.setSizeToComputedSize(control, SWT.DEFAULT, detail.getClientArea().height);
+					Swts.setSizeToComputedSize(control, SWT.DEFAULT, detail.getClientArea().height); //needed for scroll bar calculations
+					System.out.println("detail: " + detail.isDisposed() + ", control: " + control.isDisposed());
 					detail.setContent(control);
+					Swts.setSizeToComputedSize(control, SWT.DEFAULT, detail.getClientArea().height); //needed again if the scroll bar popped in
 					detail.layout();
 					detail.addListener(SWT.Resize, detailResizeListener);
 				}
@@ -143,6 +146,9 @@ public class CardExplorer implements IHasComposite {
 
 	public void setUrl(String url) {
 		ICallback.Utils.call(content.callbackToGotoUrl, url);
+	}
+
+	public void addCardSelectedListener(ICardSelectedListener listener) {
 	}
 
 	public static void main(String[] args) {

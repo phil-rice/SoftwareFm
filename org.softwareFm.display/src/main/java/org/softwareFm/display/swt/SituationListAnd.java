@@ -17,12 +17,12 @@ import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.utilities.exceptions.WrappedException;
 
 public class SituationListAnd<T extends IHasControl> implements IHasComposite {
-	private final SashForm content;
 	private List situationList;
 	private T situationDisplayer;
 
 	CopyOnWriteArrayList<ISituationListListener<T>> listeners = new CopyOnWriteArrayList<ISituationListListener<T>>();
 	private StyledText situationContents;
+	private SashForm content;
 
 	public SituationListAnd(Composite parent, Callable<? extends Iterable<String>> situations, ISituationListAndBuilder<T> builder) {
 		this.content = new SashForm(parent, SWT.HORIZONTAL) {
@@ -94,5 +94,6 @@ public class SituationListAnd<T extends IHasControl> implements IHasComposite {
 		listeners.add(listener);
 
 	}
+
 
 }

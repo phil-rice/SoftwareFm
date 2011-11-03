@@ -75,4 +75,5 @@ public class CardUnit implements IHasComposite {
 	public Composite getComposite() {
 		return sashForm;
 	}
+
 }

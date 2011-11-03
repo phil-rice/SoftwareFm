@@ -21,6 +21,7 @@ import org.softwareFm.card.api.IDetailFactory;
 import org.softwareFm.card.api.IFollowOnFragment;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.card.constants.CardConstants;
+import org.softwareFm.card.internal.details.CollectionItemDetailAdder;
 import org.softwareFm.card.internal.details.CollectionsDetailAdder;
 import org.softwareFm.card.internal.details.ListDetailAdder;
 import org.softwareFm.card.internal.details.TextEditorDetailAdder;
@@ -45,8 +46,15 @@ public class BasicCardConfigurator implements ICardConfigurator {
 		String keysToHide = resourceGetter.getStringOrNull("keys.hide");
 		final Set<String> ignoredNamed = keysToHide == null ? Collections.<String> emptySet() : new HashSet<String>(Arrays.asList(keysToHide.split(",")));
 		IFunction1<KeyValue, String> nameFn = new IFunction1<KeyValue, String>() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public String apply(KeyValue from) throws Exception {
+				if (from.value instanceof Map<?, ?>) {
+					Map<Object, Object> map = (Map<Object, Object>) from.value;
+					Object resourceType = map.get(CardConstants.slingResourceType);
+					if (CardConstants.group.equals(resourceType))
+						return from.key;
+				}
 				String key = findKey(from);
 				String prettyKey = Strings.camelCaseToPretty(from.key);
 				String pattern = resourceGetter.getStringOrNull(key + ".name");
@@ -61,14 +69,17 @@ public class BasicCardConfigurator implements ICardConfigurator {
 			public String apply(KeyValue from) throws Exception {
 				String key = findKey(from);
 				String pattern = resourceGetter.getStringOrNull(key + ".value");
-				int size = findSize(from);
+				String size = findSize(from);
 				if (pattern == null)
-					return Strings.nullSafeToString(from.value);
+					if (from.value instanceof Map<?, ?>)
+						return "";
+					else
+						return Strings.nullSafeToString(from.value);
 				else
 					return MessageFormat.format(pattern, key, size);
 			}
 
-			private int findSize(KeyValue from) {
+			private String findSize(KeyValue from) {
 				Object value = from.value;
 				if (value instanceof Collection<?>)
 					throw new IllegalStateException();
@@ -77,9 +88,9 @@ public class BasicCardConfigurator implements ICardConfigurator {
 					for (Entry<?, ?> entry : ((Map<?, ?>) value).entrySet())
 						if (entry.getValue() instanceof Map<?, ?>)
 							i++;
-					return i;
+					return Integer.toString(i);
 				} else
-					return 0;
+					return Strings.nullSafeToString(from.value);
 			}
 		};
 		IFunction1<KeyValue, Boolean> hideFn = new IFunction1<KeyValue, Boolean>() {
@@ -94,16 +105,16 @@ public class BasicCardConfigurator implements ICardConfigurator {
 		IFunction1<Map<String, Object>, Image> cardIconFn = new IFunction1<Map<String, Object>, Image>() {
 			@Override
 			public Image apply(Map<String, Object> from) throws Exception {
-				Object object = from.get("sling:resourceType");
+				Object object = from.get(CardConstants.slingResourceType);
 				if (object == null)
 					return imageRegistry.get(TitleAnchor.folderKey);
-				if (object.equals("softwareFm_group"))
+				if (object.equals(CardConstants.group))
 					return imageRegistry.get(ArtifactsAnchor.organisationKey);
-				else if (object.equals("softwareFm_artifact"))
+				else if (object.equals(CardConstants.artifact))
 					return imageRegistry.get(ArtifactsAnchor.projectKey);
-				else if (object.equals("softwareFm_version"))
+				else if (object.equals(CardConstants.version))
 					return imageRegistry.get(ArtifactsAnchor.jarKey);
-				else if (object.equals("softwareFm_version_jar"))
+				else if (object.equals(CardConstants.versionJar))
 					return imageRegistry.get(ArtifactsAnchor.jarKey);
 				else
 					return imageRegistry.get(TitleAnchor.folderKey);
@@ -137,6 +148,8 @@ public class BasicCardConfigurator implements ICardConfigurator {
 
 		IDetailFactory detailFactory = IDetailFactory.Utils.detailsFactory(//
 				new CollectionsDetailAdder(), //
+				// new GroupDetailAdder(),//
+				new CollectionItemDetailAdder(),//
 				new ListDetailAdder(), //
 				new TextEditorDetailAdder());
 		IFunction1<ICard, String> defaultChildFn = new IFunction1<ICard, String>() {
@@ -162,7 +175,8 @@ public class BasicCardConfigurator implements ICardConfigurator {
 				if (value instanceof Map<?, ?>)
 					return key;
 				else
-					return null;			}
+					return null;
+			}
 		};
 		return config.withNameFn(nameFn).withValueFn(valueFn).withHideFn(hideFn).//
 				withCardIconFn(cardIconFn).withResourceGetter(resourceGetter).withAggregatorTags(tagNames).//

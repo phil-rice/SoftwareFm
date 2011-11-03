@@ -1,7 +1,5 @@
 package org.softwareFm.card.internal;
 
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.widgets.Composite;
@@ -28,24 +26,13 @@ public class SingleCardExplorerOnAsync {
 				ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 				final CardConfig cardConfig = new BasicCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 				final CardHolder cardHolder = new CardHolder(from, "Loading", "title", cardConfig, CardDataStoreFixture.url, ICallback.Utils.<String> noCallback());
-				final CardCollectionsDataStore dataStore = new CardCollectionsDataStore() {
-					@Override
-					protected String findFollowOnUrlFragment(Entry<String, Object> entry) {
-						if (entry.getValue() instanceof Map<?, ?>) {
-							Map<?, ?> map = (Map<?, ?>) entry.getValue();
-							String result = (String) map.get("value");
-							return result;
-						} else
-							return null;
-					}
-				};
 
 				Thread thread = new Thread() {
 					@Override
 					public void run() {
 						try {
 							while (true) {
-								final CardAndCollectionsStatus status = dataStore.processDataFor(cardHolder, cardConfig, rootUrl, CardAndCollectionDataStoreVisitorMonitored.Utils.sysout());
+								final CardAndCollectionsStatus status = cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, rootUrl, CardAndCollectionDataStoreVisitorMonitored.Utils.sysout());
 								int delay = 1000;
 								Thread.sleep(delay);
 								((GatedMockFuture<?, ?>) status.initialFuture).kick();

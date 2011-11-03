@@ -12,7 +12,7 @@ public class DataStoreConfigurator implements IGuiDataStoreConfigurator {
 		String prefix = "/softwareFm/data/";
 		dataStore.//
 				urlGenerator("urlGenerator.group", new UrlGenerator(prefix + "{3}/{2}", "groupId")).// hash, hash, groupId, groundIdWithSlash
-				urlGenerator("urlGenerator.artifact", new UrlGenerator(prefix+"{3}/{2}/artifact/{5}", "groupId", "artifactId")).// 0,1: hash, 2,3: groupId, 4,5: artifactId
+				urlGenerator("urlGenerator.artifact", new UrlGenerator(prefix+"{3}/{2}/artifact/{4}", "groupId", "artifactId")).// 0,1: hash, 2,3: groupId, 4,5: artifactId
 				urlGenerator("urlGenerator.version", new UrlGenerator(prefix+"{3}/{2}/artifact/{4}/version/{6}", "groupId", "artifactId", "version")).// 0,1: hash, 2,3: groupId, 4,5: artifactId, 6,7: version
 				urlGenerator("urlGenerator.digest", new UrlGenerator(prefix+"{3}/{2}/artifact/{4}/version/{6}/digest/{8}", "groupId", "artifactId", "version",JdtConstants.hexDigestKey)).// 0,1: hash, 2,3: groupId, 4,5: artifactId, 6,7: version, 8,9: digest
 //				urlGenerator("urlGenerator", new UrlGenerator(prefix+"{3}/{2}/artifact/{4}/version/{6}", "groupId", "artifactId", "version")).// 0,1: hash, 2,3: groupId, 4,5: artifactId, 6,7: version

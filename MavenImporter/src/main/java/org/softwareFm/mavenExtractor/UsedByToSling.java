@@ -38,7 +38,7 @@ public class UsedByToSling implements IArtifactDependancyVisitor {
 		Map<String, Object> data = makeMap(groupid, artifactid);
 		data.put(MavenImporterConstants.slingResourceTypeKey, MavenImporterConstants.usedByResourceType);
 		System.out.println(fullUrl + "<-------" + data);
-		repository.post(fullUrl, data, new IResponseCallback.Utils().noCallback()).get();
+		repository.post(fullUrl, data,  IResponseCallback.Utils.noCallback()).get();
 		if (count++ > maxCount)
 			System.exit(0);
 	}

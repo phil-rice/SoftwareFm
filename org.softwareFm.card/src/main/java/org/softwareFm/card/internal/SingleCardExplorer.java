@@ -25,19 +25,13 @@ public class SingleCardExplorer implements IHasComposite {
 	private final ICallback<String> callbackToGotoUrl;
 	private final SashForm sashForm;
 	private final Text text;
-	private final CardCollectionsDataStore cardCollectionsDataStore = new CardCollectionsDataStore() {
-		@Override
-		protected String findFollowOnUrlFragment(java.util.Map.Entry<String,Object> entry) {
-			return CardConfig.defaultBodgedUrlFragments.contains(entry.getKey()) ? entry.getKey() : null;
-		};
-	};
 
 	public SingleCardExplorer(Composite parent, final CardConfig cardConfig, final String rootUrl) {
 		sashForm = new SashForm(parent, SWT.VERTICAL);
 		callbackToGotoUrl = new ICallback<String>() {
 			@Override
 			public void process(String url) throws Exception {
-				cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, CardAndCollectionDataStoreVisitorMonitored.Utils.sysout());
+				cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, CardAndCollectionDataStoreVisitorMonitored.Utils.sysout());
 			}
 		};
 		cardHolder = new CardHolder(sashForm, "loading", "Some title", cardConfig, rootUrl, callbackToGotoUrl);
@@ -47,6 +41,10 @@ public class SingleCardExplorer implements IHasComposite {
 			@Override
 			public void cardChanged(ICardHolder cardHolder, ICard card) {
 				text.setText(card.data().toString());
+			}
+
+			@Override
+			public void valueChanged(ICard card, String key, Object newValue) {
 			}
 		});
 	}
@@ -64,6 +62,7 @@ public class SingleCardExplorer implements IHasComposite {
 	public Composite getComposite() {
 		return sashForm;
 	}
+
 
 	public static void main(String[] args) {
 		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacardForCardExplorer();

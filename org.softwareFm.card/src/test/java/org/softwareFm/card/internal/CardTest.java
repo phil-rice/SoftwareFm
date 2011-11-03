@@ -15,8 +15,8 @@ import org.softwareFm.utilities.maps.Maps;
 
 public class CardTest extends SwtIntegrationTest {
 
-	private final Map<String, Object> rawData = Maps.<String, Object> makeLinkedMap("a", 1, "b", 2);
-	private final Map<String, Object> rawDataWithA3 = Maps.<String, Object> makeLinkedMap("a", 3,"b", 2);
+	private final Map<String, Object> rawData = Maps.<String, Object> makeImmutableMap("a", 1, "b", 2);
+	private final Map<String, Object> rawDataWithA3 = Maps.<String, Object> makeImmutableMap("a", 3,"b", 2);
 	private CardConfig cardConfig;
 
 	@Test
@@ -40,7 +40,6 @@ public class CardTest extends SwtIntegrationTest {
 	}
 
 	public void testValueChangedDoesntAffectRawDataButUpdatesData() {
-		Map<String, Object> copy = Maps.copyMap(rawData);
 		Card card = new Card(shell, cardConfig, "someUrl", rawData);
 		assertEquals(rawData, card.data());
 
@@ -50,7 +49,6 @@ public class CardTest extends SwtIntegrationTest {
 	}
 	
 	public void testRawDataNotMessedWithByConstructorOrValueChanged(){
-		Map<String, Object> copy = Maps.copyMap(rawData);
 		Card card = new Card(shell, cardConfig, "someUrl", rawData);
 		card.valueChanged("a", 3);
 		assertEquals(rawDataWithA3, card.data());

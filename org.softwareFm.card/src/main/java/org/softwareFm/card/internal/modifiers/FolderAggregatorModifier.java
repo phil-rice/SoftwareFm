@@ -20,6 +20,7 @@ public class FolderAggregatorModifier implements ICardDataModifier {
 		this.ignoreTag = ignoreTag;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, Object> modify(CardConfig cardConfig, ICard card, Map<String, Object> rawData) {
 		Map<String, Object> result = Maps.newMap();

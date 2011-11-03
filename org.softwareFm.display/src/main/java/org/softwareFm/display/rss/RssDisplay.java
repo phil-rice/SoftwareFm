@@ -18,10 +18,10 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class RssDisplay implements IBrowserPart {
 
-	private final Composite content;
 	private final Composite main;
 	private final Label label;
 	private final IResourceGetter resourceGetter;
+	private Composite content;
 
 	public RssDisplay(Composite parent, int style, IResourceGetter resourceGetter) {
 		this.resourceGetter = resourceGetter;

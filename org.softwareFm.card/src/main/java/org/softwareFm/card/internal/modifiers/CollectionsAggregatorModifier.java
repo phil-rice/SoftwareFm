@@ -17,6 +17,7 @@ public class CollectionsAggregatorModifier implements ICardDataModifier {
 		this.tagName = tagName;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, Object> modify(CardConfig cardConfig, ICard card, Map<String, Object> rawData) {
 		Map<String, Object> result = Maps.newMap();

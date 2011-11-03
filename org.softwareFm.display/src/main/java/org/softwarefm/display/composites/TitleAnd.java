@@ -21,8 +21,8 @@ public  class TitleAnd implements IDisplayer, IHasComposite {
 	private final Composite compButtons;
 	protected int buttonCount;
 	private final Label lblFiller;
-	private Composite content;
 	private SoftwareFmLayout layout;
+	private Composite content;
 
 	public TitleAnd(CompositeConfig config, Composite parent, String titleOrTitleKey, boolean titleIsKey) {
 		this.content = Swts.newComposite(parent, SWT.NULL, getClass().getSimpleName() +"/"+ titleOrTitleKey);
@@ -120,4 +120,5 @@ public  class TitleAnd implements IDisplayer, IHasComposite {
 	@Override
 	public void unhighlight() {
 	}
+
 }
