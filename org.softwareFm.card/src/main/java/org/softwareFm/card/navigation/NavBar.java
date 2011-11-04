@@ -65,8 +65,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 					e.gc.setBackground(combo.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 					e.gc.fillRectangle(clientArea);
 					Image image = imageRegistry.get(TitleAnchor.historyKey);
-					e.gc.drawImage(image, 0, -1);
-					// e.gc.drawRectangle(clientArea.x, clientArea.y, clientArea.width - 1, clientArea.height);
+					e.gc.drawImage(image, 0, +1);
 				}
 			});
 			nextButton = Swts.makeImageButton(this, imageRegistry.get(TitleAnchor.nextKey), new Runnable() {
