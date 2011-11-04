@@ -84,7 +84,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 		public void setUrl(String url, TitleSpec titleSpec) {
 			this.url = url;
 			listener.setTitleAndTitleSpec("", titleSpec);
-			setBackground(titleSpec.background);
+//			setBackground(titleSpec.background);
 			if (!url.startsWith(rootUrl))
 				throw new IllegalArgumentException("rooturl: " + rootUrl + " url: " + url);
 			history.push(url);
