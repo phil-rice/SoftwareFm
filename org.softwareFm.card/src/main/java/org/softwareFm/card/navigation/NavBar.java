@@ -23,6 +23,7 @@ import org.softwareFm.display.swt.Swts;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.title.TitleAnchor;
 import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.functions.Functions;
 
 public class NavBar implements IHasComposite, ITitleBarForCard {
 	static class NavBarComposite extends Composite {
@@ -36,6 +37,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 		private final CardConfig cardConfig;
 		private final NavHistoryCombo navCombo;
 		private String url;
+		private final TitlePaintListener listener;
 
 		public NavBarComposite(Composite parent, CardConfig cardConfig, String rootUrl, final ICallback<String> callbackToGotoUrl) {
 			super(parent, SWT.NULL);
@@ -76,11 +78,14 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 			});
 			nextButton.setImage(imageRegistry.get(TitleAnchor.nextKey));
 			updateNextPrevButtons();
-			addPaintListener(new TitlePaintListener(cardConfig, TitleSpec.noTitleSpec(getBackground()), ""));
+			listener = new TitlePaintListener(cardConfig, TitleSpec.noTitleSpec(getBackground()), "");
+			addPaintListener(listener);
 		}
 
-		public void setUrl(String url) {
+		public void setUrl(String url, TitleSpec titleSpec) {
 			this.url = url;
+			listener.setTitleAndTitleSpec("", titleSpec);
+			setBackground(titleSpec.background);
 			if (!url.startsWith(rootUrl))
 				throw new IllegalArgumentException("rooturl: " + rootUrl + " url: " + url);
 			history.push(url);
@@ -93,12 +98,13 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 			for (final String string : fragments)
 				if (string.length() > 0) {
 					String parentUrl = thisUrl;
-					new NavCombo(this, cardConfig, parentUrl, string, callbackToGotoUrl);
+					NavCombo navCombo = new NavCombo(this, cardConfig, parentUrl, string, callbackToGotoUrl);
 					thisUrl += "/" + string;
-					new NavButton(this, thisUrl, callbackToGotoUrl);
-
+					NavButton navButton = new NavButton(this, thisUrl, callbackToGotoUrl);
 				}
 			new NavCombo(this, cardConfig, url, "", callbackToGotoUrl);
+			for (Control control: getChildren())
+				control.setBackground(titleSpec.background);
 			layout();
 			getParent().layout();
 			redraw();
@@ -117,7 +123,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 		@Override
 		public Point computeSize(int wHint, int hHint) {
 			Rectangle clientArea = getClientArea();
-			int x = clientArea.x+cardConfig.leftMargin;
+			int x = clientArea.x + cardConfig.leftMargin;
 			for (Control control : getChildren())
 				if (control instanceof Combo) {
 					x += cardConfig.navIconWidth;
@@ -150,14 +156,14 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 					i++;
 				}
 			}
-			int x = clientArea.x+cardConfig.leftMargin;
-			int y = clientArea.y+2;
+			int x = clientArea.x + cardConfig.leftMargin;
+			int y = clientArea.y + 2;
 			for (Control control : getChildren())
 				if (control instanceof Combo) {
 					control.setLocation(x, y);
 					x += cardConfig.navIconWidth;
 				} else {
-					control.setLocation(x, y );
+					control.setLocation(x, y);
 					int width = control.getSize().x;
 					x += width;
 				}
@@ -170,6 +176,11 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 			return width > clientArea.x + clientArea.width;
 		}
 
+		@Override
+		public Rectangle getClientArea() {
+			Rectangle clientArea = super.getClientArea();
+			return new Rectangle(clientArea.x, clientArea.y, clientArea.width - listener.getTitleSpec().rightIndent, clientArea.height);
+		}
 	}
 
 	private final NavBarComposite content;
@@ -202,7 +213,8 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 
 	@Override
 	public void setUrl(ICard card) {
-		content.setUrl(card.url());
+		TitleSpec titleSpec = Functions.call(card.cardConfig().titleSpecFn, card);
+		content.setUrl(card.url(), titleSpec);
 	}
 
 	public void addCardSelectedListener(ICardSelectedListener listener) {

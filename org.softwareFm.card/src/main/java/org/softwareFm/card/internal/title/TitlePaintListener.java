@@ -35,4 +35,7 @@ public  class TitlePaintListener implements PaintListener {
 		this.title = title;
 		this.titleSpec = titleSpec;
 	}
+	public TitleSpec getTitleSpec() {
+		return titleSpec;
+	}
 }

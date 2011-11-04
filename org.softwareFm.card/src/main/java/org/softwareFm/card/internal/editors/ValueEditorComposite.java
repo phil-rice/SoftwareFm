@@ -34,6 +34,7 @@ abstract class ValueEditorComposite<T extends Control> extends Composite {
 		titleLabel = new Title(this, cardConfig, titleSpec, name, url);
 		setBackground(titleSpec.background);
 		body = new Composite(this, SWT.NULL);
+		body.setBackground(titleSpec.background);
 
 		originalValue = Functions.call(cardConfig.valueFn, keyValue);
 		editorControl = makeEditorControl(body, originalValue);

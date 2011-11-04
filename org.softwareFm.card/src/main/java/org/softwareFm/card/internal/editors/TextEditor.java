@@ -21,6 +21,7 @@ public class TextEditor implements IHasComposite {
 
 		public TextEditorComposite(Composite parent, int style, final CardConfig cardConfig, final String url, final String key, Object initialValue, TitleSpec titleSpec, final IDetailsFactoryCallback callback) {
 			super(parent, style, cardConfig, url, key, initialValue, titleSpec, callback);
+		
 		}
 
 		@Override

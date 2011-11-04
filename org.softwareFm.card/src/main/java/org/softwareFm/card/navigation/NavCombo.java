@@ -58,7 +58,6 @@ public class NavCombo implements IHasControl {
 			@Override
 			public void paintControl(PaintEvent e) {
 				Rectangle clientArea = combo.getClientArea();
-				e.gc.setBackground(combo.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 				e.gc.fillRectangle(clientArea);
 				if (image == null) {
 					e.gc.drawText("/", 3, 0);
