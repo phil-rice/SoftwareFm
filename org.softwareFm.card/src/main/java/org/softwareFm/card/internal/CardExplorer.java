@@ -3,6 +3,7 @@ package org.softwareFm.card.internal;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -51,9 +52,9 @@ public class CardExplorer implements IHasComposite {
 			right = new SashForm(this, SWT.VERTICAL);
 			// right.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_BLUE));
 			detail = new ScrolledComposite(right, SWT.H_SCROLL);
-			// detail.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_RED));
 
 			comments = new ScrolledComposite(right, SWT.H_SCROLL);
+			comments.setBackground(new Color(getDisplay(), 235, 242, 246));
 			this.setWeights(new int[] { 2, 5 });
 			right.setWeights(new int[] { 1, 1 });
 			cardHolder.addCardChangedListener(new ICardChangedListener() {
@@ -98,15 +99,18 @@ public class CardExplorer implements IHasComposite {
 							// System.out.println("Resizing: " + detail.getClientArea());
 							Swts.setSizeToComputedSize(control, SWT.DEFAULT, detail.getClientArea().height);
 							detail.layout();
+							Control content = detail.getContent();
+							if (content instanceof Composite)
+								((Composite) content).layout();
 						}
 					};
 					detail.setContent(null);
-					Swts.setSizeToComputedSize(control, SWT.DEFAULT, detail.getClientArea().height); //needed for scroll bar calculations
+					Swts.setSizeToComputedSize(control, SWT.DEFAULT, detail.getClientArea().height); // needed for scroll bar calculations
 					System.out.println("detail: " + detail.isDisposed() + ", control: " + control.isDisposed());
 					detail.setContent(control);
-					Swts.setSizeToComputedSize(control, SWT.DEFAULT, detail.getClientArea().height); //needed again if the scroll bar popped in
+					Swts.setSizeToComputedSize(control, SWT.DEFAULT, detail.getClientArea().height); // needed again if the scroll bar popped in
 					if (control instanceof Composite)
-						if (((Composite) control).getLayout()==null)
+						if (((Composite) control).getLayout() == null)
 							((Composite) control).layout();
 					detail.layout();
 					detail.addListener(SWT.Resize, detailResizeListener);

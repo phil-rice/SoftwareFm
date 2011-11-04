@@ -88,10 +88,10 @@ public class CardConfig {
 		this.defaultChildFn = Functions.constant(null);
 		this.titleSpecFn = Functions.expectionIfCalled();
 		this.comparator = Lists.orderedComparator();
-		this.leftMargin = 5;
-		this.rightMargin = 5;
-		this.topMargin = 5;
-		this.bottomMargin = 5;
+		this.leftMargin = 3;
+		this.rightMargin = 3;
+		this.topMargin = 3;
+		this.bottomMargin = 3;
 		this.titleHeight = 20;
 		this.keyValueModifiers = Arrays.<ICardDataModifier> asList(new CardMapSorter());
 		this.followOnFragment = new IFollowOnFragment() {

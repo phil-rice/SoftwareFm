@@ -29,8 +29,8 @@ public class TextEditor implements IHasComposite {
 		}
 
 		@Override
-		protected Text makeEditorControl(String originalValue) {
-			Text result = new Text(this, SWT.NULL);
+		protected Text makeEditorControl(Composite parent, String originalValue) {
+			Text result = new Text(parent, SWT.BORDER);
 			result.setText(originalValue);
 			return result;
 		}

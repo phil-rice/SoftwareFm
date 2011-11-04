@@ -29,8 +29,8 @@ public class StyledTextEditor implements IHasComposite {
 		}
 
 		@Override
-		protected StyledText makeEditorControl(String originalValue) {
-			StyledText result = new StyledText(this, SWT.NULL);
+		protected StyledText makeEditorControl(Composite parent, String originalValue) {
+			StyledText result = new StyledText(parent, SWT.BORDER);
 			result.setText(originalValue);
 			return result;
 		}

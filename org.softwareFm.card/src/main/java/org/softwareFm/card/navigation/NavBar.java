@@ -16,6 +16,8 @@ import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardSelectedListener;
 import org.softwareFm.card.internal.History;
+import org.softwareFm.card.internal.details.TitleSpec;
+import org.softwareFm.card.internal.title.TitlePaintListener;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
@@ -36,7 +38,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 		private String url;
 
 		public NavBarComposite(Composite parent, CardConfig cardConfig, String rootUrl, final ICallback<String> callbackToGotoUrl) {
-			super(parent, SWT.BORDER);
+			super(parent, SWT.NULL);
 			final ImageRegistry imageRegistry = new ImageRegistry();
 			new BasicImageRegisterConfigurator().registerWith(parent.getDisplay(), imageRegistry);
 			this.height = cardConfig.titleHeight;
@@ -74,6 +76,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 			});
 			nextButton.setImage(imageRegistry.get(TitleAnchor.nextKey));
 			updateNextPrevButtons();
+			addPaintListener(new TitlePaintListener(cardConfig, TitleSpec.noTitleSpec(getBackground()), ""));
 		}
 
 		public void setUrl(String url) {
@@ -98,6 +101,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 			new NavCombo(this, cardConfig, url, "", callbackToGotoUrl);
 			layout();
 			getParent().layout();
+			redraw();
 		}
 
 		private void updateNextPrevButtons() {
@@ -112,7 +116,8 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 
 		@Override
 		public Point computeSize(int wHint, int hHint) {
-			int x = 0;
+			Rectangle clientArea = getClientArea();
+			int x = clientArea.x+cardConfig.leftMargin;
 			for (Control control : getChildren())
 				if (control instanceof Combo) {
 					x += cardConfig.navIconWidth;
@@ -145,14 +150,14 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 					i++;
 				}
 			}
-			int x = clientArea.x;
-			int y = clientArea.y;
+			int x = clientArea.x+cardConfig.leftMargin;
+			int y = clientArea.y+2;
 			for (Control control : getChildren())
 				if (control instanceof Combo) {
 					control.setLocation(x, y);
 					x += cardConfig.navIconWidth;
 				} else {
-					control.setLocation(x, y - 1);
+					control.setLocation(x, y );
 					int width = control.getSize().x;
 					x += width;
 				}

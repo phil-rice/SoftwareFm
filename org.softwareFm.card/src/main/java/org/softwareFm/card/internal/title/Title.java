@@ -2,10 +2,7 @@ package org.softwareFm.card.internal.title;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -20,54 +17,25 @@ import org.softwareFm.utilities.functions.IFunction1;
 
 public class Title implements IHasControl {
 
-	private final Canvas canvas;
-	private String title;
-	protected TitleSpec titleSpec;
-	private String tooltip;
+	final Canvas canvas;
+	private final TitlePaintListener listener;
 
 	public Title(Composite parent, final CardConfig cardConfig, final TitleSpec initialTitleSpec, String initialTitle, String initialTooltip) {
-		this.titleSpec = initialTitleSpec;
-		this.title = initialTitle;
 		canvas = new Canvas(parent, SWT.NULL);
 		canvas.setToolTipText(initialTooltip);
-		canvas.addPaintListener(new PaintListener() {
-			@Override
-			public void paintControl(PaintEvent e) {
-				Rectangle clientArea = canvas.getClientArea();
-				e.gc.setBackground(titleSpec.background);
-				e.gc.fillRoundRectangle(clientArea.x, clientArea.y, clientArea.width - titleSpec.rightIndent, clientArea.height + cardConfig.cornerRadius, cardConfig.cornerRadius, cardConfig.cornerRadius);
-
-				if (titleSpec.icon != null)
-					e.gc.drawImage(titleSpec.icon, clientArea.x+cardConfig.titleSpacer, clientArea.y+1);
-				int leftX = titleSpec.icon == null ? clientArea.x + cardConfig.titleSpacer : clientArea.x + 2 * cardConfig.titleSpacer + titleSpec.icon.getImageData().width;
-				e.gc.setClipping(clientArea.x, clientArea.y, clientArea.width - titleSpec.rightIndent-cardConfig.cornerRadius, clientArea.height);
-				e.gc.drawText(title, leftX, clientArea.y);
-				e.gc.setClipping((Rectangle) null);
-				e.gc.drawRoundRectangle(clientArea.x, clientArea.y, clientArea.width - titleSpec.rightIndent, clientArea.height + cardConfig.cornerRadius, cardConfig.cornerRadius, cardConfig.cornerRadius);
-			}
-
-		});
+		listener = new TitlePaintListener(cardConfig, initialTitleSpec, initialTitle);
+		canvas.addPaintListener(listener);
 	}
 
 	public void setTitleAndImage(String title, String tooltip, TitleSpec titleSpec) {
-		this.title = title;
-		this.titleSpec = titleSpec;
 		canvas.setToolTipText(tooltip);
-		canvas.redraw();
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
+		listener.setTitleAndTitleSpec(title, titleSpec);
 		canvas.redraw();
 	}
 
 	@Override
 	public Control getControl() {
 		return canvas;
-	}
-
-	public String getText() {
-		return title;
 	}
 
 	public static void main(String[] args) {

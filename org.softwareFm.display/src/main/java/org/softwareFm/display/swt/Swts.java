@@ -628,6 +628,9 @@ public class Swts {
 	public static void setSizeFromClientArea(Control child) {
 		Rectangle clientArea = child.getParent().getClientArea();
 		child.setSize(clientArea.width, clientArea.height);
+		if (child instanceof Composite)
+			((Composite) child).layout();
+		child.redraw();
 
 	}
 

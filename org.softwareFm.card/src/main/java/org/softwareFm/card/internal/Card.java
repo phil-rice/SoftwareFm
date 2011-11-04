@@ -7,13 +7,9 @@ import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -49,7 +45,7 @@ public class Card implements ICard {
 	private final String url;
 
 	/** The gui component that displays the data */
-	private final Table table;
+	final Table table;
 	private final TableColumn nameColumn;
 	private final TableColumn valueColumn;
 
@@ -107,23 +103,7 @@ public class Card implements ICard {
 					table.deselectAll();
 			}
 		});
-		table.addPaintListener(new PaintListener() {
-			@Override
-			public void paintControl(PaintEvent e) {
-				Rectangle clientArea = table.getClientArea();
-				e.gc.setClipping(clientArea.x, clientArea.y+cardConfig.cornerRadius, clientArea.width-cardConfig.cornerRadius, clientArea.height);
-				e.gc.drawRoundRectangle(clientArea.x, clientArea.y - cardConfig.cornerRadius, clientArea.width - 1, clientArea.height - 1 + cardConfig.cornerRadius, cardConfig.cornerRadius, cardConfig.cornerRadius);
-
-				e.gc.setClipping(clientArea.x+clientArea.width-titleSpec.rightIndent, clientArea.y, clientArea.width, clientArea.height); //way to wide...but who cares
-				e.gc.drawRoundRectangle(clientArea.x, clientArea.y , clientArea.width - 1, clientArea.height - 1 , cardConfig.cornerRadius, cardConfig.cornerRadius);
-				
-				e.gc.setClipping((Rectangle) null);
-				e.gc.drawLine(clientArea.x, clientArea.y, clientArea.x, clientArea.y+cardConfig.cornerRadius);
-//				e.gc.drawLine(clientArea.x + clientArea.width - titleSpec.rightIndent, clientArea.y, clientArea.x + clientArea.width, clientArea.y);
-				e.gc.setForeground(new Color(e.display, 200, 200, 200));
-				e.gc.drawLine(clientArea.x+1, clientArea.y, clientArea.width-titleSpec.rightIndent-1, clientArea.y);
-			}
-		});
+		table.addPaintListener(new CardOutlinePaintListener(titleSpec, cardConfig, table));
 		table.addListener(SWT.Resize, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
