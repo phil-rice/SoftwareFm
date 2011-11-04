@@ -8,7 +8,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
-import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.internal.details.IDetailsFactoryCallback;
 import org.softwareFm.card.internal.details.TitleSpec;
 import org.softwareFm.display.composites.IHasComposite;
@@ -77,7 +76,7 @@ public class StyledTextEditor implements IHasComposite {
 		Swts.displayNoLayout(StyledTextEditor.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				CardConfig cardConfig = new CardConfig(ICardFactory.Utils.cardFactory(), CardDataStoreFixture.rawCardStore());
+				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay());
 				StyledTextEditor textEditor = new StyledTextEditor(from, cardConfig, "someUrl", "key", "value", IDetailsFactoryCallback.Utils.resizeAfterGotData(), TitleSpec.noTitleSpec(from.getBackground()));
 				Swts.resizeMeToParentsSize(textEditor.getControl());
 				textEditor.content.layout();

@@ -4,9 +4,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Device;
+import org.softwareFm.card.internal.details.TitleSpec;
+import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.maps.Maps;
 
-/** Hello ALyson*/
+/** Hello ALyson */
 public class CardDataStoreFixture {
 
 	public final static String url1 = "prefix1/prefix2/org/softwareFm/url1";
@@ -60,7 +64,13 @@ public class CardDataStoreFixture {
 			"2b", data2b,//
 			"2c", data2c,//
 	};
-	public static CardConfig cardConfigSync = new CardConfig(ICardFactory.Utils.cardFactory(), rawCardStore());
+
+	public static CardConfig syncCardConfig(Device device) {
+		return new CardConfig(ICardFactory.Utils.cardFactory(), rawCardStore()).withTitleSpecFn(Functions.<ICard, TitleSpec> constant(TitleSpec.noTitleSpec(device.getSystemColor(SWT.COLOR_WHITE))));
+	}
+	public static CardConfig asyncCardConfig(Device device) {
+		return new CardConfig(ICardFactory.Utils.cardFactory(), rawAsyncCardStore()).withTitleSpecFn(Functions.<ICard, TitleSpec> constant(TitleSpec.noTitleSpec(device.getSystemColor(SWT.COLOR_WHITE))));
+	}
 
 	public static final CardDataStoreMock rawCardStore() {
 		return new CardDataStoreMock(dataForMocks);

@@ -197,6 +197,10 @@ public class CardConfig {
 		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, comparator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers, followOnFragment, titleSpecFn);
 	}
 
+	public CardConfig withCardFactory(ICardFactory cardFactory) {
+		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, comparator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers, followOnFragment, titleSpecFn);
+	}
+
 	public Map<String, Object> modify(ICard card, Map<String, Object> rawData) {
 		Map<String, Object> value = rawData;
 		debugModifiers("Initial " + card.url(), value);
@@ -214,5 +218,6 @@ public class CardConfig {
 			System.out.println();
 		}
 	}
+
 
 }

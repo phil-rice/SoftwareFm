@@ -20,4 +20,5 @@ public class NavTitle extends Title implements ITitleBarForCard {
 		setTitleAndImage(title, card.url(), titleSpec);
 	}
 
+
 }

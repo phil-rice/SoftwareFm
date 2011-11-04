@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.ScrollBar;
 import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMonitored;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
@@ -51,7 +52,16 @@ public class CardExplorer implements IHasComposite {
 			cardHolder = new CardHolder(this, "loading", "Some title", cardConfig, rootUrl, callbackToGotoUrl);
 			right = new SashForm(this, SWT.VERTICAL);
 			// right.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_BLUE));
-			detail = new ScrolledComposite(right, SWT.H_SCROLL);
+			detail = new ScrolledComposite(right, SWT.H_SCROLL|SWT.NO_REDRAW_RESIZE|SWT.NO_BACKGROUND);
+			ScrollBar hbar = detail.getHorizontalBar();
+			hbar.addListener(SWT.Selection , new Listener(){
+				@Override
+				public void handleEvent(Event event) {
+					System.out.println("hbar event");
+					Swts.redrawAllChildren(detail.getContent());
+					detail.redraw();
+					
+				}});
 
 			comments = new ScrolledComposite(right, SWT.H_SCROLL);
 			comments.setBackground(new Color(getDisplay(), 235, 242, 246));

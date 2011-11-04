@@ -6,7 +6,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.internal.details.TitleSpec;
 
-public  class TitlePaintListener implements PaintListener {
+public class TitlePaintListener implements PaintListener {
 	private final CardConfig cardConfig;
 	private TitleSpec titleSpec;
 	private String title;
@@ -19,6 +19,7 @@ public  class TitlePaintListener implements PaintListener {
 
 	@Override
 	public void paintControl(PaintEvent e) {
+//		e.gc.fillRectangle(e.x, e.y, e.width, e.height);
 		e.gc.setBackground(titleSpec.background);
 		e.gc.fillRoundRectangle(e.x, e.y, e.width - titleSpec.rightIndent, e.height + cardConfig.cornerRadius, cardConfig.cornerRadius, cardConfig.cornerRadius);
 
@@ -35,7 +36,12 @@ public  class TitlePaintListener implements PaintListener {
 		this.title = title;
 		this.titleSpec = titleSpec;
 	}
+
 	public TitleSpec getTitleSpec() {
 		return titleSpec;
+	}
+
+	public String getTitle() {
+		return title;
 	}
 }

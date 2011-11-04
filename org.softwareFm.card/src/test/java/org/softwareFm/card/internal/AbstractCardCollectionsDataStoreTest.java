@@ -5,7 +5,6 @@ import java.util.concurrent.ExecutionException;
 
 import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMonitored;
 import org.softwareFm.card.api.CardConfig;
-import org.softwareFm.card.api.CardDataStoreAsyncMock;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.CardFactoryMock;
 import org.softwareFm.card.api.CardMock;
@@ -14,10 +13,8 @@ import org.softwareFm.display.swt.SwtIntegrationTest;
 
 public abstract class AbstractCardCollectionsDataStoreTest extends SwtIntegrationTest {
 
-	protected CardDataStoreAsyncMock rawAsyncCardStore;
 	protected CardConfig cardConfig;
 	protected CardHolder cardHolder;
-	protected CardCollectionsDataStore cardCollectionsDataStore;
 	protected CardAndCollectionsStatus status;
 	protected CardAndCollectionsStatus followUpQueryStatus;
 	private CardFactoryMock mockCardFactory;
@@ -52,12 +49,11 @@ public abstract class AbstractCardCollectionsDataStoreTest extends SwtIntegratio
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		rawAsyncCardStore = CardDataStoreFixture.rawAsyncCardStore();
 		mockCardFactory = ICardFactory.Utils.mockCardFactory();
-		cardConfig = new CardConfig(mockCardFactory, rawAsyncCardStore);
+		cardConfig = CardDataStoreFixture.asyncCardConfig(shell.getDisplay()).withCardFactory(mockCardFactory);
 		cardHolder = new CardHolder(shell, "loading", "title", cardConfig, CardDataStoreFixture.url, null);
 		memory = new CardAndCollectionDataStoreVisitorMonitored();
-		status = cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, CardDataStoreFixture.url, memory);
+		status = cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, CardDataStoreFixture.url, memory);
 	}
 
 	abstract protected String findFollowOnUrlFragment(Entry<String, Object> entry);

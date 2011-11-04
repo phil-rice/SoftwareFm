@@ -33,6 +33,9 @@ public class Title implements IHasControl {
 		canvas.redraw();
 	}
 
+	public String getText(){
+		return listener.getTitle();
+	}
 	@Override
 	public Control getControl() {
 		return canvas;
@@ -44,7 +47,7 @@ public class Title implements IHasControl {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				Composite parent = new Composite(from, SWT.NULL);
-				CardConfig cardConfig = CardDataStoreFixture.cardConfigSync;
+				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig;
 				ImageRegistry imageRegistry = new ImageRegistry();
 				new BasicImageRegisterConfigurator().registerWith(from.getDisplay(), imageRegistry);
 				TitleSpec titleSpec = new TitleSpec(imageRegistry, ArtifactsAnchor.projectKey, new Color(from.getDisplay(), 183, 196, 183), 20);

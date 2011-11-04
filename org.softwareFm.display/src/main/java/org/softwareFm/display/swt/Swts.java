@@ -52,6 +52,7 @@ import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.simpleButtons.IButtonParent;
 import org.softwareFm.utilities.arrays.ArrayHelper;
+import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.collections.Iterables;
 import org.softwareFm.utilities.collections.Lists;
@@ -91,6 +92,22 @@ public class Swts {
 		};
 	}
 
+	public static void redrawAllChildren(Control control){
+		walkChildren(control, new ICallback<Control>(){
+			@Override
+			public void process(Control t) throws Exception {
+				t.redraw();
+			}});
+	}
+	
+	public static void walkChildren(Control control, ICallback<Control> callback){
+	   if (control instanceof Composite)
+		   for (Control child: ((Composite) control).getChildren()){
+			   ICallback.Utils.call(callback, child);
+			   walkChildren(child, callback);
+		   }
+	}
+	
 	public static Group newGroup(Composite parent, int style, final String description) {
 		return new Group(parent, style) {
 			@Override

@@ -7,14 +7,12 @@ import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICard;
-import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.display.swt.SwtIntegrationTest;
 
 public abstract class AbstractCardHolderTest extends SwtIntegrationTest {
 
 	protected CardConfig cardConfig;
 	protected CardHolder cardHolder;
-	protected ICardFactory cardFactory;
 	private Rectangle expectedClientArea;
 	private int borderThickness;
 
@@ -60,7 +58,7 @@ public abstract class AbstractCardHolderTest extends SwtIntegrationTest {
 	}
 
 	private void setCardAndcheckCardLayout(CardConfig cardConfig) {
-		ICard card = cardFactory.makeCard(cardHolder, cardConfig, "someRootUrl/someUrl", CardDataStoreFixture.data1a);
+		ICard card = cardConfig.cardFactory.makeCard(cardHolder, cardConfig, "someRootUrl/someUrl", CardDataStoreFixture.data1a);
 		cardHolder.setCard(card);
 		checkCardLayout(cardConfig);
 	}
@@ -102,7 +100,7 @@ public abstract class AbstractCardHolderTest extends SwtIntegrationTest {
 	}
 
 	protected ICard makeAndSetCard(CardConfig cardConfig) {
-		ICard card = cardFactory.makeCard(cardHolder, cardConfig, "someRootUrl/someUrl", CardDataStoreFixture.data1a);
+		ICard card = cardConfig.cardFactory.makeCard(cardHolder, cardConfig, "someRootUrl/someUrl", CardDataStoreFixture.data1a);
 		cardHolder.setCard(card);
 		return card;
 	}
@@ -110,8 +108,7 @@ public abstract class AbstractCardHolderTest extends SwtIntegrationTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		cardFactory = ICardFactory.Utils.cardFactory();
-		cardConfig = new CardConfig(cardFactory, CardDataStoreFixture.rawCardStore());
+		cardConfig = CardDataStoreFixture.syncCardConfig(shell.getDisplay());
 		Composite parent = new Composite(shell, SWT.NULL) {
 			@Override
 			public Rectangle getClientArea() {

@@ -24,11 +24,11 @@ public class CardHolderTestWithTitleTest extends AbstractCardHolderTest {
 	}
 
 	private void checkTitleBasedOnUrlIsDisplayed(String expected, String url) throws Exception {
-		ICard cardWithLastSegmentAsTitle = cardFactory.makeCard(cardHolder, cardConfig, url, CardDataStoreFixture.data1a);
+		ICard cardWithLastSegmentAsTitle = cardConfig.cardFactory.makeCard(cardHolder, cardConfig, url, CardDataStoreFixture.data1a);
 		cardHolder.setCard(cardWithLastSegmentAsTitle);
 		assertEquals(cardConfig.cardTitleFn.apply(url), getTitleText());
 
-		ICard cardWithUrlAsTitle = cardFactory.makeCard(cardHolder, cardConfig.withTitleFn(Functions.<String, String> identity()), url, CardDataStoreFixture.data1a);
+		ICard cardWithUrlAsTitle =  cardConfig.cardFactory.makeCard(cardHolder, cardConfig.withTitleFn(Functions.<String, String> identity()), url, CardDataStoreFixture.data1a);
 		cardHolder.setCard(cardWithUrlAsTitle);
 		assertEquals(url, getTitleText());
 	}

@@ -6,9 +6,8 @@ import java.util.Map;
 import org.eclipse.swt.widgets.Composite;
 import org.junit.Test;
 import org.softwareFm.card.api.CardConfig;
+import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICardDataModifier;
-import org.softwareFm.card.api.ICardDataStore;
-import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.display.swt.SwtIntegrationTest;
 import org.softwareFm.utilities.maps.Maps;
@@ -70,6 +69,6 @@ public class CardTest extends SwtIntegrationTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		cardConfig = new CardConfig(ICardFactory.Utils.mockCardFactory(), ICardDataStore.Utils.mock());
+		cardConfig = CardDataStoreFixture.syncCardConfig(shell.getDisplay());
 	}
 }
