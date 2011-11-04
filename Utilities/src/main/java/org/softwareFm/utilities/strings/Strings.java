@@ -25,9 +25,10 @@ public class Strings {
 
 	public static List<String> splitIgnoreBlanks(String raw, String separator) {
 		List<String> result = Lists.newList();
-		for (String string : raw.split(separator))
-			if (string.length() > 0)
-				result.add(string);
+		if (raw != null)
+			for (String string : raw.split(separator))
+				if (string.length() > 0)
+					result.add(string);
 		return result;
 	}
 

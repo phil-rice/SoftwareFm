@@ -29,6 +29,7 @@ public class StringsTest extends TestCase {
 		assertEquals(new PreAndPost("", ""), Strings.split(".", '.'));
 	}
 
+	
 	public void testSqlEscape() {
 		assertEquals("abc", Strings.sqlEscape("abc"));
 		assertEquals("a''bc", Strings.sqlEscape("a'bc"));

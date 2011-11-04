@@ -44,7 +44,9 @@ abstract class ValueEditorComposite<T extends Control> extends Composite {
 			@Override
 			public void run() {
 				IMutableCardDataStore cardDataStore = (IMutableCardDataStore) cardConfig.cardDataStore;
-				cardDataStore.put(url, Maps.<String, Object> makeMap(key, getValue()), callback);
+				String value = getValue();
+				if (!value.equals(originalValue))
+					cardDataStore.put(url, Maps.<String, Object> makeMap(key, value), callback);
 				ValueEditorComposite.this.dispose();
 
 			}

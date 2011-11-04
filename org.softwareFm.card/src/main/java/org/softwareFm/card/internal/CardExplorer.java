@@ -57,10 +57,7 @@ public class CardExplorer implements IHasComposite {
 			hbar.addListener(SWT.Selection , new Listener(){
 				@Override
 				public void handleEvent(Event event) {
-					System.out.println("hbar event");
 					Swts.redrawAllChildren(detail.getContent());
-					detail.redraw();
-					
 				}});
 
 			comments = new ScrolledComposite(right, SWT.H_SCROLL);
