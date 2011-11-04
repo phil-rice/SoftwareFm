@@ -5,7 +5,9 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Listener;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.IMutableCardDataStore;
 import org.softwareFm.card.api.KeyValue;
@@ -54,6 +56,14 @@ abstract class ValueEditorComposite<T extends Control> extends Composite {
 		});
 		updateEnabledStatusOfButtons();
 		body.addPaintListener(new CardOutlinePaintListener(titleSpec, cardConfig, body));
+		editorControl.addListener(SWT.Traverse, new Listener() {
+			@Override
+			public void handleEvent(Event e) {
+				if (e.detail == SWT.TRAVERSE_ESCAPE)
+					okCancel.cancel();
+			}
+		});
+
 	}
 
 	abstract protected T makeEditorControl(Composite parent, String originalValue);
@@ -74,7 +84,7 @@ abstract class ValueEditorComposite<T extends Control> extends Composite {
 		Point textSize = editorControl.computeSize(wHint, hHint);
 		Point okCancelSize = okCancel.getControl().computeSize(wHint, hHint);
 		int height = hHint == SWT.DEFAULT ? cardConfig.titleHeight + textSize.y + okCancelSize.y : hHint;
-		int width = getParent().getClientArea().width; //want full width if can have it
+		int width = getParent().getClientArea().width; // want full width if can have it
 		return new Point(width, height);
 	}
 

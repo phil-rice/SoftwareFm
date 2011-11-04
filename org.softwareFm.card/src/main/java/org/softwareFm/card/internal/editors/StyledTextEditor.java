@@ -2,6 +2,8 @@ package org.softwareFm.card.internal.editors;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.api.CardConfig;
@@ -32,6 +34,13 @@ public class StyledTextEditor implements IHasComposite {
 		protected StyledText makeEditorControl(Composite parent, String originalValue) {
 			StyledText result = new StyledText(parent, SWT.BORDER);
 			result.setText(originalValue);
+			result.addModifyListener(new ModifyListener() {
+				@Override
+				public void modifyText(ModifyEvent e) {
+					updateEnabledStatusOfButtons();
+				}
+			});
+			result.setFocus();
 			return result;
 		}
 

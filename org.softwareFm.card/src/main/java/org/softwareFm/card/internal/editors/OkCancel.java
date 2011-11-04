@@ -15,8 +15,12 @@ public class OkCancel implements IHasControl {
 	private final Button okButton;
 	private boolean enabled = true;
 	private final Composite content;
+	private final Runnable onAccept;
+	private final Runnable onCancel;
 
 	public OkCancel(Composite parent, CardConfig cardConfig, final Runnable onAccept, final Runnable onCancel) {
+		this.onAccept = onAccept;
+		this.onCancel = onCancel;
 		content = new Composite(parent, SWT.NULL);
 		IResourceGetter resourceGetter = cardConfig.resourceGetter;
 		Swts.makePushButton(content, resourceGetter, DisplayConstants.buttonCancelTitle, onCancel);
@@ -36,6 +40,14 @@ public class OkCancel implements IHasControl {
 	@Override
 	public Control getControl() {
 		return content;
+	}
+
+	public void ok() {
+		onAccept.run();
+	}
+
+	public void cancel() {
+		onCancel.run();
 	}
 
 }

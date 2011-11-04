@@ -1,6 +1,10 @@
 package org.softwareFm.card.internal.editors;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
@@ -21,7 +25,7 @@ public class TextEditor implements IHasComposite {
 
 		public TextEditorComposite(Composite parent, int style, final CardConfig cardConfig, final String url, final String key, Object initialValue, TitleSpec titleSpec, final IDetailsFactoryCallback callback) {
 			super(parent, style, cardConfig, url, key, initialValue, titleSpec, callback);
-		
+
 		}
 
 		@Override
@@ -32,7 +36,21 @@ public class TextEditor implements IHasComposite {
 		@Override
 		protected Text makeEditorControl(Composite parent, String originalValue) {
 			Text result = new Text(parent, SWT.BORDER);
+			result.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+					okCancel.ok();
+				}
+			});
 			result.setText(originalValue);
+			result.addModifyListener(new ModifyListener() {
+				@Override
+				public void modifyText(ModifyEvent e) {
+					updateEnabledStatusOfButtons();
+				}
+			});
+			result.setFocus();
+			result.selectAll();
 			return result;
 		}
 
@@ -43,7 +61,7 @@ public class TextEditor implements IHasComposite {
 
 		@Override
 		protected String getValue() {
-			return editorControl.getText();
+			return editorControl == null ? null : editorControl.getText();
 		}
 	}
 
