@@ -16,8 +16,8 @@ public class MockKeyValueModifier implements ICardDataModifier {
 	}
 
 	@Override
-	public Map<String, Object> modify(CardConfig cardConfig, ICard card, Map<String, Object> rawData) {
-		this.card = card;
+	public Map<String, Object> modify(CardConfig cardConfig, String url, Map<String, Object> rawData) {
+		this.card = url;
 		this.rawData = rawData;
 		return result;
 	}

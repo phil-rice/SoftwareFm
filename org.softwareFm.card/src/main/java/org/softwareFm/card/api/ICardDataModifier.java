@@ -4,6 +4,6 @@ import java.util.Map;
 
 public interface ICardDataModifier {
 
-	public Map<String,Object> modify(CardConfig cardConfig, ICard card, Map<String,Object> rawData);
+	public Map<String,Object> modify(CardConfig cardConfig, String url, Map<String,Object> rawData);
 
 }

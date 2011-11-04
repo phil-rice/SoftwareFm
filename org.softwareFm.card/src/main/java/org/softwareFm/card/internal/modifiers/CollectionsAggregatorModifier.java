@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.softwareFm.card.api.CardConfig;
-import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardDataModifier;
 import org.softwareFm.utilities.maps.Maps;
 
@@ -19,7 +18,7 @@ public class CollectionsAggregatorModifier implements ICardDataModifier {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Map<String, Object> modify(CardConfig cardConfig, ICard card, Map<String, Object> rawData) {
+	public Map<String, Object> modify(CardConfig cardConfig, String url, Map<String, Object> rawData) {
 		Map<String, Object> result = Maps.newMap();
 		Map<String, Map<String, Object>> aggregates = Maps.newMap();
 		for (Entry<String, Object> entry : rawData.entrySet()) {

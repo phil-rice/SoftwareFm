@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.card.api.CardConfig;
-import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardDataModifier;
+import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
@@ -14,11 +14,11 @@ import org.softwareFm.utilities.strings.Strings;
 public class KeyValueMissingItemsAdder implements ICardDataModifier {
 
 	@Override
-	public Map<String, Object> modify(CardConfig cardConfig, ICard card, Map<String, Object> rawData) {
+	public Map<String, Object> modify(CardConfig cardConfig, String url, Map<String, Object> rawData) {
 		String missingEntityList = cardConfig.resourceGetter.getStringOrNull("missing.list");
 		if (missingEntityList != null) {
 			List<String> entities = Strings.splitIgnoreBlanks(missingEntityList, ",");
-			String cardType = card.cardType();
+			Object cardType = rawData.get(CardConstants.slingResourceType);
 			if (entities.contains(cardType)) {
 				List<String> missingStrings = Strings.splitIgnoreBlanks(cardConfig.resourceGetter.getStringOrNull("missing." + cardType + ".string"), ",");
 				List<String> missingLists = Strings.splitIgnoreBlanks(cardConfig.resourceGetter.getStringOrNull("missing." + cardType + ".list"), ",");

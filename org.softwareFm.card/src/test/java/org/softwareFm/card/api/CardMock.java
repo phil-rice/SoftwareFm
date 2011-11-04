@@ -23,7 +23,7 @@ public class CardMock implements ICard {
 		this.cardConfig = cardConfig;
 		this.url = url;
 		this.map = map;
-		data = cardConfig.modify(this, map);
+		data = cardConfig.modify(url, map);
 	}
 
 	@Override

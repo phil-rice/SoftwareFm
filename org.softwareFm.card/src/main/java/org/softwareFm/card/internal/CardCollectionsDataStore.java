@@ -44,7 +44,7 @@ public class CardCollectionsDataStore implements ICardAndCollectionsDataStore {
 								visitor.followedUp(cardHolder, url, card, followUpUrl, result);
 								try {
 									if (!cardHolder.getControl().isDisposed() && !card.getControl().isDisposed()) {
-										Map<String, Object> moreData = cardConfig.modify(card, result);
+										Map<String, Object> moreData = cardConfig.modify(url, result);
 										card.valueChanged(entry.getKey(), moreData);
 										return new KeyValue(entry.getKey(), moreData);
 									}

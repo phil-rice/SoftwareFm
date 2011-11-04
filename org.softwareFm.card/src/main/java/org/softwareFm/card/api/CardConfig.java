@@ -201,11 +201,11 @@ public class CardConfig {
 		return new CardConfig(resourceGetter, selector, detailFactory, cardFactory, cardDataStore, style, allowSelection, cardIconFn, cardTitleFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, comparator, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, keyValueModifiers, followOnFragment, titleSpecFn);
 	}
 
-	public Map<String, Object> modify(ICard card, Map<String, Object> rawData) {
+	public Map<String, Object> modify(String url, Map<String, Object> rawData) {
 		Map<String, Object> value = rawData;
-		debugModifiers("Initial " + card.url(), value);
+		debugModifiers("Initial " +url, value);
 		for (ICardDataModifier modifier : keyValueModifiers) {
-			value = modifier.modify(this, card, value);
+			value = modifier.modify(this, url, value);
 			debugModifiers(modifier.getClass().getSimpleName(), value);
 		}
 		return value;
