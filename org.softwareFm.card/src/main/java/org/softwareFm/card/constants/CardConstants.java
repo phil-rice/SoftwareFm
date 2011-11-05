@@ -15,4 +15,5 @@ public class CardConstants {
 	public static final String collection = "collection";
 	public static final String editorStyledText = "editor.styledText";
 
+	public static final String folder = "Folder";
 }

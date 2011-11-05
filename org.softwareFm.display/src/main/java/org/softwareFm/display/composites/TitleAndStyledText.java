@@ -60,7 +60,7 @@ public class TitleAndStyledText extends AbstractTitleAndText<StyledText> {
 				ImageButtonConfig config = ImageButtonConfig.forTests(imageRegistry);
 				TitleAndStyledText titleAndText = new TitleAndStyledText(new CompositeConfig(from.getDisplay(), new SoftwareFmLayout(), imageRegistry, resourceGetter), from, "Value", false);
 				new SimpleImageButton(titleAndText, config.withImage(ArtifactsAnchor.jarKey), false);
-				new SimpleImageButton(titleAndText, config.withImage(ArtifactsAnchor.projectKey), false);
+				new SimpleImageButton(titleAndText, config.withImage(ArtifactsAnchor.artifactKey), false);
 				return titleAndText.getComposite();
 			}
 		});

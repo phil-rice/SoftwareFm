@@ -15,6 +15,7 @@ public class CardFactory implements ICardFactory {
 			return null;
 		else {
 			final Card card = new Card(cardHolder.getComposite(), cardConfig, url, map);
+			cardHolder.makeAndSetTableMenu(card);
 			cardHolder.setCard(card);
 			return card;
 		}

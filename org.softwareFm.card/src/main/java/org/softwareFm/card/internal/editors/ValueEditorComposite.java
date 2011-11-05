@@ -17,7 +17,6 @@ import org.softwareFm.card.internal.details.TitleSpec;
 import org.softwareFm.card.internal.title.Title;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.maps.Maps;
 
 abstract class ValueEditorComposite<T extends Control> extends Composite {
 
@@ -46,9 +45,8 @@ abstract class ValueEditorComposite<T extends Control> extends Composite {
 				IMutableCardDataStore cardDataStore = (IMutableCardDataStore) cardConfig.cardDataStore;
 				String value = getValue();
 				if (!value.equals(originalValue))
-					cardDataStore.put(url, Maps.<String, Object> makeMap(key, value), callback);
+					callback.updateDataStore(cardDataStore, url, key, value);
 				ValueEditorComposite.this.dispose();
-
 			}
 		}, new Runnable() {
 			@Override

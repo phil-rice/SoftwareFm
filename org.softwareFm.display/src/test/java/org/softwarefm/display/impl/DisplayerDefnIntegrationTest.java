@@ -32,8 +32,8 @@ public class DisplayerDefnIntegrationTest extends AbstractDisplayerEditorIntegra
 	private IDataGetter dataGetter;
 
 	public void testCreateWithNoButtonsAndIconSet() {
-		IDisplayer displayer = displayerDefn.icon(ArtifactsAnchor.projectKey).createDisplayer(shell, actionContext);
-		checkNoButtons(displayer, ArtifactsAnchor.projectKey, null);
+		IDisplayer displayer = displayerDefn.icon(ArtifactsAnchor.artifactKey).createDisplayer(shell, actionContext);
+		checkNoButtons(displayer, ArtifactsAnchor.artifactKey, null);
 	}
 
 	public void testCreateWithNoButtonsAndIconAndOverlaySet() {
@@ -75,22 +75,22 @@ public class DisplayerDefnIntegrationTest extends AbstractDisplayerEditorIntegra
 	}
 
 	public void testWithOneAction() {
-		DisplayerDefn dispDefnWithButton = displayerDefn.actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).tooltip("tooltip0"));
+		DisplayerDefn dispDefnWithButton = displayerDefn.actions(new ActionDefn("someId", ArtifactsAnchor.artifactKey, OverlaysAnchor.deleteKey).tooltip("tooltip0"));
 		IDisplayer displayer = dispDefnWithButton.createDisplayer(shell, actionContext);
-		checkButtons(displayer, ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey);
+		checkButtons(displayer, ArtifactsAnchor.artifactKey, OverlaysAnchor.deleteKey);
 	}
 
 	public void testWithTwoActions() {
 		DisplayerDefn dispDefnWithButton = displayerDefn.actions(//
-				new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).tooltip("tooltip0"),//
+				new ActionDefn("someId", ArtifactsAnchor.artifactKey, OverlaysAnchor.deleteKey).tooltip("tooltip0"),//
 				new ActionDefn("someId", ArtifactsAnchor.facebookKey, OverlaysAnchor.addKey).tooltip("tooltip1"));
 		IDisplayer displayer = dispDefnWithButton.createDisplayer(shell, actionContext);
-		checkButtons(displayer, ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey);
+		checkButtons(displayer, ArtifactsAnchor.artifactKey, OverlaysAnchor.deleteKey);
 	}
 
 	public void testWithDefaultActionNotTheFirstOne() {
 		DisplayerDefn dispDefnWithButton = displayerDefn.actions(//
-				new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).tooltip("tooltip0"),//
+				new ActionDefn("someId", ArtifactsAnchor.artifactKey, OverlaysAnchor.deleteKey).tooltip("tooltip0"),//
 				new ActionDefn("someId", ArtifactsAnchor.facebookKey, null).tooltip("tooltip1").thisIsDefault());
 		IDisplayer displayer = dispDefnWithButton.createDisplayer(shell, actionContext);
 		checkButtons(displayer, ArtifactsAnchor.facebookKey, null);
@@ -99,7 +99,7 @@ public class DisplayerDefnIntegrationTest extends AbstractDisplayerEditorIntegra
 	@SuppressWarnings("unchecked")
 	public void testPressingButtonCausesActionToFireWithParametersFromDataGetter() {
 		DisplayerDefn dispDefnWithButton = displayerDefn.//
-				actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("a"));
+				actions(new ActionDefn("someId", ArtifactsAnchor.artifactKey, OverlaysAnchor.deleteKey).params("a"));
 		IDisplayer displayer = dispDefnWithButton.createDisplayer(shell, actionContext);
 		clickOnEditor(displayer);
 		assertEquals(Arrays.asList(displayer), actionMock.displayers);
@@ -111,7 +111,7 @@ public class DisplayerDefnIntegrationTest extends AbstractDisplayerEditorIntegra
 	public void testTooltipisSetSetWithData() {
 		DisplayerDefn dispDefnWithButton = displayerDefn.//
 				data("dataKey").//
-				actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
+				actions(new ActionDefn("someId", ArtifactsAnchor.artifactKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
 		IDisplayer displayer = dispDefnWithButton.createDisplayer(shell, actionContext);
 		SimpleImageControl control = (SimpleImageControl) displayer.getButtonComposite().getChildren()[0];
 		assertEquals(null, control.getToolTipText());
@@ -126,7 +126,7 @@ public class DisplayerDefnIntegrationTest extends AbstractDisplayerEditorIntegra
 	public void testTextIsSetWithData() {
 		DisplayerDefn dispDefnWithButton = displayerDefn.//
 				data("dataKey").//
-				actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
+				actions(new ActionDefn("someId", ArtifactsAnchor.artifactKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
 		IDisplayer displayer = dispDefnWithButton.createDisplayer(shell, actionContext);
 		SimpleImageControl control = (SimpleImageControl) displayer.getButtonComposite().getChildren()[0];
 		assertEquals(null, control.getToolTipText());
@@ -141,7 +141,7 @@ public class DisplayerDefnIntegrationTest extends AbstractDisplayerEditorIntegra
 	public void testMainControlCausesEditorToBeDisplayed() {
 		DisplayerDefn dispDefnWithButton = displayerDefn.//
 				data("data.entity.key").//
-				editor("someEditor").actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
+				editor("someEditor").actions(new ActionDefn("someId", ArtifactsAnchor.artifactKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
 		CompressedText displayer = (CompressedText) dispDefnWithButton.createDisplayer(shell, actionContext);
 		Label label = displayer.getLabel();
 		label.notifyListeners(SWT.MouseDown, new Event());
@@ -155,7 +155,7 @@ public class DisplayerDefnIntegrationTest extends AbstractDisplayerEditorIntegra
 		DisplayerDefn defn = displayerDefn.//
 				guard("data.entity.notIn", "guardKey").//
 				data("data.entity.key").//
-				editor("someEditor").actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
+				editor("someEditor").actions(new ActionDefn("someId", ArtifactsAnchor.artifactKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
 		CompressedText displayer = (CompressedText) defn.createDisplayer(shell, actionContext);
 		defn.data(actionContext, defn, displayer, "entity", "url");
 		Label label = displayer.getLabel();
@@ -167,7 +167,7 @@ public class DisplayerDefnIntegrationTest extends AbstractDisplayerEditorIntegra
 		DisplayerDefn defn = displayerDefn.//
 				guard("data.entity.notIn", "guardKey").//
 				data("data.entity.key").//
-				editor("someEditor").editorIgnoreGuard("data.entity.notIn").actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
+				editor("someEditor").editorIgnoreGuard("data.entity.notIn").actions(new ActionDefn("someId", ArtifactsAnchor.artifactKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
 		CompressedText displayer = (CompressedText) defn.createDisplayer(shell, actionContext);
 		defn.data(actionContext, defn, displayer, "entity", "url");
 		Label label = displayer.getLabel();
@@ -179,7 +179,7 @@ public class DisplayerDefnIntegrationTest extends AbstractDisplayerEditorIntegra
 		DisplayerDefn defn = displayerDefn.//
 				guard("data.entity.alsoNotIn", "guardKey2", "data.entity.notIn", "guardKey").//
 				data("data.entity.key").//
-				editor("someEditor").editorIgnoreGuard("data.entity.notIn").actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
+				editor("someEditor").editorIgnoreGuard("data.entity.notIn").actions(new ActionDefn("someId", ArtifactsAnchor.artifactKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
 		CompressedText displayer = (CompressedText) defn.createDisplayer(shell, actionContext);
 		defn.data(actionContext, defn, displayer, "entity", "url");
 		Label label = displayer.getLabel();
@@ -191,7 +191,7 @@ public class DisplayerDefnIntegrationTest extends AbstractDisplayerEditorIntegra
 		DisplayerDefn defn = displayerDefn.//
 				guard("data.entity.notIn", "guardKey", "data.entity.alsoNotIn", "guardKey2").//
 				data("data.entity.key").//
-				editor("someEditor").editorIgnoreGuard("data.entity.notIn").actions(new ActionDefn("someId", ArtifactsAnchor.projectKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
+				editor("someEditor").editorIgnoreGuard("data.entity.notIn").actions(new ActionDefn("someId", ArtifactsAnchor.artifactKey, OverlaysAnchor.deleteKey).params("param1").tooltip("someActionTooltip")).tooltip("someDataTooltip");
 		CompressedText displayer = (CompressedText) defn.createDisplayer(shell, actionContext);
 		defn.data(actionContext, defn, displayer, "entity", "url");
 		Label label = displayer.getLabel();

@@ -4,6 +4,7 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.softwareFm.utilities.aggregators.IAggregator;
 import org.softwareFm.utilities.collections.Iterables;
@@ -207,13 +208,18 @@ public class Strings {
 
 			@Override
 			public String apply(String from) throws Exception {
-				int index = from.lastIndexOf(separator);
-				if (index == -1)
-					return from;
-				else
-					return from.substring(index + 1);
+				return lastSegment(from, separator);
 			}
+
 		};
+	}
+
+	public static String lastSegment(String from, final String separator) {
+		int index = from.lastIndexOf(separator);
+		if (index == -1)
+			return from;
+		else
+			return from.substring(index + 1);
 	}
 
 	public static IFunction1<String, String> camelCaseToPrettyFn() {
@@ -255,5 +261,29 @@ public class Strings {
 	public static void setClipboard(String str) {
 		StringSelection ss = new StringSelection(str);
 		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
+	}
+
+	public static int compareVersionNumbers(String o1, String o2) {
+		Pattern numRegEx = Pattern.compile("[d+]");
+		String[] left = o1.split("[\\.-]");
+		String[] right = o2.split("[\\.-]");
+		for (int i = 0; i < Math.max(left.length, right.length); i++) {
+			if (i >= left.length)
+				return 1;
+			if (i >= right.length)
+				return -1;
+			String l = left[i];
+			String r = right[i];
+			if (numRegEx.matcher(l).matches() && numRegEx.matcher(r).matches()) {
+				int compare = Integer.parseInt(l) - Integer.parseInt(r);
+				if (compare != 0)
+					return compare;
+			} else {
+				int compare = l.compareTo(r);
+				if (compare != 0)
+					return compare;
+			}
+		}
+		return 0;
 	}
 }

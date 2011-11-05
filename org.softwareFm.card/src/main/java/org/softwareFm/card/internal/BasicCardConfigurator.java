@@ -20,6 +20,7 @@ import org.softwareFm.card.api.ICardConfigurator;
 import org.softwareFm.card.api.ICardDataModifier;
 import org.softwareFm.card.api.IDetailFactory;
 import org.softwareFm.card.api.IFollowOnFragment;
+import org.softwareFm.card.api.IRightClickCategoriser;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.internal.details.CollectionItemDetailAdder;
@@ -113,9 +114,9 @@ public class BasicCardConfigurator implements ICardConfigurator {
 				if (cardType == null)
 					return makeTitleSpec("title.folder.color", "title.folder.indent", TitleAnchor.folderKey);
 				else if (cardType.equals(CardConstants.group))
-					return makeTitleSpec("title.group.color", "title.folder.indent", ArtifactsAnchor.organisationKey);
+					return makeTitleSpec("title.group.color", "title.folder.indent", ArtifactsAnchor.groupKey);
 				else if (cardType.equals(CardConstants.artifact))
-					return makeTitleSpec("title.artifact.color", "title.folder.indent", ArtifactsAnchor.projectKey);
+					return makeTitleSpec("title.artifact.color", "title.folder.indent", ArtifactsAnchor.artifactKey);
 				else if (cardType.equals(CardConstants.version))
 					return makeTitleSpec("title.version.color", "title.folder.indent", ArtifactsAnchor.jarKey);
 				else if (cardType.equals(CardConstants.versionJar))
@@ -139,9 +140,9 @@ public class BasicCardConfigurator implements ICardConfigurator {
 				if (object == null)
 					return imageRegistry.get(TitleAnchor.folderKey);
 				if (object.equals(CardConstants.group))
-					return imageRegistry.get(ArtifactsAnchor.organisationKey);
+					return imageRegistry.get(ArtifactsAnchor.groupKey);
 				else if (object.equals(CardConstants.artifact))
-					return imageRegistry.get(ArtifactsAnchor.projectKey);
+					return imageRegistry.get(ArtifactsAnchor.artifactKey);
 				else if (object.equals(CardConstants.version))
 					return imageRegistry.get(ArtifactsAnchor.jarKey);
 				else if (object.equals(CardConstants.versionJar))
@@ -215,6 +216,7 @@ public class BasicCardConfigurator implements ICardConfigurator {
 					return null;
 			}
 		};
+		IRightClickCategoriser rightClickCategoriser = new RightClickCategoriser();
 		return config.withNameFn(nameFn).withValueFn(valueFn).withHideFn(hideFn).//
 				withCardIconFn(cardIconFn).withResourceGetter(resourceGetter).withAggregatorTags(tagNames).//
 				withNavIconFn(navIconFn).//
@@ -223,7 +225,7 @@ public class BasicCardConfigurator implements ICardConfigurator {
 				withSorter(Lists.orderedComparator(order)).//
 				withKeyValueModifiers(modifiers).//
 				withFollowOn(followOnFragment).//
-
+				withRightClickCategoriser(rightClickCategoriser).//
 				withTitleSpecFn(titleSpecFn);
 	}
 

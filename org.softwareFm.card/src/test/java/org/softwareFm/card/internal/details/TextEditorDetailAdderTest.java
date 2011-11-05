@@ -186,7 +186,7 @@ public class TextEditorDetailAdderTest extends AbstractDetailsAdderTest<TextEdit
 			}
 
 			@Override
-			public void afterEdit() {
+			public void afterEdit(String url) {
 				afterEdit.run();
 			}});
 		TextEditor holder = (TextEditor) actual;

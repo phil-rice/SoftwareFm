@@ -5,6 +5,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
@@ -12,14 +14,20 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
+import org.softwareFm.card.api.IAddItemProcessor;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardChangedListener;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardHolder;
 import org.softwareFm.card.api.ILineSelectedListener;
+import org.softwareFm.card.api.RightClickCategoryResult;
 import org.softwareFm.card.internal.details.TitleSpec;
 import org.softwareFm.card.navigation.ITitleBarForCard;
 import org.softwareFm.card.navigation.NavBar;
@@ -30,6 +38,7 @@ import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.future.GatedMockFuture;
+import org.softwareFm.utilities.strings.Strings;
 
 public class CardHolder implements ICardHolder {
 
@@ -39,10 +48,12 @@ public class CardHolder implements ICardHolder {
 		ICard card;
 		private final CardConfig navBarCardConfig;
 		private final List<ILineSelectedListener> lineListeners = new CopyOnWriteArrayList<ILineSelectedListener>();
+		private final ICallback<String> callbackToGotoUrl;
 
 		public CardHolderComposite(Composite parent, final String loadingText, CardConfig navBarCardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
 			super(parent, SWT.NULL);
 			this.navBarCardConfig = navBarCardConfig;
+			this.callbackToGotoUrl = callbackToGotoUrl;
 			if (navBarCardConfig == null)
 				throw new NullPointerException();
 			if (callbackToGotoUrl == null)
@@ -120,8 +131,43 @@ public class CardHolder implements ICardHolder {
 		}
 	}
 
+	@Override
+	public void makeAndSetTableMenu(final ICard card) {
+		final Table table = (Table) card.getControl();
+		if (table.getMenu() != null)
+			table.getMenu().dispose();
+
+		if (addItemProcessor == null)
+			return;
+
+		Menu menu = new Menu(table);
+		final MenuItem item1 = new MenuItem(menu, SWT.NULL);
+
+		table.addListener(SWT.MenuDetect, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				Point location = new Point(event.x, event.y);
+				Point inMySpace = table.toControl(location);
+				TableItem item = table.getItem(inMySpace);
+				String key = (String) (item == null ? null : item.getData());
+				RightClickCategoryResult categorisation = card.cardConfig().rightClickCategoriser.categorise(card.url(), card.data(), key);
+				item1.setText("Add " + Strings.nullSafeToString(categorisation.collectionName));
+				item1.setData(categorisation);
+				item1.setEnabled(categorisation.isCollection());
+			}
+		});
+		item1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				addItemProcessor.process((RightClickCategoryResult) item1.getData());
+			}
+		});
+		table.setMenu(menu);
+	}
+
 	private final List<ICardChangedListener> cardListeners = new CopyOnWriteArrayList<ICardChangedListener>();
 	final CardHolderComposite content;
+	private IAddItemProcessor addItemProcessor;
 
 	public CardHolder(Composite parent, String loadingText, String title, CardConfig cardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
 		content = new CardHolderComposite(parent, loadingText, cardConfig, rootUrl, callbackToGotoUrl);
@@ -147,6 +193,11 @@ public class CardHolder implements ICardHolder {
 
 	public void addLineSelectedListener(ILineSelectedListener listener) {
 		content.lineListeners.add(listener);
+	}
+
+	@Override
+	public void setAddItemProcessor(IAddItemProcessor processor) {
+		addItemProcessor = processor;
 	}
 
 	@Override

@@ -25,8 +25,8 @@ public class ImagesInALine {
 				new BasicImageRegisterConfigurator().registerWith(from.getDisplay(), imageRegistry);
 				CompositeConfig config = new CompositeConfig(from.getDisplay(), new SoftwareFmLayout(), imageRegistry, IResourceGetter.Utils.noResources());
 				TitleAndText titleAndText = new TitleAndText(config, composite, "Title", false);
-				new SimpleImageButton(titleAndText, config.imageButtonConfig.withImage(ArtifactsAnchor.projectKey), true);
-				new SimpleImageButton(titleAndText, config.imageButtonConfig.withImage(ArtifactsAnchor.projectKey, OverlaysAnchor.editKey), true);
+				new SimpleImageButton(titleAndText, config.imageButtonConfig.withImage(ArtifactsAnchor.artifactKey), true);
+				new SimpleImageButton(titleAndText, config.imageButtonConfig.withImage(ArtifactsAnchor.artifactKey, OverlaysAnchor.editKey), true);
 				new SimpleImageButton(titleAndText, config.imageButtonConfig.withImage(GeneralAnchor.browseKey), true);
 				Swts.addGrabHorizontalAndFillGridDataToAllChildren(composite);
 				return composite;

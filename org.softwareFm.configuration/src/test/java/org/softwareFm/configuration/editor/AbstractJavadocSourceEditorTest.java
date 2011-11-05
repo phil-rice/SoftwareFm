@@ -396,7 +396,7 @@ public abstract class AbstractJavadocSourceEditorTest extends AbstractDisplayerE
 	@Override
 	protected DisplayerDefn makeBaseDisplayDefn() {
 		JavadocSourceSummaryDisplayerFactory displayerFactory = new JavadocSourceSummaryDisplayerFactory(getEclipseValueKey(), getSoftwareFmValueKey());
-		return new DisplayerDefn(displayerFactory).title("Ttl").editor("someEditor").icon(ArtifactsAnchor.projectKey);
+		return new DisplayerDefn(displayerFactory).title("Ttl").editor("someEditor").icon(ArtifactsAnchor.artifactKey);
 	}
 
 }

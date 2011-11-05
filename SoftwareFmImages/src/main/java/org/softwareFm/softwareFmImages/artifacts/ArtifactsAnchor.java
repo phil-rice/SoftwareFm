@@ -13,8 +13,8 @@ public class ArtifactsAnchor {
 	public static String jobKey = prefix + "recruitment";
 	public static final String facebookKey = prefix + "faceBook";
 	public static final String issuesKey = prefix + "issues";
-	public static final String organisationKey = prefix + "organisation";
-	public static final String projectKey = prefix + "project";
+	public static final String groupKey = prefix + "group";
+	public static final String artifactKey = prefix + "artifact";
 	public static final String rssKey = prefix + "rss";
 	public static final String twitterKey = prefix + "twitter";
 	public static final String mailingListKey = prefix + "mailingList";

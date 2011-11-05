@@ -47,10 +47,10 @@ public class Title implements IHasControl {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				Composite parent = new Composite(from, SWT.NULL);
-				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig;
+				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay());
 				ImageRegistry imageRegistry = new ImageRegistry();
 				new BasicImageRegisterConfigurator().registerWith(from.getDisplay(), imageRegistry);
-				TitleSpec titleSpec = new TitleSpec(imageRegistry, ArtifactsAnchor.projectKey, new Color(from.getDisplay(), 183, 196, 183), 20);
+				TitleSpec titleSpec = new TitleSpec(imageRegistry, ArtifactsAnchor.artifactKey, new Color(from.getDisplay(), 183, 196, 183), 20);
 				Title title = new Title(parent, cardConfig, titleSpec, "title", "tooltip");
 				Swts.resizeMeToParentsSize(parent);
 				Swts.resizeMeToParentsSize(title.canvas);

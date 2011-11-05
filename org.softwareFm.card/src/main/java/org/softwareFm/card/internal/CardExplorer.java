@@ -1,5 +1,7 @@
 package org.softwareFm.card.internal;
 
+import java.util.Map;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -11,21 +13,33 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMonitored;
 import org.softwareFm.card.api.CardConfig;
+import org.softwareFm.card.api.IAddItemProcessor;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardChangedListener;
 import org.softwareFm.card.api.ICardDataStore;
+import org.softwareFm.card.api.ICardDataStoreCallback;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardHolder;
 import org.softwareFm.card.api.ICardSelectedListener;
 import org.softwareFm.card.api.ILineSelectedListener;
+import org.softwareFm.card.api.IMutableCardDataStore;
+import org.softwareFm.card.api.RightClickCategoryResult;
+import org.softwareFm.card.api.RightClickCategoryResult.Type;
+import org.softwareFm.card.constants.CardConstants;
+import org.softwareFm.card.internal.details.IAfterEditCallback;
 import org.softwareFm.card.internal.details.IDetailsFactoryCallback;
+import org.softwareFm.card.internal.details.TitleSpec;
+import org.softwareFm.card.internal.editors.TextEditor;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.strings.Strings;
 
 public class CardExplorer implements IHasComposite {
 
@@ -52,13 +66,14 @@ public class CardExplorer implements IHasComposite {
 			cardHolder = new CardHolder(this, "loading", "Some title", cardConfig, rootUrl, callbackToGotoUrl);
 			right = new SashForm(this, SWT.VERTICAL);
 			// right.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_BLUE));
-			detail = new ScrolledComposite(right, SWT.H_SCROLL|SWT.NO_REDRAW_RESIZE|SWT.NO_BACKGROUND);
+			detail = new ScrolledComposite(right, SWT.H_SCROLL | SWT.NO_REDRAW_RESIZE | SWT.NO_BACKGROUND);
 			ScrollBar hbar = detail.getHorizontalBar();
-			hbar.addListener(SWT.Selection , new Listener(){
+			hbar.addListener(SWT.Selection, new Listener() {
 				@Override
 				public void handleEvent(Event event) {
 					Swts.redrawAllChildren(detail.getContent());
-				}});
+				}
+			});
 
 			comments = new ScrolledComposite(right, SWT.H_SCROLL);
 			comments.setBackground(new Color(getDisplay(), 235, 242, 246));
@@ -87,6 +102,70 @@ public class CardExplorer implements IHasComposite {
 				}
 
 			});
+			IAddItemProcessor itemProcessor = new IAddItemProcessor() {
+				@Override
+				public void process(final RightClickCategoryResult result) {
+					System.out.println("In add item processor with " + result + " and card: " + cardHolder.getCard());
+					removeDetailContents();
+					TextEditor editor = new TextEditor(detail, cardConfig, result.url, result.collectionName, "", new IDetailsFactoryCallback() {
+						private final IDetailsFactoryCallback callback = this;
+
+						@Override
+						public void updateDataStore(final IMutableCardDataStore store, String url, String key, final Object value) {
+							System.out.println("Updateing data store: " + value);
+							final String editorResult = Strings.nullSafeToString(value);
+							if (result.itemType == Type.ROOT_COLLECTION) {
+								createNewItem(result, store, editorResult);
+							} else
+								store.processDataFor(result.collectionUrl(), new ICardDataStoreCallback<Void>() {
+									@Override
+									public Void process(String url, Map<String, Object> data) throws Exception {
+										createNewItem(result, store, editorResult);
+										return null;
+									}
+
+									@Override
+									public Void noData(final String url) throws Exception {
+										final Map<String, Object> newData = Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection);
+										store.put(url, newData, new IAfterEditCallback() {
+											@Override
+											public void afterEdit(String url) {
+												try {
+													process(url, newData);
+												} catch (Exception e) {
+													throw WrappedException.wrap(e);
+												}
+											}
+										});
+										return null;
+									}
+								});
+						}
+
+						@Override
+						public void afterEdit(String url) {
+							System.out.println("After edit");
+							ICallback.Utils.call(callbackToGotoUrl, url);
+						}
+
+						@Override
+						public void gotData(Control hasControl) {
+						}
+
+						@Override
+						public void cardSelected(ICard card) {
+						}
+
+						private void createNewItem(final RightClickCategoryResult result, final IMutableCardDataStore store, String newItemName) {
+							String fullUrl = result.itemUrl(newItemName);
+							store.put(fullUrl, Maps.stringObjectMap(CardConstants.slingResourceType, result.collectionName), callback);
+						}
+					}, TitleSpec.noTitleSpec(getBackground()));
+					populateDetail(editor.getControl());
+				}
+			};
+
+			cardHolder.setAddItemProcessor(itemProcessor);
 		}
 
 		private void setDetail(final ICard card, String key, Object value) {
@@ -94,40 +173,49 @@ public class CardExplorer implements IHasComposite {
 			cardConfig.detailFactory.makeDetail(detail, card, cardConfig, key, value, new IDetailsFactoryCallback() {
 
 				@Override
-				public void afterEdit() {// reload
+				public void afterEdit(String url) {// reload
 					ICallback.Utils.call(callbackToGotoUrl, card.url());
 				}
 
 				@Override
 				public void gotData(final Control control) {// /layout
-					detailResizeListener = new Listener() {
-						@Override
-						public void handleEvent(Event event) {
-							// System.out.println("Resizing: " + detail.getClientArea());
-							Swts.setSizeToComputedSize(control, SWT.DEFAULT, detail.getClientArea().height);
-							detail.layout();
-							Control content = detail.getContent();
-							if (content instanceof Composite)
-								((Composite) content).layout();
-						}
-					};
-					detail.setContent(null);
-					Swts.setSizeToComputedSize(control, SWT.DEFAULT, detail.getClientArea().height); // needed for scroll bar calculations
-					System.out.println("detail: " + detail.isDisposed() + ", control: " + control.isDisposed());
-					detail.setContent(control);
-					Swts.setSizeToComputedSize(control, SWT.DEFAULT, detail.getClientArea().height); // needed again if the scroll bar popped in
-					if (control instanceof Composite)
-						if (((Composite) control).getLayout() == null)
-							((Composite) control).layout();
-					detail.layout();
-					detail.addListener(SWT.Resize, detailResizeListener);
+					populateDetail(control);
 				}
 
 				@Override
 				public void cardSelected(ICard card) {
 					ICallback.Utils.call(callbackToGotoUrl, card.url());
 				}
+
+				@Override
+				public void updateDataStore(IMutableCardDataStore store, String url, String key, Object value) {
+					store.put(url, Maps.stringObjectMap(key, value), this);
+				}
 			});
+		}
+
+		private void populateDetail(final Control control) {
+			detailResizeListener = new Listener() {
+				@Override
+				public void handleEvent(Event event) {
+					// System.out.println("Resizing: " + detail.getClientArea());
+					Swts.setSizeToComputedSize(control, SWT.DEFAULT, detail.getClientArea().height);
+					detail.layout();
+					Control content = detail.getContent();
+					if (content instanceof Composite)
+						((Composite) content).layout();
+				}
+			};
+			detail.setContent(null);
+			Swts.setSizeToComputedSize(control, SWT.DEFAULT, detail.getClientArea().height); // needed for scroll bar calculations
+			System.out.println("detail: " + detail.isDisposed() + ", control: " + control.isDisposed());
+			detail.setContent(control);
+			Swts.setSizeToComputedSize(control, SWT.DEFAULT, detail.getClientArea().height); // needed again if the scroll bar popped in
+			if (control instanceof Composite)
+				if (((Composite) control).getLayout() == null)
+					((Composite) control).layout();
+			detail.layout();
+			detail.addListener(SWT.Resize, detailResizeListener);
 		}
 
 		private void removeDetailContents() {

@@ -17,9 +17,27 @@ public class StringsTest extends TestCase {
 		assertEquals("Group Id Again", Strings.camelCaseToPretty("GroupIdAgain"));
 		assertEquals("Group Id Again And Again", Strings.camelCaseToPretty("GroupIdAgain And Again"));
 		assertEquals("Group Id Again And Again", Strings.camelCaseToPretty("GroupIdAgain     And   Again"));
-
 	}
 
+	public void testVersionCompare(){
+		assertEquals(0, Strings.compareVersionNumbers("1.2.1" , "1.2.1" ));
+		assertEquals(1, Strings.compareVersionNumbers("1.2.2" , "1.2.1" ));
+		assertEquals(1, Strings.compareVersionNumbers("1.3.1" , "1.2.1" ));
+		assertEquals(1, Strings.compareVersionNumbers("2.1.1" , "1.2.1" ));
+
+		assertEquals(0, Strings.compareVersionNumbers("1.2.11" , "1.2.11" ));
+		assertEquals(1, Strings.compareVersionNumbers("1.2.2" , "1.2.11" ));
+		assertEquals(1, Strings.compareVersionNumbers("1.2.11" , "1.113.1" ));
+		
+		assertEquals(0, Strings.compareVersionNumbers("1-2-11" , "1.2.11" ));
+		assertEquals(1, Strings.compareVersionNumbers("1-2-2" , "1.2.11" ));
+		assertEquals(1, Strings.compareVersionNumbers("1-2-11" , "1.113.1" ));
+
+		assertEquals(0, Strings.compareVersionNumbers("1-2-11" , "1-2-11" ));
+		assertEquals(1, Strings.compareVersionNumbers("1-2-2" , "1-2-11" ));
+		assertEquals(1, Strings.compareVersionNumbers("1-2-11" , "1-113-1" ));
+	}
+	
 	public void testSplit() {
 		assertEquals(new PreAndPost("a", "b"), Strings.split("a.b", '.'));
 		assertEquals(new PreAndPost("a", "b"), Strings.split("a$b", '$'));

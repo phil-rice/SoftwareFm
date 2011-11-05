@@ -52,11 +52,11 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 	}
 
 	@Override
-	public void put(String url, Map<String, Object> map, final IAfterEditCallback afterEdit) {
+	public void put(final String url, Map<String, Object> map, final IAfterEditCallback afterEdit) {
 		this.facard.post(url, map, new IResponseCallback() {
 			@Override
 			public void process(IResponse response) {
-				afterEdit.afterEdit();
+				afterEdit.afterEdit(url);
 			}
 		});
 	}
