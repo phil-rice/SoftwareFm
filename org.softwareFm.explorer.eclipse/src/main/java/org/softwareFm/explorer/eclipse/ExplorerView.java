@@ -26,15 +26,7 @@ public class ExplorerView extends ViewPart {
 			public void data(String entity, String url) {
 				if (!entity.equals("artifact") || url == null)
 					return;
-				System.out.println("Entity: " + entity + " url: " + url);
-				int index = "/softwarefm/content".length();
-				int artifactIndex = url.indexOf("/artifact/");
-				String group = url.substring(index, artifactIndex);
-				String artifact = url.substring(artifactIndex + "/artifact/".length());
-				System.out.println("  group: " + group + "  artifact: " + artifact);
-				String newUrl = rootUrl + group + "/group/artifact/"+artifact;
-				System.out.println(newUrl);
-				cardExplorer.setUrl(newUrl);
+				cardExplorer.setUrl(url);
 			}
 		});
 	}

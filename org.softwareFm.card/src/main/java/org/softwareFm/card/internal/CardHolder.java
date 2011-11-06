@@ -36,6 +36,7 @@ import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.future.GatedMockFuture;
 import org.softwareFm.utilities.strings.Strings;
@@ -50,14 +51,16 @@ public class CardHolder implements ICardHolder {
 		private final List<ILineSelectedListener> lineListeners = new CopyOnWriteArrayList<ILineSelectedListener>();
 		private final ICallback<String> callbackToGotoUrl;
 
-		public CardHolderComposite(Composite parent, final String loadingText, CardConfig navBarCardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
+		public CardHolderComposite(Composite parent, CardConfig navBarCardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
 			super(parent, SWT.NULL);
 			this.navBarCardConfig = navBarCardConfig;
 			this.callbackToGotoUrl = callbackToGotoUrl;
 			if (navBarCardConfig == null)
 				throw new NullPointerException();
-			if (callbackToGotoUrl == null)
-				title = new NavTitle(this, navBarCardConfig, TitleSpec.noTitleSpec(parent.getBackground()), rootUrl, rootUrl);
+			if (callbackToGotoUrl == null){
+				String titleText = Functions.call(navBarCardConfig.cardTitleFn, rootUrl);
+				title = new NavTitle(this, navBarCardConfig, TitleSpec.noTitleSpec(parent.getBackground()), titleText, rootUrl);
+			}
 			else
 				title = new NavBar(this, navBarCardConfig, rootUrl, callbackToGotoUrl);
 			addListener(SWT.Resize, new Listener() {
@@ -170,7 +173,7 @@ public class CardHolder implements ICardHolder {
 	private IAddItemProcessor addItemProcessor;
 
 	public CardHolder(Composite parent, String loadingText, String title, CardConfig cardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
-		content = new CardHolderComposite(parent, loadingText, cardConfig, rootUrl, callbackToGotoUrl);
+		content = new CardHolderComposite(parent, cardConfig, rootUrl, callbackToGotoUrl);
 	}
 
 	public ICard getCard() {

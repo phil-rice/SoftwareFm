@@ -37,6 +37,7 @@ public class CardCollectionsDataStoreWithFollowOnTest extends AbstractCardCollec
 			assertEquals(i == 4, status.mainFuture.isDone());
 		}
 	}
+	
 
 	public void testEachFollowOnQueryCausesCardToBeMutated() throws InterruptedException, ExecutionException, TimeoutException {
 		kickAndDispatch(status.initialFuture);
@@ -64,9 +65,9 @@ public class CardCollectionsDataStoreWithFollowOnTest extends AbstractCardCollec
 	}
 
 	@Override
-	protected String findFollowOnUrlFragment(Map.Entry<String, Object> entry) {
-		if (entry.getValue() instanceof Map<?, ?>) {
-			Map<?, ?> map = (Map<?, ?>) entry.getValue();
+	protected String findFollowOnUrlFragmentForTest(String key, Object value) {
+		if (value instanceof Map<?, ?>) {
+			Map<?, ?> map = (Map<?, ?>) value;
 			return (String) map.get("value");
 		} else
 			return null;

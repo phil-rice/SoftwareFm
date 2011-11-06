@@ -5,11 +5,13 @@ import java.util.Collections;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreAsyncMock;
 import org.softwareFm.card.api.CardDataStoreFixture;
+import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.card.internal.Card;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.SwtIntegrationTest;
+import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.maps.Maps;
 
 abstract public class AbstractDetailTest extends SwtIntegrationTest {
@@ -29,7 +31,7 @@ abstract public class AbstractDetailTest extends SwtIntegrationTest {
 		super.setUp();
 		cardDataStore = CardDataStoreFixture.rawAsyncCardStore();
 		parentCardConfig = new CardConfig(ICardFactory.Utils.cardFactory(), cardDataStore);
-		cardConfig = new CardConfig(ICardFactory.Utils.cardFactory(), cardDataStore);
+		cardConfig = new CardConfig(ICardFactory.Utils.cardFactory(), cardDataStore).withTitleSpecFn(Functions.<ICard,TitleSpec>constant(TitleSpec.noTitleSpec(shell.getBackground())));
 		parentCard = new Card(shell, cardConfig, "parentCardUrl", Collections.<String, Object> emptyMap());
 	}
 

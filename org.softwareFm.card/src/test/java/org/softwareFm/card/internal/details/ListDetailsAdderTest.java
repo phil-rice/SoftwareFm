@@ -13,10 +13,6 @@ public class ListDetailsAdderTest extends AbstractDetailsAdderTest<ListDetailAdd
 		checkGetCardCollectionsHolder(collectionValue, parentCard.url());
 		checkGetCardCollectionsHolder(folderValue, parentCard.url());
 	}
-	@Override
-	public void testAfterEditHappensAfterCardDataStoreUpdated() {
-		noEdittingHappensWithThisDetail();
-	}
 
 	@Override
 	protected ListDetailAdder makeDetailsAdder() {

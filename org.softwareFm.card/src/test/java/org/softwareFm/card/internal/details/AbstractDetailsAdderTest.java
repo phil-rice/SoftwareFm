@@ -31,7 +31,6 @@ public abstract class AbstractDetailsAdderTest<T extends IDetailAdder> extends A
 		assertEquals(expectedUrl, holder.getRootUrl());
 	}
 
-	abstract public void testAfterEditHappensAfterCardDataStoreUpdated();
 
 	protected void noEdittingHappensWithThisDetail() {
 		

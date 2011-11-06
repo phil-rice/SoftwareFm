@@ -8,13 +8,13 @@ import org.softwareFm.card.navigation.NavTitle;
 import org.softwareFm.utilities.functions.Functions;
 
 public class CardHolderTestWithTitleTest extends AbstractCardHolderTest {
-	public void testDisplaysTitleWithLoadingTextAndHasNoNavBarIfGotoUrlIsNull() {
-		assertEquals("loadingtext", getTitleText());
+	public void testDisplaysTitleWithTitleTextAndHasNoNavBarIfGotoUrlIsNull() {
+		assertEquals("rootUrl", getTitleText());
 	}
 
 	@Override
 	protected CardHolder makeCardHolder(Composite parent, CardConfig cardConfig) {
-		return new CardHolder(parent, "loadingtext", "some title", cardConfig, "someRootUrl", null);
+		return new CardHolder(parent, "loadingtext", "some title", cardConfig, rootUrl, null);
 	}
 
 	@Override

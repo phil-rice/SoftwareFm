@@ -15,6 +15,7 @@ public abstract class AbstractCardHolderTest extends SwtIntegrationTest {
 	protected CardHolder cardHolder;
 	private Rectangle expectedClientArea;
 	private int borderThickness;
+	protected final String rootUrl ="some/rootUrl";
 
 	abstract protected CardHolder makeCardHolder(Composite parent, CardConfig cardConfig);
 
@@ -58,7 +59,7 @@ public abstract class AbstractCardHolderTest extends SwtIntegrationTest {
 	}
 
 	private void setCardAndcheckCardLayout(CardConfig cardConfig) {
-		ICard card = cardConfig.cardFactory.makeCard(cardHolder, cardConfig, "someRootUrl/someUrl", CardDataStoreFixture.data1a);
+		ICard card = cardConfig.cardFactory.makeCard(cardHolder, cardConfig,rootUrl+ "/someUrl", CardDataStoreFixture.data1a);
 		cardHolder.setCard(card);
 		checkCardLayout(cardConfig);
 	}
@@ -100,7 +101,7 @@ public abstract class AbstractCardHolderTest extends SwtIntegrationTest {
 	}
 
 	protected ICard makeAndSetCard(CardConfig cardConfig) {
-		ICard card = cardConfig.cardFactory.makeCard(cardHolder, cardConfig, "someRootUrl/someUrl", CardDataStoreFixture.data1a);
+		ICard card = cardConfig.cardFactory.makeCard(cardHolder, cardConfig, rootUrl + "/someUrl", CardDataStoreFixture.data1a);
 		cardHolder.setCard(card);
 		return card;
 	}
@@ -116,7 +117,7 @@ public abstract class AbstractCardHolderTest extends SwtIntegrationTest {
 			}
 		};
 		cardHolder = makeCardHolder(parent, cardConfig);
-		borderThickness = 2;
+		borderThickness = 0;
 		expectedClientArea = new Rectangle(cardConfig.leftMargin, //
 				cardConfig.topMargin,//
 				110 - cardConfig.leftMargin - cardConfig.rightMargin - borderThickness * 2,//

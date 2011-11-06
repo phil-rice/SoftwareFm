@@ -12,11 +12,10 @@ import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.internal.details.IDetailsFactoryCallback;
 import org.softwareFm.card.internal.details.TitleSpec;
-import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.functions.IFunction1;
 
-public class TextEditor implements IHasComposite {
+public class TextEditor implements IValueEditor {
 
 	private final TextEditorComposite content;
 
@@ -78,8 +77,9 @@ public class TextEditor implements IHasComposite {
 		return content;
 	}
 
-	public Text getText() {
-		return content.editorControl;
+	@Override
+	public String getValue() {
+		return content.editorControl.getText();
 	}
 
 	public static void main(String[] args) {
@@ -95,6 +95,20 @@ public class TextEditor implements IHasComposite {
 				return textEditor.content;
 			}
 		});
+	}
+
+	@Override
+	public String getTitleText() {
+		return content.titleLabel.getText();
+	}
+
+	@Override
+	public OkCancel getOkCancel() {
+		return content.okCancel;
+	}
+	@Override
+	public void setValue(String newValue) {
+		 content.editorControl.setText(newValue);
 	}
 
 }

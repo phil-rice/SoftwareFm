@@ -14,17 +14,12 @@ public class CollectionsDetailAdderTest extends AbstractDetailsAdderTest<Collect
 	}
 
 	public void testNeedsCollectionToMakeACardHolder() {
-		checkGetCardCollectionsHolder(collectionValue, parentCard.url());
+		checkGetCardCollectionsHolder(collectionValue, parentCard.url()+"/key");
 	}
 
 	@Override
 	protected CollectionsDetailAdder makeDetailsAdder() {
 		return new CollectionsDetailAdder();
-	}
-
-	@Override
-	public void testAfterEditHappensAfterCardDataStoreUpdated() {
-		noEdittingHappensWithThisDetail();
 	}
 
 }

@@ -1,6 +1,5 @@
 package org.softwareFm.card.internal;
 
-import java.util.Map.Entry;
 
 public class CardCollectionsDataStoreWithNoFollowOnTest extends AbstractCardCollectionsDataStoreTest {
 	public void testMainFutureIsDoneWhenInitialQueryReturnsWhenNoExtraDataNeeded() {
@@ -10,7 +9,7 @@ public class CardCollectionsDataStoreWithNoFollowOnTest extends AbstractCardColl
 	}
 
 	@Override
-	protected String findFollowOnUrlFragment(Entry<String, Object> entry) {
+	protected String findFollowOnUrlFragmentForTest(String key, Object value) {
 		return null;
 	}
 

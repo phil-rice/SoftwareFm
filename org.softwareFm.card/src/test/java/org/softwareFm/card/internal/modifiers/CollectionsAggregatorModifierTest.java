@@ -1,6 +1,5 @@
 package org.softwareFm.card.internal.modifiers;
 
-import java.util.Collections;
 import java.util.Map;
 
 import junit.framework.TestCase;
@@ -8,7 +7,6 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
-import org.softwareFm.card.api.CardMock;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.utilities.maps.Maps;
 
@@ -33,7 +31,6 @@ public class CollectionsAggregatorModifierTest extends TestCase {
 
 	private final static CollectionsAggregatorModifier modifier = new CollectionsAggregatorModifier("tag");
 	private CardConfig cardConfig;
-	private CardMock card;
 
 	@Test
 	public void testItemsWithNoTaggedChildMapsAreLeftAlone() {
@@ -69,7 +66,7 @@ public class CollectionsAggregatorModifierTest extends TestCase {
 	}
 
 	private void check(Map<String, Object> input, Map<String, Object> expected) {
-		Map<String, Object> actual = modifier.modify(cardConfig, card, input);
+		Map<String, Object> actual = modifier.modify(cardConfig, "someurl", input);
 		assertEquals(expected, actual);
 	}
 
@@ -77,7 +74,6 @@ public class CollectionsAggregatorModifierTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		cardConfig = new CardConfig(ICardFactory.Utils.cardFactory(), CardDataStoreFixture.rawCardStore());
-		card = new CardMock(null, cardConfig, "someUrl", Collections.<String, Object> emptyMap());
 	}
 
 }

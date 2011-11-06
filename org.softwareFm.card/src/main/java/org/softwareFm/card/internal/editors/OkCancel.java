@@ -12,7 +12,8 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class OkCancel implements IHasControl {
 
-	private final Button okButton;
+	public final Button okButton;
+	public final Button cancelButton;
 	private boolean enabled = true;
 	private final Composite content;
 	private final Runnable onAccept;
@@ -23,7 +24,7 @@ public class OkCancel implements IHasControl {
 		this.onCancel = onCancel;
 		content = new Composite(parent, SWT.NULL);
 		IResourceGetter resourceGetter = cardConfig.resourceGetter;
-		Swts.makePushButton(content, resourceGetter, DisplayConstants.buttonCancelTitle, onCancel);
+		cancelButton = Swts.makePushButton(content, resourceGetter, DisplayConstants.buttonCancelTitle, onCancel);
 		okButton = Swts.makePushButton(content, resourceGetter, DisplayConstants.buttonOkTitle, onAccept);
 		content.setLayout(Swts.getHorizonalNoMarginRowLayout());
 	}

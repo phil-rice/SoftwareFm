@@ -342,7 +342,8 @@ public class Maps {
 			return new HashMap<K, V>();
 		else if (IdentityHashMap.class.isAssignableFrom(clazz))
 			return new IdentityHashMap<K, V>();
-		throw new IllegalArgumentException(clazz.toString());
+		else
+			return new HashMap<K, V>();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -444,15 +445,15 @@ public class Maps {
 		return result;
 	}
 
-	public static<K,V> Map<K, V> sortByKey(Map<K,V> map, Comparator<K> comparator) {
+	public static <K, V> Map<K, V> sortByKey(Map<K, V> map, Comparator<K> comparator) {
 		List<K> sortedKeys = Lists.sort(map.keySet(), comparator);
 		Map<K, V> result = new LinkedHashMap<K, V>();
-		for (K key: sortedKeys)
+		for (K key : sortedKeys)
 			result.put(key, map.get(key));
 		return result;
 	}
 
-	public static Map<String,Object> stringObjectMap(Object...attributesAndValues) {
+	public static Map<String, Object> stringObjectMap(Object... attributesAndValues) {
 		return makeMap(attributesAndValues);
 	}
 }

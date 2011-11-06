@@ -9,7 +9,9 @@ public class CardFactoryMock implements ICardFactory {
 	@Override
 	public ICard makeCard(ICardHolder cardHolder, CardConfig cardConfig, String url, Map<String, Object> map) {
 		count++;
-		return new CardMock(cardHolder, cardConfig, url, map);
+		CardMock card = new CardMock(cardHolder, cardConfig, url, map);
+		cardHolder.setCard(card);
+		return card;
 	}
 
 }

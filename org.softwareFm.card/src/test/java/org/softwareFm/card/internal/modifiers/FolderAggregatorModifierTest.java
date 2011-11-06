@@ -57,7 +57,7 @@ public class FolderAggregatorModifierTest extends TestCase {
 	}
 
 	private void check(Map<String, Object> expected, Map<String, Object> input) {
-		Map<String, Object> actual = modifier.modify(cardConfig, card, input);
+		Map<String, Object> actual = modifier.modify(cardConfig, "someUrl", input);
 		assertEquals(expected, actual);
 	}
 

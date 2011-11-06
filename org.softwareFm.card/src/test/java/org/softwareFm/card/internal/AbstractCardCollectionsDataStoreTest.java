@@ -1,6 +1,5 @@
 package org.softwareFm.card.internal;
 
-import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
 
 import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMonitored;
@@ -9,6 +8,7 @@ import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.CardFactoryMock;
 import org.softwareFm.card.api.CardMock;
 import org.softwareFm.card.api.ICardFactory;
+import org.softwareFm.card.api.IFollowOnFragment;
 import org.softwareFm.display.swt.SwtIntegrationTest;
 
 public abstract class AbstractCardCollectionsDataStoreTest extends SwtIntegrationTest {
@@ -50,12 +50,17 @@ public abstract class AbstractCardCollectionsDataStoreTest extends SwtIntegratio
 	protected void setUp() throws Exception {
 		super.setUp();
 		mockCardFactory = ICardFactory.Utils.mockCardFactory();
-		cardConfig = CardDataStoreFixture.asyncCardConfig(shell.getDisplay()).withCardFactory(mockCardFactory);
+		cardConfig = CardDataStoreFixture.asyncCardConfig(shell.getDisplay()).withCardFactory(mockCardFactory).withFollowOn(new IFollowOnFragment() {
+			@Override
+			public String findFollowOnFragment(String key, Object value) {
+				return findFollowOnUrlFragmentForTest(key, value);
+			}
+		});
 		cardHolder = new CardHolder(shell, "loading", "title", cardConfig, CardDataStoreFixture.url, null);
 		memory = new CardAndCollectionDataStoreVisitorMonitored();
 		status = cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, CardDataStoreFixture.url, memory);
 	}
 
-	abstract protected String findFollowOnUrlFragment(Entry<String, Object> entry);
+	abstract protected String findFollowOnUrlFragmentForTest(String key, Object value);
 
 }
