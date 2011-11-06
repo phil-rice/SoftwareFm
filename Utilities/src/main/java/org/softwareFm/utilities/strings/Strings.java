@@ -198,6 +198,16 @@ public class Strings {
 		return raw.replaceAll("'", "''").replaceAll("\\\\", "\\\\");
 	}
 
+	public static IFunction1<String, String> forUrlFn() {
+		return new IFunction1<String, String>() {
+
+			@Override
+			public String apply(String from) throws Exception {
+				return forUrl(from);
+			}
+		};
+	}
+
 	public static String forUrl(String raw) {
 		String cleanUrl = Strings.onlyKeep(raw.toLowerCase(), "abcdefghijklmnopqrstuvwxyz0123456789._-");
 		return cleanUrl;
@@ -220,6 +230,45 @@ public class Strings {
 			return from;
 		else
 			return from.substring(index + 1);
+	}
+
+	public static IFunction1<String, String> stringToUrlSegmentFn() {
+		return new IFunction1<String, String>() {
+			@Override
+			public String apply(String from) throws Exception {
+				return stringToUrlSegment(from);
+			}
+		};
+	}
+
+	public static String stringToUrlSegment(String from) {
+		List<String> fragments = splitIgnoreBlanks(from, " ");
+		Iterable<String> cleaned = Iterables.map(fragments, forUrlFn());
+		Iterable<String> upperCased = Iterables.map(cleaned, upperCaseFirstCharacterFn());
+		String join = join(upperCased, "");
+		String result = lowerCaseFirstCharacter(join);
+		return result;
+	}
+
+	public static IFunction1<String, String> upperCaseFirstCharacterFn() {
+		return new IFunction1<String, String>() {
+			@Override
+			public String apply(String from) throws Exception {
+				return upperCaseFirstCharacter(from);
+			}
+		};
+	}
+
+	public static String upperCaseFirstCharacter(String from) {
+		if (from == null || from.length() < 1)
+			return from;
+		return Character.toUpperCase(from.charAt(0)) + from.substring(1);
+	}
+
+	public static String lowerCaseFirstCharacter(String from) {
+		if (from == null || from.length() < 1)
+			return from;
+		return Character.toLowerCase(from.charAt(0)) + from.substring(1);
 	}
 
 	public static IFunction1<String, String> camelCaseToPrettyFn() {
@@ -286,4 +335,5 @@ public class Strings {
 		}
 		return 0;
 	}
+
 }

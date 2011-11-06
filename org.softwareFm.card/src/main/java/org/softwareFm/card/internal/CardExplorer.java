@@ -113,7 +113,7 @@ public class CardExplorer implements IHasComposite {
 						@Override
 						public void updateDataStore(final IMutableCardDataStore store, String url, String key, final Object value) {
 							System.out.println("Updateing data store: " + value);
-							final String editorResult = Strings.nullSafeToString(value);
+							final String editorResult = Strings.stringToUrlSegment(Strings.nullSafeToString(value));
 							if (result.itemType == Type.ROOT_COLLECTION) {
 								createNewItem(result, store, editorResult);
 							} else

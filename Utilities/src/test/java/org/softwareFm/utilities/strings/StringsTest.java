@@ -2,6 +2,8 @@ package org.softwareFm.utilities.strings;
 
 import junit.framework.TestCase;
 
+import org.softwareFm.utilities.functions.Functions;
+
 public class StringsTest extends TestCase {
 
 	public void testCamelCaseToPretty() {
@@ -17,6 +19,38 @@ public class StringsTest extends TestCase {
 		assertEquals("Group Id Again", Strings.camelCaseToPretty("GroupIdAgain"));
 		assertEquals("Group Id Again And Again", Strings.camelCaseToPretty("GroupIdAgain And Again"));
 		assertEquals("Group Id Again And Again", Strings.camelCaseToPretty("GroupIdAgain     And   Again"));
+	}
+	
+	public void testStringToUrlSegment(){
+		checkStringToUrlSegment("", "");
+		checkStringToUrlSegment("abc", "abc");
+		checkStringToUrlSegment("ab.c", "a/b.c");
+		checkStringToUrlSegment("aB.C", " a / b . c ");
+		checkStringToUrlSegment("someNewValue", " Some New Value ");
+		checkStringToUrlSegment("s.omeNewValue", " S.ome New Value ");
+		checkStringToUrlSegment("aBC", "a!\"£$%^&*\'# b c");
+	}
+
+	public void testLowerAndUpperCaseFirstCharacter(){
+		checkLowerAndUpperCaseFirstCharacter("Abc", "abc", "Abc");
+		checkLowerAndUpperCaseFirstCharacter("Abc", "abc", "abc");
+		checkLowerAndUpperCaseFirstCharacter("ABc", "aBc", "aBc");
+		checkLowerAndUpperCaseFirstCharacter("A", "a", "a");
+		checkLowerAndUpperCaseFirstCharacter("", "", "");
+		checkLowerAndUpperCaseFirstCharacter(null, null, null);
+	}
+	
+	
+	private void checkLowerAndUpperCaseFirstCharacter(String expectedUpper, String expectedLower, String raw) {
+		assertEquals(expectedLower, Strings.lowerCaseFirstCharacter(raw));
+		assertEquals(expectedUpper, Strings.upperCaseFirstCharacter(raw));
+		assertEquals(expectedUpper, Functions.call(Strings.upperCaseFirstCharacterFn(), raw));
+		
+	}
+
+	private void checkStringToUrlSegment(String expected, String raw) {
+		assertEquals(expected, Strings.stringToUrlSegment(raw));
+		assertEquals(expected, Functions.call(Strings.stringToUrlSegmentFn(), raw));
 	}
 
 	public void testVersionCompare(){
