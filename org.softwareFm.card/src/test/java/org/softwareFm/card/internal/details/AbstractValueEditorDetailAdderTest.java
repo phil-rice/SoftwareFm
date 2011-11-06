@@ -184,6 +184,7 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 				afterEdit.run();
 			}
 		});
+		@SuppressWarnings("unchecked")
 		TE holder = (TE) actual;
 		return holder;
 	}

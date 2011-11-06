@@ -200,6 +200,7 @@ public class BasicCardConfigurator implements ICardConfigurator {
 					return "nt:unstructured";
 				for (Entry<String, Object> entry : data.entrySet())
 					if (entry.getValue() instanceof Map<?, ?>) {
+						@SuppressWarnings("unchecked")
 						Map<String, Object> map = (Map<String, Object>) entry.getValue();
 						if (CardConstants.group.equals(map.get(CardConstants.slingResourceType)))
 							return entry.getKey();

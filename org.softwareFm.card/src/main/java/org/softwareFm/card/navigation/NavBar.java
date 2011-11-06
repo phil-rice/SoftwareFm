@@ -97,9 +97,9 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 			for (final String string : fragments)
 				if (string.length() > 0) {
 					String parentUrl = thisUrl;
-					NavCombo navCombo = new NavCombo(this, cardConfig, parentUrl, string, callbackToGotoUrl);
+					 new NavCombo(this, cardConfig, parentUrl, string, callbackToGotoUrl);
 					thisUrl += "/" + string;
-					NavButton navButton = new NavButton(this, thisUrl, callbackToGotoUrl);
+					new NavButton(this, thisUrl, callbackToGotoUrl);
 				}
 			new NavCombo(this, cardConfig, url, "", callbackToGotoUrl);
 			for (Control control: getChildren())

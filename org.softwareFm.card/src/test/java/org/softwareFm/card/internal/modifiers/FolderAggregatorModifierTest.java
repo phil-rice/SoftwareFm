@@ -1,6 +1,5 @@
 package org.softwareFm.card.internal.modifiers;
 
-import java.util.Collections;
 import java.util.Map;
 
 import junit.framework.TestCase;
@@ -8,7 +7,6 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
-import org.softwareFm.card.api.CardMock;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.utilities.maps.Maps;
 
@@ -30,7 +28,6 @@ public class FolderAggregatorModifierTest extends TestCase {
 
 	private final FolderAggregatorModifier modifier = new FolderAggregatorModifier("tag", "t1","ignoreThisTag");
 	private CardConfig cardConfig;
-	private CardMock card;
 
 	@Test
 	public void testPassesThroughItemsWithoutTags() {
@@ -65,6 +62,5 @@ public class FolderAggregatorModifierTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		cardConfig = new CardConfig(ICardFactory.Utils.cardFactory(), CardDataStoreFixture.rawCardStore());
-		card = new CardMock(null, cardConfig, "someUrl", Collections.<String, Object> emptyMap());
 	}
 }

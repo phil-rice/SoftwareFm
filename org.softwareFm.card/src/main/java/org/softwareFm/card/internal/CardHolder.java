@@ -49,12 +49,10 @@ public class CardHolder implements ICardHolder {
 		ICard card;
 		private final CardConfig navBarCardConfig;
 		private final List<ILineSelectedListener> lineListeners = new CopyOnWriteArrayList<ILineSelectedListener>();
-		private final ICallback<String> callbackToGotoUrl;
 
 		public CardHolderComposite(Composite parent, CardConfig navBarCardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
 			super(parent, SWT.NULL);
 			this.navBarCardConfig = navBarCardConfig;
-			this.callbackToGotoUrl = callbackToGotoUrl;
 			if (navBarCardConfig == null)
 				throw new NullPointerException();
 			if (callbackToGotoUrl == null){
