@@ -1,4 +1,4 @@
-package org.softwareFm.card.internal.editors;
+package org.softwareFm.card.editors;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;

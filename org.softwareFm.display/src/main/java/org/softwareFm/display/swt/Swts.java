@@ -671,5 +671,34 @@ public class Swts {
 		int b = Integer.parseInt(strings.get(2));
 		return new Color(device, r,g,b);
 	}
+	public static IFunction1<Composite, IHasControl> labelFn(final String text) {
+		return new IFunction1<Composite, IHasControl>() {
+
+			@Override
+			public IHasControl apply(Composite from) throws Exception {
+				Label label = new Label(from, SWT.NULL);
+				label.setText(text);
+				return IHasControl.Utils.toHasControl(label);
+			}
+		};
+	}
+
+	public static IFunction1<Composite, IHasControl> styledTextFn(final String text, final int style) {
+		return new IFunction1<Composite, IHasControl>() {
+
+			@Override
+			public IHasControl apply(Composite from) throws Exception {
+				StyledText styledText = new StyledText(from, style);
+				styledText.setText(text);
+				return IHasControl.Utils.toHasControl(styledText);
+			}
+		};
+	}
+
+	public static void layoutIfComposite(Control control) {
+		if (control instanceof Composite)
+			((Composite) control).layout();
+		
+	}
 
 }

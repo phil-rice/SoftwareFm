@@ -3,7 +3,6 @@ package org.softwareFm.card.api;
 import java.util.Map;
 import java.util.concurrent.Future;
 
-import org.softwareFm.card.internal.details.IAfterEditCallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.maps.Maps;

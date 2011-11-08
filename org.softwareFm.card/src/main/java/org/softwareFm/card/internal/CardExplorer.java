@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.ScrollBar;
 import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMonitored;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.IAddItemProcessor;
+import org.softwareFm.card.api.IAfterEditCallback;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardChangedListener;
 import org.softwareFm.card.api.ICardDataStore;
@@ -21,15 +22,14 @@ import org.softwareFm.card.api.ICardDataStoreCallback;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardHolder;
 import org.softwareFm.card.api.ICardSelectedListener;
+import org.softwareFm.card.api.IDetailsFactoryCallback;
 import org.softwareFm.card.api.ILineSelectedListener;
 import org.softwareFm.card.api.IMutableCardDataStore;
 import org.softwareFm.card.api.RightClickCategoryResult;
 import org.softwareFm.card.api.RightClickCategoryResult.Type;
 import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.card.internal.details.IAfterEditCallback;
-import org.softwareFm.card.internal.details.IDetailsFactoryCallback;
-import org.softwareFm.card.internal.details.TitleSpec;
-import org.softwareFm.card.internal.editors.TextEditor;
+import org.softwareFm.card.editors.TextEditor;
+import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
@@ -255,7 +255,7 @@ public class CardExplorer implements IHasComposite {
 
 	public static void main(String[] args) {
 		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacardForCardExplorer();
-		final String rootUrl = "/softwareFm/data";
+		final String rootUrl = "/softwareFm/";
 		final String firstUrl = "/softwareFm/data/org";
 		try {
 			Swts.display(CardExplorer.class.getSimpleName(), new IFunction1<Composite, Composite>() {

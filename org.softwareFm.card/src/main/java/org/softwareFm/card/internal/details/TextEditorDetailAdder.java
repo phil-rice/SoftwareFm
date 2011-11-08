@@ -3,7 +3,9 @@ package org.softwareFm.card.internal.details;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
-import org.softwareFm.card.internal.editors.TextEditor;
+import org.softwareFm.card.api.IDetailsFactoryCallback;
+import org.softwareFm.card.editors.TextEditor;
+import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.utilities.functions.Functions;
 

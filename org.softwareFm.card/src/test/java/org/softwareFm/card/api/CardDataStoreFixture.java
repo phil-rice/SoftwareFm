@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
-import org.softwareFm.card.internal.details.TitleSpec;
+import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.maps.Maps;
 

@@ -1,4 +1,4 @@
-package org.softwareFm.card.internal.editors;
+package org.softwareFm.card.editors;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -9,12 +9,12 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 import org.softwareFm.card.api.CardConfig;
+import org.softwareFm.card.api.IDetailsFactoryCallback;
 import org.softwareFm.card.api.IMutableCardDataStore;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.card.internal.CardOutlinePaintListener;
-import org.softwareFm.card.internal.details.IDetailsFactoryCallback;
-import org.softwareFm.card.internal.details.TitleSpec;
-import org.softwareFm.card.internal.title.Title;
+import org.softwareFm.card.title.Title;
+import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.functions.Functions;
 

@@ -1,9 +1,8 @@
-package org.softwareFm.card.internal.details;
+package org.softwareFm.card.api;
 
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.card.api.ICard;
-import org.softwareFm.card.api.ICardSelectedListener;
-import org.softwareFm.card.api.IMutableCardDataStore;
+import org.softwareFm.card.internal.details.IGotDataCallback;
+import org.softwareFm.card.internal.details.IUpdateDataStore;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.maps.Maps;
 

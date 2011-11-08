@@ -26,7 +26,7 @@ import org.softwareFm.card.api.ICardValueChangedListener;
 import org.softwareFm.card.api.ILineSelectedListener;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.card.internal.details.TitleSpec;
+import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -62,13 +62,14 @@ public class Card implements ICard {
 		this.cardConfig = cardConfig;
 		this.url = url;
 		this.rawData = rawData;
-		this.table = new Table(parent, cardConfig.style | SWT.NULL);
+		this.table = new Table(parent, cardConfig.cardStyle );
 		this.nameColumn = new TableColumn(table, SWT.NONE);
 		this.valueColumn = new TableColumn(table, SWT.NONE);
 		this.cardType = (String) rawData.get(CardConstants.slingResourceType);
 		data = cardConfig.modify(url, rawData);
 
-		table.setHeaderVisible(false);
+//		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
 		nameColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "card.name.title"));
 		valueColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "card.value.title"));
 		nameColumn.setWidth(100);

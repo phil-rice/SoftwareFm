@@ -1,10 +1,9 @@
-package org.softwareFm.card.internal.title;
+package org.softwareFm.card.title;
 
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Rectangle;
 import org.softwareFm.card.api.CardConfig;
-import org.softwareFm.card.internal.details.TitleSpec;
 
 public class TitlePaintListener implements PaintListener {
 	private final CardConfig cardConfig;

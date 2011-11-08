@@ -2,6 +2,7 @@ package org.softwareFm.card.internal.details;
 
 import java.util.Arrays;
 
+import org.softwareFm.card.api.IDetailsFactoryCallback;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.card.internal.CardCollectionHolder;
 import org.softwareFm.display.composites.IHasControl;

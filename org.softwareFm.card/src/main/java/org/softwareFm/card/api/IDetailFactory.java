@@ -5,7 +5,6 @@ import java.util.Arrays;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.internal.details.DetailFactory;
 import org.softwareFm.card.internal.details.IDetailAdder;
-import org.softwareFm.card.internal.details.IDetailsFactoryCallback;
 import org.softwareFm.display.composites.IHasControl;
 
 public interface IDetailFactory {

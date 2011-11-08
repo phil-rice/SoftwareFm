@@ -6,7 +6,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.api.CardConfig;
-import org.softwareFm.card.internal.details.TitleSpec;
+import org.softwareFm.card.title.TitleSpec;
 
 public class CardOutlinePaintListener implements PaintListener {
 		private final TitleSpec titleSpec;

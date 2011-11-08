@@ -456,4 +456,7 @@ public class Maps {
 	public static Map<String, Object> stringObjectMap(Object... attributesAndValues) {
 		return makeMap(attributesAndValues);
 	}
+	public static Map<String, Object> stringObjectLinkedMap(Object... attributesAndValues) {
+		return makeLinkedMap(attributesAndValues);
+	}
 }

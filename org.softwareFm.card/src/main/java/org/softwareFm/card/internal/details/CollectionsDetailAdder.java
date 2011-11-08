@@ -5,6 +5,7 @@ import java.util.Map;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
+import org.softwareFm.card.api.IDetailsFactoryCallback;
 import org.softwareFm.card.internal.CardCollectionHolder;
 import org.softwareFm.display.composites.IHasControl;
 

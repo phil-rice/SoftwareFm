@@ -3,8 +3,8 @@ package org.softwareFm.card.navigation;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
-import org.softwareFm.card.internal.details.TitleSpec;
-import org.softwareFm.card.internal.title.Title;
+import org.softwareFm.card.title.Title;
+import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.utilities.functions.Functions;
 
 public class NavTitle extends Title implements ITitleBarForCard {

@@ -1,4 +1,4 @@
-package org.softwareFm.card.internal.details;
+package org.softwareFm.card.title;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Color;

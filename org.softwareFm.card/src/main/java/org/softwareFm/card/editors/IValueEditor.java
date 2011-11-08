@@ -1,4 +1,4 @@
-package org.softwareFm.card.internal.editors;
+package org.softwareFm.card.editors;
 
 import org.softwareFm.display.composites.IHasComposite;
 
