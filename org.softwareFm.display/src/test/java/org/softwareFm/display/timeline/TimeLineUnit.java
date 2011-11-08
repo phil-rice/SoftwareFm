@@ -4,11 +4,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
@@ -31,6 +27,7 @@ import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.services.IServiceExecutor;
 
 public class TimeLineUnit {
 
@@ -49,7 +46,7 @@ public class TimeLineUnit {
 				}
 			}
 		};
-		final ExecutorService service = new ThreadPoolExecutor(2, 10, 2, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(10));
+		final IServiceExecutor service = IServiceExecutor.Utils.defaultExecutor();
 		try {
 			Swts.xUnit("Timeline Unit", root, "txt", //
 					new ISituationListAndBuilder<BrowserPlusNextPrevButtons>() {

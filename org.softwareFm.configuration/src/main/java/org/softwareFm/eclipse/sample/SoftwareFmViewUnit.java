@@ -2,10 +2,6 @@ package org.softwareFm.eclipse.sample;
 
 import java.io.File;
 import java.util.Map;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.configuration.ConfigurationConstants;
@@ -19,6 +15,7 @@ import org.softwareFm.jdtBinding.api.IJavadocSourceMutator;
 import org.softwareFm.jdtBinding.api.RippedResult;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.json.Json;
+import org.softwareFm.utilities.services.IServiceExecutor;
 
 public class SoftwareFmViewUnit {
 
@@ -26,11 +23,11 @@ public class SoftwareFmViewUnit {
 		private SoftwareFmFixture softwareFmFixture;
 		private final IFunction1<SoftwareFmFixture, LargeButtonDefn[]> largeButtons;
 		private SoftwareFmDataComposite softwareFmComposite;
-		private final ExecutorService service;
+		private final IServiceExecutor service;
 
 		public SoftwareFmViewUnitBuilder(IFunction1<SoftwareFmFixture, LargeButtonDefn[]> largeButtons) {
 			this.largeButtons = largeButtons;
-			service = new ThreadPoolExecutor(2, 10, 2, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(10));
+			service = IServiceExecutor.Utils.defaultExecutor();
 		}
 
 		@Override

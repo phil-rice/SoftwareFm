@@ -6,10 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Callable;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -68,6 +65,7 @@ import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.services.IServiceExecutor;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -101,7 +99,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	private IUpdateStore updateStore;
 	private IResourceGetter resourceGetter;
 	private String uuid;
-	private ExecutorService service;
+	private IServiceExecutor service;
 
 	public SoftwareFmActivator() {
 	}
@@ -323,9 +321,9 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 					@Override
 					public void setNewValue(final String newValue, final IJavadocSourceMutatorCallback whenComplete) throws Exception {
 						final BindingRipperResult reripped = SelectedArtifactSelectionManager.reRip(rippedResult);
-						getExecutorService().submit(new Runnable() {
+						getExecutorService().submit(new Callable<Void>() {
 							@Override
-							public void run() {
+							public Void call() throws Exception {
 								try {
 									if (newValue.endsWith(".jar")) {
 										File file = Files.downloadAndPutIndirectory(newValue, ConfigurationConstants.defaultDirectoryForDownloads);
@@ -337,19 +335,18 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 									e.printStackTrace();
 									throw WrappedException.wrap(e);
 								}
+								return null;
 							}
 						});
-						// TODO Auto-generated method stub
-
 					}
 				};
 				IJavadocSourceMutator javadocMutator = new IJavadocSourceMutator() {
 					@Override
 					public void setNewValue(final String newValue, final IJavadocSourceMutatorCallback whenComplete) throws Exception {
 						final BindingRipperResult reripped = SelectedArtifactSelectionManager.reRip(rippedResult);
-						getExecutorService().submit(new Runnable() {
+						getExecutorService().submit(new  Callable<Void>() {
 							@Override
-							public void run() {
+							public Void call() {
 								try {
 									if (newValue.endsWith(".jar")) {
 										File file = Files.downloadAndPutIndirectory(newValue, ConfigurationConstants.defaultDirectoryForDownloads);
@@ -361,6 +358,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 									e.printStackTrace();
 									throw WrappedException.wrap(e);
 								}
+								return null;
 							}
 						});
 					}
@@ -377,8 +375,8 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 
 	}
 
-	private ExecutorService getExecutorService() {
-		return service == null ? service = new ThreadPoolExecutor(2, 10, 2, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(10)) : service;
+	private IServiceExecutor getExecutorService() {
+		return service == null ? service = IServiceExecutor.Utils.defaultExecutor() : service;
 	}
 
 	public List<IBrowserConfigurator> getBrowserConfigurators() {

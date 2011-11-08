@@ -4,7 +4,6 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import org.apache.http.HttpResponse;
@@ -24,16 +23,17 @@ import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.maps.ISimpleMap;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.services.IServiceExecutor;
 
 public class BrowserComposite implements IBrowserCompositeBuilder, ISimpleMap<String, IBrowserPart> {
 
-	private final ExecutorService service;
+	private final IServiceExecutor service;
 	private final DefaultHttpClient client;
 	private final Map<String, IBrowserPart> transformerMap = Maps.newMap();
 	private final Composite content;
 	private final StackLayout stackLayout;
 
-	public BrowserComposite(Composite parent, int style, ExecutorService service) {
+	public BrowserComposite(Composite parent, int style, IServiceExecutor service) {
 		this.service = service;
 		this.content = Swts.newComposite(parent, style, "BrowserComposite");
 		stackLayout = new StackLayout();

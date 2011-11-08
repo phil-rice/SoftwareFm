@@ -4,7 +4,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import org.eclipse.jface.resource.ImageRegistry;
@@ -46,6 +45,7 @@ import org.softwareFm.softwareFmImages.backdrop.BackdropAnchor;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.services.IServiceExecutor;
 
 public class SoftwareFmDataComposite implements IHasComposite {
 
@@ -58,10 +58,10 @@ public class SoftwareFmDataComposite implements IHasComposite {
 	public BrowserComposite browserComposite;
 	private StackLayout rightHandSideLayout;
 	private Composite rightHandSide;
-	private ExecutorService service;
+	private IServiceExecutor service;
 	private Composite content;
 
-	public SoftwareFmDataComposite(final Composite parent, ExecutorService service, final GuiDataStore guiDataStore, final CompositeConfig compositeConfig, final ActionStore actionStore, final IEditorFactory editorFactory, final IUpdateStore updateStore, final ListEditorStore listEditorStore, ICallback<Throwable> exceptionHandler, final List<LargeButtonDefn> largeButtonDefns, final List<IBrowserConfigurator> browserConfigurators, IPlayListGetter playListGetter) {
+	public SoftwareFmDataComposite(final Composite parent, IServiceExecutor service, final GuiDataStore guiDataStore, final CompositeConfig compositeConfig, final ActionStore actionStore, final IEditorFactory editorFactory, final IUpdateStore updateStore, final ListEditorStore listEditorStore, ICallback<Throwable> exceptionHandler, final List<LargeButtonDefn> largeButtonDefns, final List<IBrowserConfigurator> browserConfigurators, IPlayListGetter playListGetter) {
 		this.service = service;
 		content = Swts.newComposite(parent, SWT.NULL, "SoftwareFmDataComposite.content");
 		content.setLayout(new FillLayout());

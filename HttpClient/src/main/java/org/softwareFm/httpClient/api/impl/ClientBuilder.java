@@ -12,13 +12,13 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.softwareFm.httpClient.api.IClientBuilder;
 import org.softwareFm.httpClient.api.IHttpClient;
-import org.softwareFm.httpClient.api.IServiceExecutor;
 import org.softwareFm.httpClient.constants.HttpClientConstants;
 import org.softwareFm.httpClient.requests.IRequestBuilder;
 import org.softwareFm.httpClient.requests.impl.DeleteRequest;
 import org.softwareFm.httpClient.requests.impl.GetRequest;
 import org.softwareFm.httpClient.requests.impl.PostRequest;
 import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.utilities.services.IServiceExecutor;
 
 public class ClientBuilder implements IClientBuilder {
 	public final HttpHost host;

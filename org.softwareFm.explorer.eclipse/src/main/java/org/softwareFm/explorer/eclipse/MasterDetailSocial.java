@@ -9,33 +9,37 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.ISituationListAndBuilder;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.collections.Sets;
-import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 
-public class MasterDetail implements IHasComposite {
+public class MasterDetailSocial implements IMasterDetailSocial {
 
 	static class MasterDetailComposite extends SashForm {
 
 		private final Composite master;
+
+		private final SashForm detailSocial;
+
 		private final Composite detail;
-		private final StackLayout masterLayout;
-		private final StackLayout detailLayout;
+		private final Composite social;
 
 		public MasterDetailComposite(Composite parent, int style) {
 			super(parent, style);
-			master = new Composite(this, SWT.NULL);
-			detail = new Composite(this, SWT.NULL);
-			masterLayout = new StackLayout();
-			detailLayout = new StackLayout();
-			master.setLayout(masterLayout);
-			detail.setLayout(detailLayout);
+			master = Swts.newComposite(this, SWT.NULL, "Master");
+			detailSocial = Swts.newSashForm(this, SWT.VERTICAL, "DetailSocial");
+			detail = Swts.newComposite(detailSocial, SWT.NULL, "Detail");
+			social = Swts.newComposite(detailSocial, SWT.NULL, "Social");
+
+			detailSocial.setWeights(new int[] { 1, 1 });
+
+			master.setLayout(new StackLayout());
+			detail.setLayout(new StackLayout());
+			social.setLayout(new StackLayout());
 			setWeights(new int[] { 1, 2 });
 		}
 	}
@@ -43,32 +47,47 @@ public class MasterDetail implements IHasComposite {
 	private final MasterDetailComposite content;
 	private final Set<Control> preserve = Sets.newSet();
 
-	public MasterDetail(Composite parent, int style) {
+	public MasterDetailSocial(Composite parent, int style) {
 		content = new MasterDetailComposite(parent, style);
 	}
 
+	@Override
 	public <T extends IHasControl> T createMaster(IFunction1<Composite, T> builder, boolean preserve) {
-		T result = Functions.call(builder, content.master);
-		if (preserve)
-			this.preserve.add(result.getControl());
-		return result;
+		return create(content.master, builder, preserve);
 	}
 
-	public <T extends IHasControl> T createAndShowDetail(IFunction1<Composite, T> builder) {
-		try {
-			T detail = createDetail(builder, false);
-			setDetail(detail == null ? null : detail.getControl());
-			return detail;
-		} catch (Exception e) {
-			throw WrappedException.wrap(e);
-		}
-	}
-
+	@Override
 	public <T extends IHasControl> T createDetail(IFunction1<Composite, T> builder, boolean preserve) {
-		T result = Functions.call(builder, content.detail);
+		return create(content.detail, builder, preserve);
+	}
+
+	@Override
+	public <T extends IHasControl> T createSocial(IFunction1<Composite, T> builder, boolean preserve) {
+		return create(content.social, builder, preserve);
+	}
+
+	private <T extends IHasControl> T create(Composite composite, IFunction1<Composite, T> builder, boolean preserve) {
+		T result = Functions.call(builder, composite);
 		if (preserve)
 			this.preserve.add(result.getControl());
 		return result;
+
+	}
+
+	@Override
+	public <T extends IHasControl> T createAndShowDetail(IFunction1<Composite, T> builder) {
+		return createAndSHow(content.detail, builder);
+	}
+
+	@Override
+	public <T extends IHasControl> T createAndShowSocial(IFunction1<Composite, T> builder) {
+		return createAndSHow(content.social, builder);
+	}
+
+	private <T extends IHasControl> T createAndSHow(Composite composite, IFunction1<Composite, T> builder) {
+		T control = create(composite, builder, false);
+		set(composite, control == null ? null : control.getControl());
+		return control;
 	}
 
 	@Override
@@ -81,18 +100,39 @@ public class MasterDetail implements IHasComposite {
 		return content;
 	}
 
+	@Override
 	public void setMaster(Control master) {
-		clean(content.master, master);
-		content.masterLayout.topControl = master;
-		content.master.layout();
+		set(content.master, master);
 	}
 
+	@Override
 	public void setDetail(Control detail) {
-		clean(content.detail, detail);
-		content.detailLayout.topControl = detail;
-			content.detail.layout();
-		Swts.layoutIfComposite(detail);
+		set(content.detail, detail);
+		content.detailSocial.layout();
+	}
 
+	@Override
+	public void setSocial(Control social) {
+		set(content.social, social);
+		content.detailSocial.layout();
+	}
+
+	@Override
+	public void hideSocial() {
+		content.detailSocial.setMaximizedControl(content.detail);
+	}
+
+	@Override
+	public void showSocial() {
+		content.detailSocial.setMaximizedControl(null);
+	}
+
+	private void set(Composite composite, Control social) {
+		clean(composite, social);
+		StackLayout layout = (StackLayout) composite.getLayout();
+		layout.topControl = social;
+		composite.layout();
+		Swts.layoutIfComposite(social);
 	}
 
 	private void clean(Composite composite, Control newValue) {
@@ -103,16 +143,16 @@ public class MasterDetail implements IHasComposite {
 	}
 
 	public static void main(String[] args) {
-		Swts.xUnit(MasterDetail.class.getSimpleName(), new ISituationListAndBuilder<MasterDetail>() {
+		Swts.xUnit(MasterDetailSocial.class.getSimpleName(), new ISituationListAndBuilder<MasterDetailSocial>() {
 			private final Map<String, Control> masterMap = Maps.newMap();
 			private final Map<String, Control> detailMap = Maps.newMap();
 
 			@Override
-			public void selected(final MasterDetail masterDetail, final String context, final Object value) throws Exception {
+			public void selected(final MasterDetailSocial masterDetailSocial, final String context, final Object value) throws Exception {
 				Control master = Maps.findOrCreate(masterMap, context, new Callable<Control>() {
 					@Override
 					public Control call() throws Exception {
-						IHasControl master = masterDetail.createMaster(Swts.styledTextFn(context, SWT.WRAP), true);
+						IHasControl master = masterDetailSocial.createMaster(Swts.styledTextFn(context, SWT.WRAP), true);
 						return master.getControl();
 					}
 				});
@@ -120,18 +160,18 @@ public class MasterDetail implements IHasComposite {
 					@Override
 					public Control call() throws Exception {
 						IFunction1<Composite, IHasControl> fn = (IFunction1<Composite, IHasControl>) value;
-						IHasControl detail = masterDetail.createDetail(fn, true);
+						IHasControl detail = masterDetailSocial.createDetail(fn, true);
 						return detail.getControl();
 					}
 				});
-				masterDetail.setMaster(master);
-				masterDetail.setDetail(detail);
+				masterDetailSocial.setMaster(master);
+				masterDetailSocial.setDetail(detail);
 
 			}
 
 			@Override
-			public MasterDetail makeChild(Composite parent) throws Exception {
-				return new MasterDetail(parent, SWT.NULL);
+			public MasterDetailSocial makeChild(Composite parent) throws Exception {
+				return new MasterDetailSocial(parent, SWT.NULL);
 			}
 		}, Maps.stringObjectLinkedMap(//
 				"text", Swts.styledTextFn("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", SWT.WRAP), //

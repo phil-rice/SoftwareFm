@@ -1,4 +1,4 @@
-package org.softwareFm.httpClient.api;
+package org.softwareFm.utilities.services;
 
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;

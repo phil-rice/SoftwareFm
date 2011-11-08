@@ -1,16 +1,16 @@
 package org.softwareFm.explorer.eclipse;
 
 import java.util.Map;
+import java.util.concurrent.Future;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMonitored;
+import org.softwareFm.card.api.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.IAddItemProcessor;
 import org.softwareFm.card.api.IAfterEditCallback;
 import org.softwareFm.card.api.ICard;
-import org.softwareFm.card.api.ICardChangedListener;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardDataStoreCallback;
 import org.softwareFm.card.api.ICardFactory;
@@ -26,7 +26,8 @@ import org.softwareFm.card.internal.BasicCardConfigurator;
 import org.softwareFm.card.internal.CardDataStoreForRepository;
 import org.softwareFm.card.internal.CardHolder;
 import org.softwareFm.card.title.TitleSpec;
-import org.softwareFm.display.composites.IHasComposite;
+import org.softwareFm.display.browser.BrowserComposite;
+import org.softwareFm.display.browser.IBrowserPart;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
@@ -35,69 +36,92 @@ import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.services.IServiceExecutor;
 import org.softwareFm.utilities.strings.Strings;
 
-public class Explorer implements IHasComposite, IExplorer {
+public class Explorer implements IExplorer, IHasControl {
 
-	private final MasterDetail masterDetail;
 	private UnrecognisedJar unrecognisedJar;
 	private CardHolder cardHolder;
-	private ICallback<String> callbackToGotoUrl;
+	private ICallback<String> callbackToGotoUrlAndUpdateDetails;
+	private final IMasterDetailSocial masterDetailSocial;
+	private final CardConfig cardConfig;
+	private BrowserComposite browser;
 
-	public Explorer(Composite parent, int style, final CardConfig cardConfig,  final String rootUrl) {
-		callbackToGotoUrl = new ICallback<String>() {
+	public Explorer(final CardConfig cardConfig, final String rootUrl, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service) {
+		this.cardConfig = cardConfig;
+		this.masterDetailSocial = masterDetailSocial;
+		callbackToGotoUrlAndUpdateDetails = new ICallback<String>() {
 			@Override
 			public void process(String url) throws Exception {
-				masterDetail.setMaster(cardHolder.getControl());
-				cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, CardAndCollectionDataStoreVisitorMonitored.Utils.sysout());
+				masterDetailSocial.setMaster(cardHolder.getControl());
+				cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, new CardAndCollectionDataStoreAdapter() {
+					@Override
+					public void finished(ICardHolder cardHolder, String url, ICard card) {
+						String key = findDefaultChild(card);
+						showDetailForCardKey(masterDetailSocial, card, key, card.data().get(key));
+					}
+				});
 			}
 		};
-
-		masterDetail = new MasterDetail(parent, style);
-
-		unrecognisedJar = masterDetail.createMaster(new IFunction1<Composite, UnrecognisedJar>() {
+		unrecognisedJar = masterDetailSocial.createMaster(new IFunction1<Composite, UnrecognisedJar>() {
 			@Override
 			public UnrecognisedJar apply(final Composite from) throws Exception {
 				return new UnrecognisedJar(from, SWT.NULL, cardConfig);
 			}
 		}, true);
-		cardHolder = masterDetail.createMaster(new IFunction1<Composite, CardHolder>() {
+		cardHolder = masterDetailSocial.createMaster(new IFunction1<Composite, CardHolder>() {
 			@Override
 			public CardHolder apply(Composite from) throws Exception {
-				return new CardHolder(from, "loading", "Some title", cardConfig, rootUrl, callbackToGotoUrl);
+				return new CardHolder(from, "loading", "Some title", cardConfig, rootUrl, callbackToGotoUrlAndUpdateDetails);
 			}
 		}, true);
-		cardHolder.setAddItemProcessor(makeAddItemProcessor(cardConfig));
+		cardHolder.setAddItemProcessor(makeAddItemProcessor(masterDetailSocial, cardConfig));
 		cardHolder.addLineSelectedListener(new ILineSelectedListener() {
 			@Override
 			public void selected(final ICard card, final String key, final Object value) {
-				showDetailForCardKey(card, key, value);
+				showDetailForCardKey(masterDetailSocial, card, key, value);
 			}
 
 		});
-		cardHolder.addCardChangedListener(new ICardChangedListener() {//probably want to change this, so that we have a listener when the card has finished getting data, that way we won't have to show the default child multiple times
+		browser = masterDetailSocial.createDetail(new IFunction1<Composite, BrowserComposite>() {
 			@Override
-			public void cardChanged(ICardHolder cardHolder, ICard card) {
-				String key = findDefaultChild(card);
-				showDetailForCardKey(card, key, card.data().get(key));
+			public BrowserComposite apply(Composite from) throws Exception {
+				return new BrowserComposite(from, SWT.BORDER, service);
 			}
-
-			@Override
-			public void valueChanged(ICard card, String key, Object newValue) {
-				String defaultChild = findDefaultChild(card);
-				if (defaultChild != null && defaultChild.equals(key))
-					showDetailForCardKey(card, key, card.data().get(key));
-			}
-		});
+		},true);
 	}
+
+	@Override
+	public IBrowserPart register(String feedType, IFunction1<Composite, IBrowserPart> feedPostProcessor) {
+		return browser.register(feedType, feedPostProcessor);
+	}
+
+	@Override
+	public void displayCard(String url) {
+		masterDetailSocial.setMaster(cardHolder.getControl());
+		cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, new CardAndCollectionDataStoreAdapter());
+	}
+
+	@Override
+	public void displayUnrecognisedJar(String url, String file) {
+		unrecognisedJar.setUrlAndFile(url, file);
+	}
+
+	@Override
+	public void displayComments(final String url) {
+		masterDetailSocial.createAndShowSocial(Swts.styledTextFn(url, SWT.WRAP));
+	}
+
 
 	private String findDefaultChild(ICard card) {
 		String result = Functions.call(card.cardConfig().defaultChildFn, card);
 		return result;
 	}
 
-	private void showDetailForCardKey(final ICard card, final String key, final Object value) {
-		masterDetail.createAndShowDetail(new IFunction1<Composite, IHasControl>() {
+	private void showDetailForCardKey(IMasterDetailSocial masterDetailSocial, final ICard card, final String key, final Object value) {
+		masterDetailSocial.showSocial();
+		masterDetailSocial.createAndShowDetail(new IFunction1<Composite, IHasControl>() {
 			@Override
 			public IHasControl apply(Composite from) throws Exception {
 				CardConfig cardConfig = card.cardConfig();
@@ -105,7 +129,7 @@ public class Explorer implements IHasComposite, IExplorer {
 
 					@Override
 					public void afterEdit(String url) {// reload
-						ICallback.Utils.call(callbackToGotoUrl, card.url());
+						ICallback.Utils.call(callbackToGotoUrlAndUpdateDetails, card.url());
 					}
 
 					@Override
@@ -114,7 +138,7 @@ public class Explorer implements IHasComposite, IExplorer {
 
 					@Override
 					public void cardSelected(ICard card) {
-						ICallback.Utils.call(callbackToGotoUrl, card.url());
+						ICallback.Utils.call(callbackToGotoUrlAndUpdateDetails, card.url());
 					}
 
 					@Override
@@ -129,13 +153,13 @@ public class Explorer implements IHasComposite, IExplorer {
 	}
 
 	/** This is the bit that configures then acts on the right click that adds folders/groups/collections */
-	private IAddItemProcessor makeAddItemProcessor(final CardConfig cardConfig) {
+	private IAddItemProcessor makeAddItemProcessor(final IMasterDetailSocial masterDetailSocial, final CardConfig cardConfig) {
 		IAddItemProcessor itemProcessor = new IAddItemProcessor() {
 			@Override
 			public void process(final RightClickCategoryResult result) {
 				System.out.println("In add item processor with " + result + " and card: " + cardHolder.getCard());
 
-				TextEditor editor = masterDetail.createDetail(new IFunction1<Composite, TextEditor>() {
+				TextEditor editor = masterDetailSocial.createDetail(new IFunction1<Composite, TextEditor>() {
 					@Override
 					public TextEditor apply(Composite from) throws Exception {
 						return new TextEditor(from, cardConfig, result.url, result.collectionName, "", new IDetailsFactoryCallback() {
@@ -150,7 +174,7 @@ public class Explorer implements IHasComposite, IExplorer {
 							@Override
 							public void afterEdit(String url) {
 								System.out.println("After edit");
-								ICallback.Utils.call(callbackToGotoUrl, url);
+								ICallback.Utils.call(callbackToGotoUrlAndUpdateDetails, url);
 							}
 
 							@Override
@@ -164,7 +188,7 @@ public class Explorer implements IHasComposite, IExplorer {
 						}, TitleSpec.noTitleSpec(from.getBackground()));
 					}
 				}, false);
-				masterDetail.setDetail(editor.getControl());
+				masterDetailSocial.setDetail(editor.getControl());
 			}
 		};
 		return itemProcessor;
@@ -206,24 +230,22 @@ public class Explorer implements IHasComposite, IExplorer {
 	}
 
 	@Override
-	public void setCardUrl(String url) {
-		ICallback.Utils.call(callbackToGotoUrl, url);
-	}
-
-	@Override
 	public Control getControl() {
-		return masterDetail.getControl();
+		return masterDetailSocial.getControl();
 	}
 
 	@Override
-	public Composite getComposite() {
-		return masterDetail.getComposite();
+	public Future<String> processUrl(String feedType, String url) {
+		masterDetailSocial.hideSocial();
+		masterDetailSocial.setDetail(browser.getControl());
+		return browser.processUrl(feedType, url);
 	}
 
 	public static void main(String[] args) {
 		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacardForCardExplorer();
+		final IServiceExecutor service = IServiceExecutor.Utils.defaultExecutor();
 		try {
-			final String rootUrl = "/softwareFm/";
+			final String rootUrl = "/softwareFm/data";
 			final String firstUrl = "/softwareFm/data/org";
 
 			Swts.display(Explorer.class.getSimpleName(), new IFunction1<Composite, Composite>() {
@@ -232,13 +254,16 @@ public class Explorer implements IHasComposite, IExplorer {
 					final ICardDataStore cardDataStore = new CardDataStoreForRepository(from, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 					final CardConfig cardConfig = new BasicCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
-					IExplorer explorer = new Explorer(from, SWT.NULL, cardConfig, rootUrl);
-					explorer.setCardUrl(firstUrl);
-					return explorer.getComposite();
+					IMasterDetailSocial masterDetailSocial = new MasterDetailSocial(from, SWT.NULL);
+					IExplorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, service);
+					explorer.displayCard(firstUrl);
+					return masterDetailSocial.getComposite();
 				}
 			});
 		} finally {
 			facard.shutdown();
+			service.shutdown();
 		}
 	}
+
 }

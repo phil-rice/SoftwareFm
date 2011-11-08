@@ -9,14 +9,18 @@ import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.internal.History;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.functions.Functions;
+import org.softwareFm.utilities.functions.IFunction1;
 
-public class NavHistoryCombo implements IHasControl {
+public class NavHistoryCombo<T> implements IHasControl {
 
 	final Combo combo;
-	private final History<String> history;
+	private final History<T> history;
+	private final IFunction1<T, String> stringFn;
 
-	public NavHistoryCombo(Composite composite, History<String> history, final ICallback<String> callbackToGotoUrl) {
+	public NavHistoryCombo(Composite composite, final History<T> history, final ICallback<T> callbackToGotoUrl, IFunction1<T, String> stringFn) {
 		this.history = history;
+		this.stringFn = stringFn;
 		combo = new Combo(composite, SWT.DROP_DOWN | SWT.NO_FOCUS);
 		combo.addSelectionListener(new SelectionListener() {
 
@@ -25,12 +29,12 @@ public class NavHistoryCombo implements IHasControl {
 				int index = combo.getSelectionIndex();
 				if (index == -1)
 					return;
-				ICallback.Utils.call(callbackToGotoUrl, combo.getItem(index));
+				ICallback.Utils.call(callbackToGotoUrl, history.getItem(index));
 			}
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
-				ICallback.Utils.call(callbackToGotoUrl, combo.getText());
+				widgetSelected(e);
 			}
 		});
 	}
@@ -42,8 +46,8 @@ public class NavHistoryCombo implements IHasControl {
 
 	public void updateFromHistory() {
 		combo.removeAll();
-		for (String item : history.items())
-			combo.add(item);
+		for (T item : history.items())
+			combo.add(Functions.call(stringFn, item));
 
 	}
 

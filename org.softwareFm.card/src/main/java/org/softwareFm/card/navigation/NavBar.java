@@ -56,7 +56,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 					updateNextPrevButtons();
 				}
 			});
-			navCombo = new NavHistoryCombo(this, history, callbackToGotoUrl);
+			navCombo = new NavHistoryCombo<String>(this, history, callbackToGotoUrl, Functions.<String>toStringFn());
 			navCombo.getControl().addPaintListener(new PaintListener() {
 				@Override
 				public void paintControl(PaintEvent e) {

@@ -7,7 +7,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.softwareFm.httpClient.api.IServiceExecutor;
+import org.softwareFm.utilities.services.IServiceExecutor;
 
 public class GetRequest extends AbstractRequestBuilder {
 

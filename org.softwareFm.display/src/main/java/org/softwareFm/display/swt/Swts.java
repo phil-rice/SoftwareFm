@@ -12,6 +12,7 @@ import java.util.concurrent.Callable;
 import junit.framework.Assert;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.custom.TableEditor;
@@ -42,7 +43,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
@@ -83,8 +83,8 @@ public class Swts {
 		};
 	}
 
-	public static Sash newSash(Composite parent, int style, final String description) {
-		return new Sash(parent, style) {
+	public static SashForm newSashForm(Composite parent, int style, final String description) {
+		return new SashForm(parent, style) {
 			@Override
 			public String toString() {
 				return description + "." + super.toString();
@@ -700,5 +700,6 @@ public class Swts {
 			((Composite) control).layout();
 		
 	}
+
 
 }

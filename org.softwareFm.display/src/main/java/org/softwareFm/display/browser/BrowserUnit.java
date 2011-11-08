@@ -2,10 +2,6 @@ package org.softwareFm.display.browser;
 
 import java.io.File;
 import java.util.Map;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
@@ -20,11 +16,12 @@ import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.services.IServiceExecutor;
 
 public class BrowserUnit {
 	public static void main(String[] args) {
 		final File root = new File("../org.softwareFm.display/src/test/resources/org/softwareFm/display/browser");
-		final ExecutorService service = new ThreadPoolExecutor(2, 10, 2, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(10));
+		final IServiceExecutor service = IServiceExecutor.Utils.defaultExecutor();
 		try {
 			Swts.xUnit("Browser Unit", root, "txt", //
 					new ISituationListAndBuilder<BrowserComposite>() {

@@ -3,7 +3,6 @@ package org.softwareFm.configuration.fixture;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import org.eclipse.jface.resource.ImageRegistry;
@@ -45,10 +44,11 @@ import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.services.IServiceExecutor;
 
 public class SoftwareFmFixture {
 
-	public static SoftwareFmDataComposite makeSoftwareFmComposite(Composite parent, ExecutorService service) throws Exception {
+	public static SoftwareFmDataComposite makeSoftwareFmComposite(Composite parent, IServiceExecutor service) throws Exception {
 		return new SoftwareFmFixture(parent.getDisplay(), service).makeComposite(parent);
 	}
 
@@ -74,9 +74,9 @@ public class SoftwareFmFixture {
 	private final List<IBrowserConfigurator> browserConfigurators;
 	private final IPlayListGetter playListGetter;
 	public LargeButtonDefn[] allLargeButtons;
-	private final ExecutorService service;
+	private final IServiceExecutor service;
 
-	public SoftwareFmFixture(Display display, ExecutorService service) throws Exception {
+	public SoftwareFmFixture(Display display, IServiceExecutor service) throws Exception {
 		this.service = service;
 		imageRegistry = new ImageRegistry();
 		new BasicImageRegisterConfigurator().registerWith(display, imageRegistry);

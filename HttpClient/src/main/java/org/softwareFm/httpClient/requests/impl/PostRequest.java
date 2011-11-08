@@ -8,7 +8,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.softwareFm.httpClient.api.IServiceExecutor;
+import org.softwareFm.utilities.services.IServiceExecutor;
 
 public class PostRequest extends AbstractRequestBuilder {
 

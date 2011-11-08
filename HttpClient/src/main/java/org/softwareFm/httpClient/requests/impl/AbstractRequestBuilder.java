@@ -12,11 +12,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.softwareFm.httpClient.api.IServiceExecutor;
 import org.softwareFm.httpClient.requests.IRequestBuilder;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.httpClient.response.impl.Response;
 import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.utilities.services.IServiceExecutor;
 
 public abstract class AbstractRequestBuilder implements IRequestBuilder {
 

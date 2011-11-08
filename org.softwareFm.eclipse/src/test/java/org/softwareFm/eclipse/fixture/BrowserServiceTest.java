@@ -2,11 +2,7 @@ package org.softwareFm.eclipse.fixture;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -20,6 +16,7 @@ import org.softwareFm.repositoryFacard.AbstractRepositoryFacardTest;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.services.IServiceExecutor;
 
 public class BrowserServiceTest extends AbstractRepositoryFacardTest {
 
@@ -27,7 +24,7 @@ public class BrowserServiceTest extends AbstractRepositoryFacardTest {
 	private BrowserComposite browserComposite;
 	private Shell shell;
 	private final List<IBrowserPart> parts = Lists.newList();
-	private ExecutorService service;
+	private IServiceExecutor service;
 
 	public void testSetup() {
 		assertEquals(0, parts.size());
@@ -89,7 +86,7 @@ public class BrowserServiceTest extends AbstractRepositoryFacardTest {
 		String name = "tests/" + getClass().getSimpleName();
 		facard.post(name, Maps.<String, Object> makeMap("A", 1, "B", 2), IResponseCallback.Utils.noCallback()).get();
 		url = "http://" + HttpClientConstants.defaultHost + ":" + HttpClientConstants.defaultPort + "/" + name + ".json";
-		service = new ThreadPoolExecutor(2, 10, 2, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(10));
+		service = IServiceExecutor.Utils.defaultExecutor();
 		browserComposite = new BrowserComposite(shell, SWT.NULL, service);
 	}
 

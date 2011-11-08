@@ -50,5 +50,9 @@ public class History<T> {
 	public List<T> items() {
 		return history;
 	}
+	
+	public T getItem(int i){
+		return history.get(i);
+	}
 
 }
