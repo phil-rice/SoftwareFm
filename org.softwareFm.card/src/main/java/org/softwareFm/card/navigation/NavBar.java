@@ -2,8 +2,6 @@ package org.softwareFm.card.navigation;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -21,23 +19,20 @@ import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
-import org.softwareFm.softwareFmImages.title.TitleAnchor;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.Functions;
+import org.softwareFm.utilities.functions.IFunction1;
 
 public class NavBar implements IHasComposite, ITitleBarForCard {
 	static class NavBarComposite extends Composite {
 
-		private final History<String> history;
 		private final String rootUrl;
 		private final ICallback<String> callbackToGotoUrl;
-		private final Label prevButton;
-		private final Label nextButton;
 		private final int height;
 		private final CardConfig cardConfig;
-		private final NavHistoryCombo navCombo;
 		private String url;
 		private final TitlePaintListener listener;
+		private NavNextHistoryPrev<String> navNextHistoryPrev;
 
 		public NavBarComposite(Composite parent, CardConfig cardConfig, String rootUrl, final ICallback<String> callbackToGotoUrl) {
 			super(parent, SWT.NULL);
@@ -47,36 +42,13 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 			this.cardConfig = cardConfig;
 			this.rootUrl = rootUrl;
 			this.callbackToGotoUrl = callbackToGotoUrl;
-			history = new History<String>();
-
-			prevButton = Swts.makeImageButton(this, imageRegistry.get(TitleAnchor.previousKey), new Runnable() {
+			IFunction1<String, Image> imageFn = new IFunction1<String, Image>() {
 				@Override
-				public void run() {
-					ICallback.Utils.call(callbackToGotoUrl, history.prev());
-					updateNextPrevButtons();
+				public Image apply(String from) throws Exception {
+					return imageRegistry.get(from);
 				}
-			});
-			navCombo = new NavHistoryCombo<String>(this, history, callbackToGotoUrl, Functions.<String>toStringFn());
-			navCombo.getControl().addPaintListener(new PaintListener() {
-				@Override
-				public void paintControl(PaintEvent e) {
-					Combo combo = navCombo.combo;
-					Rectangle clientArea = combo.getClientArea();
-					e.gc.setBackground(combo.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
-					e.gc.fillRectangle(clientArea);
-					Image image = imageRegistry.get(TitleAnchor.historyKey);
-					e.gc.drawImage(image, 0, +1);
-				}
-			});
-			nextButton = Swts.makeImageButton(this, imageRegistry.get(TitleAnchor.nextKey), new Runnable() {
-				@Override
-				public void run() {
-					ICallback.Utils.call(callbackToGotoUrl, history.next());
-					updateNextPrevButtons();
-				}
-			});
-			nextButton.setImage(imageRegistry.get(TitleAnchor.nextKey));
-			updateNextPrevButtons();
+			};
+			navNextHistoryPrev = new NavNextHistoryPrev<String>(this, new NavNextHistoryPrevConfig<String>(height, imageFn, Functions.<String> toStringFn(), callbackToGotoUrl));
 			listener = new TitlePaintListener(cardConfig, TitleSpec.noTitleSpec(getBackground()), "");
 			addPaintListener(listener);
 		}
@@ -84,34 +56,27 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 		public void setUrl(String url, TitleSpec titleSpec) {
 			this.url = url;
 			listener.setTitleAndTitleSpec("", titleSpec);
-//			setBackground(titleSpec.background);
+			// setBackground(titleSpec.background);
 			if (!url.startsWith(rootUrl))
 				throw new IllegalArgumentException("rooturl: " + rootUrl + " url: " + url);
-			history.push(url);
-			navCombo.updateFromHistory();
-			updateNextPrevButtons();
+			navNextHistoryPrev.visiting(url);
 			String endOfUrl = url.substring(rootUrl.length());
 			String[] fragments = endOfUrl.split("/");
-			Swts.removeChildrenAfter(this, nextButton);
+			Swts.removeChildrenAfter(this, navNextHistoryPrev.getControl());
 			String thisUrl = rootUrl;
 			for (final String string : fragments)
 				if (string.length() > 0) {
 					String parentUrl = thisUrl;
-					 new NavCombo(this, cardConfig, parentUrl, string, callbackToGotoUrl);
+					new NavCombo(this, cardConfig, parentUrl, string, callbackToGotoUrl);
 					thisUrl += "/" + string;
 					new NavButton(this, thisUrl, callbackToGotoUrl);
 				}
 			new NavCombo(this, cardConfig, url, "", callbackToGotoUrl);
-			for (Control control: getChildren())
+			for (Control control : getChildren())
 				control.setBackground(titleSpec.background);
 			layout();
 			getParent().layout();
 			redraw();
-		}
-
-		private void updateNextPrevButtons() {
-			nextButton.setEnabled(history.hasNext());
-			prevButton.setEnabled(history.hasPrev());
 		}
 
 		@Override
@@ -135,7 +100,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 		public void layout() {
 			Rectangle clientArea = getClientArea();
 			Control[] children = getChildren();
-
+			navNextHistoryPrev.layout();
 			for (Control control : children) {
 				if (control instanceof Combo) {
 					control.setSize(cardConfig.navIconWidth, height);
@@ -144,7 +109,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 					control.setSize(width, clientArea.height);
 				}
 			}
-			int i = 3;
+			int i = 1;
 			if (isTooBig(clientArea)) {
 				while (isTooBig(clientArea) && i < children.length) {
 					Control child = children[i];
@@ -207,7 +172,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 	}
 
 	public History<String> getHistory() {
-		return content.history;
+		return content.navNextHistoryPrev.getHistory();
 	}
 
 	@Override

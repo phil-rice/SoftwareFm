@@ -98,7 +98,7 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 			int height = navNextHistoryPrevConfig.height;
 			int x = ca.x;
 			int y = ca.y;
-			for (Control control: getChildren()){
+			for (Control control : getChildren()) {
 				control.setBounds(x, y, navIconWidth, height);
 				x += navIconWidth;
 			}
@@ -113,6 +113,21 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 	@Override
 	public Control getControl() {
 		return content;
+	}
+
+	public History<T> getHistory() {
+		return content.history;
+	}
+
+	public void visiting(T place) {
+		content.history.push(place);
+		content.navCombo.updateFromHistory();
+		content.updateNextPrevButtons();
+
+	}
+
+	public void layout() {
+		content.layout();
 	}
 
 }

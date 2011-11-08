@@ -6,7 +6,7 @@ import org.softwareFm.utilities.functions.IFunction1;
 
 public class NavNextHistoryPrevConfig<T> {
 
-	private final int margin = 5;
+	private final int margin = 0;
 	public final int navIconWidth = 10;
 
 	public final int leftMargin = margin;
