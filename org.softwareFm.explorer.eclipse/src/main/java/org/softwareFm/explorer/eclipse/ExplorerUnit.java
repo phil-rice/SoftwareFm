@@ -42,6 +42,7 @@ public class ExplorerUnit {
 						hasControl.processUrl(browser.get("feedType"), browser.get("url"));
 					if (social != null)
 						hasControl.displayComments(social);
+					Swts.layoutDump(hasControl.getControl());
 				}
 
 				@Override
@@ -53,6 +54,7 @@ public class ExplorerUnit {
 					Explorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, service);
 					new BrowserFeedConfigurator().configure(null, explorer);
 					new RssFeedConfigurator().configure(null, explorer);
+					Swts.resizeMeToParentsSize(masterDetailSocial.getControl());
 					return explorer;
 				}
 			}, Maps.stringObjectLinkedMap(//

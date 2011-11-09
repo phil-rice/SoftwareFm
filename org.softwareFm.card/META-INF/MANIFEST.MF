@@ -12,4 +12,5 @@ Export-Package: org.softwareFm.card.api,
  org.softwareFm.card.constants,
  org.softwareFm.card.editors,
  org.softwareFm.card.internal,
+ org.softwareFm.card.navigation,
  org.softwareFm.card.title

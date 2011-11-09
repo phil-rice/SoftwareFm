@@ -571,6 +571,7 @@ public class Swts {
 			}
 		};
 		control.getParent().addListener(SWT.Resize, listener);
+		redrawAllChildren(control);
 		return listener;
 	}
 
@@ -583,6 +584,7 @@ public class Swts {
 			public void handleEvent(Event event) {
 				Swts.setSizeFromClientArea(composite);
 				composite.layout();
+				redrawAllChildren(composite);
 			}
 		};
 		composite.getParent().addListener(SWT.Resize, listener);

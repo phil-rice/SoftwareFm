@@ -239,4 +239,13 @@ public class Functions {
 			}
 		};
 	}
+
+	public static IFunction1<String, Integer> stringToIntegerFn() {
+		return new IFunction1<String, Integer>() {
+			@Override
+			public Integer apply(String from) throws Exception {
+				return Integer.parseInt(from);
+			}
+		};
+	}
 }

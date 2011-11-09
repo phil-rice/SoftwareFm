@@ -123,7 +123,7 @@ public class Card implements ICard {
 		int maxNameValue = (int) (idealNameWidth * cardConfig.cardMaxNameSizeRatio);
 		if (newNameWidth > maxNameValue)
 			newNameWidth = maxNameValue;
-		int newValueWidth = size.x - newNameWidth;
+		int newValueWidth = size.x - newNameWidth-1;
 		nameColumn.setWidth(newNameWidth);
 		valueColumn.setWidth(newValueWidth);
 	}

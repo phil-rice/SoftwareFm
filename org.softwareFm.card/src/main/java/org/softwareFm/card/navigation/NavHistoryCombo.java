@@ -18,12 +18,11 @@ public class NavHistoryCombo<T> implements IHasControl {
 	private final History<T> history;
 	private final IFunction1<T, String> stringFn;
 
-	public NavHistoryCombo(Composite composite, final History<T> history, final ICallback<T> callbackToGotoUrl, IFunction1<T, String> stringFn) {
+	public NavHistoryCombo(Composite composite, final History<T> history, final ICallback<T> callbackToGotoUrl, NavNextHistoryPrevConfig<T> config) {
 		this.history = history;
-		this.stringFn = stringFn;
-		combo = new Combo(composite, SWT.DROP_DOWN | SWT.NO_FOCUS);
+		this.stringFn = config.stringFn;
+		combo = new Combo(composite, SWT.DROP_DOWN | SWT.NO_FOCUS|SWT.READ_ONLY);
 		combo.addSelectionListener(new SelectionListener() {
-
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				int index = combo.getSelectionIndex();
@@ -48,6 +47,7 @@ public class NavHistoryCombo<T> implements IHasControl {
 		combo.removeAll();
 		for (T item : history.items())
 			combo.add(Functions.call(stringFn, item));
+		combo.setText(Functions.call(stringFn, history.prev()));
 
 	}
 

@@ -1,6 +1,7 @@
 package org.softwareFm.card.internal;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.softwareFm.utilities.collections.Lists;
 
@@ -9,6 +10,7 @@ public class History<T> {
 	private final List<T> history = Lists.newList();
 	private int index;
 	private final Object lock = new Object();
+	private final List<IHistoryListener<T>> listeners = new CopyOnWriteArrayList<IHistoryListener<T>>();
 
 	public void push(T newItem) {
 		synchronized (lock) {
@@ -17,8 +19,18 @@ public class History<T> {
 			Lists.removeAllAfter(history, index);
 			index = history.size();
 			history.add(newItem);
+			fireListeners(newItem);
 		}
 
+	}
+
+	public void addHistoryListener(IHistoryListener<T> listener) {
+		listeners.add(listener);
+	}
+	
+	private void fireListeners(T newValue){
+		for (IHistoryListener<T> listener: listeners)
+			listener.changingTo(newValue);
 	}
 
 	public T prev() {
@@ -26,6 +38,7 @@ public class History<T> {
 			if (index > 0)
 				index--;
 			T result = history.get(index);
+			fireListeners(result);
 			return result;
 		}
 	}
@@ -35,6 +48,7 @@ public class History<T> {
 			if (index + 1 < history.size())
 				index++;
 			T result = history.get(index);
+			fireListeners(result);
 			return result;
 		}
 	}
@@ -50,8 +64,8 @@ public class History<T> {
 	public List<T> items() {
 		return history;
 	}
-	
-	public T getItem(int i){
+
+	public T getItem(int i) {
 		return history.get(i);
 	}
 

@@ -49,6 +49,7 @@ public class MasterDetailSocial implements IMasterDetailSocial {
 
 	public MasterDetailSocial(Composite parent, int style) {
 		content = new MasterDetailComposite(parent, style);
+		Swts.resizeMeToParentsSizeWithLayout(this);
 	}
 
 	@Override

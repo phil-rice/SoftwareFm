@@ -3,6 +3,7 @@ package org.softwareFm.card.navigation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -27,25 +28,25 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 		private final Label prevButton;
 		private final NavHistoryCombo<T> navCombo;
 		private final Label nextButton;
-		private final NavNextHistoryPrevConfig<T> navNextHistoryPrevConfig;
+		private final NavNextHistoryPrevConfig<T> config;
 
-		public NavNextHistoryPrevComposite(Composite parent, final NavNextHistoryPrevConfig<T> navNextHistoryPrevConfig) {
+		public NavNextHistoryPrevComposite(Composite parent, final NavNextHistoryPrevConfig<T> config) {
 			super(parent, SWT.NULL);
-			this.navNextHistoryPrevConfig = navNextHistoryPrevConfig;
+			this.config = config;
 			history = new History<T>();
 
-			final Image prevImage = Functions.call(navNextHistoryPrevConfig.imageFn, TitleAnchor.previousKey);
-			final Image historyImage = Functions.call(navNextHistoryPrevConfig.imageFn, TitleAnchor.historyKey);
-			final Image nextImage = Functions.call(navNextHistoryPrevConfig.imageFn, TitleAnchor.nextKey);
+			final Image prevImage = Functions.call(config.imageFn, TitleAnchor.previousKey);
+			final Image historyImage = Functions.call(config.imageFn, TitleAnchor.historyKey);
+			final Image nextImage = Functions.call(config.imageFn, TitleAnchor.nextKey);
 
 			prevButton = Swts.makeImageButton(this, prevImage, new Runnable() {
 				@Override
 				public void run() {
-					ICallback.Utils.call(navNextHistoryPrevConfig.gotoCallback, history.prev());
+					ICallback.Utils.call(config.gotoCallback, history.prev());
 					updateNextPrevButtons();
 				}
 			});
-			navCombo = new NavHistoryCombo<T>(this, history, navNextHistoryPrevConfig.gotoCallback, navNextHistoryPrevConfig.stringFn);
+			navCombo = new NavHistoryCombo<T>(this, history, config.gotoCallback, config);
 			navCombo.getControl().addPaintListener(new PaintListener() {
 				@Override
 				public void paintControl(PaintEvent e) {
@@ -59,7 +60,7 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 			nextButton = Swts.makeImageButton(this, nextImage, new Runnable() {
 				@Override
 				public void run() {
-					ICallback.Utils.call(navNextHistoryPrevConfig.gotoCallback, history.next());
+					ICallback.Utils.call(config.gotoCallback, history.next());
 					updateNextPrevButtons();
 				}
 			});
@@ -79,29 +80,30 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 		@Override
 		public Rectangle getClientArea() {
 			Rectangle ca = super.getClientArea();
-			return new Rectangle(ca.x + navNextHistoryPrevConfig.leftMargin, //
-					ca.y + navNextHistoryPrevConfig.topMargin, //
-					ca.width = navNextHistoryPrevConfig.leftMargin - navNextHistoryPrevConfig.rightMargin, //
-					ca.height - navNextHistoryPrevConfig.topMargin - navNextHistoryPrevConfig.bottomMargin);
+			return new Rectangle(ca.x + config.leftMargin, //
+					ca.y + config.topMargin, //
+					ca.width - config.leftMargin - config.rightMargin, //
+					ca.height - config.topMargin - config.bottomMargin);
 		}
 
 		@Override
 		public Point computeSize(int wHint, int hHint) {
-			return new Point(navNextHistoryPrevConfig.leftMargin + 3 * navNextHistoryPrevConfig.navIconWidth + navNextHistoryPrevConfig.rightMargin, //
-					navNextHistoryPrevConfig.topMargin + navNextHistoryPrevConfig.height + navNextHistoryPrevConfig.bottomMargin);
+			return new Point(config.leftMargin + 3 * config.navIconWidth + config.rightMargin, //
+					config.topMargin + config.height + config.bottomMargin);
 		}
 
 		@Override
 		public void layout() {
 			Rectangle ca = getClientArea();
-			int navIconWidth = navNextHistoryPrevConfig.navIconWidth;
-			int height = navNextHistoryPrevConfig.height;
+			int navIconWidth = config.navIconWidth;
+			int height = config.height;
 			int x = ca.x;
 			int y = ca.y;
-			for (Control control : getChildren()) {
-				control.setBounds(x, y, navIconWidth, height);
-				x += navIconWidth;
-			}
+			prevButton.setBounds(x, y, navIconWidth, height);
+			x += navIconWidth;
+			navCombo.getControl().setBounds(x, y, navIconWidth, height);
+			x += navIconWidth;
+			nextButton.setBounds(x, y, navIconWidth, height);
 		}
 
 	}
@@ -128,6 +130,14 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 
 	public void layout() {
 		content.layout();
+	}
+
+	public void setBackground(Color background) {
+		content.setBackground(background);
+		content.nextButton.setBackground(background);
+		content.navCombo.getControl().setBackground(background);
+		content.prevButton.setBackground(background);
+
 	}
 
 }

@@ -22,6 +22,7 @@ import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.repositoryFacard.impl.RepositoryFacard;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.utilities.services.IServiceExecutor;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -39,6 +40,8 @@ public class Activator extends AbstractUIPlugin {
 	private String uuid;
 
 	private ISelectedBindingManager selectedArtifactSelectionManager;
+
+	private IServiceExecutor serviceExecutor;
 
 	/**
 	 * The constructor
@@ -68,6 +71,10 @@ public class Activator extends AbstractUIPlugin {
 		if (repository != null)
 			repository.shutdown();
 		repository = null;
+		
+		if (serviceExecutor != null)
+			serviceExecutor.shutdown();
+		serviceExecutor = null;
 		super.stop(context);
 	}
 
@@ -77,7 +84,7 @@ public class Activator extends AbstractUIPlugin {
 			// int port = HttpClientConstants.defaultPort;// 8080;
 			IHttpClient client = IHttpClient.Utils.builder().withCredentials(HttpClientConstants.userName, HttpClientConstants.password).//
 					setDefaultHeaders(Arrays.<NameValuePair> asList(new BasicNameValuePair("SoftwareFm", getUuid())));
-			repository = new RepositoryFacard(client, "sfm");
+			repository = new RepositoryFacard(client, "1.json");
 		}
 		return repository;
 	}
@@ -125,6 +132,10 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public static Activator getDefault() {
 		return plugin;
+	}
+
+	public IServiceExecutor getServiceExecutor() {
+		return serviceExecutor == null ? serviceExecutor = IServiceExecutor.Utils.defaultExecutor() : serviceExecutor;
 	}
 
 }

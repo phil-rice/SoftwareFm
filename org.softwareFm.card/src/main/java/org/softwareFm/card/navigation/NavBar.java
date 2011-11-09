@@ -60,6 +60,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 			if (!url.startsWith(rootUrl))
 				throw new IllegalArgumentException("rooturl: " + rootUrl + " url: " + url);
 			navNextHistoryPrev.visiting(url);
+			navNextHistoryPrev.setBackground(titleSpec.background);
 			String endOfUrl = url.substring(rootUrl.length());
 			String[] fragments = endOfUrl.split("/");
 			Swts.removeChildrenAfter(this, navNextHistoryPrev.getControl());
@@ -98,20 +99,21 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 
 		@Override
 		public void layout() {
-			Rectangle clientArea = getClientArea();
+			Rectangle ca = getClientArea();
 			Control[] children = getChildren();
 			navNextHistoryPrev.layout();
+			navNextHistoryPrev.getControl().setLocation(ca.x, ca.y);
 			for (Control control : children) {
 				if (control instanceof Combo) {
 					control.setSize(cardConfig.navIconWidth, height);
 				} else {
-					int width = control.computeSize(SWT.DEFAULT, clientArea.height).x;
-					control.setSize(width, clientArea.height);
+					int width = control.computeSize(SWT.DEFAULT, ca.height).x;
+					control.setSize(width, ca.height);
 				}
 			}
 			int i = 1;
-			if (isTooBig(clientArea)) {
-				while (isTooBig(clientArea) && i < children.length) {
+			if (isTooBig(ca)) {
+				while (isTooBig(ca) && i < children.length) {
 					Control child = children[i];
 					if (child instanceof Label) {
 						child.setSize(cardConfig.compressedNavTitleWidth, height);
@@ -120,8 +122,8 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 					i++;
 				}
 			}
-			int x = clientArea.x + cardConfig.leftMargin;
-			int y = clientArea.y + 2;
+			int x = ca.x + cardConfig.leftMargin;
+			int y = ca.y + 2;
 			for (Control control : getChildren())
 				if (control instanceof Combo) {
 					control.setLocation(x, y);

@@ -31,7 +31,7 @@ public class StyledTextEditor implements IHasComposite {
 
 		@Override
 		protected StyledText makeEditorControl(Composite parent, String originalValue) {
-			StyledText result = new StyledText(parent, SWT.BORDER);
+			StyledText result = new StyledText(parent, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.WRAP);
 			result.setText(originalValue);
 			result.addModifyListener(new ModifyListener() {
 				@Override

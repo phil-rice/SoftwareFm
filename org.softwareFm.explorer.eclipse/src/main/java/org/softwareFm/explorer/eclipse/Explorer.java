@@ -25,11 +25,12 @@ import org.softwareFm.card.editors.TextEditor;
 import org.softwareFm.card.internal.BasicCardConfigurator;
 import org.softwareFm.card.internal.CardDataStoreForRepository;
 import org.softwareFm.card.internal.CardHolder;
+import org.softwareFm.card.navigation.NavNextHistoryPrevConfig;
 import org.softwareFm.card.title.TitleSpec;
-import org.softwareFm.display.browser.BrowserComposite;
 import org.softwareFm.display.browser.IBrowserPart;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.explorer.eclipse.BrowserAndNavBar.TypeAndUrl;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
@@ -46,7 +47,7 @@ public class Explorer implements IExplorer, IHasControl {
 	private ICallback<String> callbackToGotoUrlAndUpdateDetails;
 	private final IMasterDetailSocial masterDetailSocial;
 	private final CardConfig cardConfig;
-	private BrowserComposite browser;
+	private BrowserAndNavBar browser;
 
 	public Explorer(final CardConfig cardConfig, final String rootUrl, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service) {
 		this.cardConfig = cardConfig;
@@ -84,12 +85,22 @@ public class Explorer implements IExplorer, IHasControl {
 			}
 
 		});
-		browser = masterDetailSocial.createDetail(new IFunction1<Composite, BrowserComposite>() {
+		browser = masterDetailSocial.createDetail(new IFunction1<Composite, BrowserAndNavBar>() {
 			@Override
-			public BrowserComposite apply(Composite from) throws Exception {
-				return new BrowserComposite(from, SWT.BORDER, service);
+			public BrowserAndNavBar apply(Composite from) throws Exception {
+				return new BrowserAndNavBar(from, SWT.NULL, cardConfig.leftMargin, cardConfig, new NavNextHistoryPrevConfig<BrowserAndNavBar.TypeAndUrl>(cardConfig.titleHeight, cardConfig.imageFn, new IFunction1<TypeAndUrl, String>() {
+					@Override
+					public String apply(TypeAndUrl from) throws Exception {
+						return from.toString();
+					}
+				}, new ICallback<TypeAndUrl>() {
+					@Override
+					public void process(TypeAndUrl t) throws Exception {
+						browser.processUrl(t.type, t.url);
+					}
+				}), service);
 			}
-		},true);
+		}, true);
 	}
 
 	@Override
@@ -106,13 +117,14 @@ public class Explorer implements IExplorer, IHasControl {
 	@Override
 	public void displayUnrecognisedJar(String url, String file) {
 		unrecognisedJar.setUrlAndFile(url, file);
+		masterDetailSocial.setMaster(unrecognisedJar.getControl());
+		unrecognisedJar.getControl().redraw();
 	}
 
 	@Override
 	public void displayComments(final String url) {
 		masterDetailSocial.createAndShowSocial(Swts.styledTextFn(url, SWT.WRAP));
 	}
-
 
 	private String findDefaultChild(ICard card) {
 		String result = Functions.call(card.cardConfig().defaultChildFn, card);

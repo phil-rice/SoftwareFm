@@ -149,10 +149,11 @@ public class UnrecognisedJar implements IHasComposite {
 			title.getControl().setSize(ca.width, cardConfig.titleHeight);
 
 			card.getControl().setLocation(ca.x, ca.y + cardConfig.titleHeight);
-			card.getControl().setSize(ca.width, ca.height - cardConfig.titleHeight - okCancelSize.y - 2);
+			card.getControl().setSize(ca.width, ca.height - cardConfig.titleHeight - okCancelSize.y-5);
 
 			okCancelControl.setSize(ca.width, okCancelSize.y);
 			okCancelControl.setLocation(ca.x, ca.height - okCancelSize.y);
+			redraw();
 		}
 
 		@Override

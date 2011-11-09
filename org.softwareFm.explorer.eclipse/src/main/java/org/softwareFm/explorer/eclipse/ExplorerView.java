@@ -1,14 +1,18 @@
 package org.softwareFm.explorer.eclipse;
 
+import java.util.Map;
+
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICardDataStore;
+import org.softwareFm.card.api.ICardDataStoreCallback;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.internal.BasicCardConfigurator;
-import org.softwareFm.card.internal.CardExplorer;
 import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.display.data.IUrlGeneratorMap;
+import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.urlGenerator.UrlGenerator;
 import org.softwareFm.eclipse.ISelectedBindingListener;
 import org.softwareFm.eclipse.ISelectedBindingManager;
@@ -21,11 +25,14 @@ public class ExplorerView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		final String rootUrl = "/softwareFm/data";
-		CardConfig cardConfig = new BasicCardConfigurator().configure(parent.getDisplay(), new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(parent, IRepositoryFacard.Utils.defaultFacardForCardExplorer())));
-		final CardExplorer cardExplorer = new CardExplorer(parent, cardConfig, rootUrl);
-		cardExplorer.setUrl(rootUrl + "/org");
 		final Activator activator = Activator.getDefault();
+
+		final String rootUrl = "/softwareFm/data";
+		IRepositoryFacard repository = activator.getRepository();
+		final CardConfig cardConfig = new BasicCardConfigurator().configure(parent.getDisplay(), new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(parent, repository)));
+		MasterDetailSocial masterDetailSocial = new MasterDetailSocial(parent, SWT.NULL);
+		Swts.resizeMeToParentsSize(masterDetailSocial.getControl());
+		final Explorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, activator.getServiceExecutor());
 		ISelectedBindingManager selectedBindingManager = activator.getSelectedBindingManager();// creates it
 		String prefix = "/softwareFm/data/";
 
@@ -39,12 +46,27 @@ public class ExplorerView extends ViewPart {
 
 		selectedBindingManager.addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
 			@Override
-			public void selectionOccured(BindingRipperResult ripperResult) {
+			public void selectionOccured(final BindingRipperResult ripperResult) {
 				String hexDigest = ripperResult.hexDigest;
-				IRepositoryFacard repository = activator.getRepository();
-				IUrlGenerator generator = urlGeneratorMap.get("urlGenerator.jar");
-				String url = generator.findUrlFor(Maps.stringObjectMap(JdtConstants.hexDigestKey, hexDigest));
-				System.out.println("Digest: " + hexDigest +"\n Url: " + url);
+				IUrlGenerator jarUrlGenerator = urlGeneratorMap.get("urlGenerator.jar");
+				String url = jarUrlGenerator.findUrlFor(Maps.stringObjectMap(JdtConstants.hexDigestKey, hexDigest));
+				System.out.println("Digest: " + hexDigest + "\n Url: " + url);
+				cardConfig.cardDataStore.processDataFor(url, new ICardDataStoreCallback<Void>() {
+					@Override
+					public Void process(String url, Map<String, Object> result) throws Exception {
+						IUrlGenerator cardUrlGenerator = urlGeneratorMap.get("urlGenerator.artifact");
+						String cardUrl = cardUrlGenerator.findUrlFor(result);
+						explorer.displayCard(cardUrl);
+						return null;
+					}
+
+					@Override
+					public Void noData(String url) throws Exception {
+						explorer.displayUnrecognisedJar(url, ripperResult.path.toOSString());
+						
+						return null;
+					}
+				});
 			}
 		});
 
