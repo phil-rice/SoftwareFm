@@ -12,13 +12,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.softwareFm.card.api.CardConfig;
-import org.softwareFm.card.internal.IHistoryListener;
 import org.softwareFm.card.navigation.NavNextHistoryPrev;
 import org.softwareFm.card.navigation.NavNextHistoryPrevConfig;
 import org.softwareFm.display.browser.BrowserComposite;
 import org.softwareFm.display.browser.IBrowserCompositeBuilder;
 import org.softwareFm.display.browser.IBrowserPart;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.history.IHistoryListener;
 import org.softwareFm.utilities.services.IServiceExecutor;
 import org.softwareFm.utilities.strings.Strings;
 

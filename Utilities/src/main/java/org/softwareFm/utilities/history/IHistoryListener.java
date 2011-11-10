@@ -1,4 +1,4 @@
-package org.softwareFm.card.internal;
+package org.softwareFm.utilities.history;
 
 public interface IHistoryListener<T> {
 

@@ -6,11 +6,11 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.card.internal.History;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.history.History;
 
 public class NavHistoryCombo<T> implements IHasControl {
 

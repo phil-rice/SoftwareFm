@@ -1,4 +1,4 @@
-package org.softwareFm.card.internal;
+package org.softwareFm.utilities.history;
 
 import java.util.Arrays;
 import java.util.List;
@@ -7,10 +7,13 @@ import junit.framework.TestCase;
 
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.history.History;
+import org.softwareFm.utilities.history.IHistory;
+import org.softwareFm.utilities.history.IHistoryListener;
 
 public class HistoryTest extends TestCase {
 
-	private History<Object> history;
+	private IHistory<Object> history;
 
 	public void testHistoryProvidesPrev() {
 		push(1, 2, 3, 4, 5);

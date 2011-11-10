@@ -13,7 +13,6 @@ import org.eclipse.swt.widgets.Layout;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardSelectedListener;
-import org.softwareFm.card.internal.History;
 import org.softwareFm.card.title.TitlePaintListener;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.composites.IHasComposite;
@@ -22,6 +21,7 @@ import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.history.IHistory;
 
 public class NavBar implements IHasComposite, ITitleBarForCard {
 	static class NavBarComposite extends Composite {
@@ -173,7 +173,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 		return content.url;
 	}
 
-	public History<String> getHistory() {
+	public IHistory<String> getHistory() {
 		return content.navNextHistoryPrev.getHistory();
 	}
 

@@ -12,12 +12,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
-import org.softwareFm.card.internal.History;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts.Button;
 import org.softwareFm.softwareFmImages.title.TitleAnchor;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.Functions;
+import org.softwareFm.utilities.history.History;
+import org.softwareFm.utilities.history.IHistory;
 
 public class NavNextHistoryPrev<T> implements IHasControl {
 
@@ -117,7 +118,7 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 		return content;
 	}
 
-	public History<T> getHistory() {
+	public IHistory<T> getHistory() {
 		return content.history;
 	}
 

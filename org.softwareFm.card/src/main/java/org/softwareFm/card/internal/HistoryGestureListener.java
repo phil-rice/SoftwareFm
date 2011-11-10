@@ -4,15 +4,16 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.gestures.GestureLeftRightListener;
 import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.history.IHistory;
 
 public class HistoryGestureListener<T> extends GestureLeftRightListener {
 
 	private final Control control;
-	private final History<T> history;
+	private final IHistory<T> history;
 	private final ICallback<T> callback;
 	private Point start;
 
-	public HistoryGestureListener(Control control, int sensitivity, int start, History<T> history, ICallback<T> callback) {
+	public HistoryGestureListener(Control control, int sensitivity, int start, IHistory<T> history, ICallback<T> callback) {
 		super(control, sensitivity, start);
 		this.control = control;
 		this.history = history;
