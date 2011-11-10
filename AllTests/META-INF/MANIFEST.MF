@@ -8,4 +8,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.softwareFm.display;bundle-version="1.0.0",
  org.softwareFm.configuration;bundle-version="1.0.0",
  org.softwareFm.eclipse;bundle-version="1.0.0",
- org.softwareFm.card;bundle-version="1.0.0"
+ org.softwareFm.card;bundle-version="1.0.0",
+ org.softwareFm.explorer.eclipse;bundle-version="1.0.0"

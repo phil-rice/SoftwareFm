@@ -6,7 +6,8 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Grid;
+import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.utilities.functions.IFunction1;
 
 public class HelpDialog extends Composite {
@@ -15,7 +16,7 @@ public class HelpDialog extends Composite {
 		super(parent, style);
 		Button help = new Button(this, SWT.PUSH);
 		help.setText("Help");
-		Swts.addGrabHorizontalAndFillGridDataToAllChildren(this);
+		Grid.addGrabHorizontalAndFillGridDataToAllChildren(this);
 		help.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -26,7 +27,7 @@ public class HelpDialog extends Composite {
 	}
 
 	public static void main(String[] args) {
-		Swts.display("Help Dialog", new IFunction1<Composite, Composite>() {
+		Show.display("Help Dialog", new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				return new HelpDialog(from, SWT.NULL);

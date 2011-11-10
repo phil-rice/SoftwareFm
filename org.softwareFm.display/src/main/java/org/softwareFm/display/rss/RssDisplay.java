@@ -14,6 +14,7 @@ import org.jdom.input.SAXBuilder;
 import org.softwareFm.display.browser.IBrowserPart;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Grid;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class RssDisplay implements IBrowserPart {
@@ -39,8 +40,8 @@ public class RssDisplay implements IBrowserPart {
 			};
 
 		};
-		content.setLayoutData(Swts.makeGrabHorizonalAndFillGridData());
-		Swts.addGrabHorizontalAndFillGridDataToAllChildren(main);
+		content.setLayoutData(Grid.makeGrabHorizonalAndFillGridData());
+		Grid.addGrabHorizontalAndFillGridDataToAllChildren(main);
 
 	}
 
@@ -69,7 +70,7 @@ public class RssDisplay implements IBrowserPart {
 				for (Element itemElement : items)
 					new RssItemComposite(content, SWT.BORDER, itemElement);
 			}
-			Swts.addGrabHorizontalAndFillGridDataToAllChildren(content);
+			Grid.addGrabHorizontalAndFillGridDataToAllChildren(content);
 			content.getParent().layout();
 			content.getParent().redraw();
 			content.layout();

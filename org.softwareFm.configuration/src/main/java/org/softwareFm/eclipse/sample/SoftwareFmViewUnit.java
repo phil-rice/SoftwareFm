@@ -11,6 +11,7 @@ import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.largeButton.LargeButtonDefn;
 import org.softwareFm.display.swt.ISituationListAndBuilder;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.jdtBinding.api.IJavadocSourceMutator;
 import org.softwareFm.jdtBinding.api.RippedResult;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -70,7 +71,7 @@ public class SoftwareFmViewUnit {
 			}
 		});
 		try {
-			Swts.xUnit("View", root, "json", builder);
+			Show.xUnit("View", root, "json", builder);
 		} finally {
 			builder.shutdown();
 		}

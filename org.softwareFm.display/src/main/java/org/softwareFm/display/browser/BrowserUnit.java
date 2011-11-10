@@ -11,7 +11,7 @@ import org.softwareFm.display.AllSoftwareFmDisplayTests;
 import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.swt.ISituationListAndBuilder;
-import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
@@ -23,7 +23,7 @@ public class BrowserUnit {
 		final File root = new File("../org.softwareFm.display/src/test/resources/org/softwareFm/display/browser");
 		final IServiceExecutor service = IServiceExecutor.Utils.defaultExecutor();
 		try {
-			Swts.xUnit("Browser Unit", root, "txt", //
+			Show.xUnit("Browser Unit", root, "txt", //
 					new ISituationListAndBuilder<BrowserComposite>() {
 
 						@Override

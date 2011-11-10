@@ -6,7 +6,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.TitleAndText;
-import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Grid;
+import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
@@ -16,7 +17,7 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class ImagesInALine {
 	public static void main(String[] args) {
-		Swts.display("Images in a line", new IFunction1<Composite, Composite>() {
+		Show.display("Images in a line", new IFunction1<Composite, Composite>() {
 
 			@Override
 			public Composite apply(Composite from) throws Exception {
@@ -28,7 +29,7 @@ public class ImagesInALine {
 				new SimpleImageButton(titleAndText, config.imageButtonConfig.withImage(ArtifactsAnchor.artifactKey), true);
 				new SimpleImageButton(titleAndText, config.imageButtonConfig.withImage(ArtifactsAnchor.artifactKey, OverlaysAnchor.editKey), true);
 				new SimpleImageButton(titleAndText, config.imageButtonConfig.withImage(GeneralAnchor.browseKey), true);
-				Swts.addGrabHorizontalAndFillGridDataToAllChildren(composite);
+				Grid.addGrabHorizontalAndFillGridDataToAllChildren(composite);
 				return composite;
 			}
 

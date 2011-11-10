@@ -21,6 +21,7 @@ import org.softwareFm.display.simpleButtons.ButtonParent;
 import org.softwareFm.display.simpleButtons.IButtonParent;
 import org.softwareFm.display.swt.OkCancelLegacy;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Grid;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.strings.Strings;
 
@@ -50,7 +51,7 @@ public class SoftwareFmIdEditor implements IEditor {
 		addCrListeners(groupIdText, artifactIdText, versionText);
 		buttonParent = new ButtonParent(content, config, SWT.NULL);
 		helpText = Swts.makeHelpDisplayer(content);
-		Swts.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(content, actionContext.compositeConfig.layout.dataMargin);
+		Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(content, actionContext.compositeConfig.layout.dataMargin);
 
 		// content.setLayout(Swts.getHorizonalNoMarginRowLayout());
 		// for (Control child: content.getChildren())

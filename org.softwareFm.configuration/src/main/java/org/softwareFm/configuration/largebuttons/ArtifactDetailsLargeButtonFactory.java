@@ -6,7 +6,7 @@ import org.softwareFm.configuration.configurators.LargeButtonFactory;
 import org.softwareFm.configuration.fixture.SoftwareFmFixture;
 import org.softwareFm.display.GuiBuilder;
 import org.softwareFm.display.largeButton.LargeButtonDefn;
-import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.eclipse.sample.SoftwareFmViewUnit;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -42,7 +42,7 @@ public class ArtifactDetailsLargeButtonFactory extends LargeButtonFactory {
 			}
 		});
 		try {
-			Swts.xUnit(ArtifactDetailsLargeButtonFactory.class.getSimpleName(), root, "json", builder);
+			Show.xUnit(ArtifactDetailsLargeButtonFactory.class.getSimpleName(), root, "json", builder);
 		} finally {
 			builder.shutdown();
 		}

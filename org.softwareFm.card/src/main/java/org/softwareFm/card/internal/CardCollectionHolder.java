@@ -13,6 +13,7 @@ import org.softwareFm.card.api.IDetailsFactoryCallback;
 import org.softwareFm.card.internal.details.IGotDataCallback;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
@@ -94,7 +95,7 @@ public class CardCollectionHolder implements IHasComposite {
 	}
 
 	public static void main(String[] args) {
-		Swts.displayNoLayout(CardCollectionHolder.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+		Show.displayNoLayout(CardCollectionHolder.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(final Composite from) throws Exception {
 				Display display = from.getDisplay();

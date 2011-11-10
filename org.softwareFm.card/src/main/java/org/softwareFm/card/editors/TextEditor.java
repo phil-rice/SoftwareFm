@@ -13,6 +13,8 @@ import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.IDetailsFactoryCallback;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Show;
+import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.utilities.functions.IFunction1;
 
 public class TextEditor implements IValueEditor {
@@ -83,15 +85,15 @@ public class TextEditor implements IValueEditor {
 	}
 
 	public static void main(String[] args) {
-		Swts.displayNoLayout(TextEditor.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+		Show.displayNoLayout(TextEditor.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay());
 				TextEditor textEditor = new TextEditor(from, cardConfig, "someUrl", "key", "value", IDetailsFactoryCallback.Utils.resizeAfterGotData(), TitleSpec.noTitleSpec(from.getBackground()));
-				Swts.resizeMeToParentsSize(textEditor.getControl());
+				Size.resizeMeToParentsSize(textEditor.getControl());
 				textEditor.content.layout();
 				Swts.layoutDump(from);
-				Swts.resizeMeToParentsSizeWithLayout(textEditor);
+				Size.resizeMeToParentsSizeWithLayout(textEditor);
 				return textEditor.content;
 			}
 		});

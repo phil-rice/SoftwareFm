@@ -38,6 +38,8 @@ import org.softwareFm.display.simpleButtons.SimpleButtonParent;
 import org.softwareFm.display.smallButtons.ImageButtonConfig;
 import org.softwareFm.display.smallButtons.SmallButtonDefn;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Grid;
+import org.softwareFm.display.swt.Swts.Row;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.display.timeline.TimeLine;
 import org.softwareFm.softwareFmImages.Images;
@@ -99,9 +101,9 @@ public class SoftwareFmDataComposite implements IHasComposite {
 		sash.setLayout(new FillLayout());
 
 		Composite leftHandside = new Composite(sash, SWT.NULL);
-		makeActionButtons(leftHandside, compositeConfig, largeButtonDefns).setLayoutData(Swts.makeGrabHorizonalAndFillGridData());
+		makeActionButtons(leftHandside, compositeConfig, largeButtonDefns).setLayoutData(Grid.makeGrabHorizonalAndFillGridData());
 		makeDisplayers(leftHandside, largeButtonDefns, actionContext, stackLayout);
-		Swts.addGrabHorizontalAndFillGridDataToAllChildren(leftHandside);
+		Grid.addGrabHorizontalAndFillGridDataToAllChildren(leftHandside);
 		
 		makeRightHandSide(sash, actionContext, browserConfigurators);
 		sash.setWeights(new int[] { 1, 2 });
@@ -112,7 +114,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 
 	private Composite makeActionButtons(Composite parent, final CompositeConfig compositeConfig, final List<LargeButtonDefn> largeButtonDefns) {
 		Composite topRow = Swts.newComposite(parent, SWT.NULL, "topRow");
-		topRow.setLayout(Swts.getHorizonalNoMarginRowLayout());
+		topRow.setLayout(Row.getHorizonalNoMarginRowLayout());
 		ImageButtonConfig imageButtonConfig = compositeConfig.imageButtonConfig;
 		SoftwareFmLayout layout = imageButtonConfig.layout;
 		for (LargeButtonDefn largeButtonDefn : largeButtonDefns) {
@@ -133,13 +135,13 @@ public class SoftwareFmDataComposite implements IHasComposite {
 		rightHandSide = Swts.newComposite(parent, SWT.BORDER, "RightHandSide");
 		rightHandSideLayout = new StackLayout();
 		rightHandSide.setLayout(rightHandSideLayout);
-		rightHandSide.setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
+		rightHandSide.setLayoutData(Grid.makeGrabHorizonalVerticalAndFillGridData());
 		browserComposite = new BrowserComposite(rightHandSide, SWT.BORDER, service);
 		rightHandSideLayout.topControl = browserComposite.getControl();
 		for (IBrowserConfigurator configurator : browserConfigurators)
 			configurator.configure(actionContext.compositeConfig, browserComposite);
 		((Composite) browserComposite.getControl()).layout();
-		browserComposite.getControl().setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
+		browserComposite.getControl().setLayoutData(Grid.makeGrabHorizonalVerticalAndFillGridData());
 	}
 
 	private void makeDisplayers(Composite parent, final List<LargeButtonDefn> largeButtonDefns, final ActionContext actionContext, StackLayout stackLayout) {
@@ -156,12 +158,12 @@ public class SoftwareFmDataComposite implements IHasComposite {
 					IDisplayer displayer = defn.createDisplayer(group, actionContext);
 					displayDefnToDisplayerMap.put(defn, displayer);
 				}
-				Swts.addGrabHorizontalAndFillGridDataToAllChildren(group);
+				Grid.addGrabHorizontalAndFillGridDataToAllChildren(group);
 			}
-			Swts.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(largeButtonComposite, actionContext.compositeConfig.layout.dataMargin);
+			Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(largeButtonComposite, actionContext.compositeConfig.layout.dataMargin);
 
 		}
-		displayerComposite.setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
+		displayerComposite.setLayoutData(Grid.makeGrabHorizonalVerticalAndFillGridData());
 	}
 
 	private void setUpListeners(final List<LargeButtonDefn> largeButtonDefns, final ActionContext actionContext, final StackLayout stackLayout, final TimeLine timeLine) {

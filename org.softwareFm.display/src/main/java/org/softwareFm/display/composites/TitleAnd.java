@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.displayer.IDisplayer;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Row;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public  class TitleAnd implements IDisplayer, IHasComposite {
@@ -27,7 +28,7 @@ public  class TitleAnd implements IDisplayer, IHasComposite {
 	public TitleAnd(CompositeConfig config, Composite parent, String titleOrTitleKey, boolean titleIsKey) {
 		this.content = Swts.newComposite(parent, SWT.NULL, getClass().getSimpleName() +"/"+ titleOrTitleKey);
 		this.config = config;
-		content.setLayout(Swts.getHorizonalNoMarginRowLayout());
+		content.setLayout(Row.getHorizonalNoMarginRowLayout());
 
 		layout = config.layout;
 		int height = layout.titleHeight;

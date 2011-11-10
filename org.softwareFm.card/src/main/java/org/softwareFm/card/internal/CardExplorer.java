@@ -32,6 +32,8 @@ import org.softwareFm.card.editors.TextEditor;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Show;
+import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
@@ -199,7 +201,7 @@ public class CardExplorer implements IHasComposite {
 				@Override
 				public void handleEvent(Event event) {
 					// System.out.println("Resizing: " + detail.getClientArea());
-					Swts.setSizeToComputedSize(control, SWT.DEFAULT, detail.getClientArea().height);
+					Size.setSizeToComputedSize(control, SWT.DEFAULT, detail.getClientArea().height);
 					detail.layout();
 					Control content = detail.getContent();
 					if (content instanceof Composite)
@@ -207,10 +209,10 @@ public class CardExplorer implements IHasComposite {
 				}
 			};
 			detail.setContent(null);
-			Swts.setSizeToComputedSize(control, SWT.DEFAULT, detail.getClientArea().height); // needed for scroll bar calculations
+			Size.setSizeToComputedSize(control, SWT.DEFAULT, detail.getClientArea().height); // needed for scroll bar calculations
 			System.out.println("detail: " + detail.isDisposed() + ", control: " + control.isDisposed());
 			detail.setContent(control);
-			Swts.setSizeToComputedSize(control, SWT.DEFAULT, detail.getClientArea().height); // needed again if the scroll bar popped in
+			Size.setSizeToComputedSize(control, SWT.DEFAULT, detail.getClientArea().height); // needed again if the scroll bar popped in
 			if (control instanceof Composite)
 				if (((Composite) control).getLayout() == null)
 					((Composite) control).layout();
@@ -221,7 +223,7 @@ public class CardExplorer implements IHasComposite {
 		private void removeDetailContents() {
 			detail.setContent(null);
 			Swts.removeAllChildren(detail);
-			Swts.removeOldResizeListener(detail, detailResizeListener);
+			Size.removeOldResizeListener(detail, detailResizeListener);
 		}
 
 		private String findDefaultChild(ICard card) {
@@ -258,7 +260,7 @@ public class CardExplorer implements IHasComposite {
 		final String rootUrl = "/softwareFm/";
 		final String firstUrl = "/softwareFm/data/org";
 		try {
-			Swts.display(CardExplorer.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+			Show.display(CardExplorer.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 				@Override
 				public Composite apply(final Composite from) throws Exception {
 					final ICardDataStore cardDataStore = new CardDataStoreForRepository(from, facard);
@@ -267,7 +269,7 @@ public class CardExplorer implements IHasComposite {
 					IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "navBar.prev.title");
 					final CardExplorer cardExplorer = new CardExplorer(from, cardConfig, rootUrl);
 					cardExplorer.setUrl(firstUrl);
-					Swts.resizeMeToParentsSize(cardExplorer.getControl());
+					Size.resizeMeToParentsSize(cardExplorer.getControl());
 					return cardExplorer.getComposite();
 				}
 			});

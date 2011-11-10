@@ -13,7 +13,8 @@ import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardHolder;
 import org.softwareFm.display.composites.IHasComposite;
-import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Show;
+import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -36,7 +37,7 @@ public class SingleCardExplorer implements IHasComposite {
 		};
 		cardHolder = new CardHolder(sashForm, "loading", "Some title", cardConfig, rootUrl, callbackToGotoUrl);
 		text = new Text(sashForm, SWT.H_SCROLL | SWT.WRAP);
-		Swts.resizeMeToParentsSize(cardHolder.getControl());
+		Size.resizeMeToParentsSize(cardHolder.getControl());
 		cardHolder.addCardChangedListener(new ICardChangedListener() {
 			@Override
 			public void cardChanged(ICardHolder cardHolder, ICard card) {
@@ -69,7 +70,7 @@ public class SingleCardExplorer implements IHasComposite {
 		final String rootUrl = "/softwareFm/data";
 		final String firstUrl = "/softwareFm/data/org";
 		try {
-			Swts.display(SingleCardExplorer.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+			Show.display(SingleCardExplorer.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 				@Override
 				public Composite apply(final Composite from) throws Exception {
 					final ICardDataStore cardDataStore = new CardDataStoreForRepository(from, facard);

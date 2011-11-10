@@ -3,7 +3,7 @@ package org.softwareFm.card.api;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.internal.details.IGotDataCallback;
 import org.softwareFm.card.internal.details.IUpdateDataStore;
-import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.utilities.maps.Maps;
 
 public interface IDetailsFactoryCallback extends ICardSelectedListener, IGotDataCallback, IAfterEditCallback, IUpdateDataStore {
@@ -38,7 +38,7 @@ public interface IDetailsFactoryCallback extends ICardSelectedListener, IGotData
 
 				@Override
 				public void gotData(Control control) {
-					Swts.setSizeFromClientArea(control);
+					Size.setSizeFromClientArea(control);
 				}
 
 				@Override

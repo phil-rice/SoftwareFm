@@ -27,7 +27,7 @@ import org.softwareFm.card.api.ILineSelectedListener;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.title.TitleSpec;
-import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
@@ -205,7 +205,7 @@ public class Card implements ICard {
 		final ICardDataStore cardDataStore = CardDataStoreFixture.rawCardStore();
 		final ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 
-		Swts.display(Card.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+		Show.display(Card.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(final Composite from) throws Exception {
 				final CardConfig cardConfig = new CardConfig(cardFactory, cardDataStore).withTitleSpecFn(new IFunction1<ICard, TitleSpec>() {

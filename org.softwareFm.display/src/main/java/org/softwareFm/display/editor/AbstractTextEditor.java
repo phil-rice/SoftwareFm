@@ -19,6 +19,7 @@ import org.softwareFm.display.simpleButtons.ButtonParent;
 import org.softwareFm.display.simpleButtons.IButtonParent;
 import org.softwareFm.display.swt.OkCancelLegacy;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Grid;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
@@ -93,7 +94,7 @@ public abstract class AbstractTextEditor<T extends Control> implements IEditor {
 		buttonParent = new ButtonParent(content, actionContext.compositeConfig, SWT.NULL);
 		help = Swts.makeHelpDisplayer(content);
 
-		Swts.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(content, actionContext.compositeConfig.layout.dataMargin);
+		Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(content, actionContext.compositeConfig.layout.dataMargin);
 		return content;
 	}
 

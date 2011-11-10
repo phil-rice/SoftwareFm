@@ -12,7 +12,7 @@ import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.internal.BasicCardConfigurator;
 import org.softwareFm.display.data.IUrlGenerator;
-import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.eclipse.ISelectedBindingListener;
 import org.softwareFm.eclipse.ISelectedBindingManager;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
@@ -30,7 +30,7 @@ public class ExplorerView extends ViewPart {
 		IRepositoryFacard repository = activator.getRepository();
 		final CardConfig cardConfig = new BasicCardConfigurator().configure(parent.getDisplay(), new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(parent, repository)));
 		MasterDetailSocial masterDetailSocial = new MasterDetailSocial(parent, SWT.NULL);
-		Swts.resizeMeToParentsSize(masterDetailSocial.getControl());
+		Size.resizeMeToParentsSize(masterDetailSocial.getControl());
 
 		final Explorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, activator.getServiceExecutor());
 		ISelectedBindingManager selectedBindingManager = activator.getSelectedBindingManager();// creates it

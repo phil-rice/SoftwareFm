@@ -31,6 +31,9 @@ import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.browser.IBrowserPart;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Show;
+import org.softwareFm.display.timeline.IPlayListGetter;
+import org.softwareFm.display.timeline.TimeLine;
 import org.softwareFm.explorer.eclipse.BrowserAndNavBar.TypeAndUrl;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -49,8 +52,9 @@ public class Explorer implements IExplorer, IHasControl {
 	private final IMasterDetailSocial masterDetailSocial;
 	private final CardConfig cardConfig;
 	private BrowserAndNavBar browser;
+	private TimeLine timeLine;
 
-	public Explorer(final CardConfig cardConfig, final String rootUrl, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service) {
+	public Explorer(final CardConfig cardConfig, final String rootUrl, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter) {
 		this.cardConfig = cardConfig;
 		this.masterDetailSocial = masterDetailSocial;
 		callbackToGotoUrlAndUpdateDetails = new ICallback<String>() {
@@ -102,6 +106,7 @@ public class Explorer implements IExplorer, IHasControl {
 				}), service);
 			}
 		}, true);
+		timeLine = new TimeLine(browser, playListGetter);
 	}
 
 	@Override
@@ -262,14 +267,14 @@ public class Explorer implements IExplorer, IHasControl {
 			final String rootUrl = "/softwareFm/data";
 			final String firstUrl = "/softwareFm/data/org";
 
-			Swts.display(Explorer.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+			Show.display(Explorer.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 				@Override
 				public Composite apply(Composite from) throws Exception {
 					final ICardDataStore cardDataStore = new CardDataStoreForRepository(from, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 					final CardConfig cardConfig = new BasicCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 					IMasterDetailSocial masterDetailSocial = new MasterDetailSocial(from, SWT.NULL);
-					IExplorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, service);
+					IExplorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, service, IPlayListGetter.Utils.noPlayListGetter());
 					explorer.displayCard(firstUrl);
 					return masterDetailSocial.getComposite();
 				}
@@ -278,6 +283,27 @@ public class Explorer implements IExplorer, IHasControl {
 			facard.shutdown();
 			service.shutdown();
 		}
+	}
+
+	@Override
+	public void next() {
+		masterDetailSocial.hideSocial();
+		masterDetailSocial.setDetail(browser.getControl());
+		timeLine.next();
+	}
+
+	@Override
+	public void previous() {
+		masterDetailSocial.setDetail(browser.getControl());
+		masterDetailSocial.hideSocial();
+		timeLine.previous();
+	}
+
+	@Override
+	public Future<?> selectAndNext(String playListName) {
+		masterDetailSocial.setDetail(browser.getControl());
+		masterDetailSocial.hideSocial();
+		return timeLine.selectAndNext(playListName);
 	}
 
 }

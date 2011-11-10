@@ -6,7 +6,7 @@ import org.softwareFm.configuration.configurators.LargeButtonFactory;
 import org.softwareFm.configuration.fixture.SoftwareFmFixture;
 import org.softwareFm.display.GuiBuilder;
 import org.softwareFm.display.largeButton.LargeButtonDefn;
-import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.eclipse.sample.SoftwareFmViewUnit;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
@@ -40,7 +40,7 @@ public class ArtifactTrainingLargeButtonFactory extends LargeButtonFactory {
 
 	public static void main(String[] args) {
 		final File root = new File("../org.softwareFm.configuration/src/test/resources/org/softwareFm/configuration");
-		Swts.xUnit(ArtifactTrainingLargeButtonFactory.class.getSimpleName(), root, "json", new SoftwareFmViewUnit.SoftwareFmViewUnitBuilder(new IFunction1<SoftwareFmFixture, LargeButtonDefn[]>() {
+		Show.xUnit(ArtifactTrainingLargeButtonFactory.class.getSimpleName(), root, "json", new SoftwareFmViewUnit.SoftwareFmViewUnitBuilder(new IFunction1<SoftwareFmFixture, LargeButtonDefn[]>() {
 			@Override
 			public LargeButtonDefn[] apply(SoftwareFmFixture from) throws Exception {
 				return new LargeButtonDefn[] { from.artifactTrainingButton };

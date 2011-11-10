@@ -14,6 +14,9 @@ import org.softwareFm.display.browser.BrowserFeedConfigurator;
 import org.softwareFm.display.browser.RssFeedConfigurator;
 import org.softwareFm.display.swt.ISituationListAndBuilder;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Show;
+import org.softwareFm.display.swt.Swts.Size;
+import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.services.IServiceExecutor;
@@ -25,7 +28,7 @@ public class ExplorerUnit {
 		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacardForCardExplorer();
 		try {
 			final String rootUrl = "/softwareFm/data";
-			Swts.xUnit(ExplorerUnit.class.getSimpleName(), new ISituationListAndBuilder<Explorer>() {
+			Show.xUnit(ExplorerUnit.class.getSimpleName(), new ISituationListAndBuilder<Explorer>() {
 				@Override
 				@SuppressWarnings("unchecked")
 				public void selected(Explorer explorer, String context, Object value) throws Exception {
@@ -53,10 +56,10 @@ public class ExplorerUnit {
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 					final CardConfig cardConfig = new BasicCardConfigurator().configure(parent.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 					IMasterDetailSocial masterDetailSocial = new MasterDetailSocial(parent, SWT.NULL);
-					Explorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, service);
+					Explorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, service, IPlayListGetter.Utils.noPlayListGetter());
 					new BrowserFeedConfigurator().configure(null, explorer);
 					new RssFeedConfigurator().configure(null, explorer);
-					Swts.resizeMeToParentsSize(masterDetailSocial.getControl());
+					Size.resizeMeToParentsSize(masterDetailSocial.getControl());
 					return explorer;
 				}
 			}, Maps.stringObjectLinkedMap(//

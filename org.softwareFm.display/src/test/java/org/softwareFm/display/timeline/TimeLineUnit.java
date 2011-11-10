@@ -18,7 +18,7 @@ import org.softwareFm.display.browser.IBrowserComposite;
 import org.softwareFm.display.browser.RssFeedConfigurator;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.swt.ISituationListAndBuilder;
-import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
@@ -48,7 +48,7 @@ public class TimeLineUnit {
 		};
 		final IServiceExecutor service = IServiceExecutor.Utils.defaultExecutor();
 		try {
-			Swts.xUnit("Timeline Unit", root, "txt", //
+			Show.xUnit("Timeline Unit", root, "txt", //
 					new ISituationListAndBuilder<BrowserPlusNextPrevButtons>() {
 
 						@Override

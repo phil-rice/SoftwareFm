@@ -13,7 +13,7 @@ import org.softwareFm.display.AllSoftwareFmDisplayTests;
 import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.smallButtons.ImageButtonConfig;
 import org.softwareFm.display.smallButtons.SimpleImageButton;
-import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -63,7 +63,7 @@ public class TitleAndText extends AbstractTitleAndText<Text> {
 		text.removeModifyListener(listener);
 	}
 	public static void main(String[] args) {
-		Swts.display("TitleAndText", new IFunction1<Composite, Composite>() {
+		Show.display("TitleAndText", new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				ImageRegistry imageRegistry = BasicImageRegisterConfigurator.forTests(from);

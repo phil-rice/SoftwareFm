@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.List;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.composites.IHasControl;
+import org.softwareFm.display.swt.Swts.Grid;
 import org.softwareFm.utilities.exceptions.WrappedException;
 
 public class SituationListAnd<T extends IHasControl> implements IHasComposite {
@@ -36,7 +37,7 @@ public class SituationListAnd<T extends IHasControl> implements IHasComposite {
 			Composite leftColumn = new Composite(content, SWT.NULL);
 			situationList = new List(leftColumn, SWT.BORDER);
 			situationContents = new StyledText(leftColumn, SWT.BORDER);
-			Swts.addGrabHorizontalAndFillGridDataToAllChildren(leftColumn);
+			Grid.addGrabHorizontalAndFillGridDataToAllChildren(leftColumn);
 
 			Iterable<String> list = situations.call();
 			for (String object : list)
@@ -50,8 +51,8 @@ public class SituationListAnd<T extends IHasControl> implements IHasComposite {
 				}
 
 			});
-			leftColumn.setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
-			control.setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
+			leftColumn.setLayoutData(Grid.makeGrabHorizonalVerticalAndFillGridData());
+			control.setLayoutData(Grid.makeGrabHorizonalVerticalAndFillGridData());
 			content.setWeights(new int[] { 1, 2 });
 
 		} catch (Exception e) {

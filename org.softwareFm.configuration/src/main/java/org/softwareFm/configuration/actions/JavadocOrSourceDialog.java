@@ -14,7 +14,8 @@ import org.softwareFm.display.data.ActionData;
 import org.softwareFm.display.data.IDataGetter;
 import org.softwareFm.display.smallButtons.IImageButtonListener;
 import org.softwareFm.display.smallButtons.SimpleImageButton;
-import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Button;
+import org.softwareFm.display.swt.Swts.Grid;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.resources.IResourceGetter;
@@ -41,7 +42,7 @@ public class JavadocOrSourceDialog extends Dialog {
 	public void open(CompositeConfig compositeConfig, ActionContext actionContext, ActionData actionData) {
 		shell = new Shell(getParentShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		createContents(shell, compositeConfig, actionContext, actionData);
-		Swts.addGrabHorizontalAndFillGridDataToAllChildren(shell);
+		Grid.addGrabHorizontalAndFillGridDataToAllChildren(shell);
 		shell.pack();
 		shell.open();
 		Display display = shell.getDisplay();
@@ -79,7 +80,7 @@ public class JavadocOrSourceDialog extends Dialog {
 
 		Composite buttonPanel = new Composite(parent, SWT.NULL);
 		buttonPanel.setLayout(new GridLayout(3, true));
-		Swts.makePushButton(buttonPanel, resourceGetter, "button.cancel.title", new Runnable() {
+		Button.makePushButton(buttonPanel, resourceGetter, "button.cancel.title", new Runnable() {
 			@Override
 			public void run() {
 				getShell().close();

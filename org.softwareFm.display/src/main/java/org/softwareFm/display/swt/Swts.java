@@ -34,7 +34,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -64,6 +63,371 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
 
 public class Swts {
+	
+	public static class Size{
+
+		public static Listener resizeMeToParentsSize(final Control control) {
+			Size.setSizeFromClientArea(control);
+		
+			Listener listener = new Listener() {
+				@Override
+				public void handleEvent(Event event) {
+					Size.setSizeFromClientArea(control);
+				}
+			};
+			control.getParent().addListener(SWT.Resize, listener);
+			Swts.redrawAllChildren(control);
+			return listener;
+		}
+
+		public static Listener resizeMeToParentsSizeWithLayout(final IHasComposite hasComposite) {
+			final Composite composite = hasComposite.getComposite();
+			Size.setSizeFromClientArea(composite);
+		
+			Listener listener = new Listener() {
+				@Override
+				public void handleEvent(Event event) {
+					Size.setSizeFromClientArea(composite);
+					composite.layout();
+					Swts.redrawAllChildren(composite);
+				}
+			};
+			composite.getParent().addListener(SWT.Resize, listener);
+			return listener;
+		}
+
+		public static Listener resizeMeToParentsSizeWithTopMargin(final Control control, final int topMargin) {
+			Size.setSizeAndLocationFromParentsSizeWithTopMargin(control, topMargin);
+		
+			Listener listener = new Listener() {
+				@Override
+				public void handleEvent(Event event) {
+					Size.setSizeAndLocationFromParentsSizeWithTopMargin(control, topMargin);
+				}
+		
+			};
+			control.getParent().addListener(SWT.Resize, listener);
+			return listener;
+		}
+
+		private static void setSizeAndLocationFromParentsSizeWithTopMargin(final Control control, final int topMargin) {
+			Rectangle clientArea = control.getParent().getClientArea();
+			control.setLocation(clientArea.x, clientArea.y + topMargin);
+			control.setSize(clientArea.width, clientArea.height - topMargin);
+		}
+
+		public static void removeOldResizeListener(final Control control, Listener listener) {
+			if (listener != null)
+				control.removeListener(SWT.Resize, listener);
+		}
+
+		public static void setSizeToComputedAndLayout(IHasControl left, int wHint, int hHint) {
+			Control control = left.getControl();
+			Size.setSizeToComputedSize(control, wHint, hHint);
+			if (control instanceof Composite)
+				((Composite) control).layout();
+		}
+
+		public static void setSizeToComputedAndLayout(IHasControl left, Rectangle rectangle) {
+			Control control = left.getControl();
+			Point computedSize = control.computeSize(rectangle.width, rectangle.height);
+			control.setSize(computedSize);
+			if (control instanceof Composite)
+				((Composite) control).layout();
+		}
+
+		public static void setSizeFromClientArea(IHasComposite parent, IHasControl child) {
+			Rectangle clientArea = parent.getComposite().getClientArea();
+			child.getControl().setSize(clientArea.width, clientArea.height);
+		}
+
+		public static void setSizeFromClientArea(Control child) {
+			Rectangle clientArea = child.getParent().getClientArea();
+			child.setSize(clientArea.width, clientArea.height);
+			if (child instanceof Composite)
+				((Composite) child).layout();
+			child.redraw();
+		
+		}
+
+		public static void setSizeToComputedSize(Control c, int wHint, int hHint) {
+			Point size = c.computeSize(wHint, hHint);
+			c.setSize(size);
+		}
+		
+	}
+	
+	public static class Show{
+
+		public static void displayNoLayout(String title, IFunction1<Composite, Composite> builder) {
+			try {
+				Display display = new Display();
+				Shell shell = new Shell(display);
+				shell.setSize(600, 400);
+				shell.setText(title);
+				builder.apply(shell);
+				shell.open();
+				while (!shell.isDisposed()) {
+					if (!display.readAndDispatch())
+						display.sleep();
+				}
+				display.dispose();
+			} catch (Exception e) {
+				throw WrappedException.wrap(e);
+			}
+		}
+
+		public static void display(String title, IFunction1<Composite, Composite> builder) {
+			try {
+				Display display = new Display();
+				Shell shell = new Shell(display);
+				shell.setSize(1300, 380);
+				shell.setText(title);
+				shell.setLayout(new FormLayout());
+				Composite composite = builder.apply(shell);
+				FormData fd = new FormData();
+				fd.bottom = new FormAttachment(100, 0);
+				fd.right = new FormAttachment(100, 0);
+				fd.top = new FormAttachment(0, 0);
+				fd.left = new FormAttachment(0, 0);
+				composite.setLayoutData(fd);
+				shell.open();
+				Swts.layoutDump(shell);
+				while (!shell.isDisposed()) {
+					if (!display.readAndDispatch())
+						display.sleep();
+				}
+				display.dispose();
+			} catch (Exception e) {
+				throw WrappedException.wrap(e);
+			}
+		}
+
+		public static <T extends IHasControl> void xUnit(String title, final File root, final String extension, final ISituationListAndBuilder<T> builder) {
+			Swts.Show.display(title, new IFunction1<Composite, Composite>() {
+				@Override
+				public Composite apply(Composite from) throws Exception {
+					Callable<? extends Iterable<String>> situations = new Callable<Iterable<String>>() {
+						@Override
+						public Iterable<String> call() throws Exception {
+							return Iterables.map(Files.walkChildrenOf(root, Files.extensionFilter(extension)), Files.toFileName());
+						}
+					};
+					final SituationListAnd<T> result = new SituationListAnd<T>(from, situations, builder);
+					result.addListener(new ISituationListListener<T>() {
+						@Override
+						public void selected(T hasControl, String selectedItem) throws Exception {
+							File file = new File(root, selectedItem);
+							String value = Files.getText(file);
+							builder.selected(hasControl, selectedItem, value);
+							result.setText(value);
+						}
+					});
+		
+					result.selectFirst();
+					return result.getComposite();
+				}
+			});
+		}
+
+		public static <T extends IHasControl> void xUnit(String title, final ISituationListAndBuilder<T> builder, final Map<String, Object> situationMap) {
+			Swts.Show.display(title, new IFunction1<Composite, Composite>() {
+				@Override
+				public Composite apply(Composite from) throws Exception {
+					final Callable<? extends Iterable<String>> situationsCallable = new Callable<Iterable<String>>() {
+						@Override
+						public Iterable<String> call() throws Exception {
+							return situationMap.keySet();
+						}
+					};
+					final SituationListAnd<T> result = new SituationListAnd<T>(from, situationsCallable, builder);
+					result.addListener(new ISituationListListener<T>() {
+						@Override
+						public void selected(T hasControl, String selectedItem) throws Exception {
+							Object value = situationMap.get(selectedItem);
+							builder.selected(hasControl, selectedItem, value);
+							result.setText(value.toString());
+						}
+					});
+		
+					result.selectFirst();
+					return result.getComposite();
+				}
+			});
+		}
+		
+	}
+
+	
+	public static class Button{
+
+		public static void makeButtonFromMainMethod(Composite composite, final Class<?> classWithMain) {
+			 org.eclipse.swt.widgets.Button button = new  org.eclipse.swt.widgets.Button(composite, SWT.PUSH);
+			button.setText(classWithMain.getSimpleName());
+			button.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					new Thread() {
+						@Override
+						public void run() {
+							try {
+								Method method = classWithMain.getMethod("main", String[].class);
+								method.invoke(null, new Object[] { new String[0] });
+							} catch (Exception e1) {
+								throw WrappedException.wrap(e1);
+							}
+						}
+					}.start();
+				}
+			});
+		}
+
+		public static org.eclipse.swt.widgets.Button makePushButton(Composite parent, IResourceGetter resourceGetter, String titleKey, final Runnable runnable) {
+			return Button.makePushButton(parent, resourceGetter, titleKey, true, runnable);
+		}
+
+		public static org.eclipse.swt.widgets.Button makePushButton(Composite parent, IResourceGetter resourceGetter, String titleOrKey, boolean titleIsKey, final Runnable runnable) {
+			return Button.makePushButton(parent, SWT.PUSH, resourceGetter, titleOrKey, titleIsKey, runnable);
+		}
+
+		public static  org.eclipse.swt.widgets.Button makePushButton(Composite parent, int style, IResourceGetter resourceGetter, String titleOrKey, boolean titleIsKey, final Runnable runnable) {
+			 org.eclipse.swt.widgets.Button button =  new org.eclipse.swt.widgets.Button(parent, style);
+			String title = titleIsKey ? IResourceGetter.Utils.getOrException(resourceGetter, titleOrKey) : titleOrKey;
+			button.setText(title);
+			button.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					runnable.run();
+				}
+			});
+			return button;
+		}
+
+		public static Label makeImageButton(Composite parent, Image image, final Runnable runnable) {
+			Label label = new Label(parent, SWT.NULL);
+			label.setImage(image);
+			label.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseUp(MouseEvent e) {
+					runnable.run();
+				}
+			});
+			return label;
+		}
+		
+	}
+	
+	public static class Grid {
+
+		public static void addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(Composite composite, int margin) {
+			GridLayout layout = new GridLayout();
+			layout.marginWidth = margin;
+			layout.marginHeight = margin;
+			layout.verticalSpacing = 5;
+			composite.setLayout(layout);
+			for (Control control : composite.getChildren()) {
+				GridData data = Grid.makeGrabHorizonalAndFillGridData();
+				control.setLayoutData(data);
+			}
+		}
+
+		public static void addGrabHorizontalAndFillGridDataToAllChildren(Composite composite) {
+			Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(composite, 0);
+		}
+
+		public static void addGrabHorizontalAndFillGridDataToAllChildrenWithHeightHint(Composite composite, int heightHint) {
+			GridLayout layout = new GridLayout();
+			layout.marginWidth = 0;
+			layout.verticalSpacing = 0;
+			layout.marginHeight = 0;
+			composite.setLayout(layout);
+			for (Control control : composite.getChildren()) {
+				GridData data = Grid.makeGrabHorizonalAndFillGridDataWithHeight(heightHint);
+				control.setLayoutData(data);
+			}
+		}
+
+		public static void addGrabHorizontalAndFillGridDataToAllChildrenWithHeightWidthHint(Composite composite, int heightHint, int widthHint) {
+			GridLayout layout = new GridLayout();
+			layout.marginWidth = 0;
+			layout.verticalSpacing = 0;
+			layout.marginHeight = 0;
+			composite.setLayout(layout);
+			for (Control control : composite.getChildren()) {
+				GridData data = Grid.makeGrabHorizonalAndFillGridDataWithHeightWidth(heightHint, widthHint);
+				control.setLayoutData(data);
+			}
+		}
+
+		private static GridData makeGrabHorizonalAndFillGridDataWithHeightWidth(int heightHint, int widthHint) {
+			GridData result = Grid.makeGrabHorizonalAndFillGridData();
+			result.heightHint = heightHint;
+			result.widthHint = widthHint;
+			return result;
+
+		}
+
+		public static GridData makeGrabHorizonalVerticalAndFillGridData() {
+			GridData data = new GridData();
+			data.horizontalAlignment = GridData.FILL;
+			data.verticalAlignment = GridData.FILL;
+			data.grabExcessHorizontalSpace = true;
+			data.grabExcessVerticalSpace = true;
+			return data;
+		}
+
+		public static GridData makeGrabHorizonalAndFillGridData() {
+			GridData data = new GridData();
+			data.horizontalAlignment = GridData.FILL;
+			data.grabExcessHorizontalSpace = true;
+			return data;
+		}
+
+		public static Layout getGridLayoutWithoutMargins(int columns) {
+			GridLayout gridLayout = new GridLayout(columns, false);
+			gridLayout.marginWidth = 0;
+			gridLayout.marginHeight = 0;
+			gridLayout.verticalSpacing = 0;
+			gridLayout.horizontalSpacing = 0;
+			return gridLayout;
+		}
+
+		public static GridData makeGrabHorizonalAndFillGridDataWithHeight(int heightHint) {
+			GridData result = Swts.Grid.makeGrabHorizonalAndFillGridData();
+			result.heightHint = heightHint;
+			return result;
+		
+		}
+
+	}
+	
+	public static class Row{
+
+		public static Layout getHorizonalMarginRowLayout(int margin) {
+			RowLayout rowLayout = new RowLayout(SWT.HORIZONTAL);
+			rowLayout.marginWidth = 0;
+			rowLayout.marginHeight = 0;
+			rowLayout.marginTop = margin;
+			rowLayout.marginBottom = margin;
+			rowLayout.marginLeft = margin;
+			rowLayout.marginRight = margin;
+			rowLayout.fill = true;
+			rowLayout.justify = false;
+			rowLayout.spacing = 0;
+			return rowLayout;
+		}
+
+		public static Layout getHorizonalNoMarginRowLayout() {
+			return Swts.Row.getHorizonalMarginRowLayout(0);
+		}
+
+		public static <C extends Control> void setRowDataFor(int width, int height, C... controls) {
+			for (Control control : controls)
+				control.setLayoutData(new RowData(width, height));
+		
+		}
+		
+	}
 
 	public static ScrolledComposite newScrolledComposite(Composite parent, int style, final String description) {
 		return new ScrolledComposite(parent, style) {
@@ -92,22 +456,23 @@ public class Swts {
 		};
 	}
 
-	public static void redrawAllChildren(Control control){
-		walkChildren(control, new ICallback<Control>(){
+	public static void redrawAllChildren(Control control) {
+		walkChildren(control, new ICallback<Control>() {
 			@Override
 			public void process(Control t) throws Exception {
 				t.redraw();
-			}});
+			}
+		});
 	}
-	
-	public static void walkChildren(Control control, ICallback<Control> callback){
-	   if (control instanceof Composite)
-		   for (Control child: ((Composite) control).getChildren()){
-			   ICallback.Utils.call(callback, child);
-			   walkChildren(child, callback);
-		   }
+
+	public static void walkChildren(Control control, ICallback<Control> callback) {
+		if (control instanceof Composite)
+			for (Control child : ((Composite) control).getChildren()) {
+				ICallback.Utils.call(callback, child);
+				walkChildren(child, callback);
+			}
 	}
-	
+
 	public static Group newGroup(Composite parent, int style, final String description) {
 		return new Group(parent, style) {
 			@Override
@@ -146,46 +511,6 @@ public class Swts {
 		FontData fontData = font.getFontData()[0];
 		Font newFont = new Font(text.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(), fontStyle));
 		text.setFont(newFont);
-	}
-
-	public static void addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(Composite composite, int margin) {
-		GridLayout layout = new GridLayout();
-		layout.marginWidth = margin;
-		layout.marginHeight = margin;
-		layout.verticalSpacing = 5;
-		composite.setLayout(layout);
-		for (Control control : composite.getChildren()) {
-			GridData data = makeGrabHorizonalAndFillGridData();
-			control.setLayoutData(data);
-		}
-	}
-
-	public static void addGrabHorizontalAndFillGridDataToAllChildren(Composite composite) {
-		addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(composite, 0);
-	}
-
-	public static void addGrabHorizontalAndFillGridDataToAllChildrenWithHeightHint(Composite composite, int heightHint) {
-		GridLayout layout = new GridLayout();
-		layout.marginWidth = 0;
-		layout.verticalSpacing = 0;
-		layout.marginHeight = 0;
-		composite.setLayout(layout);
-		for (Control control : composite.getChildren()) {
-			GridData data = makeGrabHorizonalAndFillGridDataWithHeight(heightHint);
-			control.setLayoutData(data);
-		}
-	}
-
-	public static void addGrabHorizontalAndFillGridDataToAllChildrenWithHeightWidthHint(Composite composite, int heightHint, int widthHint) {
-		GridLayout layout = new GridLayout();
-		layout.marginWidth = 0;
-		layout.verticalSpacing = 0;
-		layout.marginHeight = 0;
-		composite.setLayout(layout);
-		for (Control control : composite.getChildren()) {
-			GridData data = makeGrabHorizonalAndFillGridDataWithHeightWidth(heightHint, widthHint);
-			control.setLayoutData(data);
-		}
 	}
 
 	public static OkCancelLegacy addOkCancel(IButtonParent buttonParent, CompositeConfig config, final Runnable onAccept, final Runnable onCancel) {
@@ -255,55 +580,6 @@ public class Swts {
 		return editor;
 	}
 
-	public static Layout getHorizonalMarginRowLayout(int margin) {
-		RowLayout rowLayout = new RowLayout(SWT.HORIZONTAL);
-		rowLayout.marginWidth = 0;
-		rowLayout.marginHeight = 0;
-		rowLayout.marginTop = margin;
-		rowLayout.marginBottom = margin;
-		rowLayout.marginLeft = margin;
-		rowLayout.marginRight = margin;
-		rowLayout.fill = true;
-		rowLayout.justify = false;
-		rowLayout.spacing = 0;
-		return rowLayout;
-	}
-
-	public static Layout getHorizonalNoMarginRowLayout() {
-		return getHorizonalMarginRowLayout(0);
-	}
-
-	public static GridData makeGrabHorizonalAndFillGridDataWithHeight(int heightHint) {
-		GridData result = makeGrabHorizonalAndFillGridData();
-		result.heightHint = heightHint;
-		return result;
-
-	}
-
-	private static GridData makeGrabHorizonalAndFillGridDataWithHeightWidth(int heightHint, int widthHint) {
-		GridData result = makeGrabHorizonalAndFillGridData();
-		result.heightHint = heightHint;
-		result.widthHint = widthHint;
-		return result;
-
-	}
-
-	public static GridData makeGrabHorizonalAndFillGridData() {
-		GridData data = new GridData();
-		data.horizontalAlignment = GridData.FILL;
-		data.grabExcessHorizontalSpace = true;
-		return data;
-	}
-
-	public static GridData makeGrabHorizonalVerticalAndFillGridData() {
-		GridData data = new GridData();
-		data.horizontalAlignment = GridData.FILL;
-		data.verticalAlignment = GridData.FILL;
-		data.grabExcessHorizontalSpace = true;
-		data.grabExcessVerticalSpace = true;
-		return data;
-	}
-
 	public static String layoutAsString(Control control) {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(control);
@@ -336,103 +612,6 @@ public class Swts {
 				layoutDump(nested, indented);
 			}
 		}
-	}
-
-	public static void displayNoLayout(String title, IFunction1<Composite, Composite> builder) {
-		try {
-			Display display = new Display();
-			Shell shell = new Shell(display);
-			shell.setSize(600, 400);
-			shell.setText(title);
-			builder.apply(shell);
-			shell.open();
-			while (!shell.isDisposed()) {
-				if (!display.readAndDispatch())
-					display.sleep();
-			}
-			display.dispose();
-		} catch (Exception e) {
-			throw WrappedException.wrap(e);
-		}
-	}
-
-	public static void display(String title, IFunction1<Composite, Composite> builder) {
-		try {
-			Display display = new Display();
-			Shell shell = new Shell(display);
-			shell.setSize(1300, 380);
-			shell.setText(title);
-			shell.setLayout(new FormLayout());
-			Composite composite = builder.apply(shell);
-			FormData fd = new FormData();
-			fd.bottom = new FormAttachment(100, 0);
-			fd.right = new FormAttachment(100, 0);
-			fd.top = new FormAttachment(0, 0);
-			fd.left = new FormAttachment(0, 0);
-			composite.setLayoutData(fd);
-			shell.open();
-			Swts.layoutDump(shell);
-			while (!shell.isDisposed()) {
-				if (!display.readAndDispatch())
-					display.sleep();
-			}
-			display.dispose();
-		} catch (Exception e) {
-			throw WrappedException.wrap(e);
-		}
-	}
-
-	public static <T extends IHasControl> void xUnit(String title, final File root, final String extension, final ISituationListAndBuilder<T> builder) {
-		Swts.display(title, new IFunction1<Composite, Composite>() {
-			@Override
-			public Composite apply(Composite from) throws Exception {
-				Callable<? extends Iterable<String>> situations = new Callable<Iterable<String>>() {
-					@Override
-					public Iterable<String> call() throws Exception {
-						return Iterables.map(Files.walkChildrenOf(root, Files.extensionFilter(extension)), Files.toFileName());
-					}
-				};
-				final SituationListAnd<T> result = new SituationListAnd<T>(from, situations, builder);
-				result.addListener(new ISituationListListener<T>() {
-					@Override
-					public void selected(T hasControl, String selectedItem) throws Exception {
-						File file = new File(root, selectedItem);
-						String value = Files.getText(file);
-						builder.selected(hasControl, selectedItem, value);
-						result.setText(value);
-					}
-				});
-
-				result.selectFirst();
-				return result.getComposite();
-			}
-		});
-	}
-
-	public static <T extends IHasControl> void xUnit(String title, final ISituationListAndBuilder<T> builder, final Map<String, Object> situationMap) {
-		Swts.display(title, new IFunction1<Composite, Composite>() {
-			@Override
-			public Composite apply(Composite from) throws Exception {
-				final Callable<? extends Iterable<String>> situationsCallable = new Callable<Iterable<String>>() {
-					@Override
-					public Iterable<String> call() throws Exception {
-						return situationMap.keySet();
-					}
-				};
-				final SituationListAnd<T> result = new SituationListAnd<T>(from, situationsCallable, builder);
-				result.addListener(new ISituationListListener<T>() {
-					@Override
-					public void selected(T hasControl, String selectedItem) throws Exception {
-						Object value = situationMap.get(selectedItem);
-						builder.selected(hasControl, selectedItem, value);
-						result.setText(value.toString());
-					}
-				});
-
-				result.selectFirst();
-				return result.getComposite();
-			}
-		});
 	}
 
 	public static void removeAllChildren(Composite composite) {
@@ -469,42 +648,6 @@ public class Swts {
 
 	}
 
-	public static <C extends Control> void setRowDataFor(int width, int height, C... controls) {
-		for (Control control : controls)
-			control.setLayoutData(new RowData(width, height));
-
-	}
-
-	public static void makeButtonFromMainMethod(Composite composite, final Class<?> classWithMain) {
-		Button button = new Button(composite, SWT.PUSH);
-		button.setText(classWithMain.getSimpleName());
-		button.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				new Thread() {
-					@Override
-					public void run() {
-						try {
-							Method method = classWithMain.getMethod("main", String[].class);
-							method.invoke(null, new Object[] { new String[0] });
-						} catch (Exception e1) {
-							throw WrappedException.wrap(e1);
-						}
-					}
-				}.start();
-			}
-		});
-	}
-
-	public static Layout getGridLayoutWithoutMargins(int columns) {
-		GridLayout gridLayout = new GridLayout(columns, false);
-		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 0;
-		gridLayout.verticalSpacing = 0;
-		gridLayout.horizontalSpacing = 0;
-		return gridLayout;
-	}
-
 	public static void asyncExec(IHasControl hasControl, Runnable runnable) {
 		Control control = hasControl.getControl();
 		if (!control.isDisposed())
@@ -523,97 +666,9 @@ public class Swts {
 			control.getDisplay().syncExec(runnable);
 	}
 
-	public static Label makeImageButton(Composite parent, Image image, final Runnable runnable) {
-		Label label = new Label(parent, SWT.NULL);
-		label.setImage(image);
-		label.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseUp(MouseEvent e) {
-				runnable.run();
-			}
-		});
-		return label;
-	}
-
-	public static Button makePushButton(Composite parent, IResourceGetter resourceGetter, String titleKey, final Runnable runnable) {
-		return makePushButton(parent, resourceGetter, titleKey, true, runnable);
-	}
-
-	public static Button makePushButton(Composite parent, IResourceGetter resourceGetter, String titleOrKey, boolean titleIsKey, final Runnable runnable) {
-		return makePushButton(parent, SWT.PUSH, resourceGetter, titleOrKey, titleIsKey, runnable);
-	}
-
-	public static Button makePushButton(Composite parent, int style, IResourceGetter resourceGetter, String titleOrKey, boolean titleIsKey, final Runnable runnable) {
-		Button button = new Button(parent, style);
-		String title = titleIsKey ? IResourceGetter.Utils.getOrException(resourceGetter, titleOrKey) : titleOrKey;
-		button.setText(title);
-		button.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				runnable.run();
-			}
-		});
-		return button;
-	}
-
 	public static void dispatchUntilQueueEmpty(Display display) {
 		while (display.readAndDispatch())
 			;
-	}
-
-	public static Listener resizeMeToParentsSize(final Control control) {
-		Swts.setSizeFromClientArea(control);
-
-		Listener listener = new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				Swts.setSizeFromClientArea(control);
-			}
-		};
-		control.getParent().addListener(SWT.Resize, listener);
-		redrawAllChildren(control);
-		return listener;
-	}
-
-	public static Listener resizeMeToParentsSizeWithLayout(final IHasComposite hasComposite) {
-		final Composite composite = hasComposite.getComposite();
-		Swts.setSizeFromClientArea(composite);
-
-		Listener listener = new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				Swts.setSizeFromClientArea(composite);
-				composite.layout();
-				redrawAllChildren(composite);
-			}
-		};
-		composite.getParent().addListener(SWT.Resize, listener);
-		return listener;
-	}
-
-	public static Listener resizeMeToParentsSizeWithTopMargin(final Control control, final int topMargin) {
-		setSizeAndLocationFromParentsSizeWithTopMargin(control, topMargin);
-
-		Listener listener = new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				setSizeAndLocationFromParentsSizeWithTopMargin(control, topMargin);
-			}
-
-		};
-		control.getParent().addListener(SWT.Resize, listener);
-		return listener;
-	}
-
-	private static void setSizeAndLocationFromParentsSizeWithTopMargin(final Control control, final int topMargin) {
-		Rectangle clientArea = control.getParent().getClientArea();
-		control.setLocation(clientArea.x, clientArea.y + topMargin);
-		control.setSize(clientArea.width, clientArea.height - topMargin);
-	}
-
-	public static void removeOldResizeListener(final Control control, Listener listener) {
-		if (listener != null)
-			control.removeListener(SWT.Resize, listener);
 	}
 
 	public static void removeChildrenAfter(Composite composite, Control control) {
@@ -624,55 +679,17 @@ public class Swts {
 				children[i].dispose();
 	}
 
-	public static void setSizeToComputedAndLayout(IHasControl left, int wHint, int hHint) {
-		Control control = left.getControl();
-		setSizeToComputedSize(control, wHint, hHint);
-		if (control instanceof Composite)
-			((Composite) control).layout();
-	}
-
-	public static void setSizeToComputedAndLayout(IHasControl left, Rectangle rectangle) {
-		Control control = left.getControl();
-		Point computedSize = control.computeSize(rectangle.width, rectangle.height);
-		control.setSize(computedSize);
-		if (control instanceof Composite)
-			((Composite) control).layout();
-	}
-
-	public static void setSizeFromClientArea(IHasComposite parent, IHasControl child) {
-		Rectangle clientArea = parent.getComposite().getClientArea();
-		child.getControl().setSize(clientArea.width, clientArea.height);
-	}
-
-	public static void setSizeFromClientArea(Control child) {
-		Rectangle clientArea = child.getParent().getClientArea();
-		child.setSize(clientArea.width, clientArea.height);
-		if (child instanceof Composite)
-			((Composite) child).layout();
-		child.redraw();
-
-	}
-
-	public static void S(IHasControl control, int wHint, int hHint) {
-		Control c = control.getControl();
-		setSizeToComputedSize(c, wHint, hHint);
-	}
-
-	public static void setSizeToComputedSize(Control c, int wHint, int hHint) {
-		Point size = c.computeSize(wHint, hHint);
-		c.setSize(size);
-	}
-
 	public static Color makeColor(Device device, IResourceGetter resourceGetter, String colorKey) {
 		String raw = IResourceGetter.Utils.getOrException(resourceGetter, colorKey);
 		List<String> strings = Strings.splitIgnoreBlanks(raw, ",");
-		if (strings.size()!= 3)
+		if (strings.size() != 3)
 			throw new IllegalStateException(MessageFormat.format(DisplayConstants.illegalColorString, colorKey, raw));
 		int r = Integer.parseInt(strings.get(0));
 		int g = Integer.parseInt(strings.get(1));
 		int b = Integer.parseInt(strings.get(2));
-		return new Color(device, r,g,b);
+		return new Color(device, r, g, b);
 	}
+
 	public static IFunction1<Composite, IHasControl> labelFn(final String text) {
 		return new IFunction1<Composite, IHasControl>() {
 
@@ -700,8 +717,7 @@ public class Swts {
 	public static void layoutIfComposite(Control control) {
 		if (control instanceof Composite)
 			((Composite) control).layout();
-		
-	}
 
+	}
 
 }

@@ -16,8 +16,8 @@ public class OkCancelLegacy {
 	public OkCancelLegacy(IButtonParent buttonParent, CompositeConfig config, final Runnable onAccept, final Runnable onCancel) {
 		IResourceGetter resourceGetter = config.resourceGetter;
 		Composite buttonComposite = buttonParent.getButtonComposite();
-		Button cancelButton = Swts.makePushButton(buttonComposite, resourceGetter, DisplayConstants.buttonCancelTitle, onCancel);
-		okButton = Swts.makePushButton(buttonComposite, resourceGetter, DisplayConstants.buttonOkTitle, onAccept);
+		Button cancelButton = org.softwareFm.display.swt.Swts.Button.makePushButton(buttonComposite, resourceGetter, DisplayConstants.buttonCancelTitle, onCancel);
+		okButton = org.softwareFm.display.swt.Swts.Button.makePushButton(buttonComposite, resourceGetter, DisplayConstants.buttonOkTitle, onAccept);
 		cancelButton.setLayoutData(new RowData(config.layout.okCancelWidth, config.layout.okCancelHeight));
 		okButton.setLayoutData(new RowData(config.layout.okCancelWidth, config.layout.okCancelHeight));
 		buttonComposite.layout();

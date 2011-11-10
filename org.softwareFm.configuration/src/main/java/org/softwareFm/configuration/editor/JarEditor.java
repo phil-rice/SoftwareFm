@@ -16,6 +16,7 @@ import org.softwareFm.display.editor.IEditorCompletion;
 import org.softwareFm.display.simpleButtons.ButtonParent;
 import org.softwareFm.display.simpleButtons.IButtonParent;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Grid;
 import org.softwareFm.utilities.strings.Strings;
 
 public class JarEditor implements IEditor {
@@ -42,7 +43,7 @@ public class JarEditor implements IEditor {
 		buttonParent = new ButtonParent(content, config, SWT.NULL);
 		helpText = Swts.makeHelpDisplayer(content);
 
-		Swts.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(content, actionContext.compositeConfig.layout.dataMargin);
+		Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(content, actionContext.compositeConfig.layout.dataMargin);
 		// content.setLayout(Swts.getHorizonalNoMarginRowLayout());
 		// for (Control child: content.getChildren())
 		// child.setLayoutData(new RowData());

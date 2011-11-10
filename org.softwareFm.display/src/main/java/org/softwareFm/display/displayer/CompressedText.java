@@ -11,6 +11,9 @@ import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.smallButtons.ImageButtonConfig;
 import org.softwareFm.display.smallButtons.SimpleImageButton;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Grid;
+import org.softwareFm.display.swt.Swts.Row;
+import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -26,9 +29,9 @@ public class CompressedText extends AbstractCompressedText<Label> {
 
 	@Override
 	protected void setLayout() {
-		content.setLayout(Swts.getGridLayoutWithoutMargins(2));
-		buttonPanel.setLayout(Swts.getHorizonalNoMarginRowLayout());
-		control.setLayoutData(Swts.makeGrabHorizonalAndFillGridDataWithHeight(config.layout.textHeight));
+		content.setLayout(Grid.getGridLayoutWithoutMargins(2));
+		buttonPanel.setLayout(Row.getHorizonalNoMarginRowLayout());
+		control.setLayoutData(Grid.makeGrabHorizonalAndFillGridDataWithHeight(config.layout.textHeight));
 	}
 
 	@Override
@@ -59,7 +62,7 @@ public class CompressedText extends AbstractCompressedText<Label> {
 	}
 
 	public static void main(String[] args) {
-		Swts.display(CompressedText.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+		Show.display(CompressedText.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				ImageRegistry imageRegistry = BasicImageRegisterConfigurator.forTests(from);

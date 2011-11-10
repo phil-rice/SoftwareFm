@@ -15,6 +15,7 @@ import org.softwareFm.display.composites.TitleAnd;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.data.IDataGetter;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Grid;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class ListDisplayer implements IDisplayer {
@@ -29,7 +30,7 @@ public class ListDisplayer implements IDisplayer {
 		this.content = new Composite(parent, SWT.NULL);
 		this.listComposite = new Composite(content, SWT.NULL);
 		this.mainLine = new TitleAnd(compositeConfig, content, defn.title, true);
-		Swts.addGrabHorizontalAndFillGridDataToAllChildren(content);
+		Grid.addGrabHorizontalAndFillGridDataToAllChildren(content);
 	}
 
 	public void data(IDataGetter dataGetter, DisplayerDefn defn, String entity, String url) {
@@ -48,7 +49,7 @@ public class ListDisplayer implements IDisplayer {
 //					index++;
 //				}
 		}
-		Swts.addGrabHorizontalAndFillGridDataToAllChildren(listComposite);
+		Grid.addGrabHorizontalAndFillGridDataToAllChildren(listComposite);
 
 		content.getParent().getParent().layout();
 		content.getParent().getParent().redraw();

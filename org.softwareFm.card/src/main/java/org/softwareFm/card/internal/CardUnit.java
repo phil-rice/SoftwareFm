@@ -13,7 +13,7 @@ import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.ISituationListAndBuilder;
-import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.Functions;
@@ -41,7 +41,7 @@ public class CardUnit implements IHasComposite {
 		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacardForCardExplorer();
 		try {
 
-			Swts.xUnit(CardUnit.class.getSimpleName(), new ISituationListAndBuilder<CardUnit>() {
+			Show.xUnit(CardUnit.class.getSimpleName(), new ISituationListAndBuilder<CardUnit>() {
 				@Override
 				public void selected(final CardUnit cardunit, String context, Object value) throws Exception {
 					ICardFactory.Utils.makeCard(cardunit.cardHolder, cardunit.cardConfig, Strings.nullSafeToString(value), new ICallback<ICard>() {

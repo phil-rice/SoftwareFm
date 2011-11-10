@@ -10,6 +10,8 @@ import org.softwareFm.display.browser.IBrowserComposite;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Button;
+import org.softwareFm.display.swt.Swts.Grid;
 import org.softwareFm.utilities.functions.IFunction1;
 
 public class BrowserPlusNextPrevButtons implements IHasControl {
@@ -29,13 +31,13 @@ public class BrowserPlusNextPrevButtons implements IHasControl {
 		playlist = Swts.newComposite(content, SWT.NULL, "playList");
 		browser = browserCreator.apply(content);
 		timeLine = new TimeLine(browser, playListGetter);
-		Swts.makePushButton(buttons, config.resourceGetter, "browser.next.title", new Runnable() {
+		Button.makePushButton(buttons, config.resourceGetter, "browser.next.title", new Runnable() {
 			@Override
 			public void run() {
 				timeLine.next();
 			}
 		});
-		Swts.makePushButton(buttons, config.resourceGetter, "browser.prev.title", new Runnable() {
+		Button.makePushButton(buttons, config.resourceGetter, "browser.prev.title", new Runnable() {
 			@Override
 			public void run() {
 				if (timeLine.hasPrevious())
@@ -44,8 +46,8 @@ public class BrowserPlusNextPrevButtons implements IHasControl {
 		});
 		buttons.setLayout(new RowLayout());
 		playlist.setLayout(new RowLayout());
-		Swts.addGrabHorizontalAndFillGridDataToAllChildren(content);
-		browser.getControl().setLayoutData(Swts.makeGrabHorizonalVerticalAndFillGridData());
+		Grid.addGrabHorizontalAndFillGridDataToAllChildren(content);
+		browser.getControl().setLayoutData(Grid.makeGrabHorizonalVerticalAndFillGridData());
 	}
 
 	@Override
@@ -57,7 +59,7 @@ public class BrowserPlusNextPrevButtons implements IHasControl {
 		timeLine = new TimeLine(browser, playListGetter);
 		Swts.removeAllChildren(playlist);
 		for (final String key : keySet)
-			Swts.makePushButton(playlist, config.resourceGetter, key, false, new Runnable() {
+			Button.makePushButton(playlist, config.resourceGetter, key, false, new Runnable() {
 				@Override
 				public void run() {
 					timeLine.selectAndNext(key);

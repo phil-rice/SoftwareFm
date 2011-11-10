@@ -7,7 +7,7 @@ import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.constants.DisplayConstants;
-import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Row;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class OkCancel implements IHasControl {
@@ -24,9 +24,9 @@ public class OkCancel implements IHasControl {
 		this.onCancel = onCancel;
 		content = new Composite(parent, SWT.NULL);
 		IResourceGetter resourceGetter = cardConfig.resourceGetter;
-		cancelButton = Swts.makePushButton(content, resourceGetter, DisplayConstants.buttonCancelTitle, onCancel);
-		okButton = Swts.makePushButton(content, resourceGetter, DisplayConstants.buttonOkTitle, onAccept);
-		content.setLayout(Swts.getHorizonalNoMarginRowLayout());
+		cancelButton = org.softwareFm.display.swt.Swts.Button.makePushButton(content, resourceGetter, DisplayConstants.buttonCancelTitle, onCancel);
+		okButton = org.softwareFm.display.swt.Swts.Button.makePushButton(content, resourceGetter, DisplayConstants.buttonOkTitle, onAccept);
+		content.setLayout(Row.getHorizonalNoMarginRowLayout());
 	}
 
 	public void setOkEnabled(boolean enabled) {

@@ -33,7 +33,8 @@ import org.softwareFm.card.navigation.NavBar;
 import org.softwareFm.card.navigation.NavTitle;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.composites.IHasComposite;
-import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Show;
+import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.Functions;
@@ -215,7 +216,7 @@ public class CardHolder implements ICardHolder {
 		final ICardDataStore cardDataStore = CardDataStoreFixture.rawAsyncCardStore();
 		final ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 		final CardConfig cardConfig = new CardConfig(cardFactory, cardDataStore);
-		Swts.display(CardHolder.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+		Show.display(CardHolder.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(final Composite from) throws Exception {
 				final CardHolder cardHolder = new CardHolder(from, "Loading", "title", cardConfig, CardDataStoreFixture.url, ICallback.Utils.<String> noCallback());
@@ -238,7 +239,7 @@ public class CardHolder implements ICardHolder {
 						((GatedMockFuture<?, ?>) future).kick();
 					};
 				}.start();
-				Swts.resizeMeToParentsSize(cardHolder.getControl());
+				Size.resizeMeToParentsSize(cardHolder.getControl());
 				return cardHolder.getComposite();
 			}
 		});

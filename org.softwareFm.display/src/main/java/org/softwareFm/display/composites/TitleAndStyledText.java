@@ -14,7 +14,7 @@ import org.softwareFm.display.AllSoftwareFmDisplayTests;
 import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.smallButtons.ImageButtonConfig;
 import org.softwareFm.display.smallButtons.SimpleImageButton;
-import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -51,7 +51,7 @@ public class TitleAndStyledText extends AbstractTitleAndText<StyledText> {
 	}
 
 	public static void main(String[] args) {
-		Swts.display(TitleAndStyledText.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+		Show.display(TitleAndStyledText.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				ImageRegistry imageRegistry = BasicImageRegisterConfigurator.forTests(from);

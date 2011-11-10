@@ -24,6 +24,7 @@ import org.softwareFm.display.editor.IEditorCompletion;
 import org.softwareFm.display.simpleButtons.ButtonParent;
 import org.softwareFm.display.simpleButtons.IButtonParent;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Grid;
 import org.softwareFm.jdtBinding.api.IJavadocSourceMutator;
 import org.softwareFm.jdtBinding.api.IJavadocSourceMutatorCallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
@@ -87,7 +88,7 @@ public class JavadocSourceEditor implements IEditor {
 		// new SimpleImageButton(parent, config, showBackground);
 		buttonPanel.setLayout(new GridLayout(3, true));
 		helpText = Swts.makeHelpDisplayer(content);
-		Swts.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(content, actionContext.compositeConfig.layout.dataMargin);
+		Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(content, actionContext.compositeConfig.layout.dataMargin);
 		return content;
 	}
 

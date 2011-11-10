@@ -28,7 +28,8 @@ import org.softwareFm.card.title.Title;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.configuration.ConfigurationConstants;
 import org.softwareFm.display.composites.IHasComposite;
-import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Show;
+import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
@@ -193,14 +194,14 @@ public class UnrecognisedJar implements IHasComposite {
 	}
 
 	public static void main(String[] args) {
-		Swts.displayNoLayout(UnrecognisedJar.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+		Show.displayNoLayout(UnrecognisedJar.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay()).withUrlGeneratorMap(BasicCardConfigurator.makeUrlGeneratorMap("/prefix/"));
 				UnrecognisedJar unrecognisedJar = new UnrecognisedJar(from, SWT.NULL, cardConfig);
 				unrecognisedJar.setFileAndDigest(new File("a/b/c/jarFile.jar"), "01234567Test");
 				Composite result = unrecognisedJar.getComposite();
-				Swts.resizeMeToParentsSize(result);
+				Size.resizeMeToParentsSize(result);
 				return result;
 			}
 		});

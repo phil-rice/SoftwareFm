@@ -9,6 +9,8 @@ import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Show;
+import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -18,7 +20,7 @@ public class SingleCardExplorerOnAsync {
 
 	public static void main(String[] args) {
 		final String rootUrl = CardDataStoreFixture.url;
-		Swts.display(SingleCardExplorerOnAsync.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+		Show.display(SingleCardExplorerOnAsync.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 
 			@Override
 			public Composite apply(final Composite from) throws Exception {
@@ -60,7 +62,7 @@ public class SingleCardExplorerOnAsync {
 				};
 				thread.setDaemon(true);
 				thread.start();
-				Swts.resizeMeToParentsSize(cardHolder.getControl());
+				Size.resizeMeToParentsSize(cardHolder.getControl());
 				return cardHolder.getComposite();
 			}
 		});

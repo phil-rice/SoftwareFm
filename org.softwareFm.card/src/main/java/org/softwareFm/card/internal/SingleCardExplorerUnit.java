@@ -5,7 +5,7 @@ import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.display.swt.ISituationListAndBuilder;
-import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.strings.Strings;
 
@@ -15,7 +15,7 @@ public class SingleCardExplorerUnit {
 		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacardForCardExplorer();
 		final String rootUrl = "/softwareFm/data";
 		try {
-			Swts.xUnit(SingleCardExplorerUnit.class.getSimpleName(), new ISituationListAndBuilder<SingleCardExplorer>() {
+			Show.xUnit(SingleCardExplorerUnit.class.getSimpleName(), new ISituationListAndBuilder<SingleCardExplorer>() {
 				@Override
 				public void selected(SingleCardExplorer hasControl, String context, Object value) throws Exception {
 					hasControl.setUrl(Strings.nullSafeToString(value));

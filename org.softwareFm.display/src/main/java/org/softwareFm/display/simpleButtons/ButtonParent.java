@@ -7,6 +7,7 @@ import org.softwareFm.display.SoftwareFmLayout;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Row;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class ButtonParent implements IButtonParent {
@@ -46,7 +47,7 @@ public class ButtonParent implements IButtonParent {
 	}
 
 	private void setLayoutData() {
-		content.setLayout(Swts.getHorizonalNoMarginRowLayout());
+		content.setLayout(Row.getHorizonalNoMarginRowLayout());
 		content.layout();
 		content.getParent().layout();
 	}

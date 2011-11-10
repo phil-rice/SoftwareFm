@@ -12,6 +12,8 @@ import org.eclipse.swt.widgets.Control;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.ISituationListAndBuilder;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Show;
+import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.utilities.collections.Sets;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -49,7 +51,7 @@ public class MasterDetailSocial implements IMasterDetailSocial {
 
 	public MasterDetailSocial(Composite parent, int style) {
 		content = new MasterDetailComposite(parent, style);
-		Swts.resizeMeToParentsSizeWithLayout(this);
+		Size.resizeMeToParentsSizeWithLayout(this);
 	}
 
 	@Override
@@ -144,7 +146,7 @@ public class MasterDetailSocial implements IMasterDetailSocial {
 	}
 
 	public static void main(String[] args) {
-		Swts.xUnit(MasterDetailSocial.class.getSimpleName(), new ISituationListAndBuilder<MasterDetailSocial>() {
+		Show.xUnit(MasterDetailSocial.class.getSimpleName(), new ISituationListAndBuilder<MasterDetailSocial>() {
 			private final Map<String, Control> masterMap = Maps.newMap();
 			private final Map<String, Control> detailMap = Maps.newMap();
 

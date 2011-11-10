@@ -7,7 +7,6 @@ import org.softwareFm.configuration.ConfigurationConstants;
 import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.simpleButtons.IButtonParent;
-import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class JavadocSourceButtons {
@@ -26,18 +25,18 @@ public class JavadocSourceButtons {
 	public JavadocSourceButtons(IButtonParent buttonParent, CompositeConfig config, Runnable onCancel, final Runnable copyToEclipse, final Runnable copyToSoftwareFm, Runnable copyEclipseToSoftwareFm, Runnable nuke) {
 		IResourceGetter resourceGetter = config.resourceGetter;
 		Composite buttonComposite = buttonParent.getButtonComposite();
-		cancelButton = Swts.makePushButton(buttonComposite, resourceGetter, DisplayConstants.buttonCancelTitle, onCancel);
-		copyToEclipseButton = Swts.makePushButton(buttonComposite, resourceGetter, ConfigurationConstants.buttonCopyToEclipseTitle, copyToEclipse);
-		copyToSoftwareFmButton = Swts.makePushButton(buttonComposite, resourceGetter, ConfigurationConstants.buttonCopyToSoftwareFmTitle, copyToSoftwareFm);
-		copyToEclipseAndSoftwareFmButton = Swts.makePushButton(buttonComposite, resourceGetter, ConfigurationConstants.buttonCopyToBothTitle, new Runnable() {
+		cancelButton = org.softwareFm.display.swt.Swts.Button.makePushButton(buttonComposite, resourceGetter, DisplayConstants.buttonCancelTitle, onCancel);
+		copyToEclipseButton = org.softwareFm.display.swt.Swts.Button.makePushButton(buttonComposite, resourceGetter, ConfigurationConstants.buttonCopyToEclipseTitle, copyToEclipse);
+		copyToSoftwareFmButton = org.softwareFm.display.swt.Swts.Button.makePushButton(buttonComposite, resourceGetter, ConfigurationConstants.buttonCopyToSoftwareFmTitle, copyToSoftwareFm);
+		copyToEclipseAndSoftwareFmButton = org.softwareFm.display.swt.Swts.Button.makePushButton(buttonComposite, resourceGetter, ConfigurationConstants.buttonCopyToBothTitle, new Runnable() {
 			@Override
 			public void run() {
 				copyToSoftwareFm.run();
 				copyToEclipse.run();
 			}
 		});
-		copyFromEclipseToSoftwareFmButton = Swts.makePushButton(buttonComposite, resourceGetter, ConfigurationConstants.buttonCopyEclipseToSoftwareFmTitle, copyEclipseToSoftwareFm);
-		nukeButton = Swts.makePushButton(buttonComposite, resourceGetter, "Nuke", false, nuke);
+		copyFromEclipseToSoftwareFmButton = org.softwareFm.display.swt.Swts.Button.makePushButton(buttonComposite, resourceGetter, ConfigurationConstants.buttonCopyEclipseToSoftwareFmTitle, copyEclipseToSoftwareFm);
+		nukeButton = org.softwareFm.display.swt.Swts.Button.makePushButton(buttonComposite, resourceGetter, "Nuke", false, nuke);
 		setLayoutData(config, cancelButton, copyToEclipseButton, copyToSoftwareFmButton);
 		buttonComposite.layout();
 		buttonComposite.getParent().layout(); // only needed I think if there are no other buttons on the button composite

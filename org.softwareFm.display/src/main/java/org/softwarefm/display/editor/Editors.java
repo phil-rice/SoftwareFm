@@ -19,6 +19,8 @@ import org.softwareFm.display.data.IDataGetter;
 import org.softwareFm.display.displayer.CompressedText;
 import org.softwareFm.display.displayer.DisplayerDefn;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Grid;
+import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -32,7 +34,7 @@ public class Editors {
 	}
 
 	public static void display(String title, final IEditor editor, final Object... nameAndInitialValues) {
-		Swts.display(title, new IFunction1<Composite, Composite>() {
+		Show.display(title, new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(final Composite from) throws Exception {
 				SashForm holder = new SashForm(from, SWT.NULL);
@@ -60,7 +62,7 @@ public class Editors {
 					});
 				}
 
-				Swts.addGrabHorizontalAndFillGridDataToAllChildren(displayerParent);
+				Grid.addGrabHorizontalAndFillGridDataToAllChildren(displayerParent);
 				holder.setWeights(new int[] { 1, 2 });
 				return holder;
 			}

@@ -10,6 +10,8 @@ import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Show;
+import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -41,7 +43,7 @@ public class Title implements IHasControl {
 	}
 
 	public static void main(String[] args) {
-		Swts.displayNoLayout(Title.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+		Show.displayNoLayout(Title.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 
 			@Override
 			public Composite apply(Composite from) throws Exception {
@@ -51,8 +53,8 @@ public class Title implements IHasControl {
 				new BasicImageRegisterConfigurator().registerWith(from.getDisplay(), imageRegistry);
 				TitleSpec titleSpec = new TitleSpec(imageRegistry, ArtifactsAnchor.artifactKey, new Color(from.getDisplay(), 183, 196, 183), 20);
 				Title title = new Title(parent, cardConfig, titleSpec, "title", "tooltip");
-				Swts.resizeMeToParentsSize(parent);
-				Swts.resizeMeToParentsSize(title.canvas);
+				Size.resizeMeToParentsSize(parent);
+				Size.resizeMeToParentsSize(title.canvas);
 				Swts.layoutDump(from);
 				return parent;
 			}

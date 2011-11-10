@@ -11,7 +11,9 @@ import org.softwareFm.display.simpleButtons.IButtonParent;
 import org.softwareFm.display.simpleButtons.SmallIconPosition;
 import org.softwareFm.display.smallButtons.ImageButtonConfig;
 import org.softwareFm.display.smallButtons.SimpleImageButton;
-import org.softwareFm.display.swt.Swts;
+import org.softwareFm.display.swt.Swts.Grid;
+import org.softwareFm.display.swt.Swts.Row;
+import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.softwareFmImages.IImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.Images;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
@@ -28,7 +30,7 @@ public class ShowAllSimpleImageButtons {
 	}
 
 	public static void main(String[] args) {
-		Swts.display("Images", new IFunction1<Composite, Composite>() {
+		Show.display("Images", new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				ImageRegistry imageRegistry = IImageRegisterConfigurator.Utils.withBasics(from.getDisplay());
@@ -64,9 +66,9 @@ public class ShowAllSimpleImageButtons {
 				Composite artifactsComposite = new Composite(composite, SWT.BORDER);
 				crossProductArtifactsAndOverlays(artifactsComposite, imageButtonConfig);
 
-				Swts.addGrabHorizontalAndFillGridDataToAllChildren(jarComposite);
-				Swts.addGrabHorizontalAndFillGridDataToAllChildren(artifactsComposite);
-				Swts.addGrabHorizontalAndFillGridDataToAllChildren(composite);
+				Grid.addGrabHorizontalAndFillGridDataToAllChildren(jarComposite);
+				Grid.addGrabHorizontalAndFillGridDataToAllChildren(artifactsComposite);
+				Grid.addGrabHorizontalAndFillGridDataToAllChildren(composite);
 
 				return composite;
 			}
@@ -76,7 +78,7 @@ public class ShowAllSimpleImageButtons {
 			private void addJarVariants(final ImageButtonConfig imageButtonConfig, Composite composite, String key, Acceptor acceptor) {
 				final Composite rowComposite = new Composite(composite, SWT.NULL);
 				IButtonParent buttonParent = IButtonParent.Utils.buttonParent(rowComposite, imageButtonConfig.imageRegistry, IResourceGetter.Utils.noResources());
-				rowComposite.setLayout(Swts.getHorizonalNoMarginRowLayout());
+				rowComposite.setLayout(Row.getHorizonalNoMarginRowLayout());
 				addTitle(rowComposite, key);
 				for (boolean state : falseTrue)
 					for (boolean source : falseTrue)
@@ -118,7 +120,7 @@ public class ShowAllSimpleImageButtons {
 					if (name.startsWith("jar") && name.length() > 3)
 						continue;
 					Composite rowComposite = new Composite(composite, SWT.NULL);
-					rowComposite.setLayout(Swts.getHorizonalNoMarginRowLayout());
+					rowComposite.setLayout(Row.getHorizonalNoMarginRowLayout());
 					addTitle(rowComposite, name);
 					String artifactKey = "artifact." + name;
 					IButtonParent buttonParent = IButtonParent.Utils.buttonParent(rowComposite, imageRegistry, IResourceGetter.Utils.noResources());
