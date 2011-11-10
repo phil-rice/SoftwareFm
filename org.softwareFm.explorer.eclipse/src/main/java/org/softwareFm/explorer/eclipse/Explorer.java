@@ -1,5 +1,6 @@
 package org.softwareFm.explorer.eclipse;
 
+import java.io.File;
 import java.util.Map;
 import java.util.concurrent.Future;
 
@@ -115,8 +116,8 @@ public class Explorer implements IExplorer, IHasControl {
 	}
 
 	@Override
-	public void displayUnrecognisedJar(String url, String file) {
-		unrecognisedJar.setUrlAndFile(url, file);
+	public void displayUnrecognisedJar( File file, String digest) {
+		unrecognisedJar.setFileAndDigest(file, digest);
 		masterDetailSocial.setMaster(unrecognisedJar.getControl());
 		unrecognisedJar.getControl().redraw();
 	}
@@ -124,6 +125,7 @@ public class Explorer implements IExplorer, IHasControl {
 	@Override
 	public void displayComments(final String url) {
 		masterDetailSocial.createAndShowSocial(Swts.styledTextFn(url, SWT.WRAP));
+		masterDetailSocial.showSocial();
 	}
 
 	private String findDefaultChild(ICard card) {

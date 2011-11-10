@@ -4,9 +4,6 @@ import org.softwareFm.display.actions.ActionStore;
 import org.softwareFm.display.actions.BrowseAction;
 import org.softwareFm.display.actions.BrowseRssAction;
 import org.softwareFm.display.actions.IActionStoreConfigurator;
-import org.softwareFm.display.actions.ListAddAction;
-import org.softwareFm.display.actions.ListDeleteAction;
-import org.softwareFm.display.actions.ListEditAction;
 import org.softwareFm.display.actions.NoOperationAction;
 import org.softwareFm.display.actions.SearchForAction;
 import org.softwareFm.display.actions.ViewTweetsAction;
@@ -21,9 +18,6 @@ public class ActionStoreConfigurator implements IActionStoreConfigurator {
 				action("action.rss.browse", new BrowseRssAction()).//
 				action("action.text.browse", new BrowseAction()).//
 
-				action("action.list.add", new ListAddAction()).//
-				action("action.list.edit", new ListEditAction()).//
-				action("action.list.delete", new ListDeleteAction()).//
 				action("action.list.viewTweets", new ViewTweetsAction());
 	}
 }

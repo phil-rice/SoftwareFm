@@ -160,6 +160,7 @@ public class MasterDetailSocial implements IMasterDetailSocial {
 				Control detail = Maps.findOrCreate(detailMap, context, new Callable<Control>() {
 					@Override
 					public Control call() throws Exception {
+						@SuppressWarnings("unchecked")
 						IFunction1<Composite, IHasControl> fn = (IFunction1<Composite, IHasControl>) value;
 						IHasControl detail = masterDetailSocial.createDetail(fn, true);
 						return detail.getControl();

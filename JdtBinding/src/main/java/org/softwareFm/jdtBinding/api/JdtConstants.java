@@ -1,7 +1,7 @@
 package org.softwareFm.jdtBinding.api;
 
 public class JdtConstants {
-	public final static String hexDigestKey = "hexDigest";
+	public final static String hexDigestKey = "digest";
 	public final static String jarPathKey = "jarPath";
 	public final static String jarNameKey = "jarName";
 	public final static String javadocKey = "javadoc";

@@ -52,8 +52,8 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 	}
 
 	@Override
-	public void put(final String url, Map<String, Object> map, final IAfterEditCallback afterEdit) {
-		this.facard.post(url, map, new IResponseCallback() {
+	public Future<?> put(final String url, Map<String, Object> map, final IAfterEditCallback afterEdit) {
+		return this.facard.post(url, map, new IResponseCallback() {
 			@Override
 			public void process(IResponse response) {
 				afterEdit.afterEdit(url);

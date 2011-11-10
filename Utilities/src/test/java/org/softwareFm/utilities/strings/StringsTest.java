@@ -1,5 +1,7 @@
 package org.softwareFm.utilities.strings;
 
+import java.io.File;
+
 import junit.framework.TestCase;
 
 import org.softwareFm.utilities.functions.Functions;
@@ -20,8 +22,20 @@ public class StringsTest extends TestCase {
 		assertEquals("Group Id Again And Again", Strings.camelCaseToPretty("GroupIdAgain And Again"));
 		assertEquals("Group Id Again And Again", Strings.camelCaseToPretty("GroupIdAgain     And   Again"));
 	}
-	
-	public void testStringToUrlSegment(){
+
+	public void testVersions() {
+		checkVersions("\\a\\b\\c\\spring-code-1.0.0.jar", "spring-code", "1.0.0");
+		checkVersions("a/b/c/spring-code-1.0.0.jar", "spring-code", "1.0.0");
+		checkVersions("spring-code-1.0.0.jar", "spring-code", "1.0.0");
+		checkVersions("spring-code-1.A.0.jar", "n/a", "n/a");
+	}
+
+	private void checkVersions(String raw, String prefix, String version) {
+		assertEquals(version, Strings.versionPartOf(new File(raw), "n/a"));
+		assertEquals(prefix, Strings.withoutVersion(new File(raw), "n/a"));
+	}
+
+	public void testStringToUrlSegment() {
 		checkStringToUrlSegment("", "");
 		checkStringToUrlSegment("abc", "abc");
 		checkStringToUrlSegment("ab.c", "a/b.c");
@@ -31,7 +45,7 @@ public class StringsTest extends TestCase {
 		checkStringToUrlSegment("aBC", "a!\"£$%^&*\'# b c");
 	}
 
-	public void testLowerAndUpperCaseFirstCharacter(){
+	public void testLowerAndUpperCaseFirstCharacter() {
 		checkLowerAndUpperCaseFirstCharacter("Abc", "abc", "Abc");
 		checkLowerAndUpperCaseFirstCharacter("Abc", "abc", "abc");
 		checkLowerAndUpperCaseFirstCharacter("ABc", "aBc", "aBc");
@@ -39,13 +53,12 @@ public class StringsTest extends TestCase {
 		checkLowerAndUpperCaseFirstCharacter("", "", "");
 		checkLowerAndUpperCaseFirstCharacter(null, null, null);
 	}
-	
-	
+
 	private void checkLowerAndUpperCaseFirstCharacter(String expectedUpper, String expectedLower, String raw) {
 		assertEquals(expectedLower, Strings.lowerCaseFirstCharacter(raw));
 		assertEquals(expectedUpper, Strings.upperCaseFirstCharacter(raw));
 		assertEquals(expectedUpper, Functions.call(Strings.upperCaseFirstCharacterFn(), raw));
-		
+
 	}
 
 	private void checkStringToUrlSegment(String expected, String raw) {
@@ -53,25 +66,25 @@ public class StringsTest extends TestCase {
 		assertEquals(expected, Functions.call(Strings.stringToUrlSegmentFn(), raw));
 	}
 
-	public void testVersionCompare(){
-		assertEquals(0, Strings.compareVersionNumbers("1.2.1" , "1.2.1" ));
-		assertEquals(1, Strings.compareVersionNumbers("1.2.2" , "1.2.1" ));
-		assertEquals(1, Strings.compareVersionNumbers("1.3.1" , "1.2.1" ));
-		assertEquals(1, Strings.compareVersionNumbers("2.1.1" , "1.2.1" ));
+	public void testVersionCompare() {
+		assertEquals(0, Strings.compareVersionNumbers("1.2.1", "1.2.1"));
+		assertEquals(1, Strings.compareVersionNumbers("1.2.2", "1.2.1"));
+		assertEquals(1, Strings.compareVersionNumbers("1.3.1", "1.2.1"));
+		assertEquals(1, Strings.compareVersionNumbers("2.1.1", "1.2.1"));
 
-		assertEquals(0, Strings.compareVersionNumbers("1.2.11" , "1.2.11" ));
-		assertEquals(1, Strings.compareVersionNumbers("1.2.2" , "1.2.11" ));
-		assertEquals(1, Strings.compareVersionNumbers("1.2.11" , "1.113.1" ));
-		
-		assertEquals(0, Strings.compareVersionNumbers("1-2-11" , "1.2.11" ));
-		assertEquals(1, Strings.compareVersionNumbers("1-2-2" , "1.2.11" ));
-		assertEquals(1, Strings.compareVersionNumbers("1-2-11" , "1.113.1" ));
+		assertEquals(0, Strings.compareVersionNumbers("1.2.11", "1.2.11"));
+		assertEquals(1, Strings.compareVersionNumbers("1.2.2", "1.2.11"));
+		assertEquals(1, Strings.compareVersionNumbers("1.2.11", "1.113.1"));
 
-		assertEquals(0, Strings.compareVersionNumbers("1-2-11" , "1-2-11" ));
-		assertEquals(1, Strings.compareVersionNumbers("1-2-2" , "1-2-11" ));
-		assertEquals(1, Strings.compareVersionNumbers("1-2-11" , "1-113-1" ));
+		assertEquals(0, Strings.compareVersionNumbers("1-2-11", "1.2.11"));
+		assertEquals(1, Strings.compareVersionNumbers("1-2-2", "1.2.11"));
+		assertEquals(1, Strings.compareVersionNumbers("1-2-11", "1.113.1"));
+
+		assertEquals(0, Strings.compareVersionNumbers("1-2-11", "1-2-11"));
+		assertEquals(1, Strings.compareVersionNumbers("1-2-2", "1-2-11"));
+		assertEquals(1, Strings.compareVersionNumbers("1-2-11", "1-113-1"));
 	}
-	
+
 	public void testSplit() {
 		assertEquals(new PreAndPost("a", "b"), Strings.split("a.b", '.'));
 		assertEquals(new PreAndPost("a", "b"), Strings.split("a$b", '$'));
@@ -81,7 +94,6 @@ public class StringsTest extends TestCase {
 		assertEquals(new PreAndPost("", ""), Strings.split(".", '.'));
 	}
 
-	
 	public void testSqlEscape() {
 		assertEquals("abc", Strings.sqlEscape("abc"));
 		assertEquals("a''bc", Strings.sqlEscape("a'bc"));

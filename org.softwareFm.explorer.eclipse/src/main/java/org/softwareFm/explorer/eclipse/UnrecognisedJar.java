@@ -1,5 +1,6 @@
 package org.softwareFm.explorer.eclipse;
 
+import java.io.File;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
@@ -19,7 +20,9 @@ import org.eclipse.swt.widgets.Text;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICard;
+import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.editors.OkCancel;
+import org.softwareFm.card.internal.BasicCardConfigurator;
 import org.softwareFm.card.internal.Card;
 import org.softwareFm.card.title.Title;
 import org.softwareFm.card.title.TitleSpec;
@@ -38,27 +41,25 @@ public class UnrecognisedJar implements IHasComposite {
 	static class UnrecognisedJarComposite extends Composite {
 
 		private ICard card;
-		private Title title;
+		private final Title title;
 		private final CardConfig cardConfig;
 		private final OkCancel okCancel;
-		private final Map<String, Object> rawData;
-		private String url;
-		private String file;
+		private File file;
+		private String digest;
 
-		public UnrecognisedJarComposite(Composite parent, int style, CardConfig cardConfig) {
+		public UnrecognisedJarComposite(Composite parent, int style, final CardConfig cardConfig) {
 			super(parent, style);
 			this.cardConfig = cardConfig.withStyleAndSelection(SWT.FULL_SELECTION, true);
-			this.file = "";
-			this.url = "";
-			rawData = Maps.stringObjectMap(//
-					ConfigurationConstants.groupId, "Please specify the group id",//
-					ConfigurationConstants.artifactId, "Please specify the artifact id",//
-					ConfigurationConstants.version, "Please specify the version");
-			makeCard();
+			this.file = new File(".");
+			title = new Title(this, cardConfig, TitleSpec.noTitleSpec(getBackground()), "", "");
+		
 			okCancel = new OkCancel(this, cardConfig, new Runnable() {
 				@Override
 				public void run() {
-					System.out.println("Url: " + url + " card: " + card);
+					String groupId = (String) card.data().get(ConfigurationConstants.groupId);
+					String artifactId= (String) card.data().get(ConfigurationConstants.artifactId);
+					String version=(String) card.data().get(ConfigurationConstants.version);
+					new NewJarImporter(cardConfig, CardConstants.manuallyAdded, digest, groupId, artifactId, version).process();
 
 				}
 			}, new Runnable() {
@@ -72,18 +73,26 @@ public class UnrecognisedJar implements IHasComposite {
 			okCancel.setOkEnabled(false);
 		}
 
-		public void setUrlAndFile(String url, String file) {
-			this.url = url;
+		public void setFileAndDigest(File file, String digest) {
 			this.file = file;
+			this.digest = digest;
 			makeCard();
 		}
 
 		private void makeCard() {
 			if (card != null)
 				card.getControl().dispose();
-			card = new Card(this, this.cardConfig, url, rawData);
+			final Map<String, Object> rawData = Maps.stringObjectMap(//
+					ConfigurationConstants.groupId,  "Please specify the group id",//
+					ConfigurationConstants.artifactId, "Please specify the artifact id",//
+					ConfigurationConstants.version, "Please specify the version");
+			final Map<String, Object> startData = Maps.stringObjectMap(//
+					ConfigurationConstants.groupId,  "Please specify the group id",//
+					ConfigurationConstants.artifactId, Strings.withoutVersion(file,"Please specify the artifact id"),//
+					ConfigurationConstants.version, Strings.versionPartOf(file, "Please specify the version"));
+			card = new Card(this, this.cardConfig, "neverused", startData);
 			TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, card);
-			title = new Title(this, cardConfig, titleSpec, file, "");
+			title.setTitleAndImage(file.getName(), file.toString(), titleSpec);
 			card.getControl().moveBelow(title.getControl());
 			final Table table = (Table) card.getControl();
 			final TableEditor editor = new TableEditor(table);
@@ -149,7 +158,7 @@ public class UnrecognisedJar implements IHasComposite {
 			title.getControl().setSize(ca.width, cardConfig.titleHeight);
 
 			card.getControl().setLocation(ca.x, ca.y + cardConfig.titleHeight);
-			card.getControl().setSize(ca.width, ca.height - cardConfig.titleHeight - okCancelSize.y-5);
+			card.getControl().setSize(ca.width, ca.height - cardConfig.titleHeight - okCancelSize.y - 5);
 
 			okCancelControl.setSize(ca.width, okCancelSize.y);
 			okCancelControl.setLocation(ca.x, ca.height - okCancelSize.y);
@@ -168,9 +177,11 @@ public class UnrecognisedJar implements IHasComposite {
 	public UnrecognisedJar(Composite parent, int style, CardConfig cardConfig) {
 		composite = new UnrecognisedJarComposite(parent, style, cardConfig);
 	}
-	public void setUrlAndFile(String url, String file) {
-		composite.setUrlAndFile(url, file);
+
+	public void setFileAndDigest(File file, String digest) {
+		composite.setFileAndDigest(file, digest);
 	}
+
 	@Override
 	public Control getControl() {
 		return composite;
@@ -185,9 +196,9 @@ public class UnrecognisedJar implements IHasComposite {
 		Swts.displayNoLayout(UnrecognisedJar.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay());
-				UnrecognisedJar unrecognisedJar = new UnrecognisedJar(from, SWT.NULL, cardConfig );
-				unrecognisedJar.setUrlAndFile( "/data/01/23/012398759038247587346123","jarFile.jar");
+				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay()).withUrlGeneratorMap(BasicCardConfigurator.makeUrlGeneratorMap("/prefix/"));
+				UnrecognisedJar unrecognisedJar = new UnrecognisedJar(from, SWT.NULL, cardConfig);
+				unrecognisedJar.setFileAndDigest(new File("a/b/c/jarFile.jar"), "01234567Test");
 				Composite result = unrecognisedJar.getComposite();
 				Swts.resizeMeToParentsSize(result);
 				return result;

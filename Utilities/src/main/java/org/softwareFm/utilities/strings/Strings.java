@@ -2,6 +2,7 @@ package org.softwareFm.utilities.strings;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -40,6 +41,45 @@ public class Strings {
 		else
 			return new PreAndPost(value.substring(0, index), value.substring(index + 1));
 
+	}
+
+	public static String versionPartOf(File raw, String defaultIfCannotFind) {
+		String version = lastSegment(raw.toString(), "-");
+		if (isVersion(version)) {
+			int index = version.lastIndexOf('.');
+			if (index != -1) {
+				String result = version.substring(0, index);
+				return result;
+			}
+		}
+		return defaultIfCannotFind;
+	}
+
+	public static String withoutVersion(File raw, String defaultIfCannotFind) {
+		String file = raw.getName();
+		String version = lastSegment(file, "-");
+		if (isVersion(version)) {
+			int index = file.lastIndexOf("-");
+			if (index != -1) {
+				String result = file.substring(0, index);
+				return result;
+			}
+		}
+		return defaultIfCannotFind;
+
+	}
+
+	public static boolean isVersion(String version) {
+		List<String> list = splitIgnoreBlanks(version, "\\.");
+		if (list.size() > 0)
+			if (list.get(list.size() - 1).equals("jar"))
+				for (int i = 0; i < list.size() - 1; i++) {
+					String item = list.get(i);
+					for (int j = 0; j < item.length(); j++)
+						if (!Character.isDigit(item.charAt(j)))
+							return false;
+				}
+		return true;
 	}
 
 	public static String join(List<String> from, List<Integer> indicies, String separator) {

@@ -16,4 +16,14 @@ public class CardConstants {
 	public static final String editorStyledText = "editor.styledText";
 
 	public static final String folder = "Folder";
+	public static final Object found = "found";
+
+	public static final String urlGroupKey = "urlGenerator.group";
+	public static final String artifactUrlKey = "urlGenerator.artifact";
+	public static final String versionUrlKey = "urlGenerator.version";
+	public static final String digestUrlKey = "urlGenerator.digest";
+	public static final String jarUrlKey = "urlGenerator.jar";
+	public static final String userUrlKey = "urlGenerator.user";
+	public static final String manuallyAdded = "manually added";
+
 }

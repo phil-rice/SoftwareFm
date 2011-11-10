@@ -43,9 +43,10 @@ public class CardDataStoreAsyncMock implements IMutableCardDataStore {
 	}
 
 	@Override
-	public void put(String url, Map<String, Object> map, IAfterEditCallback afterEdit) {
+	public Future<?> put(String url, Map<String, Object> map, IAfterEditCallback afterEdit) {
 		Maps.addToList(rememberedPuts, url, map);
 		afterEdit.afterEdit(url);
+		return Futures.doneFuture(null);
 	}
 
 }
