@@ -135,7 +135,7 @@ public class CardHolder implements ICardHolder {
 
 	@Override
 	public void makeAndSetTableMenu(final ICard card) {
-		final Table table = (Table) card.getControl();
+		final Table table = ((Card) card).getTable();
 		if (table.getMenu() != null)
 			table.getMenu().dispose();
 

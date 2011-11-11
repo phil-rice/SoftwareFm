@@ -34,141 +34,167 @@ import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class Card implements ICard {
-	/** Holds strategies and values to control how the card is displayed */
-	private final CardConfig cardConfig;
-	/** The original data passed to you. Kept for debugging / tests */
-	private final Map<String, Object> rawData;
-	/** the current view of the data. It may change as more information is acquired from the server. It will often have been aggregated */
-	private final Map<String, Object> data;
 
-	/** The url that this card is a representation of */
-	private final String url;
+	static class CardComposite extends Composite {
+		/** Holds strategies and values to control how the card is displayed */
+		private final CardConfig cardConfig;
+		/** The original data passed to you. Kept for debugging / tests */
+		private final Map<String, Object> rawData;
+		/** the current view of the data. It may change as more information is acquired from the server. It will often have been aggregated */
+		private final Map<String, Object> data;
 
-	/** The gui component that displays the data */
-	final Table table;
-	private final TableColumn nameColumn;
-	private final TableColumn valueColumn;
+		/** The url that this card is a representation of */
+		private final String url;
+		/** The gui component that displays the data */
+		final Table table;
+		private final TableColumn nameColumn;
+		private final TableColumn valueColumn;
 
-	/** If a line is selected by the user, then these listeners are informed */
-	private final List<ILineSelectedListener> lineSelectedListeners = new CopyOnWriteArrayList<ILineSelectedListener>();
-	/** Controls access to data */
-	private final Object lock = new Object();
+		/** Controls access to data */
+		private final Object lock = new Object();
 
-	/** What type of card is this? Examples are the strings 'collection', 'group', 'artifact' */
-	private String cardType;
-	private final List<ICardValueChangedListener> valueChangedListeners = new CopyOnWriteArrayList<ICardValueChangedListener>();
+		/** What type of card is this? Examples are the strings 'collection', 'group', 'artifact' */
+		private final String cardType;
 
-	public Card(Composite parent, final CardConfig cardConfig, final String url, Map<String, Object> rawData) {
-		this.cardConfig = cardConfig;
-		this.url = url;
-		this.rawData = rawData;
-		this.table = new Table(parent, cardConfig.cardStyle);
-		this.nameColumn = new TableColumn(table, SWT.NONE);
-		this.valueColumn = new TableColumn(table, SWT.NONE);
-		this.cardType = (String) rawData.get(CardConstants.slingResourceType);
-		Map<String, Object> modified = cardConfig.modify(url, rawData);
-		data = modified == rawData ? Maps.copyMap(rawData) : modified;
+		public CardComposite(Composite parent, final CardConfig cardConfig, final String url, Map<String, Object> rawData, TitleSpec titleSpec) {
+			super(parent, SWT.NULL);
 
-		// table.setHeaderVisible(true);
-		table.setLinesVisible(true);
-		nameColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "card.name.title"));
-		valueColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "card.value.title"));
-		nameColumn.setWidth(100);
-		valueColumn.setWidth(100);
-		table.setDragDetect(true);
-		final TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, this);
-		table.setBackground(titleSpec.background);
-		int i = 0;
-		for (Entry<String, Object> entry : data.entrySet()) {
-			KeyValue keyValue = new KeyValue(entry.getKey(), entry.getValue());
-			if (!Functions.call(cardConfig.hideFn, keyValue)) { // Have to make an object here, but we are decoupling how we store the data, and the JVM probably optimises it away anyway
-				TableItem tableItem = new TableItem(table, SWT.NULL);
-				setTableItem(i, cardConfig, tableItem, keyValue);
+			this.cardConfig = cardConfig;
+			this.url = url;
+			this.rawData = rawData;
+			this.table = new Table(parent, cardConfig.cardStyle);
+			this.nameColumn = new TableColumn(table, SWT.NONE);
+			this.valueColumn = new TableColumn(table, SWT.NONE);
+			this.cardType = (String) rawData.get(CardConstants.slingResourceType);
+			Map<String, Object> modified = cardConfig.modify(url, rawData);
+			data = modified == rawData ? Maps.copyMap(rawData) : modified;
+
+			// table.setHeaderVisible(true);
+			table.setLinesVisible(true);
+			nameColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "card.name.title"));
+			valueColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "card.value.title"));
+			nameColumn.setWidth(100);
+			valueColumn.setWidth(100);
+			table.setDragDetect(true);
+			table.setBackground(titleSpec.background);
+			int i = 0;
+			for (Entry<String, Object> entry : data.entrySet()) {
+				KeyValue keyValue = new KeyValue(entry.getKey(), entry.getValue());
+				if (!Functions.call(cardConfig.hideFn, keyValue)) { // Have to make an object here, but we are decoupling how we store the data, and the JVM probably optimises it away anyway
+					TableItem tableItem = new TableItem(table, SWT.NULL);
+					setTableItem(i, cardConfig, tableItem, keyValue);
+				}
+				i++;
 			}
-			i++;
+
+			nameColumn.pack();
+			valueColumn.pack();
+			table.pack();
+
+			table.addPaintListener(new CardOutlinePaintListener(titleSpec, cardConfig, table));
+			table.addListener(SWT.Resize, new Listener() {
+				@Override
+				public void handleEvent(Event event) {
+					layout();
+				}
+			});
 		}
 
-		nameColumn.pack();
-		valueColumn.pack();
-		table.pack();
-		table.addSelectionListener(new SelectionAdapter() {
+		@Override
+		public void layout(boolean b) {
+			Point size = table.getSize();
+			if (size.x == 0)
+				return;
+			nameColumn.pack();
+			int idealNameWidth = nameColumn.getWidth();
+			int newNameWidth = (size.x * cardConfig.cardNameWeight) / (cardConfig.cardNameWeight + cardConfig.cardValueWeight);
+			int maxNameValue = (int) (idealNameWidth * cardConfig.cardMaxNameSizeRatio);
+			if (newNameWidth > maxNameValue)
+				newNameWidth = maxNameValue;
+			int newValueWidth = size.x - newNameWidth - 1;
+			nameColumn.setWidth(newNameWidth);
+			valueColumn.setWidth(newValueWidth);
+		}
+
+		private void setTableItem(int i, final CardConfig cardConfig, TableItem tableItem, KeyValue keyValue) {
+			// System.out.println("Setting table item[" + i + "]: " + keyValue);
+			String displayValue = Functions.call(cardConfig.valueFn, keyValue);
+			String name = Functions.call(cardConfig.nameFn, keyValue);
+			tableItem.setText(new String[] { name, displayValue });
+			tableItem.setData(keyValue.key);
+
+		}
+
+		private void valueChanged(String key, Object newValue) {
+			int index = findTableItem(key);
+			synchronized (lock) {
+				try {
+					TableItem item = table.getItem(index);
+					data.put(key, newValue);
+					setTableItem(index, cardConfig, item, new KeyValue(key, newValue));
+					table.redraw();
+				} catch (IllegalArgumentException e) {
+					throw new RuntimeException(MessageFormat.format(CardConstants.exceptionChangingValue, key, index, newValue));
+				}
+			}
+		}
+
+		private int findTableItem(String key) {
+			for (int i = 0; i < table.getItemCount(); i++)
+				if (table.getItem(i).getData() == key)
+					return i;
+			throw new RuntimeException(MessageFormat.format(CardConstants.cannotFindTableItemWithKey, key));
+		}
+
+		public Map<String, Object> data() {
+			synchronized (lock) {
+				return Maps.copyMap(data);
+			}
+		}
+
+	}
+
+	private final CardComposite content;
+	private final List<ICardValueChangedListener> valueChangedListeners = new CopyOnWriteArrayList<ICardValueChangedListener>();
+	/** If a line is selected by the user, then these listeners are informed */
+	private final List<ILineSelectedListener> lineSelectedListeners = new CopyOnWriteArrayList<ILineSelectedListener>();
+
+	public Card(Composite parent, final CardConfig cardConfig, final String url, Map<String, Object> rawData) {
+		final TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, this);
+		content = new CardComposite(parent, cardConfig, url, rawData, titleSpec);
+		content.table.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				int index = table.getSelectionIndex();
+				int index = content.table.getSelectionIndex();
 				if (index == -1)
 					return;
-				String key = (String) table.getItem(index).getData();
+				String key = (String) content.table.getItem(index).getData();
 				for (ILineSelectedListener lineSelectedListener : lineSelectedListeners) {
-					lineSelectedListener.selected(Card.this, key, data.get(key));
+					lineSelectedListener.selected(Card.this, key, content.data.get(key));
 				}
 				if (!cardConfig.allowSelection)
-					table.deselectAll();
+					content.table.deselectAll();
 			}
 		});
-		table.addPaintListener(new CardOutlinePaintListener(titleSpec, cardConfig, table));
-		table.addListener(SWT.Resize, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				layout();
-			}
-		});
-	}
 
-	public void layout() {
-		Point size = table.getSize();
-		if (size.x == 0)
-			return;
-		nameColumn.pack();
-		int idealNameWidth = nameColumn.getWidth();
-		int newNameWidth = (size.x * cardConfig.cardNameWeight) / (cardConfig.cardNameWeight + cardConfig.cardValueWeight);
-		int maxNameValue = (int) (idealNameWidth * cardConfig.cardMaxNameSizeRatio);
-		if (newNameWidth > maxNameValue)
-			newNameWidth = maxNameValue;
-		int newValueWidth = size.x - newNameWidth - 1;
-		nameColumn.setWidth(newNameWidth);
-		valueColumn.setWidth(newValueWidth);
-	}
-
-	private void setTableItem(int i, final CardConfig cardConfig, TableItem tableItem, KeyValue keyValue) {
-		// System.out.println("Setting table item[" + i + "]: " + keyValue);
-		String displayValue = Functions.call(cardConfig.valueFn, keyValue);
-		String name = Functions.call(cardConfig.nameFn, keyValue);
-		tableItem.setText(new String[] { name, displayValue });
-		tableItem.setData(keyValue.key);
 	}
 
 	@Override
 	public void valueChanged(String key, Object newValue) {
-		int index = findTableItem(key);
-		synchronized (lock) {
-			try {
-				TableItem item = table.getItem(index);
-				data.put(key, newValue);
-				setTableItem(index, cardConfig, item, new KeyValue(key, newValue));
-				table.redraw();
-			} catch (IllegalArgumentException e) {
-				throw new RuntimeException(MessageFormat.format(CardConstants.exceptionChangingValue, key, index, newValue));
-			}
-		}
+		content.valueChanged(key, newValue);
 		for (ICardValueChangedListener listener : valueChangedListeners)
 			listener.valueChanged(this, key, newValue);
-	}
 
-	private int findTableItem(String key) {
-		for (int i = 0; i < table.getItemCount(); i++)
-			if (table.getItem(i).getData() == key)
-				return i;
-		throw new RuntimeException(MessageFormat.format(CardConstants.cannotFindTableItemWithKey, key));
 	}
 
 	@Override
 	public Composite getComposite() {
-		return table;
+		return content;
 	}
 
 	@Override
 	public Control getControl() {
-		return table;
+		return content;
 	}
 
 	@Override
@@ -183,23 +209,31 @@ public class Card implements ICard {
 
 	@Override
 	public CardConfig cardConfig() {
-		return cardConfig;
+		return content.cardConfig;
 	}
 
 	@Override
 	public String url() {
-		return url;
+		return content.url;
 	}
 
 	@Override
 	public Map<String, Object> data() {
-		synchronized (lock) {
-			return Maps.copyMap(data);
-		}
+		return content.data();
 	}
 
 	public Map<String, Object> rawData() {
-		return rawData;
+		return content.rawData;
+	}
+
+	@Override
+	public String cardType() {
+		return content.cardType;
+	}
+
+	@Override
+	public String toString() {
+		return "Card [url=" + url() + ", cardType=" + cardType() + ", data=" + data() + "]";
 	}
 
 	public static void main(String[] args) {
@@ -221,14 +255,8 @@ public class Card implements ICard {
 		});
 	}
 
-	@Override
-	public String cardType() {
-		return cardType;
-	}
-
-	@Override
-	public String toString() {
-		return "Card [url=" + url + ", cardType=" + cardType + ", data=" + data + "]";
+	public Table getTable() {
+		return content.table;
 	}
 
 }
