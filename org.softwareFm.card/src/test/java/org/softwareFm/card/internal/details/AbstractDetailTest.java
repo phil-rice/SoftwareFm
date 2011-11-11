@@ -21,7 +21,8 @@ abstract public class AbstractDetailTest extends SwtIntegrationTest {
 	protected static KeyValue intValue = new KeyValue("key", 0);
 	protected static KeyValue mapValue = new KeyValue("key", Maps.stringObjectMap("k1", "v1", "k2", "v2"));
 	protected static KeyValue collectionValue = new KeyValue("key", Maps.stringObjectMap("k1", "v1", "k2", "v2", "sling:resourceType", "collection"));
-	protected static KeyValue folderValue = new KeyValue("key", Maps.stringObjectMap("k1", "v1", "k2", "v2", "sling:resourceType", "folder"));
+	protected static KeyValue typedValueNotCollection = new KeyValue("key", Maps.stringObjectMap("k1", "v1", "k2", "v2", "sling:resourceType", "sometype"));
+	protected static KeyValue folderValue = new KeyValue("key", Maps.stringObjectMap("k1", "v1", "k2", "v2"));
 
 	protected CardConfig parentCardConfig;
 	protected CardConfig cardConfig;
@@ -32,9 +33,13 @@ abstract public class AbstractDetailTest extends SwtIntegrationTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		cardDataStore = CardDataStoreFixture.rawAsyncCardStore();
-		parentCardConfig = new CardConfig(ICardFactory.Utils.cardFactory(), cardDataStore);
-		cardConfig = new CardConfig(ICardFactory.Utils.cardFactory(), cardDataStore).withTitleSpecFn(Functions.<ICard,TitleSpec>constant(TitleSpec.noTitleSpec(shell.getBackground())));
+		parentCardConfig = makeCardConfig();
+		cardConfig = makeCardConfig().withTitleSpecFn(Functions.<ICard,TitleSpec>constant(TitleSpec.noTitleSpec(shell.getBackground())));
 		parentCard = new Card(shell, cardConfig, "parentCardUrl", Collections.<String, Object> emptyMap());
+	}
+
+	protected CardConfig makeCardConfig() {
+		return new CardConfig(ICardFactory.Utils.cardFactory(), cardDataStore);
 	}
 
 	protected void checkGetNull(DetailFactory detailFactory, KeyValue keyValue) {

@@ -62,13 +62,14 @@ public class Card implements ICard {
 		this.cardConfig = cardConfig;
 		this.url = url;
 		this.rawData = rawData;
-		this.table = new Table(parent, cardConfig.cardStyle );
+		this.table = new Table(parent, cardConfig.cardStyle);
 		this.nameColumn = new TableColumn(table, SWT.NONE);
 		this.valueColumn = new TableColumn(table, SWT.NONE);
 		this.cardType = (String) rawData.get(CardConstants.slingResourceType);
-		data = cardConfig.modify(url, rawData);
+		Map<String, Object> modified = cardConfig.modify(url, rawData);
+		data = modified == rawData ? Maps.copyMap(rawData) : modified;
 
-//		table.setHeaderVisible(true);
+		// table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		nameColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "card.name.title"));
 		valueColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "card.value.title"));
@@ -123,7 +124,7 @@ public class Card implements ICard {
 		int maxNameValue = (int) (idealNameWidth * cardConfig.cardMaxNameSizeRatio);
 		if (newNameWidth > maxNameValue)
 			newNameWidth = maxNameValue;
-		int newValueWidth = size.x - newNameWidth-1;
+		int newValueWidth = size.x - newNameWidth - 1;
 		nameColumn.setWidth(newNameWidth);
 		valueColumn.setWidth(newValueWidth);
 	}

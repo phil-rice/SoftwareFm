@@ -54,7 +54,6 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 				@Override
 				public void changingTo(PlayItem playItem) {
 					titleLabel.setText(playItem.toString());
-					
 					browser.processUrl(playItem.feedType, playItem.url);
 				}
 			});
@@ -108,7 +107,7 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 
 	@Override
 	public Future<String> processUrl(String feedType, String url) {
-		content.navNextHistoryPrev.visiting(new PlayItem(feedType, url));
+		LinkToHistory();
 		return content.browser.processUrl(feedType, url);
 	}
 

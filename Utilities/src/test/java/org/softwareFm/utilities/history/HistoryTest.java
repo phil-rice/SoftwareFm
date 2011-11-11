@@ -1,15 +1,11 @@
 package org.softwareFm.utilities.history;
 
 import java.util.Arrays;
-import java.util.List;
 
 import junit.framework.TestCase;
 
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.history.History;
-import org.softwareFm.utilities.history.IHistory;
-import org.softwareFm.utilities.history.IHistoryListener;
 
 public class HistoryTest extends TestCase {
 
@@ -25,6 +21,20 @@ public class HistoryTest extends TestCase {
 		prev(4, 3, 2, 1);
 	}
 
+	public void testLastIsTheLastItem(){
+		push(1, 2, 3, 4, 5);
+		assertEquals(5, history.last());
+		prev(4);
+		assertEquals(4, history.last());
+		prev(3);
+		assertEquals(3, history.last());
+		prev(2,1,1);
+		assertEquals(1, history.last());
+		next(2,3,4,5,5,5);
+		assertEquals(5, history.last());
+		
+	}
+	
 	public void testCanUseNextAfterPrev() {
 		push(1, 2, 3, 4, 5);
 		prev(4, 3, 2, 1);
@@ -111,18 +121,12 @@ public class HistoryTest extends TestCase {
 	}
 
 	public void testListenersFiredWithNextPrevAndPush() {
-		final List<Object> values = Lists.newList();
-		IHistoryListener<Object> listener = new IHistoryListener<Object>() {
-			@Override
-			public void changingTo(Object newValue) {
-				values.add(newValue);
-			}
-		};
+		HistoryListenerMock<Object> listener = new HistoryListenerMock<Object>();
 		history.addHistoryListener(listener);
 		push(1, 2, 3, 4, 5);
 		prev(4, 3, 2, 1, 1, 1);
 		next(2, 3, 4, 5, 5, 5);
-		assertEquals(Arrays.asList(1, 2, 3, 4, 5, 4, 3, 2, 1, 1, 1, 2, 3, 4, 5, 5, 5), Lists.map(values, new IFunction1<Object, Integer>() {
+		assertEquals(Arrays.asList(1, 2, 3, 4, 5, 4, 3, 2, 1, 1, 1, 2, 3, 4, 5, 5, 5), Lists.map(listener.values, new IFunction1<Object, Integer>() {
 			@Override
 			public Integer apply(Object from) throws Exception {
 				return Integer.parseInt(from.toString());
@@ -172,6 +176,8 @@ public class HistoryTest extends TestCase {
 		assertEquals("5", history.next());
 	}
 
+	
+	
 	private void push(Object... items) {
 		for (Object item : items)
 			history.push(item);

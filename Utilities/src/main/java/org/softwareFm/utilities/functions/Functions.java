@@ -146,10 +146,10 @@ public class Functions {
 		};
 	}
 
-	public static IFunction1<String, String> addToEnd(final String string) {
-		return new IFunction1<String, String>() {
+	public static<T> IFunction1<T, String> addToEnd(final String string) {
+		return new IFunction1<T, String>() {
 			@Override
-			public String apply(String from) throws Exception {
+			public String apply(T from) throws Exception {
 				return from + string;
 			}
 		};

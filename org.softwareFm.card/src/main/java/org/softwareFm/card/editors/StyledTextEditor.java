@@ -74,6 +74,9 @@ public class StyledTextEditor implements IHasComposite {
 		return content.editorControl;
 	}
 
+	public TitleSpec getTitleSpec() {
+		return content.getTitleSpec();
+	}
 	public static void main(String[] args) {
 		Show.displayNoLayout(StyledTextEditor.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
@@ -88,5 +91,7 @@ public class StyledTextEditor implements IHasComposite {
 			}
 		});
 	}
+
+
 
 }

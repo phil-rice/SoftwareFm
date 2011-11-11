@@ -34,7 +34,6 @@ public abstract class AbstractDetailsAdderTest<T extends IDetailAdder> extends A
 
 
 	protected void noEdittingHappensWithThisDetail() {
-		
 	}
 
 	protected IFunction1<KeyValue, String> justValue = new IFunction1<KeyValue, String>() {

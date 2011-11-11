@@ -10,8 +10,8 @@ import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.internal.OneCardHolder;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.display.swt.Swts.Size;
 
+/** Treats as an item in a collection if it has a type, and isn't a collection itself */
 public class CollectionItemDetailAdder implements IDetailAdder {
 
 	@Override
@@ -23,7 +23,7 @@ public class CollectionItemDetailAdder implements IDetailAdder {
 			if (object != null && !CardConstants.collection.equals(object)) {// it
 				String url = parentCard.url() + "/" + key;
 				OneCardHolder result = new OneCardHolder(parentComposite, cardConfig, url, key, callback);
-				Size.setSizeFromClientArea(result.getControl());
+				Swts.Size.setSizeFromClientArea(result.getControl());
 				Swts.layoutDump(parentComposite);
 				return result;
 			}

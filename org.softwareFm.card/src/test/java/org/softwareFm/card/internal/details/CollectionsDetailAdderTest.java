@@ -11,6 +11,7 @@ public class CollectionsDetailAdderTest extends AbstractDetailsAdderTest<Collect
 	public void testNeedMoreThanItBeingAList() {
 		checkGetNull(detailFactory, mapValue);
 		checkGetNull(detailFactory, folderValue);
+		checkGetNull(detailFactory, typedValueNotCollection);
 	}
 
 	public void testNeedsCollectionToMakeACardHolder() {

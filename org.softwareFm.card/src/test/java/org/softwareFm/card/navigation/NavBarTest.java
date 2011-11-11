@@ -1,0 +1,106 @@
+package org.softwareFm.card.navigation;
+
+import java.util.Arrays;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.softwareFm.card.api.CardConfig;
+import org.softwareFm.card.api.CardDataStoreFixture;
+import org.softwareFm.card.api.CardMock;
+import org.softwareFm.card.api.ICard;
+import org.softwareFm.display.swt.SwtIntegrationTest;
+import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.callbacks.MemoryCallback;
+import org.softwareFm.utilities.maps.Maps;
+
+public class NavBarTest extends SwtIntegrationTest {
+
+	private CardConfig cardConfig;
+	private NavBar nav;
+	private Composite navComposite;
+	private NavNextHistoryPrev<String> navHistoryPrev;
+
+	@SuppressWarnings("unused")
+	public void testCreatesNavCombosAndNavButtonsForTheUrl() {
+		nav.setUrl(makeCard(CardDataStoreFixture.url + "/a/b/c"));
+		Control[] children = navComposite.getChildren();
+		assertEquals(8, children.length);
+		Composite combo = (Composite) children[0]; // Actually NavNextHistoryPrevComposite
+		Combo combo1 = (Combo) children[1];
+		Label buttona = (Label) children[2];
+		Combo combo2 = (Combo) children[3];
+		Label buttonb = (Label) children[4];
+		Combo combo3 = (Combo) children[5];
+		Label buttonc = (Label) children[6];
+		Combo combo4 = (Combo) children[7];
+
+		assertEquals(3, combo.getChildren().length);// kindof saysing this is NextHistoryPrev
+	}
+
+	@SuppressWarnings("unused")
+	public void testPopulatesComboWithDataFromCardStore() {
+		nav.setUrl(makeCard(CardDataStoreFixture.url1a));
+		Control[] children = navComposite.getChildren();
+		assertEquals(4, children.length);
+		Combo combo1 = (Combo) children[1];
+		Label buttona = (Label) children[2];
+		Combo combo2 = (Combo) children[3];
+		assertEquals(Arrays.asList("data1a", "data1b", "data2a", "data2b", "data2c"), Arrays.asList(combo1.getItems()));
+		assertEquals(Arrays.asList(), Arrays.asList(combo2.getItems()));
+	}
+
+	public void testButtonsHaveUrl() {
+		nav.setUrl(makeCard(CardDataStoreFixture.url1a));
+		Control[] children = navComposite.getChildren();
+		Label buttona = (Label) children[2];
+		assertEquals("1a", buttona.getText());
+	}
+
+	public void testGetRootUrl() {
+		assertEquals(CardDataStoreFixture.url, nav.getRootUrl());
+	}
+
+	public void testGetHistoryIsSameHistoryAsInPrevHistoryNext() {
+		assertSame(nav.getHistory(), navHistoryPrev.getHistory());
+	}
+
+	public void testComputeSize() {
+		Point navControlSize = navHistoryPrev.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT);
+		assertEquals(new Point(30, 20), navControlSize);
+
+		int leftMargin = 5;
+		int navIconWidth = 10;
+		Label label = new Label(shell, SWT.NULL);
+		label.setText("a");
+		int aWidth = label.computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
+
+		checkComputeSize(CardDataStoreFixture.url, 5 + 30 + navIconWidth);// left margin + navcontrols + a / combo
+		checkComputeSize(CardDataStoreFixture.url + "/a", leftMargin + navControlSize.x + navIconWidth + aWidth + navIconWidth);// left margin + navcontrols + a / combo and the text for a and another combo
+		checkComputeSize(CardDataStoreFixture.url + "/a/a/a", leftMargin + navControlSize.x + navIconWidth + aWidth + navIconWidth + aWidth + navIconWidth + aWidth + navIconWidth);
+	}
+
+	private void checkComputeSize(String url, int expectedWidth) {
+		ICard card = makeCard(url);
+		nav.setUrl(card);
+		Point size = navComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+		assertEquals(new Point(expectedWidth, 20), size);
+	}
+
+	private ICard makeCard(String url) {
+		return new CardMock(null, cardConfig, url, Maps.stringObjectMap());
+	}
+
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		cardConfig = CardDataStoreFixture.syncCardConfig(display).withMargins(5, 6, 7, 8);
+		MemoryCallback<String> memory = ICallback.Utils.memory();
+		nav = new NavBar(shell, cardConfig, CardDataStoreFixture.url, memory);
+		navComposite = nav.getComposite();
+		navHistoryPrev = nav.getNavHistoryPrev();
+	}
+}

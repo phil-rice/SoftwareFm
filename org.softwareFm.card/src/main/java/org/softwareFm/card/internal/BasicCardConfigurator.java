@@ -177,7 +177,7 @@ public class BasicCardConfigurator implements ICardConfigurator {
 		String orderAsString = resourceGetter.getStringOrNull("card.order");
 		String[] order = orderAsString.split(",");
 
-		List<ICardDataModifier> modifiers = Arrays.asList(new CollectionsAggregatorModifier(CardConstants.slingResourceType), new FolderAggregatorModifier(CardConstants.jcrPrimaryType, CardConstants.ntUnstructured, CardConstants.slingResourceType), new KeyValueMissingItemsAdder(), new CardMapSorter());
+		List<ICardDataModifier> modifiers = Arrays.asList(new CollectionsAggregatorModifier(CardConstants.slingResourceType), new FolderAggregatorModifier(CardConstants.jcrPrimaryType, CardConstants.ntUnstructured, CardConstants.slingResourceType), new KeyValueMissingItemsAdder(), new CardMapSorter(CardConstants.version));
 
 		IDetailFactory detailFactory = IDetailFactory.Utils.detailsFactory(//
 				new CollectionsDetailAdder(), //

@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.api.CardConfig;
+import org.softwareFm.card.api.CardDataStoreCallbackAdapter;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardDataStoreCallback;
 import org.softwareFm.display.composites.IHasControl;
@@ -66,7 +67,7 @@ public class NavCombo implements IHasControl {
 					e.gc.drawImage(image, 1, 0);
 			}
 		});
-		cardDataStore.processDataFor(rootUrl, new ICardDataStoreCallback<Void>() {
+		cardDataStore.processDataFor(rootUrl, new CardDataStoreCallbackAdapter<Void>() {
 			@Override
 			public Void process(String url, Map<String, Object> result) throws Exception {
 				List<String> items = Lists.newList();
@@ -78,10 +79,6 @@ public class NavCombo implements IHasControl {
 				return null;
 			}
 
-			@Override
-			public Void noData(String url) throws Exception {
-				return process(url, Collections.<String, Object> emptyMap());
-			}
 		});
 		workOutImage();
 

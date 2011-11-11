@@ -7,18 +7,17 @@ import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICardSelectedListener;
 import org.softwareFm.display.composites.IHasComposite;
 
-public class OneCardHolder implements IHasComposite{
+public class OneCardHolder implements IHasComposite {
 
 	private final HoldsCardHolder content;
 
-	public OneCardHolder(Composite parent, CardConfig cardConfig, String url, String title, ICardSelectedListener listener){
+	public OneCardHolder(Composite parent, CardConfig cardConfig, String url, String title, ICardSelectedListener listener) {
 		content = new HoldsCardHolder(parent, SWT.NULL, cardConfig);
 		content.makeCardHolder(url, title);
 		content.addCardSelectedListener(listener);
 		content.setLayout(new FillWithAspectRatioLayoutManager(cardConfig.defaultWidthWeight, cardConfig.defaultHeightWeight));
 	}
-	
-	
+
 	@Override
 	public Control getControl() {
 		return content;
@@ -27,6 +26,14 @@ public class OneCardHolder implements IHasComposite{
 	@Override
 	public Composite getComposite() {
 		return content;
+	}
+
+	public Object getCardConfig() {
+		return content.cardConfig;
+	}
+
+	public CardHolder getCardHolder() {
+		return content.getCardHolder();
 	}
 
 }

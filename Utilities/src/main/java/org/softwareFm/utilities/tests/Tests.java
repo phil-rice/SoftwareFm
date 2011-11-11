@@ -81,4 +81,22 @@ public class Tests {
 		suite.addTestSuite(class1);
 		new TestRunner().doRun(suite);
 	}
+
+	public static <T> void checkEqualityAndHashcode(IFunction1<String, T> creator) {
+		try {
+			T onea = creator.apply("one");
+			T oneb = creator.apply("one");
+			T two = creator.apply("two");
+			Assert.assertEquals(onea, onea);
+			Assert.assertEquals(onea, oneb);
+			Assert.assertEquals(onea.hashCode(), oneb.hashCode());
+			Assert.assertTrue(onea.hashCode() != two.hashCode());// by some crazy chance this might fail...
+			Assert.assertFalse(onea.equals(null));
+			Assert.assertFalse(onea.equals(two));
+			Assert.assertFalse(two.equals(onea));
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+
+	}
 }

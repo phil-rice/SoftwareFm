@@ -19,6 +19,7 @@ public class HoldsCardHolder extends Composite {
 
 	protected final List<ICardSelectedListener> listeners = new CopyOnWriteArrayList<ICardSelectedListener>();
 	protected final CardConfig cardConfig;
+	private CardHolder cardHolder;
 
 	public HoldsCardHolder(Composite parent, int style, CardConfig cardConfig) {
 		super(parent, style);
@@ -30,7 +31,7 @@ public class HoldsCardHolder extends Composite {
 	}
 
 	public void makeCardHolder(String url, String title) {
-		final CardHolder cardHolder = new CardHolder(this, "loading", title, cardConfig, url, null);
+		cardHolder = new CardHolder(this, "loading", title, cardConfig, url, null);
 		addPaintListenerThatGetsMoreData(url, cardHolder);
 	}
 
@@ -81,4 +82,7 @@ public class HoldsCardHolder extends Composite {
 		cardHolder.getControl().addPaintListener(listener);
 	}
 
+	public CardHolder getCardHolder() {
+		return cardHolder;
+	}
 }

@@ -12,6 +12,7 @@ public class ListDetailsAdderTest extends AbstractDetailsAdderTest<ListDetailAdd
 		checkGetCardCollectionsHolder(mapValue, parentCard.url());
 		checkGetCardCollectionsHolder(collectionValue, parentCard.url());
 		checkGetCardCollectionsHolder(folderValue, parentCard.url());
+		checkGetCardCollectionsHolder( typedValueNotCollection, parentCard.url());
 	}
 
 	@Override

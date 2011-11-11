@@ -353,7 +353,7 @@ public class Strings {
 	}
 
 	public static int compareVersionNumbers(String o1, String o2) {
-		Pattern numRegEx = Pattern.compile("[d+]");
+		Pattern numRegEx = Pattern.compile("\\d*");
 		String[] left = o1.split("[\\.-]");
 		String[] right = o2.split("[\\.-]");
 		for (int i = 0; i < Math.max(left.length, right.length); i++) {

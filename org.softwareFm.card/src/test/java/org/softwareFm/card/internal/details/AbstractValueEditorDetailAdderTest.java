@@ -33,6 +33,7 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 		checkGetNull(detailFactory, collectionValue);
 		checkGetNull(detailFactory, folderValue);
 		checkGetNull(detailFactory, intValue);
+		checkGetNull(detailFactory, typedValueNotCollection);
 	}
 
 	public void testWithStringReturnsTextEditor() {

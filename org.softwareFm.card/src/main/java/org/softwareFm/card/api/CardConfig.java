@@ -1,6 +1,5 @@
 package org.softwareFm.card.api;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -11,7 +10,6 @@ import org.eclipse.swt.graphics.Image;
 import org.softwareFm.card.internal.CardCollectionsDataStore;
 import org.softwareFm.card.internal.details.DetailFactory;
 import org.softwareFm.card.internal.details.IDetailAdder;
-import org.softwareFm.card.internal.modifiers.CardMapSorter;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.data.IUrlGeneratorMap;
@@ -99,7 +97,7 @@ public class CardConfig {
 		this.topMargin = 3;
 		this.bottomMargin = 3;
 		this.titleHeight = 20;
-		this.keyValueModifiers = Arrays.<ICardDataModifier> asList(new CardMapSorter());
+		this.keyValueModifiers = Collections.emptyList();
 		this.rightClickCategoriser = IRightClickCategoriser.Utils.noRightClickCategoriser();
 		this.urlGeneratorMap = IUrlGeneratorMap.Utils.urlGeneratorMap();
 		this.followOnFragment = new IFollowOnFragment() {

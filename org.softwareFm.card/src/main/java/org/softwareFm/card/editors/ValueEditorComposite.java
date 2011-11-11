@@ -26,10 +26,12 @@ abstract class ValueEditorComposite<T extends Control> extends Composite {
 	protected final CardConfig cardConfig;
 	protected final String originalValue;
 	private final Composite body;
+	private final TitleSpec titleSpec;
 
 	public ValueEditorComposite(Composite parent, int style, final CardConfig cardConfig, final String url, final String key, Object initialValue, TitleSpec titleSpec, final IDetailsFactoryCallback callback) {
 		super(parent, style);
 		this.cardConfig = cardConfig;
+		this.titleSpec = titleSpec;
 		KeyValue keyValue = new KeyValue(key, initialValue);
 		String name = Functions.call(cardConfig.nameFn, keyValue);
 		titleLabel = new Title(this, cardConfig, titleSpec, name, url);
@@ -121,6 +123,10 @@ abstract class ValueEditorComposite<T extends Control> extends Composite {
 				editorHeight);
 		Swts.layoutDump(getParent());
 
+	}
+	
+	public TitleSpec getTitleSpec() {
+		return titleSpec;
 	}
 
 }

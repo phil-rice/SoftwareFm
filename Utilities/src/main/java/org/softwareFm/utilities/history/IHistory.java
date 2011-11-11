@@ -19,5 +19,7 @@ public interface IHistory<T> extends Iterable<T>{
 
 	int size();
 
+	T last();
+
 
 }

@@ -11,6 +11,7 @@ import java.util.concurrent.Callable;
 
 import junit.framework.Assert;
 
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -648,6 +649,15 @@ public class Swts {
 
 	}
 
+	public static IFunction1<String, Image> imageFn(final ImageRegistry imageRegistry){
+		return new IFunction1<String, Image>() {
+			@Override
+			public Image apply(String from) throws Exception {
+				return imageRegistry.get(from);
+			}
+		};
+	}
+	
 	public static void asyncExec(IHasControl hasControl, Runnable runnable) {
 		Control control = hasControl.getControl();
 		if (!control.isDisposed())
@@ -719,5 +729,6 @@ public class Swts {
 			((Composite) control).layout();
 
 	}
+
 
 }

@@ -4,6 +4,9 @@ import java.util.Comparator;
 
 import junit.framework.TestCase;
 
+import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.tests.Tests;
+
 public class KeyValueTest extends TestCase {
 
 	public void testConstructor() {
@@ -15,6 +18,17 @@ public class KeyValueTest extends TestCase {
 	public void testKeyFunctio() throws Exception {
 		assertEquals("key", KeyValue.Utils.keyFn().apply(new KeyValue("key", "value")));
 
+	}
+
+	public void testEquality() {
+		Tests.checkEqualityAndHashcode(new IFunction1<String, KeyValue>() {
+			@Override
+			public KeyValue apply(String from) throws Exception {
+				return new KeyValue(from + "_key", from + "_value");
+			}
+		});
+		assertFalse(new KeyValue("k", "v").equals(new KeyValue("k", "v2")));
+		assertFalse(new KeyValue("k", "v").equals(new KeyValue("k2", "v")));
 	}
 
 	public void testForItemsInSortOrder() {

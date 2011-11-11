@@ -12,7 +12,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
-import org.softwareFm.card.api.ICardSelectedListener;
 import org.softwareFm.card.title.TitlePaintListener;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.composites.IHasComposite;
@@ -60,7 +59,6 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 			// setBackground(titleSpec.background);
 			if (!url.startsWith(rootUrl))
 				throw new IllegalArgumentException("rooturl: " + rootUrl + " url: " + url);
-			navNextHistoryPrev.visiting(url);
 			navNextHistoryPrev.setBackground(titleSpec.background);
 			String endOfUrl = url.substring(rootUrl.length());
 			String[] fragments = endOfUrl.split("/");
@@ -184,7 +182,8 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 		content.setUrl(card.url(), titleSpec);
 	}
 
-	public void addCardSelectedListener(ICardSelectedListener listener) {
+	NavNextHistoryPrev<String> getNavHistoryPrev() {
+		return content.navNextHistoryPrev;
 	}
 
 }

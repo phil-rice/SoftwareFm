@@ -21,4 +21,9 @@ public class MemoryCallback<T> implements ICallback<T> {
 		Assert.assertEquals(1, result.size());
 		return result.get(0);
 	}
+
+	public void assertNotCalled() {
+		if (result.size()>0)
+			Assert.fail(result.toString());
+	}
 }

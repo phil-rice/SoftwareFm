@@ -102,7 +102,7 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 		}
 
 		@Override
-		public void layout() {
+		public void layout(boolean b) {
 			Rectangle ca = getClientArea();
 			int navIconWidth = config.navIconWidth;
 			int height = config.height;
@@ -130,10 +130,6 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 		return content.history;
 	}
 
-	public void visiting(T place) {
-		content.history.push(place);
-		content.navCombo.updateFromHistory();
-	}
 
 	public void layout() {
 		content.layout();

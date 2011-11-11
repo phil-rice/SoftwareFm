@@ -63,6 +63,13 @@ public class History<T> implements IHistory<T> {
 		}
 	}
 
+	@Override
+	public T last() {
+		synchronized (lock) {
+			return history.get(index);
+		}
+
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -136,5 +143,6 @@ public class History<T> implements IHistory<T> {
 	public Iterator<T> iterator() {
 		return history.iterator();
 	}
+
 
 }

@@ -351,4 +351,9 @@ public class Explorer implements IExplorer, IHasControl {
 		return timeLine.iterator();
 	}
 
+	@Override
+	public PlayItem last() {
+		return timeLine.last();
+	}
+
 }
