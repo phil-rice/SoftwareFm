@@ -10,6 +10,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -27,7 +28,7 @@ import org.softwareFm.card.api.ILineSelectedListener;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.title.TitleSpec;
-import org.softwareFm.display.swt.Swts.Show;
+import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
@@ -53,19 +54,16 @@ public class Card implements ICard {
 		/** Controls access to data */
 		private final Object lock = new Object();
 
-		/** What type of card is this? Examples are the strings 'collection', 'group', 'artifact' */
-		private final String cardType;
-
 		public CardComposite(Composite parent, final CardConfig cardConfig, final String url, Map<String, Object> rawData, TitleSpec titleSpec) {
 			super(parent, SWT.NULL);
 
 			this.cardConfig = cardConfig;
 			this.url = url;
 			this.rawData = rawData;
-			this.table = new Table(parent, cardConfig.cardStyle);
+			this.table = new Table(this, cardConfig.cardStyle);
 			this.nameColumn = new TableColumn(table, SWT.NONE);
 			this.valueColumn = new TableColumn(table, SWT.NONE);
-			this.cardType = (String) rawData.get(CardConstants.slingResourceType);
+
 			Map<String, Object> modified = cardConfig.modify(url, rawData);
 			data = modified == rawData ? Maps.copyMap(rawData) : modified;
 
@@ -91,8 +89,10 @@ public class Card implements ICard {
 			valueColumn.pack();
 			table.pack();
 
-			table.addPaintListener(new CardOutlinePaintListener(titleSpec, cardConfig, table));
-			table.addListener(SWT.Resize, new Listener() {
+			CardOutlinePaintListener cardOutlinePaintListener = new CardOutlinePaintListener(titleSpec, cardConfig, this);
+			addPaintListener(cardOutlinePaintListener);
+			cardOutlinePaintListener.addListener(IStringAndRectangleListener.Utils.sysout());
+			addListener(SWT.Resize, new Listener() {
 				@Override
 				public void handleEvent(Event event) {
 					layout();
@@ -101,7 +101,18 @@ public class Card implements ICard {
 		}
 
 		@Override
+		public Rectangle getClientArea() {
+			Rectangle clientArea = super.getClientArea();
+			int cardWidth = clientArea.width -  cardConfig.rightMargin - cardConfig.leftMargin;
+			int cardHeight = clientArea.height -  cardConfig.bottomMargin-cardConfig.topMargin;
+			Rectangle result = new Rectangle(clientArea.x + cardConfig.leftMargin, clientArea.y + cardConfig.topMargin, cardWidth, cardHeight);
+			return result;
+		}
+
+		@Override
 		public void layout(boolean b) {
+			Rectangle ca = getClientArea();
+			table.setBounds(ca);
 			Point size = table.getSize();
 			if (size.x == 0)
 				return;
@@ -114,6 +125,8 @@ public class Card implements ICard {
 			int newValueWidth = size.x - newNameWidth - 1;
 			nameColumn.setWidth(newNameWidth);
 			valueColumn.setWidth(newValueWidth);
+			System.out.println("Card layout");
+			Swts.layoutDump(getShell());
 		}
 
 		private void setTableItem(int i, final CardConfig cardConfig, TableItem tableItem, KeyValue keyValue) {
@@ -159,7 +172,11 @@ public class Card implements ICard {
 	/** If a line is selected by the user, then these listeners are informed */
 	private final List<ILineSelectedListener> lineSelectedListeners = new CopyOnWriteArrayList<ILineSelectedListener>();
 
+	/** What type of card is this? Examples are the strings 'collection', 'group', 'artifact' */
+	private final String cardType;
+
 	public Card(Composite parent, final CardConfig cardConfig, final String url, Map<String, Object> rawData) {
+		this.cardType = (String) rawData.get(CardConstants.slingResourceType);
 		final TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, this);
 		content = new CardComposite(parent, cardConfig, url, rawData, titleSpec);
 		content.table.addSelectionListener(new SelectionAdapter() {
@@ -228,7 +245,7 @@ public class Card implements ICard {
 
 	@Override
 	public String cardType() {
-		return content.cardType;
+		return cardType;
 	}
 
 	@Override
@@ -240,7 +257,7 @@ public class Card implements ICard {
 		final ICardDataStore cardDataStore = CardDataStoreFixture.rawCardStore();
 		final ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 
-		Show.display(Card.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+		Swts.Show.display(Card.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(final Composite from) throws Exception {
 				final CardConfig cardConfig = new CardConfig(cardFactory, cardDataStore).withTitleSpecFn(new IFunction1<ICard, TitleSpec>() {

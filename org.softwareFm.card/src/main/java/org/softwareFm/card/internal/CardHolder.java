@@ -23,7 +23,6 @@ import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.IAddItemProcessor;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardChangedListener;
-import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardHolder;
 import org.softwareFm.card.api.ILineSelectedListener;
@@ -70,15 +69,7 @@ public class CardHolder implements ICardHolder {
 			});
 		}
 
-		@Override
-		public Rectangle getClientArea() {
-			CardConfig cardConfig = getCardConfig();
-			Rectangle clientArea = super.getClientArea();
-			int cardWidth = clientArea.width - cardConfig.leftMargin - cardConfig.rightMargin;
-			int cardHeight = clientArea.height - cardConfig.topMargin - cardConfig.bottomMargin;
-			Rectangle result = new Rectangle(clientArea.x + cardConfig.leftMargin, clientArea.y + cardConfig.topMargin, cardWidth, cardHeight);
-			return result;
-		}
+
 
 		private CardConfig getCardConfig() {
 			CardConfig cardConfig = card == null ? navBarCardConfig : card.cardConfig();
@@ -95,7 +86,8 @@ public class CardHolder implements ICardHolder {
 			Rectangle clientArea = getClientArea();
 			int titleHeight = getCardConfig().titleHeight;
 			if (card != null) {
-				card.getControl().setBounds(clientArea.x, clientArea.y + titleHeight, clientArea.width, clientArea.height - titleHeight);
+				Rectangle cardBounds = new Rectangle(clientArea.x, clientArea.y + titleHeight, clientArea.width, clientArea.height - titleHeight);
+				card.getControl().setBounds(cardBounds);
 				card.getComposite().layout();
 			}
 			title.getControl().setBounds(clientArea.x, clientArea.y, clientArea.width, titleHeight);
@@ -213,12 +205,10 @@ public class CardHolder implements ICardHolder {
 	}
 
 	public static void main(String[] args) {
-		final ICardDataStore cardDataStore = CardDataStoreFixture.rawAsyncCardStore();
-		final ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
-		final CardConfig cardConfig = new CardConfig(cardFactory, cardDataStore);
 		Show.display(CardHolder.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(final Composite from) throws Exception {
+				final CardConfig cardConfig = CardDataStoreFixture.asyncCardConfig(from.getDisplay());
 				final CardHolder cardHolder = new CardHolder(from, "Loading", "title", cardConfig, CardDataStoreFixture.url, ICallback.Utils.<String> noCallback());
 				final Future<ICard> future = ICardFactory.Utils.makeCard(cardHolder, cardConfig, CardDataStoreFixture.url1a, new ICallback<ICard>() {
 					@Override

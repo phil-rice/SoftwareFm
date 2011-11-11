@@ -59,10 +59,11 @@ public class CardConfig {
 	public final IUrlGeneratorMap urlGeneratorMap;
 	
 	public int titleSpacer = 3;
+	public int defaultMargin = 10; 
 
 	public int compressedNavTitleWidth = 12;
 	public int navIconWidth = 10;
-	public int cornerRadius = 10;
+	public int cornerRadius = 7;
 	public int cornerRadiusComp = 2;
 	public final IRightClickCategoriser rightClickCategoriser;
 
@@ -92,10 +93,10 @@ public class CardConfig {
 		this.defaultChildFn = Functions.constant(null);
 		this.titleSpecFn = Functions.expectionIfCalled();
 		this.comparator = Lists.orderedComparator();
-		this.leftMargin = 3;
-		this.rightMargin = 3;
-		this.topMargin = 3;
-		this.bottomMargin = 3;
+		this.leftMargin = defaultMargin;
+		this.rightMargin = defaultMargin;
+		this.topMargin = defaultMargin;
+		this.bottomMargin = defaultMargin;
 		this.titleHeight = 20;
 		this.keyValueModifiers = Collections.emptyList();
 		this.rightClickCategoriser = IRightClickCategoriser.Utils.noRightClickCategoriser();

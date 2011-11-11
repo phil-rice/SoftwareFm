@@ -141,7 +141,8 @@ public class UnrecognisedJar implements IHasComposite {
 		@Override
 		public Rectangle getClientArea() {
 			Rectangle ca = super.getClientArea();
-			return new Rectangle(ca.x + cardConfig.leftMargin, ca.y + cardConfig.topMargin, ca.width - cardConfig.leftMargin - cardConfig.rightMargin, ca.height - cardConfig.topMargin - cardConfig.bottomMargin);
+			Rectangle result = new Rectangle(ca.x + cardConfig.leftMargin, ca.y + cardConfig.topMargin, ca.width - cardConfig.leftMargin - cardConfig.rightMargin, ca.height - cardConfig.topMargin - cardConfig.bottomMargin);
+			return result;
 		}
 
 		@Override
