@@ -47,14 +47,15 @@ public class ExplorerView extends ViewPart {
 			public void selectionOccured(final BindingRipperResult ripperResult) {
 				final String hexDigest = ripperResult.hexDigest;
 				IUrlGenerator jarUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.jarUrlKey);
-				String url = jarUrlGenerator.findUrlFor(Maps.stringObjectMap(JdtConstants.hexDigestKey, hexDigest));
-				System.out.println("Digest: " + hexDigest + "\n Url: " + url);
-				cardConfig.cardDataStore.processDataFor(url, new ICardDataStoreCallback<Void>() {
+				String jarUrl = jarUrlGenerator.findUrlFor(Maps.stringObjectMap(JdtConstants.hexDigestKey, hexDigest));
+				System.out.println("Digest: " + hexDigest + "\n Url: " + jarUrl);
+				cardConfig.cardDataStore.processDataFor(jarUrl, new ICardDataStoreCallback<Void>() {
 					@Override
-					public Void process(String url, Map<String, Object> result) throws Exception {
+					public Void process(String jarUrl, Map<String, Object> result) throws Exception {
 						IUrlGenerator cardUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.artifactUrlKey);
-						String cardUrl = cardUrlGenerator.findUrlFor(result);
-						explorer.displayCard(cardUrl);
+						String artifactUrl = cardUrlGenerator.findUrlFor(result);
+						explorer.displayCard(artifactUrl);
+						explorer.selectAndNext(artifactUrl);
 						return null;
 					}
 

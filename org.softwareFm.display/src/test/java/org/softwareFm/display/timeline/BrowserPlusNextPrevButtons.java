@@ -30,7 +30,7 @@ public class BrowserPlusNextPrevButtons implements IHasControl {
 		Composite buttons = Swts.newComposite(content, SWT.NULL, "buttons");
 		playlist = Swts.newComposite(content, SWT.NULL, "playList");
 		browser = browserCreator.apply(content);
-		timeLine = new TimeLine(browser, playListGetter);
+		timeLine = new TimeLine(playListGetter);
 		Button.makePushButton(buttons, config.resourceGetter, "browser.next.title", new Runnable() {
 			@Override
 			public void run() {
@@ -56,7 +56,7 @@ public class BrowserPlusNextPrevButtons implements IHasControl {
 	}
 
 	public void addPlayLists(Set<String> keySet) {
-		timeLine = new TimeLine(browser, playListGetter);
+		timeLine = new TimeLine(playListGetter);
 		Swts.removeAllChildren(playlist);
 		for (final String key : keySet)
 			Button.makePushButton(playlist, config.resourceGetter, key, false, new Runnable() {

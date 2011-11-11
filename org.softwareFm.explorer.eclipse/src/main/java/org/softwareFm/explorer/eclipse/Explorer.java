@@ -37,14 +37,11 @@ import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.display.timeline.PlayItem;
 import org.softwareFm.display.timeline.TimeLine;
-import org.softwareFm.explorer.eclipse.BrowserAndNavBar.TypeAndUrl;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.history.History;
-import org.softwareFm.utilities.history.IHistory;
 import org.softwareFm.utilities.history.IHistoryListener;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.services.IServiceExecutor;
@@ -96,27 +93,24 @@ public class Explorer implements IExplorer, IHasControl {
 			}
 
 		});
-		final IHistory<TypeAndUrl> history = new History<BrowserAndNavBar.TypeAndUrl>();
+		timeLine = new TimeLine(playListGetter);
 		browser = masterDetailSocial.createDetail(new IFunction1<Composite, BrowserAndNavBar>() {
 			@Override
 			public BrowserAndNavBar apply(Composite from) throws Exception {
-				return new BrowserAndNavBar(from, SWT.NULL, cardConfig.leftMargin, cardConfig, new NavNextHistoryPrevConfig<BrowserAndNavBar.TypeAndUrl>(cardConfig.titleHeight, cardConfig.imageFn, new IFunction1<TypeAndUrl, String>() {
+				return new BrowserAndNavBar(from, SWT.NULL, cardConfig.leftMargin, cardConfig, new NavNextHistoryPrevConfig<PlayItem>(cardConfig.titleHeight, cardConfig.imageFn, new IFunction1<PlayItem, String>() {
 					@Override
-					public String apply(TypeAndUrl from) throws Exception {
+					public String apply(PlayItem from) throws Exception {
 						return from.toString();
 					}
-				}, new ICallback<TypeAndUrl>() {
+				}, new ICallback<PlayItem>() {
 					@Override
-					public void process(TypeAndUrl t) throws Exception {
-						browser.processUrl(t.type, t.url);
+					public void process(PlayItem t) throws Exception {
+						browser.processUrl(t.feedType, t.url);
 					}
-				}), service, history);
+				}), service, timeLine);
 			}
 		}, true);
-		timeLine = new TimeLine(browser, playListGetter);
-		//todo: merge timeline/timeline data, get rid of the browser, as this can be done with listeners
-		//then the histoy above is lost...
-		///get rid of TypeAndUrl
+	
 	}
 
 	@Override

@@ -18,6 +18,7 @@ import org.softwareFm.softwareFmImages.title.TitleAnchor;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.history.IHistory;
+import org.softwareFm.utilities.history.IHistoryListener;
 
 public class NavNextHistoryPrev<T> implements IHasControl {
 
@@ -65,11 +66,19 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 				}
 			});
 			nextButton.setImage(nextImage);
+			history.addHistoryListener(new IHistoryListener<T>() {
+				@Override
+				public void changingTo(T newValue) {
+					updateNextPrevButtons();
+				}
+			});
 		}
 
 		private void updateNextPrevButtons() {
-			nextButton.setEnabled(history.hasNext());
-			prevButton.setEnabled(history.hasPrevious());
+			boolean hasNext = history.hasNext();
+			boolean hasPrevious = history.hasPrevious();
+			nextButton.setEnabled(hasNext);
+			prevButton.setEnabled(hasPrevious);
 		}
 
 		@Override
@@ -124,8 +133,6 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 	public void visiting(T place) {
 		content.history.push(place);
 		content.navCombo.updateFromHistory();
-		content.updateNextPrevButtons();
-
 	}
 
 	public void layout() {

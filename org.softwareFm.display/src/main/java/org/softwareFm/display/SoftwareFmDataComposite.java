@@ -108,7 +108,7 @@ public class SoftwareFmDataComposite implements IHasComposite {
 		makeRightHandSide(sash, actionContext, browserConfigurators);
 		sash.setWeights(new int[] { 1, 2 });
 
-		TimeLine timeLine = new TimeLine(browserComposite, playListGetter);
+		TimeLine timeLine = new TimeLine(playListGetter);
 		setUpListeners(largeButtonDefns, actionContext, stackLayout, timeLine);
 	}
 

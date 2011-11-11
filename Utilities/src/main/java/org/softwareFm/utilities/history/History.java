@@ -86,6 +86,10 @@ public class History<T> implements IHistory<T> {
 	 */
 	@Override
 	public boolean hasNext() {
+		return hasNextInHistory();
+	}
+
+	protected boolean hasNextInHistory() {
 		synchronized (lock) {
 			return index < history.size() - 1;
 		}

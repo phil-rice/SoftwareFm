@@ -1,72 +1,49 @@
 package org.softwareFm.display.timeline;
 
-import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.Future;
 
-import org.softwareFm.display.browser.IBrowser;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.future.Futures;
-import org.softwareFm.utilities.history.IHistoryListener;
+import org.softwareFm.utilities.history.History;
+import org.softwareFm.utilities.maps.Maps;
 
-public class TimeLine implements ITimeLine {
-
-	private final TimeLineData timeLineData = new TimeLineData();
-	@Override
-	public void push(PlayItem newItem) {
-		timeLineData.push(newItem);
-	}
+public class TimeLine extends History<PlayItem> implements ITimeLine {
+	private IPlayList selected;
+	private final Map<String, IPlayList> nameToPlayList = Maps.newMap();
+	private final IPlayListGetter playListGetter;
 
 	@Override
-	public void addHistoryListener(IHistoryListener<PlayItem> listener) {
-		timeLineData.addHistoryListener(listener);
+	public PlayItem next() {
+		if (selected == null)
+			throw new IllegalStateException(DisplayConstants.mustHaveSelectedPlayList);
+		synchronized (lock) {
+			if (hasNextInHistory())
+				return super.next();
+			PlayItem result = selected.next();
+			push(result);
+			return result;
+		}
 	}
 
 	@Override
 	public boolean hasNext() {
-		return timeLineData.hasNext();
+		return true;
 	}
 
-	@Override
-	public PlayItem getItem(int i) {
-		return timeLineData.getItem(i);
-	}
-
-	@Override
-	public int size() {
-		return timeLineData.size();
-	}
-
-	private final IBrowser browser;
-	private final IPlayListGetter playListGetter;
-
-	public TimeLine(IBrowser browser, IPlayListGetter playListGetter) {
-		this.browser = browser;
+	public TimeLine(IPlayListGetter playListGetter) {
 		this.playListGetter = playListGetter;
-		timeLineData.addPlayList(DisplayConstants.defaultPlayListName, IPlayList.Utils.make(DisplayConstants.defaultPlayListName, DisplayConstants.defaultPlayList));
-		timeLineData.select(DisplayConstants.defaultPlayListName);
-	}
-
-	@Override
-	public PlayItem next() {
-		PlayItem next = timeLineData.next();
-		browser.processUrl(next.feedType, next.url);
-		return next;
-	}
-
-	@Override
-	public PlayItem previous() {
-		PlayItem previous = timeLineData.previous();
-		browser.processUrl(previous.feedType, previous.url);
-		return previous;
+		// timeLineData.addPlayList(DisplayConstants.defaultPlayListName, IPlayList.Utils.make(DisplayConstants.defaultPlayListName, DisplayConstants.defaultPlayList));
+		// timeLineData.select(DisplayConstants.defaultPlayListName);
 	}
 
 	@Override
 	public Future<?> selectAndNext(final String playListName) {
 		try {
-			if (timeLineData.hasPlayListName(playListName)) {
-				IPlayList playList = timeLineData.select(playListName);
+			if (hasPlayListName(playListName)) {
+				IPlayList playList = select(playListName);
 				next();
 				return Futures.doneFuture(playList);
 			} else {
@@ -77,8 +54,8 @@ public class TimeLine implements ITimeLine {
 							if (t == null) {
 								selectAndNext(DisplayConstants.defaultPlayListName);
 							}
-							timeLineData.addPlayList(playListName, t);
-							timeLineData.select(playListName);
+							addPlayList(playListName, t);
+							select(playListName);
 							next();
 						}
 					});
@@ -91,19 +68,27 @@ public class TimeLine implements ITimeLine {
 		}
 	}
 
-	@Override
-	public boolean hasPrevious() {
-		return timeLineData.hasPrevious();
-	}
-
 	public void forgetPlayList(String playListName) {
-		timeLineData.forgetPlayList(playListName);
+		nameToPlayList.remove(playListName);
 
 	}
 
-	@Override
-	public Iterator<PlayItem> iterator() {
-		return timeLineData.iterator();
+	public boolean hasPlayListName(String playListName) {
+		synchronized (lock) {
+			return nameToPlayList.containsKey(playListName);
+		}
+	}
+
+	public void addPlayList(String playListName, IPlayList playList) {
+		synchronized (lock) {
+			nameToPlayList.put(playListName, playList);
+		}
+	}
+
+	public IPlayList select(String playListName) {
+		synchronized (lock) {
+			return selected = Maps.getOrException(nameToPlayList, playListName);
+		}
 	}
 
 }

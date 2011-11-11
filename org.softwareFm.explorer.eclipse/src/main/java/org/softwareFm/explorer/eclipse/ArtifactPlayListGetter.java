@@ -41,6 +41,7 @@ public class ArtifactPlayListGetter implements IPlayListGetter {
 			return collectionName;
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public List<PlayItem> process(Map<String, Object> collectionMap) {
 			List<PlayItem> result = Lists.newList();

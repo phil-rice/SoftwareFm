@@ -17,45 +17,30 @@ import org.softwareFm.card.navigation.NavNextHistoryPrevConfig;
 import org.softwareFm.display.browser.BrowserComposite;
 import org.softwareFm.display.browser.IBrowserCompositeBuilder;
 import org.softwareFm.display.browser.IBrowserPart;
+import org.softwareFm.display.timeline.PlayItem;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.history.IHistory;
 import org.softwareFm.utilities.history.IHistoryListener;
 import org.softwareFm.utilities.services.IServiceExecutor;
-import org.softwareFm.utilities.strings.Strings;
 
 public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 
 	private final BrowserAndNavBarComposite content;
 
-	static class TypeAndUrl {
-		public final String type;
-		public final String url;
-
-		public TypeAndUrl(String type, String url) {
-			this.type = type;
-			this.url = url;
-		}
-
-		@Override
-		public String toString() {
-			return Strings.lastSegment(type, ".") + " - " + url;
-		}
-	}
-
 	static class BrowserAndNavBarComposite extends Composite {
 		BrowserComposite browser;
 		Composite titleComposite;
-		NavNextHistoryPrev<TypeAndUrl> navNextHistoryPrev;
-		private final NavNextHistoryPrevConfig<TypeAndUrl> config;
+		NavNextHistoryPrev<PlayItem> navNextHistoryPrev;
+		private final NavNextHistoryPrevConfig<PlayItem> config;
 		private final Label titleLabel;
 		private final CardConfig cardConfig;
 
-		public BrowserAndNavBarComposite(Composite parent, int style, final int margin, final CardConfig cardConfig, final NavNextHistoryPrevConfig<TypeAndUrl> config, IServiceExecutor service, IHistory<TypeAndUrl> history) {
+		public BrowserAndNavBarComposite(Composite parent, int style, final int margin, final CardConfig cardConfig, final NavNextHistoryPrevConfig<PlayItem> config, IServiceExecutor service, IHistory<PlayItem> history) {
 			super(parent, style);
 			this.cardConfig = cardConfig;
 			this.config = config;
 			titleComposite = new Composite(this, SWT.NULL);
-			navNextHistoryPrev = new NavNextHistoryPrev<TypeAndUrl>(titleComposite, config, history);
+			navNextHistoryPrev = new NavNextHistoryPrev<PlayItem>(titleComposite, config, history);
 			titleLabel = new Label(titleComposite, SWT.NULL);
 			browser = new BrowserComposite(this, SWT.NULL, service);
 			addPaintListener(new PaintListener() {
@@ -65,10 +50,12 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 					e.gc.drawRoundRectangle(ca.x, ca.y, ca.width, ca.height, cardConfig.cornerRadius, cardConfig.cornerRadius);
 				}
 			});
-			navNextHistoryPrev.getHistory().addHistoryListener(new IHistoryListener<BrowserAndNavBar.TypeAndUrl>() {
+			history.addHistoryListener(new IHistoryListener<PlayItem>() {
 				@Override
-				public void changingTo(TypeAndUrl typeAndUrl) {
-					titleLabel.setText(typeAndUrl.toString());
+				public void changingTo(PlayItem playItem) {
+					titleLabel.setText(playItem.toString());
+					
+					browser.processUrl(playItem.feedType, playItem.url);
 				}
 			});
 
@@ -92,15 +79,15 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 			Control navHistoryPrevControl = navNextHistoryPrev.getControl();
 			Point navSize = navHistoryPrevControl.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 			int titleHeight = navSize.y;
-			
+
 			int cornerRadiusComp = cardConfig.cornerRadiusComp;
-			int twiceComp = 2*cornerRadiusComp;
-			
+			int twiceComp = 2 * cornerRadiusComp;
+
 			titleComposite.setBounds(ca.x + cornerRadiusComp, ca.y + cornerRadiusComp, ca.width - twiceComp, titleHeight);
 			navHistoryPrevControl.setBounds(0, 0, navSize.x, titleHeight);
-			titleLabel.setBounds(ca.x + navSize.x, ca.y, ca.width - navSize.x, titleHeight );
+			titleLabel.setBounds(ca.x + navSize.x, ca.y, ca.width - navSize.x, titleHeight);
 			navNextHistoryPrev.layout();
-			browser.getControl().setBounds(ca.x +cornerRadiusComp, ca.y + titleHeight + cornerRadiusComp, ca.width-twiceComp, ca.height - titleHeight-twiceComp);
+			browser.getControl().setBounds(ca.x + cornerRadiusComp, ca.y + titleHeight + cornerRadiusComp, ca.width - twiceComp, ca.height - titleHeight - twiceComp);
 		}
 
 		@Override
@@ -110,7 +97,7 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 		}
 	}
 
-	public BrowserAndNavBar(Composite parent, int style, int margin, CardConfig cardConfig, NavNextHistoryPrevConfig<TypeAndUrl> config, IServiceExecutor service, IHistory<TypeAndUrl> history) {
+	public BrowserAndNavBar(Composite parent, int style, int margin, CardConfig cardConfig, NavNextHistoryPrevConfig<PlayItem> config, IServiceExecutor service, IHistory<PlayItem> history) {
 		content = new BrowserAndNavBarComposite(parent, style, margin, cardConfig, config, service, history);
 	}
 
@@ -121,7 +108,7 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 
 	@Override
 	public Future<String> processUrl(String feedType, String url) {
-		content.navNextHistoryPrev.visiting(new TypeAndUrl(feedType, url));
+		content.navNextHistoryPrev.visiting(new PlayItem(feedType, url));
 		return content.browser.processUrl(feedType, url);
 	}
 

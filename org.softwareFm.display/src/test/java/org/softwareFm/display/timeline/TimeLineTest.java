@@ -9,7 +9,7 @@ public class TimeLineTest extends PlayListTest {
 	private PlayListGetterMock playListGetterMock;
 
 	public void testSelectAndNext() throws InterruptedException, ExecutionException {
-		TimeLine timeLine = new TimeLine(browserMock, playListGetterMock);
+		TimeLine timeLine = new TimeLine(playListGetterMock);
 		checkBrowser();
 		assertEquals(list1, timeLine.selectAndNext("list1").get());
 		checkBrowser(playItem1_1);
@@ -20,7 +20,7 @@ public class TimeLineTest extends PlayListTest {
 	}
 
 	public void testPrevious() throws InterruptedException, ExecutionException {
-		TimeLine timeLine = new TimeLine(browserMock, playListGetterMock);
+		TimeLine timeLine = new TimeLine(playListGetterMock);
 		checkBrowser();
 		assertEquals(list1, timeLine.selectAndNext("list1").get());
 		checkBrowser(playItem1_1);
@@ -36,7 +36,7 @@ public class TimeLineTest extends PlayListTest {
 	}
 
 	public void testNextPreviousRepeated() throws Exception {
-		TimeLine timeLine = new TimeLine(browserMock, playListGetterMock);
+		TimeLine timeLine = new TimeLine(playListGetterMock);
 		assertEquals(list1, timeLine.selectAndNext("list1").get());
 		timeLine.next();
 		timeLine.next();
