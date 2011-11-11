@@ -109,11 +109,13 @@ public class ArtifactPlayListGetter implements IPlayListGetter {
 			}
 
 			private void processBuilder(final List<PlayItem> items, final int i) {
-				if (i >= builders.size())
+				if (i >= builders.size()){
 					if (items.size() == 0)
 						processNoPlayItems();
 					else
 						processResult(items);
+					return;
+				}
 				final IPlayListBuilder builder = builders.get(i);
 				cardDataStore.processDataFor(playListName + "/" + builder.collectionName(), new ICardDataStoreCallback<IPlayList>() {
 					@Override

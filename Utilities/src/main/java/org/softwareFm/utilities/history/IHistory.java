@@ -1,19 +1,23 @@
 package org.softwareFm.utilities.history;
 
-public interface IHistory<T> {
+
+public interface IHistory<T> extends Iterable<T>{
 
 	void push(T newItem);
 
 	void addHistoryListener(IHistoryListener<T> listener);
 
-	T prev();
+	T previous();
 
 	T next();
 
 	boolean hasNext();
 
-	boolean hasPrev();
+	boolean hasPrevious();
 
 	T getItem(int i);
+
+	int size();
+
 
 }

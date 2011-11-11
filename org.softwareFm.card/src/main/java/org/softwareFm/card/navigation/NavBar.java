@@ -21,6 +21,7 @@ import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.history.History;
 import org.softwareFm.utilities.history.IHistory;
 
 public class NavBar implements IHasComposite, ITitleBarForCard {
@@ -48,7 +49,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 					return imageRegistry.get(from);
 				}
 			};
-			navNextHistoryPrev = new NavNextHistoryPrev<String>(this, new NavNextHistoryPrevConfig<String>(height, imageFn, Functions.<String> toStringFn(), callbackToGotoUrl));
+			navNextHistoryPrev = new NavNextHistoryPrev<String>(this, new NavNextHistoryPrevConfig<String>(height, imageFn, Functions.<String> toStringFn(), callbackToGotoUrl), new History<String>());
 			listener = new TitlePaintListener(cardConfig, TitleSpec.noTitleSpec(getBackground()), "");
 			addPaintListener(listener);
 		}

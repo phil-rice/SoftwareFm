@@ -68,15 +68,15 @@ public class TimeLineDataTest extends PlayListTest {
 		for (int j = 0; j < expected.length; j++) {
 			assertEquals(expected[j], timeLineData.next());
 		}
-		assertEquals(expectedSize, timeLineData.historySize());
+		assertEquals(expectedSize, timeLineData.size());
 		assertTrue(timeLineData.hasPrevious());
 		for (int j = expected.length - 2; j >= 0; j--)
 			assertEquals(expected[j], timeLineData.previous());
-		assertEquals(expectedSize, timeLineData.historySize());
+		assertEquals(expectedSize, timeLineData.size());
 		for (int j = 1; j < expected.length; j++) {
 			assertEquals(expected[j], timeLineData.next());
 		}
-		assertEquals(expectedSize, timeLineData.historySize());
+		assertEquals(expectedSize, timeLineData.size());
 	}
 
 	private void checkCannotPrevious(final TimeLineData timeLineData) {

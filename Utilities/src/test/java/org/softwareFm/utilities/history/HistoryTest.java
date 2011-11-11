@@ -93,7 +93,7 @@ public class HistoryTest extends TestCase {
 	}
 
 	private void hasPrev(boolean b) {
-		assertEquals(b, history.hasPrev());
+		assertEquals(b, history.hasPrevious());
 	}
 
 	public void testHasPrevIsTrueIfHaveNextedAndThereIsSomethingThere() {
@@ -136,7 +136,7 @@ public class HistoryTest extends TestCase {
 
 	private void prev(Object... expected) {
 		for (Object string : expected)
-			assertEquals(string, history.prev());
+			assertEquals(string, history.previous());
 	}
 
 	private void next(Object... expected) {
@@ -147,10 +147,10 @@ public class HistoryTest extends TestCase {
 	public void testHistoryWithNextAfterPrev() {
 		push("1", "2", "2", "2", "3", "4", "4", "5");
 
-		assertEquals("4", history.prev());
-		assertEquals("3", history.prev());
-		assertEquals("2", history.prev());
-		assertEquals("1", history.prev());
+		assertEquals("4", history.previous());
+		assertEquals("3", history.previous());
+		assertEquals("2", history.previous());
+		assertEquals("1", history.previous());
 		assertEquals("2", history.next());
 		assertEquals("3", history.next());
 		assertEquals("4", history.next());
@@ -161,10 +161,10 @@ public class HistoryTest extends TestCase {
 	public void testHistoryIgnoresDuplicates() {
 		push("1", "2", "2", "2", "3", "4", "4", "5");
 
-		assertEquals("4", history.prev());
-		assertEquals("3", history.prev());
-		assertEquals("2", history.prev());
-		assertEquals("1", history.prev());
+		assertEquals("4", history.previous());
+		assertEquals("3", history.previous());
+		assertEquals("2", history.previous());
+		assertEquals("1", history.previous());
 		assertEquals("2", history.next());
 		assertEquals("3", history.next());
 		assertEquals("4", history.next());

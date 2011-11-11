@@ -18,6 +18,7 @@ import org.softwareFm.display.browser.BrowserComposite;
 import org.softwareFm.display.browser.IBrowserCompositeBuilder;
 import org.softwareFm.display.browser.IBrowserPart;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.history.IHistory;
 import org.softwareFm.utilities.history.IHistoryListener;
 import org.softwareFm.utilities.services.IServiceExecutor;
 import org.softwareFm.utilities.strings.Strings;
@@ -49,12 +50,12 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 		private final Label titleLabel;
 		private final CardConfig cardConfig;
 
-		public BrowserAndNavBarComposite(Composite parent, int style, final int margin, final CardConfig cardConfig, final NavNextHistoryPrevConfig<TypeAndUrl> config, IServiceExecutor service) {
+		public BrowserAndNavBarComposite(Composite parent, int style, final int margin, final CardConfig cardConfig, final NavNextHistoryPrevConfig<TypeAndUrl> config, IServiceExecutor service, IHistory<TypeAndUrl> history) {
 			super(parent, style);
 			this.cardConfig = cardConfig;
 			this.config = config;
 			titleComposite = new Composite(this, SWT.NULL);
-			navNextHistoryPrev = new NavNextHistoryPrev<TypeAndUrl>(titleComposite, config);
+			navNextHistoryPrev = new NavNextHistoryPrev<TypeAndUrl>(titleComposite, config, history);
 			titleLabel = new Label(titleComposite, SWT.NULL);
 			browser = new BrowserComposite(this, SWT.NULL, service);
 			addPaintListener(new PaintListener() {
@@ -109,8 +110,8 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 		}
 	}
 
-	public BrowserAndNavBar(Composite parent, int style, int margin, CardConfig cardConfig, NavNextHistoryPrevConfig<TypeAndUrl> config, IServiceExecutor service) {
-		content = new BrowserAndNavBarComposite(parent, style, margin, cardConfig, config, service);
+	public BrowserAndNavBar(Composite parent, int style, int margin, CardConfig cardConfig, NavNextHistoryPrevConfig<TypeAndUrl> config, IServiceExecutor service, IHistory<TypeAndUrl> history) {
+		content = new BrowserAndNavBarComposite(parent, style, margin, cardConfig, config, service, history);
 	}
 
 	@Override

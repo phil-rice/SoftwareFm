@@ -1,6 +1,7 @@
 package org.softwareFm.explorer.eclipse;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.Future;
 
@@ -12,6 +13,7 @@ import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.IAddItemProcessor;
 import org.softwareFm.card.api.IAfterEditCallback;
 import org.softwareFm.card.api.ICard;
+import org.softwareFm.card.api.ICardChangedListener;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardDataStoreCallback;
 import org.softwareFm.card.api.ICardFactory;
@@ -33,6 +35,7 @@ import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.timeline.IPlayListGetter;
+import org.softwareFm.display.timeline.PlayItem;
 import org.softwareFm.display.timeline.TimeLine;
 import org.softwareFm.explorer.eclipse.BrowserAndNavBar.TypeAndUrl;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
@@ -40,6 +43,9 @@ import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.history.History;
+import org.softwareFm.utilities.history.IHistory;
+import org.softwareFm.utilities.history.IHistoryListener;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.services.IServiceExecutor;
 import org.softwareFm.utilities.strings.Strings;
@@ -90,6 +96,7 @@ public class Explorer implements IExplorer, IHasControl {
 			}
 
 		});
+		final IHistory<TypeAndUrl> history = new History<BrowserAndNavBar.TypeAndUrl>();
 		browser = masterDetailSocial.createDetail(new IFunction1<Composite, BrowserAndNavBar>() {
 			@Override
 			public BrowserAndNavBar apply(Composite from) throws Exception {
@@ -103,10 +110,13 @@ public class Explorer implements IExplorer, IHasControl {
 					public void process(TypeAndUrl t) throws Exception {
 						browser.processUrl(t.type, t.url);
 					}
-				}), service);
+				}), service, history);
 			}
 		}, true);
 		timeLine = new TimeLine(browser, playListGetter);
+		//todo: merge timeline/timeline data, get rid of the browser, as this can be done with listeners
+		//then the histoy above is lost...
+		///get rid of TypeAndUrl
 	}
 
 	@Override
@@ -286,17 +296,17 @@ public class Explorer implements IExplorer, IHasControl {
 	}
 
 	@Override
-	public void next() {
+	public PlayItem next() {
 		masterDetailSocial.hideSocial();
 		masterDetailSocial.setDetail(browser.getControl());
-		timeLine.next();
+		return timeLine.next();
 	}
 
 	@Override
-	public void previous() {
+	public PlayItem previous() {
 		masterDetailSocial.setDetail(browser.getControl());
 		masterDetailSocial.hideSocial();
-		timeLine.previous();
+		return timeLine.previous();
 	}
 
 	@Override
@@ -304,6 +314,47 @@ public class Explorer implements IExplorer, IHasControl {
 		masterDetailSocial.setDetail(browser.getControl());
 		masterDetailSocial.hideSocial();
 		return timeLine.selectAndNext(playListName);
+	}
+
+	@Override
+	public void push(PlayItem newItem) {
+		timeLine.push(newItem);
+	}
+
+	@Override
+	public void addHistoryListener(IHistoryListener<PlayItem> listener) {
+		timeLine.addHistoryListener(listener);
+	}
+
+	@Override
+	public boolean hasNext() {
+		return timeLine.hasNext();
+	}
+
+	@Override
+	public boolean hasPrevious() {
+		return timeLine.hasPrevious();
+	}
+
+	@Override
+	public PlayItem getItem(int i) {
+		return timeLine.getItem(i);
+	}
+
+	@Override
+	public int size() {
+		return timeLine.size();
+	}
+
+	@Override
+	public void addCardListener(ICardChangedListener listener) {
+		cardHolder.addCardChangedListener(listener);
+		
+	}
+
+	@Override
+	public Iterator<PlayItem> iterator() {
+		return timeLine.iterator();
 	}
 
 }

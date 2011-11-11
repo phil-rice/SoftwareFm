@@ -17,7 +17,6 @@ import org.softwareFm.display.swt.Swts.Button;
 import org.softwareFm.softwareFmImages.title.TitleAnchor;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.history.History;
 import org.softwareFm.utilities.history.IHistory;
 
 public class NavNextHistoryPrev<T> implements IHasControl {
@@ -25,16 +24,16 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 	private final NavNextHistoryPrevComposite<T> content;
 
 	static public class NavNextHistoryPrevComposite<T> extends Composite {
-		private final History<T> history;
 		private final Label prevButton;
 		private final NavHistoryCombo<T> navCombo;
 		private final Label nextButton;
 		private final NavNextHistoryPrevConfig<T> config;
+		private final IHistory<T> history;
 
-		public NavNextHistoryPrevComposite(Composite parent, final NavNextHistoryPrevConfig<T> config) {
+		public NavNextHistoryPrevComposite(Composite parent, final NavNextHistoryPrevConfig<T> config, final IHistory<T> history) {
 			super(parent, SWT.NULL);
 			this.config = config;
-			history = new History<T>();
+			this.history = history;
 
 			final Image prevImage = Functions.call(config.imageFn, TitleAnchor.previousKey);
 			final Image historyImage = Functions.call(config.imageFn, TitleAnchor.historyKey);
@@ -43,7 +42,7 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 			prevButton = Button.makeImageButton(this, prevImage, new Runnable() {
 				@Override
 				public void run() {
-					ICallback.Utils.call(config.gotoCallback, history.prev());
+					ICallback.Utils.call(config.gotoCallback, history.previous());
 					updateNextPrevButtons();
 				}
 			});
@@ -70,7 +69,7 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 
 		private void updateNextPrevButtons() {
 			nextButton.setEnabled(history.hasNext());
-			prevButton.setEnabled(history.hasPrev());
+			prevButton.setEnabled(history.hasPrevious());
 		}
 
 		@Override
@@ -109,8 +108,8 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 
 	}
 
-	public NavNextHistoryPrev(Composite parent, final NavNextHistoryPrevConfig<T> navNextHistoryPrevConfig) {
-		content = new NavNextHistoryPrevComposite<T>(parent, navNextHistoryPrevConfig);
+	public NavNextHistoryPrev(Composite parent, final NavNextHistoryPrevConfig<T> navNextHistoryPrevConfig, IHistory<T> history) {
+		content = new NavNextHistoryPrevComposite<T>(parent, navNextHistoryPrevConfig, history);
 	}
 
 	@Override

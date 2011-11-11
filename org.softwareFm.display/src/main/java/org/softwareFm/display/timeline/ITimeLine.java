@@ -2,11 +2,9 @@ package org.softwareFm.display.timeline;
 
 import java.util.concurrent.Future;
 
-public interface ITimeLine {
+import org.softwareFm.utilities.history.IHistory;
 
-	void next();
-
-	void previous();
+public interface ITimeLine extends IHistory<PlayItem> {
 
 	Future<?> selectAndNext(String playListName);
 

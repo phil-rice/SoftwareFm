@@ -11,8 +11,11 @@ import org.softwareFm.card.api.ICardDataStoreCallback;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.internal.BasicCardConfigurator;
+import org.softwareFm.display.browser.BrowserFeedConfigurator;
+import org.softwareFm.display.browser.RssFeedConfigurator;
 import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.display.swt.Swts.Size;
+import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.eclipse.ISelectedBindingListener;
 import org.softwareFm.eclipse.ISelectedBindingManager;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
@@ -32,7 +35,11 @@ public class ExplorerView extends ViewPart {
 		MasterDetailSocial masterDetailSocial = new MasterDetailSocial(parent, SWT.NULL);
 		Size.resizeMeToParentsSize(masterDetailSocial.getControl());
 
-		final Explorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, activator.getServiceExecutor());
+		IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardConfig.cardDataStore);
+		final Explorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, activator.getServiceExecutor(),playListGetter);
+		new BrowserFeedConfigurator().configure(null, explorer);
+		new RssFeedConfigurator().configure(null, explorer);
+		
 		ISelectedBindingManager selectedBindingManager = activator.getSelectedBindingManager();// creates it
 
 		selectedBindingManager.addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
