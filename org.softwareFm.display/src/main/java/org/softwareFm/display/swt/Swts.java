@@ -82,6 +82,7 @@ public class Swts {
 		}
 
 		static int globalId = 0;
+
 		public static Listener resizeMeToParentsSizeWithLayout(final IHasComposite hasComposite) {
 			final Composite composite = hasComposite.getComposite();
 			Size.setSizeFromClientArea(composite);
@@ -93,7 +94,7 @@ public class Swts {
 				public void handleEvent(Event event) {
 					System.out.println("SWT/resizeMeToParentsSizeWithLayout " + id + boundsUpToShell(composite));
 					Size.setSizeFromClientArea(composite);
-					// composite.layout();
+					composite.layout();
 					Swts.redrawAllChildren(composite);
 					System.out.println("   end SWT/resizeMeToParentsSizeWithLayout " + id + boundsUpToShell(composite));
 				}

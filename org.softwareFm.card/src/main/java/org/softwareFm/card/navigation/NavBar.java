@@ -24,6 +24,72 @@ import org.softwareFm.utilities.history.History;
 import org.softwareFm.utilities.history.IHistory;
 
 public class NavBar implements IHasComposite, ITitleBarForCard {
+
+	public static class NavBarLayout extends Layout {
+
+		@Override
+		protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
+			NavBarComposite nav = (NavBarComposite) composite;
+			Rectangle clientArea = nav.getClientArea();
+			int x = clientArea.x + nav.cardConfig.leftMargin;
+			for (Control control : nav.getChildren())
+				if (control instanceof Combo) {
+					x += nav.cardConfig.navIconWidth;
+				} else
+					x += control.computeSize(wHint, hHint).x;
+			return new Point(x, nav.height);
+		}
+
+		@Override
+		protected void layout(Composite composite, boolean flushCache) {
+			NavBarComposite nav = (NavBarComposite) composite;
+			Rectangle ca = nav.getClientArea();
+			System.out.println(" NavBar " + " " + ca + "  parent " + nav.getParent().getBounds());
+			Control[] children = nav.getChildren();
+			nav.navNextHistoryPrev.layout();
+			nav.navNextHistoryPrev.getControl().setLocation(ca.x, ca.y);
+			for (Control control : children) {
+				if (control instanceof Combo) {
+					control.setSize(nav.cardConfig.navIconWidth, nav.height);
+				} else {
+					int width = control.computeSize(SWT.DEFAULT, ca.height).x;
+					control.setSize(width, ca.height);
+				}
+			}
+			int i = 1;
+			if (isTooBig(nav, ca)) {
+				while (isTooBig(nav, ca) && i < children.length) {
+					Control child = children[i];
+					if (child instanceof Label) {
+						child.setSize(nav.cardConfig.compressedNavTitleWidth, nav.height);
+						child.setToolTipText(((Label) child).getText());
+					}
+					i++;
+				}
+			}
+			int x = ca.x + nav.cardConfig.leftMargin;
+			int y = ca.y + 2;
+			for (Control control : nav.getChildren())
+				if (control instanceof Combo) {
+					control.setLocation(x, y);
+					x += nav.cardConfig.navIconWidth;
+				} else {
+					control.setLocation(x, y);
+					int width = control.getSize().x;
+					x += width;
+				}
+
+		}
+
+		private boolean isTooBig(NavBarComposite nav, Rectangle clientArea) {
+			int width = 0;
+			for (Control child : nav.getChildren())
+				width += child.getSize().x;
+			return width > clientArea.x + clientArea.width;
+		}
+
+	}
+
 	static class NavBarComposite extends Composite {
 
 		private final String rootUrl;
@@ -49,6 +115,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 				}
 			};
 			navNextHistoryPrev = new NavNextHistoryPrev<String>(this, new NavNextHistoryPrevConfig<String>(height, imageFn, Functions.<String> toStringFn(), callbackToGotoUrl), new History<String>());
+			navNextHistoryPrev.setLayout(new NavNextHistoryPrev.NavNextHistoryPrevLayout<String>());
 			listener = new TitlePaintListener(cardConfig, TitleSpec.noTitleSpec(getBackground()), "");
 			addPaintListener(listener);
 		}
@@ -76,69 +143,6 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 				control.setBackground(titleSpec.background);
 			layout();
 			redraw();
-		}
-
-		@Override
-		public void setLayout(Layout layout) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public Point computeSize(int wHint, int hHint) {
-			Rectangle clientArea = getClientArea();
-			int x = clientArea.x + cardConfig.leftMargin;
-			for (Control control : getChildren())
-				if (control instanceof Combo) {
-					x += cardConfig.navIconWidth;
-				} else
-					x += control.computeSize(wHint, hHint).x;
-			return new Point(x, height);
-		}
-
-		@Override
-		public void layout() {
-			Rectangle ca = getClientArea();
-			System.out.println(" NavBar "+ " " + ca + "  parent " + getParent().getBounds());
-			Control[] children = getChildren();
-			navNextHistoryPrev.layout();
-			navNextHistoryPrev.getControl().setLocation(ca.x, ca.y);
-			for (Control control : children) {
-				if (control instanceof Combo) {
-					control.setSize(cardConfig.navIconWidth, height);
-				} else {
-					int width = control.computeSize(SWT.DEFAULT, ca.height).x;
-					control.setSize(width, ca.height);
-				}
-			}
-			int i = 1;
-			if (isTooBig(ca)) {
-				while (isTooBig(ca) && i < children.length) {
-					Control child = children[i];
-					if (child instanceof Label) {
-						child.setSize(cardConfig.compressedNavTitleWidth, height);
-						child.setToolTipText(((Label) child).getText());
-					}
-					i++;
-				}
-			}
-			int x = ca.x + cardConfig.leftMargin;
-			int y = ca.y + 2;
-			for (Control control : getChildren())
-				if (control instanceof Combo) {
-					control.setLocation(x, y);
-					x += cardConfig.navIconWidth;
-				} else {
-					control.setLocation(x, y);
-					int width = control.getSize().x;
-					x += width;
-				}
-		}
-
-		private boolean isTooBig(Rectangle clientArea) {
-			int width = 0;
-			for (Control child : getChildren())
-				width += child.getSize().x;
-			return width > clientArea.x + clientArea.width;
 		}
 
 		@Override

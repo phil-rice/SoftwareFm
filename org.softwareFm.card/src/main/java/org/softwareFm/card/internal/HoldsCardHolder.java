@@ -32,6 +32,7 @@ public class HoldsCardHolder extends Composite {
 
 	public void makeCardHolder(String url, String title) {
 		cardHolder = new CardHolder(this, "loading", title, cardConfig, url, null);
+		cardHolder.getComposite().setLayout(new CardHolder.CardHolderLayout());
 		addPaintListenerThatGetsMoreData(url, cardHolder);
 	}
 

@@ -25,6 +25,36 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 
 	private final NavNextHistoryPrevComposite<T> content;
 	private static int globalId = 0;
+	
+	public static class NavNextHistoryPrevLayout<T> extends Layout{
+
+		@Override
+		protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
+			@SuppressWarnings("unchecked")
+			NavNextHistoryPrevComposite<T> nav = (NavNextHistoryPrevComposite<T>) composite;
+			NavNextHistoryPrevConfig<T> config = nav.config;
+			return new Point(config.leftMargin + 3 * config.navIconWidth + config.rightMargin, //
+					config.topMargin + config.height + config.bottomMargin);
+		}
+
+		@Override
+		protected void layout(Composite composite, boolean flushCache) {
+			@SuppressWarnings("unchecked")
+			NavNextHistoryPrevComposite<T> nav = (NavNextHistoryPrevComposite<T>) composite;
+			Rectangle ca = nav.getClientArea();
+			System.out.println("  NHP " + Swts.boundsUpToShell(composite)  + " clientAreas: " + Swts.clientAreasUpToShell(composite));
+			int navIconWidth = nav.config.navIconWidth;
+			int height = nav.config.height;
+			int x = ca.x;
+			int y = ca.y;
+			nav.prevButton.setBounds(x, y, navIconWidth, height);
+			x += navIconWidth;
+			nav.	navCombo.getControl().setBounds(x, y, navIconWidth, height);
+			x += navIconWidth;
+			nav.	nextButton.setBounds(x, y, navIconWidth, height);
+		}
+
+	}
 
 	static public class NavNextHistoryPrevComposite<T> extends Composite {
 		private final Label prevButton;
@@ -86,11 +116,6 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 		}
 
 		@Override
-		public void setLayout(Layout layout) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
 		public Rectangle getClientArea() {
 			Rectangle ca = super.getClientArea();
 			return new Rectangle(ca.x + config.leftMargin, //
@@ -99,27 +124,7 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 					ca.height - config.topMargin - config.bottomMargin);
 		}
 
-		@Override
-		public Point computeSize(int wHint, int hHint) {
-			return new Point(config.leftMargin + 3 * config.navIconWidth + config.rightMargin, //
-					config.topMargin + config.height + config.bottomMargin);
-		}
-
-		@Override
-		public void layout(boolean b) {
-			Rectangle ca = getClientArea();
-			System.out.println("  NHP " + Swts.boundsUpToShell(this)  + " clientAreas: " + Swts.clientAreasUpToShell(this));
-			int navIconWidth = config.navIconWidth;
-			int height = config.height;
-			int x = ca.x;
-			int y = ca.y;
-			prevButton.setBounds(x, y, navIconWidth, height);
-			x += navIconWidth;
-			navCombo.getControl().setBounds(x, y, navIconWidth, height);
-			x += navIconWidth;
-			nextButton.setBounds(x, y, navIconWidth, height);
-		}
-
+		
 	}
 
 	public NavNextHistoryPrev(Composite parent, final NavNextHistoryPrevConfig<T> navNextHistoryPrevConfig, IHistory<T> history) {
@@ -145,6 +150,11 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 		content.navCombo.getControl().setBackground(background);
 		content.prevButton.setBackground(background);
 
+	}
+
+	public void setLayout(Layout layout) {
+		content.setLayout(layout);
+		
 	}
 
 }

@@ -13,6 +13,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -33,10 +34,38 @@ import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class Card implements ICard {
+	static class CardLayout extends Layout {
+
+		@Override
+		protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
+			CardComposite card = (CardComposite) composite;
+			return card.table.computeSize(wHint, hHint);
+		}
+
+		@Override
+		protected void layout(Composite composite, boolean flushCache) {
+			CardComposite card = (CardComposite) composite;
+			Rectangle ca = card.getClientArea();
+			card.table.setBounds(ca);
+			Point size = card.table.getSize();
+			if (size.x == 0)
+				return;
+			card.nameColumn.pack();
+			int idealNameWidth = card.nameColumn.getWidth();
+			int newNameWidth = (size.x * card.cardConfig.cardNameWeight) / (card.cardConfig.cardNameWeight + card.cardConfig.cardValueWeight);
+			int maxNameValue = (int) (idealNameWidth * card.cardConfig.cardMaxNameSizeRatio);
+			if (newNameWidth > maxNameValue)
+				newNameWidth = maxNameValue;
+			int newValueWidth = size.x - newNameWidth - 1;
+			card.nameColumn.setWidth(newNameWidth);
+			card.valueColumn.setWidth(newValueWidth);
+		}
+
+	}
 
 	static class CardComposite extends Composite {
 		/** Holds strategies and values to control how the card is displayed */
-		private final CardConfig cardConfig;
+		final CardConfig cardConfig;
 		/** The original data passed to you. Kept for debugging / tests */
 		private final Map<String, Object> rawData;
 		/** the current view of the data. It may change as more information is acquired from the server. It will often have been aggregated */
@@ -46,8 +75,8 @@ public class Card implements ICard {
 		private final String url;
 		/** The gui component that displays the data */
 		final Table table;
-		private final TableColumn nameColumn;
-		private final TableColumn valueColumn;
+		final TableColumn nameColumn;
+		final TableColumn valueColumn;
 
 		/** Controls access to data */
 		private final Object lock = new Object();
@@ -93,32 +122,13 @@ public class Card implements ICard {
 
 		@Override
 		public Rectangle getClientArea() {
-			// note that the topMargin doesn't reference this component: it affects the space between the top of somewhere and the title. 
-			//There is a two pixel gap between the top of the card and the title
+			// note that the topMargin doesn't reference this component: it affects the space between the top of somewhere and the title.
+			// There is a two pixel gap between the top of the card and the title
 			Rectangle clientArea = super.getClientArea();
 			int cardWidth = clientArea.width - cardConfig.rightMargin - cardConfig.leftMargin;
 			int cardHeight = clientArea.height - cardConfig.bottomMargin - 2;
-			Rectangle result = new Rectangle(clientArea.x + cardConfig.leftMargin, clientArea.y+2, cardWidth, cardHeight);
+			Rectangle result = new Rectangle(clientArea.x + cardConfig.leftMargin, clientArea.y + 2, cardWidth, cardHeight);
 			return result;
-		}
-
-		@Override
-		public void layout(boolean b) {
-//			System.out.println(" Crd " + Swts.boundsUpToShell(table)  + " clientAreas: " + Swts.clientAreasUpToShell(table));
-			Rectangle ca = getClientArea();
-			table.setBounds(ca);
-			Point size = table.getSize();
-			if (size.x == 0)
-				return;
-			nameColumn.pack();
-			int idealNameWidth = nameColumn.getWidth();
-			int newNameWidth = (size.x * cardConfig.cardNameWeight) / (cardConfig.cardNameWeight + cardConfig.cardValueWeight);
-			int maxNameValue = (int) (idealNameWidth * cardConfig.cardMaxNameSizeRatio);
-			if (newNameWidth > maxNameValue)
-				newNameWidth = maxNameValue;
-			int newValueWidth = size.x - newNameWidth - 1;
-			nameColumn.setWidth(newNameWidth);
-			valueColumn.setWidth(newValueWidth);
 		}
 
 		private void setTableItem(int i, final CardConfig cardConfig, TableItem tableItem, KeyValue keyValue) {

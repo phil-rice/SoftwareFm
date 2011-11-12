@@ -43,6 +43,38 @@ import org.softwareFm.utilities.strings.Strings;
 
 public class CardHolder implements ICardHolder {
 
+	public static class CardHolderLayout extends Layout {
+
+		@Override
+		protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
+			CardHolderComposite cardHolder = (CardHolderComposite) composite;
+			ICard card = cardHolder.card;
+			CardConfig cardConfig = cardHolder.getCardConfig();
+			int cardHeightHint = hHint == SWT.DEFAULT ? hHint : hHint - cardConfig.titleHeight;
+			Point titleSize = cardHolder.title.getControl().computeSize(wHint, cardConfig.titleHeight);
+			Point cardSize = card == null ? new Point(0, 0) : card.getControl().computeSize(wHint, cardHeightHint);
+			return new Point(Math.max(cardSize.x, titleSize.x) + cardConfig.leftMargin + cardConfig.rightMargin, cardSize.y + cardConfig.topMargin + cardConfig.bottomMargin + cardConfig.titleHeight);
+		}
+
+		@Override
+		protected void layout(Composite composite, boolean flushCache) {
+			CardHolderComposite cardHolder = (CardHolderComposite) composite;
+			Rectangle clientArea = cardHolder.getClientArea();
+			CardConfig cardConfig = cardHolder.getCardConfig();
+			int titleHeight = cardConfig.titleHeight;
+			if (cardHolder.card != null) {
+				Rectangle cardBounds = new Rectangle(clientArea.x, clientArea.y + titleHeight + cardConfig.topMargin, clientArea.width, clientArea.height - titleHeight - cardConfig.topMargin);
+				cardHolder.card.getControl().setBounds(cardBounds);
+				cardHolder.card.getComposite().layout();
+			}
+
+			cardHolder.title.getControl().setBounds(clientArea.x, clientArea.y, clientArea.width, titleHeight + cardConfig.topMargin);
+			if (cardHolder.title instanceof IHasComposite)
+				((IHasComposite) cardHolder.title).getComposite().layout();
+		}
+
+	}
+
 	static class CardHolderComposite extends Composite {
 
 		final ITitleBarForCard title;
@@ -55,52 +87,19 @@ public class CardHolder implements ICardHolder {
 			this.navBarCardConfig = navBarCardConfig;
 			if (navBarCardConfig == null)
 				throw new NullPointerException();
-			if (callbackToGotoUrl == null){
+			if (callbackToGotoUrl == null) {
 				String titleText = Functions.call(navBarCardConfig.cardTitleFn, rootUrl);
 				title = new NavTitle(this, navBarCardConfig, TitleSpec.noTitleSpec(parent.getBackground()), titleText, rootUrl);
+			} else {
+				NavBar bar = new NavBar(this, navBarCardConfig, rootUrl, callbackToGotoUrl);
+				bar.getComposite().setLayout(new NavBar.NavBarLayout());
+				title = bar;
 			}
-			else
-				title = new NavBar(this, navBarCardConfig, rootUrl, callbackToGotoUrl);
-//			addListener(SWT.Resize, new Listener() {
-//				@Override
-//				public void handleEvent(Event event) {
-//					layout();
-//				}
-//			});
 		}
-
-
 
 		private CardConfig getCardConfig() {
 			CardConfig cardConfig = card == null ? navBarCardConfig : card.cardConfig();
 			return cardConfig;
-		}
-
-		@Override
-		public void setLayout(Layout layout) {
-			throw new UnsupportedOperationException();
-		}
-		int count;
-
-		@Override
-		public void layout(boolean changed) {
-			Rectangle clientArea = getClientArea();
-			CardConfig cardConfig = getCardConfig();
-			int titleHeight = cardConfig.titleHeight;
-			if (card != null) {
-				Rectangle cardBounds = new Rectangle(clientArea.x, clientArea.y + titleHeight + cardConfig.topMargin, clientArea.width, clientArea.height - titleHeight-cardConfig.topMargin);
-				card.getControl().setBounds(cardBounds);
-				card.getComposite().layout();
-			}
-			
-			title.getControl().setBounds(clientArea.x, clientArea.y, clientArea.width, titleHeight+cardConfig.topMargin);
-			if (title instanceof IHasComposite)
-				((IHasComposite) title).getComposite().layout();
-		}
-
-		@Override
-		public Point computeSize(int wHint, int hHint) {
-			return super.computeSize(wHint, hHint);
 		}
 
 		public void setCard(ICard card) {
@@ -112,8 +111,9 @@ public class CardHolder implements ICardHolder {
 				if (card.cardConfig() == null)
 					throw new NullPointerException();
 				this.card = card;
+				card.getComposite().setLayout(new Card.CardLayout());
 				title.setUrl(card);
-				layout();
+				 layout();
 
 				card.addLineSelectedListener(new ILineSelectedListener() {
 					@Override

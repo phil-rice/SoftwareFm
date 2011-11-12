@@ -82,7 +82,9 @@ public class Explorer implements IExplorer, IHasControl {
 		cardHolder = masterDetailSocial.createMaster(new IFunction1<Composite, CardHolder>() {
 			@Override
 			public CardHolder apply(Composite from) throws Exception {
-				return new CardHolder(from, "loading", "Some title", cardConfig, rootUrl, callbackToGotoUrlAndUpdateDetails);
+				CardHolder cardHolder = new CardHolder(from, "loading", "Some title", cardConfig, rootUrl, callbackToGotoUrlAndUpdateDetails);
+				cardHolder.getComposite().setLayout(new CardHolder.CardHolderLayout());
+				return cardHolder;
 			}
 		}, true);
 		cardHolder.setAddItemProcessor(makeAddItemProcessor(masterDetailSocial, cardConfig));
