@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.softwareFm.display.composites.IHasControl;
+import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Button;
 import org.softwareFm.softwareFmImages.title.TitleAnchor;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -23,6 +24,7 @@ import org.softwareFm.utilities.history.IHistoryListener;
 public class NavNextHistoryPrev<T> implements IHasControl {
 
 	private final NavNextHistoryPrevComposite<T> content;
+	private static int globalId = 0;
 
 	static public class NavNextHistoryPrevComposite<T> extends Composite {
 		private final Label prevButton;
@@ -30,9 +32,11 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 		private final Label nextButton;
 		private final NavNextHistoryPrevConfig<T> config;
 		private final IHistory<T> history;
+		private final int id;
 
 		public NavNextHistoryPrevComposite(Composite parent, final NavNextHistoryPrevConfig<T> config, final IHistory<T> history) {
 			super(parent, SWT.NULL);
+			id = globalId++;
 			this.config = config;
 			this.history = history;
 
@@ -104,6 +108,7 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 		@Override
 		public void layout(boolean b) {
 			Rectangle ca = getClientArea();
+			System.out.println("  NHP " + Swts.boundsUpToShell(this)  + " clientAreas: " + Swts.clientAreasUpToShell(this));
 			int navIconWidth = config.navIconWidth;
 			int height = config.height;
 			int x = ca.x;
@@ -129,7 +134,6 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 	public IHistory<T> getHistory() {
 		return content.history;
 	}
-
 
 	public void layout() {
 		content.layout();

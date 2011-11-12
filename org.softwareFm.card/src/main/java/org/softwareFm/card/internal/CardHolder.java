@@ -61,12 +61,12 @@ public class CardHolder implements ICardHolder {
 			}
 			else
 				title = new NavBar(this, navBarCardConfig, rootUrl, callbackToGotoUrl);
-			addListener(SWT.Resize, new Listener() {
-				@Override
-				public void handleEvent(Event event) {
-					layout();
-				}
-			});
+//			addListener(SWT.Resize, new Listener() {
+//				@Override
+//				public void handleEvent(Event event) {
+//					layout();
+//				}
+//			});
 		}
 
 
@@ -80,17 +80,20 @@ public class CardHolder implements ICardHolder {
 		public void setLayout(Layout layout) {
 			throw new UnsupportedOperationException();
 		}
+		int count;
 
 		@Override
 		public void layout(boolean changed) {
 			Rectangle clientArea = getClientArea();
-			int titleHeight = getCardConfig().titleHeight;
+			CardConfig cardConfig = getCardConfig();
+			int titleHeight = cardConfig.titleHeight;
 			if (card != null) {
-				Rectangle cardBounds = new Rectangle(clientArea.x, clientArea.y + titleHeight, clientArea.width, clientArea.height - titleHeight);
+				Rectangle cardBounds = new Rectangle(clientArea.x, clientArea.y + titleHeight + cardConfig.topMargin, clientArea.width, clientArea.height - titleHeight-cardConfig.topMargin);
 				card.getControl().setBounds(cardBounds);
 				card.getComposite().layout();
 			}
-			title.getControl().setBounds(clientArea.x, clientArea.y, clientArea.width, titleHeight);
+			
+			title.getControl().setBounds(clientArea.x, clientArea.y, clientArea.width, titleHeight+cardConfig.topMargin);
 			if (title instanceof IHasComposite)
 				((IHasComposite) title).getComposite().layout();
 		}

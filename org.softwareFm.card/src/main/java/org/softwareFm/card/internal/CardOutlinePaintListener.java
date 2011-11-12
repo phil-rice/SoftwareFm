@@ -24,8 +24,6 @@ public class CardOutlinePaintListener implements PaintListener {
 		this.cardComposite = cardComposite;
 	}
 
-	int pullback = 2;
-	int twicePullback = pullback * 2;
 
 	@Override
 	public void paintControl(PaintEvent e) {
@@ -38,26 +36,28 @@ public class CardOutlinePaintListener implements PaintListener {
 		drawRight(e, clientArea);
 
 		e.gc.setClipping((Rectangle) null);
-		Rectangle topLeft = new Rectangle(clientArea.x - pullback, clientArea.y - pullback, clientArea.x - pullback, clientArea.y + -pullback + cardConfig.cornerRadius);
+		Rectangle topLeft = new Rectangle(clientArea.x - cardConfig.cornerRadiusComp, clientArea.y - cardConfig.cornerRadiusComp, clientArea.x - cardConfig.cornerRadiusComp, clientArea.y + -cardConfig.cornerRadiusComp + cardConfig.cornerRadius);
 		e.gc.drawLine(topLeft.x, topLeft.y, topLeft.width, topLeft.height);
 		notifyListeners("topLeft-Line", topLeft);
 		
-		Rectangle secondLine = new Rectangle(clientArea.x + clientArea.width - titleSpec.rightIndent-pullback, clientArea.y-pullback, clientArea.x + clientArea.width-cardConfig.cornerRadius, clientArea.y-pullback);
+		Rectangle secondLine = new Rectangle(clientArea.x + clientArea.width - titleSpec.rightIndent-cardConfig.cornerRadiusComp, clientArea.y-cardConfig.cornerRadiusComp, clientArea.x + clientArea.width-cardConfig.cornerRadius, clientArea.y-cardConfig.cornerRadiusComp);
 		e.gc.drawLine(secondLine.x, secondLine.y, secondLine.width, secondLine.height);
 		notifyListeners("second-Line", secondLine);
 		e.gc.setForeground(new Color(e.display, 200, 200, 200));
-		e.gc.drawLine(clientArea.x + 1, clientArea.y, clientArea.width - titleSpec.rightIndent - 1, clientArea.y);
+		int x = clientArea.x -cardConfig.cornerRadiusComp+1;
+		int y = clientArea.y-cardConfig.cornerRadiusComp;
+		e.gc.drawLine(x, y, x+clientArea.width -titleSpec.rightIndent+cardConfig.cornerRadiusComp, y);
 	}
 
 	private void drawRight(PaintEvent e, Rectangle clientArea) {
-		Rectangle clipRectangle = new Rectangle(clientArea.x + clientArea.width - titleSpec.rightIndent - pullback, clientArea.y - pullback, clientArea.width + twicePullback, clientArea.height + twicePullback + 1);
+		Rectangle clipRectangle = new Rectangle(clientArea.x + clientArea.width - titleSpec.rightIndent - cardConfig.cornerRadiusComp, clientArea.y - cardConfig.cornerRadiusComp, clientArea.width + 2*cardConfig.cornerRadiusComp, clientArea.height + 2*cardConfig.cornerRadiusComp + 1);
 		e.gc.setClipping(clipRectangle); // way to wide...but who cares. Don't know why need +1, but without it bottom right doesnt appear
 		notifyListeners("drawRight-clip", clipRectangle);
 
-		int x = clientArea.x - pullback;
-		int y = clientArea.y - pullback;
-		int width = clientArea.width + pullback;
-		int height = clientArea.height + twicePullback;
+		int x = clientArea.x - cardConfig.cornerRadiusComp;
+		int y = clientArea.y - cardConfig.cornerRadiusComp;
+		int width = clientArea.width + cardConfig.cornerRadiusComp;
+		int height = clientArea.height + 2*cardConfig.cornerRadiusComp;
 		e.gc.drawRoundRectangle(x, y, width, height, cardConfig.cornerRadius, cardConfig.cornerRadius);
 		notifyListeners("drawRight-round", new Rectangle(x, y, width, height));
 	}
@@ -72,14 +72,14 @@ public class CardOutlinePaintListener implements PaintListener {
 	}
 
 	private void drawLeftAndBottom(PaintEvent e, Rectangle clientArea) {
-		Rectangle clipRectangle = new Rectangle(clientArea.x - pullback, clientArea.y + cardConfig.cornerRadius - pullback,//
-				clientArea.width - cardConfig.cornerRadius + pullback, clientArea.height + pullback + cardConfig.cornerRadius);
+		Rectangle clipRectangle = new Rectangle(clientArea.x - cardConfig.cornerRadiusComp, clientArea.y + cardConfig.cornerRadius - cardConfig.cornerRadiusComp,//
+				clientArea.width - cardConfig.cornerRadius + cardConfig.cornerRadiusComp, clientArea.height + cardConfig.cornerRadiusComp + cardConfig.cornerRadius);
 		e.gc.setClipping(clipRectangle);
 		notifyListeners("drawLeftBottom-clip", clipRectangle);
-		int x = clientArea.x - pullback;
-		int y = clientArea.y - cardConfig.cornerRadius - pullback;
-		int width = clientArea.width + twicePullback;
-		int height = clientArea.height + cardConfig.cornerRadius + twicePullback;
+		int x = clientArea.x - cardConfig.cornerRadiusComp;
+		int y = clientArea.y - cardConfig.cornerRadius - cardConfig.cornerRadiusComp;
+		int width = clientArea.width + 2*cardConfig.cornerRadiusComp;
+		int height = clientArea.height + cardConfig.cornerRadius + 2*cardConfig.cornerRadiusComp;
 		e.gc.drawRoundRectangle(x, y, width, height, cardConfig.cornerRadius, cardConfig.cornerRadius);
 		notifyListeners("drawLeftBottom-round", new Rectangle(x, y, width, height));
 	}

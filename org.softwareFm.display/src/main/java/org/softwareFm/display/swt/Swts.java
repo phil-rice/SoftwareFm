@@ -64,12 +64,12 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
 
 public class Swts {
-	
-	public static class Size{
+
+	public static class Size {
 
 		public static Listener resizeMeToParentsSize(final Control control) {
 			Size.setSizeFromClientArea(control);
-		
+
 			Listener listener = new Listener() {
 				@Override
 				public void handleEvent(Event event) {
@@ -81,16 +81,21 @@ public class Swts {
 			return listener;
 		}
 
+		static int globalId = 0;
 		public static Listener resizeMeToParentsSizeWithLayout(final IHasComposite hasComposite) {
 			final Composite composite = hasComposite.getComposite();
 			Size.setSizeFromClientArea(composite);
-		
+
 			Listener listener = new Listener() {
+				int id = globalId++;
+
 				@Override
 				public void handleEvent(Event event) {
+					System.out.println("SWT/resizeMeToParentsSizeWithLayout " + id + boundsUpToShell(composite));
 					Size.setSizeFromClientArea(composite);
-					composite.layout();
+					// composite.layout();
 					Swts.redrawAllChildren(composite);
+					System.out.println("   end SWT/resizeMeToParentsSizeWithLayout " + id + boundsUpToShell(composite));
 				}
 			};
 			composite.getParent().addListener(SWT.Resize, listener);
@@ -99,13 +104,13 @@ public class Swts {
 
 		public static Listener resizeMeToParentsSizeWithTopMargin(final Control control, final int topMargin) {
 			Size.setSizeAndLocationFromParentsSizeWithTopMargin(control, topMargin);
-		
+
 			Listener listener = new Listener() {
 				@Override
 				public void handleEvent(Event event) {
 					Size.setSizeAndLocationFromParentsSizeWithTopMargin(control, topMargin);
 				}
-		
+
 			};
 			control.getParent().addListener(SWT.Resize, listener);
 			return listener;
@@ -147,18 +152,18 @@ public class Swts {
 			child.setSize(clientArea.width, clientArea.height);
 			if (child instanceof Composite)
 				((Composite) child).layout();
-			child.redraw();
-		
+			// child.redraw();
+
 		}
 
 		public static void setSizeToComputedSize(Control c, int wHint, int hHint) {
 			Point size = c.computeSize(wHint, hHint);
 			c.setSize(size);
 		}
-		
+
 	}
-	
-	public static class Show{
+
+	public static class Show {
 
 		public static void displayNoLayout(String title, IFunction1<Composite, Composite> builder) {
 			try {
@@ -224,7 +229,7 @@ public class Swts {
 							result.setText(value);
 						}
 					});
-		
+
 					result.selectFirst();
 					return result.getComposite();
 				}
@@ -250,20 +255,19 @@ public class Swts {
 							result.setText(value.toString());
 						}
 					});
-		
+
 					result.selectFirst();
 					return result.getComposite();
 				}
 			});
 		}
-		
+
 	}
 
-	
-	public static class Button{
+	public static class Button {
 
 		public static void makeButtonFromMainMethod(Composite composite, final Class<?> classWithMain) {
-			 org.eclipse.swt.widgets.Button button = new  org.eclipse.swt.widgets.Button(composite, SWT.PUSH);
+			org.eclipse.swt.widgets.Button button = new org.eclipse.swt.widgets.Button(composite, SWT.PUSH);
 			button.setText(classWithMain.getSimpleName());
 			button.addSelectionListener(new SelectionAdapter() {
 				@Override
@@ -291,8 +295,8 @@ public class Swts {
 			return Button.makePushButton(parent, SWT.PUSH, resourceGetter, titleOrKey, titleIsKey, runnable);
 		}
 
-		public static  org.eclipse.swt.widgets.Button makePushButton(Composite parent, int style, IResourceGetter resourceGetter, String titleOrKey, boolean titleIsKey, final Runnable runnable) {
-			 org.eclipse.swt.widgets.Button button =  new org.eclipse.swt.widgets.Button(parent, style);
+		public static org.eclipse.swt.widgets.Button makePushButton(Composite parent, int style, IResourceGetter resourceGetter, String titleOrKey, boolean titleIsKey, final Runnable runnable) {
+			org.eclipse.swt.widgets.Button button = new org.eclipse.swt.widgets.Button(parent, style);
 			String title = titleIsKey ? IResourceGetter.Utils.getOrException(resourceGetter, titleOrKey) : titleOrKey;
 			button.setText(title);
 			button.addSelectionListener(new SelectionAdapter() {
@@ -315,9 +319,9 @@ public class Swts {
 			});
 			return label;
 		}
-		
+
 	}
-	
+
 	public static class Grid {
 
 		public static void addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(Composite composite, int margin) {
@@ -397,12 +401,12 @@ public class Swts {
 			GridData result = Swts.Grid.makeGrabHorizonalAndFillGridData();
 			result.heightHint = heightHint;
 			return result;
-		
+
 		}
 
 	}
-	
-	public static class Row{
+
+	public static class Row {
 
 		public static Layout getHorizonalMarginRowLayout(int margin) {
 			RowLayout rowLayout = new RowLayout(SWT.HORIZONTAL);
@@ -425,9 +429,9 @@ public class Swts {
 		public static <C extends Control> void setRowDataFor(int width, int height, C... controls) {
 			for (Control control : controls)
 				control.setLayoutData(new RowData(width, height));
-		
+
 		}
-		
+
 	}
 
 	public static ScrolledComposite newScrolledComposite(Composite parent, int style, final String description) {
@@ -649,7 +653,7 @@ public class Swts {
 
 	}
 
-	public static IFunction1<String, Image> imageFn(final ImageRegistry imageRegistry){
+	public static IFunction1<String, Image> imageFn(final ImageRegistry imageRegistry) {
 		return new IFunction1<String, Image>() {
 			@Override
 			public Image apply(String from) throws Exception {
@@ -657,7 +661,7 @@ public class Swts {
 			}
 		};
 	}
-	
+
 	public static void asyncExec(IHasControl hasControl, Runnable runnable) {
 		Control control = hasControl.getControl();
 		if (!control.isDisposed())
@@ -730,5 +734,43 @@ public class Swts {
 
 	}
 
+	public static String boundsUpToShell(Control control) {
+		StringBuffer buffer = new StringBuffer();
+		boundsUpToShell(buffer, control);
+		return buffer.toString();
+	}
+
+	private static void boundsUpToShell(StringBuffer buffer, Control control) {
+		if (buffer.length() > 0)
+			buffer.append(" / ");
+		buffer.append(control.getClass().getSimpleName() + ": " + control.getBounds());
+		if (control.getParent() == null)
+			return;
+		else {
+			Composite parent = control.getParent();
+			boundsUpToShell(buffer, parent);
+		}
+
+	}
+
+	public static String clientAreasUpToShell(Control control) {
+		StringBuffer buffer = new StringBuffer();
+		clientAreasUpToShell(buffer, control);
+		return buffer.toString();
+	}
+
+	private static void clientAreasUpToShell(StringBuffer buffer, Control control) {
+		if (buffer.length() > 0)
+			buffer.append(" / ");
+		String value = control instanceof Composite ? ((Composite) control).getClientArea().toString() : "na";
+		buffer.append(control.getClass().getSimpleName() + ": " + value);
+		if (control.getParent() == null)
+			return;
+		else {
+			Composite parent = control.getParent();
+			clientAreasUpToShell(buffer, parent);
+		}
+
+	}
 
 }

@@ -15,7 +15,6 @@ import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.card.internal.CardOutlinePaintListener;
 import org.softwareFm.card.title.Title;
 import org.softwareFm.card.title.TitleSpec;
-import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.functions.Functions;
 
 abstract class ValueEditorComposite<T extends Control> extends Composite {
@@ -121,7 +120,6 @@ abstract class ValueEditorComposite<T extends Control> extends Composite {
 				bodyClientArea.y + 1 + cardConfig.topMargin, //
 				bodyClientArea.width - 2 - cardConfig.leftMargin - cardConfig.rightMargin, //
 				editorHeight);
-		Swts.layoutDump(getParent());
 
 	}
 	

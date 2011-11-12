@@ -13,7 +13,6 @@ import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.ISituationListAndBuilder;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Show;
-import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.utilities.collections.Sets;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -51,7 +50,7 @@ public class MasterDetailSocial implements IMasterDetailSocial {
 
 	public MasterDetailSocial(Composite parent, int style) {
 		content = new MasterDetailComposite(parent, style);
-		Size.resizeMeToParentsSizeWithLayout(this);
+//		Size.resizeMeToParentsSizeWithLayout(this);
 	}
 
 	@Override
@@ -130,12 +129,12 @@ public class MasterDetailSocial implements IMasterDetailSocial {
 		content.detailSocial.setMaximizedControl(null);
 	}
 
-	private void set(Composite composite, Control social) {
-		clean(composite, social);
+	private void set(Composite composite, Control control) {
+		clean(composite, control);
 		StackLayout layout = (StackLayout) composite.getLayout();
-		layout.topControl = social;
+		layout.topControl = control;
 		composite.layout();
-		Swts.layoutIfComposite(social);
+		Swts.layoutIfComposite(control);
 	}
 
 	private void clean(Composite composite, Control newValue) {

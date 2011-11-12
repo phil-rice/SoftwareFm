@@ -55,7 +55,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 
 		public void setUrl(String url, TitleSpec titleSpec) {
 			this.url = url;
-			listener.setTitleAndTitleSpec("", titleSpec);
+			listener.setTitleAndTitleSpec("", titleSpec.withoutImage());
 			// setBackground(titleSpec.background);
 			if (!url.startsWith(rootUrl))
 				throw new IllegalArgumentException("rooturl: " + rootUrl + " url: " + url);
@@ -75,7 +75,6 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 			for (Control control : getChildren())
 				control.setBackground(titleSpec.background);
 			layout();
-			getParent().layout();
 			redraw();
 		}
 
@@ -99,6 +98,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 		@Override
 		public void layout() {
 			Rectangle ca = getClientArea();
+			System.out.println(" NavBar "+ " " + ca + "  parent " + getParent().getBounds());
 			Control[] children = getChildren();
 			navNextHistoryPrev.layout();
 			navNextHistoryPrev.getControl().setLocation(ca.x, ca.y);
@@ -144,7 +144,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 		@Override
 		public Rectangle getClientArea() {
 			Rectangle clientArea = super.getClientArea();
-			return new Rectangle(clientArea.x, clientArea.y, clientArea.width - listener.getTitleSpec().rightIndent, clientArea.height);
+			return new Rectangle(clientArea.x + cardConfig.leftMargin, clientArea.y + cardConfig.topMargin, clientArea.width - listener.getTitleSpec().rightIndent - cardConfig.leftMargin - cardConfig.rightMargin, clientArea.height - cardConfig.topMargin);
 		}
 	}
 

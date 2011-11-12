@@ -4,9 +4,12 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Layout;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.IDetailsFactoryCallback;
@@ -29,8 +32,12 @@ public class CardCollectionHolder implements IHasComposite {
 		private Object value;
 
 		public CardCollectionHolderComposite(Composite parent, CardConfig cardConfig) {
-			super(parent, SWT.NULL,cardConfig);
-			setLayout(new FillWithAspectRatioLayoutManager(3, 2));
+			super(parent, SWT.NULL, cardConfig);
+		}
+
+		@Override
+		public void setLayout(Layout layout) {
+			throw new IllegalArgumentException();
 		}
 
 		@SuppressWarnings("unchecked")
@@ -53,9 +60,61 @@ public class CardCollectionHolder implements IHasComposite {
 			}
 			return null;
 		}
-	}
 
-	
+		@Override
+		public void layout(boolean flushCache) {
+			Rectangle clientArea = getClientArea();
+			System.out.println("CCH " + " " + Swts.boundsUpToShell(this) + " clientAreas: " + Swts.clientAreasUpToShell(this));
+			int height = clientArea.height;
+			int width = heightToWidth(height);
+			int x = clientArea.x;
+			for (Control control : getChildren()) {
+				control.setLocation(x, clientArea.y);
+				control.setSize(width, height);
+				if (control instanceof Composite)
+					((Composite) control).layout();
+				x += width;
+			}
+		}
+
+		@Override
+		public Point computeSize(int wHint, int hHint) {
+			Control[] children = getChildren();
+			int noOfChildren = children.length;
+			if (wHint == SWT.DEFAULT)
+				if (hHint == SWT.DEFAULT) {
+					int idealHeight = 0;
+					int idealWidth = 0;
+					for (Control control : children)
+						idealHeight = Math.max(idealHeight, control.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+					idealWidth = heightToWidth(idealHeight) * noOfChildren;
+					return new Point(idealWidth, idealHeight);
+				} else {
+					int width = heightToWidth(hHint) * noOfChildren;
+					return new Point(width, hHint);
+				}
+			else if (hHint == SWT.DEFAULT) {
+				int height = widthToHeight(wHint);
+				return new Point(wHint, height);
+			} else {
+				int heightForwHint = widthToHeight(wHint / noOfChildren);
+				int clippedheight = Math.min(heightForwHint, hHint);
+				int widthForClippedHeight = heightToWidth(clippedheight);
+				int width = Math.min(wHint / noOfChildren, widthForClippedHeight);
+				int height = widthToHeight(width);
+				Point result = new Point(width, height);
+				return result;
+			}
+		}
+
+		private int widthToHeight(int wHint) {
+			return wHint * cardConfig.defaultHeightWeight / cardConfig.defaultWidthWeight;
+		}
+
+		private int heightToWidth(int hHint) {
+			return hHint * cardConfig.defaultWidthWeight / cardConfig.defaultHeightWeight;
+		}
+	}
 
 	public CardCollectionHolder(Composite parent, CardConfig cardConfig) {
 		content = new CardCollectionHolderComposite(parent, cardConfig);

@@ -3,13 +3,13 @@ package org.softwareFm.card.title;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.display.composites.IHasControl;
-import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
@@ -22,7 +22,13 @@ public class Title implements IHasControl {
 	private final TitlePaintListener listener;
 
 	public Title(Composite parent, final CardConfig cardConfig, final TitleSpec initialTitleSpec, String initialTitle, String initialTooltip) {
-		canvas = new Canvas(parent, SWT.NULL);
+		canvas = new Canvas(parent, SWT.NONE) {
+			@Override
+			public Rectangle getClientArea() {
+				Rectangle ca = super.getClientArea();
+				return new Rectangle(ca.x + cardConfig.leftMargin, ca.y + cardConfig.topMargin, ca.width - cardConfig.leftMargin - cardConfig.rightMargin, ca.height - cardConfig.topMargin);
+			}
+		};
 		canvas.setToolTipText(initialTooltip);
 		listener = new TitlePaintListener(cardConfig, initialTitleSpec, initialTitle);
 		canvas.addPaintListener(listener);
@@ -34,9 +40,10 @@ public class Title implements IHasControl {
 		canvas.redraw();
 	}
 
-	public String getText(){
+	public String getText() {
 		return listener.getTitle();
 	}
+
 	@Override
 	public Control getControl() {
 		return canvas;
@@ -55,7 +62,6 @@ public class Title implements IHasControl {
 				Title title = new Title(parent, cardConfig, titleSpec, "title", "tooltip");
 				Size.resizeMeToParentsSize(parent);
 				Size.resizeMeToParentsSize(title.canvas);
-				Swts.layoutDump(from);
 				return parent;
 			}
 		});

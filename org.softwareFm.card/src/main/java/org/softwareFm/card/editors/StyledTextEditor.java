@@ -11,7 +11,6 @@ import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.IDetailsFactoryCallback;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.composites.IHasComposite;
-import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -85,7 +84,6 @@ public class StyledTextEditor implements IHasComposite {
 				StyledTextEditor textEditor = new StyledTextEditor(from, cardConfig, "someUrl", "key", "value", IDetailsFactoryCallback.Utils.resizeAfterGotData(), TitleSpec.noTitleSpec(from.getBackground()));
 				Size.resizeMeToParentsSize(textEditor.getControl());
 				textEditor.content.layout();
-				Swts.layoutDump(from);
 				Size.resizeMeToParentsSizeWithLayout(textEditor);
 				return textEditor.content;
 			}

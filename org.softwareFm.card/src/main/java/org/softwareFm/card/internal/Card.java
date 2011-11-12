@@ -13,8 +13,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -91,26 +89,22 @@ public class Card implements ICard {
 
 			CardOutlinePaintListener cardOutlinePaintListener = new CardOutlinePaintListener(titleSpec, cardConfig, this);
 			addPaintListener(cardOutlinePaintListener);
-			cardOutlinePaintListener.addListener(IStringAndRectangleListener.Utils.sysout());
-			addListener(SWT.Resize, new Listener() {
-				@Override
-				public void handleEvent(Event event) {
-					layout();
-				}
-			});
 		}
 
 		@Override
 		public Rectangle getClientArea() {
+			// note that the topMargin doesn't reference this component: it affects the space between the top of somewhere and the title. 
+			//There is a two pixel gap between the top of the card and the title
 			Rectangle clientArea = super.getClientArea();
-			int cardWidth = clientArea.width -  cardConfig.rightMargin - cardConfig.leftMargin;
-			int cardHeight = clientArea.height -  cardConfig.bottomMargin-cardConfig.topMargin;
-			Rectangle result = new Rectangle(clientArea.x + cardConfig.leftMargin, clientArea.y + cardConfig.topMargin, cardWidth, cardHeight);
+			int cardWidth = clientArea.width - cardConfig.rightMargin - cardConfig.leftMargin;
+			int cardHeight = clientArea.height - cardConfig.bottomMargin - 2;
+			Rectangle result = new Rectangle(clientArea.x + cardConfig.leftMargin, clientArea.y+2, cardWidth, cardHeight);
 			return result;
 		}
 
 		@Override
 		public void layout(boolean b) {
+//			System.out.println(" Crd " + Swts.boundsUpToShell(table)  + " clientAreas: " + Swts.clientAreasUpToShell(table));
 			Rectangle ca = getClientArea();
 			table.setBounds(ca);
 			Point size = table.getSize();
@@ -125,8 +119,6 @@ public class Card implements ICard {
 			int newValueWidth = size.x - newNameWidth - 1;
 			nameColumn.setWidth(newNameWidth);
 			valueColumn.setWidth(newValueWidth);
-			System.out.println("Card layout");
-			Swts.layoutDump(getShell());
 		}
 
 		private void setTableItem(int i, final CardConfig cardConfig, TableItem tableItem, KeyValue keyValue) {

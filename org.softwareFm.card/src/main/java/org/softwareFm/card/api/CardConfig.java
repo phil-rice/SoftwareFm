@@ -60,11 +60,12 @@ public class CardConfig {
 	
 	public int titleSpacer = 3;
 	public int defaultMargin = 10; 
+	
 
 	public int compressedNavTitleWidth = 12;
 	public int navIconWidth = 10;
 	public int cornerRadius = 7;
-	public int cornerRadiusComp = 2;
+	public  int cornerRadiusComp = 2; //if its one loose pixels at the corner
 	public final IRightClickCategoriser rightClickCategoriser;
 
 	public CardConfig(ICardFactory cardFactory, ICardDataStore cardDataStore) {

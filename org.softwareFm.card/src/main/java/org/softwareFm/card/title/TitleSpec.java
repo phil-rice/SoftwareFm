@@ -25,4 +25,8 @@ public class TitleSpec {
 	public static TitleSpec noTitleSpec(Color background) {
 		return new TitleSpec(null, background, 40);
 	}
+
+	public TitleSpec withoutImage() {
+		return new TitleSpec(null, background, rightIndent);
+	}
 }

@@ -24,7 +24,6 @@ public class CollectionItemDetailAdder implements IDetailAdder {
 				String url = parentCard.url() + "/" + key;
 				OneCardHolder result = new OneCardHolder(parentComposite, cardConfig, url, key, callback);
 				Swts.Size.setSizeFromClientArea(result.getControl());
-				Swts.layoutDump(parentComposite);
 				return result;
 			}
 		}
