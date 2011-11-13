@@ -116,17 +116,18 @@ public class MasterDetailSocial implements IMasterDetailSocial {
 	@Override
 	public void setSocial(Control social) {
 		set(content.social, social);
-		content.detailSocial.layout();
 	}
 
 	@Override
 	public void hideSocial() {
 		content.detailSocial.setMaximizedControl(content.detail);
+		content.detailSocial.layout();
 	}
 
 	@Override
 	public void showSocial() {
 		content.detailSocial.setMaximizedControl(null);
+		content.detailSocial.layout();
 	}
 
 	private void set(Composite composite, Control control) {

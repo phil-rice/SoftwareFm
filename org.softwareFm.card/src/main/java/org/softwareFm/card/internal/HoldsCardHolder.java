@@ -1,7 +1,6 @@
 package org.softwareFm.card.internal;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.swt.events.MouseAdapter;
@@ -14,6 +13,7 @@ import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardHolder;
 import org.softwareFm.card.api.ICardSelectedListener;
+import org.softwareFm.card.api.ILineSelectedListener;
 
 public class HoldsCardHolder extends Composite {
 
@@ -44,36 +44,23 @@ public class HoldsCardHolder extends Composite {
 				if (!cardHolder.getControl().isDisposed()) {
 					CardAndCollectionDataStoreVisitorMonitored visitor = new CardAndCollectionDataStoreVisitorMonitored() {
 						@Override
-						public void initialUrl(ICardHolder cardHolder, CardConfig cardConfig, String url) {
-						}
-
-						@Override
 						public void initialCard(ICardHolder cardHolder, CardConfig cardConfig, String url, final ICard card) {
+							super.initialCard(cardHolder, cardConfig, url, card);
 							card.getControl().addMouseListener(new MouseAdapter() {
 								@Override
 								public void mouseUp(MouseEvent e) {
-									for (ICardSelectedListener listener : listeners) {
-										listener.cardSelected(card);
-									}
+									norifyCardSelectedListeners(card);
+								}
+							});
+							card.addLineSelectedListener(new ILineSelectedListener() {
+								
+								@Override
+								public void selected(ICard card, String key, Object value) {
+									norifyCardSelectedListeners(card);
 								}
 							});
 						}
 
-						@Override
-						public void requestingFollowup(ICardHolder cardHolder, String url, ICard card, String followOnUrlFragment) {
-						}
-
-						@Override
-						public void followedUp(ICardHolder cardHolder, String url, ICard card, String followUpUrl, Map<String, Object> result) {
-						}
-
-						@Override
-						public void noData(ICardHolder cardHolder, String url, ICard card, String followUpUrl) {
-						}
-
-						@Override
-						public void finished(ICardHolder cardHolder, String url, ICard card) {
-						}
 					};
 
 					cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, visitor);
@@ -81,6 +68,12 @@ public class HoldsCardHolder extends Composite {
 			}
 		};
 		cardHolder.getControl().addPaintListener(listener);
+	}
+
+	private void norifyCardSelectedListeners(final ICard card) {
+		for (ICardSelectedListener listener : listeners) {
+			listener.cardSelected(card);
+		}
 	}
 
 	public CardHolder getCardHolder() {

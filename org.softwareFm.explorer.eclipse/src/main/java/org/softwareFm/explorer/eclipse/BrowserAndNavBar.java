@@ -27,6 +27,33 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 
 	private final BrowserAndNavBarComposite content;
 
+	public static class BrowserAndNavBarLayout extends Layout {
+		@Override
+		protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
+			BrowserAndNavBarComposite nav = (BrowserAndNavBarComposite) composite;
+			Point size = nav.browser.getControl().computeSize(wHint, hHint == SWT.DEFAULT ? SWT.DEFAULT : hHint - nav.config.height);
+			return new Point(size.x, size.y + nav.config.height);
+		}
+
+		@Override
+		protected void layout(Composite composite, boolean flushCache) {
+			BrowserAndNavBarComposite nav = (BrowserAndNavBarComposite) composite;
+			Rectangle ca = nav.getClientArea();
+			Control navHistoryPrevControl = nav.navNextHistoryPrev.getControl();
+			Point navSize = navHistoryPrevControl.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+			int titleHeight = navSize.y;
+
+			int cornerRadiusComp = nav.cardConfig.cornerRadiusComp;
+			int twiceComp = 2 * cornerRadiusComp;
+			nav.titleComposite.setBounds(ca.x + cornerRadiusComp, ca.y + cornerRadiusComp, ca.width - twiceComp, titleHeight);
+			navHistoryPrevControl.setBounds(0, 0, navSize.x, titleHeight);
+			nav.titleLabel.setBounds(ca.x + navSize.x, ca.y, ca.width - navSize.x, titleHeight);
+			nav.navNextHistoryPrev.layout();
+			nav.browser.getControl().setBounds(ca.x + cornerRadiusComp, ca.y + titleHeight + cornerRadiusComp, ca.width - twiceComp, ca.height - titleHeight - twiceComp);
+		}
+
+	}
+
 	static class BrowserAndNavBarComposite extends Composite {
 		BrowserComposite browser;
 		Composite titleComposite;
@@ -57,7 +84,6 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 					browser.processUrl(playItem.feedType, playItem.url);
 				}
 			});
-
 		}
 
 		@Override
@@ -67,33 +93,6 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 			return result;
 		}
 
-		@Override
-		public void setLayout(Layout layout) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public void layout(boolean changed) {
-			Rectangle ca = getClientArea();
-			Control navHistoryPrevControl = navNextHistoryPrev.getControl();
-			Point navSize = navHistoryPrevControl.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-			int titleHeight = navSize.y;
-
-			int cornerRadiusComp = cardConfig.cornerRadiusComp;
-			int twiceComp = 2 * cornerRadiusComp;
-
-			titleComposite.setBounds(ca.x + cornerRadiusComp, ca.y + cornerRadiusComp, ca.width - twiceComp, titleHeight);
-			navHistoryPrevControl.setBounds(0, 0, navSize.x, titleHeight);
-			titleLabel.setBounds(ca.x + navSize.x, ca.y, ca.width - navSize.x, titleHeight);
-			navNextHistoryPrev.layout();
-			browser.getControl().setBounds(ca.x + cornerRadiusComp, ca.y + titleHeight + cornerRadiusComp, ca.width - twiceComp, ca.height - titleHeight - twiceComp);
-		}
-
-		@Override
-		public Point computeSize(int wHint, int hHint) {
-			Point size = browser.getControl().computeSize(wHint, hHint == SWT.DEFAULT ? SWT.DEFAULT : hHint - config.height);
-			return new Point(size.x, size.y + config.height);
-		}
 	}
 
 	public BrowserAndNavBar(Composite parent, int style, int margin, CardConfig cardConfig, NavNextHistoryPrevConfig<PlayItem> config, IServiceExecutor service, IHistory<PlayItem> history) {
@@ -114,6 +113,11 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 	@Override
 	public IBrowserPart register(String feedType, IFunction1<Composite, IBrowserPart> displayCreator) {
 		return content.browser.register(feedType, displayCreator);
+	}
+
+	@Override
+	public Composite getComposite() {
+		return content;
 	}
 
 }

@@ -47,7 +47,7 @@ import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.services.IServiceExecutor;
 import org.softwareFm.utilities.strings.Strings;
 
-public class Explorer implements IExplorer, IHasControl {
+public class Explorer implements IExplorer {
 
 	private UnrecognisedJar unrecognisedJar;
 	private CardHolder cardHolder;
@@ -99,7 +99,7 @@ public class Explorer implements IExplorer, IHasControl {
 		browser = masterDetailSocial.createDetail(new IFunction1<Composite, BrowserAndNavBar>() {
 			@Override
 			public BrowserAndNavBar apply(Composite from) throws Exception {
-				return new BrowserAndNavBar(from, SWT.NULL, cardConfig.leftMargin, cardConfig, new NavNextHistoryPrevConfig<PlayItem>(cardConfig.titleHeight, cardConfig.imageFn, new IFunction1<PlayItem, String>() {
+				BrowserAndNavBar browserAndNavBar = new BrowserAndNavBar(from, SWT.NULL, cardConfig.leftMargin, cardConfig, new NavNextHistoryPrevConfig<PlayItem>(cardConfig.titleHeight, cardConfig.imageFn, new IFunction1<PlayItem, String>() {
 					@Override
 					public String apply(PlayItem from) throws Exception {
 						return from.toString();
@@ -110,6 +110,8 @@ public class Explorer implements IExplorer, IHasControl {
 						browser.processUrl(t.feedType, t.url);
 					}
 				}), service, timeLine);
+				browserAndNavBar.getComposite().setLayout(new BrowserAndNavBar.BrowserAndNavBarLayout());
+				return browserAndNavBar;
 			}
 		}, true);
 	
@@ -356,6 +358,11 @@ public class Explorer implements IExplorer, IHasControl {
 	@Override
 	public PlayItem last() {
 		return timeLine.last();
+	}
+
+	@Override
+	public Composite getComposite() {
+		return masterDetailSocial.getComposite();
 	}
 
 }

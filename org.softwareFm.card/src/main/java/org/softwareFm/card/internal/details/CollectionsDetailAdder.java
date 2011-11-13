@@ -6,7 +6,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.IDetailsFactoryCallback;
-import org.softwareFm.card.internal.CardCollectionHolder;
+import org.softwareFm.card.internal.ScrollingCardCollectionHolder;
 import org.softwareFm.display.composites.IHasControl;
 
 public class CollectionsDetailAdder implements IDetailAdder {
@@ -17,8 +17,8 @@ public class CollectionsDetailAdder implements IDetailAdder {
 			Map<String, Object> map = (Map<String, Object>) value;
 			Object type = map.get("sling:resourceType");
 			if ("collection".equals(type)) {
-				CardCollectionHolder result = new CardCollectionHolder(parentComposite, cardConfig);
-				result.getComposite().setLayout(new CardCollectionHolder.CardCollectionHolderLayout());
+				ScrollingCardCollectionHolder result = new ScrollingCardCollectionHolder(parentComposite, cardConfig);
+		
 				String newUrl = parentCard.url() +"/" + key;
 				result.setKeyValue(newUrl, key, value, callback);
 				return result;

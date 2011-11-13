@@ -146,7 +146,6 @@ public class CardCollectionHolder implements IHasComposite {
 
 	public CardConfig getCardConfig() {
 		return content.cardConfig;
-
 	}
 
 	public String getKey() {

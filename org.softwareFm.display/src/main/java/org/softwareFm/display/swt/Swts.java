@@ -148,11 +148,12 @@ public class Swts {
 			child.getControl().setSize(clientArea.width, clientArea.height);
 		}
 
-		public static void setSizeFromClientArea(Control child) {
+		public static Rectangle setSizeFromClientArea(Control child) {
 			Rectangle clientArea = child.getParent().getClientArea();
 			child.setSize(clientArea.width, clientArea.height);
 			if (child instanceof Composite)
 				((Composite) child).layout();
+			return clientArea;
 			// child.redraw();
 
 		}
