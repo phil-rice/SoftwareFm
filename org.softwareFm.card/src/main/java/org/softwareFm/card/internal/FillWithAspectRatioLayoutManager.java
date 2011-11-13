@@ -37,7 +37,7 @@ public class FillWithAspectRatioLayoutManager extends Layout {
 				int width = heightToWidth(hHint) * noOfChildren;
 				return new Point(width, hHint);
 			}
-		else if (hHint == SWT.DEFAULT) {
+		else if 						(hHint == SWT.DEFAULT) {
 			int height = widthToHeight(wHint);
 			return new Point(wHint, height);
 		} else {

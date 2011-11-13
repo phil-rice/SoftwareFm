@@ -32,6 +32,8 @@ public class CardConfig {
 	public final int topMargin;
 	public final int bottomMargin;
 	public final int titleHeight;
+	public final int titleIndentX = 10;
+	public final int titleIndentY = 10;
 	public final CardCollectionsDataStore cardCollectionsDataStore = new CardCollectionsDataStore();
 	public final IResourceGetter resourceGetter;
 	public final ICardConfigSelector selector;

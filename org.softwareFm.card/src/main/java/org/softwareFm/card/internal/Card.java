@@ -116,7 +116,7 @@ public class Card implements ICard {
 			valueColumn.pack();
 			table.pack();
 
-			CardOutlinePaintListener cardOutlinePaintListener = new CardOutlinePaintListener(titleSpec, cardConfig, this);
+			CardOutlinePaintListener cardOutlinePaintListener = new CardOutlinePaintListener(titleSpec, cardConfig);
 			addPaintListener(cardOutlinePaintListener);
 		}
 

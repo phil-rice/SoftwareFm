@@ -1,12 +1,10 @@
 package org.softwareFm.card.editors;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.IDetailsFactoryCallback;
@@ -24,8 +22,9 @@ abstract class ValueEditorComposite<T extends Control> extends Composite {
 	protected final OkCancel okCancel;
 	protected final CardConfig cardConfig;
 	protected final String originalValue;
-	private final Composite body;
 	private final TitleSpec titleSpec;
+	protected final Composite body;
+	protected Composite innerBody;
 
 	public ValueEditorComposite(Composite parent, int style, final CardConfig cardConfig, final String url, final String key, Object initialValue, TitleSpec titleSpec, final IDetailsFactoryCallback callback) {
 		super(parent, style);
@@ -34,13 +33,24 @@ abstract class ValueEditorComposite<T extends Control> extends Composite {
 		KeyValue keyValue = new KeyValue(key, initialValue);
 		String name = Functions.call(cardConfig.nameFn, keyValue);
 		titleLabel = new Title(this, cardConfig, titleSpec, name, url);
-		setBackground(titleSpec.background);
-		body = new Composite(this, SWT.NULL);
-		body.setBackground(titleSpec.background);
+		body = new Composite(this, SWT.NULL) {
+			@Override
+			public Rectangle getClientArea() {
+				// note that the topMargin doesn't reference this component: it affects the space between the top of somewhere and the title.
+				// There is a two pixel gap between the top of the card and the title
+				Rectangle clientArea = super.getClientArea();
+				int cardWidth = clientArea.width - cardConfig.rightMargin - cardConfig.leftMargin;
+				int cardHeight = clientArea.height - cardConfig.bottomMargin - 2;
+				Rectangle result = new Rectangle(clientArea.x + cardConfig.leftMargin, clientArea.y + 2, cardWidth, cardHeight);
+				return result;
+			}
+		};// needed to allow the CardOutlinePaintListener to paint around
+			// setBackground(titleSpec.background);
+		innerBody = new Composite(body, SWT.NULL);
 
 		originalValue = Functions.call(cardConfig.valueFn, keyValue);
-		editorControl = makeEditorControl(body, originalValue);
-		okCancel = new OkCancel(body, cardConfig, new Runnable() {
+		editorControl = makeEditorControl(innerBody, originalValue);
+		okCancel = new OkCancel(innerBody, cardConfig, new Runnable() {
 			@Override
 			public void run() {
 				IMutableCardDataStore cardDataStore = (IMutableCardDataStore) cardConfig.cardDataStore;
@@ -56,7 +66,7 @@ abstract class ValueEditorComposite<T extends Control> extends Composite {
 			}
 		});
 		updateEnabledStatusOfButtons();
-		body.addPaintListener(new CardOutlinePaintListener(titleSpec, cardConfig, body));
+		body.addPaintListener(new CardOutlinePaintListener(titleSpec, cardConfig));
 		editorControl.addListener(SWT.Traverse, new Listener() {
 			@Override
 			public void handleEvent(Event e) {
@@ -64,7 +74,7 @@ abstract class ValueEditorComposite<T extends Control> extends Composite {
 					okCancel.cancel();
 			}
 		});
-
+		innerBody.setBackground(titleSpec.background);
 	}
 
 	abstract protected T makeEditorControl(Composite parent, String originalValue);
@@ -75,54 +85,6 @@ abstract class ValueEditorComposite<T extends Control> extends Composite {
 
 	abstract protected boolean useAllHeight();
 
-	@Override
-	public void setLayout(Layout layout) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Point computeSize(int wHint, int hHint) {
-		Point textSize = editorControl.computeSize(wHint, hHint);
-		Point okCancelSize = okCancel.getControl().computeSize(wHint, hHint);
-		int height = hHint == SWT.DEFAULT ? cardConfig.titleHeight + textSize.y + okCancelSize.y : hHint;
-		int width = getParent().getClientArea().width; // want full width if can have it
-		return new Point(width, height);
-	}
-
-	@Override
-	public void layout(boolean changed) {
-		Rectangle clientArea = getClientArea();
-
-		body.setBounds(clientArea.x + 1, //
-				clientArea.y + 1 + cardConfig.titleHeight, //
-				clientArea.width - 2,//
-				clientArea.height - cardConfig.titleHeight - 2);// allows for line outside...
-
-		Rectangle bodyClientArea = body.getClientArea();
-
-		titleLabel.getControl().setSize(bodyClientArea.width, cardConfig.titleHeight);
-		titleLabel.getControl().setLocation(bodyClientArea.x + 1, bodyClientArea.y + 1);
-
-		Control okCancelControl = okCancel.getControl();
-		okCancelControl.pack();
-		int okCancelWidth = okCancelControl.getSize().x;
-		int okCancelHeight = okCancelControl.getSize().y;
-		okCancelControl.setBounds(//
-				bodyClientArea.x + bodyClientArea.width - okCancelWidth - 2,//
-				bodyClientArea.y + bodyClientArea.height - okCancelHeight - 2,//
-				okCancelWidth, okCancelHeight);
-
-		int editorHeight = useAllHeight() ? //
-		clientArea.height - cardConfig.titleHeight - okCancelControl.getSize().y - cardConfig.topMargin - cardConfig.bottomMargin - 2
-				: editorControl.computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
-
-		editorControl.setBounds(bodyClientArea.x + 1 + cardConfig.leftMargin,//
-				bodyClientArea.y + 1 + cardConfig.topMargin, //
-				bodyClientArea.width - 2 - cardConfig.leftMargin - cardConfig.rightMargin, //
-				editorHeight);
-
-	}
-	
 	public TitleSpec getTitleSpec() {
 		return titleSpec;
 	}

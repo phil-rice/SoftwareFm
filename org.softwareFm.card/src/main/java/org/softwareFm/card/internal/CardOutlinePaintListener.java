@@ -14,19 +14,18 @@ import org.softwareFm.card.title.TitleSpec;
 public class CardOutlinePaintListener implements PaintListener {
 	private final TitleSpec titleSpec;
 	private final CardConfig cardConfig;
-	private final Composite cardComposite;
 
 	private final List<IStringAndRectangleListener> listeners = new CopyOnWriteArrayList<IStringAndRectangleListener>();
 
-	public CardOutlinePaintListener(TitleSpec titleSpec, CardConfig cardConfig, Composite cardComposite) {
+	public CardOutlinePaintListener(TitleSpec titleSpec, CardConfig cardConfig) {
 		this.titleSpec = titleSpec;
 		this.cardConfig = cardConfig;
-		this.cardComposite = cardComposite;
 	}
 
 
 	@Override
 	public void paintControl(PaintEvent e) {
+		Composite cardComposite = (Composite) e.widget;
 		Rectangle cardBounds = cardComposite.getBounds();
 		Rectangle clientArea = cardComposite.getClientArea();
 		notifyListeners("cardBounds", cardBounds);

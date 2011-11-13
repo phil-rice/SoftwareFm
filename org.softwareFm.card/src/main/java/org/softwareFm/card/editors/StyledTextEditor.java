@@ -76,20 +76,18 @@ public class StyledTextEditor implements IHasComposite {
 	public TitleSpec getTitleSpec() {
 		return content.getTitleSpec();
 	}
+
 	public static void main(String[] args) {
 		Show.displayNoLayout(StyledTextEditor.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay());
-				StyledTextEditor textEditor = new StyledTextEditor(from, cardConfig, "someUrl", "key", "value", IDetailsFactoryCallback.Utils.resizeAfterGotData(), TitleSpec.noTitleSpec(from.getBackground()));
-				Size.resizeMeToParentsSize(textEditor.getControl());
-				textEditor.content.layout();
+				StyledTextEditor textEditor = new StyledTextEditor(from, cardConfig, "someUrl", "key", "value", IDetailsFactoryCallback.Utils.resizeAfterGotData(), TitleSpec.noTitleSpec(from.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN)));
+				textEditor.getComposite().setLayout(new ValueEditorLayout());
 				Size.resizeMeToParentsSizeWithLayout(textEditor);
 				return textEditor.content;
 			}
 		});
 	}
-
-
 
 }

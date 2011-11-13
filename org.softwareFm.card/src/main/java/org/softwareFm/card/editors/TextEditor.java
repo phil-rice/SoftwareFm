@@ -89,9 +89,10 @@ public class TextEditor implements IValueEditor {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay());
-				TextEditor textEditor = new TextEditor(from, cardConfig, "someUrl", "key", "value", IDetailsFactoryCallback.Utils.resizeAfterGotData(), TitleSpec.noTitleSpec(from.getBackground()));
-				Size.resizeMeToParentsSize(textEditor.getControl());
-				textEditor.content.layout();
+				TextEditor textEditor = new TextEditor(from, cardConfig, "someUrl", "key", "value", IDetailsFactoryCallback.Utils.resizeAfterGotData(), TitleSpec.noTitleSpec(from.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN)));
+				textEditor.getComposite().setLayout(new ValueEditorLayout());
+//				Size.resizeMeToParentsSize(textEditor.getControl());
+//				textEditor.content.layout();
 				Swts.layoutDump(from);
 				Size.resizeMeToParentsSizeWithLayout(textEditor);
 				return textEditor.content;
