@@ -5,12 +5,11 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.api.CardConfig;
-import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.swt.Swts.Row;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
-public class OkCancel implements IHasControl {
+public class OkCancel implements IOkCancel {
 
 	public final Button okButton;
 	public final Button cancelButton;
@@ -29,11 +28,13 @@ public class OkCancel implements IHasControl {
 		content.setLayout(Row.getHorizonalNoMarginRowLayout());
 	}
 
+	@Override
 	public void setOkEnabled(boolean enabled) {
 		this.enabled = enabled;
 		okButton.setEnabled(enabled);
 	}
 
+	@Override
 	public boolean isOkEnabled() {
 		return enabled;
 	}

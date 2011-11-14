@@ -21,7 +21,7 @@ import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.card.editors.OkCancel;
+import org.softwareFm.card.editors.OKCancelWithBorder;
 import org.softwareFm.card.internal.BasicCardConfigurator;
 import org.softwareFm.card.internal.Card;
 import org.softwareFm.card.title.Title;
@@ -77,7 +77,7 @@ public class UnrecognisedJar implements IHasComposite {
 		private ICard card;
 		private final Title title;
 		private final CardConfig cardConfig;
-		private final OkCancel okCancel;
+		private final OKCancelWithBorder okCancel;
 		private File file;
 		private String digest;
 
@@ -87,7 +87,7 @@ public class UnrecognisedJar implements IHasComposite {
 			this.file = new File(".");
 			title = new Title(this, cardConfig, TitleSpec.noTitleSpec(getBackground()), "", "");
 
-			okCancel = new OkCancel(this, cardConfig, new Runnable() {
+			okCancel = new OKCancelWithBorder(this, cardConfig, new Runnable() {
 				@Override
 				public void run() {
 					String groupId = (String) card.data().get(ConfigurationConstants.groupId);
@@ -103,6 +103,7 @@ public class UnrecognisedJar implements IHasComposite {
 					layout();
 				}
 			});
+			okCancel.setLayout(new OKCancelWithBorder.OKCancelWithBorderLayout());
 			okCancel.setOkEnabled(false);
 		}
 
