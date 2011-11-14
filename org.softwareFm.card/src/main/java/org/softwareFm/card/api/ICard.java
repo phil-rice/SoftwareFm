@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.softwareFm.display.composites.IHasComposite;
 
-public interface ICard extends IHasComposite {
+public interface ICard extends IHasComposite, IHasTable {
 
 	void valueChanged(String key, Object newValue);
 

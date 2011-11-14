@@ -29,6 +29,7 @@ import org.softwareFm.card.api.RightClickCategoryResult;
 import org.softwareFm.card.api.RightClickCategoryResult.Type;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.editors.TextEditor;
+import org.softwareFm.card.editors.ValueEditorLayout;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
@@ -163,8 +164,9 @@ public class CardExplorer implements IHasComposite {
 							store.put(fullUrl, Maps.stringObjectMap(CardConstants.slingResourceType, result.collectionName), callback);
 						}
 					}, TitleSpec.noTitleSpec(getBackground()));
+					editor.getComposite().setLayout(new ValueEditorLayout());
 					populateDetail(editor.getControl());
-				}
+				};
 			};
 
 			cardHolder.setAddItemProcessor(itemProcessor);

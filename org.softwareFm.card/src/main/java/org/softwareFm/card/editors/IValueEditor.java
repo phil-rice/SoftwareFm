@@ -14,4 +14,6 @@ public interface IValueEditor extends IHasComposite {
 	
 	/**Set the value so that if getValue was called it would return this */
 	void setValue(String newValue);
+	
+	
 }

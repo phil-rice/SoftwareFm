@@ -25,6 +25,7 @@ import org.softwareFm.card.api.RightClickCategoryResult;
 import org.softwareFm.card.api.RightClickCategoryResult.Type;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.editors.TextEditor;
+import org.softwareFm.card.editors.ValueEditorLayout;
 import org.softwareFm.card.internal.BasicCardConfigurator;
 import org.softwareFm.card.internal.CardDataStoreForRepository;
 import org.softwareFm.card.internal.CardHolder;
@@ -76,7 +77,9 @@ public class Explorer implements IExplorer {
 		unrecognisedJar = masterDetailSocial.createMaster(new IFunction1<Composite, UnrecognisedJar>() {
 			@Override
 			public UnrecognisedJar apply(final Composite from) throws Exception {
-				return new UnrecognisedJar(from, SWT.NULL, cardConfig);
+				UnrecognisedJar unrecognisedJar = new UnrecognisedJar(from, SWT.NULL, cardConfig);
+				unrecognisedJar.getComposite().setLayout(new UnrecognisedJar.UnrecognisedJarLayout());
+				return unrecognisedJar;
 			}
 		}, true);
 		cardHolder = masterDetailSocial.createMaster(new IFunction1<Composite, CardHolder>() {
@@ -114,7 +117,7 @@ public class Explorer implements IExplorer {
 				return browserAndNavBar;
 			}
 		}, true);
-	
+
 	}
 
 	@Override
@@ -129,7 +132,7 @@ public class Explorer implements IExplorer {
 	}
 
 	@Override
-	public void displayUnrecognisedJar( File file, String digest) {
+	public void displayUnrecognisedJar(File file, String digest) {
 		unrecognisedJar.setFileAndDigest(file, digest);
 		masterDetailSocial.setMaster(unrecognisedJar.getControl());
 		unrecognisedJar.getControl().redraw();
@@ -215,6 +218,7 @@ public class Explorer implements IExplorer {
 						}, TitleSpec.noTitleSpec(from.getBackground()));
 					}
 				}, false);
+				editor.getComposite().setLayout(new ValueEditorLayout());
 				masterDetailSocial.setDetail(editor.getControl());
 			}
 		};
@@ -347,7 +351,7 @@ public class Explorer implements IExplorer {
 	@Override
 	public void addCardListener(ICardChangedListener listener) {
 		cardHolder.addCardChangedListener(listener);
-		
+
 	}
 
 	@Override

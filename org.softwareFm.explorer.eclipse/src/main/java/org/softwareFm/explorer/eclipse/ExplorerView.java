@@ -1,5 +1,6 @@
 package org.softwareFm.explorer.eclipse;
 
+import java.io.File;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
@@ -13,6 +14,7 @@ import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.internal.BasicCardConfigurator;
 import org.softwareFm.display.browser.BrowserFeedConfigurator;
 import org.softwareFm.display.browser.RssFeedConfigurator;
+import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.display.timeline.IPlayListGetter;
@@ -21,6 +23,7 @@ import org.softwareFm.eclipse.ISelectedBindingManager;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.jdtBinding.api.JdtConstants;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
+import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.maps.Maps;
 
 public class ExplorerView extends ViewPart {
@@ -36,10 +39,10 @@ public class ExplorerView extends ViewPart {
 		Size.resizeMeToParentsSize(masterDetailSocial.getControl());
 
 		IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardConfig.cardDataStore);
-		final Explorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, activator.getServiceExecutor(),playListGetter);
+		final Explorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, activator.getServiceExecutor(), playListGetter);
 		new BrowserFeedConfigurator().configure(null, explorer);
 		new RssFeedConfigurator().configure(null, explorer);
-		
+
 		ISelectedBindingManager selectedBindingManager = activator.getSelectedBindingManager();// creates it
 
 		selectedBindingManager.addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
@@ -61,12 +64,17 @@ public class ExplorerView extends ViewPart {
 
 					@Override
 					public Void noData(String url) throws Exception {
-						explorer.displayUnrecognisedJar( ripperResult.path.toFile(), hexDigest);
+						File file = ripperResult.path.toFile();
+						if (Files.extension(file.toString()).equals("jar")) {
+							explorer.displayUnrecognisedJar(file, hexDigest);
+							explorer.processUrl(DisplayConstants.browserFeedType, "www.softwarefm.com");
+						}
 						return null;
 					}
 				});
 			}
 		});
+		explorer.processUrl(DisplayConstants.browserFeedType, "www.softwarefm.com");
 
 	}
 

@@ -45,7 +45,7 @@ public class StyledTextEditor implements IHasComposite {
 		}
 
 		@Override
-		protected boolean useAllHeight() {
+		public boolean useAllHeight() {
 			return true;
 		}
 

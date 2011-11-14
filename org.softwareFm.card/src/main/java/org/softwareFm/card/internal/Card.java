@@ -23,6 +23,7 @@ import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardValueChangedListener;
+import org.softwareFm.card.api.IHasTable;
 import org.softwareFm.card.api.ILineSelectedListener;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.card.constants.CardConstants;
@@ -33,8 +34,8 @@ import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
-public class Card implements ICard {
-	static class CardLayout extends Layout {
+public class Card implements ICard, IHasTable {
+public	static class CardLayout extends Layout {
 
 		@Override
 		protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
@@ -63,7 +64,7 @@ public class Card implements ICard {
 
 	}
 
-	static class CardComposite extends Composite {
+	public static class CardComposite extends Composite {
 		/** Holds strategies and values to control how the card is displayed */
 		final CardConfig cardConfig;
 		/** The original data passed to you. Kept for debugging / tests */
@@ -274,6 +275,7 @@ public class Card implements ICard {
 		});
 	}
 
+	@Override
 	public Table getTable() {
 		return content.table;
 	}

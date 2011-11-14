@@ -56,7 +56,14 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 		return this.facard.post(url, map, new IResponseCallback() {
 			@Override
 			public void process(IResponse response) {
-				afterEdit.afterEdit(url);
+				if (!from.isDisposed())
+					if (!from.isDisposed())
+						from.getDisplay().asyncExec(new Runnable() {
+							@Override
+							public void run() {
+								afterEdit.afterEdit(url);
+							}
+						});
 			}
 		});
 	}

@@ -13,29 +13,29 @@ public class ValueEditorLayout extends Layout {
 
 	@Override
 	protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
-		ValueEditorComposite<Control> c = (ValueEditorComposite<Control>) composite;
-		Point textSize = c.editorControl.computeSize(wHint, hHint);
-		Point okCancelSize = c.okCancel.getControl().computeSize(wHint, hHint);
-		int height = hHint == SWT.DEFAULT ? c.cardConfig.titleHeight + textSize.y + okCancelSize.y : hHint;
-		int width = c.getParent().getClientArea().width; // want full width if can have it
+		IValueComposite<Control> c = (IValueComposite<Control>) composite;
+		Point editorSize = c.getEditor().computeSize(wHint, hHint);
+		Point okCancelSize = c.getOkCancel().getControl().computeSize(wHint, hHint);
+		int height = hHint == SWT.DEFAULT ? c.getCardConfig().titleHeight + editorSize.y + okCancelSize.y : hHint;
+		int width = composite.getParent().getClientArea().width; // want full width if can have it
 		return new Point(width, height);
 	}
 
 	@Override
 	protected void layout(Composite composite, boolean flushCache) {
-		ValueEditorComposite<Control> c = (ValueEditorComposite<Control>) composite;
-		Rectangle cb = c.getBounds();
-		Rectangle ca = c.getClientArea();
-		CardConfig cc = c.cardConfig;
+		IValueComposite<Control> c = (IValueComposite<Control>) composite;
+		Rectangle cb = composite.getBounds();
+		Rectangle ca = composite.getClientArea();
+		CardConfig cc = c.getCardConfig();
 
-		c.body.setBounds(ca.x, ca.y + cc.topMargin + cc.titleHeight, ca.width, ca.height - cc.topMargin - cc.titleHeight);
+		c.getBody().setBounds(ca.x, ca.y + cc.topMargin + cc.titleHeight, ca.width, ca.height - cc.topMargin - cc.titleHeight);
 
-		c.innerBody.setBounds(c.body.getClientArea());
-		Rectangle cb_ca = c.innerBody.getClientArea();
+		c.getInnerBody().setBounds(c.getBody().getClientArea());
+		Rectangle cb_ca = c.getInnerBody().getClientArea();
 
-		c.titleLabel.getControl().setBounds(cb.x, cb.y, cb.width, cc.titleHeight + c.cardConfig.topMargin);
+		c.getTitle().getControl().setBounds(cb.x, cb.y, cb.width, cc.titleHeight + c.getCardConfig().topMargin);
 
-		Control okCancelControl = c.okCancel.getControl();
+		Control okCancelControl = c.getOkCancel().getControl();
 		okCancelControl.pack();
 		int okCancelWidth = okCancelControl.getSize().x;
 		int okCancelHeight = okCancelControl.getSize().y;
@@ -44,11 +44,12 @@ public class ValueEditorLayout extends Layout {
 				cb_ca.y + cb_ca.height - okCancelHeight - 2,//
 				okCancelWidth, okCancelHeight);
 
+		Control editor = c.getEditor();
 		int editorHeight = c.useAllHeight() ? //
 		cb_ca.height - 2*cc.titleIndentY - okCancelControl.getSize().y //
-				: c.editorControl.computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
+				: editor.computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
 
-		c.editorControl.setBounds(cb_ca.x + 1 + cc.titleIndentX,//
+		editor.setBounds(cb_ca.x + 1 + cc.titleIndentX,//
 				cb_ca.y + cc.titleIndentY, //
 				cb_ca.width - 2*cc.titleIndentX, //
 				editorHeight);

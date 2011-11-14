@@ -55,7 +55,7 @@ public class TextEditor implements IValueEditor {
 		}
 
 		@Override
-		protected boolean useAllHeight() {
+		public boolean useAllHeight() {
 			return false;
 		}
 
@@ -102,7 +102,7 @@ public class TextEditor implements IValueEditor {
 
 	@Override
 	public String getTitleText() {
-		return content.titleLabel.getText();
+		return content.title.getText();
 	}
 
 	@Override

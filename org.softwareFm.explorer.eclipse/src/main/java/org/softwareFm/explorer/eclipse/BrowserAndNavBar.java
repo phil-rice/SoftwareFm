@@ -17,6 +17,7 @@ import org.softwareFm.card.navigation.NavNextHistoryPrevConfig;
 import org.softwareFm.display.browser.BrowserComposite;
 import org.softwareFm.display.browser.IBrowserCompositeBuilder;
 import org.softwareFm.display.browser.IBrowserPart;
+import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.timeline.PlayItem;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.history.IHistory;
@@ -47,9 +48,10 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 			int twiceComp = 2 * cornerRadiusComp;
 			nav.titleComposite.setBounds(ca.x + cornerRadiusComp, ca.y + cornerRadiusComp, ca.width - twiceComp, titleHeight);
 			navHistoryPrevControl.setBounds(0, 0, navSize.x, titleHeight);
-			nav.titleLabel.setBounds(ca.x + navSize.x, ca.y, ca.width - navSize.x, titleHeight);
+			nav.titleLabel.setBounds(navSize.x, 0, ca.width - navSize.x, titleHeight);
 			nav.navNextHistoryPrev.layout();
 			nav.browser.getControl().setBounds(ca.x + cornerRadiusComp, ca.y + titleHeight + cornerRadiusComp, ca.width - twiceComp, ca.height - titleHeight - twiceComp);
+			System.out.println("BANB " + Swts.boundsUpToShell(nav.navNextHistoryPrev.getControl()));
 		}
 
 	}
@@ -68,13 +70,14 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 			this.config = config;
 			titleComposite = new Composite(this, SWT.NULL);
 			navNextHistoryPrev = new NavNextHistoryPrev<PlayItem>(titleComposite, config, history);
+			navNextHistoryPrev.setLayout(new NavNextHistoryPrev.NavNextHistoryPrevLayout<PlayItem>());
 			titleLabel = new Label(titleComposite, SWT.NULL);
 			browser = new BrowserComposite(this, SWT.NULL, service);
 			addPaintListener(new PaintListener() {
 				@Override
 				public void paintControl(PaintEvent e) {
 					Rectangle ca = getClientArea();
-					e.gc.drawRoundRectangle(ca.x, ca.y, ca.width, ca.height, cardConfig.cornerRadius, cardConfig.cornerRadius);
+					e.gc.drawRoundRectangle(ca.x - cardConfig.cornerRadiusComp, ca.y-cardConfig.cornerRadiusComp, ca.width, ca.height + 2 * cardConfig.cornerRadiusComp, cardConfig.cornerRadius, cardConfig.cornerRadius);
 				}
 			});
 			history.addHistoryListener(new IHistoryListener<PlayItem>() {
@@ -106,7 +109,7 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 
 	@Override
 	public Future<String> processUrl(String feedType, String url) {
-		LinkToHistory();
+		content.navNextHistoryPrev.getHistory().push(new PlayItem(feedType, url));
 		return content.browser.processUrl(feedType, url);
 	}
 

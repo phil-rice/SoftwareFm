@@ -28,6 +28,7 @@ import org.softwareFm.card.title.Title;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.configuration.ConfigurationConstants;
 import org.softwareFm.display.composites.IHasComposite;
+import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.utilities.functions.Functions;
@@ -38,6 +39,38 @@ import org.softwareFm.utilities.strings.Strings;
 public class UnrecognisedJar implements IHasComposite {
 
 	private final UnrecognisedJarComposite composite;
+
+	public static class UnrecognisedJarLayout extends Layout {
+
+		@Override
+		protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
+			UnrecognisedJarComposite c = (UnrecognisedJarComposite) composite;
+			Point titleSize = c.title.getControl().computeSize(wHint, c.cardConfig.titleHeight);
+			Point okCancelSize = c.okCancel.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT);
+			Point cardSize = c.card == null ? new Point(0, 0) : c.card.getControl().computeSize(wHint, hHint == SWT.DEFAULT ? SWT.DEFAULT : hHint - titleSize.y);
+			return new Point(Math.max(titleSize.x, cardSize.x), titleSize.y + cardSize.y + okCancelSize.y);
+		}
+
+		@Override
+		protected void layout(Composite composite, boolean flushCache) {
+			UnrecognisedJarComposite c = (UnrecognisedJarComposite) composite;
+			System.out.println(Swts.boundsUpToShell(composite));
+			CardConfig cc = c.cardConfig;
+			Rectangle ca = c.getClientArea();
+			Control okCancelControl = c.okCancel.getControl();
+			Point okCancelSize = okCancelControl.computeSize(ca.width, SWT.DEFAULT);
+
+			c.title.getControl().setBounds(ca.x, ca.y, ca.width, cc.titleHeight+cc.topMargin);
+
+			if (c.card != null)
+				c.card.getControl().setBounds(ca.x, ca.y + cc.titleHeight+cc.topMargin, ca.width, ca.height - cc.titleHeight - okCancelSize.y - cc.topMargin);
+
+			okCancelControl.setSize(ca.width, okCancelSize.y);
+			okCancelControl.setLocation(ca.x, ca.height - okCancelSize.y);
+			c.redraw();
+		}
+
+	}
 
 	static class UnrecognisedJarComposite extends Composite {
 
@@ -53,15 +86,14 @@ public class UnrecognisedJar implements IHasComposite {
 			this.cardConfig = cardConfig.withStyleAndSelection(SWT.FULL_SELECTION, true);
 			this.file = new File(".");
 			title = new Title(this, cardConfig, TitleSpec.noTitleSpec(getBackground()), "", "");
-		
+
 			okCancel = new OkCancel(this, cardConfig, new Runnable() {
 				@Override
 				public void run() {
 					String groupId = (String) card.data().get(ConfigurationConstants.groupId);
-					String artifactId= (String) card.data().get(ConfigurationConstants.artifactId);
-					String version=(String) card.data().get(ConfigurationConstants.version);
+					String artifactId = (String) card.data().get(ConfigurationConstants.artifactId);
+					String version = (String) card.data().get(ConfigurationConstants.version);
 					new NewJarImporter(cardConfig, CardConstants.manuallyAdded, digest, groupId, artifactId, version).process();
-
 				}
 			}, new Runnable() {
 				@Override
@@ -84,18 +116,19 @@ public class UnrecognisedJar implements IHasComposite {
 			if (card != null)
 				card.getControl().dispose();
 			final Map<String, Object> rawData = Maps.stringObjectMap(//
-					ConfigurationConstants.groupId,  "Please specify the group id",//
+					ConfigurationConstants.groupId, "Please specify the group id",//
 					ConfigurationConstants.artifactId, "Please specify the artifact id",//
 					ConfigurationConstants.version, "Please specify the version");
 			final Map<String, Object> startData = Maps.stringObjectMap(//
-					ConfigurationConstants.groupId,  "Please specify the group id",//
-					ConfigurationConstants.artifactId, Strings.withoutVersion(file,"Please specify the artifact id"),//
+					ConfigurationConstants.groupId, "Please specify the group id",//
+					ConfigurationConstants.artifactId, Strings.withoutVersion(file, "Please specify the artifact id"),//
 					ConfigurationConstants.version, Strings.versionPartOf(file, "Please specify the version"));
 			card = new Card(this, this.cardConfig, "neverused", startData);
+			card.getComposite().setLayout(new Card.CardLayout());
 			TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, card);
 			title.setTitleAndImage(file.getName(), file.toString(), titleSpec);
 			card.getControl().moveBelow(title.getControl());
-			final Table table = (Table) card.getControl();
+			final Table table = card.getTable();
 			final TableEditor editor = new TableEditor(table);
 			editor.horizontalAlignment = SWT.LEFT;
 			editor.grabHorizontal = true;
@@ -138,41 +171,6 @@ public class UnrecognisedJar implements IHasComposite {
 			});
 		}
 
-		@Override
-		public Rectangle getClientArea() {
-			Rectangle ca = super.getClientArea();
-			Rectangle result = new Rectangle(ca.x + cardConfig.leftMargin, ca.y + cardConfig.topMargin, ca.width - cardConfig.leftMargin - cardConfig.rightMargin, ca.height - cardConfig.topMargin - cardConfig.bottomMargin);
-			return result;
-		}
-
-		@Override
-		public void setLayout(Layout layout) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public void layout(boolean changed) {
-			Rectangle ca = getClientArea();
-			Control okCancelControl = okCancel.getControl();
-			Point okCancelSize = okCancelControl.computeSize(ca.width, SWT.DEFAULT);
-
-			title.getControl().setLocation(ca.x, ca.y);
-			title.getControl().setSize(ca.width, cardConfig.titleHeight);
-
-			card.getControl().setLocation(ca.x, ca.y + cardConfig.titleHeight);
-			card.getControl().setSize(ca.width, ca.height - cardConfig.titleHeight - okCancelSize.y - 5);
-
-			okCancelControl.setSize(ca.width, okCancelSize.y);
-			okCancelControl.setLocation(ca.x, ca.height - okCancelSize.y);
-			redraw();
-		}
-
-		@Override
-		public Point computeSize(int wHint, int hHint) {
-			Point titleSize = title.getControl().computeSize(wHint, hHint);
-			Point cardSize = card.getControl().computeSize(wHint, hHint == SWT.DEFAULT ? SWT.DEFAULT : hHint - titleSize.y);
-			return new Point(Math.max(titleSize.y, cardSize.y), titleSize.y + cardSize.y);
-		}
 
 	}
 
@@ -201,6 +199,7 @@ public class UnrecognisedJar implements IHasComposite {
 				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay()).withUrlGeneratorMap(BasicCardConfigurator.makeUrlGeneratorMap("/prefix/"));
 				UnrecognisedJar unrecognisedJar = new UnrecognisedJar(from, SWT.NULL, cardConfig);
 				unrecognisedJar.setFileAndDigest(new File("a/b/c/jarFile.jar"), "01234567Test");
+				unrecognisedJar.getComposite().setLayout(new UnrecognisedJarLayout());
 				Composite result = unrecognisedJar.getComposite();
 				Size.resizeMeToParentsSize(result);
 				return result;

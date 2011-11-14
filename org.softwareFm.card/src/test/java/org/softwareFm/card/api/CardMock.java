@@ -6,6 +6,7 @@ import java.util.Map;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Table;
 import org.softwareFm.utilities.collections.Lists;
 
 public class CardMock implements ICard {
@@ -69,6 +70,11 @@ public class CardMock implements ICard {
 
 	@Override
 	public void addValueChangedListener(ICardValueChangedListener listener) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Table getTable() {
 		throw new UnsupportedOperationException();
 	}
 

@@ -15,9 +15,9 @@ import org.softwareFm.card.title.Title;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.utilities.functions.Functions;
 
-abstract class ValueEditorComposite<T extends Control> extends Composite {
+abstract public class ValueEditorComposite<T extends Control> extends Composite implements IValueComposite<T> {
 
-	public Title titleLabel;
+	public Title title;
 	final T editorControl;
 	protected final OkCancel okCancel;
 	protected final CardConfig cardConfig;
@@ -32,7 +32,7 @@ abstract class ValueEditorComposite<T extends Control> extends Composite {
 		this.titleSpec = titleSpec;
 		KeyValue keyValue = new KeyValue(key, initialValue);
 		String name = Functions.call(cardConfig.nameFn, keyValue);
-		titleLabel = new Title(this, cardConfig, titleSpec, name, url);
+		title = new Title(this, cardConfig, titleSpec, name, url);
 		body = new Composite(this, SWT.NULL) {
 			@Override
 			public Rectangle getClientArea() {
@@ -83,7 +83,36 @@ abstract class ValueEditorComposite<T extends Control> extends Composite {
 
 	abstract protected void updateEnabledStatusOfButtons();
 
-	abstract protected boolean useAllHeight();
+
+	@Override
+	public CardConfig getCardConfig() {
+		return cardConfig;
+	}
+
+	@Override
+	public Title getTitle() {
+		return title;
+	}
+
+	@Override
+	public Composite getBody() {
+		return body;
+	}
+
+	@Override
+	public Composite getInnerBody() {
+		return innerBody;
+	}
+
+	@Override
+	public T getEditor() {
+		return editorControl;
+	}
+
+	@Override
+	public OkCancel getOkCancel() {
+		return okCancel;
+	}
 
 	public TitleSpec getTitleSpec() {
 		return titleSpec;
