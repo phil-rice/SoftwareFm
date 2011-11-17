@@ -17,7 +17,6 @@ public class CardHolderTestWithTitleTest extends AbstractCardHolderTest {
 		return new CardHolder(parent, "loadingtext", "some title", cardConfig, rootUrl, null);
 	}
 
-	@Override
 	public void testNavBarOrTitleChangesWhenCardAppears() throws Exception {
 		checkTitleBasedOnUrlIsDisplayed("someUrl", "someUrl");
 		checkTitleBasedOnUrlIsDisplayed("c", "a/b/c");

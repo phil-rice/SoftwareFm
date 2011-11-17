@@ -134,11 +134,8 @@ public class CardHolder implements ICardHolder {
 		if (table.getMenu() != null)
 			table.getMenu().dispose();
 
-		if (addItemProcessor == null)
-			return;
-
 		Menu menu = new Menu(table);
-		final MenuItem item1 = new MenuItem(menu, SWT.NULL);
+		item1 = new MenuItem(menu, SWT.NULL);
 
 		table.addListener(SWT.MenuDetect, new Listener() {
 			@Override
@@ -165,6 +162,7 @@ public class CardHolder implements ICardHolder {
 	private final List<ICardChangedListener> cardListeners = new CopyOnWriteArrayList<ICardChangedListener>();
 	final CardHolderComposite content;
 	private IAddItemProcessor addItemProcessor;
+	private MenuItem item1;
 
 	public CardHolder(Composite parent, String loadingText, String title, CardConfig cardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
 		content = new CardHolderComposite(parent, cardConfig, rootUrl, callbackToGotoUrl);
@@ -207,6 +205,9 @@ public class CardHolder implements ICardHolder {
 		return content;
 	}
 
+	 MenuItem getItem1() {
+		return item1;
+	}
 	public static void main(String[] args) {
 		Show.display(CardHolder.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override

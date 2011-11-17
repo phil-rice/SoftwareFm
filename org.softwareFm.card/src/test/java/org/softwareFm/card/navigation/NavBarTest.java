@@ -12,6 +12,7 @@ import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.CardMock;
 import org.softwareFm.card.api.ICard;
+import org.softwareFm.card.navigation.NavBar.NavBarLayout;
 import org.softwareFm.display.swt.SwtIntegrationTest;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.callbacks.MemoryCallback;
@@ -69,24 +70,25 @@ public class NavBarTest extends SwtIntegrationTest {
 	}
 
 	public void testComputeSize() {
-		Point navControlSize = navHistoryPrev.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT);
-		assertEquals(new Point(30, 20), navControlSize);
+		NavBarLayout layout = new NavBar.NavBarLayout();
+		Point navControlSize = layout.computeSize(navComposite, SWT.DEFAULT, SWT.DEFAULT, true);
+		assertEquals(new Point(cardConfig.leftMargin + 3*cardConfig.navIconWidth, cardConfig.titleHeight), navControlSize);
 
-		int leftMargin = 5;
-		int navIconWidth = 10;
+		int navIconWidth = cardConfig.navIconWidth;
 		Label label = new Label(shell, SWT.NULL);
 		label.setText("a");
 		int aWidth = label.computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
 
-		checkComputeSize(CardDataStoreFixture.url, 5 + 30 + navIconWidth);// left margin + navcontrols + a / combo
-		checkComputeSize(CardDataStoreFixture.url + "/a", leftMargin + navControlSize.x + navIconWidth + aWidth + navIconWidth);// left margin + navcontrols + a / combo and the text for a and another combo
-		checkComputeSize(CardDataStoreFixture.url + "/a/a/a", leftMargin + navControlSize.x + navIconWidth + aWidth + navIconWidth + aWidth + navIconWidth + aWidth + navIconWidth);
+		checkComputeSize(CardDataStoreFixture.url, navControlSize.x + navIconWidth);// left margin + navcontrols + a / combo
+		checkComputeSize(CardDataStoreFixture.url + "/a",  navControlSize.x + navIconWidth + aWidth + navIconWidth);// left margin + navcontrols + a / combo and the text for a and another combo
+		checkComputeSize(CardDataStoreFixture.url + "/a/a/a", navControlSize.x + navIconWidth + aWidth + navIconWidth + aWidth + navIconWidth + aWidth + navIconWidth);
 	}
 
 	private void checkComputeSize(String url, int expectedWidth) {
 		ICard card = makeCard(url);
 		nav.setUrl(card);
-		Point size = navComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+		NavBarLayout layout = new NavBar.NavBarLayout();
+		Point size = layout.computeSize(navComposite, SWT.DEFAULT, SWT.DEFAULT, true);
 		assertEquals(new Point(expectedWidth, 20), size);
 	}
 

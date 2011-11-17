@@ -13,7 +13,6 @@ public class CardHolderTestWithNavBarTest extends AbstractCardHolderTest {
 		return cardHolder;
 	}
 
-	@Override
 	public void testNavBarOrTitleChangesWhenCardAppears() throws Exception {
 		checkNavBarWithSetCard(cardConfig);
 	}

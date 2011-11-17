@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.softwareFm.card.api.IDetailsFactoryCallback;
 import org.softwareFm.card.api.KeyValue;
 import org.softwareFm.card.internal.CardCollectionHolder;
+import org.softwareFm.card.internal.ScrollingCardCollectionHolder;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.strings.Strings;
@@ -25,7 +26,8 @@ public abstract class AbstractDetailsAdderTest<T extends IDetailAdder> extends A
 
 	protected void checkGetCardCollectionsHolder(KeyValue keyValue, String expectedUrl) {
 		IHasControl actual = adder.add(shell, parentCard, cardConfig, keyValue.key, keyValue.value,IDetailsFactoryCallback.Utils.noCallback());
-		CardCollectionHolder holder = (CardCollectionHolder) actual;
+		ScrollingCardCollectionHolder scrollingHolder = (ScrollingCardCollectionHolder) actual;
+		CardCollectionHolder holder = scrollingHolder.getCardHolder();
 		assertSame(cardConfig, holder.getCardConfig());
 		assertSame(keyValue.key, holder.getKey());
 		assertSame(keyValue.value, holder.getValue());

@@ -8,6 +8,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.junit.Test;
+import org.softwareFm.card.navigation.NavNextHistoryPrev.NavNextHistoryPrevLayout;
 import org.softwareFm.display.swt.SwtIntegrationTest;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
@@ -29,9 +30,9 @@ public class NavNextHistoryPrevTest extends SwtIntegrationTest {
 
 	@Test
 	public void testComputeSize() {
-		checkComputeSize(nav, SWT.DEFAULT, SWT.DEFAULT);
-		checkComputeSize(nav, 1, 2);
-		checkComputeSize(nav, 100, 200);
+		checkComputeSize(SWT.DEFAULT, SWT.DEFAULT);
+		checkComputeSize(1, 2);
+		checkComputeSize(100, 200);
 	}
 
 	public void testGetClientArea() {
@@ -42,7 +43,7 @@ public class NavNextHistoryPrevTest extends SwtIntegrationTest {
 	}
 
 	public void testLayout() {
-		nav.layout();
+		nav.setLayout(new NavNextHistoryPrev.NavNextHistoryPrevLayout<Integer>());
 		navComposite.setSize(100, 200);
 		Control[] children = navComposite.getChildren();
 		assertEquals(3, children.length);
@@ -68,8 +69,9 @@ public class NavNextHistoryPrevTest extends SwtIntegrationTest {
 	}
 	
 
-	private void checkComputeSize(NavNextHistoryPrev<Integer> nav, int wHint, int hHint) {
-		Point size = navComposite.computeSize(wHint, hHint);
+	private void checkComputeSize(int wHint, int hHint) {
+		NavNextHistoryPrevLayout<Integer> layout = new NavNextHistoryPrev.NavNextHistoryPrevLayout<Integer>();
+		Point size = layout.computeSize(navComposite, wHint, hHint, true);
 		int expectedWidth = 2 + 4 + 3 * 20;// left/right margin * 3 icons
 		int expectedHeight = 44 + 6 + 8; // height + top/bottom margin
 		assertEquals(new Point(expectedWidth, expectedHeight), size);

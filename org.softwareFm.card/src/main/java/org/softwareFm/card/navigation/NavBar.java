@@ -31,7 +31,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 		protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
 			NavBarComposite nav = (NavBarComposite) composite;
 			Rectangle clientArea = nav.getClientArea();
-			int x = clientArea.x + nav.cardConfig.leftMargin;
+			int x = clientArea.x;
 			for (Control control : nav.getChildren())
 				if (control instanceof Combo) {
 					x += nav.cardConfig.navIconWidth;
@@ -67,7 +67,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 					i++;
 				}
 			}
-			int x = ca.x + nav.cardConfig.leftMargin;
+			int x = ca.x ;
 			int y = ca.y + 2;
 			for (Control control : nav.getChildren())
 				if (control instanceof Combo) {
@@ -82,10 +82,10 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 		}
 
 		private boolean isTooBig(NavBarComposite nav, Rectangle clientArea) {
-			int width = 0;
+			int width = clientArea.x;
 			for (Control child : nav.getChildren())
 				width += child.getSize().x;
-			return width > clientArea.x + clientArea.width;
+			return width >= clientArea.x + clientArea.width;
 		}
 
 	}

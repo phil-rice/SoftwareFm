@@ -55,4 +55,44 @@ public class RightClickCategoryResult {
 		return collectionUrl()+"/"+ value;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((collectionName == null) ? 0 : collectionName.hashCode());
+		result = prime * result + ((itemType == null) ? 0 : itemType.hashCode());
+		result = prime * result + ((key == null) ? 0 : key.hashCode());
+		result = prime * result + ((url == null) ? 0 : url.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RightClickCategoryResult other = (RightClickCategoryResult) obj;
+		if (collectionName == null) {
+			if (other.collectionName != null)
+				return false;
+		} else if (!collectionName.equals(other.collectionName))
+			return false;
+		if (itemType != other.itemType)
+			return false;
+		if (key == null) {
+			if (other.key != null)
+				return false;
+		} else if (!key.equals(other.key))
+			return false;
+		if (url == null) {
+			if (other.url != null)
+				return false;
+		} else if (!url.equals(other.url))
+			return false;
+		return true;
+	}
+
 }

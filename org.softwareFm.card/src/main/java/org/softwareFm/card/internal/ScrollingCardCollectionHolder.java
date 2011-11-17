@@ -63,4 +63,8 @@ public class ScrollingCardCollectionHolder implements IHasControl {
 		setSize();
 	}
 
+	public CardCollectionHolder getCardHolder() {
+		return holder;
+	}
+
 }
