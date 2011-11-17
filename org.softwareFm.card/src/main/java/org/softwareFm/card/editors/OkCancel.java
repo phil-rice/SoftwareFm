@@ -7,6 +7,7 @@ import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.swt.Swts.Row;
+import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class OkCancel implements IOkCancel {
@@ -22,7 +23,7 @@ public class OkCancel implements IOkCancel {
 		this.onAccept = onAccept;
 		this.onCancel = onCancel;
 		content = new Composite(parent, SWT.NULL);
-		IResourceGetter resourceGetter = cardConfig.resourceGetter;
+		IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, null);
 		cancelButton = org.softwareFm.display.swt.Swts.Button.makePushButton(content, resourceGetter, DisplayConstants.buttonCancelTitle, onCancel);
 		okButton = org.softwareFm.display.swt.Swts.Button.makePushButton(content, resourceGetter, DisplayConstants.buttonOkTitle, onAccept);
 		content.setLayout(Row.getHorizonalNoMarginRowLayout());
@@ -44,10 +45,12 @@ public class OkCancel implements IOkCancel {
 		return content;
 	}
 
+	@Override
 	public void ok() {
 		onAccept.run();
 	}
 
+	@Override
 	public void cancel() {
 		onCancel.run();
 	}

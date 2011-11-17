@@ -6,49 +6,53 @@ import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.strings.Strings;
 
-public class KeyValue {
+public class LineItem {
+	public final String cardType;
 	public final String key;
 	public final Object value;
 
 	public static class Utils {
-		public static IFunction1<KeyValue, String> keyFn() {
-			return new IFunction1<KeyValue, String>() {
+		public static IFunction1<LineItem, String> keyFn() {
+			return new IFunction1<LineItem, String>() {
 				@Override
-				public String apply(KeyValue from) throws Exception {
+				public String apply(LineItem from) throws Exception {
 					return from.key;
 				}
 			};
 		}
 
-		public static Comparator<KeyValue> orderedKeyComparator(String... order) {
+		public static Comparator<LineItem> orderedKeyComparator(String... order) {
 			return Lists.comparator(keyFn(), Lists.orderedComparator(order));
 		}
 
-		public static IFunction1<KeyValue, String> valueAsStrFn() {
-			return new IFunction1<KeyValue, String>() {
+		public static IFunction1<LineItem, String> valueAsStrFn() {
+			return new IFunction1<LineItem, String>() {
 
 				@Override
-				public String apply(KeyValue from) throws Exception {
+				public String apply(LineItem from) throws Exception {
 					return Strings.nullSafeToString(from.value);
 				}
 			};
 		}
 	}
 
-	public KeyValue(String key, Object value) {
+	public LineItem(String cardType, String key, Object value) {
+		this.cardType = cardType;
 		this.key = key;
 		this.value = value;
 	}
 
+
 	@Override
 	public String toString() {
-		return "KeyValue [key=" + key + ", value=" + value + "]";
+		return "LineItem [key=" + key + ", value=" + value + ", cardType=" + cardType + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((cardType == null) ? 0 : cardType.hashCode());
 		result = prime * result + ((key == null) ? 0 : key.hashCode());
 		result = prime * result + ((value == null) ? 0 : value.hashCode());
 		return result;
@@ -62,7 +66,12 @@ public class KeyValue {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		KeyValue other = (KeyValue) obj;
+		LineItem other = (LineItem) obj;
+		if (cardType == null) {
+			if (other.cardType != null)
+				return false;
+		} else if (!cardType.equals(other.cardType))
+			return false;
 		if (key == null) {
 			if (other.key != null)
 				return false;

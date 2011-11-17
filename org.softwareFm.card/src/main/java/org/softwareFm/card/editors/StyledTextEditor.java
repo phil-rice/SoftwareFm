@@ -21,8 +21,8 @@ public class StyledTextEditor implements IHasComposite {
 
 	static class TextEditorComposite extends ValueEditorComposite<StyledText> {
 
-		public TextEditorComposite(Composite parent, int style, final CardConfig cardConfig, final String url, final String key, Object initialValue, TitleSpec titleSpec, final IDetailsFactoryCallback callback) {
-			super(parent, style, cardConfig, url, key, initialValue, titleSpec, callback);
+		public TextEditorComposite(Composite parent, int style, final CardConfig cardConfig, final String url,String cardType, final String key, Object initialValue, TitleSpec titleSpec, final IDetailsFactoryCallback callback) {
+			super(parent, style, cardConfig, url, cardType, key, initialValue, titleSpec, callback);
 		}
 
 		@Override
@@ -55,8 +55,8 @@ public class StyledTextEditor implements IHasComposite {
 		}
 	}
 
-	public StyledTextEditor(Composite parentComposite, CardConfig cardConfig, String url, String key, Object value, IDetailsFactoryCallback callback, TitleSpec titleSpec) {
-		content = new TextEditorComposite(parentComposite, SWT.NULL, cardConfig, url, key, value, titleSpec, callback);
+	public StyledTextEditor(Composite parentComposite, CardConfig cardConfig, String url,String cardType,  String key, Object value, IDetailsFactoryCallback callback, TitleSpec titleSpec) {
+		content = new TextEditorComposite(parentComposite, SWT.NULL, cardConfig, url, cardType, key, value, titleSpec, callback);
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class StyledTextEditor implements IHasComposite {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay());
-				StyledTextEditor textEditor = new StyledTextEditor(from, cardConfig, "someUrl", "key", "value", IDetailsFactoryCallback.Utils.resizeAfterGotData(), TitleSpec.noTitleSpec(from.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN)));
+				StyledTextEditor textEditor = new StyledTextEditor(from, cardConfig, "someUrl", null,"key", "value", IDetailsFactoryCallback.Utils.resizeAfterGotData(), TitleSpec.noTitleSpec(from.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN)));
 				textEditor.getComposite().setLayout(new ValueEditorLayout());
 				Size.resizeMeToParentsSizeWithLayout(textEditor);
 				return textEditor.content;

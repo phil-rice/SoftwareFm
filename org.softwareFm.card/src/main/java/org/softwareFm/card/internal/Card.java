@@ -25,7 +25,7 @@ import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardValueChangedListener;
 import org.softwareFm.card.api.IHasTable;
 import org.softwareFm.card.api.ILineSelectedListener;
-import org.softwareFm.card.api.KeyValue;
+import org.softwareFm.card.api.LineItem;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.swt.Swts;
@@ -35,7 +35,7 @@ import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class Card implements ICard, IHasTable {
-public	static class CardLayout extends Layout {
+	public static class CardLayout extends Layout {
 
 		@Override
 		protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
@@ -81,13 +81,15 @@ public	static class CardLayout extends Layout {
 
 		/** Controls access to data */
 		private final Object lock = new Object();
+		public String cardType;
 
-		public CardComposite(Composite parent, final CardConfig cardConfig, final String url, Map<String, Object> rawData, TitleSpec titleSpec) {
+		public CardComposite(Composite parent, final CardConfig cardConfig, final String url, Map<String, Object> rawData, String cardType, TitleSpec titleSpec) {
 			super(parent, SWT.NULL);
 
 			this.cardConfig = cardConfig;
 			this.url = url;
 			this.rawData = rawData;
+			this.cardType = cardType;
 			this.table = new Table(this, cardConfig.cardStyle);
 			this.nameColumn = new TableColumn(table, SWT.NONE);
 			this.valueColumn = new TableColumn(table, SWT.NONE);
@@ -97,18 +99,18 @@ public	static class CardLayout extends Layout {
 
 			// table.setHeaderVisible(true);
 			table.setLinesVisible(true);
-			nameColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "card.name.title"));
-			valueColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "card.value.title"));
+			nameColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null, "card.name.title"));
+			valueColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null, "card.value.title"));
 			nameColumn.setWidth(100);
 			valueColumn.setWidth(100);
 			table.setDragDetect(true);
 			table.setBackground(titleSpec.background);
 			int i = 0;
 			for (Entry<String, Object> entry : data.entrySet()) {
-				KeyValue keyValue = new KeyValue(entry.getKey(), entry.getValue());
-				if (!Functions.call(cardConfig.hideFn, keyValue)) { // Have to make an object here, but we are decoupling how we store the data, and the JVM probably optimises it away anyway
+				LineItem lineItem = new LineItem(cardType, entry.getKey(), entry.getValue());
+				if (!Functions.call(cardConfig.hideFn, lineItem)) { // Have to make an object here, but we are decoupling how we store the data, and the JVM probably optimises it away anyway
 					TableItem tableItem = new TableItem(table, SWT.NULL);
-					setTableItem(i, cardConfig, tableItem, keyValue);
+					setTableItem(i, cardConfig, tableItem, lineItem);
 				}
 				i++;
 			}
@@ -132,12 +134,12 @@ public	static class CardLayout extends Layout {
 			return result;
 		}
 
-		private void setTableItem(int i, final CardConfig cardConfig, TableItem tableItem, KeyValue keyValue) {
+		private void setTableItem(int i, final CardConfig cardConfig, TableItem tableItem, LineItem lineItem) {
 			// System.out.println("Setting table item[" + i + "]: " + keyValue);
-			String displayValue = Functions.call(cardConfig.valueFn, keyValue);
-			String name = Functions.call(cardConfig.nameFn, keyValue);
+			String displayValue = Functions.call(cardConfig.valueFn, lineItem);
+			String name = Functions.call(cardConfig.nameFn, lineItem);
 			tableItem.setText(new String[] { name, displayValue });
-			tableItem.setData(keyValue.key);
+			tableItem.setData(lineItem.key);
 
 		}
 
@@ -147,7 +149,7 @@ public	static class CardLayout extends Layout {
 				try {
 					TableItem item = table.getItem(index);
 					data.put(key, newValue);
-					setTableItem(index, cardConfig, item, new KeyValue(key, newValue));
+					setTableItem(index, cardConfig, item, new LineItem(cardType, key, newValue));
 					table.redraw();
 				} catch (IllegalArgumentException e) {
 					throw new RuntimeException(MessageFormat.format(CardConstants.exceptionChangingValue, key, index, newValue));
@@ -176,12 +178,14 @@ public	static class CardLayout extends Layout {
 	private final List<ILineSelectedListener> lineSelectedListeners = new CopyOnWriteArrayList<ILineSelectedListener>();
 
 	/** What type of card is this? Examples are the strings 'collection', 'group', 'artifact' */
-	private final String cardType;
+	private final CardConfig cardConfig;
+	private String cardType;
 
 	public Card(Composite parent, final CardConfig cardConfig, final String url, Map<String, Object> rawData) {
-		this.cardType = (String) rawData.get(CardConstants.slingResourceType);
+		this.cardConfig = cardConfig;
+		this. cardType = (String) rawData.get(CardConstants.slingResourceType);
 		final TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, this);
-		content = new CardComposite(parent, cardConfig, url, rawData, titleSpec);
+		content = new CardComposite(parent, cardConfig, url, rawData, cardType, titleSpec);
 		content.table.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -229,7 +233,7 @@ public	static class CardLayout extends Layout {
 
 	@Override
 	public CardConfig cardConfig() {
-		return content.cardConfig;
+		return cardConfig;
 	}
 
 	@Override

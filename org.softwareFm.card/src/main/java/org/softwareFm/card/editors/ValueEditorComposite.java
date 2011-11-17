@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.IDetailsFactoryCallback;
 import org.softwareFm.card.api.IMutableCardDataStore;
-import org.softwareFm.card.api.KeyValue;
+import org.softwareFm.card.api.LineItem;
 import org.softwareFm.card.internal.CardOutlinePaintListener;
 import org.softwareFm.card.title.Title;
 import org.softwareFm.card.title.TitleSpec;
@@ -26,12 +26,12 @@ abstract public class ValueEditorComposite<T extends Control> extends Composite 
 	protected final Composite body;
 	protected Composite innerBody;
 
-	public ValueEditorComposite(Composite parent, int style, final CardConfig cardConfig, final String url, final String key, Object initialValue, TitleSpec titleSpec, final IDetailsFactoryCallback callback) {
+	public ValueEditorComposite(Composite parent, int style, final CardConfig cardConfig, final String url, String cardType, final String key, Object initialValue, TitleSpec titleSpec, final IDetailsFactoryCallback callback) {
 		super(parent, style);
 		this.cardConfig = cardConfig;
 		this.titleSpec = titleSpec;
-		KeyValue keyValue = new KeyValue(key, initialValue);
-		String name = Functions.call(cardConfig.nameFn, keyValue);
+		LineItem lineItem = new LineItem(cardType, key, initialValue);
+		String name = Functions.call(cardConfig.nameFn, lineItem);
 		title = new Title(this, cardConfig, titleSpec, name, url);
 		body = new Composite(this, SWT.NULL) {
 			@Override
@@ -48,7 +48,7 @@ abstract public class ValueEditorComposite<T extends Control> extends Composite 
 			// setBackground(titleSpec.background);
 		innerBody = new Composite(body, SWT.NULL);
 
-		originalValue = Functions.call(cardConfig.valueFn, keyValue);
+		originalValue = Functions.call(cardConfig.valueFn, lineItem);
 		editorControl = makeEditorControl(innerBody, originalValue);
 		okCancel = new OkCancel(innerBody, cardConfig, new Runnable() {
 			@Override

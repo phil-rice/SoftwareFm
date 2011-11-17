@@ -3,7 +3,7 @@ package org.softwareFm.card.internal.details;
 import java.util.Arrays;
 
 import org.softwareFm.card.api.IDetailsFactoryCallback;
-import org.softwareFm.card.api.KeyValue;
+import org.softwareFm.card.api.LineItem;
 import org.softwareFm.card.internal.CardCollectionHolder;
 import org.softwareFm.card.internal.ScrollingCardCollectionHolder;
 import org.softwareFm.display.composites.IHasControl;
@@ -24,13 +24,13 @@ public abstract class AbstractDetailsAdderTest<T extends IDetailAdder> extends A
 
 	abstract protected T makeDetailsAdder();
 
-	protected void checkGetCardCollectionsHolder(KeyValue keyValue, String expectedUrl) {
-		IHasControl actual = adder.add(shell, parentCard, cardConfig, keyValue.key, keyValue.value,IDetailsFactoryCallback.Utils.noCallback());
+	protected void checkGetCardCollectionsHolder(LineItem lineItem, String expectedUrl) {
+		IHasControl actual = adder.add(shell, parentCard, cardConfig, lineItem.key, lineItem.value,IDetailsFactoryCallback.Utils.noCallback());
 		ScrollingCardCollectionHolder scrollingHolder = (ScrollingCardCollectionHolder) actual;
 		CardCollectionHolder holder = scrollingHolder.getCardHolder();
 		assertSame(cardConfig, holder.getCardConfig());
-		assertSame(keyValue.key, holder.getKey());
-		assertSame(keyValue.value, holder.getValue());
+		assertSame(lineItem.key, holder.getKey());
+		assertSame(lineItem.value, holder.getValue());
 		assertEquals(expectedUrl, holder.getRootUrl());
 	}
 
@@ -38,15 +38,15 @@ public abstract class AbstractDetailsAdderTest<T extends IDetailAdder> extends A
 	protected void noEdittingHappensWithThisDetail() {
 	}
 
-	protected IFunction1<KeyValue, String> justValue = new IFunction1<KeyValue, String>() {
+	protected IFunction1<LineItem, String> justValue = new IFunction1<LineItem, String>() {
 		@Override
-		public String apply(KeyValue from) throws Exception {
+		public String apply(LineItem from) throws Exception {
 			return Strings.nullSafeToString(from.value);
 		}
 	};
-	protected IFunction1<KeyValue, String> addPrefixToValue = new IFunction1<KeyValue, String>() {
+	protected IFunction1<LineItem, String> addPrefixToValue = new IFunction1<LineItem, String>() {
 		@Override
-		public String apply(KeyValue from) throws Exception {
+		public String apply(LineItem from) throws Exception {
 			return "pre_" + from.value;
 		}
 	};

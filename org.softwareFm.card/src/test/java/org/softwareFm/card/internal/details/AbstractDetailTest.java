@@ -8,7 +8,7 @@ import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.IDetailsFactoryCallback;
-import org.softwareFm.card.api.KeyValue;
+import org.softwareFm.card.api.LineItem;
 import org.softwareFm.card.internal.Card;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.composites.IHasControl;
@@ -17,12 +17,12 @@ import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.maps.Maps;
 
 abstract public class AbstractDetailTest extends SwtIntegrationTest {
-	protected static KeyValue stringValue = new KeyValue("key", "stringValue");
-	protected static KeyValue intValue = new KeyValue("key", 0);
-	protected static KeyValue mapValue = new KeyValue("key", Maps.stringObjectMap("k1", "v1", "k2", "v2"));
-	protected static KeyValue collectionValue = new KeyValue("key", Maps.stringObjectMap("k1", "v1", "k2", "v2", "sling:resourceType", "collection"));
-	protected static KeyValue typedValueNotCollection = new KeyValue("key", Maps.stringObjectMap("k1", "v1", "k2", "v2", "sling:resourceType", "sometype"));
-	protected static KeyValue folderValue = new KeyValue("key", Maps.stringObjectMap("k1", "v1", "k2", "v2"));
+	protected static LineItem stringValue = new LineItem(null, "key", "stringValue");
+	protected static LineItem intValue = new LineItem(null, "key", 0);
+	protected static LineItem mapValue = new LineItem(null, "key", Maps.stringObjectMap("k1", "v1", "k2", "v2"));
+	protected static LineItem collectionValue = new LineItem(null, "key", Maps.stringObjectMap("k1", "v1", "k2", "v2", "sling:resourceType", "collection"));
+	protected static LineItem typedValueNotCollection = new LineItem(null, "key", Maps.stringObjectMap("k1", "v1", "k2", "v2", "sling:resourceType", "sometype"));
+	protected static LineItem folderValue = new LineItem(null, "key", Maps.stringObjectMap("k1", "v1", "k2", "v2"));
 
 	protected CardConfig parentCardConfig;
 	protected CardConfig cardConfig;
@@ -42,8 +42,8 @@ abstract public class AbstractDetailTest extends SwtIntegrationTest {
 		return new CardConfig(ICardFactory.Utils.cardFactory(), cardDataStore);
 	}
 
-	protected void checkGetNull(DetailFactory detailFactory, KeyValue keyValue) {
-		IHasControl actual = detailFactory.makeDetail(shell, parentCard, cardConfig, keyValue.key, keyValue.value, IDetailsFactoryCallback.Utils.noCallback());
+	protected void checkGetNull(DetailFactory detailFactory, LineItem lineItem) {
+		IHasControl actual = detailFactory.makeDetail(shell, parentCard, cardConfig, lineItem.key, lineItem.value, IDetailsFactoryCallback.Utils.noCallback());
 		assertNull(actual);
 	}
 

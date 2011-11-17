@@ -16,7 +16,7 @@ public class TextEditorDetailAdder implements IDetailAdder {
 	public IHasControl add(Composite parentComposite, ICard parentCard, CardConfig cardConfig, String key, Object value, IDetailsFactoryCallback callback) {
 		if (value instanceof String) {
 			TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, parentCard);
-			TextEditor result = new TextEditor(parentComposite, cardConfig, parentCard.url(), key, value, callback, titleSpec);
+			TextEditor result = new TextEditor(parentComposite, cardConfig, parentCard.url(),parentCard.cardType(),  key, value, callback, titleSpec);
 			result.getComposite().setLayout(new ValueEditorLayout());
 			callback.gotData(result.getControl());
 			return result;

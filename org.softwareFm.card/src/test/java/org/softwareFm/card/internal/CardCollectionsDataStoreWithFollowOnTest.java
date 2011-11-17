@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.softwareFm.card.api.CardMock;
-import org.softwareFm.card.api.KeyValue;
+import org.softwareFm.card.api.LineItem;
 
 public class CardCollectionsDataStoreWithFollowOnTest extends AbstractCardCollectionsDataStoreTest {
 
@@ -46,9 +46,9 @@ public class CardCollectionsDataStoreWithFollowOnTest extends AbstractCardCollec
 			Future<?> f = status.keyValueFutures.get(i);
 			int start = card.keys.size();
 			kickAndDispatch(f);
-			KeyValue keyValue = (KeyValue) f.get(1, TimeUnit.SECONDS);
+			LineItem lineItem = (LineItem) f.get(1, TimeUnit.SECONDS);
 			assertEquals(start + 1, card.keys.size());
-			assertEquals(keyValue.key, card.keys.get(i));
+			assertEquals(lineItem.key, card.keys.get(i));
 			// should really test value
 		}
 	}

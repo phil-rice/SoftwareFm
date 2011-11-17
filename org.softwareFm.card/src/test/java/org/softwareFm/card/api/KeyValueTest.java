@@ -10,25 +10,25 @@ import org.softwareFm.utilities.tests.Tests;
 public class KeyValueTest extends TestCase {
 
 	public void testConstructor() {
-		KeyValue keyValue = new KeyValue("key", "value");
-		assertEquals("key", keyValue.key);
-		assertEquals("value", keyValue.value);
+		LineItem lineItem = new LineItem(null, "key", "value");
+		assertEquals("key", lineItem.key);
+		assertEquals("value", lineItem.value);
 	}
 
 	public void testKeyFunctio() throws Exception {
-		assertEquals("key", KeyValue.Utils.keyFn().apply(new KeyValue("key", "value")));
+		assertEquals("key", LineItem.Utils.keyFn().apply(new LineItem(null, "key", "value")));
 
 	}
 
 	public void testEquality() {
-		Tests.checkEqualityAndHashcode(new IFunction1<String, KeyValue>() {
+		Tests.checkEqualityAndHashcode(new IFunction1<String, LineItem>() {
 			@Override
-			public KeyValue apply(String from) throws Exception {
-				return new KeyValue(from + "_key", from + "_value");
+			public LineItem apply(String from) throws Exception {
+				return new LineItem(null, from + "_key", from + "_value");
 			}
 		});
-		assertFalse(new KeyValue("k", "v").equals(new KeyValue("k", "v2")));
-		assertFalse(new KeyValue("k", "v").equals(new KeyValue("k2", "v")));
+		assertFalse(new LineItem(null, "k", "v").equals(new LineItem(null, "k", "v2")));
+		assertFalse(new LineItem(null, "k", "v").equals(new LineItem(null, "k2", "v")));
 	}
 
 	public void testForItemsInSortOrder() {
@@ -56,9 +56,9 @@ public class KeyValueTest extends TestCase {
 	}
 
 	private void checkComparator(String left, String right, int expected) {
-		Comparator<KeyValue> comparator = KeyValue.Utils.orderedKeyComparator("d", "c", "b");
-		assertEquals(expected, comparator.compare(new KeyValue(left, null), new KeyValue(right, null)));
-		assertEquals(-expected, comparator.compare(new KeyValue(right, null), new KeyValue(left, null)));
+		Comparator<LineItem> comparator = LineItem.Utils.orderedKeyComparator("d", "c", "b");
+		assertEquals(expected, comparator.compare(new LineItem(null, left, null), new LineItem(null, right, null)));
+		assertEquals(-expected, comparator.compare(new LineItem(null, right, null), new LineItem(null, left, null)));
 	}
 
 }

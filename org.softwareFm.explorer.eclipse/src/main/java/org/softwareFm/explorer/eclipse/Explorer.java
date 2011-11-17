@@ -187,12 +187,13 @@ public class Explorer implements IExplorer {
 		IAddItemProcessor itemProcessor = new IAddItemProcessor() {
 			@Override
 			public void process(final RightClickCategoryResult result) {
-				System.out.println("In add item processor with " + result + " and card: " + cardHolder.getCard());
+				final ICard card = cardHolder.getCard();
+				System.out.println("In add item processor with " + result + " and card: " + card);
 
 				TextEditor editor = masterDetailSocial.createDetail(new IFunction1<Composite, TextEditor>() {
 					@Override
 					public TextEditor apply(Composite from) throws Exception {
-						return new TextEditor(from, cardConfig, result.url, result.collectionName, "", new IDetailsFactoryCallback() {
+						return new TextEditor(from, cardConfig, result.url, card.cardType(), result.collectionName, "", new IDetailsFactoryCallback() {
 							private final IDetailsFactoryCallback callback = this;
 
 							@Override

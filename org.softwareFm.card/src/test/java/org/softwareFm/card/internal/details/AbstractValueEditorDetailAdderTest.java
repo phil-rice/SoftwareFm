@@ -11,7 +11,7 @@ import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.IDetailsFactoryCallback;
 import org.softwareFm.card.api.IMutableCardDataStore;
-import org.softwareFm.card.api.KeyValue;
+import org.softwareFm.card.api.LineItem;
 import org.softwareFm.card.editors.IValueEditor;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.constants.DisplayConstants;
@@ -46,7 +46,7 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 		checkHasLabelBasedOnCardConfigNameFn("pre_stringValue", addPrefixToValue);
 	}
 
-	private void checkHasLabelBasedOnCardConfigNameFn(String expected, IFunction1<KeyValue, String> nameFn) {
+	private void checkHasLabelBasedOnCardConfigNameFn(String expected, IFunction1<LineItem, String> nameFn) {
 		TE holder = makeHolder(cardConfig.withNameFn(nameFn), stringValue);
 		assertEquals(expected, holder.getTitleText());
 	}
@@ -127,7 +127,7 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 		assertEquals(0, cardDataStore.rememberedPuts.size());
 	}
 
-	private void checkCardDataStoreUpdated(String url,String key, String value) {
+	private void checkCardDataStoreUpdated(String url, String key, String value) {
 		assertEquals(1, updateDataStoreCount.get());
 		assertEquals(updatedKey, key);
 		assertEquals(updatedValue, value);
@@ -145,25 +145,24 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 	}
 
 	private TE makeWithResourceGetterWith(String key, String expected) {
-		IResourceGetter with = IResourceGetter.Utils.noResources().//
-				with(cardConfig.resourceGetter).//
-				with(new ResourceGetterMock(key, expected));//
-		TE textEditor = makeHolder(cardConfig.withResourceGetter(with), stringValue);
+		IResourceGetter raw = Functions.call(cardConfig.resourceGetterFn, null);
+		IResourceGetter resourceGetter = raw.with(new ResourceGetterMock(key, expected));
+		TE textEditor = makeHolder(cardConfig.withResourceGetterFn(Functions.<String, IResourceGetter> constant(resourceGetter)), stringValue);
 		return textEditor;
 	}
 
-	private void checkHasTextBasedOnCardConfigValueFn(String expected, IFunction1<KeyValue, String> valueFn) {
+	private void checkHasTextBasedOnCardConfigValueFn(String expected, IFunction1<LineItem, String> valueFn) {
 		TE holder = makeHolder(cardConfig.withValueFn(valueFn), stringValue);
 		assertEquals(expected, holder.getValue());
 	}
 
-	private TE makeHolder(CardConfig cardConfig, KeyValue keyValue) {
-		return makeHolder(cardConfig, keyValue, Runnables.noRunnable);
+	private TE makeHolder(CardConfig cardConfig, LineItem lineItem) {
+		return makeHolder(cardConfig, lineItem, Runnables.noRunnable);
 
 	}
 
-	private TE makeHolder(CardConfig cardConfig, KeyValue keyValue, final Runnable afterEdit) {
-		IHasControl actual = adder.add(shell, parentCard, cardConfig, keyValue.key, keyValue.value, new IDetailsFactoryCallback() {
+	private TE makeHolder(CardConfig cardConfig, LineItem lineItem, final Runnable afterEdit) {
+		IHasControl actual = adder.add(shell, parentCard, cardConfig, lineItem.key, lineItem.value, new IDetailsFactoryCallback() {
 
 			@Override
 			public void cardSelected(ICard card) {
@@ -191,8 +190,8 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 		return holder;
 	}
 
-	private TE makeHolder(KeyValue keyValue) {
-		return makeHolder(cardConfig, keyValue);
+	private TE makeHolder(LineItem lineItem) {
+		return makeHolder(cardConfig, lineItem);
 	}
 
 	@Override

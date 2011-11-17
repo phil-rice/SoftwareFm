@@ -28,8 +28,8 @@ public class CardDataStoreFixture {
 	public final static Map<String, Object> data2bp = Maps.makeLinkedMap("tag", "two", "value", "2b", "q", 2);
 	public final static Map<String, Object> data2cp = Maps.makeLinkedMap("tag", "two", "value", "2c", "q", 3);
 
-	public final static List<KeyValue> kvFromData1a = Arrays.asList(new KeyValue("tag", "one"), new KeyValue("value", "valuea"));
-	public final static List<KeyValue> p1q2 = Arrays.asList(new KeyValue("p", 1), new KeyValue("q", 2));
+	public final static List<LineItem> kvFromData1a = Arrays.asList(new LineItem(null, "tag", "one"), new LineItem(null, "value", "valuea"));
+	public final static List<LineItem> p1q2 = Arrays.asList(new LineItem(null, "p", 1), new LineItem(null, "q", 2));
 	public final static Map<String, Object> mapP1Q2 = Maps.makeLinkedMap("p", 1, "q", 2);
 	public final static Map<String, Object> data1aWithP1Q2 = Maps.makeLinkedMap("tag", "one", "value", "valuea", "p", 1, "q", 2);
 

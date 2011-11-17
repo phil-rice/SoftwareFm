@@ -76,7 +76,7 @@ public class SingleCardExplorer implements IHasComposite {
 					final ICardDataStore cardDataStore = new CardDataStoreForRepository(from, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 					final CardConfig cardConfig = new BasicCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
-					IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "navBar.prev.title");
+					IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null,"navBar.prev.title");
 					final SingleCardExplorer cardExplorer = new SingleCardExplorer(from, cardConfig, rootUrl);
 					cardExplorer.setUrl(firstUrl);
 

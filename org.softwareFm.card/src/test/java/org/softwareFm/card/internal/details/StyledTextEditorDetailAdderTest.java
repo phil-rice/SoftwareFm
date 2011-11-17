@@ -2,10 +2,12 @@ package org.softwareFm.card.internal.details;
 
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.IDetailsFactoryCallback;
-import org.softwareFm.card.api.KeyValue;
+import org.softwareFm.card.api.LineItem;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.editors.StyledTextEditor;
 import org.softwareFm.display.data.ResourceGetterMock;
+import org.softwareFm.utilities.functions.Functions;
+import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class StyledTextEditorDetailAdderTest extends AbstractDetailsAdderTest<StyledTextEditorDetailAdder> {
 
@@ -25,15 +27,17 @@ public class StyledTextEditorDetailAdderTest extends AbstractDetailsAdderTest<St
 		assertSame(cardConfig.titleSpecFn.apply(parentCard), actual.getTitleSpec());
 	}
 
-	private void checkMakesStyledTextIfStringAndKeyInEditorStyledText(KeyValue keyValue) {
-		StyledTextEditor actual = (StyledTextEditor) detailFactory.makeDetail(shell, parentCard, cardConfig, keyValue.key, keyValue.value, IDetailsFactoryCallback.Utils.noCallback());
+	private void checkMakesStyledTextIfStringAndKeyInEditorStyledText(LineItem lineItem) {
+		StyledTextEditor actual = (StyledTextEditor) detailFactory.makeDetail(shell, parentCard, cardConfig, lineItem.key, lineItem.value, IDetailsFactoryCallback.Utils.noCallback());
 		assertEquals("stringValue", actual.getText().getText());
 	}
 
 	@Override
 	protected CardConfig makeCardConfig() {
-		CardConfig raw = super.makeCardConfig();
-		return raw.withResourceGetter(raw.resourceGetter.with(new ResourceGetterMock(CardConstants.editorStyledText, "key,someOther")));
+		CardConfig cardConfig = super.makeCardConfig();
+		IResourceGetter raw = Functions.call(cardConfig.resourceGetterFn, null);
+		IResourceGetter resourceGetter = raw.with(new ResourceGetterMock(CardConstants.editorStyledText, "key,someOther"));
+		return cardConfig.withResourceGetterFn(Functions.<String,IResourceGetter>constant(resourceGetter));
 	}
 
 	@Override

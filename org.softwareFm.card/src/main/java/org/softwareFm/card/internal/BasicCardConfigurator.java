@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.Callable;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Color;
@@ -21,7 +22,7 @@ import org.softwareFm.card.api.ICardDataModifier;
 import org.softwareFm.card.api.IDetailFactory;
 import org.softwareFm.card.api.IFollowOnFragment;
 import org.softwareFm.card.api.IRightClickCategoriser;
-import org.softwareFm.card.api.KeyValue;
+import org.softwareFm.card.api.LineItem;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.internal.details.CollectionItemDetailAdder;
 import org.softwareFm.card.internal.details.CollectionsDetailAdder;
@@ -40,6 +41,7 @@ import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.title.TitleAnchor;
 import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
@@ -49,13 +51,32 @@ public class BasicCardConfigurator implements ICardConfigurator {
 
 	@Override
 	public CardConfig configure(final Display display, CardConfig config) {
-		final IResourceGetter resourceGetter = IResourceGetter.Utils.noResources().with(CardConfig.class, "Card");
-		String keysToHide = resourceGetter.getStringOrNull("keys.hide");
+		final IResourceGetter baseResourceGetter = IResourceGetter.Utils.noResources().with(CardConfig.class, "Card");
+		final IFunction1<String, IResourceGetter> resourceGetterFn = new IFunction1<String, IResourceGetter>() {
+			private final Map<String, IResourceGetter> cache = Maps.newMap();
+
+			@Override
+			public IResourceGetter apply(final String from) throws Exception {
+				return Maps.findOrCreate(cache, from, new Callable<IResourceGetter>() {
+					@Override
+					public IResourceGetter call() throws Exception {
+						try {
+							return baseResourceGetter.with(CardConfig.class, from);
+						} catch (Exception e) {
+							e.printStackTrace();
+							return baseResourceGetter;
+						}
+					}
+				});
+			}
+		};
+
+		String keysToHide = baseResourceGetter.getStringOrNull("keys.hide");
 		final Set<String> ignoredNamed = keysToHide == null ? Collections.<String> emptySet() : new HashSet<String>(Arrays.asList(keysToHide.split(",")));
-		IFunction1<KeyValue, String> nameFn = new IFunction1<KeyValue, String>() {
+		IFunction1<LineItem, String> nameFn = new IFunction1<LineItem, String>() {
 			@SuppressWarnings("unchecked")
 			@Override
-			public String apply(KeyValue from) throws Exception {
+			public String apply(LineItem from) throws Exception {
 				if (from.value instanceof Map<?, ?>) {
 					Map<Object, Object> map = (Map<Object, Object>) from.value;
 					Object resourceType = map.get(CardConstants.slingResourceType);
@@ -64,18 +85,18 @@ public class BasicCardConfigurator implements ICardConfigurator {
 				}
 				String key = findKey(from);
 				String prettyKey = Strings.camelCaseToPretty(from.key);
-				String pattern = resourceGetter.getStringOrNull(key + ".name");
+				String pattern = IResourceGetter.Utils.get(resourceGetterFn, from.cardType, key + ".name");
 				if (pattern == null)
 					return prettyKey;
 				else
 					return MessageFormat.format(pattern, key, prettyKey);
 			}
 		};
-		IFunction1<KeyValue, String> valueFn = new IFunction1<KeyValue, String>() {
+		IFunction1<LineItem, String> valueFn = new IFunction1<LineItem, String>() {
 			@Override
-			public String apply(KeyValue from) throws Exception {
+			public String apply(LineItem from) throws Exception {
 				String key = findKey(from);
-				String pattern = resourceGetter.getStringOrNull(key + ".value");
+				String pattern = IResourceGetter.Utils.get(resourceGetterFn, from.cardType, key + ".value");
 				String size = findSize(from);
 				if (pattern == null)
 					if (from.value instanceof Map<?, ?>)
@@ -86,7 +107,7 @@ public class BasicCardConfigurator implements ICardConfigurator {
 					return MessageFormat.format(pattern, key, size);
 			}
 
-			private String findSize(KeyValue from) {
+			private String findSize(LineItem from) {
 				Object value = from.value;
 				if (value instanceof Collection<?>)
 					throw new IllegalStateException();
@@ -100,9 +121,9 @@ public class BasicCardConfigurator implements ICardConfigurator {
 					return Strings.nullSafeToString(from.value);
 			}
 		};
-		IFunction1<KeyValue, Boolean> hideFn = new IFunction1<KeyValue, Boolean>() {
+		IFunction1<LineItem, Boolean> hideFn = new IFunction1<LineItem, Boolean>() {
 			@Override
-			public Boolean apply(KeyValue from) throws Exception {
+			public Boolean apply(LineItem from) throws Exception {
 				return ignoredNamed.contains(from.key);
 			}
 		};
@@ -114,22 +135,22 @@ public class BasicCardConfigurator implements ICardConfigurator {
 			public TitleSpec apply(ICard from) throws Exception {
 				String cardType = from.cardType();
 				if (cardType == null)
-					return makeTitleSpec("title.folder.color", "title.folder.indent", TitleAnchor.folderKey);
+					return makeTitleSpec("title.folder.color", "title.folder.indent", TitleAnchor.folderKey, from);
 				else if (cardType.equals(CardConstants.group))
-					return makeTitleSpec("title.group.color", "title.folder.indent", ArtifactsAnchor.groupKey);
+					return makeTitleSpec("title.group.color", "title.folder.indent", ArtifactsAnchor.groupKey, from);
 				else if (cardType.equals(CardConstants.artifact))
-					return makeTitleSpec("title.artifact.color", "title.folder.indent", ArtifactsAnchor.artifactKey);
+					return makeTitleSpec("title.artifact.color", "title.folder.indent", ArtifactsAnchor.artifactKey, from);
 				else if (cardType.equals(CardConstants.version))
-					return makeTitleSpec("title.version.color", "title.folder.indent", ArtifactsAnchor.jarKey);
+					return makeTitleSpec("title.version.color", "title.folder.indent", ArtifactsAnchor.jarKey, from);
 				else if (cardType.equals(CardConstants.versionJar))
-					return makeTitleSpec("title.jar.color", "title.folder.indent", TitleAnchor.folderKey);
+					return makeTitleSpec("title.jar.color", "title.folder.indent", TitleAnchor.folderKey, from);
 				else
-					return makeTitleSpec("title.folder.color", "title.folder.indent", TitleAnchor.folderKey);
+					return makeTitleSpec("title.folder.color", "title.folder.indent", TitleAnchor.folderKey, from);
 			}
 
-			private TitleSpec makeTitleSpec(String colorKey, String indentKey, String iconKey) {
-				Color color = Swts.makeColor(display, resourceGetter, colorKey);
-				int indent = IResourceGetter.Utils.getIntegerOrException(resourceGetter, indentKey);
+			private TitleSpec makeTitleSpec(String colorKey, String indentKey, String iconKey, ICard card) {
+				Color color = Swts.makeColor(display, Functions.call(card.cardConfig().resourceGetterFn, card.cardType()), colorKey);
+				int indent = IResourceGetter.Utils.getIntegerOrException(card.cardConfig().resourceGetterFn, card.cardType(), indentKey);
 				Image icon = imageRegistry.get(iconKey);
 				return new TitleSpec(icon, color, indent);
 			}
@@ -172,9 +193,9 @@ public class BasicCardConfigurator implements ICardConfigurator {
 			}
 		};
 
-		String tag = resourceGetter.getStringOrNull("card.aggregator.tag");
+		String tag = baseResourceGetter.getStringOrNull("card.aggregator.tag");
 		List<String> tagNames = Strings.splitIgnoreBlanks(tag, ",");
-		String orderAsString = resourceGetter.getStringOrNull("card.order");
+		String orderAsString = baseResourceGetter.getStringOrNull("card.order");
 		String[] order = orderAsString.split(",");
 
 		List<ICardDataModifier> modifiers = Arrays.asList(new CollectionsAggregatorModifier(CardConstants.slingResourceType), new FolderAggregatorModifier(CardConstants.jcrPrimaryType, CardConstants.ntUnstructured, CardConstants.slingResourceType), new KeyValueMissingItemsAdder(), new CardMapSorter(CardConstants.version));
@@ -231,7 +252,7 @@ public class BasicCardConfigurator implements ICardConfigurator {
 		final IUrlGeneratorMap urlGeneratorMap = makeUrlGeneratorMap(prefix);
 
 		return config.withNameFn(nameFn).withValueFn(valueFn).withHideFn(hideFn).//
-				withCardIconFn(cardIconFn).withResourceGetter(resourceGetter).withAggregatorTags(tagNames).//
+				withCardIconFn(cardIconFn).withResourceGetterFn(resourceGetterFn).withAggregatorTags(tagNames).//
 				withNavIconFn(navIconFn).//
 				withDetailsFactory(detailFactory).//
 				withDefaultChildFn(defaultChildFn).//
@@ -255,7 +276,7 @@ public class BasicCardConfigurator implements ICardConfigurator {
 		return urlGeneratorMap;
 	}
 
-	private String findKey(KeyValue from) {
+	private String findKey(LineItem from) {
 		String key = from.key.replace(':', '_');
 		return key;
 	}

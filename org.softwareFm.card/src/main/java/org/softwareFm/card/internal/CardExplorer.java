@@ -108,9 +108,10 @@ public class CardExplorer implements IHasComposite {
 			IAddItemProcessor itemProcessor = new IAddItemProcessor() {
 				@Override
 				public void process(final RightClickCategoryResult result) {
-					System.out.println("In add item processor with " + result + " and card: " + cardHolder.getCard());
+					ICard card = cardHolder.getCard();
+					System.out.println("In add item processor with " + result + " and card: " + card);
 					removeDetailContents();
-					TextEditor editor = new TextEditor(detail, cardConfig, result.url, result.collectionName, "", new IDetailsFactoryCallback() {
+					TextEditor editor = new TextEditor(detail, cardConfig, result.url, card.cardType(),result.collectionName, "", new IDetailsFactoryCallback() {
 						private final IDetailsFactoryCallback callback = this;
 
 						@Override
@@ -268,7 +269,7 @@ public class CardExplorer implements IHasComposite {
 					final ICardDataStore cardDataStore = new CardDataStoreForRepository(from, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 					final CardConfig cardConfig = new BasicCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
-					IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "navBar.prev.title");
+					IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null,"navBar.prev.title");
 					final CardExplorer cardExplorer = new CardExplorer(from, cardConfig, rootUrl);
 					cardExplorer.setUrl(firstUrl);
 					Size.resizeMeToParentsSize(cardExplorer.getControl());

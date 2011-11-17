@@ -14,7 +14,7 @@ import org.softwareFm.card.api.ICardAndCollectionsDataStore;
 import org.softwareFm.card.api.ICardDataStoreCallback;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardHolder;
-import org.softwareFm.card.api.KeyValue;
+import org.softwareFm.card.api.LineItem;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.future.GatedFuture;
@@ -46,7 +46,7 @@ public class CardCollectionsDataStore implements ICardAndCollectionsDataStore {
 									if (!cardHolder.getControl().isDisposed() && !card.getControl().isDisposed()) {
 										Map<String, Object> moreData = cardConfig.modify(url, result);
 										card.valueChanged(entry.getKey(), moreData);
-										return new KeyValue(entry.getKey(), moreData);
+										return new LineItem(card.cardType(),entry.getKey(), moreData);
 									}
 									return null;
 								} finally {
@@ -55,7 +55,7 @@ public class CardCollectionsDataStore implements ICardAndCollectionsDataStore {
 							}
 
 							@Override
-							public KeyValue noData(String followUpUrl) throws Exception {
+							public LineItem noData(String followUpUrl) throws Exception {
 								visitor.noData(cardHolder, url, card, followUpUrl);
 								finish(card);
 								return null;

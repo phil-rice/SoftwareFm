@@ -7,7 +7,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
+import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.utilities.strings.Strings;
 
 public class CardMock implements ICard {
 
@@ -65,7 +67,7 @@ public class CardMock implements ICard {
 
 	@Override
 	public String cardType() {
-		throw new UnsupportedOperationException();
+		return Strings.nullSafeToString(map.get(CardConstants.slingResourceType));
 	}
 
 	@Override

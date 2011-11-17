@@ -96,7 +96,6 @@ public class CardCollectionHolder implements IHasComposite {
 			super(parent, SWT.NULL, cardConfig);
 		}
 
-
 		@SuppressWarnings("unchecked")
 		protected Future<?> setKeyValue(final String rootUrl, String key, Object value, final IGotDataCallback callback) {
 			if (isDisposed())
@@ -162,7 +161,7 @@ public class CardCollectionHolder implements IHasComposite {
 			public Composite apply(final Composite from) throws Exception {
 				Display display = from.getDisplay();
 				final CardConfig cardConfig = new BasicCardConfigurator().configure(display, CardDataStoreFixture.syncCardConfig(display));
-				IResourceGetter.Utils.getOrException(cardConfig.resourceGetter, "navBar.prev.title");
+				IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null, "navBar.prev.title");
 				final CardCollectionHolder cardCollectionHolder = new CardCollectionHolder(from, cardConfig);
 				cardCollectionHolder.setKeyValue(CardDataStoreFixture.url, "stuff", Maps.makeMap(CardDataStoreFixture.dataIndexedByUrlFragment), IDetailsFactoryCallback.Utils.resizeAfterGotData());
 				return cardCollectionHolder.getComposite();
