@@ -38,7 +38,8 @@ public class CardPopupMenuContributor implements IPopupMenuContributor<ICard> {
 		default:
 			;
 		}
-//		
+		if (menu.getItemCount()>0)
+			new MenuItem(menu, SWT.SEPARATOR);
 		MenuItem addGroup = new MenuItem(menu, SWT.NULL);
 		addGroup.setText(IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.menuItemAddArtifact));
 	}
