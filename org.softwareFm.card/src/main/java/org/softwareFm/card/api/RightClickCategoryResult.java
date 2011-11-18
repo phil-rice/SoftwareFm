@@ -44,6 +44,8 @@ public class RightClickCategoryResult {
 		switch (itemType) {
 		case ROOT_COLLECTION:
 			return url ;
+		case IS_FOLDERS:
+			return url ;
 		case IS_COLLECTION:
 			return url + "/" + key ;
 		default:

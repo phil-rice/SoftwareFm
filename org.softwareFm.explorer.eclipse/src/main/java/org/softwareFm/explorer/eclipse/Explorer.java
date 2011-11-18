@@ -22,7 +22,6 @@ import org.softwareFm.card.api.IDetailsFactoryCallback;
 import org.softwareFm.card.api.ILineSelectedListener;
 import org.softwareFm.card.api.IMutableCardDataStore;
 import org.softwareFm.card.api.RightClickCategoryResult;
-import org.softwareFm.card.api.RightClickCategoryResult.Type;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.editors.TextEditor;
 import org.softwareFm.card.editors.ValueEditorLayout;
@@ -228,9 +227,11 @@ public class Explorer implements IExplorer {
 
 	private void updateStore(final IMutableCardDataStore store, final RightClickCategoryResult result, final Object value, final IAfterEditCallback afterEditCallback) {
 		final String editorResult = Strings.stringToUrlSegment(Strings.nullSafeToString(value));
-		if (result.itemType == Type.ROOT_COLLECTION) {
+		switch (result.itemType) {
+		case ROOT_COLLECTION:
 			createNewItem(result, store, editorResult, afterEditCallback);
-		} else
+			break;
+		case IS_COLLECTION:
 			store.processDataFor(result.collectionUrl(), new ICardDataStoreCallback<Void>() {
 				@Override
 				public Void process(String url, Map<String, Object> data) throws Exception {
@@ -254,12 +255,16 @@ public class Explorer implements IExplorer {
 					return null;
 				}
 			});
+		default:
+			throw new IllegalStateException(result.toString());
+		}
 	}
 
 	private void createNewItem(final RightClickCategoryResult result, final IMutableCardDataStore store, String newItemName, IAfterEditCallback afterEditCallback) {
 		String fullUrl = result.itemUrl(newItemName);
 		store.put(fullUrl, Maps.stringObjectMap(CardConstants.slingResourceType, result.collectionName), afterEditCallback);
 	}
+
 
 	@Override
 	public Control getControl() {
