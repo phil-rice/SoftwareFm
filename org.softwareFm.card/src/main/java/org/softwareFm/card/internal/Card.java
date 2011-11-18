@@ -214,7 +214,12 @@ public class Card implements ICard, IHasTable {
 				menu.addMenuListener(new MenuAdapter() {
 					@Override
 					public void menuHidden(MenuEvent e) {
-						menu.dispose();
+						Swts.asyncExec(Card.this, new Runnable() {
+							@Override
+							public void run() {
+								menu.dispose();
+							}
+						});
 					}
 				});
 			}

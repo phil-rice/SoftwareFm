@@ -13,7 +13,6 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.MenuItem;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
-import org.softwareFm.card.api.IAddItemProcessor;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardChangedListener;
 import org.softwareFm.card.api.ICardFactory;
@@ -148,7 +147,6 @@ public class CardHolder implements ICardHolder {
 
 	private final List<ICardChangedListener> cardListeners = new CopyOnWriteArrayList<ICardChangedListener>();
 	final CardHolderComposite content;
-	private IAddItemProcessor addItemProcessor;
 	private MenuItem item1;
 
 	public CardHolder(Composite parent, String loadingText, String title, CardConfig cardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
@@ -177,10 +175,6 @@ public class CardHolder implements ICardHolder {
 		content.lineListeners.add(listener);
 	}
 
-	@Override
-	public void setAddItemProcessor(IAddItemProcessor processor) {
-		addItemProcessor = processor;
-	}
 
 	@Override
 	public Control getControl() {

@@ -59,53 +59,8 @@ public class CardExplorer implements IHasComposite {
 
 		public CardExplorerComposite(final Composite parent, final CardConfig cardConfig, final String rootUrl) {
 			super(parent, SWT.H_SCROLL);
-			this.cardConfig = cardConfig;
-			callbackToGotoUrl = new ICallback<String>() {
-				@Override
-				public void process(String url) throws Exception {
-					cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, CardAndCollectionDataStoreVisitorMonitored.Utils.sysout());
-				}
-			};
-			cardHolder = new CardHolder(this, "loading", "Some title", cardConfig, rootUrl, callbackToGotoUrl);
-			right = new SashForm(this, SWT.VERTICAL);
-			// right.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_BLUE));
-			detail = new ScrolledComposite(right, SWT.H_SCROLL | SWT.NO_REDRAW_RESIZE | SWT.NO_BACKGROUND);
-			ScrollBar hbar = detail.getHorizontalBar();
-			hbar.addListener(SWT.Selection, new Listener() {
-				@Override
-				public void handleEvent(Event event) {
-					Swts.redrawAllChildren(detail.getContent());
-				}
-			});
-
-			comments = new ScrolledComposite(right, SWT.H_SCROLL);
-			comments.setBackground(new Color(getDisplay(), 235, 242, 246));
-			this.setWeights(new int[] { 2, 5 });
-			right.setWeights(new int[] { 1, 1 });
-			cardHolder.addCardChangedListener(new ICardChangedListener() {
-				@Override
-				public void cardChanged(ICardHolder cardHolder, ICard card) {
-					String key = findDefaultChild(card);
-					setDetail(card, key, card.data().get(key));
-				}
-
-				@Override
-				public void valueChanged(ICard card, String key, Object newValue) {
-					String defaultChild = findDefaultChild(card);
-					if (defaultChild != null && defaultChild.equals(key))
-						setDetail(card, key, card.data().get(key));
-				}
-			});
-			cardHolder.addLineSelectedListener(new ILineSelectedListener() {
-				@Override
-				public void selected(ICard card, String key, Object value) {
-					System.out.println("Card keyvalue: " + key);
-					setDetail(card, key, value);
-					// setDetailCard(card, keyValue);
-				}
-
-			});
-			IAddItemProcessor itemProcessor = new IAddItemProcessor() {
+			
+			IAddItemProcessor addItemProcessor = new IAddItemProcessor() {
 				@Override
 				public void process(final RightClickCategoryResult result) {
 					ICard card = cardHolder.getCard();
@@ -169,8 +124,55 @@ public class CardExplorer implements IHasComposite {
 					populateDetail(editor.getControl());
 				};
 			};
+			this.cardConfig = cardConfig.withAddItemProcessor(addItemProcessor);
+			
+			
+			callbackToGotoUrl = new ICallback<String>() {
+				@Override
+				public void process(String url) throws Exception {
+					cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, CardAndCollectionDataStoreVisitorMonitored.Utils.sysout());
+				}
+			};
+			cardHolder = new CardHolder(this, "loading", "Some title", cardConfig, rootUrl, callbackToGotoUrl);
+			right = new SashForm(this, SWT.VERTICAL);
+			// right.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_BLUE));
+			detail = new ScrolledComposite(right, SWT.H_SCROLL | SWT.NO_REDRAW_RESIZE | SWT.NO_BACKGROUND);
+			ScrollBar hbar = detail.getHorizontalBar();
+			hbar.addListener(SWT.Selection, new Listener() {
+				@Override
+				public void handleEvent(Event event) {
+					Swts.redrawAllChildren(detail.getContent());
+				}
+			});
 
-			cardHolder.setAddItemProcessor(itemProcessor);
+			comments = new ScrolledComposite(right, SWT.H_SCROLL);
+			comments.setBackground(new Color(getDisplay(), 235, 242, 246));
+			this.setWeights(new int[] { 2, 5 });
+			right.setWeights(new int[] { 1, 1 });
+			cardHolder.addCardChangedListener(new ICardChangedListener() {
+				@Override
+				public void cardChanged(ICardHolder cardHolder, ICard card) {
+					String key = findDefaultChild(card);
+					setDetail(card, key, card.data().get(key));
+				}
+
+				@Override
+				public void valueChanged(ICard card, String key, Object newValue) {
+					String defaultChild = findDefaultChild(card);
+					if (defaultChild != null && defaultChild.equals(key))
+						setDetail(card, key, card.data().get(key));
+				}
+			});
+			cardHolder.addLineSelectedListener(new ILineSelectedListener() {
+				@Override
+				public void selected(ICard card, String key, Object value) {
+					System.out.println("Card keyvalue: " + key);
+					setDetail(card, key, value);
+					// setDetailCard(card, keyValue);
+				}
+
+			});
+		
 		}
 
 		private void setDetail(final ICard card, String key, Object value) {

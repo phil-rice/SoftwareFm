@@ -69,16 +69,14 @@ public abstract class AbstractCardHolderTest extends SwtIntegrationTest {
 
 	public void testItemProcessorInvokedWhenTableIsRightClickedWhenCardSetAfterItemProcessor() {
 		AddItemProcessorMock mock = new AddItemProcessorMock();
-		ICard newCard = makeAndSetCard(cardConfig);
-		cardHolder.setAddItemProcessor(mock);
+		ICard newCard = makeAndSetCard(cardConfig.withAddItemProcessor(mock));
 		
 		checkItemProcessorIsInvoked(mock, newCard);
 		
 	}
 	public void testItemProcessorInvokedWhenTableIsRightClickedWhenCardSetBeforeItemProcessor() {
 		AddItemProcessorMock mock = new AddItemProcessorMock();
-		cardHolder.setAddItemProcessor(mock);
-		ICard newCard = makeAndSetCard(cardConfig);
+		ICard newCard = makeAndSetCard(cardConfig.withAddItemProcessor(mock));
 		
 		checkItemProcessorIsInvoked(mock, newCard);
 	}

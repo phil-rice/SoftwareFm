@@ -57,8 +57,8 @@ public class Explorer implements IExplorer {
 	private BrowserAndNavBar browser;
 	private TimeLine timeLine;
 
-	public Explorer(final CardConfig cardConfig, final String rootUrl, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter) {
-		this.cardConfig = cardConfig;
+	public Explorer(final CardConfig cardConfigParam, final String rootUrl, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter) {
+		this.cardConfig = cardConfigParam.withAddItemProcessor(makeAddItemProcessor(masterDetailSocial));
 		this.masterDetailSocial = masterDetailSocial;
 		callbackToGotoUrlAndUpdateDetails = new ICallback<String>() {
 			@Override
@@ -89,7 +89,6 @@ public class Explorer implements IExplorer {
 				return cardHolder;
 			}
 		}, true);
-		cardHolder.setAddItemProcessor(makeAddItemProcessor(masterDetailSocial, cardConfig));
 		cardHolder.addLineSelectedListener(new ILineSelectedListener() {
 			@Override
 			public void selected(final ICard card, final String key, final Object value) {
@@ -182,7 +181,7 @@ public class Explorer implements IExplorer {
 	}
 
 	/** This is the bit that configures then acts on the right click that adds folders/groups/collections */
-	private IAddItemProcessor makeAddItemProcessor(final IMasterDetailSocial masterDetailSocial, final CardConfig cardConfig) {
+	private IAddItemProcessor makeAddItemProcessor(final IMasterDetailSocial masterDetailSocial) {
 		IAddItemProcessor itemProcessor = new IAddItemProcessor() {
 			@Override
 			public void process(final RightClickCategoryResult result) {
@@ -192,7 +191,7 @@ public class Explorer implements IExplorer {
 				TextEditor editor = masterDetailSocial.createDetail(new IFunction1<Composite, TextEditor>() {
 					@Override
 					public TextEditor apply(Composite from) throws Exception {
-						return new TextEditor(from, cardConfig, result.url, card.cardType(), result.collectionName, "", new IDetailsFactoryCallback() {
+						return new TextEditor(from,card.cardConfig(), result.url, card.cardType(), result.collectionName, "", new IDetailsFactoryCallback() {
 							private final IDetailsFactoryCallback callback = this;
 
 							@Override
@@ -255,6 +254,7 @@ public class Explorer implements IExplorer {
 					return null;
 				}
 			});
+			break;
 		default:
 			throw new IllegalStateException(result.toString());
 		}

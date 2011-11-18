@@ -19,7 +19,7 @@ public class RightClickCategoriser implements IRightClickCategoriser {
 			return new RightClickCategoryResult(Type.ROOT_COLLECTION, lastSegment, key, url);
 		else if (CardConstants.ntUnstructured.equals(key)) // clicked on item representing key
 			return new RightClickCategoryResult(Type.IS_FOLDERS, CardConstants.folder, key, url);
-		else if (value instanceof Map<?, ?>)
+		else if (cardType != null && value instanceof Map<?, ?>)
 			return new RightClickCategoryResult(Type.IS_COLLECTION, key, key, url);
 		else
 			return new RightClickCategoryResult(Type.NOT_COLLECTION, null, key, url);
