@@ -39,7 +39,6 @@ import org.softwareFm.display.data.IUrlGeneratorMap;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.urlGenerator.UrlGenerator;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
-import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
@@ -155,8 +154,6 @@ public class BasicCardConfigurator implements ICardConfigurator {
 
 		String tag = baseResourceGetter.getStringOrNull("card.aggregator.tag");
 		List<String> tagNames = Strings.splitIgnoreBlanks(tag, ",");
-		String orderAsString = baseResourceGetter.getStringOrNull("card.order");
-		String[] order = orderAsString.split(",");
 
 		List<ICardDataModifier> modifiers = Arrays.asList(new CollectionsAggregatorModifier(CardConstants.slingResourceType), new FolderAggregatorModifier(CardConstants.jcrPrimaryType, CardConstants.ntUnstructured, CardConstants.slingResourceType), new KeyValueMissingItemsAdder(), new CardMapSorter(CardConstants.version));
 
@@ -217,7 +214,6 @@ public class BasicCardConfigurator implements ICardConfigurator {
 				withNavIconFn(navIconFn).//
 				withDetailsFactory(detailFactory).//
 				withDefaultChildFn(defaultChildFn).//
-				withSorter(Lists.orderedComparator(order)).//
 				withKeyValueModifiers(modifiers).//
 				withFollowOn(followOnFragment).//
 				withRightClickCategoriser(rightClickCategoriser).//

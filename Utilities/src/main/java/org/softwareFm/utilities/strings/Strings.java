@@ -4,6 +4,7 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -356,6 +357,15 @@ public class Strings {
 		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
 	}
 
+	public static Comparator<String> compareVersionNumbers() {
+		return new Comparator<String>() {
+			@Override
+			public int compare(String o1, String o2) {
+				return compareVersionNumbers(o1, o2);
+			}
+		};
+		
+	}
 	public static int compareVersionNumbers(String o1, String o2) {
 		Pattern numRegEx = Pattern.compile("\\d*");
 		String[] left = o1.split("[\\.-]");

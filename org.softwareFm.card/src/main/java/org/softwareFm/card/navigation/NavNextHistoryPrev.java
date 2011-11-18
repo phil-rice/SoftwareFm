@@ -62,6 +62,7 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 		private final Label nextButton;
 		private final NavNextHistoryPrevConfig<T> config;
 		private final IHistory<T> history;
+		@SuppressWarnings("unused")
 		private final int id;
 
 		public NavNextHistoryPrevComposite(Composite parent, final NavNextHistoryPrevConfig<T> config, final IHistory<T> history) {

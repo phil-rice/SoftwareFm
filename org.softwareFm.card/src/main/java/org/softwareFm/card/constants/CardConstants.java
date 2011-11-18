@@ -31,5 +31,8 @@ public class CardConstants {
 	public static final String indentTitleKey = "card.title.indent";
 	public static final String cardTitleIcon = "card.title.icon";
 	public static final String navIcon = "card.title.navIcon";
+	public static final String missingStringKey = "card.missing.string";
+	public static final String missingListKey = "card.missing.list";
+	public static final String cardOrderKey = "card.order";
 
 }

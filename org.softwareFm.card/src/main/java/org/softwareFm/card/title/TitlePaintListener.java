@@ -11,6 +11,7 @@ public class TitlePaintListener implements PaintListener {
 	private TitleSpec titleSpec;
 	private String title;
 	private static int globalId;
+	@SuppressWarnings("unused")
 	private final int id;
 
 	public TitlePaintListener(CardConfig cardConfig, TitleSpec titleSpec, String title) {

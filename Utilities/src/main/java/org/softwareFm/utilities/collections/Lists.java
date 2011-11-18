@@ -243,6 +243,10 @@ public class Lists {
 
 	public static <T extends Comparable<T>> Comparator<T> orderedComparator(T... order) {
 		final List<T> list = Arrays.asList(order);
+		return orderedComparator(list);
+	}
+
+	public static <T extends Comparable<T>> Comparator<T> orderedComparator(final List<T> list) {
 		return new Comparator<T>() {
 			@Override
 			public int compare(T left, T right) {
@@ -259,7 +263,6 @@ public class Lists {
 					return leftIndex - rightIndex;
 			}
 		};
-
 	}
 
 	public static <From, To> Comparator<From> comparator(final IFunction1<From, To> transformer, final Comparator<To> comparator) {

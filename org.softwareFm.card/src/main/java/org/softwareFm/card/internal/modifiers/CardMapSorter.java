@@ -1,11 +1,15 @@
 package org.softwareFm.card.internal.modifiers;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICardDataModifier;
+import org.softwareFm.card.constants.CardConstants;
+import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
 
 public class CardMapSorter implements ICardDataModifier {
@@ -25,7 +29,11 @@ public class CardMapSorter implements ICardDataModifier {
 					return Strings.compareVersionNumbers(o1,o2);
 				}
 			});
-		return Maps.sortByKey(rawData, cardConfig.comparator);
+		String cardType = (String) rawData.get(CardConstants.slingResourceType);
+		List<String> order = Strings.splitIgnoreBlanks(IResourceGetter.Utils.get(cardConfig.resourceGetterFn, cardType, CardConstants.cardOrderKey), ",");
+		Comparator<String> orderedComparator = Lists.orderedComparator(order);
+		Map<String, Object> result = Maps.sortByKey(rawData, orderedComparator);
+		return result;
 	}
 
 }

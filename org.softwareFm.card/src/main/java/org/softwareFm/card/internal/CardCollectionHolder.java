@@ -20,6 +20,7 @@ import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.strings.Strings;
 
 public class CardCollectionHolder implements IHasComposite {
 
@@ -104,8 +105,9 @@ public class CardCollectionHolder implements IHasComposite {
 			this.value = value;
 			Swts.removeAllChildren(this);
 			if (value instanceof Map<?, ?>) {
-				Map<String, ?> map = Maps.sortByKey((Map<String, ?>) value, cardConfig.comparator);
-				for (final Map.Entry<String, ?> childEntry : map.entrySet()) {
+				Map<String, ?> map =(Map<String, ?>) value;
+				Map<String, ?> sortedMap = Maps.sortByKey(map, Strings.compareVersionNumbers());
+				for (final Map.Entry<String, ?> childEntry : sortedMap.entrySet()) {
 					if (childEntry.getValue() instanceof Map<?, ?>) {
 						String detailUrl = rootUrl + "/" + childEntry.getKey();
 						String title = childEntry.getKey();
