@@ -23,7 +23,7 @@ public class HoldsCardHolder extends Composite {
 
 	public HoldsCardHolder(Composite parent, int style, CardConfig cardConfig) {
 		super(parent, style);
-		this.cardConfig = cardConfig;
+		this.cardConfig = cardConfig.withStyleAndSelection(cardConfig.cardStyle, false);
 	}
 
 	public void addCardSelectedListener(ICardSelectedListener listener) {

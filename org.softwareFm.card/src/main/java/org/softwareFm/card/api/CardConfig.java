@@ -83,7 +83,7 @@ public class CardConfig {
 		this.cardFactory = cardFactory;
 		this.cardDataStore = cardDataStore;
 		this.cardStyle = SWT.FULL_SELECTION | SWT.NO_SCROLL;
-		this.allowSelection = false;
+		this.allowSelection = true;
 		this.cardIconFn = Functions.constant(null);
 		this.navIconFn = Functions.constant(null);
 		this.cardTitleFn = defaultCardTitleFn;
