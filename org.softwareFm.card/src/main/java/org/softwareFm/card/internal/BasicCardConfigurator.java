@@ -21,6 +21,7 @@ import org.softwareFm.card.api.ICardConfigurator;
 import org.softwareFm.card.api.ICardDataModifier;
 import org.softwareFm.card.api.IDetailFactory;
 import org.softwareFm.card.api.IFollowOnFragment;
+import org.softwareFm.card.api.IPopupMenuContributor;
 import org.softwareFm.card.api.IRightClickCategoriser;
 import org.softwareFm.card.api.LineItem;
 import org.softwareFm.card.constants.CardConstants;
@@ -38,8 +39,6 @@ import org.softwareFm.display.data.IUrlGeneratorMap;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.urlGenerator.UrlGenerator;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
-import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
-import org.softwareFm.softwareFmImages.title.TitleAnchor;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -133,63 +132,24 @@ public class BasicCardConfigurator implements ICardConfigurator {
 
 			@Override
 			public TitleSpec apply(ICard from) throws Exception {
-				String cardType = from.cardType();
-				if (cardType == null)
-					return makeTitleSpec("title.folder.color", "title.folder.indent", TitleAnchor.folderKey, from);
-				else if (cardType.equals(CardConstants.group))
-					return makeTitleSpec("title.group.color", "title.folder.indent", ArtifactsAnchor.groupKey, from);
-				else if (cardType.equals(CardConstants.artifact))
-					return makeTitleSpec("title.artifact.color", "title.folder.indent", ArtifactsAnchor.artifactKey, from);
-				else if (cardType.equals(CardConstants.version))
-					return makeTitleSpec("title.version.color", "title.folder.indent", ArtifactsAnchor.jarKey, from);
-				else if (cardType.equals(CardConstants.versionJar))
-					return makeTitleSpec("title.jar.color", "title.folder.indent", TitleAnchor.folderKey, from);
-				else
-					return makeTitleSpec("title.folder.color", "title.folder.indent", TitleAnchor.folderKey, from);
+				return makeTitleSpec(CardConstants.cardColorKey, CardConstants.indentTitleKey, CardConstants.cardTitleIcon, from);
 			}
 
 			private TitleSpec makeTitleSpec(String colorKey, String indentKey, String iconKey, ICard card) {
 				Color color = Swts.makeColor(display, Functions.call(card.cardConfig().resourceGetterFn, card.cardType()), colorKey);
 				int indent = IResourceGetter.Utils.getIntegerOrException(card.cardConfig().resourceGetterFn, card.cardType(), indentKey);
-				Image icon = imageRegistry.get(iconKey);
+				String imageName = IResourceGetter.Utils.getOrException(card.cardConfig().resourceGetterFn, card.cardType(), iconKey);
+				Image icon = imageRegistry.get(imageName);
 				return new TitleSpec(icon, color, indent);
 			}
 		};
 
-		IFunction1<Map<String, Object>, Image> cardIconFn = new IFunction1<Map<String, Object>, Image>() {
-			@Override
-			public Image apply(Map<String, Object> from) throws Exception {
-				Object object = from.get(CardConstants.slingResourceType);
-				if (object == null)
-					return imageRegistry.get(TitleAnchor.folderKey);
-				if (object.equals(CardConstants.group))
-					return imageRegistry.get(ArtifactsAnchor.groupKey);
-				else if (object.equals(CardConstants.artifact))
-					return imageRegistry.get(ArtifactsAnchor.artifactKey);
-				else if (object.equals(CardConstants.version))
-					return imageRegistry.get(ArtifactsAnchor.jarKey);
-				else if (object.equals(CardConstants.versionJar))
-					return imageRegistry.get(ArtifactsAnchor.jarKey);
-				else
-					return imageRegistry.get(TitleAnchor.folderKey);
-			}
-		};
 		IFunction1<Map<String, Object>, Image> navIconFn = new IFunction1<Map<String, Object>, Image>() {
 			@Override
 			public Image apply(Map<String, Object> from) throws Exception {
-				Object object = from.get("sling:resourceType");
-				if (object == null)
-					return null;// imageRegistry.get(TitleAnchor.folderKey);
-				if (object.equals(CardConstants.group))
-					return imageRegistry.get(TitleAnchor.groupKey);
-				else if (object.equals(CardConstants.artifact))
-					return imageRegistry.get(TitleAnchor.artifactKey);
-				else if (object.equals(CardConstants.version))
-					return imageRegistry.get(TitleAnchor.versionKey);
-				else if (object.equals(CardConstants.versionJar))
-					return imageRegistry.get(TitleAnchor.jarKey);
-				else
-					return null;
+				String cardType = (String) from.get("sling:resourceType");
+				String iconName = IResourceGetter.Utils.getOrNull(resourceGetterFn, cardType, CardConstants.navIcon);
+				return imageRegistry.get(iconName);
 			}
 		};
 
@@ -250,9 +210,10 @@ public class BasicCardConfigurator implements ICardConfigurator {
 		String prefix = "/softwareFm/data/";
 
 		final IUrlGeneratorMap urlGeneratorMap = makeUrlGeneratorMap(prefix);
+		final IPopupMenuContributor<ICard> contributor = new CardPopupMenuContributor();
 
 		return config.withNameFn(nameFn).withValueFn(valueFn).withHideFn(hideFn).//
-				withCardIconFn(cardIconFn).withResourceGetterFn(resourceGetterFn).withAggregatorTags(tagNames).//
+				withResourceGetterFn(resourceGetterFn).withAggregatorTags(tagNames).//
 				withNavIconFn(navIconFn).//
 				withDetailsFactory(detailFactory).//
 				withDefaultChildFn(defaultChildFn).//
@@ -262,7 +223,7 @@ public class BasicCardConfigurator implements ICardConfigurator {
 				withRightClickCategoriser(rightClickCategoriser).//
 				withTitleSpecFn(titleSpecFn).//
 				withUrlGeneratorMap(urlGeneratorMap).//
-				withImageFn(imageFn);
+				withImageFn(imageFn).withPopupMenuContributor(contributor);
 	}
 
 	public static IUrlGeneratorMap makeUrlGeneratorMap(String prefix) {

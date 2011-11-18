@@ -52,8 +52,8 @@ public class CardTest extends SwtIntegrationTest {
 		card.valueChanged("a", 3);
 		assertEquals(rawDataWithA3, card.data());
 		assertEquals(rawData, card.rawData());
-		
 	}
+	
 
 	public void testCardTypeIsBasedOnSlingResourceTypeInRawData() {
 		checkCardType(null);

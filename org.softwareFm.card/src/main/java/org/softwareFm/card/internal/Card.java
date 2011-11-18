@@ -7,13 +7,18 @@ import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MenuAdapter;
+import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -183,7 +188,7 @@ public class Card implements ICard, IHasTable {
 
 	public Card(Composite parent, final CardConfig cardConfig, final String url, Map<String, Object> rawData) {
 		this.cardConfig = cardConfig;
-		this. cardType = (String) rawData.get(CardConstants.slingResourceType);
+		this.cardType = (String) rawData.get(CardConstants.slingResourceType);
 		final TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, this);
 		content = new CardComposite(parent, cardConfig, url, rawData, cardType, titleSpec);
 		content.table.addSelectionListener(new SelectionAdapter() {
@@ -200,7 +205,20 @@ public class Card implements ICard, IHasTable {
 					content.table.deselectAll();
 			}
 		});
-
+		addMenuDetectListener(new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				final Menu menu = new Menu(getControl());
+				cardConfig.popupMenuContributor.contributeTo(event, menu, Card.this);
+				menu.setVisible(true);
+				menu.addMenuListener(new MenuAdapter() {
+					@Override
+					public void menuHidden(MenuEvent e) {
+						menu.dispose();
+					}
+				});
+			}
+		});
 	}
 
 	@Override
@@ -282,6 +300,11 @@ public class Card implements ICard, IHasTable {
 	@Override
 	public Table getTable() {
 		return content.table;
+	}
+
+	@Override
+	public void addMenuDetectListener(Listener listener) {
+		content.table.addListener(SWT.MenuDetect, listener);
 	}
 
 }

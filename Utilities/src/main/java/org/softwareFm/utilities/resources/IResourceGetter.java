@@ -73,5 +73,10 @@ public interface IResourceGetter {
 			return Integer.parseInt(raw);
 		}
 
+		public static <T> String getOrNull(IFunction1<T, IResourceGetter> resourceGetterFn, T cardType, String key) {
+			IResourceGetter resourceGetter = Functions.call(resourceGetterFn, cardType);
+			return resourceGetter.getStringOrNull(key);
+		}
+
 	}
 }

@@ -7,6 +7,4 @@ public interface ICardHolder extends IHasComposite {
 
 	void setAddItemProcessor(IAddItemProcessor processor);
 
-	void makeAndSetTableMenu(ICard card);
-
 }

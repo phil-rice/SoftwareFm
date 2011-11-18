@@ -2,6 +2,7 @@ package org.softwareFm.card.api;
 
 import java.util.Map;
 
+import org.eclipse.swt.widgets.Listener;
 import org.softwareFm.display.composites.IHasComposite;
 
 public interface ICard extends IHasComposite, IHasTable {
@@ -12,13 +13,16 @@ public interface ICard extends IHasComposite, IHasTable {
 	Map<String, Object> data();
 
 	void addLineSelectedListener(ILineSelectedListener listener);
-	
+
 	void addValueChangedListener(ICardValueChangedListener listener);
+
+	void addMenuDetectListener(Listener listener);
 
 	CardConfig cardConfig();
 
 	String cardType();
 
 	String url();
+
 
 }

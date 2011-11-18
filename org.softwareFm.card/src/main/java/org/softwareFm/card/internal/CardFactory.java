@@ -10,12 +10,12 @@ import org.softwareFm.card.api.ICardHolder;
 public class CardFactory implements ICardFactory {
 
 	@Override
-	public ICard makeCard(ICardHolder cardHolder, CardConfig cardConfig, String url, Map<String, Object> map) {
+	public ICard makeCard(ICardHolder cardHolder, final CardConfig cardConfig, String url, Map<String, Object> map) {
 		if (cardHolder.getControl().isDisposed())
 			return null;
 		else {
 			final Card card = new Card(cardHolder.getComposite(), cardConfig, url, map);
-			cardHolder.makeAndSetTableMenu(card);
+		
 			cardHolder.setCard(card);
 			return card;
 		}

@@ -25,5 +25,11 @@ public class CardConstants {
 	public static final String jarUrlKey = "urlGenerator.jar";
 	public static final String userUrlKey = "urlGenerator.user";
 	public static final String manuallyAdded = "manually added";
+	public static final String menuItemAddCollection = "menuitem.add.collection";
+	public static final String menuItemAddArtifact = "menuitem.add.artifact";
+	public static final String cardColorKey = "card.color";
+	public static final String indentTitleKey = "card.title.indent";
+	public static final String cardTitleIcon = "card.title.icon";
+	public static final String navIcon = "card.title.navIcon";
 
 }
