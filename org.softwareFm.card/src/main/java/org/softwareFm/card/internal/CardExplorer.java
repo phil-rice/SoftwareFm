@@ -62,7 +62,7 @@ public class CardExplorer implements IHasComposite {
 			
 			IAddItemProcessor addItemProcessor = new IAddItemProcessor() {
 				@Override
-				public void process(final RightClickCategoryResult result) {
+				public void addCollectionItem(final RightClickCategoryResult result) {
 					ICard card = cardHolder.getCard();
 					System.out.println("In add item processor with " + result + " and card: " + card);
 					removeDetailContents();
@@ -122,6 +122,11 @@ public class CardExplorer implements IHasComposite {
 					}, TitleSpec.noTitleSpec(getBackground()));
 					editor.getComposite().setLayout(new ValueEditorLayout());
 					populateDetail(editor.getControl());
+				}
+
+				@Override
+				public void addNewArtifact() {
+					
 				};
 			};
 			this.cardConfig = cardConfig.withAddItemProcessor(addItemProcessor);

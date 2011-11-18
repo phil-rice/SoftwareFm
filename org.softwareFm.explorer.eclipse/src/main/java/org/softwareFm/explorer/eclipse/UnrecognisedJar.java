@@ -1,5 +1,6 @@
 package org.softwareFm.explorer.eclipse;
 
+
 import java.io.File;
 import java.util.Map;
 
@@ -31,6 +32,7 @@ import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.swt.Swts.Size;
+import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
@@ -60,10 +62,10 @@ public class UnrecognisedJar implements IHasComposite {
 			Control okCancelControl = c.okCancel.getControl();
 			Point okCancelSize = okCancelControl.computeSize(ca.width, SWT.DEFAULT);
 
-			c.title.getControl().setBounds(ca.x, ca.y, ca.width, cc.titleHeight+cc.topMargin);
+			c.title.getControl().setBounds(ca.x, ca.y, ca.width, cc.titleHeight + cc.topMargin);
 
 			if (c.card != null)
-				c.card.getControl().setBounds(ca.x, ca.y + cc.titleHeight+cc.topMargin, ca.width, ca.height - cc.titleHeight - okCancelSize.y - cc.topMargin);
+				c.card.getControl().setBounds(ca.x, ca.y + cc.titleHeight + cc.topMargin, ca.width, ca.height - cc.titleHeight - okCancelSize.y - cc.topMargin);
 
 			okCancelControl.setSize(ca.width, okCancelSize.y);
 			okCancelControl.setLocation(ca.x, ca.height - okCancelSize.y);
@@ -81,7 +83,7 @@ public class UnrecognisedJar implements IHasComposite {
 		private File file;
 		private String digest;
 
-		public UnrecognisedJarComposite(Composite parent, int style, final CardConfig cardConfig) {
+		public UnrecognisedJarComposite(Composite parent, int style, final CardConfig cardConfig, final ICallback<String> afterOk) {
 			super(parent, style);
 			this.cardConfig = cardConfig.withStyleAndSelection(SWT.FULL_SELECTION, true);
 			this.file = new File(".");
@@ -93,7 +95,7 @@ public class UnrecognisedJar implements IHasComposite {
 					String groupId = (String) card.data().get(ConfigurationConstants.groupId);
 					String artifactId = (String) card.data().get(ConfigurationConstants.artifactId);
 					String version = (String) card.data().get(ConfigurationConstants.version);
-					new NewJarImporter(cardConfig, CardConstants.manuallyAdded, digest, groupId, artifactId, version).process();
+					new NewJarImporter(cardConfig, CardConstants.manuallyAdded, digest, groupId, artifactId, version).process(afterOk);
 				}
 			}, new Runnable() {
 				@Override
@@ -127,7 +129,9 @@ public class UnrecognisedJar implements IHasComposite {
 			card = new Card(this, this.cardConfig, "neverused", startData);
 			card.getComposite().setLayout(new Card.CardLayout());
 			TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, card);
-			title.setTitleAndImage(file.getName(), file.toString(), titleSpec);
+			String name = file == null ? "" : file.getName();
+			String tooltip = file == null ? "" : file.toString();
+			title.setTitleAndImage(name, tooltip, titleSpec);
 			card.getControl().moveBelow(title.getControl());
 			final Table table = card.getTable();
 			final TableEditor editor = new TableEditor(table);
@@ -172,11 +176,10 @@ public class UnrecognisedJar implements IHasComposite {
 			});
 		}
 
-
 	}
 
-	public UnrecognisedJar(Composite parent, int style, CardConfig cardConfig) {
-		composite = new UnrecognisedJarComposite(parent, style, cardConfig);
+	public UnrecognisedJar(Composite parent, int style, CardConfig cardConfig, ICallback<String> afterOk) {
+		composite = new UnrecognisedJarComposite(parent, style, cardConfig, afterOk);
 	}
 
 	public void setFileAndDigest(File file, String digest) {
@@ -198,7 +201,7 @@ public class UnrecognisedJar implements IHasComposite {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay()).withUrlGeneratorMap(BasicCardConfigurator.makeUrlGeneratorMap("/prefix/"));
-				UnrecognisedJar unrecognisedJar = new UnrecognisedJar(from, SWT.NULL, cardConfig);
+				UnrecognisedJar unrecognisedJar = new UnrecognisedJar(from, SWT.NULL, cardConfig, ICallback.Utils.<String>sysoutCallback());
 				unrecognisedJar.setFileAndDigest(new File("a/b/c/jarFile.jar"), "01234567Test");
 				unrecognisedJar.getComposite().setLayout(new UnrecognisedJarLayout());
 				Composite result = unrecognisedJar.getComposite();

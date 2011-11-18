@@ -2,15 +2,19 @@ package org.softwareFm.card.api;
 
 public interface IAddItemProcessor {
 
-
-	void process(RightClickCategoryResult rightClickCategoryResult);
+	void addCollectionItem(RightClickCategoryResult rightClickCategoryResult);
+	void addNewArtifact();
 
 	public static class Utils {
 
 		public static IAddItemProcessor noAddItemProcessor() {
 			return new IAddItemProcessor() {
 				@Override
-				public void process(RightClickCategoryResult rightClickCategoryResult) {
+				public void addCollectionItem(RightClickCategoryResult rightClickCategoryResult) {
+				}
+
+				@Override
+				public void addNewArtifact() {
 				}
 			};
 		}

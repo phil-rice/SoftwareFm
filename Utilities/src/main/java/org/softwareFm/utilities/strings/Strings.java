@@ -44,25 +44,29 @@ public class Strings {
 	}
 
 	public static String versionPartOf(File raw, String defaultIfCannotFind) {
-		String version = lastSegment(raw.toString(), "-");
-		if (isVersion(version)) {
-			int index = version.lastIndexOf('.');
-			if (index != -1) {
-				String result = version.substring(0, index);
-				return result;
+		if (raw != null) {
+			String version = lastSegment(raw.toString(), "-");
+			if (isVersion(version)) {
+				int index = version.lastIndexOf('.');
+				if (index != -1) {
+					String result = version.substring(0, index);
+					return result;
+				}
 			}
 		}
 		return defaultIfCannotFind;
 	}
 
 	public static String withoutVersion(File raw, String defaultIfCannotFind) {
-		String file = raw.getName();
-		String version = lastSegment(file, "-");
-		if (isVersion(version)) {
-			int index = file.lastIndexOf("-");
-			if (index != -1) {
-				String result = file.substring(0, index);
-				return result;
+		if (raw != null) {
+			String file = raw.getName();
+			String version = lastSegment(file, "-");
+			if (isVersion(version)) {
+				int index = file.lastIndexOf("-");
+				if (index != -1) {
+					String result = file.substring(0, index);
+					return result;
+				}
 			}
 		}
 		return defaultIfCannotFind;

@@ -38,7 +38,7 @@ public class CardPopupMenuContributor implements IPopupMenuContributor<ICard> {
 				@Override
 				public void handleEvent(Event event) {
 					CardConfig cardConfig = card.cardConfig();
-					cardConfig.addItemProcessor.process(categorisation);
+					cardConfig.addItemProcessor.addCollectionItem(categorisation);
 				}
 			});
 			break;
@@ -51,7 +51,8 @@ public class CardPopupMenuContributor implements IPopupMenuContributor<ICard> {
 		addGroup.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				System.out.println("add group");
+				CardConfig cardConfig = card.cardConfig();
+				cardConfig.addItemProcessor.addNewArtifact();
 			}
 		});
 	}

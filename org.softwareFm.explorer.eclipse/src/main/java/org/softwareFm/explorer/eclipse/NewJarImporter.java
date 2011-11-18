@@ -11,6 +11,7 @@ import org.softwareFm.configuration.ConfigurationConstants;
 import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.display.data.IUrlGeneratorMap;
 import org.softwareFm.jdtBinding.api.JdtConstants;
+import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.maps.Maps;
 
@@ -32,22 +33,27 @@ public class NewJarImporter {
 			this.cardConfig = cardConfig;
 		}
 
-		public Future<?> process(ImportStage... stages) {
-			return process(0, stages);
+		public Future<?> process(Runnable afterOk, ImportStage... stages) {
+			return process(afterOk, 0, stages);
 		}
 
-		private Future<?> process(final int index, final ImportStage[] stages) {
-			if (index >= stages.length)
+		private Future<?> process(final Runnable afterOk, final int index, final ImportStage[] stages) {
+			if (index >= stages.length) {
+				afterOk.run();
 				return Futures.doneFuture(null);
+			}
 			ImportStage stage = stages[index];
 			IMutableCardDataStore cardDataStore = (IMutableCardDataStore) cardConfig.cardDataStore;
 			System.out.println("Putting: " + stage.url + " " + stage.data);
-			return cardDataStore.put(stage.url, stage.data, new IAfterEditCallback() {
-				@Override
-				public void afterEdit(String url) {
-					process(index + 1, stages);
-				}
-			});
+			if (stage.url == null)
+				return process(afterOk, index + 1, stages);
+			else
+				return cardDataStore.put(stage.url, stage.data, new IAfterEditCallback() {
+					@Override
+					public void afterEdit(String url) {
+						process(afterOk, index + 1, stages);
+					}
+				});
 		}
 
 	}
@@ -90,8 +96,14 @@ public class NewJarImporter {
 		return new ImportStage(baseUrl + "/" + collectionName, Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection));
 	}
 
-	public Future<?> process() {
-		return importer.process(//
+	public Future<?> process(final ICallback<String> afterOk) {
+		return importer.process(new Runnable() {
+			@Override
+			public void run() {
+				String artifactUrl = map.get(CardConstants.artifactUrlKey).findUrlFor(groupIdArtifactIdVersionMap);
+				ICallback.Utils.call(afterOk, artifactUrl);
+			}
+		},//
 				map(CardConstants.jarUrlKey, Maps.with(groupIdArtifactIdVersionMap, CardConstants.slingResourceType, CardConstants.collection)), //
 				stage(CardConstants.urlGroupKey, ConfigurationConstants.groupId, groupId, CardConstants.slingResourceType, CardConstants.group),//
 				collection(CardConstants.urlGroupKey, CardConstants.artifact), //

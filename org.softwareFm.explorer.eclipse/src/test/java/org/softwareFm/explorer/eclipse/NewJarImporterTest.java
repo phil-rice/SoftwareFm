@@ -16,6 +16,8 @@ import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.internal.BasicCardConfigurator;
 import org.softwareFm.configuration.ConfigurationConstants;
+import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.callbacks.MemoryCallback;
 import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.maps.Maps;
 
@@ -28,7 +30,8 @@ public class NewJarImporterTest extends TestCase {
 	@Test
 	public void test() {
 		NewJarImporter newJarImporter = new NewJarImporter(cardConfig, "found - text", "012345", "g", "a", "v");
-		newJarImporter.process();
+		MemoryCallback<String> memory = ICallback.Utils.<String>memory();
+		newJarImporter.process(memory);
 		assertEquals(Maps.makeLinkedMap(//
 				"/softwareFm/jars/01/23/012345", //
 				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.collection, ConfigurationConstants.groupId, "g", ConfigurationConstants.artifactId, "a", CardConstants.version, "v"),//
@@ -47,6 +50,7 @@ public class NewJarImporterTest extends TestCase {
 				"/prefix/g/g/artifact/a/version/v/digest/012345", //
 				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.versionJar, CardConstants.digest, "012345", CardConstants.found, "found - text")),//
 				actualUrlToMap);
+		assertEquals("/prefix/g/g/artifact/a", memory.getOnlyResult());
 		assertEquals(actualUrlToMap.size(), count.get());
 	}
 

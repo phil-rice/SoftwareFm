@@ -10,7 +10,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
-import org.eclipse.swt.widgets.MenuItem;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICard;
@@ -147,7 +146,6 @@ public class CardHolder implements ICardHolder {
 
 	private final List<ICardChangedListener> cardListeners = new CopyOnWriteArrayList<ICardChangedListener>();
 	final CardHolderComposite content;
-	private MenuItem item1;
 
 	public CardHolder(Composite parent, String loadingText, String title, CardConfig cardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
 		content = new CardHolderComposite(parent, cardConfig, rootUrl, callbackToGotoUrl);
@@ -186,9 +184,6 @@ public class CardHolder implements ICardHolder {
 		return content;
 	}
 
-	 MenuItem getItem1() {
-		return item1;
-	}
 	public static void main(String[] args) {
 		Show.display(CardHolder.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override

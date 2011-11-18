@@ -76,7 +76,12 @@ public class Explorer implements IExplorer {
 		unrecognisedJar = masterDetailSocial.createMaster(new IFunction1<Composite, UnrecognisedJar>() {
 			@Override
 			public UnrecognisedJar apply(final Composite from) throws Exception {
-				UnrecognisedJar unrecognisedJar = new UnrecognisedJar(from, SWT.NULL, cardConfig);
+				UnrecognisedJar unrecognisedJar = new UnrecognisedJar(from, SWT.NULL, cardConfig, new ICallback<String>() {
+					@Override
+					public void process(String artifactUrl) throws Exception {
+						displayCard(artifactUrl);
+					}
+				});
 				unrecognisedJar.getComposite().setLayout(new UnrecognisedJar.UnrecognisedJarLayout());
 				return unrecognisedJar;
 			}
@@ -184,25 +189,22 @@ public class Explorer implements IExplorer {
 	private IAddItemProcessor makeAddItemProcessor(final IMasterDetailSocial masterDetailSocial) {
 		IAddItemProcessor itemProcessor = new IAddItemProcessor() {
 			@Override
-			public void process(final RightClickCategoryResult result) {
+			public void addCollectionItem(final RightClickCategoryResult result) {
 				final ICard card = cardHolder.getCard();
-				System.out.println("In add item processor with " + result + " and card: " + card);
 
 				TextEditor editor = masterDetailSocial.createDetail(new IFunction1<Composite, TextEditor>() {
 					@Override
 					public TextEditor apply(Composite from) throws Exception {
-						return new TextEditor(from,card.cardConfig(), result.url, card.cardType(), result.collectionName, "", new IDetailsFactoryCallback() {
+						return new TextEditor(from, card.cardConfig(), result.url, card.cardType(), result.collectionName, "", new IDetailsFactoryCallback() {
 							private final IDetailsFactoryCallback callback = this;
 
 							@Override
 							public void updateDataStore(final IMutableCardDataStore store, String url, String key, final Object value) {
-								System.out.println("Updateing data store: " + value);
 								updateStore(store, result, value, callback);
 							}
 
 							@Override
 							public void afterEdit(String url) {
-								System.out.println("After edit");
 								ICallback.Utils.call(callbackToGotoUrlAndUpdateDetails, url);
 							}
 
@@ -219,6 +221,12 @@ public class Explorer implements IExplorer {
 				}, false);
 				editor.getComposite().setLayout(new ValueEditorLayout());
 				masterDetailSocial.setDetail(editor.getControl());
+			}
+
+			@Override
+			public void addNewArtifact() {
+				unrecognisedJar.setFileAndDigest(null, null);
+				masterDetailSocial.setMaster(unrecognisedJar.getControl());
 			}
 		};
 		return itemProcessor;
@@ -264,7 +272,6 @@ public class Explorer implements IExplorer {
 		String fullUrl = result.itemUrl(newItemName);
 		store.put(fullUrl, Maps.stringObjectMap(CardConstants.slingResourceType, result.collectionName), afterEditCallback);
 	}
-
 
 	@Override
 	public Control getControl() {

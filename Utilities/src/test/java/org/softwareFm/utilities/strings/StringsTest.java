@@ -28,11 +28,14 @@ public class StringsTest extends TestCase {
 		checkVersions("a/b/c/spring-code-1.0.0.jar", "spring-code", "1.0.0");
 		checkVersions("spring-code-1.0.0.jar", "spring-code", "1.0.0");
 		checkVersions("spring-code-1.A.0.jar", "n/a", "n/a");
+		checkVersions("spring-code-1.A.0.jar", "n/a", "n/a");
+		checkVersions(null, "n/a", "n/a");
 	}
 
 	private void checkVersions(String raw, String prefix, String version) {
-		assertEquals(version, Strings.versionPartOf(new File(raw), "n/a"));
-		assertEquals(prefix, Strings.withoutVersion(new File(raw), "n/a"));
+		File file = raw == null ? null : new File(raw);
+		assertEquals(version, Strings.versionPartOf(file, "n/a"));
+		assertEquals(prefix, Strings.withoutVersion(file, "n/a"));
 	}
 
 	public void testStringToUrlSegment() {

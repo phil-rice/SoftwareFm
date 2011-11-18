@@ -1,5 +1,6 @@
 package org.softwareFm.card.internal;
 
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
@@ -8,19 +9,16 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
-import org.softwareFm.card.api.AddItemProcessorMock;
 import org.softwareFm.card.api.CardChangedListenerMock;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICard;
-import org.softwareFm.card.api.RightClickCategoryResult;
 import org.softwareFm.display.swt.SwtIntegrationTest;
 import org.softwareFm.utilities.collections.Iterables;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.strings.Strings;
 
 public abstract class AbstractCardHolderTest extends SwtIntegrationTest {
 
@@ -67,26 +65,15 @@ public abstract class AbstractCardHolderTest extends SwtIntegrationTest {
 		checkValueChanged(mock2, newCard, "value", "newValue");
 	}
 
-	public void testItemProcessorInvokedWhenTableIsRightClickedWhenCardSetAfterItemProcessor() {
-		AddItemProcessorMock mock = new AddItemProcessorMock();
-		ICard newCard = makeAndSetCard(cardConfig.withAddItemProcessor(mock));
-		
-		checkItemProcessorIsInvoked(mock, newCard);
-		
-	}
-	public void testItemProcessorInvokedWhenTableIsRightClickedWhenCardSetBeforeItemProcessor() {
-		AddItemProcessorMock mock = new AddItemProcessorMock();
-		ICard newCard = makeAndSetCard(cardConfig.withAddItemProcessor(mock));
-		
-		checkItemProcessorIsInvoked(mock, newCard);
-	}
-
-	private void checkItemProcessorIsInvoked(AddItemProcessorMock mock, ICard card) {
-		Table table = cardHolder.getCard().getTable();
-		assertEquals(0, mock.results.size());
-		table.select(0);
-		dispatchUntilQueueEmpty();
-		assertEquals(0, mock.results.size());//not notified yet
+	public void testMenuListenerInvokedWhenTableRightClicked(){
+		ICard card = makeAndSetCard(cardConfig);
+		final List<Event> events = Lists.newList();
+		card.addMenuDetectListener(new Listener() {
+			@Override
+			public void handleEvent(Event event) {events.add(event);
+			}
+		});
+		Table table = card.getTable();
 		
 		Point control = table.toDisplay(new Point(2,2));//just inside the first item: "tag"
 		Event event = new Event();
@@ -95,19 +82,7 @@ public abstract class AbstractCardHolderTest extends SwtIntegrationTest {
 		
 		table.notifyListeners(SWT.MenuDetect, event);
 		dispatchUntilQueueEmpty();
-		RightClickCategoryResult categorisation = card.cardConfig().rightClickCategoriser.categorise(card.url(), card.data(), "tag");
-		MenuItem item1 = cardHolder.getItem1();
-		assertEquals(categorisation, item1.getData());
-		assertEquals("Add " + Strings.nullSafeToString(categorisation.collectionName), item1.getText()); 
-		assertFalse( item1.isEnabled());
-		
-		//now lets click on item 1, and see that the add item processor is actually invoked
-		
-		dispatchUntilQueueEmpty();
-		assertEquals(0, mock.results.size());//not notified yet
-		item1.notifyListeners(SWT.Selection, new Event());
-		dispatchUntilQueueEmpty();
-		assertEquals(categorisation, Lists.getOnly(mock.results));
+		assertEquals(event, Lists.getOnly(events));
 	}
 
 	private void checkValueChanged(CardChangedListenerMock mock, ICard card, Object... keyAndValues) {
