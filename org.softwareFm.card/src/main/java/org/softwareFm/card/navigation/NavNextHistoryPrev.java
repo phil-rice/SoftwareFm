@@ -88,7 +88,6 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 				public void paintControl(PaintEvent e) {
 					Combo combo = navCombo.combo;
 					Rectangle clientArea = combo.getClientArea();
-					e.gc.setBackground(combo.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 					e.gc.fillRectangle(clientArea);
 					e.gc.drawImage(historyImage, 0, +2);
 				}
