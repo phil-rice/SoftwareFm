@@ -272,8 +272,8 @@ public class Explorer implements IExplorer {
 	}
 
 	private void createNewItem(final RightClickCategoryResult result, final IMutableCardDataStore store, String newItemName, IAfterEditCallback afterEditCallback) {
-		String cardUrl = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, result.collectionName, CardConstants.cardAutoUrl);
-		String cardName = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, result.collectionName, CardConstants.cardAutoName);
+		String cardUrl = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, result.collectionName, CardConstants.cardNameUrlKey);
+		String cardName = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, result.collectionName, CardConstants.cardNameFieldKey);
 		String itemName = cardUrl == null ? newItemName : MessageFormat.format(cardUrl,  Strings.forUrl(newItemName), UUID.randomUUID());
 		String fullUrl = result.itemUrl(itemName);
 		Map<String, Object> baseData = Maps.stringObjectMap(CardConstants.slingResourceType, result.collectionName);

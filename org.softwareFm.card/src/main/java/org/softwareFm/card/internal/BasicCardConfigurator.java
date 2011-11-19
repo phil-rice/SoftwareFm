@@ -98,7 +98,7 @@ public class BasicCardConfigurator implements ICardConfigurator {
 				String size = findSize(from);
 				if (pattern == null)
 					if (from.value instanceof Map<?, ?>)
-						return "";
+						return size;
 					else
 						return Strings.nullSafeToString(from.value);
 				else
