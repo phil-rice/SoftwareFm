@@ -59,10 +59,17 @@ public class Explorer implements IExplorer {
 	private final CardConfig cardConfig;
 	private BrowserAndNavBar browser;
 	private TimeLine timeLine;
+	private IHelpText helpText;
 
 	public Explorer(final CardConfig cardConfigParam, final String rootUrl, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter) {
 		this.cardConfig = cardConfigParam.withAddItemProcessor(makeAddItemProcessor(masterDetailSocial));
 		this.masterDetailSocial = masterDetailSocial;
+		helpText = masterDetailSocial.createSocial(new IFunction1<Composite, IHelpText>() {
+			@Override
+			public IHelpText apply(Composite from) throws Exception {
+				return new HelpText(from);
+			}
+		}, true);
 		callbackToGotoUrlAndUpdateDetails = new ICallback<String>() {
 			@Override
 			public void process(String url) throws Exception {
@@ -184,8 +191,17 @@ public class Explorer implements IExplorer {
 				};
 				return cardConfig.detailFactory.makeDetail(from, card, cardConfig, key, value, callback);
 			}
-
 		});
+		String cardType = card.cardType();
+		String helpKey = "help." + cardType + "." + key;
+		String help = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, cardType, helpKey);
+		masterDetailSocial.setSocial(helpText.getControl());
+		helpText.setText(Strings.nullSafeToString(help));
+		if (help == null)
+//			masterDetailSocial.setSocial(null);
+			;
+		else {
+		}
 	}
 
 	/** This is the bit that configures then acts on the right click that adds folders/groups/collections */
@@ -274,10 +290,10 @@ public class Explorer implements IExplorer {
 	private void createNewItem(final RightClickCategoryResult result, final IMutableCardDataStore store, String newItemName, IAfterEditCallback afterEditCallback) {
 		String cardUrl = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, result.collectionName, CardConstants.cardNameUrlKey);
 		String cardName = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, result.collectionName, CardConstants.cardNameFieldKey);
-		String itemName = cardUrl == null ? newItemName : MessageFormat.format(cardUrl,  Strings.forUrl(newItemName), UUID.randomUUID());
+		String itemName = cardUrl == null ? newItemName : MessageFormat.format(cardUrl, Strings.forUrl(newItemName), UUID.randomUUID());
 		String fullUrl = result.itemUrl(itemName);
 		Map<String, Object> baseData = Maps.stringObjectMap(CardConstants.slingResourceType, result.collectionName);
-		if (cardName!= null)
+		if (cardName != null)
 			baseData.put(cardName, newItemName);
 		store.put(fullUrl, baseData, afterEditCallback);
 	}
