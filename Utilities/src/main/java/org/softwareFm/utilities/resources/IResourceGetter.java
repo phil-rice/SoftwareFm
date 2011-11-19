@@ -77,6 +77,11 @@ public interface IResourceGetter {
 			IResourceGetter resourceGetter = Functions.call(resourceGetterFn, cardType);
 			return resourceGetter.getStringOrNull(key);
 		}
+		public static <T> String getOr(IFunction1<T, IResourceGetter> resourceGetterFn, T cardType, String key, String defaultValue) {
+			IResourceGetter resourceGetter = Functions.call(resourceGetterFn, cardType);
+			String result = resourceGetter.getStringOrNull(key);
+			return result == null? defaultValue : result;
+		}
 
 	}
 }

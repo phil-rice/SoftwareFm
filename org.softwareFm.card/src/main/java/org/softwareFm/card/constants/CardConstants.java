@@ -15,6 +15,7 @@ public class CardConstants {
 	public static final String collection = "collection";
 	public static final String editorStyledText = "editor.styledText";
 
+
 	public static final String folder = "Folder";
 	public static final Object found = "found";
 
@@ -34,5 +35,8 @@ public class CardConstants {
 	public static final String missingStringKey = "card.missing.string";
 	public static final String missingListKey = "card.missing.list";
 	public static final String cardOrderKey = "card.order";
+	public static final String cardAutoName = "card.auto.name";
+	public static final String cardAutoUrl = "card.auto.url";
+	
 
 }

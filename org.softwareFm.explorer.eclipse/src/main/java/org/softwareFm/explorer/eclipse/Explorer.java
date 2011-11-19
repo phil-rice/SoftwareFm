@@ -1,8 +1,10 @@
 package org.softwareFm.explorer.eclipse;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.SWT;
@@ -44,6 +46,7 @@ import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.history.IHistoryListener;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.services.IServiceExecutor;
 import org.softwareFm.utilities.strings.Strings;
 
@@ -269,8 +272,14 @@ public class Explorer implements IExplorer {
 	}
 
 	private void createNewItem(final RightClickCategoryResult result, final IMutableCardDataStore store, String newItemName, IAfterEditCallback afterEditCallback) {
-		String fullUrl = result.itemUrl(newItemName);
-		store.put(fullUrl, Maps.stringObjectMap(CardConstants.slingResourceType, result.collectionName), afterEditCallback);
+		String cardUrl = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, result.collectionName, CardConstants.cardAutoUrl);
+		String cardName = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, result.collectionName, CardConstants.cardAutoName);
+		String itemName = cardUrl == null ? newItemName : MessageFormat.format(cardUrl,  Strings.forUrl(newItemName), UUID.randomUUID());
+		String fullUrl = result.itemUrl(itemName);
+		Map<String, Object> baseData = Maps.stringObjectMap(CardConstants.slingResourceType, result.collectionName);
+		if (cardName!= null)
+			baseData.put(cardName, newItemName);
+		store.put(fullUrl, baseData, afterEditCallback);
 	}
 
 	@Override
