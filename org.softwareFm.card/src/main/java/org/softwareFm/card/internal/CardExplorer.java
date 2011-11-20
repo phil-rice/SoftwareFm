@@ -112,7 +112,7 @@ public class CardExplorer implements IHasComposite {
 						}
 
 						@Override
-						public void cardSelected(ICard card) {
+						public void cardSelected(String cardUrl) {
 						}
 
 						private void createNewItem(final RightClickCategoryResult result, final IMutableCardDataStore store, String newItemName) {
@@ -195,8 +195,8 @@ public class CardExplorer implements IHasComposite {
 				}
 
 				@Override
-				public void cardSelected(ICard card) {
-					ICallback.Utils.call(callbackToGotoUrl, card.url());
+				public void cardSelected(String cardUrl) {
+					ICallback.Utils.call(callbackToGotoUrl, cardUrl);
 				}
 
 				@Override

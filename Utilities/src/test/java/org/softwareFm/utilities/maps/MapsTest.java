@@ -13,7 +13,44 @@ import junit.framework.TestCase;
 import org.softwareFm.utilities.constants.UtilityMessages;
 import org.softwareFm.utilities.functions.Functions;
 
+@SuppressWarnings("unchecked")
 public class MapsTest extends TestCase {
+
+	private static final Map<String, Object> input = Maps.stringObjectLinkedMap(//
+			"key1", Maps.stringObjectLinkedMap("a", 1, "b", 2),//
+			"key2", Maps.stringObjectLinkedMap("a", 2, "b", 1));
+
+	private static final MapAsList expectedabk12 = new MapAsList(Arrays.asList("a", "b", "key"), 2, Arrays.<Object> asList(1, 2, "key1"), Arrays.<Object> asList(2, 1, "key2"));
+	private static final MapAsList expectedabk21 = new MapAsList(Arrays.asList("a", "b", "key"), 2, Arrays.<Object> asList(2, 1, "key2"), Arrays.<Object> asList(1, 2, "key1"));
+
+	private static final MapAsList expectedbak12 = new MapAsList(Arrays.asList("b", "a", "key"), 2, Arrays.<Object> asList(2, 1, "key1"), Arrays.<Object> asList(1, 2, "key2"));
+	private static final MapAsList expectedbak21 = new MapAsList(Arrays.asList("b", "a", "key"), 2, Arrays.<Object> asList(1, 2, "key2"), Arrays.<Object> asList(2, 1, "key1"));
+
+	private static final MapAsList expectedkab12 = new MapAsList(Arrays.asList("key", "a", "b"), 0, Arrays.<Object> asList("key1", 1, 2), Arrays.<Object> asList("key2", 2, 1));
+	private static final MapAsList expectedkab21 = new MapAsList(Arrays.asList("key", "a", "b"), 0, Arrays.<Object> asList("key2", 2, 1), Arrays.<Object> asList("key1", 1, 2));
+
+	public void testMapsAsList() {
+		assertEquals(expectedabk12, Maps.toMapAsList("key", input, "a", Arrays.<String> asList()));
+		assertEquals(expectedabk12, Maps.toMapAsList("key", input, "a", Arrays.<String> asList("a")));
+		assertEquals(expectedabk12, Maps.toMapAsList("key", input, "a", Arrays.<String> asList("a", "b")));
+		assertEquals(expectedabk12, Maps.toMapAsList("key", input, "a", Arrays.<String> asList("a", "b", "key")));
+
+		assertEquals(expectedabk21, Maps.toMapAsList("key", input, "b", Arrays.<String> asList()));
+		assertEquals(expectedabk21, Maps.toMapAsList("key", input, "b", Arrays.<String> asList("a")));
+		assertEquals(expectedabk21, Maps.toMapAsList("key", input, "b", Arrays.<String> asList("a", "b")));
+		assertEquals(expectedabk21, Maps.toMapAsList("key", input, "b", Arrays.<String> asList("a", "b", "key")));
+
+		assertEquals(expectedbak12, Maps.toMapAsList("key", input, "a", Arrays.<String> asList("b")));
+		assertEquals(expectedbak12, Maps.toMapAsList("key", input, "a", Arrays.<String> asList("b", "a")));
+		assertEquals(expectedbak12, Maps.toMapAsList("key", input, "a", Arrays.<String> asList("b", "a", "key")));
+
+		assertEquals(expectedbak21, Maps.toMapAsList("key", input, "b", Arrays.<String> asList("b")));
+		assertEquals(expectedbak21, Maps.toMapAsList("key", input, "b", Arrays.<String> asList("b", "a")));
+		assertEquals(expectedbak21, Maps.toMapAsList("key", input, "b", Arrays.<String> asList("b", "a", "key")));
+
+		assertEquals(expectedkab12, Maps.toMapAsList("key", input, "a", Arrays.<String> asList("key")));
+		assertEquals(expectedkab21, Maps.toMapAsList("key", input, "b", Arrays.<String> asList("key")));
+	}
 
 	public void testMakeMap() {
 		checkMakeMap();

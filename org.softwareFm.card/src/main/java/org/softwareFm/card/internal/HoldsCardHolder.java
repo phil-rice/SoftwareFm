@@ -73,7 +73,7 @@ public class HoldsCardHolder extends Composite {
 
 	private void norifyCardSelectedListeners(final ICard card) {
 		for (ICardSelectedListener listener : listeners) {
-			listener.cardSelected(card);
+			listener.cardSelected(card.url());
 		}
 	}
 

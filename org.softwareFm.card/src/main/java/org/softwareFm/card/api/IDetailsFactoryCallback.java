@@ -21,7 +21,7 @@ public interface IDetailsFactoryCallback extends ICardSelectedListener, IGotData
 				}
 
 				@Override
-				public void cardSelected(ICard card) {
+				public void cardSelected(String cardUrl) {
 				}
 
 				@Override
@@ -33,7 +33,7 @@ public interface IDetailsFactoryCallback extends ICardSelectedListener, IGotData
 		public static IDetailsFactoryCallback resizeAfterGotData() {
 			return new IDetailsFactoryCallback() {
 				@Override
-				public void cardSelected(ICard card) {
+				public void cardSelected(String cardUrl) {
 				}
 
 				@Override

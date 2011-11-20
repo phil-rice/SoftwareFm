@@ -2,14 +2,14 @@ package org.softwareFm.card.api;
 
 public interface ICardSelectedListener {
 
-	void cardSelected(ICard card);
+	void cardSelected(String cardUrl);
 
 	public static class Utils {
 
 		public static ICardSelectedListener noListener() {
 			return new ICardSelectedListener() {
 				@Override
-				public void cardSelected(ICard card) {
+				public void cardSelected(String cardUrl) {
 				}
 			};
 		}

@@ -180,8 +180,8 @@ public class Explorer implements IExplorer {
 					}
 
 					@Override
-					public void cardSelected(ICard card) {
-						ICallback.Utils.call(callbackToGotoUrlAndUpdateDetails, card.url());
+					public void cardSelected(String cardUrl) {
+						ICallback.Utils.call(callbackToGotoUrlAndUpdateDetails, cardUrl);
 					}
 
 					@Override
@@ -232,7 +232,7 @@ public class Explorer implements IExplorer {
 							}
 
 							@Override
-							public void cardSelected(ICard card) {
+							public void cardSelected(String cardUrl) {
 							}
 
 						}, TitleSpec.noTitleSpec(from.getBackground()));

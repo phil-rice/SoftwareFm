@@ -8,7 +8,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.junit.Test;
 import org.softwareFm.card.api.CardConfig;
-import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.IDetailsFactoryCallback;
 import org.softwareFm.card.api.IMutableCardDataStore;
 import org.softwareFm.card.api.LineItem;
@@ -165,7 +164,7 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 		IHasControl actual = adder.add(shell, parentCard, cardConfig, lineItem.key, lineItem.value, new IDetailsFactoryCallback() {
 
 			@Override
-			public void cardSelected(ICard card) {
+			public void cardSelected(String cardUrl) {
 			}
 
 			@Override

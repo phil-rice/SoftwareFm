@@ -37,6 +37,54 @@ public class Maps {
 
 	}
 
+	@SuppressWarnings("unchecked")
+	public static MapAsList toMapAsList(String keyName, Map<String, Object> map, String sortOrder, List<String> keyOrder) {
+		List<String> titles = Lists.newList();
+		titles.add(keyName);
+		for (Entry<String, Object> entry : map.entrySet()) {
+			if (entry.getValue() instanceof Map<?, ?>)
+				for (String key : ((Map<String, Object>) entry.getValue()).keySet())
+					if (!titles.contains(key))
+						titles.add(key);
+		}
+		Collections.sort(titles, Lists.orderedComparator(keyOrder));
+		int keyIndex = titles.indexOf(keyName);
+		List<List<Object>> values = Lists.newList();
+		for (Entry<String, Object> entry : map.entrySet()) {
+			List<Object> theseValues = Lists.newList();
+			String key = entry.getKey();
+			Map<String, Object> thisMap = entry.getValue() instanceof Map<?, ?> ? (Map<String, Object>) entry.getValue() : Collections.<String, Object> emptyMap();
+			for (int i = 0; i < titles.size(); i++) {
+				String title = titles.get(i);
+				Object thisValue = title == keyName ? key : thisMap.get(title);
+				theseValues.add(thisValue);
+			}
+			values.add(theseValues);
+		}
+		final int index = titles.indexOf(sortOrder);
+		if (index == -1)
+			throw new IllegalArgumentException(MessageFormat.format(UtilityConstants.cannotSort, sortOrder, titles));
+		Collections.sort(values, new Comparator<List<Object>>() {
+
+			@Override
+			public int compare(List<Object> o1, List<Object> o2) {
+				Object l = o1.get(index);
+				Object r = o2.get(index);
+				if (l == null)
+					if (r == null)
+						return 0;
+					else
+						return 1;
+				else if (r == null)
+					return -1;
+				else
+					return ((Comparable<Object>) l).compareTo(r);
+			}
+		});
+		return new MapAsList(titles,keyIndex, values);
+
+	}
+
 	public static <KV> KV[] toArray(final Map<? extends KV, ? extends KV> map, KV[] baseArray) {
 		List<KV> result = new ArrayList<KV>();
 		for (Entry<? extends KV, ? extends KV> entry : map.entrySet()) {
@@ -456,6 +504,7 @@ public class Maps {
 	public static Map<String, Object> stringObjectMap(Object... attributesAndValues) {
 		return makeMap(attributesAndValues);
 	}
+
 	public static Map<String, Object> stringObjectLinkedMap(Object... attributesAndValues) {
 		return makeLinkedMap(attributesAndValues);
 	}

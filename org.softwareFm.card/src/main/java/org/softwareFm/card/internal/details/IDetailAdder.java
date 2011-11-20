@@ -7,6 +7,8 @@ import org.softwareFm.card.api.IDetailsFactoryCallback;
 import org.softwareFm.display.composites.IHasControl;
 
 public interface IDetailAdder {
+	
+	public static boolean useListOfCards = false;
 
 	IHasControl add(Composite parentComposite, ICard parentCard, CardConfig cardConfig, String key, Object value, IDetailsFactoryCallback callback);
 
