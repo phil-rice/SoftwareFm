@@ -27,6 +27,8 @@ import org.softwareFm.card.api.LineItem;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.internal.details.CollectionItemDetailAdder;
 import org.softwareFm.card.internal.details.CollectionsDetailAdder;
+import org.softwareFm.card.internal.details.EditorDetailAdder;
+import org.softwareFm.card.internal.details.IDetailAdder;
 import org.softwareFm.card.internal.details.ListDetailAdder;
 import org.softwareFm.card.internal.details.StyledTextEditorDetailAdder;
 import org.softwareFm.card.internal.details.TextEditorDetailAdder;
@@ -50,6 +52,20 @@ public class BasicCardConfigurator implements ICardConfigurator {
 	@Override
 	public CardConfig configure(final Display display, CardConfig config) {
 		final IResourceGetter baseResourceGetter = IResourceGetter.Utils.noResources().with(CardConfig.class, "Card");
+
+		IFunction1<String, IDetailAdder> editorFn = new IFunction1<String, IDetailAdder>() {
+			@Override
+			public IDetailAdder apply(String editorName) throws Exception {
+				if (editorName.equals("text"))
+					return new TextEditorDetailAdder();
+				else if (editorName.equals("styledText"))
+					return new StyledTextEditorDetailAdder();
+				else if (editorName.equals("none"))
+					return null;
+				throw new IllegalStateException(editorName);
+			}
+		};
+
 		final IFunction1<String, IResourceGetter> resourceGetterFn = new IFunction1<String, IResourceGetter>() {
 			private final Map<String, IResourceGetter> cache = Maps.newMap();
 
@@ -162,8 +178,7 @@ public class BasicCardConfigurator implements ICardConfigurator {
 				// new GroupDetailAdder(),//
 				new CollectionItemDetailAdder(),//
 				new ListDetailAdder(), //
-				new StyledTextEditorDetailAdder(),//
-				new TextEditorDetailAdder());
+				new EditorDetailAdder());
 		IFunction1<ICard, String> defaultChildFn = new IFunction1<ICard, String>() {
 			final Map<String, String> typeToDefaultChildMap = Maps.makeMap(//
 					CardConstants.group, CardConstants.artifact,//
@@ -219,7 +234,8 @@ public class BasicCardConfigurator implements ICardConfigurator {
 				withRightClickCategoriser(rightClickCategoriser).//
 				withTitleSpecFn(titleSpecFn).//
 				withUrlGeneratorMap(urlGeneratorMap).//
-				withImageFn(imageFn).withPopupMenuContributor(contributor);
+				withImageFn(imageFn).withPopupMenuContributor(contributor).//
+				withEditorFn(editorFn);
 	}
 
 	public static IUrlGeneratorMap makeUrlGeneratorMap(String prefix) {

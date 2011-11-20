@@ -95,7 +95,7 @@ public class Card implements ICard, IHasTable {
 			this.url = url;
 			this.rawData = rawData;
 			this.cardType = cardType;
-			this.table = new Table(this, cardConfig.cardStyle);
+			this.table = new Table(this, cardConfig.cardStyle|SWT.V_SCROLL);
 			this.nameColumn = new TableColumn(table, SWT.NONE);
 			this.valueColumn = new TableColumn(table, SWT.NONE);
 

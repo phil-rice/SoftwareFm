@@ -24,7 +24,7 @@ public class KeyValueMissingItemsAdder implements ICardDataModifier {
 		if (!missingLists.isEmpty() || !missingStrings.isEmpty()) {
 			Map<String, Object> result = Maps.copyMap(rawData);
 			for (String item : missingStrings) {
-				String value = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn,cardType, "missing." + item + ".default");
+				String value = IResourceGetter.Utils.getOr(cardConfig.resourceGetterFn,cardType, "missing." + item + ".default", "");
 				result.put(item, value);
 			}
 			for (String item : missingLists)
