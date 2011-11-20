@@ -32,6 +32,7 @@ import org.softwareFm.card.internal.details.IDetailAdder;
 import org.softwareFm.card.internal.details.ListDetailAdder;
 import org.softwareFm.card.internal.details.StyledTextEditorDetailAdder;
 import org.softwareFm.card.internal.details.TextEditorDetailAdder;
+import org.softwareFm.card.internal.details.UrlEditorDetailAdder;
 import org.softwareFm.card.internal.modifiers.CardMapSorter;
 import org.softwareFm.card.internal.modifiers.CollectionsAggregatorModifier;
 import org.softwareFm.card.internal.modifiers.FolderAggregatorModifier;
@@ -58,6 +59,8 @@ public class BasicCardConfigurator implements ICardConfigurator {
 			public IDetailAdder apply(String editorName) throws Exception {
 				if (editorName.equals("text"))
 					return new TextEditorDetailAdder();
+				if (editorName.equals("url"))
+					return new UrlEditorDetailAdder();
 				else if (editorName.equals("styledText"))
 					return new StyledTextEditorDetailAdder();
 				else if (editorName.equals("none"))

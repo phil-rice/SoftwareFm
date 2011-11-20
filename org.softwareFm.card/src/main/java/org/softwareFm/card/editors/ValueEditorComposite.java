@@ -65,6 +65,8 @@ abstract public class ValueEditorComposite<T extends Control> extends Composite 
 				ValueEditorComposite.this.dispose();
 			}
 		});
+		addAnyMoreButtons();
+		
 		updateEnabledStatusOfButtons();
 		body.addPaintListener(new CardOutlinePaintListener(titleSpec, cardConfig));
 		editorControl.addListener(SWT.Traverse, new Listener() {
@@ -75,6 +77,9 @@ abstract public class ValueEditorComposite<T extends Control> extends Composite 
 			}
 		});
 		innerBody.setBackground(titleSpec.background);
+	}
+
+	protected void addAnyMoreButtons() {
 	}
 
 	abstract protected T makeEditorControl(Composite parent, String originalValue);

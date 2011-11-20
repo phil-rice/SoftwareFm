@@ -1,6 +1,7 @@
 package org.softwareFm.card.constants;
 
 public class CardConstants {
+	public static final String testButtonKey = "button.test.title";
 
 	public static final String slingResourceType = "sling:resourceType";
 	public static final String cannotFindTableItemWithKey = "Cannot find table item with key {0}";
