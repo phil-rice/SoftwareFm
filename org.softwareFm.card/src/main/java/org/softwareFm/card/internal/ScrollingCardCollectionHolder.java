@@ -24,10 +24,9 @@ public class ScrollingCardCollectionHolder implements IHasControl {
 	public ScrollingCardCollectionHolder(Composite parent, CardConfig cardConfig) {
 		this.content = Swts.newScrolledComposite(parent, SWT.H_SCROLL, getClass().getSimpleName());
 		holder = new CardCollectionHolder(content, cardConfig);
-		content.setContent(holder.getControl());
 		holder.getComposite().setLayout(new CardCollectionHolder.CardCollectionHolderLayout());
-		Swts.layoutDump(parent);
 		Size.setSizeFromClientArea(content);
+		content.setContent(holder.getControl());
 		final Listener listener = new Listener() {
 			@Override
 			public void handleEvent(Event event) {
@@ -46,11 +45,15 @@ public class ScrollingCardCollectionHolder implements IHasControl {
 
 	}
 
+	@SuppressWarnings("unused")
 	private void setSize() {
-		Rectangle parentClientArea = Size.setSizeFromClientArea(content);
+		Point hs1 = content.getHorizontalBar().getSize();
+		Rectangle clientArea = content.getParent().getClientArea();
+		content.setSize(clientArea.width, clientArea.height );
+		Rectangle parentClientArea = clientArea;
 		int height = parentClientArea.height;
 		Point size = holder.getComposite().computeSize(SWT.DEFAULT, height);
-		holder.getControl().setSize(size);
+		holder.getControl().setSize(size.x, size.y-hs1.y);
 	}
 
 	@Override
