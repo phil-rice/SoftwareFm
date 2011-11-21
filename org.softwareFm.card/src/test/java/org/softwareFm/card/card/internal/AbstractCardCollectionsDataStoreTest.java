@@ -6,7 +6,7 @@ import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.card.CardFactoryMock;
 import org.softwareFm.card.card.CardMock;
 import org.softwareFm.card.card.ICardFactory;
-import org.softwareFm.card.card.internal.CardHolder;
+import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreVisitorMonitored;
 import org.softwareFm.card.dataStore.CardAndCollectionsStatus;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
@@ -16,7 +16,7 @@ import org.softwareFm.display.swt.SwtIntegrationTest;
 public abstract class AbstractCardCollectionsDataStoreTest extends SwtIntegrationTest {
 
 	protected CardConfig cardConfig;
-	protected CardHolder cardHolder;
+	protected ICardHolder cardHolder;
 	protected CardAndCollectionsStatus status;
 	protected CardAndCollectionsStatus followUpQueryStatus;
 	private CardFactoryMock mockCardFactory;
@@ -58,7 +58,7 @@ public abstract class AbstractCardCollectionsDataStoreTest extends SwtIntegratio
 				return findFollowOnUrlFragmentForTest(key, value);
 			}
 		});
-		cardHolder = new CardHolder(shell, "loading", "title", cardConfig, CardDataStoreFixture.url, null);
+		cardHolder = ICardHolder.Utils.cardHolderWithLayout(shell, "loading", "title", cardConfig, CardDataStoreFixture.url, null);
 		memory = new CardAndCollectionDataStoreVisitorMonitored();
 		status = cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, CardDataStoreFixture.url, memory);
 	}

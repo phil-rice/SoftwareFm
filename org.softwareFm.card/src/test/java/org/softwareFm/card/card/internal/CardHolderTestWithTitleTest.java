@@ -3,7 +3,7 @@ package org.softwareFm.card.card.internal;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.card.internal.CardHolder;
+import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.navigation.internal.NavTitle;
 import org.softwareFm.utilities.functions.Functions;
@@ -15,7 +15,7 @@ public class CardHolderTestWithTitleTest extends AbstractCardHolderTest {
 
 	@Override
 	protected CardHolder makeCardHolder(Composite parent, CardConfig cardConfig) {
-		return new CardHolder(parent, "loadingtext", "some title", cardConfig, rootUrl, null);
+		return (CardHolder) ICardHolder.Utils.cardHolderWithLayout(parent, "loadingtext", "some title", cardConfig, rootUrl, null);
 	}
 
 	public void testNavBarOrTitleChangesWhenCardAppears() throws Exception {

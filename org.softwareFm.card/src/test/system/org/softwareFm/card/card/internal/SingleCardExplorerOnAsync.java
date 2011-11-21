@@ -6,7 +6,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.card.BasicCardConfigurator;
 import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.card.ICardFactory;
-import org.softwareFm.card.card.internal.CardHolder;
+import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreVisitorMonitored;
 import org.softwareFm.card.dataStore.CardAndCollectionsStatus;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
@@ -30,7 +30,7 @@ public class SingleCardExplorerOnAsync {
 				final ICardDataStore cardDataStore = CardDataStoreFixture.rawAsyncCardStore();
 				ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 				final CardConfig cardConfig = new BasicCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
-				final CardHolder cardHolder = new CardHolder(from, "Loading", "title", cardConfig, CardDataStoreFixture.url, ICallback.Utils.<String> noCallback());
+				final ICardHolder cardHolder =ICardHolder.Utils.cardHolderWithLayout(from, "Loading", "title", cardConfig, CardDataStoreFixture.url, ICallback.Utils.<String> noCallback());
 
 				Thread thread = new Thread() {
 					@Override

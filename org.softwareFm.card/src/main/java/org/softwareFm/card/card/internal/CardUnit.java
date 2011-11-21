@@ -11,6 +11,7 @@ import org.softwareFm.card.card.BasicCardConfigurator;
 import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardFactory;
+import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.card.dataStore.internal.CardDataStoreForRepository;
 import org.softwareFm.display.composites.IHasComposite;
@@ -28,14 +29,14 @@ public class CardUnit implements IHasComposite {
 	public final static Map<String, Object> urls = (Map) Maps.makeLinkedMapFromArray(Functions.addToStart(rootUrl),//
 			"/org/apache/org.apache", "/", "/org/antlr/org.antlr", "/org/apache/ant/org.apache.ant", "/org/apache/ant/org.apache.ant/artifact/ant");
 	private final SashForm sashForm;
-	private final CardHolder cardHolder;
+	private final ICardHolder cardHolder;
 	private final Text text;
 	private final CardConfig cardConfig;
 
 	public CardUnit(Composite parent, CardConfig cardConfig, String rootUrl) {
 		this.cardConfig = cardConfig;
 		sashForm = new SashForm(parent, SWT.VERTICAL);
-		cardHolder = new CardHolder(sashForm, "loading", "title", cardConfig, rootUrl, null);
+		cardHolder = ICardHolder.Utils.cardHolderWithLayout(sashForm, "loading", "title", cardConfig, rootUrl, null);
 		text = new Text(sashForm, SWT.WRAP);
 	}
 

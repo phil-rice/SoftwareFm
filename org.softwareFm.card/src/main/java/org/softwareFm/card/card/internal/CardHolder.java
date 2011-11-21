@@ -151,6 +151,7 @@ public class CardHolder implements ICardHolder {
 		content = new CardHolderComposite(parent, cardConfig, rootUrl, callbackToGotoUrl);
 	}
 
+	@Override
 	public ICard getCard() {
 		return content.card;
 	}
@@ -165,10 +166,12 @@ public class CardHolder implements ICardHolder {
 
 	}
 
+	@Override
 	public void addCardChangedListener(ICardChangedListener listener) {
 		cardListeners.add(listener);
 	}
 
+	@Override
 	public void addLineSelectedListener(ILineSelectedListener listener) {
 		content.lineListeners.add(listener);
 	}
@@ -189,7 +192,7 @@ public class CardHolder implements ICardHolder {
 			@Override
 			public Composite apply(final Composite from) throws Exception {
 				final CardConfig cardConfig = CardDataStoreFixture.asyncCardConfig(from.getDisplay());
-				final CardHolder cardHolder = new CardHolder(from, "Loading", "title", cardConfig, CardDataStoreFixture.url, ICallback.Utils.<String> noCallback());
+				final ICardHolder cardHolder = ICardHolder.Utils.cardHolderWithLayout(from, "Loading", "title", cardConfig, CardDataStoreFixture.url, ICallback.Utils.<String> noCallback());
 				final Future<ICard> future = ICardFactory.Utils.makeCard(cardHolder, cardConfig, CardDataStoreFixture.url1a, new ICallback<ICard>() {
 					@Override
 					public void process(ICard card) throws Exception {

@@ -3,17 +3,13 @@ package org.softwareFm.card.card;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
-import org.softwareFm.card.card.CardConfig;
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.card.ICardHolder;
-import org.softwareFm.card.card.ICardValueChangedListener;
-import org.softwareFm.card.card.ILineSelectedListener;
+import org.softwareFm.card.card.internal.Card;
 import org.softwareFm.card.constants.CardConstants;
+import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.strings.Strings;
 
@@ -28,7 +24,7 @@ public class CardMock implements ICard {
 	private final Composite mockComposite;
 
 	public CardMock(ICardHolder cardHolder, CardConfig cardConfig, String url, Map<String, Object> map) {
-		mockComposite = cardHolder == null?null:new Composite(cardHolder.getComposite(), SWT.NULL);
+		mockComposite = cardHolder == null?null:new Card.CardComposite(cardHolder.getComposite(), cardConfig, url, map, null, TitleSpec.noTitleSpec(cardHolder.getControl().getBackground()));
 		this.cardConfig = cardConfig;
 		this.url = url;
 		this.map = map;

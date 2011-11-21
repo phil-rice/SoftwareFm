@@ -20,7 +20,7 @@ public class HoldsCardHolder extends Composite {
 
 	protected final List<ICardSelectedListener> listeners = new CopyOnWriteArrayList<ICardSelectedListener>();
 	protected final CardConfig cardConfig;
-	private CardHolder cardHolder;
+	private ICardHolder cardHolder;
 
 	public HoldsCardHolder(Composite parent, int style, CardConfig cardConfig) {
 		super(parent, style);
@@ -32,12 +32,12 @@ public class HoldsCardHolder extends Composite {
 	}
 
 	public void makeCardHolder(String url, String title) {
-		cardHolder = new CardHolder(this, "loading", title, cardConfig, url, null);
+		cardHolder = ICardHolder.Utils.cardHolderWithLayout(this, "loading", title, cardConfig, url, null);
 		cardHolder.getComposite().setLayout(new CardHolder.CardHolderLayout());
-		addPaintListenerThatGetsMoreData(url, cardHolder);
+		addPaintListenerThatGetsMoreData(url);
 	}
 
-	private void addPaintListenerThatGetsMoreData(final String url, final CardHolder cardHolder) {
+	private void addPaintListenerThatGetsMoreData(final String url) {
 		PaintListener listener = new PaintListener() {
 			@Override
 			public void paintControl(PaintEvent e) {
@@ -77,7 +77,7 @@ public class HoldsCardHolder extends Composite {
 		}
 	}
 
-	public CardHolder getCardHolder() {
+	public ICardHolder getCardHolder() {
 		return cardHolder;
 	}
 }

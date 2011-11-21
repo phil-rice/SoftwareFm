@@ -4,6 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.card.CardConfig;
+import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.card.ICardSelectedListener;
 import org.softwareFm.display.composites.IHasComposite;
 
@@ -32,7 +33,7 @@ public class OneCardHolder implements IHasComposite {
 		return content.cardConfig;
 	}
 
-	public CardHolder getCardHolder() {
+	public ICardHolder getCardHolder() {
 		return content.getCardHolder();
 	}
 

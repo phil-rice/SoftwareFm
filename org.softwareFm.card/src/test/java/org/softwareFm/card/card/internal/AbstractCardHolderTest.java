@@ -14,7 +14,6 @@ import org.eclipse.swt.widgets.Table;
 import org.softwareFm.card.card.CardChangedListenerMock;
 import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.card.internal.CardHolder;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.display.swt.SwtIntegrationTest;
 import org.softwareFm.utilities.collections.Iterables;
