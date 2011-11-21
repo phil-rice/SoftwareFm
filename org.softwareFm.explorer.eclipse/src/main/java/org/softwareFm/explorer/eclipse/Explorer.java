@@ -25,8 +25,7 @@ import org.softwareFm.card.api.ILineSelectedListener;
 import org.softwareFm.card.api.IMutableCardDataStore;
 import org.softwareFm.card.api.RightClickCategoryResult;
 import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.card.editors.TextEditor;
-import org.softwareFm.card.editors.ValueEditorLayout;
+import org.softwareFm.card.editors.IValueEditor;
 import org.softwareFm.card.internal.BasicCardConfigurator;
 import org.softwareFm.card.internal.CardDataStoreForRepository;
 import org.softwareFm.card.internal.CardHolder;
@@ -63,10 +62,10 @@ public class Explorer implements IExplorer {
 		public void addCollectionItem(final RightClickCategoryResult result) {
 			final ICard card = cardHolder.getCard();
 
-			TextEditor editor = masterDetailSocial.createDetail(new IFunction1<Composite, TextEditor>() {
+			IValueEditor editor = masterDetailSocial.createDetail(new IFunction1<Composite, IValueEditor>() {
 				@Override
-				public TextEditor apply(Composite from) throws Exception {
-					return new TextEditor(from, card.cardConfig(), result.url, card.cardType(), result.collectionName, "", new IDetailsFactoryCallback() {
+				public IValueEditor apply(Composite from) throws Exception {
+					return IValueEditor.Utils.textEditorWithLayout(from, card.cardConfig(), result.url, card.cardType(), result.collectionName, "", new IDetailsFactoryCallback() {
 						private final IDetailsFactoryCallback callback = this;
 
 						@Override
@@ -90,7 +89,6 @@ public class Explorer implements IExplorer {
 					}, TitleSpec.noTitleSpec(from.getBackground()));
 				}
 			}, false);
-			editor.getComposite().setLayout(new ValueEditorLayout());
 			masterDetailSocial.setDetail(editor.getControl());
 		}
 

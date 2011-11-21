@@ -11,7 +11,7 @@ import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.IDetailsFactoryCallback;
 import org.softwareFm.card.api.IMutableCardDataStore;
 import org.softwareFm.card.api.LineItem;
-import org.softwareFm.card.editors.IValueEditor;
+import org.softwareFm.card.editors.internal.IValueEditorForTests;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.data.ResourceGetterMock;
@@ -20,7 +20,7 @@ import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.runnable.Runnables;
 
-public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder, TE extends IValueEditor> extends AbstractDetailsAdderTest<T> {
+public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder, TE extends IValueEditorForTests> extends AbstractDetailsAdderTest<T> {
 
 	private AtomicInteger updateDataStoreCount;
 	protected String updatedKey;

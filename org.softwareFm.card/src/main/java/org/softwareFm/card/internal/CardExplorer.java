@@ -28,8 +28,8 @@ import org.softwareFm.card.api.IMutableCardDataStore;
 import org.softwareFm.card.api.RightClickCategoryResult;
 import org.softwareFm.card.api.RightClickCategoryResult.Type;
 import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.card.editors.TextEditor;
-import org.softwareFm.card.editors.ValueEditorLayout;
+import org.softwareFm.card.editors.internal.TextEditor;
+import org.softwareFm.card.editors.internal.ValueEditorLayout;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
@@ -66,7 +66,7 @@ public class CardExplorer implements IHasComposite {
 					ICard card = cardHolder.getCard();
 					System.out.println("In add item processor with " + result + " and card: " + card);
 					removeDetailContents();
-					TextEditor editor = new TextEditor(detail, cardConfig, result.url, card.cardType(),result.collectionName, "", new IDetailsFactoryCallback() {
+					TextEditor TextEditor = new TextEditor(detail, cardConfig, result.url, card.cardType(),result.collectionName, "", new IDetailsFactoryCallback() {
 						private final IDetailsFactoryCallback callback = this;
 
 						@Override
@@ -120,8 +120,8 @@ public class CardExplorer implements IHasComposite {
 							store.put(fullUrl, Maps.stringObjectMap(CardConstants.slingResourceType, result.collectionName), callback);
 						}
 					}, TitleSpec.noTitleSpec(getBackground()));
-					editor.getComposite().setLayout(new ValueEditorLayout());
-					populateDetail(editor.getControl());
+					TextEditor.getComposite().setLayout(new ValueEditorLayout());
+					populateDetail(TextEditor.getControl());
 				}
 
 				@Override

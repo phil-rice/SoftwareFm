@@ -10,7 +10,6 @@ import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.IDetailsFactoryCallback;
 import org.softwareFm.card.api.IMutableCardDataStore;
 import org.softwareFm.card.api.LineItem;
-import org.softwareFm.card.editors.IValueComposite;
 import org.softwareFm.card.internal.CardOutlinePaintListener;
 import org.softwareFm.card.title.Title;
 import org.softwareFm.card.title.TitleSpec;

@@ -1,6 +1,6 @@
 package org.softwareFm.card.internal.details;
 
-import org.softwareFm.card.editors.TextEditor;
+import org.softwareFm.card.editors.internal.TextEditor;
 
 public class TextEditorDetailAdderTest extends AbstractValueEditorDetailAdderTest<TextEditorDetailAdder, TextEditor> {
 

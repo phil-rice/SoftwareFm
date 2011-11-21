@@ -9,14 +9,14 @@ import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.IDetailsFactoryCallback;
-import org.softwareFm.card.editors.ValueEditorLayout;
+import org.softwareFm.card.editors.IValueEditor;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.utilities.functions.IFunction1;
 
-public class StyledTextEditor implements IHasComposite {
+public class StyledTextEditor implements IHasComposite , IValueEditor{
 
 	private final TextEditorComposite content;
 

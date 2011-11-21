@@ -13,8 +13,6 @@ import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.IDetailsFactoryCallback;
 import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.card.editors.IValueEditor;
-import org.softwareFm.card.editors.ValueEditorLayout;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.okCancel.OkCancel;
 import org.softwareFm.display.swt.Swts;
@@ -22,11 +20,11 @@ import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.utilities.functions.IFunction1;
 
-public class UrlEditor implements IValueEditor {
+public class UrlEditor implements IValueEditorForTests {
 
 	private final UrlEditorComposite content;
 
-	static class UrlEditorComposite extends org.softwareFm.card.editors.TextEditor.TextEditorComposite {
+	static class UrlEditorComposite extends org.softwareFm.card.editors.internal.TextEditor.TextEditorComposite {
 
 		private Button testButton;
 

@@ -1,4 +1,4 @@
-package org.softwareFm.card.editors;
+package org.softwareFm.card.editors.internal;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -11,7 +11,6 @@ import org.eclipse.swt.widgets.Text;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.IDetailsFactoryCallback;
-import org.softwareFm.card.editors.internal.ValueEditorComposite;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.okCancel.OkCancel;
 import org.softwareFm.display.swt.Swts;
@@ -19,7 +18,7 @@ import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.utilities.functions.IFunction1;
 
-public class TextEditor implements IValueEditor {
+public class TextEditor implements IValueEditorForTests {
 
 	private final TextEditorComposite content;
 
@@ -91,13 +90,13 @@ public class TextEditor implements IValueEditor {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay());
-				TextEditor textEditor = new TextEditor(from, cardConfig, "someUrl", null, "key", "value", IDetailsFactoryCallback.Utils.resizeAfterGotData(), TitleSpec.noTitleSpec(from.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN)));
-				textEditor.getComposite().setLayout(new ValueEditorLayout());
+				TextEditor TextEditor = new TextEditor(from, cardConfig, "someUrl", null, "key", "value", IDetailsFactoryCallback.Utils.resizeAfterGotData(), TitleSpec.noTitleSpec(from.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN)));
+				TextEditor.getComposite().setLayout(new ValueEditorLayout());
 //				Size.resizeMeToParentsSize(textEditor.getControl());
 //				textEditor.content.layout();
 				Swts.layoutDump(from);
-				Size.resizeMeToParentsSizeWithLayout(textEditor);
-				return textEditor.content;
+				Size.resizeMeToParentsSizeWithLayout(TextEditor);
+				return TextEditor.content;
 			}
 		});
 	}
