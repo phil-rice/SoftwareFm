@@ -46,12 +46,12 @@ public class ValueEditorLayout extends Layout {
 
 		Control editor = c.getEditor();
 		int editorHeight = c.useAllHeight() ? //
-		cb_ca.height - 2*cc.titleIndentY - okCancelControl.getSize().y //
+		cb_ca.height - 2*cc.editorIndentY - okCancelControl.getSize().y //
 				: editor.computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
 
-		editor.setBounds(cb_ca.x + 1 + cc.titleIndentX,//
-				cb_ca.y + cc.titleIndentY, //
-				cb_ca.width - 2*cc.titleIndentX, //
+		editor.setBounds(cb_ca.x + 1 + cc.editorIndentX,//
+				cb_ca.y + cc.editorIndentY, //
+				cb_ca.width - 2*cc.editorIndentX, //
 				editorHeight);
 	}
 

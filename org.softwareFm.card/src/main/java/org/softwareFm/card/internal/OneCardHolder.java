@@ -15,7 +15,7 @@ public class OneCardHolder implements IHasComposite {
 		content = new HoldsCardHolder(parent, SWT.NULL, cardConfig);
 		content.makeCardHolder(url, title);
 		content.addCardSelectedListener(listener);
-		content.setLayout(new FillWithAspectRatioLayoutManager(cardConfig.defaultWidthWeight, cardConfig.defaultHeightWeight));
+		content.setLayout(new FillWithAspectRatioLayoutManager(cardConfig.widthWeight, cardConfig.heightWeight));
 	}
 
 	@Override

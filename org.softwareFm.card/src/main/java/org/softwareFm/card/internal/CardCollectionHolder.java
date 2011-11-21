@@ -79,11 +79,11 @@ public class CardCollectionHolder implements IHasComposite {
 		}
 
 		private int widthToHeight(CardConfig cardConfig, int wHint) {
-			return wHint * cardConfig.defaultHeightWeight / cardConfig.defaultWidthWeight;
+			return wHint * cardConfig.heightWeight / cardConfig.widthWeight;
 		}
 
 		private int heightToWidth(CardConfig cardConfig, int hHint) {
-			return hHint * cardConfig.defaultWidthWeight / cardConfig.defaultHeightWeight;
+			return hHint * cardConfig.widthWeight / cardConfig.heightWeight;
 		}
 
 	}

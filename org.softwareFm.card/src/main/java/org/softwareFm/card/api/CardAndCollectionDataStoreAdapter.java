@@ -2,6 +2,7 @@ package org.softwareFm.card.api;
 
 import java.util.Map;
 
+/** An implementation with empty methods of {@link ICardAndCollectionDataStoreVisitor}, allowing an implementer to only override the methods they are interested in */
 public class CardAndCollectionDataStoreAdapter implements ICardAndCollectionDataStoreVisitor {
 
 	@Override
