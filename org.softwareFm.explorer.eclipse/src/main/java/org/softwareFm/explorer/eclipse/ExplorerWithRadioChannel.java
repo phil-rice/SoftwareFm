@@ -5,12 +5,12 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.card.BasicCardConfigurator;
-import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardChangedListener;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.ICardHolder;
+import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.display.browser.BrowserFeedConfigurator;
 import org.softwareFm.display.browser.RssFeedConfigurator;
@@ -40,12 +40,12 @@ public class ExplorerWithRadioChannel {
 
 					final ICardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(from, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
-					final CardConfig cardConfig = new BasicCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
+					final CardConfig cardConfig = ICardConfigurator.Utils.softwareFmConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 					IMasterDetailSocial masterDetailSocial = new MasterDetailSocial(explorerAndButton, SWT.NULL);
 					final IExplorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, service, new ArtifactPlayListGetter(cardDataStore));
 
-					new BrowserFeedConfigurator().configure(null, explorer);
-					new RssFeedConfigurator().configure(null, explorer);
+					new BrowserFeedConfigurator().configure( explorer);
+					new RssFeedConfigurator().configure( explorer);
 
 					explorer.displayCard(firstUrl);
 					buttonPanel.setLayoutData(Grid.makeGrabHorizonalAndFillGridData());

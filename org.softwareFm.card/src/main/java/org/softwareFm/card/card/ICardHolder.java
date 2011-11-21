@@ -2,6 +2,7 @@ package org.softwareFm.card.card;
 
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.card.internal.CardHolder;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.utilities.callbacks.ICallback;
 

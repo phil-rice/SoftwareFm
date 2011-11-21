@@ -90,7 +90,6 @@ public class ConfigurationConstants {
 
 	public static final String primaryEntity = "jar";
 	public static final String artifactId = "artifactId";
-
 	public static final String groupId = "groupId";
 	public static final String version = "version";
 

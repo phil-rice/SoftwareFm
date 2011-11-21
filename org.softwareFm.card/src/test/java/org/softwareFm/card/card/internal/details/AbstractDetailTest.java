@@ -2,11 +2,11 @@ package org.softwareFm.card.card.internal.details;
 
 import java.util.Collections;
 
-import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.LineItem;
 import org.softwareFm.card.card.internal.Card;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreAsyncMock;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.details.IDetailsFactoryCallback;

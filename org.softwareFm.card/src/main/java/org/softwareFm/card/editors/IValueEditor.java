@@ -1,7 +1,7 @@
 package org.softwareFm.card.editors;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.card.CardConfig;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.card.editors.internal.StyledTextEditor;
 import org.softwareFm.card.editors.internal.TextEditor;

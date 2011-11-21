@@ -1,13 +1,10 @@
 package org.softwareFm.card.card.internal;
 
-import java.util.Arrays;
 import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
 import org.junit.Test;
-import org.softwareFm.card.card.CardConfig;
-import org.softwareFm.card.card.ICardDataModifier;
-import org.softwareFm.card.card.internal.Card;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.display.swt.SwtIntegrationTest;
@@ -33,7 +30,7 @@ public class CardTest extends SwtIntegrationTest {
 	public void testKeyValuesAreTheRawDataModifiedByTheCardConfig() {
 		Map<String, Object> result = Maps.<String,Object>makeMap("some", "result");
 		MockKeyValueModifier mock = new MockKeyValueModifier(result);
-		CardConfig cardConfig2 = cardConfig.withKeyValueModifiers(Arrays.<ICardDataModifier> asList(mock));
+		CardConfig cardConfig2 = cardConfig.withKeyValueModifiers(mock);
 		Card card = new Card(shell, cardConfig2, "someUrl", rawData);
 		assertEquals(result, card.data());
 		assertEquals(rawData, mock.rawData);

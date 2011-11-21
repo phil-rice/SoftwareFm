@@ -2,8 +2,8 @@ package org.softwareFm.card.card.internal;
 
 import java.util.Map;
 
-import org.softwareFm.card.card.CardConfig;
-import org.softwareFm.card.card.ICardDataModifier;
+import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.card.modifiers.ICardDataModifier;
 
 public class MockKeyValueModifier implements ICardDataModifier {
 	public Map<String, Object> result;

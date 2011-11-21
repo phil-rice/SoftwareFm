@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.softwareFm.card.card.CardConfig;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
@@ -26,10 +26,8 @@ import org.softwareFm.utilities.strings.Strings;
 
 public class ListOfCards implements IHasControl {
 	private final Table content;
-	private String key;
 	private Object value;
 	private String sortOrder;
-	private String cardType;
 	private final CardConfig cardConfig;
 	private List<String> keyOrder;
 	private MapAsList mapAsList;
@@ -41,8 +39,6 @@ public class ListOfCards implements IHasControl {
 	}
 
 	public Future<?> setKeyValue(final String rootUrl, String cardType, String key, Object value, final IDetailsFactoryCallback callback) {
-		this.cardType = cardType;
-		this.key = key;
 		this.value = value;
 		this.sortOrder = "key";
 		String cardOrderAsString = IResourceGetter.Utils.getOr(cardConfig.resourceGetterFn, cardType, CardConstants.cardOrderKey, "");

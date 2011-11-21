@@ -10,8 +10,6 @@ import java.util.concurrent.Future;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.card.card.BasicCardConfigurator;
-import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.card.IAddItemProcessor;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardChangedListener;
@@ -19,6 +17,8 @@ import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.card.ILineSelectedListener;
 import org.softwareFm.card.card.RightClickCategoryResult;
+import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.dataStore.IAfterEditCallback;
@@ -325,7 +325,7 @@ public class Explorer implements IExplorer {
 				public Composite apply(Composite from) throws Exception {
 					final ICardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(from, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
-					final CardConfig cardConfig = new BasicCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
+					final CardConfig cardConfig = ICardConfigurator.Utils.softwareFmConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 					IMasterDetailSocial masterDetailSocial = new MasterDetailSocial(from, SWT.NULL);
 					IExplorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, service, IPlayListGetter.Utils.noPlayListGetter());
 					explorer.displayCard(firstUrl);

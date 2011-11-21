@@ -3,14 +3,14 @@ package org.softwareFm.card.card.internal;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.card.BasicCardConfigurator;
-import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.ICardHolder;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreVisitorMonitored;
 import org.softwareFm.card.dataStore.CardAndCollectionsStatus;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.dataStore.ICardDataStore;
+import org.softwareFm.card.softwareFm.internal.SoftwareFmCardConfigurator;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.swt.Swts.Size;
@@ -29,7 +29,7 @@ public class SingleCardExplorerOnAsync {
 			public Composite apply(final Composite from) throws Exception {
 				final ICardDataStore cardDataStore = CardDataStoreFixture.rawAsyncCardStore();
 				ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
-				final CardConfig cardConfig = new BasicCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
+				final CardConfig cardConfig = new SoftwareFmCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 				final ICardHolder cardHolder =ICardHolder.Utils.cardHolderWithLayout(from, "Loading", "title", cardConfig, CardDataStoreFixture.url, ICallback.Utils.<String> noCallback());
 
 				Thread thread = new Thread() {

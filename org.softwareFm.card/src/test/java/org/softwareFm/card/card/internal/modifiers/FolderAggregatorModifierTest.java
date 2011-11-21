@@ -5,8 +5,8 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.junit.Test;
-import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.card.ICardFactory;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.modifiers.internal.FolderAggregatorModifier;
 import org.softwareFm.utilities.maps.Maps;

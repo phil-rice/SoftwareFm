@@ -1,8 +1,8 @@
 package org.softwareFm.card.details;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.card.ICard;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.details.internal.CollectionItemDetailAdder;
 import org.softwareFm.card.details.internal.CollectionsDetailAdder;
 import org.softwareFm.card.details.internal.EditorDetailAdder;
@@ -19,7 +19,7 @@ public interface IDetailAdder {
 		public static IDetailAdder collectionItem(){
 			return new CollectionItemDetailAdder();
 		}
-		public static IDetailAdder collectiondsDetail(){
+		public static IDetailAdder collections(){
 			return new CollectionsDetailAdder();
 		}
 		public static IDetailAdder editorDetail(){

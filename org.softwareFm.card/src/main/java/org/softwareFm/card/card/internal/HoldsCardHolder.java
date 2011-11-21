@@ -8,23 +8,22 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.card.ICardSelectedListener;
 import org.softwareFm.card.card.ILineSelectedListener;
 import org.softwareFm.card.card.IPopupMenuContributor;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreVisitorMonitored;
 
 public class HoldsCardHolder extends Composite {
 
 	protected final List<ICardSelectedListener> listeners = new CopyOnWriteArrayList<ICardSelectedListener>();
 	protected final CardConfig cardConfig;
-	private ICardHolder cardHolder;
 
 	public HoldsCardHolder(Composite parent, int style, CardConfig cardConfig) {
 		super(parent, style);
-		this.cardConfig = cardConfig.withStyleAndSelection(cardConfig.cardStyle, false).withPopupMenuContributor(IPopupMenuContributor.Utils.noContributor());
+		this.cardConfig = cardConfig.withStyleAndSelection(cardConfig.cardStyle, false).withPopupMenuContributor(IPopupMenuContributor.Utils.<ICard>noContributor());
 	}
 
 	public void addCardSelectedListener(ICardSelectedListener listener) {
@@ -32,12 +31,12 @@ public class HoldsCardHolder extends Composite {
 	}
 
 	public void makeCardHolder(String url, String title) {
-		cardHolder = ICardHolder.Utils.cardHolderWithLayout(this, "loading", title, cardConfig, url, null);
+		ICardHolder cardHolder = ICardHolder.Utils.cardHolderWithLayout(this, "loading", title, cardConfig, url, null);
 		cardHolder.getComposite().setLayout(new CardHolder.CardHolderLayout());
-		addPaintListenerThatGetsMoreData(url);
+		addPaintListenerThatGetsMoreData(cardHolder, url);
 	}
 
-	private void addPaintListenerThatGetsMoreData(final String url) {
+	private void addPaintListenerThatGetsMoreData(final ICardHolder cardHolder, final String url) {
 		PaintListener listener = new PaintListener() {
 			@Override
 			public void paintControl(PaintEvent e) {
@@ -77,7 +76,4 @@ public class HoldsCardHolder extends Composite {
 		}
 	}
 
-	public ICardHolder getCardHolder() {
-		return cardHolder;
-	}
 }

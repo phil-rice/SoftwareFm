@@ -3,8 +3,8 @@ package org.softwareFm.card.modifiers.internal;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.softwareFm.card.card.CardConfig;
-import org.softwareFm.card.card.ICardDataModifier;
+import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.card.modifiers.ICardDataModifier;
 import org.softwareFm.utilities.maps.Maps;
 
 public class FolderAggregatorModifier implements ICardDataModifier {

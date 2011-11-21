@@ -1,8 +1,8 @@
 package org.softwareFm.card.card.internal;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.card.ICardHolder;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.navigation.internal.NavBar;
 import org.softwareFm.utilities.callbacks.ICallback;
 

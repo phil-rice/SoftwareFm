@@ -8,14 +8,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import junit.framework.TestCase;
 
 import org.junit.Test;
-import org.softwareFm.card.card.BasicCardConfigurator;
-import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.card.ICardFactory;
+import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.dataStore.CardDataStoreMock;
 import org.softwareFm.card.dataStore.IAfterEditCallback;
-import org.softwareFm.configuration.ConfigurationConstants;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.callbacks.MemoryCallback;
 import org.softwareFm.utilities.future.Futures;
@@ -34,9 +33,9 @@ public class NewJarImporterTest extends TestCase {
 		newJarImporter.process(memory);
 		assertEquals(Maps.makeLinkedMap(//
 				"/softwareFm/jars/01/23/012345", //
-				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.collection, ConfigurationConstants.groupId, "g", ConfigurationConstants.artifactId, "a", CardConstants.version, "v"),//
+				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.collection, EclipseConstants.groupId, "g", EclipseConstants.artifactId, "a", CardConstants.version, "v"),//
 				"/prefix/g/g", //
-				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.group, ConfigurationConstants.groupId, "g"),//
+				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.group, EclipseConstants.groupId, "g"),//
 				"/prefix/g/g/artifact", //
 				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.collection),//
 				"/prefix/g/g/artifact/a", //
@@ -44,7 +43,7 @@ public class NewJarImporterTest extends TestCase {
 				"/prefix/g/g/artifact/a/version", //
 				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.collection),//
 				"/prefix/g/g/artifact/a/version/v", //
-				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.version, ConfigurationConstants.groupId, "g", ConfigurationConstants.artifactId, "a", ConfigurationConstants.version, "v"),//
+				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.version, EclipseConstants.groupId, "g", EclipseConstants.artifactId, "a", EclipseConstants.version, "v"),//
 				"/prefix/g/g/artifact/a/version/v/digest", //
 				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.collection),//
 				"/prefix/g/g/artifact/a/version/v/digest/012345", //
@@ -66,7 +65,7 @@ public class NewJarImporterTest extends TestCase {
 						callback.afterEdit(url);
 						return Futures.doneFuture(null);
 					}
-				}).withUrlGeneratorMap(BasicCardConfigurator.makeUrlGeneratorMap("/prefix/"));
+				}).withUrlGeneratorMap(ICardConfigurator.Utils.makeSoftwareFmUrlGeneratorMap("/prefix/"));
 	}
 
 }

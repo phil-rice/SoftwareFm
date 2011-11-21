@@ -7,9 +7,5 @@ Require-Bundle: org.softwareFm.jdtBinding;bundle-version="1.0.0";visibility:=ree
  org.eclipse.ui;bundle-version="3.7.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.softwareFm.configuration,
- org.softwareFm.configuration.configurators,
- org.softwareFm.configuration.jar,
- org.softwareFm.configuration.largebuttons,
- org.softwareFm.configuration.playlists,
- org.softwareFm.eclipse.sample
+ org.softwareFm.configuration.playlists
 Bundle-SymbolicName: org.softwareFm.configuration

@@ -7,22 +7,11 @@ Bundle-Activator: org.softwareFm.display.Activator
 Require-Bundle: org.softwareFm.softwareFmImages;bundle-version="1.0.0";visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.softwareFm.display,
- org.softwareFm.display.actions,
- org.softwareFm.display.browser,
+Export-Package: org.softwareFm.display.browser,
  org.softwareFm.display.composites,
  org.softwareFm.display.constants,
  org.softwareFm.display.data,
- org.softwareFm.display.displayer,
- org.softwareFm.display.editor,
- org.softwareFm.display.impl,
- org.softwareFm.display.largeButton,
- org.softwareFm.display.lists,
  org.softwareFm.display.okCancel,
- org.softwareFm.display.rss,
- org.softwareFm.display.samples,
- org.softwareFm.display.simpleButtons,
- org.softwareFm.display.smallButtons,
  org.softwareFm.display.swt,
  org.softwareFm.display.timeline,
  org.softwareFm.display.urlGenerator

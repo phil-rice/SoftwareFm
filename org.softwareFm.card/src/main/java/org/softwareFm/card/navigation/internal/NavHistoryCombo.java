@@ -16,12 +16,10 @@ import org.softwareFm.utilities.history.IHistoryListener;
 public class NavHistoryCombo<T> implements IHasControl {
 
 	final Combo combo;
-	private final IHistory<T> history;
 	private final IFunction1<T, String> stringFn;
 	private boolean changing;
 
 	public NavHistoryCombo(Composite composite, final IHistory<T> history, final ICallback<T> callbackToGotoUrl, NavNextHistoryPrevConfig<T> config) {
-		this.history = history;
 		this.stringFn = config.stringFn;
 		combo = new Combo(composite, SWT.DROP_DOWN | SWT.NO_FOCUS | SWT.READ_ONLY);
 		combo.addSelectionListener(new SelectionListener() {

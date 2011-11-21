@@ -3,6 +3,7 @@ package org.softwareFm.card.card;
 import java.util.Map;
 
 import org.eclipse.swt.widgets.Listener;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.composites.IHasTable;
 

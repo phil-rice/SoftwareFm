@@ -3,11 +3,10 @@ package org.softwareFm.explorer.eclipse;
 import java.util.Map;
 import java.util.concurrent.Future;
 
-import org.softwareFm.card.card.CardConfig;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.IAfterEditCallback;
 import org.softwareFm.card.dataStore.IMutableCardDataStore;
-import org.softwareFm.configuration.ConfigurationConstants;
 import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.display.data.IUrlGeneratorMap;
 import org.softwareFm.jdtBinding.api.JdtConstants;
@@ -75,7 +74,7 @@ public class NewJarImporter {
 		this.groupId = groupId;
 		map = cardConfig.urlGeneratorMap;
 		importer = new ChainImporter(cardConfig);
-		groupIdArtifactIdVersionMap = Maps.stringObjectMap(ConfigurationConstants.groupId, groupId, ConfigurationConstants.artifactId, artifactId, ConfigurationConstants.version, version);
+		groupIdArtifactIdVersionMap = Maps.stringObjectMap(EclipseConstants.groupId, groupId, EclipseConstants.artifactId, artifactId, EclipseConstants.version, version);
 		groupIdArtifactIdVersionDigestMap = Maps.with(groupIdArtifactIdVersionMap, CardConstants.digest, digest);
 	}
 
@@ -105,7 +104,7 @@ public class NewJarImporter {
 			}
 		},//
 				map(CardConstants.jarUrlKey, Maps.with(groupIdArtifactIdVersionMap, CardConstants.slingResourceType, CardConstants.collection)), //
-				stage(CardConstants.urlGroupKey, ConfigurationConstants.groupId, groupId, CardConstants.slingResourceType, CardConstants.group),//
+				stage(CardConstants.urlGroupKey, EclipseConstants.groupId, groupId, CardConstants.slingResourceType, CardConstants.group),//
 				collection(CardConstants.urlGroupKey, CardConstants.artifact), //
 				stage(CardConstants.artifactUrlKey, CardConstants.slingResourceType, CardConstants.artifact),//
 				collection(CardConstants.artifactUrlKey, CardConstants.version), //

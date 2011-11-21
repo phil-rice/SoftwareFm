@@ -18,16 +18,15 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.softwareFm.card.card.BasicCardConfigurator;
-import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardFactory;
+import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.editors.OKCancelWithBorder;
 import org.softwareFm.card.title.Title;
 import org.softwareFm.card.title.TitleSpec;
-import org.softwareFm.configuration.ConfigurationConstants;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Show;
@@ -92,9 +91,9 @@ public class UnrecognisedJar implements IHasComposite {
 			okCancel = new OKCancelWithBorder(this, cardConfig, new Runnable() {
 				@Override
 				public void run() {
-					String groupId = (String) card.data().get(ConfigurationConstants.groupId);
-					String artifactId = (String) card.data().get(ConfigurationConstants.artifactId);
-					String version = (String) card.data().get(ConfigurationConstants.version);
+					String groupId = (String) card.data().get(EclipseConstants.groupId);
+					String artifactId = (String) card.data().get(EclipseConstants.artifactId);
+					String version = (String) card.data().get(EclipseConstants.version);
 					new NewJarImporter(cardConfig, CardConstants.manuallyAdded, digest, groupId, artifactId, version).process(afterOk);
 				}
 			}, new Runnable() {
@@ -119,13 +118,13 @@ public class UnrecognisedJar implements IHasComposite {
 			if (card != null)
 				card.getControl().dispose();
 			final Map<String, Object> rawData = Maps.stringObjectMap(//
-					ConfigurationConstants.groupId, "Please specify the group id",//
-					ConfigurationConstants.artifactId, "Please specify the artifact id",//
-					ConfigurationConstants.version, "Please specify the version");
+					EclipseConstants.groupId, "Please specify the group id",//
+					EclipseConstants.artifactId, "Please specify the artifact id",//
+					EclipseConstants.version, "Please specify the version");
 			final Map<String, Object> startData = Maps.stringObjectMap(//
-					ConfigurationConstants.groupId, "Please specify the group id",//
-					ConfigurationConstants.artifactId, Strings.withoutVersion(file, "Please specify the artifact id"),//
-					ConfigurationConstants.version, Strings.versionPartOf(file, "Please specify the version"));
+					EclipseConstants.groupId, "Please specify the group id",//
+					EclipseConstants.artifactId, Strings.withoutVersion(file, "Please specify the artifact id"),//
+					EclipseConstants.version, Strings.versionPartOf(file, "Please specify the version"));
 			card = ICardFactory.Utils.createCardWithLayout(this, this.cardConfig, "neverused", startData);
 			TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, card);
 			String name = file == null ? "" : file.getName();
@@ -157,9 +156,9 @@ public class UnrecognisedJar implements IHasComposite {
 							Text text = (Text) editor.getEditor();
 							TableItem item = editor.getItem();
 							card.valueChanged((String) item.getData(), text.getText());
-							boolean groupIdChanged = hasChanged(card, ConfigurationConstants.groupId);
-							boolean artifactIdChanged = hasChanged(card, ConfigurationConstants.artifactId);
-							boolean versionChanged = hasChanged(card, ConfigurationConstants.version);
+							boolean groupIdChanged = hasChanged(card, EclipseConstants.groupId);
+							boolean artifactIdChanged = hasChanged(card, EclipseConstants.artifactId);
+							boolean versionChanged = hasChanged(card, EclipseConstants.version);
 							boolean allChanged = groupIdChanged && versionChanged && artifactIdChanged;
 							okCancel.setOkEnabled(allChanged);
 						}
@@ -199,7 +198,7 @@ public class UnrecognisedJar implements IHasComposite {
 		Show.displayNoLayout(UnrecognisedJar.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay()).withUrlGeneratorMap(BasicCardConfigurator.makeUrlGeneratorMap("/prefix/"));
+				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay()).withUrlGeneratorMap(ICardConfigurator.Utils.makeSoftwareFmUrlGeneratorMap("/prefix/"));
 				UnrecognisedJar unrecognisedJar = new UnrecognisedJar(from, SWT.NULL, cardConfig, ICallback.Utils.<String>sysoutCallback());
 				unrecognisedJar.setFileAndDigest(new File("a/b/c/jarFile.jar"), "01234567Test");
 				unrecognisedJar.getComposite().setLayout(new UnrecognisedJarLayout());

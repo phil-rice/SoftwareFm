@@ -1,8 +1,7 @@
 package org.softwareFm.card.card.internal.details;
 
-import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.card.LineItem;
-import org.softwareFm.card.constants.CardConstants;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.card.editors.internal.StyledTextEditor;
 import org.softwareFm.card.editors.internal.StyledTextEditorDetailAdder;
@@ -37,7 +36,7 @@ public class StyledTextEditorDetailAdderTest extends AbstractDetailsAdderTest<St
 	protected CardConfig makeCardConfig() {
 		CardConfig cardConfig = super.makeCardConfig();
 		IResourceGetter raw = Functions.call(cardConfig.resourceGetterFn, null);
-		IResourceGetter resourceGetter = raw.with(new ResourceGetterMock(CardConstants.editorStyledText, "key,someOther"));
+		IResourceGetter resourceGetter = raw.with(new ResourceGetterMock());
 		return cardConfig.withResourceGetterFn(Functions.<String,IResourceGetter>constant(resourceGetter));
 	}
 

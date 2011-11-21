@@ -10,11 +10,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Layout;
-import org.softwareFm.card.card.BasicCardConfigurator;
-import org.softwareFm.card.card.CardConfig;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.card.details.internal.IGotDataCallback;
+import org.softwareFm.card.softwareFm.internal.SoftwareFmCardConfigurator;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Show;
@@ -163,7 +163,7 @@ public class CardCollectionHolder implements IHasComposite {
 			@Override
 			public Composite apply(final Composite from) throws Exception {
 				Display display = from.getDisplay();
-				final CardConfig cardConfig = new BasicCardConfigurator().configure(display, CardDataStoreFixture.syncCardConfig(display));
+				final CardConfig cardConfig = new SoftwareFmCardConfigurator().configure(display, CardDataStoreFixture.syncCardConfig(display));
 				IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null, "navBar.prev.title");
 				final CardCollectionHolder cardCollectionHolder = new CardCollectionHolder(from, cardConfig);
 				cardCollectionHolder.setKeyValue(CardDataStoreFixture.url, "stuff", Maps.makeMap(CardDataStoreFixture.dataIndexedByUrlFragment), IDetailsFactoryCallback.Utils.resizeAfterGotData());

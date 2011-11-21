@@ -6,9 +6,9 @@ import java.util.Map;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
-import org.softwareFm.card.card.BasicCardConfigurator;
-import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.card.ICardFactory;
+import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.card.dataStore.ICardDataStoreCallback;
@@ -18,8 +18,6 @@ import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.display.timeline.IPlayListGetter;
-import org.softwareFm.eclipse.ISelectedBindingListener;
-import org.softwareFm.eclipse.ISelectedBindingManager;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.jdtBinding.api.JdtConstants;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
@@ -34,14 +32,14 @@ public class ExplorerView extends ViewPart {
 
 		final String rootUrl = "/softwareFm/data";
 		IRepositoryFacard repository = activator.getRepository();
-		final CardConfig cardConfig = new BasicCardConfigurator().configure(parent.getDisplay(), new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(parent, repository)));
+		final CardConfig cardConfig =ICardConfigurator.Utils.softwareFmConfigurator().configure(parent.getDisplay(), new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(parent, repository)));
 		MasterDetailSocial masterDetailSocial = new MasterDetailSocial(parent, SWT.NULL);
 		Size.resizeMeToParentsSize(masterDetailSocial.getControl());
 
 		IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardConfig.cardDataStore);
 		final Explorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, activator.getServiceExecutor(), playListGetter);
-		new BrowserFeedConfigurator().configure(null, explorer);
-		new RssFeedConfigurator().configure(null, explorer);
+		new BrowserFeedConfigurator().configure( explorer);
+		new RssFeedConfigurator().configure( explorer);
 
 		ISelectedBindingManager selectedBindingManager = activator.getSelectedBindingManager();// creates it
 

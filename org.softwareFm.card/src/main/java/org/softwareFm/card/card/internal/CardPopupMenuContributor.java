@@ -10,10 +10,10 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
-import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.IPopupMenuContributor;
 import org.softwareFm.card.card.RightClickCategoryResult;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.utilities.resources.IResourceGetter;
 

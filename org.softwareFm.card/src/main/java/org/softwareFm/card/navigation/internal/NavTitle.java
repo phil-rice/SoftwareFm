@@ -1,8 +1,8 @@
 package org.softwareFm.card.navigation.internal;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.card.ICard;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.navigation.ITitleBarForCard;
 import org.softwareFm.card.title.Title;
 import org.softwareFm.card.title.TitleSpec;

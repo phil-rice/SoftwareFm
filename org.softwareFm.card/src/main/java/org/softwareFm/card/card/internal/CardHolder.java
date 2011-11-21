@@ -10,18 +10,19 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
-import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardChangedListener;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.card.ILineSelectedListener;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.navigation.ITitleBarForCard;
 import org.softwareFm.card.navigation.internal.NavBar;
 import org.softwareFm.card.navigation.internal.NavTitle;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.composites.IHasComposite;
+import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -103,6 +104,7 @@ public class CardHolder implements ICardHolder {
 				card.getComposite().setLayout(new Card.CardLayout());
 				title.setUrl(card);
 				 layout();
+				 Swts.layoutDump(card.getTable().getParent().getParent().getParent());
 
 				card.addLineSelectedListener(new ILineSelectedListener() {
 					@Override

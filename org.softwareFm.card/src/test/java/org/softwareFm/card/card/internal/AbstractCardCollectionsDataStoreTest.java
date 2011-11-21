@@ -2,11 +2,11 @@ package org.softwareFm.card.card.internal;
 
 import java.util.concurrent.ExecutionException;
 
-import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.card.CardFactoryMock;
 import org.softwareFm.card.card.CardMock;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.ICardHolder;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreVisitorMonitored;
 import org.softwareFm.card.dataStore.CardAndCollectionsStatus;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;

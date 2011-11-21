@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import org.junit.Test;
-import org.softwareFm.card.card.CardConfig;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.modifiers.internal.CardMapSorter;
 import org.softwareFm.display.swt.SwtIntegrationTest;

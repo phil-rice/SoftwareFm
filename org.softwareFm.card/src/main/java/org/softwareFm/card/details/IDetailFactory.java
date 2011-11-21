@@ -3,8 +3,8 @@ package org.softwareFm.card.details;
 import java.util.Arrays;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.card.ICard;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.details.internal.DetailFactory;
 import org.softwareFm.display.composites.IHasControl;
 

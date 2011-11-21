@@ -2,8 +2,8 @@ package org.softwareFm.card.editors.internal;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.card.internal.CardOutlinePaintListener;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.title.Title;
 import org.softwareFm.display.okCancel.OkCancel;
 

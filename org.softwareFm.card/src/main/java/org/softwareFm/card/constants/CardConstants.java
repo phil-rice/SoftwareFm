@@ -1,22 +1,15 @@
 package org.softwareFm.card.constants;
 
 public class CardConstants {
+	public static final String dataPrefix = "/softwareFm/data/";
 	public static final String testButtonKey = "button.test.title";
 
 	public static final String slingResourceType = "sling:resourceType";
 	public static final String cannotFindTableItemWithKey = "Cannot find table item with key {0}";
 	public static final String exceptionChangingValue = "Exception changing value with key {0}, index {1}, and newValue {2})";
-	public static final String group = "group";
-	public static final String artifact = "artifact";
-	public static final String version = "version";
-	public static final String digest = "digest";
-	public static final String versionJar = "jar";
 	public static final String ntUnstructured = "nt:unstructured";
 	public static final String jcrPrimaryType = "jcr:primaryType";
-	public static final String collection = "collection";
-	public static final String editorStyledText = "editor.styledText";
 
-	public static final String folder = "Folder";
 	public static final Object found = "found";
 
 	public static final String urlGroupKey = "urlGenerator.group";
@@ -37,6 +30,20 @@ public class CardConstants {
 	public static final String cardOrderKey = "card.order";
 	public static final String cardNameUrlKey = "card.name.url";
 	public static final String cardNameFieldKey = "card.name.field";
+
+	public static final String keysHideKey = "keys.hide";
+	public static final String namePattern = "{0}.name";
+	public static final String valuePattern = "{0}.value";
+
+	public static final String cardAggregatorTagKey = "card.aggregator.tag";
+
+	public static final String folder = "Folder";
+	public static final String group = "group";
+	public static final String artifact = "artifact";
+	public static final String version = "version";
+	public static final String digest = "digest";
+	public static final String versionJar = "jar";
+	public static final String collection = "collection";
 	
 
 }

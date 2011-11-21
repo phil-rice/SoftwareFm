@@ -6,11 +6,10 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
-import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.LineItem;
-import org.softwareFm.card.card.ICardFactory.Utils;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.maps.Maps;

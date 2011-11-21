@@ -46,11 +46,9 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
-import org.softwareFm.display.composites.CompositeConfig;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.constants.DisplayConstants;
-import org.softwareFm.display.simpleButtons.IButtonParent;
 import org.softwareFm.utilities.arrays.ArrayHelper;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Files;
@@ -520,9 +518,6 @@ public class Swts {
 		text.setFont(newFont);
 	}
 
-	public static OkCancelLegacy addOkCancel(IButtonParent buttonParent, CompositeConfig config, final Runnable onAccept, final Runnable onCancel) {
-		return new OkCancelLegacy(buttonParent, config, onAccept, onCancel);
-	}
 
 	public static Control setAfter(List<Control> controls, Control firstControl) {
 		for (Control control : controls) {

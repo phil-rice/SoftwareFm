@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.softwareFm.card.card.CardConfig;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
@@ -45,7 +45,6 @@ public class ScrollingCardCollectionHolder implements IHasControl {
 
 	}
 
-	@SuppressWarnings("unused")
 	private void setSize() {
 		Point hs1 = content.getHorizontalBar().getSize();
 		Rectangle clientArea = content.getParent().getClientArea();

@@ -7,11 +7,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.card.LineItem;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardAndCollectionsStatus;
 import org.softwareFm.card.dataStore.ICardAndCollectionDataStoreVisitor;
 import org.softwareFm.card.dataStore.ICardAndCollectionsDataStore;

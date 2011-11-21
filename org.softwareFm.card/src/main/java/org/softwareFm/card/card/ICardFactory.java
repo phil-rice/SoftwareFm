@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.card.CardFactoryMock;
 import org.softwareFm.card.card.internal.Card;
 import org.softwareFm.card.card.internal.CardFactory;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.ICardDataStoreCallback;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.callbacks.ICallback;

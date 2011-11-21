@@ -3,10 +3,10 @@ package org.softwareFm.card.details.internal;
 import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.internal.ListOfCards;
 import org.softwareFm.card.card.internal.ScrollingCardCollectionHolder;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.details.IDetailAdder;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.display.composites.IHasControl;

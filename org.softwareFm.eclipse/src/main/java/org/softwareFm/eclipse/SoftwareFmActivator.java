@@ -1,69 +1,30 @@
 package org.softwareFm.eclipse;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.prefs.BackingStoreException;
-import org.softwareFm.configuration.ConfigurationConstants;
 import org.softwareFm.configuration.SoftwareFmPropertyAnchor;
-import org.softwareFm.configuration.playlists.BasicPlaylistContributor;
-import org.softwareFm.display.GuiBuilder;
-import org.softwareFm.display.SoftwareFmDataComposite;
-import org.softwareFm.display.SoftwareFmLayout;
-import org.softwareFm.display.actions.ActionStore;
 import org.softwareFm.display.browser.IBrowserConfigurator;
-import org.softwareFm.display.composites.CompositeConfig;
-import org.softwareFm.display.data.GuiDataStore;
-import org.softwareFm.display.data.IUrlDataCallback;
-import org.softwareFm.display.data.IUrlToData;
-import org.softwareFm.display.displayer.DisplayerStore;
-import org.softwareFm.display.editor.EditorFactory;
-import org.softwareFm.display.editor.IEditorFactory;
-import org.softwareFm.display.editor.IUpdateStore;
-import org.softwareFm.display.largeButton.ILargeButtonFactory;
-import org.softwareFm.display.largeButton.LargeButtonDefn;
-import org.softwareFm.display.lists.ListEditorStore;
-import org.softwareFm.display.smallButtons.SmallButtonStore;
-import org.softwareFm.display.timeline.IPlayListContributor;
-import org.softwareFm.display.timeline.IPlayListGetter;
-import org.softwareFm.display.timeline.PlayListFromArtifactGetter;
+import org.softwareFm.explorer.eclipse.ISelectedBindingManager;
+import org.softwareFm.explorer.eclipse.Plugins;
+import org.softwareFm.explorer.eclipse.SelectedArtifactSelectionManager;
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.constants.HttpClientConstants;
-import org.softwareFm.httpClient.response.IResponse;
-import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.jdtBinding.api.IBindingRipper;
-import org.softwareFm.jdtBinding.api.IJavadocSourceMutator;
-import org.softwareFm.jdtBinding.api.IJavadocSourceMutatorCallback;
-import org.softwareFm.jdtBinding.api.JavaProjects;
-import org.softwareFm.jdtBinding.api.JdtConstants;
-import org.softwareFm.jdtBinding.api.RippedResult;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
-import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
 import org.softwareFm.repositoryFacard.impl.RepositoryFacard;
-import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.collections.Files;
-import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
-import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.services.IServiceExecutor;
 
@@ -85,18 +46,8 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	// The shared instance
 	private static SoftwareFmActivator plugin;
 
-	private CompositeConfig compositeConfig;
-	private GuiBuilder guiBuilder;
-	private DisplayerStore displayerStore;
-	private ActionStore actionStore;
-	private SmallButtonStore smallButtonStore;
-	private ListEditorStore listEditorStore;
-	private GuiDataStore guiDataStore;
-	private IEditorFactory editorFactory;
-	private List<LargeButtonDefn> largeButtonDefns;
 	private SelectedArtifactSelectionManager selectedArtifactSelectionManager;
 	IRepositoryFacard repository;
-	private IUpdateStore updateStore;
 	private IResourceGetter resourceGetter;
 	private String uuid;
 	private IServiceExecutor service;
@@ -115,13 +66,6 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
-		compositeConfig = null;
-		guiBuilder = null;
-		displayerStore = null;
-		actionStore = null;
-		smallButtonStore = null;
-		listEditorStore = null;
-		guiDataStore = null;
 		if (selectedArtifactSelectionManager != null) {
 			Plugins.walkSelectionServices(new ICallback<ISelectionService>() {
 				@Override
@@ -166,100 +110,13 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		return ICallback.Utils.sysErrCallback();
 	}
 
-	public CompositeConfig getCompositeConfig(Display display) {
-		if (compositeConfig == null) {
-			ImageRegistry imageRegistry = getImageRegistry();
-			new BasicImageRegisterConfigurator().registerWith(display, imageRegistry);
-			IResourceGetter resourceGetter = getResourceGetter();
-			SoftwareFmLayout layout = new SoftwareFmLayout();
-			compositeConfig = new CompositeConfig(display, layout, imageRegistry, resourceGetter);
-		}
-		return compositeConfig;
-	}
-
 	public IResourceGetter getResourceGetter() {
 		return resourceGetter == null ? resourceGetter = IResourceGetter.Utils.noResources().with(SoftwareFmPropertyAnchor.class, "SoftwareFmDisplay") : resourceGetter;
 	}
 
-	public GuiBuilder getGuiBuilder() {
-		return guiBuilder == null ? guiBuilder = new GuiBuilder(getSmallButtonStore(), getActionStore(), getDisplayerStore(), getListEditorStore()) : guiBuilder;
-	}
-
-	ListEditorStore getListEditorStore() {
-		return listEditorStore == null ? listEditorStore = Plugins.configureMainWithCallbacks(new ListEditorStore(), listEditorStoreConfiguratorId, "class", onException()) : listEditorStore;
-	}
-
-	private DisplayerStore getDisplayerStore() {
-		return displayerStore == null ? displayerStore = Plugins.configureMainWithCallbacks(new DisplayerStore(), displayerStoreConfiguratorId, "class", onException()) : displayerStore;
-	}
-
-	private ActionStore getActionStore() {
-		return actionStore == null ? actionStore = Plugins.configureMainWithCallbacks(new ActionStore(), actionStoreConfiguratorId, "class", onException()) : actionStore;
-	}
-
-	private SmallButtonStore getSmallButtonStore() {
-		return smallButtonStore == null ? smallButtonStore = Plugins.configureMainWithCallbacks(new SmallButtonStore(), smallButtonStoreConfiguratorId, "class", onException()) : smallButtonStore;
-	}
-
-	private IUpdateStore getUpdateStore() {
-		return updateStore == null ? updateStore = new RepositoryUpdateStore(getRepository(), new IStoreUpdatedCallback() {
-			@Override
-			public void storeUpdates(String url, String entity, Map<String, Object> data) {
-				for (String attribute : data.keySet())
-					guiDataStore.clearCache(url, entity, attribute);
-				Map<String, Object> lastRawData = guiDataStore.getLastRawData(ConfigurationConstants.primaryEntity);
-				// TODO is there a hideous race condition here?
-				guiDataStore.processData(ConfigurationConstants.primaryEntity, lastRawData, Maps.<String, Object> newMap());
-
-			}
-		}) : updateStore;
-	}
 
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
-	}
-
-	public GuiDataStore getGuiDataStore() {
-		final IRepositoryFacard repository = getRepository();
-		return guiDataStore == null ? guiDataStore = Plugins.configureMainWithCallbacks(new GuiDataStore(new IUrlToData() {
-			@Override
-			public void getData(final String entity, final String url, final Map<String, Object> context, final IUrlDataCallback callback) {
-				repository.get(url, new IRepositoryFacardCallback() {
-					@Override
-					public void process(IResponse response, Map<String, Object> data) {
-						callback.processData(entity, url, context, data);
-					}
-				});
-			}
-		}, getResourceGetter(), onException()), dataStoreConfiguratorId, "class", onException()) : guiDataStore;
-	}
-
-	public IEditorFactory getEditorFactory(Display display) {
-		return editorFactory == null ? editorFactory = Plugins.configureMainWithCallbacks(new EditorFactory(), editorConfiguratorId, "class", onException()) : editorFactory;
-	}
-
-	public List<LargeButtonDefn> getLargeButtonDefns() {
-		if (largeButtonDefns == null) {
-			largeButtonDefns = Lists.newList();
-			final GuiBuilder guiBuilder = getGuiBuilder();
-			Plugins.useClasses(largeButtonConfiguratorId, new IPlugInCreationCallback<ILargeButtonFactory>() {
-
-				@Override
-				public void process(ILargeButtonFactory t, IConfigurationElement element) throws Exception {
-					largeButtonDefns.add(t.apply(guiBuilder));
-				}
-
-				@Override
-				public void onException(Throwable throwable, IConfigurationElement element) {
-					try {
-						SoftwareFmActivator.this.onException().process(throwable);
-					} catch (Exception e) {
-						throw WrappedException.wrap(e);
-					}
-				}
-			});
-		}
-		return largeButtonDefns;
 	}
 
 	public ISelectedBindingManager getSelectedBindingManager() {
@@ -292,88 +149,88 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	}
 	
 
-	public SoftwareFmDataComposite makeComposite(final Composite parent) {
-		Display display = parent.getDisplay();
-		final GuiDataStore guiDataStore = getGuiDataStore();
-		getSelectedBindingManager().addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
-			@Override
-			public void selectionOccured(final BindingRipperResult rippedResult) {
-				getEditorFactory(parent.getDisplay()).cancel();
-				IPath path = rippedResult.path;
-				if (path != null) {
-					final Map<String, Object> context = Maps.<String, Object> newMap();
-					final RippedResult result = makeRippedResult(guiDataStore, rippedResult, context);
-					getEditorFactory(parent.getDisplay()).cancel();
-					guiDataStore.processData(ConfigurationConstants.primaryEntity, result, context);
-				}
-			}
-
-			private RippedResult makeRippedResult(final GuiDataStore guiDataStore, final BindingRipperResult rippedResult, final Map<String, Object> context) {
-				IPath path = rippedResult.path;
-				String javadoc = JavaProjects.findJavadocFor(rippedResult.classpathEntry);
-				String source = JavaProjects.findSourceFor(rippedResult.packageFragmentRoot);
-				String name = path.lastSegment().toString();
-				String extension = Files.extension(name);
-				String hexDigest = extension.equals("jar") ? rippedResult.hexDigest : null;
-				String javaProject = rippedResult.javaProject == null ? null : rippedResult.javaProject.getElementName();
-				final RippedResult result = new RippedResult(hexDigest, javaProject, path.toOSString(), name, javadoc, source, null, null);
-				IJavadocSourceMutator sourceMutator = new IJavadocSourceMutator() {
-					@Override
-					public void setNewValue(final String newValue, final IJavadocSourceMutatorCallback whenComplete) throws Exception {
-						final BindingRipperResult reripped = SelectedArtifactSelectionManager.reRip(rippedResult);
-						getExecutorService().submit(new Callable<Void>() {
-							@Override
-							public Void call() throws Exception {
-								try {
-									if (newValue.endsWith(".jar")) {
-										File file = Files.downloadAndPutIndirectory(newValue, ConfigurationConstants.defaultDirectoryForDownloads);
-										JavaProjects.setSourceAttachment(reripped.javaProject, reripped.classpathEntry, file.getCanonicalPath());
-									} else
-										JavaProjects.setSourceAttachment(reripped.javaProject, reripped.classpathEntry, newValue);
-									whenComplete.process(newValue, newValue);
-								} catch (IOException e) {
-									e.printStackTrace();
-									throw WrappedException.wrap(e);
-								}
-								return null;
-							}
-						});
-					}
-				};
-				IJavadocSourceMutator javadocMutator = new IJavadocSourceMutator() {
-					@Override
-					public void setNewValue(final String newValue, final IJavadocSourceMutatorCallback whenComplete) throws Exception {
-						final BindingRipperResult reripped = SelectedArtifactSelectionManager.reRip(rippedResult);
-						getExecutorService().submit(new  Callable<Void>() {
-							@Override
-							public Void call() {
-								try {
-									if (newValue.endsWith(".jar")) {
-										File file = Files.downloadAndPutIndirectory(newValue, ConfigurationConstants.defaultDirectoryForDownloads);
-										JavaProjects.setJavadoc(reripped.javaProject, reripped.classpathEntry, "jar:file:" + file.getCanonicalPath() + "!/");
-									} else
-										JavaProjects.setJavadoc(reripped.javaProject, reripped.classpathEntry, newValue);
-									whenComplete.process(newValue, newValue);
-								} catch (IOException e) {
-									e.printStackTrace();
-									throw WrappedException.wrap(e);
-								}
-								return null;
-							}
-						});
-					}
-				};
-				result.put(JdtConstants.javadocMutatorKey, javadocMutator);
-				result.put(JdtConstants.sourceMutatorKey, sourceMutator);
-				return result;
-			}
-		});
-		List<IBrowserConfigurator> browserConfigurators = getBrowserConfigurators();
-		IPlayListGetter playListGetter = new PlayListFromArtifactGetter(guiDataStore, ConfigurationConstants.entityForPlayList, Arrays.<IPlayListContributor> asList(new BasicPlaylistContributor()));
-		SoftwareFmDataComposite composite = new SoftwareFmDataComposite(parent, getExecutorService(), guiDataStore, getCompositeConfig(display), getActionStore(), getEditorFactory(display), getUpdateStore(), getListEditorStore(), onException(), getLargeButtonDefns(), browserConfigurators, playListGetter);
-		return composite;
-
-	}
+//	public SoftwareFmDataComposite makeComposite(final Composite parent) {
+//		Display display = parent.getDisplay();
+//		final GuiDataStore guiDataStore = getGuiDataStore();
+//		getSelectedBindingManager().addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
+//			@Override
+//			public void selectionOccured(final BindingRipperResult rippedResult) {
+//				getEditorFactory(parent.getDisplay()).cancel();
+//				IPath path = rippedResult.path;
+//				if (path != null) {
+//					final Map<String, Object> context = Maps.<String, Object> newMap();
+//					final RippedResult result = makeRippedResult(guiDataStore, rippedResult, context);
+//					getEditorFactory(parent.getDisplay()).cancel();
+//					guiDataStore.processData(ConfigurationConstants.primaryEntity, result, context);
+//				}
+//			}
+//
+//			private RippedResult makeRippedResult(final GuiDataStore guiDataStore, final BindingRipperResult rippedResult, final Map<String, Object> context) {
+//				IPath path = rippedResult.path;
+//				String javadoc = JavaProjects.findJavadocFor(rippedResult.classpathEntry);
+//				String source = JavaProjects.findSourceFor(rippedResult.packageFragmentRoot);
+//				String name = path.lastSegment().toString();
+//				String extension = Files.extension(name);
+//				String hexDigest = extension.equals("jar") ? rippedResult.hexDigest : null;
+//				String javaProject = rippedResult.javaProject == null ? null : rippedResult.javaProject.getElementName();
+//				final RippedResult result = new RippedResult(hexDigest, javaProject, path.toOSString(), name, javadoc, source, null, null);
+//				IJavadocSourceMutator sourceMutator = new IJavadocSourceMutator() {
+//					@Override
+//					public void setNewValue(final String newValue, final IJavadocSourceMutatorCallback whenComplete) throws Exception {
+//						final BindingRipperResult reripped = SelectedArtifactSelectionManager.reRip(rippedResult);
+//						getExecutorService().submit(new Callable<Void>() {
+//							@Override
+//							public Void call() throws Exception {
+//								try {
+//									if (newValue.endsWith(".jar")) {
+//										File file = Files.downloadAndPutIndirectory(newValue, ConfigurationConstants.defaultDirectoryForDownloads);
+//										JavaProjects.setSourceAttachment(reripped.javaProject, reripped.classpathEntry, file.getCanonicalPath());
+//									} else
+//										JavaProjects.setSourceAttachment(reripped.javaProject, reripped.classpathEntry, newValue);
+//									whenComplete.process(newValue, newValue);
+//								} catch (IOException e) {
+//									e.printStackTrace();
+//									throw WrappedException.wrap(e);
+//								}
+//								return null;
+//							}
+//						});
+//					}
+//				};
+//				IJavadocSourceMutator javadocMutator = new IJavadocSourceMutator() {
+//					@Override
+//					public void setNewValue(final String newValue, final IJavadocSourceMutatorCallback whenComplete) throws Exception {
+//						final BindingRipperResult reripped = SelectedArtifactSelectionManager.reRip(rippedResult);
+//						getExecutorService().submit(new  Callable<Void>() {
+//							@Override
+//							public Void call() {
+//								try {
+//									if (newValue.endsWith(".jar")) {
+//										File file = Files.downloadAndPutIndirectory(newValue, ConfigurationConstants.defaultDirectoryForDownloads);
+//										JavaProjects.setJavadoc(reripped.javaProject, reripped.classpathEntry, "jar:file:" + file.getCanonicalPath() + "!/");
+//									} else
+//										JavaProjects.setJavadoc(reripped.javaProject, reripped.classpathEntry, newValue);
+//									whenComplete.process(newValue, newValue);
+//								} catch (IOException e) {
+//									e.printStackTrace();
+//									throw WrappedException.wrap(e);
+//								}
+//								return null;
+//							}
+//						});
+//					}
+//				};
+//				result.put(JdtConstants.javadocMutatorKey, javadocMutator);
+//				result.put(JdtConstants.sourceMutatorKey, sourceMutator);
+//				return result;
+//			}
+//		});
+//		List<IBrowserConfigurator> browserConfigurators = getBrowserConfigurators();
+//		IPlayListGetter playListGetter = new PlayListFromArtifactGetter(guiDataStore, ConfigurationConstants.entityForPlayList, Arrays.<IPlayListContributor> asList(new BasicPlaylistContributor()));
+//		SoftwareFmDataComposite composite = new SoftwareFmDataComposite(parent, getExecutorService(), guiDataStore, getCompositeConfig(display), getActionStore(), getEditorFactory(display), getUpdateStore(), getListEditorStore(), onException(), getLargeButtonDefns(), browserConfigurators, playListGetter);
+//		return composite;
+//
+//	}
 
 	private IServiceExecutor getExecutorService() {
 		return service == null ? service = IServiceExecutor.Utils.defaultExecutor() : service;

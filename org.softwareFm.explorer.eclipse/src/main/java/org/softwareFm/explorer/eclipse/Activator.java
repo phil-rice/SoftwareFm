@@ -11,10 +11,6 @@ import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.prefs.BackingStoreException;
-import org.softwareFm.eclipse.ISelectedBindingManager;
-import org.softwareFm.eclipse.Plugins;
-import org.softwareFm.eclipse.SelectedArtifactSelectionManager;
-import org.softwareFm.eclipse.SoftwareFmActivator;
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.constants.HttpClientConstants;
 import org.softwareFm.jdtBinding.api.IBindingRipper;
@@ -112,7 +108,7 @@ public class Activator extends AbstractUIPlugin {
 	private String findOrMakeUuid() {
 		try {
 			@SuppressWarnings("deprecation")
-			IEclipsePreferences prefs = new InstanceScope().getNode(SoftwareFmActivator.PLUGIN_ID);
+			IEclipsePreferences prefs = new InstanceScope().getNode(PLUGIN_ID);
 			String uuid = prefs.get("Uuid", null);
 			if (uuid == null) {
 				uuid = UUID.randomUUID().toString();
