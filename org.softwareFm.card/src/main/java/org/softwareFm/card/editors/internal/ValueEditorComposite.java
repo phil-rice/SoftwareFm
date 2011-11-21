@@ -1,4 +1,4 @@
-package org.softwareFm.card.editors;
+package org.softwareFm.card.editors.internal;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Rectangle;
@@ -10,15 +10,18 @@ import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.IDetailsFactoryCallback;
 import org.softwareFm.card.api.IMutableCardDataStore;
 import org.softwareFm.card.api.LineItem;
+import org.softwareFm.card.editors.IValueComposite;
 import org.softwareFm.card.internal.CardOutlinePaintListener;
 import org.softwareFm.card.title.Title;
 import org.softwareFm.card.title.TitleSpec;
+import org.softwareFm.display.okCancel.OkCancel;
 import org.softwareFm.utilities.functions.Functions;
+import org.softwareFm.utilities.resources.IResourceGetter;
 
 abstract public class ValueEditorComposite<T extends Control> extends Composite implements IValueComposite<T> {
 
 	public Title title;
-	final T editorControl;
+	private final T editorControl;
 	protected final OkCancel okCancel;
 	protected final CardConfig cardConfig;
 	protected final String originalValue;
@@ -50,7 +53,8 @@ abstract public class ValueEditorComposite<T extends Control> extends Composite 
 
 		originalValue = Functions.call(cardConfig.valueFn, lineItem);
 		editorControl = makeEditorControl(innerBody, originalValue);
-		okCancel = new OkCancel(innerBody, cardConfig, new Runnable() {
+		IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, null);
+		okCancel = new OkCancel(innerBody, resourceGetter, new Runnable() {
 			@Override
 			public void run() {
 				IMutableCardDataStore cardDataStore = (IMutableCardDataStore) cardConfig.cardDataStore;

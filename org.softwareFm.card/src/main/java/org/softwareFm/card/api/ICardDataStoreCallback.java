@@ -2,6 +2,7 @@ package org.softwareFm.card.api;
 
 import java.util.Map;
 
+/** Data has been found for the card */
 public interface ICardDataStoreCallback<T> {
 
 	T process(String url, Map<String, Object> result) throws Exception;

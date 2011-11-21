@@ -6,6 +6,7 @@ import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.strings.Strings;
 
+/** Data about a single line in the card */
 public class LineItem {
 	public final String cardType;
 	public final String key;

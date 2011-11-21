@@ -10,8 +10,10 @@ import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.maps.Maps;
 
+
 public interface ICardFactory {
 
+	/** Make a component to display the data */
 	ICard makeCard(ICardHolder cardHolder, CardConfig cardConfig, String url, Map<String, Object> map);
 
 	public static class Utils {

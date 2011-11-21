@@ -6,8 +6,10 @@ import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.internal.CardDataStoreForRepository;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 
+/** Go get data for a url, no follow ups */
 public interface ICardDataStore {
 
+	/** Go get data for a url, no follow ups */
 	<T> Future<T> processDataFor(String url, ICardDataStoreCallback<T> callback);
 
 	public static class Utils {

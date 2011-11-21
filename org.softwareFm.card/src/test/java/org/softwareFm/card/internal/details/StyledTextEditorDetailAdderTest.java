@@ -4,7 +4,7 @@ import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.IDetailsFactoryCallback;
 import org.softwareFm.card.api.LineItem;
 import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.card.editors.StyledTextEditor;
+import org.softwareFm.card.editors.internal.StyledTextEditor;
 import org.softwareFm.display.data.ResourceGetterMock;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.resources.IResourceGetter;

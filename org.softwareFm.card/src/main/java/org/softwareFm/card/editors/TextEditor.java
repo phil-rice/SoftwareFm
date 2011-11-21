@@ -11,7 +11,9 @@ import org.eclipse.swt.widgets.Text;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.IDetailsFactoryCallback;
+import org.softwareFm.card.editors.internal.ValueEditorComposite;
 import org.softwareFm.card.title.TitleSpec;
+import org.softwareFm.display.okCancel.OkCancel;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.swt.Swts.Size;
@@ -21,7 +23,7 @@ public class TextEditor implements IValueEditor {
 
 	private final TextEditorComposite content;
 
-	static class TextEditorComposite extends ValueEditorComposite<Text> {
+	public static class TextEditorComposite extends ValueEditorComposite<Text> {
 
 		public TextEditorComposite(Composite parent, int style, final CardConfig cardConfig, final String url,String cardType, final String key, Object initialValue, TitleSpec titleSpec, final IDetailsFactoryCallback callback) {
 			super(parent, style, cardConfig, url, cardType, key, initialValue, titleSpec, callback);
@@ -61,7 +63,7 @@ public class TextEditor implements IValueEditor {
 
 		@Override
 		protected String getValue() {
-			return editorControl == null ? null : editorControl.getText();
+			return getEditor() == null ? null : getEditor().getText();
 		}
 	}
 
@@ -81,7 +83,7 @@ public class TextEditor implements IValueEditor {
 
 	@Override
 	public String getValue() {
-		return content.editorControl.getText();
+		return content.getEditor().getText();
 	}
 
 	public static void main(String[] args) {
@@ -107,11 +109,11 @@ public class TextEditor implements IValueEditor {
 
 	@Override
 	public OkCancel getOkCancel() {
-		return content.okCancel;
+		return content.getOkCancel();
 	}
 	@Override
 	public void setValue(String newValue) {
-		 content.editorControl.setText(newValue);
+		 content.getEditor().setText(newValue);
 	}
 
 }

@@ -1,7 +1,9 @@
 package org.softwareFm.card.api;
 
+/** The user has clicked on this card */
 public interface ICardSelectedListener {
 
+	/** The user has clicked on this card */
 	void cardSelected(String cardUrl);
 
 	public static class Utils {

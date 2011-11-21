@@ -1,4 +1,4 @@
-package org.softwareFm.card.editors;
+package org.softwareFm.card.editors.internal;
 
 import java.awt.Desktop;
 import java.net.URI;
@@ -13,7 +13,10 @@ import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.IDetailsFactoryCallback;
 import org.softwareFm.card.constants.CardConstants;
+import org.softwareFm.card.editors.IValueEditor;
+import org.softwareFm.card.editors.ValueEditorLayout;
 import org.softwareFm.card.title.TitleSpec;
+import org.softwareFm.display.okCancel.OkCancel;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.swt.Swts.Size;
@@ -80,7 +83,7 @@ public class UrlEditor implements IValueEditor {
 
 	@Override
 	public String getValue() {
-		return content.editorControl.getText();
+		return content.getEditor().getText();
 	}
 
 	public static void main(String[] args) {
@@ -111,7 +114,7 @@ public class UrlEditor implements IValueEditor {
 
 	@Override
 	public void setValue(String newValue) {
-		content.editorControl.setText(newValue);
+		content.getEditor().setText(newValue);
 	}
 
 }

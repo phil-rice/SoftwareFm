@@ -1,4 +1,4 @@
-package org.softwareFm.card.editors;
+package org.softwareFm.card.editors.internal;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.IDetailsFactoryCallback;
+import org.softwareFm.card.editors.ValueEditorLayout;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts.Show;
@@ -51,7 +52,7 @@ public class StyledTextEditor implements IHasComposite {
 
 		@Override
 		protected String getValue() {
-			return editorControl.getText();
+			return getEditor().getText();
 		}
 	}
 
@@ -70,7 +71,7 @@ public class StyledTextEditor implements IHasComposite {
 	}
 
 	public StyledText getText() {
-		return content.editorControl;
+		return content.getEditor();
 	}
 
 	public TitleSpec getTitleSpec() {

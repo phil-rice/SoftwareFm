@@ -52,6 +52,55 @@ import org.softwareFm.utilities.strings.Strings;
 
 public class Explorer implements IExplorer {
 
+	private  final class AddItemProcessor implements IAddItemProcessor {
+		private final IMasterDetailSocial masterDetailSocial;
+
+		private AddItemProcessor(IMasterDetailSocial masterDetailSocial) {
+			this.masterDetailSocial = masterDetailSocial;
+		}
+
+		@Override
+		public void addCollectionItem(final RightClickCategoryResult result) {
+			final ICard card = cardHolder.getCard();
+
+			TextEditor editor = masterDetailSocial.createDetail(new IFunction1<Composite, TextEditor>() {
+				@Override
+				public TextEditor apply(Composite from) throws Exception {
+					return new TextEditor(from, card.cardConfig(), result.url, card.cardType(), result.collectionName, "", new IDetailsFactoryCallback() {
+						private final IDetailsFactoryCallback callback = this;
+
+						@Override
+						public void updateDataStore(final IMutableCardDataStore store, String url, String key, final Object value) {
+							updateStore(store, result, value, callback);
+						}
+
+						@Override
+						public void afterEdit(String url) {
+							ICallback.Utils.call(callbackToGotoUrlAndUpdateDetails, url);
+						}
+
+						@Override
+						public void gotData(Control hasControl) {
+						}
+
+						@Override
+						public void cardSelected(String cardUrl) {
+						}
+
+					}, TitleSpec.noTitleSpec(from.getBackground()));
+				}
+			}, false);
+			editor.getComposite().setLayout(new ValueEditorLayout());
+			masterDetailSocial.setDetail(editor.getControl());
+		}
+
+		@Override
+		public void addNewArtifact() {
+			unrecognisedJar.setFileAndDigest(null, null);
+			masterDetailSocial.setMaster(unrecognisedJar.getControl());
+		}
+	}
+
 	private UnrecognisedJar unrecognisedJar;
 	private CardHolder cardHolder;
 	private ICallback<String> callbackToGotoUrlAndUpdateDetails;
@@ -206,48 +255,7 @@ public class Explorer implements IExplorer {
 
 	/** This is the bit that configures then acts on the right click that adds folders/groups/collections */
 	private IAddItemProcessor makeAddItemProcessor(final IMasterDetailSocial masterDetailSocial) {
-		IAddItemProcessor itemProcessor = new IAddItemProcessor() {
-			@Override
-			public void addCollectionItem(final RightClickCategoryResult result) {
-				final ICard card = cardHolder.getCard();
-
-				TextEditor editor = masterDetailSocial.createDetail(new IFunction1<Composite, TextEditor>() {
-					@Override
-					public TextEditor apply(Composite from) throws Exception {
-						return new TextEditor(from, card.cardConfig(), result.url, card.cardType(), result.collectionName, "", new IDetailsFactoryCallback() {
-							private final IDetailsFactoryCallback callback = this;
-
-							@Override
-							public void updateDataStore(final IMutableCardDataStore store, String url, String key, final Object value) {
-								updateStore(store, result, value, callback);
-							}
-
-							@Override
-							public void afterEdit(String url) {
-								ICallback.Utils.call(callbackToGotoUrlAndUpdateDetails, url);
-							}
-
-							@Override
-							public void gotData(Control hasControl) {
-							}
-
-							@Override
-							public void cardSelected(String cardUrl) {
-							}
-
-						}, TitleSpec.noTitleSpec(from.getBackground()));
-					}
-				}, false);
-				editor.getComposite().setLayout(new ValueEditorLayout());
-				masterDetailSocial.setDetail(editor.getControl());
-			}
-
-			@Override
-			public void addNewArtifact() {
-				unrecognisedJar.setFileAndDigest(null, null);
-				masterDetailSocial.setMaster(unrecognisedJar.getControl());
-			}
-		};
+		IAddItemProcessor itemProcessor = new AddItemProcessor(masterDetailSocial);
 		return itemProcessor;
 	}
 

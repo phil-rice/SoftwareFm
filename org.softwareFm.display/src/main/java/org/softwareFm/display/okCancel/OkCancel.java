@@ -1,14 +1,12 @@
-package org.softwareFm.card.editors;
+package org.softwareFm.display.okCancel;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Row;
-import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class OkCancel implements IOkCancel {
@@ -19,10 +17,10 @@ public class OkCancel implements IOkCancel {
 	private final Composite content;
 	private final Runnable onAccept;
 	private final Runnable onCancel;
-	private final CardConfig cardConfig;
+	private final IResourceGetter resourceGetter;
 
-	public OkCancel(Composite parent, CardConfig cardConfig, final Runnable onAccept, final Runnable onCancel) {
-		this.cardConfig = cardConfig;
+	public OkCancel(Composite parent, IResourceGetter resourceGetter, final Runnable onAccept, final Runnable onCancel) {
+		this.resourceGetter = resourceGetter;
 		this.onAccept = onAccept;
 		this.onCancel = onCancel;
 		content = new Composite(parent, SWT.NULL);
@@ -33,7 +31,6 @@ public class OkCancel implements IOkCancel {
 
 	
 	public Button addButton(String titleKey, Runnable runnable){
-		IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, null);
 		Button result = Swts.Button.makePushButton(content, resourceGetter, titleKey,runnable);
 		return result;
 		

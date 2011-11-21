@@ -1,5 +1,6 @@
 package org.softwareFm.card.api;
 
+/** Categorised data about the line that has just been right clicked on in the card */
 public class RightClickCategoryResult {
 
 	public static enum Type {

@@ -2,18 +2,25 @@ package org.softwareFm.card.api;
 
 import java.util.Map;
 
+/** The life cycle for requesting more data about a card is monitored by this visitor */
 public interface ICardAndCollectionDataStoreVisitor {
 
+	/** The initial data is being requested */
 	void initialUrl(ICardHolder cardHolder, CardConfig cardConfig, String url);
 
+	/** The initial data has been found and turned into a card */
 	void initialCard(ICardHolder cardHolder, CardConfig cardConfig, String url, ICard card);
 
+	/** More data is needed from one of the child nodes */
 	void requestingFollowup(ICardHolder cardHolder, String url, ICard card, String followOnUrlFragment);
 
+	/** More data has been found */
 	void followedUp(ICardHolder cardHolder, String url, ICard card, String followUpUrl, Map<String, Object> result);
 
+	/** There was no initial data for the card */
 	void noData(ICardHolder cardHolder, String url, ICard card, String followUpUrl);
 
+	/** All the data, and the follow up data has been found */
 	void finished(ICardHolder cardHolder, String url, ICard card);
 
 	public static class Utils {
