@@ -8,12 +8,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import junit.framework.TestCase;
 
 import org.junit.Test;
-import org.softwareFm.card.api.BasicCardConfigurator;
-import org.softwareFm.card.api.CardConfig;
-import org.softwareFm.card.api.CardDataStoreFixture;
-import org.softwareFm.card.api.CardDataStoreMock;
-import org.softwareFm.card.api.ICardFactory;
+import org.softwareFm.card.card.BasicCardConfigurator;
+import org.softwareFm.card.card.CardConfig;
+import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.constants.CardConstants;
+import org.softwareFm.card.dataStore.CardDataStoreFixture;
+import org.softwareFm.card.dataStore.CardDataStoreMock;
 import org.softwareFm.card.dataStore.IAfterEditCallback;
 import org.softwareFm.configuration.ConfigurationConstants;
 import org.softwareFm.utilities.callbacks.ICallback;

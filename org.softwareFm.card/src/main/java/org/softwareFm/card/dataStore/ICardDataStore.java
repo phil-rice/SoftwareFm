@@ -3,7 +3,6 @@ package org.softwareFm.card.dataStore;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.card.api.CardDataStoreMock;
 import org.softwareFm.card.dataStore.internal.CardDataStoreForRepository;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 

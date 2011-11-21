@@ -8,7 +8,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
-import org.softwareFm.card.api.CardConfig;
+import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.display.okCancel.IOkCancel;
 import org.softwareFm.display.okCancel.OkCancel;
 import org.softwareFm.utilities.functions.Functions;

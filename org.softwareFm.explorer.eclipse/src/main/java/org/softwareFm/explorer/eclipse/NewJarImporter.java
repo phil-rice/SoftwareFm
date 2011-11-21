@@ -3,7 +3,7 @@ package org.softwareFm.explorer.eclipse;
 import java.util.Map;
 import java.util.concurrent.Future;
 
-import org.softwareFm.card.api.CardConfig;
+import org.softwareFm.card.card.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.IAfterEditCallback;
 import org.softwareFm.card.dataStore.IMutableCardDataStore;

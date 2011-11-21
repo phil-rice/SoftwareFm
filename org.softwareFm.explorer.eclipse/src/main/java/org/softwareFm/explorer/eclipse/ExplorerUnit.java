@@ -5,9 +5,9 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.api.BasicCardConfigurator;
-import org.softwareFm.card.api.CardConfig;
-import org.softwareFm.card.api.ICardFactory;
+import org.softwareFm.card.card.BasicCardConfigurator;
+import org.softwareFm.card.card.CardConfig;
+import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.display.browser.BrowserFeedConfigurator;
 import org.softwareFm.display.browser.RssFeedConfigurator;

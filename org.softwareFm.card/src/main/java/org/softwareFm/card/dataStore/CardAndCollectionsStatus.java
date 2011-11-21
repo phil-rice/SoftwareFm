@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.softwareFm.card.api.ICard;
+import org.softwareFm.card.card.ICard;
 
 public class CardAndCollectionsStatus {
 	public final Future<Void> mainFuture;

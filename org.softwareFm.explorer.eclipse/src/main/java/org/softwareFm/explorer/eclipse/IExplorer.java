@@ -2,7 +2,7 @@ package org.softwareFm.explorer.eclipse;
 
 import java.io.File;
 
-import org.softwareFm.card.api.ICardChangedListener;
+import org.softwareFm.card.card.ICardChangedListener;
 import org.softwareFm.display.browser.IBrowserCompositeBuilder;
 import org.softwareFm.display.timeline.ITimeLine;
 

@@ -2,9 +2,9 @@ package org.softwareFm.allTests;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.internal.CardCollectionHolder;
-import org.softwareFm.card.internal.CardHolder;
-import org.softwareFm.card.internal.CardUnit;
+import org.softwareFm.card.card.internal.CardCollectionHolder;
+import org.softwareFm.card.card.internal.CardHolder;
+import org.softwareFm.card.card.internal.CardUnit;
 import org.softwareFm.configuration.largebuttons.ArtifactDetailsLargeButtonFactory;
 import org.softwareFm.configuration.largebuttons.ArtifactSocialLargeButtonFactory;
 import org.softwareFm.configuration.largebuttons.GroupLargeButtonFactory;
