@@ -6,7 +6,10 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-import org.softwareFm.card.internal.CardCollectionsDataStore;
+import org.softwareFm.card.dataStore.ICardAndCollectionsDataStore;
+import org.softwareFm.card.dataStore.ICardDataStore;
+import org.softwareFm.card.dataStore.IFollowOnFragment;
+import org.softwareFm.card.dataStore.internal.CardCollectionsDataStore;
 import org.softwareFm.card.internal.details.DetailFactory;
 import org.softwareFm.card.internal.details.EditorDetailAdder;
 import org.softwareFm.card.internal.details.IDetailAdder;
@@ -66,7 +69,7 @@ public class CardConfig {
 	/** This gets data from the server. */
 	public final ICardDataStore cardDataStore;
 	/** When data is asked about a card, often more data is asked: specifically any collections are asked for. This manages that 'extra data' getting */
-	public final CardCollectionsDataStore cardCollectionsDataStore = new CardCollectionsDataStore();
+	public final ICardAndCollectionsDataStore cardCollectionsDataStore = new CardCollectionsDataStore();
 	/** this is the function used by the {@link #cardCollectionsDataStore} to determine what extra data needs to be acquired. Typically used to request more data about children */
 	public final IFollowOnFragment followOnFragment;
 

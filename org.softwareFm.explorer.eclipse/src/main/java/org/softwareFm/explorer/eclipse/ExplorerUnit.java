@@ -5,11 +5,10 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.card.api.BasicCardConfigurator;
 import org.softwareFm.card.api.CardConfig;
-import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
-import org.softwareFm.card.internal.BasicCardConfigurator;
-import org.softwareFm.card.internal.CardDataStoreForRepository;
+import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.display.browser.BrowserFeedConfigurator;
 import org.softwareFm.display.browser.RssFeedConfigurator;
 import org.softwareFm.display.swt.ISituationListAndBuilder;
@@ -52,7 +51,7 @@ public class ExplorerUnit {
 
 				@Override
 				public Explorer makeChild(Composite parent) throws Exception {
-					final ICardDataStore cardDataStore = new CardDataStoreForRepository(parent, facard);
+					final ICardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(parent, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 					final CardConfig cardConfig = new BasicCardConfigurator().configure(parent.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 					IMasterDetailSocial masterDetailSocial = new MasterDetailSocial(parent, SWT.NULL);

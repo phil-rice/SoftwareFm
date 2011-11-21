@@ -8,8 +8,8 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.concurrent.Future;
 
-import org.softwareFm.card.api.ICardDataStore;
-import org.softwareFm.card.api.ICardDataStoreCallback;
+import org.softwareFm.card.dataStore.ICardDataStore;
+import org.softwareFm.card.dataStore.ICardDataStoreCallback;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.timeline.IPlayList;
 import org.softwareFm.display.timeline.IPlayListGetter;

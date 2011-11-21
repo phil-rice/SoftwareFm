@@ -18,13 +18,13 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.softwareFm.card.api.BasicCardConfigurator;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.ICard;
+import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.editors.OKCancelWithBorder;
-import org.softwareFm.card.internal.BasicCardConfigurator;
-import org.softwareFm.card.internal.Card;
 import org.softwareFm.card.title.Title;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.configuration.ConfigurationConstants;
@@ -126,8 +126,7 @@ public class UnrecognisedJar implements IHasComposite {
 					ConfigurationConstants.groupId, "Please specify the group id",//
 					ConfigurationConstants.artifactId, Strings.withoutVersion(file, "Please specify the artifact id"),//
 					ConfigurationConstants.version, Strings.versionPartOf(file, "Please specify the version"));
-			card = new Card(this, this.cardConfig, "neverused", startData);
-			card.getComposite().setLayout(new Card.CardLayout());
+			card = ICardFactory.Utils.createCardWithLayout(this, this.cardConfig, "neverused", startData);
 			TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, card);
 			String name = file == null ? "" : file.getName();
 			String tooltip = file == null ? "" : file.toString();

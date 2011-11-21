@@ -1,12 +1,12 @@
-package org.softwareFm.card.internal;
+package org.softwareFm.card.dataStore.internal;
 
 import java.util.Map;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.card.api.IAfterEditCallback;
-import org.softwareFm.card.api.ICardDataStoreCallback;
-import org.softwareFm.card.api.IMutableCardDataStore;
+import org.softwareFm.card.dataStore.IAfterEditCallback;
+import org.softwareFm.card.dataStore.ICardDataStoreCallback;
+import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;

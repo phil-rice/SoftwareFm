@@ -1,4 +1,4 @@
-package org.softwareFm.card.internal;
+package org.softwareFm.card.api;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
@@ -15,16 +15,10 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-import org.softwareFm.card.api.CardConfig;
-import org.softwareFm.card.api.ICard;
-import org.softwareFm.card.api.ICardConfigurator;
-import org.softwareFm.card.api.ICardDataModifier;
-import org.softwareFm.card.api.IDetailFactory;
-import org.softwareFm.card.api.IFollowOnFragment;
-import org.softwareFm.card.api.IPopupMenuContributor;
-import org.softwareFm.card.api.IRightClickCategoriser;
-import org.softwareFm.card.api.LineItem;
 import org.softwareFm.card.constants.CardConstants;
+import org.softwareFm.card.dataStore.IFollowOnFragment;
+import org.softwareFm.card.internal.CardPopupMenuContributor;
+import org.softwareFm.card.internal.RightClickCategoriser;
 import org.softwareFm.card.internal.details.CollectionItemDetailAdder;
 import org.softwareFm.card.internal.details.CollectionsDetailAdder;
 import org.softwareFm.card.internal.details.EditorDetailAdder;

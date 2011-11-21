@@ -1,9 +1,11 @@
 package org.softwareFm.card.internal;
 
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.card.api.BasicCardConfigurator;
 import org.softwareFm.card.api.CardConfig;
-import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
+import org.softwareFm.card.dataStore.ICardDataStore;
+import org.softwareFm.card.dataStore.internal.CardDataStoreForRepository;
 import org.softwareFm.display.swt.ISituationListAndBuilder;
 import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;

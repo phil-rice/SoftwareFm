@@ -1,6 +1,10 @@
-package org.softwareFm.card.api;
+package org.softwareFm.card.dataStore;
 
 import java.util.Map;
+
+import org.softwareFm.card.api.CardConfig;
+import org.softwareFm.card.api.ICard;
+import org.softwareFm.card.api.ICardHolder;
 
 /** An implementation with empty methods of {@link ICardAndCollectionDataStoreVisitor}, allowing an implementer to only override the methods they are interested in */
 public class CardAndCollectionDataStoreAdapter implements ICardAndCollectionDataStoreVisitor {

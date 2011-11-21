@@ -2,6 +2,8 @@ package org.softwareFm.card.api;
 
 import java.util.Map;
 
+import org.softwareFm.card.dataStore.ICardAndCollectionDataStoreVisitor;
+
 public class CardAndCollectionDataStoreVisitorMonitored implements ICardAndCollectionDataStoreVisitor {
 
 	public int initialUrlCount;

@@ -10,25 +10,23 @@ import java.util.concurrent.Future;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.card.api.CardAndCollectionDataStoreAdapter;
+import org.softwareFm.card.api.BasicCardConfigurator;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.IAddItemProcessor;
-import org.softwareFm.card.api.IAfterEditCallback;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardChangedListener;
-import org.softwareFm.card.api.ICardDataStore;
-import org.softwareFm.card.api.ICardDataStoreCallback;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardHolder;
 import org.softwareFm.card.api.IDetailsFactoryCallback;
 import org.softwareFm.card.api.ILineSelectedListener;
-import org.softwareFm.card.api.IMutableCardDataStore;
 import org.softwareFm.card.api.RightClickCategoryResult;
 import org.softwareFm.card.constants.CardConstants;
+import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
+import org.softwareFm.card.dataStore.IAfterEditCallback;
+import org.softwareFm.card.dataStore.ICardDataStore;
+import org.softwareFm.card.dataStore.ICardDataStoreCallback;
+import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.card.editors.IValueEditor;
-import org.softwareFm.card.internal.BasicCardConfigurator;
-import org.softwareFm.card.internal.CardDataStoreForRepository;
-import org.softwareFm.card.internal.CardHolder;
 import org.softwareFm.card.navigation.NavNextHistoryPrevConfig;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.browser.IBrowserPart;
@@ -100,7 +98,7 @@ public class Explorer implements IExplorer {
 	}
 
 	private UnrecognisedJar unrecognisedJar;
-	private CardHolder cardHolder;
+	private ICardHolder cardHolder;
 	private ICallback<String> callbackToGotoUrlAndUpdateDetails;
 	private final IMasterDetailSocial masterDetailSocial;
 	private final CardConfig cardConfig;
@@ -143,11 +141,10 @@ public class Explorer implements IExplorer {
 				return unrecognisedJar;
 			}
 		}, true);
-		cardHolder = masterDetailSocial.createMaster(new IFunction1<Composite, CardHolder>() {
+		cardHolder = masterDetailSocial.createMaster(new IFunction1<Composite, ICardHolder>() {
 			@Override
-			public CardHolder apply(Composite from) throws Exception {
-				CardHolder cardHolder = new CardHolder(from, "loading", "Some title", cardConfig, rootUrl, callbackToGotoUrlAndUpdateDetails);
-				cardHolder.getComposite().setLayout(new CardHolder.CardHolderLayout());
+			public ICardHolder apply(Composite from) throws Exception {
+				ICardHolder cardHolder = ICardHolder.Utils.cardHolderWithLayout(from, "loading", "Some title", cardConfig, rootUrl, callbackToGotoUrlAndUpdateDetails);
 				return cardHolder;
 			}
 		}, true);
@@ -326,7 +323,7 @@ public class Explorer implements IExplorer {
 			Show.display(Explorer.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 				@Override
 				public Composite apply(Composite from) throws Exception {
-					final ICardDataStore cardDataStore = new CardDataStoreForRepository(from, facard);
+					final ICardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(from, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 					final CardConfig cardConfig = new BasicCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 					IMasterDetailSocial masterDetailSocial = new MasterDetailSocial(from, SWT.NULL);

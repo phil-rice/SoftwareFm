@@ -3,6 +3,9 @@ package org.softwareFm.card.api;
 import java.util.Map;
 import java.util.concurrent.Future;
 
+import org.softwareFm.card.dataStore.IAfterEditCallback;
+import org.softwareFm.card.dataStore.ICardDataStoreCallback;
+import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.maps.Maps;

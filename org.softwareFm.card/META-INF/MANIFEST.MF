@@ -10,7 +10,7 @@ Require-Bundle: org.softwareFm.display;bundle-version="1.0.0";visibility:=reexpo
  org.eclipse.ui.forms;bundle-version="3.5.100";visibility:=reexport
 Export-Package: org.softwareFm.card.api,
  org.softwareFm.card.constants,
+ org.softwareFm.card.dataStore,
  org.softwareFm.card.editors,
- org.softwareFm.card.internal,
  org.softwareFm.card.navigation,
  org.softwareFm.card.title

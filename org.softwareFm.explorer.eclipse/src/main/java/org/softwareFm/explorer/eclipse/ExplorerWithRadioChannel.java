@@ -5,14 +5,13 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.card.api.BasicCardConfigurator;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
 import org.softwareFm.card.api.ICardChangedListener;
-import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardHolder;
-import org.softwareFm.card.internal.BasicCardConfigurator;
-import org.softwareFm.card.internal.CardDataStoreForRepository;
+import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.display.browser.BrowserFeedConfigurator;
 import org.softwareFm.display.browser.RssFeedConfigurator;
 import org.softwareFm.display.swt.Swts;
@@ -39,7 +38,7 @@ public class ExplorerWithRadioChannel {
 					Composite buttonPanel = Swts.newComposite(explorerAndButton, SWT.NULL, "ButtonPanel");
 					buttonPanel.setLayout(Swts.Row.getHorizonalNoMarginRowLayout());
 
-					final ICardDataStore cardDataStore = new CardDataStoreForRepository(from, facard);
+					final ICardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(from, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 					final CardConfig cardConfig = new BasicCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 					IMasterDetailSocial masterDetailSocial = new MasterDetailSocial(explorerAndButton, SWT.NULL);

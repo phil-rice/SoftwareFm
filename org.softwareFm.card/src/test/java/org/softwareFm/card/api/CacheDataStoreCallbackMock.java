@@ -3,6 +3,7 @@ package org.softwareFm.card.api;
 import java.util.List;
 import java.util.Map;
 
+import org.softwareFm.card.dataStore.ICardDataStoreCallback;
 import org.softwareFm.utilities.collections.Lists;
 
 public class CacheDataStoreCallbackMock<T> implements ICardDataStoreCallback<T> {

@@ -1,6 +1,8 @@
 package org.softwareFm.card.api;
 
 import org.eclipse.swt.widgets.Control;
+import org.softwareFm.card.dataStore.IAfterEditCallback;
+import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.card.internal.details.IGotDataCallback;
 import org.softwareFm.card.internal.details.IUpdateDataStore;
 import org.softwareFm.display.swt.Swts.Size;

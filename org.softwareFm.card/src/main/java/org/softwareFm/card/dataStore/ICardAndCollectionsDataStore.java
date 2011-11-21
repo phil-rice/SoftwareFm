@@ -1,6 +1,7 @@
-package org.softwareFm.card.api;
+package org.softwareFm.card.dataStore;
 
-import org.softwareFm.card.internal.CardAndCollectionsStatus;
+import org.softwareFm.card.api.CardConfig;
+import org.softwareFm.card.api.ICardHolder;
 
 /** Gets data about a card, and the may ask for follow up data as well.*/
 public interface ICardAndCollectionsDataStore {

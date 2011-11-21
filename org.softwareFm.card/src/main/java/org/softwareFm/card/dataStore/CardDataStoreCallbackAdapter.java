@@ -1,4 +1,4 @@
-package org.softwareFm.card.api;
+package org.softwareFm.card.dataStore;
 
 import java.util.Collections;
 /** An implementation with empty methods of {@link ICardDataStoreCallback}, it treats noData as though an empty map had been returned */

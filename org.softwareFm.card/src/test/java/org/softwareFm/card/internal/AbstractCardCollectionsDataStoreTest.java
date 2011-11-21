@@ -8,7 +8,8 @@ import org.softwareFm.card.api.CardDataStoreFixture;
 import org.softwareFm.card.api.CardFactoryMock;
 import org.softwareFm.card.api.CardMock;
 import org.softwareFm.card.api.ICardFactory;
-import org.softwareFm.card.api.IFollowOnFragment;
+import org.softwareFm.card.dataStore.CardAndCollectionsStatus;
+import org.softwareFm.card.dataStore.IFollowOnFragment;
 import org.softwareFm.display.swt.SwtIntegrationTest;
 
 public abstract class AbstractCardCollectionsDataStoreTest extends SwtIntegrationTest {

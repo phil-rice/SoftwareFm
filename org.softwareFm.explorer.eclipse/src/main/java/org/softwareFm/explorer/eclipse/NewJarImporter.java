@@ -4,9 +4,9 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 import org.softwareFm.card.api.CardConfig;
-import org.softwareFm.card.api.IAfterEditCallback;
-import org.softwareFm.card.api.IMutableCardDataStore;
 import org.softwareFm.card.constants.CardConstants;
+import org.softwareFm.card.dataStore.IAfterEditCallback;
+import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.configuration.ConfigurationConstants;
 import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.display.data.IUrlGeneratorMap;

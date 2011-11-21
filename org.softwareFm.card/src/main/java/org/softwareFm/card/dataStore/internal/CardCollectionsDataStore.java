@@ -1,4 +1,4 @@
-package org.softwareFm.card.internal;
+package org.softwareFm.card.dataStore.internal;
 
 import java.util.List;
 import java.util.Map;
@@ -9,12 +9,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.ICard;
-import org.softwareFm.card.api.ICardAndCollectionDataStoreVisitor;
-import org.softwareFm.card.api.ICardAndCollectionsDataStore;
-import org.softwareFm.card.api.ICardDataStoreCallback;
 import org.softwareFm.card.api.ICardFactory;
 import org.softwareFm.card.api.ICardHolder;
 import org.softwareFm.card.api.LineItem;
+import org.softwareFm.card.dataStore.CardAndCollectionsStatus;
+import org.softwareFm.card.dataStore.ICardAndCollectionDataStoreVisitor;
+import org.softwareFm.card.dataStore.ICardAndCollectionsDataStore;
+import org.softwareFm.card.dataStore.ICardDataStoreCallback;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.future.GatedFuture;

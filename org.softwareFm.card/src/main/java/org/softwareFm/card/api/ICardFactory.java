@@ -4,12 +4,14 @@ import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.card.dataStore.ICardDataStoreCallback;
+import org.softwareFm.card.internal.Card;
 import org.softwareFm.card.internal.CardFactory;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.maps.Maps;
-
 
 public interface ICardFactory {
 
@@ -17,6 +19,13 @@ public interface ICardFactory {
 	ICard makeCard(ICardHolder cardHolder, CardConfig cardConfig, String url, Map<String, Object> map);
 
 	public static class Utils {
+
+		public static ICard createCardWithLayout(Composite parent, CardConfig cardConfig, String url, Map<String, Object> rawData) {
+			Card card = new Card(parent, cardConfig, url, rawData);
+			card.getComposite().setLayout(new Card.CardLayout());
+			return card;
+		}
+
 		public static Future<ICard> makeCard(final ICardHolder cardHolder, final CardConfig cardConfig, String url, final ICallback<ICard> callback) {
 			Future<ICard> cardFuture = cardConfig.cardDataStore.processDataFor(url, new ICardDataStoreCallback<ICard>() {
 				@Override

@@ -3,11 +3,13 @@ package org.softwareFm.card.internal;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.card.api.BasicCardConfigurator;
 import org.softwareFm.card.api.CardAndCollectionDataStoreVisitorMonitored;
 import org.softwareFm.card.api.CardConfig;
 import org.softwareFm.card.api.CardDataStoreFixture;
-import org.softwareFm.card.api.ICardDataStore;
 import org.softwareFm.card.api.ICardFactory;
+import org.softwareFm.card.dataStore.CardAndCollectionsStatus;
+import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.swt.Swts.Size;
