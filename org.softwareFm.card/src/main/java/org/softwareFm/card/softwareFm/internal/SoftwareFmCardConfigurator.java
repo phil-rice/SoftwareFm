@@ -13,6 +13,7 @@ public class SoftwareFmCardConfigurator implements ICardConfigurator {
 		CardConfig baseConfigured = Utils.basicConfigurator().configure(display, config);
 		return baseConfigured.//
 				withNameFn(ILineItemFunction.Utils.softwareFmNameFunction(baseConfigured.resourceGetterFn, CardConstants.namePattern)).//
+				withValueFn(ILineItemFunction.Utils.softwareFmValueFunction(baseConfigured.resourceGetterFn, CardConstants.valuePattern)).//
 				withDefaultChildFn(new SoftwareFmDefaultChildFunction()).//
 				withRightClickCategoriser(new SoftwareFmRightClickCategoriser()).//
 				withUrlGeneratorMap(ICardConfigurator.Utils.makeSoftwareFmUrlGeneratorMap(CardConstants.dataPrefix));//

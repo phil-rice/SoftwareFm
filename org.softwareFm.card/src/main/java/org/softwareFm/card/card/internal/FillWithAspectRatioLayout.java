@@ -9,17 +9,14 @@ import org.eclipse.swt.widgets.Layout;
 import org.softwareFm.display.swt.Swts;
 
 /** Horizonal laid out components. Fills from left. Each control is set to height, with aspect ratio determining the width */
-public class FillWithAspectRatioLayoutManager extends Layout {
+public abstract class FillWithAspectRatioLayout extends Layout {
 
-	private final int widthWeight;
-	private final int heightWeight;
 	private static int globalId;
 	private final int id = globalId++;
 
-	public FillWithAspectRatioLayoutManager(int widthWeight, int heightWeight) {
-		this.widthWeight = widthWeight;
-		this.heightWeight = heightWeight;
-	}
+	abstract protected int getWidthWeight(Composite composite);
+
+	abstract protected int getHeightWeight(Composite composite);
 
 	@Override
 	protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
@@ -31,34 +28,34 @@ public class FillWithAspectRatioLayoutManager extends Layout {
 				int idealWidth = 0;
 				for (Control control : children)
 					idealHeight = Math.max(idealHeight, control.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
-				idealWidth = heightToWidth(idealHeight) * noOfChildren;
+				idealWidth = heightToWidth(composite, idealHeight) * noOfChildren;
 				return new Point(idealWidth, idealHeight);
 			} else {
-				int width = heightToWidth(hHint) * noOfChildren;
+				int width = heightToWidth(composite, hHint) * noOfChildren;
 				return new Point(width, hHint);
 			}
 		else if (hHint == SWT.DEFAULT) {
 			if (noOfChildren == 0)
 				return new Point(wHint, 0);
-			int height = widthToHeight(wHint)/noOfChildren;
+			int height = widthToHeight(composite, wHint) / noOfChildren;
 			return new Point(wHint, height);
 		} else {
-			int heightForwHint = widthToHeight(wHint / noOfChildren);
+			int heightForwHint = widthToHeight(composite, wHint / noOfChildren);
 			int clippedheight = Math.min(heightForwHint, hHint);
-			int widthForClippedHeight = heightToWidth(clippedheight);
+			int widthForClippedHeight = heightToWidth(composite, clippedheight);
 			int width = Math.min(wHint / noOfChildren, widthForClippedHeight);
-			int height = widthToHeight(width);
-			Point result = new Point(width*noOfChildren, height);
+			int height = widthToHeight(composite, width);
+			Point result = new Point(width * noOfChildren, height);
 			return result;
 		}
 	}
 
-	private int widthToHeight(int wHint) {
-		return wHint * heightWeight / widthWeight;
+	private int widthToHeight(Composite composite, int wHint) {
+		return wHint * getHeightWeight(composite) / getWidthWeight(composite);
 	}
 
-	private int heightToWidth(int hHint) {
-		return hHint * widthWeight / heightWeight;
+	private int heightToWidth(Composite composite, int hHint) {
+		return hHint * getWidthWeight(composite) / getHeightWeight(composite);
 	}
 
 	@Override
@@ -66,7 +63,7 @@ public class FillWithAspectRatioLayoutManager extends Layout {
 		Rectangle clientArea = composite.getClientArea();
 		System.out.println("FWAR " + id + " " + Swts.boundsUpToShell(composite) + " clientAreas: " + Swts.clientAreasUpToShell(composite));
 		int height = clientArea.height;
-		int width = heightToWidth(height);
+		int width = heightToWidth(composite, height);
 		int x = clientArea.x;
 		for (Control control : composite.getChildren()) {
 			control.setLocation(x, clientArea.y);

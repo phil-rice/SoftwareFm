@@ -2,7 +2,7 @@ package org.softwareFm.card.card;
 
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
-import org.softwareFm.card.card.internal.CardPopupMenuContributor;
+import org.softwareFm.card.softwareFm.internal.CardPopupMenuContributor;
 
 /** the popup menu is about an item (typically an ICard). This adds items to the menu, prior to it being seen */
 public interface IPopupMenuContributor<T> {

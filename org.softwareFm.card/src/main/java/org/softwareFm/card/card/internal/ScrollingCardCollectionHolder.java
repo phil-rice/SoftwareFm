@@ -24,7 +24,7 @@ public class ScrollingCardCollectionHolder implements IHasControl {
 	public ScrollingCardCollectionHolder(Composite parent, CardConfig cardConfig) {
 		this.content = Swts.newScrolledComposite(parent, SWT.H_SCROLL, getClass().getSimpleName());
 		holder = new CardCollectionHolder(content, cardConfig);
-		holder.getComposite().setLayout(new CardCollectionHolder.CardCollectionHolderLayout());
+		holder.getComposite().setLayout(new CardConfigFillWithAspectRatioLayout());
 		Size.setSizeFromClientArea(content);
 		content.setContent(holder.getControl());
 		final Listener listener = new Listener() {

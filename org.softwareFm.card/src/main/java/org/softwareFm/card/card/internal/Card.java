@@ -203,12 +203,11 @@ public class Card implements ICard, IHasTable {
 				if (index == -1)
 					return;
 				String key = (String) content.table.getItem(index).getData();
-				for (ILineSelectedListener lineSelectedListener : lineSelectedListeners) {
-					lineSelectedListener.selected(Card.this, key, content.data.get(key));
-				}
+				notifyLineSelectedListeners(key);
 				if (!cardConfig.allowSelection)
 					content.table.deselectAll();
 			}
+
 		});
 		addMenuDetectListener(new Listener() {
 			@Override
@@ -229,6 +228,11 @@ public class Card implements ICard, IHasTable {
 				});
 			}
 		});
+	}
+	public void notifyLineSelectedListeners(String key) {
+		for (ILineSelectedListener lineSelectedListener : lineSelectedListeners) {
+			lineSelectedListener.selected(Card.this, key, content.data.get(key));
+		}
 	}
 
 	@Override

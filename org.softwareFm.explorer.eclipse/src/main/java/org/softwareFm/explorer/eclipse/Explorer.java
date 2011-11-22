@@ -77,7 +77,7 @@ public class Explorer implements IExplorer {
 						}
 
 						@Override
-						public void gotData(Control hasControl) {
+						public void gotData(Control control) {
 						}
 
 						@Override

@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.card.ICard;
+import org.softwareFm.card.card.internal.CardConfigFillWithAspectRatioLayout;
 import org.softwareFm.card.card.internal.OneCardHolder;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
@@ -24,6 +25,7 @@ public class CollectionItemDetailAdder implements IDetailAdder {
 			if (object != null && !CardConstants.collection.equals(object)) {// it
 				String url = parentCard.url() + "/" + key;
 				OneCardHolder result = new OneCardHolder(parentComposite, cardConfig, url, key, callback);
+				result.getComposite().setLayout(new CardConfigFillWithAspectRatioLayout());
 				Swts.Size.setSizeFromClientArea(result.getControl());
 				return result;
 			}

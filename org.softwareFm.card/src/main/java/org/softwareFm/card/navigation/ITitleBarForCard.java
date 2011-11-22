@@ -12,6 +12,7 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 public interface ITitleBarForCard extends IHasControl {
 
 	void setUrl(ICard card);
+	
 
 	public static class Utils {
 		public static IFunction1<Map<String, Object>, Image> navIconFn(IFunction1<String, IResourceGetter> resourceGetterFn, IFunction1<String, Image> imageFn) {

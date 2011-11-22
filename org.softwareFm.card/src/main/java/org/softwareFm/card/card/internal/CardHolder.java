@@ -103,18 +103,22 @@ public class CardHolder implements ICardHolder {
 				card.getComposite().setLayout(new Card.CardLayout());
 				title.setUrl(card);
 				 layout();
-//				 Swts.layoutDump(card.getTable().getParent().getParent().getParent());
 
 				card.addLineSelectedListener(new ILineSelectedListener() {
 					@Override
 					public void selected(ICard card, String key, Object value) {
-						for (ILineSelectedListener listener : lineListeners)
-							listener.selected(card, key, value);
+						notifyListSelectedListeners(card, key, value);
 					}
+
 				});
 			} catch (Exception e) {
 				throw WrappedException.wrap(e);
 			}
+		}
+		
+		public void notifyListSelectedListeners(ICard card, String key, Object value) {
+			for (ILineSelectedListener listener : lineListeners)
+				listener.selected(card, key, value);
 		}
 	}
 

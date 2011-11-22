@@ -62,11 +62,11 @@ public class CardDataStoreFixture {
 			url2c, data2cp,//
 	};
 	public static final Object[] dataIndexedByUrlFragment = new Object[] { "some", Maps.newMap(),//
-			"1a", data1a, //
-			"1b", data1b,//
-			"2a", data2a,//
-			"2b", data2b,//
-			"2c", data2c,//
+			"1a", data1ap, //
+			"1b", data1bp,//
+			"2a", data2ap,//
+			"2b", data2bp,//
+			"2c", data2cp,//
 	};
 
 	public static CardConfig syncCardConfig(Device device) {

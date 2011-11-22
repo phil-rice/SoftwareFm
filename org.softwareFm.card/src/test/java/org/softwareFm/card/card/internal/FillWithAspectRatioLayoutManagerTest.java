@@ -75,7 +75,7 @@ public class FillWithAspectRatioLayoutManagerTest extends SwtIntegrationTest {
 		Composite composite = new Composite(shell, SWT.BORDER);
 		composite.setSize(width, height);
 		try {
-			FillWithAspectRatioLayoutManager layout = makeComponent(weights, numOfControls, composite);
+			FillWithAspectRatioLayout layout = makeComponent(weights, numOfControls, composite);
 			layout.layout(composite, true);
 			Control[] children = composite.getChildren();
 			Rectangle ca = composite.getClientArea();
@@ -96,7 +96,7 @@ public class FillWithAspectRatioLayoutManagerTest extends SwtIntegrationTest {
 	private void checkComputeSize(int wHint, int hHint, Point weights, int numOfControls, Point expectedSize) {
 		Composite composite = new Composite(shell, SWT.BORDER);
 		try {
-			FillWithAspectRatioLayoutManager layout = makeComponent(weights, numOfControls, composite);
+			FillWithAspectRatioLayout layout = makeComponent(weights, numOfControls, composite);
 			Point actual = layout.computeSize(composite, wHint, hHint, true);
 			assertEquals(expectedSize, actual);
 		} finally {
@@ -104,8 +104,19 @@ public class FillWithAspectRatioLayoutManagerTest extends SwtIntegrationTest {
 		}
 	}
 
-	private FillWithAspectRatioLayoutManager makeComponent(Point weights, int numOfControls, Composite composite) {
-		FillWithAspectRatioLayoutManager layout = new FillWithAspectRatioLayoutManager(weights.x, weights.y);
+	private FillWithAspectRatioLayout makeComponent(final Point weights, int numOfControls, Composite composite) {
+		FillWithAspectRatioLayout layout = new FillWithAspectRatioLayout(){
+			@Override
+			protected int getWidthWeight(Composite composite) {
+				return weights.x;
+			}
+
+			@Override
+			protected int getHeightWeight(Composite composite) {
+				return weights.y;
+			}
+			
+		};
 		composite.setLayout(layout);
 		List<Object> controls = Lists.newList();
 		for (int i = 0; i < numOfControls; i++) {

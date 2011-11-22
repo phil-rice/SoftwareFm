@@ -33,6 +33,6 @@ public interface ICard extends IHasComposite, IHasTable {
 
 	/** What url on the server does this card represent? */
 	String url();
-	
+
 
 }
