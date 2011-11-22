@@ -10,7 +10,6 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.configuration.CardConfig;
-import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.dataStore.CardDataStoreMock;
@@ -19,6 +18,7 @@ import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.callbacks.MemoryCallback;
 import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwarefm.collections.ICollectionConfigurationFactory;
 
 public class NewJarImporterTest extends TestCase {
 
@@ -65,7 +65,7 @@ public class NewJarImporterTest extends TestCase {
 						callback.afterEdit(url);
 						return Futures.doneFuture(null);
 					}
-				}).withUrlGeneratorMap(ICardConfigurator.Utils.makeSoftwareFmUrlGeneratorMap("/prefix/"));
+				}).withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap("/prefix/"));
 	}
 
 }

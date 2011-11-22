@@ -18,7 +18,6 @@ import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.card.ILineSelectedListener;
 import org.softwareFm.card.card.RightClickCategoryResult;
 import org.softwareFm.card.configuration.CardConfig;
-import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.dataStore.IAfterEditCallback;
@@ -46,6 +45,7 @@ import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.services.IServiceExecutor;
 import org.softwareFm.utilities.strings.Strings;
+import org.softwarefm.collections.ICollectionConfigurationFactory;
 
 public class Explorer implements IExplorer {
 
@@ -325,7 +325,7 @@ public class Explorer implements IExplorer {
 				public Composite apply(Composite from) throws Exception {
 					final ICardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(from, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
-					final CardConfig cardConfig = ICardConfigurator.Utils.softwareFmConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
+					final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 					IMasterDetailSocial masterDetailSocial = new MasterDetailSocial(from, SWT.NULL);
 					IExplorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, service, IPlayListGetter.Utils.noPlayListGetter());
 					explorer.displayCard(firstUrl);

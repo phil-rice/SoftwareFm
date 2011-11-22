@@ -13,6 +13,7 @@ import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.IPopupMenuContributor;
 import org.softwareFm.card.card.IRightClickCategoriser;
 import org.softwareFm.card.card.LineItem;
+import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.ICardAndCollectionsDataStore;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.card.dataStore.IFollowOnFragment;
@@ -132,6 +133,7 @@ public class CardConfig {
 				new ResourceGetterMock("card.name.title", "Name", //
 						"card.value.title", "Value", //
 						DisplayConstants.buttonOkTitle, "Ok",//
+						CardConstants.buttonTestTitle, "Test",//
 						DisplayConstants.buttonCancelTitle, "Cancel",//
 						"navBar.prev.title", "<", //
 						"navBar.next.title", ">",//

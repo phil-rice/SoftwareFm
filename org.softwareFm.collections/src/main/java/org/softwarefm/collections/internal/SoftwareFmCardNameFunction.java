@@ -1,17 +1,18 @@
-package org.softwareFm.card.softwareFm.internal;
+package org.softwarefm.collections.internal;
 
 import java.util.Map;
 
+import org.softwareFm.card.card.AbstractLineItemFunction;
 import org.softwareFm.card.card.LineItem;
-import org.softwareFm.card.card.internal.CardNameFunction;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.resources.IResourceGetter;
 
-public class SoftwareFmCardNameFunction extends CardNameFunction {
+public class SoftwareFmCardNameFunction extends AbstractLineItemFunction<String> {
 
-	public SoftwareFmCardNameFunction(IFunction1<String, IResourceGetter> resourceGetterFn, String namePattern) {
-		super(resourceGetterFn, namePattern);
+	private final IFunction1<LineItem, String> delegate;
+
+	public SoftwareFmCardNameFunction(IFunction1<LineItem, String> delegate) {
+		this.delegate = delegate;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -23,6 +24,6 @@ public class SoftwareFmCardNameFunction extends CardNameFunction {
 			if (CardConstants.group.equals(resourceType))
 				return from.key;
 		}
-		return super.apply(from);
+		return delegate.apply(from);
 	}
 }

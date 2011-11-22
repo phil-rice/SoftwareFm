@@ -21,7 +21,6 @@ import org.eclipse.swt.widgets.Text;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.configuration.CardConfig;
-import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.editors.OKCancelWithBorder;
@@ -36,6 +35,7 @@ import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.strings.Strings;
+import org.softwarefm.collections.ICollectionConfigurationFactory;
 
 public class UnrecognisedJar implements IHasComposite {
 
@@ -198,7 +198,7 @@ public class UnrecognisedJar implements IHasComposite {
 		Show.displayNoLayout(UnrecognisedJar.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay()).withUrlGeneratorMap(ICardConfigurator.Utils.makeSoftwareFmUrlGeneratorMap("/prefix/"));
+				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay()).withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap("/prefix/"));
 				UnrecognisedJar unrecognisedJar = new UnrecognisedJar(from, SWT.NULL, cardConfig, ICallback.Utils.<String>sysoutCallback());
 				unrecognisedJar.setFileAndDigest(new File("a/b/c/jarFile.jar"), "01234567Test");
 				unrecognisedJar.getComposite().setLayout(new UnrecognisedJarLayout());

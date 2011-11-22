@@ -7,7 +7,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.configuration.CardConfig;
-import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.display.browser.BrowserFeedConfigurator;
 import org.softwareFm.display.browser.RssFeedConfigurator;
@@ -19,6 +18,7 @@ import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.services.IServiceExecutor;
+import org.softwarefm.collections.ICollectionConfigurationFactory;
 
 public class ExplorerUnit {
 
@@ -53,7 +53,7 @@ public class ExplorerUnit {
 				public Explorer makeChild(Composite parent) throws Exception {
 					final ICardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(parent, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
-					final CardConfig cardConfig = ICardConfigurator.Utils.softwareFmConfigurator().configure(parent.getDisplay(), new CardConfig(cardFactory, cardDataStore));
+					final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(parent.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 					IMasterDetailSocial masterDetailSocial = new MasterDetailSocial(parent, SWT.NULL);
 					Explorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, service, IPlayListGetter.Utils.noPlayListGetter());
 					new BrowserFeedConfigurator().configure( explorer);

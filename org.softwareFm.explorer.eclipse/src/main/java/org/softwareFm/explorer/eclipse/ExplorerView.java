@@ -8,7 +8,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.configuration.CardConfig;
-import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.card.dataStore.ICardDataStoreCallback;
@@ -23,6 +22,7 @@ import org.softwareFm.jdtBinding.api.JdtConstants;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwarefm.collections.ICollectionConfigurationFactory;
 
 public class ExplorerView extends ViewPart {
 
@@ -32,7 +32,7 @@ public class ExplorerView extends ViewPart {
 
 		final String rootUrl = "/softwareFm/data";
 		IRepositoryFacard repository = activator.getRepository();
-		final CardConfig cardConfig =ICardConfigurator.Utils.softwareFmConfigurator().configure(parent.getDisplay(), new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(parent, repository)));
+		final CardConfig cardConfig =ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(parent.getDisplay(), new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(parent, repository)));
 		MasterDetailSocial masterDetailSocial = new MasterDetailSocial(parent, SWT.NULL);
 		Size.resizeMeToParentsSize(masterDetailSocial.getControl());
 

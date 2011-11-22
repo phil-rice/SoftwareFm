@@ -1,4 +1,4 @@
-package org.softwareFm.card.softwareFm.internal;
+package org.softwarefm.collections.internal;
 
 import java.util.Map;
 import java.util.Map.Entry;

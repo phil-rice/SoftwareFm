@@ -10,7 +10,6 @@ import org.softwareFm.card.card.ICardChangedListener;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.configuration.CardConfig;
-import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.display.browser.BrowserFeedConfigurator;
 import org.softwareFm.display.browser.RssFeedConfigurator;
@@ -21,6 +20,7 @@ import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.services.IServiceExecutor;
+import org.softwarefm.collections.ICollectionConfigurationFactory;
 
 public class ExplorerWithRadioChannel {
 	public static void main(String[] args) {
@@ -40,7 +40,7 @@ public class ExplorerWithRadioChannel {
 
 					final ICardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(from, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
-					final CardConfig cardConfig = ICardConfigurator.Utils.softwareFmConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
+					final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 					IMasterDetailSocial masterDetailSocial = new MasterDetailSocial(explorerAndButton, SWT.NULL);
 					final IExplorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, service, new ArtifactPlayListGetter(cardDataStore));
 

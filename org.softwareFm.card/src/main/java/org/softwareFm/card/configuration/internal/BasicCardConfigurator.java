@@ -2,6 +2,7 @@ package org.softwareFm.card.configuration.internal;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ILineItemFunction;
 import org.softwareFm.card.card.IPopupMenuContributor;
 import org.softwareFm.card.configuration.CardConfig;
@@ -13,7 +14,6 @@ import org.softwareFm.card.details.IDetailFactory;
 import org.softwareFm.card.editors.IEditorDetailAdder;
 import org.softwareFm.card.modifiers.ICardDataModifier;
 import org.softwareFm.card.navigation.ITitleBarForCard;
-import org.softwareFm.card.softwareFm.internal.SoftwareFmRightClickCategoriser;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -26,10 +26,9 @@ public class BasicCardConfigurator implements ICardConfigurator {
 		final IFunction1<String, IResourceGetter> resourceGetterFn = Utils.resourceGetterFn(CardConfig.class, "Card");
 		IFunction1<String, Image> imageFn = Utils.imageFn(display, new BasicImageRegisterConfigurator());
 
-
 		return config.//
 				withImageFn(imageFn).//
-				withNameFn(ILineItemFunction.Utils.softwareFmNameFunction(resourceGetterFn, CardConstants.namePattern)).//
+				withNameFn(ILineItemFunction.Utils.nameFunction(resourceGetterFn, CardConstants.namePattern)).//
 				withValueFn(ILineItemFunction.Utils.valueFunction(resourceGetterFn, CardConstants.valuePattern)).//
 				withHideFn(ILineItemFunction.Utils.hideFunction(resourceGetterFn, CardConstants.keysHideKey)).//
 				withResourceGetterFn(resourceGetterFn).//
@@ -45,11 +44,10 @@ public class BasicCardConfigurator implements ICardConfigurator {
 						ICardDataModifier.Utils.missingItems(), //
 						ICardDataModifier.Utils.sorter(CardConstants.version)).//
 				withFollowOn(IFollowOnFragment.Utils.followOnMaps).//
-				withRightClickCategoriser(new SoftwareFmRightClickCategoriser()).//
+
 				withTitleSpecFn(TitleSpec.cardToTitleSpecFn(display, imageFn)).//
-				withPopupMenuContributor(IPopupMenuContributor.Utils.cardPopupMenuContributor()).//
+				withPopupMenuContributor(IPopupMenuContributor.Utils.<ICard> noContributor()).//
 				withEditorFn(IEditorDetailAdder.Utils.defaultEditorFn());
 	}
-
 
 }

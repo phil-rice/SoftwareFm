@@ -35,7 +35,7 @@ public class UrlEditor implements IValueEditorForTests {
 
 		@Override
 		protected void addAnyMoreButtons() {
-			testButton = okCancel.addButton(CardConstants.testButtonKey, new Runnable() {
+			testButton = okCancel.addButton(CardConstants.buttonTestTitle, new Runnable() {
 				@Override
 				public void run() {
 					try {

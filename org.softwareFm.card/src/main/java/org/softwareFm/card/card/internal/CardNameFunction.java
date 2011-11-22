@@ -2,12 +2,13 @@ package org.softwareFm.card.card.internal;
 
 import java.text.MessageFormat;
 
+import org.softwareFm.card.card.AbstractLineItemFunction;
 import org.softwareFm.card.card.LineItem;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
 
-public class CardNameFunction extends AbstractLineItemToStringFunction<String> {
+public class CardNameFunction extends AbstractLineItemFunction<String> {
 	private final IFunction1<String, IResourceGetter> resourceGetterFn;
 	private final String namePattern;
 

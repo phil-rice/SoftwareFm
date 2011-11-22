@@ -3,7 +3,6 @@ package org.softwareFm.card.card;
 import java.util.Map;
 
 import org.softwareFm.card.card.RightClickCategoryResult.Type;
-import org.softwareFm.card.softwareFm.internal.SoftwareFmRightClickCategoriser;
 
 /** Determines information about the item that has just been right clicked on in the card */
 public interface IRightClickCategoriser {
@@ -20,11 +19,6 @@ public interface IRightClickCategoriser {
 					return new RightClickCategoryResult(Type.NOT_COLLECTION, null, key, url);
 				}
 			};
-		}
-
-		// TODO Move this into a different project
-		public static IRightClickCategoriser softwareFmRightClickCategoriser() {
-			return new SoftwareFmRightClickCategoriser();
 		}
 
 	}

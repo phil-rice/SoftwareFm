@@ -1,17 +1,17 @@
-package org.softwareFm.card.softwareFm.internal;
+package org.softwarefm.collections.internal;
 
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.softwareFm.card.card.AbstractLineItemFunction;
 import org.softwareFm.card.card.LineItem;
-import org.softwareFm.card.card.internal.AbstractLineItemToStringFunction;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
 
-public class SoftwareFmCardValueFunction extends AbstractLineItemToStringFunction<String> {
+public class SoftwareFmCardValueFunction extends AbstractLineItemFunction<String> {
 	private final IFunction1<String, IResourceGetter> resourceGetterFn;
 	private final String valuePattern;
 

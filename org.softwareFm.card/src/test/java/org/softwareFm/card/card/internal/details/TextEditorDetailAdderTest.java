@@ -1,5 +1,6 @@
 package org.softwareFm.card.card.internal.details;
 
+import org.softwareFm.card.editors.IEditorDetailAdder;
 import org.softwareFm.card.editors.internal.TextEditor;
 import org.softwareFm.card.editors.internal.TextEditorDetailAdder;
 
@@ -7,7 +8,7 @@ public class TextEditorDetailAdderTest extends AbstractValueEditorDetailAdderTes
 
 	@Override
 	protected TextEditorDetailAdder makeDetailsAdder() {
-		return new TextEditorDetailAdder();
+		return (TextEditorDetailAdder) IEditorDetailAdder.Utils.text();
 	}
 
 }

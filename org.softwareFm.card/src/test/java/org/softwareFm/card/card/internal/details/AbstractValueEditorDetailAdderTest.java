@@ -71,7 +71,7 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 		Button okButton = textEditor.getOkCancel().okButton;
 		assertFalse(okButton.isEnabled());
 
-		textEditor.setValue("some other value");
+		textEditor.setValue("someothervalue");
 		assertTrue(okButton.isEnabled());
 
 		textEditor.setValue(Functions.call(cardConfig.valueFn, stringValue));

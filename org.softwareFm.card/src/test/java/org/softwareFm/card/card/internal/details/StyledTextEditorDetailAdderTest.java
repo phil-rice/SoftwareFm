@@ -3,6 +3,7 @@ package org.softwareFm.card.card.internal.details;
 import org.softwareFm.card.card.LineItem;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
+import org.softwareFm.card.editors.IEditorDetailAdder;
 import org.softwareFm.card.editors.internal.StyledTextEditor;
 import org.softwareFm.card.editors.internal.StyledTextEditorDetailAdder;
 import org.softwareFm.display.data.ResourceGetterMock;
@@ -42,7 +43,7 @@ public class StyledTextEditorDetailAdderTest extends AbstractDetailsAdderTest<St
 
 	@Override
 	protected StyledTextEditorDetailAdder makeDetailsAdder() {
-		return new StyledTextEditorDetailAdder();
+		return (StyledTextEditorDetailAdder) IEditorDetailAdder.Utils.styledText();
 	}
 
 }

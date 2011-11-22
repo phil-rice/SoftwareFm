@@ -10,10 +10,10 @@ import org.softwareFm.card.card.ICardChangedListener;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.card.configuration.internal.BasicCardConfigurator;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreVisitorMonitored;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.card.dataStore.internal.CardDataStoreForRepository;
-import org.softwareFm.card.softwareFm.internal.SoftwareFmCardConfigurator;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.swt.Swts.Size;
@@ -77,7 +77,7 @@ public class SingleCardExplorer implements IHasComposite {
 				public Composite apply(final Composite from) throws Exception {
 					final ICardDataStore cardDataStore = new CardDataStoreForRepository(from, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
-					final CardConfig cardConfig = new SoftwareFmCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
+					final CardConfig cardConfig = new BasicCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 					IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null,"navBar.prev.title");
 					final SingleCardExplorer cardExplorer = new SingleCardExplorer(from, cardConfig, rootUrl);
 					cardExplorer.setUrl(firstUrl);
