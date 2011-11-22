@@ -37,8 +37,10 @@ public class FillWithAspectRatioLayoutManager extends Layout {
 				int width = heightToWidth(hHint) * noOfChildren;
 				return new Point(width, hHint);
 			}
-		else if 						(hHint == SWT.DEFAULT) {
-			int height = widthToHeight(wHint);
+		else if (hHint == SWT.DEFAULT) {
+			if (noOfChildren == 0)
+				return new Point(wHint, 0);
+			int height = widthToHeight(wHint)/noOfChildren;
 			return new Point(wHint, height);
 		} else {
 			int heightForwHint = widthToHeight(wHint / noOfChildren);
@@ -46,7 +48,7 @@ public class FillWithAspectRatioLayoutManager extends Layout {
 			int widthForClippedHeight = heightToWidth(clippedheight);
 			int width = Math.min(wHint / noOfChildren, widthForClippedHeight);
 			int height = widthToHeight(width);
-			Point result = new Point(width, height);
+			Point result = new Point(width*noOfChildren, height);
 			return result;
 		}
 	}
@@ -62,7 +64,7 @@ public class FillWithAspectRatioLayoutManager extends Layout {
 	@Override
 	protected void layout(Composite composite, boolean flushCache) {
 		Rectangle clientArea = composite.getClientArea();
-		System.out.println("FWAR " +id  + " " +Swts.boundsUpToShell(composite) + " clientAreas: " + Swts.clientAreasUpToShell(composite));
+		System.out.println("FWAR " + id + " " + Swts.boundsUpToShell(composite) + " clientAreas: " + Swts.clientAreasUpToShell(composite));
 		int height = clientArea.height;
 		int width = heightToWidth(height);
 		int x = clientArea.x;
