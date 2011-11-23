@@ -372,9 +372,9 @@ public class Strings {
 		String[] right = o2.split("[\\.-]");
 		for (int i = 0; i < Math.max(left.length, right.length); i++) {
 			if (i >= left.length)
-				return 1;
-			if (i >= right.length)
 				return -1;
+			if (i >= right.length)
+				return 1;
 			String l = left[i];
 			String r = right[i];
 			if (numRegEx.matcher(l).matches() && numRegEx.matcher(r).matches()) {

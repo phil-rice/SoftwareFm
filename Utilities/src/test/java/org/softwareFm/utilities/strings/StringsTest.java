@@ -75,6 +75,10 @@ public class StringsTest extends TestCase {
 		assertEquals(1, Strings.compareVersionNumbers("1.3.1", "1.2.1"));
 		assertEquals(1, Strings.compareVersionNumbers("2.1.1", "1.2.1"));
 
+		assertEquals(-1, Strings.compareVersionNumbers("1.2", "1.2.1"));
+		assertEquals(1, Strings.compareVersionNumbers("1.2.1", "1.2"));
+
+		
 		assertEquals(0, Strings.compareVersionNumbers("1.2.11", "1.2.11"));
 		assertEquals(-9, Strings.compareVersionNumbers("1.2.2", "1.2.11"));
 		assertEquals(-111, Strings.compareVersionNumbers("1.2.11", "1.113.1"));
