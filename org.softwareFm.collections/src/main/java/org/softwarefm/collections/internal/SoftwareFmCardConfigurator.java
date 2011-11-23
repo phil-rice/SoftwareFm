@@ -17,6 +17,7 @@ public class SoftwareFmCardConfigurator implements ICardConfigurator {
 				withValueFn(ICollectionConfigurationFactory.Utils.softwareFmValueFunction(baseConfigured.resourceGetterFn, CardConstants.valuePattern)).//
 				withDefaultChildFn(ICollectionConfigurationFactory.Utils.softwareFmDefaultChildFunction()).//
 				withRightClickCategoriser(ICollectionConfigurationFactory.Utils.softwareFmRightClickCategoriser()).//
+				withPopupMenuContributor(ICollectionConfigurationFactory.Utils.softwareFmPopupMenuContributor()).//
 				withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap(CardConstants.dataPrefix));//
 
 	}

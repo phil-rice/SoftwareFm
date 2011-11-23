@@ -2,6 +2,7 @@ package org.softwarefm.collections;
 
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ILineItemFunction;
+import org.softwareFm.card.card.IPopupMenuContributor;
 import org.softwareFm.card.card.IRightClickCategoriser;
 import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.constants.CardConstants;
@@ -9,6 +10,7 @@ import org.softwareFm.display.data.IUrlGeneratorMap;
 import org.softwareFm.display.urlGenerator.UrlGenerator;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwarefm.collections.internal.CardPopupMenuContributor;
 import org.softwarefm.collections.internal.SoftwareFmCardConfigurator;
 import org.softwarefm.collections.internal.SoftwareFmCardNameFunction;
 import org.softwarefm.collections.internal.SoftwareFmCardValueFunction;
@@ -34,6 +36,10 @@ public interface ICollectionConfigurationFactory {
 			return new SoftwareFmRightClickCategoriser();
 		}
 
+		public static IPopupMenuContributor<ICard> softwareFmPopupMenuContributor(){
+			return new CardPopupMenuContributor();
+		}
+		
 		public static IUrlGeneratorMap makeSoftwareFmUrlGeneratorMap(String prefix) {
 			final IUrlGeneratorMap urlGeneratorMap = IUrlGeneratorMap.Utils.urlGeneratorMap(//
 					CardConstants.urlGroupKey, new UrlGenerator(prefix + "{3}/{2}", "groupId"),// hash, hash, groupId, groundIdWithSlash
