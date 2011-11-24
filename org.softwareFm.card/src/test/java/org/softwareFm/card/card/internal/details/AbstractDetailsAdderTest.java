@@ -2,14 +2,15 @@ package org.softwareFm.card.card.internal.details;
 
 import java.util.Arrays;
 
+import org.softwareFm.card.card.ILineItemFunction;
 import org.softwareFm.card.card.LineItem;
 import org.softwareFm.card.card.internal.CardCollectionHolder;
 import org.softwareFm.card.card.internal.ScrollingCardCollectionHolder;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.details.IDetailAdder;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.card.details.internal.DetailFactory;
 import org.softwareFm.display.composites.IHasControl;
-import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.strings.Strings;
 
 public abstract class AbstractDetailsAdderTest<T extends IDetailAdder> extends AbstractDetailTest {
@@ -27,7 +28,7 @@ public abstract class AbstractDetailsAdderTest<T extends IDetailAdder> extends A
 	abstract protected T makeDetailsAdder();
 
 	protected void checkGetCardCollectionsHolder(LineItem lineItem, String expectedUrl) {
-		IHasControl actual = adder.add(shell, parentCard, cardConfig, lineItem.key, lineItem.value,IDetailsFactoryCallback.Utils.noCallback());
+		IHasControl actual = adder.add(shell, parentCard, cardConfig, lineItem.key, lineItem.value, IDetailsFactoryCallback.Utils.noCallback());
 		ScrollingCardCollectionHolder scrollingHolder = (ScrollingCardCollectionHolder) actual;
 		CardCollectionHolder holder = scrollingHolder.getCardHolder();
 		assertSame(lineItem.key, holder.getKey());
@@ -35,19 +36,18 @@ public abstract class AbstractDetailsAdderTest<T extends IDetailAdder> extends A
 		assertEquals(expectedUrl, holder.getRootUrl());
 	}
 
-
 	protected void noEdittingHappensWithThisDetail() {
 	}
 
-	protected IFunction1<LineItem, String> justValue = new IFunction1<LineItem, String>() {
+	protected ILineItemFunction<String> justValue = new ILineItemFunction<String>() {
 		@Override
-		public String apply(LineItem from) throws Exception {
+		public String apply(CardConfig cardConfig, LineItem from) {
 			return Strings.nullSafeToString(from.value);
 		}
 	};
-	protected IFunction1<LineItem, String> addPrefixToValue = new IFunction1<LineItem, String>() {
+	protected ILineItemFunction<String> addPrefixToValue = new ILineItemFunction<String>() {
 		@Override
-		public String apply(LineItem from) throws Exception {
+		public String apply(CardConfig cardConfig, LineItem from){
 			return "pre_" + from.value;
 		}
 	};

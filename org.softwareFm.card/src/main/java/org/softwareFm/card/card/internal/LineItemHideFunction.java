@@ -7,6 +7,7 @@ import java.util.concurrent.Callable;
 
 import org.softwareFm.card.card.ILineItemFunction;
 import org.softwareFm.card.card.LineItem;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
@@ -23,7 +24,7 @@ public class LineItemHideFunction implements ILineItemFunction<Boolean> {
 	}
 
 	@Override
-	public Boolean apply(final LineItem from) throws Exception {
+	public Boolean apply(CardConfig cardConfig,  final LineItem from) {
 		Set<String> keysToHide = Maps.findOrCreate(cache, from.cardType, new Callable<Set<String>>() {
 			@Override
 			public Set<String> call() throws Exception {

@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import org.softwareFm.card.card.AbstractLineItemFunction;
 import org.softwareFm.card.card.LineItem;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
@@ -21,7 +22,7 @@ public class SoftwareFmCardValueFunction extends AbstractLineItemFunction<String
 	}
 
 	@Override
-	public String apply(LineItem from) throws Exception {
+	public String apply(CardConfig cardConfig, LineItem from) {
 		String key = findKey(from);
 		String fullKey = MessageFormat.format(valuePattern, key);
 		String pattern = IResourceGetter.Utils.get(resourceGetterFn, from.cardType, fullKey);

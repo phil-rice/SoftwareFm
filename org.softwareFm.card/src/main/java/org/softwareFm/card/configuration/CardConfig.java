@@ -10,6 +10,7 @@ import org.eclipse.swt.graphics.Image;
 import org.softwareFm.card.card.IAddItemProcessor;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardFactory;
+import org.softwareFm.card.card.ILineItemFunction;
 import org.softwareFm.card.card.IPopupMenuContributor;
 import org.softwareFm.card.card.IRightClickCategoriser;
 import org.softwareFm.card.card.LineItem;
@@ -110,11 +111,11 @@ public class CardConfig {
 	/** Given a line on a card, find an image for that line */
 	public final IFunction1<LineItem, Image> iconFn;
 	/** Given a line on a card, find the display name for that line */
-	public final IFunction1<LineItem, String> nameFn;
+	public final ILineItemFunction<String> nameFn;
 	/** Given a line on a card, find the value for that line */
-	public final IFunction1<LineItem, String> valueFn;
+	public final ILineItemFunction<String> valueFn;
 	/** Given a line on a card, should it be displayed? */
-	public final IFunction1<LineItem, Boolean> hideFn;
+	public final ILineItemFunction<Boolean> hideFn;
 
 	/** Given the data in a card, which is the item that should be (by default) shown in the details area. */
 	public final IFunction1<ICard, String> defaultChildFn;
@@ -153,9 +154,9 @@ public class CardConfig {
 		this.cardTitleFn = defaultCardTitleFn;
 		this.imageFn = Functions.constant(null);
 		this.iconFn = Functions.constant(null);
-		this.nameFn = LineItem.Utils.keyFn();
-		this.valueFn = LineItem.Utils.valueAsStrFn();
-		this.hideFn = Functions.constant(false);
+		this.nameFn = LineItem.Utils.keyLineItemFn();
+		this.valueFn = LineItem.Utils.valueAsStrLineItemFn();
+		this.hideFn = ILineItemFunction.Utils.falseFn();
 		this.defaultChildFn = Functions.constant(null);
 		this.titleSpecFn = Functions.expectionIfCalled();
 		this.leftMargin = defaultMargin;
@@ -177,7 +178,7 @@ public class CardConfig {
 		this.editorFn = Functions.constant(null);
 	}
 
-	private CardConfig(IFunction1<String, IResourceGetter> resourceGetterFn, IDetailFactory detailFactory, ICardFactory cardFactory, ICardDataStore cardDataStore, int style, boolean allowSelection, IFunction1<ICard, String> cardTitleFn, IFunction1<String, Image> imageFn, IFunction1<LineItem, Image> iconFn, IFunction1<LineItem, String> nameFn, IFunction1<LineItem, String> valueFn, IFunction1<ICard, String> defaultChildFn, IFunction1<LineItem, Boolean> hideFn, int leftMargin, int rightMargin, int topMargin, int bottomMargin, int navBarHeight, IFunction1<Map<String, Object>, Image> navIconFn, List<ICardDataModifier> keyValueModifiers, IFollowOnFragment followOnFragment, IFunction1<ICard, TitleSpec> titleSpecFn, IRightClickCategoriser rightClickCategoriser, IUrlGeneratorMap urlGeneratorMap, IPopupMenuContributor<ICard> popupMenuContributor, IAddItemProcessor addItemProcessor, IFunction1<String, IEditorDetailAdder> editorFn) {
+	private CardConfig(IFunction1<String, IResourceGetter> resourceGetterFn, IDetailFactory detailFactory, ICardFactory cardFactory, ICardDataStore cardDataStore, int style, boolean allowSelection, IFunction1<ICard, String> cardTitleFn, IFunction1<String, Image> imageFn, IFunction1<LineItem, Image> iconFn, ILineItemFunction<String> nameFn, ILineItemFunction<String> valueFn, IFunction1<ICard, String> defaultChildFn, ILineItemFunction<Boolean> hideFn, int leftMargin, int rightMargin, int topMargin, int bottomMargin, int navBarHeight, IFunction1<Map<String, Object>, Image> navIconFn, List<ICardDataModifier> keyValueModifiers, IFollowOnFragment followOnFragment, IFunction1<ICard, TitleSpec> titleSpecFn, IRightClickCategoriser rightClickCategoriser, IUrlGeneratorMap urlGeneratorMap, IPopupMenuContributor<ICard> popupMenuContributor, IAddItemProcessor addItemProcessor, IFunction1<String, IEditorDetailAdder> editorFn) {
 		this.resourceGetterFn = resourceGetterFn;
 		this.detailFactory = detailFactory;
 		this.cardFactory = cardFactory;
@@ -215,15 +216,15 @@ public class CardConfig {
 		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, popupMenuContributor, addItemProcessor, editorFn);
 	}
 
-	public CardConfig withNameFn(IFunction1<LineItem, String> nameFn) {
+	public CardConfig withNameFn(ILineItemFunction<String> nameFn) {
 		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, popupMenuContributor, addItemProcessor, editorFn);
 	}
 
-	public CardConfig withHideFn(IFunction1<LineItem, Boolean> hideFn) {
+	public CardConfig withHideFn(ILineItemFunction<Boolean> hideFn) {
 		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, popupMenuContributor, addItemProcessor, editorFn);
 	}
 
-	public CardConfig withValueFn(IFunction1<LineItem, String> valueFn) {
+	public CardConfig withValueFn(ILineItemFunction<String> valueFn) {
 		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, popupMenuContributor, addItemProcessor, editorFn);
 	}
 
@@ -312,6 +313,33 @@ public class CardConfig {
 	public static IResourceGetter resourceGetter(ICard card) {
 		CardConfig cardConfig = card.cardConfig();
 		return Functions.call(cardConfig.resourceGetterFn, card.cardType());
+	}
+
+	public IFunction1<LineItem, String> valueFn() {
+		return new IFunction1<LineItem, String>() {
+			@Override
+			public String apply(LineItem from) throws Exception {
+				return valueFn.apply(CardConfig.this, from);
+			}
+		};
+	}
+
+	public IFunction1<LineItem, String> nameFn() {
+		return new IFunction1<LineItem, String>() {
+			@Override
+			public String apply(LineItem from) throws Exception {
+				return nameFn.apply(CardConfig.this, from);
+			}
+		};
+	}
+
+	public IFunction1<LineItem, Boolean> hideFn() {
+		return new IFunction1<LineItem, Boolean>() {
+			@Override
+			public Boolean apply(LineItem from) throws Exception {
+				return hideFn.apply(CardConfig.this, from);
+			}
+		};
 	}
 
 }

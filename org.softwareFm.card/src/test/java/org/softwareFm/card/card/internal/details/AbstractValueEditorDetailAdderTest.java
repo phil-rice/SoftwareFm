@@ -7,6 +7,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.junit.Test;
+import org.softwareFm.card.card.ILineItemFunction;
 import org.softwareFm.card.card.LineItem;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.IMutableCardDataStore;
@@ -16,7 +17,6 @@ import org.softwareFm.card.editors.internal.IValueEditorForTests;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.resources.ResourceGetterMock;
 import org.softwareFm.utilities.runnable.Runnables;
@@ -46,7 +46,7 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 		checkHasLabelBasedOnCardConfigNameFn("pre_stringValue", addPrefixToValue);
 	}
 
-	private void checkHasLabelBasedOnCardConfigNameFn(String expected, IFunction1<LineItem, String> nameFn) {
+	private void checkHasLabelBasedOnCardConfigNameFn(String expected, ILineItemFunction<String> nameFn) {
 		TE holder = makeHolder(cardConfig.withNameFn(nameFn), stringValue);
 		assertEquals(expected, holder.getTitleText());
 	}
@@ -74,7 +74,7 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 		textEditor.setValue("someothervalue");
 		assertTrue(okButton.isEnabled());
 
-		textEditor.setValue(Functions.call(cardConfig.valueFn, stringValue));
+		textEditor.setValue(cardConfig.valueFn.apply(null, stringValue));
 		assertFalse(okButton.isEnabled());
 	}
 
@@ -86,7 +86,7 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 		textEditor.setValue("some other value");
 		assertTrue(cancelButton.isEnabled());
 
-		textEditor.setValue(Functions.call(cardConfig.valueFn, stringValue));
+		textEditor.setValue(cardConfig.valueFn.apply(null, stringValue));
 		assertTrue(cancelButton.isEnabled());
 
 	}
@@ -151,7 +151,7 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 		return textEditor;
 	}
 
-	private void checkHasTextBasedOnCardConfigValueFn(String expected, IFunction1<LineItem, String> valueFn) {
+	private void checkHasTextBasedOnCardConfigValueFn(String expected, ILineItemFunction<String> valueFn) {
 		TE holder = makeHolder(cardConfig.withValueFn(valueFn), stringValue);
 		assertEquals(expected, holder.getValue());
 	}

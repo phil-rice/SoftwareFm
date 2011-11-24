@@ -22,7 +22,7 @@ public class LineItemHideFunctionTest extends TestCase {
 	}
 
 	private void checkLineHide(boolean expected, String key, String cardType) throws Exception {
-		assertEquals(expected, new LineItemHideFunction(resourceGetterFn, "hide").apply(new LineItem(cardType, key, "irrelevant")).booleanValue());
+		assertEquals(expected, new LineItemHideFunction(resourceGetterFn, "hide").apply(null, new LineItem(cardType, key, "irrelevant")).booleanValue());
 	}
 
 	@Override

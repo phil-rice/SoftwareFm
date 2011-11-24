@@ -115,7 +115,7 @@ public class Card implements ICard, IHasTable {
 			int i = 0;
 			for (Entry<String, Object> entry : data.entrySet()) {
 				LineItem lineItem = new LineItem(cardType, entry.getKey(), entry.getValue());
-				if (!Functions.call(cardConfig.hideFn, lineItem)) { // Have to make an object here, but we are decoupling how we store the data, and the JVM probably optimises it away anyway
+				if (!Functions.call(cardConfig.hideFn(), lineItem)) { // Have to make an object here, but we are decoupling how we store the data, and the JVM probably optimises it away anyway
 					TableItem tableItem = new TableItem(table, SWT.NULL);
 					setTableItem(i, cardConfig, tableItem, lineItem);
 				}
@@ -143,8 +143,8 @@ public class Card implements ICard, IHasTable {
 
 		private void setTableItem(int i, final CardConfig cardConfig, TableItem tableItem, LineItem lineItem) {
 			// System.out.println("Setting table item[" + i + "]: " + keyValue);
-			String displayValue = Functions.call(cardConfig.valueFn, lineItem);
-			String name = Functions.call(cardConfig.nameFn, lineItem);
+			String displayValue = Functions.call(cardConfig.valueFn(), lineItem);
+			String name = Functions.call(cardConfig.nameFn(), lineItem);
 			tableItem.setText(new String[] { name, displayValue });
 			tableItem.setData(lineItem.key);
 

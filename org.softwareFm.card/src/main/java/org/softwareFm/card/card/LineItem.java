@@ -2,6 +2,7 @@ package org.softwareFm.card.card;
 
 import java.util.Comparator;
 
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.strings.Strings;
@@ -21,19 +22,25 @@ public class LineItem {
 				}
 			};
 		}
+		public static ILineItemFunction<String> keyLineItemFn() {
+			return new ILineItemFunction<String>() {
+				@Override
+				public String apply(CardConfig cardConfig, LineItem from) {
+					return from.key;
+				}
+			};
+		}
 
 		public static Comparator<LineItem> orderedKeyComparator(String... order) {
 			return Lists.comparator(keyFn(), Lists.orderedComparator(order));
 		}
 
-		public static IFunction1<LineItem, String> valueAsStrFn() {
-			return new IFunction1<LineItem, String>() {
-
+		public static ILineItemFunction<String> valueAsStrLineItemFn() {
+			return new ILineItemFunction<String>(){
 				@Override
-				public String apply(LineItem from) throws Exception {
-					return Strings.nullSafeToString(from.value);
-				}
-			};
+				public String apply(CardConfig cardConfig, LineItem item) {
+					return Strings.nullSafeToString(item.value);
+				}};
 		}
 	}
 

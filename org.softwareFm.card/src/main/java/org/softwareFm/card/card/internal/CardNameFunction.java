@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 
 import org.softwareFm.card.card.AbstractLineItemFunction;
 import org.softwareFm.card.card.LineItem;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
@@ -18,7 +19,7 @@ public class CardNameFunction extends AbstractLineItemFunction<String> {
 	}
 
 	@Override
-	public String apply(LineItem from) throws Exception {
+	public String apply(CardConfig cardConfig, LineItem from) {
 		String key = findKey(from);
 		String prettyKey = Strings.camelCaseToPretty(from.key);
 		String fullKey = MessageFormat.format(namePattern, key );

@@ -33,7 +33,7 @@ abstract public class ValueEditorComposite<T extends Control> extends Composite 
 		this.cardConfig = cardConfig;
 		this.titleSpec = titleSpec;
 		LineItem lineItem = new LineItem(cardType, key, initialValue);
-		String name = Functions.call(cardConfig.nameFn, lineItem);
+		String name = Functions.call(cardConfig.nameFn(), lineItem);
 		title = new Title(this, cardConfig, titleSpec, name, url);
 		body = new Composite(this, SWT.NULL) {
 			@Override
@@ -50,7 +50,7 @@ abstract public class ValueEditorComposite<T extends Control> extends Composite 
 			// setBackground(titleSpec.background);
 		innerBody = new Composite(body, SWT.NULL);
 
-		originalValue = Functions.call(cardConfig.valueFn, lineItem);
+		originalValue = Functions.call(cardConfig.valueFn(), lineItem);
 		editorControl = makeEditorControl(innerBody, originalValue);
 		IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, null);
 		okCancel = new OkCancel(innerBody, resourceGetter, new Runnable() {
