@@ -27,10 +27,10 @@ import org.softwareFm.card.modifiers.ICardDataModifier;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.data.IUrlGeneratorMap;
-import org.softwareFm.display.data.ResourceGetterMock;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.resources.ResourceGetterMock;
 import org.softwareFm.utilities.strings.Strings;
 
 /** This holds all the layout data, and strategies associated with displaying a card. It is meant to be immutable, although the image functions often rely on ImageRegisters, and are thus subject to mutability. */
@@ -135,6 +135,7 @@ public class CardConfig {
 						DisplayConstants.buttonOkTitle, "Ok",//
 						CardConstants.buttonTestTitle, "Test",//
 						DisplayConstants.buttonCancelTitle, "Cancel",//
+						CardConstants.cardNameUrlKey, "{0}",//
 						"navBar.prev.title", "<", //
 						"navBar.next.title", ">",//
 						"card.holder.loading.text", "loading")));

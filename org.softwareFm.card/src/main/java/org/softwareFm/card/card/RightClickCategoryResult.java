@@ -55,7 +55,8 @@ public class RightClickCategoryResult {
 	}
 
 	public String itemUrl(String value) {
-		return collectionUrl()+"/"+ value;
+		String result = collectionUrl()+"/"+ value;
+		return result;
 	}
 
 	@Override

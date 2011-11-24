@@ -6,9 +6,9 @@ import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.card.editors.IEditorDetailAdder;
 import org.softwareFm.card.editors.internal.StyledTextEditor;
 import org.softwareFm.card.editors.internal.StyledTextEditorDetailAdder;
-import org.softwareFm.display.data.ResourceGetterMock;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.resources.ResourceGetterMock;
 
 public class StyledTextEditorDetailAdderTest extends AbstractDetailsAdderTest<StyledTextEditorDetailAdder> {
 

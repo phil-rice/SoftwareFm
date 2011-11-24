@@ -15,10 +15,10 @@ import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.card.editors.internal.IValueEditorForTests;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.constants.DisplayConstants;
-import org.softwareFm.display.data.ResourceGetterMock;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.resources.ResourceGetterMock;
 import org.softwareFm.utilities.runnable.Runnables;
 
 public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder, TE extends IValueEditorForTests> extends AbstractDetailsAdderTest<T> {

@@ -1,12 +1,14 @@
 package org.softwareFm.utilities.resources;
 
 import java.text.MessageFormat;
+import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.softwareFm.utilities.constants.UtilityMessages;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.maps.Maps;
 
 public interface IResourceGetter {
 
@@ -81,6 +83,17 @@ public interface IResourceGetter {
 			IResourceGetter resourceGetter = Functions.call(resourceGetterFn, cardType);
 			String result = resourceGetter.getStringOrNull(key);
 			return result == null? defaultValue : result;
+		}
+		
+		public static IFunction1<String, IResourceGetter> mock(final IResourceGetter defaultValue, final Object...namesAndResourceGetters){
+			return new IFunction1<String, IResourceGetter>() {
+				private final Map<String, IResourceGetter> map = Maps.makeMap(namesAndResourceGetters);
+				@Override
+				public IResourceGetter apply(String from) throws Exception {
+					IResourceGetter result = map.get(from);
+					return result == null?defaultValue:result.with(defaultValue);
+				}
+			};
 		}
 
 	}

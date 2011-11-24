@@ -3,9 +3,9 @@ package org.softwareFm.card.card.internal;
 import junit.framework.TestCase;
 
 import org.softwareFm.card.card.LineItem;
-import org.softwareFm.display.data.ResourceGetterMock;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.resources.ResourceGetterMock;
 
 public class LineItemHideFunctionTest extends TestCase {
 

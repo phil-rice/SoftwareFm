@@ -1,17 +1,16 @@
-package org.softwareFm.display.data;
+package org.softwareFm.utilities.resources;
 
 import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class ResourceGetterMock implements IResourceGetter {
 
 	private final Map<String, String> map;
 
 	public ResourceGetterMock(String... namesAndValues) {
-		this.map = Maps.<String,String>makeLinkedMap((Object[])namesAndValues);
+		this.map = Maps.<String, String> makeLinkedMap((Object[]) namesAndValues);
 	}
 
 	@Override
@@ -20,8 +19,17 @@ public class ResourceGetterMock implements IResourceGetter {
 	}
 
 	@Override
-	public IResourceGetter with(IResourceGetter getter) {
-		throw new UnsupportedOperationException();
+	public IResourceGetter with(final IResourceGetter getter) {
+		return new ResourceGetterMock() {
+			@Override
+			public String getStringOrNull(String fullKey) {
+				String first = ResourceGetterMock.this.getStringOrNull(fullKey);
+				if (first != null)
+					return first;
+				return getter.getStringOrNull(fullKey);
+			}
+		};
+
 	}
 
 	@Override

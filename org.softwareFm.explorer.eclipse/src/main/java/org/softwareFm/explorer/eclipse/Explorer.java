@@ -241,11 +241,6 @@ public class Explorer implements IExplorer {
 		String help = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, cardType, helpKey);
 		masterDetailSocial.setSocial(helpText.getControl());
 		helpText.setText(Strings.nullSafeToString(help));
-		if (help == null)
-//			masterDetailSocial.setSocial(null);
-			;
-		else {
-		}
 	}
 
 	/** This is the bit that configures then acts on the right click that adds folders/groups/collections */
@@ -255,7 +250,7 @@ public class Explorer implements IExplorer {
 	}
 
 	private void updateStore(final IMutableCardDataStore store, final RightClickCategoryResult result, final Object value, final IAfterEditCallback afterEditCallback) {
-		final String editorResult = Strings.stringToUrlSegment(Strings.nullSafeToString(value));
+		final String editorResult = Strings.nullSafeToString(value);
 		switch (result.itemType) {
 		case ROOT_COLLECTION:
 			createNewItem(result, store, editorResult, afterEditCallback);
@@ -290,15 +285,20 @@ public class Explorer implements IExplorer {
 		}
 	}
 
-	private void createNewItem(final RightClickCategoryResult result, final IMutableCardDataStore store, String newItemName, IAfterEditCallback afterEditCallback) {
+	Map<String, Object> createNewItem(final RightClickCategoryResult result, final IMutableCardDataStore store, String newItemName, IAfterEditCallback afterEditCallback) {
 		String cardUrl = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, result.collectionName, CardConstants.cardNameUrlKey);
 		String cardName = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, result.collectionName, CardConstants.cardNameFieldKey);
-		String itemName = cardUrl == null ? newItemName : MessageFormat.format(cardUrl, Strings.forUrl(newItemName), UUID.randomUUID());
+		String itemName = MessageFormat.format(cardUrl, Strings.forUrl(newItemName), makeRandomUUID());
 		String fullUrl = result.itemUrl(itemName);
 		Map<String, Object> baseData = Maps.stringObjectMap(CardConstants.slingResourceType, result.collectionName);
 		if (cardName != null)
 			baseData.put(cardName, newItemName);
 		store.put(fullUrl, baseData, afterEditCallback);
+		return baseData;
+	}
+
+	protected String makeRandomUUID() {
+		return UUID.randomUUID().toString();
 	}
 
 	@Override

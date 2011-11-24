@@ -3,9 +3,8 @@ package org.softwareFm.card.dataStore;
 import java.util.Map;
 import java.util.concurrent.Future;
 
-import org.softwareFm.card.dataStore.IAfterEditCallback;
-import org.softwareFm.card.dataStore.ICardDataStoreCallback;
-import org.softwareFm.card.dataStore.IMutableCardDataStore;
+import junit.framework.Assert;
+
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.maps.Maps;
@@ -14,6 +13,7 @@ public class CardDataStoreMock implements IMutableCardDataStore {
 
 	private final Map<String, Map<String, Object>> map;
 	public final Map<String, Integer> counts = Maps.newMap();
+	public final Map<String, Map<String, Object>> updateMap = Maps.newMap();
 
 	public CardDataStoreMock(Object... urlsAndMaps) {
 		map = Maps.makeMap(urlsAndMaps);
@@ -39,7 +39,11 @@ public class CardDataStoreMock implements IMutableCardDataStore {
 
 	@Override
 	public Future<?> put(String url, Map<String, Object> map, IAfterEditCallback callback) {
-		throw new UnsupportedOperationException();
+		if (updateMap.containsKey(url))
+			Assert.fail(url +" <- " + map);
+		updateMap.put(url, map);
+		callback.afterEdit(url);
+		return Futures.doneFuture(null);
 	}
 
 }

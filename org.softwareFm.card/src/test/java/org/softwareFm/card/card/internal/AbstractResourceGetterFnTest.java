@@ -2,9 +2,9 @@ package org.softwareFm.card.card.internal;
 
 import junit.framework.TestCase;
 
-import org.softwareFm.display.data.ResourceGetterMock;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.resources.ResourceGetterMock;
 
 abstract public class AbstractResourceGetterFnTest extends TestCase {
 

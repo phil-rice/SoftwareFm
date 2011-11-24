@@ -254,7 +254,7 @@ public class Strings {
 	}
 
 	public static String forUrl(String raw) {
-		String cleanUrl = Strings.onlyKeep(raw.toLowerCase(), "abcdefghijklmnopqrstuvwxyz0123456789._-");
+		String cleanUrl = Strings.onlyKeep(raw, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._-");
 		return cleanUrl;
 	}
 
