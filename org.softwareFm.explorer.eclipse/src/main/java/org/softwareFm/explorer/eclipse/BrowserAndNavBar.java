@@ -26,7 +26,7 @@ import org.softwareFm.utilities.services.IServiceExecutor;
 
 public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 
-	private final BrowserAndNavBarComposite content;
+	final BrowserAndNavBarComposite content;
 
 	public static class BrowserAndNavBarLayout extends Layout {
 		@Override
@@ -71,6 +71,7 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 			titleComposite = new Composite(this, SWT.NULL);
 			navNextHistoryPrev = new NavNextHistoryPrev<PlayItem>(titleComposite, config, history);
 			navNextHistoryPrev.setLayout(new NavNextHistoryPrev.NavNextHistoryPrevLayout<PlayItem>());
+			navNextHistoryPrev.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));//issue-3
 			titleLabel = new Label(titleComposite, SWT.NULL);
 			browser = new BrowserComposite(this, SWT.NULL, service);
 			addPaintListener(new PaintListener() {

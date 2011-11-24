@@ -156,4 +156,8 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 
 	}
 
+	public Color getBackground() {
+		return content.getBackground();
+	}
+
 }
