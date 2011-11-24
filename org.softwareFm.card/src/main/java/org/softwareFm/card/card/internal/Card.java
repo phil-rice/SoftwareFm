@@ -42,9 +42,6 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 public class Card implements ICard, IHasTable {
 	public static class CardLayout extends Layout {
 
-		public CardLayout() {
-			System.out.println("here");
-		}
 		@Override
 		protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
 			CardComposite card = (CardComposite) composite;
@@ -53,7 +50,7 @@ public class Card implements ICard, IHasTable {
 
 		@Override
 		protected void layout(Composite composite, boolean flushCache) {
-			System.out.println(Swts.boundsUpToShell(composite));
+//			System.out.println(Swts.boundsUpToShell(composite));
 			
 			CardComposite card = (CardComposite) composite;
 			Rectangle ca = card.getClientArea();

@@ -102,52 +102,51 @@ public class CardHolder implements ICardHolder {
 				this.card = card;
 				card.getComposite().setLayout(new Card.CardLayout());
 				title.setUrl(card);
-				 layout();
+				layout();
 
 				card.addLineSelectedListener(new ILineSelectedListener() {
 					@Override
 					public void selected(ICard card, String key, Object value) {
 						notifyListSelectedListeners(card, key, value);
 					}
-
 				});
 			} catch (Exception e) {
 				throw WrappedException.wrap(e);
 			}
 		}
-		
+
 		public void notifyListSelectedListeners(ICard card, String key, Object value) {
 			for (ILineSelectedListener listener : lineListeners)
 				listener.selected(card, key, value);
 		}
 	}
 
-//	@Override
-//	public void makeAndSetTableMenu(final ICard card) {
-//		Menu menu = new Menu(table);
-//		item1 = new MenuItem(menu, SWT.NULL);
-//
-//		card.addMenuDetectListener( new Listener() {
-//			@Override
-//			public void handleEvent(Event event) {
-//				Point location = new Point(event.x, event.y);
-//				Point inMySpace = table.toControl(location);
-//				TableItem item = table.getItem(inMySpace);
-//				String key = (String) (item == null ? null : item.getData());
-//				RightClickCategoryResult categorisation = card.cardConfig().rightClickCategoriser.categorise(card.url(), card.data(), key);
-//				item1.setText("Add " + Strings.nullSafeToString(categorisation.collectionName));
-//				item1.setData(categorisation);
-//				item1.setEnabled(categorisation.isCollection());
-//			}
-//		});
-//		item1.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				addItemProcessor.process((RightClickCategoryResult) item1.getData());
-//			}
-//		});
-////		table.setMenu(menu);
-//	}
+	// @Override
+	// public void makeAndSetTableMenu(final ICard card) {
+	// Menu menu = new Menu(table);
+	// item1 = new MenuItem(menu, SWT.NULL);
+	//
+	// card.addMenuDetectListener( new Listener() {
+	// @Override
+	// public void handleEvent(Event event) {
+	// Point location = new Point(event.x, event.y);
+	// Point inMySpace = table.toControl(location);
+	// TableItem item = table.getItem(inMySpace);
+	// String key = (String) (item == null ? null : item.getData());
+	// RightClickCategoryResult categorisation = card.cardConfig().rightClickCategoriser.categorise(card.url(), card.data(), key);
+	// item1.setText("Add " + Strings.nullSafeToString(categorisation.collectionName));
+	// item1.setData(categorisation);
+	// item1.setEnabled(categorisation.isCollection());
+	// }
+	// });
+	// item1.addSelectionListener(new SelectionAdapter() {
+	// @Override
+	// public void widgetSelected(SelectionEvent e) {
+	// addItemProcessor.process((RightClickCategoryResult) item1.getData());
+	// }
+	// });
+	// // table.setMenu(menu);
+	// }
 
 	private final List<ICardChangedListener> cardListeners = new CopyOnWriteArrayList<ICardChangedListener>();
 	final CardHolderComposite content;
@@ -181,6 +180,10 @@ public class CardHolder implements ICardHolder {
 		content.lineListeners.add(listener);
 	}
 
+	public ITitleBarForCard getTitle() {
+		return content.title;
+
+	}
 
 	@Override
 	public Control getControl() {

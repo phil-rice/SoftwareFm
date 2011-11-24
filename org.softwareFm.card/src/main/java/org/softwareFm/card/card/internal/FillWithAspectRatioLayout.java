@@ -6,7 +6,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
-import org.softwareFm.display.swt.Swts;
 
 /** Horizonal laid out components. Fills from left. Each control is set to height, with aspect ratio determining the width */
 public abstract class FillWithAspectRatioLayout extends Layout {
@@ -61,7 +60,7 @@ public abstract class FillWithAspectRatioLayout extends Layout {
 	@Override
 	protected void layout(Composite composite, boolean flushCache) {
 		Rectangle clientArea = composite.getClientArea();
-		System.out.println("FWAR " + id + " " + Swts.boundsUpToShell(composite) + " clientAreas: " + Swts.clientAreasUpToShell(composite));
+//		System.out.println("FWAR " + id + " " + Swts.boundsUpToShell(composite) + " clientAreas: " + Swts.clientAreasUpToShell(composite));
 		int height = clientArea.height;
 		int width = heightToWidth(composite, height);
 		int x = clientArea.x;

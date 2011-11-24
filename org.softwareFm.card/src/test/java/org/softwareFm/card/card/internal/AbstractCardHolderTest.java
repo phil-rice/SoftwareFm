@@ -108,7 +108,12 @@ public abstract class AbstractCardHolderTest extends SwtIntegrationTest {
 	}
 
 	protected ICard makeAndSetCard(CardConfig cardConfig) {
-		ICard card = cardConfig.cardFactory.makeCard(cardHolder, cardConfig, rootUrl + "/someUrl", CardDataStoreFixture.data1a);
+		String urlPostfix = "someUrl";
+		return makeAndSetCard(cardConfig, urlPostfix);
+	}
+
+	protected ICard makeAndSetCard(CardConfig cardConfig, String urlPostfix) {
+		ICard card = cardConfig.cardFactory.makeCard(cardHolder, cardConfig, rootUrl + "/"+urlPostfix, CardDataStoreFixture.data1a);
 		return card;
 	}
 

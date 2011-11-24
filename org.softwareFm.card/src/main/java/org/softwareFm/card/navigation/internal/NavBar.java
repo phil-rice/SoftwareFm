@@ -123,6 +123,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 
 		public void setUrl(String url, TitleSpec titleSpec) {
 			this.url = url;
+			navNextHistoryPrev.getHistory().push(url);
 			listener.setTitleAndTitleSpec("", titleSpec.withoutImage());
 			// setBackground(titleSpec.background);
 			if (!url.startsWith(rootUrl))

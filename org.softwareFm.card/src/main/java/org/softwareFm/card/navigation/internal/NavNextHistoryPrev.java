@@ -13,7 +13,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.softwareFm.display.composites.IHasControl;
-import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Button;
 import org.softwareFm.softwareFmImages.title.TitleAnchor;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -25,8 +24,8 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 
 	private final NavNextHistoryPrevComposite<T> content;
 	private static int globalId = 0;
-	
-	public static class NavNextHistoryPrevLayout<T> extends Layout{
+
+	public static class NavNextHistoryPrevLayout<T> extends Layout {
 
 		@Override
 		protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
@@ -42,16 +41,16 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 			@SuppressWarnings("unchecked")
 			NavNextHistoryPrevComposite<T> nav = (NavNextHistoryPrevComposite<T>) composite;
 			Rectangle ca = nav.getClientArea();
-			System.out.println("  NHP " + Swts.boundsUpToShell(composite)  + " clientAreas: " + Swts.clientAreasUpToShell(composite));
+			// System.out.println("  NNHP " + Swts.boundsUpToShell(composite) + " clientAreas: " + Swts.clientAreasUpToShell(composite));
 			int navIconWidth = nav.config.navIconWidth;
 			int height = nav.config.height;
 			int x = ca.x;
 			int y = ca.y;
 			nav.prevButton.setBounds(x, y, navIconWidth, height);
 			x += navIconWidth;
-			nav.	navCombo.getControl().setBounds(x, y, navIconWidth, height);
+			nav.navCombo.getControl().setBounds(x, y, navIconWidth, height);
 			x += navIconWidth;
-			nav.	nextButton.setBounds(x, y, navIconWidth, height);
+			nav.nextButton.setBounds(x, y, navIconWidth, height);
 		}
 
 	}
@@ -78,7 +77,7 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 			prevButton = Button.makeImageButton(this, prevImage, new Runnable() {
 				@Override
 				public void run() {
-					ICallback.Utils.call(config.gotoCallback, history.previous());
+						ICallback.Utils.call(config.gotoCallback, history.previous());
 					updateNextPrevButtons();
 				}
 			});
@@ -106,6 +105,7 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 					updateNextPrevButtons();
 				}
 			});
+			updateNextPrevButtons();
 		}
 
 		private void updateNextPrevButtons() {
@@ -124,7 +124,6 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 					ca.height - config.topMargin - config.bottomMargin);
 		}
 
-		
 	}
 
 	public NavNextHistoryPrev(Composite parent, final NavNextHistoryPrevConfig<T> navNextHistoryPrevConfig, IHistory<T> history) {
@@ -154,7 +153,7 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 
 	public void setLayout(Layout layout) {
 		content.setLayout(layout);
-		
+
 	}
 
 }
