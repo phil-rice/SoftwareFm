@@ -36,7 +36,7 @@ public class CardUnit implements IHasComposite {
 	public CardUnit(Composite parent, CardConfig cardConfig, String rootUrl) {
 		this.cardConfig = cardConfig;
 		sashForm = new SashForm(parent, SWT.VERTICAL);
-		cardHolder = ICardHolder.Utils.cardHolderWithLayout(sashForm, "loading", "title", cardConfig, rootUrl, null);
+		cardHolder = ICardHolder.Utils.cardHolderWithLayout(sashForm, cardConfig, rootUrl, null);
 		text = new Text(sashForm, SWT.WRAP);
 	}
 

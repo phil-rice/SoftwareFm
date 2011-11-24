@@ -2,7 +2,7 @@ package org.softwareFm.display.swt;
 
 import org.softwareFm.utilities.services.IServiceExecutor;
 
-public class SwtIntegrationAndServiceTest extends SwtIntegrationTest {
+abstract public class SwtIntegrationAndServiceTest extends SwtIntegrationTest {
 
 	protected IServiceExecutor service;
 

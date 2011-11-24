@@ -4,6 +4,7 @@ public class CardConstants {
 	public static final String dataPrefix = "/softwareFm/data/";
 	public static final String buttonTestTitle = "button.test.title";
 
+	public static final String cardHolderLoadingText = "card.holder.loading.text";
 	public static final String slingResourceType = "sling:resourceType";
 	public static final String cannotFindTableItemWithKey = "Cannot find table item with key {0}";
 	public static final String exceptionChangingValue = "Exception changing value with key {0}, index {1}, and newValue {2})";
@@ -11,7 +12,6 @@ public class CardConstants {
 	public static final String jcrPrimaryType = "jcr:primaryType";
 
 	public static final Object found = "found";
-
 	public static final String urlGroupKey = "urlGenerator.group";
 	public static final String artifactUrlKey = "urlGenerator.artifact";
 	public static final String versionUrlKey = "urlGenerator.version";

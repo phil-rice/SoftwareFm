@@ -37,7 +37,12 @@ import org.softwareFm.utilities.strings.Strings;
 public class CardConfig {
 
 	/** If you don't specify a {@link #cardTitleFn} this is the default */
-	public static final IFunction1<String, String> defaultCardTitleFn = Strings.lastSegmentFn("/");
+	public static final IFunction1<ICard, String> defaultCardTitleFn = new IFunction1<ICard, String>() {
+		@Override
+		public String apply(ICard from) throws Exception {
+			return Strings.lastSegment(from.url(), "/");
+		}
+	};;
 	/** Enabled the debugging of chain of modifiers {@link #cardDataModifiers} that change the raw data from the server into display data */
 	public final boolean debugModifiers = false;
 	/** The {@link org.softwareFm.card.card.internal.Card.CardLayout} uses this to determine how wide to display the name column. The bigger the more space it takes up */
@@ -98,8 +103,8 @@ public class CardConfig {
 	public final IDetailFactory detailFactory;
 	/** the {@link EditorDetailAdder} uses this to create the editor. The string is the name specified in the properties file. For example in card.properties we set editor.decription=styledText. When clicking on description, the EditorDetailAdder will pass 'styledText' to this function. If it returns null no editor will be shown */
 	public final IFunction1<String, IEditorDetailAdder> editorFn;
-	/** Derive the title of the card from the url */
-	public final IFunction1<String, String> cardTitleFn;
+	/** Derive the title of the card from the card */
+	public final IFunction1<ICard, String> cardTitleFn;
 	/** Given a string, find an image. Typically backed by an ImageRegister */
 	public final IFunction1<String, Image> imageFn;
 	/** Given a line on a card, find an image for that line */
@@ -138,7 +143,7 @@ public class CardConfig {
 						CardConstants.cardNameUrlKey, "{0}",//
 						"navBar.prev.title", "<", //
 						"navBar.next.title", ">",//
-						"card.holder.loading.text", "loading")));
+						CardConstants.cardHolderLoadingText, "loading")));
 		this.detailFactory = new DetailFactory(Collections.<IDetailAdder> emptyList());
 		this.cardFactory = cardFactory;
 		this.cardDataStore = cardDataStore;
@@ -172,7 +177,7 @@ public class CardConfig {
 		this.editorFn = Functions.constant(null);
 	}
 
-	private CardConfig(IFunction1<String, IResourceGetter> resourceGetterFn, IDetailFactory detailFactory, ICardFactory cardFactory, ICardDataStore cardDataStore, int style, boolean allowSelection, IFunction1<String, String> cardTitleFn, IFunction1<String, Image> imageFn, IFunction1<LineItem, Image> iconFn, IFunction1<LineItem, String> nameFn, IFunction1<LineItem, String> valueFn, IFunction1<ICard, String> defaultChildFn, IFunction1<LineItem, Boolean> hideFn, int leftMargin, int rightMargin, int topMargin, int bottomMargin, int navBarHeight, IFunction1<Map<String, Object>, Image> navIconFn, List<ICardDataModifier> keyValueModifiers, IFollowOnFragment followOnFragment, IFunction1<ICard, TitleSpec> titleSpecFn, IRightClickCategoriser rightClickCategoriser, IUrlGeneratorMap urlGeneratorMap, IPopupMenuContributor<ICard> popupMenuContributor, IAddItemProcessor addItemProcessor, IFunction1<String, IEditorDetailAdder> editorFn) {
+	private CardConfig(IFunction1<String, IResourceGetter> resourceGetterFn, IDetailFactory detailFactory, ICardFactory cardFactory, ICardDataStore cardDataStore, int style, boolean allowSelection, IFunction1<ICard, String> cardTitleFn, IFunction1<String, Image> imageFn, IFunction1<LineItem, Image> iconFn, IFunction1<LineItem, String> nameFn, IFunction1<LineItem, String> valueFn, IFunction1<ICard, String> defaultChildFn, IFunction1<LineItem, Boolean> hideFn, int leftMargin, int rightMargin, int topMargin, int bottomMargin, int navBarHeight, IFunction1<Map<String, Object>, Image> navIconFn, List<ICardDataModifier> keyValueModifiers, IFollowOnFragment followOnFragment, IFunction1<ICard, TitleSpec> titleSpecFn, IRightClickCategoriser rightClickCategoriser, IUrlGeneratorMap urlGeneratorMap, IPopupMenuContributor<ICard> popupMenuContributor, IAddItemProcessor addItemProcessor, IFunction1<String, IEditorDetailAdder> editorFn) {
 		this.resourceGetterFn = resourceGetterFn;
 		this.detailFactory = detailFactory;
 		this.cardFactory = cardFactory;
@@ -202,7 +207,7 @@ public class CardConfig {
 		this.editorFn = editorFn;
 	}
 
-	public CardConfig withTitleFn(IFunction1<String, String> cardTitleFn) {
+	public CardConfig withTitleFn(IFunction1<ICard, String> cardTitleFn) {
 		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, popupMenuContributor, addItemProcessor, editorFn);
 	}
 

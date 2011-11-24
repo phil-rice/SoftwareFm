@@ -12,7 +12,7 @@ public class CardHolderTestWithNavBarTest extends AbstractCardHolderTest {
 
 	@Override
 	protected CardHolder makeCardHolder(Composite parent, CardConfig cardConfig) {
-		ICardHolder cardHolder =ICardHolder.Utils.cardHolderWithLayout(shell, "loadingtext", "some title", cardConfig,rootUrl, ICallback.Utils.<String> memory());
+		ICardHolder cardHolder =ICardHolder.Utils.cardHolderWithLayout(shell, cardConfig, rootUrl, ICallback.Utils.<String> memory());
 		return (CardHolder) cardHolder;
 	}
 

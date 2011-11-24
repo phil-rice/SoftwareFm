@@ -30,7 +30,7 @@ public class HoldsCardHolder extends Composite implements IHasCardConfig {
 	}
 
 	public void makeCardHolder(String url, String title) {
-		ICardHolder cardHolder = ICardHolder.Utils.cardHolderWithLayout(this, "loading", title, cardConfig, url, null);
+		ICardHolder cardHolder = ICardHolder.Utils.cardHolderWithLayout(this, cardConfig, url, null);
 		cardHolder.getComposite().setLayout(new CardHolder.CardHolderLayout());
 		addPaintListenerThatGetsMoreData(cardHolder, url);
 	}

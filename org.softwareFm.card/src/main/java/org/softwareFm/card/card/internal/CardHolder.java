@@ -16,6 +16,7 @@ import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.card.ILineSelectedListener;
 import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.navigation.ITitleBarForCard;
 import org.softwareFm.card.navigation.internal.NavBar;
@@ -26,9 +27,9 @@ import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
-import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.future.GatedMockFuture;
+import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class CardHolder implements ICardHolder {
 
@@ -77,8 +78,8 @@ public class CardHolder implements ICardHolder {
 			if (navBarCardConfig == null)
 				throw new NullPointerException();
 			if (callbackToGotoUrl == null) {
-				String titleText = Functions.call(navBarCardConfig.cardTitleFn, rootUrl);
-				title = new NavTitle(this, navBarCardConfig, TitleSpec.noTitleSpec(parent.getBackground()), titleText, rootUrl);
+				String loadingText = IResourceGetter.Utils.getOrException(navBarCardConfig.resourceGetterFn, null, CardConstants.cardHolderLoadingText);
+				title = new NavTitle(this, navBarCardConfig, TitleSpec.noTitleSpec(parent.getBackground()), loadingText, rootUrl);
 			} else {
 				NavBar bar = new NavBar(this, navBarCardConfig, rootUrl, callbackToGotoUrl);
 				bar.getComposite().setLayout(new NavBar.NavBarLayout());
@@ -151,7 +152,7 @@ public class CardHolder implements ICardHolder {
 	private final List<ICardChangedListener> cardListeners = new CopyOnWriteArrayList<ICardChangedListener>();
 	final CardHolderComposite content;
 
-	public CardHolder(Composite parent, String loadingText, String title, CardConfig cardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
+	public CardHolder(Composite parent, CardConfig cardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
 		content = new CardHolderComposite(parent, cardConfig, rootUrl, callbackToGotoUrl);
 	}
 
@@ -200,7 +201,7 @@ public class CardHolder implements ICardHolder {
 			@Override
 			public Composite apply(final Composite from) throws Exception {
 				final CardConfig cardConfig = CardDataStoreFixture.asyncCardConfig(from.getDisplay());
-				final ICardHolder cardHolder = ICardHolder.Utils.cardHolderWithLayout(from, "Loading", "title", cardConfig, CardDataStoreFixture.url, ICallback.Utils.<String> noCallback());
+				final ICardHolder cardHolder = ICardHolder.Utils.cardHolderWithLayout(from, cardConfig, CardDataStoreFixture.url, ICallback.Utils.<String> noCallback());
 				final Future<ICard> future = ICardFactory.Utils.makeCard(cardHolder, cardConfig, CardDataStoreFixture.url1a, new ICallback<ICard>() {
 					@Override
 					public void process(ICard card) throws Exception {

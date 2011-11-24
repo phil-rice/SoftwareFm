@@ -6,16 +6,11 @@ import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.navigation.internal.NavTitle;
-import org.softwareFm.utilities.functions.Functions;
+import org.softwareFm.utilities.functions.IFunction1;
 
-public class CardHolderTestWithTitleTest extends AbstractCardHolderTest {
-	public void testDisplaysTitleWithTitleTextAndHasNoNavBarIfGotoUrlIsNull() {
-		assertEquals("rootUrl", getTitleText());
-	}
-
-	@Override
-	protected CardHolder makeCardHolder(Composite parent, CardConfig cardConfig) {
-		return (CardHolder) ICardHolder.Utils.cardHolderWithLayout(parent, "loadingtext", "some title", cardConfig, rootUrl, null);
+public class CardHolderWithTitleTest extends AbstractCardHolderTest {
+	public void testDisplaysLoadingWhenConstructed() {
+		assertEquals("loading", getTitleText());
 	}
 
 	public void testNavBarOrTitleChangesWhenCardAppears() throws Exception {
@@ -25,12 +20,21 @@ public class CardHolderTestWithTitleTest extends AbstractCardHolderTest {
 
 	private void checkTitleBasedOnUrlIsDisplayed(String expected, String url) throws Exception {
 		ICard cardWithLastSegmentAsTitle = cardConfig.cardFactory.makeCard(cardHolder, cardConfig, url, CardDataStoreFixture.data1a);
-		cardHolder.setCard(cardWithLastSegmentAsTitle);
-		assertEquals(cardConfig.cardTitleFn.apply(url), getTitleText());
+		assertEquals(cardConfig.cardTitleFn.apply(cardWithLastSegmentAsTitle), getTitleText());
 
-		ICard cardWithUrlAsTitle =  cardConfig.cardFactory.makeCard(cardHolder, cardConfig.withTitleFn(Functions.<String, String> identity()), url, CardDataStoreFixture.data1a);
+		ICard cardWithUrlAsTitle = cardConfig.cardFactory.makeCard(cardHolder, cardConfig.withTitleFn(new IFunction1<ICard, String>() {
+			@Override
+			public String apply(ICard from) throws Exception {
+				return "x" + from.url() + "x";
+			}
+		}), url, CardDataStoreFixture.data1a);
 		cardHolder.setCard(cardWithUrlAsTitle);
-		assertEquals(url, getTitleText());
+		assertEquals("x" + url + "x", getTitleText());
+	}
+
+	@Override
+	protected CardHolder makeCardHolder(Composite parent, CardConfig cardConfig) {
+		return (CardHolder) ICardHolder.Utils.cardHolderWithLayout(parent, cardConfig, rootUrl, null);
 	}
 
 	String getTitleText() {

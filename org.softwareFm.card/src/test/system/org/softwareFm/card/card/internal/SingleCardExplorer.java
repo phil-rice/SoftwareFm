@@ -37,7 +37,7 @@ public class SingleCardExplorer implements IHasComposite {
 				cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, CardAndCollectionDataStoreVisitorMonitored.Utils.sysout());
 			}
 		};
-		cardHolder = new CardHolder(sashForm, "loading", "Some title", cardConfig, rootUrl, callbackToGotoUrl);
+		cardHolder = new CardHolder(sashForm, cardConfig, rootUrl, callbackToGotoUrl);
 		text = new Text(sashForm, SWT.H_SCROLL | SWT.WRAP);
 		Size.resizeMeToParentsSize(cardHolder.getControl());
 		cardHolder.addCardChangedListener(new ICardChangedListener() {

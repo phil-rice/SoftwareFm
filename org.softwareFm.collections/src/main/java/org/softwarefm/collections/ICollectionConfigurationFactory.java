@@ -36,10 +36,14 @@ public interface ICollectionConfigurationFactory {
 			return new SoftwareFmRightClickCategoriser();
 		}
 
-		public static IPopupMenuContributor<ICard> softwareFmPopupMenuContributor(){
+		public static IPopupMenuContributor<ICard> softwareFmPopupMenuContributor() {
 			return new CardPopupMenuContributor();
 		}
-		
+
+		public static IFunction1<ICard, String> softwareFmTitleFunction(IFunction1<String, IResourceGetter> resourceGetterFn) {
+			return new SoftwareFmCardTitleFunction();
+		}
+
 		public static IUrlGeneratorMap makeSoftwareFmUrlGeneratorMap(String prefix) {
 			final IUrlGeneratorMap urlGeneratorMap = IUrlGeneratorMap.Utils.urlGeneratorMap(//
 					CardConstants.urlGroupKey, new UrlGenerator(prefix + "{3}/{2}", "groupId"),// hash, hash, groupId, groundIdWithSlash
