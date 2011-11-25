@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Layout;
 public abstract class FillWithAspectRatioLayout extends Layout {
 
 	private static int globalId;
+	@SuppressWarnings("unused")
 	private final int id = globalId++;
 
 	abstract protected int getWidthWeight(Composite composite);

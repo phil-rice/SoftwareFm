@@ -16,7 +16,6 @@ public class CardMapSorterTest extends SwtIntegrationTest {
 	private CardConfig cardConfig;
 	private CardMapSorter sorter;
 	private Map<String, Object> acb;
-	private Map<String, Object> abc;
 	private Map<String, Object> versionInput;
 	private final String lowVersion = "v-1.1.33";
 	private final String highVersion = "v-1.1.111";
@@ -58,7 +57,6 @@ public class CardMapSorterTest extends SwtIntegrationTest {
 		cardConfig = CardDataStoreFixture.syncCardConfig(display);
 		sorter = new CardMapSorter("v");
 		acb = Maps.stringObjectLinkedMap("a", 1, "c", 3, "b", 3);
-		abc = Maps.stringObjectLinkedMap("a", 1, "b", 2, "c", 3);
 		versionInput = Maps.stringObjectLinkedMap(highVersion, 1, lowVersion, 2);
 	}
 }

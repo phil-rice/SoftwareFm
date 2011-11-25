@@ -8,12 +8,17 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.RightClickCategoryResult;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.menu.ICardMenuItemHandler;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwarefm.collections.explorer.IExplorer;
 
 public class AddItemToCollectionMenuHandler implements ICardMenuItemHandler {
+
+	private final IExplorer explorer;
+	public AddItemToCollectionMenuHandler(IExplorer explorer) {
+		this.explorer = explorer;
+	}
 
 	@Override
 	public MenuItem optionallyCreate(final ICard card, IResourceGetter resourceGetter, Menu menu, Event event, String key) {
@@ -33,8 +38,7 @@ public class AddItemToCollectionMenuHandler implements ICardMenuItemHandler {
 
 	@Override
 	public void execute(ICard card, MenuItem item) {
-		CardConfig cardConfig = card.cardConfig();
 		RightClickCategoryResult categorisation = (RightClickCategoryResult) item.getData();
-		cardConfig.addItemProcessor.addCollectionItem(categorisation);
+		explorer.showAddCollectionItemEditor(card, categorisation);
 	}
 }

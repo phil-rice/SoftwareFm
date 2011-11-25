@@ -24,8 +24,6 @@ public abstract class AbstractCardHolderTest extends SwtIntegrationTest {
 
 	protected CardConfig cardConfig;
 	protected CardHolder cardHolder;
-	private Rectangle expectedClientArea;
-	private int borderThickness;
 	protected final String rootUrl = "some/rootUrl";
 
 	private CardChangedListenerMock mock1;
@@ -128,11 +126,11 @@ public abstract class AbstractCardHolderTest extends SwtIntegrationTest {
 			}
 		};
 		cardHolder = makeCardHolder(parent, cardConfig);
-		borderThickness = 0;
-		expectedClientArea = new Rectangle(cardConfig.leftMargin, //
-				cardConfig.topMargin,//
-				110 - cardConfig.leftMargin - cardConfig.rightMargin - borderThickness * 2,//
-				220 - cardConfig.topMargin - cardConfig.bottomMargin - borderThickness * 2);
+//		borderThickness = 0;
+//		expectedClientArea = new Rectangle(cardConfig.leftMargin, //
+//				cardConfig.topMargin,//
+//				110 - cardConfig.leftMargin - cardConfig.rightMargin - borderThickness * 2,//
+//				220 - cardConfig.topMargin - cardConfig.bottomMargin - borderThickness * 2);
 		cardHolder.getControl().setBounds(10, 20, 110, 220);
 		mock1 = new CardChangedListenerMock();
 		mock2 = new CardChangedListenerMock();

@@ -13,7 +13,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
-import org.softwareFm.card.card.IAddItemProcessor;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardChangedListener;
 import org.softwareFm.card.card.ICardFactory;
@@ -62,54 +61,6 @@ public class Explorer implements IExplorer {
 		SHOWING_DETAIL, BROWSING_LIST;
 	}
 
-	private final class AddItemProcessor implements IAddItemProcessor {
-		private final IMasterDetailSocial masterDetailSocial;
-
-		private AddItemProcessor(IMasterDetailSocial masterDetailSocial) {
-			this.masterDetailSocial = masterDetailSocial;
-		}
-
-		@Override
-		public void addCollectionItem(final RightClickCategoryResult result) {
-			final ICard card = cardHolder.getCard();
-
-			IValueEditor editor = masterDetailSocial.createDetail(new IFunction1<Composite, IValueEditor>() {
-				@Override
-				public IValueEditor apply(Composite from) throws Exception {
-					return IValueEditor.Utils.textEditorWithLayout(from, card.cardConfig(), result.url, card.cardType(), result.collectionName, "", new IDetailsFactoryCallback() {
-						private final IDetailsFactoryCallback callback = this;
-
-						@Override
-						public void updateDataStore(final IMutableCardDataStore store, String url, String key, final Object value) {
-							updateStore(store, result, value, callback);
-						}
-
-						@Override
-						public void afterEdit(String url) {
-							ICallback.Utils.call(callbackToGotoUrlAndUpdateDetails, url);
-						}
-
-						@Override
-						public void gotData(Control control) {
-						}
-
-						@Override
-						public void cardSelected(String cardUrl) {
-						}
-
-					}, TitleSpec.noTitleSpec(from.getBackground()));
-				}
-			}, false);
-			masterDetailSocial.setDetail(editor.getControl());
-		}
-
-		@Override
-		public void addNewArtifact() {
-			unrecognisedJar.setFileAndDigest(null, null);
-			masterDetailSocial.setMaster(unrecognisedJar.getControl());
-		}
-	}
-
 	private UnrecognisedJar unrecognisedJar;
 	private ICardHolder cardHolder;
 	private ICallback<String> callbackToGotoUrlAndUpdateDetails;
@@ -121,12 +72,11 @@ public class Explorer implements IExplorer {
 	private State state = State.SHOWING_DETAIL;
 
 	public Explorer(final CardConfig cardConfigParam, final String rootUrl, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter) {
-		this.cardConfig = cardConfigParam.withAddItemProcessor(makeAddItemProcessor(masterDetailSocial)).//
-				withMenuHandlers(//
-						new AddItemToCollectionMenuHandler(),//
-						new OptionalSeparatorMenuHandler(),//
-						new AddNewArtifactMenuHandler(),//
-						new ViewContentsMenuHandler(this)//
+		this.cardConfig = cardConfigParam.withMenuHandlers(//
+				new AddItemToCollectionMenuHandler(this),//
+				new OptionalSeparatorMenuHandler(),//
+				new AddNewArtifactMenuHandler(this),//
+				new ViewContentsMenuHandler(this)//
 				);
 		this.masterDetailSocial = masterDetailSocial;
 		helpText = masterDetailSocial.createSocial(new IFunction1<Composite, IHelpText>() {
@@ -205,6 +155,38 @@ public class Explorer implements IExplorer {
 			}
 		}, true);
 
+	}
+
+	@Override
+	public void showAddCollectionItemEditor(final ICard card, final RightClickCategoryResult result) {
+		IValueEditor editor = masterDetailSocial.createDetail(new IFunction1<Composite, IValueEditor>() {
+			@Override
+			public IValueEditor apply(Composite from) throws Exception {
+				return IValueEditor.Utils.textEditorWithLayout(from, card.cardConfig(), result.url, card.cardType(), result.collectionName, "", new IDetailsFactoryCallback() {
+					private final IDetailsFactoryCallback callback = this;
+
+					@Override
+					public void updateDataStore(final IMutableCardDataStore store, String url, String key, final Object value) {
+						updateStore(store, result, value, callback);
+					}
+
+					@Override
+					public void afterEdit(String url) {
+						ICallback.Utils.call(callbackToGotoUrlAndUpdateDetails, url);
+					}
+
+					@Override
+					public void gotData(Control control) {
+					}
+
+					@Override
+					public void cardSelected(String cardUrl) {
+					}
+
+				}, TitleSpec.noTitleSpec(from.getBackground()));
+			}
+		}, false);
+		masterDetailSocial.setDetail(editor.getControl());
 	}
 
 	@Override
@@ -287,12 +269,6 @@ public class Explorer implements IExplorer {
 		String help = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, cardType, helpKey);
 		masterDetailSocial.setSocial(helpText.getControl());
 		helpText.setText(Strings.nullSafeToString(help));
-	}
-
-	/** This is the bit that configures then acts on the right click that adds folders/groups/collections */
-	private IAddItemProcessor makeAddItemProcessor(final IMasterDetailSocial masterDetailSocial) {
-		IAddItemProcessor itemProcessor = new AddItemProcessor(masterDetailSocial);
-		return itemProcessor;
 	}
 
 	private void updateStore(final IMutableCardDataStore store, final RightClickCategoryResult result, final Object value, final IAfterEditCallback afterEditCallback) {
@@ -460,6 +436,12 @@ public class Explorer implements IExplorer {
 			}
 		}
 
+	}
+
+	@Override
+	public void showAddNewArtifactEditor() {
+		unrecognisedJar.setFileAndDigest(null, null);
+		masterDetailSocial.setMaster(unrecognisedJar.getControl());
 	}
 
 	public static void main(String[] args) {
