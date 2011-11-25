@@ -5,7 +5,6 @@ public class CardConstants {
 	public static final String buttonTestTitle = "button.test.title";
 
 	public static final String cardHolderLoadingText = "card.holder.loading.text";
-	public static final String cardContentMenu = "card.content.menu";
 	public static final String cardContentField = "card.content.field";
 	public static final String cardContentFeedType = "card.content.feedType";
 	
@@ -23,8 +22,11 @@ public class CardConstants {
 	public static final String jarUrlKey = "urlGenerator.jar";
 	public static final String userUrlKey = "urlGenerator.user";
 	public static final String manuallyAdded = "manually added";
+
+	public static final String menuItemViewActual = "menuitem.view.actual";
 	public static final String menuItemAddCollection = "menuitem.add.collection";
 	public static final String menuItemAddArtifact = "menuitem.add.artifact";
+	
 	public static final String cardColorKey = "card.color";
 	public static final String indentTitleKey = "card.title.indent";
 	public static final String cardTitleIcon = "card.title.icon";

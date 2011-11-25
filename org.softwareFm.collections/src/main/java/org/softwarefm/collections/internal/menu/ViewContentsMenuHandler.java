@@ -24,10 +24,10 @@ public class ViewContentsMenuHandler implements ICardMenuItemHandler {
 	public MenuItem optionallyCreate(ICard card, IResourceGetter resourceGetter, Menu menu, Event event, String key) {
 		String cardContentFieldName = IResourceGetter.Utils.getOrNull(card.cardConfig().resourceGetterFn, key, CardConstants.cardContentField);
 		if (cardContentFieldName != null) {
-			String cardContentMenuPattern = resourceGetter.getStringOrNull(CardConstants.cardContentMenu);
-			if (cardContentMenuPattern != null) {
+			String viewActualPattern = resourceGetter.getStringOrNull(CardConstants.menuItemViewActual);
+			if (viewActualPattern != null) {
 				MenuItem viewContents = new MenuItem(menu, SWT.NULL);
-				viewContents.setText(MessageFormat.format(cardContentMenuPattern, key));
+				viewContents.setText(MessageFormat.format(viewActualPattern, key));
 				return viewContents;
 			}
 		}

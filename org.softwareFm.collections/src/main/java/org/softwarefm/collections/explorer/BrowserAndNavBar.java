@@ -5,6 +5,7 @@ import java.util.concurrent.Future;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
@@ -71,8 +72,10 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 			titleComposite = new Composite(this, SWT.NULL);
 			navNextHistoryPrev = new NavNextHistoryPrev<PlayItem>(titleComposite, config, history);
 			navNextHistoryPrev.setLayout(new NavNextHistoryPrev.NavNextHistoryPrevLayout<PlayItem>());
-			navNextHistoryPrev.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));//issue-3
+			Color white = getDisplay().getSystemColor(SWT.COLOR_WHITE);
+			navNextHistoryPrev.setBackground(white);//issue-3
 			titleLabel = new Label(titleComposite, SWT.NULL);
+			titleLabel.setBackground(white);
 			browser = new BrowserComposite(this, SWT.NULL, service);
 			addPaintListener(new PaintListener() {
 				@Override
@@ -84,7 +87,7 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 			history.addHistoryListener(new IHistoryListener<PlayItem>() {
 				@Override
 				public void changingTo(PlayItem playItem) {
-					titleLabel.setText(playItem.toString());
+					titleLabel.setText(" " + playItem.url); //TODO improve the layout of the BrowserAndNavBar title
 					browser.processUrl(playItem.feedType, playItem.url);
 				}
 			});
