@@ -226,10 +226,12 @@ public class Explorer implements IExplorer {
 			Map<String, Object> map = (Map<String, Object>) value;
 			String cardType = (String) map.get(CardConstants.slingResourceType);
 			if (cardType != null) {
-				String cardDetailUrlKey = IResourceGetter.Utils.getOrNull(card.cardConfig().resourceGetterFn, cardType, CardConstants.cardDetailUrl);
+				String cardDetailUrlKey = IResourceGetter.Utils.getOrNull(card.cardConfig().resourceGetterFn, cardType, CardConstants.cardContentField);
 				String url = (String) map.get(cardDetailUrlKey);
-				if (url != null)
-					browser.processUrl(DisplayConstants.browserFeedType, url);
+				if (url != null){
+					String cardDetailFeedType= IResourceGetter.Utils.getOr(card.cardConfig().resourceGetterFn, cardType, CardConstants.cardContentFeedType, DisplayConstants.browserFeedType);
+					browser.processUrl(cardDetailFeedType, url);
+				}
 			}
 		}
 	}
