@@ -11,6 +11,7 @@ import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.display.browser.BrowserFeedConfigurator;
 import org.softwareFm.display.browser.RssFeedConfigurator;
+import org.softwareFm.display.browser.TweetFeedConfigurator;
 import org.softwareFm.display.swt.ISituationListAndBuilder;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Show;
@@ -60,8 +61,9 @@ public class ExplorerUnit {
 					final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(parent.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 					IMasterDetailSocial masterDetailSocial = new MasterDetailSocial(parent, SWT.NULL);
 					Explorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, service, IPlayListGetter.Utils.noPlayListGetter());
-					new BrowserFeedConfigurator().configure( explorer);
-					new RssFeedConfigurator().configure( explorer);
+					new BrowserFeedConfigurator().configure(explorer);
+					new RssFeedConfigurator().configure(explorer);
+					new TweetFeedConfigurator().configure(explorer);
 					Size.resizeMeToParentsSize(masterDetailSocial.getControl());
 					return explorer;
 				}

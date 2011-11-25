@@ -14,6 +14,7 @@ import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.display.browser.BrowserFeedConfigurator;
 import org.softwareFm.display.browser.RssFeedConfigurator;
+import org.softwareFm.display.browser.TweetFeedConfigurator;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Button;
 import org.softwareFm.display.swt.Swts.Grid;
@@ -51,6 +52,7 @@ public class ExplorerWithRadioChannel {
 
 					new BrowserFeedConfigurator().configure( explorer);
 					new RssFeedConfigurator().configure( explorer);
+					new TweetFeedConfigurator().configure( explorer);
 
 					explorer.displayCard(firstUrl, new CardAndCollectionDataStoreAdapter());
 					buttonPanel.setLayoutData(Grid.makeGrabHorizonalAndFillGridData());

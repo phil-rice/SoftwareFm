@@ -69,7 +69,7 @@ public class ArtifactPlayListGetter implements IPlayListGetter {
 		@Override
 		protected PlayItem makePlayItemFrom(Map<String, Object> value) {
 			String tweetName = (String) value.get("tweet");
-			return new PlayItem(DisplayConstants.browserFeedType, "http://mobile.twitter.com/" + tweetName);
+			return new PlayItem(DisplayConstants.tweetFeedType,  tweetName);
 		}
 
 	}

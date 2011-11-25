@@ -14,6 +14,7 @@ import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.card.dataStore.ICardDataStoreCallback;
 import org.softwareFm.display.browser.BrowserFeedConfigurator;
 import org.softwareFm.display.browser.RssFeedConfigurator;
+import org.softwareFm.display.browser.TweetFeedConfigurator;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.display.swt.Swts.Size;
@@ -35,14 +36,15 @@ public class ExplorerView extends ViewPart {
 
 		final String rootUrl = "/softwareFm/data";
 		IRepositoryFacard repository = activator.getRepository();
-		final CardConfig cardConfig =ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(parent.getDisplay(), new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(parent, repository)));
+		final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(parent.getDisplay(), new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(parent, repository)));
 		MasterDetailSocial masterDetailSocial = new MasterDetailSocial(parent, SWT.NULL);
 		Size.resizeMeToParentsSize(masterDetailSocial.getControl());
 
 		IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardConfig.cardDataStore);
 		final Explorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, activator.getServiceExecutor(), playListGetter);
-		new BrowserFeedConfigurator().configure( explorer);
-		new RssFeedConfigurator().configure( explorer);
+		new BrowserFeedConfigurator().configure(explorer);
+		new RssFeedConfigurator().configure(explorer);
+		new TweetFeedConfigurator().configure(explorer);
 
 		ISelectedBindingManager selectedBindingManager = activator.getSelectedBindingManager();// creates it
 

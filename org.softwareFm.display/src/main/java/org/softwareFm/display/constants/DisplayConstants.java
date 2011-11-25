@@ -31,6 +31,7 @@ public class DisplayConstants {
 
 	public static final String rssFeedType = "feedType.rss";
 	public static final String browserFeedType = "feedType.browser";
+	public static final String tweetFeedType = "feedType.tweet";
 
 	public static final String rssTitleKey = "rss.title";
 	public static final String cannotFindValueForKey = "Cannot find value for key {0} in {1}";
