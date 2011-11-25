@@ -46,6 +46,19 @@ public class CardPopupMenuContributor implements IPopupMenuContributor<ICard> {
 		}
 		if (menu.getItemCount() > 0)
 			new MenuItem(menu, SWT.SEPARATOR);
+		MenuItem viewContents = new MenuItem(menu, SWT.NULL);
+		String cardContentFieldName = IResourceGetter.Utils.getOrNull(card.cardConfig().resourceGetterFn, key, CardConstants.cardContentField);
+		if (cardContentFieldName != null) {
+			String cardContentMenuPattern = IResourceGetter.Utils.getOrNull(card.cardConfig().resourceGetterFn, key, CardConstants.cardContentMenu);
+			viewContents.setText(MessageFormat.format(cardContentMenuPattern, key));
+			viewContents.addListener(SWT.Selection, new Listener() {
+				@Override
+				public void handleEvent(Event event) {
+					
+				}
+			});
+		}
+
 		MenuItem addGroup = new MenuItem(menu, SWT.NULL);
 		addGroup.setText(IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.menuItemAddArtifact));
 		addGroup.addListener(SWT.Selection, new Listener() {

@@ -16,4 +16,6 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine{
 	
 	void addCardListener(ICardChangedListener listener);
 
+	void showContents();
+
 }

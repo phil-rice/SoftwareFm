@@ -4,12 +4,15 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.card.card.IAddItemProcessor;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardChangedListener;
@@ -30,6 +33,7 @@ import org.softwareFm.card.navigation.internal.NavNextHistoryPrevConfig;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.browser.IBrowserPart;
 import org.softwareFm.display.composites.IHasControl;
+import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.timeline.IPlayListGetter;
@@ -49,7 +53,11 @@ import org.softwarefm.collections.ICollectionConfigurationFactory;
 
 public class Explorer implements IExplorer {
 
-	private  final class AddItemProcessor implements IAddItemProcessor {
+	static enum State {
+		SHOWING_DETAIL, BROWSING_LIST;
+	}
+
+	private final class AddItemProcessor implements IAddItemProcessor {
 		private final IMasterDetailSocial masterDetailSocial;
 
 		private AddItemProcessor(IMasterDetailSocial masterDetailSocial) {
@@ -105,6 +113,7 @@ public class Explorer implements IExplorer {
 	private BrowserAndNavBar browser;
 	private TimeLine timeLine;
 	private IHelpText helpText;
+	private State state = State.SHOWING_DETAIL;
 
 	public Explorer(final CardConfig cardConfigParam, final String rootUrl, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter) {
 		this.cardConfig = cardConfigParam.withAddItemProcessor(makeAddItemProcessor(masterDetailSocial));
@@ -118,12 +127,13 @@ public class Explorer implements IExplorer {
 		callbackToGotoUrlAndUpdateDetails = new ICallback<String>() {
 			@Override
 			public void process(String url) throws Exception {
+				state = State.SHOWING_DETAIL;
 				masterDetailSocial.setMaster(cardHolder.getControl());
 				cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, new CardAndCollectionDataStoreAdapter() {
 					@Override
 					public void finished(ICardHolder cardHolder, String url, ICard card) {
 						String key = findDefaultChild(card);
-						showDetailForCardKey(masterDetailSocial, card, key, card.data().get(key));
+						showDetailForCardKey(card, key, card.data().get(key));
 					}
 				});
 			}
@@ -151,7 +161,16 @@ public class Explorer implements IExplorer {
 		cardHolder.addLineSelectedListener(new ILineSelectedListener() {
 			@Override
 			public void selected(final ICard card, final String key, final Object value) {
-				showDetailForCardKey(masterDetailSocial, card, key, value);
+				switch (state) {
+				case BROWSING_LIST:
+					browseDetailForCardKey(card, key, value);
+					break;
+				case SHOWING_DETAIL:
+					showDetailForCardKey(card, key, value);
+					break;
+				default:
+					throw new IllegalStateException(state.toString());
+				}
 			}
 
 		});
@@ -206,7 +225,23 @@ public class Explorer implements IExplorer {
 		return result;
 	}
 
-	private void showDetailForCardKey(IMasterDetailSocial masterDetailSocial, final ICard card, final String key, final Object value) {
+	@SuppressWarnings("unchecked")
+	private void browseDetailForCardKey(ICard card, String key, Object value) {
+		masterDetailSocial.hideSocial();
+		masterDetailSocial.setDetail(browser.getControl());
+		if (value instanceof Map<?, ?>) {
+			Map<String, Object> map = (Map<String, Object>) value;
+			String cardType = (String) map.get(CardConstants.slingResourceType);
+			if (cardType != null) {
+				String cardDetailUrlKey = IResourceGetter.Utils.getOrNull(card.cardConfig().resourceGetterFn, cardType, CardConstants.cardDetailUrl);
+				String url = (String) map.get(cardDetailUrlKey);
+				if (url != null)
+					browser.processUrl(DisplayConstants.browserFeedType, url);
+			}
+		}
+	}
+
+	private void showDetailForCardKey(final ICard card, final String key, final Object value) {
 		masterDetailSocial.showSocial();
 		masterDetailSocial.createAndShowDetail(new IFunction1<Composite, IHasControl>() {
 			@Override
@@ -410,4 +445,29 @@ public class Explorer implements IExplorer {
 		return masterDetailSocial.getComposite();
 	}
 
+	@Override
+	public void showContents() {
+		ICard card = cardHolder.getCard();
+		if (card != null) {
+			Table table = card.getTable();
+			int selectionIndex = table.getSelectionIndex();
+			if (selectionIndex != -1) {
+				TableItem item = table.getItem(selectionIndex);
+				Object key = item.getData();
+				Map<String, Object> data = card.data();
+				Object value = data.get(key);
+				if (value instanceof Map<?, ?>) {
+					System.out.println("value: " + value);
+					displayCard(card.url() + "/" + key);
+					state = State.BROWSING_LIST;
+					Map<String,Object> map = (Map<String, Object>) value;
+					if (map.size()>0){
+						Entry<String, Object> entry = map.entrySet().iterator().next();
+						browseDetailForCardKey(card, entry.getKey(), entry.getValue());
+					}
+				}
+			}
+		}
+
+	}
 }

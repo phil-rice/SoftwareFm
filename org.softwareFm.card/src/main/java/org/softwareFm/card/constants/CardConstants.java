@@ -5,6 +5,10 @@ public class CardConstants {
 	public static final String buttonTestTitle = "button.test.title";
 
 	public static final String cardHolderLoadingText = "card.holder.loading.text";
+	public static final String cardDetailUrl = "card.detail.url";
+	public static final String cardContentMenu = "card.content.menu";
+	public static final String cardContentField = "card.content.field";
+	
 	public static final String slingResourceType = "sling:resourceType";
 	public static final String cannotFindTableItemWithKey = "Cannot find table item with key {0}";
 	public static final String exceptionChangingValue = "Exception changing value with key {0}, index {1}, and newValue {2})";

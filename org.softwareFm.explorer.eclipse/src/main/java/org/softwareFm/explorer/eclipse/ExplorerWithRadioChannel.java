@@ -82,6 +82,12 @@ public class ExplorerWithRadioChannel {
 							explorer.selectAndNext(url.get());
 						}
 					});
+					Button.makePushButton(buttonPanel, null, "Show List", false, new Runnable() {
+						@Override
+						public void run() {
+							explorer.showContents();
+						}
+					});
 					Swts.Row.setRowDataFor(100, 20, buttonPanel.getChildren());
 
 					return explorerAndButton;
