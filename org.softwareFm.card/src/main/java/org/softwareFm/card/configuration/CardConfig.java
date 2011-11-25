@@ -43,7 +43,7 @@ public class CardConfig {
 		public String apply(ICard from) throws Exception {
 			return Strings.lastSegment(from.url(), "/");
 		}
-	};;
+	};
 	/** Enabled the debugging of chain of modifiers {@link #cardDataModifiers} that change the raw data from the server into display data */
 	public final boolean debugModifiers = false;
 	/** The {@link org.softwareFm.card.card.internal.Card.CardLayout} uses this to determine how wide to display the name column. The bigger the more space it takes up */
@@ -58,6 +58,8 @@ public class CardConfig {
 	public final int rightMargin;
 	public final int topMargin;
 	public final int bottomMargin;
+	public final int cardIconWidth = 16;
+	public final int cardIconHeight = 16;;
 
 	/** The title for the card is this big */
 	public final int titleHeight;
@@ -242,6 +244,9 @@ public class CardConfig {
 	}
 
 	public CardConfig withNavIconFn(IFunction1<Map<String, Object>, Image> navIconFn) {
+		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, menuItems);
+	}
+	public CardConfig withIconFn(IFunction1<LineItem, Image> iconFn) {
 		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, menuItems);
 	}
 

@@ -11,6 +11,7 @@ import org.eclipse.swt.events.MenuAdapter;
 import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
@@ -50,8 +51,8 @@ public class Card implements ICard, IHasTable {
 
 		@Override
 		protected void layout(Composite composite, boolean flushCache) {
-//			System.out.println(Swts.boundsUpToShell(composite));
-			
+			// System.out.println(Swts.boundsUpToShell(composite));
+
 			CardComposite card = (CardComposite) composite;
 			Rectangle ca = card.getClientArea();
 			card.table.setBounds(ca);
@@ -90,14 +91,14 @@ public class Card implements ICard, IHasTable {
 		private final Object lock = new Object();
 		public String cardType;
 
-		public CardComposite(Composite parent, final CardConfig cardConfig, final String url, Map<String, Object> rawData, String cardType, TitleSpec titleSpec) {
+		public CardComposite(Composite parent, final CardConfig cardConfig, final String url, Map<String, Object> rawData, final String cardType, TitleSpec titleSpec) {
 			super(parent, SWT.NULL);
 
 			this.cardConfig = cardConfig;
 			this.url = url;
 			this.rawData = rawData;
 			this.cardType = cardType;
-			this.table = new Table(this, cardConfig.cardStyle|SWT.V_SCROLL);
+			this.table = new Table(this, cardConfig.cardStyle | SWT.V_SCROLL);
 			this.nameColumn = new TableColumn(table, SWT.NONE);
 			this.valueColumn = new TableColumn(table, SWT.NONE);
 
@@ -146,8 +147,9 @@ public class Card implements ICard, IHasTable {
 			String displayValue = Functions.call(cardConfig.valueFn(), lineItem);
 			String name = Functions.call(cardConfig.nameFn(), lineItem);
 			tableItem.setText(new String[] { name, displayValue });
+			Image image = Functions.call(cardConfig.iconFn, lineItem);
+			tableItem.setImage(0, image);
 			tableItem.setData(lineItem.key);
-
 		}
 
 		private void valueChanged(String key, Object newValue) {
@@ -226,6 +228,7 @@ public class Card implements ICard, IHasTable {
 			}
 		});
 	}
+
 	public void notifyLineSelectedListeners(String key) {
 		for (ILineSelectedListener lineSelectedListener : lineSelectedListeners) {
 			lineSelectedListener.selected(Card.this, key, content.data.get(key));

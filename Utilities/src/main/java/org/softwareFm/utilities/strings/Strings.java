@@ -25,6 +25,10 @@ public class Strings {
 		}
 		return builder.toString();
 	}
+	
+	public static String replaceColonWithUnderscore(String raw){
+		return raw.replace(":", "_");
+	}
 
 	public static List<String> splitIgnoreBlanks(String raw, String separator) {
 		List<String> result = Lists.newList();

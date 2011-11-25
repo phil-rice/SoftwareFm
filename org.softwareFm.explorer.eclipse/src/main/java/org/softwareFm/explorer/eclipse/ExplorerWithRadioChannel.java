@@ -33,7 +33,7 @@ public class ExplorerWithRadioChannel {
 		final IServiceExecutor service = IServiceExecutor.Utils.defaultExecutor();
 		try {
 			final String rootUrl = "/softwareFm/data";
-			final String firstUrl = "/softwareFm/data/org";
+			final String firstUrl = "/softwareFm/data/ant/ant/artifact/ant";
 
 			Show.display(ExplorerWithRadioChannel.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 				@Override
