@@ -1,4 +1,4 @@
-package org.softwareFm.explorer.eclipse;
+package org.softwarefm.collections.explorer;
 
 
 import java.io.File;
@@ -36,6 +36,7 @@ import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.strings.Strings;
 import org.softwarefm.collections.ICollectionConfigurationFactory;
+import org.softwarefm.collections.constants.CollectionConstants;
 
 public class UnrecognisedJar implements IHasComposite {
 
@@ -91,9 +92,9 @@ public class UnrecognisedJar implements IHasComposite {
 			okCancel = new OKCancelWithBorder(this, cardConfig, new Runnable() {
 				@Override
 				public void run() {
-					String groupId = (String) card.data().get(EclipseConstants.groupId);
-					String artifactId = (String) card.data().get(EclipseConstants.artifactId);
-					String version = (String) card.data().get(EclipseConstants.version);
+					String groupId = (String) card.data().get(CollectionConstants.groupId);
+					String artifactId = (String) card.data().get(CollectionConstants.artifactId);
+					String version = (String) card.data().get(CollectionConstants.version);
 					new NewJarImporter(cardConfig, CardConstants.manuallyAdded, digest, groupId, artifactId, version).process(afterOk);
 				}
 			}, new Runnable() {
@@ -118,13 +119,13 @@ public class UnrecognisedJar implements IHasComposite {
 			if (card != null)
 				card.getControl().dispose();
 			final Map<String, Object> rawData = Maps.stringObjectMap(//
-					EclipseConstants.groupId, "Please specify the group id",//
-					EclipseConstants.artifactId, "Please specify the artifact id",//
-					EclipseConstants.version, "Please specify the version");
+					CollectionConstants.groupId, "Please specify the group id",//
+					CollectionConstants.artifactId, "Please specify the artifact id",//
+					CollectionConstants.version, "Please specify the version");
 			final Map<String, Object> startData = Maps.stringObjectMap(//
-					EclipseConstants.groupId, "Please specify the group id",//
-					EclipseConstants.artifactId, Strings.withoutVersion(file, "Please specify the artifact id"),//
-					EclipseConstants.version, Strings.versionPartOf(file, "Please specify the version"));
+					CollectionConstants.groupId, "Please specify the group id",//
+					CollectionConstants.artifactId, Strings.withoutVersion(file, "Please specify the artifact id"),//
+					CollectionConstants.version, Strings.versionPartOf(file, "Please specify the version"));
 			card = ICardFactory.Utils.createCardWithLayout(this, this.cardConfig, "neverused", startData);
 			TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, card);
 			String name = file == null ? "" : file.getName();
@@ -156,9 +157,9 @@ public class UnrecognisedJar implements IHasComposite {
 							Text text = (Text) editor.getEditor();
 							TableItem item = editor.getItem();
 							card.valueChanged((String) item.getData(), text.getText());
-							boolean groupIdChanged = hasChanged(card, EclipseConstants.groupId);
-							boolean artifactIdChanged = hasChanged(card, EclipseConstants.artifactId);
-							boolean versionChanged = hasChanged(card, EclipseConstants.version);
+							boolean groupIdChanged = hasChanged(card, CollectionConstants.groupId);
+							boolean artifactIdChanged = hasChanged(card, CollectionConstants.artifactId);
+							boolean versionChanged = hasChanged(card, CollectionConstants.version);
 							boolean allChanged = groupIdChanged && versionChanged && artifactIdChanged;
 							okCancel.setOkEnabled(allChanged);
 						}

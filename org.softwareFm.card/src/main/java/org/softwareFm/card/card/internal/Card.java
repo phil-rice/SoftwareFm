@@ -210,7 +210,7 @@ public class Card implements ICard, IHasTable {
 			@Override
 			public void handleEvent(Event event) {
 				final Menu menu = new Menu(getControl());
-				cardConfig.popupMenuContributor.contributeTo(event, menu, Card.this);
+				cardConfig.menuItems.contributeTo(event, menu, Card.this);
 				menu.setVisible(true);
 				menu.addMenuListener(new MenuAdapter() {
 					@Override

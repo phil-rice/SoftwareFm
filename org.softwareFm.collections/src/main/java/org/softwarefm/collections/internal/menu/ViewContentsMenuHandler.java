@@ -10,8 +10,15 @@ import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.menu.ICardMenuItemHandler;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwarefm.collections.explorer.IExplorer;
 
 public class ViewContentsMenuHandler implements ICardMenuItemHandler {
+
+	private final IExplorer explorer;
+
+	public ViewContentsMenuHandler(IExplorer explorer) {
+		this.explorer = explorer;
+	}
 
 	@Override
 	public MenuItem optionallyCreate(ICard card, IResourceGetter resourceGetter, Menu menu, Event event, String key) {
@@ -21,6 +28,7 @@ public class ViewContentsMenuHandler implements ICardMenuItemHandler {
 			if (cardContentMenuPattern != null) {
 				MenuItem viewContents = new MenuItem(menu, SWT.NULL);
 				viewContents.setText(MessageFormat.format(cardContentMenuPattern, key));
+				return viewContents;
 			}
 		}
 		return null;
@@ -28,8 +36,7 @@ public class ViewContentsMenuHandler implements ICardMenuItemHandler {
 
 	@Override
 	public void execute(ICard card, MenuItem item) {
-		// TODO Auto-generated method stub
-
+		explorer.showContents();
 	}
 
 }

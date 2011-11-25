@@ -2,9 +2,7 @@ package org.softwareFm.card.configuration.internal;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ILineItemFunction;
-import org.softwareFm.card.card.IPopupMenuContributor;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.constants.CardConstants;
@@ -46,7 +44,6 @@ public class BasicCardConfigurator implements ICardConfigurator {
 				withFollowOn(IFollowOnFragment.Utils.followOnMaps).//
 
 				withTitleSpecFn(TitleSpec.cardToTitleSpecFn(display, imageFn)).//
-				withPopupMenuContributor(IPopupMenuContributor.Utils.<ICard> noContributor()).//
 				withEditorFn(IEditorDetailAdder.Utils.defaultEditorFn());
 	}
 

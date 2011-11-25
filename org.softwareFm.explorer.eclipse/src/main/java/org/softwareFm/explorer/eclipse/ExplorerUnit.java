@@ -7,6 +7,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.display.browser.BrowserFeedConfigurator;
 import org.softwareFm.display.browser.RssFeedConfigurator;
@@ -19,6 +20,9 @@ import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.services.IServiceExecutor;
 import org.softwarefm.collections.ICollectionConfigurationFactory;
+import org.softwarefm.collections.explorer.Explorer;
+import org.softwarefm.collections.explorer.IMasterDetailSocial;
+import org.softwarefm.collections.explorer.MasterDetailSocial;
 
 public class ExplorerUnit {
 
@@ -39,7 +43,7 @@ public class ExplorerUnit {
 					String social = (String) map.get("social");
 
 					if (master != null)
-						explorer.displayCard(master);
+						explorer.displayCard(master, new CardAndCollectionDataStoreAdapter());
 					if (jar != null)
 						explorer.displayUnrecognisedJar(new File(jar.get("jar")), jar.get("digest"));
 					if (browser != null)

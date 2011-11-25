@@ -1,4 +1,4 @@
-package org.softwareFm.explorer.eclipse;
+package org.softwarefm.collections.explorer;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -19,6 +19,7 @@ import org.softwareFm.utilities.callbacks.MemoryCallback;
 import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwarefm.collections.ICollectionConfigurationFactory;
+import org.softwarefm.collections.constants.CollectionConstants;
 
 public class NewJarImporterTest extends TestCase {
 
@@ -33,9 +34,9 @@ public class NewJarImporterTest extends TestCase {
 		newJarImporter.process(memory);
 		assertEquals(Maps.makeLinkedMap(//
 				"/softwareFm/jars/01/23/012345", //
-				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.collection, EclipseConstants.groupId, "g", EclipseConstants.artifactId, "a", CardConstants.version, "v"),//
+				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.collection, CollectionConstants.groupId, "g", CollectionConstants.artifactId, "a", CardConstants.version, "v"),//
 				"/prefix/g/g", //
-				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.group, EclipseConstants.groupId, "g"),//
+				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.group, CollectionConstants.groupId, "g"),//
 				"/prefix/g/g/artifact", //
 				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.collection),//
 				"/prefix/g/g/artifact/a", //
@@ -43,7 +44,7 @@ public class NewJarImporterTest extends TestCase {
 				"/prefix/g/g/artifact/a/version", //
 				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.collection),//
 				"/prefix/g/g/artifact/a/version/v", //
-				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.version, EclipseConstants.groupId, "g", EclipseConstants.artifactId, "a", EclipseConstants.version, "v"),//
+				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.version, CollectionConstants.groupId, "g", CollectionConstants.artifactId, "a", CollectionConstants.version, "v"),//
 				"/prefix/g/g/artifact/a/version/v/digest", //
 				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.collection),//
 				"/prefix/g/g/artifact/a/version/v/digest/012345", //

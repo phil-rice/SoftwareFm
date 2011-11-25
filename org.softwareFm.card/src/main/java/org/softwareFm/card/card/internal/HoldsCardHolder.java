@@ -11,7 +11,6 @@ import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.card.ICardSelectedListener;
 import org.softwareFm.card.card.IHasCardConfig;
 import org.softwareFm.card.card.ILineSelectedListener;
-import org.softwareFm.card.card.IPopupMenuContributor;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreVisitorMonitored;
 
@@ -22,7 +21,7 @@ public class HoldsCardHolder extends Composite implements IHasCardConfig {
 
 	public HoldsCardHolder(Composite parent, int style, CardConfig cardConfig) {
 		super(parent, style);
-		this.cardConfig = cardConfig.withStyleAndSelection(cardConfig.cardStyle, false).withPopupMenuContributor(IPopupMenuContributor.Utils.<ICard>noContributor());
+		this.cardConfig = cardConfig.withStyleAndSelection(cardConfig.cardStyle, false).withNoMenuHandlers();
 	}
 
 	public void addCardSelectedListener(ICardSelectedListener listener) {

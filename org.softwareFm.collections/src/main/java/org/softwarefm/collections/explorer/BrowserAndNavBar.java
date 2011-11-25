@@ -1,4 +1,4 @@
-package org.softwareFm.explorer.eclipse;
+package org.softwarefm.collections.explorer;
 
 import java.util.concurrent.Future;
 

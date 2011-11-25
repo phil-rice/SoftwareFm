@@ -7,4 +7,6 @@ Bundle-Activator: org.softwarefm.collections.Activator
 Require-Bundle: org.softwareFm.card;bundle-version="1.0.0";visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.softwarefm.collections
+Export-Package: org.softwarefm.collections,
+ org.softwarefm.collections.constants,
+ org.softwarefm.collections.explorer

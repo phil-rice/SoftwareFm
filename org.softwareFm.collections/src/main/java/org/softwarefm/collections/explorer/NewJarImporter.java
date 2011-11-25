@@ -1,4 +1,4 @@
-package org.softwareFm.explorer.eclipse;
+package org.softwarefm.collections.explorer;
 
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -9,10 +9,10 @@ import org.softwareFm.card.dataStore.IAfterEditCallback;
 import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.display.data.IUrlGeneratorMap;
-import org.softwareFm.jdtBinding.api.JdtConstants;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwarefm.collections.constants.CollectionConstants;
 
 public class NewJarImporter {
 
@@ -74,7 +74,7 @@ public class NewJarImporter {
 		this.groupId = groupId;
 		map = cardConfig.urlGeneratorMap;
 		importer = new ChainImporter(cardConfig);
-		groupIdArtifactIdVersionMap = Maps.stringObjectMap(EclipseConstants.groupId, groupId, EclipseConstants.artifactId, artifactId, EclipseConstants.version, version);
+		groupIdArtifactIdVersionMap = Maps.stringObjectMap(CollectionConstants.groupId, groupId, CollectionConstants.artifactId, artifactId, CollectionConstants.version, version);
 		groupIdArtifactIdVersionDigestMap = Maps.with(groupIdArtifactIdVersionMap, CardConstants.digest, digest);
 	}
 
@@ -104,12 +104,12 @@ public class NewJarImporter {
 			}
 		},//
 				map(CardConstants.jarUrlKey, Maps.with(groupIdArtifactIdVersionMap, CardConstants.slingResourceType, CardConstants.collection)), //
-				stage(CardConstants.urlGroupKey, EclipseConstants.groupId, groupId, CardConstants.slingResourceType, CardConstants.group),//
+				stage(CardConstants.urlGroupKey, CollectionConstants.groupId, groupId, CardConstants.slingResourceType, CardConstants.group),//
 				collection(CardConstants.urlGroupKey, CardConstants.artifact), //
 				stage(CardConstants.artifactUrlKey, CardConstants.slingResourceType, CardConstants.artifact),//
 				collection(CardConstants.artifactUrlKey, CardConstants.version), //
 				map(CardConstants.versionUrlKey, Maps.with(groupIdArtifactIdVersionMap, CardConstants.slingResourceType, CardConstants.version)), //
 				collection(CardConstants.versionUrlKey, CardConstants.digest), //
-				stage(CardConstants.digestUrlKey, CardConstants.slingResourceType, CardConstants.versionJar, JdtConstants.hexDigestKey, digest, CardConstants.found, found));
+				stage(CardConstants.digestUrlKey, CardConstants.slingResourceType, CardConstants.versionJar, CardConstants.digest, digest, CardConstants.found, found));
 	}
 }

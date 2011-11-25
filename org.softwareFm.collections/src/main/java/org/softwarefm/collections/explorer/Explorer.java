@@ -1,16 +1,16 @@
-package org.softwareFm.explorer.eclipse;
+package org.softwarefm.collections.explorer;
 
 import java.io.File;
 import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.card.card.IAddItemProcessor;
@@ -24,6 +24,7 @@ import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.dataStore.IAfterEditCallback;
+import org.softwareFm.card.dataStore.ICardAndCollectionDataStoreVisitor;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.card.dataStore.ICardDataStoreCallback;
 import org.softwareFm.card.dataStore.IMutableCardDataStore;
@@ -50,6 +51,10 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.services.IServiceExecutor;
 import org.softwareFm.utilities.strings.Strings;
 import org.softwarefm.collections.ICollectionConfigurationFactory;
+import org.softwarefm.collections.internal.menu.AddItemToCollectionMenuHandler;
+import org.softwarefm.collections.internal.menu.AddNewArtifactMenuHandler;
+import org.softwarefm.collections.internal.menu.OptionalSeparatorMenuHandler;
+import org.softwarefm.collections.internal.menu.ViewContentsMenuHandler;
 
 public class Explorer implements IExplorer {
 
@@ -116,7 +121,13 @@ public class Explorer implements IExplorer {
 	private State state = State.SHOWING_DETAIL;
 
 	public Explorer(final CardConfig cardConfigParam, final String rootUrl, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter) {
-		this.cardConfig = cardConfigParam.withAddItemProcessor(makeAddItemProcessor(masterDetailSocial));
+		this.cardConfig = cardConfigParam.withAddItemProcessor(makeAddItemProcessor(masterDetailSocial)).//
+				withMenuHandlers(//
+						new AddItemToCollectionMenuHandler(),//
+						new OptionalSeparatorMenuHandler(),//
+						new AddNewArtifactMenuHandler(),//
+						new ViewContentsMenuHandler(this)//
+				);
 		this.masterDetailSocial = masterDetailSocial;
 		helpText = masterDetailSocial.createSocial(new IFunction1<Composite, IHelpText>() {
 			@Override
@@ -144,7 +155,7 @@ public class Explorer implements IExplorer {
 				UnrecognisedJar unrecognisedJar = new UnrecognisedJar(from, SWT.NULL, cardConfig, new ICallback<String>() {
 					@Override
 					public void process(String artifactUrl) throws Exception {
-						displayCard(artifactUrl);
+						displayCard(artifactUrl, new CardAndCollectionDataStoreAdapter());
 					}
 				});
 				unrecognisedJar.getComposite().setLayout(new UnrecognisedJar.UnrecognisedJarLayout());
@@ -202,9 +213,9 @@ public class Explorer implements IExplorer {
 	}
 
 	@Override
-	public void displayCard(String url) {
+	public void displayCard(String url, ICardAndCollectionDataStoreVisitor visitor) {
 		masterDetailSocial.setMaster(cardHolder.getControl());
-		cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, new CardAndCollectionDataStoreAdapter());
+		cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, visitor);
 	}
 
 	@Override
@@ -348,31 +359,6 @@ public class Explorer implements IExplorer {
 		return browser.processUrl(feedType, url);
 	}
 
-	public static void main(String[] args) {
-		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacardForCardExplorer();
-		final IServiceExecutor service = IServiceExecutor.Utils.defaultExecutor();
-		try {
-			final String rootUrl = "/softwareFm/data";
-			final String firstUrl = "/softwareFm/data/org";
-
-			Show.display(Explorer.class.getSimpleName(), new IFunction1<Composite, Composite>() {
-				@Override
-				public Composite apply(Composite from) throws Exception {
-					final ICardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(from, facard);
-					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
-					final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
-					IMasterDetailSocial masterDetailSocial = new MasterDetailSocial(from, SWT.NULL);
-					IExplorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, service, IPlayListGetter.Utils.noPlayListGetter());
-					explorer.displayCard(firstUrl);
-					return masterDetailSocial.getComposite();
-				}
-			});
-		} finally {
-			facard.shutdown();
-			service.shutdown();
-		}
-	}
-
 	@Override
 	public PlayItem next() {
 		masterDetailSocial.hideSocial();
@@ -458,16 +444,46 @@ public class Explorer implements IExplorer {
 				Object value = data.get(key);
 				if (value instanceof Map<?, ?>) {
 					System.out.println("value: " + value);
-					displayCard(card.url() + "/" + key);
+					displayCard(card.url() + "/" + key, new CardAndCollectionDataStoreAdapter() {
+						@Override
+						public void finished(ICardHolder cardHolder, String url, ICard card) {
+							if (card.getControl().isDisposed())
+								return;
+							if (card.getTable().getItemCount() > 0) {
+								card.getTable().select(0);
+								card.getTable().notifyListeners(SWT.Selection, new Event());
+							}
+						}
+					});
 					state = State.BROWSING_LIST;
-					Map<String,Object> map = (Map<String, Object>) value;
-					if (map.size()>0){
-						Entry<String, Object> entry = map.entrySet().iterator().next();
-						browseDetailForCardKey(card, entry.getKey(), entry.getValue());
-					}
 				}
 			}
 		}
 
+	}
+
+	public static void main(String[] args) {
+		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacardForCardExplorer();
+		final IServiceExecutor service = IServiceExecutor.Utils.defaultExecutor();
+		try {
+			final String rootUrl = "/softwareFm/data";
+			final String firstUrl = "/softwareFm/data/org";
+
+			Show.display(Explorer.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+				@Override
+				public Composite apply(Composite from) throws Exception {
+					final ICardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(from, facard);
+					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
+					final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
+					IMasterDetailSocial masterDetailSocial = new MasterDetailSocial(from, SWT.NULL);
+					IExplorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, service, IPlayListGetter.Utils.noPlayListGetter());
+					explorer.displayCard(firstUrl, new CardAndCollectionDataStoreAdapter());
+					return masterDetailSocial.getComposite();
+				}
+			});
+		} finally {
+			facard.shutdown();
+			service.shutdown();
+		}
 	}
 }

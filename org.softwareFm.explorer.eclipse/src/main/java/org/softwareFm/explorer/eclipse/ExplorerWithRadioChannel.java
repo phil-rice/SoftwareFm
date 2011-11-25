@@ -10,6 +10,7 @@ import org.softwareFm.card.card.ICardChangedListener;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.display.browser.BrowserFeedConfigurator;
 import org.softwareFm.display.browser.RssFeedConfigurator;
@@ -21,6 +22,10 @@ import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.services.IServiceExecutor;
 import org.softwarefm.collections.ICollectionConfigurationFactory;
+import org.softwarefm.collections.explorer.Explorer;
+import org.softwarefm.collections.explorer.IExplorer;
+import org.softwarefm.collections.explorer.IMasterDetailSocial;
+import org.softwarefm.collections.explorer.MasterDetailSocial;
 
 public class ExplorerWithRadioChannel {
 	public static void main(String[] args) {
@@ -47,7 +52,7 @@ public class ExplorerWithRadioChannel {
 					new BrowserFeedConfigurator().configure( explorer);
 					new RssFeedConfigurator().configure( explorer);
 
-					explorer.displayCard(firstUrl);
+					explorer.displayCard(firstUrl, new CardAndCollectionDataStoreAdapter());
 					buttonPanel.setLayoutData(Grid.makeGrabHorizonalAndFillGridData());
 					masterDetailSocial.getComposite().setLayoutData(Grid.makeGrabHorizonalVerticalAndFillGridData());
 

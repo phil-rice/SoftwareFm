@@ -9,6 +9,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
+import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.card.dataStore.ICardDataStoreCallback;
 import org.softwareFm.display.browser.BrowserFeedConfigurator;
@@ -23,6 +24,8 @@ import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwarefm.collections.ICollectionConfigurationFactory;
+import org.softwarefm.collections.explorer.Explorer;
+import org.softwarefm.collections.explorer.MasterDetailSocial;
 
 public class ExplorerView extends ViewPart {
 
@@ -55,7 +58,7 @@ public class ExplorerView extends ViewPart {
 					public Void process(String jarUrl, Map<String, Object> result) throws Exception {
 						IUrlGenerator cardUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.artifactUrlKey);
 						String artifactUrl = cardUrlGenerator.findUrlFor(result);
-						explorer.displayCard(artifactUrl);
+						explorer.displayCard(artifactUrl, new CardAndCollectionDataStoreAdapter());
 						explorer.selectAndNext(artifactUrl);
 						return null;
 					}
