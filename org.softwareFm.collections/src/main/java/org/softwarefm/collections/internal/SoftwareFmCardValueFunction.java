@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import org.softwareFm.card.card.AbstractLineItemFunction;
 import org.softwareFm.card.card.LineItem;
 import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
@@ -29,7 +30,10 @@ public class SoftwareFmCardValueFunction extends AbstractLineItemFunction<String
 		String size = findSize(from);
 		if (pattern == null)
 			if (from.value instanceof Map<?, ?>)
-				return size;
+				if (CardConstants.collection.equals(from.cardType))
+					return "";
+				else
+					return size;
 			else
 				return Strings.nullSafeToString(from.value);
 		else
