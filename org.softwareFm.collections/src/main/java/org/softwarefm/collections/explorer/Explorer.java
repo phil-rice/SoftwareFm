@@ -208,6 +208,7 @@ public class Explorer implements IExplorer {
 
 	@Override
 	public void displayUnrecognisedJar(File file, String digest) {
+		masterDetailSocial.showMaster();
 		unrecognisedJar.setFileAndDigest(file, digest);
 		masterDetailSocial.setMaster(unrecognisedJar.getControl());
 		unrecognisedJar.getControl().redraw();
