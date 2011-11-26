@@ -1,3 +1,8 @@
+/* This file is part of SoftwareFm
+/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+/* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
+/* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
+
 package org.softwarefm.collections.explorer;
 
 import java.util.concurrent.Future;
@@ -18,7 +23,6 @@ import org.softwareFm.card.navigation.internal.NavNextHistoryPrevConfig;
 import org.softwareFm.display.browser.BrowserComposite;
 import org.softwareFm.display.browser.IBrowserCompositeBuilder;
 import org.softwareFm.display.browser.IBrowserPart;
-import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.timeline.PlayItem;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.history.IHistory;
@@ -52,7 +56,7 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 			nav.titleLabel.setBounds(navSize.x, 0, ca.width - navSize.x, titleHeight);
 			nav.navNextHistoryPrev.layout();
 			nav.browser.getControl().setBounds(ca.x + cornerRadiusComp, ca.y + titleHeight + cornerRadiusComp, ca.width - twiceComp, ca.height - titleHeight - twiceComp);
-			System.out.println("BANB " + Swts.boundsUpToShell(nav.navNextHistoryPrev.getControl()));
+//			System.out.println("BANB " + Swts.boundsUpToShell(nav.navNextHistoryPrev.getControl()));
 		}
 
 	}

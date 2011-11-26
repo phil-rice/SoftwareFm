@@ -1,3 +1,8 @@
+/* This file is part of SoftwareFm
+/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+/* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
+/* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
+
 package org.softwarefm.collections.explorer;
 
 
@@ -27,7 +32,6 @@ import org.softwareFm.card.editors.OKCancelWithBorder;
 import org.softwareFm.card.title.Title;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.composites.IHasComposite;
-import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -56,7 +60,7 @@ public class UnrecognisedJar implements IHasComposite {
 		@Override
 		protected void layout(Composite composite, boolean flushCache) {
 			UnrecognisedJarComposite c = (UnrecognisedJarComposite) composite;
-			System.out.println(Swts.boundsUpToShell(composite));
+//			System.out.println(Swts.boundsUpToShell(composite));
 			CardConfig cc = c.cardConfig;
 			Rectangle ca = c.getClientArea();
 			Control okCancelControl = c.okCancel.getControl();
