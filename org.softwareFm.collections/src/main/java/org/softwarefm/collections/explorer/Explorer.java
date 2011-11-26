@@ -196,6 +196,7 @@ public class Explorer implements IExplorer {
 
 	@Override
 	public void displayCard(String url, ICardAndCollectionDataStoreVisitor visitor) {
+		masterDetailSocial.showMaster();
 		masterDetailSocial.setMaster(cardHolder.getControl());
 		cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, visitor);
 	}

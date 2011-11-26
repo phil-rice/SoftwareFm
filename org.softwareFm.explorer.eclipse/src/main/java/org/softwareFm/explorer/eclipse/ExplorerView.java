@@ -78,11 +78,13 @@ public class ExplorerView extends ViewPart {
 							explorer.displayUnrecognisedJar(file, hexDigest);
 							explorer.processUrl(DisplayConstants.browserFeedType, unknownJarUrl);
 						}
+						
 						return null;
 					}
 				});
 			}
 		});
+		masterDetailSocial.hideMaster();
 		explorer.processUrl(DisplayConstants.browserFeedType, welcomeUrl);
 
 	}
