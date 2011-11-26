@@ -7,7 +7,7 @@ public class CardConstants {
 	public static final String cardHolderLoadingText = "card.holder.loading.text";
 	public static final String cardContentField = "card.content.field";
 	public static final String cardContentFeedType = "card.content.feedType";
-	
+
 	public static final String slingResourceType = "sling:resourceType";
 	public static final String cannotFindTableItemWithKey = "Cannot find table item with key {0}";
 	public static final String exceptionChangingValue = "Exception changing value with key {0}, index {1}, and newValue {2})";
@@ -26,7 +26,7 @@ public class CardConstants {
 	public static final String menuItemViewActual = "menuitem.view.actual";
 	public static final String menuItemAddCollection = "menuitem.add.collection";
 	public static final String menuItemAddArtifact = "menuitem.add.artifact";
-	
+
 	public static final String cardColorKey = "card.color";
 	public static final String indentTitleKey = "card.title.indent";
 	public static final String cardTitleIcon = "card.title.icon";
@@ -50,6 +50,8 @@ public class CardConstants {
 	public static final String digest = "digest";
 	public static final String versionJar = "jar";
 	public static final String collection = "collection";
-	
+
+	public static final String webPageWelcomeUrl = "webpage.welcome.url";
+	public static final String webPageUnknownJarUrl = "webpage.unknownJar.url";
 
 }

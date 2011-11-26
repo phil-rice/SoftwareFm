@@ -23,7 +23,9 @@ import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.jdtBinding.api.JdtConstants;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.collections.Files;
+import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwarefm.collections.ICollectionConfigurationFactory;
 import org.softwarefm.collections.explorer.Explorer;
 import org.softwarefm.collections.explorer.MasterDetailSocial;
@@ -46,6 +48,10 @@ public class ExplorerView extends ViewPart {
 		new RssFeedConfigurator().configure(explorer);
 		new TweetFeedConfigurator().configure(explorer);
 
+		IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, null);
+		String welcomeUrl = IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.webPageWelcomeUrl);
+		final String unknownJarUrl = IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.webPageUnknownJarUrl);
+		
 		ISelectedBindingManager selectedBindingManager = activator.getSelectedBindingManager();// creates it
 
 		selectedBindingManager.addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
@@ -70,14 +76,14 @@ public class ExplorerView extends ViewPart {
 						File file = ripperResult.path.toFile();
 						if (Files.extension(file.toString()).equals("jar")) {
 							explorer.displayUnrecognisedJar(file, hexDigest);
-							explorer.processUrl(DisplayConstants.browserFeedType, "www.softwarefm.com");
+							explorer.processUrl(DisplayConstants.browserFeedType, unknownJarUrl);
 						}
 						return null;
 					}
 				});
 			}
 		});
-		explorer.processUrl(DisplayConstants.browserFeedType, "www.softwarefm.com");
+		explorer.processUrl(DisplayConstants.browserFeedType, welcomeUrl);
 
 	}
 
