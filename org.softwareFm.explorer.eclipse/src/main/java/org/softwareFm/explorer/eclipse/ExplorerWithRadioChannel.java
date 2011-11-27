@@ -31,7 +31,6 @@ import org.softwarefm.collections.ICollectionConfigurationFactory;
 import org.softwarefm.collections.explorer.Explorer;
 import org.softwarefm.collections.explorer.IExplorer;
 import org.softwarefm.collections.explorer.IMasterDetailSocial;
-import org.softwarefm.collections.explorer.MasterDetailSocial;
 
 public class ExplorerWithRadioChannel {
 	public static void main(String[] args) {
@@ -52,7 +51,7 @@ public class ExplorerWithRadioChannel {
 					final ICardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(from, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 					final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
-					IMasterDetailSocial masterDetailSocial = new MasterDetailSocial(explorerAndButton, SWT.NULL);
+					IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(explorerAndButton);
 					final IExplorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, service, new ArtifactPlayListGetter(cardDataStore));
 
 					new BrowserFeedConfigurator().configure( explorer);

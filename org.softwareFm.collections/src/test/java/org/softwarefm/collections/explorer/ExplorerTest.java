@@ -22,6 +22,7 @@ import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.resources.ResourceGetterMock;
+import org.softwarefm.collections.explorer.internal.MasterDetailSocial;
 
 public class ExplorerTest extends SwtIntegrationAndServiceTest {
 

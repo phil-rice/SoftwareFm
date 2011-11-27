@@ -5,11 +5,13 @@
 
 package org.softwarefm.collections.explorer;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwarefm.collections.explorer.internal.MasterDetailSocial;
 
 public interface IMasterDetailSocial extends IHasComposite {
 	<T extends IHasControl> T createMaster(IFunction1<Composite, T> builder, boolean preserve);
@@ -35,5 +37,11 @@ public interface IMasterDetailSocial extends IHasComposite {
 	void hideMaster();
 
 	void showMaster();
+	
+	public static class Utils {
+		public static IMasterDetailSocial masterDetailSocial(Composite parent){
+			return new MasterDetailSocial(parent, SWT.NULL);
+		}
+	}
 
 }

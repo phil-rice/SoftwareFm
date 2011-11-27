@@ -8,7 +8,6 @@ package org.softwareFm.explorer.eclipse;
 import java.io.File;
 import java.util.Map;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 import org.softwareFm.card.card.ICardFactory;
@@ -33,7 +32,7 @@ import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwarefm.collections.ICollectionConfigurationFactory;
 import org.softwarefm.collections.explorer.Explorer;
-import org.softwarefm.collections.explorer.MasterDetailSocial;
+import org.softwarefm.collections.explorer.IMasterDetailSocial;
 
 public class ExplorerView extends ViewPart {
 
@@ -44,7 +43,7 @@ public class ExplorerView extends ViewPart {
 		final String rootUrl = "/softwareFm/data";
 		IRepositoryFacard repository = activator.getRepository();
 		final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(parent.getDisplay(), new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(parent, repository)));
-		MasterDetailSocial masterDetailSocial = new MasterDetailSocial(parent, SWT.NULL);
+		IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(parent);
 		Size.resizeMeToParentsSize(masterDetailSocial.getControl());
 
 		IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardConfig.cardDataStore);

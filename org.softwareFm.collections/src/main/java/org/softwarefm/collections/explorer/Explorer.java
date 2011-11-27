@@ -55,6 +55,8 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.services.IServiceExecutor;
 import org.softwareFm.utilities.strings.Strings;
 import org.softwarefm.collections.ICollectionConfigurationFactory;
+import org.softwarefm.collections.explorer.internal.MasterDetailSocial;
+import org.softwarefm.collections.explorer.internal.UnrecognisedJar;
 import org.softwarefm.collections.internal.menu.AddItemToCollectionMenuHandler;
 import org.softwarefm.collections.internal.menu.AddNewArtifactMenuHandler;
 import org.softwarefm.collections.internal.menu.OptionalSeparatorMenuHandler;

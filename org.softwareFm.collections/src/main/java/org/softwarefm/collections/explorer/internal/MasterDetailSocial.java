@@ -3,7 +3,7 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwarefm.collections.explorer;
+package org.softwarefm.collections.explorer.internal;
 
 import java.util.Map;
 import java.util.Set;
@@ -22,6 +22,7 @@ import org.softwareFm.utilities.collections.Sets;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwarefm.collections.explorer.IMasterDetailSocial;
 
 public class MasterDetailSocial implements IMasterDetailSocial {
 
@@ -29,15 +30,29 @@ public class MasterDetailSocial implements IMasterDetailSocial {
 
 		private final Composite master;
 
-		private final SashForm detailSocial;
+		final SashForm detailSocial;
 
-		private final Composite detail;
+		final Composite detail;
 		private final Composite social;
+
+		int layoutCount;
+
+		int detailSocialLayoutCount;
 
 		public MasterDetailComposite(Composite parent, int style) {
 			super(parent, style);
 			master = Swts.newComposite(this, SWT.NULL, "Master");
-			detailSocial = Swts.newSashForm(this, SWT.VERTICAL, "DetailSocial");
+			detailSocial = new SashForm(this, SWT.VERTICAL) {
+				@Override
+				public void layout(boolean changed) {
+					super.layout(changed);
+					detailSocialLayoutCount++;
+				}
+				@Override
+				public String toString() {
+					return super.toString() + "." + "DetailSocial";
+				};
+			};
 			detail = Swts.newComposite(detailSocial, SWT.NULL, "Detail");
 			social = Swts.newComposite(detailSocial, SWT.NULL, "Social");
 
@@ -48,9 +63,15 @@ public class MasterDetailSocial implements IMasterDetailSocial {
 			social.setLayout(new StackLayout());
 			setWeights(new int[] { 1, 2 });
 		}
+
+		@Override
+		public void layout(boolean changed) {
+			super.layout(changed);
+			layoutCount++;
+		}
 	}
 
-	private final MasterDetailComposite content;
+	final MasterDetailComposite content;
 	private final Set<Control> preserve = Sets.newSet();
 
 	public MasterDetailSocial(Composite parent, int style) {
@@ -125,33 +146,27 @@ public class MasterDetailSocial implements IMasterDetailSocial {
 
 	@Override
 	public void hideSocial() {
-		if (content.detailSocial.getMaximizedControl() != content.detail) {
-			content.detailSocial.setMaximizedControl(content.detail);
-			content.detailSocial.layout();
-		}
+		setMaximizedControlAndLayout(content.detailSocial, content.detail);
 	}
 
 	@Override
 	public void showSocial() {
-		if (content.getMaximizedControl() != null) {
-			content.detailSocial.setMaximizedControl(null);
-			content.detailSocial.layout();
-		}
+		setMaximizedControlAndLayout(content.detailSocial, null);
 	}
 
 	@Override
 	public void hideMaster() {
-		if (content.getMaximizedControl() != content.detailSocial) {
-			content.setMaximizedControl(content.detailSocial);
-			content.layout();
-		}
+		setMaximizedControlAndLayout(content, content.detailSocial);
 	}
 
 	@Override
 	public void showMaster() {
-		if (content.getMaximizedControl() != null) {
-			content.setMaximizedControl(null);
-			content.layout();
+		setMaximizedControlAndLayout(content, null);
+	}
+
+	private void setMaximizedControlAndLayout(SashForm sashForm, Control control) {
+		if (sashForm.getMaximizedControl() != control) {
+			sashForm.setMaximizedControl(control);
 		}
 	}
 

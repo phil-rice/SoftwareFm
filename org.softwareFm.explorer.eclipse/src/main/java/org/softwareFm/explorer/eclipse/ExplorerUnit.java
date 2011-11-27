@@ -8,7 +8,6 @@ package org.softwareFm.explorer.eclipse;
 import java.io.File;
 import java.util.Map;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.configuration.CardConfig;
@@ -28,7 +27,6 @@ import org.softwareFm.utilities.services.IServiceExecutor;
 import org.softwarefm.collections.ICollectionConfigurationFactory;
 import org.softwarefm.collections.explorer.Explorer;
 import org.softwarefm.collections.explorer.IMasterDetailSocial;
-import org.softwarefm.collections.explorer.MasterDetailSocial;
 
 public class ExplorerUnit {
 
@@ -64,7 +62,7 @@ public class ExplorerUnit {
 					final ICardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(parent, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 					final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(parent.getDisplay(), new CardConfig(cardFactory, cardDataStore));
-					IMasterDetailSocial masterDetailSocial = new MasterDetailSocial(parent, SWT.NULL);
+					IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(parent);
 					Explorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, service, IPlayListGetter.Utils.noPlayListGetter());
 					new BrowserFeedConfigurator().configure(explorer);
 					new RssFeedConfigurator().configure(explorer);

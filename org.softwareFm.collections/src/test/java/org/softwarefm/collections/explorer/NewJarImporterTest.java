@@ -25,6 +25,7 @@ import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwarefm.collections.ICollectionConfigurationFactory;
 import org.softwarefm.collections.constants.CollectionConstants;
+import org.softwarefm.collections.explorer.internal.NewJarImporter;
 
 public class NewJarImporterTest extends TestCase {
 
