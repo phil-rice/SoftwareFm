@@ -5,7 +5,7 @@
 
 package org.softwareFm.jdtBinding.api;
 
-import org.softwareFm.jdtBinding.api.impl.JarDigestor;
+import org.softwareFm.jdtBinding.internal.JarDigestor;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.springframework.core.io.Resource;
 

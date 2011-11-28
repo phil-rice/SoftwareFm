@@ -31,6 +31,7 @@ public class SoftwareFmCardConfigurator implements ICardConfigurator {
 				withDefaultChildFn(ICollectionConfigurationFactory.Utils.softwareFmDefaultChildFunction()).//
 				withRightClickCategoriser(ICollectionConfigurationFactory.Utils.softwareFmRightClickCategoriser()).//
 				withIconFn(new IFunction1<LineItem, Image>() {
+					@SuppressWarnings("unchecked")
 					@Override
 					public Image apply(LineItem from) throws Exception {
 						Image fromKey = getImageFor(from.cardType, from.key);

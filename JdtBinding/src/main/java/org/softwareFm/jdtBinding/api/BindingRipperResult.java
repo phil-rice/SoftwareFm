@@ -12,6 +12,7 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.IBinding;
 import org.softwareFm.utilities.exceptions.WrappedException;
 
@@ -31,12 +32,14 @@ public class BindingRipperResult {
 	public final IPath sourceAttachmentPath;
 	public final IClasspathEntry classpathEntry;
 	public final Map<String, Object> cargo;
+	public final Expression expression;
 
-	public BindingRipperResult(IBinding binding, IJavaProject javaProject, IJavaElement javaElement, IPackageFragmentRoot packageFragment, IPath path, String hexDigest, IPath sourceAttachmentPath, String packageName, String className, String methodName, Map<String, Object> cargo) {
+	public BindingRipperResult(Expression expression, IJavaProject javaProject, IJavaElement javaElement, IPackageFragmentRoot packageFragment, IPath path, String hexDigest, IPath sourceAttachmentPath, String packageName, String className, String methodName, Map<String, Object> cargo) {
 		super();
 		try {
-			this.binding = binding;
-			if (cargo == null && binding != null)// allows tests where both are null..
+			this.expression = expression;
+			this.binding = expression ==null?null:expression.resolveTypeBinding();
+			if (cargo == null && expression != null)// allows tests where both are null..
 				throw new NullPointerException();
 			this.cargo = cargo;
 			this.javaElement = javaElement;

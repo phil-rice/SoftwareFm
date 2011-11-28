@@ -53,20 +53,20 @@ public interface IResourceGetter {
 
 		public static String get(IResourceGetter resourceGetter, String key) {
 			String string = resourceGetter.getStringOrNull(key);
-			if (string == null) {
-				String message = MessageFormat.format(UtilityMessages.missingResource, key);
-//				System.err.println(message);
-			}
+//			if (string == null) {
+//				String message = MessageFormat.format(UtilityMessages.missingResource, key);
+////				System.err.println(message);
+//			}
 			return string;
 		}
 
 		public static <T> String get(IFunction1<T, IResourceGetter> fn, T t, String key) {
 			IResourceGetter resourceGetter = Functions.call(fn, t);
 			String string = resourceGetter.getStringOrNull(key);
-			if (string == null) {
-				String message = MessageFormat.format(UtilityMessages.missingResource, key);
-//				System.err.println(message);
-			}
+//			if (string == null) {
+//				String message = MessageFormat.format(UtilityMessages.missingResource, key);
+////				System.err.println(message);
+//			}
 			return string;
 		}
 

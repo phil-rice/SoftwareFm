@@ -3,7 +3,7 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwareFm.jdtBinding.api.impl;
+package org.softwareFm.jdtBinding.internal;
 
 import java.io.File;
 import java.util.Map;
@@ -17,11 +17,13 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.dom.IBinding;
+import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
+import org.softwareFm.jdtBinding.api.ExpressionData;
 import org.softwareFm.jdtBinding.api.IBindingRipper;
+import org.softwareFm.jdtBinding.api.IExpressionCategoriser;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.maps.Maps;
@@ -31,10 +33,13 @@ public class BindingRipper implements IBindingRipper {
 	private final Map<IPath, String> cache = Maps.newMap();
 
 	@Override
-	public BindingRipperResult rip(IBinding from, Map<String, Object> cargo) {
+	public BindingRipperResult rip(Expression from, Map<String, Object> cargo) {
 		try {
 			if (from != null) {
-				IJavaElement javaElement = from.getJavaElement();
+				ExpressionData expressionData = IExpressionCategoriser.Utils.categoriser().categorise(from);
+				System.out.println("BR: " + expressionData);
+				ITypeBinding binding = from.resolveTypeBinding();
+				IJavaElement javaElement = binding.getJavaElement();
 				if (javaElement != null) {
 					IResource resource = javaElement.getResource();
 					IPath javaElementPath = javaElement.getPath();

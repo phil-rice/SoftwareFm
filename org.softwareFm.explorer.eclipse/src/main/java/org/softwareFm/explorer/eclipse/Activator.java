@@ -12,10 +12,14 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.prefs.BackingStoreException;
+import org.softwareFm.card.card.ICardFactory;
+import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.constants.HttpClientConstants;
 import org.softwareFm.jdtBinding.api.IBindingRipper;
@@ -24,6 +28,7 @@ import org.softwareFm.repositoryFacard.impl.RepositoryFacard;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.services.IServiceExecutor;
+import org.softwarefm.collections.ICollectionConfigurationFactory;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -72,11 +77,16 @@ public class Activator extends AbstractUIPlugin {
 		if (repository != null)
 			repository.shutdown();
 		repository = null;
-		
+
 		if (serviceExecutor != null)
 			serviceExecutor.shutdown();
 		serviceExecutor = null;
 		super.stop(context);
+	}
+
+	public CardConfig getCardConfig(Composite parent) {
+		final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(parent.getDisplay(), new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(parent, getRepository())));
+		return cardConfig;
 	}
 
 	public IRepositoryFacard getRepository() {

@@ -10,11 +10,9 @@ import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
-import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
-import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.card.dataStore.ICardDataStoreCallback;
 import org.softwareFm.display.browser.BrowserFeedConfigurator;
 import org.softwareFm.display.browser.RssFeedConfigurator;
@@ -25,12 +23,10 @@ import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.jdtBinding.api.JdtConstants;
-import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwarefm.collections.ICollectionConfigurationFactory;
 import org.softwarefm.collections.explorer.Explorer;
 import org.softwarefm.collections.explorer.IMasterDetailSocial;
 
@@ -38,11 +34,9 @@ public class ExplorerView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		final Activator activator = Activator.getDefault();
-
 		final String rootUrl = "/softwareFm/data";
-		IRepositoryFacard repository = activator.getRepository();
-		final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(parent.getDisplay(), new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(parent, repository)));
+		final Activator activator = Activator.getDefault();
+		final CardConfig cardConfig = activator.getCardConfig(parent);
 		IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(parent);
 		Size.resizeMeToParentsSize(masterDetailSocial.getControl());
 
@@ -92,6 +86,7 @@ public class ExplorerView extends ViewPart {
 		explorer.processUrl(DisplayConstants.browserFeedType, welcomeUrl);
 
 	}
+
 
 	@Override
 	public void setFocus() {

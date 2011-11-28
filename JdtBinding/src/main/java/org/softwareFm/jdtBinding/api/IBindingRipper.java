@@ -7,12 +7,12 @@ package org.softwareFm.jdtBinding.api;
 
 import java.util.Map;
 
-import org.eclipse.jdt.core.dom.IBinding;
-import org.softwareFm.jdtBinding.api.impl.BindingRipper;
+import org.eclipse.jdt.core.dom.Expression;
+import org.softwareFm.jdtBinding.internal.BindingRipper;
 
 public interface IBindingRipper {
 
-	BindingRipperResult rip(IBinding binding, Map<String, Object> cargo);
+	BindingRipperResult rip(Expression expression, Map<String, Object> cargo);
 
 	public static class Utils {
 		public static IBindingRipper ripper() {

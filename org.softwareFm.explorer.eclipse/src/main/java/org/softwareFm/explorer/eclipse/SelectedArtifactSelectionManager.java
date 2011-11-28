@@ -14,7 +14,6 @@ import org.eclipse.jdt.core.ITypeRoot;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.NodeFinder;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jdt.ui.SharedASTProvider;
@@ -77,8 +76,7 @@ public class SelectedArtifactSelectionManager implements ISelectedBindingManager
 						ASTNode node = NodeFinder.perform(root, textSelection.getOffset(), textSelection.getLength());
 						if (node instanceof Expression) {
 							Expression expression = (Expression) node;
-							ITypeBinding binding = expression.resolveTypeBinding();
-							BindingRipperResult ripperResult = ripper.rip(binding, Maps.<String, Object> makeMap(//
+							BindingRipperResult ripperResult = ripper.rip(expression, Maps.<String, Object> makeMap(//
 									selectionKey, textSelection,//
 									ripperKey, ripper));
 							return ripperResult;
