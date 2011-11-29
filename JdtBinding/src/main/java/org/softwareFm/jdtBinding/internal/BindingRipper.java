@@ -70,7 +70,7 @@ public class BindingRipper implements IBindingRipper {
 						return new BindingRipperResult(from, project, javaElement, root, path, digestAsHexString, attachmentPath, "", "", "", cargo);
 				}
 			}
-			return BindingRipperResult.empty;
+			return new BindingRipperResult(from, null, null, null, null, null,null, "", "", "", cargo);
 		} catch (JavaModelException e) {
 			throw WrappedException.wrap(e);
 		}

@@ -16,6 +16,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.card.card.ICard;
@@ -34,11 +36,11 @@ import org.softwareFm.card.dataStore.ICardDataStoreCallback;
 import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.card.editors.IValueEditor;
+import org.softwareFm.card.menu.ICardMenuItemHandler;
 import org.softwareFm.card.navigation.internal.NavNextHistoryPrevConfig;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.browser.IBrowserPart;
 import org.softwareFm.display.composites.IHasControl;
-import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.timeline.IPlayListGetter;
@@ -83,8 +85,20 @@ public class Explorer implements IExplorer {
 				new AddItemToCollectionMenuHandler(this),//
 				new OptionalSeparatorMenuHandler(),//
 				new AddNewArtifactMenuHandler(this),//
-				new ViewContentsMenuHandler(this)//
-				);
+				new ViewContentsMenuHandler(this),//
+				new ICardMenuItemHandler() {
+					@Override
+					public MenuItem optionallyCreate(ICard card, IResourceGetter resourceGetter, Menu menu, Event event, String key) {
+						MenuItem menuItem = new MenuItem(menu, SWT.NULL);
+						menuItem.setText(IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.menuItemAddSnippet));
+						return menuItem;
+					}
+
+					@Override
+					public void execute(ICard card, MenuItem item) {
+						showAddSnippetEditor(card);
+					}
+				});
 		this.masterDetailSocial = masterDetailSocial;
 		helpText = masterDetailSocial.createSocial(new IFunction1<Composite, IHelpText>() {
 			@Override
@@ -197,6 +211,67 @@ public class Explorer implements IExplorer {
 	}
 
 	@Override
+	public void showAddSnippetEditor(final ICard card) {
+		IValueEditor editor = masterDetailSocial.createDetail(new IFunction1<Composite, IValueEditor>() {
+			@Override
+			public IValueEditor apply(Composite from) throws Exception {
+				return IValueEditor.Utils.textEditorWithLayout(from, card.cardConfig(), card.url(), card.cardType(), "snippet", "", new IDetailsFactoryCallback() {
+					private final IDetailsFactoryCallback callback = this;
+
+					@Override
+					public void updateDataStore(final IMutableCardDataStore store, String url, String key, final Object value) {
+						final String collectionUrl = url + "/snippet";
+						store.processDataFor(collectionUrl, new ICardDataStoreCallback<Void>() {
+							@Override
+							public Void process(final String url, Map<String, Object> data) throws Exception {
+								createNewItem(store, "snippet", Strings.nullSafeToString(value), new IFunction1<String, String>() {
+									@Override
+									public String apply(String from) throws Exception {
+										String result = url + "/" + from;
+										return result;
+									}
+								}, callback);
+								return null;
+							}
+
+							@Override
+							public Void noData(final String url) throws Exception {
+								final Map<String, Object> newData = Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection);
+								store.put(url, newData, new IAfterEditCallback() {
+									@Override
+									public void afterEdit(String url) {
+										try {
+											process(url, newData);
+										} catch (Exception e) {
+											throw WrappedException.wrap(e);
+										}
+									}
+								});
+								return null;
+							}
+						});
+					}
+
+					@Override
+					public void afterEdit(String url) {
+						ICallback.Utils.call(callbackToGotoUrlAndUpdateDetails, url);
+					}
+
+					@Override
+					public void gotData(Control control) {
+					}
+
+					@Override
+					public void cardSelected(String cardUrl) {
+					}
+
+				}, TitleSpec.noTitleSpec(from.getBackground()));
+			}
+		}, false);
+		masterDetailSocial.setDetail(editor.getControl());
+	}
+
+	@Override
 	public IBrowserPart register(String feedType, IFunction1<Composite, IBrowserPart> feedPostProcessor) {
 		return browser.register(feedType, feedPostProcessor);
 	}
@@ -235,10 +310,12 @@ public class Explorer implements IExplorer {
 			Map<String, Object> map = (Map<String, Object>) value;
 			String cardType = (String) map.get(CardConstants.slingResourceType);
 			if (cardType != null) {
+				String cardDetailExtensionKey = IResourceGetter.Utils.getOrNull(card.cardConfig().resourceGetterFn, cardType, CardConstants.cardContentUrl);
 				String cardDetailUrlKey = IResourceGetter.Utils.getOrNull(card.cardConfig().resourceGetterFn, cardType, CardConstants.cardContentField);
-				String url = (String) map.get(cardDetailUrlKey);
-				if (url != null){
-					String cardDetailFeedType= IResourceGetter.Utils.getOr(card.cardConfig().resourceGetterFn, cardType, CardConstants.cardContentFeedType, DisplayConstants.browserFeedType);
+				String feedType = IResourceGetter.Utils.getOrNull(card.cardConfig().resourceGetterFn, cardType, CardConstants.cardContentFeedType);
+				String url = cardDetailExtensionKey ==null ? (String) map.get(cardDetailUrlKey): MessageFormat.format(cardDetailExtensionKey,card.url(), key) ;
+				if (url != null) {
+					String cardDetailFeedType = IResourceGetter.Utils.getOr(card.cardConfig().resourceGetterFn, cardType, CardConstants.cardContentFeedType, feedType);
 					browser.processUrl(cardDetailFeedType, url);
 				}
 			}
@@ -318,14 +395,25 @@ public class Explorer implements IExplorer {
 		}
 	}
 
-	Map<String, Object> createNewItem(final RightClickCategoryResult result, final IMutableCardDataStore store, String newItemName, IAfterEditCallback afterEditCallback) {
-		String cardUrl = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, result.collectionName, CardConstants.cardNameUrlKey);
-		String cardName = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, result.collectionName, CardConstants.cardNameFieldKey);
-		String itemName = MessageFormat.format(cardUrl, Strings.forUrl(newItemName), makeRandomUUID());
-		String fullUrl = result.itemUrl(itemName);
-		Map<String, Object> baseData = Maps.stringObjectMap(CardConstants.slingResourceType, result.collectionName);
+	Map<String, Object> createNewItem(final RightClickCategoryResult result, final IMutableCardDataStore store, String editorText, IAfterEditCallback afterEditCallback) {
+		String collectionName = result.collectionName;
+		IFunction1<String, String> itemNameToUrl = new IFunction1<String, String>() {
+			@Override
+			public String apply(String from) throws Exception {
+				return result.itemUrl(from);
+			}
+		};
+		return createNewItem(store, collectionName, editorText, itemNameToUrl, afterEditCallback);
+	}
+
+	private Map<String, Object> createNewItem(final IMutableCardDataStore store, String collectionName, String editorText, IFunction1<String, String> itemNameToUrl, IAfterEditCallback afterEditCallback) {
+		String cardUrl = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, collectionName, CardConstants.cardNameUrlKey);
+		String cardName = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, collectionName, CardConstants.cardNameFieldKey);
+		String itemName = MessageFormat.format(cardUrl, Strings.forUrl(editorText), makeRandomUUID());
+		String fullUrl = Functions.call(itemNameToUrl, itemName);
+		Map<String, Object> baseData = Maps.stringObjectMap(CardConstants.slingResourceType, collectionName);
 		if (cardName != null)
-			baseData.put(cardName, newItemName);
+			baseData.put(cardName, editorText);
 		store.put(fullUrl, baseData, afterEditCallback);
 		return baseData;
 	}

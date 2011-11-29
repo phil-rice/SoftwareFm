@@ -26,6 +26,8 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine {
 
 	void showContents();
 
+	void showAddSnippetEditor(final ICard card);
+	
 	void showAddCollectionItemEditor(final ICard card, final RightClickCategoryResult result);
 	
 	void showAddNewArtifactEditor();

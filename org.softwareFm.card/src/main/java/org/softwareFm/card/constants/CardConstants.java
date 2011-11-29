@@ -11,6 +11,7 @@ public class CardConstants {
 
 	public static final String cardHolderLoadingText = "card.holder.loading.text";
 	public static final String cardContentField = "card.content.field";
+	public static final String cardContentUrl = "card.content.url";
 	public static final String cardContentFeedType = "card.content.feedType";
 
 	public static final String slingResourceType = "sling:resourceType";
@@ -22,6 +23,7 @@ public class CardConstants {
 	public static final Object found = "found";
 	public static final String urlGroupKey = "urlGenerator.group";
 	public static final String artifactUrlKey = "urlGenerator.artifact";
+	public static final String snippetUrlKey = "urlGenerator.snippet";
 	public static final String versionUrlKey = "urlGenerator.version";
 	public static final String digestUrlKey = "urlGenerator.digest";
 	public static final String jarUrlKey = "urlGenerator.jar";
@@ -31,6 +33,7 @@ public class CardConstants {
 	public static final String menuItemViewActual = "menuitem.view.actual";
 	public static final String menuItemAddCollection = "menuitem.add.collection";
 	public static final String menuItemAddArtifact = "menuitem.add.artifact";
+	public static final String menuItemAddSnippet = "menuitem.add.snippet";
 
 	public static final String cardColorKey = "card.color";
 	public static final String indentTitleKey = "card.title.indent";
@@ -55,8 +58,10 @@ public class CardConstants {
 	public static final String digest = "digest";
 	public static final String versionJar = "jar";
 	public static final String collection = "collection";
+	public static final String snippet = "snippet";
 
 	public static final String webPageWelcomeUrl = "webpage.welcome.url";
 	public static final String webPageUnknownJarUrl = "webpage.unknownJar.url";
+	public static final String urlRogueValue = "<key>";
 
 }

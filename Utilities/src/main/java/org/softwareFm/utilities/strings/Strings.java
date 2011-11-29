@@ -19,6 +19,25 @@ import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.functions.IFunction1;
 
 public class Strings {
+
+	public static String removeBrackets(String raw, char open, char close) {
+		if (raw == null)
+			return null;
+		StringBuilder builder = new StringBuilder();
+		int depth = 0;
+		for (int i = 0; i < raw.length(); i++) {
+			char ch = raw.charAt(i);
+			if (ch == open)
+				depth++;
+			else if (ch == close)
+				depth--;
+			else if (depth == 0)
+				builder.append(ch);
+		}
+		return builder.toString();
+
+	}
+
 	public static <T> String join(Iterable<T> from, String separator) {
 		StringBuilder builder = new StringBuilder();
 		boolean addSeparator = false;
@@ -30,8 +49,8 @@ public class Strings {
 		}
 		return builder.toString();
 	}
-	
-	public static String replaceColonWithUnderscore(String raw){
+
+	public static String replaceColonWithUnderscore(String raw) {
 		return raw.replace(":", "_");
 	}
 
@@ -373,8 +392,9 @@ public class Strings {
 				return compareVersionNumbers(o1, o2);
 			}
 		};
-		
+
 	}
+
 	public static int compareVersionNumbers(String o1, String o2) {
 		Pattern numRegEx = Pattern.compile("\\d*");
 		String[] left = o1.split("[\\.-]");

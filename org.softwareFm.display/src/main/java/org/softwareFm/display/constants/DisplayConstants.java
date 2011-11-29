@@ -36,6 +36,7 @@ public class DisplayConstants {
 
 	public static final String rssFeedType = "feedType.rss";
 	public static final String browserFeedType = "feedType.browser";
+	public static final String snippetFeedType = "feedType.snippet";
 	public static final String tweetFeedType = "feedType.tweet";
 
 	public static final String rssTitleKey = "rss.title";

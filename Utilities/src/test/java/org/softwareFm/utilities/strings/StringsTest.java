@@ -12,6 +12,14 @@ import junit.framework.TestCase;
 import org.softwareFm.utilities.functions.Functions;
 
 public class StringsTest extends TestCase {
+	
+	public void testRemoveBrackets(){
+		assertEquals("onethree", Strings.removeBrackets("one<two>three", '<', '>'));
+		assertEquals("one<two>three", Strings.removeBrackets("one<two>three", '{', '}'));
+		assertEquals("onefive", Strings.removeBrackets("one<two<three>four>five", '<', '>'));
+		assertEquals("", Strings.removeBrackets("", '<', '>'));
+		assertEquals(null, Strings.removeBrackets(null, '<', '>'));
+	}
 
 	public void testCamelCaseToPretty() {
 		assertEquals("G", Strings.camelCaseToPretty("G"));

@@ -5,44 +5,35 @@
 
 package org.softwareFm.explorer.eclipse;
 
-import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.part.ViewPart;
-import org.softwareFm.display.swt.Swts;
+import java.util.Map;
+
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.jdtBinding.api.ExpressionData;
 import org.softwareFm.jdtBinding.api.IExpressionCategoriser;
-import org.softwareFm.utilities.strings.Strings;
+import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwarefm.collections.explorer.Explorer;
 
-public class SnippetView extends ViewPart {
+public class SnippetView extends AbstractExplorerView {
+
+	IExpressionCategoriser categoriser = IExpressionCategoriser.Utils.categoriser();
 
 	@Override
-	public void createPartControl(Composite parent) {
-		final Activator activator = Activator.getDefault();
-		final Text text = new Text(parent, SWT.MULTI | SWT.H_SCROLL);
-		Swts.Size.resizeMeToParentsSize(text);
-
-		ISelectedBindingManager selectedBindingManager = activator.getSelectedBindingManager();// creates it
-		selectedBindingManager.addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
-			@Override
-			public void selectionOccured(final BindingRipperResult ripperResult) {
-				if (ripperResult == null) {
-					text.setText("Ripper result null");
-					return;
-				}
-				Expression expression = ripperResult.expression;
-				ExpressionData data = IExpressionCategoriser.Utils.categoriser().categorise(expression);
-				String content = "Expression: " + Strings.nullSafeToString(expression) + //
-						"\n\nExpressionData: " + data;
-				text.setText(content);
-			}
-		});
+	protected String makeUrl(BindingRipperResult ripperResult, final CardConfig cardConfig, Map<String, Object> data) {
+		ExpressionData key = categoriser.categorise(ripperResult.expression);
+		if (key == null)
+			return null;
+		String baseUrl = rootUrl + "/" + key.classKey;
+		if (key.methodKey != null && key.methodKey.length() > 0) {
+			String result = baseUrl + "/method/" + key.methodKey;
+			return result;
+		} else
+			return baseUrl;
 	}
 
 	@Override
-	public void setFocus() {
+	protected void processNoData(CardConfig cardConfig, Explorer explorer, IResourceGetter resourceGetter, BindingRipperResult ripperResult) {
+		process(cardConfig, explorer, ripperResult, Maps.stringObjectLinkedMap());
 	}
-
 }
