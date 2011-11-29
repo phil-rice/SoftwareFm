@@ -8,7 +8,9 @@ package org.softwarefm.collections.explorer;
 import java.io.File;
 import java.text.MessageFormat;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.Future;
 
@@ -41,6 +43,7 @@ import org.softwareFm.card.navigation.internal.NavNextHistoryPrevConfig;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.browser.IBrowserPart;
 import org.softwareFm.display.composites.IHasControl;
+import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.timeline.IPlayListGetter;
@@ -48,6 +51,7 @@ import org.softwareFm.display.timeline.PlayItem;
 import org.softwareFm.display.timeline.TimeLine;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -313,7 +317,7 @@ public class Explorer implements IExplorer {
 				String cardDetailExtensionKey = IResourceGetter.Utils.getOrNull(card.cardConfig().resourceGetterFn, cardType, CardConstants.cardContentUrl);
 				String cardDetailUrlKey = IResourceGetter.Utils.getOrNull(card.cardConfig().resourceGetterFn, cardType, CardConstants.cardContentField);
 				String feedType = IResourceGetter.Utils.getOrNull(card.cardConfig().resourceGetterFn, cardType, CardConstants.cardContentFeedType);
-				String url = cardDetailExtensionKey ==null ? (String) map.get(cardDetailUrlKey): MessageFormat.format(cardDetailExtensionKey,card.url(), key) ;
+				String url = cardDetailExtensionKey == null ? (String) map.get(cardDetailUrlKey) : MessageFormat.format(cardDetailExtensionKey, card.url(), key);
 				if (url != null) {
 					String cardDetailFeedType = IResourceGetter.Utils.getOr(card.cardConfig().resourceGetterFn, cardType, CardConstants.cardContentFeedType, feedType);
 					browser.processUrl(cardDetailFeedType, url);
@@ -522,6 +526,7 @@ public class Explorer implements IExplorer {
 					displayCard(card.url() + "/" + key, new CardAndCollectionDataStoreAdapter() {
 						@Override
 						public void finished(ICardHolder cardHolder, String url, ICard card) {
+							state = State.BROWSING_LIST;
 							if (card.getControl().isDisposed())
 								return;
 							if (card.getTable().getItemCount() > 0) {
@@ -530,7 +535,6 @@ public class Explorer implements IExplorer {
 							}
 						}
 					});
-					state = State.BROWSING_LIST;
 				}
 			}
 		}
@@ -566,5 +570,54 @@ public class Explorer implements IExplorer {
 			facard.shutdown();
 			service.shutdown();
 		}
+	}
+
+	private final Random random = new Random();
+
+	public void showRandomSnippetFor(String artifactUrl) {
+		masterDetailSocial.setDetail(browser.getControl());
+		masterDetailSocial.hideSocial();
+		cardConfig.cardDataStore.processDataFor(artifactUrl + "/snippet", new ICardDataStoreCallback<Void>() {
+			@Override
+			public Void process(String url, Map<String, Object> result) throws Exception {
+				List<String> keys = Lists.newList();
+				for (Map.Entry<String, Object> entry: result.entrySet()){
+					if (entry.getValue() instanceof Map<?,?>)
+						keys.add(entry.getKey());
+				}
+				if (result.size() > 0) {
+					String key = keys.get(random.nextInt(keys.size()));
+					//TODO centralise this code
+					String urlPattern = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, "snippet", CardConstants.cardContentUrl);
+					String snippetUrl = MessageFormat.format(urlPattern, url, key);
+					browser.processUrl(DisplayConstants.snippetFeedType, snippetUrl);
+				}
+				return null;
+			}
+
+			@Override
+			public Void noData(String url) throws Exception {
+				return null;
+			}
+		});
+
+	}
+
+	public void showRandomContent(ICard card) {
+		masterDetailSocial.hideSocial();
+		masterDetailSocial.setDetail(browser.getControl());
+		Map<String, Object> data = card.data();
+		List<String> keys = Lists.newList();
+		for (Map.Entry<String, Object> entry : data.entrySet()) {
+			if (entry.getValue() instanceof Map<?, ?>)
+				keys.add(entry.getKey());
+		}
+		if (data.size() > 0) {
+			int index = random.nextInt(keys.size());
+			card.getTable().select(index);
+			state = State.BROWSING_LIST;
+			card.getTable().notifyListeners(SWT.Selection, new Event());
+		}
+		
 	}
 }

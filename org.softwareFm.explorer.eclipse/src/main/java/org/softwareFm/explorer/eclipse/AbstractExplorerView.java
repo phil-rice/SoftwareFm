@@ -90,6 +90,10 @@ public class AbstractExplorerView extends ViewPart {
 	protected void process(final CardConfig cardConfig, final Explorer explorer, final BindingRipperResult ripperResult, Map<String, Object> result) {
 		String artifactUrl = makeUrl(ripperResult, cardConfig, result);
 		explorer.displayCard(artifactUrl, new CardAndCollectionDataStoreAdapter());
+		showRadioChannelFor(cardConfig, explorer, artifactUrl);
+	}
+
+	protected void showRadioChannelFor(CardConfig cardConfig, final Explorer explorer, String artifactUrl) {
 		explorer.selectAndNext(artifactUrl);
 	}
 

@@ -6,8 +6,12 @@
 package org.softwareFm.explorer.eclipse;
 
 import java.util.Map;
+import java.util.Random;
 
+import org.softwareFm.card.card.ICard;
+import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.jdtBinding.api.ExpressionData;
 import org.softwareFm.jdtBinding.api.IExpressionCategoriser;
@@ -27,9 +31,27 @@ public class SnippetView extends AbstractExplorerView {
 		String baseUrl = rootUrl + "/" + key.classKey;
 		if (key.methodKey != null && key.methodKey.length() > 0) {
 			String result = baseUrl + "/method/" + key.methodKey;
-			return result;
+			return result + "/snippet";
 		} else
-			return baseUrl;
+			return baseUrl + "/snippet";
+	}
+
+	Random random = new Random(System.currentTimeMillis());
+
+	@Override
+	protected void process(CardConfig cardConfig, final Explorer explorer, BindingRipperResult ripperResult, Map<String, Object> result) {
+		String artifactUrl = makeUrl(ripperResult, cardConfig, result);
+		explorer.displayCard(artifactUrl, new CardAndCollectionDataStoreAdapter() {
+			@Override
+			public void finished(ICardHolder cardHolder, String url, ICard card) {
+				explorer.showRandomContent(card);
+			}
+		});
+	}
+
+	@Override
+	protected void showRadioChannelFor(CardConfig cardConfig, Explorer explorer, String artifactUrl) {
+		explorer.showRandomSnippetFor(artifactUrl);
 	}
 
 	@Override
