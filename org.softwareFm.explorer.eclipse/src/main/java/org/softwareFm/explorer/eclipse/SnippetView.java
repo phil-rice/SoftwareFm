@@ -41,12 +41,13 @@ public class SnippetView extends AbstractExplorerView {
 	@Override
 	protected void process(CardConfig cardConfig, final Explorer explorer, BindingRipperResult ripperResult, Map<String, Object> result) {
 		String artifactUrl = makeUrl(ripperResult, cardConfig, result);
-		explorer.displayCard(artifactUrl, new CardAndCollectionDataStoreAdapter() {
-			@Override
-			public void finished(ICardHolder cardHolder, String url, ICard card) {
-				explorer.showRandomContent(card);
-			}
-		});
+		if (artifactUrl != null)
+			explorer.displayCard(artifactUrl, new CardAndCollectionDataStoreAdapter() {
+				@Override
+				public void finished(ICardHolder cardHolder, String url, ICard card) {
+					explorer.showRandomContent(card);
+				}
+			});
 	}
 
 	@Override

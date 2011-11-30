@@ -10,7 +10,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.card.CardFactoryMock;
 import org.softwareFm.card.card.internal.Card;
 import org.softwareFm.card.card.internal.CardFactory;
 import org.softwareFm.card.configuration.CardConfig;
@@ -34,9 +33,13 @@ public interface ICardFactory {
 		}
 
 		public static Future<ICard> makeCard(final ICardHolder cardHolder, final CardConfig cardConfig, String url, final ICallback<ICard> callback) {
+			if (url == null)
+				throw new NullPointerException();
 			Future<ICard> cardFuture = cardConfig.cardDataStore.processDataFor(url, new ICardDataStoreCallback<ICard>() {
 				@Override
 				public ICard process(final String url, final Map<String, Object> result) throws Exception {
+					if (url == null)
+						throw new NullPointerException();
 					final AtomicReference<ICard> ref = new AtomicReference<ICard>();
 					Swts.syncExec(cardHolder, new Runnable() {
 						@Override

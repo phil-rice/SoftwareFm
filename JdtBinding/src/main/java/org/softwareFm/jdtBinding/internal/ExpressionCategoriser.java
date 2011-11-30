@@ -61,7 +61,7 @@ public class ExpressionCategoriser implements IExpressionCategoriser {
 		if (string == null)
 			return null;
 		String withoutGenerics = Strings.removeBrackets(string, '<','>');
-		String cleaner = withoutGenerics.replace(";", "").replace("|", "_");
+		String cleaner = withoutGenerics.replace(";", "").replace("|", "_").replace("[", "(").replace('%', '_');
 		String result = replaceSlash ? cleaner.replace("/", "_"): cleaner;
 		return result;
 	}

@@ -98,6 +98,8 @@ public class Card implements ICard, IHasTable {
 
 		public CardComposite(Composite parent, final CardConfig cardConfig, final String url, Map<String, Object> rawData, final String cardType, TitleSpec titleSpec) {
 			super(parent, SWT.NULL);
+			if (url == null)
+				throw new NullPointerException();
 
 			this.cardConfig = cardConfig;
 			this.url = url;
