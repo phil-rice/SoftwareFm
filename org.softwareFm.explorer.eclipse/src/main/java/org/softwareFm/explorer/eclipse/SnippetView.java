@@ -12,12 +12,12 @@ import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
+import org.softwareFm.collections.explorer.Explorer;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.jdtBinding.api.ExpressionData;
 import org.softwareFm.jdtBinding.api.IExpressionCategoriser;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwarefm.collections.explorer.Explorer;
 
 public class SnippetView extends AbstractExplorerView {
 

@@ -17,6 +17,10 @@ import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.dataStore.ICardDataStore;
+import org.softwareFm.collections.ICollectionConfigurationFactory;
+import org.softwareFm.collections.explorer.Explorer;
+import org.softwareFm.collections.explorer.IExplorer;
+import org.softwareFm.collections.explorer.IMasterDetailSocial;
 import org.softwareFm.display.browser.BrowserFeedConfigurator;
 import org.softwareFm.display.browser.RssFeedConfigurator;
 import org.softwareFm.display.browser.TweetFeedConfigurator;
@@ -27,10 +31,6 @@ import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.services.IServiceExecutor;
-import org.softwarefm.collections.ICollectionConfigurationFactory;
-import org.softwarefm.collections.explorer.Explorer;
-import org.softwarefm.collections.explorer.IExplorer;
-import org.softwarefm.collections.explorer.IMasterDetailSocial;
 
 public class ExplorerWithRadioChannel {
 	public static void main(String[] args) {

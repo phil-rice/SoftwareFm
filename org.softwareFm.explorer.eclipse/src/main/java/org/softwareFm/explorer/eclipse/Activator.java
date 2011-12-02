@@ -20,6 +20,7 @@ import org.osgi.service.prefs.BackingStoreException;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.ICardDataStore;
+import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.constants.HttpClientConstants;
 import org.softwareFm.jdtBinding.api.IBindingRipper;
@@ -28,7 +29,6 @@ import org.softwareFm.repositoryFacard.impl.RepositoryFacard;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.services.IServiceExecutor;
-import org.softwarefm.collections.ICollectionConfigurationFactory;
 
 /**
  * The activator class controls the plug-in life cycle

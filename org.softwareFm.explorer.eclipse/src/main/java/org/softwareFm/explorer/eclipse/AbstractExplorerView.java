@@ -14,6 +14,8 @@ import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.dataStore.ICardDataStoreCallback;
+import org.softwareFm.collections.explorer.Explorer;
+import org.softwareFm.collections.explorer.IMasterDetailSocial;
 import org.softwareFm.display.browser.BrowserFeedConfigurator;
 import org.softwareFm.display.browser.RssFeedConfigurator;
 import org.softwareFm.display.browser.SnippetFeedConfigurator;
@@ -28,8 +30,6 @@ import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwarefm.collections.explorer.Explorer;
-import org.softwarefm.collections.explorer.IMasterDetailSocial;
 
 public class AbstractExplorerView extends ViewPart {
 
