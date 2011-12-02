@@ -53,20 +53,12 @@ public interface IResourceGetter {
 
 		public static String get(IResourceGetter resourceGetter, String key) {
 			String string = resourceGetter.getStringOrNull(key);
-//			if (string == null) {
-//				String message = MessageFormat.format(UtilityMessages.missingResource, key);
-////				System.err.println(message);
-//			}
 			return string;
 		}
 
 		public static <T> String get(IFunction1<T, IResourceGetter> fn, T t, String key) {
 			IResourceGetter resourceGetter = Functions.call(fn, t);
 			String string = resourceGetter.getStringOrNull(key);
-//			if (string == null) {
-//				String message = MessageFormat.format(UtilityMessages.missingResource, key);
-////				System.err.println(message);
-//			}
 			return string;
 		}
 
@@ -81,8 +73,12 @@ public interface IResourceGetter {
 		}
 
 		public static <T> String getOrNull(IFunction1<T, IResourceGetter> resourceGetterFn, T cardType, String key) {
-			IResourceGetter resourceGetter = Functions.call(resourceGetterFn, cardType);
-			return resourceGetter.getStringOrNull(key);
+			try {
+				IResourceGetter resourceGetter = Functions.call(resourceGetterFn, cardType);
+				return resourceGetter.getStringOrNull(key);
+			} catch (Exception e) {
+				return null;
+			}
 		}
 		public static <T> String getOr(IFunction1<T, IResourceGetter> resourceGetterFn, T cardType, String key, String defaultValue) {
 			IResourceGetter resourceGetter = Functions.call(resourceGetterFn, cardType);

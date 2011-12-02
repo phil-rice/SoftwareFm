@@ -93,9 +93,13 @@ public class Explorer implements IExplorer {
 				new ICardMenuItemHandler() {
 					@Override
 					public MenuItem optionallyCreate(ICard card, IResourceGetter resourceGetter, Menu menu, Event event, String key) {
-						MenuItem menuItem = new MenuItem(menu, SWT.NULL);
-						menuItem.setText(IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.menuItemAddSnippet));
-						return menuItem;
+						String cardType = card.cardType();
+						if (cardType == null || CardConstants.collection.equals(cardType)) {//TODO Fix the menu subsystem to support 'add snippet'. This is actually a bit crap, as may end up adding snippet to a collection...but this is demo code, and it's better than snippets appearing everywhere
+							MenuItem menuItem = new MenuItem(menu, SWT.NULL);
+							menuItem.setText(IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.menuItemAddSnippet));
+							return menuItem;
+						}
+						return null;
 					}
 
 					@Override
@@ -224,7 +228,7 @@ public class Explorer implements IExplorer {
 
 					@Override
 					public void updateDataStore(final IMutableCardDataStore store, String url, String key, final Object value) {
-						final String collectionUrl = url + "/snippet";
+						final String collectionUrl = url ;
 						store.processDataFor(collectionUrl, new ICardDataStoreCallback<Void>() {
 							@Override
 							public Void process(final String url, Map<String, Object> data) throws Exception {
@@ -584,13 +588,13 @@ public class Explorer implements IExplorer {
 			@Override
 			public Void process(String url, Map<String, Object> result) throws Exception {
 				List<String> keys = Lists.newList();
-				for (Map.Entry<String, Object> entry: result.entrySet()){
-					if (entry.getValue() instanceof Map<?,?>)
+				for (Map.Entry<String, Object> entry : result.entrySet()) {
+					if (entry.getValue() instanceof Map<?, ?>)
 						keys.add(entry.getKey());
 				}
 				if (result.size() > 0) {
 					String key = keys.get(random.nextInt(keys.size()));
-					//TODO centralise this code
+					// TODO centralise this code
 					String urlPattern = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, "snippet", CardConstants.cardContentUrl);
 					String snippetUrl = MessageFormat.format(urlPattern, url, key);
 					browser.processUrl(DisplayConstants.snippetFeedType, snippetUrl);
@@ -621,6 +625,6 @@ public class Explorer implements IExplorer {
 			state = State.BROWSING_LIST;
 			card.getTable().notifyListeners(SWT.Selection, new Event());
 		}
-		
+
 	}
 }
