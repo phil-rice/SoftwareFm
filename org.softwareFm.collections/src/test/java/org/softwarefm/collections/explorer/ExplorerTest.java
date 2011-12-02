@@ -33,8 +33,8 @@ public class ExplorerTest extends SwtIntegrationAndServiceTest {
 	private MasterDetailSocial masterDetailSocial;
 
 	public void testCreateNewItemMakesNewUrlBasedOnCardNameUrlKey() {
-		//THe cardNameField should have no effect
-		//THe keys are different to ensure different urls for the update store 
+		// THe cardNameField should have no effect
+		// THe keys are different to ensure different urls for the update store
 		// 0 is Strings.forUrl(name) 1 is guid
 		checkCreateNewItemMakesNewUrl("rootUrl/key1/xnewItemNamex", "x{0}x", RightClickCategoryResult.Type.IS_COLLECTION, "noCardNameField", "newItemName", "key1");
 		checkCreateNewItemMakesNewUrl("rootUrl/key2/xnewItemNamex", "x{0}x", RightClickCategoryResult.Type.IS_COLLECTION, "noCardNameField", "new Item Name", "key2");
@@ -47,31 +47,27 @@ public class ExplorerTest extends SwtIntegrationAndServiceTest {
 		checkCreateNewItemMakesNewUrl("rootUrl/randomUUID_2", "{1}_2", RightClickCategoryResult.Type.ROOT_COLLECTION, "withCardNameField", "newItemName", "key8");
 	}
 
-	
-	public void testCreatedItemHasCollectionTypeAndNameGivenByCardNameField(){
+	public void testCreatedItemHasCollectionTypeAndNameGivenByCardNameField() {
 		checkCreatedItemInitialData("noCardNameField", "key1", "newItemName", null);
 		checkCreatedItemInitialData("withCardNameField", "key2", "newItemName", "cardName");
 		checkCreatedItemInitialData("withCardNameField", "key3", "new Item Name", "cardName");
 	}
 
-
 	private void checkCreatedItemInitialData(String collection, String key, String expectedName, String cardNameField) {
 		Type type = RightClickCategoryResult.Type.IS_COLLECTION;
-		Map<String,Object> raw = Maps.stringObjectMap(CardConstants.slingResourceType, collection);
-		Map<String,Object>expected = cardNameField == null?raw: Maps.with(raw, cardNameField, expectedName);
-			
-		
-		Map<String, Object> created = createNewItem( "{0}", type, collection, expectedName, key);
+		Map<String, Object> raw = Maps.stringObjectMap(CardConstants.slingResourceType, collection);
+		Map<String, Object> expected = cardNameField == null ? raw : Maps.with(raw, cardNameField, expectedName);
+
+		Map<String, Object> created = createNewItem("{0}", type, collection, expectedName, key);
 		assertEquals(expected, created);
 	}
-	
+
 	private void checkCreateNewItemMakesNewUrl(String expectedUrl, String cardNameUrl, Type type, String collectionName, String newItemName, String key) {
 		createNewItem(cardNameUrl, type, collectionName, newItemName, key);
 
 		assertEquals(++count, updateStore.updateMap.size());
-		assertTrue(updateStore.updateMap.get(key)+"\n\n" + updateStore.updateMap.toString(), updateStore.updateMap.containsKey(expectedUrl));
+		assertTrue(updateStore.updateMap.get(key) + "\n\n" + updateStore.updateMap.toString(), updateStore.updateMap.containsKey(expectedUrl));
 	}
-
 
 	private Map<String, Object> createNewItem(String cardNameUrl, Type type, String collectionName, String newItemName, String key) {
 		Explorer explorer = makeExplorer(cardNameUrl);

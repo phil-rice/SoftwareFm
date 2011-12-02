@@ -282,6 +282,7 @@ public class Explorer implements IExplorer {
 
 	@Override
 	public void displayCard(String url, ICardAndCollectionDataStoreVisitor visitor) {
+		state = State.SHOWING_DETAIL;
 		masterDetailSocial.showMaster();
 		masterDetailSocial.setMaster(cardHolder.getControl());
 		cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, visitor);
@@ -289,6 +290,7 @@ public class Explorer implements IExplorer {
 
 	@Override
 	public void displayUnrecognisedJar(File file, String digest) {
+		state = State.SHOWING_DETAIL;
 		masterDetailSocial.showMaster();
 		unrecognisedJar.setFileAndDigest(file, digest);
 		masterDetailSocial.setMaster(unrecognisedJar.getControl());
@@ -308,6 +310,7 @@ public class Explorer implements IExplorer {
 
 	@SuppressWarnings("unchecked")
 	private void browseDetailForCardKey(ICard card, String key, Object value) {
+		state = State.SHOWING_DETAIL;
 		masterDetailSocial.hideSocial();
 		masterDetailSocial.setDetail(browser.getControl());
 		if (value instanceof Map<?, ?>) {
