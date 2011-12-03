@@ -6,8 +6,8 @@
 package org.softwareFm.card.menu;
 
 import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.card.IPopupMenuContributor;
 import org.softwareFm.card.menu.internal.MenuItems;
+import org.softwareFm.display.menu.IPopupMenuContributor;
 
 public interface IMenuItems extends IPopupMenuContributor<ICard> {
 
