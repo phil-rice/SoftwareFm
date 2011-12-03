@@ -28,7 +28,7 @@ public class DetailFactory implements IDetailFactory {
 		if (key == null)
 			return null;
 		for (IDetailAdder adder : detailAdders) {
-			IHasControl result = adder.add(parentComposite, parentCard, cardConfig, key, value, callback);
+			IHasControl result = adder.add(parentComposite, parentCard, cardConfig.withPopupMenuId(cardConfig.detailsPopupMenuId, null), key, value, callback);
 			if (result != null)
 				return result;
 		}

@@ -3,7 +3,7 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwareFm.collections.explorer;
+package org.softwareFm.collections.explorer.internal;
 
 import java.io.File;
 import java.text.MessageFormat;
@@ -18,8 +18,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.card.card.ICard;
@@ -38,16 +36,14 @@ import org.softwareFm.card.dataStore.ICardDataStoreCallback;
 import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.card.editors.IValueEditor;
-import org.softwareFm.card.menu.ICardMenuItemHandler;
 import org.softwareFm.card.navigation.internal.NavNextHistoryPrevConfig;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
-import org.softwareFm.collections.explorer.internal.MasterDetailSocial;
-import org.softwareFm.collections.explorer.internal.UnrecognisedJar;
-import org.softwareFm.collections.internal.menu.AddItemToCollectionMenuHandler;
-import org.softwareFm.collections.internal.menu.AddNewArtifactMenuHandler;
-import org.softwareFm.collections.internal.menu.OptionalSeparatorMenuHandler;
-import org.softwareFm.collections.internal.menu.ViewContentsMenuHandler;
+import org.softwareFm.collections.explorer.BrowserAndNavBar;
+import org.softwareFm.collections.explorer.HelpText;
+import org.softwareFm.collections.explorer.IExplorer;
+import org.softwareFm.collections.explorer.IHelpText;
+import org.softwareFm.collections.explorer.IMasterDetailSocial;
 import org.softwareFm.display.browser.IBrowserPart;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.constants.DisplayConstants;
@@ -75,7 +71,7 @@ public class Explorer implements IExplorer {
 	}
 
 	private UnrecognisedJar unrecognisedJar;
-	private ICardHolder cardHolder;
+	 ICardHolder cardHolder;
 	private ICallback<String> callbackToGotoUrlAndUpdateDetails;
 	private final IMasterDetailSocial masterDetailSocial;
 	private final CardConfig cardConfig;
@@ -84,29 +80,30 @@ public class Explorer implements IExplorer {
 	private IHelpText helpText;
 	private State state = State.SHOWING_DETAIL;
 
-	public Explorer(final CardConfig cardConfigParam, final String rootUrl, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter) {
-		this.cardConfig = cardConfigParam.withMenuHandlers(//
-				new AddItemToCollectionMenuHandler(this),//
-				new OptionalSeparatorMenuHandler(),//
-				new AddNewArtifactMenuHandler(this),//
-				new ViewContentsMenuHandler(this),//
-				new ICardMenuItemHandler() {
-					@Override
-					public MenuItem optionallyCreate(ICard card, IResourceGetter resourceGetter, Menu menu, Event event, String key) {
-						String cardType = card.cardType();
-						if (cardType == null || CardConstants.collection.equals(cardType)) {//TODO Fix the menu subsystem to support 'add snippet'. This is actually a bit crap, as may end up adding snippet to a collection...but this is demo code, and it's better than snippets appearing everywhere
-							MenuItem menuItem = new MenuItem(menu, SWT.NULL);
-							menuItem.setText(IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.menuItemAddSnippet));
-							return menuItem;
-						}
-						return null;
-					}
-
-					@Override
-					public void execute(ICard card, MenuItem item) {
-						showAddSnippetEditor(card);
-					}
-				});
+	public Explorer(final CardConfig cardConfig, final String rootUrl, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter) {
+		this.cardConfig = cardConfig;
+		//		this.cardConfig = cardConfigParam.withMenuHandlers(//
+//				new AddItemToCollectionMenuHandler(this),//
+//				new OptionalSeparatorMenuHandler(),//
+//				new AddNewArtifactMenuHandler(this),//
+//				new ViewContentsMenuHandler(this),//
+//				new ICardMenuItemHandler() {
+//					@Override
+//					public MenuItem optionallyCreate(ICard card, IResourceGetter resourceGetter, Menu menu, Event event, String key) {
+//						String cardType = card.cardType();
+//						if (cardType == null || CardConstants.collection.equals(cardType)) {//TODO Fix the menu subsystem to support 'add snippet'. This is actually a bit crap, as may end up adding snippet to a collection...but this is demo code, and it's better than snippets appearing everywhere
+//							MenuItem menuItem = new MenuItem(menu, SWT.NULL);
+//							menuItem.setText(IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.menuItemAddSnippet));
+//							return menuItem;
+//						}
+//						return null;
+//					}
+//
+//					@Override
+//					public void execute(ICard card, MenuItem item) {
+//						showAddSnippetEditor(card);
+//					}
+//				});
 		this.masterDetailSocial = masterDetailSocial;
 		helpText = masterDetailSocial.createSocial(new IFunction1<Composite, IHelpText>() {
 			@Override
@@ -581,6 +578,7 @@ public class Explorer implements IExplorer {
 
 	private final Random random = new Random();
 
+	@Override
 	public void showRandomSnippetFor(String artifactUrl) {
 		masterDetailSocial.setDetail(browser.getControl());
 		masterDetailSocial.hideSocial();
@@ -610,6 +608,7 @@ public class Explorer implements IExplorer {
 
 	}
 
+	@Override
 	public void showRandomContent(ICard card) {
 		masterDetailSocial.hideSocial();
 		masterDetailSocial.setDetail(browser.getControl());
@@ -627,4 +626,10 @@ public class Explorer implements IExplorer {
 		}
 
 	}
+
+	@Override
+	public CardConfig getCardConfig() {
+		return cardConfig;
+	}
+
 }

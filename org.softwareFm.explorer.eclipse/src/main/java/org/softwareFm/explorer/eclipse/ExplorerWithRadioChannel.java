@@ -18,16 +18,15 @@ import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
-import org.softwareFm.collections.explorer.Explorer;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
-import org.softwareFm.display.browser.BrowserFeedConfigurator;
-import org.softwareFm.display.browser.RssFeedConfigurator;
-import org.softwareFm.display.browser.TweetFeedConfigurator;
+import org.softwareFm.collections.menu.ICardMenuItemHandler;
+import org.softwareFm.display.browser.IBrowserConfigurator;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Button;
 import org.softwareFm.display.swt.Swts.Grid;
 import org.softwareFm.display.swt.Swts.Show;
+import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.services.IServiceExecutor;
@@ -50,13 +49,16 @@ public class ExplorerWithRadioChannel {
 
 					final ICardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(from, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
-					final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
+					String popupMenuId = "explorerMenu";
+					String detailsPopupMenuId = null;
+					
+					final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore)).withPopupMenuId(popupMenuId, detailsPopupMenuId);
 					IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(explorerAndButton);
-					final IExplorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, service, new ArtifactPlayListGetter(cardDataStore));
-
-					new BrowserFeedConfigurator().configure( explorer);
-					new RssFeedConfigurator().configure( explorer);
-					new TweetFeedConfigurator().configure( explorer);
+					IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardDataStore);
+					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, playListGetter, service);
+					
+					ICardMenuItemHandler.Utils.addDefaultCardExplorerOptions(explorer, popupMenuId);
+					IBrowserConfigurator.Utils.configueWithUrlRssAndTweet(explorer);
 
 					explorer.displayCard(firstUrl, new CardAndCollectionDataStoreAdapter());
 					buttonPanel.setLayoutData(Grid.makeGrabHorizonalAndFillGridData());

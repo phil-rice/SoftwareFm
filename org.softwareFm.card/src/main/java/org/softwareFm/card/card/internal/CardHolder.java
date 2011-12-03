@@ -19,6 +19,7 @@ import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardChangedListener;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.ICardHolder;
+import org.softwareFm.card.card.ICardHolderForTests;
 import org.softwareFm.card.card.ILineSelectedListener;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
@@ -36,7 +37,7 @@ import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.future.GatedMockFuture;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
-public class CardHolder implements ICardHolder {
+public class CardHolder implements ICardHolderForTests {
 
 	public static class CardHolderLayout extends Layout {
 
@@ -156,9 +157,16 @@ public class CardHolder implements ICardHolder {
 
 	private final List<ICardChangedListener> cardListeners = new CopyOnWriteArrayList<ICardChangedListener>();
 	final CardHolderComposite content;
+	private final String rootUrl;
 
 	public CardHolder(Composite parent, CardConfig cardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
+		this.rootUrl = rootUrl;
 		content = new CardHolderComposite(parent, cardConfig, rootUrl, callbackToGotoUrl);
+	}
+
+	@Override
+	public String getRootUrl() {
+		return rootUrl;
 	}
 
 	@Override
@@ -230,6 +238,11 @@ public class CardHolder implements ICardHolder {
 				return cardHolder.getComposite();
 			}
 		});
+	}
+
+	@Override
+	public CardConfig getCardConfig() {
+		return content.navBarCardConfig;
 	}
 
 }

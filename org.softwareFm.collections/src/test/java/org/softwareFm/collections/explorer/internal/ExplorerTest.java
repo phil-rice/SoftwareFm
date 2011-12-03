@@ -3,23 +3,31 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwareFm.collections.explorer;
+package org.softwareFm.collections.explorer.internal;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Event;
+import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardFactory;
+import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.card.RightClickCategoryResult;
 import org.softwareFm.card.card.RightClickCategoryResult.Type;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
+import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
+import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.dataStore.CardDataStoreMock;
 import org.softwareFm.card.dataStore.IAfterEditCallback;
 import org.softwareFm.card.dataStore.MemoryAfterEditCallback;
-import org.softwareFm.collections.explorer.Explorer;
+import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.collections.explorer.internal.MasterDetailSocial;
+import org.softwareFm.display.menu.PopupMenuContributorMock;
 import org.softwareFm.display.swt.SwtIntegrationAndServiceTest;
 import org.softwareFm.display.timeline.IPlayListGetter;
+import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
@@ -27,6 +35,8 @@ import org.softwareFm.utilities.resources.ResourceGetterMock;
 
 public class ExplorerTest extends SwtIntegrationAndServiceTest {
 
+	private final static String popupMenuId = "popupMenuId";
+	private final static String detailsPopupMenuId = "detailsPopupMenuId";
 	private CardDataStoreMock updateStore;
 	private MemoryAfterEditCallback afterEdit;
 	private CardConfig raw;
@@ -46,6 +56,24 @@ public class ExplorerTest extends SwtIntegrationAndServiceTest {
 		checkCreateNewItemMakesNewUrl("rootUrl/xnewItemName2", "x{0}2", RightClickCategoryResult.Type.ROOT_COLLECTION, "noCardNameField", "new Item Name", "key6");
 		checkCreateNewItemMakesNewUrl("rootUrl/randomUUID_1", "{1}_1", RightClickCategoryResult.Type.ROOT_COLLECTION, "noCardNameField", "newItemName", "key7");
 		checkCreateNewItemMakesNewUrl("rootUrl/randomUUID_2", "{1}_2", RightClickCategoryResult.Type.ROOT_COLLECTION, "withCardNameField", "newItemName", "key8");
+	}
+
+	public void testExplorerUsesPopupMenuId() {
+		Explorer explorer = makeExplorer("withCardNameField");
+		final AtomicInteger count = new AtomicInteger();
+
+		explorer.displayCard(CardDataStoreFixture.url1a, new CardAndCollectionDataStoreAdapter() {
+			@Override
+			public void finished(ICardHolder cardHolder, String url, ICard card) {
+				PopupMenuContributorMock<ICard> contributor = new PopupMenuContributorMock<ICard>();
+				card.cardConfig().popupMenuService.registerContributor(popupMenuId, contributor);
+				assertEquals(1, count.incrementAndGet());
+				Event event = new Event();
+				card.getTable().notifyListeners(SWT.MenuDetect, event);
+				assertEquals(event, Lists.getOnly(contributor.events));
+			}
+		});
+		assertEquals(1, count.get());
 	}
 
 	public void testCreatedItemHasCollectionTypeAndNameGivenByCardNameField() {
@@ -81,8 +109,10 @@ public class ExplorerTest extends SwtIntegrationAndServiceTest {
 		CardConfig cardConfig = raw.withResourceGetterFn(IResourceGetter.Utils.mock(//
 				Functions.call(raw.resourceGetterFn, null).with(new ResourceGetterMock(CardConstants.cardNameUrlKey, cardNameUrl)), // default
 				"noCardNameField", new ResourceGetterMock(), //
-				"withCardNameField", new ResourceGetterMock(CardConstants.cardNameFieldKey, "cardName")));
-		Explorer explorer = new Explorer(cardConfig, "rootUrl", masterDetailSocial, service, IPlayListGetter.Utils.noPlayListGetter()) {
+				"withCardNameField", new ResourceGetterMock(CardConstants.cardNameFieldKey, "cardName"))).//
+				withTitleSpecFn(Functions.<ICard,TitleSpec> constant(TitleSpec.noTitleSpec(shell.getBackground()))).//
+				withPopupMenuId(popupMenuId, detailsPopupMenuId);
+		Explorer explorer = new Explorer(cardConfig, CardDataStoreFixture.url, masterDetailSocial, service, IPlayListGetter.Utils.noPlayListGetter()) {
 			@Override
 			protected String makeRandomUUID() {
 				return "randomUUID";
@@ -98,5 +128,6 @@ public class ExplorerTest extends SwtIntegrationAndServiceTest {
 		updateStore = new CardDataStoreMock();
 		masterDetailSocial = new MasterDetailSocial(shell, SWT.NULL);
 		raw = new CardConfig(ICardFactory.Utils.cardFactory(), updateStore);
+		raw.popupMenuService.registerMenuId(popupMenuId);
 	}
 }

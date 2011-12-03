@@ -17,6 +17,7 @@ import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.display.composites.IHasControl;
 
 public class CollectionsDetailAdder implements IDetailAdder {
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public IHasControl add(Composite parentComposite, ICard parentCard, CardConfig cardConfig, String key, Object value, IDetailsFactoryCallback callback) {

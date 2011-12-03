@@ -6,5 +6,25 @@
 package org.softwareFm.display.browser;
 
 public interface IBrowserConfigurator {
-	void configure( IBrowserCompositeBuilder builder);
+	void configure(IBrowserCompositeBuilder builder);
+
+	public static class Utils {
+		
+		public static void configueWithUrlRssAndTweet(IBrowserCompositeBuilder browser){
+			rss().configure(browser);
+			url().configure(browser);
+			tweet().configure(browser);
+		}
+		public static IBrowserConfigurator rss() {
+			return new RssFeedConfigurator();
+		}
+
+		public static IBrowserConfigurator url() {
+			return new BrowserFeedConfigurator();
+		}
+
+		public static IBrowserConfigurator tweet() {
+			return new TweetFeedConfigurator();
+		}
+	}
 }

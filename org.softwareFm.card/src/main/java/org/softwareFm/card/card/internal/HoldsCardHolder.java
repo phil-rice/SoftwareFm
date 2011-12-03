@@ -26,7 +26,7 @@ public class HoldsCardHolder extends Composite implements IHasCardConfig {
 
 	public HoldsCardHolder(Composite parent, int style, CardConfig cardConfig) {
 		super(parent, style);
-		this.cardConfig = cardConfig.withStyleAndSelection(cardConfig.cardStyle, false).withNoMenuHandlers();
+		this.cardConfig = cardConfig.withStyleAndSelection(cardConfig.cardStyle, false).withPopupMenuId(null, null);
 	}
 
 	public void addCardSelectedListener(ICardSelectedListener listener) {

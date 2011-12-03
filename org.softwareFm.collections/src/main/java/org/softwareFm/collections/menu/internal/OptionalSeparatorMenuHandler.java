@@ -3,45 +3,28 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwareFm.collections.internal.menu;
-
-import java.text.MessageFormat;
+package org.softwareFm.collections.menu.internal;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.card.menu.ICardMenuItemHandler;
-import org.softwareFm.collections.explorer.IExplorer;
+import org.softwareFm.collections.menu.AbstractCardMenuHandler;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
-public class ViewContentsMenuHandler implements ICardMenuItemHandler {
-
-	private final IExplorer explorer;
-
-	public ViewContentsMenuHandler(IExplorer explorer) {
-		this.explorer = explorer;
-	}
+public class OptionalSeparatorMenuHandler extends AbstractCardMenuHandler {
 
 	@Override
 	public MenuItem optionallyCreate(ICard card, IResourceGetter resourceGetter, Menu menu, Event event, String key) {
-		String cardContentFieldName = IResourceGetter.Utils.getOrNull(card.cardConfig().resourceGetterFn, key, CardConstants.cardContentField);
-		if (cardContentFieldName != null) {
-			String viewActualPattern = resourceGetter.getStringOrNull(CardConstants.menuItemViewActual);
-			if (viewActualPattern != null) {
-				MenuItem viewContents = new MenuItem(menu, SWT.NULL);
-				viewContents.setText(MessageFormat.format(viewActualPattern, key));
-				return viewContents;
-			}
-		}
-		return null;
+		if (menu.getItemCount() > 0)
+			return new MenuItem(menu, SWT.SEPARATOR);
+		else
+			return null;
 	}
 
 	@Override
 	public void execute(ICard card, MenuItem item) {
-		explorer.showContents();
 	}
 
 }

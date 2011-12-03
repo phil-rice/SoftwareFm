@@ -14,7 +14,7 @@ import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.dataStore.ICardDataStoreCallback;
-import org.softwareFm.collections.explorer.Explorer;
+import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
 import org.softwareFm.display.browser.BrowserFeedConfigurator;
 import org.softwareFm.display.browser.RssFeedConfigurator;
@@ -30,6 +30,7 @@ import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.services.IServiceExecutor;
 
 public class AbstractExplorerView extends ViewPart {
 
@@ -43,7 +44,8 @@ public class AbstractExplorerView extends ViewPart {
 		Size.resizeMeToParentsSize(masterDetailSocial.getControl());
 
 		IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardConfig.cardDataStore);
-		final Explorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, activator.getServiceExecutor(), playListGetter);
+		IServiceExecutor service = activator.getServiceExecutor();
+		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, playListGetter, service);
 		new BrowserFeedConfigurator().configure(explorer);
 		new RssFeedConfigurator().configure(explorer);
 		new TweetFeedConfigurator().configure(explorer);
@@ -87,17 +89,17 @@ public class AbstractExplorerView extends ViewPart {
 		return Activator.getDefault().getCardConfig(parent);
 	}
 
-	protected void process(final CardConfig cardConfig, final Explorer explorer, final BindingRipperResult ripperResult, Map<String, Object> result) {
+	protected void process(final CardConfig cardConfig, final IExplorer explorer, final BindingRipperResult ripperResult, Map<String, Object> result) {
 		String artifactUrl = makeUrl(ripperResult, cardConfig, result);
 		explorer.displayCard(artifactUrl, new CardAndCollectionDataStoreAdapter());
 		showRadioChannelFor(cardConfig, explorer, artifactUrl);
 	}
 
-	protected void showRadioChannelFor(CardConfig cardConfig, final Explorer explorer, String artifactUrl) {
+	protected void showRadioChannelFor(CardConfig cardConfig, final IExplorer explorer, String artifactUrl) {
 		explorer.selectAndNext(artifactUrl);
 	}
 
-	protected void processNoData(CardConfig cardConfig, final Explorer explorer, final IResourceGetter resourceGetter, final BindingRipperResult ripperResult) {
+	protected void processNoData(CardConfig cardConfig, final IExplorer explorer, final IResourceGetter resourceGetter, final BindingRipperResult ripperResult) {
 		final String hexDigest = ripperResult.hexDigest;
 		final String unknownJarUrl = IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.webPageUnknownJarUrl);
 		File file = ripperResult.path.toFile();

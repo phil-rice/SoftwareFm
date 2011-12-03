@@ -9,4 +9,5 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.softwareFm.collections,
  org.softwareFm.collections.constants,
- org.softwareFm.collections.explorer
+ org.softwareFm.collections.explorer,
+ org.softwareFm.collections.menu

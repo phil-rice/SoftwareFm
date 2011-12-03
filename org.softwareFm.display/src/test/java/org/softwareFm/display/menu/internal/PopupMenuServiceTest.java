@@ -42,6 +42,13 @@ public class PopupMenuServiceTest extends SwtIntegrationTest {
 		assertEquals(0, Lists.getOnly(mock1_2.counts).intValue());
 	}
 	
+	public void testContributeWithNullIsIgnored(){
+		popUpMenuService.contributeTo(null, event, menu, "relevantItem");
+		checkNotCalled(mock1_1);
+		checkNotCalled(mock1_2);
+		checkNotCalled(mock2_1);
+		
+	}
 	public void testCannotRegisterContributorAgainstUnknownId(){
 		IllegalArgumentException e = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
 			@Override

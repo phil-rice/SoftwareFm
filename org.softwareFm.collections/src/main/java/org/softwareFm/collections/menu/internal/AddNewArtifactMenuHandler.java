@@ -3,47 +3,35 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwareFm.collections.internal.menu;
-
-import java.text.MessageFormat;
+package org.softwareFm.collections.menu.internal;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.card.RightClickCategoryResult;
 import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.card.menu.ICardMenuItemHandler;
 import org.softwareFm.collections.explorer.IExplorer;
+import org.softwareFm.collections.menu.AbstractCardMenuHandler;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
-public class AddItemToCollectionMenuHandler implements ICardMenuItemHandler {
+public class AddNewArtifactMenuHandler extends AbstractCardMenuHandler {
 
-	private final IExplorer explorer;
-	public AddItemToCollectionMenuHandler(IExplorer explorer) {
-		this.explorer = explorer;
+	
+	public AddNewArtifactMenuHandler(IExplorer explorer) {
+		super(explorer);
 	}
 
 	@Override
 	public MenuItem optionallyCreate(final ICard card, IResourceGetter resourceGetter, Menu menu, Event event, String key) {
-		final RightClickCategoryResult categorisation = card.cardConfig().rightClickCategoriser.categorise(card.url(), card.data(), key);
-		switch (categorisation.itemType) {
-		case IS_COLLECTION:
-		case ROOT_COLLECTION:
-			MenuItem menuItem = new MenuItem(menu, SWT.NULL);
-			String addCollectionPattern = IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.menuItemAddCollection);
-			menuItem.setText(MessageFormat.format(addCollectionPattern, categorisation.collectionName));
-			menuItem.setData(categorisation);
-			return menuItem;
-		default:
-		}
-		return null;
+		MenuItem menuItem = new MenuItem(menu, SWT.NULL);
+		menuItem.setText(IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.menuItemAddArtifact));
+		return menuItem;
 	}
 
 	@Override
 	public void execute(ICard card, MenuItem item) {
-		RightClickCategoryResult categorisation = (RightClickCategoryResult) item.getData();
-		explorer.showAddCollectionItemEditor(card, categorisation);
+		explorer.showAddNewArtifactEditor();
 	}
+
 }

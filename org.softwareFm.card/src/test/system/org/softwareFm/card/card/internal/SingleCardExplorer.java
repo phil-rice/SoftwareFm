@@ -34,7 +34,7 @@ public class SingleCardExplorer implements IHasComposite {
 	private final SashForm sashForm;
 	private final Text text;
 
-	public SingleCardExplorer(Composite parent, final CardConfig cardConfig, final String rootUrl) {
+	public SingleCardExplorer(Composite parent,  final CardConfig cardConfig, final String rootUrl) {
 		sashForm = new SashForm(parent, SWT.VERTICAL);
 		callbackToGotoUrl = new ICallback<String>() {
 			@Override

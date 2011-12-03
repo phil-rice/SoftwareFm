@@ -32,6 +32,8 @@ public class PopupMenuService<T> implements IPopupMenuService<T> {
 
 	@Override
 	public void contributeTo(String menuId, Event event, Menu menu, T relevantItem) {
+		if (menuId == null)
+			return;
 		checkMenuId(menuId);
 		List<IPopupMenuContributor<T>> list = map.get(menuId);
 		for (IPopupMenuContributor<T> contributor : list)

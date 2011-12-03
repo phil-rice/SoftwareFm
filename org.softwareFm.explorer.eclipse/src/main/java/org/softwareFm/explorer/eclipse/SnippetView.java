@@ -12,7 +12,7 @@ import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
-import org.softwareFm.collections.explorer.Explorer;
+import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.jdtBinding.api.ExpressionData;
 import org.softwareFm.jdtBinding.api.IExpressionCategoriser;
@@ -39,7 +39,7 @@ public class SnippetView extends AbstractExplorerView {
 	Random random = new Random(System.currentTimeMillis());
 
 	@Override
-	protected void process(CardConfig cardConfig, final Explorer explorer, BindingRipperResult ripperResult, Map<String, Object> result) {
+	protected void process(CardConfig cardConfig, final IExplorer explorer, BindingRipperResult ripperResult, Map<String, Object> result) {
 		String artifactUrl = makeUrl(ripperResult, cardConfig, result);
 		if (artifactUrl != null)
 			explorer.displayCard(artifactUrl, new CardAndCollectionDataStoreAdapter() {
@@ -51,12 +51,12 @@ public class SnippetView extends AbstractExplorerView {
 	}
 
 	@Override
-	protected void showRadioChannelFor(CardConfig cardConfig, Explorer explorer, String artifactUrl) {
+	protected void showRadioChannelFor(CardConfig cardConfig, IExplorer explorer, String artifactUrl) {
 		explorer.showRandomSnippetFor(artifactUrl);
 	}
 
 	@Override
-	protected void processNoData(CardConfig cardConfig, Explorer explorer, IResourceGetter resourceGetter, BindingRipperResult ripperResult) {
+	protected void processNoData(CardConfig cardConfig, IExplorer explorer, IResourceGetter resourceGetter, BindingRipperResult ripperResult) {
 		process(cardConfig, explorer, ripperResult, Maps.stringObjectLinkedMap());
 	}
 }

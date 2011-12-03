@@ -14,7 +14,7 @@ import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
-import org.softwareFm.collections.explorer.Explorer;
+import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
 import org.softwareFm.display.browser.BrowserFeedConfigurator;
 import org.softwareFm.display.browser.RssFeedConfigurator;
@@ -35,10 +35,10 @@ public class ExplorerUnit {
 		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacardForCardExplorer();
 		try {
 			final String rootUrl = "/softwareFm/data";
-			Show.xUnit(ExplorerUnit.class.getSimpleName(), new ISituationListAndBuilder<Explorer>() {
+			Show.xUnit(ExplorerUnit.class.getSimpleName(), new ISituationListAndBuilder<IExplorer>() {
 				@Override
 				@SuppressWarnings("unchecked")
-				public void selected(Explorer explorer, String context, Object value) throws Exception {
+				public void selected(IExplorer explorer, String context, Object value) throws Exception {
 					Map<String, Object> map = (Map<String, Object>) value;
 					String master = (String) map.get("card");
 					Map<String, String> jar = (Map<String, String>) map.get("jar");
@@ -58,12 +58,13 @@ public class ExplorerUnit {
 				}
 
 				@Override
-				public Explorer makeChild(Composite parent) throws Exception {
+				public IExplorer makeChild(Composite parent) throws Exception {
 					final ICardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(parent, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 					final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(parent.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 					IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(parent);
-					Explorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, service, IPlayListGetter.Utils.noPlayListGetter());
+					IPlayListGetter noPlayListGetter = IPlayListGetter.Utils.noPlayListGetter();
+					IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, noPlayListGetter, service);
 					new BrowserFeedConfigurator().configure(explorer);
 					new RssFeedConfigurator().configure(explorer);
 					new TweetFeedConfigurator().configure(explorer);

@@ -21,6 +21,7 @@ import org.softwareFm.display.swt.Swts;
 /** Treats as an item in a collection if it has a type, and isn't a collection itself */
 public class CollectionItemDetailAdder implements IDetailAdder {
 
+
 	@Override
 	public IHasControl add(Composite parentComposite, ICard parentCard, CardConfig cardConfig, String key, Object value, IDetailsFactoryCallback callback) {
 		if (value instanceof Map<?, ?>) {

@@ -21,6 +21,8 @@ public interface ICardHolder extends IHasComposite {
 
 	ICard getCard();
 
+
+
 	public static class Utils {
 		public static ICardHolder cardHolderWithLayout(Composite parent, CardConfig cardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
 			CardHolder cardHolder = new CardHolder(parent, cardConfig, rootUrl, callbackToGotoUrl);
@@ -28,5 +30,7 @@ public interface ICardHolder extends IHasComposite {
 			return cardHolder;
 		}
 	}
+
+
 
 }

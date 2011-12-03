@@ -29,7 +29,6 @@ public class NestedResourceGetterFn implements IFunction1<String, IResourceGette
 				try {
 					return from == null ? baseResourceGetter : baseResourceGetter.with(anchorClass, from);
 				} catch (Exception e) {
-					e.printStackTrace();
 					return baseResourceGetter;
 				}
 			}
