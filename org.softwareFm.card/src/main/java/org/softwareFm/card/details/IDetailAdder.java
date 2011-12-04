@@ -12,6 +12,7 @@ import org.softwareFm.card.details.internal.CollectionItemDetailAdder;
 import org.softwareFm.card.details.internal.CollectionsDetailAdder;
 import org.softwareFm.card.details.internal.EditorDetailAdder;
 import org.softwareFm.card.details.internal.ListDetailAdder;
+import org.softwareFm.card.editors.internal.TextViewerDetailAdder;
 import org.softwareFm.display.composites.IHasControl;
 
 public interface IDetailAdder {
@@ -27,11 +28,14 @@ public interface IDetailAdder {
 		public static IDetailAdder collections(){
 			return new CollectionsDetailAdder();
 		}
-		public static IDetailAdder editorDetail(){
+		public static IDetailAdder editor(){
 			return new EditorDetailAdder();
 		}
-		public static IDetailAdder listDetail(){
+		public static IDetailAdder list(){
 			return new ListDetailAdder();
+		}
+		public static IDetailAdder textView(){
+			return new TextViewerDetailAdder();
 		}
 	}
 

@@ -25,6 +25,7 @@ public interface IEditorDetailAdder extends IDetailAdder {
 			return new UrlEditorDetailAdder();
 		}
 		
+		
 		public static IFunction1<String, IEditorDetailAdder> defaultEditorFn(){
 			IFunction1<String, IEditorDetailAdder> editorFn = new IFunction1<String, IEditorDetailAdder>() {
 				@Override

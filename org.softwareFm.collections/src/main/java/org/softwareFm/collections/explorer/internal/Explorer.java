@@ -68,7 +68,7 @@ import org.softwareFm.utilities.strings.Strings;
 public class Explorer implements IExplorer {
 
 	private UnrecognisedJar unrecognisedJar;
-	 ICardHolder cardHolder;
+	ICardHolder cardHolder;
 	private ICallback<String> callbackToGotoUrlAndUpdateDetails;
 	private final IMasterDetailSocial masterDetailSocial;
 	private final CardConfig cardConfig;
@@ -199,7 +199,7 @@ public class Explorer implements IExplorer {
 
 					@Override
 					public void updateDataStore(final IMutableCardDataStore store, String url, String key, final Object value) {
-						final String collectionUrl = url ;
+						final String collectionUrl = url;
 						store.processDataFor(collectionUrl, new ICardDataStoreCallback<Void>() {
 							@Override
 							public Void process(final String url, Map<String, Object> data) throws Exception {
@@ -257,7 +257,7 @@ public class Explorer implements IExplorer {
 
 	@Override
 	public void displayCard(String url, ICardAndCollectionDataStoreVisitor visitor) {
-//		changeState(State.SHOWING_DETAIL);
+		// changeState(State.SHOWING_DETAIL);
 		masterDetailSocial.showMaster();
 		masterDetailSocial.setMaster(cardHolder.getControl());
 		cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, visitor);
@@ -516,9 +516,10 @@ public class Explorer implements IExplorer {
 		}
 
 	}
+
 	@Override
 	public void changeState(ExplorerState newState) {
-		explorerState = newState;							
+		explorerState = newState;
 	}
 
 	@Override
