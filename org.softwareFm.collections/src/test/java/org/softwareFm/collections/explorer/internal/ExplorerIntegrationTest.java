@@ -29,7 +29,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 				assertEquals("Tweet", table.getItem(6).getText(0));
 				assertEquals("Rss", table.getItem(7).getText(0));
 				assertEquals("Blog", table.getItem(8).getText(0));
-				assertEquals("Facebook", table.getItem(9).getText(0));
+				assertEquals("Forum", table.getItem(9).getText(0));
 			}
 		});
 	}

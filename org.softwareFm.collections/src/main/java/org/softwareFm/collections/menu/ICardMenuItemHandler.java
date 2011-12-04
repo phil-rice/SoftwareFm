@@ -14,6 +14,7 @@ import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.menu.internal.AddItemToCollectionMenuHandler;
 import org.softwareFm.collections.menu.internal.AddNewArtifactMenuHandler;
 import org.softwareFm.collections.menu.internal.AddNewSnippetMenuHandler;
+import org.softwareFm.collections.menu.internal.BrowseUrlMenuHandler;
 import org.softwareFm.collections.menu.internal.EditTextMenuHandler;
 import org.softwareFm.collections.menu.internal.OptionalSeparatorMenuHandler;
 import org.softwareFm.collections.menu.internal.ViewActualContentsMenuHandler;
@@ -37,6 +38,7 @@ public interface ICardMenuItemHandler extends IPopupMenuContributor<ICard> {
 			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.viewText(explorer));
 			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.viewCards(explorer));
 			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.addItemToCollection(explorer));//
+			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.browseUrl(explorer));
 			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.optionalSeparator());//
 			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.addNewArtifact(explorer));
 		}
@@ -63,6 +65,9 @@ public interface ICardMenuItemHandler extends IPopupMenuContributor<ICard> {
 			return new ViewActualContentsMenuHandler(explorer);
 		}
 		
+		public static ICardMenuItemHandler browseUrl(IExplorer explorer) {
+			return new BrowseUrlMenuHandler(explorer);
+		}
 		public static ICardMenuItemHandler editText(IExplorer explorer) {
 			return new EditTextMenuHandler(explorer);
 		}

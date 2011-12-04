@@ -5,8 +5,10 @@
 
 package org.softwareFm.utilities.strings;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 
 import org.softwareFm.utilities.exceptions.WrappedException;
 
@@ -40,6 +42,16 @@ public class Urls {
 				return new URI(rip.url);
 		} catch (URISyntaxException e) {
 			throw WrappedException.wrap(e);
+		}
+	}
+
+
+	public static boolean isUrl(String string) {
+		try {
+			new URL(string);
+			return true;
+		} catch (MalformedURLException e) {
+			return false;
 		}
 	}
 }

@@ -51,7 +51,10 @@ public class Strings {
 	}
 
 	public static String replaceColonWithUnderscore(String raw) {
-		return raw.replace(":", "_");
+		if (raw == null)
+			throw new NullPointerException();
+		else
+			return raw.replace(":", "_");
 	}
 
 	public static List<String> splitIgnoreBlanks(String raw, String separator) {

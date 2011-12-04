@@ -26,21 +26,17 @@ public abstract class AbstractCardMenuHandler implements ICardMenuItemHandler {
 	@Override
 	public void contributeTo(Event event, Menu menu, final ICard card) {
 		int selectionIndex = card.getTable().getSelectionIndex();
-		if (selectionIndex != -1) {
-			TableItem item = card.getTable().getItem(selectionIndex);
-			if (item != null) {
-				IResourceGetter resourceGetter = Functions.call(card.cardConfig().resourceGetterFn, card.cardType());
-				final String key = (String) item.getData();
-				final MenuItem menuItem = optionallyCreate(card, resourceGetter, menu, event, key);
-				if (menuItem != null)
-					menuItem.addListener(SWT.Selection, new Listener() {
-						@Override
-						public void handleEvent(Event event) {
-							execute(card, key, menuItem);
-						}
-					});
-			}
-		}
+		TableItem item = selectionIndex == -1 ? null : card.getTable().getItem(selectionIndex);
+		IResourceGetter resourceGetter = Functions.call(card.cardConfig().resourceGetterFn, card.cardType());
+		final String key = item == null ? null : (String) item.getData();
+		final MenuItem menuItem = optionallyCreate(card, resourceGetter, menu, event, key);
+		if (menuItem != null)
+			menuItem.addListener(SWT.Selection, new Listener() {
+				@Override
+				public void handleEvent(Event event) {
+					execute(card, key, menuItem);
+				}
+			});
 	}
 
 }
