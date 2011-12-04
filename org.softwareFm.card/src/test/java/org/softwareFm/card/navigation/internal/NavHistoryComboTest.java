@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Event;
 import org.softwareFm.card.navigation.internal.NavHistoryCombo;
 import org.softwareFm.card.navigation.internal.NavNextHistoryPrevConfig;
-import org.softwareFm.display.swt.SwtIntegrationTest;
+import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -23,7 +23,7 @@ import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.history.History;
 
-public class NavHistoryComboTest extends SwtIntegrationTest {
+public class NavHistoryComboTest extends SwtTest {
 
 	private ImageRegistry imageRegistry;
 	private MemoryCallback<Integer> memory;

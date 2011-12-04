@@ -20,11 +20,11 @@ import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.card.title.Title;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.okCancel.OkCancel;
-import org.softwareFm.display.swt.SwtIntegrationTest;
+import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.utilities.booleans.Booleans;
 import org.softwareFm.utilities.callbacks.ICallback;
 
-public class ValueEditorLayoutTest extends SwtIntegrationTest {
+public class ValueEditorLayoutTest extends SwtTest {
 
 	private final static int titleHeight = 121;
 	int leftMargin = 11;

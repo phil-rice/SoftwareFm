@@ -12,10 +12,10 @@ import org.junit.Test;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
-import org.softwareFm.display.swt.SwtIntegrationTest;
+import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.utilities.maps.Maps;
 
-public class CardTest extends SwtIntegrationTest {
+public class CardTest extends SwtTest {
 
 	private final Map<String, Object> rawData = Maps.<String, Object> makeImmutableMap("a", 1, "b", 2);
 	private final Map<String, Object> rawDataWithA3 = Maps.<String, Object> makeImmutableMap("a", 3,"b", 2);

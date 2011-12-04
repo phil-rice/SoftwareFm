@@ -9,7 +9,7 @@ import org.eclipse.swt.SWT;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.navigation.internal.NavNextHistoryPrevConfig;
 import org.softwareFm.collections.explorer.BrowserAndNavBar;
-import org.softwareFm.display.swt.SwtIntegrationAndServiceTest;
+import org.softwareFm.display.swt.SwtAndServiceTest;
 import org.softwareFm.display.timeline.PlayItem;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.callbacks.MemoryCallback;
@@ -17,7 +17,7 @@ import org.softwareFm.utilities.history.History;
 import org.softwareFm.utilities.history.IHistory;
 
 
-public class BrowserAndNavBarTest extends SwtIntegrationAndServiceTest{
+public class BrowserAndNavBarTest extends SwtAndServiceTest{
 
 	private IHistory<PlayItem> history;
 	private BrowserAndNavBar browserAndNavBar;

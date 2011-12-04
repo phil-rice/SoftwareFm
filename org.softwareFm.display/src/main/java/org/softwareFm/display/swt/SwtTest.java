@@ -5,22 +5,41 @@
 
 package org.softwareFm.display.swt;
 
-import org.softwareFm.utilities.services.IServiceExecutor;
+import java.util.concurrent.Future;
 
-abstract public class SwtIntegrationAndServiceTest extends SwtIntegrationTest {
+import junit.framework.TestCase;
 
-	protected IServiceExecutor service;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.softwareFm.utilities.future.GatedMockFuture;
+import org.softwareFm.utilities.tests.IIntegrationTest;
+
+abstract public class SwtTest extends TestCase  {
+
+	protected Shell shell;
+	protected Display display;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		service = IServiceExecutor.Utils.defaultExecutor();
+		this.shell = new Shell();
+		this.display = shell.getDisplay();
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
-		service.shutdown();
+		dispatchUntilQueueEmpty();
+		shell.dispose();
 		super.tearDown();
 	}
 
+	protected void kickAndDispatch(Future<?> future) {
+		GatedMockFuture<?, ?> gatedMockFuture = (GatedMockFuture<?, ?>) future;
+		gatedMockFuture.kick();
+		dispatchUntilQueueEmpty();
+	}
+
+	protected void dispatchUntilQueueEmpty() {
+		Swts.dispatchUntilQueueEmpty(shell.getDisplay());
+	}
 }

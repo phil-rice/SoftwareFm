@@ -21,11 +21,11 @@ import org.softwareFm.card.dataStore.CardDataStoreAsyncMock;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
-import org.softwareFm.display.swt.SwtIntegrationTest;
+import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.maps.Maps;
 
-public class CardCollectionHolderTest extends SwtIntegrationTest {
+public class CardCollectionHolderTest extends SwtTest {
 
 	private CardCollectionHolder cardCollectionHolder;
 	private CardCollectionHolder.CardCollectionHolderComposite composite;

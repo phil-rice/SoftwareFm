@@ -10,11 +10,11 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.junit.Test;
 import org.softwareFm.card.navigation.internal.NavButton;
-import org.softwareFm.display.swt.SwtIntegrationTest;
+import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.callbacks.MemoryCallback;
 
-public class NavButtonTest extends SwtIntegrationTest {
+public class NavButtonTest extends SwtTest {
 
 	private MemoryCallback<String> memory;
 	private NavButton navButton;

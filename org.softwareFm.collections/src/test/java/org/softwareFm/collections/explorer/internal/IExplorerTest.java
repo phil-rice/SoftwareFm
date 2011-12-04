@@ -5,11 +5,11 @@ import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
-import org.softwareFm.display.swt.SwtIntegrationTest;
+import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.utilities.services.IServiceExecutor;
 
-public class IExplorerTest extends SwtIntegrationTest {
+public class IExplorerTest extends SwtTest {
 
 	private IServiceExecutor service;
 

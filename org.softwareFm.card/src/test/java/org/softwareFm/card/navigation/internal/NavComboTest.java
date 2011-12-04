@@ -15,11 +15,11 @@ import org.junit.Test;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.navigation.internal.NavCombo;
-import org.softwareFm.display.swt.SwtIntegrationTest;
+import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.callbacks.MemoryCallback;
 
-public class NavComboTest extends SwtIntegrationTest {
+public class NavComboTest extends SwtTest {
 
 	private CardConfig cardConfig;
 	private MemoryCallback<String> memory;

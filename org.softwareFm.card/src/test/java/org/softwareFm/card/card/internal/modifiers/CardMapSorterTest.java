@@ -13,10 +13,10 @@ import org.junit.Test;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.modifiers.internal.CardMapSorter;
-import org.softwareFm.display.swt.SwtIntegrationTest;
+import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.utilities.maps.Maps;
 
-public class CardMapSorterTest extends SwtIntegrationTest {
+public class CardMapSorterTest extends SwtTest {
 
 	private CardConfig cardConfig;
 	private CardMapSorter sorter;

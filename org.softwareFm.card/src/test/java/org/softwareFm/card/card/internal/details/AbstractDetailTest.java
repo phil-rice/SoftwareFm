@@ -18,11 +18,11 @@ import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.card.details.internal.DetailFactory;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.composites.IHasControl;
-import org.softwareFm.display.swt.SwtIntegrationTest;
+import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.maps.Maps;
 
-abstract public class AbstractDetailTest extends SwtIntegrationTest {
+abstract public class AbstractDetailTest extends SwtTest {
 	protected static LineItem stringValue = new LineItem(null, "key", "stringValue");
 	protected static LineItem intValue = new LineItem(null, "key", 0);
 	protected static LineItem mapValue = new LineItem(null, "key", Maps.stringObjectMap("k1", "v1", "k2", "v2"));

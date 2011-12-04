@@ -25,7 +25,7 @@ import org.softwareFm.card.dataStore.MemoryAfterEditCallback;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.collections.explorer.internal.MasterDetailSocial;
 import org.softwareFm.display.menu.PopupMenuContributorMock;
-import org.softwareFm.display.swt.SwtIntegrationAndServiceTest;
+import org.softwareFm.display.swt.SwtAndServiceTest;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.functions.Functions;
@@ -33,7 +33,7 @@ import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.resources.ResourceGetterMock;
 
-public class ExplorerTest extends SwtIntegrationAndServiceTest {
+public class ExplorerTest extends SwtAndServiceTest {
 
 	private final static String popupMenuId = "popupMenuId";
 	private final static String detailsPopupMenuId = "detailsPopupMenuId";

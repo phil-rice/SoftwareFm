@@ -6,6 +6,7 @@
 package org.softwareFm.collections.menu.internal;
 
 import java.text.MessageFormat;
+import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
@@ -18,18 +19,17 @@ import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.menu.AbstractCardMenuHandler;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
-public class ViewActualContentsMenuHandler extends AbstractCardMenuHandler{
+public class ViewCardsMenuHandler extends AbstractCardMenuHandler {
 
-
-	public ViewActualContentsMenuHandler(IExplorer explorer) {
+	public ViewCardsMenuHandler(IExplorer explorer) {
 		super(explorer);
 	}
 
 	@Override
 	public MenuItem optionallyCreate(ICard card, IResourceGetter resourceGetter, Menu menu, Event event, String key) {
-		String cardContentFieldName = IResourceGetter.Utils.getOrNull(card.cardConfig().resourceGetterFn, key, CardConstants.cardContentField);
-		if (cardContentFieldName != null) {
-			String viewActualPattern = resourceGetter.getStringOrNull(CardConstants.menuItemViewActual);
+		Object value = card.data().get(key);
+		if (value instanceof Map<?,?>) {
+			String viewActualPattern = resourceGetter.getStringOrNull(CardConstants.menuItemViewCards);
 			if (viewActualPattern != null) {
 				MenuItem menuItem = new MenuItem(menu, SWT.NULL);
 				menuItem.setText(MessageFormat.format(viewActualPattern, key));

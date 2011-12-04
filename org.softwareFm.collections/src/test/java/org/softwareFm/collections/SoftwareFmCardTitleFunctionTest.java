@@ -15,13 +15,13 @@ import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.collections.SoftwareFmCardTitleFunction;
-import org.softwareFm.display.swt.SwtIntegrationTest;
+import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.resources.ResourceGetterMock;
 
-public class SoftwareFmCardTitleFunctionTest extends SwtIntegrationTest {
+public class SoftwareFmCardTitleFunctionTest extends SwtTest {
 
 	public void testCardTitleUsedLastSegmentOfUrlIfCardNameFieldNotSpecifiedInCollection() throws Exception {
 		checkTitle("title", null, "a/b/c/title");

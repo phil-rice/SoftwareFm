@@ -14,6 +14,7 @@ import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.dataStore.ICardDataStoreCallback;
+import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
 import org.softwareFm.display.browser.IBrowserConfigurator;
@@ -31,8 +32,6 @@ import org.softwareFm.utilities.services.IServiceExecutor;
 
 public abstract class AbstractExplorerView extends ViewPart {
 
-	final protected String rootUrl = "/softwareFm/data";
-
 	@Override
 	public void createPartControl(Composite parent) {
 		final Activator activator = Activator.getDefault();
@@ -43,7 +42,7 @@ public abstract class AbstractExplorerView extends ViewPart {
 
 		IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardConfig.cardDataStore);
 		IServiceExecutor service = activator.getServiceExecutor();
-		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, playListGetter, service);
+		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, CollectionConstants.rootUrl, playListGetter, service);
 		configurePopupMenu(popupMenuId, explorer);
 		IBrowserConfigurator.Utils.configueWithUrlRssSnippetAndTweet(explorer);
 

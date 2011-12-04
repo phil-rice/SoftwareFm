@@ -5,11 +5,11 @@ import org.eclipse.swt.widgets.Menu;
 import org.junit.Test;
 import org.softwareFm.display.menu.IPopupMenuService;
 import org.softwareFm.display.menu.PopupMenuContributorMock;
-import org.softwareFm.display.swt.SwtIntegrationTest;
+import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.tests.Tests;
 
-public class PopupMenuServiceTest extends SwtIntegrationTest {
+public class PopupMenuServiceTest extends SwtTest {
 
 	private PopupMenuContributorMock<String> mock1_1;
 	private PopupMenuContributorMock<String> mock1_2;

@@ -3,9 +3,9 @@ package org.softwareFm.collections.explorer.internal;
 import org.eclipse.swt.SWT;
 import org.junit.Test;
 import org.softwareFm.collections.explorer.internal.MasterDetailSocial;
-import org.softwareFm.display.swt.SwtIntegrationTest;
+import org.softwareFm.display.swt.SwtTest;
 
-public class MasterDetailSocialTest extends SwtIntegrationTest {
+public class MasterDetailSocialTest extends SwtTest {
 
 	private MasterDetailSocial masterDetailSocial;
 

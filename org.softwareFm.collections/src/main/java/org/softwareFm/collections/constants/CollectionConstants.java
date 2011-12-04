@@ -10,5 +10,6 @@ public class CollectionConstants {
 	public static final String artifactId = "artifactId";
 	public static final String groupId = "groupId";
 	public static final String version = "version";
+	public static final String rootUrl = "/softwareFm/data";
 
 }

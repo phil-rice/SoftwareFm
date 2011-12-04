@@ -1,0 +1,78 @@
+package org.softwareFm.collections.explorer.internal;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Table;
+import org.softwareFm.card.card.ICard;
+import org.softwareFm.card.card.ICardHolder;
+import org.softwareFm.collections.menu.ICardMenuItemHandler;
+import org.softwareFm.utilities.collections.Lists;
+
+public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
+	private final static String antUrl = "/ant/ant/artifact/ant";
+
+	public void testArtifactViewMainTitles() {
+		displayCard(antUrl, new CardHolderAndCardCallback() {
+			@Override
+			public void process(ICardHolder cardHolder, ICard card) {
+				Table table = card.getTable();
+				assertEquals(10, table.getItemCount());
+				assertEquals("Name", table.getItem(0).getText(0));
+				assertEquals("Description", table.getItem(1).getText(0));
+				assertEquals("Issues", table.getItem(2).getText(0));
+				assertEquals("Version", table.getItem(3).getText(0));
+				assertEquals("Mailing List", table.getItem(4).getText(0));
+				assertEquals("Tutorials", table.getItem(5).getText(0));
+				assertEquals("Tweet", table.getItem(6).getText(0));
+				assertEquals("Rss", table.getItem(7).getText(0));
+				assertEquals("Blog", table.getItem(8).getText(0));
+				assertEquals("Facebook", table.getItem(9).getText(0));
+			}
+		});
+	}
+
+	public void testRightClickMenusText() {
+		String view = "View";
+		String viewCards = "View cards";
+		String edit = "Edit";
+
+		checkMenu(0, "Name", view, edit);
+		checkMenu(1, "Description", view, edit);
+		checkMenu(2, "Issues", view, edit);
+		checkMenu(3, "Version", viewCards, "Add version");
+		checkMenu(4, "Mailing List", viewCards, "Add mailingList" );
+		checkMenu(5, "Tutorials", view, viewCards, "Add tutorial");
+		checkMenu(6, "Tweet", view, viewCards, "Add tweet");
+		checkMenu(7, "Rss",  view, viewCards, "Add rss");
+		checkMenu(8, "Blog", view, viewCards, "Add blog");
+	}
+
+	private void checkMenu(final int index, final String expectedName, final String... expected) {
+		displayCard(antUrl, new CardHolderAndCardCallback() {
+			@Override
+			public void process(ICardHolder cardHolder, ICard card) {
+				final Menu menu = new Menu(shell);
+				Table table = card.getTable();
+				table.select(index);
+				cardConfig.popupMenuService.contributeTo("popupmenuid", new Event(), menu, card);
+				List<String> actual = Lists.newList();
+				for (int i = 0; i < menu.getItemCount(); i++)
+					actual.add(menu.getItem(i).getText());
+				assertEquals(expectedName, table.getItem(index).getText(0));
+				List<String> fullExpected = Lists.append(Arrays.asList(expected), "", "Register new artifact");
+				assertEquals(fullExpected, actual);
+			}
+		});
+	}
+
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		ICardMenuItemHandler.Utils.addExplorerMenuItemHandlers(explorer, "popupmenuid");
+
+	}
+
+}

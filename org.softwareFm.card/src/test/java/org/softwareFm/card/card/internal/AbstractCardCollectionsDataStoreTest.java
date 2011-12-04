@@ -16,9 +16,9 @@ import org.softwareFm.card.dataStore.CardAndCollectionDataStoreVisitorMonitored;
 import org.softwareFm.card.dataStore.CardAndCollectionsStatus;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.dataStore.IFollowOnFragment;
-import org.softwareFm.display.swt.SwtIntegrationTest;
+import org.softwareFm.display.swt.SwtTest;
 
-public abstract class AbstractCardCollectionsDataStoreTest extends SwtIntegrationTest {
+public abstract class AbstractCardCollectionsDataStoreTest extends SwtTest {
 
 	protected CardConfig cardConfig;
 	protected ICardHolder cardHolder;

@@ -20,12 +20,12 @@ import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.navigation.internal.NavBar;
 import org.softwareFm.card.navigation.internal.NavNextHistoryPrev;
 import org.softwareFm.card.navigation.internal.NavBar.NavBarLayout;
-import org.softwareFm.display.swt.SwtIntegrationTest;
+import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.callbacks.MemoryCallback;
 import org.softwareFm.utilities.maps.Maps;
 
-public class NavBarTest extends SwtIntegrationTest {
+public class NavBarTest extends SwtTest {
 
 	private CardConfig cardConfig;
 	private NavBar nav;

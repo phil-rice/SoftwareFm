@@ -13,10 +13,10 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.display.swt.SwtIntegrationTest;
+import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.utilities.collections.Lists;
 
-public class FillWithAspectRatioLayoutManagerTest extends SwtIntegrationTest {
+public class FillWithAspectRatioLayoutManagerTest extends SwtTest {
 
 	public void testComputeSizeIfBothHintsAreDefaultUsesIdealSizeOfChildren() {
 		checkComputeSize(SWT.DEFAULT, SWT.DEFAULT, new Point(1, 1), 0, new Point(0, 0));
