@@ -81,7 +81,7 @@ public class TextViewer implements IHasComposite {
 					return result;
 				}
 			};
-			StyledText text = new StyledText(body, SWT.V_SCROLL | SWT.WRAP|SWT.BORDER);
+			StyledText text = new StyledText(body, SWT.V_SCROLL | SWT.WRAP|SWT.BORDER|SWT.READ_ONLY);
 			body.setBackground(titleSpec.background);
 			body.addPaintListener(new CardOutlinePaintListener(titleSpec, cardConfig));
 			text.setText(Strings.nullSafeToString(value));

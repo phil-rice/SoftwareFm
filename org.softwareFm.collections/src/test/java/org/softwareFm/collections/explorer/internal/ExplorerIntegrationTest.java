@@ -36,18 +36,17 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 
 	public void testRightClickMenusText() {
 		String view = "View";
-		String viewCards = "View cards";
 		String edit = "Edit";
 
-		checkMenu(0, "Name", view, edit);
-		checkMenu(1, "Description", view, edit);
-		checkMenu(2, "Issues", view, edit);
-		checkMenu(3, "Version", viewCards, "Add version");
-		checkMenu(4, "Mailing List", viewCards, "Add mailingList" );
-		checkMenu(5, "Tutorials", view, viewCards, "Add tutorial");
-		checkMenu(6, "Tweet", view, viewCards, "Add tweet");
-		checkMenu(7, "Rss",  view, viewCards, "Add rss");
-		checkMenu(8, "Blog", view, viewCards, "Add blog");
+		checkMenu(0, "Name", edit, view);
+		checkMenu(1, "Description", edit, view);
+		checkMenu(2, "Issues", edit, view);
+		checkMenu(3, "Version", view, "Add version");
+		checkMenu(4, "Mailing List", view, "Add mailingList" );
+		checkMenu(5, "Tutorials",  view, "Add tutorial");
+		checkMenu(6, "Tweet",  view, "Add tweet");
+		checkMenu(7, "Rss",   view, "Add rss");
+		checkMenu(8, "Blog",  view, "Add blog");
 	}
 
 	private void checkMenu(final int index, final String expectedName, final String... expected) {

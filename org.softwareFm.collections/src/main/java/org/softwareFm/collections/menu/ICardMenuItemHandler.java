@@ -26,16 +26,15 @@ public interface ICardMenuItemHandler extends IPopupMenuContributor<ICard> {
 
 	MenuItem optionallyCreate(ICard card, IResourceGetter resourceGetter, Menu menu, Event event, String key);
 
-	void execute(ICard card, MenuItem item);
+	void execute(ICard card, String key, MenuItem item);
 
 	public static class Utils {
 
 		public static void addExplorerMenuItemHandlers(IExplorer explorer, String popupMenuId) {
 			CardConfig cardConfig = explorer.getCardConfig();
 			cardConfig.popupMenuService.registerMenuId(popupMenuId);
-			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.viewText(explorer));
 			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.editText(explorer));
-			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.viewActualContents(explorer));
+			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.viewText(explorer));
 			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.viewCards(explorer));
 			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.addItemToCollection(explorer));//
 			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.optionalSeparator());//

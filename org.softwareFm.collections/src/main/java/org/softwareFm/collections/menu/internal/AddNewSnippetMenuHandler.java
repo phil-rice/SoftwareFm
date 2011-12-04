@@ -29,7 +29,7 @@ public class AddNewSnippetMenuHandler extends AbstractCardMenuHandler {
 	}
 
 	@Override
-	public void execute(ICard card, MenuItem item) {
+	public void execute(ICard card, String key, MenuItem item) {
 		explorer.showAddSnippetEditor(card);
 	}
 }

@@ -35,12 +35,12 @@ import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.card.dataStore.ICardDataStoreCallback;
 import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
+import org.softwareFm.card.editors.IEditorDetailAdder;
 import org.softwareFm.card.editors.IValueEditor;
 import org.softwareFm.card.navigation.internal.NavNextHistoryPrevConfig;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.collections.explorer.BrowserAndNavBar;
-import org.softwareFm.collections.explorer.ExplorerState;
 import org.softwareFm.collections.explorer.HelpText;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IHelpText;
@@ -75,7 +75,6 @@ public class Explorer implements IExplorer {
 	private BrowserAndNavBar browser;
 	private TimeLine timeLine;
 	private IHelpText helpText;
-	private ExplorerState explorerState = ExplorerState.SHOWING_DETAIL;
 
 	public Explorer(final CardConfig cardConfig, final String rootUrl, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter) {
 		this.cardConfig = cardConfig;
@@ -122,16 +121,7 @@ public class Explorer implements IExplorer {
 		cardHolder.addLineSelectedListener(new ILineSelectedListener() {
 			@Override
 			public void selected(final ICard card, final String key, final Object value) {
-				switch (explorerState) {
-				case BROWSING_LIST:
-					browseDetailForCardKey(card, key, value);
-					break;
-				case SHOWING_DETAIL:
-					showDetailForCardKey(card, key, value);
-					break;
-				default:
-					throw new IllegalStateException(explorerState.toString());
-				}
+				showDetailForCardKey(card, key, value);
 			}
 
 		});
@@ -154,6 +144,24 @@ public class Explorer implements IExplorer {
 				return browserAndNavBar;
 			}
 		}, true);
+
+	}
+
+	@Override
+	public void edit(final ICard card, final String key) {
+		if (card.getControl().isDisposed())
+			return;
+		String editorName = IResourceGetter.Utils.getOr(card.cardConfig().resourceGetterFn, card.cardType(), "editor." + key, "text");
+		final IEditorDetailAdder editor = Functions.call(card.cardConfig().editorFn, editorName);
+		masterDetailSocial.showSocial();
+		masterDetailSocial.createAndShowDetail(new IFunction1<Composite, IHasControl>() {
+			@Override
+			public IHasControl apply(Composite from) throws Exception {
+				String value = Strings.nullSafeToString(card.data().get(key));
+				IHasControl hasControl = editor.add(from, card, cardConfig, key, value, makeEditCallback(card));
+				return hasControl;
+			}
+		});
 
 	}
 
@@ -303,40 +311,56 @@ public class Explorer implements IExplorer {
 	}
 
 	private void showDetailForCardKey(final ICard card, final String key, final Object value) {
+		if (CardConstants.collection.equals(card.cardType())) {
+			String collectionType = Strings.lastSegment(card.url(), "/");
+
+			String hasCardContentField = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, collectionType, CardConstants.cardContentField);
+			if (hasCardContentField != null) {
+				browseDetailForCardKey(card, key, value);
+				return;
+			}
+		}
+
 		masterDetailSocial.showSocial();
 		masterDetailSocial.createAndShowDetail(new IFunction1<Composite, IHasControl>() {
 			@Override
 			public IHasControl apply(Composite from) throws Exception {
 				CardConfig cardConfig = card.cardConfig();
-				IDetailsFactoryCallback callback = new IDetailsFactoryCallback() {
-
-					@Override
-					public void afterEdit(String url) {// reload
-						ICallback.Utils.call(callbackToGotoUrlAndUpdateDetails, card.url());
-					}
-
-					@Override
-					public void gotData(final Control control) {// /layout
-					}
-
-					@Override
-					public void cardSelected(String cardUrl) {
-						ICallback.Utils.call(callbackToGotoUrlAndUpdateDetails, cardUrl);
-					}
-
-					@Override
-					public void updateDataStore(IMutableCardDataStore store, String url, String key, Object value) {
-						store.put(url, Maps.stringObjectMap(key, value), this);
-					}
-				};
+				IDetailsFactoryCallback callback = makeEditCallback(card);
 				return cardConfig.detailFactory.makeDetail(from, card, cardConfig, key, value, callback);
 			}
+
 		});
 		String cardType = card.cardType();
 		String helpKey = "help." + cardType + "." + key;
 		String help = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, cardType, helpKey);
 		masterDetailSocial.setSocial(helpText.getControl());
 		helpText.setText(Strings.nullSafeToString(help));
+	}
+
+	private IDetailsFactoryCallback makeEditCallback(final ICard card) {
+		IDetailsFactoryCallback callback = new IDetailsFactoryCallback() {
+
+			@Override
+			public void afterEdit(String url) {// reload
+				ICallback.Utils.call(callbackToGotoUrlAndUpdateDetails, card.url());
+			}
+
+			@Override
+			public void gotData(final Control control) {// /layout
+			}
+
+			@Override
+			public void cardSelected(String cardUrl) {
+				ICallback.Utils.call(callbackToGotoUrlAndUpdateDetails, cardUrl);
+			}
+
+			@Override
+			public void updateDataStore(IMutableCardDataStore store, String url, String key, Object value) {
+				store.put(url, Maps.stringObjectMap(key, value), this);
+			}
+		};
+		return callback;
 	}
 
 	private void updateStore(final IMutableCardDataStore store, final RightClickCategoryResult result, final Object value, final IAfterEditCallback afterEditCallback) {
@@ -515,11 +539,6 @@ public class Explorer implements IExplorer {
 			}
 		}
 
-	}
-
-	@Override
-	public void changeState(ExplorerState newState) {
-		explorerState = newState;
 	}
 
 	@Override

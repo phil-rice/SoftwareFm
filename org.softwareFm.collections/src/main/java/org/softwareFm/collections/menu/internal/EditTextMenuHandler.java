@@ -21,7 +21,7 @@ public class EditTextMenuHandler extends AbstractCardMenuHandler {
 		Object value = card.data().get(key);
 		if (value instanceof String) {
 			String editor = resourceGetter.getStringOrNull("editor." + key);
-			if (!"none".equals(editor)) {
+			if ( !"none".equals(editor)) {
 				MenuItem menuItem = new MenuItem(menu, SWT.NULL);
 				menuItem.setText(IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.menuItemEditText));
 				return menuItem;
@@ -31,8 +31,8 @@ public class EditTextMenuHandler extends AbstractCardMenuHandler {
 	}
 
 	@Override
-	public void execute(ICard card, MenuItem item) {
-
+	public void execute(ICard card, String key, MenuItem item) {
+		explorer.edit(card, key);
 	}
 
 }

@@ -12,6 +12,7 @@ import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
+import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.menu.ICardMenuItemHandler;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
@@ -34,7 +35,7 @@ public class SnippetView extends AbstractExplorerView {
 		ExpressionData key = categoriser.categorise(ripperResult.expression);
 		if (key == null)
 			return null;
-		String baseUrl = rootUrl + "/" + key.classKey;
+		String baseUrl = CollectionConstants.rootUrl + "/" + key.classKey;
 		if (key.methodKey != null && key.methodKey.length() > 0) {
 			String result = baseUrl + "/method/" + key.methodKey;
 			return result + "/snippet";

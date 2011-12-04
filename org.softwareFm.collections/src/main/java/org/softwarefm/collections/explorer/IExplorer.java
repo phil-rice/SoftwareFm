@@ -41,7 +41,7 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 
 	void showRandomSnippetFor(String artifactUrl);
 
-	void changeState(ExplorerState state);
+	void edit(ICard card, String key);
 
 	public static class Utils {
 
@@ -49,5 +49,7 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 			return new Explorer(cardConfig, rootUrl, masterDetailSocial, service, playListGetter);
 		}
 	}
+
+
 
 }

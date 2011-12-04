@@ -29,14 +29,14 @@ public abstract class AbstractCardMenuHandler implements ICardMenuItemHandler {
 		if (selectionIndex != -1) {
 			TableItem item = card.getTable().getItem(selectionIndex);
 			if (item != null) {
-				String key = (String) item.getData();
 				IResourceGetter resourceGetter = Functions.call(card.cardConfig().resourceGetterFn, card.cardType());
+				final String key = (String) item.getData();
 				final MenuItem menuItem = optionallyCreate(card, resourceGetter, menu, event, key);
 				if (menuItem != null)
 					menuItem.addListener(SWT.Selection, new Listener() {
 						@Override
 						public void handleEvent(Event event) {
-							execute(card, menuItem);
+							execute(card, key, menuItem);
 						}
 					});
 			}

@@ -12,7 +12,6 @@ import junit.framework.TestCase;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.softwareFm.utilities.future.GatedMockFuture;
-import org.softwareFm.utilities.tests.IIntegrationTest;
 
 abstract public class SwtTest extends TestCase  {
 
