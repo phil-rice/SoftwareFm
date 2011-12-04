@@ -40,6 +40,7 @@ import org.softwareFm.card.navigation.internal.NavNextHistoryPrevConfig;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.collections.explorer.BrowserAndNavBar;
+import org.softwareFm.collections.explorer.ExplorerState;
 import org.softwareFm.collections.explorer.HelpText;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IHelpText;
@@ -66,10 +67,6 @@ import org.softwareFm.utilities.strings.Strings;
 
 public class Explorer implements IExplorer {
 
-	static enum State {
-		SHOWING_DETAIL, BROWSING_LIST;
-	}
-
 	private UnrecognisedJar unrecognisedJar;
 	 ICardHolder cardHolder;
 	private ICallback<String> callbackToGotoUrlAndUpdateDetails;
@@ -78,32 +75,10 @@ public class Explorer implements IExplorer {
 	private BrowserAndNavBar browser;
 	private TimeLine timeLine;
 	private IHelpText helpText;
-	private State state = State.SHOWING_DETAIL;
+	private ExplorerState explorerState = ExplorerState.SHOWING_DETAIL;
 
 	public Explorer(final CardConfig cardConfig, final String rootUrl, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter) {
 		this.cardConfig = cardConfig;
-		//		this.cardConfig = cardConfigParam.withMenuHandlers(//
-//				new AddItemToCollectionMenuHandler(this),//
-//				new OptionalSeparatorMenuHandler(),//
-//				new AddNewArtifactMenuHandler(this),//
-//				new ViewContentsMenuHandler(this),//
-//				new ICardMenuItemHandler() {
-//					@Override
-//					public MenuItem optionallyCreate(ICard card, IResourceGetter resourceGetter, Menu menu, Event event, String key) {
-//						String cardType = card.cardType();
-//						if (cardType == null || CardConstants.collection.equals(cardType)) {//TODO Fix the menu subsystem to support 'add snippet'. This is actually a bit crap, as may end up adding snippet to a collection...but this is demo code, and it's better than snippets appearing everywhere
-//							MenuItem menuItem = new MenuItem(menu, SWT.NULL);
-//							menuItem.setText(IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.menuItemAddSnippet));
-//							return menuItem;
-//						}
-//						return null;
-//					}
-//
-//					@Override
-//					public void execute(ICard card, MenuItem item) {
-//						showAddSnippetEditor(card);
-//					}
-//				});
 		this.masterDetailSocial = masterDetailSocial;
 		helpText = masterDetailSocial.createSocial(new IFunction1<Composite, IHelpText>() {
 			@Override
@@ -114,7 +89,6 @@ public class Explorer implements IExplorer {
 		callbackToGotoUrlAndUpdateDetails = new ICallback<String>() {
 			@Override
 			public void process(String url) throws Exception {
-				state = State.SHOWING_DETAIL;
 				masterDetailSocial.setMaster(cardHolder.getControl());
 				cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, new CardAndCollectionDataStoreAdapter() {
 					@Override
@@ -148,7 +122,7 @@ public class Explorer implements IExplorer {
 		cardHolder.addLineSelectedListener(new ILineSelectedListener() {
 			@Override
 			public void selected(final ICard card, final String key, final Object value) {
-				switch (state) {
+				switch (explorerState) {
 				case BROWSING_LIST:
 					browseDetailForCardKey(card, key, value);
 					break;
@@ -156,7 +130,7 @@ public class Explorer implements IExplorer {
 					showDetailForCardKey(card, key, value);
 					break;
 				default:
-					throw new IllegalStateException(state.toString());
+					throw new IllegalStateException(explorerState.toString());
 				}
 			}
 
@@ -283,7 +257,7 @@ public class Explorer implements IExplorer {
 
 	@Override
 	public void displayCard(String url, ICardAndCollectionDataStoreVisitor visitor) {
-		state = State.SHOWING_DETAIL;
+//		changeState(State.SHOWING_DETAIL);
 		masterDetailSocial.showMaster();
 		masterDetailSocial.setMaster(cardHolder.getControl());
 		cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, visitor);
@@ -291,7 +265,6 @@ public class Explorer implements IExplorer {
 
 	@Override
 	public void displayUnrecognisedJar(File file, String digest) {
-		state = State.SHOWING_DETAIL;
 		masterDetailSocial.showMaster();
 		unrecognisedJar.setFileAndDigest(file, digest);
 		masterDetailSocial.setMaster(unrecognisedJar.getControl());
@@ -311,7 +284,6 @@ public class Explorer implements IExplorer {
 
 	@SuppressWarnings("unchecked")
 	private void browseDetailForCardKey(ICard card, String key, Object value) {
-		state = State.SHOWING_DETAIL;
 		masterDetailSocial.hideSocial();
 		masterDetailSocial.setDetail(browser.getControl());
 		if (value instanceof Map<?, ?>) {
@@ -530,7 +502,6 @@ public class Explorer implements IExplorer {
 					displayCard(card.url() + "/" + key, new CardAndCollectionDataStoreAdapter() {
 						@Override
 						public void finished(ICardHolder cardHolder, String url, ICard card) {
-							state = State.BROWSING_LIST;
 							if (card.getControl().isDisposed())
 								return;
 							if (card.getTable().getItemCount() > 0) {
@@ -538,11 +509,16 @@ public class Explorer implements IExplorer {
 								card.getTable().notifyListeners(SWT.Selection, new Event());
 							}
 						}
+
 					});
 				}
 			}
 		}
 
+	}
+	@Override
+	public void changeState(ExplorerState newState) {
+		explorerState = newState;							
 	}
 
 	@Override
@@ -621,7 +597,6 @@ public class Explorer implements IExplorer {
 		if (data.size() > 0) {
 			int index = random.nextInt(keys.size());
 			card.getTable().select(index);
-			state = State.BROWSING_LIST;
 			card.getTable().notifyListeners(SWT.Selection, new Event());
 		}
 

@@ -57,8 +57,8 @@ public class ExplorerWithRadioChannel {
 					IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardDataStore);
 					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, playListGetter, service);
 					
-					ICardMenuItemHandler.Utils.addDefaultCardExplorerOptions(explorer, popupMenuId);
-					IBrowserConfigurator.Utils.configueWithUrlRssAndTweet(explorer);
+					ICardMenuItemHandler.Utils.addExplorerMenuItemHandlers(explorer, popupMenuId);
+					IBrowserConfigurator.Utils.configueWithUrlRssSnippetAndTweet(explorer);
 
 					explorer.displayCard(firstUrl, new CardAndCollectionDataStoreAdapter());
 					buttonPanel.setLayoutData(Grid.makeGrabHorizonalAndFillGridData());

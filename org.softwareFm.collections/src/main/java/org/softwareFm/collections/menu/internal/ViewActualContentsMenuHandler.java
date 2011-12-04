@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.constants.CardConstants;
+import org.softwareFm.collections.explorer.ExplorerState;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.menu.AbstractCardMenuHandler;
 import org.softwareFm.utilities.resources.IResourceGetter;
@@ -40,6 +41,7 @@ public class ViewActualContentsMenuHandler extends AbstractCardMenuHandler{
 
 	@Override
 	public void execute(ICard card, MenuItem item) {
+		explorer.changeState(ExplorerState.BROWSING_LIST);
 		explorer.showContents();
 	}
 

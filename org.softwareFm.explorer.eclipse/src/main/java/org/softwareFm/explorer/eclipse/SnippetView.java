@@ -13,6 +13,7 @@ import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.collections.explorer.IExplorer;
+import org.softwareFm.collections.menu.ICardMenuItemHandler;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.jdtBinding.api.ExpressionData;
 import org.softwareFm.jdtBinding.api.IExpressionCategoriser;
@@ -22,6 +23,11 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 public class SnippetView extends AbstractExplorerView {
 
 	IExpressionCategoriser categoriser = IExpressionCategoriser.Utils.categoriser();
+
+	@Override
+	protected void configurePopupMenu(String popupMenuId, IExplorer explorer) {
+		ICardMenuItemHandler.Utils.addSnippetMenuItemHandlers(explorer, popupMenuId);
+	}
 
 	@Override
 	protected String makeUrl(BindingRipperResult ripperResult, final CardConfig cardConfig, Map<String, Object> data) {
@@ -59,4 +65,5 @@ public class SnippetView extends AbstractExplorerView {
 	protected void processNoData(CardConfig cardConfig, IExplorer explorer, IResourceGetter resourceGetter, BindingRipperResult ripperResult) {
 		process(cardConfig, explorer, ripperResult, Maps.stringObjectLinkedMap());
 	}
+
 }

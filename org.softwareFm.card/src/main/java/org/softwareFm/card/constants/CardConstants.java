@@ -31,6 +31,7 @@ public class CardConstants {
 	public static final String manuallyAdded = "manually added";
 
 	public static final String menuItemViewActual = "menuitem.view.actual";
+	public static final String menuItemViewCards = "menuitem.view.cards";
 	public static final String menuItemAddCollection = "menuitem.add.collection";
 	public static final String menuItemAddArtifact = "menuitem.add.artifact";
 	public static final String menuItemAddSnippet = "menuitem.add.snippet";

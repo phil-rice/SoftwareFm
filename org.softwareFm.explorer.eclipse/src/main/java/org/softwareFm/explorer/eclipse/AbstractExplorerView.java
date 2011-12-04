@@ -16,10 +16,7 @@ import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.dataStore.ICardDataStoreCallback;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
-import org.softwareFm.display.browser.BrowserFeedConfigurator;
-import org.softwareFm.display.browser.RssFeedConfigurator;
-import org.softwareFm.display.browser.SnippetFeedConfigurator;
-import org.softwareFm.display.browser.TweetFeedConfigurator;
+import org.softwareFm.display.browser.IBrowserConfigurator;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.display.swt.Swts.Size;
@@ -32,24 +29,23 @@ import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.services.IServiceExecutor;
 
-public class AbstractExplorerView extends ViewPart {
+public abstract class AbstractExplorerView extends ViewPart {
 
 	final protected String rootUrl = "/softwareFm/data";
 
 	@Override
 	public void createPartControl(Composite parent) {
 		final Activator activator = Activator.getDefault();
-		final CardConfig cardConfig = makeCardConfig(parent);
+		String popupMenuId = getPopupMenuId();
+		final CardConfig cardConfig = makeCardConfig(parent).withPopupMenuId(popupMenuId, null);
 		IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(parent);
 		Size.resizeMeToParentsSize(masterDetailSocial.getControl());
 
 		IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardConfig.cardDataStore);
 		IServiceExecutor service = activator.getServiceExecutor();
 		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, playListGetter, service);
-		new BrowserFeedConfigurator().configure(explorer);
-		new RssFeedConfigurator().configure(explorer);
-		new TweetFeedConfigurator().configure(explorer);
-		new SnippetFeedConfigurator().configure(explorer);
+		configurePopupMenu(popupMenuId, explorer);
+		IBrowserConfigurator.Utils.configueWithUrlRssSnippetAndTweet(explorer);
 
 		final IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, null);
 		String welcomeUrl = IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.webPageWelcomeUrl);
@@ -84,6 +80,12 @@ public class AbstractExplorerView extends ViewPart {
 		explorer.processUrl(DisplayConstants.browserFeedType, welcomeUrl);
 
 	}
+
+	abstract protected void configurePopupMenu(String popupMenuId, final IExplorer explorer);
+
+	 protected String getPopupMenuId(){
+		 return getClass().getSimpleName();
+	 }
 
 	protected CardConfig makeCardConfig(Composite parent) {
 		return Activator.getDefault().getCardConfig(parent);

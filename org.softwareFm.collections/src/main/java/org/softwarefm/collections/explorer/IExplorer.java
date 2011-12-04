@@ -41,6 +41,8 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 
 	void showRandomSnippetFor(String artifactUrl);
 
+	void changeState(ExplorerState state);
+
 	public static class Utils {
 
 		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, String rootUrl, IPlayListGetter playListGetter, IServiceExecutor service) {

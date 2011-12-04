@@ -9,6 +9,8 @@ import java.util.Map;
 
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
+import org.softwareFm.collections.explorer.IExplorer;
+import org.softwareFm.collections.menu.ICardMenuItemHandler;
 import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
 
@@ -19,5 +21,11 @@ public class ExplorerView extends AbstractExplorerView {
 		String artifactUrl = cardUrlGenerator.findUrlFor(result);
 		return artifactUrl;
 	}
+
+	@Override
+	protected void configurePopupMenu(String popupMenuId, IExplorer explorer) {
+		ICardMenuItemHandler.Utils.addExplorerMenuItemHandlers(explorer, popupMenuId);
+	}
+
 
 }
