@@ -30,7 +30,7 @@ public interface ICardAndCollectionDataStoreVisitor {
 	void noData(ICardHolder cardHolder, String url, ICard card, String followUpUrl);
 
 	/** All the data, and the follow up data has been found */
-	void finished(ICardHolder cardHolder, String url, ICard card);
+	void finished(ICardHolder cardHolder, String url, ICard card) throws Exception;
 
 	public static class Utils {
 		public static CardAndCollectionDataStoreVisitorMonitored noVisitor() {

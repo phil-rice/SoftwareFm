@@ -23,7 +23,6 @@ import org.softwareFm.card.dataStore.CardDataStoreMock;
 import org.softwareFm.card.dataStore.IAfterEditCallback;
 import org.softwareFm.card.dataStore.MemoryAfterEditCallback;
 import org.softwareFm.card.title.TitleSpec;
-import org.softwareFm.collections.explorer.internal.MasterDetailSocial;
 import org.softwareFm.display.menu.PopupMenuContributorMock;
 import org.softwareFm.display.swt.SwtAndServiceTest;
 import org.softwareFm.display.timeline.IPlayListGetter;
@@ -82,6 +81,8 @@ public class ExplorerTest extends SwtAndServiceTest {
 		checkCreatedItemInitialData("withCardNameField", "key3", "new Item Name", "cardName");
 	}
 
+	
+	
 	private void checkCreatedItemInitialData(String collection, String key, String expectedName, String cardNameField) {
 		Type type = RightClickCategoryResult.Type.IS_COLLECTION;
 		Map<String, Object> raw = Maps.stringObjectMap(CardConstants.slingResourceType, collection);

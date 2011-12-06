@@ -95,11 +95,11 @@ public class Swts {
 
 				@Override
 				public void handleEvent(Event event) {
-					System.out.println("SWT/resizeMeToParentsSizeWithLayout " + id + boundsUpToShell(composite));
+//					System.out.println("SWT/resizeMeToParentsSizeWithLayout " + id + boundsUpToShell(composite));
 					Size.setSizeFromClientArea(composite);
 					composite.layout();
 					Swts.redrawAllChildren(composite);
-					System.out.println("   end SWT/resizeMeToParentsSizeWithLayout " + id + boundsUpToShell(composite));
+//					System.out.println("   end SWT/resizeMeToParentsSizeWithLayout " + id + boundsUpToShell(composite));
 				}
 			};
 			composite.getParent().addListener(SWT.Resize, listener);

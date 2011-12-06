@@ -42,6 +42,8 @@ public interface IRepositoryFacard {
 	void shutdown();
 
 	public static class Utils {
+		
+		public static boolean debug = false;
 
 		public static IRepositoryFacard defaultFacard() {
 			return new RepositoryFacard(IHttpClient.Utils.defaultClient(), "sfm");

@@ -19,6 +19,7 @@ import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.collections.explorer.IExplorer;
+import org.softwareFm.collections.explorer.IExplorerListener;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
 import org.softwareFm.collections.menu.ICardMenuItemHandler;
 import org.softwareFm.display.browser.IBrowserConfigurator;
@@ -51,12 +52,12 @@ public class ExplorerWithRadioChannel {
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 					String popupMenuId = "explorerMenu";
 					String detailsPopupMenuId = null;
-					
+
 					final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore)).withPopupMenuId(popupMenuId, detailsPopupMenuId);
 					IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(explorerAndButton);
 					IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardDataStore);
 					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, playListGetter, service);
-					
+
 					ICardMenuItemHandler.Utils.addExplorerMenuItemHandlers(explorer, popupMenuId);
 					IBrowserConfigurator.Utils.configueWithUrlRssSnippetAndTweet(explorer);
 
@@ -102,7 +103,7 @@ public class ExplorerWithRadioChannel {
 						}
 					});
 					Swts.Row.setRowDataFor(100, 20, buttonPanel.getChildren());
-
+					explorer.addExplorerListener(IExplorerListener.Utils.sysout());
 					return explorerAndButton;
 				}
 			});

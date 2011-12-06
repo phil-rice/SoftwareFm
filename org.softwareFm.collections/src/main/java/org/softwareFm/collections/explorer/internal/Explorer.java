@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.SWT;
@@ -43,6 +44,7 @@ import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.collections.explorer.BrowserAndNavBar;
 import org.softwareFm.collections.explorer.HelpText;
 import org.softwareFm.collections.explorer.IExplorer;
+import org.softwareFm.collections.explorer.IExplorerListener;
 import org.softwareFm.collections.explorer.IHelpText;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
 import org.softwareFm.display.browser.IBrowserPart;
@@ -264,11 +266,83 @@ public class Explorer implements IExplorer {
 	}
 
 	@Override
-	public void displayCard(String url, ICardAndCollectionDataStoreVisitor visitor) {
-		// changeState(State.SHOWING_DETAIL);
+	public void displayCard(final String url, final ICardAndCollectionDataStoreVisitor visitor) {
+		fireListeners(new ICallback<IExplorerListener>() {
+			@Override
+			public void process(IExplorerListener t) throws Exception {
+				t.displayCard(url);
+
+			}
+		});
 		masterDetailSocial.showMaster();
 		masterDetailSocial.setMaster(cardHolder.getControl());
-		cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, visitor);
+		cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, new ICardAndCollectionDataStoreVisitor() {
+			@Override
+			public void requestingFollowup(final ICardHolder cardHolder, final String url, final ICard card, final String followOnUrlFragment) {
+				fireListeners(new ICallback<IExplorerListener>() {
+					@Override
+					public void process(IExplorerListener t) throws Exception {
+						t.requestingFollowup(cardHolder, url, card, followOnUrlFragment);
+					}
+				});
+				visitor.requestingFollowup(cardHolder, url, card, followOnUrlFragment);
+			}
+
+			@Override
+			public void noData(final ICardHolder cardHolder, final String url, final ICard card, final String followUpUrl) {
+				fireListeners(new ICallback<IExplorerListener>() {
+					@Override
+					public void process(IExplorerListener t) throws Exception {
+						t.noData(cardHolder, url, card, followUpUrl);
+					}
+				});
+				visitor.noData(cardHolder, url, card, followUpUrl);
+			}
+
+			@Override
+			public void initialUrl(final ICardHolder cardHolder, final CardConfig cardConfig, final String url) {
+				fireListeners(new ICallback<IExplorerListener>() {
+					@Override
+					public void process(IExplorerListener t) throws Exception {
+						t.initialUrl(cardHolder, cardConfig, url);
+					}
+				});
+				visitor.initialUrl(cardHolder, cardConfig, url);
+			}
+
+			@Override
+			public void initialCard(final ICardHolder cardHolder, final CardConfig cardConfig, final String url, final ICard card) {
+				fireListeners(new ICallback<IExplorerListener>() {
+					@Override
+					public void process(IExplorerListener t) throws Exception {
+						t.initialCard(cardHolder, cardConfig, url, card);
+					}
+				});
+				visitor.initialCard(cardHolder, cardConfig, url, card);
+			}
+
+			@Override
+			public void followedUp( final ICardHolder cardHolder,  final String url, final  ICard card, final String followUpUrl, final Map<String, Object> result) {
+				fireListeners(new ICallback<IExplorerListener>() {
+					@Override
+					public void process(IExplorerListener t) throws Exception {
+						t.followedUp(cardHolder, url, card, followUpUrl, result);
+					}
+				});
+				visitor.followedUp(cardHolder, url, card, followUpUrl, result);
+			}
+
+			@Override
+			public void finished(final ICardHolder cardHolder, final String url, final ICard card) throws Exception {
+				fireListeners(new ICallback<IExplorerListener>() {
+					@Override
+					public void process(IExplorerListener t) throws Exception {
+						t.finished(cardHolder, url, card);
+					}
+				});
+				visitor.finished(cardHolder, url, card);
+			}
+		});
 	}
 
 	@Override
@@ -512,7 +586,13 @@ public class Explorer implements IExplorer {
 
 	@Override
 	public void showContents() {
-		ICard card = cardHolder.getCard();
+		final ICard card = cardHolder.getCard();
+		fireListeners(new ICallback<IExplorerListener>() {
+			@Override
+			public void process(IExplorerListener t) throws Exception {
+				t.showContents(card);
+			}
+		});
 		if (card != null) {
 			Table table = card.getTable();
 			int selectionIndex = table.getSelectionIndex();
@@ -522,7 +602,6 @@ public class Explorer implements IExplorer {
 				Map<String, Object> data = card.data();
 				Object value = data.get(key);
 				if (value instanceof Map<?, ?>) {
-					System.out.println("value: " + value);
 					displayCard(card.url() + "/" + key, new CardAndCollectionDataStoreAdapter() {
 						@Override
 						public void finished(ICardHolder cardHolder, String url, ICard card) {
@@ -532,11 +611,22 @@ public class Explorer implements IExplorer {
 								card.getTable().select(0);
 								card.getTable().notifyListeners(SWT.Selection, new Event());
 							}
+							Swts.layoutDump(cardHolder.getControl());
 						}
 
 					});
 				}
 			}
+		}
+
+	}
+
+	private void fireListeners(ICallback<IExplorerListener> iCallback) {
+		try {
+			for (IExplorerListener listener : listeners)
+				ICallback.Utils.call(iCallback, listener);
+		} catch (Exception e) {e.printStackTrace();
+			throw WrappedException.wrap(e);
 		}
 
 	}
@@ -573,6 +663,7 @@ public class Explorer implements IExplorer {
 	}
 
 	private final Random random = new Random();
+	private final List<IExplorerListener> listeners = new CopyOnWriteArrayList<IExplorerListener>();
 
 	@Override
 	public void showRandomSnippetFor(String artifactUrl) {
@@ -625,6 +716,11 @@ public class Explorer implements IExplorer {
 	@Override
 	public CardConfig getCardConfig() {
 		return cardConfig;
+	}
+
+	@Override
+	public void addExplorerListener(IExplorerListener listener) {
+		listeners.add(listener);
 	}
 
 }

@@ -2,17 +2,55 @@ package org.softwareFm.collections.explorer.internal;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardHolder;
+import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.collections.constants.CollectionConstants;
+import org.softwareFm.collections.explorer.ExplorerAdapter;
 import org.softwareFm.collections.menu.ICardMenuItemHandler;
 import org.softwareFm.utilities.collections.Lists;
 
 public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 	private final static String antUrl = "/ant/ant/artifact/ant";
+
+	public void testShowContentOnlyAsksForOneMainUrlFromCardDataStore() {
+		final AtomicInteger count = new AtomicInteger();
+		displayCard(antUrl, new CardHolderAndCardCallback() {
+			@Override
+			public void process(ICardHolder cardHolder, ICard card) throws InterruptedException {
+				selectItem(card, "Tutorials");
+				final CountDownLatch latch = new CountDownLatch(1);
+				explorer.addExplorerListener(new ExplorerAdapter() {
+					@Override
+					public void initialCard(ICardHolder cardHolder, CardConfig cardConfig, String url, ICard card) {
+						assertEquals(1, count.incrementAndGet());
+						latch.countDown();
+						assertEquals(CollectionConstants.rootUrl+antUrl+"/tutorial", card.url());
+					}
+				});
+				explorer.showContents();
+				dispatchUntilTimeoutOrLatch(latch, delay);
+				
+			}
+		});
+		assertEquals(1, count.get());
+	}
+
+	public void testViewTutorials() {
+		displayCardThenViewChild(antUrl, "Tutorials", new CardHolderAndCardCallback() {
+			@Override
+			public void process(ICardHolder cardHolder, ICard card) throws Exception {
+				assertEquals("asd", card.url());
+
+			}
+		});
+	}
 
 	public void testArtifactViewMainTitles() {
 		displayCard(antUrl, new CardHolderAndCardCallback() {
@@ -42,11 +80,11 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 		checkMenu(1, "Description", edit, view);
 		checkMenu(2, "Issues", edit, view);
 		checkMenu(3, "Version", view, "Add version");
-		checkMenu(4, "Mailing List", view, "Add mailingList" );
-		checkMenu(5, "Tutorials",  view, "Add tutorial");
-		checkMenu(6, "Tweet",  view, "Add tweet");
-		checkMenu(7, "Rss",   view, "Add rss");
-		checkMenu(8, "Blog",  view, "Add blog");
+		checkMenu(4, "Mailing List", view, "Add mailingList");
+		checkMenu(5, "Tutorials", view, "Add tutorial");
+		checkMenu(6, "Tweet", view, "Add tweet");
+		checkMenu(7, "Rss", view, "Add rss");
+		checkMenu(8, "Blog", view, "Add blog");
 	}
 
 	private void checkMenu(final int index, final String expectedName, final String... expected) {
@@ -71,7 +109,6 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		ICardMenuItemHandler.Utils.addExplorerMenuItemHandlers(explorer, "popupmenuid");
-
 	}
 
 }

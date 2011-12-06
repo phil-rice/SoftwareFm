@@ -167,6 +167,7 @@ public class Card implements ICard, IHasTable {
 					data.put(key, newValue);
 					setTableItem(index, cardConfig, item, new LineItem(cardType, key, newValue));
 					table.redraw();
+					System.out.println("valueChanged: " + key +", "+ newValue);
 				} catch (IllegalArgumentException e) {
 					throw new RuntimeException(MessageFormat.format(CardConstants.exceptionChangingValue, key, index, newValue));
 				}

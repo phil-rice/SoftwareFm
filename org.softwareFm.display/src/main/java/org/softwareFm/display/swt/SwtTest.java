@@ -5,7 +5,9 @@
 
 package org.softwareFm.display.swt;
 
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import junit.framework.TestCase;
 
@@ -13,7 +15,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.softwareFm.utilities.future.GatedMockFuture;
 
-abstract public class SwtTest extends TestCase  {
+abstract public class SwtTest extends TestCase {
 
 	protected Shell shell;
 	protected Display display;
@@ -30,6 +32,17 @@ abstract public class SwtTest extends TestCase  {
 		dispatchUntilQueueEmpty();
 		shell.dispose();
 		super.tearDown();
+	}
+
+	protected void dispatchUntilTimeoutOrLatch(final CountDownLatch latch, long delay) throws InterruptedException {
+		long start = System.currentTimeMillis();
+		dispatchUntilQueueEmpty();
+		while (!latch.await(10, TimeUnit.MILLISECONDS)) {
+			if (System.currentTimeMillis() > delay + start)
+				fail();
+			dispatchUntilQueueEmpty();
+			Thread.sleep(10);
+		}
 	}
 
 	protected void kickAndDispatch(Future<?> future) {

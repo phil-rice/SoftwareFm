@@ -35,7 +35,7 @@ public class CardAndCollectionDataStoreAdapter implements ICardAndCollectionData
 	}
 
 	@Override
-	public void finished(ICardHolder cardHolder, String url, ICard card) {
+	public void finished(ICardHolder cardHolder, String url, ICard card) throws Exception {
 	}
 
 }

@@ -43,7 +43,8 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 								if (RepositoryFacardConstants.okStatusCodes.contains(response.statusCode()))
 									callback.process(url, data);
 								else {
-									System.out.println(response.asString());
+									if (IRepositoryFacard.Utils.debug)
+										System.out.println(response.asString());
 									callback.noData(url);
 								}
 							} catch (Exception e) {

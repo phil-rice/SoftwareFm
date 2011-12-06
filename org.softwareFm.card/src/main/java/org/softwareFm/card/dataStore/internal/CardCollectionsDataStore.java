@@ -22,6 +22,7 @@ import org.softwareFm.card.dataStore.ICardAndCollectionDataStoreVisitor;
 import org.softwareFm.card.dataStore.ICardAndCollectionsDataStore;
 import org.softwareFm.card.dataStore.ICardDataStoreCallback;
 import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.future.GatedFuture;
 
@@ -76,7 +77,11 @@ public class CardCollectionsDataStore implements ICardAndCollectionsDataStore {
 
 			private void finish(ICard card) {
 				if (count.decrementAndGet() == 0) {
-					visitor.finished(cardHolder, url, card);
+					try {
+						visitor.finished(cardHolder, url, card);
+					} catch (Exception e) {
+						throw WrappedException.wrap(e);
+					}
 					future.done(null);
 				}
 			}

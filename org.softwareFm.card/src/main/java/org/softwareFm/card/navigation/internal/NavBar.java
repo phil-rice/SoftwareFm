@@ -50,7 +50,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 		protected void layout(Composite composite, boolean flushCache) {
 			NavBarComposite nav = (NavBarComposite) composite;
 			Rectangle ca = nav.getClientArea();
-			System.out.println(" NavBar " + " " + ca + "  parent " + nav.getParent().getBounds());
+//			System.out.println(" NavBar " + " " + ca + "  parent " + nav.getParent().getBounds());
 			Control[] children = nav.getChildren();
 			nav.navNextHistoryPrev.layout();
 			nav.navNextHistoryPrev.getControl().setLocation(ca.x, ca.y);
