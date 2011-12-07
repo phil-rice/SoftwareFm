@@ -32,10 +32,14 @@ public class BasicImageRegisterConfigurator implements IImageRegisterConfigurato
 				"jar", "jarClearEclipse", "jarCopyFromSoftwareFm", "jarCopyToSoftwareFm", //
 				"blog", "document", "faceBook", "folder", "forum", "nothing", "javadoc", "issues", "license", "mailingList", "merchandise", "group", "artifact",//
 				"news", "rss", "recruitment", "source", "tutorials", "twitter");
-		Images.registerImages(device, imageRegistry, OverlaysAnchor.class, "overlay", "add", "delete", "edit", "properties");
-		Images.registerImages(device, imageRegistry, SmallIconsAnchor.class, "smallIcon", "softwareFm", "javadoc", "source");
-		Images.registerImages(device, imageRegistry, GeneralAnchor.class, "general", "browse", "help", "clear", "sfmLogo");
-		Images.registerImages(device, imageRegistry, TitleAnchor.class, "title", "artifact", "folder", "group", "history", "jar", "next", "previous", "refresh", "version");
+		Images.registerImages(device, imageRegistry, OverlaysAnchor.class, "overlay", //
+				"add", "delete", "edit", "properties");
+		Images.registerImages(device, imageRegistry, SmallIconsAnchor.class, "smallIcon", //
+				"softwareFm", "javadoc", "source");
+		Images.registerImages(device, imageRegistry, GeneralAnchor.class, "general", //
+				"browse", "help", "clear", "sfmLogo");
+		Images.registerImages(device, imageRegistry, TitleAnchor.class, "title",//
+				"artifact","blog","facebook", "folder", "group", "history", "jar", "mailingList", "next", "previous", "refresh", "rss","tutorial", "twitter","version");
 
 	}
 

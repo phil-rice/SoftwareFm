@@ -25,7 +25,7 @@ public class NavIconFunction implements IFunction1<Map<String, Object>, Image> {
 	@Override
 	public Image apply(Map<String, Object> from) throws Exception {
 		String cardType = (String) from.get("sling:resourceType");
-		String iconName = IResourceGetter.Utils.getOrNull(resourceGetterFn, cardType, CardConstants.navIcon);
+		String iconName = IResourceGetter.Utils.getOr(resourceGetterFn, cardType, CardConstants.navIcon, "title." + cardType);
 		return Functions.call(imageFn, iconName);
 	}
 }

@@ -91,7 +91,7 @@ public class Swts {
 			Size.setSizeFromClientArea(composite);
 
 			Listener listener = new Listener() {
-				int id = globalId++;
+//				int id = globalId++;
 
 				@Override
 				public void handleEvent(Event event) {
