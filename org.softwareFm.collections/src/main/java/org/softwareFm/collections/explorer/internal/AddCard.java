@@ -19,17 +19,19 @@ import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.ICardValueChangedListener;
 import org.softwareFm.card.card.IHasCardConfig;
 import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.editors.OKCancelWithBorder;
+import org.softwareFm.card.modifiers.ICardDataModifier;
 import org.softwareFm.card.title.Title;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.collections.explorer.IAddCardCallback;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.runnable.Runnables;
 import org.softwareFm.utilities.strings.Strings;
 
 public class AddCard implements IHasComposite, IHasCardConfig, ICardData {
@@ -38,7 +40,7 @@ public class AddCard implements IHasComposite, IHasCardConfig, ICardData {
 	final AddCardComposite content;
 	private final Map<String, Object> data;
 	private final String url;
-	private String cardType;
+	private final String cardType;
 
 	static class AddCardComposite extends Composite implements IHasCardConfig {
 
@@ -54,7 +56,17 @@ public class AddCard implements IHasComposite, IHasCardConfig, ICardData {
 			TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, cardData);
 			title = new Title(this, cardConfig, titleSpec, titleString, cardData.url());
 			card = ICardFactory.Utils.createCardWithLayout(this, cardConfig, "neverused", cardData.data());
-			okCancel = new OKCancelWithBorder(this, cardConfig, callback.ok(), callback.cancel());
+			okCancel = new OKCancelWithBorder(this, cardConfig, new Runnable() {
+				@Override
+				public void run() {
+					callback.ok(cardData);
+				}
+			}, new Runnable() {
+				@Override
+				public void run() {
+					callback.cancel(cardData);
+				}
+			});
 			okCancel.setLayout(new OKCancelWithBorder.OKCancelWithBorderLayout());
 			okCancel.setOkEnabled(false);
 			table = card.getTable();
@@ -107,10 +119,12 @@ public class AddCard implements IHasComposite, IHasCardConfig, ICardData {
 	}
 
 	public AddCard(Composite parent, CardConfig cardConfig, String url, String title, String cardType, Map<String, Object> existingData, IAddCardCallback callback) {
-		this.cardConfig = cardConfig;
+		this.cardConfig = cardConfig.withCardDataModifiers(Lists.addAtStart(cardConfig.cardDataModifiers,  ICardDataModifier.Utils.hideCollections()));
 		this.url = url;
-		this.data = Maps.copyMap(existingData);
+		this.cardType = cardType;
+		this.data = Maps.with(existingData, CardConstants.slingResourceType, cardType);
 		this.content = new AddCardComposite(parent, title, this, callback);
+		content.setLayout(new AddCardLayout());
 	}
 
 	@Override
@@ -156,13 +170,13 @@ public class AddCard implements IHasComposite, IHasCardConfig, ICardData {
 				AddCard addCard = new AddCard(from, cardConfig, "url", "title", "card", CardDataStoreFixture.data1aWithP1Q2, new IAddCardCallback() {
 
 					@Override
-					public Runnable ok() {
-						return Runnables.sysout("ok");
+					public void ok(ICardData data) {
+						System.out.println("ok: " + data.data());
 					}
 
 					@Override
-					public Runnable cancel() {
-						return Runnables.sysout("cancel");
+					public void cancel(ICardData data) {
+						System.out.println("cancel: " + data.data());
 					}
 
 					@Override

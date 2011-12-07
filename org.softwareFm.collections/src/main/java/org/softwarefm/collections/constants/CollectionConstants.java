@@ -11,5 +11,6 @@ public class CollectionConstants {
 	public static final String groupId = "groupId";
 	public static final String version = "version";
 	public static final String rootUrl = "/softwareFm/data";
+	public static final String jarNotRecognised = "jar.notRecognised.text";
 
 }

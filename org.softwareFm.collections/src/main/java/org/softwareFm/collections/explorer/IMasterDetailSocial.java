@@ -20,6 +20,8 @@ public interface IMasterDetailSocial extends IHasComposite {
 
 	<T extends IHasControl> T createSocial(IFunction1<Composite, T> builder, boolean preserve);
 
+	<T extends IHasControl> T createAndShowMaster(IFunction1<Composite, T> builder);
+
 	<T extends IHasControl> T createAndShowDetail(IFunction1<Composite, T> builder);
 
 	<T extends IHasControl> T createAndShowSocial(IFunction1<Composite, T> builder);
@@ -37,9 +39,9 @@ public interface IMasterDetailSocial extends IHasComposite {
 	void hideMaster();
 
 	void showMaster();
-	
+
 	public static class Utils {
-		public static IMasterDetailSocial masterDetailSocial(Composite parent){
+		public static IMasterDetailSocial masterDetailSocial(Composite parent) {
 			return new MasterDetailSocial(parent, SWT.NULL);
 		}
 	}

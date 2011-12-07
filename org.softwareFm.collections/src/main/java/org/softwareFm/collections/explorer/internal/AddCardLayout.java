@@ -30,7 +30,7 @@ public class AddCardLayout extends Layout {
 	@Override
 	protected void layout(Composite composite, boolean flushCache) {
 		Control[] children = composite.getChildren();
-		assert children.length == 3;
+		assert children.length == 3: children.length;
 		CardConfig cc = ((IHasCardConfig) composite).getCardConfig();
 		Control title = children[0];
 		Control card = children[1];

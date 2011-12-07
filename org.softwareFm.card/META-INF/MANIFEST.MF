@@ -14,5 +14,6 @@ Export-Package: org.softwareFm.card.card,
  org.softwareFm.card.dataStore,
  org.softwareFm.card.details,
  org.softwareFm.card.editors,
+ org.softwareFm.card.modifiers,
  org.softwareFm.card.navigation.internal,
  org.softwareFm.card.title

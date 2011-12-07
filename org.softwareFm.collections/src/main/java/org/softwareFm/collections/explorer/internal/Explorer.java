@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardChangedListener;
+import org.softwareFm.card.card.ICardData;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.card.ILineSelectedListener;
@@ -41,8 +42,10 @@ import org.softwareFm.card.editors.IValueEditor;
 import org.softwareFm.card.navigation.internal.NavNextHistoryPrevConfig;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
+import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.collections.explorer.BrowserAndNavBar;
 import org.softwareFm.collections.explorer.HelpText;
+import org.softwareFm.collections.explorer.IAddCardCallback;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IExplorerListener;
 import org.softwareFm.collections.explorer.IHelpText;
@@ -69,7 +72,6 @@ import org.softwareFm.utilities.strings.Strings;
 
 public class Explorer implements IExplorer {
 
-	private UnrecognisedJar unrecognisedJar;
 	ICardHolder cardHolder;
 	private ICallback<String> callbackToGotoUrlAndUpdateDetails;
 	private final IMasterDetailSocial masterDetailSocial;
@@ -100,19 +102,6 @@ public class Explorer implements IExplorer {
 				});
 			}
 		};
-		unrecognisedJar = masterDetailSocial.createMaster(new IFunction1<Composite, UnrecognisedJar>() {
-			@Override
-			public UnrecognisedJar apply(final Composite from) throws Exception {
-				UnrecognisedJar unrecognisedJar = new UnrecognisedJar(from, SWT.NULL, cardConfig, new ICallback<String>() {
-					@Override
-					public void process(String artifactUrl) throws Exception {
-						displayCard(artifactUrl, new CardAndCollectionDataStoreAdapter());
-					}
-				});
-				unrecognisedJar.getComposite().setLayout(new AddCardLayout());
-				return unrecognisedJar;
-			}
-		}, true);
 		cardHolder = masterDetailSocial.createMaster(new IFunction1<Composite, ICardHolder>() {
 			@Override
 			public ICardHolder apply(Composite from) throws Exception {
@@ -169,34 +158,53 @@ public class Explorer implements IExplorer {
 
 	@Override
 	public void showAddCollectionItemEditor(final ICard card, final RightClickCategoryResult result) {
-		IValueEditor editor = masterDetailSocial.createDetail(new IFunction1<Composite, IValueEditor>() {
+		masterDetailSocial.createAndShowDetail(new IFunction1<Composite, AddCard>() {
 			@Override
-			public IValueEditor apply(Composite from) throws Exception {
-				return IValueEditor.Utils.textEditorWithLayout(from, card.getCardConfig(), result.url, card.cardType(), result.collectionName, "", new IDetailsFactoryCallback() {
-					private final IDetailsFactoryCallback callback = this;
-
+			public AddCard apply(Composite from) throws Exception {
+				return new AddCard(from, cardConfig, result.url, "some title", result.collectionName, Maps.stringObjectMap(), new IAddCardCallback() {
 					@Override
-					public void updateDataStore(final IMutableCardDataStore store, String url, String key, final Object value) {
-						updateStore(store, result, value, callback);
+					public void ok(ICardData cardData) {
 					}
-
+					
 					@Override
-					public void afterEdit(String url) {
-						ICallback.Utils.call(callbackToGotoUrlAndUpdateDetails, url);
+					public void cancel(ICardData cardData) {
 					}
-
+					
 					@Override
-					public void gotData(Control control) {
+					public boolean canOk(Map<String, Object> data) {
+						return false;
 					}
-
-					@Override
-					public void cardSelected(String cardUrl) {
-					}
-
-				}, TitleSpec.noTitleSpec(from.getBackground()));
+				});
 			}
-		}, false);
-		masterDetailSocial.setDetail(editor.getControl());
+		});
+//		IValueEditor editor = masterDetailSocial.createDetail(new IFunction1<Composite, IValueEditor>() {
+//			@Override
+//			public IValueEditor apply(Composite from) throws Exception {
+//				return IValueEditor.Utils.textEditorWithLayout(from, card.getCardConfig(), result.url, card.cardType(), result.collectionName, "", new IDetailsFactoryCallback() {
+//					private final IDetailsFactoryCallback callback = this;
+//
+//					@Override
+//					public void updateDataStore(final IMutableCardDataStore store, String url, String key, final Object value) {
+//						updateStore(store, result, value, callback);
+//					}
+//
+//					@Override
+//					public void afterEdit(String url) {
+//						ICallback.Utils.call(callbackToGotoUrlAndUpdateDetails, url);
+//					}
+//
+//					@Override
+//					public void gotData(Control control) {
+//					}
+//
+//					@Override
+//					public void cardSelected(String cardUrl) {
+//					}
+//
+//				}, TitleSpec.noTitleSpec(from.getBackground()));
+//			}
+//		}, false);
+//		masterDetailSocial.setDetail(editor.getControl());
 	}
 
 	@Override
@@ -322,7 +330,7 @@ public class Explorer implements IExplorer {
 			}
 
 			@Override
-			public void followedUp( final ICardHolder cardHolder,  final String url, final  ICard card, final String followUpUrl, final Map<String, Object> result) {
+			public void followedUp(final ICardHolder cardHolder, final String url, final ICard card, final String followUpUrl, final Map<String, Object> result) {
 				fireListeners(new ICallback<IExplorerListener>() {
 					@Override
 					public void process(IExplorerListener t) throws Exception {
@@ -346,11 +354,60 @@ public class Explorer implements IExplorer {
 	}
 
 	@Override
-	public void displayUnrecognisedJar(File file, String digest) {
+	public void displayUnrecognisedJar(final File file, final String digest) {
 		masterDetailSocial.showMaster();
-		unrecognisedJar.setFileAndDigest(file, digest);
-		masterDetailSocial.setMaster(unrecognisedJar.getControl());
-		unrecognisedJar.getControl().redraw();
+		masterDetailSocial.createAndShowMaster(new IFunction1<Composite, JarDetails>() {
+			@Override
+			public JarDetails apply(Composite from) throws Exception {
+				return new JarDetails(from, Functions.call(cardConfig.resourceGetterFn, null), new Runnable() {
+					@Override
+					public void run() {
+						final Map<String, Object> startData = Maps.stringObjectMap(//
+								CollectionConstants.groupId, "Please specify the group id",//
+								CollectionConstants.artifactId, Strings.withoutVersion(file, "Please specify the artifact id"),//
+								CollectionConstants.version, Strings.versionPartOf(file, "Please specify the version"));
+						addUnrecognisedJar(digest, startData);
+					}
+				});
+			}
+		});
+	}
+
+	@Override
+	public void showAddNewArtifactEditor() {
+		addUnrecognisedJar(null, Maps.stringObjectMap());
+	}
+
+	private void addUnrecognisedJar(final String digest, final Map<String, Object> startData) {
+		masterDetailSocial.showSocial();
+		masterDetailSocial.createAndShowDetail(new IFunction1<Composite, AddCard>() {
+			@Override
+			public AddCard apply(Composite from) throws Exception {
+				return new AddCard(from, cardConfig, "", "Unrecognised jar", "cardType", startData, new IAddCardCallback() {
+					@Override
+					public void ok(ICardData cardData) {
+						String groupId = (String) cardData.data().get(CollectionConstants.groupId);
+						String artifactId = (String) cardData.data().get(CollectionConstants.artifactId);
+						String version = (String) cardData.data().get(CollectionConstants.version);
+						new NewJarImporter(cardConfig, CardConstants.manuallyAdded, digest, groupId, artifactId, version).process(new ICallback<String>() {
+							@Override
+							public void process(String url) throws Exception {
+								displayCard(url, new CardAndCollectionDataStoreAdapter());
+							}
+						});
+					}
+
+					@Override
+					public void cancel(ICardData cardData) {
+					}
+
+					@Override
+					public boolean canOk(Map<String, Object> data) {
+						return false;
+					}
+				});
+			}
+		});
 	}
 
 	@Override
@@ -625,16 +682,11 @@ public class Explorer implements IExplorer {
 		try {
 			for (IExplorerListener listener : listeners)
 				ICallback.Utils.call(iCallback, listener);
-		} catch (Exception e) {e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 			throw WrappedException.wrap(e);
 		}
 
-	}
-
-	@Override
-	public void showAddNewArtifactEditor() {
-		unrecognisedJar.setFileAndDigest(null, null);
-		masterDetailSocial.setMaster(unrecognisedJar.getControl());
 	}
 
 	public static void main(String[] args) {

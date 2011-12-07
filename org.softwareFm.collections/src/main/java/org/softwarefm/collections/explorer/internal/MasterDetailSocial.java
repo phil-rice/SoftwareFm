@@ -48,6 +48,7 @@ public class MasterDetailSocial implements IMasterDetailSocial {
 					super.layout(changed);
 					detailSocialLayoutCount++;
 				}
+
 				@Override
 				public String toString() {
 					return super.toString() + "." + "DetailSocial";
@@ -103,16 +104,21 @@ public class MasterDetailSocial implements IMasterDetailSocial {
 	}
 
 	@Override
+	public <T extends IHasControl> T createAndShowMaster(IFunction1<Composite, T> builder) {
+		return createAndShow(content.master, builder);
+	}
+
+	@Override
 	public <T extends IHasControl> T createAndShowDetail(IFunction1<Composite, T> builder) {
-		return createAndSHow(content.detail, builder);
+		return createAndShow(content.detail, builder);
 	}
 
 	@Override
 	public <T extends IHasControl> T createAndShowSocial(IFunction1<Composite, T> builder) {
-		return createAndSHow(content.social, builder);
+		return createAndShow(content.social, builder);
 	}
 
-	private <T extends IHasControl> T createAndSHow(Composite composite, IFunction1<Composite, T> builder) {
+	private <T extends IHasControl> T createAndShow(Composite composite, IFunction1<Composite, T> builder) {
 		T control = create(composite, builder, false);
 		set(composite, control == null ? null : control.getControl());
 		return control;

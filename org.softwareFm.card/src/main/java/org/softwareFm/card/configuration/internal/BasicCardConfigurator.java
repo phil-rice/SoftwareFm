@@ -42,7 +42,7 @@ public class BasicCardConfigurator implements ICardConfigurator {
 						IDetailAdder.Utils.list(),//
 						IDetailAdder.Utils.textView(),//
 						IDetailAdder.Utils.editor())).//
-				withKeyValueModifiers(//
+				withCardDataModifiers(//
 						ICardDataModifier.Utils.collectionsAggregator(CardConstants.slingResourceType), //
 						ICardDataModifier.Utils.folderAggregator(CardConstants.jcrPrimaryType, CardConstants.ntUnstructured, CardConstants.slingResourceType), //
 						ICardDataModifier.Utils.missingItems(), //

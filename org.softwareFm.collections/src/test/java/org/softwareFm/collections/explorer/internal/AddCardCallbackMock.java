@@ -3,26 +3,27 @@ package org.softwareFm.collections.explorer.internal;
 import java.util.List;
 import java.util.Map;
 
+import org.softwareFm.card.card.ICardData;
 import org.softwareFm.collections.explorer.IAddCardCallback;
 import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.runnable.Runnables;
-import org.softwareFm.utilities.runnable.Runnables.CountRunnable;
+import org.softwareFm.utilities.maps.Maps;
 
 public class AddCardCallbackMock implements IAddCardCallback {
 
+	private final List<Map<String, Object>> okData = Lists.newList();
+	private final List<Map<String, Object>> cancelData = Lists.newList();
 	private final List<Map<String, Object>> canOkData = Lists.newList();
-	private final CountRunnable ok = Runnables.count();
-	private final CountRunnable cancel = Runnables.count();
+
 	private boolean canOk;
 
 	@Override
-	public Runnable ok() {
-		return ok;
+	public void ok(ICardData cardData) {
+		okData.add(Maps.copyMap(cardData.data()));
 	}
 
 	@Override
-	public Runnable cancel() {
-		return cancel;
+	public void cancel(ICardData cardData) {
+		cancelData.add(Maps.copyMap(cardData.data()));
 	}
 
 	public void setCanOk(boolean canOk) {
@@ -31,7 +32,7 @@ public class AddCardCallbackMock implements IAddCardCallback {
 
 	@Override
 	public boolean canOk(Map<String, Object> data) {
-		canOkData.add(data);
+		canOkData.add(Maps.copyMap(data));
 		return canOk;
 	}
 

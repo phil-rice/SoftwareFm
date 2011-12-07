@@ -35,7 +35,7 @@ public class CardTest extends SwtTest {
 	public void testKeyValuesAreTheRawDataModifiedByTheCardConfig() {
 		Map<String, Object> result = Maps.<String,Object>makeMap("some", "result");
 		MockKeyValueModifier mock = new MockKeyValueModifier(result);
-		CardConfig cardConfig2 = cardConfig.withKeyValueModifiers(mock);
+		CardConfig cardConfig2 = cardConfig.withCardDataModifiers(mock);
 		Card card = new Card(shell, cardConfig2, "someUrl", rawData);
 		assertEquals(result, card.data());
 		assertEquals(rawData, mock.rawData);

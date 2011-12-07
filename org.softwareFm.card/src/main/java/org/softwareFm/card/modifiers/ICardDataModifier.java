@@ -11,6 +11,7 @@ import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.modifiers.internal.CardMapSorter;
 import org.softwareFm.card.modifiers.internal.CollectionsAggregatorModifier;
 import org.softwareFm.card.modifiers.internal.FolderAggregatorModifier;
+import org.softwareFm.card.modifiers.internal.HideColectionsModifier;
 import org.softwareFm.card.modifiers.internal.KeyValueMissingItemsAdder;
 
 /** There are a chain of these modifiers (typically ending with the sorter). Each is responsible for aggregating / enriching / hiding / sorting... data about the card */
@@ -40,6 +41,10 @@ public interface ICardDataModifier {
 		/** This adds missing items (defined in the xxx.properties file with the key card.missing.string or card.missing.list) */
 		public static ICardDataModifier missingItems(){
 			return new KeyValueMissingItemsAdder();
+		}
+
+		public static ICardDataModifier hideCollections() {
+			return new HideColectionsModifier();
 		}
 	}
 
