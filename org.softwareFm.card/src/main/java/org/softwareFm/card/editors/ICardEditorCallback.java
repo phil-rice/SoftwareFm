@@ -1,10 +1,10 @@
-package org.softwareFm.collections.explorer;
+package org.softwareFm.card.editors;
 
 import java.util.Map;
 
 import org.softwareFm.card.card.ICardData;
 
-public interface IAddCardCallback{
+public interface ICardEditorCallback{
 
 	void ok(ICardData cardData);
 

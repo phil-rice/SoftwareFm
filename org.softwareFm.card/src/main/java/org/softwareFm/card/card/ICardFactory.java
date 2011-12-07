@@ -72,6 +72,7 @@ public interface ICardFactory {
 		public static CardFactoryMock mockCardFactory() {
 			return new CardFactoryMock();
 		};
+		
 
 	}
 

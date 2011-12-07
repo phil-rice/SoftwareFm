@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.card.card.ICardData;
-import org.softwareFm.collections.explorer.IAddCardCallback;
+import org.softwareFm.card.editors.ICardEditorCallback;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.maps.Maps;
 
-public class AddCardCallbackMock implements IAddCardCallback {
+public class AddCardCallbackMock implements ICardEditorCallback {
 
 	private final List<Map<String, Object>> okData = Lists.newList();
 	private final List<Map<String, Object>> cancelData = Lists.newList();

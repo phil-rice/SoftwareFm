@@ -5,9 +5,12 @@
 
 package org.softwareFm.card.editors;
 
+import java.util.Map;
+
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
+import org.softwareFm.card.editors.internal.CardEditor;
 import org.softwareFm.card.editors.internal.StyledTextEditor;
 import org.softwareFm.card.editors.internal.TextEditor;
 import org.softwareFm.card.editors.internal.ValueEditorLayout;
@@ -24,6 +27,12 @@ public interface IValueEditor extends IHasComposite {
 		}
 		public static IValueEditor styledTextEditorWithLayout(Composite parentComposite, CardConfig cardConfig, String url, String cardType, String key, Object value, IDetailsFactoryCallback callback, TitleSpec titleSpec) {
 			StyledTextEditor editor = new StyledTextEditor(parentComposite, cardConfig, url, cardType, key, value, callback, titleSpec);
+			editor.getComposite().setLayout(new ValueEditorLayout());
+			return editor;
+		}
+		
+		public static IValueEditor cardEditorWithLayout(Composite parent, CardConfig cardConfig, String cardType, String url, Map<String, Object> data, ICardEditorCallback callback){
+			CardEditor editor = new CardEditor(parent, cardConfig, cardType, url, data, callback);
 			editor.getComposite().setLayout(new ValueEditorLayout());
 			return editor;
 		}

@@ -1,4 +1,4 @@
-package org.softwareFm.collections.explorer.internal;
+package org.softwareFm.card.editors.internal;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;

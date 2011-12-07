@@ -15,5 +15,6 @@ public interface ICardData extends IHasCardConfig {
 
 	/** A copy of the data that the card is displaying: thread safe, and changes to this map have no impact */
 	Map<String, Object> data();
+	
 
 }

@@ -37,6 +37,7 @@ import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.card.dataStore.ICardDataStoreCallback;
 import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
+import org.softwareFm.card.editors.ICardEditorCallback;
 import org.softwareFm.card.editors.IEditorDetailAdder;
 import org.softwareFm.card.editors.IValueEditor;
 import org.softwareFm.card.navigation.internal.NavNextHistoryPrevConfig;
@@ -45,7 +46,6 @@ import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.collections.explorer.BrowserAndNavBar;
 import org.softwareFm.collections.explorer.HelpText;
-import org.softwareFm.collections.explorer.IAddCardCallback;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IExplorerListener;
 import org.softwareFm.collections.explorer.IHelpText;
@@ -158,10 +158,11 @@ public class Explorer implements IExplorer {
 
 	@Override
 	public void showAddCollectionItemEditor(final ICard card, final RightClickCategoryResult result) {
-		masterDetailSocial.createAndShowDetail(new IFunction1<Composite, AddCard>() {
+		masterDetailSocial.createAndShowDetail(new IFunction1<Composite, IValueEditor>() {
 			@Override
-			public AddCard apply(Composite from) throws Exception {
-				return new AddCard(from, cardConfig, result.url, "some title", result.collectionName, Maps.stringObjectMap(), new IAddCardCallback() {
+			public IValueEditor apply(Composite from) throws Exception {
+				Map<String, Object> data=Maps.stringObjectMap();
+				return IValueEditor.Utils.cardEditorWithLayout(from, card.getCardConfig(), result.collectionName, result.url, data, new ICardEditorCallback() {
 					@Override
 					public void ok(ICardData cardData) {
 					}
@@ -380,10 +381,10 @@ public class Explorer implements IExplorer {
 
 	private void addUnrecognisedJar(final String digest, final Map<String, Object> startData) {
 		masterDetailSocial.showSocial();
-		masterDetailSocial.createAndShowDetail(new IFunction1<Composite, AddCard>() {
+		masterDetailSocial.createAndShowDetail(new IFunction1<Composite, IValueEditor>() {
 			@Override
-			public AddCard apply(Composite from) throws Exception {
-				return new AddCard(from, cardConfig, "", "Unrecognised jar", "cardType", startData, new IAddCardCallback() {
+			public IValueEditor apply(Composite from) throws Exception {
+				return IValueEditor.Utils.cardEditorWithLayout(from, cardConfig, "", "", startData, new ICardEditorCallback() {
 					@Override
 					public void ok(ICardData cardData) {
 						String groupId = (String) cardData.data().get(CollectionConstants.groupId);

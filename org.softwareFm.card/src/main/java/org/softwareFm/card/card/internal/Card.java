@@ -5,10 +5,8 @@
 
 package org.softwareFm.card.card.internal;
 
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.swt.SWT;
@@ -16,7 +14,6 @@ import org.eclipse.swt.events.MenuAdapter;
 import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
@@ -27,13 +24,11 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardData;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.ICardValueChangedListener;
 import org.softwareFm.card.card.ILineSelectedListener;
-import org.softwareFm.card.card.LineItem;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
@@ -44,7 +39,6 @@ import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class Card implements ICard, IHasTable {
 	public static class CardLayout extends Layout {
@@ -52,7 +46,7 @@ public class Card implements ICard, IHasTable {
 		@Override
 		protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
 			CardComposite card = (CardComposite) composite;
-			return card.table.computeSize(wHint, hHint);
+			return card.table.getControl().computeSize(wHint, hHint);
 		}
 
 		@Override
@@ -61,19 +55,23 @@ public class Card implements ICard, IHasTable {
 
 			CardComposite card = (CardComposite) composite;
 			Rectangle ca = card.getClientArea();
-			card.table.setBounds(ca);
-			Point size = card.table.getSize();
+			Control tableControl = card.table.getControl();
+			tableControl.setBounds(ca);
+			Point size = tableControl.getSize();
 			if (size.x == 0)
 				return;
-			card.nameColumn.pack();
-			int idealNameWidth = card.nameColumn.getWidth();
+			TableColumn nameColumn = card.table.getNameColumn();
+			TableColumn valueColumn = card.table.getValueColumn();
+
+			nameColumn.pack();
+			int idealNameWidth = nameColumn.getWidth();
 			int newNameWidth = (size.x * card.cardConfig.cardNameWeight) / (card.cardConfig.cardNameWeight + card.cardConfig.cardValueWeight);
 			int maxNameValue = (int) (idealNameWidth * card.cardConfig.cardMaxNameSizeRatio);
 			if (newNameWidth > maxNameValue)
 				newNameWidth = maxNameValue;
 			int newValueWidth = size.x - newNameWidth - 1;
-			card.nameColumn.setWidth(newNameWidth);
-			card.valueColumn.setWidth(newValueWidth);
+			nameColumn.setWidth(newNameWidth);
+			valueColumn.setWidth(newValueWidth);
 		}
 
 	}
@@ -89,9 +87,7 @@ public class Card implements ICard, IHasTable {
 		/** The url that this card is a representation of */
 		private final String url;
 		/** The gui component that displays the data */
-		final Table table;
-		final TableColumn nameColumn;
-		final TableColumn valueColumn;
+		final CardTable table;
 
 		/** Controls access to data */
 		private final Object lock = new Object();
@@ -106,34 +102,10 @@ public class Card implements ICard, IHasTable {
 			this.url = url;
 			this.rawData = rawData;
 			this.cardType = cardType;
-			this.table = new Table(this, cardConfig.cardStyle | SWT.V_SCROLL);
-			this.nameColumn = new TableColumn(table, SWT.NONE);
-			this.valueColumn = new TableColumn(table, SWT.NONE);
-
 			Map<String, Object> modified = cardConfig.modify(url, rawData);
 			data = modified == rawData ? Maps.copyMap(rawData) : modified;
 
-			// table.setHeaderVisible(true);
-			table.setLinesVisible(true);
-			nameColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null, "card.name.title"));
-			valueColumn.setText(IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null, "card.value.title"));
-			nameColumn.setWidth(100);
-			valueColumn.setWidth(100);
-			table.setDragDetect(true);
-			table.setBackground(titleSpec.background);
-			int i = 0;
-			for (Entry<String, Object> entry : data.entrySet()) {
-				LineItem lineItem = new LineItem(cardType, entry.getKey(), entry.getValue());
-				if (!Functions.call(cardConfig.hideFn(), lineItem)) { // Have to make an object here, but we are decoupling how we store the data, and the JVM probably optimises it away anyway
-					TableItem tableItem = new TableItem(table, SWT.NULL);
-					setTableItem(i, cardConfig, tableItem, lineItem);
-				}
-				i++;
-			}
-
-			nameColumn.pack();
-			valueColumn.pack();
-			table.pack();
+			this.table = new CardTable(this, cardConfig, titleSpec, cardType, data);
 
 			CardOutlinePaintListener cardOutlinePaintListener = new CardOutlinePaintListener(titleSpec, cardConfig);
 			addPaintListener(cardOutlinePaintListener);
@@ -150,36 +122,11 @@ public class Card implements ICard, IHasTable {
 			return result;
 		}
 
-		private void setTableItem(int i, final CardConfig cardConfig, TableItem tableItem, LineItem lineItem) {
-			// System.out.println("Setting table item[" + i + "]: " + keyValue);
-			String displayValue = Functions.call(cardConfig.valueFn(), lineItem);
-			String name = Functions.call(cardConfig.nameFn(), lineItem);
-			tableItem.setText(new String[] { name, displayValue });
-			Image image = Functions.call(cardConfig.iconFn, lineItem);
-			tableItem.setImage(0, image);
-			tableItem.setData(lineItem.key);
-		}
-
 		private void valueChanged(String key, Object newValue) {
-			int index = findTableItem(key);
 			synchronized (lock) {
-				try {
-					TableItem item = table.getItem(index);
-					data.put(key, newValue);
-					setTableItem(index, cardConfig, item, new LineItem(cardType, key, newValue));
-					table.redraw();
-					System.out.println("valueChanged: " + key +", "+ newValue);
-				} catch (IllegalArgumentException e) {
-					throw new RuntimeException(MessageFormat.format(CardConstants.exceptionChangingValue, key, index, newValue));
-				}
+				table.setNewValue(key, newValue);
+				data.put(key, newValue);
 			}
-		}
-
-		private int findTableItem(String key) {
-			for (int i = 0; i < table.getItemCount(); i++)
-				if (table.getItem(i).getData() == key)
-					return i;
-			throw new RuntimeException(MessageFormat.format(CardConstants.cannotFindTableItemWithKey, key));
 		}
 
 		public Map<String, Object> data() {
@@ -322,12 +269,12 @@ public class Card implements ICard, IHasTable {
 
 	@Override
 	public Table getTable() {
-		return content.table;
+		return content.table.getTable();
 	}
 
 	@Override
 	public void addMenuDetectListener(Listener listener) {
-		content.table.addListener(SWT.MenuDetect, listener);
+		content.table.getTable().addListener(SWT.MenuDetect, listener);
 	}
 
 }
