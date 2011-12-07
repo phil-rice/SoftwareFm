@@ -36,4 +36,13 @@ public class Runnables {
 		return new CountRunnable();
 	}
 
+	public static Runnable sysout(final String string) {
+		return new Runnable() {
+			@Override
+			public void run() {
+				System.out.println(string);
+			}
+		};
+	}
+
 }

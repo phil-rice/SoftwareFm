@@ -13,6 +13,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Table;
 import org.softwareFm.utilities.future.GatedMockFuture;
 
 abstract public class SwtTest extends TestCase {
@@ -43,6 +44,17 @@ abstract public class SwtTest extends TestCase {
 			dispatchUntilQueueEmpty();
 			Thread.sleep(10);
 		}
+	}
+
+	protected void select(Table table, int colIndex, String value) {
+		for (int i = 0; i < table.getItemCount(); i++) {
+			String text = table.getItem(i).getText(colIndex);
+			if (text.equals(value)){
+				table.select(i);
+				return;
+			}
+		}
+		throw new IllegalArgumentException(colIndex + ", " + value);
 	}
 
 	protected void kickAndDispatch(Future<?> future) {

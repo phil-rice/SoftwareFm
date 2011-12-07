@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.softwareFm.card.card.ICard;
+import org.softwareFm.card.card.ICardData;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.card.RightClickCategoryResult;
@@ -65,7 +66,7 @@ public class ExplorerTest extends SwtAndServiceTest {
 			@Override
 			public void finished(ICardHolder cardHolder, String url, ICard card) {
 				PopupMenuContributorMock<ICard> contributor = new PopupMenuContributorMock<ICard>();
-				card.cardConfig().popupMenuService.registerContributor(popupMenuId, contributor);
+				card.getCardConfig().popupMenuService.registerContributor(popupMenuId, contributor);
 				assertEquals(1, count.incrementAndGet());
 				Event event = new Event();
 				card.getTable().notifyListeners(SWT.MenuDetect, event);
@@ -111,7 +112,7 @@ public class ExplorerTest extends SwtAndServiceTest {
 				Functions.call(raw.resourceGetterFn, null).with(new ResourceGetterMock(CardConstants.cardNameUrlKey, cardNameUrl)), // default
 				"noCardNameField", new ResourceGetterMock(), //
 				"withCardNameField", new ResourceGetterMock(CardConstants.cardNameFieldKey, "cardName"))).//
-				withTitleSpecFn(Functions.<ICard,TitleSpec> constant(TitleSpec.noTitleSpec(shell.getBackground()))).//
+				withTitleSpecFn(Functions.<ICardData,TitleSpec> constant(TitleSpec.noTitleSpec(shell.getBackground()))).//
 				withPopupMenuId(popupMenuId, detailsPopupMenuId);
 		Explorer explorer = new Explorer(cardConfig, CardDataStoreFixture.url, masterDetailSocial, service, IPlayListGetter.Utils.noPlayListGetter()) {
 			@Override

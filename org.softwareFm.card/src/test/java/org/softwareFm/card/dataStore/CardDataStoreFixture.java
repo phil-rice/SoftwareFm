@@ -11,7 +11,7 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
-import org.softwareFm.card.card.ICard;
+import org.softwareFm.card.card.ICardData;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.LineItem;
 import org.softwareFm.card.configuration.CardConfig;
@@ -75,10 +75,10 @@ public class CardDataStoreFixture {
 	};
 
 	public static CardConfig syncCardConfig(Device device) {
-		return new CardConfig(ICardFactory.Utils.cardFactory(), rawCardStore()).withTitleSpecFn(Functions.<ICard, TitleSpec> constant(TitleSpec.noTitleSpec(device.getSystemColor(SWT.COLOR_WHITE))));
+		return new CardConfig(ICardFactory.Utils.cardFactory(), rawCardStore()).withTitleSpecFn(Functions.<ICardData, TitleSpec> constant(TitleSpec.noTitleSpec(device.getSystemColor(SWT.COLOR_WHITE))));
 	}
 	public static CardConfig asyncCardConfig(Device device) {
-		return new CardConfig(ICardFactory.Utils.cardFactory(), rawAsyncCardStore()).withTitleSpecFn(Functions.<ICard, TitleSpec> constant(TitleSpec.noTitleSpec(device.getSystemColor(SWT.COLOR_WHITE))));
+		return new CardConfig(ICardFactory.Utils.cardFactory(), rawAsyncCardStore()).withTitleSpecFn(Functions.<ICardData, TitleSpec> constant(TitleSpec.noTitleSpec(device.getSystemColor(SWT.COLOR_WHITE))));
 	}
 
 	public static final CardDataStoreMock rawCardStore() {

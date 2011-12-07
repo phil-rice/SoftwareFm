@@ -9,12 +9,12 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.softwareFm.card.card.ICard;
+import org.softwareFm.card.card.ICardData;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.card.title.TitleSpec;
-import org.softwareFm.collections.SoftwareFmCardTitleFunction;
 import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.maps.Maps;
@@ -36,7 +36,7 @@ public class SoftwareFmCardTitleFunctionTest extends SwtTest {
 		CardConfig raw = new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.mock());
 		CardConfig cardConfig = raw.//
 				withResourceGetterFn(IResourceGetter.Utils.mock(raw.resourceGetterFn.apply(null).with(new ResourceGetterMock(CardConstants.cardNameFieldKey, cardNameField)))).//
-				withTitleSpecFn(Functions.<ICard,TitleSpec>constant(TitleSpec.noTitleSpec(display.getSystemColor(SWT.COLOR_WHITE))));
+				withTitleSpecFn(Functions.<ICardData,TitleSpec>constant(TitleSpec.noTitleSpec(display.getSystemColor(SWT.COLOR_WHITE))));
 
 		Map<String, Object> rawData = Maps.stringObjectLinkedMap("name", "theName", "data", "theData");
 		ICard card = ICardFactory.Utils.createCardWithLayout(shell, cardConfig, url, rawData);

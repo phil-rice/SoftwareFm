@@ -21,8 +21,8 @@ public class NavTitle extends Title implements ITitleBarForCard {
 
 	@Override
 	public void setUrl(ICard card) {
-		String title = (Functions.call(card.cardConfig().cardTitleFn, card));
-		TitleSpec titleSpec = Functions.call(card.cardConfig().titleSpecFn, card);
+		String title = (Functions.call(card.getCardConfig().cardTitleFn, card));
+		TitleSpec titleSpec = Functions.call(card.getCardConfig().titleSpecFn, card);
 		setTitleAndImage(title, card.url(), titleSpec);
 	}
 

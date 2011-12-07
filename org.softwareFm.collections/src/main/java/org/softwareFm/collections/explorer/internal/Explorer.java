@@ -109,7 +109,7 @@ public class Explorer implements IExplorer {
 						displayCard(artifactUrl, new CardAndCollectionDataStoreAdapter());
 					}
 				});
-				unrecognisedJar.getComposite().setLayout(new UnrecognisedJar.UnrecognisedJarLayout());
+				unrecognisedJar.getComposite().setLayout(new AddCardLayout());
 				return unrecognisedJar;
 			}
 		}, true);
@@ -153,8 +153,8 @@ public class Explorer implements IExplorer {
 	public void edit(final ICard card, final String key) {
 		if (card.getControl().isDisposed())
 			return;
-		String editorName = IResourceGetter.Utils.getOr(card.cardConfig().resourceGetterFn, card.cardType(), "editor." + key, "text");
-		final IEditorDetailAdder editor = Functions.call(card.cardConfig().editorFn, editorName);
+		String editorName = IResourceGetter.Utils.getOr(card.getCardConfig().resourceGetterFn, card.cardType(), "editor." + key, "text");
+		final IEditorDetailAdder editor = Functions.call(card.getCardConfig().editorFn, editorName);
 		masterDetailSocial.showSocial();
 		masterDetailSocial.createAndShowDetail(new IFunction1<Composite, IHasControl>() {
 			@Override
@@ -172,7 +172,7 @@ public class Explorer implements IExplorer {
 		IValueEditor editor = masterDetailSocial.createDetail(new IFunction1<Composite, IValueEditor>() {
 			@Override
 			public IValueEditor apply(Composite from) throws Exception {
-				return IValueEditor.Utils.textEditorWithLayout(from, card.cardConfig(), result.url, card.cardType(), result.collectionName, "", new IDetailsFactoryCallback() {
+				return IValueEditor.Utils.textEditorWithLayout(from, card.getCardConfig(), result.url, card.cardType(), result.collectionName, "", new IDetailsFactoryCallback() {
 					private final IDetailsFactoryCallback callback = this;
 
 					@Override
@@ -204,7 +204,7 @@ public class Explorer implements IExplorer {
 		IValueEditor editor = masterDetailSocial.createDetail(new IFunction1<Composite, IValueEditor>() {
 			@Override
 			public IValueEditor apply(Composite from) throws Exception {
-				return IValueEditor.Utils.textEditorWithLayout(from, card.cardConfig(), card.url(), card.cardType(), "snippet", "", new IDetailsFactoryCallback() {
+				return IValueEditor.Utils.textEditorWithLayout(from, card.getCardConfig(), card.url(), card.cardType(), "snippet", "", new IDetailsFactoryCallback() {
 					private final IDetailsFactoryCallback callback = this;
 
 					@Override
@@ -360,7 +360,7 @@ public class Explorer implements IExplorer {
 	}
 
 	private String findDefaultChild(ICard card) {
-		String result = Functions.call(card.cardConfig().defaultChildFn, card);
+		String result = Functions.call(card.getCardConfig().defaultChildFn, card);
 		return result;
 	}
 
@@ -372,12 +372,12 @@ public class Explorer implements IExplorer {
 			Map<String, Object> map = (Map<String, Object>) value;
 			String cardType = (String) map.get(CardConstants.slingResourceType);
 			if (cardType != null) {
-				String cardDetailExtensionKey = IResourceGetter.Utils.getOrNull(card.cardConfig().resourceGetterFn, cardType, CardConstants.cardContentUrl);
-				String cardDetailUrlKey = IResourceGetter.Utils.getOrNull(card.cardConfig().resourceGetterFn, cardType, CardConstants.cardContentField);
-				String feedType = IResourceGetter.Utils.getOrNull(card.cardConfig().resourceGetterFn, cardType, CardConstants.cardContentFeedType);
+				String cardDetailExtensionKey = IResourceGetter.Utils.getOrNull(card.getCardConfig().resourceGetterFn, cardType, CardConstants.cardContentUrl);
+				String cardDetailUrlKey = IResourceGetter.Utils.getOrNull(card.getCardConfig().resourceGetterFn, cardType, CardConstants.cardContentField);
+				String feedType = IResourceGetter.Utils.getOrNull(card.getCardConfig().resourceGetterFn, cardType, CardConstants.cardContentFeedType);
 				String url = cardDetailExtensionKey == null ? (String) map.get(cardDetailUrlKey) : MessageFormat.format(cardDetailExtensionKey, card.url(), key);
 				if (url != null) {
-					String cardDetailFeedType = IResourceGetter.Utils.getOr(card.cardConfig().resourceGetterFn, cardType, CardConstants.cardContentFeedType, feedType);
+					String cardDetailFeedType = IResourceGetter.Utils.getOr(card.getCardConfig().resourceGetterFn, cardType, CardConstants.cardContentFeedType, feedType);
 					browser.processUrl(cardDetailFeedType, url);
 				}
 			}
@@ -399,7 +399,7 @@ public class Explorer implements IExplorer {
 		masterDetailSocial.createAndShowDetail(new IFunction1<Composite, IHasControl>() {
 			@Override
 			public IHasControl apply(Composite from) throws Exception {
-				CardConfig cardConfig = card.cardConfig();
+				CardConfig cardConfig = card.getCardConfig();
 				IDetailsFactoryCallback callback = makeEditCallback(card);
 				return cardConfig.detailFactory.makeDetail(from, card, cardConfig, key, value, callback);
 			}

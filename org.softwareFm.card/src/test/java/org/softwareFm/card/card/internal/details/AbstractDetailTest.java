@@ -7,7 +7,7 @@ package org.softwareFm.card.card.internal.details;
 
 import java.util.Collections;
 
-import org.softwareFm.card.card.ICard;
+import org.softwareFm.card.card.ICardData;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.LineItem;
 import org.softwareFm.card.card.internal.Card;
@@ -40,7 +40,7 @@ abstract public class AbstractDetailTest extends SwtTest {
 		super.setUp();
 		cardDataStore = CardDataStoreFixture.rawAsyncCardStore();
 		parentCardConfig = makeCardConfig();
-		cardConfig = makeCardConfig().withTitleSpecFn(Functions.<ICard,TitleSpec>constant(TitleSpec.noTitleSpec(shell.getBackground())));
+		cardConfig = makeCardConfig().withTitleSpecFn(Functions.<ICardData,TitleSpec>constant(TitleSpec.noTitleSpec(shell.getBackground())));
 		parentCard = new Card(shell, cardConfig, "parentCardUrl", Collections.<String, Object> emptyMap());
 	}
 

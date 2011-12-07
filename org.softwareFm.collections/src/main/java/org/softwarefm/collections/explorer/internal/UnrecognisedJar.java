@@ -15,11 +15,8 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
@@ -46,44 +43,12 @@ public class UnrecognisedJar implements IHasComposite {
 
 	private final UnrecognisedJarComposite composite;
 
-	public static class UnrecognisedJarLayout extends Layout {
-
-		@Override
-		protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
-			UnrecognisedJarComposite c = (UnrecognisedJarComposite) composite;
-			Point titleSize = c.title.getControl().computeSize(wHint, c.cardConfig.titleHeight);
-			Point okCancelSize = c.okCancel.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT);
-			Point cardSize = c.card == null ? new Point(0, 0) : c.card.getControl().computeSize(wHint, hHint == SWT.DEFAULT ? SWT.DEFAULT : hHint - titleSize.y);
-			return new Point(Math.max(titleSize.x, cardSize.x), titleSize.y + cardSize.y + okCancelSize.y);
-		}
-
-		@Override
-		protected void layout(Composite composite, boolean flushCache) {
-			UnrecognisedJarComposite c = (UnrecognisedJarComposite) composite;
-//			System.out.println(Swts.boundsUpToShell(composite));
-			CardConfig cc = c.cardConfig;
-			Rectangle ca = c.getClientArea();
-			Control okCancelControl = c.okCancel.getControl();
-			Point okCancelSize = okCancelControl.computeSize(ca.width, SWT.DEFAULT);
-
-			c.title.getControl().setBounds(ca.x, ca.y, ca.width, cc.titleHeight + cc.topMargin);
-
-			if (c.card != null)
-				c.card.getControl().setBounds(ca.x, ca.y + cc.titleHeight + cc.topMargin, ca.width, ca.height - cc.titleHeight - okCancelSize.y - cc.topMargin);
-
-			okCancelControl.setSize(ca.width, okCancelSize.y);
-			okCancelControl.setLocation(ca.x, ca.height - okCancelSize.y);
-			c.redraw();
-		}
-
-	}
-
 	static class UnrecognisedJarComposite extends Composite {
 
-		private ICard card;
-		private final Title title;
-		private final CardConfig cardConfig;
-		private final OKCancelWithBorder okCancel;
+		ICard card;
+		final Title title;
+		final CardConfig cardConfig;
+		final OKCancelWithBorder okCancel;
 		private File file;
 		private String digest;
 
@@ -206,7 +171,7 @@ public class UnrecognisedJar implements IHasComposite {
 				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay()).withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap("/prefix/"));
 				UnrecognisedJar unrecognisedJar = new UnrecognisedJar(from, SWT.NULL, cardConfig, ICallback.Utils.<String>sysoutCallback());
 				unrecognisedJar.setFileAndDigest(new File("a/b/c/jarFile.jar"), "01234567Test");
-				unrecognisedJar.getComposite().setLayout(new UnrecognisedJarLayout());
+				unrecognisedJar.getComposite().setLayout(new AddCardLayout());
 				Composite result = unrecognisedJar.getComposite();
 				Size.resizeMeToParentsSize(result);
 				return result;

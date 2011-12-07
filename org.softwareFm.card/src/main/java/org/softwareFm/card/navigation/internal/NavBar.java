@@ -189,7 +189,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 
 	@Override
 	public void setUrl(ICard card) {
-		TitleSpec titleSpec = Functions.call(card.cardConfig().titleSpecFn, card);
+		TitleSpec titleSpec = Functions.call(card.getCardConfig().titleSpecFn, card);
 		content.setUrl(card.url(), titleSpec);
 	}
 

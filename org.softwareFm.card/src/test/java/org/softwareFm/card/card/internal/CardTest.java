@@ -25,7 +25,7 @@ public class CardTest extends SwtTest {
 	public void testConstructor() {
 		Card card = new Card(shell, cardConfig, "someUrl", rawData);
 		assertSame(rawData, card.rawData());
-		assertSame(cardConfig, card.cardConfig());
+		assertSame(cardConfig, card.getCardConfig());
 		Composite cardComposite = card.getComposite();
 		assertSame(shell, cardComposite.getParent());
 		assertSame(cardComposite, card.getControl());

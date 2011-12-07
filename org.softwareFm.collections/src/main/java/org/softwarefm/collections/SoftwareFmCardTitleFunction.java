@@ -16,7 +16,7 @@ public class SoftwareFmCardTitleFunction implements IFunction1<ICard, String> {
 	@Override
 	public String apply(ICard from) throws Exception {
 		String cardType = from.cardType();
-		String nameKey = IResourceGetter.Utils.getOrNull(from.cardConfig().resourceGetterFn, cardType, CardConstants.cardNameFieldKey);
+		String nameKey = IResourceGetter.Utils.getOrNull(from.getCardConfig().resourceGetterFn, cardType, CardConstants.cardNameFieldKey);
 		if (nameKey == null)
 			return Strings.lastSegment(from.url(), "/");
 		else

@@ -64,7 +64,7 @@ public class TextViewer implements IHasComposite {
 
 		public TextViewComposite(Composite parent, final ICard card, String key) {
 			super(parent, SWT.NULL);
-			cardConfig = card.cardConfig();
+			cardConfig = card.getCardConfig();
 			String cardType = card.cardType();
 			Object value = card.data().get(key);
 			TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, card);

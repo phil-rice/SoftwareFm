@@ -27,7 +27,7 @@ public class AddItemToCollectionMenuHandler extends AbstractCardMenuHandler {
 
 	@Override
 	public MenuItem optionallyCreate(final ICard card, IResourceGetter resourceGetter, Menu menu, Event event, String key) {
-		final RightClickCategoryResult categorisation = card.cardConfig().rightClickCategoriser.categorise(card.url(), card.data(), key);
+		final RightClickCategoryResult categorisation = card.getCardConfig().rightClickCategoriser.categorise(card.url(), card.data(), key);
 		switch (categorisation.itemType) {
 		case IS_COLLECTION:
 		case ROOT_COLLECTION:

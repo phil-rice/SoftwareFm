@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.card.card.ICard;
+import org.softwareFm.card.card.ICardData;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.ICardValueChangedListener;
 import org.softwareFm.card.card.ILineSelectedListener;
@@ -272,7 +273,7 @@ public class Card implements ICard, IHasTable {
 	}
 
 	@Override
-	public CardConfig cardConfig() {
+	public CardConfig getCardConfig() {
 		return cardConfig;
 	}
 
@@ -307,9 +308,9 @@ public class Card implements ICard, IHasTable {
 		Swts.Show.display(Card.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(final Composite from) throws Exception {
-				final CardConfig cardConfig = new CardConfig(cardFactory, cardDataStore).withTitleSpecFn(new IFunction1<ICard, TitleSpec>() {
+				final CardConfig cardConfig = new CardConfig(cardFactory, cardDataStore).withTitleSpecFn(new IFunction1<ICardData, TitleSpec>() {
 					@Override
-					public TitleSpec apply(ICard card) throws Exception {
+					public TitleSpec apply(ICardData card) throws Exception {
 						return TitleSpec.noTitleSpec(from.getDisplay().getSystemColor(SWT.COLOR_WHITE));
 					}
 				});

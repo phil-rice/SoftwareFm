@@ -94,7 +94,7 @@ public class CardHolder implements ICardHolderForTests {
 		}
 
 		private CardConfig getCardConfig() {
-			CardConfig cardConfig = card == null ? navBarCardConfig : card.cardConfig();
+			CardConfig cardConfig = card == null ? navBarCardConfig : card.getCardConfig();
 			return cardConfig;
 		}
 
@@ -104,7 +104,7 @@ public class CardHolder implements ICardHolderForTests {
 			if (this.card != null)
 				this.card.getComposite().dispose();
 			try {
-				if (card.cardConfig() == null)
+				if (card.getCardConfig() == null)
 					throw new NullPointerException();
 				this.card = card;
 				card.getComposite().setLayout(new Card.CardLayout());

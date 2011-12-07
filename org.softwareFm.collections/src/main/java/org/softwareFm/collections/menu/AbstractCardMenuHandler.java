@@ -27,7 +27,7 @@ public abstract class AbstractCardMenuHandler implements ICardMenuItemHandler {
 	public void contributeTo(Event event, Menu menu, final ICard card) {
 		int selectionIndex = card.getTable().getSelectionIndex();
 		TableItem item = selectionIndex == -1 ? null : card.getTable().getItem(selectionIndex);
-		IResourceGetter resourceGetter = Functions.call(card.cardConfig().resourceGetterFn, card.cardType());
+		IResourceGetter resourceGetter = Functions.call(card.getCardConfig().resourceGetterFn, card.cardType());
 		final String key = item == null ? null : (String) item.getData();
 		final MenuItem menuItem = optionallyCreate(card, resourceGetter, menu, event, key);
 		if (menuItem != null)

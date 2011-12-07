@@ -58,7 +58,7 @@ public class CardMock implements ICard {
 	}
 
 	@Override
-	public CardConfig cardConfig() {
+	public CardConfig getCardConfig() {
 		return cardConfig;
 	}
 

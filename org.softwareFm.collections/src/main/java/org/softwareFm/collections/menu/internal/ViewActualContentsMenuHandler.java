@@ -26,7 +26,7 @@ public class ViewActualContentsMenuHandler extends AbstractCardMenuHandler{
 
 	@Override
 	public MenuItem optionallyCreate(ICard card, IResourceGetter resourceGetter, Menu menu, Event event, String key) {
-		String cardContentFieldName = IResourceGetter.Utils.getOrNull(card.cardConfig().resourceGetterFn, key, CardConstants.cardContentField);
+		String cardContentFieldName = IResourceGetter.Utils.getOrNull(card.getCardConfig().resourceGetterFn, key, CardConstants.cardContentField);
 		if (cardContentFieldName != null) {
 			String viewActualPattern = resourceGetter.getStringOrNull(CardConstants.menuItemViewActual);
 			if (viewActualPattern != null) {
