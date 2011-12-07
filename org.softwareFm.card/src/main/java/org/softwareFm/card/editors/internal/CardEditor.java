@@ -3,6 +3,8 @@ package org.softwareFm.card.editors.internal;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
@@ -24,8 +26,6 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class CardEditor implements IValueEditor, ICardData {
 
-	
-	
 	static class CardEditorComposite extends Composite implements IValueComposite<Table> {
 
 		private final CardConfig cardConfig;
@@ -38,10 +38,10 @@ public class CardEditor implements IValueEditor, ICardData {
 			super(parent, SWT.NULL);
 			this.cardConfig = cardData.getCardConfig();
 			TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, cardData);
-			title = new Title(this, cardConfig, titleSpec, "initialTitle", "initialTooltip");
+			title = new Title(this, cardConfig, titleSpec, "initialTitle-", "initialTooltip");
 			body = new ValueEditorBodyComposite(this, cardConfig, titleSpec);
-			
-			cardTable = new CardTable(body.innerBody, cardConfig.withStyleAndSelection(cardConfig.cardStyle | SWT.BORDER, true), titleSpec, cardData.cardType(), cardData.data());
+
+			cardTable = new CardTable(body.innerBody, cardConfig.withStyleAndSelection(cardConfig.cardStyle, true), titleSpec, cardData.cardType(), cardData.data());
 			IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, null);
 			okCancel = new OkCancel(body.innerBody, resourceGetter, new Runnable() {
 				@Override
@@ -52,6 +52,15 @@ public class CardEditor implements IValueEditor, ICardData {
 				@Override
 				public void run() {
 					callback.cancel(cardData);
+				}
+			});
+			body.innerBody.addPaintListener(new PaintListener() {
+				@Override
+				public void paintControl(PaintEvent e) {
+					int width = body.innerBody.getSize().x;
+					int y = okCancel.getControl().getLocation().y-1;
+					e.gc.setForeground(e.display.getSystemColor(SWT.COLOR_GRAY));
+					e.gc.drawLine(0, y, width, y);
 				}
 			});
 		}

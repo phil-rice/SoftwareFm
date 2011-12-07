@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.card.editors.internal.CardEditor;
+import org.softwareFm.card.editors.internal.CardEditorLayout;
 import org.softwareFm.card.editors.internal.StyledTextEditor;
 import org.softwareFm.card.editors.internal.TextEditor;
 import org.softwareFm.card.editors.internal.ValueEditorLayout;
@@ -33,7 +34,7 @@ public interface IValueEditor extends IHasComposite {
 		
 		public static IValueEditor cardEditorWithLayout(Composite parent, CardConfig cardConfig, String cardType, String url, Map<String, Object> data, ICardEditorCallback callback){
 			CardEditor editor = new CardEditor(parent, cardConfig, cardType, url, data, callback);
-			editor.getComposite().setLayout(new ValueEditorLayout());
+			editor.getComposite().setLayout(new CardEditorLayout());
 			return editor;
 		}
 	}
