@@ -28,10 +28,10 @@ public class BasicImageRegisterConfigurator implements IImageRegisterConfigurato
 				"group4", "group4Active",//
 				"group5", "group5Active",//
 				"group6", "group6Active");
-		Images.registerImages(device, imageRegistry, ArtifactsAnchor.class, "artifact","advert",//
+		Images.registerImages(device, imageRegistry, ArtifactsAnchor.class, "artifact", "advert",//
 				"jar", "jarClearEclipse", "jarCopyFromSoftwareFm", "jarCopyToSoftwareFm", //
-				"blog", "document", "faceBook", "folder", "forum", "nothing", "javadoc", //
-				"issues", "license", "mailingList", "merchandise", "group", "artifact",//
+				"blog", "description", "document", "faceBook", "folder", "forum", "javadoc", //
+				"issues", "license", "mailingList", "merchandise", "nothing", "name", "group", "artifact",//
 				"news", "rss", "recruitment", "source", "tutorials", "twitter");
 		Images.registerImages(device, imageRegistry, OverlaysAnchor.class, "overlay", //
 				"add", "delete", "edit", "properties");
@@ -40,7 +40,7 @@ public class BasicImageRegisterConfigurator implements IImageRegisterConfigurato
 		Images.registerImages(device, imageRegistry, GeneralAnchor.class, "general", //
 				"browse", "help", "clear", "sfmLogo");
 		Images.registerImages(device, imageRegistry, TitleAnchor.class, "title",//
-				"artifact","blog","facebook", "folder", "group", "history", "jar", "mailingList", "next", "previous", "refresh", "rss","tutorial", "twitter","version");
+				"artifact", "blog", "facebook", "folder", "group", "history", "jar", "mailingList", "next", "previous", "refresh", "rss", "tutorial", "twitter", "version");
 
 	}
 

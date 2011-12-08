@@ -5,14 +5,16 @@
 
 package org.softwareFm.card.card;
 
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.composites.IHasTable;
 
 /** Represents a card being displayed on the screen. A card represents data about a node and it's child nodes on the server. The card starts with raw data (a JSON representation of the data on the server) that is enriched as more data is found */
 public interface ICard extends IHasComposite, IHasTable, ICardData {
-
-
 
 	/** Add a listener for the user clicking on a line in the card */
 	void addLineSelectedListener(ILineSelectedListener listener);
@@ -22,5 +24,23 @@ public interface ICard extends IHasComposite, IHasTable, ICardData {
 
 	/** Add a menu detect listener to the table */
 	void addMenuDetectListener(Listener listener);
+
+	static class Utils {
+		public static void setCardTableColumnWidths(Table table, CardConfig cardConfig) {
+			Point size = table.getSize();
+			TableColumn nameColumn = table.getColumn(0);
+			TableColumn valueColumn = table.getColumn(1);
+			nameColumn.pack();
+			int idealNameWidth = nameColumn.getWidth();
+			int newNameWidth = (size.x * cardConfig.cardNameWeight) / (cardConfig.cardNameWeight + cardConfig.cardValueWeight);
+			int maxNameValue = (int) (idealNameWidth * cardConfig.cardMaxNameSizeRatio);
+			if (newNameWidth > maxNameValue)
+				newNameWidth = maxNameValue;
+			int newValueWidth = size.x - newNameWidth - 1;
+			nameColumn.setWidth(newNameWidth);
+			valueColumn.setWidth(newValueWidth);
+		}
+
+	}
 
 }

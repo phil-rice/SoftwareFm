@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardData;
 import org.softwareFm.card.card.ICardFactory;
@@ -55,24 +54,15 @@ public class Card implements ICard, IHasTable {
 
 			CardComposite card = (CardComposite) composite;
 			Rectangle ca = card.getClientArea();
-			Control tableControl = card.table.getControl();
+			Table tableControl = (Table) card.table.getControl();
 			tableControl.setBounds(ca);
 			Point size = tableControl.getSize();
 			if (size.x == 0)
 				return;
-			TableColumn nameColumn = card.table.getNameColumn();
-			TableColumn valueColumn = card.table.getValueColumn();
-
-			nameColumn.pack();
-			int idealNameWidth = nameColumn.getWidth();
-			int newNameWidth = (size.x * card.cardConfig.cardNameWeight) / (card.cardConfig.cardNameWeight + card.cardConfig.cardValueWeight);
-			int maxNameValue = (int) (idealNameWidth * card.cardConfig.cardMaxNameSizeRatio);
-			if (newNameWidth > maxNameValue)
-				newNameWidth = maxNameValue;
-			int newValueWidth = size.x - newNameWidth - 1;
-			nameColumn.setWidth(newNameWidth);
-			valueColumn.setWidth(newValueWidth);
+			CardConfig cardConfig = card.cardConfig;
+			ICard.Utils.setCardTableColumnWidths(tableControl, cardConfig);
 		}
+
 
 	}
 

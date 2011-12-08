@@ -11,6 +11,8 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Table;
+import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.configuration.CardConfig;
 
 @SuppressWarnings("unchecked")
@@ -28,7 +30,7 @@ public class CardEditorLayout extends Layout {
 
 	@Override
 	protected void layout(Composite composite, boolean flushCache) {
-		IValueComposite<Control> c = (IValueComposite<Control>) composite;
+		IValueComposite<Table> c = (IValueComposite<Table>) composite;
 		Rectangle cb = composite.getBounds();
 		Rectangle ca = composite.getClientArea();
 		CardConfig cc = c.getCardConfig();
@@ -46,15 +48,17 @@ public class CardEditorLayout extends Layout {
 		int okCancelHeight = okCancelControl.getSize().y;
 		okCancelControl.setBounds(//
 				cb_ca.x + cb_ca.width - okCancelWidth - 2,//
-				cb_ca.y + cb_ca.height - okCancelHeight - 2 ,//
+				cb_ca.y + cb_ca.height - okCancelHeight - 2,//
 				okCancelWidth, okCancelHeight);
 
-		Control editor = c.getEditor();
+		Table editor = c.getEditor();
 		int editorHeight = c.useAllHeight() ? //
 		cb_ca.height - okCancelControl.getSize().y - 4 //
 				: editor.computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
 
 		editor.setBounds(cb_ca.x, cb_ca.y, cb_ca.width, editorHeight);
+		ICard.Utils.setCardTableColumnWidths(editor, cc);
+
 	}
 
 }
