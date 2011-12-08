@@ -67,5 +67,6 @@ public class CardConstants {
 	public static final String webPageWelcomeUrl = "webpage.welcome.url";
 	public static final String webPageUnknownJarUrl = "webpage.unknownJar.url";
 	public static final String urlRogueValue = "<key>";
+	public static final String couldNotGetImagefor = "Could not get image for {0}";
 
 }

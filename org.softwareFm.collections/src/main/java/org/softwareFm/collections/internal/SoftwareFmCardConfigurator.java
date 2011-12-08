@@ -5,6 +5,7 @@
 
 package org.softwareFm.collections.internal;
 
+import java.text.MessageFormat;
 import java.util.Map;
 
 import org.eclipse.swt.graphics.Image;
@@ -34,20 +35,29 @@ public class SoftwareFmCardConfigurator implements ICardConfigurator {
 					@SuppressWarnings("unchecked")
 					@Override
 					public Image apply(LineItem from) throws Exception {
-						Image fromKey = getImageFor(from.cardType, from.key);
-						if (fromKey != null)
-							return fromKey;
-						if (from.value instanceof Map<?, ?>) {
-							Map<String, Object> map = (Map<String, Object>) from.value;
-							String cardType = (String) map.get(CardConstants.slingResourceType);
-							Image image = getImageFor(from.cardType, cardType);
-							if (image != null)
-								return null;
+						try {
+							Image baseKey = getImageFor(from.cardType, from.key);// e.g. tutorials.image in artifact.properties   
+							if (baseKey != null)
+								return baseKey;
+							Image cardTypeKey = getImageFor(from.key, from.key);// e.g. tutorials.image in tutorial.properties
+							if (cardTypeKey != null)
+								return cardTypeKey;
+							if (from.value instanceof Map<?, ?>) {
+								Map<String, Object> map = (Map<String, Object>) from.value;
+								String cardType = (String) map.get(CardConstants.slingResourceType);
+								if (cardType != null) {
+									Image image = getImageFor(from.cardType, cardType);
+									if (image != null)
+										return null;
+								}
+							}
+							return baseConfigured.imageFn.apply(ArtifactsAnchor.nothing);
+						} catch (Exception e) {
+							throw new RuntimeException(MessageFormat.format(CardConstants.couldNotGetImagefor, from), e);
 						}
-						return baseConfigured.imageFn.apply(ArtifactsAnchor.nothing);
 					}
 
-					private Image getImageFor(String cardType,String key) throws Exception {
+					private Image getImageFor(String cardType, String key) throws Exception {
 						String fullKey = Strings.replaceColonWithUnderscore(key) + ".image";
 						String imageName = IResourceGetter.Utils.getOrNull(baseConfigured.resourceGetterFn, cardType, fullKey);
 						if (imageName != null)
