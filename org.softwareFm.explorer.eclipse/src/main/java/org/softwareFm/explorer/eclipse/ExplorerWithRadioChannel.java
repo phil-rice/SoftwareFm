@@ -24,7 +24,7 @@ import org.softwareFm.collections.explorer.IMasterDetailSocial;
 import org.softwareFm.collections.menu.ICardMenuItemHandler;
 import org.softwareFm.display.browser.IBrowserConfigurator;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.display.swt.Swts.Button;
+import org.softwareFm.display.swt.Swts.Buttons;
 import org.softwareFm.display.swt.Swts.Grid;
 import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.timeline.IPlayListGetter;
@@ -65,13 +65,13 @@ public class ExplorerWithRadioChannel {
 					buttonPanel.setLayoutData(Grid.makeGrabHorizonalAndFillGridData());
 					masterDetailSocial.getComposite().setLayoutData(Grid.makeGrabHorizonalVerticalAndFillGridData());
 
-					Button.makePushButton(buttonPanel, null, "Next", false, new Runnable() {
+					Buttons.makePushButton(buttonPanel, null, "Next", false, new Runnable() {
 						@Override
 						public void run() {
 							explorer.next();
 						}
 					});
-					Button.makePushButton(buttonPanel, null, "Prev", false, new Runnable() {
+					Buttons.makePushButton(buttonPanel, null, "Prev", false, new Runnable() {
 						@Override
 						public void run() {
 							explorer.previous();
@@ -90,13 +90,13 @@ public class ExplorerWithRadioChannel {
 							url.set(card.url());
 						}
 					});
-					Button.makePushButton(buttonPanel, null, "Select Artifact", false, new Runnable() {
+					Buttons.makePushButton(buttonPanel, null, "Select Artifact", false, new Runnable() {
 						@Override
 						public void run() {
 							explorer.selectAndNext(url.get());
 						}
 					});
-					Button.makePushButton(buttonPanel, null, "Show List", false, new Runnable() {
+					Buttons.makePushButton(buttonPanel, null, "Show List", false, new Runnable() {
 						@Override
 						public void run() {
 							explorer.showContents();

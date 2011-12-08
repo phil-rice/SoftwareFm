@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.softwareFm.display.composites.IHasControl;
-import org.softwareFm.display.swt.Swts.Button;
+import org.softwareFm.display.swt.Swts.Buttons;
 import org.softwareFm.softwareFmImages.title.TitleAnchor;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.Functions;
@@ -79,7 +79,7 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 			final Image historyImage = Functions.call(config.imageFn, TitleAnchor.historyKey);
 			final Image nextImage = Functions.call(config.imageFn, TitleAnchor.nextKey);
 
-			prevButton = Button.makeImageButton(this, prevImage, new Runnable() {
+			prevButton = Buttons.makeImageButton(this, prevImage, new Runnable() {
 				@Override
 				public void run() {
 						ICallback.Utils.call(config.gotoCallback, history.previous());
@@ -96,7 +96,7 @@ public class NavNextHistoryPrev<T> implements IHasControl {
 					e.gc.drawImage(historyImage, 0, +2);
 				}
 			});
-			nextButton = Button.makeImageButton(this, nextImage, new Runnable() {
+			nextButton = Buttons.makeImageButton(this, nextImage, new Runnable() {
 				@Override
 				public void run() {
 					ICallback.Utils.call(config.gotoCallback, history.next());

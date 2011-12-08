@@ -161,51 +161,69 @@ public class Explorer implements IExplorer {
 		masterDetailSocial.createAndShowDetail(new IFunction1<Composite, IValueEditor>() {
 			@Override
 			public IValueEditor apply(Composite from) throws Exception {
-				Map<String, Object> data=Maps.stringObjectMap();
-				return IValueEditor.Utils.cardEditorWithLayout(from, card.getCardConfig(), result.collectionName, result.url, data, new ICardEditorCallback() {
+				Map<String, Object> data = Maps.stringObjectMap();
+				final String collectionName = result.collectionName;
+				String titlePattern = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, collectionName, CardConstants.menuItemAddCollection);
+				String title = MessageFormat.format(titlePattern, result.collectionName);
+				return IValueEditor.Utils.cardEditorWithLayout(from, card.getCardConfig(), title, result.collectionName, result.url, data, new ICardEditorCallback() {
 					@Override
 					public void ok(ICardData cardData) {
+						IMutableCardDataStore store = (IMutableCardDataStore) cardConfig.cardDataStore;
+						Map<String, Object> newData = cardData.data();
+						String cardUrl = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, collectionName, CardConstants.cardNameUrlKey);
+						String cardNameKey = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, collectionName, CardConstants.cardNameFieldKey);
+						String cardName = (String) newData.get(cardNameKey);
+						String itemUrlFragment = MessageFormat.format(cardUrl, Strings.forUrl(cardName), makeRandomUUID());
+
+						IMutableCardDataStore.Utils.addCollectionItem(store, result, itemUrlFragment, newData, new IAfterEditCallback() {
+							@Override
+							public void afterEdit(String url) {
+								System.out.println("Stores into: " + url);
+								displayCard(url, new CardAndCollectionDataStoreAdapter());
+							}
+						});
 					}
-					
+
 					@Override
 					public void cancel(ICardData cardData) {
+						next();
 					}
-					
+
 					@Override
 					public boolean canOk(Map<String, Object> data) {
-						return false;
+						return true;
 					}
 				});
 			}
 		});
-//		IValueEditor editor = masterDetailSocial.createDetail(new IFunction1<Composite, IValueEditor>() {
-//			@Override
-//			public IValueEditor apply(Composite from) throws Exception {
-//				return IValueEditor.Utils.textEditorWithLayout(from, card.getCardConfig(), result.url, card.cardType(), result.collectionName, "", new IDetailsFactoryCallback() {
-//					private final IDetailsFactoryCallback callback = this;
-//
-//					@Override
-//					public void updateDataStore(final IMutableCardDataStore store, String url, String key, final Object value) {
-//						updateStore(store, result, value, callback);
-//					}
-//
-//					@Override
-//					public void afterEdit(String url) {
-//						ICallback.Utils.call(callbackToGotoUrlAndUpdateDetails, url);
-//					}
-//
-//					@Override
-//					public void gotData(Control control) {
-//					}
-//
-//					@Override
-//					public void cardSelected(String cardUrl) {
-//					}
-//
-//				}, TitleSpec.noTitleSpec(from.getBackground()));
-//			}
-//		}, false);
-//		masterDetailSocial.setDetail(editor.getControl());
+		// IValueEditor editor = masterDetailSocial.createDetail(new IFunction1<Composite, IValueEditor>() {
+		// @Override
+		// public IValueEditor apply(Composite from) throws Exception {
+		// return IValueEditor.Utils.textEditorWithLayout(from, card.getCardConfig(), result.url, card.cardType(), result.collectionName, "", new IDetailsFactoryCallback() {
+		// private final IDetailsFactoryCallback callback = this;
+		//
+		// @Override
+		// public void updateDataStore(final IMutableCardDataStore store, String url, String key, final Object value) {
+		// updateStore(store, result, value, callback);
+		// }
+		//
+		// @Override
+		// public void afterEdit(String url) {
+		// ICallback.Utils.call(callbackToGotoUrlAndUpdateDetails, url);
+		// }
+		//
+		// @Override
+		// public void gotData(Control control) {
+		// }
+		//
+		// @Override
+		// public void cardSelected(String cardUrl) {
+		// }
+		//
+		// }, TitleSpec.noTitleSpec(from.getBackground()));
+		// }
+		// }, false);
+		// masterDetailSocial.setDetail(editor.getControl());
 	}
 
 	@Override
@@ -384,7 +402,7 @@ public class Explorer implements IExplorer {
 		masterDetailSocial.createAndShowDetail(new IFunction1<Composite, IValueEditor>() {
 			@Override
 			public IValueEditor apply(Composite from) throws Exception {
-				return IValueEditor.Utils.cardEditorWithLayout(from, cardConfig, "", "", startData, new ICardEditorCallback() {
+				return IValueEditor.Utils.cardEditorWithLayout(from, cardConfig, "", "", "", startData, new ICardEditorCallback() {
 					@Override
 					public void ok(ICardData cardData) {
 						String groupId = (String) cardData.data().get(CollectionConstants.groupId);
@@ -772,8 +790,19 @@ public class Explorer implements IExplorer {
 	}
 
 	@Override
+	public void removeExplorerListener(IExplorerListener listener) {
+		listeners.remove(listener);
+	}
+	@Override
 	public void addExplorerListener(IExplorerListener listener) {
 		listeners.add(listener);
 	}
 
+	public IMasterDetailSocial getMasterDetailSocial() {
+		return masterDetailSocial;
+	}
+
+	public BrowserAndNavBar getBrowser() {
+		return browser;
+	}
 }

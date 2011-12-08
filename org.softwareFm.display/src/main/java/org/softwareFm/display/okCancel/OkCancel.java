@@ -36,7 +36,7 @@ public class OkCancel implements IOkCancel {
 
 	
 	public Button addButton(String titleKey, Runnable runnable){
-		Button result = Swts.Button.makePushButton(content, resourceGetter, titleKey,runnable);
+		Button result = Swts.Buttons.makePushButton(content, resourceGetter, titleKey,runnable);
 		return result;
 		
 	}

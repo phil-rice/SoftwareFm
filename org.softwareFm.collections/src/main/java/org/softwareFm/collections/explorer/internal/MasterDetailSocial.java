@@ -228,4 +228,17 @@ public class MasterDetailSocial implements IMasterDetailSocial {
 				"emptyText", Swts.styledTextFn("", SWT.WRAP), //
 				"label", Swts.labelFn("label")));
 	}
+
+	public Control getMasterContent() {
+		return getContent(content.master);
+	}
+	public Control getDetailContent() {
+		return getContent(content.detail);
+	}
+
+	private Control getContent(Composite holder) {
+		Composite composite = holder;
+		StackLayout layout = (StackLayout) composite.getLayout();
+		return layout.topControl;
+	}
 }

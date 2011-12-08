@@ -73,4 +73,8 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 			}
 		});
 	}
+
+	@Override
+	public void clearCache(String url) {
+	}
 }

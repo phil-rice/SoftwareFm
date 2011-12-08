@@ -3,11 +3,18 @@ package org.softwareFm.card.editors.internal;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.TableEditor;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 import org.softwareFm.card.card.ICardData;
 import org.softwareFm.card.card.internal.CardTable;
 import org.softwareFm.card.configuration.CardConfig;
@@ -23,6 +30,7 @@ import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.strings.Strings;
 
 public class CardEditor implements IValueEditor, ICardData {
 
@@ -34,14 +42,15 @@ public class CardEditor implements IValueEditor, ICardData {
 		private final Title title;
 		private final ValueEditorBodyComposite body;
 
-		public CardEditorComposite(Composite parent, final ICardData cardData, final ICardEditorCallback callback) {
+		public CardEditorComposite(Composite parent, String titleString, final ICardData cardData, final ICardEditorCallback callback) {
 			super(parent, SWT.NULL);
 			this.cardConfig = cardData.getCardConfig();
 			TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, cardData);
-			title = new Title(this, cardConfig, titleSpec, "initialTitle-", "initialTooltip");
+			title = new Title(this, cardConfig, titleSpec, titleString, "initialTooltip");
 			body = new ValueEditorBodyComposite(this, cardConfig, titleSpec);
 
 			cardTable = new CardTable(body.innerBody, cardConfig.withStyleAndSelection(cardConfig.cardStyle, true), titleSpec, cardData.cardType(), cardData.data());
+
 			IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, null);
 			okCancel = new OkCancel(body.innerBody, resourceGetter, new Runnable() {
 				@Override
@@ -58,11 +67,47 @@ public class CardEditor implements IValueEditor, ICardData {
 				@Override
 				public void paintControl(PaintEvent e) {
 					int width = body.innerBody.getSize().x;
-					int y = okCancel.getControl().getLocation().y-1;
+					int y = okCancel.getControl().getLocation().y - 1;
 					e.gc.setForeground(e.display.getSystemColor(SWT.COLOR_GRAY));
 					e.gc.drawLine(0, y, width, y);
 				}
 			});
+
+			final TableEditor editor = new TableEditor(cardTable.getTable());
+			editor.horizontalAlignment = SWT.LEFT;
+			editor.grabHorizontal = true;
+			editor.minimumWidth = 40;
+			cardTable.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					Control oldEditor = editor.getEditor();
+					if (oldEditor != null)
+						oldEditor.dispose();
+					int index = cardTable.getSelectionIndex();
+					if (index == -1)return;
+					TableItem item = cardTable.getItem(index);
+					Text newEditor = new Text(cardTable.getTable(), SWT.NONE);
+					String text = Strings.nullSafeToString(cardData.data().get(item.getData()));
+					newEditor.setText(text);
+					newEditor.selectAll();
+					newEditor.setFocus();
+					editor.setEditor(newEditor, item, 1);
+					newEditor.addModifyListener(new ModifyListener() {
+						@Override
+						public void modifyText(ModifyEvent e) {
+							Text text = (Text) editor.getEditor();
+							TableItem item = editor.getItem();
+							String key = (String) item.getData();
+							String newValue = text.getText();
+							cardTable.setNewValue(key, newValue);
+							cardData.valueChanged(key, newValue);
+							okCancel.setOkEnabled(callback.canOk(cardData.data()));
+						}
+
+					});
+				}
+			});
+
 		}
 
 		@Override
@@ -108,12 +153,12 @@ public class CardEditor implements IValueEditor, ICardData {
 	private final String url;
 	private final Map<String, Object> data;
 
-	public CardEditor(Composite parent, CardConfig cardConfig, String cardType, String url, Map<String, Object> initialData, ICardEditorCallback callback) {
+	public CardEditor(Composite parent, CardConfig cardConfig, String title, String cardType, String url, Map<String, Object> initialData, ICardEditorCallback callback) {
 		this.cardConfig = cardConfig;
 		this.cardType = cardType;
 		this.url = url;
 		this.data = cardConfig.modify(url, Maps.with(initialData, CardConstants.slingResourceType, cardType));
-		content = new CardEditorComposite(parent, this, callback);
+		content = new CardEditorComposite(parent, title, this, callback);
 	}
 
 	@Override
@@ -156,7 +201,7 @@ public class CardEditor implements IValueEditor, ICardData {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay());
-				CardEditor editor = new CardEditor(from, cardConfig, "someUrl", "tutorial", CardDataStoreFixture.data1aWithP1Q2, new ICardEditorCallback() {
+				CardEditor editor = new CardEditor(from, cardConfig, "someTitle", "someUrl", "tutorial", CardDataStoreFixture.data1aWithP1Q2, new ICardEditorCallback() {
 
 					@Override
 					public void ok(ICardData cardData) {

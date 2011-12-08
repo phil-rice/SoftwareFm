@@ -63,4 +63,8 @@ public class CardDataStoreAsyncMock implements IMutableCardDataStore {
 			f.kick();
 	}
 
+	@Override
+	public void clearCache(String url) {
+	}
+
 }

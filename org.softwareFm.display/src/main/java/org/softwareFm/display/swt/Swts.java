@@ -40,6 +40,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -59,6 +60,7 @@ import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.collections.Iterables;
 import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.utilities.constants.UtilityConstants;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -91,15 +93,15 @@ public class Swts {
 			Size.setSizeFromClientArea(composite);
 
 			Listener listener = new Listener() {
-//				int id = globalId++;
+				// int id = globalId++;
 
 				@Override
 				public void handleEvent(Event event) {
-//					System.out.println("SWT/resizeMeToParentsSizeWithLayout " + id + boundsUpToShell(composite));
+					// System.out.println("SWT/resizeMeToParentsSizeWithLayout " + id + boundsUpToShell(composite));
 					Size.setSizeFromClientArea(composite);
 					composite.layout();
 					Swts.redrawAllChildren(composite);
-//					System.out.println("   end SWT/resizeMeToParentsSizeWithLayout " + id + boundsUpToShell(composite));
+					// System.out.println("   end SWT/resizeMeToParentsSizeWithLayout " + id + boundsUpToShell(composite));
 				}
 			};
 			composite.getParent().addListener(SWT.Resize, listener);
@@ -269,7 +271,7 @@ public class Swts {
 
 	}
 
-	public static class Button {
+	public static class Buttons {
 
 		public static void makeButtonFromMainMethod(Composite composite, final Class<?> classWithMain) {
 			org.eclipse.swt.widgets.Button button = new org.eclipse.swt.widgets.Button(composite, SWT.PUSH);
@@ -293,11 +295,11 @@ public class Swts {
 		}
 
 		public static org.eclipse.swt.widgets.Button makePushButton(Composite parent, IResourceGetter resourceGetter, String titleKey, final Runnable runnable) {
-			return Button.makePushButton(parent, resourceGetter, titleKey, true, runnable);
+			return Buttons.makePushButton(parent, resourceGetter, titleKey, true, runnable);
 		}
 
 		public static org.eclipse.swt.widgets.Button makePushButton(Composite parent, IResourceGetter resourceGetter, String titleOrKey, boolean titleIsKey, final Runnable runnable) {
-			return Button.makePushButton(parent, SWT.PUSH, resourceGetter, titleOrKey, titleIsKey, runnable);
+			return Buttons.makePushButton(parent, SWT.PUSH, resourceGetter, titleOrKey, titleIsKey, runnable);
 		}
 
 		public static org.eclipse.swt.widgets.Button makePushButton(Composite parent, int style, IResourceGetter resourceGetter, String titleOrKey, boolean titleIsKey, final Runnable runnable) {
@@ -483,6 +485,19 @@ public class Swts {
 			}
 	}
 
+	public static <T extends Control> List<T> findChildrenWithClass(Control control, final Class<T> clazz) {
+		final List<T> result = Lists.newList();
+		walkChildren(control, new ICallback<Control>() {
+			@SuppressWarnings("unchecked")
+			@Override
+			public void process(Control t) throws Exception {
+				if (clazz.isAssignableFrom(t.getClass()))
+					result.add((T) t);
+			}
+		});
+		return result;
+	}
+
 	public static Group newGroup(Composite parent, int style, final String description) {
 		return new Group(parent, style) {
 			@Override
@@ -522,7 +537,6 @@ public class Swts {
 		Font newFont = new Font(text.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(), fontStyle));
 		text.setFont(newFont);
 	}
-
 
 	public static Control setAfter(List<Control> controls, Control firstControl) {
 		for (Control control : controls) {
@@ -621,7 +635,6 @@ public class Swts {
 		}
 	}
 
-	
 	public static void removeAllChildren(Composite composite) {
 		for (Control control : composite.getChildren())
 			control.dispose();
@@ -774,6 +787,13 @@ public class Swts {
 			clientAreasUpToShell(buffer, parent);
 		}
 
+	}
+
+	public static Button findButtonWithText(List<Button> buttons, String string) {
+		for (Button button : buttons)
+			if (string.equals(button.getText()))
+				return button;
+		throw new IllegalArgumentException(MessageFormat.format(UtilityConstants.cannotFindButtonWithText, string, buttons));
 	}
 
 }

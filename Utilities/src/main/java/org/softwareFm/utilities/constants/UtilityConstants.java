@@ -13,5 +13,6 @@ public class UtilityConstants {
 	public static final String directoryNotFound = "Directory.listFiles returns null. {0}";
 	public static final String cannotParseUrl = "Cannot parse url {0}";
 	public static final String cannotSort = "Cannot sort using key {0} Legal values {1}";
+	public static final String cannotFindButtonWithText = "Cannot find button with text {0} In {1}";
 
 }

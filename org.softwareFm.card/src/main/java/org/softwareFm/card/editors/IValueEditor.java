@@ -32,8 +32,8 @@ public interface IValueEditor extends IHasComposite {
 			return editor;
 		}
 		
-		public static IValueEditor cardEditorWithLayout(Composite parent, CardConfig cardConfig, String cardType, String url, Map<String, Object> data, ICardEditorCallback callback){
-			CardEditor editor = new CardEditor(parent, cardConfig, cardType, url, data, callback);
+		public static IValueEditor cardEditorWithLayout(Composite parent, CardConfig cardConfig, String title, String cardType, String url, Map<String, Object> data, ICardEditorCallback callback){
+			CardEditor editor = new CardEditor(parent, cardConfig, title, cardType, url, data, callback);
 			editor.getComposite().setLayout(new CardEditorLayout());
 			return editor;
 		}

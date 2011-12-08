@@ -51,4 +51,8 @@ public class CardDataStoreMock implements IMutableCardDataStore {
 		return Futures.doneFuture(null);
 	}
 
+	@Override
+	public void clearCache(String url) {
+	}
+
 }

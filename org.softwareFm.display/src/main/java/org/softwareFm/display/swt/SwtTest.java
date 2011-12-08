@@ -14,6 +14,7 @@ import junit.framework.TestCase;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
+import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.future.GatedMockFuture;
 
 abstract public class SwtTest extends TestCase {
@@ -35,21 +36,25 @@ abstract public class SwtTest extends TestCase {
 		super.tearDown();
 	}
 
-	protected void dispatchUntilTimeoutOrLatch(final CountDownLatch latch, long delay) throws InterruptedException {
-		long start = System.currentTimeMillis();
-		dispatchUntilQueueEmpty();
-		while (!latch.await(10, TimeUnit.MILLISECONDS)) {
-			if (System.currentTimeMillis() > delay + start)
-				fail();
+	protected void dispatchUntilTimeoutOrLatch(final CountDownLatch latch, long delay) {
+		try {
+			long start = System.currentTimeMillis();
 			dispatchUntilQueueEmpty();
-			Thread.sleep(10);
+			while (!latch.await(10, TimeUnit.MILLISECONDS)) {
+				if (System.currentTimeMillis() > delay + start)
+					fail();
+				dispatchUntilQueueEmpty();
+				Thread.sleep(10);
+			}
+		} catch (InterruptedException e) {
+			throw WrappedException.wrap(e);
 		}
 	}
 
 	protected void select(Table table, int colIndex, String value) {
 		for (int i = 0; i < table.getItemCount(); i++) {
 			String text = table.getItem(i).getText(colIndex);
-			if (text.equals(value)){
+			if (text.equals(value)) {
 				table.select(i);
 				return;
 			}

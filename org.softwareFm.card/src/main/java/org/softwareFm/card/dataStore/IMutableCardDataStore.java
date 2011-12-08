@@ -8,9 +8,63 @@ package org.softwareFm.card.dataStore;
 import java.util.Map;
 import java.util.concurrent.Future;
 
+import org.softwareFm.card.card.RightClickCategoryResult;
+import org.softwareFm.card.constants.CardConstants;
+import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.utilities.maps.Maps;
+
 /** This is a card data store that can be changed. */
 public interface IMutableCardDataStore extends ICardDataStore {
 
+	void clearCache(String url);
+
 	Future<?> put(String url, Map<String, Object> map, IAfterEditCallback callback);
 
+	public static class Utils {
+
+		public static Future<Void> addCollectionItem(final IMutableCardDataStore store, RightClickCategoryResult result, final String itemUrlFragment, final Map<String, Object> map, final IAfterEditCallback callback) {
+			switch (result.itemType) {
+			case IS_COLLECTION:
+				return addCollectionItemToCollection(store, result.collectionUrl(), result.collectionName, itemUrlFragment, map, callback);
+			case ROOT_COLLECTION:
+				return addCollectionItemToBase(store, result.url, result.collectionName, itemUrlFragment, map, callback);
+			default:
+				throw new IllegalStateException(result.itemType.toString());
+			}
+
+		}
+
+		public static Future<Void> addCollectionItemToBase(final IMutableCardDataStore store, String baseUrl, String collectionName, final String itemUrlFragment, final Map<String, Object> map, final IAfterEditCallback callback) {
+			final String collectionUrl = baseUrl + "/" + collectionName;
+			return addCollectionItemToCollection(store, collectionUrl, collectionName, itemUrlFragment, map, callback);
+		}
+
+		public static Future<Void> addCollectionItemToCollection(final IMutableCardDataStore store, final String collectionUrl, String collectionName, final String itemUrlFragment, final Map<String, Object> map, final IAfterEditCallback callback) {
+			store.clearCache(collectionUrl);
+			return store.processDataFor(collectionUrl, new ICardDataStoreCallback<Void>() {
+				@Override
+				public Void process(String url, Map<String, Object> data) throws Exception {// the collection exists
+					String itemUrl = collectionUrl + "/" + itemUrlFragment;
+					store.put(itemUrl, map, callback);
+					return null;
+				}
+
+				@Override
+				public Void noData(final String url) throws Exception {
+					final Map<String, Object> newData = Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection);
+					store.put(url, newData, new IAfterEditCallback() {
+						@Override
+						public void afterEdit(String url) {
+							try {
+								process(url, newData);
+							} catch (Exception e) {
+								throw WrappedException.wrap(e);
+							}
+						}
+					});
+					return null;
+				}
+			});
+		}
+	}
 }

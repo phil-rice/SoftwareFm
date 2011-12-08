@@ -45,11 +45,13 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 
 	void addExplorerListener(IExplorerListener listener);
 
+	void removeExplorerListener(IExplorerListener listener);
 	public static class Utils {
 
 		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, String rootUrl, IPlayListGetter playListGetter, IServiceExecutor service) {
 			return new Explorer(cardConfig, rootUrl, masterDetailSocial, service, playListGetter);
 		}
 	}
+
 
 }
