@@ -71,6 +71,87 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 		});
 	}
 
+	static interface IAddingCallback {
+		/** will get called twice. If added is false, card is the initial card, if false card is the added card */
+		void process(boolean added, ICard card, IAdding adding);
+	}
+
+	static interface IAdding {
+		void tableItem(int index, String name, String existing, String newValue);
+	}
+
+	public void testAddingMailingList() {
+		checkAdding("mailingList", "name", new IAddingCallback() {
+			@Override
+			public void process(boolean added, ICard card, IAdding adding) {
+				adding.tableItem(0, "name", "<Please add a name>", "some Name");
+				adding.tableItem(1, "description", "<Please add a description>", "someDescription");
+				adding.tableItem(2, "email", "<Add email>", "someEmail");
+				adding.tableItem(3, "subscribe", "<Add email address used to subscribe>", "someSubscribe");
+				adding.tableItem(4, "unsubscribe", "<Add email address used to unsubscribe> ", "someUnsubscribe");
+				adding.tableItem(5, "url", "", "someUrl");
+			}
+		});
+	}
+
+	/** If urlFragment is null, expecting a UUID */
+	private void checkAdding(final String collection, final String urlFragment, final IAddingCallback addingCallback) {
+		displayCard(AbstractExplorerIntegrationTest.artifactUrl, new CardHolderAndCardCallback() {
+			@Override
+			public void process(ICardHolder cardHolder, ICard card) throws Exception {
+				String prettyName = Strings.camelCaseToPretty(collection);
+				Menu menu = selectAndCreatePopupMenu(card, prettyName);
+				executeMenuItem(menu, "Add " + collection);
+
+				Composite detailContent = (Composite) masterDetailSocial.getDetailContent();
+				final Table cardTable = Lists.getOnly(Swts.findChildrenWithClass(detailContent, Table.class));
+				addingCallback.process(false, card, new IAdding() {
+					@Override
+					public void tableItem(int index, String name, String existing, String newValue) {
+						String prettyName = Strings.camelCaseToPretty(name);
+						TableItem item = cardTable.getItem(index);
+						assertEquals(prettyName, item.getText(0));
+						assertEquals(existing, item.getText(1));
+						cardTable.select(index);
+						cardTable.notifyListeners(SWT.Selection, new Event());
+						Text text = Lists.getOnly(Swts.findChildrenWithClass(cardTable, Text.class));
+						assertEquals(existing, text.getText());
+						text.setText(newValue);
+					}
+				});
+
+				List<Button> buttons = Swts.findChildrenWithClass(detailContent, Button.class);
+				final Button okButton = Swts.findButtonWithText(buttons, "Ok");
+				doSomethingAndWaitForCardDataStoreToFinish(new Runnable() {
+					@Override
+					public void run() {
+						okButton.notifyListeners(SWT.Selection, new Event());
+					}
+				}, new CardHolderAndCardCallback() {
+					@Override
+					public void process(ICardHolder cardHolder, final ICard card) throws Exception {
+						assertEquals(collection, card.cardType());
+						addingCallback.process(true, card, new IAdding() {
+							@Override
+							public void tableItem(int index, String name, String existing, String newValue) {
+								assertEquals(newValue, card.data().get(name));
+							}
+						});
+						String url = card.url();
+						String lastSegment = Strings.lastSegment(url, "/");
+						if (urlFragment == null)
+							UUID.fromString(lastSegment);
+						else
+							assertEquals(Strings.forUrl((String) card.data().get(urlFragment)), lastSegment);
+					}
+
+				});
+
+			}
+		});
+
+	}
+
 	// Importantly there are no mailing lists at the moment, so we have to add the collection. Also the mailing list use the name as part of the url
 	public void testClickingOkOnAddMailingListAddsTheMailingListUsingNameAsPartOfUrlAndCreatesCollectionAsWell() {
 		displayCard(AbstractExplorerIntegrationTest.artifactUrl, new CardHolderAndCardCallback() {
