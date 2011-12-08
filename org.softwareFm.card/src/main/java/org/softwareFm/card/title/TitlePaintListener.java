@@ -41,7 +41,7 @@ public class TitlePaintListener implements PaintListener {
 		}
 		int leftX = titleSpec.icon == null ? b.x + cardConfig.titleSpacer : b.x + 2 * cardConfig.titleSpacer + titleSpec.icon.getImageData().width;
 		e.gc.setClipping(b.x, b.y, b.width - titleSpec.rightIndent - cardConfig.cornerRadius, b.height);
-		e.gc.drawText(title, leftX+cardConfig.leftMargin, b.y+cardConfig.topMargin);
+		e.gc.drawText(title, leftX+cardConfig.leftMargin, b.y+cardConfig.topMargin+3);
 		e.gc.setClipping((Rectangle) null);
 		e.gc.drawRoundRectangle(r.x-cardConfig.cornerRadiusComp, r.y-cardConfig.cornerRadiusComp, r.width+2*cardConfig.cornerRadiusComp, r.height + 2* cardConfig.cornerRadiusComp, cardConfig.cornerRadius, cardConfig.cornerRadius);
 	}
