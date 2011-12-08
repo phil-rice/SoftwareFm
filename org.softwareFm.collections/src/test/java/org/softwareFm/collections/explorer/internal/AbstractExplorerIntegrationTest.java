@@ -30,9 +30,10 @@ import org.softwareFm.httpClient.constants.HttpClientConstants;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.repositoryFacard.impl.RepositoryFacard;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.tests.INeedsServerTest;
 
 /** These tests go out to software fm, so they are much more fragile */
-abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest {
+abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest implements INeedsServerTest {
 
 	final static String artifactUrl = "/ant/ant/artifact/ant";
 	static boolean addedArtifact = false;

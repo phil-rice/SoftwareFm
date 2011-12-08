@@ -57,34 +57,18 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 			}
 		});
 	}
+
 	public void testAddingTweets() {
-		checkAdding("tweet",  1, "tweet", new IAddingCallback() {
+		checkAdding("tweet", 1, "tweet", new IAddingCallback() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
 				adding.tableItem(0, "tweet", "", "someTweet");
 			}
 		});
 	}
-	public void testAddingRss(){
-		checkAdding("rss",  2, null, new IAddingCallback() {
-			@Override
-			public void process(boolean added, ICard card, IAdding adding) {
-				adding.tableItem(0, "url", unknown, "someUrl");
-				adding.tableItem(1, "description", pleaseAddADescription, "someDescription");
-			}
-		});
-	}
-	public void testAddingBLog(){
-		checkAdding("blog",  2, null, new IAddingCallback() {
-			@Override
-			public void process(boolean added, ICard card, IAdding adding) {
-				adding.tableItem(0, "url", unknown, "someUrl");
-				adding.tableItem(1, "description", pleaseAddADescription, "someDescription");
-			}
-		});
-	}
-	public void testAddingForum(){
-		checkAdding("forum",  2, null, new IAddingCallback() {
+
+	public void testAddingRss() {
+		checkAdding("rss", 2, null, new IAddingCallback() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
 				adding.tableItem(0, "url", unknown, "someUrl");
@@ -93,12 +77,27 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 		});
 	}
 
-	/**
-	 * If urlFragment is null, expecting a UUID
-	 * 
-	 * @param count
-	 *            TODO
-	 */
+	public void testAddingBlog() {
+		checkAdding("blog", 2, null, new IAddingCallback() {
+			@Override
+			public void process(boolean added, ICard card, IAdding adding) {
+				adding.tableItem(0, "url", unknown, "someUrl");
+				adding.tableItem(1, "description", pleaseAddADescription, "someDescription");
+			}
+		});
+	}
+
+	public void testAddingForum() {
+		checkAdding("forum", 2, null, new IAddingCallback() {
+			@Override
+			public void process(boolean added, ICard card, IAdding adding) {
+				adding.tableItem(0, "url", unknown, "someUrl");
+				adding.tableItem(1, "description", pleaseAddADescription, "someDescription");
+			}
+		});
+	}
+
+	/** If urlFragment is null, expecting a UUID */
 	private void checkAdding(final String collection, final int count, final String urlFragment, final IAddingCallback addingCallback) {
 		checkAddingToArtifactCard(collection, Strings.camelCaseToPretty(collection), count, urlFragment, addingCallback);
 

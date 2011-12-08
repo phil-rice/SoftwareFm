@@ -7,6 +7,9 @@ body {
 	color: #555;
 	font-weight: 100;
 	font-size: 15px;
+	font-family: Arial, Helvetica, sans-serif;
+	margin: 0px;
+	padding: 0px;
 	}
 
 #wrapper {
@@ -14,8 +17,16 @@ body {
 	background: url(images/overlap-shapes.jpg) center top no-repeat;
 }
 
+a {
+	color: #036;
+}
+
+a:hover {
+	color: #C00;
+}
+
 #container {
-	width: 1180px;
+	width: 980px;
 	margin: 0 auto;
 	padding-top: 90px;
 	overflow: auto;
@@ -65,7 +76,7 @@ body {
 
 
 #column3 {
-	width: 300px;
+	width: 200px;
 	margin: 0px;
 	margin-left: 15px;
 	float: left;
@@ -92,10 +103,10 @@ hr {
 
 h2 {
 		font-size: 18px;
-		font-weight: 100;
+		font-weight: 300;
 		color:  #555;
 }
-#column2 h3 {
+#column2 h3, #column3 h3 {
 	color: #C00;
 	font-size: 19px;
 	border-bottom: 1px dotted #999;
