@@ -48,7 +48,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 	}
 
 	public void testAddingTutorials() {
-		checkAddingToArtifactCard("tutorial", "Tutorials", 3, null, new IAddingCallback() {
+		checkAdding("tutorial", "Tutorials", 3, null, new IAddingCallback() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
 				adding.tableItem(0, "title", "", "someTitle");
@@ -97,13 +97,37 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 		});
 	}
 
-	/** If urlFragment is null, expecting a UUID */
-	private void checkAdding(final String collection, final int count, final String urlFragment, final IAddingCallback addingCallback) {
-		checkAddingToArtifactCard(collection, Strings.camelCaseToPretty(collection), count, urlFragment, addingCallback);
+	public void testAddingAdvert() {
+		checkAdding("advert", "Adverts", 3, null, new IAddingCallback() {
+			@Override
+			public void process(boolean added, ICard card, IAdding adding) {
+				adding.tableItem(0, "title", "", "someTitle");
+				adding.tableItem(1, "description", pleaseAddADescription, "someDescription");
+				adding.tableItem(2, "url", unknown, "someUrl");
+			}
+		});
 
 	}
 
-	private void checkAddingToArtifactCard(final String collection, final String nameInMainCard, final int count, final String urlFragment, final IAddingCallback addingCallback) {
+	public void testAddingRecruitment() {
+		checkAdding("recruitment", 3, null, new IAddingCallback() {
+			@Override
+			public void process(boolean added, ICard card, IAdding adding) {
+				adding.tableItem(0, "title", "", "someTitle");
+				adding.tableItem(1, "description", pleaseAddADescription, "someDescription");
+				adding.tableItem(2, "url", unknown, "someUrl");
+			}
+		});
+
+	}
+
+	/** If urlFragment is null, expecting a UUID */
+	private void checkAdding(final String collection, final int count, final String urlFragment, final IAddingCallback addingCallback) {
+		checkAdding(collection, Strings.camelCaseToPretty(collection), count, urlFragment, addingCallback);
+
+	}
+
+	private void checkAdding(final String collection, final String nameInMainCard, final int count, final String urlFragment, final IAddingCallback addingCallback) {
 		displayCard(AbstractExplorerIntegrationTest.artifactUrl, new CardHolderAndCardCallback() {
 			@Override
 			public void process(ICardHolder cardHolder, ICard card) throws Exception {

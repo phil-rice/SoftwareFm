@@ -69,7 +69,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 			@Override
 			public void process(ICardHolder cardHolder, ICard card) {
 				Table table = card.getTable();
-				assertEquals(10, table.getItemCount());
+				assertEquals(12, table.getItemCount());
 				assertEquals("Name", table.getItem(0).getText(0));
 				assertEquals("Description", table.getItem(1).getText(0));
 				assertEquals("Issues", table.getItem(2).getText(0));
@@ -79,7 +79,9 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 				assertEquals("Tweet", table.getItem(6).getText(0));
 				assertEquals("Rss", table.getItem(7).getText(0));
 				assertEquals("Blog", table.getItem(8).getText(0));
-				assertEquals("Forum", table.getItem(9).getText(0));
+				assertEquals("Adverts", table.getItem(9).getText(0));
+				assertEquals("Recruitment", table.getItem(10).getText(0));
+				assertEquals("Forum", table.getItem(11).getText(0));
 			}
 		});
 	}

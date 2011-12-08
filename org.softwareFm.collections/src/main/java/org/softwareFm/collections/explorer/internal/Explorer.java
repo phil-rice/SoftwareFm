@@ -513,52 +513,7 @@ public class Explorer implements IExplorer {
 		return callback;
 	}
 
-	private void updateStore(final IMutableCardDataStore store, final RightClickCategoryResult result, final Object value, final IAfterEditCallback afterEditCallback) {
-		final String editorResult = Strings.nullSafeToString(value);
-		switch (result.itemType) {
-		case ROOT_COLLECTION:
-			createNewItem(result, store, editorResult, afterEditCallback);
-			break;
-		case IS_COLLECTION:
-			store.processDataFor(result.collectionUrl(), new ICardDataStoreCallback<Void>() {
-				@Override
-				public Void process(String url, Map<String, Object> data) throws Exception {
-					createNewItem(result, store, editorResult, afterEditCallback);
-					return null;
-				}
 
-				@Override
-				public Void noData(final String url) throws Exception {
-					final Map<String, Object> newData = Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection);
-					store.put(url, newData, new IAfterEditCallback() {
-						@Override
-						public void afterEdit(String url) {
-							try {
-								process(url, newData);
-							} catch (Exception e) {
-								throw WrappedException.wrap(e);
-							}
-						}
-					});
-					return null;
-				}
-			});
-			break;
-		default:
-			throw new IllegalStateException(result.toString());
-		}
-	}
-
-	Map<String, Object> createNewItem(final RightClickCategoryResult result, final IMutableCardDataStore store, String editorText, IAfterEditCallback afterEditCallback) {
-		String collectionName = result.collectionName;
-		IFunction1<String, String> itemNameToUrl = new IFunction1<String, String>() {
-			@Override
-			public String apply(String from) throws Exception {
-				return result.itemUrl(from);
-			}
-		};
-		return createNewItem(store, collectionName, editorText, itemNameToUrl, afterEditCallback);
-	}
 
 	private Map<String, Object> createNewItem(final IMutableCardDataStore store, String collectionName, String editorText, IFunction1<String, String> itemNameToUrl, IAfterEditCallback afterEditCallback) {
 		String cardUrl = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, collectionName, CardConstants.cardNameUrlKey);
