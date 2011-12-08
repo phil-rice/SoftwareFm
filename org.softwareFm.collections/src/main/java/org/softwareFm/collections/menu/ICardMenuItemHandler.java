@@ -16,6 +16,7 @@ import org.softwareFm.collections.menu.internal.AddNewArtifactMenuHandler;
 import org.softwareFm.collections.menu.internal.AddNewSnippetMenuHandler;
 import org.softwareFm.collections.menu.internal.BrowseUrlMenuHandler;
 import org.softwareFm.collections.menu.internal.EditTextMenuHandler;
+import org.softwareFm.collections.menu.internal.ExternalBrowseUrlMenuHandler;
 import org.softwareFm.collections.menu.internal.OptionalSeparatorMenuHandler;
 import org.softwareFm.collections.menu.internal.ViewActualContentsMenuHandler;
 import org.softwareFm.collections.menu.internal.ViewCardsMenuHandler;
@@ -38,7 +39,9 @@ public interface ICardMenuItemHandler extends IPopupMenuContributor<ICard> {
 			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.viewText(explorer));
 			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.viewCards(explorer));
 			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.addItemToCollection(explorer));//
+			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.optionalSeparator());//
 			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.browseUrl(explorer));
+			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.externalBrowseUrl(explorer));
 			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.optionalSeparator());//
 			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.addNewArtifact(explorer));
 		}
@@ -67,6 +70,9 @@ public interface ICardMenuItemHandler extends IPopupMenuContributor<ICard> {
 		
 		public static ICardMenuItemHandler browseUrl(IExplorer explorer) {
 			return new BrowseUrlMenuHandler(explorer);
+		}
+		public static ICardMenuItemHandler externalBrowseUrl(IExplorer explorer) {
+			return new ExternalBrowseUrlMenuHandler(explorer);
 		}
 		public static ICardMenuItemHandler editText(IExplorer explorer) {
 			return new EditTextMenuHandler(explorer);

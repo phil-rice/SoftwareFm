@@ -17,10 +17,11 @@ public class OptionalSeparatorMenuHandler extends AbstractCardMenuHandler {
 
 	@Override
 	public MenuItem optionallyCreate(ICard card, IResourceGetter resourceGetter, Menu menu, Event event, String key) {
-		if (menu.getItemCount() > 0)
-			return new MenuItem(menu, SWT.SEPARATOR);
-		else
-			return null;
+		int count = menu.getItemCount();
+		if (count > 0)
+			if ((menu.getItem(count - 1).getStyle() & SWT.SEPARATOR) == 0)
+				return new MenuItem(menu, SWT.SEPARATOR);
+		return null;
 	}
 
 	@Override
