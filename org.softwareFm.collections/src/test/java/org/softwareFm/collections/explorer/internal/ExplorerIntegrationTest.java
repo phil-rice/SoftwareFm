@@ -1,5 +1,6 @@
 package org.softwareFm.collections.explorer.internal;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -9,12 +10,17 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.Text;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.collections.explorer.ExplorerAdapter;
 import org.softwareFm.collections.menu.ICardMenuItemHandler;
+import org.softwareFm.display.composites.IHasControl;
+import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 	public void testShowContentOnlyAsksForOneMainUrlFromCardDataStore() {
@@ -64,41 +70,45 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 		});
 	}
 
-	public void testArtifactViewMainTitles() {
-		displayCard(AbstractExplorerIntegrationTest.artifactUrl, new CardHolderAndCardCallback() {
-			@Override
-			public void process(ICardHolder cardHolder, ICard card) {
-				Table table = card.getTable();
-				assertEquals(12, table.getItemCount());
-				assertEquals("Name", table.getItem(0).getText(0));
-				assertEquals("Description", table.getItem(1).getText(0));
-				assertEquals("Issues", table.getItem(2).getText(0));
-				assertEquals("Version", table.getItem(3).getText(0));
-				assertEquals("Mailing List", table.getItem(4).getText(0));
-				assertEquals("Tutorials", table.getItem(5).getText(0));
-				assertEquals("Tweet", table.getItem(6).getText(0));
-				assertEquals("Rss", table.getItem(7).getText(0));
-				assertEquals("Blog", table.getItem(8).getText(0));
-				assertEquals("Adverts", table.getItem(9).getText(0));
-				assertEquals("Recruitment", table.getItem(10).getText(0));
-				assertEquals("Forum", table.getItem(11).getText(0));
-			}
-		});
+	public void testUnrecognisedJarPutsJarNotRecognisedTextInLhsAndLeavesDetailAndSocialAlone() {
+		IHasControl detail = masterDetailSocial.createAndShowDetail(Swts.labelFn("detail"));
+		IHasControl social = masterDetailSocial.createAndShowSocial(Swts.labelFn("social"));
+
+		explorer.displayUnrecognisedJar(new File("a/b/c/artifact-1.0.0.jar"), "someDigest");
+		Text text = (Text) masterDetailSocial.getMasterContent();
+		String expected = IResourceGetter.Utils.getOrException(rawResourceGetter, CollectionConstants.jarNotRecognised).replace("\n", "\f\r");
+		assertEquals(expected.trim(), text.getText());
+
+		assertSame(detail.getControl(), masterDetailSocial.getDetailContent());
+		assertSame(social.getControl(), masterDetailSocial.getSocialContent());
 	}
 
-	public void testRightClickMenusText() {
+	public void testTitlesAndRightClickMenusText() {
 		String view = "View";
 		String edit = "Edit";
 
 		checkMenu(0, "Name", edit, view);
-		checkMenu(1, "Description", edit, view);
-		checkMenu(2, "Issues", edit, view);
-		checkMenu(3, "Version", view, "Add version");
-		checkMenu(4, "Mailing List", view, "Add mailingList");
-		checkMenu(5, "Tutorials", view, "Add tutorial");
-		checkMenu(6, "Tweet", view, "Add tweet");
-		checkMenu(7, "Rss", view, "Add rss");
-		checkMenu(8, "Blog", view, "Add blog");
+		checkMenu(1, "Url", edit, view);
+		checkMenu(2, "Description", edit, view);
+		checkMenu(3, "Issues", edit, view);
+		checkMenu(4, "Download Url", edit, view);
+		checkMenu(5, "Documentation", view, "Add documentation");
+		checkMenu(6, "Mailing List", view, "Add mailingList");
+		checkMenu(7, "Tutorials", view, "Add tutorial");
+		checkMenu(8, "Tweet", view, "Add tweet");
+		checkMenu(9, "Rss", view, "Add rss");
+		checkMenu(10, "Forum", view, "Add forum");
+		checkMenu(11, "Blog", view, "Add blog");
+		checkMenu(12, "Adverts", view, "Add advert");
+		checkMenu(13, "Recruitment", view, "Add recruitment");
+		checkMenu(14, "Version", view, "Add version");
+		displayCard(AbstractExplorerIntegrationTest.artifactUrl, new CardHolderAndCardCallback() {
+			@Override
+			public void process(ICardHolder cardHolder, ICard card) {
+				Table table = card.getTable();
+				assertEquals(15, table.getItemCount());
+			}
+		});
 	}
 
 	private void checkMenu(final int index, final String expectedName, final String... expected) {
@@ -113,7 +123,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 				for (int i = 0; i < menu.getItemCount(); i++)
 					actual.add(menu.getItem(i).getText());
 				assertEquals(expectedName, table.getItem(index).getText(0));
-				List<String> fullExpected = Lists.append(Arrays.asList(expected), "", "Register new artifact");
+				List<String> fullExpected = Lists.append(Arrays.asList(expected));
 				assertEquals(fullExpected, actual);
 			}
 		});

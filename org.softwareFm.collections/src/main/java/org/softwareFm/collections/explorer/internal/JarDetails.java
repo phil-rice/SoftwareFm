@@ -16,7 +16,8 @@ public class JarDetails implements IHasControl {
 
 	public JarDetails(Composite parent, IResourceGetter resourceGetter, final Runnable whenClicked) {
 		content = new Text(parent, SWT.WRAP | SWT.V_SCROLL);
-		content.setText(IResourceGetter.Utils.getOrException(resourceGetter, CollectionConstants.jarNotRecognised));
+		String text = IResourceGetter.Utils.getOrException(resourceGetter, CollectionConstants.jarNotRecognised);
+		content.setText(text);
 		content.setEditable(false);
 		content.addListener(SWT.MouseUp, new Listener() {
 			@Override

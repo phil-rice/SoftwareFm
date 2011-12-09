@@ -5,6 +5,7 @@
 
 package org.softwareFm.explorer.eclipse;
 
+import java.io.File;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.swt.SWT;
@@ -96,10 +97,10 @@ public class ExplorerWithRadioChannel {
 							explorer.selectAndNext(url.get());
 						}
 					});
-					Buttons.makePushButton(buttonPanel, null, "Show List", false, new Runnable() {
+					Buttons.makePushButton(buttonPanel, null, "Unrecognised Jar", false, new Runnable() {
 						@Override
 						public void run() {
-							explorer.showContents();
+							explorer.displayUnrecognisedJar(new File("a/b/artifact-1.0.0.jar"), "0123439754987345978");
 						}
 					});
 					Swts.Row.setRowDataFor(100, 20, buttonPanel.getChildren());

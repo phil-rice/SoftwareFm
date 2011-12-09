@@ -30,6 +30,7 @@ import org.softwareFm.httpClient.constants.HttpClientConstants;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.repositoryFacard.impl.RepositoryFacard;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.tests.INeedsServerTest;
 
 /** These tests go out to software fm, so they are much more fragile */
@@ -46,6 +47,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	protected MasterDetailSocial masterDetailSocial;
 	
 	protected final String rootUrl = "/tests/"+ getClass().getSimpleName();
+	protected IResourceGetter rawResourceGetter;
 
 	public static interface CardHolderAndCardCallback {
 		void process(ICardHolder cardHolder, ICard card) throws Exception;
@@ -151,6 +153,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 			repository.post(rootUrl+artifactUrl+"/tutorial/two", Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"), IResponseCallback.Utils.noCallback()).get();
 			addedArtifact = true;
 		}
+		rawResourceGetter = explorer.getCardConfig().resourceGetterFn.apply(null);
 	}
 
 	@Override

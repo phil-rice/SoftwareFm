@@ -235,6 +235,9 @@ public class MasterDetailSocial implements IMasterDetailSocial {
 	public Control getDetailContent() {
 		return getContent(content.detail);
 	}
+	public Control getSocialContent() {
+		return getContent(content.social);
+	}
 
 	private Control getContent(Composite holder) {
 		Composite composite = holder;

@@ -39,11 +39,11 @@ public interface ICardMenuItemHandler extends IPopupMenuContributor<ICard> {
 			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.viewText(explorer));
 			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.viewCards(explorer));
 			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.addItemToCollection(explorer));//
-			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.optionalSeparator());//
+//			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.optionalSeparator());//
 			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.browseUrl(explorer));
 			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.externalBrowseUrl(explorer));
-			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.optionalSeparator());//
-			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.addNewArtifact(explorer));
+//			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.optionalSeparator());//
+//			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.addNewArtifact(explorer));
 		}
 		public static void addSnippetMenuItemHandlers(IExplorer explorer, String popupMenuId) {
 			CardConfig cardConfig = explorer.getCardConfig();
