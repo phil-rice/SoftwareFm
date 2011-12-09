@@ -126,12 +126,12 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 	}
 
 	/** If urlFragment is null, expecting a UUID */
-	private void checkAdding(final String collection, final int count, final String urlFragment, final IAddingCallback addingCallback) {
+	private void checkAdding(final String collection, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback) {
 		checkAdding(collection, Strings.camelCaseToPretty(collection), count, urlFragment, addingCallback);
 
 	}
 
-	private void checkAdding(final String collection, final String nameInMainCard, final int count, final String urlFragment, final IAddingCallback addingCallback) {
+	private void checkAdding(final String collection, final String nameInMainCard, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback) {
 		displayCard(AbstractExplorerIntegrationTest.artifactUrl, new CardHolderAndCardCallback() {
 			@Override
 			public void process(ICardHolder cardHolder, ICard card) throws Exception {

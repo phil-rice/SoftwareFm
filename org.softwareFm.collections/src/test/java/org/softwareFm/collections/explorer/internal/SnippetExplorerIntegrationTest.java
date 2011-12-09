@@ -19,6 +19,7 @@ import org.softwareFm.utilities.collections.Lists;
 
 public class SnippetExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 
+	@SuppressWarnings("unchecked")
 	public void testTestAddingSnippet() {
 		displayCard(snippetUrl, new CardHolderAndCardCallback() {
 			@Override

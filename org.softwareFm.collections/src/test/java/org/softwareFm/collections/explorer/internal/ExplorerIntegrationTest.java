@@ -30,48 +30,6 @@ import org.softwareFm.utilities.strings.Strings;
 
 public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 	
-	public void testTestAddingSnippet() {
-		displayCard(snippetUrl, new CardHolderAndCardCallback() {
-			
-			@Override
-			public void process(ICardHolder cardHolder, ICard card) throws Exception {
-				final Menu menu = new Menu(shell);
-				Table table = card.getTable();
-				cardConfig.popupMenuService.contributeTo("popupmenuid", new Event(), menu, card);
-				System.out.println(menu);
-				System.out.println();
-			}
-		});
-
-		// explorer.displayCard(artifactUrl, new CardAndCollectionDataStoreAdapter() {
-		// explorer.showAddSnippetEditor(card);
-		// final IValueComposite<Table> composite = (IValueComposite<Table>) masterDetailSocial.getDetailContent();
-		// Table table = composite.getEditor();
-		// check(table, new IAddingCallback<Table>() {
-		// @Override
-		// public void process(boolean added, Table data, IAdding adding) {
-		// adding.tableItem(0, "Title", "", "someTitle");
-		// adding.tableItem(1, "Description", "<Please add a description>", "someDescription");
-		// adding.tableItem(2, "Content", "", "someContent");
-		// }
-		// });
-		// assertEquals(3, table.getItemCount());
-		// doSomethingAndWaitForCardDataStoreToFinish(new Runnable() {
-		// @Override
-		// public void run() {
-		// OkCancel okCancel = composite.getOkCancel();
-		// Button okButton = okCancel.okButton;
-		// okButton.notifyListeners(SWT.Selection, new Event());
-		// }
-		// }, new CardHolderAndCardCallback() {
-		// @Override
-		// public void process(ICardHolder cardHolder, ICard card) throws Exception {
-		// explorer.getBrowser().processUrl(DisplayConstants.snippetFeedType, card.url());
-		// assertEquals(explorer.getBrowser().getControl(), masterDetailSocial.getDetailContent());
-		// }
-		// });
-	}
-	
 	public void testShowContentOnlyAsksForOneMainUrlFromCardDataStore() {
 		final AtomicInteger count = new AtomicInteger();
 		displayCard(AbstractExplorerIntegrationTest.artifactUrl, new CardHolderAndCardCallback() {

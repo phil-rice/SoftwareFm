@@ -41,6 +41,8 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 
 	void showRandomContent(ICard card);
 
+	void editSnippet(ICard card, String key);
+
 	void showRandomSnippetFor(String artifactUrl);
 
 	void edit(ICard card, String key);

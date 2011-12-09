@@ -18,8 +18,6 @@ import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.dataStore.CardDataStoreMock;
-import org.softwareFm.card.dataStore.IAfterEditCallback;
-import org.softwareFm.card.dataStore.MemoryAfterEditCallback;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.menu.PopupMenuContributorMock;
 import org.softwareFm.display.swt.SwtAndServiceTest;
@@ -34,9 +32,7 @@ public class ExplorerTest extends SwtAndServiceTest {
 	private final static String popupMenuId = "popupMenuId";
 	private final static String detailsPopupMenuId = "detailsPopupMenuId";
 	private CardDataStoreMock updateStore;
-	private MemoryAfterEditCallback afterEdit;
 	private CardConfig raw;
-	private int count;
 	private MasterDetailSocial masterDetailSocial;
 
 
@@ -80,7 +76,6 @@ public class ExplorerTest extends SwtAndServiceTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		afterEdit = IAfterEditCallback.Utils.memory();
 		updateStore = new CardDataStoreMock();
 		masterDetailSocial = new MasterDetailSocial(shell, SWT.NULL);
 		raw = new CardConfig(ICardFactory.Utils.cardFactory(), updateStore);

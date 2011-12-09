@@ -198,6 +198,56 @@ public class Explorer implements IExplorer {
 	}
 
 	@Override
+	public void editSnippet(final ICard card, final String key) {
+		final IMutableCardDataStore store = (IMutableCardDataStore) card.getCardConfig().cardDataStore;
+		masterDetailSocial.showSocial();
+		masterDetailSocial.createAndShowDetail(new IFunction1<Composite, IValueEditor>() {
+			@Override
+			public IValueEditor apply(Composite from) throws Exception {
+				final String url = card.url() + "/" + key;
+				@SuppressWarnings("unchecked")
+				Map<String, Object> data = (Map<String, Object>) card.data().get(key);
+				return IValueEditor.Utils.cardEditorWithLayout(from, cardConfig, "Snippet", CardConstants.snippet, url, data, new ICardEditorCallback() {
+					@Override
+					public void ok(final ICardData cardData) {
+						Map<String, Object> data = cardData.data();
+						IAfterEditCallback callback = new IAfterEditCallback() {
+							@Override
+							public void afterEdit(String url) {
+								displayCard(card.url(), new CardAndCollectionDataStoreAdapter() {
+									@Override
+									public void finished(ICardHolder cardHolder, String url, ICard card) throws Exception {
+										Table table = card.getTable();
+										for (int i = 0; i < table.getItemCount(); i++) {
+											TableItem item = table.getItem(i);
+											String itemKey = (String) item.getData();
+											if (key.equals(itemKey))
+												table.select(i);
+
+										}
+									}
+								});
+								browser.processUrl(DisplayConstants.snippetFeedType, url);
+								masterDetailSocial.setDetail(browser.getControl());
+							}
+						};
+						store.put(url, data, callback);
+					}
+
+					@Override
+					public void cancel(ICardData cardData) {
+					}
+
+					@Override
+					public boolean canOk(Map<String, Object> data) {
+						return true;
+					}
+				});
+			}
+		});
+	}
+
+	@Override
 	public void showAddSnippetEditor(final ICard card) {
 		final IMutableCardDataStore store = (IMutableCardDataStore) card.getCardConfig().cardDataStore;
 		final String lastSegment = Strings.lastSegment(card.url(), "/");
@@ -214,20 +264,20 @@ public class Explorer implements IExplorer {
 						IAfterEditCallback callback = new IAfterEditCallback() {
 							@Override
 							public void afterEdit(String url) {
-								displayCard(card.url(), new CardAndCollectionDataStoreAdapter(){
+								displayCard(card.url(), new CardAndCollectionDataStoreAdapter() {
 									@Override
 									public void finished(ICardHolder cardHolder, String url, ICard card) throws Exception {
 										Table table = card.getTable();
-										for (int i = 0; i<table.getItemCount();i++){
-											TableItem item= table.getItem(i);
+										for (int i = 0; i < table.getItemCount(); i++) {
+											TableItem item = table.getItem(i);
 											String key = (String) item.getData();
 											if (fragment.equals(key))
 												table.select(i);
-											
+
 										}
 									}
 								});
-								browser.processUrl(DisplayConstants.snippetFeedType, url );
+								browser.processUrl(DisplayConstants.snippetFeedType, url);
 								masterDetailSocial.setDetail(browser.getControl());
 							}
 						};
@@ -478,18 +528,6 @@ public class Explorer implements IExplorer {
 			}
 		};
 		return callback;
-	}
-
-	private Map<String, Object> createNewItem(final IMutableCardDataStore store, String collectionName, String editorText, IFunction1<String, String> itemNameToUrl, IAfterEditCallback afterEditCallback) {
-		String cardUrl = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, collectionName, CardConstants.cardNameUrlKey);
-		String cardName = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, collectionName, CardConstants.cardNameFieldKey);
-		String itemName = MessageFormat.format(cardUrl, Strings.forUrl(editorText), makeRandomUUID());
-		String fullUrl = Functions.call(itemNameToUrl, itemName);
-		Map<String, Object> baseData = Maps.stringObjectMap(CardConstants.slingResourceType, collectionName);
-		if (cardName != null)
-			baseData.put(cardName, editorText);
-		store.put(fullUrl, baseData, afterEditCallback);
-		return baseData;
 	}
 
 	protected String makeRandomUUID() {
