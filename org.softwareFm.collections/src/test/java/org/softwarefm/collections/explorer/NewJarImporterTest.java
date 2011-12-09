@@ -72,7 +72,7 @@ public class NewJarImporterTest extends TestCase {
 						callback.afterEdit(url);
 						return Futures.doneFuture(null);
 					}
-				}).withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap("/prefix/"));
+				}).withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap("tests/"+getClass().getSimpleName(),"prefix"));
 	}
 
 }

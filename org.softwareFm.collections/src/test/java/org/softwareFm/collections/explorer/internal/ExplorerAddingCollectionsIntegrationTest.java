@@ -24,17 +24,23 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 	private static final String pleaseAddAName = "<Please add a name>";
 	private static final String pleaseAddADescription = "<Please add a description>";
 
-	static interface IAddingCallback {
-		/** will get called twice. If added is false, card is the initial card, if false card is the added card */
-		void process(boolean added, ICard card, IAdding adding);
-	}
 
-	static interface IAdding {
-		void tableItem(int index, String name, String existing, String newValue);
-	}
 
+	public void testAddingDocumentation() {
+		checkAdding("documentation", 1, "name", new IAddingCallback<ICard>() {
+			@Override
+			public void process(boolean added, ICard card, IAdding adding) {
+				adding.tableItem(0, "name", pleaseAddAName, "some Name");
+				adding.tableItem(1, "description", pleaseAddADescription, "someDescription");
+				adding.tableItem(2, "email", "<Add email>", "someEmail");
+				adding.tableItem(3, "subscribe", "<Add email address used to subscribe>", "someSubscribe");
+				adding.tableItem(4, "unsubscribe", "<Add email address used to unsubscribe> ", "someUnsubscribe");
+				adding.tableItem(5, "url", "", "someUrl");
+			}
+		});
+	}
 	public void testAddingMailingList() {
-		checkAdding("mailingList", 6, "name", new IAddingCallback() {
+		checkAdding("mailingList", 6, "name", new IAddingCallback<ICard>() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
 				adding.tableItem(0, "name", pleaseAddAName, "some Name");
@@ -48,7 +54,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 	}
 
 	public void testAddingTutorials() {
-		checkAdding("tutorial", "Tutorials", 3, null, new IAddingCallback() {
+		checkAdding("tutorial", "Tutorials", 3, null, new IAddingCallback<ICard>() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
 				adding.tableItem(0, "title", "", "someTitle");
@@ -59,7 +65,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 	}
 
 	public void testAddingTweets() {
-		checkAdding("tweet", 1, "tweet", new IAddingCallback() {
+		checkAdding("tweet", 1, "tweet", new IAddingCallback<ICard>() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
 				adding.tableItem(0, "tweet", "", "someTweet");
@@ -68,7 +74,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 	}
 
 	public void testAddingRss() {
-		checkAdding("rss", 2, null, new IAddingCallback() {
+		checkAdding("rss", 2, null, new IAddingCallback<ICard>() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
 				adding.tableItem(0, "url", unknown, "someUrl");
@@ -78,7 +84,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 	}
 
 	public void testAddingBlog() {
-		checkAdding("blog", 2, null, new IAddingCallback() {
+		checkAdding("blog", 2, null, new IAddingCallback<ICard>() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
 				adding.tableItem(0, "url", unknown, "someUrl");
@@ -88,7 +94,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 	}
 
 	public void testAddingForum() {
-		checkAdding("forum", 2, null, new IAddingCallback() {
+		checkAdding("forum", 2, null, new IAddingCallback<ICard>() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
 				adding.tableItem(0, "url", unknown, "someUrl");
@@ -98,7 +104,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 	}
 
 	public void testAddingAdvert() {
-		checkAdding("advert", "Adverts", 3, null, new IAddingCallback() {
+		checkAdding("advert", "Adverts", 3, null, new IAddingCallback<ICard>() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
 				adding.tableItem(0, "title", "", "someTitle");
@@ -110,7 +116,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 	}
 
 	public void testAddingRecruitment() {
-		checkAdding("recruitment", 3, null, new IAddingCallback() {
+		checkAdding("recruitment", 3, null, new IAddingCallback<ICard>() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
 				adding.tableItem(0, "title", "", "someTitle");

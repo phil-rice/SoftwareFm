@@ -21,6 +21,7 @@ import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.editors.ICardEditorCallback;
+import org.softwareFm.card.editors.IValueComposite;
 import org.softwareFm.card.editors.IValueEditor;
 import org.softwareFm.card.title.Title;
 import org.softwareFm.card.title.TitleSpec;

@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
 import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.card.editors.IValueComposite;
 
 @SuppressWarnings("unchecked")
 public class ValueEditorLayout extends Layout {

@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Table;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.card.editors.IValueComposite;
 
 @SuppressWarnings("unchecked")
 public class CardEditorLayout extends Layout {

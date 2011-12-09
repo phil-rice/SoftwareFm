@@ -65,7 +65,7 @@ public class SoftwareFmCardConfigurator implements ICardConfigurator {
 						else
 							return null;
 					}
-				}).withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap(CardConstants.dataPrefix));//
+				}).withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap(CardConstants.softwareFmPrefix, CardConstants.dataPrefix));//
 
 	}
 

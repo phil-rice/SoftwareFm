@@ -422,4 +422,8 @@ public class Strings {
 		return 0;
 	}
 
+	public static String removeNewLines(String raw) {
+		return raw.replaceAll("\n", "").replaceAll("\r", "").replaceAll("\f","");
+	}
+
 }

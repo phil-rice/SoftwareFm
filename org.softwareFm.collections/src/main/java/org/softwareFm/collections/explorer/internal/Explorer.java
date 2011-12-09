@@ -196,34 +196,6 @@ public class Explorer implements IExplorer {
 				});
 			}
 		});
-		// IValueEditor editor = masterDetailSocial.createDetail(new IFunction1<Composite, IValueEditor>() {
-		// @Override
-		// public IValueEditor apply(Composite from) throws Exception {
-		// return IValueEditor.Utils.textEditorWithLayout(from, card.getCardConfig(), result.url, card.cardType(), result.collectionName, "", new IDetailsFactoryCallback() {
-		// private final IDetailsFactoryCallback callback = this;
-		//
-		// @Override
-		// public void updateDataStore(final IMutableCardDataStore store, String url, String key, final Object value) {
-		// updateStore(store, result, value, callback);
-		// }
-		//
-		// @Override
-		// public void afterEdit(String url) {
-		// ICallback.Utils.call(callbackToGotoUrlAndUpdateDetails, url);
-		// }
-		//
-		// @Override
-		// public void gotData(Control control) {
-		// }
-		//
-		// @Override
-		// public void cardSelected(String cardUrl) {
-		// }
-		//
-		// }, TitleSpec.noTitleSpec(from.getBackground()));
-		// }
-		// }, false);
-		// masterDetailSocial.setDetail(editor.getControl());
 	}
 
 	@Override
@@ -399,10 +371,13 @@ public class Explorer implements IExplorer {
 
 	private void addUnrecognisedJar(final String digest, final Map<String, Object> startData) {
 		masterDetailSocial.showSocial();
+		String thankYou = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn,CollectionConstants.unrecognisedJarCardType, CollectionConstants.unrecognisedJarThankYouCardType);
+		masterDetailSocial.createAndShowMaster(Swts.labelFn(thankYou));
 		masterDetailSocial.createAndShowDetail(new IFunction1<Composite, IValueEditor>() {
 			@Override
 			public IValueEditor apply(Composite from) throws Exception {
-				return IValueEditor.Utils.cardEditorWithLayout(from, cardConfig, "", "", "", startData, new ICardEditorCallback() {
+				String jarTitle = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn,null, CollectionConstants.jarNotRecognisedTitle);
+				return IValueEditor.Utils.cardEditorWithLayout(from, cardConfig, jarTitle, CollectionConstants.unrecognisedJarCardType, "", startData, new ICardEditorCallback() {
 					@Override
 					public void ok(ICardData cardData) {
 						String groupId = (String) cardData.data().get(CollectionConstants.groupId);
@@ -512,8 +487,6 @@ public class Explorer implements IExplorer {
 		};
 		return callback;
 	}
-
-
 
 	private Map<String, Object> createNewItem(final IMutableCardDataStore store, String collectionName, String editorText, IFunction1<String, String> itemNameToUrl, IAfterEditCallback afterEditCallback) {
 		String cardUrl = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, collectionName, CardConstants.cardNameUrlKey);
@@ -748,6 +721,7 @@ public class Explorer implements IExplorer {
 	public void removeExplorerListener(IExplorerListener listener) {
 		listeners.remove(listener);
 	}
+
 	@Override
 	public void addExplorerListener(IExplorerListener listener) {
 		listeners.add(listener);

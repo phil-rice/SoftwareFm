@@ -44,15 +44,16 @@ public interface ICollectionConfigurationFactory {
 			return new SoftwareFmCardTitleFunction();
 		}
 
-		public static IUrlGeneratorMap makeSoftwareFmUrlGeneratorMap(String prefix) {
+		public static IUrlGeneratorMap makeSoftwareFmUrlGeneratorMap(String prefix, String data) {
+			String dataPrefix =prefix+"/"+ data+"/";
 			final IUrlGeneratorMap urlGeneratorMap = IUrlGeneratorMap.Utils.urlGeneratorMap(//
-					CardConstants.urlGroupKey, new UrlGenerator(prefix + "{3}/{2}", "groupId"),// hash, hash, groupId, groundIdWithSlash
-					CardConstants.snippetUrlKey, new UrlGenerator(prefix + "{3}", "snippet"),// 0,1: hash, 2,3: snippet
-					CardConstants.artifactUrlKey, new UrlGenerator(prefix + "{3}/{2}/artifact/{4}", "groupId", "artifactId"),// 0,1: hash, 2,3: groupId, 4,5: artifactId
-					CardConstants.versionUrlKey, new UrlGenerator(prefix + "{3}/{2}/artifact/{4}/version/{6}", "groupId", "artifactId", "version"),// 0,1: hash, 2,3: groupId, 4,5: artifactId, 6,7: version
-					CardConstants.digestUrlKey, new UrlGenerator(prefix + "{3}/{2}/artifact/{4}/version/{6}/digest/{8}", "groupId", "artifactId", "version", CardConstants.digest),// 0,1: hash, 2,3: groupId, 4,5: artifactId, 6,7: version, 8,9: digest
-					CardConstants.jarUrlKey, new UrlGenerator("/softwareFm/jars/{0}/{1}/{2}", CardConstants.digest),// 0,1: hash, 2,3: digest
-					CardConstants.userUrlKey, new UrlGenerator("/softwareFm/users/guid/{0}/{1}/{2}", "notSure"));// hash and guid
+					CardConstants.urlGroupKey, new UrlGenerator(dataPrefix + "{3}/{2}", "groupId"),// hash, hash, groupId, groundIdWithSlash
+					CardConstants.snippetUrlKey, new UrlGenerator(dataPrefix + "{3}", "snippet"),// 0,1: hash, 2,3: snippet
+					CardConstants.artifactUrlKey, new UrlGenerator(dataPrefix + "{3}/{2}/artifact/{4}", "groupId", "artifactId"),// 0,1: hash, 2,3: groupId, 4,5: artifactId
+					CardConstants.versionUrlKey, new UrlGenerator(dataPrefix + "{3}/{2}/artifact/{4}/version/{6}", "groupId", "artifactId", "version"),// 0,1: hash, 2,3: groupId, 4,5: artifactId, 6,7: version
+					CardConstants.digestUrlKey, new UrlGenerator(dataPrefix + "{3}/{2}/artifact/{4}/version/{6}/digest/{8}", "groupId", "artifactId", "version", CardConstants.digest),// 0,1: hash, 2,3: groupId, 4,5: artifactId, 6,7: version, 8,9: digest
+					CardConstants.jarUrlKey, new UrlGenerator(prefix+"/jars/{0}/{1}/{2}", CardConstants.digest),// 0,1: hash, 2,3: digest
+					CardConstants.userUrlKey, new UrlGenerator(prefix+"/users/guid/{0}/{1}/{2}", "notSure"));// hash and guid
 			return urlGeneratorMap;
 		}
 

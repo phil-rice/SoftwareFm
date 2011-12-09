@@ -14,6 +14,7 @@ import org.softwareFm.card.card.LineItem;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
+import org.softwareFm.card.editors.IValueComposite;
 import org.softwareFm.card.title.Title;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.okCancel.OkCancel;

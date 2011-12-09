@@ -45,12 +45,22 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	protected IHttpClient httpClient;
 	protected final long delay = 200000;
 	protected MasterDetailSocial masterDetailSocial;
-	
-	protected final String rootUrl = "/tests/"+ getClass().getSimpleName();
+
+	protected final String prefix = "/tests/" + getClass().getSimpleName();
+	protected final String rootUrl = prefix+"/data";
 	protected IResourceGetter rawResourceGetter;
 
 	public static interface CardHolderAndCardCallback {
 		void process(ICardHolder cardHolder, ICard card) throws Exception;
+	}
+
+	static interface IAddingCallback<T> {
+		/** will get called twice. If added is false, card is the initial card, if false card is the added card */
+		void process(boolean added, T data, IAdding adding);
+	}
+
+	static interface IAdding {
+		void tableItem(int index, String name, String existing, String newValue);
 	}
 
 	protected void displayCard(final String url, final CardHolderAndCardCallback cardHolderAndCardCallback) {
@@ -141,16 +151,18 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		super.setUp();
 		httpClient = IHttpClient.Utils.builder().withCredentials(HttpClientConstants.userName, HttpClientConstants.password);
 		repository = new RepositoryFacard(httpClient, "1.json");
-		cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(display, new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(shell, repository)));
+		cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().//
+				configure(display, new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(shell, repository))).//
+				withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap(prefix, "data"));
 		masterDetailSocial = new MasterDetailSocial(shell, SWT.NULL);
 		explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, IPlayListGetter.Utils.noPlayListGetter(), service);
 		IBrowserConfigurator.Utils.configueWithUrlRssSnippetAndTweet(explorer);
-		if (!addedArtifact){
-			httpClient.delete(rootUrl+artifactUrl).execute(IResponseCallback.Utils.noCallback()).get();
-			repository.post(rootUrl+artifactUrl, Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.artifact), IResponseCallback.Utils.noCallback()).get();
-			repository.post(rootUrl+artifactUrl+"/tutorial", Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), IResponseCallback.Utils.noCallback()).get();
-			repository.post(rootUrl+artifactUrl+"/tutorial/one", Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"), IResponseCallback.Utils.noCallback()).get();
-			repository.post(rootUrl+artifactUrl+"/tutorial/two", Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"), IResponseCallback.Utils.noCallback()).get();
+		if (!addedArtifact) {
+			httpClient.delete(rootUrl + artifactUrl).execute(IResponseCallback.Utils.noCallback()).get();
+			repository.post(rootUrl + artifactUrl, Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.artifact), IResponseCallback.Utils.noCallback()).get();
+			repository.post(rootUrl + artifactUrl + "/tutorial", Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), IResponseCallback.Utils.noCallback()).get();
+			repository.post(rootUrl + artifactUrl + "/tutorial/one", Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"), IResponseCallback.Utils.noCallback()).get();
+			repository.post(rootUrl + artifactUrl + "/tutorial/two", Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"), IResponseCallback.Utils.noCallback()).get();
 			addedArtifact = true;
 		}
 		rawResourceGetter = explorer.getCardConfig().resourceGetterFn.apply(null);

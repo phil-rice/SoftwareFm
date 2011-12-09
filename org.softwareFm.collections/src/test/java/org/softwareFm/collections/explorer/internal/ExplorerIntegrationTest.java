@@ -6,14 +6,20 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.card.editors.IValueComposite;
+import org.softwareFm.card.title.Title;
 import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.collections.explorer.ExplorerAdapter;
 import org.softwareFm.collections.menu.ICardMenuItemHandler;
@@ -21,6 +27,7 @@ import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.strings.Strings;
 
 public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 	public void testShowContentOnlyAsksForOneMainUrlFromCardDataStore() {
@@ -76,13 +83,66 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 
 		explorer.displayUnrecognisedJar(new File("a/b/c/artifact-1.0.0.jar"), "someDigest");
 		Text text = (Text) masterDetailSocial.getMasterContent();
-		String expected = IResourceGetter.Utils.getOrException(rawResourceGetter, CollectionConstants.jarNotRecognised).replace("\n", "\f\r");
-		assertEquals(expected.trim(), text.getText());
+		String expected = Strings.removeNewLines(IResourceGetter.Utils.getOrException(rawResourceGetter, CollectionConstants.jarNotRecognisedText));
+		assertEquals(expected.trim(), Strings.removeNewLines(text.getText()));
 
 		assertSame(detail.getControl(), masterDetailSocial.getDetailContent());
 		assertSame(social.getControl(), masterDetailSocial.getSocialContent());
 	}
 
+	@SuppressWarnings("unchecked")
+	public void testClickingOnUnrecognisedJarOpensEditor(){
+		explorer.displayUnrecognisedJar(new File("a/b/c/artifact-1.0.0.jar"), "someDigest");
+		Text text = (Text) masterDetailSocial.getMasterContent();
+		text.notifyListeners(SWT.MouseUp, new Event());
+		Control detailContent = masterDetailSocial.getDetailContent();
+		final IValueComposite<Table> composite = (IValueComposite<Table>) detailContent;
+		Title title = composite.getTitle();
+		String jarTitle = IResourceGetter.Utils.getOrException(rawResourceGetter, CollectionConstants.jarNotRecognisedTitle);
+		assertEquals(jarTitle, title.getText());
+		Table editor = composite.getEditor();
+		check(editor, new IAddingCallback<Table>() {
+			@Override
+			public void process(boolean added, Table card, IAdding adding) {
+				adding.tableItem(0, "Group Id", "Please specify the group id", "some.group.id");
+				adding.tableItem(1, "Artifact Id", "artifact", "someArtifact");
+				adding.tableItem(2, "Version", "1.0.0", "1.2.0");
+			}
+		});
+		doSomethingAndWaitForCardDataStoreToFinish(new Runnable() {
+			@Override
+			public void run() {
+				Button okButton = composite.getOkCancel().okButton;
+				okButton.notifyListeners(SWT.Selection, new Event());
+			}
+		}, new CardHolderAndCardCallback() {
+			@Override
+			public void process(ICardHolder cardHolder, ICard card) throws Exception {
+				assertEquals(rootUrl+"/some/group/id/some.group.id/artifact/someArtifact", card.url());
+			}
+
+		});
+		
+	}
+	
+	
+	private void check(final Table cardTable, IAddingCallback<Table> addingCallback){
+		addingCallback.process(false, cardTable, new IAdding() {
+			@Override
+			public void tableItem(int index, String name, String existing, String newValue) {
+				String prettyName = Strings.camelCaseToPretty(name);
+				TableItem item = cardTable.getItem(index);
+				assertEquals(prettyName, item.getText(0));
+				assertEquals(existing, item.getText(1));
+				cardTable.select(index);
+				cardTable.notifyListeners(SWT.Selection, new Event());
+				Text text = Lists.getOnly(Swts.findChildrenWithClass(cardTable, Text.class));
+				assertEquals(existing, text.getText());
+				text.setText(newValue);
+			}
+		});
+	}
+	
 	public void testTitlesAndRightClickMenusText() {
 		String view = "View";
 		String edit = "Edit";
