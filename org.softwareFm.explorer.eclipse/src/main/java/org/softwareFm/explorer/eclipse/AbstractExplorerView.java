@@ -6,27 +6,21 @@
 package org.softwareFm.explorer.eclipse;
 
 import java.io.File;
-import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
-import org.softwareFm.card.dataStore.ICardDataStoreCallback;
 import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
 import org.softwareFm.display.browser.IBrowserConfigurator;
 import org.softwareFm.display.constants.DisplayConstants;
-import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
-import org.softwareFm.jdtBinding.api.JdtConstants;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.services.IServiceExecutor;
 
@@ -54,51 +48,27 @@ public abstract class AbstractExplorerView extends ViewPart {
 		selectedBindingManager.addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
 			@Override
 			public void selectionOccured(final BindingRipperResult ripperResult) {
-				final String hexDigest = ripperResult.hexDigest;
-				IUrlGenerator jarUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.jarUrlKey);
-				String jarUrl = jarUrlGenerator.findUrlFor(Maps.stringObjectMap(JdtConstants.hexDigestKey, hexDigest));
-				// System.out.println("Digest: " + hexDigest + "\n Url: " + jarUrl);
-				cardConfig.cardDataStore.processDataFor(jarUrl, new ICardDataStoreCallback<Void>() {
-					@Override
-					public Void process(String jarUrl, Map<String, Object> result) throws Exception {
-						AbstractExplorerView.this.process(cardConfig, explorer, ripperResult, result);
-						return null;
-					}
-
-					@Override
-					public Void noData(String url) throws Exception {
-						if (ripperResult != null && ripperResult.path != null)
-							processNoData(cardConfig, explorer, resourceGetter, ripperResult);
-						return null;
-					}
-
-				});
+				AbstractExplorerView.this.selectionOccured(cardConfig, explorer, resourceGetter, ripperResult);
 			}
+
 		});
 		masterDetailSocial.hideMaster();
 		explorer.processUrl(DisplayConstants.browserFeedType, welcomeUrl);
 
 	}
 
+	abstract protected void selectionOccured(final CardConfig cardConfig, final IExplorer explorer, final IResourceGetter resourceGetter, final BindingRipperResult ripperResult);
+
 	abstract protected void configurePopupMenu(String popupMenuId, final IExplorer explorer);
 
-	 protected String getPopupMenuId(){
-		 return getClass().getSimpleName();
-	 }
+	protected String getPopupMenuId() {
+		return getClass().getSimpleName();
+	}
 
 	protected CardConfig makeCardConfig(Composite parent) {
 		return Activator.getDefault().getCardConfig(parent);
 	}
 
-	protected void process(final CardConfig cardConfig, final IExplorer explorer, final BindingRipperResult ripperResult, Map<String, Object> result) {
-		String artifactUrl = makeUrl(ripperResult, cardConfig, result);
-		explorer.displayCard(artifactUrl, new CardAndCollectionDataStoreAdapter());
-		showRadioChannelFor(cardConfig, explorer, artifactUrl);
-	}
-
-	protected void showRadioChannelFor(CardConfig cardConfig, final IExplorer explorer, String artifactUrl) {
-		explorer.selectAndNext(artifactUrl);
-	}
 
 	protected void processNoData(CardConfig cardConfig, final IExplorer explorer, final IResourceGetter resourceGetter, final BindingRipperResult ripperResult) {
 		final String hexDigest = ripperResult.hexDigest;
@@ -110,11 +80,7 @@ public abstract class AbstractExplorerView extends ViewPart {
 		}
 	}
 
-	protected String makeUrl(BindingRipperResult ripperResult, final CardConfig cardConfig, Map<String, Object> result) {
-		IUrlGenerator cardUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.artifactUrlKey);
-		String artifactUrl = cardUrlGenerator.findUrlFor(result);
-		return artifactUrl;
-	}
+	
 
 	@Override
 	public void setFocus() {

@@ -6,7 +6,7 @@
 package org.softwareFm.card.constants;
 
 public class CardConstants {
-	public static final String softwareFmPrefix = "softwareFm";
+	public static final String softwareFmPrefix = "/softwareFm";
 	public static final String dataPrefix = "data";
 	public static final String buttonTestTitle = "button.test.title";
 

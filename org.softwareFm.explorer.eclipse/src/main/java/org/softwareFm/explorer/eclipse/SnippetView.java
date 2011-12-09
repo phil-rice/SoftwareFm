@@ -5,9 +5,6 @@
 
 package org.softwareFm.explorer.eclipse;
 
-import java.util.Map;
-import java.util.Random;
-
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.configuration.CardConfig;
@@ -18,7 +15,6 @@ import org.softwareFm.collections.menu.ICardMenuItemHandler;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.jdtBinding.api.ExpressionData;
 import org.softwareFm.jdtBinding.api.IExpressionCategoriser;
-import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class SnippetView extends AbstractExplorerView {
@@ -26,12 +22,23 @@ public class SnippetView extends AbstractExplorerView {
 	IExpressionCategoriser categoriser = IExpressionCategoriser.Utils.categoriser();
 
 	@Override
+	protected void selectionOccured(CardConfig cardConfig, final IExplorer explorer, IResourceGetter resourceGetter, BindingRipperResult ripperResult) {
+		final String artifactUrl = makeUrl(ripperResult, cardConfig);
+		if (artifactUrl != null)
+			explorer.displayCard(artifactUrl, new CardAndCollectionDataStoreAdapter() {
+				@Override
+				public void finished(ICardHolder cardHolder, String url, ICard card) {
+					explorer.showRandomSnippetFor(artifactUrl);
+				}
+			});
+	}
+
+	@Override
 	protected void configurePopupMenu(String popupMenuId, IExplorer explorer) {
 		ICardMenuItemHandler.Utils.addSnippetMenuItemHandlers(explorer, popupMenuId);
 	}
 
-	@Override
-	protected String makeUrl(BindingRipperResult ripperResult, final CardConfig cardConfig, Map<String, Object> data) {
+	protected String makeUrl(BindingRipperResult ripperResult, final CardConfig cardConfig) {
 		ExpressionData key = categoriser.categorise(ripperResult.expression);
 		if (key == null)
 			return null;
@@ -43,28 +50,6 @@ public class SnippetView extends AbstractExplorerView {
 			return baseUrl + "/snippet";
 	}
 
-	Random random = new Random(System.currentTimeMillis());
 
-	@Override
-	protected void process(CardConfig cardConfig, final IExplorer explorer, BindingRipperResult ripperResult, Map<String, Object> result) {
-		String artifactUrl = makeUrl(ripperResult, cardConfig, result);
-		if (artifactUrl != null)
-			explorer.displayCard(artifactUrl, new CardAndCollectionDataStoreAdapter() {
-				@Override
-				public void finished(ICardHolder cardHolder, String url, ICard card) {
-					explorer.showRandomContent(card);
-				}
-			});
-	}
-
-	@Override
-	protected void showRadioChannelFor(CardConfig cardConfig, IExplorer explorer, String artifactUrl) {
-		explorer.showRandomSnippetFor(artifactUrl);
-	}
-
-	@Override
-	protected void processNoData(CardConfig cardConfig, IExplorer explorer, IResourceGetter resourceGetter, BindingRipperResult ripperResult) {
-		process(cardConfig, explorer, ripperResult, Maps.stringObjectLinkedMap());
-	}
 
 }

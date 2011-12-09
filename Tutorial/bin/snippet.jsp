@@ -5,11 +5,8 @@
 <%        ValueMap properties = resource.adaptTo(ValueMap.class); %>
 
 
-
-
-
 <html>
-        <body>
+        <body style="background-color:#ffffcc;">
            <h1><%= properties.get("title") %></h1>
            <pre>
 <%= properties.get("content") %>

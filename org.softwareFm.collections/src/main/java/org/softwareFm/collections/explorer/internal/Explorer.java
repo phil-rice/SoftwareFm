@@ -371,12 +371,12 @@ public class Explorer implements IExplorer {
 
 	private void addUnrecognisedJar(final String digest, final Map<String, Object> startData) {
 		masterDetailSocial.showSocial();
-		String thankYou = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn,CollectionConstants.unrecognisedJarCardType, CollectionConstants.unrecognisedJarThankYouCardType);
+		String thankYou = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, CollectionConstants.unrecognisedJarCardType, CollectionConstants.unrecognisedJarThankYouCardType);
 		masterDetailSocial.createAndShowMaster(Swts.labelFn(thankYou));
 		masterDetailSocial.createAndShowDetail(new IFunction1<Composite, IValueEditor>() {
 			@Override
 			public IValueEditor apply(Composite from) throws Exception {
-				String jarTitle = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn,null, CollectionConstants.jarNotRecognisedTitle);
+				String jarTitle = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null, CollectionConstants.jarNotRecognisedTitle);
 				return IValueEditor.Utils.cardEditorWithLayout(from, cardConfig, jarTitle, CollectionConstants.unrecognisedJarCardType, "", startData, new ICardEditorCallback() {
 					@Override
 					public void ok(ICardData cardData) {
@@ -733,5 +733,12 @@ public class Explorer implements IExplorer {
 
 	public BrowserAndNavBar getBrowser() {
 		return browser;
+	}
+
+	@Override
+	public void displayNotAJar() {
+		masterDetailSocial.showMaster();
+		String text = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null, CollectionConstants.fileNotAJarText);
+		masterDetailSocial.createAndShowMaster(Swts.labelFn(text));
 	}
 }

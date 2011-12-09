@@ -96,11 +96,13 @@ public class SelectedArtifactSelectionManager implements ISelectedBindingManager
 	}
 
 	static ITypeRoot getJavaInput(IEditorPart part) {
-		IEditorInput editorInput = part.getEditorInput();
-		if (editorInput != null) {
-			IJavaElement input = JavaUI.getEditorInputJavaElement(editorInput);
-			if (input instanceof ITypeRoot) {
-				return (ITypeRoot) input;
+		if (part != null) {
+			IEditorInput editorInput = part.getEditorInput();
+			if (editorInput != null) {
+				IJavaElement input = JavaUI.getEditorInputJavaElement(editorInput);
+				if (input instanceof ITypeRoot) {
+					return (ITypeRoot) input;
+				}
 			}
 		}
 		return null;
