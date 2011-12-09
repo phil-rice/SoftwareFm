@@ -32,37 +32,39 @@ public class NewJarImporterTest extends TestCase {
 	private CardConfig cardConfig;
 	private final Map<String, Map<String, Object>> actualUrlToMap = Maps.newMap(LinkedHashMap.class);
 	private final AtomicInteger count = new AtomicInteger();
+	private String root;
 
 	@Test
 	public void test() {
 		NewJarImporter newJarImporter = new NewJarImporter(cardConfig, "found - text", "012345", "g", "a", "v");
-		MemoryCallback<String> memory = ICallback.Utils.<String>memory();
+		MemoryCallback<String> memory = ICallback.Utils.<String> memory();
 		newJarImporter.process(memory);
 		assertEquals(Maps.makeLinkedMap(//
-				"/softwareFm/jars/01/23/012345", //
+				root + "/jars/01/23/012345", //
 				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.collection, CollectionConstants.groupId, "g", CollectionConstants.artifactId, "a", CardConstants.version, "v"),//
-				"/prefix/g/g", //
+				root + "/prefix/g/g", //
 				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.group, CollectionConstants.groupId, "g"),//
-				"/prefix/g/g/artifact", //
+				root + "/prefix/g/g/artifact", //
 				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.collection),//
-				"/prefix/g/g/artifact/a", //
+				root + "/prefix/g/g/artifact/a", //
 				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.artifact),//
-				"/prefix/g/g/artifact/a/version", //
+				root + "/prefix/g/g/artifact/a/version", //
 				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.collection),//
-				"/prefix/g/g/artifact/a/version/v", //
+				root + "/prefix/g/g/artifact/a/version/v", //
 				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.version, CollectionConstants.groupId, "g", CollectionConstants.artifactId, "a", CollectionConstants.version, "v"),//
-				"/prefix/g/g/artifact/a/version/v/digest", //
+				root + "/prefix/g/g/artifact/a/version/v/digest", //
 				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.collection),//
-				"/prefix/g/g/artifact/a/version/v/digest/012345", //
+				root + "/prefix/g/g/artifact/a/version/v/digest/012345", //
 				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.versionJar, CardConstants.digest, "012345", CardConstants.found, "found - text")),//
 				actualUrlToMap);
-		assertEquals("/prefix/g/g/artifact/a", memory.getOnlyResult());
+		assertEquals(root + "/prefix/g/g/artifact/a", memory.getOnlyResult());
 		assertEquals(actualUrlToMap.size(), count.get());
 	}
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		root = "tests/" + getClass().getSimpleName();
 		cardConfig = new CardConfig(ICardFactory.Utils.cardFactory(), //
 				new CardDataStoreMock(CardDataStoreFixture.dataForMocks) {
 					@Override
@@ -72,7 +74,7 @@ public class NewJarImporterTest extends TestCase {
 						callback.afterEdit(url);
 						return Futures.doneFuture(null);
 					}
-				}).withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap("tests/"+getClass().getSimpleName(),"prefix"));
+				}).withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap(root, "prefix"));
 	}
 
 }

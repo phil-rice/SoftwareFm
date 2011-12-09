@@ -27,15 +27,12 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 
 
 	public void testAddingDocumentation() {
-		checkAdding("documentation", 1, "name", new IAddingCallback<ICard>() {
+		checkAdding("documentation", 3,null, new IAddingCallback<ICard>() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
-				adding.tableItem(0, "name", pleaseAddAName, "some Name");
-				adding.tableItem(1, "description", pleaseAddADescription, "someDescription");
-				adding.tableItem(2, "email", "<Add email>", "someEmail");
-				adding.tableItem(3, "subscribe", "<Add email address used to subscribe>", "someSubscribe");
-				adding.tableItem(4, "unsubscribe", "<Add email address used to unsubscribe> ", "someUnsubscribe");
-				adding.tableItem(5, "url", "", "someUrl");
+				adding.tableItem(0, "title", "", "some Title");
+				adding.tableItem(1, "url", unknown, "someEmail");
+				adding.tableItem(2, "description", pleaseAddADescription, "someDescription");
 			}
 		});
 	}
@@ -54,12 +51,13 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 	}
 
 	public void testAddingTutorials() {
-		checkAdding("tutorial", "Tutorials", 3, null, new IAddingCallback<ICard>() {
+		checkAdding("tutorial", "Tutorials", 4, null, new IAddingCallback<ICard>() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
 				adding.tableItem(0, "title", "", "someTitle");
 				adding.tableItem(1, "url", unknown, "someUrl");
 				adding.tableItem(2, "description", pleaseAddADescription, "someDescription");
+				adding.tableItem(3, "author", "", "someAuthor");
 			}
 		});
 	}

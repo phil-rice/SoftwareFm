@@ -13,7 +13,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardHolder;
@@ -30,6 +29,49 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
 
 public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
+	
+	public void testTestAddingSnippet() {
+		displayCard(snippetUrl, new CardHolderAndCardCallback() {
+			
+			@Override
+			public void process(ICardHolder cardHolder, ICard card) throws Exception {
+				final Menu menu = new Menu(shell);
+				Table table = card.getTable();
+				cardConfig.popupMenuService.contributeTo("popupmenuid", new Event(), menu, card);
+				System.out.println(menu);
+				System.out.println();
+			}
+		});
+
+		// explorer.displayCard(artifactUrl, new CardAndCollectionDataStoreAdapter() {
+		// explorer.showAddSnippetEditor(card);
+		// final IValueComposite<Table> composite = (IValueComposite<Table>) masterDetailSocial.getDetailContent();
+		// Table table = composite.getEditor();
+		// check(table, new IAddingCallback<Table>() {
+		// @Override
+		// public void process(boolean added, Table data, IAdding adding) {
+		// adding.tableItem(0, "Title", "", "someTitle");
+		// adding.tableItem(1, "Description", "<Please add a description>", "someDescription");
+		// adding.tableItem(2, "Content", "", "someContent");
+		// }
+		// });
+		// assertEquals(3, table.getItemCount());
+		// doSomethingAndWaitForCardDataStoreToFinish(new Runnable() {
+		// @Override
+		// public void run() {
+		// OkCancel okCancel = composite.getOkCancel();
+		// Button okButton = okCancel.okButton;
+		// okButton.notifyListeners(SWT.Selection, new Event());
+		// }
+		// }, new CardHolderAndCardCallback() {
+		// @Override
+		// public void process(ICardHolder cardHolder, ICard card) throws Exception {
+		// explorer.getBrowser().processUrl(DisplayConstants.snippetFeedType, card.url());
+		// assertEquals(explorer.getBrowser().getControl(), masterDetailSocial.getDetailContent());
+		// }
+		// });
+	}
+	
 	public void testShowContentOnlyAsksForOneMainUrlFromCardDataStore() {
 		final AtomicInteger count = new AtomicInteger();
 		displayCard(AbstractExplorerIntegrationTest.artifactUrl, new CardHolderAndCardCallback() {
@@ -90,8 +132,10 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 		assertSame(social.getControl(), masterDetailSocial.getSocialContent());
 	}
 
+	
+
 	@SuppressWarnings("unchecked")
-	public void testClickingOnUnrecognisedJarOpensEditor(){
+	public void testClickingOnUnrecognisedJarOpensEditor() {
 		explorer.displayUnrecognisedJar(new File("a/b/c/artifact-1.0.0.jar"), "someDigest");
 		Text text = (Text) masterDetailSocial.getMasterContent();
 		text.notifyListeners(SWT.MouseUp, new Event());
@@ -101,7 +145,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 		String jarTitle = IResourceGetter.Utils.getOrException(rawResourceGetter, CollectionConstants.jarNotRecognisedTitle);
 		assertEquals(jarTitle, title.getText());
 		Table editor = composite.getEditor();
-		check(editor, new IAddingCallback<Table>() {
+		checkAndEdit(editor, new IAddingCallback<Table>() {
 			@Override
 			public void process(boolean added, Table card, IAdding adding) {
 				adding.tableItem(0, "Group Id", "Please specify the group id", "some.group.id");
@@ -118,31 +162,13 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 		}, new CardHolderAndCardCallback() {
 			@Override
 			public void process(ICardHolder cardHolder, ICard card) throws Exception {
-				assertEquals(rootUrl+"/some/group/id/some.group.id/artifact/someArtifact", card.url());
+				assertEquals(rootUrl + "/some/group/id/some.group.id/artifact/someArtifact", card.url());
 			}
 
 		});
-		
+
 	}
-	
-	
-	private void check(final Table cardTable, IAddingCallback<Table> addingCallback){
-		addingCallback.process(false, cardTable, new IAdding() {
-			@Override
-			public void tableItem(int index, String name, String existing, String newValue) {
-				String prettyName = Strings.camelCaseToPretty(name);
-				TableItem item = cardTable.getItem(index);
-				assertEquals(prettyName, item.getText(0));
-				assertEquals(existing, item.getText(1));
-				cardTable.select(index);
-				cardTable.notifyListeners(SWT.Selection, new Event());
-				Text text = Lists.getOnly(Swts.findChildrenWithClass(cardTable, Text.class));
-				assertEquals(existing, text.getText());
-				text.setText(newValue);
-			}
-		});
-	}
-	
+
 	public void testTitlesAndRightClickMenusText() {
 		String view = "View";
 		String edit = "Edit";

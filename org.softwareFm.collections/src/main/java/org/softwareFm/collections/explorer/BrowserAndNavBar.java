@@ -130,5 +130,9 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 	public Composite getComposite() {
 		return content;
 	}
+	
+	public PlayItem playItem(){
+		return content.navNextHistoryPrev.getHistory().last();
+	}
 
 }

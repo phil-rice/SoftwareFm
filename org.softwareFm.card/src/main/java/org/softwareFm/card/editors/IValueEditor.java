@@ -15,8 +15,10 @@ import org.softwareFm.card.editors.internal.CardEditorLayout;
 import org.softwareFm.card.editors.internal.StyledTextEditor;
 import org.softwareFm.card.editors.internal.TextEditor;
 import org.softwareFm.card.editors.internal.ValueEditorLayout;
+import org.softwareFm.card.modifiers.ICardDataModifier;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.composites.IHasComposite;
+import org.softwareFm.utilities.collections.Lists;
 
 public interface IValueEditor extends IHasComposite {
 
@@ -33,7 +35,8 @@ public interface IValueEditor extends IHasComposite {
 		}
 		
 		public static IValueEditor cardEditorWithLayout(Composite parent, CardConfig cardConfig, String title, String cardType, String url, Map<String, Object> data, ICardEditorCallback callback){
-			CardEditor editor = new CardEditor(parent, cardConfig, title, cardType, url, data, callback);
+			CardConfig withRemoveLists = cardConfig.withCardDataModifiers(Lists.append(cardConfig.cardDataModifiers, ICardDataModifier.Utils.hideCollections()));
+			CardEditor editor = new CardEditor(parent, withRemoveLists, title, cardType, url, data, callback);
 			editor.getComposite().setLayout(new CardEditorLayout());
 			return editor;
 		}

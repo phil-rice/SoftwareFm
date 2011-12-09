@@ -41,7 +41,6 @@ import org.softwareFm.card.editors.ICardEditorCallback;
 import org.softwareFm.card.editors.IEditorDetailAdder;
 import org.softwareFm.card.editors.IValueEditor;
 import org.softwareFm.card.navigation.internal.NavNextHistoryPrevConfig;
-import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.collections.explorer.BrowserAndNavBar;
@@ -200,63 +199,56 @@ public class Explorer implements IExplorer {
 
 	@Override
 	public void showAddSnippetEditor(final ICard card) {
-		IValueEditor editor = masterDetailSocial.createDetail(new IFunction1<Composite, IValueEditor>() {
+		final IMutableCardDataStore store = (IMutableCardDataStore) card.getCardConfig().cardDataStore;
+		final String lastSegment = Strings.lastSegment(card.url(), "/");
+		masterDetailSocial.showSocial();
+		masterDetailSocial.createAndShowDetail(new IFunction1<Composite, IValueEditor>() {
 			@Override
 			public IValueEditor apply(Composite from) throws Exception {
-				return IValueEditor.Utils.textEditorWithLayout(from, card.getCardConfig(), card.url(), card.cardType(), "snippet", "", new IDetailsFactoryCallback() {
-					private final IDetailsFactoryCallback callback = this;
-
+				return IValueEditor.Utils.cardEditorWithLayout(from, cardConfig, "Snippet", CardConstants.snippet, card.url(), Maps.stringObjectMap(), new ICardEditorCallback() {
 					@Override
-					public void updateDataStore(final IMutableCardDataStore store, String url, String key, final Object value) {
-						final String collectionUrl = url;
-						store.processDataFor(collectionUrl, new ICardDataStoreCallback<Void>() {
+					public void ok(final ICardData cardData) {
+						final String fragment = UUID.randomUUID().toString();
+						String url = cardData.url();
+						Map<String, Object> data = cardData.data();
+						IAfterEditCallback callback = new IAfterEditCallback() {
 							@Override
-							public Void process(final String url, Map<String, Object> data) throws Exception {
-								createNewItem(store, "snippet", Strings.nullSafeToString(value), new IFunction1<String, String>() {
+							public void afterEdit(String url) {
+								displayCard(card.url(), new CardAndCollectionDataStoreAdapter(){
 									@Override
-									public String apply(String from) throws Exception {
-										String result = url + "/" + from;
-										return result;
-									}
-								}, callback);
-								return null;
-							}
-
-							@Override
-							public Void noData(final String url) throws Exception {
-								final Map<String, Object> newData = Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection);
-								store.put(url, newData, new IAfterEditCallback() {
-									@Override
-									public void afterEdit(String url) {
-										try {
-											process(url, newData);
-										} catch (Exception e) {
-											throw WrappedException.wrap(e);
+									public void finished(ICardHolder cardHolder, String url, ICard card) throws Exception {
+										Table table = card.getTable();
+										for (int i = 0; i<table.getItemCount();i++){
+											TableItem item= table.getItem(i);
+											String key = (String) item.getData();
+											if (fragment.equals(key))
+												table.select(i);
+											
 										}
 									}
 								});
-								return null;
+								browser.processUrl(DisplayConstants.snippetFeedType, url );
+								masterDetailSocial.setDetail(browser.getControl());
 							}
-						});
+						};
+						if (lastSegment.equals(CardConstants.snippet)) {
+							IMutableCardDataStore.Utils.addCollectionItemToCollection(store, url, CardConstants.snippet, fragment, data, callback);
+						} else
+							IMutableCardDataStore.Utils.addCollectionItemToBase(store, url, CardConstants.snippet, fragment, data, callback);
 					}
 
 					@Override
-					public void afterEdit(String url) {
-						ICallback.Utils.call(callbackToGotoUrlAndUpdateDetails, url);
+					public void cancel(ICardData cardData) {
 					}
 
 					@Override
-					public void gotData(Control control) {
+					public boolean canOk(Map<String, Object> data) {
+						return true;
 					}
-
-					@Override
-					public void cardSelected(String cardUrl) {
-					}
-
-				}, TitleSpec.noTitleSpec(from.getBackground()));
+				});
 			}
-		}, false);
-		masterDetailSocial.setDetail(editor.getControl());
+		});
+
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package org.softwareFm.collections.explorer.internal;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.Assert;
 
@@ -11,6 +12,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.ICardHolder;
@@ -24,19 +26,23 @@ import org.softwareFm.collections.explorer.ExplorerAdapter;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.display.browser.IBrowserConfigurator;
 import org.softwareFm.display.swt.SwtAndServiceTest;
+import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.constants.HttpClientConstants;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.repositoryFacard.impl.RepositoryFacard;
+import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.strings.Strings;
 import org.softwareFm.utilities.tests.INeedsServerTest;
 
 /** These tests go out to software fm, so they are much more fragile */
 abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest implements INeedsServerTest {
 
 	final static String artifactUrl = "/ant/ant/artifact/ant";
+	final static String snippetUrl = "/java/io/File/snippet";
 	static boolean addedArtifact = false;
 
 	protected CardConfig cardConfig;
@@ -47,7 +53,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	protected MasterDetailSocial masterDetailSocial;
 
 	protected final String prefix = "/tests/" + getClass().getSimpleName();
-	protected final String rootUrl = prefix+"/data";
+	protected final String rootUrl = prefix + "/data";
 	protected IResourceGetter rawResourceGetter;
 
 	public static interface CardHolderAndCardCallback {
@@ -73,19 +79,22 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 
 	}
 
-	protected void doSomethingAndWaitForCardDataStoreToFinish(Runnable something, final CardHolderAndCardCallback cardHolderAndCardCallback) {
+	protected ICard doSomethingAndWaitForCardDataStoreToFinish(Runnable something, final CardHolderAndCardCallback cardHolderAndCardCallback) {
 		final CountDownLatch latch = new CountDownLatch(1);
+		final AtomicReference<ICard> cardRef = new AtomicReference<ICard>();
 		explorer.addExplorerListener(new ExplorerAdapter() {
 			@Override
 			public void finished(ICardHolder cardHolder, String url, ICard card) throws Exception {
 				explorer.removeExplorerListener(this);
 				cardHolderAndCardCallback.process(cardHolder, card);
 				dispatchUntilQueueEmpty();
+				cardRef.set(card);
 				latch.countDown();
 			}
 		});
 		something.run();
 		dispatchUntilTimeoutOrLatch(latch, delay);
+		return cardRef.get();
 	}
 
 	protected void displayCardThenViewChild(String url, final String childTitle, final CardHolderAndCardCallback callback) {
@@ -146,6 +155,12 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		Assert.fail("Cannot find: " + title);
 	}
 
+	protected void checkTable(Table table, int i, String name, String value) {
+		assertEquals(name, table.getItem(i).getText(0));
+		assertEquals(value, table.getItem(i).getText(1));
+
+	}
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -159,10 +174,12 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		IBrowserConfigurator.Utils.configueWithUrlRssSnippetAndTweet(explorer);
 		if (!addedArtifact) {
 			httpClient.delete(rootUrl + artifactUrl).execute(IResponseCallback.Utils.noCallback()).get();
+			httpClient.delete(rootUrl + snippetUrl).execute(IResponseCallback.Utils.noCallback()).get();
 			repository.post(rootUrl + artifactUrl, Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.artifact), IResponseCallback.Utils.noCallback()).get();
 			repository.post(rootUrl + artifactUrl + "/tutorial", Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), IResponseCallback.Utils.noCallback()).get();
 			repository.post(rootUrl + artifactUrl + "/tutorial/one", Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"), IResponseCallback.Utils.noCallback()).get();
 			repository.post(rootUrl + artifactUrl + "/tutorial/two", Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"), IResponseCallback.Utils.noCallback()).get();
+			repository.post(rootUrl + snippetUrl, Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), IResponseCallback.Utils.noCallback()).get();
 			addedArtifact = true;
 		}
 		rawResourceGetter = explorer.getCardConfig().resourceGetterFn.apply(null);
@@ -172,5 +189,22 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	protected void tearDown() throws Exception {
 		repository.shutdown();
 		super.tearDown();
+	}
+
+	protected void checkAndEdit(final Table cardTable, IAddingCallback<Table> addingCallback) {
+		addingCallback.process(false, cardTable, new IAdding() {
+			@Override
+			public void tableItem(int index, String name, String existing, String newValue) {
+				String prettyName = Strings.camelCaseToPretty(name);
+				TableItem item = cardTable.getItem(index);
+				assertEquals(prettyName, item.getText(0));
+				assertEquals(existing, item.getText(1));
+				cardTable.select(index);
+				cardTable.notifyListeners(SWT.Selection, new Event());
+				Text text = Lists.getOnly(Swts.findChildrenWithClass(cardTable, Text.class));
+				assertEquals(existing, text.getText());
+				text.setText(newValue);
+			}
+		});
 	}
 }
