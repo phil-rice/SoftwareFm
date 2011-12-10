@@ -26,8 +26,10 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 	void displayUnrecognisedJar(File file, String digest);
 
 	void displayNotAJar();
+	
+	void displayComments(ICard card);
 
-	void displayComments(String url);
+	void displayHelpText(String url);
 
 	void addCardListener(ICardChangedListener listener);
 

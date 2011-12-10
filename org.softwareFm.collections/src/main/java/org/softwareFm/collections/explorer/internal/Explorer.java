@@ -42,6 +42,7 @@ import org.softwareFm.card.editors.IEditorDetailAdder;
 import org.softwareFm.card.editors.IValueEditor;
 import org.softwareFm.card.navigation.internal.NavNextHistoryPrevConfig;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
+import org.softwareFm.collections.comments.Comments;
 import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.collections.explorer.BrowserAndNavBar;
 import org.softwareFm.collections.explorer.HelpText;
@@ -78,6 +79,7 @@ public class Explorer implements IExplorer {
 	private BrowserAndNavBar browser;
 	private TimeLine timeLine;
 	private IHelpText helpText;
+	private Comments comments;
 
 	public Explorer(final CardConfig cardConfig, final String rootUrl, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter) {
 		this.cardConfig = cardConfig;
@@ -132,6 +134,12 @@ public class Explorer implements IExplorer {
 				}), service, timeLine);
 				browserAndNavBar.getComposite().setLayout(new BrowserAndNavBar.BrowserAndNavBarLayout());
 				return browserAndNavBar;
+			}
+		}, true);
+		comments = masterDetailSocial.createSocial(new IFunction1<Composite, Comments>() {
+			@Override
+			public Comments apply(Composite from) throws Exception {
+				return new Comments(from);
 			}
 		}, true);
 
@@ -447,7 +455,7 @@ public class Explorer implements IExplorer {
 	}
 
 	@Override
-	public void displayComments(final String url) {
+	public void displayHelpText(final String url) {
 		masterDetailSocial.createAndShowSocial(Swts.styledTextFn(url, SWT.WRAP));
 		masterDetailSocial.showSocial();
 	}
@@ -488,7 +496,6 @@ public class Explorer implements IExplorer {
 			}
 		}
 
-		masterDetailSocial.showSocial();
 		masterDetailSocial.createAndShowDetail(new IFunction1<Composite, IHasControl>() {
 			@Override
 			public IHasControl apply(Composite from) throws Exception {
@@ -498,11 +505,13 @@ public class Explorer implements IExplorer {
 			}
 
 		});
-		String cardType = card.cardType();
-		String helpKey = "help." + cardType + "." + key;
-		String help = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, cardType, helpKey);
-		masterDetailSocial.setSocial(helpText.getControl());
-		helpText.setText(Strings.nullSafeToString(help));
+		displayComments(card);
+		// masterDetailSocial.showSocial();
+		// String cardType = card.cardType();
+		// String helpKey = "help." + cardType + "." + key;
+		// String help = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, cardType, helpKey);
+		// masterDetailSocial.setSocial(helpText.getControl());
+		// helpText.setText(Strings.nullSafeToString(help));
 	}
 
 	private IDetailsFactoryCallback makeEditCallback(final ICard card) {
@@ -616,6 +625,13 @@ public class Explorer implements IExplorer {
 	@Override
 	public Composite getComposite() {
 		return masterDetailSocial.getComposite();
+	}
+
+	@Override
+	public void displayComments(ICard card) {
+		masterDetailSocial.showSocial();
+		comments.showCommentsFor(card);
+		masterDetailSocial.setSocial(comments.getControl());
 	}
 
 	@Override

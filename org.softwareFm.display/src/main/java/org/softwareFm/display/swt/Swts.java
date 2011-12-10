@@ -194,7 +194,7 @@ public class Swts {
 			try {
 				Display display = new Display();
 				Shell shell = new Shell(display);
-				shell.setSize(1300, 380);
+				shell.setSize(1300, 500);
 				shell.setText(title);
 				shell.setLayout(new FormLayout());
 				Composite composite = builder.apply(shell);

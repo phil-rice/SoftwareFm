@@ -16,5 +16,6 @@ public class CollectionConstants {
 	public static final String unrecognisedJarCardType = "unrecognised";
 	public static final String unrecognisedJarThankYouCardType = "jar.notRecognised.thankYou.text";
 	public static final String fileNotAJarText = "file.notAJar.text";
+	public static final String comment = "comment";
 
 }

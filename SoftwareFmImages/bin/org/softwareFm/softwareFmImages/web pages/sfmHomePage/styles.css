@@ -65,6 +65,24 @@ a:hover {
 	text-align: center;
 }
 
+.box4 {
+	background: url(images/development.jpg) no-repeat;
+	padding: 15px;
+	color: #FFF;
+	font-weight: 300;
+	text-align: center;
+}
+
+
+.box5 {
+	background: url(images/contact.jpg) no-repeat;
+	padding: 15px;
+	color: #FFF;
+	font-weight: 300;
+	text-align: center;
+}
+
+
 #column2 {
 	width: 470px;
 	margin: 0px;
