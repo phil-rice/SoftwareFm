@@ -139,7 +139,7 @@ public class Explorer implements IExplorer {
 		comments = masterDetailSocial.createSocial(new IFunction1<Composite, Comments>() {
 			@Override
 			public Comments apply(Composite from) throws Exception {
-				return new Comments(from);
+				return new Comments(from, cardConfig);
 			}
 		}, true);
 
@@ -506,12 +506,12 @@ public class Explorer implements IExplorer {
 
 		});
 		displayComments(card);
-		// masterDetailSocial.showSocial();
-		// String cardType = card.cardType();
-		// String helpKey = "help." + cardType + "." + key;
-		// String help = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, cardType, helpKey);
-		// masterDetailSocial.setSocial(helpText.getControl());
-		// helpText.setText(Strings.nullSafeToString(help));
+//		 masterDetailSocial.showSocial();
+//		 String cardType = card.cardType();
+//		 String helpKey = "help." + cardType + "." + key;
+//		 String help = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, cardType, helpKey);
+//		 masterDetailSocial.setSocial(helpText.getControl());
+//		 helpText.setText(Strings.nullSafeToString(help));
 	}
 
 	private IDetailsFactoryCallback makeEditCallback(final ICard card) {

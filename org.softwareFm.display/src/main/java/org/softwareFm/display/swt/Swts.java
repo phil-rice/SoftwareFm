@@ -331,6 +331,8 @@ public class Swts {
 
 	public static class Grid {
 
+		private static int titleHeight;
+
 		public static void addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(Composite composite, int margin) {
 			GridLayout layout = new GridLayout();
 			layout.marginWidth = margin;
@@ -794,6 +796,32 @@ public class Swts {
 			if (string.equals(button.getText()))
 				return button;
 		throw new IllegalArgumentException(MessageFormat.format(UtilityConstants.cannotFindButtonWithText, string, buttons));
+	}
+
+	public static Layout titleAndContentLayout(final int titleHeight) {
+		return new Layout() {
+
+			@Override
+			protected void layout(Composite composite, boolean flushCache) {
+				Control[] children = composite.getChildren();
+				assert children.length == 2;
+				Control title = children[0];
+				Control content = children[1];
+				Rectangle ca = composite.getClientArea();
+				title.setBounds(ca.x, ca.y, ca.width, titleHeight);
+				content.setBounds(ca.x, ca.y + titleHeight, ca.width, ca.height-titleHeight);
+			}
+
+			@Override
+			protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
+				Control[] children = composite.getChildren();
+				assert children.length == 2;
+				Control content = children[1];
+				Point size = content.computeSize(wHint, hHint);
+				return new Point(size.x, size.y + titleHeight);
+			}
+		};
+
 	}
 
 }

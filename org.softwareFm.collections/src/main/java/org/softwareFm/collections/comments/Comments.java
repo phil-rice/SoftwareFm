@@ -1,13 +1,16 @@
 package org.softwareFm.collections.comments;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -15,8 +18,11 @@ import org.softwareFm.card.card.ICardData;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.display.composites.IHasControl;
+import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.strings.Strings;
 
 public class Comments implements IHasControl {
 
@@ -26,17 +32,32 @@ public class Comments implements IHasControl {
 		private final Table table;
 		private final TableColumn titleColumn;
 		private final TableColumn textColumn;
+		private final CardConfig cc;
+		private final Composite body;
+		private final Label label;
 
-		public CommentsComposite(Composite parent) {
+		public CommentsComposite(Composite parent, CardConfig cardConfig) {
 			super(parent, SWT.NULL);
-			this.table = new Table(this, SWT.V_SCROLL);
+			this.cc = cardConfig;
+			this.body = new Composite(this, SWT.BORDER);
+			body.setLayout(Swts.titleAndContentLayout(cc.titleHeight));
+			label = new Label(body, SWT.NULL);
+			label.setText("Comments");
+			this.table = new Table(body, SWT.V_SCROLL|SWT.FULL_SELECTION);
 			this.titleColumn = new TableColumn(table, SWT.NONE);
 			this.textColumn = new TableColumn(table, SWT.NONE);
 		}
 
-		public void setInitialComments(Map<String, Object> map) {
+		@Override
+		public Rectangle getClientArea() {
+			Rectangle ca = super.getClientArea();
+			return new Rectangle(ca.x + cc.leftMargin, ca.y + cc.topMargin, ca.width - cc.leftMargin - cc.rightMargin, ca.height - cc.topMargin - cc.bottomMargin);
+		}
+
+		public void setInitialComments(String title, Map<String, Object> map) {
 			this.map.clear();
 			this.map.putAll(map);
+			label.setText(title);
 			updateDisplay();
 		}
 
@@ -61,8 +82,8 @@ public class Comments implements IHasControl {
 
 	private final CommentsComposite content;
 
-	public Comments(Composite parent) {
-		content = new CommentsComposite(parent);
+	public Comments(Composite parent, CardConfig cardConfig) {
+		content = new CommentsComposite(parent, cardConfig);
 		content.setLayout(new FillLayout());
 	}
 
@@ -70,10 +91,16 @@ public class Comments implements IHasControl {
 		CardConfig cardConfig = cardData.getCardConfig();
 		Object commentObject = cardData.data().get(CollectionConstants.comment);
 		List<String> comments = Lists.newList();
-		if (commentObject instanceof Map<?, ?>) {
-			Map<String, Object> map = (Map<String, Object>) commentObject;
-			content.setInitialComments(map);
-		}
+		if (commentObject instanceof Map<?, ?>)
+			setComment(cardData, cardConfig, CollectionConstants.commentsTitle, (Map<String, Object>) commentObject);
+		else
+			setComment(cardData, cardConfig, CollectionConstants.commentsNoTitle, Maps.stringObjectMap());
+	}
+
+	private void setComment(ICardData cardData, CardConfig cardConfig, String titleKey, Map<String, Object> map) {
+		String pattern = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardData.cardType(), titleKey);
+		String title = MessageFormat.format(pattern, cardData.url(), Strings.lastSegment(cardData.url(), "/"), cardData.cardType());
+		content.setInitialComments(title, map);
 	}
 
 	@Override
