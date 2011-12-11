@@ -44,6 +44,7 @@ public class Comments implements IHasControl {
 			label = new Label(body, SWT.NULL);
 			label.setText("Comments");
 			this.table = new Table(body, SWT.V_SCROLL|SWT.FULL_SELECTION);
+			table.setLinesVisible(true);
 			this.titleColumn = new TableColumn(table, SWT.NONE);
 			this.textColumn = new TableColumn(table, SWT.NONE);
 		}

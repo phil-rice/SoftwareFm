@@ -1,0 +1,152 @@
+@charset "UTF-8";
+/* CSS Document */
+
+
+body {
+	background: #F2F2F2 url(images/body-bg.jpg) top left repeat-x;
+	color: #555;
+	font-weight: 100;
+	font-size: 15px;
+	font-family: Arial, Helvetica, sans-serif;
+	margin: 0px;
+	padding: 0px;
+	}
+
+#wrapper {
+	width: 100%;
+	background: url(images/overlap-shapes.jpg) center top no-repeat;
+}
+
+a {
+	color: #036;
+}
+
+a:hover {
+	color: #C00;
+}
+
+#container {
+	width: 980px;
+	margin: 0 auto;
+	padding-top: 90px;
+	overflow: auto;
+	min-height: 1191px;	
+}
+
+* html #container {
+	height: 100%;
+}
+
+#column1 {
+	width: 200px;
+	margin: 0px;
+	float: left;
+}
+
+.box {
+	background-color: #FFF;
+	padding: 10px;
+	margin-bottom: 15px;
+	
+}
+
+.box2 {
+	background: url(images/box-bg.jpg);
+	padding: 15px;
+	color: #333;
+	font-weight: 300;
+}
+
+.box3 {
+	background: url(images/download.jpg) no-repeat;
+	padding: 15px;
+	color: #FFF;
+	font-weight: 300;
+	text-align: center;
+}
+
+.box4 {
+	background: url(images/development.jpg) no-repeat;
+	padding: 15px;
+	color: #FFF;
+	font-weight: 300;
+	text-align: center;
+}
+
+
+.box5 {
+	background: url(images/contact.jpg) no-repeat;
+	padding: 15px;
+	color: #FFF;
+	font-weight: 300;
+	text-align: center;
+}
+
+
+#column2 {
+	width: 470px;
+	margin: 0px;
+	margin-left: 15px;
+	float: left;
+	background-color: #FFF;
+	padding: 20px;
+}
+
+
+#column3 {
+	width: 200px;
+	margin: 0px;
+	margin-left: 15px;
+	float: left;
+	background-color: #FFF;
+	padding: 10px;
+}
+
+.logo {
+	margin-bottom: 25px;	
+}
+
+.circles {
+	float:left;
+	margin-right: 5px;
+}
+.globe {
+	float: right;
+	margin-left: 5px;
+}
+hr {
+	clear:both;
+	
+}
+
+h2 {
+		font-size: 18px;
+		font-weight: 300;
+		color:  #555;
+}
+#column2 h3, #column3 h3 {
+	color: #C00;
+	font-size: 19px;
+	border-bottom: 1px dotted #999;
+	padding-top: 8px;
+	padding-bottom: 10px;
+	margin:0px;
+	margin-bottom: 20px;
+}
+
+strong {
+	color: #C00;
+}
+
+
+.small {
+	font-size: 12px;
+}
+.medium {
+	font-size: 16px;
+}
+.large {
+	font-size: 18px;	
+	letter-spacing: 1px;
+	font-weight: 500;
+}
