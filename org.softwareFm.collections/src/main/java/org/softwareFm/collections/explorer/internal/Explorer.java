@@ -528,13 +528,13 @@ public class Explorer implements IExplorer {
 			}
 
 		});
-		displayComments(card);
-		// masterDetailSocial.showSocial();
-		// String cardType = card.cardType();
-		// String helpKey = "help." + cardType + "." + key;
-		// String help = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, cardType, helpKey);
-		// masterDetailSocial.setSocial(helpText.getControl());
-		// helpText.setText(Strings.nullSafeToString(help));
+//		displayComments(card);
+		 masterDetailSocial.showSocial();
+		 String cardType = card.cardType();
+		 String helpKey = "help." + cardType + "." + key;
+		 String help = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, cardType, helpKey);
+		 masterDetailSocial.setSocial(helpText.getControl());
+		 helpText.setText(Strings.nullSafeToString(help));
 	}
 
 	private IDetailsFactoryCallback makeEditCallback(final ICard card) {
