@@ -49,7 +49,7 @@ public class ExplorerUnit {
 					if (master != null)
 						explorer.displayCard(master, new CardAndCollectionDataStoreAdapter());
 					if (jar != null)
-						explorer.displayUnrecognisedJar(new File(jar.get("jar")), jar.get("digest"));
+						explorer.displayUnrecognisedJar(new File(jar.get("jar")), jar.get("digest"),"someProject");
 					if (browser != null)
 						explorer.processUrl(browser.get("feedType"), browser.get("url"));
 					if (social != null)

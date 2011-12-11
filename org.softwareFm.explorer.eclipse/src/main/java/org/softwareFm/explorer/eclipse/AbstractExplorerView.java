@@ -75,7 +75,7 @@ public abstract class AbstractExplorerView extends ViewPart {
 		final String unknownJarUrl = IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.webPageUnknownJarUrl);
 		File file = ripperResult.path.toFile();
 		if (Files.extension(file.toString()).equals("jar")) {
-			explorer.displayUnrecognisedJar(file, hexDigest);
+			explorer.displayUnrecognisedJar(file, hexDigest, ripperResult.javaProject.getElementName());
 			explorer.processUrl(DisplayConstants.browserFeedType, unknownJarUrl);
 		}
 	}

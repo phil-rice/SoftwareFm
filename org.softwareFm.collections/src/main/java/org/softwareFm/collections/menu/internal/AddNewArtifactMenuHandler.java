@@ -31,7 +31,8 @@ public class AddNewArtifactMenuHandler extends AbstractCardMenuHandler {
 
 	@Override
 	public void execute(ICard card, String key, MenuItem item) {
-		explorer.showAddNewArtifactEditor();
+		throw new IllegalStateException();
+//		explorer.showAddNewArtifactEditor();
 	}
 
 }

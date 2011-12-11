@@ -5,7 +5,9 @@
 
 package org.softwareFm.collections.explorer.internal;
 
+import java.awt.Desktop;
 import java.io.File;
+import java.net.URI;
 import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.List;
@@ -19,6 +21,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.card.card.ICard;
@@ -28,6 +31,7 @@ import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.card.ILineSelectedListener;
 import org.softwareFm.card.card.RightClickCategoryResult;
+import org.softwareFm.card.card.composites.TextInBorder;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
@@ -395,34 +399,53 @@ public class Explorer implements IExplorer {
 	}
 
 	@Override
-	public void displayUnrecognisedJar(final File file, final String digest) {
+	public void displayUnrecognisedJar(final File file, final String digest, final String projectName) {
 		masterDetailSocial.showMaster();
-		masterDetailSocial.createAndShowMaster(new IFunction1<Composite, JarDetails>() {
+		masterDetailSocial.createAndShowMaster(TextInBorder.makeText(SWT.WRAP | SWT.READ_ONLY, cardConfig, new Runnable() {
 			@Override
-			public JarDetails apply(Composite from) throws Exception {
-				return new JarDetails(from, Functions.call(cardConfig.resourceGetterFn, null), new Runnable() {
+			public void run() {
+				final Map<String, Object> startData = Maps.stringObjectMap(//
+						CollectionConstants.groupId, "Please specify the group id",//
+						CollectionConstants.artifactId, Strings.withoutVersion(file, "Please specify the artifact id"),//
+						CollectionConstants.version, Strings.versionPartOf(file, "Please specify the version"));
+				addUnrecognisedJar(file, digest, projectName, startData);
+			}
+		}, CollectionConstants.jarNotRecognisedText, file, file.getName(), projectName));
+	}
+
+	private void addUnrecognisedJar(final File file, final String digest, String projectName, final Map<String, Object> startData) {
+		masterDetailSocial.showSocial();
+		IFunction1<Composite, TextInBorder> text = TextInBorder.makeText(SWT.WRAP | SWT.READ_ONLY, cardConfig, CollectionConstants.unrecognisedJarThankYouCardType, file, file.getName(), projectName);
+		TextInBorder hasText = masterDetailSocial.createAndShowMaster(text);
+		hasText.setMenu(new IFunction1<Control, Menu>() {
+			@Override
+			public Menu apply(Control from) throws Exception {
+				Menu menu = new Menu(from);
+				IResourceGetter resourceGetter = cardConfig.resourceGetterFn.apply(null);
+				final String fileName = file.getName();
+				Swts.addMenu(menu, resourceGetter, CardConstants.menuItemBrowseJarKey, new Runnable() {
 					@Override
 					public void run() {
-						final Map<String, Object> startData = Maps.stringObjectMap(//
-								CollectionConstants.groupId, "Please specify the group id",//
-								CollectionConstants.artifactId, Strings.withoutVersion(file, "Please specify the artifact id"),//
-								CollectionConstants.version, Strings.versionPartOf(file, "Please specify the version"));
-						addUnrecognisedJar(digest, startData);
+						try {
+							Desktop.getDesktop().browse(new URI("http://www.google.co.uk/?hl=en&q=" + Strings.forUrl(fileName)));
+						} catch (Exception e) {
+							throw WrappedException.wrap(e);
+						}
 					}
 				});
+				Swts.addMenu(menu, resourceGetter, CardConstants.menuItemBrowseJarMavenKey, new Runnable() {
+					@Override
+					public void run() {
+						try {
+							Desktop.getDesktop().browse(new URI("http://www.google.co.uk/?hl=en&q=" + Strings.forUrl(fileName) + "+Maven"));
+						} catch (Exception e) {
+							throw WrappedException.wrap(e);
+						}
+					}
+				});
+				return menu;
 			}
 		});
-	}
-
-	@Override
-	public void showAddNewArtifactEditor() {
-		addUnrecognisedJar(null, Maps.stringObjectMap());
-	}
-
-	private void addUnrecognisedJar(final String digest, final Map<String, Object> startData) {
-		masterDetailSocial.showSocial();
-		String thankYou = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, CollectionConstants.unrecognisedJarCardType, CollectionConstants.unrecognisedJarThankYouCardType);
-		masterDetailSocial.createAndShowMaster(Swts.labelFn(thankYou));
 		masterDetailSocial.createAndShowDetail(new IFunction1<Composite, IValueEditor>() {
 			@Override
 			public IValueEditor apply(Composite from) throws Exception {
@@ -506,12 +529,12 @@ public class Explorer implements IExplorer {
 
 		});
 		displayComments(card);
-//		 masterDetailSocial.showSocial();
-//		 String cardType = card.cardType();
-//		 String helpKey = "help." + cardType + "." + key;
-//		 String help = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, cardType, helpKey);
-//		 masterDetailSocial.setSocial(helpText.getControl());
-//		 helpText.setText(Strings.nullSafeToString(help));
+		// masterDetailSocial.showSocial();
+		// String cardType = card.cardType();
+		// String helpKey = "help." + cardType + "." + key;
+		// String help = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, cardType, helpKey);
+		// masterDetailSocial.setSocial(helpText.getControl());
+		// helpText.setText(Strings.nullSafeToString(help));
 	}
 
 	private IDetailsFactoryCallback makeEditCallback(final ICard card) {

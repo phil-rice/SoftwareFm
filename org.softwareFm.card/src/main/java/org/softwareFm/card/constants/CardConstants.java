@@ -42,6 +42,9 @@ public class CardConstants {
 	public static final String menuItemBrowseText = "menuitem.browse.text";
 	public static final String menuItemExternalBrowseText = "menuitem.externalBrowse.text";
 
+	public static final String menuItemBrowseJarKey = "menuitem.browse.jar";
+	public static final String menuItemBrowseJarMavenKey = "menuitem.browseMaven.jar";
+
 	public static final String cardColorKey = "card.color";
 	public static final String indentTitleKey = "card.title.indent";
 	public static final String cardTitleIcon = "card.title.icon";
@@ -71,5 +74,6 @@ public class CardConstants {
 	public static final String webPageUnknownJarUrl = "webpage.unknownJar.url";
 	public static final String urlRogueValue = "<key>";
 	public static final String couldNotGetImagefor = "Could not get image for {0}";
+	public static final String cannotStyleText = "Cannot style text [{0}] because of character at {1} which is a '{2}'";
 
 }

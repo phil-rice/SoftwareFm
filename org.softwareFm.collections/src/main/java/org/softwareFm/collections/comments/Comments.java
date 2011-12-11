@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -15,6 +14,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.card.card.ICardData;
+import org.softwareFm.card.card.composites.CompositeWithCardMargin;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.display.composites.IHasControl;
@@ -26,7 +26,7 @@ import org.softwareFm.utilities.strings.Strings;
 
 public class Comments implements IHasControl {
 
-	static class CommentsComposite extends Composite {
+	static class CommentsComposite extends CompositeWithCardMargin {
 
 		private final Map<String, Object> map = Maps.newMap();
 		private final Table table;
@@ -37,22 +37,16 @@ public class Comments implements IHasControl {
 		private final Label label;
 
 		public CommentsComposite(Composite parent, CardConfig cardConfig) {
-			super(parent, SWT.NULL);
+			super(parent, SWT.NULL, cardConfig);
 			this.cc = cardConfig;
 			this.body = new Composite(this, SWT.BORDER);
 			body.setLayout(Swts.titleAndContentLayout(cc.titleHeight));
 			label = new Label(body, SWT.NULL);
 			label.setText("Comments");
-			this.table = new Table(body, SWT.V_SCROLL|SWT.FULL_SELECTION);
+			this.table = new Table(body, SWT.V_SCROLL | SWT.FULL_SELECTION);
 			table.setLinesVisible(true);
 			this.titleColumn = new TableColumn(table, SWT.NONE);
 			this.textColumn = new TableColumn(table, SWT.NONE);
-		}
-
-		@Override
-		public Rectangle getClientArea() {
-			Rectangle ca = super.getClientArea();
-			return new Rectangle(ca.x + cc.leftMargin, ca.y + cc.topMargin, ca.width - cc.leftMargin - cc.rightMargin, ca.height - cc.topMargin - cc.bottomMargin);
 		}
 
 		public void setInitialComments(String title, Map<String, Object> map) {

@@ -49,6 +49,8 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
@@ -822,6 +824,24 @@ public class Swts {
 			}
 		};
 
+	}
+
+	public static void addMenuTo(IHasControl hasControl, IFunction1<Control, Menu> builder) {
+		Control control = hasControl.getControl();
+		Menu menu = Functions.call(builder, control);
+		control.setMenu(menu);
+	}
+
+	public static void addMenu(Menu menu, IResourceGetter resourceGetter, String key, final Runnable runnable) {
+		String text = IResourceGetter.Utils.getOrException(resourceGetter, key);
+		MenuItem item = new MenuItem(menu, SWT.NULL);
+		item.setText(text);
+		item.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				runnable.run();
+			}
+		});
 	}
 
 }

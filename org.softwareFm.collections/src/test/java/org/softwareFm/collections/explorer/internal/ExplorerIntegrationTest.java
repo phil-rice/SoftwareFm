@@ -81,7 +81,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 		IHasControl detail = masterDetailSocial.createAndShowDetail(Swts.labelFn("detail"));
 		IHasControl social = masterDetailSocial.createAndShowSocial(Swts.labelFn("social"));
 
-		explorer.displayUnrecognisedJar(new File("a/b/c/artifact-1.0.0.jar"), "someDigest");
+		explorer.displayUnrecognisedJar(new File("a/b/c/artifact-1.0.0.jar"), "someDigest" ,"someProject");
 		Text text = (Text) masterDetailSocial.getMasterContent();
 		String expected = Strings.removeNewLines(IResourceGetter.Utils.getOrException(rawResourceGetter, CollectionConstants.jarNotRecognisedText));
 		assertEquals(expected.trim(), Strings.removeNewLines(text.getText()));
@@ -94,7 +94,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 
 	@SuppressWarnings("unchecked")
 	public void testClickingOnUnrecognisedJarOpensEditor() {
-		explorer.displayUnrecognisedJar(new File("a/b/c/artifact-1.0.0.jar"), "someDigest");
+		explorer.displayUnrecognisedJar(new File("a/b/c/artifact-1.0.0.jar"), "someDigest", "someProject");
 		Text text = (Text) masterDetailSocial.getMasterContent();
 		text.notifyListeners(SWT.MouseUp, new Event());
 		Control detailContent = masterDetailSocial.getDetailContent();

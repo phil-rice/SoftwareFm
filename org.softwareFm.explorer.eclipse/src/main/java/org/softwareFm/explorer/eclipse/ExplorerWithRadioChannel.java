@@ -100,7 +100,7 @@ public class ExplorerWithRadioChannel {
 					Buttons.makePushButton(buttonPanel, null, "Unrecognised Jar", false, new Runnable() {
 						@Override
 						public void run() {
-							explorer.displayUnrecognisedJar(new File("a/b/artifact-1.0.0.jar"), "0123439754987345978");
+							explorer.displayUnrecognisedJar(new File("a/b/artifact-1.0.0.jar"), "0123439754987345978", "some project name");
 						}
 					});
 					Swts.Row.setRowDataFor(100, 20, buttonPanel.getChildren());
