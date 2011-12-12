@@ -138,7 +138,7 @@ public class Explorer implements IExplorer {
 				return new Comments(from, cardConfig, new ICommentsCallback() {
 					@Override
 					public void selected(String cardType, String title, String text) {
-						masterDetailSocial.createAndShowDetail(TextInBorder.makeTextFromString(SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL, cardConfig, cardType, "<" + text + ">\n" + title));
+						masterDetailSocial.createAndShowDetail(TextInBorder.makeTextFromString(SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL, cardConfig, cardType,  title, text));
 
 					}
 				});
@@ -408,12 +408,12 @@ public class Explorer implements IExplorer {
 						CollectionConstants.version, Strings.versionPartOf(file, "Please specify the version"));
 				addUnrecognisedJar(file, digest, projectName, startData);
 			}
-		}, CollectionConstants.unrecognisedJarCardType, CollectionConstants.jarNotRecognisedText, file, file.getName(), projectName));
+		}, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.jarNotRecognisedTitle, CollectionConstants.jarNotRecognisedText, file, file.getName(), projectName));
 	}
 
 	private void addUnrecognisedJar(final File file, final String digest, String projectName, final Map<String, Object> startData) {
 		masterDetailSocial.showSocial();
-		IFunction1<Composite, TextInBorder> text = TextInBorder.makeText(SWT.WRAP | SWT.READ_ONLY, cardConfig,CollectionConstants.unrecognisedJarCardType, CollectionConstants.unrecognisedJarThankYou, file, file.getName(), projectName);
+		IFunction1<Composite, TextInBorder> text = TextInBorder.makeText(SWT.WRAP | SWT.READ_ONLY, cardConfig, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.jarNotRecognisedTitle, CollectionConstants.jarNotRecognisedThankYouText, file, file.getName(), projectName);
 		TextInBorder hasText = masterDetailSocial.createAndShowMaster(text);
 		hasText.setMenu(new IFunction1<Control, Menu>() {
 			@Override
@@ -448,7 +448,7 @@ public class Explorer implements IExplorer {
 			@Override
 			public IValueEditor apply(Composite from) throws Exception {
 				String jarTitle = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null, CollectionConstants.jarNotRecognisedTitle);
-				return IValueEditor.Utils.cardEditorWithLayout(from, cardConfig, jarTitle, CollectionConstants.unrecognisedJarCardType, "", startData, new ICardEditorCallback() {
+				return IValueEditor.Utils.cardEditorWithLayout(from, cardConfig, jarTitle, CollectionConstants.jarNotRecognisedCardType, "", startData, new ICardEditorCallback() {
 					@Override
 					public void ok(ICardData cardData) {
 						String groupId = (String) cardData.data().get(CollectionConstants.groupId);
@@ -533,7 +533,7 @@ public class Explorer implements IExplorer {
 	public void displayHelpTextFor(final ICard card, final String key) {
 		String cardType = card.cardType();
 		String helpKey = "help." + cardType + "." + key;
-		masterDetailSocial.createAndShowSocial(TextInBorder.makeTextWhenKeyMightNotExist(SWT.WRAP, cardConfig, cardType, helpKey));
+		masterDetailSocial.createAndShowSocial(TextInBorder.makeTextWhenKeyMightNotExist(SWT.WRAP, cardConfig, cardType, "", helpKey));
 	}
 
 	private IDetailsFactoryCallback makeEditCallback(final ICard card) {
@@ -805,6 +805,6 @@ public class Explorer implements IExplorer {
 
 	@Override
 	public void displayNotAJar() {
-		masterDetailSocial.createAndShowMaster(TextInBorder.makeText(SWT.WRAP, cardConfig, CollectionConstants.fileNotAJarCardType, CollectionConstants.fileNotAJarText));
+		masterDetailSocial.createAndShowMaster(TextInBorder.makeText(SWT.WRAP, cardConfig, CollectionConstants.fileNotAJarCardType, CollectionConstants.fileNotAJarTitle, CollectionConstants.fileNotAJarText));
 	}
 }

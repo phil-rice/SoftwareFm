@@ -806,7 +806,7 @@ public class Swts {
 			@Override
 			protected void layout(Composite composite, boolean flushCache) {
 				Control[] children = composite.getChildren();
-				assert children.length == 2;
+				assert children.length == 2: Arrays.asList(children);
 				Control title = children[0];
 				Control content = children[1];
 				Rectangle ca = composite.getClientArea();

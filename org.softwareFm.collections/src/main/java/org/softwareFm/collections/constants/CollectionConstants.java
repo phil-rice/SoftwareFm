@@ -13,11 +13,13 @@ public class CollectionConstants {
 	public static final String rootUrl = "/softwareFm/data";
 	public static final String jarNotRecognisedText = "jar.notRecognised.text";
 	public static final String jarNotRecognisedTitle = "jar.notRecognised.title";
+	public static final String jarNotRecognisedThankYouText = "jar.notRecognised.thankYou.text";
+	public static final String jarNotRecognisedThankYouTitle = "jar.notRecognised.thankYou.title";
 	
-	public static final String unrecognisedJarCardType = "unrecognised";
-	public static final String unrecognisedJarThankYou = "jar.notRecognised.thankYou.text";
+	public static final String jarNotRecognisedCardType = "unrecognised";
 	
 	public static final String fileNotAJarCardType = "notAJar";
+	public static final String fileNotAJarTitle = "file.notAJar.title";
 	public static final String fileNotAJarText = "file.notAJar.text";
 	
 	public static final String comment = "comment";
