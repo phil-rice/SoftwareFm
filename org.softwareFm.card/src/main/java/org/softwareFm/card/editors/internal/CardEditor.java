@@ -160,6 +160,7 @@ public class CardEditor implements IValueEditor, ICardData {
 		this.url = url;
 		this.data = cardConfig.modify(url, Maps.with(initialData, CardConstants.slingResourceType, cardType));
 		content = new CardEditorComposite(parent, title, this, callback);
+		content.okCancel.setOkEnabled(callback.canOk(data));
 	}
 
 	@Override
