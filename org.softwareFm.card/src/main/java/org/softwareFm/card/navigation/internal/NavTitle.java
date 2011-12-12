@@ -9,11 +9,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.navigation.ITitleBarForCard;
-import org.softwareFm.card.title.Title;
+import org.softwareFm.card.title.TitleWithTitlePaintListener;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.utilities.functions.Functions;
 
-public class NavTitle extends Title implements ITitleBarForCard {
+public class NavTitle extends TitleWithTitlePaintListener implements ITitleBarForCard {
 
 	public NavTitle(Composite parent, final CardConfig cardConfig, TitleSpec titleSpec, String initialLabel, String tooltip) {
 		super(parent, cardConfig, titleSpec, initialLabel, tooltip);

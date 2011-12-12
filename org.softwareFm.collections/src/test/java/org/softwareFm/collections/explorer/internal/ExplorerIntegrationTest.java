@@ -18,7 +18,7 @@ import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.editors.IValueComposite;
-import org.softwareFm.card.title.Title;
+import org.softwareFm.card.title.TitleWithTitlePaintListener;
 import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.collections.explorer.ExplorerAdapter;
 import org.softwareFm.collections.menu.ICardMenuItemHandler;
@@ -99,9 +99,9 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 		text.notifyListeners(SWT.MouseUp, new Event());
 		Control detailContent = masterDetailSocial.getDetailContent();
 		final IValueComposite<Table> composite = (IValueComposite<Table>) detailContent;
-		Title title = composite.getTitle();
+		TitleWithTitlePaintListener titleWithTitlePaintListener = composite.getTitle();
 		String jarTitle = IResourceGetter.Utils.getOrException(rawResourceGetter, CollectionConstants.jarNotRecognisedTitle);
-		assertEquals(jarTitle, title.getText());
+		assertEquals(jarTitle, titleWithTitlePaintListener.getText());
 		Table editor = composite.getEditor();
 		checkAndEdit(editor, new IAddingCallback<Table>() {
 			@Override

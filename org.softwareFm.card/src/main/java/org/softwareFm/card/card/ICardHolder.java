@@ -19,9 +19,9 @@ public interface ICardHolder extends IHasComposite {
 
 	void addCardChangedListener(ICardChangedListener listener);
 
+	void addCardTitleSelectedListener(ICardSelectedListener listener);
+
 	ICard getCard();
-
-
 
 	public static class Utils {
 		public static ICardHolder cardHolderWithLayout(Composite parent, CardConfig cardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
@@ -30,7 +30,5 @@ public interface ICardHolder extends IHasComposite {
 			return cardHolder;
 		}
 	}
-
-
 
 }

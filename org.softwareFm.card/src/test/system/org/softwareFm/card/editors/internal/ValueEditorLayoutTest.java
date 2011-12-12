@@ -17,7 +17,7 @@ import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
-import org.softwareFm.card.title.Title;
+import org.softwareFm.card.title.TitleWithTitlePaintListener;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.okCancel.OkCancel;
 import org.softwareFm.display.swt.SwtTest;
@@ -42,8 +42,8 @@ public class ValueEditorLayoutTest extends SwtTest {
 			checkLayout(b, new ICallback<ValueEditorComposite<Label>>() {
 				@Override
 				public void process(ValueEditorComposite<Label> t) throws Exception {
-					Title title = t.getTitle();
-					Control titleControl = title.getControl();
+					TitleWithTitlePaintListener titleWithTitlePaintListener = t.getTitle();
+					Control titleControl = titleWithTitlePaintListener.getControl();
 					assertEquals(new Rectangle(150, 250, 1000, titleHeight + topMargin), titleControl.getBounds());
 				}
 			});

@@ -232,9 +232,11 @@ public class MasterDetailSocial implements IMasterDetailSocial {
 	public Control getMasterContent() {
 		return getContent(content.master);
 	}
+
 	public Control getDetailContent() {
 		return getContent(content.detail);
 	}
+
 	public Control getSocialContent() {
 		return getContent(content.social);
 	}
@@ -243,5 +245,22 @@ public class MasterDetailSocial implements IMasterDetailSocial {
 		Composite composite = holder;
 		StackLayout layout = (StackLayout) composite.getLayout();
 		return layout.topControl;
+	}
+
+	@Override
+	public void putDetailOverSocial() {
+		if (content.detailSocial.getChildren()[0] == content.detail)
+			return;
+		content.detail.moveAbove(content.social);
+		content.detailSocial.layout();
+
+	}
+
+	@Override
+	public void putSocialOverDetail() {
+		if (content.detailSocial.getChildren()[0] == content.social)
+			return;
+		content.detail.moveBelow(content.social);
+		content.detailSocial.layout();
 	}
 }

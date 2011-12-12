@@ -58,7 +58,7 @@ public class CardConfig {
 	/** The {@link org.softwareFm.card.card.internal.Card.CardLayout} uses this to determine how wide to display the name column. Once the name column is 'this' much bigger than the ideal name width, it stops getting bigger */
 	public final float cardMaxNameSizeRatio = 1.2f;
 	/** All the margins are set to this by default */
-	public int defaultMargin = 10;
+	public int defaultMargin = 4;
 	public final int leftMargin;
 	public final int rightMargin;
 	public final int topMargin;
@@ -69,9 +69,9 @@ public class CardConfig {
 	/** The title for the card is this big */
 	public final int titleHeight;
 	/** The editors indent the edit control by this much */
-	public final int editorIndentX = 10;
+	public final int editorIndentX = 3;
 	/** The editors indent the edit control by this much */
-	public final int editorIndentY = 10;
+	public final int editorIndentY = 2;
 	/** The heightWeight and widthWeight determine the aspect ration of the card */
 	public final int widthWeight = 3;
 	/** The heightWeight and widthWeight determine the aspect ration of the card */
@@ -168,7 +168,7 @@ public class CardConfig {
 		this.rightMargin = defaultMargin;
 		this.topMargin = defaultMargin;
 		this.bottomMargin = defaultMargin;
-		this.titleHeight = 20;
+		this.titleHeight = 18;
 		this.cardDataModifiers = Collections.emptyList();
 		this.rightClickCategoriser = IRightClickCategoriser.Utils.noRightClickCategoriser();
 		this.urlGeneratorMap = IUrlGeneratorMap.Utils.urlGeneratorMap();

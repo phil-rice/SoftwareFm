@@ -7,8 +7,6 @@ package org.softwareFm.card.title;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
@@ -23,44 +21,33 @@ import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.utilities.functions.IFunction1;
 
-public class Title implements IHasControl {
+public class TitleWithTitlePaintListener implements IHasControl {
 
 	final Canvas canvas;
-	private final PaintListener listener;
-	private TitleSpec titleSpec;
-	private String title;
+	private final TitlePaintListener listener;
 
-	public Title(Composite parent, final CardConfig cardConfig, final TitleSpec initialTitleSpec, String initialTitle, String initialTooltip) {
-		this.titleSpec = initialTitleSpec;
-		canvas = new Canvas(parent, SWT.NONE);
-		canvas.setToolTipText(initialTooltip);
-		canvas.addPaintListener(listener = new PaintListener() {
-
+	public TitleWithTitlePaintListener(Composite parent, final CardConfig cardConfig, final TitleSpec initialTitleSpec, String initialTitle, String initialTooltip) {
+		canvas = new Canvas(parent, SWT.NONE) {
 			@Override
-			public void paintControl(PaintEvent e) {
-				Rectangle b = canvas.getClientArea();
-				e.gc.setBackground(titleSpec.titleColor);
-
-				e.gc.fillRoundRectangle(b.x, b.y, b.width, b.height*2, cardConfig.cornerRadius, cardConfig.cornerRadius);
-
-				if (titleSpec.icon != null) {
-					int iconX = b.x + cardConfig.titleSpacer ;
-					e.gc.drawImage(titleSpec.icon, iconX, b.y + 1);
-				}
-				int leftX = titleSpec.icon == null ? b.x + cardConfig.titleSpacer : b.x + 2 * cardConfig.titleSpacer + titleSpec.icon.getImageData().width;
-				e.gc.setClipping(b.x, b.y, b.width - titleSpec.rightIndent - cardConfig.cornerRadius, b.height);
-				e.gc.drawText(title, leftX, b.y+3);
+			public Rectangle getClientArea() {
+				Rectangle ca = super.getClientArea();
+				return new Rectangle(ca.x + cardConfig.leftMargin, ca.y + cardConfig.topMargin, ca.width - cardConfig.leftMargin - cardConfig.rightMargin, ca.height - cardConfig.topMargin);
 			}
-		});
+		};
+		canvas.setToolTipText(initialTooltip);
+		listener = new TitlePaintListener(cardConfig, initialTitleSpec, initialTitle);
+		canvas.addPaintListener(listener);
 	}
 
 	public void setTitleAndImage(String title, String tooltip, TitleSpec titleSpec) {
-		this.title = title;
-		this.titleSpec = titleSpec;
 		canvas.setToolTipText(tooltip);
+		listener.setTitleAndTitleSpec(title, titleSpec);
 		canvas.redraw();
 	}
 
+	public String getText() {
+		return listener.getTitle();
+	}
 
 	@Override
 	public Control getControl() {
@@ -68,7 +55,7 @@ public class Title implements IHasControl {
 	}
 
 	public static void main(String[] args) {
-		Show.displayNoLayout(Title.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+		Show.displayNoLayout(TitleWithTitlePaintListener.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 
 			@Override
 			public Composite apply(Composite from) throws Exception {
@@ -78,7 +65,7 @@ public class Title implements IHasControl {
 				new BasicImageRegisterConfigurator().registerWith(from.getDisplay(), imageRegistry);
 				Color color = new Color(from.getDisplay(), 183, 196, 183);
 				TitleSpec titleSpec = new TitleSpec(imageRegistry.get(ArtifactsAnchor.artifactKey), color, color, 20);
-				Title titleWithTitlePaintListener = new Title(parent, cardConfig, titleSpec, "title", "tooltip");
+				TitleWithTitlePaintListener titleWithTitlePaintListener = new TitleWithTitlePaintListener(parent, cardConfig, titleSpec, "title", "tooltip");
 				Size.resizeMeToParentsSize(parent);
 				Size.resizeMeToParentsSize(titleWithTitlePaintListener.canvas);
 				return parent;

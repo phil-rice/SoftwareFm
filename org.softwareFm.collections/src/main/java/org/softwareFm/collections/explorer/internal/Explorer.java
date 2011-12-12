@@ -138,7 +138,9 @@ public class Explorer implements IExplorer {
 				return new Comments(from, cardConfig, new ICommentsCallback() {
 					@Override
 					public void selected(String cardType, String title, String text) {
-						masterDetailSocial.createAndShowDetail(TextInBorder.makeTextFromString(SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL, cardConfig, cardType,  title, text));
+
+						masterDetailSocial.putSocialOverDetail();
+						masterDetailSocial.createAndShowDetail(TextInBorder.makeTextFromString(SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL, cardConfig, CollectionConstants.comment, title, text));
 
 					}
 				});
@@ -318,6 +320,7 @@ public class Explorer implements IExplorer {
 
 	@Override
 	public void displayCard(final String url, final ICardAndCollectionDataStoreVisitor visitor) {
+
 		fireListeners(new ICallback<IExplorerListener>() {
 			@Override
 			public void process(IExplorerListener t) throws Exception {
@@ -326,6 +329,7 @@ public class Explorer implements IExplorer {
 			}
 		});
 		masterDetailSocial.showMaster();
+		masterDetailSocial.putDetailOverSocial();
 		masterDetailSocial.setMaster(cardHolder.getControl());
 		cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, new ICardAndCollectionDataStoreVisitor() {
 			@Override
@@ -399,6 +403,7 @@ public class Explorer implements IExplorer {
 	@Override
 	public void displayUnrecognisedJar(final File file, final String digest, final String projectName) {
 		masterDetailSocial.showMaster();
+		masterDetailSocial.putDetailOverSocial();
 		masterDetailSocial.createAndShowMaster(TextInBorder.makeTextWithClick(SWT.WRAP | SWT.READ_ONLY, cardConfig, new Runnable() {
 			@Override
 			public void run() {
@@ -413,6 +418,7 @@ public class Explorer implements IExplorer {
 
 	private void addUnrecognisedJar(final File file, final String digest, String projectName, final Map<String, Object> startData) {
 		masterDetailSocial.showSocial();
+		masterDetailSocial.putDetailOverSocial();
 		IFunction1<Composite, TextInBorder> text = TextInBorder.makeText(SWT.WRAP | SWT.READ_ONLY, cardConfig, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.jarNotRecognisedTitle, CollectionConstants.jarNotRecognisedThankYouText, file, file.getName(), projectName);
 		TextInBorder hasText = masterDetailSocial.createAndShowMaster(text);
 		hasText.setMenu(new IFunction1<Control, Menu>() {
@@ -489,6 +495,8 @@ public class Explorer implements IExplorer {
 	@SuppressWarnings("unchecked")
 	private void browseDetailForCardKey(ICard card, String key, Object value) {
 		masterDetailSocial.hideSocial();
+		masterDetailSocial.putDetailOverSocial();
+
 		masterDetailSocial.setDetail(browser.getControl());
 		if (value instanceof Map<?, ?>) {
 			Map<String, Object> map = (Map<String, Object>) value;
@@ -507,6 +515,7 @@ public class Explorer implements IExplorer {
 	}
 
 	private void showDetailForCardKey(final ICard card, final String key, final Object value) {
+		masterDetailSocial.putDetailOverSocial();
 		if (CardConstants.collection.equals(card.cardType())) {
 			String collectionType = Strings.lastSegment(card.url(), "/");
 
@@ -658,6 +667,7 @@ public class Explorer implements IExplorer {
 
 	@Override
 	public void showContents() {
+		masterDetailSocial.putDetailOverSocial();
 		final ICard card = cardHolder.getCard();
 		fireListeners(new ICallback<IExplorerListener>() {
 			@Override

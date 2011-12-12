@@ -84,7 +84,7 @@ public class StyledTextWithBold implements IHasControl {
 
 	public void setBackground(Color background) {
 		content.setBackground(background);
-		styledText.setBackground(background);
+//		styledText.setBackground(background);
 	}
 
 }

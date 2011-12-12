@@ -17,7 +17,7 @@ public class CompositeWithEditorIndent extends Composite implements IHasCardConf
 	@Override
 	public Rectangle getClientArea() {
 		Rectangle ca = super.getClientArea();
-		return new Rectangle(ca.x + cc.editorIndentX, ca.y + cc.editorIndentY, ca.width - cc.editorIndentX*2, ca.height - cc.editorIndentY*2);
+		return new Rectangle(ca.x + cc.editorIndentX, ca.y , ca.width - cc.editorIndentX*2, ca.height - cc.editorIndentY);
 	}
 
 	@Override

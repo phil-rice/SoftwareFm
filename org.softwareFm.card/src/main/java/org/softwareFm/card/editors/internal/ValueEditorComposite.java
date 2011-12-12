@@ -15,7 +15,7 @@ import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.card.editors.IValueComposite;
-import org.softwareFm.card.title.Title;
+import org.softwareFm.card.title.TitleWithTitlePaintListener;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.okCancel.OkCancel;
 import org.softwareFm.utilities.functions.Functions;
@@ -23,7 +23,7 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 
 abstract public class ValueEditorComposite<T extends Control> extends Composite implements IValueComposite<T> {
 
-	public Title title;
+	public TitleWithTitlePaintListener titleWithTitlePaintListener;
 	private final T editorControl;
 	protected final OkCancel okCancel;
 	protected final CardConfig cardConfig;
@@ -37,7 +37,7 @@ abstract public class ValueEditorComposite<T extends Control> extends Composite 
 		this.titleSpec = titleSpec;
 		LineItem lineItem = new LineItem(cardType, key, initialValue);
 		String name = Functions.call(cardConfig.nameFn(), lineItem);
-		title = new Title(this, cardConfig, titleSpec, name, url);
+		titleWithTitlePaintListener = new TitleWithTitlePaintListener(this, cardConfig, titleSpec, name, url);
 		body = new ValueEditorBodyComposite(this, cardConfig, titleSpec);
 
 		originalValue = Functions.call(cardConfig.valueFn(), lineItem);
@@ -86,8 +86,8 @@ abstract public class ValueEditorComposite<T extends Control> extends Composite 
 	}
 
 	@Override
-	public Title getTitle() {
-		return title;
+	public TitleWithTitlePaintListener getTitle() {
+		return titleWithTitlePaintListener;
 	}
 
 	@Override

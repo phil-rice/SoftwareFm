@@ -40,6 +40,10 @@ public interface IMasterDetailSocial extends IHasComposite {
 
 	void showMaster();
 
+	void putDetailOverSocial();
+
+	void putSocialOverDetail();
+
 	public static class Utils {
 		public static IMasterDetailSocial masterDetailSocial(Composite parent) {
 			return new MasterDetailSocial(parent, SWT.NULL);

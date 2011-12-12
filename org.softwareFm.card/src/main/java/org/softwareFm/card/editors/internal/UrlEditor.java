@@ -107,7 +107,7 @@ public class UrlEditor implements IValueEditorForTests {
 
 	@Override
 	public String getTitleText() {
-		return content.title.getText();
+		return content.titleWithTitlePaintListener.getText();
 	}
 
 	@Override

@@ -10,6 +10,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
@@ -20,6 +22,7 @@ import org.softwareFm.card.card.ICardChangedListener;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.card.ICardHolderForTests;
+import org.softwareFm.card.card.ICardSelectedListener;
 import org.softwareFm.card.card.ILineSelectedListener;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
@@ -77,6 +80,7 @@ public class CardHolder implements ICardHolderForTests {
 		ICard card;
 		private final CardConfig navBarCardConfig;
 		private final List<ILineSelectedListener> lineListeners = new CopyOnWriteArrayList<ILineSelectedListener>();
+		private final List<ICardSelectedListener> cardSelectedListeners = new CopyOnWriteArrayList<ICardSelectedListener>();
 
 		public CardHolderComposite(Composite parent, CardConfig navBarCardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
 			super(parent, SWT.NULL);
@@ -86,6 +90,13 @@ public class CardHolder implements ICardHolderForTests {
 			if (callbackToGotoUrl == null) {
 				String loadingText = IResourceGetter.Utils.getOrException(navBarCardConfig.resourceGetterFn, null, CardConstants.cardHolderLoadingText);
 				title = new NavTitle(this, navBarCardConfig, TitleSpec.noTitleSpec(parent.getBackground()), loadingText, rootUrl);
+				title.getControl().addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseUp(MouseEvent e) {
+						for (ICardSelectedListener listener : cardSelectedListeners)
+							listener.cardSelected(card.url());
+					}
+				});
 			} else {
 				NavBar bar = new NavBar(this, navBarCardConfig, rootUrl, callbackToGotoUrl);
 				bar.getComposite().setLayout(new NavBar.NavBarLayout());
@@ -128,34 +139,7 @@ public class CardHolder implements ICardHolderForTests {
 		}
 	}
 
-	// @Override
-	// public void makeAndSetTableMenu(final ICard card) {
-	// Menu menu = new Menu(table);
-	// item1 = new MenuItem(menu, SWT.NULL);
-	//
-	// card.addMenuDetectListener( new Listener() {
-	// @Override
-	// public void handleEvent(Event event) {
-	// Point location = new Point(event.x, event.y);
-	// Point inMySpace = table.toControl(location);
-	// TableItem item = table.getItem(inMySpace);
-	// String key = (String) (item == null ? null : item.getData());
-	// RightClickCategoryResult categorisation = card.cardConfig().rightClickCategoriser.categorise(card.url(), card.data(), key);
-	// item1.setText("Add " + Strings.nullSafeToString(categorisation.collectionName));
-	// item1.setData(categorisation);
-	// item1.setEnabled(categorisation.isCollection());
-	// }
-	// });
-	// item1.addSelectionListener(new SelectionAdapter() {
-	// @Override
-	// public void widgetSelected(SelectionEvent e) {
-	// addItemProcessor.process((RightClickCategoryResult) item1.getData());
-	// }
-	// });
-	// // table.setMenu(menu);
-	// }
-
-	private final List<ICardChangedListener> cardListeners = new CopyOnWriteArrayList<ICardChangedListener>();
+	private final List<ICardChangedListener> cardChangedListeners = new CopyOnWriteArrayList<ICardChangedListener>();
 	final CardHolderComposite content;
 	private final String rootUrl;
 
@@ -177,7 +161,7 @@ public class CardHolder implements ICardHolderForTests {
 	@Override
 	public void setCard(final ICard card) {
 		content.setCard(card);
-		for (ICardChangedListener listener : cardListeners) {
+		for (ICardChangedListener listener : cardChangedListeners) {
 			listener.cardChanged(this, card);
 			card.addValueChangedListener(listener);
 		}
@@ -186,7 +170,12 @@ public class CardHolder implements ICardHolderForTests {
 
 	@Override
 	public void addCardChangedListener(ICardChangedListener listener) {
-		cardListeners.add(listener);
+		cardChangedListeners.add(listener);
+	}
+
+	@Override
+	public void addCardTitleSelectedListener(ICardSelectedListener listener) {
+		content.cardSelectedListeners.add(listener);
 	}
 
 	@Override

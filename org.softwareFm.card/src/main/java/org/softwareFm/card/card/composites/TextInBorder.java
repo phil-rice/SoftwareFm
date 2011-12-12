@@ -8,11 +8,11 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.softwareFm.card.card.ICardData;
 import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.card.title.Title;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
@@ -69,12 +69,12 @@ public class TextInBorder implements IHasControl {
 	private final Composite content;
 	private final StyledTextWithBold textWithBold;
 	private final Composite body;
-	private final Label title;
+	private final Title title;
 
 	public TextInBorder(Composite parent, int textStyle, final CardConfig cardConfig) {
 		this.cardConfig = cardConfig;
 		content = new CompositeWithCardMargin(parent, SWT.NULL, cardConfig);
-		title = new Label(content, SWT.NULL);
+		title = new Title(content, cardConfig, TitleSpec.noTitleSpec(parent.getBackground()), "", "");
 		body = new Composite(content, SWT.NULL);
 		content.setLayout(Swts.titleAndContentLayout(cardConfig.titleHeight));
 		body.setLayout(new FillLayout());
@@ -136,9 +136,8 @@ public class TextInBorder implements IHasControl {
 				return cardType;
 			}
 		});
-		textWithBold.setBackground(titleSpec.background);
-		title.setBackground(titleSpec.titleColor);
-		title.setText(titleText);
+		textWithBold.setBackground(titleSpec.titleColor);
+		title.setTitleAndImage(titleText, "", titleSpec);
 	}
 
 	public void addClickedListener(final Runnable whenClicked) {

@@ -17,7 +17,7 @@ import org.softwareFm.card.card.LineItem;
 import org.softwareFm.card.card.internal.CardOutlinePaintListener;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
-import org.softwareFm.card.title.Title;
+import org.softwareFm.card.title.TitleWithTitlePaintListener;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
@@ -70,7 +70,7 @@ public class TextViewer implements IHasComposite {
 			TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, card);
 			LineItem lineItem = new LineItem(cardType, key, value);
 			String name = Functions.call(cardConfig.nameFn(), lineItem);
-			new Title(this, cardConfig, titleSpec, name, "");
+			new TitleWithTitlePaintListener(this, cardConfig, titleSpec, name, "");
 			Composite body = new Composite(this, SWT.NULL) {
 				@Override
 				public Rectangle getClientArea() {

@@ -55,6 +55,12 @@ public class HoldsCardHolder extends Composite implements IHasCardConfig {
 									notifyCardSelectedListeners(card);
 								}
 							});
+							cardHolder.addCardTitleSelectedListener(new ICardSelectedListener() {
+								@Override
+								public void cardSelected(String cardUrl) {
+									notifyCardSelectedListeners(card);
+								}
+							});
 						}
 
 					};

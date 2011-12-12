@@ -23,7 +23,7 @@ import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.editors.ICardEditorCallback;
 import org.softwareFm.card.editors.IValueComposite;
 import org.softwareFm.card.editors.IValueEditor;
-import org.softwareFm.card.title.Title;
+import org.softwareFm.card.title.TitleWithTitlePaintListener;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.okCancel.OkCancel;
 import org.softwareFm.display.swt.Swts;
@@ -40,14 +40,14 @@ public class CardEditor implements IValueEditor, ICardData {
 		private final CardConfig cardConfig;
 		private final OkCancel okCancel;
 		private final CardTable cardTable;
-		private final Title title;
+		private final TitleWithTitlePaintListener titleWithTitlePaintListener;
 		private final ValueEditorBodyComposite body;
 
 		public CardEditorComposite(Composite parent, String titleString, final ICardData cardData, final ICardEditorCallback callback) {
 			super(parent, SWT.NULL);
 			this.cardConfig = cardData.getCardConfig();
 			TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, cardData);
-			title = new Title(this, cardConfig, titleSpec, titleString, "initialTooltip");
+			titleWithTitlePaintListener = new TitleWithTitlePaintListener(this, cardConfig, titleSpec, titleString, "initialTooltip");
 			body = new ValueEditorBodyComposite(this, cardConfig, titleSpec);
 
 			cardTable = new CardTable(body.innerBody, cardConfig.withStyleAndSelection(cardConfig.cardStyle, true), titleSpec, cardData.cardType(), cardData.data());
@@ -117,8 +117,8 @@ public class CardEditor implements IValueEditor, ICardData {
 		}
 
 		@Override
-		public Title getTitle() {
-			return title;
+		public TitleWithTitlePaintListener getTitle() {
+			return titleWithTitlePaintListener;
 		}
 
 		@Override
