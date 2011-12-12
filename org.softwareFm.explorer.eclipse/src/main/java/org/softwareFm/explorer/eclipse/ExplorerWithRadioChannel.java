@@ -109,6 +109,12 @@ public class ExplorerWithRadioChannel {
 							explorer.displayNotAJar();
 						}
 					});
+					Buttons.makePushButton(buttonPanel, null, "Ant", false, new Runnable() {
+						@Override
+						public void run() {
+							explorer.displayCard(firstUrl, new CardAndCollectionDataStoreAdapter());
+						}
+					});
 					Swts.Row.setRowDataFor(100, 20, buttonPanel.getChildren());
 					explorer.addExplorerListener(IExplorerListener.Utils.sysout());
 					return explorerAndButton;

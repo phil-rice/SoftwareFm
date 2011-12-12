@@ -6,6 +6,7 @@ import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -29,8 +30,7 @@ public class StyledTextWithBold implements IHasControl {
 		@Override
 		public Rectangle getClientArea() {
 			Rectangle ca = super.getClientArea();
-//			return new Rectangle(ca.x + cc.editorIndentX, ca.y + cc.editorIndentY, ca.width - 2 * cc.editorIndentX, ca.height - 2 * cc.editorIndentY);
-			return ca;
+			return new Rectangle(ca.x + cc.editorIndentX, ca.y + cc.editorIndentY, ca.width - 2 * cc.editorIndentX, ca.height - 2 * cc.editorIndentY);
 		}
 
 	}
@@ -80,6 +80,11 @@ public class StyledTextWithBold implements IHasControl {
 	@Override
 	public Control getControl() {
 		return styledText;
+	}
+
+	public void setBackground(Color background) {
+		content.setBackground(background);
+		styledText.setBackground(background);
 	}
 
 }

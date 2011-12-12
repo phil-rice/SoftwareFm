@@ -1,18 +1,18 @@
 package org.softwareFm.card.card.composites;
 
 import java.text.MessageFormat;
+import java.util.Map;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
+import org.softwareFm.card.card.ICardData;
 import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -33,12 +33,12 @@ public class TextInBorder implements IHasControl {
 		};
 	}
 
-	public static IFunction1<Composite, TextInBorder> makeTextFromString(final int textStyle, final CardConfig cardConfig, final String text) {
+	public static IFunction1<Composite, TextInBorder> makeTextFromString(final int textStyle, final CardConfig cardConfig, final String cardType, final String text) {
 		return new IFunction1<Composite, TextInBorder>() {
 			@Override
 			public TextInBorder apply(Composite from) throws Exception {
 				TextInBorder result = new TextInBorder(from, textStyle, cardConfig);
-				result.setText(text);
+				result.setText(cardType, text);
 				if (null != null)
 					result.addClickedListener(null);
 				return result;
@@ -46,16 +46,16 @@ public class TextInBorder implements IHasControl {
 		};
 	}
 
-	public static IFunction1<Composite, TextInBorder> makeText(final int textStyle, final CardConfig cardConfig, final String key, final Object... args) {
-		return makeText(textStyle, cardConfig, null, key, args);
+	public static IFunction1<Composite, TextInBorder> makeText(final int textStyle, final CardConfig cardConfig, String cardType, final String key, final Object... args) {
+		return makeTextWithClick(textStyle, cardConfig, null, cardType, key, args);
 	}
 
-	public static IFunction1<Composite, TextInBorder> makeText(final int textStyle, final CardConfig cardConfig, final Runnable whenClicked, final String key, final Object... args) {
+	public static IFunction1<Composite, TextInBorder> makeTextWithClick(final int textStyle, final CardConfig cardConfig, final Runnable whenClicked, final String cardType, final String key, final Object... args) {
 		return new IFunction1<Composite, TextInBorder>() {
 			@Override
 			public TextInBorder apply(Composite from) throws Exception {
 				TextInBorder result = new TextInBorder(from, textStyle, cardConfig);
-				result.setTextFromResourceGetter(key, args);
+				result.setTextFromResourceGetter(cardType, key, args);
 				if (whenClicked != null)
 					result.addClickedListener(whenClicked);
 				return result;
@@ -72,17 +72,7 @@ public class TextInBorder implements IHasControl {
 		content = new CompositeWithCardMargin(parent, SWT.NULL, cardConfig);
 		content.setLayout(new FillLayout());
 		textWithBold = new StyledTextWithBold(content, SWT.WRAP | SWT.READ_ONLY, cardConfig);
-		content.addPaintListener(new PaintListener() {
-			@Override
-			public void paintControl(PaintEvent e) {
-				Rectangle ca = content.getClientArea();
-				e.gc.drawRoundRectangle(ca.x - cardConfig.cornerRadiusComp, //
-						ca.y - cardConfig.cornerRadiusComp, //
-						ca.width + 2 * cardConfig.cornerRadiusComp, //
-						ca.height + 2 * cardConfig.cornerRadiusComp,//
-						cardConfig.cornerRadius, cardConfig.cornerRadius);
-			}
-		});
+		content.addPaintListener(new OutlinePaintListener(cardConfig));
 	}
 
 	public void setMenu(IFunction1<Control, Menu> fn) {
@@ -93,17 +83,45 @@ public class TextInBorder implements IHasControl {
 	public void setTextFromResourceGetterWhenKeyMightNotExist(String cardType, String patternKey, Object... args) {
 		String pattern = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, cardType, patternKey);
 		String text = pattern == null ? "" : MessageFormat.format(pattern, args);
-		textWithBold.setText(text);
+		setText(cardType, text);
 	}
 
-	public void setTextFromResourceGetter(String patternKey, Object... args) {
-		String pattern = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null, patternKey);
+	public void setTextFromResourceGetter(String cardType, String patternKey, Object... args) {
+		String pattern = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, patternKey);
 		String text = MessageFormat.format(pattern, args);
-		textWithBold.setText(text);
+		setText(cardType, text);
 	}
 
-	protected void setText(String text) {
+	protected void setText(final String cardType, String text) {
 		textWithBold.setText(text);
+		TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, new ICardData() {
+
+			@Override
+			public CardConfig getCardConfig() {
+				return cardConfig;
+			}
+
+			@Override
+			public void valueChanged(String key, Object newValue) {
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			public String url() {
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			public Map<String, Object> data() {
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			public String cardType() {
+				return cardType;
+			}
+		});
+		textWithBold.setBackground(titleSpec.background);
 	}
 
 	public void addClickedListener(final Runnable whenClicked) {

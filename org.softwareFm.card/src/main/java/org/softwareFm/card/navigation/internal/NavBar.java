@@ -133,7 +133,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 			// setBackground(titleSpec.background);
 			if (!url.startsWith(rootUrl))
 				throw new IllegalArgumentException("rooturl: " + rootUrl + " url: " + url);
-			navNextHistoryPrev.setBackground(titleSpec.background);
+			navNextHistoryPrev.setBackground(titleSpec.titleColor);
 			String endOfUrl = url.substring(rootUrl.length());
 			String[] fragments = endOfUrl.split("/");
 			Swts.removeChildrenAfter(this, navNextHistoryPrev.getControl());
@@ -147,7 +147,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 				}
 			new NavCombo(this, cardConfig, url, "", callbackToGotoUrl);
 			for (Control control : getChildren())
-				control.setBackground(titleSpec.background);
+				control.setBackground(titleSpec.titleColor);
 			layout();
 			redraw();
 		}

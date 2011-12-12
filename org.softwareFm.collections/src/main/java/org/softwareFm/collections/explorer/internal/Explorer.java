@@ -137,8 +137,9 @@ public class Explorer implements IExplorer {
 			public Comments apply(Composite from) throws Exception {
 				return new Comments(from, cardConfig, new ICommentsCallback() {
 					@Override
-					public void selected(Object title, Object text) {
-						masterDetailSocial.createAndShowDetail(TextInBorder.makeTextFromString(SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL, cardConfig, "<" + text + ">\n" + title));
+					public void selected(String cardType, String title, String text) {
+						masterDetailSocial.createAndShowDetail(TextInBorder.makeTextFromString(SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL, cardConfig, cardType, "<" + text + ">\n" + title));
+
 					}
 				});
 			}
@@ -398,7 +399,7 @@ public class Explorer implements IExplorer {
 	@Override
 	public void displayUnrecognisedJar(final File file, final String digest, final String projectName) {
 		masterDetailSocial.showMaster();
-		masterDetailSocial.createAndShowMaster(TextInBorder.makeText(SWT.WRAP | SWT.READ_ONLY, cardConfig, new Runnable() {
+		masterDetailSocial.createAndShowMaster(TextInBorder.makeTextWithClick(SWT.WRAP | SWT.READ_ONLY, cardConfig, new Runnable() {
 			@Override
 			public void run() {
 				final Map<String, Object> startData = Maps.stringObjectMap(//
@@ -407,12 +408,12 @@ public class Explorer implements IExplorer {
 						CollectionConstants.version, Strings.versionPartOf(file, "Please specify the version"));
 				addUnrecognisedJar(file, digest, projectName, startData);
 			}
-		}, CollectionConstants.jarNotRecognisedText, file, file.getName(), projectName));
+		}, CollectionConstants.unrecognisedJarCardType, CollectionConstants.jarNotRecognisedText, file, file.getName(), projectName));
 	}
 
 	private void addUnrecognisedJar(final File file, final String digest, String projectName, final Map<String, Object> startData) {
 		masterDetailSocial.showSocial();
-		IFunction1<Composite, TextInBorder> text = TextInBorder.makeText(SWT.WRAP | SWT.READ_ONLY, cardConfig, CollectionConstants.unrecognisedJarThankYouCardType, file, file.getName(), projectName);
+		IFunction1<Composite, TextInBorder> text = TextInBorder.makeText(SWT.WRAP | SWT.READ_ONLY, cardConfig,CollectionConstants.unrecognisedJarCardType, CollectionConstants.unrecognisedJarThankYou, file, file.getName(), projectName);
 		TextInBorder hasText = masterDetailSocial.createAndShowMaster(text);
 		hasText.setMenu(new IFunction1<Control, Menu>() {
 			@Override
@@ -804,6 +805,6 @@ public class Explorer implements IExplorer {
 
 	@Override
 	public void displayNotAJar() {
-		masterDetailSocial.createAndShowMaster(TextInBorder.makeText(SWT.WRAP, cardConfig, CollectionConstants.fileNotAJarText));
+		masterDetailSocial.createAndShowMaster(TextInBorder.makeText(SWT.WRAP, cardConfig, CollectionConstants.fileNotAJarCardType, CollectionConstants.fileNotAJarText));
 	}
 }

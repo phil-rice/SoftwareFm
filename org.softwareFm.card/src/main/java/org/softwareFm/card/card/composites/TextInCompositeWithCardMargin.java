@@ -22,12 +22,12 @@ public class TextInCompositeWithCardMargin implements IHasControl {
 		return makeText(textStyle, cardConfig, null, key, args);
 	}
 
-	public static IFunction1<Composite, IHasControl> makeText(final int textStyle, final CardConfig cardConfig, final Runnable whenClicked, final String key, final Object... args) {
+	public static IFunction1<Composite, IHasControl> makeText(final int textStyle, final CardConfig cardConfig, final Runnable whenClicked, final String cardType, final String key, final Object... args) {
 		return new IFunction1<Composite, IHasControl>() {
 			@Override
 			public IHasControl apply(Composite from) throws Exception {
 				TextInBorder result = new TextInBorder(from, textStyle, cardConfig);
-				result.setTextFromResourceGetter(key, args);
+				result.setTextFromResourceGetter(cardType, key, args);
 				if (whenClicked != null)
 					result.addClickedListener(whenClicked);
 				return result;
@@ -57,7 +57,7 @@ public class TextInCompositeWithCardMargin implements IHasControl {
 		});
 	}
 
-	public void setTextFromResourceGetter(String patternKey, Object... args) {
+	public void setTextFromResourceGetter(String cardType, String patternKey, Object... args) {
 		String pattern = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null, patternKey);
 		String text = MessageFormat.format(pattern, args);
 		textWithBold.setText(text);
