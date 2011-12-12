@@ -57,7 +57,7 @@ public class TextInBorder implements IHasControl {
 		this.cardConfig = cardConfig;
 		content = new CompositeWithCardMargin(parent, SWT.NULL, cardConfig);
 		content.setLayout(new FillLayout());
-		textWithBold = new StyledTextWithBold(content, SWT.WRAP | SWT.READ_ONLY);
+		textWithBold = new StyledTextWithBold(content, SWT.WRAP | SWT.READ_ONLY, cardConfig);
 		content.addPaintListener(new PaintListener() {
 			@Override
 			public void paintControl(PaintEvent e) {

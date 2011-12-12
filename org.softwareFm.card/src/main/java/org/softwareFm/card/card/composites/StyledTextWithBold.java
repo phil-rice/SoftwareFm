@@ -6,24 +6,47 @@ import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.utilities.collections.Lists;
 
 public class StyledTextWithBold implements IHasControl {
 
+	static class StyledTextWithBoldComposite extends Composite {
 
+		private final CardConfig cc;
+
+		public StyledTextWithBoldComposite(Composite parent, int style, CardConfig cardConfig) {
+			super(parent, style);
+			this.cc = cardConfig;
+		}
+
+		@Override
+		public Rectangle getClientArea() {
+			Rectangle ca = super.getClientArea();
+//			return new Rectangle(ca.x + cc.editorIndentX, ca.y + cc.editorIndentY, ca.width - 2 * cc.editorIndentX, ca.height - 2 * cc.editorIndentY);
+			return ca;
+		}
+
+	}
+
+	private final Composite content;
 	private final StyledText styledText;
 
-	public StyledTextWithBold(Composite parent, int style) {
-		styledText = new StyledText(parent, style);
+	public StyledTextWithBold(Composite parent, int textStyle, CardConfig cardConfig) {
+		content = new StyledTextWithBoldComposite(parent, SWT.NULL, cardConfig);
+		styledText = new StyledText(content, textStyle);
+		content.setLayout(new FillLayout());
 	}
 
 	public void setText(String text) {
 		styledText.setText(text);
-		List<StyleRange> ranges=Lists.newList();
+		List<StyleRange> ranges = Lists.newList();
 		StringBuilder builder = new StringBuilder();
 		int start = -1;
 		for (int i = 0; i < text.length(); i++) {
@@ -32,7 +55,8 @@ public class StyledTextWithBold implements IHasControl {
 			case '<':
 				if (start != -1)
 					throw new IllegalArgumentException(MessageFormat.format(CardConstants.cannotStyleText, text, i, ch));
-				start = builder.length();;
+				start = builder.length();
+				;
 				break;
 			case '>':
 				if (start == -1)
@@ -52,7 +76,6 @@ public class StyledTextWithBold implements IHasControl {
 		styledText.setText(builder.toString());
 		styledText.setStyleRanges(ranges.toArray(new StyleRange[0]));
 	}
-	
 
 	@Override
 	public Control getControl() {
