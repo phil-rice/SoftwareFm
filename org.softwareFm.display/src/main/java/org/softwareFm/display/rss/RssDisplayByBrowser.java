@@ -44,7 +44,7 @@ public class RssDisplayByBrowser implements IBrowserPart {
 		int index1 = reply.indexOf("<rss");
 		int index2 = reply.indexOf("<feed");
 		if (index1 == -1 && index2 == -1)
-			browser.setText("<h1>Not an RSS Feed</h1>");
+				browser.setText("<h1>Not an RSS Feed.</h1><br /><br /><hr />" + reply);
 		else {
 			try {
 				String html = new RssFeedTransformer().apply(reply);

@@ -14,21 +14,26 @@ import org.softwareFm.utilities.functions.IFunction1;
 
 public class TitleSpec {
 	public final Image icon;
+	public final Color titleColor;
 	public final Color background;
 	public final int rightIndent;
 
-	public TitleSpec(Image icon, Color background, int rightIndent) {
+	public TitleSpec(Image icon, Color titleColor, Color background, int rightIndent) {
 		this.icon = icon;
+		this.titleColor = titleColor;
 		this.background = background;
 		this.rightIndent = rightIndent;
 	}
 
-	public static TitleSpec noTitleSpec(Color background) {
-		return new TitleSpec(null, background, 40);
+	public static TitleSpec noTitleSpec(Color titleColor, Color background) {
+		return new TitleSpec(null, titleColor, background, 40);
+	}
+	public static TitleSpec noTitleSpec(Color color ) {
+		return new TitleSpec(null, color, color, 40);
 	}
 
 	public TitleSpec withoutImage() {
-		return new TitleSpec(null, background, rightIndent);
+		return new TitleSpec(null, titleColor, background, rightIndent);
 	}
 
 	public static IFunction1<ICardData, TitleSpec> cardToTitleSpecFn(Display display, IFunction1<String, Image> imageFn) {

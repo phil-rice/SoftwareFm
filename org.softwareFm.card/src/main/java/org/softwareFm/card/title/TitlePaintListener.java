@@ -30,7 +30,7 @@ public class TitlePaintListener implements PaintListener {
 	public void paintControl(PaintEvent e) {
 		Rectangle b = ((Control) e.widget).getBounds();
 //		System.out.println("TPL: " + new Rectangle(e.x,e.y,e.width, e.height) + " widget " + b);
-		e.gc.setBackground(titleSpec.background);
+		e.gc.setBackground(titleSpec.titleColor);
 		
 		Rectangle r = new Rectangle(b.x+cardConfig.leftMargin, b.y+cardConfig.topMargin, b.width - titleSpec.rightIndent-cardConfig.leftMargin-cardConfig.rightMargin, b.height + cardConfig.cornerRadius-cardConfig.topMargin);
 		e.gc.fillRoundRectangle(r.x, r.y, r.width, r.height, cardConfig.cornerRadius, cardConfig.cornerRadius);

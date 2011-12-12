@@ -25,13 +25,27 @@ public class TextInBorder implements IHasControl {
 			@Override
 			public TextInBorder apply(Composite from) throws Exception {
 				TextInBorder result = new TextInBorder(from, textStyle, cardConfig);
-				result.setTextFromResourceGetterWhenKeyMightNotExist(cardType,key, args);
+				result.setTextFromResourceGetterWhenKeyMightNotExist(cardType, key, args);
 				if (null != null)
 					result.addClickedListener(null);
 				return result;
 			}
 		};
 	}
+
+	public static IFunction1<Composite, TextInBorder> makeTextFromString(final int textStyle, final CardConfig cardConfig, final String text) {
+		return new IFunction1<Composite, TextInBorder>() {
+			@Override
+			public TextInBorder apply(Composite from) throws Exception {
+				TextInBorder result = new TextInBorder(from, textStyle, cardConfig);
+				result.setText(text);
+				if (null != null)
+					result.addClickedListener(null);
+				return result;
+			}
+		};
+	}
+
 	public static IFunction1<Composite, TextInBorder> makeText(final int textStyle, final CardConfig cardConfig, final String key, final Object... args) {
 		return makeText(textStyle, cardConfig, null, key, args);
 	}
@@ -85,6 +99,10 @@ public class TextInBorder implements IHasControl {
 	public void setTextFromResourceGetter(String patternKey, Object... args) {
 		String pattern = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null, patternKey);
 		String text = MessageFormat.format(pattern, args);
+		textWithBold.setText(text);
+	}
+
+	protected void setText(String text) {
 		textWithBold.setText(text);
 	}
 

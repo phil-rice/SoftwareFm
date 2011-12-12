@@ -63,7 +63,8 @@ public class Title implements IHasControl {
 				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay());
 				ImageRegistry imageRegistry = new ImageRegistry();
 				new BasicImageRegisterConfigurator().registerWith(from.getDisplay(), imageRegistry);
-				TitleSpec titleSpec = new TitleSpec(imageRegistry.get(ArtifactsAnchor.artifactKey), new Color(from.getDisplay(), 183, 196, 183), 20);
+				Color color = new Color(from.getDisplay(), 183, 196, 183);
+				TitleSpec titleSpec = new TitleSpec(imageRegistry.get(ArtifactsAnchor.artifactKey), color, color, 20);
 				Title title = new Title(parent, cardConfig, titleSpec, "title", "tooltip");
 				Size.resizeMeToParentsSize(parent);
 				Size.resizeMeToParentsSize(title.canvas);

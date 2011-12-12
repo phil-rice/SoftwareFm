@@ -46,6 +46,7 @@ public class CardConstants {
 	public static final String menuItemBrowseJarMavenKey = "menuitem.browseMaven.jar";
 
 	public static final String cardColorKey = "card.color";
+	public static final String cardTitleColorKey = "card.title.color";
 	public static final String indentTitleKey = "card.title.indent";
 	public static final String cardTitleIcon = "card.title.icon";
 	public static final String navIcon = "card.title.navIcon";

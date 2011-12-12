@@ -47,6 +47,7 @@ import org.softwareFm.card.editors.IValueEditor;
 import org.softwareFm.card.navigation.internal.NavNextHistoryPrevConfig;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.collections.comments.Comments;
+import org.softwareFm.collections.comments.ICommentsCallback;
 import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.collections.explorer.BrowserAndNavBar;
 import org.softwareFm.collections.explorer.IExplorer;
@@ -134,7 +135,12 @@ public class Explorer implements IExplorer {
 		comments = masterDetailSocial.createSocial(new IFunction1<Composite, Comments>() {
 			@Override
 			public Comments apply(Composite from) throws Exception {
-				return new Comments(from, cardConfig);
+				return new Comments(from, cardConfig, new ICommentsCallback() {
+					@Override
+					public void selected(Object title, Object text) {
+						masterDetailSocial.createAndShowDetail(TextInBorder.makeTextFromString(SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL, cardConfig, "<" + text + ">\n" + title));
+					}
+				});
 			}
 		}, true);
 

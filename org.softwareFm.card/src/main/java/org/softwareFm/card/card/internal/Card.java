@@ -14,6 +14,7 @@ import org.eclipse.swt.events.MenuAdapter;
 import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
@@ -62,7 +63,6 @@ public class Card implements ICard, IHasTable {
 			CardConfig cardConfig = card.cardConfig;
 			ICard.Utils.setCardTableColumnWidths(tableControl, cardConfig);
 		}
-
 
 	}
 
@@ -248,7 +248,8 @@ public class Card implements ICard, IHasTable {
 				final CardConfig cardConfig = new CardConfig(cardFactory, cardDataStore).withTitleSpecFn(new IFunction1<ICardData, TitleSpec>() {
 					@Override
 					public TitleSpec apply(ICardData card) throws Exception {
-						return TitleSpec.noTitleSpec(from.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+						Color white = from.getDisplay().getSystemColor(SWT.COLOR_WHITE);
+						return TitleSpec.noTitleSpec(white, white);
 					}
 				});
 				ICard card = new Card(from, cardConfig, CardDataStoreFixture.url, CardDataStoreFixture.data1a);

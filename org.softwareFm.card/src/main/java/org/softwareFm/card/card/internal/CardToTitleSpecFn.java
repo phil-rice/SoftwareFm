@@ -5,6 +5,9 @@
 
 package org.softwareFm.card.card.internal;
 
+import java.util.Map;
+import java.util.concurrent.Callable;
+
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -14,11 +17,14 @@ import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class CardToTitleSpecFn implements IFunction1<ICardData, TitleSpec> {
 	private final IFunction1<String, Image> imageFn;
 	private final Display display;
+	private final Map<String, Color> colorCache = Maps.newMap();
+	private final Map<String, Color> titleColorCache = Maps.newMap();
 
 	public CardToTitleSpecFn(Display display, IFunction1<String, Image> imageFn) {
 		this.imageFn = imageFn;
@@ -26,12 +32,23 @@ public class CardToTitleSpecFn implements IFunction1<ICardData, TitleSpec> {
 	}
 
 	@Override
-	public TitleSpec apply(ICardData from) throws Exception {
-		Color color = Swts.makeColor(display, Functions.call(from.getCardConfig().resourceGetterFn, from.cardType()), CardConstants.cardColorKey);
+	public TitleSpec apply(final ICardData from) throws Exception {
+		Color color = Maps.findOrCreate(colorCache, from.cardType(), new Callable<Color>() {
+			@Override
+			public Color call() throws Exception {
+				return Swts.makeColor(display, Functions.call(from.getCardConfig().resourceGetterFn, from.cardType()), CardConstants.cardColorKey);
+			}
+		});
+		Color titleColor = Maps.findOrCreate(titleColorCache, from.cardType(), new Callable<Color>() {
+			@Override
+			public Color call() throws Exception {
+				return Swts.makeColor(display, Functions.call(from.getCardConfig().resourceGetterFn, from.cardType()), CardConstants.cardTitleColorKey);
+			}
+		});
 		int indent = IResourceGetter.Utils.getIntegerOrException(from.getCardConfig().resourceGetterFn, from.cardType(), CardConstants.indentTitleKey);
 		String imageName = IResourceGetter.Utils.getOrException(from.getCardConfig().resourceGetterFn, from.cardType(), CardConstants.cardTitleIcon);
 		Image icon = Functions.call(imageFn, imageName);
-		return new TitleSpec(icon, color, indent);
+		return new TitleSpec(icon, titleColor, color, indent);
 	}
 
 }
