@@ -26,7 +26,9 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 	void displayUnrecognisedJar(File file, String digest, String projectName);
 
 	void displayNotAJar();
-	
+
+	void displayHelpTextFor(final ICard card, final String key);
+
 	void displayComments(ICard card);
 
 	void displayHelpText(String url);
@@ -38,7 +40,6 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 	void showAddSnippetEditor(final ICard card);
 
 	void showAddCollectionItemEditor(final ICard card, final RightClickCategoryResult result);
-
 
 	void showRandomContent(ICard card);
 

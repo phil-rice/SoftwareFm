@@ -103,6 +103,12 @@ public class ExplorerWithRadioChannel {
 							explorer.displayUnrecognisedJar(new File("a/b/artifact-1.0.0.jar"), "0123439754987345978", "some project name");
 						}
 					});
+					Buttons.makePushButton(buttonPanel, null, "Not A Jar", false, new Runnable() {
+						@Override
+						public void run() {
+							explorer.displayNotAJar();
+						}
+					});
 					Swts.Row.setRowDataFor(100, 20, buttonPanel.getChildren());
 					explorer.addExplorerListener(IExplorerListener.Utils.sysout());
 					return explorerAndButton;

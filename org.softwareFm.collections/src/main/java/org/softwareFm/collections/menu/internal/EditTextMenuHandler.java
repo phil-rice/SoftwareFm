@@ -32,6 +32,7 @@ public class EditTextMenuHandler extends AbstractCardMenuHandler {
 
 	@Override
 	public void execute(ICard card, String key, MenuItem item) {
+		explorer.displayHelpTextFor(card, key);
 		explorer.edit(card, key);
 	}
 

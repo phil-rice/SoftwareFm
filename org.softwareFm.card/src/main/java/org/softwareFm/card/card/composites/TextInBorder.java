@@ -20,6 +20,18 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class TextInBorder implements IHasControl {
 
+	public static IFunction1<Composite, TextInBorder> makeTextWhenKeyMightNotExist(final int textStyle, final CardConfig cardConfig, final String cardType, final String key, final Object... args) {
+		return new IFunction1<Composite, TextInBorder>() {
+			@Override
+			public TextInBorder apply(Composite from) throws Exception {
+				TextInBorder result = new TextInBorder(from, textStyle, cardConfig);
+				result.setTextFromResourceGetterWhenKeyMightNotExist(cardType,key, args);
+				if (null != null)
+					result.addClickedListener(null);
+				return result;
+			}
+		};
+	}
 	public static IFunction1<Composite, TextInBorder> makeText(final int textStyle, final CardConfig cardConfig, final String key, final Object... args) {
 		return makeText(textStyle, cardConfig, null, key, args);
 	}
@@ -59,12 +71,17 @@ public class TextInBorder implements IHasControl {
 		});
 	}
 
-
-	public void setMenu(IFunction1<Control, Menu> fn){
-		Menu menu = Functions.call(	fn, textWithBold.getControl());
+	public void setMenu(IFunction1<Control, Menu> fn) {
+		Menu menu = Functions.call(fn, textWithBold.getControl());
 		textWithBold.getControl().setMenu(menu);
 	}
-	
+
+	public void setTextFromResourceGetterWhenKeyMightNotExist(String cardType, String patternKey, Object... args) {
+		String pattern = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, cardType, patternKey);
+		String text = pattern == null ? "" : MessageFormat.format(pattern, args);
+		textWithBold.setText(text);
+	}
+
 	public void setTextFromResourceGetter(String patternKey, Object... args) {
 		String pattern = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null, patternKey);
 		String text = MessageFormat.format(pattern, args);

@@ -49,10 +49,8 @@ import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.collections.comments.Comments;
 import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.collections.explorer.BrowserAndNavBar;
-import org.softwareFm.collections.explorer.HelpText;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IExplorerListener;
-import org.softwareFm.collections.explorer.IHelpText;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
 import org.softwareFm.display.browser.IBrowserPart;
 import org.softwareFm.display.composites.IHasControl;
@@ -82,18 +80,11 @@ public class Explorer implements IExplorer {
 	private final CardConfig cardConfig;
 	private BrowserAndNavBar browser;
 	private TimeLine timeLine;
-	private IHelpText helpText;
 	private Comments comments;
 
 	public Explorer(final CardConfig cardConfig, final String rootUrl, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter) {
 		this.cardConfig = cardConfig;
 		this.masterDetailSocial = masterDetailSocial;
-		helpText = masterDetailSocial.createSocial(new IFunction1<Composite, IHelpText>() {
-			@Override
-			public IHelpText apply(Composite from) throws Exception {
-				return new HelpText(from);
-			}
-		}, true);
 		callbackToGotoUrlAndUpdateDetails = new ICallback<String>() {
 			@Override
 			public void process(String url) throws Exception {
@@ -528,13 +519,14 @@ public class Explorer implements IExplorer {
 			}
 
 		});
-//		displayComments(card);
-		 masterDetailSocial.showSocial();
-		 String cardType = card.cardType();
-		 String helpKey = "help." + cardType + "." + key;
-		 String help = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, cardType, helpKey);
-		 masterDetailSocial.setSocial(helpText.getControl());
-		 helpText.setText(Strings.nullSafeToString(help));
+		displayComments(card);
+	}
+
+	@Override
+	public void displayHelpTextFor(final ICard card, final String key) {
+		String cardType = card.cardType();
+		String helpKey = "help." + cardType + "." + key;
+		masterDetailSocial.createAndShowSocial(TextInBorder.makeTextWhenKeyMightNotExist(SWT.WRAP, cardConfig, cardType, helpKey));
 	}
 
 	private IDetailsFactoryCallback makeEditCallback(final ICard card) {
@@ -806,8 +798,6 @@ public class Explorer implements IExplorer {
 
 	@Override
 	public void displayNotAJar() {
-		masterDetailSocial.showMaster();
-		String text = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null, CollectionConstants.fileNotAJarText);
-		masterDetailSocial.createAndShowMaster(Swts.labelFn(text));
+		masterDetailSocial.createAndShowMaster(TextInBorder.makeText(SWT.WRAP, cardConfig, CollectionConstants.fileNotAJarText));
 	}
 }
