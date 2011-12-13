@@ -17,8 +17,8 @@ import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
-import org.softwareFm.card.title.TitleWithTitlePaintListener;
 import org.softwareFm.card.title.TitleSpec;
+import org.softwareFm.card.title.TitleWithTitlePaintListener;
 import org.softwareFm.display.okCancel.OkCancel;
 import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.utilities.booleans.Booleans;
@@ -64,19 +64,20 @@ public class ValueEditorLayoutTest extends SwtTest {
 
 	}
 
+	//without just repeating algorithm hard to test...so checked it looked good visually and recorded values
 	public void testLayoutSetsEditorSize() throws Exception {
 		checkLayout(false, new ICallback<ValueEditorComposite<Label>>() {
 			@Override
 			public void process(ValueEditorComposite<Label> t) throws Exception {
 				Label control = t.getEditor();
-				assertEquals(new Rectangle(11, 10, 956, 15), control.getBounds());
+				assertEquals(new Rectangle(4, 2, 970, 15), control.getBounds());
 			}
 		});
 		checkLayout(true, new ICallback<ValueEditorComposite<Label>>() {
 			@Override
 			public void process(ValueEditorComposite<Label> t) throws Exception {
 				Label control = t.getEditor();
-				assertEquals(new Rectangle(11, 10, 956, 296), control.getBounds());
+				assertEquals(new Rectangle(4, 2, 970, 312), control.getBounds());
 			}
 		});
 

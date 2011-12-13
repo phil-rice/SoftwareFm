@@ -62,11 +62,16 @@ public interface IResourceGetter {
 			return string;
 		}
 
-		public static <T>int getIntegerOrException(IFunction1<T, IResourceGetter>resourceGetterFn, T t, String indentKey) {
+		public static <T> int getIntegerOrException(IFunction1<T, IResourceGetter> resourceGetterFn, T t, String indentKey) {
 			String raw = getOrException(resourceGetterFn, t, indentKey);
-			return Integer.parseInt(raw);
-			
+			try {
+				return Integer.parseInt(raw);
+			} catch (NumberFormatException e) {
+				throw e;
+			}
+
 		}
+
 		public static int getIntegerOrException(IResourceGetter resourceGetter, String indentKey) {
 			String raw = getOrException(resourceGetter, indentKey);
 			return Integer.parseInt(raw);
@@ -80,19 +85,21 @@ public interface IResourceGetter {
 				return null;
 			}
 		}
+
 		public static <T> String getOr(IFunction1<T, IResourceGetter> resourceGetterFn, T cardType, String key, String defaultValue) {
 			IResourceGetter resourceGetter = Functions.call(resourceGetterFn, cardType);
 			String result = resourceGetter.getStringOrNull(key);
-			return result == null? defaultValue : result;
+			return result == null ? defaultValue : result;
 		}
-		
-		public static IFunction1<String, IResourceGetter> mock(final IResourceGetter defaultValue, final Object...namesAndResourceGetters){
+
+		public static IFunction1<String, IResourceGetter> mock(final IResourceGetter defaultValue, final Object... namesAndResourceGetters) {
 			return new IFunction1<String, IResourceGetter>() {
 				private final Map<String, IResourceGetter> map = Maps.makeMap(namesAndResourceGetters);
+
 				@Override
 				public IResourceGetter apply(String from) throws Exception {
 					IResourceGetter result = map.get(from);
-					return result == null?defaultValue:result.with(defaultValue);
+					return result == null ? defaultValue : result.with(defaultValue);
 				}
 			};
 		}

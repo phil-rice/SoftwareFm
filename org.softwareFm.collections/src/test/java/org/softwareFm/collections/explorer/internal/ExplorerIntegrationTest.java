@@ -1,21 +1,24 @@
 package org.softwareFm.collections.explorer.internal;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.Text;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardHolder;
+import org.softwareFm.card.card.composites.CompositeWithCardMargin;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.editors.IValueComposite;
 import org.softwareFm.card.title.TitleWithTitlePaintListener;
@@ -29,7 +32,7 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
 
 public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
-	
+
 	public void testShowContentOnlyAsksForOneMainUrlFromCardDataStore() {
 		final AtomicInteger count = new AtomicInteger();
 		displayCard(AbstractExplorerIntegrationTest.artifactUrl, new CardHolderAndCardCallback() {
@@ -81,28 +84,29 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 		IHasControl detail = masterDetailSocial.createAndShowDetail(Swts.labelFn("detail"));
 		IHasControl social = masterDetailSocial.createAndShowSocial(Swts.labelFn("social"));
 
-		explorer.displayUnrecognisedJar(new File("a/b/c/artifact-1.0.0.jar"), "someDigest" ,"someProject");
-		Text text = (Text) masterDetailSocial.getMasterContent();
-		String expected = Strings.removeNewLines(IResourceGetter.Utils.getOrException(rawResourceGetter, CollectionConstants.jarNotRecognisedText));
+		File file = new File("a/b/c/artifact-1.0.0.jar");
+		explorer.displayUnrecognisedJar(file, "someDigest", "someProject");
+		StyledText text = getTextInBorderComponent(masterDetailSocial.getMasterContent());
+		String pattern = IResourceGetter.Utils.getOrException(rawResourceGetter, CollectionConstants.jarNotRecognisedText);
+		String expected = Strings.removeNewLines(MessageFormat.format(pattern, file, file.getName(), "someProject")).replace("<", "").replace(">", "");
 		assertEquals(expected.trim(), Strings.removeNewLines(text.getText()));
 
 		assertSame(detail.getControl(), masterDetailSocial.getDetailContent());
 		assertSame(social.getControl(), masterDetailSocial.getSocialContent());
 	}
 
-	
-
 	@SuppressWarnings("unchecked")
 	public void testClickingOnUnrecognisedJarOpensEditor() {
 		explorer.displayUnrecognisedJar(new File("a/b/c/artifact-1.0.0.jar"), "someDigest", "someProject");
-		Text text = (Text) masterDetailSocial.getMasterContent();
+		StyledText text = getTextInBorderComponent(masterDetailSocial.getMasterContent());
+		
 		text.notifyListeners(SWT.MouseUp, new Event());
 		Control detailContent = masterDetailSocial.getDetailContent();
-		final IValueComposite<Table> composite = (IValueComposite<Table>) detailContent;
-		TitleWithTitlePaintListener titleWithTitlePaintListener = composite.getTitle();
+		final IValueComposite<Table> valueComposite = (IValueComposite<Table>) detailContent;
+		TitleWithTitlePaintListener titleWithTitlePaintListener = valueComposite.getTitle();
 		String jarTitle = IResourceGetter.Utils.getOrException(rawResourceGetter, CollectionConstants.jarNotRecognisedTitle);
 		assertEquals(jarTitle, titleWithTitlePaintListener.getText());
-		Table editor = composite.getEditor();
+		Table editor = valueComposite.getEditor();
 		checkAndEdit(editor, new IAddingCallback<Table>() {
 			@Override
 			public void process(boolean added, Table card, IAdding adding) {
@@ -114,7 +118,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 		doSomethingAndWaitForCardDataStoreToFinish(new Runnable() {
 			@Override
 			public void run() {
-				Button okButton = composite.getOkCancel().okButton;
+				Button okButton = valueComposite.getOkCancel().okButton;
 				okButton.notifyListeners(SWT.Selection, new Event());
 			}
 		}, new CardHolderAndCardCallback() {
@@ -127,15 +131,28 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 
 	}
 
+	private StyledText getTextInBorderComponent(Control control) {
+		CompositeWithCardMargin composite = (CompositeWithCardMargin) control;
+		Control[] children = composite.getChildren();
+		assertEquals(2, children.length);
+		assertTrue(children[0] instanceof Canvas);// title
+		Composite body = (Composite) children[1];
+		Control[] bodyChildren = body.getChildren();
+		assertEquals(1, bodyChildren.length);
+		Composite innerBody = (Composite) body.getChildren()[0];
+		StyledText text = (StyledText) innerBody.getChildren()[0];
+		return text;
+	}
+
 	public void testTitlesAndRightClickMenusText() {
 		String view = "View";
 		String edit = "Edit";
 
-		checkMenu(0, "Name", edit, view);
-		checkMenu(1, "Url", edit, view);
-		checkMenu(2, "Description", edit, view);
-		checkMenu(3, "Issues", edit, view);
-		checkMenu(4, "Download Url", edit, view);
+		checkMenu(0, "Name", edit);
+		checkMenu(1, "Url", edit);
+		checkMenu(2, "Description", edit);
+		checkMenu(3, "Issues", edit);
+		checkMenu(4, "Download Url", edit);
 		checkMenu(5, "Documentation", view, "Add documentation");
 		checkMenu(6, "Mailing List", view, "Add mailingList");
 		checkMenu(7, "Tutorials", view, "Add tutorial");
@@ -150,7 +167,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 			@Override
 			public void process(ICardHolder cardHolder, ICard card) {
 				Table table = card.getTable();
-				assertEquals(15, table.getItemCount());
+				assertEquals(16, table.getItemCount()); // currently has comments, which will be vanishing in near future.
 			}
 		});
 	}
