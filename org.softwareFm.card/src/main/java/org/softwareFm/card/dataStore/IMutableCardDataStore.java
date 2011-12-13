@@ -23,11 +23,14 @@ public interface IMutableCardDataStore extends ICardDataStore {
 	public static class Utils {
 
 		public static Future<Void> addCollectionItem(final IMutableCardDataStore store, RightClickCategoryResult result, final String itemUrlFragment, final Map<String, Object> map, final IAfterEditCallback callback) {
+			String collectionUrl = result.collectionUrl();
 			switch (result.itemType) {
+			case COLLECTION_NOT_CREATED_YET:
+				return addCollectionItemToCollection(store, collectionUrl, result.collectionName, itemUrlFragment, map, callback);
 			case IS_COLLECTION:
-				return addCollectionItemToCollection(store, result.collectionUrl(), result.collectionName, itemUrlFragment, map, callback);
+				return addCollectionItemToCollection(store, collectionUrl, result.collectionName, itemUrlFragment, map, callback);
 			case ROOT_COLLECTION:
-				return addCollectionItemToBase(store, result.url, result.collectionName, itemUrlFragment, map, callback);
+				return addCollectionItemToCollection(store, collectionUrl, result.collectionName, itemUrlFragment, map, callback);
 			default:
 				throw new IllegalStateException(result.itemType.toString());
 			}

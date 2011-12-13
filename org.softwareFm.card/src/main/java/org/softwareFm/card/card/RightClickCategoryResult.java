@@ -17,6 +17,8 @@ public class RightClickCategoryResult {
 		ROOT_COLLECTION,
 		/** Right clicked on an item that represents a collection (for example mailingList,artifact,version) */
 		IS_COLLECTION,
+		/** Right clicked: no item, no cardtype. This is probably an empty collection that hasn't been created yet */
+		COLLECTION_NOT_CREATED_YET,
 		/** Right clicked on an item that reprsents all the child folders */
 		IS_FOLDERS;
 	}
@@ -38,7 +40,7 @@ public class RightClickCategoryResult {
 	}
 
 	public boolean isCollection() {
-		return itemType != Type.NOT_COLLECTION;
+		return itemType != Type.NOT_COLLECTION ;
 	}
 
 	@Override
@@ -48,19 +50,21 @@ public class RightClickCategoryResult {
 
 	public String collectionUrl() {
 		switch (itemType) {
+		case COLLECTION_NOT_CREATED_YET:
+			return url;
 		case ROOT_COLLECTION:
-			return url ;
+			return url;
 		case IS_FOLDERS:
-			return url ;
+			return url;
 		case IS_COLLECTION:
-			return url + "/" + key ;
+			return url + "/" + key;
 		default:
 			throw new IllegalStateException(itemType.name());
 		}
 	}
 
 	public String itemUrl(String value) {
-		String result = collectionUrl()+"/"+ value;
+		String result = collectionUrl() + "/" + value;
 		return result;
 	}
 

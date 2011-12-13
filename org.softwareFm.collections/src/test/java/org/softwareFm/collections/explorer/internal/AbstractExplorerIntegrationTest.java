@@ -151,7 +151,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 				return;
 			}
 		}
-		Assert.fail("Cannot find: " + title);
+		Assert.fail("Cannot find: " + title+"\nCard: " + card);
 	}
 
 	protected void checkTable(Table table, int i, String name, String value) {

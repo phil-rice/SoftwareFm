@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.softwareFm.card.card.ICard;
+import org.softwareFm.card.card.IRightClickCategoriser;
 import org.softwareFm.card.card.RightClickCategoryResult;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.collections.explorer.IExplorer;
@@ -27,8 +28,11 @@ public class AddItemToCollectionMenuHandler extends AbstractCardMenuHandler {
 
 	@Override
 	public MenuItem optionallyCreate(final ICard card, IResourceGetter resourceGetter, Menu menu, Event event, String key) {
-		final RightClickCategoryResult categorisation = card.getCardConfig().rightClickCategoriser.categorise(card.url(), card.data(), key);
+		IRightClickCategoriser categoriser = card.getCardConfig().rightClickCategoriser;
+		String url = card.url();
+		final RightClickCategoryResult categorisation = categoriser.categorise(url, card.data(), key);
 		switch (categorisation.itemType) {
+		case COLLECTION_NOT_CREATED_YET:
 		case IS_COLLECTION:
 		case ROOT_COLLECTION:
 			MenuItem menuItem = new MenuItem(menu, SWT.NULL);

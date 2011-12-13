@@ -20,6 +20,8 @@ public class SoftwareFmRightClickCategoriser implements IRightClickCategoriser {
 		String lastSegment = Strings.lastSegment(url, "/");
 		String cardType = (String) map.get(CardConstants.slingResourceType);
 		Object value = map == null ? null : map.get(key);
+		if (cardType==null && key == null)
+			return new RightClickCategoryResult(Type.COLLECTION_NOT_CREATED_YET, lastSegment, null, url);
 		if (CardConstants.collection.equals(cardType))
 			return new RightClickCategoryResult(Type.ROOT_COLLECTION, lastSegment, key, url);
 		else if (CardConstants.ntUnstructured.equals(key)) // clicked on item representing key

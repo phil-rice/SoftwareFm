@@ -48,7 +48,7 @@ public class SoftwareFmCardValueFunction extends AbstractLineItemFunction<String
 	private String findSize(LineItem from) {
 		Object value = from.value;
 		if (value instanceof Collection<?>)
-			throw new IllegalStateException();
+			throw new IllegalStateException(from.toString());
 		else if (value instanceof Map<?, ?>) {
 			int i = 0;
 			for (Entry<?, ?> entry : ((Map<?, ?>) value).entrySet())

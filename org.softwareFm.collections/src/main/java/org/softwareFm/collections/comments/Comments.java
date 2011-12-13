@@ -92,8 +92,8 @@ public class Comments implements IHasControl {
 					if (title != null) {
 						TableItem item = new TableItem(table, SWT.NULL);
 						item.setData(entry.getKey());
-						item.setText(0, title.toString());
-						item.setText(1, text.toString());
+						item.setText(0, Strings.nullSafeToString(title));
+						item.setText(1, Strings.nullSafeToString(text));
 					}
 				}
 			}

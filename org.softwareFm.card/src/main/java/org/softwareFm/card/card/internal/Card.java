@@ -134,7 +134,7 @@ public class Card implements ICard, IHasTable {
 
 	/** What type of card is this? Examples are the strings 'collection', 'group', 'artifact' */
 	private final CardConfig cardConfig;
-	private String cardType;
+	private final String cardType;
 
 	public Card(Composite parent, final CardConfig cardConfig, final String url, Map<String, Object> rawData) {
 		this.cardConfig = cardConfig;
@@ -145,9 +145,7 @@ public class Card implements ICard, IHasTable {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				int index = content.table.getSelectionIndex();
-				if (index == -1)
-					return;
-				String key = (String) content.table.getItem(index).getData();
+				String key = index == -1 ? null : (String) content.table.getItem(index).getData();
 				notifyLineSelectedListeners(key);
 				if (!cardConfig.allowSelection)
 					content.table.deselectAll();

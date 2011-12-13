@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
@@ -19,7 +20,12 @@ import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.collections.explorer.ExplorerAdapter;
 import org.softwareFm.collections.menu.ICardMenuItemHandler;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.httpClient.requests.IResponseCallback;
+import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.utilities.functions.Functions;
+import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.strings.Strings;
 
 public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIntegrationTest {
@@ -28,7 +34,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 	private static final String pleaseAddAName = "<Please add a name>";
 	private static final String pleaseAddADescription = "<Please add a description>";
 
-	public void testAddingDocumentation() {
+	public void testAddingDocumentation() throws Exception {
 		checkAdding("documentation", 3, null, new IAddingCallback<ICard>() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
@@ -39,7 +45,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 		});
 	}
 
-	public void testAddingMailingList() {
+	public void testAddingMailingList() throws Exception {
 		checkAdding("mailingList", 6, "name", new IAddingCallback<ICard>() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
@@ -53,8 +59,8 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 		});
 	}
 
-	public void testAddingTutorials() {
-		checkAdding("tutorial", "Tutorials", 4, null, new IAddingCallback<ICard>() {
+	public void testAddingTutorials() throws Exception {
+		IAddingCallback<ICard> addingCallback = new IAddingCallback<ICard>() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
 				adding.tableItem(0, "title", "", "someTitle");
@@ -62,10 +68,42 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 				adding.tableItem(2, "description", pleaseAddADescription, "someDescription");
 				adding.tableItem(3, "author", "", "someAuthor");
 			}
+		};
+		String collectionUrl = AbstractExplorerIntegrationTest.artifactUrl + "/" + "tutorial";
+		delete(collectionUrl);
+		
+		checkAddingToUrl(AbstractExplorerIntegrationTest.artifactUrl, new ICallback<ICard>() {
+			@Override
+			public void process(ICard t) throws Exception {
+				Menu menu = selectAndCreatePopupMenu(t, "Tutorials");
+				executeMenuItem(menu, "Add " + "tutorial");
+			}
+		}, "tutorial", "Tutorials", 4, null, addingCallback, new IFunction1<String, String>() {
+			@Override
+			public String apply(String from) throws Exception {
+				return from + "/" + "tutorial";
+			}
+		});
+		delete(collectionUrl);
+		
+		checkAddingToUrl(collectionUrl, new ICallback<ICard>() {
+		
+			@Override
+			public void process(ICard t) throws Exception {
+				final Menu menu1 = new Menu(shell);
+				cardConfig.popupMenuService.contributeTo("popupmenuid", new Event(), menu1, t);
+				Menu menu = menu1;
+				executeMenuItem(menu, "Add " + "tutorial");
+			}
+		}, "tutorial", "Tutorials", 4, null, addingCallback, new IFunction1<String, String>() {
+			@Override
+			public String apply(String from) throws Exception {
+				return from;
+			}
 		});
 	}
 
-	public void testAddingTweets() {
+	public void testAddingTweets() throws Exception {
 		checkAdding("tweet", 1, "tweet", new IAddingCallback<ICard>() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
@@ -74,7 +112,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 		});
 	}
 
-	public void testAddingRss() {
+	public void testAddingRss() throws Exception {
 		checkAdding("rss", 2, null, new IAddingCallback<ICard>() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
@@ -84,7 +122,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 		});
 	}
 
-	public void testAddingBlog() {
+	public void testAddingBlog() throws Exception {
 		checkAdding("blog", 2, null, new IAddingCallback<ICard>() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
@@ -94,7 +132,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 		});
 	}
 
-	public void testAddingForum() {
+	public void testAddingForum() throws Exception {
 		checkAdding("forum", 2, null, new IAddingCallback<ICard>() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
@@ -104,19 +142,51 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 		});
 	}
 
-	public void testAddingAdvert() {
-		checkAdding("advert", "Adverts", 3, null, new IAddingCallback<ICard>() {
+	public void testAddingAdvert() throws Exception {
+		IAddingCallback<ICard> addingCallback = new IAddingCallback<ICard>() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
 				adding.tableItem(0, "title", "", "someTitle");
 				adding.tableItem(1, "description", pleaseAddADescription, "someDescription");
 				adding.tableItem(2, "url", unknown, "someUrl");
 			}
+		};
+		String collectionUrl = AbstractExplorerIntegrationTest.artifactUrl + "/" + "advert";
+		delete(collectionUrl);
+		
+		checkAddingToUrl(AbstractExplorerIntegrationTest.artifactUrl, new ICallback<ICard>() {
+			@Override
+			public void process(ICard t) throws Exception {
+				Menu menu = selectAndCreatePopupMenu(t, "Adverts");
+				executeMenuItem(menu, "Add " + "advert");
+			}
+		}, "advert", "Adverts", 3, null, addingCallback, new IFunction1<String, String>() {
+			@Override
+			public String apply(String from) throws Exception {
+				return from + "/" + "advert";
+			}
+		});
+		delete(collectionUrl);
+		
+		checkAddingToUrl(collectionUrl, new ICallback<ICard>() {
+		
+			@Override
+			public void process(ICard t) throws Exception {
+				final Menu menu1 = new Menu(shell);
+				cardConfig.popupMenuService.contributeTo("popupmenuid", new Event(), menu1, t);
+				Menu menu = menu1;
+				executeMenuItem(menu, "Add " + "advert");
+			}
+		}, "advert", "Adverts", 3, null, addingCallback, new IFunction1<String, String>() {
+			@Override
+			public String apply(String from) throws Exception {
+				return from;
+			}
 		});
 
 	}
 
-	public void testAddingRecruitment() {
+	public void testAddingRecruitment() throws Exception {
 		checkAdding("recruitment", 3, null, new IAddingCallback<ICard>() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
@@ -128,21 +198,81 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 
 	}
 
-	/** If urlFragment is null, expecting a UUID */
-	private void checkAdding(final String collection, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback) {
-		checkAdding(collection, Strings.camelCaseToPretty(collection), count, urlFragment, addingCallback);
+	/**
+	 * If urlFragment is null, expecting a UUID
+	 * 
+	 * @throws Exception
+	 */
+	private void checkAdding(final String collection, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback) throws Exception {
+		String collectionUrl = AbstractExplorerIntegrationTest.artifactUrl + "/" + collection;
+
+		delete(collectionUrl);
+		addFromRoot(collection, count, urlFragment, addingCallback);
+		
+		delete(collectionUrl);
+		addFromCollection(collection, count, urlFragment, addingCallback, collectionUrl);
+		
+		makeCollectionUrlAnExistingUrl(collectionUrl);
+		addFromRoot(collection, count, urlFragment, addingCallback);
+		
+		makeCollectionUrlAnExistingUrl(collectionUrl);
+		addFromCollection(collection, count, urlFragment, addingCallback, collectionUrl);
 
 	}
 
-	private void checkAdding(final String collection, final String nameInMainCard, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback) {
-		displayCard(AbstractExplorerIntegrationTest.artifactUrl, new CardHolderAndCardCallback() {
+	private void makeCollectionUrlAnExistingUrl(String collectionUrl) throws InterruptedException, ExecutionException {
+		delete(collectionUrl);
+		repository.post(rootUrl+collectionUrl,Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), IResponseCallback.Utils.noCallback()).get();
+	}
+
+	private void addFromCollection(final String collection, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback, String collectionUrl) {
+		final String nameInMainCard = Strings.camelCaseToPretty(collection);
+		checkAddingToUrl(collectionUrl, new ICallback<ICard>() {
+		
+			@Override
+			public void process(ICard t) throws Exception {
+				final Menu menu1 = new Menu(shell);
+				cardConfig.popupMenuService.contributeTo("popupmenuid", new Event(), menu1, t);
+				Menu menu = menu1;
+				executeMenuItem(menu, "Add " + collection);
+			}
+		}, collection, nameInMainCard, count, urlFragment, addingCallback, new IFunction1<String, String>() {
+			@Override
+			public String apply(String from) throws Exception {
+				return from;
+			}
+		});
+	}
+
+	private void addFromRoot(final String collection, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback) {
+		final String nameInMainCard = Strings.camelCaseToPretty(collection);
+		checkAddingToUrl(AbstractExplorerIntegrationTest.artifactUrl, new ICallback<ICard>() {
+			@Override
+			public void process(ICard t) throws Exception {
+				Menu menu = selectAndCreatePopupMenu(t, nameInMainCard);
+				executeMenuItem(menu, "Add " + collection);
+			}
+		}, collection, nameInMainCard, count, urlFragment, addingCallback, new IFunction1<String, String>() {
+			@Override
+			public String apply(String from) throws Exception {
+				return from + "/" + collection;
+			}
+		});
+	}
+
+	private void delete(String collectionUrl) throws InterruptedException, ExecutionException {
+		String fullUrl = rootUrl + collectionUrl;
+		httpClient.delete(fullUrl).execute(IResponseCallback.Utils.noCallback()).get();
+	}
+
+	private void checkAddingToUrl(String initialUrl, final ICallback<ICard> addMenuExecutor, final String collection, final String nameInMainCard, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback, final IFunction1<String, String> baseToExpectedCollectionUrlFn) {
+		displayCard(initialUrl, new CardHolderAndCardCallback() {
 			@Override
 			public void process(ICardHolder cardHolder, final ICard initialCard) throws Exception {
-				Menu menu = selectAndCreatePopupMenu(initialCard, nameInMainCard);
-				executeMenuItem(menu, "Add " + collection);
+				addMenuExecutor.process(initialCard);
 
-				Composite detailContent = (Composite) masterDetailSocial.getDetailContent();
-				final Table cardTable = Lists.getOnly(Swts.findChildrenWithClass(detailContent, Table.class));
+				Composite detailContent1 = (Composite) masterDetailSocial.getDetailContent();
+				final Table cardTable = Lists.getOnly(Swts.findChildrenWithClass(detailContent1, Table.class));
 				assertEquals(count, cardTable.getItemCount());
 				addingCallback.process(false, initialCard, new IAdding() {
 					@Override
@@ -158,26 +288,27 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 						text.setText(newValue);
 					}
 				});
+				Composite detailContent = detailContent1;
 
 				List<Button> buttons = Swts.findChildrenWithClass(detailContent, Button.class);
 				final Button okButton = Swts.findButtonWithText(buttons, "Ok");
 				final CountDownLatch latch = new CountDownLatch(1);
-				explorer.addExplorerListener(new ExplorerAdapter() {
+				ExplorerAdapter listemer = new ExplorerAdapter() {
 
 					@Override
 					public void collectionItemAdded(String collectionUrl, String key) {
 						explorer.removeExplorerListener(this);
-						latch.countDown();
 						ICard card = explorer.cardHolder.getCard();
 						assertEquals(CardConstants.collection, card.cardType());
-						assertEquals(initialCard.url() + "/" + collection, card.url());
+						String expectedCollectionUrl = Functions.call(baseToExpectedCollectionUrlFn, initialCard.url());
+						assertEquals(expectedCollectionUrl, collectionUrl);
 						assertEquals(collectionUrl, card.url());
 
 						if (urlFragment == null)
 							UUID.fromString(key);
 						else {
 							Map<String, Object> data = card.data();
-							Map<String,Object> dataAboutItemAdded = (Map<String, Object>) data.get(key);
+							Map<String, Object> dataAboutItemAdded = (Map<String, Object>) data.get(key);
 							String raw = (String) dataAboutItemAdded.get(urlFragment);
 							assertEquals(Strings.forUrl(raw), key);
 						}
@@ -185,10 +316,10 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 						int index = card.getTable().getSelectionIndex();
 						TableItem item = card.getTable().getItem(index);
 						assertEquals(key, item.getData());
-
-						// not checking that the notify listener has being called...either showing browser or card
+						latch.countDown();
 					}
-				});
+				};
+				explorer.addExplorerListener(listemer);
 				okButton.notifyListeners(SWT.Selection, new Event());
 				dispatchUntilTimeoutOrLatch(latch, delay);
 			}

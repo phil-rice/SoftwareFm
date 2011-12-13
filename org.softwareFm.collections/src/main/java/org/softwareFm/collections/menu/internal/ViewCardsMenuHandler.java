@@ -30,7 +30,7 @@ public class ViewCardsMenuHandler extends AbstractCardMenuHandler {
 		if (value instanceof Map<?,?>) {
 			String viewActualPattern = resourceGetter.getStringOrNull(CardConstants.menuItemViewCards);
 			if (viewActualPattern != null) {
-				MenuItem menuItem = new MenuItem(menu, SWT.NULL);
+			 	MenuItem menuItem = new MenuItem(menu, SWT.NULL);
 				menuItem.setText(MessageFormat.format(viewActualPattern, key));
 				return menuItem;
 			}
