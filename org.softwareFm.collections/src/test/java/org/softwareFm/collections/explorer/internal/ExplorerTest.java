@@ -78,7 +78,7 @@ public class ExplorerTest extends SwtAndServiceTest {
 		super.setUp();
 		updateStore = new CardDataStoreMock();
 		masterDetailSocial = new MasterDetailSocial(shell, SWT.NULL);
-		raw = new CardConfig(ICardFactory.Utils.cardFactory(), updateStore);
+		raw = IExplorerTest.addNeededResources(new CardConfig(ICardFactory.Utils.cardFactory(), updateStore));
 		raw.popupMenuService.registerMenuId(popupMenuId);
 	}
 }
