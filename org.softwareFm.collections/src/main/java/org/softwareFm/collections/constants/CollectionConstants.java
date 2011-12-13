@@ -25,5 +25,6 @@ public class CollectionConstants {
 	public static final String comment = "comment";
 	public static final String commentsTitle = "comment.title";
 	public static final String commentsNoTitle = "comment.no.title";
+	public static final String addCommentButtonTitle = "button.comment.add.title";
 
 }

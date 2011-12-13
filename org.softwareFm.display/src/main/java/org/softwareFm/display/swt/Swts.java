@@ -806,12 +806,12 @@ public class Swts {
 			@Override
 			protected void layout(Composite composite, boolean flushCache) {
 				Control[] children = composite.getChildren();
-				assert children.length == 2: Arrays.asList(children);
+				assert children.length == 2 : Arrays.asList(children);
 				Control title = children[0];
 				Control content = children[1];
 				Rectangle ca = composite.getClientArea();
 				title.setBounds(ca.x, ca.y, ca.width, titleHeight);
-				content.setBounds(ca.x, ca.y + titleHeight, ca.width, ca.height-titleHeight);
+				content.setBounds(ca.x, ca.y + titleHeight, ca.width, ca.height - titleHeight);
 			}
 
 			@Override
@@ -824,6 +824,34 @@ public class Swts {
 			}
 		};
 
+	}
+
+	public static Layout titleAndRhsLayout() {
+		return new Layout() {
+
+			@Override
+			protected void layout(Composite composite, boolean flushCache) {
+				Control[] children = composite.getChildren();
+				assert children.length == 2 : Arrays.asList(children);
+				Control lhs = children[0];
+				Control rhs = children[1];
+				int rhsWidth = children[1].computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
+				Rectangle ca = composite.getClientArea();
+				lhs.setBounds(ca.x, ca.y, ca.width - rhsWidth, ca.height);
+				rhs.setBounds(ca.x + ca.width - rhsWidth, ca.y, rhsWidth, ca.height);
+			}
+
+			@Override
+			protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
+				Control[] children = composite.getChildren();
+				assert children.length == 2;
+				Control lhs = children[0];
+				Control rhs = children[1];
+				Point lhSize = lhs.computeSize(wHint, hHint);
+				Point rhSize = rhs.computeSize(wHint, hHint);
+				return new Point(lhSize.x + rhSize.x, Math.max(lhSize.y, rhSize.y));
+			}
+		};
 	}
 
 	public static void addMenuTo(IHasControl hasControl, IFunction1<Control, Menu> builder) {

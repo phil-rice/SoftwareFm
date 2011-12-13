@@ -138,10 +138,14 @@ public class Explorer implements IExplorer {
 				return new Comments(from, cardConfig, new ICommentsCallback() {
 					@Override
 					public void selected(String cardType, String title, String text) {
-
 						masterDetailSocial.putSocialOverDetail();
 						masterDetailSocial.createAndShowDetail(TextInBorder.makeTextFromString(SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL, cardConfig, CollectionConstants.comment, title, text));
 
+					}
+				}, new Runnable() {
+					@Override
+					public void run() {
+						System.out.println("Adding comment");
 					}
 				});
 			}

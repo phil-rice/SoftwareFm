@@ -41,14 +41,17 @@ public class Comments implements IHasControl {
 		private final Title title;
 		private String cardType;
 
-		public CommentsComposite(Composite parent, CardConfig cardConfig, final ICommentsCallback callback) {
+		public CommentsComposite(Composite parent, CardConfig cardConfig, final ICommentsCallback callback, Runnable addButton) {
 			super(parent, SWT.NULL, cardConfig);
 			this.cc = cardConfig;
-			title = new Title(this, cardConfig, TitleSpec.noTitleSpec(getBackground()), "Comments", "");
+			Composite header = Swts.newComposite(this, SWT.NULL, "header");
+			header.setLayout(Swts.titleAndRhsLayout());
+			title = new Title(header, cardConfig, TitleSpec.noTitleSpec(getBackground()), "Comments", "");
+			Swts.Buttons.makePushButton(header, Functions.call(cardConfig.resourceGetterFn, null), CollectionConstants.addCommentButtonTitle, addButton);
 			this.body = new CompositeWithEditorIndent(this, SWT.NULL, cardConfig);
 			this.addPaintListener(new OutlinePaintListener(cardConfig));
 			body.setLayout(new FillLayout());
-			this.table = new Table(body, SWT.V_SCROLL | SWT.FULL_SELECTION|SWT.BORDER);
+			this.table = new Table(body, SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 			table.setLinesVisible(true);
 			this.titleColumn = new TableColumn(table, SWT.NONE);
 			this.textColumn = new TableColumn(table, SWT.NONE);
@@ -60,7 +63,7 @@ public class Comments implements IHasControl {
 						Object object = map.get(table.getItem(index).getData());
 						if (object instanceof Map<?, ?>) {
 							Map<String, Object> entryMap = (Map<String, Object>) object;
-							String title =Strings.nullSafeToString(entryMap.get("title"));
+							String title = Strings.nullSafeToString(entryMap.get("title"));
 							String text = Strings.nullSafeToString(entryMap.get("text"));
 							callback.selected(cardType, title, text);
 						}
@@ -69,7 +72,7 @@ public class Comments implements IHasControl {
 			});
 		}
 
-		public void setInitialComments( String titleText, ICardData cardData, Map<String, Object> map) {
+		public void setInitialComments(String titleText, ICardData cardData, Map<String, Object> map) {
 			this.cardType = cardData.cardType();
 			this.map.clear();
 			this.map.putAll(map);
@@ -101,8 +104,8 @@ public class Comments implements IHasControl {
 
 	private final CommentsComposite content;
 
-	public Comments(Composite parent, CardConfig cardConfig, ICommentsCallback callback) {
-		content = new CommentsComposite(parent, cardConfig, callback);
+	public Comments(Composite parent, CardConfig cardConfig, ICommentsCallback callback, Runnable addComment) {
+		content = new CommentsComposite(parent, cardConfig, callback, addComment);
 		content.setLayout(Swts.titleAndContentLayout(cardConfig.titleHeight));
 	}
 
