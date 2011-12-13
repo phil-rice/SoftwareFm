@@ -50,15 +50,22 @@ public class StringsTest extends TestCase {
 		assertEquals(version, Strings.versionPartOf(file, "n/a"));
 		assertEquals(prefix, Strings.withoutVersion(file, "n/a"));
 	}
+	public void testLastSegmentAndAllButLastSegment(){
+		checkLastSegment(null, null,null);
+		checkLastSegment("", "","");
+		checkLastSegment("abc", "abc","abc");
+		checkLastSegment("/a/b", "/a","b");
+		checkLastSegment("/a/b/c", "/a/b","c");
+		
+	}
+	
 
-	public void testStringToUrlSegment() {
-		checkStringToUrlSegment("", "");
-		checkStringToUrlSegment("abc", "abc");
-		checkStringToUrlSegment("ab.c", "a/b.c");
-		checkStringToUrlSegment("aB.C", " a / b . c ");
-		checkStringToUrlSegment("someNewValue", " Some New Value ");
-		checkStringToUrlSegment("s.omeNewValue", " S.ome New Value ");
-		checkStringToUrlSegment("aBC", "a!\"£$%^&*\'# b c");
+
+	private void checkLastSegment(String input, String begin, String end) {
+		assertEquals(end, Strings.lastSegment(input, "/"));
+		assertEquals(end, Functions.call(Strings.lastSegmentFn("/"),input));
+		assertEquals(begin, Strings.allButLastSegment(input, "/"));
+		
 	}
 
 	public void testLowerAndUpperCaseFirstCharacter() {
@@ -77,10 +84,6 @@ public class StringsTest extends TestCase {
 
 	}
 
-	private void checkStringToUrlSegment(String expected, String raw) {
-		assertEquals(expected, Strings.stringToUrlSegment(raw));
-		assertEquals(expected, Functions.call(Strings.stringToUrlSegmentFn(), raw));
-	}
 
 	public void testVersionCompare() {
 		assertEquals(0, Strings.compareVersionNumbers("1.2.1", "1.2.1"));

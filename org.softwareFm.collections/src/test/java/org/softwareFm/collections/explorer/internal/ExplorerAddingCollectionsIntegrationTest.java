@@ -1,7 +1,9 @@
 package org.softwareFm.collections.explorer.internal;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
@@ -13,6 +15,8 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardHolder;
+import org.softwareFm.card.constants.CardConstants;
+import org.softwareFm.collections.explorer.ExplorerAdapter;
 import org.softwareFm.collections.menu.ICardMenuItemHandler;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.collections.Lists;
@@ -24,10 +28,8 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 	private static final String pleaseAddAName = "<Please add a name>";
 	private static final String pleaseAddADescription = "<Please add a description>";
 
-
-
 	public void testAddingDocumentation() {
-		checkAdding("documentation", 3,null, new IAddingCallback<ICard>() {
+		checkAdding("documentation", 3, null, new IAddingCallback<ICard>() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
 				adding.tableItem(0, "title", "", "some Title");
@@ -36,6 +38,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 			}
 		});
 	}
+
 	public void testAddingMailingList() {
 		checkAdding("mailingList", 6, "name", new IAddingCallback<ICard>() {
 			@Override
@@ -134,14 +137,14 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 	private void checkAdding(final String collection, final String nameInMainCard, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback) {
 		displayCard(AbstractExplorerIntegrationTest.artifactUrl, new CardHolderAndCardCallback() {
 			@Override
-			public void process(ICardHolder cardHolder, ICard card) throws Exception {
-				Menu menu = selectAndCreatePopupMenu(card, nameInMainCard);
+			public void process(ICardHolder cardHolder, final ICard initialCard) throws Exception {
+				Menu menu = selectAndCreatePopupMenu(initialCard, nameInMainCard);
 				executeMenuItem(menu, "Add " + collection);
 
 				Composite detailContent = (Composite) masterDetailSocial.getDetailContent();
 				final Table cardTable = Lists.getOnly(Swts.findChildrenWithClass(detailContent, Table.class));
 				assertEquals(count, cardTable.getItemCount());
-				addingCallback.process(false, card, new IAdding() {
+				addingCallback.process(false, initialCard, new IAdding() {
 					@Override
 					public void tableItem(int index, String name, String existing, String newValue) {
 						String prettyName = Strings.camelCaseToPretty(name);
@@ -158,31 +161,36 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 
 				List<Button> buttons = Swts.findChildrenWithClass(detailContent, Button.class);
 				final Button okButton = Swts.findButtonWithText(buttons, "Ok");
-				doSomethingAndWaitForCardDataStoreToFinish(new Runnable() {
+				final CountDownLatch latch = new CountDownLatch(1);
+				explorer.addExplorerListener(new ExplorerAdapter() {
+
 					@Override
-					public void run() {
-						okButton.notifyListeners(SWT.Selection, new Event());
-					}
-				}, new CardHolderAndCardCallback() {
-					@Override
-					public void process(ICardHolder cardHolder, final ICard card) throws Exception {
-						assertEquals(collection, card.cardType());
-						addingCallback.process(true, card, new IAdding() {
-							@Override
-							public void tableItem(int index, String name, String existing, String newValue) {
-								assertEquals(newValue, card.data().get(name));
-							}
-						});
-						String url = card.url();
-						String lastSegment = Strings.lastSegment(url, "/");
+					public void collectionItemAdded(String collectionUrl, String key) {
+						explorer.removeExplorerListener(this);
+						latch.countDown();
+						ICard card = explorer.cardHolder.getCard();
+						assertEquals(CardConstants.collection, card.cardType());
+						assertEquals(initialCard.url() + "/" + collection, card.url());
+						assertEquals(collectionUrl, card.url());
+
 						if (urlFragment == null)
-							UUID.fromString(lastSegment);
-						else
-							assertEquals(Strings.forUrl((String) card.data().get(urlFragment)), lastSegment);
+							UUID.fromString(key);
+						else {
+							Map<String, Object> data = card.data();
+							Map<String,Object> dataAboutItemAdded = (Map<String, Object>) data.get(key);
+							String raw = (String) dataAboutItemAdded.get(urlFragment);
+							assertEquals(Strings.forUrl(raw), key);
+						}
+
+						int index = card.getTable().getSelectionIndex();
+						TableItem item = card.getTable().getItem(index);
+						assertEquals(key, item.getData());
+
+						// not checking that the notify listener has being called...either showing browser or card
 					}
-
 				});
-
+				okButton.notifyListeners(SWT.Selection, new Event());
+				dispatchUntilTimeoutOrLatch(latch, delay);
 			}
 		});
 	}

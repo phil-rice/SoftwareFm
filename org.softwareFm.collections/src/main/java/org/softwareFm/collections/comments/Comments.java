@@ -128,4 +128,18 @@ public class Comments implements IHasControl {
 	public Control getControl() {
 		return content;
 	}
+
+	public void selectComment(String key) {
+		Table table = content.table;
+		for (int i = 0; i < table.getItemCount(); i++) {
+			TableItem item = content.table.getItem(i);
+			if (key.equals(item.getData())) {
+				table.select(i);
+				table.showItem(item);
+				table.notifyListeners(SWT.Selection, new Event());
+				return;
+			}
+		}
+
+	}
 }

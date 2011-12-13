@@ -13,6 +13,8 @@ public interface IExplorerListener extends ICardAndCollectionDataStoreVisitor {
 
 	void displayCard(String url);
 	
+	void commentAdded(String commentsUrl, String key);
+	void collectionItemAdded(String collectionUrl, String key);
 	static class Utils{
 		public static IExplorerListener sysout(){
 			return new IExplorerListener() {
@@ -56,9 +58,20 @@ public interface IExplorerListener extends ICardAndCollectionDataStoreVisitor {
 				public void displayCard(String url) {
 					System.out.println("displayCard: " + url);
 				}
+
+				@Override
+				public void commentAdded(String commentsUrl, String key) {
+					System.out.println("commentAdded: " + commentsUrl +", "+ key);
+				}
+				@Override
+				public void collectionItemAdded(String collectionUrl, String key) {
+					System.out.println("collectionItemAdded: " + collectionUrl +", "+ key);
+					
+				}
 			};
 			
 		}
 	}
+
 
 }

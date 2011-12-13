@@ -301,6 +301,8 @@ public class Strings {
 	}
 
 	public static String lastSegment(String from, final String separator) {
+		if (from == null)
+			return from;
 		int index = from.lastIndexOf(separator);
 		if (index == -1)
 			return from;
@@ -308,22 +310,15 @@ public class Strings {
 			return from.substring(index + 1);
 	}
 
-	public static IFunction1<String, String> stringToUrlSegmentFn() {
-		return new IFunction1<String, String>() {
-			@Override
-			public String apply(String from) throws Exception {
-				return stringToUrlSegment(from);
-			}
-		};
-	}
+	public static String allButLastSegment(String from, final String separator) {
+		if (from == null)
+			return from;
+		int index = from.lastIndexOf(separator);
+		if (index == -1)
+			return from;
+		else
+			return from.substring(0, index);
 
-	public static String stringToUrlSegment(String from) {
-		List<String> fragments = splitIgnoreBlanks(from, " ");
-		Iterable<String> cleaned = Iterables.map(fragments, forUrlFn());
-		Iterable<String> upperCased = Iterables.map(cleaned, upperCaseFirstCharacterFn());
-		String join = join(upperCased, "");
-		String result = lowerCaseFirstCharacter(join);
-		return result;
 	}
 
 	public static IFunction1<String, String> upperCaseFirstCharacterFn() {
@@ -423,7 +418,7 @@ public class Strings {
 	}
 
 	public static String removeNewLines(String raw) {
-		return raw.replaceAll("\n", "").replaceAll("\r", "").replaceAll("\f","");
+		return raw.replaceAll("\n", "").replaceAll("\r", "").replaceAll("\f", "");
 	}
 
 }

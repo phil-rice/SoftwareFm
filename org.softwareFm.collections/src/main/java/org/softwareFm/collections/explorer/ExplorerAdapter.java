@@ -6,7 +6,7 @@ import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.configuration.CardConfig;
 
-public class ExplorerAdapter implements IExplorerListener{
+public class ExplorerAdapter implements IExplorerListener {
 
 	@Override
 	public void initialUrl(ICardHolder cardHolder, CardConfig cardConfig, String url) {
@@ -38,6 +38,14 @@ public class ExplorerAdapter implements IExplorerListener{
 
 	@Override
 	public void displayCard(String url) {
+	}
+
+	@Override
+	public void commentAdded(String commentsUrl, String key) {
+	}
+
+	@Override
+	public void collectionItemAdded(String collectionUrl, String key) {
 	}
 
 }

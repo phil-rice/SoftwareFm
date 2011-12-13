@@ -31,10 +31,12 @@ import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.card.ILineSelectedListener;
 import org.softwareFm.card.card.RightClickCategoryResult;
+import org.softwareFm.card.card.RightClickCategoryResult.Type;
 import org.softwareFm.card.card.composites.TextInBorder;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
+import org.softwareFm.card.dataStore.CardDataStoreCallbackAdapter;
 import org.softwareFm.card.dataStore.IAfterEditCallback;
 import org.softwareFm.card.dataStore.ICardAndCollectionDataStoreVisitor;
 import org.softwareFm.card.dataStore.ICardDataStore;
@@ -145,7 +147,54 @@ public class Explorer implements IExplorer {
 				}, new Runnable() {
 					@Override
 					public void run() {
-						System.out.println("Adding comment");
+						final String baseUrl = cardHolder.getCard().url(); // the url when the button was pushed
+						final String cardType = cardHolder.getCard().cardType(); // the url when the button was pushed
+						masterDetailSocial.createAndShowDetail(new IFunction1<Composite, IValueEditor>() {
+							@Override
+							public IValueEditor apply(Composite from) throws Exception {
+								return IValueEditor.Utils.cardEditorWithLayout(from, cardConfig, "Add Comment", CollectionConstants.comment, baseUrl, Maps.stringObjectMap(), new ICardEditorCallback() {
+									@Override
+									public void ok(ICardData cardData) {
+										RightClickCategoryResult result = new RightClickCategoryResult(Type.IS_COLLECTION, CollectionConstants.comment, CollectionConstants.comment, baseUrl);
+										addCollectionItem(result, CollectionConstants.comment, cardData, new IAfterEditCallback() {
+											@Override
+											public void afterEdit(final String addedCommentUrl) {
+												cardConfig.cardDataStore.processDataFor(baseUrl + "/" + CollectionConstants.comment, new CardDataStoreCallbackAdapter<Void>() {
+													@Override
+													public Void process(String localUrl, Map<String, Object> result) throws Exception {
+														final String commentsUrl = Strings.allButLastSegment(addedCommentUrl, "/");
+														final String key = Strings.lastSegment(addedCommentUrl, "/");
+														Map<String, Object> map = Maps.makeMap(CollectionConstants.comment, result);
+														comments.showCommentsFor(ICardData.Utils.create(cardConfig, cardType, commentsUrl, map));
+														comments.selectComment(key);
+														fireListeners(new ICallback<IExplorerListener>() {
+															@Override
+															public void process(IExplorerListener t) throws Exception {
+																t.commentAdded(commentsUrl, key);
+
+															}
+														});
+														return null;
+													}
+												});
+											}
+										});
+									}
+
+									@Override
+									public void cancel(ICardData cardData) {
+										cardHolder.getCard().getTable().notifyListeners(SWT.Selection, new Event());
+									}
+
+									@Override
+									public boolean canOk(Map<String, Object> data) {
+										String title = Strings.nullSafeToString(data.get(CollectionConstants.commentsTitleKey));
+										String text = Strings.nullSafeToString(data.get(CollectionConstants.commentsTextKey));
+										return title.length() > 0 && text.length() > 0;
+									}
+								});
+							}
+						});
 					}
 				});
 			}
@@ -183,18 +232,17 @@ public class Explorer implements IExplorer {
 				return IValueEditor.Utils.cardEditorWithLayout(from, card.getCardConfig(), title, result.collectionName, result.url, data, new ICardEditorCallback() {
 					@Override
 					public void ok(ICardData cardData) {
-						IMutableCardDataStore store = (IMutableCardDataStore) cardConfig.cardDataStore;
-						Map<String, Object> newData = cardData.data();
-						String cardUrl = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, collectionName, CardConstants.cardNameUrlKey);
-						String cardNameKey = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, collectionName, CardConstants.cardNameFieldKey);
-						String cardName = (String) newData.get(cardNameKey);
-						String itemUrlFragment = MessageFormat.format(cardUrl, Strings.forUrl(cardName), makeRandomUUID());
-
-						IMutableCardDataStore.Utils.addCollectionItem(store, result, itemUrlFragment, newData, new IAfterEditCallback() {
+						addCollectionItem(result, collectionName, cardData, new IAfterEditCallback() {
 							@Override
 							public void afterEdit(String url) {
-								System.out.println("Stores into: " + url);
-								displayCard(url, new CardAndCollectionDataStoreAdapter());
+								final String key = Strings.lastSegment(url, "/");
+								final String collectionUrl = Strings.allButLastSegment(url, "/");
+								displayAndSelectItemWithKey(collectionUrl, key, new ICallback<IExplorerListener>() {
+									@Override
+									public void process(IExplorerListener t) throws Exception {
+										t.collectionItemAdded(collectionUrl, key);
+									}
+								});
 							}
 						});
 					}
@@ -211,6 +259,61 @@ public class Explorer implements IExplorer {
 				});
 			}
 		});
+	}
+
+	private void addCollectionItem(final RightClickCategoryResult result, final String collectionName, ICardData cardData, final IAfterEditCallback afterEdit) {
+		IMutableCardDataStore store = (IMutableCardDataStore) cardConfig.cardDataStore;
+		assert result.collectionName.equals(collectionName);// TODO do we really need this parameter?
+		Map<String, Object> newData = cardData.data();
+		String cardUrl = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, collectionName, CardConstants.cardNameUrlKey);
+		String cardNameKey = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, collectionName, CardConstants.cardNameFieldKey);
+		String cardName = (String) newData.get(cardNameKey);
+		String itemUrlFragment = MessageFormat.format(cardUrl, Strings.forUrl(cardName), makeRandomUUID());
+
+		IMutableCardDataStore.Utils.addCollectionItem(store, result, itemUrlFragment, newData, new IAfterEditCallback() {
+			@Override
+			public void afterEdit(String url) {
+				afterEdit.afterEdit(url);
+			}
+
+		});
+	}
+
+	private void displayAndSelectItemWithKey(String url, final String key, final ICallback<IExplorerListener> callback) {
+		displayCard(url, new CardAndCollectionDataStoreAdapter() {
+			@Override
+			public void finished(ICardHolder cardHolder, String url, ICard card) throws Exception {
+				try {
+					if (key != null) {
+						Table table = card.getTable();
+						for (int i = 0; i < table.getItemCount(); i++) {
+							TableItem item = table.getItem(i);
+							if (key.equals(item.getData())) {
+								table.select(i);
+								table.notifyListeners(SWT.Selection, new Event());
+								return;
+							}
+						}
+					}
+				} finally {
+					fireListeners(callback);
+				}
+			}
+		});
+	}
+
+	private String getKey() {
+		ICard card = cardHolder.getCard();
+		if (card != null) {
+			int index = card.getTable().getSelectionIndex();
+			if (index != -1) {
+				TableItem item = card.getTable().getItem(index);
+				String key = (String) item.getData();
+				return key;
+			}
+		}
+		return null;
+
 	}
 
 	@Override
@@ -820,5 +923,9 @@ public class Explorer implements IExplorer {
 	@Override
 	public void displayNotAJar() {
 		masterDetailSocial.createAndShowMaster(TextInBorder.makeText(SWT.WRAP, cardConfig, CollectionConstants.fileNotAJarCardType, CollectionConstants.fileNotAJarTitle, CollectionConstants.fileNotAJarText));
+	}
+
+	public Comments getComments() {
+		return comments;
 	}
 }
