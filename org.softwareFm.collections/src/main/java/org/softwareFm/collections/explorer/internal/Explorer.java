@@ -581,7 +581,14 @@ public class Explorer implements IExplorer {
 
 					@Override
 					public boolean canOk(Map<String, Object> data) {
-						return false;
+						String groupId = Strings.nullSafeToString(data.get(CollectionConstants.groupId));
+						String artifactId = Strings.nullSafeToString(data.get(CollectionConstants.artifactId));
+						String version = Strings.nullSafeToString(data.get(CollectionConstants.version));
+
+						boolean groupValidated = Strings.isUrlFriendly(groupId);
+						boolean artifactValidated = Strings.isUrlFriendly(artifactId);
+						boolean versionValidated = Strings.isUrlFriendly(version);
+						return groupValidated && artifactValidated && versionValidated;
 					}
 				});
 			}

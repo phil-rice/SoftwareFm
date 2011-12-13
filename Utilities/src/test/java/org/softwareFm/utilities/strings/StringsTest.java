@@ -13,6 +13,14 @@ import org.softwareFm.utilities.functions.Functions;
 
 public class StringsTest extends TestCase {
 	
+	public void testIsUrlFriendly(){
+		assertTrue(Strings.isUrlFriendly("asdljkalsdj"));
+		assertTrue(Strings.isUrlFriendly("asdljkal---s_____dj"));
+		assertTrue(Strings.isUrlFriendly("asdl.......jkal---s_____dj"));
+		assertFalse(Strings.isUrlFriendly(""));
+		assertFalse(Strings.isUrlFriendly("asd$l.......jkal---s_____dj"));
+	}
+	
 	public void testRemoveBrackets(){
 		assertEquals("onethree", Strings.removeBrackets("one<two>three", '<', '>'));
 		assertEquals("one<two>three", Strings.removeBrackets("one<two>three", '{', '}'));

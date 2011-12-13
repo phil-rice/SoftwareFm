@@ -8,8 +8,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
@@ -23,8 +21,8 @@ import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.editors.ICardEditorCallback;
 import org.softwareFm.card.editors.IValueComposite;
 import org.softwareFm.card.editors.IValueEditor;
-import org.softwareFm.card.title.TitleWithTitlePaintListener;
 import org.softwareFm.card.title.TitleSpec;
+import org.softwareFm.card.title.TitleWithTitlePaintListener;
 import org.softwareFm.display.okCancel.OkCancel;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.functions.Functions;
@@ -74,40 +72,35 @@ public class CardEditor implements IValueEditor, ICardData {
 				}
 			});
 
-			final TableEditor editor = new TableEditor(cardTable.getTable());
-			editor.horizontalAlignment = SWT.LEFT;
-			editor.grabHorizontal = true;
-			editor.minimumWidth = 40;
-			cardTable.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					Control oldEditor = editor.getEditor();
-					if (oldEditor != null)
-						oldEditor.dispose();
-					int index = cardTable.getSelectionIndex();
-					if (index == -1)return;
-					TableItem item = cardTable.getItem(index);
-					Text newEditor = new Text(cardTable.getTable(), SWT.NONE);
-					String text = Strings.nullSafeToString(cardData.data().get(item.getData()));
-					newEditor.setText(text);
-					newEditor.selectAll();
-					newEditor.setFocus();
-					editor.setEditor(newEditor, item, 1);
-					newEditor.addModifyListener(new ModifyListener() {
-						@Override
-						public void modifyText(ModifyEvent e) {
-							Text text = (Text) editor.getEditor();
-							TableItem item = editor.getItem();
-							String key = (String) item.getData();
-							String newValue = text.getText();
-							cardTable.setNewValue(key, newValue);
-							cardData.valueChanged(key, newValue);
-							okCancel.setOkEnabled(callback.canOk(cardData.data()));
-						}
-
-					});
-				}
-			});
+			Control firstEditor = null;
+			for (TableItem item : cardTable.getTable().getItems()) {
+				final TableEditor editor = new TableEditor(cardTable.getTable());
+				editor.horizontalAlignment = SWT.LEFT;
+				editor.grabHorizontal = true;
+				editor.minimumWidth = 40;
+				Text newEditor = new Text(cardTable.getTable(), SWT.NONE);
+				if (firstEditor == null)
+					firstEditor = newEditor;
+				String text = Strings.nullSafeToString(cardData.data().get(item.getData()));
+				newEditor.setText(text);
+				newEditor.selectAll();
+				newEditor.setFocus();
+				editor.setEditor(newEditor, item, 1);
+				newEditor.addModifyListener(new ModifyListener() {
+					@Override
+					public void modifyText(ModifyEvent e) {
+						Text text = (Text) editor.getEditor();
+						TableItem item = editor.getItem();
+						String key = (String) item.getData();
+						String newValue = text.getText();
+						cardTable.setNewValue(key, newValue);
+						cardData.valueChanged(key, newValue);
+						okCancel.setOkEnabled(callback.canOk(cardData.data()));
+					}
+				});
+			}
+			if (firstEditor != null)
+				firstEditor.forceFocus();
 
 		}
 

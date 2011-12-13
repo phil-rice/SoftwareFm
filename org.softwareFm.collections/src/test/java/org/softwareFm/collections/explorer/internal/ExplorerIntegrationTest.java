@@ -99,7 +99,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 	public void testClickingOnUnrecognisedJarOpensEditor() {
 		explorer.displayUnrecognisedJar(new File("a/b/c/artifact-1.0.0.jar"), "someDigest", "someProject");
 		StyledText text = getTextInBorderComponent(masterDetailSocial.getMasterContent());
-		
+
 		text.notifyListeners(SWT.MouseUp, new Event());
 		Control detailContent = masterDetailSocial.getDetailContent();
 		final IValueComposite<Table> valueComposite = (IValueComposite<Table>) detailContent;
@@ -127,6 +127,38 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 				assertEquals(rootUrl + "/some/group/id/some.group.id/artifact/someArtifact", card.url());
 			}
 
+		});
+	}
+
+	public void testUnrecognisedJarEditorOnlyEnablesOkIfLegalValues() {
+		checkUnrecognisedOk(false, "", "", "");
+		checkUnrecognisedOk(true, "g", "a", "v");
+		checkUnrecognisedOk(true, "g-.102938", "a-.sdlkfj", "v-1.-sdlfkj");
+		checkUnrecognisedOk(false, " g", "a", "v");
+		checkUnrecognisedOk(false, "g", " a", "v");
+		checkUnrecognisedOk(false, "g", " a", " v");
+
+	}
+
+	private void checkUnrecognisedOk(final boolean expected, final String group, final String artifact, final String version) {
+		explorer.displayUnrecognisedJar(new File("a/b/c/artifact-1.0.0.jar"), "someDigest", "someProject");
+		StyledText text = getTextInBorderComponent(masterDetailSocial.getMasterContent());
+
+		text.notifyListeners(SWT.MouseUp, new Event());
+		Control detailContent = masterDetailSocial.getDetailContent();
+		final IValueComposite<Table> valueComposite = (IValueComposite<Table>) detailContent;
+		TitleWithTitlePaintListener titleWithTitlePaintListener = valueComposite.getTitle();
+		String jarTitle = IResourceGetter.Utils.getOrException(rawResourceGetter, CollectionConstants.jarNotRecognisedTitle);
+		assertEquals(jarTitle, titleWithTitlePaintListener.getText());
+		Table editor = valueComposite.getEditor();
+		checkAndEdit(editor, new IAddingCallback<Table>() {
+			@Override
+			public void process(boolean added, Table card, IAdding adding) {
+				adding.tableItem(0, "Group Id", "Please specify the group id", group);
+				adding.tableItem(1, "Artifact Id", "artifact", artifact);
+				adding.tableItem(2, "Version", "1.0.0",version);
+				assertEquals(expected, valueComposite.getOkCancel().okButton.isEnabled());
+			}
 		});
 
 	}

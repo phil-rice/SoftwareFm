@@ -20,6 +20,12 @@ import org.softwareFm.utilities.functions.IFunction1;
 
 public class Strings {
 
+	private final static Pattern urlFriendlyPattern = Pattern.compile("^[\\w\\.-]+$");
+
+	public static synchronized boolean isUrlFriendly(String raw) {
+		return urlFriendlyPattern.matcher(raw).matches();
+	}
+
 	public static String removeBrackets(String raw, char open, char close) {
 		if (raw == null)
 			return null;

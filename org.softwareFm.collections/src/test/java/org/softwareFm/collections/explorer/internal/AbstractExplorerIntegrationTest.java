@@ -32,7 +32,6 @@ import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.constants.HttpClientConstants;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.repositoryFacard.impl.RepositoryFacard;
-import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
@@ -201,7 +200,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 				assertEquals(existing, item.getText(1));
 				cardTable.select(index);
 				cardTable.notifyListeners(SWT.Selection, new Event());
-				Text text = Lists.getOnly(Swts.findChildrenWithClass(cardTable, Text.class));
+				Text text = Swts.findChildrenWithClass(cardTable, Text.class).get(index);
 				assertEquals(existing, text.getText());
 				text.setText(newValue);
 			}

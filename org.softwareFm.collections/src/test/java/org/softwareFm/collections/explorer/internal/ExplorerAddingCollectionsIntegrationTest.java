@@ -153,7 +153,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 						assertEquals(existing, item.getText(1));
 						cardTable.select(index);
 						cardTable.notifyListeners(SWT.Selection, new Event());
-						Text text = Lists.getOnly(Swts.findChildrenWithClass(cardTable, Text.class));
+						Text text = Swts.findChildrenWithClass(cardTable, Text.class).get(index);
 						assertEquals(existing, text.getText());
 						text.setText(newValue);
 					}
