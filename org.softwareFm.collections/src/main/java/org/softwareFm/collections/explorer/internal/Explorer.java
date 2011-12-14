@@ -156,6 +156,7 @@ public class Explorer implements IExplorer {
 									@Override
 									public void ok(ICardData cardData) {
 										RightClickCategoryResult result = new RightClickCategoryResult(Type.IS_COLLECTION, CollectionConstants.comment, CollectionConstants.comment, baseUrl);
+										
 										addCollectionItem(result, CollectionConstants.comment, cardData, new IAfterEditCallback() {
 											@Override
 											public void afterEdit(final String addedCommentUrl) {
@@ -264,7 +265,7 @@ public class Explorer implements IExplorer {
 	private void addCollectionItem(final RightClickCategoryResult result, final String collectionName, ICardData cardData, final IAfterEditCallback afterEdit) {
 		IMutableCardDataStore store = (IMutableCardDataStore) cardConfig.cardDataStore;
 		assert result.collectionName.equals(collectionName);// TODO do we really need this parameter?
-		Map<String, Object> newData = cardData.data();
+		Map<String, Object> newData = Maps.with(cardData.data(), CollectionConstants.createdTime, System.currentTimeMillis());
 		String cardUrl = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, collectionName, CardConstants.cardNameUrlKey);
 		String cardNameKey = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, collectionName, CardConstants.cardNameFieldKey);
 		String cardName = (String) newData.get(cardNameKey);

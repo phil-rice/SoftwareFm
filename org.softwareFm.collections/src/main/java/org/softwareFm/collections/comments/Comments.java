@@ -23,6 +23,7 @@ import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.utilities.comparators.Comparators;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
@@ -84,7 +85,8 @@ public class Comments implements IHasControl {
 
 		private void updateDisplay() {
 			table.removeAll();
-			for (Entry<String, Object> entry : map.entrySet()) {
+			Map<String, Object> sorted = Maps.sortByKey(map, Comparators.invert(Comparators.compareBasedOnTagInValue(map, CollectionConstants.createdTime)));
+			for (Entry<String, Object> entry : sorted.entrySet()) {
 				if (entry.getValue() instanceof Map<?, ?>) {
 					Map<String, Object> entryMap = (Map<String, Object>) entry.getValue();
 					Object title = entryMap.get("title");
@@ -141,5 +143,9 @@ public class Comments implements IHasControl {
 			}
 		}
 
+	}
+
+	public Table getTable() {
+		return content.table;
 	}
 }

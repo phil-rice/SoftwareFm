@@ -191,15 +191,16 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 		checkMenu(8, "Tweet", view, "Add tweet");
 		checkMenu(9, "Rss", view, "Add rss");
 		checkMenu(10, "Forum", view, "Add forum");
-		checkMenu(11, "Blog", view, "Add blog");
-		checkMenu(12, "Adverts", view, "Add advert");
-		checkMenu(13, "Recruitment", view, "Add recruitment");
-		checkMenu(14, "Version", view, "Add version");
+		checkMenu(11, "Article", view, "Add article");
+		checkMenu(12, "Companies", view, "Add company");
+		checkMenu(13, "Adverts", view, "Add advert");
+		checkMenu(14, "Job", view, "Add job");
+		checkMenu(15, "Version", view, "Add version");
 		displayCard(AbstractExplorerIntegrationTest.artifactUrl, new CardHolderAndCardCallback() {
 			@Override
 			public void process(ICardHolder cardHolder, ICard card) {
 				Table table = card.getTable();
-				assertEquals(16, table.getItemCount()); // currently has comments, which will be vanishing in near future.
+				assertEquals(17, table.getItemCount()); // currently has comments, which will be vanishing in near future.
 			}
 		});
 	}

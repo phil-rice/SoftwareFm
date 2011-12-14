@@ -29,16 +29,16 @@ public class BasicImageRegisterConfigurator implements IImageRegisterConfigurato
 				"group5", "group5Active",//
 				"group6", "group6Active");
 		Images.registerImages(device, imageRegistry, ArtifactsAnchor.class, "artifact", "archive", "advert",//
-				"jar", "jarClearEclipse", "jarCopyFromSoftwareFm", "jarCopyToSoftwareFm","jarUnrecognised", //
-				"blog","comment", "description", "document","email", "faceBook", "folder", "forum", "javadoc", //
-				"issues", "license", "mailingList", "merchandise", "nothing", "name", "group", "artifact",//
-				"news", "rss", "recruitment", "source", "subscribe", "tutorials", "twitter", "unsubscribe");
+				"article", "jar", "jarClearEclipse", "jarCopyFromSoftwareFm", "jarCopyToSoftwareFm","jarUnrecognised", //
+				"comment","company", "description", "document","email", "faceBook", "folder", "forum", "javadoc", //
+				"issues", "job", "license", "mailingList", "merchandise", "nothing", "name", "group", "artifact",//
+				"news", "rss", "source", "subscribe", "tutorials", "twitter", "unsubscribe");
 		Images.registerImages(device, imageRegistry, OverlaysAnchor.class, "overlay", //
 				"add", "delete", "edit", "properties");
 		Images.registerImages(device, imageRegistry, SmallIconsAnchor.class, "smallIcon", //
 				"softwareFm", "javadoc", "source");
 		Images.registerImages(device, imageRegistry, GeneralAnchor.class, "general", //
-				"browse", "help", "clear", "sfmLogo");
+				"browse", "help", "clear", "sfmLogo", "commentAdd");
 		Images.registerImages(device, imageRegistry, TitleAnchor.class, "title",//
 				"artifact", "blog", "facebook", "folder", "group", "history", "jar", "mailingList", "next", "previous", "refresh", "rss", "tutorial", "twitter", "version");
 

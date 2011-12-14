@@ -34,6 +34,29 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 	private static final String pleaseAddAName = "<Please add a name>";
 	private static final String pleaseAddADescription = "<Please add a description>";
 
+	public void testAddingCompanies() throws Exception {
+		checkAdding("company", "Companies", 2, null, new IAddingCallback<ICard>() {
+			@Override
+			public void process(boolean added, ICard card, IAdding adding) {
+				adding.tableItem(0, "title", "", "someTitle");
+				adding.tableItem(1, "text", "", "someText");
+			}
+		});
+
+	}
+
+	public void testAddingTutorials() throws Exception {
+		checkAdding("tutorial", "Tutorials", 4, null, new IAddingCallback<ICard>() {
+			@Override
+			public void process(boolean added, ICard card, IAdding adding) {
+				adding.tableItem(0, "title", "", "someTitle");
+				adding.tableItem(1, "url", unknown, "someUrl");
+				adding.tableItem(2, "description", pleaseAddADescription, "someDescription");
+				adding.tableItem(3, "author", "", "someAuthor");
+			}
+		});
+	}
+
 	public void testAddingDocumentation() throws Exception {
 		checkAdding("documentation", 3, null, new IAddingCallback<ICard>() {
 			@Override
@@ -59,50 +82,6 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 		});
 	}
 
-	public void testAddingTutorials() throws Exception {
-		IAddingCallback<ICard> addingCallback = new IAddingCallback<ICard>() {
-			@Override
-			public void process(boolean added, ICard card, IAdding adding) {
-				adding.tableItem(0, "title", "", "someTitle");
-				adding.tableItem(1, "url", unknown, "someUrl");
-				adding.tableItem(2, "description", pleaseAddADescription, "someDescription");
-				adding.tableItem(3, "author", "", "someAuthor");
-			}
-		};
-		String collectionUrl = AbstractExplorerIntegrationTest.artifactUrl + "/" + "tutorial";
-		delete(collectionUrl);
-		
-		checkAddingToUrl(AbstractExplorerIntegrationTest.artifactUrl, new ICallback<ICard>() {
-			@Override
-			public void process(ICard t) throws Exception {
-				Menu menu = selectAndCreatePopupMenu(t, "Tutorials");
-				executeMenuItem(menu, "Add " + "tutorial");
-			}
-		}, "tutorial", "Tutorials", 4, null, addingCallback, new IFunction1<String, String>() {
-			@Override
-			public String apply(String from) throws Exception {
-				return from + "/" + "tutorial";
-			}
-		});
-		delete(collectionUrl);
-		
-		checkAddingToUrl(collectionUrl, new ICallback<ICard>() {
-		
-			@Override
-			public void process(ICard t) throws Exception {
-				final Menu menu1 = new Menu(shell);
-				cardConfig.popupMenuService.contributeTo("popupmenuid", new Event(), menu1, t);
-				Menu menu = menu1;
-				executeMenuItem(menu, "Add " + "tutorial");
-			}
-		}, "tutorial", "Tutorials", 4, null, addingCallback, new IFunction1<String, String>() {
-			@Override
-			public String apply(String from) throws Exception {
-				return from;
-			}
-		});
-	}
-
 	public void testAddingTweets() throws Exception {
 		checkAdding("tweet", 1, "tweet", new IAddingCallback<ICard>() {
 			@Override
@@ -123,7 +102,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 	}
 
 	public void testAddingBlog() throws Exception {
-		checkAdding("blog", 2, null, new IAddingCallback<ICard>() {
+		checkAdding("article", 2, null, new IAddingCallback<ICard>() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
 				adding.tableItem(0, "url", unknown, "someUrl");
@@ -153,7 +132,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 		};
 		String collectionUrl = AbstractExplorerIntegrationTest.artifactUrl + "/" + "advert";
 		delete(collectionUrl);
-		
+
 		checkAddingToUrl(AbstractExplorerIntegrationTest.artifactUrl, new ICallback<ICard>() {
 			@Override
 			public void process(ICard t) throws Exception {
@@ -167,9 +146,9 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 			}
 		});
 		delete(collectionUrl);
-		
+
 		checkAddingToUrl(collectionUrl, new ICallback<ICard>() {
-		
+
 			@Override
 			public void process(ICard t) throws Exception {
 				final Menu menu1 = new Menu(shell);
@@ -187,7 +166,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 	}
 
 	public void testAddingRecruitment() throws Exception {
-		checkAdding("recruitment", 3, null, new IAddingCallback<ICard>() {
+		checkAdding("job", 3, null, new IAddingCallback<ICard>() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
 				adding.tableItem(0, "title", "", "someTitle");
@@ -195,7 +174,6 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 				adding.tableItem(2, "url", unknown, "someUrl");
 			}
 		});
-
 	}
 
 	/**
@@ -204,31 +182,35 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 	 * @throws Exception
 	 */
 	private void checkAdding(final String collection, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback) throws Exception {
+		final String nameInMainCard = Strings.camelCaseToPretty(collection);
+		checkAdding(collection, nameInMainCard, count, urlFragment, addingCallback);
+
+	}
+
+	private void checkAdding(final String collection, final String nameInMainCard, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback) throws InterruptedException, ExecutionException {
 		String collectionUrl = AbstractExplorerIntegrationTest.artifactUrl + "/" + collection;
 
 		delete(collectionUrl);
-		addFromRoot(collection, count, urlFragment, addingCallback);
-		
-		delete(collectionUrl);
-		addFromCollection(collection, count, urlFragment, addingCallback, collectionUrl);
-		
-		makeCollectionUrlAnExistingUrl(collectionUrl);
-		addFromRoot(collection, count, urlFragment, addingCallback);
-		
-		makeCollectionUrlAnExistingUrl(collectionUrl);
-		addFromCollection(collection, count, urlFragment, addingCallback, collectionUrl);
+		addFromRoot(collection, nameInMainCard, count, urlFragment, addingCallback);
 
+		delete(collectionUrl);
+		addFromCollection(collection, nameInMainCard, count, urlFragment, addingCallback, collectionUrl);
+
+		makeCollectionUrlAnExistingUrl(collectionUrl);
+		addFromRoot(collection, nameInMainCard, count, urlFragment, addingCallback);
+
+		makeCollectionUrlAnExistingUrl(collectionUrl);
+		addFromCollection(collection, nameInMainCard, count, urlFragment, addingCallback, collectionUrl);
 	}
 
 	private void makeCollectionUrlAnExistingUrl(String collectionUrl) throws InterruptedException, ExecutionException {
 		delete(collectionUrl);
-		repository.post(rootUrl+collectionUrl,Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), IResponseCallback.Utils.noCallback()).get();
+		repository.post(rootUrl + collectionUrl, Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), IResponseCallback.Utils.noCallback()).get();
 	}
 
-	private void addFromCollection(final String collection, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback, String collectionUrl) {
-		final String nameInMainCard = Strings.camelCaseToPretty(collection);
+	private void addFromCollection(final String collection, final String nameInMainCard, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback, String collectionUrl) {
 		checkAddingToUrl(collectionUrl, new ICallback<ICard>() {
-		
+
 			@Override
 			public void process(ICard t) throws Exception {
 				final Menu menu1 = new Menu(shell);
@@ -244,8 +226,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 		});
 	}
 
-	private void addFromRoot(final String collection, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback) {
-		final String nameInMainCard = Strings.camelCaseToPretty(collection);
+	private void addFromRoot(final String collection, final String nameInMainCard, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback) {
 		checkAddingToUrl(AbstractExplorerIntegrationTest.artifactUrl, new ICallback<ICard>() {
 			@Override
 			public void process(ICard t) throws Exception {
