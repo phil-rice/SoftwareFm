@@ -5,7 +5,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -46,9 +48,12 @@ public class Comments implements IHasControl {
 			super(parent, SWT.NULL, cardConfig);
 			this.cc = cardConfig;
 			Composite header = Swts.newComposite(this, SWT.NULL, "header");
-			header.setLayout(Swts.titleAndRhsLayout());
+			header.setLayout(Swts.titleAndRhsLayout(0));
 			title = new Title(header, cardConfig, TitleSpec.noTitleSpec(getBackground()), "Comments", "");
-			Swts.Buttons.makePushButton(header, Functions.call(cardConfig.resourceGetterFn, null), CollectionConstants.addCommentButtonTitle, addButton);
+			Button addCommentButton = Swts.Buttons.makePushButton(header, Functions.call(cardConfig.resourceGetterFn, null), CollectionConstants.addCommentButtonTitle, addButton);
+			String imageName = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null, CollectionConstants.addCommentButtonImage);
+			Image addCommentImage = Functions.call(cardConfig.imageFn, imageName);
+			addCommentButton.setImage(addCommentImage);
 			this.body = new CompositeWithEditorIndent(this, SWT.NULL, cardConfig);
 			this.addPaintListener(new OutlinePaintListener(cardConfig));
 			body.setLayout(new FillLayout());

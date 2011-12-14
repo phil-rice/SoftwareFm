@@ -826,7 +826,7 @@ public class Swts {
 
 	}
 
-	public static Layout titleAndRhsLayout() {
+	public static Layout titleAndRhsLayout(final int rightMargin) {
 		return new Layout() {
 
 			@Override
@@ -837,8 +837,8 @@ public class Swts {
 				Control rhs = children[1];
 				int rhsWidth = children[1].computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
 				Rectangle ca = composite.getClientArea();
-				lhs.setBounds(ca.x, ca.y, ca.width - rhsWidth, ca.height);
-				rhs.setBounds(ca.x + ca.width - rhsWidth, ca.y, rhsWidth, ca.height);
+				lhs.setBounds(ca.x, ca.y, ca.width - rhsWidth -rightMargin, ca.height);
+				rhs.setBounds(ca.x + ca.width - rhsWidth-rightMargin, ca.y, rhsWidth, ca.height);
 			}
 
 			@Override
@@ -849,7 +849,7 @@ public class Swts {
 				Control rhs = children[1];
 				Point lhSize = lhs.computeSize(wHint, hHint);
 				Point rhSize = rhs.computeSize(wHint, hHint);
-				return new Point(lhSize.x + rhSize.x, Math.max(lhSize.y, rhSize.y));
+				return new Point(lhSize.x + rhSize.x + rightMargin, Math.max(lhSize.y, rhSize.y));
 			}
 		};
 	}
