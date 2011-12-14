@@ -15,8 +15,6 @@ import org.codehaus.cake.forkjoin.RecursiveTask;
 
 public class Sample {
 
-	
-	
 	@SuppressWarnings("unused")
 	/** This is my comment about x*/
 	public static void main(String[] args) {

@@ -503,6 +503,7 @@ public class Explorer implements IExplorer {
 					}
 				});
 				visitor.finished(cardHolder, url, card);
+				comments.showCommentsFor(card);
 			}
 		});
 	}
@@ -775,7 +776,7 @@ public class Explorer implements IExplorer {
 	@Override
 	public void displayComments(ICard card) {
 		masterDetailSocial.showSocial();
-		comments.showCommentsFor(card);
+
 		masterDetailSocial.setSocial(comments.getControl());
 	}
 
