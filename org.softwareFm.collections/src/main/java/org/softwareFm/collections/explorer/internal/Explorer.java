@@ -598,8 +598,8 @@ public class Explorer implements IExplorer {
 	}
 
 	@Override
-	public void displayHelpText(final String url) {
-		masterDetailSocial.createAndShowSocial(Swts.styledTextFn(url, SWT.WRAP));
+	public void displayHelpText(String cardType, final String text) {
+		masterDetailSocial.createAndShowSocial(TextInBorder.makeTextFromString(SWT.WRAP|SWT.READ_ONLY, cardConfig, cardType, "Help", text));
 		masterDetailSocial.showSocial();
 	}
 

@@ -31,7 +31,7 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 
 	void displayComments(ICard card);
 
-	void displayHelpText(String url);
+	void displayHelpText(String cardType, String url);
 
 	void addCardListener(ICardChangedListener listener);
 

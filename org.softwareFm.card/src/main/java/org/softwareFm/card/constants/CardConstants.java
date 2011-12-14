@@ -41,6 +41,7 @@ public class CardConstants {
 	public static final String menuItemEditSnippetText = "menuitem.editSnippet.text";
 	public static final String menuItemBrowseText = "menuitem.browse.text";
 	public static final String menuItemExternalBrowseText = "menuitem.externalBrowse.text";
+	public static final String menuItemHelpText = "menuitem.help.text";
 
 	public static final String menuItemBrowseJarKey = "menuitem.browse.jar";
 	public static final String menuItemBrowseJarMavenKey = "menuitem.browseMaven.jar";

@@ -32,7 +32,7 @@ public class BasicImageRegisterConfigurator implements IImageRegisterConfigurato
 				"article", "jar", "jarClearEclipse", "jarCopyFromSoftwareFm", "jarCopyToSoftwareFm","jarUnrecognised", //
 				"comment","company", "description", "document","email", "faceBook", "folder", "forum", "javadoc", //
 				"issues", "job", "license", "mailingList", "merchandise", "nothing", "name", "group", "artifact",//
-				"news", "rss", "source", "subscribe", "tutorials", "twitter", "unsubscribe");
+				"news", "rss", "source", "subscribe", "tutorial", "twitter", "unsubscribe");
 		Images.registerImages(device, imageRegistry, OverlaysAnchor.class, "overlay", //
 				"add", "delete", "edit", "properties");
 		Images.registerImages(device, imageRegistry, SmallIconsAnchor.class, "smallIcon", //
@@ -40,7 +40,8 @@ public class BasicImageRegisterConfigurator implements IImageRegisterConfigurato
 		Images.registerImages(device, imageRegistry, GeneralAnchor.class, "general", //
 				"browse", "help", "clear", "sfmLogo", "commentAdd");
 		Images.registerImages(device, imageRegistry, TitleAnchor.class, "title",//
-				"artifact", "blog", "facebook", "folder", "group", "history", "jar", "mailingList", "next", "previous", "refresh", "rss", "tutorial", "twitter", "version");
+				"advert", "artifact", "blog", "document", "facebook", "folder", "forum","group", "history", "jar", //
+				"mailingList", "next", "previous", "refresh", "rss", "tutorial", "twitter", "version");
 
 	}
 

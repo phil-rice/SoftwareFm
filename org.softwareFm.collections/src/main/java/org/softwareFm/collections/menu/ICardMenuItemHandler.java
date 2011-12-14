@@ -18,6 +18,7 @@ import org.softwareFm.collections.menu.internal.BrowseUrlMenuHandler;
 import org.softwareFm.collections.menu.internal.EditSnippetMenuHandler;
 import org.softwareFm.collections.menu.internal.EditTextMenuHandler;
 import org.softwareFm.collections.menu.internal.ExternalBrowseUrlMenuHandler;
+import org.softwareFm.collections.menu.internal.HelpMenuHandler;
 import org.softwareFm.collections.menu.internal.OptionalSeparatorMenuHandler;
 import org.softwareFm.collections.menu.internal.ViewActualContentsMenuHandler;
 import org.softwareFm.collections.menu.internal.ViewCardsMenuHandler;
@@ -41,8 +42,12 @@ public interface ICardMenuItemHandler extends IPopupMenuContributor<ICard> {
 //			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.optionalSeparator());//
 			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.browseUrl(explorer));
 			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.externalBrowseUrl(explorer));
+			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.help(explorer));
 //			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.optionalSeparator());//
 //			cardConfig.popupMenuService.registerContributor(popupMenuId, ICardMenuItemHandler.Utils.addNewArtifact(explorer));
+		}
+		private static IPopupMenuContributor<ICard> help(IExplorer explorer) {
+			return new HelpMenuHandler(explorer);
 		}
 		public static void addSnippetMenuItemHandlers(IExplorer explorer, String popupMenuId) {
 			CardConfig cardConfig = explorer.getCardConfig();

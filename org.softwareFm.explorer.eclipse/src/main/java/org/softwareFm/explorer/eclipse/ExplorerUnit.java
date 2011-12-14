@@ -53,7 +53,7 @@ public class ExplorerUnit {
 					if (browser != null)
 						explorer.processUrl(browser.get("feedType"), browser.get("url"));
 					if (social != null)
-						explorer.displayHelpText(social);
+						explorer.displayHelpText("artifact", social);
 					Swts.layoutDump(explorer.getControl());
 				}
 
