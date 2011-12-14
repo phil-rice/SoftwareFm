@@ -62,6 +62,7 @@ public class Comments implements IHasControl {
 			this.titleColumn = new TableColumn(table, SWT.NONE);
 			this.textColumn = new TableColumn(table, SWT.NONE);
 			table.addListener(SWT.Selection, new Listener() {
+				@SuppressWarnings("unchecked")
 				@Override
 				public void handleEvent(Event event) {
 					int index = table.getSelectionIndex();
@@ -88,6 +89,7 @@ public class Comments implements IHasControl {
 			updateDisplay();
 		}
 
+		@SuppressWarnings("unchecked")
 		private void updateDisplay() {
 			table.removeAll();
 			Map<String, Object> sorted = Maps.sortByKey(map, Comparators.invert(Comparators.compareBasedOnTagInValue(map, CollectionConstants.createdTime)));
@@ -116,6 +118,7 @@ public class Comments implements IHasControl {
 		content.setLayout(Swts.titleAndContentLayout(cardConfig.titleHeight));
 	}
 
+	@SuppressWarnings("unchecked")
 	public void showCommentsFor(ICardData cardData) {
 		CardConfig cardConfig = cardData.getCardConfig();
 		Object commentObject = cardData.data().get(CollectionConstants.comment);

@@ -26,7 +26,6 @@ import org.softwareFm.utilities.functions.IFunction1;
 public class Title implements IHasControl {
 
 	final Canvas canvas;
-	private final PaintListener listener;
 	private TitleSpec titleSpec;
 	private String title;
 
@@ -34,7 +33,7 @@ public class Title implements IHasControl {
 		this.titleSpec = initialTitleSpec;
 		canvas = new Canvas(parent, SWT.NONE);
 		canvas.setToolTipText(initialTooltip);
-		canvas.addPaintListener(listener = new PaintListener() {
+		canvas.addPaintListener( new PaintListener() {
 
 			@Override
 			public void paintControl(PaintEvent e) {

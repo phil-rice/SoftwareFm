@@ -8,6 +8,7 @@ import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
 import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.display.timeline.IPlayListGetter;
+import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.resources.ResourceGetterMock;
@@ -32,6 +33,7 @@ public class IExplorerTest extends SwtTest {
 		IResourceGetter resourceGetter = Functions.call(raw.resourceGetterFn, null);
 		IResourceGetter withNeeded = resourceGetter.with(new ResourceGetterMock(//
 				CollectionConstants.addCommentButtonTitle, "Add Comment",//
+				CollectionConstants.addCommentButtonImage, GeneralAnchor.commentAdd,//
 				CollectionConstants.commentsNoTitle, "No comments",//
 				CollectionConstants.commentsTitle, "Comments"));
 		return raw.withResourceGetterFn(Functions.<String, IResourceGetter> constant(withNeeded));

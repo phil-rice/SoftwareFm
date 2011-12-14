@@ -14,5 +14,6 @@ public class GeneralAnchor {
 	public static final String clearKey = prefix + "clear";
 	public static final String searchKey = prefix + "search";
 	public static final String mavenKey = prefix + "maven";
+	public static final String commentAdd = prefix + "commentAdd";
 
 }

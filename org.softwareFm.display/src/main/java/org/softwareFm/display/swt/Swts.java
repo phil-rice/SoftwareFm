@@ -333,7 +333,6 @@ public class Swts {
 
 	public static class Grid {
 
-		private static int titleHeight;
 
 		public static void addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(Composite composite, int margin) {
 			GridLayout layout = new GridLayout();

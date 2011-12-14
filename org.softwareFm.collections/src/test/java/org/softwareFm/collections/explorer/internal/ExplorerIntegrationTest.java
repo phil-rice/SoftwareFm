@@ -140,6 +140,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private void checkUnrecognisedOk(final boolean expected, final String group, final String artifact, final String version) {
 		explorer.displayUnrecognisedJar(new File("a/b/c/artifact-1.0.0.jar"), "someDigest", "someProject");
 		StyledText text = getTextInBorderComponent(masterDetailSocial.getMasterContent());

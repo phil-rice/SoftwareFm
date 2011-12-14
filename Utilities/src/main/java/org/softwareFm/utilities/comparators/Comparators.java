@@ -14,14 +14,13 @@ public class Comparators {
 			return one.compareTo(two);
 		}
 	};
-	
 
 	@SuppressWarnings("unchecked")
 	public static <T> Comparator<T> naturalOrder() {
 		return naturalComparator;
 	}
 
-	public static <T>Comparator<T> invert(final Comparator<T> raw){
+	public static <T> Comparator<T> invert(final Comparator<T> raw) {
 		return new Comparator<T>() {
 
 			@Override
@@ -30,7 +29,8 @@ public class Comparators {
 			}
 		};
 	}
-	
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static Comparator<String> compareBasedOnTagInValue(final Map<String, Object> map, final String tag) {
 		return new Comparator<String>() {
 			@Override

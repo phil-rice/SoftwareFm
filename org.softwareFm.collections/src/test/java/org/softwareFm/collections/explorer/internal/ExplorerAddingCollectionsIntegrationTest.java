@@ -276,6 +276,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 				final CountDownLatch latch = new CountDownLatch(1);
 				ExplorerAdapter listemer = new ExplorerAdapter() {
 
+					@SuppressWarnings("unchecked")
 					@Override
 					public void collectionItemAdded(String collectionUrl, String key) {
 						explorer.removeExplorerListener(this);

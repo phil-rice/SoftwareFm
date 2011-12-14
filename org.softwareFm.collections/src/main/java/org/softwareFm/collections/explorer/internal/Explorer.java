@@ -302,20 +302,20 @@ public class Explorer implements IExplorer {
 			}
 		});
 	}
-
-	private String getKey() {
-		ICard card = cardHolder.getCard();
-		if (card != null) {
-			int index = card.getTable().getSelectionIndex();
-			if (index != -1) {
-				TableItem item = card.getTable().getItem(index);
-				String key = (String) item.getData();
-				return key;
-			}
-		}
-		return null;
-
-	}
+//
+//	private String getKey() {
+//		ICard card = cardHolder.getCard();
+//		if (card != null) {
+//			int index = card.getTable().getSelectionIndex();
+//			if (index != -1) {
+//				TableItem item = card.getTable().getItem(index);
+//				String key = (String) item.getData();
+//				return key;
+//			}
+//		}
+//		return null;
+//
+//	}
 
 	@Override
 	public void editSnippet(final ICard card, final String key) {
