@@ -3,12 +3,24 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwareFm.card.card;
+package org.softwareFm.server;
 
-import org.softwareFm.card.configuration.CardConfig;
+import java.util.concurrent.Future;
 
-public interface ICardHolderForTests extends ICardHolder{
-	String getRootUrl();
+import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
+import org.softwareFm.repositoryFacard.IRepositoryFacardReader;
 
-	CardConfig getCardConfig();
+/** This class 
+ * 
+ * 
+ */
+public class GitRepositoryFacard implements IRepositoryFacardReader{
+
+
+	@Override
+	public Future<?> get(String url, IRepositoryFacardCallback callback) {
+		return null;
+	}
+
+
 }

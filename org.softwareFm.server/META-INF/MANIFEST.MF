@@ -5,4 +5,6 @@ Bundle-SymbolicName: org.softwareFm.server
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: SoftwareFm
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.softwareFm.externals;bundle-version="1.0.0";visibility:=reexport
+Require-Bundle: org.softwareFm.externals;bundle-version="1.0.0";visibility:=reexport,
+ org.softwareFm.repository;bundle-version="1.0.0",
+ org.softwareFm.repositoryClient;bundle-version="1.0.0"

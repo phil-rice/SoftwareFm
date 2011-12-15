@@ -15,16 +15,13 @@ import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.repositoryFacard.impl.RepositoryFacard;
 
-public interface IRepositoryFacard {
+public interface IRepositoryFacard extends IRepositoryFacardReader{
 
 	/** adds this as an Http header to all requests */
 	void addHeader(String name, String value);
 
 	/** This will delete the node at the Url */
 	Future<?> delete(String url, IResponseCallback callback);
-
-	/** This will call the callback with the .json representation of the node at the Url */
-	Future<?> get(String url, IRepositoryFacardCallback callback);
 
 	/** This will create or update the node at the location. The map <em>must</em> be a map from string to: Integer,Long,String,String[] */
 	Future<?> post(String url, Map<String, Object> map, IResponseCallback callback);
