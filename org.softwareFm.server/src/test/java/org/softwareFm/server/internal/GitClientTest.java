@@ -2,7 +2,7 @@ package org.softwareFm.server.internal;
 
 import org.softwareFm.utilities.maps.Maps;
 
-public class LocalGitTest extends GitTest {
+public class GitClientTest extends GitTest {
 
 	public void testGetWhenNothingThere() {
 		checkNoData("a/b/c");
@@ -22,7 +22,7 @@ public class LocalGitTest extends GitTest {
 	}
 
 	public void testPost(){
-		localGit.post("a/b/c", a1b2);
+		localGitClient.post("a/b/c", a1b2);
 		checkLocalGet("a/b/c", a1b2);
 	}
 }

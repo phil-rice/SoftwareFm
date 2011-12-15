@@ -12,7 +12,7 @@ import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.services.IServiceExecutor;
 
-public class GitTest extends TestCase {
+public abstract class GitTest extends TestCase {
 	protected final static Map<String, Object> a1b2 = Maps.stringObjectMap("a", 1L, "b", 2L);
 
 	protected final static Map<String, Object> typeCollectionMap = Maps.stringObjectMap(ServerConstants.typeTag, ServerConstants.collectionType);
@@ -22,7 +22,7 @@ public class GitTest extends TestCase {
 	protected final static Map<String, Object> v22 = Maps.stringObjectMap("c", 2l, "v", 2l);
 
 	protected File root;
-	protected LocalGit localGit;
+	protected LocalGitClient localGitClient;
 	private IServiceExecutor serviceExecutor;
 
 	protected void put(String url, Map<String, Object> data) {
@@ -37,21 +37,22 @@ public class GitTest extends TestCase {
 		Files.setText(file, text);
 	}
 
-	protected void setUpABC( Map<String, Object> data) {
+	protected void setUpABC(Map<String, Object> data) {
 		setUpABC(root, data);
 	}
+
 	protected void setUpABC(File root, Map<String, Object> data) {
-		put(root,"a/b/c", data);
+		put(root, "a/b/c", data);
 
-		put(root,"a/b/c/col1", typeCollectionMap);
-		put(root,"a/b/c/col1/v11", v11);
-		put(root,"a/b/c/col1/v12", v12);
-		put(root,"a/b/c/col1/v11/col1_v1_1", typeCollectionMap);
-		put(root,"a/b/c/col1/v11/col1_v1_2", typeCollectionMap);
+		put(root, "a/b/c/col1", typeCollectionMap);
+		put(root, "a/b/c/col1/v11", v11);
+		put(root, "a/b/c/col1/v12", v12);
+		put(root, "a/b/c/col1/v11/col1_v1_1", typeCollectionMap);
+		put(root, "a/b/c/col1/v11/col1_v1_2", typeCollectionMap);
 
-		put(root,"a/b/c/col2", typeCollectionMap);
-		put(root,"a/b/c/col2/v21", v21);
-		put(root,"a/b/c/col2/v22", v22);
+		put(root, "a/b/c/col2", typeCollectionMap);
+		put(root, "a/b/c/col2/v21", v21);
+		put(root, "a/b/c/col2/v22", v22);
 	}
 
 	@Override
@@ -63,7 +64,11 @@ public class GitTest extends TestCase {
 		tests.mkdirs();
 		root = new File(tests, getClass().getSimpleName());
 		Files.deleteDirectory(root);
-		localGit = new LocalGit(root);
+		localGitClient = makeLocalGitClient();
+	}
+
+	protected LocalGitClient makeLocalGitClient() {
+		return new LocalGitClient(root);
 	}
 
 	@Override
@@ -74,13 +79,13 @@ public class GitTest extends TestCase {
 	}
 
 	protected void checkNoData(String url) {
-		GetResult result = localGit.get(url);
+		GetResult result = localGitClient.get(url);
 		assertFalse(result.toString(), result.found);
 
 	}
 
 	protected void checkLocalGet(String url, Map<String, Object> data) {
-		GetResult result = localGit.get(url);
+		GetResult result = localGitClient.get(url);
 		assertTrue(result.found);
 		assertEquals(data, result.data);
 	}

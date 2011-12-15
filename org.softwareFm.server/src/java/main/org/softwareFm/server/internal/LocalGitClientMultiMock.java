@@ -6,18 +6,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 import junit.framework.Assert;
 
 import org.softwareFm.server.GetResult;
-import org.softwareFm.server.ILocalGitReader;
+import org.softwareFm.server.ILocalGitClientReader;
 
-public class LocalGitReaderMultiMock implements ILocalGitReader {
+public class LocalGitClientMultiMock implements ILocalGitClientReader {
 
-	private final String firstUrl;
-	private final String secondUrl;
+	private final String url;
 	private final Map<String, Object> result;
 	public final AtomicInteger index = new AtomicInteger();
 
-	public LocalGitReaderMultiMock(String firstUrl, String secondUrl, Map<String, Object> map) {
-		this.firstUrl = firstUrl;
-		this.secondUrl = secondUrl;
+	public LocalGitClientMultiMock(String url, Map<String, Object> map) {
+		this.url = url;
 		this.result = map;
 	}
 
@@ -25,8 +23,9 @@ public class LocalGitReaderMultiMock implements ILocalGitReader {
 	public GetResult get(String url) {
 		switch (index.getAndIncrement()) {
 		case 0:
+			Assert.assertEquals(this.url, url);
 			return GetResult.create(null);
-		case 2:
+		case 1:
 			return GetResult.create(result);
 		default:
 			Assert.fail(index.toString());
@@ -34,10 +33,5 @@ public class LocalGitReaderMultiMock implements ILocalGitReader {
 		}
 	}
 
-	@Override
-	public String cloneOrPull(String url) {
-		Assert.assertEquals(1, index.getAndIncrement());
-		return secondUrl;
-	}
 
 }

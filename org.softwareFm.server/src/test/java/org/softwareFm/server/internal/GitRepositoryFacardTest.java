@@ -8,16 +8,17 @@ import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
 import org.softwareFm.repositoryFacard.IRepositoryFacardReader;
 import org.softwareFm.server.GetResult;
-import org.softwareFm.server.ILocalGitReader;
+import org.softwareFm.server.IGitClient;
+import org.softwareFm.server.ILocalGitClientReader;
 import org.softwareFm.utilities.collections.Lists;
 
 public class GitRepositoryFacardTest extends GitTest {
 
-	private final LocalGitReaderMock mockWith = new LocalGitReaderMock("url1", v11);
+	private final LocalGitClientMock mockWith = new LocalGitClientMock("url1", v11);
 
 	public void testDelegatesToLocalGitOnServerThread() throws Exception {
 		final Thread mainThread = Thread.currentThread();
-		IRepositoryFacardReader repositoryFacard = makeRepostory(mockWith);
+		IRepositoryFacardReader repositoryFacard = makeRepostory(mockWith, IGitClient.Utils.noClient());
 		Future<?> future = repositoryFacard.get("url1", new IRepositoryFacardCallback() {
 			@Override
 			public void process(IResponse response, Map<String, Object> data) throws Exception {
@@ -30,8 +31,10 @@ public class GitRepositoryFacardTest extends GitTest {
 	}
 
 	public void testTellsLocalToCloneOrPullIfNotFoundLocally() throws Exception {
-		LocalGitReaderMultiMock mock = new LocalGitReaderMultiMock("url1", "urlRoot", v11);
-		IRepositoryFacardReader repositoryFacard = makeRepostory(mock);
+		LocalGitClientMultiMock mock = new LocalGitClientMultiMock("url1", v11);
+		IGitClient gitClient = new GitClientMock("url1", "urlRoot");
+		
+		IRepositoryFacardReader repositoryFacard = makeRepostory(mock, gitClient);
 		Future<?> future = repositoryFacard.get("url1", new IRepositoryFacardCallback() {
 			@Override
 			public void process(IResponse response, Map<String, Object> data) throws Exception {
@@ -39,7 +42,7 @@ public class GitRepositoryFacardTest extends GitTest {
 			}
 		});
 		assertEquals(GetResult.create(v11), future.get(1000, TimeUnit.MILLISECONDS));
-		assertEquals(3, mock.index.get());
+		assertEquals(2, mock.index.get());
 	}
 
 	@Override
@@ -48,7 +51,7 @@ public class GitRepositoryFacardTest extends GitTest {
 
 	}
 
-	private IRepositoryFacardReader makeRepostory(ILocalGitReader localGitReader) {
-		return new GitRepositoryFacard(getServiceExecutor(), localGitReader);
+	private IRepositoryFacardReader makeRepostory(ILocalGitClientReader localGitClientReader, IGitClient gitClient) {
+		return new GitRepositoryFacard(getServiceExecutor(), gitClient, localGitClientReader);
 	}
 }

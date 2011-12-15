@@ -17,6 +17,7 @@ import org.springframework.core.io.ClassPathResource;
 
 public class FilesTest extends TestCase {
 
+	
 	@Test
 	public void testDigest() throws IOException {
 		ClassPathResource resource = new ClassPathResource("UnchangingFile.txt", getClass());

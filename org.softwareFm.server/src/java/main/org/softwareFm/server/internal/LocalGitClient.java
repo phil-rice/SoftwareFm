@@ -6,17 +6,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.softwareFm.server.GetResult;
-import org.softwareFm.server.ILocalGit;
+import org.softwareFm.server.ILocalGitClient;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
 
-public class LocalGit implements ILocalGit {
+public class LocalGitClient implements ILocalGitClient {
 
-	private final File root;
+	protected final File root;
 
-	public LocalGit(File root) {
+	public LocalGitClient(File root) {
 		this.root = root;
 	}
 
@@ -56,8 +56,4 @@ public class LocalGit implements ILocalGit {
 		Files.setText(file, Json.toString(map));
 	}
 
-	@Override
-	public String cloneOrPull(String url) {
-		return null;
-	}
 }

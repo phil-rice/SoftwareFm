@@ -18,12 +18,15 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.RandomAccessFile;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.text.MessageFormat;
@@ -32,6 +35,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
+import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.constants.UtilityConstants;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -40,6 +44,36 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 
 public class Files {
+	private static final Object lock = new Object();
+
+	/** The directory is locked, and the operation begins! */
+	public static void doOperationInLock(File dir, String lockFileName, ICallback<File> callback) {
+		File file = new File(dir, lockFileName);
+		try {
+			if (!file.exists()) {
+				dir.mkdirs();
+				try {
+					file.createNewFile();
+				} catch (Exception e) {
+					if (!file.exists())// A likely scenario is that the file has been made between the file exists and the createNewFile, which could end up causing "access is denied"
+						file.createNewFile();
+				}
+			}
+			synchronized (lock) {
+				FileChannel channel = new RandomAccessFile(file, "rw").getChannel();
+				// Get an exclusive lock on the whole file
+				FileLock lock = channel.lock();
+				try {
+					callback.process(file);
+				} finally {
+					lock.release();
+					channel.close();
+				}
+			}
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+	}
 
 	public static int downLoadFile(String url, File target) {
 		try {
@@ -359,6 +393,22 @@ public class Files {
 	public static File[] listChildDirectories(File file) {
 		File[] result = file.listFiles(Files.directoryFilter());
 		return result == null ? new File[0] : result;
+	}
+
+	public static List<File> listParentsUntil(File root, File leaf) {
+		List<File> result = Lists.newList();
+		listParentsUntil(result, root, leaf);
+		return result;
+
+	}
+
+	private static void listParentsUntil(List<File> result, File root, File leaf) {
+		if (leaf == null)
+			return;
+		result.add(leaf);
+		if (leaf.equals(root))
+			return;
+		listParentsUntil(result, root, leaf.getParentFile());
 	}
 
 }

@@ -11,18 +11,21 @@ import java.util.concurrent.Future;
 import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
 import org.softwareFm.repositoryFacard.IRepositoryFacardReader;
 import org.softwareFm.server.GetResult;
-import org.softwareFm.server.ILocalGit;
-import org.softwareFm.server.ILocalGitReader;
+import org.softwareFm.server.IGitClient;
+import org.softwareFm.server.ILocalGitClient;
+import org.softwareFm.server.ILocalGitClientReader;
 import org.softwareFm.utilities.services.IServiceExecutor;
 
 /** This class reads from the local file system. If the file isn't held locally, it asks for a git download, then returns the file. */
 public class GitRepositoryFacard implements IRepositoryFacardReader {
 
 	private final IServiceExecutor serviceExecutor;
-	private final ILocalGitReader localGit;
+	private final ILocalGitClientReader localGit;
+	private final IGitClient gitClient;
 
-	public GitRepositoryFacard(IServiceExecutor serviceExecutor, ILocalGitReader localGit) {
+	public GitRepositoryFacard(IServiceExecutor serviceExecutor, IGitClient gitClient, ILocalGitClientReader localGit) {
 		this.serviceExecutor = serviceExecutor;
+		this.gitClient = gitClient;
 		this.localGit = localGit;
 	}
 
@@ -31,7 +34,7 @@ public class GitRepositoryFacard implements IRepositoryFacardReader {
 		return serviceExecutor.submit(new Callable<GetResult>() {
 			@Override
 			public GetResult call() throws Exception {
-				return ILocalGit.Utils.getFromLocalPullIfNeeded(localGit, url);
+				return ILocalGitClient.Utils.getFromLocalPullIfNeeded(localGit, gitClient, url);
 			}
 		});
 	}
