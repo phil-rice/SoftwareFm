@@ -8,6 +8,7 @@ package org.softwareFm.utilities.collections;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -48,8 +49,6 @@ public class Files {
 		}
 
 	}
-
-
 
 	public static int downLoadFile(URL url, File target) {
 		try {
@@ -130,7 +129,13 @@ public class Files {
 	public static String getText(File file) {
 		try {
 			FileReader reader = new FileReader(file);
-			return getText(reader);
+			try {
+				return getText(reader);
+			} catch (Exception e) {
+				throw WrappedException.wrap(e);
+			} finally {
+				reader.close();
+			}
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
@@ -151,6 +156,7 @@ public class Files {
 			try {
 				return getText(inputStreamReader);
 			} finally {
+				inputStreamReader.close();
 				inputStream.close();
 			}
 		} catch (IOException e) {
@@ -304,11 +310,13 @@ public class Files {
 
 	public static void setText(File file, String text) {
 		try {
-			BufferedWriter out = new BufferedWriter(new FileWriter(file));
+			FileWriter fileWriter = new FileWriter(file);
+			BufferedWriter out = new BufferedWriter(fileWriter);
 			try {
 				out.write(text);
 			} finally {
 				out.close();
+				fileWriter.close();
 			}
 		} catch (IOException e) {
 			throw WrappedException.wrap(e);
@@ -324,6 +332,33 @@ public class Files {
 		File file = new File(directory, lastSegment);
 		downLoadFile(url, file);
 		return file;
+	}
+
+	public static boolean deleteDirectory(File dir) {
+		if (dir.isDirectory()) {
+			String[] children = dir.list();
+			for (int i = 0; i < children.length; i++) {
+				boolean success = deleteDirectory(new File(dir, children[i]));
+				if (!success) {
+					return false;
+				}
+			}
+		}
+		return dir.delete();
+	}
+
+	public static FileFilter directoryFilter() {
+		return new FileFilter() {
+			@Override
+			public boolean accept(File arg0) {
+				return arg0.isDirectory();
+			}
+		};
+	}
+
+	public static File[] listChildDirectories(File file) {
+		File[] result = file.listFiles(Files.directoryFilter());
+		return result == null ? new File[0] : result;
 	}
 
 }
