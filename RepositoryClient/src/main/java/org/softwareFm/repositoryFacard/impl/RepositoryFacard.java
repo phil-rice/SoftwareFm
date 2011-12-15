@@ -15,14 +15,14 @@ import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.repositoryFacard.IAspectToParameters;
-import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
+import org.softwareFm.repositoryFacard.IRepositoryFacardWithImports;
 import org.softwareFm.repositoryFacardConstants.RepositoryFacardConstants;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.json.Json;
 
-public class RepositoryFacard implements IRepositoryFacard {
+public class RepositoryFacard implements IRepositoryFacardWithImports {
 
 	private final IHttpClient client;
 	private final IAspectToParameters parameterMaker;

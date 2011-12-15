@@ -29,12 +29,6 @@ public interface IRepositoryFacard {
 	/** This will create or update the node at the location. The map <em>must</em> be a map from string to: Integer,Long,String,String[] */
 	Future<?> post(String url, Map<String, Object> map, IResponseCallback callback);
 
-	/**
-	 * This creates one or more nodes underneath the parentNode<br />
-	 * assume parentUrl='content',<br />
-	 * map = {'sample', {'propOne':'propOneValue, 'childOne':{'childPropOne': true}}}' would make content/sample and content/sample/childOne
-	 */
-	Future<?> postMany(String parentUrl, Map<String, Object> map, IResponseCallback callback);
 
 	void shutdown();
 

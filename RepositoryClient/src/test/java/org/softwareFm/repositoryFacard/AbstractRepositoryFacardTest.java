@@ -15,11 +15,11 @@ import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.tests.INeedsServerTest;
 
 public abstract class AbstractRepositoryFacardTest extends TestCase implements INeedsServerTest {
-	protected IRepositoryFacard facard;
+	protected IRepositoryFacardWithImports facard;
 
 	@Override
 	protected void setUp() throws Exception {
-		facard = IRepositoryFacard.Utils.defaultFacard();
+		facard = (IRepositoryFacardWithImports) IRepositoryFacard.Utils.defaultFacard();
 	}
 
 	protected void checkDataMatches(String url, Object... expectedObjects) throws Exception {
