@@ -26,9 +26,6 @@ public interface IRepositoryFacard {
 	/** This will call the callback with the .json representation of the node at the Url */
 	Future<?> get(String url, IRepositoryFacardCallback callback);
 
-	/** This will call the callback with the .<depth>.json representation of the node at the Url */
-	Future<?> getDepth(String url, int depth, IRepositoryFacardCallback callback);
-
 	/** This will create or update the node at the location. The map <em>must</em> be a map from string to: Integer,Long,String,String[] */
 	Future<?> post(String url, Map<String, Object> map, IResponseCallback callback);
 

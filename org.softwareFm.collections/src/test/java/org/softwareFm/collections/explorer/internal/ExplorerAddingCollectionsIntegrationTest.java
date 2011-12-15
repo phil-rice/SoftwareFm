@@ -35,11 +35,13 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 	private static final String pleaseAddADescription = "<Please add a description>";
 
 	public void testAddingCompanies() throws Exception {
-		checkAdding("company", "Companies", 2, null, new IAddingCallback<ICard>() {
+		checkAdding("company", "Companies", 4, null, new IAddingCallback<ICard>() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
 				adding.tableItem(0, "title", "", "someTitle");
-				adding.tableItem(1, "text", "", "someText");
+				adding.tableItem(1, "url", unknown, "someUrl");
+				adding.tableItem(2, "email", "", "someEmail");
+				adding.tableItem(3, "text", "", "someText");
 			}
 		});
 

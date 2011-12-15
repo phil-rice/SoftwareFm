@@ -180,23 +180,24 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 	public void testTitlesAndRightClickMenusText() {
 		String view = "View";
 		String edit = "Edit";
+		String help = "Help";
 
-		checkMenu(0, "Name", edit);
-		checkMenu(1, "Url", edit);
-		checkMenu(2, "Description", edit);
-		checkMenu(3, "Issues", edit);
-		checkMenu(4, "Download Url", edit);
-		checkMenu(5, "Documentation", view, "Add documentation");
-		checkMenu(6, "Mailing List", view, "Add mailingList");
-		checkMenu(7, "Tutorials", view, "Add tutorial");
-		checkMenu(8, "Tweet", view, "Add tweet");
-		checkMenu(9, "Rss", view, "Add rss");
-		checkMenu(10, "Forum", view, "Add forum");
-		checkMenu(11, "Article", view, "Add article");
-		checkMenu(12, "Companies", view, "Add company");
-		checkMenu(13, "Adverts", view, "Add advert");
-		checkMenu(14, "Job", view, "Add job");
-		checkMenu(15, "Version", view, "Add version");
+		checkMenu(0, "Name", edit, help);
+		checkMenu(1, "Url", edit, help);
+		checkMenu(2, "Description", edit, help);
+		checkMenu(3, "Issues", edit, help);
+		checkMenu(4, "Download Url", edit, help);
+		checkMenu(5, "Documentation", view, "Add documentation", help);
+		checkMenu(6, "Mailing List", view, "Add mailingList", help);
+		checkMenu(7, "Tutorials", view, "Add tutorial", help);
+		checkMenu(8, "Tweet", view, "Add tweet", help);
+		checkMenu(9, "Rss", view, "Add rss", help);
+		checkMenu(10, "Forum", view, "Add forum", help);
+		checkMenu(11, "Article", view, "Add article", help);
+		checkMenu(12, "Companies", view, "Add company", help);
+		checkMenu(13, "Adverts", view, "Add advert", help);
+		checkMenu(14, "Job", view, "Add job", help);
+		checkMenu(15, "Version", view, "Add version", help);
 		displayCard(AbstractExplorerIntegrationTest.artifactUrl, new CardHolderAndCardCallback() {
 			@Override
 			public void process(ICardHolder cardHolder, ICard card) {

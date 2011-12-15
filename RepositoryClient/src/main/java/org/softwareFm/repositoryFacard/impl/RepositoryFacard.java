@@ -85,21 +85,6 @@ public class RepositoryFacard implements IRepositoryFacard {
 		return client.delete(url).execute(callback);
 	}
 
-	@Override
-	public Future<?> getDepth(String url, int depth, final IRepositoryFacardCallback callback) {
-		return client.get(url + "." + depth + getExtension).execute(new IResponseCallback() {
-			@Override
-			public void process(IResponse response) {
-				try {
-					String string = response.asString();
-					Map<String, Object> result = parameterMaker.makeFrom(string);
-					callback.process(response, result);
-				} catch (Exception e) {
-					throw WrappedException.wrap(e);
-				}
-			}
-		});
-	}
 
 	@Override
 	public void shutdown() {

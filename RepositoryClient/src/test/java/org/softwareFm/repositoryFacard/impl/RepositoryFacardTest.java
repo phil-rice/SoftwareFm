@@ -43,10 +43,7 @@ public class RepositoryFacardTest extends AbstractRepositoryFacardTest {
 		oneReponse.assertOk();
 		twoReponse.assertOk();
 
-		checkDepthMatches(url, 0, "namep1", "datap1", "namep2", 2L, "jcr:primaryType", "nt:unstructured");
-		checkDepthMatches(url, 1, "namep1", "datap1", "namep2", 2L, "jcr:primaryType", "nt:unstructured", //
-				"one", Maps.makeMap("name11", "data11", "name12", 12L, "jcr:primaryType", "nt:unstructured"),//
-				"two", Maps.makeMap("name21", "data21", "name22", 22L, "jcr:primaryType", "nt:unstructured"));
+		checkGet(url, "namep1", "datap1", "namep2", 2L, "jcr:primaryType", "nt:unstructured");
 	}
 
 	public void testPostImport() throws Exception {
@@ -60,18 +57,19 @@ public class RepositoryFacardTest extends AbstractRepositoryFacardTest {
 		facard.postMany(url, expected, parentReponse).get();
 		parentReponse.assertOk();
 
-		checkDepthMatches(url, 0, "namep1", "datap1", "namep2", 2L, "jcr:primaryType", "nt:unstructured");
-		checkDepthMatches(url, 1, expected);
+		checkGet(url, "namep1", "datap1", "namep2", 2L, "jcr:primaryType", "nt:unstructured");
+		checkGet(url+"/one", "name11", "data11", "name12", 12L, "jcr:primaryType", "nt:unstructured");
+		checkGet(url+"/two", "name21", "data21", "name22", 22L, "jcr:primaryType", "nt:unstructured");
 	}
 
-	private void checkDepthMatches(String url, int depth, Object... expectedAsParams) throws Exception {
+	private void checkGet(String url, Object... expectedAsParams) throws Exception {
 		Map<String, Object> expected = Maps.<String, Object> makeMap(expectedAsParams);
-		checkDepthMatches(url, depth, expected);
+		checkGetMap(url, expected);
 	}
 
-	private void checkDepthMatches(String url, int depth, Map<String, Object> expected) throws Exception {
+	private void checkGetMap(String url, Map<String, Object> expected) throws Exception {
 		ResponseFacardCallbackRecordingStatus callback = new ResponseFacardCallbackRecordingStatus();
-		facard.getDepth(url, depth, callback).get();
+		facard.get(url, callback).get();
 		Maps.assertEquals(expected, callback.data.get());
 	}
 
