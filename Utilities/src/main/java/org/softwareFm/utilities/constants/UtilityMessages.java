@@ -22,4 +22,5 @@ public class UtilityMessages {
 	public static final String cannotFindMapForGet = "Cannot find map for get\nMap: {0}\n Keys: {2}";
 	public static final String errorParsingJson = "Error parsing object of {0} with value {1}";
 	public static final String missingResource = "Cannot find resource {0}";
+	public static final String cannotFindOffset = "Cannot find offset. \nRoot {0}\nLeaf {1}";
 }

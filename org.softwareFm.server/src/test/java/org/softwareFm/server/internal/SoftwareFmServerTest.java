@@ -13,6 +13,7 @@ import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.httpClient.requests.MemoryResponseCallback;
 import org.softwareFm.server.IProcessCall;
 import org.softwareFm.server.ISoftwareFmServer;
+import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.callbacks.MemoryCallback;
 import org.softwareFm.utilities.comparators.Comparators;
@@ -68,8 +69,8 @@ public class SoftwareFmServerTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		memory = ICallback.Utils.memory();
-		server = ISoftwareFmServer.Utils.serverPort8080(new ProcessCallMock(), memory);
-		client = IHttpClient.Utils.builder("localhost", 8080);
+		server = ISoftwareFmServer.Utils.testServerPort(new ProcessCallMock(), memory);
+		client = IHttpClient.Utils.builder("localhost", ServerConstants.testPort);
 	}
 
 	@Override

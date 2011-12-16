@@ -50,4 +50,7 @@ public class FilesIntegrationTest extends TestCase implements IIntegrationTest {
 		assertEquals(size * size, count);
 	}
 
+	public void testGetWhenDataDoesntExist() throws Exception {
+	}
+
 }

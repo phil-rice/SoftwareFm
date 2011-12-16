@@ -21,6 +21,15 @@ import org.softwareFm.utilities.reflection.Classes;
 import org.softwareFm.utilities.reflection.IClassAcceptor;
 
 public class Tests {
+	public static File makeTempDirectory(String name) {
+		String tempDir = System.getProperty("java.io.tmpdir");
+		Assert.assertTrue(!tempDir.equals(""));
+		File tests = new File(tempDir, "softwareFmTests");
+		tests.mkdirs();
+		File result = new File(tests, name);
+		Files.deleteDirectory(result);
+		return result;
+	}
 
 	@SuppressWarnings("unchecked")
 	public static <E extends Throwable> E assertThrows(Class<E> class1, Runnable runnable) {

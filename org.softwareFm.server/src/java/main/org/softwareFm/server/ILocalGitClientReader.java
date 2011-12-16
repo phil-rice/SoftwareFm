@@ -1,6 +1,29 @@
 package org.softwareFm.server;
 
-public interface ILocalGitClientReader {
-	GetResult get(String url);
+import java.io.File;
 
+public interface ILocalGitClientReader {
+
+	File getRoot();
+
+	GetResult localGet(String url);
+
+
+	public static class Utils {
+		public static ILocalGitClientReader noReader() {
+			return new ILocalGitClientReader() {
+
+				@Override
+				public GetResult localGet(String url) {
+					throw new UnsupportedOperationException();
+				}
+
+				@Override
+				public File getRoot() {
+					throw new UnsupportedOperationException();
+				}
+
+			};
+		}
+	}
 }

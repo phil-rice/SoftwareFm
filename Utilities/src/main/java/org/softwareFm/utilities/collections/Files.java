@@ -37,6 +37,7 @@ import java.util.Stack;
 
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.constants.UtilityConstants;
+import org.softwareFm.utilities.constants.UtilityMessages;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.springframework.core.io.ClassPathResource;
@@ -45,6 +46,14 @@ import org.springframework.core.io.UrlResource;
 
 public class Files {
 	private static final Object lock = new Object();
+
+	public static String offset(File root, File leaf) {
+		String rootString = root.getAbsolutePath();
+		String leafString = leaf.getAbsolutePath();
+		if (leafString.startsWith(rootString))
+			return leafString.substring(rootString.length() + 1).replace('\\', '/');
+		throw new IllegalArgumentException(MessageFormat.format(UtilityMessages.cannotFindOffset, root, leaf));
+	}
 
 	/** The directory is locked, and the operation begins! */
 	public static void doOperationInLock(File dir, String lockFileName, ICallback<File> callback) {

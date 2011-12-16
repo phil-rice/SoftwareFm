@@ -1,5 +1,6 @@
 package org.softwareFm.server.internal;
 
+import java.io.File;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -20,7 +21,7 @@ public class LocalGitClientMultiMock implements ILocalGitClientReader {
 	}
 
 	@Override
-	public GetResult get(String url) {
+	public GetResult localGet(String url) {
 		switch (index.getAndIncrement()) {
 		case 0:
 			Assert.assertEquals(this.url, url);
@@ -31,6 +32,12 @@ public class LocalGitClientMultiMock implements ILocalGitClientReader {
 			Assert.fail(index.toString());
 			return null;
 		}
+	}
+
+	@Override
+	public File getRoot() {
+		Assert.fail();
+		return null;
 	}
 
 

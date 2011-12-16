@@ -44,7 +44,7 @@ public class GitServer extends LocalGitClient implements IGitServer {
 				File gitDir = new File(dir, ServerConstants.gitDirectory);
 				dir.mkdirs();
 				FileRepository fileRepository = new FileRepositoryBuilder().setGitDir(gitDir).readEnvironment().build();
-				fileRepository.create();// we don't want a bare repository
+				fileRepository.create();
 			}
 		});
 	}

@@ -21,7 +21,7 @@ public class LocalGitClient implements ILocalGitClient {
 	}
 
 	@Override
-	public GetResult get(String url) {
+	public GetResult localGet(String url) {
 		File directory = new File(root, url);
 		File file = new File(directory, ServerConstants.dataFileName);
 		if (!file.exists())
@@ -45,7 +45,7 @@ public class LocalGitClient implements ILocalGitClient {
 		File directory = new File(root, url);
 		File file = new File(directory, ServerConstants.dataFileName);
 		file.delete();
-		directory.delete();//will only delete successfully is the directory is empty
+		directory.delete();// will only delete successfully is the directory is empty
 	}
 
 	@Override
@@ -54,6 +54,11 @@ public class LocalGitClient implements ILocalGitClient {
 		directory.mkdirs();
 		File file = new File(directory, ServerConstants.dataFileName);
 		Files.setText(file, Json.toString(map));
+	}
+
+	@Override
+	public File getRoot() {
+		return root;
 	}
 
 }

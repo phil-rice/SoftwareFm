@@ -36,7 +36,7 @@ import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.constants.HttpClientConstants;
 import org.softwareFm.httpClient.requests.IResponseCallback;
-import org.softwareFm.repositoryFacard.impl.RepositoryFacard;
+import org.softwareFm.repositoryFacard.internal.RepositoryFacard;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;

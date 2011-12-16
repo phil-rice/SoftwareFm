@@ -12,6 +12,8 @@ public interface IGitFacard {
 
 	void clone(String fromUri, File targetDirectory);
 	
+	void pull(File root,String fromUri);
+	
 	public static class Utils{
 		public static IGitFacard makeFacard(){
 			return new GitFacard();

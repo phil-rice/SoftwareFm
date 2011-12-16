@@ -13,7 +13,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.requests.IResponseCallback;
-import org.softwareFm.repositoryFacard.impl.RepositoryFacard;
+import org.softwareFm.repositoryFacard.internal.RepositoryFacard;
 
 public interface IRepositoryFacard extends IRepositoryFacardReader{
 

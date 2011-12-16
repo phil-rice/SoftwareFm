@@ -6,6 +6,7 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.eclipse.jgit.storage.file.FileRepository;
+import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.server.GetResult;
 import org.softwareFm.server.IGitFacard;
 import org.softwareFm.server.IGitServer;
@@ -14,20 +15,23 @@ import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.services.IServiceExecutor;
+import org.softwareFm.utilities.tests.Tests;
 
 public abstract class GitTest extends TestCase {
-	protected final static Map<String, Object> a1b2 = Maps.stringObjectMap("a", 1L, "b", 2L);
+	protected final static Map<String, Object> a1b2 = Maps.stringObjectLinkedMap("a", 1L, "b", 2L);
 
-	protected final static Map<String, Object> typeCollectionMap = Maps.stringObjectMap(ServerConstants.typeTag, ServerConstants.collectionType);
-	protected final static Map<String, Object> v11 = Maps.stringObjectMap("c", 1l, "v", 1l);
-	protected final static Map<String, Object> v12 = Maps.stringObjectMap("c", 1l, "v", 2l);
-	protected final static Map<String, Object> v21 = Maps.stringObjectMap("c", 2l, "v", 1l);
-	protected final static Map<String, Object> v22 = Maps.stringObjectMap("c", 2l, "v", 2l);
+	protected final static Map<String, Object> typeCollectionMap = Maps.stringObjectLinkedMap(ServerConstants.typeTag, ServerConstants.collectionType);
+	protected final static Map<String, Object> v11 = Maps.stringObjectLinkedMap("c", 1l, "v", 1l);
+	protected final static Map<String, Object> v12 = Maps.stringObjectLinkedMap("c", 1l, "v", 2l);
+	protected final static Map<String, Object> v21 = Maps.stringObjectLinkedMap("c", 2l, "v", 1l);
+	protected final static Map<String, Object> v22 = Maps.stringObjectLinkedMap("c", 2l, "v", 2l);
 
 	protected File root;
 	protected LocalGitClient localGitClient;
 	private IServiceExecutor serviceExecutor;
 	protected final IGitFacard gitFacard = IGitFacard.Utils.makeFacard();
+
+	private IHttpClient httpClient;
 
 	protected void put(String url, Map<String, Object> data) {
 		put(root, url, data);
@@ -62,12 +66,7 @@ public abstract class GitTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		String tempDir = System.getProperty("java.io.tmpdir");
-		assertTrue(!tempDir.equals(""));
-		File tests = new File(tempDir, "softwareFmTests");
-		tests.mkdirs();
-		root = new File(tests, getClass().getSimpleName());
-		Files.deleteDirectory(root);
+		root = Tests.makeTempDirectory(getClass().getSimpleName());
 		localGitClient = makeLocalGitClient();
 	}
 
@@ -80,22 +79,28 @@ public abstract class GitTest extends TestCase {
 		super.tearDown();
 		if (serviceExecutor != null)
 			serviceExecutor.shutdown();
+		if (httpClient != null)
+			httpClient.shutdown();
 	}
 
 	protected void checkNoData(String url) {
-		GetResult result = localGitClient.get(url);
+		GetResult result = localGitClient.localGet(url);
 		assertFalse(result.toString(), result.found);
 
 	}
 
 	protected void checkLocalGet(String url, Map<String, Object> data) {
-		GetResult result = localGitClient.get(url);
+		GetResult result = localGitClient.localGet(url);
 		assertTrue(result.found);
 		assertEquals(data, result.data);
 	}
 
 	protected IServiceExecutor getServiceExecutor() {
 		return serviceExecutor == null ? serviceExecutor = IServiceExecutor.Utils.defaultExecutor() : serviceExecutor;
+	}
+
+	protected IHttpClient getHttpClient() {
+		return httpClient == null ? httpClient = IHttpClient.Utils.builder("localhost", ServerConstants.testPort) : httpClient;
 	}
 
 	protected void checkCreateRepository(IGitServer gitServer, String url) {

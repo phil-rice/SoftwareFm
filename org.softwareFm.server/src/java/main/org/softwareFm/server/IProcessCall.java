@@ -3,6 +3,8 @@ package org.softwareFm.server;
 import java.util.Map;
 
 import org.apache.http.RequestLine;
+import org.softwareFm.server.processors.FindRootProcessor;
+import org.softwareFm.server.processors.PostProcessor;
 
 public interface IProcessCall {
 	String process(RequestLine requestLine, Map<String, Object> parameters);
@@ -36,6 +38,10 @@ public interface IProcessCall {
 
 		private static String toString(RequestLine requestLine, Map<String, Object> parameters) {
 			return "<" + requestLine + ", " + parameters + ">";
+		}
+
+		public static IProcessCall softwareFmProcessCall(IGitServer server) {
+			return chain(new PostProcessor(server), new FindRootProcessor(server));
 		}
 	}
 }

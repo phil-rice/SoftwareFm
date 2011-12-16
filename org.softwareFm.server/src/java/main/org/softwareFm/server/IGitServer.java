@@ -3,6 +3,8 @@ package org.softwareFm.server;
 import java.io.File;
 import java.util.Map;
 
+import org.softwareFm.server.internal.GitServer;
+
 public interface IGitServer extends ILocalGitClient {
 	void createRepository(String url);
 
@@ -15,4 +17,12 @@ public interface IGitServer extends ILocalGitClient {
 	@Override
 	void post(String url, Map<String, Object> map);
 
+	public static class Utils {
+
+		public static IGitServer gitServer(File root) {
+			return new GitServer(IGitFacard.Utils.makeFacard(), root);
+		}
+		
+	}
+	
 }

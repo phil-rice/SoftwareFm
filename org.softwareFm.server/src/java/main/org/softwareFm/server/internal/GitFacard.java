@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.softwareFm.server.IGitFacard;
@@ -12,6 +13,17 @@ import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.exceptions.WrappedException;
 
 public class GitFacard implements IGitFacard {
+
+	@Override
+	public void pull(File root, String fromUri) {
+		try {
+			FileRepository fileRepository = makeFileRepository(root, fromUri);
+			PullCommand pull = new Git(fileRepository).pull();
+			pull.call();
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+	};
 
 	@Override
 	public File findRepositoryUrl(File root, String url) {

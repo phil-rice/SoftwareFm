@@ -1,8 +1,10 @@
 package org.softwareFm.server.internal;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Assert;
 import org.softwareFm.server.GetResult;
 import org.softwareFm.server.ILocalGitClientReader;
 import org.softwareFm.utilities.collections.Lists;
@@ -18,10 +20,17 @@ public class LocalGitClientMock implements ILocalGitClientReader {
 	}
 
 	@Override
-	public GetResult get(String url) {
+	public GetResult localGet(String url) {
 		urls.add(url);
 		return GetResult.create(map.get(url));
 	}
+
+	@Override
+	public File getRoot() {
+		Assert.fail();
+		return null;
+	}
+
 
 
 }

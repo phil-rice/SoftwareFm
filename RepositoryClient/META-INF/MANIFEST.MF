@@ -7,5 +7,5 @@ Bundle-Vendor: org.softwareFm.softwareFm
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: orc.softwareFm.httpClient;bundle-version="1.0.0";visibility:=reexport
 Export-Package: org.softwareFm.repositoryFacard,
- org.softwareFm.repositoryFacard.impl,
+ org.softwareFm.repositoryFacard.internal,
  org.softwareFm.repositoryFacardConstants

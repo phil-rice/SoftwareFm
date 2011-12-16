@@ -5,28 +5,43 @@
 
 package org.softwareFm.server.internal;
 
+import java.io.File;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
+import org.softwareFm.httpClient.api.IHttpClient;
+import org.softwareFm.httpClient.requests.IResponseCallback;
+import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
-import org.softwareFm.repositoryFacard.IRepositoryFacardReader;
 import org.softwareFm.server.GetResult;
-import org.softwareFm.server.IGitClient;
-import org.softwareFm.server.ILocalGitClient;
+import org.softwareFm.server.IGitFacard;
 import org.softwareFm.server.ILocalGitClientReader;
+import org.softwareFm.server.ISoftwareFmClient;
+import org.softwareFm.server.ServerConstants;
+import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.callbacks.MemoryCallback;
+import org.softwareFm.utilities.json.Json;
+import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.services.IServiceExecutor;
 
 /** This class reads from the local file system. If the file isn't held locally, it asks for a git download, then returns the file. */
-public class GitRepositoryFacard implements IRepositoryFacardReader {
+public class GitRepositoryFacard implements ISoftwareFmClient {
 
 	private final IServiceExecutor serviceExecutor;
 	private final ILocalGitClientReader localGit;
-	private final IGitClient gitClient;
+	private final String remoteGitPrefix;
+	private final Map<String, GetResult> cache = Maps.newMap();
+	private final IHttpClient httpClient;
+	private final IGitFacard gitFacard;
 
-	public GitRepositoryFacard(IServiceExecutor serviceExecutor, IGitClient gitClient, ILocalGitClientReader localGit) {
+	public GitRepositoryFacard(IHttpClient httpClient, IServiceExecutor serviceExecutor, IGitFacard gitFacard, ILocalGitClientReader localGit, String remoteGitPrefix) {
+		this.httpClient = httpClient;
 		this.serviceExecutor = serviceExecutor;
-		this.gitClient = gitClient;
+		this.gitFacard = gitFacard;
 		this.localGit = localGit;
+		this.remoteGitPrefix = remoteGitPrefix;
 	}
 
 	@Override
@@ -34,9 +49,79 @@ public class GitRepositoryFacard implements IRepositoryFacardReader {
 		return serviceExecutor.submit(new Callable<GetResult>() {
 			@Override
 			public GetResult call() throws Exception {
-				return ILocalGitClient.Utils.getFromLocalPullIfNeeded(localGit, gitClient, url);
+				GetResult result = Maps.findOrCreate(cache, url, new Callable<GetResult>() {
+					@Override
+					public GetResult call() throws Exception {
+						GetResult firstResult = localGit.localGet(url);
+						if (firstResult.found) {
+							processCallback(firstResult);
+							return firstResult;
+						}
+						MemoryCallback<String> memory = ICallback.Utils.<String> memory();
+						findRepositoryBase(url, memory).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+						String repositoryBase = memory.getOnlyResult();
+						if (repositoryBase == null) {
+							processCallback(firstResult);
+							return GetResult.create(null);
+						}
+						String fromUri = remoteGitPrefix +"/" + repositoryBase;
+						File localRepostoryBase = new File(localGit.getRoot(), repositoryBase);
+						gitFacard.clone(fromUri, localRepostoryBase);
+						GetResult afterCloneResult = localGit.localGet(url);
+						processCallback(afterCloneResult);
+						return afterCloneResult;
+					}
+
+					private void processCallback(GetResult result) throws Exception {
+						boolean found = result.found;
+						int status = found ? ServerConstants.okStatusCode : ServerConstants.notFoundStatusCode;
+						String message = found ? ServerConstants.foundMessage : ServerConstants.notFoundMessage;
+						IResponse makeResponse = IResponse.Utils.create(url, status, message);
+						callback.process(makeResponse, result.data);
+					}
+				});
+				return result;
 			}
 		});
 	}
 
+	@Override
+	public Future<?> post(final String url, Map<String, Object> map, final IResponseCallback callback) {
+		cache.clear();// we can do better and only clear relevant caches..
+		return httpClient.post(url).addParams(ServerConstants.dataParameterName, Json.toString(map)).execute(new IResponseCallback() {
+			
+			@Override
+			public void process(IResponse response) {
+				gitFacard.pull(localGit.getRoot(), url);
+				callback.process(response);
+			}
+		});
+	}
+
+	@Override
+	public Future<?> findRepositoryBase(String url, final ICallback<String> callback) {
+		// we can speed this up by using the fact that urls have structure, and if a parent has been investigated, we know the result.
+		return httpClient.get(ServerConstants.findRepositoryBasePrefix + "/" + url).execute(new IResponseCallback() {
+			@Override
+			public void process(IResponse response) {
+				String result = response.statusCode() == ServerConstants.okStatusCode ? response.asString() : null;
+				ICallback.Utils.call(callback, result);
+			}
+		});
+	}
+
+	@Override
+	public void addHeader(String name, String value) {
+	}
+
+	@Override
+	public Future<?> delete(String url, IResponseCallback callback) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void shutdown() {
+		serviceExecutor.shutdown();
+		httpClient.shutdown();
+	}
 }
