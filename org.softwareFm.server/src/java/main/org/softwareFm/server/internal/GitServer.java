@@ -9,6 +9,7 @@ import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.softwareFm.server.IGitFacard;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -23,8 +24,11 @@ import org.softwareFm.utilities.exceptions.WrappedException;
  */
 public class GitServer extends LocalGitClient implements IGitServer {
 
-	public GitServer(File root) {
+	private final IGitFacard gitFacard;
+
+	public GitServer(IGitFacard gitFacard, File root) {
 		super(root);
+		this.gitFacard = gitFacard;
 	}
 
 	@Override
@@ -67,7 +71,7 @@ public class GitServer extends LocalGitClient implements IGitServer {
 
 	private void addAllAndCommit(String url, String message) {
 		try {
-			FileRepository fileRepository = IGitServer.Utils.makeFileRepository(root, url);
+			FileRepository fileRepository = gitFacard.makeFileRepository(root, url);
 			Git git = new Git(fileRepository);
 			new AddCommand(fileRepository).addFilepattern(".").call();
 			CommitCommand commit = git.commit();

@@ -25,4 +25,5 @@ abstract public class AbstractLocalGitClientTest extends GitTest {
 		localGitClient.post("a/b/c", a1b2);
 		checkLocalGet("a/b/c", a1b2);
 	}
+	
 }

@@ -5,7 +5,10 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.eclipse.jgit.storage.file.FileRepository;
 import org.softwareFm.server.GetResult;
+import org.softwareFm.server.IGitFacard;
+import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.json.Json;
@@ -24,6 +27,7 @@ public abstract class GitTest extends TestCase {
 	protected File root;
 	protected LocalGitClient localGitClient;
 	private IServiceExecutor serviceExecutor;
+	protected final IGitFacard gitFacard = IGitFacard.Utils.makeFacard();
 
 	protected void put(String url, Map<String, Object> data) {
 		put(root, url, data);
@@ -92,6 +96,12 @@ public abstract class GitTest extends TestCase {
 
 	protected IServiceExecutor getServiceExecutor() {
 		return serviceExecutor == null ? serviceExecutor = IServiceExecutor.Utils.defaultExecutor() : serviceExecutor;
+	}
+
+	protected void checkCreateRepository(IGitServer gitServer, String url) {
+		gitServer.createRepository(url);
+		FileRepository fileRepository = gitFacard.makeFileRepository(root, url);
+		assertEquals(new File(root, url + "/" + ServerConstants.gitExistsMarker), fileRepository.getDirectory());
 	}
 
 }

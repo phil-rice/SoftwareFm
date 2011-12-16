@@ -6,4 +6,7 @@ public class ServerConstants {
 	public static final String typeTag = "sling:resourceType";
 	public static final String cannotCreateGitUnderSecondRepository = "Cannot create git {0} under second repository";
 	public static final String gitDirectory = ".git";
+	public static final String GET = "GET";
+	public static final String POST = "GET";
+	public static String gitExistsMarker =".git";
 }
