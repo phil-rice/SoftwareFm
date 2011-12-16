@@ -14,6 +14,8 @@ public class WrappedException extends RuntimeException {
 	}
 
 	public static RuntimeException wrap(Throwable e) {
+		if (e instanceof ThreadDeath)
+			throw (ThreadDeath) e;// dont mess with threaddeath!
 		if (e instanceof RuntimeException)
 			return (RuntimeException) e;
 		return new WrappedException(e);

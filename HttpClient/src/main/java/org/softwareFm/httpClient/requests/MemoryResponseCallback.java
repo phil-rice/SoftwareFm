@@ -7,6 +7,8 @@ package org.softwareFm.httpClient.requests;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import junit.framework.Assert;
+
 import org.softwareFm.httpClient.response.IResponse;
 
 public class MemoryResponseCallback<Thing, Aspect> implements IResponseCallback {
@@ -18,6 +20,10 @@ public class MemoryResponseCallback<Thing, Aspect> implements IResponseCallback 
 	public void process(IResponse response) {
 		this.response = response;
 		count.incrementAndGet();
+	}
+	
+	public void assertCalledOnce(){
+		Assert.assertEquals(1, count.get());
 	}
 
 }

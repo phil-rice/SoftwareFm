@@ -25,9 +25,13 @@ public interface IServiceExecutor {
 
 	public static class Utils {
 		public static IServiceExecutor defaultExecutor() {
+			return defaultExecutor(10);
+			
+		}
+		public static IServiceExecutor defaultExecutor(final int maxThreadPoolSize) {
 			IServiceExecutor executor = new IServiceExecutor() {
 				private final List<IExceptionListener> listeners = Lists.newList();
-				private final ExecutorService service = new ThreadPoolExecutor(10, 10, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(1000)) {
+				private final ExecutorService service = new ThreadPoolExecutor(1, maxThreadPoolSize, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(1000)) {
 					@Override
 					protected void afterExecute(Runnable r, Throwable t) {
 						super.afterExecute(r, t);
