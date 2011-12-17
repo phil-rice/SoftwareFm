@@ -10,6 +10,7 @@ import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.server.GetResult;
 import org.softwareFm.server.IGitFacard;
 import org.softwareFm.server.IGitServer;
+import org.softwareFm.server.ILocalGitClient;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.json.Json;
@@ -27,7 +28,6 @@ public abstract class GitTest extends TestCase {
 	protected final static Map<String, Object> v22 = Maps.stringObjectLinkedMap("c", 2l, "v", 2l);
 
 	protected File root;
-	protected LocalGitClient localGitClient;
 	private IServiceExecutor serviceExecutor;
 	protected final IGitFacard gitFacard = IGitFacard.Utils.makeFacard();
 
@@ -67,11 +67,6 @@ public abstract class GitTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		root = Tests.makeTempDirectory(getClass().getSimpleName());
-		localGitClient = makeLocalGitClient();
-	}
-
-	protected LocalGitClient makeLocalGitClient() {
-		return new LocalGitClient(root);
 	}
 
 	@Override
@@ -83,14 +78,14 @@ public abstract class GitTest extends TestCase {
 			httpClient.shutdown();
 	}
 
-	protected void checkNoData(String url) {
-		GetResult result = localGitClient.localGet(url);
+	protected void checkNoData(ILocalGitClient client, String url) {
+		GetResult result = client.localGet(url);
 		assertFalse(result.toString(), result.found);
 
 	}
 
-	protected void checkLocalGet(String url, Map<String, Object> data) {
-		GetResult result = localGitClient.localGet(url);
+	protected void checkLocalGet(ILocalGitClient client, String url, Map<String, Object> data) {
+		GetResult result = client.localGet(url);
 		assertTrue(result.found);
 		assertEquals(data, result.data);
 	}
@@ -105,8 +100,16 @@ public abstract class GitTest extends TestCase {
 
 	protected void checkCreateRepository(IGitServer gitServer, String url) {
 		gitServer.createRepository(url);
-		FileRepository fileRepository = gitFacard.makeFileRepository(root, url);
-		assertEquals(new File(root, url + "/" + ServerConstants.gitExistsMarker), fileRepository.getDirectory());
+		FileRepository fileRepository = gitFacard.makeFileRepository(gitServer.getRoot(), url);
+		assertEquals(new File(gitServer.getRoot(), url + "/" + ServerConstants.DOT_GIT), fileRepository.getDirectory());
+	}
+
+	protected IGitServer makeGitServer(String remoteUriPrefix) {
+		return new GitServer(gitFacard, root, remoteUriPrefix);
+	}
+
+	protected void checkRepositoryExists(File repo) {
+		assertTrue(new File(repo, ServerConstants.DOT_GIT).exists());
 	}
 
 }

@@ -1,16 +1,11 @@
 package org.softwareFm.server.internal;
 
-import org.softwareFm.server.IGitServer;
+import org.softwareFm.server.ILocalGitClient;
 
 public class GitServerAsLocalGitClientTest extends AbstractLocalGitClientTest {
 	@Override
-	protected LocalGitClient makeLocalGitClient() {
-		return new GitServer(gitFacard, root);
+	protected ILocalGitClient makeLocalGitClient() {
+		return new GitServer(gitFacard, root, "not used");
 	}
-	
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		checkCreateRepository((IGitServer) localGitClient, "a/b");
-	}
+
 }

@@ -5,7 +5,6 @@
 
 package org.softwareFm.server.internal;
 
-import java.io.File;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -16,8 +15,7 @@ import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
 import org.softwareFm.server.GetResult;
-import org.softwareFm.server.IGitFacard;
-import org.softwareFm.server.ILocalGitClientReader;
+import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ISoftwareFmClient;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -30,18 +28,14 @@ import org.softwareFm.utilities.services.IServiceExecutor;
 public class GitRepositoryFacard implements ISoftwareFmClient {
 
 	private final IServiceExecutor serviceExecutor;
-	private final ILocalGitClientReader localGit;
-	private final String remoteGitPrefix;
+	private final IGitServer localGit;
 	private final Map<String, GetResult> cache = Maps.newMap();
 	private final IHttpClient httpClient;
-	private final IGitFacard gitFacard;
 
-	public GitRepositoryFacard(IHttpClient httpClient, IServiceExecutor serviceExecutor, IGitFacard gitFacard, ILocalGitClientReader localGit, String remoteGitPrefix) {
+	public GitRepositoryFacard(IHttpClient httpClient, IServiceExecutor serviceExecutor, IGitServer localGit) {
 		this.httpClient = httpClient;
 		this.serviceExecutor = serviceExecutor;
-		this.gitFacard = gitFacard;
 		this.localGit = localGit;
-		this.remoteGitPrefix = remoteGitPrefix;
 	}
 
 	@Override
@@ -60,13 +54,11 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 						MemoryCallback<String> memory = ICallback.Utils.<String> memory();
 						findRepositoryBase(url, memory).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
 						String repositoryBase = memory.getOnlyResult();
-						if (repositoryBase == null) {
+						if (repositoryBase == null) {// returning null because the remote server has never heard of it
 							processCallback(firstResult);
 							return GetResult.create(null);
 						}
-						String fromUri = remoteGitPrefix +"/" + repositoryBase;
-						File localRepostoryBase = new File(localGit.getRoot(), repositoryBase);
-						gitFacard.clone(fromUri, localRepostoryBase);
+						localGit.clone(repositoryBase);
 						GetResult afterCloneResult = localGit.localGet(url);
 						processCallback(afterCloneResult);
 						return afterCloneResult;
@@ -89,10 +81,10 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 	public Future<?> post(final String url, Map<String, Object> map, final IResponseCallback callback) {
 		cache.clear();// we can do better and only clear relevant caches..
 		return httpClient.post(url).addParams(ServerConstants.dataParameterName, Json.toString(map)).execute(new IResponseCallback() {
-			
+
 			@Override
 			public void process(IResponse response) {
-				gitFacard.pull(localGit.getRoot(), url);
+				localGit.pull( url);
 				callback.process(response);
 			}
 		});

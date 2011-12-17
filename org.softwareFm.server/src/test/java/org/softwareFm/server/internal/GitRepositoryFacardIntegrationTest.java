@@ -7,7 +7,6 @@ import java.util.concurrent.ExecutionException;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.repositoryFacard.CheckRepositoryFacardCallback;
 import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
-import org.softwareFm.server.IGitFacard;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.IProcessCall;
 import org.softwareFm.server.ISoftwareFmServer;
@@ -16,7 +15,6 @@ import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.tests.IIntegrationTest;
-import org.softwareFm.utilities.tests.Tests;
 
 public class GitRepositoryFacardIntegrationTest extends GitTest implements IIntegrationTest {
 
@@ -24,9 +22,11 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 	private GitRepositoryFacard repositoryFacard;
 	private IGitServer remoteGitServer;
 	private File remoteRoot;
+	private IGitServer localGitServer;
+	private File localRoot;
 
 	public void testGetWhenDataExists() throws InterruptedException, ExecutionException {
-		File directory = new File(root, "a/b/c");
+		File directory = new File(localRoot, "a/b/c");
 		directory.mkdirs();
 		File file = new File(directory, ServerConstants.dataFileName);
 		Files.setText(file, Json.toString(v11));
@@ -35,9 +35,8 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 		callback.assertCalled();
 	}
 
-	@Override
 	public void testGetWhenDataDoesntExist() throws Exception {
-		File directory = new File(root, "a/b/c");
+		File directory = new File(localRoot, "a/b/c");
 		File file = new File(directory, ServerConstants.dataFileName);
 		remoteGitServer.createRepository("a/b");
 		remoteGitServer.post("a/b/c", v11); // so now the remote repository has the data
@@ -56,7 +55,9 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 
 	public void testPostThenGet() throws InterruptedException, ExecutionException {
 		remoteGitServer.createRepository("a/b");
-		File localFile = new File(new File(root, "a/b/c"), ServerConstants.dataFileName);
+		localGitServer.clone("a/b/");
+
+		File localFile = new File(new File(localRoot, "a/b/c"), ServerConstants.dataFileName);
 		File remoteFile = new File(new File(remoteRoot, "a/b/c"), ServerConstants.dataFileName);
 		repositoryFacard.post("a/b/c", v11, IResponseCallback.Utils.noCallback()).get();
 
@@ -73,11 +74,13 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		remoteRoot = Tests.makeTempDirectory(getClass().getSimpleName() + "_remote");
-		remoteGitServer = IGitServer.Utils.gitServer(remoteRoot);
+		localRoot = new File(root, "local");
+		remoteRoot = new File(root, "remote");
+		remoteGitServer = IGitServer.Utils.gitServer(remoteRoot, "not used");
+		localGitServer = IGitServer.Utils.gitServer(localRoot, remoteRoot.getAbsolutePath());
 		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCall(remoteGitServer);
 		server = ISoftwareFmServer.Utils.server(ServerConstants.testPort, 2, processCall, ICallback.Utils.<Throwable> memory());
-		repositoryFacard = new GitRepositoryFacard(getHttpClient(), getServiceExecutor(), IGitFacard.Utils.makeFacard(), localGitClient, remoteRoot.getAbsolutePath());
+		repositoryFacard = new GitRepositoryFacard(getHttpClient(), getServiceExecutor(), localGitServer);
 	}
 
 	@Override

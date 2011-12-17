@@ -5,10 +5,22 @@ import java.util.Map;
 
 import org.softwareFm.server.internal.GitServer;
 
+/**
+ * IGitServer is a 'thread safe' (i.e. most operations are wrapped in Files.doFileLockOperation) wrapper around git facard. The local root, and the remote uri prefix are known
+ * 
+ * 
+ * 
+ * Design note: It is perhaps an unnecessary layer, but without it we are passing root around everywhere, and having to remember the File.doFileLockOperations.
+ */
 public interface IGitServer extends ILocalGitClient {
+	
 	void createRepository(String url);
 
 	File findRepositoryUrl(String url);
+	
+	void clone(String url);
+	
+	void pull(String url);
 
 	/**
 	 * Map should just have simple values: strings, numbers, arrays of strings/numbers <br />
@@ -19,10 +31,10 @@ public interface IGitServer extends ILocalGitClient {
 
 	public static class Utils {
 
-		public static IGitServer gitServer(File root) {
-			return new GitServer(IGitFacard.Utils.makeFacard(), root);
+		public static IGitServer gitServer(File root, String remoteUriPrefix) {
+			return new GitServer(IGitFacard.Utils.makeFacard(), root, remoteUriPrefix);
 		}
-		
+
 	}
-	
+
 }

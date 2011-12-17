@@ -7,6 +7,5 @@ package org.softwareFm.utilities.tests;
 
 public interface IIntegrationTest {
 
-	public abstract void testGetWhenDataDoesntExist() throws Exception;
 
 }
