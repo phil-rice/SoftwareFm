@@ -9,6 +9,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 
 import org.apache.maven.model.Model;
+import org.softwareFm.mavenExtractor.git.ExtractProjectStuff;
 import org.softwareFm.utilities.callbacks.ICallback;
 
 public class PurgeJavadocSourceThatAreIdenticalToJar implements IExtractorCallback {

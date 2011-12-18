@@ -3,7 +3,7 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwareFm.mavenExtractor;
+package org.softwareFm.mavenExtractor.git;
 
 import java.io.StringReader;
 import java.sql.ResultSet;
@@ -13,6 +13,9 @@ import javax.sql.DataSource;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.softwareFm.mavenExtractor.IExtractorCallback;
+import org.softwareFm.mavenExtractor.MavenImporterConstants;
+import org.softwareFm.mavenExtractor.IExtractorCallback.Utils;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.springframework.dao.DataAccessException;

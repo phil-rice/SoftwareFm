@@ -5,32 +5,19 @@
 
 package org.softwareFm.mavenExtractor;
 
-import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import javax.sql.DataSource;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Parent;
-import org.softwareFm.mavenImporter.MavenRepoWalker;
-import org.softwareFm.mavenImporter.MysqlNavigator;
+import org.softwareFm.mavenExtractor.git.ExtractProjectStuff;
 import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.strings.Strings;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 
 @SuppressWarnings("unused")

@@ -27,7 +27,7 @@ public class CardConstants {
 	public static final String jcrPrimaryType = "jcr:primaryType";
 
 	public static final Object found = "found";
-	public static final String urlGroupKey = "urlGenerator.group";
+	public static final String groupUrlKey = "urlGenerator.group";
 	public static final String artifactUrlKey = "urlGenerator.artifact";
 	public static final String snippetUrlKey = "urlGenerator.snippet";
 	public static final String versionUrlKey = "urlGenerator.version";

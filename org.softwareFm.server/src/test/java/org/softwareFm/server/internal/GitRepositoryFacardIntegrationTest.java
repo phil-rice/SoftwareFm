@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import org.softwareFm.httpClient.requests.CheckCallback;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.repositoryFacard.CheckRepositoryFacardCallback;
 import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
@@ -13,8 +14,10 @@ import org.softwareFm.server.ISoftwareFmServer;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Files;
+import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.tests.IIntegrationTest;
+import org.softwareFm.utilities.tests.Tests;
 
 public class GitRepositoryFacardIntegrationTest extends GitTest implements IIntegrationTest {
 
@@ -24,6 +27,51 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 	private File remoteRoot;
 	private IGitServer localGitServer;
 	private File localRoot;
+
+	public void testCanPostAfterLocalRepositoryExists() throws InterruptedException, ExecutionException {
+		gitFacard.createRepository(remoteRoot, "a/b");
+		gitFacard.clone(new File(remoteRoot, "a/b").getAbsolutePath(), localRoot, "a/b");
+		repositoryFacard.post("a/b/c", v11, IResponseCallback.Utils.noCallback()).get();
+		CheckRepositoryFacardCallback check = IRepositoryFacardCallback.Utils.checkMatches(200, v11);
+		repositoryFacard.get("a/b/c", check).get();
+		check.assertCalled();
+	}
+
+	public void testCannotPostIfLocalRepositoryDoesntExist() throws InterruptedException, ExecutionException {
+		File localRepo = new File(localRoot, "a/b");
+		checkRepositoryDoesntExists(localRepo);
+		Tests.assertThrowsWithMessage("Cannot post a/b/c when local repository doesn't exist", IllegalStateException.class, new Runnable() {
+			@Override
+			public void run() {
+				try {
+					repositoryFacard.post("a/b/c", v11, IResponseCallback.Utils.noCallback()).get();
+				} catch (Exception e) {
+					throw WrappedException.wrap(e);
+				}
+			}
+		});
+		checkRepositoryDoesntExists(localRepo);
+	}
+
+	public void testMakeRootClonesLocally() throws InterruptedException, ExecutionException {
+		File localRepo = new File(localRoot, "a/b");
+		checkRepositoryDoesntExists(localRepo);
+		repositoryFacard.makeRoot("a/b", IResponseCallback.Utils.noCallback()).get();
+		checkRepositoryExists(localRepo);
+	}
+
+	public void testCanPostAfterMakeRoot() throws InterruptedException, ExecutionException {
+		CheckCallback checkMakeRoot = IResponseCallback.Utils.checkCallback(200, "Made root at location a/b");
+		repositoryFacard.makeRoot("a/b", checkMakeRoot).get();
+		checkMakeRoot.assertCalledSuccessfullyOnce();
+
+		repositoryFacard.post("a/b/c", v11, IResponseCallback.Utils.noCallback()).get();
+		assertTrue(new File(localRoot, "a/b/" + ServerConstants.DOT_GIT).exists());
+	}
+
+	public void testPostAlsoClonesIfFirstPost() {
+
+	}
 
 	public void testGetWhenDataExists() throws InterruptedException, ExecutionException {
 		File directory = new File(localRoot, "a/b/c");
@@ -79,7 +127,7 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 		remoteGitServer = IGitServer.Utils.gitServer(remoteRoot, "not used");
 		localGitServer = IGitServer.Utils.gitServer(localRoot, remoteRoot.getAbsolutePath());
 		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCall(remoteGitServer);
-		server = ISoftwareFmServer.Utils.server(ServerConstants.testPort, 2, processCall, ICallback.Utils.<Throwable> memory());
+		server = ISoftwareFmServer.Utils.server(ServerConstants.testPort, 4, processCall, ICallback.Utils.<Throwable> memory());
 		repositoryFacard = new GitRepositoryFacard(getHttpClient(), getServiceExecutor(), localGitServer);
 	}
 
@@ -88,6 +136,8 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 		super.tearDown();
 		if (server != null)
 			server.shutdown();
+		if (repositoryFacard != null)
+			repositoryFacard.shutdown();
 	}
 
 }

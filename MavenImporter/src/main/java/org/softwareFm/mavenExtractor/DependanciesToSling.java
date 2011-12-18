@@ -11,8 +11,6 @@ import java.util.UUID;
 
 import javax.sql.DataSource;
 
-import org.softwareFm.configuration.configurators.DataStoreConfigurator;
-import org.softwareFm.display.data.GuiDataStore;
 import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;

@@ -32,5 +32,9 @@ public interface IResponseCallback {
 				}
 			};
 		}
+
+		public static CheckCallback checkCallback(int status, String message) {
+			return new CheckCallback(status, message);
+		}
 	}
 }

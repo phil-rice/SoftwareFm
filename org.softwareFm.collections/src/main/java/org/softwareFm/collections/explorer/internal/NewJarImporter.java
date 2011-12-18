@@ -114,8 +114,8 @@ public class NewJarImporter {
 			}
 		},//
 				map(CardConstants.jarUrlKey, Maps.with(groupIdArtifactIdVersionMap, CardConstants.slingResourceType, CardConstants.collection)), //
-				stage(CardConstants.urlGroupKey, CollectionConstants.groupId, groupId, CardConstants.slingResourceType, CardConstants.group),//
-				collection(CardConstants.urlGroupKey, CardConstants.artifact), //
+				stage(CardConstants.groupUrlKey, CollectionConstants.groupId, groupId, CardConstants.slingResourceType, CardConstants.group),//
+				collection(CardConstants.groupUrlKey, CardConstants.artifact), //
 				stage(CardConstants.artifactUrlKey, CardConstants.slingResourceType, CardConstants.artifact),//
 				collection(CardConstants.artifactUrlKey, CardConstants.version), //
 				map(CardConstants.versionUrlKey, Maps.with(groupIdArtifactIdVersionMap, CardConstants.slingResourceType, CardConstants.version)), //

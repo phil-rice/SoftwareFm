@@ -17,5 +17,13 @@ public interface IRepositoryFacardCallback {
 		public static CheckRepositoryFacardCallback checkMatches(final int statusCode, final Map<String,Object> expected){
 			return new CheckRepositoryFacardCallback(expected, statusCode);
 		}
+
+		public static IRepositoryFacardCallback noCallback() {
+			return new IRepositoryFacardCallback() {
+				@Override
+				public void process(IResponse response, Map<String, Object> data) throws Exception {
+				}
+			};
+		}
 	}
 }

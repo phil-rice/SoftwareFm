@@ -5,6 +5,8 @@
 
 package org.softwareFm.server.internal;
 
+import java.io.File;
+import java.text.MessageFormat;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -12,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.requests.IResponseCallback;
+import org.softwareFm.httpClient.requests.MemoryResponseCallback;
 import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
 import org.softwareFm.server.GetResult;
@@ -36,6 +39,20 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 		this.httpClient = httpClient;
 		this.serviceExecutor = serviceExecutor;
 		this.localGit = localGit;
+	}
+
+	@Override
+	public Future<?> makeRoot(final String url, final IResponseCallback callback) {
+		return serviceExecutor.submit(new Callable<GetResult>() {
+			@Override
+			public GetResult call() throws Exception {
+				MemoryResponseCallback<Object, Object> memoryCallback = IResponseCallback.Utils.memoryCallback();
+				httpClient.post(ServerConstants.makeRootPrefix + url).execute(memoryCallback).get();
+				localGit.clone(url);
+				callback.process(memoryCallback.response);
+				return null;
+			}
+		});
 	}
 
 	@Override
@@ -78,14 +95,19 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 	}
 
 	@Override
-	public Future<?> post(final String url, Map<String, Object> map, final IResponseCallback callback) {
+	public Future<?> post(final String url, final Map<String, Object> map, final IResponseCallback callback) {
 		getCache.clear();// we can do better and only clear relevant caches..
-		return httpClient.post(url).addParams(ServerConstants.dataParameterName, Json.toString(map)).execute(new IResponseCallback() {
-
+		File existing = localGit.findRepositoryUrl(url);
+		if (existing == null)
+			throw new IllegalStateException(MessageFormat.format(ServerConstants.cannotPostWhenLocalRepositoryDoesntExist, url));
+		return serviceExecutor.submit(new Callable<Void>() {
 			@Override
-			public void process(IResponse response) {
-				localGit.pull( url);
-				callback.process(response);
+			public Void call() throws Exception {
+				MemoryResponseCallback<Object, Object> memoryCallback = IResponseCallback.Utils.memoryCallback();
+				httpClient.post(url).addParams(ServerConstants.dataParameterName, Json.toString(map)).execute(memoryCallback).get();
+				localGit.pull(url);
+				callback.process(memoryCallback.response);
+				return null;
 			}
 		});
 	}

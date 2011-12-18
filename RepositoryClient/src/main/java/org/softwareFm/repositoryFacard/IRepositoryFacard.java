@@ -26,6 +26,7 @@ public interface IRepositoryFacard extends IRepositoryFacardReader{
 	/** This will create or update the node at the location. The map <em>must</em> be a map from string to: Integer,Long,String,String[] */
 	Future<?> post(String url, Map<String, Object> map, IResponseCallback callback);
 
+	Future<?> makeRoot(String url, IResponseCallback callback);
 
 	void shutdown();
 

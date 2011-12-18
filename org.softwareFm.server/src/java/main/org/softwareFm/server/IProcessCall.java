@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.apache.http.RequestLine;
 import org.softwareFm.server.processors.FindRootProcessor;
+import org.softwareFm.server.processors.MakeRootProcessor;
 import org.softwareFm.server.processors.PostProcessor;
 
 public interface IProcessCall {
@@ -41,7 +42,9 @@ public interface IProcessCall {
 		}
 
 		public static IProcessCall softwareFmProcessCall(IGitServer server) {
-			return chain(new PostProcessor(server), new FindRootProcessor(server));
+			return chain(new FindRootProcessor(server), //
+					new MakeRootProcessor(server), //
+					new PostProcessor(server));// this sweeps up any posts, so ensure that commands appear in chain before it
 		}
 	}
 }

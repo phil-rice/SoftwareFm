@@ -27,11 +27,18 @@ public class Tests {
 		File tests = new File(tempDir, "softwareFmTests");
 		tests.mkdirs();
 		File result = new File(tests, name);
-		Files.deleteDirectory(result);
+		boolean deleted = Files.deleteDirectory(result);
+		boolean exists = result.exists();
+		Assert.assertFalse("Cannot delete temp file for: " + name, exists);
 		return result;
 	}
 
-	@SuppressWarnings("unchecked")
+	public static <E extends Throwable> E assertThrowsWithMessage(String message, Class<E> class1, Runnable runnable) {
+		E e = assertThrows(class1, runnable);
+		Assert.assertEquals(message, e.getMessage());
+		return e;
+	}
+
 	public static <E extends Throwable> E assertThrows(Class<E> class1, Runnable runnable) {
 		try {
 			runnable.run();

@@ -3,7 +3,7 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwareFm.mavenExtractor;
+package org.softwareFm.mavenExtractor.git;
 
 import java.io.File;
 import java.util.List;
@@ -21,15 +21,19 @@ import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.display.data.IUrlGeneratorMap;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.jdtBinding.api.JdtConstants;
-import org.softwareFm.mavenExtractor.git.ExtractProjectStuff;
+import org.softwareFm.mavenExtractor.DownloadJarsExtractor;
+import org.softwareFm.mavenExtractor.IExtractorCallback;
+import org.softwareFm.mavenExtractor.MavenImporterConstants;
+import org.softwareFm.mavenExtractor.SlingImporterextractor;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
+import org.softwareFm.server.GitRepositoryFactory;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.strings.Strings;
 
-public class SlingImporterextractor implements IExtractorCallback {
+public class JarGroupArtifactVersionToGitRepository implements IExtractorCallback {
 	private final IUrlGenerator jarUrlGenerator;
 	private final IUrlGenerator versionUrlGenerator;
 	private final IUrlGenerator artifactUrlGenerator;
@@ -43,7 +47,7 @@ public class SlingImporterextractor implements IExtractorCallback {
 	private final List<String> missingProperties = Lists.newList();
 	private final IUrlGenerator digestUrlGenerator;
 
-	public SlingImporterextractor(File directory, IRepositoryFacard facard, int maxCount) {
+	public JarGroupArtifactVersionToGitRepository(File directory, IRepositoryFacard facard, int maxCount) {
 		this.directory = directory;
 		this.facard = facard;
 		this.maxCount = maxCount;
@@ -244,8 +248,12 @@ public class SlingImporterextractor implements IExtractorCallback {
 	}
 
 	public static void main(String[] args) {
-		File directory = new File("c:/softwareFmRepository");
-		IRepositoryFacard repository = IRepositoryFacard.Utils.frontEnd("178.79.180.172", 8080, "admin", "admin");
-		new ExtractProjectStuff().walk(MavenImporterConstants.dataSource, new SlingImporterextractor(directory, repository, 1000000), ICallback.Utils.sysErrCallback());
+//		IRepositoryFacard slingRepository = IRepositoryFacard.Utils.frontEnd("178.79.180.172", 8080, "admin", "admin");
+		File home = new File(System.getProperty("user.home"));
+		File jarDirectory = new File("c:/softwareFmRepository");
+		File localRoot = new File(home, ".sfm");
+		File remoteRoot = new File(home, ".sfm_remote");
+		IRepositoryFacard repository = GitRepositoryFactory.gitLocalRepositoryFacard("localhost", 8080, localRoot, remoteRoot);
+		new ExtractProjectStuff().walk(MavenImporterConstants.dataSource, new SlingImporterextractor(jarDirectory, repository, 2), ICallback.Utils.sysErrCallback());
 	}
 }

@@ -56,18 +56,22 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 									Socket socket = serverSocket.accept();
 									HttpParams params = new BasicHttpParams();
 									DefaultHttpServerConnection conn = new DefaultHttpServerConnection();
-									conn.bind(socket, params);
-									HttpRequest request = conn.receiveRequestHeader();
-									Map<String, Object> value = getValue(conn, request);
-									RequestLine requestLine = request.getRequestLine();
-									HttpResponse response = process(processCall, value, requestLine);
-									conn.sendResponseHeader(response);
-									conn.sendResponseEntity(response);
-									conn.close();
+									try {
+										conn.bind(socket, params);
+										HttpRequest request = conn.receiveRequestHeader();
+										Map<String, Object> value = getValue(conn, request);
+										RequestLine requestLine = request.getRequestLine();
+										HttpResponse response = process(processCall, value, requestLine);
+										conn.sendResponseHeader(response);
+										conn.sendResponseEntity(response);
+									} finally {
+										conn.close();
+									}
 								} catch (ThreadDeath e) {
 									throw e;
 								} catch (Throwable t) {
 									errorHandler.process(t);
+
 								}
 						} finally {
 							countDownLatch.countDown();
@@ -80,7 +84,7 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 							String replyString = processCall.process(requestLine, value);
 							return makeResponse(replyString, 200, "OK");
 						} catch (Exception e) {
-							return makeResponse(e.getClass()+"/"+e.getMessage(), 500, e.getMessage());
+							return makeResponse(e.getClass() + "/" + e.getMessage(), 500, e.getMessage());
 						}
 					}
 

@@ -11,6 +11,7 @@ import java.net.MalformedURLException;
 import javax.sql.DataSource;
 
 import org.apache.maven.model.Model;
+import org.softwareFm.mavenExtractor.git.ExtractProjectStuff;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Files;
 import org.springframework.jdbc.core.JdbcTemplate;

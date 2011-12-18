@@ -8,8 +8,10 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/Repository"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/RepositoryClient"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/HttpClient"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/org.softwareFm.configuration"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.softwareFm.display"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JdtBinding"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.softwareFm.collections"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.softwareFm.card"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.softwareFm.server"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

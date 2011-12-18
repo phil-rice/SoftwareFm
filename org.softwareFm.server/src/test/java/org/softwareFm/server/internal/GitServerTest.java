@@ -25,6 +25,10 @@ public class GitServerTest extends GitTest {
 		assertEquals(new File(root, "a/b"), gitServer.findRepositoryUrl("a/b/c"));
 	}
 
+	public void testCloneOrPull(){
+		fail();
+	}
+	
 
 	public void testPostAddsToRepository() throws Exception {
 		checkCreateRepository(gitServer, "a/b/c");

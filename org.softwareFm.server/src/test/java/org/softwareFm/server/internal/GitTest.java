@@ -111,5 +111,8 @@ public abstract class GitTest extends TestCase {
 	protected void checkRepositoryExists(File repo) {
 		assertTrue(new File(repo, ServerConstants.DOT_GIT).exists());
 	}
+	protected void checkRepositoryDoesntExists(File repo) {
+		assertFalse(new File(repo, ServerConstants.DOT_GIT).exists());
+	}
 
 }

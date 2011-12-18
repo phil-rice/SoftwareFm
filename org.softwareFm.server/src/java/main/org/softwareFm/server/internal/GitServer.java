@@ -1,6 +1,7 @@
 package org.softwareFm.server.internal;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.Map;
 
 import org.softwareFm.server.IGitFacard;
@@ -27,7 +28,10 @@ public class GitServer extends LocalGitClient implements IGitServer {
 
 	@Override
 	public void pull(String url) {
-		gitFacard.pull(root, url);
+		File existing = findRepositoryUrl(url);
+		if (existing == null)
+			throw new IllegalArgumentException(MessageFormat.format(ServerConstants.cannotPullWhenLocalRepositoryDoesntExist, url));
+			gitFacard.pull(root, url);
 	}
 
 	@Override
