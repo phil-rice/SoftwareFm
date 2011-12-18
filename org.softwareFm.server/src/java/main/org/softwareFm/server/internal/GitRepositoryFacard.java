@@ -29,7 +29,7 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 
 	private final IServiceExecutor serviceExecutor;
 	private final IGitServer localGit;
-	private final Map<String, GetResult> cache = Maps.newMap();
+	private final Map<String, GetResult> getCache = Maps.newMap();
 	private final IHttpClient httpClient;
 
 	public GitRepositoryFacard(IHttpClient httpClient, IServiceExecutor serviceExecutor, IGitServer localGit) {
@@ -43,7 +43,7 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 		return serviceExecutor.submit(new Callable<GetResult>() {
 			@Override
 			public GetResult call() throws Exception {
-				GetResult result = Maps.findOrCreate(cache, url, new Callable<GetResult>() {
+				GetResult result = Maps.findOrCreate(getCache, url, new Callable<GetResult>() {
 					@Override
 					public GetResult call() throws Exception {
 						GetResult firstResult = localGit.localGet(url);
@@ -79,7 +79,7 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 
 	@Override
 	public Future<?> post(final String url, Map<String, Object> map, final IResponseCallback callback) {
-		cache.clear();// we can do better and only clear relevant caches..
+		getCache.clear();// we can do better and only clear relevant caches..
 		return httpClient.post(url).addParams(ServerConstants.dataParameterName, Json.toString(map)).execute(new IResponseCallback() {
 
 			@Override
