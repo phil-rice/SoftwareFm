@@ -7,6 +7,7 @@ public class ServerConstants {
 	public static final String cannotCreateGitUnderSecondRepository = "Cannot create git {0} under second repository";
 	public static final String GET = "GET";
 	public static final String POST = "POST";
+	public static final String DELETE = "DELETE";
 	public static final String couldntStop = "Couldn't stop the server";
 	public static final long clientTimeOut = 1000;
 	public static final int okStatusCode = 200;

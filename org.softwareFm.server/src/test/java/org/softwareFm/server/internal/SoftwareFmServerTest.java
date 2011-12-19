@@ -49,9 +49,20 @@ public class SoftwareFmServerTest extends TestCase {
 		checkExceptionHandled();
 		checkExceptionHandled();
 		checkExceptionHandled();
+		checkExceptionHandled();
+		checkExceptionHandled();
+		checkExceptionHandled();
+		checkExceptionHandled();
+		checkExceptionHandled();
+		checkExceptionHandled();
+		checkExceptionHandled();
+		checkExceptionHandled();
+		checkExceptionHandled();
 		checkGet();
 		checkGet();
 	}
+	
+	
 
 	private void checkGet() throws Exception {
 		MemoryResponseCallback<Object, Object> memoryCallback = IResponseCallback.Utils.memoryCallback();

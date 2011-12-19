@@ -36,6 +36,12 @@ public class GitServer extends LocalGitClient implements IGitServer {
 	}
 
 	@Override
+	public void delete(String url) {
+		super.delete(url);
+		gitFacard.addAllAndCommit(root, url, "message");
+	}
+
+	@Override
 	public void clone(String url) {
 		gitFacard.clone(Urls.compose(remoteUriPrefix, url), root, url);
 	}

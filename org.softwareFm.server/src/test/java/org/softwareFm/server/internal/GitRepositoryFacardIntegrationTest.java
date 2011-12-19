@@ -24,9 +24,7 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 	private ISoftwareFmServer server;
 	private GitRepositoryFacard repositoryFacard;
 	private IGitServer remoteGitServer;
-	private File remoteRoot;
 	private IGitServer localGitServer;
-	private File localRoot;
 
 	public void testCanPostAfterLocalRepositoryExists() throws InterruptedException, ExecutionException {
 		gitFacard.createRepository(remoteRoot, "a/b");
@@ -136,8 +134,6 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		localRoot = new File(root, "local");
-		remoteRoot = new File(root, "remote");
 		remoteGitServer = IGitServer.Utils.gitServer(remoteRoot, "not used");
 		localGitServer = IGitServer.Utils.gitServer(localRoot, remoteRoot.getAbsolutePath());
 		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCall(remoteGitServer);

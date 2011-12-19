@@ -27,11 +27,15 @@ public abstract class GitTest extends TestCase {
 	protected final static Map<String, Object> v21 = Maps.stringObjectLinkedMap("c", 2l, "v", 1l);
 	protected final static Map<String, Object> v22 = Maps.stringObjectLinkedMap("c", 2l, "v", 2l);
 
-	protected File root;
 	private IServiceExecutor serviceExecutor;
 	protected final IGitFacard gitFacard = IGitFacard.Utils.makeFacard();
 
 	private IHttpClient httpClient;
+
+	protected File root;
+	protected File localRoot;
+	protected File remoteRoot;
+	protected String remoteAsUri;
 
 	protected void put(String url, Map<String, Object> data) {
 		put(root, url, data);
@@ -67,6 +71,9 @@ public abstract class GitTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		root = Tests.makeTempDirectory(getClass().getSimpleName());
+		localRoot = new File(root, "local");
+		remoteRoot = new File(root, "remote");
+		remoteAsUri = new File(root, "remote").getAbsolutePath();
 	}
 
 	@Override
@@ -111,8 +118,16 @@ public abstract class GitTest extends TestCase {
 	protected void checkRepositoryExists(File repo) {
 		assertTrue(new File(repo, ServerConstants.DOT_GIT).exists());
 	}
+
 	protected void checkRepositoryDoesntExists(File repo) {
 		assertFalse(new File(repo, ServerConstants.DOT_GIT).exists());
+	}
+
+	protected void checkContents(File root, String url, Map<String, Object> data) {
+		File directory = new File(root, url);
+		assertTrue(directory.exists());
+		File file = new File(directory, ServerConstants.dataFileName);
+		assertEquals(Json.mapFromString(Files.getText(file)), data);
 	}
 
 }

@@ -22,7 +22,7 @@ public class PostProcessor implements IProcessCall {
 			Object data = parameters.get(ServerConstants.dataParameterName);
 			if (data instanceof String)
 				server.post(requestLine.getUri(), Json.mapFromString((String) data));
-			else
+			else 
 				throw new IllegalArgumentException(data.getClass() + "\n" + data);
 			return "";
 		}
