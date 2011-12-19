@@ -234,7 +234,6 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		ICardMenuItemHandler.Utils.addExplorerMenuItemHandlers(explorer, "popupmenuid");
-		fail();
 	}
 
 }

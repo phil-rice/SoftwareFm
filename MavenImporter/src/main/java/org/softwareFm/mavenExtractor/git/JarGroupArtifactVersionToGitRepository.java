@@ -76,10 +76,10 @@ public class JarGroupArtifactVersionToGitRepository implements IExtractorCallbac
 		if (file.exists()) {
 			String digest = Files.digestAsHexString(file);
 			importJar(jarUrl, model, file, digest);
-			String groupUrl = importGroup(model);
-			importArtifact(jarUrl, model, file, digest);
+//			importGroup(model);
+			String artifactUrl = importArtifact(jarUrl, model, file, digest);
 			importVersion(jarUrl, model, file, digest);
-			imported.process(groupUrl);
+			imported.process(artifactUrl);
 			postedCount++;
 		}
 	}
@@ -100,9 +100,9 @@ public class JarGroupArtifactVersionToGitRepository implements IExtractorCallbac
 		Map<String, Object> mapWithDigest = Maps.<String, Object> makeMap(JdtConstants.hexDigestKey, digest);
 		String urlRoot = jarRootUrlGenerator.findUrlFor(mapWithDigest);
 		String url = jarUrlGenerator.findUrlFor(mapWithDigest);
-		String groupUrl = groupUrlGenerator.findUrlFor(map);
+		String artifactUrl = artifactUrlGenerator.findUrlFor(map);
 		facard.makeRoot(urlRoot.substring(1), IResponseCallback.Utils.noCallback()).get();
-		facard.makeRoot(groupUrl.substring(1), IResponseCallback.Utils.noCallback()).get();
+		facard.makeRoot(artifactUrl.substring(1), IResponseCallback.Utils.noCallback()).get();
 		facard.post(url.substring(1), map, IResponseCallback.Utils.noCallback()).get();
 	}
 
@@ -118,7 +118,7 @@ public class JarGroupArtifactVersionToGitRepository implements IExtractorCallbac
 
 	}
 
-	private void importArtifact(String jarUrl, Model model, File file, String digest) throws Exception {
+	private String importArtifact(String jarUrl, Model model, File file, String digest) throws Exception {
 		String groupId = getGroupId(model);
 		String artifactId = model.getArtifactId();
 		Map<String, Object> map = Maps.newMap();
@@ -134,6 +134,7 @@ public class JarGroupArtifactVersionToGitRepository implements IExtractorCallbac
 		String url = artifactUrlGenerator.findUrlFor(Maps.<String, Object> makeMap(CollectionConstants.groupId, groupId, CollectionConstants.artifactId, artifactId));
 		facard.post(url, map, IResponseCallback.Utils.noCallback()).get();
 		noteAsCollection(url, "version");
+		return url;
 
 	}
 
@@ -264,7 +265,7 @@ public class JarGroupArtifactVersionToGitRepository implements IExtractorCallbac
 		File jarDirectory = new File("c:/softwareFmRepository");
 		File localRoot = new File(home, ".sfm");
 		final File remoteRoot = new File(home, ".sfm_remote");
-//		IRepositoryFacard repository = GitRepositoryFactory.gitLocalRepositoryFacard("localhost", 8080, localRoot, remoteRoot);
+		// IRepositoryFacard repository = GitRepositoryFactory.gitLocalRepositoryFacard("localhost", 8080, localRoot, remoteRoot);
 		IRepositoryFacard repository = GitRepositoryFactory.forImport(remoteRoot);
 		final IGitFacard gitFacard = IGitFacard.Utils.makeFacard();
 		new ExtractProjectStuff().walk(MavenImporterConstants.dataSource, //

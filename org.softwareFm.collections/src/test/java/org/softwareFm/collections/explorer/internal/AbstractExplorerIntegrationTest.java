@@ -5,6 +5,7 @@
 
 package org.softwareFm.collections.explorer.internal;
 
+import java.io.File;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -34,23 +35,27 @@ import org.softwareFm.display.swt.SwtAndServiceTest;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.httpClient.api.IHttpClient;
-import org.softwareFm.httpClient.constants.HttpClientConstants;
 import org.softwareFm.httpClient.requests.IResponseCallback;
-import org.softwareFm.repositoryFacard.internal.RepositoryFacard;
+import org.softwareFm.repositoryFacard.IRepositoryFacard;
+import org.softwareFm.server.GitRepositoryFactory;
+import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
+import org.softwareFm.utilities.strings.Urls;
 import org.softwareFm.utilities.tests.INeedsServerTest;
+import org.softwareFm.utilities.tests.Tests;
 
 /** These tests go out to software fm, so they are much more fragile */
 abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest implements INeedsServerTest {
 
+	final static String groupUrl = "/ant";
 	final static String artifactUrl = "/ant/ant/artifact/ant";
+	final static String snippetrepoUrl = "/java/io/File";
 	final static String snippetUrl = "/java/io/File/snippet";
-	static boolean addedArtifact = false;
 
 	protected CardConfig cardConfig;
-	protected RepositoryFacard repository;
+	protected IRepositoryFacard repository;
 	protected Explorer explorer;
 	protected IHttpClient httpClient;
 	protected final long delay = 200000;
@@ -59,6 +64,10 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	protected final String prefix = "/tests/" + getClass().getSimpleName();
 	protected final String rootUrl = prefix + "/data";
 	protected IResourceGetter rawResourceGetter;
+	private File root;
+	private File localRoot;
+	private File remoteRoot;
+	private String remoteAsUri;
 
 	public static interface CardHolderAndCardCallback {
 		void process(ICardHolder cardHolder, ICard card) throws Exception;
@@ -156,7 +165,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 				return;
 			}
 		}
-		Assert.fail("Cannot find: " + title+"\nCard: " + card);
+		Assert.fail("Cannot find: " + title + "\nCard: " + card);
 	}
 
 	protected void checkTable(Table table, int i, String name, String value) {
@@ -168,24 +177,29 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		httpClient = IHttpClient.Utils.builder().withCredentials(HttpClientConstants.userName, HttpClientConstants.password);
-		repository = new RepositoryFacard(httpClient, "1.json");
+		root = Tests.makeTempDirectory(getClass().getSimpleName());
+		localRoot = new File(root, "local");
+		remoteRoot = new File(root, "remote");
+		remoteAsUri = new File(root, "remote").getAbsolutePath();
+
+		httpClient = IHttpClient.Utils.builder("localhost", ServerConstants.testPort);
+		repository = GitRepositoryFactory.gitLocalRepositoryFacard(ServerConstants.testPort, localRoot, remoteRoot);
+
 		cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().//
 				configure(display, new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(shell, repository))).//
 				withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap(prefix, "data"));
 		masterDetailSocial = new MasterDetailSocial(shell, SWT.NULL);
 		explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, IPlayListGetter.Utils.noPlayListGetter(), service);
 		IBrowserConfigurator.Utils.configueWithUrlRssSnippetAndTweet(explorer);
-		if (!addedArtifact) {
-			httpClient.delete(rootUrl + artifactUrl).execute(IResponseCallback.Utils.noCallback()).get();
-			httpClient.delete(rootUrl + snippetUrl).execute(IResponseCallback.Utils.noCallback()).get();
-			repository.post(rootUrl + artifactUrl, Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.artifact), IResponseCallback.Utils.noCallback()).get();
-			repository.post(rootUrl + artifactUrl + "/tutorial", Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), IResponseCallback.Utils.noCallback()).get();
-			repository.post(rootUrl + artifactUrl + "/tutorial/one", Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"), IResponseCallback.Utils.noCallback()).get();
-			repository.post(rootUrl + artifactUrl + "/tutorial/two", Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"), IResponseCallback.Utils.noCallback()).get();
-			repository.post(rootUrl + snippetUrl, Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), IResponseCallback.Utils.noCallback()).get();
-			addedArtifact = true;
-		}
+		httpClient.delete(Urls.compose(rootUrl, artifactUrl)).execute(IResponseCallback.Utils.noCallback()).get();
+		httpClient.delete(Urls.compose(rootUrl, snippetUrl)).execute(IResponseCallback.Utils.noCallback()).get();
+		repository.makeRoot(Urls.compose(rootUrl, groupUrl), IResponseCallback.Utils.noCallback()).get();
+		repository.post(Urls.compose(rootUrl, artifactUrl), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.artifact), IResponseCallback.Utils.noCallback()).get();
+		repository.post(Urls.compose(rootUrl, artifactUrl, "/tutorial"), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), IResponseCallback.Utils.noCallback()).get();
+		repository.post(Urls.compose(rootUrl, artifactUrl, "/tutorial/one"), Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"), IResponseCallback.Utils.noCallback()).get();
+		repository.post(Urls.compose(rootUrl, artifactUrl, "/tutorial/two"), Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"), IResponseCallback.Utils.noCallback()).get();
+		repository.makeRoot(Urls.compose(rootUrl, snippetrepoUrl), IResponseCallback.Utils.noCallback()).get();
+		repository.post(Urls.compose(rootUrl, snippetUrl), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), IResponseCallback.Utils.noCallback()).get();
 		rawResourceGetter = explorer.getCardConfig().resourceGetterFn.apply(null);
 	}
 

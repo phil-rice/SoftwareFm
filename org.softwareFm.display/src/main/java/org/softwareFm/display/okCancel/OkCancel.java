@@ -4,7 +4,7 @@
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
 /* This file is part of SoftwareFm
-/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+ /* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
@@ -34,17 +34,24 @@ public class OkCancel implements IOkCancel {
 		this.onAccept = onAccept;
 		this.onCancel = onCancel;
 		content = new Composite(parent, SWT.NULL);
-		cancelButton = addButton( DisplayConstants.buttonCancelTitle, onCancel);
-		okButton = addButton( DisplayConstants.buttonOkTitle, onAccept);
+		cancelButton = addButton(DisplayConstants.buttonCancelTitle, onCancel);
+		okButton = addButton(DisplayConstants.buttonOkTitle, new Runnable() {
+			@Override
+			public void run() {
+				if (okButton.isEnabled())
+					onAccept.run();
+				okButton.setEnabled(false);
+			}
+		});
 		content.setLayout(Row.getHorizonalNoMarginRowLayout());
 	}
 
-	
-	public Button addButton(String titleKey, Runnable runnable){
-		Button result = Swts.Buttons.makePushButton(content, resourceGetter, titleKey,runnable);
+	public Button addButton(String titleKey, Runnable runnable) {
+		Button result = Swts.Buttons.makePushButton(content, resourceGetter, titleKey, runnable);
 		return result;
-		
+
 	}
+
 	@Override
 	public void setOkEnabled(boolean enabled) {
 		this.enabled = enabled;

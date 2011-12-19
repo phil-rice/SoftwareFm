@@ -26,7 +26,10 @@ public class Urls {
 				if (builder.charAt(builder.length() - 1) != '/')
 					builder.append('/');
 			}
-			builder.append(url);
+			if (url.startsWith("/"))
+				builder.append(url.substring(1));
+			else
+				builder.append(url);
 		}
 		return builder.toString();
 	}
