@@ -106,6 +106,7 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 		Button okButton = textEditor.getOkCancel().okButton;
 		textEditor.setValue("some other value");
 		checkCardDataStoreNotUpdated();
+		okButton.setEnabled(true);
 		okButton.notifyListeners(SWT.Selection, new Event());
 		checkCardDataStoreUpdated(parentCard.url(), "key", "some other value");
 	}
@@ -128,6 +129,7 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 	}
 
 	private void checkPressCausesDispose(TE textEditor, Button button) {
+		button.setEnabled(true);
 		assertFalse(textEditor.getControl().isDisposed());
 		button.notifyListeners(SWT.Selection, new Event());
 		assertTrue(textEditor.getControl().isDisposed());

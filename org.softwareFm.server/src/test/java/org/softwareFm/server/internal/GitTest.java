@@ -27,6 +27,8 @@ public abstract class GitTest extends TestCase {
 	protected final static Map<String, Object> v21 = Maps.stringObjectLinkedMap("c", 2l, "v", 1l);
 	protected final static Map<String, Object> v22 = Maps.stringObjectLinkedMap("c", 2l, "v", 2l);
 
+	protected static final Map<String, Object> emptyMap = Maps.stringObjectMap();
+
 	private IServiceExecutor serviceExecutor;
 	protected final IGitFacard gitFacard = IGitFacard.Utils.makeFacard();
 
@@ -105,6 +107,7 @@ public abstract class GitTest extends TestCase {
 		return httpClient == null ? httpClient = IHttpClient.Utils.builder("localhost", ServerConstants.testPort) : httpClient;
 	}
 
+	
 	protected void checkCreateRepository(IGitServer gitServer, String url) {
 		gitServer.createRepository(url);
 		FileRepository fileRepository = gitFacard.makeFileRepository(gitServer.getRoot(), url);

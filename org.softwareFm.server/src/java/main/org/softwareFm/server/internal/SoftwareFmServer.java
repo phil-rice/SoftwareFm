@@ -137,6 +137,11 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 		} catch (InterruptedException e) {
 			throw WrappedException.wrap(e);
 		} finally {
+			try {
+				serverSocket.close();
+			} catch (IOException e) {
+				throw WrappedException.wrap(e);
+			}
 		}
 	}
 

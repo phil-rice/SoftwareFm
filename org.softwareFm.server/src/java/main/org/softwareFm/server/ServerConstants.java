@@ -23,4 +23,6 @@ public class ServerConstants {
 	public static final String madeRoot = "Made root at location {0}";
 	public static final String cannotPullWhenLocalRepositoryDoesntExist = "Cannot pull {0} when local repository doesn''t exist";
 	public static final String cannotPostWhenLocalRepositoryDoesntExist ="Cannot post {0} when local repository doesn''t exist";
+	public static final String dataKey = "data";
+	public static final String repoUrlKey = "repoUrl";
 }

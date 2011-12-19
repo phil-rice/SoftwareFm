@@ -74,7 +74,6 @@ public class SnippetExplorerIntegrationTest extends AbstractExplorerIntegrationT
 	protected void setUp() throws Exception {
 		super.setUp();
 		ICardMenuItemHandler.Utils.addSnippetMenuItemHandlers(explorer, "popupmenuid");
-		fail();
 	}
 
 }

@@ -33,7 +33,7 @@ public class CardToTitleSpecFnTest extends SwtTest{
 	private IFunction1<String, Image> imageFn;
 
 	public void test() throws Exception {
-		checkTitleSpec("someUrl/groupUrl", "group", 243, 232, 252, ArtifactsAnchor.groupKey, 20);
+		checkTitleSpec("someUrl/groupUrl", "group", 227,246,234, ArtifactsAnchor.groupKey, 20);
 	}
 
 	private void checkTitleSpec(String url, String cardType, int red, int green, int blue, String imageKey, int indent) throws Exception {

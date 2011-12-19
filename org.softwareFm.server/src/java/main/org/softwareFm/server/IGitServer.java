@@ -15,6 +15,7 @@ import org.softwareFm.server.internal.GitServer;
 public interface IGitServer extends ILocalGitClient {
 
 	void createRepository(String url);
+	
 
 	File findRepositoryUrl(String url);
 
