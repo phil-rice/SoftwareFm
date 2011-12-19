@@ -97,6 +97,7 @@ public class SoftwareFmRepositoryTest extends TestCase implements INeedsServerTe
 	@Before
 	protected void setUp() throws Exception {
 		super.setUp();
+		fail();
 		facard = IRepositoryFacard.Utils.defaultFacard();
 		jarDigestor = IJarDigester.Utils.digester();
 		repository = ISoftwareFmRepository.Utils.repository(facard, jarDigestor);

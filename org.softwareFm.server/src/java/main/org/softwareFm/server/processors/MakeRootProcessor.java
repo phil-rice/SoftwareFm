@@ -1,5 +1,6 @@
 package org.softwareFm.server.processors;
 
+import java.io.File;
 import java.text.MessageFormat;
 
 import org.softwareFm.server.IGitServer;
@@ -13,7 +14,9 @@ public class MakeRootProcessor extends AbstractCommandProcessor {
 
 	@Override
 	protected String execute(String actualUrl) {
-		server.createRepository(actualUrl);
+		File existing = server.findRepositoryUrl(actualUrl);
+		if (existing == null)
+			server.createRepository(actualUrl);
 		return MessageFormat.format(ServerConstants.madeRoot, actualUrl);
 	}
 }

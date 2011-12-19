@@ -5,16 +5,23 @@ import java.io.File;
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.server.internal.GitRepositoryFacard;
+import org.softwareFm.server.internal.ImportGitRepositoryFacard;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.services.IServiceExecutor;
 
 public class GitRepositoryFactory {
 
 	/** This is mainly for tests: It starts a softwareFm Server (which is shut down when the repository is shutdown) The remote git is accessed through the file system. */
-	public static IRepositoryFacard gitLocalRepositoryFacard(String host, int port, File localRoot, File remoteRoot) {
+	public static IRepositoryFacard forImport(File remoteRoot) {
+		IGitServer remoteGitServer = IGitServer.Utils.gitServer(remoteRoot, "not used");
+		return new ImportGitRepositoryFacard(remoteGitServer);
+
+	}
+
+	public static IRepositoryFacard gitLocalRepositoryFacard(int port, File localRoot, File remoteRoot) {
 		IGitServer remoteGitServer = IGitServer.Utils.gitServer(remoteRoot, "not used");
 		final ISoftwareFmServer server = ISoftwareFmServer.Utils.server(port, 10, IProcessCall.Utils.softwareFmProcessCall(remoteGitServer), ICallback.Utils.sysErrCallback());
-		return gitRepositoryFacard(host, port, localRoot, remoteRoot.getAbsolutePath(), new Runnable() {
+		return gitRepositoryFacard("localhost", port, localRoot, remoteRoot.getAbsolutePath(), new Runnable() {
 			@Override
 			public void run() {
 				server.shutdown();

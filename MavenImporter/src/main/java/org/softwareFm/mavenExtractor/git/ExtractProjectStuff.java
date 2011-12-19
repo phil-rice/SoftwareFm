@@ -15,7 +15,6 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.softwareFm.mavenExtractor.IExtractorCallback;
 import org.softwareFm.mavenExtractor.MavenImporterConstants;
-import org.softwareFm.mavenExtractor.IExtractorCallback.Utils;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.springframework.dao.DataAccessException;
@@ -29,7 +28,7 @@ public class ExtractProjectStuff {
 
 	public void walk(DataSource dataSource, final IExtractorCallback callback, final ICallback<Throwable> exceptions) {
 		JdbcTemplate template = new JdbcTemplate(dataSource);
-		template.query("select * from version", new ResultSetExtractor<Void>() {
+		template.query("select * from version ", new ResultSetExtractor<Void>() {
 
 			public Void extractData(ResultSet rs) throws SQLException, DataAccessException {
 				while (rs.next()) {

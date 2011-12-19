@@ -4,7 +4,7 @@
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
 /* This file is part of SoftwareFm
-/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+ /* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
@@ -35,16 +35,20 @@ import org.softwareFm.display.swt.Swts.Grid;
 import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
+import org.softwareFm.server.GitRepositoryFactory;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.services.IServiceExecutor;
 
 public class ExplorerWithRadioChannel {
 	public static void main(String[] args) {
-		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacardForCardExplorer();
+		File home = new File(System.getProperty("user.home"));
+		final File localRoot = new File(home, ".sfm");
+		final File remoteRoot = new File(home, ".sfm_remote");
+		final IRepositoryFacard facard = GitRepositoryFactory.gitLocalRepositoryFacard(8080, localRoot, remoteRoot);
 		final IServiceExecutor service = IServiceExecutor.Utils.defaultExecutor();
 		try {
 			final String rootUrl = "/softwareFm/data";
-			final String firstUrl = "/softwareFm/data/ant/ant/artifact/ant";
+			final String firstUrl = "/softwareFm/data/org/apache/activemq/org.apache.activemq";
 
 			Show.display(ExplorerWithRadioChannel.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 				@Override

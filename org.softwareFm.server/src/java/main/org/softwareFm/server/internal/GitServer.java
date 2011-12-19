@@ -9,6 +9,7 @@ import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.utilities.strings.Urls;
 
 public class GitServer extends LocalGitClient implements IGitServer {
 
@@ -31,12 +32,12 @@ public class GitServer extends LocalGitClient implements IGitServer {
 		File existing = findRepositoryUrl(url);
 		if (existing == null)
 			throw new IllegalArgumentException(MessageFormat.format(ServerConstants.cannotPullWhenLocalRepositoryDoesntExist, url));
-			gitFacard.pull(root, url);
+		gitFacard.pull(root, url);
 	}
 
 	@Override
 	public void clone(String url) {
-		gitFacard.clone(remoteUriPrefix + "/" + url, root, url);
+		gitFacard.clone(Urls.compose(remoteUriPrefix, url), root, url);
 	}
 
 	@Override

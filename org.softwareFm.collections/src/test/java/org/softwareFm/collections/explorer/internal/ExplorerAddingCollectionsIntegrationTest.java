@@ -318,6 +318,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		fail();
 		ICardMenuItemHandler.Utils.addExplorerMenuItemHandlers(explorer, "popupmenuid");
 	}
 

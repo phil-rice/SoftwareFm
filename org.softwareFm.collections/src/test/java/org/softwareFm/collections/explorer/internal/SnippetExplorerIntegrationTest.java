@@ -62,10 +62,10 @@ public class SnippetExplorerIntegrationTest extends AbstractExplorerIntegrationT
 				int selectionIndex = masterTable.getSelectionIndex();
 				TableItem selectedItem = masterTable.getItem(selectionIndex);
 				assertEquals("someTitle", selectedItem.getText(0));
-				
+
 				BrowserAndNavBar browser = explorer.getBrowser();
 				assertEquals(browser.getControl(), masterDetailSocial.getDetailContent());
-				assertEquals(new PlayItem(DisplayConstants.snippetFeedType, rootUrl+snippetUrl +"/" + selectedItem.getData()), browser.playItem());
+				assertEquals(new PlayItem(DisplayConstants.snippetFeedType, rootUrl + snippetUrl + "/" + selectedItem.getData()), browser.playItem());
 			}
 		});
 	}
@@ -74,6 +74,7 @@ public class SnippetExplorerIntegrationTest extends AbstractExplorerIntegrationT
 	protected void setUp() throws Exception {
 		super.setUp();
 		ICardMenuItemHandler.Utils.addSnippetMenuItemHandlers(explorer, "popupmenuid");
+		fail();
 	}
 
 }

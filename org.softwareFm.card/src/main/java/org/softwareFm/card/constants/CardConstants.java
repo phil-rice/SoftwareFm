@@ -32,6 +32,7 @@ public class CardConstants {
 	public static final String snippetUrlKey = "urlGenerator.snippet";
 	public static final String versionUrlKey = "urlGenerator.version";
 	public static final String digestUrlKey = "urlGenerator.digest";
+	public static final String jarUrlRootKey = "urlGenerator.jar.root";
 	public static final String jarUrlKey = "urlGenerator.jar";
 	public static final String userUrlKey = "urlGenerator.user";
 	public static final String manuallyAdded = "manually added";

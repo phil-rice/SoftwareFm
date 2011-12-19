@@ -24,9 +24,9 @@ import org.softwareFm.jdtBinding.api.JdtConstants;
 import org.softwareFm.mavenExtractor.DownloadJarsExtractor;
 import org.softwareFm.mavenExtractor.IExtractorCallback;
 import org.softwareFm.mavenExtractor.MavenImporterConstants;
-import org.softwareFm.mavenExtractor.SlingImporterextractor;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.server.GitRepositoryFactory;
+import org.softwareFm.server.IGitFacard;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.collections.Lists;
@@ -38,6 +38,8 @@ public class JarGroupArtifactVersionToGitRepository implements IExtractorCallbac
 	private final IUrlGenerator versionUrlGenerator;
 	private final IUrlGenerator artifactUrlGenerator;
 	private final IUrlGenerator groupUrlGenerator;
+	private final IUrlGenerator digestUrlGenerator;
+	private final IUrlGenerator jarRootUrlGenerator;
 
 	private final IRepositoryFacard facard;
 	private final File directory;
@@ -45,14 +47,16 @@ public class JarGroupArtifactVersionToGitRepository implements IExtractorCallbac
 	private int count;
 	private int postedCount;
 	private final List<String> missingProperties = Lists.newList();
-	private final IUrlGenerator digestUrlGenerator;
+	private final ICallback<String> imported;
 
-	public JarGroupArtifactVersionToGitRepository(File directory, IRepositoryFacard facard, int maxCount) {
+	public JarGroupArtifactVersionToGitRepository(File directory, IRepositoryFacard facard, int maxCount, ICallback<String> imported) {
 		this.directory = directory;
 		this.facard = facard;
 		this.maxCount = maxCount;
+		this.imported = imported;
 		IUrlGeneratorMap urlGeneratorMap = ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap(CardConstants.softwareFmPrefix, CardConstants.dataPrefix);
 		jarUrlGenerator = urlGeneratorMap.get(CardConstants.jarUrlKey);
+		jarRootUrlGenerator = urlGeneratorMap.get(CardConstants.jarUrlRootKey);
 		groupUrlGenerator = urlGeneratorMap.get(CardConstants.groupUrlKey);
 		artifactUrlGenerator = urlGeneratorMap.get(CardConstants.artifactUrlKey);
 		versionUrlGenerator = urlGeneratorMap.get(CardConstants.versionUrlKey);
@@ -65,16 +69,17 @@ public class JarGroupArtifactVersionToGitRepository implements IExtractorCallbac
 		if (count++ > maxCount) {
 			System.exit(0);
 		}
-		if (count % 100 == 0)
+		if (count % 10 == 0)
 			System.out.println(count);
 		String targetFile = jarUrl.substring(MavenImporterConstants.baseUrl.length());
 		File file = new File(directory, targetFile);
 		if (file.exists()) {
 			String digest = Files.digestAsHexString(file);
 			importJar(jarUrl, model, file, digest);
-			importGroup(model);
+			String groupUrl = importGroup(model);
 			importArtifact(jarUrl, model, file, digest);
 			importVersion(jarUrl, model, file, digest);
+			imported.process(groupUrl);
 			postedCount++;
 		}
 	}
@@ -92,11 +97,16 @@ public class JarGroupArtifactVersionToGitRepository implements IExtractorCallbac
 		addMustExist(model, map, MavenImporterConstants.slingResourceTypeKey, MavenImporterConstants.jarResourceType);
 		addFileIfExists(model, map, file, jarUrl, "javadoc", "-javadoc");
 		addFileIfExists(model, map, file, jarUrl, "source", "-sources");
-		String url = jarUrlGenerator.findUrlFor(Maps.<String, Object> makeMap(JdtConstants.hexDigestKey, digest));
-		facard.post(url, map, IResponseCallback.Utils.noCallback()).get();
+		Map<String, Object> mapWithDigest = Maps.<String, Object> makeMap(JdtConstants.hexDigestKey, digest);
+		String urlRoot = jarRootUrlGenerator.findUrlFor(mapWithDigest);
+		String url = jarUrlGenerator.findUrlFor(mapWithDigest);
+		String groupUrl = groupUrlGenerator.findUrlFor(map);
+		facard.makeRoot(urlRoot.substring(1), IResponseCallback.Utils.noCallback()).get();
+		facard.makeRoot(groupUrl.substring(1), IResponseCallback.Utils.noCallback()).get();
+		facard.post(url.substring(1), map, IResponseCallback.Utils.noCallback()).get();
 	}
 
-	private void importGroup(Model model) throws Exception {
+	private String importGroup(Model model) throws Exception {
 		Map<String, Object> map = Maps.newMap();
 		String groupId = getGroupId(model);
 		addMustExist(model, map, MavenImporterConstants.groupIdKey, groupId);
@@ -104,6 +114,7 @@ public class JarGroupArtifactVersionToGitRepository implements IExtractorCallbac
 		String url = groupUrlGenerator.findUrlFor(Maps.<String, Object> makeMap(CollectionConstants.groupId, groupId));
 		facard.post(url, map, IResponseCallback.Utils.noCallback()).get(); // ok so we need a bit more data here...
 		noteAsCollection(url, "artifact");
+		return url;
 
 	}
 
@@ -248,12 +259,21 @@ public class JarGroupArtifactVersionToGitRepository implements IExtractorCallbac
 	}
 
 	public static void main(String[] args) {
-//		IRepositoryFacard slingRepository = IRepositoryFacard.Utils.frontEnd("178.79.180.172", 8080, "admin", "admin");
+		// IRepositoryFacard slingRepository = IRepositoryFacard.Utils.frontEnd("178.79.180.172", 8080, "admin", "admin");
 		File home = new File(System.getProperty("user.home"));
 		File jarDirectory = new File("c:/softwareFmRepository");
 		File localRoot = new File(home, ".sfm");
-		File remoteRoot = new File(home, ".sfm_remote");
-		IRepositoryFacard repository = GitRepositoryFactory.gitLocalRepositoryFacard("localhost", 8080, localRoot, remoteRoot);
-		new ExtractProjectStuff().walk(MavenImporterConstants.dataSource, new SlingImporterextractor(jarDirectory, repository, 2), ICallback.Utils.sysErrCallback());
+		final File remoteRoot = new File(home, ".sfm_remote");
+//		IRepositoryFacard repository = GitRepositoryFactory.gitLocalRepositoryFacard("localhost", 8080, localRoot, remoteRoot);
+		IRepositoryFacard repository = GitRepositoryFactory.forImport(remoteRoot);
+		final IGitFacard gitFacard = IGitFacard.Utils.makeFacard();
+		new ExtractProjectStuff().walk(MavenImporterConstants.dataSource, //
+				new JarGroupArtifactVersionToGitRepository(jarDirectory, repository, 1000000000,//
+						new ICallback<String>() {
+							public void process(String groupUrl) throws Exception {
+								gitFacard.addAllAndCommit(remoteRoot, groupUrl.substring(1), "Import");
+							}
+						}), //
+				ICallback.Utils.sysErrCallback());
 	}
 }

@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.requests.IResponseCallback;
@@ -26,6 +27,7 @@ import org.softwareFm.utilities.callbacks.MemoryCallback;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.services.IServiceExecutor;
+import org.softwareFm.utilities.strings.Urls;
 
 /** This class reads from the local file system. If the file isn't held locally, it asks for a git download, then returns the file. */
 public class GitRepositoryFacard implements ISoftwareFmClient {
@@ -47,8 +49,9 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 			@Override
 			public GetResult call() throws Exception {
 				MemoryResponseCallback<Object, Object> memoryCallback = IResponseCallback.Utils.memoryCallback();
-				httpClient.post(ServerConstants.makeRootPrefix + url).execute(memoryCallback).get();
-				localGit.clone(url);
+				String fullUrl = Urls.compose(ServerConstants.makeRootPrefix, url);
+				httpClient.post(fullUrl).execute(memoryCallback).get();
+				IGitServer.Utils.cloneOrPull(localGit, url);
 				callback.process(memoryCallback.response);
 				return null;
 			}
@@ -57,7 +60,8 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 
 	@Override
 	public Future<?> get(final String url, final IRepositoryFacardCallback callback) {
-		return serviceExecutor.submit(new Callable<GetResult>() {
+		final AtomicBoolean callbackHasBeenCalled = new AtomicBoolean();
+		Future<GetResult> future = serviceExecutor.submit(new Callable<GetResult>() {
 			@Override
 			public GetResult call() throws Exception {
 				GetResult result = Maps.findOrCreate(getCache, url, new Callable<GetResult>() {
@@ -65,33 +69,39 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 					public GetResult call() throws Exception {
 						GetResult firstResult = localGit.localGet(url);
 						if (firstResult.found) {
-							processCallback(firstResult);
+							processCallback(callbackHasBeenCalled, callback, url, firstResult);
 							return firstResult;
 						}
 						MemoryCallback<String> memory = ICallback.Utils.<String> memory();
 						findRepositoryBase(url, memory).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
 						String repositoryBase = memory.getOnlyResult();
 						if (repositoryBase == null) {// returning null because the remote server has never heard of it
-							processCallback(firstResult);
+							processCallback(callbackHasBeenCalled, callback, repositoryBase, firstResult);
 							return GetResult.create(null);
 						}
-						localGit.clone(repositoryBase);
+						IGitServer.Utils.cloneOrPull(localGit, repositoryBase);
 						GetResult afterCloneResult = localGit.localGet(url);
-						processCallback(afterCloneResult);
+						processCallback(callbackHasBeenCalled, callback, repositoryBase, afterCloneResult);
 						return afterCloneResult;
 					}
 
-					private void processCallback(GetResult result) throws Exception {
-						boolean found = result.found;
-						int status = found ? ServerConstants.okStatusCode : ServerConstants.notFoundStatusCode;
-						String message = found ? ServerConstants.foundMessage : ServerConstants.notFoundMessage;
-						IResponse makeResponse = IResponse.Utils.create(url, status, message);
-						callback.process(makeResponse, result.data);
-					}
 				});
+				if (!callbackHasBeenCalled.get()) // probably we are here because the item was in the cache, but this also works if the round trip above returns really quicky
+					processCallback(callbackHasBeenCalled, callback, url, result);
 				return result;
 			}
 		});
+		return future;
+	}
+
+	private void processCallback(AtomicBoolean callbackHasBeenCalled, final IRepositoryFacardCallback callback, String url, GetResult result) throws Exception {
+		if (callbackHasBeenCalled.compareAndSet(false, true)) {
+			boolean found = result.found;
+			int status = found ? ServerConstants.okStatusCode : ServerConstants.notFoundStatusCode;
+			String message = found ? ServerConstants.foundMessage : ServerConstants.notFoundMessage;
+			IResponse makeResponse = IResponse.Utils.create(url, status, message);
+			callback.process(makeResponse, result.data);
+		}
 	}
 
 	@Override

@@ -29,10 +29,12 @@ public class GitFacard implements IGitFacard {
 	@Override
 	public void createRepository(File root, String url) {
 		try {
+			File fullRoot = new File(root, url);
 			File file = findRepositoryUrl(root, url);
+			if (fullRoot.equals(file))
+				return;
 			if (file != null)
 				throw new IllegalArgumentException(MessageFormat.format(ServerConstants.cannotCreateGitUnderSecondRepository, url));
-			File fullRoot = new File(root, url);
 			Git git = Git.init().setDirectory(fullRoot).call();
 			git.getRepository().close();
 		} catch (Exception e) {
@@ -115,11 +117,11 @@ public class GitFacard implements IGitFacard {
 		FileBasedConfig config = fileRepository.getConfig();
 		config.setString("branch", "master", "remote", "origin");
 		config.setString("branch", "master", "merge", "refs/heads/master");
-		fileRepository.close();
 		try {
 			config.save();
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
+		fileRepository.close();
 	}
 }

@@ -61,7 +61,7 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 	}
 
 	public void testCanPostAfterMakeRoot() throws InterruptedException, ExecutionException {
-		CheckCallback checkMakeRoot = IResponseCallback.Utils.checkCallback(200, "Made root at location a/b");
+		CheckCallback checkMakeRoot = IResponseCallback.Utils.checkCallback(200, "Made root at location /a/b");
 		repositoryFacard.makeRoot("a/b", checkMakeRoot).get();
 		checkMakeRoot.assertCalledSuccessfullyOnce();
 
@@ -81,6 +81,20 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 		CheckRepositoryFacardCallback callback = IRepositoryFacardCallback.Utils.checkMatches(ServerConstants.okStatusCode, v11);
 		repositoryFacard.get("a/b/c", callback).get();
 		callback.assertCalled();
+	}
+	
+	public void testCallsBackEvenIfInCache() throws InterruptedException, ExecutionException{
+		File directory = new File(localRoot, "a/b/c");
+		directory.mkdirs();
+		File file = new File(directory, ServerConstants.dataFileName);
+		Files.setText(file, Json.toString(v11));
+		CheckRepositoryFacardCallback callback1 = IRepositoryFacardCallback.Utils.checkMatches(ServerConstants.okStatusCode, v11);
+		CheckRepositoryFacardCallback callback2 = IRepositoryFacardCallback.Utils.checkMatches(ServerConstants.okStatusCode, v11);
+		repositoryFacard.get("a/b/c", callback1).get();
+		repositoryFacard.get("a/b/c", callback2).get();
+		callback1.assertCalled();
+		callback2.assertCalled();
+		
 	}
 
 	public void testGetWhenDataDoesntExist() throws Exception {

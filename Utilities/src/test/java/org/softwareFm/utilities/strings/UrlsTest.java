@@ -9,11 +9,12 @@ import java.net.URI;
 
 import junit.framework.TestCase;
 
-import org.junit.Test;
-
 public class UrlsTest extends TestCase {
 
-	@Test
+	public void testCompose(){
+		assertEquals("a/b", Urls.compose("a", "b"));
+		assertEquals("a/b", Urls.compose("a/", "b"));
+	}
 	public void testRipper() {
 		checkUrlRipper("http://a.b.c/wibble.html", "http", "a.b.c/wibble", "html");
 		checkUrlRipper("a.b.c/wibble.html", "", "a.b.c/wibble", "html");

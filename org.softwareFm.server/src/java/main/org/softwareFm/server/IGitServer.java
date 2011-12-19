@@ -13,13 +13,13 @@ import org.softwareFm.server.internal.GitServer;
  * Design note: It is perhaps an unnecessary layer, but without it we are passing root around everywhere, and having to remember the File.doFileLockOperations.
  */
 public interface IGitServer extends ILocalGitClient {
-	
+
 	void createRepository(String url);
 
 	File findRepositoryUrl(String url);
-	
+
 	void clone(String url);
-	
+
 	void pull(String url);
 
 	/**
@@ -30,6 +30,14 @@ public interface IGitServer extends ILocalGitClient {
 	void post(String url, Map<String, Object> map);
 
 	public static class Utils {
+
+		public static void cloneOrPull(IGitServer server, String uri) {
+			File existing = server.findRepositoryUrl(uri);
+			if (existing == null)
+				server.clone(uri);
+			else
+				server.pull(uri);
+		}
 
 		public static IGitServer gitServer(File root, String remoteUriPrefix) {
 			return new GitServer(IGitFacard.Utils.makeFacard(), root, remoteUriPrefix);
