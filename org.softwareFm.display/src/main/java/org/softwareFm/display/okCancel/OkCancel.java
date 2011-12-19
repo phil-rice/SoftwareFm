@@ -38,9 +38,12 @@ public class OkCancel implements IOkCancel {
 		okButton = addButton(DisplayConstants.buttonOkTitle, new Runnable() {
 			@Override
 			public void run() {
-				if (okButton.isEnabled())
+				if (okButton.isDisposed())
+					return;
+				if (okButton.isEnabled()) {
+					okButton.setEnabled(false);
 					onAccept.run();
-				okButton.setEnabled(false);
+				}
 			}
 		});
 		content.setLayout(Row.getHorizonalNoMarginRowLayout());

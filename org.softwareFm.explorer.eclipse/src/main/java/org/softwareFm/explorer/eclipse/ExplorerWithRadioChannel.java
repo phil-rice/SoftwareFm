@@ -48,7 +48,7 @@ public class ExplorerWithRadioChannel {
 		final IServiceExecutor service = IServiceExecutor.Utils.defaultExecutor();
 		try {
 			final String rootUrl = "/softwareFm/data";
-			final String firstUrl = "/softwareFm/data/org/apache/activemq/org.apache.activemq";
+			final String firstUrl = "/softwareFm/data/activemq/activemq/artifact/activemq-axis";
 
 			Show.display(ExplorerWithRadioChannel.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 				@Override
