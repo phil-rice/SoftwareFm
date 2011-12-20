@@ -95,7 +95,7 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 		
 	}
 
-	public void testGetWhenDataDoesntExist() throws Exception {
+	public void testGetWhenDataDoesntExistLocallyButDoesRemotely() throws Exception {
 		File directory = new File(localRoot, "a/b/c");
 		File file = new File(directory, ServerConstants.dataFileName);
 		remoteGitServer.createRepository("a/b");

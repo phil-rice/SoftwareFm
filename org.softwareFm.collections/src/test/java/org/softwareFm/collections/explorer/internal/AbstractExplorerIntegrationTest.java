@@ -58,7 +58,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	protected IRepositoryFacard repository;
 	protected Explorer explorer;
 	protected IHttpClient httpClient;
-	protected final long delay = 200000;
+	protected final long delay = 2000;
 	protected MasterDetailSocial masterDetailSocial;
 
 	protected final String prefix = "/tests/" + getClass().getSimpleName();

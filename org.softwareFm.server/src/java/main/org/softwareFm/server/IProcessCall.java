@@ -3,7 +3,7 @@ package org.softwareFm.server;
 import java.util.Map;
 
 import org.apache.http.RequestLine;
-import org.softwareFm.server.processors.FindRootProcessor;
+import org.softwareFm.server.processors.GetProcessor;
 import org.softwareFm.server.processors.MakeRootProcessor;
 import org.softwareFm.server.processors.PostProcessor;
 
@@ -42,7 +42,7 @@ public interface IProcessCall {
 		}
 
 		public static IProcessCall softwareFmProcessCall(IGitServer server) {
-			return chain(new FindRootProcessor(server), //
+			return chain(new GetProcessor(server), //
 					new MakeRootProcessor(server), //
 					new PostProcessor(server));// this sweeps up any posts, so ensure that commands appear in chain before it
 		}

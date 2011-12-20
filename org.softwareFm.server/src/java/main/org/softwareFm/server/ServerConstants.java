@@ -25,4 +25,5 @@ public class ServerConstants {
 	public static final String cannotPostWhenLocalRepositoryDoesntExist ="Cannot post {0} when local repository doesn''t exist";
 	public static final String dataKey = "data";
 	public static final String repoUrlKey = "repoUrl";
+	public static final String cannotParseReplyFromGet = "Cannot parse answer from get: {0}";
 }

@@ -12,6 +12,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.requests.IResponseCallback;
@@ -22,8 +23,8 @@ import org.softwareFm.server.GetResult;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ISoftwareFmClient;
 import org.softwareFm.server.ServerConstants;
-import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.callbacks.MemoryCallback;
+import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.services.IServiceExecutor;
@@ -64,7 +65,7 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 		Future<GetResult> future = serviceExecutor.submit(new Callable<GetResult>() {
 			@Override
 			public GetResult call() throws Exception {
-				GetResult result = Maps.findOrCreate(getCache, url, new Callable<GetResult>() {
+				final GetResult result = Maps.findOrCreate(getCache, url, new Callable<GetResult>() {
 					@Override
 					public GetResult call() throws Exception {
 						GetResult firstResult = localGit.localGet(url);
@@ -72,19 +73,26 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 							processCallback(callbackHasBeenCalled, callback, url, firstResult);
 							return firstResult;
 						}
-						MemoryCallback<String> memory = ICallback.Utils.<String> memory();
-						findRepositoryBase(url, memory).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
-						String repositoryBase = memory.getOnlyResult();
-						if (repositoryBase == null) {// returning null because the remote server has never heard of it
-							processCallback(callbackHasBeenCalled, callback, repositoryBase, firstResult);
-							return GetResult.create(null);
-						}
-						IGitServer.Utils.cloneOrPull(localGit, repositoryBase);
-						GetResult afterCloneResult = localGit.localGet(url);
-						processCallback(callbackHasBeenCalled, callback, repositoryBase, afterCloneResult);
-						return afterCloneResult;
-					}
+						GetResult result = findRepositoryBaseOrAboveRepositoryData(url, new IGetCallback() {
+							@Override
+							public GetResult repositoryBase(String repositoryBase) {
+								IGitServer.Utils.cloneOrPull(localGit, repositoryBase);
+								GetResult afterCloneResult = localGit.localGet(url);
+								return afterCloneResult;
+							}
 
+							@Override
+							public void invalidResponse(int statusCode, String message) {
+							}
+
+							@Override
+							public GetResult aboveRepositoryData(Map<String, Object> data) {
+								return GetResult.create(data);
+							}
+						}).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+						processCallback(callbackHasBeenCalled, callback, url, result);
+						return result;
+					}
 				});
 				if (!callbackHasBeenCalled.get()) // probably we are here because the item was in the cache, but this also works if the round trip above returns really quicky
 					processCallback(callbackHasBeenCalled, callback, url, result);
@@ -123,13 +131,32 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 	}
 
 	@Override
-	public Future<?> findRepositoryBase(String url, final ICallback<String> callback) {
-		// we can speed this up by using the fact that urls have structure, and if a parent has been investigated, we know the result.
-		return httpClient.get(ServerConstants.findRepositoryBasePrefix + "/" + url).execute(new IResponseCallback() {
+	@SuppressWarnings("unchecked")
+	public Future<GetResult> findRepositoryBaseOrAboveRepositoryData(String url, final IGetCallback callback) {
+		final AtomicReference<GetResult> result = new AtomicReference<GetResult>();
+		Future<Object> rawFuture = (Future<Object>) httpClient.get( url).execute(new IResponseCallback() {
 			@Override
 			public void process(IResponse response) {
-				String result = response.statusCode() == ServerConstants.okStatusCode ? response.asString() : null;
-				ICallback.Utils.call(callback, result);
+				if (response.statusCode() != ServerConstants.okStatusCode) {
+					callback.invalidResponse(response.statusCode(), response.asString());
+					result.set(GetResult.create(null));
+				} else {
+					Map<String, Object> map = Json.mapFromString(response.asString());
+					if (map.containsKey(ServerConstants.repoUrlKey))
+						result.set(callback.repositoryBase((String) map.get(ServerConstants.repoUrlKey)));
+					else if (map.containsKey(ServerConstants.dataKey))
+						result.set(callback.aboveRepositoryData((Map<String, Object>) map.get(ServerConstants.dataKey)));
+					else {
+						callback.invalidResponse(response.statusCode(), MessageFormat.format(ServerConstants.cannotParseReplyFromGet, map));
+						result.set(GetResult.create(null));
+					}
+				}
+			}
+		});
+		return Futures.transformed(rawFuture, new IFunction1<Object, GetResult>() {
+			@Override
+			public GetResult apply(Object from) throws Exception {
+				return result.get();
 			}
 		});
 	}
