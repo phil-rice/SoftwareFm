@@ -513,4 +513,8 @@ public class Maps {
 	public static Map<String, Object> stringObjectLinkedMap(Object... attributesAndValues) {
 		return makeLinkedMap(attributesAndValues);
 	}
+
+	public static Map<String,Object> emptyStringObjectMap() {
+		return Collections.emptyMap();
+	}
 }

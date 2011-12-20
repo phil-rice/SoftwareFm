@@ -72,8 +72,8 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 								} catch (ThreadDeath e) {
 									throw e;
 								} catch (Throwable t) {
-									errorHandler.process(t);
-
+									if (!shutdown)
+										errorHandler.process(t);
 								}
 						} finally {
 							countDownLatch.countDown();

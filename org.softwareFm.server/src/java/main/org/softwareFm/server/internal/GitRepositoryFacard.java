@@ -70,8 +70,11 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 					public GetResult call() throws Exception {
 						GetResult firstResult = localGit.localGet(url);
 						if (firstResult.found) {
-							processCallback(callbackHasBeenCalled, callback, url, firstResult);
-							return firstResult;
+							File localRepositoryUrl = localGit.findRepositoryUrl(url);
+							if (localRepositoryUrl != null) {//we have found something, and it is in a repository
+								processCallback(callbackHasBeenCalled, callback, url, firstResult);
+								return firstResult;
+							}
 						}
 						GetResult result = findRepositoryBaseOrAboveRepositoryData(url, new IGetCallback() {
 							@Override
@@ -134,7 +137,7 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 	@SuppressWarnings("unchecked")
 	public Future<GetResult> findRepositoryBaseOrAboveRepositoryData(String url, final IGetCallback callback) {
 		final AtomicReference<GetResult> result = new AtomicReference<GetResult>();
-		Future<Object> rawFuture = (Future<Object>) httpClient.get( url).execute(new IResponseCallback() {
+		Future<Object> rawFuture = (Future<Object>) httpClient.get(url).execute(new IResponseCallback() {
 			@Override
 			public void process(IResponse response) {
 				if (response.statusCode() != ServerConstants.okStatusCode) {
