@@ -29,6 +29,18 @@ public class PostProcessorTest extends AbstractProcessCallTest<PostProcessor> {
 		processor.process(makeRequestLine(ServerConstants.POST, "a/b"), makeDataMap(Maps.stringObjectMap("v", 2)));
 		checkContents(remoteRoot, "a/b", v12);
 	}
+	
+	public void testDontCopySubDirectoriesIntoFile(){
+		gitFacard.createRepository(remoteRoot, "a");
+		processor.process(makeRequestLine(ServerConstants.POST, "a/b/c"), makeDataMap(a1b2));
+		processor.process(makeRequestLine(ServerConstants.POST, "a/b/c/d"), makeDataMap(v22));
+		
+		processor.process(makeRequestLine(ServerConstants.POST, "a/b"), makeDataMap(v11));
+		processor.process(makeRequestLine(ServerConstants.POST, "a/b"), makeDataMap(Maps.stringObjectMap("v", 2)));
+		
+		checkContents(remoteRoot, "a/b", v12);
+		
+	}
 
 	@Override
 	protected PostProcessor makeProcessor() {

@@ -24,7 +24,7 @@ public class PostProcessor implements IProcessCall {
 			Object data = parameters.get(ServerConstants.dataParameterName);
 			if (data instanceof String) {
 				String url = requestLine.getUri();
-				GetResult initial = server.localGet(url);
+				GetResult initial = server.getFile(url);
 				String newData = initial.found ? merge(initial, (String) data) : (String) data;
 				server.post(url, Json.mapFromString(newData));
 			} else

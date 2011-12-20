@@ -98,6 +98,11 @@ public abstract class GitTest extends TestCase {
 		assertTrue(result.found);
 		assertEquals(data, result.data);
 	}
+	protected void checkGetFile(ILocalGitClient client, String url, Map<String, Object> data) {
+		GetResult result = client.getFile(url);
+		assertTrue(result.found);
+		assertEquals(data, result.data);
+	}
 
 	protected IServiceExecutor getServiceExecutor() {
 		return serviceExecutor == null ? serviceExecutor = IServiceExecutor.Utils.defaultExecutor() : serviceExecutor;

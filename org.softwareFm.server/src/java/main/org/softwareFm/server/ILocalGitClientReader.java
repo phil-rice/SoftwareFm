@@ -7,6 +7,8 @@ public interface ILocalGitClientReader {
 	File getRoot();
 
 	GetResult localGet(String url);
+	
+	GetResult getFile(String url);
 
 
 	public static class Utils {
@@ -20,6 +22,11 @@ public interface ILocalGitClientReader {
 
 				@Override
 				public File getRoot() {
+					throw new UnsupportedOperationException();
+				}
+
+				@Override
+				public GetResult getFile(String url) {
 					throw new UnsupportedOperationException();
 				}
 

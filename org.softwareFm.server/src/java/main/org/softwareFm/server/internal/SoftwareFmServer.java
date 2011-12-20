@@ -1,5 +1,6 @@
 package org.softwareFm.server.internal;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
@@ -26,6 +27,7 @@ import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
+import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.IProcessCall;
 import org.softwareFm.server.ISoftwareFmServer;
 import org.softwareFm.server.ServerConstants;
@@ -146,12 +148,8 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 	}
 
 	public static void main(String[] args) throws Exception {
-		new SoftwareFmServer(8080, 10, new IProcessCall() {
-			@Override
-			public String process(RequestLine requestLine, Map<String, Object> parameters) {
-				System.out.println("uri: " + requestLine.getUri());
-				return ("<" + requestLine + ", " + parameters + ">");
-			}
-		}, ICallback.Utils.sysErrCallback());
+		File root = new File(System.getProperty("user.home"));
+		IGitServer server = IGitServer.Utils.gitServer(new File(root, ".sfm_remote"), "not used");
+		new SoftwareFmServer(8080, 10, IProcessCall.Utils.softwareFmProcessCall(server), ICallback.Utils.sysErrCallback());
 	}
 }

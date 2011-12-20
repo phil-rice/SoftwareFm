@@ -34,6 +34,20 @@ public class LocalGitClientTest extends GitTest {
 
 	}
 
+	public void testGetFileDoesntIncludeSubdirectories(){
+		put(localRoot, "a/b/c", v11);
+		checkGetFile(client, "a/b/c", v11);
+		put(localRoot, "a/b/c/d/e", v12);
+		put(localRoot, "a/b/c/d/e/f/g/h", v12);
+		put(localRoot, "a/b/c/i/j", v12);
+		checkGetFile(client, "a/b/c", v11);
+	}
+	
+	public void testGetFileReturnsEmptyMapIfDataFileDoesntExistButDirectoryDoes(){
+		new File(localRoot, "a/b/c").mkdirs();
+		checkGetFile(client, "a/b/c", emptyMap);
+	}
+	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();

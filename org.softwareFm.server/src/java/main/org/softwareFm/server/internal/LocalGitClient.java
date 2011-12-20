@@ -20,12 +20,22 @@ public class LocalGitClient implements ILocalGitClient {
 	}
 
 	@Override
-	public GetResult localGet(String url) {
+	public GetResult getFile(String url) {
 		File directory = new File(root, url);
 		if (!directory.exists())
 			return GetResult.create(null);
 		File file = new File(directory, ServerConstants.dataFileName);
 		Map<String, Object> result = file.exists() ? new HashMap<String, Object>(Json.mapFromString(Files.getText(file))) : Maps.<String, Object> newMap();
+		return GetResult.create(result);
+	}
+	
+	@Override
+	public GetResult localGet(String url) {
+		GetResult rawFile = getFile(url);
+		if (!rawFile.found)
+			return rawFile;
+		File directory = new File(root, url);
+		Map<String, Object> result = rawFile.data;
 		for (File child : Files.listChildDirectories(directory)) {
 			Map<String, Object> collectionResults = Maps.newMap();
 			for (File grandChild : Files.listChildDirectories(child)) {
@@ -58,5 +68,6 @@ public class LocalGitClient implements ILocalGitClient {
 	public File getRoot() {
 		return root;
 	}
+
 
 }
