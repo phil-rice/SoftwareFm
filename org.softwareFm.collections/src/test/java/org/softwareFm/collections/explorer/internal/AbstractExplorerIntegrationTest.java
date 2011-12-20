@@ -156,6 +156,11 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		return menu;
 	}
 
+	protected void selectItemAndNotifyListeners(ICard card, String title) {
+		selectItem(card, title);
+		card.getTable().notifyListeners(SWT.Selection, new Event());
+	}
+
 	protected void selectItem(ICard card, String title) {
 		Table table = card.getTable();
 		for (int i = 0; i < table.getItemCount(); i++) {

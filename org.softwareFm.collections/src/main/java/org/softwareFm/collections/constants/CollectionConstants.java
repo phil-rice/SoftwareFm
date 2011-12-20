@@ -36,7 +36,7 @@ public class CollectionConstants {
 
 	public static final String commentsTitleKey = "title";
 	public static final String commentsTextKey = "text";
-	public static final String createdTime = "created";
+	public static final String createdTimeKey = "created";
 	public static final String commentTitleKey = "title";
 	public static final String commentTextKey = "text";
 

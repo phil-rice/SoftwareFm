@@ -270,7 +270,7 @@ public class Explorer implements IExplorer {
 	private void addCollectionItem(final RightClickCategoryResult result, final String collectionName, ICardData cardData, final IAfterEditCallback afterEdit) {
 		IMutableCardDataStore store = (IMutableCardDataStore) cardConfig.cardDataStore;
 		assert result.collectionName.equals(collectionName);// TODO do we really need this parameter?
-		Map<String, Object> newData = Maps.with(cardData.data(), CollectionConstants.createdTime, System.currentTimeMillis());
+		Map<String, Object> newData = Maps.with(cardData.data(), CollectionConstants.createdTimeKey, System.currentTimeMillis());
 		String cardUrl = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, collectionName, CardConstants.cardNameUrlKey);
 		String cardNameKey = IResourceGetter.Utils.getOrNull(cardConfig.resourceGetterFn, collectionName, CardConstants.cardNameFieldKey);
 		String cardName = (String) newData.get(cardNameKey);
@@ -781,8 +781,8 @@ public class Explorer implements IExplorer {
 
 	@Override
 	public void displayComments(ICard card) {
+		comments.showCommentsFor(card);
 		masterDetailSocial.showSocial();
-
 		masterDetailSocial.setSocial(comments.getControl());
 	}
 

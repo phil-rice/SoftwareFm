@@ -48,7 +48,7 @@ public class CommentsTest extends SwtTest {
 	}
 
 	private Map<String, Object> makeComment(String title, String text, int time) {
-		return Maps.stringObjectMap(CollectionConstants.commentTitleKey, title, CollectionConstants.commentTextKey, text, CollectionConstants.createdTime, time);
+		return Maps.stringObjectMap(CollectionConstants.commentTitleKey, title, CollectionConstants.commentTextKey, text, CollectionConstants.createdTimeKey, time);
 	}
 
 	@Override

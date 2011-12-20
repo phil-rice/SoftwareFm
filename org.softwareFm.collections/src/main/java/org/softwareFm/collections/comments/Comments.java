@@ -97,7 +97,7 @@ public class Comments implements IHasControl {
 		@SuppressWarnings("unchecked")
 		private void updateDisplay() {
 			table.removeAll();
-			Map<String, Object> sorted = Maps.sortByKey(map, Comparators.invert(Comparators.compareBasedOnTagInValue(map, CollectionConstants.createdTime)));
+			Map<String, Object> sorted = Maps.sortByKey(map, Comparators.invert(Comparators.compareBasedOnTagInValue(map, CollectionConstants.createdTimeKey)));
 			for (Entry<String, Object> entry : sorted.entrySet()) {
 				if (entry.getValue() instanceof Map<?, ?>) {
 					Map<String, Object> entryMap = (Map<String, Object>) entry.getValue();
@@ -160,5 +160,9 @@ public class Comments implements IHasControl {
 
 	public Table getTable() {
 		return content.table;
+	}
+
+	public Title getTitle() {
+		return content.title;
 	}
 }
