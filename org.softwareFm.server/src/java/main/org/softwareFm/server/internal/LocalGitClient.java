@@ -28,7 +28,7 @@ public class LocalGitClient implements ILocalGitClient {
 		Map<String, Object> result = file.exists() ? new HashMap<String, Object>(Json.mapFromString(Files.getText(file))) : Maps.<String, Object> newMap();
 		return GetResult.create(result);
 	}
-	
+
 	@Override
 	public GetResult localGet(String url) {
 		GetResult rawFile = getFile(url);
@@ -37,15 +37,21 @@ public class LocalGitClient implements ILocalGitClient {
 		File directory = new File(root, url);
 		Map<String, Object> result = rawFile.data;
 		for (File child : Files.listChildDirectories(directory)) {
+			File childFile = new File(child, ServerConstants.dataFileName);
 			Map<String, Object> collectionResults = Maps.newMap();
-			for (File grandChild : Files.listChildDirectories(child)) {
-				File grandChildFile = new File(grandChild, ServerConstants.dataFileName);
-				if (grandChildFile.exists())
-					collectionResults.put(grandChild.getName(), Json.mapFromString(Files.getText(grandChildFile)));
-			}
+			if (childFile.exists())
+				collectionResults.putAll(Json.mapFromString(Files.getText(childFile)));
+			for (File grandChild : Files.listChildDirectories(child))
+				addDataFromFileIfExists(collectionResults, grandChild);
 			result.put(child.getName(), collectionResults);
 		}
 		return new GetResult(true, result);
+	}
+
+	private void addDataFromFileIfExists(Map<String, Object> collectionResults, File directory) {
+		File file = new File(directory, ServerConstants.dataFileName);
+		if (file.exists())
+			collectionResults.put(directory.getName(), Json.mapFromString(Files.getText(file)));
 	}
 
 	@Override
@@ -68,6 +74,5 @@ public class LocalGitClient implements ILocalGitClient {
 	public File getRoot() {
 		return root;
 	}
-
 
 }

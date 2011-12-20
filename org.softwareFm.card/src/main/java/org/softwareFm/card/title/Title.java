@@ -36,6 +36,7 @@ public class Title implements IHasControl {
 
 	public Title(Composite parent, final CardConfig cardConfig, final TitleSpec initialTitleSpec, String initialTitle, String initialTooltip) {
 		this.titleSpec = initialTitleSpec;
+		this.title = initialTitle;
 		canvas = new Canvas(parent, SWT.NONE);
 		canvas.setToolTipText(initialTooltip);
 		canvas.addPaintListener( new PaintListener() {
@@ -59,6 +60,8 @@ public class Title implements IHasControl {
 	}
 
 	public void setTitleAndImage(String title, String tooltip, TitleSpec titleSpec) {
+		if (title==null)
+			throw new NullPointerException();
 		this.title = title;
 		this.titleSpec = titleSpec;
 		canvas.setToolTipText(tooltip);
