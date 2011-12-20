@@ -942,4 +942,14 @@ public class Explorer implements IExplorer {
 	public Comments getComments() {
 		return comments;
 	}
+
+	@Override
+	public void clearCaches() {
+		cardConfig.cardDataStore.clearCaches();
+	}
+
+	@Override
+	public ICardHolder getCardHolder() {
+		return cardHolder;
+	}
 }

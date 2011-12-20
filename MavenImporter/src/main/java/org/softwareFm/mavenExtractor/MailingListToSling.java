@@ -21,8 +21,8 @@ import org.softwareFm.utilities.maps.Maps;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class MailingListToSling implements IExtractorCallback {
-	private final GuiDataStore guiDataStore;
-	private final IUrlGenerator artifactUrlGenerator;
+//	private final GuiDataStore guiDataStore;
+	private IUrlGenerator artifactUrlGenerator;
 
 	private final IRepositoryFacard facard;
 	private final int maxCount;
@@ -33,10 +33,10 @@ public class MailingListToSling implements IExtractorCallback {
 	public MailingListToSling(IRepositoryFacard facard, DataSource dataSource, int maxCount) {
 		this.facard = facard;
 		this.maxCount = maxCount;
-		guiDataStore = new GuiDataStore(null, null, ICallback.Utils.rethrow());
-		new DataStoreConfigurator().process(guiDataStore);// setsup all the url generator;
-		Map<String, IUrlGenerator> urlGeneratorMap = guiDataStore.getUrlGeneratorMap();
-		artifactUrlGenerator = urlGeneratorMap.get("urlGenerator.artifact");
+//		guiDataStore = new GuiDataStore(null, null, ICallback.Utils.rethrow());
+//		new DataStoreConfigurator().process(guiDataStore);// setsup all the url generator;
+//		Map<String, IUrlGenerator> urlGeneratorMap = guiDataStore.getUrlGeneratorMap();
+//		artifactUrlGenerator = urlGeneratorMap.get("urlGenerator.artifact");
 		jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 

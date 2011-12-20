@@ -20,7 +20,6 @@ import org.softwareFm.utilities.strings.Strings;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 
-@SuppressWarnings("unused")
 public class DependanciesToMysql implements IExtractorCallback {
 
 	private final int maxCount;

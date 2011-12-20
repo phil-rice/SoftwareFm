@@ -37,7 +37,8 @@ public class PostProcessor implements IProcessCall {
 	private String merge(GetResult initial, String data) {
 		Map<String, Object> initialData = initial.data;
 		Map<String, Object> newMap = Json.mapFromString(data);
-		Map<String, Object> composite = Maps.merge(initialData, newMap);
+		@SuppressWarnings("unchecked")
+		Map<String, Object> composite = Maps.<String,Object>merge(initialData, newMap);
 		return Json.toString(composite);
 	}
 }

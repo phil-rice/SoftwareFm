@@ -67,7 +67,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	private File root;
 	private File localRoot;
 	private File remoteRoot;
-	private String remoteAsUri;
+//	private String remoteAsUri;
 
 	public static interface CardHolderAndCardCallback {
 		void process(ICardHolder cardHolder, ICard card) throws Exception;
@@ -185,7 +185,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		root = Tests.makeTempDirectory(getClass().getSimpleName());
 		localRoot = new File(root, "local");
 		remoteRoot = new File(root, "remote");
-		remoteAsUri = new File(root, "remote").getAbsolutePath();
+//		remoteAsUri = new File(root, "remote").getAbsolutePath();
 
 		httpClient = IHttpClient.Utils.builder("localhost", ServerConstants.testPort);
 		repository = GitRepositoryFactory.gitLocalRepositoryFacard(ServerConstants.testPort, localRoot, remoteRoot);

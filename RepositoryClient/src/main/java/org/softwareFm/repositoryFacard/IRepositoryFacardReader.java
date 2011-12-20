@@ -12,4 +12,6 @@ public interface IRepositoryFacardReader {
 	/** This will call the callback with the .json representation of the node at the Url */
 	Future<?> get(String url, IRepositoryFacardCallback callback);
 
+	void clearCaches();
+
 }

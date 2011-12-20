@@ -20,6 +20,7 @@ import org.softwareFm.repositoryFacard.IRepositoryFacardWithImports;
 import org.softwareFm.repositoryFacardConstants.RepositoryFacardConstants;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.json.Json;
 
 public class RepositoryFacard implements IRepositoryFacardWithImports {
@@ -37,6 +38,15 @@ public class RepositoryFacard implements IRepositoryFacardWithImports {
 		this.client = client;
 		this.parameterMaker = parameters;
 		this.getExtension = "." + getExtension;
+	}
+
+	@Override
+	public void clearCaches() {
+	}
+
+	@Override
+	public Future<?> makeRoot(String url, IResponseCallback callback) {
+		return Futures.doneFuture(null);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -84,7 +94,6 @@ public class RepositoryFacard implements IRepositoryFacardWithImports {
 	public Future<?> delete(String url, IResponseCallback callback) {
 		return client.delete(url).execute(callback);
 	}
-
 
 	@Override
 	public void shutdown() {

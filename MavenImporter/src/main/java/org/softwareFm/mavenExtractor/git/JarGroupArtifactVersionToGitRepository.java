@@ -106,6 +106,7 @@ public class JarGroupArtifactVersionToGitRepository implements IExtractorCallbac
 		facard.post(url.substring(1), map, IResponseCallback.Utils.noCallback()).get();
 	}
 
+	@SuppressWarnings("unused")
 	private String importGroup(Model model) throws Exception {
 		Map<String, Object> map = Maps.newMap();
 		String groupId = getGroupId(model);
@@ -115,7 +116,6 @@ public class JarGroupArtifactVersionToGitRepository implements IExtractorCallbac
 		facard.post(url, map, IResponseCallback.Utils.noCallback()).get(); // ok so we need a bit more data here...
 		noteAsCollection(url, "artifact");
 		return url;
-
 	}
 
 	private String importArtifact(String jarUrl, Model model, File file, String digest) throws Exception {
@@ -263,7 +263,7 @@ public class JarGroupArtifactVersionToGitRepository implements IExtractorCallbac
 		// IRepositoryFacard slingRepository = IRepositoryFacard.Utils.frontEnd("178.79.180.172", 8080, "admin", "admin");
 		File home = new File(System.getProperty("user.home"));
 		File jarDirectory = new File("c:/softwareFmRepository");
-		File localRoot = new File(home, ".sfm");
+//		File localRoot = new File(home, ".sfm");
 		final File remoteRoot = new File(home, ".sfm_remote");
 		// IRepositoryFacard repository = GitRepositoryFactory.gitLocalRepositoryFacard("localhost", 8080, localRoot, remoteRoot);
 		IRepositoryFacard repository = GitRepositoryFactory.forImport(remoteRoot);

@@ -106,6 +106,14 @@ public class ExplorerWithRadioChannel {
 							explorer.selectAndNext(url.get());
 						}
 					});
+					Buttons.makePushButton(buttonPanel, null, "Refresh", false, new Runnable() {
+						@Override
+						public void run() {
+							explorer.clearCaches();
+							String url = explorer.getCardHolder().getCard().url();
+							explorer.displayCard(url, new CardAndCollectionDataStoreAdapter());
+						}
+					});
 					Buttons.makePushButton(buttonPanel, null, "Unrecognised Jar", false, new Runnable() {
 						@Override
 						public void run() {

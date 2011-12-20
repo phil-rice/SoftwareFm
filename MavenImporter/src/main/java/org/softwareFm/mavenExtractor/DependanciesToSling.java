@@ -20,7 +20,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 @SuppressWarnings("unused")
 public class DependanciesToSling implements IArtifactDependancyVisitor {
-	private final IUrlGenerator artifactUrlGenerator;
+	private IUrlGenerator artifactUrlGenerator;
 	private final IRepositoryFacard repository;
 	private final int maxCount;
 	private int count;
@@ -28,10 +28,10 @@ public class DependanciesToSling implements IArtifactDependancyVisitor {
 	public DependanciesToSling(IRepositoryFacard repository, int count) {
 		this.repository = repository;
 		this.maxCount = count;
-		GuiDataStore guiDataStore = new GuiDataStore(null, null, ICallback.Utils.rethrow());
-		new DataStoreConfigurator().process(guiDataStore);// setsup all the url generator;
-		Map<String, IUrlGenerator> urlGeneratorMap = guiDataStore.getUrlGeneratorMap();
-		artifactUrlGenerator = urlGeneratorMap.get("urlGenerator.artifact");
+////		GuiDataStore guiDataStore = new GuiDataStore(null, null, ICallback.Utils.rethrow());
+////		new DataStoreConfigurator().process(guiDataStore);// setsup all the url generator;
+//		Map<String, IUrlGenerator> urlGeneratorMap = guiDataStore.getUrlGeneratorMap();
+//		artifactUrlGenerator = urlGeneratorMap.get("urlGenerator.artifact");
 	}
 
 	public void vist(String groupid, String artifactid, String childgroupid, String childartifactid) throws Exception {

@@ -27,6 +27,7 @@ public class Tests {
 		File tests = new File(tempDir, "softwareFmTests");
 		tests.mkdirs();
 		File result = new File(tests, name);
+		@SuppressWarnings("unused")
 		boolean deleted = Files.deleteDirectory(result);
 		boolean exists = result.exists();
 		Assert.assertFalse("Cannot delete temp file for: " + name, exists);
@@ -39,6 +40,7 @@ public class Tests {
 		return e;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <E extends Throwable> E assertThrows(Class<E> class1, Runnable runnable) {
 		try {
 			runnable.run();

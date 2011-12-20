@@ -45,6 +45,11 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 	}
 
 	@Override
+	public void clearCaches() {
+		getCache.clear();
+	}
+
+	@Override
 	public Future<?> makeRoot(final String url, final IResponseCallback callback) {
 		return serviceExecutor.submit(new Callable<GetResult>() {
 			@Override
@@ -71,7 +76,7 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 						GetResult firstResult = localGit.localGet(url);
 						if (firstResult.found) {
 							File localRepositoryUrl = localGit.findRepositoryUrl(url);
-							if (localRepositoryUrl != null) {//we have found something, and it is in a repository
+							if (localRepositoryUrl != null) {// we have found something, and it is in a repository
 								processCallback(callbackHasBeenCalled, callback, url, firstResult);
 								return firstResult;
 							}

@@ -40,5 +40,9 @@ public class LocalGitClientMultiMock implements ILocalGitClientReader {
 		return null;
 	}
 
+	@Override
+	public GetResult getFile(String url) {
+		throw new UnsupportedOperationException();
+	}
 
 }

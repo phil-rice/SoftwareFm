@@ -17,6 +17,8 @@ public interface ICardDataStore {
 	/** Go get data for a url, no follow ups */
 	<T> Future<T> processDataFor(String url, ICardDataStoreCallback<T> callback);
 
+	void clearCaches();
+
 	public static class Utils {
 		public static ICardDataStore mock(Object... urlsAndMaps) {
 			return new CardDataStoreMock(urlsAndMaps);

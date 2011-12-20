@@ -57,4 +57,8 @@ public class ImportGitRepositoryFacard implements IRepositoryFacard {
 	public void shutdown() {
 	}
 
+	@Override
+	public void clearCaches() {
+	}
+
 }

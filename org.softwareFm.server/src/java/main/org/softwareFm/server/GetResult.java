@@ -45,6 +45,7 @@ public class GetResult {
 		return true;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static GetResult create(Object object) {
 		boolean found = object instanceof Map<?, ?>;
 		Map<String, Object> data = found ? (Map<String, Object>) object : Collections.<String, Object> emptyMap();

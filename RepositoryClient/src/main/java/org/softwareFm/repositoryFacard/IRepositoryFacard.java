@@ -15,7 +15,7 @@ import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.repositoryFacard.internal.RepositoryFacard;
 
-public interface IRepositoryFacard extends IRepositoryFacardReader{
+public interface IRepositoryFacard extends IRepositoryFacardReader {
 
 	/** adds this as an Http header to all requests */
 	void addHeader(String name, String value);
@@ -28,10 +28,11 @@ public interface IRepositoryFacard extends IRepositoryFacardReader{
 
 	Future<?> makeRoot(String url, IResponseCallback callback);
 
+
 	void shutdown();
 
 	public static class Utils {
-		
+
 		public static boolean debug = false;
 
 		public static IRepositoryFacard defaultFacard() {
