@@ -36,12 +36,12 @@ public class LocalGitClient implements ILocalGitClient {
 			return rawFile;
 		File directory = new File(root, url);
 		Map<String, Object> result = rawFile.data;
-		for (File child : Files.listChildDirectories(directory)) {
+		for (File child : Files.listChildDirectoriesIgnoringDot(directory)) {
 			File childFile = new File(child, ServerConstants.dataFileName);
 			Map<String, Object> collectionResults = Maps.newMap();
 			if (childFile.exists())
 				collectionResults.putAll(Json.mapFromString(Files.getText(childFile)));
-			for (File grandChild : Files.listChildDirectories(child))
+			for (File grandChild : Files.listChildDirectoriesIgnoringDot(child))
 				addDataFromFileIfExists(collectionResults, grandChild);
 			result.put(child.getName(), collectionResults);
 		}

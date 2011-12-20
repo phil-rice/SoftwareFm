@@ -399,6 +399,20 @@ public class Files {
 		};
 	}
 
+	public static FileFilter directoryIgnoringDotFilter() {
+		return new FileFilter() {
+			@Override
+			public boolean accept(File arg0) {
+				return arg0.isDirectory() && !arg0.getName().startsWith(".");
+			}
+		};
+	}
+
+	public static File[] listChildDirectoriesIgnoringDot(File file) {
+		File[] result = file.listFiles(Files.directoryIgnoringDotFilter());
+		return result == null ? new File[0] : result;
+	}
+
 	public static File[] listChildDirectories(File file) {
 		File[] result = file.listFiles(Files.directoryFilter());
 		return result == null ? new File[0] : result;
