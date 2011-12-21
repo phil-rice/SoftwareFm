@@ -11,6 +11,7 @@
 package org.softwareFm.explorer.eclipse;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.swt.SWT;
@@ -37,6 +38,7 @@ import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.server.GitRepositoryFactory;
+import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.services.IServiceExecutor;
 
@@ -140,7 +142,7 @@ public class ExplorerWithRadioChannel {
 			});
 		} finally {
 			facard.shutdown();
-			service.shutdown();
+			service.shutdownAndAwaitTermination(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
 		}
 
 	}

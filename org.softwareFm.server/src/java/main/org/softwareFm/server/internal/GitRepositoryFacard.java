@@ -81,9 +81,7 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 							if (localRepositoryUrl != null) {// we have found something, and it is in a repository
 								File repoDirectory = new File(localRepositoryUrl, ServerConstants.DOT_GIT);
 								long lastModified = repoDirectory.lastModified();
-								if (System.currentTimeMillis() >= lastModified + staleCacheTime) {
-
-								} else {
+								if (System.currentTimeMillis() < lastModified + staleCacheTime) {
 									processCallback(callbackHasBeenCalled, callback, url, firstResult);
 									return firstResult;
 								}
@@ -193,7 +191,7 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 
 	@Override
 	public void shutdown() {
-		serviceExecutor.shutdown();
+		serviceExecutor.shutdownAndAwaitTermination(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
 		httpClient.shutdown();
 	}
 }

@@ -2,6 +2,7 @@ package org.softwareFm.server.internal;
 
 import java.io.File;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import junit.framework.TestCase;
 
@@ -82,7 +83,7 @@ public abstract class GitTest extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		if (serviceExecutor != null)
-			serviceExecutor.shutdown();
+			serviceExecutor.shutdownAndAwaitTermination(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
 		if (httpClient != null)
 			httpClient.shutdown();
 	}

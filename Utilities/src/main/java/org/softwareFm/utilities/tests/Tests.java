@@ -21,6 +21,25 @@ import org.softwareFm.utilities.reflection.Classes;
 import org.softwareFm.utilities.reflection.IClassAcceptor;
 
 public class Tests {
+
+	public static boolean deleteTempDirectory(String name) {
+		String tempDir = System.getProperty("java.io.tmpdir");
+		File tests = new File(tempDir, "softwareFmTests");
+		File file = new File(tests, name);
+		boolean deleted = Files.deleteDirectory(file);
+		return deleted;
+	}
+
+	public static void waitUntilCanDeleteTempDirectory(String name, long maxWaitTime) {
+		long startTime = System.currentTimeMillis();
+		boolean deleted;
+		while (!(deleted = deleteTempDirectory(name)) && System.currentTimeMillis() < startTime + maxWaitTime)
+			;
+		if (!deleted)
+			throw new RuntimeException(name);
+
+	}
+
 	public static File makeTempDirectory(String name) {
 		String tempDir = System.getProperty("java.io.tmpdir");
 		Assert.assertTrue(!tempDir.equals(""));

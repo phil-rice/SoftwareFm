@@ -21,6 +21,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -69,6 +70,7 @@ import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.display.timeline.PlayItem;
 import org.softwareFm.display.timeline.TimeLine;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
+import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
@@ -857,7 +859,7 @@ public class Explorer implements IExplorer {
 			});
 		} finally {
 			facard.shutdown();
-			service.shutdown();
+			service.shutdownAndAwaitTermination(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
 		}
 	}
 

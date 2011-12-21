@@ -14,6 +14,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.utilities.exceptions.WrappedException;
 
 public interface IServiceExecutor {
 
@@ -23,11 +24,15 @@ public interface IServiceExecutor {
 
 	void shutdown();
 
+	void shutdownAndAwaitTermination(long timeout, TimeUnit unit);
+
 	public static class Utils {
+
 		public static IServiceExecutor defaultExecutor() {
 			return defaultExecutor(10);
-			
+
 		}
+
 		public static IServiceExecutor defaultExecutor(final int maxThreadPoolSize) {
 			IServiceExecutor executor = new IServiceExecutor() {
 				private final List<IExceptionListener> listeners = Lists.newList();
@@ -35,7 +40,6 @@ public interface IServiceExecutor {
 					@Override
 					protected void afterExecute(Runnable r, Throwable t) {
 						super.afterExecute(r, t);
-
 					}
 				};
 
@@ -65,6 +69,16 @@ public interface IServiceExecutor {
 				@Override
 				public void shutdown() {
 					service.shutdown();
+				}
+
+				@Override
+				public void shutdownAndAwaitTermination(long time, TimeUnit unit) {
+					try {
+						service.shutdown();
+						service.awaitTermination(time, unit);
+					} catch (InterruptedException e) {
+						throw WrappedException.wrap(e);
+					}
 				}
 			};
 			executor.addExceptionListener(IExceptionListener.Utils.syserr());

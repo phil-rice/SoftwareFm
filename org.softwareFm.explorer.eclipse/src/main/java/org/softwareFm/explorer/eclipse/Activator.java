@@ -12,6 +12,7 @@ package org.softwareFm.explorer.eclipse;
 
 import java.util.Arrays;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -31,6 +32,7 @@ import org.softwareFm.httpClient.constants.HttpClientConstants;
 import org.softwareFm.jdtBinding.api.IBindingRipper;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.repositoryFacard.internal.RepositoryFacard;
+import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.services.IServiceExecutor;
@@ -84,7 +86,7 @@ public class Activator extends AbstractUIPlugin {
 		repository = null;
 
 		if (serviceExecutor != null)
-			serviceExecutor.shutdown();
+			serviceExecutor.shutdownAndAwaitTermination(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
 		serviceExecutor = null;
 		super.stop(context);
 	}

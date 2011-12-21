@@ -10,6 +10,8 @@
 
 package org.softwareFm.display.swt;
 
+import java.util.concurrent.TimeUnit;
+
 import org.softwareFm.utilities.services.IServiceExecutor;
 
 abstract public class SwtAndServiceTest extends SwtTest {
@@ -24,7 +26,7 @@ abstract public class SwtAndServiceTest extends SwtTest {
 
 	@Override
 	protected void tearDown() throws Exception {
-		service.shutdown();
+		service.shutdownAndAwaitTermination(2, TimeUnit.SECONDS);
 		super.tearDown();
 	}
 

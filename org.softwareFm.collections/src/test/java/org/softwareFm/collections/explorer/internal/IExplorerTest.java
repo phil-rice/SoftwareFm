@@ -5,6 +5,8 @@
 
 package org.softwareFm.collections.explorer.internal;
 
+import java.util.concurrent.TimeUnit;
+
 import org.softwareFm.card.card.ICardHolderForTests;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
@@ -13,6 +15,7 @@ import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
 import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.display.timeline.IPlayListGetter;
+import org.softwareFm.server.ServerConstants;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.resources.IResourceGetter;
@@ -52,7 +55,7 @@ public class IExplorerTest extends SwtTest {
 
 	@Override
 	protected void tearDown() throws Exception {
-		service.shutdown();
+		service.shutdownAndAwaitTermination(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
 		super.tearDown();
 	}
 

@@ -47,7 +47,11 @@ public class GitFacard implements IGitFacard {
 	public String getBranch(File root, String url) {
 		try {
 			FileRepository fileRepository = makeFileRepository(root, url);
-			return fileRepository.getBranch();
+			try {
+				return fileRepository.getBranch();
+			} finally {
+				fileRepository.close();
+			}
 		} catch (IOException e) {
 			throw WrappedException.wrap(e);
 		}
@@ -57,11 +61,15 @@ public class GitFacard implements IGitFacard {
 	public void addAllAndCommit(File root, String url, String message) {
 		try {
 			FileRepository fileRepository = makeFileRepository(root, url);
-			Git git = new Git(fileRepository);
-			new AddCommand(fileRepository).addFilepattern(".").call();
-			CommitCommand commit = git.commit();
-			commit.setAll(true).setMessage(message);
-			commit.call();
+			try {
+				Git git = new Git(fileRepository);
+				new AddCommand(fileRepository).addFilepattern(".").call();
+				CommitCommand commit = git.commit();
+				commit.setAll(true).setMessage(message);
+				commit.call();
+			} finally {
+				fileRepository.close();
+			}
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
@@ -72,8 +80,8 @@ public class GitFacard implements IGitFacard {
 	public void pull(File root, String url) {
 		try {
 			FileRepository fileRepository = makeFileRepository(root, url);
-			PullCommand pull = new Git(fileRepository).pull();
 			try {
+				PullCommand pull = new Git(fileRepository).pull();
 				pull.call();
 			} finally {
 				fileRepository.close();
@@ -114,14 +122,17 @@ public class GitFacard implements IGitFacard {
 				call();
 		call.getRepository().close();
 		FileRepository fileRepository = makeFileRepository(targetRoot, targetUri);
-		FileBasedConfig config = fileRepository.getConfig();
-		config.setString("branch", "master", "remote", "origin");
-		config.setString("branch", "master", "merge", "refs/heads/master");
 		try {
-			config.save();
-		} catch (Exception e) {
-			throw WrappedException.wrap(e);
+			FileBasedConfig config = fileRepository.getConfig();
+			config.setString("branch", "master", "remote", "origin");
+			config.setString("branch", "master", "merge", "refs/heads/master");
+			try {
+				config.save();
+			} catch (Exception e) {
+				throw WrappedException.wrap(e);
+			}
+		} finally {
+			fileRepository.close();
 		}
-		fileRepository.close();
 	}
 }

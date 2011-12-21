@@ -12,6 +12,7 @@ package org.softwareFm.explorer.eclipse;
 
 import java.io.File;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.card.ICardFactory;
@@ -31,6 +32,7 @@ import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
+import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.services.IServiceExecutor;
 
@@ -94,7 +96,7 @@ public class ExplorerUnit {
 
 		} finally {
 			facard.shutdown();
-			service.shutdown();
+			service.shutdownAndAwaitTermination(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
 		}
 	}
 }

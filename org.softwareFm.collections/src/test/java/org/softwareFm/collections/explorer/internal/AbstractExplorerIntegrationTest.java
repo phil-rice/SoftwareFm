@@ -210,8 +210,9 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 
 	@Override
 	protected void tearDown() throws Exception {
-		repository.shutdown();
 		super.tearDown();
+		repository.shutdown();//also closes httpclient
+		Tests.waitUntilCanDeleteTempDirectory(getClass().getSimpleName(), 200);
 	}
 
 	protected void checkAndEdit(final Table cardTable, IAddingCallback<Table> addingCallback) {
