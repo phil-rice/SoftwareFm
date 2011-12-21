@@ -15,7 +15,9 @@ class ChainImporter implements IChainImporter {
 		this.cardDataStore = cardDataStore;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.softwareFm.collections.explorer.internal.IChainImporter#process(java.lang.Runnable, org.softwareFm.collections.explorer.internal.NewJarImporter.ImportStage)
 	 */
 	@Override
@@ -29,16 +31,27 @@ class ChainImporter implements IChainImporter {
 			return Futures.doneFuture(null);
 		}
 		ImportStage stage = stages[index];
-		System.out.println("Putting: " + stage.url + " " + stage.data);
-		if (stage.url == null)
-			return process(afterOk, index + 1, stages);
-		else
-			return cardDataStore.put(stage.url, stage.data, new IAfterEditCallback() {
+		switch (stage.command) {
+		case MAKE_REPO:
+			return cardDataStore.makeRepo(stage.url,  new IAfterEditCallback() {
 				@Override
 				public void afterEdit(String url) {
 					process(afterOk, index + 1, stages);
 				}
 			});
+		case POST_DATA:
+			if (stage.url == null)
+				return process(afterOk, index + 1, stages);
+			else
+				return cardDataStore.put(stage.url, stage.data, new IAfterEditCallback() {
+					@Override
+					public void afterEdit(String url) {
+						process(afterOk, index + 1, stages);
+					}
+				});
+		default:
+			throw new IllegalStateException(stage.command.toString());
+		}
 	}
 
 }

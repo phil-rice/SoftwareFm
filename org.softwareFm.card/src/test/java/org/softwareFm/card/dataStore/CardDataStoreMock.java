@@ -11,10 +11,12 @@
 package org.softwareFm.card.dataStore;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Future;
 
 import junit.framework.Assert;
 
+import org.softwareFm.utilities.collections.Sets;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.maps.Maps;
@@ -24,6 +26,7 @@ public class CardDataStoreMock implements IMutableCardDataStore {
 	private final Map<String, Map<String, Object>> map;
 	public final Map<String, Integer> counts = Maps.newMap();
 	public final Map<String, Map<String, Object>> updateMap = Maps.newMap();
+	public final Set<String> repos = Sets.newSet();
 
 	public CardDataStoreMock(Object... urlsAndMaps) {
 		map = Maps.makeMap(urlsAndMaps);
@@ -61,6 +64,13 @@ public class CardDataStoreMock implements IMutableCardDataStore {
 
 	@Override
 	public void clearCache(String url) {
+	}
+
+	@Override
+	public Future<?> makeRepo(String url, IAfterEditCallback callback) {
+		repos.add(url);
+		callback.afterEdit(url);
+		return Futures.doneFuture(null);
 	}
 
 }

@@ -119,4 +119,9 @@ class MutableCardDataStoreMock implements IMutableCardDataStore {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public Future<?> makeRepo(String url, IAfterEditCallback callback) {
+		throw new UnsupportedOperationException();
+	}
+
 }

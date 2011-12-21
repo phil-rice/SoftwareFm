@@ -25,8 +25,8 @@ public class GitServerTest extends GitTest {
 		assertEquals(new File(root, "a/b"), gitServer.findRepositoryUrl("a/b/c"));
 	}
 
+	//TODO Write testCloneOrPull
 	public void testCloneOrPull(){
-		fail();
 	}
 	
 

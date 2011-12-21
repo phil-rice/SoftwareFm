@@ -76,4 +76,8 @@ public class CardDataStoreAsyncMock implements IMutableCardDataStore {
 	public void clearCache(String url) {
 	}
 
+	@Override
+	public Future<?> makeRepo(String url, IAfterEditCallback callback) {
+		throw new UnsupportedOperationException();
+	}
 }

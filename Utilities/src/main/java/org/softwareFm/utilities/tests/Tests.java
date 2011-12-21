@@ -26,8 +26,8 @@ public class Tests {
 		String tempDir = System.getProperty("java.io.tmpdir");
 		File tests = new File(tempDir, "softwareFmTests");
 		File file = new File(tests, name);
-		boolean deleted = Files.deleteDirectory(file);
-		return deleted;
+		Files.deleteDirectory(file);
+		return !file.exists();
 	}
 
 	public static void waitUntilCanDeleteTempDirectory(String name, long maxWaitTime) {
@@ -46,8 +46,7 @@ public class Tests {
 		File tests = new File(tempDir, "softwareFmTests");
 		tests.mkdirs();
 		File result = new File(tests, name);
-		@SuppressWarnings("unused")
-		boolean deleted = Files.deleteDirectory(result);
+		waitUntilCanDeleteTempDirectory(name, 2000);
 		boolean exists = result.exists();
 		Assert.assertFalse("Cannot delete temp file for: " + name, exists);
 		return result;

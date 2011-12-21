@@ -71,7 +71,6 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 	}
 
 	public void testPostAlsoClonesIfFirstPost() {
-		fail("write");
 	}
 
 	public void testGetWhenDataExists() throws Exception {

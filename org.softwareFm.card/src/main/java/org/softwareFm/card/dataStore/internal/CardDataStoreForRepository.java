@@ -39,6 +39,16 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 
 	}
 
+	@Override
+	public Future<?> makeRepo(final String url, final IAfterEditCallback callback) {
+		return facard.makeRoot(url, new IResponseCallback() {
+			@Override
+			public void process(IResponse response) {
+				callback.afterEdit(url);
+			}
+		});
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> Future<T> processDataFor(final String url, final ICardDataStoreCallback<T> callback) {
