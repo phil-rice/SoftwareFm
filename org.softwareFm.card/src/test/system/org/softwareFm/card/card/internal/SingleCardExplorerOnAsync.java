@@ -15,7 +15,7 @@ import org.softwareFm.card.configuration.internal.BasicCardConfigurator;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreVisitorMonitored;
 import org.softwareFm.card.dataStore.CardAndCollectionsStatus;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
-import org.softwareFm.card.dataStore.ICardDataStore;
+import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.swt.Swts.Size;
@@ -32,7 +32,7 @@ public class SingleCardExplorerOnAsync {
 
 			@Override
 			public Composite apply(final Composite from) throws Exception {
-				final ICardDataStore cardDataStore = CardDataStoreFixture.rawAsyncCardStore();
+				final IMutableCardDataStore cardDataStore = CardDataStoreFixture.rawAsyncCardStore();
 				ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 				final CardConfig cardConfig = new BasicCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 				final ICardHolder cardHolder =ICardHolder.Utils.cardHolderWithLayout(from, cardConfig, CardDataStoreFixture.url, ICallback.Utils.<String> noCallback());

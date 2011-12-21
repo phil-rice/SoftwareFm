@@ -17,7 +17,7 @@ import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.configuration.internal.BasicCardConfigurator;
-import org.softwareFm.card.dataStore.ICardDataStore;
+import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.card.dataStore.internal.CardDataStoreForRepository;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.ISituationListAndBuilder;
@@ -62,7 +62,7 @@ public class CardUnit implements IHasComposite {
 
 				@Override
 				public CardUnit makeChild(Composite parent) throws Exception {
-					final ICardDataStore cardDataStore = new CardDataStoreForRepository(parent, facard);
+					final IMutableCardDataStore cardDataStore = new CardDataStoreForRepository(parent, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 					final CardConfig cardConfig = new BasicCardConfigurator().configure(parent.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 					CardUnit cardUnit = new CardUnit(parent, cardConfig, rootUrl);

@@ -18,6 +18,7 @@ import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.dataStore.ICardDataStore;
+import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
@@ -64,7 +65,7 @@ public class ExplorerUnit {
 
 				@Override
 				public IExplorer makeChild(Composite parent) throws Exception {
-					final ICardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(parent, facard);
+					final IMutableCardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(parent, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 					final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(parent.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 					IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(parent);

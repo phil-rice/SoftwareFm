@@ -23,6 +23,7 @@ import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.dataStore.ICardDataStore;
+import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IExplorerListener;
@@ -58,7 +59,7 @@ public class ExplorerWithRadioChannel {
 					Composite buttonPanel = Swts.newComposite(explorerAndButton, SWT.NULL, "ButtonPanel");
 					buttonPanel.setLayout(Swts.Row.getHorizonalNoMarginRowLayout());
 
-					final ICardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(from, facard);
+					final IMutableCardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(from, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 					String popupMenuId = "explorerMenu";
 					String detailsPopupMenuId = null;

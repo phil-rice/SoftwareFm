@@ -268,7 +268,7 @@ public class Explorer implements IExplorer {
 	}
 
 	private void addCollectionItem(final RightClickCategoryResult result, final String collectionName, ICardData cardData, final IAfterEditCallback afterEdit) {
-		IMutableCardDataStore store = (IMutableCardDataStore) cardConfig.cardDataStore;
+		IMutableCardDataStore store = cardConfig.cardDataStore;
 		assert result.collectionName.equals(collectionName);// TODO do we really need this parameter?
 		Map<String, Object> newData = Maps.with(cardData.data(), CollectionConstants.createdTimeKey, System.currentTimeMillis());
 		String cardUrl = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, collectionName, CardConstants.cardNameUrlKey);
@@ -324,7 +324,7 @@ public class Explorer implements IExplorer {
 
 	@Override
 	public void editSnippet(final ICard card, final String key) {
-		final IMutableCardDataStore store = (IMutableCardDataStore) card.getCardConfig().cardDataStore;
+		final IMutableCardDataStore store = card.getCardConfig().cardDataStore;
 		masterDetailSocial.showSocial();
 		masterDetailSocial.createAndShowDetail(new IFunction1<Composite, IValueEditor>() {
 			@Override
@@ -374,7 +374,7 @@ public class Explorer implements IExplorer {
 
 	@Override
 	public void showAddSnippetEditor(final ICard card) {
-		final IMutableCardDataStore store = (IMutableCardDataStore) card.getCardConfig().cardDataStore;
+		final IMutableCardDataStore store = card.getCardConfig().cardDataStore;
 		final String lastSegment = Strings.lastSegment(card.url(), "/");
 		masterDetailSocial.showSocial();
 		masterDetailSocial.createAndShowDetail(new IFunction1<Composite, IValueEditor>() {
@@ -574,7 +574,8 @@ public class Explorer implements IExplorer {
 						String groupId = (String) cardData.data().get(CollectionConstants.groupId);
 						String artifactId = (String) cardData.data().get(CollectionConstants.artifactId);
 						String version = (String) cardData.data().get(CollectionConstants.version);
-						new NewJarImporter(cardConfig, CardConstants.manuallyAdded, digest, groupId, artifactId, version).process(new ICallback<String>() {
+						
+						new NewJarImporter(cardConfig, CardConstants.manuallyAdded, digest, groupId, artifactId, version).processImport(new ICallback<String>() {
 							@Override
 							public void process(String url) throws Exception {
 								displayCard(url, new CardAndCollectionDataStoreAdapter());
@@ -845,7 +846,7 @@ public class Explorer implements IExplorer {
 			Show.display(Explorer.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 				@Override
 				public Composite apply(Composite from) throws Exception {
-					final ICardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(from, facard);
+					final IMutableCardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(from, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 					final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 					IMasterDetailSocial masterDetailSocial = new MasterDetailSocial(from, SWT.NULL);

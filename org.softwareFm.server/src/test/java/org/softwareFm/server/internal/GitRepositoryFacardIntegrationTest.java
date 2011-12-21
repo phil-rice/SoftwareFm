@@ -71,7 +71,7 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 	}
 
 	public void testPostAlsoClonesIfFirstPost() {
-
+		fail("write");
 	}
 
 	public void testGetWhenDataExists() throws Exception {
@@ -83,6 +83,34 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 		CheckRepositoryFacardCallback callback = IRepositoryFacardCallback.Utils.checkMatches(ServerConstants.okStatusCode, v11);
 		repositoryFacard.get("a/b/c", callback).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
 		callback.assertCalled();
+	}
+
+	public void testGetWhenStaleCacheTimeUpCausesPullIfRepositoryExists() throws InterruptedException {
+		checkCreateRepository(localGitServer, "a/b");// need a repository, otherwise get 'above repository' behaviour
+		checkCreateRepository(localGitServer, "a/b");
+
+		put(remoteRoot, "a/b/c", v11);
+
+		checkRespositoryGet("a/b", Maps.emptyStringObjectMap());
+		checkRespositoryGet("a/b", Maps.emptyStringObjectMap());
+		Thread.sleep(ServerConstants.staleCacheTimeForTests+50);
+		checkRespositoryGet("a/b", Maps.stringObjectMap("c", v11));
+
+		put(remoteRoot, "a/b/c", v12);
+		checkRespositoryGet("a/b", Maps.stringObjectMap("c", v11));
+		Thread.sleep(ServerConstants.staleCacheTimeForTests+50);
+		checkRespositoryGet("a/b", Maps.stringObjectMap("c", v12));
+	}
+
+	private void checkRespositoryGet(String url, Map<String, Object> expected) {
+		try {
+			CheckRepositoryFacardCallback checkMatches = IRepositoryFacardCallback.Utils.checkMatches(ServerConstants.okStatusCode, expected);
+			repositoryFacard.get(url, checkMatches).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+			checkMatches.assertCalled();
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+
 	}
 
 	public void testCallsBackEvenIfInCache() throws Exception {
@@ -160,7 +188,7 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 		localGitServer = IGitServer.Utils.gitServer(localRoot, remoteRoot.getAbsolutePath());
 		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCall(remoteGitServer);
 		server = ISoftwareFmServer.Utils.server(ServerConstants.testPort, 4, processCall, ICallback.Utils.<Throwable> memory());
-		repositoryFacard = new GitRepositoryFacard(getHttpClient(), getServiceExecutor(), localGitServer);
+		repositoryFacard = new GitRepositoryFacard(getHttpClient(), getServiceExecutor(), localGitServer, ServerConstants.staleCacheTimeForTests);
 	}
 
 	@Override

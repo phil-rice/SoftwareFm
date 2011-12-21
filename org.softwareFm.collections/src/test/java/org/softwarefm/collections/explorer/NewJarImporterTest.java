@@ -43,7 +43,7 @@ public class NewJarImporterTest extends TestCase {
 	public void test() {
 		NewJarImporter newJarImporter = new NewJarImporter(cardConfig, "found - text", "012345", "g", "a", "v");
 		MemoryCallback<String> memory = ICallback.Utils.<String> memory();
-		newJarImporter.process(memory);
+		newJarImporter.processImport(memory);
 		assertEquals(Maps.makeLinkedMap(//
 				root + "/jars/01/23/012345", //
 				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.collection, CollectionConstants.groupId, "g", CollectionConstants.artifactId, "a", CardConstants.version, "v"),//

@@ -34,7 +34,7 @@ public class GitRepositoryFactory {
 		IGitServer localGit = IGitServer.Utils.gitServer(localRoot, remoteUriPrefix);
 		IServiceExecutor serviceExecutor = IServiceExecutor.Utils.defaultExecutor();
 		IHttpClient httpClient = IHttpClient.Utils.builder(host, port);
-		return new GitRepositoryFacard(httpClient, serviceExecutor, localGit) {
+		return new GitRepositoryFacard(httpClient, serviceExecutor, localGit, ServerConstants.staleCacheTime) {
 			@Override
 			public void shutdown() {
 				super.shutdown();
@@ -46,7 +46,7 @@ public class GitRepositoryFactory {
 	}
 
 	public static IRepositoryFacard gitRepositoryFacard(IHttpClient httpClient, IServiceExecutor serviceExecutor, IGitServer localGit) {
-		return new GitRepositoryFacard(httpClient, serviceExecutor, localGit);
+		return new GitRepositoryFacard(httpClient, serviceExecutor, localGit, ServerConstants.staleCacheTime);
 
 	}
 }

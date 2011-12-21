@@ -23,7 +23,7 @@ public class LocalGitClient implements ILocalGitClient {
 	public GetResult getFile(String url) {
 		File directory = new File(root, url);
 		if (!directory.exists())
-			return GetResult.create(null);
+			return GetResult.notFound();
 		File file = new File(directory, ServerConstants.dataFileName);
 		Map<String, Object> result = file.exists() ? new HashMap<String, Object>(Json.mapFromString(Files.getText(file))) : Maps.<String, Object> newMap();
 		return GetResult.create(result);

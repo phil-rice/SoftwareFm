@@ -37,7 +37,7 @@ import org.softwareFm.card.card.ILineSelectedListener;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
-import org.softwareFm.card.dataStore.ICardDataStore;
+import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.composites.IHasTable;
 import org.softwareFm.display.swt.Swts;
@@ -242,7 +242,7 @@ public class Card implements ICard, IHasTable {
 	}
 
 	public static void main(String[] args) {
-		final ICardDataStore cardDataStore = CardDataStoreFixture.rawCardStore();
+		final IMutableCardDataStore cardDataStore = CardDataStoreFixture.rawCardStore();
 		final ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 
 		Swts.Show.display(Card.class.getSimpleName(), new IFunction1<Composite, Composite>() {

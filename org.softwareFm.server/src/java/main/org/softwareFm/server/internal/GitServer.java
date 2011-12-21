@@ -16,6 +16,7 @@ public class GitServer extends LocalGitClient implements IGitServer {
 	private final IGitFacard gitFacard;
 	private final String remoteUriPrefix;
 
+
 	public GitServer(IGitFacard gitFacard, File root, String remoteUriPrefix) {
 		super(root);
 		this.gitFacard = gitFacard;

@@ -25,7 +25,7 @@ public class LocalGitClientMultiMock implements ILocalGitClientReader {
 		switch (index.getAndIncrement()) {
 		case 0:
 			Assert.assertEquals(this.url, url);
-			return GetResult.create(null);
+			return GetResult.notFound();
 		case 1:
 			return GetResult.create(result);
 		default:

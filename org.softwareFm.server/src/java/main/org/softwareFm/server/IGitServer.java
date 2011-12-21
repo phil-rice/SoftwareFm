@@ -15,7 +15,6 @@ import org.softwareFm.server.internal.GitServer;
 public interface IGitServer extends ILocalGitClient {
 
 	void createRepository(String url);
-	
 
 	File findRepositoryUrl(String url);
 
@@ -43,6 +42,7 @@ public interface IGitServer extends ILocalGitClient {
 		public static IGitServer gitServer(File root, String remoteUriPrefix) {
 			return new GitServer(IGitFacard.Utils.makeFacard(), root, remoteUriPrefix);
 		}
+
 
 	}
 

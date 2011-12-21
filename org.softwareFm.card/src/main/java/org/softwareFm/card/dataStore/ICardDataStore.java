@@ -20,12 +20,12 @@ public interface ICardDataStore {
 	void clearCaches();
 
 	public static class Utils {
-		public static ICardDataStore mock(Object... urlsAndMaps) {
+		public static IMutableCardDataStore mock(Object... urlsAndMaps) {
 			return new CardDataStoreMock(urlsAndMaps);
 		}
 
 		/** The control is used to ensure that call backs are in the correct thread, and everything ceases to work if the control is disposed */
-		public static ICardDataStore repositoryCardDataStore(Control from, IRepositoryFacard repository) {
+		public static IMutableCardDataStore repositoryCardDataStore(Control from, IRepositoryFacard repository) {
 			return new CardDataStoreForRepository(from, repository);
 		}
 	}

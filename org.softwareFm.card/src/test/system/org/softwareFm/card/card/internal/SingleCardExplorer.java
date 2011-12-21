@@ -22,7 +22,7 @@ import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.configuration.internal.BasicCardConfigurator;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreVisitorMonitored;
-import org.softwareFm.card.dataStore.ICardDataStore;
+import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.card.dataStore.internal.CardDataStoreForRepository;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts.Show;
@@ -85,7 +85,7 @@ public class SingleCardExplorer implements IHasComposite {
 			Show.display(SingleCardExplorer.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 				@Override
 				public Composite apply(final Composite from) throws Exception {
-					final ICardDataStore cardDataStore = new CardDataStoreForRepository(from, facard);
+					final IMutableCardDataStore cardDataStore = new CardDataStoreForRepository(from, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 					final CardConfig cardConfig = new BasicCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 					IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null,"navBar.prev.title");

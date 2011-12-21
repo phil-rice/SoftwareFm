@@ -76,6 +76,15 @@ public interface ICardFactory {
 
 		public static CardFactoryMock mockCardFactory() {
 			return new CardFactoryMock();
+		}
+
+		public static ICardFactory noCardFactory() {
+			return new ICardFactory() {
+				@Override
+				public ICard makeCard(ICardHolder cardHolder, CardConfig cardConfig, String url, Map<String, Object> map) {
+					throw new UnsupportedOperationException();
+				}
+			};
 		};
 		
 

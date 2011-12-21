@@ -25,8 +25,8 @@ import org.softwareFm.card.card.IRightClickCategoriser;
 import org.softwareFm.card.card.LineItem;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.ICardAndCollectionsDataStore;
-import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.card.dataStore.IFollowOnFragment;
+import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.card.dataStore.internal.CardCollectionsDataStore;
 import org.softwareFm.card.details.IDetailAdder;
 import org.softwareFm.card.details.IDetailFactory;
@@ -96,7 +96,7 @@ public class CardConfig {
 	/** The softwarefm application uses this to map group / artifact / version / digest data to urls on the server. It can be used to map any identifiers to data on the server */
 	public final IUrlGeneratorMap urlGeneratorMap;
 	/** This gets data from the server. */
-	public final ICardDataStore cardDataStore;
+	public final IMutableCardDataStore cardDataStore;
 	/** When data is asked about a card, often more data is asked: specifically any collections are asked for. This manages that 'extra data' getting */
 	public final ICardAndCollectionsDataStore cardCollectionsDataStore = new CardCollectionsDataStore();
 	/** this is the function used by the {@link #cardCollectionsDataStore} to determine what extra data needs to be acquired. Typically used to request more data about children */
@@ -146,7 +146,7 @@ public class CardConfig {
 	public final String popupMenuId;
 	public final String detailsPopupMenuId;
 
-	public CardConfig(ICardFactory cardFactory, ICardDataStore cardDataStore) {
+	public CardConfig(ICardFactory cardFactory, IMutableCardDataStore cardDataStore) {
 		this.resourceGetterFn = Functions.constant(IResourceGetter.Utils.noResources().with(//
 				new ResourceGetterMock("card.name.title", "Name", //
 						"card.value.title", "Value", //
@@ -189,7 +189,7 @@ public class CardConfig {
 		this.popupMenuService=IPopupMenuService.Utils.popUpMenuService();
 	}
 
-	private CardConfig(IFunction1<String, IResourceGetter> resourceGetterFn, IDetailFactory detailFactory, ICardFactory cardFactory, ICardDataStore cardDataStore, int style, boolean allowSelection, IFunction1<ICard, String> cardTitleFn, IFunction1<String, Image> imageFn, IFunction1<LineItem, Image> iconFn, ILineItemFunction<String> nameFn, ILineItemFunction<String> valueFn, IFunction1<ICard, String> defaultChildFn, ILineItemFunction<Boolean> hideFn, int leftMargin, int rightMargin, int topMargin, int bottomMargin, int navBarHeight, IFunction1<Map<String, Object>, Image> navIconFn, List<ICardDataModifier> keyValueModifiers, IFollowOnFragment followOnFragment, IFunction1<ICardData, TitleSpec> titleSpecFn, IRightClickCategoriser rightClickCategoriser, IUrlGeneratorMap urlGeneratorMap, IFunction1<String, IEditorDetailAdder> editorFn, String popupMenuId, IPopupMenuService<ICard> popupMenuService, String detailsPopupMenuId) {
+	private CardConfig(IFunction1<String, IResourceGetter> resourceGetterFn, IDetailFactory detailFactory, ICardFactory cardFactory, IMutableCardDataStore cardDataStore, int style, boolean allowSelection, IFunction1<ICard, String> cardTitleFn, IFunction1<String, Image> imageFn, IFunction1<LineItem, Image> iconFn, ILineItemFunction<String> nameFn, ILineItemFunction<String> valueFn, IFunction1<ICard, String> defaultChildFn, ILineItemFunction<Boolean> hideFn, int leftMargin, int rightMargin, int topMargin, int bottomMargin, int navBarHeight, IFunction1<Map<String, Object>, Image> navIconFn, List<ICardDataModifier> keyValueModifiers, IFollowOnFragment followOnFragment, IFunction1<ICardData, TitleSpec> titleSpecFn, IRightClickCategoriser rightClickCategoriser, IUrlGeneratorMap urlGeneratorMap, IFunction1<String, IEditorDetailAdder> editorFn, String popupMenuId, IPopupMenuService<ICard> popupMenuService, String detailsPopupMenuId) {
 		this.resourceGetterFn = resourceGetterFn;
 		this.detailFactory = detailFactory;
 		this.cardFactory = cardFactory;

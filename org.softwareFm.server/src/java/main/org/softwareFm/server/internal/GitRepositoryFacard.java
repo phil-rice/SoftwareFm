@@ -37,11 +37,13 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 	private final IGitServer localGit;
 	private final Map<String, GetResult> getCache = Maps.newMap();
 	private final IHttpClient httpClient;
+	private final long staleCacheTime;
 
-	public GitRepositoryFacard(IHttpClient httpClient, IServiceExecutor serviceExecutor, IGitServer localGit) {
+	public GitRepositoryFacard(IHttpClient httpClient, IServiceExecutor serviceExecutor, IGitServer localGit, long staleCacheTime) {
 		this.httpClient = httpClient;
 		this.serviceExecutor = serviceExecutor;
 		this.localGit = localGit;
+		this.staleCacheTime = staleCacheTime;
 	}
 
 	@Override
@@ -70,15 +72,21 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 		Future<GetResult> future = serviceExecutor.submit(new Callable<GetResult>() {
 			@Override
 			public GetResult call() throws Exception {
-				final GetResult result = Maps.findOrCreate(getCache, url, new Callable<GetResult>() {
+				Callable<GetResult> callable = new Callable<GetResult>() {
 					@Override
 					public GetResult call() throws Exception {
 						GetResult firstResult = localGit.localGet(url);
 						if (firstResult.found) {
 							File localRepositoryUrl = localGit.findRepositoryUrl(url);
 							if (localRepositoryUrl != null) {// we have found something, and it is in a repository
-								processCallback(callbackHasBeenCalled, callback, url, firstResult);
-								return firstResult;
+								File repoDirectory = new File(localRepositoryUrl, ServerConstants.DOT_GIT);
+								long lastModified = repoDirectory.lastModified();
+								if (System.currentTimeMillis() >= lastModified + staleCacheTime) {
+
+								} else {
+									processCallback(callbackHasBeenCalled, callback, url, firstResult);
+									return firstResult;
+								}
 							}
 						}
 						GetResult result = findRepositoryBaseOrAboveRepositoryData(url, new IGetCallback() {
@@ -101,7 +109,12 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 						processCallback(callbackHasBeenCalled, callback, url, result);
 						return result;
 					}
-				});
+				};
+				GetResult result = Maps.findOrCreate(getCache, url, callable);
+				if (System.currentTimeMillis() > result.created + staleCacheTime) {
+					result = callable.call();
+					getCache.put(url, result);
+				}
 				if (!callbackHasBeenCalled.get()) // probably we are here because the item was in the cache, but this also works if the round trip above returns really quicky
 					processCallback(callbackHasBeenCalled, callback, url, result);
 				return result;
@@ -147,7 +160,7 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 			public void process(IResponse response) {
 				if (response.statusCode() != ServerConstants.okStatusCode) {
 					callback.invalidResponse(response.statusCode(), response.asString());
-					result.set(GetResult.create(null));
+					result.set(GetResult.notFound());
 				} else {
 					Map<String, Object> map = Json.mapFromString(response.asString());
 					if (map.containsKey(ServerConstants.repoUrlKey))
@@ -156,7 +169,7 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 						result.set(callback.aboveRepositoryData((Map<String, Object>) map.get(ServerConstants.dataKey)));
 					else {
 						callback.invalidResponse(response.statusCode(), MessageFormat.format(ServerConstants.cannotParseReplyFromGet, map));
-						result.set(GetResult.create(null));
+						result.set(GetResult.notFound());
 					}
 				}
 			}
