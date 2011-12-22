@@ -11,9 +11,10 @@ import org.softwareFm.httpClient.api.IClientBuilder;
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.httpClient.requests.MemoryResponseCallback;
-import org.softwareFm.server.IProcessCall;
 import org.softwareFm.server.ISoftwareFmServer;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.processors.IProcessCall;
+import org.softwareFm.server.processors.IProcessResult;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.callbacks.MemoryCallback;
 import org.softwareFm.utilities.comparators.Comparators;
@@ -93,10 +94,10 @@ public class SoftwareFmServerTest extends TestCase {
 	static class ProcessCallMock implements IProcessCall {
 
 		@Override
-		public String process(RequestLine requestLine, Map<String, Object> parameters) {
+		public IProcessResult process(RequestLine requestLine, Map<String, Object> parameters) {
 			if (requestLine.toString().contains("exception"))
 				throw new RuntimeException();
-			return "<" + requestLine + "," + Maps.sortByKey(parameters, Comparators.<String> naturalOrder()) + ">";
+			return IProcessResult.Utils.processString("<" + requestLine + "," + Maps.sortByKey(parameters, Comparators.<String> naturalOrder()) + ">");
 		}
 	}
 

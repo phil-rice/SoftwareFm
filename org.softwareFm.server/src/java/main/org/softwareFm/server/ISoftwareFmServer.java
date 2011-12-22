@@ -1,6 +1,7 @@
 package org.softwareFm.server;
 
 import org.softwareFm.server.internal.SoftwareFmServer;
+import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.utilities.callbacks.ICallback;
 
 public interface ISoftwareFmServer {

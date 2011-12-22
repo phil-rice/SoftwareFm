@@ -2,7 +2,6 @@ package org.softwareFm.server.internal;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Collections;
@@ -21,16 +20,16 @@ import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.RequestLine;
 import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.DefaultHttpServerConnection;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.softwareFm.server.IGitServer;
-import org.softwareFm.server.IProcessCall;
 import org.softwareFm.server.ISoftwareFmServer;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.processors.IProcessCall;
+import org.softwareFm.server.processors.IProcessResult;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.maps.Maps;
@@ -81,18 +80,18 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 						return null;
 					}
 
-					private HttpResponse process(final IProcessCall processCall, Map<String, Object> value, RequestLine requestLine) throws UnsupportedEncodingException {
+					private HttpResponse process(final IProcessCall processCall, Map<String, Object> value, RequestLine requestLine) throws Exception {
 						try {
-							String replyString = processCall.process(requestLine, value);
-							return makeResponse(replyString, 200, "OK");
+							IProcessResult processResult = processCall.process(requestLine, value);
+							return makeResponse(processResult, 200, "OK");
 						} catch (Exception e) {
-							return makeResponse(e.getClass() + "/" + e.getMessage(), 500, e.getMessage());
+							return makeResponse(IProcessResult.Utils.processString(e.getClass() + "/" + e.getMessage()), 500, e.getMessage());
 						}
 					}
 
-					private HttpResponse makeResponse(String replyString, int status, String reason) throws UnsupportedEncodingException {
+					private HttpResponse makeResponse(IProcessResult processResult, int status, String reason) throws Exception {
 						HttpResponse response = new BasicHttpResponse(HttpVersion.HTTP_1_1, status, "OK");
-						response.setEntity(new StringEntity(replyString));
+						processResult.process(response);
 						return response;
 					}
 
@@ -149,7 +148,8 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 
 	public static void main(String[] args) throws Exception {
 		File root = new File(System.getProperty("user.home"));
-		IGitServer server = IGitServer.Utils.gitServer(new File(root, ".sfm_remote"), "not used");
-		new SoftwareFmServer(8080, 10, IProcessCall.Utils.softwareFmProcessCall(server), ICallback.Utils.sysErrCallback());
+		File sfmRoot = new File(root, ".sfm_remote");
+		IGitServer server = IGitServer.Utils.gitServer(sfmRoot, "not used");
+		new SoftwareFmServer(8080, 10, IProcessCall.Utils.softwareFmProcessCall(server, sfmRoot), ICallback.Utils.sysErrCallback());
 	}
 }

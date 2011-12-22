@@ -86,7 +86,7 @@ public class Maps {
 					return ((Comparable<Object>) l).compareTo(r);
 			}
 		});
-		return new MapAsList(titles,keyIndex, values);
+		return new MapAsList(titles, keyIndex, values);
 
 	}
 
@@ -514,7 +514,14 @@ public class Maps {
 		return makeLinkedMap(attributesAndValues);
 	}
 
-	public static Map<String,Object> emptyStringObjectMap() {
+	public static Map<String, Object> emptyStringObjectMap() {
 		return Collections.emptyMap();
+	}
+
+	public static <K, V> V getOrDefault(Map<K, V> map, K key, V defaultValue) {
+		if (map.containsKey(key))
+			return map.get(key);
+		else
+			return defaultValue;
 	}
 }

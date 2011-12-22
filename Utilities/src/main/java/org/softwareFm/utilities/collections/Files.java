@@ -33,6 +33,7 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -40,6 +41,7 @@ import org.softwareFm.utilities.constants.UtilityConstants;
 import org.softwareFm.utilities.constants.UtilityMessages;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.maps.Maps;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -47,6 +49,12 @@ import org.springframework.core.io.UrlResource;
 public class Files {
 	private static final Object lock = new Object();
 
+	
+	private static final Map<String,String> extensionToMime = Maps.makeMap("jpg", "image/jpg", "gif", "image/gif", "html", "text/html", "png", "image/png");
+	public static String defaultMimeType(String fileName){
+		return Maps.getOrDefault(extensionToMime, Files.extension(fileName), "text/plain");
+	}
+	
 	public static String offset(File root, File leaf) {
 		String rootString = root.getAbsolutePath();
 		String leafString = leaf.getAbsolutePath();

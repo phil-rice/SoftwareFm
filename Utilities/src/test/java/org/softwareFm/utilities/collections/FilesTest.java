@@ -18,6 +18,19 @@ import org.springframework.core.io.ClassPathResource;
 public class FilesTest extends TestCase {
 
 	
+	public void testDefaultMimeType(){
+		checkDefaultMimeType("text/html", "abc.html");
+		checkDefaultMimeType("image/png", "abc.png");
+		checkDefaultMimeType("image/gif", "abc.gif");
+		checkDefaultMimeType("image/jpg", "abc.jpg");
+		checkDefaultMimeType("text/plain", "abc.unknown");
+	}
+	
+	private void checkDefaultMimeType(String expected, String fileName) {
+		assertEquals(expected, Files.defaultMimeType(fileName));
+		
+	}
+
 	@Test
 	public void testDigest() throws IOException {
 		ClassPathResource resource = new ClassPathResource("UnchangingFile.txt", getClass());
