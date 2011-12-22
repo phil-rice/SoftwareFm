@@ -10,12 +10,10 @@
 
 package org.softwareFm.explorer.eclipse;
 
-import java.util.Arrays;
+import java.io.File;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.swt.widgets.Composite;
@@ -27,11 +25,9 @@ import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
-import org.softwareFm.httpClient.api.IHttpClient;
-import org.softwareFm.httpClient.constants.HttpClientConstants;
 import org.softwareFm.jdtBinding.api.IBindingRipper;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
-import org.softwareFm.repositoryFacard.internal.RepositoryFacard;
+import org.softwareFm.server.GitRepositoryFactory;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
@@ -98,11 +94,13 @@ public class Activator extends AbstractUIPlugin {
 
 	public IRepositoryFacard getRepository() {
 		if (repository == null) {
-			// String host = HttpClientConstants.defaultHost;// "178.79.180.172";
-			// int port = HttpClientConstants.defaultPort;// 8080;
-			IHttpClient client = IHttpClient.Utils.builder().withCredentials(HttpClientConstants.userName, HttpClientConstants.password).//
-					setDefaultHeaders(Arrays.<NameValuePair> asList(new BasicNameValuePair("SoftwareFm", getUuid())));
-			repository = new RepositoryFacard(client, "1.json");
+			File home = new File(System.getProperty("user.home"));
+			final File localRoot = new File(home, ".sfm");
+			boolean local = false;
+			String server = local ? "localhost" : "www.softwarefm.com";
+			String prefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : "git://www.softwarefm.com/";
+			int port = local?8080:80;
+			repository = GitRepositoryFactory.gitRepositoryFacard(server, port, localRoot, prefix);			
 		}
 		return repository;
 	}

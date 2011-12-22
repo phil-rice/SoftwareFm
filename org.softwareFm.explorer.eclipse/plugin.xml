@@ -6,7 +6,7 @@
        <category  name="SoftwareFm" id="org.softwareFm" />
       <view  name="Explorer" icon="icons/sfm.gif" category="org.softwareFm"   
              class="org.softwareFm.explorer.eclipse.ExplorerView"   id="org.softwareFm.explorer.eclipse.ExplorerView" />
-      <view  name="Snippets" icon="icons/sfm.gif" category="org.softwareFm"   
-             class="org.softwareFm.explorer.eclipse.SnippetView"   id="org.softwareFm.explorer.eclipse.SnippetView" />
+      <!--view  name="Snippets" icon="icons/sfm.gif" category="org.softwareFm"   
+             class="org.softwareFm.explorer.eclipse.SnippetView"   id="org.softwareFm.explorer.eclipse.SnippetView" /-->
    </extension>
 </plugin>

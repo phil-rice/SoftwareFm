@@ -46,8 +46,11 @@ public class ExplorerWithRadioChannel {
 	public static void main(String[] args) {
 		File home = new File(System.getProperty("user.home"));
 		final File localRoot = new File(home, ".sfm");
-		final File remoteRoot = new File(home, ".sfm_remote");
-		final IRepositoryFacard facard = GitRepositoryFactory.gitLocalRepositoryFacard(8080, localRoot, remoteRoot);
+		boolean local = false;
+		String server = local ? "localhost" : "www.softwarefm.com";
+		String prefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : "git://www.softwarefm.com/";
+		int port = local?8080:80;
+		final IRepositoryFacard facard = GitRepositoryFactory.gitRepositoryFacard(server, port, localRoot, prefix);
 		final IServiceExecutor service = IServiceExecutor.Utils.defaultExecutor();
 		try {
 			final String rootUrl = "/softwareFm/data";

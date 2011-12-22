@@ -19,7 +19,7 @@ public class GitRepositoryFactory {
 
 	}
 
-	public static IRepositoryFacard gitLocalRepositoryFacard(int port, File localRoot, File remoteRoot) {
+	public static IRepositoryFacard gitLocalRepositoryFacardWithServer(int port, File localRoot, File remoteRoot) {
 		IGitServer remoteGitServer = IGitServer.Utils.gitServer(remoteRoot, "not used");
 		final ISoftwareFmServer server = ISoftwareFmServer.Utils.server(port, 10, IProcessCall.Utils.softwareFmProcessCall(remoteGitServer, remoteRoot), ICallback.Utils.sysErrCallback());
 		return gitRepositoryFacard("localhost", port, localRoot, remoteRoot.getAbsolutePath(), new Runnable() {

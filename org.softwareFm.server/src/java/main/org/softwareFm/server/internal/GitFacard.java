@@ -78,6 +78,7 @@ public class GitFacard implements IGitFacard {
 
 	@Override
 	public void pull(File root, String url) {
+		System.out.println("Pull: " + url);
 		try {
 			FileRepository fileRepository = makeFileRepository(root, url);
 			try {

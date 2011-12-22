@@ -48,7 +48,7 @@ public interface IProcessCall {
 		public static IProcessCall softwareFmProcessCall(IGitServer server, File fileRoot) {
 			return chain(new FavIconProcessor(),//
 					new GetRootProcessor(fileRoot),//
-					new GetFileProcessor(fileRoot), //
+					new GetFileProcessor(fileRoot, "html", "jpg", "png", "css", "gif", "jar", "xml"), //
 					new GitGetProcessor(server), //
 					new MakeRootProcessor(server), //
 					new PostProcessor(server));// this sweeps up any posts, so ensure that commands appear in chain before it

@@ -29,6 +29,31 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 	private IGitServer remoteGitServer;
 	private IGitServer localGitServer;
 
+	public void testGetWhenStaleCacheTimeUpCausesPullIfRepositoryExists() throws InterruptedException {
+		checkCreateRepository(remoteGitServer, "a/b");
+		put(remoteRoot, "a/b/c", v11);
+		gitFacard.addAllAndCommit(remoteRoot, "a/b", "message");
+		localGitServer.clone("a/b");
+		
+		put(remoteRoot, "a/b/c", v12);
+		gitFacard.addAllAndCommit(remoteRoot, "a/b", "message");
+
+		checkRespositoryGet("a/b", Maps.stringObjectMap("c", v11));
+		checkRespositoryGet("a/b", Maps.stringObjectMap("c", v11));
+		Thread.sleep(ServerConstants.staleCacheTimeForTests + 50);
+		checkRespositoryGet("a/b", Maps.stringObjectMap("c", v12));
+		checkRespositoryGet("a/b", Maps.stringObjectMap("c", v12));
+		checkRespositoryGet("a/b", Maps.stringObjectMap("c", v12));
+
+		put(remoteRoot, "a/b/c", v21);
+		gitFacard.addAllAndCommit(remoteRoot, "a/b", "message");
+		checkRespositoryGet("a/b", Maps.stringObjectMap("c", v12));
+		checkRespositoryGet("a/b", Maps.stringObjectMap("c", v12));
+		checkRespositoryGet("a/b", Maps.stringObjectMap("c", v12));
+		Thread.sleep(ServerConstants.staleCacheTimeForTests + 50);
+		checkRespositoryGet("a/b", Maps.stringObjectMap("c", v21));
+	}
+
 	public void testCanPostAfterLocalRepositoryExists() throws Exception {
 		gitFacard.createRepository(remoteRoot, "a/b");
 		gitFacard.clone(new File(remoteRoot, "a/b").getAbsolutePath(), localRoot, "a/b");
@@ -82,23 +107,6 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 		CheckRepositoryFacardCallback callback = IRepositoryFacardCallback.Utils.checkMatches(ServerConstants.okStatusCode, v11);
 		repositoryFacard.get("a/b/c", callback).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
 		callback.assertCalled();
-	}
-
-	public void testGetWhenStaleCacheTimeUpCausesPullIfRepositoryExists() throws InterruptedException {
-		checkCreateRepository(localGitServer, "a/b");// need a repository, otherwise get 'above repository' behaviour
-		checkCreateRepository(localGitServer, "a/b");
-
-		put(remoteRoot, "a/b/c", v11);
-
-		checkRespositoryGet("a/b", Maps.emptyStringObjectMap());
-		checkRespositoryGet("a/b", Maps.emptyStringObjectMap());
-		Thread.sleep(ServerConstants.staleCacheTimeForTests+50);
-		checkRespositoryGet("a/b", Maps.stringObjectMap("c", v11));
-
-		put(remoteRoot, "a/b/c", v12);
-		checkRespositoryGet("a/b", Maps.stringObjectMap("c", v11));
-		Thread.sleep(ServerConstants.staleCacheTimeForTests+50);
-		checkRespositoryGet("a/b", Maps.stringObjectMap("c", v12));
 	}
 
 	private void checkRespositoryGet(String url, Map<String, Object> expected) {

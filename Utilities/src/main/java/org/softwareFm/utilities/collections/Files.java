@@ -50,7 +50,8 @@ public class Files {
 	private static final Object lock = new Object();
 
 	
-	private static final Map<String,String> extensionToMime = Maps.makeMap("jpg", "image/jpg", "gif", "image/gif", "html", "text/html", "png", "image/png");
+	private static final Map<String,String> extensionToMime = Maps.makeMap(//
+			"jpg", "image/jpg", "gif", "image/gif", "html", "text/html", "png", "image/png", "css", "text/css", "xml", "text/xml", "jar", "application/java-archive");
 	public static String defaultMimeType(String fileName){
 		return Maps.getOrDefault(extensionToMime, Files.extension(fileName), "text/plain");
 	}

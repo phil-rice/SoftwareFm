@@ -576,7 +576,7 @@ public class Explorer implements IExplorer {
 						String groupId = (String) cardData.data().get(CollectionConstants.groupId);
 						String artifactId = (String) cardData.data().get(CollectionConstants.artifactId);
 						String version = (String) cardData.data().get(CollectionConstants.version);
-						
+						masterDetailSocial.setDetail(null);
 						new NewJarImporter(cardConfig, CardConstants.manuallyAdded, digest, groupId, artifactId, version).processImport(new ICallback<String>() {
 							@Override
 							public void process(String url) throws Exception {

@@ -23,6 +23,8 @@ public class FilesTest extends TestCase {
 		checkDefaultMimeType("image/png", "abc.png");
 		checkDefaultMimeType("image/gif", "abc.gif");
 		checkDefaultMimeType("image/jpg", "abc.jpg");
+		checkDefaultMimeType("text/xml", "abc.xml");
+		checkDefaultMimeType("application/java-archive", "abc.jar");
 		checkDefaultMimeType("text/plain", "abc.unknown");
 	}
 	

@@ -23,10 +23,12 @@ import org.softwareFm.server.GetResult;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ISoftwareFmClient;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.runnable.Callables;
 import org.softwareFm.utilities.services.IServiceExecutor;
 import org.softwareFm.utilities.strings.Urls;
 
@@ -35,9 +37,9 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 
 	private final IServiceExecutor serviceExecutor;
 	private final IGitServer localGit;
-	private final Map<String, GetResult> getCache = Maps.newMap();
 	private final IHttpClient httpClient;
 	private final long staleCacheTime;
+	private final Map<File, Long> lastPullTimeMap = Maps.newMap();
 
 	public GitRepositoryFacard(IHttpClient httpClient, IServiceExecutor serviceExecutor, IGitServer localGit, long staleCacheTime) {
 		this.httpClient = httpClient;
@@ -48,7 +50,7 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 
 	@Override
 	public void clearCaches() {
-		getCache.clear();
+		lastPullTimeMap.clear();
 	}
 
 	@Override
@@ -72,49 +74,40 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 		Future<GetResult> future = serviceExecutor.submit(new Callable<GetResult>() {
 			@Override
 			public GetResult call() throws Exception {
-				Callable<GetResult> callable = new Callable<GetResult>() {
-					@Override
-					public GetResult call() throws Exception {
-						GetResult firstResult = localGit.localGet(url);
-						if (firstResult.found) {
-							File localRepositoryUrl = localGit.findRepositoryUrl(url);
-							if (localRepositoryUrl != null) {// we have found something, and it is in a repository
-								File repoDirectory = new File(localRepositoryUrl, ServerConstants.DOT_GIT);
-								long lastModified = repoDirectory.lastModified();
-								if (System.currentTimeMillis() < lastModified + staleCacheTime) {
-									processCallback(callbackHasBeenCalled, callback, url, firstResult);
-									return firstResult;
-								}
-							}
-						}
-						GetResult result = findRepositoryBaseOrAboveRepositoryData(url, new IGetCallback() {
-							@Override
-							public GetResult repositoryBase(String repositoryBase) {
-								IGitServer.Utils.cloneOrPull(localGit, repositoryBase);
-								GetResult afterCloneResult = localGit.localGet(url);
-								return afterCloneResult;
-							}
-
-							@Override
-							public void invalidResponse(int statusCode, String message) {
-							}
-
-							@Override
-							public GetResult aboveRepositoryData(Map<String, Object> data) {
-								return GetResult.create(data);
-							}
-						}).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
-						processCallback(callbackHasBeenCalled, callback, url, result);
-						return result;
+				File localRepositoryRoot = localGit.findRepositoryUrl(url);
+				if (localRepositoryRoot != null) {// we have found something, and it is in a repository
+					long lastPull = Maps.findOrCreate(lastPullTimeMap, localRepositoryRoot, Callables.time());
+					long now = System.currentTimeMillis();
+					boolean needToPull = now > lastPull + staleCacheTime;
+					if (needToPull) {
+						String url = Files.offset(localGit.getRoot(), localRepositoryRoot);
+						localGit.pull(url);
+						lastPullTimeMap.put(localRepositoryRoot, now);
 					}
-				};
-				GetResult result = Maps.findOrCreate(getCache, url, callable);
-				if (System.currentTimeMillis() > result.created + staleCacheTime) {
-					result = callable.call();
-					getCache.put(url, result);
-				}
-				if (!callbackHasBeenCalled.get()) // probably we are here because the item was in the cache, but this also works if the round trip above returns really quicky
+					GetResult result = localGit.localGet(url);
 					processCallback(callbackHasBeenCalled, callback, url, result);
+					return result;
+				}
+				//well we didn't find a repository
+				GetResult result = findRepositoryBaseOrAboveRepositoryData(url, new IGetCallback() {
+					@Override
+					public GetResult repositoryBase(String repositoryBase) {
+						localGit.clone(repositoryBase);
+						GetResult afterCloneResult = localGit.localGet(url);
+						return afterCloneResult;
+					}
+
+					@Override
+					public void invalidResponse(int statusCode, String message) {
+					}
+
+					@Override
+					public GetResult aboveRepositoryData(Map<String, Object> data) {
+						//TODO we should really cache these 'above repository' queries
+						return GetResult.create(data);
+					}
+				}).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+				processCallback(callbackHasBeenCalled, callback, url, result);
 				return result;
 			}
 		});
@@ -123,7 +116,7 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 
 	private void processCallback(AtomicBoolean callbackHasBeenCalled, final IRepositoryFacardCallback callback, String url, GetResult result) throws Exception {
 		if (callbackHasBeenCalled.compareAndSet(false, true)) {
-			boolean found = result.found;
+			boolean found = result.found && !result.data.isEmpty();
 			int status = found ? ServerConstants.okStatusCode : ServerConstants.notFoundStatusCode;
 			String message = found ? ServerConstants.foundMessage : ServerConstants.notFoundMessage;
 			IResponse makeResponse = IResponse.Utils.create(url, status, message);
@@ -133,7 +126,7 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 
 	@Override
 	public Future<?> post(final String url, final Map<String, Object> map, final IResponseCallback callback) {
-		getCache.clear();// we can do better and only clear relevant caches..
+		lastPullTimeMap.clear();// we can do better and only clear relevant caches..
 		File existing = localGit.findRepositoryUrl(url);
 		if (existing == null)
 			throw new IllegalStateException(MessageFormat.format(ServerConstants.cannotPostWhenLocalRepositoryDoesntExist, url));

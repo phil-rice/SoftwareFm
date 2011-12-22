@@ -7,17 +7,15 @@ import org.softwareFm.utilities.maps.Maps;
 public class GetResult {
 	public final boolean found;
 	public final Map<String, Object> data;
-	public long created;
 
 	public GetResult(boolean found, Map<String, Object> data) {
 		this.found = found;
 		this.data = data;
-		this.created = System.currentTimeMillis();
 	}
 
 	@Override
 	public String toString() {
-		return "GetResult [found=" + found + ", data=" + data + ", created=" + created + "]";
+		return "GetResult [found=" + found + ", data=" + data + "]";
 	}
 
 
@@ -29,6 +27,7 @@ public class GetResult {
 	public static GetResult create(Object object) {
 		if (object == null)
 			throw new NullPointerException();
-		return new GetResult(true, (Map<String, Object>) object);
+		Map<String, Object> map = (Map<String, Object>) object;
+		return new GetResult(true, map);
 	}
 }
