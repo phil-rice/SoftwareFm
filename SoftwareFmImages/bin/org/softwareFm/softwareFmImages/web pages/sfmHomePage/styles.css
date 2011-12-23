@@ -82,9 +82,27 @@ a:hover {
 	text-align: center;
 }
 
+.box6 {
+	background: url(images/quickGuide.jpg) no-repeat;
+	padding: 15px;
+	color: #FFF;
+	font-weight: 300;
+	text-align: center;
+}
+
 
 #column2 {
 	width: 470px;
+	margin: 0px;
+	margin-left: 15px;
+	float: left;
+	background-color: #FFF;
+	padding: 20px;
+}
+
+
+#columnAll {
+	width: 1200px;
 	margin: 0px;
 	margin-left: 15px;
 	float: left;
@@ -133,6 +151,7 @@ h2 {
 	margin:0px;
 	margin-bottom: 20px;
 }
+
 
 strong {
 	color: #C00;
