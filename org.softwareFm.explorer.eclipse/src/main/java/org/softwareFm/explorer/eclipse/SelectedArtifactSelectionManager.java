@@ -51,11 +51,14 @@ public class SelectedArtifactSelectionManager implements ISelectedBindingManager
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		if (selection instanceof ITextSelection) {
-			ITextSelection textSelection = (ITextSelection) selection;
-			BindingRipperResult ripperResult = selectToBindingResult(bindingRipper, textSelection);
-			if (ripperResult != null)
-				fireListeners(ripperResult);
+		try {
+			if (selection instanceof ITextSelection) {
+				ITextSelection textSelection = (ITextSelection) selection;
+				BindingRipperResult ripperResult = selectToBindingResult(bindingRipper, textSelection);
+				if (ripperResult != null)
+					fireListeners(ripperResult);
+			}
+		} catch (Exception e) {
 		}
 	}
 

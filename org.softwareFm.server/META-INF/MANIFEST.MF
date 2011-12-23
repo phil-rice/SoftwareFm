@@ -8,4 +8,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.softwareFm.externals;bundle-version="1.0.0";visibility:=reexport,
  org.softwareFm.repository;bundle-version="1.0.0";visibility:=reexport,
  org.softwareFm.repositoryClient;bundle-version="1.0.0"
-Export-Package: org.softwareFm.server
+Export-Package: org.softwareFm.server,
+ org.softwareFm.server.processors
