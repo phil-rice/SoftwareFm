@@ -33,6 +33,8 @@ public class ExplorerView extends AbstractExplorerView {
 
 	@Override
 	protected void selectionOccured(final CardConfig cardConfig, final IExplorer explorer, final IResourceGetter resourceGetter, final BindingRipperResult ripperResult) {
+		if (ripperResult == null || ripperResult.path == null)
+			return;
 		String fileExtension = ripperResult.path.getFileExtension();
 		if (!fileExtension.equals("jar")) {
 			explorer.displayNotAJar();
@@ -59,7 +61,6 @@ public class ExplorerView extends AbstractExplorerView {
 					processNoData(cardConfig, explorer, resourceGetter, ripperResult);
 				return null;
 			}
-
 		});
 	}
 

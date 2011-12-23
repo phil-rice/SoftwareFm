@@ -43,6 +43,8 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 	private ServerSocket serverSocket;
 
 	public SoftwareFmServer(int port, int threads, final IProcessCall processCall, final ICallback<Throwable> errorHandler) {
+		final Usage usage = new Usage(Usage.makeLocalDataSource());
+		usage.start();
 		try {
 			serverSocket = new ServerSocket(port);
 			executor = IServiceExecutor.Utils.defaultExecutor(threads);
@@ -62,7 +64,8 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 									Map<String, Object> value = getValue(conn, request);
 									RequestLine requestLine = request.getRequestLine();
 									HttpResponse response = process(processCall, value, requestLine);
-									System.out.println(requestLine +" " + response.getStatusLine());
+									System.out.println(socket.getRemoteSocketAddress() +", "+ requestLine +" " + response.getStatusLine());
+									usage.monitor(socket.getRemoteSocketAddress().toString(), requestLine.toString());
 									conn.sendResponseHeader(response);
 									conn.sendResponseEntity(response);
 								} finally {
