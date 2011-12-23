@@ -47,77 +47,80 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 			serverSocket = new ServerSocket(port);
 			executor = IServiceExecutor.Utils.defaultExecutor(threads);
 			countDownLatch = new CountDownLatch(threads);
-			for (int i = 0; i < threads; i++) {
-				executor.submit(new Callable<Void>() {
-					@Override
-					public Void call() throws Exception {
-						try {
-							while (!shutdown)
+			Callable<Void> callable = new Callable<Void>() {
+				@Override
+				public Void call() throws Exception {
+					try {
+						while (!shutdown)
+							try {
+								Socket socket = serverSocket.accept();
+								HttpParams params = new BasicHttpParams();
+								DefaultHttpServerConnection conn = new DefaultHttpServerConnection();
 								try {
-									Socket socket = serverSocket.accept();
-									HttpParams params = new BasicHttpParams();
-									DefaultHttpServerConnection conn = new DefaultHttpServerConnection();
-									try {
-										conn.bind(socket, params);
-										HttpRequest request = conn.receiveRequestHeader();
-										Map<String, Object> value = getValue(conn, request);
-										RequestLine requestLine = request.getRequestLine();
-										HttpResponse response = process(processCall, value, requestLine);
-										conn.sendResponseHeader(response);
-										conn.sendResponseEntity(response);
-									} finally {
-										conn.close();
-									}
-								} catch (ThreadDeath e) {
-									throw e;
-								} catch (Throwable t) {
-									if (!shutdown)
-										errorHandler.process(t);
+									conn.bind(socket, params);
+									HttpRequest request = conn.receiveRequestHeader();
+									Map<String, Object> value = getValue(conn, request);
+									RequestLine requestLine = request.getRequestLine();
+									HttpResponse response = process(processCall, value, requestLine);
+									System.out.println(requestLine +" " + response.getStatusLine());
+									conn.sendResponseHeader(response);
+									conn.sendResponseEntity(response);
+								} finally {
+									conn.close();
 								}
-						} finally {
-							countDownLatch.countDown();
-						}
-						return null;
-					}
-
-					private HttpResponse process(final IProcessCall processCall, Map<String, Object> value, RequestLine requestLine) throws Exception {
-						try {
-							IProcessResult processResult = processCall.process(requestLine, value);
-							return makeResponse(processResult, 200, "OK");
-						} catch (Exception e) {
-							return makeResponse(IProcessResult.Utils.processString(e.getClass() + "/" + e.getMessage()), 500, e.getMessage());
-						}
-					}
-
-					private HttpResponse makeResponse(IProcessResult processResult, int status, String reason) throws Exception {
-						HttpResponse response = new BasicHttpResponse(HttpVersion.HTTP_1_1, status, "OK");
-						processResult.process(response);
-						return response;
-					}
-
-					private Map<String, Object> getValue(DefaultHttpServerConnection conn, HttpRequest request) throws HttpException, IOException {
-						if (request instanceof HttpEntityEnclosingRequest) {
-							conn.receiveRequestEntity((HttpEntityEnclosingRequest) request);
-							// Do something useful with the entity and, when done, ensure all
-							// content has been consumed, so that the underlying connection
-							// coult be re-used
-							HttpEntity entity = ((HttpEntityEnclosingRequest) request).getEntity();
-							if (entity != null) {
-								List<NameValuePair> parse = URLEncodedUtils.parse(entity);
-								EntityUtils.consume(entity);
-								Map<String, Object> result = Maps.newMap();
-								for (NameValuePair pair : parse)
-									result.put(pair.getName(), pair.getValue());
-								return result;
+							} catch (ThreadDeath e) {
+								throw e;
+							} catch (Throwable t) {
+								if (!shutdown)
+									errorHandler.process(t);
 							}
-						}
-						return Collections.emptyMap();
+					} finally {
+						countDownLatch.countDown();
 					}
-				});
+					return null;
+				}
+				
+				private HttpResponse process(final IProcessCall processCall, Map<String, Object> value, RequestLine requestLine) throws Exception {
+					try {
+						IProcessResult processResult = processCall.process(requestLine, value);
+						return makeResponse(processResult, 200, "OK");
+					} catch (Exception e) {
+						return makeResponse(IProcessResult.Utils.processString(e.getClass() + "/" + e.getMessage()), 500, e.getMessage());
+					}
+				}
+				
+				private HttpResponse makeResponse(IProcessResult processResult, int status, String reason) throws Exception {
+					HttpResponse response = new BasicHttpResponse(HttpVersion.HTTP_1_1, status, "OK");
+					processResult.process(response);
+					return response;
+				}
+				
+				private Map<String, Object> getValue(DefaultHttpServerConnection conn, HttpRequest request) throws HttpException, IOException {
+					if (request instanceof HttpEntityEnclosingRequest) {
+						conn.receiveRequestEntity((HttpEntityEnclosingRequest) request);
+						// Do something useful with the entity and, when done, ensure all
+						// content has been consumed, so that the underlying connection
+						// coult be re-used
+						HttpEntity entity = ((HttpEntityEnclosingRequest) request).getEntity();
+						if (entity != null) {
+							List<NameValuePair> parse = URLEncodedUtils.parse(entity);
+							EntityUtils.consume(entity);
+							Map<String, Object> result = Maps.newMap();
+							for (NameValuePair pair : parse)
+								result.put(pair.getName(), pair.getValue());
+									return result;
+						}
+					}
+					return Collections.emptyMap();
+				}
+			};
+			for (int i = 0; i < threads; i++) {
+				executor.submit(callable);
 			}
 		} catch (IOException e) {
 			throw WrappedException.wrap(e);
 		}
+		System.out.println("Started with " + threads + " threads");
 	}
 
 	@Override

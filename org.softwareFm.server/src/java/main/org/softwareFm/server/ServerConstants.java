@@ -8,10 +8,11 @@ public class ServerConstants {
 	public static final String GET = "GET";
 	public static final String POST = "POST";
 	public static final String DELETE = "DELETE";
+	public static final String HEAD = "HEAD";
 	public static final String couldntStop = "Couldn't stop the server";
 	public static final long clientTimeOut = 1000;
 	public static final int okStatusCode = 200;
-	public static final int notFoundStatusCode = 401;
+	public static final int notFoundStatusCode = 404;
 	public static final String dataParameterName = "data";
 	public static final String findRepositoryBasePrefix = "command/findRepositoryBase";
 	public static final String makeRootPrefix = "command/makeRoot";

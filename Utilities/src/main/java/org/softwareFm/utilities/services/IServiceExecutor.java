@@ -33,10 +33,10 @@ public interface IServiceExecutor {
 
 		}
 
-		public static IServiceExecutor defaultExecutor(final int maxThreadPoolSize) {
+		public static IServiceExecutor defaultExecutor(final int threadPoolSize) {
 			IServiceExecutor executor = new IServiceExecutor() {
 				private final List<IExceptionListener> listeners = Lists.newList();
-				private final ExecutorService service = new ThreadPoolExecutor(1, maxThreadPoolSize, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(1000)) {
+				private final ExecutorService service = new ThreadPoolExecutor(threadPoolSize, threadPoolSize, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(1000)) {
 					@Override
 					protected void afterExecute(Runnable r, Throwable t) {
 						super.afterExecute(r, t);

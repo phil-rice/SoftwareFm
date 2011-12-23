@@ -7,10 +7,11 @@ import org.apache.http.RequestLine;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.processors.internal.FavIconProcessor;
 import org.softwareFm.server.processors.internal.GetFileProcessor;
-import org.softwareFm.server.processors.internal.GetRootProcessor;
+import org.softwareFm.server.processors.internal.GetIndexProcessor;
 import org.softwareFm.server.processors.internal.GitGetProcessor;
 import org.softwareFm.server.processors.internal.MakeRootProcessor;
 import org.softwareFm.server.processors.internal.PostProcessor;
+import org.softwareFm.server.processors.internal.RigidFileProcessor;
 
 public interface IProcessCall {
 	IProcessResult process(RequestLine requestLine, Map<String, Object> parameters);
@@ -47,7 +48,8 @@ public interface IProcessCall {
 
 		public static IProcessCall softwareFmProcessCall(IGitServer server, File fileRoot) {
 			return chain(new FavIconProcessor(),//
-					new GetRootProcessor(fileRoot),//
+					new RigidFileProcessor(fileRoot, "update"),//
+					new GetIndexProcessor(fileRoot),//
 					new GetFileProcessor(fileRoot, "html", "jpg", "png", "css", "gif", "jar", "xml"), //
 					new GitGetProcessor(server), //
 					new MakeRootProcessor(server), //
