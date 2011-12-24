@@ -28,8 +28,7 @@ class HttpResponseMock implements HttpResponse {
 
 	@Override
 	public void setHeader(String name, String value) {
-		throw new UnsupportedOperationException();
-	}
+ 	}
 
 	@Override
 	public void setHeader(Header header) {
