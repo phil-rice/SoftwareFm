@@ -28,6 +28,7 @@ import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.card.ICardHolderForTests;
 import org.softwareFm.card.card.ICardSelectedListener;
+import org.softwareFm.card.card.IHasCard;
 import org.softwareFm.card.card.ILineSelectedListener;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
@@ -79,7 +80,7 @@ public class CardHolder implements ICardHolderForTests {
 
 	}
 
-	static class CardHolderComposite extends Composite {
+	static class CardHolderComposite extends Composite implements IHasCard{
 
 		final ITitleBarForCard title;
 		ICard card;
@@ -109,6 +110,10 @@ public class CardHolder implements ICardHolderForTests {
 			}
 		}
 
+		@Override
+		public ICard getCard() {
+			return card;
+		}
 		private CardConfig getCardConfig() {
 			CardConfig cardConfig = card == null ? navBarCardConfig : card.getCardConfig();
 			return cardConfig;

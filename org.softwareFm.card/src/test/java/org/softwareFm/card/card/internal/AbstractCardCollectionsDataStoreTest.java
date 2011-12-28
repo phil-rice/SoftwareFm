@@ -46,7 +46,7 @@ public abstract class AbstractCardCollectionsDataStoreTest extends SwtTest {
 		kickAndDispatch(status.initialFuture);
 		assertEquals(1, mockCardFactory.count);
 		CardMock card = (CardMock) cardHolder.getCard();
-		assertEquals(CardDataStoreFixture.url, card.url());
+		assertEquals("/"+CardDataStoreFixture.url, card.url());
 		assertEquals(CardDataStoreFixture.dataUrl1, card.map);
 	}
 
@@ -70,7 +70,7 @@ public abstract class AbstractCardCollectionsDataStoreTest extends SwtTest {
 		});
 		cardHolder = ICardHolder.Utils.cardHolderWithLayout(shell, cardConfig, CardDataStoreFixture.url, null);
 		memory = new CardAndCollectionDataStoreVisitorMonitored();
-		status = cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, CardDataStoreFixture.url, memory);
+		status = cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, "/"+CardDataStoreFixture.url, memory);
 	}
 
 	abstract protected String findFollowOnUrlFragmentForTest(String key, Object value);

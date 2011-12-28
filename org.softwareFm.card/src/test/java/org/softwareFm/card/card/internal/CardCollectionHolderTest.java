@@ -53,20 +53,20 @@ public class CardCollectionHolderTest extends SwtTest {
 	}
 
 	public void testCardHolderPaintListenersCauseDataRequestForCard() {
-		cardCollectionHolder.setKeyValue("some/url", "key", Maps.stringObjectLinkedMap(CardDataStoreFixture.dataIndexedByUrlFragment), callback);
-		checkPaintCausesRequest(0, "some/url/1a", CardDataStoreFixture.data1ap);
-		checkPaintCausesRequest(1, "some/url/1b", CardDataStoreFixture.data1bp);
+		cardCollectionHolder.setKeyValue("some", "url", Maps.stringObjectLinkedMap(CardDataStoreFixture.dataIndexedByUrlFragment), callback);
+		checkPaintCausesRequest(0, "/some/url/1a", CardDataStoreFixture.data1ap);
+		checkPaintCausesRequest(1, "/some/url/1b", CardDataStoreFixture.data1bp);
 		for (int i = 3; i < 6; i++)
 			checkChildhasNullCard(i);
-		checkPaintCausesRequest(2, "some/url/2a", CardDataStoreFixture.data2ap);
-		checkPaintCausesRequest(3, "some/url/2b", CardDataStoreFixture.data2bp);
-		checkPaintCausesRequest(4, "some/url/2c", CardDataStoreFixture.data2cp);
+		checkPaintCausesRequest(2, "/some/url/2a", CardDataStoreFixture.data2ap);
+		checkPaintCausesRequest(3, "/some/url/2b", CardDataStoreFixture.data2bp);
+		checkPaintCausesRequest(4, "/some/url/2c", CardDataStoreFixture.data2cp);
 		// last item is some...which will throw an exception is we try and paint it
 		assertEquals(0, callback.cardUrls.size());
 	}
 
 	public void testAfterPaintListenerFiresThatTableSelectWillFireCardSelectedListeners() {
-		cardCollectionHolder.setKeyValue("some/url", "key", Maps.stringObjectLinkedMap(CardDataStoreFixture.dataIndexedByUrlFragment), callback);
+		cardCollectionHolder.setKeyValue("some", "url", Maps.stringObjectLinkedMap(CardDataStoreFixture.dataIndexedByUrlFragment), callback);
 		CardHolderComposite control = (CardHolderComposite) composite.getChildren()[0];
 		control.notifyListeners(SWT.Paint, new Event());
 		mockDataStore.kickAllFutures();
@@ -78,7 +78,7 @@ public class CardCollectionHolderTest extends SwtTest {
 		Table table = card.getTable();
 		table.select(0);
 		table.notifyListeners(SWT.Selection, new Event());
-		assertEquals("some/url/1a", Lists.getOnly(callback.cardUrls));
+		assertEquals("/some/url/1a", Lists.getOnly(callback.cardUrls));
 
 	}
 

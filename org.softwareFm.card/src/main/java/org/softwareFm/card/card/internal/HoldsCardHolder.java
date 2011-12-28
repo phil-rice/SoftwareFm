@@ -50,9 +50,11 @@ public class HoldsCardHolder extends Composite implements IHasCardConfig {
 			public void paintControl(PaintEvent e) {
 				cardHolder.getControl().removePaintListener(this);
 				if (!cardHolder.getControl().isDisposed()) {
+					System.out.println("PaintListener... get data for: " + url);
 					CardAndCollectionDataStoreVisitorMonitored visitor = new CardAndCollectionDataStoreVisitorMonitored() {
 						@Override
 						public void initialCard(ICardHolder cardHolder, CardConfig cardConfig, String url, final ICard card) {
+							System.out.println("  Initial card " + card.getControl().isDisposed());
 							super.initialCard(cardHolder, cardConfig, url, card);
 							card.addLineSelectedListener(new ILineSelectedListener() {
 								@Override
@@ -67,7 +69,6 @@ public class HoldsCardHolder extends Composite implements IHasCardConfig {
 								}
 							});
 						}
-
 					};
 
 					cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, visitor);

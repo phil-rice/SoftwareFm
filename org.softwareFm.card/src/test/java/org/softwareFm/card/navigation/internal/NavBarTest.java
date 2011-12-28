@@ -37,7 +37,7 @@ public class NavBarTest extends SwtTest {
 
 	@SuppressWarnings("unused")
 	public void testCreatesNavCombosAndNavButtonsForTheUrl() {
-		nav.setUrl(makeCard(CardDataStoreFixture.url + "/a/b/c"));
+		nav.setUrl(makeCard("/"+CardDataStoreFixture.url + "/a/b/c"));
 		Control[] children = navComposite.getChildren();
 		assertEquals(8, children.length);
 		Composite combo = (Composite) children[0]; // Actually NavNextHistoryPrevComposite
@@ -54,7 +54,8 @@ public class NavBarTest extends SwtTest {
 
 	@SuppressWarnings("unused")
 	public void testPopulatesComboWithDataFromCardStore() {
-		nav.setUrl(makeCard(CardDataStoreFixture.url1a));
+		ICard card = makeCard("/"+CardDataStoreFixture.url1a);
+		nav.setUrl(card);
 		Control[] children = navComposite.getChildren();
 		assertEquals(4, children.length);
 		Combo combo1 = (Combo) children[1];
@@ -65,14 +66,14 @@ public class NavBarTest extends SwtTest {
 	}
 
 	public void testButtonsHaveUrl() {
-		nav.setUrl(makeCard(CardDataStoreFixture.url1a));
+		nav.setUrl(makeCard("/"+CardDataStoreFixture.url1a));
 		Control[] children = navComposite.getChildren();
 		Label buttona = (Label) children[2];
 		assertEquals("1a", buttona.getText());
 	}
 
 	public void testGetRootUrl() {
-		assertEquals(CardDataStoreFixture.url, nav.getRootUrl());
+		assertEquals("/"+CardDataStoreFixture.url, nav.getRootUrl());
 	}
 
 	public void testGetHistoryIsSameHistoryAsInPrevHistoryNext() {
@@ -89,9 +90,9 @@ public class NavBarTest extends SwtTest {
 		label.setText("a");
 		int aWidth = label.computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
 
-		checkComputeSize(CardDataStoreFixture.url, navControlSize.x + navIconWidth);// left margin + navcontrols + a / comb
-		checkComputeSize(CardDataStoreFixture.url + "/a",  navControlSize.x + navIconWidth + aWidth + navIconWidth);// left margin + navcontrols + a / combo and the text for a and another combo
-		checkComputeSize(CardDataStoreFixture.url + "/a/a/a", navControlSize.x + navIconWidth + aWidth + navIconWidth + aWidth + navIconWidth + aWidth + navIconWidth);
+		checkComputeSize("/"+CardDataStoreFixture.url, navControlSize.x + navIconWidth);// left margin + navcontrols + a / comb
+		checkComputeSize("/"+CardDataStoreFixture.url + "/a",  navControlSize.x + navIconWidth + aWidth + navIconWidth);// left margin + navcontrols + a / combo and the text for a and another combo
+		checkComputeSize("/"+CardDataStoreFixture.url + "/a/a/a", navControlSize.x + navIconWidth + aWidth + navIconWidth + aWidth + navIconWidth + aWidth + navIconWidth);
 	}
 
 	private void checkComputeSize(String url, int expectedWidth) {
@@ -111,7 +112,7 @@ public class NavBarTest extends SwtTest {
 		super.setUp();
 		cardConfig = CardDataStoreFixture.syncCardConfig(display).withMargins(5, 6, 7, 8);
 		MemoryCallback<String> memory = ICallback.Utils.memory();
-		nav = new NavBar(shell, cardConfig, CardDataStoreFixture.url, memory);
+		nav = new NavBar(shell, cardConfig, "/"+CardDataStoreFixture.url, memory);
 		navComposite = nav.getComposite();
 		navHistoryPrev = nav.getNavHistoryPrev();
 	}

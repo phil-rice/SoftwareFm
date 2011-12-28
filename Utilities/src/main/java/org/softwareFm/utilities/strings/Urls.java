@@ -33,6 +33,9 @@ public class Urls {
 		}
 		return builder.toString();
 	}
+	public static String composeWithSlash(String... urls) {
+		return "/"+compose(urls);
+	}
 
 	public static UrlRipperResult rip(String url) {
 		if (url == null || url.equals("")) {

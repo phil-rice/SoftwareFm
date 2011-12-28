@@ -6,6 +6,7 @@
 package org.softwareFm.collections.explorer.internal;
 
 import java.io.File;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -39,6 +40,7 @@ import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.server.GitRepositoryFactory;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
@@ -58,7 +60,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	protected IRepositoryFacard repository;
 	protected Explorer explorer;
 	protected IHttpClient httpClient;
-	protected final long delay = 2000;
+	protected final long delay = 5000;
 	protected MasterDetailSocial masterDetailSocial;
 
 	protected final String prefix = "/tests/" + getClass().getSimpleName();
@@ -66,8 +68,9 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	protected IResourceGetter rawResourceGetter;
 	private File root;
 	private File localRoot;
-	private File remoteRoot;
-//	private String remoteAsUri;
+	protected File remoteRoot;
+
+	// private String remoteAsUri;
 
 	public static interface CardHolderAndCardCallback {
 		void process(ICardHolder cardHolder, ICard card) throws Exception;
@@ -90,6 +93,20 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 			}
 		}, cardHolderAndCardCallback);
 
+	}
+
+	protected void dispatchUntil(Callable<Boolean> callable) {
+		long startTime = System.currentTimeMillis();
+		try {
+			while (!callable.call() && System.currentTimeMillis() < startTime + delay) {
+				dispatchUntilQueueEmpty();
+				Thread.sleep(2);
+			}
+			if (!callable.call())
+				fail();
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
 	}
 
 	protected ICard doSomethingAndWaitForCardDataStoreToFinish(Runnable something, final CardHolderAndCardCallback cardHolderAndCardCallback) {
@@ -185,7 +202,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		root = Tests.makeTempDirectory(getClass().getSimpleName());
 		localRoot = new File(root, "local");
 		remoteRoot = new File(root, "remote");
-//		remoteAsUri = new File(root, "remote").getAbsolutePath();
+		// remoteAsUri = new File(root, "remote").getAbsolutePath();
 
 		httpClient = IHttpClient.Utils.builder("localhost", ServerConstants.testPort);
 		repository = GitRepositoryFactory.gitLocalRepositoryFacardWithServer(ServerConstants.testPort, localRoot, remoteRoot);
@@ -199,19 +216,33 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		httpClient.delete(Urls.compose(rootUrl, artifactUrl)).execute(IResponseCallback.Utils.noCallback()).get();
 		httpClient.delete(Urls.compose(rootUrl, snippetUrl)).execute(IResponseCallback.Utils.noCallback()).get();
 		repository.makeRoot(Urls.compose(rootUrl, groupUrl), IResponseCallback.Utils.noCallback()).get();
-		repository.post(Urls.compose(rootUrl, artifactUrl), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.artifact), IResponseCallback.Utils.noCallback()).get();
-		repository.post(Urls.compose(rootUrl, artifactUrl, "/tutorial"), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), IResponseCallback.Utils.noCallback()).get();
-		repository.post(Urls.compose(rootUrl, artifactUrl, "/tutorial/one"), Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"), IResponseCallback.Utils.noCallback()).get();
-		repository.post(Urls.compose(rootUrl, artifactUrl, "/tutorial/two"), Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"), IResponseCallback.Utils.noCallback()).get();
-		repository.makeRoot(Urls.compose(rootUrl, snippetrepoUrl), IResponseCallback.Utils.noCallback()).get();
-		repository.post(Urls.compose(rootUrl, snippetUrl), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), IResponseCallback.Utils.noCallback()).get();
 		rawResourceGetter = explorer.getCardConfig().resourceGetterFn.apply(null);
+	}
+
+	protected void postSnippetData() {
+		try {
+			repository.makeRoot(Urls.compose(rootUrl, snippetrepoUrl), IResponseCallback.Utils.noCallback()).get();
+			repository.post(Urls.compose(rootUrl, snippetUrl), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), IResponseCallback.Utils.noCallback()).get();
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+	}
+
+	protected void postArtifactData(){
+		try {
+			repository.post(Urls.compose(rootUrl, artifactUrl), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.artifact), IResponseCallback.Utils.noCallback()).get();
+			repository.post(Urls.compose(rootUrl, artifactUrl, "/tutorial"), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), IResponseCallback.Utils.noCallback()).get();
+			repository.post(Urls.compose(rootUrl, artifactUrl, "/tutorial/one"), Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"), IResponseCallback.Utils.noCallback()).get();
+			repository.post(Urls.compose(rootUrl, artifactUrl, "/tutorial/two"), Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"), IResponseCallback.Utils.noCallback()).get();
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		repository.shutdown();//also closes httpclient
+		repository.shutdown();// also closes httpclient
 		Tests.waitUntilCanDeleteTempDirectory(getClass().getSimpleName(), 2000);
 	}
 

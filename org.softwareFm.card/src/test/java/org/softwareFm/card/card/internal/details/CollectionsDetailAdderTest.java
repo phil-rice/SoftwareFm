@@ -22,7 +22,7 @@ public class CollectionsDetailAdderTest extends AbstractDetailsAdderTest<Collect
 	}
 
 	public void testNeedsCollectionToMakeACardHolder() {
-		checkGetCardCollectionsHolder(collectionValue, parentCard.url()+"/key");
+		checkGetCardCollectionsHolder(collectionValue, parentCard.url());
 	}
 
 	@Override

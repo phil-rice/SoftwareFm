@@ -26,6 +26,7 @@ public class SnippetExplorerIntegrationTest extends AbstractExplorerIntegrationT
 
 	@SuppressWarnings("unchecked")
 	public void testTestAddingSnippet() {
+		postSnippetData();
 		displayCard(snippetUrl, new CardHolderAndCardCallback() {
 			@Override
 			public void process(ICardHolder cardHolder, ICard card) throws Exception {

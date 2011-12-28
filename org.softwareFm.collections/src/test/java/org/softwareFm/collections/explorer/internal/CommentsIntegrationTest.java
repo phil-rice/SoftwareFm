@@ -14,6 +14,7 @@ import org.softwareFm.utilities.strings.Urls;
 public class CommentsIntegrationTest extends AbstractExplorerIntegrationTest {
 
 	public void testCommentsAreNotShownInitiallyUntilATextItemIsSelected() {
+		postArtifactData();
 		displayCard(artifactUrl, new CardHolderAndCardCallback() {
 			@Override
 			public void process(ICardHolder cardHolder, ICard card) throws Exception {

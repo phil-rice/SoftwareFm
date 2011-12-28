@@ -37,69 +37,6 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
 
 public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
-
-	public void testShowContentOnlyAsksForOneMainUrlFromCardDataStore() {
-		final AtomicInteger count = new AtomicInteger();
-		displayCard(AbstractExplorerIntegrationTest.artifactUrl, new CardHolderAndCardCallback() {
-			@Override
-			public void process(ICardHolder cardHolder, ICard card) throws InterruptedException {
-				selectItem(card, "Tutorials");
-				final CountDownLatch latch = new CountDownLatch(1);
-				explorer.addExplorerListener(new ExplorerAdapter() {
-					@Override
-					public void initialCard(ICardHolder cardHolder, CardConfig cardConfig, String url, ICard card) {
-						assertEquals(1, count.incrementAndGet());
-						latch.countDown();
-						assertEquals(rootUrl + AbstractExplorerIntegrationTest.artifactUrl + "/tutorial", card.url());
-					}
-				});
-				explorer.showContents();
-				dispatchUntilTimeoutOrLatch(latch, delay);
-
-			}
-		});
-		assertEquals(1, count.get());
-	}
-
-	public void testViewTutorials() {
-		displayCardThenViewChild(AbstractExplorerIntegrationTest.artifactUrl, "Tutorials", new CardHolderAndCardCallback() {
-			@Override
-			public void process(ICardHolder cardHolder, ICard card) throws Exception {
-				assertEquals(rootUrl + AbstractExplorerIntegrationTest.artifactUrl + "/tutorial", card.url());
-				assertEquals(explorer.getBrowser().getComposite(), masterDetailSocial.getDetailContent());
-			}
-		});
-	}
-
-	public void testAddMailingListCausesCardEditorToAppear() {
-		displayCard(AbstractExplorerIntegrationTest.artifactUrl, new CardHolderAndCardCallback() {
-			@Override
-			public void process(ICardHolder cardHolder, ICard card) throws Exception {
-				Menu menu = selectAndCreatePopupMenu(card, "Mailing List");
-				executeMenuItem(menu, "Add mailingList");
-
-				Composite detailContent = (Composite) masterDetailSocial.getDetailContent();
-				assertEquals("CardEditorComposite", detailContent.getClass().getSimpleName());
-				assertEquals(2, detailContent.getChildren().length);// title,body
-			}
-		});
-	}
-
-	public void testUnrecognisedJarPutsJarNotRecognisedTextInLhsAndLeavesDetailAndSocialAlone() {
-		IHasControl detail = masterDetailSocial.createAndShowDetail(Swts.labelFn("detail"));
-		IHasControl social = masterDetailSocial.createAndShowSocial(Swts.labelFn("social"));
-
-		File file = new File("a/b/c/artifact-1.0.0.jar");
-		explorer.displayUnrecognisedJar(file, "someDigest", "someProject");
-		StyledText text = getTextInBorderComponent(masterDetailSocial.getMasterContent());
-		String pattern = IResourceGetter.Utils.getOrException(rawResourceGetter, CollectionConstants.jarNotRecognisedText);
-		String expected = Strings.removeNewLines(MessageFormat.format(pattern, file, file.getName(), "someProject")).replace("<", "").replace(">", "");
-		assertEquals(expected.trim(), Strings.removeNewLines(text.getText()));
-
-		assertSame(detail.getControl(), masterDetailSocial.getDetailContent());
-		assertSame(social.getControl(), masterDetailSocial.getSocialContent());
-	}
-
 	@SuppressWarnings("unchecked")
 	public void testClickingOnUnrecognisedJarOpensEditor() {
 		explorer.displayUnrecognisedJar(new File("a/b/c/artifact-1.0.0.jar"), "someDigest", "someProject");
@@ -135,6 +72,71 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 		});
 	}
 
+	public void testShowContentOnlyAsksForOneMainUrlFromCardDataStore() {
+		postArtifactData();
+		final AtomicInteger count = new AtomicInteger();
+		displayCard(AbstractExplorerIntegrationTest.artifactUrl, new CardHolderAndCardCallback() {
+			@Override
+			public void process(ICardHolder cardHolder, ICard card) throws InterruptedException {
+				selectItem(card, "Tutorials");
+				final CountDownLatch latch = new CountDownLatch(1);
+				explorer.addExplorerListener(new ExplorerAdapter() {
+					@Override
+					public void initialCard(ICardHolder cardHolder, CardConfig cardConfig, String url, ICard card) {
+						assertEquals(1, count.incrementAndGet());
+						latch.countDown();
+						assertEquals(rootUrl + AbstractExplorerIntegrationTest.artifactUrl + "/tutorial", card.url());
+					}
+				});
+				explorer.showContents();
+				dispatchUntilTimeoutOrLatch(latch, delay);
+
+			}
+		});
+		assertEquals(1, count.get());
+	}
+
+	public void testViewTutorials() {
+		postArtifactData();
+		displayCardThenViewChild(AbstractExplorerIntegrationTest.artifactUrl, "Tutorials", new CardHolderAndCardCallback() {
+			@Override
+			public void process(ICardHolder cardHolder, ICard card) throws Exception {
+				assertEquals(rootUrl + AbstractExplorerIntegrationTest.artifactUrl + "/tutorial", card.url());
+				assertEquals(explorer.getBrowser().getComposite(), masterDetailSocial.getDetailContent());
+			}
+		});
+	}
+
+	public void testAddMailingListCausesCardEditorToAppear() {
+		postArtifactData();
+		displayCard(AbstractExplorerIntegrationTest.artifactUrl, new CardHolderAndCardCallback() {
+			@Override
+			public void process(ICardHolder cardHolder, ICard card) throws Exception {
+				Menu menu = selectAndCreatePopupMenu(card, "Mailing List");
+				executeMenuItem(menu, "Add mailingList");
+
+				Composite detailContent = (Composite) masterDetailSocial.getDetailContent();
+				assertEquals("CardEditorComposite", detailContent.getClass().getSimpleName());
+				assertEquals(2, detailContent.getChildren().length);// title,body
+			}
+		});
+	}
+
+	public void testUnrecognisedJarPutsJarNotRecognisedTextInLhsAndLeavesDetailAndSocialAlone() {
+		IHasControl detail = masterDetailSocial.createAndShowDetail(Swts.labelFn("detail"));
+		IHasControl social = masterDetailSocial.createAndShowSocial(Swts.labelFn("social"));
+
+		File file = new File("a/b/c/artifact-1.0.0.jar");
+		explorer.displayUnrecognisedJar(file, "someDigest", "someProject");
+		StyledText text = getTextInBorderComponent(masterDetailSocial.getMasterContent());
+		String pattern = IResourceGetter.Utils.getOrException(rawResourceGetter, CollectionConstants.jarNotRecognisedText);
+		String expected = Strings.removeNewLines(MessageFormat.format(pattern, file, file.getName(), "someProject")).replace("<", "").replace(">", "");
+		assertEquals(expected.trim(), Strings.removeNewLines(text.getText()));
+
+		assertSame(detail.getControl(), masterDetailSocial.getDetailContent());
+		assertSame(social.getControl(), masterDetailSocial.getSocialContent());
+	}
+
 	public void testUnrecognisedJarEditorOnlyEnablesOkIfLegalValues() {
 		checkUnrecognisedOk(false, "", "", "");
 		checkUnrecognisedOk(true, "g", "a", "v");
@@ -162,7 +164,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 			public void process(boolean added, Table card, IAdding adding) {
 				adding.tableItem(0, "Group Id", "Please specify the group id", group);
 				adding.tableItem(1, "Artifact Id", "artifact", artifact);
-				adding.tableItem(2, "Version", "1.0.0",version);
+				adding.tableItem(2, "Version", "1.0.0", version);
 				assertEquals(expected, valueComposite.getOkCancel().okButton.isEnabled());
 			}
 		});
@@ -183,6 +185,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 	}
 
 	public void testTitlesAndRightClickMenusText() {
+		postArtifactData();
 		String view = "View";
 		String edit = "Edit";
 		String help = "Help";

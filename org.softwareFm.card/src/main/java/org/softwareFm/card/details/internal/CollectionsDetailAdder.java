@@ -36,8 +36,7 @@ public class CollectionsDetailAdder implements IDetailAdder {
 					return result;
 				} else {
 					ScrollingCardCollectionHolder result = new ScrollingCardCollectionHolder(parentComposite, cardConfig);
-					String newUrl = parentCard.url() + "/" + key;
-					result.setKeyValue(newUrl, key, value, callback);
+					result.setKeyValue( parentCard.url() , key, value, callback);
 					return result;
 				}
 			}

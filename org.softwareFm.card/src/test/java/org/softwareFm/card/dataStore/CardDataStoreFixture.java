@@ -64,12 +64,12 @@ public class CardDataStoreFixture {
 			"data2c", data2c);
 
 	public static final Object[] dataForMocks = new Object[] { "some", Maps.newMap(),//
-			url, dataUrl1, //
-			url1a, data1ap, //
-			url1b, data1bp,//
-			url2a, data2ap,//
-			url2b, data2bp,//
-			url2c, data2cp,//
+			"/"+url, dataUrl1, //
+			"/"+url1a, data1ap, //
+			"/"+url1b, data1bp,//
+			"/"+url2a, data2ap,//
+			"/"+url2b, data2bp,//
+			"/"+url2c, data2cp,//
 	};
 	public static final Object[] dataIndexedByUrlFragment = new Object[] { "some", Maps.newMap(),//
 			"1a", data1ap, //

@@ -12,6 +12,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.softwareFm.card.card.IHasKeyAndValue;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.configuration.internal.BasicCardConfigurator;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
@@ -24,6 +25,7 @@ import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
+import org.softwareFm.utilities.strings.Urls;
 
 public class CardCollectionHolder implements IHasComposite {
 
@@ -31,7 +33,7 @@ public class CardCollectionHolder implements IHasComposite {
 	private final CardCollectionHolderComposite content;
 
 
-	public static class CardCollectionHolderComposite extends HoldsCardHolder {
+	public static class CardCollectionHolderComposite extends HoldsCardHolder implements IHasKeyAndValue {
 
 		private String key;
 		private Object value;
@@ -52,7 +54,7 @@ public class CardCollectionHolder implements IHasComposite {
 				Map<String, ?> sortedMap = Maps.sortByKey(map, Strings.compareVersionNumbers());
 				for (final Map.Entry<String, ?> childEntry : sortedMap.entrySet()) {
 					if (childEntry.getValue() instanceof Map<?, ?>) {
-						String detailUrl = rootUrl + "/" + childEntry.getKey();
+						String detailUrl = Urls.composeWithSlash(rootUrl , key, childEntry.getKey());
 						String title = childEntry.getKey();
 						makeCardHolder(detailUrl, title);
 					}
@@ -62,7 +64,18 @@ public class CardCollectionHolder implements IHasComposite {
 			return null;
 		}
 
+		@Override
+		public String getKey() {
+			return key;
+		}
+
+		@Override
+		public Object getValue() {
+			return value;
+		}
+
 	}
+	
 
 	public CardCollectionHolder(Composite parent, CardConfig cardConfig) {
 		content = new CardCollectionHolderComposite(parent, cardConfig);
