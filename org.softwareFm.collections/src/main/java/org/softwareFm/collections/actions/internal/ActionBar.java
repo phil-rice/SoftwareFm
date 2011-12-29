@@ -30,6 +30,8 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class ActionBar implements IActionBar {
 
+	private final static boolean newFeatures = false;
+
 	private String urlKey;
 	private final IExplorer explorer;
 	private final CardConfig cardConfig;
@@ -51,18 +53,22 @@ public class ActionBar implements IActionBar {
 
 	@Override
 	public void selectionOccured(final BindingRipperResult ripperResult) {
+		selectionOccured(ripperResult, true);
+	}
+
+	public void selectionOccured(final BindingRipperResult ripperResult, boolean showRadioStation) {
 		this.ripperResult = ripperResult;
 		if (ripperResult == null || ripperResult.path == null)
 			return;
 		switch (state) {
 		case FROM_JAR:
-			fromJarSelection();
+			fromJarSelection(showRadioStation);
 			break;
 		case JUST_JAR:
-			justJarSelection();
+			justJarSelection(showRadioStation);
 			break;
 		case FROM_PATH:// Will do snippet here
-			fromPathSelection();
+			fromPathSelection(showRadioStation);
 			break;
 		case URL:// Doesn't do anything...url selected
 			break;
@@ -73,7 +79,7 @@ public class ActionBar implements IActionBar {
 
 	IExpressionCategoriser categoriser = IExpressionCategoriser.Utils.categoriser();
 
-	private void fromPathSelection() {
+	private void fromPathSelection(boolean showRadioStation) {
 		final String url = makeUrlForSnippet(ripperResult);
 		if (url != null)
 			explorer.displayCard(url, new CardAndCollectionDataStoreAdapter() {
@@ -96,7 +102,7 @@ public class ActionBar implements IActionBar {
 			return baseUrl + "/snippet";
 	}
 
-	private void justJarSelection() {
+	private void justJarSelection(boolean showRadioStation) {
 		String fileExtension = ripperResult.path.getFileExtension();
 		if (!fileExtension.equals("jar")) {
 			explorer.displayNotAJar();
@@ -109,14 +115,15 @@ public class ActionBar implements IActionBar {
 		if (url == null)
 			throw new NullPointerException();
 		explorer.displayCard(url, new CardAndCollectionDataStoreAdapter());
-		explorer.selectAndNext(url);
+		if (showRadioStation)
+			explorer.selectAndNext(url);
 	}
 
 	public void reselect() {
-		selectionOccured(Functions.call(reRipFn, ripperResult));
+		selectionOccured(Functions.call(reRipFn, ripperResult), false);
 	}
 
-	private void fromJarSelection() {
+	private void fromJarSelection(final boolean showRadioStation) {
 		String fileExtension = ripperResult.path.getFileExtension();
 		if (!fileExtension.equals("jar")) {
 			explorer.displayNotAJar();
@@ -134,7 +141,8 @@ public class ActionBar implements IActionBar {
 				if (url == null)
 					throw new NullPointerException();
 				explorer.displayCard(url, new CardAndCollectionDataStoreAdapter());
-				explorer.selectAndNext(url);
+				if (showRadioStation)
+					explorer.selectAndNext(url);
 				return null;
 			}
 
@@ -157,29 +165,31 @@ public class ActionBar implements IActionBar {
 	@Override
 	public void populateToolbar(IToolBarManager toolBarManager) {
 		IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, null);
-		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionWelcomeTitle,ActionAnchor.class,  CollectionConstants.actionWelcomeImage, new Runnable() {
+		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionWelcomeTitle, ActionAnchor.class, CollectionConstants.actionWelcomeImage, new Runnable() {
 			@Override
 			public void run() {
-				String welcomeUrl = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null, CardConstants.webPageWelcomeUrl);
-				explorer.processUrl(DisplayConstants.browserFeedType, welcomeUrl);
+				showUrl(CardConstants.webPageWelcomeUrl);
 				explorer.onlyShowBrowser();
 				state = State.URL;
 			}
 		}));
-//		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionGroupTitle, ActionAnchor.class, CollectionConstants.actionGroupImage, new Runnable() {
-//			@Override
-//			public void run() {
-//				state = State.FROM_JAR;
-//				urlKey = CardConstants.groupUrlKey;
-//				reselect();
-//			}
-//		}));
+		if (newFeatures)
+			toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionGroupTitle, ActionAnchor.class, CollectionConstants.actionGroupImage, new Runnable() {
+				@Override
+				public void run() {
+					state = State.FROM_JAR;
+					urlKey = CardConstants.groupUrlKey;
+					reselect();
+					showUrl(CardConstants.webPageGroupUrl);
+				}
+			}));
 		Action artifactAction = Swts.Actions.Action(resourceGetter, CollectionConstants.actionArtifactTitle, ActionAnchor.class, CollectionConstants.actionArtifactImage, new Runnable() {
 			@Override
 			public void run() {
 				state = State.FROM_JAR;
 				urlKey = CardConstants.artifactUrlKey;
 				reselect();
+				showUrl(CardConstants.webPageArtifactUrl);
 			}
 		});
 		artifactAction.setChecked(true);
@@ -190,6 +200,7 @@ public class ActionBar implements IActionBar {
 				state = State.FROM_JAR;
 				urlKey = CardConstants.versionUrlKey;
 				reselect();
+				showUrl(CardConstants.webPageVersionUrl);
 			}
 		}));
 		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionJarTitle, ActionAnchor.class, CollectionConstants.actionJarImage, new Runnable() {
@@ -198,14 +209,22 @@ public class ActionBar implements IActionBar {
 				state = State.JUST_JAR;
 				urlKey = CardConstants.jarUrlKey;
 				reselect();
+				showUrl(CardConstants.webPageJarUrl);
 			}
 		}));
-		// toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionSnippetTitle, ActionAnchor.class, CollectionConstants.actionSnippetImage, new Runnable() {
-		// @Override
-		// public void run() {
-		// state = State.FROM_PATH;
-		// reselect();
-		// }
-		// }));
+		if (newFeatures)
+			toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionSnippetTitle, ActionAnchor.class, CollectionConstants.actionSnippetImage, new Runnable() {
+				@Override
+				public void run() {
+					state = State.FROM_PATH;
+					reselect();
+					showUrl(CardConstants.webPageSnippetUrl);
+				}
+			}));
+	}
+
+	private void showUrl(String url) {
+		String welcomeUrl = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null, url);
+		explorer.processUrl(DisplayConstants.browserFeedType, welcomeUrl);
 	}
 }

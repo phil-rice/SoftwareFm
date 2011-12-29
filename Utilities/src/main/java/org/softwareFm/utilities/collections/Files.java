@@ -443,4 +443,14 @@ public class Files {
 		listParentsUntil(result, root, leaf.getParentFile());
 	}
 
+	public static FilenameFilter exactNameFilter(final String name) {
+		return new FilenameFilter() {
+			@Override
+			public boolean accept(File file, String actualName) {
+				boolean result =  actualName.equals(name);
+				return result;
+			}
+		};
+	}
+
 }

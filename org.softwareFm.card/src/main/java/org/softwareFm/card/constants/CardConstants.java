@@ -79,6 +79,12 @@ public class CardConstants {
 	public static final String snippet = "snippet";
 
 	public static final String webPageWelcomeUrl = "webpage.welcome.url";
+	public static final String webPageGroupUrl = "webpage.group.url";
+	public static final String webPageArtifactUrl = "webpage.artifact.url";
+	public static final String webPageVersionUrl = "webpage.version.url";
+	public static final String webPageJarUrl = "webpage.jar.url";
+	public static final String webPageSnippetUrl = "webpage.snippet.url";
+
 	public static final String webPageUnknownJarUrl = "webpage.unknownJar.url";
 	public static final String urlRogueValue = "<key>";
 	public static final String couldNotGetImagefor = "Could not get image for {0}";
