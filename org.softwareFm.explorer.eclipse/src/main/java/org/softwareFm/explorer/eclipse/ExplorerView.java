@@ -10,63 +10,88 @@
 
 package org.softwareFm.explorer.eclipse;
 
-import java.util.Map;
+import java.io.File;
 
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.part.ViewPart;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
-import org.softwareFm.card.dataStore.ICardDataStoreCallback;
+import org.softwareFm.collections.actions.IActionBar;
+import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.collections.explorer.IExplorer;
+import org.softwareFm.collections.explorer.IMasterDetailSocial;
 import org.softwareFm.collections.menu.ICardMenuItemHandler;
-import org.softwareFm.display.data.IUrlGenerator;
+import org.softwareFm.display.browser.IBrowserConfigurator;
+import org.softwareFm.display.constants.DisplayConstants;
+import org.softwareFm.display.swt.Swts.Size;
+import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
-import org.softwareFm.jdtBinding.api.JdtConstants;
-import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.collections.Files;
+import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.services.IServiceExecutor;
 
-public class ExplorerView extends AbstractExplorerView {
+public  class ExplorerView extends ViewPart {
+
+	protected IActionBar actionBar;
 
 	@Override
-	protected void configurePopupMenu(String popupMenuId, IExplorer explorer) {
+	public void createPartControl(Composite parent) {
+		final Activator activator = Activator.getDefault();
+		String popupMenuId = getPopupMenuId();
+		final CardConfig cardConfig = makeCardConfig(parent).withPopupMenuId(popupMenuId, null);
+		IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(parent);
+		Size.resizeMeToParentsSize(masterDetailSocial.getControl());
+
+		IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardConfig.cardDataStore);
+		IServiceExecutor service = activator.getServiceExecutor();
+		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, CollectionConstants.rootUrl, playListGetter, service);
+		actionBar = IActionBar.Utils.actionBar(explorer, cardConfig, SelectedArtifactSelectionManager.reRipFn());
+		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
+		actionBar.populateToolbar(toolBarManager);
+		configurePopupMenu(popupMenuId, explorer);
+		IBrowserConfigurator.Utils.configueWithUrlRssSnippetAndTweet(explorer);
+
+		final IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, null);
+		String welcomeUrl = IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.webPageWelcomeUrl);
+
+		ISelectedBindingManager selectedBindingManager = activator.getSelectedBindingManager();// creates it
+
+		selectedBindingManager.addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
+			@Override
+			public void selectionOccured(final BindingRipperResult ripperResult) {
+				ExplorerView.this.actionBar.selectionOccured(ripperResult);
+			}
+		});
+		masterDetailSocial.hideMaster();
+		explorer.processUrl(DisplayConstants.browserFeedType, welcomeUrl);
+	}
+
+	protected void configurePopupMenu(String popupMenuId, final IExplorer explorer) {
 		ICardMenuItemHandler.Utils.addExplorerMenuItemHandlers(explorer, popupMenuId);
 	}
 
-	@Override
-	protected void selectionOccured(final CardConfig cardConfig, final IExplorer explorer, final IResourceGetter resourceGetter, final BindingRipperResult ripperResult) {
-		if (ripperResult == null || ripperResult.path == null)
-			return;
-		String fileExtension = ripperResult.path.getFileExtension();
-		if (!fileExtension.equals("jar")) {
-			explorer.displayNotAJar();
-			return;
-		}
+	protected String getPopupMenuId() {
+		return getClass().getSimpleName();
+	}
+
+	protected CardConfig makeCardConfig(Composite parent) {
+		return Activator.getDefault().getCardConfig(parent);
+	}
+
+	protected void processNoData(CardConfig cardConfig, final IExplorer explorer, final IResourceGetter resourceGetter, final BindingRipperResult ripperResult) {
 		final String hexDigest = ripperResult.hexDigest;
-		IUrlGenerator jarUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.jarUrlKey);
-		String jarUrl = jarUrlGenerator.findUrlFor(Maps.stringObjectMap(JdtConstants.hexDigestKey, hexDigest));
-
-		cardConfig.cardDataStore.processDataFor(jarUrl, new ICardDataStoreCallback<Void>() {
-			@Override
-			public Void process(String jarUrl, Map<String, Object> result) throws Exception {
-				String artifactUrl = makeUrl(ripperResult, cardConfig, result);
-				if (artifactUrl == null)
-					throw new NullPointerException();
-				explorer.displayCard(artifactUrl, new CardAndCollectionDataStoreAdapter());
-				explorer.selectAndNext(artifactUrl);
-				return null;
-			}
-
-			@Override
-			public Void noData(String url) throws Exception {
-				if (ripperResult != null && ripperResult.path != null)
-					processNoData(cardConfig, explorer, resourceGetter, ripperResult);
-				return null;
-			}
-		});
+		final String unknownJarUrl = IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.webPageUnknownJarUrl);
+		File file = ripperResult.path.toFile();
+		if (Files.extension(file.toString()).equals("jar")) {
+			explorer.displayUnrecognisedJar(file, hexDigest, ripperResult.javaProject.getElementName());
+			explorer.processUrl(DisplayConstants.browserFeedType, unknownJarUrl);
+		}
 	}
 
-	protected String makeUrl(BindingRipperResult ripperResult, final CardConfig cardConfig, Map<String, Object> result) {
-		IUrlGenerator cardUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.artifactUrlKey);
-		String artifactUrl = cardUrlGenerator.findUrlFor(result);
-		return artifactUrl;
+	@Override
+	public void setFocus() {
 	}
+
 }

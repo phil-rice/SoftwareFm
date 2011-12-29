@@ -4,7 +4,7 @@
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
 /* This file is part of SoftwareFm
-/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+ /* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
@@ -35,6 +35,7 @@ import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.jdtBinding.api.IBindingRipper;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 
 public class SelectedArtifactSelectionManager implements ISelectedBindingManager, ISelectionListener {
@@ -60,6 +61,15 @@ public class SelectedArtifactSelectionManager implements ISelectedBindingManager
 			}
 		} catch (Exception e) {
 		}
+	}
+
+	public static IFunction1<BindingRipperResult, BindingRipperResult> reRipFn() {
+		return new IFunction1<BindingRipperResult, BindingRipperResult>() {
+			@Override
+			public BindingRipperResult apply(BindingRipperResult from) throws Exception {
+				return reRip(from);
+			}
+		};
 	}
 
 	public static BindingRipperResult reRip(BindingRipperResult result) {

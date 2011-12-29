@@ -22,7 +22,7 @@ import org.softwareFm.jdtBinding.api.ExpressionData;
 import org.softwareFm.jdtBinding.api.IExpressionCategoriser;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
-public class SnippetView extends AbstractExplorerView {
+public class SnippetView extends _AbstractExplorerView {
 
 	IExpressionCategoriser categoriser = IExpressionCategoriser.Utils.categoriser();
 

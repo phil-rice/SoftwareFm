@@ -207,9 +207,12 @@ public class Explorer implements IExplorer {
 				});
 			}
 		}, true);
-
 	}
 
+	@Override
+	public void onlyShowBrowser() {
+		masterDetailSocial.hideMaster();
+	}
 	@Override
 	public void edit(final ICard card, final String key) {
 		if (card.getControl().isDisposed())

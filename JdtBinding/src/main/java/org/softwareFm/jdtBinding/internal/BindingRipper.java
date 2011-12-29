@@ -42,7 +42,7 @@ public class BindingRipper implements IBindingRipper {
 		try {
 			if (from != null) {
 				ExpressionData expressionData = IExpressionCategoriser.Utils.categoriser().categorise(from);
-				System.out.println("BR: " + expressionData);
+//				System.out.println("BR: " + expressionData);
 				ITypeBinding binding = from.resolveTypeBinding();
 				IJavaElement javaElement = binding.getJavaElement();
 				if (javaElement != null) {

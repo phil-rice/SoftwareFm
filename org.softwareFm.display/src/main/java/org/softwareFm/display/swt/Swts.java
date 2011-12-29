@@ -4,7 +4,7 @@
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
 /* This file is part of SoftwareFm
-/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+ /* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
@@ -12,6 +12,8 @@ package org.softwareFm.display.swt;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -21,6 +23,8 @@ import java.util.concurrent.Callable;
 
 import junit.framework.Assert;
 
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -76,6 +80,29 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
 
 public class Swts {
+
+	public static class Actions {
+		public static Action Action(IResourceGetter resourceGetter, String key, String imageKey, final Runnable run) {
+			Action action = new Action() {
+				@Override
+				public void run() {
+					run.run();
+				}
+			};
+			action.setText(IResourceGetter.Utils.getOrException(resourceGetter, key));
+			ImageDescriptor imageDescriptor = getImageDescriptor(imageKey);
+			action.setImageDescriptor(imageDescriptor);
+			return action;
+		}
+
+		private static ImageDescriptor getImageDescriptor(String imageKey) {
+			try {
+				return ImageDescriptor.createFromURL(new URL(imageKey));
+			} catch (MalformedURLException e) {
+				 return ImageDescriptor.getMissingImageDescriptor();
+			}
+		}
+	}
 
 	public static class Size {
 
@@ -337,7 +364,6 @@ public class Swts {
 	}
 
 	public static class Grid {
-
 
 		public static void addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(Composite composite, int margin) {
 			GridLayout layout = new GridLayout();
@@ -841,8 +867,8 @@ public class Swts {
 				Control rhs = children[1];
 				int rhsWidth = children[1].computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
 				Rectangle ca = composite.getClientArea();
-				lhs.setBounds(ca.x, ca.y, ca.width - rhsWidth -rightMargin, ca.height);
-				rhs.setBounds(ca.x + ca.width - rhsWidth-rightMargin, ca.y, rhsWidth, ca.height);
+				lhs.setBounds(ca.x, ca.y, ca.width - rhsWidth - rightMargin, ca.height);
+				rhs.setBounds(ca.x + ca.width - rhsWidth - rightMargin, ca.y, rhsWidth, ca.height);
 			}
 
 			@Override
