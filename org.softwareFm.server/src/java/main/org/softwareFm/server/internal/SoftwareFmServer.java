@@ -34,6 +34,7 @@ import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.services.IServiceExecutor;
+import org.softwareFm.utilities.strings.Strings;
 
 public class SoftwareFmServer implements ISoftwareFmServer {
 
@@ -65,7 +66,9 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 									RequestLine requestLine = request.getRequestLine();
 									HttpResponse response = process(processCall, value, requestLine);
 									System.out.println(socket.getRemoteSocketAddress() +", "+ requestLine +" " + response.getStatusLine());
-									usage.monitor(socket.getRemoteSocketAddress().toString(), requestLine.toString());
+									String remoteSocketAddress = socket.getRemoteSocketAddress().toString();
+									String ip = Strings.firstSegment(remoteSocketAddress, ":");
+									usage.monitor(ip, requestLine.toString());
 									conn.sendResponseHeader(response);
 									conn.sendResponseEntity(response);
 								} finally {

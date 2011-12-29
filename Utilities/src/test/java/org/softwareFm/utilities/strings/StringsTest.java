@@ -69,15 +69,19 @@ public class StringsTest extends TestCase {
 		checkLastSegment("abc", "abc","abc");
 		checkLastSegment("/a/b", "/a","b");
 		checkLastSegment("/a/b/c", "/a/b","c");
-		
 	}
 	
-
-
 	private void checkLastSegment(String input, String begin, String end) {
 		assertEquals(end, Strings.lastSegment(input, "/"));
 		assertEquals(end, Functions.call(Strings.lastSegmentFn("/"),input));
 		assertEquals(begin, Strings.allButLastSegment(input, "/"));
+		
+	}
+	
+	public void testFirstSegment(){
+		assertEquals("a", Strings.firstSegment("a.b.c", "."));
+		assertEquals("a.b.c", Strings.firstSegment("a.b.c", ":"));
+		assertEquals(null, Strings.firstSegment(null, "."));
 		
 	}
 
