@@ -12,8 +12,6 @@ package org.softwareFm.display.swt;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -82,24 +80,25 @@ import org.softwareFm.utilities.strings.Strings;
 public class Swts {
 
 	public static class Actions {
-		public static Action Action(IResourceGetter resourceGetter, String key, String imageKey, final Runnable run) {
-			Action action = new Action() {
+		public static Action Action(IResourceGetter resourceGetter, String key, Class<?> imageAnchor, String imageKey, final Runnable run) {
+			String text = IResourceGetter.Utils.getOrException(resourceGetter, key);
+			Action action = new Action(text, Action.AS_RADIO_BUTTON) {
 				@Override
 				public void run() {
-					run.run();
+					if (isChecked())
+						run.run();
 				}
 			};
-			action.setText(IResourceGetter.Utils.getOrException(resourceGetter, key));
-			ImageDescriptor imageDescriptor = getImageDescriptor(imageKey);
+			ImageDescriptor imageDescriptor = getImageDescriptor(imageAnchor, imageKey);
 			action.setImageDescriptor(imageDescriptor);
 			return action;
 		}
 
-		private static ImageDescriptor getImageDescriptor(String imageKey) {
+		private static ImageDescriptor getImageDescriptor(Class<?> imageAnchor, String imageKey) {
 			try {
-				return ImageDescriptor.createFromURL(new URL(imageKey));
-			} catch (MalformedURLException e) {
-				 return ImageDescriptor.getMissingImageDescriptor();
+				return ImageDescriptor.createFromFile(imageAnchor, imageKey);
+			} catch (Exception e) {
+				return ImageDescriptor.getMissingImageDescriptor();
 			}
 		}
 	}

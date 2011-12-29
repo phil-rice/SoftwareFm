@@ -3,6 +3,7 @@ package org.softwareFm.collections.actions.internal;
 import java.io.File;
 import java.util.Map;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardHolder;
@@ -20,6 +21,7 @@ import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.jdtBinding.api.ExpressionData;
 import org.softwareFm.jdtBinding.api.IExpressionCategoriser;
 import org.softwareFm.jdtBinding.api.JdtConstants;
+import org.softwareFm.softwareFmImages.actions.ActionAnchor;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -155,16 +157,16 @@ public class ActionBar implements IActionBar {
 	@Override
 	public void populateToolbar(IToolBarManager toolBarManager) {
 		IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, null);
-		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionWelcomeTitle, CollectionConstants.actionWelcomeImage, new Runnable() {
+		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionWelcomeTitle,ActionAnchor.class,  CollectionConstants.actionWelcomeImage, new Runnable() {
 			@Override
 			public void run() {
-				state = State.URL;
-				explorer.onlyShowBrowser();
 				String welcomeUrl = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null, CardConstants.webPageWelcomeUrl);
 				explorer.processUrl(DisplayConstants.browserFeedType, welcomeUrl);
+				explorer.onlyShowBrowser();
+				state = State.URL;
 			}
 		}));
-		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionGroupTitle, CollectionConstants.actionGroupImage, new Runnable() {
+		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionGroupTitle, ActionAnchor.class, CollectionConstants.actionGroupImage, new Runnable() {
 			@Override
 			public void run() {
 				state = State.FROM_JAR;
@@ -172,15 +174,17 @@ public class ActionBar implements IActionBar {
 				reselect();
 			}
 		}));
-		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionArtifactTitle, CollectionConstants.actionArtifactImage, new Runnable() {
+		Action artifactAction = Swts.Actions.Action(resourceGetter, CollectionConstants.actionArtifactTitle, ActionAnchor.class, CollectionConstants.actionArtifactImage, new Runnable() {
 			@Override
 			public void run() {
 				state = State.FROM_JAR;
 				urlKey = CardConstants.artifactUrlKey;
 				reselect();
 			}
-		}));
-		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionVersionTitle, CollectionConstants.actionVersionImage, new Runnable() {
+		});
+		artifactAction.setChecked(true);
+		toolBarManager.add(artifactAction);
+		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionVersionTitle, ActionAnchor.class, CollectionConstants.actionVersionImage, new Runnable() {
 			@Override
 			public void run() {
 				state = State.FROM_JAR;
@@ -188,7 +192,7 @@ public class ActionBar implements IActionBar {
 				reselect();
 			}
 		}));
-		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionJarTitle, CollectionConstants.actionJarImage, new Runnable() {
+		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionJarTitle, ActionAnchor.class, CollectionConstants.actionJarImage, new Runnable() {
 			@Override
 			public void run() {
 				state = State.JUST_JAR;
@@ -196,12 +200,12 @@ public class ActionBar implements IActionBar {
 				reselect();
 			}
 		}));
-//		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionSnippetTitle, CollectionConstants.actionSnippetImage, new Runnable() {
-//			@Override
-//			public void run() {
-//				state = State.FROM_PATH;
-//				reselect();
-//			}
-//		}));
+		// toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionSnippetTitle, ActionAnchor.class, CollectionConstants.actionSnippetImage, new Runnable() {
+		// @Override
+		// public void run() {
+		// state = State.FROM_PATH;
+		// reselect();
+		// }
+		// }));
 	}
 }

@@ -47,11 +47,11 @@ public class CollectionConstants {
 	public static final String actionJarTitle = "action.jar.title";
 	public static final String actionSnippetTitle = "action.snippet.title";
 
-	public static final String actionWelcomeImage = "action.welcome.image";
-	public static final String actionGroupImage = "action.group.image";
-	public static final String actionArtifactImage = "action.artifact.image";
-	public static final String actionVersionImage = "action.version.image";
-	public static final String actionJarImage = "action.jar.image";
-	public static final String actionSnippetImage = "action.snippet.image";
+	public static final String actionWelcomeImage = "welcome.gif";
+	public static final String actionGroupImage = "group.gif";
+	public static final String actionArtifactImage = "artifact.gif";
+	public static final String actionVersionImage = "version.gif";
+	public static final String actionJarImage = "jar.gif";
+	public static final String actionSnippetImage = "snippet.gif";
 
 }

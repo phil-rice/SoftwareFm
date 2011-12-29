@@ -13,6 +13,7 @@ Export-Package: org.softwareFm.softwareFmImages;
    org.softwareFm.swtBasics.images,
    org.softwareFm.swtBasics.text,
    org.eclipse.swt.graphics",
+ org.softwareFm.softwareFmImages.actions,
  org.softwareFm.softwareFmImages.artifacts,
  org.softwareFm.softwareFmImages.backdrop,
  org.softwareFm.softwareFmImages.general,
