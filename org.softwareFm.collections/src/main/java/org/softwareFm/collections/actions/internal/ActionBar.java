@@ -166,14 +166,14 @@ public class ActionBar implements IActionBar {
 				state = State.URL;
 			}
 		}));
-		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionGroupTitle, ActionAnchor.class, CollectionConstants.actionGroupImage, new Runnable() {
-			@Override
-			public void run() {
-				state = State.FROM_JAR;
-				urlKey = CardConstants.groupUrlKey;
-				reselect();
-			}
-		}));
+//		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionGroupTitle, ActionAnchor.class, CollectionConstants.actionGroupImage, new Runnable() {
+//			@Override
+//			public void run() {
+//				state = State.FROM_JAR;
+//				urlKey = CardConstants.groupUrlKey;
+//				reselect();
+//			}
+//		}));
 		Action artifactAction = Swts.Actions.Action(resourceGetter, CollectionConstants.actionArtifactTitle, ActionAnchor.class, CollectionConstants.actionArtifactImage, new Runnable() {
 			@Override
 			public void run() {
