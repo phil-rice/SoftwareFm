@@ -4,6 +4,10 @@ import java.util.concurrent.Callable;
 
 public class Callables {
 
+	public static <V>CountCallable<V> count(V value){
+		return new CountCallable<V>(value);
+	}
+	
 	public static Callable<Long> time() {
 		return new Callable<Long>() {
 			@Override

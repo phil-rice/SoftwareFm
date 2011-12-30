@@ -1,8 +1,8 @@
 package org.softwareFm.server.processors.internal;
 
-
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.maps.UrlCache;
 
 public class GitGetProcessorTest extends AbstractProcessCallTest<GitGetProcessor> {
 
@@ -24,7 +24,8 @@ public class GitGetProcessorTest extends AbstractProcessCallTest<GitGetProcessor
 
 	@Override
 	protected GitGetProcessor makeProcessor() {
-		return new GitGetProcessor(remoteGitServer);
+		UrlCache<String> cache = new UrlCache<String>();
+		return new GitGetProcessor(remoteGitServer, cache);
 	}
 
 }

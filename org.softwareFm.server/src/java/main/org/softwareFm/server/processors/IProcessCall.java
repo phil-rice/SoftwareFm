@@ -12,6 +12,7 @@ import org.softwareFm.server.processors.internal.GitGetProcessor;
 import org.softwareFm.server.processors.internal.MakeRootProcessor;
 import org.softwareFm.server.processors.internal.PostProcessor;
 import org.softwareFm.server.processors.internal.RigidFileProcessor;
+import org.softwareFm.utilities.maps.UrlCache;
 
 public interface IProcessCall {
 	IProcessResult process(RequestLine requestLine, Map<String, Object> parameters);
@@ -47,12 +48,13 @@ public interface IProcessCall {
 		}
 
 		public static IProcessCall softwareFmProcessCall(IGitServer server, File fileRoot) {
+			UrlCache<String> aboveRepostoryUrlCache = new UrlCache<String>();
 			return chain(new FavIconProcessor(),//
 					new RigidFileProcessor(fileRoot, "update"),//
 					new GetIndexProcessor(fileRoot),//
 					new GetFileProcessor(fileRoot, "html", "jpg", "png", "css", "gif", "jar", "xml"), //
-					new GitGetProcessor(server), //
-					new MakeRootProcessor(server), //
+					new GitGetProcessor(server, aboveRepostoryUrlCache), //
+					new MakeRootProcessor(aboveRepostoryUrlCache, server), //
 					new PostProcessor(server));// this sweeps up any posts, so ensure that commands appear in chain before it
 		}
 	}

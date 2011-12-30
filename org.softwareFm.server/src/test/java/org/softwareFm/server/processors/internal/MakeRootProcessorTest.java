@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.Collections;
 
 import org.softwareFm.server.ServerConstants;
-import org.softwareFm.server.processors.internal.MakeRootProcessor;
+import org.softwareFm.utilities.maps.UrlCache;
 
 public class MakeRootProcessorTest extends AbstractProcessCallTest<MakeRootProcessor> {
 
@@ -12,13 +12,14 @@ public class MakeRootProcessorTest extends AbstractProcessCallTest<MakeRootProce
 		checkIgnoresNonePosts();
 	}
 
-	public void testReturnsUrlOfGitRepository() {
+	public void testMakesRepository() {
 		checkProcessMakesRepo("a/b/c");
 		checkProcessMakesRepo("a/b/d");
 		checkProcessMakesRepo("b/d");
 		checkProcessMakesRepo("c");
-
 	}
+	
+	
 
 	private void checkProcessMakesRepo(String uri) {
 		File file = new File(remoteRoot, uri);
@@ -29,7 +30,7 @@ public class MakeRootProcessorTest extends AbstractProcessCallTest<MakeRootProce
 
 	@Override
 	protected MakeRootProcessor makeProcessor() {
-		return new MakeRootProcessor(remoteGitServer);
+		return new MakeRootProcessor(new UrlCache<String>(), remoteGitServer);
 	}
 
 }

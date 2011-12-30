@@ -62,7 +62,7 @@ public abstract class AbstractSimpleMapTest<K, V> extends TestCase {
 	public void testKeys() {
 		ISimpleMap<K, V> map = blankMap();
 		put(map, key1, value1);
-		assertEquals(Arrays.asList("a"), map.keys());
+		assertEquals(Arrays.asList(key1), map.keys());
 		put(map, key2, value2);
 
 		assertEquals(Sets.<K> makeSet(key1, key2), new HashSet<K>(map.keys()));

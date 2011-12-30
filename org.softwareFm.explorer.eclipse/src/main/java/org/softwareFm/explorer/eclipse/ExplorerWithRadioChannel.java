@@ -47,7 +47,7 @@ public class ExplorerWithRadioChannel {
 	public static void main(String[] args) {
 		File home = new File(System.getProperty("user.home"));
 		final File localRoot = new File(home, ".sfm");
-		boolean local = false;
+		boolean local = true;
 		String server = local ? "localhost" : "www.softwarefm.com";
 		String prefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : "git://www.softwarefm.com/";
 		int port = local?8080:80;
@@ -73,7 +73,6 @@ public class ExplorerWithRadioChannel {
 					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, playListGetter, service);
 
 					ICardMenuItemHandler.Utils.addSoftwareFmMenuItemHandlers(explorer);
-					ICardMenuItemHandler.Utils.addExplorerMenuItemHandlers(explorer, "data");
 					IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
 					SnippetFeedConfigurator.configure(explorer, cardConfig);
 
