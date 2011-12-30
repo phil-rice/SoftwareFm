@@ -4,7 +4,7 @@
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
 /* This file is part of SoftwareFm
-/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+ /* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
@@ -142,9 +142,9 @@ public class CardConfig {
 	/** Used by the right click menu on the card to work out 'what' has been clicked on. Mostly it is concerned on 'what sort of collection is it' */
 	public final IRightClickCategoriser rightClickCategoriser;
 
-	public final IPopupMenuService<ICard> popupMenuService ;
-	public final String popupMenuId;
-	public final String detailsPopupMenuId;
+	public final IPopupMenuService<ICard> popupMenuService;
+	public final String explorerMenuId;
+	public final String snippetMenuId;
 
 	public CardConfig(ICardFactory cardFactory, IMutableCardDataStore cardDataStore) {
 		this.resourceGetterFn = Functions.constant(IResourceGetter.Utils.noResources().with(//
@@ -184,9 +184,18 @@ public class CardConfig {
 			}
 		};
 		this.editorFn = Functions.constant(null);
-		this.popupMenuId = null;
-		this.detailsPopupMenuId = null;
-		this.popupMenuService=IPopupMenuService.Utils.popUpMenuService();
+		this.explorerMenuId = null;
+		this.snippetMenuId = null;
+		this.popupMenuService = IPopupMenuService.Utils.popUpMenuService(new IFunction1<ICard, String>() {
+			@Override
+			public String apply(ICard from) throws Exception {
+				List<String> splitIgnoreBlanks = Strings.splitIgnoreBlanks(from.url(), "/");
+				if (splitIgnoreBlanks.size() == 0)
+					return null;
+				else
+					return splitIgnoreBlanks.get(0);
+			}
+		});
 	}
 
 	private CardConfig(IFunction1<String, IResourceGetter> resourceGetterFn, IDetailFactory detailFactory, ICardFactory cardFactory, IMutableCardDataStore cardDataStore, int style, boolean allowSelection, IFunction1<ICard, String> cardTitleFn, IFunction1<String, Image> imageFn, IFunction1<LineItem, Image> iconFn, ILineItemFunction<String> nameFn, ILineItemFunction<String> valueFn, IFunction1<ICard, String> defaultChildFn, ILineItemFunction<Boolean> hideFn, int leftMargin, int rightMargin, int topMargin, int bottomMargin, int navBarHeight, IFunction1<Map<String, Object>, Image> navIconFn, List<ICardDataModifier> keyValueModifiers, IFollowOnFragment followOnFragment, IFunction1<ICardData, TitleSpec> titleSpecFn, IRightClickCategoriser rightClickCategoriser, IUrlGeneratorMap urlGeneratorMap, IFunction1<String, IEditorDetailAdder> editorFn, String popupMenuId, IPopupMenuService<ICard> popupMenuService, String detailsPopupMenuId) {
@@ -215,104 +224,101 @@ public class CardConfig {
 		this.rightClickCategoriser = rightClickCategoriser;
 		this.urlGeneratorMap = urlGeneratorMap;
 		this.editorFn = editorFn;
-		this.popupMenuId = popupMenuId;
+		this.explorerMenuId = popupMenuId;
 		this.popupMenuService = popupMenuService;
-		this.detailsPopupMenuId = detailsPopupMenuId;
+		this.snippetMenuId = detailsPopupMenuId;
 	}
 
-	
-
-	public CardConfig withPopupMenuId(String popupMenuId, String detailsPopupMenuId) {
-		if (popupMenuId == this.popupMenuId&& this.detailsPopupMenuId == detailsPopupMenuId)
+	public CardConfig withPopupMenuId(String explorerMenuId, String snippetMenuId) {
+		if (explorerMenuId == this.explorerMenuId && this.snippetMenuId == snippetMenuId)
 			return this;
 		else
-			return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuId, popupMenuService, detailsPopupMenuId);
+			return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, explorerMenuId, popupMenuService, snippetMenuId);
 
 	}
 
 	public CardConfig withTitleFn(IFunction1<ICard, String> cardTitleFn) {
-		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuId, popupMenuService, detailsPopupMenuId);
+		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, explorerMenuId, popupMenuService, snippetMenuId);
 	}
 
 	public CardConfig withStyleAndSelection(int cardStyle, boolean allowSelection) {
-		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuId, popupMenuService, detailsPopupMenuId);
+		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, explorerMenuId, popupMenuService, snippetMenuId);
 	}
 
 	public CardConfig withNameFn(ILineItemFunction<String> nameFn) {
-		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuId, popupMenuService, detailsPopupMenuId);
+		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, explorerMenuId, popupMenuService, snippetMenuId);
 	}
 
 	public CardConfig withHideFn(ILineItemFunction<Boolean> hideFn) {
-		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuId, popupMenuService, detailsPopupMenuId);
+		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, explorerMenuId, popupMenuService, snippetMenuId);
 	}
 
 	public CardConfig withValueFn(ILineItemFunction<String> valueFn) {
-		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuId, popupMenuService, detailsPopupMenuId);
+		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, explorerMenuId, popupMenuService, snippetMenuId);
 	}
 
 	public CardConfig withResourceGetterFn(IFunction1<String, IResourceGetter> resourceGetterFn) {
-		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuId, popupMenuService, detailsPopupMenuId);
+		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, explorerMenuId, popupMenuService, snippetMenuId);
 	}
 
 	public CardConfig withMargins(int leftMargin, int rightMargin, int topMargin, int bottomMargin) {
-		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuId, popupMenuService, detailsPopupMenuId);
+		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, explorerMenuId, popupMenuService, snippetMenuId);
 	}
 
 	public CardConfig withTitleHeight(int titleHeight) {
-		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuId, popupMenuService, detailsPopupMenuId);
+		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, explorerMenuId, popupMenuService, snippetMenuId);
 	}
 
 	public CardConfig withNavIconFn(IFunction1<Map<String, Object>, Image> navIconFn) {
-		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuId, popupMenuService, detailsPopupMenuId);
+		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, explorerMenuId, popupMenuService, snippetMenuId);
 	}
 
 	public CardConfig withIconFn(IFunction1<LineItem, Image> iconFn) {
-		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuId, popupMenuService, detailsPopupMenuId);
+		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, explorerMenuId, popupMenuService, snippetMenuId);
 	}
 
 	public CardConfig withCardDataModifiers(ICardDataModifier... keyValueModifiers) {
-		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, Arrays.asList(keyValueModifiers), followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuId, popupMenuService, detailsPopupMenuId);
+		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, Arrays.asList(keyValueModifiers), followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, explorerMenuId, popupMenuService, snippetMenuId);
 	}
 
-
 	public CardConfig withCardDataModifiers(List<ICardDataModifier> cardDataModifiers) {
-		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuId, popupMenuService, detailsPopupMenuId);
+		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, explorerMenuId, popupMenuService, snippetMenuId);
 	}
 
 	public CardConfig withDetailsFactory(IDetailFactory detailFactory) {
-		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuId, popupMenuService, detailsPopupMenuId);
+		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, explorerMenuId, popupMenuService, snippetMenuId);
 	}
 
 	public CardConfig withDefaultChildFn(IFunction1<ICard, String> defaultChildFn) {
-		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuId, popupMenuService, detailsPopupMenuId);
+		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, explorerMenuId, popupMenuService, snippetMenuId);
 	}
 
 	public CardConfig withFollowOn(IFollowOnFragment followOnFragment) {
-		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuId, popupMenuService, detailsPopupMenuId);
+		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, explorerMenuId, popupMenuService, snippetMenuId);
 	}
 
 	public CardConfig withTitleSpecFn(IFunction1<ICardData, TitleSpec> titleSpecFn) {
-		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuId, popupMenuService, detailsPopupMenuId);
+		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, explorerMenuId, popupMenuService, snippetMenuId);
 	}
 
 	public CardConfig withCardFactory(ICardFactory cardFactory) {
-		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuId, popupMenuService, detailsPopupMenuId);
+		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, explorerMenuId, popupMenuService, snippetMenuId);
 	}
 
 	public CardConfig withRightClickCategoriser(IRightClickCategoriser rightClickCategoriser) {
-		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuId, popupMenuService, detailsPopupMenuId);
+		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, explorerMenuId, popupMenuService, snippetMenuId);
 	}
 
 	public CardConfig withImageFn(IFunction1<String, Image> imageFn) {
-		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuId, popupMenuService, detailsPopupMenuId);
+		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, explorerMenuId, popupMenuService, snippetMenuId);
 	}
 
 	public CardConfig withUrlGeneratorMap(IUrlGeneratorMap urlGeneratorMap) {
-		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuId, popupMenuService, detailsPopupMenuId);
+		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, explorerMenuId, popupMenuService, snippetMenuId);
 	}
 
 	public CardConfig withEditorFn(IFunction1<String, IEditorDetailAdder> editorFn) {
-		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuId, popupMenuService, detailsPopupMenuId);
+		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, explorerMenuId, popupMenuService, snippetMenuId);
 	}
 
 	public Map<String, Object> modify(String url, Map<String, Object> rawData) {

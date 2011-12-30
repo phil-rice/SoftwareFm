@@ -34,8 +34,7 @@ import org.softwareFm.utilities.resources.ResourceGetterMock;
 
 public class ExplorerTest extends SwtAndServiceTest {
 
-	private final static String popupMenuId = "popupMenuId";
-	private final static String detailsPopupMenuId = "detailsPopupMenuId";
+	private final static String popupMenuId = "test";
 	private CardDataStoreMock updateStore;
 	private CardConfig raw;
 	private MasterDetailSocial masterDetailSocial;

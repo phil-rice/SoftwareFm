@@ -8,6 +8,7 @@ package org.softwareFm.display.menu;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.softwareFm.display.menu.internal.PopupMenuService;
+import org.softwareFm.utilities.functions.IFunction1;
 
 public interface IPopupMenuService<T> {
 
@@ -15,11 +16,11 @@ public interface IPopupMenuService<T> {
 
 	public void registerContributor(String menuId, IPopupMenuContributor<T> contributor);
 
-	void contributeTo(String menuId, Event event, Menu menu, T relevantItem);
+	void contributeTo(Event event, Menu menu, T relevantItem);
 	
 	public static class Utils {
-		public static <T>IPopupMenuService <T>popUpMenuService(){
-			return new PopupMenuService<T>();
+		public static <T>IPopupMenuService <T>popUpMenuService(IFunction1<T, String> menuIdFn){
+			return new PopupMenuService<T>(menuIdFn);
 			
 		}
 	}

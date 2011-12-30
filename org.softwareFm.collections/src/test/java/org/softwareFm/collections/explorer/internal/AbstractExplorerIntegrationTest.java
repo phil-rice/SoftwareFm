@@ -169,7 +169,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	protected Menu selectAndCreatePopupMenu(ICard card, String title) {
 		selectItem(card, title);
 		final Menu menu = new Menu(shell);
-		cardConfig.popupMenuService.contributeTo("popupmenuid", new Event(), menu, card);
+		cardConfig.popupMenuService.contributeTo(new Event(), menu, card);
 		return menu;
 	}
 

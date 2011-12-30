@@ -4,7 +4,7 @@
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
 /* This file is part of SoftwareFm
-/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+ /* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
@@ -163,7 +163,7 @@ public class Explorer implements IExplorer {
 									@Override
 									public void ok(ICardData cardData) {
 										RightClickCategoryResult result = new RightClickCategoryResult(Type.IS_COLLECTION, CollectionConstants.comment, CollectionConstants.comment, baseUrl);
-										
+
 										addCollectionItem(result, CollectionConstants.comment, cardData, new IAfterEditCallback() {
 											@Override
 											public void afterEdit(final String addedCommentUrl) {
@@ -213,6 +213,7 @@ public class Explorer implements IExplorer {
 	public void onlyShowBrowser() {
 		masterDetailSocial.hideMaster();
 	}
+
 	@Override
 	public void edit(final ICard card, final String key) {
 		if (card.getControl().isDisposed())
@@ -312,20 +313,21 @@ public class Explorer implements IExplorer {
 			}
 		});
 	}
-//
-//	private String getKey() {
-//		ICard card = cardHolder.getCard();
-//		if (card != null) {
-//			int index = card.getTable().getSelectionIndex();
-//			if (index != -1) {
-//				TableItem item = card.getTable().getItem(index);
-//				String key = (String) item.getData();
-//				return key;
-//			}
-//		}
-//		return null;
-//
-//	}
+
+	//
+	// private String getKey() {
+	// ICard card = cardHolder.getCard();
+	// if (card != null) {
+	// int index = card.getTable().getSelectionIndex();
+	// if (index != -1) {
+	// TableItem item = card.getTable().getItem(index);
+	// String key = (String) item.getData();
+	// return key;
+	// }
+	// }
+	// return null;
+	//
+	// }
 
 	@Override
 	public void editSnippet(final ICard card, final String key) {
@@ -390,8 +392,8 @@ public class Explorer implements IExplorer {
 					public void ok(final ICardData cardData) {
 						final String fragment = UUID.randomUUID().toString();
 						String url = cardData.url();
-						Map<String, Object> data = cardData.data();
-						IAfterEditCallback callback = new IAfterEditCallback() {
+						final Map<String, Object> data = cardData.data();
+						final IAfterEditCallback callback = new IAfterEditCallback() {
 							@Override
 							public void afterEdit(String url) {
 								displayCard(card.url(), new CardAndCollectionDataStoreAdapter() {
@@ -411,10 +413,22 @@ public class Explorer implements IExplorer {
 								masterDetailSocial.setDetail(browser.getControl());
 							}
 						};
-						if (lastSegment.equals(CardConstants.snippet)) {
-							IMutableCardDataStore.Utils.addCollectionItemToCollection(store, url, CardConstants.snippet, fragment, data, callback);
-						} else
-							IMutableCardDataStore.Utils.addCollectionItemToBase(store, url, CardConstants.snippet, fragment, data, callback);
+						cardConfig.cardDataStore.processDataFor(url, new ICardDataStoreCallback<Void>() {
+							@Override
+							public Void process(String url, Map<String, Object> result) throws Exception {
+								if (lastSegment.equals(CardConstants.snippet)) {
+									IMutableCardDataStore.Utils.addCollectionItemToCollection(store, url, CardConstants.snippet, fragment, data, callback);
+								} else
+									IMutableCardDataStore.Utils.addCollectionItemToBase(store, url, CardConstants.snippet, fragment, data, callback);
+								return null;
+							}
+
+							@Override
+							public Void noData(String url) throws Exception {
+								
+								return null;
+							}
+						});
 					}
 
 					@Override
@@ -610,7 +624,7 @@ public class Explorer implements IExplorer {
 
 	@Override
 	public void displayHelpText(String cardType, final String text) {
-		masterDetailSocial.createAndShowSocial(TextInBorder.makeTextFromString(SWT.WRAP|SWT.READ_ONLY, cardConfig, cardType, "Help", text));
+		masterDetailSocial.createAndShowSocial(TextInBorder.makeTextFromString(SWT.WRAP | SWT.READ_ONLY, cardConfig, cardType, "Help", text));
 		masterDetailSocial.showSocial();
 	}
 

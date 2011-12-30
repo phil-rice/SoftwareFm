@@ -39,8 +39,7 @@ public  class ExplorerView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		final Activator activator = Activator.getDefault();
-		String popupMenuId = getPopupMenuId();
-		final CardConfig cardConfig = makeCardConfig(parent).withPopupMenuId(popupMenuId, null);
+		final CardConfig cardConfig = makeCardConfig(parent).withPopupMenuId(CollectionConstants.explorerPopupMenuId, CollectionConstants.snippetPopupMenuId);
 		IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(parent);
 		Size.resizeMeToParentsSize(masterDetailSocial.getControl());
 
@@ -50,7 +49,8 @@ public  class ExplorerView extends ViewPart {
 		actionBar = IActionBar.Utils.actionBar(explorer, cardConfig, SelectedArtifactSelectionManager.reRipFn());
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
 		actionBar.populateToolbar(toolBarManager);
-		configurePopupMenu(popupMenuId, explorer);
+		ICardMenuItemHandler.Utils.addExplorerMenuItemHandlers(explorer, CollectionConstants.explorerPopupMenuId);
+		ICardMenuItemHandler.Utils.addSnippetMenuItemHandlers(explorer, CollectionConstants.snippetPopupMenuId);
 		IBrowserConfigurator.Utils.configueWithUrlRssSnippetAndTweet(explorer);
 
 		final IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, null);
@@ -68,13 +68,6 @@ public  class ExplorerView extends ViewPart {
 		explorer.processUrl(DisplayConstants.browserFeedType, welcomeUrl);
 	}
 
-	protected void configurePopupMenu(String popupMenuId, final IExplorer explorer) {
-		ICardMenuItemHandler.Utils.addExplorerMenuItemHandlers(explorer, popupMenuId);
-	}
-
-	protected String getPopupMenuId() {
-		return getClass().getSimpleName();
-	}
 
 	protected CardConfig makeCardConfig(Composite parent) {
 		return Activator.getDefault().getCardConfig(parent);

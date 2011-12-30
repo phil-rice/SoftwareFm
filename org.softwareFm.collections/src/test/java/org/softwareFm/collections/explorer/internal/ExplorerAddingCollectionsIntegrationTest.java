@@ -160,7 +160,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 			@Override
 			public void process(ICard t) throws Exception {
 				final Menu menu1 = new Menu(shell);
-				cardConfig.popupMenuService.contributeTo("popupmenuid", new Event(), menu1, t);
+				cardConfig.popupMenuService.contributeTo(new Event(), menu1, t);
 				Menu menu = menu1;
 				executeMenuItem(menu, "Add " + "advert");
 			}
@@ -222,7 +222,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 			@Override
 			public void process(ICard t) throws Exception {
 				final Menu menu1 = new Menu(shell);
-				cardConfig.popupMenuService.contributeTo("popupmenuid", new Event(), menu1, t);
+				cardConfig.popupMenuService.contributeTo(new Event(), menu1, t);
 				Menu menu = menu1;
 				executeMenuItem(menu, "Add " + collection);
 			}
@@ -319,7 +319,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		ICardMenuItemHandler.Utils.addExplorerMenuItemHandlers(explorer, "popupmenuid");
+		ICardMenuItemHandler.Utils.addExplorerMenuItemHandlers(explorer, "tests");
 		postArtifactData();	}
 
 }

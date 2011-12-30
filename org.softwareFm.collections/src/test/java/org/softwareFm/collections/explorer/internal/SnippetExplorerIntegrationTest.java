@@ -31,7 +31,7 @@ public class SnippetExplorerIntegrationTest extends AbstractExplorerIntegrationT
 			@Override
 			public void process(ICardHolder cardHolder, ICard card) throws Exception {
 				final Menu menu = new Menu(shell);
-				cardConfig.popupMenuService.contributeTo("popupmenuid", new Event(), menu, card);
+				cardConfig.popupMenuService.contributeTo(new Event(), menu, card);
 				executeMenuItem(menu, "Add new snippet");
 				final IValueComposite<Table> composite = (IValueComposite<Table>) masterDetailSocial.getDetailContent();
 				Table table = composite.getEditor();
@@ -74,7 +74,7 @@ public class SnippetExplorerIntegrationTest extends AbstractExplorerIntegrationT
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		ICardMenuItemHandler.Utils.addSnippetMenuItemHandlers(explorer, "popupmenuid");
+		ICardMenuItemHandler.Utils.addSnippetMenuItemHandlers(explorer, "test");
 	}
 
 }

@@ -4,7 +4,7 @@
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
 /* This file is part of SoftwareFm
-/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+ /* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
@@ -73,21 +73,22 @@ public abstract class AbstractCardHolderTest extends SwtTest {
 		checkValueChanged(mock2, newCard, "value", "newValue");
 	}
 
-	public void testMenuListenerInvokedWhenTableRightClicked(){
+	public void testMenuListenerInvokedWhenTableRightClicked() {
 		ICard card = makeAndSetCard(cardConfig);
 		final List<Event> events = Lists.newList();
 		card.addMenuDetectListener(new Listener() {
 			@Override
-			public void handleEvent(Event event) {events.add(event);
+			public void handleEvent(Event event) {
+				events.add(event);
 			}
 		});
 		Table table = card.getTable();
-		
-		Point control = table.toDisplay(new Point(2,2));//just inside the first item: "tag"
+
+		Point control = table.toDisplay(new Point(2, 2));// just inside the first item: "tag"
 		Event event = new Event();
 		event.x = control.x;
 		event.y = control.y;
-		
+
 		table.notifyListeners(SWT.MenuDetect, event);
 		dispatchUntilQueueEmpty();
 		assertEquals(event, Lists.getOnly(events));
@@ -121,7 +122,7 @@ public abstract class AbstractCardHolderTest extends SwtTest {
 	}
 
 	protected ICard makeAndSetCard(CardConfig cardConfig, String urlPostfix) {
-		ICard card = cardConfig.cardFactory.makeCard(cardHolder, cardConfig, rootUrl + "/"+urlPostfix, CardDataStoreFixture.data1a);
+		ICard card = cardConfig.cardFactory.makeCard(cardHolder, cardConfig, rootUrl + "/" + urlPostfix, CardDataStoreFixture.data1a);
 		return card;
 	}
 
@@ -129,6 +130,7 @@ public abstract class AbstractCardHolderTest extends SwtTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		cardConfig = CardDataStoreFixture.syncCardConfig(shell.getDisplay());
+		cardConfig.popupMenuService.registerMenuId("some");
 		Composite parent = new Composite(shell, SWT.NULL) {
 			@Override
 			public Rectangle getClientArea() {
@@ -136,11 +138,11 @@ public abstract class AbstractCardHolderTest extends SwtTest {
 			}
 		};
 		cardHolder = makeCardHolder(parent, cardConfig);
-//		borderThickness = 0;
-//		expectedClientArea = new Rectangle(cardConfig.leftMargin, //
-//				cardConfig.topMargin,//
-//				110 - cardConfig.leftMargin - cardConfig.rightMargin - borderThickness * 2,//
-//				220 - cardConfig.topMargin - cardConfig.bottomMargin - borderThickness * 2);
+		// borderThickness = 0;
+		// expectedClientArea = new Rectangle(cardConfig.leftMargin, //
+		// cardConfig.topMargin,//
+		// 110 - cardConfig.leftMargin - cardConfig.rightMargin - borderThickness * 2,//
+		// 220 - cardConfig.topMargin - cardConfig.bottomMargin - borderThickness * 2);
 		cardHolder.getControl().setBounds(10, 20, 110, 220);
 		mock1 = new CardChangedListenerMock();
 		mock2 = new CardChangedListenerMock();

@@ -53,5 +53,7 @@ public class CollectionConstants {
 	public static final String actionVersionImage = "version.gif";
 	public static final String actionJarImage = "jar.gif";
 	public static final String actionSnippetImage = "snippet.gif";
+	public static final String explorerPopupMenuId = "popupMenu.explorer";
+	public static final String snippetPopupMenuId = "popupMenu.snippet";
 
 }

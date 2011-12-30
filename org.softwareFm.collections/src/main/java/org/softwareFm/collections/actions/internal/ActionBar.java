@@ -30,7 +30,7 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class ActionBar implements IActionBar {
 
-	private final static boolean newFeatures = false;
+	private final static boolean newFeatures = true;
 
 	private String urlKey;
 	private final IExplorer explorer;
