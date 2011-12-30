@@ -37,6 +37,8 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
 
 public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
+	private String popupMenuId;
+
 	@SuppressWarnings("unchecked")
 	public void testClickingOnUnrecognisedJarOpensEditor() {
 		explorer.displayUnrecognisedJar(new File("a/b/c/artifact-1.0.0.jar"), "someDigest", "someProject");
@@ -222,7 +224,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 				final Menu menu = new Menu(shell);
 				Table table = card.getTable();
 				table.select(index);
-				cardConfig.popupMenuService.contributeTo("tests", new Event(), menu, card);
+				cardConfig.popupMenuService.contributeTo(popupMenuId, new Event(), menu, card);
 				List<String> actual = Lists.newList();
 				for (int i = 0; i < menu.getItemCount(); i++)
 					actual.add(menu.getItem(i).getText());
@@ -236,7 +238,8 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		ICardMenuItemHandler.Utils.addExplorerMenuItemHandlers(explorer, "tests");
+		popupMenuId = getClass().getSimpleName();
+		ICardMenuItemHandler.Utils.addExplorerMenuItemHandlers(explorer, popupMenuId);
 	}
 
 }

@@ -11,31 +11,34 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.menu.AbstractCardMenuHandler;
 import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwareFm.utilities.strings.Urls;
 
-public class EditSnippetMenuHandler extends AbstractCardMenuHandler {
+public class EditTextInSnippetMenuHandler extends AbstractCardMenuHandler {
 
-	public EditSnippetMenuHandler(IExplorer explorer) {
+	public EditTextInSnippetMenuHandler(IExplorer explorer) {
 		super(explorer);
 	}
 
 	@Override
 	public MenuItem optionallyCreate(ICard card, IResourceGetter resourceGetter, Menu menu, Event event, String key) {
-		if (card.cardType().equals(CardConstants.snippet)) // assumption: we are either a folder, collection or snippet.
-			return null;
-		MenuItem menuItem = new MenuItem(menu, SWT.NULL);
-		menuItem.setText(IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.menuItemEditSnippetText));
-		return menuItem;
+		Object value = card.data().get(key);
+		if (CardConstants.snippet.equals(card.cardType()) && value instanceof String) {
+			String editor = resourceGetter.getStringOrNull("editor." + key);
+			if ( !"none".equals(editor)) {
+				MenuItem menuItem = new MenuItem(menu, SWT.NULL);
+				menuItem.setText(IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.menuItemEditText));
+				return menuItem;
+			}
+		}
+		return null;
 	}
 
 	@Override
 	public void execute(ICard card, String key, MenuItem item) {
-		explorer.displayCard(Urls.composeWithSlash(card.url(), key), new CardAndCollectionDataStoreAdapter());
-//		explorer.editSnippet(card, key);
+		explorer.displayHelpTextFor(card, key);
+		explorer.edit(card, key);
 	}
 
 }

@@ -75,7 +75,7 @@ public class ExplorerWithRadioChannel {
 					ICardMenuItemHandler.Utils.addSoftwareFmMenuItemHandlers(explorer);
 					ICardMenuItemHandler.Utils.addExplorerMenuItemHandlers(explorer, "data");
 					IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
-					new SnippetFeedConfigurator(cardConfig.cardDataStore).configure(explorer);
+					SnippetFeedConfigurator.configure(explorer, cardConfig);
 
 					explorer.displayCard(firstUrl, new CardAndCollectionDataStoreAdapter());
 					buttonPanel.setLayoutData(Grid.makeGrabHorizonalAndFillGridData());

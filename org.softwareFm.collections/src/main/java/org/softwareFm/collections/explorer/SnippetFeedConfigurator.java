@@ -10,6 +10,8 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.card.dataStore.ICardDataStoreCallback;
 import org.softwareFm.display.browser.BrowserPart;
@@ -18,6 +20,7 @@ import org.softwareFm.display.browser.IBrowserConfigurator;
 import org.softwareFm.display.browser.IBrowserPart;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
@@ -26,6 +29,10 @@ import org.softwareFm.utilities.strings.Strings;
 import de.java2html.Java2Html;
 
 public class SnippetFeedConfigurator implements IBrowserConfigurator {
+
+	public static void configure(IBrowserCompositeBuilder browser, CardConfig cardConfig) {
+		new SnippetFeedConfigurator(cardConfig.cardDataStore, Functions.call(cardConfig.resourceGetterFn, CardConstants.snippet)).configure(browser);
+	}
 
 	private final ICardDataStore cardDataStore;
 	private final IResourceGetter resourceGetter;

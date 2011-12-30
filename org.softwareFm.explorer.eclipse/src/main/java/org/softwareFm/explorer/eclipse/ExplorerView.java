@@ -33,7 +33,7 @@ import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.services.IServiceExecutor;
 
-public  class ExplorerView extends ViewPart {
+public class ExplorerView extends ViewPart {
 
 	protected IActionBar actionBar;
 
@@ -51,9 +51,9 @@ public  class ExplorerView extends ViewPart {
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
 		actionBar.populateToolbar(toolBarManager);
 		ICardMenuItemHandler.Utils.addSoftwareFmMenuItemHandlers(explorer);
-		
+
 		IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
-		new SnippetFeedConfigurator(cardConfig.cardDataStore, Functions.call(cardConfig.resourceGetterFn, "snippet")).configure(explorer);
+		SnippetFeedConfigurator.configure(explorer, cardConfig);
 
 		final IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, null);
 		String welcomeUrl = IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.webPageWelcomeUrl);
@@ -69,7 +69,6 @@ public  class ExplorerView extends ViewPart {
 		masterDetailSocial.hideMaster();
 		explorer.processUrl(DisplayConstants.browserFeedType, welcomeUrl);
 	}
-
 
 	protected CardConfig makeCardConfig(Composite parent) {
 		return Activator.getDefault().getCardConfig(parent);

@@ -38,6 +38,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 	private static final String unknown = "Unknown";
 	private static final String pleaseAddAName = "<Please add a name>";
 	private static final String pleaseAddADescription = "<Please add a description>";
+	private String popupMenuId;
 
 	public void testAddingCompanies() throws Exception {
 		checkAdding("company", "Companies", 4, null, new IAddingCallback<ICard>() {
@@ -160,7 +161,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 			@Override
 			public void process(ICard t) throws Exception {
 				final Menu menu1 = new Menu(shell);
-				cardConfig.popupMenuService.contributeTo("tests", new Event(), menu1, t);
+				cardConfig.popupMenuService.contributeTo(popupMenuId, new Event(), menu1, t);
 				Menu menu = menu1;
 				executeMenuItem(menu, "Add " + "advert");
 			}
@@ -222,7 +223,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 			@Override
 			public void process(ICard t) throws Exception {
 				final Menu menu1 = new Menu(shell);
-				cardConfig.popupMenuService.contributeTo("tests", new Event(), menu1, t);
+				cardConfig.popupMenuService.contributeTo(popupMenuId, new Event(), menu1, t);
 				Menu menu = menu1;
 				executeMenuItem(menu, "Add " + collection);
 			}
@@ -319,7 +320,8 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		ICardMenuItemHandler.Utils.addExplorerMenuItemHandlers(explorer, "tests");
+		popupMenuId = getClass().getSimpleName();
+		ICardMenuItemHandler.Utils.addExplorerMenuItemHandlers(explorer, popupMenuId);
 		postArtifactData();	}
 
 }

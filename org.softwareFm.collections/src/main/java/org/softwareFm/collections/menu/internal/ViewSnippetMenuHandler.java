@@ -17,9 +17,9 @@ import org.softwareFm.collections.menu.AbstractCardMenuHandler;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Urls;
 
-public class EditSnippetMenuHandler extends AbstractCardMenuHandler {
+public class ViewSnippetMenuHandler extends AbstractCardMenuHandler {
 
-	public EditSnippetMenuHandler(IExplorer explorer) {
+	public ViewSnippetMenuHandler(IExplorer explorer) {
 		super(explorer);
 	}
 
@@ -28,7 +28,7 @@ public class EditSnippetMenuHandler extends AbstractCardMenuHandler {
 		if (card.cardType().equals(CardConstants.snippet)) // assumption: we are either a folder, collection or snippet.
 			return null;
 		MenuItem menuItem = new MenuItem(menu, SWT.NULL);
-		menuItem.setText(IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.menuItemEditSnippetText));
+		menuItem.setText(IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.menuItemViewSnippetText));
 		return menuItem;
 	}
 

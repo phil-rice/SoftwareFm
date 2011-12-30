@@ -216,7 +216,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		masterDetailSocial = new MasterDetailSocial(shell, SWT.NULL);
 		explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, IPlayListGetter.Utils.noPlayListGetter(), service);
 		IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
-		new SnippetFeedConfigurator(cardConfig.cardDataStore).configure(explorer);
+		SnippetFeedConfigurator.configure(explorer, cardConfig);
 		httpClient.delete(Urls.compose(rootUrl, artifactUrl)).execute(IResponseCallback.Utils.noCallback()).get();
 		httpClient.delete(Urls.compose(rootUrl, snippetUrl)).execute(IResponseCallback.Utils.noCallback()).get();
 		repository.makeRoot(Urls.compose(rootUrl, groupUrl), IResponseCallback.Utils.noCallback()).get();
@@ -232,7 +232,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		}
 	}
 
-	protected void postArtifactData(){
+	protected void postArtifactData() {
 		try {
 			repository.post(Urls.compose(rootUrl, artifactUrl), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.artifact), IResponseCallback.Utils.noCallback()).get();
 			repository.post(Urls.compose(rootUrl, artifactUrl, "/tutorial"), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), IResponseCallback.Utils.noCallback()).get();
