@@ -30,7 +30,7 @@ import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class ActionBar implements IActionBar {
 
-	private final static boolean newFeatures = true;
+	private final static boolean newFeatures = false;
 
 	private String urlKey;
 	private final IExplorer explorer;
@@ -40,7 +40,7 @@ public class ActionBar implements IActionBar {
 	private final IFunction1<BindingRipperResult, BindingRipperResult> reRipFn;
 
 	private static enum State {
-		URL, JUST_JAR, FROM_JAR, FROM_PATH;
+		URL, JUST_JAR, FROM_JAR, FROM_PATH, DEBUG;
 	}
 
 	public ActionBar(IExplorer explorer, CardConfig cardConfig, IFunction1<BindingRipperResult, BindingRipperResult> reRipFn) {
@@ -72,9 +72,16 @@ public class ActionBar implements IActionBar {
 			break;
 		case URL:// Doesn't do anything...url selected
 			break;
+		case DEBUG:
+			debug();
+			break;
 		default:
 			throw new IllegalStateException(state.toString());
 		}
+	}
+
+	private void debug() {
+		explorer.showDebug(ripperResult);
 	}
 
 	IExpressionCategoriser categoriser = IExpressionCategoriser.Utils.categoriser();
@@ -210,6 +217,13 @@ public class ActionBar implements IActionBar {
 				urlKey = CardConstants.jarUrlKey;
 				reselect();
 				showUrl(CardConstants.webPageJarUrl);
+			}
+		}));
+		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionDebugTitle, ActionAnchor.class, CollectionConstants.actionDebugImage, new Runnable() {
+			@Override
+			public void run() {
+				state = State.DEBUG;
+				reselect();
 			}
 		}));
 		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionSnippetTitle, ActionAnchor.class, CollectionConstants.actionSnippetImage, new Runnable() {

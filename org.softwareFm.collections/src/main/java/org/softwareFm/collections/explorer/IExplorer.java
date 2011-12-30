@@ -23,6 +23,7 @@ import org.softwareFm.collections.explorer.internal.Explorer;
 import org.softwareFm.display.browser.IBrowserCompositeBuilder;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.display.timeline.ITimeLine;
+import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.utilities.services.IServiceExecutor;
 
 public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCardConfig {
@@ -54,6 +55,8 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 	void editSnippet(ICard card, String key);
 
 	void showRandomSnippetFor(String artifactUrl);
+
+	void showDebug(BindingRipperResult ripperResult);
 
 	void edit(ICard card, String key);
 

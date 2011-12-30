@@ -45,6 +45,7 @@ public class CollectionConstants {
 	public static final String actionArtifactTitle = "action.artifact.title";
 	public static final String actionVersionTitle = "action.version.title";
 	public static final String actionJarTitle = "action.jar.title";
+	public static final String actionDebugTitle = "action.debug.title";
 	public static final String actionSnippetTitle = "action.snippet.title";
 
 	public static final String actionWelcomeImage = "welcome.gif";
@@ -52,6 +53,7 @@ public class CollectionConstants {
 	public static final String actionArtifactImage = "artifact.gif";
 	public static final String actionVersionImage = "version.gif";
 	public static final String actionJarImage = "jar.gif";
+	public static final String actionDebugImage = "debug.gif";
 	public static final String actionSnippetImage = "snippet.gif";
 
 }

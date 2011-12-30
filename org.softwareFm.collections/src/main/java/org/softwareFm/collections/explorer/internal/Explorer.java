@@ -21,6 +21,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -64,6 +65,7 @@ import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.display.timeline.PlayItem;
 import org.softwareFm.display.timeline.TimeLine;
+import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
@@ -951,5 +953,14 @@ public class Explorer implements IExplorer {
 	@Override
 	public ICardHolder getCardHolder() {
 		return cardHolder;
+	}
+
+	private final AtomicInteger count = new AtomicInteger();
+
+	@Override
+	public void showDebug(BindingRipperResult ripperResult) {
+		String text = "This is a debug screen.\nCount: " + count.incrementAndGet() + "\n" + ripperResult;
+		masterDetailSocial.createAndShowMaster(Swts.styledTextFn(text, SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL));
+
 	}
 }

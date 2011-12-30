@@ -28,6 +28,7 @@ public class ServerConstants {
 	public static final String repoUrlKey = "repoUrl";
 	public static final String cannotParseReplyFromGet = "Cannot parse answer from get: {0}";
 	public static final long staleCacheTime = 60 * 5 * 1000;// millisecond before need to pull again
-	public static final long staleCacheTimeForTests = 500;//hopefully enough to remove randomness without slowing tests too much
+	public static final long staleAboveRepositoryCacheTime = 60 * 60* 5 * 1000;// millisecond before need to clear above repository cache (should never need to, but I think it won't hurt...)
+	public static final long staleCacheTimeForTests = 500;// hopefully enough to remove randomness without slowing tests too much
 	public static final String snipperTemplateKey = "snippet.template";
 }

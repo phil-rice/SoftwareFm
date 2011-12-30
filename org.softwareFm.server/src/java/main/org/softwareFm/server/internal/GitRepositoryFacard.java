@@ -43,12 +43,14 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 	private final Map<File, Long> lastPullTimeMap = Maps.newMap();
 	private long lastAboveRepositoryClearTime;
 	private final UrlCache<GetResult> aboveRepositoryCache = new UrlCache<GetResult>();
+	private final long aboveRepositorytStaleCacheTime;
 
-	public GitRepositoryFacard(IHttpClient httpClient, IServiceExecutor serviceExecutor, IGitServer localGit, long staleCacheTime) {
+	public GitRepositoryFacard(IHttpClient httpClient, IServiceExecutor serviceExecutor, IGitServer localGit, long staleCacheTime, long aboveRepositorytStaleCacheTime) {
 		this.httpClient = httpClient;
 		this.serviceExecutor = serviceExecutor;
 		this.localGit = localGit;
 		this.staleCacheTime = staleCacheTime;
+		this.aboveRepositorytStaleCacheTime = aboveRepositorytStaleCacheTime;
 		lastAboveRepositoryClearTime = System.currentTimeMillis();
 	}
 
@@ -80,7 +82,7 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 			@Override
 			public GetResult call() throws Exception {
 				if (aboveRepositoryCache.containsKey(url)) {
-					if (System.currentTimeMillis() > lastAboveRepositoryClearTime + staleCacheTime){
+					if (System.currentTimeMillis() > lastAboveRepositoryClearTime + aboveRepositorytStaleCacheTime){
 						long now = System.currentTimeMillis();
 						lastAboveRepositoryClearTime = now;
 						aboveRepositoryCache.clear();
