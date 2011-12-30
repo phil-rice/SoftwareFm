@@ -29,6 +29,7 @@ import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IExplorerListener;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
+import org.softwareFm.collections.explorer.SnippetFeedConfigurator;
 import org.softwareFm.collections.menu.ICardMenuItemHandler;
 import org.softwareFm.display.browser.IBrowserConfigurator;
 import org.softwareFm.display.swt.Swts;
@@ -73,7 +74,8 @@ public class ExplorerWithRadioChannel {
 
 					ICardMenuItemHandler.Utils.addSoftwareFmMenuItemHandlers(explorer);
 					ICardMenuItemHandler.Utils.addExplorerMenuItemHandlers(explorer, "data");
-					IBrowserConfigurator.Utils.configueWithUrlRssSnippetAndTweet(explorer);
+					IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
+					new SnippetFeedConfigurator(cardConfig.cardDataStore).configure(explorer);
 
 					explorer.displayCard(firstUrl, new CardAndCollectionDataStoreAdapter());
 					buttonPanel.setLayoutData(Grid.makeGrabHorizonalAndFillGridData());

@@ -39,7 +39,7 @@ public interface ICardMenuItemHandler extends IPopupMenuContributor<ICard> {
 	public static class Utils {
 		public static void addSoftwareFmMenuItemHandlers(IExplorer explorer) {
 			addExplorerMenuItemHandlers(explorer, "data");
-			addExplorerMenuItemHandlers(explorer, "jar");
+			addExplorerMenuItemHandlers(explorer, "jars");
 			addSnippetMenuItemHandlers(explorer, "snippet");
 		}
 

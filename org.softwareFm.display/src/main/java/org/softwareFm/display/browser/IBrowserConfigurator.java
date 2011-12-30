@@ -10,16 +10,16 @@
 
 package org.softwareFm.display.browser;
 
+
 public interface IBrowserConfigurator {
 	void configure(IBrowserCompositeBuilder builder);
 
 	public static class Utils {
 		
-		public static void configueWithUrlRssSnippetAndTweet(IBrowserCompositeBuilder browser){
+		public static void configueWithUrlRssTweet(IBrowserCompositeBuilder browser){
 			rss().configure(browser);
 			url().configure(browser);
 			tweet().configure(browser);
-			snippet().configure(browser);
 		}
 		public static IBrowserConfigurator rss() {
 			return new RssFeedConfigurator();
@@ -32,8 +32,6 @@ public interface IBrowserConfigurator {
 		public static IBrowserConfigurator tweet() {
 			return new TweetFeedConfigurator();
 		}
-		public static IBrowserConfigurator snippet() {
-			return new SnippetFeedConfigurator();
-		}
+		
 	}
 }

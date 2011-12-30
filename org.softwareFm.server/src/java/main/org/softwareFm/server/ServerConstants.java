@@ -29,4 +29,5 @@ public class ServerConstants {
 	public static final String cannotParseReplyFromGet = "Cannot parse answer from get: {0}";
 	public static final long staleCacheTime = 60 * 5 * 1000;// millisecond before need to pull again
 	public static final long staleCacheTimeForTests = 500;//hopefully enough to remove randomness without slowing tests too much
+	public static final String snipperTemplateKey = "snippet.template";
 }

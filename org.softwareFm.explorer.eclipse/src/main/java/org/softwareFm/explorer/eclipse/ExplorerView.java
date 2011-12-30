@@ -21,6 +21,7 @@ import org.softwareFm.collections.actions.IActionBar;
 import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
+import org.softwareFm.collections.explorer.SnippetFeedConfigurator;
 import org.softwareFm.collections.menu.ICardMenuItemHandler;
 import org.softwareFm.display.browser.IBrowserConfigurator;
 import org.softwareFm.display.constants.DisplayConstants;
@@ -51,7 +52,8 @@ public  class ExplorerView extends ViewPart {
 		actionBar.populateToolbar(toolBarManager);
 		ICardMenuItemHandler.Utils.addSoftwareFmMenuItemHandlers(explorer);
 		
-		IBrowserConfigurator.Utils.configueWithUrlRssSnippetAndTweet(explorer);
+		IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
+		new SnippetFeedConfigurator(cardConfig.cardDataStore, Functions.call(cardConfig.resourceGetterFn, "snippet")).configure(explorer);
 
 		final IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, null);
 		String welcomeUrl = IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.webPageWelcomeUrl);
