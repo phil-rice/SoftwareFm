@@ -35,7 +35,6 @@ public class ViewSnippetMenuHandler extends AbstractCardMenuHandler {
 	@Override
 	public void execute(ICard card, String key, MenuItem item) {
 		explorer.displayCard(Urls.composeWithSlash(card.url(), key), new CardAndCollectionDataStoreAdapter());
-//		explorer.editSnippet(card, key);
 	}
 
 }

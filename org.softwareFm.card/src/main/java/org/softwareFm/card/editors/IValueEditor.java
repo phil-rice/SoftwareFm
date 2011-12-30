@@ -17,6 +17,7 @@ import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.card.editors.internal.CardEditor;
 import org.softwareFm.card.editors.internal.CardEditorLayout;
+import org.softwareFm.card.editors.internal.SnippetEditor;
 import org.softwareFm.card.editors.internal.StyledTextEditor;
 import org.softwareFm.card.editors.internal.TextEditor;
 import org.softwareFm.card.editors.internal.ValueEditorLayout;
@@ -43,6 +44,11 @@ public interface IValueEditor extends IHasComposite {
 			CardConfig withRemoveLists = cardConfig.withCardDataModifiers(Lists.append(cardConfig.cardDataModifiers, ICardDataModifier.Utils.hideCollections()));
 			CardEditor editor = new CardEditor(parent, withRemoveLists, title, cardType, url, data, callback);
 			editor.getComposite().setLayout(new CardEditorLayout());
+			return editor;
+		}
+		public static IValueEditor snippetEditorWithLayout(Composite parent, CardConfig cardConfig, String title,  String url, Map<String, Object> data, ICardEditorCallback callback){
+			SnippetEditor editor = new SnippetEditor(parent, cardConfig, title, url, data, callback);
+			editor.getComposite().setLayout(new SnippetEditor.SnippetEditorLayout());
 			return editor;
 		}
 	}

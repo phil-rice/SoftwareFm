@@ -11,11 +11,9 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.menu.AbstractCardMenuHandler;
 import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwareFm.utilities.strings.Urls;
 
 public class EditSnippetMenuHandler extends AbstractCardMenuHandler {
 
@@ -34,8 +32,7 @@ public class EditSnippetMenuHandler extends AbstractCardMenuHandler {
 
 	@Override
 	public void execute(ICard card, String key, MenuItem item) {
-		explorer.displayCard(Urls.composeWithSlash(card.url(), key), new CardAndCollectionDataStoreAdapter());
-//		explorer.editSnippet(card, key);
+		explorer.editSnippet(card, key);
 	}
 
 }

@@ -3,21 +3,20 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwareFm.collections.explorer.internal;
+package org.softwareFm.card.editors;
 
 import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.card.card.ICardData;
-import org.softwareFm.card.editors.ICardEditorCallback;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.maps.Maps;
 
 public class AddCardCallbackMock implements ICardEditorCallback {
 
-	private final List<Map<String, Object>> okData = Lists.newList();
-	private final List<Map<String, Object>> cancelData = Lists.newList();
-	private final List<Map<String, Object>> canOkData = Lists.newList();
+	public final List<Map<String, Object>> okData = Lists.newList();
+	public final List<Map<String, Object>> cancelData = Lists.newList();
+	public final List<Map<String, Object>> canOkData = Lists.newList();
 
 	private boolean canOk;
 

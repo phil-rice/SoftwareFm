@@ -332,7 +332,7 @@ public class Explorer implements IExplorer {
 				final String url = card.url() + "/" + key;
 				@SuppressWarnings("unchecked")
 				Map<String, Object> data = (Map<String, Object>) card.data().get(key);
-				return IValueEditor.Utils.cardEditorWithLayout(from, cardConfig, "Snippet", CardConstants.snippet, url, data, new ICardEditorCallback() {
+				return IValueEditor.Utils.snippetEditorWithLayout(from, cardConfig, "Snippet", url, data, new ICardEditorCallback() {
 					@Override
 					public void ok(final ICardData cardData) {
 						Map<String, Object> data = cardData.data();
@@ -380,7 +380,7 @@ public class Explorer implements IExplorer {
 		masterDetailSocial.createAndShowDetail(new IFunction1<Composite, IValueEditor>() {
 			@Override
 			public IValueEditor apply(Composite from) throws Exception {
-				return IValueEditor.Utils.cardEditorWithLayout(from, cardConfig, "Snippet", CardConstants.snippet, card.url(), Maps.stringObjectMap(), new ICardEditorCallback() {
+				return IValueEditor.Utils.snippetEditorWithLayout(from, cardConfig, "Snippet", card.url(), Maps.stringObjectMap(), new ICardEditorCallback() {
 					@Override
 					public void ok(final ICardData cardData) {
 						final String fragment = UUID.randomUUID().toString();
