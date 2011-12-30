@@ -25,7 +25,7 @@ public class ViewSnippetMenuHandler extends AbstractCardMenuHandler {
 
 	@Override
 	public MenuItem optionallyCreate(ICard card, IResourceGetter resourceGetter, Menu menu, Event event, String key) {
-		if (card.cardType().equals(CardConstants.snippet)) // assumption: we are either a folder, collection or snippet.
+		if (key == null||CardConstants.snippet.equals(card.cardType())) // assumption: we are either a folder, collection or snippet.
 			return null;
 		MenuItem menuItem = new MenuItem(menu, SWT.NULL);
 		menuItem.setText(IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.menuItemViewSnippetText));

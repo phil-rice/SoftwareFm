@@ -17,12 +17,14 @@ import junit.framework.TestSuite;
 import org.apache.log4j.Logger;
 import org.apache.tools.ant.taskdefs.Ant;
 import org.codehaus.cake.forkjoin.RecursiveTask;
+import org.softwareFm.httpClient.api.IHttpClient;
 
 public class Sample {
 
 	@SuppressWarnings("unused")
 	/** This is my comment about x*/
 	public static void main(String[] args) {
+		IHttpClient client;
 		Logger logger = Logger.getLogger(Sample.class);
 		new Ant();
 		new TestSuite();
