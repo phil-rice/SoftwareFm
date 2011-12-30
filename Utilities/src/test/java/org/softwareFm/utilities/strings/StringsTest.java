@@ -18,6 +18,10 @@ import org.softwareFm.utilities.functions.Functions;
 
 public class StringsTest extends TestCase {
 	
+	public void testHtmlEscape(){
+		assertEquals("&lt;tag&gt;", Strings.htmlEscape("<tag>"));
+	}
+	
 	public void testIsUrlFriendly(){
 		assertTrue(Strings.isUrlFriendly("asdljkalsdj"));
 		assertTrue(Strings.isUrlFriendly("asdljkal---s_____dj"));

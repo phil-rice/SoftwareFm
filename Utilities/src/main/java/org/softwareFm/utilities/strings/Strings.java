@@ -30,6 +30,12 @@ public class Strings {
 	public static synchronized boolean isUrlFriendly(String raw) {
 		return urlFriendlyPattern.matcher(raw).matches();
 	}
+	
+	public static String htmlEscape(String raw){
+		return raw.replace("<", "&lt;").replace(">", "&gt;");
+		
+		
+	}
 
 	public static String removeBrackets(String raw, char open, char close) {
 		if (raw == null)

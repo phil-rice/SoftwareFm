@@ -48,7 +48,10 @@ public class SnippetFeedConfigurator implements IBrowserConfigurator {
 							public Void process(String url, Map<String, Object> result) throws Exception {
 								String template = IResourceGetter.Utils.getOrException(resourceGetter, ServerConstants.snipperTemplateKey);
 								String content = Java2Html.convertToHtml(Strings.nullSafeToString(result.get("content")));
-								String html = MessageFormat.format(template, result.get("title"), result.get("description"), content);
+								String html = MessageFormat.format(template, //
+										Strings.htmlEscape(Strings.nullSafeToString(result.get("title"))), //
+										Strings.htmlEscape(Strings.nullSafeToString(result.get("description"))), //
+										content);
 								displayReply(ServerConstants.okStatusCode, html);
 								return null;
 							}
