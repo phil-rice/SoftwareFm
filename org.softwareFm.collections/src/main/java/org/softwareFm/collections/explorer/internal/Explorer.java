@@ -353,6 +353,7 @@ public class Explorer implements IExplorer {
 									}
 								});
 								browser.processUrl(DisplayConstants.snippetFeedType, url);
+								masterDetailSocial.hideSocial();
 								masterDetailSocial.setDetail(browser.getControl());
 							}
 						};
@@ -403,7 +404,9 @@ public class Explorer implements IExplorer {
 									}
 								});
 								browser.processUrl(DisplayConstants.snippetFeedType, url);
+								masterDetailSocial.hideSocial();
 								masterDetailSocial.setDetail(browser.getControl());
+
 							}
 						};
 						cardConfig.cardDataStore.processDataFor(url, new ICardDataStoreCallback<Void>() {

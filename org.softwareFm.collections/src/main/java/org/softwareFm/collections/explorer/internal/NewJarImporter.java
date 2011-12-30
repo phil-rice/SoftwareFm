@@ -28,6 +28,7 @@ public class NewJarImporter {
 
 	private final IChainImporter importer;
 	private final Map<String, Object> groupIdArtifactIdVersionMap;
+	@SuppressWarnings("unused")
 	private final String groupId;
 	private final IUrlGeneratorMap map;
 	private final String digest;

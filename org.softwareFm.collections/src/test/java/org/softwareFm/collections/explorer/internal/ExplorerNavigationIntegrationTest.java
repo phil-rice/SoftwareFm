@@ -19,8 +19,6 @@ import org.softwareFm.utilities.strings.Urls;
 
 public class ExplorerNavigationIntegrationTest extends AbstractExplorerIntegrationTest {
 
-	private final String orgUrl = "/org";
-	private final String orgFirstUrl = "/org/first";
 	private final String orgFirstGroupUrl = "/org/first/org.first";
 
 	public void testNavigatingTutorials() {

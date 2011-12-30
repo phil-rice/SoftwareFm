@@ -212,15 +212,14 @@ public class ActionBar implements IActionBar {
 				showUrl(CardConstants.webPageJarUrl);
 			}
 		}));
-		if (newFeatures)
-			toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionSnippetTitle, ActionAnchor.class, CollectionConstants.actionSnippetImage, new Runnable() {
-				@Override
-				public void run() {
-					state = State.FROM_PATH;
-					reselect();
-					showUrl(CardConstants.webPageSnippetUrl);
-				}
-			}));
+		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionSnippetTitle, ActionAnchor.class, CollectionConstants.actionSnippetImage, new Runnable() {
+			@Override
+			public void run() {
+				state = State.FROM_PATH;
+				reselect();
+				showUrl(CardConstants.webPageSnippetUrl);
+			}
+		}));
 	}
 
 	private void showUrl(String url) {

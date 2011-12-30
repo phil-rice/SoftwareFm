@@ -26,9 +26,7 @@ import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
-import org.softwareFm.jdtBinding.api.ExpressionData;
 import org.softwareFm.jdtBinding.api.IBindingRipper;
-import org.softwareFm.jdtBinding.api.IExpressionCategoriser;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.maps.Maps;
@@ -41,7 +39,7 @@ public class BindingRipper implements IBindingRipper {
 	public BindingRipperResult rip(Expression from, Map<String, Object> cargo) {
 		try {
 			if (from != null) {
-				ExpressionData expressionData = IExpressionCategoriser.Utils.categoriser().categorise(from);
+//				ExpressionData expressionData = IExpressionCategoriser.Utils.categoriser().categorise(from);
 //				System.out.println("BR: " + expressionData);
 				ITypeBinding binding = from.resolveTypeBinding();
 				IJavaElement javaElement = binding.getJavaElement();
