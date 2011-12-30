@@ -66,10 +66,9 @@ public class ExplorerWithRadioChannel {
 
 					final IMutableCardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(from, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
-					String popupMenuId = "explorerMenu";
-					String detailsPopupMenuId = null;
+					String popupMenuId = "data";
 
-					final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore)).withPopupMenuId(popupMenuId, detailsPopupMenuId);
+					final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 					IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(explorerAndButton);
 					IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardDataStore);
 					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, playListGetter, service);

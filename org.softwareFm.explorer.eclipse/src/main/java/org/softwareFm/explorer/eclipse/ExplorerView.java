@@ -39,7 +39,7 @@ public  class ExplorerView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		final Activator activator = Activator.getDefault();
-		final CardConfig cardConfig = makeCardConfig(parent).withPopupMenuId(CollectionConstants.explorerPopupMenuId, CollectionConstants.snippetPopupMenuId);
+		final CardConfig cardConfig = makeCardConfig(parent);
 		IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(parent);
 		Size.resizeMeToParentsSize(masterDetailSocial.getControl());
 
@@ -49,8 +49,8 @@ public  class ExplorerView extends ViewPart {
 		actionBar = IActionBar.Utils.actionBar(explorer, cardConfig, SelectedArtifactSelectionManager.reRipFn());
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
 		actionBar.populateToolbar(toolBarManager);
-		ICardMenuItemHandler.Utils.addExplorerMenuItemHandlers(explorer, CollectionConstants.explorerPopupMenuId);
-		ICardMenuItemHandler.Utils.addSnippetMenuItemHandlers(explorer, CollectionConstants.snippetPopupMenuId);
+		ICardMenuItemHandler.Utils.addExplorerMenuItemHandlers(explorer, "data");
+		ICardMenuItemHandler.Utils.addSnippetMenuItemHandlers(explorer, "snippet");
 		IBrowserConfigurator.Utils.configueWithUrlRssSnippetAndTweet(explorer);
 
 		final IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, null);

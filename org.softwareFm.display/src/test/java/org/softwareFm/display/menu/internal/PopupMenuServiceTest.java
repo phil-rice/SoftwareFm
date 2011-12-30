@@ -12,8 +12,6 @@ import org.softwareFm.display.menu.IPopupMenuService;
 import org.softwareFm.display.menu.PopupMenuContributorMock;
 import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.strings.Strings;
 import org.softwareFm.utilities.tests.Tests;
 
 public class PopupMenuServiceTest extends SwtTest {
@@ -27,25 +25,25 @@ public class PopupMenuServiceTest extends SwtTest {
 
 	@Test
 	public void testContributorsWithCorrectIdGetCalled() {
-		popUpMenuService.contributeTo(event, menu, "one:relevantItem");
-		checkCalledOnce("one", mock1_1);
-		checkCalledOnce("one", mock1_2);
+		popUpMenuService.contributeTo("one", event, menu, "relevantItem");
+		checkCalledOnce(mock1_1);
+		checkCalledOnce(mock1_2);
 		checkNotCalled(mock2_1);
 
-		popUpMenuService.contributeTo(event, menu, "two:relevantItem");
-		checkCalledOnce("one", mock1_1);
-		checkCalledOnce("one", mock1_2);
-		checkCalledOnce("two", mock2_1);
+		popUpMenuService.contributeTo("two", event, menu, "relevantItem");
+		checkCalledOnce(mock1_1);
+		checkCalledOnce(mock1_2);
+		checkCalledOnce(mock2_1);
 	}
 
 	public void testOrderPreserved() {
-		popUpMenuService.contributeTo(event, menu, "one:relevantItem");
+		popUpMenuService.contributeTo("one", event, menu, "relevantItem");
 		assertEquals(0, Lists.getOnly(mock1_1.counts).intValue());
 		assertEquals(1, Lists.getOnly(mock1_2.counts).intValue());
 	}
 
 	public void testOrderPreservedWithReverse() {
-		popUpMenuService.contributeTo(event, menu, "reverseOrder:relevantItem");
+		popUpMenuService.contributeTo("reverseOrder", event, menu, "reverseOrder:relevantItem");
 		assertEquals(1, Lists.getOnly(mock1_1.counts).intValue());
 		assertEquals(0, Lists.getOnly(mock1_2.counts).intValue());
 	}
@@ -64,17 +62,17 @@ public class PopupMenuServiceTest extends SwtTest {
 		IllegalArgumentException e = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
 			@Override
 			public void run() {
-				popUpMenuService.contributeTo(event, menu, "notIn:anything");
+				popUpMenuService.contributeTo("notIn", event, menu, "notIn:anything");
 			}
 		});
 		assertEquals("Illegal Menu Id [notIn]. Legal values are [reverseOrder, two, one]", e.getMessage());
 
 	}
 
-	private void checkCalledOnce(String menuId, PopupMenuContributorMock<String> mock) {
+	private void checkCalledOnce(PopupMenuContributorMock<String> mock) {
 		assertEquals(event, Lists.getOnly(mock.events));
 		assertEquals(menu, Lists.getOnly(mock.menus));
-		assertEquals(menuId + ":relevantItem", Lists.getOnly(mock.relevantItems));
+		assertEquals("relevantItem", Lists.getOnly(mock.relevantItems));
 	}
 
 	private void checkNotCalled(PopupMenuContributorMock<String> mock) {
@@ -91,12 +89,7 @@ public class PopupMenuServiceTest extends SwtTest {
 		mock1_2 = new PopupMenuContributorMock<String>();
 		mock2_1 = new PopupMenuContributorMock<String>();
 
-		popUpMenuService = IPopupMenuService.Utils.popUpMenuService(new IFunction1<String, String>() {
-			@Override
-			public String apply(String from) throws Exception {
-				return Strings.firstSegment(from, ":");
-			}
-		});
+		popUpMenuService = IPopupMenuService.Utils.popUpMenuService();
 		popUpMenuService.registerMenuId("one");
 		popUpMenuService.registerMenuId("two");
 		popUpMenuService.registerMenuId("reverseOrder");

@@ -26,6 +26,38 @@ public class StringsTest extends TestCase {
 		assertFalse(Strings.isUrlFriendly("asd$l.......jkal---s_____dj"));
 	}
 	
+	public void testSegmentFn(){
+		checkSegmentFn(0, "a", "a/b/c");
+		checkSegmentFn(1, "b", "a/b/c");
+		checkSegmentFn(2, "c", "a/b/c");
+		checkSegmentFn(3, "", "a/b/c");
+
+		checkSegmentFn(0, "a", "/a/b/c");
+		checkSegmentFn(1, "b", "/a/b/c");
+		checkSegmentFn(2, "c", "/a/b/c");
+		checkSegmentFn(3, "", "/a/b/c");
+
+		checkSegmentFn(0, "a", "/a///b///c");
+		checkSegmentFn(1, "b", "/a///b///c");
+		checkSegmentFn(2, "c", "/a///b///c//");
+		checkSegmentFn(3, "", "///a/b/c//");
+		
+		checkSegmentFn(0, "abc", "abc");
+		checkSegmentFn(1, "", "abc");
+		
+		checkSegmentFn(0, "", "");
+		checkSegmentFn(1, "", "");
+
+		checkSegmentFn(0, null, null);
+		checkSegmentFn(1, null, null);
+	}
+	
+	private void checkSegmentFn(int i, String expected, String raw) {
+		assertEquals(expected, Strings.segment(raw, "/", i));
+		assertEquals(expected, Functions.call(Strings.segmentFn("/", i), raw));
+		
+	}
+
 	public void testRemoveBrackets(){
 		assertEquals("onethree", Strings.removeBrackets("one<two>three", '<', '>'));
 		assertEquals("one<two>three", Strings.removeBrackets("one<two>three", '{', '}'));

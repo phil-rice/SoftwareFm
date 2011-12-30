@@ -443,4 +443,23 @@ public class Strings {
 
 	}
 
+	public static String segment(String raw, String separator, int i) {
+		if (raw == null)
+			return raw;
+		List<String> split = Strings.splitIgnoreBlanks(raw, separator);
+		if (i < split.size())
+			return split.get(i);
+		else
+			return "";
+	}
+
+	public static IFunction1<String, String> segmentFn(final String separator, final int i) {
+		return new IFunction1<String, String>() {
+			@Override
+			public String apply(String from) throws Exception {
+				return segment(from, separator, i);
+			}
+		};
+	}
+
 }

@@ -41,6 +41,7 @@ import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.server.GitRepositoryFactory;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
@@ -169,7 +170,8 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	protected Menu selectAndCreatePopupMenu(ICard card, String title) {
 		selectItem(card, title);
 		final Menu menu = new Menu(shell);
-		cardConfig.popupMenuService.contributeTo(new Event(), menu, card);
+		String popupMenuId = Functions.call(card.getCardConfig().popupMenuIdFn, card);
+		cardConfig.popupMenuService.contributeTo(popupMenuId, new Event(), menu, card);
 		return menu;
 	}
 

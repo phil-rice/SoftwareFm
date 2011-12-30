@@ -222,7 +222,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 				final Menu menu = new Menu(shell);
 				Table table = card.getTable();
 				table.select(index);
-				cardConfig.popupMenuService.contributeTo(new Event(), menu, card);
+				cardConfig.popupMenuService.contributeTo("tests", new Event(), menu, card);
 				List<String> actual = Lists.newList();
 				for (int i = 0; i < menu.getItemCount(); i++)
 					actual.add(menu.getItem(i).getText());

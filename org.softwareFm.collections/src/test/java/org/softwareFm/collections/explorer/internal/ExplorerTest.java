@@ -34,7 +34,7 @@ import org.softwareFm.utilities.resources.ResourceGetterMock;
 
 public class ExplorerTest extends SwtAndServiceTest {
 
-	private final static String popupMenuId = "test";
+	private final static String popupMenuId = "some";
 	private CardDataStoreMock updateStore;
 	private CardConfig raw;
 	private MasterDetailSocial masterDetailSocial;
@@ -66,8 +66,7 @@ public class ExplorerTest extends SwtAndServiceTest {
 				Functions.call(raw.resourceGetterFn, null).with(new ResourceGetterMock(CardConstants.cardNameUrlKey, cardNameUrl)), // default
 				"noCardNameField", new ResourceGetterMock(), //
 				"withCardNameField", new ResourceGetterMock(CardConstants.cardNameFieldKey, "cardName"))).//
-				withTitleSpecFn(Functions.<ICardData,TitleSpec> constant(TitleSpec.noTitleSpec(shell.getBackground()))).//
-				withPopupMenuId(popupMenuId, detailsPopupMenuId);
+				withTitleSpecFn(Functions.<ICardData,TitleSpec> constant(TitleSpec.noTitleSpec(shell.getBackground())));
 		Explorer explorer = new Explorer(cardConfig, CardDataStoreFixture.url, masterDetailSocial, service, IPlayListGetter.Utils.noPlayListGetter()) {
 			@Override
 			protected String makeRandomUUID() {

@@ -160,7 +160,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 			@Override
 			public void process(ICard t) throws Exception {
 				final Menu menu1 = new Menu(shell);
-				cardConfig.popupMenuService.contributeTo(new Event(), menu1, t);
+				cardConfig.popupMenuService.contributeTo("tests", new Event(), menu1, t);
 				Menu menu = menu1;
 				executeMenuItem(menu, "Add " + "advert");
 			}
@@ -222,7 +222,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 			@Override
 			public void process(ICard t) throws Exception {
 				final Menu menu1 = new Menu(shell);
-				cardConfig.popupMenuService.contributeTo(new Event(), menu1, t);
+				cardConfig.popupMenuService.contributeTo("tests", new Event(), menu1, t);
 				Menu menu = menu1;
 				executeMenuItem(menu, "Add " + collection);
 			}

@@ -19,6 +19,7 @@ import org.softwareFm.card.details.IDetailAdder;
 import org.softwareFm.card.details.IDetailFactory;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.display.composites.IHasControl;
+import org.softwareFm.display.menu.IPopupMenuService;
 
 public class DetailFactory implements IDetailFactory {
 
@@ -33,7 +34,7 @@ public class DetailFactory implements IDetailFactory {
 		if (key == null)
 			return null;
 		for (IDetailAdder adder : detailAdders) {
-			IHasControl result = adder.add(parentComposite, parentCard, cardConfig.withPopupMenuId(null, null), key, value, callback);
+			IHasControl result = adder.add(parentComposite, parentCard, cardConfig.withPopupMenuService(IPopupMenuService.Utils.<ICard>noPopupMenus()), key, value, callback);
 			if (result != null)
 				return result;
 		}

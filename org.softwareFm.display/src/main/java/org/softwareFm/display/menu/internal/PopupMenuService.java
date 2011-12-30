@@ -18,19 +18,13 @@ import org.softwareFm.display.menu.IPopupMenuService;
 import org.softwareFm.utilities.collections.Iterables;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.collections.Sets;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 
 public class PopupMenuService<T> implements IPopupMenuService<T> {
 
 	private final Set<String> menuIds = Sets.newSet();
 	private final Map<String, List<IPopupMenuContributor<T>>> map = Maps.newMap();
-	private final IFunction1<T, String> menuIdFn;
 
-	public PopupMenuService(IFunction1<T, String> menuIdFn) {
-		this.menuIdFn = menuIdFn;
-	}
 
 	@Override
 	public void registerMenuId(String menuId) {
@@ -44,12 +38,11 @@ public class PopupMenuService<T> implements IPopupMenuService<T> {
 	}
 
 	@Override
-	public void contributeTo(Event event, Menu menu, T relevantItem) {
-		String menuId = Functions.call(menuIdFn, relevantItem);
-		if (menuId == null)
+	public void contributeTo(String popupMenuId, Event event, Menu menu, T relevantItem) {
+		if (popupMenuId == null)
 			return;
-		checkMenuId(menuId);
-		List<IPopupMenuContributor<T>> list = map.get(menuId);
+		checkMenuId(popupMenuId);
+		List<IPopupMenuContributor<T>> list = map.get(popupMenuId);
 		for (IPopupMenuContributor<T> contributor : Lists.nullSafe(list))
 			contributor.contributeTo(event, menu, relevantItem);
 	}
