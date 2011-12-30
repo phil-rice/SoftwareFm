@@ -16,22 +16,7 @@ public interface IResponse {
 	public static class Utils {
 
 		public static IResponse create(final String url, final int statusCode, final String string) {
-			return new IResponse() {
-				@Override
-				public String url() {
-					return url;
-				}
-				
-				@Override
-				public int statusCode() {
-					return statusCode;
-				}
-				
-				@Override
-				public String asString() {
-					return string;
-				}
-			};
+			return new Response(url, statusCode, string);
 		}
 		
 	}

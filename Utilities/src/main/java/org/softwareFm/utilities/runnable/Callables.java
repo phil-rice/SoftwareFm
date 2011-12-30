@@ -17,4 +17,13 @@ public class Callables {
 		};
 	}
 
+	public static <T>Callable<T> value(final T value) {
+		return new Callable<T>() {
+			@Override
+			public T call() throws Exception {
+				return value;
+			}
+		};
+	}
+
 }

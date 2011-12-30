@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.softwareFm.utilities.strings.Strings;
+import org.softwareFm.utilities.strings.Urls;
 
 public class UrlCache<V> {
 
@@ -11,23 +12,28 @@ public class UrlCache<V> {
 	private final Object lock = new Object();
 
 	public boolean containsKey(String url) {
-		return map.containsKey(url);
+		synchronized (lock) {
+			return map.containsKey(Urls.removeSlash(url));
+		}
 	}
 
 	public V get(String url) {
-		return map.get(url);
+		synchronized (lock) {
+			return map.get(Urls.removeSlash(url));
+		}
 	}
 
 	public V findOrCreate(String url, Callable<V> creator) {
 		synchronized (lock) {
-			return Maps.findOrCreate(map, url, creator);
+			return Maps.findOrCreate(map, Urls.removeSlash(url), creator);
 		}
 	}
 
 	public void clear(String url) {
 		synchronized (lock) {
-			removeParents(url);
-			map.remove(url);
+			String actualUrl = Urls.removeSlash(url);
+			removeParents(actualUrl);
+			map.remove(actualUrl);
 		}
 	}
 
@@ -40,5 +46,12 @@ public class UrlCache<V> {
 			map.remove(nextUrl);
 			thisUrl = nextUrl;
 		}
+	}
+
+	public void clear() {
+		synchronized (lock) {
+			map.clear();
+		}
+
 	}
 }

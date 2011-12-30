@@ -5,11 +5,13 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.softwareFm.httpClient.requests.CheckCallback;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.repositoryFacard.CheckRepositoryFacardCallback;
 import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
+import org.softwareFm.server.GetResult;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ISoftwareFmServer;
 import org.softwareFm.server.ServerConstants;
@@ -29,12 +31,54 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 	private IGitServer remoteGitServer;
 	private IGitServer localGitServer;
 
+	public void testCanSeeAboveRepositoryAfterPost() throws InterruptedException, ExecutionException, TimeoutException {
+		File ab = new File(localRoot, "a/b");
+		File abc = new File(localRoot, "a/b/c");
+		File abd = new File(localRoot, "a/b/d");
+		checkRepositoryDoesntExists(ab);
+		checkRepositoryDoesntExists(abc);
+		checkRepositoryDoesntExists(abd);
+
+		//Now
+		repositoryFacard.get("a/b", IRepositoryFacardCallback.Utils.checkMatches(ServerConstants.notFoundStatusCode, Maps.emptyStringObjectMap())).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+
+		repositoryFacard.makeRoot("a/b/c", IResponseCallback.Utils.noCallback()).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+		repositoryFacard.makeRoot("a/b/d", IResponseCallback.Utils.noCallback()).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+
+		final Map<String, Object> expected = Maps.stringObjectMap("c", Maps.emptyStringObjectMap(), "d", Maps.emptyStringObjectMap());
+		repositoryFacard.get("a/b", IRepositoryFacardCallback.Utils.checkMatches(ServerConstants.okStatusCode, expected)).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+
+		final AtomicInteger count = new AtomicInteger();
+		repositoryFacard.findRepositoryBaseOrAboveRepositoryData("a/b", new IGetCallback() {
+			@Override
+			public GetResult aboveRepositoryData(Map<String, Object> data) {
+				assertEquals(1, count.incrementAndGet());
+				assertEquals(expected, data);
+				return null;
+			}
+
+			@Override
+			public GetResult repositoryBase(String repositoryBase) {
+				fail();
+				return null;
+			}
+
+			@Override
+			public void invalidResponse(int statusCode, String message) {
+				fail();
+
+			}
+		}).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+		assertEquals(1, count.get());
+
+	}
+
 	public void testGetWhenStaleCacheTimeUpCausesPullIfRepositoryExists() throws InterruptedException {
 		checkCreateRepository(remoteGitServer, "a/b");
 		put(remoteRoot, "a/b/c", v11);
 		gitFacard.addAllAndCommit(remoteRoot, "a/b", "message");
 		localGitServer.clone("a/b");
-		
+
 		put(remoteRoot, "a/b/c", v12);
 		gitFacard.addAllAndCommit(remoteRoot, "a/b", "message");
 

@@ -22,7 +22,7 @@ public class MakeRootProcessor extends AbstractCommandProcessor {
 		File existing = server.findRepositoryUrl(actualUrl);
 		if (existing == null) {
 			server.createRepository(actualUrl);
-			urlCache.clear(actualUrl.substring(1));
+			urlCache.clear(actualUrl);
 			return IProcessResult.Utils.processString(MessageFormat.format(ServerConstants.madeRoot, actualUrl));
 		}
 		return null;

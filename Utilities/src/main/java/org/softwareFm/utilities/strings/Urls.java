@@ -19,6 +19,13 @@ import org.softwareFm.utilities.exceptions.WrappedException;
 
 public class Urls {
 
+	public static String removeSlash(String raw) {
+		if (raw.startsWith("/"))
+			return raw.substring(1);
+		else
+			return raw;
+	}
+
 	public static String compose(String... urls) {
 		StringBuilder builder = new StringBuilder();
 		for (String url : urls) {
@@ -33,8 +40,9 @@ public class Urls {
 		}
 		return builder.toString();
 	}
+
 	public static String composeWithSlash(String... urls) {
-		return "/"+compose(urls);
+		return "/" + compose(urls);
 	}
 
 	public static UrlRipperResult rip(String url) {

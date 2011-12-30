@@ -43,7 +43,8 @@ public class GitGetProcessor implements IProcessCall {
 				@Override
 				public String call() throws Exception {
 					GetResult data = server.localGet(url);
-					return Json.toString(Maps.stringObjectLinkedMap(ServerConstants.dataKey, data.data));
+					String result = Json.toString(Maps.stringObjectLinkedMap(ServerConstants.dataKey, data.data));
+					return result;
 				}
 			});
 		} else {

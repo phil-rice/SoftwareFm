@@ -21,8 +21,8 @@ public class CheckRepositoryFacardCallback implements IRepositoryFacardCallback 
 	public void process(IResponse response, Map<String, Object> data) throws Exception {
 		if (count.getAndIncrement() > 0)
 			Assert.fail();
-		Assert.assertEquals(statusCode, response.statusCode());
-		Assert.assertEquals(expected, data);
+		Assert.assertEquals(response.toString(), expected, data);
+		Assert.assertEquals(response.toString(), statusCode, response.statusCode());
 	}
 
 	public void assertCalled() {

@@ -28,6 +28,7 @@ import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.maps.UrlCache;
 import org.softwareFm.utilities.runnable.Callables;
 import org.softwareFm.utilities.services.IServiceExecutor;
 import org.softwareFm.utilities.strings.Urls;
@@ -40,12 +41,15 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 	private final IHttpClient httpClient;
 	private final long staleCacheTime;
 	private final Map<File, Long> lastPullTimeMap = Maps.newMap();
+	private long lastAboveRepositoryClearTime;
+	private final UrlCache<GetResult> aboveRepositoryCache = new UrlCache<GetResult>();
 
 	public GitRepositoryFacard(IHttpClient httpClient, IServiceExecutor serviceExecutor, IGitServer localGit, long staleCacheTime) {
 		this.httpClient = httpClient;
 		this.serviceExecutor = serviceExecutor;
 		this.localGit = localGit;
 		this.staleCacheTime = staleCacheTime;
+		lastAboveRepositoryClearTime = System.currentTimeMillis();
 	}
 
 	@Override
@@ -61,6 +65,7 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 				MemoryResponseCallback<Object, Object> memoryCallback = IResponseCallback.Utils.memoryCallback();
 				String fullUrl = Urls.compose(ServerConstants.makeRootPrefix, url);
 				httpClient.post(fullUrl).execute(memoryCallback).get();
+				aboveRepositoryCache.clear(url);
 				IGitServer.Utils.cloneOrPull(localGit, url);
 				callback.process(memoryCallback.response);
 				return null;
@@ -74,6 +79,17 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 		Future<GetResult> future = serviceExecutor.submit(new Callable<GetResult>() {
 			@Override
 			public GetResult call() throws Exception {
+				if (aboveRepositoryCache.containsKey(url)) {
+					if (System.currentTimeMillis() > lastAboveRepositoryClearTime + staleCacheTime){
+						long now = System.currentTimeMillis();
+						lastAboveRepositoryClearTime = now;
+						aboveRepositoryCache.clear();
+					} else {
+						GetResult result = aboveRepositoryCache.get(url);
+						processCallback(callbackHasBeenCalled, callback, url, result);
+						return result;
+					}
+				}
 				File localRepositoryRoot = localGit.findRepositoryUrl(url);
 				if (localRepositoryRoot != null) {// we have found something, and it is in a repository
 					long lastPull = Maps.findOrCreate(lastPullTimeMap, localRepositoryRoot, Callables.time());
@@ -88,7 +104,7 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 					processCallback(callbackHasBeenCalled, callback, url, result);
 					return result;
 				}
-				//well we didn't find a repository
+				// well we didn't find a repository
 				GetResult result = findRepositoryBaseOrAboveRepositoryData(url, new IGetCallback() {
 					@Override
 					public GetResult repositoryBase(String repositoryBase) {
@@ -103,8 +119,8 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 
 					@Override
 					public GetResult aboveRepositoryData(Map<String, Object> data) {
-						//TODO we should really cache these 'above repository' queries
-						return GetResult.create(data);
+						GetResult result = aboveRepositoryCache.findOrCreate(url, Callables.value(GetResult.create(data)));
+						return result;
 					}
 				}).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
 				processCallback(callbackHasBeenCalled, callback, url, result);
