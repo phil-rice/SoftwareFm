@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.LineItem;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.configuration.ICardConfigurator;
@@ -31,6 +32,13 @@ public class SoftwareFmCardConfigurator implements ICardConfigurator {
 	public CardConfig configure(final Display display, CardConfig config) {
 		final CardConfig baseConfigured = Utils.basicConfigurator().configure(display, config);
 		return baseConfigured.//
+				withPopupMenuIdFn(new IFunction1<ICard, String>() {
+					@Override
+					public String apply(ICard from) throws Exception {
+						String result = Strings.segment(from.url(), "/", 1);
+						return result;//0 is softwarefm, 1 is data or snippet or jar or...
+					}
+				}).
 				withNameFn(ICollectionConfigurationFactory.Utils.softwareFmNameFunction(baseConfigured.resourceGetterFn, CardConstants.namePattern)).//
 				withValueFn(ICollectionConfigurationFactory.Utils.softwareFmValueFunction(baseConfigured.resourceGetterFn, CardConstants.valuePattern)).//
 				withTitleFn(ICollectionConfigurationFactory.Utils.softwareFmTitleFunction(baseConfigured.resourceGetterFn)).//

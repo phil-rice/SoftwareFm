@@ -308,6 +308,9 @@ public class CardConfig {
 	public CardConfig withPopupMenuService(IPopupMenuService<ICard> popupMenuService) {
 		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuService, popupMenuIdFn);
 	}
+	public CardConfig withPopupMenuIdFn(IFunction1<ICard, String> popupMenuIdFn) {
+		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuService, popupMenuIdFn);
+	}
 
 	public Map<String, Object> modify(String url, Map<String, Object> rawData) {
 		Map<String, Object> value = rawData;

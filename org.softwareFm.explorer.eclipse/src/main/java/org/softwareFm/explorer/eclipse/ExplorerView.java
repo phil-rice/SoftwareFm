@@ -49,8 +49,8 @@ public  class ExplorerView extends ViewPart {
 		actionBar = IActionBar.Utils.actionBar(explorer, cardConfig, SelectedArtifactSelectionManager.reRipFn());
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
 		actionBar.populateToolbar(toolBarManager);
-		ICardMenuItemHandler.Utils.addExplorerMenuItemHandlers(explorer, "data");
-		ICardMenuItemHandler.Utils.addSnippetMenuItemHandlers(explorer, "snippet");
+		ICardMenuItemHandler.Utils.addSoftwareFmMenuItemHandlers(explorer);
+		
 		IBrowserConfigurator.Utils.configueWithUrlRssSnippetAndTweet(explorer);
 
 		final IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, null);

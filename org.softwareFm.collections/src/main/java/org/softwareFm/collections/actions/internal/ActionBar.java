@@ -94,7 +94,7 @@ public class ActionBar implements IActionBar {
 		ExpressionData key = categoriser.categorise(ripperResult.expression);
 		if (key == null)
 			return null;
-		String baseUrl = CollectionConstants.rootUrl + "/" + key.classKey;
+		String baseUrl = CollectionConstants.rootUrl + "/snippet/" + key.classKey;
 		if (key.methodKey != null && key.methodKey.length() > 0) {
 			String result = baseUrl + "/method/" + key.methodKey;
 			return result + "/snippet";

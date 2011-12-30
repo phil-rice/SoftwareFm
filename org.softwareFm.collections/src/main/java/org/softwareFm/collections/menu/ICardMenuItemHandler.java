@@ -37,6 +37,11 @@ public interface ICardMenuItemHandler extends IPopupMenuContributor<ICard> {
 	void execute(ICard card, String key, MenuItem item);
 
 	public static class Utils {
+		public static void addSoftwareFmMenuItemHandlers(IExplorer explorer) {
+			addExplorerMenuItemHandlers(explorer, "data");
+			addExplorerMenuItemHandlers(explorer, "jar");
+			addSnippetMenuItemHandlers(explorer, "snippet");
+		}
 
 		public static void addExplorerMenuItemHandlers(IExplorer explorer, String popupMenuId) {
 			CardConfig cardConfig = explorer.getCardConfig();
@@ -96,6 +101,7 @@ public interface ICardMenuItemHandler extends IPopupMenuContributor<ICard> {
 		public static ICardMenuItemHandler editSnippet(IExplorer explorer) {
 			return new EditSnippetMenuHandler(explorer);
 		}
+		
 
 	}
 

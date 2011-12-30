@@ -21,7 +21,6 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -33,7 +32,6 @@ import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardChangedListener;
 import org.softwareFm.card.card.ICardData;
-import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.card.ILineSelectedListener;
 import org.softwareFm.card.card.RightClickCategoryResult;
@@ -45,7 +43,6 @@ import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.dataStore.CardDataStoreCallbackAdapter;
 import org.softwareFm.card.dataStore.IAfterEditCallback;
 import org.softwareFm.card.dataStore.ICardAndCollectionDataStoreVisitor;
-import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.card.dataStore.ICardDataStoreCallback;
 import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
@@ -53,7 +50,6 @@ import org.softwareFm.card.editors.ICardEditorCallback;
 import org.softwareFm.card.editors.IEditorDetailAdder;
 import org.softwareFm.card.editors.IValueEditor;
 import org.softwareFm.card.navigation.internal.NavNextHistoryPrevConfig;
-import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.collections.comments.Comments;
 import org.softwareFm.collections.comments.ICommentsCallback;
 import org.softwareFm.collections.constants.CollectionConstants;
@@ -65,12 +61,9 @@ import org.softwareFm.display.browser.IBrowserPart;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.display.timeline.PlayItem;
 import org.softwareFm.display.timeline.TimeLine;
-import org.softwareFm.repositoryFacard.IRepositoryFacard;
-import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
@@ -425,7 +418,16 @@ public class Explorer implements IExplorer {
 
 							@Override
 							public Void noData(String url) throws Exception {
-								
+								cardConfig.cardDataStore.makeRepo(url, new IAfterEditCallback() {
+									@Override
+									public void afterEdit(String url) {
+										try {
+											process(url, Maps.emptyStringObjectMap());
+										} catch (Exception e) {
+											throw WrappedException.wrap(e);
+										}
+									}
+								});
 								return null;
 							}
 						});
@@ -853,31 +855,6 @@ public class Explorer implements IExplorer {
 			throw WrappedException.wrap(e);
 		}
 
-	}
-
-	public static void main(String[] args) {
-		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacardForCardExplorer();
-		final IServiceExecutor service = IServiceExecutor.Utils.defaultExecutor();
-		try {
-			final String rootUrl = "/softwareFm/data";
-			final String firstUrl = "/softwareFm/data/org";
-
-			Show.display(Explorer.class.getSimpleName(), new IFunction1<Composite, Composite>() {
-				@Override
-				public Composite apply(Composite from) throws Exception {
-					final IMutableCardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(from, facard);
-					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
-					final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
-					IMasterDetailSocial masterDetailSocial = new MasterDetailSocial(from, SWT.NULL);
-					IExplorer explorer = new Explorer(cardConfig, rootUrl, masterDetailSocial, service, IPlayListGetter.Utils.noPlayListGetter());
-					explorer.displayCard(firstUrl, new CardAndCollectionDataStoreAdapter());
-					return masterDetailSocial.getComposite();
-				}
-			});
-		} finally {
-			facard.shutdown();
-			service.shutdownAndAwaitTermination(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
-		}
 	}
 
 	private final Random random = new Random();
