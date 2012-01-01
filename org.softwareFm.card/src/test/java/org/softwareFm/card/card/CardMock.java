@@ -4,7 +4,7 @@
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
 /* This file is part of SoftwareFm
-/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+ /* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
@@ -35,7 +35,7 @@ public class CardMock implements ICard {
 	private final Composite mockComposite;
 
 	public CardMock(ICardHolder cardHolder, CardConfig cardConfig, String url, Map<String, Object> map) {
-		mockComposite = cardHolder == null?null:new Card.CardComposite(cardHolder.getComposite(), cardConfig, url, map, null, TitleSpec.noTitleSpec(cardHolder.getControl().getBackground()));
+		mockComposite = cardHolder == null ? null : new Card.CardComposite(cardHolder.getComposite(), cardConfig, url, map, null, TitleSpec.noTitleSpec(cardHolder.getControl().getBackground()));
 		this.cardConfig = cardConfig;
 		this.url = url;
 		this.map = map;
@@ -43,7 +43,7 @@ public class CardMock implements ICard {
 	}
 
 	@Override
-	public void valueChanged(String  key, Object newValue) {
+	public void valueChanged(String key, Object newValue) {
 		keys.add(key);
 		newValues.add(newValue);
 	}
@@ -71,7 +71,6 @@ public class CardMock implements ICard {
 	public String url() {
 		return url;
 	}
-
 
 	@Override
 	public Map<String, Object> data() {

@@ -37,7 +37,7 @@ public class IExplorerTest extends SwtTest {
 		assertEquals(cardConfig, cardHolder.getCardConfig());
 	}
 
-	public static  CardConfig addNeededResources(CardConfig raw) {
+	public static CardConfig addNeededResources(CardConfig raw) {
 		IResourceGetter resourceGetter = Functions.call(raw.resourceGetterFn, null);
 		IResourceGetter withNeeded = resourceGetter.with(new ResourceGetterMock(//
 				CollectionConstants.addCommentButtonTitle, "Add Comment",//

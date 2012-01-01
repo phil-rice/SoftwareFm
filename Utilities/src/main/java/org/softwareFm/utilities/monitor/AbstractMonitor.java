@@ -12,18 +12,22 @@ public abstract class AbstractMonitor implements IMonitor {
 	private final AtomicBoolean cancel = new AtomicBoolean();
 	private final AtomicBoolean finished = new AtomicBoolean();
 
+	@Override
 	public void cancel() {
 		cancel.set(true);
 	}
 
+	@Override
 	public boolean cancelled() {
 		return cancel.get();
 	}
 
+	@Override
 	public void finish() {
 		finished.set(true);
 	}
 
+	@Override
 	public boolean done() {
 		return finished.get();
 	}

@@ -27,7 +27,6 @@ public class AboveRepositoryCacheTest extends AbstractProcessCallTest<GitGetProc
 		checkGetWhenIn("a/b", empty);
 		checkGetWhenIn("a", empty);
 
-		
 		assertTrue(cache.containsKey("a"));
 		assertTrue(cache.containsKey("a/b"));
 		assertTrue(cache.containsKey("a/b/c"));
@@ -35,7 +34,7 @@ public class AboveRepositoryCacheTest extends AbstractProcessCallTest<GitGetProc
 		assertTrue(cache.containsKey("a/b/d"));
 
 		makeRepo("a/b/c");
-		
+
 		assertFalse(cache.containsKey("a"));
 		assertFalse(cache.containsKey("a/b"));
 		assertFalse(cache.containsKey("a/b/c"));
@@ -43,10 +42,10 @@ public class AboveRepositoryCacheTest extends AbstractProcessCallTest<GitGetProc
 		assertTrue(cache.containsKey("a/b/d"));
 
 		checkGetWhenNotIn("a", "{\"data\":{\"b\":{}}}");
-		checkGetWhenNotIn("a/b",  "{\"data\":{\"c\":{}}}");
-		
+		checkGetWhenNotIn("a/b", "{\"data\":{\"c\":{}}}");
+
 		checkGetWhenIn("a", "{\"data\":{\"b\":{}}}");
-		checkGetWhenIn("a/b",  "{\"data\":{\"c\":{}}}");
+		checkGetWhenIn("a/b", "{\"data\":{\"c\":{}}}");
 	}
 
 	private void makeRepo(String url) {

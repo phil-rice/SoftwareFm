@@ -17,7 +17,7 @@ public class RemoveSourceJavadocFromJarData {
 			String text = Files.getText(file);
 			Map<String, Object> data = Json.mapFromString(text);
 			boolean changed = remove(data, "javadoc") || remove(data, "source");
-			System.out.println(file +": "+ Strings.oneLine(text));
+			System.out.println(file + ": " + Strings.oneLine(text));
 			if (changed)
 				Files.setText(file, Json.toString(data));
 		}

@@ -17,7 +17,7 @@ public class TweetFeedConfigurator implements IBrowserConfigurator {
 		builder.register(DisplayConstants.tweetFeedType, new IFunction1<Composite, IBrowserPart>() {
 			@Override
 			public IBrowserPart apply(Composite from) throws Exception {
-				return new BrowserPart(from, SWT.NULL){
+				return new BrowserPart(from, SWT.NULL) {
 					@Override
 					public void displayUrl(String url) {
 						super.displayUrl("http://mobile.twitter.com/" + url);

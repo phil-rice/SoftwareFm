@@ -12,13 +12,14 @@ import org.softwareFm.utilities.functions.IFunction1;
 
 public class NavNextHistoryPrevConfig<T> {
 
-	public static <T>NavNextHistoryPrevConfig<T> forTests(){
-		return forTests( ICallback.Utils.<T>noCallback());
+	public static <T> NavNextHistoryPrevConfig<T> forTests() {
+		return forTests(ICallback.Utils.<T> noCallback());
 	}
-	public static <T>NavNextHistoryPrevConfig<T> forTests(ICallback<T> callback){
-		return new NavNextHistoryPrevConfig<T>(10, Functions.<String,Image>constant(null), Functions.<T>toStringFn(), callback);
+
+	public static <T> NavNextHistoryPrevConfig<T> forTests(ICallback<T> callback) {
+		return new NavNextHistoryPrevConfig<T>(10, Functions.<String, Image> constant(null), Functions.<T> toStringFn(), callback);
 	}
-	
+
 	private final int defaultMargin = 0;
 	private final int defaultNavIconWidth = 10;
 	public final int navIconWidth;
@@ -60,10 +61,9 @@ public class NavNextHistoryPrevConfig<T> {
 	public NavNextHistoryPrevConfig<T> withMargins(int leftMargin, int rightMargin, int topMargin, int bottomMargin) {
 		return new NavNextHistoryPrevConfig<T>(navIconWidth, height, imageFn, stringFn, gotoCallback, leftMargin, rightMargin, topMargin, bottomMargin);
 	}
+
 	public NavNextHistoryPrevConfig<T> withNavIconWidth(int navIconWidth) {
 		return new NavNextHistoryPrevConfig<T>(navIconWidth, height, imageFn, stringFn, gotoCallback, leftMargin, rightMargin, topMargin, bottomMargin);
 	}
-	
-	
 
 }

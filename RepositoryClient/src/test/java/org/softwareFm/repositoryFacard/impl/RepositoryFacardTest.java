@@ -13,8 +13,9 @@ import org.softwareFm.utilities.maps.Maps;
 
 public class RepositoryFacardTest extends AbstractRepositoryFacardTest {
 
-	public void testNotAnyMore(){
+	public void testNotAnyMore() {
 	}
+
 	public void _testWithSimpleTypes() throws Exception {
 		checkRoundTrip();
 		checkRoundTrip("a", 1L);
@@ -60,8 +61,8 @@ public class RepositoryFacardTest extends AbstractRepositoryFacardTest {
 		parentReponse.assertOk();
 
 		checkGet(url, "namep1", "datap1", "namep2", 2L, "jcr:primaryType", "nt:unstructured");
-		checkGet(url+"/one", "name11", "data11", "name12", 12L, "jcr:primaryType", "nt:unstructured");
-		checkGet(url+"/two", "name21", "data21", "name22", 22L, "jcr:primaryType", "nt:unstructured");
+		checkGet(url + "/one", "name11", "data11", "name12", 12L, "jcr:primaryType", "nt:unstructured");
+		checkGet(url + "/two", "name21", "data21", "name22", 22L, "jcr:primaryType", "nt:unstructured");
 	}
 
 	private void checkGet(String url, Object... expectedAsParams) throws Exception {

@@ -61,7 +61,6 @@ public class StyledTextWithBold implements IHasControl {
 				if (start != -1)
 					throw new IllegalArgumentException(MessageFormat.format(CardConstants.cannotStyleText, text, i, ch));
 				start = builder.length();
-				;
 				break;
 			case '>':
 				if (start == -1)
@@ -89,7 +88,7 @@ public class StyledTextWithBold implements IHasControl {
 
 	public void setBackground(Color background) {
 		content.setBackground(background);
-//		styledText.setBackground(background);
+		// styledText.setBackground(background);
 	}
 
 }

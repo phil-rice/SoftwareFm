@@ -52,7 +52,7 @@ public abstract class AbstractDetailsAdderTest<T extends IDetailAdder> extends A
 	};
 	protected ILineItemFunction<String> addPrefixToValue = new ILineItemFunction<String>() {
 		@Override
-		public String apply(CardConfig cardConfig, LineItem from){
+		public String apply(CardConfig cardConfig, LineItem from) {
 			return "pre_" + from.value;
 		}
 	};

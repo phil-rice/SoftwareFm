@@ -34,10 +34,13 @@ public class Tests {
 		long startTime = System.currentTimeMillis();
 		boolean deleted;
 		while (!(deleted = deleteTempDirectory(name)) && System.currentTimeMillis() < startTime + maxWaitTime)
-			;
+			doNothing();
 		if (!deleted)
 			throw new RuntimeException(name);
 
+	}
+
+	private static void doNothing() {
 	}
 
 	public static File makeTempDirectory(String name) {

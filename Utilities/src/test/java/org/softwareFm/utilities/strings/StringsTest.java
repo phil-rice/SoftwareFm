@@ -4,7 +4,7 @@
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
 /* This file is part of SoftwareFm
-/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+ /* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
@@ -17,20 +17,20 @@ import junit.framework.TestCase;
 import org.softwareFm.utilities.functions.Functions;
 
 public class StringsTest extends TestCase {
-	
-	public void testHtmlEscape(){
+
+	public void testHtmlEscape() {
 		assertEquals("&lt;tag&gt;", Strings.htmlEscape("<tag>"));
 	}
-	
-	public void testIsUrlFriendly(){
+
+	public void testIsUrlFriendly() {
 		assertTrue(Strings.isUrlFriendly("asdljkalsdj"));
 		assertTrue(Strings.isUrlFriendly("asdljkal---s_____dj"));
 		assertTrue(Strings.isUrlFriendly("asdl.......jkal---s_____dj"));
 		assertFalse(Strings.isUrlFriendly(""));
 		assertFalse(Strings.isUrlFriendly("asd$l.......jkal---s_____dj"));
 	}
-	
-	public void testSegmentFn(){
+
+	public void testSegmentFn() {
 		checkSegmentFn(0, "a", "a/b/c");
 		checkSegmentFn(1, "b", "a/b/c");
 		checkSegmentFn(2, "c", "a/b/c");
@@ -45,24 +45,24 @@ public class StringsTest extends TestCase {
 		checkSegmentFn(1, "b", "/a///b///c");
 		checkSegmentFn(2, "c", "/a///b///c//");
 		checkSegmentFn(3, "", "///a/b/c//");
-		
+
 		checkSegmentFn(0, "abc", "abc");
 		checkSegmentFn(1, "", "abc");
-		
+
 		checkSegmentFn(0, "", "");
 		checkSegmentFn(1, "", "");
 
 		checkSegmentFn(0, null, null);
 		checkSegmentFn(1, null, null);
 	}
-	
+
 	private void checkSegmentFn(int i, String expected, String raw) {
 		assertEquals(expected, Strings.segment(raw, "/", i));
 		assertEquals(expected, Functions.call(Strings.segmentFn("/", i), raw));
-		
+
 	}
 
-	public void testRemoveBrackets(){
+	public void testRemoveBrackets() {
 		assertEquals("onethree", Strings.removeBrackets("one<two>three", '<', '>'));
 		assertEquals("one<two>three", Strings.removeBrackets("one<two>three", '{', '}'));
 		assertEquals("onefive", Strings.removeBrackets("one<two<three>four>five", '<', '>'));
@@ -99,26 +99,27 @@ public class StringsTest extends TestCase {
 		assertEquals(version, Strings.versionPartOf(file, "n/a"));
 		assertEquals(prefix, Strings.withoutVersion(file, "n/a"));
 	}
-	public void testLastSegmentAndAllButLastSegment(){
-		checkLastSegment(null, null,null);
-		checkLastSegment("", "","");
-		checkLastSegment("abc", "abc","abc");
-		checkLastSegment("/a/b", "/a","b");
-		checkLastSegment("/a/b/c", "/a/b","c");
+
+	public void testLastSegmentAndAllButLastSegment() {
+		checkLastSegment(null, null, null);
+		checkLastSegment("", "", "");
+		checkLastSegment("abc", "abc", "abc");
+		checkLastSegment("/a/b", "/a", "b");
+		checkLastSegment("/a/b/c", "/a/b", "c");
 	}
-	
+
 	private void checkLastSegment(String input, String begin, String end) {
 		assertEquals(end, Strings.lastSegment(input, "/"));
-		assertEquals(end, Functions.call(Strings.lastSegmentFn("/"),input));
+		assertEquals(end, Functions.call(Strings.lastSegmentFn("/"), input));
 		assertEquals(begin, Strings.allButLastSegment(input, "/"));
-		
+
 	}
-	
-	public void testFirstSegment(){
+
+	public void testFirstSegment() {
 		assertEquals("a", Strings.firstSegment("a.b.c", "."));
 		assertEquals("a.b.c", Strings.firstSegment("a.b.c", ":"));
 		assertEquals(null, Strings.firstSegment(null, "."));
-		
+
 	}
 
 	public void testLowerAndUpperCaseFirstCharacter() {
@@ -137,7 +138,6 @@ public class StringsTest extends TestCase {
 
 	}
 
-
 	public void testVersionCompare() {
 		assertEquals(0, Strings.compareVersionNumbers("1.2.1", "1.2.1"));
 		assertEquals(1, Strings.compareVersionNumbers("1.2.2", "1.2.1"));
@@ -147,7 +147,6 @@ public class StringsTest extends TestCase {
 		assertEquals(-1, Strings.compareVersionNumbers("1.2", "1.2.1"));
 		assertEquals(1, Strings.compareVersionNumbers("1.2.1", "1.2"));
 
-		
 		assertEquals(0, Strings.compareVersionNumbers("1.2.11", "1.2.11"));
 		assertEquals(-9, Strings.compareVersionNumbers("1.2.2", "1.2.11"));
 		assertEquals(-111, Strings.compareVersionNumbers("1.2.11", "1.113.1"));

@@ -11,42 +11,52 @@ import org.eclipse.jdt.core.dom.IBinding;
 
 public class BindingAdapter implements IBinding {
 
+	@Override
 	public IAnnotationBinding[] getAnnotations() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public IJavaElement getJavaElement() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public String getKey() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public int getKind() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public int getModifiers() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public String getName() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public boolean isDeprecated() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public boolean isEqualTo(IBinding arg0) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public boolean isRecovered() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public boolean isSynthetic() {
 		throw new UnsupportedOperationException();
 	}

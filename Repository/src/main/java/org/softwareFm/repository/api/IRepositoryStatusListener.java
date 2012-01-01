@@ -28,7 +28,7 @@ public interface IRepositoryStatusListener {
 
 		public static MemoryStatusChangedListener memory() {
 			return new MemoryStatusChangedListener();
-		};
+		}
 
 	}
 }

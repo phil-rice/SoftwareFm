@@ -33,6 +33,7 @@ public class TopologicalSortResultTest extends TestCase {
 		assertEquals(Arrays.asList(3, 2, 2, 1, 0, 0), visitor.getGenerations());
 	}
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		dependancy = IDependancyBuilder.Utils.<String> newBuilder().//

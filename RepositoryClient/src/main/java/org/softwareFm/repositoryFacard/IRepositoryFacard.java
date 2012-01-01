@@ -28,7 +28,6 @@ public interface IRepositoryFacard extends IRepositoryFacardReader {
 
 	Future<?> makeRoot(String url, IResponseCallback callback);
 
-
 	void shutdown();
 
 	public static class Utils {

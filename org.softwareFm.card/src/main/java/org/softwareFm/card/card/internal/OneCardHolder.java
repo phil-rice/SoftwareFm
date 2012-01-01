@@ -36,5 +36,4 @@ public class OneCardHolder implements IHasComposite {
 		return content.cardConfig;
 	}
 
-
 }

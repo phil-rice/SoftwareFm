@@ -31,14 +31,14 @@ public class OkCancelTest extends SwtTest {
 		assertEquals("OK-Title", okCancel.okButton.getText());
 		assertEquals("Cancel-Title", okCancel.cancelButton.getText());
 	}
-	
-	public void testOKButtonIsDisabledWhenSelected(){
+
+	public void testOKButtonIsDisabledWhenSelected() {
 		assertTrue(okCancel.okButton.getEnabled());
 		okCancel.okButton.notifyListeners(SWT.Selection, new Event());
 		assertFalse(okCancel.okButton.getEnabled());
 	}
-	
-	public void testCannotSpamOkButton(){
+
+	public void testCannotSpamOkButton() {
 		assertTrue(okCancel.okButton.getEnabled());
 		okCancel.okButton.notifyListeners(SWT.Selection, new Event());
 		okCancel.okButton.notifyListeners(SWT.Selection, new Event());
@@ -49,7 +49,7 @@ public class OkCancelTest extends SwtTest {
 		okCancel.okButton.notifyListeners(SWT.Selection, new Event());
 		assertFalse(okCancel.okButton.getEnabled());
 		checkCounts(1, 0);
-		
+
 	}
 
 	public void testSetEnabled() {

@@ -7,10 +7,12 @@ package org.softwareFm.utilities.profiling;
 
 public abstract class VoidProfilable<Situation> implements IProfilable<Situation, Void> {
 
+	@Override
 	public Void start(Situation situation) throws Exception {
 		return null;
 	}
 
+	@Override
 	public void finish(Situation situation, Void context) throws Exception {
 	}
 

@@ -6,7 +6,6 @@
 package org.softwareFm.mavenExtractor;
 
 import java.io.File;
-import java.net.MalformedURLException;
 
 import org.apache.maven.model.Model;
 import org.softwareFm.mavenExtractor.git.ExtractProjectStuff;
@@ -52,7 +51,7 @@ public class PurgeJavadocSourceThatAreIdenticalToJar implements IExtractorCallba
 			}
 	}
 
-	public static void main(String[] args) throws MalformedURLException {
+	public static void main(String[] args) {
 		File directory = new File("c:/softwareFmRepository");
 		new ExtractProjectStuff().walk(MavenImporterConstants.dataSource, new PurgeJavadocSourceThatAreIdenticalToJar(directory), ICallback.Utils.sysErrCallback());
 	}

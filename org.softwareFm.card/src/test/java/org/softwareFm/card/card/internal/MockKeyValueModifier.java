@@ -15,7 +15,7 @@ public class MockKeyValueModifier implements ICardDataModifier {
 	public Map<String, Object> rawData;
 	public String url;
 
-	public MockKeyValueModifier(Map<String,Object> result) {
+	public MockKeyValueModifier(Map<String, Object> result) {
 		this.result = result;
 	}
 

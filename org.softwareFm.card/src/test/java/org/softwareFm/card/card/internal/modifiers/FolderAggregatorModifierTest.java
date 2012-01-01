@@ -28,11 +28,11 @@ public class FolderAggregatorModifierTest extends TestCase {
 	private final static Map<String, Object> item1_t2 = Maps.makeImmutableMap("item2", 2, "tag", "t2");
 
 	private final static Map<String, Object> noTags = Maps.makeImmutableMap("1_1", item1_1, "1_2", item1_2, "tag", "coll1");
-	private final static Map<String, Object> tagsWithCorrectValues = Maps.makeImmutableMap("1_1", item1_t1, "2_1", item2_t1,  "3_1", item3_t1, "tag", "irrelevant");
+	private final static Map<String, Object> tagsWithCorrectValues = Maps.makeImmutableMap("1_1", item1_t1, "2_1", item2_t1, "3_1", item3_t1, "tag", "irrelevant");
 	private final static Map<String, Object> tagsWithInCorrectValues = Maps.makeImmutableMap("1_1", item1_t2, "junk", 1);
 	private final static Map<String, Object> tagsWithCorrectAndInCorrectValues = Maps.makeImmutableMap("1_1", item1_t1, "2_1", item2_t1, "3_1", item3_t1, "tag", "irrelevant", "1_2", item1_t2);
 
-	private final FolderAggregatorModifier modifier = new FolderAggregatorModifier("tag", "t1","ignoreThisTag");
+	private final FolderAggregatorModifier modifier = new FolderAggregatorModifier("tag", "t1", "ignoreThisTag");
 	private CardConfig cardConfig;
 
 	@Test

@@ -25,6 +25,6 @@ public class ArtifactsAnchor {
 	public static final String mailingListKey = prefix + "mailingList";
 	public static final String tutorialsKey = prefix + "tutorials";
 	public static final String blogKey = prefix + "blog";
-	public static final String nothing = prefix+"nothing";
+	public static final String nothing = prefix + "nothing";
 
 }

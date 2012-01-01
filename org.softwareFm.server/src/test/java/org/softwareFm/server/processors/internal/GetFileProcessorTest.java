@@ -13,27 +13,28 @@ import org.softwareFm.utilities.maps.Maps;
 
 public class GetFileProcessorTest extends AbstractProcessCallTest<GetFileProcessor> {
 
-	public void testIgnoresNoneGet(){
+	public void testIgnoresNoneGet() {
 		checkIgnoresNoneGet();
 	}
-	
-	public void testIgnoresGetWithoutExtension(){
+
+	public void testIgnoresGetWithoutExtension() {
 		IProcessResult result = processor.process(makeRequestLine(ServerConstants.GET, "someUriWithoutExtension"), Maps.stringObjectMap("a", 1));
 		assertNull(result);
 	}
-	public void testIgnoresIfNotNamedExtension(){
+
+	public void testIgnoresIfNotNamedExtension() {
 		final String someData = "someData";
 		remoteRoot.mkdirs();
-		Files.setText(new File(remoteRoot, "url.htm"),someData);
+		Files.setText(new File(remoteRoot, "url.htm"), someData);
 
 		IProcessResult result = processor.process(makeRequestLine(ServerConstants.GET, "url.htm"), Maps.stringObjectMap("a", 1));
 		assertNull(result);
 	}
-	
+
 	public void testGetsFile() throws Exception {
 		final String someData = "someData";
 		remoteRoot.mkdirs();
-		Files.setText(new File(remoteRoot, "url.html"),someData);
+		Files.setText(new File(remoteRoot, "url.html"), someData);
 		IProcessResult result = processor.process(makeRequestLine(ServerConstants.GET, "url.html"), emptyMap);
 		result.process(new HttpResponseMock() {
 			@Override

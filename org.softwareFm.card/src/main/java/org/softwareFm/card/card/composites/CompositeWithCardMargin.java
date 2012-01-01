@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.card.IHasCardConfig;
 import org.softwareFm.card.configuration.CardConfig;
 
-public class CompositeWithCardMargin extends Composite implements IHasCardConfig{
+public class CompositeWithCardMargin extends Composite implements IHasCardConfig {
 
 	private final CardConfig cc;
 

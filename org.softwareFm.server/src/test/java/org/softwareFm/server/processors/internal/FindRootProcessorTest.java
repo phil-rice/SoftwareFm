@@ -10,9 +10,9 @@ public class FindRootProcessorTest extends AbstractProcessCallTest<FindRootProce
 
 	public void testReturnsUrlOfGitRepository() {
 		remoteGitServer.createRepository("a/b");
-		checkGetStringFromProcessor("/"+ServerConstants.findRepositoryBasePrefix +"/a/b", "a/b");
-		checkGetStringFromProcessor("/"+ServerConstants.findRepositoryBasePrefix +"/a/b/c", "a/b");
-		checkGetStringFromProcessor("/"+ServerConstants.findRepositoryBasePrefix +"/a/b/c/d", "a/b");
+		checkGetStringFromProcessor("/" + ServerConstants.findRepositoryBasePrefix + "/a/b", "a/b");
+		checkGetStringFromProcessor("/" + ServerConstants.findRepositoryBasePrefix + "/a/b/c", "a/b");
+		checkGetStringFromProcessor("/" + ServerConstants.findRepositoryBasePrefix + "/a/b/c/d", "a/b");
 	}
 
 	@Override

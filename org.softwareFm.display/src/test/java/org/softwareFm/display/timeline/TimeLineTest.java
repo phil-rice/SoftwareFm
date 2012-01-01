@@ -73,5 +73,5 @@ public class TimeLineTest extends PlayListTest {
 		super.setUp();
 		playListGetterMock = new PlayListGetterMock(list1, list2);
 	}
-	
+
 }

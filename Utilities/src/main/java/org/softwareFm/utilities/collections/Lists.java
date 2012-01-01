@@ -294,14 +294,14 @@ public class Lists {
 
 	}
 
-	public static <T>T getOnly(List<T> list) {
+	public static <T> T getOnly(List<T> list) {
 		Assert.assertEquals(1, list.size());
 		return list.get(0);
 	}
 
-	public static <T>List<T> times(T t, int size) {
+	public static <T> List<T> times(T t, int size) {
 		List<T> result = Lists.newList(size);
-		for (int i = 0; i<size; i++)
+		for (int i = 0; i < size; i++)
 			result.add(t);
 		return result;
 	}

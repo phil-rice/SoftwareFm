@@ -19,7 +19,7 @@ public class DeleteSlingBeCareful implements ISlingVisitor {
 	}
 
 	public static void main(String[] args) {
-//		new SlingWalker(1).walk("/softwareFm/data", new DeleteSlingBeCareful());
+		// new SlingWalker(1).walk("/softwareFm/data", new DeleteSlingBeCareful());
 	}
 
 	public void exception(String url, Exception e) {

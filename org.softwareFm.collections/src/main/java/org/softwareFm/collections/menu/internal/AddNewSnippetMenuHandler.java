@@ -16,8 +16,7 @@ import org.softwareFm.collections.menu.AbstractCardMenuHandler;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class AddNewSnippetMenuHandler extends AbstractCardMenuHandler {
-	
-	
+
 	public AddNewSnippetMenuHandler(IExplorer explorer) {
 		super(explorer);
 	}
@@ -25,7 +24,7 @@ public class AddNewSnippetMenuHandler extends AbstractCardMenuHandler {
 	@Override
 	public MenuItem optionallyCreate(ICard card, IResourceGetter resourceGetter, Menu menu, Event event, String key) {
 		String cardType = card.cardType();
-		if (cardType == null || CardConstants.collection.equals(cardType)) {//Note that at the moment, there is no way to say "this is a collection of snippets... so this at least means that it will only add a snippet to a collection
+		if (cardType == null || CardConstants.collection.equals(cardType)) {// Note that at the moment, there is no way to say "this is a collection of snippets... so this at least means that it will only add a snippet to a collection
 			MenuItem menuItem = new MenuItem(menu, SWT.NULL);
 			menuItem.setText(IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.menuItemAddSnippet));
 			return menuItem;

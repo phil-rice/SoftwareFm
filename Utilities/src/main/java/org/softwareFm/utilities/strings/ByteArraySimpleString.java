@@ -15,10 +15,12 @@ public class ByteArraySimpleString extends AbstractSimpleString {
 		this.byteArray = byteArray;
 	}
 
+	@Override
 	public byte byteAt(int offset) {
 		return byteArray[start + offset];
 	}
 
+	@Override
 	public void setFromByteArray(byte[] byteArray, int start, int size) {
 		for (int i = 0; i < size; i++)
 			this.byteArray[i] = byteArray[start + i];
@@ -26,6 +28,7 @@ public class ByteArraySimpleString extends AbstractSimpleString {
 		this.size = size;
 	}
 
+	@Override
 	public String asString() {
 		return new String(byteArray, start, size);
 	}

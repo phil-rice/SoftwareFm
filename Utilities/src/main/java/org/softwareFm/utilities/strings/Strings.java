@@ -30,11 +30,10 @@ public class Strings {
 	public static synchronized boolean isUrlFriendly(String raw) {
 		return urlFriendlyPattern.matcher(raw).matches();
 	}
-	
-	public static String htmlEscape(String raw){
+
+	public static String htmlEscape(String raw) {
 		return raw.replace("<", "&lt;").replace(">", "&gt;");
-		
-		
+
 	}
 
 	public static String removeBrackets(String raw, char open, char close) {
@@ -381,7 +380,7 @@ public class Strings {
 			} else {
 				if (ch == ' ')
 					if (result.length() == 0 || result.charAt(result.length() - 1) == ' ')
-						;// ignore
+						doNothing();// ignore
 					else
 						result.append(' ');
 				else if (Character.isUpperCase(ch)) {
@@ -393,6 +392,9 @@ public class Strings {
 			}
 		}
 		return result.toString();
+	}
+
+	private static void doNothing() {
 	}
 
 	public static void setClipboard(String str) {

@@ -4,13 +4,11 @@
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
 /* This file is part of SoftwareFm
-/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+ /* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
 package org.softwareFm.card.card.internal;
-
-import java.util.concurrent.ExecutionException;
 
 import org.softwareFm.card.card.CardFactoryMock;
 import org.softwareFm.card.card.CardMock;
@@ -32,7 +30,7 @@ public abstract class AbstractCardCollectionsDataStoreTest extends SwtTest {
 	private CardFactoryMock mockCardFactory;
 	protected CardAndCollectionDataStoreVisitorMonitored memory;
 
-	public void testNothingHappenBeforeInitialQueryReturns() throws InterruptedException, ExecutionException {
+	public void testNothingHappenBeforeInitialQueryReturns() {
 		assertEquals(1, memory.initialUrlCount);
 		dispatchUntilQueueEmpty();
 		assertFalse(status.mainFuture.isDone());
@@ -46,7 +44,7 @@ public abstract class AbstractCardCollectionsDataStoreTest extends SwtTest {
 		kickAndDispatch(status.initialFuture);
 		assertEquals(1, mockCardFactory.count);
 		CardMock card = (CardMock) cardHolder.getCard();
-		assertEquals("/"+CardDataStoreFixture.url, card.url());
+		assertEquals("/" + CardDataStoreFixture.url, card.url());
 		assertEquals(CardDataStoreFixture.dataUrl1, card.map);
 	}
 
@@ -70,7 +68,7 @@ public abstract class AbstractCardCollectionsDataStoreTest extends SwtTest {
 		});
 		cardHolder = ICardHolder.Utils.cardHolderWithLayout(shell, cardConfig, CardDataStoreFixture.url, null);
 		memory = new CardAndCollectionDataStoreVisitorMonitored();
-		status = cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, "/"+CardDataStoreFixture.url, memory);
+		status = cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, "/" + CardDataStoreFixture.url, memory);
 	}
 
 	abstract protected String findFollowOnUrlFragmentForTest(String key, Object value);

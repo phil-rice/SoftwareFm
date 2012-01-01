@@ -18,7 +18,7 @@ public class MapAsList {
 		this(titles, keyIndex, Arrays.asList(values));
 	}
 
-	public MapAsList(List<String> titles, int keyIndex,List<List<Object>> values) {
+	public MapAsList(List<String> titles, int keyIndex, List<List<Object>> values) {
 		this.titles = titles;
 		this.keyIndex = keyIndex;
 		this.values = values;

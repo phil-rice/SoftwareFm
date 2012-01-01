@@ -24,7 +24,7 @@ public class HelpMenuHandler extends AbstractCardMenuHandler {
 	public MenuItem optionallyCreate(ICard card, IResourceGetter resourceGetter, Menu menu, Event event, String key) {
 		String helpKey = "help." + card.cardType() + "." + key;
 		String helpText = IResourceGetter.Utils.getOrNull(card.getCardConfig().resourceGetterFn, card.cardType(), helpKey);
-		if (helpText!=null){
+		if (helpText != null) {
 			String helpMenuItemText = IResourceGetter.Utils.getOrException(card.getCardConfig().resourceGetterFn, card.cardType(), CardConstants.menuItemHelpText);
 			MenuItem menuItem = new MenuItem(menu, SWT.NULL);
 			menuItem.setText(helpMenuItemText);

@@ -19,7 +19,7 @@ import org.softwareFm.display.okCancel.OkCancel;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
-public class OKCancelWithBorder implements  IOkCancel {
+public class OKCancelWithBorder implements IOkCancel {
 
 	static public class OKCancelWithBorderLayout extends Layout {
 
@@ -42,10 +42,10 @@ public class OKCancelWithBorder implements  IOkCancel {
 			int width = 0;
 			for (Control child : composite.getChildren()) {
 				child.pack();
-				width+= child.getSize().x;
+				width += child.getSize().x;
 			}
 			Rectangle ca = composite.getClientArea();
-			int x = ca.x + ca.width -width;
+			int x = ca.x + ca.width - width;
 			int y = ca.y;
 			for (Control child : composite.getChildren()) {
 				child.setLocation(x, y);

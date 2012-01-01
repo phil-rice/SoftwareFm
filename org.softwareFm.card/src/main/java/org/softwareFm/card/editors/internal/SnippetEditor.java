@@ -80,7 +80,6 @@ public class SnippetEditor implements IValueEditor, ICardData {
 			titleText = new Text(values, SWT.NULL);
 			descriptionText = new Text(values, SWT.NULL);
 			contentText = new StyledText(values, SWT.WRAP);
-			
 
 			setInitialTextAndAddModified(cardData, titleText, "title");
 			setInitialTextAndAddModified(cardData, descriptionText, "description");
@@ -122,6 +121,7 @@ public class SnippetEditor implements IValueEditor, ICardData {
 				}
 			});
 		}
+
 		private void setInitialTextAndAddModified(final ICardData cardData, final StyledText text, final String key) {
 			text.setText(Strings.nullSafeToString(cardData.data().get(key)));
 			text.addModifyListener(new ModifyListener() {

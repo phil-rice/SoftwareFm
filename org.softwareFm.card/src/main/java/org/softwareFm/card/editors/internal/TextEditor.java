@@ -4,7 +4,7 @@
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
 /* This file is part of SoftwareFm
-/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+ /* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
@@ -34,7 +34,7 @@ public class TextEditor implements IValueEditorForTests {
 
 	public static class TextEditorComposite extends ValueEditorComposite<Text> {
 
-		public TextEditorComposite(Composite parent, int style, final CardConfig cardConfig, final String url,String cardType, final String key, Object initialValue, TitleSpec titleSpec, final IDetailsFactoryCallback callback) {
+		public TextEditorComposite(Composite parent, int style, final CardConfig cardConfig, final String url, String cardType, final String key, Object initialValue, TitleSpec titleSpec, final IDetailsFactoryCallback callback) {
 			super(parent, style, cardConfig, url, cardType, key, initialValue, titleSpec, callback);
 
 		}
@@ -76,8 +76,8 @@ public class TextEditor implements IValueEditorForTests {
 		}
 	}
 
-	public TextEditor(Composite parentComposite, CardConfig cardConfig, String url, String cardType,String key, Object value, IDetailsFactoryCallback callback, TitleSpec titleSpec) {
-		content = new TextEditorComposite(parentComposite, SWT.NULL, cardConfig, url, cardType,key, value, titleSpec, callback);
+	public TextEditor(Composite parentComposite, CardConfig cardConfig, String url, String cardType, String key, Object value, IDetailsFactoryCallback callback, TitleSpec titleSpec) {
+		content = new TextEditorComposite(parentComposite, SWT.NULL, cardConfig, url, cardType, key, value, titleSpec, callback);
 	}
 
 	@Override
@@ -102,8 +102,8 @@ public class TextEditor implements IValueEditorForTests {
 				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay());
 				TextEditor TextEditor = new TextEditor(from, cardConfig, "someUrl", null, "key", "value", IDetailsFactoryCallback.Utils.resizeAfterGotData(), TitleSpec.noTitleSpec(from.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN)));
 				TextEditor.getComposite().setLayout(new ValueEditorLayout());
-//				Size.resizeMeToParentsSize(textEditor.getControl());
-//				textEditor.content.layout();
+				// Size.resizeMeToParentsSize(textEditor.getControl());
+				// textEditor.content.layout();
 				Swts.layoutDump(from);
 				Size.resizeMeToParentsSizeWithLayout(TextEditor);
 				return TextEditor.content;
@@ -120,9 +120,10 @@ public class TextEditor implements IValueEditorForTests {
 	public OkCancel getOkCancel() {
 		return content.getOkCancel();
 	}
+
 	@Override
 	public void setValue(String newValue) {
-		 content.getEditor().setText(newValue);
+		content.getEditor().setText(newValue);
 	}
 
 }

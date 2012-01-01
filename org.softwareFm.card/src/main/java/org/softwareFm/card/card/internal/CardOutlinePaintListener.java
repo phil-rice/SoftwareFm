@@ -27,7 +27,6 @@ public class CardOutlinePaintListener implements PaintListener {
 		this.cardConfig = cardConfig;
 	}
 
-
 	@Override
 	public void paintControl(PaintEvent e) {
 		Composite cardComposite = (Composite) e.widget;
@@ -43,25 +42,25 @@ public class CardOutlinePaintListener implements PaintListener {
 		Rectangle topLeft = new Rectangle(clientArea.x - cardConfig.cornerRadiusComp, clientArea.y - cardConfig.cornerRadiusComp, clientArea.x - cardConfig.cornerRadiusComp, clientArea.y + -cardConfig.cornerRadiusComp + cardConfig.cornerRadius);
 		e.gc.drawLine(topLeft.x, topLeft.y, topLeft.width, topLeft.height);
 		notifyListeners("topLeft-Line", topLeft);
-		
-		Rectangle secondLine = new Rectangle(clientArea.x + clientArea.width - titleSpec.rightIndent-cardConfig.cornerRadiusComp, clientArea.y-cardConfig.cornerRadiusComp, clientArea.x + clientArea.width-cardConfig.cornerRadius, clientArea.y-cardConfig.cornerRadiusComp);
+
+		Rectangle secondLine = new Rectangle(clientArea.x + clientArea.width - titleSpec.rightIndent - cardConfig.cornerRadiusComp, clientArea.y - cardConfig.cornerRadiusComp, clientArea.x + clientArea.width - cardConfig.cornerRadius, clientArea.y - cardConfig.cornerRadiusComp);
 		e.gc.drawLine(secondLine.x, secondLine.y, secondLine.width, secondLine.height);
 		notifyListeners("second-Line", secondLine);
 		e.gc.setForeground(new Color(e.display, 200, 200, 200));
-		int x = clientArea.x -cardConfig.cornerRadiusComp+1;
-		int y = clientArea.y-cardConfig.cornerRadiusComp;
-		e.gc.drawLine(x, y, x+clientArea.width -titleSpec.rightIndent+cardConfig.cornerRadiusComp, y);
+		int x = clientArea.x - cardConfig.cornerRadiusComp + 1;
+		int y = clientArea.y - cardConfig.cornerRadiusComp;
+		e.gc.drawLine(x, y, x + clientArea.width - titleSpec.rightIndent + cardConfig.cornerRadiusComp, y);
 	}
 
 	private void drawRight(PaintEvent e, Rectangle clientArea) {
-		Rectangle clipRectangle = new Rectangle(clientArea.x + clientArea.width - titleSpec.rightIndent - cardConfig.cornerRadiusComp, clientArea.y - cardConfig.cornerRadiusComp, clientArea.width + 2*cardConfig.cornerRadiusComp, clientArea.height + 2*cardConfig.cornerRadiusComp + 1);
+		Rectangle clipRectangle = new Rectangle(clientArea.x + clientArea.width - titleSpec.rightIndent - cardConfig.cornerRadiusComp, clientArea.y - cardConfig.cornerRadiusComp, clientArea.width + 2 * cardConfig.cornerRadiusComp, clientArea.height + 2 * cardConfig.cornerRadiusComp + 1);
 		e.gc.setClipping(clipRectangle); // way to wide...but who cares. Don't know why need +1, but without it bottom right doesnt appear
 		notifyListeners("drawRight-clip", clipRectangle);
 
 		int x = clientArea.x - cardConfig.cornerRadiusComp;
 		int y = clientArea.y - cardConfig.cornerRadiusComp;
 		int width = clientArea.width + cardConfig.cornerRadiusComp;
-		int height = clientArea.height + 2*cardConfig.cornerRadiusComp;
+		int height = clientArea.height + 2 * cardConfig.cornerRadiusComp;
 		e.gc.drawRoundRectangle(x, y, width, height, cardConfig.cornerRadius, cardConfig.cornerRadius);
 		notifyListeners("drawRight-round", new Rectangle(x, y, width, height));
 	}
@@ -82,8 +81,8 @@ public class CardOutlinePaintListener implements PaintListener {
 		notifyListeners("drawLeftBottom-clip", clipRectangle);
 		int x = clientArea.x - cardConfig.cornerRadiusComp;
 		int y = clientArea.y - cardConfig.cornerRadius - cardConfig.cornerRadiusComp;
-		int width = clientArea.width + 2*cardConfig.cornerRadiusComp;
-		int height = clientArea.height + cardConfig.cornerRadius + 2*cardConfig.cornerRadiusComp;
+		int width = clientArea.width + 2 * cardConfig.cornerRadiusComp;
+		int height = clientArea.height + cardConfig.cornerRadius + 2 * cardConfig.cornerRadiusComp;
 		e.gc.drawRoundRectangle(x, y, width, height, cardConfig.cornerRadius, cardConfig.cornerRadius);
 		notifyListeners("drawLeftBottom-round", new Rectangle(x, y, width, height));
 	}

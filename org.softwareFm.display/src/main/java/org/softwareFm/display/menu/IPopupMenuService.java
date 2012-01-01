@@ -16,14 +16,14 @@ public interface IPopupMenuService<T> {
 	public void registerContributor(String menuId, IPopupMenuContributor<T> contributor);
 
 	void contributeTo(String popupMenuId, Event event, Menu menu, T relevantItem);
-	
+
 	public static class Utils {
-		public static <T>IPopupMenuService <T>popUpMenuService(){
+		public static <T> IPopupMenuService<T> popUpMenuService() {
 			return new PopupMenuService<T>();
-			
+
 		}
 
-		public static <T>IPopupMenuService <T>noPopupMenus() {
+		public static <T> IPopupMenuService<T> noPopupMenus() {
 			return new IPopupMenuService<T>() {
 				@Override
 				public void registerMenuId(String menuId) {

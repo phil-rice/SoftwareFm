@@ -1,7 +1,6 @@
 package org.softwareFm.server.internal;
 
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.TestCase;
@@ -30,7 +29,7 @@ public class SoftwareFmServerTest extends TestCase {
 		checkGet();
 	}
 
-	public void testServerDoesntRespondAfterShutdown() throws InterruptedException, ExecutionException {
+	public void testServerDoesntRespondAfterShutdown() throws InterruptedException {
 		MemoryResponseCallback<Object, Object> memoryCallback = IResponseCallback.Utils.memoryCallback();
 		server.shutdown();
 		client.get("someUrl").execute(memoryCallback);
@@ -42,7 +41,7 @@ public class SoftwareFmServerTest extends TestCase {
 		checkExceptionHandled();
 	}
 
-	public void testExceptionsDontUseUpThreads() throws Exception{
+	public void testExceptionsDontUseUpThreads() throws Exception {
 		// note there are only 2 threadsin the server
 		checkExceptionHandled();
 		checkExceptionHandled();
@@ -62,8 +61,6 @@ public class SoftwareFmServerTest extends TestCase {
 		checkGet();
 		checkGet();
 	}
-	
-	
 
 	private void checkGet() throws Exception {
 		MemoryResponseCallback<Object, Object> memoryCallback = IResponseCallback.Utils.memoryCallback();

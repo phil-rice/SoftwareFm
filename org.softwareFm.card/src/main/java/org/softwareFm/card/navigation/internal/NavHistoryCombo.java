@@ -64,5 +64,4 @@ public class NavHistoryCombo<T> implements IHasControl {
 		return combo;
 	}
 
-
 }

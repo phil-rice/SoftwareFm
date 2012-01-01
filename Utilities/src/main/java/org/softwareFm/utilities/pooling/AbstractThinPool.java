@@ -21,10 +21,12 @@ public abstract class AbstractThinPool<T> implements IPoolThin<T> {
 		data = new ArrayList<T>();
 	}
 
+	@Override
 	public IObjectDefinition<T> getDefinition() {
 		return defn;
 	}
 
+	@Override
 	public int newObjectId() {
 		int objectIndex = makeNewObjectIndex();
 		if (objectIndex >= data.size())
@@ -34,14 +36,17 @@ public abstract class AbstractThinPool<T> implements IPoolThin<T> {
 		return objectIndex;
 	}
 
+	@Override
 	public PoolOptions getPoolOptions() {
 		return poolOptions;
 	}
 
+	@Override
 	public int size() {
 		return 0;
 	}
 
+	@Override
 	public T getObject(int objectId) {
 		return data.get(objectId);
 	}

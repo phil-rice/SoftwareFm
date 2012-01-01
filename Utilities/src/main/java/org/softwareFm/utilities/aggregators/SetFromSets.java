@@ -19,6 +19,7 @@ public class SetFromSets<T> implements Set<T> {
 		this.sets = sets;
 	}
 
+	@Override
 	public int size() {
 		int size = 0;
 		for (Set<T> set : sets)
@@ -26,6 +27,7 @@ public class SetFromSets<T> implements Set<T> {
 		return size;
 	}
 
+	@Override
 	public boolean isEmpty() {
 		for (Set<T> set : sets)
 			if (!set.isEmpty())
@@ -33,6 +35,7 @@ public class SetFromSets<T> implements Set<T> {
 		return true;
 	}
 
+	@Override
 	public boolean contains(Object key) {
 		for (Set<T> set : sets)
 			if (set.contains(key))
@@ -40,6 +43,7 @@ public class SetFromSets<T> implements Set<T> {
 		return false;
 	}
 
+	@Override
 	public boolean containsAll(Collection<?> c) {
 		for (Object x : c)
 			if (!contains(x))
@@ -47,38 +51,47 @@ public class SetFromSets<T> implements Set<T> {
 		return true;
 	}
 
+	@Override
 	public Iterator<T> iterator() {
 		return Iterables.split(sets).iterator();
 	}
 
+	@Override
 	public Object[] toArray() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public <E> E[] toArray(E[] a) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public boolean add(T o) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public boolean remove(Object o) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public boolean addAll(Collection<? extends T> c) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public boolean retainAll(Collection<?> c) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public boolean removeAll(Collection<?> c) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public void clear() {
 		throw new UnsupportedOperationException();
 	}

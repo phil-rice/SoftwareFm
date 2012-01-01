@@ -13,7 +13,7 @@ import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public interface ILineItemFunction<T> {
-	T apply(CardConfig cardConfig, LineItem item) ;
+	T apply(CardConfig cardConfig, LineItem item);
 
 	public static class Utils {
 		public static ILineItemFunction<String> nameFunction(IFunction1<String, IResourceGetter> resourceGetterFn, String namePattern) {
@@ -29,11 +29,12 @@ public interface ILineItemFunction<T> {
 		}
 
 		public static ILineItemFunction<Boolean> falseFn() {
-			return new ILineItemFunction<Boolean>(){
+			return new ILineItemFunction<Boolean>() {
 				@Override
 				public Boolean apply(CardConfig cardConfig, LineItem item) {
 					return false;
-				}};
+				}
+			};
 		}
 	}
 

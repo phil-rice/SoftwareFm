@@ -5,8 +5,7 @@
 
 package org.softwareFm.utilities.history;
 
-
-public interface IHistory<T> extends Iterable<T>{
+public interface IHistory<T> extends Iterable<T> {
 
 	void push(T newItem);
 
@@ -25,6 +24,5 @@ public interface IHistory<T> extends Iterable<T>{
 	int size();
 
 	T last();
-
 
 }

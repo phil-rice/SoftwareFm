@@ -14,10 +14,12 @@ public class ThreadSaferPool<T> extends AbstractThinPool<T> {
 		super(poolOptions, defn);
 	}
 
+	@Override
 	public void dispose() {
 		next.set(0);
 	}
 
+	@Override
 	protected int makeNewObjectIndex() {
 		int objectId = next.getAndIncrement();
 		return objectId;

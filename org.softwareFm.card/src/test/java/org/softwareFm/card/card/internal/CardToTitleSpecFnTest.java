@@ -4,7 +4,7 @@
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
 /* This file is part of SoftwareFm
-/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+ /* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
@@ -25,7 +25,7 @@ import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 //Smoke test. 
-public class CardToTitleSpecFnTest extends SwtTest{
+public class CardToTitleSpecFnTest extends SwtTest {
 
 	private CardToTitleSpecFn cardToTitleSpecFn;
 	private CardConfig cardConfig;
@@ -33,14 +33,14 @@ public class CardToTitleSpecFnTest extends SwtTest{
 	private IFunction1<String, Image> imageFn;
 
 	public void test() throws Exception {
-		checkTitleSpec("someUrl/groupUrl", "group", 227,246,234, ArtifactsAnchor.groupKey, 20);
+		checkTitleSpec("someUrl/groupUrl", "group", 227, 246, 234, ArtifactsAnchor.groupKey, 20);
 	}
 
 	private void checkTitleSpec(String url, String cardType, int red, int green, int blue, String imageKey, int indent) throws Exception {
 		TitleSpec titleSpec = cardToTitleSpecFn.apply(new CardMock(null, cardConfig, url, Maps.stringObjectLinkedMap(CardConstants.slingResourceType, cardType)));
-		assertEquals(red,titleSpec.background.getRed());
-		assertEquals(green,titleSpec.background.getGreen());
-		assertEquals(blue,titleSpec.background.getBlue());
+		assertEquals(red, titleSpec.background.getRed());
+		assertEquals(green, titleSpec.background.getGreen());
+		assertEquals(blue, titleSpec.background.getBlue());
 		assertEquals(imageFn.apply(imageKey), titleSpec.icon);
 		assertEquals(indent, titleSpec.rightIndent);
 	}
@@ -53,5 +53,5 @@ public class CardToTitleSpecFnTest extends SwtTest{
 		cardConfig = CardDataStoreFixture.syncCardConfig(shell.getDisplay()).withImageFn(imageFn).withResourceGetterFn(resourceGetterFn);
 		cardToTitleSpecFn = new CardToTitleSpecFn(shell.getDisplay(), imageFn);
 	}
-	
+
 }

@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.card.IHasCardConfig;
 import org.softwareFm.card.configuration.CardConfig;
 
-public class CompositeWithEditorIndent extends Composite implements IHasCardConfig{
+public class CompositeWithEditorIndent extends Composite implements IHasCardConfig {
 
 	private final CardConfig cc;
 
@@ -22,7 +22,7 @@ public class CompositeWithEditorIndent extends Composite implements IHasCardConf
 	@Override
 	public Rectangle getClientArea() {
 		Rectangle ca = super.getClientArea();
-		return new Rectangle(ca.x + cc.editorIndentX, ca.y , ca.width - cc.editorIndentX*2, ca.height - cc.editorIndentY);
+		return new Rectangle(ca.x + cc.editorIndentX, ca.y, ca.width - cc.editorIndentX * 2, ca.height - cc.editorIndentY);
 	}
 
 	@Override

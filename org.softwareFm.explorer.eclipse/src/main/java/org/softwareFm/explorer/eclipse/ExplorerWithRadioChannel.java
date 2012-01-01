@@ -50,7 +50,7 @@ public class ExplorerWithRadioChannel {
 		boolean local = true;
 		String server = local ? "localhost" : "www.softwarefm.com";
 		String prefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : "git://www.softwarefm.com/";
-		int port = local?8080:80;
+		int port = local ? 8080 : 80;
 		final IRepositoryFacard facard = GitRepositoryFactory.gitRepositoryFacard(server, port, localRoot, prefix);
 		final IServiceExecutor service = IServiceExecutor.Utils.defaultExecutor();
 		try {

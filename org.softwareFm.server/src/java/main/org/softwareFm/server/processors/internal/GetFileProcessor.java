@@ -15,7 +15,7 @@ public class GetFileProcessor implements IProcessCall {
 	private final File root;
 	private final Set<String> knownExtensions;
 
-	public GetFileProcessor(File root, String...knownExtensions) {
+	public GetFileProcessor(File root, String... knownExtensions) {
 		this.root = root;
 		this.knownExtensions = Sets.makeSet(knownExtensions);
 	}

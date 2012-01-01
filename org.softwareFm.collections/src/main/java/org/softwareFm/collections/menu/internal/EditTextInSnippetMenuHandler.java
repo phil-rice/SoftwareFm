@@ -26,7 +26,7 @@ public class EditTextInSnippetMenuHandler extends AbstractCardMenuHandler {
 		Object value = card.data().get(key);
 		if (CardConstants.snippet.equals(card.cardType()) && value instanceof String) {
 			String editor = resourceGetter.getStringOrNull("editor." + key);
-			if ( !"none".equals(editor)) {
+			if (!"none".equals(editor)) {
 				MenuItem menuItem = new MenuItem(menu, SWT.NULL);
 				menuItem.setText(IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.menuItemEditText));
 				return menuItem;

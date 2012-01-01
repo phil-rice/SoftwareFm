@@ -29,7 +29,7 @@ public class LineItemHideFunction implements ILineItemFunction<Boolean> {
 	}
 
 	@Override
-	public Boolean apply(CardConfig cardConfig,  final LineItem from) {
+	public Boolean apply(CardConfig cardConfig, final LineItem from) {
 		Set<String> keysToHide = Maps.findOrCreate(cache, from.cardType, new Callable<Set<String>>() {
 			@Override
 			public Set<String> call() throws Exception {

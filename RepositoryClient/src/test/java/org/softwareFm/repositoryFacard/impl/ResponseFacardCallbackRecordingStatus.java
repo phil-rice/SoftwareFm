@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
+import junit.framework.Assert;
+
 import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
 
@@ -24,13 +26,13 @@ public class ResponseFacardCallbackRecordingStatus implements IRepositoryFacardC
 		this.response.set(response);
 		this.data.set(data);
 		if (count.incrementAndGet() > 1)
-			RepositoryFacardTest.fail();
+			Assert.fail();
 
 	}
 
 	public void assertOk() {
 		int code = statusCode.get();
-		RepositoryFacardTest.assertTrue("Code: " + code + "\n" + response.get(), code == 200 || code == 201);
+		Assert.assertTrue("Code: " + code + "\n" + response.get(), code == 200 || code == 201);
 	}
 
 }

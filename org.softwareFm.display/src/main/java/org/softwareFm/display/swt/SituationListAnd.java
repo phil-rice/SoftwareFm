@@ -79,7 +79,7 @@ public class SituationListAnd<T extends IHasControl> implements IHasComposite {
 		} catch (Exception e1) {
 			throw WrappedException.wrap(e1);
 		}
-	};
+	}
 
 	public void selectFirst() {
 		situationList.setSelection(0);
@@ -100,6 +100,5 @@ public class SituationListAnd<T extends IHasControl> implements IHasComposite {
 		listeners.add(listener);
 
 	}
-
 
 }

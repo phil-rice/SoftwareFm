@@ -10,14 +10,17 @@ import junit.framework.TestCase;
 public abstract class PoolTest extends TestCase {
 
 	protected IObjectDefinition<IExampleForPool> defn = new IObjectDefinition<IExampleForPool>() {
+		@Override
 		public Class<IExampleForPool> objectClass() {
 			return IExampleForPool.class;
 		}
 
+		@Override
 		public IExampleForPool createBlank() {
 			return new ExampleForPool();
 		}
 
+		@Override
 		public void clean(IExampleForPool oldObject) {
 			oldObject.setValue(0);
 		}

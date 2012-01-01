@@ -9,6 +9,7 @@ public abstract class AbstractSimpleString implements ISimpleStringWithSetters {
 	protected int start;
 	protected int size;
 
+	@Override
 	public int length() {
 		return size;
 	}
@@ -17,6 +18,7 @@ public abstract class AbstractSimpleString implements ISimpleStringWithSetters {
 		this.size = size;
 	}
 
+	@Override
 	public void setFromString(String string) {
 		start = 0;
 		size = string.length();

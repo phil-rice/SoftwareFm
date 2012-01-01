@@ -18,11 +18,11 @@ public class GetResult {
 		return "GetResult [found=" + found + ", data=" + data + "]";
 	}
 
-
 	public static GetResult notFound() {
 		return new GetResult(false, Maps.emptyStringObjectMap());
-		
+
 	}
+
 	@SuppressWarnings("unchecked")
 	public static GetResult create(Object object) {
 		if (object == null)

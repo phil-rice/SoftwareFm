@@ -15,7 +15,7 @@ public class AddAndCommitJars {
 		for (File firstTwo : Files.listChildDirectories(jarRoot)) {
 			for (File secondTwo : Files.listChildDirectories(firstTwo)) {
 				String url = firstTwo.getName() + "/" + secondTwo.getName();
-				 git.addAllAndCommit(jarRoot, url, "Fixing error with initial create");
+				git.addAllAndCommit(jarRoot, url, "Fixing error with initial create");
 				System.out.println(url);
 			}
 		}

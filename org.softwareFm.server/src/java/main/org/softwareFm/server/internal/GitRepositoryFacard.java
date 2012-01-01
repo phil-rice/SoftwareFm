@@ -82,7 +82,7 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 			@Override
 			public GetResult call() throws Exception {
 				if (aboveRepositoryCache.containsKey(url)) {
-					if (System.currentTimeMillis() > lastAboveRepositoryClearTime + aboveRepositorytStaleCacheTime){
+					if (System.currentTimeMillis() > lastAboveRepositoryClearTime + aboveRepositorytStaleCacheTime) {
 						long now = System.currentTimeMillis();
 						lastAboveRepositoryClearTime = now;
 						aboveRepositoryCache.clear();

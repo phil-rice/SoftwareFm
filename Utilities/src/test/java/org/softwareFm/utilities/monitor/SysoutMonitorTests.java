@@ -55,6 +55,7 @@ public class SysoutMonitorTests extends TestCase {
 		final Collection<Integer> actual = Lists.newList();
 		SysoutMonitor monitor = new SysoutMonitor("", quanta) {
 
+			@Override
 			protected void display(String pattern, int done, int max) {
 				actual.add(done);
 			}

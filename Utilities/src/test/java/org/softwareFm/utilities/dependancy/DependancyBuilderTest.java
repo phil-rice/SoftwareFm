@@ -60,6 +60,7 @@ public class DependancyBuilderTest extends TestCase {
 
 	private void checkLoopException(final String newChild, final String newParent, String[] path) {
 		LoopException e = Tests.assertThrows(LoopException.class, new Runnable() {
+			@Override
 			public void run() {
 				dependancy.parent(newChild, newParent);
 			}
@@ -76,6 +77,7 @@ public class DependancyBuilderTest extends TestCase {
 		assertEquals(4, result.size());
 	}
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		dependancy = IDependancyBuilder.Utils.<String> newBuilder().//

@@ -4,7 +4,7 @@
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
 /* This file is part of SoftwareFm
-/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+ /* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
@@ -61,7 +61,7 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 			nav.titleLabel.setBounds(navSize.x, 0, ca.width - navSize.x, titleHeight);
 			nav.navNextHistoryPrev.layout();
 			nav.browser.getControl().setBounds(ca.x + cornerRadiusComp, ca.y + titleHeight + cornerRadiusComp, ca.width - twiceComp, ca.height - titleHeight - twiceComp);
-//			System.out.println("BANB " + Swts.boundsUpToShell(nav.navNextHistoryPrev.getControl()));
+			// System.out.println("BANB " + Swts.boundsUpToShell(nav.navNextHistoryPrev.getControl()));
 		}
 
 	}
@@ -82,7 +82,7 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 			navNextHistoryPrev = new NavNextHistoryPrev<PlayItem>(titleComposite, config, history);
 			navNextHistoryPrev.setLayout(new NavNextHistoryPrev.NavNextHistoryPrevLayout<PlayItem>());
 			Color white = getDisplay().getSystemColor(SWT.COLOR_WHITE);
-			navNextHistoryPrev.setBackground(white);//issue-3
+			navNextHistoryPrev.setBackground(white);// issue-3
 			titleLabel = new Label(titleComposite, SWT.NULL);
 			titleLabel.setBackground(white);
 			browser = new BrowserComposite(this, SWT.NULL, service);
@@ -90,13 +90,13 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 				@Override
 				public void paintControl(PaintEvent e) {
 					Rectangle ca = getClientArea();
-					e.gc.drawRoundRectangle(ca.x - cardConfig.cornerRadiusComp, ca.y-cardConfig.cornerRadiusComp, ca.width, ca.height + 2 * cardConfig.cornerRadiusComp, cardConfig.cornerRadius, cardConfig.cornerRadius);
+					e.gc.drawRoundRectangle(ca.x - cardConfig.cornerRadiusComp, ca.y - cardConfig.cornerRadiusComp, ca.width, ca.height + 2 * cardConfig.cornerRadiusComp, cardConfig.cornerRadius, cardConfig.cornerRadius);
 				}
 			});
 			history.addHistoryListener(new IHistoryListener<PlayItem>() {
 				@Override
 				public void changingTo(PlayItem playItem) {
-					titleLabel.setText(" " + playItem.url); //TODO improve the layout of the BrowserAndNavBar title
+					titleLabel.setText(" " + playItem.url); // TODO improve the layout of the BrowserAndNavBar title
 					browser.processUrl(playItem.feedType, playItem.url);
 				}
 			});
@@ -135,8 +135,8 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 	public Composite getComposite() {
 		return content;
 	}
-	
-	public PlayItem playItem(){
+
+	public PlayItem playItem() {
 		return content.navNextHistoryPrev.getHistory().last();
 	}
 

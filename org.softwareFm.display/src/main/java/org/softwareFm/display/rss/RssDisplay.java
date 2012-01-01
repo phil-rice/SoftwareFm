@@ -35,14 +35,14 @@ public class RssDisplay implements IBrowserPart {
 			@Override
 			public String toString() {
 				return "rssDisplay.main: " + isVisible() + super.toString();
-			};
+			}
 		};
 		label = new Label(main, SWT.NULL);
 		this.content = new Composite(main, SWT.NULL) {
 			@Override
 			public String toString() {
 				return "rssDisplay.content: " + super.toString();
-			};
+			}
 
 		};
 		content.setLayoutData(Grid.makeGrabHorizonalAndFillGridData());
@@ -55,6 +55,7 @@ public class RssDisplay implements IBrowserPart {
 		return main;
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public void displayReply(int statusCode, String reply) {
 		Swts.removeAllChildren(content);

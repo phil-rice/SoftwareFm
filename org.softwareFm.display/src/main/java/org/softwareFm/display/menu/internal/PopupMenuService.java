@@ -25,7 +25,6 @@ public class PopupMenuService<T> implements IPopupMenuService<T> {
 	private final Set<String> menuIds = Sets.newSet();
 	private final Map<String, List<IPopupMenuContributor<T>>> map = Maps.newMap();
 
-
 	@Override
 	public void registerMenuId(String menuId) {
 		menuIds.add(menuId);

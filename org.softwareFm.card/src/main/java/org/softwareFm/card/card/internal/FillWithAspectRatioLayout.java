@@ -66,7 +66,7 @@ public abstract class FillWithAspectRatioLayout extends Layout {
 	@Override
 	protected void layout(Composite composite, boolean flushCache) {
 		Rectangle clientArea = composite.getClientArea();
-//		System.out.println("FWAR " + id + " " + Swts.boundsUpToShell(composite) + " clientAreas: " + Swts.clientAreasUpToShell(composite));
+		// System.out.println("FWAR " + id + " " + Swts.boundsUpToShell(composite) + " clientAreas: " + Swts.clientAreasUpToShell(composite));
 		int height = clientArea.height;
 		int width = heightToWidth(composite, height);
 		int x = clientArea.x;

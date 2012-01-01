@@ -24,5 +24,4 @@ public class HasComposite extends Composite implements IHasComposite {
 		return this;
 	}
 
-
 }

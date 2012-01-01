@@ -10,12 +10,10 @@ public class UrlCacheTest extends TestCase {
 	private final String a = "a/value";
 	private final String ab = "a/b/value";
 	private final String abc = "a/b/c/value";
-	private final String abd = "a/b/d/value";
 
 	private final String ap = "a/valuep";
 	private final String abp = "a/b/valuep";
 	private final String abcp = "a/b/c/valuep";
-	private final String abdp = "a/b/d/valuep";
 
 	public void testFindOrCreateDoesntAffectOthers() {
 		UrlCache<Object> cache = new UrlCache<Object>();

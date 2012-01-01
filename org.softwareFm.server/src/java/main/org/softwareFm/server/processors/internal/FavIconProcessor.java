@@ -15,7 +15,7 @@ public class FavIconProcessor implements IProcessCall {
 	public IProcessResult process(RequestLine requestLine, Map<String, Object> parameters) {
 		if (ServerConstants.GET.equals(requestLine.getMethod())) {
 			String lastSegment = Strings.lastSegment(requestLine.getUri(), "/");
-			if ("favicon.ico".equals(lastSegment)){
+			if ("favicon.ico".equals(lastSegment)) {
 				InputStream stream = getClass().getClassLoader().getResourceAsStream("sfmLogo.ico");
 				return IProcessResult.Utils.processStream(stream, "image/vnd.microsoft.icon");
 			}

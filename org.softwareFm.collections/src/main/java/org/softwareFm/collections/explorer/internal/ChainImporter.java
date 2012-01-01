@@ -33,7 +33,7 @@ class ChainImporter implements IChainImporter {
 		ImportStage stage = stages[index];
 		switch (stage.command) {
 		case MAKE_REPO:
-			return cardDataStore.makeRepo(stage.url,  new IAfterEditCallback() {
+			return cardDataStore.makeRepo(stage.url, new IAfterEditCallback() {
 				@Override
 				public void afterEdit(String url) {
 					process(afterOk, index + 1, stages);

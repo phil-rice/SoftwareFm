@@ -39,7 +39,7 @@ public class CardCollectionsDataStore implements ICardAndCollectionsDataStore {
 			@Override
 			public void process(final ICard card) throws Exception {
 				visitor.initialCard(cardHolder, cardConfig, url, card);
-//				cardHolder.setCard(card);
+				// cardHolder.setCard(card);
 				for (final Entry<String, Object> entry : card.data().entrySet()) {
 					final String followOnUrlFragment = cardConfig.followOnFragment.findFollowOnFragment(entry.getKey(), entry.getValue());
 					if (followOnUrlFragment != null) {
@@ -53,7 +53,7 @@ public class CardCollectionsDataStore implements ICardAndCollectionsDataStore {
 									if (!cardHolder.getControl().isDisposed() && !card.getControl().isDisposed()) {
 										Map<String, Object> moreData = cardConfig.modify(url, result);
 										card.valueChanged(entry.getKey(), moreData);
-										return new LineItem(card.cardType(),entry.getKey(), moreData);
+										return new LineItem(card.cardType(), entry.getKey(), moreData);
 									}
 									return null;
 								} finally {

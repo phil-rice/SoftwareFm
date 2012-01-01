@@ -11,8 +11,8 @@ import org.softwareFm.card.configuration.CardConfig;
 
 public class TextInBorderWithClick extends TextInCompositeWithCardMargin {
 
-	public TextInBorderWithClick(Composite parent, CardConfig cardConfig, final Runnable whenClicked, String cardType, String pattern, Object...args) {
-		super(parent, SWT.WRAP , cardConfig);
+	public TextInBorderWithClick(Composite parent, CardConfig cardConfig, final Runnable whenClicked, String cardType, String pattern, Object... args) {
+		super(parent, SWT.WRAP, cardConfig);
 		setTextFromResourceGetter(cardType, pattern, args);
 		addClickedListener(whenClicked);
 	}

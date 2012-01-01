@@ -8,6 +8,8 @@ package org.softwareFm.repositoryFacard.impl;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
+import junit.framework.Assert;
+
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.httpClient.response.IResponse;
 
@@ -23,6 +25,6 @@ class ResponseCallbackRecordingStatus implements IResponseCallback {
 
 	public void assertOk() {
 		int code = statusCode.get();
-		RepositoryFacardTest.assertTrue("Code: " + code + "\n" + responseString.get(), code == 200 || code == 201);
+		Assert.assertTrue("Code: " + code + "\n" + responseString.get(), code == 200 || code == 201);
 	}
 }

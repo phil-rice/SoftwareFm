@@ -69,7 +69,7 @@ public class CardConfig {
 	public final int topMargin;
 	public final int bottomMargin;
 	public final int cardIconWidth = 16;
-	public final int cardIconHeight = 16;;
+	public final int cardIconHeight = 16;
 
 	/** The title for the card is this big */
 	public final int titleHeight;
@@ -305,9 +305,11 @@ public class CardConfig {
 	public CardConfig withEditorFn(IFunction1<String, IEditorDetailAdder> editorFn) {
 		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuService, popupMenuIdFn);
 	}
+
 	public CardConfig withPopupMenuService(IPopupMenuService<ICard> popupMenuService) {
 		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuService, popupMenuIdFn);
 	}
+
 	public CardConfig withPopupMenuIdFn(IFunction1<ICard, String> popupMenuIdFn) {
 		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuService, popupMenuIdFn);
 	}
@@ -361,6 +363,5 @@ public class CardConfig {
 			}
 		};
 	}
-
 
 }

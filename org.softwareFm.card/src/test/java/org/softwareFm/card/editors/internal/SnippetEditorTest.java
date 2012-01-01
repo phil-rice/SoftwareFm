@@ -41,8 +41,7 @@ public class SnippetEditorTest extends SwtTest {
 		checkChange(editor.data(), composite.contentText, "content");
 	}
 
-	
-	public void testOkUsesUptodateData(){
+	public void testOkUsesUptodateData() {
 		AddCardCallbackMock mock = new AddCardCallbackMock();
 
 		Map<String, Object> data = Maps.stringObjectMap("title", title, "content", content, "description", description);
@@ -55,10 +54,9 @@ public class SnippetEditorTest extends SwtTest {
 		mock.setCanOk(true);
 		composite.getOkCancel().ok();
 		assertEquals(Maps.stringObjectMap("title", "someNewtitle", "content", "someNewcontent", "description", "someNewdescription", CardConstants.slingResourceType, CardConstants.snippet), Lists.getOnly(mock.okData));
-		
-		
+
 	}
-	
+
 	private void checkChange(Map<String, Object> data, Text text, String key) {
 		text.setText("someNew" + key);
 		text.notifyListeners(SWT.Modify, new Event());

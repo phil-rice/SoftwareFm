@@ -20,7 +20,7 @@ public class UrlEditorDetailAdder implements IEditorDetailAdder {
 	public IHasControl add(Composite parentComposite, ICard parentCard, CardConfig cardConfig, String key, Object value, IDetailsFactoryCallback callback) {
 		if (value instanceof String) {
 			TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, parentCard);
-			UrlEditor result = new UrlEditor(parentComposite, cardConfig, parentCard.url(),parentCard.cardType(),  key, value, callback, titleSpec);
+			UrlEditor result = new UrlEditor(parentComposite, cardConfig, parentCard.url(), parentCard.cardType(), key, value, callback, titleSpec);
 			result.getComposite().setLayout(new ValueEditorLayout());
 			callback.gotData(result.getControl());
 			return result;

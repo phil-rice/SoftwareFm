@@ -4,7 +4,7 @@
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
 /* This file is part of SoftwareFm
-/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+ /* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
@@ -32,7 +32,7 @@ public class HoldsCardHolder extends Composite implements IHasCardConfig {
 
 	public HoldsCardHolder(Composite parent, int style, CardConfig cardConfig) {
 		super(parent, style);
-		this.cardConfig = cardConfig.withStyleAndSelection(cardConfig.cardStyle, false).withPopupMenuService(IPopupMenuService.Utils.<ICard>noPopupMenus());
+		this.cardConfig = cardConfig.withStyleAndSelection(cardConfig.cardStyle, false).withPopupMenuService(IPopupMenuService.Utils.<ICard> noPopupMenus());
 	}
 
 	public void addCardSelectedListener(ICardSelectedListener listener) {
@@ -51,11 +51,11 @@ public class HoldsCardHolder extends Composite implements IHasCardConfig {
 			public void paintControl(PaintEvent e) {
 				cardHolder.getControl().removePaintListener(this);
 				if (!cardHolder.getControl().isDisposed()) {
-//					System.out.println("PaintListener... get data for: " + url);
+					// System.out.println("PaintListener... get data for: " + url);
 					CardAndCollectionDataStoreVisitorMonitored visitor = new CardAndCollectionDataStoreVisitorMonitored() {
 						@Override
 						public void initialCard(ICardHolder cardHolder, CardConfig cardConfig, String url, final ICard card) {
-//							System.out.println("  Initial card " + card.getControl().isDisposed());
+							// System.out.println("  Initial card " + card.getControl().isDisposed());
 							super.initialCard(cardHolder, cardConfig, url, card);
 							card.addLineSelectedListener(new ILineSelectedListener() {
 								@Override

@@ -35,7 +35,7 @@ public class AddCardLayout extends Layout {
 	@Override
 	protected void layout(Composite composite, boolean flushCache) {
 		Control[] children = composite.getChildren();
-		assert children.length == 3: children.length;
+		assert children.length == 3 : children.length;
 		CardConfig cc = ((IHasCardConfig) composite).getCardConfig();
 		Control title = children[0];
 		Control card = children[1];
@@ -51,7 +51,7 @@ public class AddCardLayout extends Layout {
 
 		okCancel.setSize(ca.width, okCancelSize.y);
 		okCancel.setLocation(ca.x, ca.height - okCancelSize.y);
-//		composite.redraw();
+		// composite.redraw();
 	}
 
 }

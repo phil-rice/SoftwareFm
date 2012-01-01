@@ -61,13 +61,13 @@ public class ExpressionCategoriser implements IExpressionCategoriser {
 		String methodKey = clean(classAndMethod.post, true);
 		return new ExpressionData(classKey, methodKey);
 	}
-	
+
 	private String clean(String string, boolean replaceSlash) {
 		if (string == null)
 			return null;
-		String withoutGenerics = Strings.removeBrackets(string, '<','>');
+		String withoutGenerics = Strings.removeBrackets(string, '<', '>');
 		String cleaner = withoutGenerics.replace(";", "").replace("|", "_").replace("[", "(").replace('%', '_');
-		String result = replaceSlash ? cleaner.replace("/", "_"): cleaner;
+		String result = replaceSlash ? cleaner.replace("/", "_") : cleaner;
 		return result;
 	}
 

@@ -53,11 +53,11 @@ public class ScrollingCardCollectionHolder implements IHasControl {
 	private void setSize() {
 		Point hs1 = content.getHorizontalBar().getSize();
 		Rectangle clientArea = content.getParent().getClientArea();
-		content.setSize(clientArea.width, clientArea.height );
+		content.setSize(clientArea.width, clientArea.height);
 		Rectangle parentClientArea = clientArea;
 		int height = parentClientArea.height;
 		Point size = holder.getComposite().computeSize(SWT.DEFAULT, height);
-		holder.getControl().setSize(size.x, size.y-hs1.y);
+		holder.getControl().setSize(size.x, size.y - hs1.y);
 	}
 
 	@Override

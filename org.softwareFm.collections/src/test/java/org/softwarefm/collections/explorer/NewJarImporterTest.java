@@ -62,7 +62,7 @@ public class NewJarImporterTest extends TestCase {
 				root + "/prefix/g/g/artifact/a/version/v/digest/012345", //
 				Maps.makeLinkedMap(CardConstants.slingResourceType, CardConstants.versionJar, CardConstants.digest, "012345", CardConstants.found, "found - text")),//
 				actualUrlToMap);
-		assertEquals(Sets.makeSet("tests/NewJarImporterTest/prefix/g/g/artifact/a","tests/NewJarImporterTest/jars/01/23/012345"), mock.repos);
+		assertEquals(Sets.makeSet("tests/NewJarImporterTest/prefix/g/g/artifact/a", "tests/NewJarImporterTest/jars/01/23/012345"), mock.repos);
 		assertEquals(root + "/prefix/g/g/artifact/a", memory.getOnlyResult());
 		assertEquals(actualUrlToMap.size(), count.get());
 	}
@@ -80,8 +80,7 @@ public class NewJarImporterTest extends TestCase {
 				return Futures.doneFuture(null);
 			}
 		};
-		cardConfig = new CardConfig(ICardFactory.Utils.cardFactory(), 
-				mock).withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap(root, "prefix"));
+		cardConfig = new CardConfig(ICardFactory.Utils.cardFactory(), mock).withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap(root, "prefix"));
 	}
 
 }

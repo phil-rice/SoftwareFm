@@ -13,10 +13,12 @@ public class ThreadUnsafePool<T> extends AbstractThinPool<T> {
 
 	private int next;
 
+	@Override
 	public void dispose() {
 		next = 0;
 	}
 
+	@Override
 	protected int makeNewObjectIndex() {
 		return next++;
 	}

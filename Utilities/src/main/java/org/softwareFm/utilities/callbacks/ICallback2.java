@@ -11,7 +11,7 @@ public interface ICallback2<T1, T2> {
 	static class Utils {
 		public static final <T1, T2> ICallback2<T1, T2> noCallback() {
 			return new NoCallback2<T1, T2>();
-		};
+		}
 
 	}
 }

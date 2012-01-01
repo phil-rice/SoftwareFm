@@ -99,6 +99,7 @@ public abstract class GitTest extends TestCase {
 		assertTrue(result.found);
 		assertEquals(data, result.data);
 	}
+
 	protected void checkGetFile(ILocalGitClient client, String url, Map<String, Object> data) {
 		GetResult result = client.getFile(url);
 		assertTrue(result.found);
@@ -113,7 +114,6 @@ public abstract class GitTest extends TestCase {
 		return httpClient == null ? httpClient = IHttpClient.Utils.builder("localhost", ServerConstants.testPort) : httpClient;
 	}
 
-	
 	protected void checkCreateRepository(IGitServer gitServer, String url) {
 		gitServer.createRepository(url);
 		FileRepository fileRepository = gitFacard.makeFileRepository(gitServer.getRoot(), url);

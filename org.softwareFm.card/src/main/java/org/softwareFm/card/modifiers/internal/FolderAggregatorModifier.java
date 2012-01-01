@@ -35,8 +35,8 @@ public class FolderAggregatorModifier implements ICardDataModifier {
 			if (value instanceof Map) {
 				Map<String, Object> valueMap = (Map<String, Object>) value;
 				Object tag = valueMap.get(tagName);
-				
-				if (!valueMap.containsKey(ignoreTag)&&lookedFor.equals(tag)) {
+
+				if (!valueMap.containsKey(ignoreTag) && lookedFor.equals(tag)) {
 					aggregates.put(key, value);
 					continue;
 				}

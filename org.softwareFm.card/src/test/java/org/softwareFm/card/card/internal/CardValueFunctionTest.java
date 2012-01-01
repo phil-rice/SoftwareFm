@@ -7,7 +7,7 @@ package org.softwareFm.card.card.internal;
 
 import org.softwareFm.card.card.LineItem;
 
-public class CardValueFunctionTest extends AbstractResourceGetterFnTest{
+public class CardValueFunctionTest extends AbstractResourceGetterFnTest {
 
 	private CardValueFunction function;
 
@@ -24,12 +24,11 @@ public class CardValueFunctionTest extends AbstractResourceGetterFnTest{
 		assertEquals("value", function.apply(null, new LineItem(null, "q", "value")));
 		assertEquals("value", function.apply(null, new LineItem(null, "camelCase", "value")));
 	}
-	
-	
-	public void testReplacesColonWIthUnderscores() throws Exception{
+
+	public void testReplacesColonWIthUnderscores() throws Exception {
 		assertEquals("xwi_th,value2", function.apply(null, new LineItem("one", "wi:th", "value")));
 	}
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();

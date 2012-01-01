@@ -9,7 +9,6 @@ import java.util.Comparator;
 
 import junit.framework.TestCase;
 
-import org.softwareFm.card.card.LineItem;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.tests.Tests;
 

@@ -25,10 +25,12 @@ public class TopologicalSortResult<T> implements ITopologicalSortResult<T> {
 		}
 	}
 
+	@Override
 	public int size() {
 		return list.size();
 	}
 
+	@Override
 	public ISimpleList<T> get(int index) {
 		return list.get(index);
 	}

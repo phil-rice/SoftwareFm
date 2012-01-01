@@ -9,7 +9,7 @@ public class CardDataStoreForRepositoryTest extends TestCase {
 	@Test
 	public void test() {
 	}
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();

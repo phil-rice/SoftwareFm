@@ -9,8 +9,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
 
-
-public class LayoutMock extends Layout{
+public class LayoutMock extends Layout {
 
 	public int computeSize;
 	public int layoutCount;
@@ -18,7 +17,7 @@ public class LayoutMock extends Layout{
 	@Override
 	protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
 		computeSize++;
-		return new Point(0,0);
+		return new Point(0, 0);
 	}
 
 	@Override

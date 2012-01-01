@@ -4,7 +4,7 @@
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
 /* This file is part of SoftwareFm
-/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+ /* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
@@ -25,7 +25,7 @@ public class SoftwareFmRightClickCategoriser implements IRightClickCategoriser {
 		String lastSegment = Strings.lastSegment(url, "/");
 		String cardType = (String) map.get(CardConstants.slingResourceType);
 		Object value = map == null ? null : map.get(key);
-		if (cardType==null && key == null)
+		if (cardType == null && key == null)
 			return new RightClickCategoryResult(Type.COLLECTION_NOT_CREATED_YET, lastSegment, null, url);
 		if (CardConstants.collection.equals(cardType))
 			return new RightClickCategoryResult(Type.ROOT_COLLECTION, lastSegment, key, url);

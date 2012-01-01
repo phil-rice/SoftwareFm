@@ -4,7 +4,7 @@
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
 /* This file is part of SoftwareFm
-/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+ /* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
@@ -32,10 +32,10 @@ public class ViewCardsMenuHandler extends AbstractCardMenuHandler {
 	@Override
 	public MenuItem optionallyCreate(ICard card, IResourceGetter resourceGetter, Menu menu, Event event, String key) {
 		Object value = card.data().get(key);
-		if (value instanceof Map<?,?>) {
+		if (value instanceof Map<?, ?>) {
 			String viewActualPattern = resourceGetter.getStringOrNull(CardConstants.menuItemViewCards);
 			if (viewActualPattern != null) {
-			 	MenuItem menuItem = new MenuItem(menu, SWT.NULL);
+				MenuItem menuItem = new MenuItem(menu, SWT.NULL);
 				menuItem.setText(MessageFormat.format(viewActualPattern, key));
 				return menuItem;
 			}

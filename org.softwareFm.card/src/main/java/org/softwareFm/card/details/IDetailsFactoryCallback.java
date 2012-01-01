@@ -4,7 +4,7 @@
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
 /* This file is part of SoftwareFm
-/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+ /* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
@@ -19,7 +19,8 @@ import org.softwareFm.card.details.internal.IGotDataCallback;
 import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.utilities.maps.Maps;
 
-/** When a detail is shown there are a lot of potential callbacks/interfaces, so this aggregates them together.<br />
+/**
+ * When a detail is shown there are a lot of potential callbacks/interfaces, so this aggregates them together.<br />
  * <ul>
  * <li>{@link ICardSelectedListener} is the listener to be called if the detail creates one or more cards that are then clicked on (e.g. the detail shows a collection of cards )
  * <li>{@link IGotDataCallback} must be called when the control is fit to be displayed. So for example TextEditorDetailAdder calls it as soon as the control is available, but when showing a card collection, it is not called until the count of the cards is known

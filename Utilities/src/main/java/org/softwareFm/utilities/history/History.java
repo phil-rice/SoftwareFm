@@ -75,6 +75,7 @@ public class History<T> implements IHistory<T> {
 		}
 
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -148,6 +149,5 @@ public class History<T> implements IHistory<T> {
 	public Iterator<T> iterator() {
 		return history.iterator();
 	}
-
 
 }

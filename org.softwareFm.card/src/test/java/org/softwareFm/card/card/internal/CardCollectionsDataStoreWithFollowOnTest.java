@@ -42,7 +42,6 @@ public class CardCollectionsDataStoreWithFollowOnTest extends AbstractCardCollec
 			assertEquals(i == 4, status.mainFuture.isDone());
 		}
 	}
-	
 
 	public void testEachFollowOnQueryCausesCardToBeMutated() throws InterruptedException, ExecutionException, TimeoutException {
 		kickAndDispatch(status.initialFuture);

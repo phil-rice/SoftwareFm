@@ -5,7 +5,6 @@
 
 package org.softwareFm.card.card.internal;
 
-
 public class CardCollectionsDataStoreWithNoFollowOnTest extends AbstractCardCollectionsDataStoreTest {
 	public void testMainFutureIsDoneWhenInitialQueryReturnsWhenNoExtraDataNeeded() {
 		assertFalse(status.mainFuture.isDone());

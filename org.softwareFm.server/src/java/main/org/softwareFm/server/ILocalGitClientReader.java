@@ -7,9 +7,8 @@ public interface ILocalGitClientReader {
 	File getRoot();
 
 	GetResult localGet(String url);
-	
-	GetResult getFile(String url);
 
+	GetResult getFile(String url);
 
 	public static class Utils {
 		public static ILocalGitClientReader noReader() {

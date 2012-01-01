@@ -1,7 +1,6 @@
 package org.softwareFm.server.processors.internal;
 
 import org.softwareFm.server.ServerConstants;
-import org.softwareFm.server.processors.internal.PostProcessor;
 import org.softwareFm.utilities.maps.Maps;
 
 public class PostProcessorTest extends AbstractProcessCallTest<PostProcessor> {
@@ -30,17 +29,17 @@ public class PostProcessorTest extends AbstractProcessCallTest<PostProcessor> {
 		processor.process(makeRequestLine(ServerConstants.POST, "a/b"), makeDataMap(Maps.stringObjectMap("v", 2)));
 		checkContents(remoteRoot, "a/b", v12);
 	}
-	
-	public void testDontCopySubDirectoriesIntoFile(){
+
+	public void testDontCopySubDirectoriesIntoFile() {
 		gitFacard.createRepository(remoteRoot, "a");
 		processor.process(makeRequestLine(ServerConstants.POST, "a/b/c"), makeDataMap(a1b2));
 		processor.process(makeRequestLine(ServerConstants.POST, "a/b/c/d"), makeDataMap(v22));
-		
+
 		processor.process(makeRequestLine(ServerConstants.POST, "a/b"), makeDataMap(v11));
 		processor.process(makeRequestLine(ServerConstants.POST, "a/b"), makeDataMap(Maps.stringObjectMap("v", 2)));
-		
+
 		checkContents(remoteRoot, "a/b", v12);
-		
+
 	}
 
 	@Override

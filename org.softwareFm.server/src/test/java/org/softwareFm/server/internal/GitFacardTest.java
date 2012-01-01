@@ -7,7 +7,6 @@ import org.softwareFm.utilities.tests.Tests;
 
 public class GitFacardTest extends GitTest {
 
-
 	public void testCreateRepository() {
 		gitFacard.createRepository(root, "remote");
 		checkRepositoryExists(remoteRoot);
@@ -21,7 +20,6 @@ public class GitFacardTest extends GitTest {
 		assertEquals("master", gitFacard.getBranch(root, "remote"));
 	}
 
-	
 	public void testCreateRepositoryThrowsExceptionIfParentRepositoryOfUrlExists() {
 		gitFacard.createRepository(root, "remote");
 		IllegalArgumentException e = Tests.assertThrows(IllegalArgumentException.class, new Runnable() {

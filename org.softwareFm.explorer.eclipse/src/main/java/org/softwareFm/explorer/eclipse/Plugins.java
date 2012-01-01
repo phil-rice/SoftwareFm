@@ -18,7 +18,7 @@ import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
 
 public class Plugins {
-	
+
 	public static void walkSelectionServices(ICallback<ISelectionService> callback) {
 		try {
 			IWorkbench workbench = PlatformUI.getWorkbench();
@@ -33,14 +33,14 @@ public class Plugins {
 		}
 	}
 
-	public static <T> List<T> makeListFrom(String id, final ICallback<Throwable> exceptions){
+	public static <T> List<T> makeListFrom(String id, final ICallback<Throwable> exceptions) {
 		final List<T> result = Lists.newList();
 		useClasses(id, new IPlugInCreationCallback<T>() {
 
 			@Override
 			public void process(T t, IConfigurationElement element) throws Exception {
 				result.add(t);
-				
+
 			}
 
 			@Override
@@ -54,7 +54,7 @@ public class Plugins {
 		});
 		return result;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static <T> Class<T> classFrom(IConfigurationElement element) {
 		try {

@@ -71,6 +71,7 @@ public class ReusableSimpleListTest extends TestCase {
 
 	private void checkThrowsIndexOutOfBounds(final IReusableSimpleList<Integer> list, final int i) {
 		Tests.assertThrows(IndexOutOfBoundsException.class, new Runnable() {
+			@Override
 			public void run() {
 				list.get(i);
 			}

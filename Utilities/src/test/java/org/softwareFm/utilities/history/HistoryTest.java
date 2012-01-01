@@ -26,20 +26,20 @@ public class HistoryTest extends TestCase {
 		prev(4, 3, 2, 1);
 	}
 
-	public void testLastIsTheLastItem(){
+	public void testLastIsTheLastItem() {
 		push(1, 2, 3, 4, 5);
 		assertEquals(5, history.last());
 		prev(4);
 		assertEquals(4, history.last());
 		prev(3);
 		assertEquals(3, history.last());
-		prev(2,1,1);
+		prev(2, 1, 1);
 		assertEquals(1, history.last());
-		next(2,3,4,5,5,5);
+		next(2, 3, 4, 5, 5, 5);
 		assertEquals(5, history.last());
-		
+
 	}
-	
+
 	public void testCanUseNextAfterPrev() {
 		push(1, 2, 3, 4, 5);
 		prev(4, 3, 2, 1);
@@ -181,8 +181,6 @@ public class HistoryTest extends TestCase {
 		assertEquals("5", history.next());
 	}
 
-	
-	
 	private void push(Object... items) {
 		for (Object item : items)
 			history.push(item);

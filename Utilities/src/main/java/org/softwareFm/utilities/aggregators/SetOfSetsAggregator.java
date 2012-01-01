@@ -20,10 +20,12 @@ public class SetOfSetsAggregator<T> implements IAggregator<Set<T>, Set<T>> {
 			result = new HashSet<Set<T>>();
 	}
 
+	@Override
 	public void add(Set<T> t) {
 		result.add(t);
 	}
 
+	@Override
 	public Set<T> result() {
 		return new SetFromSets<T>(result);
 	}

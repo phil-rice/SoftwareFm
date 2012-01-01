@@ -22,7 +22,7 @@ public class CrossThreadAggregator<T> implements Iterable<T> {
 			ArrayList<T> list = new ArrayList<T>();
 			results[index.getAndIncrement()] = list;
 			return list;
-		};
+		}
 	};
 
 	@SuppressWarnings("unchecked")

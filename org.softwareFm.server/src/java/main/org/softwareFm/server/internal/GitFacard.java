@@ -90,7 +90,7 @@ public class GitFacard implements IGitFacard {
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
-	};
+	}
 
 	@Override
 	public File findRepositoryUrl(File root, String url) {

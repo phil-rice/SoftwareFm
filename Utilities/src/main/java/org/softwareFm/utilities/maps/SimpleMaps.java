@@ -49,10 +49,12 @@ public class SimpleMaps {
 		return new ISimpleMap<K, V>() {
 			private final List<K> keyList = Iterables.list(map.keySet());
 
+			@Override
 			public V get(K key) {
 				return map.get(key);
 			}
 
+			@Override
 			public List<K> keys() {
 				return keyList;
 			}
@@ -64,14 +66,17 @@ public class SimpleMaps {
 		return new ISimpleMapWithIndex<K, V>() {
 			private final List<K> keyList = Iterables.list(map.keySet());
 
+			@Override
 			public V get(K key) {
 				return map.get(key);
 			}
 
+			@Override
 			public List<K> keys() {
 				return keyList;
 			}
 
+			@Override
 			public V getByIndex(int keyIndex) {
 				return get(keyList.get(keyIndex));
 			}
@@ -97,10 +102,12 @@ public class SimpleMaps {
 
 	public static <K, V> ISimpleMap<K, V> empty() {
 		return new ISimpleMap<K, V>() {
+			@Override
 			public V get(K key) {
 				return null;
 			}
 
+			@Override
 			public List<K> keys() {
 				return Collections.emptyList();
 			}

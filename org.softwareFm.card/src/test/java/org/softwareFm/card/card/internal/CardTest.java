@@ -4,7 +4,7 @@
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
 /* This file is part of SoftwareFm
-/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+ /* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
@@ -23,7 +23,7 @@ import org.softwareFm.utilities.maps.Maps;
 public class CardTest extends SwtTest {
 
 	private final Map<String, Object> rawData = Maps.<String, Object> makeImmutableMap("a", 1, "b", 2);
-	private final Map<String, Object> rawDataWithA3 = Maps.<String, Object> makeImmutableMap("a", 3,"b", 2);
+	private final Map<String, Object> rawDataWithA3 = Maps.<String, Object> makeImmutableMap("a", 3, "b", 2);
 	private CardConfig cardConfig;
 
 	@Test
@@ -38,7 +38,7 @@ public class CardTest extends SwtTest {
 	}
 
 	public void testKeyValuesAreTheRawDataModifiedByTheCardConfig() {
-		Map<String, Object> result = Maps.<String,Object>makeMap("some", "result");
+		Map<String, Object> result = Maps.<String, Object> makeMap("some", "result");
 		MockKeyValueModifier mock = new MockKeyValueModifier(result);
 		CardConfig cardConfig2 = cardConfig.withCardDataModifiers(mock);
 		Card card = new Card(shell, cardConfig2, "someUrl", rawData);
@@ -54,14 +54,13 @@ public class CardTest extends SwtTest {
 		assertEquals(rawDataWithA3, card.data());
 		assertSame(rawData, card.rawData());
 	}
-	
-	public void testRawDataNotMessedWithByConstructorOrValueChanged(){
+
+	public void testRawDataNotMessedWithByConstructorOrValueChanged() {
 		Card card = new Card(shell, cardConfig, "someUrl", rawData);
 		card.valueChanged("a", 3);
 		assertEquals(rawDataWithA3, card.data());
 		assertEquals(rawData, card.rawData());
 	}
-	
 
 	public void testCardTypeIsBasedOnSlingResourceTypeInRawData() {
 		checkCardType(null);

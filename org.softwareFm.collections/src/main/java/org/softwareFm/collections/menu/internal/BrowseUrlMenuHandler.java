@@ -19,23 +19,22 @@ import org.softwareFm.utilities.strings.Urls;
 
 public class BrowseUrlMenuHandler extends AbstractCardMenuHandler {
 
-	
 	public BrowseUrlMenuHandler(IExplorer explorer) {
 		super(explorer);
 	}
 
 	@Override
 	public MenuItem optionallyCreate(ICard card, IResourceGetter resourceGetter, Menu menu, Event event, String key) {
-		Object value =card.data().get(key);
-		if (value instanceof String){
+		Object value = card.data().get(key);
+		if (value instanceof String) {
 			String string = (String) value;
-			if (Urls.isUrl(string)){
+			if (Urls.isUrl(string)) {
 				MenuItem item = new MenuItem(menu, SWT.NULL);
 				item.setText(IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.menuItemBrowseText));
 				return item;
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -43,7 +42,7 @@ public class BrowseUrlMenuHandler extends AbstractCardMenuHandler {
 	public void execute(ICard card, String key, MenuItem item) {
 		String url = (String) card.data().get(key);
 		explorer.processUrl(DisplayConstants.browserFeedType, url.trim());
-		
+
 	}
 
 }

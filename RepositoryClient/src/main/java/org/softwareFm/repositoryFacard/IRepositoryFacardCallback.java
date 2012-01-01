@@ -11,10 +11,10 @@ import org.softwareFm.httpClient.response.IResponse;
 
 public interface IRepositoryFacardCallback {
 
-
 	void process(IResponse response, Map<String, Object> data) throws Exception;
-	public static class Utils{
-		public static CheckRepositoryFacardCallback checkMatches(final int statusCode, final Map<String,Object> expected){
+
+	public static class Utils {
+		public static CheckRepositoryFacardCallback checkMatches(final int statusCode, final Map<String, Object> expected) {
 			return new CheckRepositoryFacardCallback(expected, statusCode);
 		}
 

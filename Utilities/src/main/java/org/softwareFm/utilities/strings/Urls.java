@@ -76,6 +76,7 @@ public class Urls {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	public static boolean isUrl(String string) {
 		try {
 			new URL(string);

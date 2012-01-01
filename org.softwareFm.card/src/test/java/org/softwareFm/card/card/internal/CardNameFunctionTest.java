@@ -24,12 +24,11 @@ public class CardNameFunctionTest extends AbstractResourceGetterFnTest {
 		assertEquals("Q", function.apply(null, new LineItem(null, "q", "irrelevant")));
 		assertEquals("Camel Case", function.apply(null, new LineItem(null, "camelCase", "irrelevant")));
 	}
-	
-	
-	public void testReplacesColonWIthUnderscores() throws Exception{
+
+	public void testReplacesColonWIthUnderscores() throws Exception {
 		assertEquals("xwi_th,Wi:th2", function.apply(null, new LineItem("one", "wi:th", "irrelevant")));
 	}
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();

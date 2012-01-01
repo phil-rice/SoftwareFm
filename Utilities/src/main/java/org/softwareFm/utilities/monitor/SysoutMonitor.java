@@ -17,6 +17,7 @@ public class SysoutMonitor extends AbstractMonitor {
 		this.quanta = quanta <= 0 ? 1 : quanta;
 	}
 
+	@Override
 	public void processed(String message, int done, int max) {
 		if ((done + 1) % quanta == 0)
 			display(message, done, max);

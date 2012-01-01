@@ -12,10 +12,9 @@ import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.ILocalVariable;
 import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.dom.IBinding;
 import org.springframework.core.io.ClassPathResource;
 
-public class BindingBuilder extends BindingAdapter implements IBindingBuilder, IBinding {
+public class BindingBuilder extends BindingAdapter implements IBindingBuilder {
 
 	protected final JavaElementData parentData;
 	protected final JavaElementData childData;

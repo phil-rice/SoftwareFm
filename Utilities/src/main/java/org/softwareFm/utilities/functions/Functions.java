@@ -151,7 +151,7 @@ public class Functions {
 		};
 	}
 
-	public static<T> IFunction1<T, String> addToEnd(final String string) {
+	public static <T> IFunction1<T, String> addToEnd(final String string) {
 		return new IFunction1<T, String>() {
 			@Override
 			public String apply(T from) throws Exception {
@@ -236,7 +236,7 @@ public class Functions {
 		};
 	}
 
-	public static <From,To>IFunction1<From,To> expectionIfCalled() {
+	public static <From, To> IFunction1<From, To> expectionIfCalled() {
 		return new IFunction1<From, To>() {
 			@Override
 			public To apply(From from) throws Exception {

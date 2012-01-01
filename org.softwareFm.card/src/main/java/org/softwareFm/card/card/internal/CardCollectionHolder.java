@@ -32,7 +32,6 @@ public class CardCollectionHolder implements IHasComposite {
 	String rootUrl;
 	private final CardCollectionHolderComposite content;
 
-
 	public static class CardCollectionHolderComposite extends HoldsCardHolder implements IHasKeyAndValue {
 
 		private String key;
@@ -50,11 +49,11 @@ public class CardCollectionHolder implements IHasComposite {
 			this.value = value;
 			Swts.removeAllChildren(this);
 			if (value instanceof Map<?, ?>) {
-				Map<String, ?> map =(Map<String, ?>) value;
+				Map<String, ?> map = (Map<String, ?>) value;
 				Map<String, ?> sortedMap = Maps.sortByKey(map, Strings.compareVersionNumbers());
 				for (final Map.Entry<String, ?> childEntry : sortedMap.entrySet()) {
 					if (childEntry.getValue() instanceof Map<?, ?>) {
-						String detailUrl = Urls.composeWithSlash(rootUrl , key, childEntry.getKey());
+						String detailUrl = Urls.composeWithSlash(rootUrl, key, childEntry.getKey());
 						String title = childEntry.getKey();
 						makeCardHolder(detailUrl, title);
 					}
@@ -75,7 +74,6 @@ public class CardCollectionHolder implements IHasComposite {
 		}
 
 	}
-	
 
 	public CardCollectionHolder(Composite parent, CardConfig cardConfig) {
 		content = new CardCollectionHolderComposite(parent, cardConfig);

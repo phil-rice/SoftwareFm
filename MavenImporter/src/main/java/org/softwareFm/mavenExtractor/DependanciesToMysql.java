@@ -82,7 +82,7 @@ public class DependanciesToMysql implements IExtractorCallback {
 		return parent.getVersion();
 	}
 
-	public static void main(String[] args) throws MalformedURLException {
+	public static void main(String[] args) {
 		DataSource dataSource = MavenImporterConstants.dataSource;
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		new ExtractProjectStuff().walk(MavenImporterConstants.dataSource, new DependanciesToMysql(jdbcTemplate, 1000000), ICallback.Utils.sysErrCallback());

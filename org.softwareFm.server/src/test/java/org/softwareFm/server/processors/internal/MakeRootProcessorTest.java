@@ -18,13 +18,11 @@ public class MakeRootProcessorTest extends AbstractProcessCallTest<MakeRootProce
 		checkProcessMakesRepo("b/d");
 		checkProcessMakesRepo("c");
 	}
-	
-	
 
 	private void checkProcessMakesRepo(String uri) {
 		File file = new File(remoteRoot, uri);
 		checkRepositoryDoesntExists(file);
-		processor.process(makeRequestLine(ServerConstants.POST, "/" + ServerConstants.makeRootPrefix + "/"+ uri), makeDataMap(Collections.<String, Object> emptyMap()));
+		processor.process(makeRequestLine(ServerConstants.POST, "/" + ServerConstants.makeRootPrefix + "/" + uri), makeDataMap(Collections.<String, Object> emptyMap()));
 		checkRepositoryExists(file);
 	}
 

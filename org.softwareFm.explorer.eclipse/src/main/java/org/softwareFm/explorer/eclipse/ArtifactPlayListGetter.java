@@ -74,7 +74,7 @@ public class ArtifactPlayListGetter implements IPlayListGetter {
 		@Override
 		protected PlayItem makePlayItemFrom(Map<String, Object> value) {
 			String tweetName = (String) value.get("tweet");
-			return new PlayItem(DisplayConstants.tweetFeedType,  tweetName);
+			return new PlayItem(DisplayConstants.tweetFeedType, tweetName);
 		}
 
 	}
@@ -115,7 +115,7 @@ public class ArtifactPlayListGetter implements IPlayListGetter {
 			}
 
 			private void processBuilder(final List<PlayItem> items, final int i) {
-				if (i >= builders.size()){
+				if (i >= builders.size()) {
 					if (items.size() == 0)
 						processNoPlayItems();
 					else

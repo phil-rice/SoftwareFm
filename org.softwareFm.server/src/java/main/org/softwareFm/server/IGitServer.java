@@ -43,7 +43,6 @@ public interface IGitServer extends ILocalGitClient {
 			return new GitServer(IGitFacard.Utils.makeFacard(), root, remoteUriPrefix);
 		}
 
-
 	}
 
 }

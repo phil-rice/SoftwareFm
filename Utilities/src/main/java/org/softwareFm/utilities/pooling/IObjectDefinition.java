@@ -27,14 +27,17 @@ public interface IObjectDefinition<T> {
 	static class Utils {
 		public static IObjectDefinition<ISimpleStringWithSetters> arraySimpleStringDefn(final int maxStringLength) {
 			return new IObjectDefinition<ISimpleStringWithSetters>() {
+				@Override
 				public Class<ISimpleStringWithSetters> objectClass() {
 					return ISimpleStringWithSetters.class;
 				}
 
+				@Override
 				public ISimpleStringWithSetters createBlank() {
 					return new ByteArraySimpleString(new byte[maxStringLength]);
 				}
 
+				@Override
 				public void clean(ISimpleStringWithSetters oldObject) {
 					oldObject.setFromString("");
 				}
@@ -43,14 +46,17 @@ public interface IObjectDefinition<T> {
 
 		public static IObjectDefinition<ISimpleStringWithSetters> bufferSimpleStringDefn(final int maxStringLength) {
 			return new IObjectDefinition<ISimpleStringWithSetters>() {
+				@Override
 				public Class<ISimpleStringWithSetters> objectClass() {
 					return ISimpleStringWithSetters.class;
 				}
 
+				@Override
 				public ISimpleStringWithSetters createBlank() {
 					return new ByteBufferSimpleString(ByteBuffer.allocate(maxStringLength));
 				}
 
+				@Override
 				public void clean(ISimpleStringWithSetters oldObject) {
 					oldObject.setFromString("");
 				}
@@ -61,14 +67,17 @@ public interface IObjectDefinition<T> {
 		public static <T> IObjectDefinition<T[]> arrayDefn(final Class<T> clazz, final int arrayLength) {
 			final Class<T[]> arrayClass = (Class<T[]>) Array.newInstance(clazz, 0).getClass();
 			return new IObjectDefinition<T[]>() {
+				@Override
 				public Class<T[]> objectClass() {
 					return arrayClass;
 				}
 
+				@Override
 				public T[] createBlank() {
 					return (T[]) Array.newInstance(clazz, arrayLength);
 				}
 
+				@Override
 				public void clean(T[] oldObject) {
 					for (int i = 0; i < oldObject.length; i++)
 						oldObject[i] = null;
@@ -83,10 +92,12 @@ public interface IObjectDefinition<T> {
 
 		public static <K, V, T extends ArraySimpleMap<K, V>> IObjectDefinition<T> arraySimpleMapDefn(final List<K> keys, final Class<T> resultClass, final Class<V> valueClass) {
 			return new IObjectDefinition<T>() {
+				@Override
 				public Class<T> objectClass() {
 					return resultClass;
 				}
 
+				@Override
 				public T createBlank() {
 					try {
 						Constructor<T> constructor = resultClass.getConstructor(new Class[] { List.class, Class.class });
@@ -97,6 +108,7 @@ public interface IObjectDefinition<T> {
 					}
 				}
 
+				@Override
 				public void clean(T oldObject) {
 					V[] values = oldObject.getValues();
 					for (int i = 0; i < values.length; i++)

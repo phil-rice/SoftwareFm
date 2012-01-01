@@ -46,7 +46,6 @@ public abstract class AbstractCardHolderTest extends SwtTest {
 	}
 
 	public void testCompositeIsCardHoldComposite() {
-		assertTrue(cardHolder.content instanceof CardHolder.CardHolderComposite);
 		assertSame(cardHolder.content, cardHolder.getControl());
 		assertSame(cardHolder.content, cardHolder.getComposite());
 	}

@@ -31,10 +31,12 @@ public class CrossThreadsAggregatorTest extends TestCase {
 	private void check(List<Integer> expected, List<Integer>... ints) throws InterruptedException {
 		final CrossThreadAggregator<Integer> lists = new CrossThreadAggregator<Integer>(ints.length);
 		Iterable<Thread> threads = Iterables.map(Arrays.asList(ints), new IFunction1<List<Integer>, Thread>() {
+			@Override
 			public Thread apply(final List<Integer> from) throws Exception {
 				Thread thread = new Thread() {
 					private final List<Integer> list = lists.myList();
 
+					@Override
 					public void run() {
 						for (int i : from)
 							list.add(i);

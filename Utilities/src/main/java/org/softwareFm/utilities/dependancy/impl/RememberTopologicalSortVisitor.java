@@ -16,6 +16,7 @@ public class RememberTopologicalSortVisitor<T> implements ITopologicalSortResult
 	private final Map<T, Integer> actual = Maps.newMap();
 	private final List<Integer> generations = Lists.newList();
 
+	@Override
 	public void visit(int generation, T item) {
 		actual.put(item, generation);
 		generations.add(generation);

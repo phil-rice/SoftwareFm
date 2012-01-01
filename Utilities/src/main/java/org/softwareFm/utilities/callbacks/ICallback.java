@@ -56,11 +56,11 @@ public interface ICallback<T> {
 
 		public static final <T> ICallback<T> noCallback() {
 			return new NoCallback<T>();
-		};
+		}
 
 		public static final <T> MemoryCallback<T> memory() {
 			return new MemoryCallback<T>();
-		};
+		}
 
 		public static ICallback<Integer> count = new ICallback<Integer>() {
 			@Override

@@ -10,7 +10,7 @@ import java.util.concurrent.Future;
 
 import org.softwareFm.httpClient.requests.IResponseCallback;
 
-public interface IRepositoryFacardWithImports extends IRepositoryFacard{
+public interface IRepositoryFacardWithImports extends IRepositoryFacard {
 	/**
 	 * This creates one or more nodes underneath the parentNode<br />
 	 * assume parentUrl='content',<br />

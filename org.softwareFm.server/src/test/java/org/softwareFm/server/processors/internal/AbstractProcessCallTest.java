@@ -79,6 +79,7 @@ abstract public class AbstractProcessCallTest<T extends IProcessCall> extends Gi
 			throw WrappedException.wrap(e);
 		}
 	}
+
 	protected void checkGetStringFromProcessor(String url, final String expected) {
 		try {
 			IProcessResult result = processor.process(makeRequestLine(ServerConstants.GET, url), emptyMap);

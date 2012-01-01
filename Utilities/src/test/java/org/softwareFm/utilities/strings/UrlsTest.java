@@ -11,7 +11,7 @@ import junit.framework.TestCase;
 
 public class UrlsTest extends TestCase {
 
-	public void testCompose(){
+	public void testCompose() {
 		assertEquals("a/b", Urls.compose("a", "b"));
 		assertEquals("a/b", Urls.compose("a/", "b"));
 		assertEquals("a/b", Urls.compose("a/", "/b"));
@@ -19,6 +19,7 @@ public class UrlsTest extends TestCase {
 		assertEquals("/a/b", Urls.composeWithSlash("a/", "b"));
 		assertEquals("/a/b", Urls.composeWithSlash("a/", "/b"));
 	}
+
 	public void testRipper() {
 		checkUrlRipper("http://a.b.c/wibble.html", "http", "a.b.c/wibble", "html");
 		checkUrlRipper("a.b.c/wibble.html", "", "a.b.c/wibble", "html");

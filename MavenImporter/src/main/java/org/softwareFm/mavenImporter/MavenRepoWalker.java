@@ -5,7 +5,6 @@
 
 package org.softwareFm.mavenImporter;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
@@ -116,7 +115,7 @@ public class MavenRepoWalker {
 		}
 	}
 
-	private String getPom(String pomUrl) throws MalformedURLException {
+	private String getPom(String pomUrl) {
 		try {
 			String pom = pomUrl.length() > 0 ? Files.getText(new URL(pomUrl)) : "";
 			return pom;

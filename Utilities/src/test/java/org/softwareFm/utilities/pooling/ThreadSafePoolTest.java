@@ -7,6 +7,7 @@ package org.softwareFm.utilities.pooling;
 
 public class ThreadSafePoolTest extends PoolTest {
 
+	@Override
 	protected IPool<IExampleForPool> makePool(boolean cleanWhenReuse) {
 		return IPool.Utils.pool(new PoolOptions().withCleanWhenReuse(cleanWhenReuse), defn);
 	}

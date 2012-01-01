@@ -4,7 +4,7 @@
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
 /* This file is part of SoftwareFm
-/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+ /* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
@@ -64,12 +64,12 @@ public class CardDataStoreFixture {
 			"data2c", data2c);
 
 	public static final Object[] dataForMocks = new Object[] { "some", Maps.newMap(),//
-			"/"+url, dataUrl1, //
-			"/"+url1a, data1ap, //
-			"/"+url1b, data1bp,//
-			"/"+url2a, data2ap,//
-			"/"+url2b, data2bp,//
-			"/"+url2c, data2cp,//
+			"/" + url, dataUrl1, //
+			"/" + url1a, data1ap, //
+			"/" + url1b, data1bp,//
+			"/" + url2a, data2ap,//
+			"/" + url2b, data2bp,//
+			"/" + url2c, data2cp,//
 	};
 	public static final Object[] dataIndexedByUrlFragment = new Object[] { "some", Maps.newMap(),//
 			"1a", data1ap, //
@@ -82,6 +82,7 @@ public class CardDataStoreFixture {
 	public static CardConfig syncCardConfig(Device device) {
 		return new CardConfig(ICardFactory.Utils.cardFactory(), rawCardStore()).withTitleSpecFn(Functions.<ICardData, TitleSpec> constant(TitleSpec.noTitleSpec(device.getSystemColor(SWT.COLOR_WHITE))));
 	}
+
 	public static CardConfig asyncCardConfig(Device device) {
 		return new CardConfig(ICardFactory.Utils.cardFactory(), rawAsyncCardStore()).withTitleSpecFn(Functions.<ICardData, TitleSpec> constant(TitleSpec.noTitleSpec(device.getSystemColor(SWT.COLOR_WHITE))));
 	}

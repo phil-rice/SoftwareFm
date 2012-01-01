@@ -38,11 +38,11 @@ import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.maps.Maps;
 
+@SuppressWarnings("restriction")
 public class BindingRipper implements IBindingRipper {
 
 	private final Map<IPath, String> cache = Maps.newMap();
 
-	@SuppressWarnings("restriction")
 	@Override
 	public BindingRipperResult rip(Expression from, Map<String, Object> cargo) {
 		try {
@@ -67,7 +67,6 @@ public class BindingRipper implements IBindingRipper {
 							return result;
 						}
 					});
-					IJavaElement parent = javaElement.getParent();
 					if (from instanceof IMethodBinding) {// javaElement instanceof IMethod
 						String packageName = ((IMethodBinding) from).getDeclaringClass().getPackage().getName();
 						String className = javaElement.getParent().getElementName();
@@ -125,7 +124,8 @@ public class BindingRipper implements IBindingRipper {
 			IMethodBinding resolveMethodBinding = ((MethodInvocation) parent).resolveMethodBinding();
 			IJavaElement result = resolveMethodBinding.getJavaElement();
 			return result;
-		} if (parent  instanceof MethodDeclaration){
+		}
+		if (parent instanceof MethodDeclaration) {
 			IMethodBinding methodBinding = ((MethodDeclaration) parent).resolveBinding();
 			IJavaElement result = methodBinding.getJavaElement();
 			return result;

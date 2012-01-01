@@ -5,7 +5,6 @@
 
 package org.softwareFm.explorer.eclipse;
 
-
 public interface ISelectedBindingManager {
 
 	void addSelectedArtifactSelectionListener(ISelectedBindingListener listener);

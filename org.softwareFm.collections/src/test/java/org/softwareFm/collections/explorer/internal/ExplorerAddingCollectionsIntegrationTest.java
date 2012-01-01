@@ -130,7 +130,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 	}
 
 	public void testAddingAdvert() throws Exception {
-		
+
 		IAddingCallback<ICard> addingCallback = new IAddingCallback<ICard>() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
@@ -322,6 +322,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 		super.setUp();
 		popupMenuId = getClass().getSimpleName();
 		ICardMenuItemHandler.Utils.addExplorerMenuItemHandlers(explorer, popupMenuId);
-		postArtifactData();	}
+		postArtifactData();
+	}
 
 }

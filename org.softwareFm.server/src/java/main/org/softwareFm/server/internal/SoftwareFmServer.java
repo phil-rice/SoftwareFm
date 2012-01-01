@@ -65,7 +65,7 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 									Map<String, Object> value = getValue(conn, request);
 									RequestLine requestLine = request.getRequestLine();
 									HttpResponse response = process(processCall, value, requestLine);
-									System.out.println(socket.getRemoteSocketAddress() +", "+ requestLine +" " + response.getStatusLine());
+									System.out.println(socket.getRemoteSocketAddress() + ", " + requestLine + " " + response.getStatusLine());
 									String remoteSocketAddress = socket.getRemoteSocketAddress().toString();
 									String ip = Strings.firstSegment(remoteSocketAddress, ":");
 									usage.monitor(ip, requestLine.toString());
@@ -85,7 +85,7 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 					}
 					return null;
 				}
-				
+
 				private HttpResponse process(final IProcessCall processCall, Map<String, Object> value, RequestLine requestLine) throws Exception {
 					try {
 						IProcessResult processResult = processCall.process(requestLine, value);
@@ -94,13 +94,13 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 						return makeResponse(IProcessResult.Utils.processString(e.getClass() + "/" + e.getMessage()), 500, e.getMessage());
 					}
 				}
-				
+
 				private HttpResponse makeResponse(IProcessResult processResult, int status, String reason) throws Exception {
 					HttpResponse response = new BasicHttpResponse(HttpVersion.HTTP_1_1, status, "OK");
 					processResult.process(response);
 					return response;
 				}
-				
+
 				private Map<String, Object> getValue(DefaultHttpServerConnection conn, HttpRequest request) throws HttpException, IOException {
 					if (request instanceof HttpEntityEnclosingRequest) {
 						conn.receiveRequestEntity((HttpEntityEnclosingRequest) request);
@@ -114,7 +114,7 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 							Map<String, Object> result = Maps.newMap();
 							for (NameValuePair pair : parse)
 								result.put(pair.getName(), pair.getValue());
-									return result;
+							return result;
 						}
 					}
 					return Collections.emptyMap();
@@ -141,7 +141,7 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 			}
 			int tries = 0;
 			while (tries++ < 1000 && !countDownLatch.await(10, TimeUnit.MILLISECONDS))
-				;
+				doNothing();
 			if (tries >= 1000)
 				throw new RuntimeException(ServerConstants.couldntStop);
 		} catch (InterruptedException e) {
@@ -155,6 +155,10 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 		}
 	}
 
+	private void doNothing() {
+	}
+
+	@SuppressWarnings("unused")
 	public static void main(String[] args) throws Exception {
 		File root = new File(System.getProperty("user.home"));
 		File sfmRoot = new File(root, ".sfm_remote");

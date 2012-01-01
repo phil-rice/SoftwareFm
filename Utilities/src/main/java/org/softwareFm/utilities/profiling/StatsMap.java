@@ -18,6 +18,7 @@ public class StatsMap<K> implements ISimpleMap<K, Stats> {
 	static class Utils {
 		public static final <K> Callable<StatsMap<K>> newStatsMap() {
 			return new Callable<StatsMap<K>>() {
+				@Override
 				public StatsMap<K> call() throws Exception {
 					return new StatsMap<K>();
 				}
@@ -29,16 +30,19 @@ public class StatsMap<K> implements ISimpleMap<K, Stats> {
 
 	public void add(K job, long duration) {
 		Maps.findOrCreate(map, job, new Callable<Stats>() {
+			@Override
 			public Stats call() throws Exception {
 				return new Stats();
 			}
 		}).add(duration);
 	}
 
+	@Override
 	public Stats get(K key) {
 		return map.get(key);
 	}
 
+	@Override
 	public List<K> keys() {
 		return Iterables.list(map.keySet());
 	}

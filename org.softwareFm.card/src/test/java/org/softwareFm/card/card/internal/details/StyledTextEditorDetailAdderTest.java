@@ -43,7 +43,7 @@ public class StyledTextEditorDetailAdderTest extends AbstractDetailsAdderTest<St
 		CardConfig cardConfig = super.makeCardConfig();
 		IResourceGetter raw = Functions.call(cardConfig.resourceGetterFn, null);
 		IResourceGetter resourceGetter = raw.with(new ResourceGetterMock());
-		return cardConfig.withResourceGetterFn(Functions.<String,IResourceGetter>constant(resourceGetter));
+		return cardConfig.withResourceGetterFn(Functions.<String, IResourceGetter> constant(resourceGetter));
 	}
 
 	@Override

@@ -19,10 +19,12 @@ public class AbstractFindNextIterableTest extends TestCase {
 	private void checkIterable(final Integer... ints) {
 		Iterable<Integer> iterable = new AbstractFindNextIterable<Integer, Iterator<Integer>>() {
 
+			@Override
 			protected Integer findNext(Iterator<Integer> context) {
 				return context.hasNext() ? context.next() : null;
 			}
 
+			@Override
 			protected Iterator<Integer> reset() {
 				return Arrays.asList(ints).iterator();
 			}

@@ -21,11 +21,9 @@ public class Json {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static Map<String, Object> makeMap(String jsonString) {
-		if (jsonString instanceof String) {
-			Object result = parse(jsonString);
-			if (result instanceof Map)
-				return (Map) result;
-		}
+		Object result = parse(jsonString);
+		if (result instanceof Map)
+			return (Map) result;
 		throw new IllegalArgumentException(MessageFormat.format(UtilityConstants.notAMap, jsonString.getClass(), jsonString));
 	}
 

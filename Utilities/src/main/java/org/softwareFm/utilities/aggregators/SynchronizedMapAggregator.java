@@ -13,11 +13,13 @@ public class SynchronizedMapAggregator<K, V> implements IAggregator<Map<K, V>, M
 
 	private final Map<K, V> result = Collections.synchronizedMap(new HashMap<K, V>());
 
+	@Override
 	public void add(Map<K, V> t) {
 		result.putAll(t);
 
 	}
 
+	@Override
 	public Map<K, V> result() {
 		return result;
 	}

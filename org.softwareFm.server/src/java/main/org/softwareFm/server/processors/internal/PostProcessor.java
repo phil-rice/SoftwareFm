@@ -39,7 +39,7 @@ public class PostProcessor implements IProcessCall {
 		Map<String, Object> initialData = initial.data;
 		Map<String, Object> newMap = Json.mapFromString(data);
 		@SuppressWarnings("unchecked")
-		Map<String, Object> composite = Maps.<String,Object>merge(initialData, newMap);
+		Map<String, Object> composite = Maps.<String, Object> merge(initialData, newMap);
 		return Json.toString(composite);
 	}
 }

@@ -10,7 +10,6 @@ import java.util.Map;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.configuration.CardConfig;
-import org.softwareFm.card.dataStore.ICardAndCollectionDataStoreVisitor;
 
 public class CardAndCollectionDataStoreVisitorMonitored implements ICardAndCollectionDataStoreVisitor {
 

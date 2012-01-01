@@ -50,7 +50,7 @@ public class SlingWalker {
 								try {
 									walk(repository, client, url + "/" + entry.getKey(), depth + 1, visitor);
 								} catch (Exception e) {
-									visitor.exception(url,e);
+									visitor.exception(url, e);
 								}
 
 				}

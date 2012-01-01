@@ -4,7 +4,7 @@
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
 /* This file is part of SoftwareFm
-/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+ /* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
@@ -39,7 +39,7 @@ public class SingleCardExplorer implements IHasComposite {
 	private final SashForm sashForm;
 	private final Text text;
 
-	public SingleCardExplorer(Composite parent,  final CardConfig cardConfig, final String rootUrl) {
+	public SingleCardExplorer(Composite parent, final CardConfig cardConfig, final String rootUrl) {
 		sashForm = new SashForm(parent, SWT.VERTICAL);
 		callbackToGotoUrl = new ICallback<String>() {
 			@Override
@@ -76,7 +76,6 @@ public class SingleCardExplorer implements IHasComposite {
 		return sashForm;
 	}
 
-
 	public static void main(String[] args) {
 		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacardForCardExplorer();
 		final String rootUrl = "/softwareFm/data";
@@ -88,7 +87,7 @@ public class SingleCardExplorer implements IHasComposite {
 					final IMutableCardDataStore cardDataStore = new CardDataStoreForRepository(from, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 					final CardConfig cardConfig = new BasicCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
-					IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null,"navBar.prev.title");
+					IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null, "navBar.prev.title");
 					final SingleCardExplorer cardExplorer = new SingleCardExplorer(from, cardConfig, rootUrl);
 					cardExplorer.setUrl(firstUrl);
 

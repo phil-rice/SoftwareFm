@@ -8,7 +8,7 @@ package org.softwareFm.card.dataStore;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.configuration.CardConfig;
 
-/** Gets data about a card, and the may ask for follow up data as well.*/
+/** Gets data about a card, and the may ask for follow up data as well. */
 public interface ICardAndCollectionsDataStore {
 
 	/** Note that the cardholder is populated early, but the card may get prodded with valueHasChanged, and the future isn't done until all values have been changed */

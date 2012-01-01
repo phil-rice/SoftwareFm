@@ -1,6 +1,5 @@
 package org.softwareFm.server.internal;
 
-
 import java.util.Date;
 
 import javax.sql.DataSource;
@@ -35,15 +34,15 @@ public class Usage {
 	}
 
 	public void monitor(final String ip, final String url) {
-//		template.execute("insert into `usage`(ip, url, stamp) values('"+ ip+"','" + url+"','" + new Date().toString()+"')");
-		template.update("insert into `usage`(ip, url, stamp) values(?,?,?)",ip, url, new Date().toString());
+		// template.execute("insert into `usage`(ip, url, stamp) values('"+ ip+"','" + url+"','" + new Date().toString()+"')");
+		template.update("insert into `usage`(ip, url, stamp) values(?,?,?)", ip, url, new Date().toString());
 	}
 
 	public static void main(String[] args) {
 		Usage usage = new Usage(makeLocalDataSource());
 		usage.start();
-		usage.monitor("ip1","url1");
-		usage.monitor("ip2","url2");
+		usage.monitor("ip1", "url1");
+		usage.monitor("ip2", "url2");
 	}
 
 }

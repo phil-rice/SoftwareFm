@@ -7,7 +7,6 @@ package org.softwareFm.card.card.internal.details;
 
 import org.softwareFm.card.details.internal.ListDetailAdder;
 
-
 public class ListDetailsAdderTest extends AbstractDetailsAdderTest<ListDetailAdder> {
 
 	public void testWithNonListGetNull() {
@@ -19,7 +18,7 @@ public class ListDetailsAdderTest extends AbstractDetailsAdderTest<ListDetailAdd
 		checkGetCardCollectionsHolder(mapValue, parentCard.url());
 		checkGetCardCollectionsHolder(collectionValue, parentCard.url());
 		checkGetCardCollectionsHolder(folderValue, parentCard.url());
-		checkGetCardCollectionsHolder( typedValueNotCollection, parentCard.url());
+		checkGetCardCollectionsHolder(typedValueNotCollection, parentCard.url());
 	}
 
 	@Override

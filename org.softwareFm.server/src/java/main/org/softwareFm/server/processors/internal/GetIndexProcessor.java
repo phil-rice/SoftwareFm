@@ -11,7 +11,7 @@ import org.softwareFm.server.processors.IProcessResult;
 public class GetIndexProcessor implements IProcessCall {
 
 	private final File root;
-	
+
 	public GetIndexProcessor(File root) {
 		super();
 		this.root = root;
@@ -19,7 +19,7 @@ public class GetIndexProcessor implements IProcessCall {
 
 	@Override
 	public IProcessResult process(RequestLine requestLine, Map<String, Object> parameters) {
-		if (ServerConstants.GET.equals(requestLine.getMethod()) && requestLine.getUri().equals("/")){
+		if (ServerConstants.GET.equals(requestLine.getMethod()) && requestLine.getUri().equals("/")) {
 			File file = new File(root, "index.html");
 			return IProcessResult.Utils.processFile(file);
 

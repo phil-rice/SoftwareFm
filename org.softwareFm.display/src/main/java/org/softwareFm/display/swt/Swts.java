@@ -22,6 +22,7 @@ import java.util.concurrent.Callable;
 import junit.framework.Assert;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
@@ -82,7 +83,7 @@ public class Swts {
 	public static class Actions {
 		public static Action Action(IResourceGetter resourceGetter, String key, Class<?> imageAnchor, String imageKey, final Runnable run) {
 			String text = IResourceGetter.Utils.getOrException(resourceGetter, key);
-			Action action = new Action(text, Action.AS_RADIO_BUTTON) {
+			Action action = new Action(text, IAction.AS_RADIO_BUTTON) {
 				@Override
 				public void run() {
 					if (isChecked())
@@ -731,7 +732,10 @@ public class Swts {
 
 	public static void dispatchUntilQueueEmpty(Display display) {
 		while (display.readAndDispatch())
-			;
+			doNothing();
+	}
+
+	private static void doNothing() {
 	}
 
 	public static void removeChildrenAfter(Composite composite, Control control) {

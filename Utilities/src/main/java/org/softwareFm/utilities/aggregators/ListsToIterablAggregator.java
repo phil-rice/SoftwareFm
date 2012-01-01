@@ -17,10 +17,12 @@ public class ListsToIterablAggregator<T> implements IAggregator<List<T>, Iterabl
 		listAggregator = new ListAggregator<List<T>>(threadSafe);
 	}
 
+	@Override
 	public void add(List<T> t) {
 		listAggregator.add(t);
 	}
 
+	@Override
 	public Iterable<T> result() {
 		return Iterables.split(listAggregator.result());
 	}

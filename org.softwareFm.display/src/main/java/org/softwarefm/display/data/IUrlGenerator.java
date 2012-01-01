@@ -9,6 +9,6 @@ import java.util.Map;
 
 public interface IUrlGenerator {
 
-	String findUrlFor(Map<String,Object> data);
+	String findUrlFor(Map<String, Object> data);
 
 }

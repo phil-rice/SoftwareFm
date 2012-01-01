@@ -16,7 +16,6 @@ public class MavenImporterConstants {
 	public static DataSource dataSource;
 	public static String slingResourceTypeKey = "sling:resourceType";
 
-
 	public static final String artifactIdKey = "artifactId";
 	public static final String groupIdKey = "groupId";
 	public static final String versionKey = "version";
@@ -35,7 +34,7 @@ public class MavenImporterConstants {
 
 	public static final String collectionResourceType = "collection";
 	public static final String jarResourceType = "jar";
-	//TODO Merge these with CardConstants, and remove any literals
+	// TODO Merge these with CardConstants, and remove any literals
 	public static final String groupResourceType = "group";
 	public static final String artifactResourceType = "artifact";
 	public static final String versionResourceType = "version";
@@ -49,9 +48,6 @@ public class MavenImporterConstants {
 	public static final String mailingListPostKey = "post";
 	public static final String mailingListSubscribeKey = "subscribe";
 	public static final String mailingListUnsubscribeKey = "unsubscribe";
-
-
-
 
 	static {
 		BasicDataSource basicDataSource = new BasicDataSource();

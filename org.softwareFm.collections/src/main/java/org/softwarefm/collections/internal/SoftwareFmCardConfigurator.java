@@ -4,7 +4,7 @@
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
 /* This file is part of SoftwareFm
-/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+ /* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
@@ -36,10 +36,9 @@ public class SoftwareFmCardConfigurator implements ICardConfigurator {
 					@Override
 					public String apply(ICard from) throws Exception {
 						String result = Strings.segment(from.url(), "/", 1);
-						return result;//0 is softwarefm, 1 is data or snippet or jar or...
+						return result;// 0 is softwarefm, 1 is data or snippet or jar or...
 					}
-				}).
-				withNameFn(ICollectionConfigurationFactory.Utils.softwareFmNameFunction(baseConfigured.resourceGetterFn, CardConstants.namePattern)).//
+				}).withNameFn(ICollectionConfigurationFactory.Utils.softwareFmNameFunction(baseConfigured.resourceGetterFn, CardConstants.namePattern)).//
 				withValueFn(ICollectionConfigurationFactory.Utils.softwareFmValueFunction(baseConfigured.resourceGetterFn, CardConstants.valuePattern)).//
 				withTitleFn(ICollectionConfigurationFactory.Utils.softwareFmTitleFunction(baseConfigured.resourceGetterFn)).//
 				withDefaultChildFn(ICollectionConfigurationFactory.Utils.softwareFmDefaultChildFunction()).//
@@ -49,7 +48,7 @@ public class SoftwareFmCardConfigurator implements ICardConfigurator {
 					@Override
 					public Image apply(LineItem from) throws Exception {
 						try {
-							Image baseKey = getImageFor(from.cardType, from.key);// e.g. tutorials.image in artifact.properties   
+							Image baseKey = getImageFor(from.cardType, from.key);// e.g. tutorials.image in artifact.properties
 							if (baseKey != null)
 								return baseKey;
 							Image cardTypeKey = getImageFor(from.key, from.key);// e.g. tutorials.image in tutorial.properties

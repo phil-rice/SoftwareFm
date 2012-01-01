@@ -32,14 +32,17 @@ public interface ISimpleString {
 		}
 
 		public static final ISimpleString empty = new ISimpleString() {
+			@Override
 			public int length() {
 				return 0;
 			}
 
+			@Override
 			public byte byteAt(int offset) {
 				throw new IndexOutOfBoundsException(Integer.toString(offset));
 			}
 
+			@Override
 			public String asString() {
 				return "";
 			}

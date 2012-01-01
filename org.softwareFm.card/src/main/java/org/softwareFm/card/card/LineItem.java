@@ -27,6 +27,7 @@ public class LineItem {
 				}
 			};
 		}
+
 		public static ILineItemFunction<String> keyLineItemFn() {
 			return new ILineItemFunction<String>() {
 				@Override
@@ -41,11 +42,12 @@ public class LineItem {
 		}
 
 		public static ILineItemFunction<String> valueAsStrLineItemFn() {
-			return new ILineItemFunction<String>(){
+			return new ILineItemFunction<String>() {
 				@Override
 				public String apply(CardConfig cardConfig, LineItem item) {
 					return Strings.nullSafeToString(item.value);
-				}};
+				}
+			};
 		}
 	}
 
@@ -54,7 +56,6 @@ public class LineItem {
 		this.key = key;
 		this.value = value;
 	}
-
 
 	@Override
 	public String toString() {

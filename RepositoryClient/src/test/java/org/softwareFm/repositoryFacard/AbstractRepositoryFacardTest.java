@@ -38,5 +38,5 @@ public abstract class AbstractRepositoryFacardTest extends TestCase implements I
 		HashMap<String, Object> expected = new HashMap<String, Object>(rawExpected);
 		expected.put("jcr:primaryType", "nt:unstructured");
 		Maps.assertEquals(expected, callback.data.get());
-	};
+	}
 }

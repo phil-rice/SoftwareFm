@@ -7,7 +7,6 @@ package org.softwareFm.card.card.internal.details;
 
 import org.softwareFm.card.details.internal.CollectionsDetailAdder;
 
-
 public class CollectionsDetailAdderTest extends AbstractDetailsAdderTest<CollectionsDetailAdder> {
 
 	public void testWithNonListGetNull() {

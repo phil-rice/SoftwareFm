@@ -103,7 +103,7 @@ public class IterablesTest extends TestCase {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void testSplit() throws InterruptedException {
+	public void testSplit() {
 		checkSplit(Arrays.<Integer> asList());
 		checkSplit(Arrays.<Integer> asList(1, 2, 3), x123);
 		checkSplit(Arrays.<Integer> asList(1, 2, 3, 4, 5, 6), x123, x456);

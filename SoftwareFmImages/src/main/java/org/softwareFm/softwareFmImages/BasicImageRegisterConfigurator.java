@@ -4,7 +4,7 @@
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
 /* This file is part of SoftwareFm
-/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+ /* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
@@ -34,8 +34,8 @@ public class BasicImageRegisterConfigurator implements IImageRegisterConfigurato
 				"group5", "group5Active",//
 				"group6", "group6Active");
 		Images.registerImages(device, imageRegistry, ArtifactsAnchor.class, "artifact", "archive", "advert",//
-				"article", "jar", "jarClearEclipse", "jarCopyFromSoftwareFm", "jarCopyToSoftwareFm","jarUnrecognised", //
-				"comment","company", "description", "document","email", "faceBook", "folder", "forum", "javadoc", //
+				"article", "jar", "jarClearEclipse", "jarCopyFromSoftwareFm", "jarCopyToSoftwareFm", "jarUnrecognised", //
+				"comment", "company", "description", "document", "email", "faceBook", "folder", "forum", "javadoc", //
 				"issues", "job", "license", "mailingList", "merchandise", "nothing", "name", "group", "artifact",//
 				"news", "rss", "source", "snippet", "subscribe", "tutorial", "twitter", "unsubscribe");
 		Images.registerImages(device, imageRegistry, OverlaysAnchor.class, "overlay", //
@@ -45,7 +45,7 @@ public class BasicImageRegisterConfigurator implements IImageRegisterConfigurato
 		Images.registerImages(device, imageRegistry, GeneralAnchor.class, "general", //
 				"browse", "help", "clear", "sfmLogo", "commentAdd");
 		Images.registerImages(device, imageRegistry, TitleAnchor.class, "title",//
-				"advert", "artifact", "blog", "document", "facebook", "folder", "forum","group", "history", "jar", //
+				"advert", "artifact", "blog", "document", "facebook", "folder", "forum", "group", "history", "jar", //
 				"mailingList", "next", "previous", "refresh", "rss", "tutorial", "twitter", "version");
 
 	}

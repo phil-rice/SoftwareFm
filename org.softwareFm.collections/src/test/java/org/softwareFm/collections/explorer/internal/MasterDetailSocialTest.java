@@ -7,7 +7,6 @@ package org.softwareFm.collections.explorer.internal;
 
 import org.eclipse.swt.SWT;
 import org.junit.Test;
-import org.softwareFm.collections.explorer.internal.MasterDetailSocial;
 import org.softwareFm.display.swt.SwtTest;
 
 public class MasterDetailSocialTest extends SwtTest {
@@ -33,25 +32,24 @@ public class MasterDetailSocialTest extends SwtTest {
 		masterDetailSocial.showSocial();
 		assertEquals(null, masterDetailSocial.content.detailSocial.getMaximizedControl());
 	}
-	
-	public void testHideShowMasterCausesLayout(){
+
+	public void testHideShowMasterCausesLayout() {
 		int initialCount = masterDetailSocial.content.layoutCount;
 		masterDetailSocial.hideMaster();
-		assertEquals(initialCount+1, masterDetailSocial.content.layoutCount);
+		assertEquals(initialCount + 1, masterDetailSocial.content.layoutCount);
 		masterDetailSocial.showMaster();
-		assertEquals(initialCount+2, masterDetailSocial.content.layoutCount);
+		assertEquals(initialCount + 2, masterDetailSocial.content.layoutCount);
 	}
-	
-	public void testHideShowSocialCausesLayout(){
+
+	public void testHideShowSocialCausesLayout() {
 		int initialLayoutCount = masterDetailSocial.content.layoutCount;
 		int initialDetailSocialLayoutCount = masterDetailSocial.content.detailSocialLayoutCount;
 		masterDetailSocial.hideSocial();
-		assertEquals(initialDetailSocialLayoutCount+1, masterDetailSocial.content.detailSocialLayoutCount);
+		assertEquals(initialDetailSocialLayoutCount + 1, masterDetailSocial.content.detailSocialLayoutCount);
 		masterDetailSocial.showSocial();
-		assertEquals(initialDetailSocialLayoutCount+2, masterDetailSocial.content.detailSocialLayoutCount);
+		assertEquals(initialDetailSocialLayoutCount + 2, masterDetailSocial.content.detailSocialLayoutCount);
 		assertEquals(initialLayoutCount, masterDetailSocial.content.layoutCount);
 	}
-	
 
 	@Override
 	protected void setUp() throws Exception {

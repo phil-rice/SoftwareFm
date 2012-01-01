@@ -49,13 +49,13 @@ import org.springframework.core.io.UrlResource;
 public class Files {
 	private static final Object lock = new Object();
 
-	
-	private static final Map<String,String> extensionToMime = Maps.makeMap(//
+	private static final Map<String, String> extensionToMime = Maps.makeMap(//
 			"jpg", "image/jpg", "gif", "image/gif", "html", "text/html", "png", "image/png", "css", "text/css", "xml", "text/xml", "jar", "application/java-archive");
-	public static String defaultMimeType(String fileName){
+
+	public static String defaultMimeType(String fileName) {
 		return Maps.getOrDefault(extensionToMime, Files.extension(fileName), "text/plain");
 	}
-	
+
 	public static String offset(File root, File leaf) {
 		String rootString = root.getAbsolutePath();
 		String leafString = leaf.getAbsolutePath();
@@ -260,12 +260,15 @@ public class Files {
 			DigestInputStream digestInputStream = new DigestInputStream(inputStream, MessageDigest.getInstance("SHA-1"));
 			byte[] buffer = new byte[8192];
 			while (digestInputStream.read(buffer) != -1)
-				;
+				doNothing();
 			byte[] rawDigest = digestInputStream.getMessageDigest().digest();
 			return new BigInteger(rawDigest).abs().toString(16);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
+	}
+
+	private static void doNothing() {
 	}
 
 	public static byte[] digest(File file) {
@@ -282,7 +285,7 @@ public class Files {
 			try {
 				byte[] buffer = new byte[8192];
 				while (digestStream.read(buffer) != -1)
-					;
+					doNothing();
 				byte[] rawDigest = digestStream.getMessageDigest().digest();
 				return rawDigest;
 			} finally {
@@ -447,7 +450,7 @@ public class Files {
 		return new FilenameFilter() {
 			@Override
 			public boolean accept(File file, String actualName) {
-				boolean result =  actualName.equals(name);
+				boolean result = actualName.equals(name);
 				return result;
 			}
 		};

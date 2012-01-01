@@ -10,10 +10,11 @@ import org.softwareFm.utilities.functions.IFunction1;
 public interface IActionBar {
 
 	public void populateToolbar(IToolBarManager toolBarManager);
+
 	public void selectionOccured(BindingRipperResult result);
 
 	public static class Utils {
-		public static IActionBar actionBar(IExplorer explorer,  CardConfig cardConfig, IFunction1<BindingRipperResult, BindingRipperResult> reRipFn) {
+		public static IActionBar actionBar(IExplorer explorer, CardConfig cardConfig, IFunction1<BindingRipperResult, BindingRipperResult> reRipFn) {
 			return new ActionBar(explorer, cardConfig, reRipFn);
 		}
 	}

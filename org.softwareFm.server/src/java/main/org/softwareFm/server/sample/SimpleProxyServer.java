@@ -8,11 +8,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class SimpleProxyServer {
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		try {
 			String host = "localhost";
 			int remoteport = 8080;
-			int localport = 9418 ;
+			int localport = 9418;
 			// Print a start-up message
 			System.out.println("Starting proxy for " + host + ":" + remoteport + " on port " + localport);
 			// And start running the server
@@ -67,7 +67,7 @@ public class SimpleProxyServer {
 						try {
 							while ((bytesRead = streamFromClient.read(request)) != -1) {
 								String string = new String(request, 0, bytesRead, "UTF-8");
-								System.out.println("client->server"+string);
+								System.out.println("client->server" + string);
 
 								streamToServer.write(request, 0, bytesRead);
 								streamToServer.flush();
@@ -93,7 +93,7 @@ public class SimpleProxyServer {
 				try {
 					while ((bytesRead = streamFromServer.read(reply)) != -1) {
 						String string = new String(request, 0, bytesRead, "UTF-8");
-						System.out.println("server->client"+string);
+						System.out.println("server->client" + string);
 						streamToClient.write(reply, 0, bytesRead);
 						streamToClient.flush();
 					}

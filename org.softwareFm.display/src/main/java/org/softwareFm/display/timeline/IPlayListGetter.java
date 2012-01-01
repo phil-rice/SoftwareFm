@@ -18,7 +18,7 @@ public interface IPlayListGetter {
 
 		public static IPlayListGetter noPlayListGetter() {
 			return new IPlayListGetter() {
-				
+
 				@Override
 				public Future<IPlayList> getPlayListFor(String playListName, ICallback<IPlayList> callback) throws Exception {
 					return Futures.doneFuture(null);

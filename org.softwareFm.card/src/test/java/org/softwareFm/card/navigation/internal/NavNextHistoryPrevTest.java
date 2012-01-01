@@ -4,7 +4,7 @@
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
 /* This file is part of SoftwareFm
-/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+ /* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
@@ -18,8 +18,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.junit.Test;
-import org.softwareFm.card.navigation.internal.NavNextHistoryPrev;
-import org.softwareFm.card.navigation.internal.NavNextHistoryPrevConfig;
 import org.softwareFm.card.navigation.internal.NavNextHistoryPrev.NavNextHistoryPrevLayout;
 import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.display.swt.Swts;
@@ -66,20 +64,19 @@ public class NavNextHistoryPrevTest extends SwtTest {
 		assertEquals(new Rectangle(2 + 20, 6, 20, 23), historyControl.getBounds());// now you are asking why this isn't using height. and I don't know. I suspect it's because combo has internal stuff
 		assertEquals(new Rectangle(2 + 20 + 20, 6, 20, height), nextControl.getBounds());
 	}
-	
-	public void testGetHistory(){
+
+	public void testGetHistory() {
 		assertEquals(history, nav.getHistory());
 	}
-	
-	public void testSetBackgroundUpdatesAllTheBackground(){
+
+	public void testSetBackgroundUpdatesAllTheBackground() {
 		Color color = new Color(shell.getDisplay(), 10, 20, 30);
 		nav.setBackground(color);
 		assertEquals(color, navComposite.getBackground());
 		Control[] children = navComposite.getChildren();
-		for (Control child: children)
+		for (Control child : children)
 			assertEquals(color, child.getBackground());
 	}
-	
 
 	private void checkComputeSize(int wHint, int hHint) {
 		NavNextHistoryPrevLayout<Integer> layout = new NavNextHistoryPrev.NavNextHistoryPrevLayout<Integer>();

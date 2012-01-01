@@ -28,10 +28,10 @@ public class DependanciesToSling implements IArtifactDependancyVisitor {
 	public DependanciesToSling(IRepositoryFacard repository, int count) {
 		this.repository = repository;
 		this.maxCount = count;
-////		GuiDataStore guiDataStore = new GuiDataStore(null, null, ICallback.Utils.rethrow());
-////		new DataStoreConfigurator().process(guiDataStore);// setsup all the url generator;
-//		Map<String, IUrlGenerator> urlGeneratorMap = guiDataStore.getUrlGeneratorMap();
-//		artifactUrlGenerator = urlGeneratorMap.get("urlGenerator.artifact");
+		// // GuiDataStore guiDataStore = new GuiDataStore(null, null, ICallback.Utils.rethrow());
+		// // new DataStoreConfigurator().process(guiDataStore);// setsup all the url generator;
+		// Map<String, IUrlGenerator> urlGeneratorMap = guiDataStore.getUrlGeneratorMap();
+		// artifactUrlGenerator = urlGeneratorMap.get("urlGenerator.artifact");
 	}
 
 	public void vist(String groupid, String artifactid, String childgroupid, String childartifactid) throws Exception {
@@ -41,7 +41,7 @@ public class DependanciesToSling implements IArtifactDependancyVisitor {
 		Map<String, Object> data = makeMap(childgroupid, childartifactid);
 		data.put(MavenImporterConstants.slingResourceTypeKey, "dependancy");
 		System.out.println(fullUrl + "<-------" + data);
-		repository.post(fullUrl, data,  IResponseCallback.Utils.noCallback()).get();
+		repository.post(fullUrl, data, IResponseCallback.Utils.noCallback()).get();
 		if (count++ > maxCount)
 			System.exit(0);
 	}

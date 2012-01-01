@@ -22,8 +22,8 @@ import org.softwareFm.card.card.LineItem;
 import org.softwareFm.card.card.internal.CardOutlinePaintListener;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
-import org.softwareFm.card.title.TitleWithTitlePaintListener;
 import org.softwareFm.card.title.TitleSpec;
+import org.softwareFm.card.title.TitleWithTitlePaintListener;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.functions.Functions;
@@ -57,8 +57,8 @@ public class TextViewer implements IHasComposite {
 			assert bodyChildren.length == 1;
 			Control text = bodyChildren[0];
 			Rectangle bca = body.getClientArea();
-			text.setBounds(bca.x+cc.editorIndentX, bca.y+cc.editorIndentY, bca.width-2*cc.editorIndentX, bca.height-2*cc.editorIndentY);
-			
+			text.setBounds(bca.x + cc.editorIndentX, bca.y + cc.editorIndentY, bca.width - 2 * cc.editorIndentX, bca.height - 2 * cc.editorIndentY);
+
 		}
 
 	}
@@ -67,6 +67,7 @@ public class TextViewer implements IHasComposite {
 
 		private CardConfig cardConfig;
 
+		@SuppressWarnings("unused")
 		public TextViewComposite(Composite parent, final ICard card, String key) {
 			super(parent, SWT.NULL);
 			cardConfig = card.getCardConfig();
@@ -86,7 +87,7 @@ public class TextViewer implements IHasComposite {
 					return result;
 				}
 			};
-			StyledText text = new StyledText(body, SWT.V_SCROLL | SWT.WRAP|SWT.BORDER|SWT.READ_ONLY);
+			StyledText text = new StyledText(body, SWT.V_SCROLL | SWT.WRAP | SWT.BORDER | SWT.READ_ONLY);
 			body.setBackground(titleSpec.background);
 			body.addPaintListener(new CardOutlinePaintListener(titleSpec, cardConfig));
 			text.setText(Strings.nullSafeToString(value));

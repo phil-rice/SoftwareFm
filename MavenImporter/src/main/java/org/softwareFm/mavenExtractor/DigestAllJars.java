@@ -6,7 +6,6 @@
 package org.softwareFm.mavenExtractor;
 
 import java.io.File;
-import java.net.MalformedURLException;
 
 import javax.sql.DataSource;
 
@@ -39,7 +38,7 @@ public class DigestAllJars implements IExtractorCallback {
 
 	}
 
-	public static void main(String[] args) throws MalformedURLException {
+	public static void main(String[] args) {
 		File directory = new File("c:/softwareFmRepository");
 		DataSource dataSource = MavenImporterConstants.dataSource;
 		new ExtractProjectStuff().walk(MavenImporterConstants.dataSource, new DigestAllJars(dataSource, directory), ICallback.Utils.sysErrCallback());

@@ -18,6 +18,7 @@ public class CountCallable<T> implements Callable<T> {
 		count.incrementAndGet();
 		return value;
 	}
+
 	public int getCount() {
 		return count.get();
 	}

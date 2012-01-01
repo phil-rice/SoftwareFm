@@ -4,7 +4,7 @@
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
 /* This file is part of SoftwareFm
-/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+ /* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
@@ -80,7 +80,7 @@ public class CardHolder implements ICardHolderForTests {
 
 	}
 
-	static class CardHolderComposite extends Composite implements IHasCard{
+	static class CardHolderComposite extends Composite implements IHasCard {
 
 		final ITitleBarForCard title;
 		ICard card;
@@ -114,6 +114,7 @@ public class CardHolder implements ICardHolderForTests {
 		public ICard getCard() {
 			return card;
 		}
+
 		private CardConfig getCardConfig() {
 			CardConfig cardConfig = card == null ? navBarCardConfig : card.getCardConfig();
 			return cardConfig;
@@ -231,7 +232,7 @@ public class CardHolder implements ICardHolderForTests {
 							throw WrappedException.wrap(e);
 						}
 						((GatedMockFuture<?, ?>) future).kick();
-					};
+					}
 				}.start();
 				Size.resizeMeToParentsSize(cardHolder.getControl());
 				return cardHolder.getComposite();

@@ -34,7 +34,6 @@ public class CollectionsAggregatorModifierTest extends TestCase {
 	private final static Map<String, Object> compWithTwoSameTaggedChildren = Maps.makeImmutableMap("ct1", item1_t1, "ct2", item2_t1, "tag", "irrelevant"); // for example this could be a 'collection' of tagged cards. Like the artifacts collection
 	private final static Map<String, Object> compWithFourTaggedChildren = Maps.makeImmutableMap("ct11", item1_t1, "ct12", item1_t2, "ct21", item2_t1, "ct22", item2_t2, "tag", "irrelevant"); // for example this could be a 'collection' of tagged cards. Like the artifacts collection
 
-
 	private final static CollectionsAggregatorModifier modifier = new CollectionsAggregatorModifier("tag");
 	private CardConfig cardConfig;
 
@@ -53,7 +52,7 @@ public class CollectionsAggregatorModifierTest extends TestCase {
 		check(item1_t2, item1_t2);
 	}
 
-	//TODO Come back and sort this out...
+	// TODO Come back and sort this out...
 	public void testTransformsKeyValueWhenValueHasTagIntoTagAndListOfValuesThatShareTag() {
 		check(compWithOneTaggedChildren, Maps.stringObjectMap(//
 				"ct1", item1_t1, //

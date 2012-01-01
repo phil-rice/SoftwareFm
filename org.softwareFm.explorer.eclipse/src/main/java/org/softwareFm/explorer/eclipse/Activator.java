@@ -4,7 +4,7 @@
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
 /* This file is part of SoftwareFm
-/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+ /* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
@@ -99,8 +99,8 @@ public class Activator extends AbstractUIPlugin {
 			boolean local = false;
 			String server = local ? "localhost" : "www.softwarefm.com";
 			String prefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : "git://www.softwarefm.com/";
-			int port = local?8080:80;
-			repository = GitRepositoryFactory.gitRepositoryFacard(server, port, localRoot, prefix);			
+			int port = local ? 8080 : 80;
+			repository = GitRepositoryFactory.gitRepositoryFacard(server, port, localRoot, prefix);
 		}
 		return repository;
 	}
@@ -153,6 +153,5 @@ public class Activator extends AbstractUIPlugin {
 	public IServiceExecutor getServiceExecutor() {
 		return serviceExecutor == null ? serviceExecutor = IServiceExecutor.Utils.defaultExecutor() : serviceExecutor;
 	}
-
 
 }

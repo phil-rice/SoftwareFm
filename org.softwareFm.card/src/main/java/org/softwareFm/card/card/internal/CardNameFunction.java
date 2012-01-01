@@ -27,7 +27,7 @@ public class CardNameFunction extends AbstractLineItemFunction<String> {
 	public String apply(CardConfig cardConfig, LineItem from) {
 		String key = findKey(from);
 		String prettyKey = Strings.camelCaseToPretty(from.key);
-		String fullKey = MessageFormat.format(namePattern, key );
+		String fullKey = MessageFormat.format(namePattern, key);
 		String pattern = IResourceGetter.Utils.get(resourceGetterFn, from.cardType, fullKey);
 		if (pattern == null)
 			return prettyKey;

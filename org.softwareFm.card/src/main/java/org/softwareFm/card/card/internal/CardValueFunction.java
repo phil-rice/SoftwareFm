@@ -24,7 +24,7 @@ public class CardValueFunction extends AbstractLineItemFunction<String> {
 	}
 
 	@Override
-	public String apply(CardConfig cardConfig,  LineItem from) {
+	public String apply(CardConfig cardConfig, LineItem from) {
 		String key = findKey(from);
 		String fullKey = MessageFormat.format(valuePattern, key);
 		String pattern = IResourceGetter.Utils.get(resourceGetterFn, from.cardType, fullKey);

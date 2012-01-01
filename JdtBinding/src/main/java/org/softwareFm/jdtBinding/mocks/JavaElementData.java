@@ -30,6 +30,7 @@ public class JavaElementData {
 		this.type = type;
 	}
 
+	@Override
 	public String toString() {
 		return "JavaElementData [name=" + name + ", type=" + type + "]";
 	}

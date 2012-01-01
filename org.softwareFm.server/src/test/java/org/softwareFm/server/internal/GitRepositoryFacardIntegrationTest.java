@@ -39,7 +39,7 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 		checkRepositoryDoesntExists(abc);
 		checkRepositoryDoesntExists(abd);
 
-		//Now
+		// Now
 		repositoryFacard.get("a/b", IRepositoryFacardCallback.Utils.checkMatches(ServerConstants.notFoundStatusCode, Maps.emptyStringObjectMap())).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
 
 		repositoryFacard.makeRoot("a/b/c", IResponseCallback.Utils.noCallback()).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);

@@ -28,7 +28,7 @@ class HttpResponseMock implements HttpResponse {
 
 	@Override
 	public void setHeader(String name, String value) {
- 	}
+	}
 
 	@Override
 	public void setHeader(Header header) {

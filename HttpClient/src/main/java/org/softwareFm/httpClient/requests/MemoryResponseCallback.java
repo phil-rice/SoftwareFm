@@ -21,8 +21,8 @@ public class MemoryResponseCallback<Thing, Aspect> implements IResponseCallback 
 		this.response = response;
 		count.incrementAndGet();
 	}
-	
-	public void assertCalledOnce(){
+
+	public void assertCalledOnce() {
 		Assert.assertEquals(1, count.get());
 	}
 

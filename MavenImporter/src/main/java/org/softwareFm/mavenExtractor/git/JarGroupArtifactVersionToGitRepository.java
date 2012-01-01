@@ -76,7 +76,7 @@ public class JarGroupArtifactVersionToGitRepository implements IExtractorCallbac
 		if (file.exists()) {
 			String digest = Files.digestAsHexString(file);
 			importJar(jarUrl, model, file, digest);
-//			importGroup(model);
+			// importGroup(model);
 			String artifactUrl = importArtifact(jarUrl, model, file, digest);
 			importVersion(jarUrl, model, file, digest);
 			imported.process(artifactUrl);
@@ -263,7 +263,7 @@ public class JarGroupArtifactVersionToGitRepository implements IExtractorCallbac
 		// IRepositoryFacard slingRepository = IRepositoryFacard.Utils.frontEnd("178.79.180.172", 8080, "admin", "admin");
 		File home = new File(System.getProperty("user.home"));
 		File jarDirectory = new File("c:/softwareFmRepository");
-//		File localRoot = new File(home, ".sfm");
+		// File localRoot = new File(home, ".sfm");
 		final File remoteRoot = new File(home, ".sfm_remote");
 		// IRepositoryFacard repository = GitRepositoryFactory.gitLocalRepositoryFacard("localhost", 8080, localRoot, remoteRoot);
 		IRepositoryFacard repository = GitRepositoryFactory.forImport(remoteRoot);

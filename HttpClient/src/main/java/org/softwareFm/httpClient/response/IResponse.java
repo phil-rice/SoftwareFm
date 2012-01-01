@@ -7,18 +7,18 @@ package org.softwareFm.httpClient.response;
 
 public interface IResponse {
 
-
 	String url();
 
 	int statusCode();
 
 	String asString();
+
 	public static class Utils {
 
 		public static IResponse create(final String url, final int statusCode, final String string) {
 			return new Response(url, statusCode, string);
 		}
-		
+
 	}
 
 }

@@ -14,7 +14,7 @@ import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
-public class EditorDetailAdder implements IDetailAdder{
+public class EditorDetailAdder implements IDetailAdder {
 
 	@Override
 	public IHasControl add(Composite parentComposite, ICard parentCard, CardConfig cardConfig, String key, Object value, IDetailsFactoryCallback callback) {

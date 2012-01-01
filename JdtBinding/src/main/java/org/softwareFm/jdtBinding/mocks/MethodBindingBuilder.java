@@ -16,78 +16,97 @@ public class MethodBindingBuilder extends BindingBuilder implements IMethodBindi
 		super(path, packageName, modifyingParent, parentData, childData);
 	}
 
+	@Override
 	protected IBindingBuilder newBuilder(JavaElementData data) {
 		return newMethodBuilder(data);
 	}
 
+	@Override
 	public ITypeBinding getDeclaringClass() {
 		return new TypeBindingBuilder(path, packageName, modifyingParent, null, parentData);
 	}
 
+	@Override
 	public Object getDefaultValue() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public ITypeBinding[] getExceptionTypes() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public IMethodBinding getMethodDeclaration() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public IAnnotationBinding[] getParameterAnnotations(int arg0) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public ITypeBinding[] getParameterTypes() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public ITypeBinding getReturnType() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public ITypeBinding[] getTypeArguments() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public ITypeBinding[] getTypeParameters() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public boolean isAnnotationMember() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public boolean isConstructor() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public boolean isDefaultConstructor() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public boolean isGenericMethod() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public boolean isParameterizedMethod() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public boolean isRawMethod() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public boolean isSubsignature(IMethodBinding arg0) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public boolean isVarargs() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public boolean overrides(IMethodBinding arg0) {
 		throw new UnsupportedOperationException();
 	}

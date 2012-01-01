@@ -9,5 +9,4 @@ public interface ILocalGitClient extends ILocalGitClientReader {
 	/** Map should just have simple values: strings, numbers, arrays of strings/numbers */
 	void post(String url, Map<String, Object> map);
 
-	
 }

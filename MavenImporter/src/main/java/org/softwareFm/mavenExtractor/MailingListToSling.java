@@ -21,7 +21,7 @@ import org.softwareFm.utilities.maps.Maps;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class MailingListToSling implements IExtractorCallback {
-//	private final GuiDataStore guiDataStore;
+	// private final GuiDataStore guiDataStore;
 	private IUrlGenerator artifactUrlGenerator;
 
 	private final IRepositoryFacard facard;
@@ -33,10 +33,10 @@ public class MailingListToSling implements IExtractorCallback {
 	public MailingListToSling(IRepositoryFacard facard, DataSource dataSource, int maxCount) {
 		this.facard = facard;
 		this.maxCount = maxCount;
-//		guiDataStore = new GuiDataStore(null, null, ICallback.Utils.rethrow());
-//		new DataStoreConfigurator().process(guiDataStore);// setsup all the url generator;
-//		Map<String, IUrlGenerator> urlGeneratorMap = guiDataStore.getUrlGeneratorMap();
-//		artifactUrlGenerator = urlGeneratorMap.get("urlGenerator.artifact");
+		// guiDataStore = new GuiDataStore(null, null, ICallback.Utils.rethrow());
+		// new DataStoreConfigurator().process(guiDataStore);// setsup all the url generator;
+		// Map<String, IUrlGenerator> urlGeneratorMap = guiDataStore.getUrlGeneratorMap();
+		// artifactUrlGenerator = urlGeneratorMap.get("urlGenerator.artifact");
 		jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 
@@ -57,16 +57,16 @@ public class MailingListToSling implements IExtractorCallback {
 				addMustExist(model, urlMap, MavenImporterConstants.groupIdKey, groupId);
 				addMustExist(model, urlMap, MavenImporterConstants.artifactIdKey, artifactId);
 				addMustExist(model, urlMap, MavenImporterConstants.versionKey, version);
-				
+
 				Map<String, Object> map = Maps.newMap();
 				addMustExist(model, map, MavenImporterConstants.mailingListNameKey, mailingList.getName());
 				addIfExists(model, map, MavenImporterConstants.mailingListArchiveKey, mailingList.getArchive());
-				map.put( MavenImporterConstants.mailingListOtherArchivesKey, mailingList.getOtherArchives());
+				map.put(MavenImporterConstants.mailingListOtherArchivesKey, mailingList.getOtherArchives());
 				addMustExist(model, map, MavenImporterConstants.mailingListPostKey, mailingList.getPost());
 				addIfExists(model, map, MavenImporterConstants.mailingListSubscribeKey, mailingList.getSubscribe());
 				addIfExists(model, map, MavenImporterConstants.mailingListUnsubscribeKey, mailingList.getUnsubscribe());
 				String url = artifactUrlGenerator.findUrlFor(urlMap);
-				System.out.println(url +" <--------- " + map);
+				System.out.println(url + " <--------- " + map);
 				jdbcTemplate.update("insert into mailinglist (groupid,artifactid,version) values(?,?,?)", groupId, artifactId, version);
 			}
 			postedCount++;
@@ -87,6 +87,7 @@ public class MailingListToSling implements IExtractorCallback {
 				map.put(key, deref);
 		}
 	}
+
 	private String deref(Model model, String key, String raw) {
 		if (raw.contains("${")) {
 			Map<String, String> properties = getModelProperties(model);
@@ -102,6 +103,7 @@ public class MailingListToSling implements IExtractorCallback {
 		return raw;
 
 	}
+
 	private String getGroupId(Model model) {
 		String groupId = model.getGroupId();
 		if (groupId != null)
@@ -153,6 +155,7 @@ public class MailingListToSling implements IExtractorCallback {
 				properties.put((String) entry.getKey(), (String) entry.getValue());
 		return properties;
 	}
+
 	public static void main(String[] args) {
 		IRepositoryFacard repository = IRepositoryFacard.Utils.frontEnd("178.79.180.172", 8080, "admin", "admin");
 		new ExtractProjectStuff().walk(MavenImporterConstants.dataSource, new MailingListToSling(repository, MavenImporterConstants.dataSource, 10), ICallback.Utils.sysErrCallback());
