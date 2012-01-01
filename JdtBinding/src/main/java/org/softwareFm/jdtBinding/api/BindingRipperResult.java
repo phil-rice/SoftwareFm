@@ -20,6 +20,7 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.IBinding;
 import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.utilities.strings.Strings;
 
 /** this is my javadoc */
 public class BindingRipperResult {
@@ -64,7 +65,7 @@ public class BindingRipperResult {
 
 	@Override
 	public String toString() {
-		return "BindingRipperResult [path=" + path + "\npackageFragment=" + packageFragmentRoot + "\nHexDigest=" + hexDigest + "\nSrcAttachment = " + sourceAttachmentPath + "\nPackageName=" + packageName + "\nClassName=" + className + "\nMethodName=" + methodName + "]";
+		return "BindingRipperResult [\npackageName=" + packageName + "\nclassName=" + className + "\nmethodName=" + methodName + "\npath=" + path + "\nhexDigest=" + hexDigest + "\nsourceAttachmentPath=" + Strings.oneLine(sourceAttachmentPath) + "\nclasspathEntry=" + classpathEntry + "\ncargo=" + cargo + "\nexpression=" + expression + "]";
 	}
 
 }
