@@ -19,7 +19,7 @@ import org.softwareFm.utilities.callbacks.MemoryCallback;
 import org.softwareFm.utilities.comparators.Comparators;
 import org.softwareFm.utilities.maps.Maps;
 
-public class SoftwareFmServerTest extends TestCase {
+public class SoftwareFmServerTest extends TestCase  {
 
 	private ISoftwareFmServer server;
 	private MemoryCallback<Throwable> memory;

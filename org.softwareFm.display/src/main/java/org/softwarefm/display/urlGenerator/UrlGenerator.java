@@ -49,9 +49,15 @@ public class UrlGenerator implements IUrlGenerator {
 
 	private Object subString(Object object, int i, int j) {
 		String raw = Strings.nullSafeToString(object);
-		if (raw.length() < j)
-			return "x";
-		else
+		if (raw.length() < j) {
+			int min = raw.length() - j + i;
+			if (min < 0)
+				min = 0;
+			int max = min + j - i;
+			if (max >= raw.length())
+				max = raw.length() ;
+			return raw.substring(min, max);
+		} else
 			return raw.substring(i, j);
 	}
 

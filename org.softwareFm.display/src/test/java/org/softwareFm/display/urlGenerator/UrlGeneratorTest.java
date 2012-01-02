@@ -39,4 +39,14 @@ public class UrlGeneratorTest extends TestCase {
 		assertEquals("pzero0/one1/two2", generator.findUrlFor(data));
 		assertEquals("pzero0/p0/one1/p1/q1/two2/p2/q2", generator.findUrlFor(dataWithDots));
 	}
+	
+	public void testSensibleResultsWithShortNames(){
+		UrlGenerator generator = new UrlGenerator("{0}/{1}/{2}", "name");
+		assertEquals("a/a/a", generator.findUrlFor(Maps.stringObjectMap("name", "a")));
+		assertEquals("ab/ab/ab", generator.findUrlFor(Maps.stringObjectMap("name", "ab")));
+		assertEquals("ab/bc/abc", generator.findUrlFor(Maps.stringObjectMap("name", "abc")));
+		assertEquals("ab/cd/abcd", generator.findUrlFor(Maps.stringObjectMap("name", "abcd")));
+		assertEquals("ab/cd/abcde", generator.findUrlFor(Maps.stringObjectMap("name", "abcde")));
+		
+	}
 }

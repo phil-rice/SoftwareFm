@@ -30,6 +30,7 @@ public class CardConstants {
 	public static final String groupUrlKey = "urlGenerator.group";
 	public static final String artifactUrlKey = "urlGenerator.artifact";
 	public static final String snippetUrlKey = "urlGenerator.snippet";
+	public static final String jarNameUrlKey = "urlGenerator.jarName";
 	public static final String versionUrlKey = "urlGenerator.version";
 	public static final String digestUrlKey = "urlGenerator.digest";
 	public static final String jarUrlRootKey = "urlGenerator.jar.root";
@@ -79,6 +80,7 @@ public class CardConstants {
 	public static final String versionJar = "jar";
 	public static final String collection = "collection";
 	public static final String snippet = "snippet";
+	public static final String jarName = "jarname";
 
 	public static final String webPageWelcomeUrl = "webpage.welcome.url";
 	public static final String webPageGroupUrl = "webpage.group.url";

@@ -20,6 +20,8 @@ import org.apache.tools.ant.taskdefs.Ant;
 import org.codehaus.cake.forkjoin.RecursiveTask;
 import org.softwareFm.httpClient.api.IHttpClient;
 
+import twitter4j.Tweet;
+
 public class Sample {
 
 	@SuppressWarnings("unused")
@@ -33,5 +35,6 @@ public class Sample {
 		Math.random();
 		File file = new File("");
 		RecursiveTask<String> task;
+		Tweet tweet;
 	}
 }
