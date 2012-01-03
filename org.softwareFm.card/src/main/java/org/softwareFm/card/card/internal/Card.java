@@ -241,10 +241,20 @@ public class Card implements ICard {
 		return "Card [url=" + url() + ", cardType=" + cardType() + ", data=" + data() + "]";
 	}
 
+
+	@Override
+	public Table getTable() {
+		return content.table.getTable();
+	}
+
+	@Override
+	public void addMenuDetectListener(Listener listener) {
+		content.table.getTable().addListener(SWT.MenuDetect, listener);
+	}
 	public static void main(String[] args) {
 		final IMutableCardDataStore cardDataStore = CardDataStoreFixture.rawCardStore();
 		final ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
-
+		
 		Swts.Show.display(Card.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(final Composite from) throws Exception {
@@ -259,16 +269,6 @@ public class Card implements ICard {
 				return card.getComposite();
 			}
 		});
-	}
-
-	@Override
-	public Table getTable() {
-		return content.table.getTable();
-	}
-
-	@Override
-	public void addMenuDetectListener(Listener listener) {
-		content.table.getTable().addListener(SWT.MenuDetect, listener);
 	}
 
 }

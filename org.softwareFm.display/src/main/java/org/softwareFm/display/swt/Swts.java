@@ -905,4 +905,15 @@ public class Swts {
 		});
 	}
 
+	public static Point computeSizeForVerticallyStackedComposites(int wHint, int hHint, Control... controls) {
+		int sumY = 0;
+		int maxX = 0;
+		for (Control control : controls) {
+			Point size = control.computeSize(wHint, hHint);
+			maxX = Math.max(maxX, size.x);
+			sumY += size.y;
+		}
+		return new Point(maxX, sumY);
+	}
+
 }

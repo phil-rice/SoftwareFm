@@ -47,6 +47,15 @@ public class UrlGeneratorTest extends TestCase {
 		assertEquals("ab/bc/abc", generator.findUrlFor(Maps.stringObjectMap("name", "abc")));
 		assertEquals("ab/cd/abcd", generator.findUrlFor(Maps.stringObjectMap("name", "abcd")));
 		assertEquals("ab/cd/abcde", generator.findUrlFor(Maps.stringObjectMap("name", "abcde")));
+	}
+	
+	public void testDealsWithIllegalCharacters(){
+		UrlGenerator generator = new UrlGenerator("{0}/{1}/{2}", "name");
+		assertEquals("a/a/a", generator.findUrlFor(Maps.stringObjectMap("name", "a$%^&*")));
+		assertEquals("ab/ab/ab", generator.findUrlFor(Maps.stringObjectMap("name", "a$%^&*b")));
+		assertEquals("ab/bc/abc", generator.findUrlFor(Maps.stringObjectMap("name", "$%^&*a$%^&*b$%^&*c")));
+		assertEquals("ab/cd/abcd", generator.findUrlFor(Maps.stringObjectMap("name", "$%^&*a$%^&*b$%^&*c$%^&*d$%^&*")));
+		assertEquals("ab/cd/abcde", generator.findUrlFor(Maps.stringObjectMap("name", "$%^&*ab$%^&*cd$%^&*e$%^&*")));
 		
 	}
 }

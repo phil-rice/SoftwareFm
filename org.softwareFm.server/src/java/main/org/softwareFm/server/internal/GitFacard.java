@@ -102,6 +102,16 @@ public class GitFacard implements IGitFacard {
 	}
 
 	@Override
+	public void gc(File root, String url) {
+		File file = new File(root, url);
+		try {
+			Runtime.getRuntime().exec("git", new String[] { "gc" }, file);
+		} catch (IOException e) {
+			throw WrappedException.wrap(e);
+		}
+	}
+
+	@Override
 	public FileRepository makeFileRepository(File root, String url) {
 		try {
 			File dir = findRepositoryUrl(root, url);

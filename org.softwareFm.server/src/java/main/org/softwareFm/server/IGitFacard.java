@@ -16,6 +16,8 @@ public interface IGitFacard {
 
 	void pull(File root, String url);
 
+	void gc(File root, String url);
+
 	void addAllAndCommit(File root, String url, String message);
 
 	String getConfig(File root, String url, String section, String subsection, String name);

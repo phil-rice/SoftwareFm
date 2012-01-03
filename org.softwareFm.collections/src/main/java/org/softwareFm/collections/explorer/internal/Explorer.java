@@ -22,6 +22,8 @@ import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -61,12 +63,14 @@ import org.softwareFm.collections.explorer.IMasterDetailSocial;
 import org.softwareFm.display.browser.IBrowserPart;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.constants.DisplayConstants;
+import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.display.timeline.PlayItem;
 import org.softwareFm.display.timeline.TimeLine;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.Functions;
@@ -78,6 +82,7 @@ import org.softwareFm.utilities.services.IServiceExecutor;
 import org.softwareFm.utilities.strings.Strings;
 
 public class Explorer implements IExplorer {
+	private final static Pattern stringsStart = Pattern.compile("^([\\.a-zA-Z_-]+)");
 
 	ICardHolder cardHolder;
 	private ICallback<String> callbackToGotoUrlAndUpdateDetails;
@@ -547,11 +552,22 @@ public class Explorer implements IExplorer {
 		masterDetailSocial.createAndShowMaster(TextInBorder.makeTextWithClick(SWT.WRAP | SWT.READ_ONLY, cardConfig, new Runnable() {
 			@Override
 			public void run() {
+				final Map<String, Object> startData = guessDetailsForUnrecognisedJar(file);
+				addUnrecognisedJar(file, digest, projectName, startData);
+			}
+
+			private Map<String, Object> guessDetailsForUnrecognisedJar(final File file) {
+				if (file.getName().equals("rt.jar"))
+					return Maps.stringObjectMap(//
+							CollectionConstants.groupId, "sun.jdk",//
+							CollectionConstants.artifactId, "runtime",//
+							CollectionConstants.version, Strings.versionPartOf(file, "Please specify the version"));
+						
 				final Map<String, Object> startData = Maps.stringObjectMap(//
 						CollectionConstants.groupId, "Please specify the group id",//
 						CollectionConstants.artifactId, Strings.withoutVersion(file, "Please specify the artifact id"),//
 						CollectionConstants.version, Strings.versionPartOf(file, "Please specify the version"));
-				addUnrecognisedJar(file, digest, projectName, startData);
+				return startData;
 			}
 		}, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.jarNotRecognisedTitle, CollectionConstants.jarNotRecognisedText, file, file.getName(), projectName));
 	}
@@ -567,6 +583,32 @@ public class Explorer implements IExplorer {
 				Menu menu = new Menu(from);
 				IResourceGetter resourceGetter = cardConfig.resourceGetterFn.apply(null);
 				final String fileName = file.getName();
+				Swts.addMenu(menu, resourceGetter, CardConstants.menuItemSearchSoftwareFmForJar, new Runnable() {
+
+					@Override
+					public void run() {
+						IUrlGenerator urlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.jarNameUrlKey);
+						Matcher matcher = stringsStart.matcher(Files.noExtension(fileName));
+						if (matcher.find()) {
+							String found = matcher.group(0);
+							char ch = found.charAt(found.length() - 1);
+							int max = Character.isLetter(ch) ? found.length() : found.length() - 1;
+							String artifactIdCandidate = found.substring(0, max);
+							String url = urlGenerator.findUrlFor(Maps.stringObjectMap(CardConstants.jarName, artifactIdCandidate));
+							cardConfig.cardDataStore.processDataFor(url, new ICardDataStoreCallback<Void>() {
+								@Override
+								public Void process(String url, Map<String, Object> result) throws Exception {
+									return null;
+								}
+
+								@Override
+								public Void noData(String url) throws Exception {
+									return null;
+								}
+							});
+						}
+					}
+				});
 				Swts.addMenu(menu, resourceGetter, CardConstants.menuItemBrowseJarKey, new Runnable() {
 					@Override
 					public void run() {

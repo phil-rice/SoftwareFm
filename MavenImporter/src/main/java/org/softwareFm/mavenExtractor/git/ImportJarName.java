@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.maven.model.Model;
+import org.apache.maven.model.Parent;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.display.data.IUrlGenerator;
@@ -12,8 +13,12 @@ import org.softwareFm.mavenExtractor.MavenImporterConstants;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.server.GitRepositoryFactory;
 import org.softwareFm.server.IGitFacard;
+import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.collections.Files;
+import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.strings.Strings;
 
 public class ImportJarName implements IExtractorCallback {
 	private final int maxCount;
@@ -36,10 +41,30 @@ public class ImportJarName implements IExtractorCallback {
 			System.exit(0);
 		String artifactId = model.getArtifactId();
 		String url = urlGenerator.findUrlFor(Maps.stringObjectMap(CardConstants.jarName, artifactId));
-		System.out.println(url);
+		String repoUrl = Strings.allButLastSegment(url, "/");
+		File repoDirectory = new File(remoteRoot, repoUrl);
+		if (!new File(repoDirectory, ServerConstants.DOT_GIT).exists()) {
+			gitFacard.createRepository(remoteRoot, repoUrl);
+			System.out.println("Creating: " + repoDirectory);
+		}
+		File directory = new File(remoteRoot, url);
+		directory.mkdirs();
+		String data = Json.toString(Maps.stringObjectLinkedMap(CardConstants.group, getGroupId(model), CardConstants.artifact, artifactId, CardConstants.slingResourceType, CardConstants.jarName));
+		File file = new File(directory, ServerConstants.dataFileName);
+		Files.setText(file, data);
+		gitFacard.addAllAndCommit(remoteRoot, url, "Importing jarName");
+		System.out.println(repoDirectory + "   " + artifactId + "  " + data);
 	}
 
 	public void finished() {
+	}
+
+	private String getGroupId(Model model) {
+		String groupId = model.getGroupId();
+		if (groupId != null)
+			return groupId;
+		Parent parent = model.getParent();
+		return parent.getGroupId();
 	}
 
 	public static void main(String[] args) {
@@ -51,7 +76,7 @@ public class ImportJarName implements IExtractorCallback {
 		IRepositoryFacard repository = GitRepositoryFactory.forImport(remoteRoot);
 		IUrlGenerator urlGenerator = ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap(CardConstants.softwareFmPrefix, CardConstants.dataPrefix).get(CardConstants.jarNameUrlKey);
 		new ExtractProjectStuff().walk(MavenImporterConstants.dataSource, //
-				new ImportJarName(10, remoteRoot, repository, urlGenerator), //
+				new ImportJarName(100000000, remoteRoot, repository, urlGenerator), //
 				ICallback.Utils.sysErrCallback());
 	}
 }

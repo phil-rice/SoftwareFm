@@ -47,7 +47,7 @@ public class ExplorerWithRadioChannel {
 	public static void main(String[] args) {
 		File home = new File(System.getProperty("user.home"));
 		final File localRoot = new File(home, ".sfm");
-		boolean local = true;
+		boolean local = false;
 		String server = local ? "localhost" : "www.softwarefm.com";
 		String prefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : "git://www.softwarefm.com/";
 		int port = local ? 8080 : 80;
@@ -122,7 +122,7 @@ public class ExplorerWithRadioChannel {
 					Buttons.makePushButton(buttonPanel, null, "Unrecognised Jar", false, new Runnable() {
 						@Override
 						public void run() {
-							explorer.displayUnrecognisedJar(new File("a/b/artifact-1.0.0.jar"), "0123439754987345978", "some project name");
+							explorer.displayUnrecognisedJar(new File("a/b/rt.jar"), "0123439754987345978", "some project name");
 						}
 					});
 					Buttons.makePushButton(buttonPanel, null, "Not A Jar", false, new Runnable() {
