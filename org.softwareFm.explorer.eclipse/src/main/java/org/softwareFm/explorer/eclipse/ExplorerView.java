@@ -32,7 +32,6 @@ import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.services.IServiceExecutor;
-import org.softwareFm.utilities.strings.Urls;
 
 public class ExplorerView extends ViewPart {
 
@@ -72,7 +71,7 @@ public class ExplorerView extends ViewPart {
 	}
 
 	protected String getRootUrl() {
-		return Urls.composeWithSlash(CollectionConstants.rootUrl, CardConstants.dataPrefix);
+		return CollectionConstants.rootUrl;
 	}
 
 	protected CardConfig makeCardConfig(Composite parent) {
