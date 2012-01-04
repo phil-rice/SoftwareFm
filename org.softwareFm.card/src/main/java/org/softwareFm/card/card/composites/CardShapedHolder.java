@@ -21,7 +21,6 @@ import org.softwareFm.utilities.functions.IFunction1;
 public class CardShapedHolder<Body extends IHasControl> implements IHasComposite {
 
 	private final CardShapedComposite composite;
-	private final IHasControl title;
 	private final Body body;
 
 	static class CardShapedLayout extends Layout {
@@ -150,7 +149,7 @@ public class CardShapedHolder<Body extends IHasControl> implements IHasComposite
 	public CardShapedHolder(Composite parent, CardConfig cardConfig, TitleSpec titleSpec, IFunction1<Composite, IHasControl> titleMaker, IFunction1<Composite, Body> bodyMaker) {
 		super();
 		this.composite = new CardShapedComposite(parent, SWT.NULL, cardConfig, titleSpec);
-		title = Functions.call(titleMaker, composite);
+		 Functions.call(titleMaker, composite);
 		body = Functions.call(bodyMaker, composite);
 		composite.setTitleSpec(titleSpec);
 		composite.setLayout(new CardShapedLayout());
@@ -163,6 +162,9 @@ public class CardShapedHolder<Body extends IHasControl> implements IHasComposite
 	@Override
 	public Control getControl() {
 		return composite;
+	}
+	public Body getBody() {
+		return body;
 	}
 
 	@Override

@@ -7,11 +7,10 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.Parent;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
+import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.mavenExtractor.IExtractorCallback;
 import org.softwareFm.mavenExtractor.MavenImporterConstants;
-import org.softwareFm.repositoryFacard.IRepositoryFacard;
-import org.softwareFm.server.GitRepositoryFactory;
 import org.softwareFm.server.IGitFacard;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -26,13 +25,11 @@ public class ImportJarName implements IExtractorCallback {
 
 	private final IGitFacard gitFacard = IGitFacard.Utils.makeFacard();
 	private final File remoteRoot;
-	private final IRepositoryFacard repository;
 	private final IUrlGenerator urlGenerator;
 
-	public ImportJarName(int maxCount, File remoteRoot, IRepositoryFacard repository, IUrlGenerator urlGenerator) {
+	public ImportJarName(int maxCount, File remoteRoot, IUrlGenerator urlGenerator) {
 		this.maxCount = maxCount;
 		this.remoteRoot = remoteRoot;
-		this.repository = repository;
 		this.urlGenerator = urlGenerator;
 	}
 
@@ -40,7 +37,7 @@ public class ImportJarName implements IExtractorCallback {
 		if (count.incrementAndGet() >= maxCount)
 			System.exit(0);
 		String artifactId = model.getArtifactId();
-		String url = urlGenerator.findUrlFor(Maps.stringObjectMap(CardConstants.jarName, artifactId));
+		String url = urlGenerator.findUrlFor(Maps.stringObjectMap(CollectionConstants.artifactId, artifactId));
 		String repoUrl = Strings.allButLastSegment(url, "/");
 		File repoDirectory = new File(remoteRoot, repoUrl);
 		if (!new File(repoDirectory, ServerConstants.DOT_GIT).exists()) {
@@ -73,10 +70,9 @@ public class ImportJarName implements IExtractorCallback {
 		// File localRoot = new File(home, ".sfm");
 		final File remoteRoot = new File(home, ".sfm_remote");
 		// IRepositoryFacard repository = GitRepositoryFactory.gitLocalRepositoryFacard("localhost", 8080, localRoot, remoteRoot);
-		IRepositoryFacard repository = GitRepositoryFactory.forImport(remoteRoot);
 		IUrlGenerator urlGenerator = ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap(CardConstants.softwareFmPrefix, CardConstants.dataPrefix).get(CardConstants.jarNameUrlKey);
 		new ExtractProjectStuff().walk(MavenImporterConstants.dataSource, //
-				new ImportJarName(100000000, remoteRoot, repository, urlGenerator), //
+				new ImportJarName(100000000, remoteRoot, urlGenerator), //
 				ICallback.Utils.sysErrCallback());
 	}
 }

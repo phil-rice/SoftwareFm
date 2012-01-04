@@ -16,11 +16,14 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.softwareFm.utilities.aggregators.IAggregator;
+import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.collections.Iterables;
 import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.utilities.collections.Sets;
 import org.softwareFm.utilities.functions.IFunction1;
 
 public class Strings {
@@ -122,15 +125,16 @@ public class Strings {
 	}
 
 	public static boolean isVersion(String version) {
-		List<String> list = splitIgnoreBlanks(version, "\\.");
+		Set<String> releaseStrings = Sets.makeSet("RELEASE",  "Final");
+		List<String> list = splitIgnoreBlanks(Files.noExtension(version), "\\.");
 		if (list.size() > 0)
-			if (list.get(list.size() - 1).equals("jar"))
-				for (int i = 0; i < list.size() - 1; i++) {
-					String item = list.get(i);
+			for (int i = 0; i < list.size(); i++) {
+				String item = list.get(i);
+				if (!releaseStrings.contains(item))
 					for (int j = 0; j < item.length(); j++)
 						if (!Character.isDigit(item.charAt(j)))
 							return false;
-				}
+			}
 		return true;
 	}
 

@@ -19,6 +19,7 @@ public class Comparators {
 			return one.compareTo(two);
 		}
 	};
+	
 
 	@SuppressWarnings("unchecked")
 	public static <T> Comparator<T> naturalOrder() {

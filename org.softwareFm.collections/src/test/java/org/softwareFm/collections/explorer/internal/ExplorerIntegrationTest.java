@@ -48,7 +48,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 		Control detailContent = masterDetailSocial.getDetailContent();
 		final IValueComposite<Table> valueComposite = (IValueComposite<Table>) detailContent;
 		TitleWithTitlePaintListener titleWithTitlePaintListener = valueComposite.getTitle();
-		String jarTitle = IResourceGetter.Utils.getOrException(rawResourceGetter, CollectionConstants.jarNotRecognisedTitle);
+		String jarTitle = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.jarNotRecognisedTitle);
 		assertEquals(jarTitle, titleWithTitlePaintListener.getText());
 		Table editor = valueComposite.getEditor();
 		checkAndEdit(editor, new IAddingCallback<Table>() {
@@ -124,19 +124,20 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 		});
 	}
 
-	public void testUnrecognisedJarPutsJarNotRecognisedTextInLhsAndLeavesDetailAndSocialAlone() {
+	public void testUnrecognisedJarPutsJarNotRecognisedTextInLhsAndLeavesDetailAloneWhileDisplayingHelpInSocial() {
 		IHasControl detail = masterDetailSocial.createAndShowDetail(Swts.labelFn("detail"));
 		IHasControl social = masterDetailSocial.createAndShowSocial(Swts.labelFn("social"));
 
 		File file = new File("a/b/c/artifact-1.0.0.jar");
 		explorer.displayUnrecognisedJar(file, "someDigest", "someProject");
 		StyledText text = getTextInBorderComponent(masterDetailSocial.getMasterContent());
-		String pattern = IResourceGetter.Utils.getOrException(rawResourceGetter, CollectionConstants.jarNotRecognisedText);
+		String pattern =  IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.jarNotRecognisedText);
+
 		String expected = Strings.removeNewLines(MessageFormat.format(pattern, file, file.getName(), "someProject")).replace("<", "").replace(">", "");
 		assertEquals(expected.trim(), Strings.removeNewLines(text.getText()));
 
 		assertSame(detail.getControl(), masterDetailSocial.getDetailContent());
-		assertSame(social.getControl(), masterDetailSocial.getSocialContent());
+		CompositeWithCardMargin socialContent = (CompositeWithCardMargin) masterDetailSocial.getSocialContent();
 	}
 
 	public void testUnrecognisedJarEditorOnlyEnablesOkIfLegalValues() {
@@ -158,7 +159,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 		Control detailContent = masterDetailSocial.getDetailContent();
 		final IValueComposite<Table> valueComposite = (IValueComposite<Table>) detailContent;
 		TitleWithTitlePaintListener titleWithTitlePaintListener = valueComposite.getTitle();
-		String jarTitle = IResourceGetter.Utils.getOrException(rawResourceGetter, CollectionConstants.jarNotRecognisedTitle);
+		String jarTitle = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.jarNotRecognisedTitle);
 		assertEquals(jarTitle, titleWithTitlePaintListener.getText());
 		Table editor = valueComposite.getEditor();
 		checkAndEdit(editor, new IAddingCallback<Table>() {

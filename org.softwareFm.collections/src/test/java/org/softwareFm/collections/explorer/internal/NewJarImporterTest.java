@@ -1,6 +1,7 @@
 package org.softwareFm.collections.explorer.internal;
 
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -55,7 +56,8 @@ public class NewJarImporterTest extends SwtTest {
 
 	public void testProcessImport() throws InterruptedException, ExecutionException, TimeoutException {
 		MemoryCallback<String> afterOk = ICallback.Utils.memory();
-		Object actual = newJarImporter.processImport(afterOk).get(2, TimeUnit.SECONDS);
+		String randomUuid = UUID.randomUUID().toString();
+		Object actual = newJarImporter.processImport(randomUuid, afterOk).get(2, TimeUnit.SECONDS);
 		assertEquals("<artifact>/someGroupId/someArtifactId/someVersion", afterOk.getOnlyResult());
 		assertEquals("MAKE_REPO:<jar>/someGroupId/someArtifactId/someVersion/someDigest:{}\n" + //
 				"POST_DATA:<jar>/someGroupId/someArtifactId/someVersion/someDigest:{artifactId=someArtifactId, groupId=someGroupId, version=someVersion}\n" + //
@@ -64,7 +66,10 @@ public class NewJarImporterTest extends SwtTest {
 				"POST_DATA:<artifact>/someGroupId/someArtifactId/someVersion/version:{sling:resourceType=collection}\n" + //
 				"POST_DATA:<version>/someGroupId/someArtifactId/someVersion:{artifactId=someArtifactId, groupId=someGroupId, sling:resourceType=version, version=someVersion}\n" + //
 				"POST_DATA:<version>/someGroupId/someArtifactId/someVersion/digest:{sling:resourceType=collection}\n" + //
-				"POST_DATA:<digest>/someGroupId/someArtifactId/someVersion/someDigest:{digest=someDigest, found=foundFromTest, sling:resourceType=jar}\n", actual);
+				"POST_DATA:<digest>/someGroupId/someArtifactId/someVersion/someDigest:{digest=someDigest, found=foundFromTest, sling:resourceType=jar}\n" + //
+				"MAKE_REPO:<jarName>/someGroupId/someArtifactId/someVersion:{}\n" + //
+				"POST_DATA:<jarName>/someGroupId/someArtifactId/someVersion/"+randomUuid+":{artifact=null, group=null, sling:resourceType=jarname}\n"//
+		, actual);
 
 	}
 
@@ -80,6 +85,7 @@ public class NewJarImporterTest extends SwtTest {
 		CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(display).//
 				withUrlGeneratorMap(IUrlGeneratorMap.Utils.urlGeneratorMap(//
 						CardConstants.jarUrlKey, urlKeyWithDigest("jar"), //
+						CardConstants.jarNameUrlKey, urlKey("jarName"), //
 						CardConstants.groupUrlKey, urlKey("group"), //
 						CardConstants.artifactUrlKey, urlKey("artifact"), //
 						CardConstants.versionUrlKey, urlKey("version"), //

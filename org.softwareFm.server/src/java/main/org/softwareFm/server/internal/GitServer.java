@@ -29,10 +29,14 @@ public class GitServer extends LocalGitClient implements IGitServer {
 
 	@Override
 	public void pull(String url) {
-		File existing = findRepositoryUrl(url);
-		if (existing == null)
-			throw new IllegalArgumentException(MessageFormat.format(ServerConstants.cannotPullWhenLocalRepositoryDoesntExist, url));
-		gitFacard.pull(root, url);
+		try {
+			File existing = findRepositoryUrl(url);
+			if (existing == null)
+				throw new IllegalArgumentException(MessageFormat.format(ServerConstants.cannotPullWhenLocalRepositoryDoesntExist, url));
+			gitFacard.pull(root, url);
+		} catch (Exception e) {
+			throw new RuntimeException(MessageFormat.format(ServerConstants.errorInGit, url), e);
+		}
 	}
 
 	@Override

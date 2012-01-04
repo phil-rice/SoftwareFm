@@ -10,26 +10,22 @@
 
 package org.softwareFm.collections.explorer.internal;
 
-import java.awt.Desktop;
 import java.io.File;
-import java.net.URI;
 import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.card.card.ICard;
@@ -39,6 +35,7 @@ import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.card.ILineSelectedListener;
 import org.softwareFm.card.card.RightClickCategoryResult;
 import org.softwareFm.card.card.RightClickCategoryResult.Type;
+import org.softwareFm.card.card.composites.CardShapedHolder;
 import org.softwareFm.card.card.composites.TextInBorder;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
@@ -53,6 +50,7 @@ import org.softwareFm.card.editors.ICardEditorCallback;
 import org.softwareFm.card.editors.IEditorDetailAdder;
 import org.softwareFm.card.editors.IValueEditor;
 import org.softwareFm.card.navigation.internal.NavNextHistoryPrevConfig;
+import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.collections.comments.Comments;
 import org.softwareFm.collections.comments.ICommentsCallback;
 import org.softwareFm.collections.constants.CollectionConstants;
@@ -60,6 +58,10 @@ import org.softwareFm.collections.explorer.BrowserAndNavBar;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IExplorerListener;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
+import org.softwareFm.collections.unrecognisedJar.GroupidArtifactVersion;
+import org.softwareFm.collections.unrecognisedJar.GuessArtifactAndVersionDetails;
+import org.softwareFm.collections.unrecognisedJar.UnrecognisedJar;
+import org.softwareFm.collections.unrecognisedJar.UnrecognisedJarData;
 import org.softwareFm.display.browser.IBrowserPart;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.constants.DisplayConstants;
@@ -70,7 +72,6 @@ import org.softwareFm.display.timeline.PlayItem;
 import org.softwareFm.display.timeline.TimeLine;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.Functions;
@@ -82,7 +83,6 @@ import org.softwareFm.utilities.services.IServiceExecutor;
 import org.softwareFm.utilities.strings.Strings;
 
 public class Explorer implements IExplorer {
-	private final static Pattern stringsStart = Pattern.compile("^([\\.a-zA-Z_-]+)");
 
 	ICardHolder cardHolder;
 	private ICallback<String> callbackToGotoUrlAndUpdateDetails;
@@ -369,6 +369,8 @@ public class Explorer implements IExplorer {
 
 					@Override
 					public void cancel(ICardData cardData) {
+						masterDetailSocial.setDetail(null);
+						displayCard(card.url(), new CardAndCollectionDataStoreAdapter());
 					}
 
 					@Override
@@ -445,6 +447,8 @@ public class Explorer implements IExplorer {
 
 					@Override
 					public void cancel(ICardData cardData) {
+						masterDetailSocial.setDetail(null);
+						displayCard(cardData.url(), new CardAndCollectionDataStoreAdapter());
 					}
 
 					@Override
@@ -549,110 +553,119 @@ public class Explorer implements IExplorer {
 	public void displayUnrecognisedJar(final File file, final String digest, final String projectName) {
 		masterDetailSocial.showMaster();
 		masterDetailSocial.putDetailOverSocial();
+		displayHelpKey(CollectionConstants.jarNotRecognisedCardType, CollectionConstants.helpUnrecognisedPleaseAddText);
+		final GuessArtifactAndVersionDetails guesser = new GuessArtifactAndVersionDetails();
+		final String guessedVersion = guesser.guessVersion(file);
+		if (file.getName().equals("rt.jar") && guessedVersion.length() > 0) {
+			displayUnrecognisedRtJar(file, digest, projectName, guessedVersion);
+			return;
+		}
 		masterDetailSocial.createAndShowMaster(TextInBorder.makeTextWithClick(SWT.WRAP | SWT.READ_ONLY, cardConfig, new Runnable() {
 			@Override
 			public void run() {
+				displayHelpKey(CollectionConstants.jarNotRecognisedCardType, CollectionConstants.helpUnrecognisedThankYouText);
 				final Map<String, Object> startData = guessDetailsForUnrecognisedJar(file);
 				addUnrecognisedJar(file, digest, projectName, startData);
+				final TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, ICardData.Utils.create(cardConfig, CollectionConstants.jarNotRecognisedCardType, "", Maps.emptyStringObjectMap()));
+				IFunction1<Composite, CardShapedHolder<UnrecognisedJar>> text = new IFunction1<Composite, CardShapedHolder<UnrecognisedJar>>() {
+					@Override
+					public CardShapedHolder<UnrecognisedJar> apply(Composite from) throws Exception {
+						String title = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.jarNotRecognisedTitle);
+						return new CardShapedHolder<UnrecognisedJar>(from, cardConfig, titleSpec, Swts.labelFn(title), new IFunction1<Composite, UnrecognisedJar>() {
+							@Override
+							public UnrecognisedJar apply(Composite from) throws Exception {
+								UnrecognisedJarData jarData = UnrecognisedJarData.forTests(projectName, file);
+								UnrecognisedJar unrecognisedJar = new UnrecognisedJar(from, getCardConfig(), jarData, new ICallback<GroupidArtifactVersion>() {
+									@Override
+									public void process(GroupidArtifactVersion t) throws Exception {
+										Map<String, Object> data = Maps.stringObjectMap(//
+												CollectionConstants.groupId, t.groupId,//
+												CollectionConstants.artifactId, t.artifactId,//
+												CollectionConstants.version, t.version);
+										addUnrecognisedJar(file, digest, projectName, data);
+									}
+								});
+								return unrecognisedJar;
+							}
+						});
+					}
+				};
+				CardShapedHolder<UnrecognisedJar> holder = masterDetailSocial.createAndShowMaster(text);
+				UnrecognisedJar unrecognisedJar = holder.getBody();
+				
+				searchForJar(unrecognisedJar, file);
+			}
+
+			private void searchForJar(final UnrecognisedJar unrecognisedJar, final File file) {
+				IUrlGenerator urlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.jarNameUrlKey);
+				String jarName = file.getName().equals("rt.jar") ? "rt" : guesser.guessArtifactName(file);
+				String url = urlGenerator.findUrlFor(Maps.stringObjectMap(CollectionConstants.artifactId, jarName));
+				cardConfig.cardDataStore.processDataFor(url, new CardDataStoreCallbackAdapter<Void>() {
+					@SuppressWarnings("unchecked")
+					@Override
+					public Void process(String url, Map<String, Object> result) throws Exception {
+						List<GroupidArtifactVersion> gavs = Lists.newList();
+						for (Entry<String, Object> entry : result.entrySet())
+							if (entry.getValue() instanceof Map<?, ?>) {
+								Map<String, Object> map = (Map<String, Object>) entry.getValue();
+								assert map.get(CardConstants.slingResourceType).equals(CardConstants.jarName) : "Entry: " + entry + "\nMap: " + map;
+								GroupidArtifactVersion gav = new GroupidArtifactVersion(//
+										Strings.nullSafeToString(map.get(CardConstants.group)), //
+										Strings.nullSafeToString(map.get(CardConstants.artifact)), //
+										guessedVersion);
+								gavs.add(gav);
+							}
+						unrecognisedJar.populate(gavs);
+						return null;
+					}
+				});
 			}
 
 			private Map<String, Object> guessDetailsForUnrecognisedJar(final File file) {
-				if (file.getName().equals("rt.jar"))
-					return Maps.stringObjectMap(//
-							CollectionConstants.groupId, "sun.jdk",//
-							CollectionConstants.artifactId, "runtime",//
-							CollectionConstants.version, Strings.versionPartOf(file, "Please specify the version"));
-						
+				GuessArtifactAndVersionDetails guesser = new GuessArtifactAndVersionDetails();
 				final Map<String, Object> startData = Maps.stringObjectMap(//
-						CollectionConstants.groupId, "Please specify the group id",//
-						CollectionConstants.artifactId, Strings.withoutVersion(file, "Please specify the artifact id"),//
-						CollectionConstants.version, Strings.versionPartOf(file, "Please specify the version"));
+						CollectionConstants.groupId, file.getName().equals("rt.jar") ? "sun.jdk" : "Please specify the group id",//
+						CollectionConstants.artifactId, guesser.guessArtifactName(file),//
+						CollectionConstants.version, guesser.guessVersion(file));
 				return startData;
 			}
 		}, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.jarNotRecognisedTitle, CollectionConstants.jarNotRecognisedText, file, file.getName(), projectName));
 	}
 
-	private void addUnrecognisedJar(final File file, final String digest, String projectName, final Map<String, Object> startData) {
+	private void displayHelpKey(String cardType, String key) {
+		displayHelpText(cardType, IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, key));
+	}
+
+	private void displayUnrecognisedRtJar(final File file, final String digest, final String projectName, final String versionNo) {
+		masterDetailSocial.createAndShowMaster(TextInBorder.makeTextWithClick(SWT.WRAP | SWT.READ_ONLY, cardConfig, new Runnable() {
+			@Override
+			public void run() {
+				importJar(digest, "sun.jdk", "runtime", versionNo);
+			}
+		}, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.jarRtNotRecognisedTitle, CollectionConstants.jarRtNotRecognisedText, file, file.getName(), projectName, versionNo));
+	}
+
+	private void addUnrecognisedJar(final File file, final String digest, final String projectName, final Map<String, Object> startData) {
 		masterDetailSocial.showSocial();
 		masterDetailSocial.putDetailOverSocial();
-		IFunction1<Composite, TextInBorder> text = TextInBorder.makeText(SWT.WRAP | SWT.READ_ONLY, cardConfig, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.jarNotRecognisedTitle, CollectionConstants.jarNotRecognisedThankYouText, file, file.getName(), projectName);
-		TextInBorder hasText = masterDetailSocial.createAndShowMaster(text);
-		hasText.setMenu(new IFunction1<Control, Menu>() {
-			@Override
-			public Menu apply(Control from) throws Exception {
-				Menu menu = new Menu(from);
-				IResourceGetter resourceGetter = cardConfig.resourceGetterFn.apply(null);
-				final String fileName = file.getName();
-				Swts.addMenu(menu, resourceGetter, CardConstants.menuItemSearchSoftwareFmForJar, new Runnable() {
-
-					@Override
-					public void run() {
-						IUrlGenerator urlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.jarNameUrlKey);
-						Matcher matcher = stringsStart.matcher(Files.noExtension(fileName));
-						if (matcher.find()) {
-							String found = matcher.group(0);
-							char ch = found.charAt(found.length() - 1);
-							int max = Character.isLetter(ch) ? found.length() : found.length() - 1;
-							String artifactIdCandidate = found.substring(0, max);
-							String url = urlGenerator.findUrlFor(Maps.stringObjectMap(CardConstants.jarName, artifactIdCandidate));
-							cardConfig.cardDataStore.processDataFor(url, new ICardDataStoreCallback<Void>() {
-								@Override
-								public Void process(String url, Map<String, Object> result) throws Exception {
-									return null;
-								}
-
-								@Override
-								public Void noData(String url) throws Exception {
-									return null;
-								}
-							});
-						}
-					}
-				});
-				Swts.addMenu(menu, resourceGetter, CardConstants.menuItemBrowseJarKey, new Runnable() {
-					@Override
-					public void run() {
-						try {
-							Desktop.getDesktop().browse(new URI("http://www.google.co.uk/?hl=en&q=" + Strings.forUrl(fileName)));
-						} catch (Exception e) {
-							throw WrappedException.wrap(e);
-						}
-					}
-				});
-				Swts.addMenu(menu, resourceGetter, CardConstants.menuItemBrowseJarMavenKey, new Runnable() {
-					@Override
-					public void run() {
-						try {
-							Desktop.getDesktop().browse(new URI("http://www.google.co.uk/?hl=en&q=" + Strings.forUrl(fileName) + "+Maven"));
-						} catch (Exception e) {
-							throw WrappedException.wrap(e);
-						}
-					}
-				});
-				return menu;
-			}
-		});
 		masterDetailSocial.createAndShowDetail(new IFunction1<Composite, IValueEditor>() {
 			@Override
 			public IValueEditor apply(Composite from) throws Exception {
-				String jarTitle = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null, CollectionConstants.jarNotRecognisedTitle);
+				String jarTitle = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.jarNotRecognisedTitle);
 				return IValueEditor.Utils.cardEditorWithLayout(from, cardConfig, jarTitle, CollectionConstants.jarNotRecognisedCardType, "", startData, new ICardEditorCallback() {
 					@Override
 					public void ok(ICardData cardData) {
+						masterDetailSocial.setDetail(null);
 						String groupId = (String) cardData.data().get(CollectionConstants.groupId);
 						String artifactId = (String) cardData.data().get(CollectionConstants.artifactId);
 						String version = (String) cardData.data().get(CollectionConstants.version);
-						masterDetailSocial.setDetail(null);
-						new NewJarImporter(cardConfig, CardConstants.manuallyAdded, digest, groupId, artifactId, version).processImport(new ICallback<String>() {
-							@Override
-							public void process(String url) throws Exception {
-								displayCard(url, new CardAndCollectionDataStoreAdapter());
-							}
-						});
+						importJar(digest, groupId, artifactId, version);
 					}
 
 					@Override
 					public void cancel(ICardData cardData) {
+						masterDetailSocial.setDetail(null);
+						displayUnrecognisedJar(file, digest, projectName);
 					}
 
 					@Override
@@ -667,6 +680,19 @@ public class Explorer implements IExplorer {
 						return groupValidated && artifactValidated && versionValidated;
 					}
 				});
+			}
+		});
+	}
+
+	private void importJar(final String digest, String groupId, String artifactId, String version) {
+		masterDetailSocial.createAndShowMaster(TextInBorder.makeText(SWT.WRAP | SWT.READ_ONLY, cardConfig, //
+				CollectionConstants.jarNotRecognisedCardType, CollectionConstants.jarImportingTitle, CollectionConstants.jarImportingText,//
+				groupId, artifactId, version));
+
+		new NewJarImporter(cardConfig, CardConstants.manuallyAdded, digest, groupId, artifactId, version).processImport(new ICallback<String>() {
+			@Override
+			public void process(String url) throws Exception {
+				displayCard(url, new CardAndCollectionDataStoreAdapter());
 			}
 		});
 	}

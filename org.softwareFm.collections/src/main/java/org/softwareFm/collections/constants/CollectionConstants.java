@@ -16,10 +16,14 @@ public class CollectionConstants {
 	public static final String groupId = "groupId";
 	public static final String version = "version";
 	public static final String rootUrl = "/softwareFm";
-	public static final String jarNotRecognisedText = "jar.notRecognised.text";
 	public static final String jarNotRecognisedTitle = "jar.notRecognised.title";
-	public static final String jarNotRecognisedThankYouText = "jar.notRecognised.thankYou.text";
-	public static final String jarNotRecognisedThankYouTitle = "jar.notRecognised.thankYou.title";
+	public static final String jarNotRecognisedText = "jar.notRecognised.text";
+	
+	public static final String jarRtNotRecognisedTitle = "jar.rt.notRecognised.title";
+	public static final String jarRtNotRecognisedText = "jar.rt.notRecognised.text";
+
+	public static final String jarImportingTitle = "jar.importing.title";
+	public static final String jarImportingText = "jar.importing.text";
 
 	public static final String jarNotRecognisedCardType = "unrecognised";
 
@@ -55,5 +59,18 @@ public class CollectionConstants {
 	public static final String actionJarImage = "jar.gif";
 	public static final String actionDebugImage = "debug.gif";
 	public static final String actionSnippetImage = "snippet.gif";
+	
+	public static final String jarNotRecognisedSearchingText = "jar.notRecognised.searching.text" ;
+	public static final String jarNotRecognisedFound0Text = "jar.notRecognised.found0.text" ;
+	public static final String jarNotRecognisedFound1Text = "jar.notRecognised.found1.text" ;
+	public static final String jarNotRecognisedFoundManyText = "jar.notRecognised.foundMany.text" ;
+	public static final String jarSearchButtonTitle = "button.jar.search";
+	public static final String jarSearchWithMavenButtonTitle = "button.jarAndMaven.search";
+	public static final String helpUnrecognisedPleaseAddText = "help.unrecognised.pleaseAdd.text";
+	public static final String helpUnrecognisedThankYouText = "help.unrecognised.thankYou.text";
+	public static final String eclipseProject = "unrecognised.eclipseProject.text";
+	public static final String jarName = "unrecognised.jarName.text";
+	public static final String jarPath = "unrecognised.jarPath.text";
+
 
 }
