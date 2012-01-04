@@ -122,7 +122,7 @@ public class ExplorerWithRadioChannel {
 					Buttons.makePushButton(buttonPanel, null, "Unrecognised Jar", false, new Runnable() {
 						@Override
 						public void run() {
-							explorer.displayUnrecognisedJar(new File("a/b/rt.jar"), "0123439754987345978", "some project name");
+							explorer.displayUnrecognisedJar(new File("a/b/cake-forkjoin-0.1.jar"), "0123439754987345978", "some project name");
 						}
 					});
 					Buttons.makePushButton(buttonPanel, null, "Not A Jar", false, new Runnable() {

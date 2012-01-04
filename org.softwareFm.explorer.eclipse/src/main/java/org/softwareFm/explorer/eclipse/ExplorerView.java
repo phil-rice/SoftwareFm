@@ -32,6 +32,7 @@ import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.services.IServiceExecutor;
+import org.softwareFm.utilities.strings.Urls;
 
 public class ExplorerView extends ViewPart {
 
@@ -46,7 +47,7 @@ public class ExplorerView extends ViewPart {
 
 		IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardConfig.cardDataStore);
 		IServiceExecutor service = activator.getServiceExecutor();
-		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, CollectionConstants.rootUrl, playListGetter, service);
+		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, getRootUrl(), playListGetter, service);
 		actionBar = IActionBar.Utils.actionBar(explorer, cardConfig, SelectedArtifactSelectionManager.reRipFn());
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
 		actionBar.populateToolbar(toolBarManager);
@@ -68,6 +69,10 @@ public class ExplorerView extends ViewPart {
 		});
 		masterDetailSocial.hideMaster();
 		explorer.processUrl(DisplayConstants.browserFeedType, welcomeUrl);
+	}
+
+	protected String getRootUrl() {
+		return Urls.composeWithSlash(CollectionConstants.rootUrl, CardConstants.dataPrefix);
 	}
 
 	protected CardConfig makeCardConfig(Composite parent) {
