@@ -2,7 +2,7 @@
 <feature
       id="SoftwareFmFeatures"
       label="SoftwareFm"
-      version="1.4.5"
+      version="1.4.6"
       provider-name="SoftwareFm">
 
    <description url="http://www.softwareFm.com">
