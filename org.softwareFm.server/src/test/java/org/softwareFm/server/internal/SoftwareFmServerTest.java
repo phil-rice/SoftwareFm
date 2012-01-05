@@ -66,13 +66,13 @@ public class SoftwareFmServerTest extends TestCase  {
 	private void checkGet() throws Exception {
 		MemoryResponseCallback<Object, Object> memoryCallback = IResponseCallback.Utils.memoryCallback();
 		client.get("someUrl").execute(memoryCallback).get(1, TimeUnit.SECONDS);
-		assertEquals("Response [url=/someUrl, statusCode=200, string=<GET /someUrl HTTP/1.1,{}>]", memoryCallback.response.toString());
+		assertEquals("Response [statusCode=200, string=<GET /someUrl HTTP/1.1,{}>, url=/someUrl, mimeType=unknown]", memoryCallback.response.toString());
 	}
 
 	private void checkExceptionHandled() throws Exception {
 		MemoryResponseCallback<Object, Object> memoryCallback = IResponseCallback.Utils.memoryCallback();
 		client.get("exception").execute(memoryCallback).get(2, TimeUnit.SECONDS);
-		assertEquals("Response [url=/exception, statusCode=500, string=class java.lang.RuntimeException/null]", memoryCallback.response.toString());
+		assertEquals("Response [statusCode=500, string=class java.lang.RuntimeException/null, url=/exception, mimeType=unknown]", memoryCallback.response.toString());
 	}
 
 	@Override

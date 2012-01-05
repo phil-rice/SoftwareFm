@@ -468,7 +468,6 @@ public class Explorer implements IExplorer {
 
 	@Override
 	public void displayCard(final String url, final ICardAndCollectionDataStoreVisitor visitor) {
-
 		fireListeners(new ICallback<IExplorerListener>() {
 			@Override
 			public void process(IExplorerListener t) throws Exception {

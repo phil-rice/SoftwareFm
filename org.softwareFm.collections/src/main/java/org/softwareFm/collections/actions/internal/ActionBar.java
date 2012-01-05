@@ -5,6 +5,10 @@ import java.util.Map;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.configuration.CardConfig;
@@ -27,6 +31,7 @@ import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.strings.Strings;
 
 public class ActionBar implements IActionBar {
 
@@ -38,6 +43,7 @@ public class ActionBar implements IActionBar {
 	private State state;
 	private BindingRipperResult ripperResult;
 	private final IFunction1<BindingRipperResult, BindingRipperResult> reRipFn;
+	private IAfterDisplayCard afterDisplayCard = IAfterDisplayCard.Utils.noCallback();
 
 	private static enum State {
 		URL, JUST_JAR, FROM_JAR, FROM_PATH, DEBUG;
@@ -142,12 +148,17 @@ public class ActionBar implements IActionBar {
 
 		cardConfig.cardDataStore.processDataFor(jarUrl, new ICardDataStoreCallback<Void>() {
 			@Override
-			public Void process(String jarUrl, Map<String, Object> result) throws Exception {
+			public Void process(String jarUrl, final Map<String, Object> groupArtifactVersionMap) throws Exception {
 				IUrlGenerator urlGenerator = cardConfig.urlGeneratorMap.get(urlKey);
-				String url = urlGenerator.findUrlFor(result);
+				String url = urlGenerator.findUrlFor(groupArtifactVersionMap);
 				if (url == null)
 					throw new NullPointerException();
-				explorer.displayCard(url, new CardAndCollectionDataStoreAdapter());
+				explorer.displayCard(url, new CardAndCollectionDataStoreAdapter() {
+					@Override
+					public void initialCard(ICardHolder cardHolder, CardConfig cardConfig, String url, ICard card) {
+						afterDisplayCard.process(card, groupArtifactVersionMap);
+					}
+				});
 				if (showRadioStation)
 					explorer.selectAndNext(url);
 				return null;
@@ -175,16 +186,16 @@ public class ActionBar implements IActionBar {
 		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionWelcomeTitle, ActionAnchor.class, CollectionConstants.actionWelcomeImage, new Runnable() {
 			@Override
 			public void run() {
+				setState(State.URL);
 				showUrl(CardConstants.webPageWelcomeUrl);
 				explorer.onlyShowBrowser();
-				state = State.URL;
 			}
 		}));
 		if (newFeatures)
 			toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionGroupTitle, ActionAnchor.class, CollectionConstants.actionGroupImage, new Runnable() {
 				@Override
 				public void run() {
-					state = State.FROM_JAR;
+					setState(State.FROM_JAR);
 					urlKey = CardConstants.groupUrlKey;
 					reselect();
 					showUrl(CardConstants.webPageGroupUrl);
@@ -193,7 +204,7 @@ public class ActionBar implements IActionBar {
 		Action artifactAction = Swts.Actions.Action(resourceGetter, CollectionConstants.actionArtifactTitle, ActionAnchor.class, CollectionConstants.actionArtifactImage, new Runnable() {
 			@Override
 			public void run() {
-				state = State.FROM_JAR;
+				setState(State.FROM_JAR);
 				urlKey = CardConstants.artifactUrlKey;
 				reselect();
 				showUrl(CardConstants.webPageArtifactUrl);
@@ -204,8 +215,25 @@ public class ActionBar implements IActionBar {
 		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionVersionTitle, ActionAnchor.class, CollectionConstants.actionVersionImage, new Runnable() {
 			@Override
 			public void run() {
-				state = State.FROM_JAR;
-				urlKey = CardConstants.versionUrlKey;
+				setState(State.FROM_JAR);
+				afterDisplayCard = new IAfterDisplayCard() {
+					@Override
+					public void process(ICard card, Map<String, Object> groupArtifactVersionMap) {
+						String version = Strings.nullSafeToString(groupArtifactVersionMap.get(CollectionConstants.version));
+						if (version != null) {
+							Table table = card.getTable();
+							for (TableItem item : table.getItems()) {
+								Object data = item.getData();
+								if (version.equals(data)) {
+									table.setSelection(item);
+									table.notifyListeners(SWT.Selection, new Event());
+									return;
+								}
+							}
+						}
+					}
+				};
+				urlKey = CardConstants.versionCollectionUrlKey;
 				reselect();
 				showUrl(CardConstants.webPageVersionUrl);
 			}
@@ -213,7 +241,7 @@ public class ActionBar implements IActionBar {
 		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionJarTitle, ActionAnchor.class, CollectionConstants.actionJarImage, new Runnable() {
 			@Override
 			public void run() {
-				state = State.JUST_JAR;
+				setState(State.FROM_JAR);
 				urlKey = CardConstants.jarUrlKey;
 				reselect();
 				showUrl(CardConstants.webPageJarUrl);
@@ -222,18 +250,24 @@ public class ActionBar implements IActionBar {
 		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionDebugTitle, ActionAnchor.class, CollectionConstants.actionDebugImage, new Runnable() {
 			@Override
 			public void run() {
-				state = State.DEBUG;
+				setState(State.DEBUG);
 				reselect();
 			}
 		}));
 		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionSnippetTitle, ActionAnchor.class, CollectionConstants.actionSnippetImage, new Runnable() {
 			@Override
 			public void run() {
-				state = State.FROM_PATH;
 				reselect();
 				showUrl(CardConstants.webPageSnippetUrl);
+				setState(State.FROM_PATH);
 			}
 		}));
+	}
+
+	protected void setState(State state) {
+		this.state = state;
+		afterDisplayCard = IAfterDisplayCard.Utils.noCallback();
+
 	}
 
 	private void showUrl(String url) {
