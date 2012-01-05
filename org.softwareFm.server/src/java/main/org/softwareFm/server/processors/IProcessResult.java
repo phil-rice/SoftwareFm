@@ -38,7 +38,8 @@ public interface IProcessResult {
 				public void process(HttpResponse response) throws Exception {
 					String contentType = Files.defaultMimeType(file.getName());
 					String format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z").format(file.lastModified());
-					response.setHeader("Last-Modified", format);// Last-Modified:Wed, 14 Dec 2011 19:57:26 GMT
+					response.setHeader("Last-Modified", format);// e.g. Last-Modified:Wed, 14 Dec 2011 19:57:26 GMT
+					response.setHeader("Content-Type", contentType);
 					response.setEntity(new FileEntity(file, contentType));
 				}
 			};

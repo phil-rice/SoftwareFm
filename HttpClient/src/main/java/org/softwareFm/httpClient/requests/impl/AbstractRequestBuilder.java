@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -80,11 +81,24 @@ public abstract class AbstractRequestBuilder implements IRequestBuilder {
 
 				HttpResponse httpResponse = client.execute(base);
 				HttpEntity entity = httpResponse.getEntity();
-				Response response = new Response(url,//
+				String mimeType = findMimeType(entity);
+
+				Response response = new Response(//
 						httpResponse.getStatusLine().getStatusCode(), //
-						entity == null ? "" : EntityUtils.toString(entity));
+						url,//
+						entity == null ? "" : EntityUtils.toString(entity),//
+						mimeType);
 				callback.process(response);
 				return null;
+			}
+
+			private String findMimeType(HttpEntity entity) {
+				if (entity != null) {
+					Header contentType = entity.getContentType();
+					if (contentType != null)
+						return contentType.getValue();
+				}
+				return "unknown";
 			}
 		});
 	}

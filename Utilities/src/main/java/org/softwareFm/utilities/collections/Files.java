@@ -53,7 +53,8 @@ public class Files {
 			"jpg", "image/jpg", "gif", "image/gif", "html", "text/html", "png", "image/png", "css", "text/css", "xml", "text/xml", "jar", "application/java-archive");
 
 	public static String defaultMimeType(String fileName) {
-		return Maps.getOrDefault(extensionToMime, Files.extension(fileName), "text/plain");
+		String result = Maps.getOrDefault(extensionToMime, Files.extension(fileName), "text/plain");
+		return result;
 	}
 
 	public static String offset(File root, File leaf) {

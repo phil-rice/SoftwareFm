@@ -12,11 +12,13 @@ public class Response implements IResponse {
 	private final int statusCode;
 	private final String string;
 	private final String url;
+	private final String mimeType;
 
-	public Response(String url, int statusCode, String string) {
-		this.url = url;
+	public Response(int statusCode, String url, String string, String mimeType) {
 		this.statusCode = statusCode;
 		this.string = string;
+		this.url = url;
+		this.mimeType = mimeType;
 	}
 
 	@Override
@@ -36,7 +38,11 @@ public class Response implements IResponse {
 
 	@Override
 	public String toString() {
-		return "Response [url=" + url + ", statusCode=" + statusCode + ", string=" + string + "]";
+		return "Response [statusCode=" + statusCode + ", string=" + string + ", url=" + url + ", mimeType=" + mimeType + "]";
 	}
 
+	@Override
+	public String mimeType() {
+		return mimeType;
+	}
 }

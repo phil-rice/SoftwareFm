@@ -5,6 +5,8 @@
 
 package org.softwareFm.httpClient.response;
 
+import org.softwareFm.httpClient.response.impl.Response;
+
 public interface IResponse {
 
 	String url();
@@ -13,10 +15,12 @@ public interface IResponse {
 
 	String asString();
 
+	String mimeType();
+
 	public static class Utils {
 
-		public static IResponse create(final String url, final int statusCode, final String string) {
-			return new Response(url, statusCode, string);
+		public static IResponse create(final String url, final int statusCode, final String string, final String mimeType) {
+			return new Response(statusCode, url, string, mimeType);
 		}
 
 	}

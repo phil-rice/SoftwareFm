@@ -137,7 +137,7 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 			boolean found = result.found && !result.data.isEmpty();
 			int status = found ? ServerConstants.okStatusCode : ServerConstants.notFoundStatusCode;
 			String message = found ? ServerConstants.foundMessage : ServerConstants.notFoundMessage;
-			IResponse makeResponse = IResponse.Utils.create(url, status, message);
+			IResponse makeResponse = IResponse.Utils.create(url, status, message, "unknown");
 			callback.process(makeResponse, result.data);
 		}
 	}
