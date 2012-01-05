@@ -9,6 +9,7 @@ import org.softwareFm.server.processors.internal.FavIconProcessor;
 import org.softwareFm.server.processors.internal.GetFileProcessor;
 import org.softwareFm.server.processors.internal.GetIndexProcessor;
 import org.softwareFm.server.processors.internal.GitGetProcessor;
+import org.softwareFm.server.processors.internal.HeadThrowing404;
 import org.softwareFm.server.processors.internal.MakeRootProcessor;
 import org.softwareFm.server.processors.internal.PostProcessor;
 import org.softwareFm.server.processors.internal.RigidFileProcessor;
@@ -50,7 +51,8 @@ public interface IProcessCall {
 		public static IProcessCall softwareFmProcessCall(IGitServer server, File fileRoot) {
 			UrlCache<String> aboveRepostoryUrlCache = new UrlCache<String>();
 			return chain(new FavIconProcessor(),//
-					new RigidFileProcessor(fileRoot, "update"),//
+					new RigidFileProcessor(fileRoot, "update"),//responds to get or head
+					new HeadThrowing404(),//sweep up any heads 
 					new GetIndexProcessor(fileRoot),//
 					new GetFileProcessor(fileRoot, "html", "jpg", "png", "css", "gif", "jar", "xml"), //
 					new GitGetProcessor(server, aboveRepostoryUrlCache), //

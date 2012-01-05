@@ -90,6 +90,7 @@ public class CardConstants {
 	public static final String webPageVersionUrl = "webpage.version.url";
 	public static final String webPageJarUrl = "webpage.jar.url";
 	public static final String webPageSnippetUrl = "webpage.snippet.url";
+	public static final String webPageDebugUrl = "webpage.debug.url";
 
 	public static final String webPageUnknownJarUrl = "webpage.unknownJar.url";
 	public static final String urlRogueValue = "<key>";

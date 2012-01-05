@@ -21,6 +21,7 @@ import org.softwareFm.httpClient.constants.HttpClientConstants;
 import org.softwareFm.httpClient.requests.IRequestBuilder;
 import org.softwareFm.httpClient.requests.impl.DeleteRequest;
 import org.softwareFm.httpClient.requests.impl.GetRequest;
+import org.softwareFm.httpClient.requests.impl.HeadRequest;
 import org.softwareFm.httpClient.requests.impl.PostRequest;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.services.IServiceExecutor;
@@ -61,6 +62,11 @@ public class ClientBuilder implements IClientBuilder {
 	@Override
 	public IRequestBuilder get(String url) {
 		return new GetRequest(executor, host, client, defaultHeaders, url);
+	}
+
+	@Override
+	public IRequestBuilder head(String url) {
+		return new HeadRequest(executor, host, client, defaultHeaders, url);
 	}
 
 	@Override

@@ -235,13 +235,12 @@ public class ActionBar implements IActionBar {
 				};
 				urlKey = CardConstants.versionCollectionUrlKey;
 				reselect();
-				showUrl(CardConstants.webPageVersionUrl);
 			}
 		}));
 		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionJarTitle, ActionAnchor.class, CollectionConstants.actionJarImage, new Runnable() {
 			@Override
 			public void run() {
-				setState(State.FROM_JAR);
+				setState(State.JUST_JAR);
 				urlKey = CardConstants.jarUrlKey;
 				reselect();
 				showUrl(CardConstants.webPageJarUrl);
@@ -252,6 +251,7 @@ public class ActionBar implements IActionBar {
 			public void run() {
 				setState(State.DEBUG);
 				reselect();
+				showUrl(CardConstants.webPageDebugUrl);
 			}
 		}));
 		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionSnippetTitle, ActionAnchor.class, CollectionConstants.actionSnippetImage, new Runnable() {

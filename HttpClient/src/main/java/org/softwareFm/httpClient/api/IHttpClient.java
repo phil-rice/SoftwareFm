@@ -33,6 +33,8 @@ public interface IHttpClient {
 
 	IRequestBuilder get(String url);
 
+	IRequestBuilder head(String url);
+
 	IRequestBuilder delete(String url);
 
 	void shutdown();

@@ -7,6 +7,7 @@ import junit.framework.TestCase;
 
 import org.softwareFm.httpClient.api.IClientBuilder;
 import org.softwareFm.httpClient.api.IHttpClient;
+import org.softwareFm.httpClient.requests.CheckCallback;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.server.IGitServer;
@@ -17,10 +18,16 @@ import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.callbacks.MemoryCallback;
 import org.springframework.core.io.ClassPathResource;
 
-public class SoftwareFmServerFileIntegrationTest extends TestCase {
+public class SoftwareFmServerIntegrationTest extends TestCase {
 	private MemoryCallback<Throwable> memory;
 	private ISoftwareFmServer server;
 	private IClientBuilder client;
+
+	public void testThrows404ForContentXml() throws Exception {
+		CheckCallback checkCallback = IResponseCallback.Utils.checkCallback(ServerConstants.notFoundStatusCode, "");
+		client.head("content.xml").execute(checkCallback).get(200, TimeUnit.SECONDS);
+		checkCallback.assertCalledSuccessfullyOnce();
+	}
 
 	public void testReturnsStyleTypeForFiles() throws Exception {
 		client.get("test.css").execute(new IResponseCallback() {
