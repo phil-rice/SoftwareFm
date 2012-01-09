@@ -23,7 +23,7 @@ import org.softwareFm.utilities.collections.Lists;
 
 public class StyledTextWithBold implements IHasControl {
 
-	static class StyledTextWithBoldComposite extends Composite {
+	public static class StyledTextWithBoldComposite extends Composite {
 
 		private final CardConfig cc;
 

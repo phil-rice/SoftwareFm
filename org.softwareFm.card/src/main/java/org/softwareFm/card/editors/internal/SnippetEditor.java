@@ -62,9 +62,11 @@ public class SnippetEditor implements IValueEditor, ICardData {
 		final StyledText contentText;
 		final Text descriptionText;
 		final Text titleText;
+		private final ICardEditorCallback callback;
 
 		public SnippetEditorComposite(Composite parent, String titleString, final ICardData cardData, final ICardEditorCallback callback) {
 			super(parent, SWT.NULL);
+			this.callback = callback;
 			this.cardConfig = cardData.getCardConfig();
 			TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, cardData);
 			titleWithTitlePaintListener = new TitleWithTitlePaintListener(this, cardConfig, titleSpec, titleString, "initialTooltip");
@@ -117,6 +119,7 @@ public class SnippetEditor implements IValueEditor, ICardData {
 			text.addModifyListener(new ModifyListener() {
 				@Override
 				public void modifyText(ModifyEvent e) {
+				okCancel.setOkEnabled(callback.canOk(cardData.data()));
 					cardData.valueChanged(key, text.getText());
 				}
 			});
@@ -127,6 +130,7 @@ public class SnippetEditor implements IValueEditor, ICardData {
 			text.addModifyListener(new ModifyListener() {
 				@Override
 				public void modifyText(ModifyEvent e) {
+					okCancel.setOkEnabled(callback.canOk(cardData.data()));
 					cardData.valueChanged(key, text.getText());
 				}
 			});

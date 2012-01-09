@@ -56,7 +56,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	final static String groupUrl = "/ant";
 	final static String artifactUrl = "/ant/ant/artifact/ant";
 	final static String snippetrepoUrl = "/java/io/File";
-	final static String snippetUrl = "/java/io/File/snippet";
+	final static String snippetUrl = "snippet/java/io/File/snippet";
 
 	protected CardConfig cardConfig;
 	protected IRepositoryFacard repository;
@@ -114,18 +114,27 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	protected ICard doSomethingAndWaitForCardDataStoreToFinish(Runnable something, final CardHolderAndCardCallback cardHolderAndCardCallback) {
 		final CountDownLatch latch = new CountDownLatch(1);
 		final AtomicReference<ICard> cardRef = new AtomicReference<ICard>();
+		final AtomicReference<Exception> exception = new AtomicReference<Exception>();
 		explorer.addExplorerListener(new ExplorerAdapter() {
 			@Override
 			public void finished(ICardHolder cardHolder, String url, ICard card) throws Exception {
-				explorer.removeExplorerListener(this);
-				cardHolderAndCardCallback.process(cardHolder, card);
-				dispatchUntilQueueEmpty();
-				cardRef.set(card);
-				latch.countDown();
+				try {
+					explorer.removeExplorerListener(this);
+					cardHolderAndCardCallback.process(cardHolder, card);
+					dispatchUntilQueueEmpty();
+					cardRef.set(card);
+				} catch (Exception e) {
+					exception.set(e);
+					throw e;
+				} finally {
+					latch.countDown();
+				}
 			}
 		});
 		something.run();
 		dispatchUntilTimeoutOrLatch(latch, delay);
+		if (exception.get() != null)
+			throw new RuntimeException(exception.get());
 		return cardRef.get();
 	}
 
@@ -170,6 +179,10 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 
 	protected Menu selectAndCreatePopupMenu(ICard card, String title) {
 		selectItem(card, title);
+		return createPopupMenu(card);
+	}
+
+	protected Menu createPopupMenu(ICard card) {
 		final Menu menu = new Menu(shell);
 		String popupMenuId = Functions.call(card.getCardConfig().popupMenuIdFn, card);
 		cardConfig.popupMenuService.contributeTo(popupMenuId, new Event(), menu, card);

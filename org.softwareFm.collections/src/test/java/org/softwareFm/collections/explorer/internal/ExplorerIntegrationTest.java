@@ -39,6 +39,24 @@ import org.softwareFm.utilities.strings.Strings;
 public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 	private String popupMenuId;
 
+	public void testUnrecognisedJarPutsJarNotRecognisedTextInLhsAndLeavesDetailAloneWhileDisplayingHelpInSocial() {
+		IHasControl detail = masterDetailSocial.createAndShowDetail(Swts.labelFn("detail"));
+
+		File file = new File("a/b/c/artifact-1.0.0.jar");
+		explorer.displayUnrecognisedJar(file, "someDigest", "someProject");
+		StyledText text = getTextInBorderComponent(masterDetailSocial.getMasterContent());
+		String pattern = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.jarNotRecognisedText);
+
+		String expected = Strings.removeNewLines(MessageFormat.format(pattern, file, file.getName(), "someProject")).replace("<", "").replace(">", "");
+		assertEquals(expected.trim(), Strings.removeNewLines(text.getText()));
+
+		assertSame(detail.getControl(), masterDetailSocial.getDetailContent());
+		CompositeWithCardMargin socialContent = (CompositeWithCardMargin) masterDetailSocial.getSocialContent();
+		StyledText actualHelpTextComponent = (StyledText) Swts.getDescendant(socialContent, 1, 0, 0);
+		String expectedHelp = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.helpUnrecognisedPleaseAddText);
+		assertEquals(expectedHelp, actualHelpTextComponent.getText());
+	}
+
 	@SuppressWarnings("unchecked")
 	public void testClickingOnUnrecognisedJarOpensEditor() {
 		explorer.displayUnrecognisedJar(new File("a/b/c/artifact-1.0.0.jar"), "someDigest", "someProject");
@@ -122,22 +140,6 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 				assertEquals(2, detailContent.getChildren().length);// title,body
 			}
 		});
-	}
-
-	public void testUnrecognisedJarPutsJarNotRecognisedTextInLhsAndLeavesDetailAloneWhileDisplayingHelpInSocial() {
-		IHasControl detail = masterDetailSocial.createAndShowDetail(Swts.labelFn("detail"));
-		IHasControl social = masterDetailSocial.createAndShowSocial(Swts.labelFn("social"));
-
-		File file = new File("a/b/c/artifact-1.0.0.jar");
-		explorer.displayUnrecognisedJar(file, "someDigest", "someProject");
-		StyledText text = getTextInBorderComponent(masterDetailSocial.getMasterContent());
-		String pattern =  IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.jarNotRecognisedText);
-
-		String expected = Strings.removeNewLines(MessageFormat.format(pattern, file, file.getName(), "someProject")).replace("<", "").replace(">", "");
-		assertEquals(expected.trim(), Strings.removeNewLines(text.getText()));
-
-		assertSame(detail.getControl(), masterDetailSocial.getDetailContent());
-		CompositeWithCardMargin socialContent = (CompositeWithCardMargin) masterDetailSocial.getSocialContent();
 	}
 
 	public void testUnrecognisedJarEditorOnlyEnablesOkIfLegalValues() {

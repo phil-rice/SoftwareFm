@@ -71,6 +71,7 @@ import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.collections.Iterables;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.constants.UtilityConstants;
+import org.softwareFm.utilities.constants.UtilityMessages;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -914,6 +915,19 @@ public class Swts {
 			sumY += size.y;
 		}
 		return new Point(maxX, sumY);
+	}
+
+	public static Control getDescendant(Control control, int... childIndicies) {
+		return getDescendant(control, 0, childIndicies);
+
+	}
+
+	private static Control getDescendant(Control control, int index, int[] childIndicies) {
+		if (index >= childIndicies.length)
+			return control;
+		if (control instanceof Composite)
+			return getDescendant(((Composite) control).getChildren()[childIndicies[index]], index + 1, childIndicies);
+		throw new IllegalArgumentException(MessageFormat.format(UtilityMessages.cannotGetDescendant, index, Arrays.asList(childIndicies)));
 	}
 
 }

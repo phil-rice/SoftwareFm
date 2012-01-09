@@ -375,13 +375,23 @@ public class Explorer implements IExplorer {
 
 					@Override
 					public boolean canOk(Map<String, Object> data) {
-						return true;
+						return snippetOk(data);
 					}
 				});
 			}
 		});
 	}
 
+
+	private boolean snippetOk(Map<String, Object> data) {
+		String title = Strings.nullSafeToString(data.get("title"));
+		String description = Strings.nullSafeToString(data.get("description"));
+		String content = Strings.nullSafeToString(data.get("content"));
+		boolean titleOk = title.length() > 0;
+		boolean contentOk = content.length() > 0;
+		boolean descriptionOk = !description.startsWith("<");
+		return titleOk && contentOk && descriptionOk;
+	}
 	@Override
 	public void showAddSnippetEditor(final ICard card) {
 		final IMutableCardDataStore store = card.getCardConfig().cardDataStore;
@@ -453,7 +463,7 @@ public class Explorer implements IExplorer {
 
 					@Override
 					public boolean canOk(Map<String, Object> data) {
-						return true;
+						return snippetOk(data);
 					}
 				});
 			}
@@ -591,7 +601,7 @@ public class Explorer implements IExplorer {
 				};
 				CardShapedHolder<UnrecognisedJar> holder = masterDetailSocial.createAndShowMaster(text);
 				UnrecognisedJar unrecognisedJar = holder.getBody();
-				
+
 				searchForJar(unrecognisedJar, file);
 			}
 
