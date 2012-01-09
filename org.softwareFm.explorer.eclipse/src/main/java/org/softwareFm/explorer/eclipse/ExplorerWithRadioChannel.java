@@ -11,6 +11,8 @@
 package org.softwareFm.explorer.eclipse;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -54,7 +56,7 @@ public class ExplorerWithRadioChannel {
 		final IRepositoryFacard facard = GitRepositoryFactory.gitRepositoryFacard(server, port, localRoot, prefix);
 		final IServiceExecutor service = IServiceExecutor.Utils.defaultExecutor();
 		try {
-			final String rootUrl = "/softwareFm/data";
+			final List<String> rootUrl = Arrays.asList("/softwareFm/data", "/softwareFm/snippet");
 			final String firstUrl = "/softwareFm/data/activemq/activemq/artifact/activemq-axis";
 
 			Show.display(ExplorerWithRadioChannel.class.getSimpleName(), new IFunction1<Composite, Composite>() {

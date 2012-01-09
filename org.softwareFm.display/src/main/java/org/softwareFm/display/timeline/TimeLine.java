@@ -21,6 +21,13 @@ public class TimeLine extends History<PlayItem> implements ITimeLine {
 	private final IPlayListGetter playListGetter;
 
 	@Override
+	public void clear() {
+		synchronized (lock) {
+			nameToPlayList.clear();
+		}
+	}
+
+	@Override
 	public PlayItem next() {
 		if (selected == null)
 			throw new IllegalStateException(DisplayConstants.mustHaveSelectedPlayList);

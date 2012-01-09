@@ -73,7 +73,7 @@ public class NavBarTest extends SwtTest {
 	}
 
 	public void testGetRootUrl() {
-		assertEquals("/" + CardDataStoreFixture.url, nav.getRootUrl());
+		assertEquals(Arrays.asList("/" + CardDataStoreFixture.url), nav.getRootUrls());
 	}
 
 	public void testGetHistoryIsSameHistoryAsInPrevHistoryNext() {
@@ -112,7 +112,7 @@ public class NavBarTest extends SwtTest {
 		super.setUp();
 		cardConfig = CardDataStoreFixture.syncCardConfig(display).withMargins(5, 6, 7, 8);
 		MemoryCallback<String> memory = ICallback.Utils.memory();
-		nav = new NavBar(shell, cardConfig, "/" + CardDataStoreFixture.url, memory);
+		nav = new NavBar(shell, cardConfig, Arrays.asList("/" + CardDataStoreFixture.url), memory);
 		navComposite = nav.getComposite();
 		navHistoryPrev = nav.getNavHistoryPrev();
 	}

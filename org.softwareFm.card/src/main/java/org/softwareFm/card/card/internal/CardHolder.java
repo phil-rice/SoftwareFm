@@ -10,6 +10,8 @@
 
 package org.softwareFm.card.card.internal;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
@@ -88,14 +90,14 @@ public class CardHolder implements ICardHolderForTests {
 		private final List<ILineSelectedListener> lineListeners = new CopyOnWriteArrayList<ILineSelectedListener>();
 		private final List<ICardSelectedListener> cardSelectedListeners = new CopyOnWriteArrayList<ICardSelectedListener>();
 
-		public CardHolderComposite(Composite parent, CardConfig navBarCardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
+		public CardHolderComposite(Composite parent, CardConfig navBarCardConfig, List<String> rootUrls, ICallback<String> callbackToGotoUrl) {
 			super(parent, SWT.NULL);
 			this.navBarCardConfig = navBarCardConfig;
 			if (navBarCardConfig == null)
 				throw new NullPointerException();
 			if (callbackToGotoUrl == null) {
 				String loadingText = IResourceGetter.Utils.getOrException(navBarCardConfig.resourceGetterFn, null, CardConstants.cardHolderLoadingText);
-				title = new NavTitle(this, navBarCardConfig, TitleSpec.noTitleSpec(parent.getBackground()), loadingText, rootUrl);
+				title = new NavTitle(this, navBarCardConfig, TitleSpec.noTitleSpec(parent.getBackground()), loadingText, "");
 				title.getControl().addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseUp(MouseEvent e) {
@@ -104,7 +106,7 @@ public class CardHolder implements ICardHolderForTests {
 					}
 				});
 			} else {
-				NavBar bar = new NavBar(this, navBarCardConfig, rootUrl, callbackToGotoUrl);
+				NavBar bar = new NavBar(this, navBarCardConfig, rootUrls, callbackToGotoUrl);
 				bar.getComposite().setLayout(new NavBar.NavBarLayout());
 				title = bar;
 			}
@@ -152,16 +154,16 @@ public class CardHolder implements ICardHolderForTests {
 
 	private final List<ICardChangedListener> cardChangedListeners = new CopyOnWriteArrayList<ICardChangedListener>();
 	final CardHolderComposite content;
-	private final String rootUrl;
+	private final List<String> rootUrls;
 
-	public CardHolder(Composite parent, CardConfig cardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
-		this.rootUrl = rootUrl;
-		content = new CardHolderComposite(parent, cardConfig, rootUrl, callbackToGotoUrl);
+	public CardHolder(Composite parent, CardConfig cardConfig, List<String> rootUrls, ICallback<String> callbackToGotoUrl) {
+		this.rootUrls = rootUrls;
+		content = new CardHolderComposite(parent, cardConfig, rootUrls, callbackToGotoUrl);
 	}
 
 	@Override
-	public String getRootUrl() {
-		return rootUrl;
+	public List<String> getRootUrls() {
+		return Collections.unmodifiableList(rootUrls);
 	}
 
 	@Override
@@ -214,7 +216,7 @@ public class CardHolder implements ICardHolderForTests {
 			@Override
 			public Composite apply(final Composite from) throws Exception {
 				final CardConfig cardConfig = CardDataStoreFixture.asyncCardConfig(from.getDisplay());
-				final ICardHolder cardHolder = ICardHolder.Utils.cardHolderWithLayout(from, cardConfig, CardDataStoreFixture.url, ICallback.Utils.<String> noCallback());
+				final ICardHolder cardHolder = ICardHolder.Utils.cardHolderWithLayout(from, cardConfig, Arrays.asList(CardDataStoreFixture.url), ICallback.Utils.<String> noCallback());
 				final Future<ICard> future = ICardFactory.Utils.makeCard(cardHolder, cardConfig, CardDataStoreFixture.url1a, new ICallback<ICard>() {
 					@Override
 					public void process(ICard card) throws Exception {

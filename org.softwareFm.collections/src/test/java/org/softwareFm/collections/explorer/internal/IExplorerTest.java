@@ -5,6 +5,8 @@
 
 package org.softwareFm.collections.explorer.internal;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.softwareFm.card.card.ICardHolderForTests;
@@ -28,12 +30,12 @@ public class IExplorerTest extends SwtTest {
 
 	public void testConstructorCreatesExplorerAndCardHolderIsSetUp() {
 		CardConfig cardConfig = addNeededResources(CardDataStoreFixture.syncCardConfig(display));
-		String rootUrl = "rootUrl";
+		List<String> rootUrls = Arrays.asList("rootUrl");
 		IPlayListGetter playListGetter = IPlayListGetter.Utils.noPlayListGetter();
 		IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(shell);
-		Explorer explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, playListGetter, service);
+		Explorer explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrls, playListGetter, service);
 		ICardHolderForTests cardHolder = (ICardHolderForTests) explorer.cardHolder;
-		assertEquals(rootUrl, cardHolder.getRootUrl());
+		assertEquals(rootUrls, cardHolder.getRootUrls());
 		assertEquals(cardConfig, cardHolder.getCardConfig());
 	}
 

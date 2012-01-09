@@ -5,6 +5,8 @@
 
 package org.softwareFm.card.card.internal;
 
+import java.util.Arrays;
+
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardHolder;
@@ -17,7 +19,7 @@ public class CardHolderTestWithNavBarTest extends AbstractCardHolderTest {
 
 	@Override
 	protected CardHolder makeCardHolder(Composite parent, CardConfig cardConfig) {
-		ICardHolder cardHolder = ICardHolder.Utils.cardHolderWithLayout(shell, cardConfig, rootUrl, ICallback.Utils.<String> memory());
+		ICardHolder cardHolder = ICardHolder.Utils.cardHolderWithLayout(shell, cardConfig, Arrays.asList(rootUrl), ICallback.Utils.<String> memory());
 		return (CardHolder) cardHolder;
 	}
 
@@ -43,7 +45,7 @@ public class CardHolderTestWithNavBarTest extends AbstractCardHolderTest {
 	private void checkNavBarWithSetCard(CardConfig cardConfig) {
 		makeAndSetCard(cardConfig);
 		NavBar navbar = (NavBar) cardHolder.content.title;
-		assertEquals(rootUrl, navbar.getRootUrl());
+		assertEquals(Arrays.asList(rootUrl), navbar.getRootUrls());
 		assertEquals(rootUrl + "/someUrl", navbar.getCurrentUrl());
 	}
 

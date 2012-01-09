@@ -10,12 +10,21 @@
 
 package org.softwareFm.collections.constants;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.softwareFm.utilities.strings.Urls;
+
 public class CollectionConstants {
 
 	public static final String artifactId = "artifactId";
 	public static final String groupId = "groupId";
 	public static final String version = "version";
 	public static final String rootUrl = "/softwareFm";
+	public static final String rootDataUrl = Urls.composeWithSlash(rootUrl, "data");
+	public static final String rootSnippetUrl = Urls.composeWithSlash(rootUrl, "snippet");
+	public static final String rootJarUrl = Urls.composeWithSlash(rootUrl, "jar");;
+	public static final List<String> rootUrlList = Arrays.asList(rootDataUrl, rootJarUrl, rootSnippetUrl);
 	public static final String jarNotRecognisedTitle = "jar.notRecognised.title";
 	public static final String jarNotRecognisedText = "jar.notRecognised.text";
 	

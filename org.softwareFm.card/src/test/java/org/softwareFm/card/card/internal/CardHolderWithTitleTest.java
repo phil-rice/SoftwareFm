@@ -5,6 +5,8 @@
 
 package org.softwareFm.card.card.internal;
 
+import java.util.Arrays;
+
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardHolder;
@@ -39,7 +41,7 @@ public class CardHolderWithTitleTest extends AbstractCardHolderTest {
 
 	@Override
 	protected CardHolder makeCardHolder(Composite parent, CardConfig cardConfig) {
-		return (CardHolder) ICardHolder.Utils.cardHolderWithLayout(parent, cardConfig, rootUrl, null);
+		return (CardHolder) ICardHolder.Utils.cardHolderWithLayout(parent, cardConfig, Arrays.asList(rootUrl), null);
 	}
 
 	String getTitleText() {

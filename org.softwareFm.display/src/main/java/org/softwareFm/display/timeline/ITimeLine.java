@@ -11,6 +11,8 @@ import org.softwareFm.utilities.history.IHistory;
 
 public interface ITimeLine extends IHistory<PlayItem> {
 
+	void clear();
+
 	Future<?> selectAndNext(String playListName);
 
 }

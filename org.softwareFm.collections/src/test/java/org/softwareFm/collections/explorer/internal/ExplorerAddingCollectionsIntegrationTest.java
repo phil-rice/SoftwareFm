@@ -214,7 +214,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 
 	private void makeCollectionUrlAnExistingUrl(String collectionUrl) throws InterruptedException, ExecutionException {
 		delete(collectionUrl);
-		repository.post(rootUrl + collectionUrl, Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), IResponseCallback.Utils.noCallback()).get();
+		repository.post(rootArtifactUrl + collectionUrl, Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), IResponseCallback.Utils.noCallback()).get();
 	}
 
 	private void addFromCollection(final String collection, final String nameInMainCard, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback, String collectionUrl) {
@@ -251,7 +251,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 	}
 
 	private void delete(String collectionUrl) throws InterruptedException, ExecutionException {
-		String fullUrl = rootUrl + collectionUrl;
+		String fullUrl = rootArtifactUrl + collectionUrl;
 		httpClient.delete(fullUrl).execute(IResponseCallback.Utils.noCallback()).get();
 	}
 

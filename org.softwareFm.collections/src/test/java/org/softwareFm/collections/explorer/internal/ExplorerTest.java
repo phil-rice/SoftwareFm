@@ -63,7 +63,7 @@ public class ExplorerTest extends SwtAndServiceTest {
 				"noCardNameField", new ResourceGetterMock(), //
 				"withCardNameField", new ResourceGetterMock(CardConstants.cardNameFieldKey, "cardName"))).//
 				withTitleSpecFn(Functions.<ICardData, TitleSpec> constant(TitleSpec.noTitleSpec(shell.getBackground())));
-		Explorer explorer = new Explorer(cardConfig, CardDataStoreFixture.url, masterDetailSocial, service, IPlayListGetter.Utils.noPlayListGetter()) {
+		Explorer explorer = new Explorer(cardConfig, CardDataStoreFixture.urlAsList, masterDetailSocial, service, IPlayListGetter.Utils.noPlayListGetter()) {
 			@Override
 			protected String makeRandomUUID() {
 				return "randomUUID";

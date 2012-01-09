@@ -11,6 +11,7 @@
 package org.softwareFm.explorer.eclipse;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -72,7 +73,7 @@ public class ExplorerUnit {
 					final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(parent.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 					IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(parent);
 					IPlayListGetter noPlayListGetter = IPlayListGetter.Utils.noPlayListGetter();
-					IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, noPlayListGetter, service);
+					IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, Arrays.asList(rootUrl), noPlayListGetter, service);
 					new BrowserFeedConfigurator().configure(explorer);
 					new RssFeedConfigurator().configure(explorer);
 					new TweetFeedConfigurator().configure(explorer);

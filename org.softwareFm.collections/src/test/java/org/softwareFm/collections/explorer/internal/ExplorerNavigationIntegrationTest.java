@@ -31,8 +31,8 @@ public class ExplorerNavigationIntegrationTest extends AbstractExplorerIntegrati
 						"one", Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"),//
 						"two", Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"));
 				clickOnItemAndCheckCollection(card, "Tutorials", "tutorial", expectedValue);
-				ICard childOne = checkChildUrl(0, Urls.composeWithSlash(rootUrl, artifactUrl, "tutorial", "one"));
-				checkChildUrl(1, Urls.composeWithSlash(rootUrl, artifactUrl, "tutorial", "two"));
+				ICard childOne = checkChildUrl(0, Urls.composeWithSlash(rootArtifactUrl, artifactUrl, "tutorial", "one"));
+				checkChildUrl(1, Urls.composeWithSlash(rootArtifactUrl, artifactUrl, "tutorial", "two"));
 				clickOnChildCardAndCheckUrl(cardHolder, childOne);
 			}
 		});
@@ -43,7 +43,7 @@ public class ExplorerNavigationIntegrationTest extends AbstractExplorerIntegrati
 			@Override
 			public void process(final ICardHolder cardHolder, ICard card) throws Exception {
 				clickOnItemAndCheckCollection(card, "First", "first", Maps.stringObjectMap("org.first", Maps.emptyStringObjectMap()));
-				final String expectedUrl = Urls.composeWithSlash(rootUrl, orgFirstGroupUrl);
+				final String expectedUrl = Urls.composeWithSlash(rootArtifactUrl, orgFirstGroupUrl);
 				ICard childCard = checkChildUrl(0, expectedUrl);
 				clickOnChildCardAndCheckUrl(cardHolder, childCard);
 			}
@@ -94,7 +94,7 @@ public class ExplorerNavigationIntegrationTest extends AbstractExplorerIntegrati
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		File actualRoot = new File(remoteRoot, rootUrl);
+		File actualRoot = new File(remoteRoot, rootArtifactUrl);
 		File file = new File(actualRoot, orgFirstGroupUrl);
 		file.mkdirs();
 	}

@@ -5,6 +5,8 @@
 
 package org.softwareFm.card.card.internal;
 
+import java.util.Arrays;
+
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.configuration.CardConfig;
@@ -33,7 +35,7 @@ public class SingleCardExplorerUnit {
 					final IMutableCardDataStore cardDataStore = new CardDataStoreForRepository(parent, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 					final CardConfig cardConfig = new BasicCardConfigurator().configure(parent.getDisplay(), new CardConfig(cardFactory, cardDataStore));
-					return new SingleCardExplorer(parent, cardConfig, rootUrl);
+					return new SingleCardExplorer(parent, cardConfig, Arrays.asList(rootUrl));
 				}
 			}, CardUnit.urls);
 		} finally {

@@ -474,4 +474,11 @@ public class Strings {
 		};
 	}
 
+	public static String oneStartsWith(List<String> roots, String value) {
+		for (String root: roots)
+			if (value.startsWith(root))
+				return root;
+		return null;
+	}
+
 }

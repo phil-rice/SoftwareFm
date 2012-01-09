@@ -86,7 +86,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 		}, new CardHolderAndCardCallback() {
 			@Override
 			public void process(ICardHolder cardHolder, ICard card) throws Exception {
-				assertEquals(rootUrl + "/some/group/id/some.group.id/artifact/someArtifact", card.url());
+				assertEquals(rootArtifactUrl + "/some/group/id/some.group.id/artifact/someArtifact", card.url());
 			}
 
 		});
@@ -105,7 +105,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 					public void initialCard(ICardHolder cardHolder, CardConfig cardConfig, String url, ICard card) {
 						assertEquals(1, count.incrementAndGet());
 						latch.countDown();
-						assertEquals(rootUrl + AbstractExplorerIntegrationTest.artifactUrl + "/tutorial", card.url());
+						assertEquals(rootArtifactUrl + AbstractExplorerIntegrationTest.artifactUrl + "/tutorial", card.url());
 					}
 				});
 				explorer.showContents();
@@ -121,7 +121,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 		displayCardThenViewChild(AbstractExplorerIntegrationTest.artifactUrl, "Tutorials", new CardHolderAndCardCallback() {
 			@Override
 			public void process(ICardHolder cardHolder, ICard card) throws Exception {
-				assertEquals(rootUrl + AbstractExplorerIntegrationTest.artifactUrl + "/tutorial", card.url());
+				assertEquals(rootArtifactUrl + AbstractExplorerIntegrationTest.artifactUrl + "/tutorial", card.url());
 				assertEquals(explorer.getBrowser().getComposite(), masterDetailSocial.getDetailContent());
 			}
 		});

@@ -10,6 +10,8 @@
 
 package org.softwareFm.card.card;
 
+import java.util.List;
+
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.card.internal.CardHolder;
 import org.softwareFm.card.configuration.CardConfig;
@@ -29,8 +31,8 @@ public interface ICardHolder extends IHasComposite {
 	ICard getCard();
 
 	public static class Utils {
-		public static ICardHolder cardHolderWithLayout(Composite parent, CardConfig cardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
-			CardHolder cardHolder = new CardHolder(parent, cardConfig, rootUrl, callbackToGotoUrl);
+		public static ICardHolder cardHolderWithLayout(Composite parent, CardConfig cardConfig, List<String> rootUrls, ICallback<String> callbackToGotoUrl) {
+			CardHolder cardHolder = new CardHolder(parent, cardConfig, rootUrls, callbackToGotoUrl);
 			cardHolder.getComposite().setLayout(new CardHolder.CardHolderLayout());
 			return cardHolder;
 		}

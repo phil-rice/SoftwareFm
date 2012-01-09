@@ -11,6 +11,7 @@
 package org.softwareFm.collections.explorer;
 
 import java.io.File;
+import java.util.List;
 
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardChangedListener;
@@ -70,8 +71,8 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 
 	public static class Utils {
 
-		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, String rootUrl, IPlayListGetter playListGetter, IServiceExecutor service) {
-			return new Explorer(cardConfig, rootUrl, masterDetailSocial, service, playListGetter);
+		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, List<String> rootUrls, IPlayListGetter playListGetter, IServiceExecutor service) {
+			return new Explorer(cardConfig, rootUrls, masterDetailSocial, service, playListGetter);
 		}
 	}
 

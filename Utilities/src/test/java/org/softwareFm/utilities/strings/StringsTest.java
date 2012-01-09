@@ -11,6 +11,7 @@
 package org.softwareFm.utilities.strings;
 
 import java.io.File;
+import java.util.Arrays;
 
 import junit.framework.TestCase;
 
@@ -21,6 +22,18 @@ public class StringsTest extends TestCase {
 	public void testHtmlEscape() {
 		assertEquals("&lt;tag&gt;", Strings.htmlEscape("<tag>"));
 	}
+	public void testOneStartsWith(){
+		assertEquals("one", Strings.oneStartsWith(Arrays.asList("one", "two"), "one"));
+		assertEquals("two", Strings.oneStartsWith(Arrays.asList("one", "two"), "two"));
+
+		assertEquals("one", Strings.oneStartsWith(Arrays.asList("one", "two"), "one/more"));
+		assertEquals("two", Strings.oneStartsWith(Arrays.asList("one", "two"), "twomore"));
+
+		assertNull(Strings.oneStartsWith(Arrays.asList("one", "two"), "/one"));
+		assertNull(Strings.oneStartsWith(Arrays.asList("one", "two"), " two"));
+		
+	}
+	
 
 	public void testIsUrlFriendly() {
 		assertTrue(Strings.isUrlFriendly("asdljkalsdj"));

@@ -10,6 +10,9 @@
 
 package org.softwareFm.card.card.internal;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;
@@ -39,7 +42,7 @@ public class SingleCardExplorer implements IHasComposite {
 	private final SashForm sashForm;
 	private final Text text;
 
-	public SingleCardExplorer(Composite parent, final CardConfig cardConfig, final String rootUrl) {
+	public SingleCardExplorer(Composite parent, final CardConfig cardConfig, final List<String> rootUrls) {
 		sashForm = new SashForm(parent, SWT.VERTICAL);
 		callbackToGotoUrl = new ICallback<String>() {
 			@Override
@@ -47,7 +50,7 @@ public class SingleCardExplorer implements IHasComposite {
 				cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, CardAndCollectionDataStoreVisitorMonitored.Utils.sysout());
 			}
 		};
-		cardHolder = new CardHolder(sashForm, cardConfig, rootUrl, callbackToGotoUrl);
+		cardHolder = new CardHolder(sashForm, cardConfig, rootUrls, callbackToGotoUrl);
 		text = new Text(sashForm, SWT.H_SCROLL | SWT.WRAP);
 		Size.resizeMeToParentsSize(cardHolder.getControl());
 		cardHolder.addCardChangedListener(new ICardChangedListener() {
@@ -88,7 +91,7 @@ public class SingleCardExplorer implements IHasComposite {
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 					final CardConfig cardConfig = new BasicCardConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 					IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null, "navBar.prev.title");
-					final SingleCardExplorer cardExplorer = new SingleCardExplorer(from, cardConfig, rootUrl);
+					final SingleCardExplorer cardExplorer = new SingleCardExplorer(from, cardConfig, Arrays.asList(rootUrl));
 					cardExplorer.setUrl(firstUrl);
 
 					return cardExplorer.getComposite();

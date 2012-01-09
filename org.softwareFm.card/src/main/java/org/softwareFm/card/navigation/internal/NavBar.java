@@ -10,6 +10,9 @@
 
 package org.softwareFm.card.navigation.internal;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -33,6 +36,7 @@ import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.history.History;
 import org.softwareFm.utilities.history.IHistory;
+import org.softwareFm.utilities.strings.Strings;
 
 public class NavBar implements IHasComposite, ITitleBarForCard {
 
@@ -103,7 +107,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 
 	static class NavBarComposite extends Composite {
 
-		private final String rootUrl;
+		private final List<String> rootUrls;
 		private final ICallback<String> callbackToGotoUrl;
 		private final int height;
 		private final CardConfig cardConfig;
@@ -111,13 +115,13 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 		private final TitlePaintListener listener;
 		private NavNextHistoryPrev<String> navNextHistoryPrev;
 
-		public NavBarComposite(Composite parent, CardConfig cardConfig, String rootUrl, final ICallback<String> callbackToGotoUrl) {
+		public NavBarComposite(Composite parent, CardConfig cardConfig, java.util.List<String> rootUrls, final ICallback<String> callbackToGotoUrl) {
 			super(parent, SWT.NULL);
 			final ImageRegistry imageRegistry = new ImageRegistry();
 			new BasicImageRegisterConfigurator().registerWith(parent.getDisplay(), imageRegistry);
 			this.height = cardConfig.titleHeight;
 			this.cardConfig = cardConfig;
-			this.rootUrl = rootUrl;
+			this.rootUrls = rootUrls;
 			this.callbackToGotoUrl = callbackToGotoUrl;
 			IFunction1<String, Image> imageFn = new IFunction1<String, Image>() {
 				@Override
@@ -137,13 +141,14 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 			navNextHistoryPrev.getHistory().push(url);
 			listener.setTitleAndTitleSpec("", titleSpec.withoutImage());
 			// setBackground(titleSpec.background);
-			if (!url.startsWith(rootUrl))
-				throw new IllegalArgumentException("rooturl: " + rootUrl + " url: " + url);
+			String root = Strings.oneStartsWith(rootUrls, url);
+			if (root == null)
+				throw new IllegalArgumentException("rooturl: " + rootUrls + " url: " + url);
 			navNextHistoryPrev.setBackground(titleSpec.titleColor);
-			String endOfUrl = url.substring(rootUrl.length());
+			String endOfUrl = url.substring(root.length());
 			String[] fragments = endOfUrl.split("/");
 			Swts.removeChildrenAfter(this, navNextHistoryPrev.getControl());
-			String thisUrl = rootUrl;
+			String thisUrl = root;
 			for (final String string : fragments)
 				if (string.length() > 0) {
 					String parentUrl = thisUrl;
@@ -167,8 +172,8 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 
 	private final NavBarComposite content;
 
-	public NavBar(Composite parent, CardConfig cardConfig, String rootUrl, ICallback<String> callbackToGotoUrl) {
-		content = new NavBarComposite(parent, cardConfig, rootUrl, callbackToGotoUrl);
+	public NavBar(Composite parent, CardConfig cardConfig, List<String> rootUrls, ICallback<String> callbackToGotoUrl) {
+		content = new NavBarComposite(parent, cardConfig, rootUrls, callbackToGotoUrl);
 	}
 
 	@Override
@@ -181,8 +186,8 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 		return content;
 	}
 
-	public String getRootUrl() {
-		return content.rootUrl;
+	public List<String> getRootUrls() {
+		return Collections.unmodifiableList(content.rootUrls);
 	}
 
 	public String getCurrentUrl() {

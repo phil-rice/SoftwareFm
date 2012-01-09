@@ -36,13 +36,13 @@ public class CommentsIntegrationTest extends AbstractExplorerIntegrationTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		repository.post(Urls.compose(rootUrl, artifactUrl, CollectionConstants.comment), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), IResponseCallback.Utils.noCallback()).get();
-		repository.post(Urls.compose(rootUrl, artifactUrl, CollectionConstants.comment, "someGuid1"), Maps.stringObjectMap(//
+		repository.post(Urls.compose(rootArtifactUrl, artifactUrl, CollectionConstants.comment), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), IResponseCallback.Utils.noCallback()).get();
+		repository.post(Urls.compose(rootArtifactUrl, artifactUrl, CollectionConstants.comment, "someGuid1"), Maps.stringObjectMap(//
 				CollectionConstants.commentsTitleKey, "title1",//
 				CollectionConstants.commentsTextKey, "text1", //
 				CollectionConstants.createdTimeKey, 123), //
 				IResponseCallback.Utils.noCallback()).get();
-		repository.post(Urls.compose(rootUrl, artifactUrl, CollectionConstants.comment, "someGuid2"), Maps.stringObjectMap(//
+		repository.post(Urls.compose(rootArtifactUrl, artifactUrl, CollectionConstants.comment, "someGuid2"), Maps.stringObjectMap(//
 				CollectionConstants.commentsTitleKey, "title2",//
 				CollectionConstants.commentsTextKey, "text2", //
 				CollectionConstants.createdTimeKey, 124), //

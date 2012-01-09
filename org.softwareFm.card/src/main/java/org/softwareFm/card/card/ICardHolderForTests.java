@@ -5,10 +5,12 @@
 
 package org.softwareFm.card.card;
 
+import java.util.List;
+
 import org.softwareFm.card.configuration.CardConfig;
 
 public interface ICardHolderForTests extends ICardHolder {
-	String getRootUrl();
+	List<String> getRootUrls();
 
 	CardConfig getCardConfig();
 }

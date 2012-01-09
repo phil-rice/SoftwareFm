@@ -5,6 +5,8 @@
 
 package org.softwareFm.card.card.internal;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
@@ -38,10 +40,10 @@ public class CardUnit implements IHasComposite {
 	private final Text text;
 	private final CardConfig cardConfig;
 
-	public CardUnit(Composite parent, CardConfig cardConfig, String rootUrl) {
+	public CardUnit(Composite parent, CardConfig cardConfig, List<String> rootUrls) {
 		this.cardConfig = cardConfig;
 		sashForm = new SashForm(parent, SWT.VERTICAL);
-		cardHolder = ICardHolder.Utils.cardHolderWithLayout(sashForm, cardConfig, rootUrl, null);
+		cardHolder = ICardHolder.Utils.cardHolderWithLayout(sashForm, cardConfig, rootUrls, null);
 		text = new Text(sashForm, SWT.WRAP);
 	}
 
@@ -65,7 +67,7 @@ public class CardUnit implements IHasComposite {
 					final IMutableCardDataStore cardDataStore = new CardDataStoreForRepository(parent, facard);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 					final CardConfig cardConfig = new BasicCardConfigurator().configure(parent.getDisplay(), new CardConfig(cardFactory, cardDataStore));
-					CardUnit cardUnit = new CardUnit(parent, cardConfig, rootUrl);
+					CardUnit cardUnit = new CardUnit(parent, cardConfig, Arrays.asList(rootUrl));
 					return cardUnit;
 				}
 			}, urls);

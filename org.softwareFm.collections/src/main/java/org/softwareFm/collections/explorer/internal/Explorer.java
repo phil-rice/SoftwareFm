@@ -92,7 +92,7 @@ public class Explorer implements IExplorer {
 	private TimeLine timeLine;
 	private Comments comments;
 
-	public Explorer(final CardConfig cardConfig, final String rootUrl, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter) {
+	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter) {
 		this.cardConfig = cardConfig;
 		this.masterDetailSocial = masterDetailSocial;
 		callbackToGotoUrlAndUpdateDetails = new ICallback<String>() {
@@ -111,7 +111,7 @@ public class Explorer implements IExplorer {
 		cardHolder = masterDetailSocial.createMaster(new IFunction1<Composite, ICardHolder>() {
 			@Override
 			public ICardHolder apply(Composite from) throws Exception {
-				ICardHolder cardHolder = ICardHolder.Utils.cardHolderWithLayout(from, cardConfig, rootUrl, callbackToGotoUrlAndUpdateDetails);
+				ICardHolder cardHolder = ICardHolder.Utils.cardHolderWithLayout(from, cardConfig, rootUrls, callbackToGotoUrlAndUpdateDetails);
 				return cardHolder;
 			}
 		}, true);
@@ -247,6 +247,7 @@ public class Explorer implements IExplorer {
 						addCollectionItem(result, collectionName, cardData, new IAfterEditCallback() {
 							@Override
 							public void afterEdit(String url) {
+								timeLine.clear(); 
 								final String key = Strings.lastSegment(url, "/");
 								final String collectionUrl = Strings.allButLastSegment(url, "/");
 								displayAndSelectItemWithKey(collectionUrl, key, new ICallback<IExplorerListener>() {
@@ -382,7 +383,6 @@ public class Explorer implements IExplorer {
 		});
 	}
 
-
 	private boolean snippetOk(Map<String, Object> data) {
 		String title = Strings.nullSafeToString(data.get("title"));
 		String description = Strings.nullSafeToString(data.get("description"));
@@ -392,6 +392,7 @@ public class Explorer implements IExplorer {
 		boolean descriptionOk = !description.startsWith("<");
 		return titleOk && contentOk && descriptionOk;
 	}
+
 	@Override
 	public void showAddSnippetEditor(final ICard card) {
 		final IMutableCardDataStore store = card.getCardConfig().cardDataStore;
@@ -776,6 +777,7 @@ public class Explorer implements IExplorer {
 			@Override
 			public void afterEdit(String url) {// reload
 				ICallback.Utils.call(callbackToGotoUrlAndUpdateDetails, card.url());
+				timeLine.clear();
 			}
 
 			@Override
@@ -816,6 +818,11 @@ public class Explorer implements IExplorer {
 		masterDetailSocial.hideSocial();
 		masterDetailSocial.setDetail(browser.getControl());
 		return timeLine.next();
+	}
+
+	@Override
+	public void clear() {
+		timeLine.clear();
 	}
 
 	@Override

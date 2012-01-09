@@ -66,7 +66,7 @@ public abstract class AbstractCardCollectionsDataStoreTest extends SwtTest {
 				return findFollowOnUrlFragmentForTest(key, value);
 			}
 		});
-		cardHolder = ICardHolder.Utils.cardHolderWithLayout(shell, cardConfig, CardDataStoreFixture.url, null);
+		cardHolder = ICardHolder.Utils.cardHolderWithLayout(shell, cardConfig, CardDataStoreFixture.urlAsList, null);
 		memory = new CardAndCollectionDataStoreVisitorMonitored();
 		status = cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, "/" + CardDataStoreFixture.url, memory);
 	}

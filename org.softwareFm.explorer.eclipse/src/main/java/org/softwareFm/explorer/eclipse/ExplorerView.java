@@ -11,6 +11,7 @@
 package org.softwareFm.explorer.eclipse;
 
 import java.io.File;
+import java.util.List;
 
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.widgets.Composite;
@@ -46,7 +47,7 @@ public class ExplorerView extends ViewPart {
 
 		IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardConfig.cardDataStore);
 		IServiceExecutor service = activator.getServiceExecutor();
-		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, getRootUrl(), playListGetter, service);
+		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, getRootUrls(), playListGetter, service);
 		actionBar = IActionBar.Utils.actionBar(explorer, cardConfig, SelectedArtifactSelectionManager.reRipFn());
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
 		actionBar.populateToolbar(toolBarManager);
@@ -70,8 +71,8 @@ public class ExplorerView extends ViewPart {
 		explorer.processUrl(DisplayConstants.browserFeedType, welcomeUrl);
 	}
 
-	protected String getRootUrl() {
-		return CollectionConstants.rootUrl;
+	protected List<String> getRootUrls() {
+		return CollectionConstants.rootUrlList;
 	}
 
 	protected CardConfig makeCardConfig(Composite parent) {
