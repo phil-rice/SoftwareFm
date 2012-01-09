@@ -333,6 +333,7 @@ public class Swts {
 			return Buttons.makePushButton(parent, resourceGetter, titleKey, true, runnable);
 		}
 
+		
 		public static org.eclipse.swt.widgets.Button makePushButton(Composite parent, IResourceGetter resourceGetter, String titleOrKey, boolean titleIsKey, final Runnable runnable) {
 			return Buttons.makePushButton(parent, SWT.PUSH, resourceGetter, titleOrKey, titleIsKey, runnable);
 		}
