@@ -21,6 +21,7 @@ import org.codehaus.cake.forkjoin.RecursiveTask;
 import org.softwareFm.httpClient.api.IHttpClient;
 
 import twitter4j.Tweet;
+import de.java2html.Java2Html;
 
 public class Sample {
 
@@ -31,9 +32,10 @@ public class Sample {
 		HttpClient client2;
 		Logger logger = Logger.getLogger(Sample.class);
 		new Ant();
+		TestSuite suite;
 		new TestSuite();
 		Math.random();
-		
+		Java2Html html;
 		File file = new File("");
 		RecursiveTask<String> task;
 		Tweet tweet;

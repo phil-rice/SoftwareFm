@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: LoadTest
+Bundle-SymbolicName: org.softwareFm.loadTest
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: SoftwareFm
+Require-Bundle: org.eclipse.core.runtime,
+ org.softwareFm.server;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

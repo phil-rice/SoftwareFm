@@ -29,11 +29,11 @@ public interface IServiceExecutor {
 	public static class Utils {
 
 		public static IServiceExecutor defaultExecutor() {
-			return defaultExecutor(10);
+			return executor(10);
 
 		}
 
-		public static IServiceExecutor defaultExecutor(final int threadPoolSize) {
+		public static IServiceExecutor executor(final int threadPoolSize) {
 			IServiceExecutor executor = new IServiceExecutor() {
 				private final List<IExceptionListener> listeners = Lists.newList();
 				private final ExecutorService service = new ThreadPoolExecutor(threadPoolSize, threadPoolSize, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(1000)) {

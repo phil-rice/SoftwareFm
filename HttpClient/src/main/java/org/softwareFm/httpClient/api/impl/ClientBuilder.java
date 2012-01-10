@@ -37,6 +37,9 @@ public class ClientBuilder implements IClientBuilder {
 	}
 
 	@SuppressWarnings("unchecked")
+	public ClientBuilder(String host, int port, int threadCount) {
+		this(IServiceExecutor.Utils.executor(threadCount), new HttpHost(host, port), makeClient(), null, Collections.EMPTY_LIST);
+	}
 	public ClientBuilder(String host, int port) {
 		this(IServiceExecutor.Utils.defaultExecutor(), new HttpHost(host, port), makeClient(), null, Collections.EMPTY_LIST);
 	}

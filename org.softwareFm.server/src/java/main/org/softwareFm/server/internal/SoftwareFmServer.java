@@ -27,6 +27,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ISoftwareFmServer;
+import org.softwareFm.server.IUsage;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.IProcessResult;
@@ -40,39 +41,61 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 
 	private IServiceExecutor executor;
 	private boolean shutdown;
-	private CountDownLatch countDownLatch;
+	private CountDownLatch shutdownLatch;
 	private ServerSocket serverSocket;
 
-	public SoftwareFmServer(int port, int threads, final IProcessCall processCall, final ICallback<Throwable> errorHandler) {
-		final Usage usage = new Usage(Usage.makeLocalDataSource());
+	public SoftwareFmServer(int port, int threads, final IProcessCall processCall, final ICallback<Throwable> errorHandler, final IUsage usage) {
 		usage.start();
+		final CountDownLatch startLatch = new CountDownLatch(threads);
 		try {
 			serverSocket = new ServerSocket(port);
-			executor = IServiceExecutor.Utils.defaultExecutor(threads);
-			countDownLatch = new CountDownLatch(threads);
+			executor = IServiceExecutor.Utils.executor(threads);
+			shutdownLatch = new CountDownLatch(threads);
 			Callable<Void> callable = new Callable<Void>() {
 				@Override
 				public Void call() throws Exception {
-					try {
-						while (!shutdown)
+					long aggregatedUsage = 0;
+					long count = 0;
+					startLatch.countDown();
+					while (!shutdown)
+						try {
 							try {
 								Socket socket = serverSocket.accept();
+								long startTime = System.nanoTime();
 								HttpParams params = new BasicHttpParams();
 								DefaultHttpServerConnection conn = new DefaultHttpServerConnection();
+								String ip = null;
+								String requestLineAsString = null;
+								String prefix = "";
 								try {
 									conn.bind(socket, params);
 									HttpRequest request = conn.receiveRequestHeader();
 									Map<String, Object> value = getValue(conn, request);
 									RequestLine requestLine = request.getRequestLine();
 									HttpResponse response = process(processCall, value, requestLine);
-									System.out.println(socket.getRemoteSocketAddress() + ", " + requestLine + " " + response.getStatusLine());
-									String remoteSocketAddress = socket.getRemoteSocketAddress().toString();
-									String ip = Strings.firstSegment(remoteSocketAddress, ":");
-									usage.monitor(ip, requestLine.toString());
+									prefix += socket.getRemoteSocketAddress() + ", " + requestLine + " " + response.getStatusLine();
 									conn.sendResponseHeader(response);
 									conn.sendResponseEntity(response);
+
+									requestLineAsString = requestLine.toString();
+									String remoteSocketAddress = socket.getRemoteSocketAddress().toString();
+									ip = Strings.firstSegment(remoteSocketAddress, ":");
 								} finally {
 									conn.close();
+									long now = System.nanoTime();
+									long duration = now - startTime;
+									long nowms = System.currentTimeMillis();
+
+									usage.monitor(ip, requestLineAsString, duration);
+
+									long usageDuration = System.nanoTime() - now;
+									long usageMs = System.currentTimeMillis() - nowms;
+
+									aggregatedUsage += usageDuration;
+									count += 1;
+									double nanosToMilli = 1E6;
+									System.out.println(String.format(prefix + "...took %10.2fms Usage %10.2fms AvgUsage %10.2f Usagems %10.2f", duration / nanosToMilli, usageDuration / nanosToMilli, aggregatedUsage / count / nanosToMilli, usageMs * 1.0));
+
 								}
 							} catch (ThreadDeath e) {
 								throw e;
@@ -80,9 +103,9 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 								if (!shutdown)
 									errorHandler.process(t);
 							}
-					} finally {
-						countDownLatch.countDown();
-					}
+						} finally {
+							shutdownLatch.countDown();
+						}
 					return null;
 				}
 
@@ -123,7 +146,8 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 			for (int i = 0; i < threads; i++) {
 				executor.submit(callable);
 			}
-		} catch (IOException e) {
+			startLatch.await();
+		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
 		System.out.println("Started with " + threads + " threads");
@@ -134,13 +158,13 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 		try {
 			shutdown = true;
 			executor.shutdown();// stop accepting new queries... aha that means the threads that are
-			countDownLatch.await(10, TimeUnit.MILLISECONDS); // this gives any fast actions time to finish
+			shutdownLatch.await(10, TimeUnit.MILLISECONDS); // this gives any fast actions time to finish
 			try {
 				serverSocket.close();
 			} catch (IOException e) {
 			}
 			int tries = 0;
-			while (tries++ < 1000 && !countDownLatch.await(10, TimeUnit.MILLISECONDS))
+			while (tries++ < 1000 && !shutdownLatch.await(10, TimeUnit.MILLISECONDS))
 				doNothing();
 			if (tries >= 1000)
 				throw new RuntimeException(ServerConstants.couldntStop);
@@ -163,6 +187,7 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 		File root = new File(System.getProperty("user.home"));
 		File sfmRoot = new File(root, ".sfm_remote");
 		IGitServer server = IGitServer.Utils.gitServer(sfmRoot, "not used");
-		new SoftwareFmServer(8080, 1000, IProcessCall.Utils.softwareFmProcessCall(server, sfmRoot), ICallback.Utils.sysErrCallback());
+		final IUsage usage = IUsage.Utils.defaultUsage();
+		new SoftwareFmServer(8080, 1000, IProcessCall.Utils.softwareFmProcessCall(server, sfmRoot), ICallback.Utils.sysErrCallback(), usage);
 	}
 }

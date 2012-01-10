@@ -18,6 +18,9 @@ public interface IHttpClient {
 			return new ClientBuilder();
 		}
 
+		public static IClientBuilder builderWithThreads(String host, int port, int threadCount) {
+			return new ClientBuilder(host, port, threadCount);
+		}
 		public static IClientBuilder builder(String host, int port) {
 			return new ClientBuilder(host, port);
 		}

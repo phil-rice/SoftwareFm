@@ -20,11 +20,21 @@ public class Stats {
 	}
 
 	public long averageDuration() {
-		return totalDuration / count;
+		return count == 0 ? 0 : totalDuration / count;
 	}
 
 	public double standardDeviation() {
 		return deviation.getResult();
+	}
+
+	public String display(String format, double scale) {
+		return "[Stats: " + String.format("Avg: " + format + " Count: %d", averageDuration() / scale, count) + "]";
+
+	}
+
+	@Override
+	public String toString() {
+		return "[Stats: " + String.format("Avg: %d Count: %d", averageDuration(), count) + "]";
 	}
 
 }
