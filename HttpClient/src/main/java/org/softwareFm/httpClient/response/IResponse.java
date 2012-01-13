@@ -23,6 +23,10 @@ public interface IResponse {
 			return new Response(statusCode, url, string, mimeType);
 		}
 
+		public static IResponse okText(final String url, final String string) {
+			return new Response(200, url, string, "text/plain");
+		}
+
 	}
 
 }

@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Display;
 import org.softwareFm.card.configuration.internal.BasicCardConfigurator;
 import org.softwareFm.softwareFmImages.IImageRegisterConfigurator;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.functions.IFunction1WithDispose;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.resources.NestedResourceGetterFn;
 
@@ -30,13 +31,18 @@ public interface ICardConfigurator {
 			return resourceGetterFn;
 		}
 
-		public static IFunction1<String, Image> imageFn(Display display, IImageRegisterConfigurator configurator) {
+		public static IFunction1WithDispose<String, Image> imageFn(Display display, IImageRegisterConfigurator configurator) {
 			final ImageRegistry imageRegistry = new ImageRegistry(display);
 			configurator.registerWith(display, imageRegistry);
-			IFunction1<String, Image> imageFn = new IFunction1<String, Image>() {
+			IFunction1WithDispose<String, Image> imageFn = new IFunction1WithDispose<String, Image>() {
 				@Override
 				public Image apply(String from) throws Exception {
 					return imageRegistry.get(from);
+				}
+
+				@Override
+				public void dispose() {
+					imageRegistry.dispose();
 				}
 			};
 			return imageFn;

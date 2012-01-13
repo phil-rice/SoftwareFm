@@ -28,6 +28,7 @@ public class TimedServer {
 				try {
 					return rawProcessCall.process(requestLine, parameters);
 				} finally {
+					@SuppressWarnings("unused")
 					long duration = System.nanoTime() - startTime;
 					// System.out.println(requestLine.getUri() + ": " + duration / 1000000.0);
 				}

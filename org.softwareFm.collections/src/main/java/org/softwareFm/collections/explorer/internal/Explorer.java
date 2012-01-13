@@ -209,6 +209,10 @@ public class Explorer implements IExplorer {
 		}, true);
 	}
 
+	public void dispose(){
+		masterDetailSocial.dispose();
+	}
+	
 	@Override
 	public void onlyShowBrowser() {
 		masterDetailSocial.hideMaster();

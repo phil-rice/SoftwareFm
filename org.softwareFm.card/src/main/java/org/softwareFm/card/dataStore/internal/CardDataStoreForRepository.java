@@ -34,9 +34,13 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 	}
 
 	@Override
+	public void clearCache(String url) {
+		facard.clearCache(url);
+	}
+
+	@Override
 	public void clearCaches() {
 		facard.clearCaches();
-
 	}
 
 	@Override
@@ -47,6 +51,17 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 				callback.afterEdit(url);
 			}
 		});
+	}
+
+	@Override
+	public void delete(final String url, final IAfterEditCallback callback) {
+		facard.delete(url, new IResponseCallback() {
+			@Override
+			public void process(IResponse response) {
+				callback.afterEdit(url);
+			}
+		});
+
 	}
 
 	@SuppressWarnings("unchecked")
@@ -95,7 +110,4 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 		});
 	}
 
-	@Override
-	public void clearCache(String url) {
-	}
 }

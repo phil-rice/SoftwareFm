@@ -23,7 +23,7 @@ public class CollectionConstants {
 	public static final String rootUrl = "/softwareFm";
 	public static final String rootDataUrl = Urls.composeWithSlash(rootUrl, "data");
 	public static final String rootSnippetUrl = Urls.composeWithSlash(rootUrl, "snippet");
-	public static final String rootJarUrl = Urls.composeWithSlash(rootUrl, "jar");;
+	public static final String rootJarUrl = Urls.composeWithSlash(rootUrl, "jar");
 	public static final List<String> rootUrlList = Arrays.asList(rootDataUrl, rootJarUrl, rootSnippetUrl);
 	public static final String jarNotRecognisedTitle = "jar.notRecognised.title";
 	public static final String jarNotRecognisedText = "jar.notRecognised.text";
@@ -54,15 +54,18 @@ public class CollectionConstants {
 	public static final String commentTextKey = "text";
 
 	public static final String actionWelcomeTitle = "action.welcome.title";
+	public static final String actionRefreshTitle = "action.refresh.title";
 	public static final String actionGroupTitle = "action.group.title";
 	public static final String actionArtifactTitle = "action.artifact.title";
 	public static final String actionVersionTitle = "action.version.title";
 	public static final String actionJarTitle = "action.jar.title";
 	public static final String actionDebugTitle = "action.debug.title";
+	public static final String actionNukeTitle = "action.nuke.title";
 	public static final String actionSnippetTitle = "action.snippet.title";
 
 	public static final String actionWelcomeImage = "welcome.gif";
 	public static final String actionGroupImage = "group.gif";
+	public static final String actionRefreshImage = "refresh.gif";
 	public static final String actionArtifactImage = "artifact.gif";
 	public static final String actionVersionImage = "version.gif";
 	public static final String actionJarImage = "jar.gif";
@@ -80,6 +83,7 @@ public class CollectionConstants {
 	public static final String eclipseProject = "unrecognised.eclipseProject.text";
 	public static final String jarName = "unrecognised.jarName.text";
 	public static final String jarPath = "unrecognised.jarPath.text";
+	public static final String confirm = "Confirm Delete";
 
 
 }

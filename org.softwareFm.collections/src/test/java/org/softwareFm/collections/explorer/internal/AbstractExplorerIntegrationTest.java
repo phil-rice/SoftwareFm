@@ -71,7 +71,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	protected final String rootSnippetUrl = prefix + "/snippet";
 	protected IResourceGetter rawResourceGetter;
 	private File root;
-	private File localRoot;
+	protected File localRoot;
 	protected File remoteRoot;
 
 	// private String remoteAsUri;
@@ -225,17 +225,31 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		httpClient = IHttpClient.Utils.builder("localhost", ServerConstants.testPort);
 		repository = GitRepositoryFactory.gitLocalRepositoryFacardWithServer(ServerConstants.testPort, localRoot, remoteRoot);
 
-		cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().//
-				configure(display, new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(shell, repository))).//
-				withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap(prefix, "data"));
-		masterDetailSocial = new MasterDetailSocial(shell, SWT.NULL);
-		explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, cardConfig, Arrays.asList(rootArtifactUrl, rootSnippetUrl), IPlayListGetter.Utils.noPlayListGetter(), service);
-		IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
-		SnippetFeedConfigurator.configure(explorer, cardConfig);
-		httpClient.delete(Urls.compose(rootArtifactUrl, artifactUrl)).execute(IResponseCallback.Utils.noCallback()).get();
-		httpClient.delete(Urls.compose(rootArtifactUrl, snippetUrl)).execute(IResponseCallback.Utils.noCallback()).get();
-		repository.makeRoot(Urls.compose(rootArtifactUrl, groupUrl), IResponseCallback.Utils.noCallback()).get();
-		rawResourceGetter = explorer.getCardConfig().resourceGetterFn.apply(null);
+		try {
+			cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().//
+					configure(display, new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(shell, repository))).//
+					withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap(prefix, "data"));
+			masterDetailSocial = new MasterDetailSocial(shell, SWT.NULL);
+			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, cardConfig, Arrays.asList(rootArtifactUrl, rootSnippetUrl), IPlayListGetter.Utils.noPlayListGetter(), service);
+			IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
+			SnippetFeedConfigurator.configure(explorer, cardConfig);
+			httpClient.delete(Urls.compose(rootArtifactUrl, artifactUrl)).execute(IResponseCallback.Utils.noCallback()).get();
+			httpClient.delete(Urls.compose(rootArtifactUrl, snippetUrl)).execute(IResponseCallback.Utils.noCallback()).get();
+			repository.makeRoot(Urls.compose(rootArtifactUrl, groupUrl), IResponseCallback.Utils.noCallback()).get();
+			rawResourceGetter = explorer.getCardConfig().resourceGetterFn.apply(null);
+		} catch (Exception e) {
+			repository.shutdown();// otherwise many future tests get BindException
+			throw e;
+		}
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		repository.shutdown();// also closes httpclient
+		explorer.dispose();
+		cardConfig.dispose();
+		Tests.waitUntilCanDeleteTempDirectory(getClass().getSimpleName(), 2000);
 	}
 
 	protected void postSnippetData() {
@@ -256,13 +270,6 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		repository.shutdown();// also closes httpclient
-		Tests.waitUntilCanDeleteTempDirectory(getClass().getSimpleName(), 2000);
 	}
 
 	protected void checkAndEdit(final Table cardTable, IAddingCallback<Table> addingCallback) {

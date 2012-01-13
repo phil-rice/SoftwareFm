@@ -73,4 +73,10 @@ public class CardDataStoreMock implements IMutableCardDataStore {
 		return Futures.doneFuture(null);
 	}
 
+
+	@Override
+	public void delete(String url, IAfterEditCallback callback) {
+		throw new UnsupportedOperationException();
+	}
+
 }

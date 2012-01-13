@@ -40,6 +40,7 @@ import org.softwareFm.display.data.IUrlGeneratorMap;
 import org.softwareFm.display.menu.IPopupMenuService;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.functions.IFunction1WithDispose;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.resources.ResourceGetterMock;
 import org.softwareFm.utilities.strings.Strings;
@@ -362,6 +363,11 @@ public class CardConfig {
 				return hideFn.apply(CardConfig.this, from);
 			}
 		};
+	}
+
+	public void dispose() {
+		if (imageFn instanceof IFunction1WithDispose<?, ?>)
+			((IFunction1WithDispose<?, ?>) imageFn).dispose();
 	}
 
 }

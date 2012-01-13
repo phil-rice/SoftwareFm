@@ -80,4 +80,10 @@ public class CardDataStoreAsyncMock implements IMutableCardDataStore {
 	public Future<?> makeRepo(String url, IAfterEditCallback callback) {
 		throw new UnsupportedOperationException();
 	}
+
+	@Override
+	public void delete(String url, IAfterEditCallback callback) {
+		throw new UnsupportedOperationException();
+		
+	}
 }

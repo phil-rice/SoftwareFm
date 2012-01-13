@@ -43,15 +43,22 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 	private final Map<File, Long> lastPullTimeMap = Maps.newMap();
 	private long lastAboveRepositoryClearTime;
 	private final UrlCache<GetResult> aboveRepositoryCache = new UrlCache<GetResult>();
-	private final long aboveRepositorytStaleCacheTime;
+	private final long aboveRepositoryStaleCacheTime;
 
 	public GitRepositoryFacard(IHttpClient httpClient, IServiceExecutor serviceExecutor, IGitServer localGit, long staleCacheTime, long aboveRepositorytStaleCacheTime) {
 		this.httpClient = httpClient;
 		this.serviceExecutor = serviceExecutor;
 		this.localGit = localGit;
 		this.staleCacheTime = staleCacheTime;
-		this.aboveRepositorytStaleCacheTime = aboveRepositorytStaleCacheTime;
+		this.aboveRepositoryStaleCacheTime = aboveRepositorytStaleCacheTime;
 		lastAboveRepositoryClearTime = System.currentTimeMillis();
+	}
+
+	@Override
+	public void clearCache(String url) {
+		File repositoryDirectory = localGit.findRepositoryUrl(url);
+		Files.deleteDirectory(repositoryDirectory);
+		clearCaches();
 	}
 
 	@Override
@@ -82,7 +89,7 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 			@Override
 			public GetResult call() throws Exception {
 				if (aboveRepositoryCache.containsKey(url)) {
-					if (System.currentTimeMillis() > lastAboveRepositoryClearTime + aboveRepositorytStaleCacheTime) {
+					if (System.currentTimeMillis() > lastAboveRepositoryClearTime + aboveRepositoryStaleCacheTime) {
 						long now = System.currentTimeMillis();
 						lastAboveRepositoryClearTime = now;
 						aboveRepositoryCache.clear();
@@ -196,8 +203,14 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 	}
 
 	@Override
-	public Future<?> delete(String url, IResponseCallback callback) {
-		throw new UnsupportedOperationException();
+	public Future<?> delete(final String url, final IResponseCallback callback) {
+		return httpClient.delete(url).execute(new IResponseCallback() {
+			@Override
+			public void process(IResponse response) {
+				localGit.pull(url);
+				callback.process(response);
+			}
+		});
 	}
 
 	@Override

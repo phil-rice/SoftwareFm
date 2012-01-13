@@ -25,6 +25,7 @@ import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
+import org.softwareFm.card.dataStore.IAfterEditCallback;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
@@ -49,7 +50,7 @@ public class ExplorerWithRadioChannel {
 	public static void main(String[] args) {
 		File home = new File(System.getProperty("user.home"));
 		final File localRoot = new File(home, ".sfm");
-		boolean local = false;
+		boolean local = true;
 		String server = local ? "localhost" : "www.softwarefm.com";
 		String prefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : "git://www.softwarefm.com/";
 		int port = local ? 8080 : 80;
@@ -137,6 +138,17 @@ public class ExplorerWithRadioChannel {
 						@Override
 						public void run() {
 							explorer.displayCard(firstUrl, new CardAndCollectionDataStoreAdapter());
+						}
+					});
+					Buttons.makePushButton(buttonPanel, null, "Nuke", false, new Runnable() {
+						@Override
+						public void run() {
+							cardConfig.cardDataStore.delete(explorer.getCardHolder().getCard().url(), new IAfterEditCallback() {
+								@Override
+								public void afterEdit(String url) {
+									explorer.displayCard(url, new CardAndCollectionDataStoreAdapter());
+								}
+							});
 						}
 					});
 					Swts.Row.setRowDataFor(100, 20, buttonPanel.getChildren());

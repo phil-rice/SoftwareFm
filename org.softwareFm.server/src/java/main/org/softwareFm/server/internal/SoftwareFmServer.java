@@ -187,6 +187,7 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 		File root = new File(System.getProperty("user.home"));
 		File sfmRoot = new File(root, ".sfm_remote");
 		IGitServer server = IGitServer.Utils.gitServer(sfmRoot, "not used");
+		System.out.println("Server: " + server);
 		final IUsage usage = IUsage.Utils.defaultUsage();
 		new SoftwareFmServer(8080, 1000, IProcessCall.Utils.softwareFmProcessCall(server, sfmRoot), ICallback.Utils.sysErrCallback(), usage);
 	}

@@ -28,17 +28,35 @@ import org.softwareFm.display.swt.Swts;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.strings.Strings;
+import org.softwareFm.utilities.strings.Urls;
 
-public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIntegrationTest {
+public abstract class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIntegrationTest {
+	abstract protected void addMe(String collection, String collectionUrl, String nameInMainCard, int count, String urlFragment, IAddingCallback<ICard> addingCallback) throws Exception, ExecutionException;
 
 	private static final String unknown = "Unknown";
 	private static final String pleaseAddAName = "<Please add a name>";
 	private static final String pleaseAddADescription = "<Please add a description>";
 	private String popupMenuId;
+
+	public void testAddingAdvert() throws Exception {
+
+		IAddingCallback<ICard> addingCallback = new IAddingCallback<ICard>() {
+			@Override
+			public void process(boolean added, ICard card, IAdding adding) {
+				adding.tableItem(0, "title", "", "someTitle");
+				adding.tableItem(1, "description", pleaseAddADescription, "someDescription");
+				adding.tableItem(2, "url", unknown, "someUrl");
+			}
+		};
+		checkAdding("advert", "Adverts", 3, null, addingCallback);
+
+
+	}
 
 	public void testAddingCompanies() throws Exception {
 		checkAdding("company", "Companies", 4, null, new IAddingCallback<ICard>() {
@@ -129,51 +147,6 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 		});
 	}
 
-	public void testAddingAdvert() throws Exception {
-
-		IAddingCallback<ICard> addingCallback = new IAddingCallback<ICard>() {
-			@Override
-			public void process(boolean added, ICard card, IAdding adding) {
-				adding.tableItem(0, "title", "", "someTitle");
-				adding.tableItem(1, "description", pleaseAddADescription, "someDescription");
-				adding.tableItem(2, "url", unknown, "someUrl");
-			}
-		};
-		String collectionUrl = AbstractExplorerIntegrationTest.artifactUrl + "/" + "advert";
-		delete(collectionUrl);
-
-		checkAddingToUrl(AbstractExplorerIntegrationTest.artifactUrl, new ICallback<ICard>() {
-			@Override
-			public void process(ICard t) throws Exception {
-				Menu menu = selectAndCreatePopupMenu(t, "Adverts");
-				executeMenuItem(menu, "Add " + "advert");
-			}
-		}, "advert", "Adverts", 3, null, addingCallback, new IFunction1<String, String>() {
-			@Override
-			public String apply(String from) throws Exception {
-				return from + "/" + "advert";
-			}
-		});
-		delete(collectionUrl);
-
-		checkAddingToUrl(collectionUrl, new ICallback<ICard>() {
-
-			@Override
-			public void process(ICard t) throws Exception {
-				final Menu menu1 = new Menu(shell);
-				cardConfig.popupMenuService.contributeTo(popupMenuId, new Event(), menu1, t);
-				Menu menu = menu1;
-				executeMenuItem(menu, "Add " + "advert");
-			}
-		}, "advert", "Adverts", 3, null, addingCallback, new IFunction1<String, String>() {
-			@Override
-			public String apply(String from) throws Exception {
-				return from;
-			}
-		});
-
-	}
-
 	public void testAddingRecruitment() throws Exception {
 		checkAdding("job", 3, null, new IAddingCallback<ICard>() {
 			@Override
@@ -196,28 +169,22 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 
 	}
 
-	private void checkAdding(final String collection, final String nameInMainCard, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback) throws InterruptedException, ExecutionException {
-		String collectionUrl = AbstractExplorerIntegrationTest.artifactUrl + "/" + collection;
+	private void checkAdding(final String collection, final String nameInMainCard, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback) {
+		try {
+			String collectionUrl = Urls.composeWithSlash(AbstractExplorerIntegrationTest.artifactUrl, collection);
+			addMe(collection, collectionUrl, nameInMainCard, count, urlFragment, addingCallback);
 
-		delete(collectionUrl);
-		addFromRoot(collection, nameInMainCard, count, urlFragment, addingCallback);
-
-		delete(collectionUrl);
-		addFromCollection(collection, nameInMainCard, count, urlFragment, addingCallback, collectionUrl);
-
-		makeCollectionUrlAnExistingUrl(collectionUrl);
-		addFromRoot(collection, nameInMainCard, count, urlFragment, addingCallback);
-
-		makeCollectionUrlAnExistingUrl(collectionUrl);
-		addFromCollection(collection, nameInMainCard, count, urlFragment, addingCallback, collectionUrl);
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
 	}
 
-	private void makeCollectionUrlAnExistingUrl(String collectionUrl) throws InterruptedException, ExecutionException {
-		delete(collectionUrl);
+	protected void makeCollectionUrlAndExistingUrl(String collectionUrl) throws InterruptedException, ExecutionException {
+//		delete(collectionUrl);
 		repository.post(rootArtifactUrl + collectionUrl, Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), IResponseCallback.Utils.noCallback()).get();
 	}
 
-	private void addFromCollection(final String collection, final String nameInMainCard, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback, String collectionUrl) {
+	protected void addFromCollection(final String collection, final String nameInMainCard, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback, String collectionUrl) {
 		checkAddingToUrl(collectionUrl, new ICallback<ICard>() {
 
 			@Override
@@ -235,7 +202,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 		});
 	}
 
-	private void addFromRoot(final String collection, final String nameInMainCard, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback) {
+	protected void addFromRoot(final String collection, final String nameInMainCard, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback) {
 		checkAddingToUrl(AbstractExplorerIntegrationTest.artifactUrl, new ICallback<ICard>() {
 			@Override
 			public void process(ICard t) throws Exception {
@@ -250,10 +217,6 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 		});
 	}
 
-	private void delete(String collectionUrl) throws InterruptedException, ExecutionException {
-		String fullUrl = rootArtifactUrl + collectionUrl;
-		httpClient.delete(fullUrl).execute(IResponseCallback.Utils.noCallback()).get();
-	}
 
 	private void checkAddingToUrl(String initialUrl, final ICallback<ICard> addMenuExecutor, final String collection, final String nameInMainCard, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback, final IFunction1<String, String> baseToExpectedCollectionUrlFn) {
 		displayCard(initialUrl, new CardHolderAndCardCallback() {
@@ -290,7 +253,7 @@ public class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIn
 					public void collectionItemAdded(String collectionUrl, String key) {
 						explorer.removeExplorerListener(this);
 						ICard card = explorer.cardHolder.getCard();
-						assertEquals(CardConstants.collection, card.cardType());
+						assertEquals(card.toString(), CardConstants.collection, card.cardType());
 						String expectedCollectionUrl = Functions.call(baseToExpectedCollectionUrlFn, initialCard.url());
 						assertEquals(expectedCollectionUrl, collectionUrl);
 						assertEquals(collectionUrl, card.url());

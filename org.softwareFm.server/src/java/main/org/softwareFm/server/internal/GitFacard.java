@@ -15,6 +15,7 @@ import org.softwareFm.server.IGitFacard;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.utilities.strings.Urls;
 
 public class GitFacard implements IGitFacard {
 
@@ -37,6 +38,28 @@ public class GitFacard implements IGitFacard {
 				throw new IllegalArgumentException(MessageFormat.format(ServerConstants.cannotCreateGitUnderSecondRepository, url));
 			Git git = Git.init().setDirectory(fullRoot).call();
 			git.getRepository().close();
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+
+	}
+
+	@Override
+	public void delete(File root, String url) {
+		try {
+			FileRepository fileRepository = makeFileRepository(root, url);
+			try {
+				Git git = new Git(fileRepository);
+				File file = new File(root, Urls.compose(url, ServerConstants.dataFileName));
+				if (!file.delete())
+					throw new RuntimeException(MessageFormat.format(ServerConstants.cannotDelete, file));
+				new AddCommand(fileRepository).addFilepattern(".").call();
+				CommitCommand commit = git.commit();
+				commit.setAll(true).setMessage(MessageFormat.format(ServerConstants.deleting, url));
+				commit.call();
+			} finally {
+				fileRepository.close();
+			}
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}

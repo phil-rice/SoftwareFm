@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.http.RequestLine;
 import org.softwareFm.server.IGitServer;
+import org.softwareFm.server.processors.internal.DeleteProcessor;
 import org.softwareFm.server.processors.internal.FavIconProcessor;
 import org.softwareFm.server.processors.internal.GetFileProcessor;
 import org.softwareFm.server.processors.internal.GetIndexProcessor;
@@ -50,6 +51,7 @@ public interface IProcessCall {
 
 		public static IProcessCall softwareFmProcessCall(IGitServer server, File fileRoot) {
 			UrlCache<String> aboveRepostoryUrlCache = new UrlCache<String>();
+			System.out.println("Local git server: " + server);
 			return chain(new FavIconProcessor(),//
 					new RigidFileProcessor(fileRoot, "update"),//responds to get or head
 					new HeadThrowing404(),//sweep up any heads 
@@ -57,6 +59,7 @@ public interface IProcessCall {
 					new GetFileProcessor(fileRoot, "html", "jpg", "png", "css", "gif", "jar", "xml"), //
 					new GitGetProcessor(server, aboveRepostoryUrlCache), //
 					new MakeRootProcessor(aboveRepostoryUrlCache, server), //
+					new DeleteProcessor(server),//
 					new PostProcessor(server));// this sweeps up any posts, so ensure that commands appear in chain before it
 		}
 	}

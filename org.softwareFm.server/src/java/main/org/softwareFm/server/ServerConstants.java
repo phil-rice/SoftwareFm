@@ -10,7 +10,7 @@ public class ServerConstants {
 	public static final String DELETE = "DELETE";
 	public static final String HEAD = "HEAD";
 	public static final String couldntStop = "Couldn't stop the server";
-	public static final long clientTimeOut = 1000;
+	public static final long clientTimeOut = 500;
 	public static final int okStatusCode = 200;
 	public static final int notFoundStatusCode = 404;
 	public static final String dataParameterName = "data";
@@ -32,4 +32,6 @@ public class ServerConstants {
 	public static final long staleCacheTimeForTests = 500;// hopefully enough to remove randomness without slowing tests too much
 	public static final String snipperTemplateKey = "snippet.template";
 	public static final String errorInGit = "Error in git. Url {0}";
+	public static final String deleting = "Deleting {0}";
+	public static final String cannotDelete = "Cannot delete {0}";
 }

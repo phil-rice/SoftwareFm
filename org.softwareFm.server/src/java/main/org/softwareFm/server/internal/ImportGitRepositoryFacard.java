@@ -61,4 +61,9 @@ public class ImportGitRepositoryFacard implements IRepositoryFacard {
 	public void clearCaches() {
 	}
 
+	@Override
+	public void clearCache(String url) {
+		throw new UnsupportedOperationException();
+	}
+
 }

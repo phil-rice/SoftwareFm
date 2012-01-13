@@ -75,6 +75,12 @@ public class MasterDetailSocial implements IMasterDetailSocial {
 			super.layout(changed);
 			layoutCount++;
 		}
+
+		@Override
+		public void dispose() {
+			master.dispose();
+			detailSocial.dispose();
+		}
 	}
 
 	final MasterDetailComposite content;
@@ -83,6 +89,11 @@ public class MasterDetailSocial implements IMasterDetailSocial {
 	public MasterDetailSocial(Composite parent, int style) {
 		content = new MasterDetailComposite(parent, style);
 		Swts.Size.resizeMeToParentsSizeWithLayout(this);
+	}
+
+	@Override
+	public void dispose() {
+		content.dispose();
 	}
 
 	@Override
@@ -196,6 +207,41 @@ public class MasterDetailSocial implements IMasterDetailSocial {
 					control.dispose();
 	}
 
+	public Control getMasterContent() {
+		return getContent(content.master);
+	}
+
+	public Control getDetailContent() {
+		return getContent(content.detail);
+	}
+
+	public Control getSocialContent() {
+		return getContent(content.social);
+	}
+
+	private Control getContent(Composite holder) {
+		Composite composite = holder;
+		StackLayout layout = (StackLayout) composite.getLayout();
+		return layout.topControl;
+	}
+
+	@Override
+	public void putDetailOverSocial() {
+		if (content.detailSocial.getChildren()[0] == content.detail)
+			return;
+		content.detail.moveAbove(content.social);
+		content.detailSocial.layout();
+
+	}
+
+	@Override
+	public void putSocialOverDetail() {
+		if (content.detailSocial.getChildren()[0] == content.social)
+			return;
+		content.detail.moveBelow(content.social);
+		content.detailSocial.layout();
+	}
+
 	public static void main(String[] args) {
 		Show.xUnit(MasterDetailSocial.class.getSimpleName(), new ISituationListAndBuilder<MasterDetailSocial>() {
 			private final Map<String, Control> masterMap = Maps.newMap();
@@ -232,40 +278,5 @@ public class MasterDetailSocial implements IMasterDetailSocial {
 				"text", Swts.styledTextFn("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", SWT.WRAP), //
 				"emptyText", Swts.styledTextFn("", SWT.WRAP), //
 				"label", Swts.labelFn("label")));
-	}
-
-	public Control getMasterContent() {
-		return getContent(content.master);
-	}
-
-	public Control getDetailContent() {
-		return getContent(content.detail);
-	}
-
-	public Control getSocialContent() {
-		return getContent(content.social);
-	}
-
-	private Control getContent(Composite holder) {
-		Composite composite = holder;
-		StackLayout layout = (StackLayout) composite.getLayout();
-		return layout.topControl;
-	}
-
-	@Override
-	public void putDetailOverSocial() {
-		if (content.detailSocial.getChildren()[0] == content.detail)
-			return;
-		content.detail.moveAbove(content.social);
-		content.detailSocial.layout();
-
-	}
-
-	@Override
-	public void putSocialOverDetail() {
-		if (content.detailSocial.getChildren()[0] == content.social)
-			return;
-		content.detail.moveBelow(content.social);
-		content.detailSocial.layout();
 	}
 }

@@ -14,8 +14,8 @@ public interface IActionBar {
 	public void selectionOccured(BindingRipperResult result);
 
 	public static class Utils {
-		public static IActionBar actionBar(IExplorer explorer, CardConfig cardConfig, IFunction1<BindingRipperResult, BindingRipperResult> reRipFn) {
-			return new ActionBar(explorer, cardConfig, reRipFn);
+		public static IActionBar actionBar(IExplorer explorer, CardConfig cardConfig, IFunction1<BindingRipperResult, BindingRipperResult> reRipFn, boolean admin) {
+			return new ActionBar(explorer, cardConfig, reRipFn, admin);
 		}
 	}
 

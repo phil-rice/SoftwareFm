@@ -56,10 +56,12 @@ public class LocalGitClient implements ILocalGitClient {
 
 	@Override
 	public void delete(String url) {
+		
 		File directory = new File(root, url);
 		File file = new File(directory, ServerConstants.dataFileName);
-		file.delete();
-		directory.delete();// will only delete successfully is the directory is empty
+		boolean deleted = file.delete();
+		System.out.println("File: " + file + " deleted: " + deleted + " exists: " + file.exists());
+		directory.delete();// will only delete successfully if the directory is empty
 	}
 
 	@Override

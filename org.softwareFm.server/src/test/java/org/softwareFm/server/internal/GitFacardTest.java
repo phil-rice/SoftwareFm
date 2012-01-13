@@ -2,7 +2,10 @@ package org.softwareFm.server.internal;
 
 import java.io.File;
 
+import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.collections.Files;
+import org.softwareFm.utilities.json.Json;
+import org.softwareFm.utilities.strings.Urls;
 import org.softwareFm.utilities.tests.Tests;
 
 public class GitFacardTest extends GitTest {
@@ -18,6 +21,33 @@ public class GitFacardTest extends GitTest {
 		gitFacard.createRepository(root, "/remote");
 		checkRepositoryExists(remoteRoot);
 		assertEquals("master", gitFacard.getBranch(root, "remote"));
+	}
+
+	public void testDeleteWhenExistsLocally() {
+		gitFacard.createRepository(root, "/remote");
+		put(remoteRoot, "a/b/c", v11);
+		put(remoteRoot, "a/b/c/d", v12);
+		gitFacard.addAllAndCommit(remoteRoot, "a/b", "message");
+		gitFacard.clone(remoteAsUri, root, "/local");
+		File localAbc = new File(localRoot, Urls.compose("a/b/c", ServerConstants.dataFileName));
+		File remoteAbc = new File(remoteRoot, Urls.compose("a/b/c", ServerConstants.dataFileName));
+
+		assertTrue(localAbc.exists());
+		assertTrue(remoteAbc.exists());
+		assertEquals(v11, Json.mapFromString(Files.getText(localAbc)));
+
+		gitFacard.delete(remoteRoot, "a/b/c");
+
+		assertEquals(v11, Json.mapFromString(Files.getText(localAbc)));
+		assertFalse(remoteAbc.exists());
+
+		gitFacard.pull(localRoot, "a/b");
+
+		assertFalse(localAbc.exists());
+		assertFalse(remoteAbc.exists());
+		
+		assertEquals(v12, Json.mapFromString(Files.getText(new File(localRoot, Urls.compose("a/b/c/d", ServerConstants.dataFileName)))));
+
 	}
 
 	public void testCreateRepositoryThrowsExceptionIfParentRepositoryOfUrlExists() {

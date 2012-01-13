@@ -3,10 +3,10 @@
 <plugin>
 
  <extension  point="org.eclipse.ui.views">
-       <category  name="SoftwareFm" id="org.softwareFm" />
+      <category  name="SoftwareFm" id="org.softwareFm" />
       <view  name="SoftwareFM" icon="icons/sfm.gif" category="org.softwareFm"   
              class="org.softwareFm.explorer.eclipse.ExplorerView"   id="org.softwareFm.explorer.eclipse.ExplorerView" />
- <!-- <view  name="Admin" icon="icons/sfm.gif" category="org.softwareFm"   
-             class="org.softwareFm.explorer.eclipse.AdminView"   id="org.softwareFm.explorer.eclipse.AdminView" /> -->
+      <view  name="Admin" icon="icons/sfm.gif" category="org.softwareFm"   
+             class="org.softwareFm.explorer.eclipse.AdminView"   id="org.softwareFm.explorer.eclipse.AdminView" />
    </extension>
 </plugin>

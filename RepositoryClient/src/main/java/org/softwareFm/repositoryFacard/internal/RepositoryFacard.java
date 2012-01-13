@@ -45,6 +45,10 @@ public class RepositoryFacard implements IRepositoryFacardWithImports {
 	}
 
 	@Override
+	public void clearCache(String url) {
+	}
+
+	@Override
 	public Future<?> makeRoot(String url, IResponseCallback callback) {
 		return Futures.doneFuture(null);
 	}

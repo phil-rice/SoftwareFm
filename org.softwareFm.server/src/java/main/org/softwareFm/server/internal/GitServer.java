@@ -74,4 +74,9 @@ public class GitServer extends LocalGitClient implements IGitServer {
 
 	}
 
+	@Override
+	public String toString() {
+		return "GitServer [gitFacard=" + gitFacard + ", remoteUriPrefix=" + remoteUriPrefix + ", Root=" + root +"]";
+	}
+
 }

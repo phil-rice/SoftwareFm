@@ -48,10 +48,10 @@ public class ExplorerView extends ViewPart {
 		IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardConfig.cardDataStore);
 		IServiceExecutor service = activator.getServiceExecutor();
 		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, getRootUrls(), playListGetter, service);
-		actionBar = IActionBar.Utils.actionBar(explorer, cardConfig, SelectedArtifactSelectionManager.reRipFn());
+		actionBar = makeActionBar(explorer, cardConfig);
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
 		actionBar.populateToolbar(toolBarManager);
-		ICardMenuItemHandler.Utils.addSoftwareFmMenuItemHandlers(explorer);
+		addMenuItems(explorer);
 
 		IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
 		SnippetFeedConfigurator.configure(explorer, cardConfig);
@@ -69,6 +69,14 @@ public class ExplorerView extends ViewPart {
 		});
 		masterDetailSocial.hideMaster();
 		explorer.processUrl(DisplayConstants.browserFeedType, welcomeUrl);
+	}
+
+	protected IActionBar makeActionBar(final IExplorer explorer, final CardConfig cardConfig) {
+		return IActionBar.Utils.actionBar(explorer, cardConfig, SelectedArtifactSelectionManager.reRipFn(), false);
+	}
+
+	protected void addMenuItems(final IExplorer explorer) {
+		ICardMenuItemHandler.Utils.addSoftwareFmMenuItemHandlers(explorer);
 	}
 
 	protected List<String> getRootUrls() {

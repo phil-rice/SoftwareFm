@@ -14,6 +14,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.utilities.constants.UtilityMessages;
 import org.softwareFm.utilities.exceptions.WrappedException;
 
 public interface IServiceExecutor {
@@ -75,7 +76,10 @@ public interface IServiceExecutor {
 				public void shutdownAndAwaitTermination(long time, TimeUnit unit) {
 					try {
 						service.shutdown();
-						service.awaitTermination(time, unit);
+						boolean suceeded = service.awaitTermination(time, unit);
+						if (!suceeded){
+							throw new ServerExecutorException(UtilityMessages.cannotCloseServer);
+						}
 					} catch (InterruptedException e) {
 						throw WrappedException.wrap(e);
 					}

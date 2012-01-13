@@ -21,6 +21,7 @@ import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.strings.Urls;
 import org.softwareFm.utilities.tests.IIntegrationTest;
 import org.softwareFm.utilities.tests.Tests;
 
@@ -30,6 +31,53 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 	private GitRepositoryFacard repositoryFacard;
 	private IGitServer remoteGitServer;
 	private IGitServer localGitServer;
+	private File localAbc;
+	private File remoteAbc;
+
+	public void testDelete() throws Exception {
+
+		checkCreateRepository(remoteGitServer, "a/b");
+		put(remoteRoot, "a/b/c", v11);
+		gitFacard.addAllAndCommit(remoteRoot, "a/b", "message");
+		localGitServer.clone("a/b");
+		assertTrue(remoteAbc.exists());
+		assertTrue(localAbc.exists());
+
+		repositoryFacard.get("a/b/c", IRepositoryFacardCallback.Utils.checkMatches(ServerConstants.okStatusCode, v11)).get();
+
+		CheckCallback callback = IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, "");
+		repositoryFacard.delete("a/b/c", callback).get();
+		callback.assertCalledSuccessfullyOnce();
+		assertFalse(remoteAbc.exists());
+		assertFalse(localAbc.exists());
+
+		CheckRepositoryFacardCallback notFound = IRepositoryFacardCallback.Utils.checkMatches(ServerConstants.notFoundStatusCode, Maps.emptyStringObjectMap());
+		repositoryFacard.get("a/b/c", notFound).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+		notFound.assertCalled();
+	}
+	
+	public void testClearCache() throws Exception{
+		checkCreateRepository(remoteGitServer, "a/b");
+		File localRespository = new File(localRoot, Urls.compose("a/b", ServerConstants.DOT_GIT));
+		put(remoteRoot, "a/b/c", v11);
+		gitFacard.addAllAndCommit(remoteRoot, "a/b", "message");
+		
+		assertFalse(localRespository.exists());
+		localGitServer.clone("a/b");
+		assertTrue(localRespository.exists());
+		assertTrue(remoteAbc.exists());
+		assertTrue(localAbc.exists());
+		
+		repositoryFacard.clearCache("a/b/c");
+		assertFalse(localRespository.exists());
+		assertTrue(remoteAbc.exists());
+		assertFalse(localAbc.exists());
+
+		repositoryFacard.get("a/b/c", IRepositoryFacardCallback.Utils.checkMatches(ServerConstants.okStatusCode, v11)).get();
+		assertTrue(localRespository.exists());
+		assertTrue(remoteAbc.exists());
+		assertTrue(localAbc.exists());
+	}
 
 	public void testCanSeeAboveRepositoryAfterPost() throws InterruptedException, ExecutionException, TimeoutException {
 		File ab = new File(localRoot, "a/b");
@@ -235,6 +283,8 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		remoteAbc = new File(remoteRoot, Urls.compose("a/b/c", ServerConstants.dataFileName));
+		localAbc = new File(localRoot, Urls.compose("a/b/c", ServerConstants.dataFileName));
 		remoteGitServer = IGitServer.Utils.gitServer(remoteRoot, "not used");
 		localGitServer = IGitServer.Utils.gitServer(localRoot, remoteRoot.getAbsolutePath());
 		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCall(remoteGitServer, remoteRoot);

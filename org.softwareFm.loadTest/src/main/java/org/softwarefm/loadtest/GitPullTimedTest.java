@@ -9,9 +9,7 @@ import org.softwareFm.server.IGitServer;
 public class GitPullTimedTest {
 	public static void main(String[] args) {
 		File root = new File(System.getProperty("user.home"));
-		File sfmRemoteRoot = new File(root, ".sfm_remote");
 		File sfmLocalRoot = new File(root, ".sfm");
-		IGitServer remoteServer = IGitServer.Utils.gitServer(sfmRemoteRoot, "not used");
 		final IGitServer localServer = IGitServer.Utils.gitServer(sfmLocalRoot, "git://www.softwarefm.com/");
 		final List<String> urls = Arrays.asList(//
 				"/softwareFm/data/org/apache/maven/archetype/org.apache.maven.archetype/artifact/archetype-catalog",//

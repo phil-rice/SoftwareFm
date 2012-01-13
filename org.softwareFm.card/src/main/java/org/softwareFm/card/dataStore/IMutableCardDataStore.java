@@ -25,6 +25,8 @@ public interface IMutableCardDataStore extends ICardDataStore {
 
 	Future<?> put(String url, Map<String, Object> map, IAfterEditCallback callback);
 
+	void delete(String url,IAfterEditCallback callback);
+
 	Future<?> makeRepo(String url, IAfterEditCallback callback);
 
 	public static class Utils {
@@ -77,4 +79,5 @@ public interface IMutableCardDataStore extends ICardDataStore {
 			});
 		}
 	}
+
 }

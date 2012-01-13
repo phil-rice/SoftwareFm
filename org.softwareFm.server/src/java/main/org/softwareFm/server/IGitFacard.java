@@ -16,6 +16,8 @@ public interface IGitFacard {
 
 	void pull(File root, String url);
 
+	void delete(File root, String url);
+
 	void gc(File root, String url);
 
 	void addAllAndCommit(File root, String url, String message);
@@ -29,5 +31,6 @@ public interface IGitFacard {
 			return new GitFacard();
 		}
 	}
+
 
 }
