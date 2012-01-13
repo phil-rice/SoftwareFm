@@ -15,6 +15,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import junit.framework.Assert;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -99,14 +100,30 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 
 	}
 
-	protected void dispatchUntil(Callable<Boolean> callable) {
+	public <T> T callInDispatch(Display display, final Callable<T> callable) {
+		final AtomicReference<T> result = new AtomicReference<T>();
+		display.syncExec(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					result.set(callable.call());
+				} catch (Exception e) {
+					throw WrappedException.wrap(e);
+				}
+			}
+		});
+
+		return result.get();
+	}
+
+	protected void dispatchUntil(Display display, Callable<Boolean> callable) {
 		long startTime = System.currentTimeMillis();
 		try {
 			while (!callable.call() && System.currentTimeMillis() < startTime + delay) {
 				dispatchUntilQueueEmpty();
 				Thread.sleep(2);
 			}
-			if (!callable.call())
+			if (!callInDispatch(display, callable))
 				fail();
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
