@@ -24,6 +24,7 @@ import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ISoftwareFmClient;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.collections.Files;
+import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.json.Json;
@@ -51,19 +52,25 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 		this.localGit = localGit;
 		this.staleCacheTime = staleCacheTime;
 		this.aboveRepositoryStaleCacheTime = aboveRepositorytStaleCacheTime;
-		lastAboveRepositoryClearTime = System.currentTimeMillis();
+		clearCaches();
 	}
 
 	@Override
 	public void clearCache(String url) {
 		File repositoryDirectory = localGit.findRepositoryUrl(url);
-		Files.deleteDirectory(repositoryDirectory);
+		if (repositoryDirectory == null)
+			throw new NullPointerException(MessageFormat.format(ServerConstants.cannotFindRepositoryFor, url));
+		if (!Files.deleteDirectory(repositoryDirectory))
+			throw new RuntimeException(MessageFormat.format(ServerConstants.cannotClearDirectory, repositoryDirectory));
 		clearCaches();
 	}
 
 	@Override
 	public void clearCaches() {
+		aboveRepositoryCache.clear();
+		lastAboveRepositoryClearTime = System.currentTimeMillis();
 		lastPullTimeMap.clear();
+		
 	}
 
 	@Override
@@ -117,9 +124,13 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 				GetResult result = findRepositoryBaseOrAboveRepositoryData(url, new IGetCallback() {
 					@Override
 					public GetResult repositoryBase(String repositoryBase) {
-						localGit.clone(repositoryBase);
-						GetResult afterCloneResult = localGit.localGet(url);
-						return afterCloneResult;
+						try {
+							localGit.clone(repositoryBase);
+							GetResult afterCloneResult = localGit.localGet(url);
+							return afterCloneResult;
+						} catch (Exception e) {
+							throw WrappedException.wrap(e);
+						}
 					}
 
 					@Override

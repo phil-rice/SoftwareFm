@@ -25,11 +25,12 @@ public class SlingWalker {
 
 	public void walk(String url, ISlingVisitor visitor) {
 		IHttpClient client = IHttpClient.Utils.defaultClient();
-		IRepositoryFacard repository = IRepositoryFacard.Utils.defaultFacardForCardExplorer();
+		IRepositoryFacard repository = null;// IRepositoryFacard.Utils.defaultFacardForCardExplorer();
 		try {
 			walk(repository, client, url, 0, visitor);
 		} finally {
-			repository.shutdown();
+			if (repository != null)
+				repository.shutdown();
 			client.shutdown();
 		}
 	}

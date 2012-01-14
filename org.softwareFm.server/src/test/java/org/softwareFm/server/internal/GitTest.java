@@ -14,6 +14,7 @@ import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ILocalGitClient;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.collections.Files;
+import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.services.IServiceExecutor;
@@ -114,10 +115,15 @@ public abstract class GitTest extends TestCase {
 		return httpClient == null ? httpClient = IHttpClient.Utils.builder("localhost", ServerConstants.testPort) : httpClient;
 	}
 
-	protected void checkCreateRepository(IGitServer gitServer, String url) {
+	protected void checkCreateRepository(final IGitServer gitServer, final String url) {
 		gitServer.createRepository(url);
-		FileRepository fileRepository = gitFacard.makeFileRepository(gitServer.getRoot(), url);
-		assertEquals(new File(gitServer.getRoot(), url + "/" + ServerConstants.DOT_GIT), fileRepository.getDirectory());
+		((GitFacard)gitFacard).useFileRepository(gitServer.getRoot(), url, new IFunction1<FileRepository, Void>() {
+			@Override
+			public Void apply(FileRepository fileRepository) throws Exception {
+				assertEquals(new File(gitServer.getRoot(), url + "/" + ServerConstants.DOT_GIT), fileRepository.getDirectory());
+				return null;
+			}
+		});
 	}
 
 	protected IGitServer makeGitServer(String remoteUriPrefix) {

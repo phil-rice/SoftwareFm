@@ -21,7 +21,7 @@ import org.softwareFm.utilities.strings.Strings;
 public class SingleCardExplorerUnit {
 
 	public static void main(String[] args) {
-		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacardForCardExplorer();
+		final IRepositoryFacard facard = null;// IRepositoryFacard.Utils.defaultFacardForCardExplorer();
 		final String rootUrl = "/softwareFm/data";
 		try {
 			Show.xUnit(SingleCardExplorerUnit.class.getSimpleName(), new ISituationListAndBuilder<SingleCardExplorer>() {
@@ -39,7 +39,8 @@ public class SingleCardExplorerUnit {
 				}
 			}, CardUnit.urls);
 		} finally {
-			facard.shutdown();
+			if (facard != null)
+				facard.shutdown();
 		}
 	}
 }

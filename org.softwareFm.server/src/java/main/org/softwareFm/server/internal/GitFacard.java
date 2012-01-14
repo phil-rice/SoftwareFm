@@ -15,16 +15,21 @@ import org.softwareFm.server.IGitFacard;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.strings.Urls;
 
 public class GitFacard implements IGitFacard {
 
 	@Override
-	public String getConfig(File root, String url, String section, String subsection, String name) {
-		FileRepository fileRepository = makeFileRepository(root, url);
-		FileBasedConfig gitConfig = fileRepository.getConfig();
-		String result = gitConfig.getString(section, subsection, name);
-		return result;
+	public String getConfig(File root, String url, final String section, final String subsection, final String name) {
+		return useFileRepository(root, url, new IFunction1<FileRepository, String>() {
+			@Override
+			public String apply(FileRepository from) throws Exception {
+				FileBasedConfig gitConfig = from.getConfig();
+				String result = gitConfig.getString(section, subsection, name);
+				return result;
+			}
+		});
 	}
 
 	@Override
@@ -45,10 +50,10 @@ public class GitFacard implements IGitFacard {
 	}
 
 	@Override
-	public void delete(File root, String url) {
-		try {
-			FileRepository fileRepository = makeFileRepository(root, url);
-			try {
+	public void delete(final File root, final String url) {
+		useFileRepository(root, url, new IFunction1<FileRepository, Void>() {
+			@Override
+			public Void apply(FileRepository fileRepository) throws Exception {
 				Git git = new Git(fileRepository);
 				File file = new File(root, Urls.compose(url, ServerConstants.dataFileName));
 				if (!file.delete())
@@ -57,62 +62,47 @@ public class GitFacard implements IGitFacard {
 				CommitCommand commit = git.commit();
 				commit.setAll(true).setMessage(MessageFormat.format(ServerConstants.deleting, url));
 				commit.call();
-			} finally {
-				fileRepository.close();
+				return null;
 			}
-		} catch (Exception e) {
-			throw WrappedException.wrap(e);
-		}
+		});
 
 	}
 
 	@Override
 	public String getBranch(File root, String url) {
-		try {
-			FileRepository fileRepository = makeFileRepository(root, url);
-			try {
+		return useFileRepository(root, url, new IFunction1<FileRepository, String>() {
+			@Override
+			public String apply(FileRepository fileRepository) throws Exception {
 				return fileRepository.getBranch();
-			} finally {
-				fileRepository.close();
 			}
-		} catch (IOException e) {
-			throw WrappedException.wrap(e);
-		}
+		});
 	}
 
 	@Override
-	public void addAllAndCommit(File root, String url, String message) {
-		try {
-			FileRepository fileRepository = makeFileRepository(root, url);
-			try {
+	public void addAllAndCommit(File root, String url, final String message) {
+		useFileRepository(root, url, new IFunction1<FileRepository, Void>() {
+			@Override
+			public Void apply(FileRepository fileRepository) throws Exception {
 				Git git = new Git(fileRepository);
 				new AddCommand(fileRepository).addFilepattern(".").call();
 				CommitCommand commit = git.commit();
 				commit.setAll(true).setMessage(message);
 				commit.call();
-			} finally {
-				fileRepository.close();
+				return null;
 			}
-		} catch (Exception e) {
-			throw WrappedException.wrap(e);
-		}
-
+		});
 	}
 
 	@Override
 	public void pull(File root, String url) {
-		System.out.println("Pull: " + url);
-		try {
-			FileRepository fileRepository = makeFileRepository(root, url);
-			try {
+		useFileRepository(root, url, new IFunction1<FileRepository, Void>() {
+			@Override
+			public Void apply(FileRepository fileRepository) throws Exception {
 				PullCommand pull = new Git(fileRepository).pull();
 				pull.call();
-			} finally {
-				fileRepository.close();
+				return null;
 			}
-		} catch (Exception e) {
-			throw WrappedException.wrap(e);
-		}
+		});
 	}
 
 	@Override
@@ -134,14 +124,19 @@ public class GitFacard implements IGitFacard {
 		}
 	}
 
-	@Override
-	public FileRepository makeFileRepository(File root, String url) {
+	public <T> T useFileRepository(File root, String url, IFunction1<FileRepository, T> callback) {
 		try {
 			File dir = findRepositoryUrl(root, url);
 			FileRepositoryBuilder builder = new FileRepositoryBuilder();
-			return builder.setGitDir(new File(dir, ServerConstants.DOT_GIT)).readEnvironment() // scan environment GIT_* variables
+			FileRepository repository = builder.setGitDir(new File(dir, ServerConstants.DOT_GIT)).readEnvironment() // scan environment GIT_* variables
 					.build(); // scan up the file system tree
-		} catch (IOException e) {
+			try {
+				T result = callback.apply(repository);
+				return result;
+			} finally {
+				repository.close();
+			}
+		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
 	}
@@ -155,18 +150,19 @@ public class GitFacard implements IGitFacard {
 				// setBranch("master").//
 				call();
 		call.getRepository().close();
-		FileRepository fileRepository = makeFileRepository(targetRoot, targetUri);
-		try {
-			FileBasedConfig config = fileRepository.getConfig();
-			config.setString("branch", "master", "remote", "origin");
-			config.setString("branch", "master", "merge", "refs/heads/master");
-			try {
-				config.save();
-			} catch (Exception e) {
-				throw WrappedException.wrap(e);
+		useFileRepository(targetRoot, targetUri, new IFunction1<FileRepository, Void>() {
+			@Override
+			public Void apply(FileRepository fileRepository) throws Exception {
+				FileBasedConfig config = fileRepository.getConfig();
+				config.setString("branch", "master", "remote", "origin");
+				config.setString("branch", "master", "merge", "refs/heads/master");
+				try {
+					config.save();
+				} catch (Exception e) {
+					throw WrappedException.wrap(e);
+				}
+				return null;
 			}
-		} finally {
-			fileRepository.close();
-		}
+		});
 	}
 }

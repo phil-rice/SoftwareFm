@@ -188,7 +188,7 @@ public class ActionBar implements IActionBar {
 	@Override
 	public void populateToolbar(IToolBarManager toolBarManager) {
 		IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, null);
-		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionWelcomeTitle, ActionAnchor.class, CollectionConstants.actionWelcomeImage, new Runnable() {
+		toolBarManager.add(Swts.Actions.radioAction(resourceGetter, CollectionConstants.actionWelcomeTitle, ActionAnchor.class, CollectionConstants.actionWelcomeImage, new Runnable() {
 			@Override
 			public void run() {
 				setState(State.URL);
@@ -196,16 +196,40 @@ public class ActionBar implements IActionBar {
 				explorer.onlyShowBrowser();
 			}
 		}));
-		
-		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionRefreshTitle, ActionAnchor.class, CollectionConstants.actionRefreshImage, new Runnable() {
+		toolBarManager.add(Swts.Actions.pushAction(resourceGetter, CollectionConstants.actionRefreshTitle, ActionAnchor.class, CollectionConstants.actionRefreshImage, new Runnable() {
 			@Override
 			public void run() {
-				String url = explorer.getCardHolder().getCard().url();
-				cardConfig.cardDataStore.clearCache(url);
+				ICard card = explorer.getCardHolder().getCard();
+				if (card != null) {
+					String url = card.url();
+					if (url != null) {
+						cardConfig.cardDataStore.clearCache(url);
+						explorer.displayCard(url, new CardAndCollectionDataStoreAdapter());
+					}
+				}
 			}
 		}));
+		if (admin)
+			toolBarManager.add(Swts.Actions.pushAction(resourceGetter, CollectionConstants.actionNukeTitle, ActionAnchor.class, CollectionConstants.actionNukeImage, new Runnable() {
+				@Override
+				public void run() {
+					String url = explorer.getCardHolder().getCard().url();
+					if (MessageDialog.openConfirm(explorer.getControl().getShell(), CollectionConstants.confirm, url))
+						cardConfig.cardDataStore.delete(url, new IAfterEditCallback() {
+							@Override
+							public void afterEdit(final String url) {
+								Swts.asyncExec(explorer.getControl(), new Runnable() {
+									@Override
+									public void run() {
+										explorer.displayCard(url, new CardAndCollectionDataStoreAdapter());
+									}
+								});
+							}
+						});
+				}
+			}));
 		if (newFeatures)
-			toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionGroupTitle, ActionAnchor.class, CollectionConstants.actionGroupImage, new Runnable() {
+			toolBarManager.add(Swts.Actions.radioAction(resourceGetter, CollectionConstants.actionGroupTitle, ActionAnchor.class, CollectionConstants.actionGroupImage, new Runnable() {
 				@Override
 				public void run() {
 					setState(State.FROM_JAR);
@@ -214,7 +238,7 @@ public class ActionBar implements IActionBar {
 					showUrl(CardConstants.webPageGroupUrl);
 				}
 			}));
-		Action artifactAction = Swts.Actions.Action(resourceGetter, CollectionConstants.actionArtifactTitle, ActionAnchor.class, CollectionConstants.actionArtifactImage, new Runnable() {
+		Action artifactAction = Swts.Actions.radioAction(resourceGetter, CollectionConstants.actionArtifactTitle, ActionAnchor.class, CollectionConstants.actionArtifactImage, new Runnable() {
 			@Override
 			public void run() {
 				setState(State.FROM_JAR);
@@ -225,7 +249,7 @@ public class ActionBar implements IActionBar {
 		});
 		artifactAction.setChecked(true);
 		toolBarManager.add(artifactAction);
-		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionVersionTitle, ActionAnchor.class, CollectionConstants.actionVersionImage, new Runnable() {
+		toolBarManager.add(Swts.Actions.radioAction(resourceGetter, CollectionConstants.actionVersionTitle, ActionAnchor.class, CollectionConstants.actionVersionImage, new Runnable() {
 			@Override
 			public void run() {
 				setState(State.FROM_JAR);
@@ -251,7 +275,7 @@ public class ActionBar implements IActionBar {
 			}
 		}));
 		if (admin)
-			toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionJarTitle, ActionAnchor.class, CollectionConstants.actionJarImage, new Runnable() {
+			toolBarManager.add(Swts.Actions.radioAction(resourceGetter, CollectionConstants.actionJarTitle, ActionAnchor.class, CollectionConstants.actionJarImage, new Runnable() {
 				@Override
 				public void run() {
 					setState(State.JUST_JAR);
@@ -261,7 +285,7 @@ public class ActionBar implements IActionBar {
 				}
 			}));
 		if (admin)
-			toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionDebugTitle, ActionAnchor.class, CollectionConstants.actionDebugImage, new Runnable() {
+			toolBarManager.add(Swts.Actions.radioAction(resourceGetter, CollectionConstants.actionDebugTitle, ActionAnchor.class, CollectionConstants.actionDebugImage, new Runnable() {
 				@Override
 				public void run() {
 					setState(State.DEBUG);
@@ -269,26 +293,8 @@ public class ActionBar implements IActionBar {
 					showUrl(CardConstants.webPageDebugUrl);
 				}
 			}));
-		if (admin)
-			toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionNukeTitle, ActionAnchor.class, CollectionConstants.actionDebugImage, new Runnable() {
-				@Override
-				public void run() {
-					String url = explorer.getCardHolder().getCard().url();
-					if (MessageDialog.openConfirm(explorer.getControl().getShell(), CollectionConstants.confirm, url))
-						cardConfig.cardDataStore.delete(url, new IAfterEditCallback() {
-							@Override
-							public void afterEdit(final String url) {
-								Swts.asyncExec(explorer.getControl(), new Runnable() {
-									@Override
-									public void run() {
-										explorer.displayCard(url, new CardAndCollectionDataStoreAdapter());
-									}
-								});
-							}
-						});
-				}
-			}));
-		toolBarManager.add(Swts.Actions.Action(resourceGetter, CollectionConstants.actionSnippetTitle, ActionAnchor.class, CollectionConstants.actionSnippetImage, new Runnable() {
+
+		toolBarManager.add(Swts.Actions.radioAction(resourceGetter, CollectionConstants.actionSnippetTitle, ActionAnchor.class, CollectionConstants.actionSnippetImage, new Runnable() {
 			@Override
 			public void run() {
 				reselect();

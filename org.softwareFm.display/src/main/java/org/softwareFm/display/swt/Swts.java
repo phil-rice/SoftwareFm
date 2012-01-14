@@ -82,7 +82,20 @@ import org.softwareFm.utilities.strings.Strings;
 public class Swts {
 
 	public static class Actions {
-		public static Action Action(IResourceGetter resourceGetter, String key, Class<?> imageAnchor, String imageKey, final Runnable run) {
+		public static Action pushAction(IResourceGetter resourceGetter, String key, Class<?> imageAnchor, String imageKey, final Runnable run) {
+			String text = IResourceGetter.Utils.getOrException(resourceGetter, key);
+			Action action = new Action(text, IAction.AS_PUSH_BUTTON) {
+				@Override
+				public void run() {
+					run.run();
+				}
+			};
+			ImageDescriptor imageDescriptor = getImageDescriptor(imageAnchor, imageKey);
+			action.setImageDescriptor(imageDescriptor);
+			return action;
+		}
+
+		public static Action radioAction(IResourceGetter resourceGetter, String key, Class<?> imageAnchor, String imageKey, final Runnable run) {
 			String text = IResourceGetter.Utils.getOrException(resourceGetter, key);
 			Action action = new Action(text, IAction.AS_RADIO_BUTTON) {
 				@Override
@@ -333,7 +346,6 @@ public class Swts {
 			return Buttons.makePushButton(parent, resourceGetter, titleKey, true, runnable);
 		}
 
-		
 		public static org.eclipse.swt.widgets.Button makePushButton(Composite parent, IResourceGetter resourceGetter, String titleOrKey, boolean titleIsKey, final Runnable runnable) {
 			return Buttons.makePushButton(parent, SWT.PUSH, resourceGetter, titleOrKey, titleIsKey, runnable);
 		}

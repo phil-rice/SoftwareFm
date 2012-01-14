@@ -21,7 +21,7 @@ import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
-import org.softwareFm.repositoryFacardConstants.RepositoryFacardConstants;
+import org.softwareFm.repositoryFacard.RepositoryConstants;
 import org.softwareFm.utilities.exceptions.WrappedException;
 
 public class CardDataStoreForRepository implements IMutableCardDataStore {
@@ -76,7 +76,7 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 						@Override
 						public void run() {
 							try {
-								if (RepositoryFacardConstants.okStatusCodes.contains(response.statusCode()))
+								if (RepositoryConstants.okStatusCodes.contains(response.statusCode()))
 									callback.process(url, data);
 								else {
 									if (IRepositoryFacard.Utils.debug)

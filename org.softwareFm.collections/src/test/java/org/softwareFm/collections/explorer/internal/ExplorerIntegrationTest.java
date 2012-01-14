@@ -39,6 +39,18 @@ import org.softwareFm.utilities.strings.Strings;
 public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 	private String popupMenuId;
 
+	public void testRefresh() {
+		postArtifactData();
+		displayCard(artifactUrl, new CardHolderAndCardCallback() {
+			@Override
+			public void process(ICardHolder cardHolder, ICard card) throws Exception {
+				cardConfig.cardDataStore.clearCache(card.url());//this is the equivalent of pressing the refresh button
+				File localFile = new File(localRoot, card.url());
+				assertFalse(localFile.exists());
+			}
+		});
+	}
+
 	public void testUnrecognisedJarPutsJarNotRecognisedTextInLhsAndLeavesDetailAloneWhileDisplayingHelpInSocial() {
 		IHasControl detail = masterDetailSocial.createAndShowDetail(Swts.labelFn("detail"));
 

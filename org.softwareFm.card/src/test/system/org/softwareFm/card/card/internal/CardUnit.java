@@ -48,7 +48,7 @@ public class CardUnit implements IHasComposite {
 	}
 
 	public static void main(String[] args) {
-		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacardForCardExplorer();
+		final IRepositoryFacard facard = null;// IRepositoryFacard.Utils.defaultFacardForCardExplorer();
 		try {
 
 			Show.xUnit(CardUnit.class.getSimpleName(), new ISituationListAndBuilder<CardUnit>() {
@@ -72,7 +72,8 @@ public class CardUnit implements IHasComposite {
 				}
 			}, urls);
 		} finally {
-			facard.shutdown();
+			if (facard != null)
+				facard.shutdown();
 		}
 	}
 

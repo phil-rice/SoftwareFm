@@ -1,5 +1,6 @@
 package org.softwareFm.server;
 
+
 public class ServerConstants {
 	public final static String dataFileName = "data.json";
 	public static final String collectionType = "collection";
@@ -34,4 +35,6 @@ public class ServerConstants {
 	public static final String errorInGit = "Error in git. Url {0}";
 	public static final String deleting = "Deleting {0}";
 	public static final String cannotDelete = "Cannot delete {0}";
+	public static final String cannotClearDirectory = "Cannot clear directory: {0}";
+	public static final String cannotFindRepositoryFor = "Cannot find repository for {0}";
 }

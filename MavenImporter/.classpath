@@ -5,7 +5,6 @@
 	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Utilities"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Externals"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Repository"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/RepositoryClient"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/HttpClient"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.softwareFm.display"/>

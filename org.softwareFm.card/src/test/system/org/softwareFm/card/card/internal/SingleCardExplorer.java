@@ -80,7 +80,7 @@ public class SingleCardExplorer implements IHasComposite {
 	}
 
 	public static void main(String[] args) {
-		final IRepositoryFacard facard = IRepositoryFacard.Utils.defaultFacardForCardExplorer();
+		final IRepositoryFacard facard = null;// IRepositoryFacard.Utils.defaultFacardForCardExplorer();
 		final String rootUrl = "/softwareFm/data";
 		final String firstUrl = "/softwareFm/data/org";
 		try {
@@ -98,7 +98,8 @@ public class SingleCardExplorer implements IHasComposite {
 				}
 			});
 		} finally {
-			facard.shutdown();
+			if (facard != null)
+				facard.shutdown();
 		}
 	}
 

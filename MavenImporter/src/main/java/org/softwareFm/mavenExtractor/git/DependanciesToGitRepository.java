@@ -57,7 +57,7 @@ public class DependanciesToGitRepository implements IArtifactDependancyVisitor {
 	public static void main(String[] args) throws MalformedURLException {
 		DataSource dataSource = MavenImporterConstants.dataSource;
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		IRepositoryFacard repository = IRepositoryFacard.Utils.defaultFacard();
+		IRepositoryFacard repository = null;//IRepositoryFacard.Utils.defaultFacard();
 		new DependancyWalker().walk(MavenImporterConstants.dataSource, new DependanciesToGitRepository(repository, 100), ICallback.Utils.sysErrCallback());
 	}
 

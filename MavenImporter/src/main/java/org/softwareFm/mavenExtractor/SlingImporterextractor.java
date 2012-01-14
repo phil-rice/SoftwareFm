@@ -245,7 +245,7 @@ public class SlingImporterextractor implements IExtractorCallback {
 
 	public static void main(String[] args) {
 		File directory = new File("c:/softwareFmRepository");
-		IRepositoryFacard repository = IRepositoryFacard.Utils.frontEnd("178.79.180.172", 8080, "admin", "admin");
+		IRepositoryFacard repository = null;//IRepositoryFacard.Utils.frontEnd("178.79.180.172", 8080, "admin", "admin");
 		new ExtractProjectStuff().walk(MavenImporterConstants.dataSource, new SlingImporterextractor(directory, repository, 1000000), ICallback.Utils.sysErrCallback());
 	}
 }

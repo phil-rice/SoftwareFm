@@ -2,7 +2,6 @@ package org.softwareFm.server;
 
 import java.io.File;
 
-import org.eclipse.jgit.storage.file.FileRepository;
 import org.softwareFm.server.internal.GitFacard;
 
 public interface IGitFacard {
@@ -10,7 +9,6 @@ public interface IGitFacard {
 
 	File findRepositoryUrl(File root, String url);
 
-	FileRepository makeFileRepository(File root, String url);
 
 	void clone(String fromUri, File targetRoot, String targetUri);
 
@@ -31,6 +29,5 @@ public interface IGitFacard {
 			return new GitFacard();
 		}
 	}
-
 
 }
