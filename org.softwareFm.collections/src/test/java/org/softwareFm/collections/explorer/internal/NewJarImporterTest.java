@@ -67,8 +67,9 @@ public class NewJarImporterTest extends SwtTest {
 				"POST_DATA:<version>/someGroupId/someArtifactId/someVersion:{artifactId=someArtifactId, groupId=someGroupId, sling:resourceType=version, version=someVersion}\n" + //
 				"POST_DATA:<version>/someGroupId/someArtifactId/someVersion/digest:{sling:resourceType=collection}\n" + //
 				"POST_DATA:<digest>/someGroupId/someArtifactId/someVersion/someDigest:{digest=someDigest, found=foundFromTest, sling:resourceType=jar}\n" + //
-				"MAKE_REPO:<jarName>/someGroupId/someArtifactId/someVersion:{}\n" + //
-				"POST_DATA:<jarName>/someGroupId/someArtifactId/someVersion/"+randomUuid+":{artifact=null, group=null, sling:resourceType=jarname}\n"//
+				"MAKE_REPO:<jarName>/someJarStem:{}\n" + //
+				"POST_DATA:<jarName>/someJarStem:{sling:resourceType=collection}\n" +//
+				"POST_DATA:<jarName>/someJarStem/" + randomUuid + ":{artifactId=someArtifactId, group=someGroupId, sling:resourceType=jarname}\n"//
 		, actual);
 
 	}
@@ -85,16 +86,20 @@ public class NewJarImporterTest extends SwtTest {
 		CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(display).//
 				withUrlGeneratorMap(IUrlGeneratorMap.Utils.urlGeneratorMap(//
 						CardConstants.jarUrlKey, urlKeyWithDigest("jar"), //
-						CardConstants.jarNameUrlKey, urlKey("jarName"), //
+						CardConstants.jarNameUrlKey, urlKeyForJarName("jarName"), //
 						CardConstants.groupUrlKey, urlKey("group"), //
 						CardConstants.artifactUrlKey, urlKey("artifact"), //
 						CardConstants.versionUrlKey, urlKey("version"), //
 						CardConstants.digestUrlKey, urlKeyWithDigest("digest")));
-		newJarImporter = new NewJarImporter(new ChainImporterMock(), cardConfig, "foundFromTest", "someDigest", "someGroupId", "someArtifactId", "someVersion");
+		newJarImporter = new NewJarImporter(new ChainImporterMock(), cardConfig, "foundFromTest", "someDigest", "someGroupId", "someArtifactId", "someVersion", "someJarStem");
 	}
 
 	private IUrlGenerator urlKey(String string) {
 		return new UrlGenerator("<" + string + ">/{2}/{4}/{6}", CollectionConstants.groupId, CollectionConstants.artifactId, CollectionConstants.version);// 0,1: hash, 2,3: groupId, 4,5: artifactId, 6,7: version
+	}
+
+	private IUrlGenerator urlKeyForJarName(String string) {
+		return new UrlGenerator("<" + string + ">/{2}", CollectionConstants.jarStem);
 	}
 
 	private IUrlGenerator urlKeyWithDigest(String string) {

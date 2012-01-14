@@ -71,8 +71,8 @@ public class UnrecognisedJar implements IHasControl {
 		// new StyledText(content, SWT.NULL | SWT.READ_ONLY | SWT.WRAP).setText("The SoftwareFM does not include the jar that this item was defined in. ");
 		ICardTable.Utils.cardTable(content, cardConfig, titleSpec, CollectionConstants.jarNotRecognisedCardType, Maps.stringObjectLinkedMap(//
 				IResourceGetter.Utils.getOrException(resourceGetter, CollectionConstants.eclipseProject), jarData.projectName,//
-				IResourceGetter.Utils.getOrException(resourceGetter, CollectionConstants.jarName), jarData.jarFile.getName(),//
-				IResourceGetter.Utils.getOrException(resourceGetter, CollectionConstants.jarPath), jarData.jarFile.getAbsoluteFile().toString()));
+				IResourceGetter.Utils.getOrException(resourceGetter, CollectionConstants.unrecognisedJarName), jarData.jarFile.getName(),//
+				IResourceGetter.Utils.getOrException(resourceGetter, CollectionConstants.unreocgnisedJarPath), jarData.jarFile.getAbsoluteFile().toString()));
 		status = new StyledText(content, SWT.NULL | SWT.READ_ONLY | SWT.WRAP);
 		status.setText(IResourceGetter.Utils.getOrException(resourceGetter, CollectionConstants.jarNotRecognisedSearchingText));
 		firstSearchButton = addSearchButton(CollectionConstants.jarSearchButtonTitle, "http://www.google.co.uk/?hl=en&q={0}");

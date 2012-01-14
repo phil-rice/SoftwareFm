@@ -214,7 +214,7 @@ public class ActionBar implements IActionBar {
 				@Override
 				public void run() {
 					String url = explorer.getCardHolder().getCard().url();
-					if (MessageDialog.openConfirm(explorer.getControl().getShell(), CollectionConstants.confirm, url))
+					if (MessageDialog.openConfirm(explorer.getControl().getShell(), CollectionConstants.confirmDelete, url))
 						cardConfig.cardDataStore.delete(url, new IAfterEditCallback() {
 							@Override
 							public void afterEdit(final String url) {

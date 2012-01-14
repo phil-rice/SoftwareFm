@@ -613,7 +613,7 @@ public class Explorer implements IExplorer {
 			private void searchForJar(final UnrecognisedJar unrecognisedJar, final File file) {
 				IUrlGenerator urlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.jarNameUrlKey);
 				String jarName = file.getName().equals("rt.jar") ? "rt" : guesser.guessArtifactName(file);
-				String url = urlGenerator.findUrlFor(Maps.stringObjectMap(CollectionConstants.artifactId, jarName));
+				String url = urlGenerator.findUrlFor(Maps.stringObjectMap(CollectionConstants.jarStem, jarName));
 				cardConfig.cardDataStore.processDataFor(url, new CardDataStoreCallbackAdapter<Void>() {
 					@SuppressWarnings("unchecked")
 					@Override
@@ -654,7 +654,8 @@ public class Explorer implements IExplorer {
 		masterDetailSocial.createAndShowMaster(TextInBorder.makeTextWithClick(SWT.WRAP | SWT.READ_ONLY, cardConfig, new Runnable() {
 			@Override
 			public void run() {
-				importJar(digest, "sun.jdk", "runtime", versionNo);
+				
+				importJar(digest, "sun.jdk", "runtime", versionNo, file);
 			}
 		}, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.jarRtNotRecognisedTitle, CollectionConstants.jarRtNotRecognisedText, file, file.getName(), projectName, versionNo));
 	}
@@ -673,7 +674,7 @@ public class Explorer implements IExplorer {
 						String groupId = (String) cardData.data().get(CollectionConstants.groupId);
 						String artifactId = (String) cardData.data().get(CollectionConstants.artifactId);
 						String version = (String) cardData.data().get(CollectionConstants.version);
-						importJar(digest, groupId, artifactId, version);
+						importJar(digest, groupId, artifactId, version, file);
 					}
 
 					@Override
@@ -698,12 +699,12 @@ public class Explorer implements IExplorer {
 		});
 	}
 
-	private void importJar(final String digest, String groupId, String artifactId, String version) {
+	private void importJar(final String digest, String groupId, String artifactId, String version, File file) {
 		masterDetailSocial.createAndShowMaster(TextInBorder.makeText(SWT.WRAP | SWT.READ_ONLY, cardConfig, //
 				CollectionConstants.jarNotRecognisedCardType, CollectionConstants.jarImportingTitle, CollectionConstants.jarImportingText,//
 				groupId, artifactId, version));
-
-		new NewJarImporter(cardConfig, CardConstants.manuallyAdded, digest, groupId, artifactId, version).processImport(new ICallback<String>() {
+		String jarStem = new GuessArtifactAndVersionDetails().guessArtifactName(file);
+		new NewJarImporter(cardConfig, CardConstants.manuallyAdded, digest, groupId, artifactId, version, jarStem).processImport(new ICallback<String>() {
 			@Override
 			public void process(String url) throws Exception {
 				displayCard(url, new CardAndCollectionDataStoreAdapter());

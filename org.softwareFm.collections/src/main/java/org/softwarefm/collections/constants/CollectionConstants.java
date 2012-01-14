@@ -19,6 +19,7 @@ public class CollectionConstants {
 
 	public static final String artifactId = "artifactId";
 	public static final String groupId = "groupId";
+	public static final String jarStem = "jarStem";
 	public static final String version = "version";
 	public static final String rootUrl = "/softwareFm";
 	public static final String rootDataUrl = Urls.composeWithSlash(rootUrl, "data");
@@ -82,9 +83,9 @@ public class CollectionConstants {
 	public static final String helpUnrecognisedPleaseAddText = "help.unrecognised.pleaseAdd.text";
 	public static final String helpUnrecognisedThankYouText = "help.unrecognised.thankYou.text";
 	public static final String eclipseProject = "unrecognised.eclipseProject.text";
-	public static final String jarName = "unrecognised.jarName.text";
-	public static final String jarPath = "unrecognised.jarPath.text";
-	public static final String confirm = "Confirm Delete";
+	public static final String unrecognisedJarName = "unrecognised.jarName.text";
+	public static final String unreocgnisedJarPath = "unrecognised.jarPath.text";
+	public static final String confirmDelete = "Confirm Delete";
 
 
 }

@@ -457,4 +457,13 @@ public class Files {
 		};
 	}
 
+	public static IFunction1<File, Boolean> fileNameEquals(final String name) {
+		return new IFunction1<File, Boolean>() {
+			@Override
+			public Boolean apply(File from) throws Exception {
+				return from.getName().equals(name);
+			}
+		};
+	}
+
 }

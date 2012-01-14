@@ -187,8 +187,6 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 		assertTrue(new File(localRoot, "a/b/" + ServerConstants.DOT_GIT).exists());
 	}
 
-	public void testPostAlsoClonesIfFirstPost() {
-	}
 
 	public void testGetWhenDataExists() throws Exception {
 		checkCreateRepository(localGitServer, "a/b");// need a repository, otherwise get 'above repository' behaviour

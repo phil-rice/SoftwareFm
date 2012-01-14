@@ -16,6 +16,7 @@ public class GuessArtifactAndVersionDetailsTest extends TestCase {
 
 	
 	public void _testWhenWantToGetBetter(){
+		checkGuess("org.eclipse.jface_3.7.0.I20110522-1430.jar", "jface", "3.7.0");
 		checkGuess("org/springframework/security/spring-security-config/3.0.7.RELEASE/spring-security-config-3.0.7.RELEASE-tests.jar", "spring-security-config", "3.0.7.RELEASE-tests");
 		checkGuess("/org/hibernate/hibernate-jdbc3-testing/3.5.4-Final/hibernate-jdbc3-testing-3.5.4-Final.jar", "hibernate-jdbc3-testing", "3.5.4-Final");
 		

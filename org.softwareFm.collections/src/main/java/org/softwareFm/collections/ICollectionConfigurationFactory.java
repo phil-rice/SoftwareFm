@@ -54,7 +54,7 @@ public interface ICollectionConfigurationFactory {
 			final IUrlGeneratorMap urlGeneratorMap = IUrlGeneratorMap.Utils.urlGeneratorMap(//
 					CardConstants.groupUrlKey, new UrlGenerator(dataPrefix + "{3}/{2}", CollectionConstants.groupId),// hash, hash, groupId, groundIdWithSlash
 					CardConstants.snippetUrlKey, new UrlGenerator(prefix + "/snippet/{3}", CardConstants.snippet),// 0,1: hash, 2,3: snippet
-					CardConstants.jarNameUrlKey, new UrlGenerator(prefix + "/jarname/{0}/{1}/{2}", CollectionConstants.artifactId),// 0,1: hash,
+					CardConstants.jarNameUrlKey, new UrlGenerator(prefix + "/jarname/{0}/{1}/{2}", CollectionConstants.jarStem),// 0,1: hash,
 					CardConstants.artifactUrlKey, new UrlGenerator(dataPrefix + "{3}/{2}/artifact/{4}", CollectionConstants.groupId, CollectionConstants.artifactId),// 0,1: hash, 2,3: groupId, 4,5: artifactId
 					CardConstants.versionCollectionUrlKey, new UrlGenerator(dataPrefix + "{3}/{2}/artifact/{4}/version", CollectionConstants.groupId, CollectionConstants.artifactId, CollectionConstants.version),// 0,1: hash, 2,3: groupId, 4,5: artifactId, 6,7: version
 					CardConstants.versionUrlKey, new UrlGenerator(dataPrefix + "{3}/{2}/artifact/{4}/version/{6}", CollectionConstants.groupId, CollectionConstants.artifactId, CollectionConstants.version),// 0,1: hash, 2,3: groupId, 4,5: artifactId, 6,7: version

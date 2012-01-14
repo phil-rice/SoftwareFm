@@ -35,7 +35,7 @@ public class NewJarImporter {
 	private final IUrlGeneratorMap map;
 	private final String digest;
 	private final String found;
-	private final Map<String, Object> groupIdArtifactIdVersionDigestMap;
+	private final Map<String, Object> groupIdArtifactIdVersionDigestJarStemMap;
 
 	static enum ImportStageCommand {
 		POST_DATA, MAKE_REPO;
@@ -54,18 +54,18 @@ public class NewJarImporter {
 
 	}
 
-	public NewJarImporter(CardConfig cardConfig, String found, String digest, String groupId, String artifactId, String version) {
-		this(new ChainImporter(cardConfig.cardDataStore), cardConfig, found, digest, groupId, artifactId, version);
+	public NewJarImporter(CardConfig cardConfig, String found, String digest, String groupId, String artifactId, String version, String jarStem) {
+		this(new ChainImporter(cardConfig.cardDataStore), cardConfig, found, digest, groupId, artifactId, version, jarStem);
 	}
 
-	public NewJarImporter(IChainImporter chainImporter, CardConfig cardConfig, String found, String digest, String groupId, String artifactId, String version) {
+	public NewJarImporter(IChainImporter chainImporter, CardConfig cardConfig, String found, String digest, String groupId, String artifactId, String version, String jarStem) {
 		this.found = found;
 		this.digest = digest;
 		this.groupId = groupId;
 		this.map = cardConfig.urlGeneratorMap;
 		this.importer = chainImporter;
 		this.groupIdArtifactIdVersionMap = Maps.stringObjectMap(CollectionConstants.groupId, groupId, CollectionConstants.artifactId, artifactId, CollectionConstants.version, version);
-		this.groupIdArtifactIdVersionDigestMap = Maps.with(groupIdArtifactIdVersionMap, CardConstants.digest, digest);
+		this.groupIdArtifactIdVersionDigestJarStemMap = Maps.with(groupIdArtifactIdVersionMap, CardConstants.digest, digest, CollectionConstants.jarStem, jarStem);
 	}
 
 	public ImportStage stage(String urlKey, Object... namesAndValues) {
@@ -86,7 +86,7 @@ public class NewJarImporter {
 		IUrlGenerator urlGenerator = map.get(urlKey);
 		if (urlGenerator == null)
 			throw new IllegalArgumentException(MessageFormat.format(UtilityConstants.mapDoesntHaveKey, urlKey, Lists.sort(map.keys()), map));
-		String url = urlGenerator.findUrlFor(groupIdArtifactIdVersionDigestMap);
+		String url = urlGenerator.findUrlFor(groupIdArtifactIdVersionDigestJarStemMap);
 		return url;
 	}
 
@@ -128,7 +128,8 @@ public class NewJarImporter {
 				stage(CardConstants.digestUrlKey, CardConstants.slingResourceType, CardConstants.versionJar, CardConstants.digest, digest, CardConstants.found, found),//
 
 				makeRepo(CardConstants.jarNameUrlKey),//
-				mapWithOffset(CardConstants.jarNameUrlKey, jarNameUuid, Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.jarName, CardConstants.artifact, map.get(CardConstants.artifact), CardConstants.group, map.get(CollectionConstants.groupId))) //
+				map(CardConstants.jarNameUrlKey, Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection)), //
+				mapWithOffset(CardConstants.jarNameUrlKey, jarNameUuid, Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.jarName, CollectionConstants.artifactId, groupIdArtifactIdVersionMap.get(CollectionConstants.artifactId), CardConstants.group, groupIdArtifactIdVersionMap.get(CollectionConstants.groupId))) //
 		);
 	}
 
