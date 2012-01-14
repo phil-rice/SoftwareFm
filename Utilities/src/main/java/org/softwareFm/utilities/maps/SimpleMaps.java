@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.Assert;
-
 import org.softwareFm.utilities.collections.Iterables;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
@@ -21,21 +19,6 @@ public class SimpleMaps {
 
 	public static <K, V> ISimpleMap<K, V> makeMap(Object... kvs) {
 		return fromMap(Maps.<K, V> makeLinkedMap(kvs));
-	}
-
-	public static <K, V> ISimpleMapWithIndex<K, V> makeMapWithIndex(Object... kvs) {
-		return withIndexfromMap(Maps.<K, V> makeLinkedMap(kvs));
-	}
-
-	public static <K, V> IListOfSimpleMapWithIndex<K, V> makeList(ISimpleMapWithIndex<K, V>... maps) {
-		List<K> keys = Lists.newList();
-		for (ISimpleMapWithIndex<K, V> map : maps)
-			Lists.addAllUnique(keys, map.keys());
-		ListOfSimpleMapWithIndex<K, V> result = new ListOfSimpleMapWithIndex<K, V>(keys);
-		for (ISimpleMapWithIndex<K, V> map : maps)
-			result.add(map);
-		return result;
-
 	}
 
 	public static <K, V, T extends Iterable<? extends ISimpleMap<K, V>>> List<Map<K, V>> toListOfMaps(T from) {
@@ -150,11 +133,4 @@ public class SimpleMaps {
 		}
 	}
 
-	public static <K, V> void assertEquals(ISimpleMap<K, V> map, Object... expectedKeysAndValues) {
-		ISimpleMap<K, V> expected = SimpleMaps.makeMap(expectedKeysAndValues);
-		Assert.assertEquals(expected.keys(), map.keys());
-		for (K key : expected.keys())
-			Assert.assertEquals("Key: " + key, expected.get(key), map.get(key));
-
-	}
 }

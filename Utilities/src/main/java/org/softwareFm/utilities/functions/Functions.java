@@ -253,4 +253,14 @@ public class Functions {
 			}
 		};
 	}
+
+	public static IFunction1<Integer, Integer> doubleInts() {
+		return new IFunction1<Integer, Integer>() {
+
+			@Override
+			public Integer apply(Integer from) throws Exception {
+				return from * 2;
+			}
+		};
+	}
 }

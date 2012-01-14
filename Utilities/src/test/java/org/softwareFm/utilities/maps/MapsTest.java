@@ -17,13 +17,21 @@ import junit.framework.TestCase;
 
 import org.softwareFm.utilities.constants.UtilityMessages;
 import org.softwareFm.utilities.functions.Functions;
+import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.tests.Tests;
 
 @SuppressWarnings("unchecked")
 public class MapsTest extends TestCase {
 
+	private static Map<String, Object> a1b2 = Maps.stringObjectLinkedMap("a", 1, "b", 2);
+	private static Map<String, Object> b2c3 = Maps.stringObjectLinkedMap("b", 2, "c", 3);
+	private static Map<String, Object> a1b2c3 = Maps.stringObjectLinkedMap("a", 1, "b", 2, "c", 3);
+	private static Map<String, Object> a2b4c6 = Maps.stringObjectLinkedMap("a", 2, "b", 4, "c", 6);
+	private static Map<String, Object> a2b1 = Maps.stringObjectLinkedMap("a", 2, "b", 1);
+
 	private static final Map<String, Object> input = Maps.stringObjectLinkedMap(//
-			"key1", Maps.stringObjectLinkedMap("a", 1, "b", 2),//
-			"key2", Maps.stringObjectLinkedMap("a", 2, "b", 1));
+			"key1", a1b2,//
+			"key2", a2b1);
 
 	private static final MapAsList expectedabk12 = new MapAsList(Arrays.asList("a", "b", "key"), 2, Arrays.<Object> asList(1, 2, "key1"), Arrays.<Object> asList(2, 1, "key2"));
 	private static final MapAsList expectedabk21 = new MapAsList(Arrays.asList("a", "b", "key"), 2, Arrays.<Object> asList(2, 1, "key2"), Arrays.<Object> asList(1, 2, "key1"));
@@ -55,6 +63,17 @@ public class MapsTest extends TestCase {
 
 		assertEquals(expectedkab12, Maps.toMapAsList("key", input, "a", Arrays.<String> asList("key")));
 		assertEquals(expectedkab21, Maps.toMapAsList("key", input, "b", Arrays.<String> asList("key")));
+
+		Tests.checkEqualityAndHashcode(new IFunction1<String, MapAsList>() {
+			@Override
+			public MapAsList apply(String from) throws Exception {
+				if (from.equals("one"))
+					return expectedabk12;
+				else if (from.equals("two"))
+					return expectedabk21;
+				throw new IllegalArgumentException();
+			}
+		});
 	}
 
 	public void testMakeMap() {
@@ -167,6 +186,97 @@ public class MapsTest extends TestCase {
 		Maps.put(map, new String[] { "c", "e" }, 15);
 		Maps.put(map, new String[] { "c", "f", "g" }, 17);
 		assertEquals(Maps.makeMap("a", 11, "b", 12, "c", Maps.makeMap("d", 14, "e", 15, "f", Maps.makeMap("g", 17))), map);
+	}
+
+	public void testToArray() {
+		assertEquals(Arrays.asList("a", 1, "b", 2), Arrays.asList(Maps.toArray(Maps.<Object, Object> makeLinkedMap("a", 1, "b", 2), new Object[0])));
+	}
+
+	public void testInverse() {
+		assertEquals(Maps.makeMap(//
+				1, Arrays.asList("a", "c"),//
+				2, Arrays.asList("b")), //
+				Maps.inverse(Maps.makeLinkedMap("a", 1, "b", 2, "c", 1)));
+	}
+
+	public void testMerge() {
+		assertEquals(a1b2c3, Maps.merge(a1b2, b2c3));
+		assertEquals(a1b2c3, Maps.merge(Arrays.asList(a1b2, b2c3)));
+	}
+
+	public void testPartitionByKey() {
+		Map<Object, Object> expected = Maps.makeMap(//
+				"p", Maps.makeMap("a", 1, "b", 2),//
+				"q", Maps.makeMap("c", 3));
+		assertEquals(expected,//
+				Maps.partitionByKey(a1b2c3, new IFunction1<String, String>() {
+					@Override
+					public String apply(String from) throws Exception {
+						if (from.equals("a") || from.equals("b"))
+							return "p";
+						else
+							return "q";
+					}
+				}));
+	}
+
+	public void testPartitionByValue() {
+		Map<Object, Object> expected = Maps.makeMap(//
+				"p", Maps.makeMap("a", 1, "b", 2),//
+				"q", Maps.makeMap("c", 3));
+		assertEquals(expected,//
+				Maps.partitionByValue(a1b2c3, new IFunction1<Object, String>() {
+					@Override
+					public String apply(Object from) throws Exception {
+						if (from.equals(1) || from.equals(2))
+							return "p";
+						else
+							return "q";
+					}
+				}));
+	}
+
+	@SuppressWarnings("rawtypes")
+	public void testMapTheMap() {
+		assertEquals(a2b4c6, Maps.mapTheMap(a1b2c3, (IFunction1) Functions.doubleInts()));
+	}
+
+	public void testEntryToString() throws Exception {
+		IFunction1<Object, String> keyToValuePatternToStr = Maps.keyToValuePatternToStr(Maps.makeMap("a", "pa_{0}{1}", "b", "pb_{1}{0}"), "V");
+		assertEquals("pa_aV", keyToValuePatternToStr.apply("a"));
+		assertEquals("pb_Vb", keyToValuePatternToStr.apply("b"));
+	}
+
+	public void testGet() throws Exception {
+		IFunction1<String, Object> fn = Maps.get(a1b2c3);
+		assertEquals(1, fn.apply("a"));
+		assertEquals(2, fn.apply("b"));
+		assertEquals(3, fn.apply("c"));
+		assertEquals(null, fn.apply("d"));
+		assertEquals(null, fn.apply(null));
+	}
+
+	public void testAdd() {
+		Map<String, Integer> map = Maps.makeMap("a", 1, "b", 2);
+		Maps.add(map, "a", 3);
+		assertEquals(Maps.makeMap("a", 4, "b", 2), map);
+	}
+	
+	
+
+	@SuppressWarnings("rawtypes")
+	public void testIntFor() {
+		assertEquals(0, Maps.intFor((Map) a1b2, "c"));
+		assertEquals(1, Maps.intFor((Map) a1b2, "a"));
+	}
+
+	public void testBooleanFor() {
+		Map<Object, Boolean> map = Maps.makeMap("a", true, "b", false);
+		assertEquals(true, Maps.booleanFor(map, "a", true));
+		assertEquals(true, Maps.booleanFor(map, "a", false));
+
+		assertEquals(true, Maps.booleanFor(map, "c", true));
+		assertEquals(false, Maps.booleanFor(map, "c", false));
 	}
 
 	public void testCopyMapWith() {

@@ -33,15 +33,6 @@ import org.softwareFm.utilities.indent.Indent;
 
 public class Maps {
 
-	public static <K, V> ContainsAndValue<V> containsAndValue(Object lock, Map<K, V> map, K key) {
-		synchronized (lock) {
-			boolean contained = map.containsKey(key);
-			V value = contained ? map.get(key) : null;
-			return new ContainsAndValue<V>(contained, value);
-		}
-
-	}
-
 	@SuppressWarnings("unchecked")
 	public static MapAsList toMapAsList(String keyName, Map<String, Object> map, String sortOrder, List<String> keyOrder) {
 		List<String> titles = Lists.newList();
