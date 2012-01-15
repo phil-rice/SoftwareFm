@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.softwareFm.externals
 Bundle-SymbolicName: org.softwareFm.externals
-Bundle-Version: 1.0.2
+Bundle-Version: 1.0.3
 Bundle-Vendor: SoftwareFm
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: lib/cake-forkjoin-0.1.jar,
@@ -27,7 +27,8 @@ Bundle-ClassPath: lib/cake-forkjoin-0.1.jar,
  lib/commons-dbcp-1.3.jar,
  lib/commons-pool-1.5.4.jar,
  lib/spring-beans-3.0.5.RELEASE.jar,
- lib/java2html.jar
+ lib/java2html.jar,
+ lib/bcprov-jdk16-146.jar
 Export-Package: com.jcraft.jsch,
  com.jcraft.jsch.jce,
  com.jcraft.jsch.jcraft,
@@ -172,6 +173,7 @@ Export-Package: com.jcraft.jsch,
  org.apache.tools.mail,
  org.apache.tools.tar,
  org.apache.tools.zip,
+ org.bouncycastle.jce.provider,
  org.codehaus.cake.forkjoin,
  org.eclipse.jgit,
  org.eclipse.jgit.api,

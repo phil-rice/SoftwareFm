@@ -18,6 +18,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.io.Reader;
 import java.io.StringWriter;
@@ -466,4 +467,70 @@ public class Files {
 		};
 	}
 
+	public static void setText(OutputStream outputStream, String text) {
+		setText(outputStream, text, "UTF-8");
+	}
+
+	public static void setText(OutputStream outputStream, String text, String encoding) {
+		try {
+			outputStream.write(text.getBytes(encoding));
+			outputStream.flush();
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		} finally {
+			try {
+				outputStream.close();
+			} catch (IOException e) {
+				throw WrappedException.wrap(e);
+			}
+		}
+	}
+
+	static class ByteArrayAndLength {
+		byte[] bytes;
+		int length;
+
+		public ByteArrayAndLength(byte[] bytes, int length) {
+			super();
+			this.bytes = bytes;
+			this.length = length;
+		}
+
+		static int length(List<ByteArrayAndLength> list) {
+			int result = 0;
+			for (ByteArrayAndLength byteArrayAndLength : list) {
+				result += byteArrayAndLength.length;
+			}
+			return result;
+		}
+	}
+
+	public static byte[] getBytes(InputStream inputStream, int bufferSize) {
+		try {
+			List<ByteArrayAndLength> list = Lists.newList();
+			while (true) {
+				byte[] buffer = new byte[bufferSize];
+				int count = inputStream.read(buffer);
+				if (count == -1) {
+					byte[] result = new byte[ByteArrayAndLength.length(list)];
+					int index = 0;
+					for (ByteArrayAndLength byteArrayAndLength : list) {
+						System.arraycopy(byteArrayAndLength.bytes, 0,  result, index, byteArrayAndLength.length);
+						index += byteArrayAndLength.length;
+					}
+					assert index == result.length;
+					return result;
+				}
+				list.add(new ByteArrayAndLength(buffer, count));
+			}
+		} catch (IOException e) {
+			throw WrappedException.wrap(e);
+		} finally {
+			try {
+				inputStream.close();
+			} catch (IOException e) {
+				throw WrappedException.wrap(e);
+			}
+		}
+	}
 }

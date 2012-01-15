@@ -15,14 +15,34 @@ import java.util.Arrays;
 
 import junit.framework.TestCase;
 
+import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.functions.Functions;
 
 public class StringsTest extends TestCase {
 
+	public void testFromHex() {
+		checkFromHex("00", 0);
+		checkFromHex("09", 9);
+		checkFromHex("0a", 10);
+		byte[] actual = Strings.fromHex("000102030405060708090a0b0c0d0e0f101112");
+		System.out.println(Lists.asList(actual));
+		assertTrue(Arrays.equals(new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 }, actual));
+	}
+
+	private void checkFromHex(String string, int... bytes) {
+		byte[] expected = new byte[bytes.length];
+		for (int i = 0; i < expected.length; i++)
+			expected[i] = (byte) bytes[i];
+		byte[] actual = Strings.fromHex(string);
+		assertTrue(Arrays.equals(expected, actual));
+
+	}
+
 	public void testHtmlEscape() {
 		assertEquals("&lt;tag&gt;", Strings.htmlEscape("<tag>"));
 	}
-	public void testOneStartsWith(){
+
+	public void testOneStartsWith() {
 		assertEquals("one", Strings.oneStartsWith(Arrays.asList("one", "two"), "one"));
 		assertEquals("two", Strings.oneStartsWith(Arrays.asList("one", "two"), "two"));
 
@@ -31,9 +51,8 @@ public class StringsTest extends TestCase {
 
 		assertNull(Strings.oneStartsWith(Arrays.asList("one", "two"), "/one"));
 		assertNull(Strings.oneStartsWith(Arrays.asList("one", "two"), " two"));
-		
+
 	}
-	
 
 	public void testIsUrlFriendly() {
 		assertTrue(Strings.isUrlFriendly("asdljkalsdj"));

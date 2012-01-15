@@ -29,6 +29,59 @@ import org.softwareFm.utilities.functions.IFunction1;
 public class Strings {
 
 	private final static Pattern urlFriendlyPattern = Pattern.compile("^[\\w\\.-]+$");
+	private static String digits = "0123456789abcdef";
+
+	public static String toHex(byte[] data, int length) {
+		StringBuffer buf = new StringBuffer();
+
+		for (int i = 0; i != length; i++) {
+			int v = data[i] & 0xff;
+
+			buf.append(digits.charAt(v >> 4));
+			buf.append(digits.charAt(v & 0xf));
+		}
+
+		return buf.toString();
+	}
+
+	/**
+	 * Return the passed in byte array as a hex string.
+	 * 
+	 * @param data
+	 *            the bytes to be converted.
+	 * @return a hex representation of data.
+	 */
+	public static String toHex(byte[] data) {
+		return toHex(data, data.length);
+	}
+
+	public static byte[] fromHex(String hexCoded) {
+		if (hexCoded.length() % 2 != 0)
+			throw new IllegalArgumentException();
+		byte[] result = new byte[hexCoded.length() / 2];
+		int index = 0;
+		int last = 0;
+		for (int i = 0; i < hexCoded.length(); i++) {
+			byte thisChar = (byte) hexCoded.charAt(i);
+			byte byte0 = (byte) '0';
+			byte charOffset = 39;
+			int nibble = thisChar - byte0;
+			if (nibble > 9)
+				nibble = nibble - charOffset;
+			if (nibble < 0 || nibble > 15)
+				throw new IllegalArgumentException();
+			switch (i % 2) {
+			case 0:
+				last = nibble;
+				break;
+			case 1:
+				result[index++] = (byte) (last * 16 + nibble);
+				break;
+			}
+
+		}
+		return result;
+	}
 
 	public static synchronized boolean isUrlFriendly(String raw) {
 		return urlFriendlyPattern.matcher(raw).matches();
@@ -125,7 +178,7 @@ public class Strings {
 	}
 
 	public static boolean isVersion(String version) {
-		Set<String> releaseStrings = Sets.makeSet("RELEASE",  "Final");
+		Set<String> releaseStrings = Sets.makeSet("RELEASE", "Final");
 		List<String> list = splitIgnoreBlanks(Files.noExtension(version), "\\.");
 		if (list.size() > 0)
 			for (int i = 0; i < list.size(); i++) {
@@ -475,10 +528,11 @@ public class Strings {
 	}
 
 	public static String oneStartsWith(List<String> roots, String value) {
-		for (String root: roots)
+		for (String root : roots)
 			if (value.startsWith(root))
 				return root;
 		return null;
 	}
+
 
 }
