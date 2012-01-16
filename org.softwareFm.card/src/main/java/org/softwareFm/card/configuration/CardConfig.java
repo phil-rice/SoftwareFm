@@ -333,7 +333,7 @@ public class CardConfig {
 		}
 	}
 
-	public static IResourceGetter resourceGetter(ICard card) {
+	public static IResourceGetter resourceGetter(ICardData card) {
 		CardConfig cardConfig = card.getCardConfig();
 		return Functions.call(cardConfig.resourceGetterFn, card.cardType());
 	}

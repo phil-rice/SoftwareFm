@@ -342,6 +342,14 @@ public class Swts {
 			});
 		}
 
+		public static org.eclipse.swt.widgets.Button makePushButtonAtStart(Composite parent, IResourceGetter resourceGetter, String titleKey, final Runnable runnable) {
+			Button button = makePushButton(parent, resourceGetter, titleKey, runnable);
+			Control[] children = parent.getChildren();
+			if (children.length>0)
+				button.moveAbove(children[0]);
+			return button;
+			
+		}
 		public static org.eclipse.swt.widgets.Button makePushButton(Composite parent, IResourceGetter resourceGetter, String titleKey, final Runnable runnable) {
 			return Buttons.makePushButton(parent, resourceGetter, titleKey, true, runnable);
 		}

@@ -24,19 +24,17 @@ import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 
 public class SnippetEditor extends NameAndValuesEditor {
+	private final static String cardType = CardConstants.snippet;
 
-	
 	public SnippetEditor(Composite parent, CardConfig cardConfig, String title, String url, Map<String, Object> initialData, ICardEditorCallback callback) {
-		super(parent, cardConfig, title, url, initialData, getNamesAndValuesData(cardConfig), callback);
+		super(parent, cardConfig, cardType, title, url, initialData, getNamesAndValuesData(cardConfig), callback);
 	}
-
 
 	private static List<NameAndValueData> getNamesAndValuesData(CardConfig cardConfig) {
-		return Arrays.asList(INamesAndValuesEditor.Utils.text(cardConfig,  CardConstants.snippet, "title"),//
-				INamesAndValuesEditor.Utils.text(cardConfig,  CardConstants.snippet, "description"), //
-				INamesAndValuesEditor.Utils.styledText(cardConfig,  CardConstants.snippet, "content"));
+		return Arrays.asList(INamesAndValuesEditor.Utils.text(cardConfig, cardType, "title"),//
+				INamesAndValuesEditor.Utils.text(cardConfig, CardConstants.snippet, "description"), //
+				INamesAndValuesEditor.Utils.styledText(cardConfig, CardConstants.snippet, "content"));
 	}
-
 
 	public static void main(String[] args) {
 		Swts.Show.display(SnippetEditor.class.getSimpleName(), new IFunction1<Composite, Composite>() {

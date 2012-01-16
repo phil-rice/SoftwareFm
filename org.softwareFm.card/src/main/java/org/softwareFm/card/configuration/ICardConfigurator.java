@@ -8,7 +8,9 @@ package org.softwareFm.card.configuration;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.configuration.internal.BasicCardConfigurator;
+import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.softwareFmImages.IImageRegisterConfigurator;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.functions.IFunction1WithDispose;
@@ -46,6 +48,11 @@ public interface ICardConfigurator {
 				}
 			};
 			return imageFn;
+		}
+
+		public static CardConfig cardConfigForTests(Display display) {
+			CardConfig cardConfig = ICardConfigurator.Utils.basicConfigurator().configure(display, new CardConfig(ICardFactory.Utils.noCardFactory(), ICardDataStore.Utils.mock()));
+			return cardConfig;
 		}
 	}
 

@@ -96,5 +96,17 @@ public class CardConstants {
 	public static final String urlRogueValue = "<key>";
 	public static final String couldNotGetImagefor = "Could not get image for {0}";
 	public static final String cannotStyleText = "Cannot style text [{0}] because of character at {1} which is a '{2}'";
+	
+	public static final String loginCardType = "login";
+	public static final String signupCardType = "signup";
+	public static final String forgotPasswordCardType = "forgotpassword";
+	public static final String loginTitle = "login.title.text";
+	public static final String forgotPasswordTitle = "forgotPassword.title.text";
+	public static final String signupTitle = "signup.title.text";
+	
+	public static final String signUpButtonTitle = "signup.button.text";
+	public static final String loginButtonTitle = "login.button.text";
+	public static final String forgotPasswordButtonTitle = "forgotPassword.button.text";
+	public static final String contactingServer = "login.contactingServer.text";
 
 }

@@ -151,6 +151,12 @@ public class ExplorerWithRadioChannel {
 							});
 						}
 					});
+					Buttons.makePushButton(buttonPanel, null, "Mysoftwarefm", false, new Runnable() {
+						@Override
+						public void run() {
+							explorer.showMySoftwareFm();
+						}
+					});
 					Swts.Row.setRowDataFor(100, 20, buttonPanel.getChildren());
 					explorer.addExplorerListener(IExplorerListener.Utils.sysout());
 					return explorerAndButton;

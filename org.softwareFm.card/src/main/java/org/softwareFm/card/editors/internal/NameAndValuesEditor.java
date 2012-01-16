@@ -181,11 +181,13 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 	private final CardConfig cardConfig;
 	private final String url;
 	private final Map<String, Object> data;
+	private final String cardType;
 
-	public NameAndValuesEditor(Composite parent, CardConfig cardConfig, String title, String url, Map<String, Object> initialData, List<NameAndValueData> nameAndValueData, ICardEditorCallback callback) {
+	public NameAndValuesEditor(Composite parent, CardConfig cardConfig, String cardType, String title, String url, Map<String, Object> initialData, List<NameAndValueData> nameAndValueData, ICardEditorCallback callback) {
 		this.cardConfig = cardConfig;
+		this.cardType = cardType;
 		this.url = url;
-		this.data = cardConfig.modify(url, Maps.with(initialData, CardConstants.slingResourceType, cardType()));
+		this.data = cardConfig.modify(url, Maps.with(initialData, CardConstants.slingResourceType, cardType));
 		content = new NameAndValuesEditorComposite(parent, title, this, nameAndValueData, callback);
 		content.okCancel.setOkEnabled(callback.canOk(data));
 		content.setLayout(new ValueEditorLayout());
@@ -207,13 +209,13 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 	}
 
 	@Override
-	public String cardType() {
-		return CardConstants.snippet;
-	}
-
-	@Override
 	public void valueChanged(String key, Object newValue) {
 		data.put(key, newValue);
+	}
+	
+	@Override
+	public Composite getButtonComposite() {
+		return (Composite) content.okCancel.getControl();
 	}
 
 	@Override
@@ -226,15 +228,19 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 		return data;
 	}
 
+	@Override
+	public String cardType() {
+		return cardType;
+	}
+
 	public static void main(String[] args) {
 		Swts.Show.display(NameAndValuesEditor.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay());
 				Map<String, Object> data = Maps.stringObjectMap("title", "Some title", "description", "Some Description", "content", "public void testThis(){\n  fail();\n}\n");
-				IResourceGetter resourceGetter = cardConfig.resourceGetterFn.apply(null);
-				String cardType = "";
-				NameAndValuesEditor editor = new NameAndValuesEditor(from, cardConfig, "someTitle", "tutorial", data, Arrays.asList(//
+				final String cardType = "";
+				NameAndValuesEditor editor = new NameAndValuesEditor(from, cardConfig, cardType, "someTitle", "tutorial", data, Arrays.asList(//
 						INamesAndValuesEditor.Utils.text(cardConfig, cardType, "email"),//
 						INamesAndValuesEditor.Utils.text(cardConfig, cardType, "password"),//
 						INamesAndValuesEditor.Utils.text(cardConfig, cardType, "confirmPassword"),//

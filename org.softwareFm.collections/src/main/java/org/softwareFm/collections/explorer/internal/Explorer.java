@@ -23,6 +23,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -58,6 +59,8 @@ import org.softwareFm.collections.explorer.BrowserAndNavBar;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IExplorerListener;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
+import org.softwareFm.collections.mySoftwareFm.ILogin;
+import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.collections.unrecognisedJar.GroupidArtifactVersion;
 import org.softwareFm.collections.unrecognisedJar.GuessArtifactAndVersionDetails;
 import org.softwareFm.collections.unrecognisedJar.UnrecognisedJar;
@@ -209,10 +212,29 @@ public class Explorer implements IExplorer {
 		}, true);
 	}
 
-	public void dispose(){
+	@Override
+	public void showMySoftwareFm() {
+		//The click is to simulate the request for a salt from the server
+		masterDetailSocial.createAndShowMaster(TextInBorder.makeTextWithClick(SWT.WRAP|SWT.READ_ONLY, cardConfig, new Runnable() {
+			@Override
+			public void run() {
+				final String salt = UUID.randomUUID().toString();
+				masterDetailSocial.createAndShowMaster(new IFunction1<Composite, IHasControl>() {
+					@Override
+					public IHasControl apply(Composite from) throws Exception {
+						Composite holder = new Composite(from, SWT.NULL);
+						ILogin.Utils.login(holder, cardConfig, salt, ILoginStrategy.Utils.mock(cardConfig, holder));
+						holder.setLayout(new FillLayout());
+						return IHasControl.Utils.toHasControl(holder);
+					}
+				});
+			}
+		}, CardConstants.loginCardType, CardConstants.loginTitle, CardConstants.contactingServer));
+	}
+
+	public void dispose() {
 		masterDetailSocial.dispose();
 	}
-	
 
 	@Override
 	public void edit(final ICard card, final String key) {
@@ -247,7 +269,7 @@ public class Explorer implements IExplorer {
 						addCollectionItem(result, collectionName, cardData, new IAfterEditCallback() {
 							@Override
 							public void afterEdit(String url) {
-								timeLine.clear(); 
+								timeLine.clear();
 								final String key = Strings.lastSegment(url, "/");
 								final String collectionUrl = Strings.allButLastSegment(url, "/");
 								displayAndSelectItemWithKey(collectionUrl, key, new ICallback<IExplorerListener>() {
@@ -648,7 +670,7 @@ public class Explorer implements IExplorer {
 		masterDetailSocial.createAndShowMaster(TextInBorder.makeTextWithClick(SWT.WRAP | SWT.READ_ONLY, cardConfig, new Runnable() {
 			@Override
 			public void run() {
-				
+
 				importJar(digest, "sun.jdk", "runtime", versionNo, file);
 			}
 		}, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.jarRtNotRecognisedTitle, CollectionConstants.jarRtNotRecognisedText, file, file.getName(), projectName, versionNo));
