@@ -67,6 +67,7 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 	void clearCaches();
 
 	ICardHolder getCardHolder();
+	void showMySoftwareFm();
 
 	public static class Utils {
 
@@ -74,5 +75,6 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 			return new Explorer(cardConfig, rootUrls, masterDetailSocial, service, playListGetter);
 		}
 	}
+
 
 }

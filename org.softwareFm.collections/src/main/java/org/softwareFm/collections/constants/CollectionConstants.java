@@ -87,5 +87,12 @@ public class CollectionConstants {
 	public static final String unreocgnisedJarPath = "unrecognised.jarPath.text";
 	public static final String confirmDelete = "Confirm Delete";
 
+	public static final String mySoftwareFmCardType = "mySoftwareFm";
+	
+	public static final String email = "email";
+	public static final String password = "password";
+	public static final String confirmPassword = "confirmPassword";
+	public static final String forgotPassword = "login.button.forgotPassword";
+	public static final String signUp = "login.button.signUp";
 
 }

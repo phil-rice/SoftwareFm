@@ -50,7 +50,6 @@ public interface IValueEditor extends IHasComposite {
 
 		public static IValueEditor snippetEditorWithLayout(Composite parent, CardConfig cardConfig, String title, String url, Map<String, Object> data, ICardEditorCallback callback) {
 			SnippetEditor editor = new SnippetEditor(parent, cardConfig, title, url, data, callback);
-			editor.getComposite().setLayout(new SnippetEditor.SnippetEditorLayout());
 			return editor;
 		}
 	}

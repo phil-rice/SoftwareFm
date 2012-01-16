@@ -440,6 +440,8 @@ public class Swts {
 			GridData data = new GridData();
 			data.horizontalAlignment = GridData.FILL;
 			data.grabExcessHorizontalSpace = true;
+			data.verticalAlignment = SWT.TOP;
+
 			return data;
 		}
 
@@ -457,6 +459,13 @@ public class Swts {
 			result.heightHint = heightHint;
 			return result;
 
+		}
+
+		public static void addGrabVerticalToGridData(Control control, boolean fill) {
+			GridData data = (GridData) control.getLayoutData();
+			data.grabExcessVerticalSpace = true;
+			if (fill)
+				data.verticalAlignment = SWT.FILL;
 		}
 
 	}
@@ -943,4 +952,13 @@ public class Swts {
 		throw new IllegalArgumentException(MessageFormat.format(UtilityMessages.cannotGetDescendant, index, Arrays.asList(childIndicies)));
 	}
 
+	/** the table must have two columns, and the tableItem.getData holds keys */
+	public static String getStringFor(Table table, String key) {
+		if (table.getColumnCount() != 2)
+			throw new IllegalArgumentException(Integer.toString(table.getColumnCount()));
+		for (TableItem item : table.getItems())
+			if (key.equals(item.getData()))
+				return Strings.nullSafeToString(item.getText(1));
+		throw new IllegalArgumentException(key);
+	}
 }

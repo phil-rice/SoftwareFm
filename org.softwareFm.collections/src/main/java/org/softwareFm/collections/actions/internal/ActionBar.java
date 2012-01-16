@@ -193,6 +193,7 @@ public class ActionBar implements IActionBar {
 			public void run() {
 				setState(State.URL);
 				showUrl(CardConstants.webPageWelcomeUrl);
+				explorer.showMySoftwareFm();
 			}
 		}));
 		toolBarManager.add(Swts.Actions.pushAction(resourceGetter, CollectionConstants.actionRefreshTitle, ActionAnchor.class, CollectionConstants.actionRefreshImage, new Runnable() {
