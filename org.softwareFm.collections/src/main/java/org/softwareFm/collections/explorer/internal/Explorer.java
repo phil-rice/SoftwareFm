@@ -213,10 +213,6 @@ public class Explorer implements IExplorer {
 		masterDetailSocial.dispose();
 	}
 	
-	@Override
-	public void onlyShowBrowser() {
-		masterDetailSocial.hideMaster();
-	}
 
 	@Override
 	public void edit(final ICard card, final String key) {
@@ -490,7 +486,6 @@ public class Explorer implements IExplorer {
 
 			}
 		});
-		masterDetailSocial.showMaster();
 		masterDetailSocial.putDetailOverSocial();
 		masterDetailSocial.setMaster(cardHolder.getControl());
 		cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, new ICardAndCollectionDataStoreVisitor() {
@@ -565,7 +560,6 @@ public class Explorer implements IExplorer {
 
 	@Override
 	public void displayUnrecognisedJar(final File file, final String digest, final String projectName) {
-		masterDetailSocial.showMaster();
 		masterDetailSocial.putDetailOverSocial();
 		displayHelpKey(CollectionConstants.jarNotRecognisedCardType, CollectionConstants.helpUnrecognisedPleaseAddText);
 		final GuessArtifactAndVersionDetails guesser = new GuessArtifactAndVersionDetails();

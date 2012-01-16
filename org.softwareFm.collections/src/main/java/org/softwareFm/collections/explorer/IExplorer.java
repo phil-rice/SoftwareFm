@@ -29,7 +29,6 @@ import org.softwareFm.utilities.services.IServiceExecutor;
 
 public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCardConfig {
 
-	void onlyShowBrowser();
 
 	void displayCard(String url, ICardAndCollectionDataStoreVisitor visitor);
 

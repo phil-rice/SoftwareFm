@@ -19,26 +19,12 @@ public class MasterDetailSocialTest extends SwtTest {
 		assertEquals(null, masterDetailSocial.content.detailSocial.getMaximizedControl());
 	}
 
-	public void testHideShowMasterAdjustContentGetMaximizedControl() {
-		masterDetailSocial.hideMaster();
-		assertEquals(masterDetailSocial.content.detailSocial, masterDetailSocial.content.getMaximizedControl());
-		masterDetailSocial.showMaster();
-		assertEquals(null, masterDetailSocial.content.getMaximizedControl());
-	}
 
 	public void testHideShowSocialAdjustsDetailContentGetMaximizedControl() {
 		masterDetailSocial.hideSocial();
 		assertEquals(masterDetailSocial.content.detail, masterDetailSocial.content.detailSocial.getMaximizedControl());
 		masterDetailSocial.showSocial();
 		assertEquals(null, masterDetailSocial.content.detailSocial.getMaximizedControl());
-	}
-
-	public void testHideShowMasterCausesLayout() {
-		int initialCount = masterDetailSocial.content.layoutCount;
-		masterDetailSocial.hideMaster();
-		assertEquals(initialCount + 1, masterDetailSocial.content.layoutCount);
-		masterDetailSocial.showMaster();
-		assertEquals(initialCount + 2, masterDetailSocial.content.layoutCount);
 	}
 
 	public void testHideShowSocialCausesLayout() {

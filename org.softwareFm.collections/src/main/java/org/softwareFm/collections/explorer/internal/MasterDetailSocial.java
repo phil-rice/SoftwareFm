@@ -176,15 +176,6 @@ public class MasterDetailSocial implements IMasterDetailSocial {
 		setMaximizedControlAndLayout(content.detailSocial, null);
 	}
 
-	@Override
-	public void hideMaster() {
-		setMaximizedControlAndLayout(content, content.detailSocial);
-	}
-
-	@Override
-	public void showMaster() {
-		setMaximizedControlAndLayout(content, null);
-	}
 
 	private void setMaximizedControlAndLayout(SashForm sashForm, Control control) {
 		if (sashForm.getMaximizedControl() != control) {

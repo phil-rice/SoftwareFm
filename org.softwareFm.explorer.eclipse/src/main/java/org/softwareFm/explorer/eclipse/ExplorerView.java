@@ -67,7 +67,6 @@ public class ExplorerView extends ViewPart {
 				ExplorerView.this.actionBar.selectionOccured(ripperResult);
 			}
 		});
-		masterDetailSocial.hideMaster();
 		explorer.processUrl(DisplayConstants.browserFeedType, welcomeUrl);
 	}
 
