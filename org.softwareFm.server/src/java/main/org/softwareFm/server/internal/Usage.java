@@ -21,7 +21,7 @@ public class Usage implements IUsage {
 		try {
 			template.queryForInt("select count(*) from `usage`");
 		} catch (DataAccessException e) {
-			template.execute("create table `usage` (ip varchar(100), url varchar(200), stamp varchar(100), long duration)");
+			template.execute("create table `usage` (ip varchar(100), url varchar(200), stamp varchar(100),duration integer)");
 		}
 	}
 

@@ -123,8 +123,8 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 			text.addModifyListener(new ModifyListener() {
 				@Override
 				public void modifyText(ModifyEvent e) {
-					okCancel.setOkEnabled(callback.canOk(cardData.data()));
 					cardData.valueChanged(key, text.getText());
+					okCancel.setOkEnabled(callback.canOk(cardData.data()));
 				}
 			});
 		}
@@ -134,8 +134,8 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 			text.addModifyListener(new ModifyListener() {
 				@Override
 				public void modifyText(ModifyEvent e) {
-					okCancel.setOkEnabled(callback.canOk(cardData.data()));
 					cardData.valueChanged(key, text.getText());
+					okCancel.setOkEnabled(callback.canOk(cardData.data()));
 				}
 			});
 		}
