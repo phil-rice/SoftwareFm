@@ -16,9 +16,14 @@ import java.util.concurrent.TimeUnit;
 
 import junit.framework.TestCase;
 
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.Text;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.future.GatedMockFuture;
 
@@ -39,6 +44,28 @@ abstract public class SwtTest extends TestCase {
 		dispatchUntilQueueEmpty();
 		shell.dispose();
 		super.tearDown();
+	}
+
+	protected void checkTextMatches(Composite values, String... expected) {
+		Control[] children = values.getChildren();
+		for (int i = 0; i < children.length; i++) {
+			Control control = children[i];
+			if (control instanceof Text)
+				assertEquals(expected[i], ((Text) control).getText());
+			else if (control instanceof StyledText)
+				assertEquals(expected[i], ((StyledText) control).getText());
+			else
+				throw new IllegalArgumentException(control.getClass().getName());
+		}
+	}
+
+	protected void checkLabelsMatch(Composite labels, String... expected) {
+		Control[] children = labels.getChildren();
+		assertEquals( expected.length, children.length);
+		for (int i = 0; i < children.length; i++) {
+			Label label = (Label) children[i];
+			assertEquals(expected[i], label.getText());
+		}
 	}
 
 	protected void dispatchUntilTimeoutOrLatch(final CountDownLatch latch, long delay) {
