@@ -13,8 +13,11 @@ import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.card.editors.ICardEditorCallback;
 import org.softwareFm.card.editors.INamesAndValuesEditor;
+import org.softwareFm.collections.mySoftwareFm.ILoginCallbacks;
 import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
+import org.softwareFm.collections.mySoftwareFm.IShowMessage;
 import org.softwareFm.collections.mySoftwareFm.ISignUp;
+import org.softwareFm.collections.mySoftwareFm.ISignUpCallback;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.crypto.Crypto;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -26,7 +29,7 @@ public class Signup implements ISignUp {
 	private final String cardType = CardConstants.signupCardType;
 	private final INamesAndValuesEditor content;
 
-	public Signup(Composite parent, CardConfig cardConfig, final String salt, final String cryptoKey, final ILoginStrategy strategy) {
+	public Signup(Composite parent, final CardConfig cardConfig, final String salt, final String cryptoKey, final ILoginStrategy strategy, final ISignUpCallback callback) {
 		String title = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, CardConstants.signupTitle);
 		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(), Arrays.asList(//
 				INamesAndValuesEditor.Utils.text(cardConfig, cardType, "email"),//
@@ -38,7 +41,8 @@ public class Signup implements ISignUp {
 						Map<String, Object> data = cardData.data();
 						String password = getPassword(data);
 						String passwordHash = Crypto.aesEncrypt(cryptoKey, Maps.stringObjectLinkedMap("password", password, "salt", salt).toString());
-						strategy.signup(getEmail(cardData.data()), salt, cryptoKey, passwordHash);
+						final String email = getEmail(cardData.data());
+						strategy.signup(email, salt, cryptoKey, passwordHash, callback);
 					}
 
 					private String get(Map<String, Object> data, String key) {
@@ -53,7 +57,7 @@ public class Signup implements ISignUp {
 					@Override
 					public boolean canOk(Map<String, Object> data) {
 						boolean emailOk = getEmail(data).length() > 0;
-						boolean passwordOk = getPassword(data).length() > 0&&getPassword(data).equals(getConfirmPassword(data));
+						boolean passwordOk = getPassword(data).length() > 0 && getPassword(data).equals(getConfirmPassword(data));
 						return emailOk && passwordOk;
 					}
 
@@ -96,7 +100,7 @@ public class Signup implements ISignUp {
 				CardConfig cardConfig = ICardConfigurator.Utils.basicConfigurator().configure(parent.getDisplay(), new CardConfig(ICardFactory.Utils.noCardFactory(), ICardDataStore.Utils.mock()));
 				String key = "someKey";
 				String salt = "someSalt";
-				return (Composite) new Signup(parent, cardConfig, salt, key, ILoginStrategy.Utils.sysoutLoginStrategy()).getControl();
+				return (Composite) new Signup(parent, cardConfig, salt, key, ILoginStrategy.Utils.sysoutLoginStrategy(), ILoginCallbacks.Utils.showMessageCallbacks(cardConfig, IShowMessage.Utils.sysout())).getControl();
 			}
 		});
 	}

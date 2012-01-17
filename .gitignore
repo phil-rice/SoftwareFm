@@ -1,3 +1,8 @@
 *.class
 */target/*
-*.jar
+*/features/*.jar
+*/plugins/*.jar
+*/artifacts.jar
+*/content.jar
+*/SoftwareFmServer_*.jar
+

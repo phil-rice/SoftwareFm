@@ -8,8 +8,8 @@ import org.softwareFm.display.composites.IHasComposite;
 public interface ILogin extends IHasComposite {
 
 	public static class Utils{
-		public static ILogin login(Composite parent, CardConfig cardConfig, String salt, ILoginStrategy loginStrategy){
-			return new Login(parent, cardConfig, salt, loginStrategy);
+		public static ILogin login(Composite parent, CardConfig cardConfig, String salt, ILoginStrategy loginStrategy, ILoginCallback callback){
+			return new Login(parent, cardConfig, salt, loginStrategy, callback);
 		}
 	}
 }
