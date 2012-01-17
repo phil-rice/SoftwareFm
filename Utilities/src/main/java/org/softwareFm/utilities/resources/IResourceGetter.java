@@ -45,6 +45,12 @@ public interface IResourceGetter {
 
 		}
 
+		public static <T> String getMessageOrException(IFunction1<T, IResourceGetter> fn, T t, String key, Object...args) {
+			String pattern = getOrException(fn, t, key);
+			String message = MessageFormat.format(pattern, args);
+			return message;
+			
+		}
 		public static <T> String getOrException(IFunction1<T, IResourceGetter> fn, T t, String key) {
 			IResourceGetter resourceGetter = Functions.call(fn, t);
 			String string = resourceGetter.getStringOrNull(key);

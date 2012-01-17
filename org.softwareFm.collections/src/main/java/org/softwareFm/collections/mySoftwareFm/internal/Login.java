@@ -12,8 +12,11 @@ import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.editors.ICardEditorCallback;
 import org.softwareFm.card.editors.INamesAndValuesEditor;
+import org.softwareFm.collections.mySoftwareFm.ILoginCallbacks;
 import org.softwareFm.collections.mySoftwareFm.ILogin;
+import org.softwareFm.collections.mySoftwareFm.ILoginCallback;
 import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
+import org.softwareFm.collections.mySoftwareFm.IShowMessage;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
@@ -24,7 +27,7 @@ public class Login implements ILogin {
 	private final String cardType = CardConstants.loginCardType;
 	private final INamesAndValuesEditor content;
 
-	public Login(Composite parent, CardConfig cardConfig, final String salt, final ILoginStrategy loginStrategy) {
+	public Login(Composite parent, final CardConfig cardConfig, final String salt, final ILoginStrategy loginStrategy, final ILoginCallback callback) {
 		String title = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, CardConstants.loginTitle);
 		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(), Arrays.asList(//
 				INamesAndValuesEditor.Utils.text(cardConfig, cardType, "email"),//
@@ -33,7 +36,7 @@ public class Login implements ILogin {
 					@Override
 					public void ok(ICardData cardData) {
 						Map<String, Object> data = cardData.data();
-						loginStrategy.login(getEmail(cardData.data()), getPassword(data));
+						loginStrategy.login(getEmail(cardData.data()), getPassword(data), callback);
 					}
 
 					private String get(Map<String, Object> data, String key) {
@@ -93,7 +96,7 @@ public class Login implements ILogin {
 			@Override
 			public Composite apply(Composite parent) throws Exception {
 				CardConfig cardConfig = ICardConfigurator.Utils.cardConfigForTests(parent.getDisplay());
-				return (Composite) new Login(parent, cardConfig,  UUID.randomUUID().toString(), ILoginStrategy.Utils.sysoutLoginStrategy()).getControl();
+				return (Composite) new Login(parent, cardConfig, UUID.randomUUID().toString(), ILoginStrategy.Utils.sysoutLoginStrategy(), ILoginCallbacks.Utils.showMessageCallbacks(cardConfig, IShowMessage.Utils.sysout())).getControl();
 			}
 		});
 	}

@@ -60,7 +60,9 @@ import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IExplorerListener;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
 import org.softwareFm.collections.mySoftwareFm.ILogin;
+import org.softwareFm.collections.mySoftwareFm.ILoginCallbacks;
 import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
+import org.softwareFm.collections.mySoftwareFm.IShowMessage;
 import org.softwareFm.collections.unrecognisedJar.GroupidArtifactVersion;
 import org.softwareFm.collections.unrecognisedJar.GuessArtifactAndVersionDetails;
 import org.softwareFm.collections.unrecognisedJar.UnrecognisedJar;
@@ -223,7 +225,9 @@ public class Explorer implements IExplorer {
 					@Override
 					public IHasControl apply(Composite from) throws Exception {
 						Composite holder = new Composite(from, SWT.NULL);
-						ILogin.Utils.login(holder, cardConfig, salt, ILoginStrategy.Utils.mock(cardConfig, holder));
+						IShowMessage showMessages = IShowMessage.Utils.textInBorder(holder, cardConfig);
+						ILoginCallbacks loginCallbacks = ILoginCallbacks.Utils.showMessageCallbacks(cardConfig, showMessages);
+						ILogin.Utils.login(holder, cardConfig, salt, ILoginStrategy.Utils.mock(cardConfig, holder, true, loginCallbacks), loginCallbacks);
 						holder.setLayout(new FillLayout());
 						return IHasControl.Utils.toHasControl(holder);
 					}

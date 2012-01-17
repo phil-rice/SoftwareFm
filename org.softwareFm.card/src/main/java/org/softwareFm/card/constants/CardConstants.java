@@ -108,5 +108,23 @@ public class CardConstants {
 	public static final String loginButtonTitle = "login.button.text";
 	public static final String forgotPasswordButtonTitle = "forgotPassword.button.text";
 	public static final String contactingServer = "login.contactingServer.text";
+	
+	public static final String failedToSendForgottenPasswordTitle = "forgotpassword.failedToSend.title";
+	public static final String failedToSendForgottenPasswordText = "forgotpassword.failedToSend.text";
+	
+	public static final String sentForgottenPasswordTitle = "forgotpassword.emailSent.title";
+	public static final String sentForgottenPasswordText = "forgotpassword.emailSent.text";
+	
+	public static final String loggedInTitle = "login.loggedIn.title";
+	public static final String loggedInText = "login.loggedIn.text";
+	
+	public static final String failedToLoginTitle = "login.failedtologin.title";
+	public static final String failedToLoginText = "login.failedtologin.text";
+	
+	public static final String signedUpInTitle = "signup.signedup.title";
+	public static final String signedUpText = "signup.signedup.text";
+	
+	public static final String failedToSignupTitle = "signup.failedtosignup.title";
+	public static final String failedToSignupText = "signup.failedtosignup.text";
 
 }
