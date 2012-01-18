@@ -2,7 +2,7 @@ package org.softwareFm.collections.mySoftwareFm;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.card.composites.TextInBorder;
+import org.softwareFm.card.card.composites.TextInBorderWithClick;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.functions.Functions;
@@ -22,12 +22,12 @@ public interface IShowMessage {
 			};
 		}
 
-		public static IShowMessage textInBorder(final Composite parent, final CardConfig cardConfig) {
+		public static IShowMessage textInBorder(final Composite parent, final CardConfig cardConfig, final Runnable onClick) {
 			return new IShowMessage() {
 				@Override
 				public void showMessage(String cardType, String title, String message) {
 					Swts.removeAllChildren(parent);
-					Functions.call(TextInBorder.makeTextFromString(SWT.READ_ONLY | SWT.WRAP, cardConfig, cardType, title, message), parent);
+					Functions.call(TextInBorderWithClick.makeTextFromString(SWT.WRAP|SWT.READ_ONLY, cardConfig, cardType, title, message, onClick), parent);
 					parent.layout();
 				}
 			};

@@ -111,7 +111,6 @@ public class CardCollectionHolderTest extends SwtTest {
 		assertEquals(0, composite.getChildren().length);
 	}
 
-	@SuppressWarnings("unused")
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();

@@ -216,8 +216,8 @@ public class Explorer implements IExplorer {
 
 	@Override
 	public void showMySoftwareFm() {
-		//The click is to simulate the request for a salt from the server
-		masterDetailSocial.createAndShowMaster(TextInBorder.makeTextWithClick(SWT.WRAP|SWT.READ_ONLY, cardConfig, new Runnable() {
+		// The click is to simulate the request for a salt from the server
+		masterDetailSocial.createAndShowMaster(TextInBorder.makeTextWithClick(SWT.WRAP | SWT.READ_ONLY, cardConfig, new Runnable() {
 			@Override
 			public void run() {
 				final String salt = UUID.randomUUID().toString();
@@ -225,7 +225,12 @@ public class Explorer implements IExplorer {
 					@Override
 					public IHasControl apply(Composite from) throws Exception {
 						Composite holder = new Composite(from, SWT.NULL);
-						IShowMessage showMessages = IShowMessage.Utils.textInBorder(holder, cardConfig);
+						IShowMessage showMessages = IShowMessage.Utils.textInBorder(holder, cardConfig, new Runnable() {
+							@Override
+							public void run() {
+								showMySoftwareFm();
+							}
+						});
 						ILoginCallbacks loginCallbacks = ILoginCallbacks.Utils.showMessageCallbacks(cardConfig, showMessages);
 						ILogin.Utils.login(holder, cardConfig, salt, ILoginStrategy.Utils.mock(cardConfig, holder, true, loginCallbacks), loginCallbacks);
 						holder.setLayout(new FillLayout());

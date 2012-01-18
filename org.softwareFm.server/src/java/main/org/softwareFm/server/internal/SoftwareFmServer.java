@@ -182,7 +182,6 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 	private void doNothing() {
 	}
 
-	@SuppressWarnings("unused")
 	public static void main(String[] args) throws Exception {
 		File root = new File(System.getProperty("user.home"));
 		File sfmRoot = new File(root, ".sfm_remote");

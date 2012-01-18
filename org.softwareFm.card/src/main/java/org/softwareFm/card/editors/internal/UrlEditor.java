@@ -58,7 +58,6 @@ public class UrlEditor implements IValueEditorForTests {
 			testButton.moveAbove(okCancel.okButton);
 		}
 
-		@SuppressWarnings("unused")
 		@Override
 		protected void updateEnabledStatusOfButtons() {
 			try {

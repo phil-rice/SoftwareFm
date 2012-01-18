@@ -28,6 +28,9 @@ public class Sample {
 	@SuppressWarnings("unused")
 	/** This is my comment about x*/
 	public static void main(String[] args) {
+		RecursiveTask<String> task;
+		File file = new File("");
+		Tweet tweet;
 		IHttpClient client;
 		HttpClient client2;
 		Logger logger = Logger.getLogger(Sample.class);
@@ -36,8 +39,5 @@ public class Sample {
 		new TestSuite();
 		Math.random();
 		Java2Html html;
-		File file = new File("");
-		RecursiveTask<String> task;
-		Tweet tweet;
 	}
 }

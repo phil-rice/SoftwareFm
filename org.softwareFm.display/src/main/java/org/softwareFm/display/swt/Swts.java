@@ -62,6 +62,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.constants.DisplayConstants;
@@ -345,11 +346,12 @@ public class Swts {
 		public static org.eclipse.swt.widgets.Button makePushButtonAtStart(Composite parent, IResourceGetter resourceGetter, String titleKey, final Runnable runnable) {
 			Button button = makePushButton(parent, resourceGetter, titleKey, runnable);
 			Control[] children = parent.getChildren();
-			if (children.length>0)
+			if (children.length > 0)
 				button.moveAbove(children[0]);
 			return button;
-			
+
 		}
+
 		public static org.eclipse.swt.widgets.Button makePushButton(Composite parent, IResourceGetter resourceGetter, String titleKey, final Runnable runnable) {
 			return Buttons.makePushButton(parent, resourceGetter, titleKey, true, runnable);
 		}
@@ -968,5 +970,15 @@ public class Swts {
 			if (key.equals(item.getData()))
 				return Strings.nullSafeToString(item.getText(1));
 		throw new IllegalArgumentException(key);
+	}
+
+	public static void setText(Control control, String newValue) {
+		if (control instanceof Text)
+			((Text) control).setText(newValue);
+		else if (control instanceof StyledText)
+			((StyledText) control).setText(newValue);
+		else
+			throw new IllegalArgumentException();
+
 	}
 }

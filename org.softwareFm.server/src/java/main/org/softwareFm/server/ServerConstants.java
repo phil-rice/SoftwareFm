@@ -1,6 +1,5 @@
 package org.softwareFm.server;
 
-
 public class ServerConstants {
 	public final static String dataFileName = "data.json";
 	public static final String collectionType = "collection";
@@ -15,8 +14,14 @@ public class ServerConstants {
 	public static final int okStatusCode = 200;
 	public static final int notFoundStatusCode = 404;
 	public static final String dataParameterName = "data";
+	
 	public static final String findRepositoryBasePrefix = "command/findRepositoryBase";
+	public static final String makeSaltPrefix = "command/makeLoginSalt";
 	public static final String makeRootPrefix = "command/makeRoot";
+	public static final String loginCommandPrefix = "command/login";
+	public static final String signupPrefix = "command/signup";
+	public static final String forgottonPasswordPrefix = "command/forgottonPassword";
+	
 	public static final int testPort = 8080;
 	public static final String alreadyInCache = "<Already in Cache>";
 	public static final String notFoundMessage = "<Not found>";
@@ -37,4 +42,11 @@ public class ServerConstants {
 	public static final String cannotDelete = "Cannot delete {0}";
 	public static final String cannotClearDirectory = "Cannot clear directory: {0}";
 	public static final String cannotFindRepositoryFor = "Cannot find repository for {0}";
+	public static final String saltKey = "salt";
+	public static final String passwordHashKey = "passwordHash";
+	public static final String emailKey = "email";
+	public static final String emailPasswordMismatch = "Email / Password didn't match";
+	public static final String cryptoKey = "crypto";
+	public static final String invalidSaltMessage = "invalid salt message";
+
 }

@@ -96,7 +96,7 @@ public class Activator extends AbstractUIPlugin {
 		if (repository == null) {
 			File home = new File(System.getProperty("user.home"));
 			final File localRoot = new File(home, ".sfm");
-			boolean local = false;
+			boolean local = true;
 			String server = local ? "localhost" : "www.softwarefm.com";
 			String prefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : "git://www.softwarefm.com/";
 			int port = local ? 8080 : 80;

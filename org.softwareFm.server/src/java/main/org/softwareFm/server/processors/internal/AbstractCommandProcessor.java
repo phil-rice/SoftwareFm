@@ -25,12 +25,12 @@ public abstract class AbstractCommandProcessor implements IProcessCall {
 			String url = requestLine.getUri(); // need to trim this a bit!
 			if (url.substring(1).startsWith(prefix)) {
 				String actualUrl = url.substring(prefix.length() + 1);
-				return execute(actualUrl);
+				return execute(actualUrl, parameters);
 			}
 		}
 		return null;
 	}
 
-	abstract protected IProcessResult execute(String actualUrl);
+	abstract protected IProcessResult execute(String actualUrl, Map<String, Object> parameters);
 
 }
