@@ -3,9 +3,8 @@ package org.softwareFm.server.processors.internal;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.collections.Sets;
-import org.softwareFm.utilities.tests.IIntegrationTest;
 
-public class LoginIntegrationTests extends AbstractProcessorIntegrationTests implements IIntegrationTest {
+public class LoginIntegrationTests extends AbstractProcessorIntegrationTests  {
 
 	public void testMakeSaltLogin() throws Exception {
 		String salt = "salt 0";

@@ -55,6 +55,7 @@ public class RssDisplay implements IBrowserPart {
 		return main;
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public void displayReply(int statusCode, String reply) {
 		Swts.removeAllChildren(content);

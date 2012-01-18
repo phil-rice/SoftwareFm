@@ -14,14 +14,15 @@ public class ServerConstants {
 	public static final int okStatusCode = 200;
 	public static final int notFoundStatusCode = 404;
 	public static final String dataParameterName = "data";
-	
+
 	public static final String findRepositoryBasePrefix = "command/findRepositoryBase";
 	public static final String makeSaltPrefix = "command/makeLoginSalt";
 	public static final String makeRootPrefix = "command/makeRoot";
 	public static final String loginCommandPrefix = "command/login";
 	public static final String signupPrefix = "command/signup";
 	public static final String forgottonPasswordPrefix = "command/forgottonPassword";
-	
+	public static final String passwordResetLinkPrefix = "command/resetPassword";
+
 	public static final int testPort = 8080;
 	public static final String alreadyInCache = "<Already in Cache>";
 	public static final String notFoundMessage = "<Not found>";
@@ -48,5 +49,12 @@ public class ServerConstants {
 	public static final String emailPasswordMismatch = "Email / Password didn't match";
 	public static final String cryptoKey = "crypto";
 	public static final String invalidSaltMessage = "invalid salt message";
+	public static final String existingEmailAddress = "Existing email address {0}";
+	public static final String duplicateEmailAndPassword = "Duplicate email and password {0} and {1}";
+	public static final String forgottonPasswordMessage = "You've lost your SoftwareFM password? Say it isn't so!\n\nVisit this site www.softwarefm.org/" + passwordResetLinkPrefix + "/{1} to reset it.";
+	public static final String passwordResetSubject = "Software FM Password Reset";
+	public static final String emailAddressNotFound = "Email address {0} not known";
+	public static final String passwordResetHtml = "<html><body>Your new password is: {0}</html>";
+	public static final String failedToResetPasswordHtml = "<html><body>Failed to reset. Please request a new link</body></html>";
 
 }

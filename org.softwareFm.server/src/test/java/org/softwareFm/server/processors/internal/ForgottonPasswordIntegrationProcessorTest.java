@@ -24,7 +24,7 @@ public class ForgottonPasswordIntegrationProcessorTest extends AbstractProcessor
 		client.post(ServerConstants.forgottonPasswordPrefix).//
 				addParam(ServerConstants.emailKey, "someEmail").//
 				addParam(ServerConstants.saltKey, salt).//
-				execute(IResponseCallback.Utils.checkCallback(ServerConstants.notFoundStatusCode, "some error message")).get();
+				execute(IResponseCallback.Utils.checkCallback(500, "class java.lang.RuntimeException/some error message")).get();
 		assertEquals(0, saltProcessor.legalSalts.size());
 	}
 

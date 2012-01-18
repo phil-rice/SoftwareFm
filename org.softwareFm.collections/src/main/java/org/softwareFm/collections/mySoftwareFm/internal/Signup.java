@@ -40,7 +40,7 @@ public class Signup implements ISignUp {
 					public void ok(ICardData cardData) {
 						Map<String, Object> data = cardData.data();
 						String password = getPassword(data);
-						String passwordHash = Crypto.aesEncrypt(cryptoKey, Maps.stringObjectLinkedMap("password", password, "salt", salt).toString());
+						String passwordHash = Crypto.digest(salt, password);
 						final String email = getEmail(cardData.data());
 						strategy.signup(email, salt, cryptoKey, passwordHash, callback);
 					}

@@ -31,6 +31,10 @@ abstract public class AbstractProcessCallTest<T extends IProcessCall> extends Gi
 		IProcessResult result = processor.process(makeRequestLine(method, uri), Maps.stringObjectMap("a", 1));
 		assertNull(result);
 	}
+	protected void checkIgnores(String method, String uri) {
+		IProcessResult result = processor.process(makeRequestLine(method, uri), Maps.stringObjectMap("a", 1));
+		assertNull(result);
+	}
 
 	protected RequestLineMock makeRequestLine(String method, String uri) {
 		return new RequestLineMock(method, uri);

@@ -135,6 +135,7 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 			addPaintListener(listener);
 		}
 
+		@SuppressWarnings("unused")
 		public void setUrl(String url, TitleSpec titleSpec) {
 			this.url = url;
 			navNextHistoryPrev.getHistory().push(url);

@@ -32,7 +32,6 @@ public class SignUpProcessorTest extends AbstractProcessCallTest<SignupProcessor
 		assertEquals("someEmail", Lists.getOnly(checker.emails));
 		assertEquals("someHash", Lists.getOnly(checker.passwordHashes));
 		assertEquals(1, saltProcessor.checkAndInvalidateCount.get());
-		assertEquals(0, saltProcessor.invalidateCount.get());
 	}
 
 	private Map<String, Object> makeData(String salt) {
@@ -46,7 +45,6 @@ public class SignUpProcessorTest extends AbstractProcessCallTest<SignupProcessor
 		assertNotNull(result);// contents dealt with in integration test
 		checkErrorResult(result, ServerConstants.notFoundStatusCode, ServerConstants.invalidSaltMessage, ServerConstants.invalidSaltMessage);
 		assertEquals(1, saltProcessor.checkAndInvalidateCount.get());
-		assertEquals(0, saltProcessor.invalidateCount.get());
 		assertEquals(0, checker.salts.size());
 	}
 

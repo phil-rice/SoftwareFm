@@ -2,10 +2,10 @@ package org.softwareFm.server.processors.internal;
 
 import java.util.List;
 
-import org.softwareFm.server.processors.IForgottonPasswordProcessor;
+import org.softwareFm.server.processors.IForgottonPasswordMailer;
 import org.softwareFm.utilities.collections.Lists;
 
-public class ForgottonPasswordProcessorMock implements IForgottonPasswordProcessor {
+public class ForgottonPasswordProcessorMock implements IForgottonPasswordMailer {
 
 	public final List<String> emails = Lists.newList();
 
@@ -22,8 +22,10 @@ public class ForgottonPasswordProcessorMock implements IForgottonPasswordProcess
 
 	@Override
 	public String process(String email) {
+		if (errorMessage != null)
+			throw new RuntimeException(errorMessage);
 		emails.add(email);
-		return errorMessage;
+		return "someMagicString";
 	}
 
 }

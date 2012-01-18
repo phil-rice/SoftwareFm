@@ -9,12 +9,12 @@ public class ForgotPasswordIntegrationTests extends AbstractProcessorIntegration
 	public void testMakeSaltThenForgotPassword() throws Exception {
 		String salt = "salt 0";
 		client.get(ServerConstants.makeSaltPrefix).execute(IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, salt)).get(); // salt won't be used but we want it removed
-		assertEquals(salt, Sets.getOnly(saltProcessor.legalSalts));
 		
+		assertEquals(salt, Sets.getOnly(saltProcessor.legalSalts));
 		client.post(ServerConstants.forgottonPasswordPrefix).//
 				addParam(ServerConstants.emailKey, "someEmail").//
 				addParam(ServerConstants.saltKey, salt).//
-				execute(IResponseCallback.Utils.checkMapCallback(ServerConstants.okStatusCode, ServerConstants.cryptoKey, "signUpCrypto", ServerConstants.emailKey, "someEmail")).get();
+				execute(IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, "")).get();
 		assertEquals(0, saltProcessor.legalSalts.size());
 	}
 

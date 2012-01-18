@@ -26,6 +26,10 @@ public class Crypto {
 
 	private static boolean initialised;
 
+	public static String digest(String salt, String password) {
+		return Strings.toHex(Files.digest(new StringInputStream(salt + "$$" + password)));
+	}
+
 	public static String digest(String string) {
 		return Strings.toHex(Files.digest(new StringInputStream(string)));
 	}
