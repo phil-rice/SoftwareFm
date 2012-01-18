@@ -2,7 +2,6 @@ package org.softwareFm.server.processors.internal;
 
 import java.util.Map;
 
-import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.server.processors.IProcessResult;
 import org.softwareFm.server.processors.ISaltProcessor;
@@ -17,8 +16,8 @@ public class SignupProcessor extends AbstractCommandProcessor {
 	private final ISaltProcessor saltProcessor;
 	private final ISignUpChecker checker;
 
-	public SignupProcessor(IGitServer server, ISignUpChecker checker, ISaltProcessor saltProcessor) {
-		super(server, ServerConstants.POST, ServerConstants.signupPrefix);
+	public SignupProcessor( ISignUpChecker checker, ISaltProcessor saltProcessor) {
+		super(null, ServerConstants.POST, ServerConstants.signupPrefix);
 		this.checker = checker;
 		this.saltProcessor = saltProcessor;
 	}

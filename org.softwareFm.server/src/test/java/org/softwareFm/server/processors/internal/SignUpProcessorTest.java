@@ -54,7 +54,7 @@ public class SignUpProcessorTest extends AbstractProcessCallTest<SignupProcessor
 	protected SignupProcessor makeProcessor() {
 		saltProcessor = new SaltProcessorMock();
 		checker = new SignUpCheckerMock(null, "someCrypto");
-		return new SignupProcessor(remoteGitServer, checker, saltProcessor);
+		return new SignupProcessor( checker, saltProcessor);
 	}
 
 }

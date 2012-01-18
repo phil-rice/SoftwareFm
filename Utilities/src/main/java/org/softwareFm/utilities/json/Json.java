@@ -12,6 +12,7 @@ import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
 import org.softwareFm.utilities.constants.UtilityConstants;
 import org.softwareFm.utilities.constants.UtilityMessages;
+import org.softwareFm.utilities.maps.Maps;
 
 public class Json {
 
@@ -38,5 +39,9 @@ public class Json {
 
 	public static String toString(Object from) {
 		return JSONValue.toJSONString(from);
+	}
+
+	public static String mapToString(Object...namesAndValues) {
+		return toString(Maps.stringObjectLinkedMap(namesAndValues));
 	}
 }

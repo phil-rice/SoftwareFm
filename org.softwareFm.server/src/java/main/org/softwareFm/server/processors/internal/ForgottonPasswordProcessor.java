@@ -2,7 +2,6 @@ package org.softwareFm.server.processors.internal;
 
 import java.util.Map;
 
-import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.server.processors.IForgottonPasswordProcessor;
 import org.softwareFm.server.processors.IProcessResult;
@@ -14,8 +13,8 @@ public class ForgottonPasswordProcessor extends AbstractCommandProcessor {
 	private final IForgottonPasswordProcessor forgottonPasswordProcessor;
 	private final ISaltProcessor saltProcessor;
 
-	public ForgottonPasswordProcessor(IGitServer server, ISaltProcessor saltProcessor, IForgottonPasswordProcessor forgottonPasswordProcessor) {
-		super(server, ServerConstants.POST, ServerConstants.forgottonPasswordPrefix);
+	public ForgottonPasswordProcessor(ISaltProcessor saltProcessor, IForgottonPasswordProcessor forgottonPasswordProcessor) {
+		super(null, ServerConstants.POST, ServerConstants.forgottonPasswordPrefix);
 		this.saltProcessor = saltProcessor;
 		this.forgottonPasswordProcessor = forgottonPasswordProcessor;
 	}

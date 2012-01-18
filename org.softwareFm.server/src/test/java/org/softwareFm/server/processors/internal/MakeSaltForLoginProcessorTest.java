@@ -28,7 +28,7 @@ public class MakeSaltForLoginProcessorTest extends AbstractProcessCallTest<MakeS
 	@Override
 	protected MakeSaltForLoginProcessor makeProcessor() {
 		saltProcessor = new SaltProcessorMock();
-		return new MakeSaltForLoginProcessor(remoteGitServer, saltProcessor);
+		return new MakeSaltForLoginProcessor( saltProcessor);
 	}
 
 }

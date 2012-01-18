@@ -35,7 +35,6 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 	private File remoteAbc;
 
 	public void testDelete() throws Exception {
-
 		checkCreateRepository(remoteGitServer, "a/b");
 		put(remoteRoot, "a/b/c", v11);
 		gitFacard.addAllAndCommit(remoteRoot, "a/b", "message");

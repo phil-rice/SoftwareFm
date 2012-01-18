@@ -42,7 +42,7 @@ public class LoginProcessorTest extends AbstractProcessCallTest<LoginProcessor> 
 
 	@Override
 	protected LoginProcessor makeProcessor() {
-		return new LoginProcessor(remoteGitServer, saltProcessor, checker);
+		return new LoginProcessor( saltProcessor, checker);
 	}
 
 }

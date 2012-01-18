@@ -36,5 +36,8 @@ public interface IResponseCallback {
 		public static CheckCallback checkCallback(int status, String message) {
 			return new CheckCallback(status, message);
 		}
+		public static CheckMapCallback checkMapCallback(int status, Object...namesAndValues) {
+			return new CheckMapCallback(status, namesAndValues);
+		}
 	}
 }

@@ -2,7 +2,6 @@ package org.softwareFm.server.processors.internal;
 
 import java.util.Map;
 
-import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.server.processors.ILoginChecker;
 import org.softwareFm.server.processors.IProcessResult;
@@ -16,8 +15,8 @@ public class LoginProcessor extends AbstractCommandProcessor {
 	private final ILoginChecker checker;
 	private final ISaltProcessor saltProcessor;
 
-	public LoginProcessor(IGitServer server, ISaltProcessor saltProcessor, ILoginChecker checker) {
-		super(server, ServerConstants.POST, ServerConstants.loginCommandPrefix);
+	public LoginProcessor(ISaltProcessor saltProcessor, ILoginChecker checker) {
+		super(null, ServerConstants.POST, ServerConstants.loginCommandPrefix);
 		this.saltProcessor = saltProcessor;
 		this.checker = checker;
 	}
@@ -26,7 +25,6 @@ public class LoginProcessor extends AbstractCommandProcessor {
 	protected IProcessResult execute(String actualUrl, Map<String, Object> parameters) {
 		String salt = Strings.nullSafeToString(parameters.get(ServerConstants.saltKey));
 		saltProcessor.invalidateSalt(salt);
-		
 		String email = Strings.nullSafeToString(parameters.get(ServerConstants.emailKey));
 		String passwordHash = Strings.nullSafeToString(parameters.get(ServerConstants.passwordHashKey));
 		String key = checker.login(email, passwordHash);

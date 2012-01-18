@@ -20,7 +20,7 @@ public class NameAndValuesEditorTest extends AbstractNameAndValuesEditorTest<Nam
 	private int changeValueIndex;
 
 	public void testInitialValuesWhenDisplayed() {
-		checkLabelsMatch(labels, "one", "two", "three");
+		checkLabelsMatch(labels, "One", "Two", "Three");
 		checkTextMatches(values, "1", "2", "");
 		assertFalse(okCancel.isOkEnabled());
 	}
@@ -40,7 +40,7 @@ public class NameAndValuesEditorTest extends AbstractNameAndValuesEditorTest<Nam
 
 	private void checkChangeValue(int index, String newValue, boolean expectedOkEnabled) {
 		Label label = (Label) labels.getChildren()[index];
-		String key = label.getText();
+		String key = label.getText().toLowerCase();//won't work in general, but is ok for one/two/three
 		Control control = values.getChildren()[index];
 		assertEquals(changeValueIndex + 1, callback.canOkData.size());
 		Swts.setText(control, newValue);

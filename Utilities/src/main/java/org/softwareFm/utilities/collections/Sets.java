@@ -44,4 +44,10 @@ public class Sets {
 	public static <T> Set<T> newSet() {
 		return new HashSet<T>();
 	}
+
+	public static String getOnly(Set<String> set) {
+		if (set.size()!= 1)
+			throw new IllegalArgumentException(set.toString());
+		return set.iterator().next();
+	}
 }
