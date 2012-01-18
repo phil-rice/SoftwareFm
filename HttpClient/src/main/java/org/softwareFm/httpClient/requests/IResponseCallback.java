@@ -20,8 +20,8 @@ public interface IResponseCallback {
 			};
 		}
 
-		public static <Thing, Aspect> MemoryResponseCallback<Thing, Aspect> memoryCallback() {
-			return new MemoryResponseCallback<Thing, Aspect>();
+		public static  MemoryResponseCallback memoryCallback() {
+			return new MemoryResponseCallback();
 		}
 
 		public static IResponseCallback sysoutStatusCallback() {

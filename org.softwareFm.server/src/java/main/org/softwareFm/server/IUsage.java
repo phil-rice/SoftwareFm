@@ -1,7 +1,5 @@
 package org.softwareFm.server;
 
-import javax.sql.DataSource;
-
 import org.apache.commons.dbcp.BasicDataSource;
 import org.softwareFm.server.internal.Usage;
 
@@ -9,6 +7,7 @@ public interface IUsage {
 	void start();
 
 	void monitor(final String ip, final String url, long duration);
+	void shutdown();
 
 	public static class Utils {
 
@@ -16,7 +15,7 @@ public interface IUsage {
 			return new Usage(dataSource());
 		}
 
-		public static DataSource dataSource() {
+		public static BasicDataSource dataSource() {
 			BasicDataSource basicDataSource = new BasicDataSource();
 			basicDataSource.setDriverClassName("com.mysql.jdbc.Driver");
 			basicDataSource.setUrl("jdbc:mysql://localhost/softwarefm");
@@ -25,4 +24,5 @@ public interface IUsage {
 			return basicDataSource;
 		}
 	}
+
 }

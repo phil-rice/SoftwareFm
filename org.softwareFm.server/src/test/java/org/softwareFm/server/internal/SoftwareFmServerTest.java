@@ -30,7 +30,7 @@ public class SoftwareFmServerTest extends TestCase  {
 	}
 
 	public void testServerDoesntRespondAfterShutdown() throws InterruptedException {
-		MemoryResponseCallback<Object, Object> memoryCallback = IResponseCallback.Utils.memoryCallback();
+		MemoryResponseCallback memoryCallback = IResponseCallback.Utils.memoryCallback();
 		server.shutdown();
 		client.get("someUrl").execute(memoryCallback);
 		Thread.sleep(10);// This would have been long enough for the server to execute memory...but it isnt going to
@@ -64,13 +64,13 @@ public class SoftwareFmServerTest extends TestCase  {
 	
 
 	private void checkGet() throws Exception {
-		MemoryResponseCallback<Object, Object> memoryCallback = IResponseCallback.Utils.memoryCallback();
+		MemoryResponseCallback memoryCallback = IResponseCallback.Utils.memoryCallback();
 		client.get("someUrl").execute(memoryCallback).get(1, TimeUnit.SECONDS);
 		assertEquals("Response [statusCode=200, string=<GET /someUrl HTTP/1.1,{}>, url=/someUrl, mimeType=unknown]", memoryCallback.response.toString());
 	}
 
 	private void checkExceptionHandled() throws Exception {
-		MemoryResponseCallback<Object, Object> memoryCallback = IResponseCallback.Utils.memoryCallback();
+		MemoryResponseCallback memoryCallback = IResponseCallback.Utils.memoryCallback();
 		client.get("exception").execute(memoryCallback).get(2, TimeUnit.SECONDS);
 		assertEquals("Response [statusCode=500, string=class java.lang.RuntimeException/null, url=/exception, mimeType=unknown]", memoryCallback.response.toString());
 	}

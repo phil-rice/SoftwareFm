@@ -43,8 +43,10 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 	private boolean shutdown;
 	private CountDownLatch shutdownLatch;
 	private ServerSocket serverSocket;
+	private final IUsage usage;
 
 	public SoftwareFmServer(int port, int threads, final IProcessCall processCall, final ICallback<Throwable> errorHandler, final IUsage usage) {
+		this.usage = usage;
 		usage.start();
 		final CountDownLatch startLatch = new CountDownLatch(threads);
 		try {
@@ -157,6 +159,7 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 	public void shutdown() {
 		try {
 			shutdown = true;
+			usage.shutdown();
 			executor.shutdown();// stop accepting new queries... aha that means the threads that are
 			shutdownLatch.await(10, TimeUnit.MILLISECONDS); // this gives any fast actions time to finish
 			try {

@@ -22,7 +22,10 @@ public class ForgottonPasswordWebPageProcessor extends AbstractCommandProcessor 
 		String magicString = Strings.lastSegment(actualUrl, "/");
 		try {
 			String newPassword = resetter.reset(magicString);
-			return IProcessResult.Utils.processString(MessageFormat.format(ServerConstants.passwordResetHtml, newPassword));
+			if (newPassword == null)
+				return IProcessResult.Utils.processString(MessageFormat.format(ServerConstants.failedToResetPasswordHtml, newPassword));
+			else
+				return IProcessResult.Utils.processString(MessageFormat.format(ServerConstants.passwordResetHtml, newPassword));
 		} catch (Exception e) {
 			return IProcessResult.Utils.processString(ServerConstants.failedToResetPasswordHtml);
 		}

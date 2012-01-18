@@ -1,48 +1,127 @@
 package org.softwareFm.server.processors.internal;
 
+import java.util.Map;
+
 import junit.framework.TestCase;
 
 import org.softwareFm.httpClient.api.IClientBuilder;
 import org.softwareFm.httpClient.api.IHttpClient;
-import org.softwareFm.server.ISoftwareFmServer;
+import org.softwareFm.httpClient.requests.IResponseCallback;
+import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.server.ServerConstants;
-import org.softwareFm.server.processors.IProcessCall;
-import org.softwareFm.server.processors.ISignUpChecker;
-import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.tests.IIntegrationTest;
 
 abstract public class AbstractProcessorIntegrationTests extends TestCase implements IIntegrationTest {
-	private ISoftwareFmServer server;
-	protected ISignUpChecker signUpChecker;
-	protected LoginCheckerMock loginChecker;
-	protected SaltProcessorMock saltProcessor;
 	protected IClientBuilder client;
-	protected ForgottonPasswordProcessorMock forgottonPasswordProcessor;
-	protected PasswordResetterMock resetter;
 
+	protected String signup(String email, String salt, String hash) {
+		MapCallback callback = new MapCallback();
+		signup(email, salt, hash, callback);
+		Map<String, Object> map = callback.map;
+		assertEquals(2, map.size());
+		assertEquals(email, map.get(ServerConstants.emailKey));
+		return (String) map.get(ServerConstants.cryptoKey);
+	}
+
+	protected void signup(String email, String salt, String hash, IResponseCallback callback) {
+		try {
+			client.post(ServerConstants.signupPrefix).//
+					addParam(ServerConstants.emailKey, email).//
+					addParam(ServerConstants.saltKey, salt).//
+					addParam(ServerConstants.passwordHashKey, hash).//
+					execute(callback).get();
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+	}
+
+	protected void resetPassword(String magicString, IResponseCallback callback) {
+		try {
+			client.get(ServerConstants.passwordResetLinkPrefix + "/" + magicString).//
+					addParam(ServerConstants.emailKey, "someEmail").//
+					execute(callback).get();
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+	}
+
+	protected void forgotPassword(String email, String salt) {
+		MapCallback callback = new MapCallback();
+		forgotPassword(email, salt, callback);
+		assertEquals(email, callback.map.get(ServerConstants.emailKey));
+		
+		
+	}
+	protected void forgotPassword(String email, String salt, IResponseCallback callback) {
+		try {
+			client.post(ServerConstants.forgottonPasswordPrefix).//
+					addParam(ServerConstants.emailKey, email).//
+					addParam(ServerConstants.saltKey, salt).//
+					execute(callback).get();
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+	}
+
+	protected String makeSalt() {
+		try {
+			StringCallback callback = new StringCallback();
+			client.get(ServerConstants.makeSaltPrefix).execute(callback).get(); // salt won't be used but we want it removed
+			return callback.string;
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+	}
+
+	protected void login(String email, String salt, String hash, IResponseCallback callback) {
+		try {
+			client.post(ServerConstants.loginCommandPrefix).//
+					addParam(ServerConstants.emailKey, email).//
+					addParam(ServerConstants.saltKey, salt).//
+					addParam(ServerConstants.passwordHashKey, hash).//
+					execute(callback).get();
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+	}
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		saltProcessor = new SaltProcessorMock();
-		loginChecker = new LoginCheckerMock("loginCrypto");
-		signUpChecker = new SignUpCheckerMock(null, "signUpCrypto");
-		forgottonPasswordProcessor = new ForgottonPasswordProcessorMock(null);
-		resetter = new PasswordResetterMock("theNewPassword");
-		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.chain(//
-				new LoginProcessor(saltProcessor, loginChecker), //
-				new SignupProcessor(signUpChecker, saltProcessor), //
-				new MakeSaltForLoginProcessor(saltProcessor),//
-				new ForgottonPasswordProcessor( saltProcessor, forgottonPasswordProcessor),//
-				new ForgottonPasswordWebPageProcessor(resetter)
-				), ICallback.Utils.rethrow());
 		client = IHttpClient.Utils.builder("localhost", ServerConstants.testPort);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		server.shutdown();
 		client.shutdown();
+	}
+
+	static class StringCallback implements IResponseCallback {
+
+		public String string;
+
+		@Override
+		public void process(IResponse response) {
+			assertEquals(ServerConstants.okStatusCode, response.statusCode());
+			string = response.asString();
+
+		}
+
+	}
+
+	static class MapCallback implements IResponseCallback {
+
+		public Map<String, Object> map;
+
+		@Override
+		public void process(IResponse response) {
+			assertEquals(ServerConstants.okStatusCode, response.statusCode());
+			map = Json.mapFromString(response.asString());
+
+		}
+
 	}
 }

@@ -11,7 +11,7 @@ import junit.framework.Assert;
 
 import org.softwareFm.httpClient.response.IResponse;
 
-public class MemoryResponseCallback<Thing, Aspect> implements IResponseCallback {
+public class MemoryResponseCallback implements IResponseCallback {
 
 	public IResponse response;
 	public AtomicInteger count = new AtomicInteger();

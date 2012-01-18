@@ -78,7 +78,7 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 		return serviceExecutor.submit(new Callable<GetResult>() {
 			@Override
 			public GetResult call() throws Exception {
-				MemoryResponseCallback<Object, Object> memoryCallback = IResponseCallback.Utils.memoryCallback();
+				MemoryResponseCallback memoryCallback = IResponseCallback.Utils.memoryCallback();
 				String fullUrl = Urls.compose(ServerConstants.makeRootPrefix, url);
 				httpClient.post(fullUrl).execute(memoryCallback).get();
 				aboveRepositoryCache.clear(url);
@@ -169,7 +169,7 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 		return serviceExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				MemoryResponseCallback<Object, Object> memoryCallback = IResponseCallback.Utils.memoryCallback();
+				MemoryResponseCallback memoryCallback = IResponseCallback.Utils.memoryCallback();
 				httpClient.post(url).addParams(ServerConstants.dataParameterName, Json.toString(map)).execute(memoryCallback).get();
 				localGit.pull(url);
 				callback.process(memoryCallback.response);

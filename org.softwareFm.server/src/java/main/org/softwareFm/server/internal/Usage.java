@@ -1,10 +1,11 @@
 package org.softwareFm.server.internal;
 
+import java.sql.SQLException;
 import java.util.Date;
 
-import javax.sql.DataSource;
-
+import org.apache.commons.dbcp.BasicDataSource;
 import org.softwareFm.server.IUsage;
+import org.softwareFm.utilities.exceptions.WrappedException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -12,7 +13,7 @@ public class Usage implements IUsage {
 
 	private final JdbcTemplate template;
 
-	public Usage(DataSource dataSource) {
+	public Usage(BasicDataSource dataSource) {
 		template = new JdbcTemplate(dataSource);
 	}
 
@@ -22,6 +23,15 @@ public class Usage implements IUsage {
 			template.queryForInt("select count(*) from `usage`");
 		} catch (DataAccessException e) {
 			template.execute("create table `usage` (ip varchar(100), url varchar(200), stamp varchar(100),duration integer)");
+		}
+	}
+
+	@Override
+	public void shutdown() {
+		try {
+			((BasicDataSource) template.getDataSource()).close();
+		} catch (SQLException e) {
+			throw WrappedException.wrap(e);
 		}
 	}
 
