@@ -60,7 +60,7 @@ public interface IProcessResult {
 				@Override
 				public void process(HttpResponse response) throws Exception {
 					response.setStatusCode(statusCode);
-					response.setReasonPhrase("Not Found");
+					response.setReasonPhrase(message);
 					response.setEntity(new StringEntity(message));
 				}
 			};

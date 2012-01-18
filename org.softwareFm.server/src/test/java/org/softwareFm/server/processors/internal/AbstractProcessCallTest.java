@@ -2,6 +2,7 @@ package org.softwareFm.server.processors.internal;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.ProtocolVersion;
@@ -61,6 +62,49 @@ abstract public class AbstractProcessCallTest<T extends IProcessCall> extends Gi
 	protected void checkGetFromProcessor(String url, final Object... expected) {
 		try {
 			IProcessResult result = processor.process(makeRequestLine(ServerConstants.GET, url), emptyMap);
+			checkStringResultWithMap(result, expected);
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+	}
+
+	protected void checkErrorResult(IProcessResult result, final int expectedCode, final String expectedReason, final String expectedString) {
+		final AtomicInteger count = new AtomicInteger();
+		try {
+			result.process(new HttpResponseMock() {
+				@Override
+				public void setEntity(HttpEntity entity) {
+					try {
+						count.incrementAndGet();
+						assertTrue(entity instanceof StringEntity);
+						StringEntity stringEntity = (StringEntity) entity;
+						String string = Files.getText(stringEntity.getContent());
+						assertEquals(expectedString, string);
+					} catch (IOException e) {
+						throw WrappedException.wrap(e);
+					}
+				}
+
+				@Override
+				public void setStatusCode(int code) throws IllegalStateException {
+					assertEquals(expectedCode, code);
+					count.incrementAndGet();
+				}
+
+				@Override
+				public void setReasonPhrase(String reason) throws IllegalStateException {
+					assertEquals(expectedReason, reason);
+					count.incrementAndGet();
+				}
+			});
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+		assertEquals(3, count.get());// not perfect but easy
+	}
+
+	protected void checkStringResultWithMap(IProcessResult result, final Object... expected) {
+		try {
 			result.process(new HttpResponseMock() {
 				@Override
 				public void setEntity(HttpEntity entity) {
@@ -80,9 +124,8 @@ abstract public class AbstractProcessCallTest<T extends IProcessCall> extends Gi
 		}
 	}
 
-	protected void checkGetStringFromProcessor(String url, final String expected) {
+	protected void checkStringResult(IProcessResult result, final String expected) {
 		try {
-			IProcessResult result = processor.process(makeRequestLine(ServerConstants.GET, url), emptyMap);
 			result.process(new HttpResponseMock() {
 				@Override
 				public void setEntity(HttpEntity entity) {
@@ -96,6 +139,15 @@ abstract public class AbstractProcessCallTest<T extends IProcessCall> extends Gi
 					}
 				}
 			});
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+	}
+
+	protected void checkGetStringFromProcessor(String url, final String expected) {
+		try {
+			IProcessResult result = processor.process(makeRequestLine(ServerConstants.GET, url), emptyMap);
+			checkStringResult(result, expected);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}

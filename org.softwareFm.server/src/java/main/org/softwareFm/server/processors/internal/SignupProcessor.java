@@ -29,7 +29,7 @@ public class SignupProcessor extends AbstractCommandProcessor {
 		if (saltProcessor.checkAndInvalidateSalt(salt)) {
 			String email = Strings.nullSafeToString(parameters.get(ServerConstants.emailKey));
 			String passwordHash = Strings.nullSafeToString(parameters.get(ServerConstants.passwordHashKey));
-			SignUpResult result = checker.signUp(email, passwordHash);
+			SignUpResult result = checker.signUp(email, salt, passwordHash);
 			if (result.errorMessage != null)
 				return IProcessResult.Utils.processError(ServerConstants.notFoundStatusCode, result.errorMessage);
 			else
