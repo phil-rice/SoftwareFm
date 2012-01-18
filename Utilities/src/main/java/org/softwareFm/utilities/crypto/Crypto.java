@@ -16,6 +16,7 @@ import javax.crypto.CipherOutputStream;
 import javax.crypto.KeyGenerator;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.tools.ant.filters.StringInputStream;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.exceptions.WrappedException;
@@ -24,6 +25,10 @@ import org.softwareFm.utilities.strings.Strings;
 public class Crypto {
 
 	private static boolean initialised;
+
+	public static String digest(String string) {
+		return Strings.toHex(Files.digest(new StringInputStream(string)));
+	}
 
 	public static String makeKey() {
 		try {
@@ -37,7 +42,6 @@ public class Crypto {
 			throw WrappedException.wrap(e);
 		}
 	}
-	
 
 	public static String aesDecrypt(String hexKey, String hexCoded) {
 		try {

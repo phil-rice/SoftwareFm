@@ -9,6 +9,21 @@ public class CryptoTest extends TestCase{
 	public void testEncryptDecrypt() {
 		checkCrypto("here is some text");
 	}
+	
+	public void testDigest(){
+		String one = "string one";
+		String two = "string two";
+		String digest1 = Crypto.digest(one);
+		String digest2 = Crypto.digest(two);
+		
+		assertEquals(digest1 ,Crypto.digest(one));
+		assertEquals(digest2 ,Crypto.digest(two));
+		
+		assertFalse(digest1.equals(digest2));
+		
+		Strings.fromHex(digest1);
+		Strings.fromHex(digest2);
+	}
 
 	private void checkCrypto(String string) {
 		String key = Crypto.makeKey();
