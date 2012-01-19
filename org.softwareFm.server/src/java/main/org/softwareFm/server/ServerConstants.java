@@ -56,5 +56,6 @@ public class ServerConstants {
 	public static final String emailAddressNotFound = "Email address {0} not known";
 	public static final String passwordResetHtml = "<html><body>Your new password is: {0}</html>";
 	public static final String failedToResetPasswordHtml = "<html><body>Failed to reset. Please request a new link</body></html>";
+	public static final String timedOut = "Timed out";
 
 }

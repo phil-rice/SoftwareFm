@@ -43,8 +43,8 @@ public class LoginSample {
 				ILoginStrategy loginStrategy = new ILoginStrategy() {
 
 					@Override
-					public void signup(String email, String salt, String cryptoKey, String passwordHash, ISignUpCallback callback) {
-						System.out.println("Signing up email: " + email + ", " + salt + " hash: " + passwordHash);
+					public void signup(String email, String sessionSalt, String cryptoKey, String passwordHash, ISignUpCallback callback) {
+						System.out.println("Signing up email: " + email + ", " + sessionSalt + " hash: " + passwordHash);
 						System.out.println("Which decodes to: " + Crypto.aesDecrypt(cryptoKey, passwordHash));
 						if (ok)
 							callback.signedUp(email);
@@ -53,31 +53,31 @@ public class LoginSample {
 					}
 
 					@Override
-					public void showSignup(String salt) {
+					public void showSignup(String sessionSalt) {
 						Swts.removeAllChildren(holder);
-						System.out.println("Would have sent salt to SFM: " + salt);
+						System.out.println("Would have sent salt to SFM: " + sessionSalt);
 						String crypto = Crypto.makeKey();
 						System.out.println("And got reply: " + crypto);
-						ISignUp.Utils.signUp(holder, cardConfig, salt, crypto, this, callback);
+						ISignUp.Utils.signUp(holder, cardConfig, sessionSalt, crypto, this, callback);
 						holder.layout();
 					}
 
 					@Override
-					public void showLogin(String salt) {
+					public void showLogin(String sessionSalt) {
 						Swts.removeAllChildren(holder);
-						ILogin.Utils.login(holder, cardConfig, salt, this, callback);
+						ILogin.Utils.login(holder, cardConfig, sessionSalt, this, callback);
 						holder.layout();
 					}
 
 					@Override
-					public void showForgotPassword(String salt) {
+					public void showForgotPassword(String sessionSalt) {
 						Swts.removeAllChildren(holder);
-						IForgotPassword.Utils.forgotPassword(holder, cardConfig, salt, this, callback);
+						IForgotPassword.Utils.forgotPassword(holder, cardConfig, sessionSalt, this, callback);
 						holder.layout();
 					}
 
 					@Override
-					public void login(String email, String password, ILoginCallback callback) {
+					public void login(String email, String sessionSalt, String password, ILoginCallback callback) {
 						System.out.println("Trying to login: " + email + ", " + password);
 						if (ok)
 							callback.loggedIn(email, Crypto.makeKey());
@@ -86,8 +86,8 @@ public class LoginSample {
 					}
 
 					@Override
-					public void forgotPassword(String email, IForgotPasswordCallback callback) {
-						System.out.println("Sending forgot password message to" + email);
+					public void forgotPassword(String email, String sessionSalt, IForgotPasswordCallback callback) {
+						System.out.println("Sending forgot password message to " + email+", with session salt " + sessionSalt);
 						if (ok)
 							callback.emailSent(email);
 						else
@@ -95,12 +95,19 @@ public class LoginSample {
 					}
 
 					@Override
-					public void requestSalt(IRequestSaltCallback callback) {
-						throw new IllegalStateException();
-//						if (ok)
-//							callback.saltReceived(UUID.randomUUID().toString());
-//						else
-//							callback.problemGettingSalt("some failure message");
+					public void requestSessionSalt(IRequestSaltCallback callback) {
+						if (ok)
+							callback.saltReceived(UUID.randomUUID().toString());
+						else
+							callback.problemGettingSalt("some failure message");
+					}
+
+					@Override
+					public void requestEmailSalt(String email, String sessionSalt, IRequestSaltCallback callback) {
+						if (ok)
+							callback.saltReceived(UUID.randomUUID().toString());
+						else
+							callback.problemGettingSalt("some failure message");
 					}
 				};
 				loginStrategy.showLogin(UUID.randomUUID().toString());

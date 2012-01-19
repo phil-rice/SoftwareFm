@@ -12,9 +12,9 @@ import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.editors.ICardEditorCallback;
 import org.softwareFm.card.editors.INamesAndValuesEditor;
-import org.softwareFm.collections.mySoftwareFm.ILoginCallbacks;
 import org.softwareFm.collections.mySoftwareFm.IForgotPassword;
 import org.softwareFm.collections.mySoftwareFm.IForgotPasswordCallback;
+import org.softwareFm.collections.mySoftwareFm.ILoginCallbacks;
 import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.collections.mySoftwareFm.IShowMessage;
 import org.softwareFm.display.swt.Swts;
@@ -27,7 +27,7 @@ public class ForgotPassword implements IForgotPassword {
 	private final String cardType = CardConstants.forgotPasswordCardType;
 	private final INamesAndValuesEditor content;
 
-	public ForgotPassword(Composite parent, final CardConfig cardConfig, final String salt, final ILoginStrategy strategy, final IForgotPasswordCallback forgotPasswordCallback) {
+	public ForgotPassword(Composite parent, final CardConfig cardConfig, final String sessionSalt, final ILoginStrategy strategy, final IForgotPasswordCallback forgotPasswordCallback) {
 		String title = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, CardConstants.forgotPasswordTitle);
 		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(), Arrays.asList(//
 				INamesAndValuesEditor.Utils.text(cardConfig, cardType, "email")),//
@@ -35,7 +35,7 @@ public class ForgotPassword implements IForgotPassword {
 					@Override
 					public void ok(ICardData cardData) {
 						final String email = getEmail(cardData.data());
-						strategy.forgotPassword(email, forgotPasswordCallback);
+						strategy.forgotPassword(email, sessionSalt, forgotPasswordCallback);
 					}
 
 					private String get(Map<String, Object> data, String key) {
@@ -44,7 +44,7 @@ public class ForgotPassword implements IForgotPassword {
 
 					@Override
 					public void cancel(ICardData cardData) {
-						strategy.showLogin(salt);
+						strategy.showLogin(sessionSalt);
 					}
 
 					@Override
@@ -62,7 +62,7 @@ public class ForgotPassword implements IForgotPassword {
 		Swts.Buttons.makePushButtonAtStart(buttonComposite, CardConfig.resourceGetter(content), CardConstants.signUpButtonTitle, new Runnable() {
 			@Override
 			public void run() {
-				strategy.showSignup(salt);
+				strategy.showSignup(sessionSalt);
 			}
 		});
 
