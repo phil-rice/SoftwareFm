@@ -11,6 +11,7 @@ abstract public class AbstractProcessorMockIntegrationTests extends AbstractProc
 	protected SignUpCheckerMock signUpChecker;
 	protected ForgottonPasswordProcessorMock forgottonPasswordProcessor;
 	protected PasswordResetterMock resetter;
+	private EmailSailRequesterMock emailSaltProcessor;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -20,10 +21,12 @@ abstract public class AbstractProcessorMockIntegrationTests extends AbstractProc
 		signUpChecker = new SignUpCheckerMock(null, "signUpCrypto");
 		forgottonPasswordProcessor = new ForgottonPasswordProcessorMock(null);
 		resetter = new PasswordResetterMock("theNewPassword");
+		emailSaltProcessor = new EmailSailRequesterMock("someEmailHash");
 		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.chain(//
 				new LoginProcessor(saltProcessor, loginChecker), //
 				new SignupProcessor(signUpChecker, saltProcessor), //
 				new MakeSaltForLoginProcessor(saltProcessor),//
+				new RequestEmailSaltProcessor(emailSaltProcessor),//
 				new ForgottonPasswordProcessor(saltProcessor, forgottonPasswordProcessor),//
 				new ForgottonPasswordWebPageProcessor(resetter)), ICallback.Utils.rethrow());
 	}

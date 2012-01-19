@@ -20,7 +20,7 @@ public class ForgottonPasswordWebPageProcessorTest extends AbstractProcessCallTe
 
 	public void testSendsEmailToMailer(){
 		RequestLineMock requestLine = new RequestLineMock(ServerConstants.POST, uri);
-		Map<String, Object> data = Maps.stringObjectMap(ServerConstants.emailKey, "someEmail", ServerConstants.saltKey, "");
+		Map<String, Object> data = Maps.stringObjectMap(ServerConstants.emailKey, "someEmail", ServerConstants.sessionSaltKey, "");
 		IProcessResult result = processor.process(requestLine, data);
 		checkStringResult(result, "");
 	}

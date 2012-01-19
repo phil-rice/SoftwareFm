@@ -24,7 +24,7 @@ public class SignupProcessor extends AbstractCommandProcessor {
 
 	@Override
 	protected IProcessResult execute(String actualUrl, Map<String, Object> parameters) {
-		String salt = Strings.nullSafeToString(parameters.get(ServerConstants.saltKey));
+		String salt = Strings.nullSafeToString(parameters.get(ServerConstants.sessionSaltKey));
 		if (saltProcessor.invalidateSalt(salt)) {
 			String email = Strings.nullSafeToString(parameters.get(ServerConstants.emailKey));
 			String passwordHash = Strings.nullSafeToString(parameters.get(ServerConstants.passwordHashKey));

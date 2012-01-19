@@ -21,7 +21,7 @@ public class ForgottonPasswordProcessor extends AbstractCommandProcessor {
 
 	@Override
 	protected IProcessResult execute(String actualUrl, Map<String, Object> parameters) {
-		String salt = Strings.nullSafeToString(parameters.get(ServerConstants.saltKey));
+		String salt = Strings.nullSafeToString(parameters.get(ServerConstants.sessionSaltKey));
 		String email = Strings.nullSafeToString(parameters.get(ServerConstants.emailKey));
 		saltProcessor.invalidateSalt(salt);
 		forgottonPasswordMailer.process(email);

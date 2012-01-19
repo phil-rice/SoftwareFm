@@ -35,7 +35,7 @@ public class SignUpProcessorTest extends AbstractProcessCallTest<SignupProcessor
 	}
 
 	private Map<String, Object> makeData(String salt) {
-		return Maps.stringObjectMap(ServerConstants.emailKey, "someEmail", ServerConstants.saltKey, salt, ServerConstants.passwordHashKey, "someHash");
+		return Maps.stringObjectMap(ServerConstants.emailKey, "someEmail", ServerConstants.sessionSaltKey, salt, ServerConstants.passwordHashKey, "someHash");
 	}
 
 	public void testDoesntSIgnUpWithIllegalSalt() {

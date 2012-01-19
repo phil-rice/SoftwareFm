@@ -28,7 +28,7 @@ public interface ILoginStrategy {
 
 	void forgotPassword(String email, String sessionSalt, IForgotPasswordCallback callback);
 
-	void login(String email, String sessionSalt, String password, ILoginCallback callback);
+	void login(String email, String sessionSalt, String emailSalt, String password, ILoginCallback callback);
 
 	void requestSessionSalt(IRequestSaltCallback callback);
 
@@ -48,7 +48,7 @@ public interface ILoginStrategy {
 							try {
 								client.post(ServerConstants.signupPrefix).//
 										addParam(ServerConstants.emailKey, email).//
-										addParam(ServerConstants.saltKey, sessionSalt).//
+										addParam(ServerConstants.sessionSaltKey, sessionSalt).//
 										addParam(ServerConstants.passwordHashKey, passwordHash).//
 										execute(new IResponseCallback() {
 											@Override
@@ -120,14 +120,14 @@ public interface ILoginStrategy {
 				}
 
 				@Override
-				public void login(final String email, final String sessionSalt, final String password, final ILoginCallback callback) {
+				public void login(final String email, final String sessionSalt, String emailSalt, final String password, final ILoginCallback callback) {
 					serviceExecutor.submit(new Callable<Void>() {
 						@Override
 						public Void call() throws Exception {
 							String hash = Crypto.digest(sessionSalt, password);
 							client.post(ServerConstants.loginCommandPrefix).//
 									addParam(ServerConstants.emailKey, email).//
-									addParam(ServerConstants.saltKey, sessionSalt).//
+									addParam(ServerConstants.sessionSaltKey, sessionSalt).//
 									addParam(ServerConstants.passwordHashKey, hash).//
 									execute(new IResponseCallback() {
 										@Override
@@ -155,16 +155,47 @@ public interface ILoginStrategy {
 					serviceExecutor.submit(new Callable<Void>() {
 						@Override
 						public Void call() throws Exception {
-							client.post(ServerConstants.forgottonPasswordPrefix).//
+							try {
+								client.post(ServerConstants.forgottonPasswordPrefix).//
+										addParam(ServerConstants.emailKey, email).//
+										addParam(ServerConstants.sessionSaltKey, sessionSalt).//
+										execute(new IResponseCallback() {
+											@Override
+											public void process(IResponse response) {
+												display.asyncExec(new Runnable() {
+													@Override
+													public void run() {
+														callback.emailSent(email);
+													}
+												});
+											}
+										}).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+							} catch (Exception e) {
+								callback.failedToSend(email, e.getMessage());
+							}
+							return null;
+						}
+					});
+				}
+
+				@Override
+				public void requestEmailSalt(final String email, final String sessionSalt, final IRequestSaltCallback callback) {
+					serviceExecutor.submit(new Callable<Void>() {
+						@Override
+						public Void call() throws Exception {
+							client.post(ServerConstants.emailSaltPrefix).//
+									addParam(ServerConstants.sessionSaltKey, sessionSalt).//
 									addParam(ServerConstants.emailKey, email).//
-									addParam(ServerConstants.saltKey, sessionSalt).//
 									execute(new IResponseCallback() {
 										@Override
-										public void process(IResponse response) {
+										public void process(final IResponse response) {
 											display.asyncExec(new Runnable() {
 												@Override
 												public void run() {
-													callback.emailSent(email);
+													if (response.statusCode() == ServerConstants.okStatusCode)
+														callback.saltReceived(response.asString());
+													else
+														callback.problemGettingSalt(response.asString());
 												}
 											});
 										}
@@ -172,11 +203,6 @@ public interface ILoginStrategy {
 							return null;
 						}
 					});
-				}
-
-				@Override
-				public void requestEmailSalt(String email, String sessionSalt, IRequestSaltCallback callback) {
-					throw new UnsupportedOperationException();
 				}
 			};
 		}
@@ -226,7 +252,7 @@ public interface ILoginStrategy {
 				}
 
 				@Override
-				public void login(String email, String sessionSalt, String password, ILoginCallback callback) {
+				public void login(String email, String sessionSalt, String emailSalt, String password, ILoginCallback callback) {
 					System.out.println("Logging in");
 					if (ok)
 						callback.loggedIn(email, Crypto.makeKey());
@@ -279,7 +305,7 @@ public interface ILoginStrategy {
 				}
 
 				@Override
-				public void login(String email, String sessionSalt, String password, ILoginCallback callback) {
+				public void login(String email, String sessionSalt, String emailSalt, String password, ILoginCallback callback) {
 					String key = Crypto.makeKey();
 					System.out.println("Sending 'login' to server, would have received key: " + key);
 					callback.loggedIn(email, key);

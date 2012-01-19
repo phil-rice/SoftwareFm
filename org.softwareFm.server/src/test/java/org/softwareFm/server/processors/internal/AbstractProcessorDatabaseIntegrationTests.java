@@ -18,11 +18,13 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 		SignUpChecker signUpChecker = new SignUpChecker();
 		ForgottonPasswordMailer forgottonPasswordProcessor = new ForgottonPasswordMailer(null, null, null);
 		IPasswordResetter resetter = new PasswordResetter();
+		EmailSaltRequester saltRequester = new EmailSaltRequester();
 		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.chain(//
 				new LoginProcessor(saltProcessor, loginChecker), //
 				new SignupProcessor(signUpChecker, saltProcessor), //
 				new MakeSaltForLoginProcessor(saltProcessor),//
 				new ForgottonPasswordProcessor(saltProcessor, forgottonPasswordProcessor),//
+				new RequestEmailSaltProcessor(saltRequester),//
 				new ForgottonPasswordWebPageProcessor(resetter)), ICallback.Utils.rethrow());
 		template = signUpChecker.template;
 		template.update("truncate users");

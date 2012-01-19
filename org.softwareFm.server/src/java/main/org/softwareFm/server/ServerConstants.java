@@ -22,6 +22,7 @@ public class ServerConstants {
 	public static final String signupPrefix = "command/signup";
 	public static final String forgottonPasswordPrefix = "command/forgottonPassword";
 	public static final String passwordResetLinkPrefix = "command/resetPassword";
+	public static final String emailSaltPrefix = "command/emailSalt";
 
 	public static final int testPort = 8080;
 	public static final String alreadyInCache = "<Already in Cache>";
@@ -43,7 +44,8 @@ public class ServerConstants {
 	public static final String cannotDelete = "Cannot delete {0}";
 	public static final String cannotClearDirectory = "Cannot clear directory: {0}";
 	public static final String cannotFindRepositoryFor = "Cannot find repository for {0}";
-	public static final String saltKey = "salt";
+	public static final String sessionSaltKey = "sessionSalt";
+	public static final String emailSaltKey = "emailSalt";
 	public static final String passwordHashKey = "passwordHash";
 	public static final String emailKey = "email";
 	public static final String emailPasswordMismatch = "Email / Password didn't match";

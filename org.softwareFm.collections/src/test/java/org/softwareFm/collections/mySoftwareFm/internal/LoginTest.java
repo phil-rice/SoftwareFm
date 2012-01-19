@@ -36,13 +36,24 @@ public class LoginTest extends AbstractNameAndValuesEditorTest<Login> {
 
 	}
 
-	public void testEmailAndCryptoSentToLoginStrategy() {
+	public void testEmailAndCryptoSentToLoginStrategyWithEmailSaltOk() {
 		checkOk("someEmail", "somePassword", true);
 		loginStrategy.setOk(true);
+		loginStrategy.setEmailSetOk(true);
 		okCancel.okButton.notifyListeners(SWT.Selection, new Event());
 		assertEquals("someEmail", Lists.getOnly(loginCallback.loggedInEmail));
 		assertEquals(loginStrategy.cryptoKey, Lists.getOnly(loginCallback.loggedInCrypto));
 		assertEquals("someEmail", Lists.getOnly(loginCallback.loggedInEmail));
+	}
+
+	public void testEmailAndCryptoSentToLoginStrategyWithEmailSaltFail() {
+		checkOk("someEmail", "somePassword", true);
+		loginStrategy.setOk(true);
+		okCancel.okButton.notifyListeners(SWT.Selection, new Event());
+		assertEquals(0, loginCallback.loggedInEmail.size());
+		
+		assertEquals("someEmail", Lists.getOnly(loginCallback.failedEmail));
+		assertEquals("someMessage", Lists.getOnly(loginCallback.failedMessage));
 	}
 
 	private void checkOk(String email, String password, boolean expectedOk) {

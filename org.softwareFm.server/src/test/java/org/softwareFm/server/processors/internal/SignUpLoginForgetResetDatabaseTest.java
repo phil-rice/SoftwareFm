@@ -10,11 +10,12 @@ public class SignUpLoginForgetResetDatabaseTest extends AbstractProcessorDatabas
 	final String email = "someEmail1@a";
 
 	public void testSignupPutsSaltCryptoAndHashInDatabase() {
-		String salt = makeSalt();
-		String crypto = signup(email, salt, "hash");
+		String initialSalt = makeSalt();
+		String crypto1 = signup(email, initialSalt, "hash");
+		String crypto = crypto1;
 
 		assertEquals(1, template.queryForInt("select count(*) from users where email=?", email));
-		assertEquals(salt, template.queryForObject("select salt from users where email=?", String.class, email));
+		assertEquals(initialSalt, template.queryForObject("select salt from users where email=?", String.class, email));
 		assertEquals("hash", template.queryForObject("select password from users where email=?", String.class, email));
 		assertEquals(crypto, template.queryForObject("select crypto from users where email=?", String.class, email));
 
@@ -29,43 +30,54 @@ public class SignUpLoginForgetResetDatabaseTest extends AbstractProcessorDatabas
 	}
 
 	public void testLoginAfterSignUp() {
-		String salt1 = makeSalt();
-		String crypto = signup(email, salt1, "hash");
+		String crypto = initialSignup();
 
-		String salt2 = makeSalt();
-		MapCallback callback = new MapCallback();
-		login(email, salt2, "hash", callback);
-		assertEquals(email, callback.map.get(ServerConstants.emailKey));
-		assertEquals(crypto, callback.map.get(ServerConstants.cryptoKey));
+		String sessionSalt = makeSalt();
+		String emailSalt = requestEmailSalt(sessionSalt, email);
+
+		String actualCrypto = login(email, sessionSalt, emailSalt, "hash");
+		assertEquals(crypto, actualCrypto);
 	}
 
-	public void testLoginWithoutSignupFails() {
-		String salt = makeSalt();
-		login(email, salt, "hash", IResponseCallback.Utils.checkCallback(ServerConstants.notFoundStatusCode, ServerConstants.emailPasswordMismatch));
+	private String initialSignup() {
+		String salt1 = makeSalt();
+		String crypto = signup(email, salt1, "hash");
+		return crypto;
+	}
+
+	public void testLoginWithoutEmailHashFails() {
+		initialSignup();
+		String sessionSalt = makeSalt();
+		String emailSalt = requestEmailSalt(sessionSalt, email);
+		login(email, sessionSalt, emailSalt, "wronghash", IResponseCallback.Utils.checkCallback(ServerConstants.notFoundStatusCode, ServerConstants.emailPasswordMismatch));
 	}
 
 	public void testLoginWithWrongHash() {
 		String salt1 = makeSalt();
 		signup(email, salt1, "hash");
 
-		String salt2 = makeSalt();
-		login(email, salt2, "hash2", IResponseCallback.Utils.checkCallback(ServerConstants.notFoundStatusCode, ServerConstants.emailPasswordMismatch));
+		String sessionSalt = makeSalt();
+		String emailSalt = requestEmailSalt(sessionSalt, email);
+		login(email, sessionSalt, emailSalt, "hash2", IResponseCallback.Utils.checkCallback(ServerConstants.notFoundStatusCode, ServerConstants.emailPasswordMismatch));
 	}
 
 	public void testForgotPassword() {
-		String salt1 = makeSalt();
-		String crypto = signup(email, salt1, "hash");
+		String signupSalt = makeSalt();
+		String crypto = signup(email, signupSalt, "startHash");
 
-		forgotPassword(email, salt1, IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, ""));
+		
+		String sessionSalt1 = makeSalt();
+		forgotPassword(email, sessionSalt1, IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, ""));
+		
 		String resetKey = getPasswordResetKeyFor(email);
+		
+		String hash = resetPasswordAndGetHash(signupSalt, resetKey);
 
-		String hash = resetPasswordAndGetHash(salt1, resetKey);
+		String sessionSalt2 = makeSalt();
+		String emailSalt = requestEmailSalt(sessionSalt2, email);
+		String actualCrypto = login(email, sessionSalt2, emailSalt, hash);
+		assertEquals(crypto, actualCrypto);
 
-		String salt2 = makeSalt();
-		MapCallback mapCallback = new MapCallback();
-		login(email, salt2, hash, mapCallback);
-		assertEquals(crypto, mapCallback.map.get(ServerConstants.cryptoKey));
-		assertEquals(email, mapCallback.map.get(ServerConstants.emailKey));
 		assertNull(getPasswordResetKeyFor(email));
 	}
 
@@ -86,14 +98,14 @@ public class SignUpLoginForgetResetDatabaseTest extends AbstractProcessorDatabas
 		resetPassword(resetKey, IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, ServerConstants.failedToResetPasswordHtml));
 	}
 
-	private String resetPasswordAndGetHash(String salt1, String resetKey) {
+	private String resetPasswordAndGetHash(String signupSalt, String resetKey) {
 		StringCallback callback = new StringCallback();
 		resetPassword(resetKey, callback);
 		int startIndex = callback.string.indexOf(": ") + 2;
 		int endIndex = callback.string.indexOf("</html");
 		String password = callback.string.substring(startIndex, endIndex);
 
-		String hash = Crypto.digest(salt1, password);
+		String hash = Crypto.digest(signupSalt, password);
 		return hash;
 	}
 

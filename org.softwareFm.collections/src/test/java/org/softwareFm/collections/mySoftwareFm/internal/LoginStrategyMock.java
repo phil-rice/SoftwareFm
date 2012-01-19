@@ -33,11 +33,16 @@ public class LoginStrategyMock implements ILoginStrategy {
 	public final String cryptoKey = Crypto.makeKey();
 	private final String sessionSalt = UUID.randomUUID().toString();
 	private final String emailSalt = UUID.randomUUID().toString();
+	private boolean emailSaltOk;
 
 	public void setOk(boolean ok) {
 		this.ok = ok;
 	}
 
+	public void setEmailSetOk(boolean ok) {
+		this.emailSaltOk = ok;
+	}
+	
 	@Override
 	public void showLogin(String sessionSalt) {
 		showLogin.add(sessionSalt);
@@ -63,7 +68,7 @@ public class LoginStrategyMock implements ILoginStrategy {
 	}
 
 	@Override
-	public void login(String email, String sessionSalt, String password, ILoginCallback callback) {
+	public void login(String email, String sessionSalt, String emailSalt, String password, ILoginCallback callback) {
 		loginEmail.add(email);
 		loginPassword.add(password);
 		if (ok)
@@ -96,7 +101,7 @@ public class LoginStrategyMock implements ILoginStrategy {
 	public void requestEmailSalt(String email, String sessionSalt, IRequestSaltCallback callback) {
 		requestEmailSaltEmail.add(email);
 		requestEmailSaltSessionSalt.add(sessionSalt);
-		if (ok)
+		if (emailSaltOk)
 			callback.saltReceived(emailSalt);
 		else
 			callback.problemGettingSalt("someMessage");

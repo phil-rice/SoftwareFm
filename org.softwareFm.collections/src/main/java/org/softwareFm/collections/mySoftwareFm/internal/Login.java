@@ -16,6 +16,7 @@ import org.softwareFm.collections.mySoftwareFm.ILogin;
 import org.softwareFm.collections.mySoftwareFm.ILoginCallback;
 import org.softwareFm.collections.mySoftwareFm.ILoginCallbacks;
 import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
+import org.softwareFm.collections.mySoftwareFm.IRequestSaltCallback;
 import org.softwareFm.collections.mySoftwareFm.IShowMessage;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -35,8 +36,19 @@ public class Login implements ILogin {
 				new ICardEditorCallback() {
 					@Override
 					public void ok(ICardData cardData) {
-						Map<String, Object> data = cardData.data();
-						loginStrategy.login(getEmail(cardData.data()), sessionSalt, getPassword(data), callback);
+						final Map<String, Object> data = cardData.data();
+						final String email = getEmail(cardData.data());
+						loginStrategy.requestEmailSalt(email, sessionSalt, new IRequestSaltCallback() {
+							@Override
+							public void saltReceived(String emailSalt) {
+								loginStrategy.login(email, sessionSalt, emailSalt, getPassword(data), callback);
+							}
+
+							@Override
+							public void problemGettingSalt(String message) {
+								callback.failedToLogin(email, message);
+							}
+						});
 					}
 
 					private String get(Map<String, Object> data, String key) {

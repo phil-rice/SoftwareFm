@@ -1,32 +1,30 @@
 package org.softwareFm.server.processors.internal;
 
-
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.collections.Sets;
 
-public class LoginIntegrationTests extends AbstractProcessorMockIntegrationTests  {
+public class LoginIntegrationTests extends AbstractProcessorMockIntegrationTests {
 
 	public void testMakeSaltLogin() throws Exception {
-		String salt = "salt 0";
-		client.get(ServerConstants.makeSaltPrefix).execute(IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, salt)).get(); // salt won't be used but we want it removed
-		assertEquals(salt, Sets.getOnly(saltProcessor.legalSalts));
-		login("someEmail", salt, "someHash", IResponseCallback.Utils.checkMapCallback(ServerConstants.okStatusCode, ServerConstants.cryptoKey, "loginCrypto", ServerConstants.emailKey, "someEmail"));
+		String sessionSalt = "salt 0";
+		String email = "someEmail";
+		client.get(ServerConstants.makeSaltPrefix).execute(IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, sessionSalt)).get(); // salt won't be used but we want it removed
+		assertEquals(sessionSalt, Sets.getOnly(saltProcessor.legalSalts));
+		String emailSalt = requestEmailSalt(sessionSalt, email);
+		login(email, sessionSalt, emailSalt, "someHash", IResponseCallback.Utils.checkMapCallback(ServerConstants.okStatusCode, ServerConstants.cryptoKey, "loginCrypto", ServerConstants.emailKey, "someEmail"));
 		assertEquals(0, saltProcessor.legalSalts.size());
 	}
 
 	public void testRemovesSaltAndLogsins() throws Exception {
-		String salt = "salt 0";
-		client.get(ServerConstants.makeSaltPrefix).execute(IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, salt)).get(); // salt won't be used but we want it removed
-		assertEquals(salt, Sets.getOnly(saltProcessor.legalSalts));
+		String email = "someEmail";
+		String sessionSalt = "salt 0";
+		client.get(ServerConstants.makeSaltPrefix).execute(IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, sessionSalt)).get(); // salt won't be used but we want it removed
+		assertEquals(sessionSalt, Sets.getOnly(saltProcessor.legalSalts));
 
 		loginChecker.setCrypto(null);// will fail to login
-
-		client.post(ServerConstants.loginCommandPrefix).//
-				addParam(ServerConstants.emailKey, "someEmail").//
-				addParam(ServerConstants.saltKey, salt).//
-				addParam(ServerConstants.passwordHashKey, "someHash").//
-				execute(IResponseCallback.Utils.checkCallback(ServerConstants.notFoundStatusCode, ServerConstants.emailPasswordMismatch)).get();
+		String emailSalt = requestEmailSalt(sessionSalt, email);
+		login(email, sessionSalt, emailSalt, "someHash", IResponseCallback.Utils.checkCallback(ServerConstants.notFoundStatusCode, ServerConstants.emailPasswordMismatch));
 		assertEquals(0, saltProcessor.legalSalts.size()); // removed salt anyway
 	}
 

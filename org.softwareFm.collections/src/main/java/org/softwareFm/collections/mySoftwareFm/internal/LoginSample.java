@@ -77,7 +77,7 @@ public class LoginSample {
 					}
 
 					@Override
-					public void login(String email, String sessionSalt, String password, ILoginCallback callback) {
+					public void login(String email, String sessionSalt, String emailSalt, String password, ILoginCallback callback) {
 						System.out.println("Trying to login: " + email + ", " + password);
 						if (ok)
 							callback.loggedIn(email, Crypto.makeKey());
