@@ -30,6 +30,7 @@ import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.runnable.Runnables;
 import org.softwareFm.utilities.services.IServiceExecutor;
 
 public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
@@ -41,39 +42,37 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 	protected String crypto;
 	protected String signupSalt;
 
+	protected Runnable restart;
+
 	public MySoftwareFm(Composite parent, CardConfig cardConfig, ILoginStrategy loginStrategy) {
 		this.cardConfig = cardConfig;
 		this.loginStrategy = loginStrategy;
 		this.content = new Composite(parent, SWT.NULL);
 		content.setLayout(new FillLayout());
+		restart = new Runnable() {
+			@Override
+			public void run() {
+				logout();
+				start();
+			}
+		};
 	}
 
 	public void start() {
-		display("connecting to server", "");
+		if (email != null)
+			display(CardConstants.loginCardType, CardConstants.loggedInTitle, CardConstants.loggedInTitle, email);
+		else
+			display(CardConstants.loginCardType, CardConstants.contactingServerTitle, CardConstants.contactingServerText, email);
 		loginStrategy.requestSessionSalt(new IRequestSaltCallback() {
 			@Override
 			public void saltReceived(String salt) {
 				MySoftwareFm.this.signupSalt = salt;
-				Swts.removeAllChildren(content);
-				ILogin.Utils.login(content, cardConfig, salt, loginStrategy, MySoftwareFm.this, new ILoginCallback() {
-					@Override
-					public void loggedIn(String email, String cryptoKey) {
-						MySoftwareFm.this.email = email;
-						MySoftwareFm.this.crypto = cryptoKey;
-						display("Logged in", "Huzzah: " + email);
-					}
-
-					@Override
-					public void failedToLogin(String email, String message) {
-						display("Failed to Login", "Couldn't login");
-					}
-				});
-				content.layout();
+				showLogin(salt);
 			}
 
 			@Override
 			public void problemGettingSalt(String message) {
-				display("Couldn't connect to server", "Couldn't connect to server");
+				display(CardConstants.loginCardType, CardConstants.failedToContactServerTitle, CardConstants.failedToContactServerText, restart, email, message);
 			}
 		});
 	}
@@ -88,12 +87,18 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		return content;
 	}
 
-	public void display(final String title, final String text) {
+	public void display(final String cardType, final String title, final String text, final String... args) {
+		display(cardType, title, text, Runnables.noRunnable, args);
+	}
+
+	public void display(final String cardType, final String title, final String text, final Runnable runnable, final String... args) {
 		content.getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				Swts.removeAllChildren(content);
-				new TextInBorder(content, SWT.WRAP | SWT.READ_ONLY, cardConfig).setText(CardConstants.loginCardType, title, text);
+				TextInBorder textInBorder = new TextInBorder(content, SWT.WRAP | SWT.READ_ONLY, cardConfig);
+				textInBorder.setTextFromResourceGetter(cardType, title, text, args);
+				textInBorder.addClickedListener(runnable);
 				content.layout();
 			}
 		});
@@ -102,15 +107,17 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 	@Override
 	public void showLogin(String sessionSalt) {
 		Swts.removeAllChildren(content);
-		ILogin.Utils.login(content, cardConfig, sessionSalt, loginStrategy, this, new ILoginCallback() {
+		ILogin.Utils.login(content, cardConfig, sessionSalt, loginStrategy, MySoftwareFm.this, new ILoginCallback() {
 			@Override
 			public void loggedIn(String email, String cryptoKey) {
-				display("Logged in", "Huzzah: " + email);
+				MySoftwareFm.this.email = email;
+				MySoftwareFm.this.crypto = cryptoKey;
+				display(CardConstants.loginCardType, CardConstants.loggedInTitle, CardConstants.loggedInText, email);
 			}
 
 			@Override
 			public void failedToLogin(String email, String message) {
-				display("Failed to Login", "Couldn't login");
+				display(CardConstants.loginCardType, CardConstants.failedToLoginTitle, CardConstants.failedToLoginText, restart, email, message);
 			}
 		});
 		content.layout();
@@ -122,12 +129,12 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		IForgotPassword.Utils.forgotPassword(content, cardConfig, sessionSalt, loginStrategy, this, new IForgotPasswordCallback() {
 			@Override
 			public void emailSent(String email) {
-				display("Email sent", "Sent email to " + email);
+				display(CardConstants.forgotPasswordCardType, CardConstants.sentForgottenPasswordTitle, CardConstants.sentForgottenPasswordText, restart, email);
 			}
 
 			@Override
 			public void failedToSend(String email, String message) {
-				display("Failed to Login", "Couldn't login");
+				display(CardConstants.forgotPasswordCardType, CardConstants.failedToSendForgottenPasswordTitle, CardConstants.failedToSendForgottenPasswordText, restart, email, message);
 			}
 		});
 		content.layout();
@@ -139,13 +146,14 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		ISignUp.Utils.signUp(content, cardConfig, sessionSalt, loginStrategy, this, new ISignUpCallback() {
 			@Override
 			public void signedUp(String email, String crypto) {
+				MySoftwareFm.this.email = email;
 				MySoftwareFm.this.crypto = crypto;
-				display("Signed Up", "Welcome to SoftwareFm " + email);
+				display(CardConstants.signupCardType, CardConstants.signedUpInTitle, CardConstants.signedUpText, email);
 			}
 
 			@Override
 			public void failed(String email, String message) {
-				display("Failed to Login", "Couldn't login");
+				display(CardConstants.signupCardType, CardConstants.failedToSignupTitle, CardConstants.failedToSignupText, restart, email, message);
 			}
 		});
 		content.layout();
@@ -182,6 +190,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 	public void logout() {
 		crypto = null;
 		signupSalt = null;
+		email = null;
 	}
 
 }

@@ -48,6 +48,10 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest {
 		assertNull(mySoftwareFm.getSignupSalt());
 		startAndGetSignupSalt();
 		assertEquals(0, template.queryForInt("select count(*) from users"));
+
+		assertNull(mySoftwareFm.crypto);
+		assertNull(mySoftwareFm.email);
+		assertNotNull(mySoftwareFm.getSignupSalt());
 	}
 
 	public void testSignup() {
@@ -59,9 +63,11 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest {
 		String passwordHash = Crypto.digest(signUpSalt, password);
 		assertEquals(passwordHash, template.queryForObject("select password from users", String.class));
 		assertNull(passwordHash, template.queryForObject("select passwordResetKey from users", String.class));
+
 		String crypto = template.queryForObject("select crypto from users", String.class);
 		assertNotNull(crypto);
 		assertEquals(crypto, mySoftwareFm.crypto);
+		assertEquals(email, mySoftwareFm.email);
 	}
 
 	public void testSignupThenLogin() {
@@ -77,6 +83,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest {
 		getOkCancel().ok();
 		displayUntilText();
 		assertEquals(crypto, mySoftwareFm.crypto);
+		assertEquals(email, mySoftwareFm.email);
 	}
 
 	public void testForgotPassword() throws Exception {
@@ -92,6 +99,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest {
 		getOkCancel().ok();
 		displayUntilText();
 		assertNull(mySoftwareFm.crypto);
+		assertNull(mySoftwareFm.email);
 
 		mySoftwareFm.start();
 		displayUntilValueComposite("Email", "Password");
@@ -104,6 +112,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest {
 		getOkCancel().ok();
 		displayUntilText();
 		assertEquals(crypto, mySoftwareFm.crypto);
+		assertEquals(email, mySoftwareFm.email);
 	}
 
 	private String resetPassword(String magicString) throws InterruptedException, ExecutionException, TimeoutException {
@@ -160,7 +169,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest {
 			@Override
 			public Boolean call() throws Exception {
 				Control firstChild = softwareFmComposite.getChildren()[0];
-				boolean result = softwareFmComposite.getChildren()[0] instanceof CompositeWithCardMargin;
+				boolean result = firstChild instanceof CompositeWithCardMargin;
 				return result;
 			}
 		});

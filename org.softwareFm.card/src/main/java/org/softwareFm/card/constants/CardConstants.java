@@ -96,34 +96,39 @@ public class CardConstants {
 	public static final String urlRogueValue = "<key>";
 	public static final String couldNotGetImagefor = "Could not get image for {0}";
 	public static final String cannotStyleText = "Cannot style text [{0}] because of character at {1} which is a '{2}'";
-	
+
 	public static final String loginCardType = "login";
 	public static final String signupCardType = "signup";
 	public static final String forgotPasswordCardType = "forgotpassword";
 	public static final String loginTitle = "login.title.text";
 	public static final String forgotPasswordTitle = "forgotPassword.title.text";
 	public static final String signupTitle = "signup.title.text";
-	
+
 	public static final String signUpButtonTitle = "signup.button.text";
 	public static final String loginButtonTitle = "login.button.text";
 	public static final String forgotPasswordButtonTitle = "forgotPassword.button.text";
-	public static final String contactingServer = "login.contactingServer.text";
 	
+	public static final String contactingServerTitle = "login.contactingServer.title";
+	public static final String contactingServerText = "login.contactingServer.text";
+
 	public static final String failedToSendForgottenPasswordTitle = "forgotpassword.failedToSend.title";
 	public static final String failedToSendForgottenPasswordText = "forgotpassword.failedToSend.text";
-	
+
 	public static final String sentForgottenPasswordTitle = "forgotpassword.emailSent.title";
 	public static final String sentForgottenPasswordText = "forgotpassword.emailSent.text";
-	
+
 	public static final String loggedInTitle = "login.loggedIn.title";
 	public static final String loggedInText = "login.loggedIn.text";
-	
+
+	public static final String failedToContactServerTitle = "login.failedtocontactserver.title";
+	public static final String failedToContactServerText = "login.failedtocontactserver.text";
+
 	public static final String failedToLoginTitle = "login.failedtologin.title";
 	public static final String failedToLoginText = "login.failedtologin.text";
-	
+
 	public static final String signedUpInTitle = "signup.signedup.title";
 	public static final String signedUpText = "signup.signedup.text";
-	
+
 	public static final String failedToSignupTitle = "signup.failedtosignup.title";
 	public static final String failedToSignupText = "signup.failedtosignup.text";
 

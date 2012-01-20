@@ -93,8 +93,9 @@ public class Explorer implements IExplorer {
 	private TimeLine timeLine;
 	private Comments comments;
 	private final ILoginStrategy loginStrategy;
+	private MySoftwareFm mySoftwareFm;
 
-	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter, ILoginStrategy loginStrategy) {
+	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy) {
 		this.cardConfig = cardConfig;
 		this.masterDetailSocial = masterDetailSocial;
 		this.loginStrategy = loginStrategy;
@@ -210,19 +211,19 @@ public class Explorer implements IExplorer {
 				});
 			}
 		}, true);
-	}
-
-	@Override
-	public void showMySoftwareFm() {
-		// The click is to simulate the request for a salt from the server
-		masterDetailSocial.createAndShowMaster(new IFunction1<Composite, MySoftwareFm>() {
+		mySoftwareFm = masterDetailSocial.createMaster(new IFunction1<Composite, MySoftwareFm>() {
 			@Override
 			public MySoftwareFm apply(Composite from) throws Exception {
 				MySoftwareFm mySoftwareFm = new MySoftwareFm(from, cardConfig, loginStrategy);
 				mySoftwareFm.start();
 				return mySoftwareFm;
 			}
-		});
+		}, true);
+	}
+
+	@Override
+	public void showMySoftwareFm() {
+		masterDetailSocial.setMaster(mySoftwareFm.getComposite());
 	}
 
 	public void dispose() {
