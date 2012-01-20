@@ -8,8 +8,8 @@ import org.softwareFm.display.composites.IHasComposite;
 public interface ISignUp extends IHasComposite{
 	
 	public static class Utils{
-		public static ISignUp signUp(Composite parent, CardConfig cardConfig, String salt, String cryptoKey, ILoginStrategy strategy, ISignUpCallback callback){
-			return new Signup(parent, cardConfig, salt, cryptoKey, strategy, callback);
+		public static ISignUp signUp(Composite parent, CardConfig cardConfig, String salt, ILoginStrategy strategy, ILoginDisplayStrategy loginDisplayStrategy,ISignUpCallback callback){
+			return new Signup(parent, cardConfig, salt, strategy, loginDisplayStrategy, callback);
 		}
 	}
 

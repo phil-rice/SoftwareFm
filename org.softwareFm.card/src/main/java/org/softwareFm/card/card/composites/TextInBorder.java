@@ -112,7 +112,7 @@ public class TextInBorder implements IHasControl {
 		setText(cardType, titleText, bodyText);
 	}
 
-	protected void setText(final String cardType, String titleText, String bodyText) {
+	public void setText(final String cardType, String titleText, String bodyText) {
 		textWithBold.setText(bodyText);
 		TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, new ICardData() {
 

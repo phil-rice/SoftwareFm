@@ -6,14 +6,26 @@ import java.util.Map;
 import org.apache.http.RequestLine;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.processors.internal.DeleteProcessor;
+import org.softwareFm.server.processors.internal.EmailSaltRequester;
 import org.softwareFm.server.processors.internal.FavIconProcessor;
+import org.softwareFm.server.processors.internal.ForgottonPasswordMailer;
+import org.softwareFm.server.processors.internal.ForgottonPasswordProcessor;
+import org.softwareFm.server.processors.internal.ForgottonPasswordWebPageProcessor;
 import org.softwareFm.server.processors.internal.GetFileProcessor;
 import org.softwareFm.server.processors.internal.GetIndexProcessor;
 import org.softwareFm.server.processors.internal.GitGetProcessor;
 import org.softwareFm.server.processors.internal.HeadThrowing404;
+import org.softwareFm.server.processors.internal.LoginChecker;
+import org.softwareFm.server.processors.internal.LoginProcessor;
 import org.softwareFm.server.processors.internal.MakeRootProcessor;
+import org.softwareFm.server.processors.internal.MakeSaltForLoginProcessor;
+import org.softwareFm.server.processors.internal.PasswordResetter;
 import org.softwareFm.server.processors.internal.PostProcessor;
+import org.softwareFm.server.processors.internal.RequestEmailSaltProcessor;
 import org.softwareFm.server.processors.internal.RigidFileProcessor;
+import org.softwareFm.server.processors.internal.SaltProcessor;
+import org.softwareFm.server.processors.internal.SignUpChecker;
+import org.softwareFm.server.processors.internal.SignupProcessor;
 import org.softwareFm.utilities.maps.UrlCache;
 
 public interface IProcessCall {
@@ -51,10 +63,21 @@ public interface IProcessCall {
 
 		public static IProcessCall softwareFmProcessCall(IGitServer server, File fileRoot) {
 			UrlCache<String> aboveRepostoryUrlCache = new UrlCache<String>();
-			System.out.println("Local git server: " + server);
+			SaltProcessor saltProcessor = new SaltProcessor();
+			LoginChecker loginChecker = new LoginChecker();
+			SignUpChecker signUpChecker = new SignUpChecker();
+			ForgottonPasswordMailer forgottonPasswordProcessor = new ForgottonPasswordMailer(null, null, null);
+			IPasswordResetter resetter = new PasswordResetter();
+			EmailSaltRequester saltRequester = new EmailSaltRequester();
 			return chain(new FavIconProcessor(),//
-					new RigidFileProcessor(fileRoot, "update"),//responds to get or head
-					new HeadThrowing404(),//sweep up any heads 
+					new RigidFileProcessor(fileRoot, "update"),// responds to get or head
+					new LoginProcessor(saltProcessor, loginChecker), //
+					new SignupProcessor(signUpChecker, saltProcessor), //
+					new MakeSaltForLoginProcessor(saltProcessor),//
+					new ForgottonPasswordProcessor(saltProcessor, forgottonPasswordProcessor),//
+					new RequestEmailSaltProcessor(saltRequester),//
+					new ForgottonPasswordWebPageProcessor(resetter),//
+					new HeadThrowing404(),// sweep up any heads
 					new GetIndexProcessor(fileRoot),//
 					new GetFileProcessor(fileRoot, "html", "jpg", "png", "css", "gif", "jar", "xml"), //
 					new GitGetProcessor(server, aboveRepostoryUrlCache), //

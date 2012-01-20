@@ -15,6 +15,7 @@ import org.softwareFm.card.editors.INamesAndValuesEditor;
 import org.softwareFm.collections.mySoftwareFm.ILogin;
 import org.softwareFm.collections.mySoftwareFm.ILoginCallback;
 import org.softwareFm.collections.mySoftwareFm.ILoginCallbacks;
+import org.softwareFm.collections.mySoftwareFm.ILoginDisplayStrategy;
 import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.collections.mySoftwareFm.IRequestSaltCallback;
 import org.softwareFm.collections.mySoftwareFm.IShowMessage;
@@ -28,7 +29,7 @@ public class Login implements ILogin {
 	private final String cardType = CardConstants.loginCardType;
 	private final INamesAndValuesEditor content;
 
-	public Login(Composite parent, final CardConfig cardConfig, final String sessionSalt, final ILoginStrategy loginStrategy, final ILoginCallback callback) {
+	public Login(Composite parent, final CardConfig cardConfig, final String sessionSalt, final ILoginStrategy loginStrategy, final ILoginDisplayStrategy loginDisplayStrategy, final ILoginCallback callback) {
 		String title = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, CardConstants.loginTitle);
 		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(), Arrays.asList(//
 				INamesAndValuesEditor.Utils.text(cardConfig, cardType, "email"),//
@@ -57,7 +58,7 @@ public class Login implements ILogin {
 
 					@Override
 					public void cancel(ICardData cardData) {
-						loginStrategy.showLogin(sessionSalt);
+						loginDisplayStrategy.showLogin(sessionSalt);
 					}
 
 					@Override
@@ -80,14 +81,14 @@ public class Login implements ILogin {
 		Swts.Buttons.makePushButtonAtStart(buttonComposite, CardConfig.resourceGetter(content), CardConstants.signUpButtonTitle, new Runnable() {
 			@Override
 			public void run() {
-				loginStrategy.showSignup(sessionSalt);
+				loginDisplayStrategy.showSignup(sessionSalt);
 
 			}
 		});
 		Swts.Buttons.makePushButtonAtStart(buttonComposite, CardConfig.resourceGetter(content), CardConstants.forgotPasswordButtonTitle, new Runnable() {
 			@Override
 			public void run() {
-				loginStrategy.showForgotPassword(sessionSalt);
+				loginDisplayStrategy.showForgotPassword(sessionSalt);
 
 			}
 		});
@@ -108,7 +109,7 @@ public class Login implements ILogin {
 			@Override
 			public Composite apply(Composite parent) throws Exception {
 				CardConfig cardConfig = ICardConfigurator.Utils.cardConfigForTests(parent.getDisplay());
-				return (Composite) new Login(parent, cardConfig, UUID.randomUUID().toString(), ILoginStrategy.Utils.sysoutLoginStrategy(), ILoginCallbacks.Utils.showMessageCallbacks(cardConfig, IShowMessage.Utils.sysout())).getControl();
+				return (Composite) new Login(parent, cardConfig, UUID.randomUUID().toString(), ILoginStrategy.Utils.sysoutLoginStrategy(), ILoginDisplayStrategy.Utils.sysoutDisplayStrategy(), ILoginCallbacks.Utils.showMessageCallbacks(cardConfig, IShowMessage.Utils.sysout())).getControl();
 			}
 		});
 	}

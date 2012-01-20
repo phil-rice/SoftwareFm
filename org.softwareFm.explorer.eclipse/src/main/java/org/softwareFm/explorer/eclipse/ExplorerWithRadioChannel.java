@@ -34,12 +34,14 @@ import org.softwareFm.collections.explorer.IExplorerListener;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
 import org.softwareFm.collections.explorer.SnippetFeedConfigurator;
 import org.softwareFm.collections.menu.ICardMenuItemHandler;
+import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.display.browser.IBrowserConfigurator;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Buttons;
 import org.softwareFm.display.swt.Swts.Grid;
 import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.timeline.IPlayListGetter;
+import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.server.GitRepositoryFactory;
 import org.softwareFm.server.ServerConstants;
@@ -54,7 +56,8 @@ public class ExplorerWithRadioChannel {
 		String server = local ? "localhost" : "www.softwarefm.com";
 		String prefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : "git://www.softwarefm.com/";
 		int port = local ? 8080 : 80;
-		final IRepositoryFacard facard = GitRepositoryFactory.gitRepositoryFacard(server, port, localRoot, prefix);
+		final IHttpClient client = IHttpClient.Utils.builder(server, port);
+		final IRepositoryFacard facard = GitRepositoryFactory.gitRepositoryFacard(client, localRoot, prefix);
 		final IServiceExecutor service = IServiceExecutor.Utils.defaultExecutor();
 		try {
 			final List<String> rootUrl = Arrays.asList("/softwareFm/data", "/softwareFm/snippet");
@@ -73,7 +76,8 @@ public class ExplorerWithRadioChannel {
 					final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 					IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(explorerAndButton);
 					IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardDataStore);
-					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, playListGetter, service);
+					ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(from.getDisplay(), service, client);
+					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, playListGetter, service, loginStrategy );
 
 					ICardMenuItemHandler.Utils.addSoftwareFmMenuItemHandlers(explorer);
 					IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
@@ -134,7 +138,7 @@ public class ExplorerWithRadioChannel {
 							explorer.displayNotAJar();
 						}
 					});
-					Buttons.makePushButton(buttonPanel, null, "Ant", false, new Runnable() {
+					Buttons.makePushButton(buttonPanel, null, "Artifact", false, new Runnable() {
 						@Override
 						public void run() {
 							explorer.displayCard(firstUrl, new CardAndCollectionDataStoreAdapter());

@@ -24,6 +24,7 @@ import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
 import org.softwareFm.collections.explorer.SnippetFeedConfigurator;
 import org.softwareFm.collections.menu.ICardMenuItemHandler;
+import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.display.browser.IBrowserConfigurator;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.swt.Swts.Size;
@@ -47,7 +48,8 @@ public class ExplorerView extends ViewPart {
 
 		IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardConfig.cardDataStore);
 		IServiceExecutor service = activator.getServiceExecutor();
-		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, getRootUrls(), playListGetter, service);
+		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(parent.getDisplay(), activator.getServiceExecutor(), activator.getClient());
+		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, getRootUrls(), playListGetter, service, loginStrategy);
 		actionBar = makeActionBar(explorer, cardConfig);
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
 		actionBar.populateToolbar(toolBarManager);

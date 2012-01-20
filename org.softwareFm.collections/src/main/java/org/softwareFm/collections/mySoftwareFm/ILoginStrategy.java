@@ -5,11 +5,7 @@ import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.softwareFm.card.configuration.CardConfig;
-import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.display.swt.Swts;
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.httpClient.response.IResponse;
@@ -20,12 +16,6 @@ import org.softwareFm.utilities.services.IServiceExecutor;
 
 public interface ILoginStrategy {
 
-	void showLogin(String sessionSalt);
-
-	void showForgotPassword(String sessionSalt);
-
-	void showSignup(String sessionSalt);
-
 	void forgotPassword(String email, String sessionSalt, IForgotPasswordCallback callback);
 
 	void login(String email, String sessionSalt, String emailSalt, String password, ILoginCallback callback);
@@ -34,14 +24,16 @@ public interface ILoginStrategy {
 
 	void requestEmailSalt(String email, String sessionSalt, IRequestSaltCallback callback);
 
-	void signup(String email, String sessionSalt, String cryptoKey, String passwordHash, ISignUpCallback callback);
+	void signup(String email, String sessionSalt, String passwordHash, ISignUpCallback callback);
 
 	public static class Utils {
 
-		public static ILoginStrategy softwareFmLoginStrategy(final Display display, final IServiceExecutor serviceExecutor, final IHttpClient client, final IShowMessage showMessage) {
+		public static ILoginStrategy softwareFmLoginStrategy(final Display display, final IServiceExecutor serviceExecutor, final IHttpClient client) {
+			if (client == null)
+				throw new NullPointerException();
 			return new ILoginStrategy() {
 				@Override
-				public void signup(final String email, final String sessionSalt, String cryptoKey, final String passwordHash, final ISignUpCallback callback) {
+				public void signup(final String email, final String sessionSalt, final String passwordHash, final ISignUpCallback callback) {
 					serviceExecutor.submit(new Callable<Void>() {
 						@Override
 						public Void call() throws Exception {
@@ -70,21 +62,6 @@ public interface ILoginStrategy {
 							return null;
 						}
 					});
-				}
-
-				@Override
-				public void showSignup(String sessionSalt) {
-					showMessage.showMessage(CardConstants.signupCardType, "Email sent", "Email sent");
-				}
-
-				@Override
-				public void showLogin(String sessionSalt) {
-					showMessage.showMessage(CardConstants.loginCardType, "Logged in", "Logged in");
-				}
-
-				@Override
-				public void showForgotPassword(String sessionSalt) {
-					showMessage.showMessage(CardConstants.forgotPasswordCardType, "Email sent", "Email sent");
 				}
 
 				@Override
@@ -120,11 +97,11 @@ public interface ILoginStrategy {
 				}
 
 				@Override
-				public void login(final String email, final String sessionSalt, String emailSalt, final String password, final ILoginCallback callback) {
+				public void login(final String email, final String sessionSalt, final String emailSalt, final String password, final ILoginCallback callback) {
 					serviceExecutor.submit(new Callable<Void>() {
 						@Override
 						public Void call() throws Exception {
-							String hash = Crypto.digest(sessionSalt, password);
+							String hash = Crypto.digest(emailSalt, password);
 							client.post(ServerConstants.loginCommandPrefix).//
 									addParam(ServerConstants.emailKey, email).//
 									addParam(ServerConstants.sessionSaltKey, sessionSalt).//
@@ -161,11 +138,14 @@ public interface ILoginStrategy {
 										addParam(ServerConstants.sessionSaltKey, sessionSalt).//
 										execute(new IResponseCallback() {
 											@Override
-											public void process(IResponse response) {
+											public void process(final IResponse response) {
 												display.asyncExec(new Runnable() {
 													@Override
 													public void run() {
-														callback.emailSent(email);
+														if (response.statusCode() == ServerConstants.okStatusCode)
+															callback.emailSent(email, response.asString());
+														else
+															callback.failedToSend(email, response.asString());
 													}
 												});
 											}
@@ -207,101 +187,85 @@ public interface ILoginStrategy {
 			};
 		}
 
-		public static ILoginStrategy mock(final CardConfig cardConfig, final Composite holder, final boolean ok, final ILoginCallbacks callback) {
-			ILoginStrategy loginStrategy = new ILoginStrategy() {
-				@Override
-				public void requestSessionSalt(IRequestSaltCallback callback) {
-					if (ok)
-						callback.saltReceived(UUID.randomUUID().toString());
-					else
-						callback.problemGettingSalt("some failure message");
-				}
-
-				@Override
-				public void signup(String email, String sessionSalt, String cryptoKey, String passwordHash, ISignUpCallback callback) {
-					System.out.println("Signing up email: " + email + ", " + sessionSalt + " hash: " + passwordHash);
-					System.out.println("Which decodes to: " + Crypto.aesDecrypt(cryptoKey, passwordHash));
-					if (ok)
-						callback.signedUp(email);
-					else
-						callback.failed(email, "some failure message");
-				}
-
-				@Override
-				public void showSignup(String sessionSalt) {
-					Swts.removeAllChildren(holder);
-					System.out.println("Would have sent salt to SFM: " + sessionSalt);
-					String crypto = Crypto.makeKey();
-					System.out.println("And got reply: " + crypto);
-					ISignUp.Utils.signUp(holder, cardConfig, sessionSalt, crypto, this, callback);
-					holder.layout();
-				}
-
-				@Override
-				public void showLogin(String sessionSalt) {
-					Swts.removeAllChildren(holder);
-					ILogin.Utils.login(holder, cardConfig, sessionSalt, this, callback);
-					holder.layout();
-				}
-
-				@Override
-				public void showForgotPassword(String sessionSalt) {
-					Swts.removeAllChildren(holder);
-					IForgotPassword.Utils.forgotPassword(holder, cardConfig, sessionSalt, this, callback);
-					holder.layout();
-				}
-
-				@Override
-				public void login(String email, String sessionSalt, String emailSalt, String password, ILoginCallback callback) {
-					System.out.println("Logging in");
-					if (ok)
-						callback.loggedIn(email, Crypto.makeKey());
-					else
-						callback.failedToLogin(email, "some failure message");
-				}
-
-				@Override
-				public void forgotPassword(String email, String sessionSalt, IForgotPasswordCallback callback) {
-					System.out.println("Logging in");
-					if (ok)
-						callback.emailSent(email);
-					else
-						callback.failedToSend(email, "some reason");
-				}
-
-				@Override
-				public void requestEmailSalt(String email, String sessionSalt, IRequestSaltCallback callback) {
-					throw new UnsupportedOperationException();
-				}
-
-			};
-			return loginStrategy;
-
-		}
+		// public static ILoginStrategy mock(final CardConfig cardConfig, final Composite holder, final boolean ok, final ILoginCallbacks callback) {
+		// ILoginStrategy loginStrategy = new ILoginStrategy() {
+		// @Override
+		// public void requestSessionSalt(IRequestSaltCallback callback) {
+		// if (ok)
+		// callback.saltReceived(UUID.randomUUID().toString());
+		// else
+		// callback.problemGettingSalt("some failure message");
+		// }
+		//
+		// @Override
+		// public void signup(String email, String sessionSalt, String cryptoKey, String passwordHash, ISignUpCallback callback) {
+		// System.out.println("Signing up email: " + email + ", " + sessionSalt + " hash: " + passwordHash);
+		// System.out.println("Which decodes to: " + Crypto.aesDecrypt(cryptoKey, passwordHash));
+		// if (ok)
+		// callback.signedUp(email);
+		// else
+		// callback.failed(email, "some failure message");
+		// }
+		//
+		// @Override
+		// public void showSignup(String sessionSalt) {
+		// Swts.removeAllChildren(holder);
+		// System.out.println("Would have sent salt to SFM: " + sessionSalt);
+		// String crypto = Crypto.makeKey();
+		// System.out.println("And got reply: " + crypto);
+		// ISignUp.Utils.signUp(holder, cardConfig, sessionSalt, crypto, this, callback);
+		// holder.layout();
+		// }
+		//
+		// @Override
+		// public void showLogin(String sessionSalt) {
+		// Swts.removeAllChildren(holder);
+		// ILogin.Utils.login(holder, cardConfig, sessionSalt, this, callback);
+		// holder.layout();
+		// }
+		//
+		// @Override
+		// public void showForgotPassword(String sessionSalt) {
+		// Swts.removeAllChildren(holder);
+		// IForgotPassword.Utils.forgotPassword(holder, cardConfig, sessionSalt, this, callback);
+		// holder.layout();
+		// }
+		//
+		// @Override
+		// public void login(String email, String sessionSalt, String emailSalt, String password, ILoginCallback callback) {
+		// System.out.println("Logging in");
+		// if (ok)
+		// callback.loggedIn(email, Crypto.makeKey());
+		// else
+		// callback.failedToLogin(email, "some failure message");
+		// }
+		//
+		// @Override
+		// public void forgotPassword(String email, String sessionSalt, IForgotPasswordCallback callback) {
+		// System.out.println("Logging in");
+		// if (ok)
+		// callback.emailSent(email);
+		// else
+		// callback.failedToSend(email, "some reason");
+		// }
+		//
+		// @Override
+		// public void requestEmailSalt(String email, String sessionSalt, IRequestSaltCallback callback) {
+		// throw new UnsupportedOperationException();
+		// }
+		//
+		// };
+		// return loginStrategy;
+		//
+		// }
 
 		public static ILoginStrategy sysoutLoginStrategy() {
 			return new ILoginStrategy() {
 
 				@Override
-				public void showLogin(String sessionSalt) {
-					System.out.println("Show login");
-				}
-
-				@Override
-				public void showForgotPassword(String sessionSalt) {
-					System.out.println("Show Forgot Password");
-				}
-
-				@Override
-				public void showSignup(String sessionSalt) {
-					System.out.println("Show Sign Up");
-
-				}
-
-				@Override
 				public void forgotPassword(String email, String sessionSalt, IForgotPasswordCallback callback) {
 					System.out.println("Sending 'forgot password' to server");
-					callback.emailSent(email);
+					callback.emailSent(email, "magicString");
 				}
 
 				@Override
@@ -318,7 +282,7 @@ public interface ILoginStrategy {
 				}
 
 				@Override
-				public void signup(String email, String sessionSalt, String cryptoKey, String passwordHash, ISignUpCallback callback) {
+				public void signup(String email, String sessionSalt, String passwordHash, ISignUpCallback callback) {
 					System.out.println("Signing up: " + email + ", " + sessionSalt + ", " + passwordHash);
 					callback.signedUp(email);
 				}
@@ -330,6 +294,36 @@ public interface ILoginStrategy {
 				}
 			};
 
+		}
+
+		public static ILoginStrategy noLoginStrategy() {
+			return new ILoginStrategy() {
+
+				@Override
+				public void signup(String email, String sessionSalt, String passwordHash, ISignUpCallback callback) {
+					throw new UnsupportedOperationException();
+				}
+
+				@Override
+				public void requestSessionSalt(IRequestSaltCallback callback) {
+					throw new UnsupportedOperationException();
+				}
+
+				@Override
+				public void requestEmailSalt(String email, String sessionSalt, IRequestSaltCallback callback) {
+					throw new UnsupportedOperationException();
+				}
+
+				@Override
+				public void login(String email, String sessionSalt, String emailSalt, String password, ILoginCallback callback) {
+					throw new UnsupportedOperationException();
+				}
+
+				@Override
+				public void forgotPassword(String email, String sessionSalt, IForgotPasswordCallback callback) {
+					throw new UnsupportedOperationException();
+				}
+			};
 		}
 	}
 

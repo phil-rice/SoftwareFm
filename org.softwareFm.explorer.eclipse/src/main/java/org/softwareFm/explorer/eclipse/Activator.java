@@ -25,6 +25,7 @@ import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
+import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.jdtBinding.api.IBindingRipper;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.server.GitRepositoryFactory;
@@ -45,35 +46,22 @@ public class Activator extends AbstractUIPlugin {
 	private static Activator plugin;
 
 	private IRepositoryFacard repository;
-
 	private String uuid;
-
 	private ISelectedBindingManager selectedArtifactSelectionManager;
-
 	private IServiceExecutor serviceExecutor;
 
-	/**
-	 * The constructor
-	 */
+	private IHttpClient httpClient;
+	boolean local = true;
+
 	public Activator() {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
-	 */
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
-	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
@@ -87,8 +75,20 @@ public class Activator extends AbstractUIPlugin {
 		super.stop(context);
 	}
 
+	public IHttpClient getClient() {
+		if (httpClient == null) {
+			String server = local ? "localhost" : "www.softwarefm.com";
+			int port = local ? 8080 : 80;
+			httpClient = IHttpClient.Utils.builder(server, port);
+		}
+		return httpClient;
+	}
+
 	public CardConfig getCardConfig(Composite parent) {
-		final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(parent.getDisplay(), new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(parent, getRepository())));
+		final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(//
+				parent.getDisplay(), //
+				new CardConfig(ICardFactory.Utils.cardFactory(), //
+						ICardDataStore.Utils.repositoryCardDataStore(parent, getRepository())));
 		return cardConfig;
 	}
 
@@ -96,11 +96,8 @@ public class Activator extends AbstractUIPlugin {
 		if (repository == null) {
 			File home = new File(System.getProperty("user.home"));
 			final File localRoot = new File(home, ".sfm");
-			boolean local = true;
-			String server = local ? "localhost" : "www.softwarefm.com";
 			String prefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : "git://www.softwarefm.com/";
-			int port = local ? 8080 : 80;
-			repository = GitRepositoryFactory.gitRepositoryFacard(server, port, localRoot, prefix);
+			repository = GitRepositoryFactory.gitRepositoryFacard(getClient(), localRoot, prefix);
 		}
 		return repository;
 	}

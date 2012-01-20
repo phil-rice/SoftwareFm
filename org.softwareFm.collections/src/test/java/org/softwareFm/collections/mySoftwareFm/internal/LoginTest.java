@@ -11,6 +11,7 @@ public class LoginTest extends AbstractNameAndValuesEditorTest<Login> {
 
 	private final String salt = "someSalt";
 	private final LoginStrategyMock loginStrategy = new LoginStrategyMock();
+	private final LoginDisplayStrategyMock loginDisplayStrategy = new LoginDisplayStrategyMock();
 	private final LoginCallbackMock loginCallback = new LoginCallbackMock();
 
 	public void testLoginEditorWhenDisplayed() {
@@ -65,7 +66,7 @@ public class LoginTest extends AbstractNameAndValuesEditorTest<Login> {
 
 	@Override
 	protected Login makeEditor() {
-		return new Login(shell, cardConfig, salt, loginStrategy, loginCallback);
+		return new Login(shell, cardConfig, salt, loginStrategy, loginDisplayStrategy, loginCallback);
 	}
 
 	@Override

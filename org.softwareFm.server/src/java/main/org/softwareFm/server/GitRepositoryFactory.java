@@ -22,7 +22,8 @@ public class GitRepositoryFactory {
 	public static IRepositoryFacard gitLocalRepositoryFacardWithServer(int port, File localRoot, File remoteRoot) {
 		IGitServer remoteGitServer = IGitServer.Utils.gitServer(remoteRoot, "not used");
 		final ISoftwareFmServer server = ISoftwareFmServer.Utils.server(port, 10, IProcessCall.Utils.softwareFmProcessCall(remoteGitServer, remoteRoot), ICallback.Utils.sysErrCallback());
-		return gitRepositoryFacard("localhost", port, localRoot, remoteRoot.getAbsolutePath(), new Runnable() {
+		IHttpClient client = IHttpClient.Utils.builder("localhost", port);
+		return gitRepositoryFacard(client, localRoot, remoteRoot.getAbsolutePath(), new Runnable() {
 			@Override
 			public void run() {
 				server.shutdown();
@@ -31,11 +32,10 @@ public class GitRepositoryFactory {
 
 	}
 
-	public static IRepositoryFacard gitRepositoryFacard(String host, int port, File localRoot, String remoteUriPrefix, final Runnable... onShutdown) {
+	public static IRepositoryFacard gitRepositoryFacard(IHttpClient client, File localRoot, String remoteUriPrefix, final Runnable... onShutdown) {
 		IGitServer localGit = IGitServer.Utils.gitServer(localRoot, remoteUriPrefix);
 		IServiceExecutor serviceExecutor = IServiceExecutor.Utils.defaultExecutor();
-		IHttpClient httpClient = IHttpClient.Utils.builder(host, port);
-		return new GitRepositoryFacard(httpClient, serviceExecutor, localGit, ServerConstants.staleCacheTime, ServerConstants.staleAboveRepositoryCacheTime) {
+		return new GitRepositoryFacard(client, serviceExecutor, localGit, ServerConstants.staleCacheTime, ServerConstants.staleAboveRepositoryCacheTime) {
 			@Override
 			public void shutdown() {
 				super.shutdown();

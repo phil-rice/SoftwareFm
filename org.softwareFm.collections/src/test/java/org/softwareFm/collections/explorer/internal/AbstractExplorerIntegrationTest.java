@@ -34,6 +34,7 @@ import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.collections.explorer.ExplorerAdapter;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.SnippetFeedConfigurator;
+import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.display.browser.IBrowserConfigurator;
 import org.softwareFm.display.swt.SwtAndServiceTest;
 import org.softwareFm.display.swt.Swts;
@@ -247,7 +248,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 					configure(display, new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(shell, repository))).//
 					withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap(prefix, "data"));
 			masterDetailSocial = new MasterDetailSocial(shell, SWT.NULL);
-			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, cardConfig, Arrays.asList(rootArtifactUrl, rootSnippetUrl), IPlayListGetter.Utils.noPlayListGetter(), service);
+			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, cardConfig, Arrays.asList(rootArtifactUrl, rootSnippetUrl), IPlayListGetter.Utils.noPlayListGetter(), service, ILoginStrategy.Utils.noLoginStrategy());
 			IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
 			SnippetFeedConfigurator.configure(explorer, cardConfig);
 			httpClient.delete(Urls.compose(rootArtifactUrl, artifactUrl)).execute(IResponseCallback.Utils.noCallback()).get();

@@ -21,6 +21,7 @@ import org.softwareFm.card.card.RightClickCategoryResult;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.ICardAndCollectionDataStoreVisitor;
 import org.softwareFm.collections.explorer.internal.Explorer;
+import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.display.browser.IBrowserCompositeBuilder;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.display.timeline.ITimeLine;
@@ -28,7 +29,6 @@ import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.utilities.services.IServiceExecutor;
 
 public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCardConfig {
-
 
 	void displayCard(String url, ICardAndCollectionDataStoreVisitor visitor);
 
@@ -67,14 +67,14 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 	void clearCaches();
 
 	ICardHolder getCardHolder();
+
 	void showMySoftwareFm();
 
 	public static class Utils {
 
-		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, List<String> rootUrls, IPlayListGetter playListGetter, IServiceExecutor service) {
-			return new Explorer(cardConfig, rootUrls, masterDetailSocial, service, playListGetter);
+		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, List<String> rootUrls, IPlayListGetter playListGetter, IServiceExecutor service, ILoginStrategy loginStrategy) {
+			return new Explorer(cardConfig, rootUrls, masterDetailSocial, service, playListGetter, loginStrategy);
 		}
 	}
-
 
 }

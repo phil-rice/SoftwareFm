@@ -23,7 +23,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -59,10 +58,7 @@ import org.softwareFm.collections.explorer.BrowserAndNavBar;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IExplorerListener;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
-import org.softwareFm.collections.mySoftwareFm.ILogin;
-import org.softwareFm.collections.mySoftwareFm.ILoginCallbacks;
 import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
-import org.softwareFm.collections.mySoftwareFm.IShowMessage;
 import org.softwareFm.collections.unrecognisedJar.GroupidArtifactVersion;
 import org.softwareFm.collections.unrecognisedJar.GuessArtifactAndVersionDetails;
 import org.softwareFm.collections.unrecognisedJar.UnrecognisedJar;
@@ -96,10 +92,12 @@ public class Explorer implements IExplorer {
 	private BrowserAndNavBar browser;
 	private TimeLine timeLine;
 	private Comments comments;
+	private final ILoginStrategy loginStrategy;
 
-	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter) {
+	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter, ILoginStrategy loginStrategy) {
 		this.cardConfig = cardConfig;
 		this.masterDetailSocial = masterDetailSocial;
+		this.loginStrategy = loginStrategy;
 		callbackToGotoUrlAndUpdateDetails = new ICallback<String>() {
 			@Override
 			public void process(String url) throws Exception {
@@ -217,28 +215,14 @@ public class Explorer implements IExplorer {
 	@Override
 	public void showMySoftwareFm() {
 		// The click is to simulate the request for a salt from the server
-		masterDetailSocial.createAndShowMaster(TextInBorder.makeTextWithClick(SWT.WRAP | SWT.READ_ONLY, cardConfig, new Runnable() {
+		masterDetailSocial.createAndShowMaster(new IFunction1<Composite, MySoftwareFm>() {
 			@Override
-			public void run() {
-				final String salt = UUID.randomUUID().toString();
-				masterDetailSocial.createAndShowMaster(new IFunction1<Composite, IHasControl>() {
-					@Override
-					public IHasControl apply(Composite from) throws Exception {
-						Composite holder = new Composite(from, SWT.NULL);
-						IShowMessage showMessages = IShowMessage.Utils.textInBorder(holder, cardConfig, new Runnable() {
-							@Override
-							public void run() {
-								showMySoftwareFm();
-							}
-						});
-						ILoginCallbacks loginCallbacks = ILoginCallbacks.Utils.showMessageCallbacks(cardConfig, showMessages);
-						ILogin.Utils.login(holder, cardConfig, salt, ILoginStrategy.Utils.mock(cardConfig, holder, true, loginCallbacks), loginCallbacks);
-						holder.setLayout(new FillLayout());
-						return IHasControl.Utils.toHasControl(holder);
-					}
-				});
+			public MySoftwareFm apply(Composite from) throws Exception {
+				MySoftwareFm mySoftwareFm = new MySoftwareFm(from, cardConfig, loginStrategy);
+				mySoftwareFm.start();
+				return mySoftwareFm;
 			}
-		}, CardConstants.loginCardType, CardConstants.loginTitle, CardConstants.contactingServer));
+		});
 	}
 
 	public void dispose() {

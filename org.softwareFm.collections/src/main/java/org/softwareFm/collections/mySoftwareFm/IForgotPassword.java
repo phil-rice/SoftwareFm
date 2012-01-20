@@ -7,8 +7,8 @@ import org.softwareFm.display.composites.IHasComposite;
 
 public interface IForgotPassword extends IHasComposite {
 	public static class Utils {
-		public static IForgotPassword forgotPassword(Composite parent, CardConfig cardConfig,  String salt, ILoginStrategy strategy, IForgotPasswordCallback callback) {
-			return new ForgotPassword(parent, cardConfig, salt, strategy, callback);
+		public static IForgotPassword forgotPassword(Composite parent, CardConfig cardConfig, String salt, ILoginStrategy loginStrategy, ILoginDisplayStrategy loginDisplayStrategy, IForgotPasswordCallback callback) {
+			return new ForgotPassword(parent, cardConfig, salt, loginStrategy, loginDisplayStrategy, callback);
 		}
 	}
 }

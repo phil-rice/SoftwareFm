@@ -13,4 +13,5 @@ Export-Package: org.softwareFm.collections,
  org.softwareFm.collections.comments,
  org.softwareFm.collections.constants,
  org.softwareFm.collections.explorer,
- org.softwareFm.collections.menu
+ org.softwareFm.collections.menu,
+ org.softwareFm.collections.mySoftwareFm

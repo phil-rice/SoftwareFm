@@ -14,9 +14,6 @@ import org.softwareFm.utilities.crypto.Crypto;
 
 public class LoginStrategyMock implements ILoginStrategy {
 
-	public final List<String> showLogin = Lists.newList();
-	public final List<String> showForgetPassword = Lists.newList();
-	public final List<String> showSignup = Lists.newList();
 	public final List<String> forgotPasswordEmail = Lists.newList();
 	public final List<String> loginEmail = Lists.newList();
 	public final List<String> loginPassword = Lists.newList();
@@ -42,27 +39,12 @@ public class LoginStrategyMock implements ILoginStrategy {
 	public void setEmailSetOk(boolean ok) {
 		this.emailSaltOk = ok;
 	}
-	
-	@Override
-	public void showLogin(String sessionSalt) {
-		showLogin.add(sessionSalt);
-	}
-
-	@Override
-	public void showForgotPassword(String sessionSalt) {
-		showForgetPassword.add(sessionSalt);
-	}
-
-	@Override
-	public void showSignup(String sessionSalt) {
-		showSignup.add(sessionSalt);
-	}
 
 	@Override
 	public void forgotPassword(String email, String sessionSalt, IForgotPasswordCallback callback) {
 		forgotPasswordEmail.add(email);
 		if (ok)
-			callback.emailSent(email);
+			callback.emailSent(email, "magicString");
 		else
 			callback.failedToSend(email, "someMessage");
 	}
@@ -87,7 +69,7 @@ public class LoginStrategyMock implements ILoginStrategy {
 	}
 
 	@Override
-	public void signup(String email, String sessionSalt, String cryptoKey, String passwordHash, ISignUpCallback callback) {
+	public void signup(String email, String sessionSalt, String passwordHash, ISignUpCallback callback) {
 		signupEmail.add(email);
 		signupSalt.add(sessionSalt);
 		signupPassword.add(passwordHash);

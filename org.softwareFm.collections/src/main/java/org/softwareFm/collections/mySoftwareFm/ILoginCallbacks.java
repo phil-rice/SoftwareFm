@@ -10,7 +10,7 @@ public interface ILoginCallbacks extends ILoginCallback, IForgotPasswordCallback
 		public static ILoginCallbacks showMessageCallbacks(final CardConfig cardConfig, final IShowMessage strategy) {
 			return new ILoginCallbacks() {
 				@Override
-				public void emailSent(String email) {
+				public void emailSent(String email, String magicString) {
 					String cardType = CardConstants.forgotPasswordCardType;
 					String title = IResourceGetter.Utils.getMessageOrException(cardConfig.resourceGetterFn, cardType, CardConstants.sentForgottenPasswordTitle, email);
 					String message = IResourceGetter.Utils.getMessageOrException(cardConfig.resourceGetterFn, cardType, CardConstants.sentForgottenPasswordText, email);

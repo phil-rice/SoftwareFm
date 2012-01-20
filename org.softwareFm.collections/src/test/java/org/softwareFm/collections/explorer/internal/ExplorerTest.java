@@ -24,6 +24,7 @@ import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.dataStore.CardDataStoreMock;
 import org.softwareFm.card.title.TitleSpec;
+import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.display.menu.PopupMenuContributorMock;
 import org.softwareFm.display.swt.SwtAndServiceTest;
 import org.softwareFm.display.timeline.IPlayListGetter;
@@ -63,7 +64,7 @@ public class ExplorerTest extends SwtAndServiceTest {
 				"noCardNameField", new ResourceGetterMock(), //
 				"withCardNameField", new ResourceGetterMock(CardConstants.cardNameFieldKey, "cardName"))).//
 				withTitleSpecFn(Functions.<ICardData, TitleSpec> constant(TitleSpec.noTitleSpec(shell.getBackground())));
-		Explorer explorer = new Explorer(cardConfig, CardDataStoreFixture.urlAsList, masterDetailSocial, service, IPlayListGetter.Utils.noPlayListGetter()) {
+		Explorer explorer = new Explorer(cardConfig, CardDataStoreFixture.urlAsList, masterDetailSocial, service, IPlayListGetter.Utils.noPlayListGetter(), ILoginStrategy.Utils.noLoginStrategy()) {
 			@Override
 			protected String makeRandomUUID() {
 				return "randomUUID";
