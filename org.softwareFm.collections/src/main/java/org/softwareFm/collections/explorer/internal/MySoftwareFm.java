@@ -118,8 +118,8 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		Swts.removeAllChildren(content);
 		IForgotPassword.Utils.forgotPassword(content, cardConfig, sessionSalt, loginStrategy, this, new IForgotPasswordCallback() {
 			@Override
-			public void emailSent(String email, String magicString) {
-				display("Email sent", "Sent email to " + email +", with magic string: " + magicString+"\n\n localhost:8080/" + ServerConstants.passwordResetLinkPrefix +"/" + magicString);
+			public void emailSent(String email) {
+				display("Email sent", "Sent email to " + email );
 			}
 
 			@Override

@@ -143,7 +143,7 @@ public interface ILoginStrategy {
 													@Override
 													public void run() {
 														if (response.statusCode() == ServerConstants.okStatusCode)
-															callback.emailSent(email, response.asString());
+															callback.emailSent(email);
 														else
 															callback.failedToSend(email, response.asString());
 													}
@@ -265,7 +265,7 @@ public interface ILoginStrategy {
 				@Override
 				public void forgotPassword(String email, String sessionSalt, IForgotPasswordCallback callback) {
 					System.out.println("Sending 'forgot password' to server");
-					callback.emailSent(email, "magicString");
+					callback.emailSent(email);
 				}
 
 				@Override

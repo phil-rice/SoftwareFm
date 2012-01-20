@@ -3,6 +3,8 @@ package org.softwareFm.collections.mySoftwareFm.internal;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -63,7 +65,9 @@ public class Login implements ILogin {
 
 					@Override
 					public boolean canOk(Map<String, Object> data) {
-						boolean emailOk = getEmail(data).length() > 0;
+						String email = getEmail(data);
+						Matcher matcher = Pattern.compile("[\\w-]+@([\\w-]+\\.)+[\\w-]+").matcher(email);
+						boolean emailOk = email.length() > 0 && matcher.find();
 						boolean passwordOk = getPassword(data).length() > 0;
 						return emailOk && passwordOk;
 					}

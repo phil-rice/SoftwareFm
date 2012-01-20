@@ -25,7 +25,8 @@ public class ForgottonPasswordProcessor extends AbstractCommandProcessor {
 		String email = Strings.nullSafeToString(parameters.get(ServerConstants.emailKey));
 		saltProcessor.invalidateSalt(salt);
 		String magicString = forgottonPasswordMailer.process(email);
-		return IProcessResult.Utils.processString(magicString);
+		System.out.println("Magic String: " + magicString);
+		return IProcessResult.Utils.processString("");
 	}
 
 }

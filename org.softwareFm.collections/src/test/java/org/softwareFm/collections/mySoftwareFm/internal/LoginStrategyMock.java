@@ -44,7 +44,7 @@ public class LoginStrategyMock implements ILoginStrategy {
 	public void forgotPassword(String email, String sessionSalt, IForgotPasswordCallback callback) {
 		forgotPasswordEmail.add(email);
 		if (ok)
-			callback.emailSent(email, "magicString");
+			callback.emailSent(email);
 		else
 			callback.failedToSend(email, "someMessage");
 	}

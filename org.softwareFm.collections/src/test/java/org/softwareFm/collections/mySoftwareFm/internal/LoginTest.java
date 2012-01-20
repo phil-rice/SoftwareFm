@@ -21,14 +21,23 @@ public class LoginTest extends AbstractNameAndValuesEditorTest<Login> {
 	}
 
 	public void testNeedEmailAndPasswordToBeOk() {
-		checkOk("emailValue", "passwordValue", true);
-		checkOk("emailValue", "", false);
+		checkOk("a.b.c@c.d", "passwordValue", true);
+		checkOk("a.b.c@c.d", "", false);
 		checkOk("", "passwordValue", false);
 		checkOk("", "", false);
 	}
 
+	public void testLoginEditorNeedsEmailAddress() {
+		checkOk("emailValue", "passwordValue", false);
+		checkOk("email@", "passwordValue", false);
+		checkOk("@address", "passwordValue", false);
+		
+		checkOk("a.b.c@c.d", "passwordValue", true);
+
+	}
+
 	public void testEmailFailedLoginStrategy() {
-		checkOk("someEmail", "somePassword", true);
+		checkOk("a.b.c@c.d", "somePassword", true);
 		assertEquals(0, loginCallback.loggedInEmail.size());
 		assertEquals(0, loginCallback.failedEmail.size());
 		okCancel.okButton.notifyListeners(SWT.Selection, new Event());
@@ -38,22 +47,22 @@ public class LoginTest extends AbstractNameAndValuesEditorTest<Login> {
 	}
 
 	public void testEmailAndCryptoSentToLoginStrategyWithEmailSaltOk() {
-		checkOk("someEmail", "somePassword", true);
+		checkOk("a.b.c@c.d", "somePassword", true);
 		loginStrategy.setOk(true);
 		loginStrategy.setEmailSetOk(true);
 		okCancel.okButton.notifyListeners(SWT.Selection, new Event());
-		assertEquals("someEmail", Lists.getOnly(loginCallback.loggedInEmail));
+		assertEquals("a.b.c@c.d", Lists.getOnly(loginCallback.loggedInEmail));
 		assertEquals(loginStrategy.cryptoKey, Lists.getOnly(loginCallback.loggedInCrypto));
-		assertEquals("someEmail", Lists.getOnly(loginCallback.loggedInEmail));
+		assertEquals("a.b.c@c.d", Lists.getOnly(loginCallback.loggedInEmail));
 	}
 
 	public void testEmailAndCryptoSentToLoginStrategyWithEmailSaltFail() {
-		checkOk("someEmail", "somePassword", true);
+		checkOk("a.b.c@c.d", "somePassword", true);
 		loginStrategy.setOk(true);
 		okCancel.okButton.notifyListeners(SWT.Selection, new Event());
 		assertEquals(0, loginCallback.loggedInEmail.size());
-		
-		assertEquals("someEmail", Lists.getOnly(loginCallback.failedEmail));
+
+		assertEquals("a.b.c@c.d", Lists.getOnly(loginCallback.failedEmail));
 		assertEquals("someMessage", Lists.getOnly(loginCallback.failedMessage));
 	}
 
