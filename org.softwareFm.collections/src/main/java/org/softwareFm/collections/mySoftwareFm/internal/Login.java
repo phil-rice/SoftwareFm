@@ -33,7 +33,7 @@ public class Login implements ILogin {
 		String title = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, CardConstants.loginTitle);
 		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(), Arrays.asList(//
 				INamesAndValuesEditor.Utils.text(cardConfig, cardType, "email"),//
-				INamesAndValuesEditor.Utils.text(cardConfig, cardType, "password")),//
+				INamesAndValuesEditor.Utils.password(cardConfig, cardType, "password")),//
 				new ICardEditorCallback() {
 					@Override
 					public void ok(ICardData cardData) {

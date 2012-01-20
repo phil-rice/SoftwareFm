@@ -7,6 +7,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.editors.AbstractNameAndValuesEditorTest;
 import org.softwareFm.card.editors.INamesAndValuesEditor;
@@ -33,14 +34,14 @@ public class NameAndValuesEditorTest extends AbstractNameAndValuesEditorTest<Nam
 		assertFalse(okCancel.isOkEnabled());
 		checkChangeValue(1, "newerTwo", true);
 		assertEquals(0, callback.okData.size());
-		
+
 		okCancel.okButton.notifyListeners(SWT.Selection, new Event());
 		assertEquals(Maps.stringObjectMap("one", "newOne", "two", "newerTwo", "three", "newThree", CardConstants.slingResourceType, cardType), Lists.getOnly(callback.okData));
 	}
 
 	private void checkChangeValue(int index, String newValue, boolean expectedOkEnabled) {
 		Label label = (Label) labels.getChildren()[index];
-		String key = label.getText().toLowerCase();//won't work in general, but is ok for one/two/three
+		String key = label.getText().toLowerCase();// won't work in general, but is ok for one/two/three
 		Control control = values.getChildren()[index];
 		assertEquals(changeValueIndex + 1, callback.canOkData.size());
 		Swts.setText(control, newValue);
@@ -54,16 +55,30 @@ public class NameAndValuesEditorTest extends AbstractNameAndValuesEditorTest<Nam
 
 	}
 
+	public void testSelectCallsOKIfOkEnabled() {
+		Text text = (Text) values.getChildren()[0];
+
+		assertEquals(0, callback.okData.size());
+		text.notifyListeners(SWT.DefaultSelection, new Event());
+		assertEquals(0, callback.okData.size());
+
+		callback.setCanOk(true);
+		text.notifyListeners(SWT.Modify, new Event());
+		text.notifyListeners(SWT.DefaultSelection, new Event());
+		assertEquals(1, callback.okData.size());
+	}
 
 	@Override
 	protected String getCardType() {
 		return "someCardType";
 	}
+
 	@Override
 	protected NameAndValuesEditor makeEditor() {
 		return new NameAndValuesEditor(shell, cardConfig, cardType, "someTitle", "someurl", initialData, Arrays.asList(//
 				INamesAndValuesEditor.Utils.text(cardConfig, cardType, "one"),//
 				INamesAndValuesEditor.Utils.styledText(cardConfig, cardType, "two"),//
-				INamesAndValuesEditor.Utils.text(cardConfig, cardType, "three")), callback);	}
+				INamesAndValuesEditor.Utils.text(cardConfig, cardType, "three")), callback);
+	}
 
 }

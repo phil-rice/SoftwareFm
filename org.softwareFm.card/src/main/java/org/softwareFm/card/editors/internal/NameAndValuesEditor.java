@@ -12,10 +12,14 @@ import java.util.Map;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -127,6 +131,33 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 					okCancel.setOkEnabled(callback.canOk(cardData.data()));
 				}
 			});
+			addListeners(text);
+		}
+
+		private void addListeners(Text text) {
+			text.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (okCancel.isOkEnabled())
+						okCancel.ok();
+				}
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+					if (okCancel.isOkEnabled())
+						okCancel.ok();
+				}
+			});
+			text.addKeyListener(new KeyListener() {
+				@Override
+				public void keyReleased(KeyEvent e) {
+					if (e.keyCode == SWT.ESC)
+						okCancel.cancel();
+				}
+
+				@Override
+				public void keyPressed(KeyEvent e) {
+				}
+			});
 		}
 
 		private void setInitialTextAndAddModified(final ICardData cardData, final StyledText text, final String key) {
@@ -212,7 +243,7 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 	public void valueChanged(String key, Object newValue) {
 		data.put(key, newValue);
 	}
-	
+
 	@Override
 	public Composite getButtonComposite() {
 		return (Composite) content.okCancel.getControl();

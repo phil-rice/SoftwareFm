@@ -43,6 +43,18 @@ public interface INamesAndValuesEditor extends IValueEditor, ICardData {
 				}
 			});
 		}
+		public static NameAndValueData password(final CardConfig cardConfig, final String cardType, final String key) {
+			return new NameAndValueData(key, new IFunction1<Composite, Control>() {
+				@Override
+				public Control apply(Composite from) throws Exception {
+					Text text = new Text(from, SWT.NULL);
+					text.setEchoChar('#');
+					String initialValue = cardConfig.valueFn.apply(cardConfig, new LineItem(cardType, key, ""));
+					text.setText(initialValue);
+					return text;
+				}
+			});
+		}
 
 		public static NameAndValueData styledText(final CardConfig cardConfig, final String cardType, final String key) {
 			return new NameAndValueData(key, new IFunction1<Composite, Control>() {

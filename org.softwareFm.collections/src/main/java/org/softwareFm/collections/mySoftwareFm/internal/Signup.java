@@ -34,8 +34,8 @@ public class Signup implements ISignUp {
 		String title = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, CardConstants.signupTitle);
 		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(), Arrays.asList(//
 				INamesAndValuesEditor.Utils.text(cardConfig, cardType, "email"),//
-				INamesAndValuesEditor.Utils.text(cardConfig, cardType, "password"),//
-				INamesAndValuesEditor.Utils.text(cardConfig, cardType, "confirmPassword")),//
+				INamesAndValuesEditor.Utils.password(cardConfig, cardType, "password"),//
+				INamesAndValuesEditor.Utils.password(cardConfig, cardType, "confirmPassword")),//
 				new ICardEditorCallback() {
 					@Override
 					public void ok(ICardData cardData) {
