@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Display;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.backdrop.BackdropAnchor;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
+import org.softwareFm.softwareFmImages.login.LoginAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 import org.softwareFm.softwareFmImages.smallIcons.SmallIconsAnchor;
 import org.softwareFm.softwareFmImages.title.TitleAnchor;
@@ -44,6 +45,8 @@ public class BasicImageRegisterConfigurator implements IImageRegisterConfigurato
 				"softwareFm", "javadoc", "source");
 		Images.registerImages(device, imageRegistry, GeneralAnchor.class, "general", //
 				"browse", "help", "clear", "sfmLogo", "commentAdd");
+		Images.registerImages(device, imageRegistry, LoginAnchor.class, "login", //
+				"login");
 		Images.registerImages(device, imageRegistry, TitleAnchor.class, "title",//
 				"advert", "artifact", "blog", "document", "facebook", "folder", "forum", "group", "history", "jar", //
 				"mailingList", "next", "previous", "refresh", "rss", "tutorial", "twitter", "version");

@@ -92,13 +92,11 @@ public class Explorer implements IExplorer {
 	private BrowserAndNavBar browser;
 	private TimeLine timeLine;
 	private Comments comments;
-	private final ILoginStrategy loginStrategy;
 	private MySoftwareFm mySoftwareFm;
 
 	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy) {
 		this.cardConfig = cardConfig;
 		this.masterDetailSocial = masterDetailSocial;
-		this.loginStrategy = loginStrategy;
 		callbackToGotoUrlAndUpdateDetails = new ICallback<String>() {
 			@Override
 			public void process(String url) throws Exception {

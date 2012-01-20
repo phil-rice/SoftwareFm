@@ -196,38 +196,7 @@ public class ActionBar implements IActionBar {
 				explorer.showMySoftwareFm();
 			}
 		}));
-		toolBarManager.add(Swts.Actions.pushAction(resourceGetter, CollectionConstants.actionRefreshTitle, ActionAnchor.class, CollectionConstants.actionRefreshImage, new Runnable() {
-			@Override
-			public void run() {
-				ICard card = explorer.getCardHolder().getCard();
-				if (card != null) {
-					String url = card.url();
-					if (url != null) {
-						cardConfig.cardDataStore.clearCache(url);
-						explorer.displayCard(url, new CardAndCollectionDataStoreAdapter());
-					}
-				}
-			}
-		}));
-		if (admin)
-			toolBarManager.add(Swts.Actions.pushAction(resourceGetter, CollectionConstants.actionNukeTitle, ActionAnchor.class, CollectionConstants.actionNukeImage, new Runnable() {
-				@Override
-				public void run() {
-					String url = explorer.getCardHolder().getCard().url();
-					if (MessageDialog.openConfirm(explorer.getControl().getShell(), CollectionConstants.confirmDelete, url))
-						cardConfig.cardDataStore.delete(url, new IAfterEditCallback() {
-							@Override
-							public void afterEdit(final String url) {
-								Swts.asyncExec(explorer.getControl(), new Runnable() {
-									@Override
-									public void run() {
-										explorer.displayCard(url, new CardAndCollectionDataStoreAdapter());
-									}
-								});
-							}
-						});
-				}
-			}));
+
 		if (newFeatures)
 			toolBarManager.add(Swts.Actions.radioAction(resourceGetter, CollectionConstants.actionGroupTitle, ActionAnchor.class, CollectionConstants.actionGroupImage, new Runnable() {
 				@Override
@@ -302,6 +271,41 @@ public class ActionBar implements IActionBar {
 				setState(State.FROM_PATH);
 			}
 		}));
+		toolBarManager.add(Swts.Actions.pushAction(resourceGetter, CollectionConstants.actionRefreshTitle, ActionAnchor.class, CollectionConstants.actionRefreshImage, new Runnable() {
+			@Override
+			public void run() {
+				ICard card = explorer.getCardHolder().getCard();
+				if (card != null) {
+					String url = card.url();
+					if (url != null) {
+						cardConfig.cardDataStore.clearCache(url);
+						explorer.displayCard(url, new CardAndCollectionDataStoreAdapter());
+					}
+				}
+			}
+		}));
+		if (admin)
+			toolBarManager.add(Swts.Actions.pushAction(resourceGetter, CollectionConstants.actionNukeTitle, ActionAnchor.class, CollectionConstants.actionNukeImage, new Runnable() {
+				@Override
+				public void run() {
+					ICard card = explorer.getCardHolder().getCard();
+					if (card != null) {
+						String url = card.url();
+						if (MessageDialog.openConfirm(explorer.getControl().getShell(), CollectionConstants.confirmDelete, url))
+							cardConfig.cardDataStore.delete(url, new IAfterEditCallback() {
+								@Override
+								public void afterEdit(final String url) {
+									Swts.asyncExec(explorer.getControl(), new Runnable() {
+										@Override
+										public void run() {
+											explorer.displayCard(url, new CardAndCollectionDataStoreAdapter());
+										}
+									});
+								}
+							});
+					}
+				}
+			}));
 	}
 
 	protected void setState(State state) {

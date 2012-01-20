@@ -36,11 +36,11 @@ public class ForgottonPasswordMailer extends AbstractLoginDataAccessor implement
 
 			Email email = new SimpleEmail();
 			email.setHostName(host);
-			email.setSmtpPort(587);
+			email.setSmtpPort(25);
 			if (username != null && password != null)
 				email.setAuthentication(username, password);
 			email.setDebug(true);
-			email.setTLS(true);
+			email.setTLS(false);
 			email.setFrom("forgottonpasswords@softwarefm.org");
 			email.setSubject(ServerConstants.passwordResetSubject);
 			String message = MessageFormat.format(ServerConstants.forgottonPasswordMessage, emailAddress, magicString);

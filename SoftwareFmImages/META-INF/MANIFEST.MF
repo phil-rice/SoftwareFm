@@ -16,8 +16,10 @@ Export-Package: org.softwareFm.softwareFmImages;
  org.softwareFm.softwareFmImages.actions,
  org.softwareFm.softwareFmImages.artifacts,
  org.softwareFm.softwareFmImages.backdrop,
+ org.softwareFm.softwareFmImages.comments,
  org.softwareFm.softwareFmImages.general,
  org.softwareFm.softwareFmImages.listTabs,
+ org.softwareFm.softwareFmImages.login,
  org.softwareFm.softwareFmImages.overlays,
  org.softwareFm.softwareFmImages.smallIcons,
  org.softwareFm.softwareFmImages.title

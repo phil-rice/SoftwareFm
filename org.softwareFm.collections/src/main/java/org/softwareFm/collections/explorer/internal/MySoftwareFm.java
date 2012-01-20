@@ -97,7 +97,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 			public void run() {
 				Swts.removeAllChildren(content);
 				TextInBorder textInBorder = new TextInBorder(content, SWT.WRAP | SWT.READ_ONLY, cardConfig);
-				textInBorder.setTextFromResourceGetter(cardType, title, text, args);
+				textInBorder.setTextFromResourceGetter(cardType, title, text, (Object[])args);
 				textInBorder.addClickedListener(runnable);
 				content.layout();
 			}

@@ -41,8 +41,6 @@ public interface IMasterDetailSocial extends IHasComposite {
 
 	void hideSocial();
 
-
-
 	void dispose();
 
 	void putDetailOverSocial();

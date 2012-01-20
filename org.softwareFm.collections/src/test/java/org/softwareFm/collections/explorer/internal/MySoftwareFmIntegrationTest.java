@@ -89,11 +89,12 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest {
 
 	public void testLoginErrors() {
 		signUp(email, password);
-		String crypto = template.queryForObject("select crypto from users", String.class);
+		 template.queryForObject("select crypto from users", String.class);
 		mySoftwareFm.logout();
 
 		checkLoginError(email, "password", "Email: a.b@c.com\n\n Email / Password didn't match\n\nClicking this panel will start login again");
 		checkLoginError("a@b.com", "password", "Email: a@b.com\n\n Email not recognised\n\nClicking this panel will start login again");
+		assertNull(mySoftwareFm.crypto);
 	}
 
 	private void checkLoginError(String email, String password, String errorMessage) {
@@ -207,12 +208,14 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest {
 	}
 
 	OkCancel getOkCancel() {
+		@SuppressWarnings("unchecked")
 		IValueComposite<Composite> valueComposite = (IValueComposite<Composite>) softwareFmComposite.getChildren()[0];
 		return valueComposite.getOkCancel();
 
 	}
 
 	private void setValues(final String... values) {
+		@SuppressWarnings("unchecked")
 		IValueComposite<Composite> valueComposite = (IValueComposite<Composite>) softwareFmComposite.getChildren()[0];
 		process(valueComposite, new IEditorCallback<Void>() {
 			@Override
@@ -254,6 +257,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest {
 				Control[] children = softwareFmComposite.getChildren();
 				if (children.length > 0)
 					if (children[0] instanceof IValueComposite<?>) {
+						@SuppressWarnings("unchecked")
 						IValueComposite<Composite> valueComposite = (IValueComposite<Composite>) softwareFmComposite.getChildren()[0];
 						return process(valueComposite, new IEditorCallback<Boolean>() {
 							@Override
@@ -274,6 +278,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest {
 			}
 		};
 		dispatchUntil(display, ServerConstants.clientTimeOut * 1000, childIsValueComposite);
+		@SuppressWarnings("unchecked")
 		IValueComposite<Composite> valueComposite = (IValueComposite<Composite>) softwareFmComposite.getChildren()[0];
 		return valueComposite;
 	}
