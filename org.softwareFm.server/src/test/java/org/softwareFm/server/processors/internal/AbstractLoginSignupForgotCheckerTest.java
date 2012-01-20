@@ -7,10 +7,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.dbcp.BasicDataSource;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.SignUpResult;
 import org.softwareFm.utilities.tests.IIntegrationTest;
 import org.softwareFm.utilities.tests.Tests;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
 
 abstract public class AbstractLoginSignupForgotCheckerTest extends TestCase implements IIntegrationTest {
@@ -19,6 +22,8 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends TestCase impl
 	protected LoginChecker loginChecker;
 	protected ForgottonPasswordMailer passwordMailer;
 	protected PasswordResetter resetPassword;
+	private BasicDataSource dataSource;
+	protected JdbcTemplate template;
 
 	protected String checkSignup(final String email, final String salt, final String hash) {
 		int initial = findUsersSize();
@@ -26,7 +31,7 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends TestCase impl
 		assertNull(signUp.errorMessage);
 		final String crypto = signUp.crypto;
 		final AtomicInteger count = new AtomicInteger();
-		signupChecker.template.query("select * from users where email = ?", new Object[] { email }, new RowCallbackHandler() {
+		template.query("select * from users where email = ?", new Object[] { email }, new RowCallbackHandler() {
 			@Override
 			public void processRow(ResultSet rs) throws SQLException {
 				assertEquals(email, rs.getString("email"));
@@ -43,7 +48,7 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends TestCase impl
 	}
 
 	protected int findUsersSize() {
-		return signupChecker.template.queryForInt("select count(*) from users");
+		return template.queryForInt("select count(*) from users");
 	}
 
 	protected void checkNotAdded(final String email, final String salt, final String hash) {
@@ -58,11 +63,19 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends TestCase impl
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		signupChecker = new SignUpChecker();
-		loginChecker = new LoginChecker();
-		passwordMailer = new ForgottonPasswordMailer(null, null, null);//bit of a cheat...won't actually mail
-		resetPassword = new PasswordResetter();
-		signupChecker.template.update("truncate users");
+		dataSource = AbstractLoginDataAccessor.defaultDataSource();
+		signupChecker = new SignUpChecker(dataSource);
+		loginChecker = new LoginChecker(dataSource);
+		passwordMailer = new ForgottonPasswordMailer(dataSource, null, null, null);// bit of a cheat...won't actually mail
+		resetPassword = new PasswordResetter(dataSource);
+		template = new JdbcTemplate(dataSource);
+		template.update("truncate users");
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		dataSource.close();
 	}
 
 	protected void checkLogin(String email, String hash, String crypto) {
@@ -85,7 +98,7 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends TestCase impl
 		int initial = findUsersSize();
 		String magicString = passwordMailer.process(email);
 		final AtomicInteger count = new AtomicInteger();
-		signupChecker.template.query("select * from users where passwordResetKey = ?", new Object[] { magicString }, new RowCallbackHandler() {
+		template.query("select * from users where passwordResetKey = ?", new Object[] { magicString }, new RowCallbackHandler() {
 			@Override
 			public void processRow(ResultSet rs) throws SQLException {
 				assertEquals(email, rs.getString("email"));
@@ -106,8 +119,8 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends TestCase impl
 				passwordMailer.process(email);
 			}
 		});
-	
-		assertEquals(0, signupChecker.template.queryForInt("select count(*) from users where email = ?", email));
+
+		assertEquals(0, template.queryForInt("select count(*) from users where email = ?", email));
 		int finalCount = findUsersSize();
 		assertEquals(initialCount, finalCount);
 	}

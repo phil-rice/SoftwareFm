@@ -34,7 +34,7 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 		assertTrue(text, text.contains("Searching SoftwareFM Database for other Jars that look like this"));
 		// possible race condition here...the card may arrive before we have tested that the search text occured. I think that because we are not dispatching this won't take place
 
-		dispatchUntil(display, new Callable<Boolean>() {
+		dispatchUntil(display, delay, new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				String text = findSearchText();
@@ -67,7 +67,7 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 		// possible race condition here...the card may arrive before we have tested that the import text occured. I think that because we are not dispatching this won't take place
 		StyledText importingText = (StyledText) Swts.getDescendant(importingMessage, 1, 0, 0);
 		assertTrue(importingText.getText().startsWith("Importing"));
-		dispatchUntil(display, new Callable<Boolean>() {
+		dispatchUntil(display, delay, new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				ICardHolder cardHolder = explorer.getCardHolder();
@@ -89,7 +89,7 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 	}
 
 	private void dispatchUntilHasImportingMessage() {
-		dispatchUntil(display, new Callable<Boolean>() {
+		dispatchUntil(display, delay, new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				// this is race condition territory. We may get a importing message (normally takes a while to import), then the card will appear
@@ -105,7 +105,7 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 	}
 
 	private void dispatchUntilHasCardInHolder() {
-		dispatchUntil(display, new Callable<Boolean>() {
+		dispatchUntil(display, delay, new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				ICardHolder cardHolder = explorer.getCardHolder();

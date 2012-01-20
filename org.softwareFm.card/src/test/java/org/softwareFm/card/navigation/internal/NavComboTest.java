@@ -54,4 +54,11 @@ public class NavComboTest extends SwtTest {
 		nav = new NavCombo(shell, cardConfig, CardDataStoreFixture.url, "1a", memory);
 		navControl = (Combo) nav.getControl();
 	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		cardConfig.dispose();
+	}
+
 }

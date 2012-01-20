@@ -57,7 +57,7 @@ public class Signup implements ISignUp {
 
 					@Override
 					public boolean canOk(Map<String, Object> data) {
-						boolean emailOk = getEmail(data).length() > 0;
+						boolean emailOk = Strings.isEmail(getEmail(data));
 						boolean passwordOk = getPassword(data).length() > 0 && getPassword(data).equals(getConfirmPassword(data));
 						return emailOk && passwordOk;
 					}

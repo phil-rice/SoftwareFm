@@ -1,4 +1,4 @@
-package org.softwareFm.server.processors.internal;
+package org.softwareFm.server.processors;
 
 import javax.sql.DataSource;
 
@@ -7,14 +7,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 abstract public class AbstractLoginDataAccessor {
 
-	private final static DataSource dataSource = makeDataSource();
 	protected final JdbcTemplate template;
 
-	public AbstractLoginDataAccessor() {
+	public AbstractLoginDataAccessor(DataSource dataSource) {
 		this.template = new JdbcTemplate(dataSource);
 	}
 
-	private static DataSource makeDataSource() {
+	public static BasicDataSource defaultDataSource() {
 		BasicDataSource basicDataSource = new BasicDataSource();
 		basicDataSource.setDriverClassName("com.mysql.jdbc.Driver");
 		basicDataSource.setUrl("jdbc:mysql://localhost/users");

@@ -141,6 +141,7 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 					if (okCancel.isOkEnabled())
 						okCancel.ok();
 				}
+
 				@Override
 				public void widgetDefaultSelected(SelectionEvent e) {
 					if (okCancel.isOkEnabled())

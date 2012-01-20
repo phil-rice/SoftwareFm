@@ -3,6 +3,8 @@ package org.softwareFm.server.processors;
 import java.io.File;
 import java.util.Map;
 
+import javax.sql.DataSource;
+
 import org.apache.http.RequestLine;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.processors.internal.DeleteProcessor;
@@ -61,14 +63,14 @@ public interface IProcessCall {
 			return "<" + requestLine + ", " + parameters + ">";
 		}
 
-		public static IProcessCall softwareFmProcessCall(IGitServer server, File fileRoot) {
+		public static IProcessCall softwareFmProcessCall(DataSource dataSource, IGitServer server, File fileRoot) {
 			UrlCache<String> aboveRepostoryUrlCache = new UrlCache<String>();
 			SaltProcessor saltProcessor = new SaltProcessor();
-			LoginChecker loginChecker = new LoginChecker();
-			SignUpChecker signUpChecker = new SignUpChecker();
-			ForgottonPasswordMailer forgottonPasswordProcessor = new ForgottonPasswordMailer(null, null, null);
-			IPasswordResetter resetter = new PasswordResetter();
-			EmailSaltRequester saltRequester = new EmailSaltRequester();
+			LoginChecker loginChecker = new LoginChecker(dataSource);
+			SignUpChecker signUpChecker = new SignUpChecker(dataSource);
+			ForgottonPasswordMailer forgottonPasswordProcessor = new ForgottonPasswordMailer(dataSource, null, null, null);
+			IPasswordResetter resetter = new PasswordResetter(dataSource);
+			EmailSaltRequester saltRequester = new EmailSaltRequester(dataSource);
 			return chain(new FavIconProcessor(),//
 					new RigidFileProcessor(fileRoot, "update"),// responds to get or head
 					new LoginProcessor(saltProcessor, loginChecker), //

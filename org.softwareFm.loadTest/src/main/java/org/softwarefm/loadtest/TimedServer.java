@@ -10,6 +10,7 @@ import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ISoftwareFmServer;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.IProcessResult;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -20,7 +21,7 @@ public class TimedServer {
 		File root = new File(System.getProperty("user.home"));
 		File sfmRoot = new File(root, ".sfm_remote");
 		IGitServer server = IGitServer.Utils.gitServer(sfmRoot, "not used");
-		final IProcessCall rawProcessCall = IProcessCall.Utils.softwareFmProcessCall(server, sfmRoot);
+		final IProcessCall rawProcessCall = IProcessCall.Utils.softwareFmProcessCall(AbstractLoginDataAccessor.defaultDataSource(), server, sfmRoot);
 		IProcessCall processCall = new IProcessCall() {
 			@Override
 			public IProcessResult process(RequestLine requestLine, Map<String, Object> parameters) {

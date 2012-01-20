@@ -7,7 +7,6 @@ package org.softwareFm.collections.explorer.internal;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -15,7 +14,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import junit.framework.Assert;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -44,6 +42,7 @@ import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.server.GitRepositoryFactory;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.maps.Maps;
@@ -63,9 +62,9 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 
 	protected CardConfig cardConfig;
 	protected IRepositoryFacard repository;
-	protected Explorer explorer;
+	public Explorer explorer;
 	protected IHttpClient httpClient;
-	protected final long delay = 5000;
+	public final long delay = 5000;
 	protected MasterDetailSocial masterDetailSocial;
 
 	protected final String prefix = "/tests/" + getClass().getSimpleName();
@@ -101,62 +100,6 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 
 	}
 
-	public <T> T callInDispatch(Display display, final Callable<T> callable) {
-		final AtomicReference<T> result = new AtomicReference<T>();
-		display.syncExec(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					result.set(callable.call());
-				} catch (Exception e) {
-					throw WrappedException.wrap(e);
-				}
-			}
-		});
-
-		return result.get();
-	}
-
-	protected void dispatchUntil(Display display, Callable<Boolean> callable) {
-		long startTime = System.currentTimeMillis();
-		try {
-			while (!callable.call() && System.currentTimeMillis() < startTime + delay) {
-				dispatchUntilQueueEmpty();
-				Thread.sleep(2);
-			}
-			if (!callInDispatch(display, callable))
-				fail();
-		} catch (Exception e) {
-			throw WrappedException.wrap(e);
-		}
-	}
-
-	protected ICard doSomethingAndWaitForCardDataStoreToFinish(Runnable something, final CardHolderAndCardCallback cardHolderAndCardCallback) {
-		final CountDownLatch latch = new CountDownLatch(1);
-		final AtomicReference<ICard> cardRef = new AtomicReference<ICard>();
-		final AtomicReference<Exception> exception = new AtomicReference<Exception>();
-		explorer.addExplorerListener(new ExplorerAdapter() {
-			@Override
-			public void finished(ICardHolder cardHolder, String url, ICard card) throws Exception {
-				try {
-					explorer.removeExplorerListener(this);
-					cardHolderAndCardCallback.process(cardHolder, card);
-					dispatchUntilQueueEmpty();
-					cardRef.set(card);
-				} catch (Exception e) {
-					exception.set(e);
-					throw e;
-				} finally {
-					latch.countDown();
-				}
-			}
-		});
-		something.run();
-		dispatchUntilTimeoutOrLatch(latch, delay);
-		if (exception.get() != null)
-			throw new RuntimeException(exception.get());
-		return cardRef.get();
-	}
 
 	protected void displayCardThenViewChild(String url, final String childTitle, final CardHolderAndCardCallback callback) {
 		final AtomicInteger count = new AtomicInteger();
@@ -186,7 +129,32 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		});
 		assertEquals(1, count.get());// check the body was called
 	}
-
+	protected ICard doSomethingAndWaitForCardDataStoreToFinish(Runnable something, final CardHolderAndCardCallback cardHolderAndCardCallback) {
+		final CountDownLatch latch = new CountDownLatch(1);
+		final AtomicReference<ICard> cardRef = new AtomicReference<ICard>();
+		final AtomicReference<Exception> exception = new AtomicReference<Exception>();
+		explorer.addExplorerListener(new ExplorerAdapter() {
+			@Override
+			public void finished(ICardHolder cardHolder, String url, ICard card) throws Exception {
+				try {
+					explorer.removeExplorerListener(this);
+					cardHolderAndCardCallback.process(cardHolder, card);
+					dispatchUntilQueueEmpty();
+					cardRef.set(card);
+				} catch (Exception e) {
+					exception.set(e);
+					throw e;
+				} finally {
+					latch.countDown();
+				}
+			}
+		});
+		something.run();
+		dispatchUntilTimeoutOrLatch(latch, delay);
+		if (exception.get() != null)
+			throw new RuntimeException(exception.get());
+		return cardRef.get();
+	}
 	protected void executeMenuItem(Menu menu, String title) {
 		for (MenuItem item : menu.getItems()) {
 			if (item.getText().equals(title)) {
@@ -241,7 +209,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		// remoteAsUri = new File(root, "remote").getAbsolutePath();
 
 		httpClient = IHttpClient.Utils.builder("localhost", ServerConstants.testPort);
-		repository = GitRepositoryFactory.gitLocalRepositoryFacardWithServer(ServerConstants.testPort, localRoot, remoteRoot);
+		repository = GitRepositoryFactory.gitLocalRepositoryFacardWithServer(AbstractLoginDataAccessor.defaultDataSource(), ServerConstants.testPort, localRoot, remoteRoot);
 
 		try {
 			cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().//

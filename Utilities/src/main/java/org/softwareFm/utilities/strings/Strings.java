@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.softwareFm.utilities.aggregators.IAggregator;
@@ -30,6 +31,12 @@ public class Strings {
 
 	private final static Pattern urlFriendlyPattern = Pattern.compile("^[\\w\\.-]+$");
 	private static String digits = "0123456789abcdef";
+
+	public static boolean isEmail(String email) {
+		Matcher matcher = Pattern.compile("[\\w-]+@([\\w-]+\\.)+[\\w-]+").matcher(email);
+		boolean emailOk = email.length() > 0 && matcher.find();
+		return emailOk;
+	}
 
 	public static String toHex(byte[] data, int length) {
 		StringBuffer buf = new StringBuffer();
@@ -533,6 +540,5 @@ public class Strings {
 				return root;
 		return null;
 	}
-
 
 }

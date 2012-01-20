@@ -26,6 +26,7 @@ import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ISoftwareFmServer;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -38,6 +39,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 	private final CardConfig cardConfig;
 	protected String email;
 	protected String crypto;
+	protected String signupSalt;
 
 	public MySoftwareFm(Composite parent, CardConfig cardConfig, ILoginStrategy loginStrategy) {
 		this.cardConfig = cardConfig;
@@ -51,6 +53,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		loginStrategy.requestSessionSalt(new IRequestSaltCallback() {
 			@Override
 			public void saltReceived(String salt) {
+				MySoftwareFm.this.signupSalt = salt;
 				Swts.removeAllChildren(content);
 				ILogin.Utils.login(content, cardConfig, salt, loginStrategy, MySoftwareFm.this, new ILoginCallback() {
 					@Override
@@ -119,7 +122,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		IForgotPassword.Utils.forgotPassword(content, cardConfig, sessionSalt, loginStrategy, this, new IForgotPasswordCallback() {
 			@Override
 			public void emailSent(String email) {
-				display("Email sent", "Sent email to " + email );
+				display("Email sent", "Sent email to " + email);
 			}
 
 			@Override
@@ -135,7 +138,8 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		Swts.removeAllChildren(content);
 		ISignUp.Utils.signUp(content, cardConfig, sessionSalt, loginStrategy, this, new ISignUpCallback() {
 			@Override
-			public void signedUp(String email) {
+			public void signedUp(String email, String crypto) {
+				MySoftwareFm.this.crypto = crypto;
 				display("Signed Up", "Welcome to SoftwareFm " + email);
 			}
 
@@ -153,7 +157,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		IGitServer gitServer = IGitServer.Utils.noGitServer();
 		File home = new File(System.getProperty("user.home"));
 		final File localRoot = new File(home, ".sfm");
-		ISoftwareFmServer server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCall(gitServer, localRoot), ICallback.Utils.rethrow());
+		ISoftwareFmServer server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCall(AbstractLoginDataAccessor.defaultDataSource(), gitServer, localRoot), ICallback.Utils.rethrow());
 		try {
 			Swts.Show.display(MySoftwareFm.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 				@Override
@@ -169,6 +173,15 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 			client.shutdown();
 			service.shutdown();
 		}
+	}
+
+	public String getSignupSalt() {
+		return signupSalt;
+	}
+
+	public void logout() {
+		crypto = null;
+		signupSalt = null;
 	}
 
 }

@@ -78,4 +78,10 @@ public class CardTest extends SwtTest {
 		super.setUp();
 		cardConfig = CardDataStoreFixture.syncCardConfig(shell.getDisplay());
 	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		cardConfig.dispose();
+	}
 }

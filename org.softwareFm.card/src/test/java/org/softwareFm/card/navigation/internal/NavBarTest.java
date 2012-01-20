@@ -116,4 +116,11 @@ public class NavBarTest extends SwtTest {
 		navComposite = nav.getComposite();
 		navHistoryPrev = nav.getNavHistoryPrev();
 	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		cardConfig.dispose();
+	}
+
 }

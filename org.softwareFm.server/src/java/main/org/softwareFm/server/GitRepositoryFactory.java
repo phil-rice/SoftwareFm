@@ -2,6 +2,8 @@ package org.softwareFm.server;
 
 import java.io.File;
 
+import javax.sql.DataSource;
+
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.server.internal.GitRepositoryFacard;
@@ -19,9 +21,9 @@ public class GitRepositoryFactory {
 
 	}
 
-	public static IRepositoryFacard gitLocalRepositoryFacardWithServer(int port, File localRoot, File remoteRoot) {
+	public static IRepositoryFacard gitLocalRepositoryFacardWithServer(DataSource dataSource, int port, File localRoot, File remoteRoot) {
 		IGitServer remoteGitServer = IGitServer.Utils.gitServer(remoteRoot, "not used");
-		final ISoftwareFmServer server = ISoftwareFmServer.Utils.server(port, 10, IProcessCall.Utils.softwareFmProcessCall(remoteGitServer, remoteRoot), ICallback.Utils.sysErrCallback());
+		final ISoftwareFmServer server = ISoftwareFmServer.Utils.server(port, 10, IProcessCall.Utils.softwareFmProcessCall(dataSource, remoteGitServer, remoteRoot), ICallback.Utils.sysErrCallback());
 		IHttpClient client = IHttpClient.Utils.builder("localhost", port);
 		return gitRepositoryFacard(client, localRoot, remoteRoot.getAbsolutePath(), new Runnable() {
 			@Override

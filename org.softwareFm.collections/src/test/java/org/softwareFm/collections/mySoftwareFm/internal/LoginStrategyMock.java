@@ -74,7 +74,7 @@ public class LoginStrategyMock implements ILoginStrategy {
 		signupSalt.add(sessionSalt);
 		signupPassword.add(passwordHash);
 		if (ok)
-			callback.signedUp(email);
+			callback.signedUp(email, cryptoKey);
 		else
 			callback.failed(email, "someMessage");
 	}

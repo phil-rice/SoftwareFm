@@ -69,4 +69,11 @@ public class CardMapSorterTest extends SwtTest {
 		acb = Maps.stringObjectLinkedMap("a", 1, "c", 3, "b", 3);
 		versionInput = Maps.stringObjectLinkedMap(highVersion, 1, lowVersion, 2);
 	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		cardConfig.dispose();
+	}
+
 }

@@ -69,4 +69,9 @@ public class FolderAggregatorModifierTest extends TestCase {
 		super.setUp();
 		cardConfig = new CardConfig(ICardFactory.Utils.cardFactory(), CardDataStoreFixture.rawCardStore());
 	}
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		cardConfig.dispose();
+	}
 }

@@ -54,4 +54,10 @@ public class CardToTitleSpecFnTest extends SwtTest {
 		cardToTitleSpecFn = new CardToTitleSpecFn(shell.getDisplay(), imageFn);
 	}
 
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		cardConfig.dispose();
+	}
+
 }

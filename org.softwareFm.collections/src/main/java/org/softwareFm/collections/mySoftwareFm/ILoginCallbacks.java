@@ -43,7 +43,7 @@ public interface ILoginCallbacks extends ILoginCallback, IForgotPasswordCallback
 				}
 
 				@Override
-				public void signedUp(String email) {
+				public void signedUp(String email, String crypto) {
 					String cardType = CardConstants.signupCardType;
 					String title = IResourceGetter.Utils.getMessageOrException(cardConfig.resourceGetterFn, cardType, CardConstants.signedUpInTitle, email);
 					String message = IResourceGetter.Utils.getMessageOrException(cardConfig.resourceGetterFn, cardType, CardConstants.signedUpText, email);

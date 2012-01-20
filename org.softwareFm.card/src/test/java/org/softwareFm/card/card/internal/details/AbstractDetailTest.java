@@ -49,6 +49,12 @@ abstract public class AbstractDetailTest extends SwtTest {
 		parentCard = new Card(shell, cardConfig, "parentCardUrl", Collections.<String, Object> emptyMap());
 	}
 
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		cardConfig.dispose();
+	}
+
 	protected CardConfig makeCardConfig() {
 		return new CardConfig(ICardFactory.Utils.cardFactory(), cardDataStore);
 	}

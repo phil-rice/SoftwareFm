@@ -27,6 +27,7 @@ public class NewJarImporterTest extends SwtTest {
 
 	private NewJarImporter newJarImporter;
 	private final Map<String, Object> data1 = Maps.stringObjectMap("data", 1);
+	private CardConfig cardConfig;
 
 	public void testMap() {
 		ImportStage stage = newJarImporter.map(CardConstants.jarUrlKey, data1);
@@ -83,7 +84,7 @@ public class NewJarImporterTest extends SwtTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(display).//
+		cardConfig = CardDataStoreFixture.syncCardConfig(display).//
 				withUrlGeneratorMap(IUrlGeneratorMap.Utils.urlGeneratorMap(//
 						CardConstants.jarUrlKey, urlKeyWithDigest("jar"), //
 						CardConstants.jarNameUrlKey, urlKeyForJarName("jarName"), //
@@ -92,6 +93,11 @@ public class NewJarImporterTest extends SwtTest {
 						CardConstants.versionUrlKey, urlKey("version"), //
 						CardConstants.digestUrlKey, urlKeyWithDigest("digest")));
 		newJarImporter = new NewJarImporter(new ChainImporterMock(), cardConfig, "foundFromTest", "someDigest", "someGroupId", "someArtifactId", "someVersion", "someJarStem");
+	}
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		cardConfig.dispose();
 	}
 
 	private IUrlGenerator urlKey(String string) {

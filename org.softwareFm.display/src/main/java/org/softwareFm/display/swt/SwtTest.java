@@ -10,9 +10,11 @@
 
 package org.softwareFm.display.swt;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.TestCase;
 
@@ -103,4 +105,40 @@ abstract public class SwtTest extends TestCase {
 	protected void dispatchUntilQueueEmpty() {
 		Swts.dispatchUntilQueueEmpty(shell.getDisplay());
 	}
+	public <T> T callInDispatch(Display display, final Callable<T> callable) {
+		final AtomicReference<T> result = new AtomicReference<T>();
+		display.syncExec(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					result.set(callable.call());
+				} catch (Exception e) {
+					throw WrappedException.wrap(e);
+				}
+			}
+		});
+
+		return result.get();
+	}
+
+	protected void dispatchUntil(Display display, long delay, Callable<Boolean> callable) {
+		long startTime = System.currentTimeMillis();
+		try {
+			dispatchUntilQueueEmpty();
+			while (!callable.call() && System.currentTimeMillis() < startTime + delay) {
+				dispatchUntilQueueEmpty();
+				Thread.sleep(2);
+			}
+			checkAtEnd(display, callable);
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+	}
+
+	private void checkAtEnd(Display display, Callable<Boolean> callable) {
+		if (!callInDispatch(display, callable))
+			fail();
+	}
+
+
 }

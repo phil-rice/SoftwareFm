@@ -19,12 +19,9 @@ abstract public class AbstractProcessorIntegrationTests extends TestCase impleme
 	protected IClientBuilder client;
 
 	protected String signup(String email, String sessionSalt, String hash) {
-		MapCallback callback = new MapCallback();
+		StringCallback callback = new StringCallback();
 		signup(email, sessionSalt, hash, callback);
-		Map<String, Object> map = callback.map;
-		assertEquals(2, map.size());
-		assertEquals(email, map.get(ServerConstants.emailKey));
-		return (String) map.get(ServerConstants.cryptoKey);
+		return callback.string;
 	}
 
 	protected void signup(String email, String sessionSalt, String hash, IResponseCallback callback) {

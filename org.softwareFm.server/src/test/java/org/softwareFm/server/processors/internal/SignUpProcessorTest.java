@@ -26,7 +26,7 @@ public class SignUpProcessorTest extends AbstractProcessCallTest<SignupProcessor
 		String salt = saltProcessor.makeSalt();
 		Map<String, Object> data = makeData(salt);
 		IProcessResult result = processor.process(requestLine, data);
-		checkStringResultWithMap(result, ServerConstants.emailKey, "someEmail", ServerConstants.cryptoKey, "someCrypto");
+		checkStringResult(result, "someCrypto");
 
 		assertEquals(salt, Lists.getOnly(checker.salts));
 		assertEquals("someEmail", Lists.getOnly(checker.emails));
@@ -52,7 +52,7 @@ public class SignUpProcessorTest extends AbstractProcessCallTest<SignupProcessor
 	protected SignupProcessor makeProcessor() {
 		saltProcessor = new SaltProcessorMock();
 		checker = new SignUpCheckerMock(null, "someCrypto");
-		return new SignupProcessor( checker, saltProcessor);
+		return new SignupProcessor(checker, saltProcessor);
 	}
 
 }

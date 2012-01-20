@@ -2,12 +2,19 @@ package org.softwareFm.server.processors.internal;
 
 import java.text.MessageFormat;
 
+import javax.sql.DataSource;
+
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.ISignUpChecker;
 import org.softwareFm.server.processors.SignUpResult;
 import org.softwareFm.utilities.crypto.Crypto;
 
 public class SignUpChecker extends AbstractLoginDataAccessor implements ISignUpChecker {
+
+	public SignUpChecker(DataSource dataSource) {
+		super(dataSource);
+	}
 
 	@Override
 	public SignUpResult signUp(String email, String salt, String passwordHash) {
@@ -20,4 +27,4 @@ public class SignUpChecker extends AbstractLoginDataAccessor implements ISignUpC
 		return new SignUpResult(MessageFormat.format(ServerConstants.existingEmailAddress, email), null);
 	}
 
-} 
+}

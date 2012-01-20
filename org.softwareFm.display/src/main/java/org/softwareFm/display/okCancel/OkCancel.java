@@ -14,6 +14,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Row;
@@ -79,6 +80,17 @@ public class OkCancel implements IOkCancel {
 	@Override
 	public void cancel() {
 		onCancel.run();
+	}
+
+	public void pressButton(String title) {
+		for (Control control : content.getChildren())
+			if (control instanceof Button)
+				if (((Button) control).getText().equals(title)) {
+					control.notifyListeners(SWT.Selection, new Event());
+					return;
+				}
+		throw new IllegalArgumentException(title);
+
 	}
 
 }

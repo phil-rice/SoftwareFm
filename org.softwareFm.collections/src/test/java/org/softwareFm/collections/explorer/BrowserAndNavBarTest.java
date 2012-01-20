@@ -11,6 +11,7 @@
 package org.softwareFm.collections.explorer;
 
 import org.eclipse.swt.SWT;
+import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.navigation.internal.NavNextHistoryPrevConfig;
 import org.softwareFm.display.swt.SwtAndServiceTest;
@@ -26,6 +27,7 @@ public class BrowserAndNavBarTest extends SwtAndServiceTest {
 	private BrowserAndNavBar browserAndNavBar;
 	@SuppressWarnings("unused")
 	private MemoryCallback<PlayItem> memoryCallback;
+	private CardConfig cardConfig;
 
 	public void testBrowserHistoryComboBackgroundIsSetToWhite() {// issue-3
 		assertEquals(display.getSystemColor(SWT.COLOR_WHITE), browserAndNavBar.content.navNextHistoryPrev.getBackground());
@@ -36,12 +38,15 @@ public class BrowserAndNavBarTest extends SwtAndServiceTest {
 		super.setUp();
 		history = new History<PlayItem>();
 		memoryCallback = ICallback.Utils.<PlayItem> memory();
-		browserAndNavBar = new BrowserAndNavBar(shell, SWT.NULL, 4, CardDataStoreFixture.syncCardConfig(display), NavNextHistoryPrevConfig.<PlayItem> forTests(), service, history);
+		cardConfig = CardDataStoreFixture.syncCardConfig(display);
+		browserAndNavBar = new BrowserAndNavBar(shell, SWT.NULL, 4, cardConfig, NavNextHistoryPrevConfig.<PlayItem> forTests(), service, history);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
+		cardConfig.dispose();
 	}
+
 
 }

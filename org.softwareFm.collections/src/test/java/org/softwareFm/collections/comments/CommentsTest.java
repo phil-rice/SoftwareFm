@@ -64,4 +64,10 @@ public class CommentsTest extends SwtTest {
 		}, addRunnable);
 	}
 
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		cardConfig.dispose();
+	}
+
 }

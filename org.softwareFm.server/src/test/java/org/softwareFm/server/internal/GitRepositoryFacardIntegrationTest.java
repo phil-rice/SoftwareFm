@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.commons.dbcp.BasicDataSource;
 import org.softwareFm.httpClient.requests.CheckCallback;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.repositoryFacard.CheckRepositoryFacardCallback;
@@ -15,6 +16,7 @@ import org.softwareFm.server.GetResult;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ISoftwareFmServer;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Files;
@@ -33,6 +35,7 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 	private IGitServer localGitServer;
 	private File localAbc;
 	private File remoteAbc;
+	private BasicDataSource dataSource;
 
 	public void testDelete() throws Exception {
 		checkCreateRepository(remoteGitServer, "a/b");
@@ -284,7 +287,8 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 		localAbc = new File(localRoot, Urls.compose("a/b/c", ServerConstants.dataFileName));
 		remoteGitServer = IGitServer.Utils.gitServer(remoteRoot, "not used");
 		localGitServer = IGitServer.Utils.gitServer(localRoot, remoteRoot.getAbsolutePath());
-		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCall(remoteGitServer, remoteRoot);
+		dataSource = AbstractLoginDataAccessor.defaultDataSource();
+		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCall(dataSource, remoteGitServer, remoteRoot);
 		server = ISoftwareFmServer.Utils.server(ServerConstants.testPort, 4, processCall, ICallback.Utils.<Throwable> memory());
 		repositoryFacard = new GitRepositoryFacard(getHttpClient(), getServiceExecutor(), localGitServer, ServerConstants.staleCacheTimeForTests, ServerConstants.staleCacheTimeForTests);
 	}
@@ -296,6 +300,7 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 			server.shutdown();
 		if (repositoryFacard != null)
 			repositoryFacard.shutdown();
+		dataSource.close();
 	}
 
 }

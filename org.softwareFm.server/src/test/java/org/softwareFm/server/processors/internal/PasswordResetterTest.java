@@ -10,7 +10,7 @@ public class PasswordResetterTest extends AbstractLoginSignupForgotCheckerTest {
 		String newPassword = resetPassword.reset(magicString);
 
 		String newDigest = Crypto.digest("salt", newPassword);
-		String actualNewDigest = signupChecker.template.queryForObject("select password from users where email =?", String.class, new Object[] { "email1@a" });
+		String actualNewDigest = template.queryForObject("select password from users where email =?", String.class, new Object[] { "email1@a" });
 		assertEquals(newDigest, actualNewDigest);
 	}
 

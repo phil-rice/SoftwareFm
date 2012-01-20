@@ -3,10 +3,13 @@ package org.softwareFm.server.processors.internal;
 import java.text.MessageFormat;
 import java.util.UUID;
 
+import javax.sql.DataSource;
+
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.IForgottonPasswordMailer;
 import org.softwareFm.utilities.exceptions.WrappedException;
 
@@ -16,7 +19,8 @@ public class ForgottonPasswordMailer extends AbstractLoginDataAccessor implement
 	private final String username;
 	private final String password;
 
-	public ForgottonPasswordMailer(String host, String username, String password) {
+	public ForgottonPasswordMailer(DataSource dataSource, String host, String username, String password) {
+		super(dataSource);
 		this.host = host;
 		this.username = username;
 		this.password = password;
@@ -52,10 +56,10 @@ public class ForgottonPasswordMailer extends AbstractLoginDataAccessor implement
 
 	public static void main(String[] args) {
 		try {
-			new SignUpChecker().signUp("phil.rice.erudine@googlemail.com", "someSalt", "somepassword");
+			new SignUpChecker(SignUpChecker.defaultDataSource()).signUp("phil.rice.erudine@googlemail.com", "someSalt", "somepassword");
 		} catch (Exception e) {
 		}
-		new ForgottonPasswordMailer("smtp.gmail.com", "phil.rice.erudine@googlemail.com", "elrx4321").process("phil.rice.erudine@googlemail.com");
+		new ForgottonPasswordMailer(ForgottonPasswordMailer.defaultDataSource(),"smtp.gmail.com", "phil.rice.erudine@googlemail.com", "elrx4321").process("phil.rice.erudine@googlemail.com");
 
 	}
 

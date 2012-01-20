@@ -13,6 +13,7 @@ import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ISoftwareFmServer;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.callbacks.MemoryCallback;
@@ -46,7 +47,7 @@ public class SoftwareFmServerIntegrationTest extends TestCase {
 		memory = ICallback.Utils.memory();
 		File fileRoot = new ClassPathResource("test.css", getClass()).getFile().getParentFile();
 		IGitServer gitServer = IGitServer.Utils.noGitServer();
-		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCall(gitServer, fileRoot), memory);
+		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCall(AbstractLoginDataAccessor.defaultDataSource(), gitServer, fileRoot), memory);
 		client = IHttpClient.Utils.builder("localhost", ServerConstants.testPort);
 	}
 

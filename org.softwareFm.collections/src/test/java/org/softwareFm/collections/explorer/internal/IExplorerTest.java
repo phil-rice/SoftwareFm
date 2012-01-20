@@ -31,13 +31,17 @@ public class IExplorerTest extends SwtTest {
 
 	public void testConstructorCreatesExplorerAndCardHolderIsSetUp() {
 		CardConfig cardConfig = addNeededResources(CardDataStoreFixture.syncCardConfig(display));
-		List<String> rootUrls = Arrays.asList("rootUrl");
-		IPlayListGetter playListGetter = IPlayListGetter.Utils.noPlayListGetter();
-		IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(shell);
-		Explorer explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrls, playListGetter, service, ILoginStrategy.Utils.noLoginStrategy());
-		ICardHolderForTests cardHolder = (ICardHolderForTests) explorer.cardHolder;
-		assertEquals(rootUrls, cardHolder.getRootUrls());
-		assertEquals(cardConfig, cardHolder.getCardConfig());
+		try {
+			List<String> rootUrls = Arrays.asList("rootUrl");
+			IPlayListGetter playListGetter = IPlayListGetter.Utils.noPlayListGetter();
+			IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(shell);
+			Explorer explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrls, playListGetter, service, ILoginStrategy.Utils.noLoginStrategy());
+			ICardHolderForTests cardHolder = (ICardHolderForTests) explorer.cardHolder;
+			assertEquals(rootUrls, cardHolder.getRootUrls());
+			assertEquals(cardConfig, cardHolder.getCardConfig());
+		} finally {
+			cardConfig.dispose();
+		}
 	}
 
 	public static CardConfig addNeededResources(CardConfig raw) {

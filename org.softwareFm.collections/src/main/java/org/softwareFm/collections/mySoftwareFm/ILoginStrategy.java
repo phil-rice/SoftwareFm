@@ -49,7 +49,7 @@ public interface ILoginStrategy {
 													@Override
 													public void run() {
 														if (response.statusCode() == ServerConstants.okStatusCode)
-															callback.signedUp(email);
+															callback.signedUp(email, response.asString());
 														else
 															callback.failed(email, response.asString());
 													}
@@ -284,7 +284,7 @@ public interface ILoginStrategy {
 				@Override
 				public void signup(String email, String sessionSalt, String passwordHash, ISignUpCallback callback) {
 					System.out.println("Signing up: " + email + ", " + sessionSalt + ", " + passwordHash);
-					callback.signedUp(email);
+					callback.signedUp(email, Crypto.makeKey());
 				}
 
 				@Override

@@ -36,5 +36,11 @@ public abstract class AbstractNameAndValuesEditorTest<T extends IHasComposite> e
 		labels = (Composite) sashForm.getChildren()[0];
 		values = (Composite) sashForm.getChildren()[1];
 	}
+	
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		cardConfig.dispose();
+	}
 
 }

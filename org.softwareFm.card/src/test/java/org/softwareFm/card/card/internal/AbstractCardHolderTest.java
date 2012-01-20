@@ -149,6 +149,12 @@ public abstract class AbstractCardHolderTest extends SwtTest {
 		cardHolder.addCardChangedListener(mock2);
 	}
 
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		cardConfig.dispose();
+	}
+
 	protected Control getTitleControl() {
 		return cardHolder.content.title.getControl();
 	}

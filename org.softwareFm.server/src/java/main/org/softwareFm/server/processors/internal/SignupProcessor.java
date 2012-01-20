@@ -7,8 +7,6 @@ import org.softwareFm.server.processors.IProcessResult;
 import org.softwareFm.server.processors.ISaltProcessor;
 import org.softwareFm.server.processors.ISignUpChecker;
 import org.softwareFm.server.processors.SignUpResult;
-import org.softwareFm.utilities.json.Json;
-import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.strings.Strings;
 
 public class SignupProcessor extends AbstractCommandProcessor {
@@ -32,7 +30,7 @@ public class SignupProcessor extends AbstractCommandProcessor {
 			if (result.errorMessage != null)
 				return IProcessResult.Utils.processError(ServerConstants.notFoundStatusCode, result.errorMessage);
 			else
-				return IProcessResult.Utils.processString(Json.toString(Maps.stringObjectMap(ServerConstants.emailKey, email, ServerConstants.cryptoKey, result.crypto)));
+				return IProcessResult.Utils.processString(result.crypto);
 
 		}
 		return IProcessResult.Utils.processError(ServerConstants.notFoundStatusCode, ServerConstants.invalidSaltMessage);

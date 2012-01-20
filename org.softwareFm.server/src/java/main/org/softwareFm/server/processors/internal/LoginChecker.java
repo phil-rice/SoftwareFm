@@ -4,12 +4,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 
+import javax.sql.DataSource;
+
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.ILoginChecker;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
 public class LoginChecker extends AbstractLoginDataAccessor implements ILoginChecker {
+
+	public LoginChecker(DataSource dataSource) {
+		super(dataSource);
+	}
 
 	@Override
 	public String login(final String email, final String passwordHash) {
