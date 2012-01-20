@@ -21,7 +21,7 @@ public class TimedServer {
 		File root = new File(System.getProperty("user.home"));
 		File sfmRoot = new File(root, ".sfm_remote");
 		IGitServer server = IGitServer.Utils.gitServer(sfmRoot, "not used");
-		final IProcessCall rawProcessCall = IProcessCall.Utils.softwareFmProcessCall(AbstractLoginDataAccessor.defaultDataSource(), server, sfmRoot);
+		final IProcessCall rawProcessCall = IProcessCall.Utils.softwareFmProcessCallWithoutMail(AbstractLoginDataAccessor.defaultDataSource(), server, sfmRoot);
 		IProcessCall processCall = new IProcessCall() {
 			@Override
 			public IProcessResult process(RequestLine requestLine, Map<String, Object> parameters) {

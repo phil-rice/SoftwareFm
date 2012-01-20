@@ -63,12 +63,15 @@ public interface IProcessCall {
 			return "<" + requestLine + ", " + parameters + ">";
 		}
 
-		public static IProcessCall softwareFmProcessCall(DataSource dataSource, IGitServer server, File fileRoot) {
+		public static IProcessCall softwareFmProcessCallWithoutMail(DataSource dataSource, IGitServer server, File fileRoot) {
+			return softwareFmProcessCall(dataSource, server, fileRoot, null, null, null);
+		}
+		public static IProcessCall softwareFmProcessCall(DataSource dataSource, IGitServer server, File fileRoot, String mailHost, String userName, String password) {
 			UrlCache<String> aboveRepostoryUrlCache = new UrlCache<String>();
 			SaltProcessor saltProcessor = new SaltProcessor();
 			LoginChecker loginChecker = new LoginChecker(dataSource);
 			SignUpChecker signUpChecker = new SignUpChecker(dataSource);
-			ForgottonPasswordMailer forgottonPasswordProcessor = new ForgottonPasswordMailer(dataSource, null, null, null);
+			ForgottonPasswordMailer forgottonPasswordProcessor = new ForgottonPasswordMailer(dataSource, mailHost, userName, password);
 			IPasswordResetter resetter = new PasswordResetter(dataSource);
 			EmailSaltRequester saltRequester = new EmailSaltRequester(dataSource);
 			return chain(new FavIconProcessor(),//

@@ -47,7 +47,7 @@ public class SoftwareFmServerIntegrationTest extends TestCase {
 		memory = ICallback.Utils.memory();
 		File fileRoot = new ClassPathResource("test.css", getClass()).getFile().getParentFile();
 		IGitServer gitServer = IGitServer.Utils.noGitServer();
-		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCall(AbstractLoginDataAccessor.defaultDataSource(), gitServer, fileRoot), memory);
+		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCallWithoutMail(AbstractLoginDataAccessor.defaultDataSource(), gitServer, fileRoot), memory);
 		client = IHttpClient.Utils.builder("localhost", ServerConstants.testPort);
 	}
 

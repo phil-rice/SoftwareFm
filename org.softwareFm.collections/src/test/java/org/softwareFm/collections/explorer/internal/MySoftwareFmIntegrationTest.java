@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -84,6 +85,36 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest {
 		displayUntilText();
 		assertEquals(crypto, mySoftwareFm.crypto);
 		assertEquals(email, mySoftwareFm.email);
+	}
+
+	public void testLoginErrors() {
+		signUp(email, password);
+		String crypto = template.queryForObject("select crypto from users", String.class);
+		mySoftwareFm.logout();
+
+		checkLoginError(email, "password", "Email: a.b@c.com\n\n Email / Password didn't match\n\nClicking this panel will start login again");
+		checkLoginError("a@b.com", "password", "Email: a@b.com\n\n Email not recognised\n\nClicking this panel will start login again");
+	}
+
+	private void checkLoginError(String email, String password, String errorMessage) {
+		mySoftwareFm.logout();
+		mySoftwareFm.start();
+		assertNull(mySoftwareFm.crypto);
+		displayUntilValueComposite("Email", "Password");
+		setValues(email, password);
+		assertTrue(getOkCancel().isOkEnabled());
+		getOkCancel().ok();
+		displayUntilText();
+		assertNull(mySoftwareFm.crypto);
+		assertEquals(errorMessage, getText());
+	}
+
+	private String getText() {
+		Control firstChild = softwareFmComposite.getChildren()[0];
+		CompositeWithCardMargin compositeWithCardMargin = (CompositeWithCardMargin) firstChild;
+		Swts.layoutDump(compositeWithCardMargin);
+		StyledText text = (StyledText) Swts.getDescendant(compositeWithCardMargin, 1, 0, 0);
+		return text.getText();
 	}
 
 	public void testForgotPassword() throws Exception {
@@ -262,7 +293,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		dataSource = AbstractLoginDataAccessor.defaultDataSource();
-		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCall(dataSource, null, null), ICallback.Utils.rethrow());
+		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, null, null), ICallback.Utils.rethrow());
 		client = IHttpClient.Utils.builder("localhost", 8080);
 		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(display, service, client);
 		cardConfig = ICardConfigurator.Utils.cardConfigForTests(display);

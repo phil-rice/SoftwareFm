@@ -165,7 +165,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		IGitServer gitServer = IGitServer.Utils.noGitServer();
 		File home = new File(System.getProperty("user.home"));
 		final File localRoot = new File(home, ".sfm");
-		ISoftwareFmServer server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCall(AbstractLoginDataAccessor.defaultDataSource(), gitServer, localRoot), ICallback.Utils.rethrow());
+		ISoftwareFmServer server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCallWithoutMail(AbstractLoginDataAccessor.defaultDataSource(), gitServer, localRoot), ICallback.Utils.rethrow());
 		try {
 			Swts.Show.display(MySoftwareFm.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 				@Override

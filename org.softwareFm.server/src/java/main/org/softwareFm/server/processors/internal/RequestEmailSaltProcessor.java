@@ -7,7 +7,7 @@ import org.softwareFm.server.processors.IEmailSaltRequester;
 import org.softwareFm.server.processors.IProcessResult;
 import org.softwareFm.utilities.strings.Strings;
 
-public class RequestEmailSaltProcessor extends AbstractCommandProcessor{
+public class RequestEmailSaltProcessor extends AbstractCommandProcessor {
 
 	private final IEmailSaltRequester saltRequester;
 
@@ -20,7 +20,10 @@ public class RequestEmailSaltProcessor extends AbstractCommandProcessor{
 	protected IProcessResult execute(String actualUrl, Map<String, Object> parameters) {
 		String email = Strings.nullSafeToString(parameters.get(ServerConstants.emailKey));
 		String emailSalt = saltRequester.getSalt(email);
-		return IProcessResult.Utils.processString(emailSalt);
+		if (emailSalt == null)
+			return IProcessResult.Utils.processError(ServerConstants.notFoundStatusCode, ServerConstants.emailNotRecognised);
+		else
+			return IProcessResult.Utils.processString(emailSalt);
 	}
 
 }

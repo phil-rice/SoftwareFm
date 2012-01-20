@@ -153,6 +153,10 @@ public class CardConfig {
 						DisplayConstants.buttonOkTitle, "Ok",//
 						CardConstants.buttonTestTitle, "Test",//
 						DisplayConstants.buttonCancelTitle, "Cancel",//
+						CardConstants.contactingServerTitle, "Contacting Server",//
+						CardConstants.contactingServerText, "Contacting Server",//
+						CardConstants.failedToContactServerTitle, "Failed to Contact Server",//
+						CardConstants.failedToContactServerText, "Failed to Contact Server",//
 						CardConstants.cardNameUrlKey, "{0}",//
 						CardConstants.cardHolderLoadingText, "loading")));
 		this.detailFactory = new DetailFactory(Collections.<IDetailAdder> emptyList());

@@ -51,6 +51,7 @@ public class SignUpLoginForgetResetDatabaseTest extends AbstractProcessorDatabas
 		String emailSalt = requestEmailSalt(sessionSalt, email);
 		login(email, sessionSalt, emailSalt, "wronghash", IResponseCallback.Utils.checkCallback(ServerConstants.notFoundStatusCode, ServerConstants.emailPasswordMismatch));
 	}
+	
 
 	public void testLoginWithWrongHash() {
 		String salt1 = makeSalt();

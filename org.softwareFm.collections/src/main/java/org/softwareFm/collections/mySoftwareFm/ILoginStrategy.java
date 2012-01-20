@@ -306,7 +306,7 @@ public interface ILoginStrategy {
 
 				@Override
 				public void requestSessionSalt(IRequestSaltCallback callback) {
-					throw new UnsupportedOperationException();
+					callback.problemGettingSalt("Unsupported");
 				}
 
 				@Override

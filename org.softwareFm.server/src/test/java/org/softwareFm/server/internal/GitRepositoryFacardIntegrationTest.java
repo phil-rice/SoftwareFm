@@ -288,7 +288,7 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 		remoteGitServer = IGitServer.Utils.gitServer(remoteRoot, "not used");
 		localGitServer = IGitServer.Utils.gitServer(localRoot, remoteRoot.getAbsolutePath());
 		dataSource = AbstractLoginDataAccessor.defaultDataSource();
-		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCall(dataSource, remoteGitServer, remoteRoot);
+		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, remoteGitServer, remoteRoot);
 		server = ISoftwareFmServer.Utils.server(ServerConstants.testPort, 4, processCall, ICallback.Utils.<Throwable> memory());
 		repositoryFacard = new GitRepositoryFacard(getHttpClient(), getServiceExecutor(), localGitServer, ServerConstants.staleCacheTimeForTests, ServerConstants.staleCacheTimeForTests);
 	}

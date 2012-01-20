@@ -5,7 +5,6 @@ import junit.framework.TestCase;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.utilities.tests.IIntegrationTest;
-import org.softwareFm.utilities.tests.Tests;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class EmailSaltRequesterTest extends TestCase implements IIntegrationTest {
@@ -22,12 +21,7 @@ public class EmailSaltRequesterTest extends TestCase implements IIntegrationTest
 	}
 
 	public void testWhenEmailNotPresent() {
-		Tests.assertThrows(RuntimeException.class, new Runnable() {
-			@Override
-			public void run() {
-				saltRequester.getSalt("email1");
-			}
-		});
+		assertNull(saltRequester.getSalt("email1"));
 	}
 
 	@Override

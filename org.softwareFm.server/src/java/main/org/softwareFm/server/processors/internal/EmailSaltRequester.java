@@ -10,7 +10,7 @@ import org.softwareFm.server.processors.IEmailSaltRequester;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
-public class EmailSaltRequester extends AbstractLoginDataAccessor implements IEmailSaltRequester{
+public class EmailSaltRequester extends AbstractLoginDataAccessor implements IEmailSaltRequester {
 
 	public EmailSaltRequester(DataSource dataSource) {
 		super(dataSource);
@@ -18,14 +18,15 @@ public class EmailSaltRequester extends AbstractLoginDataAccessor implements IEm
 
 	@Override
 	public String getSalt(String email) {
-		return template.query("select * from users where email = ?", new Object[]{email}, new ResultSetExtractor<String>() {
+		return template.query("select * from users where email = ?", new Object[] { email }, new ResultSetExtractor<String>() {
 			@Override
 			public String extractData(ResultSet rs) throws SQLException, DataAccessException {
-				if (rs.next()){
+				if (rs.next()) {
 					String salt = rs.getString("salt");
 					if (!rs.next())
 						return salt;
-				}
+				} else
+					return null;
 				throw new RuntimeException();
 			}
 		});
