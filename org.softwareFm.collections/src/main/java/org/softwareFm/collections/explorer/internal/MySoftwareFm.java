@@ -68,7 +68,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		if (crypto != null)
 			showLoggedIn();
 		else
-			display(CardConstants.loginCardType, CardConstants.contactingServerTitle, CardConstants.contactingServerText, email);
+			displayWithClickBackToStart(CardConstants.loginCardType, CardConstants.contactingServerTitle, CardConstants.contactingServerText, email);
 		loginStrategy.requestSessionSalt(new IRequestSaltCallback() {
 			@Override
 			public void saltReceived(String salt) {
