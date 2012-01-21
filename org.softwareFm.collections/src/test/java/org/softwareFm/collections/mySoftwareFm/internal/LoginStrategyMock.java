@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.softwareFm.collections.mySoftwareFm.IChangePasswordCallback;
 import org.softwareFm.collections.mySoftwareFm.IForgotPasswordCallback;
 import org.softwareFm.collections.mySoftwareFm.ILoginCallback;
 import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
@@ -87,6 +88,11 @@ public class LoginStrategyMock implements ILoginStrategy {
 			callback.saltReceived(emailSalt);
 		else
 			callback.problemGettingSalt("someMessage");
+	}
+
+	@Override
+	public void changePassword(String email, String oldHash, String newHash, IChangePasswordCallback callback) {
+		throw new UnsupportedOperationException();
 	}
 
 }

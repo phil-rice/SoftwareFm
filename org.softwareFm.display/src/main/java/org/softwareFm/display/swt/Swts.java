@@ -355,6 +355,9 @@ public class Swts {
 		public static org.eclipse.swt.widgets.Button makePushButton(Composite parent, IResourceGetter resourceGetter, String titleKey, final Runnable runnable) {
 			return Buttons.makePushButton(parent, resourceGetter, titleKey, true, runnable);
 		}
+		public static org.eclipse.swt.widgets.Button makePushButton(Composite parent,  String text, final Runnable runnable) {
+			return Buttons.makePushButton(parent, null, text, false, runnable);
+		}
 
 		public static org.eclipse.swt.widgets.Button makePushButton(Composite parent, IResourceGetter resourceGetter, String titleOrKey, boolean titleIsKey, final Runnable runnable) {
 			return Buttons.makePushButton(parent, SWT.PUSH, resourceGetter, titleOrKey, titleIsKey, runnable);
@@ -887,6 +890,35 @@ public class Swts {
 				Control content = children[1];
 				Point size = content.computeSize(wHint, hHint);
 				return new Point(size.x, size.y + titleHeight);
+			}
+		};
+
+	}
+
+	public static Layout contentAndButtonBarLayout() {
+		return new Layout() {
+
+			@Override
+			protected void layout(Composite composite, boolean flushCache) {
+				Control[] children = composite.getChildren();
+				assert children.length == 2 : Arrays.asList(children);
+				Control content = children[0];
+				Control buttons = children[1];
+				Point buttonsSize = buttons.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+				Rectangle ca = composite.getClientArea();
+				content.setBounds(ca.x, ca.y, ca.width, ca.height - buttonsSize.y);
+				buttons.setBounds(ca.x, ca.y + ca.height - buttonsSize.y, ca.width, buttonsSize.y);
+			}
+
+			@Override
+			protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
+				Control[] children = composite.getChildren();
+				assert children.length == 2;
+				Control content = children[0];
+				Control buttons = children[1];
+				Point contentSize = buttons.computeSize(wHint, hHint);
+				Point buttonsSize = buttons.computeSize(wHint, hHint);
+				return new Point(Math.max(contentSize.x, buttonsSize.x), contentSize.y + buttonsSize.y);
 			}
 		};
 

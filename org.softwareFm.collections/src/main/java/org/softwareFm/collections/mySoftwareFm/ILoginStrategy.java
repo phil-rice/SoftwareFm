@@ -26,6 +26,8 @@ public interface ILoginStrategy {
 
 	void signup(String email, String sessionSalt, String passwordHash, ISignUpCallback callback);
 
+	void changePassword(String email, String oldHash, String newHash, IChangePasswordCallback callback);
+
 	public static class Utils {
 
 		public static ILoginStrategy softwareFmLoginStrategy(final Display display, final IServiceExecutor serviceExecutor, final IHttpClient client) {
@@ -184,6 +186,11 @@ public interface ILoginStrategy {
 						}
 					});
 				}
+
+				@Override
+				public void changePassword(String email, String oldHash, String newHash, IChangePasswordCallback callback) {
+					throw new UnsupportedOperationException();
+				}
 			};
 		}
 
@@ -292,6 +299,13 @@ public interface ILoginStrategy {
 					System.out.println("requesting email salt: " + email + ", " + sessionSalt);
 					callback.saltReceived(UUID.randomUUID().toString());
 				}
+
+				@Override
+				public void changePassword(String email, String oldHash, String newHash, IChangePasswordCallback callback) {
+					System.out.println("changePassword: " + email + ", " + oldHash +", " + newHash);
+					callback.changedPassword(email);
+					
+				}
 			};
 
 		}
@@ -321,6 +335,11 @@ public interface ILoginStrategy {
 
 				@Override
 				public void forgotPassword(String email, String sessionSalt, IForgotPasswordCallback callback) {
+					throw new UnsupportedOperationException();
+				}
+
+				@Override
+				public void changePassword(String email, String oldHash, String newHash, IChangePasswordCallback callback) {
 					throw new UnsupportedOperationException();
 				}
 			};

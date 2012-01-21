@@ -4,7 +4,7 @@ import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
-public interface ILoginCallbacks extends ILoginCallback, IForgotPasswordCallback, ISignUpCallback {
+public interface ILoginCallbacks extends ILoginCallback, IForgotPasswordCallback, ISignUpCallback, IChangePasswordCallback {
 
 	public static class Utils {
 		public static ILoginCallbacks showMessageCallbacks(final CardConfig cardConfig, final IShowMessage strategy) {
@@ -55,6 +55,27 @@ public interface ILoginCallbacks extends ILoginCallback, IForgotPasswordCallback
 					String cardType = CardConstants.signupCardType;
 					String title = IResourceGetter.Utils.getMessageOrException(cardConfig.resourceGetterFn, cardType, CardConstants.failedToSignupTitle, email, errorMessage);
 					String message = IResourceGetter.Utils.getMessageOrException(cardConfig.resourceGetterFn, cardType, CardConstants.failedToSignupText, email, errorMessage);
+					strategy.showMessage(cardType, title, message);
+				}
+
+				@Override
+				public void cancelChangePassword() {
+					throw new UnsupportedOperationException();
+				}
+
+				@Override
+				public void changedPassword(String email) {
+					String cardType = CardConstants.changePasswordCardType;
+					String title = IResourceGetter.Utils.getMessageOrException(cardConfig.resourceGetterFn, cardType, CardConstants.changedPasswordTitle, email);
+					String message = IResourceGetter.Utils.getMessageOrException(cardConfig.resourceGetterFn, cardType, CardConstants.changedPasswordText, email);
+					strategy.showMessage(cardType, title, message);
+				}
+
+				@Override
+				public void failedToChangePassword(String email, String errorMessage) {
+					String cardType = CardConstants.changePasswordCardType;
+					String title = IResourceGetter.Utils.getMessageOrException(cardConfig.resourceGetterFn, cardType, CardConstants.failedToChangePasswordTitle, email, errorMessage);
+					String message = IResourceGetter.Utils.getMessageOrException(cardConfig.resourceGetterFn, cardType, CardConstants.failedToChangePasswordText, email, errorMessage);
 					strategy.showMessage(cardType, title, message);
 				}
 

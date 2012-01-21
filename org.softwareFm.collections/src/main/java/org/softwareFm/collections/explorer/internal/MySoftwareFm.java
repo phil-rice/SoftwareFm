@@ -10,6 +10,8 @@ import org.softwareFm.card.card.composites.TextInBorder;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.constants.CardConstants;
+import org.softwareFm.collections.mySoftwareFm.IChangePassword;
+import org.softwareFm.collections.mySoftwareFm.IChangePasswordCallback;
 import org.softwareFm.collections.mySoftwareFm.IForgotPassword;
 import org.softwareFm.collections.mySoftwareFm.IForgotPasswordCallback;
 import org.softwareFm.collections.mySoftwareFm.ILogin;
@@ -63,7 +65,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 
 	public void start(final String email) {
 		if (crypto != null)
-			display(CardConstants.loginCardType, CardConstants.loggedInTitle, CardConstants.loggedInTitle, email);
+			showLoggedIn();
 		else
 			display(CardConstants.loginCardType, CardConstants.contactingServerTitle, CardConstants.contactingServerText, email);
 		loginStrategy.requestSessionSalt(new IRequestSaltCallback() {
@@ -75,9 +77,17 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 
 			@Override
 			public void problemGettingSalt(String message) {
-				displayWithClick(CardConstants.loginCardType, CardConstants.failedToContactServerTitle, CardConstants.failedToContactServerText, email, message);
+				displayWithClickBackToStart(CardConstants.loginCardType, CardConstants.failedToContactServerTitle, CardConstants.failedToContactServerText, email, message);
 			}
 		});
+	}
+
+	@SuppressWarnings("unused")
+	public void showLoggedIn() {
+		Swts.removeAllChildren(content);
+		IChangePasswordCallback callback = null;
+		new MySoftwareFmLoggedIn(content, cardConfig, CardConstants.loggedInTitle, CardConstants.loggedInText, email, this, callback);
+		content.layout();
 	}
 
 	@Override
@@ -102,19 +112,23 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		});
 	}
 
-	public void displayWithClick(final String cardType, final String title, final String text, final String email, final String... args) {
+	public void displayWithClickBackToStart(final String cardType, final String title, final String text, final String email, final String... args) {
+		displayWithClick(cardType, title, text, email, new Runnable() {
+			@Override
+			public void run() {
+				ICallback.Utils.call(restart, email);
+			}
+		}, args);
+	}
+
+	public void displayWithClick(final String cardType, final String title, final String text, final String email, final Runnable runnable, final String... args) {
 		content.getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				Swts.removeAllChildren(content);
 				TextInBorder textInBorder = new TextInBorder(content, SWT.WRAP | SWT.READ_ONLY, cardConfig);
 				textInBorder.setTextFromResourceGetter(cardType, title, text, (Object[]) args);
-				textInBorder.addClickedListener(new Runnable() {
-					@Override
-					public void run() {
-						ICallback.Utils.call(restart, email);
-					}
-				});
+				textInBorder.addClickedListener(runnable);
 				content.layout();
 			}
 		});
@@ -128,12 +142,12 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 			public void loggedIn(String email, String cryptoKey) {
 				MySoftwareFm.this.email = email;
 				MySoftwareFm.this.crypto = cryptoKey;
-				display(CardConstants.loginCardType, CardConstants.loggedInTitle, CardConstants.loggedInText, email);
+				showLoggedIn();
 			}
 
 			@Override
 			public void failedToLogin(String email, String message) {
-				displayWithClick(CardConstants.loginCardType, CardConstants.failedToLoginTitle, CardConstants.failedToLoginText, email, message);
+				displayWithClickBackToStart(CardConstants.loginCardType, CardConstants.failedToLoginTitle, CardConstants.failedToLoginText, email, message);
 			}
 		});
 		content.layout();
@@ -145,12 +159,12 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		IForgotPassword.Utils.forgotPassword(content, cardConfig, sessionSalt, initialEmail, loginStrategy, this, new IForgotPasswordCallback() {
 			@Override
 			public void emailSent(String email) {
-				displayWithClick(CardConstants.forgotPasswordCardType, CardConstants.sentForgottenPasswordTitle, CardConstants.sentForgottenPasswordText, email);
+				displayWithClickBackToStart(CardConstants.forgotPasswordCardType, CardConstants.sentForgottenPasswordTitle, CardConstants.sentForgottenPasswordText, email);
 			}
 
 			@Override
 			public void failedToSend(String email, String message) {
-				displayWithClick(CardConstants.forgotPasswordCardType, CardConstants.failedToSendForgottenPasswordTitle, CardConstants.failedToSendForgottenPasswordText, email, message);
+				displayWithClickBackToStart(CardConstants.forgotPasswordCardType, CardConstants.failedToSendForgottenPasswordTitle, CardConstants.failedToSendForgottenPasswordText, email, message);
 			}
 		});
 		content.layout();
@@ -164,15 +178,45 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 			public void signedUp(String email, String crypto) {
 				MySoftwareFm.this.email = email;
 				MySoftwareFm.this.crypto = crypto;
-				display(CardConstants.signupCardType, CardConstants.signedUpInTitle, CardConstants.signedUpText, email);
+				showLoggedIn();
 			}
 
 			@Override
 			public void failed(String email, String message) {
-				displayWithClick(CardConstants.signupCardType, CardConstants.failedToSignupTitle, CardConstants.failedToSignupText, email, message);
+				displayWithClickBackToStart(CardConstants.signupCardType, CardConstants.failedToSignupTitle, CardConstants.failedToSignupText, email, message);
 			}
 		});
 		content.layout();
+	}
+
+	@Override
+	public void showChangePassword(final String email) {
+		Swts.removeAllChildren(content);
+		final String cardType = CardConstants.changePasswordCardType;
+		final Runnable showLoggedIn = new Runnable() {
+			@Override
+			public void run() {
+				showLoggedIn();
+			}
+		};
+		IChangePassword.Utils.changePassword(content, cardConfig, email, loginStrategy, this, new IChangePasswordCallback() {
+			@Override
+			public void failedToChangePassword(String email, String message) {
+				displayWithClick(cardType, CardConstants.failedToChangePasswordTitle, CardConstants.failedToChangePasswordText, email, showLoggedIn, message);
+			}
+
+			@Override
+			public void changedPassword(String email) {
+				displayWithClick(cardType, CardConstants.changedPasswordTitle, CardConstants.changedPasswordText, email, showLoggedIn);
+			}
+
+			@Override
+			public void cancelChangePassword() {
+				showLoggedIn();
+			}
+		});
+		content.layout();
+
 	}
 
 	public static void main(String[] args) {

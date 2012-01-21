@@ -7,6 +7,7 @@ public interface ILoginDisplayStrategy {
 	void showForgotPassword(String sessionSalt, String initialEmail);
 
 	void showSignup(String sessionSalt, String initialEmail);
+	void showChangePassword(String email);
 
 	public static class Utils {
 		public static ILoginDisplayStrategy noDisplayStrategy() {
@@ -24,6 +25,11 @@ public interface ILoginDisplayStrategy {
 
 				@Override
 				public void showForgotPassword(String sessionSalt, String initialEmail) {
+					throw new UnsupportedOperationException();
+				}
+
+				@Override
+				public void showChangePassword(String email) {
 					throw new UnsupportedOperationException();
 				}
 			};
@@ -46,8 +52,15 @@ public interface ILoginDisplayStrategy {
 				public void showForgotPassword(String sessionSalt, String initialEmail) {
 					System.out.println("showForgotPassword: " + sessionSalt+", " + initialEmail);
 				}
+
+				@Override
+				public void showChangePassword(String email) {
+					System.out.println("showChangePassword: " + email);
+					
+				}
 			};
 		}
 	}
+
 
 }

@@ -10,6 +10,7 @@ public class LoginDisplayStrategyMock implements ILoginDisplayStrategy {
 	public final List<String> showLogin = Lists.newList();
 	public final List<String> showForgetPassword = Lists.newList();
 	public final List<String> showSignup = Lists.newList();
+	public final List<String> showChangePassword = Lists.newList();
 	public final List<String> initialEmails = Lists.newList();
 
 	@Override
@@ -28,6 +29,11 @@ public class LoginDisplayStrategyMock implements ILoginDisplayStrategy {
 	public void showSignup(String sessionSalt, String initialEmail) {
 		showSignup.add(sessionSalt);
 		initialEmails.add(initialEmail);
+	}
+
+	@Override
+	public void showChangePassword(String email) {
+		showChangePassword.add(email);
 	}
 
 }

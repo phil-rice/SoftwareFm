@@ -73,7 +73,7 @@ public class TextInBorder implements IHasControl {
 	private final CardConfig cardConfig;
 	private final Composite content;
 	private final StyledTextWithBold textWithBold;
-	private final Composite body;
+	protected final Composite body;
 	private final Title title;
 
 	public TextInBorder(Composite parent, int textStyle, final CardConfig cardConfig) {
