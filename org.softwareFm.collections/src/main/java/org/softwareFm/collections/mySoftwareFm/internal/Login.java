@@ -20,6 +20,7 @@ import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.collections.mySoftwareFm.IRequestSaltCallback;
 import org.softwareFm.collections.mySoftwareFm.IShowMessage;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
@@ -27,11 +28,11 @@ import org.softwareFm.utilities.strings.Strings;
 
 public class Login implements ILogin {
 	private final String cardType = CardConstants.loginCardType;
-	private final INamesAndValuesEditor content;
+	 final INamesAndValuesEditor content;
 
-	public Login(Composite parent, final CardConfig cardConfig, final String sessionSalt, final ILoginStrategy loginStrategy, final ILoginDisplayStrategy loginDisplayStrategy, final ILoginCallback callback) {
+	public Login(Composite parent, final CardConfig cardConfig, final String sessionSalt, String initialEmail, final ILoginStrategy loginStrategy, final ILoginDisplayStrategy loginDisplayStrategy, final ILoginCallback callback) {
 		String title = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, CardConstants.loginTitle);
-		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(), Arrays.asList(//
+		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(ServerConstants.emailKey, initialEmail), Arrays.asList(//
 				INamesAndValuesEditor.Utils.text(cardConfig, cardType, "email"),//
 				INamesAndValuesEditor.Utils.password(cardConfig, cardType, "password")),//
 				new ICardEditorCallback() {
@@ -58,7 +59,7 @@ public class Login implements ILogin {
 
 					@Override
 					public void cancel(ICardData cardData) {
-						loginDisplayStrategy.showLogin(sessionSalt);
+						loginDisplayStrategy.showLogin(sessionSalt, getEmail(cardData.data()));
 					}
 
 					@Override
@@ -68,7 +69,6 @@ public class Login implements ILogin {
 						boolean passwordOk = getPassword(data).length() > 0;
 						return emailOk && passwordOk;
 					}
-
 
 					private String getEmail(Map<String, Object> data) {
 						return get(data, "email");
@@ -83,17 +83,21 @@ public class Login implements ILogin {
 		Swts.Buttons.makePushButtonAtStart(buttonComposite, CardConfig.resourceGetter(content), CardConstants.signUpButtonTitle, new Runnable() {
 			@Override
 			public void run() {
-				loginDisplayStrategy.showSignup(sessionSalt);
-
+				loginDisplayStrategy.showSignup(sessionSalt, getEmail());
 			}
+
 		});
 		Swts.Buttons.makePushButtonAtStart(buttonComposite, CardConfig.resourceGetter(content), CardConstants.forgotPasswordButtonTitle, new Runnable() {
 			@Override
 			public void run() {
-				loginDisplayStrategy.showForgotPassword(sessionSalt);
+				loginDisplayStrategy.showForgotPassword(sessionSalt, getEmail());
 
 			}
 		});
+	}
+
+	private String getEmail() {
+		return (String) content.data().get(ServerConstants.emailKey);
 	}
 
 	@Override
@@ -111,7 +115,11 @@ public class Login implements ILogin {
 			@Override
 			public Composite apply(Composite parent) throws Exception {
 				CardConfig cardConfig = ICardConfigurator.Utils.cardConfigForTests(parent.getDisplay());
-				return (Composite) new Login(parent, cardConfig, UUID.randomUUID().toString(), ILoginStrategy.Utils.sysoutLoginStrategy(), ILoginDisplayStrategy.Utils.sysoutDisplayStrategy(), ILoginCallbacks.Utils.showMessageCallbacks(cardConfig, IShowMessage.Utils.sysout())).getControl();
+				String salt = UUID.randomUUID().toString();
+				ILoginStrategy sysoutLoginStrategy = ILoginStrategy.Utils.sysoutLoginStrategy();
+				ILoginDisplayStrategy loginDisplayStrategy = ILoginDisplayStrategy.Utils.sysoutDisplayStrategy();
+				ILoginCallbacks loginCallbacks = ILoginCallbacks.Utils.showMessageCallbacks(cardConfig, IShowMessage.Utils.sysout());
+				return (Composite) new Login(parent, cardConfig, salt, "initialEmail", sysoutLoginStrategy, loginDisplayStrategy, loginCallbacks).getControl();
 			}
 		});
 	}

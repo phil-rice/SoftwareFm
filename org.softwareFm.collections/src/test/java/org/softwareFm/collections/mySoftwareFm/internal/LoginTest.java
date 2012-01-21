@@ -5,7 +5,9 @@ import org.eclipse.swt.widgets.Event;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.editors.AbstractNameAndValuesEditorTest;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.utilities.maps.Maps;
 
 public class LoginTest extends AbstractNameAndValuesEditorTest<Login> {
 
@@ -16,8 +18,12 @@ public class LoginTest extends AbstractNameAndValuesEditorTest<Login> {
 
 	public void testLoginEditorWhenDisplayed() {
 		checkLabelsMatch(labels, "Email", "Password");
-		checkTextMatches(values, "", "");
+		checkTextMatches(values, "initialEmail", "");
 		assertFalse(okCancel.isOkEnabled());
+	}
+	
+	public void testInitialEmailAddedToCardData(){
+		assertEquals(Maps.stringObjectMap(ServerConstants.emailKey, "initialEmail",CardConstants.slingResourceType, CardConstants.loginCardType), editor.content.data());
 	}
 
 	public void testNeedEmailAndPasswordToBeOk() {
@@ -31,7 +37,7 @@ public class LoginTest extends AbstractNameAndValuesEditorTest<Login> {
 		checkOk("emailValue", "passwordValue", false);
 		checkOk("email@", "passwordValue", false);
 		checkOk("@address", "passwordValue", false);
-		
+
 		checkOk("a.b.c@c.d", "passwordValue", true);
 
 	}
@@ -75,7 +81,7 @@ public class LoginTest extends AbstractNameAndValuesEditorTest<Login> {
 
 	@Override
 	protected Login makeEditor() {
-		return new Login(shell, cardConfig, salt, loginStrategy, loginDisplayStrategy, loginCallback);
+		return new Login(shell, cardConfig, salt, "initialEmail", loginStrategy, loginDisplayStrategy, loginCallback);
 	}
 
 	@Override

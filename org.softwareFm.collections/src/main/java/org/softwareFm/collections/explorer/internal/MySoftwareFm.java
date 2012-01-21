@@ -59,7 +59,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 	}
 
 	public void start() {
-		if (email != null)
+		if (crypto != null)
 			display(CardConstants.loginCardType, CardConstants.loggedInTitle, CardConstants.loggedInTitle, email);
 		else
 			display(CardConstants.loginCardType, CardConstants.contactingServerTitle, CardConstants.contactingServerText, email);
@@ -67,7 +67,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 			@Override
 			public void saltReceived(String salt) {
 				MySoftwareFm.this.signupSalt = salt;
-				showLogin(salt);
+				showLogin(salt, email);
 			}
 
 			@Override
@@ -97,7 +97,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 			public void run() {
 				Swts.removeAllChildren(content);
 				TextInBorder textInBorder = new TextInBorder(content, SWT.WRAP | SWT.READ_ONLY, cardConfig);
-				textInBorder.setTextFromResourceGetter(cardType, title, text, (Object[])args);
+				textInBorder.setTextFromResourceGetter(cardType, title, text, (Object[]) args);
 				textInBorder.addClickedListener(runnable);
 				content.layout();
 			}
@@ -105,9 +105,9 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 	}
 
 	@Override
-	public void showLogin(String sessionSalt) {
+	public void showLogin(String sessionSalt, String initialEmail) {
 		Swts.removeAllChildren(content);
-		ILogin.Utils.login(content, cardConfig, sessionSalt, loginStrategy, MySoftwareFm.this, new ILoginCallback() {
+		ILogin.Utils.login(content, cardConfig, sessionSalt, initialEmail, loginStrategy, MySoftwareFm.this, new ILoginCallback() {
 			@Override
 			public void loggedIn(String email, String cryptoKey) {
 				MySoftwareFm.this.email = email;
@@ -124,9 +124,9 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 	}
 
 	@Override
-	public void showForgotPassword(String sessionSalt) {
+	public void showForgotPassword(String sessionSalt, String initialEmail) {
 		Swts.removeAllChildren(content);
-		IForgotPassword.Utils.forgotPassword(content, cardConfig, sessionSalt, loginStrategy, this, new IForgotPasswordCallback() {
+		IForgotPassword.Utils.forgotPassword(content, cardConfig, sessionSalt, initialEmail, loginStrategy, this, new IForgotPasswordCallback() {
 			@Override
 			public void emailSent(String email) {
 				display(CardConstants.forgotPasswordCardType, CardConstants.sentForgottenPasswordTitle, CardConstants.sentForgottenPasswordText, restart, email);
@@ -141,9 +141,9 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 	}
 
 	@Override
-	public void showSignup(String sessionSalt) {
+	public void showSignup(String sessionSalt, String initialEmail) {
 		Swts.removeAllChildren(content);
-		ISignUp.Utils.signUp(content, cardConfig, sessionSalt, loginStrategy, this, new ISignUpCallback() {
+		ISignUp.Utils.signUp(content, cardConfig, sessionSalt, initialEmail, loginStrategy, this, new ISignUpCallback() {
 			@Override
 			public void signedUp(String email, String crypto) {
 				MySoftwareFm.this.email = email;

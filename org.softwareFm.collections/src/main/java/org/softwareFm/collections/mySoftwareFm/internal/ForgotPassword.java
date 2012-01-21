@@ -19,6 +19,7 @@ import org.softwareFm.collections.mySoftwareFm.ILoginDisplayStrategy;
 import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.collections.mySoftwareFm.IShowMessage;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
@@ -28,9 +29,9 @@ public class ForgotPassword implements IForgotPassword {
 	private final String cardType = CardConstants.forgotPasswordCardType;
 	private final INamesAndValuesEditor content;
 
-	public ForgotPassword(Composite parent, final CardConfig cardConfig, final String sessionSalt, final ILoginStrategy loginStrategy, final ILoginDisplayStrategy loginDisplayStrategy, final IForgotPasswordCallback forgotPasswordCallback) {
+	public ForgotPassword(Composite parent, final CardConfig cardConfig, final String sessionSalt, String initialEmail, final ILoginStrategy loginStrategy, final ILoginDisplayStrategy loginDisplayStrategy, final IForgotPasswordCallback forgotPasswordCallback) {
 		String title = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, CardConstants.forgotPasswordTitle);
-		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(), Arrays.asList(//
+		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(ServerConstants.emailKey, initialEmail), Arrays.asList(//
 				INamesAndValuesEditor.Utils.text(cardConfig, cardType, "email")),//
 				new ICardEditorCallback() {
 					@Override
@@ -45,7 +46,7 @@ public class ForgotPassword implements IForgotPassword {
 
 					@Override
 					public void cancel(ICardData cardData) {
-						loginDisplayStrategy.showLogin(sessionSalt);
+						loginDisplayStrategy.showLogin(sessionSalt, getEmail(cardData.data()));
 					}
 
 					@Override
@@ -63,10 +64,14 @@ public class ForgotPassword implements IForgotPassword {
 		Swts.Buttons.makePushButtonAtStart(buttonComposite, CardConfig.resourceGetter(content), CardConstants.signUpButtonTitle, new Runnable() {
 			@Override
 			public void run() {
-				loginDisplayStrategy.showSignup(sessionSalt);
+				loginDisplayStrategy.showSignup(sessionSalt, getEmail());
 			}
 		});
 
+	}
+
+	private String getEmail() {
+		return (String) content.data().get(ServerConstants.emailKey);
 	}
 
 	@Override
@@ -86,6 +91,7 @@ public class ForgotPassword implements IForgotPassword {
 				CardConfig cardConfig = ICardConfigurator.Utils.cardConfigForTests(parent.getDisplay());
 				return (Composite) new ForgotPassword(parent, cardConfig, //
 						UUID.randomUUID().toString(), //
+						"initial email",//
 						ILoginStrategy.Utils.sysoutLoginStrategy(), //
 						ILoginDisplayStrategy.Utils.sysoutDisplayStrategy(),//
 						ILoginCallbacks.Utils.showMessageCallbacks(cardConfig, IShowMessage.Utils.sysout())).getControl();

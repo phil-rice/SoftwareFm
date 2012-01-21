@@ -123,7 +123,9 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 		}
 
 		private void setInitialTextAndAddModified(final ICardData cardData, final Text text, final String key) {
-			text.setText(Strings.nullSafeToString(cardData.data().get(key)));
+			String initial = Strings.nullSafeToString(cardData.data().get(key));
+			text.setText(initial);
+			text.setSelection(initial.length());
 			text.addModifyListener(new ModifyListener() {
 				@Override
 				public void modifyText(ModifyEvent e) {

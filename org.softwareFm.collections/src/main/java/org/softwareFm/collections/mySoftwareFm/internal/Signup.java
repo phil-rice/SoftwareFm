@@ -20,6 +20,7 @@ import org.softwareFm.collections.mySoftwareFm.IShowMessage;
 import org.softwareFm.collections.mySoftwareFm.ISignUp;
 import org.softwareFm.collections.mySoftwareFm.ISignUpCallback;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.crypto.Crypto;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
@@ -30,9 +31,9 @@ public class Signup implements ISignUp {
 	private final String cardType = CardConstants.signupCardType;
 	private final INamesAndValuesEditor content;
 
-	public Signup(Composite parent, final CardConfig cardConfig, final String salt, final ILoginStrategy strategy, final ILoginDisplayStrategy loginDisplayStrategy, final ISignUpCallback callback) {
+	public Signup(Composite parent, final CardConfig cardConfig, final String salt, String initialEmail, final ILoginStrategy strategy, final ILoginDisplayStrategy loginDisplayStrategy, final ISignUpCallback callback) {
 		String title = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, CardConstants.signupTitle);
-		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(), Arrays.asList(//
+		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(ServerConstants.emailKey, initialEmail), Arrays.asList(//
 				INamesAndValuesEditor.Utils.text(cardConfig, cardType, "email"),//
 				INamesAndValuesEditor.Utils.password(cardConfig, cardType, "password"),//
 				INamesAndValuesEditor.Utils.password(cardConfig, cardType, "confirmPassword")),//
@@ -52,7 +53,7 @@ public class Signup implements ISignUp {
 
 					@Override
 					public void cancel(ICardData cardData) {
-						loginDisplayStrategy.showLogin(salt);
+						loginDisplayStrategy.showLogin(salt, getEmail(cardData.data()));
 					}
 
 					@Override
@@ -79,9 +80,13 @@ public class Signup implements ISignUp {
 		Swts.Buttons.makePushButtonAtStart(buttonComposite, CardConfig.resourceGetter(content), CardConstants.forgotPasswordButtonTitle, new Runnable() {
 			@Override
 			public void run() {
-				loginDisplayStrategy.showForgotPassword(salt);
+				loginDisplayStrategy.showForgotPassword(salt, getEmail());
 			}
 		});
+	}
+
+	private String getEmail() {
+		return (String) content.data().get(ServerConstants.emailKey);
 	}
 
 	@Override
@@ -100,7 +105,7 @@ public class Signup implements ISignUp {
 			public Composite apply(Composite parent) throws Exception {
 				CardConfig cardConfig = ICardConfigurator.Utils.basicConfigurator().configure(parent.getDisplay(), new CardConfig(ICardFactory.Utils.noCardFactory(), ICardDataStore.Utils.mock()));
 				String salt = "someSalt";
-				return (Composite) new Signup(parent, cardConfig, salt, ILoginStrategy.Utils.sysoutLoginStrategy(), //
+				return (Composite) new Signup(parent, cardConfig, salt, "initialEmail", ILoginStrategy.Utils.sysoutLoginStrategy(), //
 						ILoginDisplayStrategy.Utils.sysoutDisplayStrategy(), //
 						ILoginCallbacks.Utils.showMessageCallbacks(cardConfig, IShowMessage.Utils.sysout())).getControl();
 			}

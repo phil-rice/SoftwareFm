@@ -33,11 +33,11 @@ public interface INamesAndValuesEditor extends IValueEditor, ICardData {
 		}
 
 		public static NameAndValueData text(final CardConfig cardConfig, final String cardType, final String key) {
+			final String initialValue = cardConfig.valueFn.apply(cardConfig, new LineItem(cardType, key, ""));
 			return new NameAndValueData(key, new IFunction1<Composite, Control>() {
 				@Override
 				public Control apply(Composite from) throws Exception {
 					Text text = new Text(from, SWT.NULL);
-					String initialValue = cardConfig.valueFn.apply(cardConfig, new LineItem(cardType, key, ""));
 					text.setText(initialValue);
 					return text;
 				}

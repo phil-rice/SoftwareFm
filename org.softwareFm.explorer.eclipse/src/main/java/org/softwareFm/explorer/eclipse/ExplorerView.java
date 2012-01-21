@@ -69,7 +69,7 @@ public class ExplorerView extends ViewPart {
 				ExplorerView.this.actionBar.selectionOccured(ripperResult);
 			}
 		});
-		explorer.showMySoftwareFm();
+		explorer.showMySoftwareFm(); 
 		explorer.processUrl(DisplayConstants.browserFeedType, welcomeUrl);
 	}
 
