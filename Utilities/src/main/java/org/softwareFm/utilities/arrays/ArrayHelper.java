@@ -24,6 +24,14 @@ public class ArrayHelper {
 
 	}
 
+	public static <T> T[] insert(T[] raw, T... toInsert) {
+		List<T> result = Lists.newList();
+		for (T t : toInsert)
+			result.add(t);
+		for (T t : raw)
+			result.add(t);
+		return result.toArray(raw);
+	}
 	public static <From, To> To[] map(Class<To> clazz, From[] old, IFunction1<From, To> mutator) {
 		try {
 			@SuppressWarnings({ "unchecked" })
@@ -42,4 +50,5 @@ public class ArrayHelper {
 				return i;
 		return -1;
 	}
+
 }

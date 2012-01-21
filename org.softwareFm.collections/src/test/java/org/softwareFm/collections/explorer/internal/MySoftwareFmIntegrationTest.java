@@ -89,7 +89,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest {
 
 	public void testLoginErrors() {
 		signUp(email, password);
-		 template.queryForObject("select crypto from users", String.class);
+		template.queryForObject("select crypto from users", String.class);
 		mySoftwareFm.logout();
 
 		checkLoginError(email, "password", "Email / Password didn't match\n\nClicking this panel will start login again");
@@ -130,6 +130,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest {
 		assertTrue(getOkCancel().isOkEnabled());
 		getOkCancel().ok();
 		displayUntilText();
+		assertEquals("Reminder email sent to " + email + "\n\nClicking this panel will start login again", getText());
 		assertNull(mySoftwareFm.crypto);
 		assertNull(mySoftwareFm.email);
 
@@ -143,6 +144,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest {
 		assertTrue(getOkCancel().isOkEnabled());
 		getOkCancel().ok();
 		displayUntilText();
+		assertEquals("Welcome to softwareFm.\n\n\nYou are logged in as "+email, getText());
 		assertEquals(crypto, mySoftwareFm.crypto);
 		assertEquals(email, mySoftwareFm.email);
 	}
@@ -165,6 +167,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest {
 		assertTrue(getOkCancel().isOkEnabled());
 		getOkCancel().ok();
 		displayUntilText();
+		assertEquals("Welcome to softwareFm.\n\n\nYou are logged in as " + email, getText());
 		return signUpSalt;
 	}
 
@@ -184,7 +187,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest {
 		assertTrue(getOkCancel().isOkEnabled());
 	}
 
-	public void testNeedsEmailAndCreatesEmail() {
+	public void testNeedsValidEmailAddressForLogin() {
 		mySoftwareFm.start();
 		displayUntilValueComposite("Email", "Password");
 		setValues("email", "password");
@@ -192,8 +195,6 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest {
 
 		setValues("email@a.b", "password");
 		assertTrue(getOkCancel().isOkEnabled());
-		getOkCancel().ok();
-		displayUntilText();
 	}
 
 	private void displayUntilText() {

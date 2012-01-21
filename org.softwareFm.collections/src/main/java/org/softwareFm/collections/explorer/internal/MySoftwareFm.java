@@ -30,6 +30,7 @@ import org.softwareFm.server.ISoftwareFmServer;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.IProcessCall;
+import org.softwareFm.utilities.arrays.ArrayHelper;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.services.IServiceExecutor;
@@ -124,7 +125,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 			public void run() {
 				ICallback.Utils.call(restart, email);
 			}
-		}, args);
+		}, ArrayHelper.insert(args, email));
 	}
 
 	public void displayWithClick(final String cardType, final String title, final String text, final String email, final Runnable runnable, final String... args) {
