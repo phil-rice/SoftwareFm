@@ -30,7 +30,6 @@ import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.runnable.Runnables;
 import org.softwareFm.utilities.services.IServiceExecutor;
 
 public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
@@ -42,23 +41,27 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 	protected String crypto;
 	protected String signupSalt;
 
-	protected Runnable restart;
+	protected ICallback<String> restart;
 
 	public MySoftwareFm(Composite parent, CardConfig cardConfig, ILoginStrategy loginStrategy) {
 		this.cardConfig = cardConfig;
 		this.loginStrategy = loginStrategy;
 		this.content = new Composite(parent, SWT.NULL);
 		content.setLayout(new FillLayout());
-		restart = new Runnable() {
+		restart = new ICallback<String>() {
 			@Override
-			public void run() {
+			public void process(String email) throws Exception {
 				logout();
-				start();
+				start(email);
 			}
 		};
 	}
 
 	public void start() {
+		start(email);
+	}
+
+	public void start(final String email) {
 		if (crypto != null)
 			display(CardConstants.loginCardType, CardConstants.loggedInTitle, CardConstants.loggedInTitle, email);
 		else
@@ -72,7 +75,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 
 			@Override
 			public void problemGettingSalt(String message) {
-				display(CardConstants.loginCardType, CardConstants.failedToContactServerTitle, CardConstants.failedToContactServerText, restart, email, message);
+				displayWithClick(CardConstants.loginCardType, CardConstants.failedToContactServerTitle, CardConstants.failedToContactServerText, email, message);
 			}
 		});
 	}
@@ -88,17 +91,30 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 	}
 
 	public void display(final String cardType, final String title, final String text, final String... args) {
-		display(cardType, title, text, Runnables.noRunnable, args);
-	}
-
-	public void display(final String cardType, final String title, final String text, final Runnable runnable, final String... args) {
 		content.getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				Swts.removeAllChildren(content);
 				TextInBorder textInBorder = new TextInBorder(content, SWT.WRAP | SWT.READ_ONLY, cardConfig);
 				textInBorder.setTextFromResourceGetter(cardType, title, text, (Object[]) args);
-				textInBorder.addClickedListener(runnable);
+				content.layout();
+			}
+		});
+	}
+
+	public void displayWithClick(final String cardType, final String title, final String text, final String email, final String... args) {
+		content.getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				Swts.removeAllChildren(content);
+				TextInBorder textInBorder = new TextInBorder(content, SWT.WRAP | SWT.READ_ONLY, cardConfig);
+				textInBorder.setTextFromResourceGetter(cardType, title, text, (Object[]) args);
+				textInBorder.addClickedListener(new Runnable() {
+					@Override
+					public void run() {
+						ICallback.Utils.call(restart, email);
+					}
+				});
 				content.layout();
 			}
 		});
@@ -117,7 +133,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 
 			@Override
 			public void failedToLogin(String email, String message) {
-				display(CardConstants.loginCardType, CardConstants.failedToLoginTitle, CardConstants.failedToLoginText, restart, email, message);
+				displayWithClick(CardConstants.loginCardType, CardConstants.failedToLoginTitle, CardConstants.failedToLoginText, email, message);
 			}
 		});
 		content.layout();
@@ -129,12 +145,12 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		IForgotPassword.Utils.forgotPassword(content, cardConfig, sessionSalt, initialEmail, loginStrategy, this, new IForgotPasswordCallback() {
 			@Override
 			public void emailSent(String email) {
-				display(CardConstants.forgotPasswordCardType, CardConstants.sentForgottenPasswordTitle, CardConstants.sentForgottenPasswordText, restart, email);
+				displayWithClick(CardConstants.forgotPasswordCardType, CardConstants.sentForgottenPasswordTitle, CardConstants.sentForgottenPasswordText, email);
 			}
 
 			@Override
 			public void failedToSend(String email, String message) {
-				display(CardConstants.forgotPasswordCardType, CardConstants.failedToSendForgottenPasswordTitle, CardConstants.failedToSendForgottenPasswordText, restart, email, message);
+				displayWithClick(CardConstants.forgotPasswordCardType, CardConstants.failedToSendForgottenPasswordTitle, CardConstants.failedToSendForgottenPasswordText, email, message);
 			}
 		});
 		content.layout();
@@ -153,7 +169,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 
 			@Override
 			public void failed(String email, String message) {
-				display(CardConstants.signupCardType, CardConstants.failedToSignupTitle, CardConstants.failedToSignupText, restart, email, message);
+				displayWithClick(CardConstants.signupCardType, CardConstants.failedToSignupTitle, CardConstants.failedToSignupText, email, message);
 			}
 		});
 		content.layout();
