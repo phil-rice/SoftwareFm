@@ -20,10 +20,10 @@ public class MySoftwareFmLoggedIn implements IHasControl {
 
 	private final TextInBorderWithButtons content;
 
-	public MySoftwareFmLoggedIn(Composite parent, CardConfig cardConfig, String title, String text, final String email, final ILoginDisplayStrategy loginDisplayStrategy, IChangePasswordCallback changePasswordCallback) {
+	public MySoftwareFmLoggedIn(Composite parent, CardConfig cardConfig, String title, String text, final String email, final ILoginDisplayStrategy loginDisplayStrategy, Runnable logout, IChangePasswordCallback changePasswordCallback) {
 		content = new TextInBorderWithButtons(parent, SWT.WRAP | SWT.READ_ONLY, cardConfig);
-		content.setText(CardConstants.loginCardType, title, text);
-		content.addButton("Logout", Runnables.sysout("Logout clicked"));
+		content.setTextFromResourceGetter(CardConstants.loginCardType, title, text, email);
+		content.addButton("Logout", logout);
 		content.addButton("Change Password", new Runnable() {
 			@Override
 			public void run() {
@@ -42,7 +42,7 @@ public class MySoftwareFmLoggedIn implements IHasControl {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				CardConfig cardConfig = ICardConfigurator.Utils.cardConfigForTests(from.getDisplay()) ;
-				return (Composite) new MySoftwareFmLoggedIn(from,  cardConfig, "title", "text", "email", ILoginDisplayStrategy.Utils.sysoutDisplayStrategy(), ILoginCallbacks.Utils.showMessageCallbacks(cardConfig, IShowMessage.Utils.sysout())).getControl();
+				return (Composite) new MySoftwareFmLoggedIn(from,  cardConfig, "title", "text", "email", ILoginDisplayStrategy.Utils.sysoutDisplayStrategy(), Runnables.sysout("Logout clicked"), ILoginCallbacks.Utils.showMessageCallbacks(cardConfig, IShowMessage.Utils.sysout())).getControl();
 			}
 		});
 	}

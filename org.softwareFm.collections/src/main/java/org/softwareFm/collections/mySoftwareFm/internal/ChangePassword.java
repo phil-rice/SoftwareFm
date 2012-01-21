@@ -2,7 +2,6 @@ package org.softwareFm.collections.mySoftwareFm.internal;
 
 import java.util.Arrays;
 import java.util.Map;
-import java.util.UUID;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -43,8 +42,8 @@ public class ChangePassword implements IChangePassword {
 					@Override
 					public void ok(ICardData cardData) {
 						final Map<String, Object> data = cardData.data();
-						final String oldPassword = getPassword(cardData.data());
-						final String newPassword = getNewPassword(cardData.data());
+						final String oldPassword = getPassword(data);
+						final String newPassword = getNewPassword(data);
 						final String confirmPassword = getConfirmNewPassword(cardData.data());
 						assert newPassword.equals(confirmPassword) : "Old: " + oldPassword + " Confirm: " + confirmPassword;
 						loginStrategy.requestEmailSalt(email, "", new IRequestSaltCallback() {
@@ -110,7 +109,6 @@ public class ChangePassword implements IChangePassword {
 			@Override
 			public Composite apply(Composite parent) throws Exception {
 				CardConfig cardConfig = ICardConfigurator.Utils.cardConfigForTests(parent.getDisplay());
-				String salt = UUID.randomUUID().toString();
 				ILoginStrategy sysoutLoginStrategy = ILoginStrategy.Utils.sysoutLoginStrategy();
 				ILoginDisplayStrategy loginDisplayStrategy = ILoginDisplayStrategy.Utils.sysoutDisplayStrategy();
 				ILoginCallbacks loginCallbacks = ILoginCallbacks.Utils.showMessageCallbacks(cardConfig, IShowMessage.Utils.sysout());

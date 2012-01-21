@@ -221,7 +221,9 @@ public class Explorer implements IExplorer {
 
 	@Override
 	public void showMySoftwareFm() {
-		masterDetailSocial.setMaster(mySoftwareFm.getComposite());
+		Composite composite = mySoftwareFm.getComposite();
+		masterDetailSocial.setMaster(composite);
+		mySoftwareFm.forceFocus();
 	}
 
 	public void dispose() {

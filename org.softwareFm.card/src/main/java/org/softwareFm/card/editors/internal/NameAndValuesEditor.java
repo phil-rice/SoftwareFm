@@ -52,6 +52,7 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 		private final ValueEditorBodyComposite body;
 		private final SashForm editing;
 		private final ICardEditorCallback callback;
+		private final Control firstChild;
 
 		public NameAndValuesEditorComposite(Composite parent, String titleString, final ICardData cardData, List<NameAndValueData> nameAndValueData, final ICardEditorCallback strategy) {
 			super(parent, SWT.NULL);
@@ -109,7 +110,14 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 				}
 			});
 			assert nameAndValueData.size() > 0;
-			values.getChildren()[0].forceFocus();
+			firstChild = values.getChildren()[0];
+			firstChild.forceFocus();
+		}
+
+		@Override
+		public boolean forceFocus() {
+			boolean gotFocus = firstChild.forceFocus();
+			return gotFocus;
 		}
 
 		private void setInitialTextAndAddModified(ICardData cardData, Control editor, String key) {

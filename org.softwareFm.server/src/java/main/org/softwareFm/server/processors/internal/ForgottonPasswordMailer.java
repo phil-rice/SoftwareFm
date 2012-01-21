@@ -59,7 +59,7 @@ public class ForgottonPasswordMailer extends AbstractLoginDataAccessor implement
 			new SignUpChecker(SignUpChecker.defaultDataSource()).signUp("phil.rice.erudine@googlemail.com", "someSalt", "somepassword");
 		} catch (Exception e) {
 		}
-		new ForgottonPasswordMailer(ForgottonPasswordMailer.defaultDataSource(),"smtp.gmail.com", "phil.rice.erudine@googlemail.com", "elrx4321").process("phil.rice.erudine@googlemail.com");
+		new ForgottonPasswordMailer(ForgottonPasswordMailer.defaultDataSource(),"smtp.gmail.com", "your name", "your password").process("phil.rice.erudine@googlemail.com");
 
 	}
 

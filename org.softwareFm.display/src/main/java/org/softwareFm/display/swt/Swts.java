@@ -916,7 +916,7 @@ public class Swts {
 				assert children.length == 2;
 				Control content = children[0];
 				Control buttons = children[1];
-				Point contentSize = buttons.computeSize(wHint, hHint);
+				Point contentSize = content.computeSize(wHint, hHint);
 				Point buttonsSize = buttons.computeSize(wHint, hHint);
 				return new Point(Math.max(contentSize.x, buttonsSize.x), contentSize.y + buttonsSize.y);
 			}

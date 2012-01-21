@@ -86,7 +86,13 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 	public void showLoggedIn() {
 		Swts.removeAllChildren(content);
 		IChangePasswordCallback callback = null;
-		new MySoftwareFmLoggedIn(content, cardConfig, CardConstants.loggedInTitle, CardConstants.loggedInText, email, this, callback);
+		new MySoftwareFmLoggedIn(content, cardConfig, CardConstants.loggedInTitle, CardConstants.loggedInText, email, this, new Runnable() {
+			@Override
+			public void run() {
+				logout();
+				start();
+			}
+		}, callback);
 		content.layout();
 	}
 
@@ -201,13 +207,13 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		};
 		IChangePassword.Utils.changePassword(content, cardConfig, email, loginStrategy, this, new IChangePasswordCallback() {
 			@Override
-			public void failedToChangePassword(String email, String message) {
-				displayWithClick(cardType, CardConstants.failedToChangePasswordTitle, CardConstants.failedToChangePasswordText, email, showLoggedIn, message);
+			public void changedPassword(String email) {
+				displayWithClick(cardType, CardConstants.changedPasswordTitle, CardConstants.changedPasswordText, email, showLoggedIn);
 			}
 
 			@Override
-			public void changedPassword(String email) {
-				displayWithClick(cardType, CardConstants.changedPasswordTitle, CardConstants.changedPasswordText, email, showLoggedIn);
+			public void failedToChangePassword(String email, String message) {
+				displayWithClick(cardType, CardConstants.failedToChangePasswordTitle, CardConstants.failedToChangePasswordText, email, showLoggedIn, message);
 			}
 
 			@Override
@@ -251,6 +257,13 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		crypto = null;
 		signupSalt = null;
 		email = null;
+	}
+
+	public void forceFocus() {
+		Control[] children = content.getChildren();
+		if (children.length>0)
+			children[0].forceFocus();
+		
 	}
 
 }

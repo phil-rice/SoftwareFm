@@ -188,9 +188,31 @@ public interface ILoginStrategy {
 				}
 
 				@Override
-				public void changePassword(String email, String oldHash, String newHash, IChangePasswordCallback callback) {
-					throw new UnsupportedOperationException();
-				}
+				public void changePassword(final String email, final String oldHash, final String newHash, final IChangePasswordCallback callback) {
+					serviceExecutor.submit(new Callable<Void>() {
+						@Override
+						public Void call() throws Exception {
+							client.post(ServerConstants.changePasswordPrefix).//
+									addParam(ServerConstants.emailKey, email).//
+									addParam(ServerConstants.passwordHashKey, oldHash).//
+									addParam(ServerConstants.newPasswordHashKey, newHash).//
+									execute(new IResponseCallback() {
+										@Override
+										public void process(final IResponse response) {
+											display.asyncExec(new Runnable() {
+												@Override
+												public void run() {
+													if (response.statusCode() == ServerConstants.okStatusCode)
+														callback.changedPassword(email);
+													else
+														callback.failedToChangePassword(email, response.asString());
+												}
+											});
+										}
+									}).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+							return null;
+						}
+					});				}
 			};
 		}
 
