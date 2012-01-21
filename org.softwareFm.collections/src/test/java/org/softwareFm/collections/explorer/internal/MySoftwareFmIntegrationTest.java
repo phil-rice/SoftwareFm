@@ -92,8 +92,8 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest {
 		 template.queryForObject("select crypto from users", String.class);
 		mySoftwareFm.logout();
 
-		checkLoginError(email, "password", "Email: a.b@c.com\n\n Email / Password didn't match\n\nClicking this panel will start login again");
-		checkLoginError("a@b.com", "password", "Email: a@b.com\n\n Email not recognised\n\nClicking this panel will start login again");
+		checkLoginError(email, "password", "Email / Password didn't match\n\nClicking this panel will start login again");
+		checkLoginError("a@b.com", "password", "Email not recognised\n\nClicking this panel will start login again");
 		assertNull(mySoftwareFm.crypto);
 	}
 

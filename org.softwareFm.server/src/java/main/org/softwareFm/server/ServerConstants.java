@@ -63,5 +63,7 @@ public class ServerConstants {
 	public static final String failedToResetPasswordHtml = "<html><body>Failed to reset. Please request a new link</body></html>";
 	public static final String timedOut = "Timed out";
 	public static final String emailNotRecognised = "Email not recognised";
+	public static final String wrongPassword = "Password didn't match email";
+	public static final String passwordChanged = "Password changed";
 
 }

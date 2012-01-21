@@ -24,6 +24,7 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends TestCase impl
 	protected PasswordResetter resetPassword;
 	private BasicDataSource dataSource;
 	protected JdbcTemplate template;
+	private MailerMock mailerMock;
 
 	protected String checkSignup(final String email, final String salt, final String hash) {
 		int initial = findUsersSize();
@@ -66,7 +67,8 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends TestCase impl
 		dataSource = AbstractLoginDataAccessor.defaultDataSource();
 		signupChecker = new SignUpChecker(dataSource);
 		loginChecker = new LoginChecker(dataSource);
-		passwordMailer = new ForgottonPasswordMailer(dataSource, null, null, null);// bit of a cheat...won't actually mail
+		mailerMock = new MailerMock();
+		passwordMailer = new ForgottonPasswordMailer(dataSource, mailerMock);// bit of a cheat...won't actually mail
 		resetPassword = new PasswordResetter(dataSource);
 		template = new JdbcTemplate(dataSource);
 		template.update("truncate users");

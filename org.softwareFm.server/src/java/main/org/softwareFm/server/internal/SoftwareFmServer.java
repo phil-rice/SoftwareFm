@@ -30,6 +30,7 @@ import org.softwareFm.server.ISoftwareFmServer;
 import org.softwareFm.server.IUsage;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.server.processors.AbstractLoginDataAccessor;
+import org.softwareFm.server.processors.IMailer;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.IProcessResult;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -193,6 +194,7 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 		IGitServer server = IGitServer.Utils.gitServer(sfmRoot, "not used");
 		System.out.println("Server: " + server);
 		final IUsage usage = IUsage.Utils.defaultUsage();
-		new SoftwareFmServer(8080, 1000, IProcessCall.Utils.softwareFmProcessCall(AbstractLoginDataAccessor.defaultDataSource(), server, sfmRoot, "localhost", null, null), ICallback.Utils.sysErrCallback(), usage);
+		IMailer mailer = IMailer.Utils.email("localhost",null, null);
+		new SoftwareFmServer(8080, 1000, IProcessCall.Utils.softwareFmProcessCall(AbstractLoginDataAccessor.defaultDataSource(), server, sfmRoot, mailer), ICallback.Utils.sysErrCallback(), usage);
 	}
 }

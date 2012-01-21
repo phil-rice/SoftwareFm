@@ -5,53 +5,30 @@ import java.util.UUID;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.mail.Email;
-import org.apache.commons.mail.EmailException;
-import org.apache.commons.mail.SimpleEmail;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.IForgottonPasswordMailer;
-import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.server.processors.IMailer;
 
 public class ForgottonPasswordMailer extends AbstractLoginDataAccessor implements IForgottonPasswordMailer {
 
-	private final String host;
-	private final String username;
-	private final String password;
+	private final IMailer mailer;
 
-	public ForgottonPasswordMailer(DataSource dataSource, String host, String username, String password) {
+	public ForgottonPasswordMailer(DataSource dataSource, IMailer mailer) {
 		super(dataSource);
-		this.host = host;
-		this.username = username;
-		this.password = password;
+		this.mailer = mailer;
 	}
 
 	@Override
 	public String process(String emailAddress) {
-		try {
-			String magicString = UUID.randomUUID().toString();
-			int count = template.update("update users set passwordResetKey=? where email=?", magicString, emailAddress);
-			if (count == 0)
-				throw new RuntimeException(MessageFormat.format(ServerConstants.emailAddressNotFound, emailAddress));
+		String magicString = UUID.randomUUID().toString();
+		int count = template.update("update users set passwordResetKey=? where email=?", magicString, emailAddress);
+		if (count == 0)
+			throw new RuntimeException(MessageFormat.format(ServerConstants.emailAddressNotFound, emailAddress));
 
-			Email email = new SimpleEmail();
-			email.setHostName(host);
-			email.setSmtpPort(25);
-			if (username != null && password != null)
-				email.setAuthentication(username, password);
-			email.setDebug(true);
-			email.setTLS(false);
-			email.setFrom("forgottonpasswords@softwarefm.org");
-			email.setSubject(ServerConstants.passwordResetSubject);
-			String message = MessageFormat.format(ServerConstants.forgottonPasswordMessage, emailAddress, magicString);
-			email.setMsg(message);
-			email.addTo(emailAddress);
-			if (host != null)
-				email.send();
-			return magicString;
-		} catch (EmailException e) {
-			throw WrappedException.wrap(e);
-		}
+		String message = MessageFormat.format(ServerConstants.forgottonPasswordMessage, emailAddress, magicString);
+		mailer.mail("forgottonpasswords@softwarefm.org", emailAddress, ServerConstants.passwordResetSubject, message);
+		return magicString;
 	}
 
 	public static void main(String[] args) {
@@ -59,7 +36,7 @@ public class ForgottonPasswordMailer extends AbstractLoginDataAccessor implement
 			new SignUpChecker(SignUpChecker.defaultDataSource()).signUp("phil.rice.erudine@googlemail.com", "someSalt", "somepassword");
 		} catch (Exception e) {
 		}
-		new ForgottonPasswordMailer(ForgottonPasswordMailer.defaultDataSource(),"smtp.gmail.com", "your name", "your password").process("phil.rice.erudine@googlemail.com");
+		new ForgottonPasswordMailer(ForgottonPasswordMailer.defaultDataSource(), IMailer.Utils.email("smtp.gmail.com", "your name", "your password")).process("phil.rice.erudine@googlemail.com");
 
 	}
 

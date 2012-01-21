@@ -7,6 +7,7 @@ import javax.sql.DataSource;
 
 import org.apache.http.RequestLine;
 import org.softwareFm.server.IGitServer;
+import org.softwareFm.server.processors.internal.ChangePasswordProcessor;
 import org.softwareFm.server.processors.internal.DeleteProcessor;
 import org.softwareFm.server.processors.internal.EmailSaltRequester;
 import org.softwareFm.server.processors.internal.FavIconProcessor;
@@ -64,16 +65,18 @@ public interface IProcessCall {
 		}
 
 		public static IProcessCall softwareFmProcessCallWithoutMail(DataSource dataSource, IGitServer server, File fileRoot) {
-			return softwareFmProcessCall(dataSource, server, fileRoot, null, null, null);
+			return softwareFmProcessCall(dataSource, server, fileRoot, IMailer.Utils.noMailer());
 		}
-		public static IProcessCall softwareFmProcessCall(DataSource dataSource, IGitServer server, File fileRoot, String mailHost, String userName, String password) {
+
+		public static IProcessCall softwareFmProcessCall(DataSource dataSource, IGitServer server, File fileRoot, IMailer mailer) {
 			UrlCache<String> aboveRepostoryUrlCache = new UrlCache<String>();
 			SaltProcessor saltProcessor = new SaltProcessor();
 			LoginChecker loginChecker = new LoginChecker(dataSource);
 			SignUpChecker signUpChecker = new SignUpChecker(dataSource);
-			ForgottonPasswordMailer forgottonPasswordProcessor = new ForgottonPasswordMailer(dataSource, mailHost, userName, password);
+			ForgottonPasswordMailer forgottonPasswordProcessor = new ForgottonPasswordMailer(dataSource, mailer);
 			IPasswordResetter resetter = new PasswordResetter(dataSource);
 			EmailSaltRequester saltRequester = new EmailSaltRequester(dataSource);
+			IPasswordChanger passwordChanger = IPasswordChanger.Utils.databasePasswordChanger(dataSource);
 			return chain(new FavIconProcessor(),//
 					new RigidFileProcessor(fileRoot, "update"),// responds to get or head
 					new LoginProcessor(saltProcessor, loginChecker), //
@@ -82,6 +85,7 @@ public interface IProcessCall {
 					new ForgottonPasswordProcessor(saltProcessor, forgottonPasswordProcessor),//
 					new RequestEmailSaltProcessor(saltRequester),//
 					new ForgottonPasswordWebPageProcessor(resetter),//
+					new ChangePasswordProcessor(passwordChanger),//
 					new HeadThrowing404(),// sweep up any heads
 					new GetIndexProcessor(fileRoot),//
 					new GetFileProcessor(fileRoot, "html", "jpg", "png", "css", "gif", "jar", "xml"), //

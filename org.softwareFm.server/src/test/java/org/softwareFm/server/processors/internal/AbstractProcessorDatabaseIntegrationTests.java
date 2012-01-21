@@ -3,6 +3,7 @@ package org.softwareFm.server.processors.internal;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.softwareFm.server.ISoftwareFmServer;
 import org.softwareFm.server.processors.AbstractLoginDataAccessor;
+import org.softwareFm.server.processors.IPasswordChanger;
 import org.softwareFm.server.processors.IPasswordResetter;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -11,6 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 abstract public class AbstractProcessorDatabaseIntegrationTests extends AbstractProcessorIntegrationTests {
 	private ISoftwareFmServer server;
 	protected JdbcTemplate template;
+	private MailerMock mailerMock;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -19,15 +21,18 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 		BasicDataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
 		LoginChecker loginChecker = new LoginChecker(dataSource);
 		SignUpChecker signUpChecker = new SignUpChecker(dataSource);
-		ForgottonPasswordMailer forgottonPasswordProcessor = new ForgottonPasswordMailer(dataSource, null, null, null);
+		mailerMock = new MailerMock();
+		ForgottonPasswordMailer forgottonPasswordProcessor = new ForgottonPasswordMailer(dataSource, mailerMock);
 		IPasswordResetter resetter = new PasswordResetter(dataSource);
 		EmailSaltRequester saltRequester = new EmailSaltRequester(dataSource);
+		IPasswordChanger passwordChanger =IPasswordChanger.Utils.databasePasswordChanger(dataSource);
 		IProcessCall result = IProcessCall.Utils.chain(//
 				new LoginProcessor(saltProcessor, loginChecker), //
 				new SignupProcessor(signUpChecker, saltProcessor), //
 				new MakeSaltForLoginProcessor(saltProcessor),//
 				new ForgottonPasswordProcessor(saltProcessor, forgottonPasswordProcessor),//
 				new RequestEmailSaltProcessor(saltRequester),//
+				new ChangePasswordProcessor(passwordChanger),//
 				new ForgottonPasswordWebPageProcessor(resetter));
 		template = new JdbcTemplate(dataSource);
 		server = ISoftwareFmServer.Utils.testServerPort(result, ICallback.Utils.rethrow());
