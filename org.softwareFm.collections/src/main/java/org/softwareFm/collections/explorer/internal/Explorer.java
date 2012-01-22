@@ -66,7 +66,6 @@ import org.softwareFm.collections.unrecognisedJar.UnrecognisedJarData;
 import org.softwareFm.display.browser.IBrowserPart;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.constants.DisplayConstants;
-import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.display.timeline.PlayItem;
@@ -82,6 +81,7 @@ import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.services.IServiceExecutor;
 import org.softwareFm.utilities.strings.Strings;
+import org.softwareFm.utilities.url.IUrlGenerator;
 
 public class Explorer implements IExplorer {
 

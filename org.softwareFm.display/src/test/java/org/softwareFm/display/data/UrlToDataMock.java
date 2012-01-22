@@ -12,6 +12,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.url.IUrlDataCallback;
+import org.softwareFm.utilities.url.IUrlToData;
 
 public class UrlToDataMock implements IUrlToData {
 

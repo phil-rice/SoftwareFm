@@ -17,8 +17,6 @@ import org.apache.maven.model.Parent;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.collections.constants.CollectionConstants;
-import org.softwareFm.display.data.IUrlGenerator;
-import org.softwareFm.display.data.IUrlGeneratorMap;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.jdtBinding.api.JdtConstants;
 import org.softwareFm.mavenExtractor.DownloadJarsExtractor;
@@ -32,6 +30,8 @@ import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.strings.Strings;
+import org.softwareFm.utilities.url.IUrlGenerator;
+import org.softwareFm.utilities.url.IUrlGeneratorMap;
 
 public class JarGroupArtifactVersionToGitRepository implements IExtractorCallback {
 	private final IUrlGenerator jarUrlGenerator;

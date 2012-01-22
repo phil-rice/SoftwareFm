@@ -13,15 +13,15 @@ import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.collections.explorer.internal.NewJarImporter.ImportStage;
 import org.softwareFm.collections.explorer.internal.NewJarImporter.ImportStageCommand;
-import org.softwareFm.display.data.IUrlGenerator;
-import org.softwareFm.display.data.IUrlGeneratorMap;
 import org.softwareFm.display.swt.SwtTest;
-import org.softwareFm.display.urlGenerator.UrlGenerator;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.callbacks.MemoryCallback;
 import org.softwareFm.utilities.comparators.Comparators;
 import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.url.IUrlGenerator;
+import org.softwareFm.utilities.url.IUrlGeneratorMap;
+import org.softwareFm.utilities.url.UrlGenerator;
 
 public class NewJarImporterTest extends SwtTest {
 

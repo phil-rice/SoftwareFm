@@ -13,11 +13,11 @@ import javax.sql.DataSource;
 import org.apache.maven.model.MailingList;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Parent;
-import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.mavenExtractor.git.ExtractProjectStuff;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.url.IUrlGenerator;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class MailingListToSling implements IExtractorCallback {

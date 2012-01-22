@@ -8,7 +8,6 @@ import org.apache.maven.model.Parent;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.collections.constants.CollectionConstants;
-import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.mavenExtractor.IExtractorCallback;
 import org.softwareFm.mavenExtractor.MavenImporterConstants;
 import org.softwareFm.server.IGitFacard;
@@ -18,6 +17,7 @@ import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.strings.Strings;
+import org.softwareFm.utilities.url.IUrlGenerator;
 
 public class ImportJarName implements IExtractorCallback {
 	private final int maxCount;

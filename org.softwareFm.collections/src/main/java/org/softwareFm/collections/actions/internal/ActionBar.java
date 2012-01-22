@@ -21,7 +21,6 @@ import org.softwareFm.collections.actions.IActionBar;
 import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.display.constants.DisplayConstants;
-import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.jdtBinding.api.ExpressionData;
@@ -34,6 +33,7 @@ import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
+import org.softwareFm.utilities.url.IUrlGenerator;
 
 public class ActionBar implements IActionBar {
 

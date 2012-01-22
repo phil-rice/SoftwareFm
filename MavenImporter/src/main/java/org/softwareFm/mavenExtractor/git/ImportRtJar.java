@@ -6,13 +6,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
-import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.server.IGitFacard;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.strings.Strings;
+import org.softwareFm.utilities.url.IUrlGenerator;
 
 public class ImportRtJar {
 

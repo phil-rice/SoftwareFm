@@ -16,13 +16,13 @@ import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.collections.constants.CollectionConstants;
-import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.strings.Urls;
+import org.softwareFm.utilities.url.IUrlGenerator;
 
 public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerIntegrationTest {
 	private final File rtFile = new File("a/b/c/jdk1.2.3/rt.jar");

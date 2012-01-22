@@ -11,11 +11,11 @@ import java.util.UUID;
 
 import javax.sql.DataSource;
 
-import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.url.IUrlGenerator;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @SuppressWarnings("unused")

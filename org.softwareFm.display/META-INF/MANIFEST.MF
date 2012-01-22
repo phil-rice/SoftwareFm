@@ -8,9 +8,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.softwareFm.display.browser,
  org.softwareFm.display.composites,
  org.softwareFm.display.constants,
- org.softwareFm.display.data,
  org.softwareFm.display.menu,
  org.softwareFm.display.okCancel,
  org.softwareFm.display.swt,
- org.softwareFm.display.timeline,
- org.softwareFm.display.urlGenerator
+ org.softwareFm.display.timeline

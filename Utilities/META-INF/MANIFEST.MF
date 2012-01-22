@@ -36,4 +36,5 @@ Export-Package: org.softwareFm.utilities.aggregators,
  org.softwareFm.utilities.runnable,
  org.softwareFm.utilities.services,
  org.softwareFm.utilities.strings,
- org.softwareFm.utilities.tests
+ org.softwareFm.utilities.tests,
+ org.softwareFm.utilities.url

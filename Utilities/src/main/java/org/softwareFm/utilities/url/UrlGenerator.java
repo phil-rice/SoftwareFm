@@ -3,13 +3,13 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwareFm.display.urlGenerator;
+package org.softwareFm.utilities.url;
 
 import java.text.MessageFormat;
 import java.util.Map;
 
-import org.softwareFm.display.constants.DisplayConstants;
-import org.softwareFm.display.data.IUrlGenerator;
+import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.utilities.constants.UtilityConstants;
 import org.softwareFm.utilities.strings.Strings;
 
 public class UrlGenerator implements IUrlGenerator {
@@ -36,7 +36,7 @@ public class UrlGenerator implements IUrlGenerator {
 				if (data.containsKey(key))
 					return null;
 				else
-					throw new NullPointerException(MessageFormat.format(DisplayConstants.cannotFindValueForKey, key, data));
+					throw new NullPointerException(MessageFormat.format(UtilityConstants.mapDoesntHaveKey, key, Lists.sort(data.keySet()), data));
 			String cleaned = Strings.forUrl(value.toString());
 			values[2 * i + 2] = cleaned;
 			values[2 * i + 3] = cleaned.replace(".", "/");
@@ -55,7 +55,7 @@ public class UrlGenerator implements IUrlGenerator {
 				min = 0;
 			int max = min + j - i;
 			if (max >= raw.length())
-				max = raw.length() ;
+				max = raw.length();
 			return raw.substring(min, max);
 		} else
 			return raw.substring(i, j);

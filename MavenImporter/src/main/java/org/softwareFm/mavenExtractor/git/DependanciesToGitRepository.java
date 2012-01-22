@@ -13,8 +13,6 @@ import javax.sql.DataSource;
 
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
-import org.softwareFm.display.data.IUrlGenerator;
-import org.softwareFm.display.data.IUrlGeneratorMap;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.mavenExtractor.DependancyWalker;
 import org.softwareFm.mavenExtractor.IArtifactDependancyVisitor;
@@ -22,6 +20,8 @@ import org.softwareFm.mavenExtractor.MavenImporterConstants;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.url.IUrlGenerator;
+import org.softwareFm.utilities.url.IUrlGeneratorMap;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @SuppressWarnings("unused")

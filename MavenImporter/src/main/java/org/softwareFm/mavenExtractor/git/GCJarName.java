@@ -7,10 +7,10 @@ import java.sql.SQLException;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.collections.constants.CollectionConstants;
-import org.softwareFm.display.data.IUrlGenerator;
 import org.softwareFm.mavenExtractor.MavenImporterConstants;
 import org.softwareFm.server.IGitFacard;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.url.IUrlGenerator;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
 
