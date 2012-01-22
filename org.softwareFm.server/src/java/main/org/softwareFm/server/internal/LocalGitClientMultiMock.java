@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import junit.framework.Assert;
 
 import org.softwareFm.server.GetResult;
+import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.ILocalGitClientReader;
 
 public class LocalGitClientMultiMock implements ILocalGitClientReader {
@@ -21,10 +22,10 @@ public class LocalGitClientMultiMock implements ILocalGitClientReader {
 	}
 
 	@Override
-	public GetResult localGet(String url) {
+	public GetResult localGet(IFileDescription fileDescription) {
 		switch (index.getAndIncrement()) {
 		case 0:
-			Assert.assertEquals(this.url, url);
+			Assert.assertEquals(this.url, fileDescription);
 			return GetResult.notFound();
 		case 1:
 			return GetResult.create(result);
@@ -41,7 +42,7 @@ public class LocalGitClientMultiMock implements ILocalGitClientReader {
 	}
 
 	@Override
-	public GetResult getFile(String url) {
+	public GetResult getFile(IFileDescription fileDescription) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -9,6 +9,7 @@ import junit.framework.TestCase;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.server.GetResult;
+import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.IGitFacard;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ILocalGitClient;
@@ -87,22 +88,24 @@ public abstract class GitTest extends TestCase {
 			serviceExecutor.shutdownAndAwaitTermination(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
 		if (httpClient != null)
 			httpClient.shutdown();
+		if (root.exists())
+			assertTrue(Files.deleteDirectory(root));
 	}
 
 	protected void checkNoData(ILocalGitClient client, String url) {
-		GetResult result = client.localGet(url);
+		GetResult result = client.localGet(IFileDescription.Utils.plain(url));
 		assertFalse(result.toString(), result.found);
 
 	}
 
 	protected void checkLocalGet(ILocalGitClient client, String url, Map<String, Object> data) {
-		GetResult result = client.localGet(url);
+		GetResult result = client.localGet(IFileDescription.Utils.plain(url));
 		assertTrue(result.found);
 		assertEquals(data, result.data);
 	}
 
 	protected void checkGetFile(ILocalGitClient client, String url, Map<String, Object> data) {
-		GetResult result = client.getFile(url);
+		GetResult result = client.getFile(IFileDescription.Utils.plain(url));
 		assertTrue(result.found);
 		assertEquals(data, result.data);
 	}
@@ -117,7 +120,7 @@ public abstract class GitTest extends TestCase {
 
 	protected void checkCreateRepository(final IGitServer gitServer, final String url) {
 		gitServer.createRepository(url);
-		((GitFacard)gitFacard).useFileRepository(gitServer.getRoot(), url, new IFunction1<FileRepository, Void>() {
+		((GitFacard) gitFacard).useFileRepository(gitServer.getRoot(), url, new IFunction1<FileRepository, Void>() {
 			@Override
 			public Void apply(FileRepository fileRepository) throws Exception {
 				assertEquals(new File(gitServer.getRoot(), url + "/" + ServerConstants.DOT_GIT), fileRepository.getDirectory());

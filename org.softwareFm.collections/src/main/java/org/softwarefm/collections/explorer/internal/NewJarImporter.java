@@ -22,9 +22,9 @@ import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.constants.UtilityConstants;
 import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.strings.Urls;
 import org.softwareFm.utilities.url.IUrlGenerator;
 import org.softwareFm.utilities.url.IUrlGeneratorMap;
+import org.softwareFm.utilities.url.Urls;
 
 public class NewJarImporter {
 

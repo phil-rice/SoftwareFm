@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.softwareFm.utilities.strings.Strings;
-import org.softwareFm.utilities.strings.Urls;
+import org.softwareFm.utilities.url.Urls;
 
 public class UrlCache<V> {
 

@@ -15,7 +15,7 @@ import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.menu.AbstractCardMenuHandler;
 import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwareFm.utilities.strings.Urls;
+import org.softwareFm.utilities.url.Urls;
 
 public class ViewSnippetMenuHandler extends AbstractCardMenuHandler {
 

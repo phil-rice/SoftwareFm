@@ -46,7 +46,7 @@ public class BasicImageRegisterConfigurator implements IImageRegisterConfigurato
 		Images.registerImages(device, imageRegistry, GeneralAnchor.class, "general", //
 				"browse", "help", "clear", "sfmLogo", "commentAdd");
 		Images.registerImages(device, imageRegistry, LoginAnchor.class, "login", //
-				"login");
+				"login", "cancel", "changePasswod", "forgotPasswod", "loginButton", "signUpAsNewUser");
 		Images.registerImages(device, imageRegistry, TitleAnchor.class, "title",//
 				"advert", "artifact", "blog", "document", "facebook", "folder", "forum", "group", "history", "jar", //
 				"mailingList", "next", "previous", "refresh", "rss", "tutorial", "twitter", "version");

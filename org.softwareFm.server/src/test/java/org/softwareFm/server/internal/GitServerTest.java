@@ -12,6 +12,20 @@ public class GitServerTest extends GitTest {
 
 	IGitServer gitServer;
 
+	public void testPostAddsToRepository() throws Exception {
+		checkCreateRepository(gitServer, "a/b/c");
+		gitServer.post("a/b/c", v11);
+
+		// This is cloning a new repository and checking the data got there
+		File targetDirectory = new File(root, "target");
+		Git call = Git.cloneRepository().//
+				setDirectory(targetDirectory).//
+				setURI(new File(root, "a/b/c").getAbsolutePath()).//
+				call();
+		call.getRepository().close();
+		assertEquals(v11, Json.mapFromString(Files.getText(new File(targetDirectory, "data.json"))));
+	}
+
 	public void testCreateRepository() {
 		checkCreateRepository(gitServer, "a/b/c");
 		checkCreateRepository(gitServer, "a/b/d");
@@ -27,19 +41,6 @@ public class GitServerTest extends GitTest {
 
 	// TODO Write testCloneOrPull
 	public void testCloneOrPull() {
-	}
-
-	public void testPostAddsToRepository() throws Exception {
-		checkCreateRepository(gitServer, "a/b/c");
-		gitServer.post("a/b/c", v11);
-
-		// This is cloning a new repository and checking the data got there
-		File targetDirectory = new File(root, "target");
-		Git.cloneRepository().//
-				setDirectory(targetDirectory).//
-				setURI(new File(root, "a/b/c").getAbsolutePath()).//
-				call();
-		assertEquals(v11, Json.mapFromString(Files.getText(new File(targetDirectory, "data.json"))));
 	}
 
 	public void testCannotCreateUnderExistingRepository() {

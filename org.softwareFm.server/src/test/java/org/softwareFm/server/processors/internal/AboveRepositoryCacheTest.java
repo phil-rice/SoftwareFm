@@ -7,7 +7,7 @@ import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.maps.UrlCache;
 import org.softwareFm.utilities.maps.UrlCacheTest;
-import org.softwareFm.utilities.strings.Urls;
+import org.softwareFm.utilities.url.Urls;
 
 public class AboveRepositoryCacheTest extends AbstractProcessCallTest<GitGetProcessor> {
 

@@ -33,7 +33,7 @@ import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.strings.Strings;
-import org.softwareFm.utilities.strings.Urls;
+import org.softwareFm.utilities.url.Urls;
 
 public abstract class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIntegrationTest {
 	abstract protected void addMe(String collection, String collectionUrl, String nameInMainCard, int count, String urlFragment, IAddingCallback<ICard> addingCallback) throws Exception, ExecutionException;

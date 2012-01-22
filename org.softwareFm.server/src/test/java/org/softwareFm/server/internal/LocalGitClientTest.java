@@ -3,6 +3,7 @@ package org.softwareFm.server.internal;
 import java.io.File;
 
 import org.softwareFm.server.GetResult;
+import org.softwareFm.server.IFileDescription;
 import org.softwareFm.utilities.maps.Maps;
 
 public class LocalGitClientTest extends GitTest {
@@ -29,7 +30,7 @@ public class LocalGitClientTest extends GitTest {
 	}
 
 	public void testLocalGetReturnsNotFoundIdDirectoryNotPresent() {
-		GetResult result = client.localGet("a/b/c");
+		GetResult result = client.localGet(IFileDescription.Utils.plain("a/b/c"));
 		assertFalse(result.found);
 		assertEquals(emptyMap, result.data);
 	}

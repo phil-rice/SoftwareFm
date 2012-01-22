@@ -6,6 +6,7 @@ import java.util.concurrent.Callable;
 
 import org.apache.http.RequestLine;
 import org.softwareFm.server.GetResult;
+import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.server.processors.IProcessCall;
@@ -32,7 +33,7 @@ public class GitGetProcessor implements IProcessCall {
 		return null;
 	}
 
-	private String getString(RequestLine requestLine) {
+	private String getString(final RequestLine requestLine) {
 		final String url = requestLine.getUri();
 		String existing = cache.get(url);
 		if (existing != null)
@@ -42,7 +43,8 @@ public class GitGetProcessor implements IProcessCall {
 			return cache.findOrCreate(url, new Callable<String>() {
 				@Override
 				public String call() throws Exception {
-					GetResult data = server.localGet(url);
+					IFileDescription fileDescription = IFileDescription.Utils.fromRequest(requestLine, Maps.emptyStringObjectMap());
+					GetResult data = server.localGet(fileDescription);
 					String result = Json.toString(Maps.stringObjectLinkedMap(ServerConstants.dataKey, data.data));
 					return result;
 				}

@@ -15,7 +15,7 @@ import org.softwareFm.card.card.IHasCard;
 import org.softwareFm.card.card.IHasKeyAndValue;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.strings.Urls;
+import org.softwareFm.utilities.url.Urls;
 
 public class ExplorerNavigationIntegrationTest extends AbstractExplorerIntegrationTest {
 

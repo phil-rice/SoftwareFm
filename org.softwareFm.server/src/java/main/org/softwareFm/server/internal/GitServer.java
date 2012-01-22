@@ -4,12 +4,13 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.Map;
 
+import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.IGitFacard;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.exceptions.WrappedException;
-import org.softwareFm.utilities.strings.Urls;
+import org.softwareFm.utilities.url.Urls;
 
 public class GitServer extends LocalGitClient implements IGitServer {
 
@@ -40,9 +41,9 @@ public class GitServer extends LocalGitClient implements IGitServer {
 	}
 
 	@Override
-	public void delete(String url) {
-		super.delete(url);
-		gitFacard.addAllAndCommit(root, url, "message");
+	public void delete(IFileDescription fileDescription) {
+		super.delete(fileDescription);
+		gitFacard.addAllAndCommit(root, fileDescription, "message");
 	}
 
 	@Override
@@ -67,7 +68,7 @@ public class GitServer extends LocalGitClient implements IGitServer {
 
 	private void addAllAndCommit(String url, String message) {
 		try {
-			gitFacard.addAllAndCommit(root, url, message);
+			gitFacard.addAllAndCommit(root, IFileDescription.Utils.plain(url), message);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}

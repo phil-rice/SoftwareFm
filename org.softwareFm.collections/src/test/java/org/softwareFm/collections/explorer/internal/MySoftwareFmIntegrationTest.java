@@ -29,10 +29,11 @@ import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.crypto.Crypto;
-import org.softwareFm.utilities.strings.Urls;
+import org.softwareFm.utilities.tests.IIntegrationTest;
+import org.softwareFm.utilities.url.Urls;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-public class MySoftwareFmIntegrationTest extends SwtAndServiceTest {
+public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements IIntegrationTest{
 
 	private IHttpClient client;
 	private MySoftwareFm mySoftwareFm;

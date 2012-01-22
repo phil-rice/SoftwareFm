@@ -8,7 +8,7 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwareFm.utilities.strings;
+package org.softwareFm.utilities.url;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -16,6 +16,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.utilities.strings.UrlRipperResult;
 
 public class Urls {
 

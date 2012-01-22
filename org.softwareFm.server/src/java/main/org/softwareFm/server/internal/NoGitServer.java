@@ -4,11 +4,12 @@ import java.io.File;
 import java.util.Map;
 
 import org.softwareFm.server.GetResult;
+import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.IGitServer;
 
 public  class NoGitServer implements IGitServer {
 	@Override
-	public GetResult localGet(String url) {
+	public GetResult localGet(IFileDescription fileDescription) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -18,12 +19,12 @@ public  class NoGitServer implements IGitServer {
 	}
 
 	@Override
-	public GetResult getFile(String url) {
+	public GetResult getFile(IFileDescription fileDescription) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void delete(String url) {
+	public void delete(IFileDescription fileDescription) {
 		throw new UnsupportedOperationException();
 	}
 

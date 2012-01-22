@@ -10,6 +10,7 @@ import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.mavenExtractor.IExtractorCallback;
 import org.softwareFm.mavenExtractor.MavenImporterConstants;
+import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.IGitFacard;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -49,7 +50,7 @@ public class ImportJarName implements IExtractorCallback {
 		String data = Json.toString(Maps.stringObjectLinkedMap(CardConstants.group, getGroupId(model), CardConstants.artifact, artifactId, CardConstants.slingResourceType, CardConstants.jarName));
 		File file = new File(directory, ServerConstants.dataFileName);
 		Files.setText(file, data);
-		gitFacard.addAllAndCommit(remoteRoot, url, "Importing jarName");
+		gitFacard.addAllAndCommit(remoteRoot, IFileDescription.Utils.plain(url), "Importing jarName");
 		System.out.println(repoDirectory + "   " + artifactId + "  " + data);
 	}
 

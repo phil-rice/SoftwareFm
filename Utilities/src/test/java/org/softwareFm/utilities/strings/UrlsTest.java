@@ -7,6 +7,8 @@ package org.softwareFm.utilities.strings;
 
 import java.net.URI;
 
+import org.softwareFm.utilities.url.Urls;
+
 import junit.framework.TestCase;
 
 public class UrlsTest extends TestCase {

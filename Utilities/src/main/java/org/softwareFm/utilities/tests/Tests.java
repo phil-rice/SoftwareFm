@@ -49,7 +49,7 @@ public class Tests {
 		File tests = new File(tempDir, "softwareFmTests");
 		tests.mkdirs();
 		File result = new File(tests, name);
-		waitUntilCanDeleteTempDirectory(name, 2000);
+		waitUntilCanDeleteTempDirectory(name, 3000);
 		boolean exists = result.exists();
 		Assert.assertFalse("Cannot delete temp file for: " + name, exists);
 		return result;

@@ -20,6 +20,7 @@ import org.softwareFm.httpClient.requests.MemoryResponseCallback;
 import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
 import org.softwareFm.server.GetResult;
+import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ISoftwareFmClient;
 import org.softwareFm.server.ServerConstants;
@@ -32,7 +33,7 @@ import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.maps.UrlCache;
 import org.softwareFm.utilities.runnable.Callables;
 import org.softwareFm.utilities.services.IServiceExecutor;
-import org.softwareFm.utilities.strings.Urls;
+import org.softwareFm.utilities.url.Urls;
 
 /** This class reads from the local file system. If the file isn't held locally, it asks for a git download, then returns the file. */
 public class GitRepositoryFacard implements ISoftwareFmClient {
@@ -92,6 +93,7 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 	@Override
 	public Future<?> get(final String url, final IRepositoryFacardCallback callback) {
 		final AtomicBoolean callbackHasBeenCalled = new AtomicBoolean();
+		final IFileDescription fileDescription = IFileDescription.Utils.plain(url);
 		Future<GetResult> future = serviceExecutor.submit(new Callable<GetResult>() {
 			@Override
 			public GetResult call() throws Exception {
@@ -116,7 +118,7 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 						localGit.pull(url);
 						lastPullTimeMap.put(localRepositoryRoot, now);
 					}
-					GetResult result = localGit.localGet(url);
+					GetResult result = localGit.localGet(fileDescription);
 					processCallback(callbackHasBeenCalled, callback, url, result);
 					return result;
 				}
@@ -126,7 +128,7 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 					public GetResult repositoryBase(String repositoryBase) {
 						try {
 							localGit.clone(repositoryBase);
-							GetResult afterCloneResult = localGit.localGet(url);
+							GetResult afterCloneResult = localGit.localGet(fileDescription);
 							return afterCloneResult;
 						} catch (Exception e) {
 							throw WrappedException.wrap(e);

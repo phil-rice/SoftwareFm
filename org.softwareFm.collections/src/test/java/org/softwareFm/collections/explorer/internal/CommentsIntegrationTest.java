@@ -9,7 +9,7 @@ import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.collections.menu.ICardMenuItemHandler;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.strings.Urls;
+import org.softwareFm.utilities.url.Urls;
 
 public class CommentsIntegrationTest extends AbstractExplorerIntegrationTest {
 

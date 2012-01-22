@@ -13,6 +13,7 @@ import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.repositoryFacard.CheckRepositoryFacardCallback;
 import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
 import org.softwareFm.server.GetResult;
+import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ISoftwareFmServer;
 import org.softwareFm.server.ServerConstants;
@@ -23,9 +24,9 @@ import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.strings.Urls;
 import org.softwareFm.utilities.tests.IIntegrationTest;
 import org.softwareFm.utilities.tests.Tests;
+import org.softwareFm.utilities.url.Urls;
 
 public class GitRepositoryFacardIntegrationTest extends GitTest implements IIntegrationTest {
 
@@ -40,7 +41,7 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 	public void testDelete() throws Exception {
 		checkCreateRepository(remoteGitServer, "a/b");
 		put(remoteRoot, "a/b/c", v11);
-		gitFacard.addAllAndCommit(remoteRoot, "a/b", "message");
+		gitFacard.addAllAndCommit(remoteRoot, IFileDescription.Utils.plain("a/b"), "message");
 		localGitServer.clone("a/b");
 		assertTrue(remoteAbc.exists());
 		assertTrue(localAbc.exists());
@@ -57,19 +58,19 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 		repositoryFacard.get("a/b/c", notFound).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
 		notFound.assertCalled();
 	}
-	
-	public void testClearCache() throws Exception{
+
+	public void testClearCache() throws Exception {
 		checkCreateRepository(remoteGitServer, "a/b");
 		File localRespository = new File(localRoot, Urls.compose("a/b", ServerConstants.DOT_GIT));
 		put(remoteRoot, "a/b/c", v11);
-		gitFacard.addAllAndCommit(remoteRoot, "a/b", "message");
-		
+		gitFacard.addAllAndCommit(remoteRoot, IFileDescription.Utils.plain("a/b"), "message");
+
 		assertFalse(localRespository.exists());
 		localGitServer.clone("a/b");
 		assertTrue(localRespository.exists());
 		assertTrue(remoteAbc.exists());
 		assertTrue(localAbc.exists());
-		
+
 		repositoryFacard.clearCache("a/b/c");
 		assertFalse(localRespository.exists());
 		assertTrue(remoteAbc.exists());
@@ -126,11 +127,11 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 	public void testGetWhenStaleCacheTimeUpCausesPullIfRepositoryExists() throws InterruptedException {
 		checkCreateRepository(remoteGitServer, "a/b");
 		put(remoteRoot, "a/b/c", v11);
-		gitFacard.addAllAndCommit(remoteRoot, "a/b", "message");
+		gitFacard.addAllAndCommit(remoteRoot, IFileDescription.Utils.plain("a/b"), "message");
 		localGitServer.clone("a/b");
 
 		put(remoteRoot, "a/b/c", v12);
-		gitFacard.addAllAndCommit(remoteRoot, "a/b", "message");
+		gitFacard.addAllAndCommit(remoteRoot, IFileDescription.Utils.plain("a/b"), "message");
 
 		checkRespositoryGet("a/b", Maps.stringObjectMap("c", v11));
 		checkRespositoryGet("a/b", Maps.stringObjectMap("c", v11));
@@ -140,7 +141,7 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 		checkRespositoryGet("a/b", Maps.stringObjectMap("c", v12));
 
 		put(remoteRoot, "a/b/c", v21);
-		gitFacard.addAllAndCommit(remoteRoot, "a/b", "message");
+		gitFacard.addAllAndCommit(remoteRoot, IFileDescription.Utils.plain("a/b"), "message");
 		checkRespositoryGet("a/b", Maps.stringObjectMap("c", v12));
 		checkRespositoryGet("a/b", Maps.stringObjectMap("c", v12));
 		checkRespositoryGet("a/b", Maps.stringObjectMap("c", v12));
@@ -188,7 +189,6 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 		repositoryFacard.post("a/b/c", v11, IResponseCallback.Utils.noCallback()).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
 		assertTrue(new File(localRoot, "a/b/" + ServerConstants.DOT_GIT).exists());
 	}
-
 
 	public void testGetWhenDataExists() throws Exception {
 		checkCreateRepository(localGitServer, "a/b");// need a repository, otherwise get 'above repository' behaviour
@@ -295,12 +295,15 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
-		if (server != null)
-			server.shutdown();
-		if (repositoryFacard != null)
-			repositoryFacard.shutdown();
-		dataSource.close();
+		try {
+			super.tearDown();
+		} finally {
+			if (server != null)
+				server.shutdown();
+			if (repositoryFacard != null)
+				repositoryFacard.shutdown();
+			dataSource.close();
+		}
 	}
 
 }

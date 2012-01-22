@@ -4,20 +4,18 @@ import java.io.File;
 
 public interface ILocalGitClientReader {
 
+	/** The root file that the urls are relative to */
 	File getRoot();
 
-	GetResult localGet(String url);
+	/** Returns the local file, and child files (in sub directories) encoded into the map */
+	GetResult localGet(IFileDescription fileDescription);
 
-	GetResult getFile(String url);
+	/** Returns just the local file */
+	GetResult getFile(IFileDescription fileDescription);
 
 	public static class Utils {
 		public static ILocalGitClientReader noReader() {
 			return new ILocalGitClientReader() {
-
-				@Override
-				public GetResult localGet(String url) {
-					throw new UnsupportedOperationException();
-				}
 
 				@Override
 				public File getRoot() {
@@ -25,7 +23,12 @@ public interface ILocalGitClientReader {
 				}
 
 				@Override
-				public GetResult getFile(String url) {
+				public GetResult localGet(IFileDescription fileDescription) {
+					throw new UnsupportedOperationException();
+				}
+
+				@Override
+				public GetResult getFile(IFileDescription fileDescription) {
 					throw new UnsupportedOperationException();
 				}
 

@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.apache.http.RequestLine;
 import org.softwareFm.server.GetResult;
+import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.server.processors.IProcessCall;
@@ -25,7 +26,8 @@ public class PostProcessor implements IProcessCall {
 			Object data = parameters.get(ServerConstants.dataParameterName);
 			if (data instanceof String) {
 				String url = requestLine.getUri();
-				GetResult initial = server.getFile(url);
+				IFileDescription fileDescription = IFileDescription.Utils.fromRequest(requestLine, parameters);
+				GetResult initial = server.getFile(fileDescription);
 				String newData = initial.found ? merge(initial, (String) data) : (String) data;
 				server.post(url, Json.mapFromString(newData));
 			} else

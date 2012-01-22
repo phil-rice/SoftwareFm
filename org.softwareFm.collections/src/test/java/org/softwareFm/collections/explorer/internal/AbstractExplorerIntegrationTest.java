@@ -48,9 +48,9 @@ import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
-import org.softwareFm.utilities.strings.Urls;
 import org.softwareFm.utilities.tests.INeedsServerTest;
 import org.softwareFm.utilities.tests.Tests;
+import org.softwareFm.utilities.url.Urls;
 
 /** These tests go out to software fm, so they are much more fragile */
 abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest implements INeedsServerTest {
@@ -64,7 +64,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	protected IRepositoryFacard repository;
 	public Explorer explorer;
 	protected IHttpClient httpClient;
-	public final long delay = 5000;
+	public final long delay = 10000;
 	protected MasterDetailSocial masterDetailSocial;
 
 	protected final String prefix = "/tests/" + getClass().getSimpleName();

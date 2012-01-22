@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.junit.Assert;
 import org.softwareFm.server.GetResult;
+import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.ILocalGitClientReader;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.maps.Maps;
@@ -13,16 +14,16 @@ import org.softwareFm.utilities.maps.Maps;
 public class LocalGitClientMock implements ILocalGitClientReader {
 
 	private final Map<String, Object> map;
-	public final List<String> urls = Lists.newList();
+	public final List<IFileDescription> urls = Lists.newList();
 
 	public LocalGitClientMock(Object... contents) {
 		this.map = Maps.stringObjectMap(contents);
 	}
 
 	@Override
-	public GetResult localGet(String url) {
-		urls.add(url);
-		return GetResult.create(map.get(url));
+	public GetResult localGet(IFileDescription fileDescription) {
+		urls.add(fileDescription);
+		return GetResult.create(map.get(fileDescription));
 	}
 
 	@Override
@@ -32,7 +33,7 @@ public class LocalGitClientMock implements ILocalGitClientReader {
 	}
 
 	@Override
-	public GetResult getFile(String url) {
+	public GetResult getFile(IFileDescription fileDescription) {
 		throw new UnsupportedOperationException();
 	}
 

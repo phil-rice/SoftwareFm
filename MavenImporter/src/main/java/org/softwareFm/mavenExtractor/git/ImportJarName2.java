@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.mavenExtractor.MavenImporterConstants;
+import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.IGitFacard;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.collections.Files;
@@ -56,7 +57,7 @@ public class ImportJarName2 {
 				String data = Json.toString(Maps.stringObjectLinkedMap(CardConstants.group, groupId, CardConstants.artifact, artifactId, CardConstants.slingResourceType, CardConstants.jarName));
 				File itemFile = new File(itemDirectory, ServerConstants.dataFileName);
 				Files.setText(itemFile, data);
-				gitFacard.addAllAndCommit(remoteRoot, repoUrl, "Import Jar Name");
+				gitFacard.addAllAndCommit(remoteRoot, IFileDescription.Utils.plain(repoUrl), "Import Jar Name");
 				System.out.println(String.format("%6d %-40s" ,count.incrementAndGet(), artifactId));
 			}
 		});

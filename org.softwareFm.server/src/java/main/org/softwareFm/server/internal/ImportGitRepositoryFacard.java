@@ -12,7 +12,7 @@ import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.json.Json;
-import org.softwareFm.utilities.strings.Urls;
+import org.softwareFm.utilities.url.Urls;
 
 public class ImportGitRepositoryFacard implements IRepositoryFacard {
 

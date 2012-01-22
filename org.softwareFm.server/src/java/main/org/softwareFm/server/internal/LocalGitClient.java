@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.softwareFm.server.GetResult;
+import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.ILocalGitClient;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.collections.Files;
@@ -20,8 +21,8 @@ public class LocalGitClient implements ILocalGitClient {
 	}
 
 	@Override
-	public GetResult getFile(String url) {
-		File directory = new File(root, url);
+	public GetResult getFile(IFileDescription fileDescription) {
+		File directory = fileDescription.getDirectory(root);
 		if (!directory.exists())
 			return GetResult.notFound();
 		File file = new File(directory, ServerConstants.dataFileName);
@@ -30,11 +31,11 @@ public class LocalGitClient implements ILocalGitClient {
 	}
 
 	@Override
-	public GetResult localGet(String url) {
-		GetResult rawFile = getFile(url);
+	public GetResult localGet(IFileDescription fileDescription) {
+		GetResult rawFile = getFile(fileDescription);
 		if (!rawFile.found)
 			return rawFile;
-		File directory = new File(root, url);
+		File directory = fileDescription.getDirectory(root);
 		Map<String, Object> result = rawFile.data;
 		for (File child : Files.listChildDirectoriesIgnoringDot(directory)) {
 			File childFile = new File(child, ServerConstants.dataFileName);
@@ -55,9 +56,8 @@ public class LocalGitClient implements ILocalGitClient {
 	}
 
 	@Override
-	public void delete(String url) {
-		
-		File directory = new File(root, url);
+	public void delete(IFileDescription fileDescription) {
+		File directory = fileDescription.getDirectory(root);
 		File file = new File(directory, ServerConstants.dataFileName);
 		boolean deleted = file.delete();
 		System.out.println("File: " + file + " deleted: " + deleted + " exists: " + file.exists());

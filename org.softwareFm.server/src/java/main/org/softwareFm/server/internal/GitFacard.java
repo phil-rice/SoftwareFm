@@ -11,12 +11,12 @@ import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.storage.file.FileBasedConfig;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.IGitFacard;
 import org.softwareFm.server.ServerConstants;
-import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.strings.Urls;
+import org.softwareFm.utilities.url.Urls;
 
 public class GitFacard implements IGitFacard {
 
@@ -36,7 +36,7 @@ public class GitFacard implements IGitFacard {
 	public void createRepository(File root, String url) {
 		try {
 			File fullRoot = new File(root, url);
-			File file = findRepositoryUrl(root, url);
+			File file = IFileDescription.Utils.findRepositoryUrl(root, url);
 			if (fullRoot.equals(file))
 				return;
 			if (file != null)
@@ -79,8 +79,8 @@ public class GitFacard implements IGitFacard {
 	}
 
 	@Override
-	public void addAllAndCommit(File root, String url, final String message) {
-		useFileRepository(root, url, new IFunction1<FileRepository, Void>() {
+	public void addAllAndCommit(File root, IFileDescription fileDescription, final String message) {
+		useFileRepository(root, fileDescription, new IFunction1<FileRepository, Void>() {
 			@Override
 			public Void apply(FileRepository fileRepository) throws Exception {
 				Git git = new Git(fileRepository);
@@ -105,14 +105,6 @@ public class GitFacard implements IGitFacard {
 		});
 	}
 
-	@Override
-	public File findRepositoryUrl(File root, String url) {
-		final File dir = new File(root, url);
-		for (File file : Files.listParentsUntil(root, dir))
-			if (new File(file, ServerConstants.DOT_GIT).exists())// found it
-				return file;
-		return null;
-	}
 
 	@Override
 	public void gc(File root, String url) {
@@ -124,14 +116,18 @@ public class GitFacard implements IGitFacard {
 		}
 	}
 
-	public <T> T useFileRepository(File root, String url, IFunction1<FileRepository, T> callback) {
+	public <T> T useFileRepository(File root, String url, IFunction1<FileRepository, T> function) {
+		return useFileRepository(root, IFileDescription.Utils.plain(url), function);
+		
+	}
+	public <T> T useFileRepository(File root, IFileDescription fileDescription, IFunction1<FileRepository, T> function) {
 		try {
-			File dir = findRepositoryUrl(root, url);
+			File dir = fileDescription.findRepositoryUrl(root);
 			FileRepositoryBuilder builder = new FileRepositoryBuilder();
 			FileRepository repository = builder.setGitDir(new File(dir, ServerConstants.DOT_GIT)).readEnvironment() // scan environment GIT_* variables
 					.build(); // scan up the file system tree
 			try {
-				T result = callback.apply(repository);
+				T result = function.apply(repository);
 				return result;
 			} finally {
 				repository.close();

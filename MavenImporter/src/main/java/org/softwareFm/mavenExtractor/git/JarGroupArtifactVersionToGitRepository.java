@@ -24,6 +24,7 @@ import org.softwareFm.mavenExtractor.IExtractorCallback;
 import org.softwareFm.mavenExtractor.MavenImporterConstants;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.server.GitRepositoryFactory;
+import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.IGitFacard;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Files;
@@ -272,7 +273,7 @@ public class JarGroupArtifactVersionToGitRepository implements IExtractorCallbac
 				new JarGroupArtifactVersionToGitRepository(jarDirectory, repository, 1000000000,//
 						new ICallback<String>() {
 							public void process(String groupUrl) throws Exception {
-								gitFacard.addAllAndCommit(remoteRoot, groupUrl.substring(1), "Import");
+								gitFacard.addAllAndCommit(remoteRoot, IFileDescription.Utils.plain(groupUrl.substring(1)), "Import");
 							}
 						}), //
 				ICallback.Utils.sysErrCallback());

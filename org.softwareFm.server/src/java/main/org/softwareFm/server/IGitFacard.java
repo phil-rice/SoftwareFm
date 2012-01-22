@@ -5,12 +5,9 @@ import java.io.File;
 import org.softwareFm.server.internal.GitFacard;
 
 public interface IGitFacard {
-	void createRepository(File root, String url);
-
-	File findRepositoryUrl(File root, String url);
-
-
 	void clone(String fromUri, File targetRoot, String targetUri);
+
+	void createRepository(File root, String url);
 
 	void pull(File root, String url);
 
@@ -18,7 +15,7 @@ public interface IGitFacard {
 
 	void gc(File root, String url);
 
-	void addAllAndCommit(File root, String url, String message);
+	void addAllAndCommit(File root, IFileDescription fileDescription, String message);
 
 	String getConfig(File root, String url, String section, String subsection, String name);
 
