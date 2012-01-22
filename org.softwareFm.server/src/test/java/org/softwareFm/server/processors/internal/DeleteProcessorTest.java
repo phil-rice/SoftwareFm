@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Collections;
 
 import org.junit.Test;
+import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.ServerConstants;
 
 public class DeleteProcessorTest extends AbstractProcessCallTest<DeleteProcessor> {
@@ -16,7 +17,7 @@ public class DeleteProcessorTest extends AbstractProcessCallTest<DeleteProcessor
 
 	public void testDeletesFileAndCommitsTheDeletion() {
 		checkCreateRepository(remoteGitServer, "a/b");
-		remoteGitServer.post("a/b/c", v11);
+		remoteGitServer.post(IFileDescription.Utils.plain("a/b/c"), v11);
 		checkContents(remoteRoot, "a/b/c", v11);
 
 		processor.process(makeRequestLine(ServerConstants.DELETE, "a/b/c"), Collections.<String, Object> emptyMap());

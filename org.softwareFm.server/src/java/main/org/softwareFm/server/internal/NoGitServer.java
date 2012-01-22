@@ -34,7 +34,7 @@ public  class NoGitServer implements IGitServer {
 	}
 
 	@Override
-	public void post(String url, Map<String, Object> map) {
+	public void post(IFileDescription fileDescription, Map<String, Object> map) {
 		throw new UnsupportedOperationException();
 	}
 

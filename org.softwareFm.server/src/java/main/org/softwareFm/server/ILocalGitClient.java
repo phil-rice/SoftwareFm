@@ -7,6 +7,6 @@ public interface ILocalGitClient extends ILocalGitClientReader {
 	void delete(IFileDescription fileDescription);
 
 	/** Map should just have simple values: strings, numbers, arrays of strings/numbers */
-	void post(String url, Map<String, Object> map);
+	void post(IFileDescription fileDescription, Map<String, Object> map);
 
 }

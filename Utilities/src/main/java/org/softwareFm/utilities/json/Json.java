@@ -5,11 +5,13 @@
 
 package org.softwareFm.utilities.json;
 
+import java.io.File;
 import java.text.MessageFormat;
 import java.util.Map;
 
 import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
+import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.constants.UtilityConstants;
 import org.softwareFm.utilities.constants.UtilityMessages;
 import org.softwareFm.utilities.maps.Maps;
@@ -43,5 +45,10 @@ public class Json {
 
 	public static String mapToString(Object...namesAndValues) {
 		return toString(Maps.stringObjectLinkedMap(namesAndValues));
+	}
+
+	public static Map<String,Object> parseFile(File file) {
+		String text = Files.getText(file);
+		return Json.mapFromString(text);
 	}
 }

@@ -61,14 +61,14 @@ public class GitServer extends LocalGitClient implements IGitServer {
 	}
 
 	@Override
-	public void post(String url, Map<String, Object> map) {
-		super.post(url, map);
-		addAllAndCommit(url, "message");
+	public void post(IFileDescription fileDescription, Map<String, Object> map) {
+		super.post(fileDescription, map);
+		addAllAndCommit(fileDescription, "message");
 	}
 
-	private void addAllAndCommit(String url, String message) {
+	private void addAllAndCommit(IFileDescription fileDescription, String message) {
 		try {
-			gitFacard.addAllAndCommit(root, IFileDescription.Utils.plain(url), message);
+			gitFacard.addAllAndCommit(root, fileDescription, message);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}

@@ -3,6 +3,7 @@ package org.softwareFm.server.internal;
 import java.io.File;
 
 import org.eclipse.jgit.api.Git;
+import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.json.Json;
@@ -14,7 +15,7 @@ public class GitServerTest extends GitTest {
 
 	public void testPostAddsToRepository() throws Exception {
 		checkCreateRepository(gitServer, "a/b/c");
-		gitServer.post("a/b/c", v11);
+		gitServer.post(IFileDescription.Utils.plain("a/b/c"), v11);
 
 		// This is cloning a new repository and checking the data got there
 		File targetDirectory = new File(root, "target");

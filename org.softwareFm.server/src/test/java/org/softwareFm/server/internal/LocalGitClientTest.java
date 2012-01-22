@@ -26,7 +26,6 @@ public class LocalGitClientTest extends GitTest {
 		put(localRoot, "a/b/c/f", v22);
 
 		checkLocalGet(client, "a/b/c", Maps.with(v11, "d", Maps.with(v12, "e", v21), "f", v22));
-
 	}
 
 	public void testLocalGetReturnsNotFoundIdDirectoryNotPresent() {
@@ -43,7 +42,6 @@ public class LocalGitClientTest extends GitTest {
 		put(localRoot, "a/b/c/d/e/f/g/h", v12);// this is ignored as it is too deep
 		put(localRoot, "a/b/c/i/j", v12);
 		checkLocalGet(client, "a/b/c", Maps.with(emptyMap, "d", Maps.emptyStringObjectMap(), "i", Maps.stringObjectMap("j", v12)));
-
 	}
 
 	public void testLocalGetReturnsEmptyMapModifiedByCollectionsIfNoDataFile() {

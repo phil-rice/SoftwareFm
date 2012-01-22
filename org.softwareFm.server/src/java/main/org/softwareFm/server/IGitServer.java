@@ -28,7 +28,7 @@ public interface IGitServer extends ILocalGitClient {
 	 * This commits to the repository after the post. The operation is performed inside a file lock, so it should be thread safe
 	 */
 	@Override
-	void post(String url, Map<String, Object> map);
+	void post(IFileDescription fileDescription, Map<String, Object> map);
 
 	public static class Utils {
 

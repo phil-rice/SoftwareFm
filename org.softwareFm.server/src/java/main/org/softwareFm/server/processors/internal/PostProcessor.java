@@ -29,7 +29,7 @@ public class PostProcessor implements IProcessCall {
 				IFileDescription fileDescription = IFileDescription.Utils.fromRequest(requestLine, parameters);
 				GetResult initial = server.getFile(fileDescription);
 				String newData = initial.found ? merge(initial, (String) data) : (String) data;
-				server.post(url, Json.mapFromString(newData));
+				server.post(fileDescription, Json.mapFromString(newData));
 			} else
 				throw new IllegalArgumentException(data.getClass() + "\n" + data);
 			return IProcessResult.Utils.doNothing();

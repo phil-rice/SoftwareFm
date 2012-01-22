@@ -29,6 +29,10 @@ public abstract class GitTest extends TestCase {
 	protected final static Map<String, Object> v12 = Maps.stringObjectLinkedMap("c", 1l, "v", 2l);
 	protected final static Map<String, Object> v21 = Maps.stringObjectLinkedMap("c", 2l, "v", 1l);
 	protected final static Map<String, Object> v22 = Maps.stringObjectLinkedMap("c", 2l, "v", 2l);
+	protected final static Map<String, Object> v31 = Maps.stringObjectLinkedMap("c", 3l, "v", 1l);
+	protected final static Map<String, Object> v32 = Maps.stringObjectLinkedMap("c", 3l, "v", 2l);
+	protected final static Map<String, Object> v41 = Maps.stringObjectLinkedMap("c", 4l, "v", 1l);
+	protected final static Map<String, Object> v42 = Maps.stringObjectLinkedMap("c", 4l, "v", 2l);
 
 	protected static final Map<String, Object> emptyMap = Maps.stringObjectMap();
 
@@ -47,10 +51,14 @@ public abstract class GitTest extends TestCase {
 	}
 
 	protected void put(File root, String url, Map<String, Object> data) {
-		String text = Json.toString(data);
-		File directory = new File(root, url);
+		put(root, IFileDescription.Utils.plain(url), data);
+	}
+
+	protected void put(File root, IFileDescription fileDescription, Map<String, Object> data) {
+		File directory = fileDescription.getDirectory(root);
 		directory.mkdirs();
-		File file = new File(directory, ServerConstants.dataFileName);
+		File file = fileDescription.getFile(root);
+		String text = fileDescription.encode(data);
 		Files.setText(file, text);
 	}
 
@@ -99,13 +107,22 @@ public abstract class GitTest extends TestCase {
 	}
 
 	protected void checkLocalGet(ILocalGitClient client, String url, Map<String, Object> data) {
-		GetResult result = client.localGet(IFileDescription.Utils.plain(url));
+		checkLocalGet(client, IFileDescription.Utils.plain(url), data);
+	}
+
+	protected void checkLocalGet(ILocalGitClient client, IFileDescription fileDescription, Map<String, Object> data) {
+		GetResult result = client.localGet(fileDescription);
 		assertTrue(result.found);
 		assertEquals(data, result.data);
 	}
 
 	protected void checkGetFile(ILocalGitClient client, String url, Map<String, Object> data) {
-		GetResult result = client.getFile(IFileDescription.Utils.plain(url));
+		IFileDescription fileDescription = IFileDescription.Utils.plain(url);
+		checkGetFile(client, fileDescription, data);
+	}
+
+	protected void checkGetFile(ILocalGitClient client, IFileDescription fileDescription, Map<String, Object> data) {
+		GetResult result = client.getFile(fileDescription);
 		assertTrue(result.found);
 		assertEquals(data, result.data);
 	}

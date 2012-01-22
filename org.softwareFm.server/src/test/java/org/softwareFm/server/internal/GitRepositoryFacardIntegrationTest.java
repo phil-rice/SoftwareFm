@@ -231,7 +231,7 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 		File directory = new File(localRoot, "a/b/c");
 		File file = new File(directory, ServerConstants.dataFileName);
 		remoteGitServer.createRepository("a/b");
-		remoteGitServer.post("a/b/c", v11); // so now the remote repository has the data
+		remoteGitServer.post(IFileDescription.Utils.plain("a/b/c"), v11); // so now the remote repository has the data
 
 		assertTrue(!file.exists()); // but there is no local copy
 		CheckRepositoryFacardCallback callback = IRepositoryFacardCallback.Utils.checkMatches(ServerConstants.okStatusCode, v11);

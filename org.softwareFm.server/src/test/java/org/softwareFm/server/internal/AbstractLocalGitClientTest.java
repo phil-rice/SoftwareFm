@@ -1,5 +1,6 @@
 package org.softwareFm.server.internal;
 
+import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.ILocalGitClient;
 import org.softwareFm.utilities.maps.Maps;
 
@@ -28,7 +29,7 @@ abstract public class AbstractLocalGitClientTest extends GitTest {
 
 	public void testPost() {
 		gitFacard.createRepository(root, "a");
-		client.post("a/b/c", a1b2);
+		client.post(IFileDescription.Utils.plain("a/b/c"), a1b2);
 		checkLocalGet(client, "a/b/c", a1b2);
 	}
 

@@ -1,13 +1,11 @@
 package org.softwareFm.server.internal;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.softwareFm.server.GetResult;
 import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.ILocalGitClient;
-import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
@@ -25,9 +23,14 @@ public class LocalGitClient implements ILocalGitClient {
 		File directory = fileDescription.getDirectory(root);
 		if (!directory.exists())
 			return GetResult.notFound();
-		File file = new File(directory, ServerConstants.dataFileName);
-		Map<String, Object> result = file.exists() ? new HashMap<String, Object>(Json.mapFromString(Files.getText(file))) : Maps.<String, Object> newMap();
-		return GetResult.create(result);
+		File file = fileDescription.getFile(root);
+		if (file.exists()){
+			String text = Files.getText(file);
+			Map<String, Object> map = fileDescription.decode(text);
+			return GetResult.create(map);
+			
+		}else
+			return GetResult.create(Maps.newMap());
 	}
 
 	@Override
@@ -38,37 +41,36 @@ public class LocalGitClient implements ILocalGitClient {
 		File directory = fileDescription.getDirectory(root);
 		Map<String, Object> result = rawFile.data;
 		for (File child : Files.listChildDirectoriesIgnoringDot(directory)) {
-			File childFile = new File(child, ServerConstants.dataFileName);
+			File childFile = fileDescription.getFileInSubdirectory(child);
 			Map<String, Object> collectionResults = Maps.newMap();
 			if (childFile.exists())
-				collectionResults.putAll(Json.mapFromString(Files.getText(childFile)));
+				collectionResults.putAll(fileDescription.decode(Files.getText(childFile)));
 			for (File grandChild : Files.listChildDirectoriesIgnoringDot(child))
-				addDataFromFileIfExists(collectionResults, grandChild);
+				addDataFromFileIfExists(fileDescription, collectionResults, grandChild);
 			result.put(child.getName(), collectionResults);
 		}
 		return new GetResult(true, result);
 	}
 
-	private void addDataFromFileIfExists(Map<String, Object> collectionResults, File directory) {
-		File file = new File(directory, ServerConstants.dataFileName);
+	private void addDataFromFileIfExists(IFileDescription fileDescription, Map<String, Object> collectionResults, File directory) {
+		File file = fileDescription.getFileInSubdirectory(directory);
 		if (file.exists())
-			collectionResults.put(directory.getName(), Json.mapFromString(Files.getText(file)));
+			collectionResults.put(directory.getName(), fileDescription.decode(Files.getText(file)));
 	}
 
 	@Override
 	public void delete(IFileDescription fileDescription) {
 		File directory = fileDescription.getDirectory(root);
-		File file = new File(directory, ServerConstants.dataFileName);
-		boolean deleted = file.delete();
-		System.out.println("File: " + file + " deleted: " + deleted + " exists: " + file.exists());
+		File file = fileDescription.getFile(root);
+		file.delete();
 		directory.delete();// will only delete successfully if the directory is empty
 	}
 
 	@Override
-	public void post(String url, Map<String, Object> map) {
-		File directory = new File(root, url);
+	public void post(IFileDescription fileDescription, Map<String, Object> map) {
+		File directory = fileDescription.getDirectory(root);
 		directory.mkdirs();
-		File file = new File(directory, ServerConstants.dataFileName);
+		File file = fileDescription.getFile(root);
 		Files.setText(file, Json.toString(map));
 	}
 
