@@ -355,12 +355,22 @@ public class Swts {
 		public static org.eclipse.swt.widgets.Button makePushButton(Composite parent, IResourceGetter resourceGetter, String titleKey, final Runnable runnable) {
 			return Buttons.makePushButton(parent, resourceGetter, titleKey, true, runnable);
 		}
-		public static org.eclipse.swt.widgets.Button makePushButton(Composite parent,  String text, final Runnable runnable) {
+
+		public static org.eclipse.swt.widgets.Button makePushButton(Composite parent, String text, final Runnable runnable) {
 			return Buttons.makePushButton(parent, null, text, false, runnable);
 		}
 
 		public static org.eclipse.swt.widgets.Button makePushButton(Composite parent, IResourceGetter resourceGetter, String titleOrKey, boolean titleIsKey, final Runnable runnable) {
 			return Buttons.makePushButton(parent, SWT.PUSH, resourceGetter, titleOrKey, titleIsKey, runnable);
+		}
+
+		public static void press(Control control) {
+			if (control instanceof Label)
+				control.notifyListeners(SWT.MouseUp, new Event());
+			else if (control instanceof Button)
+				control.notifyListeners(SWT.Selection, new Event());
+			else
+				throw new IllegalArgumentException(control.getClass().getSimpleName());
 		}
 
 		public static org.eclipse.swt.widgets.Button makePushButton(Composite parent, int style, IResourceGetter resourceGetter, String titleOrKey, boolean titleIsKey, final Runnable runnable) {
@@ -388,6 +398,23 @@ public class Swts {
 			return label;
 		}
 
+		public static Label makeImageButtonAtStart(Composite parent, IFunction1<String, Image> imageFn, String name, final Runnable runnable) {
+			Label label = new Label(parent, SWT.NULL);
+			Image image = Functions.call(imageFn, name);
+			if (image == null)
+				throw new IllegalArgumentException(name);
+			label.setImage(image);
+			label.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseUp(MouseEvent e) {
+					runnable.run();
+				}
+			});
+			Control[] children = parent.getChildren();
+			if (children.length > 0)
+				label.moveAbove(children[0]);
+			return label;
+		}
 	}
 
 	public static class Grid {

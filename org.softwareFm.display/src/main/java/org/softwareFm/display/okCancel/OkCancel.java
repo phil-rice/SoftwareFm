@@ -11,32 +11,38 @@
 package org.softwareFm.display.okCancel;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Row;
+import org.softwareFm.utilities.functions.Functions;
+import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class OkCancel implements IOkCancel {
 
-	public final Button okButton;
-	public final Button cancelButton;
+	public final Label okButton;
+	public final Label cancelButton;
 	private boolean enabled = true;
 	private final Composite content;
 	private final Runnable onAccept;
 	private final Runnable onCancel;
 	private final IResourceGetter resourceGetter;
+	private final IFunction1<String, Image> imageFn;
 
-	public OkCancel(Composite parent, IResourceGetter resourceGetter, final Runnable onAccept, final Runnable onCancel) {
+	public OkCancel(Composite parent, IResourceGetter resourceGetter, IFunction1<String, Image> imageFn,final Runnable onAccept, final Runnable onCancel) {
 		this.resourceGetter = resourceGetter;
+		this.imageFn = imageFn;
 		this.onAccept = onAccept;
 		this.onCancel = onCancel;
 		content = new Composite(parent, SWT.NULL);
-		cancelButton = addButton(DisplayConstants.buttonCancelTitle, onCancel);
-		okButton = addButton(DisplayConstants.buttonOkTitle, new Runnable() {
+		cancelButton = addImageButton(DisplayConstants.buttonCancelImage, onCancel);
+		okButton = addImageButton(DisplayConstants.buttonOkImage, new Runnable() {
 			@Override
 			public void run() {
 				if (okButton.isDisposed())
@@ -50,10 +56,17 @@ public class OkCancel implements IOkCancel {
 		content.setLayout(Row.getHorizonalNoMarginRowLayout());
 	}
 
+	public Label addImageButton( String name, Runnable runnable) {
+		Image image = Functions.call(imageFn, name);
+		if (image == null)
+			throw new IllegalArgumentException(name);
+		Label result = Swts.Buttons.makeImageButton(content, image, runnable);
+		return result;
+	}
+
 	public Button addButton(String titleKey, Runnable runnable) {
 		Button result = Swts.Buttons.makePushButton(content, resourceGetter, titleKey, runnable);
 		return result;
-
 	}
 
 	@Override
@@ -82,6 +95,10 @@ public class OkCancel implements IOkCancel {
 		onCancel.run();
 	}
 
+	public void pressButton(int index) {
+		Swts.Buttons.press(content.getChildren()[index]);
+		
+	}
 	public void pressButton(String title) {
 		for (Control control : content.getChildren())
 			if (control instanceof Button)

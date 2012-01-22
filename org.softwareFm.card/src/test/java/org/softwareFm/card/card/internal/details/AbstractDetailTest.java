@@ -12,6 +12,7 @@ package org.softwareFm.card.card.internal.details;
 
 import java.util.Collections;
 
+import org.eclipse.swt.graphics.Image;
 import org.softwareFm.card.card.ICardData;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.LineItem;
@@ -24,7 +25,9 @@ import org.softwareFm.card.details.internal.DetailFactory;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.SwtTest;
+import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.utilities.functions.Functions;
+import org.softwareFm.utilities.functions.IFunction1WithDispose;
 import org.softwareFm.utilities.maps.Maps;
 
 abstract public class AbstractDetailTest extends SwtTest {
@@ -39,13 +42,17 @@ abstract public class AbstractDetailTest extends SwtTest {
 	protected CardConfig cardConfig;
 	protected Card parentCard;
 	protected CardDataStoreAsyncMock cardDataStore;
+	private IFunction1WithDispose<String, Image> imageFn;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		cardDataStore = CardDataStoreFixture.rawAsyncCardStore();
 		parentCardConfig = makeCardConfig();
-		cardConfig = makeCardConfig().withTitleSpecFn(Functions.<ICardData, TitleSpec> constant(TitleSpec.noTitleSpec(shell.getBackground())));
+		imageFn = BasicImageRegisterConfigurator.imageFnForTests(shell);
+		cardConfig = makeCardConfig().//
+				withImageFn(imageFn).//
+				withTitleSpecFn(Functions.<ICardData, TitleSpec> constant(TitleSpec.noTitleSpec(shell.getBackground())));
 		parentCard = new Card(shell, cardConfig, "parentCardUrl", Collections.<String, Object> emptyMap());
 	}
 
@@ -53,6 +60,7 @@ abstract public class AbstractDetailTest extends SwtTest {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		cardConfig.dispose();
+		imageFn.dispose();
 	}
 
 	protected CardConfig makeCardConfig() {

@@ -10,8 +10,10 @@
 
 package org.softwareFm.card.editors.internal;
 
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
@@ -26,8 +28,10 @@ import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.card.title.TitleWithTitlePaintListener;
 import org.softwareFm.display.okCancel.OkCancel;
 import org.softwareFm.display.swt.SwtTest;
+import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.utilities.booleans.Booleans;
 import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.functions.IFunction1WithDispose;
 
 public class ValueEditorLayoutTest extends SwtTest {
 
@@ -35,6 +39,7 @@ public class ValueEditorLayoutTest extends SwtTest {
 	int leftMargin = 11;
 	int rightMargin = 13;
 	private final static int topMargin = 17;
+	private IFunction1WithDispose<String, Image> imageFn;
 
 	@Test
 	public void testComputeSizeIsTitlePlusEditorPlusOKCancel() {
@@ -63,7 +68,7 @@ public class ValueEditorLayoutTest extends SwtTest {
 					OkCancel okCancel = t.getOkCancel();
 					Point idealOKCancelSize = okCancel.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT);
 					Control control = okCancel.getControl();
-					assertEquals(new Rectangle(899, 314, idealOKCancelSize.x, idealOKCancelSize.y), control.getBounds());
+					assertEquals(new Rectangle(883, 319, idealOKCancelSize.x, idealOKCancelSize.y), control.getBounds());
 				}
 			});
 
@@ -82,7 +87,7 @@ public class ValueEditorLayoutTest extends SwtTest {
 			@Override
 			public void process(ValueEditorComposite<Label> t) throws Exception {
 				Label control = t.getEditor();
-				assertEquals(new Rectangle(4, 2, 970, 312), control.getBounds());
+				assertEquals(new Rectangle(4, 2, 970, 317), control.getBounds());
 			}
 		});
 
@@ -120,14 +125,20 @@ public class ValueEditorLayoutTest extends SwtTest {
 	}
 
 	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		if (imageFn != null)
+			imageFn.dispose();
 	}
 
 	private ValueEditorComposite<Label> makeComposite(Composite parent, int backgroundInt, final boolean useAllHeight) {
 		Color background = shell.getDisplay().getSystemColor(backgroundInt);
+		if (imageFn == null)
+			imageFn = BasicImageRegisterConfigurator.imageFnForTests(shell);
 
-		CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(shell.getDisplay()).withTitleHeight(121).withMargins(leftMargin, rightMargin, topMargin, 19);
+		CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(shell.getDisplay()).//
+				withTitleHeight(121).withMargins(leftMargin, rightMargin, topMargin, 19).//
+				withImageFn(imageFn);
 		ValueEditorComposite<Label> result = new ValueEditorComposite<Label>(parent, SWT.NULL, cardConfig, "url", "cardType", "key", "initialValue", TitleSpec.noTitleSpec(background), new IDetailsFactoryCallback() {
 			@Override
 			public void cardSelected(String cardUrl) {

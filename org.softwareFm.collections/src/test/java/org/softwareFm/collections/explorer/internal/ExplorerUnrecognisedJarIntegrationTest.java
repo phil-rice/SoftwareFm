@@ -6,7 +6,6 @@ import java.util.concurrent.Callable;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
@@ -83,9 +82,8 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 	}
 
 	private void clickOk(Control detailContent) {
-		final Button okButton = (Button) Swts.getDescendant(detailContent, 1, 0, 1, 1);
-		assertEquals("Ok", okButton.getText());
-		okButton.notifyListeners(SWT.Selection, new Event());
+		final Control okButton =  Swts.getDescendant(detailContent, 1, 0, 1, 1);
+		Swts.Buttons.press(okButton);
 	}
 
 	private void dispatchUntilHasImportingMessage() {

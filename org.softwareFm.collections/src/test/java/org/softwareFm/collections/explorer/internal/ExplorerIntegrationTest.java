@@ -14,11 +14,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.softwareFm.card.card.ICard;
@@ -44,7 +44,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 		displayCard(artifactUrl, new CardHolderAndCardCallback() {
 			@Override
 			public void process(ICardHolder cardHolder, ICard card) throws Exception {
-				cardConfig.cardDataStore.clearCache(card.url());//this is the equivalent of pressing the refresh button
+				cardConfig.cardDataStore.clearCache(card.url());// this is the equivalent of pressing the refresh button
 				File localFile = new File(localRoot, card.url());
 				assertFalse(localFile.exists());
 			}
@@ -92,8 +92,8 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 		doSomethingAndWaitForCardDataStoreToFinish(new Runnable() {
 			@Override
 			public void run() {
-				Button okButton = valueComposite.getOkCancel().okButton;
-				okButton.notifyListeners(SWT.Selection, new Event());
+				Label okButton = valueComposite.getOkCancel().okButton;
+				Swts.Buttons.press(okButton);
 			}
 		}, new CardHolderAndCardCallback() {
 			@Override

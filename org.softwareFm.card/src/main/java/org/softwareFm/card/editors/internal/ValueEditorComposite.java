@@ -48,7 +48,7 @@ abstract public class ValueEditorComposite<T extends Control> extends Composite 
 		originalValue = Functions.call(cardConfig.valueFn(), lineItem);
 		editorControl = makeEditorControl(body.innerBody, originalValue);
 		IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, null);
-		okCancel = new OkCancel(body.innerBody, resourceGetter, new Runnable() {
+		okCancel = new OkCancel(body.innerBody, resourceGetter,cardConfig.imageFn, new Runnable() {
 			@Override
 			public void run() {
 				IMutableCardDataStore cardDataStore = cardConfig.cardDataStore;

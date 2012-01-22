@@ -14,6 +14,7 @@ import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.editors.IValueComposite;
 import org.softwareFm.collections.menu.ICardMenuItemHandler;
+import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class SnippetIntegrationTest extends AbstractExplorerIntegrationTest {
@@ -123,13 +124,13 @@ public class SnippetIntegrationTest extends AbstractExplorerIntegrationTest {
 	private void clickOkButton() {
 		IValueComposite<Composite> detailContent = (IValueComposite<Composite>) masterDetailSocial.getDetailContent();
 		assertTrue(detailContent.getOkCancel().isOkEnabled());
-		detailContent.getOkCancel().okButton.notifyListeners(SWT.Selection, new Event());
+		Swts.Buttons.press(detailContent.getOkCancel().okButton);
 	}
 
 	@SuppressWarnings("unchecked")
 	private void clickCancelButton() {
 		IValueComposite<Composite> detailContent = (IValueComposite<Composite>) masterDetailSocial.getDetailContent();
-		detailContent.getOkCancel().cancelButton.notifyListeners(SWT.Selection, new Event());
+		Swts.Buttons.press(detailContent.getOkCancel().cancelButton);
 	}
 
 	@SuppressWarnings("unchecked")

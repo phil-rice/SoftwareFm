@@ -5,17 +5,22 @@
 
 package org.softwareFm.card.card.internal.details;
 
+import org.eclipse.swt.graphics.Image;
 import org.softwareFm.card.card.LineItem;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.card.editors.IEditorDetailAdder;
 import org.softwareFm.card.editors.internal.StyledTextEditor;
 import org.softwareFm.card.editors.internal.StyledTextEditorDetailAdder;
+import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.utilities.functions.Functions;
+import org.softwareFm.utilities.functions.IFunction1WithDispose;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.resources.ResourceGetterMock;
 
 public class StyledTextEditorDetailAdderTest extends AbstractDetailsAdderTest<StyledTextEditorDetailAdder> {
+
+	private IFunction1WithDispose<String, Image> imageFn;
 
 	public void testWithNonStringGetNull() {
 		checkGetNull(detailFactory, collectionValue);
@@ -43,7 +48,15 @@ public class StyledTextEditorDetailAdderTest extends AbstractDetailsAdderTest<St
 		CardConfig cardConfig = super.makeCardConfig();
 		IResourceGetter raw = Functions.call(cardConfig.resourceGetterFn, null);
 		IResourceGetter resourceGetter = raw.with(new ResourceGetterMock());
-		return cardConfig.withResourceGetterFn(Functions.<String, IResourceGetter> constant(resourceGetter));
+		imageFn = BasicImageRegisterConfigurator.imageFnForTests(shell);
+		return cardConfig.//
+				withImageFn(imageFn).//
+				withResourceGetterFn(Functions.<String, IResourceGetter> constant(resourceGetter));
+	}
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		imageFn.dispose();
 	}
 
 	@Override

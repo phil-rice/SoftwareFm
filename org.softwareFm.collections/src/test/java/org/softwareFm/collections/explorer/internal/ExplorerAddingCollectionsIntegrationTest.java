@@ -5,15 +5,14 @@
 
 package org.softwareFm.collections.explorer.internal;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
@@ -22,6 +21,7 @@ import org.eclipse.swt.widgets.Text;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.constants.CardConstants;
+import org.softwareFm.card.editors.IValueComposite;
 import org.softwareFm.collections.explorer.ExplorerAdapter;
 import org.softwareFm.collections.menu.ICardMenuItemHandler;
 import org.softwareFm.display.swt.Swts;
@@ -54,7 +54,6 @@ public abstract class ExplorerAddingCollectionsIntegrationTest extends AbstractE
 			}
 		};
 		checkAdding("advert", "Adverts", 3, null, addingCallback);
-
 
 	}
 
@@ -180,7 +179,7 @@ public abstract class ExplorerAddingCollectionsIntegrationTest extends AbstractE
 	}
 
 	protected void makeCollectionUrlAndExistingUrl(String collectionUrl) throws InterruptedException, ExecutionException {
-//		delete(collectionUrl);
+		// delete(collectionUrl);
 		repository.post(rootArtifactUrl + collectionUrl, Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), IResponseCallback.Utils.noCallback()).get();
 	}
 
@@ -217,7 +216,6 @@ public abstract class ExplorerAddingCollectionsIntegrationTest extends AbstractE
 		});
 	}
 
-
 	private void checkAddingToUrl(String initialUrl, final ICallback<ICard> addMenuExecutor, final String collection, final String nameInMainCard, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback, final IFunction1<String, String> baseToExpectedCollectionUrlFn) {
 		displayCard(initialUrl, new CardHolderAndCardCallback() {
 			@Override
@@ -241,10 +239,7 @@ public abstract class ExplorerAddingCollectionsIntegrationTest extends AbstractE
 						text.setText(newValue);
 					}
 				});
-				Composite detailContent = detailContent1;
-
-				List<Button> buttons = Swts.findChildrenWithClass(detailContent, Button.class);
-				final Button okButton = Swts.findButtonWithText(buttons, "Ok");
+				Control okButton = ((IValueComposite<Composite>) detailContent1).getOkCancel().okButton;
 				final CountDownLatch latch = new CountDownLatch(1);
 				ExplorerAdapter listemer = new ExplorerAdapter() {
 
@@ -274,7 +269,7 @@ public abstract class ExplorerAddingCollectionsIntegrationTest extends AbstractE
 					}
 				};
 				explorer.addExplorerListener(listemer);
-				okButton.notifyListeners(SWT.Selection, new Event());
+				Swts.Buttons.press(okButton);
 				dispatchUntilTimeoutOrLatch(latch, delay);
 			}
 		});

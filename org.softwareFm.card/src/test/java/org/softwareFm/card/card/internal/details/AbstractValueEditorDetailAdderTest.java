@@ -12,10 +12,8 @@ package org.softwareFm.card.card.internal.details;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.junit.Test;
 import org.softwareFm.card.card.ILineItemFunction;
 import org.softwareFm.card.card.LineItem;
@@ -25,7 +23,7 @@ import org.softwareFm.card.details.IDetailAdder;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.card.editors.internal.IValueEditorForTests;
 import org.softwareFm.display.composites.IHasControl;
-import org.softwareFm.display.constants.DisplayConstants;
+import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.resources.ResourceGetterMock;
@@ -66,19 +64,10 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 		checkHasTextBasedOnCardConfigValueFn("pre_stringValue", addPrefixToValue);
 	}
 
-	public void testHasOkButtonWithNameFromCardConfigResourceGetter() {
-		checkHasOkButtonWithNameFromCardConfigResourceGetter("ok");
-		checkHasOkButtonWithNameFromCardConfigResourceGetter("_ok_");
-	}
-
-	public void testHasCancelButtonWithNameFromCardConfigResourceGetter() {
-		checkHasCancelButtonWithNameFromCardConfigResourceGetter("cancel");
-		checkHasCancelButtonWithNameFromCardConfigResourceGetter("_cancel_S");
-	}
 
 	public void testOkButtonNotEnabledIfTextNotChanged() {
 		TE textEditor = makeHolder(stringValue);
-		Button okButton = textEditor.getOkCancel().okButton;
+		Label okButton = textEditor.getOkCancel().okButton;
 		assertFalse(okButton.isEnabled());
 
 		textEditor.setValue("someothervalue");
@@ -90,7 +79,7 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 
 	public void testCancelButtonEnabled() {
 		TE textEditor = makeHolder(stringValue);
-		Button cancelButton = textEditor.getOkCancel().cancelButton;
+		Label cancelButton = textEditor.getOkCancel().cancelButton;
 		assertTrue(cancelButton.isEnabled());
 
 		textEditor.setValue("some other value");
@@ -103,11 +92,11 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 
 	public void testUpdatesWhenOKPressed() {
 		TE textEditor = makeHolder(stringValue);
-		Button okButton = textEditor.getOkCancel().okButton;
+		Label okButton = textEditor.getOkCancel().okButton;
 		textEditor.setValue("some other value");
 		checkCardDataStoreNotUpdated();
 		okButton.setEnabled(true);
-		okButton.notifyListeners(SWT.Selection, new Event());
+		Swts.Buttons.press(okButton);
 		checkCardDataStoreUpdated(parentCard.url(), "key", "some other value");
 	}
 
@@ -128,10 +117,10 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 		checkCardDataStoreNotUpdated();
 	}
 
-	private void checkPressCausesDispose(TE textEditor, Button button) {
+	private void checkPressCausesDispose(TE textEditor, Label button) {
 		button.setEnabled(true);
 		assertFalse(textEditor.getControl().isDisposed());
-		button.notifyListeners(SWT.Selection, new Event());
+		Swts.Buttons.press(button);
 		assertTrue(textEditor.getControl().isDisposed());
 	}
 
@@ -146,15 +135,6 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 		assertEquals(0, cardDataStore.rememberedPuts.size()); // The card data store should be updated by the callback, not by other means
 	}
 
-	private void checkHasOkButtonWithNameFromCardConfigResourceGetter(String expected) {
-		TE textEditor = makeWithResourceGetterWith(DisplayConstants.buttonOkTitle, expected);
-		assertEquals(expected, textEditor.getOkCancel().okButton.getText());
-	}
-
-	private void checkHasCancelButtonWithNameFromCardConfigResourceGetter(String expected) {
-		TE textEditor = makeWithResourceGetterWith(DisplayConstants.buttonCancelTitle, expected);
-		assertEquals(expected, textEditor.getOkCancel().cancelButton.getText());
-	}
 
 	private TE makeWithResourceGetterWith(String key, String expected) {
 		IResourceGetter raw = Functions.call(cardConfig.resourceGetterFn, null);

@@ -12,6 +12,7 @@ package org.softwareFm.softwareFmImages;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
@@ -21,6 +22,7 @@ import org.softwareFm.softwareFmImages.login.LoginAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 import org.softwareFm.softwareFmImages.smallIcons.SmallIconsAnchor;
 import org.softwareFm.softwareFmImages.title.TitleAnchor;
+import org.softwareFm.utilities.functions.IFunction1WithDispose;
 
 public class BasicImageRegisterConfigurator implements IImageRegisterConfigurator {
 
@@ -46,7 +48,7 @@ public class BasicImageRegisterConfigurator implements IImageRegisterConfigurato
 		Images.registerImages(device, imageRegistry, GeneralAnchor.class, "general", //
 				"browse", "help", "clear", "sfmLogo", "commentAdd");
 		Images.registerImages(device, imageRegistry, LoginAnchor.class, "login", //
-				"login", "cancel", "changePasswod", "forgotPasswod", "loginButton", "signUpAsNewUser");
+				"login", "cancel", "changePasswod", "forgotPasswod", "loginButton", "signUpAsNewUser", "ok");
 		Images.registerImages(device, imageRegistry, TitleAnchor.class, "title",//
 				"advert", "artifact", "blog", "document", "facebook", "folder", "forum", "group", "history", "jar", //
 				"mailingList", "next", "previous", "refresh", "rss", "tutorial", "twitter", "version");
@@ -66,5 +68,19 @@ public class BasicImageRegisterConfigurator implements IImageRegisterConfigurato
 		ImageRegistry imageRegistry = new ImageRegistry();
 		new BasicImageRegisterConfigurator().registerWith(from.getDisplay(), imageRegistry);
 		return imageRegistry;
+	}
+	public static IFunction1WithDispose<String, Image> imageFnForTests(Composite from) {
+		final ImageRegistry imageRegistry = forTests(from);
+		return new IFunction1WithDispose<String, Image>() {
+			@Override
+			public Image apply(String from) throws Exception {
+				return imageRegistry.get(from);
+			}
+
+			@Override
+			public void dispose() {
+				imageRegistry.dispose();
+			}
+		};
 	}
 }

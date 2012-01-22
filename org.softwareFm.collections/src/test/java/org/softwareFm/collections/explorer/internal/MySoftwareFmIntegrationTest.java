@@ -125,7 +125,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 
 		mySoftwareFm.logout();
 		mySoftwareFm.start();
-		displayUntilValueComposite("Email", "Password").getOkCancel().pressButton("Forgot Password");
+		displayUntilValueComposite("Email", "Password").getOkCancel().pressButton(0);
 		displayUntilValueComposite("Email");
 		setValues(email);
 		assertTrue(getOkCancel().isOkEnabled());
@@ -162,7 +162,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 
 	private String signUp(String email, String password) {
 		String signUpSalt = startAndGetSignupSalt();
-		displayUntilValueComposite("Email", "Password").getOkCancel().pressButton("Signup as new user");
+		displayUntilValueComposite("Email", "Password").getOkCancel().pressButton(1);
 		displayUntilValueComposite("Email", "Password", "Confirm Password");
 		setValues(email, password, password);
 		assertTrue(getOkCancel().isOkEnabled());
@@ -174,7 +174,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 
 	public void testSignupNeedsValidEmailAndPasswords() {
 		startAndGetSignupSalt();
-		displayUntilValueComposite("Email", "Password").getOkCancel().pressButton("Signup as new user");
+		displayUntilValueComposite("Email", "Password").getOkCancel().pressButton(1);
 		displayUntilValueComposite("Email", "Password", "Confirm Password");
 		assertFalse(getOkCancel().isOkEnabled());
 

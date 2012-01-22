@@ -66,7 +66,7 @@ public class OKCancelWithBorder implements IOkCancel {
 			}
 		};
 		IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, null);
-		okCancel = new OkCancel(content, resourceGetter, onAccept, onCancel);
+		okCancel = new OkCancel(content, resourceGetter,cardConfig.imageFn, onAccept, onCancel);
 
 		content.addPaintListener(new PaintListener() {
 			@Override

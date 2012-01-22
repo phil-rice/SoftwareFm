@@ -28,7 +28,7 @@ import org.softwareFm.utilities.strings.Strings;
 
 public class Login implements ILogin {
 	private final String cardType = CardConstants.loginCardType;
-	 final INamesAndValuesEditor content;
+	final INamesAndValuesEditor content;
 
 	public Login(Composite parent, final CardConfig cardConfig, final String sessionSalt, String initialEmail, final ILoginStrategy loginStrategy, final ILoginDisplayStrategy loginDisplayStrategy, final ILoginCallback callback) {
 		String title = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, CardConstants.loginTitle);
@@ -80,18 +80,16 @@ public class Login implements ILogin {
 
 				});
 		Composite buttonComposite = content.getButtonComposite();
-		Swts.Buttons.makePushButtonAtStart(buttonComposite, CardConfig.resourceGetter(content), CardConstants.signUpButtonTitle, new Runnable() {
+		Swts.Buttons.makeImageButtonAtStart(buttonComposite, cardConfig.imageFn, CardConstants.signUpImage, new Runnable() {
 			@Override
 			public void run() {
 				loginDisplayStrategy.showSignup(sessionSalt, getEmail());
 			}
-
 		});
-		Swts.Buttons.makePushButtonAtStart(buttonComposite, CardConfig.resourceGetter(content), CardConstants.forgotPasswordButtonTitle, new Runnable() {
+		Swts.Buttons.makeImageButtonAtStart(buttonComposite, cardConfig.imageFn, CardConstants.forgotPasswordImage, new Runnable() {
 			@Override
 			public void run() {
 				loginDisplayStrategy.showForgotPassword(sessionSalt, getEmail());
-
 			}
 		});
 	}

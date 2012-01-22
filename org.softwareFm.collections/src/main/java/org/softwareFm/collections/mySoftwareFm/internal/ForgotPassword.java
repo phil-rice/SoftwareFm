@@ -61,7 +61,7 @@ public class ForgotPassword implements IForgotPassword {
 
 				});
 		Composite buttonComposite = content.getButtonComposite();
-		Swts.Buttons.makePushButtonAtStart(buttonComposite, CardConfig.resourceGetter(content), CardConstants.signUpButtonTitle, new Runnable() {
+		Swts.Buttons.makeImageButtonAtStart(buttonComposite, cardConfig.imageFn, CardConstants.signUpImage, new Runnable() {
 			@Override
 			public void run() {
 				loginDisplayStrategy.showSignup(sessionSalt, getEmail());

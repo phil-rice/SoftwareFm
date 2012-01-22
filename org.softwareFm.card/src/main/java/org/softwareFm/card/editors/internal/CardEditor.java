@@ -56,7 +56,7 @@ public class CardEditor implements IValueEditor, ICardData {
 			cardTable = new CardTable(body.innerBody, cardConfig.withStyleAndSelection(cardConfig.cardStyle, true), titleSpec, cardData.cardType(), cardData.data());
 
 			IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, null);
-			okCancel = new OkCancel(body.innerBody, resourceGetter, new Runnable() {
+			okCancel = new OkCancel(body.innerBody, resourceGetter, cardConfig.imageFn, new Runnable() {
 				@Override
 				public void run() {
 					callback.ok(cardData);
