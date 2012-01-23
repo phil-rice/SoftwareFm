@@ -18,8 +18,9 @@ import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.callbacks.MemoryCallback;
 import org.softwareFm.utilities.comparators.Comparators;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.tests.IIntegrationTest;
 
-public class SoftwareFmServerTest extends TestCase  {
+public class SoftwareFmServerTest extends TestCase implements IIntegrationTest {
 
 	private ISoftwareFmServer server;
 	private MemoryCallback<Throwable> memory;

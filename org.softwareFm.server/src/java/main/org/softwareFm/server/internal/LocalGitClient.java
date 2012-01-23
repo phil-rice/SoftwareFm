@@ -7,7 +7,6 @@ import org.softwareFm.server.GetResult;
 import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.ILocalGitClient;
 import org.softwareFm.utilities.collections.Files;
-import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
 
 public class LocalGitClient implements ILocalGitClient {
@@ -71,7 +70,9 @@ public class LocalGitClient implements ILocalGitClient {
 		File directory = fileDescription.getDirectory(root);
 		directory.mkdirs();
 		File file = fileDescription.getFile(root);
-		Files.setText(file, Json.toString(map));
+		String text = fileDescription.encode(map);
+		
+		Files.setText(file, text);
 	}
 
 	@Override

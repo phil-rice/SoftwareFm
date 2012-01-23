@@ -1,5 +1,6 @@
 package org.softwareFm.server.internal;
 
+import java.io.File;
 import java.util.Map;
 
 import org.softwareFm.server.IFileDescription;
@@ -66,6 +67,16 @@ public class LocalGitClientEncryptedTests extends GitTest {
 
 		checkLocalGet(client, "a/b/c", Maps.with(v11, "d", Maps.with(v12, "e", v21), "f", v22));
 		checkLocalGet(client, IFileDescription.Utils.plain("a/b/c", "name1"), Maps.with(v31, "d", Maps.with(v32, "e", v41), "f", v42));
+	}
+	
+	public void testPostEncrypts(){
+		String key = Crypto.makeKey();
+		IFileDescription fileDescription = IFileDescription.Utils.encrypted("a/b/c", "name", key);
+		client.post(fileDescription, v11);
+		
+		assertEquals(v11, client.getFile(fileDescription).data);
+		File file = fileDescription.getFile(localRoot);
+		assertEquals(v11, fileDescription.decode(Files.getText(file)));
 	}
 
 	@Override

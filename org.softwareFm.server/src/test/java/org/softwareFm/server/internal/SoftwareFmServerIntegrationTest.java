@@ -17,9 +17,10 @@ import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.callbacks.MemoryCallback;
+import org.softwareFm.utilities.tests.IIntegrationTest;
 import org.springframework.core.io.ClassPathResource;
 
-public class SoftwareFmServerIntegrationTest extends TestCase {
+public class SoftwareFmServerIntegrationTest extends TestCase implements IIntegrationTest{
 	private MemoryCallback<Throwable> memory;
 	private ISoftwareFmServer server;
 	private IClientBuilder client;
