@@ -61,8 +61,8 @@ public class DisplayConstants {
 	public static final String buttonCancelTitle = "button.cancel.title";
 	public static final String buttonOkTitle = "button.ok.title";
 	public static final String illegalMenuId = "Illegal Menu Id [{0}]. Legal values are {1}";
-	public static final String buttonCancelImage = "login.cancel";
-	public static final String buttonOkImage = "login.ok";
+	public static final String buttonCancelImage = "general.cancel";
+	public static final String buttonOkImage = "general.ok";
 	
 	
 

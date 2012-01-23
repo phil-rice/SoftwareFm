@@ -139,6 +139,6 @@ public class CardConstants {
 	public static final String failedToChangePasswordTitle = "changepassword.failedtochangepassword.title";
 	public static final String failedToChangePasswordText = "changepassword.failedtochangepassword.text";
 	public static final String changePasswordTitle = "changepassword.title.text";
-	public static final String signUpImage = "login.signUpAsNewUser";
+	public static final String signUpImage = "login.signUp";
 	public static final String forgotPasswordImage = "login.forgotPasswod";
 }
