@@ -25,7 +25,6 @@ public class PostProcessor implements IProcessCall {
 		if (requestLine.getMethod().equals(ServerConstants.POST)) {
 			Object data = parameters.get(ServerConstants.dataParameterName);
 			if (data instanceof String) {
-				String url = requestLine.getUri();
 				IFileDescription fileDescription = IFileDescription.Utils.fromRequest(requestLine, parameters);
 				GetResult initial = server.getFile(fileDescription);
 				String newData = initial.found ? merge(initial, (String) data) : (String) data;

@@ -62,12 +62,12 @@ public class User implements IUser {
 
 	private IFileDescription makeFileDescription(IUrlGenerator urlGenerator, Map<String, Object> key, String fileName) {
 		String url = urlGenerator.findUrlFor(key);
-		String user = (String) key.get(userKey);
 		String crypto = (String) key.get(cryptoKey);
 		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, fileName, crypto);
 		return fileDescription;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, Object> addProjectDetails(Map<String, Object> userDetails, String month, long day, Map<String, Object> data) {
 		Object groupId = userDetails.get(groupIdKey);
@@ -87,15 +87,13 @@ public class User implements IUser {
 
 	@Override
 	public Map<String, Object> getProjectDetails(Map<String, Object> userDetails, String month) {
-		String url = projectDetailGenerator.findUrlFor(userDetails);
 		IFileDescription fileDescription = makeFileDescription(projectDetailGenerator, userDetails, month);
 		GetResult result = gitClient.getFile(fileDescription);
-			return result.data;
+		return result.data;
 	}
 
 	@Override
 	public void saveProjectDetails(Map<String, Object> userDetails, String month, Map<String, Object> data) {
-		String url = projectDetailGenerator.findUrlFor(userDetails);
 		IFileDescription fileDescription = makeFileDescription(projectDetailGenerator, userDetails, month);
 		gitClient.post(fileDescription, data);
 	}

@@ -239,6 +239,7 @@ public abstract class ExplorerAddingCollectionsIntegrationTest extends AbstractE
 						text.setText(newValue);
 					}
 				});
+				@SuppressWarnings("unchecked")
 				Control okButton = ((IValueComposite<Composite>) detailContent1).getOkCancel().okButton;
 				final CountDownLatch latch = new CountDownLatch(1);
 				ExplorerAdapter listemer = new ExplorerAdapter() {

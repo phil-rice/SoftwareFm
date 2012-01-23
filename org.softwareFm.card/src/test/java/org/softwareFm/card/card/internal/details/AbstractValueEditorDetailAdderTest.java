@@ -24,9 +24,6 @@ import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.card.editors.internal.IValueEditorForTests;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwareFm.utilities.resources.ResourceGetterMock;
 import org.softwareFm.utilities.runnable.Runnables;
 
 public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder, TE extends IValueEditorForTests> extends AbstractDetailsAdderTest<T> {
@@ -136,12 +133,6 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 	}
 
 
-	private TE makeWithResourceGetterWith(String key, String expected) {
-		IResourceGetter raw = Functions.call(cardConfig.resourceGetterFn, null);
-		IResourceGetter resourceGetter = raw.with(new ResourceGetterMock(key, expected));
-		TE textEditor = makeHolder(cardConfig.withResourceGetterFn(Functions.<String, IResourceGetter> constant(resourceGetter)), stringValue);
-		return textEditor;
-	}
 
 	private void checkHasTextBasedOnCardConfigValueFn(String expected, ILineItemFunction<String> valueFn) {
 		TE holder = makeHolder(cardConfig.withValueFn(valueFn), stringValue);

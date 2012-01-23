@@ -29,10 +29,8 @@ public class UserTest extends GitTest {
 
 	private final String groupId1 = "groupId1";
 	private final String artifactId11 = "artifactId11";
-	private final String artifactId12 = "artifactId12";
 	private final String groupId2 = "groupId2";
 	private final String artifactId21 = "artifactId21";
-	private final String artifactId22 = "artifactId22";
 	private Map<String, Object> userDetails;
 	private Map<String, Object> userAndProjectDetails;
 
