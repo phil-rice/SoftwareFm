@@ -37,7 +37,7 @@ public class TimedServer {
 		};
 		int threads = 10;
 		final int callsPerThread = 100;
-		final String host = "localhost";//"www.softwarefm.com";
+		final String host = "localhost";
 		ISoftwareFmServer softwareFmServer = host.equals("localhost") ? ISoftwareFmServer.Utils.server(ServerConstants.testPort, 10 * threads, processCall, ICallback.Utils.<Throwable> noCallback()) : null;
 		MultiThreadedTimeTester<IHttpClient> tester = new MultiThreadedTimeTester<IHttpClient>(threads, callsPerThread, new ITimable<IHttpClient>() {
 			@Override

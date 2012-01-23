@@ -10,7 +10,7 @@ public class GitPullTimedTest {
 	public static void main(String[] args) {
 		File root = new File(System.getProperty("user.home"));
 		File sfmLocalRoot = new File(root, ".sfm");
-		final IGitServer localServer = IGitServer.Utils.gitServer(sfmLocalRoot, "git://www.softwarefm.com/");
+		final IGitServer localServer = IGitServer.Utils.gitServer(sfmLocalRoot, "git://git.softwarefm.com/");
 		final List<String> urls = Arrays.asList(//
 				"/softwareFm/data/org/apache/maven/archetype/org.apache.maven.archetype/artifact/archetype-catalog",//
 				"/softwareFm/data/org/apache/maven/archetype/org.apache.maven.archetype/artifact/archetype-common",//

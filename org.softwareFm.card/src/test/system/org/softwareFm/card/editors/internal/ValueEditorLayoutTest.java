@@ -68,7 +68,8 @@ public class ValueEditorLayoutTest extends SwtTest {
 					OkCancel okCancel = t.getOkCancel();
 					Point idealOKCancelSize = okCancel.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT);
 					Control control = okCancel.getControl();
-					assertEquals(new Rectangle(883, 319, idealOKCancelSize.x, idealOKCancelSize.y), control.getBounds());
+					assertEquals(new Rectangle(881, 319, idealOKCancelSize.x, idealOKCancelSize.y), control.getBounds());
+					//visually it looks ok with these values. If the icons change, then these numbers will have to be changed
 				}
 			});
 
