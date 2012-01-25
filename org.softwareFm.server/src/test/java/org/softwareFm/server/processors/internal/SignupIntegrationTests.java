@@ -8,9 +8,9 @@ public class SignupIntegrationTests extends AbstractProcessorMockIntegrationTest
 
 	public void testMakeSaltThenSignUp() throws Exception {
 		String salt = "salt 0";
-		client.get(ServerConstants.makeSaltPrefix).execute(IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, salt)).get(); // salt won't be used but we want it removed
+		getHttpClient().get(ServerConstants.makeSaltPrefix).execute(IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, salt)).get(); // salt won't be used but we want it removed
 		assertEquals(salt, Sets.getOnly(saltProcessor.legalSalts));
-		assertEquals("signUpCrypto", signup("someEmail", salt, "hash"));
+		assertEquals("signUpCrypto", signup("someEmail", salt, "hash", "someSoftwareFmId0"));
 		assertEquals(0, saltProcessor.legalSalts.size());
 	}
 

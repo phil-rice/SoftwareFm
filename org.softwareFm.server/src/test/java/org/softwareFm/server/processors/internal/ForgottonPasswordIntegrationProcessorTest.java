@@ -16,10 +16,10 @@ public class ForgottonPasswordIntegrationProcessorTest extends AbstractProcessor
 
 	public void testSaltFollowedByUnknownError() throws Exception {
 		String salt = "salt 0";
-		client.get(ServerConstants.makeSaltPrefix).execute(IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, salt)).get(); // salt won't be used but we want it removed
+		getHttpClient().get(ServerConstants.makeSaltPrefix).execute(IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, salt)).get(); // salt won't be used but we want it removed
 		assertEquals(salt, Sets.getOnly(saltProcessor.legalSalts));
 		forgottonPasswordProcessor.setErrorMessage("some error message");
-		client.post(ServerConstants.forgottonPasswordPrefix).//
+		getHttpClient().post(ServerConstants.forgottonPasswordPrefix).//
 				addParam(ServerConstants.emailKey, "someEmail").//
 				addParam(ServerConstants.sessionSaltKey, salt).//
 				execute(IResponseCallback.Utils.checkCallback(500, "class java.lang.RuntimeException/some error message")).get();

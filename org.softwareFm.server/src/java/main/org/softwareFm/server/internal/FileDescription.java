@@ -60,4 +60,9 @@ public class FileDescription implements IFileDescription {
 		return null;
 	}
 
+	@Override
+	public String toString() {
+		return "FileDescription [url=" + url + ", name=" + name + ", key=" + key + "]";
+	}
+
 }

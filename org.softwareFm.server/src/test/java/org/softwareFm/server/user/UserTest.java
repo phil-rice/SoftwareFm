@@ -8,9 +8,11 @@ import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.server.internal.GitTest;
 import org.softwareFm.server.internal.LocalGitClient;
-import org.softwareFm.server.internal.User;
+import org.softwareFm.server.user.internal.User;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.crypto.Crypto;
+import org.softwareFm.utilities.functions.Functions;
+import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.tests.Tests;
@@ -62,6 +64,23 @@ public class UserTest extends GitTest {
 		assertEquals(v11, user.getUserDetails(userDetails));
 	}
 
+	public void testGetProjectDetailsCreatesCryptoKeyInUserDetailsFirstTimeAndUsesItLater() {
+		user.saveUserDetails(userDetails, v11);
+		Map<String, Object> initialDetails = user.getUserDetails(userDetails);
+		assertFalse(initialDetails.containsKey(ServerConstants.projectCryptoKey));
+
+		user.getProjectDetails(userAndProjectDetails, "month");
+
+		Map<String, Object> finalDetails = user.getUserDetails(userDetails);
+		Object projectCrypto = finalDetails.get(ServerConstants.projectCryptoKey);
+
+		Map<String, Object> finalDetails2 = user.getUserDetails(userDetails);
+		Object projectCrypto2 = finalDetails2.get(ServerConstants.projectCryptoKey);
+
+		assertEquals(projectCrypto, projectCrypto2);
+		assertNotNull(projectCrypto);
+	}
+
 	public void testAddToProjectWhenGroupAndArtifactIdExist() {
 		Map<String, Object> initial = Maps.stringObjectMap(groupId1, Maps.stringObjectMap(artifactId11, Arrays.asList(1l)));
 		Map<String, Object> initialCopy = Maps.copyMap(initial);
@@ -88,6 +107,7 @@ public class UserTest extends GitTest {
 	}
 
 	public void testSaveAndGetProjectDetails() {
+		user.saveUserDetails(userDetails, v11); // need user details for project crypto key
 		user.saveProjectDetails(userDetails, "month", v11);
 		assertEquals(v11, user.getProjectDetails(userDetails, "month"));
 
@@ -95,7 +115,9 @@ public class UserTest extends GitTest {
 		File file = new File(localRoot, Urls.compose(url, "month"));
 
 		String text = Files.getText(file);
-		String decrypted = Crypto.aesDecrypt(key, text);
+		String projectCrypto = (String) user.getUserDetails(userDetails).get(ServerConstants.projectCryptoKey);
+		
+		String decrypted = Crypto.aesDecrypt(projectCrypto, text);
 		Map<String, Object> actual = Json.mapFromString(decrypted);
 		assertEquals(v11, actual);
 	}
@@ -109,7 +131,17 @@ public class UserTest extends GitTest {
 		});
 	}
 
+	public void testGetProjectDetailsWhenTheyDontExistAndUserDoesntExist() {
+		Tests.assertThrows(IllegalArgumentException.class, new Runnable() {
+			@Override
+			public void run() {
+				user.getProjectDetails(userAndProjectDetails, "month");
+			}
+		});
+	}
+
 	public void testGetProjectDetailsWhenTheyDontExist() {
+		user.saveUserDetails(userDetails, v11); // need user details for project crypto key
 		assertEquals(Maps.emptyStringObjectMap(), user.getProjectDetails(userAndProjectDetails, "month"));
 	}
 
@@ -119,9 +151,10 @@ public class UserTest extends GitTest {
 		LocalGitClient client = new LocalGitClient(localRoot);
 		userGenerator = new UrlGenerator("user/{0}/{1}/{2}", User.userKey);
 		projectDetailGenerator = new UrlGenerator("user/{0}/{1}/{2}/projects", User.userKey);
-		user = IUser.Utils.makeUserDetails(client, userGenerator, projectDetailGenerator, "g", "a");
 		key = Crypto.makeKey();
-		userDetails = Maps.stringObjectMap(User.userKey, "sfmUser", User.cryptoKey, key);
+		IFunction1<Map<String, Object>, String> cryptoFn = Functions.constant(key);
+		user = IUser.Utils.makeUserDetails(client, userGenerator, projectDetailGenerator, cryptoFn, "g", "a");
+		userDetails = Maps.stringObjectMap(User.userKey, "sfmUser");
 		userAndProjectDetails = Maps.with(userDetails, "g", groupId1, "a", artifactId11);
 
 		repositoryDirectory = new File(localRoot, "user/sf/mU");

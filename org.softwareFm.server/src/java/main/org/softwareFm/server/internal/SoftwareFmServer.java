@@ -11,6 +11,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpException;
@@ -33,9 +34,12 @@ import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.IMailer;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.IProcessResult;
+import org.softwareFm.server.user.internal.UserCryptoFn;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.runnable.Callables;
 import org.softwareFm.utilities.services.IServiceExecutor;
 import org.softwareFm.utilities.strings.Strings;
 
@@ -194,7 +198,12 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 		IGitServer server = IGitServer.Utils.gitServer(sfmRoot, "not used");
 		System.out.println("Server: " + server);
 		final IUsage usage = IUsage.Utils.defaultUsage();
-		IMailer mailer = IMailer.Utils.email("localhost",null, null);
-		new SoftwareFmServer(8080, 1000, IProcessCall.Utils.softwareFmProcessCall(AbstractLoginDataAccessor.defaultDataSource(), server, sfmRoot, mailer), ICallback.Utils.sysErrCallback(), usage);
+		IMailer mailer = IMailer.Utils.email("localhost", null, null);
+		BasicDataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
+		IFunction1<Map<String, Object>, String> cryptoFn = new UserCryptoFn(dataSource);
+		Callable<String> monthGetter = Callables.value("january_12");
+		Callable<Integer> dayGetter = Callables.value(3);
+		Callable<String> softwareFmIdGenerator= Callables.uuidGenerator();
+		new SoftwareFmServer(8080, 1000, IProcessCall.Utils.softwareFmProcessCall(dataSource, server, cryptoFn, sfmRoot, mailer, monthGetter, dayGetter, softwareFmIdGenerator), ICallback.Utils.sysErrCallback(), usage);
 	}
 }

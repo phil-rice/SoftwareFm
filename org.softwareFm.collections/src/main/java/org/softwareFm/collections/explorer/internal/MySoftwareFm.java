@@ -1,6 +1,8 @@
 package org.softwareFm.collections.explorer.internal;
 
 import java.io.File;
+import java.util.Map;
+import java.util.concurrent.Callable;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -32,7 +34,9 @@ import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.utilities.arrays.ArrayHelper;
 import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.runnable.Callables;
 import org.softwareFm.utilities.services.IServiceExecutor;
 
 public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
@@ -42,6 +46,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 	private final CardConfig cardConfig;
 	protected String email;
 	protected String crypto;
+	protected String softwareFmId;
 	protected String signupSalt;
 
 	protected ICallback<String> restart;
@@ -146,9 +151,10 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		Swts.removeAllChildren(content);
 		ILogin.Utils.login(content, cardConfig, sessionSalt, initialEmail, loginStrategy, MySoftwareFm.this, new ILoginCallback() {
 			@Override
-			public void loggedIn(String email, String cryptoKey) {
+			public void loggedIn(String email, String cryptoKey, String softwareFmId) {
 				MySoftwareFm.this.email = email;
 				MySoftwareFm.this.crypto = cryptoKey;
+				MySoftwareFm.this.softwareFmId = softwareFmId;
 				showLoggedIn();
 			}
 
@@ -182,9 +188,10 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		Swts.removeAllChildren(content);
 		ISignUp.Utils.signUp(content, cardConfig, sessionSalt, initialEmail, loginStrategy, this, new ISignUpCallback() {
 			@Override
-			public void signedUp(String email, String crypto) {
+			public void signedUp(String email, String crypto, String softwareFmId) {
 				MySoftwareFm.this.email = email;
 				MySoftwareFm.this.crypto = crypto;
+				MySoftwareFm.this.softwareFmId = softwareFmId;
 				showLoggedIn();
 			}
 
@@ -232,7 +239,10 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		IGitServer gitServer = IGitServer.Utils.noGitServer();
 		File home = new File(System.getProperty("user.home"));
 		final File localRoot = new File(home, ".sfm");
-		ISoftwareFmServer server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCallWithoutMail(AbstractLoginDataAccessor.defaultDataSource(), gitServer, localRoot), ICallback.Utils.rethrow());
+		IFunction1<Map<String, Object>, String> cryptoFn = Functions.expectionIfCalled();
+		Callable<String> monthGetter = Callables.exceptionIfCalled();
+		Callable<Integer> dayGetter = Callables.exceptionIfCalled();
+		ISoftwareFmServer server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCallWithoutMail(AbstractLoginDataAccessor.defaultDataSource(), gitServer, cryptoFn, localRoot, monthGetter, dayGetter, Callables.uuidGenerator()), ICallback.Utils.rethrow());
 		try {
 			Swts.Show.display(MySoftwareFm.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 				@Override
@@ -256,6 +266,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 
 	public void logout() {
 		crypto = null;
+		softwareFmId = null;
 		signupSalt = null;
 		email = null;
 	}

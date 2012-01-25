@@ -7,7 +7,7 @@ public class EmailSaltRequestIntegrationTest extends AbstractProcessorDatabaseIn
 		String email = "someEmail";
 
 		String salt1 = makeSalt();
-		signup(email, salt1, "hash");
+		signup(email, salt1, "hash", "someNewSoftwareFmId0");
 		
 		String sessionSalt = makeSalt();
 		String emailSalt = requestEmailSalt( sessionSalt, email);

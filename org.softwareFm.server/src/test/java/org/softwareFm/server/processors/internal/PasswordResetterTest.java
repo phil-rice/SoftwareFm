@@ -5,7 +5,7 @@ import org.softwareFm.utilities.crypto.Crypto;
 public class PasswordResetterTest extends AbstractLoginSignupForgotCheckerTest {
 
 	public void testRosyView() {
-		checkSignup("email1@a", "salt", "initialHash");
+		checkSignup("email1@a", "salt", "initialHash", "sfmId1");
 		String magicString = checkSendPasswordEmail("email1@a");
 		String newPassword = resetPassword.reset(magicString);
 

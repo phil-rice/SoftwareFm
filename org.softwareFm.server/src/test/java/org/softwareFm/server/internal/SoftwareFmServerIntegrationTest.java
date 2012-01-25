@@ -1,6 +1,8 @@
 package org.softwareFm.server.internal;
 
 import java.io.File;
+import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.TestCase;
@@ -17,10 +19,13 @@ import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.callbacks.MemoryCallback;
+import org.softwareFm.utilities.functions.Functions;
+import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.runnable.Callables;
 import org.softwareFm.utilities.tests.IIntegrationTest;
 import org.springframework.core.io.ClassPathResource;
 
-public class SoftwareFmServerIntegrationTest extends TestCase implements IIntegrationTest{
+public class SoftwareFmServerIntegrationTest extends TestCase implements IIntegrationTest {
 	private MemoryCallback<Throwable> memory;
 	private ISoftwareFmServer server;
 	private IClientBuilder client;
@@ -48,7 +53,11 @@ public class SoftwareFmServerIntegrationTest extends TestCase implements IIntegr
 		memory = ICallback.Utils.memory();
 		File fileRoot = new ClassPathResource("test.css", getClass()).getFile().getParentFile();
 		IGitServer gitServer = IGitServer.Utils.noGitServer();
-		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCallWithoutMail(AbstractLoginDataAccessor.defaultDataSource(), gitServer, fileRoot), memory);
+		IFunction1<Map<String, Object>, String> cryptoFn = Functions.expectionIfCalled();
+		Callable<String> monthGetter = Callables.exceptionIfCalled();
+		Callable<Integer> dayGetter = Callables.exceptionIfCalled();
+		Callable<String> softwareFmIdGenerator=Callables.exceptionIfCalled();
+		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCallWithoutMail(AbstractLoginDataAccessor.defaultDataSource(), gitServer, cryptoFn, fileRoot, monthGetter, dayGetter, softwareFmIdGenerator), memory);
 		client = IHttpClient.Utils.builder("localhost", ServerConstants.testPort);
 	}
 

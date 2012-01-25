@@ -1,6 +1,7 @@
 package org.softwareFm.collections.explorer.internal;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -29,11 +30,14 @@ import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.crypto.Crypto;
+import org.softwareFm.utilities.functions.Functions;
+import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.runnable.Callables;
 import org.softwareFm.utilities.tests.IIntegrationTest;
 import org.softwareFm.utilities.url.Urls;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements IIntegrationTest{
+public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements IIntegrationTest {
 
 	private IHttpClient client;
 	private MySoftwareFm mySoftwareFm;
@@ -46,14 +50,22 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 	private final String password = "pass1";
 	private CardConfig cardConfig;
 
-	public void testStartRequestsSalt() {
-		assertNull(mySoftwareFm.getSignupSalt());
-		startAndGetSignupSalt();
-		assertEquals(0, template.queryForInt("select count(*) from users"));
+	public void testSignupThenLogin() {
+		signUp(email, password);
+		String crypto = template.queryForObject("select crypto from users", String.class);
+		String softwareFmId = template.queryForObject("select softwarefmid from users", String.class);
+		mySoftwareFm.logout();
 
+		mySoftwareFm.start();
 		assertNull(mySoftwareFm.crypto);
-		assertNull(mySoftwareFm.email);
-		assertNotNull(mySoftwareFm.getSignupSalt());
+		displayUntilValueComposite("Email", "Password");
+		setValues(email, password);
+		assertTrue(getOkCancel().isOkEnabled());
+		getOkCancel().ok();
+		displayUntilText();
+		assertEquals(crypto, mySoftwareFm.crypto);
+		assertEquals(email, mySoftwareFm.email);
+		assertEquals(softwareFmId, mySoftwareFm.softwareFmId);
 	}
 
 	public void testSignup() {
@@ -67,25 +79,22 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		assertNull(passwordHash, template.queryForObject("select passwordResetKey from users", String.class));
 
 		String crypto = template.queryForObject("select crypto from users", String.class);
+		String softwareFmId = template.queryForObject("select softwarefmid from users", String.class);
 		assertNotNull(crypto);
 		assertEquals(crypto, mySoftwareFm.crypto);
+		assertEquals(softwareFmId, mySoftwareFm.softwareFmId);
 		assertEquals(email, mySoftwareFm.email);
 	}
 
-	public void testSignupThenLogin() {
-		signUp(email, password);
-		String crypto = template.queryForObject("select crypto from users", String.class);
-		mySoftwareFm.logout();
+	public void testStartRequestsSalt() {
+		assertNull(mySoftwareFm.getSignupSalt());
+		startAndGetSignupSalt();
+		assertEquals(0, template.queryForInt("select count(*) from users"));
 
-		mySoftwareFm.start();
 		assertNull(mySoftwareFm.crypto);
-		displayUntilValueComposite("Email", "Password");
-		setValues(email, password);
-		assertTrue(getOkCancel().isOkEnabled());
-		getOkCancel().ok();
-		displayUntilText();
-		assertEquals(crypto, mySoftwareFm.crypto);
-		assertEquals(email, mySoftwareFm.email);
+		assertNull(mySoftwareFm.softwareFmId);
+		assertNull(mySoftwareFm.email);
+		assertNotNull(mySoftwareFm.getSignupSalt());
 	}
 
 	public void testLoginErrors() {
@@ -96,18 +105,21 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		checkLoginError(email, "password", "Email / Password didn't match\n\nClicking this panel will start login again");
 		checkLoginError("a@b.com", "password", "Email not recognised\n\nClicking this panel will start login again");
 		assertNull(mySoftwareFm.crypto);
+		assertNull(mySoftwareFm.softwareFmId);
 	}
 
 	private void checkLoginError(String email, String password, String errorMessage) {
 		mySoftwareFm.logout();
 		mySoftwareFm.start();
 		assertNull(mySoftwareFm.crypto);
+		assertNull(mySoftwareFm.softwareFmId);
 		displayUntilValueComposite("Email", "Password");
 		setValues(email, password);
 		assertTrue(getOkCancel().isOkEnabled());
 		getOkCancel().ok();
 		displayUntilText();
 		assertNull(mySoftwareFm.crypto);
+		assertNull(mySoftwareFm.softwareFmId);
 		assertEquals(errorMessage, getText());
 	}
 
@@ -134,6 +146,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		assertEquals("Reminder email sent to " + email + "\n\nClicking this panel will start login again", getText());
 		assertNull(mySoftwareFm.crypto);
 		assertNull(mySoftwareFm.email);
+		assertNull(mySoftwareFm.softwareFmId);
 
 		mySoftwareFm.start();
 		displayUntilValueComposite("Email", "Password");
@@ -145,8 +158,10 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		assertTrue(getOkCancel().isOkEnabled());
 		getOkCancel().ok();
 		displayUntilText();
-		assertEquals("Welcome to softwareFm.\n\n\nYou are logged in as "+email, getText());
+		assertEquals("Welcome to softwareFm.\n\n\nYou are logged in as " + email, getText());
 		assertEquals(crypto, mySoftwareFm.crypto);
+		assertEquals("someNewSoftwareFmId0", mySoftwareFm.softwareFmId);
+
 		assertEquals(email, mySoftwareFm.email);
 	}
 
@@ -300,7 +315,11 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 	protected void setUp() throws Exception {
 		super.setUp();
 		dataSource = AbstractLoginDataAccessor.defaultDataSource();
-		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, null, null), ICallback.Utils.rethrow());
+		IFunction1<Map<String, Object>, String> cryptoFn = Functions.expectionIfCalled();
+		Callable<String> monthGetter = Callables.exceptionIfCalled();
+		Callable<Integer> dayGetter = Callables.exceptionIfCalled();
+		Callable<String> softwareFmIdGenerator = Callables.patternWithCount("someNewSoftwareFmId{0}");
+		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, null, cryptoFn, null, monthGetter, dayGetter, softwareFmIdGenerator), ICallback.Utils.rethrow());
 		client = IHttpClient.Utils.builder("localhost", 8080);
 		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(display, service, client);
 		cardConfig = ICardConfigurator.Utils.cardConfigForTests(display);

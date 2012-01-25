@@ -8,11 +8,11 @@ import org.softwareFm.utilities.exceptions.WrappedException;
 
 public class ChangePasswordIntegrationTest extends AbstractProcessorDatabaseIntegrationTests {
 
-	public void testSignupFollowedByChangePasswrd() throws Exception {
+	public void testSignupFollowedByChangePassword() throws Exception {
 		String email = "a@b.com";
 
 		String salt = makeSalt();
-		signup(email, salt, "oldHash");
+		signup(email, salt, "oldHash","someNewSoftwareFmId0");
 		changePassword(email, "oldHash", "newHash");
 		String newSalt = makeSalt();
 		String emailSalt = requestEmailSalt(newSalt, email);
@@ -23,7 +23,7 @@ public class ChangePasswordIntegrationTest extends AbstractProcessorDatabaseInte
 		String email = "a@b.com";
 
 		String salt = makeSalt();
-		signup(email, salt, "oldHash");
+		signup(email, salt, "oldHash","someNewSoftwareFmId0");
 
 		changePassword(email, "wrongHash", "newHash", IResponseCallback.Utils.checkCallback(ServerConstants.notFoundStatusCode, ServerConstants.wrongPassword));
 		String newSalt = makeSalt();
@@ -36,7 +36,7 @@ public class ChangePasswordIntegrationTest extends AbstractProcessorDatabaseInte
 		String email = "a@b.com";
 
 		String salt = makeSalt();
-		signup(email, salt, "oldHash");
+		signup(email, salt, "oldHash", "someNewSoftwareFmId0");
 		changePassword(email, "oldHash", "newHash");
 		String newSalt = makeSalt();
 		String emailSalt = requestEmailSalt(newSalt, email);
@@ -50,7 +50,7 @@ public class ChangePasswordIntegrationTest extends AbstractProcessorDatabaseInte
 
 	private void changePassword(String email, String oldHash, String newHash, IResponseCallback callback) {
 		try {
-			client.post(ServerConstants.changePasswordPrefix).//
+			getHttpClient().post(ServerConstants.changePasswordPrefix).//
 					addParam(ServerConstants.emailKey, email).//
 					addParam(ServerConstants.passwordHashKey, oldHash).//
 					addParam(ServerConstants.newPasswordHashKey, newHash).//

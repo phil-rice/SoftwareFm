@@ -24,6 +24,7 @@ public class ServerConstants {
 	public static final String passwordResetLinkPrefix = "command/resetPassword";
 	public static final String emailSaltPrefix = "command/emailSalt";
 	public static final String changePasswordPrefix = "command/changePassword";
+	public static final String usagePrefix = "command/Usage";
 
 	public static final int testPort = 8080;
 	public static final String alreadyInCache = "<Already in Cache>";
@@ -55,6 +56,7 @@ public class ServerConstants {
 	public static final String cryptoKey = "crypto";
 	public static final String invalidSaltMessage = "invalid salt message";
 	public static final String existingEmailAddress = "Existing email address {0}";
+	public static final String existingSoftwareFmId = "Existing software fm id {0}";
 	public static final String duplicateEmailAndPassword = "Duplicate email and password {0} and {1}";
 	public static final String forgottonPasswordMessage = "You've lost your SoftwareFM password? Say it isn't so!\n\nVisit this site www.softwarefm.org/" + passwordResetLinkPrefix + "/{1} to reset it.";
 	public static final String passwordResetSubject = "Software FM Password Reset";
@@ -65,5 +67,7 @@ public class ServerConstants {
 	public static final String emailNotRecognised = "Email not recognised";
 	public static final String wrongPassword = "Password didn't match email";
 	public static final String passwordChanged = "Password changed";
+	public static final String projectCryptoKey = "projectCryptoKey";
+	public static final String softwareFmIdKey = "softwareFmId";
 
 }

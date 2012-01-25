@@ -17,14 +17,16 @@ public class SignUpChecker extends AbstractLoginDataAccessor implements ISignUpC
 	}
 
 	@Override
-	public SignUpResult signUp(String email, String salt, String passwordHash) {
-		int existing = template.queryForInt("select count(*) from users where email = ?", email);
-		if (existing == 0) {
-			String key = Crypto.makeKey();
-			template.update("insert into users (email, salt, password, crypto) values(?,?,?,?)", email, salt, passwordHash, key);
-			return new SignUpResult(null, key);
-		}
-		return new SignUpResult(MessageFormat.format(ServerConstants.existingEmailAddress, email), null);
+	public SignUpResult signUp(String email, String salt, String passwordHash, String softwareFmId) {
+		int existingEmail = template.queryForInt(countUsersWithEmailSql, email);
+		if (existingEmail != 0)
+			return new SignUpResult(MessageFormat.format(ServerConstants.existingEmailAddress, email), null);
+		int existingSoftwareFmId = template.queryForInt(countUsersWithSoftwareFmIdSql, email);
+		if (existingSoftwareFmId != 0)
+			return new SignUpResult(MessageFormat.format(ServerConstants.existingSoftwareFmId, softwareFmId), null);
+		String key = Crypto.makeKey();
+		template.update(addNewUserSql, email, salt, passwordHash, key, softwareFmId);
+		return new SignUpResult(null, key);
 	}
 
 }

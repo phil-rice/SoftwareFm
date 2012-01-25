@@ -1,8 +1,11 @@
 package org.softwareFm.server.processors.internal;
 
+import java.util.concurrent.Callable;
+
 import org.softwareFm.server.ISoftwareFmServer;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.runnable.Callables;
 
 abstract public class AbstractProcessorMockIntegrationTests extends AbstractProcessorIntegrationTests {
 	private ISoftwareFmServer server;
@@ -12,19 +15,21 @@ abstract public class AbstractProcessorMockIntegrationTests extends AbstractProc
 	protected ForgottonPasswordProcessorMock forgottonPasswordProcessor;
 	protected PasswordResetterMock resetter;
 	private EmailSailRequesterMock emailSaltProcessor;
+	private Callable<String> softwareFmIdGenerator;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		saltProcessor = new SaltProcessorMock();
-		loginChecker = new LoginCheckerMock("loginCrypto");
+		loginChecker = new LoginCheckerMock("loginCrypto", "loginCheckersSoftwareFmId");
 		signUpChecker = new SignUpCheckerMock(null, "signUpCrypto");
 		forgottonPasswordProcessor = new ForgottonPasswordProcessorMock(null);
 		resetter = new PasswordResetterMock("theNewPassword");
 		emailSaltProcessor = new EmailSailRequesterMock("someEmailHash");
+		softwareFmIdGenerator = Callables.patternWithCount("someSoftwareFmId{0}");
 		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.chain(//
 				new LoginProcessor(saltProcessor, loginChecker), //
-				new SignupProcessor(signUpChecker, saltProcessor), //
+				new SignupProcessor(signUpChecker, saltProcessor, softwareFmIdGenerator), //
 				new MakeSaltForLoginProcessor(saltProcessor),//
 				new RequestEmailSaltProcessor(emailSaltProcessor),//
 				new ForgottonPasswordProcessor(saltProcessor, forgottonPasswordProcessor),//

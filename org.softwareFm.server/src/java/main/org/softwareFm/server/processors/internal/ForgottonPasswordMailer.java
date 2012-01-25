@@ -22,7 +22,7 @@ public class ForgottonPasswordMailer extends AbstractLoginDataAccessor implement
 	@Override
 	public String process(String emailAddress) {
 		String magicString = UUID.randomUUID().toString();
-		int count = template.update("update users set passwordResetKey=? where email=?", magicString, emailAddress);
+		int count = template.update(setPasswordResetKeyForUserSql, magicString, emailAddress);
 		if (count == 0)
 			throw new RuntimeException(MessageFormat.format(ServerConstants.emailAddressNotFound, emailAddress));
 
@@ -33,7 +33,7 @@ public class ForgottonPasswordMailer extends AbstractLoginDataAccessor implement
 
 	public static void main(String[] args) {
 		try {
-			new SignUpChecker(SignUpChecker.defaultDataSource()).signUp("phil.rice.erudine@googlemail.com", "someSalt", "somepassword");
+			new SignUpChecker(SignUpChecker.defaultDataSource()).signUp("phil.rice.erudine@googlemail.com", "someSalt", "somepassword", "someSoftwareFmId");
 		} catch (Exception e) {
 		}
 		new ForgottonPasswordMailer(ForgottonPasswordMailer.defaultDataSource(), IMailer.Utils.email("smtp.gmail.com", "your name", "your password")).process("phil.rice.erudine@googlemail.com");

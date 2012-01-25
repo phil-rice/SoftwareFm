@@ -174,6 +174,8 @@ public class Lists {
 	}
 
 	public static <T> List<T> append(List<T> initial, T... more) {
+		if (initial == null)
+			return Arrays.asList(more);
 		List<T> result = new ArrayList<T>(initial.size() + more.length);
 		result.addAll(initial);
 		result.addAll(Arrays.asList(more));

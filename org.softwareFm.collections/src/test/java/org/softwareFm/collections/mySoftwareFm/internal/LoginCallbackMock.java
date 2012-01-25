@@ -13,7 +13,7 @@ public class LoginCallbackMock implements ILoginCallback {
 	public final List<String> failedMessage = Lists.newList();
 
 	@Override
-	public void loggedIn(String email, String cryptoKey) {
+	public void loggedIn(String email, String cryptoKey, String softwareFmId) {
 		loggedInEmail.add(email);
 		loggedInCrypto.add(cryptoKey);
 

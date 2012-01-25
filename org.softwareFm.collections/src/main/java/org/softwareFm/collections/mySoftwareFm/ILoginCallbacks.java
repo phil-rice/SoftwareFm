@@ -27,7 +27,7 @@ public interface ILoginCallbacks extends ILoginCallback, IForgotPasswordCallback
 				}
 
 				@Override
-				public void loggedIn(String email, String cryptoKey) {
+				public void loggedIn(String email, String cryptoKey, String softwareFmId) {
 					String cardType = CardConstants.loginCardType;
 					String title = IResourceGetter.Utils.getMessageOrException(cardConfig.resourceGetterFn, cardType, CardConstants.loggedInTitle, email);
 					String message = IResourceGetter.Utils.getMessageOrException(cardConfig.resourceGetterFn, CardConstants.loginCardType, CardConstants.loggedInText, email);
@@ -43,7 +43,7 @@ public interface ILoginCallbacks extends ILoginCallback, IForgotPasswordCallback
 				}
 
 				@Override
-				public void signedUp(String email, String crypto) {
+				public void signedUp(String email, String crypto, String softwareFmId) {
 					String cardType = CardConstants.signupCardType;
 					String title = IResourceGetter.Utils.getMessageOrException(cardConfig.resourceGetterFn, cardType, CardConstants.signedUpInTitle, email);
 					String message = IResourceGetter.Utils.getMessageOrException(cardConfig.resourceGetterFn, cardType, CardConstants.signedUpText, email);

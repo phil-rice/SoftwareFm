@@ -2,11 +2,13 @@ package org.softwareFm.server.processors;
 
 import java.io.File;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import javax.sql.DataSource;
 
 import org.apache.http.RequestLine;
 import org.softwareFm.server.IGitServer;
+import org.softwareFm.server.ServerConstants;
 import org.softwareFm.server.processors.internal.ChangePasswordProcessor;
 import org.softwareFm.server.processors.internal.DeleteProcessor;
 import org.softwareFm.server.processors.internal.EmailSaltRequester;
@@ -29,7 +31,11 @@ import org.softwareFm.server.processors.internal.RigidFileProcessor;
 import org.softwareFm.server.processors.internal.SaltProcessor;
 import org.softwareFm.server.processors.internal.SignUpChecker;
 import org.softwareFm.server.processors.internal.SignupProcessor;
+import org.softwareFm.server.processors.internal.UsageProcessor;
+import org.softwareFm.server.user.IUser;
+import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.UrlCache;
+import org.softwareFm.utilities.url.IUrlGenerator;
 
 public interface IProcessCall {
 	IProcessResult process(RequestLine requestLine, Map<String, Object> parameters);
@@ -64,11 +70,11 @@ public interface IProcessCall {
 			return "<" + requestLine + ", " + parameters + ">";
 		}
 
-		public static IProcessCall softwareFmProcessCallWithoutMail(DataSource dataSource, IGitServer server, File fileRoot) {
-			return softwareFmProcessCall(dataSource, server, fileRoot, IMailer.Utils.noMailer());
+		public static IProcessCall softwareFmProcessCallWithoutMail(DataSource dataSource, IGitServer server, IFunction1<Map<String, Object>, String> cryptoFn, File fileRoot,Callable<String> monthGetter,Callable<Integer> dayGetter, Callable<String> softwareFmIdGenerator) {
+			return softwareFmProcessCall(dataSource, server, cryptoFn, fileRoot, IMailer.Utils.noMailer(), monthGetter, dayGetter, softwareFmIdGenerator);
 		}
 
-		public static IProcessCall softwareFmProcessCall(DataSource dataSource, IGitServer server, File fileRoot, IMailer mailer) {
+		public static IProcessCall softwareFmProcessCall(DataSource dataSource, IGitServer server, IFunction1<Map<String, Object>, String> cryptoFn, File fileRoot, IMailer mailer,Callable<String> monthGetter,Callable<Integer> dayGetter, Callable<String> softwareFmIdGenerator) {
 			UrlCache<String> aboveRepostoryUrlCache = new UrlCache<String>();
 			SaltProcessor saltProcessor = new SaltProcessor();
 			LoginChecker loginChecker = new LoginChecker(dataSource);
@@ -77,10 +83,13 @@ public interface IProcessCall {
 			IPasswordResetter resetter = new PasswordResetter(dataSource);
 			EmailSaltRequester saltRequester = new EmailSaltRequester(dataSource);
 			IPasswordChanger passwordChanger = IPasswordChanger.Utils.databasePasswordChanger(dataSource);
+
+			UsageProcessor usageProcessor = makeUsageProcessor(server, cryptoFn, monthGetter, dayGetter);
 			return chain(new FavIconProcessor(),//
 					new RigidFileProcessor(fileRoot, "update"),// responds to get or head
 					new LoginProcessor(saltProcessor, loginChecker), //
-					new SignupProcessor(signUpChecker, saltProcessor), //
+					new SignupProcessor(signUpChecker, saltProcessor, softwareFmIdGenerator), //
+					usageProcessor,//
 					new MakeSaltForLoginProcessor(saltProcessor),//
 					new ForgottonPasswordProcessor(saltProcessor, forgottonPasswordProcessor),//
 					new RequestEmailSaltProcessor(saltRequester),//
@@ -93,6 +102,19 @@ public interface IProcessCall {
 					new MakeRootProcessor(aboveRepostoryUrlCache, server), //
 					new DeleteProcessor(server),//
 					new PostProcessor(server));// this sweeps up any posts, so ensure that commands appear in chain before it
+		}
+
+		private static UsageProcessor makeUsageProcessor(IGitServer server, IFunction1<Map<String, Object>, String> cryptoFn,Callable<String> monthGetter,Callable<Integer> dayGetter) {
+			IUser user = makeUser(server, cryptoFn);
+			UsageProcessor usageProcessor = new UsageProcessor(server, user, monthGetter, dayGetter);
+			return usageProcessor;
+		}
+
+		public static IUser makeUser(IGitServer server, IFunction1<Map<String, Object>, String> cryptoFn) {
+			IUrlGenerator userGenerator = IUrlGenerator.Utils.generator("{0}/{1}/{2}", ServerConstants.softwareFmIdKey);
+			IUrlGenerator projectDetailGenerator = IUrlGenerator.Utils.generator("{0}/{1}/{2}/projects", ServerConstants.softwareFmIdKey);
+			IUser user = IUser.Utils.makeUserDetails(server, userGenerator, projectDetailGenerator, cryptoFn, "g", "a");
+			return user;
 		}
 	}
 }

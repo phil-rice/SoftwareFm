@@ -27,11 +27,17 @@ public class LoginProcessor extends AbstractCommandProcessor {
 		saltProcessor.invalidateSalt(salt);
 		String email = Strings.nullSafeToString(parameters.get(ServerConstants.emailKey));
 		String passwordHash = Strings.nullSafeToString(parameters.get(ServerConstants.passwordHashKey));
-		String key = checker.login(email, passwordHash);
-		if (key == null)
+		Map<String, String> map = checker.login(email, passwordHash);
+		if (map == null)
 			return IProcessResult.Utils.processError(ServerConstants.notFoundStatusCode, ServerConstants.emailPasswordMismatch);
 		else {
-			String result = Json.toString(Maps.stringObjectMap(ServerConstants.emailKey, email, ServerConstants.cryptoKey, key));
+			if (!map.containsKey(ServerConstants.softwareFmIdKey))
+				throw new IllegalStateException(map.toString());
+			if (!map.containsKey(ServerConstants.cryptoKey))
+				throw new IllegalStateException(map.toString());
+			if (map.size() != 2)
+				throw new IllegalStateException(map.toString());
+			String result = Json.toString(Maps.with(map, ServerConstants.emailKey, email));
 			return IProcessResult.Utils.processString(result);
 		}
 	}

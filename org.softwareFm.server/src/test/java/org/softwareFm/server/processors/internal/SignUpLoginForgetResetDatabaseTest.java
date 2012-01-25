@@ -9,21 +9,21 @@ import org.softwareFm.utilities.crypto.Crypto;
 public class SignUpLoginForgetResetDatabaseTest extends AbstractProcessorDatabaseIntegrationTests {
 	final String email = "someEmail1@a";
 
-	public void testSignupPutsSaltCryptoAndHashInDatabase() {
+	public void testSignupPutsSaltCryptoHashAndSoftwareFmIdInDatabase() {
 		String initialSalt = makeSalt();
-		String crypto1 = signup(email, initialSalt, "hash");
+		String crypto1 = signup(email, initialSalt, "hash", "someNewSoftwareFmId0");
 		String crypto = crypto1;
 
 		assertEquals(1, template.queryForInt("select count(*) from users where email=?", email));
 		assertEquals(initialSalt, template.queryForObject("select salt from users where email=?", String.class, email));
 		assertEquals("hash", template.queryForObject("select password from users where email=?", String.class, email));
 		assertEquals(crypto, template.queryForObject("select crypto from users where email=?", String.class, email));
-
+		assertEquals("someNewSoftwareFmId0", template.queryForObject("select softwarefmid from users where email=?",String.class, email));
 	}
 
 	public void testCannotSignupWithDuplicateEmail() {
 		String salt1 = makeSalt();
-		signup(email, salt1, "hash");
+		signup(email, salt1, "hash", "someNewSoftwareFmId0");
 
 		String salt2 = makeSalt();
 		signup(email, salt2, "hash", IResponseCallback.Utils.checkCallback(ServerConstants.notFoundStatusCode, MessageFormat.format(ServerConstants.existingEmailAddress, email)));
@@ -41,7 +41,7 @@ public class SignUpLoginForgetResetDatabaseTest extends AbstractProcessorDatabas
 
 	private String initialSignup() {
 		String salt1 = makeSalt();
-		String crypto = signup(email, salt1, "hash");
+		String crypto = signup(email, salt1, "hash", "someNewSoftwareFmId0");
 		return crypto;
 	}
 
@@ -55,7 +55,7 @@ public class SignUpLoginForgetResetDatabaseTest extends AbstractProcessorDatabas
 
 	public void testLoginWithWrongHash() {
 		String salt1 = makeSalt();
-		signup(email, salt1, "hash");
+		signup(email, salt1, "hash", "someNewSoftwareFmId0");
 
 		String sessionSalt = makeSalt();
 		String emailSalt = requestEmailSalt(sessionSalt, email);
@@ -64,7 +64,7 @@ public class SignUpLoginForgetResetDatabaseTest extends AbstractProcessorDatabas
 
 	public void testForgotPassword() {
 		String signupSalt = makeSalt();
-		String crypto = signup(email, signupSalt, "startHash");
+		String crypto = signup(email, signupSalt, "startHash", "someNewSoftwareFmId0");
 
 		
 		String sessionSalt1 = makeSalt();
@@ -84,7 +84,7 @@ public class SignUpLoginForgetResetDatabaseTest extends AbstractProcessorDatabas
 
 	public void testForgotPasswordWhenNotSetup() {
 		String salt1 = makeSalt();
-		signup(email, salt1, "hash");
+		signup(email, salt1, "hash", "someNewSoftwareFmId0");
 
 		String resetKey = "someFakeKey";
 		resetPassword(resetKey, IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, ServerConstants.failedToResetPasswordHtml));
@@ -93,7 +93,7 @@ public class SignUpLoginForgetResetDatabaseTest extends AbstractProcessorDatabas
 
 	public void testForgotPasswordAndUseLinkTwice() {
 		String salt1 = makeSalt();
-		signup(email, salt1, "hash");
+		signup(email, salt1, "hash", "someNewSoftwareFmId0");
 		String resetKey = getPasswordResetKeyFor(email);
 		resetPasswordAndGetHash(salt1, resetKey);
 		resetPassword(resetKey, IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, ServerConstants.failedToResetPasswordHtml));

@@ -18,7 +18,7 @@ public class EmailSaltRequester extends AbstractLoginDataAccessor implements IEm
 
 	@Override
 	public String getSalt(String email) {
-		return template.query("select * from users where email = ?", new Object[] { email }, new ResultSetExtractor<String>() {
+		return template.query(selectUsersWithEmailSql, new Object[] { email }, new ResultSetExtractor<String>() {
 			@Override
 			public String extractData(ResultSet rs) throws SQLException, DataAccessException {
 				if (rs.next()) {

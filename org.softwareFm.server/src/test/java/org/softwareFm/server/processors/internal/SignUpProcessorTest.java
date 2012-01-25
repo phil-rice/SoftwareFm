@@ -7,6 +7,7 @@ import org.softwareFm.server.ServerConstants;
 import org.softwareFm.server.processors.IProcessResult;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.runnable.Callables;
 
 public class SignUpProcessorTest extends AbstractProcessCallTest<SignupProcessor> {
 
@@ -26,7 +27,7 @@ public class SignUpProcessorTest extends AbstractProcessCallTest<SignupProcessor
 		String salt = saltProcessor.makeSalt();
 		Map<String, Object> data = makeData(salt);
 		IProcessResult result = processor.process(requestLine, data);
-		checkStringResult(result, "someCrypto");
+		checkStringResultWithMap(result, ServerConstants.cryptoKey, "someCrypto", ServerConstants.softwareFmIdKey, "someSoftwareFmId0");
 
 		assertEquals(salt, Lists.getOnly(checker.salts));
 		assertEquals("someEmail", Lists.getOnly(checker.emails));
@@ -52,7 +53,7 @@ public class SignUpProcessorTest extends AbstractProcessCallTest<SignupProcessor
 	protected SignupProcessor makeProcessor() {
 		saltProcessor = new SaltProcessorMock();
 		checker = new SignUpCheckerMock(null, "someCrypto");
-		return new SignupProcessor(checker, saltProcessor);
+		return new SignupProcessor(checker, saltProcessor, Callables.patternWithCount("someSoftwareFmId{0}"));
 	}
 
 }

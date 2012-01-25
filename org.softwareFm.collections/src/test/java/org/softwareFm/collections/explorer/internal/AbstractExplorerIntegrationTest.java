@@ -7,6 +7,7 @@ package org.softwareFm.collections.explorer.internal;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -47,6 +48,7 @@ import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.runnable.Callables;
 import org.softwareFm.utilities.strings.Strings;
 import org.softwareFm.utilities.tests.INeedsServerTest;
 import org.softwareFm.utilities.tests.Tests;
@@ -100,7 +102,6 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 
 	}
 
-
 	protected void displayCardThenViewChild(String url, final String childTitle, final CardHolderAndCardCallback callback) {
 		final AtomicInteger count = new AtomicInteger();
 		displayCard(url, new CardHolderAndCardCallback() {
@@ -129,6 +130,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		});
 		assertEquals(1, count.get());// check the body was called
 	}
+
 	protected ICard doSomethingAndWaitForCardDataStoreToFinish(Runnable something, final CardHolderAndCardCallback cardHolderAndCardCallback) {
 		final CountDownLatch latch = new CountDownLatch(1);
 		final AtomicReference<ICard> cardRef = new AtomicReference<ICard>();
@@ -155,6 +157,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 			throw new RuntimeException(exception.get());
 		return cardRef.get();
 	}
+
 	protected void executeMenuItem(Menu menu, String title) {
 		for (MenuItem item : menu.getItems()) {
 			if (item.getText().equals(title)) {
@@ -209,7 +212,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		// remoteAsUri = new File(root, "remote").getAbsolutePath();
 
 		httpClient = IHttpClient.Utils.builder("localhost", ServerConstants.testPort);
-		repository = GitRepositoryFactory.gitLocalRepositoryFacardWithServer(AbstractLoginDataAccessor.defaultDataSource(), ServerConstants.testPort, localRoot, remoteRoot);
+		repository = GitRepositoryFactory.gitLocalRepositoryFacardWithServer(AbstractLoginDataAccessor.defaultDataSource(), ServerConstants.testPort, localRoot, remoteRoot, Functions.<Map<String, Object>, String> expectionIfCalled(), Callables.<String> exceptionIfCalled(), Callables.<Integer> exceptionIfCalled(), Callables.<String> exceptionIfCalled());
 
 		try {
 			cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().//

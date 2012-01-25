@@ -19,9 +19,9 @@ public class PasswordResetter extends AbstractLoginDataAccessor implements IPass
 	public String reset(String magicString) {
 		String newPassword = UUID.randomUUID().toString();
 		try {
-			String salt = template.queryForObject("select salt from users where passwordResetKey=?", String.class, magicString);
+			String salt = template.queryForObject(selectSaltFromUserWithPasswordResetKeySql, String.class, magicString);
 			String newDigest = Crypto.digest(salt, newPassword);
-			template.update("update users set passwordResetKey=null,password=? where passwordResetKey=?", newDigest, magicString);
+			template.update(updatePasswordAndClearResetKeySql, newDigest, magicString);
 			return newPassword;
 		} catch (DataAccessException e) {
 			return null;

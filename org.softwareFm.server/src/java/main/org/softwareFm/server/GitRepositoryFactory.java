@@ -1,6 +1,8 @@
 package org.softwareFm.server;
 
 import java.io.File;
+import java.util.Map;
+import java.util.concurrent.Callable;
 
 import javax.sql.DataSource;
 
@@ -10,6 +12,7 @@ import org.softwareFm.server.internal.GitRepositoryFacard;
 import org.softwareFm.server.internal.ImportGitRepositoryFacard;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.services.IServiceExecutor;
 
 public class GitRepositoryFactory {
@@ -21,9 +24,9 @@ public class GitRepositoryFactory {
 
 	}
 
-	public static IRepositoryFacard gitLocalRepositoryFacardWithServer(DataSource dataSource, int port, File localRoot, File remoteRoot) {
+	public static IRepositoryFacard gitLocalRepositoryFacardWithServer(DataSource dataSource, int port, File localRoot, File remoteRoot, IFunction1<Map<String, Object>, String> cryptoFn, Callable<String> monthGetter, Callable<Integer> dayGetter, Callable<String> softwareFmIdGenerator) { 
 		IGitServer remoteGitServer = IGitServer.Utils.gitServer(remoteRoot, "not used");
-		final ISoftwareFmServer server = ISoftwareFmServer.Utils.server(port, 10, IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, remoteGitServer, remoteRoot), ICallback.Utils.sysErrCallback());
+		final ISoftwareFmServer server = ISoftwareFmServer.Utils.server(port, 10, IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, remoteGitServer, cryptoFn, remoteRoot, monthGetter, dayGetter, softwareFmIdGenerator), ICallback.Utils.sysErrCallback());
 		IHttpClient client = IHttpClient.Utils.builder("localhost", port);
 		return gitRepositoryFacard(client, localRoot, remoteRoot.getAbsolutePath(), new Runnable() {
 			@Override

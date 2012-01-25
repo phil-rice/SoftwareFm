@@ -3,6 +3,7 @@ package org.softwareFm.server.processors.internal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.MessageFormat;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import junit.framework.TestCase;
@@ -26,9 +27,9 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends TestCase impl
 	protected JdbcTemplate template;
 	private MailerMock mailerMock;
 
-	protected String checkSignup(final String email, final String salt, final String hash) {
+	protected String checkSignup(final String email, final String salt, final String hash, final String softwareFmId) {
 		int initial = findUsersSize();
-		SignUpResult signUp = signupChecker.signUp(email, salt, hash);
+		SignUpResult signUp = signupChecker.signUp(email, salt, hash, softwareFmId);
 		assertNull(signUp.errorMessage);
 		final String crypto = signUp.crypto;
 		final AtomicInteger count = new AtomicInteger();
@@ -39,6 +40,7 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends TestCase impl
 				assertEquals(salt, rs.getString("salt"));
 				assertEquals(hash, rs.getString("password"));
 				assertEquals(crypto, rs.getString("crypto"));
+				assertEquals(softwareFmId, rs.getString("softwareFmId"));
 				count.incrementAndGet();
 			}
 		});
@@ -52,9 +54,9 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends TestCase impl
 		return template.queryForInt("select count(*) from users");
 	}
 
-	protected void checkNotAdded(final String email, final String salt, final String hash) {
+	protected void checkNotAdded(final String email, final String salt, final String hash, final String softwareFmId) {
 		int initial = findUsersSize();
-		SignUpResult signUp = signupChecker.signUp(email, salt, hash);
+		SignUpResult signUp = signupChecker.signUp(email, salt, hash, softwareFmId);
 		assertNull(signUp.crypto);
 		assertEquals(MessageFormat.format(ServerConstants.existingEmailAddress, email), signUp.errorMessage);
 		int finalCount = findUsersSize();
@@ -80,19 +82,20 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends TestCase impl
 		dataSource.close();
 	}
 
-	protected void checkLogin(String email, String hash, String crypto) {
+	protected void checkLogin(String email, String hash, String crypto, String expectedSfmId) {
 		int count = findUsersSize();
 
-		String key = loginChecker.login(email, hash);
+		Map<String, String> map = loginChecker.login(email, hash);
 
-		assertEquals(crypto, key);
+		assertEquals(crypto, map.get(ServerConstants.cryptoKey));
+		assertEquals(expectedSfmId, map.get(ServerConstants.softwareFmIdKey));
 		assertEquals(count, findUsersSize());
 	}
 
 	protected void checkCannotLogin(String email, String hash) {
 		int count = findUsersSize();
-		String key = loginChecker.login(email, hash);
-		assertNull(key);
+		Map<String, String> map = loginChecker.login(email, hash);
+		assertNull(map);
 		assertEquals(count, findUsersSize());
 	}
 

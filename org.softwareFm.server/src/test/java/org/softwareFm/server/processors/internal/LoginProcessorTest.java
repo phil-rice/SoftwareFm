@@ -14,7 +14,7 @@ public class LoginProcessorTest extends AbstractProcessCallTest<LoginProcessor> 
 
 	private final SaltProcessorMock saltProcessor = new SaltProcessorMock();
 	private final RequestLine requestLine = makeRequestLine(ServerConstants.POST, url);
-	private final LoginCheckerMock checker = new LoginCheckerMock("someCrypto");
+	private final LoginCheckerMock checker = new LoginCheckerMock("someCrypto", "checkSoftwareFmId");
 	private final Map<String, Object> data = Maps.stringObjectMap(ServerConstants.emailKey, "someEmail", ServerConstants.passwordHashKey, "someHash");
 
 	public void testIgnoresEverythingExceptGetWithPrefix() {
@@ -26,13 +26,13 @@ public class LoginProcessorTest extends AbstractProcessCallTest<LoginProcessor> 
 
 	public void testLogsIn() {
 		IProcessResult processResult = processor.process(requestLine, data);
-		checkStringResultWithMap(processResult, ServerConstants.cryptoKey, "someCrypto", ServerConstants.emailKey, "someEmail");
+		checkStringResultWithMap(processResult, ServerConstants.cryptoKey, "someCrypto", ServerConstants.emailKey, "someEmail", ServerConstants.softwareFmIdKey, "checkSoftwareFmId");
 		assertEquals("someEmail", Lists.getOnly(checker.emails));
 		assertEquals("someHash", Lists.getOnly(checker.passwordHashes));
 	}
 	
 	public void testDoesntLogInIfCheckerRespondsBadly(){
-		checker.setCrypto(null);
+		checker.setResultToNull();
 		IProcessResult processResult = processor.process(requestLine, data);
 		checkErrorResult(processResult, ServerConstants.notFoundStatusCode, ServerConstants.emailPasswordMismatch,ServerConstants.emailPasswordMismatch);
 		assertEquals("someEmail", Lists.getOnly(checker.emails));

@@ -12,6 +12,7 @@ import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.crypto.Crypto;
 import org.softwareFm.utilities.json.Json;
+import org.softwareFm.utilities.runnable.Callables;
 import org.softwareFm.utilities.services.IServiceExecutor;
 
 public interface ILoginStrategy {
@@ -50,10 +51,18 @@ public interface ILoginStrategy {
 												display.asyncExec(new Runnable() {
 													@Override
 													public void run() {
-														if (response.statusCode() == ServerConstants.okStatusCode)
-															callback.signedUp(email, response.asString());
-														else
-															callback.failed(email, response.asString());
+														String string = response.asString();
+														if (response.statusCode() == ServerConstants.okStatusCode) {
+															Map<String, Object> map = Json.mapFromString(string);
+															String crypto = (String) map.get(ServerConstants.cryptoKey);
+															String softwareFmId = (String) map.get(ServerConstants.softwareFmIdKey);
+															if (crypto == null)
+																throw new NullPointerException(string);
+															if (softwareFmId == null)
+																throw new NullPointerException(string);
+															callback.signedUp(email, crypto, softwareFmId);
+														} else
+															callback.failed(email, string);
 													}
 												});
 											}
@@ -117,7 +126,8 @@ public interface ILoginStrategy {
 													if (response.statusCode() == ServerConstants.okStatusCode) {
 														Map<String, Object> map = Json.mapFromString(response.asString());
 														String crypto = (String) map.get(ServerConstants.cryptoKey);
-														callback.loggedIn(email, crypto);
+														String softwareFmId = (String) map.get(ServerConstants.softwareFmIdKey);
+														callback.loggedIn(email, crypto, softwareFmId);
 													} else
 														callback.failedToLogin(email, response.asString());
 												}
@@ -212,7 +222,8 @@ public interface ILoginStrategy {
 									}).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
 							return null;
 						}
-					});				}
+					});
+				}
 			};
 		}
 
@@ -290,6 +301,7 @@ public interface ILoginStrategy {
 
 		public static ILoginStrategy sysoutLoginStrategy() {
 			return new ILoginStrategy() {
+				Callable<String> softwareFmIdGenerator = Callables.patternWithCount("softwareFmid{0}");
 
 				@Override
 				public void forgotPassword(String email, String sessionSalt, IForgotPasswordCallback callback) {
@@ -301,7 +313,7 @@ public interface ILoginStrategy {
 				public void login(String email, String sessionSalt, String emailSalt, String password, ILoginCallback callback) {
 					String key = Crypto.makeKey();
 					System.out.println("Sending 'login' to server, would have received key: " + key);
-					callback.loggedIn(email, key);
+					callback.loggedIn(email, key, Callables.call(softwareFmIdGenerator));
 				}
 
 				@Override
@@ -313,7 +325,7 @@ public interface ILoginStrategy {
 				@Override
 				public void signup(String email, String sessionSalt, String passwordHash, ISignUpCallback callback) {
 					System.out.println("Signing up: " + email + ", " + sessionSalt + ", " + passwordHash);
-					callback.signedUp(email, Crypto.makeKey());
+					callback.signedUp(email, Crypto.makeKey(), Callables.call(softwareFmIdGenerator));
 				}
 
 				@Override
@@ -324,9 +336,9 @@ public interface ILoginStrategy {
 
 				@Override
 				public void changePassword(String email, String oldHash, String newHash, IChangePasswordCallback callback) {
-					System.out.println("changePassword: " + email + ", " + oldHash +", " + newHash);
+					System.out.println("changePassword: " + email + ", " + oldHash + ", " + newHash);
 					callback.changedPassword(email);
-					
+
 				}
 			};
 

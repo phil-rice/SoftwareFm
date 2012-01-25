@@ -2,6 +2,7 @@ package org.softwareFm.server.internal;
 
 import java.io.File;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -22,8 +23,11 @@ import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.utilities.functions.Functions;
+import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.runnable.Callables;
 import org.softwareFm.utilities.tests.IIntegrationTest;
 import org.softwareFm.utilities.tests.Tests;
 import org.softwareFm.utilities.url.Urls;
@@ -288,7 +292,10 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 		remoteGitServer = IGitServer.Utils.gitServer(remoteRoot, "not used");
 		localGitServer = IGitServer.Utils.gitServer(localRoot, remoteRoot.getAbsolutePath());
 		dataSource = AbstractLoginDataAccessor.defaultDataSource();
-		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, remoteGitServer, remoteRoot);
+		IFunction1<Map<String, Object>, String> cryptoFn = Functions.expectionIfCalled();
+		Callable<String> monthGetter = Callables.exceptionIfCalled();
+		Callable<Integer> dayGetter = Callables.exceptionIfCalled();
+		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, remoteGitServer, cryptoFn, remoteRoot, monthGetter, dayGetter, Callables.<String>exceptionIfCalled());
 		server = ISoftwareFmServer.Utils.server(ServerConstants.testPort, 4, processCall, ICallback.Utils.<Throwable> memory());
 		repositoryFacard = new GitRepositoryFacard(getHttpClient(), getServiceExecutor(), localGitServer, ServerConstants.staleCacheTimeForTests, ServerConstants.staleCacheTimeForTests);
 	}

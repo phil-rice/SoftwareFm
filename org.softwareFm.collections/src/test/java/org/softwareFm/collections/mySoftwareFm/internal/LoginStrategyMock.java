@@ -29,6 +29,7 @@ public class LoginStrategyMock implements ILoginStrategy {
 
 	private boolean ok;
 	public final String cryptoKey = Crypto.makeKey();
+	public final String softwareFmId = "someSoftwareFmId";
 	private final String sessionSalt = UUID.randomUUID().toString();
 	private final String emailSalt = UUID.randomUUID().toString();
 	private boolean emailSaltOk;
@@ -55,7 +56,7 @@ public class LoginStrategyMock implements ILoginStrategy {
 		loginEmail.add(email);
 		loginPassword.add(password);
 		if (ok)
-			callback.loggedIn(email, cryptoKey);
+			callback.loggedIn(email, cryptoKey, softwareFmId);
 		else
 			callback.failedToLogin(email, "someMessage");
 	}
@@ -75,7 +76,7 @@ public class LoginStrategyMock implements ILoginStrategy {
 		signupSalt.add(sessionSalt);
 		signupPassword.add(passwordHash);
 		if (ok)
-			callback.signedUp(email, cryptoKey);
+			callback.signedUp(email, cryptoKey, softwareFmId);
 		else
 			callback.failed(email, "someMessage");
 	}

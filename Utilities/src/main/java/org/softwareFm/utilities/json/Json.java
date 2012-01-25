@@ -14,12 +14,20 @@ import org.json.simple.parser.ParseException;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.constants.UtilityConstants;
 import org.softwareFm.utilities.constants.UtilityMessages;
+import org.softwareFm.utilities.crypto.Crypto;
 import org.softwareFm.utilities.maps.Maps;
 
 public class Json {
 
 	public static Map<String, Object> mapFromString(String jsonObject) {
 		return makeMap(jsonObject);
+	}
+	
+	public static Map<String,Object> mapFromEncryptedFile(File file, String key){
+		String text = Files.getText(file);
+		String decrypted = Crypto.aesDecrypt(key, text);
+		Map<String, Object> result = mapFromString(decrypted);
+		return result;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
