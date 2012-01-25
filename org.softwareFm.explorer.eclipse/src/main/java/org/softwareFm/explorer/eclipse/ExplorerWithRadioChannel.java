@@ -32,6 +32,7 @@ import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IExplorerListener;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
+import org.softwareFm.collections.explorer.IUsageStrategy;
 import org.softwareFm.collections.explorer.SnippetFeedConfigurator;
 import org.softwareFm.collections.menu.ICardMenuItemHandler;
 import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
@@ -39,7 +40,6 @@ import org.softwareFm.display.browser.IBrowserConfigurator;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Buttons;
 import org.softwareFm.display.swt.Swts.Grid;
-import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
@@ -54,7 +54,7 @@ public class ExplorerWithRadioChannel {
 		final File localRoot = new File(home, ".sfm");
 		boolean local = true;
 		String server = local ? "localhost" : EclipseConstants.softwareFmServerUrl;
-//		String prefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : EclipseConstants.gitProtocolAndGitServerName;
+		// String prefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : EclipseConstants.gitProtocolAndGitServerName;
 		String prefix = "git://localhost:7777/";
 		int port = local ? 8080 : 80;
 		final IHttpClient client = IHttpClient.Utils.builder(server, port);
@@ -63,8 +63,7 @@ public class ExplorerWithRadioChannel {
 		try {
 			final List<String> rootUrl = Arrays.asList("/softwareFm/data", "/softwareFm/snippet");
 			final String firstUrl = "/softwareFm/data/activemq/activemq/artifact/activemq-axis";
-
-			Show.display(ExplorerWithRadioChannel.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+			Swts.Show.display(ExplorerWithRadioChannel.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 				@Override
 				public Composite apply(Composite from) throws Exception {
 					Composite explorerAndButton = Swts.newComposite(from, SWT.NULL, "ExplorerAndButton");
@@ -78,7 +77,8 @@ public class ExplorerWithRadioChannel {
 					IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(explorerAndButton);
 					IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardDataStore);
 					ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(from.getDisplay(), service, client);
-					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, playListGetter, service, loginStrategy );
+					IUsageStrategy usageStrategy = IUsageStrategy.Utils.usage(client);
+					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, playListGetter, service, loginStrategy, usageStrategy);
 
 					ICardMenuItemHandler.Utils.addSoftwareFmMenuItemHandlers(explorer);
 					IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
@@ -160,6 +160,12 @@ public class ExplorerWithRadioChannel {
 						@Override
 						public void run() {
 							explorer.showMySoftwareFm();
+						}
+					});
+					Buttons.makePushButton(buttonPanel, null, "usage", false, new Runnable() {
+						@Override
+						public void run() {
+							explorer.usage("someGroupId", "someArtifactId");
 						}
 					});
 					Swts.Row.setRowDataFor(100, 20, buttonPanel.getChildren());

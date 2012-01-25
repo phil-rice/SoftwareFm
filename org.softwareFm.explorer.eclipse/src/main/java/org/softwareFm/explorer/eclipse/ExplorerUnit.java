@@ -24,6 +24,7 @@ import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
+import org.softwareFm.collections.explorer.IUsageStrategy;
 import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.display.browser.BrowserFeedConfigurator;
 import org.softwareFm.display.browser.RssFeedConfigurator;
@@ -74,7 +75,8 @@ public class ExplorerUnit {
 					final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(parent.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 					IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(parent);
 					IPlayListGetter noPlayListGetter = IPlayListGetter.Utils.noPlayListGetter();
-					IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, Arrays.asList(rootUrl), noPlayListGetter, service,  ILoginStrategy.Utils.noLoginStrategy());
+					IUsageStrategy usageStrategy = IUsageStrategy.Utils.noUsageStrategy();
+					IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, Arrays.asList(rootUrl), noPlayListGetter, service,  ILoginStrategy.Utils.noLoginStrategy(), usageStrategy);
 					new BrowserFeedConfigurator().configure(explorer);
 					new RssFeedConfigurator().configure(explorer);
 					new TweetFeedConfigurator().configure(explorer);

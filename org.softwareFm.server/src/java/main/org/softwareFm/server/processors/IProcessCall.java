@@ -70,25 +70,26 @@ public interface IProcessCall {
 			return "<" + requestLine + ", " + parameters + ">";
 		}
 
-		public static IProcessCall softwareFmProcessCallWithoutMail(DataSource dataSource, IGitServer server, IFunction1<Map<String, Object>, String> cryptoFn, File fileRoot,Callable<String> monthGetter,Callable<Integer> dayGetter, Callable<String> softwareFmIdGenerator) {
-			return softwareFmProcessCall(dataSource, server, cryptoFn, fileRoot, IMailer.Utils.noMailer(), monthGetter, dayGetter, softwareFmIdGenerator);
+		public static IProcessCall softwareFmProcessCallWithoutMail(DataSource dataSource, IGitServer server, IFunction1<Map<String, Object>, String> cryptoFn, Callable<String> cryptoGenerator, File fileRoot, Callable<String> monthGetter, Callable<Integer> dayGetter, Callable<String> softwareFmIdGenerator) {
+			return softwareFmProcessCall(dataSource, server, cryptoFn, cryptoGenerator, fileRoot, IMailer.Utils.noMailer(), monthGetter, dayGetter, softwareFmIdGenerator);
 		}
 
-		public static IProcessCall softwareFmProcessCall(DataSource dataSource, IGitServer server, IFunction1<Map<String, Object>, String> cryptoFn, File fileRoot, IMailer mailer,Callable<String> monthGetter,Callable<Integer> dayGetter, Callable<String> softwareFmIdGenerator) {
+		public static IProcessCall softwareFmProcessCall(DataSource dataSource, IGitServer server, IFunction1<Map<String, Object>, String> cryptoFn, Callable<String> cryptoGenerator, File fileRoot, IMailer mailer, Callable<String> monthGetter, Callable<Integer> dayGetter, Callable<String> softwareFmIdGenerator) {
 			UrlCache<String> aboveRepostoryUrlCache = new UrlCache<String>();
 			SaltProcessor saltProcessor = new SaltProcessor();
 			LoginChecker loginChecker = new LoginChecker(dataSource);
-			SignUpChecker signUpChecker = new SignUpChecker(dataSource);
+			SignUpChecker signUpChecker = new SignUpChecker(dataSource, cryptoGenerator);
 			ForgottonPasswordMailer forgottonPasswordProcessor = new ForgottonPasswordMailer(dataSource, mailer);
 			IPasswordResetter resetter = new PasswordResetter(dataSource);
 			EmailSaltRequester saltRequester = new EmailSaltRequester(dataSource);
 			IPasswordChanger passwordChanger = IPasswordChanger.Utils.databasePasswordChanger(dataSource);
-
-			UsageProcessor usageProcessor = makeUsageProcessor(server, cryptoFn, monthGetter, dayGetter);
+			IUser user = makeUser(server, cryptoFn);
+			UsageProcessor usageProcessor1 = new UsageProcessor(server, user, monthGetter, dayGetter);
+			UsageProcessor usageProcessor = usageProcessor1;
 			return chain(new FavIconProcessor(),//
 					new RigidFileProcessor(fileRoot, "update"),// responds to get or head
 					new LoginProcessor(saltProcessor, loginChecker), //
-					new SignupProcessor(signUpChecker, saltProcessor, softwareFmIdGenerator), //
+					new SignupProcessor(signUpChecker, saltProcessor, softwareFmIdGenerator, user), //
 					usageProcessor,//
 					new MakeSaltForLoginProcessor(saltProcessor),//
 					new ForgottonPasswordProcessor(saltProcessor, forgottonPasswordProcessor),//
@@ -104,15 +105,9 @@ public interface IProcessCall {
 					new PostProcessor(server));// this sweeps up any posts, so ensure that commands appear in chain before it
 		}
 
-		private static UsageProcessor makeUsageProcessor(IGitServer server, IFunction1<Map<String, Object>, String> cryptoFn,Callable<String> monthGetter,Callable<Integer> dayGetter) {
-			IUser user = makeUser(server, cryptoFn);
-			UsageProcessor usageProcessor = new UsageProcessor(server, user, monthGetter, dayGetter);
-			return usageProcessor;
-		}
-
 		public static IUser makeUser(IGitServer server, IFunction1<Map<String, Object>, String> cryptoFn) {
-			IUrlGenerator userGenerator = IUrlGenerator.Utils.generator("{0}/{1}/{2}", ServerConstants.softwareFmIdKey);
-			IUrlGenerator projectDetailGenerator = IUrlGenerator.Utils.generator("{0}/{1}/{2}/projects", ServerConstants.softwareFmIdKey);
+			IUrlGenerator userGenerator = IUrlGenerator.Utils.generator("users/{0}/{1}/{2}", ServerConstants.softwareFmIdKey);
+			IUrlGenerator projectDetailGenerator = IUrlGenerator.Utils.generator("users/{0}/{1}/{2}/projects", ServerConstants.softwareFmIdKey);
 			IUser user = IUser.Utils.makeUserDetails(server, userGenerator, projectDetailGenerator, cryptoFn, "g", "a");
 			return user;
 		}

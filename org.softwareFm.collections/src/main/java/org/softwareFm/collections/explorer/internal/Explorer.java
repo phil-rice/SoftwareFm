@@ -58,6 +58,7 @@ import org.softwareFm.collections.explorer.BrowserAndNavBar;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IExplorerListener;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
+import org.softwareFm.collections.explorer.IUsageStrategy;
 import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.collections.unrecognisedJar.GroupidArtifactVersion;
 import org.softwareFm.collections.unrecognisedJar.GuessArtifactAndVersionDetails;
@@ -94,7 +95,7 @@ public class Explorer implements IExplorer {
 	private Comments comments;
 	private MySoftwareFm mySoftwareFm;
 
-	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy) {
+	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, IUsageStrategy usageStrategy) {
 		this.cardConfig = cardConfig;
 		this.masterDetailSocial = masterDetailSocial;
 		callbackToGotoUrlAndUpdateDetails = new ICallback<String>() {
@@ -1061,5 +1062,9 @@ public class Explorer implements IExplorer {
 		String text = "This is a debug screen.\nCount: " + count.incrementAndGet() + "\n" + ripperResult;
 		masterDetailSocial.createAndShowMaster(Swts.styledTextFn(text, SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL));
 
+	}
+
+	@Override
+	public void usage(String groupId, String artifactId) {
 	}
 }

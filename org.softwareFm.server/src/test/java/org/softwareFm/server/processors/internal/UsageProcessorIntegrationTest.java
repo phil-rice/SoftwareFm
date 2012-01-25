@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.processors.AbstractProcessorDatabaseIntegrationTests;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.user.IUser;
 import org.softwareFm.utilities.json.Json;
@@ -67,7 +68,7 @@ public class UsageProcessorIntegrationTest extends AbstractProcessorDatabaseInte
 		super.setUp();
 		user = IProcessCall.Utils.makeUser(gitServer, cryptoFn);
 		userDetails = Maps.stringObjectMap(ServerConstants.softwareFmIdKey, "someSoftwareFmId");
-		userFile = new File(remoteRoot, "so/me/someSoftwareFmId/" + ServerConstants.dataFileName);
-		projectFile = new File(remoteRoot, "so/me/someSoftwareFmId/projects/someMonth");
+		userFile = new File(remoteRoot, "users/so/me/someSoftwareFmId/" + ServerConstants.dataFileName);
+		projectFile = new File(remoteRoot, "users/so/me/someSoftwareFmId/projects/someMonth");
 	}
 }

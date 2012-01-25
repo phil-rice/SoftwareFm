@@ -70,10 +70,13 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 
 	void showMySoftwareFm();
 
+	void usage(String groupId, String artifactId);
+
+	
 	public static class Utils {
 
-		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, List<String> rootUrls, IPlayListGetter playListGetter, IServiceExecutor service, ILoginStrategy loginStrategy) {
-			return new Explorer(cardConfig, rootUrls, masterDetailSocial, service, playListGetter, loginStrategy);
+		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, List<String> rootUrls, IPlayListGetter playListGetter, IServiceExecutor service, ILoginStrategy loginStrategy, IUsageStrategy usageStrategy) {
+			return new Explorer(cardConfig, rootUrls, masterDetailSocial, service, playListGetter, loginStrategy, usageStrategy);
 		}
 	}
 

@@ -1,5 +1,6 @@
 package org.softwareFm.collections.explorer.internal;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -23,17 +24,21 @@ import org.softwareFm.display.swt.Swts;
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.httpClient.requests.MemoryResponseCallback;
+import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ISoftwareFmServer;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.crypto.Crypto;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.runnable.Callables;
 import org.softwareFm.utilities.tests.IIntegrationTest;
+import org.softwareFm.utilities.tests.Tests;
 import org.softwareFm.utilities.url.Urls;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -49,24 +54,9 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 	private final String email = "a.b@c.com";
 	private final String password = "pass1";
 	private CardConfig cardConfig;
-
-	public void testSignupThenLogin() {
-		signUp(email, password);
-		String crypto = template.queryForObject("select crypto from users", String.class);
-		String softwareFmId = template.queryForObject("select softwarefmid from users", String.class);
-		mySoftwareFm.logout();
-
-		mySoftwareFm.start();
-		assertNull(mySoftwareFm.crypto);
-		displayUntilValueComposite("Email", "Password");
-		setValues(email, password);
-		assertTrue(getOkCancel().isOkEnabled());
-		getOkCancel().ok();
-		displayUntilText();
-		assertEquals(crypto, mySoftwareFm.crypto);
-		assertEquals(email, mySoftwareFm.email);
-		assertEquals(softwareFmId, mySoftwareFm.softwareFmId);
-	}
+	private String key;
+	private File root;
+	private File userFile;
 
 	public void testSignup() {
 		String signUpSalt = signUp(email, password);
@@ -84,6 +74,27 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		assertEquals(crypto, mySoftwareFm.crypto);
 		assertEquals(softwareFmId, mySoftwareFm.softwareFmId);
 		assertEquals(email, mySoftwareFm.email);
+		
+		assertTrue(userFile.exists());
+		Json.mapFromEncryptedFile(userFile, crypto);
+	}
+
+	public void testSignupThenLogin() {
+		signUp(email, password);
+		String crypto = template.queryForObject("select crypto from users", String.class);
+		String softwareFmId = template.queryForObject("select softwarefmid from users", String.class);
+		mySoftwareFm.logout();
+
+		mySoftwareFm.start();
+		assertNull(mySoftwareFm.crypto);
+		displayUntilValueComposite("Email", "Password");
+		setValues(email, password);
+		assertTrue(getOkCancel().isOkEnabled());
+		getOkCancel().ok();
+		displayUntilText();
+		assertEquals(crypto, mySoftwareFm.crypto);
+		assertEquals(email, mySoftwareFm.email);
+		assertEquals(softwareFmId, mySoftwareFm.softwareFmId);
 	}
 
 	public void testStartRequestsSalt() {
@@ -315,11 +326,15 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 	protected void setUp() throws Exception {
 		super.setUp();
 		dataSource = AbstractLoginDataAccessor.defaultDataSource();
-		IFunction1<Map<String, Object>, String> cryptoFn = Functions.expectionIfCalled();
-		Callable<String> monthGetter = Callables.exceptionIfCalled();
-		Callable<Integer> dayGetter = Callables.exceptionIfCalled();
+		Callable<String> monthGetter = Callables.value("someMonth");
+		Callable<Integer> dayGetter = Callables.value(3);
 		Callable<String> softwareFmIdGenerator = Callables.patternWithCount("someNewSoftwareFmId{0}");
-		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, null, cryptoFn, null, monthGetter, dayGetter, softwareFmIdGenerator), ICallback.Utils.rethrow());
+		key = Crypto.makeKey();
+		IFunction1<Map<String, Object>, String> cryptoFn = Functions.constant(key);
+		Callable<String> cryptoGenerator = Callables.value(key);
+		root = Tests.makeTempDirectory(getClass().getSimpleName());
+		IGitServer gitServer = IGitServer.Utils.gitServer(root, "not used");
+		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, gitServer, cryptoFn, cryptoGenerator, null, monthGetter, dayGetter, softwareFmIdGenerator), ICallback.Utils.rethrow());
 		client = IHttpClient.Utils.builder("localhost", 8080);
 		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(display, service, client);
 		cardConfig = ICardConfigurator.Utils.cardConfigForTests(display);
@@ -327,6 +342,8 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		template = new JdbcTemplate(dataSource);
 		template.update("truncate users");
 		softwareFmComposite = mySoftwareFm.getComposite();
+
+		userFile = new File(root, Urls.compose("users/so/me/someNewSoftwareFmId0", ServerConstants.dataFileName));
 	}
 
 	@Override
@@ -336,5 +353,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		client.shutdown();
 		dataSource.close();
 		cardConfig.dispose();
+		if (root.exists())
+			assertTrue(Files.deleteDirectory(root));
 	}
 }

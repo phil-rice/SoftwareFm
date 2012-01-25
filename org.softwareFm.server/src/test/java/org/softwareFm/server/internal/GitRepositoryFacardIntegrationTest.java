@@ -14,6 +14,7 @@ import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.repositoryFacard.CheckRepositoryFacardCallback;
 import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
 import org.softwareFm.server.GetResult;
+import org.softwareFm.server.GitTest;
 import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ISoftwareFmServer;
@@ -295,7 +296,8 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 		IFunction1<Map<String, Object>, String> cryptoFn = Functions.expectionIfCalled();
 		Callable<String> monthGetter = Callables.exceptionIfCalled();
 		Callable<Integer> dayGetter = Callables.exceptionIfCalled();
-		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, remoteGitServer, cryptoFn, remoteRoot, monthGetter, dayGetter, Callables.<String>exceptionIfCalled());
+		Callable<String> cryptoGenerator= Callables.exceptionIfCalled();
+		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, remoteGitServer, cryptoFn, cryptoGenerator, remoteRoot, monthGetter, dayGetter, Callables.<String>exceptionIfCalled());
 		server = ISoftwareFmServer.Utils.server(ServerConstants.testPort, 4, processCall, ICallback.Utils.<Throwable> memory());
 		repositoryFacard = new GitRepositoryFacard(getHttpClient(), getServiceExecutor(), localGitServer, ServerConstants.staleCacheTimeForTests, ServerConstants.staleCacheTimeForTests);
 	}

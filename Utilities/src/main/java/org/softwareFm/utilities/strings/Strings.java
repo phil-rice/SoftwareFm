@@ -76,7 +76,7 @@ public class Strings {
 			if (nibble > 9)
 				nibble = nibble - charOffset;
 			if (nibble < 0 || nibble > 15)
-				throw new IllegalArgumentException();
+				throw new IllegalArgumentException(hexCoded);
 			switch (i % 2) {
 			case 0:
 				last = nibble;

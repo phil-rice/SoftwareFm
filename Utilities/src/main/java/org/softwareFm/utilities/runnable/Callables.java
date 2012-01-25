@@ -1,10 +1,12 @@
 package org.softwareFm.utilities.runnable;
 
 import java.text.MessageFormat;
+import java.util.Calendar;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.softwareFm.utilities.crypto.Crypto;
 import org.softwareFm.utilities.exceptions.WrappedException;
 
 public class Callables {
@@ -62,6 +64,36 @@ public class Callables {
 			@Override
 			public T call() throws Exception {
 				throw new RuntimeException();
+			}
+		};
+	}
+
+	public static Callable<String> monthGetter() {
+		return new Callable<String>() {
+			private final String [] month2String = new String[]{"january", "febuary", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"};
+			@Override
+			public String call() throws Exception {
+				int month = Calendar.getInstance().get(Calendar.MONTH);
+				return month2String[month];
+			}
+		};
+	}
+	public static Callable<Integer> dayGetter() {
+		return new Callable<Integer>(){
+			@Override
+			public Integer call() throws Exception {
+				int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+				return day;
+			}
+			
+		};
+	}
+
+	public static Callable<String> makeCryptoKey() {
+		return new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				return Crypto.makeKey();
 			}
 		};
 	}

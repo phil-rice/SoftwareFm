@@ -201,9 +201,10 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 		IMailer mailer = IMailer.Utils.email("localhost", null, null);
 		BasicDataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
 		IFunction1<Map<String, Object>, String> cryptoFn = new UserCryptoFn(dataSource);
-		Callable<String> monthGetter = Callables.value("january_12");
-		Callable<Integer> dayGetter = Callables.value(3);
-		Callable<String> softwareFmIdGenerator= Callables.uuidGenerator();
-		new SoftwareFmServer(8080, 1000, IProcessCall.Utils.softwareFmProcessCall(dataSource, server, cryptoFn, sfmRoot, mailer, monthGetter, dayGetter, softwareFmIdGenerator), ICallback.Utils.sysErrCallback(), usage);
+		Callable<String> monthGetter = Callables.monthGetter();
+		Callable<Integer> dayGetter = Callables.dayGetter();
+		Callable<String> softwareFmIdGenerator = Callables.uuidGenerator();
+		Callable<String> makeKey = Callables.makeCryptoKey();
+		new SoftwareFmServer(8080, 1000, IProcessCall.Utils.softwareFmProcessCall(dataSource, server, cryptoFn, makeKey, sfmRoot, mailer, monthGetter, dayGetter, softwareFmIdGenerator), ICallback.Utils.sysErrCallback(), usage);
 	}
 }

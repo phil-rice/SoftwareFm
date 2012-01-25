@@ -4,9 +4,9 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Map;
 
+import org.softwareFm.server.GitTest;
 import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.ServerConstants;
-import org.softwareFm.server.internal.GitTest;
 import org.softwareFm.server.internal.LocalGitClient;
 import org.softwareFm.server.user.internal.User;
 import org.softwareFm.utilities.collections.Files;

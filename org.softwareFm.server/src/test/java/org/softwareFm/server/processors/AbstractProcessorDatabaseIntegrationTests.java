@@ -1,4 +1,4 @@
-package org.softwareFm.server.processors.internal;
+package org.softwareFm.server.processors;
 
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -6,8 +6,7 @@ import java.util.concurrent.Callable;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ISoftwareFmServer;
-import org.softwareFm.server.processors.AbstractLoginDataAccessor;
-import org.softwareFm.server.processors.IProcessCall;
+import org.softwareFm.server.processors.internal.MailerMock;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.crypto.Crypto;
 import org.softwareFm.utilities.functions.Functions;
@@ -24,6 +23,7 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 	protected IFunction1<Map<String, Object>, String> cryptoFn;
 	protected Callable<String> monthGetter;
 	protected Callable<Integer> dayGetter;
+	private Callable<String> cryptoGenerator;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -33,10 +33,11 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 		gitServer = IGitServer.Utils.gitServer(remoteRoot, "not used");
 		key = Crypto.makeKey();
 		cryptoFn = Functions.constant(key);
+		cryptoGenerator = Callables.value(key);
 		monthGetter = Callables.value("someMonth");
 		dayGetter = Callables.value(3);
 		 Callable<String> softwareFmIdGenerator= Callables.patternWithCount("someNewSoftwareFmId{0}");
-		IProcessCall result = IProcessCall.Utils.softwareFmProcessCall(dataSource, gitServer, cryptoFn , remoteRoot, mailerMock, monthGetter, dayGetter, softwareFmIdGenerator);
+		IProcessCall result = IProcessCall.Utils.softwareFmProcessCall(dataSource, gitServer, cryptoFn , cryptoGenerator, remoteRoot, mailerMock, monthGetter, dayGetter, softwareFmIdGenerator);
 		template = new JdbcTemplate(dataSource);
 		server = ISoftwareFmServer.Utils.testServerPort(result, ICallback.Utils.rethrow());
 		template.update("truncate users");

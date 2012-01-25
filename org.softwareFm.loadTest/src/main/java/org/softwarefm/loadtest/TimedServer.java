@@ -28,7 +28,8 @@ public class TimedServer {
 		IFunction1<Map<String, Object>, String> cryptoFn = Functions.expectionIfCalled();
 		Callable<String> monthGetter = Callables.exceptionIfCalled();
 		Callable<Integer> dayGetter = Callables.exceptionIfCalled();
-		final IProcessCall rawProcessCall = IProcessCall.Utils.softwareFmProcessCallWithoutMail(AbstractLoginDataAccessor.defaultDataSource(), server, cryptoFn, sfmRoot, monthGetter, dayGetter, Callables.<String> exceptionIfCalled());
+		Callable<String> cryptoGenerator = Callables.exceptionIfCalled();
+		final IProcessCall rawProcessCall = IProcessCall.Utils.softwareFmProcessCallWithoutMail(AbstractLoginDataAccessor.defaultDataSource(), server, cryptoFn, cryptoGenerator, sfmRoot, monthGetter, dayGetter, Callables.<String> exceptionIfCalled());
 		IProcessCall processCall = new IProcessCall() {
 			@Override
 			public IProcessResult process(RequestLine requestLine, Map<String, Object> parameters) {

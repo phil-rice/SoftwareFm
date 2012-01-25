@@ -242,7 +242,8 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		IFunction1<Map<String, Object>, String> cryptoFn = Functions.expectionIfCalled();
 		Callable<String> monthGetter = Callables.exceptionIfCalled();
 		Callable<Integer> dayGetter = Callables.exceptionIfCalled();
-		ISoftwareFmServer server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCallWithoutMail(AbstractLoginDataAccessor.defaultDataSource(), gitServer, cryptoFn, localRoot, monthGetter, dayGetter, Callables.uuidGenerator()), ICallback.Utils.rethrow());
+		Callable<String> cryptoGenerator=Callables.makeCryptoKey();
+		ISoftwareFmServer server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCallWithoutMail(AbstractLoginDataAccessor.defaultDataSource(), gitServer, cryptoFn, cryptoGenerator, localRoot, monthGetter, dayGetter, Callables.uuidGenerator()), ICallback.Utils.rethrow());
 		try {
 			Swts.Show.display(MySoftwareFm.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 				@Override
@@ -277,5 +278,6 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 			children[0].forceFocus();
 		
 	}
+
 
 }

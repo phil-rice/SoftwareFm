@@ -1,4 +1,4 @@
-package org.softwareFm.server.internal;
+package org.softwareFm.server;
 
 import java.io.File;
 import java.util.Map;
@@ -14,6 +14,8 @@ import org.softwareFm.server.IGitFacard;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ILocalGitClient;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.internal.GitFacard;
+import org.softwareFm.server.internal.GitServer;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.json.Json;

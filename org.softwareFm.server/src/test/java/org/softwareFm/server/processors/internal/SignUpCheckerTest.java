@@ -1,5 +1,6 @@
 package org.softwareFm.server.processors.internal;
 
+
 public class SignUpCheckerTest extends AbstractLoginSignupForgotCheckerTest {
 
 	public void testAddingLegalEmails() {
@@ -12,6 +13,5 @@ public class SignUpCheckerTest extends AbstractLoginSignupForgotCheckerTest {
 		checkSignup("email2", "salt2", "hash2", "sfmId2");
 		checkNotAdded("email1", "salt2", "hash2", "sfmId2");
 	}
-
 
 }

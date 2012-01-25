@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.processors.AbstractProcessorDatabaseIntegrationTests;
 import org.softwareFm.utilities.exceptions.WrappedException;
 
 public class ChangePasswordIntegrationTest extends AbstractProcessorDatabaseIntegrationTests {

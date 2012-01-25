@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.processors.AbstractProcessorDatabaseIntegrationTests;
 import org.softwareFm.utilities.crypto.Crypto;
 
 public class SignUpLoginForgetResetDatabaseTest extends AbstractProcessorDatabaseIntegrationTests {

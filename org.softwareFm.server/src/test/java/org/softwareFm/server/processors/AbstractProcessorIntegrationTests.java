@@ -1,12 +1,13 @@
-package org.softwareFm.server.processors.internal;
+package org.softwareFm.server.processors;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.httpClient.requests.MemoryResponseCallback;
 import org.softwareFm.httpClient.response.IResponse;
+import org.softwareFm.server.GitTest;
 import org.softwareFm.server.ServerConstants;
-import org.softwareFm.server.internal.GitTest;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.strings.Strings;
@@ -30,7 +31,7 @@ abstract public class AbstractProcessorIntegrationTests extends GitTest implemen
 					addParam(ServerConstants.emailKey, email).//
 					addParam(ServerConstants.sessionSaltKey, sessionSalt).//
 					addParam(ServerConstants.passwordHashKey, hash).//
-					execute(callback).get();
+					execute(callback).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
@@ -113,7 +114,7 @@ abstract public class AbstractProcessorIntegrationTests extends GitTest implemen
 		}
 	}
 
-	static class StringCallback implements IResponseCallback {
+	public static class StringCallback implements IResponseCallback {
 
 		public String string;
 
@@ -126,7 +127,7 @@ abstract public class AbstractProcessorIntegrationTests extends GitTest implemen
 
 	}
 
-	static class MapCallback implements IResponseCallback {
+	public static class MapCallback implements IResponseCallback {
 
 		public Map<String, Object> map;
 

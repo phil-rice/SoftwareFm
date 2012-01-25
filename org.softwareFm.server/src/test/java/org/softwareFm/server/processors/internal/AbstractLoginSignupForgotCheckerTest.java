@@ -12,6 +12,8 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.SignUpResult;
+import org.softwareFm.utilities.crypto.Crypto;
+import org.softwareFm.utilities.runnable.Callables;
 import org.softwareFm.utilities.tests.IIntegrationTest;
 import org.softwareFm.utilities.tests.Tests;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,6 +28,7 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends TestCase impl
 	private BasicDataSource dataSource;
 	protected JdbcTemplate template;
 	private MailerMock mailerMock;
+	private String key;
 
 	protected String checkSignup(final String email, final String salt, final String hash, final String softwareFmId) {
 		int initial = findUsersSize();
@@ -67,7 +70,8 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends TestCase impl
 	protected void setUp() throws Exception {
 		super.setUp();
 		dataSource = AbstractLoginDataAccessor.defaultDataSource();
-		signupChecker = new SignUpChecker(dataSource);
+		key = Crypto.makeKey();
+		signupChecker = new SignUpChecker(dataSource, Callables.value(key));
 		loginChecker = new LoginChecker(dataSource);
 		mailerMock = new MailerMock();
 		passwordMailer = new ForgottonPasswordMailer(dataSource, mailerMock);// bit of a cheat...won't actually mail

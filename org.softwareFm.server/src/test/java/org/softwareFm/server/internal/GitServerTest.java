@@ -3,6 +3,7 @@ package org.softwareFm.server.internal;
 import java.io.File;
 
 import org.eclipse.jgit.api.Git;
+import org.softwareFm.server.GitTest;
 import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.utilities.collections.Files;

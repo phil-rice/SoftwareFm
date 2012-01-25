@@ -1,5 +1,7 @@
 package org.softwareFm.server.processors.internal;
 
+import org.softwareFm.server.processors.AbstractProcessorDatabaseIntegrationTests;
+
 
 public class EmailSaltRequestIntegrationTest extends AbstractProcessorDatabaseIntegrationTests {
 

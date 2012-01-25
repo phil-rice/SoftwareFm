@@ -32,6 +32,7 @@ import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.collections.explorer.ExplorerAdapter;
 import org.softwareFm.collections.explorer.IExplorer;
+import org.softwareFm.collections.explorer.IUsageStrategy;
 import org.softwareFm.collections.explorer.SnippetFeedConfigurator;
 import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.display.browser.IBrowserConfigurator;
@@ -212,14 +213,15 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		// remoteAsUri = new File(root, "remote").getAbsolutePath();
 
 		httpClient = IHttpClient.Utils.builder("localhost", ServerConstants.testPort);
-		repository = GitRepositoryFactory.gitLocalRepositoryFacardWithServer(AbstractLoginDataAccessor.defaultDataSource(), ServerConstants.testPort, localRoot, remoteRoot, Functions.<Map<String, Object>, String> expectionIfCalled(), Callables.<String> exceptionIfCalled(), Callables.<Integer> exceptionIfCalled(), Callables.<String> exceptionIfCalled());
+		repository = GitRepositoryFactory.gitLocalRepositoryFacardWithServer(AbstractLoginDataAccessor.defaultDataSource(), ServerConstants.testPort, localRoot, remoteRoot, Functions.<Map<String, Object>, String> expectionIfCalled(), Callables.<String> exceptionIfCalled(), Callables.<String> exceptionIfCalled(), Callables.<Integer> exceptionIfCalled(), Callables.<String> exceptionIfCalled());
 
 		try {
 			cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().//
 					configure(display, new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(shell, repository))).//
 					withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap(prefix, "data"));
 			masterDetailSocial = new MasterDetailSocial(shell, SWT.NULL);
-			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, cardConfig, Arrays.asList(rootArtifactUrl, rootSnippetUrl), IPlayListGetter.Utils.noPlayListGetter(), service, ILoginStrategy.Utils.noLoginStrategy());
+			IUsageStrategy usageStrategy = IUsageStrategy.Utils.usage(httpClient, "g", "a");
+			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, cardConfig, Arrays.asList(rootArtifactUrl, rootSnippetUrl), IPlayListGetter.Utils.noPlayListGetter(), service, ILoginStrategy.Utils.noLoginStrategy(), usageStrategy);
 			IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
 			SnippetFeedConfigurator.configure(explorer, cardConfig);
 			httpClient.delete(Urls.compose(rootArtifactUrl, artifactUrl)).execute(IResponseCallback.Utils.noCallback()).get();

@@ -79,6 +79,10 @@ public class User implements IUser {
 	public Map<String, Object> addProjectDetails(Map<String, Object> userDetails, String month, long day, Map<String, Object> initialProjectDetails) {
 		Object groupId = userDetails.get(groupIdKey);
 		String artifactId = (String) userDetails.get(artifactIdKey);
+		if (groupId == null)
+			throw new IllegalArgumentException(userDetails.toString());
+		if (artifactId == null)
+			throw new IllegalArgumentException(userDetails.toString());
 		Map<String, Object> artifactMap = (Map<String, Object>) initialProjectDetails.get(groupId);
 		if (artifactMap == null)
 			return Maps.<String, Object> with(initialProjectDetails, groupId, Maps.stringObjectMap(artifactId, Arrays.asList(day)));
