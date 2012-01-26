@@ -42,6 +42,7 @@ public class UsageStrategy implements IUsageStrategy {
 
 	@Override
 	public Future<?> using(final String softwareFmId, final String groupId, final String artifactId, final IResponseCallback callback) {
+		System.out.println("Usage: " + softwareFmId+", " + groupId +", " + artifactId);
 		return serviceExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {

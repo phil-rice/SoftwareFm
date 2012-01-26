@@ -29,6 +29,7 @@ import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.jdtBinding.api.IBindingRipper;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.server.GitRepositoryFactory;
+import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
@@ -51,7 +52,9 @@ public class Activator extends AbstractUIPlugin {
 	private IServiceExecutor serviceExecutor;
 
 	private IHttpClient httpClient;
-	boolean local = false;
+	boolean local = true;
+
+	private IGitServer gitServer;
 
 	public Activator() {
 	}
@@ -94,12 +97,20 @@ public class Activator extends AbstractUIPlugin {
 
 	public IRepositoryFacard getRepository() {
 		if (repository == null) {
-			File home = new File(System.getProperty("user.home"));
-			final File localRoot = new File(home, ".sfm");
-			String prefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : EclipseConstants.gitProtocolAndGitServerName;
-			repository = GitRepositoryFactory.gitRepositoryFacard(getClient(), localRoot, prefix);
+			IGitServer localGit = getGitServer();
+			repository = GitRepositoryFactory.gitRepositoryFacard(getClient(), getServiceExecutor(), localGit);
 		}
 		return repository;
+	}
+
+	public IGitServer getGitServer() {
+		if (gitServer == null) {
+			File home = new File(System.getProperty("user.home"));
+			final File localRoot = new File(home, ".sfm");
+			String remoteUriPrefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : EclipseConstants.gitProtocolAndGitServerName;
+			gitServer = IGitServer.Utils.gitServer(localRoot, remoteUriPrefix);
+		}
+		return gitServer;
 	}
 
 	public ISelectedBindingManager getSelectedBindingManager() {

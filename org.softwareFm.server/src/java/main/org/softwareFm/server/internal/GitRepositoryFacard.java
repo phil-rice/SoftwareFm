@@ -97,6 +97,7 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 		Future<GetResult> future = serviceExecutor.submit(new Callable<GetResult>() {
 			@Override
 			public GetResult call() throws Exception {
+				System.out.println("Trying to get: " + url);
 				if (aboveRepositoryCache.containsKey(url)) {
 					if (System.currentTimeMillis() > lastAboveRepositoryClearTime + aboveRepositoryStaleCacheTime) {
 						long now = System.currentTimeMillis();
@@ -109,16 +110,20 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 					}
 				}
 				File localRepositoryRoot = localGit.findRepositoryUrl(url);
+				System.out.println("  the localRepositoryRoot is: " + url);
 				if (localRepositoryRoot != null) {// we have found something, and it is in a repository
 					long lastPull = Maps.findOrCreate(lastPullTimeMap, localRepositoryRoot, Callables.time());
 					long now = System.currentTimeMillis();
 					boolean needToPull = now > lastPull + staleCacheTime;
 					if (needToPull) {
 						String url = Files.offset(localGit.getRoot(), localRepositoryRoot);
+						System.out.println("  pulling: " + url);
 						localGit.pull(url);
 						lastPullTimeMap.put(localRepositoryRoot, now);
 					}
+					System.out.println("  localGet: " + fileDescription);
 					GetResult result = localGit.localGet(fileDescription);
+					System.out.println("  result: " + result);
 					processCallback(callbackHasBeenCalled, callback, url, result);
 					return result;
 				}
@@ -127,8 +132,11 @@ public class GitRepositoryFacard implements ISoftwareFmClient {
 					@Override
 					public GetResult repositoryBase(String repositoryBase) {
 						try {
+							System.out.println("  clone: " + fileDescription);
 							localGit.clone(repositoryBase);
+							System.out.println("  localGet: " + fileDescription);
 							GetResult afterCloneResult = localGit.localGet(fileDescription);
+							System.out.println("  result: " + afterCloneResult);
 							return afterCloneResult;
 						} catch (Exception e) {
 							throw WrappedException.wrap(e);

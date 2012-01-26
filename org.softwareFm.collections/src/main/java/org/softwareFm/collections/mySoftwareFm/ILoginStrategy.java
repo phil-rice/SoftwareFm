@@ -128,6 +128,8 @@ public interface ILoginStrategy {
 														Map<String, Object> map = Json.mapFromString(response.asString());
 														String crypto = (String) map.get(ServerConstants.cryptoKey);
 														String softwareFmId = (String) map.get(ServerConstants.softwareFmIdKey);
+														if (crypto == null||softwareFmId == null)
+															throw new NullPointerException(map.toString());
 														UserData userData = new UserData(email, softwareFmId, crypto);
 														callback.loggedIn(userData);
 													} else

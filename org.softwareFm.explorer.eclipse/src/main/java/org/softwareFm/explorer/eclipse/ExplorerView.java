@@ -31,6 +31,7 @@ import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
+import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.resources.IResourceGetter;
@@ -50,7 +51,7 @@ public class ExplorerView extends ViewPart {
 		IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardConfig.cardDataStore);
 		IServiceExecutor service = activator.getServiceExecutor();
 		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(parent.getDisplay(), activator.getServiceExecutor(), activator.getClient());
-		IUsageStrategy usageStrategy  = IUsageStrategy.Utils.noUsageStrategy();
+		IUsageStrategy usageStrategy  = IUsageStrategy.Utils.usage(activator.getServiceExecutor(), activator.getClient(), activator.getGitServer(), ServerConstants.userGenerator(), ServerConstants.projectGenerator());
 		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, getRootUrls(), playListGetter, service, loginStrategy, usageStrategy);
 		actionBar = makeActionBar(explorer, cardConfig);
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();

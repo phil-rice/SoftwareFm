@@ -150,10 +150,12 @@ public class ActionBar implements IActionBar {
 		final String hexDigest = ripperResult.hexDigest;
 		IUrlGenerator jarUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.jarUrlKey);
 		String jarUrl = jarUrlGenerator.findUrlFor(Maps.stringObjectMap(JdtConstants.hexDigestKey, hexDigest));
-
+		System.out.println("Processing JarUrl: " + jarUrl);
 		cardConfig.cardDataStore.processDataFor(jarUrl, new ICardDataStoreCallback<Void>() {
 			@Override
 			public Void process(String jarUrl, final Map<String, Object> groupArtifactVersionMap) throws Exception {
+				String groupId = (String) groupArtifactVersionMap.get(CollectionConstants.groupId);
+				String artifactId = (String) groupArtifactVersionMap.get(CollectionConstants.artifactId);
 				IUrlGenerator urlGenerator = cardConfig.urlGeneratorMap.get(urlKey);
 				String url = urlGenerator.findUrlFor(groupArtifactVersionMap);
 				if (url == null)
@@ -166,6 +168,7 @@ public class ActionBar implements IActionBar {
 				});
 				if (showRadioStation)
 					explorer.selectAndNext(url);
+				explorer.usage(groupId, artifactId);
 				return null;
 			}
 
