@@ -123,6 +123,7 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 						IProcessResult processResult = processCall.process(requestLine, value);
 						return makeResponse(processResult, 200, "OK");
 					} catch (Exception e) {
+						e.printStackTrace();
 						return makeResponse(IProcessResult.Utils.processString(e.getClass() + "/" + e.getMessage()), 500, e.getMessage());
 					}
 				}
@@ -208,6 +209,6 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 		Callable<String> makeKey = Callables.makeCryptoKey();
 		IUrlGenerator userGenerator = ServerConstants.userGenerator();
 		IUrlGenerator projectGenerator = ServerConstants.projectGenerator();
-		new SoftwareFmServer(8080, 1000, IProcessCall.Utils.softwareFmProcessCall(dataSource, server, cryptoFn, makeKey, sfmRoot, mailer, monthGetter, dayGetter, softwareFmIdGenerator), ICallback.Utils.sysErrCallback(), usage);
+		new SoftwareFmServer(8080, 1000, IProcessCall.Utils.softwareFmProcessCall(dataSource, server, cryptoFn, makeKey, sfmRoot, mailer, monthGetter, dayGetter, softwareFmIdGenerator, "groupId", "artifactId"), ICallback.Utils.sysErrCallback(), usage);
 	}
 }

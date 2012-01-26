@@ -24,9 +24,10 @@ public class GitRepositoryFactory {
 
 	}
 
-	public static IRepositoryFacard gitLocalRepositoryFacardWithServer(DataSource dataSource, int port, File localRoot, File remoteRoot, IFunction1<Map<String, Object>, String> cryptoFn, Callable<String> cryptoGenerator, Callable<String> monthGetter, Callable<Integer> dayGetter, Callable<String> softwareFmIdGenerator) {
+	public static IRepositoryFacard gitLocalRepositoryFacardWithServer(DataSource dataSource, int port, File localRoot, File remoteRoot, IFunction1<Map<String, Object>, String> cryptoFn, Callable<String> cryptoGenerator, Callable<String> monthGetter, Callable<Integer> dayGetter, Callable<String> softwareFmIdGenerator, String groupIdKey, String artifactIdKey) {
 		IGitServer remoteGitServer = IGitServer.Utils.gitServer(remoteRoot, "not used");
-		final ISoftwareFmServer server = ISoftwareFmServer.Utils.server(port, 10, IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, remoteGitServer, cryptoFn, cryptoGenerator, remoteRoot, monthGetter, dayGetter, softwareFmIdGenerator), ICallback.Utils.sysErrCallback());
+		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, remoteGitServer, cryptoFn, cryptoGenerator, remoteRoot, monthGetter, dayGetter, softwareFmIdGenerator, groupIdKey, artifactIdKey);
+		final ISoftwareFmServer server = ISoftwareFmServer.Utils.server(port, 10, processCall, ICallback.Utils.sysErrCallback());
 		IHttpClient client = IHttpClient.Utils.builder("localhost", port);
 		return gitRepositoryFacard(client, localRoot, remoteRoot.getAbsolutePath(), new Runnable() {
 			@Override

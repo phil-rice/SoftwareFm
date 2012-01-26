@@ -297,7 +297,7 @@ public class GitRepositoryFacardIntegrationTest extends GitTest implements IInte
 		Callable<String> monthGetter = Callables.exceptionIfCalled();
 		Callable<Integer> dayGetter = Callables.exceptionIfCalled();
 		Callable<String> cryptoGenerator= Callables.exceptionIfCalled();
-		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, remoteGitServer, cryptoFn, cryptoGenerator, remoteRoot, monthGetter, dayGetter, Callables.<String>exceptionIfCalled());
+		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, remoteGitServer, cryptoFn, cryptoGenerator, remoteRoot, monthGetter, dayGetter, Callables.<String>exceptionIfCalled(), "g", "a");
 		server = ISoftwareFmServer.Utils.server(ServerConstants.testPort, 4, processCall, ICallback.Utils.<Throwable> memory());
 		repositoryFacard = new GitRepositoryFacard(getHttpClient(), getServiceExecutor(), localGitServer, ServerConstants.staleCacheTimeForTests, ServerConstants.staleCacheTimeForTests);
 	}

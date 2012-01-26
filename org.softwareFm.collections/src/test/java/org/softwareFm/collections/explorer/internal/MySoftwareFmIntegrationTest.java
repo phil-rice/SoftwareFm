@@ -331,7 +331,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		Callable<String> cryptoGenerator = Callables.value(key);
 		root = Tests.makeTempDirectory(getClass().getSimpleName());
 		IGitServer gitServer = IGitServer.Utils.gitServer(root, "not used");
-		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, gitServer, cryptoFn, cryptoGenerator, null, monthGetter, dayGetter, softwareFmIdGenerator), ICallback.Utils.rethrow());
+		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, gitServer, cryptoFn, cryptoGenerator, null, monthGetter, dayGetter, softwareFmIdGenerator, "g", "a"), ICallback.Utils.rethrow());
 		client = IHttpClient.Utils.builder("localhost", 8080);
 		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(display, service, client);
 		cardConfig = ICardConfigurator.Utils.cardConfigForTests(display);

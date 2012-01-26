@@ -58,7 +58,7 @@ public class SoftwareFmServerIntegrationTest extends TestCase implements IIntegr
 		Callable<Integer> dayGetter = Callables.exceptionIfCalled();
 		Callable<String> softwareFmIdGenerator = Callables.exceptionIfCalled();
 		Callable<String> cryptoGenerator = Callables.exceptionIfCalled();
-		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCallWithoutMail(AbstractLoginDataAccessor.defaultDataSource(), gitServer, cryptoFn, cryptoGenerator, fileRoot, monthGetter, dayGetter, softwareFmIdGenerator), memory);
+		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCallWithoutMail(AbstractLoginDataAccessor.defaultDataSource(), gitServer, cryptoFn, cryptoGenerator, fileRoot, monthGetter, dayGetter, softwareFmIdGenerator, "g", "a"), memory);
 		client = IHttpClient.Utils.builder("localhost", ServerConstants.testPort);
 	}
 

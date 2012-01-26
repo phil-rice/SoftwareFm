@@ -25,7 +25,7 @@ public class LoadTest {
 		Callable<String> monthGetter = Callables.exceptionIfCalled();
 		Callable<Integer> dayGetter = Callables.exceptionIfCalled();
 		Callable<String> cryptoGenerator = Callables.exceptionIfCalled();
-		final IProcessCall rawProcessCall = IProcessCall.Utils.softwareFmProcessCallWithoutMail(AbstractLoginDataAccessor.defaultDataSource(), server, cryptoFn, cryptoGenerator, sfmRoot, monthGetter, dayGetter, Callables.<String> exceptionIfCalled());
+		final IProcessCall rawProcessCall = IProcessCall.Utils.softwareFmProcessCallWithoutMail(AbstractLoginDataAccessor.defaultDataSource(), server, cryptoFn, cryptoGenerator, sfmRoot, monthGetter, dayGetter, Callables.<String> exceptionIfCalled(), "g", "a");
 		IProcessCall processCall = new IProcessCall() {
 			@Override
 			public IProcessResult process(RequestLine requestLine, Map<String, Object> parameters) {

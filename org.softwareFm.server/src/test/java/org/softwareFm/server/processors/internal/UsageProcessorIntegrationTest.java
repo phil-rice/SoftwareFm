@@ -66,7 +66,7 @@ public class UsageProcessorIntegrationTest extends AbstractProcessorDatabaseInte
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		user = IProcessCall.Utils.makeUser(gitServer, cryptoFn);
+		user = IProcessCall.Utils.makeUser(gitServer, cryptoFn, "g", "a");
 		userDetails = Maps.stringObjectMap(ServerConstants.softwareFmIdKey, "someSoftwareFmId");
 		userFile = new File(remoteRoot, "softwareFm/users/so/me/someSoftwareFmId/" + ServerConstants.dataFileName);
 		projectFile = new File(remoteRoot, "softwareFm/users/so/me/someSoftwareFmId/projects/someMonth");

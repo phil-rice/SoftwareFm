@@ -308,6 +308,13 @@ public class Lists {
 		return result;
 	}
 
+	public static <T> List<T> list(T[] array) {
+		if (array == null)
+			return Collections.emptyList();
+		else
+			return Arrays.asList(array);
+	}
+
 	// final List<String> list = Arrays.asList(order);
 	// return new Comparator<KeyValue>() {
 	//

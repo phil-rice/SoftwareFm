@@ -71,6 +71,7 @@ import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.display.timeline.PlayItem;
 import org.softwareFm.display.timeline.TimeLine;
+import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
@@ -94,10 +95,12 @@ public class Explorer implements IExplorer {
 	private TimeLine timeLine;
 	private Comments comments;
 	private MySoftwareFm mySoftwareFm;
+	private final IUsageStrategy usageStrategy;
 
 	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IUsageStrategy usageStrategy) {
 		this.cardConfig = cardConfig;
 		this.masterDetailSocial = masterDetailSocial;
+		this.usageStrategy = usageStrategy;
 		callbackToGotoUrlAndUpdateDetails = new ICallback<String>() {
 			@Override
 			public void process(String url) throws Exception {
@@ -1066,5 +1069,7 @@ public class Explorer implements IExplorer {
 
 	@Override
 	public void usage(String groupId, String artifactId) {
+		UserData userData = mySoftwareFm.userData;
+		usageStrategy.using(userData.softwareFmId, groupId, artifactId, IResponseCallback.Utils.noCallback());
 	}
 }

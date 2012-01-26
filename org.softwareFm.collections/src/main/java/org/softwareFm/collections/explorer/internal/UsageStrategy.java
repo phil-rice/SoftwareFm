@@ -14,6 +14,7 @@ import org.softwareFm.server.GetResult;
 import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.services.IServiceExecutor;
@@ -69,7 +70,7 @@ public class UsageStrategy implements IUsageStrategy {
 		
 		File directory = new File(root, projectUrl);
 		Map<String, Object> result = Maps.newMap();
-		for (File file : directory.listFiles()) {
+		for (File file : Lists.list(directory.listFiles())) {
 			Map<String, Object> map = Json.mapFromEncryptedFile(file, projectCrypto);
 			result.put(file.getName(), map);
 		}

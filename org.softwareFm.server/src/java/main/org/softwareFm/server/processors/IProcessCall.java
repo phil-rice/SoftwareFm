@@ -69,11 +69,11 @@ public interface IProcessCall {
 			return "<" + requestLine + ", " + parameters + ">";
 		}
 
-		public static IProcessCall softwareFmProcessCallWithoutMail(DataSource dataSource, IGitServer server, IFunction1<Map<String, Object>, String> cryptoFn, Callable<String> cryptoGenerator, File fileRoot, Callable<String> monthGetter, Callable<Integer> dayGetter, Callable<String> softwareFmIdGenerator) {
-			return softwareFmProcessCall(dataSource, server, cryptoFn, cryptoGenerator, fileRoot, IMailer.Utils.noMailer(), monthGetter, dayGetter, softwareFmIdGenerator);
+		public static IProcessCall softwareFmProcessCallWithoutMail(DataSource dataSource, IGitServer server, IFunction1<Map<String, Object>, String> cryptoFn, Callable<String> cryptoGenerator, File fileRoot, Callable<String> monthGetter, Callable<Integer> dayGetter, Callable<String> softwareFmIdGenerator,String groupIdKey, String artifactIdKey) {
+			return softwareFmProcessCall(dataSource, server, cryptoFn, cryptoGenerator, fileRoot, IMailer.Utils.noMailer(), monthGetter, dayGetter, softwareFmIdGenerator, groupIdKey, artifactIdKey);
 		}
 
-		public static IProcessCall softwareFmProcessCall(DataSource dataSource, IGitServer server, IFunction1<Map<String, Object>, String> cryptoFn, Callable<String> cryptoGenerator, File fileRoot, IMailer mailer, Callable<String> monthGetter, Callable<Integer> dayGetter, Callable<String> softwareFmIdGenerator) {
+		public static IProcessCall softwareFmProcessCall(DataSource dataSource, IGitServer server, IFunction1<Map<String, Object>, String> cryptoFn, Callable<String> cryptoGenerator, File fileRoot, IMailer mailer, Callable<String> monthGetter, Callable<Integer> dayGetter, Callable<String> softwareFmIdGenerator,String groupIdKey, String artifactIdKey) {
 			UrlCache<String> aboveRepostoryUrlCache = new UrlCache<String>();
 			SaltProcessor saltProcessor = new SaltProcessor();
 			LoginChecker loginChecker = new LoginChecker(dataSource);
@@ -82,7 +82,7 @@ public interface IProcessCall {
 			IPasswordResetter resetter = new PasswordResetter(dataSource);
 			EmailSaltRequester saltRequester = new EmailSaltRequester(dataSource);
 			IPasswordChanger passwordChanger = IPasswordChanger.Utils.databasePasswordChanger(dataSource);
-			IUser user = makeUser(server, cryptoFn);
+			IUser user = makeUser(server, cryptoFn, groupIdKey, artifactIdKey);
 			UsageProcessor usageProcessor1 = new UsageProcessor(server, user, monthGetter, dayGetter);
 			UsageProcessor usageProcessor = usageProcessor1;
 			return chain(new FavIconProcessor(),//
@@ -104,8 +104,8 @@ public interface IProcessCall {
 					new PostProcessor(server));// this sweeps up any posts, so ensure that commands appear in chain before it
 		}
 
-		public static IUser makeUser(IGitServer server, IFunction1<Map<String, Object>, String> cryptoFn) {
-			IUser user = IUser.Utils.makeUserDetails(server, ServerConstants.userGenerator(), ServerConstants.projectGenerator(), cryptoFn, "g", "a");
+		public static IUser makeUser(IGitServer server, IFunction1<Map<String, Object>, String> cryptoFn, String groupIdKey, String artifactIdKey) {
+			IUser user = IUser.Utils.makeUserDetails(server, ServerConstants.userGenerator(), ServerConstants.projectGenerator(), cryptoFn, groupIdKey, artifactIdKey);
 			return user;
 		}
 	}

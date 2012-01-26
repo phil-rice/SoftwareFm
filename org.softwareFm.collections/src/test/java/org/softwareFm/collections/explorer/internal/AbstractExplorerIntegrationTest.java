@@ -214,7 +214,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		// remoteAsUri = new File(root, "remote").getAbsolutePath();
 
 		httpClient = IHttpClient.Utils.builder("localhost", ServerConstants.testPort);
-		repository = GitRepositoryFactory.gitLocalRepositoryFacardWithServer(AbstractLoginDataAccessor.defaultDataSource(), ServerConstants.testPort, localRoot, remoteRoot, Functions.<Map<String, Object>, String> expectionIfCalled(), Callables.<String> exceptionIfCalled(), Callables.<String> exceptionIfCalled(), Callables.<Integer> exceptionIfCalled(), Callables.<String> exceptionIfCalled());
+		repository = GitRepositoryFactory.gitLocalRepositoryFacardWithServer(AbstractLoginDataAccessor.defaultDataSource(), ServerConstants.testPort, localRoot, remoteRoot, Functions.<Map<String, Object>, String> expectionIfCalled(), Callables.<String> exceptionIfCalled(), Callables.<String> exceptionIfCalled(), Callables.<Integer> exceptionIfCalled(), Callables.<String> exceptionIfCalled(), "g", "a");
 
 		try {
 			cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().//
