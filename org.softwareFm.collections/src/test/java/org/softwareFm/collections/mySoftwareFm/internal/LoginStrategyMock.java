@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.softwareFm.collections.explorer.internal.UserData;
 import org.softwareFm.collections.mySoftwareFm.IChangePasswordCallback;
 import org.softwareFm.collections.mySoftwareFm.IForgotPasswordCallback;
 import org.softwareFm.collections.mySoftwareFm.ILoginCallback;
@@ -56,7 +57,7 @@ public class LoginStrategyMock implements ILoginStrategy {
 		loginEmail.add(email);
 		loginPassword.add(password);
 		if (ok)
-			callback.loggedIn(email, cryptoKey, softwareFmId);
+			callback.loggedIn(new UserData(email, softwareFmId, cryptoKey));
 		else
 			callback.failedToLogin(email, "someMessage");
 	}
@@ -76,7 +77,7 @@ public class LoginStrategyMock implements ILoginStrategy {
 		signupSalt.add(sessionSalt);
 		signupPassword.add(passwordHash);
 		if (ok)
-			callback.signedUp(email, cryptoKey, softwareFmId);
+			callback.signedUp(new UserData(email,softwareFmId, cryptoKey));
 		else
 			callback.failed(email, "someMessage");
 	}

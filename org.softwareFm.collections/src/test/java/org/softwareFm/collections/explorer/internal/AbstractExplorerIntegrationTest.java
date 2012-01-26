@@ -43,6 +43,7 @@ import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.server.GitRepositoryFactory;
+import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.utilities.exceptions.WrappedException;
@@ -220,7 +221,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 					configure(display, new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(shell, repository))).//
 					withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap(prefix, "data"));
 			masterDetailSocial = new MasterDetailSocial(shell, SWT.NULL);
-			IUsageStrategy usageStrategy = IUsageStrategy.Utils.usage(httpClient, "g", "a");
+			IUsageStrategy usageStrategy = IUsageStrategy.Utils.usage(service, httpClient, IGitServer.Utils.noGitServer(), ServerConstants.userGenerator(), ServerConstants.projectGenerator(), "g", "a");
 			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, cardConfig, Arrays.asList(rootArtifactUrl, rootSnippetUrl), IPlayListGetter.Utils.noPlayListGetter(), service, ILoginStrategy.Utils.noLoginStrategy(), usageStrategy);
 			IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
 			SnippetFeedConfigurator.configure(explorer, cardConfig);

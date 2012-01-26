@@ -38,6 +38,7 @@ public class CardConstants {
 	public static final String jarUrlRootKey = "urlGenerator.jar.root";
 	public static final String jarUrlKey = "urlGenerator.jar";
 	public static final String userUrlKey = "urlGenerator.user";
+	public static final String projectUrlKey = "urlGenerator.project";
 	public static final String manuallyAdded = "manually added";
 
 	public static final String menuItemViewActual = "menuitem.view.actual";

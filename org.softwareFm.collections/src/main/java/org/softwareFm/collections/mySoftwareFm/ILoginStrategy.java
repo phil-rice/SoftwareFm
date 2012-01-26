@@ -6,6 +6,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.swt.widgets.Display;
+import org.softwareFm.collections.explorer.internal.UserData;
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.httpClient.response.IResponse;
@@ -60,7 +61,7 @@ public interface ILoginStrategy {
 																throw new NullPointerException(string);
 															if (softwareFmId == null)
 																throw new NullPointerException(string);
-															callback.signedUp(email, crypto, softwareFmId);
+															callback.signedUp(new UserData(email,  softwareFmId, crypto));
 														} else
 															callback.failed(email, string);
 													}
@@ -127,7 +128,8 @@ public interface ILoginStrategy {
 														Map<String, Object> map = Json.mapFromString(response.asString());
 														String crypto = (String) map.get(ServerConstants.cryptoKey);
 														String softwareFmId = (String) map.get(ServerConstants.softwareFmIdKey);
-														callback.loggedIn(email, crypto, softwareFmId);
+														UserData userData = new UserData(email, softwareFmId, crypto);
+														callback.loggedIn(userData);
 													} else
 														callback.failedToLogin(email, response.asString());
 												}
@@ -313,7 +315,7 @@ public interface ILoginStrategy {
 				public void login(String email, String sessionSalt, String emailSalt, String password, ILoginCallback callback) {
 					String key = Crypto.makeKey();
 					System.out.println("Sending 'login' to server, would have received key: " + key);
-					callback.loggedIn(email, key, Callables.call(softwareFmIdGenerator));
+					callback.loggedIn(new UserData(email, Callables.call(softwareFmIdGenerator), key));
 				}
 
 				@Override
@@ -325,7 +327,7 @@ public interface ILoginStrategy {
 				@Override
 				public void signup(String email, String sessionSalt, String passwordHash, ISignUpCallback callback) {
 					System.out.println("Signing up: " + email + ", " + sessionSalt + ", " + passwordHash);
-					callback.signedUp(email, Crypto.makeKey(), Callables.call(softwareFmIdGenerator));
+					callback.signedUp(new UserData(email, Callables.call(softwareFmIdGenerator),Crypto.makeKey()));
 				}
 
 				@Override

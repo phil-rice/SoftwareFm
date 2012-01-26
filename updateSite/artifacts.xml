@@ -1,0 +1,100 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?artifactRepository version='1.1.0'?>
+<repository name='Update Site' type='org.eclipse.equinox.p2.artifact.repository.simpleRepository' version='1'>
+  <properties size='2'>
+    <property name='p2.timestamp' value='1327317073240'/>
+    <property name='p2.compressed' value='true'/>
+  </properties>
+  <mappings size='3'>
+    <rule filter='(&amp; (classifier=osgi.bundle))' output='${repoUrl}/plugins/${id}_${version}.jar'/>
+    <rule filter='(&amp; (classifier=binary))' output='${repoUrl}/binary/${id}_${version}'/>
+    <rule filter='(&amp; (classifier=org.eclipse.update.feature))' output='${repoUrl}/features/${id}_${version}.jar'/>
+  </mappings>
+  <artifacts size='14'>
+    <artifact classifier='osgi.bundle' id='org.softwareFm.repositoryClient' version='1.0.0.201201231110'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='7041'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.softwareFm.card' version='1.0.0.201201231110'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='452711'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.softwareFm.explorer.eclipse' version='1.0.0.201201231110'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='49735'/>
+      </properties>
+    </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='SoftwareFmFeatures' version='1.5.5'>
+      <properties size='2'>
+        <property name='download.contentType' value='application/zip'/>
+        <property name='download.size' value='17128'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.softwareFm.selection' version='1.0.0.201201231110'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='3219'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.softwareFm.display' version='1.0.0.201201231110'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='200502'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='orc.softwareFm.httpClient' version='1.0.0.201201231110'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='31824'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.softwareFm.collections' version='1.0.0.201201231110'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='398811'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.softwareFm.softwareFmImages' version='1.0.6'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='2990971'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.softwareFm.externals' version='1.0.3'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='8572383'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.softwareFm.server' version='1.0.0.201201231110'>
+      <properties size='2'>
+        <property name='artifact.size' value='12288'/>
+        <property name='download.size' value='201784'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.softwareFm.repository' version='1.0.0.201201091354'>
+      <properties size='3'>
+        <property name='artifact.size' value='441366'/>
+        <property name='download.size' value='441366'/>
+        <property name='download.md5' value='d6e47933a66b7a08415e200c10e7cd70'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.softwareFm.utilities' version='1.0.0.201201231110'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='371616'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.softwareFm.jdtBinding' version='1.0.0.201201231110'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='45365'/>
+      </properties>
+    </artifact>
+  </artifacts>
+</repository>

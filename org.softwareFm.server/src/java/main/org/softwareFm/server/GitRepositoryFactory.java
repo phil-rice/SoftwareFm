@@ -51,8 +51,8 @@ public class GitRepositoryFactory {
 
 	}
 
-	public static IRepositoryFacard gitRepositoryFacard(IHttpClient httpClient, IServiceExecutor serviceExecutor, IGitServer localGit) {
-		return new GitRepositoryFacard(httpClient, serviceExecutor, localGit, ServerConstants.staleCacheTime, ServerConstants.staleAboveRepositoryCacheTime);
+	public static IRepositoryFacard gitRepositoryFacard(IHttpClient httpClient, IServiceExecutor serviceExecutor, IGitServer gitServer) {
+		return new GitRepositoryFacard(httpClient, serviceExecutor, gitServer, ServerConstants.staleCacheTime, ServerConstants.staleAboveRepositoryCacheTime);
 
 	}
 }

@@ -17,6 +17,7 @@ import org.softwareFm.card.card.composites.CompositeWithCardMargin;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.editors.IValueComposite;
+import org.softwareFm.collections.explorer.IUsageStrategy;
 import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.display.okCancel.OkCancel;
 import org.softwareFm.display.swt.SwtAndServiceTest;
@@ -58,6 +59,17 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 	private File root;
 	private File userFile;
 
+	public void testLoginErrors() {
+		signUp(email, password);
+		template.queryForObject("select crypto from users", String.class);
+		mySoftwareFm.logout();
+
+		checkLoginError(email, "password", "Email / Password didn't match\n\nClicking this panel will start login again");
+		checkLoginError("a@b.com", "password", "Email not recognised\n\nClicking this panel will start login again");
+
+		assertEquals(new UserData("a@b.com", null, null), mySoftwareFm.userData);
+	}
+
 	public void testSignup() {
 		String signUpSalt = signUp(email, password);
 
@@ -70,11 +82,9 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 
 		String crypto = template.queryForObject("select crypto from users", String.class);
 		String softwareFmId = template.queryForObject("select softwarefmid from users", String.class);
-		assertNotNull(crypto);
-		assertEquals(crypto, mySoftwareFm.crypto);
-		assertEquals(softwareFmId, mySoftwareFm.softwareFmId);
-		assertEquals(email, mySoftwareFm.email);
-		
+
+		assertEquals(new UserData(email, softwareFmId, crypto), mySoftwareFm.userData);
+
 		assertTrue(userFile.exists());
 		Json.mapFromEncryptedFile(userFile, crypto);
 	}
@@ -86,15 +96,14 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		mySoftwareFm.logout();
 
 		mySoftwareFm.start();
-		assertNull(mySoftwareFm.crypto);
+		assertNull(mySoftwareFm.userData.crypto);
 		displayUntilValueComposite("Email", "Password");
 		setValues(email, password);
 		assertTrue(getOkCancel().isOkEnabled());
 		getOkCancel().ok();
 		displayUntilText();
-		assertEquals(crypto, mySoftwareFm.crypto);
-		assertEquals(email, mySoftwareFm.email);
-		assertEquals(softwareFmId, mySoftwareFm.softwareFmId);
+
+		assertEquals(new UserData(email, softwareFmId, crypto), mySoftwareFm.userData);
 	}
 
 	public void testStartRequestsSalt() {
@@ -102,35 +111,25 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		startAndGetSignupSalt();
 		assertEquals(0, template.queryForInt("select count(*) from users"));
 
-		assertNull(mySoftwareFm.crypto);
-		assertNull(mySoftwareFm.softwareFmId);
-		assertNull(mySoftwareFm.email);
+		assertNull(mySoftwareFm.userData.crypto);
+		assertNull(mySoftwareFm.userData.softwareFmId);
+		assertNull(mySoftwareFm.userData.email);
 		assertNotNull(mySoftwareFm.getSignupSalt());
-	}
-
-	public void testLoginErrors() {
-		signUp(email, password);
-		template.queryForObject("select crypto from users", String.class);
-		mySoftwareFm.logout();
-
-		checkLoginError(email, "password", "Email / Password didn't match\n\nClicking this panel will start login again");
-		checkLoginError("a@b.com", "password", "Email not recognised\n\nClicking this panel will start login again");
-		assertNull(mySoftwareFm.crypto);
-		assertNull(mySoftwareFm.softwareFmId);
 	}
 
 	private void checkLoginError(String email, String password, String errorMessage) {
 		mySoftwareFm.logout();
 		mySoftwareFm.start();
-		assertNull(mySoftwareFm.crypto);
-		assertNull(mySoftwareFm.softwareFmId);
+		assertNull(mySoftwareFm.userData.crypto);
+		assertNull(mySoftwareFm.userData.softwareFmId);
 		displayUntilValueComposite("Email", "Password");
 		setValues(email, password);
 		assertTrue(getOkCancel().isOkEnabled());
 		getOkCancel().ok();
 		displayUntilText();
-		assertNull(mySoftwareFm.crypto);
-		assertNull(mySoftwareFm.softwareFmId);
+
+		assertEquals(new UserData(email, null, null), mySoftwareFm.userData);
+
 		assertEquals(errorMessage, getText());
 	}
 
@@ -155,9 +154,8 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		getOkCancel().ok();
 		displayUntilText();
 		assertEquals("Reminder email sent to " + email + "\n\nClicking this panel will start login again", getText());
-		assertNull(mySoftwareFm.crypto);
-		assertNull(mySoftwareFm.email);
-		assertNull(mySoftwareFm.softwareFmId);
+
+		assertEquals(new UserData(email, null, null), mySoftwareFm.userData);
 
 		mySoftwareFm.start();
 		displayUntilValueComposite("Email", "Password");
@@ -169,11 +167,10 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		assertTrue(getOkCancel().isOkEnabled());
 		getOkCancel().ok();
 		displayUntilText();
-		assertEquals("Welcome to softwareFm.\n\n\nYou are logged in as " + email, getText());
-		assertEquals(crypto, mySoftwareFm.crypto);
-		assertEquals("someNewSoftwareFmId0", mySoftwareFm.softwareFmId);
 
-		assertEquals(email, mySoftwareFm.email);
+		assertEquals("Welcome to softwareFm.\n\n\nYou are logged in as " + email, getText());
+
+		assertEquals(new UserData(email, "someNewSoftwareFmId0", crypto), mySoftwareFm.userData);
 	}
 
 	private String resetPassword(String magicString) throws InterruptedException, ExecutionException, TimeoutException {
@@ -338,12 +335,12 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		client = IHttpClient.Utils.builder("localhost", 8080);
 		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(display, service, client);
 		cardConfig = ICardConfigurator.Utils.cardConfigForTests(display);
-		mySoftwareFm = new MySoftwareFm(shell, cardConfig, loginStrategy);
+		mySoftwareFm = new MySoftwareFm(shell, cardConfig, loginStrategy, IUsageStrategy.Utils.mockUsageStartegy());
 		template = new JdbcTemplate(dataSource);
 		template.update("truncate users");
 		softwareFmComposite = mySoftwareFm.getComposite();
 
-		userFile = new File(root, Urls.compose("users/so/me/someNewSoftwareFmId0", ServerConstants.dataFileName));
+		userFile = new File(root, Urls.compose("softwareFm/users/so/me/someNewSoftwareFmId0", ServerConstants.dataFileName));
 	}
 
 	@Override

@@ -8,12 +8,6 @@ import junit.framework.TestCase;
 
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.softwareFm.httpClient.api.IHttpClient;
-import org.softwareFm.server.GetResult;
-import org.softwareFm.server.IFileDescription;
-import org.softwareFm.server.IGitFacard;
-import org.softwareFm.server.IGitServer;
-import org.softwareFm.server.ILocalGitClient;
-import org.softwareFm.server.ServerConstants;
 import org.softwareFm.server.internal.GitFacard;
 import org.softwareFm.server.internal.GitServer;
 import org.softwareFm.utilities.collections.Files;
@@ -38,7 +32,7 @@ public abstract class GitTest extends TestCase {
 
 	protected static final Map<String, Object> emptyMap = Maps.stringObjectMap();
 
-	private IServiceExecutor serviceExecutor;
+	protected IServiceExecutor serviceExecutor;
 	protected final IGitFacard gitFacard = IGitFacard.Utils.makeFacard();
 
 	private IHttpClient httpClient;

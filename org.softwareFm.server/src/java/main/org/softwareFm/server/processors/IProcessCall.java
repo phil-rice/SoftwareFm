@@ -35,7 +35,6 @@ import org.softwareFm.server.processors.internal.UsageProcessor;
 import org.softwareFm.server.user.IUser;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.UrlCache;
-import org.softwareFm.utilities.url.IUrlGenerator;
 
 public interface IProcessCall {
 	IProcessResult process(RequestLine requestLine, Map<String, Object> parameters);
@@ -106,9 +105,7 @@ public interface IProcessCall {
 		}
 
 		public static IUser makeUser(IGitServer server, IFunction1<Map<String, Object>, String> cryptoFn) {
-			IUrlGenerator userGenerator = IUrlGenerator.Utils.generator("users/{0}/{1}/{2}", ServerConstants.softwareFmIdKey);
-			IUrlGenerator projectDetailGenerator = IUrlGenerator.Utils.generator("users/{0}/{1}/{2}/projects", ServerConstants.softwareFmIdKey);
-			IUser user = IUser.Utils.makeUserDetails(server, userGenerator, projectDetailGenerator, cryptoFn, "g", "a");
+			IUser user = IUser.Utils.makeUserDetails(server, ServerConstants.userGenerator(), ServerConstants.projectGenerator(), cryptoFn, "g", "a");
 			return user;
 		}
 	}

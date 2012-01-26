@@ -95,7 +95,7 @@ public class Explorer implements IExplorer {
 	private Comments comments;
 	private MySoftwareFm mySoftwareFm;
 
-	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, IUsageStrategy usageStrategy) {
+	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IUsageStrategy usageStrategy) {
 		this.cardConfig = cardConfig;
 		this.masterDetailSocial = masterDetailSocial;
 		callbackToGotoUrlAndUpdateDetails = new ICallback<String>() {
@@ -213,7 +213,7 @@ public class Explorer implements IExplorer {
 		mySoftwareFm = masterDetailSocial.createMaster(new IFunction1<Composite, MySoftwareFm>() {
 			@Override
 			public MySoftwareFm apply(Composite from) throws Exception {
-				MySoftwareFm mySoftwareFm = new MySoftwareFm(from, cardConfig, loginStrategy);
+				MySoftwareFm mySoftwareFm = new MySoftwareFm(from, cardConfig, loginStrategy, usageStrategy);
 				mySoftwareFm.start();
 				return mySoftwareFm;
 			}

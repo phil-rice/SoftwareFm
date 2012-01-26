@@ -44,6 +44,7 @@ import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.server.GitRepositoryFactory;
+import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.services.IServiceExecutor;
@@ -54,12 +55,15 @@ public class ExplorerWithRadioChannel {
 		final File localRoot = new File(home, ".sfm");
 		boolean local = true;
 		String server = local ? "localhost" : EclipseConstants.softwareFmServerUrl;
-		// String prefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : EclipseConstants.gitProtocolAndGitServerName;
-		String prefix = "git://localhost:7777/";
+		String prefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : EclipseConstants.gitProtocolAndGitServerName;
+		// String prefix = "git://localhost:7777/";
 		int port = local ? 8080 : 80;
 		final IHttpClient client = IHttpClient.Utils.builder(server, port);
-		final IRepositoryFacard facard = GitRepositoryFactory.gitRepositoryFacard(client, localRoot, prefix);
-		final IServiceExecutor service = IServiceExecutor.Utils.defaultExecutor();
+		final IGitServer localGit = IGitServer.Utils.gitServer(localRoot, prefix);
+
+		IServiceExecutor gitServiceExecutor = IServiceExecutor.Utils.defaultExecutor();
+		final IServiceExecutor service = gitServiceExecutor;
+		final IRepositoryFacard facard = GitRepositoryFactory.gitRepositoryFacard(client, gitServiceExecutor, localGit);
 		try {
 			final List<String> rootUrl = Arrays.asList("/softwareFm/data", "/softwareFm/snippet");
 			final String firstUrl = "/softwareFm/data/activemq/activemq/artifact/activemq-axis";
@@ -77,7 +81,7 @@ public class ExplorerWithRadioChannel {
 					IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(explorerAndButton);
 					IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardDataStore);
 					ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(from.getDisplay(), service, client);
-					IUsageStrategy usageStrategy = IUsageStrategy.Utils.usage(client);
+					IUsageStrategy usageStrategy = IUsageStrategy.Utils.usage(service, client, localGit, ServerConstants.userGenerator(), ServerConstants.projectGenerator());
 					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, playListGetter, service, loginStrategy, usageStrategy);
 
 					ICardMenuItemHandler.Utils.addSoftwareFmMenuItemHandlers(explorer);
@@ -176,6 +180,7 @@ public class ExplorerWithRadioChannel {
 		} finally {
 			facard.shutdown();
 			service.shutdownAndAwaitTermination(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+			gitServiceExecutor.shutdownAndAwaitTermination(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
 		}
 
 	}

@@ -68,7 +68,7 @@ public class UsageProcessorIntegrationTest extends AbstractProcessorDatabaseInte
 		super.setUp();
 		user = IProcessCall.Utils.makeUser(gitServer, cryptoFn);
 		userDetails = Maps.stringObjectMap(ServerConstants.softwareFmIdKey, "someSoftwareFmId");
-		userFile = new File(remoteRoot, "users/so/me/someSoftwareFmId/" + ServerConstants.dataFileName);
-		projectFile = new File(remoteRoot, "users/so/me/someSoftwareFmId/projects/someMonth");
+		userFile = new File(remoteRoot, "softwareFm/users/so/me/someSoftwareFmId/" + ServerConstants.dataFileName);
+		projectFile = new File(remoteRoot, "softwareFm/users/so/me/someSoftwareFmId/projects/someMonth");
 	}
 }

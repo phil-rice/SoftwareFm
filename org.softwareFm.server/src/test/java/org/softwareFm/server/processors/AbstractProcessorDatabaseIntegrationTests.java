@@ -36,8 +36,8 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 		cryptoGenerator = Callables.value(key);
 		monthGetter = Callables.value("someMonth");
 		dayGetter = Callables.value(3);
-		 Callable<String> softwareFmIdGenerator= Callables.patternWithCount("someNewSoftwareFmId{0}");
-		IProcessCall result = IProcessCall.Utils.softwareFmProcessCall(dataSource, gitServer, cryptoFn , cryptoGenerator, remoteRoot, mailerMock, monthGetter, dayGetter, softwareFmIdGenerator);
+		Callable<String> softwareFmIdGenerator = Callables.patternWithCount("someNewSoftwareFmId{0}");
+		IProcessCall result = IProcessCall.Utils.softwareFmProcessCall(dataSource, gitServer, cryptoFn, cryptoGenerator, remoteRoot, mailerMock, monthGetter, dayGetter, softwareFmIdGenerator);
 		template = new JdbcTemplate(dataSource);
 		server = ISoftwareFmServer.Utils.testServerPort(result, ICallback.Utils.rethrow());
 		template.update("truncate users");

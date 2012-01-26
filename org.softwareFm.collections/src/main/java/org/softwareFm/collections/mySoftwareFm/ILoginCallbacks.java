@@ -2,6 +2,7 @@ package org.softwareFm.collections.mySoftwareFm;
 
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
+import org.softwareFm.collections.explorer.internal.UserData;
 import org.softwareFm.utilities.resources.IResourceGetter;
 
 public interface ILoginCallbacks extends ILoginCallback, IForgotPasswordCallback, ISignUpCallback, IChangePasswordCallback {
@@ -27,8 +28,9 @@ public interface ILoginCallbacks extends ILoginCallback, IForgotPasswordCallback
 				}
 
 				@Override
-				public void loggedIn(String email, String cryptoKey, String softwareFmId) {
+				public void loggedIn(UserData userData) {
 					String cardType = CardConstants.loginCardType;
+					String email = userData.email();
 					String title = IResourceGetter.Utils.getMessageOrException(cardConfig.resourceGetterFn, cardType, CardConstants.loggedInTitle, email);
 					String message = IResourceGetter.Utils.getMessageOrException(cardConfig.resourceGetterFn, CardConstants.loginCardType, CardConstants.loggedInText, email);
 					strategy.showMessage(cardType, title, message);
@@ -43,7 +45,8 @@ public interface ILoginCallbacks extends ILoginCallback, IForgotPasswordCallback
 				}
 
 				@Override
-				public void signedUp(String email, String crypto, String softwareFmId) {
+				public void signedUp(UserData userData) {
+					String email = userData.email();
 					String cardType = CardConstants.signupCardType;
 					String title = IResourceGetter.Utils.getMessageOrException(cardConfig.resourceGetterFn, cardType, CardConstants.signedUpInTitle, email);
 					String message = IResourceGetter.Utils.getMessageOrException(cardConfig.resourceGetterFn, cardType, CardConstants.signedUpText, email);

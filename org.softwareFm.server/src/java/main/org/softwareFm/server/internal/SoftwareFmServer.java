@@ -42,6 +42,7 @@ import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.runnable.Callables;
 import org.softwareFm.utilities.services.IServiceExecutor;
 import org.softwareFm.utilities.strings.Strings;
+import org.softwareFm.utilities.url.IUrlGenerator;
 
 public class SoftwareFmServer implements ISoftwareFmServer {
 
@@ -205,6 +206,8 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 		Callable<Integer> dayGetter = Callables.dayGetter();
 		Callable<String> softwareFmIdGenerator = Callables.uuidGenerator();
 		Callable<String> makeKey = Callables.makeCryptoKey();
+		IUrlGenerator userGenerator = ServerConstants.userGenerator();
+		IUrlGenerator projectGenerator = ServerConstants.projectGenerator();
 		new SoftwareFmServer(8080, 1000, IProcessCall.Utils.softwareFmProcessCall(dataSource, server, cryptoFn, makeKey, sfmRoot, mailer, monthGetter, dayGetter, softwareFmIdGenerator), ICallback.Utils.sysErrCallback(), usage);
 	}
 }

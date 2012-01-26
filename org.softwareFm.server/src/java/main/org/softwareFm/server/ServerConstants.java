@@ -1,5 +1,7 @@
 package org.softwareFm.server;
 
+import org.softwareFm.utilities.url.IUrlGenerator;
+
 public class ServerConstants {
 	public final static String dataFileName = "data.json";
 	public static final String collectionType = "collection";
@@ -70,4 +72,11 @@ public class ServerConstants {
 	public static final String projectCryptoKey = "projectCryptoKey";
 	public static final String softwareFmIdKey = "softwareFmId";
 
+	public static IUrlGenerator projectGenerator() {
+		return IUrlGenerator.Utils.generator("softwareFm/users/{0}/{1}/{2}/projects", ServerConstants.softwareFmIdKey);
+	}
+
+	public static IUrlGenerator userGenerator() {
+		return IUrlGenerator.Utils.generator("softwareFm/users/{0}/{1}/{2}", ServerConstants.softwareFmIdKey);
+	}
 }

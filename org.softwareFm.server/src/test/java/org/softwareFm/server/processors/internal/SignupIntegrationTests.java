@@ -12,6 +12,7 @@ public class SignupIntegrationTests extends AbstractProcessorMockIntegrationTest
 		assertEquals(salt, Sets.getOnly(saltProcessor.legalSalts));
 		assertEquals("signUpCrypto", signup("someEmail", salt, "hash", "someSoftwareFmId0"));
 		assertEquals(0, saltProcessor.legalSalts.size());
+		assertEquals(1, userMock.getUserDetailsCount.get());
 	}
 
 	public void testNeedsToUseSignupSalt() throws Exception {

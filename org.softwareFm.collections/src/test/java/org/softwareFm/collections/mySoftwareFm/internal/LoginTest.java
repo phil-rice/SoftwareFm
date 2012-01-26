@@ -2,6 +2,7 @@ package org.softwareFm.collections.mySoftwareFm.internal;
 
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.editors.AbstractNameAndValuesEditorTest;
+import org.softwareFm.collections.explorer.internal.UserData;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.utilities.collections.Lists;
@@ -42,10 +43,10 @@ public class LoginTest extends AbstractNameAndValuesEditorTest<Login> {
 
 	public void testEmailFailedLoginStrategy() {
 		checkOk("a.b.c@c.d", "somePassword", true);
-		assertEquals(0, loginCallback.loggedInEmail.size());
+		assertEquals(0, loginCallback.loggedInUserData.size());
 		assertEquals(0, loginCallback.failedEmail.size());
 		Swts.Buttons.press(okCancel.okButton);
-		assertEquals(0, loginCallback.loggedInEmail.size());
+		assertEquals(0, loginCallback.loggedInUserData.size());
 		assertEquals(1, loginCallback.failedEmail.size());
 
 	}
@@ -55,16 +56,15 @@ public class LoginTest extends AbstractNameAndValuesEditorTest<Login> {
 		loginStrategy.setOk(true);
 		loginStrategy.setEmailSetOk(true);
 		Swts.Buttons.press(okCancel.okButton);
-		assertEquals("a.b.c@c.d", Lists.getOnly(loginCallback.loggedInEmail));
-		assertEquals(loginStrategy.cryptoKey, Lists.getOnly(loginCallback.loggedInCrypto));
-		assertEquals("a.b.c@c.d", Lists.getOnly(loginCallback.loggedInEmail));
+		
+		assertEquals(new UserData("a.b.c@c.d", "someSoftwareFmId", loginStrategy.cryptoKey), Lists.getOnly(loginCallback.loggedInUserData));
 	}
 
 	public void testEmailAndCryptoSentToLoginStrategyWithEmailSaltFail() {
 		checkOk("a.b.c@c.d", "somePassword", true);
 		loginStrategy.setOk(true);
 		Swts.Buttons.press(okCancel.okButton);
-		assertEquals(0, loginCallback.loggedInEmail.size());
+		assertEquals(0, loginCallback.loggedInUserData.size());
 
 		assertEquals("a.b.c@c.d", Lists.getOnly(loginCallback.failedEmail));
 		assertEquals("someMessage", Lists.getOnly(loginCallback.failedMessage));
