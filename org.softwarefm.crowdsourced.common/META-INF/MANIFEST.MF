@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Common
+Bundle-SymbolicName: org.softwarefm.crowdsourced.common
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: SoftwareFM
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.softwareFm.utilities;bundle-version="1.0.0";visibility:=reexport
+Export-Package: org.softwareFm.server,
+ org.softwareFm.server.constants

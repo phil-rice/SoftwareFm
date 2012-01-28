@@ -1,18 +1,35 @@
 package org.softwareFm.server;
 
+import org.softwareFm.server.constants.CommonConstants;
+import org.softwareFm.server.constants.CommonMessages;
 import org.softwareFm.utilities.url.IUrlGenerator;
 
 public class ServerConstants {
-	public final static String dataFileName = "data.json";
-	public static final String collectionType = "collection";
-	public static final String typeTag = "sling:resourceType";
-	public static final String cannotCreateGitUnderSecondRepository = "Cannot create git {0} under second repository";
+	/**
+	 * @deprecated Use {@link CommonConstants#dataFileName} instead
+	 */
+	public final static String dataFileName = CommonConstants.dataFileName;
+	/**
+	 * @deprecated Use {@link CommonConstants#collectionType} instead
+	 */
+	public static final String collectionType = CommonConstants.collectionType;
+	/**
+	 * @deprecated Use {@link CommonConstants#typeTag} instead
+	 */
+	public static final String typeTag = CommonConstants.typeTag;
+	/**
+	 * @deprecated Use {@link CommonMessages#cannotCreateGitUnderSecondRepository} instead
+	 */
+	public static final String cannotCreateGitUnderSecondRepository = CommonMessages.cannotCreateGitUnderSecondRepository;
 	public static final String GET = "GET";
 	public static final String POST = "POST";
 	public static final String DELETE = "DELETE";
 	public static final String HEAD = "HEAD";
 	public static final String couldntStop = "Couldn't stop the server";
-	public static final long clientTimeOut = 500;
+	/**
+	 * @deprecated Use {@link CommonConstants#testTimeOutMs} instead
+	 */
+	public static final long clientTimeOut = CommonConstants.testTimeOutMs;
 	public static final int okStatusCode = 200;
 	public static final int notFoundStatusCode = 404;
 	public static final String dataParameterName = "data";
@@ -32,7 +49,10 @@ public class ServerConstants {
 	public static final String alreadyInCache = "<Already in Cache>";
 	public static final String notFoundMessage = "<Not found>";
 	public static final String foundMessage = "<Cloned>";
-	public static final String DOT_GIT = ".git";
+	/**
+	 * @deprecated Use {@link CommonConstants#DOT_GIT} instead
+	 */
+	public static final String DOT_GIT = CommonConstants.DOT_GIT;
 	public static final String madeRoot = "Made root at location {0}";
 	public static final String cannotPullWhenLocalRepositoryDoesntExist = "Cannot pull {0} when local repository doesn''t exist";
 	public static final String cannotPostWhenLocalRepositoryDoesntExist = "Cannot post {0} when local repository doesn''t exist";

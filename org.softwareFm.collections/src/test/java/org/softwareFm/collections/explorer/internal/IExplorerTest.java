@@ -19,7 +19,7 @@ import org.softwareFm.collections.explorer.IUsageStrategy;
 import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.display.timeline.IPlayListGetter;
-import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.resources.IResourceGetter;
@@ -64,7 +64,7 @@ public class IExplorerTest extends SwtTest {
 
 	@Override
 	protected void tearDown() throws Exception {
-		service.shutdownAndAwaitTermination(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+		service.shutdownAndAwaitTermination(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 		super.tearDown();
 	}
 

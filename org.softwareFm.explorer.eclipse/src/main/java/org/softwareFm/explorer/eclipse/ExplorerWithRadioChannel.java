@@ -46,6 +46,7 @@ import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.server.GitRepositoryFactory;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.services.IServiceExecutor;
 
@@ -179,8 +180,8 @@ public class ExplorerWithRadioChannel {
 			});
 		} finally {
 			facard.shutdown();
-			service.shutdownAndAwaitTermination(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
-			gitServiceExecutor.shutdownAndAwaitTermination(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+			service.shutdownAndAwaitTermination(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+			gitServiceExecutor.shutdownAndAwaitTermination(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 		}
 
 	}

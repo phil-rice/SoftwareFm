@@ -11,6 +11,7 @@ import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.utilities.crypto.Crypto;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.runnable.Callables;
@@ -61,13 +62,13 @@ public interface ILoginStrategy {
 																throw new NullPointerException(string);
 															if (softwareFmId == null)
 																throw new NullPointerException(string);
-															callback.signedUp(new UserData(email,  softwareFmId, crypto));
+															callback.signedUp(new UserData(email, softwareFmId, crypto));
 														} else
 															callback.failed(email, string);
 													}
 												});
 											}
-										}).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+										}).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 							} catch (Exception e) {
 								callback.failed(email, ServerConstants.timedOut);
 							}
@@ -102,7 +103,7 @@ public interface ILoginStrategy {
 								}
 								return null;
 							}
-						}).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+						}).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 					} catch (Exception e) {
 						callback.problemGettingSalt(ServerConstants.timedOut);
 					}
@@ -128,7 +129,7 @@ public interface ILoginStrategy {
 														Map<String, Object> map = Json.mapFromString(response.asString());
 														String crypto = (String) map.get(ServerConstants.cryptoKey);
 														String softwareFmId = (String) map.get(ServerConstants.softwareFmIdKey);
-														if (crypto == null||softwareFmId == null)
+														if (crypto == null || softwareFmId == null)
 															throw new NullPointerException(map.toString());
 														UserData userData = new UserData(email, softwareFmId, crypto);
 														callback.loggedIn(userData);
@@ -137,7 +138,7 @@ public interface ILoginStrategy {
 												}
 											});
 										}
-									}).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+									}).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 							return null;
 						}
 					});
@@ -165,7 +166,7 @@ public interface ILoginStrategy {
 													}
 												});
 											}
-										}).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+										}).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 							} catch (Exception e) {
 								callback.failedToSend(email, e.getMessage());
 							}
@@ -195,7 +196,7 @@ public interface ILoginStrategy {
 												}
 											});
 										}
-									}).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+									}).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 							return null;
 						}
 					});
@@ -223,7 +224,7 @@ public interface ILoginStrategy {
 												}
 											});
 										}
-									}).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+									}).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 							return null;
 						}
 					});
@@ -329,7 +330,7 @@ public interface ILoginStrategy {
 				@Override
 				public void signup(String email, String sessionSalt, String passwordHash, ISignUpCallback callback) {
 					System.out.println("Signing up: " + email + ", " + sessionSalt + ", " + passwordHash);
-					callback.signedUp(new UserData(email, Callables.call(softwareFmIdGenerator),Crypto.makeKey()));
+					callback.signedUp(new UserData(email, Callables.call(softwareFmIdGenerator), Crypto.makeKey()));
 				}
 
 				@Override

@@ -12,7 +12,7 @@ import org.softwareFm.mavenExtractor.IExtractorCallback;
 import org.softwareFm.mavenExtractor.MavenImporterConstants;
 import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.IGitFacard;
-import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.json.Json;
@@ -41,14 +41,14 @@ public class ImportJarName implements IExtractorCallback {
 		String url = urlGenerator.findUrlFor(Maps.stringObjectMap(CollectionConstants.artifactId, artifactId));
 		String repoUrl = Strings.allButLastSegment(url, "/");
 		File repoDirectory = new File(remoteRoot, repoUrl);
-		if (!new File(repoDirectory, ServerConstants.DOT_GIT).exists()) {
+		if (!new File(repoDirectory, CommonConstants.DOT_GIT).exists()) {
 			gitFacard.createRepository(remoteRoot, repoUrl);
 			System.out.println("Creating: " + repoDirectory);
 		}
 		File directory = new File(remoteRoot, url);
 		directory.mkdirs();
 		String data = Json.toString(Maps.stringObjectLinkedMap(CardConstants.group, getGroupId(model), CardConstants.artifact, artifactId, CardConstants.slingResourceType, CardConstants.jarName));
-		File file = new File(directory, ServerConstants.dataFileName);
+		File file = new File(directory, CommonConstants.dataFileName);
 		Files.setText(file, data);
 		gitFacard.addAllAndCommit(remoteRoot, IFileDescription.Utils.plain(url), "Importing jarName");
 		System.out.println(repoDirectory + "   " + artifactId + "  " + data);

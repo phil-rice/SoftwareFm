@@ -8,7 +8,7 @@ import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
 import org.softwareFm.server.IGitServer;
-import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.future.Futures;
 import org.softwareFm.utilities.json.Json;
@@ -39,7 +39,7 @@ public class ImportGitRepositoryFacard implements IRepositoryFacard {
 
 	@Override
 	public Future<?> post(String url, Map<String, Object> map, IResponseCallback callback) {
-		File file = new File(remoteGitServer.getRoot(), Urls.compose(url, ServerConstants.dataFileName));
+		File file = new File(remoteGitServer.getRoot(), Urls.compose(url, CommonConstants.dataFileName));
 		File directory = file.getParentFile();
 		directory.mkdirs();
 		String text = Json.toString(map);

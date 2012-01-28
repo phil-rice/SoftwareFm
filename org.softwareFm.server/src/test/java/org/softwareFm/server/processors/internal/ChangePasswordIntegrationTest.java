@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.server.processors.AbstractProcessorDatabaseIntegrationTests;
 import org.softwareFm.utilities.exceptions.WrappedException;
 
@@ -55,7 +56,7 @@ public class ChangePasswordIntegrationTest extends AbstractProcessorDatabaseInte
 					addParam(ServerConstants.emailKey, email).//
 					addParam(ServerConstants.passwordHashKey, oldHash).//
 					addParam(ServerConstants.newPasswordHashKey, newHash).//
-					execute(callback).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+					execute(callback).get(CommonConstants.testTimeOutMs, TimeUnit.SECONDS);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}

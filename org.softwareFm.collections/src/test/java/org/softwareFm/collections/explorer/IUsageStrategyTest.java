@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.server.processors.AbstractProcessorDatabaseIntegrationTests;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
@@ -24,7 +25,7 @@ public class IUsageStrategyTest extends AbstractProcessorDatabaseIntegrationTest
 	public void testUsingUpdatesProjectData() throws Exception {
 		String sessionSalt = makeSalt();
 		String crypto = signup("someEmail", sessionSalt, "hash", "someNewSoftwareFmId0");
-		usageStrategy.using("someNewSoftwareFmId0", "groupId1", "artifactId1", IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, "")).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+		usageStrategy.using("someNewSoftwareFmId0", "groupId1", "artifactId1", IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 		assertTrue(userFile.exists());
 		assertTrue(userProjectFile.exists());
 		Map<String, Object> projectData = getProjectData(crypto);
@@ -34,9 +35,9 @@ public class IUsageStrategyTest extends AbstractProcessorDatabaseIntegrationTest
 	public void testMyData() throws Exception {
 		String sessionSalt = makeSalt();
 		String crypto = signup("someEmail", sessionSalt, "hash", "someNewSoftwareFmId0");
-		usageStrategy.using("someNewSoftwareFmId0", "groupId1", "artifactId1", IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, "")).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
-		usageStrategy.using("someNewSoftwareFmId0", "groupId1", "artifactId2", IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, "")).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
-		usageStrategy.using("someNewSoftwareFmId0", "groupId2", "artifactId3", IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, "")).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+		usageStrategy.using("someNewSoftwareFmId0", "groupId1", "artifactId1", IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+		usageStrategy.using("someNewSoftwareFmId0", "groupId1", "artifactId2", IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+		usageStrategy.using("someNewSoftwareFmId0", "groupId2", "artifactId3", IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 
 		Map<String, Object> projectData = getProjectData(crypto);
 
@@ -61,7 +62,7 @@ public class IUsageStrategyTest extends AbstractProcessorDatabaseIntegrationTest
 		IGitServer localGitServer = IGitServer.Utils.gitServer(localRoot, remoteRoot.getAbsolutePath());
 		usageStrategy = IUsageStrategy.Utils.usage(getServiceExecutor(), getHttpClient(), localGitServer, ServerConstants.userGenerator(), ServerConstants.projectGenerator(), "g", "a");
 		directory = new File(remoteRoot, "softwareFm/users/so/me/someNewSoftwareFmId0");
-		userFile = new File(directory, ServerConstants.dataFileName);
+		userFile = new File(directory, CommonConstants.dataFileName);
 		userProjectFile = new File(directory, Urls.compose("projects", "someMonth"));
 	}
 

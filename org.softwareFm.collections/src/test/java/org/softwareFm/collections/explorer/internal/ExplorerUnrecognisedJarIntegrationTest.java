@@ -16,7 +16,7 @@ import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
@@ -148,13 +148,13 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 		IUrlGenerator jarUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.jarNameUrlKey);
 		String url = jarUrlGenerator.findUrlFor(urlMap);
 		File antDirectory = new File(localRoot, url);
-		assertEquals(Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), Json.mapFromString(Files.getText(new File(antDirectory, ServerConstants.dataFileName))));
+		assertEquals(Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), Json.mapFromString(Files.getText(new File(antDirectory, CommonConstants.dataFileName))));
 		// the actual new jar is in a sub directory. .git should be the only other directory
 		File[] antSubDirectories = Files.listChildDirectoriesIgnoringDot(antDirectory);
 		assertEquals(1, antSubDirectories.length);
 		File subDirectory = antSubDirectories[0];
 		assertEquals(Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.jarName, CardConstants.group, "some.group", CollectionConstants.artifactId, "someArtifact"), //
-				Json.mapFromString(Files.getText(new File(subDirectory, ServerConstants.dataFileName))));
+				Json.mapFromString(Files.getText(new File(subDirectory, CommonConstants.dataFileName))));
 	}
 
 	private void checkRepositoryPopulated(String digest, String group, String artifact, String version) {
@@ -163,12 +163,12 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 
 		IUrlGenerator jarUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.jarUrlKey);
 		String jarUrl = jarUrlGenerator.findUrlFor(groupArtifactVersionDigest);
-		assertEquals(groupArtifactVersion, Json.mapFromString(Files.getText(new File(localRoot, Urls.compose(jarUrl, ServerConstants.dataFileName)))));
-		assertEquals(groupArtifactVersion, Json.mapFromString(Files.getText(new File(remoteRoot, Urls.compose(jarUrl, ServerConstants.dataFileName)))));
+		assertEquals(groupArtifactVersion, Json.mapFromString(Files.getText(new File(localRoot, Urls.compose(jarUrl, CommonConstants.dataFileName)))));
+		assertEquals(groupArtifactVersion, Json.mapFromString(Files.getText(new File(remoteRoot, Urls.compose(jarUrl, CommonConstants.dataFileName)))));
 
 		IUrlGenerator artifactGenerator = cardConfig.urlGeneratorMap.get(CardConstants.artifactUrlKey);
 		String artifactUrl = artifactGenerator.findUrlFor(groupArtifactVersion);
-		assertEquals(Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.artifact), Json.mapFromString(Files.getText(new File(remoteRoot, Urls.compose(artifactUrl, ServerConstants.dataFileName)))));
+		assertEquals(Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.artifact), Json.mapFromString(Files.getText(new File(remoteRoot, Urls.compose(artifactUrl, CommonConstants.dataFileName)))));
 
 	}
 

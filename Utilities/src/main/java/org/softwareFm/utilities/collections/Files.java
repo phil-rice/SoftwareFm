@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.constants.UtilityConstants;
 import org.softwareFm.utilities.constants.UtilityMessages;
 import org.softwareFm.utilities.exceptions.WrappedException;
@@ -67,7 +66,7 @@ public class Files {
 	}
 
 	/** The directory is locked, and the operation begins! */
-	public static void doOperationInLock(File dir, String lockFileName, ICallback<File> callback) {
+	public static <T> T doOperationInLock(File dir, String lockFileName, IFunction1<File, T> callback) {
 		File file = new File(dir, lockFileName);
 		try {
 			if (!file.exists()) {
@@ -84,7 +83,7 @@ public class Files {
 				// Get an exclusive lock on the whole file
 				FileLock lock = channel.lock();
 				try {
-					callback.process(file);
+					return callback.apply(file);
 				} finally {
 					lock.release();
 					channel.close();
@@ -515,7 +514,7 @@ public class Files {
 					byte[] result = new byte[ByteArrayAndLength.length(list)];
 					int index = 0;
 					for (ByteArrayAndLength byteArrayAndLength : list) {
-						System.arraycopy(byteArrayAndLength.bytes, 0,  result, index, byteArrayAndLength.length);
+						System.arraycopy(byteArrayAndLength.bytes, 0, result, index, byteArrayAndLength.length);
 						index += byteArrayAndLength.length;
 					}
 					assert index == result.length;

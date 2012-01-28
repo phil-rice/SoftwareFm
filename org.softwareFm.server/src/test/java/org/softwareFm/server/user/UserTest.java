@@ -7,6 +7,7 @@ import java.util.Map;
 import org.softwareFm.server.GitTest;
 import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.server.internal.LocalGitClient;
 import org.softwareFm.server.user.internal.User;
 import org.softwareFm.utilities.collections.Files;
@@ -42,19 +43,19 @@ public class UserTest extends GitTest {
 		assertTrue(dotGit.exists());
 
 		String url = userGenerator.findUrlFor(userDetails);
-		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, ServerConstants.dataFileName, key);
+		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, CommonConstants.dataFileName, key);
 		File file = fileDescription.getFile(localRoot);
 		assertEquals(v11, fileDescription.decode(Files.getText(file)));
 	}
 
 	public void testSaveUserDetailsWhenRepositoryExists() {
 		assertFalse(dotGit.exists());
-		gitFacard.createRepository(dotGit, "");
+		gitReader.createRepository(dotGit, "");
 		assertTrue(dotGit.exists());
 		user.saveUserDetails(userDetails, v11);
 
 		String url = userGenerator.findUrlFor(userDetails);
-		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, ServerConstants.dataFileName, key);
+		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, CommonConstants.dataFileName, key);
 		File file = fileDescription.getFile(localRoot);
 		assertEquals(v11, fileDescription.decode(Files.getText(file)));
 	}
@@ -158,7 +159,7 @@ public class UserTest extends GitTest {
 		userAndProjectDetails = Maps.with(userDetails, "g", groupId1, "a", artifactId11);
 
 		repositoryDirectory = new File(localRoot, "user/sf/mU");
-		dotGit = new File(repositoryDirectory, ServerConstants.DOT_GIT);
+		dotGit = new File(repositoryDirectory, CommonConstants.DOT_GIT);
 	}
 
 }

@@ -6,6 +6,7 @@ import java.util.Collections;
 import org.junit.Test;
 import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.CommonConstants;
 
 public class DeleteProcessorTest extends AbstractProcessCallTest<DeleteProcessor> {
 
@@ -29,7 +30,7 @@ public class DeleteProcessorTest extends AbstractProcessCallTest<DeleteProcessor
 
 	private void checkContentsDontExist(File root, String url) {
 		File directory = new File(root, url);
-		File file = new File(directory, ServerConstants.dataFileName);
+		File file = new File(directory, CommonConstants.dataFileName);
 		assertFalse(file.exists());
 	}
 

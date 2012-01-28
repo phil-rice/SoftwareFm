@@ -8,9 +8,10 @@ import java.util.concurrent.Callable;
 
 import org.softwareFm.server.GetResult;
 import org.softwareFm.server.IFileDescription;
-import org.softwareFm.server.IGitFacard;
+import org.softwareFm.server.IGitReader;
 import org.softwareFm.server.ILocalGitClient;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.server.user.IUser;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.crypto.Crypto;
@@ -29,7 +30,7 @@ public class User implements IUser {
 	private final IUrlGenerator userGenerator;
 	private final IUrlGenerator projectDetailGenerator;
 
-	private final IGitFacard gitFacard = IGitFacard.Utils.makeFacard();
+	private final IGitReader gitReader = IGitReader.Utils.makeFacard();
 	private final String groupIdKey;
 	private final String artifactIdKey;
 	private final IFunction1<Map<String, Object>, String> cryptoFn;
@@ -46,7 +47,7 @@ public class User implements IUser {
 	@Override
 	public Map<String, Object> getUserDetails(Map<String, Object> userDetailMap) {
 		String crypto = Functions.call(cryptoFn, userDetailMap);
-		IFileDescription fileDescription = makeFileDescription(userGenerator, userDetailMap, crypto, ServerConstants.dataFileName);
+		IFileDescription fileDescription = makeFileDescription(userGenerator, userDetailMap, crypto, CommonConstants.dataFileName);
 		GetResult result = gitClient.getFile(fileDescription);
 		if (result.found)
 			return result.data;
@@ -57,13 +58,13 @@ public class User implements IUser {
 	@Override
 	public void saveUserDetails(Map<String, Object> userDetailMap, Map<String, Object> data) {
 		String crypto = Functions.call(cryptoFn, userDetailMap);
-		IFileDescription fileDescription = makeFileDescription(userGenerator, userDetailMap, crypto, ServerConstants.dataFileName);
+		IFileDescription fileDescription = makeFileDescription(userGenerator, userDetailMap, crypto, CommonConstants.dataFileName);
 		File file = fileDescription.getFile(gitClient.getRoot());
 		File repositoryRoot = fileDescription.findRepositoryUrl(file);
 		if (repositoryRoot == null) {
 			File directory = fileDescription.getDirectory(gitClient.getRoot());
 			File repositoryDirectory = directory.getParentFile();
-			gitFacard.createRepository(repositoryDirectory, "");
+			gitReader.createRepository(repositoryDirectory, "");
 		}
 		gitClient.post(fileDescription, data);
 	}

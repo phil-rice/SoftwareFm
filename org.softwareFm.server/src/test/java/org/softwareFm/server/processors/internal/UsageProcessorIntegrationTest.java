@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.server.processors.AbstractProcessorDatabaseIntegrationTests;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.user.IUser;
@@ -34,7 +35,7 @@ public class UsageProcessorIntegrationTest extends AbstractProcessorDatabaseInte
 				addParam(ServerConstants.softwareFmIdKey, "someSoftwareFmId").//
 				addParam("g", "someGroupId").//
 				addParam("a", "someArtifactId").//
-				execute(IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, "")).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+				execute(IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.SECONDS);
 		Map<String, Object> actualUserDetails = Json.mapFromEncryptedFile(userFile, key);
 		String projectCryptoKey = (String) actualUserDetails.get(ServerConstants.projectCryptoKey);
 
@@ -48,12 +49,12 @@ public class UsageProcessorIntegrationTest extends AbstractProcessorDatabaseInte
 				addParam(ServerConstants.softwareFmIdKey, "someSoftwareFmId").//
 				addParam("g", "someGroupId").//
 				addParam("a", "someArtifactId1").//
-				execute(IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, "")).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+				execute(IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.SECONDS);
 		getHttpClient().post("/" + ServerConstants.usagePrefix).//
 				addParam(ServerConstants.softwareFmIdKey, "someSoftwareFmId").//
 				addParam("g", "someGroupId").//
 				addParam("a", "someArtifactId2").//
-				execute(IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, "")).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+				execute(IResponseCallback.Utils.checkCallback(ServerConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.SECONDS);
 		Map<String, Object> actualUserDetails = Json.mapFromEncryptedFile(userFile, key);
 		String projectCryptoKey = (String) actualUserDetails.get(ServerConstants.projectCryptoKey);
 
@@ -68,7 +69,7 @@ public class UsageProcessorIntegrationTest extends AbstractProcessorDatabaseInte
 		super.setUp();
 		user = IProcessCall.Utils.makeUser(gitServer, cryptoFn, "g", "a");
 		userDetails = Maps.stringObjectMap(ServerConstants.softwareFmIdKey, "someSoftwareFmId");
-		userFile = new File(remoteRoot, "softwareFm/users/so/me/someSoftwareFmId/" + ServerConstants.dataFileName);
+		userFile = new File(remoteRoot, "softwareFm/users/so/me/someSoftwareFmId/" + CommonConstants.dataFileName);
 		projectFile = new File(remoteRoot, "softwareFm/users/so/me/someSoftwareFmId/projects/someMonth");
 	}
 }

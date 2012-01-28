@@ -35,7 +35,7 @@ import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
-import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.services.IServiceExecutor;
 
@@ -101,7 +101,7 @@ public class ExplorerUnit {
 		} finally {
 			if (facard != null)
 				facard.shutdown();
-			service.shutdownAndAwaitTermination(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+			service.shutdownAndAwaitTermination(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 		}
 	}
 }

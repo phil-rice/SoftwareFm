@@ -28,6 +28,7 @@ import org.softwareFm.httpClient.requests.MemoryResponseCallback;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ISoftwareFmServer;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -175,7 +176,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 
 	private String resetPassword(String magicString) throws InterruptedException, ExecutionException, TimeoutException {
 		MemoryResponseCallback memoryCallback = IResponseCallback.Utils.memoryCallback();
-		client.get(Urls.compose(ServerConstants.passwordResetLinkPrefix, magicString)).execute(memoryCallback).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+		client.get(Urls.compose(ServerConstants.passwordResetLinkPrefix, magicString)).execute(memoryCallback).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 		String html = memoryCallback.response.asString();
 		int start = html.indexOf(": ") + 2;
 		int end = html.indexOf("</html");
@@ -222,7 +223,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 	}
 
 	private void displayUntilText() {
-		dispatchUntil(display, ServerConstants.clientTimeOut * 1000, new Callable<Boolean>() {
+		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				Control firstChild = softwareFmComposite.getChildren()[0];
@@ -302,7 +303,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 				return false;
 			}
 		};
-		dispatchUntil(display, ServerConstants.clientTimeOut * 1000, childIsValueComposite);
+		dispatchUntil(display, CommonConstants.testTimeOutMs, childIsValueComposite);
 		@SuppressWarnings("unchecked")
 		IValueComposite<Composite> valueComposite = (IValueComposite<Composite>) softwareFmComposite.getChildren()[0];
 		return valueComposite;
@@ -310,7 +311,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 
 	private String startAndGetSignupSalt() {
 		mySoftwareFm.start();
-		dispatchUntil(display, ServerConstants.clientTimeOut * 1000, new Callable<Boolean>() {
+		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				return mySoftwareFm.getSignupSalt() != null;
@@ -340,7 +341,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		template.update("truncate users");
 		softwareFmComposite = mySoftwareFm.getComposite();
 
-		userFile = new File(root, Urls.compose("softwareFm/users/so/me/someNewSoftwareFmId0", ServerConstants.dataFileName));
+		userFile = new File(root, Urls.compose("softwareFm/users/so/me/someNewSoftwareFmId0", CommonConstants.dataFileName));
 	}
 
 	@Override

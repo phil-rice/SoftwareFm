@@ -11,7 +11,7 @@ import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.mavenExtractor.MavenImporterConstants;
 import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.IGitFacard;
-import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
@@ -40,12 +40,12 @@ public class ImportJarName2 {
 				File repoDirectory = new File(remoteRoot, repoUrl);
 				File jarNameDirectory = new File(remoteRoot, url);
 				jarNameDirectory.mkdirs();
-				if (!new File(repoDirectory, ServerConstants.DOT_GIT).exists()) {
+				if (!new File(repoDirectory, CommonConstants.DOT_GIT).exists()) {
 					gitFacard.createRepository(remoteRoot, repoUrl);
 					System.out.println("Creating: " + repoDirectory);
 				}
 				
-				File file = new File(jarNameDirectory, ServerConstants.dataFileName);
+				File file = new File(jarNameDirectory, CommonConstants.dataFileName);
 				String collectionData = Json.toString(Maps.stringObjectLinkedMap(CardConstants.slingResourceType, CardConstants.collection));
 				Files.setText(file, collectionData);
 
@@ -55,7 +55,7 @@ public class ImportJarName2 {
 				
 				String groupId = rs.getString("groupId");
 				String data = Json.toString(Maps.stringObjectLinkedMap(CardConstants.group, groupId, CardConstants.artifact, artifactId, CardConstants.slingResourceType, CardConstants.jarName));
-				File itemFile = new File(itemDirectory, ServerConstants.dataFileName);
+				File itemFile = new File(itemDirectory, CommonConstants.dataFileName);
 				Files.setText(itemFile, data);
 				gitFacard.addAllAndCommit(remoteRoot, IFileDescription.Utils.plain(repoUrl), "Import Jar Name");
 				System.out.println(String.format("%6d %-40s" ,count.incrementAndGet(), artifactId));

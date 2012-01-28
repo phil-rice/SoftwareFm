@@ -30,7 +30,7 @@ import org.softwareFm.jdtBinding.api.IBindingRipper;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.server.GitRepositoryFactory;
 import org.softwareFm.server.IGitServer;
-import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.services.IServiceExecutor;
@@ -73,7 +73,7 @@ public class Activator extends AbstractUIPlugin {
 		repository = null;
 
 		if (serviceExecutor != null)
-			serviceExecutor.shutdownAndAwaitTermination(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+			serviceExecutor.shutdownAndAwaitTermination(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 		serviceExecutor = null;
 		super.stop(context);
 	}

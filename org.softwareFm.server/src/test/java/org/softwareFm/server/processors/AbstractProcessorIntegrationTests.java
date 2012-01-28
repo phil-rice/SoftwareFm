@@ -8,6 +8,7 @@ import org.softwareFm.httpClient.requests.MemoryResponseCallback;
 import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.server.GitTest;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.strings.Strings;
@@ -15,6 +16,8 @@ import org.softwareFm.utilities.tests.IIntegrationTest;
 
 abstract public class AbstractProcessorIntegrationTests extends GitTest implements IIntegrationTest {
 
+	
+	
 	protected String signup(String email, String sessionSalt, String hash, String expectedSoftwareFmId) {
 		MapCallback callback = new MapCallback();
 		signup(email, sessionSalt, hash, callback);
@@ -31,7 +34,7 @@ abstract public class AbstractProcessorIntegrationTests extends GitTest implemen
 					addParam(ServerConstants.emailKey, email).//
 					addParam(ServerConstants.sessionSaltKey, sessionSalt).//
 					addParam(ServerConstants.passwordHashKey, hash).//
-					execute(callback).get(ServerConstants.clientTimeOut, TimeUnit.SECONDS);
+					execute(callback).get(CommonConstants.testTimeOutMs, TimeUnit.SECONDS);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
