@@ -30,7 +30,7 @@ import org.softwareFm.httpClient.api.IClientBuilder;
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ISoftwareFmServer;
-import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.utilities.arrays.ArrayHelper;
@@ -255,7 +255,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 
 	public static void main(String[] args) {
 		final IServiceExecutor service = IServiceExecutor.Utils.defaultExecutor();
-		final IClientBuilder client = IHttpClient.Utils.builder("localhost", ServerConstants.testPort);
+		final IClientBuilder client = IHttpClient.Utils.builder("localhost", CommonConstants.testPort);
 		IGitServer gitServer = IGitServer.Utils.noGitServer();
 		File home = new File(System.getProperty("user.home"));
 		final File localRoot = new File(home, ".sfm");

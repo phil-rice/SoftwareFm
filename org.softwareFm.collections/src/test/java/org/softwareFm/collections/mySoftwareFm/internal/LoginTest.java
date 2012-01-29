@@ -4,7 +4,7 @@ import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.editors.AbstractNameAndValuesEditorTest;
 import org.softwareFm.collections.explorer.internal.UserData;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.LoginConstants;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.maps.Maps;
 
@@ -22,7 +22,7 @@ public class LoginTest extends AbstractNameAndValuesEditorTest<Login> {
 	}
 	
 	public void testInitialEmailAddedToCardData(){
-		assertEquals(Maps.stringObjectMap(ServerConstants.emailKey, "initialEmail",CardConstants.slingResourceType, CardConstants.loginCardType), editor.content.data());
+		assertEquals(Maps.stringObjectMap(LoginConstants.emailKey, "initialEmail",CardConstants.slingResourceType, CardConstants.loginCardType), editor.content.data());
 	}
 
 	public void testNeedEmailAndPasswordToBeOk() {

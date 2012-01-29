@@ -20,7 +20,7 @@ import org.softwareFm.collections.mySoftwareFm.IShowMessage;
 import org.softwareFm.collections.mySoftwareFm.ISignUp;
 import org.softwareFm.collections.mySoftwareFm.ISignUpCallback;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.LoginConstants;
 import org.softwareFm.utilities.crypto.Crypto;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
@@ -33,7 +33,7 @@ public class Signup implements ISignUp {
 
 	public Signup(Composite parent, final CardConfig cardConfig, final String salt, String initialEmail, final ILoginStrategy strategy, final ILoginDisplayStrategy loginDisplayStrategy, final ISignUpCallback callback) {
 		String title = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, CardConstants.signupTitle);
-		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(ServerConstants.emailKey, initialEmail), Arrays.asList(//
+		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(LoginConstants.emailKey, initialEmail), Arrays.asList(//
 				INamesAndValuesEditor.Utils.text(cardConfig, cardType, "email"),//
 				INamesAndValuesEditor.Utils.password(cardConfig, cardType, "password"),//
 				INamesAndValuesEditor.Utils.password(cardConfig, cardType, "confirmPassword")),//
@@ -86,7 +86,7 @@ public class Signup implements ISignUp {
 	}
 
 	private String getEmail() {
-		return (String) content.data().get(ServerConstants.emailKey);
+		return (String) content.data().get(LoginConstants.emailKey);
 	}
 
 	@Override

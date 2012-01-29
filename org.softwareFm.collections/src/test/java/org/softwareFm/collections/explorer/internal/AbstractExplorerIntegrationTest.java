@@ -45,6 +45,7 @@ import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.server.GitRepositoryFactory;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.Functions;
@@ -213,8 +214,8 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		remoteRoot = new File(root, "remote");
 		// remoteAsUri = new File(root, "remote").getAbsolutePath();
 
-		httpClient = IHttpClient.Utils.builder("localhost", ServerConstants.testPort);
-		repository = GitRepositoryFactory.gitLocalRepositoryFacardWithServer(AbstractLoginDataAccessor.defaultDataSource(), ServerConstants.testPort, localRoot, remoteRoot, Functions.<Map<String, Object>, String> expectionIfCalled(), Callables.<String> exceptionIfCalled(), Callables.<String> exceptionIfCalled(), Callables.<Integer> exceptionIfCalled(), Callables.<String> exceptionIfCalled(), "g", "a");
+		httpClient = IHttpClient.Utils.builder("localhost", CommonConstants.testPort);
+		repository = GitRepositoryFactory.gitLocalRepositoryFacardWithServer(AbstractLoginDataAccessor.defaultDataSource(), CommonConstants.testPort, localRoot, remoteRoot, Functions.<Map<String, Object>, String> expectionIfCalled(), Callables.<String> exceptionIfCalled(), Callables.<String> exceptionIfCalled(), Callables.<Integer> exceptionIfCalled(), Callables.<String> exceptionIfCalled(), "g", "a");
 
 		try {
 			cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().//

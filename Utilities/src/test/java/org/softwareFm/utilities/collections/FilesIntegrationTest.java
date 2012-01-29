@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import junit.framework.TestCase;
 
-import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.services.IServiceExecutor;
 import org.softwareFm.utilities.tests.IIntegrationTest;
 
@@ -33,12 +33,13 @@ public class FilesIntegrationTest extends TestCase implements IIntegrationTest {
 				@Override
 				public Void call() throws Exception {
 					for (int i = 0; i < size; i++)
-						Files.doOperationInLock(dir, lockFileName, new ICallback<File>() {
+						Files.doOperationInLock(dir, lockFileName, new IFunction1<File, Void>() {
 							@Override
-							public void process(File t) throws Exception {
+							public Void apply(File from) throws Exception {
 								int thisValue = count;
 								Thread.sleep(0);
 								count = thisValue + 1;
+								return null;
 							}
 						});
 					latch.countDown();

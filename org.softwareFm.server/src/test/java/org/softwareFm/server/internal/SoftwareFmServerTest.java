@@ -11,7 +11,7 @@ import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.httpClient.requests.MemoryResponseCallback;
 import org.softwareFm.server.ISoftwareFmServer;
-import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.IProcessResult;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -81,7 +81,7 @@ public class SoftwareFmServerTest extends TestCase implements IIntegrationTest {
 		super.setUp();
 		memory = ICallback.Utils.memory();
 		server = ISoftwareFmServer.Utils.testServerPort(new ProcessCallMock(), memory);
-		client = IHttpClient.Utils.builder("localhost", ServerConstants.testPort);
+		client = IHttpClient.Utils.builder("localhost", CommonConstants.testPort);
 	}
 
 	@Override

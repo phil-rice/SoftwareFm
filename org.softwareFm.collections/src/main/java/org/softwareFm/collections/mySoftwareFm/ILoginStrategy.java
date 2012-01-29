@@ -12,6 +12,7 @@ import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.server.ServerConstants;
 import org.softwareFm.server.constants.CommonConstants;
+import org.softwareFm.server.constants.LoginConstants;
 import org.softwareFm.utilities.crypto.Crypto;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.runnable.Callables;
@@ -43,10 +44,10 @@ public interface ILoginStrategy {
 						@Override
 						public Void call() throws Exception {
 							try {
-								client.post(ServerConstants.signupPrefix).//
-										addParam(ServerConstants.emailKey, email).//
-										addParam(ServerConstants.sessionSaltKey, sessionSalt).//
-										addParam(ServerConstants.passwordHashKey, passwordHash).//
+								client.post(CommonConstants.signupPrefix).//
+										addParam(LoginConstants.emailKey, email).//
+										addParam(CommonConstants.sessionSaltKey, sessionSalt).//
+										addParam(LoginConstants.passwordHashKey, passwordHash).//
 										execute(new IResponseCallback() {
 											@Override
 											public void process(final IResponse response) {
@@ -54,10 +55,10 @@ public interface ILoginStrategy {
 													@Override
 													public void run() {
 														String string = response.asString();
-														if (response.statusCode() == ServerConstants.okStatusCode) {
+														if (response.statusCode() == CommonConstants.okStatusCode) {
 															Map<String, Object> map = Json.mapFromString(string);
-															String crypto = (String) map.get(ServerConstants.cryptoKey);
-															String softwareFmId = (String) map.get(ServerConstants.softwareFmIdKey);
+															String crypto = (String) map.get(LoginConstants.cryptoKey);
+															String softwareFmId = (String) map.get(LoginConstants.softwareFmIdKey);
 															if (crypto == null)
 																throw new NullPointerException(string);
 															if (softwareFmId == null)
@@ -84,13 +85,13 @@ public interface ILoginStrategy {
 							@Override
 							public Void call() throws Exception {
 								try {
-									client.get(ServerConstants.makeSaltPrefix).execute(new IResponseCallback() {
+									client.get(CommonConstants.makeSaltPrefix).execute(new IResponseCallback() {
 										@Override
 										public void process(final IResponse response) {
 											display.asyncExec(new Runnable() {
 												@Override
 												public void run() {
-													if (response.statusCode() == ServerConstants.okStatusCode)
+													if (response.statusCode() == CommonConstants.okStatusCode)
 														callback.saltReceived(response.asString());
 													else
 														callback.problemGettingSalt(response.asString());
@@ -115,20 +116,20 @@ public interface ILoginStrategy {
 						@Override
 						public Void call() throws Exception {
 							String hash = Crypto.digest(emailSalt, password);
-							client.post(ServerConstants.loginCommandPrefix).//
-									addParam(ServerConstants.emailKey, email).//
-									addParam(ServerConstants.sessionSaltKey, sessionSalt).//
-									addParam(ServerConstants.passwordHashKey, hash).//
+							client.post(CommonConstants.loginCommandPrefix).//
+									addParam(LoginConstants.emailKey, email).//
+									addParam(CommonConstants.sessionSaltKey, sessionSalt).//
+									addParam(LoginConstants.passwordHashKey, hash).//
 									execute(new IResponseCallback() {
 										@Override
 										public void process(final IResponse response) {
 											display.asyncExec(new Runnable() {
 												@Override
 												public void run() {
-													if (response.statusCode() == ServerConstants.okStatusCode) {
+													if (response.statusCode() == CommonConstants.okStatusCode) {
 														Map<String, Object> map = Json.mapFromString(response.asString());
-														String crypto = (String) map.get(ServerConstants.cryptoKey);
-														String softwareFmId = (String) map.get(ServerConstants.softwareFmIdKey);
+														String crypto = (String) map.get(LoginConstants.cryptoKey);
+														String softwareFmId = (String) map.get(LoginConstants.softwareFmIdKey);
 														if (crypto == null || softwareFmId == null)
 															throw new NullPointerException(map.toString());
 														UserData userData = new UserData(email, softwareFmId, crypto);
@@ -150,16 +151,16 @@ public interface ILoginStrategy {
 						@Override
 						public Void call() throws Exception {
 							try {
-								client.post(ServerConstants.forgottonPasswordPrefix).//
-										addParam(ServerConstants.emailKey, email).//
-										addParam(ServerConstants.sessionSaltKey, sessionSalt).//
+								client.post(CommonConstants.forgottonPasswordPrefix).//
+										addParam(LoginConstants.emailKey, email).//
+										addParam(CommonConstants.sessionSaltKey, sessionSalt).//
 										execute(new IResponseCallback() {
 											@Override
 											public void process(final IResponse response) {
 												display.asyncExec(new Runnable() {
 													@Override
 													public void run() {
-														if (response.statusCode() == ServerConstants.okStatusCode)
+														if (response.statusCode() == CommonConstants.okStatusCode)
 															callback.emailSent(email);
 														else
 															callback.failedToSend(email, response.asString());
@@ -180,16 +181,16 @@ public interface ILoginStrategy {
 					serviceExecutor.submit(new Callable<Void>() {
 						@Override
 						public Void call() throws Exception {
-							client.post(ServerConstants.emailSaltPrefix).//
-									addParam(ServerConstants.sessionSaltKey, sessionSalt).//
-									addParam(ServerConstants.emailKey, email).//
+							client.post(CommonConstants.emailSaltPrefix).//
+									addParam(CommonConstants.sessionSaltKey, sessionSalt).//
+									addParam(LoginConstants.emailKey, email).//
 									execute(new IResponseCallback() {
 										@Override
 										public void process(final IResponse response) {
 											display.asyncExec(new Runnable() {
 												@Override
 												public void run() {
-													if (response.statusCode() == ServerConstants.okStatusCode)
+													if (response.statusCode() == CommonConstants.okStatusCode)
 														callback.saltReceived(response.asString());
 													else
 														callback.problemGettingSalt(response.asString());
@@ -207,17 +208,17 @@ public interface ILoginStrategy {
 					serviceExecutor.submit(new Callable<Void>() {
 						@Override
 						public Void call() throws Exception {
-							client.post(ServerConstants.changePasswordPrefix).//
-									addParam(ServerConstants.emailKey, email).//
-									addParam(ServerConstants.passwordHashKey, oldHash).//
-									addParam(ServerConstants.newPasswordHashKey, newHash).//
+							client.post(CommonConstants.changePasswordPrefix).//
+									addParam(LoginConstants.emailKey, email).//
+									addParam(LoginConstants.passwordHashKey, oldHash).//
+									addParam(LoginConstants.newPasswordHashKey, newHash).//
 									execute(new IResponseCallback() {
 										@Override
 										public void process(final IResponse response) {
 											display.asyncExec(new Runnable() {
 												@Override
 												public void run() {
-													if (response.statusCode() == ServerConstants.okStatusCode)
+													if (response.statusCode() == CommonConstants.okStatusCode)
 														callback.changedPassword(email);
 													else
 														callback.failedToChangePassword(email, response.asString());

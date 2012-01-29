@@ -27,6 +27,8 @@ public interface IGitOperations {
 
 	String getConfig(String url, String section, String subsection, String name);
 	
+	File getRoot();
+	
 	public static class Utils{
 		public static IGitOperations gitOperations(File root){
 			return new GitOperations(root);

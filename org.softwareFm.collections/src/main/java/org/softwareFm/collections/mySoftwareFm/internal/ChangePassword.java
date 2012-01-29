@@ -19,7 +19,7 @@ import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.collections.mySoftwareFm.IRequestSaltCallback;
 import org.softwareFm.collections.mySoftwareFm.IShowMessage;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.LoginConstants;
 import org.softwareFm.utilities.crypto.Crypto;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
@@ -34,7 +34,7 @@ public class ChangePassword implements IChangePassword {
 	public ChangePassword(Composite parent, final CardConfig cardConfig, String initialEmail, final ILoginStrategy loginStrategy, final ILoginDisplayStrategy loginDisplayStrategy, final IChangePasswordCallback callback) {
 		this.email = initialEmail;
 		String title = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, CardConstants.changePasswordTitle);
-		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(ServerConstants.emailKey, initialEmail), Arrays.asList(//
+		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(LoginConstants.emailKey, initialEmail), Arrays.asList(//
 				INamesAndValuesEditor.Utils.password(cardConfig, cardType, "password"),//
 				INamesAndValuesEditor.Utils.password(cardConfig, cardType, "newPassword"),//
 				INamesAndValuesEditor.Utils.password(cardConfig, cardType, "confirmNewPassword")),//

@@ -6,8 +6,8 @@ import java.util.Map;
 
 import org.softwareFm.server.GitTest;
 import org.softwareFm.server.IFileDescription;
-import org.softwareFm.server.ServerConstants;
 import org.softwareFm.server.constants.CommonConstants;
+import org.softwareFm.server.constants.LoginConstants;
 import org.softwareFm.server.internal.LocalGitClient;
 import org.softwareFm.server.user.internal.User;
 import org.softwareFm.utilities.collections.Files;
@@ -68,15 +68,15 @@ public class UserTest extends GitTest {
 	public void testGetProjectDetailsCreatesCryptoKeyInUserDetailsFirstTimeAndUsesItLater() {
 		user.saveUserDetails(userDetails, v11);
 		Map<String, Object> initialDetails = user.getUserDetails(userDetails);
-		assertFalse(initialDetails.containsKey(ServerConstants.projectCryptoKey));
+		assertFalse(initialDetails.containsKey(LoginConstants.projectCryptoKey));
 
 		user.getProjectDetails(userAndProjectDetails, "month");
 
 		Map<String, Object> finalDetails = user.getUserDetails(userDetails);
-		Object projectCrypto = finalDetails.get(ServerConstants.projectCryptoKey);
+		Object projectCrypto = finalDetails.get(LoginConstants.projectCryptoKey);
 
 		Map<String, Object> finalDetails2 = user.getUserDetails(userDetails);
-		Object projectCrypto2 = finalDetails2.get(ServerConstants.projectCryptoKey);
+		Object projectCrypto2 = finalDetails2.get(LoginConstants.projectCryptoKey);
 
 		assertEquals(projectCrypto, projectCrypto2);
 		assertNotNull(projectCrypto);
@@ -116,7 +116,7 @@ public class UserTest extends GitTest {
 		File file = new File(localRoot, Urls.compose(url, "month"));
 
 		String text = Files.getText(file);
-		String projectCrypto = (String) user.getUserDetails(userDetails).get(ServerConstants.projectCryptoKey);
+		String projectCrypto = (String) user.getUserDetails(userDetails).get(LoginConstants.projectCryptoKey);
 		
 		String decrypted = Crypto.aesDecrypt(projectCrypto, text);
 		Map<String, Object> actual = Json.mapFromString(decrypted);

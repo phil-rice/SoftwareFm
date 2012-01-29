@@ -10,8 +10,8 @@ import org.softwareFm.server.GetResult;
 import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.IGitReader;
 import org.softwareFm.server.ILocalGitClient;
-import org.softwareFm.server.ServerConstants;
 import org.softwareFm.server.constants.CommonConstants;
+import org.softwareFm.server.constants.LoginConstants;
 import org.softwareFm.server.user.IUser;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.crypto.Crypto;
@@ -110,11 +110,11 @@ public class User implements IUser {
 
 	private String getProjectCrypto(final Map<String, Object> userDetailMap) {
 		final Map<String, Object> userDetails = getUserDetails(userDetailMap);
-		String projectCrypto = (String) Maps.findOrCreate(userDetails, ServerConstants.projectCryptoKey, new Callable<Object>() {
+		String projectCrypto = (String) Maps.findOrCreate(userDetails, LoginConstants.projectCryptoKey, new Callable<Object>() {
 			@Override
 			public Object call() throws Exception {
 				String result = Crypto.makeKey();
-				Map<String, Object> modifiedUserDetails = Maps.with(userDetails, ServerConstants.projectCryptoKey, result);
+				Map<String, Object> modifiedUserDetails = Maps.with(userDetails, LoginConstants.projectCryptoKey, result);
 				saveUserDetails(userDetailMap, modifiedUserDetails);
 				return result;
 			}

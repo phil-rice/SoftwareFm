@@ -14,7 +14,7 @@ import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.httpClient.response.IResponse;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ISoftwareFmServer;
-import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.utilities.callbacks.ICallback;
@@ -31,7 +31,7 @@ public class SoftwareFmServerIntegrationTest extends TestCase implements IIntegr
 	private IClientBuilder client;
 
 	public void testThrows404ForContentXml() throws Exception {
-		CheckCallback checkCallback = IResponseCallback.Utils.checkCallback(ServerConstants.notFoundStatusCode, "");
+		CheckCallback checkCallback = IResponseCallback.Utils.checkCallback(CommonConstants.notFoundStatusCode, "");
 		client.head("content.xml").execute(checkCallback).get(200, TimeUnit.SECONDS);
 		checkCallback.assertCalledSuccessfullyOnce();
 	}
@@ -40,7 +40,7 @@ public class SoftwareFmServerIntegrationTest extends TestCase implements IIntegr
 		client.get("test.css").execute(new IResponseCallback() {
 			@Override
 			public void process(IResponse response) {
-				assertEquals(ServerConstants.okStatusCode, response.statusCode());
+				assertEquals(CommonConstants.okStatusCode, response.statusCode());
 				assertEquals("Here is some content", response.asString());
 				assertEquals("text/css", response.mimeType());
 			}
@@ -59,7 +59,7 @@ public class SoftwareFmServerIntegrationTest extends TestCase implements IIntegr
 		Callable<String> softwareFmIdGenerator = Callables.exceptionIfCalled();
 		Callable<String> cryptoGenerator = Callables.exceptionIfCalled();
 		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCallWithoutMail(AbstractLoginDataAccessor.defaultDataSource(), gitServer, cryptoFn, cryptoGenerator, fileRoot, monthGetter, dayGetter, softwareFmIdGenerator, "g", "a"), memory);
-		client = IHttpClient.Utils.builder("localhost", ServerConstants.testPort);
+		client = IHttpClient.Utils.builder("localhost", CommonConstants.testPort);
 	}
 
 	@Override

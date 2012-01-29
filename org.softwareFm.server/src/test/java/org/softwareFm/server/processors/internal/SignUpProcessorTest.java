@@ -3,7 +3,10 @@ package org.softwareFm.server.processors.internal;
 import java.util.Map;
 
 import org.apache.http.RequestLine;
-import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.CommonConstants;
+import org.softwareFm.server.constants.LoginConstants;
+import org.softwareFm.server.constants.LoginMessages;
+import org.softwareFm.server.processors.AbstractProcessCallTest;
 import org.softwareFm.server.processors.IProcessResult;
 import org.softwareFm.server.user.IUser;
 import org.softwareFm.server.user.internal.UserMock;
@@ -13,25 +16,25 @@ import org.softwareFm.utilities.runnable.Callables;
 
 public class SignUpProcessorTest extends AbstractProcessCallTest<SignupProcessor> {
 
-	private final String url = "/" + ServerConstants.signupPrefix;
+	private final String url = "/" + CommonConstants.signupPrefix;
 
 	private SaltProcessorMock saltProcessor;
 	private SignUpCheckerMock checker;
-	private final RequestLine requestLine = makeRequestLine(ServerConstants.POST, url);
+	private final RequestLine requestLine = makeRequestLine(CommonConstants.POST, url);
 
 	private UserMock userMock;
 
 	public void testIgnoresEverythingExceptGetWithPrefix() {
 		checkIgnoresNoneGet();
-		checkIgnores(ServerConstants.GET);
-		assertNull(processor.process(makeRequestLine(ServerConstants.GET, url), Maps.stringObjectMap("a", 1)));
+		checkIgnores(CommonConstants.GET);
+		assertNull(processor.process(makeRequestLine(CommonConstants.GET, url), Maps.stringObjectMap("a", 1)));
 	}
 
 	public void testInvalidatesSaltAndUsesSignupChecker() {
 		String salt = saltProcessor.makeSalt();
 		Map<String, Object> data = makeData(salt);
 		IProcessResult result = processor.process(requestLine, data);
-		checkStringResultWithMap(result, ServerConstants.cryptoKey, "someCrypto", ServerConstants.softwareFmIdKey, "someSoftwareFmId0");
+		checkStringResultWithMap(result, LoginConstants.cryptoKey, "someCrypto", LoginConstants.softwareFmIdKey, "someSoftwareFmId0");
 
 		assertEquals(salt, Lists.getOnly(checker.salts));
 		assertEquals("someEmail", Lists.getOnly(checker.emails));
@@ -41,14 +44,14 @@ public class SignUpProcessorTest extends AbstractProcessCallTest<SignupProcessor
 
 	public void testCreatesUserDetails() {
 		String salt = saltProcessor.makeSalt();
-		processor.process(requestLine, Maps.stringObjectMap(ServerConstants.sessionSaltKey, salt, ServerConstants.softwareFmIdKey, "someSoftwareFmId0", ServerConstants.emailKey, "someEmail"));
-		assertEquals(Maps.makeMap(ServerConstants.cryptoKey, "someCrypto", ServerConstants.softwareFmIdKey, "someSoftwareFmId0"), Lists.getOnly(userMock.userDetailMaps));
-		assertEquals(Maps.makeMap(ServerConstants.emailKey, "someEmail"), Lists.getOnly(userMock.datas));
+		processor.process(requestLine, Maps.stringObjectMap(LoginConstants.sessionSaltKey, salt, LoginConstants.softwareFmIdKey, "someSoftwareFmId0", LoginConstants.emailKey, "someEmail"));
+		assertEquals(Maps.makeMap(LoginConstants.cryptoKey, "someCrypto", LoginConstants.softwareFmIdKey, "someSoftwareFmId0"), Lists.getOnly(userMock.userDetailMaps));
+		assertEquals(Maps.makeMap(LoginConstants.emailKey, "someEmail"), Lists.getOnly(userMock.datas));
 		assertEquals(1, userMock.getUserDetailsCount.get());
 	}
 
 	private Map<String, Object> makeData(String salt) {
-		return Maps.stringObjectMap(ServerConstants.emailKey, "someEmail", ServerConstants.sessionSaltKey, salt, ServerConstants.passwordHashKey, "someHash");
+		return Maps.stringObjectMap(LoginConstants.emailKey, "someEmail", LoginConstants.sessionSaltKey, salt, LoginConstants.passwordHashKey, "someHash");
 	}
 
 	public void testDoesntSIgnUpWithIllegalSalt() {
@@ -56,7 +59,7 @@ public class SignUpProcessorTest extends AbstractProcessCallTest<SignupProcessor
 		Map<String, Object> data = makeData("not a salt");
 		IProcessResult result = processor.process(requestLine, data);
 		assertNotNull(result);// contents dealt with in integration test
-		checkErrorResult(result, ServerConstants.notFoundStatusCode, ServerConstants.invalidSaltMessage, ServerConstants.invalidSaltMessage);
+		checkErrorResult(result, CommonConstants.notFoundStatusCode, LoginMessages.invalidSaltMessage, LoginMessages.invalidSaltMessage);
 		assertEquals(1, saltProcessor.checkAndInvalidateCount.get());
 		assertEquals(0, checker.salts.size());
 	}

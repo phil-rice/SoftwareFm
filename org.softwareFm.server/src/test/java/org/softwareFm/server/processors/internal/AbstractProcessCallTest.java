@@ -9,8 +9,7 @@ import org.apache.http.ProtocolVersion;
 import org.apache.http.RequestLine;
 import org.apache.http.entity.StringEntity;
 import org.softwareFm.server.GitTest;
-import org.softwareFm.server.IGitServer;
-import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.IProcessResult;
 import org.softwareFm.utilities.collections.Files;
@@ -23,8 +22,6 @@ abstract public class AbstractProcessCallTest<T extends IProcessCall> extends Gi
 	abstract protected T makeProcessor();
 
 	protected T processor;
-	protected IGitServer localGitServer;
-	protected IGitServer remoteGitServer;
 
 	protected void checkIgnores(String method) {
 		String uri = "someUri";
@@ -43,29 +40,27 @@ abstract public class AbstractProcessCallTest<T extends IProcessCall> extends Gi
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		remoteGitServer = IGitServer.Utils.gitServer(remoteRoot, "not used");
-		localGitServer = IGitServer.Utils.gitServer(localRoot, remoteGitServer.getRoot().getAbsolutePath());
 		processor = makeProcessor();
 
 	}
 
 	protected Map<String, Object> makeDataMap(Map<String, Object> map) {
-		return Maps.stringObjectMap(ServerConstants.dataParameterName, Json.toString(map));
+		return Maps.stringObjectMap(CommonConstants.dataParameterName, Json.toString(map));
 	}
 
 	protected void checkIgnoresNonePosts() {
-		checkIgnores(ServerConstants.GET);
-		checkIgnores(ServerConstants.DELETE);
+		checkIgnores(CommonConstants.GET);
+		checkIgnores(CommonConstants.DELETE);
 	}
 
 	protected void checkIgnoresNoneGet() {
-		checkIgnores(ServerConstants.POST);
-		checkIgnores(ServerConstants.DELETE);
+		checkIgnores(CommonConstants.POST);
+		checkIgnores(CommonConstants.DELETE);
 	}
 
 	protected void checkGetFromProcessor(String url, final Object... expected) {
 		try {
-			IProcessResult result = processor.process(makeRequestLine(ServerConstants.GET, url), emptyMap);
+			IProcessResult result = processor.process(makeRequestLine(CommonConstants.GET, url), emptyMap);
 			checkStringResultWithMap(result, expected);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
@@ -150,7 +145,7 @@ abstract public class AbstractProcessCallTest<T extends IProcessCall> extends Gi
 
 	protected void checkGetStringFromProcessor(String url, final String expected) {
 		try {
-			IProcessResult result = processor.process(makeRequestLine(ServerConstants.GET, url), emptyMap);
+			IProcessResult result = processor.process(makeRequestLine(CommonConstants.GET, url), emptyMap);
 			checkStringResult(result, expected);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);

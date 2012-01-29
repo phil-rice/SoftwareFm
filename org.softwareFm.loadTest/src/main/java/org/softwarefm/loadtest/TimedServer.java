@@ -10,7 +10,7 @@ import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ISoftwareFmServer;
-import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.IProcessResult;
@@ -46,11 +46,11 @@ public class TimedServer {
 		int threads = 10;
 		final int callsPerThread = 100;
 		final String host = "localhost";
-		ISoftwareFmServer softwareFmServer = host.equals("localhost") ? ISoftwareFmServer.Utils.server(ServerConstants.testPort, 10 * threads, processCall, ICallback.Utils.<Throwable> noCallback()) : null;
+		ISoftwareFmServer softwareFmServer = host.equals("localhost") ? ISoftwareFmServer.Utils.server(CommonConstants.testPort, 10 * threads, processCall, ICallback.Utils.<Throwable> noCallback()) : null;
 		MultiThreadedTimeTester<IHttpClient> tester = new MultiThreadedTimeTester<IHttpClient>(threads, callsPerThread, new ITimable<IHttpClient>() {
 			@Override
 			public IHttpClient start(int thread) {
-				IHttpClient client = IHttpClient.Utils.builderWithThreads(host, ServerConstants.testPort, 10);
+				IHttpClient client = IHttpClient.Utils.builderWithThreads(host, CommonConstants.testPort, 10);
 				return client;
 			}
 

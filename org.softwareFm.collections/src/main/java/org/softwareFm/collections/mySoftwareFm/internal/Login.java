@@ -20,7 +20,7 @@ import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.collections.mySoftwareFm.IRequestSaltCallback;
 import org.softwareFm.collections.mySoftwareFm.IShowMessage;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.LoginConstants;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
@@ -32,7 +32,7 @@ public class Login implements ILogin {
 
 	public Login(Composite parent, final CardConfig cardConfig, final String sessionSalt, String initialEmail, final ILoginStrategy loginStrategy, final ILoginDisplayStrategy loginDisplayStrategy, final ILoginCallback callback) {
 		String title = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, CardConstants.loginTitle);
-		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(ServerConstants.emailKey, initialEmail), Arrays.asList(//
+		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(LoginConstants.emailKey, initialEmail), Arrays.asList(//
 				INamesAndValuesEditor.Utils.text(cardConfig, cardType, "email"),//
 				INamesAndValuesEditor.Utils.password(cardConfig, cardType, "password")),//
 				new ICardEditorCallback() {
@@ -95,7 +95,7 @@ public class Login implements ILogin {
 	}
 
 	private String getEmail() {
-		return (String) content.data().get(ServerConstants.emailKey);
+		return (String) content.data().get(LoginConstants.emailKey);
 	}
 
 	@Override

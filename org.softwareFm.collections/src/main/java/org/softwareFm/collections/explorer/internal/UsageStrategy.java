@@ -13,8 +13,8 @@ import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.server.GetResult;
 import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.IGitServer;
-import org.softwareFm.server.ServerConstants;
 import org.softwareFm.server.constants.CommonConstants;
+import org.softwareFm.server.constants.LoginConstants;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
@@ -47,8 +47,8 @@ public class UsageStrategy implements IUsageStrategy {
 		return serviceExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				client.post(ServerConstants.usagePrefix).//
-						addParam(ServerConstants.softwareFmIdKey, softwareFmId).//
+				client.post(CommonConstants.usagePrefix).//
+						addParam(LoginConstants.softwareFmIdKey, softwareFmId).//
 						addParam(groupIdKey, groupId).//
 						addParam(artifactIdKey, artifactId).//
 						execute(callback).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
@@ -60,15 +60,15 @@ public class UsageStrategy implements IUsageStrategy {
 	@Override
 	public Map<String, Object> myProjectData(final String softwareFmId, final String crypto) {
 		File root = gitServer.getRoot();
-		String userUrl = userGenerator.findUrlFor(Maps.stringObjectMap(ServerConstants.softwareFmIdKey, softwareFmId));
-		String projectUrl = projectGenerator.findUrlFor(Maps.stringObjectMap(ServerConstants.softwareFmIdKey, softwareFmId));
+		String userUrl = userGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
+		String projectUrl = projectGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
 		List<String> segments = Strings.splitIgnoreBlanks(projectUrl, "/");
 		String repositoryUrl = segments.get(0) +"/"+ segments.get(1) +"/" + segments.get(2)+"/"+ segments.get(3);
 		IGitServer.Utils.cloneOrPull(gitServer, repositoryUrl);
 		GetResult userDataResult = gitServer.getFile(IFileDescription.Utils.encrypted(userUrl, CommonConstants.dataFileName, crypto));
 		if (!userDataResult.found)
 			throw new IllegalArgumentException(softwareFmId);
-		String projectCrypto = (String) userDataResult.data.get(ServerConstants.projectCryptoKey);
+		String projectCrypto = (String) userDataResult.data.get(LoginConstants.projectCryptoKey);
 		
 		File directory = new File(root, projectUrl);
 		Map<String, Object> result = Maps.newMap();

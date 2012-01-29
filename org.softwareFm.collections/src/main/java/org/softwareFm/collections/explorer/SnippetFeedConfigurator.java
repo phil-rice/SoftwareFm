@@ -20,6 +20,7 @@ import org.softwareFm.display.browser.IBrowserConfigurator;
 import org.softwareFm.display.browser.IBrowserPart;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
@@ -59,7 +60,7 @@ public class SnippetFeedConfigurator implements IBrowserConfigurator {
 										Strings.htmlEscape(Strings.nullSafeToString(result.get("title"))), //
 										Strings.htmlEscape(Strings.nullSafeToString(result.get("description"))), //
 										content);
-								displayReply(ServerConstants.okStatusCode, html);
+								displayReply(CommonConstants.okStatusCode, html);
 								return null;
 							}
 

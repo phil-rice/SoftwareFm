@@ -27,7 +27,6 @@ import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.httpClient.requests.MemoryResponseCallback;
 import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ISoftwareFmServer;
-import org.softwareFm.server.ServerConstants;
 import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.IProcessCall;
@@ -176,7 +175,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 
 	private String resetPassword(String magicString) throws InterruptedException, ExecutionException, TimeoutException {
 		MemoryResponseCallback memoryCallback = IResponseCallback.Utils.memoryCallback();
-		client.get(Urls.compose(ServerConstants.passwordResetLinkPrefix, magicString)).execute(memoryCallback).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+		client.get(Urls.compose(CommonConstants.passwordResetLinkPrefix, magicString)).execute(memoryCallback).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 		String html = memoryCallback.response.asString();
 		int start = html.indexOf(": ") + 2;
 		int end = html.indexOf("</html");

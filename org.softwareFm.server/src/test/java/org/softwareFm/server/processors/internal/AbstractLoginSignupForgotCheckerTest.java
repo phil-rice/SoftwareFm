@@ -9,7 +9,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import junit.framework.TestCase;
 
 import org.apache.commons.dbcp.BasicDataSource;
-import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.LoginConstants;
+import org.softwareFm.server.constants.LoginMessages;
 import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.SignUpResult;
 import org.softwareFm.utilities.crypto.Crypto;
@@ -61,7 +62,7 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends TestCase impl
 		int initial = findUsersSize();
 		SignUpResult signUp = signupChecker.signUp(email, salt, hash, softwareFmId);
 		assertNull(signUp.crypto);
-		assertEquals(MessageFormat.format(ServerConstants.existingEmailAddress, email), signUp.errorMessage);
+		assertEquals(MessageFormat.format(LoginMessages.existingEmailAddress, email), signUp.errorMessage);
 		int finalCount = findUsersSize();
 		assertEquals(initial, finalCount);
 	}
@@ -91,8 +92,8 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends TestCase impl
 
 		Map<String, String> map = loginChecker.login(email, hash);
 
-		assertEquals(crypto, map.get(ServerConstants.cryptoKey));
-		assertEquals(expectedSfmId, map.get(ServerConstants.softwareFmIdKey));
+		assertEquals(crypto, map.get(LoginConstants.cryptoKey));
+		assertEquals(expectedSfmId, map.get(LoginConstants.softwareFmIdKey));
 		assertEquals(count, findUsersSize());
 	}
 

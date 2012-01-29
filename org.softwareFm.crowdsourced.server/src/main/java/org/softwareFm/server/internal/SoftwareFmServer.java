@@ -26,15 +26,13 @@ import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
-import org.softwareFm.server.IGitServer;
 import org.softwareFm.server.ISoftwareFmServer;
 import org.softwareFm.server.IUsage;
-import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.CommonMessages;
 import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.IMailer;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.IProcessResult;
-import org.softwareFm.server.user.internal.UserCryptoFn;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.IFunction1;
@@ -178,7 +176,7 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 			while (tries++ < 1000 && !shutdownLatch.await(10, TimeUnit.MILLISECONDS))
 				doNothing();
 			if (tries >= 1000)
-				throw new RuntimeException(ServerConstants.couldntStop);
+				throw new RuntimeException(CommonMessages.couldntStop);
 		} catch (InterruptedException e) {
 			throw WrappedException.wrap(e);
 		} finally {

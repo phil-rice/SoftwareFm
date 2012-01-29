@@ -19,7 +19,7 @@ import org.softwareFm.collections.mySoftwareFm.ILoginDisplayStrategy;
 import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.collections.mySoftwareFm.IShowMessage;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.server.ServerConstants;
+import org.softwareFm.server.constants.LoginConstants;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
@@ -31,7 +31,7 @@ public class ForgotPassword implements IForgotPassword {
 
 	public ForgotPassword(Composite parent, final CardConfig cardConfig, final String sessionSalt, String initialEmail, final ILoginStrategy loginStrategy, final ILoginDisplayStrategy loginDisplayStrategy, final IForgotPasswordCallback forgotPasswordCallback) {
 		String title = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, CardConstants.forgotPasswordTitle);
-		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(ServerConstants.emailKey, initialEmail), Arrays.asList(//
+		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(LoginConstants.emailKey, initialEmail), Arrays.asList(//
 				INamesAndValuesEditor.Utils.text(cardConfig, cardType, "email")),//
 				new ICardEditorCallback() {
 					@Override
@@ -71,7 +71,7 @@ public class ForgotPassword implements IForgotPassword {
 	}
 
 	private String getEmail() {
-		return (String) content.data().get(ServerConstants.emailKey);
+		return (String) content.data().get(LoginConstants.emailKey);
 	}
 
 	@Override
