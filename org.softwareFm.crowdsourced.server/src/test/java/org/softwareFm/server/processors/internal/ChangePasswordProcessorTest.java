@@ -10,7 +10,7 @@ import org.softwareFm.utilities.maps.Maps;
 
 public class ChangePasswordProcessorTest extends AbstractProcessCallTest<ChangePasswordProcessor> {
 
-	private final static String url = "/" + CommonConstants.changePasswordPrefix;
+	private final static String url = "/" + LoginConstants.changePasswordPrefix;
 
 	private PasswordChangerMock passwordChanger;
 

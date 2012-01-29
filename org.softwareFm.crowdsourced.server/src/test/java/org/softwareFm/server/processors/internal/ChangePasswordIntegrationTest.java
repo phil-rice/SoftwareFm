@@ -53,7 +53,7 @@ public class ChangePasswordIntegrationTest extends AbstractProcessorDatabaseInte
 
 	private void changePassword(String email, String oldHash, String newHash, IResponseCallback callback) {
 		try {
-			getHttpClient().post(CommonConstants.changePasswordPrefix).//
+			getHttpClient().post(LoginConstants.changePasswordPrefix).//
 					addParam(LoginConstants.emailKey, email).//
 					addParam(LoginConstants.passwordHashKey, oldHash).//
 					addParam(LoginConstants.newPasswordHashKey, newHash).//

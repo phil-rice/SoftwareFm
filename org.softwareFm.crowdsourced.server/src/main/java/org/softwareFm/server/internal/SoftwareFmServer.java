@@ -26,9 +26,11 @@ import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
+import org.softwareFm.server.IGitOperations;
 import org.softwareFm.server.ISoftwareFmServer;
 import org.softwareFm.server.IUsage;
 import org.softwareFm.server.constants.CommonMessages;
+import org.softwareFm.server.constants.LoginConstants;
 import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.IMailer;
 import org.softwareFm.server.processors.IProcessCall;
@@ -195,8 +197,8 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 	public static void main(String[] args) throws Exception {
 		File root = new File(System.getProperty("user.home"));
 		File sfmRoot = new File(root, ".sfm_remote");
-		IGitServer server = IGitServer.Utils.gitServer(sfmRoot, "not used");
-		System.out.println("Server: " + server);
+		IGitOperations gitOperations = IGitOperations.Utils.gitOperations(sfmRoot);
+		System.out.println("Server: " + gitOperations);
 		final IUsage usage = IUsage.Utils.defaultUsage();
 		IMailer mailer = IMailer.Utils.email("localhost", null, null);
 		BasicDataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
@@ -205,8 +207,7 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 		Callable<Integer> dayGetter = Callables.dayGetter();
 		Callable<String> softwareFmIdGenerator = Callables.uuidGenerator();
 		Callable<String> makeKey = Callables.makeCryptoKey();
-		IUrlGenerator userGenerator = ServerConstants.userGenerator();
-		IUrlGenerator projectGenerator = ServerConstants.projectGenerator();
-		new SoftwareFmServer(8080, 1000, IProcessCall.Utils.softwareFmProcessCall(dataSource, server, cryptoFn, makeKey, sfmRoot, mailer, monthGetter, dayGetter, softwareFmIdGenerator, "groupId", "artifactId"), ICallback.Utils.sysErrCallback(), usage);
+		IUrlGenerator userGenerator = LoginConstants.userGenerator();
+		new SoftwareFmServer(8080, 1000, IProcessCall.Utils.softwareFmProcessCall(dataSource, gitOperations, cryptoFn, makeKey, sfmRoot, mailer, monthGetter, dayGetter, softwareFmIdGenerator), ICallback.Utils.sysErrCallback(), usage);
 	}
 }

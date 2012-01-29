@@ -3,26 +3,26 @@ package org.softwareFm.server.processors.internal;
 import java.util.Map;
 
 import org.apache.http.RequestLine;
+import org.easymock.EasyMock;
+import org.softwareFm.server.IUser;
 import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.server.constants.LoginConstants;
 import org.softwareFm.server.constants.LoginMessages;
 import org.softwareFm.server.processors.AbstractProcessCallTest;
 import org.softwareFm.server.processors.IProcessResult;
-import org.softwareFm.server.user.IUser;
-import org.softwareFm.server.user.internal.UserMock;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.runnable.Callables;
 
 public class SignUpProcessorTest extends AbstractProcessCallTest<SignupProcessor> {
 
-	private final String url = "/" + CommonConstants.signupPrefix;
+	private final String url = "/" + LoginConstants.signupPrefix;
 
 	private SaltProcessorMock saltProcessor;
 	private SignUpCheckerMock checker;
 	private final RequestLine requestLine = makeRequestLine(CommonConstants.POST, url);
 
-	private UserMock userMock;
+	private IUser user;
 
 	public void testIgnoresEverythingExceptGetWithPrefix() {
 		checkIgnoresNoneGet();
@@ -44,14 +44,12 @@ public class SignUpProcessorTest extends AbstractProcessCallTest<SignupProcessor
 
 	public void testCreatesUserDetails() {
 		String salt = saltProcessor.makeSalt();
-		processor.process(requestLine, Maps.stringObjectMap(CommonConstants.sessionSaltKey, salt, LoginConstants.softwareFmIdKey, "someSoftwareFmId0", LoginConstants.emailKey, "someEmail"));
-		assertEquals(Maps.makeMap(LoginConstants.cryptoKey, "someCrypto", LoginConstants.softwareFmIdKey, "someSoftwareFmId0"), Lists.getOnly(userMock.userDetailMaps));
-		assertEquals(Maps.makeMap(LoginConstants.emailKey, "someEmail"), Lists.getOnly(userMock.datas));
-		assertEquals(1, userMock.getUserDetailsCount.get());
-	}
+		user.setUserProperty(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, "someSoftwareFmId0"), "someCrypto", LoginConstants.emailKey, "someEmail");
+		EasyMock.replay(user);
 
-	private Map<String, Object> makeData(String salt) {
-		return Maps.stringObjectMap(LoginConstants.emailKey, "someEmail", CommonConstants.sessionSaltKey, salt, LoginConstants.passwordHashKey, "someHash");
+		processor.process(requestLine, Maps.stringObjectMap(LoginConstants.sessionSaltKey, salt, LoginConstants.softwareFmIdKey, "someSoftwareFmId0", LoginConstants.emailKey, "someEmail"));
+
+		EasyMock.verify(user);
 	}
 
 	public void testDoesntSIgnUpWithIllegalSalt() {
@@ -67,10 +65,15 @@ public class SignUpProcessorTest extends AbstractProcessCallTest<SignupProcessor
 	@Override
 	protected SignupProcessor makeProcessor() {
 		saltProcessor = new SaltProcessorMock();
+
 		checker = new SignUpCheckerMock(null, "someCrypto");
 
-		userMock = IUser.Utils.userMock();
-		return new SignupProcessor(checker, saltProcessor, Callables.patternWithCount("someSoftwareFmId{0}"), userMock);
+		user = EasyMock.createMock(IUser.class);
+		return new SignupProcessor(checker, saltProcessor, Callables.patternWithCount("someSoftwareFmId{0}"), user);
+	}
+
+	private Map<String, Object> makeData(String salt) {
+		return Maps.stringObjectMap(LoginConstants.emailKey, "someEmail", LoginConstants.sessionSaltKey, salt, LoginConstants.passwordHashKey, "someHash");
 	}
 
 }

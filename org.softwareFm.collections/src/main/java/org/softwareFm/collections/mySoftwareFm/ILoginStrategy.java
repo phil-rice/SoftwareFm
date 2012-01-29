@@ -44,7 +44,7 @@ public interface ILoginStrategy {
 						@Override
 						public Void call() throws Exception {
 							try {
-								client.post(CommonConstants.signupPrefix).//
+								client.post(LoginConstants.signupPrefix).//
 										addParam(LoginConstants.emailKey, email).//
 										addParam(CommonConstants.sessionSaltKey, sessionSalt).//
 										addParam(LoginConstants.passwordHashKey, passwordHash).//
@@ -85,7 +85,7 @@ public interface ILoginStrategy {
 							@Override
 							public Void call() throws Exception {
 								try {
-									client.get(CommonConstants.makeSaltPrefix).execute(new IResponseCallback() {
+									client.get(LoginConstants.makeSaltPrefix).execute(new IResponseCallback() {
 										@Override
 										public void process(final IResponse response) {
 											display.asyncExec(new Runnable() {
@@ -116,7 +116,7 @@ public interface ILoginStrategy {
 						@Override
 						public Void call() throws Exception {
 							String hash = Crypto.digest(emailSalt, password);
-							client.post(CommonConstants.loginCommandPrefix).//
+							client.post(LoginConstants.loginCommandPrefix).//
 									addParam(LoginConstants.emailKey, email).//
 									addParam(CommonConstants.sessionSaltKey, sessionSalt).//
 									addParam(LoginConstants.passwordHashKey, hash).//
@@ -151,7 +151,7 @@ public interface ILoginStrategy {
 						@Override
 						public Void call() throws Exception {
 							try {
-								client.post(CommonConstants.forgottonPasswordPrefix).//
+								client.post(LoginConstants.forgottonPasswordPrefix).//
 										addParam(LoginConstants.emailKey, email).//
 										addParam(CommonConstants.sessionSaltKey, sessionSalt).//
 										execute(new IResponseCallback() {
@@ -208,7 +208,7 @@ public interface ILoginStrategy {
 					serviceExecutor.submit(new Callable<Void>() {
 						@Override
 						public Void call() throws Exception {
-							client.post(CommonConstants.changePasswordPrefix).//
+							client.post(LoginConstants.changePasswordPrefix).//
 									addParam(LoginConstants.emailKey, email).//
 									addParam(LoginConstants.passwordHashKey, oldHash).//
 									addParam(LoginConstants.newPasswordHashKey, newHash).//

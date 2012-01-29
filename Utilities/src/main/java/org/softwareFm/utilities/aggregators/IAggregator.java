@@ -20,7 +20,7 @@ public interface IAggregator<From, To> {
 
 	To result();
 
-	static class Factory {
+	static class Utils {
 		public static <T> IAggregator<T, List<T>> list(boolean threadSafe) {
 			return new ListAggregator<T>(threadSafe);
 		}
@@ -78,14 +78,14 @@ public interface IAggregator<From, To> {
 		private static Callable listNotThreadSafe = new Callable<IAggregator<Object, List<Object>>>() {
 			@Override
 			public IAggregator<Object, List<Object>> call() throws Exception {
-				return Factory.<Object> list(false);
+				return Utils.<Object> list(false);
 			}
 		};
 
 		private static Callable listThreadSafe = new Callable<IAggregator<Object, List<Object>>>() {
 			@Override
 			public IAggregator<Object, List<Object>> call() throws Exception {
-				return Factory.<Object> list(true);
+				return Utils.<Object> list(true);
 			}
 		};
 
@@ -98,7 +98,7 @@ public interface IAggregator<From, To> {
 			return new Callable<IAggregator<Set<T>, Set<T>>>() {
 				@Override
 				public IAggregator<Set<T>, Set<T>> call() throws Exception {
-					return Factory.setOfSetsAggregator(threadSafe);
+					return Utils.setOfSetsAggregator(threadSafe);
 				}
 			};
 		}
@@ -107,7 +107,7 @@ public interface IAggregator<From, To> {
 			return new Callable<IAggregator<Long, Long>>() {
 				@Override
 				public IAggregator<Long, Long> call() throws Exception {
-					return Factory.sumLongs();
+					return Utils.sumLongs();
 				}
 			};
 		}
@@ -116,7 +116,7 @@ public interface IAggregator<From, To> {
 			return new Callable<IAggregator<Integer, Integer>>() {
 				@Override
 				public IAggregator<Integer, Integer> call() throws Exception {
-					return Factory.sumInts();
+					return Utils.sumInts();
 				}
 			};
 		}

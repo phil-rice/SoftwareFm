@@ -3,6 +3,7 @@ package org.softwareFm.server.processors.internal;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+import org.softwareFm.server.IUser;
 import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.server.constants.LoginConstants;
 import org.softwareFm.server.constants.LoginMessages;
@@ -41,7 +42,8 @@ public class SignupProcessor extends AbstractCommandProcessor {
 			if (result.errorMessage != null)
 				return IProcessResult.Utils.processError(CommonConstants.notFoundStatusCode, result.errorMessage);
 			else {
-				user.saveUserDetails(Maps.stringObjectMap(LoginConstants.cryptoKey, result.crypto, LoginConstants.softwareFmIdKey, softwareFmId), Maps.stringObjectMap(LoginConstants.emailKey, email));
+				Map<String, Object> userDetails = Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId);
+				user.setUserProperty(userDetails, result.crypto, LoginConstants.emailKey, email);
 				return IProcessResult.Utils.processString(Json.mapToString(LoginConstants.softwareFmIdKey, softwareFmId, LoginConstants.cryptoKey, result.crypto));
 			}
 

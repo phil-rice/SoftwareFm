@@ -13,7 +13,7 @@ public class ChangePasswordProcessor extends AbstractCommandProcessor {
 	private final IPasswordChanger passwordChanger;
 
 	public ChangePasswordProcessor(IPasswordChanger passwordChanger) {
-		super(null, CommonConstants.POST, CommonConstants.changePasswordPrefix);
+		super(null, CommonConstants.POST, LoginConstants.changePasswordPrefix);
 		this.passwordChanger = passwordChanger;
 	}
 

@@ -51,10 +51,10 @@ public class SimpleListsTest extends TestCase {
 		Future<Integer> futureForMapReduce = SimpleLists.<Integer, Integer, Integer> mapReduce(3, pool, from, plus, plus, mapFn, 0);
 		assertEquals(expected, futureForMapReduce.get().intValue());
 
-		Future<IAggregator<Integer, Integer>> futureForMapAggregate = SimpleLists.mapAggregate(3, pool, from, IAggregator.Factory.sumInts(), mapFn);
+		Future<IAggregator<Integer, Integer>> futureForMapAggregate = SimpleLists.mapAggregate(3, pool, from, IAggregator.Utils.sumInts(), mapFn);
 		assertEquals(expected, futureForMapAggregate.get().result().intValue());
 
-		Future<IAggregator<Integer, Integer>> futureForTwoAggregators = SimpleLists.mapTwoAggregators(3, pool, from, IAggregator.Factory.sumInts(), IAggregator.CallableFactory.sumInts(), mapFn);
+		Future<IAggregator<Integer, Integer>> futureForTwoAggregators = SimpleLists.mapTwoAggregators(3, pool, from, IAggregator.Utils.sumInts(), IAggregator.CallableFactory.sumInts(), mapFn);
 		assertEquals(expected, futureForTwoAggregators.get().result().intValue());
 		pool.shutdown();
 	}

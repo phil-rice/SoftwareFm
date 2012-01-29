@@ -2,8 +2,9 @@
 
 import java.util.concurrent.Callable;
 
+import org.easymock.EasyMock;
 import org.softwareFm.server.ISoftwareFmServer;
-import org.softwareFm.server.processors.IProcessCall;
+import org.softwareFm.server.IUser;
 import org.softwareFm.server.processors.internal.EmailSailRequesterMock;
 import org.softwareFm.server.processors.internal.ForgottonPasswordProcessor;
 import org.softwareFm.server.processors.internal.ForgottonPasswordProcessorMock;
@@ -17,6 +18,7 @@ import org.softwareFm.server.processors.internal.SaltProcessorMock;
 import org.softwareFm.server.processors.internal.SignUpCheckerMock;
 import org.softwareFm.server.processors.internal.SignupProcessor;
 import org.softwareFm.utilities.callbacks.ICallback;
+import org.softwareFm.utilities.crypto.Crypto;
 import org.softwareFm.utilities.runnable.Callables;
 
 abstract public class AbstractProcessorMockIntegrationTests extends AbstractProcessorIntegrationTests {
@@ -28,19 +30,21 @@ abstract public class AbstractProcessorMockIntegrationTests extends AbstractProc
 	protected PasswordResetterMock resetter;
 	private EmailSailRequesterMock emailSaltProcessor;
 	private Callable<String> softwareFmIdGenerator;
-	protected UserMock userMock;
+	protected IUser userMock;
 
+	protected String signUpCrypto;
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		saltProcessor = new SaltProcessorMock();
 		loginChecker = new LoginCheckerMock("loginCrypto", "loginCheckersSoftwareFmId");
-		signUpChecker = new SignUpCheckerMock(null, "signUpCrypto");
+		signUpCrypto = Crypto.makeKey();
+		signUpChecker = new SignUpCheckerMock(null, signUpCrypto);
 		forgottonPasswordProcessor = new ForgottonPasswordProcessorMock(null);
 		resetter = new PasswordResetterMock("theNewPassword");
 		emailSaltProcessor = new EmailSailRequesterMock("someEmailHash");
 		softwareFmIdGenerator = Callables.patternWithCount("someSoftwareFmId{0}");
-		userMock = IUser.Utils.userMock();
+		userMock = EasyMock.createMock(IUser.class);
 		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.chain(//
 				new LoginProcessor(saltProcessor, loginChecker), //
 				new SignupProcessor(signUpChecker, saltProcessor, softwareFmIdGenerator, userMock), //

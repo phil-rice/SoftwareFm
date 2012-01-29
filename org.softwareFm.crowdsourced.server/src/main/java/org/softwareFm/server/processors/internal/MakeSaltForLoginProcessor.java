@@ -3,6 +3,7 @@ package org.softwareFm.server.processors.internal;
 import java.util.Map;
 
 import org.softwareFm.server.constants.CommonConstants;
+import org.softwareFm.server.constants.LoginConstants;
 import org.softwareFm.server.processors.IProcessResult;
 import org.softwareFm.server.processors.ISaltProcessor;
 
@@ -11,7 +12,7 @@ public class MakeSaltForLoginProcessor extends AbstractCommandProcessor {
 	private final ISaltProcessor saltProcessor;
 
 	public MakeSaltForLoginProcessor(ISaltProcessor saltProcessor) {
-		super(null, CommonConstants.GET, CommonConstants.makeSaltPrefix);
+		super(null, CommonConstants.GET, LoginConstants.makeSaltPrefix);
 		this.saltProcessor = saltProcessor;
 	}
 

@@ -12,7 +12,7 @@ public class LoginIntegrationTests extends AbstractProcessorMockIntegrationTests
 	public void testMakeSaltLogin() throws Exception {
 		String sessionSalt = "salt 0";
 		String email = "someEmail";
-		getHttpClient().get(CommonConstants.makeSaltPrefix).execute(IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, sessionSalt)).get(); // salt won't be used but we want it removed
+		getHttpClient().get(LoginConstants.makeSaltPrefix).execute(IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, sessionSalt)).get(); // salt won't be used but we want it removed
 		assertEquals(sessionSalt, Sets.getOnly(saltProcessor.legalSalts));
 		String emailSalt = requestEmailSalt(sessionSalt, email);
 		login(email, sessionSalt, emailSalt, "someHash", IResponseCallback.Utils.checkMapCallback(//
@@ -23,7 +23,7 @@ public class LoginIntegrationTests extends AbstractProcessorMockIntegrationTests
 	public void testRemovesSaltAndLogsins() throws Exception {
 		String email = "someEmail";
 		String sessionSalt = "salt 0";
-		getHttpClient().get(CommonConstants.makeSaltPrefix).execute(IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, sessionSalt)).get(); // salt won't be used but we want it removed
+		getHttpClient().get(LoginConstants.makeSaltPrefix).execute(IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, sessionSalt)).get(); // salt won't be used but we want it removed
 		assertEquals(sessionSalt, Sets.getOnly(saltProcessor.legalSalts));
 
 		loginChecker.setResultToNull();// will fail to login

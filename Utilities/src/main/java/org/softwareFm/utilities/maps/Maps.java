@@ -155,7 +155,8 @@ public class Maps {
 	public static <K, V> Map<K, V> merge(Map<K, V>... maps) {
 		Map<K, V> result = new HashMap<K, V>();
 		for (Map<K, V> map : maps)
-			result.putAll(map);
+			if (map != null)
+				result.putAll(map);
 		return result;
 	}
 

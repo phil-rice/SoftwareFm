@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Map;
 
 import org.softwareFm.server.internal.GitOperations;
+import org.softwareFm.utilities.collections.Files;
 
 public interface IGitOperations {
 
@@ -32,6 +33,11 @@ public interface IGitOperations {
 	public static class Utils{
 		public static IGitOperations gitOperations(File root){
 			return new GitOperations(root);
+		}
+		
+		public static void init(IGitOperations gitOperations, File file){
+			String url = Files.offset(gitOperations.getRoot(), file);
+			gitOperations.init(url);
 		}
 	}
 }

@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 import java.util.Map;
 
 import org.softwareFm.server.constants.CommonConstants;
+import org.softwareFm.server.constants.LoginConstants;
 import org.softwareFm.server.constants.LoginMessages;
 import org.softwareFm.server.processors.IPasswordResetter;
 import org.softwareFm.server.processors.IProcessResult;
@@ -14,7 +15,7 @@ public class ForgottonPasswordWebPageProcessor extends AbstractCommandProcessor 
 	private final IPasswordResetter resetter;
 
 	public ForgottonPasswordWebPageProcessor(IPasswordResetter resetter) {
-		super(null, CommonConstants.GET, CommonConstants.passwordResetLinkPrefix);
+		super(null, CommonConstants.GET, LoginConstants.passwordResetLinkPrefix);
 		this.resetter = resetter;
 	}
 

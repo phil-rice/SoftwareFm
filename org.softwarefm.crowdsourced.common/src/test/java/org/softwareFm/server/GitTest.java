@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.server.internal.GitOperations;
 import org.softwareFm.utilities.collections.Files;
+import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.services.IServiceExecutor;
@@ -38,6 +39,8 @@ public abstract class GitTest extends TemporaryFileTest {
 	protected File localRoot;
 	protected File remoteRoot;
 	protected String remoteAsUri;
+
+	private IFunction1<String, String> findRepositoryRoot;
 
 	protected void put(String url, Map<String, Object> data) {
 		put(root, url, data);
@@ -81,13 +84,18 @@ public abstract class GitTest extends TemporaryFileTest {
 		remoteAsUri = new File(root, "remote").getAbsolutePath();
 		localOperations = IGitOperations.Utils.gitOperations(localRoot);
 		remoteOperations = IGitOperations.Utils.gitOperations(remoteRoot);
-		localReader = IGitReader.Utils.localReader(new IFindRepositoryRoot() {
+		findRepositoryRoot = makeFindRepositoryRoot();
+		localReader = IGitReader.Utils.localReader(findRepositoryRoot, localOperations, localRoot, remoteRoot.getAbsolutePath(), 500);
+	}
+
+	protected IFunction1<String, String> makeFindRepositoryRoot() {
+		return new IFunction1<String, String>() {
 			@Override
 			public String apply(String from) throws Exception {
 				String firstSegment = Strings.segment(from, "/", 0);
 				return firstSegment;
 			}
-		}, localOperations, localRoot, remoteRoot.getAbsolutePath(), 500);
+		};
 	}
 
 	@Override
@@ -145,6 +153,12 @@ public abstract class GitTest extends TemporaryFileTest {
 		assertTrue(directory.exists());
 		File file = new File(directory, CommonConstants.dataFileName);
 		assertEquals(Json.mapFromString(Files.getText(file)), data);
+	}
+
+	protected void createAndPull(String url) {
+		localOperations.init(url);
+		localOperations.setConfigForRemotePull(url, remoteRoot.getAbsolutePath());
+		localOperations.pull(url);
 	}
 
 }

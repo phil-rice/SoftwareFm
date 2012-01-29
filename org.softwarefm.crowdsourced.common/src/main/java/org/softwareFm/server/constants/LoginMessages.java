@@ -7,7 +7,7 @@ public class LoginMessages {
 	public static final String emailNotRecognised = "Email not recognised";
 	public static final String emailAddressNotFound = "Email address {0} not known";
 	public static final String passwordResetSubject = "Software FM Password Reset";
-	public static final String forgottonPasswordMessage = "You've lost your SoftwareFM password? Say it isn't so!\n\nVisit this site www.softwarefm.org/" + CommonConstants.passwordResetLinkPrefix + "/{1} to reset it.";
+	public static final String forgottonPasswordMessage = "You've lost your SoftwareFM password? Say it isn't so!\n\nVisit this site www.softwarefm.org/" + LoginConstants.passwordResetLinkPrefix + "/{1} to reset it.";
 	public static final String duplicateEmailAndPassword = "Duplicate email and password {0} and {1}";
 	public static final String existingSoftwareFmId = "Existing software fm id {0}";
 	public static final String existingEmailAddress = "Existing email address {0}";

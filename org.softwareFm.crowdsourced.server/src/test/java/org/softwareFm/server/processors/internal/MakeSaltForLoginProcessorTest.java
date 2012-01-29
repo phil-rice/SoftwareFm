@@ -2,6 +2,7 @@ package org.softwareFm.server.processors.internal;
 
 import org.apache.http.RequestLine;
 import org.softwareFm.server.constants.CommonConstants;
+import org.softwareFm.server.constants.LoginConstants;
 import org.softwareFm.server.processors.AbstractProcessCallTest;
 import org.softwareFm.server.processors.IProcessResult;
 import org.softwareFm.utilities.collections.Lists;
@@ -17,7 +18,7 @@ public class MakeSaltForLoginProcessorTest extends AbstractProcessCallTest<MakeS
 	}
 
 	public void testCreatesSalt() throws Exception {
-		RequestLine requestLine = makeRequestLine(CommonConstants.GET, "/" + CommonConstants.makeSaltPrefix);
+		RequestLine requestLine = makeRequestLine(CommonConstants.GET, "/" + LoginConstants.makeSaltPrefix);
 		IProcessResult result = processor.process(requestLine, Maps.emptyStringObjectMap());
 		String salt = Lists.getOnly(saltProcessor.createdSalts);
 		checkStringResult(result, salt);

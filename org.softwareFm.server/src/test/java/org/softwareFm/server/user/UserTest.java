@@ -6,10 +6,11 @@ import java.util.Map;
 
 import org.softwareFm.server.GitTest;
 import org.softwareFm.server.IFileDescription;
+import org.softwareFm.server.IUser;
 import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.server.constants.LoginConstants;
 import org.softwareFm.server.internal.LocalGitClient;
-import org.softwareFm.server.user.internal.User;
+import org.softwareFm.server.internal.User;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.crypto.Crypto;
 import org.softwareFm.utilities.functions.Functions;

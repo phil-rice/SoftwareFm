@@ -6,11 +6,11 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.softwareFm.httpClient.requests.IResponseCallback;
+import org.softwareFm.server.IUser;
 import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.server.constants.LoginConstants;
 import org.softwareFm.server.processors.AbstractProcessorDatabaseIntegrationTests;
 import org.softwareFm.server.processors.IProcessCall;
-import org.softwareFm.server.user.IUser;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
 
@@ -67,7 +67,7 @@ public class UsageProcessorIntegrationTest extends AbstractProcessorDatabaseInte
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		user = IProcessCall.Utils.makeUser(gitServer, cryptoFn, "g", "a");
+		user = IProcessCall.Utils.makeUser(remoteOperations);
 		userDetails = Maps.stringObjectMap(LoginConstants.softwareFmIdKey, "someSoftwareFmId");
 		userFile = new File(remoteRoot, "softwareFm/users/so/me/someSoftwareFmId/" + CommonConstants.dataFileName);
 		projectFile = new File(remoteRoot, "softwareFm/users/so/me/someSoftwareFmId/projects/someMonth");

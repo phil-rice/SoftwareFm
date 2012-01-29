@@ -1,4 +1,5 @@
-package org.softwareFm.server.user.internal;
+package org.softwareFm.server.internal;
+
 
 import java.io.File;
 import java.util.Arrays;
@@ -8,11 +9,11 @@ import java.util.concurrent.Callable;
 
 import org.softwareFm.server.GetResult;
 import org.softwareFm.server.IFileDescription;
+import org.softwareFm.server.IGitOperations;
 import org.softwareFm.server.IGitReader;
-import org.softwareFm.server.ILocalGitClient;
+import org.softwareFm.server.IUser;
 import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.server.constants.LoginConstants;
-import org.softwareFm.server.user.IUser;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.crypto.Crypto;
 import org.softwareFm.utilities.functions.Functions;
@@ -20,23 +21,24 @@ import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.url.IUrlGenerator;
 
-public class User implements IUser {
+public class Project implements IUser {
 
 	public final static String userKey = "user";
 	public final static String projectKey = "project";
 	public final static String monthKey = "month";
 	public final static String cryptoKey = "crypto";
-	private final ILocalGitClient gitClient;
+	private final IGitReader gitReader;
 	private final IUrlGenerator userGenerator;
 	private final IUrlGenerator projectDetailGenerator;
 
-	private final IGitReader gitReader = IGitReader.Utils.makeFacard();
 	private final String groupIdKey;
 	private final String artifactIdKey;
 	private final IFunction1<Map<String, Object>, String> cryptoFn;
+	private final IGitOperations localOperations;
 
-	public User(ILocalGitClient gitClient, IUrlGenerator userGenerator, IUrlGenerator projectDetailGenerator, IFunction1<Map<String,Object>, String> cryptoFn, String groupIdKey, String artifactIdKey) {
-		this.gitClient = gitClient;
+	public Project(IGitReader gitReader, IGitOperations localOperations, IUrlGenerator userGenerator, IUrlGenerator projectDetailGenerator, IFunction1<Map<String, Object>, String> cryptoFn, String groupIdKey, String artifactIdKey) {
+		this.gitReader = gitReader;
+		this.localOperations = localOperations;
 		this.userGenerator = userGenerator;
 		this.projectDetailGenerator = projectDetailGenerator;
 		this.cryptoFn = cryptoFn;
@@ -48,26 +50,26 @@ public class User implements IUser {
 	public Map<String, Object> getUserDetails(Map<String, Object> userDetailMap) {
 		String crypto = Functions.call(cryptoFn, userDetailMap);
 		IFileDescription fileDescription = makeFileDescription(userGenerator, userDetailMap, crypto, CommonConstants.dataFileName);
-		GetResult result = gitClient.getFile(fileDescription);
-		if (result.found)
-			return result.data;
+		Map<String, Object> data = gitReader.getFile(fileDescription);
+		if (data == null)
+			throw new IllegalArgumentException(userDetailMap.toString());
 		else
-			throw new IllegalArgumentException(userDetailMap.toString() + "-->" + result);
+			return data;
 	}
 
 	@Override
 	public void saveUserDetails(Map<String, Object> userDetailMap, Map<String, Object> data) {
 		String crypto = Functions.call(cryptoFn, userDetailMap);
 		IFileDescription fileDescription = makeFileDescription(userGenerator, userDetailMap, crypto, CommonConstants.dataFileName);
-		File file = fileDescription.getFile(gitClient.getRoot());
+		File file = fileDescription.getFile(gitReader.getRoot());
 		File repositoryRoot = fileDescription.findRepositoryUrl(file);
 		if (repositoryRoot == null) {
-			File directory = fileDescription.getDirectory(gitClient.getRoot());
+			File directory = fileDescription.getDirectory(gitReader.getRoot());
 			File repositoryDirectory = directory.getParentFile();
-			gitReader.createRepository(repositoryDirectory, "");
+			IGitOperations.Utils.init(localOperations, repositoryRoot);
 		}
-		gitClient.post(fileDescription, data);
-	}
+		localOperations.put(fileDescription, data);
+	}asd
 
 	private IFileDescription makeFileDescription(IUrlGenerator urlGenerator, Map<String, Object> key, String crypto, String fileName) {
 		String url = urlGenerator.findUrlFor(key);
@@ -88,7 +90,7 @@ public class User implements IUser {
 		if (artifactMap == null)
 			return Maps.<String, Object> with(initialProjectDetails, groupId, Maps.stringObjectMap(artifactId, Arrays.asList(day)));
 		List<Long> artifactList = (List<Long>) artifactMap.get(artifactId);
-		if (artifactList ==null)
+		if (artifactList == null)
 			artifactList = Lists.newList();
 		if (artifactList.contains(day))
 			return null;
@@ -104,7 +106,7 @@ public class User implements IUser {
 		String projectCrypto = getProjectCrypto(userDetailMap);
 
 		IFileDescription fileDescription = makeFileDescription(projectDetailGenerator, userDetailMap, projectCrypto, month);
-		GetResult result = gitClient.getFile(fileDescription);
+		GetResult result = gitReader.getFile(fileDescription);
 		return result.data;
 	}
 
@@ -126,6 +128,6 @@ public class User implements IUser {
 	public void saveProjectDetails(Map<String, Object> userDetailMap, String month, Map<String, Object> data) {
 		String projectCrypto = getProjectCrypto(userDetailMap);
 		IFileDescription fileDescription = makeFileDescription(projectDetailGenerator, userDetailMap, projectCrypto, month);
-		gitClient.post(fileDescription, data);
+		gitReader.post(fileDescription, data);
 	}
 }

@@ -13,7 +13,7 @@ import org.softwareFm.utilities.maps.Maps;
 
 public class LoginProcessorTest extends AbstractProcessCallTest<LoginProcessor> {
 
-	private final String url = "/" + CommonConstants.loginCommandPrefix;
+	private final String url = "/" + LoginConstants.loginCommandPrefix;
 
 	private final SaltProcessorMock saltProcessor = new SaltProcessorMock();
 	private final RequestLine requestLine = makeRequestLine(CommonConstants.POST, url);

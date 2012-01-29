@@ -7,6 +7,7 @@ import org.apache.http.RequestLine;
 import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.server.internal.FileDescription;
 import org.softwareFm.utilities.collections.Files;
+import org.softwareFm.utilities.maps.Maps;
 
 public interface IFileDescription {
 
@@ -59,6 +60,14 @@ public interface IFileDescription {
 			Map<String, Object> result = fileDescription.decode(text);
 			return result;
 		}
+
+		public static void merge(IGitOperations gitOperations, IFileDescription fileDescription,  Map<String, Object> toMerge) {
+			Map<String, Object> initialData = gitOperations.getFile(fileDescription);
+			@SuppressWarnings("unchecked")
+			Map<String, Object> map = Maps.merge(initialData, toMerge);
+			gitOperations.put(fileDescription, map);
+		}
+
 	}
 
 }

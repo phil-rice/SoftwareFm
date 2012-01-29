@@ -4,7 +4,7 @@ import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.server.GitTest;
 import org.softwareFm.server.constants.CommonConstants;
 
-public class GitWithHttpClientTest extends GitTest {
+abstract public class GitWithHttpClientTest extends GitTest {
 
 	private IHttpClient httpClient;
 

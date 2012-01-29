@@ -27,7 +27,7 @@ abstract public class AbstractProcessorIntegrationTests extends GitWithHttpClien
 
 	protected void signup(String email, String sessionSalt, String hash, IResponseCallback callback) {
 		try {
-			getHttpClient().post(CommonConstants.signupPrefix).//
+			getHttpClient().post(LoginConstants.signupPrefix).//
 					addParam(LoginConstants.emailKey, email).//
 					addParam(LoginConstants.sessionSaltKey, sessionSalt).//
 					addParam(LoginConstants.passwordHashKey, hash).//
@@ -39,7 +39,7 @@ abstract public class AbstractProcessorIntegrationTests extends GitWithHttpClien
 
 	protected void resetPassword(String magicString, IResponseCallback callback) {
 		try {
-			getHttpClient().get(CommonConstants.passwordResetLinkPrefix + "/" + magicString).//
+			getHttpClient().get(LoginConstants.passwordResetLinkPrefix + "/" + magicString).//
 					addParam(LoginConstants.emailKey, "someEmail").//
 					execute(callback).get();
 		} catch (Exception e) {
@@ -56,7 +56,7 @@ abstract public class AbstractProcessorIntegrationTests extends GitWithHttpClien
 
 	protected void forgotPassword(String email, String sessionSalt, IResponseCallback callback) {
 		try {
-			getHttpClient().post(CommonConstants.forgottonPasswordPrefix).//
+			getHttpClient().post(LoginConstants.forgottonPasswordPrefix).//
 					addParam(LoginConstants.emailKey, email).//
 					addParam(LoginConstants.sessionSaltKey, sessionSalt).//
 					execute(callback).get();
@@ -68,7 +68,7 @@ abstract public class AbstractProcessorIntegrationTests extends GitWithHttpClien
 	protected String makeSalt() {
 		try {
 			StringCallback callback = new StringCallback();
-			getHttpClient().get(CommonConstants.makeSaltPrefix).execute(callback).get(); // salt won't be used but we want it removed
+			getHttpClient().get(LoginConstants.makeSaltPrefix).execute(callback).get(); // salt won't be used but we want it removed
 			return callback.string;
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
@@ -88,7 +88,7 @@ abstract public class AbstractProcessorIntegrationTests extends GitWithHttpClien
 
 	protected void login(String email, String sessionSalt, String emailSalt, String hash, IResponseCallback callback) {
 		try {
-			getHttpClient().post(CommonConstants.loginCommandPrefix).//
+			getHttpClient().post(LoginConstants.loginCommandPrefix).//
 					addParam(LoginConstants.emailKey, email).//
 					addParam(LoginConstants.sessionSaltKey, sessionSalt).//
 					addParam(LoginConstants.emailSaltKey, emailSalt).//

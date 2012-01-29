@@ -172,7 +172,7 @@ public class GitOperations implements IGitOperations {
 	public Map<String, Object> getFileAndDescendants(IFileDescription fileDescription) {
 		Map<String, Object> map = getFile(fileDescription);
 		if (map == null)
-			return map;
+			map = Maps.newMap();
 		File directory = fileDescription.getDirectory(root);
 		for (File child : Files.listChildDirectoriesIgnoringDot(directory)) {
 			File childFile = fileDescription.getFileInSubdirectory(child);
@@ -190,6 +190,11 @@ public class GitOperations implements IGitOperations {
 		File file = fileDescription.getFileInSubdirectory(directory);
 		if (file.exists())
 			collectionResults.put(directory.getName(), fileDescription.decode(Files.getText(file)));
+	}
+
+	@Override
+	public File getRoot() {
+		return root;
 	}
 
 }

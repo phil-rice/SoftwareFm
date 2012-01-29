@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.softwareFm.server.IGitOperations;
+import org.softwareFm.server.IUser;
+import org.softwareFm.server.ServerConstants;
 import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.server.processors.IProcessResult;
 import org.softwareFm.utilities.runnable.Callables;
@@ -15,7 +17,7 @@ public class UsageProcessor extends AbstractCommandProcessor {
 	private final Callable<Integer> dayGetter;
 
 	public UsageProcessor(IGitOperations gitOperations, IUser user, Callable<String> monthGetter, Callable<Integer> dayGetter) {
-		super(gitOperations, CommonConstants.POST, CommonConstants.usagePrefix);
+		super(gitOperations, CommonConstants.POST, ServerConstants.usagePrefix);
 		this.user = user;
 		this.monthGetter = monthGetter;
 		this.dayGetter = dayGetter;

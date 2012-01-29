@@ -7,6 +7,7 @@ import org.softwareFm.server.constants.LoginMessages;
 import org.softwareFm.utilities.url.IUrlGenerator;
 
 public class ServerConstants {
+	public static final String usagePrefix = "command/Usage";
 	/**
 	 * @deprecated Use {@link CommonConstants#dataFileName} instead
 	 */
@@ -79,50 +80,45 @@ public class ServerConstants {
 	@Deprecated
 	public static final String findRepositoryBasePrefix = CommonConstants.findRepositoryBasePrefix;
 	/**
-	 * @deprecated Use {@link CommonConstants#makeSaltPrefix} instead
+	 * @deprecated Use {@link LoginConstants#makeSaltPrefix} instead
 	 */
 	@Deprecated
-	public static final String makeSaltPrefix = CommonConstants.makeSaltPrefix;
+	public static final String makeSaltPrefix = LoginConstants.makeSaltPrefix;
 	/**
 	 * @deprecated Use {@link CommonConstants#makeRootPrefix} instead
 	 */
 	@Deprecated
 	public static final String makeRootPrefix = CommonConstants.makeRootPrefix;
 	/**
-	 * @deprecated Use {@link CommonConstants#loginCommandPrefix} instead
+	 * @deprecated Use {@link LoginConstants#loginCommandPrefix} instead
 	 */
 	@Deprecated
-	public static final String loginCommandPrefix = CommonConstants.loginCommandPrefix;
+	public static final String loginCommandPrefix = LoginConstants.loginCommandPrefix;
 	/**
-	 * @deprecated Use {@link CommonConstants#signupPrefix} instead
+	 * @deprecated Use {@link LoginConstants#signupPrefix} instead
 	 */
 	@Deprecated
-	public static final String signupPrefix = CommonConstants.signupPrefix;
+	public static final String signupPrefix = LoginConstants.signupPrefix;
 	/**
-	 * @deprecated Use {@link CommonConstants#forgottonPasswordPrefix} instead
+	 * @deprecated Use {@link LoginConstants#forgottonPasswordPrefix} instead
 	 */
 	@Deprecated
-	public static final String forgottonPasswordPrefix = CommonConstants.forgottonPasswordPrefix;
+	public static final String forgottonPasswordPrefix = LoginConstants.forgottonPasswordPrefix;
 	/**
-	 * @deprecated Use {@link CommonConstants#passwordResetLinkPrefix} instead
+	 * @deprecated Use {@link LoginConstants#passwordResetLinkPrefix} instead
 	 */
 	@Deprecated
-	public static final String passwordResetLinkPrefix = CommonConstants.passwordResetLinkPrefix;
+	public static final String passwordResetLinkPrefix = LoginConstants.passwordResetLinkPrefix;
 	/**
 	 * @deprecated Use {@link CommonConstants#emailSaltPrefix} instead
 	 */
 	@Deprecated
 	public static final String emailSaltPrefix = CommonConstants.emailSaltPrefix;
 	/**
-	 * @deprecated Use {@link CommonConstants#changePasswordPrefix} instead
+	 * @deprecated Use {@link LoginConstants#changePasswordPrefix} instead
 	 */
 	@Deprecated
-	public static final String changePasswordPrefix = CommonConstants.changePasswordPrefix;
-	/**
-	 * @deprecated Use {@link CommonConstants#usagePrefix} instead
-	 */
-	@Deprecated
-	public static final String usagePrefix = CommonConstants.usagePrefix;
+	public static final String changePasswordPrefix = LoginConstants.changePasswordPrefix;
 
 	/**
 	 * @deprecated Use {@link CommonConstants#testPort} instead
@@ -287,7 +283,5 @@ public class ServerConstants {
 		return IUrlGenerator.Utils.generator("softwareFm/users/{0}/{1}/{2}/projects", LoginConstants.softwareFmIdKey);
 	}
 
-	public static IUrlGenerator userGenerator() {
-		return IUrlGenerator.Utils.generator("softwareFm/users/{0}/{1}/{2}", LoginConstants.softwareFmIdKey);
-	}
+
 }

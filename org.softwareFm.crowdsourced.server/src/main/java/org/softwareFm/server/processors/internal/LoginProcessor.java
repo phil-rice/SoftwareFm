@@ -18,7 +18,7 @@ public class LoginProcessor extends AbstractCommandProcessor {
 	private final ISaltProcessor saltProcessor;
 
 	public LoginProcessor(ISaltProcessor saltProcessor, ILoginChecker checker) {
-		super(null, CommonConstants.POST, CommonConstants.loginCommandPrefix);
+		super(null, CommonConstants.POST, LoginConstants.loginCommandPrefix);
 		this.saltProcessor = saltProcessor;
 		this.checker = checker;
 	}

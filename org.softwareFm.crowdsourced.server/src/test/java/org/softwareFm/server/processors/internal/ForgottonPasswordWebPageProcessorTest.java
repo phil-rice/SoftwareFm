@@ -12,7 +12,7 @@ public class ForgottonPasswordWebPageProcessorTest extends AbstractProcessCallTe
 
 	private SaltProcessorMock saltProcessor;
 	private ForgottonPasswordMailerMock forgottonPasswordMailer;
-	private final String uri = "/" + CommonConstants.forgottonPasswordPrefix;
+	private final String uri = "/" + LoginConstants.forgottonPasswordPrefix;
 
 	public void testIgnoresNonePostsAndNonePrefix() {
 		checkIgnoresNonePosts();

@@ -1,4 +1,4 @@
-package org.softwareFm.server.user.internal;
+package org.softwareFm.server.internal;
 
 import java.util.Map;
 
@@ -8,7 +8,7 @@ import org.softwareFm.server.constants.LoginConstants;
 import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.utilities.functions.IFunction1;
 
-public class UserCryptoFn extends AbstractLoginDataAccessor implements IFunction1<Map<String,Object>, String>{
+public class UserCryptoFn extends AbstractLoginDataAccessor implements IFunction1<Map<String, Object>, String> {
 
 	public UserCryptoFn(DataSource dataSource) {
 		super(dataSource);
@@ -25,6 +25,4 @@ public class UserCryptoFn extends AbstractLoginDataAccessor implements IFunction
 		return crypto;
 	}
 
-	
-	
 }

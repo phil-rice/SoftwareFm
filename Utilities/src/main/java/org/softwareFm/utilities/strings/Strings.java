@@ -541,4 +541,20 @@ public class Strings {
 		return null;
 	}
 
+	public static IFunction1<String, String> firstNSegments(final int count) {
+		return new IFunction1<String, String>() {
+			@Override
+			public String apply(String from) throws Exception {
+				List<String> segments = Strings.splitIgnoreBlanks(from, "/");
+				IAggregator<String, String> aggregator = join("/");
+				if (segments.size() < count)
+					throw new IllegalArgumentException(from);
+				else
+					for (int i = 0; i < count; i++)
+						aggregator.add(segments.get(i));
+				return aggregator.result();
+			}
+		};
+	}
+
 }

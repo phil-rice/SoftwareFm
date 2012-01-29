@@ -15,7 +15,7 @@ public class ForgottonPasswordProcessor extends AbstractCommandProcessor {
 	private final ISaltProcessor saltProcessor;
 
 	public ForgottonPasswordProcessor(ISaltProcessor saltProcessor, IForgottonPasswordMailer forgottonPasswordMailer) {
-		super(null, CommonConstants.POST, CommonConstants.forgottonPasswordPrefix);
+		super(null, CommonConstants.POST, LoginConstants.forgottonPasswordPrefix);
 		this.saltProcessor = saltProcessor;
 		this.forgottonPasswordMailer = forgottonPasswordMailer;
 	}

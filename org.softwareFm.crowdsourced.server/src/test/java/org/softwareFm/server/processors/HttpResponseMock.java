@@ -10,7 +10,7 @@ import org.apache.http.ProtocolVersion;
 import org.apache.http.StatusLine;
 import org.apache.http.params.HttpParams;
 
-class HttpResponseMock implements HttpResponse {
+public class HttpResponseMock implements HttpResponse {
 	@Override
 	public void setEntity(HttpEntity entity) {
 		throw new UnsupportedOperationException();
