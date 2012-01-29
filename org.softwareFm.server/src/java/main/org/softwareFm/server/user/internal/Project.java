@@ -7,7 +7,7 @@ import java.util.concurrent.Callable;
 
 import org.softwareFm.server.GetResult;
 import org.softwareFm.server.IFileDescription;
-import org.softwareFm.server.IGitReader;
+import org.softwareFm.server.IGitLocal;
 import org.softwareFm.server.constants.LoginConstants;
 import org.softwareFm.server.user.IProject;
 import org.softwareFm.utilities.collections.Lists;
@@ -26,7 +26,7 @@ public class Project implements IProject {
 	private final IUrlGenerator userGenerator;
 	private final IUrlGenerator projectDetailGenerator;
 
-	private final IGitReader gitReader = IGitReader.Utils.makeFacard();
+	private final IGitLocal gitLocal = IGitLocal.Utils.makeFacard();
 	private final String groupIdKey;
 	private final String artifactIdKey;
 	private final IFunction1<Map<String, Object>, String> cryptoFn;

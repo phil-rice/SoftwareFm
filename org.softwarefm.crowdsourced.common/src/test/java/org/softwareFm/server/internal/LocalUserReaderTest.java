@@ -49,7 +49,7 @@ public class LocalUserReaderTest extends GitTest {
 		remoteUser.setUserProperty(sfmId2, crypto2Key, "someProperty", "someValue");
 
 		assertEquals("someValue", localUser.getUserProperty(sfmId1, crypto1Key, "someProperty"));
-		assertEquals("someValue", remoteUser.getUserProperty(sfmId2, crypto2Key, "someProperty"));
+		assertEquals("someValue", localUser.getUserProperty(sfmId2, crypto2Key, "someProperty"));
 
 		assertEquals(expected, Json.mapFromEncryptedFile(remoteSfmId1File, crypto1Key));
 		assertEquals(expected, Json.mapFromEncryptedFile(remoteSfmId2File, crypto2Key));

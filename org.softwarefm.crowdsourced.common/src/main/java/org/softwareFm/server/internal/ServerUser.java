@@ -44,5 +44,6 @@ public class ServerUser implements IUser {
 			gitOperations.init(root);
 		}
 		IFileDescription.Utils.merge(gitOperations, fileDescription, Maps.stringObjectMap(property, value));
+		gitOperations.clearCaches();
 	}
 }

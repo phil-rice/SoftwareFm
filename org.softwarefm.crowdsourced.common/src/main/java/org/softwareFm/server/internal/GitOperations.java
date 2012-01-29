@@ -197,4 +197,8 @@ public class GitOperations implements IGitOperations {
 		return root;
 	}
 
+	@Override
+	public void clearCaches() {
+	}
+
 }

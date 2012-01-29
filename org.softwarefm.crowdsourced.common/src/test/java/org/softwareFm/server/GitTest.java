@@ -34,13 +34,15 @@ public abstract class GitTest extends TemporaryFileTest {
 	protected IGitOperations localOperations;
 	protected IGitOperations remoteOperations;
 
-	protected IGitReader localReader;
+	protected IGitLocal localReader;
 
 	protected File localRoot;
 	protected File remoteRoot;
 	protected String remoteAsUri;
 
 	private IFunction1<String, String> findRepositoryRoot;
+
+	private IGitWriter gitWriter;
 
 	protected void put(String url, Map<String, Object> data) {
 		put(root, url, data);
@@ -85,7 +87,17 @@ public abstract class GitTest extends TemporaryFileTest {
 		localOperations = IGitOperations.Utils.gitOperations(localRoot);
 		remoteOperations = IGitOperations.Utils.gitOperations(remoteRoot);
 		findRepositoryRoot = makeFindRepositoryRoot();
-		localReader = IGitReader.Utils.localReader(findRepositoryRoot, localOperations, localRoot, remoteRoot.getAbsolutePath(), 500);
+		gitWriter = new IGitWriter() {
+			@Override
+			public void put(IFileDescription fileDescription, Map<String, Object> data) {
+				remoteOperations.put(fileDescription, data);
+			}
+			@Override
+			public void init(String url) {
+				remoteOperations.init(url);
+			}
+		};
+		localReader = IGitLocal.Utils.localReader(findRepositoryRoot, localOperations,  gitWriter, remoteRoot.getAbsolutePath(), 500);
 	}
 
 	protected IFunction1<String, String> makeFindRepositoryRoot() {
@@ -106,25 +118,25 @@ public abstract class GitTest extends TemporaryFileTest {
 
 	}
 
-	protected void checkNoData(IGitReader reader, String url) {
+	protected void checkNoData(IGitLocal reader, String url) {
 		IFileDescription plain = IFileDescription.Utils.plain(url);
 		assertNull(reader.getFile(plain));
 	}
 
-	protected void checkGetFileAndDescendants(IGitReader reader, String url, Map<String, Object> data) {
+	protected void checkGetFileAndDescendants(IGitLocal reader, String url, Map<String, Object> data) {
 		IFileDescription fileDescription = IFileDescription.Utils.plain(url);
 		checkGetFileAndDescendants(reader, fileDescription, data);
 	}
 
-	protected void checkGetFileAndDescendants(IGitReader reader, IFileDescription fileDescription, Map<String, Object> data) {
+	protected void checkGetFileAndDescendants(IGitLocal reader, IFileDescription fileDescription, Map<String, Object> data) {
 		assertEquals(data, reader.getFileAndDescendants(fileDescription));
 	}
 
-	protected void checkGetFile(IGitReader reader, String url, Map<String, Object> data) {
+	protected void checkGetFile(IGitLocal reader, String url, Map<String, Object> data) {
 		checkGetFile(reader, IFileDescription.Utils.plain(url), data);
 	}
 
-	protected void checkGetFile(IGitReader reader, IFileDescription fileDescription, Map<String, Object> data) {
+	protected void checkGetFile(IGitLocal reader, IFileDescription fileDescription, Map<String, Object> data) {
 		assertEquals(data, reader.getFile(fileDescription));
 	}
 

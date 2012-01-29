@@ -9,9 +9,9 @@ public interface IUserReader {
 	<T> T getUserProperty(Map<String, Object> userDetails, String cryptoKey, String property);
 
 	public static class Utils {
-		public static IUserReader localUserReader(IGitReader gitReader, IUrlGenerator userGenerator) {
-			return new LocalUserReader(gitReader, userGenerator);
-			
+		public static IUserReader localUserReader(IGitLocal gitLocal, IUrlGenerator userGenerator) {
+			return new LocalUserReader(gitLocal, userGenerator);
+
 		}
 
 	}

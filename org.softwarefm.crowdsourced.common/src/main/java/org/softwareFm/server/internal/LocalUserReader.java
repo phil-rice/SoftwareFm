@@ -3,18 +3,18 @@ package org.softwareFm.server.internal;
 import java.util.Map;
 
 import org.softwareFm.server.IFileDescription;
-import org.softwareFm.server.IGitReader;
+import org.softwareFm.server.IGitLocal;
 import org.softwareFm.server.IUserReader;
 import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.utilities.url.IUrlGenerator;
 
 public class LocalUserReader implements IUserReader {
 
-	private final IGitReader gitReader;
 	private final IUrlGenerator userGenerator;
+	private final IGitLocal gitLocal;
 
-	public LocalUserReader(IGitReader gitReader, IUrlGenerator userGenerator) {
-		this.gitReader = gitReader;
+	public LocalUserReader(IGitLocal gitLocal, IUrlGenerator userGenerator) {
+		this.gitLocal = gitLocal;
 		this.userGenerator = userGenerator;
 
 	}
@@ -24,7 +24,7 @@ public class LocalUserReader implements IUserReader {
 	public <T> T getUserProperty(Map<String, Object> userDetails, String cryptoKey, String property) {
 		String url = userGenerator.findUrlFor(userDetails);
 		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, CommonConstants.dataFileName, cryptoKey);
-		Map<String, Object> data = gitReader.getFile(fileDescription);
+		Map<String, Object> data = gitLocal.getFile(fileDescription);
 		if (data == null)
 			throw new NullPointerException(userDetails + ", " + property);
 		return (T) data.get(property);
