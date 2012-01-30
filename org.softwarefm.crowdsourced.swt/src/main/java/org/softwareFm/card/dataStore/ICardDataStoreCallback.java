@@ -7,11 +7,31 @@ package org.softwareFm.card.dataStore;
 
 import java.util.Map;
 
+import org.softwareFm.utilities.exceptions.WrappedException;
+
 /** Data has been found for the card */
 public interface ICardDataStoreCallback<T> {
 
 	T process(String url, Map<String, Object> result) throws Exception;
 
 	T noData(String url) throws Exception;
+
+	public static class Utils {
+		public static <T> T process(ICardDataStoreCallback<T> callback, String url, Map<String, Object> result) {
+			try {
+				return callback.process(url, result);
+			} catch (Exception e) {
+				throw WrappedException.wrap(e);
+			}
+		}
+
+		public static <T> T noData(ICardDataStoreCallback<T> callback, String url) {
+			try {
+				return callback.noData(url);
+			} catch (Exception e) {
+				throw WrappedException.wrap(e);
+			}
+		}
+	}
 
 }

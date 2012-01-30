@@ -208,6 +208,6 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 		Callable<String> softwareFmIdGenerator = Callables.uuidGenerator();
 		Callable<String> makeKey = Callables.makeCryptoKey();
 		IUrlGenerator userGenerator = LoginConstants.userGenerator();
-		new SoftwareFmServer(8080, 1000, IProcessCall.Utils.softwareFmProcessCall(dataSource, gitOperations, cryptoFn, makeKey, sfmRoot, mailer, monthGetter, dayGetter, softwareFmIdGenerator), ICallback.Utils.sysErrCallback(), usage);
+		new SoftwareFmServer(8080, 1000, IProcessCall.Utils.softwareFmProcessCall(dataSource, gitOperations, cryptoFn, makeKey, sfmRoot, mailer, softwareFmIdGenerator), ICallback.Utils.sysErrCallback(), usage);
 	}
 }

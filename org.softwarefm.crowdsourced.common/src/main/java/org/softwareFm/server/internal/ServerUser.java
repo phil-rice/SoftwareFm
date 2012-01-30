@@ -29,6 +29,8 @@ public class ServerUser implements IUser {
 		String url = userUrlGenerator.findUrlFor(userDetails);
 		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, CommonConstants.dataFileName, cryptoKey);
 		Map<String, Object> data = gitOperations.getFile(fileDescription);
+		if (data == null)
+			return null;
 		@SuppressWarnings("unchecked")
 		T result = (T) data.get(property);
 		return result;

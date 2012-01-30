@@ -1,18 +1,12 @@
 package org.softwareFm.collections.explorer.internal;
 
-import java.io.File;
-import java.util.Map;
-import java.util.concurrent.Callable;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.card.composites.TextInBorder;
 import org.softwareFm.card.configuration.CardConfig;
-import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.collections.explorer.IUsageStrategy;
 import org.softwareFm.collections.mySoftwareFm.IChangePassword;
 import org.softwareFm.collections.mySoftwareFm.IChangePasswordCallback;
 import org.softwareFm.collections.mySoftwareFm.IForgotPassword;
@@ -26,19 +20,8 @@ import org.softwareFm.collections.mySoftwareFm.ISignUp;
 import org.softwareFm.collections.mySoftwareFm.ISignUpCallback;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.httpClient.api.IClientBuilder;
-import org.softwareFm.httpClient.api.IHttpClient;
-import org.softwareFm.server.IGitServer;
-import org.softwareFm.server.ISoftwareFmServer;
-import org.softwareFm.server.constants.CommonConstants;
-import org.softwareFm.server.processors.AbstractLoginDataAccessor;
-import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.utilities.arrays.ArrayHelper;
 import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.runnable.Callables;
-import org.softwareFm.utilities.services.IServiceExecutor;
 
 public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 
@@ -47,14 +30,12 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 	private final CardConfig cardConfig;
 	protected UserData userData = UserData.blank();
 	protected String signupSalt;
-	protected IUsageStrategy usageStrategy;
 
 	protected ICallback<String> restart;
 
-	public MySoftwareFm(Composite parent, CardConfig cardConfig, ILoginStrategy loginStrategy, IUsageStrategy usageStrategy) {
+	public MySoftwareFm(Composite parent, CardConfig cardConfig, ILoginStrategy loginStrategy) {
 		this.cardConfig = cardConfig;
 		this.loginStrategy = loginStrategy;
-		this.usageStrategy = usageStrategy;
 		this.content = new Composite(parent, SWT.NULL);
 		content.setLayout(new FillLayout());
 		restart = new ICallback<String>() {
@@ -96,13 +77,13 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		final String email = userData.email();
 		Swts.removeAllChildren(content);
 		IChangePasswordCallback callback = null;
-		new MySoftwareFmLoggedIn(content, cardConfig, CardConstants.loggedInTitle, CardConstants.loggedInText,userData, this, new Runnable() {
+		new MySoftwareFmLoggedIn(content, cardConfig, CardConstants.loggedInTitle, CardConstants.loggedInText, userData, this, new Runnable() {
 			@Override
 			public void run() {
 				logout();
 				start();
 			}
-		}, callback, usageStrategy);
+		}, callback);
 		content.layout();
 	}
 
@@ -253,31 +234,5 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 
 	}
 
-	public static void main(String[] args) {
-		final IServiceExecutor service = IServiceExecutor.Utils.defaultExecutor();
-		final IClientBuilder client = IHttpClient.Utils.builder("localhost", CommonConstants.testPort);
-		IGitServer gitServer = IGitServer.Utils.noGitServer();
-		File home = new File(System.getProperty("user.home"));
-		final File localRoot = new File(home, ".sfm");
-		IFunction1<Map<String, Object>, String> cryptoFn = Functions.expectionIfCalled();
-		Callable<String> monthGetter = Callables.exceptionIfCalled();
-		Callable<Integer> dayGetter = Callables.exceptionIfCalled();
-		Callable<String> cryptoGenerator = Callables.makeCryptoKey();
-		ISoftwareFmServer server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCallWithoutMail(AbstractLoginDataAccessor.defaultDataSource(), gitServer, cryptoFn, cryptoGenerator, localRoot, monthGetter, dayGetter, Callables.uuidGenerator(), "g", "a"), ICallback.Utils.rethrow());
-		try {
-			Swts.Show.display(MySoftwareFm.class.getSimpleName(), new IFunction1<Composite, Composite>() {
-				@Override
-				public Composite apply(Composite from) throws Exception {
-					CardConfig cardConfig = ICardConfigurator.Utils.cardConfigForTests(from.getDisplay());
-					MySoftwareFm mySoftwareFm = new MySoftwareFm(from, cardConfig, ILoginStrategy.Utils.softwareFmLoginStrategy(from.getDisplay(), service, client), IUsageStrategy.Utils.sysoutUsageStrategy());
-					mySoftwareFm.start();
-					return mySoftwareFm.getComposite();
-				}
-			});
-		} finally {
-			server.shutdown();
-			client.shutdown();
-			service.shutdown();
-		}
-	}
+	
 }

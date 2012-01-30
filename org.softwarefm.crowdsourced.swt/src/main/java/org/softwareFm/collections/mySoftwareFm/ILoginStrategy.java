@@ -10,8 +10,8 @@ import org.softwareFm.collections.explorer.internal.UserData;
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.httpClient.response.IResponse;
-import org.softwareFm.server.ServerConstants;
 import org.softwareFm.server.constants.CommonConstants;
+import org.softwareFm.server.constants.CommonMessages;
 import org.softwareFm.server.constants.LoginConstants;
 import org.softwareFm.utilities.crypto.Crypto;
 import org.softwareFm.utilities.json.Json;
@@ -46,7 +46,7 @@ public interface ILoginStrategy {
 							try {
 								client.post(LoginConstants.signupPrefix).//
 										addParam(LoginConstants.emailKey, email).//
-										addParam(CommonConstants.sessionSaltKey, sessionSalt).//
+										addParam(LoginConstants.sessionSaltKey, sessionSalt).//
 										addParam(LoginConstants.passwordHashKey, passwordHash).//
 										execute(new IResponseCallback() {
 											@Override
@@ -71,7 +71,7 @@ public interface ILoginStrategy {
 											}
 										}).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 							} catch (Exception e) {
-								callback.failed(email, ServerConstants.timedOut);
+								callback.failed(email, CommonMessages.timedOut);
 							}
 							return null;
 						}
@@ -106,7 +106,7 @@ public interface ILoginStrategy {
 							}
 						}).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 					} catch (Exception e) {
-						callback.problemGettingSalt(ServerConstants.timedOut);
+						callback.problemGettingSalt(CommonMessages.timedOut);
 					}
 				}
 
@@ -118,7 +118,7 @@ public interface ILoginStrategy {
 							String hash = Crypto.digest(emailSalt, password);
 							client.post(LoginConstants.loginCommandPrefix).//
 									addParam(LoginConstants.emailKey, email).//
-									addParam(CommonConstants.sessionSaltKey, sessionSalt).//
+									addParam(LoginConstants.sessionSaltKey, sessionSalt).//
 									addParam(LoginConstants.passwordHashKey, hash).//
 									execute(new IResponseCallback() {
 										@Override
@@ -153,7 +153,7 @@ public interface ILoginStrategy {
 							try {
 								client.post(LoginConstants.forgottonPasswordPrefix).//
 										addParam(LoginConstants.emailKey, email).//
-										addParam(CommonConstants.sessionSaltKey, sessionSalt).//
+										addParam(LoginConstants.sessionSaltKey, sessionSalt).//
 										execute(new IResponseCallback() {
 											@Override
 											public void process(final IResponse response) {
@@ -182,7 +182,7 @@ public interface ILoginStrategy {
 						@Override
 						public Void call() throws Exception {
 							client.post(CommonConstants.emailSaltPrefix).//
-									addParam(CommonConstants.sessionSaltKey, sessionSalt).//
+									addParam(LoginConstants.sessionSaltKey, sessionSalt).//
 									addParam(LoginConstants.emailKey, email).//
 									execute(new IResponseCallback() {
 										@Override

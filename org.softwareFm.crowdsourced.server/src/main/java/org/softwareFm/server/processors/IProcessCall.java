@@ -32,6 +32,7 @@ import org.softwareFm.server.processors.internal.RigidFileProcessor;
 import org.softwareFm.server.processors.internal.SaltProcessor;
 import org.softwareFm.server.processors.internal.SignUpChecker;
 import org.softwareFm.server.processors.internal.SignupProcessor;
+import org.softwareFm.utilities.arrays.ArrayHelper;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.UrlCache;
 import org.softwareFm.utilities.strings.Strings;
@@ -70,10 +71,10 @@ public interface IProcessCall {
 		}
 
 		public static IProcessCall softwareFmProcessCallWithoutMail(DataSource dataSource, IGitOperations gitOperations, IFunction1<Map<String, Object>, String> cryptoFn, Callable<String> cryptoGenerator, File fileRoot, Callable<String> monthGetter, Callable<Integer> dayGetter, Callable<String> softwareFmIdGenerator) {
-			return softwareFmProcessCall(dataSource, gitOperations, cryptoFn, cryptoGenerator, fileRoot, IMailer.Utils.noMailer(), monthGetter, dayGetter, softwareFmIdGenerator);
+			return softwareFmProcessCall(dataSource, gitOperations, cryptoFn, cryptoGenerator, fileRoot, IMailer.Utils.noMailer(), softwareFmIdGenerator);
 		}
 
-		public static IProcessCall softwareFmProcessCall(DataSource dataSource, IGitOperations gitOperations, IFunction1<Map<String, Object>, String> cryptoFn, Callable<String> cryptoGenerator, File fileRoot, IMailer mailer, Callable<String> monthGetter, Callable<Integer> dayGetter, Callable<String> softwareFmIdGenerator) {
+		public static IProcessCall softwareFmProcessCall(DataSource dataSource, IGitOperations gitOperations, IFunction1<Map<String, Object>, String> cryptoFn, Callable<String> cryptoGenerator, File fileRoot, IMailer mailer, Callable<String> softwareFmIdGenerator, IProcessCall... extraProcessCalls) {
 			UrlCache<String> aboveRepostoryUrlCache = new UrlCache<String>();
 			SaltProcessor saltProcessor = new SaltProcessor();
 			LoginChecker loginChecker = new LoginChecker(dataSource);
@@ -83,8 +84,7 @@ public interface IProcessCall {
 			EmailSaltRequester saltRequester = new EmailSaltRequester(dataSource);
 			IPasswordChanger passwordChanger = IPasswordChanger.Utils.databasePasswordChanger(dataSource);
 			IUser user = makeUser(gitOperations);
-			// UsageProcessor usageProcessor = new UsageProcessor(server, user, monthGetter, dayGetter);
-			return chain(new FavIconProcessor(),//
+			IProcessCall[] rawProcessCalls = new IProcessCall[] { new FavIconProcessor(),//
 					new RigidFileProcessor(fileRoot, "update"),// responds to get or head
 					new LoginProcessor(saltProcessor, loginChecker), //
 					new SignupProcessor(signUpChecker, saltProcessor, softwareFmIdGenerator, user), //
@@ -100,7 +100,9 @@ public interface IProcessCall {
 					new GitGetProcessor(gitOperations, aboveRepostoryUrlCache), //
 					new MakeRootProcessor(aboveRepostoryUrlCache, gitOperations), //
 					new DeleteProcessor(gitOperations),//
-					new PostProcessor(gitOperations));// this sweeps up any posts, so ensure that commands appear in chain before it
+					new PostProcessor(gitOperations) };
+			IProcessCall[] processCalls = ArrayHelper.insert(rawProcessCalls, extraProcessCalls);
+			return chain(processCalls);// this sweeps up any posts, so ensure that commands appear in chain before it
 		}
 
 		public static IUser makeUser(IGitOperations gitOperations) {

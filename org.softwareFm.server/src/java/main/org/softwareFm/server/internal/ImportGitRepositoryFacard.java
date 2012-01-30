@@ -7,7 +7,7 @@ import java.util.concurrent.Future;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.repositoryFacard.IRepositoryFacard;
 import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
-import org.softwareFm.server.IGitServer;
+import org.softwareFm.server.IGitOperations;
 import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.future.Futures;
@@ -16,10 +16,10 @@ import org.softwareFm.utilities.url.Urls;
 
 public class ImportGitRepositoryFacard implements IRepositoryFacard {
 
-	private final IGitServer remoteGitServer;
+	private final IGitOperations gitOperations;
 
-	public ImportGitRepositoryFacard(IGitServer remoteGitServer) {
-		this.remoteGitServer = remoteGitServer;
+	public ImportGitRepositoryFacard(IGitOperations gitOperations) {
+		this.gitOperations = gitOperations;
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class ImportGitRepositoryFacard implements IRepositoryFacard {
 
 	@Override
 	public Future<?> post(String url, Map<String, Object> map, IResponseCallback callback) {
-		File file = new File(remoteGitServer.getRoot(), Urls.compose(url, CommonConstants.dataFileName));
+		File file = new File(gitOperations.getRoot(), Urls.compose(url, CommonConstants.dataFileName));
 		File directory = file.getParentFile();
 		directory.mkdirs();
 		String text = Json.toString(map);
@@ -49,7 +49,7 @@ public class ImportGitRepositoryFacard implements IRepositoryFacard {
 
 	@Override
 	public Future<?> makeRoot(String url, IResponseCallback callback) {
-		remoteGitServer.createRepository(url);
+		gitOperations.init(url);
 		return Futures.doneFuture(null);
 	}
 

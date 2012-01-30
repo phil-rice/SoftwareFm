@@ -4,10 +4,9 @@ import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.server.constants.CommonMessages;
 import org.softwareFm.server.constants.LoginConstants;
 import org.softwareFm.server.constants.LoginMessages;
-import org.softwareFm.utilities.url.IUrlGenerator;
 
 public class ServerConstants {
-	public static final String usagePrefix = "command/Usage";
+	
 	/**
 	 * @deprecated Use {@link CommonConstants#dataFileName} instead
 	 */
@@ -162,7 +161,7 @@ public class ServerConstants {
 	public static final long staleCacheTime = 60 * 5 * 1000;// millisecond before need to pull again
 	public static final long staleAboveRepositoryCacheTime = 60 * 60 * 5 * 1000;// millisecond before need to clear above repository cache (should never need to, but I think it won't hurt...)
 	public static final long staleCacheTimeForTests = 500;// hopefully enough to remove randomness without slowing tests too much
-	public static final String snipperTemplateKey = "snippet.template";
+	
 	public static final String errorInGit = "Error in git. Url {0}";
 	public static final String deleting = "Deleting {0}";
 	/**
@@ -252,7 +251,6 @@ public class ServerConstants {
 	 */
 	@Deprecated
 	public static final String passwordResetHtml = LoginMessages.passwordResetHtml;
-	public static final String timedOut = "Timed out";
 	/**
 	 * @deprecated Use {@link LoginMessages#emailNotRecognised} instead
 	 */
@@ -279,9 +277,6 @@ public class ServerConstants {
 	@Deprecated
 	public static final String softwareFmIdKey = LoginConstants.softwareFmIdKey;
 
-	public static IUrlGenerator projectGenerator() {
-		return IUrlGenerator.Utils.generator("softwareFm/users/{0}/{1}/{2}/projects", LoginConstants.softwareFmIdKey);
-	}
 
 
 }

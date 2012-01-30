@@ -384,6 +384,8 @@ public class Maps {
 	}
 
 	public static <K, V> Map<K, V> copyMap(Map<K, V> map) {
+		if (map == null)
+			return newMap();
 		Map<K, V> newMap = newMapOfSameTypeMap(map);
 		newMap.putAll(map);
 		return newMap;
@@ -524,7 +526,7 @@ public class Maps {
 	}
 
 	public static <K, V> V getOrDefault(Map<K, V> map, K key, V defaultValue) {
-		if (map.containsKey(key))
+		if (map != null && map.containsKey(key))
 			return map.get(key);
 		else
 			return defaultValue;

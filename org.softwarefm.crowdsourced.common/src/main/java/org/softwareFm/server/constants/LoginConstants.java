@@ -10,7 +10,6 @@ public class LoginConstants {
 	public static final String sessionSaltKey = "sessionSalt";
 	public static final String emailSaltKey = "emailSalt";
 	public static final String softwareFmIdKey = "softwareFmId";
-	public static final String projectCryptoKey = "projectCryptoKey";
 	public static final String cryptoKey = "crypto";
 	public static final String makeSaltPrefix = "command/makeLoginSalt";
 	public static final String loginCommandPrefix = "command/login";

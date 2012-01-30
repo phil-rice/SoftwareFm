@@ -9,7 +9,8 @@ import java.util.concurrent.Future;
 
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.dataStore.internal.CardDataStoreForRepository;
-import org.softwareFm.repositoryFacard.IRepositoryFacard;
+import org.softwareFm.server.IGitLocal;
+import org.softwareFm.utilities.services.IServiceExecutor;
 
 /** Go get data for a url, no follow ups */
 public interface ICardDataStore {
@@ -25,8 +26,8 @@ public interface ICardDataStore {
 		}
 
 		/** The control is used to ensure that call backs are in the correct thread, and everything ceases to work if the control is disposed */
-		public static IMutableCardDataStore repositoryCardDataStore(Control from, IRepositoryFacard repository) {
-			return new CardDataStoreForRepository(from, repository);
+		public static IMutableCardDataStore repositoryCardDataStore(Control from, IServiceExecutor serviceExecutor, IGitLocal gitLocal) {
+			return new CardDataStoreForRepository(from, serviceExecutor, gitLocal);
 		}
 	}
 

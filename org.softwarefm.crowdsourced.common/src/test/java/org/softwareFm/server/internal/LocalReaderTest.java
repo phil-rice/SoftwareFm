@@ -14,9 +14,9 @@ public class LocalReaderTest extends GitTest {
 		remoteOperations.put(IFileDescription.Utils.plain("a/b/d"), v21);
 		remoteOperations.addAllAndCommit("a", getClass().getSimpleName());
 
-		checkGetFile(localReader, IFileDescription.Utils.plain("a/b"), v11);
-		checkGetFile(localReader, IFileDescription.Utils.plain("a/b/c"), v12);
-		checkGetFile(localReader, IFileDescription.Utils.plain("a/b/d"), v21);
+		checkGetFile(gitLocal, IFileDescription.Utils.plain("a/b"), v11);
+		checkGetFile(gitLocal, IFileDescription.Utils.plain("a/b/c"), v12);
+		checkGetFile(gitLocal, IFileDescription.Utils.plain("a/b/d"), v21);
 	}
 
 	public void testGetFile() {
@@ -30,9 +30,9 @@ public class LocalReaderTest extends GitTest {
 		localOperations.setConfigForRemotePull("a", remoteRoot.getAbsolutePath());
 		localOperations.pull("a");
 
-		checkGetFile(localReader, IFileDescription.Utils.plain("a/b"), v11);
-		checkGetFile(localReader, IFileDescription.Utils.plain("a/b/c"), v12);
-		checkGetFile(localReader, IFileDescription.Utils.plain("a/b/d"), v21);
+		checkGetFile(gitLocal, IFileDescription.Utils.plain("a/b"), v11);
+		checkGetFile(gitLocal, IFileDescription.Utils.plain("a/b/c"), v12);
+		checkGetFile(gitLocal, IFileDescription.Utils.plain("a/b/d"), v21);
 	}
 
 	public void testGetFileAndDescendants() {
@@ -47,9 +47,9 @@ public class LocalReaderTest extends GitTest {
 		localOperations.setConfigForRemotePull("a", remoteRoot.getAbsolutePath());
 		localOperations.pull("a");
 
-		checkGetFileAndDescendants(localReader, IFileDescription.Utils.plain("a/b"), map);
-		checkGetFileAndDescendants(localReader, IFileDescription.Utils.plain("a/b/c"), v12);
-		checkGetFileAndDescendants(localReader, IFileDescription.Utils.plain("a/b/d"), v21);
+		checkGetFileAndDescendants(gitLocal, IFileDescription.Utils.plain("a/b"), map);
+		checkGetFileAndDescendants(gitLocal, IFileDescription.Utils.plain("a/b/c"), v12);
+		checkGetFileAndDescendants(gitLocal, IFileDescription.Utils.plain("a/b/d"), v21);
 	}
 
 	public void testClearCache() {
@@ -63,14 +63,14 @@ public class LocalReaderTest extends GitTest {
 		localOperations.setConfigForRemotePull("a", remoteRoot.getAbsolutePath());
 		localOperations.pull("a");
 
-		checkGetFile(localReader, IFileDescription.Utils.plain("a/b"), v11);
-		checkGetFile(localReader, IFileDescription.Utils.plain("a/b/c"), v12);
-		checkGetFile(localReader, IFileDescription.Utils.plain("a/b/d"), v21);
+		checkGetFile(gitLocal, IFileDescription.Utils.plain("a/b"), v11);
+		checkGetFile(gitLocal, IFileDescription.Utils.plain("a/b/c"), v12);
+		checkGetFile(gitLocal, IFileDescription.Utils.plain("a/b/d"), v21);
 
 		remoteOperations.put(IFileDescription.Utils.plain("a/b"), v22);
-		checkGetFile(localReader, IFileDescription.Utils.plain("a/b"), v11);// timeout hasn't happened, so pull doesn't actually take place
-		localReader.clearCaches();
-		checkGetFile(localReader, IFileDescription.Utils.plain("a/b"), v22);// timeout has happened
+		checkGetFile(gitLocal, IFileDescription.Utils.plain("a/b"), v11);// timeout hasn't happened, so pull doesn't actually take place
+		gitLocal.clearCaches();
+		checkGetFile(gitLocal, IFileDescription.Utils.plain("a/b"), v22);// timeout has happened
 
 	}
 }

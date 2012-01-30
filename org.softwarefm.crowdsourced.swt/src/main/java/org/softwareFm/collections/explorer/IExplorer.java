@@ -25,7 +25,6 @@ import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.display.browser.IBrowserCompositeBuilder;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.display.timeline.ITimeLine;
-import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.utilities.services.IServiceExecutor;
 
 public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCardConfig {
@@ -56,7 +55,7 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 
 	void showRandomSnippetFor(String artifactUrl);
 
-	void showDebug(BindingRipperResult ripperResult);
+	void showDebug(String ripperResult);
 
 	void edit(ICard card, String key);
 
@@ -75,8 +74,8 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 	
 	public static class Utils {
 
-		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, List<String> rootUrls, IPlayListGetter playListGetter, IServiceExecutor service, ILoginStrategy loginStrategy, IUsageStrategy usageStrategy) {
-			return new Explorer(cardConfig, rootUrls, masterDetailSocial, service, playListGetter, loginStrategy, usageStrategy);
+		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, List<String> rootUrls, IPlayListGetter playListGetter, IServiceExecutor service, ILoginStrategy loginStrategy) {
+			return new Explorer(cardConfig, rootUrls, masterDetailSocial, service, playListGetter, loginStrategy);
 		}
 	}
 

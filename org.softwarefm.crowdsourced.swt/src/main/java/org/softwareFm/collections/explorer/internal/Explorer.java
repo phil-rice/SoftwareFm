@@ -58,7 +58,6 @@ import org.softwareFm.collections.explorer.BrowserAndNavBar;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IExplorerListener;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
-import org.softwareFm.collections.explorer.IUsageStrategy;
 import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.collections.unrecognisedJar.GroupidArtifactVersion;
 import org.softwareFm.collections.unrecognisedJar.GuessArtifactAndVersionDetails;
@@ -71,8 +70,6 @@ import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.display.timeline.PlayItem;
 import org.softwareFm.display.timeline.TimeLine;
-import org.softwareFm.httpClient.requests.IResponseCallback;
-import org.softwareFm.jdtBinding.api.BindingRipperResult;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
@@ -95,12 +92,10 @@ public class Explorer implements IExplorer {
 	private TimeLine timeLine;
 	private Comments comments;
 	private MySoftwareFm mySoftwareFm;
-	private final IUsageStrategy usageStrategy;
 
-	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IUsageStrategy usageStrategy) {
+	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy) {
 		this.cardConfig = cardConfig;
 		this.masterDetailSocial = masterDetailSocial;
-		this.usageStrategy = usageStrategy;
 		callbackToGotoUrlAndUpdateDetails = new ICallback<String>() {
 			@Override
 			public void process(String url) throws Exception {
@@ -216,7 +211,7 @@ public class Explorer implements IExplorer {
 		mySoftwareFm = masterDetailSocial.createMaster(new IFunction1<Composite, MySoftwareFm>() {
 			@Override
 			public MySoftwareFm apply(Composite from) throws Exception {
-				MySoftwareFm mySoftwareFm = new MySoftwareFm(from, cardConfig, loginStrategy, usageStrategy);
+				MySoftwareFm mySoftwareFm = new MySoftwareFm(from, cardConfig, loginStrategy);
 				mySoftwareFm.start();
 				return mySoftwareFm;
 			}
@@ -1061,7 +1056,7 @@ public class Explorer implements IExplorer {
 	private final AtomicInteger count = new AtomicInteger();
 
 	@Override
-	public void showDebug(BindingRipperResult ripperResult) {
+	public void showDebug(String ripperResult) {
 		String text = "This is a debug screen.\nCount: " + count.incrementAndGet() + "\n" + ripperResult;
 		masterDetailSocial.createAndShowMaster(Swts.styledTextFn(text, SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL));
 
@@ -1070,6 +1065,6 @@ public class Explorer implements IExplorer {
 	@Override
 	public void usage(String groupId, String artifactId) {
 		UserData userData = mySoftwareFm.userData;
-		usageStrategy.using(userData.softwareFmId, groupId, artifactId, IResponseCallback.Utils.noCallback());
+//		usageStrategy.using(userData.softwareFmId, groupId, artifactId, IResponseCallback.Utils.noCallback());
 	}
 }

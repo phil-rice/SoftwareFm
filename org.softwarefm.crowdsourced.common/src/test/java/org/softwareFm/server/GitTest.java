@@ -34,13 +34,13 @@ public abstract class GitTest extends TemporaryFileTest {
 	protected IGitOperations localOperations;
 	protected IGitOperations remoteOperations;
 
-	protected IGitLocal localReader;
+	protected IGitLocal gitLocal;
 
 	protected File localRoot;
 	protected File remoteRoot;
 	protected String remoteAsUri;
 
-	private IFunction1<String, String> findRepositoryRoot;
+	protected IFunction1<String, String> findRepositoryRoot;
 
 	private IGitWriter gitWriter;
 
@@ -87,17 +87,8 @@ public abstract class GitTest extends TemporaryFileTest {
 		localOperations = IGitOperations.Utils.gitOperations(localRoot);
 		remoteOperations = IGitOperations.Utils.gitOperations(remoteRoot);
 		findRepositoryRoot = makeFindRepositoryRoot();
-		gitWriter = new IGitWriter() {
-			@Override
-			public void put(IFileDescription fileDescription, Map<String, Object> data) {
-				remoteOperations.put(fileDescription, data);
-			}
-			@Override
-			public void init(String url) {
-				remoteOperations.init(url);
-			}
-		};
-		localReader = IGitLocal.Utils.localReader(findRepositoryRoot, localOperations,  gitWriter, remoteRoot.getAbsolutePath(), 500);
+		gitWriter = new GitWriterForTests();
+		gitLocal = IGitLocal.Utils.localReader(findRepositoryRoot, localOperations,  gitWriter, remoteRoot.getAbsolutePath(), 500);
 	}
 
 	protected IFunction1<String, String> makeFindRepositoryRoot() {

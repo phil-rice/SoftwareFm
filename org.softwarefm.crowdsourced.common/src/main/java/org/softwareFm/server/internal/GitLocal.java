@@ -26,17 +26,12 @@ public class GitLocal implements IGitLocal {
 	private final Object lock = new Object();
 	private final IGitWriter gitWriter;
 
-	public GitLocal(IFunction1<String, String> findRepositoryRoot, IGitOperations gitOperations, IGitWriter gitWriter,  String remotePrefix, long period) {
+	public GitLocal(IFunction1<String, String> findRepositoryRoot, IGitOperations gitOperations, IGitWriter gitWriter, String remotePrefix, long period) {
 		this.findRepositoryRoot = findRepositoryRoot;
 		this.gitOperations = gitOperations;
 		this.gitWriter = gitWriter;
 		this.remotePrefix = remotePrefix;
 		this.period = period;
-	}
-
-	@Override
-	public void clearCaches() {
-		lastPulledTime.clear();
 	}
 
 	@Override
@@ -101,6 +96,21 @@ public class GitLocal implements IGitLocal {
 	@Override
 	public void put(IFileDescription fileDescription, Map<String, Object> data) {
 		gitWriter.put(fileDescription, data);
-		
+
+	}
+
+	@Override
+	public void clearCaches() {
+		lastPulledTime.clear();
+	}
+
+	@Override
+	public void clearCache(String url) {
+		clearCaches();
+	}
+
+	@Override
+	public void delete(IFileDescription fileDescription) {
+		gitWriter.delete(fileDescription);
 	}
 }

@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Eclipse
+Bundle-SymbolicName: org.softwarefm.crowdsourced.softwarefm;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: SoftwareFM
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.softwareFm.crowdsourced.server;bundle-version="1.0.0";visibility:=reexport,
+ org.softwarefm.crowdsourced.swt;bundle-version="1.0.0";visibility:=reexport,
+ org.eclipse.jdt.core;bundle-version="3.7.0";visibility:=reexport,
+ org.eclipse.core.resources;bundle-version="3.7.100";visibility:=reexport,
+ org.eclipse.ui;bundle-version="3.7.0";visibility:=reexport,
+ org.eclipse.jdt.ui;bundle-version="3.7.0";visibility:=reexport
+Export-Package: org.softwareFm.crowdsourced.softwarefm

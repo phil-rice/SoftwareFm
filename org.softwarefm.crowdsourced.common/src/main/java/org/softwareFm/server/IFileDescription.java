@@ -8,6 +8,7 @@ import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.server.internal.FileDescription;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.url.Urls;
 
 public interface IFileDescription {
 
@@ -39,8 +40,13 @@ public interface IFileDescription {
 			return plain(requestLine.getUri());
 		}
 
-		public static File findRepositoryUrl(File root, String url) {
+		public static File findRepositoryFile(File root, String url) {
 			return plain(url).findRepositoryUrl(root);
+		}
+		public static String findRepositoryUrl(File root, String url) {
+			File file = plain(url).findRepositoryUrl(root);
+			String result = Files.offset(root, file);
+			return result;
 		}
 
 		public static IFileDescription plain(String url, String name) {
@@ -66,6 +72,18 @@ public interface IFileDescription {
 			@SuppressWarnings("unchecked")
 			Map<String, Object> map = Maps.merge(initialData, toMerge);
 			gitOperations.put(fileDescription, map);
+		}
+
+		public static void addAllAndCommit(IGitOperations gitOperations, IFileDescription fileDescription, String message) {
+			File root = gitOperations.getRoot();
+			File repositoryUrl = fileDescription.findRepositoryUrl(root);
+			String url = Files.offset(root, repositoryUrl);
+			gitOperations.addAllAndCommit(url, message);
+			
+		}
+
+		public static IFileDescription compose(String...strings) {
+			return IFileDescription.Utils.plain(Urls.compose(strings));
 		}
 
 	}

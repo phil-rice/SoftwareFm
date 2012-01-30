@@ -9,5 +9,4 @@ Require-Bundle: org.softwareFm.externals;bundle-version="1.0.0";visibility:=reex
  org.softwareFm.repository;bundle-version="1.0.0";visibility:=reexport,
  org.softwareFm.repositoryClient;bundle-version="1.0.0",
  org.softwareFm.crowdsourced.server;bundle-version="1.0.0";visibility:=reexport
-Export-Package: org.softwareFm.server,
- org.softwareFm.server.processors
+Export-Package: org.softwareFm.server

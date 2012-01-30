@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Client
+Bundle-SymbolicName: org.softwarefm.crowdsourced.client
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: SoftwareFM
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.softwarefm.crowdsourced.common;bundle-version="1.0.0";visibility:=reexport
+Export-Package: org.softwareFm.gitwriter,
+ org.softwareFm.httpClient.api,
+ org.softwareFm.httpClient.constants,
+ org.softwareFm.httpClient.requests,
+ org.softwareFm.httpClient.response

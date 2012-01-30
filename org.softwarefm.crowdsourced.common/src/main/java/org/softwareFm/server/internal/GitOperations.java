@@ -35,7 +35,7 @@ public class GitOperations implements IGitOperations {
 			@Override
 			public Void apply(FileRepository from) throws Exception {
 				File fullRoot = new File(root, url);
-				File file = IFileDescription.Utils.findRepositoryUrl(root, url);
+				File file = IFileDescription.Utils.findRepositoryFile(root, url);
 				if (fullRoot.equals(file))
 					return null; // already exists
 				if (file != null)

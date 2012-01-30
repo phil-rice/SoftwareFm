@@ -40,5 +40,70 @@ public interface IGitOperations {
 			String url = Files.offset(gitOperations.getRoot(), file);
 			gitOperations.init(url);
 		}
+
+		public static IGitOperations noGitOperations() {
+			return new IGitOperations() {
+				
+				@Override
+				public void setConfigForRemotePull(String url, String remotePrefix) {
+					throw new IllegalArgumentException();
+				}
+				
+				@Override
+				public void put(IFileDescription fileDescription, Map<String, Object> data) {
+					throw new IllegalArgumentException();
+				}
+				
+				@Override
+				public void pull(String url) {
+					throw new IllegalArgumentException();
+				}
+				
+				@Override
+				public void init(String url) {
+					throw new IllegalArgumentException();
+				}
+				
+				@Override
+				public File getRoot() {
+					throw new IllegalArgumentException();
+				}
+				
+				@Override
+				public Map<String, Object> getFileAndDescendants(IFileDescription fileDescription) {
+					throw new IllegalArgumentException();
+				}
+				
+				@Override
+				public Map<String, Object> getFile(IFileDescription fileDescription) {
+					throw new IllegalArgumentException();
+				}
+				
+				@Override
+				public String getConfig(String url, String section, String subsection, String name) {
+					throw new IllegalArgumentException();
+				}
+				
+				@Override
+				public String getBranch(String url) {
+					throw new IllegalArgumentException();
+				}
+				
+				@Override
+				public void gc(String url) {
+					throw new IllegalArgumentException();
+				}
+				
+				@Override
+				public void clearCaches() {
+					throw new IllegalArgumentException();
+				}
+				
+				@Override
+				public void addAllAndCommit(String url, String message) {
+					throw new IllegalArgumentException();
+				}
+			};
+		}
 	}
 }

@@ -11,101 +11,100 @@
 package org.softwareFm.card.dataStore.internal;
 
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.dataStore.IAfterEditCallback;
 import org.softwareFm.card.dataStore.ICardDataStoreCallback;
 import org.softwareFm.card.dataStore.IMutableCardDataStore;
-import org.softwareFm.httpClient.requests.IResponseCallback;
-import org.softwareFm.httpClient.response.IResponse;
-import org.softwareFm.repositoryFacard.IRepositoryFacard;
-import org.softwareFm.repositoryFacard.IRepositoryFacardCallback;
-import org.softwareFm.repositoryFacard.RepositoryConstants;
-import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.display.swt.Swts;
+import org.softwareFm.server.IFileDescription;
+import org.softwareFm.server.IGitLocal;
+import org.softwareFm.utilities.services.IServiceExecutor;
 
 public class CardDataStoreForRepository implements IMutableCardDataStore {
-	private final Control from;
-	private final IRepositoryFacard facard;
+	private final Control control;
+	private final IGitLocal gitLocal;
+	private final IServiceExecutor serviceExecutor;
 
-	public CardDataStoreForRepository(Control from, IRepositoryFacard facard) {
-		this.from = from;
-		this.facard = facard;
+	public CardDataStoreForRepository(Control from, IServiceExecutor serviceExecutor, IGitLocal facard) {
+		this.control = from;
+		this.serviceExecutor = serviceExecutor;
+		this.gitLocal = facard;
 	}
 
 	@Override
 	public void clearCache(String url) {
-		facard.clearCache(url);
+		gitLocal.clearCache(url);
 	}
 
 	@Override
 	public void clearCaches() {
-		facard.clearCaches();
+		gitLocal.clearCaches();
 	}
 
 	@Override
 	public Future<?> makeRepo(final String url, final IAfterEditCallback callback) {
-		return facard.makeRoot(url, new IResponseCallback() {
+		return serviceExecutor.submit(new Callable<Void>() {
 			@Override
-			public void process(IResponse response) {
+			public Void call() throws Exception {
+				gitLocal.init(url);
 				callback.afterEdit(url);
+				return null;
 			}
 		});
 	}
 
 	@Override
 	public void delete(final String url, final IAfterEditCallback callback) {
-		facard.delete(url, new IResponseCallback() {
+		serviceExecutor.submit(new Callable<Void>() {
 			@Override
-			public void process(IResponse response) {
+			public Void call() throws Exception {
+				gitLocal.delete(IFileDescription.Utils.plain(url));
 				callback.afterEdit(url);
+				return null;
 			}
 		});
 
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public <T> Future<T> processDataFor(final String url, final ICardDataStoreCallback<T> callback) {
-		@SuppressWarnings("rawtypes")
-		Future future = facard.get(url, new IRepositoryFacardCallback() {
+		final IFileDescription fileDescription = IFileDescription.Utils.plain(url);
+		return serviceExecutor.submit(new Callable<T>() {
 			@Override
-			public void process(final IResponse response, final Map<String, Object> data) {
-				if (!from.isDisposed())
-					from.getDisplay().asyncExec(new Runnable() {
-						@Override
-						public void run() {
-							try {
-								if (RepositoryConstants.okStatusCodes.contains(response.statusCode()))
-									callback.process(url, data);
-								else {
-									if (IRepositoryFacard.Utils.debug)
-										System.out.println(response.asString());
-									callback.noData(url);
-								}
-							} catch (Exception e) {
-								throw WrappedException.wrap(e);
-							}
-						}
-					});
+			public T call() throws Exception {
+				final Map<String, Object> data = gitLocal.getFile(fileDescription);
+				Swts.asyncExec(control, new Runnable() {
+					@Override
+					public void run() {
+						if (data.size() == 0)
+							ICardDataStoreCallback.Utils.noData(callback, url);
+						else
+							ICardDataStoreCallback.Utils.process(callback, url, data);
+					}
+				});
+				return null;
 			}
 		});
-		return future;
 	}
 
 	@Override
-	public Future<?> put(final String url, Map<String, Object> map, final IAfterEditCallback afterEdit) {
-		return this.facard.post(url, map, new IResponseCallback() {
+	public Future<?> put(final String url, final Map<String, Object> map, final IAfterEditCallback afterEdit) {
+		return serviceExecutor.submit(new Callable<Void>() {
 			@Override
-			public void process(IResponse response) {
-				if (!from.isDisposed())
-					if (!from.isDisposed())
-						from.getDisplay().asyncExec(new Runnable() {
-							@Override
-							public void run() {
-								afterEdit.afterEdit(url);
-							}
-						});
+			public Void call() throws Exception {
+				IFileDescription fileDescription = IFileDescription.Utils.plain(url);
+				gitLocal.put(fileDescription, map);
+				Swts.asyncExec(control, new Runnable() {
+					@Override
+					public void run() {
+						afterEdit.afterEdit(url);
+
+					}
+				});
+				return null;
 			}
 		});
 	}

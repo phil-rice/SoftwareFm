@@ -6,7 +6,9 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: SoftwareFm
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.softwarefm.crowdsourced.common;bundle-version="1.0.0";visibility:=reexport,
- org.softwareFm.softwareFmImages;bundle-version="1.0.6";visibility:=reexport
+ org.softwareFm.softwareFmImages;bundle-version="1.0.6";visibility:=reexport,
+ org.eclipse.jface.text;bundle-version="3.7.0";visibility:=reexport,
+ org.softwarefm.crowdsourced.client;bundle-version="1.0.0";visibility:=reexport
 Export-Package: org.softwareFm.card.card,
  org.softwareFm.card.card.composites,
  org.softwareFm.card.configuration,
@@ -18,10 +20,10 @@ Export-Package: org.softwareFm.card.card,
  org.softwareFm.card.navigation.internal,
  org.softwareFm.card.title,
  org.softwareFm.collections,
- org.softwareFm.collections.actions,
  org.softwareFm.collections.comments,
  org.softwareFm.collections.constants,
  org.softwareFm.collections.explorer,
+ org.softwareFm.collections.explorer.internal,
  org.softwareFm.collections.menu,
  org.softwareFm.collections.mySoftwareFm,
  org.softwareFm.display.browser,

@@ -14,7 +14,6 @@ import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.card.internal.ListOfCards;
 import org.softwareFm.card.card.internal.ScrollingCardCollectionHolder;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.details.IDetailAdder;
@@ -30,15 +29,9 @@ public class CollectionsDetailAdder implements IDetailAdder {
 			Map<String, Object> map = (Map<String, Object>) value;
 			Object type = map.get("sling:resourceType");
 			if ("collection".equals(type)) {
-				if (useListOfCards) {
-					ListOfCards result = new ListOfCards(parentComposite, cardConfig);
-					result.setKeyValue(parentCard.url() + "/" + key, "", key, value, callback);
-					return result;
-				} else {
-					ScrollingCardCollectionHolder result = new ScrollingCardCollectionHolder(parentComposite, cardConfig);
-					result.setKeyValue(parentCard.url(), key, value, callback);
-					return result;
-				}
+				ScrollingCardCollectionHolder result = new ScrollingCardCollectionHolder(parentComposite, cardConfig);
+				result.setKeyValue(parentCard.url(), key, value, callback);
+				return result;
 			}
 		}
 		return null;

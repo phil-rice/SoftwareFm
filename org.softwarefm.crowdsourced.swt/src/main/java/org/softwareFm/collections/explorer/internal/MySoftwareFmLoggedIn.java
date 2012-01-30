@@ -9,7 +9,6 @@ import org.softwareFm.card.card.composites.TextInBorderWithButtons;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.collections.explorer.IUsageStrategy;
 import org.softwareFm.collections.mySoftwareFm.IChangePasswordCallback;
 import org.softwareFm.collections.mySoftwareFm.ILoginCallbacks;
 import org.softwareFm.collections.mySoftwareFm.ILoginDisplayStrategy;
@@ -17,13 +16,14 @@ import org.softwareFm.collections.mySoftwareFm.IShowMessage;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.runnable.Runnables;
 
 public class MySoftwareFmLoggedIn implements IHasControl {
 
 	private final TextInBorderWithButtons content;
 
-	public MySoftwareFmLoggedIn(Composite parent, CardConfig cardConfig, String title, String text, final UserData userData, final ILoginDisplayStrategy loginDisplayStrategy, Runnable logout, IChangePasswordCallback changePasswordCallback, final IUsageStrategy usageStrategy) {
+	public MySoftwareFmLoggedIn(Composite parent, CardConfig cardConfig, String title, String text, final UserData userData, final ILoginDisplayStrategy loginDisplayStrategy, Runnable logout, IChangePasswordCallback changePasswordCallback) {
 		final String email = userData.email();
 		content = new TextInBorderWithButtons(parent, SWT.WRAP | SWT.READ_ONLY, cardConfig);
 		content.setTextFromResourceGetter(CardConstants.loginCardType, title, text, email);
@@ -37,7 +37,7 @@ public class MySoftwareFmLoggedIn implements IHasControl {
 		content.addButton("My Data", new Runnable() {
 			@Override
 			public void run() {
-				Map<String, Object> map = usageStrategy.myProjectData(userData.softwareFmId, userData.crypto);
+				Map<String, Object> map = Maps.stringObjectMap("data", "goes here");
 				content.setText(CardConstants.loginCardType, "Project Data", map.toString());
 			}
 		});
@@ -56,8 +56,7 @@ public class MySoftwareFmLoggedIn implements IHasControl {
 				return (Composite) new MySoftwareFmLoggedIn(from, cardConfig, CardConstants.loggedInTitle, CardConstants.loggedInText, //
 						new UserData("email", null, null), //
 						ILoginDisplayStrategy.Utils.sysoutDisplayStrategy(), Runnables.sysout("Logout clicked"), //
-						ILoginCallbacks.Utils.showMessageCallbacks(cardConfig, IShowMessage.Utils.sysout()),//
-						IUsageStrategy.Utils.sysoutUsageStrategy()).getControl();
+						ILoginCallbacks.Utils.showMessageCallbacks(cardConfig, IShowMessage.Utils.sysout())).getControl();
 			}
 		});
 	}

@@ -64,7 +64,7 @@ public class LocalUserReaderTest extends GitTest {
 		super.setUp();
 		IUrlGenerator userUrlGenerator = IUrlGenerator.Utils.generator("user/{0}/{1}/{2}", LoginConstants.softwareFmIdKey);
 		remoteUser = IUser.Utils.makeUserForServer(remoteOperations, userUrlGenerator, findRepositoryRoot);
-		localUser = IUserReader.Utils.localUserReader(localReader, userUrlGenerator);
+		localUser = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
 
 		remoteSfmId1File = new File(remoteRoot, Urls.compose("user/sf/mI/sfmId1/", CommonConstants.dataFileName));
 		remoteSfmId2File = new File(remoteRoot, Urls.compose("user/sf/mI/sfmId2/", CommonConstants.dataFileName));
