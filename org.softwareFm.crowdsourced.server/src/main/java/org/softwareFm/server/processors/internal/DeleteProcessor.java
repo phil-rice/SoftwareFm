@@ -13,7 +13,6 @@ import org.softwareFm.utilities.collections.Files;
 
 public class DeleteProcessor implements IProcessCall {
 
-
 	private final IGitOperations gitOperations;
 
 	public DeleteProcessor(IGitOperations gitOperations) {
@@ -25,11 +24,14 @@ public class DeleteProcessor implements IProcessCall {
 		if (requestLine.getMethod().equals(CommonConstants.DELETE)) {
 			String uri = requestLine.getUri();
 			IFileDescription fileDescription = IFileDescription.Utils.fromRequest(requestLine, parameters);
-			File file = fileDescription.getFile(gitOperations.getRoot());
-			file.delete();
-			File repositoryFile = fileDescription.findRepositoryUrl(gitOperations.getRoot());
-			String repositoryUrl = Files.offset(gitOperations.getRoot(), repositoryFile);
-			gitOperations.addAllAndCommit(repositoryUrl, "delete: "+ uri);
+			File root = gitOperations.getRoot();
+			File file = fileDescription.getFile(root);
+			if (file.exists()) {
+				file.delete();
+				File repositoryFile = fileDescription.findRepositoryUrl(root);
+				String repositoryUrl = Files.offset(root, repositoryFile);
+				gitOperations.addAllAndCommit(repositoryUrl, "delete: " + uri);
+			}
 			return IProcessResult.Utils.doNothing();
 		}
 		return null;

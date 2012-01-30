@@ -70,8 +70,8 @@ public interface IProcessCall {
 			return "<" + requestLine + ", " + parameters + ">";
 		}
 
-		public static IProcessCall softwareFmProcessCallWithoutMail(DataSource dataSource, IGitOperations gitOperations, IFunction1<Map<String, Object>, String> cryptoFn, Callable<String> cryptoGenerator, File fileRoot, Callable<String> monthGetter, Callable<Integer> dayGetter, Callable<String> softwareFmIdGenerator) {
-			return softwareFmProcessCall(dataSource, gitOperations, cryptoFn, cryptoGenerator, fileRoot, IMailer.Utils.noMailer(), softwareFmIdGenerator);
+		public static IProcessCall softwareFmProcessCallWithoutMail(DataSource dataSource, IGitOperations gitOperations, IFunction1<Map<String, Object>, String> cryptoFn, Callable<String> cryptoGenerator, File fileRoot, Callable<String> softwareFmIdGenerator, IProcessCall... extraProcessCalls) {
+			return softwareFmProcessCall(dataSource, gitOperations, cryptoFn, cryptoGenerator, fileRoot, IMailer.Utils.noMailer(), softwareFmIdGenerator, extraProcessCalls);
 		}
 
 		public static IProcessCall softwareFmProcessCall(DataSource dataSource, IGitOperations gitOperations, IFunction1<Map<String, Object>, String> cryptoFn, Callable<String> cryptoGenerator, File fileRoot, IMailer mailer, Callable<String> softwareFmIdGenerator, IProcessCall... extraProcessCalls) {

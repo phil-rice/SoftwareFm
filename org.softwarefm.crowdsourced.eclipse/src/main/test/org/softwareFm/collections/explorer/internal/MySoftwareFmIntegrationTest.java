@@ -339,8 +339,8 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		IFunction1<String, String> findRepositoryRoot = IGitLocal.Utils.findRepostoryForTests(remoteRoot);
 		IGitOperations localOperations = IGitOperations.Utils.gitOperations(localRoot);
 		IGitOperations remoteOperations = IGitOperations.Utils.gitOperations(remoteRoot);
-		IGitLocal gitLocal = IGitLocal.Utils.localReader(findRepositoryRoot, localOperations, new GitWriterForTests(), remoteRoot.getAbsolutePath(), CommonConstants.staleCachePeriodForTest);
-		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, localOperations, cryptoFn, cryptoGenerator, null, monthGetter, dayGetter, softwareFmIdGenerator), ICallback.Utils.rethrow());
+		IGitLocal gitLocal = IGitLocal.Utils.localReader(findRepositoryRoot, localOperations, new GitWriterForTests(remoteOperations), remoteRoot.getAbsolutePath(), CommonConstants.staleCachePeriodForTest);
+		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, localOperations, cryptoFn, cryptoGenerator, null, softwareFmIdGenerator), ICallback.Utils.rethrow());
 		client = IHttpClient.Utils.builder("localhost", 8080);
 		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(display, service, client);
 		cardConfig = ICardConfigurator.Utils.cardConfigForTests(display);

@@ -37,7 +37,7 @@ public class MySoftwareFmDemo {
 		Callable<String> cryptoGenerator = Callables.makeCryptoKey();
 		BasicDataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
 		IGitOperations gitOperations = IGitOperations.Utils.gitOperations(remoteRoot);
-		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, gitOperations, cryptoFn, cryptoGenerator, localRoot, monthGetter, dayGetter, Callables.uuidGenerator());
+		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, gitOperations, cryptoFn, cryptoGenerator, localRoot, Callables.uuidGenerator());
 		ISoftwareFmServer server = ISoftwareFmServer.Utils.testServerPort(processCall, ICallback.Utils.rethrow());
 		try {
 			Swts.Show.display(MySoftwareFm.class.getSimpleName(), new IFunction1<Composite, Composite>() {

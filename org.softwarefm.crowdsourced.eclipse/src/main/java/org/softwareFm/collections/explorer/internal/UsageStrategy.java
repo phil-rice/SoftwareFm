@@ -59,7 +59,7 @@ public class UsageStrategy implements IUsageStrategy {
 		Map<String, Object> userDataResult = gitLocal.getFile(IFileDescription.Utils.encrypted(userUrl, CommonConstants.dataFileName, crypto));
 		if (userDataResult==null)
 			throw new IllegalArgumentException(softwareFmId);
-		String projectCrypto = (String) userDataResult.get(LoginConstants.projectCryptoKey);
+		String projectCrypto = (String) userDataResult.get(SoftwareFmConstants.projectCryptoKey);
 
 		File directory = new File(root, projectUrl);
 		Map<String, Object> result = Maps.newMap();

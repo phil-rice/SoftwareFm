@@ -10,8 +10,8 @@ public interface IGitWriter {
 	void delete(IFileDescription fileDescription);
 	
 	public static class Utils{
-		public static IGitWriter writerForTest(){
-			return new GitWriterForTests();
+		public static IGitWriter writerForTest(IGitOperations remoteOperations){
+			return new GitWriterForTests(remoteOperations);
 		}
 
 		public static IGitWriter noWriter() {

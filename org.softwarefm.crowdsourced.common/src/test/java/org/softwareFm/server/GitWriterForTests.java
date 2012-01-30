@@ -4,7 +4,13 @@ import java.io.File;
 import java.util.Map;
 
 public class GitWriterForTests implements IGitWriter {
-	private IGitOperations remoteOperations;
+	private final IGitOperations remoteOperations;
+	
+
+	public GitWriterForTests(IGitOperations remoteOperations) {
+		super();
+		this.remoteOperations = remoteOperations;
+	}
 
 	@Override
 	public void put(IFileDescription fileDescription, Map<String, Object> data) {

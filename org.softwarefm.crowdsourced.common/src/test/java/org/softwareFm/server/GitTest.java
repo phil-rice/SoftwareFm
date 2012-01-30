@@ -87,7 +87,7 @@ public abstract class GitTest extends TemporaryFileTest {
 		localOperations = IGitOperations.Utils.gitOperations(localRoot);
 		remoteOperations = IGitOperations.Utils.gitOperations(remoteRoot);
 		findRepositoryRoot = makeFindRepositoryRoot();
-		gitWriter = new GitWriterForTests();
+		gitWriter = new GitWriterForTests(remoteOperations);
 		gitLocal = IGitLocal.Utils.localReader(findRepositoryRoot, localOperations,  gitWriter, remoteRoot.getAbsolutePath(), 500);
 	}
 

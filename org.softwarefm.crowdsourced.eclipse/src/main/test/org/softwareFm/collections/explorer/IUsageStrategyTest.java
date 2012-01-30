@@ -51,7 +51,7 @@ public class IUsageStrategyTest extends AbstractProcessorDatabaseIntegrationTest
 
 	private Map<String, Object> getProjectData(String crypto) {
 		Map<String, Object> userData = Json.mapFromEncryptedFile(userFile, crypto);
-		String projectCrypto = (String) userData.get(LoginConstants.projectCryptoKey);
+		String projectCrypto = (String) userData.get(SoftwareFmConstants.projectCryptoKey);
 		Map<String, Object> projectData = Json.mapFromEncryptedFile(userProjectFile, projectCrypto);
 		return projectData;
 	}

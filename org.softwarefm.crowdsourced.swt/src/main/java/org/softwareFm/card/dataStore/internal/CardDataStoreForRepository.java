@@ -79,7 +79,7 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 				Swts.asyncExec(control, new Runnable() {
 					@Override
 					public void run() {
-						if (data.size() == 0)
+						if (data== null||data.size() == 0)
 							ICardDataStoreCallback.Utils.noData(callback, url);
 						else
 							ICardDataStoreCallback.Utils.process(callback, url, data);

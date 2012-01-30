@@ -7,9 +7,13 @@ package org.softwareFm.collections.explorer.internal;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+
+import javax.sql.DataSource;
 
 import junit.framework.Assert;
 
@@ -42,11 +46,17 @@ import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.IGitLocal;
 import org.softwareFm.server.IGitOperations;
 import org.softwareFm.server.IGitWriter;
+import org.softwareFm.server.ISoftwareFmServer;
 import org.softwareFm.server.constants.CommonConstants;
+import org.softwareFm.server.processors.AbstractLoginDataAccessor;
+import org.softwareFm.server.processors.IProcessCall;
+import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
 import org.softwareFm.utilities.functions.Functions;
+import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.runnable.Callables;
 import org.softwareFm.utilities.strings.Strings;
 import org.softwareFm.utilities.tests.INeedsServerTest;
 import org.softwareFm.utilities.tests.Tests;
@@ -64,7 +74,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	protected IGitLocal gitLocal;
 	public Explorer explorer;
 	protected IHttpClient httpClient;
-	public final long delay = 10000;
+	public final long delay = 100000;
 	protected MasterDetailSocial masterDetailSocial;
 
 	protected final String prefix = "/tests/" + getClass().getSimpleName();
@@ -74,7 +84,9 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	private File root;
 	protected File localRoot;
 	protected File remoteRoot;
-
+	protected String userCryptoKey;
+	private ISoftwareFmServer softwareFmServer;
+	
 	// private String remoteAsUri;
 
 	public static interface CardHolderAndCardCallback {
@@ -211,9 +223,21 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 
 		httpClient = IHttpClient.Utils.builder("localhost", CommonConstants.testPort);
 
-		gitLocal = IGitLocal.Utils.localReader(IGitLocal.Utils.findRepostoryForTests(remoteRoot), IGitOperations.Utils.gitOperations(localRoot), IGitWriter.Utils.writerForTest(), remoteAsUri, CommonConstants.staleCachePeriodForTest);
-
+		IGitOperations remoteGitOperations = IGitOperations.Utils.gitOperations(remoteRoot);
+		gitLocal = IGitLocal.Utils.localReader(IGitLocal.Utils.findRepostoryForTests(remoteRoot), IGitOperations.Utils.gitOperations(localRoot), IGitWriter.Utils.writerForTest(remoteGitOperations), remoteAsUri, CommonConstants.staleCachePeriodForTest);
+		DataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
+		IFunction1<Map<String, Object>, String> cryptoFn =new IFunction1<Map<String,Object>, String>() {
+			@Override
+			public String apply(Map<String, Object> from) throws Exception {
+				return userCryptoKey;
+			}
+		};
+		Callable<String> cryptoGenerator = Callables.value(userCryptoKey);
+		Callable<String> softwareFmIdGenerator = Callables.patternWithCount("newSoftwareFmId{0}");
+		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, remoteGitOperations, cryptoFn, cryptoGenerator, remoteRoot, softwareFmIdGenerator);
 		
+		softwareFmServer = ISoftwareFmServer.Utils.testServerPort(processCall, ICallback.Utils.rethrow());
+
 		try {
 			cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().//
 					configure(display, new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(shell, service, gitLocal))).//
@@ -227,6 +251,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 			gitLocal.init(Urls.compose(rootArtifactUrl, groupUrl));
 			rawResourceGetter = explorer.getCardConfig().resourceGetterFn.apply(null);
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw e;
 		}
 	}
@@ -236,7 +261,9 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		super.tearDown();
 		explorer.dispose();
 		cardConfig.dispose();
+		softwareFmServer.shutdown();
 		Tests.waitUntilCanDeleteTempDirectory(getClass().getSimpleName(), 2000);
+		
 	}
 
 	protected void postSnippetData() {

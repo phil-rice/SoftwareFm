@@ -6,7 +6,7 @@ import org.softwareFm.server.GitTest;
 import org.softwareFm.server.IFileDescription;
 import org.softwareFm.utilities.maps.Maps;
 
-public class LocalReaderTest extends GitTest {
+public class GitLocalTests extends GitTest {
 	public void testGetFileWhenNeedToCreate() {
 		remoteOperations.init("a");
 		remoteOperations.put(IFileDescription.Utils.plain("a/b"), v11);

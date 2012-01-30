@@ -58,10 +58,14 @@ public class Files {
 	}
 
 	public static String offset(File root, File leaf) {
-		String rootString = root.getAbsolutePath();
-		String leafString = leaf.getAbsolutePath();
-		if (leafString.startsWith(rootString))
-			return leafString.substring(rootString.length() + 1).replace('\\', '/');
+		try {
+			String rootString = root.getAbsolutePath();
+			String leafString = leaf.getAbsolutePath();
+			if (leafString.startsWith(rootString))
+				return leafString.substring(rootString.length() + 1).replace('\\', '/');
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
 		throw new IllegalArgumentException(MessageFormat.format(UtilityMessages.cannotFindOffset, root, leaf));
 	}
 
