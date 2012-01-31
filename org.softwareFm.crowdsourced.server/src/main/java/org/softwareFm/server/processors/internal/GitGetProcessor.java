@@ -46,7 +46,7 @@ public class GitGetProcessor implements IProcessCall {
 				public String call() throws Exception {
 					IFileDescription fileDescription = IFileDescription.Utils.fromRequest(requestLine, Maps.emptyStringObjectMap());
 					Map<String, Object> data = gitOperations.getFileAndDescendants(fileDescription);
-					return Json.mapToString(CommonConstants.dataParameterName, data);
+					return Json.mapToString(CommonConstants.dataKey, data);
 				}
 			});
 		} else {

@@ -26,6 +26,7 @@ import org.softwareFm.collections.explorer.ExplorerAdapter;
 import org.softwareFm.collections.menu.ICardMenuItemHandler;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.server.IFileDescription;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
@@ -270,7 +271,7 @@ public abstract class ExplorerAddingCollectionsIntegrationTest extends AbstractE
 				};
 				explorer.addExplorerListener(listemer);
 				Swts.Buttons.press(okButton);
-				dispatchUntilTimeoutOrLatch(latch, delay);
+				dispatchUntilTimeoutOrLatch(latch, CommonConstants.testTimeOutMs);
 			}
 		});
 	}

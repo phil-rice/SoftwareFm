@@ -15,14 +15,13 @@ public class CommonConstants {
 	public static final String dataParameterName = "data";
 	public static final String repoUrlKey = "repoUrl";
 
-	public static final long testTimeOutMs = 500;
+	public static final long testTimeOutMs = 500000;
 
 	public static final String GET = "GET";
 	public static final String POST = "POST";
 	public static final String DELETE = "DELETE";
 	public static final String HEAD = "HEAD";
 
-	public static final String findRepositoryBasePrefix = "command/findRepositoryBase";
 	public static final String makeRootPrefix = "command/makeRoot";
 	public static final String emailSaltPrefix = "command/emailSalt";
 

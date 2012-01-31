@@ -32,6 +32,7 @@ import org.softwareFm.collections.explorer.ExplorerAdapter;
 import org.softwareFm.collections.menu.ICardMenuItemHandler;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.resources.IResourceGetter;
 import org.softwareFm.utilities.strings.Strings;
@@ -121,7 +122,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 					}
 				});
 				explorer.showContents();
-				dispatchUntilTimeoutOrLatch(latch, delay);
+				dispatchUntilTimeoutOrLatch(latch, CommonConstants.testTimeOutMs);
 
 			}
 		});

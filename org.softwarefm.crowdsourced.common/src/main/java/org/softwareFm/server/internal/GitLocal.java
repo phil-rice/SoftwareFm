@@ -4,30 +4,35 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.IGitLocal;
 import org.softwareFm.server.IGitOperations;
 import org.softwareFm.server.IGitWriter;
+import org.softwareFm.server.IRepoFinder;
+import org.softwareFm.server.RepoDetails;
 import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.utilities.collections.Files;
-import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.utilities.maps.IHasCache;
 import org.softwareFm.utilities.maps.Maps;
 
-public class GitLocal implements IGitLocal {
+public class GitLocal implements IGitLocal, IHasCache {
+
+	private static Logger logger = Logger.getLogger(IGitLocal.class);
 
 	private final String remotePrefix;
 	private final Map<File, Long> lastPulledTime = Collections.synchronizedMap(Maps.<File, Long> newMap());
 
 	private final IGitOperations gitOperations;
-	private final IFunction1<String, String> findRepositoryRoot;
+	private final IRepoFinder repoFinder;
 
 	private final long period;
 	private final Object lock = new Object();
 	private final IGitWriter gitWriter;
 
-	public GitLocal(IFunction1<String, String> findRepositoryRoot, IGitOperations gitOperations, IGitWriter gitWriter, String remotePrefix, long period) {
-		this.findRepositoryRoot = findRepositoryRoot;
+	public GitLocal(IRepoFinder repoFinder, IGitOperations gitOperations, IGitWriter gitWriter, String remotePrefix, long period) {
+		this.repoFinder = repoFinder;
 		this.gitOperations = gitOperations;
 		this.gitWriter = gitWriter;
 		this.remotePrefix = remotePrefix;
@@ -36,14 +41,21 @@ public class GitLocal implements IGitLocal {
 
 	@Override
 	public Map<String, Object> getFile(IFileDescription fileDescription) {
+		String message = "  " + fileDescription.url() + "   " + getClass().getSimpleName() + ".getFile(" + fileDescription + ")";
+		logger.debug(message);
 		pullIfNeeded(fileDescription);
-		return gitOperations.getFile(fileDescription);
+		Map<String, Object> result = gitOperations.getFile(fileDescription);
+		logger.debug(message + " -> " + result);
+		return result;
 	}
 
 	@Override
 	public Map<String, Object> getFileAndDescendants(IFileDescription fileDescription) {
+		logger.debug(getClass().getSimpleName() + ".getFileAndDescendants(" + fileDescription + ")");
 		pullIfNeeded(fileDescription);
-		return gitOperations.getFileAndDescendants(fileDescription);
+		Map<String, Object> result = gitOperations.getFileAndDescendants(fileDescription);
+		logger.debug(getClass().getSimpleName() + ".getFileAndDescendants_end(" + fileDescription + ")-> " + result);
+		return result;
 	}
 
 	private void pullIfNeeded(IFileDescription fileDescription) {
@@ -51,12 +63,18 @@ public class GitLocal implements IGitLocal {
 			File repositoryUrl = fileDescription.findRepositoryUrl(gitOperations.getRoot());
 			long now = System.currentTimeMillis();
 			if (repositoryUrl == null) {
-				String remoteUrl = Functions.call(findRepositoryRoot, fileDescription.url());
+				logger.debug("        " + getClass().getSimpleName() + ".pullIfNeeded/clone(" + fileDescription + ")");
+				RepoDetails repoDetails = repoFinder.findRepoUrl(fileDescription.url());
+				if (repoDetails.aboveRepository())
+					return;// nothing to pull
+				String remoteUrl = repoDetails.getRepositoryUrl();
 				clone(remoteUrl, now);
 			} else if (needToPull(repositoryUrl, now)) {
+				logger.debug("        " + getClass().getSimpleName() + ".pullIfNeeded/pull(" + fileDescription + ")");
 				String remoteUrl = Files.offset(gitOperations.getRoot(), repositoryUrl);
 				gitOperations.pull(remoteUrl);
-			}
+			} else
+				logger.debug("        " + getClass().getSimpleName() + ".pullIfNeeded/notNeeded(" + fileDescription + ")");
 		}
 	}
 
@@ -90,27 +108,33 @@ public class GitLocal implements IGitLocal {
 
 	@Override
 	public void init(String url) {
+		logger.debug(getClass().getSimpleName() + ".init(" + url + ")");
 		gitWriter.init(url);
 	}
 
 	@Override
 	public void put(IFileDescription fileDescription, Map<String, Object> data) {
+		logger.debug(getClass().getSimpleName() + ".put(" + fileDescription + ", " + data + ")");
 		gitWriter.put(fileDescription, data);
 
 	}
 
 	@Override
 	public void clearCaches() {
+		logger.debug(getClass().getSimpleName() + ".clearCaches");
 		lastPulledTime.clear();
+		repoFinder.clearCaches();
 	}
 
 	@Override
 	public void clearCache(String url) {
+		logger.debug(getClass().getSimpleName() + ".clearCache(" + url + ")");
 		clearCaches();
 	}
 
 	@Override
 	public void delete(IFileDescription fileDescription) {
+		logger.debug(getClass().getSimpleName() + ".delete(" + fileDescription + ")");
 		gitWriter.delete(fileDescription);
 	}
 }

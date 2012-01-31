@@ -16,12 +16,12 @@ public class ServerUser implements IUser {
 
 	private final IGitOperations gitOperations;
 	private final IUrlGenerator userUrlGenerator;
-	private final IFunction1<String, String> findRepositoryRoot;
+	private final IFunction1<String, String> userRepositoryDefn;
 
-	public ServerUser(IGitOperations gitOperations, IUrlGenerator userUrlGenerator, IFunction1<String, String> findRepositoryRoot) {
+	public ServerUser(IGitOperations gitOperations, IUrlGenerator userUrlGenerator, IFunction1<String, String> userRepositoryDefn) {
 		this.gitOperations = gitOperations;
 		this.userUrlGenerator = userUrlGenerator;
-		this.findRepositoryRoot = findRepositoryRoot;
+		this.userRepositoryDefn = userRepositoryDefn;
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class ServerUser implements IUser {
 		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, CommonConstants.dataFileName, cryptoKey);
 		File repositoryUrl = fileDescription.findRepositoryUrl(gitOperations.getRoot());
 		if (repositoryUrl == null){
-			String root = Functions.call(findRepositoryRoot, url);
+			String root = Functions.call(userRepositoryDefn, url);
 			gitOperations.init(root);
 		}
 		IFileDescription.Utils.merge(gitOperations, fileDescription, Maps.stringObjectMap(property, value));

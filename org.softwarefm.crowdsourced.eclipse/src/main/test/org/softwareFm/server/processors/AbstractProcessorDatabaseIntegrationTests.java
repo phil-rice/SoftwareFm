@@ -16,6 +16,7 @@ import org.softwareFm.utilities.crypto.Crypto;
 import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.runnable.Callables;
+import org.softwareFm.utilities.strings.Strings;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 abstract public class AbstractProcessorDatabaseIntegrationTests extends AbstractProcessorIntegrationTests {
@@ -37,7 +38,7 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 		cryptoFn = Functions.constant(userKey);
 		cryptoGenerator = Callables.value(userKey);
 		Callable<String> softwareFmIdGenerator = Callables.patternWithCount("someNewSoftwareFmId{0}");
-		IUser user = IUser.Utils.makeUserForServer(remoteOperations, LoginConstants.userGenerator(), findRepositoryRoot);
+		IUser user = IUser.Utils.makeUserForServer(remoteOperations, LoginConstants.userGenerator(), Strings.firstNSegments(3));
 		projectCryptoKey = Crypto.makeKey();
 		IProject project = IProject.Utils.makeProjectForServer(remoteOperations, cryptoFn, user, LoginConstants.userGenerator(), Callables.value(projectCryptoKey));
 		UsageProcessor usageProcessor = new UsageProcessor(remoteOperations, project, new IProjectTimeGetter() {

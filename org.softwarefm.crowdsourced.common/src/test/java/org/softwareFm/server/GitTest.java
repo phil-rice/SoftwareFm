@@ -7,11 +7,9 @@ import java.util.concurrent.TimeUnit;
 import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.server.internal.GitOperations;
 import org.softwareFm.utilities.collections.Files;
-import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.services.IServiceExecutor;
-import org.softwareFm.utilities.strings.Strings;
 import org.softwareFm.utilities.url.Urls;
 
 public abstract class GitTest extends TemporaryFileTest {
@@ -40,7 +38,7 @@ public abstract class GitTest extends TemporaryFileTest {
 	protected File remoteRoot;
 	protected String remoteAsUri;
 
-	protected IFunction1<String, String> findRepositoryRoot;
+	protected IRepoFinder repoFinder;
 
 	private IGitWriter gitWriter;
 
@@ -86,19 +84,13 @@ public abstract class GitTest extends TemporaryFileTest {
 		remoteAsUri = new File(root, "remote").getAbsolutePath();
 		localOperations = IGitOperations.Utils.gitOperations(localRoot);
 		remoteOperations = IGitOperations.Utils.gitOperations(remoteRoot);
-		findRepositoryRoot = makeFindRepositoryRoot();
+		repoFinder = makeFindRepositoryRoot();
 		gitWriter = new GitWriterForTests(remoteOperations);
-		gitLocal = IGitLocal.Utils.localReader(findRepositoryRoot, localOperations,  gitWriter, remoteRoot.getAbsolutePath(), 500);
+		gitLocal = IGitLocal.Utils.localReader(repoFinder, localOperations,  gitWriter, remoteRoot.getAbsolutePath(), 500);
 	}
 
-	protected IFunction1<String, String> makeFindRepositoryRoot() {
-		return new IFunction1<String, String>() {
-			@Override
-			public String apply(String from) throws Exception {
-				String firstSegment = Strings.segment(from, "/", 0);
-				return firstSegment;
-			}
-		};
+	protected IRepoFinder makeFindRepositoryRoot() {
+		return IRepoFinder.Utils.forTests(remoteRoot);
 	}
 
 	@Override

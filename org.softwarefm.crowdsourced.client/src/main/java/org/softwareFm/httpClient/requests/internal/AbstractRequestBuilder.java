@@ -18,6 +18,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
+import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.requests.IRequestBuilder;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.httpClient.response.internal.Response;
@@ -25,6 +27,8 @@ import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.services.IServiceExecutor;
 
 public abstract class AbstractRequestBuilder implements IRequestBuilder {
+
+	protected final static Logger logger = Logger.getLogger(IHttpClient.class);
 
 	public final HttpHost host;
 	public final HttpClient client;
@@ -79,6 +83,8 @@ public abstract class AbstractRequestBuilder implements IRequestBuilder {
 				for (NameValuePair pair : Lists.nullSafe(defaultHeaders))
 					base.addHeader(pair.getName(), pair.getValue());
 
+				String message = base.getClass().getSimpleName() + " " +url  + " "+ parameters;
+				logger.debug(message);
 				HttpResponse httpResponse = client.execute(base);
 				HttpEntity entity = httpResponse.getEntity();
 				String mimeType = findMimeType(entity);
@@ -88,6 +94,7 @@ public abstract class AbstractRequestBuilder implements IRequestBuilder {
 						url,//
 						entity == null ? "" : EntityUtils.toString(entity),//
 						mimeType);
+				logger.debug("end of " + message +"\n" + response);
 				callback.process(response);
 				return null;
 			}

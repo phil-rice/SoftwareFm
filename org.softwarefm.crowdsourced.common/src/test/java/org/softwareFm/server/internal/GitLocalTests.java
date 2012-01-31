@@ -21,6 +21,7 @@ public class GitLocalTests extends GitTest {
 
 	public void testGetFile() {
 		remoteOperations.init("a");
+		remoteOperations.put(IFileDescription.Utils.plain("a"), v11);
 		remoteOperations.put(IFileDescription.Utils.plain("a/b"), v11);
 		remoteOperations.put(IFileDescription.Utils.plain("a/b/c"), v12);
 		remoteOperations.put(IFileDescription.Utils.plain("a/b/d"), v21);
@@ -30,6 +31,7 @@ public class GitLocalTests extends GitTest {
 		localOperations.setConfigForRemotePull("a", remoteRoot.getAbsolutePath());
 		localOperations.pull("a");
 
+		checkGetFile(gitLocal, IFileDescription.Utils.plain("a"), v11);
 		checkGetFile(gitLocal, IFileDescription.Utils.plain("a/b"), v11);
 		checkGetFile(gitLocal, IFileDescription.Utils.plain("a/b/c"), v12);
 		checkGetFile(gitLocal, IFileDescription.Utils.plain("a/b/d"), v21);

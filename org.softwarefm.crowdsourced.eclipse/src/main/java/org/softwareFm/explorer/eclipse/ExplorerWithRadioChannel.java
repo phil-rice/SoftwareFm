@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -42,7 +45,7 @@ import org.softwareFm.display.swt.Swts.Buttons;
 import org.softwareFm.display.swt.Swts.Grid;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.gitwriter.HttpGitWriter;
-import org.softwareFm.gitwriter.HttpRootFinder;
+import org.softwareFm.gitwriter.HttpRepoFinder;
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.server.IGitLocal;
 import org.softwareFm.server.IGitOperations;
@@ -52,6 +55,11 @@ import org.softwareFm.utilities.services.IServiceExecutor;
 
 public class ExplorerWithRadioChannel {
 	public static void main(String[] args) {
+		BasicConfigurator.configure();
+		Logger.getRootLogger().setLevel(Level.ERROR);
+
+		// Logger.getLogger(IGitLocal.class).setLevel(Level.DEBUG);
+		Logger.getLogger(IHttpClient.class).setLevel(Level.DEBUG);
 		File home = new File(System.getProperty("user.home"));
 		final File localRoot = new File(home, ".sfm");
 		boolean local = true;
@@ -61,7 +69,7 @@ public class ExplorerWithRadioChannel {
 		int port = local ? 8080 : 80;
 		final IHttpClient client = IHttpClient.Utils.builder(server, port);
 		final IGitOperations gitOperations = IGitOperations.Utils.gitOperations(localRoot);
-		final IGitLocal localGit = IGitLocal.Utils.localReader(new HttpRootFinder(client), gitOperations, new HttpGitWriter(client), prefix, CommonConstants.staleCachePeriodForTest);
+		final IGitLocal localGit = IGitLocal.Utils.localReader(new HttpRepoFinder(client, CommonConstants.clientTimeOut), gitOperations, new HttpGitWriter(client), prefix, CommonConstants.staleCachePeriodForTest);
 
 		IServiceExecutor gitServiceExecutor = IServiceExecutor.Utils.defaultExecutor();
 		final IServiceExecutor service = gitServiceExecutor;
@@ -82,7 +90,7 @@ public class ExplorerWithRadioChannel {
 					IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(explorerAndButton);
 					IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardDataStore);
 					ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(from.getDisplay(), service, client);
-//					IUsageStrategy usageStrategy = IUsageStrategy.Utils.usage(service, client, localGit, ServerConstants.userGenerator(), ServerConstants.projectGenerator());
+					// IUsageStrategy usageStrategy = IUsageStrategy.Utils.usage(service, client, localGit, ServerConstants.userGenerator(), ServerConstants.projectGenerator());
 					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, playListGetter, service, loginStrategy);
 
 					ICardMenuItemHandler.Utils.addSoftwareFmMenuItemHandlers(explorer);

@@ -40,6 +40,7 @@ import org.softwareFm.display.browser.IBrowserConfigurator;
 import org.softwareFm.display.swt.SwtAndServiceTest;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.timeline.IPlayListGetter;
+import org.softwareFm.gitwriter.HttpRepoFinder;
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.server.IFileDescription;
@@ -74,7 +75,6 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	protected IGitLocal gitLocal;
 	public Explorer explorer;
 	protected IHttpClient httpClient;
-	public final long delay = 100000;
 	protected MasterDetailSocial masterDetailSocial;
 
 	protected final String prefix = "/tests/" + getClass().getSimpleName();
@@ -131,7 +131,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 				executeMenuItem(menu, "View");
 				// this should have called "explorer.showContents
 				// Now wait for the menu to have "done it's thing"
-				dispatchUntilTimeoutOrLatch(latch, delay);
+				dispatchUntilTimeoutOrLatch(latch, CommonConstants.testTimeOutMs);
 				ICard childCard = cardHolder.getCard();
 				callback.process(cardHolder, childCard);
 				assertEquals(1, count.incrementAndGet());
@@ -162,7 +162,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 			}
 		});
 		something.run();
-		dispatchUntilTimeoutOrLatch(latch, delay);
+		dispatchUntilTimeoutOrLatch(latch, CommonConstants.testTimeOutMs);
 		if (exception.get() != null)
 			throw new RuntimeException(exception.get());
 		return cardRef.get();
@@ -224,7 +224,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		httpClient = IHttpClient.Utils.builder("localhost", CommonConstants.testPort);
 
 		IGitOperations remoteGitOperations = IGitOperations.Utils.gitOperations(remoteRoot);
-		gitLocal = IGitLocal.Utils.localReader(IGitLocal.Utils.findRepostoryForTests(remoteRoot), IGitOperations.Utils.gitOperations(localRoot), IGitWriter.Utils.writerForTest(remoteGitOperations), remoteAsUri, CommonConstants.staleCachePeriodForTest);
+		gitLocal = IGitLocal.Utils.localReader(new HttpRepoFinder(httpClient, CommonConstants.testTimeOutMs), IGitOperations.Utils.gitOperations(localRoot), IGitWriter.Utils.writerForTest(remoteGitOperations), remoteAsUri, CommonConstants.staleCachePeriodForTest);
 		DataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
 		IFunction1<Map<String, Object>, String> cryptoFn =new IFunction1<Map<String,Object>, String>() {
 			@Override

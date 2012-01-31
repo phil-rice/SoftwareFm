@@ -73,9 +73,5 @@ public class LocalUserReaderTest extends GitTest {
 		localSfmId2File = new File(localRoot, Urls.compose("user/sf/mI/sfmId2/", CommonConstants.dataFileName));
 	}
 
-	@Override
-	protected IFunction1<String, String> makeFindRepositoryRoot() {
-		return Strings.firstNSegments(3);
-	}
 
 }

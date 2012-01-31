@@ -27,16 +27,16 @@ import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.crowdsourced.softwarefm.SoftwareFmConstants;
 import org.softwareFm.gitwriter.HttpGitWriter;
-import org.softwareFm.gitwriter.HttpRootFinder;
+import org.softwareFm.gitwriter.HttpRepoFinder;
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.jdtBinding.api.IBindingRipper;
 import org.softwareFm.server.IGitLocal;
 import org.softwareFm.server.IGitOperations;
 import org.softwareFm.server.IGitWriter;
+import org.softwareFm.server.IRepoFinder;
 import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.exceptions.WrappedException;
-import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.services.IServiceExecutor;
 
 /**
@@ -98,8 +98,8 @@ public class Activator extends AbstractUIPlugin {
 		return cardConfig;
 	}
 	
-	public IFunction1<String, String> getFindRepositoryRoot(){
-		return new HttpRootFinder(getClient());
+	public IRepoFinder getFindRepositoryRoot(){
+		return new HttpRepoFinder(getClient(), CommonConstants.clientTimeOut);
 	}
 	
 	public IGitWriter getGitWriter(){

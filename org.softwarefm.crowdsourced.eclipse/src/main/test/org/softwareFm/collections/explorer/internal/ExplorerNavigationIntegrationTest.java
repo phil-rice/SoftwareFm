@@ -14,6 +14,7 @@ import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.card.IHasCard;
 import org.softwareFm.card.card.IHasKeyAndValue;
 import org.softwareFm.card.constants.CardConstants;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.url.Urls;
 
@@ -63,7 +64,7 @@ public class ExplorerNavigationIntegrationTest extends AbstractExplorerIntegrati
 	private void clickOnChildCardAndCheckUrl(final ICardHolder cardHolder, ICard childCard) {
 		final String expectedUrl = childCard.url();
 		childCard.getTable().notifyListeners(SWT.Selection, new Event());
-		dispatchUntil(display, delay, new Callable<Boolean>() {
+		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				return expectedUrl.equals(cardHolder.getCard().url());
@@ -78,7 +79,7 @@ public class ExplorerNavigationIntegrationTest extends AbstractExplorerIntegrati
 		final Control firstGrandChild = ((Composite) firstChild).getChildren()[index];
 		firstGrandChild.notifyListeners(SWT.Paint, new Event());
 		// need to wait for data to be set up
-		dispatchUntil(display, delay, new Callable<Boolean>() {
+		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				ICard childCard = ((IHasCard) firstGrandChild).getCard();
