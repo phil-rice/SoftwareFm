@@ -29,7 +29,7 @@ public class IUsageStrategyTest extends AbstractProcessorDatabaseIntegrationTest
 		assertTrue(userFile.exists());
 		assertTrue(userProjectFile.exists());
 		Map<String, Object> projectData = getProjectData(crypto);
-		assertEquals(Maps.stringObjectMap("groupId1", Maps.stringObjectMap("artifactId1", Arrays.asList(3l))), projectData);
+		assertEquals(Maps.stringObjectMap("groupId1", Maps.stringObjectMap("artifactId1", Arrays.asList(0l))), projectData);
 	}
 
 	public void testMyData() throws Exception {
@@ -41,7 +41,7 @@ public class IUsageStrategyTest extends AbstractProcessorDatabaseIntegrationTest
 
 		Map<String, Object> projectData = getProjectData(crypto);
 
-		List<Long> day = Arrays.asList(3l);
+		List<Long> day = Arrays.asList(0l);
 		Object[] expected = new Object[] { "groupId1", Maps.stringObjectMap("artifactId1", day, "artifactId2", day), "groupId2", Maps.stringObjectMap("artifactId3", day) };
 
 		assertEquals(Maps.stringObjectMap(expected), projectData);
@@ -62,7 +62,7 @@ public class IUsageStrategyTest extends AbstractProcessorDatabaseIntegrationTest
 		usageStrategy = IUsageStrategy.Utils.usage(getServiceExecutor(), getHttpClient(), gitLocal, LoginConstants.userGenerator(), SoftwareFmConstants.projectGenerator());
 		directory = new File(remoteRoot, "softwareFm/users/so/me/someNewSoftwareFmId0");
 		userFile = new File(directory, CommonConstants.dataFileName);
-		userProjectFile = new File(directory, Urls.compose("projects", "someMonth"));
+		userProjectFile = new File(directory, Urls.compose("project", "someMonth"));
 	}
 
 }

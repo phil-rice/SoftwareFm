@@ -75,7 +75,8 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 		return serviceExecutor.submit(new Callable<T>() {
 			@Override
 			public T call() throws Exception {
-				final Map<String, Object> data = gitLocal.getFile(fileDescription);
+				final Map<String, Object> data = gitLocal.getFileAndDescendants(fileDescription);
+				System.out.println(fileDescription.url()+": "+ data);
 				Swts.asyncExec(control, new Runnable() {
 					@Override
 					public void run() {

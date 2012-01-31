@@ -13,9 +13,7 @@ package org.softwareFm.card.navigation.internal;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Combo;
@@ -30,10 +28,8 @@ import org.softwareFm.card.title.TitlePaintListener;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.history.History;
 import org.softwareFm.utilities.history.IHistory;
 import org.softwareFm.utilities.strings.Strings;
@@ -113,23 +109,15 @@ public class NavBar implements IHasComposite, ITitleBarForCard {
 		private final CardConfig cardConfig;
 		private String url;
 		private final TitlePaintListener listener;
-		private NavNextHistoryPrev<String> navNextHistoryPrev;
+		private final NavNextHistoryPrev<String> navNextHistoryPrev;
 
 		public NavBarComposite(Composite parent, CardConfig cardConfig, java.util.List<String> rootUrls, final ICallback<String> callbackToGotoUrl) {
 			super(parent, SWT.NULL);
-			final ImageRegistry imageRegistry = new ImageRegistry();
-			new BasicImageRegisterConfigurator().registerWith(parent.getDisplay(), imageRegistry);
 			this.height = cardConfig.titleHeight;
 			this.cardConfig = cardConfig;
 			this.rootUrls = rootUrls;
 			this.callbackToGotoUrl = callbackToGotoUrl;
-			IFunction1<String, Image> imageFn = new IFunction1<String, Image>() {
-				@Override
-				public Image apply(String from) throws Exception {
-					return imageRegistry.get(from);
-				}
-			};
-			navNextHistoryPrev = new NavNextHistoryPrev<String>(this, new NavNextHistoryPrevConfig<String>(height, imageFn, Functions.<String> toStringFn(), callbackToGotoUrl), new History<String>());
+			navNextHistoryPrev = new NavNextHistoryPrev<String>(this, new NavNextHistoryPrevConfig<String>(height, cardConfig.imageFn, Functions.<String> toStringFn(), callbackToGotoUrl), new History<String>());
 			navNextHistoryPrev.setLayout(new NavNextHistoryPrev.NavNextHistoryPrevLayout<String>());
 			listener = new TitlePaintListener(cardConfig, TitleSpec.noTitleSpec(getBackground()), "");
 			addPaintListener(listener);

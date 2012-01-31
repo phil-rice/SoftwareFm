@@ -92,4 +92,9 @@ public class NavHistoryComboTest extends SwtTest {
 		combo = (Combo) nav.getControl();
 	}
 
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		imageRegistry.dispose();
+	}
 }

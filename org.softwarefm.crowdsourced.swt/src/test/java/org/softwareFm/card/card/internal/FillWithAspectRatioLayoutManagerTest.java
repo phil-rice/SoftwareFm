@@ -140,7 +140,6 @@ public class FillWithAspectRatioLayoutManagerTest extends SwtTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-
 	}
 
 }

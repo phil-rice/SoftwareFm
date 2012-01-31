@@ -55,7 +55,6 @@ public abstract class ExplorerAddingCollectionsIntegrationTest extends AbstractE
 			}
 		};
 		checkAdding("advert", "Adverts", 3, null, addingCallback);
-
 	}
 
 	public void testAddingCompanies() throws Exception {

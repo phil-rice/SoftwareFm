@@ -96,5 +96,11 @@ public class NavNextHistoryPrevTest extends SwtTest {
 		nav = new NavNextHistoryPrev<Integer>(shell, navNextHistoryPrevConfig.withMargins(2, 4, 6, 8).withNavIconWidth(20), history);
 		navComposite = (Composite) nav.getControl();
 	}
+	
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		imageRegistry.dispose();
+	}
 
 }

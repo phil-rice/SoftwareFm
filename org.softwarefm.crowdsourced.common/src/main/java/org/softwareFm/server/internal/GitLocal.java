@@ -14,22 +14,23 @@ import org.softwareFm.server.RepoDetails;
 import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.maps.IHasCache;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.maps.UrlCache;
 
-public class GitLocal implements IGitLocal, IHasCache {
+public class GitLocal implements IGitLocal {
 
 	private static Logger logger = Logger.getLogger(IGitLocal.class);
 
 	private final String remotePrefix;
 	private final Map<File, Long> lastPulledTime = Collections.synchronizedMap(Maps.<File, Long> newMap());
-
 	private final IGitOperations gitOperations;
 	private final IRepoFinder repoFinder;
 
 	private final long period;
 	private final Object lock = new Object();
 	private final IGitWriter gitWriter;
+
+	private final UrlCache<Map<String, Object>> aboveRepoCache = new UrlCache<Map<String, Object>>();
 
 	public GitLocal(IRepoFinder repoFinder, IGitOperations gitOperations, IGitWriter gitWriter, String remotePrefix, long period) {
 		this.repoFinder = repoFinder;
@@ -41,32 +42,45 @@ public class GitLocal implements IGitLocal, IHasCache {
 
 	@Override
 	public Map<String, Object> getFile(IFileDescription fileDescription) {
-		String message = "  " + fileDescription.url() + "   " + getClass().getSimpleName() + ".getFile(" + fileDescription + ")";
+		String url = fileDescription.url();
+		String message = "  " + url + "   " + getClass().getSimpleName() + ".getFile(" + fileDescription + ")";
 		logger.debug(message);
 		pullIfNeeded(fileDescription);
 		Map<String, Object> result = gitOperations.getFile(fileDescription);
+		if (aboveRepoCache.containsKey(url))
+			return aboveRepoCache.get(url);
 		logger.debug(message + " -> " + result);
 		return result;
 	}
 
 	@Override
 	public Map<String, Object> getFileAndDescendants(IFileDescription fileDescription) {
+		String url = fileDescription.url();
 		logger.debug(getClass().getSimpleName() + ".getFileAndDescendants(" + fileDescription + ")");
 		pullIfNeeded(fileDescription);
 		Map<String, Object> result = gitOperations.getFileAndDescendants(fileDescription);
+		if (aboveRepoCache.containsKey(url))
+			return aboveRepoCache.get(url);
 		logger.debug(getClass().getSimpleName() + ".getFileAndDescendants_end(" + fileDescription + ")-> " + result);
 		return result;
 	}
 
 	private void pullIfNeeded(IFileDescription fileDescription) {
+		String url = fileDescription.url();
+		if (aboveRepoCache.containsKey(url))
+			return;
 		synchronized (lock) {
+			if (aboveRepoCache.containsKey(url))
+				return;// not redundant
 			File repositoryUrl = fileDescription.findRepositoryUrl(gitOperations.getRoot());
 			long now = System.currentTimeMillis();
 			if (repositoryUrl == null) {
 				logger.debug("        " + getClass().getSimpleName() + ".pullIfNeeded/clone(" + fileDescription + ")");
-				RepoDetails repoDetails = repoFinder.findRepoUrl(fileDescription.url());
-				if (repoDetails.aboveRepository())
+				RepoDetails repoDetails = repoFinder.findRepoUrl(url);
+				if (repoDetails.aboveRepository()) {
+					aboveRepoCache.put(url, repoDetails.getAboveRepositoryData());
 					return;// nothing to pull
+				}
 				String remoteUrl = repoDetails.getRepositoryUrl();
 				clone(remoteUrl, now);
 			} else if (needToPull(repositoryUrl, now)) {
@@ -116,7 +130,7 @@ public class GitLocal implements IGitLocal, IHasCache {
 	public void put(IFileDescription fileDescription, Map<String, Object> data) {
 		logger.debug(getClass().getSimpleName() + ".put(" + fileDescription + ", " + data + ")");
 		gitWriter.put(fileDescription, data);
-
+		clearCaches();
 	}
 
 	@Override
@@ -129,7 +143,8 @@ public class GitLocal implements IGitLocal, IHasCache {
 	@Override
 	public void clearCache(String url) {
 		logger.debug(getClass().getSimpleName() + ".clearCache(" + url + ")");
-		clearCaches();
+		lastPulledTime.clear();
+		repoFinder.clearCache(url);
 	}
 
 	@Override

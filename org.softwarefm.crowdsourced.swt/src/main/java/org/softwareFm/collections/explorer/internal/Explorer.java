@@ -561,6 +561,7 @@ public class Explorer implements IExplorer {
 
 			@Override
 			public void finished(final ICardHolder cardHolder, final String url, final ICard card) throws Exception {
+				comments.showCommentsFor(card);
 				fireListeners(new ICallback<IExplorerListener>() {
 					@Override
 					public void process(IExplorerListener t) throws Exception {
@@ -568,7 +569,6 @@ public class Explorer implements IExplorer {
 					}
 				});
 				visitor.finished(cardHolder, url, card);
-				comments.showCommentsFor(card);
 			}
 		});
 	}

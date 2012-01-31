@@ -48,6 +48,13 @@ public class UrlCache<V> {
 		}
 	}
 
+	public void put(String url, V value) {
+		synchronized (lock) {
+			map.put(Urls.removeSlash(url), value);
+		}
+
+	}
+
 	public void clear() {
 		synchronized (lock) {
 			map.clear();

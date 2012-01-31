@@ -733,8 +733,9 @@ public class Swts {
 	}
 
 	public static void removeAllChildren(Composite composite) {
-		for (Control control : composite.getChildren())
-			control.dispose();
+		if (!composite.isDisposed())
+			for (Control control : composite.getChildren())
+				control.dispose();
 
 	}
 

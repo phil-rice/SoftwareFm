@@ -147,7 +147,7 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 		Map<String, Object> urlMap = Maps.stringObjectLinkedMap(CollectionConstants.jarStem, "ant");
 		IUrlGenerator jarUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.jarNameUrlKey);
 		String url = jarUrlGenerator.findUrlFor(urlMap);
-		File antDirectory = new File(localRoot, url);
+		File antDirectory = new File(remoteRoot, url);
 		assertEquals(Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), Json.mapFromString(Files.getText(new File(antDirectory, CommonConstants.dataFileName))));
 		// the actual new jar is in a sub directory. .git should be the only other directory
 		File[] antSubDirectories = Files.listChildDirectoriesIgnoringDot(antDirectory);
@@ -163,7 +163,6 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 
 		IUrlGenerator jarUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.jarUrlKey);
 		String jarUrl = jarUrlGenerator.findUrlFor(groupArtifactVersionDigest);
-		assertEquals(groupArtifactVersion, Json.mapFromString(Files.getText(new File(localRoot, Urls.compose(jarUrl, CommonConstants.dataFileName)))));
 		assertEquals(groupArtifactVersion, Json.mapFromString(Files.getText(new File(remoteRoot, Urls.compose(jarUrl, CommonConstants.dataFileName)))));
 
 		IUrlGenerator artifactGenerator = cardConfig.urlGeneratorMap.get(CardConstants.artifactUrlKey);

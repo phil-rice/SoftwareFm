@@ -9,7 +9,6 @@ import org.softwareFm.crowdsourced.softwarefm.SoftwareFmConstants;
 import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.IGitOperations;
 import org.softwareFm.server.IUser;
-import org.softwareFm.server.constants.LoginConstants;
 import org.softwareFm.server.user.IProject;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.functions.Functions;
@@ -58,9 +57,6 @@ public class ProjectForServer implements IProject {
 	}
 
 	protected IFileDescription getFileDescriptionForProject(Map<String, Object> userDetailMap, String month) {
-		String email = (String) userDetailMap.get(LoginConstants.emailKey);
-		if (email == null)
-			throw new NullPointerException(userDetailMap.toString());
 		String cryptoKey = Functions.call(cryptoFn, userDetailMap);
 		String projectCryptoKey = user.getUserProperty(userDetailMap, cryptoKey, SoftwareFmConstants.projectCryptoKey);
 		if (projectCryptoKey == null){

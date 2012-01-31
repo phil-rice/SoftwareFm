@@ -4,10 +4,10 @@ import java.io.File;
 import java.util.Map;
 
 import org.softwareFm.server.internal.GitLocal;
-import org.softwareFm.utilities.maps.IHasCache;
+import org.softwareFm.utilities.maps.IHasUrlCache;
 
 /** These are all blocking calls that may take a long time to execute */
-public interface IGitLocal extends IHasCache{
+public interface IGitLocal extends IHasUrlCache{
 	void init(String url);
 
 	void put(IFileDescription fileDescription, Map<String, Object> data);
@@ -18,6 +18,7 @@ public interface IGitLocal extends IHasCache{
 
 	void delete(IFileDescription fileDescription);
 
+	@Override
 	void clearCache(String url);
 
 	File getRoot();

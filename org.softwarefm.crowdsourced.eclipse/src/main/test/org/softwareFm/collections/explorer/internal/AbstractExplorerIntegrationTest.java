@@ -86,7 +86,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	protected File remoteRoot;
 	protected String userCryptoKey;
 	private ISoftwareFmServer softwareFmServer;
-	
+
 	// private String remoteAsUri;
 
 	public static interface CardHolderAndCardCallback {
@@ -226,7 +226,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		IGitOperations remoteGitOperations = IGitOperations.Utils.gitOperations(remoteRoot);
 		gitLocal = IGitLocal.Utils.localReader(new HttpRepoFinder(httpClient, CommonConstants.testTimeOutMs), IGitOperations.Utils.gitOperations(localRoot), IGitWriter.Utils.writerForTest(remoteGitOperations), remoteAsUri, CommonConstants.staleCachePeriodForTest);
 		DataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
-		IFunction1<Map<String, Object>, String> cryptoFn =new IFunction1<Map<String,Object>, String>() {
+		IFunction1<Map<String, Object>, String> cryptoFn = new IFunction1<Map<String, Object>, String>() {
 			@Override
 			public String apply(Map<String, Object> from) throws Exception {
 				return userCryptoKey;
@@ -235,7 +235,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		Callable<String> cryptoGenerator = Callables.value(userCryptoKey);
 		Callable<String> softwareFmIdGenerator = Callables.patternWithCount("newSoftwareFmId{0}");
 		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, remoteGitOperations, cryptoFn, cryptoGenerator, remoteRoot, softwareFmIdGenerator);
-		
+
 		softwareFmServer = ISoftwareFmServer.Utils.testServerPort(processCall, ICallback.Utils.rethrow());
 
 		try {
@@ -258,12 +258,16 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
-		explorer.dispose();
-		cardConfig.dispose();
-		softwareFmServer.shutdown();
+		try {
+			super.tearDown();
+			masterDetailSocial.dispose();
+			explorer.dispose();
+			cardConfig.dispose();
+		} finally {
+			softwareFmServer.shutdown();
+		}
 		Tests.waitUntilCanDeleteTempDirectory(getClass().getSimpleName(), 2000);
-		
+
 	}
 
 	protected void postSnippetData() {

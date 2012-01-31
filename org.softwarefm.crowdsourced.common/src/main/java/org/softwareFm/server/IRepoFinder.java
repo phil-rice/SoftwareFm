@@ -1,17 +1,15 @@
 package org.softwareFm.server;
 
-import java.io.File;
-
 import org.softwareFm.server.internal.RepoFinderForTests;
-import org.softwareFm.utilities.maps.IHasCache;
+import org.softwareFm.utilities.maps.IHasUrlCache;
 
-public interface IRepoFinder extends IHasCache{
+public interface IRepoFinder extends IHasUrlCache{
 
 	RepoDetails findRepoUrl(String url);
 	
 	public static class Utils{
-		public static IRepoFinder forTests(File remoteRoot){
-			return new RepoFinderForTests(remoteRoot);
+		public static IRepoFinder forTests(IGitOperations remoteOperations){
+			return new RepoFinderForTests(remoteOperations);
 		}
 	}
 }

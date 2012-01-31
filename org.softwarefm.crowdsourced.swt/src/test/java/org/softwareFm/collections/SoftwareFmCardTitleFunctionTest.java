@@ -40,7 +40,8 @@ public class SoftwareFmCardTitleFunctionTest extends SwtTest {
 	private void checkTitle(String expected, String cardNameField, String url) throws Exception {
 		CardConfig raw = new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.mock());
 		CardConfig cardConfig = raw.//
-				withResourceGetterFn(IResourceGetter.Utils.mock(raw.resourceGetterFn.apply(null).with(new ResourceGetterMock(CardConstants.cardNameFieldKey, cardNameField)))).//
+				withResourceGetterFn(IResourceGetter.Utils.mock(raw.resourceGetterFn.apply(null).//
+						with(new ResourceGetterMock(CardConstants.cardNameFieldKey, cardNameField)))).//
 				withTitleSpecFn(Functions.<ICardData, TitleSpec> constant(TitleSpec.noTitleSpec(display.getSystemColor(SWT.COLOR_WHITE))));
 
 		Map<String, Object> rawData = Maps.stringObjectLinkedMap("name", "theName", "data", "theData");

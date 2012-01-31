@@ -7,6 +7,7 @@ import org.softwareFm.display.swt.Swts;
 import org.softwareFm.server.constants.LoginConstants;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.tests.Tests;
 
 public class LoginTest extends AbstractNameAndValuesEditorTest<Login> {
 
@@ -20,9 +21,9 @@ public class LoginTest extends AbstractNameAndValuesEditorTest<Login> {
 		checkTextMatches(values, "initialEmail", "");
 		assertFalse(okCancel.isOkEnabled());
 	}
-	
-	public void testInitialEmailAddedToCardData(){
-		assertEquals(Maps.stringObjectMap(LoginConstants.emailKey, "initialEmail",CardConstants.slingResourceType, CardConstants.loginCardType), editor.content.data());
+
+	public void testInitialEmailAddedToCardData() {
+		assertEquals(Maps.stringObjectMap(LoginConstants.emailKey, "initialEmail", CardConstants.slingResourceType, CardConstants.loginCardType), editor.content.data());
 	}
 
 	public void testNeedEmailAndPasswordToBeOk() {
@@ -56,7 +57,7 @@ public class LoginTest extends AbstractNameAndValuesEditorTest<Login> {
 		loginStrategy.setOk(true);
 		loginStrategy.setEmailSetOk(true);
 		Swts.Buttons.press(okCancel.okButton);
-		
+
 		assertEquals(new UserData("a.b.c@c.d", "someSoftwareFmId", loginStrategy.cryptoKey), Lists.getOnly(loginCallback.loggedInUserData));
 	}
 
@@ -85,6 +86,11 @@ public class LoginTest extends AbstractNameAndValuesEditorTest<Login> {
 	@Override
 	protected String getCardType() {
 		return CardConstants.loginCardType;
+	}
+
+	public static void main(String[] args) {
+		while (true)
+			Tests.executeTest(LoginTest.class);
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 import org.softwareFm.server.GitTest;
 import org.softwareFm.server.IFileDescription;
 import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.utilities.tests.Tests;
 
 public class GitLocalTests extends GitTest {
 	public void testGetFileWhenNeedToCreate() {
@@ -54,6 +55,23 @@ public class GitLocalTests extends GitTest {
 		checkGetFileAndDescendants(gitLocal, IFileDescription.Utils.plain("a/b/d"), v21);
 	}
 
+	public void testGetFileAboveRepo(){
+		remoteOperations.init("a/b/c");
+		remoteOperations.put(IFileDescription.Utils.plain("a/b/c"), v12);
+		Tests.assertThrows(IllegalStateException.class, new Runnable() {
+			@Override
+			public void run() {
+				gitLocal.getFile(IFileDescription.Utils.plain("a"));
+			}
+		});
+	}
+
+	public void testGetFileAndDescendantsAboveRepo() {
+		remoteOperations.init("a/b/c");
+		remoteOperations.put(IFileDescription.Utils.plain("a/b/c"), v12);
+		checkGetFileAndDescendants(gitLocal, IFileDescription.Utils.plain("a"), Maps.stringObjectMap("b", Maps.stringObjectMap("c", v12)));
+	}
+
 	public void testClearCache() {
 		remoteOperations.init("a");
 		remoteOperations.put(IFileDescription.Utils.plain("a/b"), v11);
@@ -73,6 +91,5 @@ public class GitLocalTests extends GitTest {
 		checkGetFile(gitLocal, IFileDescription.Utils.plain("a/b"), v11);// timeout hasn't happened, so pull doesn't actually take place
 		gitLocal.clearCaches();
 		checkGetFile(gitLocal, IFileDescription.Utils.plain("a/b"), v22);// timeout has happened
-
 	}
 }

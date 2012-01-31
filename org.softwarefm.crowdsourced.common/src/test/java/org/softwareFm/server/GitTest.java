@@ -90,7 +90,7 @@ public abstract class GitTest extends TemporaryFileTest {
 	}
 
 	protected IRepoFinder makeFindRepositoryRoot() {
-		return IRepoFinder.Utils.forTests(remoteRoot);
+		return IRepoFinder.Utils.forTests(remoteOperations);
 	}
 
 	@Override

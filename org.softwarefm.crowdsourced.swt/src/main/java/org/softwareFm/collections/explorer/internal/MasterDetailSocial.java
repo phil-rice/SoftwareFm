@@ -94,6 +94,8 @@ public class MasterDetailSocial implements IMasterDetailSocial {
 	@Override
 	public void dispose() {
 		content.dispose();
+		for (Control control: preserve)
+			control.dispose();
 	}
 
 	@Override

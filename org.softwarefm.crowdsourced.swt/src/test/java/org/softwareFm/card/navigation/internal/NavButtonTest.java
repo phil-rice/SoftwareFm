@@ -42,4 +42,9 @@ public class NavButtonTest extends SwtTest {
 		navButton = new NavButton(shell, "someUrl", memory);
 		control = (Label) navButton.getControl();
 	}
+	
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+	}
 }

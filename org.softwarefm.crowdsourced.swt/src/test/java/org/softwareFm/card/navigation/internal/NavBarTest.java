@@ -121,6 +121,7 @@ public class NavBarTest extends SwtTest {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		cardConfig.dispose();
+		navComposite.dispose();
 	}
 
 }

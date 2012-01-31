@@ -61,17 +61,6 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 	private File remoteRoot;
 	private File localRoot;
 
-	public void testLoginErrors() {
-		signUp(email, password);
-		template.queryForObject("select crypto from users", String.class);
-		mySoftwareFm.logout();
-
-		checkLoginError(email, "password", "Email / Password didn't match\n\nClicking this panel will start login again");
-		checkLoginError("a@b.com", "password", "Email not recognised\n\nClicking this panel will start login again");
-
-		assertEquals(new UserData("a@b.com", null, null), mySoftwareFm.userData);
-	}
-
 	public void testSignup() {
 		String signUpSalt = signUp(email, password);
 
@@ -89,6 +78,17 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 
 		assertTrue(userFile.exists());
 		Json.mapFromEncryptedFile(userFile, crypto);
+	}
+
+	public void testLoginErrors() {
+		signUp(email, password);
+		template.queryForObject("select crypto from users", String.class);
+		mySoftwareFm.logout();
+
+		checkLoginError(email, "password", "Email / Password didn't match\n\nClicking this panel will start login again");
+		checkLoginError("a@b.com", "password", "Email not recognised\n\nClicking this panel will start login again");
+
+		assertEquals(new UserData("a@b.com", null, null), mySoftwareFm.userData);
 	}
 
 	public void testSignupThenLogin() {
@@ -332,11 +332,11 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		key = Crypto.makeKey();
 		IFunction1<Map<String, Object>, String> cryptoFn = Functions.constant(key);
 		Callable<String> cryptoGenerator = Callables.value(key);
-//		IRepoFinder repoFinder = IRepoFinder.Utils.forTests(remoteRoot);
-		IGitOperations localOperations = IGitOperations.Utils.gitOperations(localRoot);
-//		IGitOperations remoteOperations = IGitOperations.Utils.gitOperations(remoteRoot);
-//		IGitLocal gitLocal = IGitLocal.Utils.localReader(repoFinder, localOperations, new GitWriterForTests(remoteOperations), remoteRoot.getAbsolutePath(), CommonConstants.staleCachePeriodForTest);
-		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, localOperations, cryptoFn, cryptoGenerator, null, softwareFmIdGenerator), ICallback.Utils.rethrow());
+		// IRepoFinder repoFinder = IRepoFinder.Utils.forTests(remoteRoot);
+		IGitOperations remoteOperations = IGitOperations.Utils.gitOperations(remoteRoot);
+		// IGitOperations remoteOperations = IGitOperations.Utils.gitOperations(remoteRoot);
+		// IGitLocal gitLocal = IGitLocal.Utils.localReader(repoFinder, localOperations, new GitWriterForTests(remoteOperations), remoteRoot.getAbsolutePath(), CommonConstants.staleCachePeriodForTest);
+		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, remoteOperations, cryptoFn, cryptoGenerator, null, softwareFmIdGenerator), ICallback.Utils.rethrow());
 		client = IHttpClient.Utils.builder("localhost", 8080);
 		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(display, service, client);
 		cardConfig = ICardConfigurator.Utils.cardConfigForTests(display);
@@ -345,7 +345,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		template.update("truncate users");
 		softwareFmComposite = mySoftwareFm.getComposite();
 
-		userFile = new File(root, Urls.compose("softwareFm/users/so/me/someNewSoftwareFmId0", CommonConstants.dataFileName));
+		userFile = new File(remoteRoot, Urls.compose("softwareFm/users/so/me/someNewSoftwareFmId0", CommonConstants.dataFileName));
 	}
 
 	@Override

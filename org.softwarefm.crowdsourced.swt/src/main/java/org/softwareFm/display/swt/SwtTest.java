@@ -43,9 +43,12 @@ abstract public class SwtTest extends TestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		dispatchUntilQueueEmpty();
-		shell.dispose();
-		super.tearDown();
+		try {
+			dispatchUntilQueueEmpty();
+		} finally {
+			shell.dispose();
+			super.tearDown();
+		}
 	}
 
 	protected void checkTextMatches(Composite values, String... expected) {
@@ -63,7 +66,7 @@ abstract public class SwtTest extends TestCase {
 
 	protected void checkLabelsMatch(Composite labels, String... expected) {
 		Control[] children = labels.getChildren();
-		assertEquals( expected.length, children.length);
+		assertEquals(expected.length, children.length);
 		for (int i = 0; i < children.length; i++) {
 			Label label = (Label) children[i];
 			assertEquals(expected[i], label.getText());
@@ -105,6 +108,7 @@ abstract public class SwtTest extends TestCase {
 	protected void dispatchUntilQueueEmpty() {
 		Swts.dispatchUntilQueueEmpty(shell.getDisplay());
 	}
+
 	public <T> T callInDispatch(Display display, final Callable<T> callable) {
 		final AtomicReference<T> result = new AtomicReference<T>();
 		display.syncExec(new Runnable() {
@@ -139,6 +143,5 @@ abstract public class SwtTest extends TestCase {
 		if (!callInDispatch(display, callable))
 			fail();
 	}
-
 
 }

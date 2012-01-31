@@ -42,4 +42,9 @@ public class MasterDetailSocialTest extends SwtTest {
 		super.setUp();
 		masterDetailSocial = new MasterDetailSocial(shell, SWT.NULL);
 	}
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		masterDetailSocial.dispose();
+	}
 }

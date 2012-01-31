@@ -48,4 +48,8 @@ public class HttpRepoFinder implements IRepoFinder {
 			throw WrappedException.wrap(e);
 		}
 	}
+
+	@Override
+	public void clearCache(String url) {
+	}
 }

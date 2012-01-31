@@ -43,8 +43,11 @@ public interface IFileDescription {
 		public static File findRepositoryFile(File root, String url) {
 			return plain(url).findRepositoryUrl(root);
 		}
+
 		public static String findRepositoryUrl(File root, String url) {
 			File file = plain(url).findRepositoryUrl(root);
+			if (file == null)
+				return null;
 			String result = Files.offset(root, file);
 			return result;
 		}
@@ -67,7 +70,7 @@ public interface IFileDescription {
 			return result;
 		}
 
-		public static void merge(IGitOperations gitOperations, IFileDescription fileDescription,  Map<String, Object> toMerge) {
+		public static void merge(IGitOperations gitOperations, IFileDescription fileDescription, Map<String, Object> toMerge) {
 			Map<String, Object> initialData = gitOperations.getFile(fileDescription);
 			@SuppressWarnings("unchecked")
 			Map<String, Object> map = Maps.merge(initialData, toMerge);
@@ -79,10 +82,10 @@ public interface IFileDescription {
 			File repositoryUrl = fileDescription.findRepositoryUrl(root);
 			String url = Files.offset(root, repositoryUrl);
 			gitOperations.addAllAndCommit(url, message);
-			
+
 		}
 
-		public static IFileDescription compose(String...strings) {
+		public static IFileDescription compose(String... strings) {
 			return IFileDescription.Utils.plain(Urls.compose(strings));
 		}
 

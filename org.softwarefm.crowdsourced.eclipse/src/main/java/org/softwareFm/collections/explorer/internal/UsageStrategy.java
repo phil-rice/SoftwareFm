@@ -19,18 +19,17 @@ import org.softwareFm.utilities.json.Json;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.services.IServiceExecutor;
 import org.softwareFm.utilities.url.IUrlGenerator;
+import org.softwareFm.utilities.url.Urls;
 
 public class UsageStrategy implements IUsageStrategy {
 	private final IHttpClient client;
 	private final IGitLocal gitLocal;
 	private final IServiceExecutor serviceExecutor;
-	private final IUrlGenerator projectGenerator;
 	private final IUrlGenerator userGenerator;
 
 	public UsageStrategy(IHttpClient client, IServiceExecutor serviceExecutor, IGitLocal gitLocal, IUrlGenerator userGenerator, IUrlGenerator projectGenerator) {
 		this.client = client;
 		this.userGenerator = userGenerator;
-		this.projectGenerator = projectGenerator;
 		this.gitLocal = gitLocal;
 		this.serviceExecutor = serviceExecutor;
 	}
@@ -55,13 +54,13 @@ public class UsageStrategy implements IUsageStrategy {
 	public Map<String, Object> myProjectData(final String softwareFmId, final String crypto) {
 		File root = gitLocal.getRoot();
 		String userUrl = userGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
-		String projectUrl = projectGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
 		Map<String, Object> userDataResult = gitLocal.getFile(IFileDescription.Utils.encrypted(userUrl, CommonConstants.dataFileName, crypto));
+
 		if (userDataResult==null)
 			throw new IllegalArgumentException(softwareFmId);
 		String projectCrypto = (String) userDataResult.get(SoftwareFmConstants.projectCryptoKey);
 
-		File directory = new File(root, projectUrl);
+		File directory = new File(root, Urls.compose(userUrl, SoftwareFmConstants.projectDirectoryName));
 		Map<String, Object> result = Maps.newMap();
 		for (File file : Lists.list(directory.listFiles())) {
 			Map<String, Object> map = Json.mapFromEncryptedFile(file, projectCrypto);
