@@ -1,5 +1,6 @@
 package org.softwareFm.collections.explorer.internal;
 
+import java.io.File;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
@@ -15,7 +16,11 @@ import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.editors.IValueComposite;
 import org.softwareFm.collections.menu.ICardMenuItemHandler;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.server.constants.CommonConstants;
+import org.softwareFm.utilities.json.Json;
+import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.utilities.url.Urls;
 
 public class SnippetIntegrationTest extends AbstractExplorerIntegrationTest {
 
@@ -55,6 +60,9 @@ public class SnippetIntegrationTest extends AbstractExplorerIntegrationTest {
 						assertEquals("someDescription", addedValue.get("description"));
 						assertEquals("some\nContent", addedValue.get("content"));
 						assertEquals(CardConstants.snippet, addedValue.get(CardConstants.slingResourceType));
+
+						File file = new File(localRoot, Urls.compose(card.url(), key, CommonConstants.dataFileName));
+						assertEquals(Maps.stringObjectMap("title", "New Title", "description", "someDescription", "content", "some\nContent", CommonConstants.typeTag, CardConstants.snippet), Json.parseFile(file));
 					}
 				});
 
@@ -67,10 +75,6 @@ public class SnippetIntegrationTest extends AbstractExplorerIntegrationTest {
 		checkValidation("", "someDescription", "some\nContent");
 		checkValidation("someTitle", "someDescription", "");
 		checkValidation("someTitle", "<mustnt start with ','", "some\nContent");
-	}
-
-	public void testOnlyAddsTitleDescriptionContentToRepo() {
-		fail();
 	}
 
 	@SuppressWarnings("unchecked")

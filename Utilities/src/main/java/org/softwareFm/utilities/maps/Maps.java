@@ -33,6 +33,13 @@ import org.softwareFm.utilities.indent.Indent;
 
 public class Maps {
 
+	public static <K,V>Map<K,V> withOnly(Map<K,V> map, K...keys){
+		Map<K, V> result = Maps.newMapOfSameTypeMap(map);
+		for (K key: keys)
+			result.put(key, map.get(key));
+		return result;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static MapAsList toMapAsList(String keyName, Map<String, Object> map, String sortOrder, List<String> keyOrder) {
 		List<String> titles = Lists.newList();

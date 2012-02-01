@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Eclipse
-Bundle-SymbolicName: org.softwarefm.crowdsourced.softwarefm;singleton:=true
+Bundle-Name: org.softwarefm.crowdsourced.eclipse
+Bundle-SymbolicName: org.softwarefm.crowdsourced.eclipse;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: SoftwareFM
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

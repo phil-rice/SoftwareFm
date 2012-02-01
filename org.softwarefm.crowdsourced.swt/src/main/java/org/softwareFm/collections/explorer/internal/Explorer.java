@@ -70,6 +70,7 @@ import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.display.timeline.PlayItem;
 import org.softwareFm.display.timeline.TimeLine;
+import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.utilities.callbacks.ICallback;
 import org.softwareFm.utilities.collections.Lists;
 import org.softwareFm.utilities.exceptions.WrappedException;
@@ -447,10 +448,11 @@ public class Explorer implements IExplorer {
 						cardConfig.cardDataStore.processDataFor(url, new ICardDataStoreCallback<Void>() {
 							@Override
 							public Void process(String url, Map<String, Object> result) throws Exception {
+								Map<String,Object> cleanedData = Maps.withOnly(data, "title", "description", "content", CommonConstants.typeTag);
 								if (lastSegment.equals(CardConstants.snippet)) {
-									IMutableCardDataStore.Utils.addCollectionItemToCollection(store, url, CardConstants.snippet, fragment, data, callback);
+									IMutableCardDataStore.Utils.addCollectionItemToCollection(store, url, CardConstants.snippet, fragment, cleanedData, callback);
 								} else
-									IMutableCardDataStore.Utils.addCollectionItemToBase(store, url, CardConstants.snippet, fragment, data, callback);
+									IMutableCardDataStore.Utils.addCollectionItemToBase(store, url, CardConstants.snippet, fragment, cleanedData, callback);
 								return null;
 							}
 
