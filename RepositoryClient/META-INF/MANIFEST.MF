@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: RepositoryClient
-Bundle-SymbolicName: org.softwareFm.repositoryClient
-Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: org.softwareFm.softwareFm
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: orc.softwareFm.httpClient;bundle-version="1.0.0";visibility:=reexport
-Export-Package: org.softwareFm.repositoryFacard

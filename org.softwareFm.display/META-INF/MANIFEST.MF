@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: org.softwareFm.display
-Bundle-SymbolicName: org.softwareFm.display
-Bundle-Version: 1.0.0.qualifier
-Require-Bundle: org.softwareFm.softwareFmImages;bundle-version="1.0.0";visibility:=reexport
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
