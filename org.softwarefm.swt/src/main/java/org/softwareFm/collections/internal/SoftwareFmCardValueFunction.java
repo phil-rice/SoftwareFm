@@ -15,13 +15,13 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.softwareFm.card.card.AbstractLineItemFunction;
-import org.softwareFm.card.card.LineItem;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.strings.Strings;
+import org.softwareFm.swt.card.AbstractLineItemFunction;
+import org.softwareFm.swt.card.LineItem;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class SoftwareFmCardValueFunction extends AbstractLineItemFunction<String> {
 	private final IFunction1<String, IResourceGetter> resourceGetterFn;

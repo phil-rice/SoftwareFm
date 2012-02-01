@@ -7,16 +7,16 @@ package org.softwareFm.card.card.internal.details;
 
 import java.util.Arrays;
 
-import org.softwareFm.card.card.ILineItemFunction;
-import org.softwareFm.card.card.LineItem;
-import org.softwareFm.card.card.internal.CardCollectionHolder;
-import org.softwareFm.card.card.internal.ScrollingCardCollectionHolder;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.details.IDetailAdder;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.card.details.internal.DetailFactory;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.display.composites.IHasControl;
+import org.softwareFm.swt.card.ILineItemFunction;
+import org.softwareFm.swt.card.LineItem;
+import org.softwareFm.swt.card.internal.CardCollectionHolder;
+import org.softwareFm.swt.card.internal.ScrollingCardCollectionHolder;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public abstract class AbstractDetailsAdderTest<T extends IDetailAdder> extends AbstractDetailTest {
 

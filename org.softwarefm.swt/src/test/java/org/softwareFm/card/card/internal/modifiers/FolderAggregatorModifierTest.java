@@ -10,11 +10,11 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.junit.Test;
-import org.softwareFm.card.card.ICardFactory;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.modifiers.internal.FolderAggregatorModifier;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.swt.card.ICardFactory;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class FolderAggregatorModifierTest extends TestCase {
 	// for example tag is jcr:primarytype and the looked for value is nt:unstructured

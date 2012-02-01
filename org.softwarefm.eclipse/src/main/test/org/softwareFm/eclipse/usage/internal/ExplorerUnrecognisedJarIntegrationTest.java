@@ -11,8 +11,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.common.collections.Files;
@@ -22,6 +20,8 @@ import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.common.url.Urls;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.card.ICardHolder;
 
 public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerIntegrationTest {
 	private final File rtFile = new File("a/b/c/jdk1.2.3/rt.jar");
@@ -82,7 +82,7 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 	}
 
 	private void clickOk(Control detailContent) {
-		final Control okButton =  Swts.getDescendant(detailContent, 1, 0, 1, 1);
+		final Control okButton = Swts.getDescendant(detailContent, 1, 0, 1, 1);
 		Swts.Buttons.press(okButton);
 	}
 

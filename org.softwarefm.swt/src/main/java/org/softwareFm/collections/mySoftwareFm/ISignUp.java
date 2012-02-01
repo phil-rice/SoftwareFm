@@ -1,9 +1,9 @@
 package org.softwareFm.collections.mySoftwareFm;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.collections.mySoftwareFm.internal.Signup;
 import org.softwareFm.display.composites.IHasComposite;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public interface ISignUp extends IHasComposite {
 

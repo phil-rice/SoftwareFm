@@ -2,7 +2,6 @@ package org.softwareFm.client.gitwriter;
 
 import java.io.File;
 
-import org.softwareFm.client.gitwriter.HttpGitWriter;
 import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.IGitWriter;
 import org.softwareFm.common.constants.CommonConstants;

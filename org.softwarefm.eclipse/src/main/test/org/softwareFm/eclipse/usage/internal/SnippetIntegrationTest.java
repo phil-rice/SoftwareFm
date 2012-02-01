@@ -10,8 +10,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.editors.IValueComposite;
 import org.softwareFm.collections.menu.ICardMenuItemHandler;
@@ -21,6 +19,8 @@ import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.url.Urls;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.card.ICardHolder;
 
 public class SnippetIntegrationTest extends AbstractExplorerIntegrationTest {
 

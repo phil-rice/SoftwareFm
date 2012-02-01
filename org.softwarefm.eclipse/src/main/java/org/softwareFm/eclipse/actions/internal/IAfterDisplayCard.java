@@ -2,7 +2,7 @@ package org.softwareFm.eclipse.actions.internal;
 
 import java.util.Map;
 
-import org.softwareFm.card.card.ICard;
+import org.softwareFm.swt.card.ICard;
 
 public interface IAfterDisplayCard {
 

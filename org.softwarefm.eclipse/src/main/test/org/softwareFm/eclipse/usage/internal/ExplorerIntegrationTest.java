@@ -21,10 +21,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.card.ICardHolder;
-import org.softwareFm.card.card.composites.CompositeWithCardMargin;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.editors.IValueComposite;
 import org.softwareFm.card.title.TitleWithTitlePaintListener;
 import org.softwareFm.collections.constants.CollectionConstants;
@@ -36,6 +32,10 @@ import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.card.ICardHolder;
+import org.softwareFm.swt.card.composites.CompositeWithCardMargin;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 	private String popupMenuId;

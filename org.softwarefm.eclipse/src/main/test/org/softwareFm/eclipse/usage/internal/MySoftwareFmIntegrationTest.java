@@ -13,9 +13,6 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.softwareFm.card.card.composites.CompositeWithCardMargin;
-import org.softwareFm.card.configuration.CardConfig;
-import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.editors.IValueComposite;
 import org.softwareFm.client.http.api.IHttpClient;
 import org.softwareFm.client.http.requests.IResponseCallback;
@@ -43,6 +40,9 @@ import org.softwareFm.display.swt.SwtAndServiceTest;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.server.ISoftwareFmServer;
 import org.softwareFm.server.processors.IProcessCall;
+import org.softwareFm.swt.card.composites.CompositeWithCardMargin;
+import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.configuration.ICardConfigurator;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements IIntegrationTest {

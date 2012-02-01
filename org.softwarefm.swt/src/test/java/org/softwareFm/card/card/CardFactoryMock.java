@@ -7,7 +7,10 @@ package org.softwareFm.card.card;
 
 import java.util.Map;
 
-import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.card.ICardFactory;
+import org.softwareFm.swt.card.ICardHolder;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class CardFactoryMock implements ICardFactory {
 

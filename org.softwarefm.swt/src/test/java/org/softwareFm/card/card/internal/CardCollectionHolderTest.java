@@ -18,10 +18,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.card.internal.CardCollectionHolder.CardCollectionHolderComposite;
-import org.softwareFm.card.card.internal.CardHolder.CardHolderComposite;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreAsyncMock;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.dataStore.IMutableCardDataStore;
@@ -29,6 +25,11 @@ import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.display.swt.SwtTest;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.card.internal.CardCollectionHolder;
+import org.softwareFm.swt.card.internal.CardCollectionHolder.CardCollectionHolderComposite;
+import org.softwareFm.swt.card.internal.CardHolder.CardHolderComposite;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class CardCollectionHolderTest extends SwtTest {
 

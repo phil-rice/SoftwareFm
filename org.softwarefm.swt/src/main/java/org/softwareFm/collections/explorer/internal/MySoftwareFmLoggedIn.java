@@ -5,9 +5,6 @@ import java.util.Map;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.card.card.composites.TextInBorderWithButtons;
-import org.softwareFm.card.configuration.CardConfig;
-import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.collections.mySoftwareFm.IChangePasswordCallback;
 import org.softwareFm.collections.mySoftwareFm.ILoginCallbacks;
@@ -18,6 +15,9 @@ import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.runnable.Runnables;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.swt.card.composites.TextInBorderWithButtons;
+import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.configuration.ICardConfigurator;
 
 public class MySoftwareFmLoggedIn implements IHasControl {
 

@@ -10,11 +10,11 @@
 
 package org.softwareFm.collections;
 
-import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.strings.Strings;
+import org.softwareFm.swt.card.ICard;
 
 public class SoftwareFmCardTitleFunction implements IFunction1<ICard, String> {
 

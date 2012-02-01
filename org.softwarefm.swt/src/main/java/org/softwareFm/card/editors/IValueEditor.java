@@ -13,7 +13,6 @@ package org.softwareFm.card.editors;
 import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.card.editors.internal.CardEditor;
 import org.softwareFm.card.editors.internal.CardEditorLayout;
@@ -25,6 +24,7 @@ import org.softwareFm.card.modifiers.ICardDataModifier;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.display.composites.IHasComposite;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public interface IValueEditor extends IHasComposite {
 

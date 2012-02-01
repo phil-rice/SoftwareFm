@@ -24,11 +24,6 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.card.ICardFactory;
-import org.softwareFm.card.card.ICardHolder;
-import org.softwareFm.card.card.ILineSelectedListener;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.dataStore.ICardDataStore;
@@ -65,6 +60,11 @@ import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.eclipse.snippets.SnippetFeedConfigurator;
 import org.softwareFm.server.ISoftwareFmServer;
 import org.softwareFm.server.processors.IProcessCall;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.card.ICardFactory;
+import org.softwareFm.swt.card.ICardHolder;
+import org.softwareFm.swt.card.ILineSelectedListener;
+import org.softwareFm.swt.configuration.CardConfig;
 
 /** These tests go out to software fm, so they are much more fragile */
 abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest implements INeedsServerTest {

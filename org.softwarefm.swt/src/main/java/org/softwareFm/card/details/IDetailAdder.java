@@ -11,14 +11,14 @@
 package org.softwareFm.card.details;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.details.internal.CollectionItemDetailAdder;
 import org.softwareFm.card.details.internal.CollectionsDetailAdder;
 import org.softwareFm.card.details.internal.EditorDetailAdder;
 import org.softwareFm.card.details.internal.ListDetailAdder;
 import org.softwareFm.card.editors.internal.TextViewerDetailAdder;
 import org.softwareFm.display.composites.IHasControl;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public interface IDetailAdder {
 

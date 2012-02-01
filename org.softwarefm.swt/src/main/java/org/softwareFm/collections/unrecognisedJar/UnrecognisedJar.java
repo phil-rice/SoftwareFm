@@ -18,12 +18,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.softwareFm.card.card.ICardData;
-import org.softwareFm.card.card.ICardFactory;
-import org.softwareFm.card.card.ICardTable;
-import org.softwareFm.card.card.LineItem;
-import org.softwareFm.card.card.composites.CardShapedHolder;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.collections.constants.CollectionConstants;
@@ -38,6 +32,12 @@ import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.swt.card.ICardData;
+import org.softwareFm.swt.card.ICardFactory;
+import org.softwareFm.swt.card.ICardTable;
+import org.softwareFm.swt.card.LineItem;
+import org.softwareFm.swt.card.composites.CardShapedHolder;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class UnrecognisedJar implements IHasControl {
 	public static TitleSpec makeTitleSpec(CardConfig cardConfig) {

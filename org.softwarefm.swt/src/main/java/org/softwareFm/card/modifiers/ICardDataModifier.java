@@ -12,12 +12,12 @@ package org.softwareFm.card.modifiers;
 
 import java.util.Map;
 
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.modifiers.internal.CardMapSorter;
 import org.softwareFm.card.modifiers.internal.CollectionsAggregatorModifier;
 import org.softwareFm.card.modifiers.internal.FolderAggregatorModifier;
 import org.softwareFm.card.modifiers.internal.HideColectionsModifier;
 import org.softwareFm.card.modifiers.internal.KeyValueMissingItemsAdder;
+import org.softwareFm.swt.configuration.CardConfig;
 
 /** There are a chain of these modifiers (typically ending with the sorter). Each is responsible for aggregating / enriching / hiding / sorting... data about the card */
 public interface ICardDataModifier {

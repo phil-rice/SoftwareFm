@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.softwareFm.card.card.ICard;
+import org.softwareFm.swt.card.ICard;
 
 public class CardAndCollectionsStatus {
 	public final Future<Void> mainFuture;

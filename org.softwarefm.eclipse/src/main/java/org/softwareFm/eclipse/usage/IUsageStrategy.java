@@ -12,7 +12,6 @@ import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.snippets.internal.UsageStrategy;
-import org.softwareFm.eclipse.usage.UsageStrategyMock;
 
 public interface IUsageStrategy {
 

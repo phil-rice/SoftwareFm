@@ -17,12 +17,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
-import org.softwareFm.card.card.internal.Card;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.strings.Strings;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.card.ICardHolder;
+import org.softwareFm.swt.card.ICardValueChangedListener;
+import org.softwareFm.swt.card.ILineSelectedListener;
+import org.softwareFm.swt.card.internal.Card;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class CardMock implements ICard {
 

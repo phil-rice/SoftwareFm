@@ -11,13 +11,13 @@
 package org.softwareFm.card.details;
 
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.card.card.ICardSelectedListener;
 import org.softwareFm.card.dataStore.IAfterEditCallback;
 import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.card.dataStore.IUpdateDataStore;
 import org.softwareFm.card.details.internal.IGotDataCallback;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.display.swt.Swts.Size;
+import org.softwareFm.swt.card.ICardSelectedListener;
 
 /**
  * When a detail is shown there are a lot of potential callbacks/interfaces, so this aggregates them together.<br />

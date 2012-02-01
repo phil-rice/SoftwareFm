@@ -7,9 +7,9 @@ package org.softwareFm.card.dataStore;
 
 import java.util.Map;
 
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.card.ICardHolder;
-import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.card.ICardHolder;
+import org.softwareFm.swt.configuration.CardConfig;
 
 /** The life cycle for requesting more data about a card is monitored by this visitor */
 public interface ICardAndCollectionDataStoreVisitor {

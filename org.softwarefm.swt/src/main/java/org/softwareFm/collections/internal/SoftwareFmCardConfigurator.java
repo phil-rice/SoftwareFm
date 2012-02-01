@@ -15,16 +15,16 @@ import java.util.Map;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.card.LineItem;
-import org.softwareFm.card.configuration.CardConfig;
-import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.card.LineItem;
+import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.configuration.ICardConfigurator;
 
 public class SoftwareFmCardConfigurator implements ICardConfigurator {
 

@@ -18,9 +18,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.softwareFm.card.card.ICardData;
-import org.softwareFm.card.card.internal.CardTable;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.editors.ICardEditorCallback;
@@ -35,6 +32,9 @@ import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.display.okCancel.OkCancel;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.swt.card.ICardData;
+import org.softwareFm.swt.card.internal.CardTable;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class CardEditor implements IValueEditor, ICardData {
 

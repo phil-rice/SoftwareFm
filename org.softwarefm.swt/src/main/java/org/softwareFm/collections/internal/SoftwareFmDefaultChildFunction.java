@@ -13,10 +13,10 @@ package org.softwareFm.collections.internal;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.swt.card.ICard;
 
 public class SoftwareFmDefaultChildFunction implements IFunction1<ICard, String> {
 	final Map<String, String> typeToDefaultChildMap = Maps.makeMap(//

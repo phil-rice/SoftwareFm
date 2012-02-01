@@ -22,11 +22,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.card.ICardChangedListener;
-import org.softwareFm.card.card.ICardFactory;
-import org.softwareFm.card.card.ICardHolder;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.dataStore.IAfterEditCallback;
 import org.softwareFm.card.dataStore.ICardDataStore;
@@ -52,6 +47,11 @@ import org.softwareFm.display.swt.Swts.Grid;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.snippets.SnippetFeedConfigurator;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.card.ICardChangedListener;
+import org.softwareFm.swt.card.ICardFactory;
+import org.softwareFm.swt.card.ICardHolder;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class ExplorerWithRadioChannel {
 	public static void main(String[] args) {

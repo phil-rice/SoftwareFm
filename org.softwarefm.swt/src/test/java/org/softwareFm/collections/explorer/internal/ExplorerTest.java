@@ -14,11 +14,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.card.ICardData;
-import org.softwareFm.card.card.ICardFactory;
-import org.softwareFm.card.card.ICardHolder;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
@@ -32,6 +27,11 @@ import org.softwareFm.common.resources.ResourceGetterMock;
 import org.softwareFm.display.menu.PopupMenuContributorMock;
 import org.softwareFm.display.swt.SwtAndServiceTest;
 import org.softwareFm.display.timeline.IPlayListGetter;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.card.ICardData;
+import org.softwareFm.swt.card.ICardFactory;
+import org.softwareFm.swt.card.ICardHolder;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class ExplorerTest extends SwtAndServiceTest {
 

@@ -1,14 +1,14 @@
 package org.softwareFm.eclipse.usage.internal;
 
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.collections.comments.Comments;
 import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.collections.menu.ICardMenuItemHandler;
 import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.card.ICardHolder;
 
 public class CommentsIntegrationTest extends AbstractExplorerIntegrationTest {
 

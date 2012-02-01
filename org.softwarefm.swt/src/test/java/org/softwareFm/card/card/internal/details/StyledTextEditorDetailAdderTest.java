@@ -6,8 +6,6 @@
 package org.softwareFm.card.card.internal.details;
 
 import org.eclipse.swt.graphics.Image;
-import org.softwareFm.card.card.LineItem;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.card.editors.IEditorDetailAdder;
 import org.softwareFm.card.editors.internal.StyledTextEditor;
@@ -17,6 +15,8 @@ import org.softwareFm.common.functions.IFunction1WithDispose;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.resources.ResourceGetterMock;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
+import org.softwareFm.swt.card.LineItem;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class StyledTextEditorDetailAdderTest extends AbstractDetailsAdderTest<StyledTextEditorDetailAdder> {
 

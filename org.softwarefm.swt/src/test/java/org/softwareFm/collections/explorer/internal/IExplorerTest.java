@@ -9,8 +9,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.softwareFm.card.card.ICardHolderForTests;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.collections.explorer.IExplorer;
@@ -24,6 +22,8 @@ import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
+import org.softwareFm.swt.card.ICardHolderForTests;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class IExplorerTest extends SwtTest {
 

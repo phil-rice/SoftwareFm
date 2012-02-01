@@ -6,13 +6,13 @@
 package org.softwareFm.card.editors.internal;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.card.editors.IEditorDetailAdder;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.display.composites.IHasControl;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class UrlEditorDetailAdder implements IEditorDetailAdder {
 

@@ -16,7 +16,6 @@ import java.util.List;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.collections.explorer.IExplorer;
@@ -34,6 +33,7 @@ import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.eclipse.actions.IActionBar;
 import org.softwareFm.eclipse.jdtBinding.BindingRipperResult;
 import org.softwareFm.eclipse.snippets.SnippetFeedConfigurator;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class ExplorerView extends ViewPart {
 

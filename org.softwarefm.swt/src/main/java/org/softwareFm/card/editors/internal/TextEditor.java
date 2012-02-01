@@ -18,7 +18,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.card.title.TitleSpec;
@@ -27,6 +26,7 @@ import org.softwareFm.display.okCancel.OkCancel;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.swt.Swts.Size;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class TextEditor implements IValueEditorForTests {
 

@@ -15,11 +15,11 @@ import java.util.Arrays;
 import java.util.Map;
 
 import org.junit.Test;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.modifiers.internal.CardMapSorter;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.display.swt.SwtTest;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class CardMapSorterTest extends SwtTest {
 

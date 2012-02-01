@@ -16,13 +16,13 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
-import org.softwareFm.card.card.ICardData;
-import org.softwareFm.card.card.ICardFactory;
-import org.softwareFm.card.card.LineItem;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.swt.card.ICardData;
+import org.softwareFm.swt.card.ICardFactory;
+import org.softwareFm.swt.card.LineItem;
+import org.softwareFm.swt.configuration.CardConfig;
 
 /** Hello ALyson */
 public class CardDataStoreFixture {

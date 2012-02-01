@@ -1,6 +1,6 @@
 package org.softwareFm.eclipse.usage.internal;
 
-import org.softwareFm.card.card.ICard;
+import org.softwareFm.swt.card.ICard;
 
 public class ExplorerAddFromRootCollectionsIntegrationTest extends ExplorerAddingCollectionsIntegrationTest {
 

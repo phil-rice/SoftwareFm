@@ -11,8 +11,8 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
-import org.softwareFm.card.card.IHasCardConfig;
-import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.swt.card.IHasCardConfig;
+import org.softwareFm.swt.configuration.CardConfig;
 
 /** COmposite must implements IHasCardConfig, and have three children: Title, Card, OKCancel */
 public class AddCardLayout extends Layout {

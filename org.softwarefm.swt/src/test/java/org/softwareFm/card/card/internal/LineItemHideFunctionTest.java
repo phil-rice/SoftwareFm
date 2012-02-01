@@ -7,10 +7,11 @@ package org.softwareFm.card.card.internal;
 
 import junit.framework.TestCase;
 
-import org.softwareFm.card.card.LineItem;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.resources.ResourceGetterMock;
+import org.softwareFm.swt.card.LineItem;
+import org.softwareFm.swt.card.internal.LineItemHideFunction;
 
 public class LineItemHideFunctionTest extends TestCase {
 

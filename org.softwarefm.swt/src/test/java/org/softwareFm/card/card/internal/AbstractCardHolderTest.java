@@ -22,13 +22,14 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.softwareFm.card.card.CardChangedListenerMock;
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.common.collections.Iterables;
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.display.swt.SwtTest;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.card.internal.CardHolder;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public abstract class AbstractCardHolderTest extends SwtTest {
 

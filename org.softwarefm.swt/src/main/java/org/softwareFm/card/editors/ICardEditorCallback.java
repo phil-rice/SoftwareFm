@@ -7,7 +7,7 @@ package org.softwareFm.card.editors;
 
 import java.util.Map;
 
-import org.softwareFm.card.card.ICardData;
+import org.softwareFm.swt.card.ICardData;
 
 public interface ICardEditorCallback {
 

@@ -13,8 +13,6 @@ package org.softwareFm.collections.menu;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.menu.internal.AddItemToCollectionMenuHandler;
 import org.softwareFm.collections.menu.internal.AddNewArtifactMenuHandler;
@@ -31,6 +29,8 @@ import org.softwareFm.collections.menu.internal.ViewCardsMenuHandler;
 import org.softwareFm.collections.menu.internal.ViewSnippetMenuHandler;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.display.menu.IPopupMenuContributor;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public interface ICardMenuItemHandler extends IPopupMenuContributor<ICard> {
 

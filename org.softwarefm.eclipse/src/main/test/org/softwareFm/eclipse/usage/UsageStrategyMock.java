@@ -10,7 +10,6 @@ import org.softwareFm.client.http.response.IResponse;
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.future.Futures;
 import org.softwareFm.common.maps.Maps;
-import org.softwareFm.eclipse.usage.IUsageStrategy;
 
 public class UsageStrategyMock implements IUsageStrategy {
 

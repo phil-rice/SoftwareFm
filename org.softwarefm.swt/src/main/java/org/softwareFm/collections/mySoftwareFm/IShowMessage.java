@@ -2,10 +2,10 @@ package org.softwareFm.collections.mySoftwareFm;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.card.composites.TextInBorderWithClick;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.swt.card.composites.TextInBorderWithClick;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public interface IShowMessage {
 

@@ -28,16 +28,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.card.ICardChangedListener;
-import org.softwareFm.card.card.ICardData;
-import org.softwareFm.card.card.ICardHolder;
-import org.softwareFm.card.card.ILineSelectedListener;
-import org.softwareFm.card.card.RightClickCategoryResult;
-import org.softwareFm.card.card.RightClickCategoryResult.Type;
-import org.softwareFm.card.card.composites.CardShapedHolder;
-import org.softwareFm.card.card.composites.TextInBorder;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.dataStore.CardDataStoreCallbackAdapter;
@@ -82,6 +72,16 @@ import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.display.timeline.PlayItem;
 import org.softwareFm.display.timeline.TimeLine;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.card.ICardChangedListener;
+import org.softwareFm.swt.card.ICardData;
+import org.softwareFm.swt.card.ICardHolder;
+import org.softwareFm.swt.card.ILineSelectedListener;
+import org.softwareFm.swt.card.RightClickCategoryResult;
+import org.softwareFm.swt.card.RightClickCategoryResult.Type;
+import org.softwareFm.swt.card.composites.CardShapedHolder;
+import org.softwareFm.swt.card.composites.TextInBorder;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class Explorer implements IExplorer {
 

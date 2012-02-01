@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Future;
 
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.common.callbacks.ICallback;
@@ -25,6 +24,7 @@ import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.common.url.IUrlGeneratorMap;
 import org.softwareFm.common.url.Urls;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class NewJarImporter {
 

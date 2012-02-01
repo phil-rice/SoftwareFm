@@ -9,12 +9,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.modifiers.ICardDataModifier;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.strings.Strings;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class KeyValueMissingItemsAdder implements ICardDataModifier {
 

@@ -9,14 +9,14 @@ import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.card.ICardHolder;
-import org.softwareFm.card.card.IHasCard;
-import org.softwareFm.card.card.IHasKeyAndValue;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.url.Urls;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.card.ICardHolder;
+import org.softwareFm.swt.card.IHasCard;
+import org.softwareFm.swt.card.IHasKeyAndValue;
 
 public class ExplorerNavigationIntegrationTest extends AbstractExplorerIntegrationTest {
 

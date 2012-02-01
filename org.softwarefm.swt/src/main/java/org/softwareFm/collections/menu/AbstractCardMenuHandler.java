@@ -11,10 +11,10 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.TableItem;
-import org.softwareFm.card.card.ICard;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.swt.card.ICard;
 
 public abstract class AbstractCardMenuHandler implements ICardMenuItemHandler {
 

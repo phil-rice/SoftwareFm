@@ -2,11 +2,11 @@ package org.softwareFm.card.editors;
 
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.configuration.CardConfig;
-import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.okCancel.OkCancel;
 import org.softwareFm.display.swt.SwtTest;
+import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.configuration.ICardConfigurator;
 
 public abstract class AbstractNameAndValuesEditorTest<T extends IHasComposite> extends SwtTest {
 	abstract protected T makeEditor();

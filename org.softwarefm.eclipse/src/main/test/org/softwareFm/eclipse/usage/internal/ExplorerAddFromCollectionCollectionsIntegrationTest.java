@@ -2,7 +2,7 @@ package org.softwareFm.eclipse.usage.internal;
 
 import java.util.concurrent.ExecutionException;
 
-import org.softwareFm.card.card.ICard;
+import org.softwareFm.swt.card.ICard;
 
 public class ExplorerAddFromCollectionCollectionsIntegrationTest extends ExplorerAddingCollectionsIntegrationTest{
 

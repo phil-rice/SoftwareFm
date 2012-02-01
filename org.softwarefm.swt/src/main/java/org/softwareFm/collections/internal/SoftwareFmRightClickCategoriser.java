@@ -12,11 +12,11 @@ package org.softwareFm.collections.internal;
 
 import java.util.Map;
 
-import org.softwareFm.card.card.IRightClickCategoriser;
-import org.softwareFm.card.card.RightClickCategoryResult;
-import org.softwareFm.card.card.RightClickCategoryResult.Type;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.common.strings.Strings;
+import org.softwareFm.swt.card.IRightClickCategoriser;
+import org.softwareFm.swt.card.RightClickCategoryResult;
+import org.softwareFm.swt.card.RightClickCategoryResult.Type;
 
 public class SoftwareFmRightClickCategoriser implements IRightClickCategoriser {
 

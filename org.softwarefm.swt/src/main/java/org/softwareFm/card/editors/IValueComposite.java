@@ -12,10 +12,10 @@ package org.softwareFm.card.editors;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.card.card.internal.CardOutlinePaintListener;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.title.TitleWithTitlePaintListener;
 import org.softwareFm.display.okCancel.OkCancel;
+import org.softwareFm.swt.card.internal.CardOutlinePaintListener;
+import org.softwareFm.swt.configuration.CardConfig;
 
 /** represents the usual editor composite seen when editing lines. <T> is the type of the editor embedded in the composite */
 public interface IValueComposite<T extends Control> {

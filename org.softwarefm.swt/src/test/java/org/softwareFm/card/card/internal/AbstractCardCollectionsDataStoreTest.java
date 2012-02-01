@@ -12,14 +12,14 @@ package org.softwareFm.card.card.internal;
 
 import org.softwareFm.card.card.CardFactoryMock;
 import org.softwareFm.card.card.CardMock;
-import org.softwareFm.card.card.ICardFactory;
-import org.softwareFm.card.card.ICardHolder;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreVisitorMonitored;
 import org.softwareFm.card.dataStore.CardAndCollectionsStatus;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.dataStore.IFollowOnFragment;
 import org.softwareFm.display.swt.SwtTest;
+import org.softwareFm.swt.card.ICardFactory;
+import org.softwareFm.swt.card.ICardHolder;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public abstract class AbstractCardCollectionsDataStoreTest extends SwtTest {
 

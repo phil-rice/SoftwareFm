@@ -5,8 +5,6 @@ import java.util.concurrent.Callable;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.configuration.CardConfig;
-import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.client.http.api.IClientBuilder;
 import org.softwareFm.client.http.api.IHttpClient;
 import org.softwareFm.collections.explorer.internal.MySoftwareFm;
@@ -22,6 +20,8 @@ import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.server.ISoftwareFmServer;
 import org.softwareFm.server.processors.IProcessCall;
+import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.configuration.ICardConfigurator;
 
 
 public class MySoftwareFmDemo {

@@ -14,13 +14,6 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.card.ICardFactory;
-import org.softwareFm.card.card.IHasCardConfig;
-import org.softwareFm.card.card.ILineSelectedListener;
-import org.softwareFm.card.card.LineItem;
-import org.softwareFm.card.card.internal.CardOutlinePaintListener;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.card.title.TitleWithTitlePaintListener;
@@ -29,6 +22,13 @@ import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.card.ICardFactory;
+import org.softwareFm.swt.card.IHasCardConfig;
+import org.softwareFm.swt.card.ILineSelectedListener;
+import org.softwareFm.swt.card.LineItem;
+import org.softwareFm.swt.card.internal.CardOutlinePaintListener;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class TextViewer implements IHasComposite {
 

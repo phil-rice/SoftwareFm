@@ -8,12 +8,13 @@ package org.softwareFm.card.card.internal;
 import java.util.Arrays;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.card.ICardHolder;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.navigation.internal.NavTitle;
 import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.card.ICardHolder;
+import org.softwareFm.swt.card.internal.CardHolder;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class CardHolderWithTitleTest extends AbstractCardHolderTest {
 	public void testDisplaysLoadingWhenConstructed() {

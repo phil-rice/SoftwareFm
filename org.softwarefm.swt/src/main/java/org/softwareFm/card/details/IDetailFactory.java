@@ -8,10 +8,10 @@ package org.softwareFm.card.details;
 import java.util.Arrays;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.details.internal.DetailFactory;
 import org.softwareFm.display.composites.IHasControl;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.configuration.CardConfig;
 
 /** creates a {@link IHasControl} to allow the user to view/edit a detail of the card */
 public interface IDetailFactory {

@@ -13,10 +13,6 @@ package org.softwareFm.collections;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.card.ICardData;
-import org.softwareFm.card.card.ICardFactory;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.card.title.TitleSpec;
@@ -25,6 +21,10 @@ import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.resources.ResourceGetterMock;
 import org.softwareFm.display.swt.SwtTest;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.card.ICardData;
+import org.softwareFm.swt.card.ICardFactory;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class SoftwareFmCardTitleFunctionTest extends SwtTest {
 

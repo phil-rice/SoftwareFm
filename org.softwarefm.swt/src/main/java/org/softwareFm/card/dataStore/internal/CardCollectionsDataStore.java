@@ -12,11 +12,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.card.ICardFactory;
-import org.softwareFm.card.card.ICardHolder;
-import org.softwareFm.card.card.LineItem;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardAndCollectionsStatus;
 import org.softwareFm.card.dataStore.ICardAndCollectionDataStoreVisitor;
 import org.softwareFm.card.dataStore.ICardAndCollectionsDataStore;
@@ -25,6 +20,11 @@ import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.future.Futures;
 import org.softwareFm.common.future.GatedFuture;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.card.ICardFactory;
+import org.softwareFm.swt.card.ICardHolder;
+import org.softwareFm.swt.card.LineItem;
+import org.softwareFm.swt.configuration.CardConfig;
 
 /** Note that the callback is called early, but the card may get prodded with valueHasChanged, and the future isn't done until all values have been changed */
 public class CardCollectionsDataStore implements ICardAndCollectionsDataStore {

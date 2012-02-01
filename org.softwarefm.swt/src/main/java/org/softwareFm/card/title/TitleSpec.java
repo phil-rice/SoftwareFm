@@ -13,9 +13,9 @@ package org.softwareFm.card.title;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-import org.softwareFm.card.card.ICardData;
-import org.softwareFm.card.card.internal.CardToTitleSpecFn;
 import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.swt.card.ICardData;
+import org.softwareFm.swt.card.internal.CardToTitleSpecFn;
 
 public class TitleSpec {
 	public final Image icon;

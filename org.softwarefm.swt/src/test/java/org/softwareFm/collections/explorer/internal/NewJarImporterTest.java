@@ -7,7 +7,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.collections.constants.CollectionConstants;
@@ -22,6 +21,7 @@ import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.common.url.IUrlGeneratorMap;
 import org.softwareFm.common.url.UrlGenerator;
 import org.softwareFm.display.swt.SwtTest;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class NewJarImporterTest extends SwtTest {
 

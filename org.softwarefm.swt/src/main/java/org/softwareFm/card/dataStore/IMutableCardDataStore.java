@@ -13,10 +13,10 @@ package org.softwareFm.card.dataStore;
 import java.util.Map;
 import java.util.concurrent.Future;
 
-import org.softwareFm.card.card.RightClickCategoryResult;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.swt.card.RightClickCategoryResult;
 
 /** This is a card data store that can be changed. */
 public interface IMutableCardDataStore extends ICardDataStore {

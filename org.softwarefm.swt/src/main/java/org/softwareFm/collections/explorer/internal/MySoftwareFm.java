@@ -4,8 +4,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.card.card.composites.TextInBorder;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.collections.mySoftwareFm.IChangePassword;
 import org.softwareFm.collections.mySoftwareFm.IChangePasswordCallback;
@@ -22,6 +20,8 @@ import org.softwareFm.common.arrays.ArrayHelper;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.swt.card.composites.TextInBorder;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 

@@ -9,11 +9,11 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.softwareFm.card.card.IRightClickCategoriser;
-import org.softwareFm.card.card.RightClickCategoryResult;
-import org.softwareFm.card.card.RightClickCategoryResult.Type;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.swt.card.IRightClickCategoriser;
+import org.softwareFm.swt.card.RightClickCategoryResult;
+import org.softwareFm.swt.card.RightClickCategoryResult.Type;
 
 public class SoftwareFmRightClickCategoriserTest extends TestCase {
 

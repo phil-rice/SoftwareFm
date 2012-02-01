@@ -10,7 +10,6 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.card.dataStore.ICardDataStoreCallback;
@@ -25,6 +24,7 @@ import org.softwareFm.display.browser.IBrowserConfigurator;
 import org.softwareFm.display.browser.IBrowserPart;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.swt.configuration.CardConfig;
 
 import de.java2html.Java2Html;
 

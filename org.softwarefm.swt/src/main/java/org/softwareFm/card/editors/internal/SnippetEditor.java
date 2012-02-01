@@ -10,10 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.card.ICardData;
-import org.softwareFm.card.card.ICardFactory;
-import org.softwareFm.card.configuration.CardConfig;
-import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardDataStoreMock;
 import org.softwareFm.card.editors.ICardEditorCallback;
@@ -22,6 +18,10 @@ import org.softwareFm.card.editors.NameAndValueData;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.swt.card.ICardData;
+import org.softwareFm.swt.card.ICardFactory;
+import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.configuration.ICardConfigurator;
 
 public class SnippetEditor extends NameAndValuesEditor {
 	private final static String cardType = CardConstants.snippet;

@@ -7,10 +7,10 @@ package org.softwareFm.collections.explorer;
 
 import java.util.Map;
 
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.card.ICardHolder;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.ICardAndCollectionDataStoreVisitor;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.card.ICardHolder;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public interface IExplorerListener extends ICardAndCollectionDataStoreVisitor {
 

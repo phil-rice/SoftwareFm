@@ -11,12 +11,12 @@
 package org.softwareFm.card.navigation.internal;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.navigation.ITitleBarForCard;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.card.title.TitleWithTitlePaintListener;
 import org.softwareFm.common.functions.Functions;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class NavTitle extends TitleWithTitlePaintListener implements ITitleBarForCard {
 

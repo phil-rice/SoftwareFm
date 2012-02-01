@@ -13,13 +13,13 @@ package org.softwareFm.card.details.internal;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.details.IDetailAdder;
 import org.softwareFm.card.details.IDetailFactory;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.menu.IPopupMenuService;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class DetailFactory implements IDetailFactory {
 

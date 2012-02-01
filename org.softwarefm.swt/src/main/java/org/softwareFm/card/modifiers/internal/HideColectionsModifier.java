@@ -8,9 +8,9 @@ package org.softwareFm.card.modifiers.internal;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.modifiers.ICardDataModifier;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class HideColectionsModifier implements ICardDataModifier {
 

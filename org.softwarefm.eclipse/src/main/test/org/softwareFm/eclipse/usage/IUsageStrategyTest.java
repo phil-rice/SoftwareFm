@@ -13,7 +13,6 @@ import org.softwareFm.common.json.Json;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.url.Urls;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
-import org.softwareFm.eclipse.usage.IUsageStrategy;
 import org.softwareFm.server.processors.AbstractProcessorDatabaseIntegrationTests;
 
 public class IUsageStrategyTest extends AbstractProcessorDatabaseIntegrationTests {

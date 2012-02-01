@@ -22,7 +22,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.navigation.internal.NavNextHistoryPrev;
 import org.softwareFm.card.navigation.internal.NavNextHistoryPrevConfig;
 import org.softwareFm.common.functions.IFunction1;
@@ -33,6 +32,7 @@ import org.softwareFm.display.browser.BrowserComposite;
 import org.softwareFm.display.browser.IBrowserCompositeBuilder;
 import org.softwareFm.display.browser.IBrowserPart;
 import org.softwareFm.display.timeline.PlayItem;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 

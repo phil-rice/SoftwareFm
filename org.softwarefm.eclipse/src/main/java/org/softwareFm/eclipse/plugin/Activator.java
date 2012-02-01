@@ -21,8 +21,6 @@ import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.prefs.BackingStoreException;
-import org.softwareFm.card.card.ICardFactory;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.client.gitwriter.HttpGitWriter;
 import org.softwareFm.client.gitwriter.HttpRepoFinder;
@@ -38,6 +36,8 @@ import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.jdtBinding.IBindingRipper;
+import org.softwareFm.swt.card.ICardFactory;
+import org.softwareFm.swt.configuration.CardConfig;
 
 /**
  * The activator class controls the plug-in life cycle

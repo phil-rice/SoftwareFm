@@ -13,11 +13,6 @@ package org.softwareFm.card.card.internal.details;
 import java.util.Collections;
 
 import org.eclipse.swt.graphics.Image;
-import org.softwareFm.card.card.ICardData;
-import org.softwareFm.card.card.ICardFactory;
-import org.softwareFm.card.card.LineItem;
-import org.softwareFm.card.card.internal.Card;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreAsyncMock;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
@@ -29,6 +24,11 @@ import org.softwareFm.common.maps.Maps;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
+import org.softwareFm.swt.card.ICardData;
+import org.softwareFm.swt.card.ICardFactory;
+import org.softwareFm.swt.card.LineItem;
+import org.softwareFm.swt.card.internal.Card;
+import org.softwareFm.swt.configuration.CardConfig;
 
 abstract public class AbstractDetailTest extends SwtTest {
 	protected static LineItem stringValue = new LineItem(null, "key", "stringValue");

@@ -11,6 +11,7 @@ import junit.framework.TestCase;
 
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.tests.Tests;
+import org.softwareFm.swt.card.LineItem;
 
 public class KeyValueTest extends TestCase {
 

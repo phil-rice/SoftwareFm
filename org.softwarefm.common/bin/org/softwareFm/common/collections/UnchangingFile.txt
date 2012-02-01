@@ -1,0 +1,5 @@
+package org.softwareFm.common.collections;
+
+public class UnchangingFile {
+
+}

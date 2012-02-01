@@ -12,12 +12,12 @@ package org.softwareFm.collections.internal;
 
 import java.util.Map;
 
-import org.softwareFm.card.card.AbstractLineItemFunction;
-import org.softwareFm.card.card.ILineItemFunction;
-import org.softwareFm.card.card.LineItem;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.swt.card.AbstractLineItemFunction;
+import org.softwareFm.swt.card.ILineItemFunction;
+import org.softwareFm.swt.card.LineItem;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class SoftwareFmCardNameFunction extends AbstractLineItemFunction<String> {
 

@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.display.swt.SwtTest;
+import org.softwareFm.swt.card.internal.FillWithAspectRatioLayout;
 
 public class FillWithAspectRatioLayoutManagerTest extends SwtTest {
 

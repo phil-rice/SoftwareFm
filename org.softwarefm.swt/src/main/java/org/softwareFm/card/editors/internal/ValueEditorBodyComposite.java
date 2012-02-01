@@ -8,9 +8,9 @@ package org.softwareFm.card.editors.internal;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.card.internal.CardOutlinePaintListener;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.title.TitleSpec;
+import org.softwareFm.swt.card.internal.CardOutlinePaintListener;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class ValueEditorBodyComposite extends Composite {
 

@@ -12,9 +12,6 @@ package org.softwareFm.card.configuration.internal;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-import org.softwareFm.card.card.ILineItemFunction;
-import org.softwareFm.card.configuration.CardConfig;
-import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.IFollowOnFragment;
 import org.softwareFm.card.details.IDetailAdder;
@@ -26,6 +23,9 @@ import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
+import org.softwareFm.swt.card.ILineItemFunction;
+import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.configuration.ICardConfigurator;
 
 public class BasicCardConfigurator implements ICardConfigurator {
 

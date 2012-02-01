@@ -21,8 +21,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.navigation.ITitleBarForCard;
 import org.softwareFm.card.title.TitlePaintListener;
 import org.softwareFm.card.title.TitleSpec;
@@ -33,6 +31,8 @@ import org.softwareFm.common.history.IHistory;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class NavBar implements IHasComposite, ITitleBarForCard {
 

@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.softwareFm.card.card.CardMock;
-import org.softwareFm.card.card.LineItem;
+import org.softwareFm.swt.card.LineItem;
 
 public class CardCollectionsDataStoreWithFollowOnTest extends AbstractCardCollectionsDataStoreTest {
 

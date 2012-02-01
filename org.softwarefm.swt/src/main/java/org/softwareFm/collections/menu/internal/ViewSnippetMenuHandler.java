@@ -9,13 +9,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.menu.AbstractCardMenuHandler;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.url.Urls;
+import org.softwareFm.swt.card.ICard;
 
 public class ViewSnippetMenuHandler extends AbstractCardMenuHandler {
 

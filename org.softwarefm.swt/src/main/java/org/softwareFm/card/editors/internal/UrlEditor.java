@@ -19,22 +19,23 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
+import org.softwareFm.card.editors.internal.TextEditor.TextEditorComposite;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.display.okCancel.OkCancel;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.swt.Swts.Size;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class UrlEditor implements IValueEditorForTests {
 
 	private final UrlEditorComposite content;
 
-	static class UrlEditorComposite extends org.softwareFm.card.editors.internal.TextEditor.TextEditorComposite {
+	static class UrlEditorComposite extends TextEditorComposite {
 
 		private Button testButton;
 

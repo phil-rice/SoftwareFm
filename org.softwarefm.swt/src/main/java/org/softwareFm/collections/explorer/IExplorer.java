@@ -13,12 +13,6 @@ package org.softwareFm.collections.explorer;
 import java.io.File;
 import java.util.List;
 
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.card.ICardChangedListener;
-import org.softwareFm.card.card.ICardHolder;
-import org.softwareFm.card.card.IHasCardConfig;
-import org.softwareFm.card.card.RightClickCategoryResult;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.ICardAndCollectionDataStoreVisitor;
 import org.softwareFm.collections.explorer.internal.Explorer;
 import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
@@ -26,6 +20,12 @@ import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.display.browser.IBrowserCompositeBuilder;
 import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.display.timeline.ITimeLine;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.card.ICardChangedListener;
+import org.softwareFm.swt.card.ICardHolder;
+import org.softwareFm.swt.card.IHasCardConfig;
+import org.softwareFm.swt.card.RightClickCategoryResult;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCardConfig {
 

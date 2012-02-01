@@ -10,9 +10,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.card.ICardHolder;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.card.dataStore.IAfterEditCallback;
@@ -34,6 +31,9 @@ import org.softwareFm.eclipse.jdtBinding.ExpressionData;
 import org.softwareFm.eclipse.jdtBinding.IExpressionCategoriser;
 import org.softwareFm.eclipse.jdtBinding.JdtConstants;
 import org.softwareFm.softwareFmImages.actions.ActionAnchor;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.card.ICardHolder;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class ActionBar implements IActionBar {
 

@@ -9,11 +9,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.softwareFm.card.card.ICardData;
-import org.softwareFm.card.card.LineItem;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.editors.internal.NameAndValuesEditor;
 import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.swt.card.ICardData;
+import org.softwareFm.swt.card.LineItem;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public interface INamesAndValuesEditor extends IValueEditor, ICardData {
 

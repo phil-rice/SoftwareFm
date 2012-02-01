@@ -11,7 +11,6 @@
 package org.softwareFm.collections.explorer;
 
 import org.eclipse.swt.SWT;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.navigation.internal.NavNextHistoryPrevConfig;
 import org.softwareFm.common.callbacks.ICallback;
@@ -20,6 +19,7 @@ import org.softwareFm.common.history.History;
 import org.softwareFm.common.history.IHistory;
 import org.softwareFm.display.swt.SwtAndServiceTest;
 import org.softwareFm.display.timeline.PlayItem;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class BrowserAndNavBarTest extends SwtAndServiceTest {
 

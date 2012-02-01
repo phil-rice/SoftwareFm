@@ -10,10 +10,6 @@
 
 package org.softwareFm.collections;
 
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.card.ILineItemFunction;
-import org.softwareFm.card.card.IRightClickCategoriser;
-import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.collections.internal.SoftwareFmCardConfigurator;
@@ -26,6 +22,10 @@ import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.url.IUrlGeneratorMap;
 import org.softwareFm.common.url.UrlGenerator;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.card.ILineItemFunction;
+import org.softwareFm.swt.card.IRightClickCategoriser;
+import org.softwareFm.swt.configuration.ICardConfigurator;
 
 public interface ICollectionConfigurationFactory {
 	public static class Utils {

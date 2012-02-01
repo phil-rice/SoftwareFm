@@ -19,14 +19,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.softwareFm.card.card.CardMock;
-import org.softwareFm.card.card.ICard;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.navigation.internal.NavBar.NavBarLayout;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.callbacks.MemoryCallback;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.display.swt.SwtTest;
+import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class NavBarTest extends SwtTest {
 

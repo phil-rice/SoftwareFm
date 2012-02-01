@@ -12,8 +12,6 @@ package org.softwareFm.card.card.internal;
 
 import org.eclipse.swt.graphics.Image;
 import org.softwareFm.card.card.CardMock;
-import org.softwareFm.card.configuration.CardConfig;
-import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.title.TitleSpec;
@@ -23,6 +21,9 @@ import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
+import org.softwareFm.swt.card.internal.CardToTitleSpecFn;
+import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.configuration.ICardConfigurator;
 
 //Smoke test. 
 public class CardToTitleSpecFnTest extends SwtTest {

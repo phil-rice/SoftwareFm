@@ -6,9 +6,6 @@ import java.util.UUID;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.card.card.ICardData;
-import org.softwareFm.card.configuration.CardConfig;
-import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.editors.ICardEditorCallback;
 import org.softwareFm.card.editors.INamesAndValuesEditor;
@@ -24,6 +21,9 @@ import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.swt.card.ICardData;
+import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.configuration.ICardConfigurator;
 
 public class ForgotPassword implements IForgotPassword {
 	private final String cardType = CardConstants.forgotPasswordCardType;

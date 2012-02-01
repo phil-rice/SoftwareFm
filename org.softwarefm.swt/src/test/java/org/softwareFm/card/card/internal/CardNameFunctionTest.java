@@ -5,7 +5,8 @@
 
 package org.softwareFm.card.card.internal;
 
-import org.softwareFm.card.card.LineItem;
+import org.softwareFm.swt.card.LineItem;
+import org.softwareFm.swt.card.internal.CardNameFunction;
 
 public class CardNameFunctionTest extends AbstractResourceGetterFnTest {
 

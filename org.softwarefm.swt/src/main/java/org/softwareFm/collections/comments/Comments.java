@@ -19,11 +19,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.softwareFm.card.card.ICardData;
-import org.softwareFm.card.card.composites.CompositeWithCardMargin;
-import org.softwareFm.card.card.composites.CompositeWithEditorIndent;
-import org.softwareFm.card.card.composites.OutlinePaintListener;
-import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.title.Title;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.collections.constants.CollectionConstants;
@@ -34,6 +29,11 @@ import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
+import org.softwareFm.swt.card.ICardData;
+import org.softwareFm.swt.card.composites.CompositeWithCardMargin;
+import org.softwareFm.swt.card.composites.CompositeWithEditorIndent;
+import org.softwareFm.swt.card.composites.OutlinePaintListener;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class Comments implements IHasControl {
 

@@ -14,7 +14,7 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.swt.configuration.CardConfig;
 
 public class TitlePaintListener implements PaintListener {
 	private final CardConfig cardConfig;
