@@ -21,21 +21,21 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
-import org.softwareFm.card.editors.IValueComposite;
-import org.softwareFm.card.title.TitleWithTitlePaintListener;
-import org.softwareFm.collections.constants.CollectionConstants;
-import org.softwareFm.collections.explorer.ExplorerAdapter;
-import org.softwareFm.collections.menu.ICardMenuItemHandler;
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.strings.Strings;
-import org.softwareFm.display.composites.IHasControl;
-import org.softwareFm.display.swt.Swts;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardHolder;
 import org.softwareFm.swt.card.composites.CompositeWithCardMargin;
+import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.constants.CollectionConstants;
+import org.softwareFm.swt.editors.IValueComposite;
+import org.softwareFm.swt.explorer.ExplorerAdapter;
+import org.softwareFm.swt.menu.ICardMenuItemHandler;
+import org.softwareFm.swt.swt.Swts;
+import org.softwareFm.swt.title.TitleWithTitlePaintListener;
 
 public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 	private String popupMenuId;

@@ -11,17 +11,17 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.common.collections.Files;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.json.Json;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.common.url.Urls;
-import org.softwareFm.display.swt.Swts;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardHolder;
+import org.softwareFm.swt.constants.CardConstants;
+import org.softwareFm.swt.constants.CollectionConstants;
+import org.softwareFm.swt.swt.Swts;
 
 public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerIntegrationTest {
 	private final File rtFile = new File("a/b/c/jdk1.2.3/rt.jar");

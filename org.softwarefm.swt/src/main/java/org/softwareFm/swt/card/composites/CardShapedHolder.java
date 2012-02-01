@@ -9,14 +9,14 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
-import org.softwareFm.card.dataStore.CardDataStoreFixture;
-import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.display.composites.IHasComposite;
-import org.softwareFm.display.composites.IHasControl;
-import org.softwareFm.display.swt.Swts;
+import org.softwareFm.swt.card.dataStore.CardDataStoreFixture;
+import org.softwareFm.swt.composites.IHasComposite;
+import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.swt.Swts;
+import org.softwareFm.swt.title.TitleSpec;
 
 public class CardShapedHolder<Body extends IHasControl> implements IHasComposite {
 

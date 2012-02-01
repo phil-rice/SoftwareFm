@@ -8,14 +8,14 @@ package org.softwareFm.swt.configuration;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-import org.softwareFm.card.configuration.internal.BasicCardConfigurator;
-import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.functions.IFunction1WithDispose;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.resources.NestedResourceGetterFn;
-import org.softwareFm.softwareFmImages.IImageRegisterConfigurator;
+import org.softwareFm.images.IImageRegisterConfigurator;
 import org.softwareFm.swt.card.ICardFactory;
+import org.softwareFm.swt.configuration.internal.BasicCardConfigurator;
+import org.softwareFm.swt.dataStore.ICardDataStore;
 
 public interface ICardConfigurator {
 

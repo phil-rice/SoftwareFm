@@ -7,12 +7,12 @@ package org.softwareFm.swt.card.composites;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.runnable.Runnables;
-import org.softwareFm.display.swt.Swts;
+import org.softwareFm.swt.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.constants.CardConstants;
+import org.softwareFm.swt.swt.Swts;
 
 public class TextInBorderWithButtons extends TextInBorder {
 

@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.resources.IResourceGetter;
-import org.softwareFm.display.composites.IHasControl;
+import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;
 
 public class TextInCompositeWithCardMargin implements IHasControl {

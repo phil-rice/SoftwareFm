@@ -10,17 +10,17 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
-import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.card.editors.IValueComposite;
-import org.softwareFm.collections.menu.ICardMenuItemHandler;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.json.Json;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.url.Urls;
-import org.softwareFm.display.swt.Swts;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardHolder;
+import org.softwareFm.swt.constants.CardConstants;
+import org.softwareFm.swt.editors.IValueComposite;
+import org.softwareFm.swt.menu.ICardMenuItemHandler;
+import org.softwareFm.swt.swt.Swts;
 
 public class SnippetIntegrationTest extends AbstractExplorerIntegrationTest {
 

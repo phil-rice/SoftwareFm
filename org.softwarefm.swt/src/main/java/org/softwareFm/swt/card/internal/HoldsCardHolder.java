@@ -17,14 +17,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.dataStore.CardAndCollectionDataStoreVisitorMonitored;
-import org.softwareFm.display.menu.IPopupMenuService;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardHolder;
 import org.softwareFm.swt.card.ICardSelectedListener;
 import org.softwareFm.swt.card.IHasCardConfig;
 import org.softwareFm.swt.card.ILineSelectedListener;
+import org.softwareFm.swt.card.dataStore.CardAndCollectionDataStoreVisitorMonitored;
 import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.menu.IPopupMenuService;
 
 public class HoldsCardHolder extends Composite implements IHasCardConfig {
 

@@ -16,10 +16,10 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.common.collections.Lists;
-import org.softwareFm.display.composites.IHasControl;
+import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.constants.CardConstants;
 
 public class StyledTextWithBold implements IHasControl {
 

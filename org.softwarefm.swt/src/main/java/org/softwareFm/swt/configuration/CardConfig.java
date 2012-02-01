@@ -17,18 +17,6 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.card.dataStore.ICardAndCollectionsDataStore;
-import org.softwareFm.card.dataStore.IFollowOnFragment;
-import org.softwareFm.card.dataStore.IMutableCardDataStore;
-import org.softwareFm.card.dataStore.internal.CardCollectionsDataStore;
-import org.softwareFm.card.details.IDetailAdder;
-import org.softwareFm.card.details.IDetailFactory;
-import org.softwareFm.card.details.internal.DetailFactory;
-import org.softwareFm.card.details.internal.EditorDetailAdder;
-import org.softwareFm.card.editors.IEditorDetailAdder;
-import org.softwareFm.card.modifiers.ICardDataModifier;
-import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.functions.IFunction1WithDispose;
@@ -36,14 +24,26 @@ import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.resources.ResourceGetterMock;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGeneratorMap;
-import org.softwareFm.display.constants.DisplayConstants;
-import org.softwareFm.display.menu.IPopupMenuService;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.card.ICardFactory;
 import org.softwareFm.swt.card.ILineItemFunction;
 import org.softwareFm.swt.card.IRightClickCategoriser;
 import org.softwareFm.swt.card.LineItem;
+import org.softwareFm.swt.constants.CardConstants;
+import org.softwareFm.swt.constants.DisplayConstants;
+import org.softwareFm.swt.dataStore.ICardAndCollectionsDataStore;
+import org.softwareFm.swt.dataStore.IFollowOnFragment;
+import org.softwareFm.swt.dataStore.IMutableCardDataStore;
+import org.softwareFm.swt.dataStore.internal.CardCollectionsDataStore;
+import org.softwareFm.swt.details.IDetailAdder;
+import org.softwareFm.swt.details.IDetailFactory;
+import org.softwareFm.swt.details.internal.DetailFactory;
+import org.softwareFm.swt.details.internal.EditorDetailAdder;
+import org.softwareFm.swt.editors.IEditorDetailAdder;
+import org.softwareFm.swt.menu.IPopupMenuService;
+import org.softwareFm.swt.modifiers.ICardDataModifier;
+import org.softwareFm.swt.title.TitleSpec;
 
 /** This holds all the layout data, and strategies associated with displaying a card. It is meant to be immutable, although the image functions often rely on ImageRegisters, and are thus subject to mutability. */
 public class CardConfig {

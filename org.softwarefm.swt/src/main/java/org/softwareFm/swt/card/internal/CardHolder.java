@@ -24,20 +24,11 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
-import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.card.dataStore.CardDataStoreFixture;
-import org.softwareFm.card.navigation.ITitleBarForCard;
-import org.softwareFm.card.navigation.internal.NavBar;
-import org.softwareFm.card.navigation.internal.NavTitle;
-import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.future.GatedMockFuture;
 import org.softwareFm.common.resources.IResourceGetter;
-import org.softwareFm.display.composites.IHasComposite;
-import org.softwareFm.display.swt.Swts.Show;
-import org.softwareFm.display.swt.Swts.Size;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardChangedListener;
 import org.softwareFm.swt.card.ICardFactory;
@@ -46,7 +37,16 @@ import org.softwareFm.swt.card.ICardHolderForTests;
 import org.softwareFm.swt.card.ICardSelectedListener;
 import org.softwareFm.swt.card.IHasCard;
 import org.softwareFm.swt.card.ILineSelectedListener;
+import org.softwareFm.swt.card.dataStore.CardDataStoreFixture;
+import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.constants.CardConstants;
+import org.softwareFm.swt.navigation.ITitleBarForCard;
+import org.softwareFm.swt.navigation.internal.NavBar;
+import org.softwareFm.swt.navigation.internal.NavTitle;
+import org.softwareFm.swt.swt.Swts.Show;
+import org.softwareFm.swt.swt.Swts.Size;
+import org.softwareFm.swt.title.TitleSpec;
 
 public class CardHolder implements ICardHolderForTests {
 

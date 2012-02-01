@@ -7,8 +7,6 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.client.http.api.IClientBuilder;
 import org.softwareFm.client.http.api.IHttpClient;
-import org.softwareFm.collections.explorer.internal.MySoftwareFm;
-import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.common.IGitOperations;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.constants.CommonConstants;
@@ -17,11 +15,13 @@ import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.processors.AbstractLoginDataAccessor;
 import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.services.IServiceExecutor;
-import org.softwareFm.display.swt.Swts;
 import org.softwareFm.server.ISoftwareFmServer;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.configuration.ICardConfigurator;
+import org.softwareFm.swt.explorer.internal.MySoftwareFm;
+import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
+import org.softwareFm.swt.swt.Swts;
 
 
 public class MySoftwareFmDemo {

@@ -16,14 +16,14 @@ import java.util.concurrent.Callable;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.resources.IResourceGetter;
-import org.softwareFm.display.swt.Swts;
 import org.softwareFm.swt.card.ICardData;
+import org.softwareFm.swt.constants.CardConstants;
+import org.softwareFm.swt.swt.Swts;
+import org.softwareFm.swt.title.TitleSpec;
 
 public class CardToTitleSpecFn implements IFunction1<ICardData, TitleSpec> {
 	private final IFunction1<String, Image> imageFn;

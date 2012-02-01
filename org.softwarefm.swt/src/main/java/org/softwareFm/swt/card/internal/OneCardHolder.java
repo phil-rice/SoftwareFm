@@ -8,8 +8,8 @@ package org.softwareFm.swt.card.internal;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.swt.card.ICardSelectedListener;
+import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
 
 public class OneCardHolder implements IHasComposite {

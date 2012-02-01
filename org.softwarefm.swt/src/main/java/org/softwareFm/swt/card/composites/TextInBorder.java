@@ -15,15 +15,15 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
-import org.softwareFm.card.title.Title;
-import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.resources.IResourceGetter;
-import org.softwareFm.display.composites.IHasControl;
-import org.softwareFm.display.swt.Swts;
 import org.softwareFm.swt.card.ICardData;
+import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.swt.Swts;
+import org.softwareFm.swt.title.Title;
+import org.softwareFm.swt.title.TitleSpec;
 
 public class TextInBorder implements IHasControl {
 

@@ -10,21 +10,21 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.card.dataStore.ICardDataStore;
-import org.softwareFm.card.dataStore.ICardDataStoreCallback;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.strings.Strings;
-import org.softwareFm.display.browser.BrowserPart;
-import org.softwareFm.display.browser.IBrowserCompositeBuilder;
-import org.softwareFm.display.browser.IBrowserConfigurator;
-import org.softwareFm.display.browser.IBrowserPart;
-import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.swt.browser.BrowserPart;
+import org.softwareFm.swt.browser.IBrowserCompositeBuilder;
+import org.softwareFm.swt.browser.IBrowserConfigurator;
+import org.softwareFm.swt.browser.IBrowserPart;
 import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.constants.CardConstants;
+import org.softwareFm.swt.constants.DisplayConstants;
+import org.softwareFm.swt.dataStore.ICardDataStore;
+import org.softwareFm.swt.dataStore.ICardDataStoreCallback;
 
 import de.java2html.Java2Html;
 

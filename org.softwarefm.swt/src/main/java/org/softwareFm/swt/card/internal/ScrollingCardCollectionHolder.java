@@ -15,11 +15,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.softwareFm.card.details.IDetailsFactoryCallback;
-import org.softwareFm.display.composites.IHasControl;
-import org.softwareFm.display.swt.Swts;
-import org.softwareFm.display.swt.Swts.Size;
+import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.details.IDetailsFactoryCallback;
+import org.softwareFm.swt.swt.Swts;
+import org.softwareFm.swt.swt.Swts.Size;
 
 public class ScrollingCardCollectionHolder implements IHasControl {
 

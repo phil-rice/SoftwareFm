@@ -3,11 +3,11 @@ package org.softwareFm.eclipse.plugin;
 import java.util.Arrays;
 import java.util.List;
 
-import org.softwareFm.collections.constants.CollectionConstants;
-import org.softwareFm.collections.explorer.IExplorer;
-import org.softwareFm.collections.menu.ICardMenuItemHandler;
 import org.softwareFm.eclipse.actions.IActionBar;
 import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.constants.CollectionConstants;
+import org.softwareFm.swt.explorer.IExplorer;
+import org.softwareFm.swt.menu.ICardMenuItemHandler;
 
 public class AdminView extends ExplorerView {
 

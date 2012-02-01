@@ -16,24 +16,24 @@ import java.util.List;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
-import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.collections.constants.CollectionConstants;
-import org.softwareFm.collections.explorer.IExplorer;
-import org.softwareFm.collections.explorer.IMasterDetailSocial;
-import org.softwareFm.collections.menu.ICardMenuItemHandler;
-import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.common.collections.Files;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.services.IServiceExecutor;
-import org.softwareFm.display.browser.IBrowserConfigurator;
-import org.softwareFm.display.constants.DisplayConstants;
-import org.softwareFm.display.swt.Swts.Size;
-import org.softwareFm.display.timeline.IPlayListGetter;
 import org.softwareFm.eclipse.actions.IActionBar;
 import org.softwareFm.eclipse.jdtBinding.BindingRipperResult;
 import org.softwareFm.eclipse.snippets.SnippetFeedConfigurator;
+import org.softwareFm.swt.browser.IBrowserConfigurator;
 import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.constants.CardConstants;
+import org.softwareFm.swt.constants.CollectionConstants;
+import org.softwareFm.swt.constants.DisplayConstants;
+import org.softwareFm.swt.explorer.IExplorer;
+import org.softwareFm.swt.explorer.IMasterDetailSocial;
+import org.softwareFm.swt.menu.ICardMenuItemHandler;
+import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
+import org.softwareFm.swt.swt.Swts.Size;
+import org.softwareFm.swt.timeline.IPlayListGetter;
 
 public class ExplorerView extends ViewPart {
 

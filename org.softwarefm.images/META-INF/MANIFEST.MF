@@ -8,18 +8,18 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.jface;bundle-version="3.7.0";visibility:=reexport,
  org.eclipse.core.runtime;bundle-version="3.7.0";visibility:=reexport,
  org.softwarefm.common;bundle-version="1.0.0";visibility:=reexport
-Export-Package: org.softwareFm.softwareFmImages;
+Export-Package: org.softwareFm.images;
   uses:="org.eclipse.jface.resource,
    org.softwareFm.swtBasics.images,
    org.softwareFm.swtBasics.text,
    org.eclipse.swt.graphics",
- org.softwareFm.softwareFmImages.actions,
- org.softwareFm.softwareFmImages.artifacts,
- org.softwareFm.softwareFmImages.backdrop,
- org.softwareFm.softwareFmImages.comments,
- org.softwareFm.softwareFmImages.general,
- org.softwareFm.softwareFmImages.listTabs,
- org.softwareFm.softwareFmImages.login,
- org.softwareFm.softwareFmImages.overlays,
- org.softwareFm.softwareFmImages.smallIcons,
- org.softwareFm.softwareFmImages.title
+ org.softwareFm.images.actions,
+ org.softwareFm.images.artifacts,
+ org.softwareFm.images.backdrop,
+ org.softwareFm.images.general,
+ org.softwareFm.images.listTabs,
+ org.softwareFm.images.login,
+ org.softwareFm.images.overlays,
+ org.softwareFm.images.smallIcons,
+ org.softwareFm.images.title,
+ org.softwareFm.images.comments

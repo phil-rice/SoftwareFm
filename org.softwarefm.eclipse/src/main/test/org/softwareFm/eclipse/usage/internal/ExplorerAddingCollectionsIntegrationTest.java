@@ -18,10 +18,6 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.card.editors.IValueComposite;
-import org.softwareFm.collections.explorer.ExplorerAdapter;
-import org.softwareFm.collections.menu.ICardMenuItemHandler;
 import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.collections.Lists;
@@ -32,9 +28,13 @@ import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.Urls;
-import org.softwareFm.display.swt.Swts;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardHolder;
+import org.softwareFm.swt.constants.CardConstants;
+import org.softwareFm.swt.editors.IValueComposite;
+import org.softwareFm.swt.explorer.ExplorerAdapter;
+import org.softwareFm.swt.menu.ICardMenuItemHandler;
+import org.softwareFm.swt.swt.Swts;
 
 public abstract class ExplorerAddingCollectionsIntegrationTest extends AbstractExplorerIntegrationTest {
 	abstract protected void addMe(String collection, String collectionUrl, String nameInMainCard, int count, String urlFragment, IAddingCallback<ICard> addingCallback) throws Exception, ExecutionException;

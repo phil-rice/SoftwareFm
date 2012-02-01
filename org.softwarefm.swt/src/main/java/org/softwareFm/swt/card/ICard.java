@@ -14,8 +14,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.softwareFm.display.composites.IHasComposite;
-import org.softwareFm.display.composites.IHasTable;
+import org.softwareFm.swt.composites.IHasComposite;
+import org.softwareFm.swt.composites.IHasTable;
 import org.softwareFm.swt.configuration.CardConfig;
 
 /** Represents a card being displayed on the screen. A card represents data about a node and it's child nodes on the server. The card starts with raw data (a JSON representation of the data on the server) that is enriched as more data is found */

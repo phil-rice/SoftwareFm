@@ -15,15 +15,15 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.card.card.CardFactoryMock;
-import org.softwareFm.card.dataStore.ICardDataStoreCallback;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.maps.Maps;
-import org.softwareFm.display.swt.Swts;
+import org.softwareFm.swt.card.card.CardFactoryMock;
 import org.softwareFm.swt.card.internal.Card;
 import org.softwareFm.swt.card.internal.CardFactory;
 import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.dataStore.ICardDataStoreCallback;
+import org.softwareFm.swt.swt.Swts;
 
 public interface ICardFactory {
 

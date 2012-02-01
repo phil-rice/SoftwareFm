@@ -29,20 +29,20 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
-import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.card.dataStore.CardDataStoreFixture;
-import org.softwareFm.card.dataStore.IMutableCardDataStore;
-import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
-import org.softwareFm.display.swt.Swts;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.card.ICardFactory;
 import org.softwareFm.swt.card.ICardValueChangedListener;
 import org.softwareFm.swt.card.ILineSelectedListener;
+import org.softwareFm.swt.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.constants.CardConstants;
+import org.softwareFm.swt.dataStore.IMutableCardDataStore;
+import org.softwareFm.swt.swt.Swts;
+import org.softwareFm.swt.title.TitleSpec;
 
 public class Card implements ICard {
 	public static class CardLayout extends Layout {

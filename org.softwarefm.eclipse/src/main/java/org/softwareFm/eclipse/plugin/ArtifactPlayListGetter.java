@@ -13,16 +13,16 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.concurrent.Future;
 
-import org.softwareFm.card.dataStore.ICardDataStore;
-import org.softwareFm.card.dataStore.ICardDataStoreCallback;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.future.Futures;
 import org.softwareFm.common.future.GatedFuture;
-import org.softwareFm.display.constants.DisplayConstants;
-import org.softwareFm.display.timeline.IPlayList;
-import org.softwareFm.display.timeline.IPlayListGetter;
-import org.softwareFm.display.timeline.PlayItem;
+import org.softwareFm.swt.constants.DisplayConstants;
+import org.softwareFm.swt.dataStore.ICardDataStore;
+import org.softwareFm.swt.dataStore.ICardDataStoreCallback;
+import org.softwareFm.swt.timeline.IPlayList;
+import org.softwareFm.swt.timeline.IPlayListGetter;
+import org.softwareFm.swt.timeline.PlayItem;
 
 /** The play list name is the url of the artifact */
 public class ArtifactPlayListGetter implements IPlayListGetter {

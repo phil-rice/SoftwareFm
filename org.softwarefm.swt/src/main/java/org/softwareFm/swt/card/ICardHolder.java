@@ -14,8 +14,8 @@ import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.common.callbacks.ICallback;
-import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.swt.card.internal.CardHolder;
+import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
 
 /** The card holder includes the title for the card. Typically it is displayed before the card data has been found */

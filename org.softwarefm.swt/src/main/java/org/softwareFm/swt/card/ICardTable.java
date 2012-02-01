@@ -9,10 +9,10 @@ import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
-import org.softwareFm.card.title.TitleSpec;
-import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.swt.card.internal.CardTable;
+import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.title.TitleSpec;
 
 public interface ICardTable extends IHasControl {
 

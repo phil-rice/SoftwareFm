@@ -12,20 +12,20 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.softwareFm.card.configuration.internal.BasicCardConfigurator;
-import org.softwareFm.card.dataStore.CardDataStoreFixture;
-import org.softwareFm.card.details.IDetailsFactoryCallback;
-import org.softwareFm.card.details.internal.IGotDataCallback;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.Urls;
-import org.softwareFm.display.composites.IHasComposite;
-import org.softwareFm.display.swt.Swts;
-import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.swt.card.IHasKeyAndValue;
+import org.softwareFm.swt.card.dataStore.CardDataStoreFixture;
+import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.configuration.internal.BasicCardConfigurator;
+import org.softwareFm.swt.details.IDetailsFactoryCallback;
+import org.softwareFm.swt.details.internal.IGotDataCallback;
+import org.softwareFm.swt.swt.Swts;
+import org.softwareFm.swt.swt.Swts.Show;
 
 public class CardCollectionHolder implements IHasComposite {
 
