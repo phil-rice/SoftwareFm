@@ -10,6 +10,7 @@
 
 package org.softwareFm.card.dataStore.internal;
 
+import java.io.File;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -21,6 +22,7 @@ import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.IGitLocal;
+import org.softwareFm.utilities.collections.Files;
 import org.softwareFm.utilities.services.IServiceExecutor;
 
 public class CardDataStoreForRepository implements IMutableCardDataStore {
@@ -37,6 +39,12 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 	@Override
 	public void clearCache(String url) {
 		gitLocal.clearCache(url);
+	}
+
+	@Override
+	public void refresh(String url) {
+		gitLocal.clearCaches();
+		Files.deleteDirectory(new File(gitLocal.getRoot(), url));
 	}
 
 	@Override
@@ -76,11 +84,11 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 			@Override
 			public T call() throws Exception {
 				final Map<String, Object> data = gitLocal.getFileAndDescendants(fileDescription);
-				System.out.println(fileDescription.url()+": "+ data);
+				System.out.println(fileDescription.url() + ": " + data);
 				Swts.asyncExec(control, new Runnable() {
 					@Override
 					public void run() {
-						if (data== null||data.size() == 0)
+						if (data == null || data.size() == 0)
 							ICardDataStoreCallback.Utils.noData(callback, url);
 						else
 							ICardDataStoreCallback.Utils.process(callback, url, data);

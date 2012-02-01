@@ -40,6 +40,7 @@ public class IExplorerTest extends SwtTest {
 			assertEquals(rootUrls, cardHolder.getRootUrls());
 			assertEquals(cardConfig, cardHolder.getCardConfig());
 		} finally {
+			dispatchUntilQueueEmpty();
 			cardConfig.dispose();
 			masterDetailSocial.dispose();
 		}

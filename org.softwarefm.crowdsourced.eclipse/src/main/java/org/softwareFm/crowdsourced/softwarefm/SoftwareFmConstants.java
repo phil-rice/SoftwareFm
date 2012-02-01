@@ -12,6 +12,7 @@ public class SoftwareFmConstants {
 
 	public static final String usagePrefix = "command/Usage";
 	
+	public static final String snipperFeedType = "feedType.snippet";
 	public static final String snipperTemplateKey = "snippet.template";
 	public static final String projectCryptoKey = "projectCrypto";
 	public static final String projectDirectoryName = "project";

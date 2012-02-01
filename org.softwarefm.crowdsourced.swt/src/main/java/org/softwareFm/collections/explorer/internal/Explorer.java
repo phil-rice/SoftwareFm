@@ -459,11 +459,16 @@ public class Explorer implements IExplorer {
 								cardConfig.cardDataStore.makeRepo(url, new IAfterEditCallback() {
 									@Override
 									public void afterEdit(String url) {
-										try {
-											process(url, Maps.emptyStringObjectMap());
-										} catch (Exception e) {
-											throw WrappedException.wrap(e);
-										}
+										cardConfig.cardDataStore.put(url, Maps.stringObjectMap(CardConstants.collection), new IAfterEditCallback() {
+											@Override
+											public void afterEdit(String url) {
+												try {
+													process(url, Maps.emptyStringObjectMap());
+												} catch (Exception e) {
+													throw WrappedException.wrap(e);
+												}
+											}
+										});
 									}
 								});
 								return null;
@@ -1065,6 +1070,6 @@ public class Explorer implements IExplorer {
 	@Override
 	public void usage(String groupId, String artifactId) {
 		UserData userData = mySoftwareFm.userData;
-//		usageStrategy.using(userData.softwareFmId, groupId, artifactId, IResponseCallback.Utils.noCallback());
+		// usageStrategy.using(userData.softwareFmId, groupId, artifactId, IResponseCallback.Utils.noCallback());
 	}
 }

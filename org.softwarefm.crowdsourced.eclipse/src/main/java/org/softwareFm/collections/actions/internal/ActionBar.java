@@ -281,7 +281,7 @@ public class ActionBar implements IActionBar {
 				if (card != null) {
 					String url = card.url();
 					if (url != null) {
-						cardConfig.cardDataStore.clearCache(url);
+						cardConfig.cardDataStore.refresh(url);
 						explorer.displayCard(url, new CardAndCollectionDataStoreAdapter());
 					}
 				}

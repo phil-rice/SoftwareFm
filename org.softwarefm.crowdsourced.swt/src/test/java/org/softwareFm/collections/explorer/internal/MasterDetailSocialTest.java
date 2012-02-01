@@ -44,7 +44,7 @@ public class MasterDetailSocialTest extends SwtTest {
 	}
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
 		masterDetailSocial.dispose();
+		super.tearDown();
 	}
 }

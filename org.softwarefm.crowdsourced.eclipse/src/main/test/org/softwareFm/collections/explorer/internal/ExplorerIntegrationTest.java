@@ -45,7 +45,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 		displayCard(artifactUrl, new CardHolderAndCardCallback() {
 			@Override
 			public void process(ICardHolder cardHolder, ICard card) throws Exception {
-				cardConfig.cardDataStore.clearCache(card.url());// this is the equivalent of pressing the refresh button
+				cardConfig.cardDataStore.refresh(card.url());// this is the equivalent of pressing the refresh button
 				File localFile = new File(localRoot, card.url());
 				assertFalse(localFile.exists());
 			}

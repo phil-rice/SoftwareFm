@@ -138,6 +138,7 @@ public class GitLocal implements IGitLocal {
 		logger.debug(getClass().getSimpleName() + ".clearCaches");
 		lastPulledTime.clear();
 		repoFinder.clearCaches();
+		aboveRepoCache.clear();
 	}
 
 	@Override
@@ -145,6 +146,7 @@ public class GitLocal implements IGitLocal {
 		logger.debug(getClass().getSimpleName() + ".clearCache(" + url + ")");
 		lastPulledTime.clear();
 		repoFinder.clearCache(url);
+		aboveRepoCache.clear();
 	}
 
 	@Override

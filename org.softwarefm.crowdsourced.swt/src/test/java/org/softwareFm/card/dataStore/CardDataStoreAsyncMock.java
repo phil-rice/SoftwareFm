@@ -86,4 +86,9 @@ public class CardDataStoreAsyncMock implements IMutableCardDataStore {
 		throw new UnsupportedOperationException();
 		
 	}
+
+	@Override
+	public void refresh(String url) {
+		throw new UnsupportedOperationException();
+	}
 }

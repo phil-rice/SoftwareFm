@@ -21,7 +21,6 @@ import org.softwareFm.display.browser.IBrowserConfigurator;
 import org.softwareFm.display.browser.IBrowserPart;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.server.constants.CommonConstants;
-import org.softwareFm.utilities.functions.Functions;
 import org.softwareFm.utilities.functions.IFunction1;
 import org.softwareFm.utilities.maps.Maps;
 import org.softwareFm.utilities.resources.IResourceGetter;
@@ -32,15 +31,15 @@ import de.java2html.Java2Html;
 public class SnippetFeedConfigurator implements IBrowserConfigurator {
 
 	public static void configure(IBrowserCompositeBuilder browser, CardConfig cardConfig) {
-		new SnippetFeedConfigurator(cardConfig.cardDataStore, Functions.call(cardConfig.resourceGetterFn, CardConstants.snippet)).configure(browser);
+		new SnippetFeedConfigurator(cardConfig.cardDataStore, cardConfig.resourceGetterFn).configure(browser);
 	}
 
 	private final ICardDataStore cardDataStore;
-	private final IResourceGetter resourceGetter;
+	private final IFunction1<String, IResourceGetter> resourceGetterFn;
 
-	public SnippetFeedConfigurator(ICardDataStore cardDataStore, IResourceGetter resourceGetter) {
+	public SnippetFeedConfigurator(ICardDataStore cardDataStore, IFunction1<String, IResourceGetter>  resourceGetterFn) {
 		this.cardDataStore = cardDataStore;
-		this.resourceGetter = resourceGetter;
+		this.resourceGetterFn = resourceGetterFn;
 	}
 
 	@Override
@@ -54,7 +53,7 @@ public class SnippetFeedConfigurator implements IBrowserConfigurator {
 						cardDataStore.processDataFor(url, new ICardDataStoreCallback<Void>() {
 							@Override
 							public Void process(String url, Map<String, Object> result) throws Exception {
-								String template = IResourceGetter.Utils.getOrException(resourceGetter, SoftwareFmConstants.snipperTemplateKey);
+								String template = IResourceGetter.Utils.getOrException(resourceGetterFn, CardConstants.snippet, SoftwareFmConstants.snipperTemplateKey);
 								String content = Java2Html.convertToHtml(Strings.nullSafeToString(result.get("content")));
 								String html = MessageFormat.format(template, //
 										Strings.htmlEscape(Strings.nullSafeToString(result.get("title"))), //

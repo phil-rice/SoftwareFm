@@ -21,6 +21,8 @@ import org.softwareFm.utilities.maps.Maps;
 /** This is a card data store that can be changed. */
 public interface IMutableCardDataStore extends ICardDataStore {
 
+	void refresh(String url);
+	
 	void clearCache(String url);
 
 	Future<?> put(String url, Map<String, Object> map, IAfterEditCallback callback);

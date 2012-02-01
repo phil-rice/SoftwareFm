@@ -35,18 +35,19 @@ import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
 import org.softwareFm.collections.explorer.ExplorerAdapter;
 import org.softwareFm.collections.explorer.IExplorer;
+import org.softwareFm.collections.explorer.SnippetFeedConfigurator;
 import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.display.browser.IBrowserConfigurator;
 import org.softwareFm.display.swt.SwtAndServiceTest;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.timeline.IPlayListGetter;
+import org.softwareFm.gitwriter.HttpGitWriter;
 import org.softwareFm.gitwriter.HttpRepoFinder;
 import org.softwareFm.httpClient.api.IHttpClient;
 import org.softwareFm.httpClient.requests.IResponseCallback;
 import org.softwareFm.server.IFileDescription;
 import org.softwareFm.server.IGitLocal;
 import org.softwareFm.server.IGitOperations;
-import org.softwareFm.server.IGitWriter;
 import org.softwareFm.server.ISoftwareFmServer;
 import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.server.processors.AbstractLoginDataAccessor;
@@ -69,7 +70,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	final static String groupUrl = "/ant";
 	final static String artifactUrl = "/ant/ant/artifact/ant";
 	final static String snippetrepoUrl = "/java/io/File";
-	final static String snippetUrl = "snippet/java/io/File/snippet";
+	final static String snippetUrl = "/snippet/java/io/File/snippet";
 
 	protected CardConfig cardConfig;
 	protected IGitLocal gitLocal;
@@ -87,7 +88,6 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	protected String userCryptoKey;
 	private ISoftwareFmServer softwareFmServer;
 
-	// private String remoteAsUri;
 
 	public static interface CardHolderAndCardCallback {
 		void process(ICardHolder cardHolder, ICard card) throws Exception;
@@ -223,8 +223,10 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 
 		httpClient = IHttpClient.Utils.builder("localhost", CommonConstants.testPort);
 
-		IGitOperations remoteGitOperations = IGitOperations.Utils.gitOperations(remoteRoot);
-		gitLocal = IGitLocal.Utils.localReader(new HttpRepoFinder(httpClient, CommonConstants.testTimeOutMs), IGitOperations.Utils.gitOperations(localRoot), IGitWriter.Utils.writerForTest(remoteGitOperations), remoteAsUri, CommonConstants.staleCachePeriodForTest);
+		gitLocal = IGitLocal.Utils.localReader(//
+				new HttpRepoFinder(httpClient, CommonConstants.testTimeOutMs), //
+				IGitOperations.Utils.gitOperations(localRoot), //
+				new HttpGitWriter(httpClient, CommonConstants.testTimeOutMs), remoteAsUri, CommonConstants.staleCachePeriodForTest);
 		DataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
 		IFunction1<Map<String, Object>, String> cryptoFn = new IFunction1<Map<String, Object>, String>() {
 			@Override
@@ -234,22 +236,24 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		};
 		Callable<String> cryptoGenerator = Callables.value(userCryptoKey);
 		Callable<String> softwareFmIdGenerator = Callables.patternWithCount("newSoftwareFmId{0}");
-		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, remoteGitOperations, cryptoFn, cryptoGenerator, remoteRoot, softwareFmIdGenerator);
 
+		IGitOperations remoteGitOperations = IGitOperations.Utils.gitOperations(remoteRoot);
+		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, remoteGitOperations, cryptoFn, cryptoGenerator, remoteRoot, softwareFmIdGenerator);
 		softwareFmServer = ISoftwareFmServer.Utils.testServerPort(processCall, ICallback.Utils.rethrow());
 
 		try {
 			cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().//
 					configure(display, new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(shell, service, gitLocal))).//
 					withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap(prefix, "data"));
+			rawResourceGetter = cardConfig.resourceGetterFn.apply(null);
 			masterDetailSocial = new MasterDetailSocial(shell, SWT.NULL);
 			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, cardConfig, Arrays.asList(rootArtifactUrl, rootSnippetUrl), IPlayListGetter.Utils.noPlayListGetter(), service, ILoginStrategy.Utils.noLoginStrategy());
 			IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
+			new SnippetFeedConfigurator(cardConfig.cardDataStore, cardConfig.resourceGetterFn).configure(explorer);
 			// SnippetFeedConfigurator.configure(explorer, cardConfig);
 			httpClient.delete(Urls.compose(rootArtifactUrl, artifactUrl)).execute(IResponseCallback.Utils.noCallback()).get();
 			httpClient.delete(Urls.compose(rootArtifactUrl, snippetUrl)).execute(IResponseCallback.Utils.noCallback()).get();
 			gitLocal.init(Urls.compose(rootArtifactUrl, groupUrl));
-			rawResourceGetter = explorer.getCardConfig().resourceGetterFn.apply(null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

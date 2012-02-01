@@ -69,6 +69,10 @@ public class SnippetIntegrationTest extends AbstractExplorerIntegrationTest {
 		checkValidation("someTitle", "<mustnt start with ','", "some\nContent");
 	}
 
+	public void testOnlyAddsTitleDescriptionContentToRepo() {
+		fail();
+	}
+
 	@SuppressWarnings("unchecked")
 	private void checkValidation(final String newTitle, final String newDescription, final String newContent) {
 		displayCard(snippetUrl, new CardHolderAndCardCallback() {

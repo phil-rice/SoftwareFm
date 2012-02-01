@@ -15,15 +15,20 @@ import org.softwareFm.utilities.url.Urls;
 public class HttpGitWriter implements IGitWriter {
 
 	private final IHttpClient httpClient;
+	private final long delayMs;
 
 	public HttpGitWriter(IHttpClient httpClient) {
+		this (httpClient, CommonConstants.clientTimeOut);
+	}
+	public HttpGitWriter(IHttpClient httpClient, long delayMs) {
 		this.httpClient = httpClient;
+		this.delayMs = delayMs;
 	}
 
 	@Override
 	public void init(String url) {
 		try {
-			httpClient.post(Urls.compose(CommonConstants.makeRootPrefix, url)).execute(IResponseCallback.Utils.noCallback()).get(CommonConstants.clientTimeOut, TimeUnit.MILLISECONDS);
+			httpClient.post(Urls.compose(CommonConstants.makeRootPrefix, url)).execute(IResponseCallback.Utils.noCallback()).get(delayMs, TimeUnit.MILLISECONDS);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
@@ -35,7 +40,7 @@ public class HttpGitWriter implements IGitWriter {
 			httpClient.post(fileDescription.url()).//
 					addParam(CommonConstants.dataParameterName, Json.toString(data)).//
 					execute(IResponseCallback.Utils.noCallback()).//
-					get(CommonConstants.clientTimeOut, TimeUnit.SECONDS);
+					get(delayMs, TimeUnit.SECONDS);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
@@ -44,7 +49,7 @@ public class HttpGitWriter implements IGitWriter {
 	@Override
 	public void delete(IFileDescription fileDescription) {
 		try {
-			httpClient.delete(fileDescription.url()).execute(IResponseCallback.Utils.noCallback()).get(CommonConstants.clientTimeOut, TimeUnit.MILLISECONDS);
+			httpClient.delete(fileDescription.url()).execute(IResponseCallback.Utils.noCallback()).get(delayMs, TimeUnit.MILLISECONDS);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
