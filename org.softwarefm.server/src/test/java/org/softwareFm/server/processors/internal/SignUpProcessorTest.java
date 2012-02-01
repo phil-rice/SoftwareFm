@@ -4,15 +4,15 @@ import java.util.Map;
 
 import org.apache.http.RequestLine;
 import org.easymock.EasyMock;
-import org.softwareFm.server.IUser;
-import org.softwareFm.server.constants.CommonConstants;
-import org.softwareFm.server.constants.LoginConstants;
-import org.softwareFm.server.constants.LoginMessages;
+import org.softwareFm.common.IUser;
+import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.common.constants.LoginMessages;
+import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.server.processors.AbstractProcessCallTest;
 import org.softwareFm.server.processors.IProcessResult;
-import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.runnable.Callables;
 
 public class SignUpProcessorTest extends AbstractProcessCallTest<SignupProcessor> {
 

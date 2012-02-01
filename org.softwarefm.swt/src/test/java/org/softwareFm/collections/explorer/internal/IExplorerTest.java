@@ -16,14 +16,14 @@ import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
 import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.common.resources.ResourceGetterMock;
+import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.display.timeline.IPlayListGetter;
-import org.softwareFm.server.constants.CommonConstants;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwareFm.utilities.resources.ResourceGetterMock;
-import org.softwareFm.utilities.services.IServiceExecutor;
 
 public class IExplorerTest extends SwtTest {
 

@@ -19,13 +19,13 @@ import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.collections.mySoftwareFm.IShowMessage;
 import org.softwareFm.collections.mySoftwareFm.ISignUp;
 import org.softwareFm.collections.mySoftwareFm.ISignUpCallback;
+import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.common.crypto.Crypto;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.common.strings.Strings;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.server.constants.LoginConstants;
-import org.softwareFm.utilities.crypto.Crypto;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwareFm.utilities.strings.Strings;
 
 public class Signup implements ISignUp {
 	private final String cardType = CardConstants.signupCardType;

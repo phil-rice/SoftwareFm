@@ -3,7 +3,7 @@ package org.softwareFm.collections.mySoftwareFm;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.collections.explorer.internal.UserData;
-import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.common.resources.IResourceGetter;
 
 public interface ILoginCallbacks extends ILoginCallback, IForgotPasswordCallback, ISignUpCallback, IChangePasswordCallback {
 

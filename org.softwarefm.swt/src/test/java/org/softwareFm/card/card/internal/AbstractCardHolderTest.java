@@ -25,10 +25,10 @@ import org.softwareFm.card.card.CardChangedListenerMock;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
+import org.softwareFm.common.collections.Iterables;
+import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.maps.Maps;
 import org.softwareFm.display.swt.SwtTest;
-import org.softwareFm.utilities.collections.Iterables;
-import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.maps.Maps;
 
 public abstract class AbstractCardHolderTest extends SwtTest {
 

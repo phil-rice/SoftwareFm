@@ -6,8 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: SoftwareFM
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.softwarefm.common;bundle-version="1.0.0";visibility:=reexport
-Export-Package: org.softwareFm.gitwriter,
- org.softwareFm.httpClient.api,
- org.softwareFm.httpClient.constants,
- org.softwareFm.httpClient.requests,
- org.softwareFm.httpClient.response
+Export-Package: org.softwareFm.client.gitwriter,
+ org.softwareFm.client.http.api,
+ org.softwareFm.client.http.constants,
+ org.softwareFm.client.http.requests,
+ org.softwareFm.client.http.response

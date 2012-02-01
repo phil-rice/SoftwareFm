@@ -3,8 +3,8 @@ package org.softwareFm.server.processors.internal;
 import junit.framework.TestCase;
 
 import org.apache.commons.dbcp.BasicDataSource;
-import org.softwareFm.server.processors.AbstractLoginDataAccessor;
-import org.softwareFm.utilities.tests.IIntegrationTest;
+import org.softwareFm.common.processors.AbstractLoginDataAccessor;
+import org.softwareFm.common.tests.IIntegrationTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class EmailSaltRequesterTest extends TestCase implements IIntegrationTest {

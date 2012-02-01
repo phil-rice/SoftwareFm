@@ -8,11 +8,11 @@ package org.softwareFm.display.menu.internal;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.junit.Test;
+import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.tests.Tests;
 import org.softwareFm.display.menu.IPopupMenuService;
 import org.softwareFm.display.menu.PopupMenuContributorMock;
 import org.softwareFm.display.swt.SwtTest;
-import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.tests.Tests;
 
 public class PopupMenuServiceTest extends SwtTest {
 

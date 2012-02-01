@@ -19,10 +19,10 @@ import org.softwareFm.card.card.internal.Card;
 import org.softwareFm.card.card.internal.CardFactory;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.ICardDataStoreCallback;
+import org.softwareFm.common.callbacks.ICallback;
+import org.softwareFm.common.exceptions.WrappedException;
+import org.softwareFm.common.maps.Maps;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.exceptions.WrappedException;
-import org.softwareFm.utilities.maps.Maps;
 
 public interface ICardFactory {
 

@@ -2,12 +2,12 @@ package org.softwareFm.server.processors.internal;
 
 import java.util.concurrent.TimeUnit;
 
-import org.softwareFm.httpClient.requests.IResponseCallback;
-import org.softwareFm.server.constants.CommonConstants;
-import org.softwareFm.server.constants.LoginConstants;
-import org.softwareFm.server.constants.LoginMessages;
+import org.softwareFm.client.http.requests.IResponseCallback;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.common.constants.LoginMessages;
+import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.server.processors.AbstractProcessorDatabaseIntegrationTests;
-import org.softwareFm.utilities.exceptions.WrappedException;
 
 public class ChangePasswordIntegrationTest extends AbstractProcessorDatabaseIntegrationTests {
 

@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import org.softwareFm.server.processors.AbstractLoginDataAccessor;
+import org.softwareFm.common.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.IEmailSaltRequester;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;

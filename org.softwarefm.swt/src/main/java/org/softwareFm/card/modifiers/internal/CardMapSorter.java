@@ -12,10 +12,10 @@ import java.util.Map;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.modifiers.ICardDataModifier;
-import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwareFm.utilities.strings.Strings;
+import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.common.strings.Strings;
 
 public class CardMapSorter implements ICardDataModifier {
 

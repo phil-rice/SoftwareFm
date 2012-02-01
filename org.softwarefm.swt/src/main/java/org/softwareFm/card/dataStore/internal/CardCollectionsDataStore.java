@@ -21,10 +21,10 @@ import org.softwareFm.card.dataStore.CardAndCollectionsStatus;
 import org.softwareFm.card.dataStore.ICardAndCollectionDataStoreVisitor;
 import org.softwareFm.card.dataStore.ICardAndCollectionsDataStore;
 import org.softwareFm.card.dataStore.ICardDataStoreCallback;
-import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.exceptions.WrappedException;
-import org.softwareFm.utilities.future.Futures;
-import org.softwareFm.utilities.future.GatedFuture;
+import org.softwareFm.common.callbacks.ICallback;
+import org.softwareFm.common.exceptions.WrappedException;
+import org.softwareFm.common.future.Futures;
+import org.softwareFm.common.future.GatedFuture;
 
 /** Note that the callback is called early, but the card may get prodded with valueHasChanged, and the future isn't done until all values have been changed */
 public class CardCollectionsDataStore implements ICardAndCollectionsDataStore {

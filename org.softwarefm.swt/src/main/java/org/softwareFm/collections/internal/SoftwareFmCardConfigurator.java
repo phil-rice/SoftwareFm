@@ -21,10 +21,10 @@ import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.configuration.ICardConfigurator;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.collections.ICollectionConfigurationFactory;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.common.strings.Strings;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwareFm.utilities.strings.Strings;
 
 public class SoftwareFmCardConfigurator implements ICardConfigurator {
 

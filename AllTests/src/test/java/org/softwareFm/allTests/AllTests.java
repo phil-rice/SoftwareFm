@@ -9,8 +9,8 @@ import java.io.File;
 
 import junit.framework.Test;
 
-import org.softwareFm.utilities.reflection.IClassAcceptor;
-import org.softwareFm.utilities.tests.Tests;
+import org.softwareFm.common.reflection.IClassAcceptor;
+import org.softwareFm.common.tests.Tests;
 
 public class AllTests {
 

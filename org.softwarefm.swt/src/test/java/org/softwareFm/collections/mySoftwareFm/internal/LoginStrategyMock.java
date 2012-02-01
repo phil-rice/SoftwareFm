@@ -11,8 +11,8 @@ import org.softwareFm.collections.mySoftwareFm.ILoginCallback;
 import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.collections.mySoftwareFm.IRequestSaltCallback;
 import org.softwareFm.collections.mySoftwareFm.ISignUpCallback;
-import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.crypto.Crypto;
+import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.crypto.Crypto;
 
 public class LoginStrategyMock implements ILoginStrategy {
 

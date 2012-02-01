@@ -2,9 +2,9 @@ package org.softwareFm.server.processors.internal;
 
 import java.util.Map;
 
-import org.softwareFm.server.constants.CommonConstants;
-import org.softwareFm.server.constants.LoginConstants;
-import org.softwareFm.server.constants.LoginMessages;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.common.constants.LoginMessages;
 import org.softwareFm.server.processors.IPasswordChanger;
 import org.softwareFm.server.processors.IProcessResult;
 

@@ -3,7 +3,7 @@ package org.softwareFm.server.processors;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
-import org.softwareFm.utilities.exceptions.WrappedException;
+import org.softwareFm.common.exceptions.WrappedException;
 
 public interface IMailer {
 	void mail(String from, String to, String subject, String message);

@@ -2,8 +2,8 @@ package org.softwareFm.server.processors.internal;
 
 import java.util.List;
 
+import org.softwareFm.common.collections.Lists;
 import org.softwareFm.server.processors.IEmailSaltRequester;
-import org.softwareFm.utilities.collections.Lists;
 
 public class EmailSailRequesterMock implements IEmailSaltRequester {
 

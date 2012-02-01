@@ -28,16 +28,16 @@ import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.collections.internal.SoftwareFmCardConfigurator;
+import org.softwareFm.common.callbacks.ICallback;
+import org.softwareFm.common.collections.Iterables;
+import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.exceptions.WrappedException;
+import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.collections.Iterables;
-import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.exceptions.WrappedException;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class UnrecognisedJar implements IHasControl {
 	public static TitleSpec makeTitleSpec(CardConfig cardConfig) {

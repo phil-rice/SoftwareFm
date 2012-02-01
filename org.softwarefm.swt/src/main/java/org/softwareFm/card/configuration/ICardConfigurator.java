@@ -11,11 +11,11 @@ import org.eclipse.swt.widgets.Display;
 import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.configuration.internal.BasicCardConfigurator;
 import org.softwareFm.card.dataStore.ICardDataStore;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.functions.IFunction1WithDispose;
+import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.common.resources.NestedResourceGetterFn;
 import org.softwareFm.softwareFmImages.IImageRegisterConfigurator;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.functions.IFunction1WithDispose;
-import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwareFm.utilities.resources.NestedResourceGetterFn;
 
 public interface ICardConfigurator {
 

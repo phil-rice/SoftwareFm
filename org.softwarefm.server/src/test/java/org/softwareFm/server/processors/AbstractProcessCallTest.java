@@ -8,12 +8,12 @@ import org.apache.http.HttpEntity;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.RequestLine;
 import org.apache.http.entity.StringEntity;
-import org.softwareFm.server.GitTest;
-import org.softwareFm.server.constants.CommonConstants;
-import org.softwareFm.utilities.collections.Files;
-import org.softwareFm.utilities.exceptions.WrappedException;
-import org.softwareFm.utilities.json.Json;
-import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.common.collections.Files;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.exceptions.WrappedException;
+import org.softwareFm.common.json.Json;
+import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.server.GitTest;
 
 abstract public class AbstractProcessCallTest<T extends IProcessCall> extends GitTest {
 

@@ -14,7 +14,7 @@ import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.modifiers.internal.FolderAggregatorModifier;
-import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.common.maps.Maps;
 
 public class FolderAggregatorModifierTest extends TestCase {
 	// for example tag is jcr:primarytype and the looked for value is nt:unstructured

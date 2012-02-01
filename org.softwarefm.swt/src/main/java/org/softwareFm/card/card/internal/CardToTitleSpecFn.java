@@ -19,11 +19,11 @@ import org.eclipse.swt.widgets.Display;
 import org.softwareFm.card.card.ICardData;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.title.TitleSpec;
+import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class CardToTitleSpecFn implements IFunction1<ICardData, TitleSpec> {
 	private final IFunction1<String, Image> imageFn;

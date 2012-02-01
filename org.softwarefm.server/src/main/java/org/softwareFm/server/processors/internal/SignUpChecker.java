@@ -5,11 +5,11 @@ import java.util.concurrent.Callable;
 
 import javax.sql.DataSource;
 
-import org.softwareFm.server.constants.LoginMessages;
-import org.softwareFm.server.processors.AbstractLoginDataAccessor;
+import org.softwareFm.common.constants.LoginMessages;
+import org.softwareFm.common.processors.AbstractLoginDataAccessor;
+import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.server.processors.ISignUpChecker;
 import org.softwareFm.server.processors.SignUpResult;
-import org.softwareFm.utilities.runnable.Callables;
 
 public class SignUpChecker extends AbstractLoginDataAccessor implements ISignUpChecker {
 

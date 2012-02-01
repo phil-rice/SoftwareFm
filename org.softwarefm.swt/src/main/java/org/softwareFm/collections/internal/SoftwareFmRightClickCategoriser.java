@@ -16,7 +16,7 @@ import org.softwareFm.card.card.IRightClickCategoriser;
 import org.softwareFm.card.card.RightClickCategoryResult;
 import org.softwareFm.card.card.RightClickCategoryResult.Type;
 import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.utilities.strings.Strings;
+import org.softwareFm.common.strings.Strings;
 
 public class SoftwareFmRightClickCategoriser implements IRightClickCategoriser {
 

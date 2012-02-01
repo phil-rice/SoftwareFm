@@ -13,7 +13,7 @@ import org.softwareFm.card.card.IRightClickCategoriser;
 import org.softwareFm.card.card.RightClickCategoryResult;
 import org.softwareFm.card.card.RightClickCategoryResult.Type;
 import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.common.maps.Maps;
 
 public class SoftwareFmRightClickCategoriserTest extends TestCase {
 

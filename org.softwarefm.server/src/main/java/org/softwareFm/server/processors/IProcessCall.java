@@ -7,9 +7,13 @@ import java.util.concurrent.Callable;
 import javax.sql.DataSource;
 
 import org.apache.http.RequestLine;
-import org.softwareFm.server.IGitOperations;
-import org.softwareFm.server.IUser;
-import org.softwareFm.server.constants.LoginConstants;
+import org.softwareFm.common.IGitOperations;
+import org.softwareFm.common.IUser;
+import org.softwareFm.common.arrays.ArrayHelper;
+import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.maps.UrlCache;
+import org.softwareFm.common.strings.Strings;
 import org.softwareFm.server.processors.internal.ChangePasswordProcessor;
 import org.softwareFm.server.processors.internal.DeleteProcessor;
 import org.softwareFm.server.processors.internal.EmailSaltRequester;
@@ -32,10 +36,6 @@ import org.softwareFm.server.processors.internal.RigidFileProcessor;
 import org.softwareFm.server.processors.internal.SaltProcessor;
 import org.softwareFm.server.processors.internal.SignUpChecker;
 import org.softwareFm.server.processors.internal.SignupProcessor;
-import org.softwareFm.utilities.arrays.ArrayHelper;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.maps.UrlCache;
-import org.softwareFm.utilities.strings.Strings;
 
 public interface IProcessCall {
 	IProcessResult process(RequestLine requestLine, Map<String, Object> parameters);

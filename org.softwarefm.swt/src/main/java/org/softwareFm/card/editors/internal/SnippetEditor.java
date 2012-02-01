@@ -19,9 +19,9 @@ import org.softwareFm.card.dataStore.CardDataStoreMock;
 import org.softwareFm.card.editors.ICardEditorCallback;
 import org.softwareFm.card.editors.INamesAndValuesEditor;
 import org.softwareFm.card.editors.NameAndValueData;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.maps.Maps;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.maps.Maps;
 
 public class SnippetEditor extends NameAndValuesEditor {
 	private final static String cardType = CardConstants.snippet;

@@ -14,9 +14,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.junit.Test;
+import org.softwareFm.common.callbacks.ICallback;
+import org.softwareFm.common.callbacks.MemoryCallback;
 import org.softwareFm.display.swt.SwtTest;
-import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.callbacks.MemoryCallback;
 
 public class NavButtonTest extends SwtTest {
 

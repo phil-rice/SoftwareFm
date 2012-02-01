@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.Collections;
 
 import org.junit.Test;
-import org.softwareFm.server.IFileDescription;
-import org.softwareFm.server.constants.CommonConstants;
+import org.softwareFm.common.IFileDescription;
+import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.server.processors.AbstractProcessCallTest;
 
 public class DeleteProcessorTest extends AbstractProcessCallTest<DeleteProcessor> {

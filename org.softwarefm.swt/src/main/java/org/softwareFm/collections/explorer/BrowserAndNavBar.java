@@ -25,14 +25,14 @@ import org.eclipse.swt.widgets.Layout;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.navigation.internal.NavNextHistoryPrev;
 import org.softwareFm.card.navigation.internal.NavNextHistoryPrevConfig;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.history.IHistory;
+import org.softwareFm.common.history.IHistoryListener;
+import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.display.browser.BrowserComposite;
 import org.softwareFm.display.browser.IBrowserCompositeBuilder;
 import org.softwareFm.display.browser.IBrowserPart;
 import org.softwareFm.display.timeline.PlayItem;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.history.IHistory;
-import org.softwareFm.utilities.history.IHistoryListener;
-import org.softwareFm.utilities.services.IServiceExecutor;
 
 public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 

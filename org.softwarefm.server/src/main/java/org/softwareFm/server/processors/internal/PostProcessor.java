@@ -3,12 +3,12 @@ package org.softwareFm.server.processors.internal;
 import java.util.Map;
 
 import org.apache.http.RequestLine;
-import org.softwareFm.server.IFileDescription;
-import org.softwareFm.server.IGitOperations;
-import org.softwareFm.server.constants.CommonConstants;
+import org.softwareFm.common.IFileDescription;
+import org.softwareFm.common.IGitOperations;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.json.Json;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.IProcessResult;
-import org.softwareFm.utilities.json.Json;
 
 public class PostProcessor implements IProcessCall {
 

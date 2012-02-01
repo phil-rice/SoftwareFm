@@ -14,9 +14,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.collections.explorer.internal.MasterDetailSocial;
+import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.composites.IHasControl;
-import org.softwareFm.utilities.functions.IFunction1;
 
 public interface IMasterDetailSocial extends IHasComposite {
 	<T extends IHasControl> T createMaster(IFunction1<Composite, T> builder, boolean preserve);

@@ -2,7 +2,7 @@ package org.softwareFm.card.editors;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.common.functions.IFunction1;
 
 public class NameAndValueData {
 	public final String key;

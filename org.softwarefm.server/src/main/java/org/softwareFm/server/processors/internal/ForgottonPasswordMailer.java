@@ -5,11 +5,11 @@ import java.util.UUID;
 
 import javax.sql.DataSource;
 
-import org.softwareFm.server.constants.LoginMessages;
-import org.softwareFm.server.processors.AbstractLoginDataAccessor;
+import org.softwareFm.common.constants.LoginMessages;
+import org.softwareFm.common.processors.AbstractLoginDataAccessor;
+import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.server.processors.IForgottonPasswordMailer;
 import org.softwareFm.server.processors.IMailer;
-import org.softwareFm.utilities.runnable.Callables;
 
 public class ForgottonPasswordMailer extends AbstractLoginDataAccessor implements IForgottonPasswordMailer {
 

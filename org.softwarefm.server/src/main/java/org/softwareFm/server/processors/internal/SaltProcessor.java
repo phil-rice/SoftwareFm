@@ -3,8 +3,8 @@ package org.softwareFm.server.processors.internal;
 import java.util.Set;
 import java.util.UUID;
 
+import org.softwareFm.common.collections.Sets;
 import org.softwareFm.server.processors.ISaltProcessor;
-import org.softwareFm.utilities.collections.Sets;
 
 public class SaltProcessor implements ISaltProcessor{
 

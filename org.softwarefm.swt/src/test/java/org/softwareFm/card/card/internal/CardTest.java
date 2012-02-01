@@ -17,8 +17,8 @@ import org.junit.Test;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
+import org.softwareFm.common.maps.Maps;
 import org.softwareFm.display.swt.SwtTest;
-import org.softwareFm.utilities.maps.Maps;
 
 public class CardTest extends SwtTest {
 

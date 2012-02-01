@@ -2,15 +2,15 @@ package org.softwareFm.display.okCancel;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.common.resources.ResourceGetterMock;
+import org.softwareFm.common.runnable.Runnables;
+import org.softwareFm.common.runnable.Runnables.CountRunnable;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwareFm.utilities.resources.ResourceGetterMock;
-import org.softwareFm.utilities.runnable.Runnables;
-import org.softwareFm.utilities.runnable.Runnables.CountRunnable;
 
 public class OkCancelTest extends SwtTest {
 

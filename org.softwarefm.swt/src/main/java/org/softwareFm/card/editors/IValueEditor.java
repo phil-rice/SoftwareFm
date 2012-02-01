@@ -23,8 +23,8 @@ import org.softwareFm.card.editors.internal.TextEditor;
 import org.softwareFm.card.editors.internal.ValueEditorLayout;
 import org.softwareFm.card.modifiers.ICardDataModifier;
 import org.softwareFm.card.title.TitleSpec;
+import org.softwareFm.common.collections.Lists;
 import org.softwareFm.display.composites.IHasComposite;
-import org.softwareFm.utilities.collections.Lists;
 
 public interface IValueEditor extends IHasComposite {
 

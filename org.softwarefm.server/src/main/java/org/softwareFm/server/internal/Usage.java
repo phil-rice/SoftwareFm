@@ -4,8 +4,8 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.server.IUsage;
-import org.softwareFm.utilities.exceptions.WrappedException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 

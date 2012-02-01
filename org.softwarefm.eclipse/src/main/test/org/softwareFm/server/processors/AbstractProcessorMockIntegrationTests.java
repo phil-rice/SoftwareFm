@@ -3,8 +3,11 @@
 import java.util.concurrent.Callable;
 
 import org.easymock.EasyMock;
+import org.softwareFm.common.IUser;
+import org.softwareFm.common.callbacks.ICallback;
+import org.softwareFm.common.crypto.Crypto;
+import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.server.ISoftwareFmServer;
-import org.softwareFm.server.IUser;
 import org.softwareFm.server.processors.internal.EmailSailRequesterMock;
 import org.softwareFm.server.processors.internal.ForgottonPasswordProcessor;
 import org.softwareFm.server.processors.internal.ForgottonPasswordProcessorMock;
@@ -17,9 +20,6 @@ import org.softwareFm.server.processors.internal.RequestEmailSaltProcessor;
 import org.softwareFm.server.processors.internal.SaltProcessorMock;
 import org.softwareFm.server.processors.internal.SignUpCheckerMock;
 import org.softwareFm.server.processors.internal.SignupProcessor;
-import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.crypto.Crypto;
-import org.softwareFm.utilities.runnable.Callables;
 
 abstract public class AbstractProcessorMockIntegrationTests extends AbstractProcessorIntegrationTests {
 	private ISoftwareFmServer server;

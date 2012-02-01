@@ -23,10 +23,10 @@ import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.navigation.internal.NavBar.NavBarLayout;
+import org.softwareFm.common.callbacks.ICallback;
+import org.softwareFm.common.callbacks.MemoryCallback;
+import org.softwareFm.common.maps.Maps;
 import org.softwareFm.display.swt.SwtTest;
-import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.callbacks.MemoryCallback;
-import org.softwareFm.utilities.maps.Maps;
 
 public class NavBarTest extends SwtTest {
 

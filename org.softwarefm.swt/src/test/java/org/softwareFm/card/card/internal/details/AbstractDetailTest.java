@@ -23,12 +23,12 @@ import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.card.details.internal.DetailFactory;
 import org.softwareFm.card.title.TitleSpec;
+import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.functions.IFunction1WithDispose;
+import org.softwareFm.common.maps.Maps;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.functions.IFunction1WithDispose;
-import org.softwareFm.utilities.maps.Maps;
 
 abstract public class AbstractDetailTest extends SwtTest {
 	protected static LineItem stringValue = new LineItem(null, "key", "stringValue");

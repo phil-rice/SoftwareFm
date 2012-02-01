@@ -12,11 +12,11 @@ import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.card.editors.IEditorDetailAdder;
 import org.softwareFm.card.editors.internal.StyledTextEditor;
 import org.softwareFm.card.editors.internal.StyledTextEditorDetailAdder;
+import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.functions.IFunction1WithDispose;
+import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.common.resources.ResourceGetterMock;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.functions.IFunction1WithDispose;
-import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwareFm.utilities.resources.ResourceGetterMock;
 
 public class StyledTextEditorDetailAdderTest extends AbstractDetailsAdderTest<StyledTextEditorDetailAdder> {
 

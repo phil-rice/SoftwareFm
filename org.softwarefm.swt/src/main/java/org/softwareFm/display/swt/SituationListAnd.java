@@ -17,10 +17,10 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.List;
+import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts.Grid;
-import org.softwareFm.utilities.exceptions.WrappedException;
 
 public class SituationListAnd<T extends IHasControl> implements IHasComposite {
 	private List situationList;

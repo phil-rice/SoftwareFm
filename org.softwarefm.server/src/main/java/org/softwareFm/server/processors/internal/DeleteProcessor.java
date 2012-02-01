@@ -4,12 +4,12 @@ import java.io.File;
 import java.util.Map;
 
 import org.apache.http.RequestLine;
-import org.softwareFm.server.IFileDescription;
-import org.softwareFm.server.IGitOperations;
-import org.softwareFm.server.constants.CommonConstants;
+import org.softwareFm.common.IFileDescription;
+import org.softwareFm.common.IGitOperations;
+import org.softwareFm.common.collections.Files;
+import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.IProcessResult;
-import org.softwareFm.utilities.collections.Files;
 
 public class DeleteProcessor implements IProcessCall {
 

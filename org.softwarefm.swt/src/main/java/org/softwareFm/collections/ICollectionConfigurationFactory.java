@@ -21,11 +21,11 @@ import org.softwareFm.collections.internal.SoftwareFmCardNameFunction;
 import org.softwareFm.collections.internal.SoftwareFmCardValueFunction;
 import org.softwareFm.collections.internal.SoftwareFmDefaultChildFunction;
 import org.softwareFm.collections.internal.SoftwareFmRightClickCategoriser;
-import org.softwareFm.server.constants.LoginConstants;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwareFm.utilities.url.IUrlGeneratorMap;
-import org.softwareFm.utilities.url.UrlGenerator;
+import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.common.url.IUrlGeneratorMap;
+import org.softwareFm.common.url.UrlGenerator;
 
 public interface ICollectionConfigurationFactory {
 	public static class Utils {

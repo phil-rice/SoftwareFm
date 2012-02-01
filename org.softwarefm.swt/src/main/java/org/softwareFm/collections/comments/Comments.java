@@ -27,13 +27,13 @@ import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.title.Title;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.collections.constants.CollectionConstants;
+import org.softwareFm.common.comparators.Comparators;
+import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.common.strings.Strings;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.utilities.comparators.Comparators;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwareFm.utilities.strings.Strings;
 
 public class Comments implements IHasControl {
 

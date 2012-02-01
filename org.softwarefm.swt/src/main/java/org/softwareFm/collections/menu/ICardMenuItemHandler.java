@@ -29,8 +29,8 @@ import org.softwareFm.collections.menu.internal.OptionalSeparatorMenuHandler;
 import org.softwareFm.collections.menu.internal.ViewActualContentsMenuHandler;
 import org.softwareFm.collections.menu.internal.ViewCardsMenuHandler;
 import org.softwareFm.collections.menu.internal.ViewSnippetMenuHandler;
+import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.display.menu.IPopupMenuContributor;
-import org.softwareFm.utilities.resources.IResourceGetter;
 
 public interface ICardMenuItemHandler extends IPopupMenuContributor<ICard> {
 

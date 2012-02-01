@@ -21,8 +21,8 @@ import org.softwareFm.card.card.internal.Card;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.title.TitleSpec;
-import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.strings.Strings;
+import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.strings.Strings;
 
 public class CardMock implements ICard {
 

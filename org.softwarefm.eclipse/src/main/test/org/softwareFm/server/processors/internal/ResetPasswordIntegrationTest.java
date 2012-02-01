@@ -2,9 +2,9 @@ package org.softwareFm.server.processors.internal;
 
 import java.text.MessageFormat;
 
-import org.softwareFm.httpClient.requests.IResponseCallback;
-import org.softwareFm.server.constants.CommonConstants;
-import org.softwareFm.server.constants.LoginMessages;
+import org.softwareFm.client.http.requests.IResponseCallback;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.LoginMessages;
 import org.softwareFm.server.processors.AbstractProcessorMockIntegrationTests;
 
 public class ResetPasswordIntegrationTest extends AbstractProcessorMockIntegrationTests {

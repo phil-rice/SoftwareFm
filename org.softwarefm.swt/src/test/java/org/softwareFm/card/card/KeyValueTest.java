@@ -9,8 +9,8 @@ import java.util.Comparator;
 
 import junit.framework.TestCase;
 
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.tests.Tests;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.tests.Tests;
 
 public class KeyValueTest extends TestCase {
 

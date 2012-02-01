@@ -12,10 +12,10 @@ import java.util.concurrent.Future;
 
 import junit.framework.TestCase;
 
-import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.exceptions.WrappedException;
-import org.softwareFm.utilities.future.Futures;
-import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.exceptions.WrappedException;
+import org.softwareFm.common.future.Futures;
+import org.softwareFm.common.maps.Maps;
 
 public class IMutableCardDataStoreTest extends TestCase {
 

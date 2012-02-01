@@ -11,10 +11,10 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.softwareFm.common.callbacks.ICallback;
+import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.strings.Strings;
 import org.softwareFm.display.composites.IHasControl;
-import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.strings.Strings;
 
 public class NavButton implements IHasControl {
 	private final Label label;

@@ -7,8 +7,8 @@ package org.softwareFm.card.gestures;
 
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.history.IHistory;
+import org.softwareFm.common.callbacks.ICallback;
+import org.softwareFm.common.history.IHistory;
 
 public class HistoryGestureListener<T> extends GestureLeftRightListener {
 

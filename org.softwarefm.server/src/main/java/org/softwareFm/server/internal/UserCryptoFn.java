@@ -4,9 +4,9 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.softwareFm.server.constants.LoginConstants;
-import org.softwareFm.server.processors.AbstractLoginDataAccessor;
-import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.processors.AbstractLoginDataAccessor;
 
 public class UserCryptoFn extends AbstractLoginDataAccessor implements IFunction1<Map<String, Object>, String> {
 

@@ -1,7 +1,7 @@
 package org.softwareFm.server.processors.internal;
 
+import org.softwareFm.common.crypto.Crypto;
 import org.softwareFm.server.processors.AbstractLoginSignupForgotCheckerTest;
-import org.softwareFm.utilities.crypto.Crypto;
 
 public class PasswordResetterTest extends AbstractLoginSignupForgotCheckerTest {
 

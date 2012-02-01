@@ -11,9 +11,9 @@ import org.eclipse.swt.widgets.Text;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.editors.AbstractNameAndValuesEditorTest;
 import org.softwareFm.card.editors.INamesAndValuesEditor;
+import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.maps.Maps;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.maps.Maps;
 
 public class NameAndValuesEditorTest extends AbstractNameAndValuesEditorTest<NameAndValuesEditor> {
 

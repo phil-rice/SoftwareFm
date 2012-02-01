@@ -15,6 +15,7 @@ import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.softwareFm.common.functions.IFunction1WithDispose;
 import org.softwareFm.softwareFmImages.artifacts.ArtifactsAnchor;
 import org.softwareFm.softwareFmImages.backdrop.BackdropAnchor;
 import org.softwareFm.softwareFmImages.general.GeneralAnchor;
@@ -22,7 +23,6 @@ import org.softwareFm.softwareFmImages.login.LoginAnchor;
 import org.softwareFm.softwareFmImages.overlays.OverlaysAnchor;
 import org.softwareFm.softwareFmImages.smallIcons.SmallIconsAnchor;
 import org.softwareFm.softwareFmImages.title.TitleAnchor;
-import org.softwareFm.utilities.functions.IFunction1WithDispose;
 
 public class BasicImageRegisterConfigurator implements IImageRegisterConfigurator {
 

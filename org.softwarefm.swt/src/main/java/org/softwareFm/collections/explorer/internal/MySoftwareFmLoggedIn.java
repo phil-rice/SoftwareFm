@@ -13,11 +13,11 @@ import org.softwareFm.collections.mySoftwareFm.IChangePasswordCallback;
 import org.softwareFm.collections.mySoftwareFm.ILoginCallbacks;
 import org.softwareFm.collections.mySoftwareFm.ILoginDisplayStrategy;
 import org.softwareFm.collections.mySoftwareFm.IShowMessage;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.runnable.Runnables;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.runnable.Runnables;
 
 public class MySoftwareFmLoggedIn implements IHasControl {
 

@@ -10,9 +10,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.runnable.Runnables;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.runnable.Runnables;
 
 public class TextInBorderWithButtons extends TextInBorder {
 

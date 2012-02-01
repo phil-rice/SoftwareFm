@@ -13,8 +13,8 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.collections.explorer.IExplorer;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.resources.IResourceGetter;
 
 public abstract class AbstractCardMenuHandler implements ICardMenuItemHandler {
 

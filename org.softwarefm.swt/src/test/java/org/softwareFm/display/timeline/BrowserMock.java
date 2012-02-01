@@ -8,9 +8,9 @@ package org.softwareFm.display.timeline;
 import java.util.List;
 import java.util.concurrent.Future;
 
+import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.future.Futures;
 import org.softwareFm.display.browser.IBrowser;
-import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.future.Futures;
 
 public class BrowserMock implements IBrowser {
 

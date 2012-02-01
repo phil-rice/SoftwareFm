@@ -4,9 +4,9 @@ import java.util.UUID;
 
 import javax.sql.DataSource;
 
-import org.softwareFm.server.processors.AbstractLoginDataAccessor;
+import org.softwareFm.common.crypto.Crypto;
+import org.softwareFm.common.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.IPasswordResetter;
-import org.softwareFm.utilities.crypto.Crypto;
 import org.springframework.dao.DataAccessException;
 
 public class PasswordResetter extends AbstractLoginDataAccessor implements IPasswordResetter {

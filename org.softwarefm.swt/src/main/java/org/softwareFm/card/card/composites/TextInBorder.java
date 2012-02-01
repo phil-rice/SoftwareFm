@@ -19,11 +19,11 @@ import org.softwareFm.card.card.ICardData;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.title.Title;
 import org.softwareFm.card.title.TitleSpec;
+import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class TextInBorder implements IHasControl {
 

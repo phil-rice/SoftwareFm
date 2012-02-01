@@ -18,17 +18,17 @@ import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.collections.mySoftwareFm.IRequestSaltCallback;
 import org.softwareFm.collections.mySoftwareFm.ISignUp;
 import org.softwareFm.collections.mySoftwareFm.ISignUpCallback;
+import org.softwareFm.common.arrays.ArrayHelper;
+import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.utilities.arrays.ArrayHelper;
-import org.softwareFm.utilities.callbacks.ICallback;
 
 public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 
 	private final Composite content;
 	private final ILoginStrategy loginStrategy;
 	private final CardConfig cardConfig;
-	protected UserData userData = UserData.blank();
+	public UserData userData = UserData.blank();
 	protected String signupSalt;
 
 	protected ICallback<String> restart;

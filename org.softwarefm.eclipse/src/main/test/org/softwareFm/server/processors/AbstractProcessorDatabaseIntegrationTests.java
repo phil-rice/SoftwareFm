@@ -4,19 +4,20 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.softwareFm.common.IUser;
+import org.softwareFm.common.callbacks.ICallback;
+import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.common.crypto.Crypto;
+import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.processors.AbstractLoginDataAccessor;
+import org.softwareFm.common.runnable.Callables;
+import org.softwareFm.common.strings.Strings;
+import org.softwareFm.eclipse.project.UsageProcessor;
+import org.softwareFm.eclipse.user.IProject;
+import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.server.ISoftwareFmServer;
-import org.softwareFm.server.IUser;
-import org.softwareFm.server.constants.LoginConstants;
 import org.softwareFm.server.processors.internal.MailerMock;
-import org.softwareFm.server.processors.internal.UsageProcessor;
-import org.softwareFm.server.user.IProject;
-import org.softwareFm.server.user.IProjectTimeGetter;
-import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.crypto.Crypto;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.runnable.Callables;
-import org.softwareFm.utilities.strings.Strings;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 abstract public class AbstractProcessorDatabaseIntegrationTests extends AbstractProcessorIntegrationTests {

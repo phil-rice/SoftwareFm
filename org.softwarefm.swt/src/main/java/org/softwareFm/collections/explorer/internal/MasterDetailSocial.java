@@ -20,14 +20,14 @@ import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.collections.explorer.IMasterDetailSocial;
+import org.softwareFm.common.collections.Sets;
+import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.maps.Maps;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.ISituationListAndBuilder;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Show;
-import org.softwareFm.utilities.collections.Sets;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.maps.Maps;
 
 public class MasterDetailSocial implements IMasterDetailSocial {
 

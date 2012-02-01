@@ -14,7 +14,7 @@ import org.softwareFm.card.details.IDetailAdder;
 import org.softwareFm.card.editors.internal.StyledTextEditorDetailAdder;
 import org.softwareFm.card.editors.internal.TextEditorDetailAdder;
 import org.softwareFm.card.editors.internal.UrlEditorDetailAdder;
-import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.common.functions.IFunction1;
 
 public interface IEditorDetailAdder extends IDetailAdder {
 

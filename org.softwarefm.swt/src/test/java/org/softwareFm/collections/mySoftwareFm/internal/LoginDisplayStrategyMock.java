@@ -3,7 +3,7 @@ package org.softwareFm.collections.mySoftwareFm.internal;
 import java.util.List;
 
 import org.softwareFm.collections.mySoftwareFm.ILoginDisplayStrategy;
-import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.common.collections.Lists;
 
 public class LoginDisplayStrategyMock implements ILoginDisplayStrategy {
 

@@ -17,14 +17,14 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Event;
+import org.softwareFm.common.callbacks.ICallback;
+import org.softwareFm.common.callbacks.MemoryCallback;
+import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.history.History;
 import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
-import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.callbacks.MemoryCallback;
-import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.history.History;
 
 public class NavHistoryComboTest extends SwtTest {
 

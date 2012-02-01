@@ -9,9 +9,9 @@ import java.util.Map;
 
 import org.eclipse.swt.graphics.Image;
 import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.resources.IResourceGetter;
 
 public class NavIconFunction implements IFunction1<Map<String, Object>, Image> {
 	private final IFunction1<String, Image> imageFn;

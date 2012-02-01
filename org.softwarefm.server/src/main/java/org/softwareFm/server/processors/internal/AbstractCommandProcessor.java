@@ -3,7 +3,7 @@ package org.softwareFm.server.processors.internal;
 import java.util.Map;
 
 import org.apache.http.RequestLine;
-import org.softwareFm.server.IGitOperations;
+import org.softwareFm.common.IGitOperations;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.IProcessResult;
 

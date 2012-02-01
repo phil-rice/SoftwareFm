@@ -11,7 +11,7 @@ import java.util.Map.Entry;
 
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.modifiers.ICardDataModifier;
-import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.common.maps.Maps;
 
 public class CollectionsAggregatorModifier implements ICardDataModifier {
 

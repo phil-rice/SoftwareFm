@@ -5,13 +5,13 @@ import java.io.IOException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.FileEntity;
-import org.softwareFm.server.constants.CommonConstants;
+import org.softwareFm.common.collections.Files;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.exceptions.WrappedException;
+import org.softwareFm.common.maps.Maps;
 import org.softwareFm.server.processors.AbstractProcessCallTest;
 import org.softwareFm.server.processors.HttpResponseMock;
 import org.softwareFm.server.processors.IProcessResult;
-import org.softwareFm.utilities.collections.Files;
-import org.softwareFm.utilities.exceptions.WrappedException;
-import org.softwareFm.utilities.maps.Maps;
 
 public class GetFileProcessorTest extends AbstractProcessCallTest<GetFileProcessor> {
 

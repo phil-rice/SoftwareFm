@@ -8,7 +8,7 @@ package org.softwareFm.display.timeline;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
-import org.softwareFm.utilities.history.HistoryListenerMock;
+import org.softwareFm.common.history.HistoryListenerMock;
 
 public class TimeLineTest extends PlayListTest {
 

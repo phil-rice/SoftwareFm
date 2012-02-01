@@ -12,8 +12,8 @@ import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.navigation.internal.NavBar;
-import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.history.IHistory;
+import org.softwareFm.common.callbacks.ICallback;
+import org.softwareFm.common.history.IHistory;
 
 public class CardHolderTestWithNavBarTest extends AbstractCardHolderTest {
 

@@ -19,9 +19,9 @@ import org.eclipse.swt.widgets.Event;
 import org.junit.Test;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
+import org.softwareFm.common.callbacks.ICallback;
+import org.softwareFm.common.callbacks.MemoryCallback;
 import org.softwareFm.display.swt.SwtTest;
-import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.callbacks.MemoryCallback;
 
 public class NavComboTest extends SwtTest {
 

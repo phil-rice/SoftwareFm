@@ -26,13 +26,13 @@ import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.navigation.ITitleBarForCard;
 import org.softwareFm.card.title.TitlePaintListener;
 import org.softwareFm.card.title.TitleSpec;
+import org.softwareFm.common.callbacks.ICallback;
+import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.history.History;
+import org.softwareFm.common.history.IHistory;
+import org.softwareFm.common.strings.Strings;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.history.History;
-import org.softwareFm.utilities.history.IHistory;
-import org.softwareFm.utilities.strings.Strings;
 
 public class NavBar implements IHasComposite, ITitleBarForCard {
 

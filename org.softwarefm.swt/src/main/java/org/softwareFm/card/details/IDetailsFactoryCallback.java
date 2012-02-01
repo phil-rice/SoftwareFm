@@ -16,8 +16,8 @@ import org.softwareFm.card.dataStore.IAfterEditCallback;
 import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.card.dataStore.IUpdateDataStore;
 import org.softwareFm.card.details.internal.IGotDataCallback;
+import org.softwareFm.common.maps.Maps;
 import org.softwareFm.display.swt.Swts.Size;
-import org.softwareFm.utilities.maps.Maps;
 
 /**
  * When a detail is shown there are a lot of potential callbacks/interfaces, so this aggregates them together.<br />

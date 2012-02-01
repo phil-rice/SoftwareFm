@@ -6,9 +6,9 @@
 package org.softwareFm.card.navigation.internal;
 
 import org.eclipse.swt.graphics.Image;
-import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.common.callbacks.ICallback;
+import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.functions.IFunction1;
 
 public class NavNextHistoryPrevConfig<T> {
 

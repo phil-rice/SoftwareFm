@@ -5,16 +5,16 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import org.softwareFm.crowdsourced.softwarefm.SoftwareFmConstants;
-import org.softwareFm.httpClient.requests.IResponseCallback;
-import org.softwareFm.server.IUser;
-import org.softwareFm.server.constants.CommonConstants;
-import org.softwareFm.server.constants.LoginConstants;
+import org.softwareFm.client.http.requests.IResponseCallback;
+import org.softwareFm.common.IUser;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.common.exceptions.WrappedException;
+import org.softwareFm.common.json.Json;
+import org.softwareFm.common.maps.Maps;
+import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.server.processors.AbstractProcessorDatabaseIntegrationTests;
 import org.softwareFm.server.processors.IProcessCall;
-import org.softwareFm.utilities.exceptions.WrappedException;
-import org.softwareFm.utilities.json.Json;
-import org.softwareFm.utilities.maps.Maps;
 
 public class UsageProcessorIntegrationTest extends AbstractProcessorDatabaseIntegrationTests {
 

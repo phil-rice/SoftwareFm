@@ -7,8 +7,8 @@ package org.softwareFm.display.timeline;
 
 import java.util.concurrent.Future;
 
-import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.future.Futures;
+import org.softwareFm.common.callbacks.ICallback;
+import org.softwareFm.common.future.Futures;
 
 public interface IPlayListGetter {
 

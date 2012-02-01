@@ -5,11 +5,11 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.http.RequestLine;
-import org.softwareFm.server.constants.CommonConstants;
-import org.softwareFm.server.constants.CommonMessages;
+import org.softwareFm.common.collections.Sets;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.CommonMessages;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.IProcessResult;
-import org.softwareFm.utilities.collections.Sets;
 
 public class RigidFileProcessor implements IProcessCall {
 

@@ -14,10 +14,10 @@ import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.collections.constants.CollectionConstants;
 import org.softwareFm.collections.explorer.internal.IExplorerTest;
+import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.runnable.Runnables;
+import org.softwareFm.common.runnable.Runnables.CountRunnable;
 import org.softwareFm.display.swt.SwtTest;
-import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.runnable.Runnables;
-import org.softwareFm.utilities.runnable.Runnables.CountRunnable;
 
 public class CommentsTest extends SwtTest {
 

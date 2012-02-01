@@ -15,8 +15,8 @@ import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.details.IDetailAdder;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.card.details.internal.DetailFactory;
+import org.softwareFm.common.strings.Strings;
 import org.softwareFm.display.composites.IHasControl;
-import org.softwareFm.utilities.strings.Strings;
 
 public abstract class AbstractDetailsAdderTest<T extends IDetailAdder> extends AbstractDetailTest {
 

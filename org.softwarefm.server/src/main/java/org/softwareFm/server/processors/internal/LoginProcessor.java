@@ -2,15 +2,15 @@ package org.softwareFm.server.processors.internal;
 
 import java.util.Map;
 
-import org.softwareFm.server.constants.CommonConstants;
-import org.softwareFm.server.constants.LoginConstants;
-import org.softwareFm.server.constants.LoginMessages;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.common.constants.LoginMessages;
+import org.softwareFm.common.json.Json;
+import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.strings.Strings;
 import org.softwareFm.server.processors.ILoginChecker;
 import org.softwareFm.server.processors.IProcessResult;
 import org.softwareFm.server.processors.ISaltProcessor;
-import org.softwareFm.utilities.json.Json;
-import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.strings.Strings;
 
 public class LoginProcessor extends AbstractCommandProcessor {
 

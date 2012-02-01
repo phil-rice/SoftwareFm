@@ -9,19 +9,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 import junit.framework.TestCase;
 
 import org.apache.commons.dbcp.BasicDataSource;
-import org.softwareFm.server.constants.LoginConstants;
-import org.softwareFm.server.constants.LoginMessages;
-import org.softwareFm.server.processors.AbstractLoginDataAccessor;
+import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.common.constants.LoginMessages;
+import org.softwareFm.common.crypto.Crypto;
+import org.softwareFm.common.processors.AbstractLoginDataAccessor;
+import org.softwareFm.common.runnable.Callables;
+import org.softwareFm.common.tests.IIntegrationTest;
+import org.softwareFm.common.tests.Tests;
 import org.softwareFm.server.processors.SignUpResult;
 import org.softwareFm.server.processors.internal.ForgottonPasswordMailer;
 import org.softwareFm.server.processors.internal.LoginChecker;
 import org.softwareFm.server.processors.internal.MailerMock;
 import org.softwareFm.server.processors.internal.PasswordResetter;
 import org.softwareFm.server.processors.internal.SignUpChecker;
-import org.softwareFm.utilities.crypto.Crypto;
-import org.softwareFm.utilities.runnable.Callables;
-import org.softwareFm.utilities.tests.IIntegrationTest;
-import org.softwareFm.utilities.tests.Tests;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
 

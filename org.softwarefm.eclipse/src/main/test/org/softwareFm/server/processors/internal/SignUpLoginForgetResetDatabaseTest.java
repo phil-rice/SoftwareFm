@@ -2,11 +2,11 @@ package org.softwareFm.server.processors.internal;
 
 import java.text.MessageFormat;
 
-import org.softwareFm.httpClient.requests.IResponseCallback;
-import org.softwareFm.server.constants.CommonConstants;
-import org.softwareFm.server.constants.LoginMessages;
+import org.softwareFm.client.http.requests.IResponseCallback;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.LoginMessages;
+import org.softwareFm.common.crypto.Crypto;
 import org.softwareFm.server.processors.AbstractProcessorDatabaseIntegrationTests;
-import org.softwareFm.utilities.crypto.Crypto;
 
 public class SignUpLoginForgetResetDatabaseTest extends AbstractProcessorDatabaseIntegrationTests {
 	final String email = "someEmail1@a";

@@ -9,10 +9,10 @@ import java.io.File;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.display.Marker;
 import org.softwareFm.display.swt.ISituationListAndBuilder;
 import org.softwareFm.display.swt.Swts.Show;
-import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class RssPersonUnit {
 	public static void main(String[] args) {

@@ -7,7 +7,7 @@ package org.softwareFm.display.timeline;
 
 import java.util.concurrent.Future;
 
-import org.softwareFm.utilities.history.IHistory;
+import org.softwareFm.common.history.IHistory;
 
 public interface ITimeLine extends IHistory<PlayItem> {
 

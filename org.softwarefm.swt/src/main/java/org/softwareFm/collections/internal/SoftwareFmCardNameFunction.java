@@ -17,7 +17,7 @@ import org.softwareFm.card.card.ILineItemFunction;
 import org.softwareFm.card.card.LineItem;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.common.resources.IResourceGetter;
 
 public class SoftwareFmCardNameFunction extends AbstractLineItemFunction<String> {
 

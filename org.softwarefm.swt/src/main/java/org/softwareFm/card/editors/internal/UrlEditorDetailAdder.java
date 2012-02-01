@@ -11,8 +11,8 @@ import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.card.editors.IEditorDetailAdder;
 import org.softwareFm.card.title.TitleSpec;
+import org.softwareFm.common.functions.Functions;
 import org.softwareFm.display.composites.IHasControl;
-import org.softwareFm.utilities.functions.Functions;
 
 public class UrlEditorDetailAdder implements IEditorDetailAdder {
 

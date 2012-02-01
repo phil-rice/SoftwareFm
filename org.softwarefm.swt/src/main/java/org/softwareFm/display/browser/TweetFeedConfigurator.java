@@ -7,8 +7,8 @@ package org.softwareFm.display.browser;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.display.constants.DisplayConstants;
-import org.softwareFm.utilities.functions.IFunction1;
 
 public class TweetFeedConfigurator implements IBrowserConfigurator {
 

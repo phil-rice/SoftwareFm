@@ -8,12 +8,12 @@ package org.softwareFm.display.timeline;
 import java.util.Map;
 import java.util.concurrent.Future;
 
+import org.softwareFm.common.callbacks.ICallback;
+import org.softwareFm.common.exceptions.WrappedException;
+import org.softwareFm.common.future.Futures;
+import org.softwareFm.common.history.History;
+import org.softwareFm.common.maps.Maps;
 import org.softwareFm.display.constants.DisplayConstants;
-import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.exceptions.WrappedException;
-import org.softwareFm.utilities.future.Futures;
-import org.softwareFm.utilities.history.History;
-import org.softwareFm.utilities.maps.Maps;
 
 public class TimeLine extends History<PlayItem> implements ITimeLine {
 	private IPlayList selected;

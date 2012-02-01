@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.softwareFm.utilities.collections.Files;
-import org.softwareFm.utilities.strings.Strings;
+import org.softwareFm.common.collections.Files;
+import org.softwareFm.common.strings.Strings;
 
 public class GuessArtifactAndVersionDetails {
 

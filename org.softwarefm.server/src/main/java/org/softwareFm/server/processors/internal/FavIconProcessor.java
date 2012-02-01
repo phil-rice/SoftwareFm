@@ -4,10 +4,10 @@ import java.io.InputStream;
 import java.util.Map;
 
 import org.apache.http.RequestLine;
-import org.softwareFm.server.constants.CommonConstants;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.strings.Strings;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.IProcessResult;
-import org.softwareFm.utilities.strings.Strings;
 
 public class FavIconProcessor implements IProcessCall {
 

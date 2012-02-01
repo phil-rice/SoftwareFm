@@ -63,22 +63,22 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.softwareFm.common.arrays.ArrayHelper;
+import org.softwareFm.common.callbacks.ICallback;
+import org.softwareFm.common.collections.Files;
+import org.softwareFm.common.collections.Iterables;
+import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.constants.UtilityConstants;
+import org.softwareFm.common.constants.UtilityMessages;
+import org.softwareFm.common.exceptions.WrappedException;
+import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.indent.Indent;
+import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.common.strings.Strings;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.constants.DisplayConstants;
-import org.softwareFm.utilities.arrays.ArrayHelper;
-import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.collections.Files;
-import org.softwareFm.utilities.collections.Iterables;
-import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.constants.UtilityConstants;
-import org.softwareFm.utilities.constants.UtilityMessages;
-import org.softwareFm.utilities.exceptions.WrappedException;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.indent.Indent;
-import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwareFm.utilities.strings.Strings;
 
 public class Swts {
 

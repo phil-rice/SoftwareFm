@@ -3,9 +3,9 @@ package org.softwareFm.server.processors.internal;
 import java.io.File;
 import java.util.Collections;
 
-import org.softwareFm.server.constants.CommonConstants;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.maps.UrlCache;
 import org.softwareFm.server.processors.AbstractProcessCallTest;
-import org.softwareFm.utilities.maps.UrlCache;
 
 public class MakeRootProcessorTest extends AbstractProcessCallTest<MakeRootProcessor> {
 

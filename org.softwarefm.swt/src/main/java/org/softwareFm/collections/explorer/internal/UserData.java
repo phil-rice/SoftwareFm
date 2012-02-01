@@ -1,6 +1,6 @@
 package org.softwareFm.collections.explorer.internal;
 
-import org.softwareFm.utilities.strings.Strings;
+import org.softwareFm.common.strings.Strings;
 
 public class UserData {
 

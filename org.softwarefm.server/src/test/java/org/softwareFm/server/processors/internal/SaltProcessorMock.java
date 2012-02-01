@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.collections.Sets;
 import org.softwareFm.server.processors.ISaltProcessor;
-import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.collections.Sets;
 
 public class SaltProcessorMock implements ISaltProcessor {
 

@@ -20,15 +20,15 @@ import org.apache.http.util.EntityUtils;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.exceptions.WrappedException;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.future.Futures;
+import org.softwareFm.common.maps.ISimpleMap;
+import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.exceptions.WrappedException;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.future.Futures;
-import org.softwareFm.utilities.maps.ISimpleMap;
-import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.services.IServiceExecutor;
 
 public class BrowserComposite implements IBrowserCompositeBuilder, ISimpleMap<String, IBrowserPart> {
 

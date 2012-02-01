@@ -3,10 +3,10 @@ package org.softwareFm.server.processors.internal;
 import java.util.List;
 import java.util.Map;
 
-import org.softwareFm.server.constants.LoginConstants;
+import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.common.maps.Maps;
 import org.softwareFm.server.processors.ILoginChecker;
-import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.maps.Maps;
 
 public class LoginCheckerMock implements ILoginChecker {
 	public final List<String> emails = Lists.newList();

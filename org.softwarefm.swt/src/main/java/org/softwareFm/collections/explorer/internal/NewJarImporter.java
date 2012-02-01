@@ -18,13 +18,13 @@ import java.util.concurrent.Future;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.collections.constants.CollectionConstants;
-import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.constants.UtilityConstants;
-import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.url.IUrlGenerator;
-import org.softwareFm.utilities.url.IUrlGeneratorMap;
-import org.softwareFm.utilities.url.Urls;
+import org.softwareFm.common.callbacks.ICallback;
+import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.constants.UtilityConstants;
+import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.url.IUrlGenerator;
+import org.softwareFm.common.url.IUrlGeneratorMap;
+import org.softwareFm.common.url.Urls;
 
 public class NewJarImporter {
 

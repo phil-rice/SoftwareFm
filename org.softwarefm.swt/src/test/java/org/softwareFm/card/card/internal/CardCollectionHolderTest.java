@@ -26,9 +26,9 @@ import org.softwareFm.card.dataStore.CardDataStoreAsyncMock;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.dataStore.IMutableCardDataStore;
 import org.softwareFm.card.details.IDetailsFactoryCallback;
+import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.maps.Maps;
 import org.softwareFm.display.swt.SwtTest;
-import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.maps.Maps;
 
 public class CardCollectionHolderTest extends SwtTest {
 

@@ -39,14 +39,14 @@ import org.softwareFm.card.navigation.ITitleBarForCard;
 import org.softwareFm.card.navigation.internal.NavBar;
 import org.softwareFm.card.navigation.internal.NavTitle;
 import org.softwareFm.card.title.TitleSpec;
+import org.softwareFm.common.callbacks.ICallback;
+import org.softwareFm.common.exceptions.WrappedException;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.future.GatedMockFuture;
+import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.display.composites.IHasComposite;
 import org.softwareFm.display.swt.Swts.Show;
 import org.softwareFm.display.swt.Swts.Size;
-import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.exceptions.WrappedException;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.future.GatedMockFuture;
-import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class CardHolder implements ICardHolderForTests {
 

@@ -10,10 +10,10 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.url.IUrlDataCallback;
-import org.softwareFm.utilities.url.IUrlToData;
+import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.url.IUrlDataCallback;
+import org.softwareFm.common.url.IUrlToData;
 
 public class UrlToDataMock implements IUrlToData {
 

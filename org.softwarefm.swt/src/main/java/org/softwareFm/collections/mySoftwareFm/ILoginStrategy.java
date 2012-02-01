@@ -6,17 +6,17 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.swt.widgets.Display;
+import org.softwareFm.client.http.api.IHttpClient;
+import org.softwareFm.client.http.requests.IResponseCallback;
+import org.softwareFm.client.http.response.IResponse;
 import org.softwareFm.collections.explorer.internal.UserData;
-import org.softwareFm.httpClient.api.IHttpClient;
-import org.softwareFm.httpClient.requests.IResponseCallback;
-import org.softwareFm.httpClient.response.IResponse;
-import org.softwareFm.server.constants.CommonConstants;
-import org.softwareFm.server.constants.CommonMessages;
-import org.softwareFm.server.constants.LoginConstants;
-import org.softwareFm.utilities.crypto.Crypto;
-import org.softwareFm.utilities.json.Json;
-import org.softwareFm.utilities.runnable.Callables;
-import org.softwareFm.utilities.services.IServiceExecutor;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.CommonMessages;
+import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.common.crypto.Crypto;
+import org.softwareFm.common.json.Json;
+import org.softwareFm.common.runnable.Callables;
+import org.softwareFm.common.services.IServiceExecutor;
 
 public interface ILoginStrategy {
 

@@ -3,16 +3,16 @@ package org.softwareFm.server.processors;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import org.softwareFm.gitwriter.GitWithHttpClientTest;
-import org.softwareFm.httpClient.requests.IResponseCallback;
-import org.softwareFm.httpClient.requests.MemoryResponseCallback;
-import org.softwareFm.httpClient.response.IResponse;
-import org.softwareFm.server.constants.CommonConstants;
-import org.softwareFm.server.constants.LoginConstants;
-import org.softwareFm.utilities.exceptions.WrappedException;
-import org.softwareFm.utilities.json.Json;
-import org.softwareFm.utilities.strings.Strings;
-import org.softwareFm.utilities.tests.IIntegrationTest;
+import org.softwareFm.client.gitwriter.GitWithHttpClientTest;
+import org.softwareFm.client.http.requests.IResponseCallback;
+import org.softwareFm.client.http.requests.MemoryResponseCallback;
+import org.softwareFm.client.http.response.IResponse;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.common.exceptions.WrappedException;
+import org.softwareFm.common.json.Json;
+import org.softwareFm.common.strings.Strings;
+import org.softwareFm.common.tests.IIntegrationTest;
 
 abstract public class AbstractProcessorIntegrationTests extends GitWithHttpClientTest implements IIntegrationTest {
 

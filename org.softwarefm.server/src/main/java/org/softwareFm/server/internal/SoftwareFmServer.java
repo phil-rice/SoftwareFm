@@ -26,23 +26,23 @@ import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
-import org.softwareFm.server.IGitOperations;
+import org.softwareFm.common.IGitOperations;
+import org.softwareFm.common.callbacks.ICallback;
+import org.softwareFm.common.constants.CommonMessages;
+import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.common.exceptions.WrappedException;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.processors.AbstractLoginDataAccessor;
+import org.softwareFm.common.runnable.Callables;
+import org.softwareFm.common.services.IServiceExecutor;
+import org.softwareFm.common.strings.Strings;
+import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.server.ISoftwareFmServer;
 import org.softwareFm.server.IUsage;
-import org.softwareFm.server.constants.CommonMessages;
-import org.softwareFm.server.constants.LoginConstants;
-import org.softwareFm.server.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.IMailer;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.IProcessResult;
-import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.exceptions.WrappedException;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.runnable.Callables;
-import org.softwareFm.utilities.services.IServiceExecutor;
-import org.softwareFm.utilities.strings.Strings;
-import org.softwareFm.utilities.url.IUrlGenerator;
 
 public class SoftwareFmServer implements ISoftwareFmServer {
 

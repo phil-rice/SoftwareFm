@@ -14,10 +14,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
 import org.softwareFm.card.configuration.CardConfig;
+import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.display.okCancel.IOkCancel;
 import org.softwareFm.display.okCancel.OkCancel;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class OKCancelWithBorder implements IOkCancel {
 

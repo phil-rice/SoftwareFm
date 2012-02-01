@@ -8,7 +8,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
-import org.softwareFm.utilities.collections.Files;
+import org.softwareFm.common.collections.Files;
 
 public interface IProcessResult {
 

@@ -7,7 +7,7 @@ package org.softwareFm.card.dataStore;
 
 import java.util.List;
 
-import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.common.collections.Lists;
 
 public class MemoryAfterEditCallback implements IAfterEditCallback {
 	public final List<String> urls = Lists.newList();

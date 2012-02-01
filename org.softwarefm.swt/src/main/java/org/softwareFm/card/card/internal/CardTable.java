@@ -22,8 +22,8 @@ import org.softwareFm.card.card.LineItem;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.title.TitleSpec;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.resources.IResourceGetter;
 
 public class CardTable implements ICardTable {
 

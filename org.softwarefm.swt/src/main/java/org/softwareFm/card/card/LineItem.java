@@ -8,9 +8,9 @@ package org.softwareFm.card.card;
 import java.util.Comparator;
 
 import org.softwareFm.card.configuration.CardConfig;
-import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.strings.Strings;
+import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.strings.Strings;
 
 /** Data about a single line in the card */
 public class LineItem {

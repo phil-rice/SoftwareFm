@@ -3,11 +3,11 @@ package org.softwareFm.collections.mySoftwareFm.internal;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.editors.AbstractNameAndValuesEditorTest;
 import org.softwareFm.collections.explorer.internal.UserData;
+import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.tests.Tests;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.server.constants.LoginConstants;
-import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.tests.Tests;
 
 public class LoginTest extends AbstractNameAndValuesEditorTest<Login> {
 

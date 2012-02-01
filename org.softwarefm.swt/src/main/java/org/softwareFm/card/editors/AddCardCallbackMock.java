@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.card.card.ICardData;
-import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.maps.Maps;
 
 public class AddCardCallbackMock implements ICardEditorCallback {
 

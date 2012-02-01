@@ -21,8 +21,8 @@ import org.softwareFm.card.card.ICardFactory;
 import org.softwareFm.card.card.LineItem;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.title.TitleSpec;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.maps.Maps;
+import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.maps.Maps;
 
 /** Hello ALyson */
 public class CardDataStoreFixture {

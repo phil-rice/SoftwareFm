@@ -15,9 +15,9 @@ import java.util.Map;
 import org.eclipse.swt.graphics.Image;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.navigation.internal.NavIconFunction;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.display.composites.IHasControl;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.resources.IResourceGetter;
 
 public interface ITitleBarForCard extends IHasControl {
 

@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 import junit.framework.TestCase;
 
-import org.softwareFm.utilities.tests.Tests;
+import org.softwareFm.common.tests.Tests;
 
 public class IPlayListTest extends TestCase {
 	PlayItem playItem1 = new PlayItem("ft1", "url1");

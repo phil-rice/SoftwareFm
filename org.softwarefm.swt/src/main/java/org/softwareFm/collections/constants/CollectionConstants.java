@@ -13,7 +13,7 @@ package org.softwareFm.collections.constants;
 import java.util.Arrays;
 import java.util.List;
 
-import org.softwareFm.utilities.url.Urls;
+import org.softwareFm.common.url.Urls;
 
 public class CollectionConstants {
 

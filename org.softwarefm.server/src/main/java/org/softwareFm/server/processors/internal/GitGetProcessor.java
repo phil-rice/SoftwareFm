@@ -5,15 +5,15 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.apache.http.RequestLine;
-import org.softwareFm.server.IFileDescription;
-import org.softwareFm.server.IGitOperations;
-import org.softwareFm.server.constants.CommonConstants;
+import org.softwareFm.common.IFileDescription;
+import org.softwareFm.common.IGitOperations;
+import org.softwareFm.common.collections.Files;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.json.Json;
+import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.maps.UrlCache;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.IProcessResult;
-import org.softwareFm.utilities.collections.Files;
-import org.softwareFm.utilities.json.Json;
-import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.maps.UrlCache;
 
 public class GitGetProcessor implements IProcessCall {
 	private final IGitOperations gitOperations;

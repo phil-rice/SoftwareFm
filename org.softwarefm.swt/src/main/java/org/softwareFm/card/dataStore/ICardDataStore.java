@@ -9,8 +9,8 @@ import java.util.concurrent.Future;
 
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.dataStore.internal.CardDataStoreForRepository;
-import org.softwareFm.server.IGitLocal;
-import org.softwareFm.utilities.services.IServiceExecutor;
+import org.softwareFm.common.IGitLocal;
+import org.softwareFm.common.services.IServiceExecutor;
 
 /** Go get data for a url, no follow ups */
 public interface ICardDataStore {

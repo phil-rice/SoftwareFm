@@ -1,5 +1,0 @@
-package org.softwareFm.utilities.collections;
-
-public class UnchangingFile {
-
-}

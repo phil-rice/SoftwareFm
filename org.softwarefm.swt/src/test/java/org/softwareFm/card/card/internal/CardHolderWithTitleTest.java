@@ -13,7 +13,7 @@ import org.softwareFm.card.card.ICardHolder;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.navigation.internal.NavTitle;
-import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.common.functions.IFunction1;
 
 public class CardHolderWithTitleTest extends AbstractCardHolderTest {
 	public void testDisplaysLoadingWhenConstructed() {

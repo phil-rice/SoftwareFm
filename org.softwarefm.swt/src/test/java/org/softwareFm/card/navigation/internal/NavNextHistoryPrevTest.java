@@ -19,13 +19,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.junit.Test;
 import org.softwareFm.card.navigation.internal.NavNextHistoryPrev.NavNextHistoryPrevLayout;
+import org.softwareFm.common.callbacks.ICallback;
+import org.softwareFm.common.callbacks.MemoryCallback;
+import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.history.History;
 import org.softwareFm.display.swt.SwtTest;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
-import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.callbacks.MemoryCallback;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.history.History;
 
 public class NavNextHistoryPrevTest extends SwtTest {
 

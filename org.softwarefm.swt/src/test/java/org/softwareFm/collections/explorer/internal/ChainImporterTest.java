@@ -6,10 +6,10 @@ import junit.framework.TestCase;
 
 import org.softwareFm.card.dataStore.CardDataStoreMock;
 import org.softwareFm.collections.explorer.internal.NewJarImporter.ImportStageCommand;
-import org.softwareFm.utilities.collections.Sets;
-import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.runnable.Runnables;
-import org.softwareFm.utilities.runnable.Runnables.CountRunnable;
+import org.softwareFm.common.collections.Sets;
+import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.runnable.Runnables;
+import org.softwareFm.common.runnable.Runnables.CountRunnable;
 
 public class ChainImporterTest extends TestCase {
 

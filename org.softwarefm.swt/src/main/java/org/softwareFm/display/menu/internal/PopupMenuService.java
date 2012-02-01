@@ -12,13 +12,13 @@ import java.util.Set;
 
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
+import org.softwareFm.common.collections.Iterables;
+import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.collections.Sets;
+import org.softwareFm.common.maps.Maps;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.menu.IPopupMenuContributor;
 import org.softwareFm.display.menu.IPopupMenuService;
-import org.softwareFm.utilities.collections.Iterables;
-import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.collections.Sets;
-import org.softwareFm.utilities.maps.Maps;
 
 public class PopupMenuService<T> implements IPopupMenuService<T> {
 

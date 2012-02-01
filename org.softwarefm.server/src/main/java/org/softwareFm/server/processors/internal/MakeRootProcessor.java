@@ -4,12 +4,12 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.Map;
 
-import org.softwareFm.server.IFileDescription;
-import org.softwareFm.server.IGitOperations;
-import org.softwareFm.server.constants.CommonConstants;
-import org.softwareFm.server.constants.CommonMessages;
+import org.softwareFm.common.IFileDescription;
+import org.softwareFm.common.IGitOperations;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.CommonMessages;
+import org.softwareFm.common.maps.UrlCache;
 import org.softwareFm.server.processors.IProcessResult;
-import org.softwareFm.utilities.maps.UrlCache;
 
 public class MakeRootProcessor extends AbstractCommandProcessor {
 

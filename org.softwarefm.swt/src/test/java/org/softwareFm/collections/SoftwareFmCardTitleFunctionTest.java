@@ -20,11 +20,11 @@ import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.card.title.TitleSpec;
+import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.common.resources.ResourceGetterMock;
 import org.softwareFm.display.swt.SwtTest;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwareFm.utilities.resources.ResourceGetterMock;
 
 public class SoftwareFmCardTitleFunctionTest extends SwtTest {
 

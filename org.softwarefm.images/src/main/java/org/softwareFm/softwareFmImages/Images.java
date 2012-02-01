@@ -18,11 +18,11 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Label;
-import org.softwareFm.utilities.collections.Files;
-import org.softwareFm.utilities.collections.Iterables;
-import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.exceptions.WrappedException;
-import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.common.collections.Files;
+import org.softwareFm.common.collections.Iterables;
+import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.exceptions.WrappedException;
+import org.softwareFm.common.functions.IFunction1;
 import org.springframework.core.io.ClassPathResource;
 
 public class Images {

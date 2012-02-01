@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.collections.menu.AbstractCardMenuHandler;
-import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.common.resources.IResourceGetter;
 
 public class OptionalSeparatorMenuHandler extends AbstractCardMenuHandler {
 

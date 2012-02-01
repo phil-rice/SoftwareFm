@@ -16,7 +16,7 @@ import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.navigation.ITitleBarForCard;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.card.title.TitleWithTitlePaintListener;
-import org.softwareFm.utilities.functions.Functions;
+import org.softwareFm.common.functions.Functions;
 
 public class NavTitle extends TitleWithTitlePaintListener implements ITitleBarForCard {
 

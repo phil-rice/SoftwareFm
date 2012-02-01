@@ -1,10 +1,10 @@
 package org.softwareFm.server.processors.internal;
 
-import org.softwareFm.httpClient.requests.IResponseCallback;
-import org.softwareFm.server.constants.CommonConstants;
-import org.softwareFm.server.constants.LoginConstants;
+import org.softwareFm.client.http.requests.IResponseCallback;
+import org.softwareFm.common.collections.Sets;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.server.processors.AbstractProcessorMockIntegrationTests;
-import org.softwareFm.utilities.collections.Sets;
 
 public class ForgotPasswordIntegrationTests extends AbstractProcessorMockIntegrationTests {
 

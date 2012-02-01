@@ -10,10 +10,10 @@ import java.lang.reflect.Modifier;
 
 import junit.framework.Test;
 
-import org.softwareFm.utilities.collections.Files;
-import org.softwareFm.utilities.reflection.IClassAcceptor;
-import org.softwareFm.utilities.tests.IIntegrationTest;
-import org.softwareFm.utilities.tests.Tests;
+import org.softwareFm.common.collections.Files;
+import org.softwareFm.common.reflection.IClassAcceptor;
+import org.softwareFm.common.tests.IIntegrationTest;
+import org.softwareFm.common.tests.Tests;
 
 public class AllUnitTests {
 

@@ -16,11 +16,11 @@ import org.eclipse.swt.widgets.Label;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.display.browser.IBrowserPart;
 import org.softwareFm.display.constants.DisplayConstants;
 import org.softwareFm.display.swt.Swts;
 import org.softwareFm.display.swt.Swts.Grid;
-import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class RssDisplay implements IBrowserPart {
 

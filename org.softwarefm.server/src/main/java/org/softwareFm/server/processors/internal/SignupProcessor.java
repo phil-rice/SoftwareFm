@@ -3,18 +3,18 @@ package org.softwareFm.server.processors.internal;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import org.softwareFm.server.IUser;
-import org.softwareFm.server.constants.CommonConstants;
-import org.softwareFm.server.constants.LoginConstants;
-import org.softwareFm.server.constants.LoginMessages;
+import org.softwareFm.common.IUser;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.common.constants.LoginMessages;
+import org.softwareFm.common.json.Json;
+import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.runnable.Callables;
+import org.softwareFm.common.strings.Strings;
 import org.softwareFm.server.processors.IProcessResult;
 import org.softwareFm.server.processors.ISaltProcessor;
 import org.softwareFm.server.processors.ISignUpChecker;
 import org.softwareFm.server.processors.SignUpResult;
-import org.softwareFm.utilities.json.Json;
-import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.runnable.Callables;
-import org.softwareFm.utilities.strings.Strings;
 
 public class SignupProcessor extends AbstractCommandProcessor {
 

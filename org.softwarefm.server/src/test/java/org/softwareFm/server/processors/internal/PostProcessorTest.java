@@ -1,8 +1,8 @@
 package org.softwareFm.server.processors.internal;
 
-import org.softwareFm.server.constants.CommonConstants;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.maps.Maps;
 import org.softwareFm.server.processors.AbstractProcessCallTest;
-import org.softwareFm.utilities.maps.Maps;
 
 public class PostProcessorTest extends AbstractProcessCallTest<PostProcessor> {
 

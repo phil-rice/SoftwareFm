@@ -25,13 +25,13 @@ import org.softwareFm.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.card.dataStore.CardDataStoreMock;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.collections.mySoftwareFm.ILoginStrategy;
+import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.common.resources.ResourceGetterMock;
 import org.softwareFm.display.menu.PopupMenuContributorMock;
 import org.softwareFm.display.swt.SwtAndServiceTest;
 import org.softwareFm.display.timeline.IPlayListGetter;
-import org.softwareFm.utilities.collections.Lists;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwareFm.utilities.resources.ResourceGetterMock;
 
 public class ExplorerTest extends SwtAndServiceTest {
 

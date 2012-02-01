@@ -3,12 +3,12 @@ package org.softwareFm.server.processors.internal;
 import java.util.Map;
 
 import org.apache.http.RequestLine;
-import org.softwareFm.server.constants.CommonConstants;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.maps.UrlCache;
+import org.softwareFm.common.maps.UrlCacheTest;
+import org.softwareFm.common.url.Urls;
 import org.softwareFm.server.processors.AbstractProcessCallTest;
-import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.maps.UrlCache;
-import org.softwareFm.utilities.maps.UrlCacheTest;
-import org.softwareFm.utilities.url.Urls;
 
 public class AboveRepositoryCacheTest extends AbstractProcessCallTest<GitGetProcessor> {
 

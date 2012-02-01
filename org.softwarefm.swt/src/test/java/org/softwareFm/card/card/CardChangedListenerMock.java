@@ -7,7 +7,7 @@ package org.softwareFm.card.card;
 
 import java.util.List;
 
-import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.common.collections.Lists;
 
 public class CardChangedListenerMock implements ICardChangedListener {
 

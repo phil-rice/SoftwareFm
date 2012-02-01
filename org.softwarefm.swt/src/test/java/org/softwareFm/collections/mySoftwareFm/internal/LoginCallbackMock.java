@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.softwareFm.collections.explorer.internal.UserData;
 import org.softwareFm.collections.mySoftwareFm.ILoginCallback;
-import org.softwareFm.utilities.collections.Lists;
+import org.softwareFm.common.collections.Lists;
 
 public class LoginCallbackMock implements ILoginCallback {
 

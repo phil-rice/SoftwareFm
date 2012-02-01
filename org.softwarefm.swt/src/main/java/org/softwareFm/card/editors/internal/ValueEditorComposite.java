@@ -22,9 +22,9 @@ import org.softwareFm.card.details.IDetailsFactoryCallback;
 import org.softwareFm.card.editors.IValueComposite;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.card.title.TitleWithTitlePaintListener;
+import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.display.okCancel.OkCancel;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.resources.IResourceGetter;
 
 abstract public class ValueEditorComposite<T extends Control> extends Composite implements IValueComposite<T> {
 

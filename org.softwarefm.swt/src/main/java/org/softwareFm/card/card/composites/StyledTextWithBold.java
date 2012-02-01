@@ -18,8 +18,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.constants.CardConstants;
+import org.softwareFm.common.collections.Lists;
 import org.softwareFm.display.composites.IHasControl;
-import org.softwareFm.utilities.collections.Lists;
 
 public class StyledTextWithBold implements IHasControl {
 

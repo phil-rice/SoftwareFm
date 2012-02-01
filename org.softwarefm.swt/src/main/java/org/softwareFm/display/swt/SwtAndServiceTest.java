@@ -12,7 +12,7 @@ package org.softwareFm.display.swt;
 
 import java.util.concurrent.TimeUnit;
 
-import org.softwareFm.utilities.services.IServiceExecutor;
+import org.softwareFm.common.services.IServiceExecutor;
 
 abstract public class SwtAndServiceTest extends SwtTest {
 

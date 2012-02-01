@@ -13,9 +13,9 @@ import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.constants.CardConstants;
 import org.softwareFm.collections.explorer.IExplorer;
 import org.softwareFm.collections.menu.AbstractCardMenuHandler;
+import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.common.url.Urls;
 import org.softwareFm.display.constants.DisplayConstants;
-import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwareFm.utilities.url.Urls;
 
 public class BrowseUrlMenuHandler extends AbstractCardMenuHandler {
 

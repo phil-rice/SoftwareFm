@@ -28,13 +28,13 @@ import org.softwareFm.card.editors.IValueComposite;
 import org.softwareFm.card.editors.IValueEditor;
 import org.softwareFm.card.title.TitleSpec;
 import org.softwareFm.card.title.TitleWithTitlePaintListener;
+import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.common.strings.Strings;
 import org.softwareFm.display.okCancel.OkCancel;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.utilities.functions.Functions;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.maps.Maps;
-import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwareFm.utilities.strings.Strings;
 
 public class CardEditor implements IValueEditor, ICardData {
 

@@ -12,9 +12,9 @@ package org.softwareFm.collections;
 
 import org.softwareFm.card.card.ICard;
 import org.softwareFm.card.constants.CardConstants;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwareFm.utilities.strings.Strings;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.common.strings.Strings;
 
 public class SoftwareFmCardTitleFunction implements IFunction1<ICard, String> {
 

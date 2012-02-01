@@ -10,9 +10,9 @@ import java.text.MessageFormat;
 import org.softwareFm.card.card.AbstractLineItemFunction;
 import org.softwareFm.card.card.LineItem;
 import org.softwareFm.card.configuration.CardConfig;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.resources.IResourceGetter;
-import org.softwareFm.utilities.strings.Strings;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.common.strings.Strings;
 
 public class CardNameFunction extends AbstractLineItemFunction<String> {
 	private final IFunction1<String, IResourceGetter> resourceGetterFn;

@@ -23,9 +23,9 @@ import org.softwareFm.card.editors.IEditorDetailAdder;
 import org.softwareFm.card.modifiers.ICardDataModifier;
 import org.softwareFm.card.navigation.ITitleBarForCard;
 import org.softwareFm.card.title.TitleSpec;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.softwareFmImages.BasicImageRegisterConfigurator;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.resources.IResourceGetter;
 
 public class BasicCardConfigurator implements ICardConfigurator {
 

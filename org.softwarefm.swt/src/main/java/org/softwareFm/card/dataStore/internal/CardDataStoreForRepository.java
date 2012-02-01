@@ -19,11 +19,11 @@ import org.eclipse.swt.widgets.Control;
 import org.softwareFm.card.dataStore.IAfterEditCallback;
 import org.softwareFm.card.dataStore.ICardDataStoreCallback;
 import org.softwareFm.card.dataStore.IMutableCardDataStore;
+import org.softwareFm.common.IFileDescription;
+import org.softwareFm.common.IGitLocal;
+import org.softwareFm.common.collections.Files;
+import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.display.swt.Swts;
-import org.softwareFm.server.IFileDescription;
-import org.softwareFm.server.IGitLocal;
-import org.softwareFm.utilities.collections.Files;
-import org.softwareFm.utilities.services.IServiceExecutor;
 
 public class CardDataStoreForRepository implements IMutableCardDataStore {
 	private final Control control;

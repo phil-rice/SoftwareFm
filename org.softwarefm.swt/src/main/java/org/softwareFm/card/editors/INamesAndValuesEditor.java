@@ -13,7 +13,7 @@ import org.softwareFm.card.card.ICardData;
 import org.softwareFm.card.card.LineItem;
 import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.editors.internal.NameAndValuesEditor;
-import org.softwareFm.utilities.functions.IFunction1;
+import org.softwareFm.common.functions.IFunction1;
 
 public interface INamesAndValuesEditor extends IValueEditor, ICardData {
 

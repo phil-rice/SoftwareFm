@@ -11,9 +11,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.jdom.Element;
+import org.softwareFm.common.strings.Strings;
 import org.softwareFm.display.composites.IHasControl;
 import org.softwareFm.display.swt.Swts.Grid;
-import org.softwareFm.utilities.strings.Strings;
 
 public class RssItemComposite implements IHasControl {
 

@@ -24,9 +24,9 @@ import org.softwareFm.card.configuration.CardConfig;
 import org.softwareFm.card.dataStore.CardDataStoreCallbackAdapter;
 import org.softwareFm.card.dataStore.ICardDataStore;
 import org.softwareFm.card.dataStore.ICardDataStoreCallback;
+import org.softwareFm.common.callbacks.ICallback;
+import org.softwareFm.common.collections.Lists;
 import org.softwareFm.display.composites.IHasControl;
-import org.softwareFm.utilities.callbacks.ICallback;
-import org.softwareFm.utilities.collections.Lists;
 
 public class NavCombo implements IHasControl {
 

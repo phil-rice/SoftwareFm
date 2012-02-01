@@ -9,8 +9,8 @@ import org.softwareFm.card.card.internal.CardNameFunction;
 import org.softwareFm.card.card.internal.CardValueFunction;
 import org.softwareFm.card.card.internal.LineItemHideFunction;
 import org.softwareFm.card.configuration.CardConfig;
-import org.softwareFm.utilities.functions.IFunction1;
-import org.softwareFm.utilities.resources.IResourceGetter;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.resources.IResourceGetter;
 
 public interface ILineItemFunction<T> {
 	T apply(CardConfig cardConfig, LineItem item);

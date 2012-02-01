@@ -7,11 +7,11 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.softwareFm.server.constants.LoginConstants;
-import org.softwareFm.server.constants.LoginMessages;
-import org.softwareFm.server.processors.AbstractLoginDataAccessor;
+import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.common.constants.LoginMessages;
+import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.processors.AbstractLoginDataAccessor;
 import org.softwareFm.server.processors.ILoginChecker;
-import org.softwareFm.utilities.maps.Maps;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
