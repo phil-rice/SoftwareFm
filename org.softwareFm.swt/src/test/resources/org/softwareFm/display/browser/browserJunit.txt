@@ -1,0 +1,1 @@
+{"feedType": "feedType.browser", "url": "http://junit.org"}
