@@ -4,7 +4,7 @@ import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.url.IUrlGenerator;
 
 public class SoftwareFmConstants {
-	public static final String softwareFmServerUrl = "www.softwarefm.com";
+	public static final String softwareFmServerUrl = "server1.softwarefm.com";
 	public static final String gitProtocolAndGitServerName = "git://git.softwarefm.com:80/";
 
 	public static final String groupIdKey = "groupId";

@@ -4,5 +4,5 @@
 */plugins/*.jar
 */artifacts.jar
 */content.jar
-*/SoftwareFmServer_*.jar
+org.softwarefm.server/SoftwareFmServer_lib/*.jar
 
