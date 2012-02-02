@@ -24,8 +24,8 @@ import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.history.History;
 import org.softwareFm.images.BasicImageRegisterConfigurator;
 import org.softwareFm.swt.navigation.internal.NavNextHistoryPrev;
-import org.softwareFm.swt.navigation.internal.NavNextHistoryPrevConfig;
 import org.softwareFm.swt.navigation.internal.NavNextHistoryPrev.NavNextHistoryPrevLayout;
+import org.softwareFm.swt.navigation.internal.NavNextHistoryPrevConfig;
 import org.softwareFm.swt.swt.SwtTest;
 import org.softwareFm.swt.swt.Swts;
 

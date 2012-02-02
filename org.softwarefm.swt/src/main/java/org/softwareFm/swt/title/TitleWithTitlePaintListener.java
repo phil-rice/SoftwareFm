@@ -10,25 +10,17 @@
 
 package org.softwareFm.swt.title;
 
-import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.images.BasicImageRegisterConfigurator;
-import org.softwareFm.images.artifacts.ArtifactsAnchor;
-import org.softwareFm.swt.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;
-import org.softwareFm.swt.swt.Swts.Show;
-import org.softwareFm.swt.swt.Swts.Size;
 
 public class TitleWithTitlePaintListener implements IHasControl {
 
-	final Canvas canvas;
+	public final Canvas canvas;
 	private final TitlePaintListener listener;
 
 	public TitleWithTitlePaintListener(Composite parent, final CardConfig cardConfig, final TitleSpec initialTitleSpec, String initialTitle, String initialTooltip) {
@@ -59,23 +51,6 @@ public class TitleWithTitlePaintListener implements IHasControl {
 		return canvas;
 	}
 
-	public static void main(String[] args) {
-		Show.displayNoLayout(TitleWithTitlePaintListener.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 
-			@Override
-			public Composite apply(Composite from) throws Exception {
-				Composite parent = new Composite(from, SWT.NULL);
-				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay());
-				ImageRegistry imageRegistry = new ImageRegistry();
-				new BasicImageRegisterConfigurator().registerWith(from.getDisplay(), imageRegistry);
-				Color color = new Color(from.getDisplay(), 183, 196, 183);
-				TitleSpec titleSpec = new TitleSpec(imageRegistry.get(ArtifactsAnchor.artifactKey), color, color, 20);
-				TitleWithTitlePaintListener titleWithTitlePaintListener = new TitleWithTitlePaintListener(parent, cardConfig, titleSpec, "title", "tooltip");
-				Size.resizeMeToParentsSize(parent);
-				Size.resizeMeToParentsSize(titleWithTitlePaintListener.canvas);
-				return parent;
-			}
-		});
-	}
 
 }

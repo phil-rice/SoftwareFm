@@ -9,7 +9,6 @@ import org.softwareFm.common.runnable.Runnables;
 import org.softwareFm.common.runnable.Runnables.CountRunnable;
 import org.softwareFm.images.BasicImageRegisterConfigurator;
 import org.softwareFm.swt.constants.DisplayConstants;
-import org.softwareFm.swt.okCancel.OkCancel;
 import org.softwareFm.swt.swt.SwtTest;
 import org.softwareFm.swt.swt.Swts;
 

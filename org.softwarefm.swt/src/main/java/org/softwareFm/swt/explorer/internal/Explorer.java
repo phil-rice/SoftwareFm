@@ -10,6 +10,7 @@
 
 package org.softwareFm.swt.explorer.internal;
 
+
 import java.io.File;
 import java.text.MessageFormat;
 import java.util.Iterator;

@@ -18,19 +18,14 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
-import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.swt.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.details.IDetailsFactoryCallback;
 import org.softwareFm.swt.okCancel.OkCancel;
-import org.softwareFm.swt.swt.Swts;
-import org.softwareFm.swt.swt.Swts.Show;
-import org.softwareFm.swt.swt.Swts.Size;
 import org.softwareFm.swt.title.TitleSpec;
 
 public class TextEditor implements IValueEditorForTests {
 
-	private final TextEditorComposite content;
+	public final TextEditorComposite content;
 
 	public static class TextEditorComposite extends ValueEditorComposite<Text> {
 
@@ -93,22 +88,6 @@ public class TextEditor implements IValueEditorForTests {
 	@Override
 	public String getValue() {
 		return content.getEditor().getText();
-	}
-
-	public static void main(String[] args) {
-		Show.displayNoLayout(TextEditor.class.getSimpleName(), new IFunction1<Composite, Composite>() {
-			@Override
-			public Composite apply(Composite from) throws Exception {
-				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay());
-				TextEditor TextEditor = new TextEditor(from, cardConfig, "someUrl", null, "key", "value", IDetailsFactoryCallback.Utils.resizeAfterGotData(), TitleSpec.noTitleSpec(from.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN)));
-				TextEditor.getComposite().setLayout(new ValueEditorLayout());
-				// Size.resizeMeToParentsSize(textEditor.getControl());
-				// textEditor.content.layout();
-				Swts.layoutDump(from);
-				Size.resizeMeToParentsSizeWithLayout(TextEditor);
-				return TextEditor.content;
-			}
-		});
 	}
 
 	@Override

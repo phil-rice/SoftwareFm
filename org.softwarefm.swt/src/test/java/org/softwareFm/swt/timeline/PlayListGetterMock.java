@@ -13,8 +13,6 @@ import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.future.Futures;
-import org.softwareFm.swt.timeline.IPlayList;
-import org.softwareFm.swt.timeline.IPlayListGetter;
 
 public class PlayListGetterMock implements IPlayListGetter {
 

@@ -3,7 +3,6 @@ package org.softwareFm.swt.card.composites;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
@@ -11,7 +10,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.swt.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;
@@ -155,7 +153,7 @@ public class CardShapedHolder<Body extends IHasControl> implements IHasComposite
 		composite.setLayout(new CardShapedLayout());
 	}
 
-	protected void setTitleSpec(TitleSpec titleSpec) {
+	public void setTitleSpec(TitleSpec titleSpec) {
 		composite.setTitleSpec(titleSpec);
 	}
 
@@ -172,21 +170,5 @@ public class CardShapedHolder<Body extends IHasControl> implements IHasComposite
 		return composite;
 	}
 
-	public static void main(String[] args) {
-
-		Swts.Show.display(CardShapedHolder.class.getSimpleName(), new IFunction1<Composite, Composite>() {
-			@Override
-			public Composite apply(final Composite from) throws Exception {
-				final CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay());
-				CardShapedHolder<IHasControl> cardShapedHolder = new CardShapedHolder<IHasControl>(from, cardConfig, Swts.labelFn("Title"), Swts.styledTextFn("body", SWT.NULL));
-				cardShapedHolder.setTitleSpec(TitleSpec.noTitleSpec(getColor(from, SWT.COLOR_CYAN), getColor(from, SWT.COLOR_GREEN)));
-				return cardShapedHolder.getComposite();
-			}
-
-			private Color getColor(final Composite from, int color) {
-				return from.getDisplay().getSystemColor(color);
-			}
-		});
-	}
 
 }

@@ -21,7 +21,6 @@ import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CollectionConstants;
 import org.softwareFm.swt.explorer.IExplorer;
 import org.softwareFm.swt.explorer.IMasterDetailSocial;
-import org.softwareFm.swt.explorer.internal.Explorer;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.swt.swt.SwtTest;
 import org.softwareFm.swt.timeline.IPlayListGetter;

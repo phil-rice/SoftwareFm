@@ -7,7 +7,6 @@ package org.softwareFm.swt.explorer.internal;
 
 import org.eclipse.swt.SWT;
 import org.junit.Test;
-import org.softwareFm.swt.explorer.internal.MasterDetailSocial;
 import org.softwareFm.swt.swt.SwtTest;
 
 public class MasterDetailSocialTest extends SwtTest {

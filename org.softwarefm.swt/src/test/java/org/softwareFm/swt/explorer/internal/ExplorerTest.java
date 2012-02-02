@@ -27,8 +27,6 @@ import org.softwareFm.swt.card.dataStore.CardDataStoreMock;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.dataStore.CardAndCollectionDataStoreAdapter;
-import org.softwareFm.swt.explorer.internal.Explorer;
-import org.softwareFm.swt.explorer.internal.MasterDetailSocial;
 import org.softwareFm.swt.menu.PopupMenuContributorMock;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.swt.swt.SwtAndServiceTest;

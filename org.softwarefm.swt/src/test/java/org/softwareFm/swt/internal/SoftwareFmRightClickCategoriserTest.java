@@ -14,7 +14,6 @@ import org.softwareFm.swt.card.IRightClickCategoriser;
 import org.softwareFm.swt.card.RightClickCategoryResult;
 import org.softwareFm.swt.card.RightClickCategoryResult.Type;
 import org.softwareFm.swt.constants.CardConstants;
-import org.softwareFm.swt.internal.SoftwareFmRightClickCategoriser;
 
 public class SoftwareFmRightClickCategoriserTest extends TestCase {
 

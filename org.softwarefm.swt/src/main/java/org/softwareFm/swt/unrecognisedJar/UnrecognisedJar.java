@@ -1,7 +1,6 @@
 package org.softwareFm.swt.unrecognisedJar;
 
 import java.awt.Desktop;
-import java.io.File;
 import java.net.URI;
 import java.text.MessageFormat;
 import java.util.List;
@@ -9,7 +8,6 @@ import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -20,22 +18,17 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.collections.Iterables;
-import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.swt.card.ICardData;
-import org.softwareFm.swt.card.ICardFactory;
 import org.softwareFm.swt.card.ICardTable;
 import org.softwareFm.swt.card.LineItem;
-import org.softwareFm.swt.card.composites.CardShapedHolder;
-import org.softwareFm.swt.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CollectionConstants;
-import org.softwareFm.swt.internal.SoftwareFmCardConfigurator;
 import org.softwareFm.swt.swt.Swts;
 import org.softwareFm.swt.title.TitleSpec;
 
@@ -177,41 +170,4 @@ public class UnrecognisedJar implements IHasControl {
 		return content;
 	}
 
-	public static void main(String[] args) {
-
-		Swts.Show.display(UnrecognisedJar.class.getSimpleName(), new IFunction1<Composite, Composite>() {
-			@Override
-			public Composite apply(final Composite from) throws Exception {
-				final CardConfig cardConfig = new SoftwareFmCardConfigurator().configure(from.getDisplay(), new CardConfig(ICardFactory.Utils.cardFactory(), CardDataStoreFixture.rawCardStore()));
-				Composite composite = new Composite(from, SWT.NULL);
-				composite.setLayout(Swts.titleAndContentLayout(30));
-				Composite titleBar = new Composite(composite, SWT.NULL);
-				titleBar.setLayout(new RowLayout());
-				CardShapedHolder<UnrecognisedJar> holder = new CardShapedHolder<UnrecognisedJar>(composite, cardConfig, UnrecognisedJar.makeTitleSpec(cardConfig), Swts.labelFn("Title"), new IFunction1<Composite, UnrecognisedJar>() {
-					@Override
-					public UnrecognisedJar apply(Composite from) throws Exception {
-						UnrecognisedJar unrecognisedJar = new UnrecognisedJar(from, cardConfig, UnrecognisedJarData.forTests("projectName", new File("artifactId-1.0.0.jar")), ICallback.Utils.<GroupidArtifactVersion> sysoutCallback());
-						return unrecognisedJar;
-					}
-				});
-				for (int i = 0; i < 3; i++)
-					makeButton(titleBar, holder, i);
-				Swts.Row.setRowDataFor(30, SWT.DEFAULT, titleBar.getChildren());
-				return composite;
-			}
-
-			private Button makeButton(Composite titleBar, final CardShapedHolder<UnrecognisedJar> holder, final int count) {
-				return Swts.Buttons.makePushButton(titleBar, null, Integer.toString(count), false, new Runnable() {
-					@Override
-					public void run() {
-						List<GroupidArtifactVersion> gavs = Lists.newList();
-						for (int i = 0; i < count; i++)
-							gavs.add(new GroupidArtifactVersion("groupid" + i, "artifactId", "version" + i));
-						holder.getBody().populate(gavs);
-					}
-				});
-			}
-
-		});
-	}
 }

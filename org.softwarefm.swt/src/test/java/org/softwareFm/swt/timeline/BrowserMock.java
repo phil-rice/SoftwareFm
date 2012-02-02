@@ -11,7 +11,6 @@ import java.util.concurrent.Future;
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.future.Futures;
 import org.softwareFm.swt.browser.IBrowser;
-import org.softwareFm.swt.timeline.PlayItem;
 
 public class BrowserMock implements IBrowser {
 

@@ -17,7 +17,6 @@ import org.softwareFm.common.history.History;
 import org.softwareFm.common.history.IHistory;
 import org.softwareFm.swt.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
-import org.softwareFm.swt.explorer.BrowserAndNavBar;
 import org.softwareFm.swt.navigation.internal.NavNextHistoryPrevConfig;
 import org.softwareFm.swt.swt.SwtAndServiceTest;
 import org.softwareFm.swt.timeline.PlayItem;

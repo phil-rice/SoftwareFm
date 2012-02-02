@@ -11,18 +11,14 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.swt.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.details.IDetailsFactoryCallback;
 import org.softwareFm.swt.editors.IValueEditor;
-import org.softwareFm.swt.swt.Swts.Show;
-import org.softwareFm.swt.swt.Swts.Size;
 import org.softwareFm.swt.title.TitleSpec;
 
 public class StyledTextEditor implements IValueEditor {
 
-	private final TextEditorComposite content;
+	public final TextEditorComposite content;
 
 	static class TextEditorComposite extends ValueEditorComposite<StyledText> {
 
@@ -82,17 +78,5 @@ public class StyledTextEditor implements IValueEditor {
 		return content.getTitleSpec();
 	}
 
-	public static void main(String[] args) {
-		Show.displayNoLayout(StyledTextEditor.class.getSimpleName(), new IFunction1<Composite, Composite>() {
-			@Override
-			public Composite apply(Composite from) throws Exception {
-				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay());
-				StyledTextEditor textEditor = new StyledTextEditor(from, cardConfig, "someUrl", null, "key", "value", IDetailsFactoryCallback.Utils.resizeAfterGotData(), TitleSpec.noTitleSpec(from.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN)));
-				textEditor.getComposite().setLayout(new ValueEditorLayout());
-				Size.resizeMeToParentsSizeWithLayout(textEditor);
-				return textEditor.content;
-			}
-		});
-	}
 
 }

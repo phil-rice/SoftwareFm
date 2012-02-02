@@ -19,12 +19,10 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.softwareFm.common.functions.Functions;
-import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.swt.card.ICardData;
-import org.softwareFm.swt.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.swt.card.internal.CardTable;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
@@ -32,7 +30,6 @@ import org.softwareFm.swt.editors.ICardEditorCallback;
 import org.softwareFm.swt.editors.IValueComposite;
 import org.softwareFm.swt.editors.IValueEditor;
 import org.softwareFm.swt.okCancel.OkCancel;
-import org.softwareFm.swt.swt.Swts;
 import org.softwareFm.swt.title.TitleSpec;
 import org.softwareFm.swt.title.TitleWithTitlePaintListener;
 
@@ -196,34 +193,6 @@ public class CardEditor implements IValueEditor, ICardData {
 		return data;
 	}
 
-	public static void main(String[] args) {
-		Swts.Show.display(CardEditor.class.getSimpleName(), new IFunction1<Composite, Composite>() {
-			@Override
-			public Composite apply(Composite from) throws Exception {
-				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay());
-				CardEditor editor = new CardEditor(from, cardConfig, "someTitle", "someUrl", "tutorial", CardDataStoreFixture.data1aWithP1Q2, new ICardEditorCallback() {
-
-					@Override
-					public void ok(ICardData cardData) {
-						System.out.println("Ok: " + cardData.data());
-
-					}
-
-					@Override
-					public void cancel(ICardData cardData) {
-						System.out.println("Cancel: " + cardData.data());
-
-					}
-
-					@Override
-					public boolean canOk(Map<String, Object> data) {
-						return true;
-					}
-				});
-				editor.getComposite().setLayout(new ValueEditorLayout());
-				return editor.getComposite();
-			}
-		});
-	}
+	
 
 }

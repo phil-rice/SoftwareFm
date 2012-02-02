@@ -9,8 +9,6 @@ import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.runnable.Runnables;
 import org.softwareFm.common.runnable.Runnables.CountRunnable;
 import org.softwareFm.swt.card.dataStore.CardDataStoreMock;
-import org.softwareFm.swt.explorer.internal.ChainImporter;
-import org.softwareFm.swt.explorer.internal.NewJarImporter;
 import org.softwareFm.swt.explorer.internal.NewJarImporter.ImportStageCommand;
 
 public class ChainImporterTest extends TestCase {

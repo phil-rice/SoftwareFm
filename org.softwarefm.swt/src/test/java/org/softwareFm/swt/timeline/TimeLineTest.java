@@ -9,8 +9,6 @@ import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import org.softwareFm.common.history.HistoryListenerMock;
-import org.softwareFm.swt.timeline.PlayItem;
-import org.softwareFm.swt.timeline.TimeLine;
 
 public class TimeLineTest extends PlayListTest {
 

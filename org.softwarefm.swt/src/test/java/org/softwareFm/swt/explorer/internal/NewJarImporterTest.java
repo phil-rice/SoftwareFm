@@ -19,8 +19,6 @@ import org.softwareFm.swt.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.constants.CollectionConstants;
-import org.softwareFm.swt.explorer.internal.IChainImporter;
-import org.softwareFm.swt.explorer.internal.NewJarImporter;
 import org.softwareFm.swt.explorer.internal.NewJarImporter.ImportStage;
 import org.softwareFm.swt.explorer.internal.NewJarImporter.ImportStageCommand;
 import org.softwareFm.swt.swt.SwtTest;

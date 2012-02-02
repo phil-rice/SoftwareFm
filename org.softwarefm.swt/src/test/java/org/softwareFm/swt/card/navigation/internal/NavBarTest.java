@@ -21,13 +21,13 @@ import org.eclipse.swt.widgets.Label;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.callbacks.MemoryCallback;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.swt.card.CardMock;
 import org.softwareFm.swt.card.ICard;
-import org.softwareFm.swt.card.card.CardMock;
 import org.softwareFm.swt.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.navigation.internal.NavBar;
-import org.softwareFm.swt.navigation.internal.NavNextHistoryPrev;
 import org.softwareFm.swt.navigation.internal.NavBar.NavBarLayout;
+import org.softwareFm.swt.navigation.internal.NavNextHistoryPrev;
 import org.softwareFm.swt.swt.SwtTest;
 
 public class NavBarTest extends SwtTest {

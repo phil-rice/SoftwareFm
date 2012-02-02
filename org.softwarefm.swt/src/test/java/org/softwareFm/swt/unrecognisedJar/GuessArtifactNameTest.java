@@ -2,8 +2,6 @@ package org.softwareFm.swt.unrecognisedJar;
 
 import java.io.File;
 
-import org.softwareFm.swt.unrecognisedJar.GuessArtifactAndVersionDetails;
-
 import junit.framework.TestCase;
 
 public class GuessArtifactNameTest extends TestCase {

@@ -14,8 +14,6 @@ import org.softwareFm.common.runnable.Runnables;
 import org.softwareFm.common.runnable.Runnables.CountRunnable;
 import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.card.dataStore.CardDataStoreFixture;
-import org.softwareFm.swt.comments.Comments;
-import org.softwareFm.swt.comments.ICommentsCallback;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CollectionConstants;
 import org.softwareFm.swt.explorer.internal.IExplorerTest;

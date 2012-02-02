@@ -10,11 +10,9 @@
 
 package org.softwareFm.swt.card.internal;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.Future;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
@@ -26,26 +24,19 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.exceptions.WrappedException;
-import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.future.GatedMockFuture;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardChangedListener;
-import org.softwareFm.swt.card.ICardFactory;
-import org.softwareFm.swt.card.ICardHolder;
 import org.softwareFm.swt.card.ICardHolderForTests;
 import org.softwareFm.swt.card.ICardSelectedListener;
 import org.softwareFm.swt.card.IHasCard;
 import org.softwareFm.swt.card.ILineSelectedListener;
-import org.softwareFm.swt.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.navigation.ITitleBarForCard;
 import org.softwareFm.swt.navigation.internal.NavBar;
 import org.softwareFm.swt.navigation.internal.NavTitle;
-import org.softwareFm.swt.swt.Swts.Show;
-import org.softwareFm.swt.swt.Swts.Size;
 import org.softwareFm.swt.title.TitleSpec;
 
 public class CardHolder implements ICardHolderForTests {
@@ -211,36 +202,7 @@ public class CardHolder implements ICardHolderForTests {
 		return content;
 	}
 
-	public static void main(String[] args) {
-		Show.display(CardHolder.class.getSimpleName(), new IFunction1<Composite, Composite>() {
-			@Override
-			public Composite apply(final Composite from) throws Exception {
-				final CardConfig cardConfig = CardDataStoreFixture.asyncCardConfig(from.getDisplay());
-				final ICardHolder cardHolder = ICardHolder.Utils.cardHolderWithLayout(from, cardConfig, Arrays.asList(CardDataStoreFixture.url), ICallback.Utils.<String> noCallback());
-				final Future<ICard> future = ICardFactory.Utils.makeCard(cardHolder, cardConfig, CardDataStoreFixture.url1a, new ICallback<ICard>() {
-					@Override
-					public void process(ICard card) throws Exception {
-						if (card == null)
-							return;
-						cardHolder.setCard(card);
-					}
-				});
-				new Thread() {
-					@Override
-					public void run() {
-						try {
-							Thread.sleep(2000);
-						} catch (InterruptedException e) {
-							throw WrappedException.wrap(e);
-						}
-						((GatedMockFuture<?, ?>) future).kick();
-					}
-				}.start();
-				Size.resizeMeToParentsSize(cardHolder.getControl());
-				return cardHolder.getComposite();
-			}
-		});
-	}
+	
 
 	@Override
 	public CardConfig getCardConfig() {

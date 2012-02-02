@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Swt
-Bundle-SymbolicName: org.softwarefm.swt
+Bundle-Name: org.softwareFm.swt
+Bundle-SymbolicName: org.softwareFm.swt
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: SoftwareFm
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
@@ -12,13 +12,11 @@ Require-Bundle: org.softwarefm.common;bundle-version="1.0.0";visibility:=reexpor
 Export-Package: org.softwareFm.swt,
  org.softwareFm.swt.browser,
  org.softwareFm.swt.card,
- org.softwareFm.swt.card.card,
  org.softwareFm.swt.card.composites,
  org.softwareFm.swt.comments,
  org.softwareFm.swt.composites,
  org.softwareFm.swt.configuration,
  org.softwareFm.swt.constants,
- org.softwareFm.swt.data,
  org.softwareFm.swt.dataStore,
  org.softwareFm.swt.details,
  org.softwareFm.swt.editors,

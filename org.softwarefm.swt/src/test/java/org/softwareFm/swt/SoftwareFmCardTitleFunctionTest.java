@@ -17,7 +17,6 @@ import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.resources.ResourceGetterMock;
-import org.softwareFm.swt.SoftwareFmCardTitleFunction;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.card.ICardFactory;

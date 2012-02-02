@@ -7,9 +7,6 @@ package org.softwareFm.swt.timeline;
 
 import java.util.Arrays;
 
-import org.softwareFm.swt.timeline.IPlayList;
-import org.softwareFm.swt.timeline.PlayItem;
-
 import junit.framework.TestCase;
 
 public abstract class PlayListTest extends TestCase {

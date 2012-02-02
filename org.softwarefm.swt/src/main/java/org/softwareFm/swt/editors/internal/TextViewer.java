@@ -6,27 +6,20 @@
 package org.softwareFm.swt.editors.internal;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
 import org.softwareFm.common.functions.Functions;
-import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.swt.card.ICard;
-import org.softwareFm.swt.card.ICardFactory;
 import org.softwareFm.swt.card.IHasCardConfig;
-import org.softwareFm.swt.card.ILineSelectedListener;
 import org.softwareFm.swt.card.LineItem;
-import org.softwareFm.swt.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.swt.card.internal.CardOutlinePaintListener;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
-import org.softwareFm.swt.swt.Swts;
 import org.softwareFm.swt.title.TitleSpec;
 import org.softwareFm.swt.title.TitleWithTitlePaintListener;
 
@@ -114,30 +107,5 @@ public class TextViewer implements IHasComposite {
 		return content;
 	}
 
-	public static void main(String[] args) {
-		Swts.Show.display(TextViewer.class.getSimpleName(), new IFunction1<Composite, Composite>() {
-			@Override
-			public Composite apply(Composite from) throws Exception {
-				final SashForm sashForm = new SashForm(from, SWT.HORIZONTAL);
-				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay());
-				ICard card = ICardFactory.Utils.createCardWithLayout(sashForm, cardConfig, CardDataStoreFixture.url1a, CardDataStoreFixture.data1a);
-				final Composite right = new Composite(sashForm, SWT.NULL);
-				right.setLayout(new FillLayout());
-				sashForm.setWeights(new int[] { 1, 2 });
-				card.addLineSelectedListener(new ILineSelectedListener() {
-					@Override
-					public void selected(ICard card, String key, Object value) {
-						Swts.removeAllChildren(right);
-						TextViewer textViewer = new TextViewer(right, card, key);
-						textViewer.getComposite().setLayout(new TextViewLayout());
-						right.layout();
-						sashForm.layout();
-					}
-				});
-				TextViewer textViewer = new TextViewer(right, card, "1a");
-				textViewer.getComposite().setLayout(new TextViewLayout());
-				return sashForm;
-			}
-		});
-	}
+	
 }
