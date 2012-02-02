@@ -15,7 +15,7 @@ public class MakeRootProcessor extends AbstractCommandProcessor {
 
 	private final UrlCache<String> urlCache;
 
-	public MakeRootProcessor(UrlCache<String> urlCache,IGitOperations gitOperations) {
+	public MakeRootProcessor(UrlCache<String> urlCache, IGitOperations gitOperations) {
 		super(gitOperations, CommonConstants.POST, CommonConstants.makeRootPrefix);
 		this.urlCache = urlCache;
 	}
@@ -28,7 +28,11 @@ public class MakeRootProcessor extends AbstractCommandProcessor {
 			gitOperations.init(actualUrl);
 			urlCache.clear(actualUrl);
 			return IProcessResult.Utils.processString(MessageFormat.format(CommonMessages.madeRoot, actualUrl));
+		} else {
+			if (existing.equals(fileDescription.getDirectory(gitOperations.getRoot())))
+				return IProcessResult.Utils.processString(MessageFormat.format(CommonMessages.rootAlreadyExists, actualUrl));
+			else
+				return IProcessResult.Utils.processError(CommonConstants.notFoundStatusCode, MessageFormat.format(CommonMessages.cannotCreateGitUnderSecondRepository, actualUrl));
 		}
-		return null;
 	}
 }

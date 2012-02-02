@@ -21,17 +21,18 @@ public class PostProcessor implements IProcessCall {
 	@Override
 	public IProcessResult process(RequestLine requestLine, Map<String, Object> parameters) {
 		if (requestLine.getMethod().equals(CommonConstants.POST)) {
+			if (!parameters.containsKey(CommonConstants.dataParameterName))
+				throw new IllegalArgumentException(requestLine + ", " + parameters);
 			Object data = parameters.get(CommonConstants.dataParameterName);
 			if (data instanceof String) {
 				IFileDescription fileDescription = IFileDescription.Utils.fromRequest(requestLine, parameters);
-				Map<String,Object> actualData = Json.mapFromString((String) parameters.get(CommonConstants.dataParameterName));
-				IFileDescription.Utils.merge(gitOperations, fileDescription,  actualData);
+				Map<String, Object> actualData = Json.mapFromString((String) parameters.get(CommonConstants.dataParameterName));
+				IFileDescription.Utils.merge(gitOperations, fileDescription, actualData);
 			} else
-				throw new IllegalArgumentException(parameters.toString());
+				throw new IllegalArgumentException(requestLine + ", " + parameters);
 			return IProcessResult.Utils.doNothing();
 		}
 		return null;
 	}
-
 
 }

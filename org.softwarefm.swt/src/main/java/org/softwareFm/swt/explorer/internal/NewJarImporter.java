@@ -52,6 +52,12 @@ public class NewJarImporter {
 			this.command = command;
 		}
 
+		@Override
+		public String toString() {
+			return "ImportStage [url=" + url + ", data=" + data + ", command=" + command + "]";
+		}
+		
+
 	}
 
 	public NewJarImporter(CardConfig cardConfig, String found, String digest, String groupId, String artifactId, String version, String jarStem) {
