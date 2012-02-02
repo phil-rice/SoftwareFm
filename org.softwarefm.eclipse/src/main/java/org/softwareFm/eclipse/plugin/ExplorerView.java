@@ -87,7 +87,8 @@ public class ExplorerView extends ViewPart {
 	}
 
 	protected CardConfig makeCardConfig(Composite parent) {
-		return Activator.getDefault().getCardConfig(parent);
+		Activator activator = Activator.getDefault();
+		return activator.getCardConfig(parent);
 	}
 
 	protected void processNoData(CardConfig cardConfig, final IExplorer explorer, final IResourceGetter resourceGetter, final BindingRipperResult ripperResult) {

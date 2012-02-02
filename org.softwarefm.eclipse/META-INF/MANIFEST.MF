@@ -12,3 +12,5 @@ Require-Bundle: org.softwareFm.common_1;bundle-version="1.0.0";visibility:=reexp
  org.eclipse.ui;bundle-version="3.7.0";visibility:=reexport,
  org.eclipse.jdt.ui;bundle-version="3.7.0";visibility:=reexport
 Export-Package: org.softwareFm.eclipse.constants
+Bundle-Activator: org.softwareFm.eclipse.plugin.Activator
+Bundle-ActivationPolicy: lazy

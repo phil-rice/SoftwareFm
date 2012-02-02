@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.collections.Files;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.json.Json;
@@ -52,8 +53,13 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 		ICard card = cardHolder.getCard();
 		assertEquals(Urls.composeWithSlash(rootArtifactUrl, "some/group/some.group/artifact/someArtifact"), card.url());
 
-		checkRepositoryPopulated("012345", "some.group", "someArtifact", "someVersion");
 		checkRuntimeJarPopulated();
+		checkCanPullJarData();
+
+		checkRepositoryPopulated("012345", "some.group", "someArtifact", "someVersion");
+		checkCanPullRepositoryData();
+
+		checkCanPullJarNameData();
 	}
 
 	public void testRtJar() {
@@ -141,6 +147,33 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 		assertTrue(originalText.getText(), originalText.getText().contains("Click this panel to add it to SoftwareFm"));
 		assertTrue(originalText.getText(), !originalText.getText().contains("This is a version of the Java runtime that"));
 		originalText.notifyListeners(SWT.MouseUp, new Event());
+	}
+
+	private void checkCanPullJarData() {
+		checkCanPullData(CardConstants.jarUrlKey, //
+				Maps.stringObjectMap(CardConstants.digest, "012345"), //
+				CollectionConstants.groupId, "some.group", CollectionConstants.artifactId, "someArtifact", CardConstants.version, "someVersion");
+	}
+
+	private void checkCanPullJarNameData() {
+		checkCanPullData(CardConstants.jarNameUrlKey, //
+				Maps.stringObjectMap(CollectionConstants.jarStem, "ant"), //
+				CommonConstants.typeTag, CommonConstants.collectionType); // under the collection are the individual values
+	}
+
+	private void checkCanPullRepositoryData() {
+		checkCanPullData(CardConstants.artifactUrlKey, //
+				Maps.stringObjectMap(CollectionConstants.groupId, "some.group", CollectionConstants.artifactId, "someArtifact"), //
+				CommonConstants.typeTag, CardConstants.artifact); // under the collection are the individual values
+
+	}
+
+	private void checkCanPullData(String urlKey, Map<String, Object> urlMap, Object... expectedNamesAndValues) {
+		IUrlGenerator jarUrlGenerator = cardConfig.urlGeneratorMap.get(urlKey);
+		String url = jarUrlGenerator.findUrlFor(urlMap);
+		Map<String, Object> expectedJarData = Maps.stringObjectMap(expectedNamesAndValues);
+		assertEquals(expectedJarData, gitLocal.getFile(IFileDescription.Utils.plain(url)));
+		assertEquals(expectedJarData, Json.parseFile(new File(localRoot, Urls.compose(url, CommonConstants.dataFileName))));
 	}
 
 	private void checkRuntimeJarPopulated() {

@@ -62,6 +62,23 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 	private File userFile;
 	private File remoteRoot;
 
+	public void testSignupThenLogin() {
+		signUp(email, password);
+		String crypto = template.queryForObject("select crypto from users", String.class);
+		String softwareFmId = template.queryForObject("select softwarefmid from users", String.class);
+		mySoftwareFm.logout();
+
+		mySoftwareFm.start();
+		assertNull(mySoftwareFm.userData.crypto);
+		displayUntilValueComposite("Email", "Password");
+		setValues(email, password);
+		assertTrue(getOkCancel().isOkEnabled());
+		getOkCancel().ok();
+		displayUntilText();
+
+		assertEquals(new UserData(email, softwareFmId, crypto), mySoftwareFm.userData);
+	}
+
 	public void testSignup() {
 		String signUpSalt = signUp(email, password);
 
@@ -90,23 +107,6 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		checkLoginError("a@b.com", "password", "Email not recognised\n\nClicking this panel will start login again");
 
 		assertEquals(new UserData("a@b.com", null, null), mySoftwareFm.userData);
-	}
-
-	public void testSignupThenLogin() {
-		signUp(email, password);
-		String crypto = template.queryForObject("select crypto from users", String.class);
-		String softwareFmId = template.queryForObject("select softwarefmid from users", String.class);
-		mySoftwareFm.logout();
-
-		mySoftwareFm.start();
-		assertNull(mySoftwareFm.userData.crypto);
-		displayUntilValueComposite("Email", "Password");
-		setValues(email, password);
-		assertTrue(getOkCancel().isOkEnabled());
-		getOkCancel().ok();
-		displayUntilText();
-
-		assertEquals(new UserData(email, softwareFmId, crypto), mySoftwareFm.userData);
 	}
 
 	public void testStartRequestsSalt() {

@@ -57,13 +57,17 @@ public class GitOperations implements IGitOperations {
 	}
 	
 	@Override
-	public void pull(String url) {
+	public void pull(final String url) {
 		useFileRepository(url, new IFunction1<FileRepository, Void>() {
 			@Override
 			public Void apply(FileRepository fileRepository) throws Exception {
-				PullCommand pull = new Git(fileRepository).pull();
-				pull.call();
-				return null;
+				try {
+					PullCommand pull = new Git(fileRepository).pull();
+					pull.call();
+					return null;
+				} catch (Exception e) {
+					throw new RuntimeException("Pull error with url: " + url, e);
+				}
 			}
 		});
 	}

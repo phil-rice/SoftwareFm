@@ -27,7 +27,7 @@ public class PostProcessor implements IProcessCall {
 				Map<String,Object> actualData = Json.mapFromString((String) parameters.get(CommonConstants.dataParameterName));
 				IFileDescription.Utils.merge(gitOperations, fileDescription,  actualData);
 			} else
-				throw new IllegalArgumentException(data.getClass() + "\n" + data);
+				throw new IllegalArgumentException(parameters.toString());
 			return IProcessResult.Utils.doNothing();
 		}
 		return null;
