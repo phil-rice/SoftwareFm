@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/org.softwareFm.eclipse/src/main/java/org/softwareFm/eclipse/plugin/ExplorerWithRadioChannel.java"/>
+<listEntry value="/org.softwarefm.eclipse/src/main/java/org/softwareFm/eclipse/plugin/ExplorerWithRadioChannel.java"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>
@@ -10,5 +10,5 @@
 <listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="org.softwareFm.eclipse.plugin.ExplorerWithRadioChannel"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="org.softwareFm.eclipse"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="org.softwarefm.eclipse"/>
 </launchConfiguration>

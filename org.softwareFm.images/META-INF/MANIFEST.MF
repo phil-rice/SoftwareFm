@@ -1,13 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.softwareFm.images
-Bundle-SymbolicName: org.softwareFm.images;singleton:=true
+Bundle-Name: org.softwarefm.images
+Bundle-SymbolicName: org.softwarefm.images;singleton:=true
 Bundle-Version: 1.0.6
-Bundle-Vendor: softwareFm
+Bundle-Vendor: SoftwareFM
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.jface;bundle-version="3.7.0";visibility:=reexport,
  org.eclipse.core.runtime;bundle-version="3.7.0";visibility:=reexport,
- org.softwareFm.common;bundle-version="1.0.0";visibility:=reexport
+ org.softwarefm.common;bundle-version="1.0.0";visibility:=reexport
 Export-Package: org.softwareFm.images;
   uses:="org.eclipse.jface.resource,
    org.softwareFm.swtBasics.images,

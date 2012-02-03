@@ -1,13 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.softwareFm.swt
-Bundle-SymbolicName: org.softwareFm.swt
+Bundle-Name: org.softwarefm.swt
+Bundle-SymbolicName: org.softwarefm.swt
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: SoftwareFm
+Bundle-Vendor: SoftwareFM
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.jface.text;bundle-version="3.7.0";visibility:=reexport,
- org.softwareFm.client;bundle-version="1.0.0";visibility:=reexport,
- org.softwareFm.images;bundle-version="1.0.6";visibility:=reexport
+ org.softwarefm.client;bundle-version="1.0.0";visibility:=reexport,
+ org.softwarefm.images;bundle-version="1.0.6";visibility:=reexport
 Export-Package: org.softwareFm.swt,
  org.softwareFm.swt.browser,
  org.softwareFm.swt.card,
