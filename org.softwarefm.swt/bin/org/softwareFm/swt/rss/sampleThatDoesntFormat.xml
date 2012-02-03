@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xml:base="http://www.junit.org" xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel>
+ <title>JUnit.org - Resources for Test Driven Development</title>
+ <link>http://www.junit.org</link>
+ <description></description>
+ <language>en</language>
+<item>
+ <title>Would you be a beta-tester if betas were announced here?</title>
+ <link>http://www.junit.org/node/598</link>
+ <description>Here is some description</description>
+ <comments>http://www.junit.org/node/598#comments</comments>
+ <category domain="http://www.junit.org/taxonomy/term/12">Article</category>
+ <pubDate>Thu, 22 Sep 2011 13:14:52 -0500</pubDate>
+ <dc:creator>dsaff</dc:creator>
+ <guid isPermaLink="false">598 at http://www.junit.org</guid>
+</item>
+</channel>
+</rss>

@@ -55,7 +55,7 @@ public class Activator extends AbstractUIPlugin {
 	private IServiceExecutor serviceExecutor;
 
 	private IHttpClient httpClient;
-	boolean local = true;
+	boolean local = false;
 
 	private IGitLocal gitLocal;
 

@@ -1,12 +1,9 @@
 package org.softwareFm.swt.explorer.internal;
 
-import java.util.Map;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.runnable.Runnables;
 import org.softwareFm.swt.card.composites.TextInBorderWithButtons;
 import org.softwareFm.swt.composites.IHasControl;
@@ -34,13 +31,13 @@ public class MySoftwareFmLoggedIn implements IHasControl {
 				loginDisplayStrategy.showChangePassword(email);
 			}
 		});
-		content.addButton("My Data", new Runnable() {
-			@Override
-			public void run() {
-				Map<String, Object> map = Maps.stringObjectMap("data", "goes here");
-				content.setText(CardConstants.loginCardType, "Project Data", map.toString());
-			}
-		});
+//		content.addButton("My Data", new Runnable() {
+//			@Override
+//			public void run() {
+//				Map<String, Object> map = Maps.stringObjectMap("data", "goes here");
+//				content.setText(CardConstants.loginCardType, "Project Data", map.toString());
+//			}
+//		});
 	}
 
 	@Override
