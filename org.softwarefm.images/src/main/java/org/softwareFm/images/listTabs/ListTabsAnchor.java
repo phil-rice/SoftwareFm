@@ -5,7 +5,7 @@
 
 package org.softwareFm.images.listTabs;
 
-public class ListTabsAnchor {
+abstract public class ListTabsAnchor {
 	public static final String prefix = "listTabs.";
 	public static final String editLeftWhite = prefix + "EditLeftR255G255B255";
 	public static final String editRightWhite = prefix + "EditRightR255G255B255";

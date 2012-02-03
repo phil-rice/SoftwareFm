@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/SoftwareFmFeatures_1.5.7.jar" id="SoftwareFmFeatures" version="1.5.7">
+   <feature url="features/SoftwareFmFeatures_1.5.8.jar" id="SoftwareFmFeatures" version="1.5.8">
       <category name="org.softwareFm"/>
    </feature>
    <category-def name="org.softwareFm" label="SoftwareFm"/>

@@ -17,7 +17,7 @@ public interface ISimpleString {
 	@Slow("This will make a new object")
 	String asString();
 
-	static class Utils {
+	abstract static class Utils {
 
 		public static boolean equivalent(ISimpleString simpleString, String string) {
 			if (simpleString == null || string == null)

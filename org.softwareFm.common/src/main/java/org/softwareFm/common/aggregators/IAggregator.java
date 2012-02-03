@@ -5,8 +5,6 @@
 
 package org.softwareFm.common.aggregators;
 
-import java.util.List;
-import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -20,21 +18,10 @@ public interface IAggregator<From, To> {
 
 	To result();
 
-	static class Utils {
-		public static <T> IAggregator<T, List<T>> list(boolean threadSafe) {
-			return new ListAggregator<T>(threadSafe);
-		}
+	abstract public static class Utils {
 
 		public static <T> IAggregator<T, String> join(String separator) {
 			return Strings.join(separator);
-		}
-
-		public static <T> IAggregator<List<T>, Iterable<T>> listToIterable(boolean threadSafe) {
-			return new ListsToIterablAggregator<T>(threadSafe);
-		}
-
-		public static <T> IAggregator<Set<T>, Set<T>> setOfSetsAggregator(boolean threadSafe) {
-			return new SetOfSetsAggregator<T>(threadSafe);
 		}
 
 		public static IAggregator<Integer, Integer> sumInts() {
@@ -73,35 +60,7 @@ public interface IAggregator<From, To> {
 
 	}
 
-	@SuppressWarnings("rawtypes")
-	static class CallableFactory {
-		private static Callable listNotThreadSafe = new Callable<IAggregator<Object, List<Object>>>() {
-			@Override
-			public IAggregator<Object, List<Object>> call() throws Exception {
-				return Utils.<Object> list(false);
-			}
-		};
-
-		private static Callable listThreadSafe = new Callable<IAggregator<Object, List<Object>>>() {
-			@Override
-			public IAggregator<Object, List<Object>> call() throws Exception {
-				return Utils.<Object> list(true);
-			}
-		};
-
-		@SuppressWarnings("unchecked")
-		public static <T> Callable<IAggregator<T, List<T>>> list(boolean threadSafe) {
-			return threadSafe ? listThreadSafe : listNotThreadSafe;
-		}
-
-		public static <T> Callable<IAggregator<Set<T>, Set<T>>> setToSetAggregator(final boolean threadSafe) {
-			return new Callable<IAggregator<Set<T>, Set<T>>>() {
-				@Override
-				public IAggregator<Set<T>, Set<T>> call() throws Exception {
-					return Utils.setOfSetsAggregator(threadSafe);
-				}
-			};
-		}
+	abstract static class CallableFactory {
 
 		public static Callable<IAggregator<Long, Long>> sum() {
 			return new Callable<IAggregator<Long, Long>>() {

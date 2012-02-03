@@ -10,7 +10,7 @@ import org.softwareFm.common.exceptions.WrappedException;
 public interface ICallback<T> {
 	void process(T t) throws Exception;
 
-	static class Utils {
+	abstract static class Utils {
 
 		public static <T> void call(ICallback<T> callback, T value) {
 			try {

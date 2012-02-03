@@ -41,11 +41,11 @@ public class Usage implements IUsage {
 		template.update("insert into `usage`(ip, url, stamp, duration) values(?,?,?,?)", ip, url, new Date().toString(), duration);
 	}
 
-	public static void main(String[] args) {
-		IUsage usage = IUsage.Utils.defaultUsage();
-		usage.start();
-		usage.monitor("ip1", "url1", 10);
-		usage.monitor("ip2", "url2", 20);
-	}
+//	public static void main(String[] args) {
+//		IUsage usage = IUsage.Utils.defaultUsage();
+//		usage.start();
+//		usage.monitor("ip1", "url1", 10);
+//		usage.monitor("ip2", "url2", 20);
+//	}
 
 }

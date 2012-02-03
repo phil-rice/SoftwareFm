@@ -8,7 +8,7 @@ import org.softwareFm.common.exceptions.WrappedException;
 public interface IMailer {
 	void mail(String from, String to, String subject, String message);
 
-	public static class Utils {
+	abstract public static class Utils {
 		public static IMailer email(final String hostName, final String userName, final String password) {
 			return new IMailer() {
 				@Override

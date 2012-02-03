@@ -26,7 +26,7 @@ public interface IFileDescription {
 
 	Map<String, Object> decode(String text);
 
-	public static class Utils {
+	abstract public static class Utils {
 
 		public static IFileDescription plain(String url) {
 			return new FileDescription(url, CommonConstants.dataFileName, null);

@@ -31,7 +31,7 @@ public interface IGitOperations {
 
 	void clearCaches();
 
-	public static class Utils {
+	abstract public static class Utils {
 		public static IGitOperations gitOperations(File root) {
 			return new GitOperations(root);
 		}

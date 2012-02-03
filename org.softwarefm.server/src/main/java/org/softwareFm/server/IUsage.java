@@ -9,7 +9,7 @@ public interface IUsage {
 	void monitor(final String ip, final String url, long duration);
 	void shutdown();
 
-	public static class Utils {
+	abstract public static class Utils {
 
 		public static IUsage defaultUsage() {
 			return new Usage(dataSource());

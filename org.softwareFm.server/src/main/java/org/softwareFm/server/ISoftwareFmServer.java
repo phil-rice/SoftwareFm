@@ -9,7 +9,7 @@ public interface ISoftwareFmServer {
 
 	public void shutdown();
 
-	public static class Utils {
+	abstract public static class Utils {
 		public static ISoftwareFmServer testServerPort(IProcessCall processCall, ICallback<Throwable> errorHandler) {
 			return server(CommonConstants.testPort, 2, processCall, errorHandler);
 		}

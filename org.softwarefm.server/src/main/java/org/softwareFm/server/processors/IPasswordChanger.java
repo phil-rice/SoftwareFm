@@ -10,7 +10,7 @@ public interface IPasswordChanger {
 	/** returns false if failed */
 	boolean changePassword(String email, String oldHash, String newHash);
 
-	public static class Utils {
+	abstract public static class Utils {
 		public static PasswordChangerMock mockPasswordChanger() {
 			return new PasswordChangerMock();
 		}

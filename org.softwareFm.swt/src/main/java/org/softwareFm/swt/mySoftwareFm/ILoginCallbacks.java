@@ -7,7 +7,7 @@ import org.softwareFm.swt.explorer.internal.UserData;
 
 public interface ILoginCallbacks extends ILoginCallback, IForgotPasswordCallback, ISignUpCallback, IChangePasswordCallback {
 
-	public static class Utils {
+	abstract public static class Utils {
 		public static ILoginCallbacks showMessageCallbacks(final CardConfig cardConfig, final IShowMessage strategy) {
 			return new ILoginCallbacks() {
 				@Override

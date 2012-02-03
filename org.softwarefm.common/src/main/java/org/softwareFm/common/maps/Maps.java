@@ -354,18 +354,7 @@ public class Maps {
 		}
 	}
 
-	public static <K, V> V findOrCreate(Map<K, V> map, IStaleCacheStrategy<K, V> staleCacheStrategy, K key, Callable<V> callable) {
-		try {
-			boolean needToRecreate = staleCacheStrategy.needToRecreate(map, key);
-			if (!needToRecreate)
-				return map.get(key);
-			V v = callable.call();
-			map.put(key, v);
-			return v;
-		} catch (Exception e) {
-			throw WrappedException.wrap(e);
-		}
-	}
+	
 
 	public static <K> void add(Map<K, Integer> map, K key, int size) {
 		map.put(key, size + intFor(map, key));

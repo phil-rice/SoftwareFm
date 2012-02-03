@@ -10,7 +10,7 @@ public interface IUser extends IUserReader {
 
 	<T>void setUserProperty(Map<String, Object> userDetails, String cryptoKey, String property, T value);
 
-	public static class Utils {
+	abstract public static class Utils {
 
 		public static IUser makeUserForServer(IGitOperations gitOperations, IUrlGenerator userUrlGenerator, IFunction1<String, String> findRepositoryRoot){
 			return new ServerUser(gitOperations, userUrlGenerator, findRepositoryRoot);

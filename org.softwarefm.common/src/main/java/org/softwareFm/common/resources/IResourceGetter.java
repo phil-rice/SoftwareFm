@@ -30,7 +30,7 @@ public interface IResourceGetter {
 
 	IResourceGetter with(ResourceBundle bundle);
 
-	public static class Utils {
+	abstract public static class Utils {
 		public static IResourceGetter noResources() {
 			return new ResourceGetter(null);
 		}

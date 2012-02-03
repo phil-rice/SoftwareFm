@@ -5,7 +5,7 @@
 
 package org.softwareFm.images.smallIcons;
 
-public class SmallIconsAnchor {
+abstract public class SmallIconsAnchor {
 
 	public static final String prefix = "smallIcon.";
 	public static final String javadocKey = prefix + "javadoc";

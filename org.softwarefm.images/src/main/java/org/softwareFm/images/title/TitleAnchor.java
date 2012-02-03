@@ -5,7 +5,7 @@
 
 package org.softwareFm.images.title;
 
-public class TitleAnchor {
+abstract public class TitleAnchor {
 
 	public static final String prefix = "title.";
 	public static final String artifactKey = prefix + "artifact";

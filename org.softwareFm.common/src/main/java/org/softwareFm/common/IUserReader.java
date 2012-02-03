@@ -8,7 +8,7 @@ import org.softwareFm.common.url.IUrlGenerator;
 public interface IUserReader {
 	<T> T getUserProperty(Map<String, Object> userDetails, String cryptoKey, String property);
 
-	public static class Utils {
+	abstract public static class Utils {
 		public static IUserReader localUserReader(IGitLocal gitLocal, IUrlGenerator userGenerator) {
 			return new LocalUserReader(gitLocal, userGenerator);
 

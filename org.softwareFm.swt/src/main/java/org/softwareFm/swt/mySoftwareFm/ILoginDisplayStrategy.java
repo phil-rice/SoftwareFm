@@ -10,7 +10,7 @@ public interface ILoginDisplayStrategy {
 
 	void showChangePassword(String email);
 
-	public static class Utils {
+	abstract public static class Utils {
 		public static ILoginDisplayStrategy noDisplayStrategy() {
 			return new ILoginDisplayStrategy() {
 

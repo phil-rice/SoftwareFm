@@ -40,7 +40,7 @@ import org.softwareFm.server.processors.internal.SignupProcessor;
 public interface IProcessCall {
 	IProcessResult process(RequestLine requestLine, Map<String, Object> parameters);
 
-	public static class Utils {
+	abstract public static class Utils {
 
 		public static IProcessCall chain(final IProcessCall... processors) {
 			return new IProcessCall() {

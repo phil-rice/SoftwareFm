@@ -23,7 +23,7 @@ public interface IGitLocal extends IHasUrlCache{
 
 	File getRoot();
 
-	public static class Utils {
+	abstract public static class Utils {
 
 		public static IGitLocal localReader(IRepoFinder repoFinder, IGitOperations gitOperations, IGitWriter gitWriter, String remotePrefix, int period) {
 			return new GitLocal(repoFinder, gitOperations, gitWriter, remotePrefix, period);

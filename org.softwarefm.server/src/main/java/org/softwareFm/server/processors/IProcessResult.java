@@ -14,7 +14,7 @@ public interface IProcessResult {
 
 	void process(HttpResponse response) throws Exception;
 
-	public static class Utils {
+	abstract public static class Utils {
 		public static IProcessResult processString(final String string) {
 			return new IProcessResult() {
 				@Override
