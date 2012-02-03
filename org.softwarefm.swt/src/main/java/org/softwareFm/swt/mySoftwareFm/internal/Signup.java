@@ -7,22 +7,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.crypto.Crypto;
-import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.swt.card.ICardData;
-import org.softwareFm.swt.card.ICardFactory;
 import org.softwareFm.swt.configuration.CardConfig;
-import org.softwareFm.swt.configuration.ICardConfigurator;
 import org.softwareFm.swt.constants.CardConstants;
-import org.softwareFm.swt.dataStore.ICardDataStore;
 import org.softwareFm.swt.editors.ICardEditorCallback;
 import org.softwareFm.swt.editors.INamesAndValuesEditor;
-import org.softwareFm.swt.mySoftwareFm.ILoginCallbacks;
 import org.softwareFm.swt.mySoftwareFm.ILoginDisplayStrategy;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
-import org.softwareFm.swt.mySoftwareFm.IShowMessage;
 import org.softwareFm.swt.mySoftwareFm.ISignUp;
 import org.softwareFm.swt.mySoftwareFm.ISignUpCallback;
 import org.softwareFm.swt.swt.Swts;
@@ -99,17 +93,6 @@ public class Signup implements ISignUp {
 		return content.getControl();
 	}
 
-	public static void main(String[] args) {
-		Swts.Show.display(Signup.class.getSimpleName(), new IFunction1<Composite, Composite>() {
-			@Override
-			public Composite apply(Composite parent) throws Exception {
-				CardConfig cardConfig = ICardConfigurator.Utils.basicConfigurator().configure(parent.getDisplay(), new CardConfig(ICardFactory.Utils.noCardFactory(), ICardDataStore.Utils.mock()));
-				String salt = "someSalt";
-				return (Composite) new Signup(parent, cardConfig, salt, "initialEmail", ILoginStrategy.Utils.sysoutLoginStrategy(), //
-						ILoginDisplayStrategy.Utils.sysoutDisplayStrategy(), //
-						ILoginCallbacks.Utils.showMessageCallbacks(cardConfig, IShowMessage.Utils.sysout())).getControl();
-			}
-		});
-	}
+
 
 }

@@ -11,30 +11,7 @@ public interface ILoginDisplayStrategy {
 	void showChangePassword(String email);
 
 	abstract public static class Utils {
-		public static ILoginDisplayStrategy noDisplayStrategy() {
-			return new ILoginDisplayStrategy() {
 
-				@Override
-				public void showSignup(String sessionSalt, String initialEmail) {
-					throw new UnsupportedOperationException();
-				}
-
-				@Override
-				public void showLogin(String sessionSalt, String initialEmail) {
-					throw new UnsupportedOperationException();
-				}
-
-				@Override
-				public void showForgotPassword(String sessionSalt, String initialEmail) {
-					throw new UnsupportedOperationException();
-				}
-
-				@Override
-				public void showChangePassword(String email) {
-					throw new UnsupportedOperationException();
-				}
-			};
-		}
 
 		public static ILoginDisplayStrategy sysoutDisplayStrategy() {
 			return new ILoginDisplayStrategy() {

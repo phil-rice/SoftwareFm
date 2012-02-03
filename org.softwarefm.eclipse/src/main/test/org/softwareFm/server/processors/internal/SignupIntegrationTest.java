@@ -11,7 +11,7 @@ import org.softwareFm.common.constants.LoginMessages;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.server.processors.AbstractProcessorMockIntegrationTests;
 
-public class SignupIntegrationTests extends AbstractProcessorMockIntegrationTests {
+public class SignupIntegrationTest extends AbstractProcessorMockIntegrationTests {
 
 	private final Map<String, Object> userDetails = Maps.stringObjectMap(LoginConstants.softwareFmIdKey, "someSoftwareFmId0");
 

@@ -2,8 +2,6 @@ package org.softwareFm.common;
 
 import java.util.Map;
 
-import org.softwareFm.common.server.GitWriterForTests;
-
 public interface IGitWriter {
 	void init(String url);
 
@@ -12,10 +10,7 @@ public interface IGitWriter {
 	void delete(IFileDescription fileDescription);
 	
 	public static class Utils{
-		public static IGitWriter writerForTest(IGitOperations remoteOperations){
-			return new GitWriterForTests(remoteOperations);
-		}
-
+	
 		public static IGitWriter noWriter() {
 			return new IGitWriter() {
 				@Override

@@ -45,27 +45,7 @@ public class SimpleMaps {
 		};
 	}
 
-	public static <K, V> ISimpleMapWithIndex<K, V> withIndexfromMap(final Map<K, V> map) {
-		return new ISimpleMapWithIndex<K, V>() {
-			private final List<K> keyList = Iterables.list(map.keySet());
 
-			@Override
-			public V get(K key) {
-				return map.get(key);
-			}
-
-			@Override
-			public List<K> keys() {
-				return keyList;
-			}
-
-			@Override
-			public V getByIndex(int keyIndex) {
-				return get(keyList.get(keyIndex));
-			}
-
-		};
-	}
 
 	public static <K, V> Map<K, V> merge(Iterable<? extends ISimpleMap<K, V>> maps) {
 		Map<K, V> result = new HashMap<K, V>();

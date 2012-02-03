@@ -5,6 +5,8 @@
 
 package org.softwareFm.client.http.response;
 
+import org.softwareFm.client.http.response.internal.Response;
+
 
 public interface IResponse {
 

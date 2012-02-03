@@ -33,13 +33,13 @@ import org.softwareFm.common.indent.Indent;
 
 public class Maps {
 
-	public static <K,V>Map<K,V> withOnly(Map<K,V> map, K...keys){
+	public static <K, V> Map<K, V> withOnly(Map<K, V> map, K... keys) {
 		Map<K, V> result = Maps.newMapOfSameTypeMap(map);
-		for (K key: keys)
+		for (K key : keys)
 			result.put(key, map.get(key));
 		return result;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static MapAsList toMapAsList(String keyName, Map<String, Object> map, String sortOrder, List<String> keyOrder) {
 		List<String> titles = Lists.newList();
@@ -354,8 +354,6 @@ public class Maps {
 		}
 	}
 
-	
-
 	public static <K> void add(Map<K, Integer> map, K key, int size) {
 		map.put(key, size + intFor(map, key));
 	}
@@ -450,24 +448,6 @@ public class Maps {
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
-
-	}
-
-	public static <K, V, To> To[] toParameters(Map<K, V> map, Class<To> toClass) {
-		return Maps.<K, V, To> toParameters(map, Functions.<K, To> cast(), Functions.<V, To> cast(), toClass);
-	}
-
-	public static <K, V> Map<K, V> newMapWith(Map<K, V> old, K key, V value) {
-		HashMap<K, V> result = new HashMap<K, V>(old);
-		result.put(key, value);
-		return result;
-	}
-
-	public static <K, V> void walkMapToList(Map<K, List<V>> map, IKeyValueCallback<K, V> keyValueCallback) {
-		if (map != null)
-			for (Entry<K, List<V>> entry : map.entrySet())
-				for (V value : entry.getValue())
-					keyValueCallback.process(entry.getKey(), value);
 
 	}
 

@@ -26,14 +26,6 @@ import org.softwareFm.common.maps.Maps;
 
 public class Lists {
 
-	public static <T> int indexOf(List<T> list, T object) {
-		int indexOne = identityIndexOf(list, object);
-		if (indexOne != -1)
-			return indexOne;
-		int indexTwo = equalsIndexOf(list, object);
-		return indexTwo;
-	}
-
 	public static <T> void addAllUnique(List<T> target, Iterable<T> toBeAdded) {
 		for (T t : toBeAdded)
 			if (!target.contains(t))

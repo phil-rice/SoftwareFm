@@ -2,28 +2,23 @@ package org.softwareFm.swt.mySoftwareFm.internal;
 
 import java.util.Arrays;
 import java.util.Map;
-import java.util.UUID;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.common.constants.LoginConstants;
-import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.configuration.CardConfig;
-import org.softwareFm.swt.configuration.ICardConfigurator;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.editors.ICardEditorCallback;
 import org.softwareFm.swt.editors.INamesAndValuesEditor;
 import org.softwareFm.swt.mySoftwareFm.ILogin;
 import org.softwareFm.swt.mySoftwareFm.ILoginCallback;
-import org.softwareFm.swt.mySoftwareFm.ILoginCallbacks;
 import org.softwareFm.swt.mySoftwareFm.ILoginDisplayStrategy;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.swt.mySoftwareFm.IRequestSaltCallback;
-import org.softwareFm.swt.mySoftwareFm.IShowMessage;
 import org.softwareFm.swt.swt.Swts;
 
 public class Login implements ILogin {
@@ -108,18 +103,6 @@ public class Login implements ILogin {
 		return content.getControl();
 	}
 
-	public static void main(String[] args) {
-		Swts.Show.display(Login.class.getSimpleName(), new IFunction1<Composite, Composite>() {
-			@Override
-			public Composite apply(Composite parent) throws Exception {
-				CardConfig cardConfig = ICardConfigurator.Utils.cardConfigForTests(parent.getDisplay());
-				String salt = UUID.randomUUID().toString();
-				ILoginStrategy sysoutLoginStrategy = ILoginStrategy.Utils.sysoutLoginStrategy();
-				ILoginDisplayStrategy loginDisplayStrategy = ILoginDisplayStrategy.Utils.sysoutDisplayStrategy();
-				ILoginCallbacks loginCallbacks = ILoginCallbacks.Utils.showMessageCallbacks(cardConfig, IShowMessage.Utils.sysout());
-				return (Composite) new Login(parent, cardConfig, salt, "initialEmail", sysoutLoginStrategy, loginDisplayStrategy, loginCallbacks).getControl();
-			}
-		});
-	}
+
 
 }
