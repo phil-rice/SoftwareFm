@@ -7,7 +7,7 @@ import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.constants.LoginMessages;
 import org.softwareFm.server.processors.AbstractProcessorMockIntegrationTests;
 
-public class LoginIntegrationTests extends AbstractProcessorMockIntegrationTests {
+public class LoginIntegrationTest extends AbstractProcessorMockIntegrationTests {
 
 	public void testMakeSaltLogin() throws Exception {
 		String sessionSalt = "salt 0";

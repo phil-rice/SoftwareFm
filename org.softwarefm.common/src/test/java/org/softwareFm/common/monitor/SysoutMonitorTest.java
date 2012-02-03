@@ -11,9 +11,8 @@ import java.util.Collection;
 import junit.framework.TestCase;
 
 import org.softwareFm.common.collections.Lists;
-import org.softwareFm.common.monitor.SysoutMonitor;
 
-public class SysoutMonitorTests extends TestCase {
+public class SysoutMonitorTest extends TestCase {
 
 	public void testCancelBehaviour() {
 		SysoutMonitor monitor = new SysoutMonitor("", 1);

@@ -15,7 +15,6 @@ import junit.framework.TestCase;
 import org.softwareFm.common.collections.Iterables;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.reflection.Fields;
 import org.springframework.core.io.ClassPathResource;
 
 public class FieldsTest extends TestCase {
@@ -40,7 +39,7 @@ public class FieldsTest extends TestCase {
 	public void testConstants() {
 		checkConstants(getClass(), "publicStaticFinalIntField", "publicStaticFinalIntegerField", "a", "b");
 		checkConstants(TestClassWithFields.class, "f", "g");
-		checkConstants(AllUtilitiesReflectionTests.class);
+		checkConstants(ClassesTest.class);
 	}
 
 	private void checkConstants(Class<?> class1, String... expected) {

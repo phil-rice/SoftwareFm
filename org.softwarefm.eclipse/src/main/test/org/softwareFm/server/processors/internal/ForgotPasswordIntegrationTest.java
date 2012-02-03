@@ -6,7 +6,7 @@ import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.server.processors.AbstractProcessorMockIntegrationTests;
 
-public class ForgotPasswordIntegrationTests extends AbstractProcessorMockIntegrationTests {
+public class ForgotPasswordIntegrationTest extends AbstractProcessorMockIntegrationTests {
 
 	public void testMakeSaltThenForgotPassword() throws Exception {
 		String salt = "salt 0";
