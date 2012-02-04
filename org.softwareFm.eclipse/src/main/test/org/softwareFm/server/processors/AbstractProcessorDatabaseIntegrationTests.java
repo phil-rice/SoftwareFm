@@ -13,11 +13,15 @@ import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.processors.AbstractLoginDataAccessor;
 import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.strings.Strings;
+import org.softwareFm.common.url.IUrlGenerator;
+import org.softwareFm.eclipse.project.ProjectForServer;
 import org.softwareFm.eclipse.project.UsageProcessor;
 import org.softwareFm.eclipse.user.IProject;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.server.ISoftwareFmServer;
 import org.softwareFm.server.processors.internal.MailerMock;
+import org.softwareFm.swt.ICollectionConfigurationFactory;
+import org.softwareFm.swt.constants.CardConstants;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 abstract public class AbstractProcessorDatabaseIntegrationTests extends AbstractProcessorIntegrationTests {
@@ -29,6 +33,7 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 	private Callable<String> cryptoGenerator;
 	protected int thisDay;
 	protected String projectCryptoKey;
+	private IUser user;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -39,29 +44,36 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 		cryptoFn = Functions.constant(userKey);
 		cryptoGenerator = Callables.value(userKey);
 		Callable<String> softwareFmIdGenerator = Callables.patternWithCount("someNewSoftwareFmId{0}");
-		IUser user = IUser.Utils.makeUserForServer(remoteOperations, LoginConstants.userGenerator(), Strings.firstNSegments(3));
+		user = IUser.Utils.makeUserForServer(remoteOperations, LoginConstants.userGenerator(), Strings.firstNSegments(3));
+		
 		projectCryptoKey = Crypto.makeKey();
-		IProject project = IProject.Utils.makeProjectForServer(remoteOperations, cryptoFn, user, LoginConstants.userGenerator(), Callables.value(projectCryptoKey));
-		UsageProcessor usageProcessor = new UsageProcessor(remoteOperations, project, new IProjectTimeGetter() {
+
+		IProcessCall processCalls = IProcessCall.Utils.softwareFmProcessCall(dataSource, remoteOperations, cryptoFn, cryptoGenerator, remoteRoot, mailerMock, softwareFmIdGenerator, getExtraProcessCalls());
+		template = new JdbcTemplate(dataSource);
+		server = ISoftwareFmServer.Utils.testServerPort(processCalls, ICallback.Utils.rethrow());
+		template.update("truncate users");
+	}
+
+	protected IProcessCall[] getExtraProcessCalls() {
+		IUrlGenerator userUrlGenerator = ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap("softwareFm", "data").get(CardConstants.userUrlKey);
+		IProject project = new ProjectForServer(remoteOperations, cryptoFn, user, userUrlGenerator, cryptoGenerator);
+		IProjectTimeGetter projectTimeGetter= new IProjectTimeGetter() {
 			@Override
 			public String thisMonth() {
 				return "someMonth";
 			}
-
-			@Override
-			public int day() {
-				return thisDay;
-			}
-
+			
 			@Override
 			public Iterable<String> lastNMonths(int n) {
 				throw new UnsupportedOperationException();
 			}
-		});
-		IProcessCall processCalls = IProcessCall.Utils.softwareFmProcessCall(dataSource, remoteOperations, cryptoFn, cryptoGenerator, remoteRoot, mailerMock, softwareFmIdGenerator, usageProcessor);
-		template = new JdbcTemplate(dataSource);
-		server = ISoftwareFmServer.Utils.testServerPort(processCalls, ICallback.Utils.rethrow());
-		template.update("truncate users");
+			
+			@Override
+			public int day() {
+				return thisDay;
+			}
+		};
+		return new IProcessCall[]{new UsageProcessor(remoteOperations, project, projectTimeGetter)};
 	}
 
 	@Override

@@ -82,7 +82,6 @@ public class MyDetails implements IHasComposite {
 			}
 			Swts.packTables(userDetails, projectDetails);
 		}
-
 	}
 
 	private final MyProjectComposite content;
