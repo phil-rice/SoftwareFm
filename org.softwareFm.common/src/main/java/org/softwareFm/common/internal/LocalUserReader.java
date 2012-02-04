@@ -22,12 +22,19 @@ public class LocalUserReader implements IUserReader {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getUserProperty(Map<String, Object> userDetails, String cryptoKey, String property) {
-		String url = userGenerator.findUrlFor(userDetails);
-		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, CommonConstants.dataFileName, cryptoKey);
-		Map<String, Object> data = gitLocal.getFile(fileDescription);
+		Map<String, Object> data = getUserData(userDetails, cryptoKey);
 		if (data == null)
 			throw new NullPointerException(userDetails + ", " + property);
 		return (T) data.get(property);
 	}
+
+	protected Map<String, Object> getUserData(Map<String, Object> userDetails, String cryptoKey) {
+		String url = userGenerator.findUrlFor(userDetails);
+		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, CommonConstants.dataFileName, cryptoKey);
+		Map<String, Object> data = gitLocal.getFile(fileDescription);
+		return data;
+	}
+
+
 
 }

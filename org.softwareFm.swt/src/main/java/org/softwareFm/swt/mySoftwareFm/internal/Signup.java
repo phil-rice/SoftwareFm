@@ -28,9 +28,10 @@ public class Signup implements ISignUp {
 	public Signup(Composite parent, final CardConfig cardConfig, final String salt, String initialEmail, final ILoginStrategy strategy, final ILoginDisplayStrategy loginDisplayStrategy, final ISignUpCallback callback) {
 		String title = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, CardConstants.signupTitle);
 		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(LoginConstants.emailKey, initialEmail), Arrays.asList(//
-				INamesAndValuesEditor.Utils.text(cardConfig, cardType, "email"),//
-				INamesAndValuesEditor.Utils.password(cardConfig, cardType, "password"),//
-				INamesAndValuesEditor.Utils.password(cardConfig, cardType, "confirmPassword")),//
+				INamesAndValuesEditor.Utils.text(cardConfig, cardType, LoginConstants.emailKey),//
+				INamesAndValuesEditor.Utils.text(cardConfig, cardType, LoginConstants.monikerKey),//
+				INamesAndValuesEditor.Utils.password(cardConfig, cardType,  LoginConstants.passwordKey),//
+				INamesAndValuesEditor.Utils.password(cardConfig, cardType, LoginConstants. confirmPasswordKey)),//
 				new ICardEditorCallback() {
 					@Override
 					public void ok(ICardData cardData) {
@@ -58,15 +59,15 @@ public class Signup implements ISignUp {
 					}
 
 					private String getEmail(Map<String, Object> data) {
-						return get(data, "email");
+						return get(data,  LoginConstants.emailKey);
 					}
 
 					private String getPassword(Map<String, Object> data) {
-						return get(data, "password");
+						return get(data,  LoginConstants.passwordKey);
 					}
 
 					private String getConfirmPassword(Map<String, Object> data) {
-						return get(data, "confirmPassword");
+						return get(data, LoginConstants. confirmPasswordKey);
 					}
 
 				});

@@ -61,6 +61,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.softwareFm.common.arrays.ArrayHelper;
@@ -506,6 +507,16 @@ public class Swts {
 			data.grabExcessVerticalSpace = true;
 			if (fill)
 				data.verticalAlignment = SWT.FILL;
+		}
+
+		public static void addGrabHorizontalAndFillGridDataToAllChildrenWithLastGrabingVertical(Composite composite) {
+			addGrabHorizontalAndFillGridDataToAllChildren(composite);
+			Control[] children = composite.getChildren();
+			if (children.length > 0) {
+				Control lastChild = children[children.length - 1];
+				addGrabVerticalToGridData(lastChild, true);
+			}
+
 		}
 
 	}
@@ -1014,12 +1025,24 @@ public class Swts {
 
 	}
 
-	private static Control getDescendant(Control control, int index, int[] childIndicies) {
+	public static Control getDescendant(Control control, int index, int[] childIndicies) {
 		if (index >= childIndicies.length)
 			return control;
 		if (control instanceof Composite)
 			return getDescendant(((Composite) control).getChildren()[childIndicies[index]], index + 1, childIndicies);
 		throw new IllegalArgumentException(MessageFormat.format(UtilityMessages.cannotGetDescendant, index, Arrays.asList(childIndicies)));
+	}
+
+	public static void checkColumns(Table table, String... expected) {
+		for (int index = 0; index < expected.length; index++)
+			Assert.assertEquals("index: " + index, expected[index], table.getColumn(index).getText());
+		Assert.assertEquals(expected.length, table.getColumnCount());
+	}
+
+	public static void checkRow(Table table, int i, String... expected) {
+		TableItem item = table.getItem(i);
+		for (int index = 0; index < expected.length; index++)
+			Assert.assertEquals("index: " + index, expected[index], item.getText(index));
 	}
 
 	/** the table must have two columns, and the tableItem.getData holds keys */
@@ -1039,6 +1062,15 @@ public class Swts {
 			((StyledText) control).setText(newValue);
 		else
 			throw new IllegalArgumentException();
+
+	}
+
+	public static void packTables(Table... tables) {
+		for (Table table : tables) {
+			for (TableColumn column : table.getColumns())
+				column.pack();
+			table.pack();
+		}
 
 	}
 }

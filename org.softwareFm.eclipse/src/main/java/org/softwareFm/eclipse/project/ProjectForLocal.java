@@ -1,5 +1,6 @@
 package org.softwareFm.eclipse.project;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -30,10 +31,11 @@ public class ProjectForLocal implements IProject {
 		this.userCryptoKey = userCryptoKey;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public Map<String, Object> getProjectDetails(Map<String, Object> userDetailMap, String month) {
+	public Map<String, Map<String, List<Integer>>> getProjectDetails(Map<String, Object> userDetailMap, String month) {
 		IFileDescription projectFileDescription = IProject.Utils.makeProjectFileDescription(userUrlGenerator, userDetailMap, month, userCryptoKey);
-		Map<String, Object> data = gitLocal.getFile(projectFileDescription);
+		Map<String, Map<String, List<Integer>>> data = (Map) gitLocal.getFile(projectFileDescription);
 		return data;
 	}
 

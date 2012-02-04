@@ -2,8 +2,10 @@ package org.softwareFm.eclipse.user;
 
 public interface IProjectTimeGetter {
 
-	String month();
+	String thisMonth();
 
 	int day();
+	
+	Iterable<String> lastNMonths(int n);
 
 }

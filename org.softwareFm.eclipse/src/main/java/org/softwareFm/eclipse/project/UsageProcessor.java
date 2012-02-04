@@ -23,7 +23,7 @@ public class UsageProcessor extends AbstractCommandProcessor {
 
 	@Override
 	protected IProcessResult execute(String actualUrl, final Map<String, Object> parameters) {
-		String month = projectTimeGetter.month();
+		String month = projectTimeGetter.thisMonth();
 		int day = projectTimeGetter.day();
 		String groupId = (String) parameters.get(SoftwareFmConstants.groupIdKey);
 		String artifactId = (String) parameters.get(SoftwareFmConstants.artifactIdKey);

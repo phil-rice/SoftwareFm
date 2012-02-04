@@ -192,6 +192,25 @@ public class Maps {
 		}
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static <K1, K2, K3, V> void addToMapOfMapOfMaps(Map<K1, Map<K2, Map<K3, V>>> map, Class<? extends Map> nestedMapClass, K1 key1, K2 key2, K3 key3, V value) {
+		try {
+			Map<K2, Map<K3, V>> map1 = map.get(key1);
+			if (map1 == null) {
+				map1 = nestedMapClass.newInstance();
+				map.put(key1, map1);
+			}
+			Map<K3, V> map2 = map1.get(key2);
+			if (map2 == null) {
+				map2 = nestedMapClass.newInstance();
+				map1.put(key2, map2);
+			}
+			map2.put(key3, value);
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+	}
+	
 	public static <K, V> void addToList(Map<K, List<V>> map, K key, V value) {
 		Maps.addToCollection(map, ArrayList.class, key, value);
 

@@ -34,10 +34,11 @@ public class ProjectForServer implements IProject {
 		this.cryptoGenerator = cryptoGenerator;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public Map<String, Object> getProjectDetails(Map<String, Object> userDetailMap, String month) {
+	public Map<String, Map<String, List<Integer>>> getProjectDetails(Map<String, Object> userDetailMap, String month) {
 		IFileDescription projectFileDescription = getFileDescriptionForProject(userDetailMap, month);
-		Map<String, Object> projectDetails = gitOperations.getFile(projectFileDescription);
+		Map<String, Map<String, List<Integer>>> projectDetails = (Map) gitOperations.getFile(projectFileDescription);
 		return projectDetails;
 	}
 
@@ -59,8 +60,8 @@ public class ProjectForServer implements IProject {
 	protected IFileDescription getFileDescriptionForProject(Map<String, Object> userDetailMap, String month) {
 		String cryptoKey = Functions.call(cryptoFn, userDetailMap);
 		String projectCryptoKey = user.getUserProperty(userDetailMap, cryptoKey, SoftwareFmConstants.projectCryptoKey);
-		if (projectCryptoKey == null){
-			projectCryptoKey =Callables.call(cryptoGenerator);
+		if (projectCryptoKey == null) {
+			projectCryptoKey = Callables.call(cryptoGenerator);
 			user.setUserProperty(userDetailMap, cryptoKey, SoftwareFmConstants.projectCryptoKey, projectCryptoKey);
 		}
 		String userUrl = userUrlGenerator.findUrlFor(userDetailMap);

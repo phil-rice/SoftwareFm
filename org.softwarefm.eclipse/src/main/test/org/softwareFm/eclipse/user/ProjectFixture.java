@@ -1,0 +1,48 @@
+package org.softwareFm.eclipse.user;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import junit.framework.Assert;
+
+import org.softwareFm.common.maps.Maps;
+
+public class ProjectFixture implements IProject {
+
+	private final Map<String, Object> map = Maps.stringObjectMap(//
+			"month1", Maps.stringObjectMap(//
+					"group1", Maps.stringObjectMap(//
+							"artifact11", Arrays.asList(1, 3, 4, 5), "artifact12", Arrays.asList(1, 2, 3)),//
+					"group2", Maps.stringObjectMap(//
+							"artifact21", Arrays.asList(1, 2), "artifact22", Arrays.asList(1, 2, 3))),//
+			"month2", Maps.stringObjectMap(//
+					"group1", Maps.stringObjectMap(//
+							"artifact11", Arrays.asList(1, 3, 4, 5), "artifact13", Arrays.asList(1, 2, 3)),//
+					"group2", Maps.stringObjectMap(//
+							"artifact21", Arrays.asList(1, 2), "artifact22", Arrays.asList(1, 2, 3))),//
+			"month3", Maps.stringObjectMap(//
+					"group1", Maps.stringObjectMap(//
+							"artifact11", Arrays.asList(1, 3, 4, 5), "artifact12", Arrays.asList(1, 2, 3)),//
+					"group3", Maps.stringObjectMap(//
+							"artifact31", Arrays.asList(1, 2), "artifact32", Arrays.asList(1, 2, 3))));
+	
+	private final Map<String, Object> expectedUserDetailMap;
+
+	public ProjectFixture(Map<String, Object> expectedUserDetailMap) {
+		this.expectedUserDetailMap = expectedUserDetailMap;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Map<String, Map<String, List<Integer>>> getProjectDetails(Map<String, Object> userDetailMap, String month) {
+		Assert.assertEquals(expectedUserDetailMap, userDetailMap);
+		return (Map<String, Map<String, List<Integer>>>) map.get(month);
+	}
+
+	@Override
+	public void addProjectDetails(Map<String, Object> userDetailMap, String groupId, String artifactId, String month, long day) {
+		throw new UnsupportedOperationException();
+	}
+
+}

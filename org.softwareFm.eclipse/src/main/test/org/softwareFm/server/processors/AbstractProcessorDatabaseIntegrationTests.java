@@ -44,13 +44,18 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 		IProject project = IProject.Utils.makeProjectForServer(remoteOperations, cryptoFn, user, LoginConstants.userGenerator(), Callables.value(projectCryptoKey));
 		UsageProcessor usageProcessor = new UsageProcessor(remoteOperations, project, new IProjectTimeGetter() {
 			@Override
-			public String month() {
+			public String thisMonth() {
 				return "someMonth";
 			}
 
 			@Override
 			public int day() {
 				return thisDay;
+			}
+
+			@Override
+			public Iterable<String> lastNMonths(int n) {
+				throw new UnsupportedOperationException();
 			}
 		});
 		IProcessCall processCalls = IProcessCall.Utils.softwareFmProcessCall(dataSource, remoteOperations, cryptoFn, cryptoGenerator, remoteRoot, mailerMock, softwareFmIdGenerator, usageProcessor);
