@@ -79,8 +79,7 @@ public class ExplorerWithRadioChannel {
 		final IGitOperations gitOperations = IGitOperations.Utils.gitOperations(localRoot);
 		final IGitLocal localGit = IGitLocal.Utils.localReader(new HttpRepoFinder(client, CommonConstants.clientTimeOut), gitOperations, new HttpGitWriter(client), prefix, CommonConstants.staleCachePeriodForTest);
 
-		IServiceExecutor gitServiceExecutor = IServiceExecutor.Utils.defaultExecutor();
-		final IServiceExecutor service = gitServiceExecutor;
+		final IServiceExecutor service = IServiceExecutor.Utils.defaultExecutor();
 		try {
 			final List<String> rootUrl = Arrays.asList("/softwareFm/data", "/softwareFm/snippet");
 			final String firstUrl = "/softwareFm/data/activemq/activemq/artifact/activemq-axis";
@@ -100,7 +99,7 @@ public class ExplorerWithRadioChannel {
 					ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(from.getDisplay(), service, client);
 					IProjectTimeGetter projectTimeGetter = IProjectTimeGetter.Utils.timeGetter();
 					IUrlGenerator userUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.userUrlKey);
-					IShowMyData showMyDetails = MyDetails.showMyDetails(masterDetailSocial, userUrlGenerator, localGit, projectTimeGetter);
+					IShowMyData showMyDetails = MyDetails.showMyDetails(cardConfig, masterDetailSocial, userUrlGenerator, localGit, projectTimeGetter);
 					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, playListGetter, service, loginStrategy,  showMyDetails);
 
 					ICardMenuItemHandler.Utils.addSoftwareFmMenuItemHandlers(explorer);
@@ -199,7 +198,7 @@ public class ExplorerWithRadioChannel {
 			});
 		} finally {
 			service.shutdownAndAwaitTermination(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
-			gitServiceExecutor.shutdownAndAwaitTermination(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+			IServiceExecutor.Utils.defaultExecutor().shutdownAndAwaitTermination(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 			client.shutdown();
 		}
 

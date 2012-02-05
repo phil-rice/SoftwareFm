@@ -25,8 +25,8 @@ import org.softwareFm.common.collections.Iterables;
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.swt.card.CardChangedListenerMock;
+import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.card.ICard;
-import org.softwareFm.swt.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.swt.SwtTest;
 

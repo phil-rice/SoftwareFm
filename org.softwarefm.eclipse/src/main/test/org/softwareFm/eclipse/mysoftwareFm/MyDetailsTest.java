@@ -12,6 +12,8 @@ import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.eclipse.user.ProjectFixture;
 import org.softwareFm.eclipse.user.ProjectTimeGetterFixture;
 import org.softwareFm.eclipse.user.UserMock;
+import org.softwareFm.swt.card.CardDataStoreFixture;
+import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.swt.SwtTest;
 import org.softwareFm.swt.swt.Swts;
@@ -22,13 +24,14 @@ public class MyDetailsTest extends SwtTest {
 	private final String cryptoKey = Crypto.makeKey();
 	private final String softwareFmId = "someSoftwareFmId";
 	private final String email = "someEmail";
+	private CardConfig cardConfig;
 
 	public void test() {
 		Map<String, Object> userDetailsMap = Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId);
 		IUser user = new UserMock(cryptoKey, userDetailsMap, LoginConstants.emailKey, email, LoginConstants.monikerKey, "someMoniker");
 		IProject project = new ProjectFixture(userDetailsMap);
 		UserData userData = new UserData(email, softwareFmId, cryptoKey);
-		MyDetails myDetails = new MyDetails(shell, userData, user, project, timeGetter);
+		MyDetails myDetails = new MyDetails(shell, cardConfig, userData, user, project, timeGetter);
 		checkUserDetails(myDetails);
 		checkProjectDetails(myDetails);
 	}
@@ -60,5 +63,6 @@ public class MyDetailsTest extends SwtTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		cardConfig = CardDataStoreFixture.syncCardConfig(display);
 	}
 }

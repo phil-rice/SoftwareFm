@@ -8,7 +8,7 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwareFm.swt.card.dataStore;
+package org.softwareFm.swt.card;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,6 +21,8 @@ import org.softwareFm.common.maps.Maps;
 import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.card.ICardFactory;
 import org.softwareFm.swt.card.LineItem;
+import org.softwareFm.swt.card.dataStore.CardDataStoreAsyncMock;
+import org.softwareFm.swt.card.dataStore.CardDataStoreMock;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.title.TitleSpec;
 

@@ -256,7 +256,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 			masterDetailSocial = new MasterDetailSocial(shell, SWT.NULL);
 			IProjectTimeGetter projectTimeGetter = new ProjectTimeGetterFixture();
 			IUrlGenerator userUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.userUrlKey);
-			showMyData = MyDetails.showMyDetails(masterDetailSocial, userUrlGenerator, gitLocal, projectTimeGetter);
+			showMyData = MyDetails.showMyDetails(cardConfig, masterDetailSocial, userUrlGenerator, gitLocal, projectTimeGetter);
 			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, cardConfig, //
 					Arrays.asList(rootArtifactUrl, rootSnippetUrl), //
 					IPlayListGetter.Utils.noPlayListGetter(), service, //

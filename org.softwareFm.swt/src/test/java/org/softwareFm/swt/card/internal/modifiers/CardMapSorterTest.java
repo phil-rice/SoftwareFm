@@ -16,7 +16,7 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.softwareFm.common.maps.Maps;
-import org.softwareFm.swt.card.dataStore.CardDataStoreFixture;
+import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.modifiers.internal.CardMapSorter;
 import org.softwareFm.swt.swt.SwtTest;

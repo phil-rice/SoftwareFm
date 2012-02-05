@@ -10,12 +10,12 @@
 
 package org.softwareFm.swt.card.internal;
 
+import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.card.CardMock;
 import org.softwareFm.swt.card.ICardFactory;
 import org.softwareFm.swt.card.ICardHolder;
 import org.softwareFm.swt.card.card.CardFactoryMock;
 import org.softwareFm.swt.card.dataStore.CardAndCollectionDataStoreVisitorMonitored;
-import org.softwareFm.swt.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.dataStore.CardAndCollectionsStatus;
 import org.softwareFm.swt.dataStore.IFollowOnFragment;

@@ -8,7 +8,7 @@ package org.softwareFm.swt.editors.internal;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.swt.card.internal.CardOutlinePaintListener;
+import org.softwareFm.swt.card.CardOutlinePaintListener;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.title.TitleSpec;
 

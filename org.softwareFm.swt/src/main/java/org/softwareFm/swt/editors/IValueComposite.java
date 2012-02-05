@@ -12,7 +12,7 @@ package org.softwareFm.swt.editors;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.swt.card.internal.CardOutlinePaintListener;
+import org.softwareFm.swt.card.CardOutlinePaintListener;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.okCancel.OkCancel;
 import org.softwareFm.swt.title.TitleWithTitlePaintListener;

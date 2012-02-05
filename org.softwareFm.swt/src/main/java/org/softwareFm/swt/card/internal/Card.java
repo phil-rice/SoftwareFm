@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.swt.card.CardOutlinePaintListener;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardValueChangedListener;
 import org.softwareFm.swt.card.ILineSelectedListener;

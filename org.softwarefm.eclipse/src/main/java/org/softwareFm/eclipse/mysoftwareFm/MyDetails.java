@@ -7,6 +7,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
@@ -21,13 +25,18 @@ import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
+import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.project.UserAndProjectFactory;
 import org.softwareFm.eclipse.user.IProjectReader;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.eclipse.user.ProjectFixture;
 import org.softwareFm.eclipse.user.ProjectTimeGetterFixture;
 import org.softwareFm.eclipse.user.UserMock;
+import org.softwareFm.swt.card.CardDataStoreFixture;
+import org.softwareFm.swt.card.LineItem;
+import org.softwareFm.swt.card.composites.CompositeWithCardMargin;
 import org.softwareFm.swt.composites.IHasComposite;
+import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.explorer.IMasterDetailSocial;
 import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.explorer.internal.UserData;
@@ -35,7 +44,7 @@ import org.softwareFm.swt.swt.Swts;
 
 public class MyDetails implements IHasComposite {
 
-	public static IShowMyData showMyDetails(final IMasterDetailSocial masterDetailSocial, final IUrlGenerator userUrlGenerator, final IGitLocal gitLocal, final IProjectTimeGetter timeGetter) {
+	public static IShowMyData showMyDetails(final CardConfig cardConfig, final IMasterDetailSocial masterDetailSocial, final IUrlGenerator userUrlGenerator, final IGitLocal gitLocal, final IProjectTimeGetter timeGetter) {
 		return new IShowMyData() {
 			@Override
 			public void show(final UserData userData) {
@@ -45,7 +54,7 @@ public class MyDetails implements IHasComposite {
 					public MyDetails apply(Composite from) throws Exception {
 						IUserReader user = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
 						IProjectReader project = UserAndProjectFactory.projectForLocal(user, userUrlGenerator, userData.crypto, gitLocal);
-						return new MyDetails(from, userData, user, project, timeGetter);
+						return new MyDetails(from, cardConfig, userData, user, project, timeGetter);
 					}
 				});
 			}
@@ -54,28 +63,37 @@ public class MyDetails implements IHasComposite {
 
 	public static List<String> displayProperties = Arrays.asList(LoginConstants.emailKey, LoginConstants.monikerKey);
 
-	static class MyProjectComposite extends Composite {
+	static class MyProjectComposite extends CompositeWithCardMargin {
 
 		private final Table userDetails;
 		private final Table projectDetails;
 
 		@SuppressWarnings("unused")
-		public MyProjectComposite(Composite parent, int style, UserData userData, IUserReader user, IProjectReader project, IProjectTimeGetter timeGetter) {
-			super(parent, style);
+		public MyProjectComposite(Composite parent, int style, final CardConfig cc, UserData userData, IUserReader user, IProjectReader project, IProjectTimeGetter timeGetter) {
+			super(parent, style, cc);
+			addPaintListener(new PaintListener() {
+				@Override
+				public void paintControl(PaintEvent e) {
+					Point size = getSize();
+					Rectangle ca = getClientArea();
+					e.gc.drawRoundRectangle(ca.x-cc.cornerRadiusComp, ca.y-cc.cornerRadiusComp, ca.width+2*cc.cornerRadiusComp, ca.height+2*cc.cornerRadiusComp, cc.cornerRadius, cc.cornerRadius);
+				}
+			});
 			this.userDetails = new Table(this, SWT.FULL_SELECTION);
 			userDetails.setHeaderVisible(false);
 			for (int i = 0; i < 2; i++)
 				new TableColumn(userDetails, SWT.NULL);
 			Map<String, Object> userDetailMap = Maps.stringObjectMap(LoginConstants.softwareFmIdKey, userData.softwareFmId);
 			user.refresh(userDetailMap);
-
 			for (String property : displayProperties) {
 				TableItem item = new TableItem(userDetails, SWT.NULL);
 				Object value = user.getUserProperty(userDetailMap, userData.crypto, property);
-				item.setText(new String[] { property, Strings.nullSafeToString(value) });
+				String name = cc.nameFn.apply(cc, new LineItem(SoftwareFmConstants.myDetailsCardType, property, value));
+				item.setText(new String[] { name, Strings.nullSafeToString(value) });
 			}
+			String softwareFmIdName = cc.nameFn.apply(cc, new LineItem(SoftwareFmConstants.myDetailsCardType, LoginConstants.softwareFmIdKey, null));
 			TableItem softwareFmIdItem = new TableItem(userDetails, SWT.FULL_SELECTION);
-			softwareFmIdItem.setText(new String[] { LoginConstants.softwareFmIdKey, userData.softwareFmId });
+			softwareFmIdItem.setText(new String[] { softwareFmIdName, userData.softwareFmId });
 			Map<String, Map<String, Map<String, Integer>>> groupToArtifactToMonthToCount = Maps.newMap();
 			Iterable<String> lastNMonths = timeGetter.lastNMonths(3);
 			this.projectDetails = new Table(this, SWT.FULL_SELECTION);
@@ -84,7 +102,7 @@ public class MyDetails implements IHasComposite {
 			new TableColumn(projectDetails, SWT.NULL).setText("Artifact ID");
 			for (String month : lastNMonths) {
 				TableColumn column = new TableColumn(projectDetails, SWT.NULL);
-				column.setText(month);
+				column.setText(Strings.upperCaseFirstCharacter(month.replace("_", " ")));
 			}
 
 			for (String month : lastNMonths) {
@@ -114,8 +132,8 @@ public class MyDetails implements IHasComposite {
 
 	private final MyProjectComposite content;
 
-	public MyDetails(Composite parent, UserData userData, IUserReader user, IProjectReader project, IProjectTimeGetter timeGetter) {
-		this.content = new MyProjectComposite(parent, SWT.NULL, userData, user, project, timeGetter);
+	public MyDetails(Composite parent, CardConfig cardConfig, UserData userData, IUserReader user, IProjectReader project, IProjectTimeGetter timeGetter) {
+		this.content = new MyProjectComposite(parent, SWT.NULL, cardConfig, userData, user, project, timeGetter);
 		Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithLastGrabingVertical(content);
 	}
 
@@ -139,7 +157,8 @@ public class MyDetails implements IHasComposite {
 				UserMock user = new UserMock(cryptoKey, userDetails, LoginConstants.emailKey, email, LoginConstants.monikerKey, "someMoniker");
 				ProjectFixture project = new ProjectFixture(userDetails);
 				UserData userData = new UserData(email, "someSoftwarefmId", cryptoKey);
-				return new MyDetails(from, userData, user, project, new ProjectTimeGetterFixture()).getComposite();
+				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay());
+				return new MyDetails(from, cardConfig, userData, user, project, new ProjectTimeGetterFixture()).getComposite();
 			}
 		});
 	}

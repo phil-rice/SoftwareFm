@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Event;
 import org.junit.Test;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.callbacks.MemoryCallback;
-import org.softwareFm.swt.card.dataStore.CardDataStoreFixture;
+import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.navigation.internal.NavCombo;
 import org.softwareFm.swt.swt.SwtTest;

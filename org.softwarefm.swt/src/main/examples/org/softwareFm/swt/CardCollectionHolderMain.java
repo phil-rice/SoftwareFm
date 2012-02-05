@@ -5,7 +5,7 @@ import org.eclipse.swt.widgets.Display;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.resources.IResourceGetter;
-import org.softwareFm.swt.card.dataStore.CardDataStoreFixture;
+import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.card.internal.CardCollectionHolder;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.configuration.internal.BasicCardConfigurator;

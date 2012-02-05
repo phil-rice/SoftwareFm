@@ -15,7 +15,7 @@ import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.callbacks.MemoryCallback;
 import org.softwareFm.common.history.History;
 import org.softwareFm.common.history.IHistory;
-import org.softwareFm.swt.card.dataStore.CardDataStoreFixture;
+import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.navigation.internal.NavNextHistoryPrevConfig;
 import org.softwareFm.swt.swt.SwtAndServiceTest;

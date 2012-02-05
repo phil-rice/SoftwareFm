@@ -15,7 +15,7 @@ import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.common.url.IUrlGeneratorMap;
 import org.softwareFm.common.url.UrlGenerator;
-import org.softwareFm.swt.card.dataStore.CardDataStoreFixture;
+import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.constants.CollectionConstants;

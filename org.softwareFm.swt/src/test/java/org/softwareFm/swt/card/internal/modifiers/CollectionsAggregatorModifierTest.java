@@ -11,8 +11,8 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.card.ICardFactory;
-import org.softwareFm.swt.card.dataStore.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.modifiers.internal.CollectionsAggregatorModifier;
 
