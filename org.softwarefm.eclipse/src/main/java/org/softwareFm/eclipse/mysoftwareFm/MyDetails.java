@@ -20,7 +20,6 @@ import org.softwareFm.common.IGitLocal;
 import org.softwareFm.common.IUserReader;
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.constants.LoginConstants;
-import org.softwareFm.common.crypto.Crypto;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.strings.Strings;
@@ -29,10 +28,6 @@ import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.project.UserAndProjectFactory;
 import org.softwareFm.eclipse.user.IProjectReader;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
-import org.softwareFm.eclipse.user.ProjectFixture;
-import org.softwareFm.eclipse.user.ProjectTimeGetterFixture;
-import org.softwareFm.eclipse.user.UserMock;
-import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.card.LineItem;
 import org.softwareFm.swt.card.composites.CompositeWithCardMargin;
 import org.softwareFm.swt.composites.IHasComposite;
@@ -147,19 +142,5 @@ public class MyDetails implements IHasComposite {
 		return content;
 	}
 
-	public static void main(String[] args) {
-		Swts.Show.display(MyDetails.class.getSimpleName(), new IFunction1<Composite, Composite>() {
-			@Override
-			public Composite apply(Composite from) throws Exception {
-				String cryptoKey = Crypto.makeKey();
-				Map<String, Object> userDetails = Maps.makeImmutableMap("some", "user details");
-				String email = "someEmail";
-				UserMock user = new UserMock(cryptoKey, userDetails, LoginConstants.emailKey, email, LoginConstants.monikerKey, "someMoniker");
-				ProjectFixture project = new ProjectFixture(userDetails);
-				UserData userData = new UserData(email, "someSoftwarefmId", cryptoKey);
-				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay());
-				return new MyDetails(from, cardConfig, userData, user, project, new ProjectTimeGetterFixture()).getComposite();
-			}
-		});
-	}
+
 }

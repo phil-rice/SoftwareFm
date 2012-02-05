@@ -14,6 +14,8 @@ Require-Bundle: org.eclipse.jdt.core;bundle-version="3.7.0";visibility:=reexport
  org.softwarefm.softwarefmcommon;bundle-version="1.0.0";visibility:=reexport,
  org.softwarefm.softwarefmserver;bundle-version="1.0.0";visibility:=reexport
 Export-Package: org.softwareFm.eclipse.constants,
+ org.softwareFm.eclipse.mysoftwareFm,
+ org.softwareFm.eclipse.user,
  org.softwareFm.server.processors
 Bundle-Activator: org.softwareFm.eclipse.plugin.Activator
 Bundle-ActivationPolicy: lazy

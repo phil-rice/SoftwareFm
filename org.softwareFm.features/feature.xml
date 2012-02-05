@@ -2,7 +2,7 @@
 <feature
       id="SoftwareFmFeatures"
       label="SoftwareFM"
-      version="1.5.8"
+      version="1.5.11"
       provider-name="SoftwareFM">
 
    <description url="http://www.softwareFm.com">
@@ -411,6 +411,20 @@ I HEREBY ACKNOWLEDGE THAT I HAVE READ AND UNDERSTAND THE FOREGOING GENERAL PURPO
 
    <plugin
          id="org.softwarefm.swt"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.softwarefm.softwarefmcommon"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.softwarefm.softwarefmserver"
          download-size="0"
          install-size="0"
          version="0.0.0"
