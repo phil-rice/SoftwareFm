@@ -36,6 +36,7 @@ public class SignupProcessor extends AbstractCommandProcessor {
 		String salt = Strings.nullSafeToString(parameters.get(LoginConstants.sessionSaltKey));
 		if (saltProcessor.invalidateSalt(salt)) {
 			String email = Strings.nullSafeToString(parameters.get(LoginConstants.emailKey));
+			String moniker = Strings.nullSafeToString(parameters.get(LoginConstants.monikerKey));
 			String passwordHash = Strings.nullSafeToString(parameters.get(LoginConstants.passwordHashKey));
 			String softwareFmId = Callables.call(softwareFmIdGenerator);
 			SignUpResult result = checker.signUp(email, salt, passwordHash, softwareFmId);
@@ -44,6 +45,8 @@ public class SignupProcessor extends AbstractCommandProcessor {
 			else {
 				Map<String, Object> userDetails = Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId);
 				user.setUserProperty(userDetails, result.crypto, LoginConstants.emailKey, email);
+				user.setUserProperty(userDetails, result.crypto, LoginConstants.monikerKey
+						, moniker);
 				return IProcessResult.Utils.processString(Json.mapToString(LoginConstants.softwareFmIdKey, softwareFmId, LoginConstants.cryptoKey, result.crypto));
 			}
 

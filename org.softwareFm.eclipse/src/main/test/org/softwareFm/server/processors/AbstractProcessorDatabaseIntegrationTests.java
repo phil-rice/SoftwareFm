@@ -14,18 +14,18 @@ import org.softwareFm.common.processors.AbstractLoginDataAccessor;
 import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
-import org.softwareFm.eclipse.project.ProjectForServer;
-import org.softwareFm.eclipse.project.UsageProcessor;
 import org.softwareFm.eclipse.user.IProject;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
-import org.softwareFm.server.ISoftwareFmServer;
+import org.softwareFm.server.ICrowdSourcedServer;
 import org.softwareFm.server.processors.internal.MailerMock;
+import org.softwareFm.softwareFmServer.ProjectForServer;
+import org.softwareFm.softwareFmServer.UsageProcessor;
 import org.softwareFm.swt.ICollectionConfigurationFactory;
 import org.softwareFm.swt.constants.CardConstants;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 abstract public class AbstractProcessorDatabaseIntegrationTests extends AbstractProcessorIntegrationTests {
-	private ISoftwareFmServer server;
+	private ICrowdSourcedServer server;
 	protected JdbcTemplate template;
 	private MailerMock mailerMock;
 	protected String userKey;
@@ -50,7 +50,7 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 
 		IProcessCall processCalls = IProcessCall.Utils.softwareFmProcessCall(dataSource, remoteOperations, cryptoFn, cryptoGenerator, remoteRoot, mailerMock, softwareFmIdGenerator, getExtraProcessCalls());
 		template = new JdbcTemplate(dataSource);
-		server = ISoftwareFmServer.Utils.testServerPort(processCalls, ICallback.Utils.rethrow());
+		server = ICrowdSourcedServer.Utils.testServerPort(processCalls, ICallback.Utils.rethrow());
 		template.update("truncate users");
 	}
 

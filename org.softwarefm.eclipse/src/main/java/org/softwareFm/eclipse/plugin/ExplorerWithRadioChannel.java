@@ -25,13 +25,19 @@ import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.client.gitwriter.HttpGitWriter;
 import org.softwareFm.client.gitwriter.HttpRepoFinder;
 import org.softwareFm.client.http.api.IHttpClient;
+import org.softwareFm.client.http.requests.IResponseCallback;
 import org.softwareFm.common.IGitLocal;
 import org.softwareFm.common.IGitOperations;
 import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.services.IServiceExecutor;
+import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
 import org.softwareFm.eclipse.snippets.SnippetFeedConfigurator;
+import org.softwareFm.eclipse.usage.IUsageStrategy;
+import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.swt.ICollectionConfigurationFactory;
 import org.softwareFm.swt.browser.IBrowserConfigurator;
 import org.softwareFm.swt.card.ICard;
@@ -39,6 +45,7 @@ import org.softwareFm.swt.card.ICardChangedListener;
 import org.softwareFm.swt.card.ICardFactory;
 import org.softwareFm.swt.card.ICardHolder;
 import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.swt.dataStore.IAfterEditCallback;
 import org.softwareFm.swt.dataStore.ICardDataStore;
@@ -46,6 +53,7 @@ import org.softwareFm.swt.dataStore.IMutableCardDataStore;
 import org.softwareFm.swt.explorer.IExplorer;
 import org.softwareFm.swt.explorer.IExplorerListener;
 import org.softwareFm.swt.explorer.IMasterDetailSocial;
+import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.menu.ICardMenuItemHandler;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.swt.swt.Swts;
@@ -90,8 +98,10 @@ public class ExplorerWithRadioChannel {
 					IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(explorerAndButton);
 					IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardDataStore);
 					ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(from.getDisplay(), service, client);
-					// IUsageStrategy usageStrategy = IUsageStrategy.Utils.usage(service, client, localGit, ServerConstants.userGenerator(), ServerConstants.projectGenerator());
-					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, playListGetter, service, loginStrategy);
+					IProjectTimeGetter projectTimeGetter = IProjectTimeGetter.Utils.timeGetter();
+					IUrlGenerator userUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.userUrlKey);
+					IShowMyData showMyDetails = MyDetails.showMyDetails(masterDetailSocial, userUrlGenerator, localGit, projectTimeGetter);
+					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, playListGetter, service, loginStrategy,  showMyDetails);
 
 					ICardMenuItemHandler.Utils.addSoftwareFmMenuItemHandlers(explorer);
 					IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
@@ -175,10 +185,11 @@ public class ExplorerWithRadioChannel {
 							explorer.showMySoftwareFm();
 						}
 					});
+					final IUsageStrategy usageStrategy = IUsageStrategy.Utils.usage(service, client, localGit, LoginConstants.userGenerator());
 					Buttons.makePushButton(buttonPanel, null, "usage", false, new Runnable() {
 						@Override
 						public void run() {
-							explorer.usage("someGroupId", "someArtifactId");
+							usageStrategy.using(explorer.getUserData().softwareFmId, "someGroupId", "someArtifactId", IResponseCallback.Utils.noCallback());
 						}
 					});
 					Swts.Row.setRowDataFor(100, 20, buttonPanel.getChildren());

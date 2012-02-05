@@ -7,7 +7,7 @@ import org.softwareFm.common.IUser;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.crypto.Crypto;
 import org.softwareFm.common.runnable.Callables;
-import org.softwareFm.server.ISoftwareFmServer;
+import org.softwareFm.server.ICrowdSourcedServer;
 import org.softwareFm.server.processors.internal.EmailSailRequesterMock;
 import org.softwareFm.server.processors.internal.ForgottonPasswordProcessor;
 import org.softwareFm.server.processors.internal.ForgottonPasswordProcessorMock;
@@ -22,7 +22,7 @@ import org.softwareFm.server.processors.internal.SignUpCheckerMock;
 import org.softwareFm.server.processors.internal.SignupProcessor;
 
 abstract public class AbstractProcessorMockIntegrationTests extends AbstractProcessorIntegrationTests {
-	private ISoftwareFmServer server;
+	private ICrowdSourcedServer server;
 	protected SaltProcessorMock saltProcessor;
 	protected LoginCheckerMock loginChecker;
 	protected SignUpCheckerMock signUpChecker;
@@ -45,7 +45,7 @@ abstract public class AbstractProcessorMockIntegrationTests extends AbstractProc
 		emailSaltProcessor = new EmailSailRequesterMock("someEmailHash");
 		softwareFmIdGenerator = Callables.patternWithCount("someSoftwareFmId{0}");
 		userMock = EasyMock.createMock(IUser.class);
-		server = ISoftwareFmServer.Utils.testServerPort(IProcessCall.Utils.chain(//
+		server = ICrowdSourcedServer.Utils.testServerPort(IProcessCall.Utils.chain(//
 				new LoginProcessor(saltProcessor, loginChecker), //
 				new SignupProcessor(signUpChecker, saltProcessor, softwareFmIdGenerator, userMock), //
 				new MakeSaltForLoginProcessor(saltProcessor),//

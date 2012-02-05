@@ -21,6 +21,7 @@ public class LoginStrategyMock implements ILoginStrategy {
 	public final List<String> loginPassword = Lists.newList();
 	public final AtomicInteger requestSaltCount = new AtomicInteger();
 	public final List<String> signupEmail = Lists.newList();
+	public final List<String> signupMoniker = Lists.newList();
 	public final List<String> signupSalt = Lists.newList();
 	public final List<String> signupPassword = Lists.newList();
 	public final List<String> signupCrypt = Lists.newList();
@@ -57,7 +58,7 @@ public class LoginStrategyMock implements ILoginStrategy {
 		loginEmail.add(email);
 		loginPassword.add(password);
 		if (ok)
-			callback.loggedIn(new UserData(email, softwareFmId, cryptoKey));
+			callback.loggedIn(new UserData(email,softwareFmId,  cryptoKey));
 		else
 			callback.failedToLogin(email, "someMessage");
 	}
@@ -72,12 +73,13 @@ public class LoginStrategyMock implements ILoginStrategy {
 	}
 
 	@Override
-	public void signup(String email, String sessionSalt, String passwordHash, ISignUpCallback callback) {
+	public void signup(String email, String moniker, String sessionSalt, String passwordHash, ISignUpCallback callback) {
 		signupEmail.add(email);
 		signupSalt.add(sessionSalt);
 		signupPassword.add(passwordHash);
+		signupMoniker.add(moniker);
 		if (ok)
-			callback.signedUp(new UserData(email,softwareFmId, cryptoKey));
+			callback.signedUp(new UserData(email, softwareFmId, cryptoKey));
 		else
 			callback.failed(email, "someMessage");
 	}

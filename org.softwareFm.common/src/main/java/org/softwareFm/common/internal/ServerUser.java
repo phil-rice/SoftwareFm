@@ -48,4 +48,9 @@ public class ServerUser implements IUser {
 		IFileDescription.Utils.merge(gitOperations, fileDescription, Maps.stringObjectMap(property, value));
 		gitOperations.clearCaches();
 	}
+
+	@Override
+	public void refresh(Map<String, Object> userDetails) {
+		throw new UnsupportedOperationException();
+	}
 }

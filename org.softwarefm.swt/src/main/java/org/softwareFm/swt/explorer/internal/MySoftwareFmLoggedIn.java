@@ -20,7 +20,7 @@ public class MySoftwareFmLoggedIn implements IHasControl {
 
 	private final TextInBorderWithButtons content;
 
-	public MySoftwareFmLoggedIn(Composite parent, CardConfig cardConfig, String title, String text, final UserData userData, final ILoginDisplayStrategy loginDisplayStrategy, Runnable logout, IChangePasswordCallback changePasswordCallback) {
+	public MySoftwareFmLoggedIn(Composite parent, CardConfig cardConfig, String title, String text, final UserData userData, final ILoginDisplayStrategy loginDisplayStrategy, Runnable logout, IChangePasswordCallback changePasswordCallback, Runnable showMyData) {
 		final String email = userData.email();
 		content = new TextInBorderWithButtons(parent, SWT.WRAP | SWT.READ_ONLY, cardConfig);
 		content.setTextFromResourceGetter(CardConstants.loginCardType, title, text, email);
@@ -31,13 +31,7 @@ public class MySoftwareFmLoggedIn implements IHasControl {
 				loginDisplayStrategy.showChangePassword(email);
 			}
 		});
-//		content.addButton("My Data", new Runnable() {
-//			@Override
-//			public void run() {
-//				Map<String, Object> map = Maps.stringObjectMap("data", "goes here");
-//				content.setText(CardConstants.loginCardType, "Project Data", map.toString());
-//			}
-//		});
+		content.addButton("My Data", showMyData);
 	}
 
 	@Override
@@ -53,7 +47,8 @@ public class MySoftwareFmLoggedIn implements IHasControl {
 				return (Composite) new MySoftwareFmLoggedIn(from, cardConfig, CardConstants.loggedInTitle, CardConstants.loggedInText, //
 						new UserData("email", null, null), //
 						ILoginDisplayStrategy.Utils.sysoutDisplayStrategy(), Runnables.sysout("Logout clicked"), //
-						ILoginCallbacks.Utils.showMessageCallbacks(cardConfig, IShowMessage.Utils.sysout())).getControl();
+						ILoginCallbacks.Utils.showMessageCallbacks(cardConfig, IShowMessage.Utils.sysout()),//
+						Runnables.sysout("show my data")).getControl();
 			}
 		});
 	}

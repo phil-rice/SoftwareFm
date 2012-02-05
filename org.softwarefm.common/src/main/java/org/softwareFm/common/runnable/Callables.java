@@ -1,7 +1,6 @@
 package org.softwareFm.common.runnable;
 
 import java.text.MessageFormat;
-import java.util.Calendar;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -11,7 +10,7 @@ import org.softwareFm.common.exceptions.WrappedException;
 
 public class Callables {
 
-	public static Callable<String> uuidGenerator(){
+	public static Callable<String> uuidGenerator() {
 		return new Callable<String>() {
 			@Override
 			public String call() throws Exception {
@@ -19,7 +18,7 @@ public class Callables {
 			}
 		};
 	}
-	
+
 	public static <V> V call(Callable<V> callable) {
 		try {
 			return callable.call();
@@ -49,9 +48,11 @@ public class Callables {
 			}
 		};
 	}
-	public static  Callable<String> patternWithCount(final String pattern) {
+
+	public static Callable<String> patternWithCount(final String pattern) {
 		return new Callable<String>() {
 			private final AtomicInteger integer = new AtomicInteger();
+
 			@Override
 			public String call() throws Exception {
 				return MessageFormat.format(pattern, integer.getAndIncrement());
@@ -65,27 +66,6 @@ public class Callables {
 			public T call() throws Exception {
 				throw new RuntimeException();
 			}
-		};
-	}
-
-	public static Callable<String> monthGetter() {
-		return new Callable<String>() {
-			private final String [] month2String = new String[]{"january", "febuary", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"};
-			@Override
-			public String call() throws Exception {
-				int month = Calendar.getInstance().get(Calendar.MONTH);
-				return month2String[month];
-			}
-		};
-	}
-	public static Callable<Integer> dayGetter() {
-		return new Callable<Integer>(){
-			@Override
-			public Integer call() throws Exception {
-				int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-				return day;
-			}
-			
 		};
 	}
 

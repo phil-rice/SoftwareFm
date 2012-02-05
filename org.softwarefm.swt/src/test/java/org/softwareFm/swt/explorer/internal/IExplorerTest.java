@@ -21,6 +21,7 @@ import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CollectionConstants;
 import org.softwareFm.swt.explorer.IExplorer;
 import org.softwareFm.swt.explorer.IMasterDetailSocial;
+import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.swt.swt.SwtTest;
 import org.softwareFm.swt.timeline.IPlayListGetter;
@@ -35,7 +36,10 @@ public class IExplorerTest extends SwtTest {
 		try {
 			List<String> rootUrls = Arrays.asList("rootUrl");
 			IPlayListGetter playListGetter = IPlayListGetter.Utils.noPlayListGetter();
-			Explorer explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrls, playListGetter, service, ILoginStrategy.Utils.noLoginStrategy());
+			Explorer explorer = (Explorer) IExplorer.Utils.explorer(//
+					masterDetailSocial, cardConfig, rootUrls, playListGetter, service, //
+					ILoginStrategy.Utils.noLoginStrategy(), //
+					IShowMyData.Utils.exceptionShowMyData());
 			ICardHolderForTests cardHolder = (ICardHolderForTests) explorer.cardHolder;
 			assertEquals(rootUrls, cardHolder.getRootUrls());
 			assertEquals(cardConfig, cardHolder.getCardConfig());

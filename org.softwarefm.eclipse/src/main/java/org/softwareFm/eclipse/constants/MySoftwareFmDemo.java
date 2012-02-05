@@ -15,10 +15,11 @@ import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.processors.AbstractLoginDataAccessor;
 import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.services.IServiceExecutor;
-import org.softwareFm.server.ISoftwareFmServer;
+import org.softwareFm.server.ICrowdSourcedServer;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.configuration.ICardConfigurator;
+import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.explorer.internal.MySoftwareFm;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.swt.swt.Swts;
@@ -36,13 +37,13 @@ public class MySoftwareFmDemo {
 		BasicDataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
 		IGitOperations gitOperations = IGitOperations.Utils.gitOperations(remoteRoot);
 		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, gitOperations, cryptoFn, cryptoGenerator, localRoot, Callables.uuidGenerator());
-		ISoftwareFmServer server = ISoftwareFmServer.Utils.testServerPort(processCall, ICallback.Utils.rethrow());
+		ICrowdSourcedServer server = ICrowdSourcedServer.Utils.testServerPort(processCall, ICallback.Utils.rethrow());
 		try {
 			Swts.Show.display(MySoftwareFm.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 				@Override
 				public Composite apply(Composite from) throws Exception {
 					CardConfig cardConfig = ICardConfigurator.Utils.cardConfigForTests(from.getDisplay());
-					MySoftwareFm mySoftwareFm = new MySoftwareFm(from, cardConfig, ILoginStrategy.Utils.softwareFmLoginStrategy(from.getDisplay(), service, client));
+					MySoftwareFm mySoftwareFm = new MySoftwareFm(from, cardConfig, ILoginStrategy.Utils.softwareFmLoginStrategy(from.getDisplay(), service, client),IShowMyData.Utils.sysout());
 					mySoftwareFm.start();
 					return mySoftwareFm.getComposite();
 				}

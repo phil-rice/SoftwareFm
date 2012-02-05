@@ -43,9 +43,13 @@ import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.tests.INeedsServerTest;
 import org.softwareFm.common.tests.Tests;
+import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.common.url.Urls;
+import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
 import org.softwareFm.eclipse.snippets.SnippetFeedConfigurator;
-import org.softwareFm.server.ISoftwareFmServer;
+import org.softwareFm.eclipse.user.IProjectTimeGetter;
+import org.softwareFm.eclipse.user.ProjectTimeGetterFixture;
+import org.softwareFm.server.ICrowdSourcedServer;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.swt.ICollectionConfigurationFactory;
 import org.softwareFm.swt.browser.IBrowserConfigurator;
@@ -59,6 +63,7 @@ import org.softwareFm.swt.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.swt.dataStore.ICardDataStore;
 import org.softwareFm.swt.explorer.ExplorerAdapter;
 import org.softwareFm.swt.explorer.IExplorer;
+import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.explorer.internal.Explorer;
 import org.softwareFm.swt.explorer.internal.MasterDetailSocial;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
@@ -88,8 +93,8 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	protected File localRoot;
 	protected File remoteRoot;
 	protected String userCryptoKey;
-	private ISoftwareFmServer softwareFmServer;
-
+	private ICrowdSourcedServer crowdSourcedServer;
+	private IShowMyData showMyData;
 
 	public static interface CardHolderAndCardCallback {
 		void process(ICardHolder cardHolder, ICard card) throws Exception;
@@ -241,7 +246,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 
 		IGitOperations remoteGitOperations = IGitOperations.Utils.gitOperations(remoteRoot);
 		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, remoteGitOperations, cryptoFn, cryptoGenerator, remoteRoot, softwareFmIdGenerator);
-		softwareFmServer = ISoftwareFmServer.Utils.testServerPort(processCall, ICallback.Utils.rethrow());
+		crowdSourcedServer = ICrowdSourcedServer.Utils.testServerPort(processCall, ICallback.Utils.rethrow());
 
 		try {
 			cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().//
@@ -249,7 +254,14 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 					withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap(prefix, "data"));
 			rawResourceGetter = cardConfig.resourceGetterFn.apply(null);
 			masterDetailSocial = new MasterDetailSocial(shell, SWT.NULL);
-			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, cardConfig, Arrays.asList(rootArtifactUrl, rootSnippetUrl), IPlayListGetter.Utils.noPlayListGetter(), service, ILoginStrategy.Utils.noLoginStrategy());
+			IProjectTimeGetter projectTimeGetter = new ProjectTimeGetterFixture();
+			IUrlGenerator userUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.userUrlKey);
+			showMyData = MyDetails.showMyDetails(masterDetailSocial, userUrlGenerator, gitLocal, projectTimeGetter);
+			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, cardConfig, //
+					Arrays.asList(rootArtifactUrl, rootSnippetUrl), //
+					IPlayListGetter.Utils.noPlayListGetter(), service, //
+					ILoginStrategy.Utils.noLoginStrategy(),//
+					showMyData);
 			IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
 			new SnippetFeedConfigurator(cardConfig.cardDataStore, cardConfig.resourceGetterFn).configure(explorer);
 			// SnippetFeedConfigurator.configure(explorer, cardConfig);
@@ -270,7 +282,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 			explorer.dispose();
 			cardConfig.dispose();
 		} finally {
-			softwareFmServer.shutdown();
+			crowdSourcedServer.shutdown();
 		}
 		Tests.waitUntilCanDeleteTempDirectory(getClass().getSimpleName(), 2000);
 

@@ -9,6 +9,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.security.Key;
 import java.security.Security;
+import java.util.concurrent.Callable;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
@@ -34,6 +35,15 @@ public class Crypto {
 		return Strings.toHex(Files.digest(new StringInputStream(string)));
 	}
 
+	public static Callable<String> makeKeyCallable() {
+		return new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				return makeKey();
+			}
+		};
+		
+	}
 	public static String makeKey() {
 		try {
 			init();

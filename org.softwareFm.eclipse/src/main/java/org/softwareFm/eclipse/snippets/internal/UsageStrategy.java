@@ -27,7 +27,7 @@ public class UsageStrategy implements IUsageStrategy {
 	private final IServiceExecutor serviceExecutor;
 	private final IUrlGenerator userGenerator;
 
-	public UsageStrategy(IHttpClient client, IServiceExecutor serviceExecutor, IGitLocal gitLocal, IUrlGenerator userGenerator, IUrlGenerator projectGenerator) {
+	public UsageStrategy(IHttpClient client, IServiceExecutor serviceExecutor, IGitLocal gitLocal, IUrlGenerator userGenerator) {
 		this.client = client;
 		this.userGenerator = userGenerator;
 		this.gitLocal = gitLocal;

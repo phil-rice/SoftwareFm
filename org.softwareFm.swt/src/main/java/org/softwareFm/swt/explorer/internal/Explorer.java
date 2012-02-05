@@ -72,6 +72,7 @@ import org.softwareFm.swt.explorer.BrowserAndNavBar;
 import org.softwareFm.swt.explorer.IExplorer;
 import org.softwareFm.swt.explorer.IExplorerListener;
 import org.softwareFm.swt.explorer.IMasterDetailSocial;
+import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.swt.navigation.internal.NavNextHistoryPrevConfig;
 import org.softwareFm.swt.swt.Swts;
@@ -95,7 +96,7 @@ public class Explorer implements IExplorer {
 	private Comments comments;
 	private MySoftwareFm mySoftwareFm;
 
-	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy) {
+	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IShowMyData showMyData) {
 		this.cardConfig = cardConfig;
 		this.masterDetailSocial = masterDetailSocial;
 		callbackToGotoUrlAndUpdateDetails = new ICallback<String>() {
@@ -213,7 +214,7 @@ public class Explorer implements IExplorer {
 		mySoftwareFm = masterDetailSocial.createMaster(new IFunction1<Composite, MySoftwareFm>() {
 			@Override
 			public MySoftwareFm apply(Composite from) throws Exception {
-				MySoftwareFm mySoftwareFm = new MySoftwareFm(from, cardConfig, loginStrategy);
+				MySoftwareFm mySoftwareFm = new MySoftwareFm(from, cardConfig, loginStrategy, showMyData);
 				mySoftwareFm.start();
 				return mySoftwareFm;
 			}
@@ -1070,9 +1071,9 @@ public class Explorer implements IExplorer {
 
 	}
 
+
 	@Override
-	public void usage(String groupId, String artifactId) {
-//		UserData userData = mySoftwareFm.userData;
-		// usageStrategy.using(userData.softwareFmId, groupId, artifactId, IResponseCallback.Utils.noCallback());
+	public UserData getUserData() {
+		return mySoftwareFm.userData;
 	}
 }

@@ -34,6 +34,7 @@ import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.jdtBinding.IBindingRipper;
+import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.swt.ICollectionConfigurationFactory;
 import org.softwareFm.swt.card.ICardFactory;
 import org.softwareFm.swt.configuration.CardConfig;
@@ -164,6 +165,10 @@ public class Activator extends AbstractUIPlugin {
 
 	public IServiceExecutor getServiceExecutor() {
 		return serviceExecutor == null ? serviceExecutor = IServiceExecutor.Utils.defaultExecutor() : serviceExecutor;
+	}
+
+	public IProjectTimeGetter getProjectTimeGetter() {
+		return IProjectTimeGetter.Utils.timeGetter();
 	}
 
 }

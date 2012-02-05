@@ -12,6 +12,7 @@ import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.eclipse.user.ProjectFixture;
 import org.softwareFm.eclipse.user.ProjectTimeGetterFixture;
 import org.softwareFm.eclipse.user.UserMock;
+import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.swt.SwtTest;
 import org.softwareFm.swt.swt.Swts;
 
@@ -19,12 +20,15 @@ public class MyDetailsTest extends SwtTest {
 
 	private final IProjectTimeGetter timeGetter = new ProjectTimeGetterFixture();
 	private final String cryptoKey = Crypto.makeKey();
-	private final Map<String, Object> userDetails = Maps.makeImmutableMap("some", "user details");
+	private final String softwareFmId = "someSoftwareFmId";
+	private final String email = "someEmail";
 
 	public void test() {
-		IUser user = new UserMock(cryptoKey, userDetails, LoginConstants.emailKey, "someEmail", LoginConstants.monikerKey, "someMoniker");
-		IProject project = new ProjectFixture(userDetails);
-		MyDetails myDetails = new MyDetails(shell, cryptoKey, user, project, timeGetter, userDetails);
+		Map<String, Object> userDetailsMap = Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId);
+		IUser user = new UserMock(cryptoKey, userDetailsMap, LoginConstants.emailKey, email, LoginConstants.monikerKey, "someMoniker");
+		IProject project = new ProjectFixture(userDetailsMap);
+		UserData userData = new UserData(email, softwareFmId, cryptoKey);
+		MyDetails myDetails = new MyDetails(shell, userData, user, project, timeGetter);
 		checkUserDetails(myDetails);
 		checkProjectDetails(myDetails);
 	}
@@ -47,9 +51,10 @@ public class MyDetailsTest extends SwtTest {
 		Table userTable = (Table) Swts.getDescendant(myDetails.getControl(), 0);
 		assertEquals(2, userTable.getColumnCount());
 
-		assertEquals(2, userTable.getItemCount());
+		assertEquals(3, userTable.getItemCount());
 		Swts.checkRow(userTable, 0, "email", "someEmail");
 		Swts.checkRow(userTable, 1, "moniker", "someMoniker");
+		Swts.checkRow(userTable, 2, "softwareFmId", "someSoftwareFmId");
 	}
 
 	@Override

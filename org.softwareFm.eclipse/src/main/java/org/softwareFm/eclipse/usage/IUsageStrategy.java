@@ -21,8 +21,8 @@ public interface IUsageStrategy {
 
 	public static class Utils {
 
-		public static IUsageStrategy usage(final IServiceExecutor serviceExecutor, final IHttpClient client, final IGitLocal gitLocal, IUrlGenerator userGenerator, IUrlGenerator projectUrlGenerator) {
-			return new UsageStrategy(client, serviceExecutor, gitLocal, userGenerator, projectUrlGenerator);
+		public static IUsageStrategy usage(final IServiceExecutor serviceExecutor, final IHttpClient client, final IGitLocal gitLocal, IUrlGenerator userGenerator) {
+			return new UsageStrategy(client, serviceExecutor, gitLocal, userGenerator);
 		}
 
 		public static IUsageStrategy noUsageStrategy() {

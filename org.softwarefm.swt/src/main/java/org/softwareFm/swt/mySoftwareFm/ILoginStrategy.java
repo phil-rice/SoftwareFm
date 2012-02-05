@@ -28,7 +28,7 @@ public interface ILoginStrategy {
 
 	void requestEmailSalt(String email, String sessionSalt, IRequestSaltCallback callback);
 
-	void signup(String email, String sessionSalt, String passwordHash, ISignUpCallback callback);
+	void signup(String email, String moniker, String sessionSalt, String passwordHash, ISignUpCallback callback);
 
 	void changePassword(String email, String oldHash, String newHash, IChangePasswordCallback callback);
 
@@ -39,13 +39,14 @@ public interface ILoginStrategy {
 				throw new NullPointerException();
 			return new ILoginStrategy() {
 				@Override
-				public void signup(final String email, final String sessionSalt, final String passwordHash, final ISignUpCallback callback) {
+				public void signup(final String email, final String moniker, final String sessionSalt, final String passwordHash, final ISignUpCallback callback) {
 					serviceExecutor.submit(new Callable<Void>() {
 						@Override
 						public Void call() throws Exception {
 							try {
 								client.post(LoginConstants.signupPrefix).//
 										addParam(LoginConstants.emailKey, email).//
+										addParam(LoginConstants.monikerKey, moniker).//
 										addParam(LoginConstants.sessionSaltKey, sessionSalt).//
 										addParam(LoginConstants.passwordHashKey, passwordHash).//
 										execute(new IResponseCallback() {
@@ -329,8 +330,8 @@ public interface ILoginStrategy {
 				}
 
 				@Override
-				public void signup(String email, String sessionSalt, String passwordHash, ISignUpCallback callback) {
-					System.out.println("Signing up: " + email + ", " + sessionSalt + ", " + passwordHash);
+				public void signup(String email, String moniker, String sessionSalt, String passwordHash, ISignUpCallback callback) {
+					System.out.println("Signing up: " + email + ", " + moniker + ", " + sessionSalt + ", " + passwordHash);
 					callback.signedUp(new UserData(email, Callables.call(softwareFmIdGenerator), Crypto.makeKey()));
 				}
 
@@ -354,7 +355,7 @@ public interface ILoginStrategy {
 			return new ILoginStrategy() {
 
 				@Override
-				public void signup(String email, String sessionSalt, String passwordHash, ISignUpCallback callback) {
+				public void signup(String email, String moniker, String sessionSalt, String passwordHash, ISignUpCallback callback) {
 					throw new UnsupportedOperationException();
 				}
 

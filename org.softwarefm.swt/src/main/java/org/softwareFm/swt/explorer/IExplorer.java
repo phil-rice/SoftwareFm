@@ -23,6 +23,7 @@ import org.softwareFm.swt.card.RightClickCategoryResult;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.dataStore.ICardAndCollectionDataStoreVisitor;
 import org.softwareFm.swt.explorer.internal.Explorer;
+import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.swt.timeline.IPlayListGetter;
 import org.softwareFm.swt.timeline.ITimeLine;
@@ -69,13 +70,12 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 
 	void showMySoftwareFm();
 
-	void usage(String groupId, String artifactId);
+	UserData getUserData();
 
-	
 	public static class Utils {
 
-		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, List<String> rootUrls, IPlayListGetter playListGetter, IServiceExecutor service, ILoginStrategy loginStrategy) {
-			return new Explorer(cardConfig, rootUrls, masterDetailSocial, service, playListGetter, loginStrategy);
+		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, List<String> rootUrls, IPlayListGetter playListGetter, IServiceExecutor service, ILoginStrategy loginStrategy, IShowMyData showMyData) {
+			return new Explorer(cardConfig, rootUrls, masterDetailSocial, service, playListGetter, loginStrategy, showMyData);
 		}
 	}
 

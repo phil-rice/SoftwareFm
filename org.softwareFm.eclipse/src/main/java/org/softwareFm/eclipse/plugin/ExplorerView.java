@@ -16,13 +16,18 @@ import java.util.List;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
+import org.softwareFm.common.IGitLocal;
 import org.softwareFm.common.collections.Files;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.services.IServiceExecutor;
+import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.actions.IActionBar;
 import org.softwareFm.eclipse.jdtBinding.BindingRipperResult;
+import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
 import org.softwareFm.eclipse.snippets.SnippetFeedConfigurator;
+import org.softwareFm.eclipse.usage.IUsageStrategy;
+import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.swt.browser.IBrowserConfigurator;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
@@ -30,6 +35,7 @@ import org.softwareFm.swt.constants.CollectionConstants;
 import org.softwareFm.swt.constants.DisplayConstants;
 import org.softwareFm.swt.explorer.IExplorer;
 import org.softwareFm.swt.explorer.IMasterDetailSocial;
+import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.menu.ICardMenuItemHandler;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.swt.swt.Swts.Size;
@@ -49,9 +55,13 @@ public class ExplorerView extends ViewPart {
 		IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardConfig.cardDataStore);
 		IServiceExecutor service = activator.getServiceExecutor();
 		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(parent.getDisplay(), activator.getServiceExecutor(), activator.getClient());
-//		IUsageStrategy usageStrategy  = IUsageStrategy.Utils.usage(activator.getServiceExecutor(), activator.getClient(), activator.getGitLocal(), ServerConstants.userGenerator(), ServerConstants.projectGenerator());
-		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, getRootUrls(), playListGetter, service, loginStrategy);
-		actionBar = makeActionBar(explorer, cardConfig);
+		IUrlGenerator userUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.userUrlKey);
+		IGitLocal gitLocal= activator.getGitLocal();
+		IProjectTimeGetter timeGetter = activator.getProjectTimeGetter();
+		IShowMyData showMyDetails = MyDetails.showMyDetails(masterDetailSocial, userUrlGenerator, gitLocal, timeGetter);
+		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, getRootUrls(), playListGetter, service, loginStrategy, showMyDetails);
+		IUsageStrategy usageStrategy = IUsageStrategy.Utils.usage(activator.getServiceExecutor(), activator.getClient(), gitLocal, userUrlGenerator);
+		actionBar = makeActionBar(explorer, cardConfig, usageStrategy);
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
 		actionBar.populateToolbar(toolBarManager);
 		addMenuItems(explorer);
@@ -74,8 +84,8 @@ public class ExplorerView extends ViewPart {
 		explorer.processUrl(DisplayConstants.browserFeedType, welcomeUrl);
 	}
 
-	protected IActionBar makeActionBar(final IExplorer explorer, final CardConfig cardConfig) {
-		return IActionBar.Utils.actionBar(explorer, cardConfig, SelectedArtifactSelectionManager.reRipFn(), false);
+	protected IActionBar makeActionBar(final IExplorer explorer, final CardConfig cardConfig, IUsageStrategy usageStrategy) {
+		return IActionBar.Utils.actionBar(explorer, cardConfig, SelectedArtifactSelectionManager.reRipFn(), false, usageStrategy);
 	}
 
 	protected void addMenuItems(final IExplorer explorer) {

@@ -30,8 +30,8 @@ public class Signup implements ISignUp {
 		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(LoginConstants.emailKey, initialEmail), Arrays.asList(//
 				INamesAndValuesEditor.Utils.text(cardConfig, cardType, LoginConstants.emailKey),//
 				INamesAndValuesEditor.Utils.text(cardConfig, cardType, LoginConstants.monikerKey),//
-				INamesAndValuesEditor.Utils.password(cardConfig, cardType,  LoginConstants.passwordKey),//
-				INamesAndValuesEditor.Utils.password(cardConfig, cardType, LoginConstants. confirmPasswordKey)),//
+				INamesAndValuesEditor.Utils.password(cardConfig, cardType, LoginConstants.passwordKey),//
+				INamesAndValuesEditor.Utils.password(cardConfig, cardType, LoginConstants.confirmPasswordKey)),//
 				new ICardEditorCallback() {
 					@Override
 					public void ok(ICardData cardData) {
@@ -39,7 +39,8 @@ public class Signup implements ISignUp {
 						String password = getPassword(data);
 						String passwordHash = Crypto.digest(salt, password);
 						final String email = getEmail(cardData.data());
-						strategy.signup(email, salt, passwordHash, callback);
+						String moniker  = getMoniker(cardData.data());
+						strategy.signup(email, moniker, salt, passwordHash, callback);
 					}
 
 					private String get(Map<String, Object> data, String key) {
@@ -54,20 +55,25 @@ public class Signup implements ISignUp {
 					@Override
 					public boolean canOk(Map<String, Object> data) {
 						boolean emailOk = Strings.isEmail(getEmail(data));
+						boolean monikerOk = Strings.nullSafeToString(getMoniker(data)).length() > 0;
 						boolean passwordOk = getPassword(data).length() > 0 && getPassword(data).equals(getConfirmPassword(data));
-						return emailOk && passwordOk;
+						return emailOk && monikerOk && passwordOk;
 					}
 
 					private String getEmail(Map<String, Object> data) {
-						return get(data,  LoginConstants.emailKey);
+						return get(data, LoginConstants.emailKey);
+					}
+
+					private String getMoniker(Map<String, Object> data) {
+						return get(data, LoginConstants.monikerKey);
 					}
 
 					private String getPassword(Map<String, Object> data) {
-						return get(data,  LoginConstants.passwordKey);
+						return get(data, LoginConstants.passwordKey);
 					}
 
 					private String getConfirmPassword(Map<String, Object> data) {
-						return get(data, LoginConstants. confirmPasswordKey);
+						return get(data, LoginConstants.confirmPasswordKey);
 					}
 
 				});
@@ -93,7 +99,5 @@ public class Signup implements ISignUp {
 	public Control getControl() {
 		return content.getControl();
 	}
-
-
 
 }

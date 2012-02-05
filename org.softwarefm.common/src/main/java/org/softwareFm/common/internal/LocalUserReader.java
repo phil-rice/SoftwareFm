@@ -35,6 +35,12 @@ public class LocalUserReader implements IUserReader {
 		return data;
 	}
 
+	@Override
+	public void refresh(Map<String, Object> userDetails) {
+		String url = userGenerator.findUrlFor(userDetails);
+		gitLocal.clearCache(url);
+	}
+
 
 
 }

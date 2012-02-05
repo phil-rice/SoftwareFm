@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.softwarefm.softwarefmcommon
+Bundle-SymbolicName: org.softwarefm.softwarefmcommon
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: SoftwareFM
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.softwarefm.common;bundle-version="1.0.0";visibility:=reexport
+Export-Package: org.softwareFm.eclipse.constants,
+ org.softwareFm.eclipse.user

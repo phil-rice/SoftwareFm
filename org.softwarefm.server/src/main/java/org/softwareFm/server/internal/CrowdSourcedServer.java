@@ -29,7 +29,6 @@ import org.apache.http.util.EntityUtils;
 import org.softwareFm.common.IGitOperations;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.constants.CommonMessages;
-import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
@@ -37,14 +36,13 @@ import org.softwareFm.common.processors.AbstractLoginDataAccessor;
 import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.common.strings.Strings;
-import org.softwareFm.common.url.IUrlGenerator;
-import org.softwareFm.server.ISoftwareFmServer;
+import org.softwareFm.server.ICrowdSourcedServer;
 import org.softwareFm.server.IUsage;
 import org.softwareFm.server.processors.IMailer;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.IProcessResult;
 
-public class SoftwareFmServer implements ISoftwareFmServer {
+public class CrowdSourcedServer implements ICrowdSourcedServer {
 
 	private IServiceExecutor executor;
 	private boolean shutdown;
@@ -52,7 +50,7 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 	private ServerSocket serverSocket;
 	private final IUsage usage;
 
-	public SoftwareFmServer(int port, int threads, final IProcessCall processCall, final ICallback<Throwable> errorHandler, final IUsage usage) {
+	public CrowdSourcedServer(int port, int threads, final IProcessCall processCall, final ICallback<Throwable> errorHandler, final IUsage usage) {
 		this.usage = usage;
 		usage.start();
 		final CountDownLatch startLatch = new CountDownLatch(threads);
@@ -193,21 +191,22 @@ public class SoftwareFmServer implements ISoftwareFmServer {
 	private void doNothing() {
 	}
 
-	@SuppressWarnings("unused")
 	public static void main(String[] args) throws Exception {
-		File root = new File(System.getProperty("user.home"));
-		File sfmRoot = new File(root, ".sfm_remote");
+		File sfmRoot = Utils.makeSfmRoot();
 		IGitOperations gitOperations = IGitOperations.Utils.gitOperations(sfmRoot);
+		BasicDataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
+		makeServer(gitOperations, dataSource);
+	}
+
+	public static ICrowdSourcedServer makeServer(IGitOperations gitOperations, BasicDataSource dataSource, IProcessCall... processCalls) {
 		System.out.println("Server: " + gitOperations);
+		File sfmRoot = gitOperations.getRoot();
 		final IUsage usage = IUsage.Utils.defaultUsage();
 		IMailer mailer = IMailer.Utils.email("localhost", null, null);
-		BasicDataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
 		IFunction1<Map<String, Object>, String> cryptoFn = new UserCryptoFn(dataSource);
-		Callable<String> monthGetter = Callables.monthGetter();
-		Callable<Integer> dayGetter = Callables.dayGetter();
 		Callable<String> softwareFmIdGenerator = Callables.uuidGenerator();
 		Callable<String> makeKey = Callables.makeCryptoKey();
-		IUrlGenerator userGenerator = LoginConstants.userGenerator();
-		new SoftwareFmServer(8080, 1000, IProcessCall.Utils.softwareFmProcessCall(dataSource, gitOperations, cryptoFn, makeKey, sfmRoot, mailer, softwareFmIdGenerator), ICallback.Utils.sysErrCallback(), usage);
+		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCall(dataSource, gitOperations, cryptoFn, makeKey, sfmRoot, mailer, softwareFmIdGenerator, processCalls);
+		return new CrowdSourcedServer(8080, 1000, processCall, ICallback.Utils.sysErrCallback(), usage);
 	}
 }

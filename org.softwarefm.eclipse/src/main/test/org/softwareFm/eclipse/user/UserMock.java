@@ -13,7 +13,7 @@ public class UserMock implements IUser {
 	private final Map<String, Object> expectedUserDetails;
 	private final String expectedCrypto;
 
-	public UserMock (String expectedCrypto, Map<String, Object> expectedUserDetails, Object...namesAndValues) {
+	public UserMock(String expectedCrypto, Map<String, Object> expectedUserDetails, Object... namesAndValues) {
 		this.map = Maps.stringObjectMap(namesAndValues);
 		this.expectedCrypto = expectedCrypto;
 		this.expectedUserDetails = expectedUserDetails;
@@ -34,4 +34,8 @@ public class UserMock implements IUser {
 		map.put(property, value);
 	}
 
+	@Override
+	public void refresh(Map<String, Object> userDetails) {
+		throw new UnsupportedOperationException();
+	}
 }
