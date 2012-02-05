@@ -39,7 +39,8 @@ public class MyDetails implements IHasComposite {
 		return new IShowMyData() {
 			@Override
 			public void show(final UserData userData) {
-				masterDetailSocial.createAndShowMaster(new IFunction1<Composite, MyDetails>() {
+				masterDetailSocial.hideSocial();
+				masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyDetails>() {
 					@Override
 					public MyDetails apply(Composite from) throws Exception {
 						IUserReader user = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
@@ -66,6 +67,8 @@ public class MyDetails implements IHasComposite {
 			for (int i = 0; i < 2; i++)
 				new TableColumn(userDetails, SWT.NULL);
 			Map<String, Object> userDetailMap = Maps.stringObjectMap(LoginConstants.softwareFmIdKey, userData.softwareFmId);
+			user.refresh(userDetailMap);
+
 			for (String property : displayProperties) {
 				TableItem item = new TableItem(userDetails, SWT.NULL);
 				Object value = user.getUserProperty(userDetailMap, userData.crypto, property);
