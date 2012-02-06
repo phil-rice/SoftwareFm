@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+import org.apache.log4j.Logger;
 import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.IGitOperations;
 import org.softwareFm.common.IUser;
@@ -19,6 +20,7 @@ import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.user.IProject;
 
 public class ProjectForServer implements IProject {
+	private static Logger logger = Logger.getLogger(IProject.class);
 
 	private final IGitOperations gitOperations;
 	private final IUser user;
@@ -46,25 +48,33 @@ public class ProjectForServer implements IProject {
 	@Override
 	public void addProjectDetails(Map<String, Object> userDetailMap, String groupId, String artifactId, String month, long day) {
 		IFileDescription projectFileDescription = getFileDescriptionForProject(userDetailMap, month);
+		logger.debug(projectFileDescription);
 		Map<String, Object> initialProjectDetails = gitOperations.getFile(projectFileDescription);
+		logger.debug("Initial Project Details: " + initialProjectDetails);
 		Map<String, Object> groupDetails = (Map<String, Object>) Maps.getOrDefault(initialProjectDetails, groupId, Maps.emptyStringObjectMap());
 		List<Long> artifactDetails = (List<Long>) Maps.getOrDefault(groupDetails, artifactId, Collections.<Integer> emptyList());
 		if (!artifactDetails.contains(day)) {
+			logger.debug("Adding to  Project Details");
 			List<Long> newDays = Lists.append(artifactDetails, day);
 			Map<String, Object> newGroupData = Maps.with(groupDetails, artifactId, newDays);
 			Map<String, Object> newProjectData = Maps.with(initialProjectDetails, groupId, newGroupData);
 			gitOperations.put(projectFileDescription, newProjectData);
+			logger.debug("New  Project Details: " + newProjectData);
 		}
 	}
 
 	protected IFileDescription getFileDescriptionForProject(Map<String, Object> userDetailMap, String month) {
+		String userUrl = userUrlGenerator.findUrlFor(userDetailMap);
+		logger.debug("User url: " + userUrl); 
 		String cryptoKey = Functions.call(cryptoFn, userDetailMap);
+		logger.debug("User crypto key: " + cryptoKey); 
 		String projectCryptoKey = user.getUserProperty(userDetailMap, cryptoKey, SoftwareFmConstants.projectCryptoKey);
 		if (projectCryptoKey == null) {
+			logger.debug("Creating project crypto key"); 
 			projectCryptoKey = Callables.call(cryptoGenerator);
 			user.setUserProperty(userDetailMap, cryptoKey, SoftwareFmConstants.projectCryptoKey, projectCryptoKey);
 		}
-		String userUrl = userUrlGenerator.findUrlFor(userDetailMap);
+		logger.debug("Project crypto key: " + cryptoKey); 
 		IFileDescription projectFileDescription = IFileDescription.Utils.encrypted(Urls.compose(userUrl, SoftwareFmConstants.projectDirectoryName), month, projectCryptoKey);
 		return projectFileDescription;
 	}

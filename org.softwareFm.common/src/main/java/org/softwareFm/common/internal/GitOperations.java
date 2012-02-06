@@ -23,6 +23,11 @@ import org.softwareFm.common.url.Urls;
 
 public class GitOperations implements IGitOperations {
 
+	@Override
+	public String toString() {
+		return "GitOperations [root=" + root + "]";
+	}
+
 	public final File root;
 
 	public GitOperations(File root) {

@@ -18,6 +18,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.log4j.Logger;
 import org.apache.tools.ant.taskdefs.Ant;
 import org.codehaus.cake.forkjoin.RecursiveTask;
+import org.easymock.EasyMock;
+import org.jdom.JDOMFactory;
 import org.softwareFm.client.http.api.IHttpClient;
 
 import twitter4j.Tweet;
@@ -38,6 +40,8 @@ public class Sample {
 		TestSuite suite;
 		new TestSuite();
 		Math.random();
+		EasyMock.createMock(IHttpClient.class);
+		JDOMFactory factory;
 		Java2Html html;
 	}
 }

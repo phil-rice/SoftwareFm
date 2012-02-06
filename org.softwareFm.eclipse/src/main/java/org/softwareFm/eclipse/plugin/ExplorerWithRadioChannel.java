@@ -70,7 +70,7 @@ public class ExplorerWithRadioChannel {
 		Logger.getLogger(IHttpClient.class).setLevel(Level.DEBUG);
 		File home = new File(System.getProperty("user.home"));
 		final File localRoot = new File(home, ".sfm");
-		boolean local = true;
+		boolean local = false;
 		String server = local ? "localhost" : SoftwareFmConstants.softwareFmServerUrl;
 		String prefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : SoftwareFmConstants.gitProtocolAndGitServerName;
 		// String prefix = "git://localhost:7777/";
@@ -99,7 +99,7 @@ public class ExplorerWithRadioChannel {
 					ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(from.getDisplay(), service, client);
 					IProjectTimeGetter projectTimeGetter = IProjectTimeGetter.Utils.timeGetter();
 					IUrlGenerator userUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.userUrlKey);
-					IShowMyData showMyDetails = MyDetails.showMyDetails(cardConfig, masterDetailSocial, userUrlGenerator, localGit, projectTimeGetter);
+					IShowMyData showMyDetails = MyDetails.showMyDetails(service, cardConfig, masterDetailSocial, userUrlGenerator, localGit, projectTimeGetter);
 					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, playListGetter, service, loginStrategy,  showMyDetails);
 
 					ICardMenuItemHandler.Utils.addSoftwareFmMenuItemHandlers(explorer);

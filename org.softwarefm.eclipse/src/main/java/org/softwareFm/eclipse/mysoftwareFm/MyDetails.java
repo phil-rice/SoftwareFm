@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.Callable;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
@@ -22,6 +23,7 @@ import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
@@ -39,17 +41,28 @@ import org.softwareFm.swt.swt.Swts;
 
 public class MyDetails implements IHasComposite {
 
-	public static IShowMyData showMyDetails(final CardConfig cardConfig, final IMasterDetailSocial masterDetailSocial, final IUrlGenerator userUrlGenerator, final IGitLocal gitLocal, final IProjectTimeGetter timeGetter) {
+	public static IShowMyData showMyDetails(final IServiceExecutor executor, final CardConfig cardConfig, final IMasterDetailSocial masterDetailSocial, final IUrlGenerator userUrlGenerator, final IGitLocal gitLocal, final IProjectTimeGetter timeGetter) {
 		return new IShowMyData() {
 			@Override
 			public void show(final UserData userData) {
-				masterDetailSocial.hideSocial();
-				masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyDetails>() {
+				executor.submit(new Callable<Void>() {
 					@Override
-					public MyDetails apply(Composite from) throws Exception {
-						IUserReader user = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
-						IProjectReader project = UserAndProjectFactory.projectForLocal(user, userUrlGenerator, userData.crypto, gitLocal);
-						return new MyDetails(from, cardConfig, userData, user, project, timeGetter);
+					public Void call() throws Exception {
+						final IUserReader user = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
+						final IProjectReader project = UserAndProjectFactory.projectForLocal(user, userUrlGenerator, userData.crypto, gitLocal);
+						Swts.asyncExec(masterDetailSocial.getControl(), new Runnable() {
+							@Override
+							public void run() {
+								masterDetailSocial.hideSocial();
+								masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyDetails>() {
+									@Override
+									public MyDetails apply(Composite from) throws Exception {
+										return new MyDetails(from, cardConfig, userData, user, project, timeGetter);
+									}
+								});
+							}
+						});
+						return null;
 					}
 				});
 			}
@@ -71,7 +84,7 @@ public class MyDetails implements IHasComposite {
 				public void paintControl(PaintEvent e) {
 					Point size = getSize();
 					Rectangle ca = getClientArea();
-					e.gc.drawRoundRectangle(ca.x-cc.cornerRadiusComp, ca.y-cc.cornerRadiusComp, ca.width+2*cc.cornerRadiusComp, ca.height+2*cc.cornerRadiusComp, cc.cornerRadius, cc.cornerRadius);
+					e.gc.drawRoundRectangle(ca.x - cc.cornerRadiusComp, ca.y - cc.cornerRadiusComp, ca.width + 2 * cc.cornerRadiusComp, ca.height + 2 * cc.cornerRadiusComp, cc.cornerRadius, cc.cornerRadius);
 				}
 			});
 			this.userDetails = new Table(this, SWT.FULL_SELECTION);
@@ -141,6 +154,5 @@ public class MyDetails implements IHasComposite {
 	public Composite getComposite() {
 		return content;
 	}
-
 
 }

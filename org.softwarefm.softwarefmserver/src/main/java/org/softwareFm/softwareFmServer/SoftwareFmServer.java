@@ -1,6 +1,7 @@
 package org.softwareFm.softwareFmServer;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.log4j.xml.DOMConfigurator;
 import org.softwareFm.common.IGitOperations;
 import org.softwareFm.common.IUser;
 import org.softwareFm.common.constants.LoginConstants;
@@ -15,6 +16,8 @@ import org.softwareFm.server.ICrowdSourcedServer;
 public class SoftwareFmServer {
 
 	public static void main(String[] args) {
+		DOMConfigurator.configure(System.getProperty("user.home") + "/log4j.xml");
+
 		BasicDataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
 		IGitOperations gitOperations = IGitOperations.Utils.gitOperations(ICrowdSourcedServer.Utils.makeSfmRoot());
 		ICrowdSourcedServer.Utils.fullServer(gitOperations, dataSource, //

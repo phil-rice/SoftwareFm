@@ -58,7 +58,7 @@ public class ExplorerView extends ViewPart {
 		IUrlGenerator userUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.userUrlKey);
 		IGitLocal gitLocal= activator.getGitLocal();
 		IProjectTimeGetter timeGetter = activator.getProjectTimeGetter();
-		IShowMyData showMyDetails = MyDetails.showMyDetails(cardConfig, masterDetailSocial, userUrlGenerator, gitLocal, timeGetter);
+		IShowMyData showMyDetails = MyDetails.showMyDetails(service, cardConfig, masterDetailSocial, userUrlGenerator, gitLocal, timeGetter);
 		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, getRootUrls(), playListGetter, service, loginStrategy, showMyDetails);
 		IUsageStrategy usageStrategy = IUsageStrategy.Utils.usage(activator.getServiceExecutor(), activator.getClient(), gitLocal, userUrlGenerator);
 		actionBar = makeActionBar(explorer, cardConfig, usageStrategy);

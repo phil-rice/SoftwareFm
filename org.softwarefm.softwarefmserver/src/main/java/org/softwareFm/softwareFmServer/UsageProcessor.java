@@ -2,6 +2,7 @@ package org.softwareFm.softwareFmServer;
 
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.softwareFm.common.IGitOperations;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
@@ -11,6 +12,8 @@ import org.softwareFm.server.processors.IProcessResult;
 import org.softwareFm.server.processors.internal.AbstractCommandProcessor;
 
 public class UsageProcessor extends AbstractCommandProcessor {
+
+	private static Logger logger = Logger.getLogger(IProject.class);
 
 	private final IProject project;
 	private final IProjectTimeGetter projectTimeGetter;
@@ -26,6 +29,7 @@ public class UsageProcessor extends AbstractCommandProcessor {
 		String month = projectTimeGetter.thisMonth();
 		int day = projectTimeGetter.day();
 		String groupId = (String) parameters.get(SoftwareFmConstants.groupIdKey);
+		logger.debug("execute" + actualUrl + ", " + parameters + ", " + month + ", " + day);
 		String artifactId = (String) parameters.get(SoftwareFmConstants.artifactIdKey);
 		if (groupId == null)
 			throw new NullPointerException(parameters.toString());

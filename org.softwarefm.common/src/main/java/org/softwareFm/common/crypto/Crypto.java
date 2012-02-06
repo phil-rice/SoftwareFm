@@ -25,6 +25,10 @@ import org.softwareFm.common.strings.Strings;
 
 public class Crypto {
 
+	private static String algorithm = "AES";
+	private static String provider = "BC";
+	private static int keySize = 128;
+
 	private static boolean initialised;
 
 	public static String digest(String salt, String password) {
@@ -42,13 +46,14 @@ public class Crypto {
 				return makeKey();
 			}
 		};
-		
+
 	}
+
 	public static String makeKey() {
 		try {
 			init();
-			KeyGenerator generator = KeyGenerator.getInstance("AES", "BC");
-			generator.init(192);
+			KeyGenerator generator = KeyGenerator.getInstance(algorithm, provider);
+			generator.init(keySize);
 			Key key = generator.generateKey();
 			byte[] encoded = key.getEncoded();
 			return Strings.toHex(encoded);
@@ -60,8 +65,8 @@ public class Crypto {
 	public static String aesDecrypt(String hexKey, String hexCoded) {
 		try {
 			init();
-			SecretKeySpec key = new SecretKeySpec(Strings.fromHex(hexKey), "AES");
-			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding", "BC");
+			SecretKeySpec key = new SecretKeySpec(Strings.fromHex(hexKey),algorithm);
+			Cipher cipher = Cipher.getInstance(algorithm+"/ECB/PKCS5Padding", provider);
 			cipher.init(Cipher.DECRYPT_MODE, key);
 			byte[] codedBytes = Strings.fromHex(hexCoded);
 			CipherInputStream inputStream = new CipherInputStream(new ByteArrayInputStream(codedBytes), cipher);
@@ -76,7 +81,7 @@ public class Crypto {
 	public static String aesEncrypt(String hexKey, String input) {
 		try {
 			init();
-			SecretKeySpec key = new SecretKeySpec(Strings.fromHex(hexKey), "AES");
+			SecretKeySpec key = new SecretKeySpec(Strings.fromHex(hexKey), algorithm);
 
 			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding", "BC");
 			cipher.init(Cipher.ENCRYPT_MODE, key);
