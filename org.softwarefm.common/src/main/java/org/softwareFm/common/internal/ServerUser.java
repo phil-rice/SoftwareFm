@@ -7,6 +7,7 @@ import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.IGitOperations;
 import org.softwareFm.common.IUser;
 import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
@@ -25,9 +26,10 @@ public class ServerUser implements IUser {
 	}
 
 	@Override
-	public <T> T getUserProperty(Map<String, Object> userDetails, String cryptoKey, String property) {
-		String url = userUrlGenerator.findUrlFor(userDetails);
-		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, CommonConstants.dataFileName, cryptoKey);
+	public <T> T getUserProperty(String softwareFmId, String cryptoKey, String property) {
+		String url = userUrlGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
+		IFileDescription fileDescription1 = IFileDescription.Utils.encrypted(url, CommonConstants.dataFileName, cryptoKey);
+		IFileDescription fileDescription = fileDescription1;
 		Map<String, Object> data = gitOperations.getFile(fileDescription);
 		if (data == null)
 			return null;
@@ -37,11 +39,12 @@ public class ServerUser implements IUser {
 	}
 
 	@Override
-	public <T> void setUserProperty(java.util.Map<String, Object> userDetails, String cryptoKey, String property, T value) {
-		String url = userUrlGenerator.findUrlFor(userDetails);
-		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, CommonConstants.dataFileName, cryptoKey);
+	public <T> void setUserProperty(String softwareFmId, String cryptoKey, String property, T value) {
+		String url = userUrlGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
+		IFileDescription fileDescription1 = IFileDescription.Utils.encrypted(url, CommonConstants.dataFileName, cryptoKey);
+		IFileDescription fileDescription = fileDescription1;
 		File repositoryUrl = fileDescription.findRepositoryUrl(gitOperations.getRoot());
-		if (repositoryUrl == null){
+		if (repositoryUrl == null) {
 			String root = Functions.call(userRepositoryDefn, url);
 			gitOperations.init(root);
 		}
@@ -50,7 +53,7 @@ public class ServerUser implements IUser {
 	}
 
 	@Override
-	public void refresh(Map<String, Object> userDetails) {
+	public void refresh(String softwareFmId) {
 		throw new UnsupportedOperationException();
 	}
 }

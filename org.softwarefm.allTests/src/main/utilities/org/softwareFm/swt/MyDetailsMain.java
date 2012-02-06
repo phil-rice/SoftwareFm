@@ -1,12 +1,9 @@
 package org.softwareFm.swt;
 
-import java.util.Map;
-
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.crypto.Crypto;
 import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.maps.Maps;
 import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
 import org.softwareFm.eclipse.user.ProjectFixture;
 import org.softwareFm.eclipse.user.ProjectTimeGetterFixture;
@@ -22,11 +19,11 @@ public class MyDetailsMain {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				String cryptoKey = Crypto.makeKey();
-				Map<String, Object> userDetails = Maps.makeImmutableMap("some", "user details");
+				String softwareFmId = "someSoftwarefmId";
 				String email = "someEmail";
-				UserMock user = new UserMock(cryptoKey, userDetails, LoginConstants.emailKey, email, LoginConstants.monikerKey, "someMoniker");
-				ProjectFixture project = new ProjectFixture(userDetails);
-				UserData userData = new UserData(email, "someSoftwarefmId", cryptoKey);
+				UserMock user = new UserMock(cryptoKey, softwareFmId, LoginConstants.emailKey, email, LoginConstants.monikerKey, "someMoniker");
+				ProjectFixture project = new ProjectFixture(softwareFmId);
+				UserData userData = new UserData(email, softwareFmId, cryptoKey);
 				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay());
 				return new MyDetails(from, cardConfig, userData, user, project, new ProjectTimeGetterFixture()).getComposite();
 			}

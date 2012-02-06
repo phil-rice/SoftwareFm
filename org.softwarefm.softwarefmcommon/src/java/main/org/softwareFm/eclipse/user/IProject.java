@@ -9,7 +9,7 @@ import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 
 public interface IProject extends IProjectReader {
 
-	void addProjectDetails(Map<String, Object> userDetailMap, String groupId, String artifactId, String month, long day);
+	void addProjectDetails(String softwareFmId, String groupId, String artifactId, String month, long day);
 
 	public static class Utils {
 

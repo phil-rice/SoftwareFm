@@ -15,7 +15,7 @@ public class ChangePasswordIntegrationTest extends AbstractProcessorDatabaseInte
 		String email = "a@b.com";
 
 		String salt = makeSalt();
-		signup(email, salt, "oldHash","someNewSoftwareFmId0");
+		signup(email, salt, "someMoniker", "oldHash", "someNewSoftwareFmId0");
 		changePassword(email, "oldHash", "newHash");
 		String newSalt = makeSalt();
 		String emailSalt = requestEmailSalt(newSalt, email);
@@ -26,7 +26,7 @@ public class ChangePasswordIntegrationTest extends AbstractProcessorDatabaseInte
 		String email = "a@b.com";
 
 		String salt = makeSalt();
-		signup(email, salt, "oldHash","someNewSoftwareFmId0");
+		signup(email, salt, "someMoniker", "oldHash", "someNewSoftwareFmId0");
 
 		changePassword(email, "wrongHash", "newHash", IResponseCallback.Utils.checkCallback(CommonConstants.notFoundStatusCode, LoginMessages.wrongPassword));
 		String newSalt = makeSalt();
@@ -39,7 +39,7 @@ public class ChangePasswordIntegrationTest extends AbstractProcessorDatabaseInte
 		String email = "a@b.com";
 
 		String salt = makeSalt();
-		signup(email, salt, "oldHash", "someNewSoftwareFmId0");
+		signup(email, salt, "someMoniker", "oldHash", "someNewSoftwareFmId0");
 		changePassword(email, "oldHash", "newHash");
 		String newSalt = makeSalt();
 		String emailSalt = requestEmailSalt(newSalt, email);

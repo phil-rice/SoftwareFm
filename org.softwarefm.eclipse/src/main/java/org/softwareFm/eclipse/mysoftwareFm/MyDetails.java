@@ -91,11 +91,10 @@ public class MyDetails implements IHasComposite {
 			userDetails.setHeaderVisible(false);
 			for (int i = 0; i < 2; i++)
 				new TableColumn(userDetails, SWT.NULL);
-			Map<String, Object> userDetailMap = Maps.stringObjectMap(LoginConstants.softwareFmIdKey, userData.softwareFmId);
-			user.refresh(userDetailMap);
+			user.refresh(userData.softwareFmId);
 			for (String property : displayProperties) {
 				TableItem item = new TableItem(userDetails, SWT.NULL);
-				Object value = user.getUserProperty(userDetailMap, userData.crypto, property);
+				Object value = user.getUserProperty(userData.softwareFmId, userData.crypto, property);
 				String name = cc.nameFn.apply(cc, new LineItem(SoftwareFmConstants.myDetailsCardType, property, value));
 				item.setText(new String[] { name, Strings.nullSafeToString(value) });
 			}
@@ -114,7 +113,7 @@ public class MyDetails implements IHasComposite {
 			}
 
 			for (String month : lastNMonths) {
-				Map<String, Map<String, List<Integer>>> monthDetails = project.getProjectDetails(userDetailMap, month);
+				Map<String, Map<String, List<Integer>>> monthDetails = project.getProjectDetails(userData.softwareFmId, month);
 				for (Entry<String, Map<String, List<Integer>>> groupEntry : monthDetails.entrySet())
 					for (Entry<String, List<Integer>> artifactEntry : groupEntry.getValue().entrySet())
 						Maps.addToMapOfMapOfMaps(groupToArtifactToMonthToCount, HashMap.class, groupEntry.getKey(), artifactEntry.getKey(), month, artifactEntry.getValue().size());

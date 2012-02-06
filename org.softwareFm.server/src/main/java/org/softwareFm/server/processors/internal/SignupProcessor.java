@@ -8,7 +8,6 @@ import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.constants.LoginMessages;
 import org.softwareFm.common.json.Json;
-import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.server.processors.IProcessResult;
@@ -39,14 +38,14 @@ public class SignupProcessor extends AbstractCommandProcessor {
 			String moniker = Strings.nullSafeToString(parameters.get(LoginConstants.monikerKey));
 			String passwordHash = Strings.nullSafeToString(parameters.get(LoginConstants.passwordHashKey));
 			String softwareFmId = Callables.call(softwareFmIdGenerator);
+			if (email == null || moniker == null || passwordHash == null || softwareFmId == null)
+				throw new IllegalArgumentException(parameters.toString());
 			SignUpResult result = checker.signUp(email, salt, passwordHash, softwareFmId);
 			if (result.errorMessage != null)
 				return IProcessResult.Utils.processError(CommonConstants.notFoundStatusCode, result.errorMessage);
 			else {
-				Map<String, Object> userDetails = Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId);
-				user.setUserProperty(userDetails, result.crypto, LoginConstants.emailKey, email);
-				user.setUserProperty(userDetails, result.crypto, LoginConstants.monikerKey
-						, moniker);
+				user.setUserProperty(softwareFmId, result.crypto, LoginConstants.emailKey, email);
+				user.setUserProperty(softwareFmId, result.crypto, LoginConstants.monikerKey, moniker);
 				return IProcessResult.Utils.processString(Json.mapToString(LoginConstants.softwareFmIdKey, softwareFmId, LoginConstants.cryptoKey, result.crypto));
 			}
 

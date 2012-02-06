@@ -6,6 +6,8 @@ import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.IGitLocal;
 import org.softwareFm.common.IUserReader;
 import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.url.IUrlGenerator;
 
 public class LocalUserReader implements IUserReader {
@@ -21,23 +23,23 @@ public class LocalUserReader implements IUserReader {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getUserProperty(Map<String, Object> userDetails, String cryptoKey, String property) {
-		Map<String, Object> data = getUserData(userDetails, cryptoKey);
+	public <T> T getUserProperty(String softwareFmId, String cryptoKey, String property) {
+		Map<String, Object> data = getUserData(softwareFmId, cryptoKey);
 		if (data == null)
-			throw new NullPointerException(userDetails + ", " + property);
+			throw new NullPointerException(softwareFmId + ", " + cryptoKey +","+property);
 		return (T) data.get(property);
 	}
 
-	protected Map<String, Object> getUserData(Map<String, Object> userDetails, String cryptoKey) {
-		String url = userGenerator.findUrlFor(userDetails);
+	protected Map<String, Object> getUserData(String softwareFmId, String cryptoKey) {
+		String url = userGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey,softwareFmId));
 		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, CommonConstants.dataFileName, cryptoKey);
 		Map<String, Object> data = gitLocal.getFile(fileDescription);
 		return data;
 	}
 
 	@Override
-	public void refresh(Map<String, Object> userDetails) {
-		String url = userGenerator.findUrlFor(userDetails);
+	public void refresh(String softwareFmId) {
+		String url = userGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
 		gitLocal.clearCache(url);
 	}
 

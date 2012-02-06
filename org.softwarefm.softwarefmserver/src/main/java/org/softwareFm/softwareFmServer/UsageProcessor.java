@@ -5,6 +5,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.softwareFm.common.IGitOperations;
 import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.user.IProject;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
@@ -31,11 +32,15 @@ public class UsageProcessor extends AbstractCommandProcessor {
 		String groupId = (String) parameters.get(SoftwareFmConstants.groupIdKey);
 		logger.debug("execute" + actualUrl + ", " + parameters + ", " + month + ", " + day);
 		String artifactId = (String) parameters.get(SoftwareFmConstants.artifactIdKey);
+		String softwareFmId = (String) parameters.get(LoginConstants.softwareFmIdKey);
 		if (groupId == null)
 			throw new NullPointerException(parameters.toString());
 		if (artifactId == null)
 			throw new NullPointerException(parameters.toString());
-		project.addProjectDetails(parameters, groupId, artifactId, month, day);
+		if (softwareFmId == null)
+			throw new NullPointerException(parameters.toString());
+		
+		project.addProjectDetails(softwareFmId, groupId, artifactId, month, day);
 		return IProcessResult.Utils.doNothing();
 	}
 

@@ -22,8 +22,8 @@ public class LocalUserReaderTest extends GitTest {
 	private IUserReader localUser;
 	private final String crypto1Key = Crypto.makeKey();
 	private final String crypto2Key = Crypto.makeKey();
-	private final Map<String, Object> sfmId1 = Maps.stringObjectMap(LoginConstants.softwareFmIdKey, "sfmId1");
-	private final Map<String, Object> sfmId2 = Maps.stringObjectMap(LoginConstants.softwareFmIdKey, "sfmId2");
+	private final String sfmId1 = "sfmId1";
+	private final String sfmId2 =  "sfmId2";
 	private File remoteSfmId1File;
 	private File remoteSfmId2File;
 	private File localSfmId1File;

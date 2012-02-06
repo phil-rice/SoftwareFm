@@ -26,22 +26,21 @@ public class ProjectFixture implements IProject {
 							"artifact11", Arrays.asList(1, 3, 4, 5), "artifact12", Arrays.asList(1, 2, 3)),//
 					"group3", Maps.stringObjectMap(//
 							"artifact31", Arrays.asList(1, 2), "artifact32", Arrays.asList(1, 2, 3))));
-	
-	private final Map<String, Object> expectedUserDetailMap;
+	private final String expectedSoftwareFmId;
 
-	public ProjectFixture(Map<String, Object> expectedUserDetailMap) {
-		this.expectedUserDetailMap = expectedUserDetailMap;
+	public ProjectFixture(String expectedSoftwareFmId) {
+		this.expectedSoftwareFmId = expectedSoftwareFmId;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Map<String, Map<String, List<Integer>>> getProjectDetails(Map<String, Object> userDetailMap, String month) {
-		Assert.assertEquals(expectedUserDetailMap, userDetailMap);
+	public Map<String, Map<String, List<Integer>>> getProjectDetails(String softwareFmId, String month) {
+		Assert.assertEquals(expectedSoftwareFmId, softwareFmId);
 		return (Map<String, Map<String, List<Integer>>>) map.get(month);
 	}
 
 	@Override
-	public void addProjectDetails(Map<String, Object> userDetailMap, String groupId, String artifactId, String month, long day) {
+	public void addProjectDetails(String softwareFmId, String groupId, String artifactId, String month, long day) {
 		throw new UnsupportedOperationException();
 	}
 

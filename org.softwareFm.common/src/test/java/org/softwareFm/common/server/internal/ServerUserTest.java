@@ -20,8 +20,8 @@ public class ServerUserTest extends GitTest {
 	private IUser user;
 	private final String crypto1Key = Crypto.makeKey();
 	private final String crypto2Key = Crypto.makeKey();
-	private final Map<String, Object> sfmId1 = Maps.stringObjectMap(LoginConstants.softwareFmIdKey, "sfmId1");
-	private final Map<String, Object> sfmId2 = Maps.stringObjectMap(LoginConstants.softwareFmIdKey, "sfmId2");
+	private final String sfmId1 = "sfmId1";
+	private final String sfmId2 = "sfmId2";
 	private File sfmId1File;
 	private File sfmId2File;
 	protected IFunction1<String, String> findRepositoryRoot = Strings.firstNSegments(3);

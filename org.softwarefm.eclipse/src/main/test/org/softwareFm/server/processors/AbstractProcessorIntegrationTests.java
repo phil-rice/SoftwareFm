@@ -16,9 +16,9 @@ import org.softwareFm.common.tests.IIntegrationTest;
 
 abstract public class AbstractProcessorIntegrationTests extends GitWithHttpClientTest implements IIntegrationTest {
 
-	protected String signup(String email, String sessionSalt, String hash, String expectedSoftwareFmId) {
+	protected String signup(String email, String sessionSalt, String moniker, String hash, String expectedSoftwareFmId) {
 		MapCallback callback = new MapCallback();
-		signup(email, sessionSalt, hash, callback);
+		signup(email, sessionSalt, moniker, hash, callback);
 		Map<String, Object> map = callback.map;
 		String crypto = (String) map.get(LoginConstants.cryptoKey);
 		assertEquals(expectedSoftwareFmId, map.get(LoginConstants.softwareFmIdKey));
@@ -26,11 +26,12 @@ abstract public class AbstractProcessorIntegrationTests extends GitWithHttpClien
 		return crypto;
 	}
 
-	protected void signup(String email, String sessionSalt, String hash, IResponseCallback callback) {
+	protected void signup(String email, String sessionSalt, String moniker, String hash, IResponseCallback callback) {
 		try {
 			getHttpClient().post(LoginConstants.signupPrefix).//
 					addParam(LoginConstants.emailKey, email).//
 					addParam(LoginConstants.sessionSaltKey, sessionSalt).//
+					addParam(LoginConstants.monikerKey, moniker).//
 					addParam(LoginConstants.passwordHashKey, hash).//
 					execute(callback).get(CommonConstants.testTimeOutMs, TimeUnit.SECONDS);
 		} catch (Exception e) {

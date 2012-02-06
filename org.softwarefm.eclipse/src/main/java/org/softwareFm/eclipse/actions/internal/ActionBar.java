@@ -2,6 +2,7 @@ package org.softwareFm.eclipse.actions.internal;
 
 import java.io.File;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
@@ -12,6 +13,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.client.http.requests.IResponseCallback;
 import org.softwareFm.common.collections.Files;
+import org.softwareFm.common.collections.Sets;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
@@ -19,6 +21,7 @@ import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.actions.IActionBar;
+import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.jdtBinding.BindingRipperResult;
 import org.softwareFm.eclipse.jdtBinding.ExpressionData;
 import org.softwareFm.eclipse.jdtBinding.IExpressionCategoriser;
@@ -52,6 +55,10 @@ public class ActionBar implements IActionBar {
 	private final boolean admin;
 
 	private final IUsageStrategy usageStrategy;
+
+	private long lastUsageTime = System.currentTimeMillis();
+
+	private final Set<String> alreadyRegistered = Sets.newSet();
 
 	static enum State {
 		URL, JUST_JAR, FROM_JAR, FROM_PATH, DEBUG;
@@ -174,8 +181,17 @@ public class ActionBar implements IActionBar {
 				if (showRadioStation)
 					explorer.selectAndNext(url);
 				String softwareFmId = explorer.getUserData().softwareFmId;
-				if (softwareFmId != null)
-					usageStrategy.using(softwareFmId, groupId, artifactId, IResponseCallback.Utils.noCallback());
+				if (softwareFmId != null) {
+					if (System.currentTimeMillis() > lastUsageTime + SoftwareFmConstants.usageRefreshTimeMs) {
+						alreadyRegistered.clear();
+						lastUsageTime = System.currentTimeMillis();
+					}
+					String key = softwareFmId + "," + groupId + "," + artifactId;
+					if (!alreadyRegistered.contains(key)) {
+						usageStrategy.using(softwareFmId, groupId, artifactId, IResponseCallback.Utils.noCallback());
+						alreadyRegistered.add(key);
+					}
+				}
 				return null;
 			}
 

@@ -18,13 +18,13 @@ import org.softwareFm.server.processors.IProcessCall;
 
 public class UsageProcessorIntegrationTest extends AbstractProcessorDatabaseIntegrationTests {
 
+	private final String softwareFmId = "someSoftwareFmId";
 	private IUser user;
-	private Map<String, Object> userDetails;
 	private File userFile;
 	private File projectFile;
 
 	public void testSetup() {
-		user.setUserProperty(userDetails, userKey, "someProperty", "someValue");
+		user.setUserProperty(softwareFmId, userKey, "someProperty", "someValue");
 
 		assertTrue(userFile.exists());
 		Map<String, Object> actualUserDetails = Json.mapFromEncryptedFile(userFile, userKey);
@@ -39,7 +39,7 @@ public class UsageProcessorIntegrationTest extends AbstractProcessorDatabaseInte
 				addParam(SoftwareFmConstants.groupIdKey, "someGroupId").//
 				addParam(SoftwareFmConstants.artifactIdKey, "someArtifactId").//
 				execute(IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.SECONDS);
-		String projectCryptoKey = user.getUserProperty(userDetails, userKey, SoftwareFmConstants.projectCryptoKey);
+		String projectCryptoKey = user.getUserProperty(softwareFmId, userKey, SoftwareFmConstants.projectCryptoKey);
 		assertNotNull(projectCryptoKey);
 		Map<String, Object> actualProjectDetails = Json.mapFromEncryptedFile(projectFile, projectCryptoKey);
 		assertEquals(Maps.stringObjectMap("someGroupId", Maps.stringObjectMap("someArtifactId", Arrays.asList(0l))), actualProjectDetails);
@@ -81,7 +81,6 @@ public class UsageProcessorIntegrationTest extends AbstractProcessorDatabaseInte
 	protected void setUp() throws Exception {
 		super.setUp();
 		user = IProcessCall.Utils.makeUser(remoteOperations);
-		userDetails = Maps.stringObjectMap(LoginConstants.softwareFmIdKey, "someSoftwareFmId");
 		userFile = new File(remoteRoot, "softwareFm/users/so/me/someSoftwareFmId/" + CommonConstants.dataFileName);
 		projectFile = new File(remoteRoot, "softwareFm/users/so/me/someSoftwareFmId/project/someMonth");
 	}

@@ -23,8 +23,8 @@ public class ProjectForLocal extends AbstractProjectReader {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public Map<String, Map<String, List<Integer>>> getProjectDetails(Map<String, Object> userDetailMap, String month) {
-		IFileDescription projectFileDescription = getFileDescriptionForProject(userCryptoKey, userDetailMap, month);
+	public Map<String, Map<String, List<Integer>>> getProjectDetails(String softwareFm, String month) {
+		IFileDescription projectFileDescription = getFileDescriptionForProject(userCryptoKey, softwareFm, month);
 		if (projectFileDescription != null) {
 			Map<String, Map<String, List<Integer>>> data = (Map) gitLocal.getFile(projectFileDescription);
 			if (data != null)

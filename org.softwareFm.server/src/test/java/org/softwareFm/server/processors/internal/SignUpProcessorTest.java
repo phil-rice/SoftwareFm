@@ -43,11 +43,13 @@ public class SignUpProcessorTest extends AbstractProcessCallTest<SignupProcessor
 	}
 
 	public void testCreatesUserDetails() {
+		String softwareFmId = "someSoftwareFmId0";
 		String salt = saltProcessor.makeSalt();
-		user.setUserProperty(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, "someSoftwareFmId0"), "someCrypto", LoginConstants.emailKey, "someEmail");
+		user.setUserProperty(softwareFmId, "someCrypto", LoginConstants.emailKey, "someEmail");
+		user.setUserProperty(softwareFmId, "someCrypto", LoginConstants.monikerKey, "someMoniker");
 		EasyMock.replay(user);
 
-		processor.process(requestLine, Maps.stringObjectMap(LoginConstants.sessionSaltKey, salt, LoginConstants.softwareFmIdKey, "someSoftwareFmId0", LoginConstants.emailKey, "someEmail"));
+		processor.process(requestLine, Maps.stringObjectMap(LoginConstants.sessionSaltKey, salt, LoginConstants.softwareFmIdKey,softwareFmId, LoginConstants.emailKey, "someEmail", LoginConstants.monikerKey, "someMoniker"));
 
 		EasyMock.verify(user);
 	}

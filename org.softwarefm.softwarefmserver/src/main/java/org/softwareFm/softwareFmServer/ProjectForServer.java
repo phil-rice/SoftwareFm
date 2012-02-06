@@ -10,6 +10,7 @@ import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.IGitOperations;
 import org.softwareFm.common.IUser;
 import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
@@ -38,16 +39,16 @@ public class ProjectForServer implements IProject {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public Map<String, Map<String, List<Integer>>> getProjectDetails(Map<String, Object> userDetailMap, String month) {
-		IFileDescription projectFileDescription = getFileDescriptionForProject(userDetailMap, month);
+	public Map<String, Map<String, List<Integer>>> getProjectDetails(String softwareFm, String month) {
+		IFileDescription projectFileDescription = getFileDescriptionForProject(softwareFm, month);
 		Map<String, Map<String, List<Integer>>> projectDetails = (Map) gitOperations.getFile(projectFileDescription);
 		return projectDetails;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void addProjectDetails(Map<String, Object> userDetailMap, String groupId, String artifactId, String month, long day) {
-		IFileDescription projectFileDescription = getFileDescriptionForProject(userDetailMap, month);
+	public void addProjectDetails(String softwareFmId, String groupId, String artifactId, String month, long day) {
+		IFileDescription projectFileDescription = getFileDescriptionForProject(softwareFmId, month);
 		logger.debug(projectFileDescription);
 		Map<String, Object> initialProjectDetails = gitOperations.getFile(projectFileDescription);
 		logger.debug("Initial Project Details: " + initialProjectDetails);
@@ -63,16 +64,17 @@ public class ProjectForServer implements IProject {
 		}
 	}
 
-	protected IFileDescription getFileDescriptionForProject(Map<String, Object> userDetailMap, String month) {
+	protected IFileDescription getFileDescriptionForProject(String softwareFmId, String month) {
+		Map<String, Object> userDetailMap = Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId);
 		String userUrl = userUrlGenerator.findUrlFor(userDetailMap);
 		logger.debug("User url: " + userUrl); 
 		String cryptoKey = Functions.call(cryptoFn, userDetailMap);
 		logger.debug("User crypto key: " + cryptoKey); 
-		String projectCryptoKey = user.getUserProperty(userDetailMap, cryptoKey, SoftwareFmConstants.projectCryptoKey);
+		String projectCryptoKey = user.getUserProperty(softwareFmId, cryptoKey, SoftwareFmConstants.projectCryptoKey);
 		if (projectCryptoKey == null) {
 			logger.debug("Creating project crypto key"); 
 			projectCryptoKey = Callables.call(cryptoGenerator);
-			user.setUserProperty(userDetailMap, cryptoKey, SoftwareFmConstants.projectCryptoKey, projectCryptoKey);
+			user.setUserProperty(softwareFmId, cryptoKey, SoftwareFmConstants.projectCryptoKey, projectCryptoKey);
 		}
 		logger.debug("Project crypto key: " + cryptoKey); 
 		IFileDescription projectFileDescription = IFileDescription.Utils.encrypted(Urls.compose(userUrl, SoftwareFmConstants.projectDirectoryName), month, projectCryptoKey);
