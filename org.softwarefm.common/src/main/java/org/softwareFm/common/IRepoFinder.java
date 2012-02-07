@@ -1,7 +1,7 @@
 package org.softwareFm.common;
 
+import org.softwareFm.common.internal.RepoFinderForTests;
 import org.softwareFm.common.maps.IHasUrlCache;
-import org.softwareFm.common.server.internal.RepoFinderForTests;
 
 public interface IRepoFinder extends IHasUrlCache {
 

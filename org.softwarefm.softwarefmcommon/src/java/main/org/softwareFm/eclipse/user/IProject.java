@@ -7,7 +7,7 @@ import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.common.url.Urls;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 
-public interface IProject extends IProjectReader {
+public interface IProject extends IUsageReader {
 
 	void addProjectDetails(String softwareFmId, String groupId, String artifactId, String month, long day);
 

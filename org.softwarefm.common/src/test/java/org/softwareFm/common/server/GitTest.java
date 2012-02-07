@@ -12,6 +12,7 @@ import org.softwareFm.common.IRepoFinder;
 import org.softwareFm.common.collections.Files;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.internal.GitOperations;
+import org.softwareFm.common.internal.GitWriterForTests;
 import org.softwareFm.common.json.Json;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.services.IServiceExecutor;

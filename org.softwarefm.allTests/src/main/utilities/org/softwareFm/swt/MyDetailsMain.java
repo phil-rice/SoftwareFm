@@ -18,11 +18,12 @@ public class MyDetailsMain {
 		Swts.Show.display(MyDetails.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				String cryptoKey = Crypto.makeKey();
+				String projectCryptoKey = Crypto.makeKey();
+				String cryptoKey = projectCryptoKey;
 				String softwareFmId = "someSoftwarefmId";
 				String email = "someEmail";
 				UserMock user = new UserMock(cryptoKey, softwareFmId, LoginConstants.emailKey, email, LoginConstants.monikerKey, "someMoniker");
-				ProjectFixture project = new ProjectFixture(softwareFmId);
+				ProjectFixture project = new ProjectFixture(softwareFmId, projectCryptoKey);
 				UserData userData = new UserData(email, softwareFmId, cryptoKey);
 				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay());
 				return new MyDetails(from, cardConfig, userData, user, project, new ProjectTimeGetterFixture()).getComposite();

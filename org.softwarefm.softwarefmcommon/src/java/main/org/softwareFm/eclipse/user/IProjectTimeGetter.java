@@ -1,7 +1,6 @@
 package org.softwareFm.eclipse.user;
 
-import java.util.Calendar;
-
+import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.eclipse.user.internal.ProjectTimeGetter;
 
 public interface IProjectTimeGetter {
@@ -14,7 +13,7 @@ public interface IProjectTimeGetter {
 
 	public static class Utils {
 		public static IProjectTimeGetter timeGetter() {
-			return new ProjectTimeGetter(Calendar.getInstance());
+			return new ProjectTimeGetter(Callables.calander());
 		}
 	}
 

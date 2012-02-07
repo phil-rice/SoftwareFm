@@ -1,6 +1,7 @@
 package org.softwareFm.common.runnable;
 
 import java.text.MessageFormat;
+import java.util.Calendar;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -74,6 +75,26 @@ public class Callables {
 			@Override
 			public String call() throws Exception {
 				return Crypto.makeKey();
+			}
+		};
+	}
+
+	public static Callable<Calendar> calander() {
+		return new Callable<Calendar>() {
+			@Override
+			public Calendar call() throws Exception {
+				return Calendar.getInstance();
+			}
+		};
+	}
+
+	public static Callable<Calendar> calander(final int year, final int month, int day, int hour, int minute) {
+		return new Callable<Calendar>() {
+			@Override
+			public Calendar call() throws Exception {
+				Calendar calendar = Calendar.getInstance();
+				calendar.set(year, month, 1, 10, 12);
+				return calendar;
 			}
 		};
 	}

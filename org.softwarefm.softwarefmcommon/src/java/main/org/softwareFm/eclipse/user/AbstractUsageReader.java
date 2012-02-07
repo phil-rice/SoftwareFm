@@ -8,12 +8,12 @@ import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.common.url.Urls;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 
-abstract public class AbstractProjectReader implements IProjectReader {
+abstract public class AbstractUsageReader implements IUsageReader {
 
 	private final IUserReader user;
 	private final IUrlGenerator userUrlGenerator;
 
-	public AbstractProjectReader(IUserReader user, IUrlGenerator userUrlGenerator) {
+	public AbstractUsageReader(IUserReader user, IUrlGenerator userUrlGenerator) {
 		this.user = user;
 		this.userUrlGenerator = userUrlGenerator;
 	}

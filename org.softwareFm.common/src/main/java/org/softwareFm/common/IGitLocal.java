@@ -7,12 +7,14 @@ import org.softwareFm.common.internal.GitLocal;
 import org.softwareFm.common.maps.IHasUrlCache;
 
 /** These are all blocking calls that may take a long time to execute */
-public interface IGitLocal extends IHasUrlCache{
+public interface IGitLocal extends IHasUrlCache {
 	void init(String url);
 
 	void put(IFileDescription fileDescription, Map<String, Object> data);
 
 	Map<String, Object> getFile(IFileDescription fileDescription);
+
+	String getFileAsString(IFileDescription fileDescription);
 
 	Map<String, Object> getFileAndDescendants(IFileDescription fileDescription);
 

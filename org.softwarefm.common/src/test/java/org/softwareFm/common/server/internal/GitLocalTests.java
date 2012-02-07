@@ -38,6 +38,10 @@ public class GitLocalTests extends GitTest {
 		checkGetFile(gitLocal, IFileDescription.Utils.plain("a/b/d"), v21);
 	}
 
+	public void getGetFileAsString() {
+		fail();
+	}
+
 	public void testGetFileAndDescendants() {
 		Map<String, Object> map = Maps.with(v11, "c", v12, "d", v21);
 		remoteOperations.init("a");
@@ -55,7 +59,7 @@ public class GitLocalTests extends GitTest {
 		checkGetFileAndDescendants(gitLocal, IFileDescription.Utils.plain("a/b/d"), v21);
 	}
 
-	public void testGetFileAboveRepo(){
+	public void testGetFileAboveRepo() {
 		remoteOperations.init("a/b/c");
 		remoteOperations.put(IFileDescription.Utils.plain("a/b/c"), v12);
 		Tests.assertThrows(IllegalStateException.class, new Runnable() {

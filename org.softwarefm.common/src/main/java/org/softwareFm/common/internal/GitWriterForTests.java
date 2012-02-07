@@ -1,4 +1,4 @@
-package org.softwareFm.common.server;
+package org.softwareFm.common.internal;
 
 import java.io.File;
 import java.util.Map;

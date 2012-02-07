@@ -39,7 +39,7 @@ public class ProjectForServer implements IProject {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public Map<String, Map<String, List<Integer>>> getProjectDetails(String softwareFm, String month) {
+	public Map<String, Map<String, List<Integer>>> getProjectDetails(String softwareFm, String projectCryptoKey, String month) {
 		IFileDescription projectFileDescription = getFileDescriptionForProject(softwareFm, month);
 		Map<String, Map<String, List<Integer>>> projectDetails = (Map) gitOperations.getFile(projectFileDescription);
 		return projectDetails;
@@ -67,16 +67,16 @@ public class ProjectForServer implements IProject {
 	protected IFileDescription getFileDescriptionForProject(String softwareFmId, String month) {
 		Map<String, Object> userDetailMap = Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId);
 		String userUrl = userUrlGenerator.findUrlFor(userDetailMap);
-		logger.debug("User url: " + userUrl); 
+		logger.debug("User url: " + userUrl);
 		String cryptoKey = Functions.call(cryptoFn, userDetailMap);
-		logger.debug("User crypto key: " + cryptoKey); 
+		logger.debug("User crypto key: " + cryptoKey);
 		String projectCryptoKey = user.getUserProperty(softwareFmId, cryptoKey, SoftwareFmConstants.projectCryptoKey);
 		if (projectCryptoKey == null) {
-			logger.debug("Creating project crypto key"); 
+			logger.debug("Creating project crypto key");
 			projectCryptoKey = Callables.call(cryptoGenerator);
 			user.setUserProperty(softwareFmId, cryptoKey, SoftwareFmConstants.projectCryptoKey, projectCryptoKey);
 		}
-		logger.debug("Project crypto key: " + cryptoKey); 
+		logger.debug("Project crypto key: " + cryptoKey);
 		IFileDescription projectFileDescription = IFileDescription.Utils.encrypted(Urls.compose(userUrl, SoftwareFmConstants.projectDirectoryName), month, projectCryptoKey);
 		return projectFileDescription;
 	}

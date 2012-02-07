@@ -1,4 +1,4 @@
-package org.softwareFm.common.server.internal;
+package org.softwareFm.common.internal;
 
 import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.IGitOperations;

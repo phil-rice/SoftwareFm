@@ -2,8 +2,11 @@ package org.softwareFm.eclipse.user.internal;
 
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.concurrent.Callable;
 
 import junit.framework.TestCase;
+
+import org.softwareFm.common.runnable.Callables;
 
 public class ProjectTimeGetterTest extends TestCase {
 
@@ -24,15 +27,13 @@ public class ProjectTimeGetterTest extends TestCase {
 
 	private void checkLastNMonths(int year, int month, int n, String ...expected) {
 		assertEquals(n, expected.length);
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(year, month, 1, 10, 12);
+		Callable<Calendar> calendar = Callables.calander(year, month, 1, 10, 12);
 		ProjectTimeGetter timeGetter = new ProjectTimeGetter(calendar);
 		assertEquals(Arrays.asList(expected), timeGetter.lastNMonths(n));
 	}
 
 	protected void checkDayAndMonth(int year, int month, int day, String expectedMonth) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(year, month, day, 10, 12);
+		Callable<Calendar> calendar = Callables.calander(year, month, day, 10, 12);
 		ProjectTimeGetter timeGetter = new ProjectTimeGetter(calendar);
 		assertEquals(expectedMonth, timeGetter.thisMonth());
 		assertEquals(day, timeGetter.day());

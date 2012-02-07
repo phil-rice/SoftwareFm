@@ -8,14 +8,14 @@ import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.IGitLocal;
 import org.softwareFm.common.IUserReader;
 import org.softwareFm.common.url.IUrlGenerator;
-import org.softwareFm.eclipse.user.AbstractProjectReader;
+import org.softwareFm.eclipse.user.AbstractUsageReader;
 
-public class ProjectForLocal extends AbstractProjectReader {
+public class UsageReaderForLocal extends AbstractUsageReader {
 
 	private final IGitLocal gitLocal;
 	private final String userCryptoKey;
 
-	public ProjectForLocal(IUserReader user, IUrlGenerator userUrlGenerator, IGitLocal gitLocal, String userCryptoKey) {
+	public UsageReaderForLocal(IUserReader user, IUrlGenerator userUrlGenerator, IGitLocal gitLocal, String userCryptoKey) {
 		super(user, userUrlGenerator);
 		this.gitLocal = gitLocal;
 		this.userCryptoKey = userCryptoKey;
@@ -23,7 +23,7 @@ public class ProjectForLocal extends AbstractProjectReader {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public Map<String, Map<String, List<Integer>>> getProjectDetails(String softwareFm, String month) {
+	public Map<String, Map<String, List<Integer>>> getProjectDetails(String softwareFm,String projectCryptoKey, String month) {
 		IFileDescription projectFileDescription = getFileDescriptionForProject(userCryptoKey, softwareFm, month);
 		if (projectFileDescription != null) {
 			Map<String, Map<String, List<Integer>>> data = (Map) gitLocal.getFile(projectFileDescription);

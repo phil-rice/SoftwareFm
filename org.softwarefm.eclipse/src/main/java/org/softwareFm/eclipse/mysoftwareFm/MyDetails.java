@@ -28,8 +28,8 @@ import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.project.UserAndProjectFactory;
-import org.softwareFm.eclipse.user.IProjectReader;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
+import org.softwareFm.eclipse.user.IUsageReader;
 import org.softwareFm.swt.card.LineItem;
 import org.softwareFm.swt.card.composites.CompositeWithCardMargin;
 import org.softwareFm.swt.composites.IHasComposite;
@@ -49,7 +49,7 @@ public class MyDetails implements IHasComposite {
 					@Override
 					public Void call() throws Exception {
 						final IUserReader user = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
-						final IProjectReader project = UserAndProjectFactory.projectForLocal(user, userUrlGenerator, userData.crypto, gitLocal);
+						final IUsageReader project = UserAndProjectFactory.projectForLocal(user, userUrlGenerator, userData.crypto, gitLocal);
 						Swts.asyncExec(masterDetailSocial.getControl(), new Runnable() {
 							@Override
 							public void run() {
@@ -77,7 +77,7 @@ public class MyDetails implements IHasComposite {
 		private final Table projectDetails;
 
 		@SuppressWarnings("unused")
-		public MyProjectComposite(Composite parent, int style, final CardConfig cc, UserData userData, IUserReader user, IProjectReader project, IProjectTimeGetter timeGetter) {
+		public MyProjectComposite(Composite parent, int style, final CardConfig cc, UserData userData, IUserReader user, IUsageReader project, IProjectTimeGetter timeGetter) {
 			super(parent, style, cc);
 			addPaintListener(new PaintListener() {
 				@Override
@@ -111,9 +111,10 @@ public class MyDetails implements IHasComposite {
 				TableColumn column = new TableColumn(projectDetails, SWT.NULL);
 				column.setText(Strings.upperCaseFirstCharacter(month.replace("_", " ")));
 			}
+			String projectCryptoKey = user.getUserProperty(userData.softwareFmId, userData.crypto, SoftwareFmConstants.projectCryptoKey);
 
 			for (String month : lastNMonths) {
-				Map<String, Map<String, List<Integer>>> monthDetails = project.getProjectDetails(userData.softwareFmId, month);
+				Map<String, Map<String, List<Integer>>> monthDetails = project.getProjectDetails(userData.softwareFmId, projectCryptoKey, month);
 				for (Entry<String, Map<String, List<Integer>>> groupEntry : monthDetails.entrySet())
 					for (Entry<String, List<Integer>> artifactEntry : groupEntry.getValue().entrySet())
 						Maps.addToMapOfMapOfMaps(groupToArtifactToMonthToCount, HashMap.class, groupEntry.getKey(), artifactEntry.getKey(), month, artifactEntry.getValue().size());
@@ -139,7 +140,7 @@ public class MyDetails implements IHasComposite {
 
 	private final MyProjectComposite content;
 
-	public MyDetails(Composite parent, CardConfig cardConfig, UserData userData, IUserReader user, IProjectReader project, IProjectTimeGetter timeGetter) {
+	public MyDetails(Composite parent, CardConfig cardConfig, UserData userData, IUserReader user, IUsageReader project, IProjectTimeGetter timeGetter) {
 		this.content = new MyProjectComposite(parent, SWT.NULL, cardConfig, userData, user, project, timeGetter);
 		Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithLastGrabingVertical(content);
 	}

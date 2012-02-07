@@ -27,15 +27,19 @@ public class ProjectFixture implements IProject {
 					"group3", Maps.stringObjectMap(//
 							"artifact31", Arrays.asList(1, 2), "artifact32", Arrays.asList(1, 2, 3))));
 	private final String expectedSoftwareFmId;
+	private final String expectedProjectCryptoKey;
 
-	public ProjectFixture(String expectedSoftwareFmId) {
+
+	public ProjectFixture(String expectedSoftwareFmId, String expectedProjectCryptoKey) {
 		this.expectedSoftwareFmId = expectedSoftwareFmId;
+		this.expectedProjectCryptoKey = expectedProjectCryptoKey;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Map<String, Map<String, List<Integer>>> getProjectDetails(String softwareFmId, String month) {
+	public Map<String, Map<String, List<Integer>>> getProjectDetails(String softwareFmId, String projectCryptoKey, String month) {
 		Assert.assertEquals(expectedSoftwareFmId, softwareFmId);
+		Assert.assertEquals(expectedProjectCryptoKey, projectCryptoKey);
 		return (Map<String, Map<String, List<Integer>>>) map.get(month);
 	}
 

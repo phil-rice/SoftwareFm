@@ -39,6 +39,17 @@ public class GitLocal implements IGitLocal {
 		this.remotePrefix = remotePrefix;
 		this.period = period;
 	}
+	
+	@Override
+	public String getFileAsString(IFileDescription fileDescription) {
+		String url = fileDescription.url();
+		String message = "  " + url + "   " + getClass().getSimpleName() + ".getFileAsString(" + fileDescription + ")";
+		logger.debug(message);
+		pullIfNeeded(fileDescription);
+		String result = gitOperations.getFileAsString(fileDescription);
+		logger.debug(message + " -> " + result);
+		return result;
+	}
 
 	@Override
 	public Map<String, Object> getFile(IFileDescription fileDescription) {

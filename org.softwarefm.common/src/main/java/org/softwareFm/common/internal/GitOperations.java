@@ -58,9 +58,9 @@ public class GitOperations implements IGitOperations {
 		File repositoryFile = fileDescription.findRepositoryUrl(root);
 		String url = Files.offset(root, repositoryFile);
 		addAllAndCommit(url, GitOperations.class.getSimpleName());
-		
+
 	}
-	
+
 	@Override
 	public void pull(final String url) {
 		useFileRepository(url, new IFunction1<FileRepository, Void>() {
@@ -165,13 +165,22 @@ public class GitOperations implements IGitOperations {
 
 	@Override
 	public Map<String, Object> getFile(IFileDescription fileDescription) {
+		String text = getFileAsString(fileDescription);
+		if (text != null) {
+			Map<String, Object> map = fileDescription.decode(text);
+			return map;
+		}
+		return null;
+	}
+
+	@Override
+	public String getFileAsString(IFileDescription fileDescription) {
 		File directory = fileDescription.getDirectory(root);
 		if (directory.exists()) {
 			File file = fileDescription.getFile(root);
 			if (file.exists()) {
 				String text = Files.getText(file);
-				Map<String, Object> map = fileDescription.decode(text);
-				return map;
+				return text;
 			}
 		}
 		return null;

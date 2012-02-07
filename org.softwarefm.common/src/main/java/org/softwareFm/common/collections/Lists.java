@@ -189,6 +189,27 @@ public class Lists {
 		return result;
 	}
 
+	public static <T> Iterable<T> tail(final Iterable<T> raw) {
+		return new AbstractFindNextIterable<T, Iterator<T>>() {
+
+			@Override
+			protected T findNext(Iterator<T> context) throws Exception {
+				if (context.hasNext())
+					return context.next();
+				else
+					return null;
+			}
+
+			@Override
+			protected Iterator<T> reset() throws Exception {
+				Iterator<T> iterator = raw.iterator();
+				if (iterator.hasNext())
+					iterator.next();
+				return iterator;
+			}
+		};
+	}
+
 	@SuppressWarnings("rawtypes")
 	public static <From, To> List<To> map(Iterable<From> fromList, IFunction1<From, To> mappingFunction) {
 		try {

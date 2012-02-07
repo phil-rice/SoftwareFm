@@ -24,6 +24,10 @@ public class GitOperationsTest extends GitTest {
 		checkRepositoryExists(localRoot, "b/c");
 	}
 
+	public void getGetFileAsString() {
+		fail();
+	}
+
 	public void testSetConfigForRemotePull() {
 		remoteOperations.init("a");
 		localOperations.init("a");

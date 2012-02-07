@@ -4,6 +4,7 @@ import org.eclipse.swt.widgets.Table;
 import org.softwareFm.common.IUser;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.crypto.Crypto;
+import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.user.IProject;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.eclipse.user.ProjectFixture;
@@ -25,7 +26,8 @@ public class MyDetailsTest extends SwtTest {
 
 	public void test() {
 		IUser user = new UserMock(cryptoKey, softwareFmId, LoginConstants.emailKey, email, LoginConstants.monikerKey, "someMoniker");
-		IProject project = new ProjectFixture(softwareFmId);
+		String projectCryptoKey = user.getUserProperty(softwareFmId, cryptoKey, SoftwareFmConstants.projectCryptoKey);
+		IProject project = new ProjectFixture(softwareFmId, projectCryptoKey);
 		UserData userData = new UserData(email, softwareFmId, cryptoKey);
 		MyDetails myDetails = new MyDetails(shell, cardConfig, userData, user, project, timeGetter);
 		checkUserDetails(myDetails);
