@@ -23,5 +23,7 @@ public interface IGroupsReader {
 
 	/** pulls the latest data about the group from the server */
 	void refresh(String groupId);
+	
+	Map<String,Object> getUsageReport(String groupId, String groupCryptoKey, String month);
 
 }

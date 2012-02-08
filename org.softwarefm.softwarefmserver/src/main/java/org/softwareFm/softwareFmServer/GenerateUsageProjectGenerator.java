@@ -14,8 +14,13 @@ import org.softwareFm.server.processors.IGenerateUsageReportGenerator;
 
 public class GenerateUsageProjectGenerator implements IGenerateUsageReportGenerator {
 
-	private IGroupsReader groupsReader;
-	private IUsageReader usageReader;
+	private final IGroupsReader groupsReader;
+	private final IUsageReader usageReader;
+
+	public GenerateUsageProjectGenerator(IGroupsReader groupsReader, IUsageReader usageReader) {
+		this.groupsReader = groupsReader;
+		this.usageReader = usageReader;
+	}
 
 	@Override
 	public Map<String, Map<String, Map<String, List<Integer>>>> generateReport(String groupId, String groupCryptoKey, String month) {
@@ -24,9 +29,10 @@ public class GenerateUsageProjectGenerator implements IGenerateUsageReportGenera
 			String usersProjectCryptoKey = (String) userData.get(SoftwareFmConstants.projectCryptoKey);
 			String softwareFmId = (String) userData.get(LoginConstants.softwareFmIdKey);
 			Map<String, Map<String, List<Integer>>> projectDetails = usageReader.getProjectDetails(softwareFmId, usersProjectCryptoKey, month);
-			for (Entry<String, Map<String, List<Integer>>> groupEntry : projectDetails.entrySet())
-				for (Entry<String, List<Integer>> artifactEntry : groupEntry.getValue().entrySet())
-					Maps.addToMapOfMapOfMaps(result, HashMap.class, groupEntry.getKey(), artifactEntry.getKey(), softwareFmId, artifactEntry.getValue());
+			if (projectDetails != null)
+				for (Entry<String, Map<String, List<Integer>>> groupEntry : projectDetails.entrySet())
+					for (Entry<String, List<Integer>> artifactEntry : groupEntry.getValue().entrySet())
+						Maps.addToMapOfMapOfMaps(result, HashMap.class, groupEntry.getKey(), artifactEntry.getKey(), softwareFmId, artifactEntry.getValue());
 		}
 		return result;
 	}

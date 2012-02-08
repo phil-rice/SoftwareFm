@@ -21,6 +21,8 @@ public interface IFileDescription {
 	File findRepositoryUrl(File root);
 
 	String url();
+	
+	String crypto();
 
 	String encode(Map<String, Object> data);
 

@@ -27,6 +27,11 @@ public class FileDescription implements IFileDescription {
 	}
 
 	@Override
+	public String crypto() {
+		return key;
+	}
+
+	@Override
 	public File getFile(File root) {
 		return new File(getDirectory(root), name);
 	}

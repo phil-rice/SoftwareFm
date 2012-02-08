@@ -1,7 +1,5 @@
 package org.softwareFm.eclipse.constants;
 
-import org.softwareFm.common.constants.LoginConstants;
-import org.softwareFm.common.url.IUrlGenerator;
 
 public class SoftwareFmConstants {
 	public static final String myDetailsCardType = "mydetails";
@@ -18,9 +16,5 @@ public class SoftwareFmConstants {
 	public static final String projectCryptoKey = "projectCrypto";
 	public static final String projectDirectoryName = "project";
 	public static final long usageRefreshTimeMs = 10 * 60 * 60 * 1000;// 10 hours
-
-	public static IUrlGenerator projectGenerator() {
-		return IUrlGenerator.Utils.generator("softwareFm/users/{0}/{1}/{2}/projects", LoginConstants.softwareFmIdKey);
-	}
 
 }
