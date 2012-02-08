@@ -14,6 +14,7 @@ import org.softwareFm.common.server.GitTest;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.common.url.Urls;
+import org.softwareFm.server.ICrowdSourcedServer;
 
 public class ServerUserTest extends GitTest {
 
@@ -56,7 +57,7 @@ public class ServerUserTest extends GitTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		IUrlGenerator userUrlGenerator = IUrlGenerator.Utils.generator("user/{0}/{1}/{2}", LoginConstants.softwareFmIdKey);
-		user = IUser.Utils.makeUserForServer(remoteOperations, userUrlGenerator, findRepositoryRoot);
+		user = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, userUrlGenerator, findRepositoryRoot);
 		sfmId1File = new File(remoteRoot, Urls.compose("user/sf/mI/sfmId1/", CommonConstants.dataFileName));
 		sfmId2File = new File(remoteRoot, Urls.compose("user/sf/mI/sfmId2/", CommonConstants.dataFileName));
 	}

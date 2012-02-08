@@ -26,7 +26,7 @@ public class SoftwareFmServer {
 
 	protected static UsageProcessor makeUsageProcessor(BasicDataSource dataSource, IGitOperations gitOperations) {
 		IUrlGenerator userUrlGenerator = LoginConstants.userGenerator();
-		IUser user = IUser.Utils.makeUserForServer(gitOperations, userUrlGenerator, Strings.firstNSegments(3));
+		IUser user = ICrowdSourcedServer.Utils.makeUserForServer(gitOperations, userUrlGenerator, Strings.firstNSegments(3));
 		IProject project = new ProjectForServer(gitOperations, ICrowdSourcedServer.Utils.cryptoFn(dataSource), user, userUrlGenerator, Crypto.makeKeyCallable());
 		IProjectTimeGetter projectTimeGetter = IProjectTimeGetter.Utils.timeGetter();
 		UsageProcessor usageProcessor = new UsageProcessor(gitOperations, project, projectTimeGetter);

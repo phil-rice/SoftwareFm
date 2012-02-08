@@ -31,6 +31,7 @@ public class UsageReaderForLocal extends AbstractUsageReader {
 		return getProjectDetails(projectFileDescription);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	protected Map<String, Map<String, List<Integer>>> getProjectDetails(IFileDescription projectFileDescription) {
 		if (projectFileDescription != null) {

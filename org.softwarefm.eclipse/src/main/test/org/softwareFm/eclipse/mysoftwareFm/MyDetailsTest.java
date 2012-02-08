@@ -27,7 +27,7 @@ public class MyDetailsTest extends SwtTest {
 	public void test() {
 		IUser user = new UserMock(cryptoKey, softwareFmId, LoginConstants.emailKey, email, LoginConstants.monikerKey, "someMoniker");
 		String projectCryptoKey = user.getUserProperty(softwareFmId, cryptoKey, SoftwareFmConstants.projectCryptoKey);
-		IProject project = new ProjectFixture(softwareFmId, projectCryptoKey);
+		IProject project = ProjectFixture.project1(softwareFmId, projectCryptoKey);
 		UserData userData = new UserData(email, softwareFmId, cryptoKey);
 		MyDetails myDetails = new MyDetails(shell, cardConfig, userData, user, project, timeGetter);
 		checkUserDetails(myDetails);

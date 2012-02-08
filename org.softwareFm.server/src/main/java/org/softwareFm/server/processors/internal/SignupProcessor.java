@@ -3,7 +3,6 @@ package org.softwareFm.server.processors.internal;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import org.softwareFm.common.IUser;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.constants.LoginMessages;
@@ -20,14 +19,12 @@ public class SignupProcessor extends AbstractCommandProcessor {
 	private final ISaltProcessor saltProcessor;
 	private final ISignUpChecker checker;
 	private final Callable<String> softwareFmIdGenerator;
-	private final IUser user;
 
-	public SignupProcessor(ISignUpChecker checker, ISaltProcessor saltProcessor, Callable<String> softwareFmIdGenerator, IUser user) {
+	public SignupProcessor(ISignUpChecker checker, ISaltProcessor saltProcessor, Callable<String> softwareFmIdGenerator) {
 		super(null, CommonConstants.POST, LoginConstants.signupPrefix);
 		this.checker = checker;
 		this.saltProcessor = saltProcessor;
 		this.softwareFmIdGenerator = softwareFmIdGenerator;
-		this.user = user;
 	}
 
 	@Override
@@ -40,12 +37,10 @@ public class SignupProcessor extends AbstractCommandProcessor {
 			String softwareFmId = Callables.call(softwareFmIdGenerator);
 			if (email == null || moniker == null || passwordHash == null || softwareFmId == null)
 				throw new IllegalArgumentException(parameters.toString());
-			SignUpResult result = checker.signUp(email, salt, passwordHash, softwareFmId);
+			SignUpResult result = checker.signUp(email, moniker, salt, passwordHash, softwareFmId);
 			if (result.errorMessage != null)
 				return IProcessResult.Utils.processError(CommonConstants.notFoundStatusCode, result.errorMessage);
 			else {
-				user.setUserProperty(softwareFmId, result.crypto, LoginConstants.emailKey, email);
-				user.setUserProperty(softwareFmId, result.crypto, LoginConstants.monikerKey, moniker);
 				return IProcessResult.Utils.processString(Json.mapToString(LoginConstants.softwareFmIdKey, softwareFmId, LoginConstants.cryptoKey, result.crypto));
 			}
 

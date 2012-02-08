@@ -17,6 +17,7 @@ import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.common.url.Urls;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.user.ProjectMock;
+import org.softwareFm.server.ICrowdSourcedServer;
 
 abstract public class GroupsTest extends GitTest {
 	protected final IUrlGenerator userGenerator = LoginConstants.userGenerator();
@@ -36,7 +37,7 @@ abstract public class GroupsTest extends GitTest {
 	protected final String id2 = "sfm2";
 
 	protected void saveUserData(String softwaerFmId, String userCrypto, String projectCrypto) {
-		IUser user = IUser.Utils.makeUserForServer(remoteOperations, userGenerator, Strings.firstNSegments(3));
+		IUser user = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, userGenerator, Strings.firstNSegments(3));
 		user.setUserProperty(softwaerFmId, userCrypto, SoftwareFmConstants.projectCryptoKey, projectCrypto);
 	}
 

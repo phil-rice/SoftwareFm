@@ -67,13 +67,11 @@ public class TakeOnGroup extends AbstractCommandProcessor {
 				softwareFmId = UUID.randomUUID().toString();
 				String salt = saltProcessor.makeSalt();
 				saltProcessor.invalidateSalt(salt);
-				checker.signUp(email, salt, "not set", softwareFmId);
+				String moniker = Strings.split(email, '@').pre;
+				checker.signUp(email, moniker, salt, "not set", softwareFmId);
 				String magicString = forgottonPassword.process(email);
 				String crypto = Callables.call(cryptoGenerator);
 				template.update("update users set passwordResetKey=? , crypto=? where email=?", magicString, crypto, email);
-				user.setUserProperty(softwareFmId, crypto, LoginConstants.emailKey, email);
-				user.setUserProperty(softwareFmId, crypto, LoginConstants.monikerKey, Strings.split(email, '@').pre);
-				user.setUserProperty(softwareFmId, crypto, SoftwareFmConstants.projectCryptoKey, Callables.call(cryptoGenerator));
 				break;
 			}
 			case 1: {

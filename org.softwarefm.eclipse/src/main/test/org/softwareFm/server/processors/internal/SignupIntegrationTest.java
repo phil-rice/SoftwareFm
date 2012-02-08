@@ -11,11 +11,7 @@ import org.softwareFm.server.processors.AbstractProcessorMockIntegrationTests;
 public class SignupIntegrationTest extends AbstractProcessorMockIntegrationTests {
 
 	public void testMakeSaltThenSignUp() throws Exception {
-		String softwareFmId = "someSoftwareFmId0";
-		// userMock.refresh(userDetails);
-		userMock.setUserProperty(softwareFmId, signUpCrypto, LoginConstants.emailKey, "someEmail");
-		userMock.setUserProperty(softwareFmId, signUpCrypto, LoginConstants.monikerKey, "someMoniker");
-		EasyMock.replay(userMock);
+		EasyMock.replay(userMock);//no calls
 
 		String salt = "salt 0";
 		getHttpClient().get(LoginConstants.makeSaltPrefix).execute(IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, salt)).get(); // salt won't be used but we want it removed

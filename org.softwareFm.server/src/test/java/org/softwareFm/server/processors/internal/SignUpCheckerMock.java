@@ -21,7 +21,7 @@ public class SignUpCheckerMock implements ISignUpChecker {
 	}
 
 	@Override
-	public SignUpResult signUp(String email, String salt, String passwordHash, String softwareFmId) {
+	public SignUpResult signUp(String email, String moniker, String salt, String passwordHash, String softwareFmId) {
 		emails.add(email);
 		salts.add(salt);
 		passwordHashes.add(passwordHash);

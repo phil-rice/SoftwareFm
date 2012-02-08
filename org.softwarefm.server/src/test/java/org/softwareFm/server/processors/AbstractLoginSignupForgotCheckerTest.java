@@ -6,17 +6,18 @@ import java.text.MessageFormat;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.dbcp.BasicDataSource;
+import org.softwareFm.common.IUser;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.constants.LoginMessages;
 import org.softwareFm.common.crypto.Crypto;
 import org.softwareFm.common.processors.AbstractLoginDataAccessor;
 import org.softwareFm.common.runnable.Callables;
+import org.softwareFm.common.server.GitTest;
+import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.tests.IIntegrationTest;
 import org.softwareFm.common.tests.Tests;
-import org.softwareFm.server.processors.SignUpResult;
+import org.softwareFm.server.internal.ServerUser;
 import org.softwareFm.server.processors.internal.ForgottonPasswordMailer;
 import org.softwareFm.server.processors.internal.LoginChecker;
 import org.softwareFm.server.processors.internal.MailerMock;
@@ -25,7 +26,7 @@ import org.softwareFm.server.processors.internal.SignUpChecker;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
 
-abstract public class AbstractLoginSignupForgotCheckerTest extends TestCase implements IIntegrationTest {
+abstract public class AbstractLoginSignupForgotCheckerTest extends GitTest implements IIntegrationTest {
 
 	protected SignUpChecker signupChecker;
 	protected LoginChecker loginChecker;
@@ -35,10 +36,11 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends TestCase impl
 	protected JdbcTemplate template;
 	private MailerMock mailerMock;
 	private String key;
+	private IUser user;
 
-	protected String checkSignup(final String email, final String salt, final String hash, final String softwareFmId) {
+	protected String checkSignup(final String email, String moniker, final String salt, final String hash, final String softwareFmId) {
 		int initial = findUsersSize();
-		SignUpResult signUp = signupChecker.signUp(email, salt, hash, softwareFmId);
+		SignUpResult signUp = signupChecker.signUp(email, moniker, salt, hash, softwareFmId);
 		assertNull(signUp.errorMessage);
 		final String crypto = signUp.crypto;
 		final AtomicInteger count = new AtomicInteger();
@@ -56,6 +58,9 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends TestCase impl
 		int finalCount = findUsersSize();
 		assertEquals(initial + 1, finalCount);
 		assertEquals(1, count.get());
+		
+		assertEquals(email, user.getUserProperty(softwareFmId, crypto, LoginConstants.emailKey));
+		assertEquals(moniker, user.getUserProperty(softwareFmId, crypto, LoginConstants.monikerKey));
 		return crypto;
 	}
 
@@ -65,7 +70,7 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends TestCase impl
 
 	protected void checkNotAdded(final String email, final String salt, final String hash, final String softwareFmId) {
 		int initial = findUsersSize();
-		SignUpResult signUp = signupChecker.signUp(email, salt, hash, softwareFmId);
+		SignUpResult signUp = signupChecker.signUp(email, "irrelevantMoniker", salt, hash, softwareFmId);
 		assertNull(signUp.crypto);
 		assertEquals(MessageFormat.format(LoginMessages.existingEmailAddress, email), signUp.errorMessage);
 		int finalCount = findUsersSize();
@@ -77,7 +82,8 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends TestCase impl
 		super.setUp();
 		dataSource = AbstractLoginDataAccessor.defaultDataSource();
 		key = Crypto.makeKey();
-		signupChecker = new SignUpChecker(dataSource, Callables.value(key));
+		user = new ServerUser(remoteOperations, LoginConstants.userGenerator(), Strings.firstNSegments(3));
+		signupChecker = new SignUpChecker(dataSource, Callables.value(key), user);
 		loginChecker = new LoginChecker(dataSource);
 		mailerMock = new MailerMock();
 		passwordMailer = new ForgottonPasswordMailer(dataSource, mailerMock);// bit of a cheat...won't actually mail

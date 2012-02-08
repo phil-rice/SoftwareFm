@@ -6,7 +6,6 @@ import java.util.concurrent.Callable;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.softwareFm.common.IUser;
 import org.softwareFm.common.callbacks.ICallback;
-import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.crypto.Crypto;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
@@ -44,7 +43,7 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 		cryptoFn = Functions.constant(userKey);
 		cryptoGenerator = Callables.value(userKey);
 		Callable<String> softwareFmIdGenerator = Callables.patternWithCount("someNewSoftwareFmId{0}");
-		user = IUser.Utils.makeUserForServer(remoteOperations, LoginConstants.userGenerator(), Strings.firstNSegments(3));
+		user = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, Strings.firstNSegments(3));
 		
 		projectCryptoKey = Crypto.makeKey();
 

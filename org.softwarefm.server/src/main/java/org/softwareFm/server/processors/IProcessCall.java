@@ -10,10 +10,10 @@ import org.apache.http.RequestLine;
 import org.softwareFm.common.IGitOperations;
 import org.softwareFm.common.IUser;
 import org.softwareFm.common.arrays.ArrayHelper;
-import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.UrlCache;
 import org.softwareFm.common.strings.Strings;
+import org.softwareFm.server.ICrowdSourcedServer;
 import org.softwareFm.server.processors.internal.ChangePasswordProcessor;
 import org.softwareFm.server.processors.internal.DeleteProcessor;
 import org.softwareFm.server.processors.internal.EmailSaltRequester;
@@ -78,16 +78,16 @@ public interface IProcessCall {
 			UrlCache<String> aboveRepostoryUrlCache = new UrlCache<String>();
 			SaltProcessor saltProcessor = new SaltProcessor();
 			LoginChecker loginChecker = new LoginChecker(dataSource);
-			SignUpChecker signUpChecker = new SignUpChecker(dataSource, cryptoGenerator);
+			IUser user = makeUser(gitOperations);
+			SignUpChecker signUpChecker = new SignUpChecker(dataSource, cryptoGenerator, user);
 			ForgottonPasswordMailer forgottonPasswordProcessor = new ForgottonPasswordMailer(dataSource, mailer);
 			IPasswordResetter resetter = new PasswordResetter(dataSource);
 			EmailSaltRequester saltRequester = new EmailSaltRequester(dataSource);
 			IPasswordChanger passwordChanger = IPasswordChanger.Utils.databasePasswordChanger(dataSource);
-			IUser user = makeUser(gitOperations);
 			IProcessCall[] rawProcessCalls = new IProcessCall[] { new FavIconProcessor(),//
 					new RigidFileProcessor(fileRoot, "update"),// responds to get or head
 					new LoginProcessor(saltProcessor, loginChecker), //
-					new SignupProcessor(signUpChecker, saltProcessor, softwareFmIdGenerator, user), //
+					new SignupProcessor(signUpChecker, saltProcessor, softwareFmIdGenerator), //
 					// usageProcessor,//
 					new MakeSaltForLoginProcessor(saltProcessor),//
 					new ForgottonPasswordProcessor(saltProcessor, forgottonPasswordProcessor),//
@@ -106,7 +106,7 @@ public interface IProcessCall {
 		}
 
 		public static IUser makeUser(IGitOperations gitOperations) {
-			IUser user = IUser.Utils.makeUserForServer(gitOperations, LoginConstants.userGenerator(), Strings.firstNSegments(3));
+			IUser user = ICrowdSourcedServer.Utils.makeUserForServer(gitOperations, Strings.firstNSegments(3));
 			return user;
 		}
 

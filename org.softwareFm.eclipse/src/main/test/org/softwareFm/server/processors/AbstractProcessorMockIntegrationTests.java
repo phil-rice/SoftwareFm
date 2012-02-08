@@ -47,7 +47,7 @@ abstract public class AbstractProcessorMockIntegrationTests extends AbstractProc
 		userMock = EasyMock.createMock(IUser.class);
 		server = ICrowdSourcedServer.Utils.testServerPort(IProcessCall.Utils.chain(//
 				new LoginProcessor(saltProcessor, loginChecker), //
-				new SignupProcessor(signUpChecker, saltProcessor, softwareFmIdGenerator, userMock), //
+				new SignupProcessor(signUpChecker, saltProcessor, softwareFmIdGenerator), //
 				new MakeSaltForLoginProcessor(saltProcessor),//
 				new RequestEmailSaltProcessor(emailSaltProcessor),//
 				new ForgottonPasswordProcessor(saltProcessor, forgottonPasswordProcessor),//

@@ -15,6 +15,7 @@ import org.softwareFm.common.server.GitTest;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.common.url.Urls;
+import org.softwareFm.server.ICrowdSourcedServer;
 
 public class LocalUserReaderTest extends GitTest {
 
@@ -63,7 +64,7 @@ public class LocalUserReaderTest extends GitTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		IUrlGenerator userUrlGenerator = IUrlGenerator.Utils.generator("user/{0}/{1}/{2}", LoginConstants.softwareFmIdKey);
-		remoteUser = IUser.Utils.makeUserForServer(remoteOperations, userUrlGenerator, findRepositoryRoot);
+		remoteUser = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, userUrlGenerator, findRepositoryRoot);
 		localUser = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
 
 		remoteSfmId1File = new File(remoteRoot, Urls.compose("user/sf/mI/sfmId1/", CommonConstants.dataFileName));
