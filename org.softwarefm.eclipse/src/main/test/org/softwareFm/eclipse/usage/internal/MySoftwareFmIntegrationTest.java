@@ -24,7 +24,6 @@ import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.crypto.Crypto;
 import org.softwareFm.common.functions.Functions;
-import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.json.Json;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.processors.AbstractLoginDataAccessor;
@@ -339,7 +338,6 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		dataSource = AbstractLoginDataAccessor.defaultDataSource();
 		Callable<String> softwareFmIdGenerator = Callables.patternWithCount("someNewSoftwareFmId{0}");
 		key = Crypto.makeKey();
-		IFunction1<Map<String, Object>, String> cryptoFn = Functions.constant(key);
 		Callable<String> cryptoGenerator = Callables.value(key);
 		// IRepoFinder repoFinder = IRepoFinder.Utils.forTests(remoteRoot);
 		IGitOperations remoteOperations = IGitOperations.Utils.gitOperations(remoteRoot);

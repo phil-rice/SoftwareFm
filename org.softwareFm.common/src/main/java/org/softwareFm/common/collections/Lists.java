@@ -38,6 +38,10 @@ public class Lists {
 		return shuffle(random, list);
 	}
 
+	public static <T> List<T> times(int n, T value){
+		return Iterables.list(Iterables.times(n, value));
+	}
+	
 	public static <T> List<T> shuffle(Random random, List<T> list) {
 		List<T> result = new ArrayList<T>(list);
 		for (int i = result.size() - 1; i > 0; i--) {

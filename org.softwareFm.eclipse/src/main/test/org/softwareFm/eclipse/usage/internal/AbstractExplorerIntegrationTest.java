@@ -7,7 +7,6 @@ package org.softwareFm.eclipse.usage.internal;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -34,7 +33,6 @@ import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.functions.Functions;
-import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.processors.AbstractLoginDataAccessor;
 import org.softwareFm.common.resources.IResourceGetter;
@@ -236,12 +234,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 				IGitOperations.Utils.gitOperations(localRoot), //
 				new HttpGitWriter(httpClient, CommonConstants.testTimeOutMs), remoteAsUri, CommonConstants.staleCachePeriodForTest);
 		BasicDataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
-		IFunction1<Map<String, Object>, String> cryptoFn = new IFunction1<Map<String, Object>, String>() {
-			@Override
-			public String apply(Map<String, Object> from) throws Exception {
-				return userCryptoKey;
-			}
-		};
+
 		Callable<String> cryptoGenerator = Callables.value(userCryptoKey);
 		Callable<String> softwareFmIdGenerator = Callables.patternWithCount("newSoftwareFmId{0}");
 

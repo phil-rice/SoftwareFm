@@ -1,7 +1,6 @@
 package org.softwareFm.eclipse.constants;
 
 import java.io.File;
-import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.apache.commons.dbcp.BasicDataSource;
@@ -32,9 +31,7 @@ public class MySoftwareFmDemo {
 		final IServiceExecutor service = IServiceExecutor.Utils.defaultExecutor();
 		final IClientBuilder client = IHttpClient.Utils.builder("localhost", CommonConstants.testPort);
 		File home = new File(System.getProperty("user.home"));
-		final File localRoot = new File(home, ".sfm");
 		final File remoteRoot = new File(home, ".sfm");
-		IFunction1<Map<String, Object>, String> cryptoFn = Functions.expectionIfCalled();
 		Callable<String> cryptoGenerator = Callables.makeCryptoKey();
 		BasicDataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
 		IGitOperations gitOperations = IGitOperations.Utils.gitOperations(remoteRoot);

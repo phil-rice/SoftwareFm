@@ -31,7 +31,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 abstract public class AbstractProcessorDatabaseIntegrationTests extends AbstractProcessorIntegrationTests {
 	private ICrowdSourcedServer server;
 	protected JdbcTemplate template;
-	private MailerMock mailerMock;
+	protected MailerMock mailerMock;
 	protected String userKey;
 	protected IFunction1<Map<String, Object>, String> userCryptoFn;
 	private Callable<String> userCryptoGenerator;
@@ -118,7 +118,7 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 				Callable<String> groupCryptoGenerator= Callables.value(groupCryptoKey);
 				return new IProcessCall[] { //
 				new UsageProcessor(remoteOperations, project, projectTimeGetter), //
-						new TakeOnGroupProcessor(from.dataSource, takeOnProcessor, from.signUpChecker, groupCryptoGenerator, emailToSfmId, from.saltGenerator, from.softwareFmIdGenerator) };
+						new TakeOnGroupProcessor(takeOnProcessor, from.signUpChecker, groupCryptoGenerator, emailToSfmId, from.saltGenerator, from.softwareFmIdGenerator, mailerMock) };
 			}
 		};
 	}

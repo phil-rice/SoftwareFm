@@ -25,24 +25,42 @@ import org.softwareFm.common.functions.IFunction1;
 
 public class Iterables {
 
-	public static <To> Iterable<To> times(final int count, final IFunction1<Integer, To> fn) {
-		return new AbstractFindNextIterable<To, AtomicInteger>() {
-
+	public static <T> Iterable<T> times(final int count, final T value) {
+		return new AbstractFindNextIterable<T, AtomicInteger>() {
+			
 			@Override
-			protected To findNext(AtomicInteger context) throws Exception {
+			protected T findNext(AtomicInteger context) throws Exception {
 				int index = context.getAndIncrement();
 				if (index >= count)
 					return null;
 				else
-					return fn.apply(index);
+					return value;
 			}
-
+			
 			@Override
 			protected AtomicInteger reset() throws Exception {
 				return new AtomicInteger();
 			}
 		};
 	}
+//	public static <To> Iterable<To> times(final int count, final IFunction1<Integer, To> fn) {
+//		return new AbstractFindNextIterable<To, AtomicInteger>() {
+//
+//			@Override
+//			protected To findNext(AtomicInteger context) throws Exception {
+//				int index = context.getAndIncrement();
+//				if (index >= count)
+//					return null;
+//				else
+//					return fn.apply(index);
+//			}
+//
+//			@Override
+//			protected AtomicInteger reset() throws Exception {
+//				return new AtomicInteger();
+//			}
+//		};
+//	}
 
 	public static <From, To> Future<To> fold(ExecutorService service, final Iterable<From> iterable, final IFoldFunction<From, To> foldFunction, final To initial) {
 		return service.submit(new Callable<To>() {
