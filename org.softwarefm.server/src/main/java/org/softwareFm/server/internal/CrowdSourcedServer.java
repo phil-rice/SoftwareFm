@@ -70,7 +70,7 @@ public class CrowdSourcedServer implements ICrowdSourcedServer {
 						try {
 							try {
 								Socket socket = serverSocket.accept();
-								long startTime = System.nanoTime();
+								long startTime = System.currentTimeMillis();
 								HttpParams params = new BasicHttpParams();
 								DefaultHttpServerConnection conn = new DefaultHttpServerConnection();
 								String ip = null;
@@ -91,19 +91,17 @@ public class CrowdSourcedServer implements ICrowdSourcedServer {
 									ip = Strings.firstSegment(remoteSocketAddress, ":");
 								} finally {
 									conn.close();
-									long now = System.nanoTime();
+									long now = System.currentTimeMillis();
 									long duration = now - startTime;
-									long nowms = System.currentTimeMillis();
 
 									usage.monitor(ip, requestLineAsString, duration);
 
-									long usageDuration = System.nanoTime() - now;
-									long usageMs = System.currentTimeMillis() - nowms;
+									long usageDuration = System.currentTimeMillis() - now;
 
 									aggregatedUsage += usageDuration;
 									count += 1;
 									double nanosToMilli = 1E6;
-									System.out.println(String.format(prefix + "...took %10.2fms Usage %10.2fms AvgUsage %10.2f Usagems %10.2f", duration / nanosToMilli, usageDuration / nanosToMilli, aggregatedUsage / count / nanosToMilli, usageMs * 1.0));
+									System.out.println(String.format(prefix + "...took %10.2fms Usage %10.2fms AvgUsage %10.2f", duration / nanosToMilli, usageDuration / nanosToMilli, aggregatedUsage / count / nanosToMilli));
 
 								}
 							} catch (ThreadDeath e) {

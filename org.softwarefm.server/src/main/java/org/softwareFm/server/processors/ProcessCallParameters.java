@@ -32,6 +32,7 @@ public class ProcessCallParameters {
 	public final File root;
 	public final Callable<String> softwareFmIdGenerator;
 	public final Callable<String> saltGenerator;
+	public final IMailer mailer;
 
 	public ProcessCallParameters(BasicDataSource dataSource, IGitOperations gitOperations) {
 		this(dataSource, gitOperations, Callables.makeCryptoKey(), Callables.uuidGenerator(), IMailer.Utils.email("localhost", null, null));
@@ -41,6 +42,7 @@ public class ProcessCallParameters {
 		this.dataSource = dataSource;
 		this.gitOperations = gitOperations;
 		this.softwareFmIdGenerator = softwareFmIdGenerator;
+		this.mailer = mailer;
 		this.aboveRepostoryUrlCache = new UrlCache<String>();
 		this.saltProcessor = new SaltProcessor();
 		this.loginChecker = new LoginChecker(dataSource);

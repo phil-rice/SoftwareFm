@@ -73,6 +73,6 @@ public class TakeOnGroupProcessor extends AbstractCommandProcessor {
 	private void check(Map<String, Object> parameters, String... keys) {
 		for (String key : keys)
 			if (!parameters.containsKey(key))
-				throw new IllegalArgumentException(key);
+				throw new IllegalArgumentException(key+", " + parameters);
 	}
 }

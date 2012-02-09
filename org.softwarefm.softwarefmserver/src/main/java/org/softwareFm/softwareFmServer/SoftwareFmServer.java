@@ -1,13 +1,19 @@
 package org.softwareFm.softwareFmServer;
 
+import java.util.Map;
+import java.util.concurrent.Callable;
+
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.softwareFm.common.IGitOperations;
+import org.softwareFm.common.IGroups;
 import org.softwareFm.common.IUser;
+import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.crypto.Crypto;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.processors.AbstractLoginDataAccessor;
+import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.user.IProject;
@@ -30,7 +36,15 @@ public class SoftwareFmServer {
 		return new IFunction1<ProcessCallParameters, IProcessCall[]>() {
 			@Override
 			public IProcessCall[] apply(ProcessCallParameters from) throws Exception {
-				return new IProcessCall[] {makeUsageProcessor(from.dataSource, from.gitOperations)};
+				IFunction1<Map<String, Object>, String> userCryptoFn = ICrowdSourcedServer.Utils.cryptoFn(from.dataSource);
+				Callable<String> projectCryptoGenerator = Callables.makeCryptoKey();
+				Callable<String> groupIdGenerator = Callables.uuidGenerator();
+				IFunction1<String, String> repoDefnFn = Strings.firstNSegments(3);
+				IGroups groups = new GroupForServer(GroupConstants.groupsGenerator(), from.gitOperations, repoDefnFn);
+				IFunction1<String, String> emailToSoftwareFmId = ICrowdSourcedServer.Utils.emailToSoftwareFmId(from.dataSource);
+				ITakeOnProcessor takeOnProcessor = new TakeOnProcessor(from.gitOperations, from.user, groups, userCryptoFn, emailToSoftwareFmId, projectCryptoGenerator, GroupConstants.groupsGenerator(), groupIdGenerator, repoDefnFn);
+				return new IProcessCall[] { makeUsageProcessor(from.dataSource, from.gitOperations),//
+						new TakeOnGroupProcessor(takeOnProcessor, from.signUpChecker, Callables.makeCryptoKey(), emailToSoftwareFmId, from.saltGenerator, from.softwareFmIdGenerator, from.mailer) };
 			}
 		};
 	}

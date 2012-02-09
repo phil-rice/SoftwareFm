@@ -12,7 +12,6 @@ public class GroupConstants {
 	
 	public static final String takeOnEmailListKey = "emailList";
 	public static final String takeOnFromKey = "from";
-	public static final String takeOnToKey = "to";
 	public static final String takeOnSubjectKey = "subject";
 	
 	public static final String takeOnEmailPattern = "emailPattern";
