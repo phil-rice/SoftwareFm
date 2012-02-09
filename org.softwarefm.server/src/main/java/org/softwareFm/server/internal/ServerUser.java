@@ -28,8 +28,7 @@ public class ServerUser implements IUser {
 	@Override
 	public <T> T getUserProperty(String softwareFmId, String cryptoKey, String property) {
 		String url = userUrlGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
-		IFileDescription fileDescription1 = IFileDescription.Utils.encrypted(url, CommonConstants.dataFileName, cryptoKey);
-		IFileDescription fileDescription = fileDescription1;
+		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, CommonConstants.dataFileName, cryptoKey);
 		Map<String, Object> data = gitOperations.getFile(fileDescription);
 		if (data == null)
 			return null;
@@ -40,9 +39,10 @@ public class ServerUser implements IUser {
 
 	@Override
 	public <T> void setUserProperty(String softwareFmId, String cryptoKey, String property, T value) {
+		if (softwareFmId == null || cryptoKey == null || property == null)
+			throw new IllegalStateException(softwareFmId + ", " + cryptoKey + ", " + property + ", " + value);
 		String url = userUrlGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
-		IFileDescription fileDescription1 = IFileDescription.Utils.encrypted(url, CommonConstants.dataFileName, cryptoKey);
-		IFileDescription fileDescription = fileDescription1;
+		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, CommonConstants.dataFileName, cryptoKey);
 		File repositoryUrl = fileDescription.findRepositoryUrl(gitOperations.getRoot());
 		if (repositoryUrl == null) {
 			String root = Functions.call(userRepositoryDefn, url);

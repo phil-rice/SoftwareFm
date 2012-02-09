@@ -13,10 +13,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-import javax.sql.DataSource;
-
 import junit.framework.Assert;
 
+import org.apache.commons.dbcp.BasicDataSource;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
@@ -50,7 +49,9 @@ import org.softwareFm.eclipse.snippets.SnippetFeedConfigurator;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.eclipse.user.ProjectTimeGetterFixture;
 import org.softwareFm.server.ICrowdSourcedServer;
+import org.softwareFm.server.processors.IMailer;
 import org.softwareFm.server.processors.IProcessCall;
+import org.softwareFm.server.processors.ProcessCallParameters;
 import org.softwareFm.swt.ICollectionConfigurationFactory;
 import org.softwareFm.swt.browser.IBrowserConfigurator;
 import org.softwareFm.swt.card.ICard;
@@ -234,7 +235,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 				new HttpRepoFinder(httpClient, CommonConstants.testTimeOutMs), //
 				IGitOperations.Utils.gitOperations(localRoot), //
 				new HttpGitWriter(httpClient, CommonConstants.testTimeOutMs), remoteAsUri, CommonConstants.staleCachePeriodForTest);
-		DataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
+		BasicDataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
 		IFunction1<Map<String, Object>, String> cryptoFn = new IFunction1<Map<String, Object>, String>() {
 			@Override
 			public String apply(Map<String, Object> from) throws Exception {
@@ -245,7 +246,8 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		Callable<String> softwareFmIdGenerator = Callables.patternWithCount("newSoftwareFmId{0}");
 
 		IGitOperations remoteGitOperations = IGitOperations.Utils.gitOperations(remoteRoot);
-		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, remoteGitOperations, cryptoFn, cryptoGenerator, remoteRoot, softwareFmIdGenerator);
+		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, remoteGitOperations, cryptoGenerator, softwareFmIdGenerator, IMailer.Utils.noMailer());
+		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, Functions.<ProcessCallParameters, IProcessCall[]> constant(new IProcessCall[0]));
 		crowdSourcedServer = ICrowdSourcedServer.Utils.testServerPort(processCall, ICallback.Utils.rethrow());
 
 		try {

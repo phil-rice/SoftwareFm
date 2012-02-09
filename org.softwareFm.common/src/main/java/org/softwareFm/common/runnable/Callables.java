@@ -49,6 +49,15 @@ public class Callables {
 			}
 		};
 	}
+	public static <T> Callable<T> valueFromList(final T... value) {
+		return new Callable<T>() {
+			private final AtomicInteger index = new AtomicInteger();
+			@Override
+			public T call() throws Exception {
+				return value[index.getAndIncrement()];
+			}
+		};
+	}
 
 	public static Callable<String> patternWithCount(final String pattern) {
 		return new Callable<String>() {

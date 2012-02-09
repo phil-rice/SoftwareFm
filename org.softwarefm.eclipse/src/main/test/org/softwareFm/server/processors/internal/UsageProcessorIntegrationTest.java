@@ -12,13 +12,14 @@ import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.json.Json;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.url.Urls;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.server.processors.AbstractProcessorDatabaseIntegrationTests;
 import org.softwareFm.server.processors.IProcessCall;
 
 public class UsageProcessorIntegrationTest extends AbstractProcessorDatabaseIntegrationTests {
 
-	private final String softwareFmId = "someSoftwareFmId";
+	private final String softwareFmId = "someNewSoftwareFmId0";
 	private IUser user;
 	private File userFile;
 	private File projectFile;
@@ -34,13 +35,13 @@ public class UsageProcessorIntegrationTest extends AbstractProcessorDatabaseInte
 	public void testFirstUsageCreatesCryptoInUserAndInitialisesProjectData() throws Exception {
 		assertFalse(userFile.exists());
 		getHttpClient().post("/" + SoftwareFmConstants.usagePrefix).//
-				addParam(LoginConstants.softwareFmIdKey, "someSoftwareFmId").//
+				addParam(LoginConstants.softwareFmIdKey, "someNewSoftwareFmId0").//using this so cryptoGenerator/cryptoFnwork
 				addParam(LoginConstants.emailKey, "someEmail").//
 				addParam(SoftwareFmConstants.groupIdKey, "someGroupId").//
 				addParam(SoftwareFmConstants.artifactIdKey, "someArtifactId").//
 				execute(IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.SECONDS);
 		String projectCryptoKey = user.getUserProperty(softwareFmId, userKey, SoftwareFmConstants.projectCryptoKey);
-		assertNotNull(projectCryptoKey);
+		assertNotNull( projectCryptoKey);
 		Map<String, Object> actualProjectDetails = Json.mapFromEncryptedFile(projectFile, projectCryptoKey);
 		assertEquals(Maps.stringObjectMap("someGroupId", Maps.stringObjectMap("someArtifactId", Arrays.asList(0l))), actualProjectDetails);
 	}
@@ -59,7 +60,7 @@ public class UsageProcessorIntegrationTest extends AbstractProcessorDatabaseInte
 		try {
 			thisDay = day;
 			getHttpClient().post("/" + SoftwareFmConstants.usagePrefix).//
-					addParam(LoginConstants.softwareFmIdKey, "someSoftwareFmId").//
+					addParam(LoginConstants.softwareFmIdKey, "someNewSoftwareFmId0").//
 					addParam(LoginConstants.emailKey, "someEmail").//
 					addParam(SoftwareFmConstants.groupIdKey, groupId).//
 					addParam(SoftwareFmConstants.artifactIdKey, artifactId).//
@@ -81,7 +82,9 @@ public class UsageProcessorIntegrationTest extends AbstractProcessorDatabaseInte
 	protected void setUp() throws Exception {
 		super.setUp();
 		user = IProcessCall.Utils.makeUser(remoteOperations);
-		userFile = new File(remoteRoot, "softwareFm/users/so/me/someSoftwareFmId/" + CommonConstants.dataFileName);
-		projectFile = new File(remoteRoot, "softwareFm/users/so/me/someSoftwareFmId/project/someMonth");
+		//someNewSoftwareFmId0
+		String url = LoginConstants.userGenerator().findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
+		userFile = new File(remoteRoot,Urls.compose( url ,CommonConstants.dataFileName));
+		projectFile = new File(remoteRoot, Urls.compose(url, "project/someMonth"));
 	}
 }

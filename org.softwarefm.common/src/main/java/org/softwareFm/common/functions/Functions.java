@@ -7,9 +7,11 @@ package org.softwareFm.common.functions;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.exceptions.WrappedException;
+import org.softwareFm.common.maps.Maps;
 
 public class Functions {
 
@@ -260,6 +262,16 @@ public class Functions {
 			@Override
 			public Integer apply(Integer from) throws Exception {
 				return from * 2;
+			}
+		};
+	}
+
+	public static <From,To>IFunction1<From, To> map(final Object...nameAndAttributes) {
+		return new IFunction1<From, To>() {
+			private final Map<From,To> map = Maps.makeMap(nameAndAttributes);
+			@Override
+			public To apply(From from) throws Exception {
+				return map.get(from);
 			}
 		};
 	}

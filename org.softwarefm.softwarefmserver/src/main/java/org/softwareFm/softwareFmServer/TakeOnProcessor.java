@@ -1,49 +1,82 @@
 package org.softwareFm.softwareFmServer;
 
+import java.io.File;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import javax.sql.DataSource;
-
+import org.softwareFm.common.IFileDescription;
+import org.softwareFm.common.IGitOperations;
 import org.softwareFm.common.IGroups;
 import org.softwareFm.common.IUser;
+import org.softwareFm.common.collections.Files;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.GroupConstants;
+import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.common.crypto.Crypto;
+import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.server.processors.ISaltProcessor;
-import org.softwareFm.server.processors.ISignUpChecker;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.softwareFm.common.json.Json;
+import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.runnable.Callables;
+import org.softwareFm.common.url.IUrlGenerator;
+import org.softwareFm.common.url.Urls;
+import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 
 public class TakeOnProcessor implements ITakeOnProcessor {
 
-	private final JdbcTemplate template;
-	private final ISignUpChecker checker;
-	private final ISaltProcessor saltProcessor;
-	private final Callable<String> cryptoGenerator;
+	private final IGitOperations gitOperations;
 	private final IUser user;
 	private final IGroups groups;
-	private final IFunction1<Map<String, Object>, String> cryptoFn;
-	private final Callable<String> softwareFmIdGenerator;
+	private final IFunction1<Map<String, Object>, String> userCryptoFn;
+	private final Callable<String> projectCryptoGenerator;
+	private final IFunction1<String, String> emailToSoftwareFmId;
+	private final IUrlGenerator groupGenerator;
+	private final Callable<String> groupIdGenerator;
+	private final IFunction1<String, String> repoDefnFn;
 
-	public TakeOnProcessor(DataSource dataSource, IUser user, IGroups groups, ISignUpChecker checker, ISaltProcessor saltProcessor, Callable<String> softwareFmIdGenerator, IFunction1<Map<String, Object>, String> cryptoFn, Callable<String> cryptoGenerator) {
+	public TakeOnProcessor(IGitOperations gitOperations, IUser user, IGroups groups, IFunction1<Map<String, Object>, String> userCryptoFn, IFunction1<String, String> emailToSoftwareFmId, Callable<String> projectCryptoGenerator, IUrlGenerator groupGenerator, Callable<String> groupIdGenerator, IFunction1<String, String> repoDefnFn) {
+		this.gitOperations = gitOperations;
 		this.user = user;
 		this.groups = groups;
-		this.checker = checker;
-		this.saltProcessor = saltProcessor;
-		this.softwareFmIdGenerator = softwareFmIdGenerator;
-		this.cryptoFn = cryptoFn;
-		this.cryptoGenerator = cryptoGenerator;
-		this.template = new JdbcTemplate(dataSource);
+		this.emailToSoftwareFmId = emailToSoftwareFmId;
+		this.userCryptoFn = userCryptoFn;
+		this.projectCryptoGenerator = projectCryptoGenerator;
+		this.groupGenerator = groupGenerator;
+		this.groupIdGenerator = groupIdGenerator;
+		this.repoDefnFn = repoDefnFn;
 	}
 
 	@Override
-	public String createUser(String email) {
-		// TODO Auto-generated method stub
-		return null;
+	public void addExistingUserToGroup(String groupId, String groupName, String groupCryptoKey, String email) {
+		String softwareFmId = Functions.call(emailToSoftwareFmId, email);
+		String userCrypto = Functions.call(userCryptoFn, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId, LoginConstants.emailKey, email));
+		String usersProjectCryptoKey = user.getUserProperty(softwareFmId, userCrypto, SoftwareFmConstants.projectCryptoKey);
+		if (usersProjectCryptoKey == null) {
+			usersProjectCryptoKey = Callables.call(projectCryptoGenerator);
+			user.setUserProperty(softwareFmId, userCrypto, SoftwareFmConstants.projectCryptoKey, usersProjectCryptoKey);
+		}
+		Map<String, Object> initialData = Maps.stringObjectMap(LoginConstants.emailKey, email, LoginConstants.softwareFmIdKey, softwareFmId, SoftwareFmConstants.projectCryptoKey, usersProjectCryptoKey, GroupConstants.userStatusInGroup, GroupConstants.invitedStatus);
+		groups.addUser(groupId, groupCryptoKey, initialData);
 	}
 
 	@Override
-	public void addExistingUserToGroup(String groupId, String groupName, String email) {
-		// TODO Auto-generated method stub
-
+	public String createGroup(String groupName, String groupCrypto) {
+		String groupId = Callables.call(groupIdGenerator);
+		String url = groupGenerator.findUrlFor(Maps.stringObjectMap(SoftwareFmConstants.groupIdKey, groupId));
+		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, CommonConstants.dataFileName, groupCrypto);
+		File repositoryFile = fileDescription.findRepositoryUrl(gitOperations.getRoot());
+		if (repositoryFile == null) {
+			String repositoryUrl = Functions.call(repoDefnFn, url);
+			gitOperations.init(repositoryUrl);
+			repositoryFile = new File(gitOperations.getRoot(), repositoryUrl);
+		}
+		File file = new File(gitOperations.getRoot(), Urls.compose(url, CommonConstants.dataFileName));
+		if (file.exists())
+			throw new IllegalStateException(file.toString());
+		Files.makeDirectoryForFile(file);
+		Files.setText(file, Crypto.aesEncrypt(groupCrypto, Json.toString(Maps.stringObjectMap(GroupConstants.groupNameKey, groupName))));
+		gitOperations.addAllAndCommit(Files.offset(gitOperations.getRoot(), repositoryFile), "createGroup (" + groupName + ")");
+		return groupId;
 	}
 
 }

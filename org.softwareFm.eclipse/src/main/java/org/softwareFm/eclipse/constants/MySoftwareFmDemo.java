@@ -1,4 +1,5 @@
 package org.softwareFm.eclipse.constants;
+
 import java.io.File;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -16,14 +17,15 @@ import org.softwareFm.common.processors.AbstractLoginDataAccessor;
 import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.server.ICrowdSourcedServer;
+import org.softwareFm.server.processors.IMailer;
 import org.softwareFm.server.processors.IProcessCall;
+import org.softwareFm.server.processors.ProcessCallParameters;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.configuration.ICardConfigurator;
 import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.explorer.internal.MySoftwareFm;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.swt.swt.Swts;
-
 
 public class MySoftwareFmDemo {
 	public static void main(String[] args) {
@@ -36,14 +38,16 @@ public class MySoftwareFmDemo {
 		Callable<String> cryptoGenerator = Callables.makeCryptoKey();
 		BasicDataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
 		IGitOperations gitOperations = IGitOperations.Utils.gitOperations(remoteRoot);
-		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCallWithoutMail(dataSource, gitOperations, cryptoFn, cryptoGenerator, localRoot, Callables.uuidGenerator());
+		Callable<String> softwareFmIdGenerator = Callables.uuidGenerator();
+		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, gitOperations, cryptoGenerator, softwareFmIdGenerator, IMailer.Utils.noMailer());
+		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, Functions.<ProcessCallParameters, IProcessCall[]> constant(new IProcessCall[0]));
 		ICrowdSourcedServer server = ICrowdSourcedServer.Utils.testServerPort(processCall, ICallback.Utils.rethrow());
 		try {
 			Swts.Show.display(MySoftwareFm.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 				@Override
 				public Composite apply(Composite from) throws Exception {
 					CardConfig cardConfig = ICardConfigurator.Utils.cardConfigForTests(from.getDisplay());
-					MySoftwareFm mySoftwareFm = new MySoftwareFm(from, cardConfig, ILoginStrategy.Utils.softwareFmLoginStrategy(from.getDisplay(), service, client),IShowMyData.Utils.sysout());
+					MySoftwareFm mySoftwareFm = new MySoftwareFm(from, cardConfig, ILoginStrategy.Utils.softwareFmLoginStrategy(from.getDisplay(), service, client), IShowMyData.Utils.sysout());
 					mySoftwareFm.start();
 					return mySoftwareFm.getComposite();
 				}

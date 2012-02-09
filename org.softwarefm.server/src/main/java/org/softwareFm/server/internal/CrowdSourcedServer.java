@@ -30,6 +30,7 @@ import org.softwareFm.common.IGitOperations;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.constants.CommonMessages;
 import org.softwareFm.common.exceptions.WrappedException;
+import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.processors.AbstractLoginDataAccessor;
@@ -41,6 +42,7 @@ import org.softwareFm.server.IUsage;
 import org.softwareFm.server.processors.IMailer;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.IProcessResult;
+import org.softwareFm.server.processors.ProcessCallParameters;
 
 public class CrowdSourcedServer implements ICrowdSourcedServer {
 
@@ -195,18 +197,16 @@ public class CrowdSourcedServer implements ICrowdSourcedServer {
 		File sfmRoot = Utils.makeSfmRoot();
 		IGitOperations gitOperations = IGitOperations.Utils.gitOperations(sfmRoot);
 		BasicDataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
-		makeServer(gitOperations, dataSource);
+		makeServer(gitOperations, dataSource, Functions.<ProcessCallParameters, IProcessCall[]> constant(new IProcessCall[0]));
 	}
 
-	public static ICrowdSourcedServer makeServer(IGitOperations gitOperations, BasicDataSource dataSource, IProcessCall... processCalls) {
+	public static ICrowdSourcedServer makeServer(IGitOperations gitOperations, BasicDataSource dataSource, IFunction1<ProcessCallParameters, IProcessCall[]> extraProcessCalls) {
 		System.out.println("Server: " + gitOperations);
-		File sfmRoot = gitOperations.getRoot();
 		final IUsage usage = IUsage.Utils.defaultUsage();
 		IMailer mailer = IMailer.Utils.email("localhost", null, null);
-		IFunction1<Map<String, Object>, String> cryptoFn = new UserCryptoFn(dataSource);
 		Callable<String> softwareFmIdGenerator = Callables.uuidGenerator();
-		Callable<String> makeKey = Callables.makeCryptoKey();
-		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCall(dataSource, gitOperations, cryptoFn, makeKey, sfmRoot, mailer, softwareFmIdGenerator, processCalls);
+		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, gitOperations, Callables.makeCryptoKey(), softwareFmIdGenerator, mailer);
+		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, extraProcessCalls);
 		return new CrowdSourcedServer(8080, 1000, processCall, ICallback.Utils.sysErrCallback(), usage);
 	}
 }

@@ -19,6 +19,8 @@ public class FileDescription implements IFileDescription {
 		this.url = url;
 		this.name = name;
 		this.key = key;
+		if (url == null)
+			throw new NullPointerException(toString());
 	}
 
 	@Override

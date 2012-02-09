@@ -1,6 +1,8 @@
 package org.softwareFm.server;
 
 import java.io.File;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -12,11 +14,16 @@ import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.processors.AbstractLoginDataAccessor;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.server.internal.CrowdSourcedServer;
 import org.softwareFm.server.internal.ServerUser;
 import org.softwareFm.server.internal.UserCryptoFn;
 import org.softwareFm.server.processors.IProcessCall;
+import org.softwareFm.server.processors.ProcessCallParameters;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 
 public interface ICrowdSourcedServer {
 
@@ -24,8 +31,8 @@ public interface ICrowdSourcedServer {
 
 	abstract public static class Utils {
 
-		public static ICrowdSourcedServer fullServer(IGitOperations gitOperations, BasicDataSource dataSource, IProcessCall... processCalls) {
-			return CrowdSourcedServer.makeServer(gitOperations, dataSource, processCalls);
+		public static ICrowdSourcedServer fullServer(IGitOperations gitOperations, BasicDataSource dataSource, IFunction1<ProcessCallParameters, IProcessCall[]>extraProcessCalls) {
+			return CrowdSourcedServer.makeServer(gitOperations, dataSource, extraProcessCalls);
 		}
 
 		public static ICrowdSourcedServer testServerPort(IProcessCall processCall, ICallback<Throwable> errorHandler) {
@@ -42,16 +49,37 @@ public interface ICrowdSourcedServer {
 			return sfmRoot;
 		}
 
+		public static IFunction1<String, String> emailToSoftwareFmId(final DataSource dataSource) {
+			return new IFunction1<String, String>() {
+				private final JdbcTemplate template = new JdbcTemplate(dataSource);
+
+				@Override
+				public String apply(String from) throws Exception {
+					return template.query(AbstractLoginDataAccessor.selectUsersWithEmailSql, new Object[] { from }, new ResultSetExtractor<String>() {
+						@Override
+						public String extractData(ResultSet rs) throws SQLException, DataAccessException {
+							if (rs.next()) {
+								String softwareFmId = rs.getString("softwarefmid");
+								return softwareFmId;
+							} else
+								return null;
+						}
+					});
+				}
+			};
+		}
+
 		public static IFunction1<Map<String, Object>, String> cryptoFn(DataSource dataSource) {
 			return new UserCryptoFn(dataSource);
 		}
 
-		public static IUser makeUserForServer(IGitOperations gitOperations, IUrlGenerator userUrlGenerator, IFunction1<String, String> userRepositoryDefn){
+		public static IUser makeUserForServer(IGitOperations gitOperations, IUrlGenerator userUrlGenerator, IFunction1<String, String> userRepositoryDefn) {
 			return new ServerUser(gitOperations, userUrlGenerator, userRepositoryDefn);
 		}
-		public static IUser makeUserForServer(IGitOperations gitOperations, IFunction1<String, String> userRepositoryDefn){
+
+		public static IUser makeUserForServer(IGitOperations gitOperations, IFunction1<String, String> userRepositoryDefn) {
 			return new ServerUser(gitOperations, LoginConstants.userGenerator(), userRepositoryDefn);
 		}
-		
+
 	}
 }

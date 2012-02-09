@@ -2,14 +2,12 @@ package org.softwareFm.server.processors;
 
 import java.io.File;
 import java.util.Map;
-import java.util.concurrent.Callable;
-
-import javax.sql.DataSource;
 
 import org.apache.http.RequestLine;
 import org.softwareFm.common.IGitOperations;
 import org.softwareFm.common.IUser;
 import org.softwareFm.common.arrays.ArrayHelper;
+import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.UrlCache;
 import org.softwareFm.common.strings.Strings;
@@ -18,23 +16,18 @@ import org.softwareFm.server.processors.internal.ChangePasswordProcessor;
 import org.softwareFm.server.processors.internal.DeleteProcessor;
 import org.softwareFm.server.processors.internal.EmailSaltRequester;
 import org.softwareFm.server.processors.internal.FavIconProcessor;
-import org.softwareFm.server.processors.internal.ForgottonPasswordMailer;
 import org.softwareFm.server.processors.internal.ForgottonPasswordProcessor;
 import org.softwareFm.server.processors.internal.ForgottonPasswordWebPageProcessor;
 import org.softwareFm.server.processors.internal.GetFileProcessor;
 import org.softwareFm.server.processors.internal.GetIndexProcessor;
 import org.softwareFm.server.processors.internal.GitGetProcessor;
 import org.softwareFm.server.processors.internal.HeadThrowing404;
-import org.softwareFm.server.processors.internal.LoginChecker;
 import org.softwareFm.server.processors.internal.LoginProcessor;
 import org.softwareFm.server.processors.internal.MakeRootProcessor;
 import org.softwareFm.server.processors.internal.MakeSaltForLoginProcessor;
-import org.softwareFm.server.processors.internal.PasswordResetter;
 import org.softwareFm.server.processors.internal.PostProcessor;
 import org.softwareFm.server.processors.internal.RequestEmailSaltProcessor;
 import org.softwareFm.server.processors.internal.RigidFileProcessor;
-import org.softwareFm.server.processors.internal.SaltProcessor;
-import org.softwareFm.server.processors.internal.SignUpChecker;
 import org.softwareFm.server.processors.internal.SignupProcessor;
 
 public interface IProcessCall {
@@ -70,30 +63,27 @@ public interface IProcessCall {
 			return "<" + requestLine + ", " + parameters + ">";
 		}
 
-		public static IProcessCall softwareFmProcessCallWithoutMail(DataSource dataSource, IGitOperations gitOperations, IFunction1<Map<String, Object>, String> cryptoFn, Callable<String> cryptoGenerator, File fileRoot, Callable<String> softwareFmIdGenerator, IProcessCall... extraProcessCalls) {
-			return softwareFmProcessCall(dataSource, gitOperations, cryptoFn, cryptoGenerator, fileRoot, IMailer.Utils.noMailer(), softwareFmIdGenerator, extraProcessCalls);
-		}
 
-		public static IProcessCall softwareFmProcessCall(DataSource dataSource, IGitOperations gitOperations, IFunction1<Map<String, Object>, String> cryptoFn, Callable<String> cryptoGenerator, File fileRoot, IMailer mailer, Callable<String> softwareFmIdGenerator, IProcessCall... extraProcessCalls) {
-			UrlCache<String> aboveRepostoryUrlCache = new UrlCache<String>();
-			SaltProcessor saltProcessor = new SaltProcessor();
-			LoginChecker loginChecker = new LoginChecker(dataSource);
-			IUser user = makeUser(gitOperations);
-			SignUpChecker signUpChecker = new SignUpChecker(dataSource, cryptoGenerator, user);
-			ForgottonPasswordMailer forgottonPasswordProcessor = new ForgottonPasswordMailer(dataSource, mailer);
-			IPasswordResetter resetter = new PasswordResetter(dataSource);
-			EmailSaltRequester saltRequester = new EmailSaltRequester(dataSource);
-			IPasswordChanger passwordChanger = IPasswordChanger.Utils.databasePasswordChanger(dataSource);
-			IProcessCall[] rawProcessCalls = new IProcessCall[] { new FavIconProcessor(),//
+		public static IProcessCall softwareFmProcessCall(ProcessCallParameters processCallParameters, IFunction1<ProcessCallParameters, IProcessCall[]> extraProcessCallFn) {
+			File fileRoot = processCallParameters.root;
+			ISaltProcessor saltProcessor = processCallParameters.saltProcessor;
+			ILoginChecker loginChecker = processCallParameters.loginChecker;
+			ISignUpChecker signUpChecker = processCallParameters.signUpChecker;
+			IForgottonPasswordMailer forgottonPasswordProcessor = processCallParameters.forgottonPasswordProcessor;
+			EmailSaltRequester saltRequester = processCallParameters.saltRequester;
+			UrlCache<String> aboveRepostoryUrlCache = processCallParameters.aboveRepostoryUrlCache;
+			IGitOperations gitOperations = processCallParameters.gitOperations;
+			IProcessCall[] rawProcessCalls = new IProcessCall[] {//
+					new FavIconProcessor(),//
 					new RigidFileProcessor(fileRoot, "update"),// responds to get or head
 					new LoginProcessor(saltProcessor, loginChecker), //
-					new SignupProcessor(signUpChecker, saltProcessor, softwareFmIdGenerator), //
+					new SignupProcessor(signUpChecker, saltProcessor, processCallParameters.softwareFmIdGenerator), //
 					// usageProcessor,//
 					new MakeSaltForLoginProcessor(saltProcessor),//
 					new ForgottonPasswordProcessor(saltProcessor, forgottonPasswordProcessor),//
 					new RequestEmailSaltProcessor(saltRequester),//
-					new ForgottonPasswordWebPageProcessor(resetter),//
-					new ChangePasswordProcessor(passwordChanger),//
+					new ForgottonPasswordWebPageProcessor(processCallParameters.resetter),//
+					new ChangePasswordProcessor(processCallParameters.passwordChanger),//
 					new HeadThrowing404(),// sweep up any heads
 					new GetIndexProcessor(fileRoot),//
 					new GetFileProcessor(fileRoot, "html", "jpg", "png", "css", "gif", "jar", "xml"), //
@@ -101,6 +91,7 @@ public interface IProcessCall {
 					new MakeRootProcessor(aboveRepostoryUrlCache, gitOperations), //
 					new DeleteProcessor(gitOperations),//
 					new PostProcessor(gitOperations) };
+			IProcessCall[] extraProcessCalls = Functions.call(extraProcessCallFn, processCallParameters);
 			IProcessCall[] processCalls = ArrayHelper.insert(rawProcessCalls, extraProcessCalls);
 			return chain(processCalls);// this sweeps up any posts, so ensure that commands appear in chain before it
 		}

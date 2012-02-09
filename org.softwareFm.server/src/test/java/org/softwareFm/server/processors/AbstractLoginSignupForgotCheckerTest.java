@@ -20,6 +20,7 @@ import org.softwareFm.common.tests.Tests;
 import org.softwareFm.server.internal.ServerUser;
 import org.softwareFm.server.processors.internal.ForgottonPasswordMailer;
 import org.softwareFm.server.processors.internal.LoginChecker;
+import org.softwareFm.server.processors.internal.MagicStringForPassword;
 import org.softwareFm.server.processors.internal.MailerMock;
 import org.softwareFm.server.processors.internal.PasswordResetter;
 import org.softwareFm.server.processors.internal.SignUpChecker;
@@ -86,7 +87,8 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends GitTest imple
 		signupChecker = new SignUpChecker(dataSource, Callables.value(key), user);
 		loginChecker = new LoginChecker(dataSource);
 		mailerMock = new MailerMock();
-		passwordMailer = new ForgottonPasswordMailer(dataSource, mailerMock);// bit of a cheat...won't actually mail
+		IMagicStringForPassword magicStringForPassword = new MagicStringForPassword(dataSource, Callables.uuidGenerator());
+		passwordMailer = new ForgottonPasswordMailer( mailerMock, magicStringForPassword);// bit of a cheat...won't actually mail
 		resetPassword = new PasswordResetter(dataSource);
 		template = new JdbcTemplate(dataSource);
 		template.update("truncate users");
