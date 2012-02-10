@@ -20,7 +20,7 @@ import org.softwareFm.eclipse.user.IProject;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.server.ICrowdSourcedServer;
 import org.softwareFm.server.processors.internal.MailerMock;
-import org.softwareFm.softwareFmServer.GroupForServer;
+import org.softwareFm.softwareFmServer.GroupsForServer;
 import org.softwareFm.softwareFmServer.ITakeOnProcessor;
 import org.softwareFm.softwareFmServer.ProjectForServer;
 import org.softwareFm.softwareFmServer.TakeOnGroupProcessor;
@@ -76,7 +76,7 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 		groupsGenerator = GroupConstants.groupsGenerator();
 		groupCryptoKey = Crypto.makeKey();
 		groupId = "someGroupId";
-		groups = new GroupForServer(groupsGenerator, remoteOperations, repoDefnFn);
+		groups = new GroupsForServer(groupsGenerator, remoteOperations, repoDefnFn);
 
 		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, remoteOperations, userCryptoGenerator, softwareFmIdGenerator, mailerMock);
 		IProcessCall processCalls = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, getExtraProcessCalls());

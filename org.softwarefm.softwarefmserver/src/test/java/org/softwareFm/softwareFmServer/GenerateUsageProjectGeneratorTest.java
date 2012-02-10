@@ -1,10 +1,8 @@
 package org.softwareFm.softwareFmServer;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
 import org.softwareFm.common.IGroups;
 import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
@@ -16,37 +14,15 @@ import org.softwareFm.eclipse.user.ProjectMock;
 
 public class GenerateUsageProjectGeneratorTest extends GroupsTest {
 
-	@Test
 	public void testGenerateReport() {
-		checkMonthsReport("month1",//
-				"group1", Maps.stringObjectMap(//
-						"artifact11", Maps.stringObjectMap("sfm1", Arrays.asList(1l, 3l, 4l, 5l), "sfm2", Arrays.asList(1l, 3l)),//
-						"artifact12", Maps.stringObjectMap("sfm1", Arrays.asList(1l, 2l, 3l), "sfm2", Arrays.asList(1l, 2l, 3l))),//
-				"group2", Maps.stringObjectMap(//
-						"artifact21", Maps.stringObjectMap("sfm1", Arrays.asList(1l, 2l), "sfm2", Arrays.asList(1l, 2l)), //
-						"artifact22", Maps.stringObjectMap("sfm1", Arrays.asList(1l, 2l, 3l), "sfm2", Arrays.asList(1l, 2l, 3l))));
-
-		checkMonthsReport("month2",//
-				"group1", Maps.stringObjectMap(//
-						"artifact11", Maps.stringObjectMap("sfm1", Arrays.asList(1l, 3l, 4l, 5l)),//
-						"artifact13", Maps.stringObjectMap("sfm1", Arrays.asList(1l, 2l, 3l))),//
-				"group2", Maps.stringObjectMap(//
-						"artifact21", Maps.stringObjectMap("sfm1", Arrays.asList(1l, 2l)), //
-						"artifact22", Maps.stringObjectMap("sfm1", Arrays.asList(1l, 2l, 3l))));
-
-		checkMonthsReport("month3",//
-				"group1", Maps.stringObjectMap(//
-						"artifact11", Maps.stringObjectMap("sfm1", Arrays.asList(1l, 3l, 4l, 5l), "sfm2", Arrays.asList(1l)),//
-						"artifact12", Maps.stringObjectMap("sfm1", Arrays.asList(1l, 2l, 3l), "sfm2", Arrays.asList(1l, 2l, 3l))),//
-				"group3", Maps.stringObjectMap(//
-						"artifact31", Maps.stringObjectMap("sfm1", Arrays.asList(1l, 2l), "sfm2", Arrays.asList(1l, 2l)), //
-						"artifact32", Maps.stringObjectMap("sfm1", Arrays.asList(1l, 2l, 3l), "sfm2", Arrays.asList(4l, 5l))));
+		checkMonthsReport("month1", ProjectFixture.expectedMergeResultMonth1);
+		checkMonthsReport("month2", ProjectFixture.expectedMergeResultMonth2);
+		checkMonthsReport("month3", ProjectFixture.expectedMergeResultMonth3);
 	}
 
-	protected void checkMonthsReport(String month, Object... nameAndValues) {
-		Map<String, Object> expected = Maps.makeMap(nameAndValues);
+	protected void checkMonthsReport(String month, Map<String, Object> expected) {
 		GenerateUsageProjectGenerator generator = new GenerateUsageProjectGenerator(//
-				new GroupForServer(GroupConstants.groupsGenerator(), remoteOperations, Strings.firstNSegments(3)), //
+				new GroupsForServer(GroupConstants.groupsGenerator(), remoteOperations, Strings.firstNSegments(3)), //
 				new UsageReaderForServer(remoteOperations, null, userGenerator));
 		Map<String, Map<String, Map<String, List<Integer>>>> month1 = generator.generateReport(groupId, groupCrypto, month);
 		assertEquals(expected, month1);
@@ -70,7 +46,7 @@ public class GenerateUsageProjectGeneratorTest extends GroupsTest {
 		// saveProjectData(id2, "month2", user2ProjectCrypto, projectUser2); no month 2 data
 		saveProjectData(id2, "month3", user2ProjectCrypto, projectUser2);
 
-		IGroups groups = new GroupForServer(groupGenerator, remoteOperations, Strings.firstNSegments(3));
+		IGroups groups = new GroupsForServer(groupGenerator, remoteOperations, Strings.firstNSegments(3));
 		groups.setGroupProperty(groupId, groupCrypto, "someName", "someValue");
 		groups.addUser(groupId, groupCrypto, Maps.stringObjectMap(SoftwareFmConstants.projectCryptoKey, user1ProjectCrypto, LoginConstants.softwareFmIdKey, id1, LoginConstants.emailKey, "email1", LoginConstants.monikerKey, "moniker1"));
 		groups.addUser(groupId, groupCrypto, Maps.stringObjectMap(SoftwareFmConstants.projectCryptoKey, user2ProjectCrypto, LoginConstants.softwareFmIdKey, id2, LoginConstants.emailKey, "email2", LoginConstants.monikerKey, "moniker2"));

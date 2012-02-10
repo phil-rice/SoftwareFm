@@ -5,8 +5,10 @@ import org.softwareFm.common.url.IUrlGenerator;
 public class GroupConstants {
 
 	public static final String groupIdKey = "groupId";
+	public static final String monthKey = "month";
 	public static final String usageReportDirectory = "reports";
 	public static final String takeOnCommandPrefix = "command/takeOnGroup";
+	public static final String generateGroupReportPrefix = "command/generateGroupReport" ;
 	
 	public static final String groupNameKey = "groupName";
 	

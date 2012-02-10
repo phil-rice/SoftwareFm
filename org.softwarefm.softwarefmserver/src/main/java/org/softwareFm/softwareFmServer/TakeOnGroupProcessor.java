@@ -39,7 +39,7 @@ public class TakeOnGroupProcessor extends AbstractCommandProcessor {
 
 	@Override
 	protected IProcessResult execute(String actualUrl, Map<String, Object> parameters) {
-		check(parameters, GroupConstants.groupNameKey, GroupConstants.takeOnEmailPattern, GroupConstants.takeOnFromKey, GroupConstants.takeOnSubjectKey, GroupConstants.takeOnEmailListKey);
+		checkForParameter(parameters, GroupConstants.groupNameKey, GroupConstants.takeOnEmailPattern, GroupConstants.takeOnFromKey, GroupConstants.takeOnSubjectKey, GroupConstants.takeOnEmailListKey);
 		String groupName = (String) parameters.get(GroupConstants.groupNameKey);
 		String emailPattern = (String) parameters.get(GroupConstants.takeOnEmailPattern);
 		String from = (String) parameters.get(GroupConstants.takeOnFromKey);
@@ -68,11 +68,5 @@ public class TakeOnGroupProcessor extends AbstractCommandProcessor {
 
 		}
 		return IProcessResult.Utils.processString("");
-	}
-
-	private void check(Map<String, Object> parameters, String... keys) {
-		for (String key : keys)
-			if (!parameters.containsKey(key))
-				throw new IllegalArgumentException(key+", " + parameters);
 	}
 }

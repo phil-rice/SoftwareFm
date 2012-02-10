@@ -33,4 +33,10 @@ public abstract class AbstractCommandProcessor implements IProcessCall {
 
 	abstract protected IProcessResult execute(String actualUrl, Map<String, Object> parameters);
 
+	protected void checkForParameter(Map<String, Object> parameters, String... keys) {
+		for (String key : keys)
+			if (!parameters.containsKey(key))
+				throw new IllegalArgumentException(key+", " + parameters);
+	}
+
 }

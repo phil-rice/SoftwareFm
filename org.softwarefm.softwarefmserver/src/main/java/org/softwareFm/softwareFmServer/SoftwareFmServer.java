@@ -29,7 +29,7 @@ public class SoftwareFmServer {
 
 		BasicDataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
 		IGitOperations gitOperations = IGitOperations.Utils.gitOperations(ICrowdSourcedServer.Utils.makeSfmRoot());
-		ICrowdSourcedServer.Utils.fullServer(gitOperations, dataSource, makeExtraProcessCalls());
+		ICrowdSourcedServer.Utils.fullServer(ICrowdSourcedServer.Utils.port(args), gitOperations, dataSource, makeExtraProcessCalls());
 	}
 
 	private static IFunction1<ProcessCallParameters, IProcessCall[]> makeExtraProcessCalls() {
@@ -40,7 +40,7 @@ public class SoftwareFmServer {
 				Callable<String> projectCryptoGenerator = Callables.makeCryptoKey();
 				Callable<String> groupIdGenerator = Callables.uuidGenerator();
 				IFunction1<String, String> repoDefnFn = Strings.firstNSegments(3);
-				IGroups groups = new GroupForServer(GroupConstants.groupsGenerator(), from.gitOperations, repoDefnFn);
+				IGroups groups = new GroupsForServer(GroupConstants.groupsGenerator(), from.gitOperations, repoDefnFn);
 				IFunction1<String, String> emailToSoftwareFmId = ICrowdSourcedServer.Utils.emailToSoftwareFmId(from.dataSource);
 				ITakeOnProcessor takeOnProcessor = new TakeOnProcessor(from.gitOperations, from.user, groups, userCryptoFn, emailToSoftwareFmId, projectCryptoGenerator, GroupConstants.groupsGenerator(), groupIdGenerator, repoDefnFn);
 				return new IProcessCall[] { makeUsageProcessor(from.dataSource, from.gitOperations),//

@@ -191,20 +191,22 @@ public class CrowdSourcedServer implements ICrowdSourcedServer {
 	private void doNothing() {
 	}
 
+
+
 	public static void main(String[] args) throws Exception {
 		File sfmRoot = Utils.makeSfmRoot();
 		IGitOperations gitOperations = IGitOperations.Utils.gitOperations(sfmRoot);
 		BasicDataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
-		makeServer(gitOperations, dataSource, Functions.<ProcessCallParameters, IProcessCall[]> constant(new IProcessCall[0]));
+		makeServer(Utils.port(args), gitOperations, dataSource, Functions.<ProcessCallParameters, IProcessCall[]> constant(new IProcessCall[0]));
 	}
 
-	public static ICrowdSourcedServer makeServer(IGitOperations gitOperations, BasicDataSource dataSource, IFunction1<ProcessCallParameters, IProcessCall[]> extraProcessCalls) {
+	public static ICrowdSourcedServer makeServer(int port, IGitOperations gitOperations, BasicDataSource dataSource, IFunction1<ProcessCallParameters, IProcessCall[]> extraProcessCalls) {
 		System.out.println("Server: " + gitOperations);
 		final IUsage usage = IUsage.Utils.defaultUsage();
 		IMailer mailer = IMailer.Utils.email("localhost", null, null);
 		Callable<String> softwareFmIdGenerator = Callables.uuidGenerator();
 		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, gitOperations, Callables.makeCryptoKey(), softwareFmIdGenerator, mailer);
 		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, extraProcessCalls);
-		return new CrowdSourcedServer(8080, 1000, processCall, ICallback.Utils.sysErrCallback(), usage);
+		return new CrowdSourcedServer(port, 1000, processCall, ICallback.Utils.sysErrCallback(), usage);
 	}
 }

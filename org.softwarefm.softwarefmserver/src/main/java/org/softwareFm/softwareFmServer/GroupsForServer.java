@@ -19,12 +19,12 @@ import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
 
-public class GroupForServer extends AbstractGroupReader implements IGroups {
+public class GroupsForServer extends AbstractGroupReader implements IGroups {
 
 	private final IGitOperations gitOperations;
 	private final IFunction1<String, String> repoUrlGenerator;
 
-	public GroupForServer(IUrlGenerator urlGenerator, IGitOperations gitOperations, IFunction1<String, String> repoUrlGenerator) {
+	public GroupsForServer(IUrlGenerator urlGenerator, IGitOperations gitOperations, IFunction1<String, String> repoUrlGenerator) {
 		super(urlGenerator);
 		this.gitOperations = gitOperations;
 		this.repoUrlGenerator = repoUrlGenerator;

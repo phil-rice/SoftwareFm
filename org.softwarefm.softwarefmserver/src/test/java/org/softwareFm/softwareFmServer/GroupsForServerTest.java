@@ -21,7 +21,7 @@ public class GroupsForServerTest extends GroupsTest {
 	}
 
 	public void testAddUsers() {
-		IGroups groups = new GroupForServer(groupGenerator, remoteOperations, repoGenerator);
+		IGroups groups = new GroupsForServer(groupGenerator, remoteOperations, repoGenerator);
 		groups.setGroupProperty(groupId, groupCrypto, "someProperty", "someValue");
 		groups.addUser(groupId, groupCrypto, makeUserDetails(0));
 		groups.addUser(groupId, groupCrypto, makeUserDetails(1));
@@ -31,7 +31,7 @@ public class GroupsForServerTest extends GroupsTest {
 	}
 
 	public void testAddingUsersDoesntImpactOnProperties() {
-		IGroups groups = new GroupForServer(groupGenerator, remoteOperations, repoGenerator);
+		IGroups groups = new GroupsForServer(groupGenerator, remoteOperations, repoGenerator);
 		checkSetGetGroups();
 		groups.addUser(groupId, groupCrypto, makeUserDetails(0));
 		checkUsers(1);
@@ -46,8 +46,8 @@ public class GroupsForServerTest extends GroupsTest {
 	}
 
 	public void testSettingPropertiesDoesntImpactOnUsers() {
-		IGroups groups = new GroupForServer(groupGenerator, remoteOperations, repoGenerator);
-		IGroups groups1 = new GroupForServer(groupGenerator, remoteOperations, repoGenerator);
+		IGroups groups = new GroupsForServer(groupGenerator, remoteOperations, repoGenerator);
+		IGroups groups1 = new GroupsForServer(groupGenerator, remoteOperations, repoGenerator);
 		IGroupsReader localGroupsReader = new LocalGroupsReader(groupGenerator, gitLocal);
 
 		groups1.setGroupProperty(groupId, groupCrypto, "property1", "value1");
@@ -81,7 +81,7 @@ public class GroupsForServerTest extends GroupsTest {
 	}
 
 	public void testSetGetReport() {
-		IGroups groups = new GroupForServer(groupGenerator, remoteOperations, repoGenerator);
+		IGroups groups = new GroupsForServer(groupGenerator, remoteOperations, repoGenerator);
 		groups.setReport(groupId, groupCrypto, "month1", v11);
 		groups.setReport(groupId, groupCrypto, "month2", v12);
 		assertEquals(v11, groups.getUsageReport(groupId, groupCrypto, "month1"));
@@ -95,7 +95,7 @@ public class GroupsForServerTest extends GroupsTest {
 	}
 
 	private void checkUsers(int userCount) {
-		IGroups groups = new GroupForServer(groupGenerator, remoteOperations, repoGenerator);
+		IGroups groups = new GroupsForServer(groupGenerator, remoteOperations, repoGenerator);
 		List<Map<String, Object>> expected = Lists.newList();
 		for (int i = 0; i < userCount; i++)
 			expected.add(makeUserDetails(i));
@@ -111,7 +111,7 @@ public class GroupsForServerTest extends GroupsTest {
 	}
 
 	protected void checkSetGetGroups() {
-		IGroups groups = new GroupForServer(groupGenerator, remoteOperations, repoGenerator);
+		IGroups groups = new GroupsForServer(groupGenerator, remoteOperations, repoGenerator);
 		IGroupsReader localGroupsReader = new LocalGroupsReader(groupGenerator, gitLocal);
 
 		groups.setGroupProperty(groupId, groupCrypto, "property1", "value1");
@@ -135,7 +135,7 @@ public class GroupsForServerTest extends GroupsTest {
 	}
 
 	protected void checkGetNewGroups() {
-		IGroups groups = new GroupForServer(groupGenerator, remoteOperations, repoGenerator);
+		IGroups groups = new GroupsForServer(groupGenerator, remoteOperations, repoGenerator);
 		IGroupsReader localGroupsReader = new LocalGroupsReader(groupGenerator, gitLocal);
 
 		assertEquals("value1", groups.getGroupProperty(groupId, groupCrypto, "property1"));

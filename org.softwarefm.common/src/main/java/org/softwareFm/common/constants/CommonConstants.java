@@ -33,5 +33,6 @@ public class CommonConstants {
 	public static final Set<Integer> okStatusCodes = Sets.makeSet(okStatusCode);
 	public static final int staleCachePeriodForTest = 500;
 	public static final long clientTimeOut = 2000;
+	public static final int serverPort = 8080;
 
 }

@@ -275,4 +275,15 @@ public class Functions {
 			}
 		};
 	}
+
+	public static IFunction1<Map<String, Object>, String> mapFromKey(final String key, final Object...namesAndValues) {
+		return new IFunction1<Map<String,Object>, String>() {
+			private final Map<String,Object> map = Maps.stringObjectMap(namesAndValues);
+			@Override
+			public String apply(Map<String, Object> from) throws Exception {
+				Object actualKey = from.get(key);
+				return (String) map.get(actualKey);
+			}
+		};
+	}
 }

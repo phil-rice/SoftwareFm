@@ -113,7 +113,7 @@ public class TakeOnProcessorTest extends GitTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		groups = new GroupForServer(GroupConstants.groupsGenerator(), remoteOperations, Strings.firstNSegments(3));
+		groups = new GroupsForServer(GroupConstants.groupsGenerator(), remoteOperations, Strings.firstNSegments(3));
 		user = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, Strings.firstNSegments(3));
 		crypto1 = Crypto.makeKey();
 		crypto2 = Crypto.makeKey();
