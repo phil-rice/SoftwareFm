@@ -16,14 +16,15 @@ import java.util.Map;
  */
 public interface IGroupsReader {
 
-	<T>T getGroupProperty(String groupId, String groupCryptoKey, String propertyName);
+	<T> T getGroupProperty(String groupId, String groupCryptoKey, String propertyName);
 
 	/** Iterates through the users one at a time. The map is of the form {softwareFmId -> "someSoftwareFmId", email -> "someEmail", "moniker"->"someMoniker", status -> "admin/member/invited/requesting"}. Email or monikor are optional */
 	Iterable<Map<String, Object>> users(String groupId, String groupCryptoKey);
 
 	/** pulls the latest data about the group from the server */
 	void refresh(String groupId);
-	
-	Map<String,Object> getUsageReport(String groupId, String groupCryptoKey, String month);
 
+	Map<String, Object> getUsageReport(String groupId, String groupCryptoKey, String month);
+
+	int membershipCount(String groupId,String groupCryptoKey);
 }

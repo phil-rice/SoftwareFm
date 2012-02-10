@@ -16,10 +16,10 @@ import org.softwareFm.common.url.Urls;
 
 public abstract class AbstractGroupReader implements IGroupsReader {
 
-	protected IUrlGenerator urlGenerator;
+	protected IUrlGenerator groupUrlGenerator;
 
-	public AbstractGroupReader(IUrlGenerator urlGenerator) {
-		this.urlGenerator = urlGenerator;
+	public AbstractGroupReader(IUrlGenerator groupUrlGenerator) {
+		this.groupUrlGenerator = groupUrlGenerator;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -74,13 +74,21 @@ public abstract class AbstractGroupReader implements IGroupsReader {
 	}
 
 	protected String findUrl(String groupId) {
-		String url = urlGenerator.findUrlFor(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId));
+		String url = groupUrlGenerator.findUrlFor(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId));
 		return url;
 	}
 
 	protected IFileDescription findReportFileDescription(String groupId, String groupCryptoKey, String month) {
-		String groupUrl = urlGenerator.findUrlFor(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId));
+		String groupUrl = groupUrlGenerator.findUrlFor(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId));
 		IFileDescription fileDescription = IFileDescription.Utils.encrypted(Urls.compose(groupUrl, GroupConstants.usageReportDirectory), month, groupCryptoKey);
 		return fileDescription;
+	}
+
+	@Override
+	public int membershipCount(String groupId, String groupCryptoKey) {
+		IFileDescription groupFileDescription = findFileDescription(groupId, groupCryptoKey);
+		String lines = getFileAsString(groupFileDescription);
+		List<String> listOfLines = Strings.splitIgnoreBlanks(lines, "\n");
+		return listOfLines.size() - 1;
 	}
 }

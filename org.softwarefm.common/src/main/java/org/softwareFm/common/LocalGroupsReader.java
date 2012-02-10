@@ -8,14 +8,14 @@ public class LocalGroupsReader extends AbstractGroupReader {
 
 	protected final IGitLocal gitLocal;
 
-	public LocalGroupsReader(IUrlGenerator urlGenerator, IGitLocal gitLocal) {
-		super(urlGenerator);
+	public LocalGroupsReader(IUrlGenerator groupUrlGenerator, IGitLocal gitLocal) {
+		super(groupUrlGenerator);
 		this.gitLocal = gitLocal;
 	}
 
 	@Override
 	protected String findUrl(String groupId) {
-		String url = urlGenerator.findUrlFor(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId));
+		String url = groupUrlGenerator.findUrlFor(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId));
 		return url;
 	}
 

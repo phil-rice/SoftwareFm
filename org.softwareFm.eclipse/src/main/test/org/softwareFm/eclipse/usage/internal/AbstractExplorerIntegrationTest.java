@@ -32,6 +32,7 @@ import org.softwareFm.common.IGitLocal;
 import org.softwareFm.common.IGitOperations;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
@@ -256,9 +257,10 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 			masterDetailSocial = new MasterDetailSocial(shell, SWT.NULL);
 			IProjectTimeGetter projectTimeGetter = new ProjectTimeGetterFixture();
 			IUrlGenerator userUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.userUrlKey);
+			IUrlGenerator groupUrlGenerator = GroupConstants.groupsGenerator();
 			showMyData = MyDetails.showMyDetails(service, cardConfig, masterDetailSocial, userUrlGenerator, gitLocal, projectTimeGetter);
 			
-			IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, gitLocal);
+			IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator,groupUrlGenerator, gitLocal);
 			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, cardConfig, //
 					Arrays.asList(rootArtifactUrl, rootSnippetUrl), //
 					IPlayListGetter.Utils.noPlayListGetter(), service, //

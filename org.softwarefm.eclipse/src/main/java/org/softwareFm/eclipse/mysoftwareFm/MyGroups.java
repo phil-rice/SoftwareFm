@@ -4,11 +4,16 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.common.IGitLocal;
+import org.softwareFm.common.IGroupsReader;
 import org.softwareFm.common.IUserReader;
+import org.softwareFm.common.LocalGroupsReader;
 import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.IFunction1;
@@ -25,7 +30,7 @@ import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.swt.Swts;
 
 public class MyGroups implements IHasComposite {
-	public static IShowMyGroups showMyGroups(final IServiceExecutor executor, final CardConfig cardConfig, final IMasterDetailSocial masterDetailSocial, final IUrlGenerator userUrlGenerator, final IGitLocal gitLocal) {
+	public static IShowMyGroups showMyGroups(final IServiceExecutor executor, final CardConfig cardConfig, final IMasterDetailSocial masterDetailSocial, final IUrlGenerator userUrlGenerator, final IUrlGenerator groupUrlGenerator, final IGitLocal gitLocal) {
 		return new IShowMyGroups() {
 			@Override
 			public void show(final UserData userData) {
@@ -34,6 +39,7 @@ public class MyGroups implements IHasComposite {
 					public Void call() throws Exception {
 						final IUserReader user = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
 						String membershipCrypto = user.getUserProperty(userData.softwareFmId, userData.crypto, GroupConstants.membershipCryptoKey);
+						final IGroupsReader groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
 						if (membershipCrypto == null) {
 							masterDetailSocial.createAndShowDetail(new IFunction1<Composite, TextInCompositeWithCardMargin>() {
 								@Override
@@ -45,7 +51,7 @@ public class MyGroups implements IHasComposite {
 							});
 							return null;
 						}
-						final IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(LoginConstants.userGenerator(), gitLocal, user, membershipCrypto);
+						final IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(LoginConstants.userGenerator(), gitLocal, user, userData.crypto);
 						Swts.asyncExec(masterDetailSocial.getControl(), new Runnable() {
 							@Override
 							public void run() {
@@ -53,7 +59,7 @@ public class MyGroups implements IHasComposite {
 								masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyGroups>() {
 									@Override
 									public MyGroups apply(Composite from) throws Exception {
-										return new MyGroups(from, userMembershipReader, userData.softwareFmId);
+										return new MyGroups(from, userMembershipReader, groupsReader, userData.softwareFmId);
 									}
 								});
 							}
@@ -68,18 +74,35 @@ public class MyGroups implements IHasComposite {
 	private final MyGroupsComposite content;
 
 	public static class MyGroupsComposite extends Composite {
-		private final StyledText text;
+		private final Table table;
+		private final IGroupsReader groupsReader;
 
-		public MyGroupsComposite(Composite parent, IUserMembershipReader membershipReader, String softwareFmId) {
+		public MyGroupsComposite(Composite parent, IUserMembershipReader membershipReader, IGroupsReader groupReaders, String softwareFmId) {
 			super(parent, SWT.NULL);
-			text = new StyledText(this, SWT.WRAP | SWT.READ_ONLY);
-			for (Map<String, Object> map : membershipReader.walkGroupsFor(softwareFmId))
-				text.append(map.toString() + "\n");
+			this.groupsReader = groupReaders;
+			table = new Table(this, SWT.FULL_SELECTION);
+			table.setHeaderVisible(true);
+			new TableColumn(table, SWT.NULL).setText("Group Name");
+			new TableColumn(table, SWT.NULL).setText("Members");
+			for (Map<String, Object> map : membershipReader.walkGroupsFor(softwareFmId)) {
+				String groupId = (String) map.get(GroupConstants.groupIdKey);
+				String groupCryptoKey = (String) map.get(GroupConstants.groupCryptoKey);
+				String groupName = groupReaders.getGroupProperty(groupId, groupCryptoKey, GroupConstants.groupNameKey);
+				TableItem item = new TableItem(table, SWT.NULL);
+				int membershipCount = groupsReader.membershipCount(groupId, groupCryptoKey);
+				String membershipCountString = Integer.toString(membershipCount);
+				item.setText(new String[] { groupName, membershipCountString });
+			}
+			for (int i = 0; i<table.getColumnCount(); i++)
+				table.getColumn(i).pack();
+			table.pack();
 		}
 	}
 
-	public MyGroups(Composite parent, IUserMembershipReader membershipReader, String softwareFmId) {
-		content = new MyGroupsComposite(parent, membershipReader, softwareFmId);
+	public MyGroups(Composite parent, IUserMembershipReader membershipReader, IGroupsReader groupsReader, String softwareFmId) {
+		content = new MyGroupsComposite(parent, membershipReader, groupsReader, softwareFmId);
+		content.setLayout(new FillLayout());
+		Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithLastGrabingVertical(content);
 	}
 
 	@Override

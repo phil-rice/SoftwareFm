@@ -29,6 +29,7 @@ import org.softwareFm.client.http.requests.IResponseCallback;
 import org.softwareFm.common.IGitLocal;
 import org.softwareFm.common.IGitOperations;
 import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.services.IServiceExecutor;
@@ -72,7 +73,7 @@ public class ExplorerWithRadioChannel {
 		Logger.getLogger(IHttpClient.class).setLevel(Level.DEBUG);
 		File home = new File(System.getProperty("user.home"));
 		final File localRoot = new File(home, ".sfm");
-		boolean local = true;
+		boolean local = false;
 		String server = local ? "localhost" : SoftwareFmConstants.softwareFmServerUrl;
 		String prefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : SoftwareFmConstants.gitProtocolAndGitServerName;
 		// String prefix = "git://localhost:7777/";
@@ -101,8 +102,9 @@ public class ExplorerWithRadioChannel {
 					ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(from.getDisplay(), service, client);
 					IProjectTimeGetter projectTimeGetter = IProjectTimeGetter.Utils.timeGetter();
 					IUrlGenerator userUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.userUrlKey);
+					IUrlGenerator groupUrlGenerator = GroupConstants.groupsGenerator();
 					IShowMyData showMyDetails = MyDetails.showMyDetails(service, cardConfig, masterDetailSocial, userUrlGenerator, localGit, projectTimeGetter);
-					IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, localGit);
+					IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, localGit);
 					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, playListGetter, service, loginStrategy,  showMyDetails, showMyGroups);
 
 					ICardMenuItemHandler.Utils.addSoftwareFmMenuItemHandlers(explorer);
