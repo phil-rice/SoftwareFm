@@ -26,6 +26,7 @@ import org.softwareFm.softwareFmServer.ProjectForServer;
 import org.softwareFm.softwareFmServer.TakeOnGroupProcessor;
 import org.softwareFm.softwareFmServer.TakeOnProcessor;
 import org.softwareFm.softwareFmServer.UsageProcessor;
+import org.softwareFm.softwareFmServer.UserMembershipForServer;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 abstract public class AbstractProcessorDatabaseIntegrationTests extends AbstractProcessorIntegrationTests {
@@ -78,7 +79,7 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 		groupId = "someGroupId";
 		groups = new GroupsForServer(groupsGenerator, remoteOperations, repoDefnFn);
 
-		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, remoteOperations, userCryptoGenerator, softwareFmIdGenerator, mailerMock);
+		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, remoteOperations, userCryptoGenerator, softwareFmIdGenerator, userCryptoFn, mailerMock);
 		IProcessCall processCalls = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, getExtraProcessCalls());
 		template = new JdbcTemplate(dataSource);
 		server = ICrowdSourcedServer.Utils.testServerPort(processCalls, ICallback.Utils.rethrow());
@@ -114,7 +115,8 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 				IFunction1<String, String> emailToSfmId = ICrowdSourcedServer.Utils.emailToSoftwareFmId(from.dataSource);
 				Callable<String> groupIdGenerator = Callables.value(groupId);
 
-				ITakeOnProcessor takeOnProcessor = new TakeOnProcessor(from.gitOperations, user, groups, userCryptoFn, emailToSfmId, Callables.valueFromList(projectCryptoKey1, projectCryptoKey2, projectCryptoKey3), groupsGenerator, groupIdGenerator, repoDefnFn);
+				UserMembershipForServer membershipForServer = new UserMembershipForServer(LoginConstants.userGenerator(), from.gitOperations, from.user, userCryptoFn, emailToSfmId);
+				ITakeOnProcessor takeOnProcessor = new TakeOnProcessor(from.gitOperations, user, membershipForServer, groups, userCryptoFn, emailToSfmId, Callables.valueFromList(projectCryptoKey1, projectCryptoKey2, projectCryptoKey3), groupsGenerator, groupIdGenerator, repoDefnFn);
 				Callable<String> groupCryptoGenerator= Callables.value(groupCryptoKey);
 				return new IProcessCall[] { //
 				new UsageProcessor(remoteOperations, project, projectTimeGetter), //

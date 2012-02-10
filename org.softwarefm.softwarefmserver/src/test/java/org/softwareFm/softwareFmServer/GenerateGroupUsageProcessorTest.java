@@ -15,6 +15,7 @@ import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.server.GitTest;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.eclipse.user.IUsageReader;
+import org.softwareFm.eclipse.user.IUserMembership;
 import org.softwareFm.server.ICrowdSourcedServer;
 import org.softwareFm.server.processors.IGenerateUsageReportGenerator;
 
@@ -64,7 +65,8 @@ public class GenerateGroupUsageProcessorTest extends GitTest {
 		processor.execute(GroupConstants.generateGroupReportPrefix, Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.monthKey, "month2"));
 		Map<String, Object> month2SecondReport = remoteGroups.getUsageReport(groupId, groupCryptoKey, "month2");
 		assertEquals(Maps.stringObjectMap("gid1", Maps.stringObjectMap(//
-				"aid2", Maps.stringObjectMap(sfmId1, Arrays.asList(1l)), "aid3", Maps.stringObjectMap(sfmId1, Arrays.asList(1l)),//
+				"aid2", Maps.stringObjectMap(sfmId1, Arrays.asList(1l)), //
+				"aid3", Maps.stringObjectMap(sfmId1, Arrays.asList(1l)),//
 				"aid4", Maps.stringObjectMap(sfmId2, Arrays.asList(1l)),//
 				"aid5", Maps.stringObjectMap(sfmId2, Arrays.asList(1l)))), month2SecondReport);
 	}
@@ -98,7 +100,7 @@ public class GenerateGroupUsageProcessorTest extends GitTest {
 		generateUsageReportGenerator = new GenerateUsageProjectGenerator(remoteGroups, usage);
 
 		IFunction1<String, String> emailToSoftwareFmId = Functions.map(email1, sfmId1, email2, sfmId2);
-		takeOnProcessor = new TakeOnProcessor(remoteOperations, user, remoteGroups, userCryptoFn, emailToSoftwareFmId, projectCryptoGenerator, GroupConstants.groupsGenerator(), Callables.value(groupId), repoDefnFn);
+		IUserMembership membership = new UserMembershipForServer(LoginConstants.userGenerator(), remoteOperations, user, userCryptoFn, repoDefnFn);
+		takeOnProcessor = new TakeOnProcessor(remoteOperations, user, membership, remoteGroups, userCryptoFn, emailToSoftwareFmId, projectCryptoGenerator, GroupConstants.groupsGenerator(), Callables.value(groupId), repoDefnFn);
 	}
-
 }

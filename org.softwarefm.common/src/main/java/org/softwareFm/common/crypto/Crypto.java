@@ -21,6 +21,7 @@ import org.apache.tools.ant.filters.StringInputStream;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.softwareFm.common.collections.Files;
 import org.softwareFm.common.exceptions.WrappedException;
+import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.strings.Strings;
 
 public class Crypto {
@@ -102,5 +103,14 @@ public class Crypto {
 		Security.addProvider(new BouncyCastleProvider());
 		initialised = true;
 
+	}
+
+	public static IFunction1<String, String> decryptFn(final String key) {
+		return new IFunction1<String, String>() {
+			@Override
+			public String apply(String from) throws Exception {
+				return Crypto.aesDecrypt(key, from);
+			}
+		};
 	}
 }

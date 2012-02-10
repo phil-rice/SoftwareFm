@@ -22,6 +22,7 @@ import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.tests.Tests;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.user.IUserMembership;
 import org.softwareFm.server.ICrowdSourcedServer;
 
 public class TakeOnProcessorTest extends GitTest {
@@ -37,6 +38,8 @@ public class TakeOnProcessorTest extends GitTest {
 
 	private String crypto2;
 
+	private IUserMembership membership;
+
 	public void testCreateGroup() {
 		String groupCrypto = Crypto.makeKey();
 		String groupId = takeOnProcessor.createGroup(groupName, groupCrypto);
@@ -49,18 +52,17 @@ public class TakeOnProcessorTest extends GitTest {
 
 	@SuppressWarnings("unchecked")
 	public void testAddUserToGroup() {
-		String projectCrypto1 = Crypto.makeKey(); 
+		String projectCrypto1 = Crypto.makeKey();
 		String projectCrypto2 = Crypto.makeKey();
 
 		user.setUserProperty("sfm1", crypto1, SoftwareFmConstants.projectCryptoKey, projectCrypto1);
 		user.setUserProperty("sfm2", crypto2, SoftwareFmConstants.projectCryptoKey, projectCrypto2);
-		
+
 		String groupCrypto = Crypto.makeKey();
 		String groupId = takeOnProcessor.createGroup(groupName, groupCrypto);
 		takeOnProcessor.addExistingUserToGroup(groupId, groupName, groupCrypto, "email1");
 		takeOnProcessor.addExistingUserToGroup(groupId, groupName, groupCrypto, "email2");
-		
-		
+
 		List<Map<String, Object>> expected = Arrays.asList(//
 				Maps.stringObjectMap(LoginConstants.emailKey, "email1", LoginConstants.softwareFmIdKey, "sfm1", SoftwareFmConstants.projectCryptoKey, projectCrypto1, GroupConstants.userStatusInGroup, GroupConstants.invitedStatus), //
 				Maps.stringObjectMap(LoginConstants.emailKey, "email2", LoginConstants.softwareFmIdKey, "sfm2", SoftwareFmConstants.projectCryptoKey, projectCrypto2, GroupConstants.userStatusInGroup, GroupConstants.invitedStatus));
@@ -72,15 +74,26 @@ public class TakeOnProcessorTest extends GitTest {
 	}
 
 	@SuppressWarnings("unchecked")
+	public void testAddingUserToGroupUpdatesMembership() {
+		String groupCrypto = Crypto.makeKey();
+		String groupId = takeOnProcessor.createGroup(groupName, groupCrypto);
+		takeOnProcessor.addExistingUserToGroup(groupId, groupName, groupCrypto, "email1");
+		takeOnProcessor.addExistingUserToGroup(groupId, groupName, groupCrypto, "email2");
+		List<Map<String, Object>> expected = Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.groupCryptoKey, groupCrypto, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus));
+		assertEquals(expected, membership.walkGroupsFor("sfm1"));
+		assertEquals(expected, membership.walkGroupsFor("sfm2"));
+	}
+
+	@SuppressWarnings("unchecked")
 	public void testAddUserToGroupAddsProjectCryptoIfItDoesntExist() {
 		String groupCrypto = Crypto.makeKey();
 		String groupId = takeOnProcessor.createGroup(groupName, groupCrypto);
 		takeOnProcessor.addExistingUserToGroup(groupId, groupName, groupCrypto, "email1");
 		takeOnProcessor.addExistingUserToGroup(groupId, groupName, groupCrypto, "email2");
-		
+
 		String projectCrypto1 = user.getUserProperty("sfm1", crypto1, SoftwareFmConstants.projectCryptoKey);
 		String projectCrypto2 = user.getUserProperty("sfm2", crypto2, SoftwareFmConstants.projectCryptoKey);
-		
+
 		List<Map<String, Object>> expected = Arrays.asList(//
 				Maps.stringObjectMap(LoginConstants.emailKey, "email1", LoginConstants.softwareFmIdKey, "sfm1", SoftwareFmConstants.projectCryptoKey, projectCrypto1, GroupConstants.userStatusInGroup, GroupConstants.invitedStatus), //
 				Maps.stringObjectMap(LoginConstants.emailKey, "email2", LoginConstants.softwareFmIdKey, "sfm2", SoftwareFmConstants.projectCryptoKey, projectCrypto2, GroupConstants.userStatusInGroup, GroupConstants.invitedStatus));
@@ -118,17 +131,19 @@ public class TakeOnProcessorTest extends GitTest {
 		crypto1 = Crypto.makeKey();
 		crypto2 = Crypto.makeKey();
 		IFunction1<Map<String, Object>, String> cryptoFn = new IFunction1<Map<String, Object>, String>() {
-			private final Map<String, String> map = Maps.makeImmutableMap("email1", crypto1, "email2", crypto2);
+			private final Map<String, String> map = Maps.makeImmutableMap("sfm1", crypto1, "sfm2", crypto2);
 
 			@Override
 			public String apply(Map<String, Object> from) throws Exception {
-				return map.get(from.get(LoginConstants.emailKey));
+				return map.get(from.get(LoginConstants.softwareFmIdKey));
 			}
 		};
 		IFunction1<String, String> emailToSoftware = Functions.map("email1", "sfm1", "email2", "sfm2");
 		Callable<String> groupIdGenerator = Callables.uuidGenerator();
 		IFunction1<String, String> repoDefnFn = Strings.firstNSegments(3);
 		groupUrlGenerator = GroupConstants.groupsGenerator();
-		takeOnProcessor = new TakeOnProcessor(remoteOperations, user, groups, cryptoFn, emailToSoftware, Callables.makeCryptoKey(), groupUrlGenerator, groupIdGenerator, repoDefnFn);
+		Callable<String> membershipCryptoGenerator = Callables.makeCryptoKey();
+		membership = new UserMembershipForServer(LoginConstants.userGenerator(), remoteOperations, user, cryptoFn, membershipCryptoGenerator, repoDefnFn);
+		takeOnProcessor = new TakeOnProcessor(remoteOperations, user, membership, groups, cryptoFn, emailToSoftware, Callables.makeCryptoKey(), groupUrlGenerator, groupIdGenerator, repoDefnFn);
 	}
 }

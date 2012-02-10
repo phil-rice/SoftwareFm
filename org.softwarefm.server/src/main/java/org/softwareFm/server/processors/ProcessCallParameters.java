@@ -1,11 +1,13 @@
 package org.softwareFm.server.processors;
 
 import java.io.File;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.softwareFm.common.IGitOperations;
 import org.softwareFm.common.IUser;
+import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.UrlCache;
 import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.server.processors.internal.EmailSaltRequester;
@@ -33,15 +35,14 @@ public class ProcessCallParameters {
 	public final Callable<String> softwareFmIdGenerator;
 	public final Callable<String> saltGenerator;
 	public final IMailer mailer;
+	public final IFunction1<Map<String, Object>, String> userCryptoFn;
 
-	public ProcessCallParameters(BasicDataSource dataSource, IGitOperations gitOperations) {
-		this(dataSource, gitOperations, Callables.makeCryptoKey(), Callables.uuidGenerator(), IMailer.Utils.email("localhost", null, null));
-	}
 
-	public ProcessCallParameters(BasicDataSource dataSource, IGitOperations gitOperations, Callable<String> cryptoGenerator, Callable<String> softwareFmIdGenerator, IMailer mailer) {
+	public ProcessCallParameters(BasicDataSource dataSource, IGitOperations gitOperations, Callable<String> cryptoGenerator, Callable<String> softwareFmIdGenerator, IFunction1<Map<String, Object>, String> userCryptoFn, IMailer mailer) {
 		this.dataSource = dataSource;
 		this.gitOperations = gitOperations;
 		this.softwareFmIdGenerator = softwareFmIdGenerator;
+		this.userCryptoFn = userCryptoFn;
 		this.mailer = mailer;
 		this.aboveRepostoryUrlCache = new UrlCache<String>();
 		this.saltProcessor = new SaltProcessor();

@@ -15,6 +15,7 @@ import org.softwareFm.common.collections.Files;
 import org.softwareFm.common.constants.UtilityConstants;
 import org.softwareFm.common.constants.UtilityMessages;
 import org.softwareFm.common.crypto.Crypto;
+import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
 
 public class Json {
@@ -58,5 +59,15 @@ public class Json {
 	public static Map<String,Object> parseFile(File file) {
 		String text = Files.getText(file);
 		return Json.mapFromString(text);
+	}
+
+	public static IFunction1<String, Map<String,Object>> decryptAndMapMakeFn(final String key) {
+		return new IFunction1<String, Map<String,Object>>() {
+			@Override
+			public Map<String, Object> apply(String from) throws Exception {
+				String raw = Crypto.aesDecrypt(key, from);
+				return mapFromString(raw);
+			}
+		};
 	}
 }

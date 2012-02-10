@@ -1,6 +1,7 @@
 package org.softwareFm.eclipse.constants;
 
 import java.io.File;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.apache.commons.dbcp.BasicDataSource;
@@ -36,7 +37,8 @@ public class MySoftwareFmDemo {
 		BasicDataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
 		IGitOperations gitOperations = IGitOperations.Utils.gitOperations(remoteRoot);
 		Callable<String> softwareFmIdGenerator = Callables.uuidGenerator();
-		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, gitOperations, cryptoGenerator, softwareFmIdGenerator, IMailer.Utils.noMailer());
+		IFunction1<Map<String, Object>, String> userCryptoFn= ICrowdSourcedServer.Utils.cryptoFn(dataSource);
+		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, gitOperations, cryptoGenerator, softwareFmIdGenerator, userCryptoFn, IMailer.Utils.noMailer());
 		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, Functions.<ProcessCallParameters, IProcessCall[]> constant(new IProcessCall[0]));
 		ICrowdSourcedServer server = ICrowdSourcedServer.Utils.testServerPort(processCall, ICallback.Utils.rethrow());
 		try {

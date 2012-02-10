@@ -7,6 +7,7 @@ package org.softwareFm.eclipse.usage.internal;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -33,6 +34,7 @@ import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.processors.AbstractLoginDataAccessor;
 import org.softwareFm.common.resources.IResourceGetter;
@@ -239,7 +241,8 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		Callable<String> softwareFmIdGenerator = Callables.patternWithCount("newSoftwareFmId{0}");
 
 		IGitOperations remoteGitOperations = IGitOperations.Utils.gitOperations(remoteRoot);
-		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, remoteGitOperations, cryptoGenerator, softwareFmIdGenerator, IMailer.Utils.noMailer());
+		IFunction1<Map<String, Object>, String> cryptoFn = ICrowdSourcedServer.Utils.cryptoFn(dataSource);
+		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, remoteGitOperations, cryptoGenerator, softwareFmIdGenerator, cryptoFn, IMailer.Utils.noMailer());
 		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, Functions.<ProcessCallParameters, IProcessCall[]> constant(new IProcessCall[0]));
 		crowdSourcedServer = ICrowdSourcedServer.Utils.testServerPort(processCall, ICallback.Utils.rethrow());
 

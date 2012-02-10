@@ -1,6 +1,5 @@
 package org.softwareFm.softwareFmServer;
 
-import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.apache.commons.dbcp.BasicDataSource;
@@ -18,6 +17,7 @@ import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.user.IProject;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
+import org.softwareFm.eclipse.user.IUserMembership;
 import org.softwareFm.server.ICrowdSourcedServer;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.ProcessCallParameters;
@@ -36,13 +36,14 @@ public class SoftwareFmServer {
 		return new IFunction1<ProcessCallParameters, IProcessCall[]>() {
 			@Override
 			public IProcessCall[] apply(ProcessCallParameters from) throws Exception {
-				IFunction1<Map<String, Object>, String> userCryptoFn = ICrowdSourcedServer.Utils.cryptoFn(from.dataSource);
+			
 				Callable<String> projectCryptoGenerator = Callables.makeCryptoKey();
 				Callable<String> groupIdGenerator = Callables.uuidGenerator();
 				IFunction1<String, String> repoDefnFn = Strings.firstNSegments(3);
 				IGroups groups = new GroupsForServer(GroupConstants.groupsGenerator(), from.gitOperations, repoDefnFn);
 				IFunction1<String, String> emailToSoftwareFmId = ICrowdSourcedServer.Utils.emailToSoftwareFmId(from.dataSource);
-				ITakeOnProcessor takeOnProcessor = new TakeOnProcessor(from.gitOperations, from.user, groups, userCryptoFn, emailToSoftwareFmId, projectCryptoGenerator, GroupConstants.groupsGenerator(), groupIdGenerator, repoDefnFn);
+				IUserMembership userMembership = new UserMembershipForServer(LoginConstants.userGenerator(), from.gitOperations, from.user, from.userCryptoFn, repoDefnFn);
+				ITakeOnProcessor takeOnProcessor = new TakeOnProcessor(from.gitOperations, from.user, userMembership, groups, from.userCryptoFn, emailToSoftwareFmId, projectCryptoGenerator, GroupConstants.groupsGenerator(), groupIdGenerator, repoDefnFn);
 				return new IProcessCall[] { makeUsageProcessor(from.dataSource, from.gitOperations),//
 						new TakeOnGroupProcessor(takeOnProcessor, from.signUpChecker, Callables.makeCryptoKey(), emailToSoftwareFmId, from.saltGenerator, from.softwareFmIdGenerator, from.mailer) };
 			}

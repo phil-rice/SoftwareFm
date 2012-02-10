@@ -205,7 +205,8 @@ public class CrowdSourcedServer implements ICrowdSourcedServer {
 		final IUsage usage = IUsage.Utils.defaultUsage();
 		IMailer mailer = IMailer.Utils.email("localhost", null, null);
 		Callable<String> softwareFmIdGenerator = Callables.uuidGenerator();
-		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, gitOperations, Callables.makeCryptoKey(), softwareFmIdGenerator, mailer);
+		IFunction1<Map<String, Object>, String> userCryptoFn = new UserCryptoFn(dataSource);
+		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, gitOperations, Callables.makeCryptoKey(), softwareFmIdGenerator, userCryptoFn, mailer);
 		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, extraProcessCalls);
 		return new CrowdSourcedServer(port, 1000, processCall, ICallback.Utils.sysErrCallback(), usage);
 	}

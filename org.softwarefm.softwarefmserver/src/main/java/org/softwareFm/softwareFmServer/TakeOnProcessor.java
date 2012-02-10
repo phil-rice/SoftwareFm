@@ -21,6 +21,7 @@ import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.common.url.Urls;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.user.IUserMembership;
 
 public class TakeOnProcessor implements ITakeOnProcessor {
 
@@ -33,10 +34,12 @@ public class TakeOnProcessor implements ITakeOnProcessor {
 	private final IUrlGenerator groupGenerator;
 	private final Callable<String> groupIdGenerator;
 	private final IFunction1<String, String> repoDefnFn;
+	private final IUserMembership userMembership;
 
-	public TakeOnProcessor(IGitOperations gitOperations, IUser user, IGroups groups, IFunction1<Map<String, Object>, String> userCryptoFn, IFunction1<String, String> emailToSoftwareFmId, Callable<String> projectCryptoGenerator, IUrlGenerator groupGenerator, Callable<String> groupIdGenerator, IFunction1<String, String> repoDefnFn) {
+	public TakeOnProcessor(IGitOperations gitOperations, IUser user, IUserMembership userMembership, IGroups groups, IFunction1<Map<String, Object>, String> userCryptoFn, IFunction1<String, String> emailToSoftwareFmId, Callable<String> projectCryptoGenerator, IUrlGenerator groupGenerator, Callable<String> groupIdGenerator, IFunction1<String, String> repoDefnFn) {
 		this.gitOperations = gitOperations;
 		this.user = user;
+		this.userMembership = userMembership;
 		this.groups = groups;
 		this.emailToSoftwareFmId = emailToSoftwareFmId;
 		this.userCryptoFn = userCryptoFn;
@@ -55,8 +58,10 @@ public class TakeOnProcessor implements ITakeOnProcessor {
 			usersProjectCryptoKey = Callables.call(projectCryptoGenerator);
 			user.setUserProperty(softwareFmId, userCrypto, SoftwareFmConstants.projectCryptoKey, usersProjectCryptoKey);
 		}
-		Map<String, Object> initialData = Maps.stringObjectMap(LoginConstants.emailKey, email, LoginConstants.softwareFmIdKey, softwareFmId, SoftwareFmConstants.projectCryptoKey, usersProjectCryptoKey, GroupConstants.userStatusInGroup, GroupConstants.invitedStatus);
+		String initialStatus = GroupConstants.invitedStatus;
+		Map<String, Object> initialData = Maps.stringObjectMap(LoginConstants.emailKey, email, LoginConstants.softwareFmIdKey, softwareFmId, SoftwareFmConstants.projectCryptoKey, usersProjectCryptoKey, GroupConstants.userStatusInGroup, initialStatus);
 		groups.addUser(groupId, groupCryptoKey, initialData);
+		userMembership.addMembership(softwareFmId, groupId, groupCryptoKey, initialStatus);
 	}
 
 	@Override
