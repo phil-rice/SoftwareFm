@@ -73,6 +73,7 @@ import org.softwareFm.swt.explorer.IExplorer;
 import org.softwareFm.swt.explorer.IExplorerListener;
 import org.softwareFm.swt.explorer.IMasterDetailSocial;
 import org.softwareFm.swt.explorer.IShowMyData;
+import org.softwareFm.swt.explorer.IShowMyGroups;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.swt.navigation.internal.NavNextHistoryPrevConfig;
 import org.softwareFm.swt.swt.Swts;
@@ -96,7 +97,7 @@ public class Explorer implements IExplorer {
 	private Comments comments;
 	private MySoftwareFm mySoftwareFm;
 
-	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IShowMyData showMyData) {
+	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IShowMyData showMyData, final IShowMyGroups showMyGroups) {
 		this.cardConfig = cardConfig;
 		this.masterDetailSocial = masterDetailSocial;
 		callbackToGotoUrlAndUpdateDetails = new ICallback<String>() {
@@ -214,7 +215,7 @@ public class Explorer implements IExplorer {
 		mySoftwareFm = masterDetailSocial.createMaster(new IFunction1<Composite, MySoftwareFm>() {
 			@Override
 			public MySoftwareFm apply(Composite from) throws Exception {
-				MySoftwareFm mySoftwareFm = new MySoftwareFm(from, cardConfig, loginStrategy, showMyData);
+				MySoftwareFm mySoftwareFm = new MySoftwareFm(from, cardConfig, loginStrategy, showMyData, showMyGroups);
 				mySoftwareFm.start();
 				return mySoftwareFm;
 			}

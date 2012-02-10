@@ -103,7 +103,7 @@ public class UserMembershipTest extends GitTest {
 		IUrlGenerator userUrlGenerator = LoginConstants.userGenerator();
 		IFunction1<String, String> repoDefn = Strings.firstNSegments(3);
 		user = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, repoDefn);
-		membershipForLocal = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, user, userMembershipCrypto);
+		membershipForLocal = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, user, userCrypto);
 
 		IFunction1<Map<String, Object>, String> userCryptoFn = Functions.constant(userCrypto);
 		Callable<String> userMembershipCryptoGenerator = Callables.value(userMembershipCrypto);

@@ -45,6 +45,7 @@ import org.softwareFm.common.tests.Tests;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.common.url.Urls;
 import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
+import org.softwareFm.eclipse.mysoftwareFm.MyGroups;
 import org.softwareFm.eclipse.snippets.SnippetFeedConfigurator;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.eclipse.user.ProjectTimeGetterFixture;
@@ -65,6 +66,7 @@ import org.softwareFm.swt.dataStore.ICardDataStore;
 import org.softwareFm.swt.explorer.ExplorerAdapter;
 import org.softwareFm.swt.explorer.IExplorer;
 import org.softwareFm.swt.explorer.IShowMyData;
+import org.softwareFm.swt.explorer.IShowMyGroups;
 import org.softwareFm.swt.explorer.internal.Explorer;
 import org.softwareFm.swt.explorer.internal.MasterDetailSocial;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
@@ -255,11 +257,13 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 			IProjectTimeGetter projectTimeGetter = new ProjectTimeGetterFixture();
 			IUrlGenerator userUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.userUrlKey);
 			showMyData = MyDetails.showMyDetails(service, cardConfig, masterDetailSocial, userUrlGenerator, gitLocal, projectTimeGetter);
+			
+			IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, gitLocal);
 			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, cardConfig, //
 					Arrays.asList(rootArtifactUrl, rootSnippetUrl), //
 					IPlayListGetter.Utils.noPlayListGetter(), service, //
 					ILoginStrategy.Utils.noLoginStrategy(),//
-					showMyData);
+					showMyData, showMyGroups);
 			IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
 			new SnippetFeedConfigurator(cardConfig.cardDataStore, cardConfig.resourceGetterFn).configure(explorer);
 			// SnippetFeedConfigurator.configure(explorer, cardConfig);
@@ -267,6 +271,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 			httpClient.delete(Urls.compose(rootArtifactUrl, snippetUrl)).execute(IResponseCallback.Utils.noCallback()).get();
 			gitLocal.init(Urls.compose(rootArtifactUrl, groupUrl));
 		} catch (Exception e) {
+			crowdSourcedServer.shutdown();
 			e.printStackTrace();
 			throw e;
 		}

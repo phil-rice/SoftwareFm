@@ -13,6 +13,7 @@ package org.softwareFm.swt.explorer.internal;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -136,10 +137,17 @@ public class MasterDetailSocial implements IMasterDetailSocial {
 		return createAndShow(content.social, builder);
 	}
 
-	private <T extends IHasControl> T createAndShow(Composite composite, IFunction1<Composite, T> builder) {
-		T control = create(composite, builder, false);
-		set(composite, control == null ? null : control.getControl());
-		return control;
+	private <T extends IHasControl> T createAndShow(final Composite composite, final IFunction1<Composite, T> builder) {
+		final AtomicReference<T> result = new AtomicReference<T>();
+		Swts.syncExec(composite, new Runnable() {
+			@Override
+			public void run() {
+				T control = create(composite, builder, false);
+				set(composite, control == null ? null : control.getControl());
+				result.set(control);
+			}
+		});
+		return result.get();
 	}
 
 	@Override

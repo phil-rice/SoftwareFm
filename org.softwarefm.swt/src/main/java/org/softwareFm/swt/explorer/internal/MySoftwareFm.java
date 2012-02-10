@@ -11,6 +11,7 @@ import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.explorer.IShowMyData;
+import org.softwareFm.swt.explorer.IShowMyGroups;
 import org.softwareFm.swt.mySoftwareFm.IChangePassword;
 import org.softwareFm.swt.mySoftwareFm.IChangePasswordCallback;
 import org.softwareFm.swt.mySoftwareFm.IForgotPassword;
@@ -34,11 +35,13 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 
 	protected ICallback<String> restart;
 	private final IShowMyData showMyData;
+	private final IShowMyGroups showMyGroups;
 
-	public MySoftwareFm(Composite parent, CardConfig cardConfig, ILoginStrategy loginStrategy, IShowMyData showMyData) {
+	public MySoftwareFm(Composite parent, CardConfig cardConfig, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups) {
 		this.cardConfig = cardConfig;
 		this.loginStrategy = loginStrategy;
 		this.showMyData = showMyData;
+		this.showMyGroups = showMyGroups;
 		this.content = new Composite(parent, SWT.NULL);
 		content.setLayout(new FillLayout());
 		restart = new ICallback<String>() {
@@ -89,7 +92,12 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		}, callback, new Runnable() {
 			@Override
 			public void run() {
-				showMyData.show( userData);
+				showMyData.show(userData);
+			}
+		}, new Runnable() {
+			@Override
+			public void run() {
+				showMyGroups.show(userData);
 			}
 		});
 		content.layout();

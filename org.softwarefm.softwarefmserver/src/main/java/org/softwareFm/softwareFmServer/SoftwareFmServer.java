@@ -42,7 +42,8 @@ public class SoftwareFmServer {
 				IFunction1<String, String> repoDefnFn = Strings.firstNSegments(3);
 				IGroups groups = new GroupsForServer(GroupConstants.groupsGenerator(), from.gitOperations, repoDefnFn);
 				IFunction1<String, String> emailToSoftwareFmId = ICrowdSourcedServer.Utils.emailToSoftwareFmId(from.dataSource);
-				IUserMembership userMembership = new UserMembershipForServer(LoginConstants.userGenerator(), from.gitOperations, from.user, from.userCryptoFn, repoDefnFn);
+				Callable<String> userMembershipCryptoGenerator = Callables.makeCryptoKey();
+				IUserMembership userMembership = new UserMembershipForServer(LoginConstants.userGenerator(), from.gitOperations, from.user, from.userCryptoFn, userMembershipCryptoGenerator, repoDefnFn);
 				ITakeOnProcessor takeOnProcessor = new TakeOnProcessor(from.gitOperations, from.user, userMembership, groups, from.userCryptoFn, emailToSoftwareFmId, projectCryptoGenerator, GroupConstants.groupsGenerator(), groupIdGenerator, repoDefnFn);
 				return new IProcessCall[] { makeUsageProcessor(from.dataSource, from.gitOperations),//
 						new TakeOnGroupProcessor(takeOnProcessor, from.signUpChecker, Callables.makeCryptoKey(), emailToSoftwareFmId, from.saltGenerator, from.softwareFmIdGenerator, from.mailer) };

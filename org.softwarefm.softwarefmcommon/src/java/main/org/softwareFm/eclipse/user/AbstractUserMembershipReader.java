@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.common.IFileDescription;
-import org.softwareFm.common.IUser;
+import org.softwareFm.common.IUserReader;
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
@@ -16,9 +16,9 @@ import org.softwareFm.common.url.IUrlGenerator;
 public abstract class AbstractUserMembershipReader implements IUserMembershipReader {
 
 	protected final IUrlGenerator userUrlGenerator;
-	protected final IUser user;
+	protected final IUserReader user;
 
-	public AbstractUserMembershipReader(IUrlGenerator userUrlGenerator, IUser user) {
+	public AbstractUserMembershipReader(IUrlGenerator userUrlGenerator, IUserReader user) {
 		this.userUrlGenerator = userUrlGenerator;
 		this.user = user;
 	}

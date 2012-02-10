@@ -28,6 +28,7 @@ import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.swt.explorer.IShowMyData;
+import org.softwareFm.swt.explorer.IShowMyGroups;
 import org.softwareFm.swt.menu.PopupMenuContributorMock;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.swt.swt.SwtAndServiceTest;
@@ -68,7 +69,8 @@ public class ExplorerTest extends SwtAndServiceTest {
 		Explorer explorer = new Explorer(cardConfig, CardDataStoreFixture.urlAsList, masterDetailSocial, service, //
 				IPlayListGetter.Utils.noPlayListGetter(), //
 				ILoginStrategy.Utils.noLoginStrategy(), //
-				IShowMyData.Utils.exceptionShowMyData()) {
+				IShowMyData.Utils.exceptionShowMyData(),//
+				IShowMyGroups.Utils.exceptionShowMyGroups()) {
 			@Override
 			protected String makeRandomUUID() {
 				return "randomUUID";

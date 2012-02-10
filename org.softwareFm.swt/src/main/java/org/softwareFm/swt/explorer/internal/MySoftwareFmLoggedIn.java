@@ -20,7 +20,7 @@ public class MySoftwareFmLoggedIn implements IHasControl {
 
 	private final TextInBorderWithButtons content;
 
-	public MySoftwareFmLoggedIn(Composite parent, CardConfig cardConfig, String title, String text, final UserData userData, final ILoginDisplayStrategy loginDisplayStrategy, Runnable logout, IChangePasswordCallback changePasswordCallback, Runnable showMyData) {
+	public MySoftwareFmLoggedIn(Composite parent, CardConfig cardConfig, String title, String text, final UserData userData, final ILoginDisplayStrategy loginDisplayStrategy, Runnable logout, IChangePasswordCallback changePasswordCallback, Runnable showMyData, Runnable showMyGroups) {
 		final String email = userData.email();
 		content = new TextInBorderWithButtons(parent, SWT.WRAP | SWT.READ_ONLY, cardConfig);
 		content.setTextFromResourceGetter(CardConstants.loginCardType, title, text, email);
@@ -32,6 +32,7 @@ public class MySoftwareFmLoggedIn implements IHasControl {
 			}
 		});
 		content.addButton("My Data", showMyData);
+		content.addButton("My Groups", showMyGroups);
 	}
 
 	@Override
@@ -48,7 +49,7 @@ public class MySoftwareFmLoggedIn implements IHasControl {
 						new UserData("email", null, null), //
 						ILoginDisplayStrategy.Utils.sysoutDisplayStrategy(), Runnables.sysout("Logout clicked"), //
 						ILoginCallbacks.Utils.showMessageCallbacks(cardConfig, IShowMessage.Utils.sysout()),//
-						Runnables.sysout("show my data")).getControl();
+						Runnables.sysout("show my data"), Runnables.sysout("show my groups")).getControl();
 			}
 		});
 	}

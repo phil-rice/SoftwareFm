@@ -41,6 +41,7 @@ import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.configuration.ICardConfigurator;
 import org.softwareFm.swt.editors.IValueComposite;
 import org.softwareFm.swt.explorer.IShowMyData;
+import org.softwareFm.swt.explorer.IShowMyGroups;
 import org.softwareFm.swt.explorer.internal.MySoftwareFm;
 import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
@@ -348,7 +349,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		client = IHttpClient.Utils.builder("localhost", 8080);
 		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(display, service, client);
 		cardConfig = ICardConfigurator.Utils.cardConfigForTests(display);
-		mySoftwareFm = new MySoftwareFm(shell, cardConfig, loginStrategy, IShowMyData.Utils.exceptionShowMyData());
+		mySoftwareFm = new MySoftwareFm(shell, cardConfig, loginStrategy, IShowMyData.Utils.exceptionShowMyData(), IShowMyGroups.Utils.exceptionShowMyGroups());
 		template = new JdbcTemplate(dataSource);
 		template.update("truncate users");
 		softwareFmComposite = mySoftwareFm.getComposite();

@@ -100,7 +100,8 @@ public class GenerateGroupUsageProcessorTest extends GitTest {
 		generateUsageReportGenerator = new GenerateUsageProjectGenerator(remoteGroups, usage);
 
 		IFunction1<String, String> emailToSoftwareFmId = Functions.map(email1, sfmId1, email2, sfmId2);
-		IUserMembership membership = new UserMembershipForServer(LoginConstants.userGenerator(), remoteOperations, user, userCryptoFn, repoDefnFn);
+		Callable<String> userMembershipCryptoGenerator = Callables.makeCryptoKey();
+		IUserMembership membership = new UserMembershipForServer(LoginConstants.userGenerator(), remoteOperations, user, userCryptoFn, userMembershipCryptoGenerator, repoDefnFn);
 		takeOnProcessor = new TakeOnProcessor(remoteOperations, user, membership, remoteGroups, userCryptoFn, emailToSoftwareFmId, projectCryptoGenerator, GroupConstants.groupsGenerator(), Callables.value(groupId), repoDefnFn);
 	}
 }

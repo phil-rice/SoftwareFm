@@ -65,9 +65,15 @@ public class TextInCompositeWithCardMargin implements IHasControl {
 	public void setTextFromResourceGetter(String cardType, String patternKey, Object... args) {
 		String pattern = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null, patternKey);
 		String text = MessageFormat.format(pattern, args);
+		setText(text);
+	}
+
+	public void setText(String text) {
 		textWithBold.setText(text);
 	}
 
+	
+	
 	public void addClickedListener(final Runnable whenClicked) {
 		textWithBold.getControl().addListener(SWT.MouseUp, new Listener() {
 			@Override

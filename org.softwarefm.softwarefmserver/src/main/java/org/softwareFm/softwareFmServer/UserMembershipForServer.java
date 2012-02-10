@@ -28,9 +28,11 @@ public class UserMembershipForServer extends AbstractUserMembershipReader implem
 	private final IFunction1<String, String> repoDefnFn;
 	private final IFunction1<Map<String, Object>, String> userCryptoFn;
 	private final Callable<String> userMemberCryptoGenerator;
+	private final IUser user;
 
 	public UserMembershipForServer(IUrlGenerator userUrlGenerator, IGitOperations gitOperations, IUser user, IFunction1<Map<String, Object>, String> userCryptoFn, Callable<String> userMemberCryptoGenerator, IFunction1<String, String> repoDefnFn) {
 		super(userUrlGenerator, user);
+		this.user = user;
 		this.gitOperations = gitOperations;
 		this.userCryptoFn = userCryptoFn;
 		this.userMemberCryptoGenerator = userMemberCryptoGenerator;

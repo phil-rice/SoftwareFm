@@ -805,6 +805,11 @@ public class Swts {
 			control.getDisplay().syncExec(runnable);
 	}
 
+	public static void syncExec(Composite control, Runnable runnable) {
+		if (!control.isDisposed())
+			control.getDisplay().syncExec(runnable);
+	}
+
 	public static void dispatchUntilQueueEmpty(Display display) {
 		while (display.readAndDispatch())
 			doNothing();

@@ -2,18 +2,19 @@ package org.softwareFm.eclipse.user;
 
 import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.IGitLocal;
-import org.softwareFm.common.IUser;
+import org.softwareFm.common.IUserReader;
+import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.url.IUrlGenerator;
 
 public class UserMembershipReaderForLocal extends AbstractUserMembershipReader {
 
 	private final IGitLocal gitLocal;
-	private final String membershipCrypto;
+	private final String userCryptoKey;
 
-	public UserMembershipReaderForLocal(IUrlGenerator userUrlGenerator, IGitLocal gitLocal, IUser user, String membershipCrypto) {
+	public UserMembershipReaderForLocal(IUrlGenerator userUrlGenerator, IGitLocal gitLocal, IUserReader user, String userCryptoKey) {
 		super(userUrlGenerator, user);
 		this.gitLocal = gitLocal;
-		this.membershipCrypto = membershipCrypto;
+		this.userCryptoKey = userCryptoKey;
 	}
 
 	@Override
@@ -23,7 +24,10 @@ public class UserMembershipReaderForLocal extends AbstractUserMembershipReader {
 
 	@Override
 	protected String getMembershipCrypto(String softwareFmId) {
-		return membershipCrypto;
+		String result = user.getUserProperty(softwareFmId, userCryptoKey, GroupConstants.membershipCryptoKey);
+		if (result == null)
+			throw new NullPointerException(softwareFmId);
+		return result;
 	}
 
 }

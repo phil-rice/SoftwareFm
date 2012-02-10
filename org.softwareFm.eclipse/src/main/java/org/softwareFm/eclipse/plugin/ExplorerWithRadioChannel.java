@@ -35,6 +35,7 @@ import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
+import org.softwareFm.eclipse.mysoftwareFm.MyGroups;
 import org.softwareFm.eclipse.snippets.SnippetFeedConfigurator;
 import org.softwareFm.eclipse.usage.IUsageStrategy;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
@@ -54,6 +55,7 @@ import org.softwareFm.swt.explorer.IExplorer;
 import org.softwareFm.swt.explorer.IExplorerListener;
 import org.softwareFm.swt.explorer.IMasterDetailSocial;
 import org.softwareFm.swt.explorer.IShowMyData;
+import org.softwareFm.swt.explorer.IShowMyGroups;
 import org.softwareFm.swt.menu.ICardMenuItemHandler;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.swt.swt.Swts;
@@ -70,7 +72,7 @@ public class ExplorerWithRadioChannel {
 		Logger.getLogger(IHttpClient.class).setLevel(Level.DEBUG);
 		File home = new File(System.getProperty("user.home"));
 		final File localRoot = new File(home, ".sfm");
-		boolean local = false;
+		boolean local = true;
 		String server = local ? "localhost" : SoftwareFmConstants.softwareFmServerUrl;
 		String prefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : SoftwareFmConstants.gitProtocolAndGitServerName;
 		// String prefix = "git://localhost:7777/";
@@ -100,7 +102,8 @@ public class ExplorerWithRadioChannel {
 					IProjectTimeGetter projectTimeGetter = IProjectTimeGetter.Utils.timeGetter();
 					IUrlGenerator userUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.userUrlKey);
 					IShowMyData showMyDetails = MyDetails.showMyDetails(service, cardConfig, masterDetailSocial, userUrlGenerator, localGit, projectTimeGetter);
-					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, playListGetter, service, loginStrategy,  showMyDetails);
+					IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, localGit);
+					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, playListGetter, service, loginStrategy,  showMyDetails, showMyGroups);
 
 					ICardMenuItemHandler.Utils.addSoftwareFmMenuItemHandlers(explorer);
 					IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
