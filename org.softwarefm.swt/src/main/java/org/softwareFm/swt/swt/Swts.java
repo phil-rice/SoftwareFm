@@ -1072,10 +1072,13 @@ public class Swts {
 
 	public static void packTables(Table... tables) {
 		for (Table table : tables) {
-			for (TableColumn column : table.getColumns())
-				column.pack();
+			packColumns(table);
 			table.pack();
 		}
+	}
 
+	public static void packColumns(Table table) {
+		for (TableColumn column : table.getColumns())
+			column.pack();
 	}
 }

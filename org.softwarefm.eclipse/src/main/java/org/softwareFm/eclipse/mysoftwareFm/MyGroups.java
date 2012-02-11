@@ -1,12 +1,18 @@
 package org.softwareFm.eclipse.mysoftwareFm;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -17,10 +23,15 @@ import org.softwareFm.common.LocalGroupsReader;
 import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.services.IServiceExecutor;
+import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
+import org.softwareFm.eclipse.IRequestGroupReportGeneration;
+import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.eclipse.user.IUserMembershipReader;
 import org.softwareFm.eclipse.user.UserMembershipReaderForLocal;
+import org.softwareFm.swt.card.LineItem;
 import org.softwareFm.swt.card.composites.TextInCompositeWithCardMargin;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
@@ -30,7 +41,7 @@ import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.swt.Swts;
 
 public class MyGroups implements IHasComposite {
-	public static IShowMyGroups showMyGroups(final IServiceExecutor executor, final CardConfig cardConfig, final IMasterDetailSocial masterDetailSocial, final IUrlGenerator userUrlGenerator, final IUrlGenerator groupUrlGenerator, final IGitLocal gitLocal) {
+	public static IShowMyGroups showMyGroups(final IServiceExecutor executor, final CardConfig cardConfig, final IMasterDetailSocial masterDetailSocial, final IUrlGenerator userUrlGenerator, final IUrlGenerator groupUrlGenerator, final IGitLocal gitLocal, final IProjectTimeGetter projectTimeGetter, final IRequestGroupReportGeneration reportGenerator) {
 		return new IShowMyGroups() {
 			@Override
 			public void show(final UserData userData) {
@@ -59,7 +70,7 @@ public class MyGroups implements IHasComposite {
 								masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyGroups>() {
 									@Override
 									public MyGroups apply(Composite from) throws Exception {
-										return new MyGroups(from, userMembershipReader, groupsReader, userData.softwareFmId);
+										return new MyGroups(from, cardConfig, userMembershipReader, groupsReader, userData.softwareFmId, projectTimeGetter, reportGenerator);
 									}
 								});
 							}
@@ -74,33 +85,85 @@ public class MyGroups implements IHasComposite {
 	private final MyGroupsComposite content;
 
 	public static class MyGroupsComposite extends Composite {
-		private final Table table;
+		private final Table summaryTable;
 		private final IGroupsReader groupsReader;
+		private final SashForm sashForm;
+		private final Table groupTable;
+		private final Map<String, String> idToCrypto = Maps.newMap();
 
-		public MyGroupsComposite(Composite parent, IUserMembershipReader membershipReader, IGroupsReader groupReaders, String softwareFmId) {
+		public MyGroupsComposite(Composite parent, CardConfig cardConfig, IUserMembershipReader membershipReader, final IGroupsReader groupReaders, String softwareFmId, IProjectTimeGetter projectTimeGetter, final IRequestGroupReportGeneration reportGenerator) {
 			super(parent, SWT.NULL);
 			this.groupsReader = groupReaders;
-			table = new Table(this, SWT.FULL_SELECTION);
-			table.setHeaderVisible(true);
-			new TableColumn(table, SWT.NULL).setText("Group Name");
-			new TableColumn(table, SWT.NULL).setText("Members");
+			sashForm = new SashForm(this, SWT.HORIZONTAL);
+			summaryTable = new Table(sashForm, SWT.FULL_SELECTION);
+			summaryTable.setHeaderVisible(true);
+			new TableColumn(summaryTable, SWT.NULL).setText("Group Name");
+			new TableColumn(summaryTable, SWT.NULL).setText("Members");
 			for (Map<String, Object> map : membershipReader.walkGroupsFor(softwareFmId)) {
 				String groupId = (String) map.get(GroupConstants.groupIdKey);
 				String groupCryptoKey = (String) map.get(GroupConstants.groupCryptoKey);
 				String groupName = groupReaders.getGroupProperty(groupId, groupCryptoKey, GroupConstants.groupNameKey);
-				TableItem item = new TableItem(table, SWT.NULL);
+				TableItem item = new TableItem(summaryTable, SWT.NULL);
+				item.setData(groupId);
 				int membershipCount = groupsReader.membershipCount(groupId, groupCryptoKey);
 				String membershipCountString = Integer.toString(membershipCount);
 				item.setText(new String[] { groupName, membershipCountString });
+				idToCrypto.put(groupId, groupCryptoKey);
 			}
-			for (int i = 0; i<table.getColumnCount(); i++)
-				table.getColumn(i).pack();
-			table.pack();
+
+			groupTable = new Table(sashForm, SWT.FULL_SELECTION);
+			groupTable.setHeaderVisible(true);
+			final Iterable<String> lastNMonths = projectTimeGetter.lastNMonths(3);
+			new TableColumn(groupTable, SWT.NULL).setText("Group Id");
+			new TableColumn(groupTable, SWT.NULL).setText("ArtifactId Id");
+			for (String month : lastNMonths) {
+				LineItem lineItem = new LineItem(GroupConstants.myGroupsCardType, month, null);
+				String name = cardConfig.nameFn.apply(cardConfig, lineItem);
+				new TableColumn(groupTable, SWT.FULL_SELECTION).setText(name);
+			}
+			summaryTable.addListener(SWT.Selection, new Listener() {
+				@Override
+				@SuppressWarnings({ "unchecked", "rawtypes" })
+				public void handleEvent(Event event) {
+					groupTable.removeAll();
+					int index = summaryTable.getSelectionIndex();
+					if (index >= 0) {
+						TableItem item = summaryTable.getItem(index);
+						String groupId = (String) item.getData();
+						if (groupId == null)
+							throw new NullPointerException(Integer.toString(index));
+						String groupCryptoKey = idToCrypto.get(groupId);
+						if (groupCryptoKey == null)
+							throw new NullPointerException(groupCryptoKey);
+						Map<String, Map<String, Map<String, Integer>>> map = Maps.newMap();
+						for (String month : lastNMonths) {
+							reportGenerator.request(groupId, groupCryptoKey, month);
+							Map<String, Map<String, Map<String, List<Integer>>>> report = (Map) groupReaders.getUsageReport(groupId, groupCryptoKey, month);
+							if (report != null)
+								for (Entry<String, Map<String, Map<String, List<Integer>>>> groupEntry : report.entrySet())
+									for (Entry<String, Map<String, List<Integer>>> artifactEntry : groupEntry.getValue().entrySet())
+										Maps.addToMapOfMapOfMaps(map, HashMap.class, groupEntry.getKey(), artifactEntry.getKey(), month, artifactEntry.getValue().size());
+						}
+						for (Entry<String, Map<String, Map<String, Integer>>> groupEntry : map.entrySet())
+							for (Entry<String, Map<String, Integer>> artifactEntry : groupEntry.getValue().entrySet()) {
+								TableItem reportItem = new TableItem(groupTable, SWT.FULL_SELECTION);
+								reportItem.setText(0, groupEntry.getKey());
+								reportItem.setText(1, artifactEntry.getKey());
+								int i = 2;
+								for (String month : lastNMonths)
+									reportItem.setText(i++, Strings.nullSafeToString(artifactEntry.getValue().get(month)));
+							}
+					}
+					Swts.packColumns(groupTable);
+				}
+			});
+			Swts.packTables(summaryTable, groupTable);
+			sashForm.setWeights(new int[] { 2, 3 });
 		}
 	}
 
-	public MyGroups(Composite parent, IUserMembershipReader membershipReader, IGroupsReader groupsReader, String softwareFmId) {
-		content = new MyGroupsComposite(parent, membershipReader, groupsReader, softwareFmId);
+	public MyGroups(Composite parent, CardConfig cardConfig, IUserMembershipReader membershipReader, IGroupsReader groupsReader, String softwareFmId, IProjectTimeGetter projectTimeGetter, IRequestGroupReportGeneration reportGenerator) {
+		content = new MyGroupsComposite(parent, cardConfig, membershipReader, groupsReader, softwareFmId, projectTimeGetter, reportGenerator);
 		content.setLayout(new FillLayout());
 		Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithLastGrabingVertical(content);
 	}

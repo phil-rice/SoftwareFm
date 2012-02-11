@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
+import org.softwareFm.client.http.requests.IResponseCallback;
 import org.softwareFm.common.IGitLocal;
 import org.softwareFm.common.collections.Files;
 import org.softwareFm.common.constants.GroupConstants;
@@ -23,10 +24,12 @@ import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.common.url.IUrlGenerator;
+import org.softwareFm.eclipse.IRequestGroupReportGeneration;
 import org.softwareFm.eclipse.actions.IActionBar;
 import org.softwareFm.eclipse.jdtBinding.BindingRipperResult;
 import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups;
+import org.softwareFm.eclipse.mysoftwareFm.RequestGroupReportGeneration;
 import org.softwareFm.eclipse.snippets.SnippetFeedConfigurator;
 import org.softwareFm.eclipse.usage.IUsageStrategy;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
@@ -62,8 +65,11 @@ public class ExplorerView extends ViewPart {
 		IUrlGenerator groupUrlGenerator = GroupConstants.groupsGenerator();
 		IGitLocal gitLocal= activator.getGitLocal();
 		IProjectTimeGetter timeGetter = activator.getProjectTimeGetter();
+		IRequestGroupReportGeneration reportGenerator = new RequestGroupReportGeneration(activator.getClient(), IResponseCallback.Utils.sysoutStatusCallback());
+
 		IShowMyData showMyDetails = MyDetails.showMyDetails(service, cardConfig, masterDetailSocial, userUrlGenerator, gitLocal, timeGetter);
-		IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal);
+		IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, timeGetter, reportGenerator);
+		
 		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, getRootUrls(), playListGetter, service, loginStrategy, showMyDetails, showMyGroups);
 		IUsageStrategy usageStrategy = IUsageStrategy.Utils.usage(activator.getServiceExecutor(), activator.getClient(), gitLocal, userUrlGenerator);
 		actionBar = makeActionBar(explorer, cardConfig, usageStrategy);

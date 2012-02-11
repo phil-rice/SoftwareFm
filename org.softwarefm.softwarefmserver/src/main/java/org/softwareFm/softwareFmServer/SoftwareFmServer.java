@@ -17,8 +17,10 @@ import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.user.IProject;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
+import org.softwareFm.eclipse.user.IUsageReader;
 import org.softwareFm.eclipse.user.IUserMembership;
 import org.softwareFm.server.ICrowdSourcedServer;
+import org.softwareFm.server.processors.IGenerateUsageReportGenerator;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.ProcessCallParameters;
 
@@ -35,18 +37,21 @@ public class SoftwareFmServer {
 	private static IFunction1<ProcessCallParameters, IProcessCall[]> makeExtraProcessCalls() {
 		return new IFunction1<ProcessCallParameters, IProcessCall[]>() {
 			@Override
-			public IProcessCall[] apply(ProcessCallParameters from) throws Exception {
-			
+			public IProcessCall[] apply(final ProcessCallParameters processCallParameters) throws Exception {
 				Callable<String> projectCryptoGenerator = Callables.makeCryptoKey();
 				Callable<String> groupIdGenerator = Callables.uuidGenerator();
 				IFunction1<String, String> repoDefnFn = Strings.firstNSegments(3);
-				IGroups groups = new GroupsForServer(GroupConstants.groupsGenerator(), from.gitOperations, repoDefnFn);
-				IFunction1<String, String> emailToSoftwareFmId = ICrowdSourcedServer.Utils.emailToSoftwareFmId(from.dataSource);
+				IGroups groups = new GroupsForServer(GroupConstants.groupsGenerator(), processCallParameters.gitOperations, repoDefnFn);
+				IFunction1<String, String> emailToSoftwareFmId = ICrowdSourcedServer.Utils.emailToSoftwareFmId(processCallParameters.dataSource);
 				Callable<String> userMembershipCryptoGenerator = Callables.makeCryptoKey();
-				IUserMembership userMembership = new UserMembershipForServer(LoginConstants.userGenerator(), from.gitOperations, from.user, from.userCryptoFn, userMembershipCryptoGenerator, repoDefnFn);
-				ITakeOnProcessor takeOnProcessor = new TakeOnProcessor(from.gitOperations, from.user, userMembership, groups, from.userCryptoFn, emailToSoftwareFmId, projectCryptoGenerator, GroupConstants.groupsGenerator(), groupIdGenerator, repoDefnFn);
-				return new IProcessCall[] { makeUsageProcessor(from.dataSource, from.gitOperations),//
-						new TakeOnGroupProcessor(takeOnProcessor, from.signUpChecker, Callables.makeCryptoKey(), emailToSoftwareFmId, from.saltGenerator, from.softwareFmIdGenerator, from.mailer) };
+				IUserMembership userMembership = new UserMembershipForServer(LoginConstants.userGenerator(), processCallParameters.gitOperations, processCallParameters.user, processCallParameters.userCryptoFn, userMembershipCryptoGenerator, repoDefnFn);
+				ITakeOnProcessor takeOnProcessor = new TakeOnProcessor(processCallParameters.gitOperations, processCallParameters.user, userMembership, groups, processCallParameters.userCryptoFn, emailToSoftwareFmId, projectCryptoGenerator, GroupConstants.groupsGenerator(), groupIdGenerator, repoDefnFn);
+
+				IUsageReader usageReader = new UsageReaderForServer(processCallParameters.gitOperations, processCallParameters.user, LoginConstants.userGenerator());
+				IGenerateUsageReportGenerator generator = new GenerateUsageProjectGenerator(groups, usageReader);
+				return new IProcessCall[] { makeUsageProcessor(processCallParameters.dataSource, processCallParameters.gitOperations),//
+						new GenerateGroupUsageProcessor(processCallParameters.gitOperations, generator, groups),//
+						new TakeOnGroupProcessor(takeOnProcessor, processCallParameters.signUpChecker, Callables.makeCryptoKey(), emailToSoftwareFmId, processCallParameters.saltGenerator, processCallParameters.softwareFmIdGenerator, processCallParameters.mailer) };
 			}
 		};
 	}

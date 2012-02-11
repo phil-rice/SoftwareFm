@@ -53,8 +53,8 @@ public class GenerateGroupUsageProcessorTest extends GitTest {
 		project.addProjectDetails(sfmId2, "gid1", "aid4", "month2", 1);
 		project.addProjectDetails(sfmId2, "gid1", "aid5", "month2", 1);
 
-		GenerateGroupUsageProcessor processor = new GenerateGroupUsageProcessor(remoteOperations, generateUsageReportGenerator, Functions.<String, String> constant(groupCryptoKey), remoteGroups);
-		processor.execute(GroupConstants.generateGroupReportPrefix, Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.monthKey, "month1"));
+		GenerateGroupUsageProcessor processor = new GenerateGroupUsageProcessor(remoteOperations, generateUsageReportGenerator, remoteGroups);
+		processor.execute(GroupConstants.generateGroupReportPrefix, Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.monthKey, "month1", GroupConstants.groupCryptoKey, groupCryptoKey));
 		Map<String, Object> month1Report = remoteGroups.getUsageReport(groupId, groupCryptoKey, "month1");
 		Map<String, Object> month2Report = remoteGroups.getUsageReport(groupId, groupCryptoKey, "month2");
 		assertEquals(Maps.stringObjectMap("gid1", Maps.stringObjectMap(//
@@ -62,7 +62,7 @@ public class GenerateGroupUsageProcessorTest extends GitTest {
 				"aid2", Maps.stringObjectMap(sfmId2, Arrays.asList(2l)))), month1Report);
 		assertEquals(null, month2Report);
 
-		processor.execute(GroupConstants.generateGroupReportPrefix, Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.monthKey, "month2"));
+		processor.execute(GroupConstants.generateGroupReportPrefix, Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.monthKey, "month2", GroupConstants.groupCryptoKey, groupCryptoKey));
 		Map<String, Object> month2SecondReport = remoteGroups.getUsageReport(groupId, groupCryptoKey, "month2");
 		assertEquals(Maps.stringObjectMap("gid1", Maps.stringObjectMap(//
 				"aid2", Maps.stringObjectMap(sfmId1, Arrays.asList(1l)), //

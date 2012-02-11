@@ -3,6 +3,7 @@ package org.softwareFm.common.constants;
 import org.softwareFm.common.url.IUrlGenerator;
 
 public class GroupConstants {
+	public static final String myGroupsCardType = "myGroups";
 
 	public static final String groupIdKey = "groupId";
 	public static final String groupCryptoKey = "groupCrypto";
