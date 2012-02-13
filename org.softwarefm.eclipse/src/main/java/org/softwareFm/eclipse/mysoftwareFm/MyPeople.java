@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -30,6 +31,7 @@ import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
+import org.softwareFm.eclipse.IRequestGroupReportGeneration;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.eclipse.user.IUserMembershipReader;
 import org.softwareFm.eclipse.user.UserMembershipReaderForLocal;
@@ -43,7 +45,7 @@ import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.swt.Swts;
 
 public class MyPeople implements IHasComposite {
-	public static IShowMyPeople showMyPeople(final IServiceExecutor executor, final IMasterDetailSocial masterDetailSocial, final CardConfig cardConfig, final IGitLocal gitLocal, final IUrlGenerator userUrlGenerator, IUrlGenerator groupUrlGenerator, final IProjectTimeGetter timeGetter) {
+	public static IShowMyPeople showMyPeople(final IServiceExecutor executor, final IMasterDetailSocial masterDetailSocial, final CardConfig cardConfig, final IGitLocal gitLocal, final IUrlGenerator userUrlGenerator, IUrlGenerator groupUrlGenerator, final IProjectTimeGetter timeGetter, final IRequestGroupReportGeneration reportGenerator, final long timeoutMs) {
 		final IUserReader user = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
 		final IGroupsReader groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
 		return new IShowMyPeople() {
@@ -56,7 +58,7 @@ public class MyPeople implements IHasComposite {
 						MyPeople myPeople = masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyPeople>() {
 							@Override
 							public MyPeople apply(Composite from) throws Exception {
-								return new MyPeople(from, cardConfig, userData, membershipReader, groupsReader, timeGetter);
+								return new MyPeople(from, cardConfig, userData, membershipReader, groupsReader, timeGetter, reportGenerator, timeoutMs);
 							}
 						});
 						myPeople.setData(groupId, artifactId);
@@ -67,12 +69,12 @@ public class MyPeople implements IHasComposite {
 		};
 	}
 
-	static class PeopleIKnowComposite extends CompositeWithCardMargin {
+	static class MyPeopleComposite extends CompositeWithCardMargin {
 
 		private final StyledText text;
 		private final Table table;
 
-		public PeopleIKnowComposite(Composite parent, int style, final CardConfig cc, IProjectTimeGetter timeGetter) {
+		public MyPeopleComposite(Composite parent, int style, final CardConfig cc, IProjectTimeGetter timeGetter) {
 			super(parent, style, cc);
 			text = new StyledText(this, SWT.WRAP | SWT.READ_ONLY);
 			table = new Table(this, SWT.FULL_SELECTION);
@@ -113,18 +115,22 @@ public class MyPeople implements IHasComposite {
 		}
 	}
 
-	private final PeopleIKnowComposite content;
+	private final MyPeopleComposite content;
 	private final UserData userData;
 	private final IUserMembershipReader membershipReader;
 	private final IGroupsReader groupsReader;
 	private final IProjectTimeGetter timeGetter;
+	private final IRequestGroupReportGeneration reportGenerator;
+	private final long timeoutMs;
 
-	public MyPeople(Composite parent, CardConfig cardConfig, UserData userData, IUserMembershipReader membershipReader, IGroupsReader groupsReader, IProjectTimeGetter timeGetter) {
+	public MyPeople(Composite parent, CardConfig cardConfig, UserData userData, IUserMembershipReader membershipReader, IGroupsReader groupsReader, IProjectTimeGetter timeGetter, IRequestGroupReportGeneration reportGenerator, long timeoutMs) {
 		this.userData = userData;
 		this.membershipReader = membershipReader;
 		this.groupsReader = groupsReader;
 		this.timeGetter = timeGetter;
-		this.content = new PeopleIKnowComposite(parent, SWT.NULL, cardConfig, timeGetter);
+		this.reportGenerator = reportGenerator;
+		this.timeoutMs = timeoutMs;
+		this.content = new MyPeopleComposite(parent, SWT.NULL, cardConfig, timeGetter);
 		Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithLastGrabingVertical(content);
 
 	}
@@ -152,6 +158,7 @@ public class MyPeople implements IHasComposite {
 				softwareFmIdToName.put(softwareFmId, email);
 			}
 			for (String month : timeGetter.lastNMonths(3)) {
+				generateReportIfPossible(groupId, groupsCrypto, month);
 				Map<String, Map<String, Map<String, List<Integer>>>> report = (Map) groupsReader.getUsageReport(groupsId, groupsCrypto, month);
 				if (report != null)
 					for (Entry<String, Map<String, Map<String, List<Integer>>>> groupEntry : report.entrySet())
@@ -172,6 +179,14 @@ public class MyPeople implements IHasComposite {
 				content.setSoftwareFmIds(groupId, artifactId, softwareFmIds, softwareFmIdToName, softwareFmIdToGroups, softwareFmIdToMonthToUsage);
 			}
 		});
+	}
+
+	protected void generateReportIfPossible(final String groupId, String groupsCrypto, String month) {
+		try {
+			reportGenerator.request(groupId, groupsCrypto, month).get(timeoutMs, TimeUnit.MILLISECONDS);
+		} catch (Exception e) {
+			// it wasn't possible
+		}
 	}
 
 	@Override
