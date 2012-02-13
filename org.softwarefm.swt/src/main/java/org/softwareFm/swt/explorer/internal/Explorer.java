@@ -10,7 +10,6 @@
 
 package org.softwareFm.swt.explorer.internal;
 
-
 import java.io.File;
 import java.text.MessageFormat;
 import java.util.Iterator;
@@ -74,6 +73,7 @@ import org.softwareFm.swt.explorer.IExplorerListener;
 import org.softwareFm.swt.explorer.IMasterDetailSocial;
 import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.explorer.IShowMyGroups;
+import org.softwareFm.swt.explorer.IShowMyPeople;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.swt.navigation.internal.NavNextHistoryPrevConfig;
 import org.softwareFm.swt.swt.Swts;
@@ -96,10 +96,12 @@ public class Explorer implements IExplorer {
 	private TimeLine timeLine;
 	private Comments comments;
 	private MySoftwareFm mySoftwareFm;
+	private final IShowMyPeople showMyPeople;
 
-	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IShowMyData showMyData, final IShowMyGroups showMyGroups) {
+	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IShowMyData showMyData, final IShowMyGroups showMyGroups, final IShowMyPeople showMyPeople) {
 		this.cardConfig = cardConfig;
 		this.masterDetailSocial = masterDetailSocial;
+		this.showMyPeople = showMyPeople;
 		callbackToGotoUrlAndUpdateDetails = new ICallback<String>() {
 			@Override
 			public void process(String url) throws Exception {
@@ -249,6 +251,11 @@ public class Explorer implements IExplorer {
 			}
 		});
 
+	}
+
+	@Override
+	public void showPeople(String groupId, String artifactId) {
+		showMyPeople.showMyPeople(getUserData(), groupId, artifactId);
 	}
 
 	@Override
@@ -451,7 +458,7 @@ public class Explorer implements IExplorer {
 						cardConfig.cardDataStore.processDataFor(url, new ICardDataStoreCallback<Void>() {
 							@Override
 							public Void process(String url, Map<String, Object> result) throws Exception {
-								Map<String,Object> cleanedData = Maps.withOnly(data, "title", "description", "content", CommonConstants.typeTag);
+								Map<String, Object> cleanedData = Maps.withOnly(data, "title", "description", "content", CommonConstants.typeTag);
 								if (lastSegment.equals(CardConstants.snippet)) {
 									IMutableCardDataStore.Utils.addCollectionItemToCollection(store, url, CardConstants.snippet, fragment, cleanedData, callback);
 								} else
@@ -1071,7 +1078,6 @@ public class Explorer implements IExplorer {
 		masterDetailSocial.createAndShowMaster(Swts.styledTextFn(text, SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL));
 
 	}
-
 
 	@Override
 	public UserData getUserData() {

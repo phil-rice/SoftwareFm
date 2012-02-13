@@ -48,6 +48,7 @@ import org.softwareFm.common.url.Urls;
 import org.softwareFm.eclipse.IRequestGroupReportGeneration;
 import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups;
+import org.softwareFm.eclipse.mysoftwareFm.MyPeople;
 import org.softwareFm.eclipse.mysoftwareFm.RequestGroupReportGeneration;
 import org.softwareFm.eclipse.snippets.SnippetFeedConfigurator;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
@@ -70,6 +71,7 @@ import org.softwareFm.swt.explorer.ExplorerAdapter;
 import org.softwareFm.swt.explorer.IExplorer;
 import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.explorer.IShowMyGroups;
+import org.softwareFm.swt.explorer.IShowMyPeople;
 import org.softwareFm.swt.explorer.internal.Explorer;
 import org.softwareFm.swt.explorer.internal.MasterDetailSocial;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
@@ -264,11 +266,12 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 			
 			IRequestGroupReportGeneration reportGenerator = new RequestGroupReportGeneration(httpClient, IResponseCallback.Utils.sysoutStatusCallback());
 			IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator,groupUrlGenerator, gitLocal, projectTimeGetter, reportGenerator);
+			IShowMyPeople showMyPeople = MyPeople.showMyPeople(service, masterDetailSocial, cardConfig, gitLocal, userUrlGenerator, groupUrlGenerator, projectTimeGetter);
 			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, cardConfig, //
 					Arrays.asList(rootArtifactUrl, rootSnippetUrl), //
 					IPlayListGetter.Utils.noPlayListGetter(), service, //
 					ILoginStrategy.Utils.noLoginStrategy(),//
-					showMyData, showMyGroups);
+					showMyData, showMyGroups, showMyPeople);
 			IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
 			new SnippetFeedConfigurator(cardConfig.cardDataStore, cardConfig.resourceGetterFn).configure(explorer);
 			// SnippetFeedConfigurator.configure(explorer, cardConfig);

@@ -38,6 +38,7 @@ import org.softwareFm.eclipse.IRequestGroupReportGeneration;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups;
+import org.softwareFm.eclipse.mysoftwareFm.MyPeople;
 import org.softwareFm.eclipse.mysoftwareFm.RequestGroupReportGeneration;
 import org.softwareFm.eclipse.snippets.SnippetFeedConfigurator;
 import org.softwareFm.eclipse.usage.IUsageStrategy;
@@ -59,6 +60,7 @@ import org.softwareFm.swt.explorer.IExplorerListener;
 import org.softwareFm.swt.explorer.IMasterDetailSocial;
 import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.explorer.IShowMyGroups;
+import org.softwareFm.swt.explorer.IShowMyPeople;
 import org.softwareFm.swt.menu.ICardMenuItemHandler;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.swt.swt.Swts;
@@ -82,7 +84,7 @@ public class ExplorerWithRadioChannel {
 		int port = local ? 8080 : 80;
 		final IHttpClient client = IHttpClient.Utils.builder(server, port);
 		final IGitOperations gitOperations = IGitOperations.Utils.gitOperations(localRoot);
-		final IGitLocal localGit = IGitLocal.Utils.localReader(new HttpRepoFinder(client, CommonConstants.clientTimeOut), gitOperations, new HttpGitWriter(client), prefix, CommonConstants.staleCachePeriodForTest);
+		final IGitLocal gitLocal = IGitLocal.Utils.localReader(new HttpRepoFinder(client, CommonConstants.clientTimeOut), gitOperations, new HttpGitWriter(client), prefix, CommonConstants.staleCachePeriodForTest);
 
 		final IServiceExecutor service = IServiceExecutor.Utils.defaultExecutor();
 		try {
@@ -96,19 +98,20 @@ public class ExplorerWithRadioChannel {
 					Composite buttonPanel = Swts.newComposite(explorerAndButton, SWT.NULL, "ButtonPanel");
 					buttonPanel.setLayout(Swts.Row.getHorizonalNoMarginRowLayout());
 
-					final IMutableCardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(from, service, localGit);
+					final IMutableCardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(from, service, gitLocal);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 					final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 					IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(explorerAndButton);
 					IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardDataStore);
 					ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(from.getDisplay(), service, client);
-					IProjectTimeGetter projectTimeGetter = IProjectTimeGetter.Utils.timeGetter();
+					final IProjectTimeGetter projectTimeGetter = IProjectTimeGetter.Utils.timeGetter();
 					IUrlGenerator userUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.userUrlKey);
 					IUrlGenerator groupUrlGenerator = GroupConstants.groupsGenerator();
-					IShowMyData showMyDetails = MyDetails.showMyDetails(service, cardConfig, masterDetailSocial, userUrlGenerator, localGit, projectTimeGetter);
 					IRequestGroupReportGeneration requestGroupReportGenerator = new RequestGroupReportGeneration(client, IResponseCallback.Utils.sysoutStatusCallback());
-					IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, localGit, projectTimeGetter,requestGroupReportGenerator);
-					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, playListGetter, service, loginStrategy,  showMyDetails, showMyGroups);
+					IShowMyData showMyDetails = MyDetails.showMyDetails(service, cardConfig, masterDetailSocial, userUrlGenerator, gitLocal, projectTimeGetter);
+					IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, projectTimeGetter, requestGroupReportGenerator);
+					IShowMyPeople showMyPeople = MyPeople.showMyPeople(service, masterDetailSocial, cardConfig, gitLocal, userUrlGenerator, groupUrlGenerator, projectTimeGetter);
+					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, rootUrl, playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople);
 
 					ICardMenuItemHandler.Utils.addSoftwareFmMenuItemHandlers(explorer);
 					IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
@@ -175,6 +178,19 @@ public class ExplorerWithRadioChannel {
 							explorer.displayCard(firstUrl, new CardAndCollectionDataStoreAdapter());
 						}
 					});
+					final IUsageStrategy usageStrategy = IUsageStrategy.Utils.usage(service, client, gitLocal, LoginConstants.userGenerator());
+					Buttons.makePushButton(buttonPanel, null, "usage", false, new Runnable() {
+						@Override
+						public void run() {
+							usageStrategy.using(explorer.getUserData().softwareFmId, "someGroupId", "someArtifactId", IResponseCallback.Utils.noCallback());
+						}
+					});
+					Buttons.makePushButton(buttonPanel, "people I know using Junit", new Runnable() {
+						@Override
+						public void run() {
+							explorer.showPeople("junit", "junit");
+						}
+					});
 					Buttons.makePushButton(buttonPanel, null, "Nuke", false, new Runnable() {
 						@Override
 						public void run() {
@@ -192,13 +208,7 @@ public class ExplorerWithRadioChannel {
 							explorer.showMySoftwareFm();
 						}
 					});
-					final IUsageStrategy usageStrategy = IUsageStrategy.Utils.usage(service, client, localGit, LoginConstants.userGenerator());
-					Buttons.makePushButton(buttonPanel, null, "usage", false, new Runnable() {
-						@Override
-						public void run() {
-							usageStrategy.using(explorer.getUserData().softwareFmId, "someGroupId", "someArtifactId", IResponseCallback.Utils.noCallback());
-						}
-					});
+
 					Swts.Row.setRowDataFor(100, 20, buttonPanel.getChildren());
 					explorer.addExplorerListener(IExplorerListener.Utils.sysout());
 					return explorerAndButton;

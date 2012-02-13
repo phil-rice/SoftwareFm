@@ -8,6 +8,9 @@ import java.util.concurrent.Callable;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -32,6 +35,7 @@ import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.eclipse.user.IUserMembershipReader;
 import org.softwareFm.eclipse.user.UserMembershipReaderForLocal;
 import org.softwareFm.swt.card.LineItem;
+import org.softwareFm.swt.card.composites.CompositeWithCardMargin;
 import org.softwareFm.swt.card.composites.TextInCompositeWithCardMargin;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
@@ -84,15 +88,22 @@ public class MyGroups implements IHasComposite {
 
 	private final MyGroupsComposite content;
 
-	public static class MyGroupsComposite extends Composite {
+	public static class MyGroupsComposite extends CompositeWithCardMargin {
 		private final Table summaryTable;
 		private final IGroupsReader groupsReader;
 		private final SashForm sashForm;
 		private final Table groupTable;
 		private final Map<String, String> idToCrypto = Maps.newMap();
 
-		public MyGroupsComposite(Composite parent, CardConfig cardConfig, IUserMembershipReader membershipReader, final IGroupsReader groupReaders, String softwareFmId, IProjectTimeGetter projectTimeGetter, final IRequestGroupReportGeneration reportGenerator) {
-			super(parent, SWT.NULL);
+		public MyGroupsComposite(Composite parent, final CardConfig cc, IUserMembershipReader membershipReader, final IGroupsReader groupReaders, String softwareFmId, IProjectTimeGetter projectTimeGetter, final IRequestGroupReportGeneration reportGenerator) {
+			super(parent, SWT.NULL, cc);
+			addPaintListener(new PaintListener() {
+				@Override
+				public void paintControl(PaintEvent e) {
+					Rectangle ca = getClientArea();
+					e.gc.drawRoundRectangle(ca.x - cc.cornerRadiusComp, ca.y - cc.cornerRadiusComp, ca.width + 2 * cc.cornerRadiusComp, ca.height + 2 * cc.cornerRadiusComp, cc.cornerRadius, cc.cornerRadius);
+				}
+			});
 			this.groupsReader = groupReaders;
 			sashForm = new SashForm(this, SWT.HORIZONTAL);
 			summaryTable = new Table(sashForm, SWT.FULL_SELECTION);
@@ -107,7 +118,7 @@ public class MyGroups implements IHasComposite {
 				item.setData(groupId);
 				int membershipCount = groupsReader.membershipCount(groupId, groupCryptoKey);
 				String membershipCountString = Integer.toString(membershipCount);
-				item.setText(new String[] { groupName, membershipCountString });
+				item.setText(new String[] { groupName + "/" + groupId, membershipCountString });
 				idToCrypto.put(groupId, groupCryptoKey);
 			}
 
@@ -118,7 +129,7 @@ public class MyGroups implements IHasComposite {
 			new TableColumn(groupTable, SWT.NULL).setText("ArtifactId Id");
 			for (String month : lastNMonths) {
 				LineItem lineItem = new LineItem(GroupConstants.myGroupsCardType, month, null);
-				String name = cardConfig.nameFn.apply(cardConfig, lineItem);
+				String name = cc.nameFn.apply(cc, lineItem);
 				new TableColumn(groupTable, SWT.FULL_SELECTION).setText(name);
 			}
 			summaryTable.addListener(SWT.Selection, new Listener() {

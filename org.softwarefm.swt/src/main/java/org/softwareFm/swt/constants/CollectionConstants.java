@@ -63,6 +63,7 @@ public class CollectionConstants {
 	public static final String actionDebugTitle = "action.debug.title";
 	public static final String actionNukeTitle = "action.nuke.title";
 	public static final String actionSnippetTitle = "action.snippet.title";
+	public static final String actionPeopleTitle = "action.people.title";
 
 	public static final String actionWelcomeImage = "welcome.gif";
 	public static final String actionGroupImage = "group.gif";
@@ -73,6 +74,7 @@ public class CollectionConstants {
 	public static final String actionDebugImage = "debug.gif";
 	public static final String actionNukeImage = "nuke.gif";
 	public static final String actionSnippetImage = "snippet.gif";
+	public static final String actionPeopleImage = "friends.gif";
 	
 	public static final String jarNotRecognisedSearchingText = "jar.notRecognised.searching.text" ;
 	public static final String jarNotRecognisedFound0Text = "jar.notRecognised.found0.text" ;

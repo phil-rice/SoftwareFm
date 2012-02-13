@@ -54,7 +54,7 @@ public abstract class AbstractGroupReader implements IGroupsReader {
 		String lines = getFileAsString(groupFileDescription);
 		List<String> listOfLines = Strings.splitIgnoreBlanks(lines, "\n");
 		if (listOfLines.size() == 0)
-			throw new IllegalStateException(groupFileDescription.toString());
+			throw new IllegalStateException(groupFileDescription.toString()+"\n" + listOfLines);
 		return Lists.map(Lists.tail(listOfLines), new IFunction1<String, Map<String, Object>>() {
 			@Override
 			public Map<String, Object> apply(String from) throws Exception {

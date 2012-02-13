@@ -61,7 +61,7 @@ public class ActionBar implements IActionBar {
 	private final Set<String> alreadyRegistered = Sets.newSet();
 
 	static enum State {
-		URL, JUST_JAR, FROM_JAR, FROM_PATH, DEBUG;
+		URL, JUST_JAR, FROM_JAR, FROM_PATH, PEOPLE, DEBUG;
 	}
 
 	public ActionBar(IExplorer explorer, CardConfig cardConfig, IFunction1<BindingRipperResult, BindingRipperResult> reRipFn, boolean admin, IUsageStrategy usageStrategy) {
@@ -89,6 +89,9 @@ public class ActionBar implements IActionBar {
 			break;
 		case JUST_JAR:
 			justJarSelection(showRadioStation);
+			break;
+		case PEOPLE:
+			peopleSelection();
 			break;
 		case FROM_PATH:// Will do snippet here
 			fromPathSelection(showRadioStation);
@@ -130,6 +133,64 @@ public class ActionBar implements IActionBar {
 			return result + "/snippet";
 		} else
 			return baseUrl + "/snippet";
+	}
+
+	private void peopleSelection() {
+		System.out.println("People Selection");
+		String fileExtension = ripperResult.path.getFileExtension();
+		if (!fileExtension.equals("jar")) {
+			explorer.displayNotAJar();
+			return;
+		}
+		final String hexDigest = ripperResult.hexDigest;
+		IUrlGenerator jarUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.jarUrlKey);
+		String jarUrl = jarUrlGenerator.findUrlFor(Maps.stringObjectMap(JdtConstants.hexDigestKey, hexDigest));
+		System.out.println("Processing JarUrl: " + jarUrl);
+		cardConfig.cardDataStore.processDataFor(jarUrl, new ICardDataStoreCallback<Void>() {
+			@Override
+			public Void process(String jarUrl, final Map<String, Object> groupArtifactVersionMap) throws Exception {
+				String groupId = (String) groupArtifactVersionMap.get(CollectionConstants.groupId);
+				String artifactId = (String) groupArtifactVersionMap.get(CollectionConstants.artifactId);
+				IUrlGenerator urlGenerator = cardConfig.urlGeneratorMap.get(urlKey);
+				String url = urlGenerator.findUrlFor(groupArtifactVersionMap);
+				if (url == null)
+					throw new NullPointerException();
+				explorer.displayCard(url, new CardAndCollectionDataStoreAdapter() {
+					@Override
+					public void initialCard(ICardHolder cardHolder, CardConfig cardConfig, String url, ICard card) {
+						afterDisplayCard.process(card, groupArtifactVersionMap);
+					}
+				});
+				explorer.showPeople(groupId, artifactId);
+				String softwareFmId = explorer.getUserData().softwareFmId;
+				if (softwareFmId != null) {
+					if (System.currentTimeMillis() > lastUsageTime + SoftwareFmConstants.usageRefreshTimeMs) {
+						alreadyRegistered.clear();
+						lastUsageTime = System.currentTimeMillis();
+					}
+					String key = softwareFmId + "," + groupId + "," + artifactId;
+					if (!alreadyRegistered.contains(key)) {
+						usageStrategy.using(softwareFmId, groupId, artifactId, IResponseCallback.Utils.noCallback());
+						alreadyRegistered.add(key);
+					}
+				}
+				return null;
+			}
+
+			@Override
+			public Void noData(String url) throws Exception {
+				if (ripperResult != null && ripperResult.path != null) {
+					final String hexDigest = ripperResult.hexDigest;
+					final String unknownJarUrl = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null, CardConstants.webPageUnknownJarUrl);
+					File file = ripperResult.path.toFile();
+					if (Files.extension(file.toString()).equals("jar")) {
+						explorer.displayUnrecognisedJar(file, hexDigest, ripperResult.javaProject.getElementName());
+						explorer.processUrl(DisplayConstants.browserFeedType, unknownJarUrl);
+					}
+				}
+				return null;
+			}
+		});
 	}
 
 	private void justJarSelection(boolean showRadioStation) {
@@ -295,6 +356,13 @@ public class ActionBar implements IActionBar {
 				reselect();
 				showUrl(CardConstants.webPageSnippetUrl);
 				setState(State.FROM_PATH);
+			}
+		}));
+		toolBarManager.add(Swts.Actions.radioAction(resourceGetter, CollectionConstants.actionPeopleTitle, ActionAnchor.class, CollectionConstants.actionPeopleImage, new Runnable() {
+			@Override
+			public void run() {
+				setState(State.PEOPLE);
+				reselect();
 			}
 		}));
 		toolBarManager.add(Swts.Actions.pushAction(resourceGetter, CollectionConstants.actionRefreshTitle, ActionAnchor.class, CollectionConstants.actionRefreshImage, new Runnable() {

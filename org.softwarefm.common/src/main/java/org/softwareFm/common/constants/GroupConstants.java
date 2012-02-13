@@ -3,6 +3,7 @@ package org.softwareFm.common.constants;
 import org.softwareFm.common.url.IUrlGenerator;
 
 public class GroupConstants {
+	public static final long usageReportPeriod = 6*60*60*1000;//hrs
 	public static final String myGroupsCardType = "myGroups";
 
 	public static final String groupIdKey = "groupId";

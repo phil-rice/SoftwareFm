@@ -29,6 +29,7 @@ import org.softwareFm.eclipse.actions.IActionBar;
 import org.softwareFm.eclipse.jdtBinding.BindingRipperResult;
 import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups;
+import org.softwareFm.eclipse.mysoftwareFm.MyPeople;
 import org.softwareFm.eclipse.mysoftwareFm.RequestGroupReportGeneration;
 import org.softwareFm.eclipse.snippets.SnippetFeedConfigurator;
 import org.softwareFm.eclipse.usage.IUsageStrategy;
@@ -42,6 +43,7 @@ import org.softwareFm.swt.explorer.IExplorer;
 import org.softwareFm.swt.explorer.IMasterDetailSocial;
 import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.explorer.IShowMyGroups;
+import org.softwareFm.swt.explorer.IShowMyPeople;
 import org.softwareFm.swt.menu.ICardMenuItemHandler;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.swt.swt.Swts.Size;
@@ -63,14 +65,17 @@ public class ExplorerView extends ViewPart {
 		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(parent.getDisplay(), activator.getServiceExecutor(), activator.getClient());
 		IUrlGenerator userUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.userUrlKey);
 		IUrlGenerator groupUrlGenerator = GroupConstants.groupsGenerator();
-		IGitLocal gitLocal= activator.getGitLocal();
+		IGitLocal gitLocal = activator.getGitLocal();
 		IProjectTimeGetter timeGetter = activator.getProjectTimeGetter();
-		IRequestGroupReportGeneration reportGenerator = new RequestGroupReportGeneration(activator.getClient(), IResponseCallback.Utils.sysoutStatusCallback());
+		IRequestGroupReportGeneration reportGenerator = IRequestGroupReportGeneration.Utils.withCache(//
+				new RequestGroupReportGeneration(activator.getClient(), IResponseCallback.Utils.sysoutStatusCallback()),//
+				GroupConstants.usageReportPeriod);
 
 		IShowMyData showMyDetails = MyDetails.showMyDetails(service, cardConfig, masterDetailSocial, userUrlGenerator, gitLocal, timeGetter);
 		IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, timeGetter, reportGenerator);
-		
-		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, getRootUrls(), playListGetter, service, loginStrategy, showMyDetails, showMyGroups);
+		IShowMyPeople showMyPeople = MyPeople.showMyPeople(service, masterDetailSocial, cardConfig, gitLocal, userUrlGenerator, groupUrlGenerator, timeGetter);
+
+		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, cardConfig, getRootUrls(), playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople);
 		IUsageStrategy usageStrategy = IUsageStrategy.Utils.usage(activator.getServiceExecutor(), activator.getClient(), gitLocal, userUrlGenerator);
 		actionBar = makeActionBar(explorer, cardConfig, usageStrategy);
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
@@ -91,7 +96,7 @@ public class ExplorerView extends ViewPart {
 				ExplorerView.this.actionBar.selectionOccured(ripperResult);
 			}
 		});
-		explorer.showMySoftwareFm(); 
+		explorer.showMySoftwareFm();
 		explorer.processUrl(DisplayConstants.browserFeedType, welcomeUrl);
 	}
 

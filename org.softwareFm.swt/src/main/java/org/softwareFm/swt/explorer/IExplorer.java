@@ -58,6 +58,8 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 
 	void showDebug(String ripperResult);
 
+	void showPeople(String groupId, String artifactId);
+
 	void edit(ICard card, String key);
 
 	void addExplorerListener(IExplorerListener listener);
@@ -74,8 +76,8 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 
 	public static class Utils {
 
-		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, List<String> rootUrls, IPlayListGetter playListGetter, IServiceExecutor service, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups) {
-			return new Explorer(cardConfig, rootUrls, masterDetailSocial, service, playListGetter, loginStrategy, showMyData, showMyGroups);
+		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, List<String> rootUrls, IPlayListGetter playListGetter, IServiceExecutor service, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IShowMyPeople showMyPeople) {
+			return new Explorer(cardConfig, rootUrls, masterDetailSocial, service, playListGetter, loginStrategy, showMyData, showMyGroups, showMyPeople);
 		}
 	}
 

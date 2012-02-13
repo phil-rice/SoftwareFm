@@ -113,7 +113,7 @@ public class Activator extends AbstractUIPlugin {
 			final File localRoot = new File(home, ".sfm");
 			String remoteUriPrefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : SoftwareFmConstants.gitProtocolAndGitServerName;
 			IGitOperations gitOperations = IGitOperations.Utils.gitOperations(localRoot);
-			gitLocal = IGitLocal.Utils.localReader(getFindRepositoryRoot(), gitOperations, getGitWriter(), remoteUriPrefix, CommonConstants.staleCachePeriodForTest);
+			gitLocal = IGitLocal.Utils.localReader(getFindRepositoryRoot(), gitOperations, getGitWriter(), remoteUriPrefix, CommonConstants.staleCachePeriod);
 		}
 		return gitLocal;
 	}
