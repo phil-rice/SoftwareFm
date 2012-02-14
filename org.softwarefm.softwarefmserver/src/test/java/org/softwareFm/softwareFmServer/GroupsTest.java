@@ -3,6 +3,7 @@ package org.softwareFm.softwareFmServer;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import org.softwareFm.common.IUser;
 import org.softwareFm.common.collections.Files;
@@ -37,7 +38,8 @@ abstract public class GroupsTest extends GitTest {
 	protected final String id2 = "sfm2";
 
 	protected void saveUserData(String softwaerFmId, String userCrypto, String projectCrypto) {
-		IUser user = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, userGenerator, Strings.firstNSegments(3));
+		Map<String,Callable<Object>> defaultValues = Maps.newMap();
+		IUser user = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, userGenerator, Strings.firstNSegments(3), defaultValues);
 		user.setUserProperty(softwaerFmId, userCrypto, SoftwareFmConstants.projectCryptoKey, projectCrypto);
 	}
 

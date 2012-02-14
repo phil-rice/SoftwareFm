@@ -30,6 +30,7 @@ import org.softwareFm.client.http.requests.IResponseCallback;
 import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.IGitLocal;
 import org.softwareFm.common.IGitOperations;
+import org.softwareFm.common.IUserReader;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.GroupConstants;
@@ -57,6 +58,7 @@ import org.softwareFm.server.ICrowdSourcedServer;
 import org.softwareFm.server.processors.IMailer;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.ProcessCallParameters;
+import org.softwareFm.softwareFmServer.SoftwareFmServer;
 import org.softwareFm.swt.ICollectionConfigurationFactory;
 import org.softwareFm.swt.browser.IBrowserConfigurator;
 import org.softwareFm.swt.card.ICard;
@@ -249,7 +251,8 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 
 		IGitOperations remoteGitOperations = IGitOperations.Utils.gitOperations(remoteRoot);
 		IFunction1<Map<String, Object>, String> cryptoFn = ICrowdSourcedServer.Utils.cryptoFn(dataSource);
-		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, remoteGitOperations, cryptoGenerator, softwareFmIdGenerator, cryptoFn, IMailer.Utils.noMailer());
+		Map<String, Callable<Object>> defaultProperties = SoftwareFmServer.makeDefaultProperties();
+		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, remoteGitOperations, cryptoGenerator, softwareFmIdGenerator, cryptoFn, IMailer.Utils.noMailer(),defaultProperties);
 		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, Functions.<ProcessCallParameters, IProcessCall[]> constant(new IProcessCall[0]));
 		crowdSourcedServer = ICrowdSourcedServer.Utils.testServerPort(processCall, ICallback.Utils.rethrow());
 
@@ -267,7 +270,8 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 			IRequestGroupReportGeneration reportGenerator = new RequestGroupReportGeneration(httpClient, IResponseCallback.Utils.sysoutStatusCallback());
 			IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator,groupUrlGenerator, gitLocal, projectTimeGetter, reportGenerator);
 			IShowMyPeople showMyPeople = MyPeople.showMyPeople(service, masterDetailSocial, cardConfig, gitLocal, userUrlGenerator, groupUrlGenerator, projectTimeGetter, reportGenerator, CommonConstants.testTimeOutMs);
-			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, cardConfig, //
+			IUserReader userReader = IUserReader.Utils.exceptionUserReader();
+			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, userReader, cardConfig, //
 					Arrays.asList(rootArtifactUrl, rootSnippetUrl), //
 					IPlayListGetter.Utils.noPlayListGetter(), service, //
 					ILoginStrategy.Utils.noLoginStrategy(),//

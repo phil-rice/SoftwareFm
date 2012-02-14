@@ -10,6 +10,11 @@
 
 package org.softwareFm.swt.constants;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.softwareFm.common.constants.LoginConstants;
+
 
 public class CardConstants {
 	public static final String softwareFmPrefix = "/softwareFm";
@@ -142,4 +147,6 @@ public class CardConstants {
 	public static final String changePasswordTitle = "changepassword.title.text";
 	public static final String signUpImage = "login.signUp";
 	public static final String forgotPasswordImage = "login.forgotPasswod";
+	public static final String myDetailsCardType = "myDetails";
+	public static final List<String> mySoftwareFmDisplayProperties = Arrays.asList(LoginConstants.emailKey, LoginConstants.monikerKey);
 }

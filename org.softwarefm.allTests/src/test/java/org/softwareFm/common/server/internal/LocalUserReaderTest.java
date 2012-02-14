@@ -2,6 +2,7 @@ package org.softwareFm.common.server.internal;
 
 import java.io.File;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import org.softwareFm.common.IUser;
 import org.softwareFm.common.IUserReader;
@@ -64,7 +65,8 @@ public class LocalUserReaderTest extends GitTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		IUrlGenerator userUrlGenerator = IUrlGenerator.Utils.generator("user/{0}/{1}/{2}", LoginConstants.softwareFmIdKey);
-		remoteUser = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, userUrlGenerator, findRepositoryRoot);
+		Map<String, Callable<Object>> noDefaults = Maps.newMap();
+		remoteUser = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, userUrlGenerator, findRepositoryRoot, noDefaults);
 		localUser = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
 
 		remoteSfmId1File = new File(remoteRoot, Urls.compose("user/sf/mI/sfmId1/", CommonConstants.dataFileName));

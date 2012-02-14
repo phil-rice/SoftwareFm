@@ -13,10 +13,12 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Table;
 import org.softwareFm.client.http.api.IHttpClient;
 import org.softwareFm.client.http.requests.IResponseCallback;
 import org.softwareFm.client.http.requests.MemoryResponseCallback;
 import org.softwareFm.common.IGitOperations;
+import org.softwareFm.common.IUserReader;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.collections.Files;
 import org.softwareFm.common.collections.Lists;
@@ -36,6 +38,7 @@ import org.softwareFm.server.ICrowdSourcedServer;
 import org.softwareFm.server.processors.IMailer;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.ProcessCallParameters;
+import org.softwareFm.softwareFmServer.SoftwareFmServer;
 import org.softwareFm.swt.card.composites.CompositeWithCardMargin;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.configuration.ICardConfigurator;
@@ -80,9 +83,8 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		setValues(email, password);
 		assertTrue(getOkCancel().isOkEnabled());
 		getOkCancel().ok();
-		displayUntilText();
-
-		assertEquals(new UserData(email, softwareFmId, crypto), mySoftwareFm.userData);
+		displayUntilCompositeWithCardMargin();
+		checkLoggedInDisplay(crypto, softwareFmId);
 	}
 
 	public void testSignup() {
@@ -136,7 +138,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		setValues(email, password);
 		assertTrue(getOkCancel().isOkEnabled());
 		getOkCancel().ok();
-		displayUntilText();
+		displayUntilCompositeWithCardMargin();
 
 		assertEquals(new UserData(email, null, null), mySoftwareFm.userData);
 
@@ -162,7 +164,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		setValues(email);
 		assertTrue(getOkCancel().isOkEnabled());
 		getOkCancel().ok();
-		displayUntilText();
+		displayUntilCompositeWithCardMargin();
 		assertEquals("Reminder email sent to " + email + "\n\nClicking this panel will start login again", getText());
 
 		assertEquals(new UserData(email, null, null), mySoftwareFm.userData);
@@ -176,9 +178,8 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		setValues(email, newPassword);
 		assertTrue(getOkCancel().isOkEnabled());
 		getOkCancel().ok();
-		displayUntilText();
-
-		assertEquals("Welcome to softwareFm.\n\n\nYou are logged in as " + email, getText());
+		displayUntilCompositeWithCardMargin();
+		checkLoggedInDisplay(crypto, "someNewSoftwareFmId0");
 
 		assertEquals(new UserData(email, "someNewSoftwareFmId0", crypto), mySoftwareFm.userData);
 	}
@@ -200,8 +201,8 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		setValues(email, moniker, password, password);
 		assertTrue(getOkCancel().isOkEnabled());
 		getOkCancel().ok();
-		displayUntilText();
-		assertEquals("Welcome to softwareFm.\n\n\nYou are logged in as " + email, getText());
+		displayUntilCompositeWithCardMargin();
+
 		return signUpSalt;
 	}
 
@@ -234,7 +235,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		assertTrue(getOkCancel().isOkEnabled());
 	}
 
-	private void displayUntilText() {
+	private void displayUntilCompositeWithCardMargin() {
 		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
@@ -332,6 +333,15 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		return mySoftwareFm.getSignupSalt();
 	}
 
+	protected void checkLoggedInDisplay(String crypto, String softwareFmId) {
+		Table table = (Table) Swts.getDescendant(mySoftwareFm.getControl(), 0, 0, 0);
+		Swts.checkRow(table, 0, "Email", email);
+		Swts.checkRow(table, 1, "Moniker", moniker);
+		Swts.checkRow(table, 2, "Software Fm Id", mySoftwareFm.userData.softwareFmId);
+
+		assertEquals(new UserData(email, softwareFmId, crypto), mySoftwareFm.userData);
+	}
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -342,14 +352,16 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		key = Crypto.makeKey();
 		Callable<String> cryptoGenerator = Callables.value(key);
 		IGitOperations remoteOperations = IGitOperations.Utils.gitOperations(remoteRoot);
-		IFunction1<Map<String, Object>, String> userCryptoFn =ICrowdSourcedServer.Utils.cryptoFn(dataSource);
-		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, remoteOperations, cryptoGenerator, softwareFmIdGenerator, userCryptoFn, IMailer.Utils.noMailer());
-		IProcessCall softwareFmProcessCall = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, Functions.<ProcessCallParameters, IProcessCall[]>constant(new IProcessCall[0]));
-		server = ICrowdSourcedServer.Utils.testServerPort(softwareFmProcessCall,  ICallback.Utils.rethrow());
+		IFunction1<Map<String, Object>, String> userCryptoFn = ICrowdSourcedServer.Utils.cryptoFn(dataSource);
+		Map<String, Callable<Object>> defaultValues = SoftwareFmServer.makeDefaultProperties();
+		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, remoteOperations, cryptoGenerator, softwareFmIdGenerator, userCryptoFn, IMailer.Utils.noMailer(), defaultValues);
+		IProcessCall softwareFmProcessCall = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, Functions.<ProcessCallParameters, IProcessCall[]> constant(new IProcessCall[0]));
+		server = ICrowdSourcedServer.Utils.testServerPort(softwareFmProcessCall, ICallback.Utils.rethrow());
 		client = IHttpClient.Utils.builder("localhost", 8080);
 		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(display, service, client);
 		cardConfig = ICardConfigurator.Utils.cardConfigForTests(display);
-		mySoftwareFm = new MySoftwareFm(shell, cardConfig, loginStrategy, IShowMyData.Utils.exceptionShowMyData(), IShowMyGroups.Utils.exceptionShowMyGroups());
+		IUserReader userReader = IUserReader.Utils.mockReader(LoginConstants.emailKey, email, LoginConstants.monikerKey, moniker);
+		mySoftwareFm = new MySoftwareFm(shell, cardConfig, loginStrategy, IShowMyData.Utils.exceptionShowMyData(), IShowMyGroups.Utils.exceptionShowMyGroups(), userReader);
 		template = new JdbcTemplate(dataSource);
 		template.update("truncate users");
 		softwareFmComposite = mySoftwareFm.getComposite();

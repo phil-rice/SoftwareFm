@@ -6,6 +6,7 @@
 package org.softwareFm.common.arrays;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.softwareFm.common.collections.Lists;
@@ -32,6 +33,7 @@ public class ArrayHelper {
 			result.add(t);
 		return result.toArray(raw);
 	}
+
 	public static <From, To> To[] map(Class<To> clazz, From[] old, IFunction1<From, To> mutator) {
 		try {
 			@SuppressWarnings({ "unchecked" })
@@ -49,6 +51,13 @@ public class ArrayHelper {
 			if (array[i] == item)
 				return i;
 		return -1;
+	}
+
+	public static List<Integer> asList(int[] data) {
+		List<Integer> result = new ArrayList<Integer>();
+		for (int i = 0; i < data.length; i++)
+			result.add(data[i]);
+		return result;
 	}
 
 }

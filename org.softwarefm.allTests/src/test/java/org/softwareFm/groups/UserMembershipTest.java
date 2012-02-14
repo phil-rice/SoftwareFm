@@ -59,7 +59,6 @@ public class UserMembershipTest extends GitTest {
 	}
 
 	public void testAddingMembershipAddsPropertyToUser() {
-		assertNull(user.getUserProperty(user1Id, userCrypto, GroupConstants.membershipCryptoKey));
 		membershipForServer.addMembership(user1Id, groupId1, groupCrypto1, "someStatus1");
 		assertNotNull(user.getUserProperty(user1Id, userCrypto, GroupConstants.membershipCryptoKey));
 	}
@@ -98,15 +97,13 @@ public class UserMembershipTest extends GitTest {
 		groupCrypto1 = Crypto.makeKey();
 		groupCrypto2 = Crypto.makeKey();
 		user1Id = "sfmId1";
-		String userMembershipCrypto = Crypto.makeKey();
 
 		IUrlGenerator userUrlGenerator = LoginConstants.userGenerator();
 		IFunction1<String, String> repoDefn = Strings.firstNSegments(3);
-		user = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, repoDefn);
+		user = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, repoDefn,Maps.<String,Callable<Object>>makeMap( GroupConstants.membershipCryptoKey, Callables.makeCryptoKey()));
 		membershipForLocal = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, user, userCrypto);
 
 		IFunction1<Map<String, Object>, String> userCryptoFn = Functions.constant(userCrypto);
-		Callable<String> userMembershipCryptoGenerator = Callables.value(userMembershipCrypto);
-		membershipForServer = new UserMembershipForServer(userUrlGenerator, remoteOperations, user, userCryptoFn, userMembershipCryptoGenerator, repoDefn);
+		membershipForServer = new UserMembershipForServer(userUrlGenerator, remoteOperations, user, userCryptoFn, repoDefn);
 	}
 }

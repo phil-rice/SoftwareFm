@@ -1,9 +1,12 @@
 package org.softwareFm.swt.explorer.internal;
 
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.softwareFm.common.IUserReader;
 import org.softwareFm.common.arrays.ArrayHelper;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.swt.card.composites.TextInBorder;
@@ -36,12 +39,14 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 	protected ICallback<String> restart;
 	private final IShowMyData showMyData;
 	private final IShowMyGroups showMyGroups;
+	private final IUserReader userReader;
 
-	public MySoftwareFm(Composite parent, CardConfig cardConfig, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups) {
+	public MySoftwareFm(Composite parent, CardConfig cardConfig, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IUserReader userReader) {
 		this.cardConfig = cardConfig;
 		this.loginStrategy = loginStrategy;
 		this.showMyData = showMyData;
 		this.showMyGroups = showMyGroups;
+		this.userReader = userReader;
 		this.content = new Composite(parent, SWT.NULL);
 		content.setLayout(new FillLayout());
 		restart = new ICallback<String>() {
@@ -83,21 +88,31 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		final String email = userData.email();
 		Swts.removeAllChildren(content);
 		IChangePasswordCallback callback = null;
-		new MySoftwareFmLoggedIn(content, cardConfig, CardConstants.loggedInTitle, CardConstants.loggedInText, userData, this, new Runnable() {
+		new MySoftwareFmLoggedIn(content, cardConfig, CardConstants.loggedInTitle, CardConstants.loggedInText, userData, this, new IMySoftwareFmLoggedInStrategy() {
 			@Override
-			public void run() {
+			public IUserReader userReader() {
+				return userReader;
+			}
+
+			@Override
+			public void showMyGroups() {
+				showMyGroups.show(userData);
+			}
+
+			@Override
+			public void showMyData() {
+				showMyData.show(userData);
+			}
+
+			@Override
+			public void logout() {
 				logout();
 				start();
 			}
-		}, callback, new Runnable() {
+
 			@Override
-			public void run() {
-				showMyData.show(userData);
-			}
-		}, new Runnable() {
-			@Override
-			public void run() {
-				showMyGroups.show(userData);
+			public List<String> displayProperties() {
+				return CardConstants.mySoftwareFmDisplayProperties;
 			}
 		});
 		content.layout();

@@ -2,7 +2,6 @@ package org.softwareFm.eclipse.constants;
 
 
 public class SoftwareFmConstants {
-	public static final String myDetailsCardType = "mydetails";
 	public static final String softwareFmServerUrl = "server1.softwarefm.com";
 	public static final String gitProtocolAndGitServerName = "git://git.softwarefm.com:80/";
 

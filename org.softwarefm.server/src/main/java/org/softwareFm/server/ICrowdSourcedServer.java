@@ -4,6 +4,7 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import javax.sql.DataSource;
 
@@ -73,12 +74,12 @@ public interface ICrowdSourcedServer {
 			return new UserCryptoFn(dataSource);
 		}
 
-		public static IUser makeUserForServer(IGitOperations gitOperations, IUrlGenerator userUrlGenerator, IFunction1<String, String> userRepositoryDefn) {
-			return new ServerUser(gitOperations, userUrlGenerator, userRepositoryDefn);
+		public static IUser makeUserForServer(IGitOperations gitOperations, IUrlGenerator userUrlGenerator, IFunction1<String, String> userRepositoryDefn, Map<String, Callable<Object>> defaultValues) {
+			return new ServerUser(gitOperations, userUrlGenerator, userRepositoryDefn, defaultValues);
 		}
 
-		public static IUser makeUserForServer(IGitOperations gitOperations, IFunction1<String, String> userRepositoryDefn) {
-			return new ServerUser(gitOperations, LoginConstants.userGenerator(), userRepositoryDefn);
+		public static IUser makeUserForServer(IGitOperations gitOperations, IFunction1<String, String> userRepositoryDefn, Map<String, Callable<Object>> defaultValues) {
+			return new ServerUser(gitOperations, LoginConstants.userGenerator(), userRepositoryDefn, defaultValues);
 		}
 
 		public static int port(String[] args) {

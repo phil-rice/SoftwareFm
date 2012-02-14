@@ -2,6 +2,7 @@ package org.softwareFm.server.processors;
 
 import java.io.File;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import org.apache.http.RequestLine;
 import org.softwareFm.common.IGitOperations;
@@ -96,8 +97,8 @@ public interface IProcessCall {
 			return chain(processCalls);// this sweeps up any posts, so ensure that commands appear in chain before it
 		}
 
-		public static IUser makeUser(IGitOperations gitOperations) {
-			IUser user = ICrowdSourcedServer.Utils.makeUserForServer(gitOperations, Strings.firstNSegments(3));
+		public static IUser makeUser(IGitOperations gitOperations, Map<String, Callable<Object>>nameAndCallables) {
+			IUser user = ICrowdSourcedServer.Utils.makeUserForServer(gitOperations, Strings.firstNSegments(3), nameAndCallables);
 			return user;
 		}
 

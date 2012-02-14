@@ -16,6 +16,7 @@ import org.softwareFm.common.url.Urls;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.server.processors.AbstractProcessorDatabaseIntegrationTests;
 import org.softwareFm.server.processors.IProcessCall;
+import org.softwareFm.softwareFmServer.SoftwareFmServer;
 
 public class UsageProcessorIntegrationTest extends AbstractProcessorDatabaseIntegrationTests {
 
@@ -81,7 +82,7 @@ public class UsageProcessorIntegrationTest extends AbstractProcessorDatabaseInte
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		user = IProcessCall.Utils.makeUser(remoteOperations);
+		user = IProcessCall.Utils.makeUser(remoteOperations, SoftwareFmServer.makeDefaultProperties());
 		//someNewSoftwareFmId0
 		String url = LoginConstants.userGenerator().findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
 		userFile = new File(remoteRoot,Urls.compose( url ,CommonConstants.dataFileName));

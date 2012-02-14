@@ -14,6 +14,7 @@ import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.server.GitTest;
 import org.softwareFm.common.strings.Strings;
+import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.user.IUsageReader;
 import org.softwareFm.eclipse.user.IUserMembership;
 import org.softwareFm.server.ICrowdSourcedServer;
@@ -92,16 +93,16 @@ public class GenerateGroupUsageProcessorTest extends GitTest {
 		IFunction1<String, String> repoDefnFn = Strings.firstNSegments(3);
 		remoteGroups = new GroupsForServer(GroupConstants.groupsGenerator(), remoteOperations, repoDefnFn);
 
-		user = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, repoDefnFn);
-		Callable<String> projectCryptoGenerator = Callables.valueFromList(user1projectCrypto, user2projectCrypto);
+		user = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, repoDefnFn, Maps.<String,Callable<Object>>makeMap(//
+				SoftwareFmConstants.projectCryptoKey, Callables.valueFromList(user1projectCrypto, user2projectCrypto), //
+				GroupConstants.membershipCryptoKey, Callables.makeCryptoKey()));
 		IFunction1<Map<String, Object>, String> userCryptoFn = Functions.mapFromKey(LoginConstants.softwareFmIdKey, sfmId1, userCrypto1, sfmId2, userCrypto2);
-		project = new ProjectForServer(remoteOperations, userCryptoFn, user, LoginConstants.userGenerator(), projectCryptoGenerator);
+		project = new ProjectForServer(remoteOperations, userCryptoFn, user, LoginConstants.userGenerator());
 		IUsageReader usage = new UsageReaderForServer(remoteOperations, user, LoginConstants.userGenerator());
 		generateUsageReportGenerator = new GenerateUsageProjectGenerator(remoteGroups, usage);
 
 		IFunction1<String, String> emailToSoftwareFmId = Functions.map(email1, sfmId1, email2, sfmId2);
-		Callable<String> userMembershipCryptoGenerator = Callables.makeCryptoKey();
-		IUserMembership membership = new UserMembershipForServer(LoginConstants.userGenerator(), remoteOperations, user, userCryptoFn, userMembershipCryptoGenerator, repoDefnFn);
-		takeOnProcessor = new TakeOnProcessor(remoteOperations, user, membership, remoteGroups, userCryptoFn, emailToSoftwareFmId, projectCryptoGenerator, GroupConstants.groupsGenerator(), Callables.value(groupId), repoDefnFn);
+		IUserMembership membership = new UserMembershipForServer(LoginConstants.userGenerator(), remoteOperations, user, userCryptoFn, repoDefnFn);
+		takeOnProcessor = new TakeOnProcessor(remoteOperations, user, membership, remoteGroups, userCryptoFn, emailToSoftwareFmId, GroupConstants.groupsGenerator(), Callables.value(groupId), repoDefnFn);
 	}
 }

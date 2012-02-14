@@ -9,10 +9,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.client.http.api.IClientBuilder;
 import org.softwareFm.client.http.api.IHttpClient;
 import org.softwareFm.common.IGitOperations;
+import org.softwareFm.common.IUserReader;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.processors.AbstractLoginDataAccessor;
 import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.services.IServiceExecutor;
@@ -39,7 +41,8 @@ public class MySoftwareFmDemo {
 		IGitOperations gitOperations = IGitOperations.Utils.gitOperations(remoteRoot);
 		Callable<String> softwareFmIdGenerator = Callables.uuidGenerator();
 		IFunction1<Map<String, Object>, String> userCryptoFn= ICrowdSourcedServer.Utils.cryptoFn(dataSource);
-		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, gitOperations, cryptoGenerator, softwareFmIdGenerator, userCryptoFn, IMailer.Utils.noMailer());
+		Map<String, Callable<Object>> defaultValues = Maps.newMap();
+		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, gitOperations, cryptoGenerator, softwareFmIdGenerator, userCryptoFn, IMailer.Utils.noMailer(), defaultValues);
 		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, Functions.<ProcessCallParameters, IProcessCall[]> constant(new IProcessCall[0]));
 		ICrowdSourcedServer server = ICrowdSourcedServer.Utils.testServerPort(processCall, ICallback.Utils.rethrow());
 		try {
@@ -47,7 +50,8 @@ public class MySoftwareFmDemo {
 				@Override
 				public Composite apply(Composite from) throws Exception {
 					CardConfig cardConfig = ICardConfigurator.Utils.cardConfigForTests(from.getDisplay());
-					MySoftwareFm mySoftwareFm = new MySoftwareFm(from, cardConfig, ILoginStrategy.Utils.softwareFmLoginStrategy(from.getDisplay(), service, client), IShowMyData.Utils.sysout(),IShowMyGroups.Utils.sysoutShowMyGroups());
+					IUserReader userReader = IUserReader.Utils.exceptionUserReader();
+					MySoftwareFm mySoftwareFm = new MySoftwareFm(from, cardConfig, ILoginStrategy.Utils.softwareFmLoginStrategy(from.getDisplay(), service, client), IShowMyData.Utils.sysout(),IShowMyGroups.Utils.sysoutShowMyGroups(), userReader);
 					mySoftwareFm.start();
 					return mySoftwareFm.getComposite();
 				}

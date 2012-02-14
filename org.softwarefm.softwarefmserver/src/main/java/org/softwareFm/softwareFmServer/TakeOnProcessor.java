@@ -29,21 +29,19 @@ public class TakeOnProcessor implements ITakeOnProcessor {
 	private final IUser user;
 	private final IGroups groups;
 	private final IFunction1<Map<String, Object>, String> userCryptoFn;
-	private final Callable<String> projectCryptoGenerator;
 	private final IFunction1<String, String> emailToSoftwareFmId;
 	private final IUrlGenerator groupGenerator;
 	private final Callable<String> groupIdGenerator;
 	private final IFunction1<String, String> repoDefnFn;
 	private final IUserMembership userMembership;
 
-	public TakeOnProcessor(IGitOperations gitOperations, IUser user, IUserMembership userMembership, IGroups groups, IFunction1<Map<String, Object>, String> userCryptoFn, IFunction1<String, String> emailToSoftwareFmId, Callable<String> projectCryptoGenerator, IUrlGenerator groupGenerator, Callable<String> groupIdGenerator, IFunction1<String, String> repoDefnFn) {
+	public TakeOnProcessor(IGitOperations gitOperations, IUser user, IUserMembership userMembership, IGroups groups, IFunction1<Map<String, Object>, String> userCryptoFn, IFunction1<String, String> emailToSoftwareFmId, IUrlGenerator groupGenerator, Callable<String> groupIdGenerator, IFunction1<String, String> repoDefnFn) {
 		this.gitOperations = gitOperations;
 		this.user = user;
 		this.userMembership = userMembership;
 		this.groups = groups;
 		this.emailToSoftwareFmId = emailToSoftwareFmId;
 		this.userCryptoFn = userCryptoFn;
-		this.projectCryptoGenerator = projectCryptoGenerator;
 		this.groupGenerator = groupGenerator;
 		this.groupIdGenerator = groupIdGenerator;
 		this.repoDefnFn = repoDefnFn;
@@ -54,10 +52,6 @@ public class TakeOnProcessor implements ITakeOnProcessor {
 		String softwareFmId = Functions.call(emailToSoftwareFmId, email);
 		String userCrypto = Functions.call(userCryptoFn, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId, LoginConstants.emailKey, email));
 		String usersProjectCryptoKey = user.getUserProperty(softwareFmId, userCrypto, SoftwareFmConstants.projectCryptoKey);
-		if (usersProjectCryptoKey == null) {
-			usersProjectCryptoKey = Callables.call(projectCryptoGenerator);
-			user.setUserProperty(softwareFmId, userCrypto, SoftwareFmConstants.projectCryptoKey, usersProjectCryptoKey);
-		}
 		String initialStatus = GroupConstants.invitedStatus;
 		Map<String, Object> initialData = Maps.stringObjectMap(LoginConstants.emailKey, email, LoginConstants.softwareFmIdKey, softwareFmId, SoftwareFmConstants.projectCryptoKey, usersProjectCryptoKey, GroupConstants.userStatusInGroup, initialStatus);
 		groups.addUser(groupId, groupCryptoKey, initialData);

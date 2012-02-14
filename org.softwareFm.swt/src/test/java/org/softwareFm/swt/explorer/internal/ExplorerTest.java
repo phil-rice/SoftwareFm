@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
+import org.softwareFm.common.IUserReader;
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.resources.IResourceGetter;
@@ -68,6 +69,7 @@ public class ExplorerTest extends SwtAndServiceTest {
 				"withCardNameField", new ResourceGetterMock(CardConstants.cardNameFieldKey, "cardName"))).//
 				withTitleSpecFn(Functions.<ICardData, TitleSpec> constant(TitleSpec.noTitleSpec(shell.getBackground())));
 		Explorer explorer = new Explorer(cardConfig, CardDataStoreFixture.urlAsList, masterDetailSocial, service, //
+				IUserReader.Utils.exceptionUserReader(),//
 				IPlayListGetter.Utils.noPlayListGetter(), //
 				ILoginStrategy.Utils.noLoginStrategy(), //
 				IShowMyData.Utils.exceptionShowMyData(),//

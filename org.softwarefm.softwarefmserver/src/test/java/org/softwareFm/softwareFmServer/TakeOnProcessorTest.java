@@ -23,7 +23,6 @@ import org.softwareFm.common.tests.Tests;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.user.IUserMembership;
-import org.softwareFm.server.ICrowdSourcedServer;
 
 public class TakeOnProcessorTest extends GitTest {
 
@@ -127,7 +126,7 @@ public class TakeOnProcessorTest extends GitTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		groups = new GroupsForServer(GroupConstants.groupsGenerator(), remoteOperations, Strings.firstNSegments(3));
-		user = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, Strings.firstNSegments(3));
+		user = SoftwareFmServer.makeUser(remoteOperations, LoginConstants.userGenerator());
 		crypto1 = Crypto.makeKey();
 		crypto2 = Crypto.makeKey();
 		IFunction1<Map<String, Object>, String> cryptoFn = new IFunction1<Map<String, Object>, String>() {
@@ -142,8 +141,7 @@ public class TakeOnProcessorTest extends GitTest {
 		Callable<String> groupIdGenerator = Callables.uuidGenerator();
 		IFunction1<String, String> repoDefnFn = Strings.firstNSegments(3);
 		groupUrlGenerator = GroupConstants.groupsGenerator();
-		Callable<String> membershipCryptoGenerator = Callables.makeCryptoKey();
-		membership = new UserMembershipForServer(LoginConstants.userGenerator(), remoteOperations, user, cryptoFn, membershipCryptoGenerator, repoDefnFn);
-		takeOnProcessor = new TakeOnProcessor(remoteOperations, user, membership, groups, cryptoFn, emailToSoftware, Callables.makeCryptoKey(), groupUrlGenerator, groupIdGenerator, repoDefnFn);
+		membership = new UserMembershipForServer(LoginConstants.userGenerator(), remoteOperations, user, cryptoFn, repoDefnFn);
+		takeOnProcessor = new TakeOnProcessor(remoteOperations, user, membership, groups, cryptoFn, emailToSoftware, groupUrlGenerator, groupIdGenerator, repoDefnFn);
 	}
 }

@@ -3,7 +3,6 @@ package org.softwareFm.softwareFmServer;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
 import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.IGitOperations;
@@ -16,7 +15,6 @@ import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.json.Json;
 import org.softwareFm.common.maps.Maps;
-import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.user.AbstractUserMembershipReader;
@@ -27,15 +25,13 @@ public class UserMembershipForServer extends AbstractUserMembershipReader implem
 	private final IGitOperations gitOperations;
 	private final IFunction1<String, String> repoDefnFn;
 	private final IFunction1<Map<String, Object>, String> userCryptoFn;
-	private final Callable<String> userMemberCryptoGenerator;
 	private final IUser user;
 
-	public UserMembershipForServer(IUrlGenerator userUrlGenerator, IGitOperations gitOperations, IUser user, IFunction1<Map<String, Object>, String> userCryptoFn, Callable<String> userMemberCryptoGenerator, IFunction1<String, String> repoDefnFn) {
+	public UserMembershipForServer(IUrlGenerator userUrlGenerator, IGitOperations gitOperations, IUser user, IFunction1<Map<String, Object>, String> userCryptoFn, IFunction1<String, String> repoDefnFn) {
 		super(userUrlGenerator, user);
 		this.user = user;
 		this.gitOperations = gitOperations;
 		this.userCryptoFn = userCryptoFn;
-		this.userMemberCryptoGenerator = userMemberCryptoGenerator;
 		this.repoDefnFn = repoDefnFn;
 	}
 
@@ -104,10 +100,6 @@ public class UserMembershipForServer extends AbstractUserMembershipReader implem
 	protected String getMembershipCrypto(String softwareFmId) {
 		String userCrypto = Functions.call(userCryptoFn, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
 		String usersMembershipCrypto = user.getUserProperty(softwareFmId, userCrypto, GroupConstants.membershipCryptoKey);
-		if (usersMembershipCrypto == null) {
-			usersMembershipCrypto = Callables.call(userMemberCryptoGenerator);
-			user.setUserProperty(softwareFmId, userCrypto, GroupConstants.membershipCryptoKey, usersMembershipCrypto);
-		}
 		return usersMembershipCrypto;
 	}
 	

@@ -5,7 +5,6 @@ import java.util.concurrent.Callable;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.softwareFm.common.IGroups;
-import org.softwareFm.common.IUser;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
@@ -16,6 +15,7 @@ import org.softwareFm.common.processors.AbstractLoginDataAccessor;
 import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
+import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.user.IProject;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.server.ICrowdSourcedServer;
@@ -38,7 +38,6 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 	private Callable<String> userCryptoGenerator;
 	protected int thisDay;
 	protected String projectCryptoKey1;
-	protected IUser user;
 	protected IGroups groups;
 	protected String groupId;
 	private IUrlGenerator groupsGenerator;
@@ -57,8 +56,9 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 		userKey = Crypto.makeKey();
 		userKey2 = Crypto.makeKey();
 		userKey3 = Crypto.makeKey();
-		userCryptoFn = new IFunction1<Map<String,Object>, String>() {
-			private final Map<String,Object>map = Maps.makeMap("someNewSoftwareFmId0", userKey,"someNewSoftwareFmId1", userKey2, "someNewSoftwareFmId2", userKey3);
+		userCryptoFn = new IFunction1<Map<String, Object>, String>() {
+			private final Map<String, Object> map = Maps.makeMap("someNewSoftwareFmId0", userKey, "someNewSoftwareFmId1", userKey2, "someNewSoftwareFmId2", userKey3);
+
 			@Override
 			public String apply(Map<String, Object> from) throws Exception {
 				String softwareFmId = (String) from.get(LoginConstants.softwareFmIdKey);
@@ -69,7 +69,6 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 		};
 		userCryptoGenerator = Callables.valueFromList(userKey, userKey2, userKey3);
 		Callable<String> softwareFmIdGenerator = Callables.patternWithCount("someNewSoftwareFmId{0}");
-		user = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, Strings.firstNSegments(3));
 		projectCryptoKey1 = Crypto.makeKey();
 		projectCryptoKey2 = Crypto.makeKey();
 		projectCryptoKey3 = Crypto.makeKey();
@@ -79,7 +78,11 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 		groupId = "someGroupId";
 		groups = new GroupsForServer(groupsGenerator, remoteOperations, repoDefnFn);
 
-		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, remoteOperations, userCryptoGenerator, softwareFmIdGenerator, userCryptoFn, mailerMock);
+		Map<String, Callable<Object>> defaultValues = Maps.makeMap(//
+				GroupConstants.membershipCryptoKey, Callables.makeCryptoKey(), //
+				GroupConstants.groupCryptoKey, Callables.valueFromList(groupCryptoKey),//
+				SoftwareFmConstants.projectCryptoKey, Callables.valueFromList(projectCryptoKey1, projectCryptoKey2, projectCryptoKey3));
+		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, remoteOperations, userCryptoGenerator, softwareFmIdGenerator, userCryptoFn, mailerMock, defaultValues);
 		IProcessCall processCalls = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, getExtraProcessCalls());
 		template = new JdbcTemplate(dataSource);
 		server = ICrowdSourcedServer.Utils.testServerPort(processCalls, ICallback.Utils.rethrow());
@@ -92,7 +95,7 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 			@Override
 			public IProcessCall[] apply(ProcessCallParameters from) throws Exception {
 				IUrlGenerator userUrlGenerator = LoginConstants.userGenerator();
-				IProject project = new ProjectForServer(remoteOperations, userCryptoFn, user, userUrlGenerator, userCryptoGenerator);
+				IProject project = new ProjectForServer(remoteOperations, userCryptoFn, from.user, userUrlGenerator);
 				IProjectTimeGetter projectTimeGetter = new IProjectTimeGetter() {
 					@Override
 					public String thisMonth() {
@@ -110,15 +113,12 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 					}
 				};
 
-
-
 				IFunction1<String, String> emailToSfmId = ICrowdSourcedServer.Utils.emailToSoftwareFmId(from.dataSource);
 				Callable<String> groupIdGenerator = Callables.value(groupId);
 
-				Callable<String> userMembershipCryptoGenerator = Callables.makeCryptoKey();
-				UserMembershipForServer membershipForServer = new UserMembershipForServer(LoginConstants.userGenerator(), from.gitOperations, from.user, userCryptoFn, userMembershipCryptoGenerator, emailToSfmId);
-				ITakeOnProcessor takeOnProcessor = new TakeOnProcessor(from.gitOperations, user, membershipForServer, groups, userCryptoFn, emailToSfmId, Callables.valueFromList(projectCryptoKey1, projectCryptoKey2, projectCryptoKey3), groupsGenerator, groupIdGenerator, repoDefnFn);
-				Callable<String> groupCryptoGenerator= Callables.value(groupCryptoKey);
+				UserMembershipForServer membershipForServer = new UserMembershipForServer(LoginConstants.userGenerator(), from.gitOperations, from.user, userCryptoFn, emailToSfmId);
+				ITakeOnProcessor takeOnProcessor = new TakeOnProcessor(from.gitOperations, from.user, membershipForServer, groups, userCryptoFn, emailToSfmId, groupsGenerator, groupIdGenerator, repoDefnFn);
+				Callable<String> groupCryptoGenerator = Callables.value(groupCryptoKey);
 				return new IProcessCall[] { //
 				new UsageProcessor(remoteOperations, project, projectTimeGetter), //
 						new TakeOnGroupProcessor(takeOnProcessor, from.signUpChecker, groupCryptoGenerator, emailToSfmId, from.saltGenerator, from.softwareFmIdGenerator, mailerMock) };

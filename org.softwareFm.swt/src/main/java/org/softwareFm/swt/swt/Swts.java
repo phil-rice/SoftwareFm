@@ -775,7 +775,6 @@ public class Swts {
 				Assert.fail("Child " + index + "/" + c + " is in wrong order\nExpected " + controls + "\naActual: " + children);
 
 		}
-
 	}
 
 	public static IFunction1<String, Image> imageFn(final ImageRegistry imageRegistry) {
@@ -851,7 +850,6 @@ public class Swts {
 
 	public static IFunction1<Composite, IHasControl> styledTextFn(final String text, final int style) {
 		return new IFunction1<Composite, IHasControl>() {
-
 			@Override
 			public IHasControl apply(Composite from) throws Exception {
 				StyledText styledText = new StyledText(from, style);
@@ -903,7 +901,6 @@ public class Swts {
 			Composite parent = control.getParent();
 			clientAreasUpToShell(buffer, parent);
 		}
-
 	}
 
 	public static Button findButtonWithText(List<Button> buttons, String string) {
@@ -1035,7 +1032,7 @@ public class Swts {
 			return control;
 		if (control instanceof Composite)
 			return getDescendant(((Composite) control).getChildren()[childIndicies[index]], index + 1, childIndicies);
-		throw new IllegalArgumentException(MessageFormat.format(UtilityMessages.cannotGetDescendant, index, Arrays.asList(childIndicies)));
+		throw new IllegalArgumentException(MessageFormat.format(UtilityMessages.cannotGetDescendant, control, index, ArrayHelper.asList(childIndicies)));
 	}
 
 	public static void checkColumns(Table table, String... expected) {

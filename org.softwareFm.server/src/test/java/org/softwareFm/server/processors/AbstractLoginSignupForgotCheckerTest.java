@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.dbcp.BasicDataSource;
@@ -11,6 +12,7 @@ import org.softwareFm.common.IUser;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.constants.LoginMessages;
 import org.softwareFm.common.crypto.Crypto;
+import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.processors.AbstractLoginDataAccessor;
 import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.server.GitTest;
@@ -83,7 +85,8 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends GitTest imple
 		super.setUp();
 		dataSource = AbstractLoginDataAccessor.defaultDataSource();
 		key = Crypto.makeKey();
-		user = new ServerUser(remoteOperations, LoginConstants.userGenerator(), Strings.firstNSegments(3));
+		Map<String, Callable<Object>> defaultValues = Maps.newMap();
+		user = new ServerUser(remoteOperations, LoginConstants.userGenerator(), Strings.firstNSegments(3), defaultValues);
 		signupChecker = new SignUpChecker(dataSource, Callables.value(key), user);
 		loginChecker = new LoginChecker(dataSource);
 		mailerMock = new MailerMock();

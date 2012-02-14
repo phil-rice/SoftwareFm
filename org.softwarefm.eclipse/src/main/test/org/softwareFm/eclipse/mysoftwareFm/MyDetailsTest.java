@@ -30,12 +30,11 @@ public class MyDetailsTest extends SwtTest {
 		IProject project = ProjectFixture.project1(softwareFmId, projectCryptoKey);
 		UserData userData = new UserData(email, softwareFmId, cryptoKey);
 		MyDetails myDetails = new MyDetails(shell, cardConfig, userData, user, project, timeGetter);
-		checkUserDetails(myDetails);
 		checkProjectDetails(myDetails);
 	}
 
 	private void checkProjectDetails(MyDetails myDetails) {
-		Table projectTable = (Table) Swts.getDescendant(myDetails.getControl(), 1);
+		Table projectTable = (Table) Swts.getDescendant(myDetails.getControl(), 0);
 		Swts.checkColumns(projectTable, "Group ID", "Artifact ID", "Month1", "Month2", "Month3");
 
 		assertEquals(7, projectTable.getItemCount());
@@ -46,16 +45,6 @@ public class MyDetailsTest extends SwtTest {
 		Swts.checkRow(projectTable, 4, "group2", "artifact22", "3", "3", "0");
 		Swts.checkRow(projectTable, 5, "group3", "artifact31", "0", "0", "2");
 		Swts.checkRow(projectTable, 6, "group3", "artifact32", "0", "0", "3");
-	}
-
-	protected void checkUserDetails(MyDetails myDetails) {
-		Table userTable = (Table) Swts.getDescendant(myDetails.getControl(), 0);
-		assertEquals(2, userTable.getColumnCount());
-
-		assertEquals(3, userTable.getItemCount());
-		Swts.checkRow(userTable, 0, "email", "someEmail");
-		Swts.checkRow(userTable, 1, "moniker", "someMoniker");
-		Swts.checkRow(userTable, 2, "softwareFmId", "someSoftwareFmId");
 	}
 
 	@Override

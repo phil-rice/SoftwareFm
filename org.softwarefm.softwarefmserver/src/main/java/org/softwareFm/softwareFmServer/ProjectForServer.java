@@ -3,7 +3,6 @@ package org.softwareFm.softwareFmServer;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
 import org.apache.log4j.Logger;
 import org.softwareFm.common.IFileDescription;
@@ -14,7 +13,6 @@ import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
-import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.common.url.Urls;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
@@ -27,14 +25,12 @@ public class ProjectForServer implements IProject {
 	private final IUser user;
 	private final IFunction1<Map<String, Object>, String> cryptoFn;
 	private final IUrlGenerator userUrlGenerator;
-	private final Callable<String> cryptoGenerator;
 
-	public ProjectForServer(IGitOperations gitOperations, IFunction1<Map<String, Object>, String> cryptoFn, IUser user, IUrlGenerator userUrlGenerator, Callable<String> cryptoGenerator) {
+	public ProjectForServer(IGitOperations gitOperations, IFunction1<Map<String, Object>, String> cryptoFn, IUser user, IUrlGenerator userUrlGenerator) {
 		this.gitOperations = gitOperations;
 		this.cryptoFn = cryptoFn;
 		this.user = user;
 		this.userUrlGenerator = userUrlGenerator;
-		this.cryptoGenerator = cryptoGenerator;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -71,11 +67,8 @@ public class ProjectForServer implements IProject {
 		String cryptoKey = Functions.call(cryptoFn, userDetailMap);
 		logger.debug("User crypto key: " + cryptoKey);
 		String projectCryptoKey = user.getUserProperty(softwareFmId, cryptoKey, SoftwareFmConstants.projectCryptoKey);
-		if (projectCryptoKey == null) {
-			logger.debug("Creating project crypto key");
-			projectCryptoKey = Callables.call(cryptoGenerator);
-			user.setUserProperty(softwareFmId, cryptoKey, SoftwareFmConstants.projectCryptoKey, projectCryptoKey);
-		}
+		if (projectCryptoKey == null)
+			throw new NullPointerException();
 		logger.debug("Project crypto key: " + cryptoKey);
 		IFileDescription projectFileDescription = IFileDescription.Utils.encrypted(Urls.compose(userUrl, SoftwareFmConstants.projectDirectoryName), month, projectCryptoKey);
 		return projectFileDescription;

@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.softwareFm.common.IUserReader;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.resources.IResourceGetter;
@@ -39,7 +40,7 @@ public class IExplorerTest extends SwtTest {
 			List<String> rootUrls = Arrays.asList("rootUrl");
 			IPlayListGetter playListGetter = IPlayListGetter.Utils.noPlayListGetter();
 			Explorer explorer = (Explorer) IExplorer.Utils.explorer(//
-					masterDetailSocial, cardConfig, rootUrls, playListGetter, service, //
+					masterDetailSocial, IUserReader.Utils.exceptionUserReader(), cardConfig, rootUrls, playListGetter, service, //
 					ILoginStrategy.Utils.noLoginStrategy(), //
 					IShowMyData.Utils.exceptionShowMyData(),//
 					IShowMyGroups.Utils.exceptionShowMyGroups(),//

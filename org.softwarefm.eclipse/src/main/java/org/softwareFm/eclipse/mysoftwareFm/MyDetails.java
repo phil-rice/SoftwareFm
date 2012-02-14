@@ -30,7 +30,6 @@ import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.project.UserAndProjectFactory;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.eclipse.user.IUsageReader;
-import org.softwareFm.swt.card.LineItem;
 import org.softwareFm.swt.card.composites.CompositeWithCardMargin;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
@@ -73,7 +72,6 @@ public class MyDetails implements IHasComposite {
 
 	static class MyProjectComposite extends CompositeWithCardMargin {
 
-		private final Table userDetails;
 		private final Table projectDetails;
 
 		@SuppressWarnings("unused")
@@ -87,20 +85,7 @@ public class MyDetails implements IHasComposite {
 					e.gc.drawRoundRectangle(ca.x - cc.cornerRadiusComp, ca.y - cc.cornerRadiusComp, ca.width + 2 * cc.cornerRadiusComp, ca.height + 2 * cc.cornerRadiusComp, cc.cornerRadius, cc.cornerRadius);
 				}
 			});
-			this.userDetails = new Table(this, SWT.FULL_SELECTION);
-			userDetails.setHeaderVisible(false);
-			for (int i = 0; i < 2; i++)
-				new TableColumn(userDetails, SWT.NULL);
-			user.refresh(userData.softwareFmId);
-			for (String property : displayProperties) {
-				TableItem item = new TableItem(userDetails, SWT.NULL);
-				Object value = user.getUserProperty(userData.softwareFmId, userData.crypto, property);
-				String name = cc.nameFn.apply(cc, new LineItem(SoftwareFmConstants.myDetailsCardType, property, value));
-				item.setText(new String[] { name, Strings.nullSafeToString(value) });
-			}
-			String softwareFmIdName = cc.nameFn.apply(cc, new LineItem(SoftwareFmConstants.myDetailsCardType, LoginConstants.softwareFmIdKey, null));
-			TableItem softwareFmIdItem = new TableItem(userDetails, SWT.FULL_SELECTION);
-			softwareFmIdItem.setText(new String[] { softwareFmIdName, userData.softwareFmId });
+		
 			Map<String, Map<String, Map<String, Integer>>> groupToArtifactToMonthToCount = Maps.newMap();
 			Iterable<String> lastNMonths = timeGetter.lastNMonths(3);
 			this.projectDetails = new Table(this, SWT.FULL_SELECTION);
@@ -134,7 +119,7 @@ public class MyDetails implements IHasComposite {
 					}
 				}
 			}
-			Swts.packTables(userDetails, projectDetails);
+			Swts.packTables( projectDetails);
 		}
 	}
 
