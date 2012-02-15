@@ -28,6 +28,8 @@ public class GroupConstants {
 
 	public static final String invitedStatus = "invited";
 	public static final String membershipFileName = "membership.json";
+	public static final String groupMembersTitle = "group.members.title";
+	public static final String needToSelectGroup = "group.members.needToSelectGroup";
 
 	public static IUrlGenerator groupsGenerator() {
 		return IUrlGenerator.Utils.generator("softwareFm/groups/{0}/{1}/{2}", groupIdKey);

@@ -1,13 +1,12 @@
 package org.softwareFm.eclipse.mysoftwareFm;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Rectangle;
@@ -23,6 +22,7 @@ import org.softwareFm.common.IGitLocal;
 import org.softwareFm.common.IGroupsReader;
 import org.softwareFm.common.IUserReader;
 import org.softwareFm.common.LocalGroupsReader;
+import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.IFunction1;
@@ -34,8 +34,8 @@ import org.softwareFm.eclipse.IRequestGroupReportGeneration;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.eclipse.user.IUserMembershipReader;
 import org.softwareFm.eclipse.user.UserMembershipReaderForLocal;
-import org.softwareFm.swt.card.LineItem;
 import org.softwareFm.swt.card.composites.CompositeWithCardMargin;
+import org.softwareFm.swt.card.composites.TextInBorder;
 import org.softwareFm.swt.card.composites.TextInCompositeWithCardMargin;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
@@ -92,16 +92,17 @@ public class MyGroups implements IHasComposite {
 		private final Table summaryTable;
 		private final IGroupsReader groupsReader;
 		private final SashForm sashForm;
-		private final Table groupTable;
+		private final Composite rightHand;
+		private final Table membershipTable;
 		private final Map<String, String> idToCrypto = Maps.newMap();
 
-		public MyGroupsComposite(Composite parent, final CardConfig cc, IUserMembershipReader membershipReader, final IGroupsReader groupReaders, String softwareFmId, IProjectTimeGetter projectTimeGetter, final IRequestGroupReportGeneration reportGenerator) {
-			super(parent, SWT.NULL, cc);
+		public MyGroupsComposite(Composite parent, final CardConfig cardConfig, IUserMembershipReader membershipReader, final IGroupsReader groupReaders, String softwareFmId, IProjectTimeGetter projectTimeGetter, final IRequestGroupReportGeneration reportGenerator) {
+			super(parent, SWT.NULL, cardConfig);
 			addPaintListener(new PaintListener() {
 				@Override
 				public void paintControl(PaintEvent e) {
 					Rectangle ca = getClientArea();
-					e.gc.drawRoundRectangle(ca.x - cc.cornerRadiusComp, ca.y - cc.cornerRadiusComp, ca.width + 2 * cc.cornerRadiusComp, ca.height + 2 * cc.cornerRadiusComp, cc.cornerRadius, cc.cornerRadius);
+					e.gc.drawRoundRectangle(ca.x - cardConfig.cornerRadiusComp, ca.y - cardConfig.cornerRadiusComp, ca.width + 2 * cardConfig.cornerRadiusComp, ca.height + 2 * cardConfig.cornerRadiusComp, cardConfig.cornerRadius, cardConfig.cornerRadius);
 				}
 			});
 			this.groupsReader = groupReaders;
@@ -118,25 +119,26 @@ public class MyGroups implements IHasComposite {
 				item.setData(groupId);
 				int membershipCount = groupsReader.membershipCount(groupId, groupCryptoKey);
 				String membershipCountString = Integer.toString(membershipCount);
-				item.setText(new String[] { groupName + "/" + groupId, membershipCountString });
+				item.setText(new String[] { groupName, membershipCountString });
 				idToCrypto.put(groupId, groupCryptoKey);
 			}
 
-			groupTable = new Table(sashForm, SWT.FULL_SELECTION);
-			groupTable.setHeaderVisible(true);
-			final Iterable<String> lastNMonths = projectTimeGetter.lastNMonths(3);
-			new TableColumn(groupTable, SWT.NULL).setText("Group Id");
-			new TableColumn(groupTable, SWT.NULL).setText("ArtifactId Id");
-			for (String month : lastNMonths) {
-				LineItem lineItem = new LineItem(GroupConstants.myGroupsCardType, month, null);
-				String name = cc.nameFn.apply(cc, lineItem);
-				new TableColumn(groupTable, SWT.FULL_SELECTION).setText(name);
-			}
+			rightHand = new Composite(sashForm, SWT.NULL);
+			final StackLayout stackLayout = new StackLayout();
+			rightHand.setLayout(stackLayout);
+
+			TextInBorder textInBorder = new TextInBorder(rightHand, SWT.WRAP | SWT.READ_ONLY, cardConfig);
+			textInBorder.setTextFromResourceGetter(GroupConstants.myGroupsCardType, GroupConstants.groupMembersTitle, GroupConstants.needToSelectGroup);
+			stackLayout.topControl = textInBorder.getControl();
+
+			membershipTable = new Table(rightHand, SWT.FULL_SELECTION);
+			membershipTable.setHeaderVisible(true);
+			new TableColumn(membershipTable, SWT.NULL).setText("Email");
 			summaryTable.addListener(SWT.Selection, new Listener() {
 				@Override
-				@SuppressWarnings({ "unchecked", "rawtypes" })
 				public void handleEvent(Event event) {
-					groupTable.removeAll();
+					stackLayout.topControl = membershipTable;
+					membershipTable.removeAll();
 					int index = summaryTable.getSelectionIndex();
 					if (index >= 0) {
 						TableItem item = summaryTable.getItem(index);
@@ -146,29 +148,17 @@ public class MyGroups implements IHasComposite {
 						String groupCryptoKey = idToCrypto.get(groupId);
 						if (groupCryptoKey == null)
 							throw new NullPointerException(groupCryptoKey);
-						Map<String, Map<String, Map<String, Integer>>> map = Maps.newMap();
-						for (String month : lastNMonths) {
-							reportGenerator.request(groupId, groupCryptoKey, month);
-							Map<String, Map<String, Map<String, List<Integer>>>> report = (Map) groupReaders.getUsageReport(groupId, groupCryptoKey, month);
-							if (report != null)
-								for (Entry<String, Map<String, Map<String, List<Integer>>>> groupEntry : report.entrySet())
-									for (Entry<String, Map<String, List<Integer>>> artifactEntry : groupEntry.getValue().entrySet())
-										Maps.addToMapOfMapOfMaps(map, HashMap.class, groupEntry.getKey(), artifactEntry.getKey(), month, artifactEntry.getValue().size());
-						}
-						for (Entry<String, Map<String, Map<String, Integer>>> groupEntry : map.entrySet())
-							for (Entry<String, Map<String, Integer>> artifactEntry : groupEntry.getValue().entrySet()) {
-								TableItem reportItem = new TableItem(groupTable, SWT.FULL_SELECTION);
-								reportItem.setText(0, groupEntry.getKey());
-								reportItem.setText(1, artifactEntry.getKey());
-								int i = 2;
-								for (String month : lastNMonths)
-									reportItem.setText(i++, Strings.nullSafeToString(artifactEntry.getValue().get(month)));
-							}
+						List<String> emails = Lists.newList();
+						for (Map<String, Object> user : groupsReader.users(groupId, groupCryptoKey))
+							emails.add(Strings.nullSafeToString(user.get(LoginConstants.emailKey)));
+						for (String email: Lists.sort(emails))
+							new TableItem(membershipTable, SWT.NULL).setText(email);
 					}
-					Swts.packColumns(groupTable);
+					Swts.packColumns(membershipTable);
+					rightHand.layout();
 				}
 			});
-			Swts.packTables(summaryTable, groupTable);
+			Swts.packTables(summaryTable, membershipTable);
 			sashForm.setWeights(new int[] { 2, 3 });
 		}
 	}
