@@ -149,8 +149,8 @@ public class ActionBar implements IActionBar {
 		cardConfig.cardDataStore.processDataFor(jarUrl, new ICardDataStoreCallback<Void>() {
 			@Override
 			public Void process(String jarUrl, final Map<String, Object> groupArtifactVersionMap) throws Exception {
-				String groupId = (String) groupArtifactVersionMap.get(CollectionConstants.groupId);
-				String artifactId = (String) groupArtifactVersionMap.get(CollectionConstants.artifactId);
+				String groupId = (String) groupArtifactVersionMap.get(SoftwareFmConstants.groupId);
+				String artifactId = (String) groupArtifactVersionMap.get(SoftwareFmConstants.artifactId);
 				IUrlGenerator urlGenerator = cardConfig.urlGeneratorMap.get(urlKey);
 				String url = urlGenerator.findUrlFor(groupArtifactVersionMap);
 				if (url == null)
@@ -227,8 +227,8 @@ public class ActionBar implements IActionBar {
 		cardConfig.cardDataStore.processDataFor(jarUrl, new ICardDataStoreCallback<Void>() {
 			@Override
 			public Void process(String jarUrl, final Map<String, Object> groupArtifactVersionMap) throws Exception {
-				String groupId = (String) groupArtifactVersionMap.get(CollectionConstants.groupId);
-				String artifactId = (String) groupArtifactVersionMap.get(CollectionConstants.artifactId);
+				String groupId = (String) groupArtifactVersionMap.get(SoftwareFmConstants.groupId);
+				String artifactId = (String) groupArtifactVersionMap.get(SoftwareFmConstants.artifactId);
 				IUrlGenerator urlGenerator = cardConfig.urlGeneratorMap.get(urlKey);
 				String url = urlGenerator.findUrlFor(groupArtifactVersionMap);
 				if (url == null)
@@ -312,7 +312,7 @@ public class ActionBar implements IActionBar {
 				afterDisplayCard = new IAfterDisplayCard() {
 					@Override
 					public void process(ICard card, Map<String, Object> groupArtifactVersionMap) {
-						String version = Strings.nullSafeToString(groupArtifactVersionMap.get(CollectionConstants.version));
+						String version = Strings.nullSafeToString(groupArtifactVersionMap.get(SoftwareFmConstants.version));
 						if (version != null) {
 							Table table = card.getTable();
 							for (TableItem item : table.getItems()) {

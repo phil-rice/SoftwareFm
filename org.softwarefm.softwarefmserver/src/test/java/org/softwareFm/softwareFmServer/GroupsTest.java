@@ -21,8 +21,8 @@ import org.softwareFm.eclipse.user.ProjectMock;
 import org.softwareFm.server.ICrowdSourcedServer;
 
 abstract public class GroupsTest extends GitTest {
-	protected final IUrlGenerator userGenerator = LoginConstants.userGenerator();
-	protected final IUrlGenerator groupGenerator = GroupConstants.groupsGenerator();
+	protected final IUrlGenerator userGenerator = LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix);
+	protected final IUrlGenerator groupGenerator = GroupConstants.groupsGenerator(SoftwareFmConstants.urlPrefix);
 
 	protected final String groupCrypto = Crypto.makeKey();
 

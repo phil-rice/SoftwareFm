@@ -22,7 +22,7 @@ public class GenerateUsageProjectGeneratorTest extends GroupsTest {
 
 	protected void checkMonthsReport(String month, Map<String, Object> expected) {
 		GenerateUsageProjectGenerator generator = new GenerateUsageProjectGenerator(//
-				new GroupsForServer(GroupConstants.groupsGenerator(), remoteOperations, Strings.firstNSegments(3)), //
+				new GroupsForServer(GroupConstants.groupsGenerator(SoftwareFmConstants.urlPrefix), remoteOperations, Strings.firstNSegments(3)), //
 				new UsageReaderForServer(remoteOperations, null, userGenerator));
 		Map<String, Map<String, Map<String, List<Integer>>>> month1 = generator.generateReport(groupId, groupCrypto, month);
 		assertEquals(expected, month1);

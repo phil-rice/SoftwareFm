@@ -36,6 +36,7 @@ import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.tests.IIntegrationTest;
 import org.softwareFm.common.tests.Tests;
 import org.softwareFm.common.url.Urls;
+import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.server.ICrowdSourcedServer;
 import org.softwareFm.server.processors.IMailer;
 import org.softwareFm.server.processors.IProcessCall;
@@ -365,7 +366,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		IGitOperations remoteOperations = IGitOperations.Utils.gitOperations(remoteRoot);
 		IFunction1<Map<String, Object>, String> userCryptoFn = ICrowdSourcedServer.Utils.cryptoFn(dataSource);
 		Map<String, Callable<Object>> defaultValues = SoftwareFmServer.makeDefaultProperties();
-		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, remoteOperations, cryptoGenerator, softwareFmIdGenerator, userCryptoFn, IMailer.Utils.noMailer(), defaultValues);
+		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, remoteOperations, cryptoGenerator, softwareFmIdGenerator, userCryptoFn, IMailer.Utils.noMailer(), defaultValues, SoftwareFmConstants.urlPrefix);
 		IProcessCall softwareFmProcessCall = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, Functions.<ProcessCallParameters, IProcessCall[]> constant(new IProcessCall[0]));
 		server = ICrowdSourcedServer.Utils.testServerPort(softwareFmProcessCall, ICallback.Utils.rethrow());
 		client = IHttpClient.Utils.builder("localhost", 8080);

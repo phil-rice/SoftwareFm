@@ -23,7 +23,7 @@ public class LoginConstants {
 	public static final String signupPrefix = "command/signup";
 	public static final String changePasswordPrefix = "command/changePassword";
 
-	public static IUrlGenerator userGenerator() {
-		return IUrlGenerator.Utils.generator("softwareFm/users/{0}/{1}/{2}", softwareFmIdKey);
+	public static IUrlGenerator userGenerator(String prefix) {
+		return IUrlGenerator.Utils.generator(prefix + "/users/{0}/{1}/{2}", softwareFmIdKey);
 	}
 }

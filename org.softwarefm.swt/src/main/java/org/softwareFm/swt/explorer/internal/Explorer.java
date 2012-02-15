@@ -41,6 +41,7 @@ import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
+import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.swt.browser.IBrowserPart;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardChangedListener;
@@ -620,9 +621,9 @@ public class Explorer implements IExplorer {
 									@Override
 									public void process(GroupidArtifactVersion t) throws Exception {
 										Map<String, Object> data = Maps.stringObjectMap(//
-												CollectionConstants.groupId, t.groupId,//
-												CollectionConstants.artifactId, t.artifactId,//
-												CollectionConstants.version, t.version);
+												SoftwareFmConstants.groupId, t.groupId,//
+												SoftwareFmConstants.artifactId, t.artifactId,//
+												SoftwareFmConstants.version, t.version);
 										addUnrecognisedJar(file, digest, projectName, data);
 									}
 								});
@@ -665,9 +666,9 @@ public class Explorer implements IExplorer {
 			private Map<String, Object> guessDetailsForUnrecognisedJar(final File file) {
 				GuessArtifactAndVersionDetails guesser = new GuessArtifactAndVersionDetails();
 				final Map<String, Object> startData = Maps.stringObjectMap(//
-						CollectionConstants.groupId, file.getName().equals("rt.jar") ? "sun.jdk" : "Please specify the group id",//
-						CollectionConstants.artifactId, guesser.guessArtifactName(file),//
-						CollectionConstants.version, guesser.guessVersion(file));
+						SoftwareFmConstants.groupId, file.getName().equals("rt.jar") ? "sun.jdk" : "Please specify the group id",//
+						SoftwareFmConstants.artifactId, guesser.guessArtifactName(file),//
+						SoftwareFmConstants.version, guesser.guessVersion(file));
 				return startData;
 			}
 		}, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.jarNotRecognisedTitle, CollectionConstants.jarNotRecognisedText, file, file.getName(), projectName));
@@ -698,9 +699,9 @@ public class Explorer implements IExplorer {
 					@Override
 					public void ok(ICardData cardData) {
 						masterDetailSocial.setDetail(null);
-						String groupId = (String) cardData.data().get(CollectionConstants.groupId);
-						String artifactId = (String) cardData.data().get(CollectionConstants.artifactId);
-						String version = (String) cardData.data().get(CollectionConstants.version);
+						String groupId = (String) cardData.data().get(SoftwareFmConstants.groupId);
+						String artifactId = (String) cardData.data().get(SoftwareFmConstants.artifactId);
+						String version = (String) cardData.data().get(SoftwareFmConstants.version);
 						importJar(digest, groupId, artifactId, version, file);
 					}
 
@@ -712,9 +713,9 @@ public class Explorer implements IExplorer {
 
 					@Override
 					public boolean canOk(Map<String, Object> data) {
-						String groupId = Strings.nullSafeToString(data.get(CollectionConstants.groupId));
-						String artifactId = Strings.nullSafeToString(data.get(CollectionConstants.artifactId));
-						String version = Strings.nullSafeToString(data.get(CollectionConstants.version));
+						String groupId = Strings.nullSafeToString(data.get(SoftwareFmConstants.groupId));
+						String artifactId = Strings.nullSafeToString(data.get(SoftwareFmConstants.artifactId));
+						String version = Strings.nullSafeToString(data.get(SoftwareFmConstants.version));
 
 						boolean groupValidated = Strings.isUrlFriendly(groupId);
 						boolean artifactValidated = Strings.isUrlFriendly(artifactId);

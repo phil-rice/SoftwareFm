@@ -84,8 +84,7 @@ public class CardConstants {
 	public static final String folder = "Folder";
 	public static final String group = "group";
 	public static final String artifact = "artifact";
-	public static final String version = "version";
-	public static final String digest = "digest";
+
 	public static final String versionJar = "jar";
 	public static final String collection = "collection";
 	public static final String snippet = "snippet";

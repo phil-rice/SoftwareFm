@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.softwareFm.common.IGitOperations;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.eclipse.IJarToGroupArtifactAndVersion;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.user.IProject;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
@@ -19,7 +20,7 @@ public class UsageProcessor extends AbstractCommandProcessor {
 	private final IProject project;
 	private final IProjectTimeGetter projectTimeGetter;
 
-	public UsageProcessor(IGitOperations gitOperations, IProject project, IProjectTimeGetter projectTimeGetter) {
+	public UsageProcessor(IGitOperations gitOperations, IJarToGroupArtifactAndVersion jarToGroupArtifactAndVersion, IProject project, IProjectTimeGetter projectTimeGetter) {
 		super(gitOperations, CommonConstants.POST, SoftwareFmConstants.usagePrefix);
 		this.project = project;
 		this.projectTimeGetter = projectTimeGetter;

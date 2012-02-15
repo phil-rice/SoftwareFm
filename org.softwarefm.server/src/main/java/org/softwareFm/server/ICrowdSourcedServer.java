@@ -32,8 +32,8 @@ public interface ICrowdSourcedServer {
 
 	abstract public static class Utils {
 
-		public static ICrowdSourcedServer fullServer(int port, IGitOperations gitOperations, BasicDataSource dataSource, IFunction1<ProcessCallParameters, IProcessCall[]> extraProcessCalls) {
-			return CrowdSourcedServer.makeServer(port, gitOperations, dataSource, extraProcessCalls);
+		public static ICrowdSourcedServer fullServer(int port, IGitOperations gitOperations, BasicDataSource dataSource, IFunction1<ProcessCallParameters, IProcessCall[]> extraProcessCalls, String prefix) {
+			return CrowdSourcedServer.makeServer(port, gitOperations, dataSource, extraProcessCalls, prefix);
 		}
 
 		public static ICrowdSourcedServer testServerPort(IProcessCall processCall, ICallback<Throwable> errorHandler) {
@@ -78,8 +78,8 @@ public interface ICrowdSourcedServer {
 			return new ServerUser(gitOperations, userUrlGenerator, userRepositoryDefn, defaultValues);
 		}
 
-		public static IUser makeUserForServer(IGitOperations gitOperations, IFunction1<String, String> userRepositoryDefn, Map<String, Callable<Object>> defaultValues) {
-			return new ServerUser(gitOperations, LoginConstants.userGenerator(), userRepositoryDefn, defaultValues);
+		public static IUser makeUserForServer(IGitOperations gitOperations, IFunction1<String, String> userRepositoryDefn, Map<String, Callable<Object>> defaultValues, String prefix) {
+			return new ServerUser(gitOperations, LoginConstants.userGenerator(prefix), userRepositoryDefn, defaultValues);
 		}
 
 		public static int port(String[] args) {

@@ -17,10 +17,7 @@ import org.softwareFm.common.url.Urls;
 
 public class CollectionConstants {
 
-	public static final String artifactId = "artifactId";
-	public static final String groupId = "groupId";
 	public static final String jarStem = "jarStem";
-	public static final String version = "version";
 	public static final String rootUrl = "/softwareFm";
 	public static final String rootDataUrl = Urls.composeWithSlash(rootUrl, "data");
 	public static final String rootSnippetUrl = Urls.composeWithSlash(rootUrl, "snippet");

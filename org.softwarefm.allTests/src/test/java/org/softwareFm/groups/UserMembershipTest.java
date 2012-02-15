@@ -17,6 +17,7 @@ import org.softwareFm.common.server.GitTest;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.tests.Tests;
 import org.softwareFm.common.url.IUrlGenerator;
+import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.user.UserMembershipReaderForLocal;
 import org.softwareFm.server.ICrowdSourcedServer;
 import org.softwareFm.softwareFmServer.UserMembershipForServer;
@@ -98,9 +99,9 @@ public class UserMembershipTest extends GitTest {
 		groupCrypto2 = Crypto.makeKey();
 		user1Id = "sfmId1";
 
-		IUrlGenerator userUrlGenerator = LoginConstants.userGenerator();
+		IUrlGenerator userUrlGenerator = LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix);
 		IFunction1<String, String> repoDefn = Strings.firstNSegments(3);
-		user = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, repoDefn,Maps.<String,Callable<Object>>makeMap( GroupConstants.membershipCryptoKey, Callables.makeCryptoKey()));
+		user = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, repoDefn,Maps.<String,Callable<Object>>makeMap( GroupConstants.membershipCryptoKey, Callables.makeCryptoKey()), SoftwareFmConstants.urlPrefix);
 		membershipForLocal = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, user, userCrypto);
 
 		IFunction1<Map<String, Object>, String> userCryptoFn = Functions.constant(userCrypto);

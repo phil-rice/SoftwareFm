@@ -17,7 +17,7 @@ public class SoftwareFmServerTest extends GitTest {
 	}
 
 	protected void checkPropertyIsCreatedAndIsCrypto(String key) {
-		IUser user = SoftwareFmServer.makeUser(remoteOperations, LoginConstants.userGenerator());
+		IUser user = SoftwareFmServer.makeUser(remoteOperations, LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix));
 		user.setUserProperty("someId", cryptoKey, "needed to", "create user");
 
 		String crypto1 = user.getUserProperty("someId", cryptoKey, key);

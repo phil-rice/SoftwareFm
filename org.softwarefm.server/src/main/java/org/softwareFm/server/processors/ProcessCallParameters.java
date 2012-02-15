@@ -37,7 +37,7 @@ public class ProcessCallParameters {
 	public final IMailer mailer;
 	public final IFunction1<Map<String, Object>, String> userCryptoFn;
 
-	public ProcessCallParameters(BasicDataSource dataSource, IGitOperations gitOperations, Callable<String> cryptoGenerator, Callable<String> softwareFmIdGenerator, IFunction1<Map<String, Object>, String> userCryptoFn, IMailer mailer, Map<String, Callable<Object>> defaultValues) {
+	public ProcessCallParameters(BasicDataSource dataSource, IGitOperations gitOperations, Callable<String> cryptoGenerator, Callable<String> softwareFmIdGenerator, IFunction1<Map<String, Object>, String> userCryptoFn, IMailer mailer, Map<String, Callable<Object>> defaultValues, String prefix) {
 		this.dataSource = dataSource;
 		this.gitOperations = gitOperations;
 		this.softwareFmIdGenerator = softwareFmIdGenerator;
@@ -46,7 +46,7 @@ public class ProcessCallParameters {
 		this.aboveRepostoryUrlCache = new UrlCache<String>();
 		this.saltProcessor = new SaltProcessor();
 		this.loginChecker = new LoginChecker(dataSource);
-		this.user = IProcessCall.Utils.makeUser(gitOperations, defaultValues);
+		this.user = IProcessCall.Utils.makeUser(gitOperations, defaultValues, prefix);
 		this.signUpChecker = new SignUpChecker(dataSource, cryptoGenerator, user);
 		this.magicStringForPassword = new MagicStringForPassword(dataSource, Callables.uuidGenerator());
 		this.forgottonPasswordProcessor = new ForgottonPasswordMailer(mailer, magicStringForPassword);

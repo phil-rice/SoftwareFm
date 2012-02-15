@@ -125,8 +125,10 @@ public class TakeOnProcessorTest extends GitTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		groups = new GroupsForServer(GroupConstants.groupsGenerator(), remoteOperations, Strings.firstNSegments(3));
-		user = SoftwareFmServer.makeUser(remoteOperations, LoginConstants.userGenerator());
+		IUrlGenerator groupsUrlGenerator = GroupConstants.groupsGenerator(SoftwareFmConstants.urlPrefix);
+		IUrlGenerator userUrlGenerator = LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix);
+		groups = new GroupsForServer(groupsUrlGenerator, remoteOperations, Strings.firstNSegments(3));
+		user = SoftwareFmServer.makeUser(remoteOperations, userUrlGenerator);
 		crypto1 = Crypto.makeKey();
 		crypto2 = Crypto.makeKey();
 		IFunction1<Map<String, Object>, String> cryptoFn = new IFunction1<Map<String, Object>, String>() {
@@ -140,8 +142,8 @@ public class TakeOnProcessorTest extends GitTest {
 		IFunction1<String, String> emailToSoftware = Functions.map("email1", "sfm1", "email2", "sfm2");
 		Callable<String> groupIdGenerator = Callables.uuidGenerator();
 		IFunction1<String, String> repoDefnFn = Strings.firstNSegments(3);
-		groupUrlGenerator = GroupConstants.groupsGenerator();
-		membership = new UserMembershipForServer(LoginConstants.userGenerator(), remoteOperations, user, cryptoFn, repoDefnFn);
+		groupUrlGenerator = groupsUrlGenerator;
+		membership = new UserMembershipForServer(userUrlGenerator, remoteOperations, user, cryptoFn, repoDefnFn);
 		takeOnProcessor = new TakeOnProcessor(remoteOperations, user, membership, groups, cryptoFn, emailToSoftware, groupUrlGenerator, groupIdGenerator, repoDefnFn);
 	}
 }

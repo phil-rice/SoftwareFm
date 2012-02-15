@@ -22,6 +22,7 @@ import org.softwareFm.server.ICrowdSourcedServer;
 import org.softwareFm.server.processors.internal.MailerMock;
 import org.softwareFm.softwareFmServer.GroupsForServer;
 import org.softwareFm.softwareFmServer.ITakeOnProcessor;
+import org.softwareFm.softwareFmServer.JarToGroupArtifactVersionOnServer;
 import org.softwareFm.softwareFmServer.ProjectForServer;
 import org.softwareFm.softwareFmServer.TakeOnGroupProcessor;
 import org.softwareFm.softwareFmServer.TakeOnProcessor;
@@ -73,7 +74,7 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 		projectCryptoKey2 = Crypto.makeKey();
 		projectCryptoKey3 = Crypto.makeKey();
 		repoDefnFn = Strings.firstNSegments(3);
-		groupsGenerator = GroupConstants.groupsGenerator();
+		groupsGenerator = GroupConstants.groupsGenerator(SoftwareFmConstants.urlPrefix);
 		groupCryptoKey = Crypto.makeKey();
 		groupId = "someGroupId";
 		groups = new GroupsForServer(groupsGenerator, remoteOperations, repoDefnFn);
@@ -82,7 +83,7 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 				GroupConstants.membershipCryptoKey, Callables.makeCryptoKey(), //
 				GroupConstants.groupCryptoKey, Callables.valueFromList(groupCryptoKey),//
 				SoftwareFmConstants.projectCryptoKey, Callables.valueFromList(projectCryptoKey1, projectCryptoKey2, projectCryptoKey3));
-		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, remoteOperations, userCryptoGenerator, softwareFmIdGenerator, userCryptoFn, mailerMock, defaultValues);
+		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, remoteOperations, userCryptoGenerator, softwareFmIdGenerator, userCryptoFn, mailerMock, defaultValues, SoftwareFmConstants.urlPrefix);
 		IProcessCall processCalls = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, getExtraProcessCalls());
 		template = new JdbcTemplate(dataSource);
 		server = ICrowdSourcedServer.Utils.testServerPort(processCalls, ICallback.Utils.rethrow());
@@ -94,7 +95,8 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 
 			@Override
 			public IProcessCall[] apply(ProcessCallParameters from) throws Exception {
-				IUrlGenerator userUrlGenerator = LoginConstants.userGenerator();
+				IUrlGenerator userUrlGenerator = LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix);
+				IUrlGenerator jarUrlGenerator = SoftwareFmConstants.jarUrlGenerator(SoftwareFmConstants.urlPrefix);
 				IProject project = new ProjectForServer(remoteOperations, userCryptoFn, from.user, userUrlGenerator);
 				IProjectTimeGetter projectTimeGetter = new IProjectTimeGetter() {
 					@Override
@@ -116,11 +118,11 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 				IFunction1<String, String> emailToSfmId = ICrowdSourcedServer.Utils.emailToSoftwareFmId(from.dataSource);
 				Callable<String> groupIdGenerator = Callables.value(groupId);
 
-				UserMembershipForServer membershipForServer = new UserMembershipForServer(LoginConstants.userGenerator(), from.gitOperations, from.user, userCryptoFn, emailToSfmId);
+				UserMembershipForServer membershipForServer = new UserMembershipForServer(userUrlGenerator, from.gitOperations, from.user, userCryptoFn, emailToSfmId);
 				ITakeOnProcessor takeOnProcessor = new TakeOnProcessor(from.gitOperations, from.user, membershipForServer, groups, userCryptoFn, emailToSfmId, groupsGenerator, groupIdGenerator, repoDefnFn);
 				Callable<String> groupCryptoGenerator = Callables.value(groupCryptoKey);
 				return new IProcessCall[] { //
-				new UsageProcessor(remoteOperations, project, projectTimeGetter), //
+				new UsageProcessor(remoteOperations, new JarToGroupArtifactVersionOnServer(jarUrlGenerator, remoteOperations), project, projectTimeGetter), //
 						new TakeOnGroupProcessor(takeOnProcessor, from.signUpChecker, groupCryptoGenerator, emailToSfmId, from.saltGenerator, from.softwareFmIdGenerator, mailerMock) };
 			}
 		};

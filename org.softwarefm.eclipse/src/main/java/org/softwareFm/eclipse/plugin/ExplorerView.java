@@ -33,6 +33,7 @@ import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.IRequestGroupReportGeneration;
 import org.softwareFm.eclipse.actions.IActionBar;
+import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.jdtBinding.BindingRipperResult;
 import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups;
@@ -80,7 +81,7 @@ public class ExplorerView extends ViewPart {
 			}
 		});
 		IUrlGenerator userUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.userUrlKey);
-		IUrlGenerator groupUrlGenerator = GroupConstants.groupsGenerator();
+		IUrlGenerator groupUrlGenerator = GroupConstants.groupsGenerator(SoftwareFmConstants.urlPrefix);
 		IGitLocal gitLocal = activator.getGitLocal();
 		IProjectTimeGetter timeGetter = activator.getProjectTimeGetter();
 		IRequestGroupReportGeneration reportGenerator = IRequestGroupReportGeneration.Utils.withCache(//
@@ -90,8 +91,7 @@ public class ExplorerView extends ViewPart {
 		IShowMyData showMyDetails = MyDetails.showMyDetails(service, cardConfig, masterDetailSocial, userUrlGenerator, gitLocal, timeGetter);
 		IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, timeGetter, reportGenerator);
 		IShowMyPeople showMyPeople = MyPeople.showMyPeople(service, masterDetailSocial, cardConfig, gitLocal, userUrlGenerator, groupUrlGenerator, timeGetter, reportGenerator, CommonConstants.clientTimeOut);
-
-		IUserReader userReader = IUserReader.Utils.localUserReader(gitLocal, LoginConstants.userGenerator());
+		IUserReader userReader = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator );
 		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, userReader, cardConfig, getRootUrls(), playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople);
 		IUsageStrategy usageStrategy = IUsageStrategy.Utils.usage(activator.getServiceExecutor(), activator.getClient(), gitLocal, userUrlGenerator);
 		actionBar = makeActionBar(explorer, cardConfig, usageStrategy);
@@ -127,7 +127,7 @@ public class ExplorerView extends ViewPart {
 		if (memento != null) {
 			IMemento userDataMemento = memento.getChild("userData");
 			if (userDataMemento != null) {
-				return new UserData(userDataMemento.getString(LoginConstants.emailKey),userDataMemento.getString(LoginConstants.softwareFmIdKey),userDataMemento.getString(LoginConstants.cryptoKey));
+				return new UserData(userDataMemento.getString(LoginConstants.emailKey), userDataMemento.getString(LoginConstants.softwareFmIdKey), userDataMemento.getString(LoginConstants.cryptoKey));
 			}
 		}
 		return UserData.blank();

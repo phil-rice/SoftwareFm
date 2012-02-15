@@ -97,8 +97,8 @@ public interface IProcessCall {
 			return chain(processCalls);// this sweeps up any posts, so ensure that commands appear in chain before it
 		}
 
-		public static IUser makeUser(IGitOperations gitOperations, Map<String, Callable<Object>>nameAndCallables) {
-			IUser user = ICrowdSourcedServer.Utils.makeUserForServer(gitOperations, Strings.firstNSegments(3), nameAndCallables);
+		public static IUser makeUser(IGitOperations gitOperations, Map<String, Callable<Object>>nameAndCallables, String prefix) {
+			IUser user = ICrowdSourcedServer.Utils.makeUserForServer(gitOperations, Strings.firstNSegments(3), nameAndCallables, prefix);
 			return user;
 		}
 

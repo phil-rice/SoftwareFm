@@ -69,7 +69,7 @@ public class TakeOnGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 		memoryCallback.assertCalledOnce();
 		assertEquals(500, memoryCallback.response.statusCode());
 		assertTrue(memoryCallback.response.asString(), memoryCallback.response.asString().startsWith("class java.lang.IllegalAr"));
-		File groupDirectory = new File(remoteRoot, GroupConstants.groupsGenerator().findUrlFor(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId)));
+		File groupDirectory = new File(remoteRoot, GroupConstants.groupsGenerator(SoftwareFmConstants.urlPrefix).findUrlFor(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId)));
 		assertFalse(groupDirectory.exists());
 		assertEquals(0, mailerMock.froms.size());
 	}

@@ -59,7 +59,7 @@ public class IUsageStrategyTest extends AbstractProcessorDatabaseIntegrationTest
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		usageStrategy = IUsageStrategy.Utils.usage(getServiceExecutor(), getHttpClient(), gitLocal, LoginConstants.userGenerator());
+		usageStrategy = IUsageStrategy.Utils.usage(getServiceExecutor(), getHttpClient(), gitLocal, LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix));
 		directory = new File(remoteRoot, "softwareFm/users/so/me/someNewSoftwareFmId0");
 		userFile = new File(directory, CommonConstants.dataFileName);
 		userProjectFile = new File(directory, Urls.compose("project", "someMonth"));

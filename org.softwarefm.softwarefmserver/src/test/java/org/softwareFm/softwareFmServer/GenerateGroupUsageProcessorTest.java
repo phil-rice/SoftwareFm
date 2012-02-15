@@ -14,6 +14,7 @@ import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.server.GitTest;
 import org.softwareFm.common.strings.Strings;
+import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.user.IUsageReader;
 import org.softwareFm.eclipse.user.IUserMembership;
@@ -91,18 +92,20 @@ public class GenerateGroupUsageProcessorTest extends GitTest {
 		user2projectCrypto = Crypto.makeKey();
 
 		IFunction1<String, String> repoDefnFn = Strings.firstNSegments(3);
-		remoteGroups = new GroupsForServer(GroupConstants.groupsGenerator(), remoteOperations, repoDefnFn);
+		IUrlGenerator groupsUrlGenerator = GroupConstants.groupsGenerator(SoftwareFmConstants.urlPrefix);
+		remoteGroups = new GroupsForServer(groupsUrlGenerator, remoteOperations, repoDefnFn);
 
 		user = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, repoDefnFn, Maps.<String,Callable<Object>>makeMap(//
 				SoftwareFmConstants.projectCryptoKey, Callables.valueFromList(user1projectCrypto, user2projectCrypto), //
-				GroupConstants.membershipCryptoKey, Callables.makeCryptoKey()));
+				GroupConstants.membershipCryptoKey, Callables.makeCryptoKey()), SoftwareFmConstants.urlPrefix);
 		IFunction1<Map<String, Object>, String> userCryptoFn = Functions.mapFromKey(LoginConstants.softwareFmIdKey, sfmId1, userCrypto1, sfmId2, userCrypto2);
-		project = new ProjectForServer(remoteOperations, userCryptoFn, user, LoginConstants.userGenerator());
-		IUsageReader usage = new UsageReaderForServer(remoteOperations, user, LoginConstants.userGenerator());
+		IUrlGenerator userUrlGenerator = LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix);
+		project = new ProjectForServer(remoteOperations, userCryptoFn, user, userUrlGenerator);
+		IUsageReader usage = new UsageReaderForServer(remoteOperations, user, userUrlGenerator);
 		generateUsageReportGenerator = new GenerateUsageProjectGenerator(remoteGroups, usage);
 
 		IFunction1<String, String> emailToSoftwareFmId = Functions.map(email1, sfmId1, email2, sfmId2);
-		IUserMembership membership = new UserMembershipForServer(LoginConstants.userGenerator(), remoteOperations, user, userCryptoFn, repoDefnFn);
-		takeOnProcessor = new TakeOnProcessor(remoteOperations, user, membership, remoteGroups, userCryptoFn, emailToSoftwareFmId, GroupConstants.groupsGenerator(), Callables.value(groupId), repoDefnFn);
+		IUserMembership membership = new UserMembershipForServer(userUrlGenerator, remoteOperations, user, userCryptoFn, repoDefnFn);
+		takeOnProcessor = new TakeOnProcessor(remoteOperations, user, membership, remoteGroups, userCryptoFn, emailToSoftwareFmId, groupsUrlGenerator, Callables.value(groupId), repoDefnFn);
 	}
 }

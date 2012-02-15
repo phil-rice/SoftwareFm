@@ -86,7 +86,7 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends GitTest imple
 		dataSource = AbstractLoginDataAccessor.defaultDataSource();
 		key = Crypto.makeKey();
 		Map<String, Callable<Object>> defaultValues = Maps.newMap();
-		user = new ServerUser(remoteOperations, LoginConstants.userGenerator(), Strings.firstNSegments(3), defaultValues);
+		user = new ServerUser(remoteOperations, LoginConstants.userGenerator("softwarefm"), Strings.firstNSegments(3), defaultValues);
 		signupChecker = new SignUpChecker(dataSource, Callables.value(key), user);
 		loginChecker = new LoginChecker(dataSource);
 		mailerMock = new MailerMock();

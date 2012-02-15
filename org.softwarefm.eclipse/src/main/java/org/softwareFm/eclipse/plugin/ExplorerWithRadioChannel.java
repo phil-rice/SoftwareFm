@@ -32,7 +32,6 @@ import org.softwareFm.common.IUserReader;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.GroupConstants;
-import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.common.url.IUrlGenerator;
@@ -115,12 +114,12 @@ public class ExplorerWithRadioChannel {
 					});
 					final IProjectTimeGetter projectTimeGetter = IProjectTimeGetter.Utils.timeGetter();
 					IUrlGenerator userUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.userUrlKey);
-					IUrlGenerator groupUrlGenerator = GroupConstants.groupsGenerator();
+					IUrlGenerator groupUrlGenerator = GroupConstants.groupsGenerator(SoftwareFmConstants.urlPrefix);
 					IRequestGroupReportGeneration requestGroupReportGenerator = new RequestGroupReportGeneration(client, IResponseCallback.Utils.sysoutStatusCallback());
 					IShowMyData showMyDetails = MyDetails.showMyDetails(service, cardConfig, masterDetailSocial, userUrlGenerator, gitLocal, projectTimeGetter);
 					IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, projectTimeGetter, requestGroupReportGenerator);
 					IShowMyPeople showMyPeople = MyPeople.showMyPeople(service, masterDetailSocial, cardConfig, gitLocal, userUrlGenerator, groupUrlGenerator, projectTimeGetter, requestGroupReportGenerator, CommonConstants.clientTimeOut);
-					IUserReader userReader= IUserReader.Utils.localUserReader(gitLocal, LoginConstants.userGenerator());
+					IUserReader userReader= IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
 					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, userReader, cardConfig, rootUrl, playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople);
 
 					ICardMenuItemHandler.Utils.addSoftwareFmMenuItemHandlers(explorer);
@@ -188,7 +187,7 @@ public class ExplorerWithRadioChannel {
 							explorer.displayCard(firstUrl, new CardAndCollectionDataStoreAdapter());
 						}
 					});
-					final IUsageStrategy usageStrategy = IUsageStrategy.Utils.usage(service, client, gitLocal, LoginConstants.userGenerator());
+					final IUsageStrategy usageStrategy = IUsageStrategy.Utils.usage(service, client, gitLocal, userUrlGenerator);
 					Buttons.makePushButton(buttonPanel, null, "usage", false, new Runnable() {
 						@Override
 						public void run() {
