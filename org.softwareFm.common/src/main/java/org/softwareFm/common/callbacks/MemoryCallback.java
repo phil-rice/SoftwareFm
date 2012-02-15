@@ -18,7 +18,7 @@ public class MemoryCallback<T> implements ICallback<T> {
 		result.add(t);
 	}
 
-	public List<T> getResult() {
+	public List<T> getResults() {
 		return result;
 	}
 

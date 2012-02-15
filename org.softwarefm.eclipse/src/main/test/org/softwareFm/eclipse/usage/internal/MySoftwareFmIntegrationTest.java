@@ -1,6 +1,7 @@
 package org.softwareFm.eclipse.usage.internal;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -20,6 +21,7 @@ import org.softwareFm.client.http.requests.MemoryResponseCallback;
 import org.softwareFm.common.IGitOperations;
 import org.softwareFm.common.IUserReader;
 import org.softwareFm.common.callbacks.ICallback;
+import org.softwareFm.common.callbacks.MemoryCallback;
 import org.softwareFm.common.collections.Files;
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.constants.CommonConstants;
@@ -70,6 +72,8 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 	private File root;
 	private File userFile;
 	private File remoteRoot;
+	private UserData initialUserData;
+	private MemoryCallback<UserData> persistCallback;
 
 	public void testSignupThenLogin() {
 		signUp(email, moniker, password);
@@ -77,6 +81,8 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		String softwareFmId = template.queryForObject("select softwarefmid from users", String.class);
 		mySoftwareFm.logout();
 
+		UserData userData = new UserData(email, softwareFmId, crypto);
+		assertEquals(Arrays.asList(userData, UserData.blank()), persistCallback.getResults());
 		mySoftwareFm.start();
 		assertNull(mySoftwareFm.userData.crypto);
 		displayUntilValueComposite("Email", "Password");
@@ -85,6 +91,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		getOkCancel().ok();
 		displayUntilCompositeWithCardMargin();
 		checkLoggedInDisplay(crypto, softwareFmId);
+		assertEquals(Arrays.asList(userData, UserData.blank(), userData), persistCallback.getResults());
 	}
 
 	public void testSignup() {
@@ -235,6 +242,10 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		assertTrue(getOkCancel().isOkEnabled());
 	}
 
+	public void testInitialUserDataIsTakenFromLoginStrategy() {
+		assertSame(mySoftwareFm.userData, initialUserData);
+	}
+
 	private void displayUntilCompositeWithCardMargin() {
 		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
 			@Override
@@ -358,7 +369,9 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		IProcessCall softwareFmProcessCall = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, Functions.<ProcessCallParameters, IProcessCall[]> constant(new IProcessCall[0]));
 		server = ICrowdSourcedServer.Utils.testServerPort(softwareFmProcessCall, ICallback.Utils.rethrow());
 		client = IHttpClient.Utils.builder("localhost", 8080);
-		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(display, service, client);
+		initialUserData = new UserData(null, null, null);
+		persistCallback = ICallback.Utils.<UserData> memory();
+		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(display, service, client, initialUserData, persistCallback);
 		cardConfig = ICardConfigurator.Utils.cardConfigForTests(display);
 		IUserReader userReader = IUserReader.Utils.mockReader(LoginConstants.emailKey, email, LoginConstants.monikerKey, moniker);
 		mySoftwareFm = new MySoftwareFm(shell, cardConfig, loginStrategy, IShowMyData.Utils.exceptionShowMyData(), IShowMyGroups.Utils.exceptionShowMyGroups(), userReader);

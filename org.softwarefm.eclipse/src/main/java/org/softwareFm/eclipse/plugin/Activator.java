@@ -56,7 +56,7 @@ public class Activator extends AbstractUIPlugin {
 	private IServiceExecutor serviceExecutor;
 
 	private IHttpClient httpClient;
-	boolean local = false;
+	boolean local = true;
 
 	private IGitLocal gitLocal;
 
@@ -75,7 +75,7 @@ public class Activator extends AbstractUIPlugin {
 
 		if (serviceExecutor != null)
 			serviceExecutor.shutdownAndAwaitTermination(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
-			serviceExecutor= null;
+		serviceExecutor = null;
 		if (httpClient != null)
 			httpClient.shutdown();
 		httpClient = null;
@@ -98,12 +98,12 @@ public class Activator extends AbstractUIPlugin {
 						ICardDataStore.Utils.repositoryCardDataStore(parent, getServiceExecutor(), getGitLocal())));
 		return cardConfig;
 	}
-	
-	public IRepoFinder getFindRepositoryRoot(){
+
+	public IRepoFinder getFindRepositoryRoot() {
 		return new HttpRepoFinder(getClient(), CommonConstants.clientTimeOut);
 	}
-	
-	public IGitWriter getGitWriter(){
+
+	public IGitWriter getGitWriter() {
 		return new HttpGitWriter(getClient());
 	}
 
@@ -170,5 +170,6 @@ public class Activator extends AbstractUIPlugin {
 	public IProjectTimeGetter getProjectTimeGetter() {
 		return IProjectTimeGetter.Utils.timeGetter();
 	}
+
 
 }

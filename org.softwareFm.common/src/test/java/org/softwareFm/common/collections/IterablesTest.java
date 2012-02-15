@@ -77,7 +77,7 @@ public class IterablesTest extends TestCase {
 	private void checkProcessCallback(Integer... ints) {
 		MemoryCallback<Integer> callback = new MemoryCallback<Integer>();
 		Iterables.processCallbacks(Arrays.asList(ints), callback);
-		assertEquals(Arrays.asList(ints), callback.getResult());
+		assertEquals(Arrays.asList(ints), callback.getResults());
 	}
 
 	public void testList() {

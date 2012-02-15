@@ -58,7 +58,7 @@ public class LoginStrategyMock implements ILoginStrategy {
 		loginEmail.add(email);
 		loginPassword.add(password);
 		if (ok)
-			callback.loggedIn(new UserData(email,softwareFmId,  cryptoKey));
+			callback.loggedIn(new UserData(email, softwareFmId, cryptoKey));
 		else
 			callback.failedToLogin(email, "someMessage");
 	}
@@ -99,4 +99,12 @@ public class LoginStrategyMock implements ILoginStrategy {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public UserData initialUserData() {
+		return UserData.blank();
+	}
+
+	@Override
+	public void clearPersistedUserData() {
+	}
 }

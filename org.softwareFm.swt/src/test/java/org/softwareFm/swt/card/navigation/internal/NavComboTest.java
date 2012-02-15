@@ -42,9 +42,9 @@ public class NavComboTest extends SwtTest {
 		List<String> list = Arrays.asList("1", "2", "3");
 		nav.setDropdownItems(list);
 		navControl.select(1);
-		assertEquals(Arrays.asList(), memory.getResult());
+		assertEquals(Arrays.asList(), memory.getResults());
 		navControl.notifyListeners(SWT.Selection, new Event());
-		assertEquals(Arrays.asList(CardDataStoreFixture.url + "/" + 2), memory.getResult());
+		assertEquals(Arrays.asList(CardDataStoreFixture.url + "/" + 2), memory.getResults());
 	}
 
 	@Override

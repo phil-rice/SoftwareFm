@@ -33,7 +33,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 	private final Composite content;
 	private final ILoginStrategy loginStrategy;
 	private final CardConfig cardConfig;
-	public UserData userData = UserData.blank();
+	public UserData userData;
 	protected String signupSalt;
 
 	protected ICallback<String> restart;
@@ -48,6 +48,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		this.showMyGroups = showMyGroups;
 		this.userReader = userReader;
 		this.content = new Composite(parent, SWT.NULL);
+		this.userData = loginStrategy.initialUserData();
 		content.setLayout(new FillLayout());
 		restart = new ICallback<String>() {
 			@Override
@@ -62,20 +63,21 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		final String email = userData.email();
 		if (userData.isLoggedIn())
 			showLoggedIn();
-		else
+		else {
 			displayWithClickBackToStart(CardConstants.loginCardType, CardConstants.contactingServerTitle, CardConstants.contactingServerText, email);
-		loginStrategy.requestSessionSalt(new IRequestSaltCallback() {
-			@Override
-			public void saltReceived(String salt) {
-				MySoftwareFm.this.signupSalt = salt;
-				showLogin(salt, email);
-			}
+			loginStrategy.requestSessionSalt(new IRequestSaltCallback() {
+				@Override
+				public void saltReceived(String salt) {
+					MySoftwareFm.this.signupSalt = salt;
+					showLogin(salt, email);
+				}
 
-			@Override
-			public void problemGettingSalt(String message) {
-				displayWithClickBackToStart(CardConstants.loginCardType, CardConstants.failedToContactServerTitle, CardConstants.failedToContactServerText, email, message);
-			}
-		});
+				@Override
+				public void problemGettingSalt(String message) {
+					displayWithClickBackToStart(CardConstants.loginCardType, CardConstants.failedToContactServerTitle, CardConstants.failedToContactServerText, email, message);
+				}
+			});
+		}
 	}
 
 	public void start(final UserData userData) {
@@ -106,7 +108,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 
 			@Override
 			public void logout() {
-				logout();
+				MySoftwareFm.this.logout();
 				start();
 			}
 
@@ -256,6 +258,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 	public void logout() {
 		userData = userData.loggedOut();
 		signupSalt = null;
+		loginStrategy.clearPersistedUserData();
 	}
 
 	public void forceFocus() {

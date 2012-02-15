@@ -59,28 +59,28 @@ public class NavHistoryComboTest extends SwtTest {
 
 	public void testHistoryUpdatingDoesntCallCallback() {
 		dispatchUntilQueueEmpty();
-		assertEquals(Arrays.<Integer> asList(), memory.getResult());
+		assertEquals(Arrays.<Integer> asList(), memory.getResults());
 
 		history.push(1);
 		dispatchUntilQueueEmpty();
-		assertEquals(Arrays.<Integer> asList(), memory.getResult());
+		assertEquals(Arrays.<Integer> asList(), memory.getResults());
 	}
 
 	public void testComboBeingSelectedCallsCallback() {
 		history.push(1);
 		history.push(2);
 		dispatchUntilQueueEmpty();
-		assertEquals(Arrays.<Integer> asList(), memory.getResult());
+		assertEquals(Arrays.<Integer> asList(), memory.getResults());
 
 		combo.select(1);// this has a value of 2
 		combo.notifyListeners(SWT.Selection, new Event());
 		dispatchUntilQueueEmpty();
-		assertEquals(Arrays.<Integer> asList(2), memory.getResult());
+		assertEquals(Arrays.<Integer> asList(2), memory.getResults());
 
 		combo.select(0);
 		combo.notifyListeners(SWT.Selection, new Event());
 		dispatchUntilQueueEmpty();
-		assertEquals(Arrays.<Integer> asList(2, 1), memory.getResult());
+		assertEquals(Arrays.<Integer> asList(2, 1), memory.getResults());
 	}
 
 	@Override
