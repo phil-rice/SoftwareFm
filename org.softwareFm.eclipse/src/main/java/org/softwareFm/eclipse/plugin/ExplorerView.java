@@ -15,18 +15,13 @@ import java.util.List;
 
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IMemento;
-import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.softwareFm.client.http.requests.IResponseCallback;
 import org.softwareFm.common.IGitLocal;
 import org.softwareFm.common.IUserReader;
-import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.collections.Files;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.GroupConstants;
-import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.services.IServiceExecutor;
@@ -52,7 +47,7 @@ import org.softwareFm.swt.explorer.IMasterDetailSocial;
 import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.explorer.IShowMyGroups;
 import org.softwareFm.swt.explorer.IShowMyPeople;
-import org.softwareFm.swt.explorer.internal.UserData;
+import org.softwareFm.swt.explorer.IUserDataManager;
 import org.softwareFm.swt.menu.ICardMenuItemHandler;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.swt.swt.Swts.Size;
@@ -61,8 +56,6 @@ import org.softwareFm.swt.timeline.IPlayListGetter;
 public class ExplorerView extends ViewPart {
 
 	protected IActionBar actionBar;
-	private IMemento memento;
-	private UserData userData;
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -73,13 +66,7 @@ public class ExplorerView extends ViewPart {
 
 		IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardConfig.cardDataStore);
 		IServiceExecutor service = activator.getServiceExecutor();
-		this.userData = getUserDataFromSavedState();
-		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(parent.getDisplay(), activator.getServiceExecutor(), activator.getClient(), userData, new ICallback<UserData>() {
-			@Override
-			public void process(UserData userData) throws Exception {
-				ExplorerView.this.userData = userData;
-			}
-		});
+		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(parent.getDisplay(), activator.getServiceExecutor(), activator.getClient());
 		IUrlGenerator userUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.userUrlKey);
 		IUrlGenerator groupUrlGenerator = GroupConstants.groupsGenerator(SoftwareFmConstants.urlPrefix);
 		IGitLocal gitLocal = activator.getGitLocal();
@@ -91,8 +78,9 @@ public class ExplorerView extends ViewPart {
 		IShowMyData showMyDetails = MyDetails.showMyDetails(service, cardConfig, masterDetailSocial, userUrlGenerator, gitLocal, timeGetter);
 		IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, timeGetter, reportGenerator);
 		IShowMyPeople showMyPeople = MyPeople.showMyPeople(service, masterDetailSocial, cardConfig, gitLocal, userUrlGenerator, groupUrlGenerator, timeGetter, reportGenerator, CommonConstants.clientTimeOut);
-		IUserReader userReader = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator );
-		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, userReader, cardConfig, getRootUrls(), playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople);
+		IUserReader userReader = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
+		IUserDataManager userDataManager = activator.getUserDataManager();
+		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, userReader, cardConfig, getRootUrls(), playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople, userDataManager);
 		IUsageStrategy usageStrategy = IUsageStrategy.Utils.usage(activator.getServiceExecutor(), activator.getClient(), gitLocal, userUrlGenerator);
 		actionBar = makeActionBar(explorer, cardConfig, usageStrategy);
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
@@ -115,31 +103,6 @@ public class ExplorerView extends ViewPart {
 		});
 		explorer.showMySoftwareFm();
 		explorer.processUrl(DisplayConstants.browserFeedType, welcomeUrl);
-	}
-
-	@Override
-	public void init(IViewSite site, IMemento memento) throws PartInitException {
-		this.memento = memento;
-		init(site);
-	}
-
-	private UserData getUserDataFromSavedState() {
-		if (memento != null) {
-			IMemento userDataMemento = memento.getChild("userData");
-			if (userDataMemento != null) {
-				return new UserData(userDataMemento.getString(LoginConstants.emailKey), userDataMemento.getString(LoginConstants.softwareFmIdKey), userDataMemento.getString(LoginConstants.cryptoKey));
-			}
-		}
-		return UserData.blank();
-	}
-
-	@Override
-	public void saveState(IMemento memento) {
-		super.saveState(memento);
-		IMemento userDataMemento = memento.createChild("userData");
-		userDataMemento.putString(LoginConstants.emailKey, userData.email);
-		userDataMemento.putString(LoginConstants.softwareFmIdKey, userData.softwareFmId);
-		userDataMemento.putString(LoginConstants.cryptoKey, userData.crypto);
 	}
 
 	protected IActionBar makeActionBar(final IExplorer explorer, final CardConfig cardConfig, IUsageStrategy usageStrategy) {

@@ -8,5 +8,10 @@
              class="org.softwareFm.eclipse.plugin.ExplorerView"   id="org.softwareFm.eclipse.plugin.ExplorerView" />
       <view  name="Admin" icon="icons/sfm.gif" category="org.softwareFm"   
              class="org.softwareFm.eclipse.plugin.AdminView"   id="org.softwareFm.eclipse.plugin.AdminView" />
-   </extension>
+ </extension>
+ <extension point="org.eclipse.ui.startup">
+    <startup class ="org.softwareFm.eclipse.plugin.Startup" />
+ </extension>
+   
+   
 </plugin>

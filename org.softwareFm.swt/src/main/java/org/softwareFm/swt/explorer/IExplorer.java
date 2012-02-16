@@ -77,8 +77,8 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 
 	public static class Utils {
 
-		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, IUserReader userReader, CardConfig cardConfig, List<String> rootUrls, IPlayListGetter playListGetter, IServiceExecutor service, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IShowMyPeople showMyPeople) {
-			return new Explorer(cardConfig, rootUrls, masterDetailSocial, service, userReader, playListGetter, loginStrategy, showMyData, showMyGroups, showMyPeople);
+		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, IUserReader userReader, CardConfig cardConfig, List<String> rootUrls, IPlayListGetter playListGetter, IServiceExecutor service, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IShowMyPeople showMyPeople, IUserDataManager userDataManager) {
+			return new Explorer(cardConfig, rootUrls, masterDetailSocial, service, userReader, playListGetter, loginStrategy, showMyData, showMyGroups, showMyPeople, userDataManager);
 		}
 	}
 

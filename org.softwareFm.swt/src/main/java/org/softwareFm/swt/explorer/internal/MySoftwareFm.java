@@ -15,6 +15,8 @@ import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.explorer.IShowMyGroups;
+import org.softwareFm.swt.explorer.IUserDataListener;
+import org.softwareFm.swt.explorer.IUserDataManager;
 import org.softwareFm.swt.mySoftwareFm.IChangePassword;
 import org.softwareFm.swt.mySoftwareFm.IChangePasswordCallback;
 import org.softwareFm.swt.mySoftwareFm.IForgotPassword;
@@ -33,33 +35,41 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 	private final Composite content;
 	private final ILoginStrategy loginStrategy;
 	private final CardConfig cardConfig;
-	public UserData userData;
 	protected String signupSalt;
 
 	protected ICallback<String> restart;
 	private final IShowMyData showMyData;
 	private final IShowMyGroups showMyGroups;
 	private final IUserReader userReader;
+	private final IUserDataManager userDataManager;
 
-	public MySoftwareFm(Composite parent, CardConfig cardConfig, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IUserReader userReader) {
+	public MySoftwareFm(Composite parent, CardConfig cardConfig, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IUserReader userReader, IUserDataManager userDataManager) {
 		this.cardConfig = cardConfig;
 		this.loginStrategy = loginStrategy;
 		this.showMyData = showMyData;
 		this.showMyGroups = showMyGroups;
 		this.userReader = userReader;
+		this.userDataManager = userDataManager;
 		this.content = new Composite(parent, SWT.NULL);
-		this.userData = loginStrategy.initialUserData();
 		content.setLayout(new FillLayout());
 		restart = new ICallback<String>() {
 			@Override
 			public void process(String email) throws Exception {
 				logout();
-				start(userData);
+				start();
 			}
 		};
+		userDataManager.addUserDataListener(new IUserDataListener() {
+			@Override
+			public void userDataChanged(Object source, UserData userData) {
+				if (source != MySoftwareFm.this)
+					start();
+			}
+		});
 	}
 
 	public void start() {
+		UserData userData = userDataManager.getUserData();
 		final String email = userData.email();
 		if (userData.isLoggedIn())
 			showLoggedIn();
@@ -80,13 +90,9 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		}
 	}
 
-	public void start(final UserData userData) {
-		this.userData = userData;
-		start();
-	}
-
 	@SuppressWarnings("unused")
 	public void showLoggedIn() {
+		final UserData userData = userDataManager.getUserData();
 		final String email = userData.email();
 		Swts.removeAllChildren(content);
 		IChangePasswordCallback callback = null;
@@ -170,13 +176,13 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		ILogin.Utils.login(content, cardConfig, sessionSalt, email, loginStrategy, MySoftwareFm.this, new ILoginCallback() {
 			@Override
 			public void loggedIn(UserData userData) {
-				MySoftwareFm.this.userData = userData;
+				setUserDataInManager(userData);
 				showLoggedIn();
 			}
 
 			@Override
 			public void failedToLogin(String email, String message) {
-				MySoftwareFm.this.userData = new UserData(email, null, null);
+				setUserDataManagerWithJustEmail(email);
 				displayWithClickBackToStart(CardConstants.loginCardType, CardConstants.failedToLoginTitle, CardConstants.failedToLoginText, email, message);
 			}
 		});
@@ -189,13 +195,13 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		IForgotPassword.Utils.forgotPassword(content, cardConfig, sessionSalt, initialEmail, loginStrategy, this, new IForgotPasswordCallback() {
 			@Override
 			public void emailSent(String email) {
-				MySoftwareFm.this.userData = new UserData(email, null, null);
+				setUserDataManagerWithJustEmail(email);
 				displayWithClickBackToStart(CardConstants.forgotPasswordCardType, CardConstants.sentForgottenPasswordTitle, CardConstants.sentForgottenPasswordText, email);
 			}
 
 			@Override
 			public void failedToSend(String email, String message) {
-				MySoftwareFm.this.userData = new UserData(email, null, null);
+				setUserDataManagerWithJustEmail(email);
 				displayWithClickBackToStart(CardConstants.forgotPasswordCardType, CardConstants.failedToSendForgottenPasswordTitle, CardConstants.failedToSendForgottenPasswordText, email, message);
 			}
 		});
@@ -208,13 +214,13 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		ISignUp.Utils.signUp(content, cardConfig, sessionSalt, initialEmail, loginStrategy, this, new ISignUpCallback() {
 			@Override
 			public void signedUp(UserData userData) {
-				MySoftwareFm.this.userData = userData;
+				setUserDataInManager(userData);
 				showLoggedIn();
 			}
 
 			@Override
 			public void failed(String email, String message) {
-				MySoftwareFm.this.userData = new UserData(email, null, null);
+				setUserDataManagerWithJustEmail(email);
 				displayWithClickBackToStart(CardConstants.signupCardType, CardConstants.failedToSignupTitle, CardConstants.failedToSignupText, email, message);
 			}
 		});
@@ -256,9 +262,8 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 	}
 
 	public void logout() {
-		userData = userData.loggedOut();
+		userDataManager.setUserData(this, userDataManager.getUserData().loggedOut());
 		signupSalt = null;
-		loginStrategy.clearPersistedUserData();
 	}
 
 	public void forceFocus() {
@@ -266,6 +271,18 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		if (children.length > 0)
 			children[0].forceFocus();
 
+	}
+
+	public UserData getUserData() {
+		return userDataManager.getUserData();
+	}
+
+	protected void setUserDataInManager(UserData userData) {
+		userDataManager.setUserData(this, userData);
+	}
+
+	protected void setUserDataManagerWithJustEmail(String email) {
+		userDataManager.setUserData(this, new UserData(email, null, null));
 	}
 
 }

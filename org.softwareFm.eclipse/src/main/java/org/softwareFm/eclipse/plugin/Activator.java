@@ -16,6 +16,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.equinox.security.storage.ISecurePreferences;
+import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -30,6 +32,7 @@ import org.softwareFm.common.IGitWriter;
 import org.softwareFm.common.IRepoFinder;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
@@ -39,6 +42,9 @@ import org.softwareFm.swt.ICollectionConfigurationFactory;
 import org.softwareFm.swt.card.ICardFactory;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.dataStore.ICardDataStore;
+import org.softwareFm.swt.explorer.IUserDataListener;
+import org.softwareFm.swt.explorer.IUserDataManager;
+import org.softwareFm.swt.explorer.internal.UserData;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -56,9 +62,11 @@ public class Activator extends AbstractUIPlugin {
 	private IServiceExecutor serviceExecutor;
 
 	private IHttpClient httpClient;
-	boolean local = true;
+	boolean local = false;
 
 	private IGitLocal gitLocal;
+
+	private IUserDataManager userDataManager;
 
 	public Activator() {
 	}
@@ -67,6 +75,7 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		
 	}
 
 	@Override
@@ -171,5 +180,38 @@ public class Activator extends AbstractUIPlugin {
 		return IProjectTimeGetter.Utils.timeGetter();
 	}
 
+	public IUserDataManager getUserDataManager() {
+		return userDataManager == null ? userDataManager = makeUserDataManager() : userDataManager;
+	}
+
+	protected IUserDataManager makeUserDataManager() {
+		try {
+			IUserDataManager result = IUserDataManager.Utils.userDataManager();
+			ISecurePreferences preferences = SecurePreferencesFactory.getDefault();
+			ISecurePreferences userDataPreferences = preferences.node("softwareFmUserData");
+			String softwareFmId = userDataPreferences.get(LoginConstants.softwareFmIdKey, null);
+			String email = userDataPreferences.get(LoginConstants.emailKey, null);
+			String crypto = userDataPreferences.get(LoginConstants.cryptoKey, null);
+			result.setUserData(this, new UserData(email, softwareFmId, crypto));
+			result.addUserDataListener(new IUserDataListener() {
+				@Override
+				public void userDataChanged(Object source, UserData userData) {
+					try {
+						ISecurePreferences preferences = SecurePreferencesFactory.getDefault();
+						ISecurePreferences userDataPreferences = preferences.node("softwareFmUserData");
+						userDataPreferences.put(LoginConstants.softwareFmIdKey, userData.softwareFmId, false);
+						userDataPreferences.put(LoginConstants.emailKey, userData.email, false);
+						userDataPreferences.put(LoginConstants.cryptoKey, userData.crypto, true);
+						preferences.flush();
+					} catch (Exception e) {
+						throw WrappedException.wrap(e);
+					}
+				}
+			});
+			return result;
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+	}
 
 }

@@ -25,6 +25,7 @@ import org.softwareFm.swt.explorer.IMasterDetailSocial;
 import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.explorer.IShowMyGroups;
 import org.softwareFm.swt.explorer.IShowMyPeople;
+import org.softwareFm.swt.explorer.IUserDataManager;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.swt.swt.SwtTest;
 import org.softwareFm.swt.timeline.IPlayListGetter;
@@ -44,7 +45,8 @@ public class IExplorerTest extends SwtTest {
 					ILoginStrategy.Utils.noLoginStrategy(), //
 					IShowMyData.Utils.exceptionShowMyData(),//
 					IShowMyGroups.Utils.exceptionShowMyGroups(),//
-					IShowMyPeople.Utils.exceptionShowMyPeople());
+					IShowMyPeople.Utils.exceptionShowMyPeople(),//
+					IUserDataManager.Utils.userDataManager());
 			ICardHolderForTests cardHolder = (ICardHolderForTests) explorer.cardHolder;
 			assertEquals(rootUrls, cardHolder.getRootUrls());
 			assertEquals(cardConfig, cardHolder.getCardConfig());

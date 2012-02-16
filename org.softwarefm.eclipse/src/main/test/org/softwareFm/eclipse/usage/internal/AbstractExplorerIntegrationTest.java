@@ -75,6 +75,7 @@ import org.softwareFm.swt.explorer.IExplorer;
 import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.explorer.IShowMyGroups;
 import org.softwareFm.swt.explorer.IShowMyPeople;
+import org.softwareFm.swt.explorer.IUserDataManager;
 import org.softwareFm.swt.explorer.internal.Explorer;
 import org.softwareFm.swt.explorer.internal.MasterDetailSocial;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
@@ -276,7 +277,8 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 					Arrays.asList(rootArtifactUrl, rootSnippetUrl), //
 					IPlayListGetter.Utils.noPlayListGetter(), service, //
 					ILoginStrategy.Utils.noLoginStrategy(),//
-					showMyData, showMyGroups, showMyPeople);
+					showMyData, showMyGroups, showMyPeople,//
+					IUserDataManager.Utils.userDataManager());
 			IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
 			new SnippetFeedConfigurator(cardConfig.cardDataStore, cardConfig.resourceGetterFn).configure(explorer);
 			// SnippetFeedConfigurator.configure(explorer, cardConfig);

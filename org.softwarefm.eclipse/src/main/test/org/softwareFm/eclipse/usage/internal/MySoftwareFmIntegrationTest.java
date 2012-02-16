@@ -1,7 +1,6 @@
 package org.softwareFm.eclipse.usage.internal;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -21,7 +20,6 @@ import org.softwareFm.client.http.requests.MemoryResponseCallback;
 import org.softwareFm.common.IGitOperations;
 import org.softwareFm.common.IUserReader;
 import org.softwareFm.common.callbacks.ICallback;
-import org.softwareFm.common.callbacks.MemoryCallback;
 import org.softwareFm.common.collections.Files;
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.constants.CommonConstants;
@@ -48,6 +46,7 @@ import org.softwareFm.swt.configuration.ICardConfigurator;
 import org.softwareFm.swt.editors.IValueComposite;
 import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.explorer.IShowMyGroups;
+import org.softwareFm.swt.explorer.IUserDataManager;
 import org.softwareFm.swt.explorer.internal.MySoftwareFm;
 import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
@@ -73,26 +72,40 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 	private File root;
 	private File userFile;
 	private File remoteRoot;
-	private UserData initialUserData;
-	private MemoryCallback<UserData> persistCallback;
+	private IUserDataManager userDataManager;
 
 	public void testSignupThenLogin() {
+		assertSame(userDataManager.getUserData(), mySoftwareFm.getUserData());
+
 		signUp(email, moniker, password);
 		String crypto = template.queryForObject("select crypto from users", String.class);
 		String softwareFmId = template.queryForObject("select softwarefmid from users", String.class);
 		mySoftwareFm.logout();
 
-		UserData userData = new UserData(email, softwareFmId, crypto);
-		assertEquals(Arrays.asList(userData, UserData.blank()), persistCallback.getResults());
 		mySoftwareFm.start();
-		assertNull(mySoftwareFm.userData.crypto);
+		assertNull(userDataManager.getUserData().crypto);
 		displayUntilValueComposite("Email", "Password");
 		setValues(email, password);
 		assertTrue(getOkCancel().isOkEnabled());
 		getOkCancel().ok();
 		displayUntilCompositeWithCardMargin();
 		checkLoggedInDisplay(crypto, softwareFmId);
-		assertEquals(Arrays.asList(userData, UserData.blank(), userData), persistCallback.getResults());
+
+		assertSame(userDataManager.getUserData(), mySoftwareFm.getUserData());
+	}
+
+	public void testRestartedWhenAnotherWindowLogsInOrOut() {
+		signUp(email, moniker, password);
+		assertEquals(email, mySoftwareFm.getUserData().email());
+		UserData newUserData = new UserData(null, null, null);
+		userDataManager.setUserData(this, newUserData);
+		displayUntilValueComposite("Email", "Password");
+	}
+
+	public void testLoggedInWhenAnotherWindowLogsIn() {
+		UserData newUserData = new UserData(email, "sfmId", password);
+		userDataManager.setUserData(this,newUserData);
+		displayUntilCompositeWithCardMargin();
 	}
 
 	public void testSignup() {
@@ -108,7 +121,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		String crypto = template.queryForObject("select crypto from users", String.class);
 		String softwareFmId = template.queryForObject("select softwarefmid from users", String.class);
 
-		assertEquals(new UserData(email, softwareFmId, crypto), mySoftwareFm.userData);
+		assertEquals(new UserData(email, softwareFmId, crypto), userDataManager.getUserData());
 
 		assertTrue(userFile.exists());
 		Map<String, Object> userData = Json.mapFromEncryptedFile(userFile, crypto);
@@ -123,7 +136,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		checkLoginError(email, "password", "Email / Password didn't match\n\nClicking this panel will start login again");
 		checkLoginError("a@b.com", "password", "Email not recognised\n\nClicking this panel will start login again");
 
-		assertEquals(new UserData("a@b.com", null, null), mySoftwareFm.userData);
+		assertEquals(new UserData("a@b.com", null, null), userDataManager.getUserData());
 	}
 
 	public void testStartRequestsSalt() {
@@ -131,24 +144,24 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		startAndGetSignupSalt();
 		assertEquals(0, template.queryForInt("select count(*) from users"));
 
-		assertNull(mySoftwareFm.userData.crypto);
-		assertNull(mySoftwareFm.userData.softwareFmId);
-		assertNull(mySoftwareFm.userData.email);
+		assertNull(userDataManager.getUserData().crypto);
+		assertNull(userDataManager.getUserData().softwareFmId);
+		assertNull(userDataManager.getUserData().email);
 		assertNotNull(mySoftwareFm.getSignupSalt());
 	}
 
 	private void checkLoginError(String email, String password, String errorMessage) {
 		mySoftwareFm.logout();
 		mySoftwareFm.start();
-		assertNull(mySoftwareFm.userData.crypto);
-		assertNull(mySoftwareFm.userData.softwareFmId);
+		assertNull(userDataManager.getUserData().crypto);
+		assertNull(userDataManager.getUserData().softwareFmId);
 		displayUntilValueComposite("Email", "Password");
 		setValues(email, password);
 		assertTrue(getOkCancel().isOkEnabled());
 		getOkCancel().ok();
 		displayUntilCompositeWithCardMargin();
 
-		assertEquals(new UserData(email, null, null), mySoftwareFm.userData);
+		assertEquals(new UserData(email, null, null), userDataManager.getUserData());
 
 		assertEquals(errorMessage, getText());
 	}
@@ -175,7 +188,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		displayUntilCompositeWithCardMargin();
 		assertEquals("Reminder email sent to " + email + "\n\nClicking this panel will start login again", getText());
 
-		assertEquals(new UserData(email, null, null), mySoftwareFm.userData);
+		assertEquals(new UserData(email, null, null), userDataManager.getUserData());
 
 		mySoftwareFm.start();
 		displayUntilValueComposite("Email", "Password");
@@ -189,7 +202,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		displayUntilCompositeWithCardMargin();
 		checkLoggedInDisplay(crypto, "someNewSoftwareFmId0");
 
-		assertEquals(new UserData(email, "someNewSoftwareFmId0", crypto), mySoftwareFm.userData);
+		assertEquals(new UserData(email, "someNewSoftwareFmId0", crypto), userDataManager.getUserData());
 	}
 
 	private String resetPassword(String magicString) throws InterruptedException, ExecutionException, TimeoutException {
@@ -244,7 +257,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 	}
 
 	public void testInitialUserDataIsTakenFromLoginStrategy() {
-		assertSame(mySoftwareFm.userData, initialUserData);
+		assertSame(userDataManager.getUserData(), mySoftwareFm.getUserData());
 	}
 
 	private void displayUntilCompositeWithCardMargin() {
@@ -349,9 +362,9 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		Table table = (Table) Swts.getDescendant(mySoftwareFm.getControl(), 0, 0, 0);
 		Swts.checkRow(table, 0, "Email", email);
 		Swts.checkRow(table, 1, "Moniker", moniker);
-		Swts.checkRow(table, 2, "Software Fm Id", mySoftwareFm.userData.softwareFmId);
+		Swts.checkRow(table, 2, "Software Fm Id", userDataManager.getUserData().softwareFmId);
 
-		assertEquals(new UserData(email, softwareFmId, crypto), mySoftwareFm.userData);
+		assertEquals(new UserData(email, softwareFmId, crypto), userDataManager.getUserData());
 	}
 
 	@Override
@@ -370,12 +383,11 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		IProcessCall softwareFmProcessCall = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, Functions.<ProcessCallParameters, IProcessCall[]> constant(new IProcessCall[0]));
 		server = ICrowdSourcedServer.Utils.testServerPort(softwareFmProcessCall, ICallback.Utils.rethrow());
 		client = IHttpClient.Utils.builder("localhost", 8080);
-		initialUserData = new UserData(null, null, null);
-		persistCallback = ICallback.Utils.<UserData> memory();
-		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(display, service, client, initialUserData, persistCallback);
+		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(display, service, client);
 		cardConfig = ICardConfigurator.Utils.cardConfigForTests(display);
 		IUserReader userReader = IUserReader.Utils.mockReader(LoginConstants.emailKey, email, LoginConstants.monikerKey, moniker);
-		mySoftwareFm = new MySoftwareFm(shell, cardConfig, loginStrategy, IShowMyData.Utils.exceptionShowMyData(), IShowMyGroups.Utils.exceptionShowMyGroups(), userReader);
+		userDataManager = IUserDataManager.Utils.userDataManager();
+		mySoftwareFm = new MySoftwareFm(shell, cardConfig, loginStrategy, IShowMyData.Utils.exceptionShowMyData(), IShowMyGroups.Utils.exceptionShowMyGroups(), userReader, userDataManager);
 		template = new JdbcTemplate(dataSource);
 		template.update("truncate users");
 		softwareFmComposite = mySoftwareFm.getComposite();

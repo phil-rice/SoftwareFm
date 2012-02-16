@@ -12,6 +12,8 @@ import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.snippets.internal.UsageStrategy;
+import org.softwareFm.eclipse.usage.internal.CachedUsageStrategy;
+import org.softwareFm.swt.explorer.IUserDataManager;
 
 public interface IUsageStrategy {
 
@@ -20,6 +22,10 @@ public interface IUsageStrategy {
 	public Map<String, Object> myProjectData(String softwareFmId, String crypto);
 
 	public static class Utils {
+		public static IUsageStrategy cached(IUsageStrategy delegate, long period, IUserDataManager userDataManager){
+			return new CachedUsageStrategy(delegate, period, userDataManager);
+		}
+		
 
 		public static IUsageStrategy usage(final IServiceExecutor serviceExecutor, final IHttpClient client, final IGitLocal gitLocal, IUrlGenerator userGenerator) {
 			return new UsageStrategy(client, serviceExecutor, gitLocal, userGenerator);
@@ -36,7 +42,6 @@ public interface IUsageStrategy {
 				public Future<?> using(String softwareFmId, String digest, IResponseCallback callback) {
 					throw new UnsupportedOperationException();
 				}
-
 			};
 		}
 

@@ -99,12 +99,4 @@ public class LoginStrategyMock implements ILoginStrategy {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public UserData initialUserData() {
-		return UserData.blank();
-	}
-
-	@Override
-	public void clearPersistedUserData() {
-	}
 }
