@@ -25,24 +25,24 @@ public class IUsageStrategyTest extends AbstractProcessorDatabaseIntegrationTest
 	public void testUsingUpdatesProjectData() throws Exception {
 		String sessionSalt = makeSalt();
 		String crypto = signup("someEmail", sessionSalt, "someMoniker", "hash", "someNewSoftwareFmId0");
-		usageStrategy.using("someNewSoftwareFmId0", "groupId1", "artifactId1", IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+		usageStrategy.using("someNewSoftwareFmId0", "digest11", IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 		assertTrue(userFile.exists());
 		assertTrue(userProjectFile.exists());
 		Map<String, Object> projectData = getProjectData(crypto);
-		assertEquals(Maps.stringObjectMap("groupId1", Maps.stringObjectMap("artifactId1", Arrays.asList(0l))), projectData);
+		assertEquals(Maps.stringObjectMap("someGroupId1", Maps.stringObjectMap("someArtifactId1", Arrays.asList(0l))), projectData);
 	}
 
 	public void testMyData() throws Exception {
 		String sessionSalt = makeSalt();
 		String crypto = signup("someEmail", sessionSalt, "someMoniker", "hash", "someNewSoftwareFmId0");
-		usageStrategy.using("someNewSoftwareFmId0", "groupId1", "artifactId1", IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
-		usageStrategy.using("someNewSoftwareFmId0", "groupId1", "artifactId2", IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
-		usageStrategy.using("someNewSoftwareFmId0", "groupId2", "artifactId3", IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+		usageStrategy.using("someNewSoftwareFmId0", "digest11", IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+		usageStrategy.using("someNewSoftwareFmId0", "digest12", IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+		usageStrategy.using("someNewSoftwareFmId0", "digest23",  IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 
 		Map<String, Object> projectData = getProjectData(crypto);
 
 		List<Long> day = Arrays.asList(0l);
-		Object[] expected = new Object[] { "groupId1", Maps.stringObjectMap("artifactId1", day, "artifactId2", day), "groupId2", Maps.stringObjectMap("artifactId3", day) };
+		Object[] expected = new Object[] { "someGroupId1", Maps.stringObjectMap("someArtifactId1", day, "someArtifactId2", day), "someGroupId2", Maps.stringObjectMap("someArtifactId3", day) };
 
 		assertEquals(Maps.stringObjectMap(expected), projectData);
 		Map<String, Object> actualProjectData = usageStrategy.myProjectData("someNewSoftwareFmId0", crypto);

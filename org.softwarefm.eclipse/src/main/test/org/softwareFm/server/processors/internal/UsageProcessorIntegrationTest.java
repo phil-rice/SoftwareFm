@@ -36,35 +36,31 @@ public class UsageProcessorIntegrationTest extends AbstractProcessorDatabaseInte
 	public void testFirstUsageCreatesCryptoInUserAndInitialisesProjectData() throws Exception {
 		assertFalse(userFile.exists());
 		getHttpClient().post("/" + SoftwareFmConstants.usagePrefix).//
-				addParam(LoginConstants.softwareFmIdKey, "someNewSoftwareFmId0").//using this so cryptoGenerator/cryptoFnwork
-				addParam(LoginConstants.emailKey, "someEmail").//
-				addParam(SoftwareFmConstants.groupIdKey, "someGroupId").//
-				addParam(SoftwareFmConstants.artifactIdKey, "someArtifactId").//
+				addParam(LoginConstants.softwareFmIdKey, "someNewSoftwareFmId0").// using this so cryptoGenerator/cryptoFnwork
+				addParam(SoftwareFmConstants.digest, "digest11").//
 				execute(IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.SECONDS);
 		String projectCryptoKey = user.getUserProperty(softwareFmId, userKey, SoftwareFmConstants.projectCryptoKey);
-		assertNotNull( projectCryptoKey);
+		assertNotNull(projectCryptoKey);
 		Map<String, Object> actualProjectDetails = Json.mapFromEncryptedFile(projectFile, projectCryptoKey);
-		assertEquals(Maps.stringObjectMap("someGroupId", Maps.stringObjectMap("someArtifactId", Arrays.asList(0l))), actualProjectDetails);
+		assertEquals(Maps.stringObjectMap("someGroupId1", Maps.stringObjectMap("someArtifactId1", Arrays.asList(0l))), actualProjectDetails);
 	}
 
 	public void testSecondUsageUpdatesProjectDataIfNew() throws Exception {
-		checkAdd("someGroupId1", "someArtifactId1", 1, "someGroupId1", Maps.stringObjectMap("someArtifactId1", Arrays.asList(1l)));
-		checkAdd("someGroupId1", "someArtifactId1", 1, "someGroupId1", Maps.stringObjectMap("someArtifactId1", Arrays.asList(1l)));
-		checkAdd("someGroupId1", "someArtifactId1", 2, "someGroupId1", Maps.stringObjectMap("someArtifactId1", Arrays.asList(1l, 2l)));
-		checkAdd("someGroupId1", "someArtifactId2", 3, "someGroupId1", Maps.stringObjectMap("someArtifactId1", Arrays.asList(1l, 2l), "someArtifactId2", Arrays.asList(3l)));
-		checkAdd("someGroupId2", "someArtifactId1", 1, //
+		checkAdd("digest11",  1, "someGroupId1", Maps.stringObjectMap("someArtifactId1", Arrays.asList(1l)));
+		checkAdd("digest11",  1, "someGroupId1", Maps.stringObjectMap("someArtifactId1", Arrays.asList(1l)));
+		checkAdd("digest11",  2, "someGroupId1", Maps.stringObjectMap("someArtifactId1", Arrays.asList(1l, 2l)));
+		checkAdd("digest12", 3, "someGroupId1", Maps.stringObjectMap("someArtifactId1", Arrays.asList(1l, 2l), "someArtifactId2", Arrays.asList(3l)));
+		checkAdd("digest21", 1, //
 				"someGroupId1", Maps.stringObjectMap("someArtifactId1", Arrays.asList(1l, 2l), "someArtifactId2", Arrays.asList(3l)),//
 				"someGroupId2", Maps.stringObjectMap("someArtifactId1", Arrays.asList(1l)));
 	}
 
-	private void checkAdd(String groupId, String artifactId, int day, Object... namesAndValues) {
+	private void checkAdd(String digest, int day, Object... namesAndValues) {
 		try {
 			thisDay = day;
 			getHttpClient().post("/" + SoftwareFmConstants.usagePrefix).//
 					addParam(LoginConstants.softwareFmIdKey, "someNewSoftwareFmId0").//
-					addParam(LoginConstants.emailKey, "someEmail").//
-					addParam(SoftwareFmConstants.groupIdKey, groupId).//
-					addParam(SoftwareFmConstants.artifactIdKey, artifactId).//
+					addParam(SoftwareFmConstants.digest, digest).//
 					execute(IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.SECONDS);
 			Map<String, Object> expected = Maps.stringObjectMap(namesAndValues);
 			Map<String, Object> actualUserDetails = Json.mapFromEncryptedFile(userFile, userKey);
@@ -79,13 +75,14 @@ public class UsageProcessorIntegrationTest extends AbstractProcessorDatabaseInte
 
 	}
 
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		user = IProcessCall.Utils.makeUser(remoteOperations, SoftwareFmServer.makeDefaultProperties(), SoftwareFmConstants.urlPrefix);
-		//someNewSoftwareFmId0
+		// someNewSoftwareFmId0
 		String url = LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix).findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
-		userFile = new File(remoteRoot,Urls.compose( url ,CommonConstants.dataFileName));
+		userFile = new File(remoteRoot, Urls.compose(url, CommonConstants.dataFileName));
 		projectFile = new File(remoteRoot, Urls.compose(url, "project/someMonth"));
 	}
 }

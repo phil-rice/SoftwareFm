@@ -15,7 +15,7 @@ import org.softwareFm.eclipse.snippets.internal.UsageStrategy;
 
 public interface IUsageStrategy {
 
-	public Future<?> using(String softwareFmId, String groupId, String artifactId, IResponseCallback callback);
+	public Future<?> using(String softwareFmId, String digest, IResponseCallback callback);
 
 	public Map<String, Object> myProjectData(String softwareFmId, String crypto);
 
@@ -28,12 +28,12 @@ public interface IUsageStrategy {
 		public static IUsageStrategy noUsageStrategy() {
 			return new IUsageStrategy() {
 				@Override
-				public Future<?> using(String softwareFmId, String groupId, String artifactId, IResponseCallback callback) {
+				public Map<String, Object> myProjectData(String softwareFmId, String crypto) {
 					throw new UnsupportedOperationException();
 				}
 
 				@Override
-				public Map<String, Object> myProjectData(String softwareFmId, String crypto) {
+				public Future<?> using(String softwareFmId, String digest, IResponseCallback callback) {
 					throw new UnsupportedOperationException();
 				}
 
@@ -43,8 +43,8 @@ public interface IUsageStrategy {
 		public static IUsageStrategy sysoutUsageStrategy() {
 			return new IUsageStrategy() {
 				@Override
-				public Future<?> using(String softwareFmId, String groupId, String artifactId, IResponseCallback callback) {
-					String message = "Using: SoftwareFmId: " + softwareFmId + ", GroupId: " + groupId + ", ArtifactId: " + artifactId;
+				public Future<?> using(String softwareFmId, String digest, IResponseCallback callback) {
+					String message = "Using: SoftwareFmId: " + softwareFmId + ", Digest: " + digest;
 					System.out.println(message);
 					callback.process(IResponse.Utils.okText("", message));
 					return Futures.doneFuture(null);
@@ -60,9 +60,7 @@ public interface IUsageStrategy {
 			};
 		}
 
-		public static UsageStrategyMock mockUsageStartegy() {
-			return new UsageStrategyMock();
-		}
+		
 	}
 
 }

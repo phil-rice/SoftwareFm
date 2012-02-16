@@ -16,7 +16,7 @@ public interface IActionBar {
 
 	public static class Utils {
 		public static IActionBar actionBar(IExplorer explorer, CardConfig cardConfig, IFunction1<BindingRipperResult, BindingRipperResult> reRipFn, boolean admin, IUsageStrategy usageStrategy) {
-			return new ActionBar(explorer, cardConfig, reRipFn, admin, usageStrategy);
+			return new ActionBar(explorer, cardConfig, reRipFn, admin);
 		}
 	}
 

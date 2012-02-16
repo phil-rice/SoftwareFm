@@ -42,7 +42,6 @@ import org.softwareFm.eclipse.mysoftwareFm.MyGroups;
 import org.softwareFm.eclipse.mysoftwareFm.MyPeople;
 import org.softwareFm.eclipse.mysoftwareFm.RequestGroupReportGeneration;
 import org.softwareFm.eclipse.snippets.SnippetFeedConfigurator;
-import org.softwareFm.eclipse.usage.IUsageStrategy;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.swt.ICollectionConfigurationFactory;
 import org.softwareFm.swt.browser.IBrowserConfigurator;
@@ -187,13 +186,7 @@ public class ExplorerWithRadioChannel {
 							explorer.displayCard(firstUrl, new CardAndCollectionDataStoreAdapter());
 						}
 					});
-					final IUsageStrategy usageStrategy = IUsageStrategy.Utils.usage(service, client, gitLocal, userUrlGenerator);
-					Buttons.makePushButton(buttonPanel, null, "usage", false, new Runnable() {
-						@Override
-						public void run() {
-							usageStrategy.using(explorer.getUserData().softwareFmId, "someGroupId", "someArtifactId", IResponseCallback.Utils.noCallback());
-						}
-					});
+					
 					Buttons.makePushButton(buttonPanel, "people I know using Junit", new Runnable() {
 						@Override
 						public void run() {

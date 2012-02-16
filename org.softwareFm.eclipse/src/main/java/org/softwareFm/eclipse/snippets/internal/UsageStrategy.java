@@ -35,15 +35,13 @@ public class UsageStrategy implements IUsageStrategy {
 	}
 
 	@Override
-	public Future<?> using(final String softwareFmId, final String groupId, final String artifactId, final IResponseCallback callback) {
-		System.out.println("Usage: " + softwareFmId + ", " + groupId + ", " + artifactId);
+	public Future<?> using(final String softwareFmId, final String digest, final IResponseCallback callback) {
 		return serviceExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
 				client.post(SoftwareFmConstants.usagePrefix).//
 						addParam(LoginConstants.softwareFmIdKey, softwareFmId).//
-						addParam(SoftwareFmConstants.groupIdKey, groupId).//
-						addParam(SoftwareFmConstants.artifactIdKey, artifactId).//
+						addParam(SoftwareFmConstants.digest, digest).//
 						execute(callback).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 				return null;
 			}

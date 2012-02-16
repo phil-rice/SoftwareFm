@@ -2,19 +2,25 @@ package org.softwareFm.server.processors;
 
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.IGroups;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.crypto.Crypto;
 import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.future.Futures;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.processors.AbstractLoginDataAccessor;
 import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
+import org.softwareFm.eclipse.AbstractJarToGroupArtifactVersion;
+import org.softwareFm.eclipse.IGroupArtifactVersionCallback;
+import org.softwareFm.eclipse.IJarToGroupArtifactAndVersion;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.user.IProject;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
@@ -22,7 +28,6 @@ import org.softwareFm.server.ICrowdSourcedServer;
 import org.softwareFm.server.processors.internal.MailerMock;
 import org.softwareFm.softwareFmServer.GroupsForServer;
 import org.softwareFm.softwareFmServer.ITakeOnProcessor;
-import org.softwareFm.softwareFmServer.JarToGroupArtifactVersionOnServer;
 import org.softwareFm.softwareFmServer.ProjectForServer;
 import org.softwareFm.softwareFmServer.TakeOnGroupProcessor;
 import org.softwareFm.softwareFmServer.TakeOnProcessor;
@@ -122,8 +127,32 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 				ITakeOnProcessor takeOnProcessor = new TakeOnProcessor(from.gitOperations, from.user, membershipForServer, groups, userCryptoFn, emailToSfmId, groupsGenerator, groupIdGenerator, repoDefnFn);
 				Callable<String> groupCryptoGenerator = Callables.value(groupCryptoKey);
 				return new IProcessCall[] { //
-				new UsageProcessor(remoteOperations, new JarToGroupArtifactVersionOnServer(jarUrlGenerator, remoteOperations), project, projectTimeGetter), //
+				new UsageProcessor(remoteOperations, getJarToGroupArtifactAndVersionProcessor(jarUrlGenerator), project, projectTimeGetter), //
 						new TakeOnGroupProcessor(takeOnProcessor, from.signUpChecker, groupCryptoGenerator, emailToSfmId, from.saltGenerator, from.softwareFmIdGenerator, mailerMock) };
+			}
+
+		};
+	}
+
+	protected IJarToGroupArtifactAndVersion getJarToGroupArtifactAndVersionProcessor(IUrlGenerator jarUrlGenerator) {
+		return new AbstractJarToGroupArtifactVersion(jarUrlGenerator) {
+			Map<String, Map<String, Object>> jarMap = Maps.makeMap(//
+					"digest11", make("someGroupId1", "someArtifactId1", "someVersion1"),//
+					"digest12", make("someGroupId1", "someArtifactId2", "someVersion1"),//
+					"digest21", make("someGroupId2", "someArtifactId1", "someVersion1"),//
+					"digest22", make("someGroupId2", "someArtifactId2", "someVersion1"),//
+					"digest23", make("someGroupId2", "someArtifactId3", "someVersion1"));
+
+			@Override
+			protected Future<?> processMapFrom(IFileDescription fileDescription, IGroupArtifactVersionCallback callback) {
+				String url = fileDescription.url();
+				String digest = Strings.lastSegment(url, "/");
+				replyTo(callback, jarMap.get(digest));
+				return Futures.doneFuture(null);
+			}
+
+			private Map<String, Object> make(String groupId, String artifactId, String version) {
+				return Maps.makeMap(SoftwareFmConstants.groupIdKey, groupId, SoftwareFmConstants.artifactIdKey, artifactId, SoftwareFmConstants.version, version);
 			}
 		};
 	}
