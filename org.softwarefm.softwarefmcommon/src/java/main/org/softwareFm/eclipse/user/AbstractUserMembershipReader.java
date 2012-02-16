@@ -1,5 +1,6 @@
 package org.softwareFm.eclipse.user;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +40,8 @@ public abstract class AbstractUserMembershipReader implements IUserMembershipRea
 	@Override
 	public List<Map<String, Object>> walkGroupsFor(String softwareFmId) {
 		String usersMembershipCrypto = getMembershipCrypto(softwareFmId);
+		if (usersMembershipCrypto ==null)
+			return Collections.emptyList();
 		List<String> lines = findLines(softwareFmId);
 		List<Map<String, Object>> result = Lists.map(lines, Json.decryptAndMapMakeFn(usersMembershipCrypto));
 		return result;

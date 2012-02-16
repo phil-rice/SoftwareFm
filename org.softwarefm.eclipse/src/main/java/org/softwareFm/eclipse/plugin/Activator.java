@@ -50,6 +50,7 @@ import org.softwareFm.swt.explorer.internal.UserData;
  * The activator class controls the plug-in life cycle
  */
 public class Activator extends AbstractUIPlugin {
+	boolean local = false;
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.softwareFm.explorer.eclipse.ExplorerView"; //$NON-NLS-1$
@@ -62,7 +63,6 @@ public class Activator extends AbstractUIPlugin {
 	private IServiceExecutor serviceExecutor;
 
 	private IHttpClient httpClient;
-	boolean local = false;
 
 	private IGitLocal gitLocal;
 

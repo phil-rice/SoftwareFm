@@ -25,8 +25,6 @@ public class UserMembershipReaderForLocal extends AbstractUserMembershipReader {
 	@Override
 	protected String getMembershipCrypto(String softwareFmId) {
 		String result = user.getUserProperty(softwareFmId, userCryptoKey, GroupConstants.membershipCryptoKey);
-		if (result == null)
-			throw new NullPointerException(softwareFmId);
 		return result;
 	}
 
