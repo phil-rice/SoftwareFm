@@ -8,6 +8,7 @@ import java.util.concurrent.Callable;
 
 import org.eclipse.ui.IStartup;
 import org.softwareFm.client.http.requests.IResponseCallback;
+import org.softwareFm.common.IGitLocal;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
@@ -24,8 +25,9 @@ public class Startup implements IStartup {
 		serviceExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				IUsageStrategy rawUsageStrategy = new UsageStrategy(activator.getClient(), serviceExecutor, activator.getGitLocal(), LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix));
-				final IUsageStrategy cachedUsageStrategy = IUsageStrategy.Utils.cached(rawUsageStrategy, SoftwareFmConstants.usageRefreshTimeMs, activator.getUserDataManager());
+				IGitLocal gitLocal = activator.getGitLocal();
+				IUsageStrategy rawUsageStrategy = new UsageStrategy(activator.getClient(), serviceExecutor, gitLocal, LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix));
+				final IUsageStrategy cachedUsageStrategy = IUsageStrategy.Utils.cached(rawUsageStrategy, SoftwareFmConstants.usageRefreshTimeMs, gitLocal, activator.getUserDataManager());
 				activator.getSelectedBindingManager().addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
 					@Override
 					public void selectionOccured(BindingRipperResult ripperResult) {

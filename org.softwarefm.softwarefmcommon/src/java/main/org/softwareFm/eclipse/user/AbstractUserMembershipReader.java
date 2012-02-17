@@ -35,8 +35,6 @@ public abstract class AbstractUserMembershipReader implements IUserMembershipRea
 
 	abstract protected String getMembershipCrypto(String softwareFmId);
 
-
-
 	@Override
 	public List<Map<String, Object>> walkGroupsFor(String softwareFmId) {
 		String url = userUrlGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
@@ -46,6 +44,6 @@ public abstract class AbstractUserMembershipReader implements IUserMembershipRea
 		return result;
 	}
 
-	abstract protected List<Map<String,Object>> getGroupFileAsText(IFileDescription fileDescription);
+	abstract protected List<Map<String, Object>> getGroupFileAsText(IFileDescription fileDescription);
 
 }

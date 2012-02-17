@@ -12,7 +12,7 @@ import org.softwareFm.common.collections.Files;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.internal.GitOperations;
 
-public interface IGitOperations {
+public interface IGitOperations extends IGitReader{
 	/** Creates a repository at this url */
 	void init(String url);
 
@@ -48,22 +48,6 @@ public interface IGitOperations {
 	/** get the config from the repository at url */
 	String getConfig(String url, String section, String subsection, String name);
 
-	/** Where is the root of this tree of repositories located */
-	File getRoot();
-
-	/** loads a file as a string */
-	String getFileAsString(IFileDescription fileDescription);
-
-	/** loads a file as a map */
-	Map<String, Object> getFile(IFileDescription fileDescription);
-
-	/** loads a file as a list of maps. Each line is a map, and optionally encrypted */
-	List<Map<String, Object>> getFileAsListOfMaps(IFileDescription fileDescription);
-
-	/** creates a map which is the aggregate of the file and it's descendants. The descendants are in sub directories with the same crypto key and name */
-	Map<String, Object> getFileAndDescendants(IFileDescription fileDescription);
-
-	void clearCaches();
 
 	abstract public static class Utils {
 		public static IGitOperations gitOperations(File root) {

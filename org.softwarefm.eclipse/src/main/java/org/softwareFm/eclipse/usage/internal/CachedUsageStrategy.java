@@ -24,10 +24,12 @@ public class CachedUsageStrategy implements IUsageStrategy, IHasCache {
 	private final long period;
 	private long lastUpdate = System.currentTimeMillis();
 	private final Set<String> cached = Collections.synchronizedSet(Sets.<String> newSet());
+	private final IHasCache cachesToClearWhenUsageOccures;
 
-	public CachedUsageStrategy(IUsageStrategy delegate, long period, IUserDataManager userDataManager) {
+	public CachedUsageStrategy(IUsageStrategy delegate, long period, IHasCache cachesToClearWhenUsageOccures, IUserDataManager userDataManager) {
 		this.delegate = delegate;
 		this.period = period;
+		this.cachesToClearWhenUsageOccures = cachesToClearWhenUsageOccures;
 		userDataManager.addUserDataListener(new IUserDataListener() {
 			@Override
 			public void userDataChanged(Object source, UserData userData) {
@@ -42,6 +44,7 @@ public class CachedUsageStrategy implements IUsageStrategy, IHasCache {
 			clearCaches();
 		if (!cached.add(digest))
 			return Futures.doneFuture(null);
+		cachesToClearWhenUsageOccures.clearCaches();
 		return delegate.using(softwareFmId, digest, callback);
 	}
 

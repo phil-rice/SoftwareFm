@@ -1,7 +1,8 @@
-package org.softwareFm.common.comments;
+package org.softwareFm.eclipse.comments;
 
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * There are three types of comments in softwarefm: global, group based, user based. It is likely that more categories will be added.
@@ -15,6 +16,10 @@ import java.util.Map;
  */
 public interface ICommentsReader {
 
-	List<Map<String, Object>> commentsFor(String url, List<String> uuids);
+	List<Map<String, Object>> globalComments(String baseUrl);
+
+	List<Map<String, Object>> groupComments(String baseUrl, String softwareFmId);
+
+	List<Map<String, Object>> myComments(String baseUrl, String softwareFmId);
 
 }

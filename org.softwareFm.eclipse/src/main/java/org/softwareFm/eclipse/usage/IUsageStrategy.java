@@ -12,6 +12,7 @@ import org.softwareFm.client.http.requests.IResponseCallback;
 import org.softwareFm.client.http.response.IResponse;
 import org.softwareFm.common.IGitLocal;
 import org.softwareFm.common.future.Futures;
+import org.softwareFm.common.maps.IHasCache;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.common.url.IUrlGenerator;
@@ -26,8 +27,8 @@ public interface IUsageStrategy {
 	public Map<String, Object> myProjectData(String softwareFmId, String crypto);
 
 	public static class Utils {
-		public static IUsageStrategy cached(IUsageStrategy delegate, long period, IUserDataManager userDataManager){
-			return new CachedUsageStrategy(delegate, period, userDataManager);
+		public static IUsageStrategy cached(IUsageStrategy delegate, long period, IHasCache cachesToClear, IUserDataManager userDataManager ){
+			return new CachedUsageStrategy(delegate, period, cachesToClear, userDataManager);
 		}
 		
 

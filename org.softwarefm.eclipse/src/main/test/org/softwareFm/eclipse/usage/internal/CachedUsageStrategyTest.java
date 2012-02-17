@@ -14,61 +14,69 @@ import org.softwareFm.common.maps.IHasCache;
 import org.softwareFm.eclipse.usage.IUsageStrategy;
 import org.softwareFm.swt.explorer.IUserDataManager;
 
-public class CachedUsageStrategyTest extends TestCase{
+public class CachedUsageStrategyTest extends TestCase {
 
 	private IUserDataManager userDataManager;
 	private IUsageStrategy delegate;
 	private IUsageStrategy cached;
 	private MemoryResponseCallback callback;
 	private int period;
+	private IHasCache cachesToClear;
 
 	public void testOnlyCallsDelegateOnceForEachDigestBeforePeriodExpires() {
 		addOneSetOfCalls();
-		EasyMock.replay(delegate);
-		
+		replayMocks();
+
 		call();
-		
-		EasyMock.verify(delegate);
+
+		verifyMocks();
 	}
 
-	public void testCallsAgainAfterClearCaches(){
+	public void testCallsAgainAfterClearCaches() {
 		addOneSetOfCalls();
 		addOneSetOfCalls();
-		EasyMock.replay(delegate);
-		
+		replayMocks();
+
 		call();
-		((IHasCache)cached).clearCaches();
+		((IHasCache) cached).clearCaches();
 		call();
-		
-		EasyMock.verify(delegate);
+
+		verifyMocks();
 	}
-	
-	public void testCallsAgainAfterPeriodExpires() throws InterruptedException{
+
+	public void testCallsAgainAfterPeriodExpires() throws InterruptedException {
 		addOneSetOfCalls();
 		addOneSetOfCalls();
-		EasyMock.replay(delegate);
-		
+		replayMocks();
+
 		call();
-		Thread.sleep(period+50);
+		Thread.sleep(period + 50);
 		call();
-		
-		EasyMock.verify(delegate);
-		
+
+		verifyMocks();
+
 	}
-	
-	public void testCallsAgainIfUserDataChanges(){
+
+	public void testCallsAgainIfUserDataChanges() {
 		addOneSetOfCalls();
 		addOneSetOfCalls();
-		EasyMock.replay(delegate);
-		
+		replayMocks();
+
 		call();
 		userDataManager.setUserData(this, userDataManager.getUserData());
 		call();
-		
-		EasyMock.verify(delegate);
-		
+
+		verifyMocks();
+
 	}
-	
+
+	protected void verifyMocks() {
+		EasyMock.verify(delegate, cachesToClear);
+	}
+
+	protected void replayMocks() {
+		EasyMock.replay(delegate, cachesToClear);
+	}
 
 	protected void call() {
 		cached.using("sfmId", "digest1", callback);
@@ -77,18 +85,16 @@ public class CachedUsageStrategyTest extends TestCase{
 		cached.using("sfmId", "digest1", callback);
 	}
 
-
 	protected void addOneSetOfCalls() {
 		delegate.using("sfmId", "digest1", callback);
 		EasyMock.expectLastCall().andReturn(Futures.doneFuture(null));
+		cachesToClear.clearCaches();
 		delegate.using("sfmId", "digest2", callback);
 		EasyMock.expectLastCall().andReturn(Futures.doneFuture(null));
+		cachesToClear.clearCaches();
 	}
-	
-	
-	public void testClearsCacheAfterPeriod(){
-		
-	}
+
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -96,7 +102,8 @@ public class CachedUsageStrategyTest extends TestCase{
 		delegate = EasyMock.createMock(IUsageStrategy.class);
 		userDataManager = IUserDataManager.Utils.userDataManager();
 		period = 300;
-		cached = IUsageStrategy.Utils.cached(delegate, period, userDataManager);
+		cachesToClear = EasyMock.createMock(IHasCache.class);
+		cached = IUsageStrategy.Utils.cached(delegate, period, cachesToClear, userDataManager);
 	}
 
 }

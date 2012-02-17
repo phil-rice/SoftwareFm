@@ -88,6 +88,8 @@ public class UserMembershipForServer extends AbstractUserMembershipReader implem
 	protected String getMembershipCrypto(String softwareFmId) {
 		String userCrypto = Functions.call(userCryptoFn, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
 		String usersMembershipCrypto = user.getUserProperty(softwareFmId, userCrypto, GroupConstants.membershipCryptoKey);
+		if (usersMembershipCrypto ==null)
+			throw new NullPointerException(softwareFmId);
 		return usersMembershipCrypto;
 	}
 

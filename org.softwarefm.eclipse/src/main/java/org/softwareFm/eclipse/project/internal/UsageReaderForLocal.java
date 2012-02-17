@@ -29,6 +29,7 @@ public class UsageReaderForLocal extends AbstractUsageReader {
 		this.userCryptoKey = userCryptoKey;
 	}
 
+
 	@Override
 	public Map<String, Map<String, List<Integer>>> getProjectDetails(String softwareFm, String projectCryptoKey, String month) {
 		IFileDescription projectFileDescription = getFileDescriptionForProject(userCryptoKey, softwareFm, month);
