@@ -5,34 +5,53 @@
 package org.softwareFm.common;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.common.collections.Files;
 import org.softwareFm.common.internal.GitOperations;
 
 public interface IGitOperations {
+	/** Creates a repository at this url */
 	void init(String url);
 
+	/** creates/overwrites a file at this file description */
 	void put(IFileDescription fileDescription, Map<String, Object> data);
 
+	/** Assumes the file is a list of maps, each map is on a separate line (separated by \n). If encrypted, each line is separately encrypted */
+	void append(IFileDescription fileDescription, Map<String, Object> data);
+
+	/** Pull from the remote repository. */
 	void pull(String url);
 
+	/** Garbage collect the repository at this url */
 	void gc(String url);
 
+	/** Add any changed files to staging, then commit all the changes */
 	void addAllAndCommit(String url, String message);
 
+	/** Find the name of the current branch */
 	String getBranch(String url);
 
+	/** Make it so that pulls come from the remotePrefix. */
 	void setConfigForRemotePull(String url, String remotePrefix);
 
+	/** get the config from the repository at url */
 	String getConfig(String url, String section, String subsection, String name);
 
+	/** Where is the root of this tree of repositories located */
 	File getRoot();
 
+	/** loads a file as a string */
 	String getFileAsString(IFileDescription fileDescription);
 
+	/** loads a file as a map */
 	Map<String, Object> getFile(IFileDescription fileDescription);
 
+	/** loads a file as a list of maps. Each line is a map, and optionally encrypted */
+	List<Map<String, Object>> getFileAsListOfMaps(IFileDescription fileDescription);
+
+	/** creates a map which is the aggregate of the file and it's descendants. The descendants are in sub directories with the same crypto key and name */
 	Map<String, Object> getFileAndDescendants(IFileDescription fileDescription);
 
 	void clearCaches();
@@ -112,6 +131,16 @@ public interface IGitOperations {
 
 				@Override
 				public String getFileAsString(IFileDescription fileDescription) {
+					throw new IllegalArgumentException();
+				}
+
+				@Override
+				public void append(IFileDescription fileDescription, Map<String, Object> data) {
+					throw new IllegalArgumentException();
+				}
+
+				@Override
+				public List<Map<String, Object>> getFileAsListOfMaps(IFileDescription fileDescription) {
 					throw new IllegalArgumentException();
 				}
 			};

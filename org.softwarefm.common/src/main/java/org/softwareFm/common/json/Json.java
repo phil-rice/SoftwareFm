@@ -22,8 +22,8 @@ public class Json {
 	public static Map<String, Object> mapFromString(String jsonObject) {
 		return makeMap(jsonObject);
 	}
-	
-	public static Map<String,Object> mapFromEncryptedFile(File file, String key){
+
+	public static Map<String, Object> mapFromEncryptedFile(File file, String key) {
 		String text = Files.getText(file);
 		String decrypted = Crypto.aesDecrypt(key, text);
 		Map<String, Object> result = mapFromString(decrypted);
@@ -51,20 +51,20 @@ public class Json {
 		return JSONValue.toJSONString(from);
 	}
 
-	public static String mapToString(Object...namesAndValues) {
+	public static String mapToString(Object... namesAndValues) {
 		return toString(Maps.stringObjectLinkedMap(namesAndValues));
 	}
 
-	public static Map<String,Object> parseFile(File file) {
+	public static Map<String, Object> parseFile(File file) {
 		String text = Files.getText(file);
 		return Json.mapFromString(text);
 	}
 
-	public static IFunction1<String, Map<String,Object>> decryptAndMapMakeFn(final String key) {
-		return new IFunction1<String, Map<String,Object>>() {
+	public static IFunction1<String, Map<String, Object>> decryptAndMapMakeFn(final String key) {
+		return new IFunction1<String, Map<String, Object>>() {
 			@Override
 			public Map<String, Object> apply(String from) throws Exception {
-				String raw = Crypto.aesDecrypt(key, from);
+				String raw = key == null ? from : Crypto.aesDecrypt(key, from);
 				return mapFromString(raw);
 			}
 		};

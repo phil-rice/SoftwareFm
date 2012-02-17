@@ -6,6 +6,7 @@ package org.softwareFm.common.internal;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -55,6 +56,16 @@ public class GitLocal implements IGitLocal {
 		return result;
 	}
 
+	@Override
+	public List<Map<String, Object>> getFileAsListOfMaps(IFileDescription fileDescription) {
+		String url = fileDescription.url();
+		String message = "  " + url + "   " + getClass().getSimpleName() + ".getFileAsListOfMaps(" + fileDescription + ")";
+		logger.debug(message);
+		pullIfNeeded(fileDescription);
+		List<Map<String, Object>> result = gitOperations.getFileAsListOfMaps(fileDescription);
+		logger.debug(message + " -> " + result);
+		return result;
+	}
 	@Override
 	public Map<String, Object> getFile(IFileDescription fileDescription) {
 		String url = fileDescription.url();

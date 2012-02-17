@@ -4,14 +4,16 @@
 
 package org.softwareFm.common.server.internal;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import org.softwareFm.common.IFileDescription;
+import org.softwareFm.common.crypto.Crypto;
+import org.softwareFm.common.json.Json;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.server.GitTest;
-import org.softwareFm.common.tests.Tests;
 
-public class GitLocalTests extends GitTest {
+public class GitLocalTest extends GitTest {
 	public void testGetFileWhenNeedToCreate() {
 		remoteOperations.init("a");
 		remoteOperations.put(IFileDescription.Utils.plain("a/b"), v11);
@@ -42,8 +44,84 @@ public class GitLocalTests extends GitTest {
 		checkGetFile(gitLocal, IFileDescription.Utils.plain("a/b/d"), v21);
 	}
 
-	public void getGetFileAsString() {
-		fail();
+	public void testGetFileAsStringWhenNoLocalRepository() {
+		String crypto = Crypto.makeKey();
+		IFileDescription ac = IFileDescription.Utils.encrypted("a/c", "file", crypto);
+
+		remoteOperations.init("a");
+		remoteOperations.put(IFileDescription.Utils.plain("a"), v11);
+		remoteOperations.put(IFileDescription.Utils.plain("a/b"), v12);
+		remoteOperations.put(ac, v21);
+		remoteOperations.addAllAndCommit("a", getClass().getSimpleName());
+
+		assertEquals(v11, Json.mapFromString(gitLocal.getFileAsString(IFileDescription.Utils.plain("a"))));
+		assertEquals(v12, Json.mapFromString(gitLocal.getFileAsString(IFileDescription.Utils.plain("a/b"))));
+		assertEquals(v21, Json.mapFromString(Crypto.aesDecrypt(crypto, gitLocal.getFileAsString(ac))));
+
+	}
+
+	public void testGetFileAsStringWhenLocalRepository() {
+		String crypto = Crypto.makeKey();
+		IFileDescription ac = IFileDescription.Utils.encrypted("a/c", "file", crypto);
+
+		remoteOperations.init("a");
+		remoteOperations.put(IFileDescription.Utils.plain("a"), v11);
+		remoteOperations.put(IFileDescription.Utils.plain("a/b"), v12);
+		remoteOperations.put(ac, v21);
+		remoteOperations.addAllAndCommit("a", getClass().getSimpleName());
+
+		localOperations.init("a");
+		localOperations.setConfigForRemotePull("a", remoteRoot.getAbsolutePath());
+		localOperations.pull("a");
+
+		assertEquals(v11, Json.mapFromString(gitLocal.getFileAsString(IFileDescription.Utils.plain("a"))));
+		assertEquals(v12, Json.mapFromString(gitLocal.getFileAsString(IFileDescription.Utils.plain("a/b"))));
+		assertEquals(v21, Json.mapFromString(Crypto.aesDecrypt(crypto, gitLocal.getFileAsString(ac))));
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testGetFileAsListOfMapsWhenNoLocalRepositoryWithEncryptedFiles() {
+		String crypto = Crypto.makeKey();
+		IFileDescription ac = IFileDescription.Utils.encrypted("a/c", "file", crypto);
+
+		remoteOperations.init("a");
+		remoteOperations.append(ac, v11);
+		remoteOperations.append(ac, v12);
+		remoteOperations.append(ac, v21);
+		remoteOperations.append(ac, v22);
+		remoteOperations.addAllAndCommit("a", getClass().getSimpleName());
+
+		localOperations.init("a");
+		localOperations.setConfigForRemotePull("a", remoteRoot.getAbsolutePath());
+		localOperations.pull("a");
+
+		assertEquals(Arrays.asList(v11, v12, v21, v22), gitLocal.getFileAsListOfMaps(ac));
+	}
+
+	public void testGetFileAsListOfMapsWhenNoLocalRepositoryWithPlainFiles() {
+		IFileDescription ac = IFileDescription.Utils.plain("a/c");
+
+		remoteOperations.init("a");
+		remoteOperations.append(ac, v11);
+		remoteOperations.append(ac, v12);
+		remoteOperations.append(ac, v21);
+		remoteOperations.append(ac, v22);
+		remoteOperations.addAllAndCommit("a", getClass().getSimpleName());
+
+		assertEquals(Arrays.asList(v11, v12, v21, v22), gitLocal.getFileAsListOfMaps(ac));
+	}
+
+	public void testGetFileAsListOfMapsWhenLocalRepository() {
+		IFileDescription ac = IFileDescription.Utils.plain("a/c");
+
+		remoteOperations.init("a");
+		remoteOperations.append(ac, v11);
+		remoteOperations.append(ac, v12);
+		remoteOperations.append(ac, v21);
+		remoteOperations.append(ac, v22);
+		remoteOperations.addAllAndCommit("a", getClass().getSimpleName());
+
+		assertEquals(Arrays.asList(v11, v12, v21, v22), gitLocal.getFileAsListOfMaps(ac));
 	}
 
 	public void testGetFileAndDescendants() {
@@ -66,12 +144,7 @@ public class GitLocalTests extends GitTest {
 	public void testGetFileAboveRepo() {
 		remoteOperations.init("a/b/c");
 		remoteOperations.put(IFileDescription.Utils.plain("a/b/c"), v12);
-		Tests.assertThrows(IllegalStateException.class, new Runnable() {
-			@Override
-			public void run() {
-				gitLocal.getFile(IFileDescription.Utils.plain("a"));
-			}
-		});
+		assertEquals(Maps.stringObjectMap("b", Maps.stringObjectMap("c", v12)), gitLocal.getFile(IFileDescription.Utils.plain("a")));
 	}
 
 	public void testGetFileAndDescendantsAboveRepo() {

@@ -5,6 +5,7 @@
 package org.softwareFm.common;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.common.internal.GitLocal;
@@ -19,6 +20,8 @@ public interface IGitLocal extends IHasUrlCache {
 	Map<String, Object> getFile(IFileDescription fileDescription);
 
 	String getFileAsString(IFileDescription fileDescription);
+
+	List<Map<String, Object>> getFileAsListOfMaps(IFileDescription fileDescription);
 
 	Map<String, Object> getFileAndDescendants(IFileDescription fileDescription);
 

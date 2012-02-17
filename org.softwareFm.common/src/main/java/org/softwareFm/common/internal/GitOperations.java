@@ -5,7 +5,10 @@
 package org.softwareFm.common.internal;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jgit.api.AddCommand;
@@ -18,11 +21,14 @@ import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.IGitOperations;
 import org.softwareFm.common.collections.Files;
+import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.CommonMessages;
 import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.json.Json;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.Urls;
 
 public class GitOperations implements IGitOperations {
@@ -171,7 +177,7 @@ public class GitOperations implements IGitOperations {
 	public Map<String, Object> getFile(IFileDescription fileDescription) {
 		String text = getFileAsString(fileDescription);
 		if (text != null) {
-			Map<String, Object> map = fileDescription.decode(text);
+			Map<String, Object> map = fileDescription.decode(text.trim());
 			return map;
 		}
 		return null;
@@ -221,6 +227,31 @@ public class GitOperations implements IGitOperations {
 
 	@Override
 	public void clearCaches() {
+	}
+
+	@Override
+	public void append(IFileDescription fileDescription, Map<String, Object> data) {
+		try {
+			File file = fileDescription.getFile(getRoot());
+			file.getParentFile().mkdirs();
+			FileWriter fileWriter = new FileWriter(file, true);
+			try{
+			fileWriter.append(fileDescription.encode(data) + "\n");
+			} finally{
+				fileWriter.close();
+			}
+		} catch (IOException e) {
+			throw WrappedException.wrap(e);
+		}
+
+	}
+
+	@Override
+	public List<Map<String, Object>> getFileAsListOfMaps(IFileDescription fileDescription) {
+		File file = fileDescription.getFile(getRoot());
+		String text = Files.getText(file);
+		List<String> lines = Strings.splitIgnoreBlanks(text, "\n");
+		return Lists.map(lines, Json.decryptAndMapMakeFn(fileDescription.crypto()));
 	}
 
 }

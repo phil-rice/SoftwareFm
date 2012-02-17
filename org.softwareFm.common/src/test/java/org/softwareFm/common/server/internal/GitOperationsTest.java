@@ -5,14 +5,18 @@
 package org.softwareFm.common.server.internal;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.collections.Files;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.crypto.Crypto;
+import org.softwareFm.common.json.Json;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.server.GitTest;
+import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.Urls;
 
 public class GitOperationsTest extends GitTest {
@@ -28,8 +32,53 @@ public class GitOperationsTest extends GitTest {
 		checkRepositoryExists(localRoot, "b/c");
 	}
 
-	public void getGetFileAsString() {
-		fail();
+	public void testGetFileAsString() {
+		String crypto = Crypto.makeKey();
+		IFileDescription ac = IFileDescription.Utils.encrypted("a/c", "file", crypto);
+
+		localOperations.init("a");
+		localOperations.put(IFileDescription.Utils.plain("a"), v11);
+		localOperations.put(IFileDescription.Utils.plain("a/b"), v12);
+		localOperations.put(ac, v21);
+
+		assertEquals(v11, Json.mapFromString(localOperations.getFileAsString(IFileDescription.Utils.plain("a"))));
+		assertEquals(v12, Json.mapFromString(localOperations.getFileAsString(IFileDescription.Utils.plain("a/b"))));
+		assertEquals(v21, Json.mapFromString(Crypto.aesDecrypt(crypto, localOperations.getFileAsString(ac))));
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testAppendGetAsListOfMapsWithPlainFiles() {
+		localOperations.init("a");
+		IFileDescription fd = IFileDescription.Utils.plain("a");
+		localOperations.append(fd, v11);
+		assertEquals(v11, localOperations.getFile(fd));
+		assertEquals(Arrays.asList(v11), localOperations.getFileAsListOfMaps(fd));
+		localOperations.append(fd, v12);
+		localOperations.append(fd, v21);
+
+		assertEquals(Arrays.asList(v11, v12, v21), localOperations.getFileAsListOfMaps(fd));
+
+	}
+
+	public void testAppendGetAsListOfMapsWithEncryptedFiles() {
+		localOperations.init("a");
+		String crypto = Crypto.makeKey();
+		IFileDescription fd = IFileDescription.Utils.encrypted("a/c", "someFile", crypto);
+		localOperations.append(fd, v11);
+		assertEquals(v11, localOperations.getFile(fd));
+		assertEquals(Arrays.asList(v11), localOperations.getFileAsListOfMaps(fd));
+
+		localOperations.append(fd, v12);
+		localOperations.append(fd, v21);
+
+		assertEquals(Arrays.asList(v11, v12, v21), localOperations.getFileAsListOfMaps(fd));
+
+		String raw = localOperations.getFileAsString(fd);
+		List<String> lines = Strings.splitIgnoreBlanks(raw, "\n");
+		assertEquals(lines, Arrays.asList(//
+				Crypto.aesEncrypt(crypto, Json.toString(v11)),//
+				Crypto.aesEncrypt(crypto, Json.toString(v12)),//
+				Crypto.aesEncrypt(crypto, Json.toString(v21))));
 	}
 
 	public void testSetConfigForRemotePull() {
