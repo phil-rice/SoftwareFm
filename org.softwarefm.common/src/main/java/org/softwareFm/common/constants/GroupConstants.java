@@ -33,6 +33,7 @@ public class GroupConstants {
 	public static final String membershipFileName = "membership.json";
 	public static final String groupMembersTitle = "group.members.title";
 	public static final String needToSelectGroup = "group.members.needToSelectGroup";
+	public static final String groupIdNotFound = "Cannot find group id {0} for user {1}";
 
 	public static IUrlGenerator groupsGenerator(String prefix) {
 		return IUrlGenerator.Utils.generator(prefix + "/groups/{0}/{1}/{2}", groupIdKey);

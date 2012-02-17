@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.common.collections.Files;
+import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.internal.GitOperations;
 
 public interface IGitOperations {
@@ -20,6 +21,14 @@ public interface IGitOperations {
 
 	/** Assumes the file is a list of maps, each map is on a separate line (separated by \n). If encrypted, each line is separately encrypted */
 	void append(IFileDescription fileDescription, Map<String, Object> data);
+
+	/**
+	 * Assumes the file is a list of maps, each map is on a separate line (separated by \n). If encrypted, each line is separately encrypted <br />
+	 * Each line that is accepted is modified by the transformation<br />
+	 * Lines that are not accepted are unchanged, so that git can find deltas easily Commits at the end if needed
+	 * @return TODO
+	 */
+	int map(IFileDescription fileDescription, IFunction1<Map<String, Object>, Boolean> acceptor, IFunction1<Map<String, Object>, Map<String, Object>> transform, String commitMessage);
 
 	/** Pull from the remote repository. */
 	void pull(String url);
@@ -141,6 +150,11 @@ public interface IGitOperations {
 
 				@Override
 				public List<Map<String, Object>> getFileAsListOfMaps(IFileDescription fileDescription) {
+					throw new IllegalArgumentException();
+				}
+
+				@Override
+				public int map(IFileDescription fileDescription, IFunction1<Map<String, Object>, Boolean> acceptor, IFunction1<Map<String, Object>, Map<String, Object>> transform, String commitMessage) {
 					throw new IllegalArgumentException();
 				}
 			};

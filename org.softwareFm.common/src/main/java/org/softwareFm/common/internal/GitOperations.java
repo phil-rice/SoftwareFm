@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +25,9 @@ import org.softwareFm.common.collections.Files;
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.CommonMessages;
+import org.softwareFm.common.crypto.Crypto;
 import org.softwareFm.common.exceptions.WrappedException;
+import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.json.Json;
 import org.softwareFm.common.maps.Maps;
@@ -235,9 +238,9 @@ public class GitOperations implements IGitOperations {
 			File file = fileDescription.getFile(getRoot());
 			file.getParentFile().mkdirs();
 			FileWriter fileWriter = new FileWriter(file, true);
-			try{
-			fileWriter.append(fileDescription.encode(data) + "\n");
-			} finally{
+			try {
+				fileWriter.append(fileDescription.encode(data) + "\n");
+			} finally {
 				fileWriter.close();
 			}
 		} catch (IOException e) {
@@ -249,9 +252,39 @@ public class GitOperations implements IGitOperations {
 	@Override
 	public List<Map<String, Object>> getFileAsListOfMaps(IFileDescription fileDescription) {
 		File file = fileDescription.getFile(getRoot());
+		if (!file.exists())
+			return Collections.emptyList();
 		String text = Files.getText(file);
 		List<String> lines = Strings.splitIgnoreBlanks(text, "\n");
 		return Lists.map(lines, Json.decryptAndMapMakeFn(fileDescription.crypto()));
+	}
+
+	@Override
+	public int map(IFileDescription fileDescription, IFunction1<Map<String, Object>, Boolean> acceptor, IFunction1<Map<String, Object>, Map<String, Object>> transform, String commitMessage) {
+		String text = getFileAsString(fileDescription);
+		List<String> lines = Strings.splitIgnoreBlanks(text, "\n");
+		int count = 0;
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < lines.size(); i++) {
+			String line = lines.get(i);
+			Map<String, Object> map = fileDescription.decode(line);
+			if (Functions.call(acceptor, map)) {
+				Map<String, Object> newMap = Functions.call(transform, map);
+				builder.append(Crypto.aesEncrypt(fileDescription.crypto(), Json.toString(newMap)) + "\n");
+				count++; 
+			} else
+				builder.append(line + "\n");
+		}
+		if (count>0) {
+			File file = fileDescription.getFile(getRoot());
+			Files.setText(file, builder.toString());
+			File findRepositoryFile = fileDescription.findRepositoryUrl(getRoot());
+			String repositoryUrl = Files.offset(getRoot(), findRepositoryFile);
+			if (repositoryUrl == null)
+				throw new IllegalStateException(file.toString());
+			addAllAndCommit(repositoryUrl, commitMessage);
+		}
+		return count;
 	}
 
 }

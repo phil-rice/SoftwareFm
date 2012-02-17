@@ -4,7 +4,7 @@
 
 package org.softwareFm.softwareFmServer;
 
-import java.io.File;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -14,12 +14,9 @@ import org.softwareFm.common.IUser;
 import org.softwareFm.common.collections.Files;
 import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
-import org.softwareFm.common.crypto.Crypto;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.json.Json;
 import org.softwareFm.common.maps.Maps;
-import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.user.AbstractUserMembershipReader;
 import org.softwareFm.eclipse.user.IUserMembership;
@@ -49,55 +46,42 @@ public class UserMembershipForServer extends AbstractUserMembershipReader implem
 
 		String url = userUrlGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
 		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, GroupConstants.membershipFileName, usersMembershipCrypto);
-		String text = getGroupFileAsText(fileDescription);
-		Map<String, Object> map = Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.groupCryptoKey, groupCrypto, GroupConstants.membershipStatusKey, membershipStatus);
-		String encrypted = Crypto.aesEncrypt(usersMembershipCrypto, Json.toString(map));
-		File file = fileDescription.getFile(gitOperations.getRoot());
-		if (!file.exists())
-			Files.makeDirectoryForFile(file);
-
 		if (fileDescription.findRepositoryUrl(gitOperations.getRoot()) == null) {
 			String repositoryUrl = Functions.call(repoDefnFn, url);
 			gitOperations.init(repositoryUrl);
 		}
-		Files.setText(file, text == null ? encrypted : text + "\n" + encrypted);
+		Map<String, Object> data = Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.groupCryptoKey, groupCrypto, GroupConstants.membershipStatusKey, membershipStatus);
+		gitOperations.append(fileDescription, data);
 		String repositoryUrl = Files.offset(gitOperations.getRoot(), fileDescription.findRepositoryUrl(gitOperations.getRoot()));
 		gitOperations.addAllAndCommit(repositoryUrl, "add membership " + groupId + "," + membershipStatus);
 	}
 
 	@Override
-	public void setMembershipProperty(String softwareFmId, String groupId, String property, String value) {
+	public void setMembershipProperty(String softwareFmId, final String groupId, final String property, final String value) {
 		String url = userUrlGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
 		String userMembershipCrypto = getMembershipCrypto(softwareFmId);
 		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, GroupConstants.membershipFileName, userMembershipCrypto);
-		String text = getGroupFileAsText(fileDescription);
-		List<String> lines = Strings.splitIgnoreBlanks(text, "\n");
-		for (int i = 0; i < lines.size(); i++) {
-			Map<String, Object> map = Json.mapFromString(Crypto.aesDecrypt(userMembershipCrypto, lines.get(i)));
-			if (groupId.equals(map.get(GroupConstants.groupIdKey))) {
-				Map<String, Object> newMap = Maps.with(map, property, value);
-				StringBuilder builder = new StringBuilder();
-				for (int j = 0; j < i; j++)
-					builder.append(lines.get(j) + "\n");
-				builder.append(Crypto.aesEncrypt(userMembershipCrypto, Json.toString(newMap)) + "\n");
-				for (int j = i + 1; j < lines.size(); j++)
-					builder.append(lines.get(j) + "\n");
-				File file = fileDescription.getFile(gitOperations.getRoot());
-				Files.setText(file, builder.toString());
-				File findRepositoryFile = fileDescription.findRepositoryUrl(gitOperations.getRoot());
-				String repositoryUrl = Files.offset(gitOperations.getRoot(), findRepositoryFile);
-				if (repositoryUrl == null)
-					throw new IllegalStateException(file.toString());
-				gitOperations.addAllAndCommit(repositoryUrl, "setMembershipProperty(" + softwareFmId + ", " + groupId + "," + property);
-				return;
+		int count = gitOperations.map(fileDescription, new IFunction1<Map<String, Object>, Boolean>() {
+			@Override
+			public Boolean apply(Map<String, Object> from) throws Exception {
+				boolean result = groupId.equals(from.get(GroupConstants.groupIdKey));
+				return result;
 			}
-		}
-		throw new IllegalArgumentException(groupId);
+		}, new IFunction1<Map<String, Object>, Map<String, Object>>() {
+
+			@Override
+			public Map<String, Object> apply(Map<String, Object> from) throws Exception {
+				Map<String, Object> newMap = Maps.with(from, property, value);
+				return newMap;
+			}
+		}, "setMembershipProperty(" + softwareFmId + ", " + groupId + "," + property);
+		if (count == 0 )
+			throw new IllegalArgumentException(MessageFormat.format(GroupConstants.groupIdNotFound, groupId, softwareFmId));
 	}
 
 	@Override
-	protected String getGroupFileAsText(IFileDescription fileDescription) {
-		return gitOperations.getFileAsString(fileDescription);
+	protected List<Map<String, Object>> getGroupFileAsText(IFileDescription fileDescription) {
+		return gitOperations.getFileAsListOfMaps(fileDescription);
 	}
 
 	@Override
@@ -106,5 +90,5 @@ public class UserMembershipForServer extends AbstractUserMembershipReader implem
 		String usersMembershipCrypto = user.getUserProperty(softwareFmId, userCrypto, GroupConstants.membershipCryptoKey);
 		return usersMembershipCrypto;
 	}
-	
+
 }

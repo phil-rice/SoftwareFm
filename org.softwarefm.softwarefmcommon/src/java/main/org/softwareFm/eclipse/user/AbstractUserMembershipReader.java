@@ -4,18 +4,14 @@
 
 package org.softwareFm.eclipse.user;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.IUserReader;
-import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
-import org.softwareFm.common.json.Json;
 import org.softwareFm.common.maps.Maps;
-import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
 
 public abstract class AbstractUserMembershipReader implements IUserMembershipReader {
@@ -43,21 +39,13 @@ public abstract class AbstractUserMembershipReader implements IUserMembershipRea
 
 	@Override
 	public List<Map<String, Object>> walkGroupsFor(String softwareFmId) {
+		String url = userUrlGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
 		String usersMembershipCrypto = getMembershipCrypto(softwareFmId);
-		if (usersMembershipCrypto ==null)
-			return Collections.emptyList();
-		List<String> lines = findLines(softwareFmId);
-		List<Map<String, Object>> result = Lists.map(lines, Json.decryptAndMapMakeFn(usersMembershipCrypto));
+		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, GroupConstants.membershipFileName, usersMembershipCrypto);
+		List<Map<String, Object>> result = getGroupFileAsText(fileDescription);
 		return result;
 	}
 
-	abstract protected String getGroupFileAsText(IFileDescription fileDescription);
+	abstract protected List<Map<String,Object>> getGroupFileAsText(IFileDescription fileDescription);
 
-	protected List<String> findLines(String softwareFmId) {
-		String url = userUrlGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
-		String usersMembershipCrypto = getMembershipCrypto(softwareFmId);
-		String text = getGroupFileAsText(IFileDescription.Utils.encrypted(url, GroupConstants.membershipFileName, usersMembershipCrypto));
-		List<String> lines = Strings.splitIgnoreBlanks(text, "\n");
-		return lines;
-	}
 }

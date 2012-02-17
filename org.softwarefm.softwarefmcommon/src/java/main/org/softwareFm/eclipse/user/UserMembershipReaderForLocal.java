@@ -4,6 +4,9 @@
 
 package org.softwareFm.eclipse.user;
 
+import java.util.List;
+import java.util.Map;
+
 import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.IGitLocal;
 import org.softwareFm.common.IUserReader;
@@ -22,8 +25,8 @@ public class UserMembershipReaderForLocal extends AbstractUserMembershipReader {
 	}
 
 	@Override
-	protected String getGroupFileAsText(IFileDescription fileDescription) {
-		return gitLocal.getFileAsString(fileDescription);
+	protected List<Map<String, Object>> getGroupFileAsText(IFileDescription fileDescription) {
+		return gitLocal.getFileAsListOfMaps(fileDescription);
 	}
 
 	@Override

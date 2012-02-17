@@ -47,7 +47,7 @@ public class GroupsForServer extends AbstractGroupReader implements IGroups {
 		Map<String, Object> data = initialMap(fileDescription, listOfLines);
 		Map<String, Object> newData = Maps.with(data, property, value);
 		String newLine0 = Crypto.aesEncrypt(groupCryptoKey, Json.toString(newData));
-		String newValue = Strings.join(Lists.addAtStart(Lists.tail(listOfLines), newLine0), "\n");
+		String newValue = Strings.join(Lists.addAtStart(Lists.tail(listOfLines), newLine0), "\n") +"\n";
 		File file = fileDescription.getFile(gitOperations.getRoot());
 		makeRepoIfNecessary(fileDescription);
 		Files.setText(file, newValue);
@@ -84,12 +84,7 @@ public class GroupsForServer extends AbstractGroupReader implements IGroups {
 	@Override
 	public void addUser(String groupId, String groupCryptoKey, Map<String, Object> userDetails) {
 		IFileDescription fileDescription = findFileDescription(groupId, groupCryptoKey);
-		String lines = getFileAsString(fileDescription);
-		if (lines == null || lines.length() == 0)
-			throw new IllegalStateException();
-		String newLines = lines + "\n" + Crypto.aesEncrypt(groupCryptoKey, Json.toString(userDetails));
-		File file = fileDescription.getFile(gitOperations.getRoot());
-		Files.setText(file, newLines);
+		gitOperations.append(fileDescription, userDetails);
 		addAllAndCommit(fileDescription, "addUser " + userDetails);
 	}
 

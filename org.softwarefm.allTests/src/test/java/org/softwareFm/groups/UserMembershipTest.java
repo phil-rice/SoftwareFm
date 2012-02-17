@@ -92,6 +92,17 @@ public class UserMembershipTest extends GitTest {
 		assertEquals(expected, membershipForServer.walkGroupsFor(user1Id));
 		assertEquals(expected, membershipForLocal.walkGroupsFor(user1Id));
 	}
+	
+	public void testSetMembershipPropertyThrowsExceptionIfGroupNotFound(){
+		membershipForServer.addMembership(user1Id, groupId1, groupCrypto1, "someStatus1");
+		Tests.assertThrowsWithMessage("Cannot find group id groupId2 for user sfmId1", IllegalArgumentException.class, new Runnable() {
+			@Override
+			public void run() {
+				membershipForServer.setMembershipProperty(user1Id, groupId2, "someProperty", "value2");
+			}
+		});
+		
+	}
 
 	@Override
 	protected void setUp() throws Exception {

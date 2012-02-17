@@ -6,6 +6,7 @@ package org.softwareFm.common.server.internal;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.collections.Files;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.crypto.Crypto;
+import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.json.Json;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.server.GitTest;
@@ -30,6 +32,14 @@ public class GitOperationsTest extends GitTest {
 		assertTrue(new File(localRoot, Urls.compose("b", "c", CommonConstants.DOT_GIT)).exists());
 		checkRepositoryExists(localRoot, "a");
 		checkRepositoryExists(localRoot, "b/c");
+	}
+
+	public void testGetsWhenFileDoesntExist() {
+		localOperations.init("a");
+		IFileDescription fd = IFileDescription.Utils.plain("a");
+		assertEquals(null, localOperations.getFile(fd));
+		assertEquals(null, localOperations.getFileAsString(fd));
+		assertEquals(Collections.emptyList(), localOperations.getFileAsListOfMaps(fd));
 	}
 
 	public void testGetFileAsString() {
@@ -143,6 +153,45 @@ public class GitOperationsTest extends GitTest {
 		assertEquals(map, localOperations.getFileAndDescendants(IFileDescription.Utils.plain("a/b")));
 		assertEquals(v12, localOperations.getFileAndDescendants(IFileDescription.Utils.plain("a/b/c")));
 		assertEquals(v21, localOperations.getFileAndDescendants(IFileDescription.Utils.plain("a/b/d")));
+	}
+
+	public void testMapWithPlainFiles() {
+		checkMap(IFileDescription.Utils.plain("a/b"));
+	}
+
+	public void testMapWithEncryptedFiles() {
+		checkMap(IFileDescription.Utils.encrypted("a/b", "someFileName", Crypto.makeKey()));
+	}
+
+	protected void checkMap(IFileDescription fd) {
+		remoteOperations.init("a");
+		remoteOperations.append(fd, v11);
+		remoteOperations.append(fd, v21);
+		remoteOperations.append(fd, v12);
+		remoteOperations.append(fd, v22);
+		remoteOperations.addAllAndCommit("a", getClass().getSimpleName());
+
+		remoteOperations.map(fd, new IFunction1<Map<String, Object>, Boolean>() {
+			@Override
+			public Boolean apply(Map<String, Object> from) throws Exception {
+				return from.get("c").equals("1");
+			}
+		}, new IFunction1<Map<String, Object>, Map<String, Object>>() {
+			@Override
+			public Map<String, Object> apply(Map<String, Object> from) throws Exception {
+				return Maps.with(from, "d", "1");
+			}
+		}, "someMessage");
+		
+		localOperations.init("a");
+		localOperations.setConfigForRemotePull("a", remoteRoot.getAbsolutePath());
+		localOperations.pull("a");
+		
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> expected = Arrays.asList(v11, v21, v12, v22);
+		assertEquals(expected, remoteOperations.getFileAsListOfMaps(fd));
+
+		assertEquals(expected, localOperations.getFileAsListOfMaps(fd));
 	}
 
 	private void checkPull(IFileDescription fileDescription, Map<String, Object> data) {

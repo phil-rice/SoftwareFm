@@ -16,10 +16,8 @@ import org.softwareFm.common.collections.Files;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
-import org.softwareFm.common.crypto.Crypto;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.json.Json;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.url.IUrlGenerator;
@@ -76,8 +74,7 @@ public class TakeOnProcessor implements ITakeOnProcessor {
 		File file = new File(gitOperations.getRoot(), Urls.compose(url, CommonConstants.dataFileName));
 		if (file.exists())
 			throw new IllegalStateException(file.toString());
-		Files.makeDirectoryForFile(file);
-		Files.setText(file, Crypto.aesEncrypt(groupCrypto, Json.toString(Maps.stringObjectMap(GroupConstants.groupNameKey, groupName))));
+		gitOperations.append(fileDescription, Maps.stringObjectMap(GroupConstants.groupNameKey, groupName));
 		gitOperations.addAllAndCommit(Files.offset(gitOperations.getRoot(), repositoryFile), "createGroup (" + groupName + ")");
 		return groupId;
 	}
