@@ -39,9 +39,9 @@ public class ChangePassword implements IChangePassword {
 		this.email = initialEmail;
 		String title = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, CardConstants.changePasswordTitle);
 		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(LoginConstants.emailKey, initialEmail), Arrays.asList(//
-				INamesAndValuesEditor.Utils.password(cardConfig, cardType, "password"),//
-				INamesAndValuesEditor.Utils.password(cardConfig, cardType, "newPassword"),//
-				INamesAndValuesEditor.Utils.password(cardConfig, cardType, "confirmNewPassword")),//
+				INamesAndValuesEditor.Utils.password(cardConfig, "password"),//
+				INamesAndValuesEditor.Utils.password(cardConfig, "newPassword"),//
+				INamesAndValuesEditor.Utils.password(cardConfig, "confirmNewPassword")),//
 				new ICardEditorCallback() {
 					@Override
 					public void ok(ICardData cardData) {

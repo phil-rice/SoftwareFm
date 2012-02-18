@@ -4,10 +4,10 @@
 
 package org.softwareFm.swt.okCancel;
 
-import org.softwareFm.swt.composites.IHasControl;
+import org.softwareFm.swt.composites.IHasComposite;
 
 /** Represents the ok cancel buttons in an editor */
-public interface IOkCancel extends IHasControl {
+public interface IOkCancel extends IHasComposite {
 	void setOkEnabled(boolean enabled);
 
 	boolean isOkEnabled();

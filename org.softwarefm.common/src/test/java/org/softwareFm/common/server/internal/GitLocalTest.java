@@ -98,6 +98,7 @@ public class GitLocalTest extends GitTest {
 		assertEquals(Arrays.asList(v11, v12, v21, v22), gitLocal.getFileAsListOfMaps(ac));
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testGetFileAsListOfMapsWhenNoLocalRepositoryWithPlainFiles() {
 		IFileDescription ac = IFileDescription.Utils.plain("a/c");
 
@@ -111,6 +112,7 @@ public class GitLocalTest extends GitTest {
 		assertEquals(Arrays.asList(v11, v12, v21, v22), gitLocal.getFileAsListOfMaps(ac));
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testGetFileAsListOfMapsWhenLocalRepository() {
 		IFileDescription ac = IFileDescription.Utils.plain("a/c");
 

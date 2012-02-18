@@ -32,10 +32,10 @@ public class Signup implements ISignUp {
 	public Signup(Composite parent, final CardConfig cardConfig, final String salt, String initialEmail, final ILoginStrategy strategy, final ILoginDisplayStrategy loginDisplayStrategy, final ISignUpCallback callback) {
 		String title = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, CardConstants.signupTitle);
 		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(LoginConstants.emailKey, initialEmail), Arrays.asList(//
-				INamesAndValuesEditor.Utils.text(cardConfig, cardType, LoginConstants.emailKey),//
-				INamesAndValuesEditor.Utils.text(cardConfig, cardType, LoginConstants.monikerKey),//
-				INamesAndValuesEditor.Utils.password(cardConfig, cardType, LoginConstants.passwordKey),//
-				INamesAndValuesEditor.Utils.password(cardConfig, cardType, LoginConstants.confirmPasswordKey)),//
+				INamesAndValuesEditor.Utils.text(cardConfig, LoginConstants.emailKey),//
+				INamesAndValuesEditor.Utils.text(cardConfig, LoginConstants.monikerKey),//
+				INamesAndValuesEditor.Utils.password(cardConfig, LoginConstants.passwordKey),//
+				INamesAndValuesEditor.Utils.password(cardConfig, LoginConstants.confirmPasswordKey)),//
 				new ICardEditorCallback() {
 					@Override
 					public void ok(ICardData cardData) {

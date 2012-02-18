@@ -19,7 +19,7 @@ import org.softwareFm.swt.configuration.ICardConfigurator;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.editors.ICardEditorCallback;
 import org.softwareFm.swt.editors.INamesAndValuesEditor;
-import org.softwareFm.swt.editors.NameAndValueData;
+import org.softwareFm.swt.editors.KeyAndEditStrategy;
 import org.softwareFm.swt.swt.Swts;
 
 public class SnippetEditor extends NameAndValuesEditor {
@@ -29,10 +29,10 @@ public class SnippetEditor extends NameAndValuesEditor {
 		super(parent, cardConfig, cardType, title, url, initialData, getNamesAndValuesData(cardConfig), callback);
 	}
 
-	private static List<NameAndValueData> getNamesAndValuesData(CardConfig cardConfig) {
-		return Arrays.asList(INamesAndValuesEditor.Utils.text(cardConfig, cardType, "title"),//
-				INamesAndValuesEditor.Utils.text(cardConfig, CardConstants.snippet, "description"), //
-				INamesAndValuesEditor.Utils.styledText(cardConfig, CardConstants.snippet, "content"));
+	private static List<KeyAndEditStrategy> getNamesAndValuesData(CardConfig cardConfig) {
+		return Arrays.asList(INamesAndValuesEditor.Utils.text(cardConfig, "title"),//
+				INamesAndValuesEditor.Utils.text(cardConfig, "description"), //
+				INamesAndValuesEditor.Utils.styledText(cardConfig, "content"));
 	}
 
 	public static void main(String[] args) {

@@ -9,5 +9,11 @@ public class CommentConstants {
 	public static final String creatorKey = "creator";
 	public static final String textKey = "text";
 	public static final String commentCryptoKey = "commentCrypto";
+	public static final String commentCardType = "comment";
+	public static final String editorTitle = "comments.editor.title";
+
+	public static final String commentsButtonYouText = "comments.button.you.text";
+	public static final String commentsButtonEveryoneText = "comments.button.everyone.text";
+	public static final String commentsButtonGroupText = "comments.button.group.text";
 
 }

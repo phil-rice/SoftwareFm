@@ -4,17 +4,14 @@
 
 package org.softwareFm.swt.editors;
 
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.softwareFm.common.functions.IFunction1;
 
-public class NameAndValueData {
+public class KeyAndEditStrategy {
 	public final String key;
-	public final IFunction1<Composite, Control> editorCreator;
+	public final IEditableControlStrategy<?> editableControlStrategy;
 
-	public NameAndValueData(String key, IFunction1<Composite, Control> editorCreator) {
+	public KeyAndEditStrategy(String key, IEditableControlStrategy<?> editableControlStrategy) {
 		this.key = key;
-		this.editorCreator = editorCreator;
+		this.editableControlStrategy = editableControlStrategy;
 	}
 
 }

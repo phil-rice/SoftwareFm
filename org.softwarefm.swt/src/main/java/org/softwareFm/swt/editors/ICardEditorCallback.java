@@ -15,4 +15,5 @@ public interface ICardEditorCallback {
 	void cancel(ICardData cardData);
 
 	boolean canOk(Map<String, Object> data);
+
 }

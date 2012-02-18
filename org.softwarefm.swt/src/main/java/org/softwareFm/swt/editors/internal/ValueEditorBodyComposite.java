@@ -13,9 +13,9 @@ import org.softwareFm.swt.title.TitleSpec;
 
 public class ValueEditorBodyComposite extends Composite {
 
-	final CardConfig cardConfig;
-	final Composite innerBody;
-	final TitleSpec titleSpec;
+	public 	final CardConfig cardConfig;
+	public final Composite innerBody;
+	public final TitleSpec titleSpec;
 
 	public ValueEditorBodyComposite(Composite parent, CardConfig cardConfig, TitleSpec titleSpec) {
 		super(parent, SWT.NULL);

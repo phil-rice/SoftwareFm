@@ -70,6 +70,7 @@ public class GitOperationsTest extends GitTest {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testAppendGetAsListOfMapsWithEncryptedFiles() {
 		localOperations.init("a");
 		String crypto = Crypto.makeKey();

@@ -410,6 +410,33 @@ public class Swts {
 				label.moveAbove(children[0]);
 			return label;
 		}
+
+		public static Button makeRadioButton(Composite parent, IResourceGetter resourceGetter, String key, final Runnable runnable) {
+			String title = IResourceGetter.Utils.getOrException(resourceGetter, key);
+			return makeRadioButton(parent, title, runnable);
+		}
+
+		public static Button makeRadioButton(Composite parent, String text, final Runnable runnable) {
+			Button button = new Button(parent, SWT.RADIO);
+			button.setText(text);
+			button.addListener(SWT.Selection, new Listener() {
+				@Override
+				public void handleEvent(Event event) {
+					runnable.run();
+				}
+			});
+			return button;
+		}
+
+		public static void selectRadioButton(Composite composite, int index) {
+			// ok this sucks, see http://stackoverflow.com/questions/5835618/swt-set-radio-buttons-programmatically
+			Control[] children = composite.getChildren();
+			Button button = (Button) children[index];
+			for (Control child : children) {
+				if (child instanceof Button)
+					((Button) child).setSelection(child == button);
+			}
+		}
 	}
 
 	public static class Grid {
@@ -1071,5 +1098,15 @@ public class Swts {
 	public static void packColumns(Table table) {
 		for (TableColumn column : table.getColumns())
 			column.pack();
+	}
+
+	public static void setChildrenBackgroundToMatch(Composite composite) {
+		Color background = composite.getBackground();
+		setChildrenBackgroundTo(composite, background);
+	}
+
+	public static void setChildrenBackgroundTo(Composite composite, Color background) {
+		for (Control control : composite.getChildren())
+			control.setBackground(background);
 	}
 }

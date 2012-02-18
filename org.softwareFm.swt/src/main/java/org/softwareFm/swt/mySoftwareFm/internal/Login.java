@@ -32,8 +32,8 @@ public class Login implements ILogin {
 	public Login(Composite parent, final CardConfig cardConfig, final String sessionSalt, String initialEmail, final ILoginStrategy loginStrategy, final ILoginDisplayStrategy loginDisplayStrategy, final ILoginCallback callback) {
 		String title = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, CardConstants.loginTitle);
 		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(LoginConstants.emailKey, initialEmail), Arrays.asList(//
-				INamesAndValuesEditor.Utils.text(cardConfig, cardType, "email"),//
-				INamesAndValuesEditor.Utils.password(cardConfig, cardType, "password")),//
+				INamesAndValuesEditor.Utils.text(cardConfig, "email"),//
+				INamesAndValuesEditor.Utils.password(cardConfig, "password")),//
 				new ICardEditorCallback() {
 					@Override
 					public void ok(ICardData cardData) {

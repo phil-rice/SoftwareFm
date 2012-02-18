@@ -80,9 +80,9 @@ public class NameAndValuesEditorTest extends AbstractNameAndValuesEditorTest<Nam
 	@Override
 	protected NameAndValuesEditor makeEditor() {
 		return new NameAndValuesEditor(shell, cardConfig, cardType, "someTitle", "someurl", initialData, Arrays.asList(//
-				INamesAndValuesEditor.Utils.text(cardConfig, cardType, "one"),//
-				INamesAndValuesEditor.Utils.styledText(cardConfig, cardType, "two"),//
-				INamesAndValuesEditor.Utils.text(cardConfig, cardType, "three")), callback);
+				INamesAndValuesEditor.Utils.text(cardConfig, "one"),//
+				INamesAndValuesEditor.Utils.styledText(cardConfig, "two"),//
+				INamesAndValuesEditor.Utils.text(cardConfig, "three")), callback);
 	}
 
 }

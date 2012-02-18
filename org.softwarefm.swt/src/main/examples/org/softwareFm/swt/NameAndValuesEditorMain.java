@@ -27,11 +27,11 @@ public class NameAndValuesEditorMain {
 				Map<String, Object> data = Maps.stringObjectMap("title", "Some title", "description", "Some Description", "content", "public void testThis(){\n  fail();\n}\n");
 				final String cardType = "";
 				NameAndValuesEditor editor = new NameAndValuesEditor(from, cardConfig, cardType, "someTitle", "tutorial", data, Arrays.asList(//
-						INamesAndValuesEditor.Utils.text(cardConfig, cardType, "email"),//
-						INamesAndValuesEditor.Utils.text(cardConfig, cardType, "password"),//
-						INamesAndValuesEditor.Utils.text(cardConfig, cardType, "confirmPassword"),//
-						INamesAndValuesEditor.Utils.styledText(cardConfig, cardType, "address"),//
-						INamesAndValuesEditor.Utils.styledText(cardConfig, cardType, "comment")), new ICardEditorCallback() {
+						INamesAndValuesEditor.Utils.text(cardConfig, "email"),//
+						INamesAndValuesEditor.Utils.text(cardConfig, "password"),//
+						INamesAndValuesEditor.Utils.text(cardConfig, "confirmPassword"),//
+						INamesAndValuesEditor.Utils.styledText(cardConfig, "address"),//
+						INamesAndValuesEditor.Utils.styledText(cardConfig, "comment")), new ICardEditorCallback() {
 	
 					@Override
 					public void ok(ICardData cardData) {

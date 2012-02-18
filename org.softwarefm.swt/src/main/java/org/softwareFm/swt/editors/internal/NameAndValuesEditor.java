@@ -10,29 +10,23 @@ import java.util.Map;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.resources.IResourceGetter;
-import org.softwareFm.common.strings.Strings;
 import org.softwareFm.swt.card.ICardData;
+import org.softwareFm.swt.card.LineItem;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.editors.ICardEditorCallback;
+import org.softwareFm.swt.editors.IEditableControlStrategy;
 import org.softwareFm.swt.editors.INamesAndValuesEditor;
 import org.softwareFm.swt.editors.IValueComposite;
-import org.softwareFm.swt.editors.NameAndValueData;
+import org.softwareFm.swt.editors.KeyAndEditStrategy;
 import org.softwareFm.swt.okCancel.OkCancel;
 import org.softwareFm.swt.swt.Swts;
 import org.softwareFm.swt.title.TitleSpec;
@@ -50,7 +44,7 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 		private final ICardEditorCallback callback;
 		private final Control firstChild;
 
-		public NameAndValuesEditorComposite(Composite parent, String titleString, final ICardData cardData, List<NameAndValueData> nameAndValueData, final ICardEditorCallback strategy) {
+		public NameAndValuesEditorComposite(Composite parent, String titleString, final ICardData cardData, List<KeyAndEditStrategy> keyAndEditStrategy, final ICardEditorCallback strategy) {
 			super(parent, SWT.NULL);
 			this.callback = strategy;
 			this.cardConfig = cardData.getCardConfig();
@@ -64,11 +58,33 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 			labels.setBackground(titleSpec.background);
 			values.setBackground(titleSpec.background);
 
-			for (NameAndValueData data : nameAndValueData) {
+			IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, null);
+			okCancel = new OkCancel(body.innerBody, resourceGetter, cardConfig.imageFn, new Runnable() {
+				@Override
+				public void run() {
+					strategy.ok(cardData);
+				}
+			}, new Runnable() {
+				@Override
+				public void run() {
+					strategy.cancel(cardData);
+				}
+			});
+			for (KeyAndEditStrategy data : keyAndEditStrategy) {
 				Label label = INamesAndValuesEditor.Utils.label(labels, cardConfig, cardData.cardType(), data.key);
 				label.setBackground(titleSpec.background);
-				Control editor = Functions.call(data.editorCreator, values);
-				setInitialTextAndAddModified(cardData, editor, data.key);
+				@SuppressWarnings("unchecked")
+				IEditableControlStrategy<Control> editableControlStrategy = (IEditableControlStrategy<Control>) data.editableControlStrategy;
+				Control editor = editableControlStrategy.createControl(values);
+				String value = cardConfig.valueFn.apply(cardConfig, new LineItem(cardData.cardType(), data.key, cardData.data().get(data.key)));
+				editableControlStrategy.populateInitialValue(editor, value);
+				editableControlStrategy.whenModifed(editor, cardData, data.key, new Runnable() {
+					@Override
+					public void run() {
+						okCancel.setOkEnabled(callback.canOk(cardData.data()));
+					}
+				});
+				editableControlStrategy.addEnterEscapeListeners(okCancel, editor);
 			}
 			Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(labels, cardConfig.editorIndentY);
 			Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(values, cardConfig.editorIndentY);
@@ -84,18 +100,7 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 
 			editing.setWeights(new int[] { 1, 3 });
 
-			IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, null);
-			okCancel = new OkCancel(body.innerBody, resourceGetter, cardConfig.imageFn, new Runnable() {
-				@Override
-				public void run() {
-					strategy.ok(cardData);
-				}
-			}, new Runnable() {
-				@Override
-				public void run() {
-					strategy.cancel(cardData);
-				}
-			});
+
 			body.innerBody.addPaintListener(new PaintListener() {
 				@Override
 				public void paintControl(PaintEvent e) {
@@ -105,7 +110,7 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 					e.gc.drawLine(0, y, width, y);
 				}
 			});
-			assert nameAndValueData.size() > 0;
+			assert keyAndEditStrategy.size() > 0;
 			firstChild = values.getChildren()[0];
 			firstChild.forceFocus();
 		}
@@ -114,68 +119,6 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 		public boolean forceFocus() {
 			boolean gotFocus = firstChild.forceFocus();
 			return gotFocus;
-		}
-
-		private void setInitialTextAndAddModified(ICardData cardData, Control editor, String key) {
-			if (editor instanceof Text)
-				setInitialTextAndAddModified(cardData, (Text) editor, key);
-			else if (editor instanceof StyledText)
-				setInitialTextAndAddModified(cardData, (StyledText) editor, key);
-			else
-				throw new IllegalArgumentException(editor.getClass().getName());
-
-		}
-
-		private void setInitialTextAndAddModified(final ICardData cardData, final Text text, final String key) {
-			String initial = Strings.nullSafeToString(cardData.data().get(key));
-			text.setText(initial);
-			text.setSelection(initial.length());
-			text.addModifyListener(new ModifyListener() {
-				@Override
-				public void modifyText(ModifyEvent e) {
-					cardData.valueChanged(key, text.getText());
-					okCancel.setOkEnabled(callback.canOk(cardData.data()));
-				}
-			});
-			addListeners(text);
-		}
-
-		private void addListeners(Text text) {
-			text.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					if (okCancel.isOkEnabled())
-						okCancel.ok();
-				}
-
-				@Override
-				public void widgetDefaultSelected(SelectionEvent e) {
-					if (okCancel.isOkEnabled())
-						okCancel.ok();
-				}
-			});
-			text.addKeyListener(new KeyListener() {
-				@Override
-				public void keyReleased(KeyEvent e) {
-					if (e.keyCode == SWT.ESC)
-						okCancel.cancel();
-				}
-
-				@Override
-				public void keyPressed(KeyEvent e) {
-				}
-			});
-		}
-
-		private void setInitialTextAndAddModified(final ICardData cardData, final StyledText text, final String key) {
-			text.setText(Strings.nullSafeToString(cardData.data().get(key)));
-			text.addModifyListener(new ModifyListener() {
-				@Override
-				public void modifyText(ModifyEvent e) {
-					cardData.valueChanged(key, text.getText());
-					okCancel.setOkEnabled(callback.canOk(cardData.data()));
-				}
-			});
 		}
 
 		@Override
@@ -221,12 +164,12 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 	private final Map<String, Object> data;
 	private final String cardType;
 
-	public NameAndValuesEditor(Composite parent, CardConfig cardConfig, String cardType, String title, String url, Map<String, Object> initialData, List<NameAndValueData> nameAndValueData, ICardEditorCallback callback) {
+	public NameAndValuesEditor(Composite parent, CardConfig cardConfig, String cardType, String title, String url, Map<String, Object> initialData, List<KeyAndEditStrategy> keyAndEditStrategy, ICardEditorCallback callback) {
 		this.cardConfig = cardConfig;
 		this.cardType = cardType;
 		this.url = url;
 		this.data = cardConfig.modify(url, Maps.with(initialData, CardConstants.slingResourceType, cardType));
-		content = new NameAndValuesEditorComposite(parent, title, this, nameAndValueData, callback);
+		content = new NameAndValuesEditorComposite(parent, title, this, keyAndEditStrategy, callback);
 		content.okCancel.setOkEnabled(callback.canOk(data));
 		content.setLayout(new ValueEditorLayout());
 	}

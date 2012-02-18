@@ -4,6 +4,8 @@
 
 package org.softwareFm.swt.swt;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
@@ -13,6 +15,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import junit.framework.TestCase;
 
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -136,6 +140,20 @@ abstract public class SwtTest extends TestCase {
 	private void checkAtEnd(Display display, Callable<Boolean> callable) {
 		if (!callInDispatch(display, callable))
 			fail();
+	}
+
+	protected void checkCombo(Composite composite, int index, List<String> items, String text) {
+		Combo combo = (Combo) composite.getChildren()[index];
+		List<String> actual = Arrays.asList(combo.getItems());
+		assertEquals(items, actual);
+		assertEquals(text, combo.getText());
+	
+	}
+
+	protected void checkRadioButton(Composite composite, int index, String text, boolean selected) {
+		Button button = (Button) composite.getChildren()[index];
+		assertEquals(text, button.getText());
+		assertEquals(selected, button.getSelection());
 	}
 
 }

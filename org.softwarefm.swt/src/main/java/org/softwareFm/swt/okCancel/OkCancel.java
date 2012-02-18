@@ -29,7 +29,7 @@ public class OkCancel implements IOkCancel {
 	private final IResourceGetter resourceGetter;
 	private final IFunction1<String, Image> imageFn;
 
-	public OkCancel(Composite parent, IResourceGetter resourceGetter, IFunction1<String, Image> imageFn,final Runnable onAccept, final Runnable onCancel) {
+	public OkCancel(Composite parent, IResourceGetter resourceGetter, IFunction1<String, Image> imageFn, final Runnable onAccept, final Runnable onCancel) {
 		this.resourceGetter = resourceGetter;
 		this.imageFn = imageFn;
 		this.onAccept = onAccept;
@@ -50,7 +50,7 @@ public class OkCancel implements IOkCancel {
 		content.setLayout(Row.getHorizonalNoMarginRowLayout());
 	}
 
-	public Label addImageButton( String name, Runnable runnable) {
+	public Label addImageButton(String name, Runnable runnable) {
 		Image image = Functions.call(imageFn, name);
 		if (image == null)
 			throw new IllegalArgumentException(name);
@@ -91,8 +91,9 @@ public class OkCancel implements IOkCancel {
 
 	public void pressButton(int index) {
 		Swts.Buttons.press(content.getChildren()[index]);
-		
+
 	}
+
 	public void pressButton(String title) {
 		for (Control control : content.getChildren())
 			if (control instanceof Button)
@@ -104,4 +105,8 @@ public class OkCancel implements IOkCancel {
 
 	}
 
+	@Override
+	public Composite getComposite() {
+		return content;
+	}
 }
