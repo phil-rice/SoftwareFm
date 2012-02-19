@@ -177,7 +177,7 @@ public class Explorer implements IExplorer {
 								List<String> groupNames = getGroupNames(groupData);
 								return new CommentsEditor(from, cardConfig, title, "", groupNames, new ICommentsEditorCallback() {
 									@Override
-									public void youComment(String text) {
+									public void youComment(String url, String text) {
 										sendComment(ICommentDefn.Utils.myInitial(userData.softwareFmId, userData.crypto, baseUrl), text);
 										displayCardAgain(baseUrl);
 									}
@@ -194,13 +194,13 @@ public class Explorer implements IExplorer {
 									}
 
 									@Override
-									public void groupComment(int groupIndex, String text) {
+									public void groupComment(String url, int groupIndex, String text) {
 										System.out.println("group: " + groupIndex);
 										displayCardAgain(baseUrl);
 									}
 
 									@Override
-									public void everyoneComment(String text) {
+									public void everyoneComment(String url, String text) {
 										System.out.println("everyone: ");
 										displayCardAgain(baseUrl);
 									}

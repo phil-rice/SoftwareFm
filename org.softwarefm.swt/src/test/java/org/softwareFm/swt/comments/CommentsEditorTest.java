@@ -76,17 +76,17 @@ public class CommentsEditorTest extends SwtTest {
 
 	static class CommentsEditorFailAdapter implements ICommentsEditorCallback {
 		@Override
-		public void youComment(String text) {
+		public void youComment(String url, String text) {
 			fail();
 		}
 
 		@Override
-		public void groupComment(int groupIndex, String text) {
+		public void groupComment(String url, int groupIndex, String text) {
 			fail();
 		}
 
 		@Override
-		public void everyoneComment(String text) {
+		public void everyoneComment(String url, String text) {
 			fail();
 		}
 
@@ -105,7 +105,7 @@ public class CommentsEditorTest extends SwtTest {
 			}
 		}, new CommentsEditorFailAdapter() {
 			@Override
-			public void everyoneComment(String text) {
+			public void everyoneComment(String url, String text) {
 				assertEquals("expected", text);
 			}
 		});
@@ -116,7 +116,7 @@ public class CommentsEditorTest extends SwtTest {
 			}
 		}, new CommentsEditorFailAdapter() {
 			@Override
-			public void youComment(String text) {
+			public void youComment(String url, String text) {
 				assertEquals("expected", text);
 			}
 		});
@@ -127,7 +127,7 @@ public class CommentsEditorTest extends SwtTest {
 			}
 		}, new CommentsEditorFailAdapter() {
 			@Override
-			public void groupComment(int index, String text) {
+			public void groupComment(String url, int index, String text) {
 				assertEquals("expected", text);
 				assertEquals(0, index);
 			}
@@ -141,7 +141,7 @@ public class CommentsEditorTest extends SwtTest {
 			}
 		}, new CommentsEditorFailAdapter() {
 			@Override
-			public void groupComment(int index, String text) {
+			public void groupComment(String url, int index, String text) {
 				assertEquals("expected", text);
 				assertEquals(1, index);
 			}
@@ -176,17 +176,17 @@ public class CommentsEditorTest extends SwtTest {
 			}
 
 			@Override
-			public void youComment(String text) {
+			public void youComment(String url, String text) {
 				fail();
 			}
 
 			@Override
-			public void groupComment(int groupIndex, String text) {
+			public void groupComment(String url, int groupIndex, String text) {
 				fail();
 			}
 
 			@Override
-			public void everyoneComment(String text) {
+			public void everyoneComment(String url, String text) {
 				fail();
 			}
 		});

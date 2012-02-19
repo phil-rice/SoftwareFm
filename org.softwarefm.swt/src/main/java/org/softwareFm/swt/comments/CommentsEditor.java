@@ -46,9 +46,11 @@ public class CommentsEditor implements IHasComposite {
 		private final Button youButton;
 		private Button groupButton;
 		private Combo groupCombo;
+		private final String url;
 
 		public CommentsComposite(Composite parent, String titleKey, final ICardData cardData, String initialText, List<String> groups, final ICommentsEditorCallback callback) {
 			super(parent, SWT.NULL);
+			this.url = cardData.url();
 			this.cardConfig = cardData.getCardConfig();
 			TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, cardData);
 			IResourceGetter resourceGetter = CardConfig.resourceGetter(cardData);
@@ -113,11 +115,11 @@ public class CommentsEditor implements IHasComposite {
 			boolean you = youButton.getSelection();
 			boolean group = groupButton != null && groupButton.getSelection();
 			if (everyone)
-				callback.everyoneComment(text);
+				callback.everyoneComment(url, text);
 			else if (you)
-				callback.youComment(text);
+				callback.youComment(url, text);
 			else if (group)
-				callback.groupComment(groupCombo.getSelectionIndex(), text);
+				callback.groupComment(url, groupCombo.getSelectionIndex(), text);
 			else
 				throw new IllegalStateException();
 		}

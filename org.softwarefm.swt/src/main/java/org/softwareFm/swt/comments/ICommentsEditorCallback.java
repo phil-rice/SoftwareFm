@@ -1,32 +1,42 @@
 package org.softwareFm.swt.comments;
 
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import org.softwareFm.common.IGroupsReader;
+import org.softwareFm.common.IUserReader;
+import org.softwareFm.swt.comments.internal.CommentsEditorCallbackThatWritesComment;
 
 public interface ICommentsEditorCallback {
 
-	void youComment(String text);
+	void youComment(String url, String text);
 
-	void groupComment(int groupIndex, String text);
+	void groupComment(String url, int groupIndex, String text);
 
-	void everyoneComment(String text);
+	void everyoneComment(String url, String text);
 
 	void cancel();
 
 	public static class Utils {
+		public static ICommentsEditorCallback writeComments(final IUserReader userReader, final IGroupsReader groupReader, final String softwareFmId, final String userCrypto, final List<Map<String,Object>> groupsData, final ICommentWriter commentWriter, final Runnable whenFinished){
+			return new CommentsEditorCallbackThatWritesComment(userReader, groupReader, commentWriter, softwareFmId, userCrypto, groupsData, whenFinished);
+		}
+		
 		public static ICommentsEditorCallback sysout() {
 			return new ICommentsEditorCallback() {
 				@Override
-				public void youComment(String text) {
+				public void youComment(String url, String text) {
 					System.out.println("you: " + text);
 				}
 
 				@Override
-				public void groupComment(int groupIndex, String text) {
+				public void groupComment(String url, int groupIndex, String text) {
 					System.out.println("group: " + groupIndex + ", " + text);
 				}
 
 				@Override
-				public void everyoneComment(String text) {
+				public void everyoneComment(String url, String text) {
 					System.out.println("everyoneComment: " +  text);
 				}
 
@@ -42,22 +52,22 @@ public interface ICommentsEditorCallback {
 			return new ICommentsEditorCallback() {
 
 				@Override
-				public void youComment(String text) {
+				public void youComment(String url, String text) {
 					integer.incrementAndGet();
-					delegate.youComment(text);
+					delegate.youComment(url, text);
 				}
 
 				@Override
-				public void groupComment(int groupIndex, String text) {
+				public void groupComment(String url, int groupIndex, String text) {
 					integer.incrementAndGet();
-					delegate.groupComment(groupIndex, text);
+					delegate.groupComment(url, groupIndex, text);
 
 				}
 
 				@Override
-				public void everyoneComment(String text) {
+				public void everyoneComment(String url, String text) {
 					integer.incrementAndGet();
-					delegate.everyoneComment(text);
+					delegate.everyoneComment(url, text);
 
 				}
 
@@ -78,17 +88,17 @@ public interface ICommentsEditorCallback {
 				}
 
 				@Override
-				public void youComment(String text) {
+				public void youComment(String url, String text) {
 					throw new IllegalArgumentException();
 				}
 
 				@Override
-				public void groupComment(int groupIndex, String text) {
+				public void groupComment(String url, int groupIndex, String text) {
 					throw new IllegalArgumentException();
 				}
 
 				@Override
-				public void everyoneComment(String text) {
+				public void everyoneComment(String url, String text) {
 					throw new IllegalArgumentException();
 				}
 			};
