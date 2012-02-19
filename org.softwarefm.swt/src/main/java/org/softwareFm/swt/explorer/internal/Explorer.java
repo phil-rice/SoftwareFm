@@ -38,6 +38,7 @@ import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
+import org.softwareFm.eclipse.comments.ICommentsReader;
 import org.softwareFm.eclipse.constants.CommentConstants;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.user.IUserMembershipReader;
@@ -101,11 +102,13 @@ public class Explorer implements IExplorer {
 	private Comments comments;
 	private MySoftwareFm mySoftwareFm;
 	private final IShowMyPeople showMyPeople;
+	protected ICommentsReader commentReader;
 
-	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, final IUserReader userReader, final IUserMembershipReader userMembershipReader, final IGroupsReader groupsReader, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IShowMyData showMyData, final IShowMyGroups showMyGroups, final IShowMyPeople showMyPeople, final IUserDataManager userDataManager, final ICommentWriter commentWriter) {
+	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, final IUserReader userReader, final IUserMembershipReader userMembershipReader, final IGroupsReader groupsReader, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IShowMyData showMyData, final IShowMyGroups showMyGroups, final IShowMyPeople showMyPeople, final IUserDataManager userDataManager, final ICommentWriter commentWriter, ICommentsReader commentsReader) {
 		this.cardConfig = cardConfig;
 		this.masterDetailSocial = masterDetailSocial;
 		this.showMyPeople = showMyPeople;
+		this.commentReader = commentsReader;
 		callbackToGotoUrlAndUpdateDetails = new ICallback<String>() {
 			@Override
 			public void process(String url) throws Exception {
@@ -155,7 +158,7 @@ public class Explorer implements IExplorer {
 		comments = masterDetailSocial.createSocial(new IFunction1<Composite, Comments>() {
 			@Override
 			public Comments apply(Composite from) throws Exception {
-				return new Comments(from, cardConfig, new ICommentsCallback() {
+				return new Comments(from, cardConfig, commentReader, new ICommentsCallback() {
 					@Override
 					public void selected(String cardType, String title, String text) {
 						masterDetailSocial.putSocialOverDetail();
@@ -576,7 +579,7 @@ public class Explorer implements IExplorer {
 
 			@Override
 			public void finished(final ICardHolder cardHolder, final String url, final ICard card) throws Exception {
-				comments.showCommentsFor(card);
+				comments.showCommentsFor(getUserData(), card.cardType(), url);
 				fireListeners(new ICallback<IExplorerListener>() {
 					@Override
 					public void process(IExplorerListener t) throws Exception {
@@ -921,7 +924,7 @@ public class Explorer implements IExplorer {
 
 	@Override
 	public void displayComments(ICard card) {
-		comments.showCommentsFor(card);
+		comments.showCommentsFor(getUserData(), card.cardType(), card.url());
 		masterDetailSocial.showSocial();
 		masterDetailSocial.setSocial(comments.getControl());
 	}

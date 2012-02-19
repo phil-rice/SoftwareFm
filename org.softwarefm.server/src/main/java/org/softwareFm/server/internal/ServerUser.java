@@ -35,9 +35,9 @@ public class ServerUser implements IUser {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getUserProperty(String softwareFmId, String cryptoKey, String property) {
+	public <T> T getUserProperty(String softwareFmId, String userCrypto, String property) {
 		String url = userUrlGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
-		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, CommonConstants.dataFileName, cryptoKey);
+		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, CommonConstants.dataFileName, userCrypto);
 		Map<String, Object> data = gitOperations.getFile(fileDescription);
 		if (data != null) {
 			T result = (T) data.get(property);
@@ -49,7 +49,7 @@ public class ServerUser implements IUser {
 		if (callable == null)
 			return null;
 		T result = Callables.call(callable);
-		setUserProperty(softwareFmId, cryptoKey, property, result);
+		setUserProperty(softwareFmId, userCrypto, property, result);
 		return result;
 	}
 

@@ -54,6 +54,7 @@ public class IExplorerTest extends SwtTest {
 					IShowMyGroups.Utils.exceptionShowMyGroups(),//
 					IShowMyPeople.Utils.exceptionShowMyPeople(),//
 					IUserDataManager.Utils.userDataManager(), //
+					ICommentWriter.Utils.exceptionCommentWriter(),//
 					ICommentWriter.Utils.exceptionCommentWriter());
 			ICardHolderForTests cardHolder = (ICardHolderForTests) explorer.cardHolder;
 			assertEquals(rootUrls, cardHolder.getRootUrls());

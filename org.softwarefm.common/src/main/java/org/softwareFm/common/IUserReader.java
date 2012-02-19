@@ -11,7 +11,7 @@ import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.url.IUrlGenerator;
 
 public interface IUserReader {
-	<T> T getUserProperty(String userId, String cryptoKey, String property);
+	<T> T getUserProperty(String userId, String userCrypto, String property);
 
 	void refresh(String userId);
 
@@ -29,7 +29,7 @@ public interface IUserReader {
 				
 				@SuppressWarnings("unchecked")
 				@Override
-				public <T> T getUserProperty(String userId, String cryptoKey, String property) {
+				public <T> T getUserProperty(String userId, String userCrypto, String property) {
 					return (T) map.get(property);
 				}
 			};
@@ -44,7 +44,7 @@ public interface IUserReader {
 				}
 				
 				@Override
-				public <T> T getUserProperty(String userId, String cryptoKey, String property) {
+				public <T> T getUserProperty(String userId, String userCrypto, String property) {
 					throw new UnsupportedOperationException();
 				}
 			};

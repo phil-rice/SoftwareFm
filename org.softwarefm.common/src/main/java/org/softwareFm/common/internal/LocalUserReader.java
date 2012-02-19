@@ -27,15 +27,16 @@ public class LocalUserReader implements IUserReader {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getUserProperty(String softwareFmId, String cryptoKey, String property) {
-		Map<String, Object> data = getUserData(softwareFmId, cryptoKey);
+	public <T> T getUserProperty(String softwareFmId, String userCrypto, String property) {
+		Map<String, Object> data = getUserData(softwareFmId, userCrypto);
+
 		if (data == null)
-			throw new NullPointerException(softwareFmId + ", " + cryptoKey +","+property);
+			throw new NullPointerException(softwareFmId + ", " + userCrypto + "," + property);
 		return (T) data.get(property);
 	}
 
 	protected Map<String, Object> getUserData(String softwareFmId, String cryptoKey) {
-		String url = userGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey,softwareFmId));
+		String url = userGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
 		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, CommonConstants.dataFileName, cryptoKey);
 		Map<String, Object> data = gitLocal.getFile(fileDescription);
 		return data;
@@ -46,7 +47,5 @@ public class LocalUserReader implements IUserReader {
 		String url = userGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
 		gitLocal.clearCache(url);
 	}
-
-
 
 }

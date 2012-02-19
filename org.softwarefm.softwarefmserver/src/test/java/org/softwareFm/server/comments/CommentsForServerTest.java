@@ -2,6 +2,7 @@ package org.softwareFm.server.comments;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -34,11 +35,11 @@ public class CommentsForServerTest extends AbstractCommentsReaderTest {
 		remoteOperations.init("a");
 		user.setUserProperty(softwareFmId, userCrypto, LoginConstants.monikerKey, "moniker");
 
-		checkAddComment(comment1, ICommentDefn.Utils.everyoneInitial("a/b"), comment1);
-		checkAddComment(comment2, ICommentDefn.Utils.everyoneInitial("a/b"), comment1, comment2);
+		checkAddComment(comment1, CommentConstants.globalSource, ICommentDefn.Utils.everyoneInitial("a/b"), comment1);
+		checkAddComment(comment2, CommentConstants.globalSource, ICommentDefn.Utils.everyoneInitial("a/b"), comment1, comment2);
 
-		assertEquals(Arrays.asList(comment1, comment2), reader.globalComments("a/b"));
-		assertEquals(Arrays.asList(),  reader.myComments("a/b", softwareFmId, userCrypto));
+		assertEquals(addSource(CommentConstants.globalSource, comment1, comment2), reader.globalComments("a/b", CommentConstants.globalSource));
+		assertEquals(Arrays.asList(), reader.myComments("a/b", softwareFmId, userCrypto, CommentConstants.mySource));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -46,31 +47,34 @@ public class CommentsForServerTest extends AbstractCommentsReaderTest {
 		remoteOperations.init("a");
 		user.setUserProperty(softwareFmId, userCrypto, LoginConstants.monikerKey, "moniker");
 
-		checkAddComment(comment1, ICommentDefn.Utils.myInitial(user, softwareFmId, userCrypto, "a/b"), comment1);
-		checkAddComment(comment2, ICommentDefn.Utils.myInitial(user, softwareFmId, userCrypto, "a/b"), comment1, comment2);
+		checkAddComment(comment1, CommentConstants.mySource, ICommentDefn.Utils.myInitial(user, softwareFmId, userCrypto, "a/b"), comment1);
+		checkAddComment(comment2, CommentConstants.mySource, ICommentDefn.Utils.myInitial(user, softwareFmId, userCrypto, "a/b"), comment1, comment2);
 
-		assertEquals(Arrays.asList(), reader.globalComments("a/b"));
-		assertEquals(Arrays.asList(comment1, comment2), reader.myComments("a/b", softwareFmId, userCrypto));
+		assertEquals(Arrays.asList(), reader.globalComments("a/b", CommentConstants.globalSource));
+		assertEquals(addSource(CommentConstants.mySource, comment1, comment2), reader.myComments("a/b", softwareFmId, userCrypto, CommentConstants.mySource));
 	}
+
 	@SuppressWarnings("unchecked")
 	public void testAddGroupComments() {
 		remoteOperations.init("a");
 		user.setUserProperty(softwareFmId, userCrypto, GroupConstants.membershipCryptoKey, Crypto.makeKey());
 		user.setUserProperty(softwareFmId, userCrypto, LoginConstants.monikerKey, "moniker");
-		Map<String, String> idToCrypto = setUpGroups("groupId1","groupId2", "groupId3");
-		
+		Map<String, String> idToCrypto = setUpGroups("groupId1", "groupId2", "groupId3");
+
 		String group1Crypto = idToCrypto.get("groupId1");
-		checkAddComment(comment1, ICommentDefn.Utils.groupInitial(groups, "groupId1", group1Crypto,"a/b"), comment1);
-		checkAddComment(comment2, ICommentDefn.Utils.groupInitial(groups, "groupId1", group1Crypto,"a/b"), comment1, comment2);
-		
-		assertEquals(Arrays.asList(), reader.globalComments("a/b"));
-		assertEquals(Arrays.asList(), reader.myComments("a/b", softwareFmId, userCrypto));
-		assertEquals(Arrays.asList(comment1, comment2), reader.groupComments("a/b", softwareFmId, userCrypto));
+		checkAddComment(comment1, "groupId1Name", ICommentDefn.Utils.groupInitial(groups, "groupId1", group1Crypto, "a/b"), comment1);
+		checkAddComment(comment2, "groupId1Name", ICommentDefn.Utils.groupInitial(groups, "groupId1", group1Crypto, "a/b"), comment1, comment2);
+
+		assertEquals(Arrays.asList(), reader.globalComments("a/b", CommentConstants.globalSource));
+		assertEquals(Arrays.asList(), reader.myComments("a/b", softwareFmId, userCrypto, CommentConstants.mySource));
+		assertEquals(addSource("groupId1Name",comment1, comment2), reader.groupComments("a/b", softwareFmId, userCrypto));
 	}
 
-	protected void checkAddComment(Map<String, Object> comment, ICommentDefn defn, Map<String, Object>... expected) {
+	protected void checkAddComment(Map<String, Object> comment, String source, ICommentDefn defn, Map<String, Object>... rawExpected) {
 		comments.add(softwareFmId, userCrypto, defn, (String) comment.get(CommentConstants.textKey));
-		assertEquals(Arrays.asList(expected), ICommentsReader.Utils.allComments(reader, "a/b", softwareFmId, userCrypto));
+		List<Map<String, Object>> expected = addSource(source, rawExpected);
+		List<Map<String, Object>> actual = ICommentsReader.Utils.allComments(reader, "a/b", softwareFmId, userCrypto, CommentConstants.globalSource, CommentConstants.mySource);
+		assertEquals(expected, actual);
 	}
 
 	@Override

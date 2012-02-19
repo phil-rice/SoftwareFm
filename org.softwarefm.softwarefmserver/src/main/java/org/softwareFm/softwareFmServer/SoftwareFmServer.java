@@ -20,6 +20,7 @@ import org.softwareFm.common.processors.AbstractLoginDataAccessor;
 import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
+import org.softwareFm.eclipse.constants.CommentConstants;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.user.IProject;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
@@ -77,6 +78,7 @@ public class SoftwareFmServer {
 	public static Map<String, Callable<Object>> makeDefaultProperties() {
 		return Maps.makeMap(GroupConstants.membershipCryptoKey, Callables.makeCryptoKey(), //
 				GroupConstants.groupCryptoKey, Callables.makeCryptoKey(),//
+				CommentConstants.commentCryptoKey, Callables.makeCryptoKey(),//
 				SoftwareFmConstants.projectCryptoKey, Callables.makeCryptoKey());
 	}
 

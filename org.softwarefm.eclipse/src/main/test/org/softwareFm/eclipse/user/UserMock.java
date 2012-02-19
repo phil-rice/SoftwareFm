@@ -25,9 +25,9 @@ public class UserMock implements IUser {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getUserProperty(String softwareFmId, String cryptoKey, String property) {
+	public <T> T getUserProperty(String softwareFmId, String userCrypto, String property) {
 		Assert.assertEquals(expectedUserDetails, softwareFmId);
-		Assert.assertEquals(expectedCrypto, cryptoKey);
+		Assert.assertEquals(expectedCrypto, userCrypto);
 		return (T) map.get(property);
 	}
 

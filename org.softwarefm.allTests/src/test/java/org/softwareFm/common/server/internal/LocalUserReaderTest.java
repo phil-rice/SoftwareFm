@@ -16,6 +16,7 @@ import org.softwareFm.common.crypto.Crypto;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.json.Json;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.server.GitTest;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
@@ -29,7 +30,7 @@ public class LocalUserReaderTest extends GitTest {
 	private final String crypto1Key = Crypto.makeKey();
 	private final String crypto2Key = Crypto.makeKey();
 	private final String sfmId1 = "sfmId1";
-	private final String sfmId2 =  "sfmId2";
+	private final String sfmId2 = "sfmId2";
 	private File remoteSfmId1File;
 	private File remoteSfmId2File;
 	private File localSfmId1File;
@@ -69,8 +70,8 @@ public class LocalUserReaderTest extends GitTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		IUrlGenerator userUrlGenerator = IUrlGenerator.Utils.generator("user/{0}/{1}/{2}", LoginConstants.softwareFmIdKey);
-		Map<String, Callable<Object>> noDefaults = Maps.newMap();
-		remoteUser = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, userUrlGenerator, findRepositoryRoot, noDefaults);
+		Map<String, Callable<Object>> defaults = Maps.<String, Callable<Object>> makeMap("defProperty", Callables.valueFromList("value"));
+		remoteUser = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, userUrlGenerator, findRepositoryRoot, defaults);
 		localUser = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
 
 		remoteSfmId1File = new File(remoteRoot, Urls.compose("user/sf/mI/sfmId1/", CommonConstants.dataFileName));
@@ -79,6 +80,5 @@ public class LocalUserReaderTest extends GitTest {
 		localSfmId1File = new File(localRoot, Urls.compose("user/sf/mI/sfmId1/", CommonConstants.dataFileName));
 		localSfmId2File = new File(localRoot, Urls.compose("user/sf/mI/sfmId2/", CommonConstants.dataFileName));
 	}
-
 
 }

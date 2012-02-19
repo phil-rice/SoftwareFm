@@ -10,6 +10,7 @@ public class CommentConstants {
 	public static final String creatorKey = "creator";
 	public static final String textKey = "text";
 	public static final String filenameKey = "filename";
+	public static final String sourceKey = "source";
 	
 	public static final String commentCryptoKey = "commentCrypto";
 	public static final String commentCardType = "comment";
@@ -25,5 +26,10 @@ public class CommentConstants {
 	public static final String illegalSoftwareFmId = "Illegal software fm id {0}";
 	public static final String cannotWorkOutFileDescription = "Cannot work out file description for {0}";
 	public static final String cannotGetCommentsCrypto = "Cannot get comments crypto for {0} {1}";
+	public static final String globalSource = "Global";
+	public static final String mySource = "You";
+	public static final String tableCreatorColumnTitle = "table.creator.column.title";
+	public static final String tableSourceColumnTitle = "table.source.column.title";
+	public static final String tableTextColumnTitle = "table.text.column.title";
 
 }

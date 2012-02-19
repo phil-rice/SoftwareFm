@@ -65,7 +65,6 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 				return ICommentDefn.Utils.everyoneInitial("a/b");
 			}
 		}, new Callable<List<Map<String, Object>>>() {
-
 			@Override
 			public List<Map<String, Object>> call() throws Exception {
 				return commentsReader.globalComments("a/b");

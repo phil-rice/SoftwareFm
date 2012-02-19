@@ -10,6 +10,7 @@ import org.softwareFm.common.IGroupsReader;
 import org.softwareFm.common.IUserReader;
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.constants.GroupConstants;
+import org.softwareFm.common.maps.Maps;
 import org.softwareFm.eclipse.constants.CommentConstants;
 import org.softwareFm.eclipse.user.IUserMembershipReader;
 
@@ -28,9 +29,9 @@ public abstract class AbstractCommentsReader implements ICommentsReader {
 	}
 
 	@Override
-	public List<Map<String, Object>> globalComments(String baseUrl) {
+	public List<Map<String, Object>> globalComments(String baseUrl, String source) {
 		IFileDescription fd = IFileDescription.Utils.plain(baseUrl, CommentConstants.globalCommentsFile);
-		List<Map<String, Object>> result = gitReader.getFileAsListOfMaps(fd);
+		List<Map<String, Object>> result = Lists.map(gitReader.getFileAsListOfMaps(fd), Maps.<String,Object>withFn(CommentConstants.sourceKey, source));
 		return result;
 	}
 
@@ -44,20 +45,22 @@ public abstract class AbstractCommentsReader implements ICommentsReader {
 			if (groupId == null || groupCrypto == null)
 				throw new IllegalStateException(MessageFormat.format(GroupConstants.missingDataFromMembership, softwareFmId, groupData));
 			String commentCrypto = groupsReader.getGroupProperty(groupId, groupCrypto, CommentConstants.commentCryptoKey);
+			String groupName = groupsReader.getGroupProperty(groupId, groupCrypto, GroupConstants.groupNameKey);
 			if (commentCrypto == null)
 				throw new IllegalStateException(MessageFormat.format(GroupConstants.missingDataFromMembership, softwareFmId, groupData));
 			IFileDescription fd = IFileDescription.Utils.encrypted(baseUrl, groupId + "." + CommentConstants.commentExtension, commentCrypto);
-			List<Map<String, Object>> maps = gitReader.getFileAsListOfMaps(fd);
+			List<Map<String, Object>> maps = Lists.map(gitReader.getFileAsListOfMaps(fd), Maps.<String,Object>withFn(CommentConstants.sourceKey, groupName));
 			result.addAll(maps);
 		}
 		return result;
 	}
 
 	@Override
-	public List<Map<String, Object>> myComments(String baseUrl, String softwareFmId, String crypto) {
-		String commentCrypto = userReader.getUserProperty(softwareFmId, crypto, CommentConstants.commentCryptoKey);
+	public List<Map<String, Object>> myComments(String baseUrl, String softwareFmId, String userCrypto, String source) {
+		String commentCrypto = userReader.getUserProperty(softwareFmId, userCrypto, CommentConstants.commentCryptoKey);
 		IFileDescription fd = IFileDescription.Utils.encrypted(baseUrl, softwareFmId + "." + CommentConstants.commentExtension, commentCrypto);
-		return gitReader.getFileAsListOfMaps(fd);
+		List<Map<String, Object>> result = Lists.map(gitReader.getFileAsListOfMaps(fd), Maps.<String,Object>withFn(CommentConstants.sourceKey, source));
+		return result;
 	}
 
 }

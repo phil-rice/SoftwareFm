@@ -2,12 +2,14 @@ package org.softwareFm.eclipse.comments;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.IGroups;
 import org.softwareFm.common.IGroupsReader;
 import org.softwareFm.common.IUser;
+import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.crypto.Crypto;
@@ -46,7 +48,7 @@ public abstract class AbstractCommentsReaderTest extends GitTest {
 		remoteOperations.append(fd, comment1);
 		remoteOperations.append(fd, comment2);
 		remoteOperations.addAllAndCommit("a", "testGlobal");
-		assertEquals(Arrays.asList(comment1, comment2), reader.globalComments("a/b"));
+		assertEquals(addSource("asd", comment1, comment2), reader.globalComments("a/b", "asd"));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -57,7 +59,7 @@ public abstract class AbstractCommentsReaderTest extends GitTest {
 		remoteOperations.append(fd, comment1);
 		remoteOperations.append(fd, comment2);
 		remoteOperations.addAllAndCommit("a", "testGlobal");
-		assertEquals(Arrays.asList(comment1, comment2), reader.myComments("a/b", softwareFmId, userCrypto));
+		assertEquals(addSource("asd", comment1, comment2), reader.myComments("a/b", softwareFmId, userCrypto, "asd"));
 	}
 
 	public void testUserCommentsWhenNoCommentsHaveBeenMade() {
@@ -65,7 +67,7 @@ public abstract class AbstractCommentsReaderTest extends GitTest {
 		remoteOperations.init("a");
 		remoteOperations.put(IFileDescription.Utils.plain("a/z"), v11);
 		remoteOperations.addAllAndCommit("a", "testUserCommentsWhenNoCommentsHaveBeenMade");// needed to ensure that the repository is in a good state
-		assertEquals(Collections.emptyList(), reader.myComments("a/b", softwareFmId, userCrypto));
+		assertEquals(Collections.emptyList(), reader.myComments("a/b", softwareFmId, userCrypto, "asd"));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -87,10 +89,11 @@ public abstract class AbstractCommentsReaderTest extends GitTest {
 			remoteOperations.append(fd, comment2);
 			remoteOperations.addAllAndCommit("a", "testGlobal");
 		}
+		String sourcekey = CommentConstants.sourceKey;
 		assertEquals(Arrays.asList(//
-				Maps.with(comment1, "a", "groupId1"), comment2,//
-				Maps.with(comment1, "a", "groupId2"), comment2,//
-				Maps.with(comment1, "a", "groupId3"), comment2), reader.groupComments("a/b", softwareFmId, userCrypto));
+				Maps.with(comment1, "a", "groupId1", sourcekey, "groupId1Name"), Maps.with(comment2, sourcekey, "groupId1Name"),//
+				Maps.with(comment1, "a", "groupId2", sourcekey, "groupId2Name"), Maps.with(comment2, sourcekey, "groupId2Name"),//
+				Maps.with(comment1, "a", "groupId3", sourcekey, "groupId3Name"), Maps.with(comment2, sourcekey, "groupId3Name")), reader.groupComments("a/b", softwareFmId, userCrypto));
 	}
 
 	protected Map<String, String> setUpGroups(String... groupIds) {
@@ -119,6 +122,11 @@ public abstract class AbstractCommentsReaderTest extends GitTest {
 		groups = makeGroups();
 		reader = makeReader(user, userMembership, groups, softwareFmId, userCrypto, userCommentsCrypto);
 
+	}
+
+	protected List<Map<String, Object>> addSource(String source, Map<String, Object>... rawExpected) {
+		List<Map<String, Object>> expected = Lists.map(Arrays.asList(rawExpected), Maps.<String, Object> withFn(CommentConstants.sourceKey, source));
+		return expected;
 	}
 
 }

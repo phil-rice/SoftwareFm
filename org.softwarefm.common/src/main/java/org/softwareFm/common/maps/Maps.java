@@ -525,4 +525,13 @@ public class Maps {
 		else
 			return defaultValue;
 	}
+
+	public static<K,V> IFunction1<Map<K,V>, Map<K,V>> withFn( final K newKey, final V newValue) {
+		return new IFunction1<Map<K,V>, Map<K,V>>() {
+			@Override
+			public Map<K, V> apply(Map<K, V> from) throws Exception {
+				return with(from, newKey, newValue);
+			}
+		};
+	}
 }

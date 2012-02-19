@@ -47,6 +47,7 @@ import org.softwareFm.common.tests.Tests;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.common.url.Urls;
 import org.softwareFm.eclipse.IRequestGroupReportGeneration;
+import org.softwareFm.eclipse.comments.ICommentsReader;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups;
@@ -68,6 +69,7 @@ import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardFactory;
 import org.softwareFm.swt.card.ICardHolder;
 import org.softwareFm.swt.card.ILineSelectedListener;
+import org.softwareFm.swt.comments.CommentsReaderLocal;
 import org.softwareFm.swt.comments.ICommentWriter;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
@@ -280,12 +282,13 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 			LocalGroupsReader groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
 
 			ICommentWriter comments = ICommentWriter.Utils.commentWriter(httpClient, CommonConstants.testTimeOutMs);
+			ICommentsReader commentsReader = new CommentsReaderLocal(gitLocal, userReader, userMembershipReader, groupsReader);
 			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, userReader, userMembershipReader, groupsReader, cardConfig, //
 					Arrays.asList(rootArtifactUrl, rootSnippetUrl), //
 					IPlayListGetter.Utils.noPlayListGetter(), service, //
 					ILoginStrategy.Utils.noLoginStrategy(),//
 					showMyData, showMyGroups, showMyPeople,//
-					IUserDataManager.Utils.userDataManager(), comments );
+					IUserDataManager.Utils.userDataManager(), comments, commentsReader );
 			IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
 			new SnippetFeedConfigurator(cardConfig.cardDataStore, cardConfig.resourceGetterFn).configure(explorer);
 			// SnippetFeedConfigurator.configure(explorer, cardConfig);
