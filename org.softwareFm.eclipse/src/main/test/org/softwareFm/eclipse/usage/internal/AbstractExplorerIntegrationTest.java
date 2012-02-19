@@ -68,6 +68,7 @@ import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardFactory;
 import org.softwareFm.swt.card.ICardHolder;
 import org.softwareFm.swt.card.ILineSelectedListener;
+import org.softwareFm.swt.comments.ICommentWriter;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.dataStore.CardAndCollectionDataStoreAdapter;
@@ -278,12 +279,13 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 			IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, userReader);
 			LocalGroupsReader groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
 
+			ICommentWriter comments = ICommentWriter.Utils.commentWriter(httpClient, CommonConstants.testTimeOutMs);
 			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, userReader, userMembershipReader, groupsReader, cardConfig, //
 					Arrays.asList(rootArtifactUrl, rootSnippetUrl), //
 					IPlayListGetter.Utils.noPlayListGetter(), service, //
 					ILoginStrategy.Utils.noLoginStrategy(),//
 					showMyData, showMyGroups, showMyPeople,//
-					IUserDataManager.Utils.userDataManager());
+					IUserDataManager.Utils.userDataManager(), comments );
 			IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
 			new SnippetFeedConfigurator(cardConfig.cardDataStore, cardConfig.resourceGetterFn).configure(explorer);
 			// SnippetFeedConfigurator.configure(explorer, cardConfig);

@@ -22,6 +22,7 @@ import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.card.ICardFactory;
 import org.softwareFm.swt.card.ICardHolder;
 import org.softwareFm.swt.card.dataStore.CardDataStoreMock;
+import org.softwareFm.swt.comments.ICommentWriter;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.dataStore.CardAndCollectionDataStoreAdapter;
@@ -75,7 +76,8 @@ public class ExplorerTest extends SwtAndServiceTest {
 				IShowMyData.Utils.exceptionShowMyData(),//
 				IShowMyGroups.Utils.exceptionShowMyGroups(),//
 				IShowMyPeople.Utils.exceptionShowMyPeople(),//
-				IUserDataManager.Utils.userDataManager()) {
+				IUserDataManager.Utils.userDataManager(), //
+				ICommentWriter.Utils.exceptionCommentWriter()) {
 			@Override
 			protected String makeRandomUUID() {
 				return "randomUUID";

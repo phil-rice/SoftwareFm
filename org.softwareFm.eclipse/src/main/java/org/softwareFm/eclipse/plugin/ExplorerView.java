@@ -10,6 +10,7 @@ import java.util.List;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
+import org.softwareFm.client.http.api.IHttpClient;
 import org.softwareFm.client.http.requests.IResponseCallback;
 import org.softwareFm.common.IGitLocal;
 import org.softwareFm.common.IUserReader;
@@ -35,6 +36,7 @@ import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.eclipse.user.IUserMembershipReader;
 import org.softwareFm.eclipse.user.UserMembershipReaderForLocal;
 import org.softwareFm.swt.browser.IBrowserConfigurator;
+import org.softwareFm.swt.comments.ICommentWriter;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.constants.CollectionConstants;
@@ -63,13 +65,14 @@ public class ExplorerView extends ViewPart {
 
 		IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardConfig.cardDataStore);
 		IServiceExecutor service = activator.getServiceExecutor();
-		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(parent.getDisplay(), activator.getServiceExecutor(), activator.getClient());
+		IHttpClient client = activator.getClient();
+		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(parent.getDisplay(), activator.getServiceExecutor(), client);
 		IUrlGenerator userUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.userUrlKey);
 		IUrlGenerator groupUrlGenerator = GroupConstants.groupsGenerator(SoftwareFmConstants.urlPrefix);
 		IGitLocal gitLocal = activator.getGitLocal();
 		IProjectTimeGetter timeGetter = activator.getProjectTimeGetter();
 		IRequestGroupReportGeneration reportGenerator = IRequestGroupReportGeneration.Utils.withCache(//
-				new RequestGroupReportGeneration(activator.getClient(), IResponseCallback.Utils.sysoutStatusCallback()),//
+				new RequestGroupReportGeneration(client, IResponseCallback.Utils.sysoutStatusCallback()),//
 				GroupConstants.usageReportPeriod);
 
 		IShowMyData showMyDetails = MyDetails.showMyDetails(service, cardConfig, masterDetailSocial, userUrlGenerator, gitLocal, timeGetter);
@@ -79,9 +82,9 @@ public class ExplorerView extends ViewPart {
 		IUserDataManager userDataManager = activator.getUserDataManager();
 		IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, userReader);
 		LocalGroupsReader groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
-
-		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, userReader, userMembershipReader, groupsReader, cardConfig, getRootUrls(), playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople, userDataManager);
-		IUsageStrategy usageStrategy = IUsageStrategy.Utils.usage(activator.getServiceExecutor(), activator.getClient(), gitLocal, userUrlGenerator);
+		ICommentWriter comments = ICommentWriter.Utils.commentWriter(client, CommonConstants.clientTimeOut);
+		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, userReader, userMembershipReader, groupsReader, cardConfig, getRootUrls(), playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople, userDataManager, comments);
+		IUsageStrategy usageStrategy = IUsageStrategy.Utils.usage(activator.getServiceExecutor(), client, gitLocal, userUrlGenerator);
 		actionBar = makeActionBar(explorer, cardConfig, usageStrategy);
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
 		actionBar.populateToolbar(toolBarManager);

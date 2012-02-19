@@ -26,9 +26,10 @@ public class CommentsEditorTest extends SwtTest {
 
 	private CardConfig cardConfig;
 	private final List<String> groupNames = Arrays.asList("group1", "group2", "group3");
+	private final String url = "someUrl";
 
 	public void testInitialLayoutWithGroups() {
-		CommentsEditor editor = new CommentsEditor(shell, cardConfig, CommentConstants.editorTitle, "some initial comment", groupNames, ICommentsEditorCallback.Utils.exceptionCallback());
+		CommentsEditor editor = new CommentsEditor(shell, cardConfig, url, CommentConstants.editorTitle, "some initial comment", groupNames, ICommentsEditorCallback.Utils.exceptionCallback());
 		@SuppressWarnings("unchecked")
 		IValueComposite<StyledText> composite = (IValueComposite<StyledText>) editor.getComposite();
 		assertEquals("some initial comment", composite.getEditor().getText());
@@ -47,7 +48,7 @@ public class CommentsEditorTest extends SwtTest {
 	}
 
 	public void testInitialLayoutWithOutGroups() {
-		CommentsEditor editor = new CommentsEditor(shell, cardConfig, CommentConstants.editorTitle, "some initial comment", Collections.<String> emptyList(), ICommentsEditorCallback.Utils.exceptionCallback());
+		CommentsEditor editor = new CommentsEditor(shell, cardConfig, url, CommentConstants.editorTitle, "some initial comment", Collections.<String> emptyList(), ICommentsEditorCallback.Utils.exceptionCallback());
 		@SuppressWarnings("unchecked")
 		IValueComposite<StyledText> composite = (IValueComposite<StyledText>) editor.getComposite();
 		OkCancel okCancel = composite.getOkCancel();
@@ -67,7 +68,7 @@ public class CommentsEditorTest extends SwtTest {
 	}
 
 	public void testOkButtonOnlyEnabledWhenHaveSomeComment() {
-		CommentsEditor editor = new CommentsEditor(shell, cardConfig, CommentConstants.editorTitle, "some initial comment", Collections.<String> emptyList(), ICommentsEditorCallback.Utils.exceptionCallback());
+		CommentsEditor editor = new CommentsEditor(shell, cardConfig, url, CommentConstants.editorTitle, "some initial comment", Collections.<String> emptyList(), ICommentsEditorCallback.Utils.exceptionCallback());
 		checkOkEnabled(editor, "", false);
 		checkOkEnabled(editor, "a", true);
 		checkOkEnabled(editor, "", false);
@@ -107,6 +108,7 @@ public class CommentsEditorTest extends SwtTest {
 			@Override
 			public void everyoneComment(String url, String text) {
 				assertEquals("expected", text);
+				assertEquals(CommentsEditorTest.this.url, url);
 			}
 		});
 		checkOkButton(new ICallback<OkCancel>() {
@@ -117,6 +119,7 @@ public class CommentsEditorTest extends SwtTest {
 		}, new CommentsEditorFailAdapter() {
 			@Override
 			public void youComment(String url, String text) {
+				assertEquals(CommentsEditorTest.this.url, url);
 				assertEquals("expected", text);
 			}
 		});
@@ -128,6 +131,7 @@ public class CommentsEditorTest extends SwtTest {
 		}, new CommentsEditorFailAdapter() {
 			@Override
 			public void groupComment(String url, int index, String text) {
+				assertEquals(CommentsEditorTest.this.url, url);
 				assertEquals("expected", text);
 				assertEquals(0, index);
 			}
@@ -142,6 +146,7 @@ public class CommentsEditorTest extends SwtTest {
 		}, new CommentsEditorFailAdapter() {
 			@Override
 			public void groupComment(String url, int index, String text) {
+				assertEquals(CommentsEditorTest.this.url, url);
 				assertEquals("expected", text);
 				assertEquals(1, index);
 			}
@@ -152,7 +157,7 @@ public class CommentsEditorTest extends SwtTest {
 	protected void checkOkButton(ICallback<OkCancel> pressButtons, ICommentsEditorCallback callback) {
 		String text = "expected";
 		AtomicInteger count = new AtomicInteger();
-		CommentsEditor editor = new CommentsEditor(shell, cardConfig, CommentConstants.editorTitle, "some comment", //
+		CommentsEditor editor = new CommentsEditor(shell, cardConfig, url, CommentConstants.editorTitle, "some comment", //
 				groupNames, ICommentsEditorCallback.Utils.withCount(callback, count));
 
 		IValueComposite<StyledText> composite = (IValueComposite<StyledText>) editor.getComposite();
@@ -168,7 +173,7 @@ public class CommentsEditorTest extends SwtTest {
 	@SuppressWarnings("unchecked")
 	public void testCancelButtonCallsCancelCallback() {
 		final AtomicInteger cancelCount = new AtomicInteger();
-		CommentsEditor editor = new CommentsEditor(shell, cardConfig, CommentConstants.editorTitle, "some comment", Collections.<String> emptyList(), new ICommentsEditorCallback() {
+		CommentsEditor editor = new CommentsEditor(shell, cardConfig, url, CommentConstants.editorTitle, "some comment", Collections.<String> emptyList(), new ICommentsEditorCallback() {
 
 			@Override
 			public void cancel() {
@@ -199,7 +204,7 @@ public class CommentsEditorTest extends SwtTest {
 
 	@SuppressWarnings("unchecked")
 	protected void checkOkButtonInitiallyEnabled(String comment, boolean expected) {
-		CommentsEditor editor = new CommentsEditor(shell, cardConfig, CommentConstants.editorTitle, comment, Collections.<String> emptyList(), ICommentsEditorCallback.Utils.exceptionCallback());
+		CommentsEditor editor = new CommentsEditor(shell, cardConfig, url, CommentConstants.editorTitle, comment, Collections.<String> emptyList(), ICommentsEditorCallback.Utils.exceptionCallback());
 		IValueComposite<StyledText> composite = (IValueComposite<StyledText>) editor.getComposite();
 		OkCancel okCancel = composite.getOkCancel();
 		assertEquals(expected, okCancel.isOkEnabled());

@@ -45,6 +45,7 @@ import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardChangedListener;
 import org.softwareFm.swt.card.ICardFactory;
 import org.softwareFm.swt.card.ICardHolder;
+import org.softwareFm.swt.comments.ICommentWriter;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.dataStore.CardAndCollectionDataStoreAdapter;
@@ -112,7 +113,8 @@ public class ExplorerWithRadioChannel {
 					IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, userReader);
 					LocalGroupsReader groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
 
-					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, userReader, userMembershipReader, groupsReader, cardConfig, rootUrl, playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople, IUserDataManager.Utils.userDataManager());
+					ICommentWriter commentWriter = ICommentWriter.Utils.commentWriter(client, CommonConstants.clientTimeOut);
+					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, userReader, userMembershipReader, groupsReader, cardConfig, rootUrl, playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople, IUserDataManager.Utils.userDataManager(), commentWriter);
 
 					ICardMenuItemHandler.Utils.addSoftwareFmMenuItemHandlers(explorer);
 					IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);

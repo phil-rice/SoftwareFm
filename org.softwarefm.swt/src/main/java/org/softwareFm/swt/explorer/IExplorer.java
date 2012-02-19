@@ -17,6 +17,7 @@ import org.softwareFm.swt.card.ICardChangedListener;
 import org.softwareFm.swt.card.ICardHolder;
 import org.softwareFm.swt.card.IHasCardConfig;
 import org.softwareFm.swt.card.RightClickCategoryResult;
+import org.softwareFm.swt.comments.ICommentWriter;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.dataStore.ICardAndCollectionDataStoreVisitor;
 import org.softwareFm.swt.explorer.internal.Explorer;
@@ -73,8 +74,8 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 
 	public static class Utils {
 
-		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, IUserReader userReader, IUserMembershipReader userMembershipReader, IGroupsReader groupsReader, CardConfig cardConfig, List<String> rootUrls, IPlayListGetter playListGetter, IServiceExecutor service, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IShowMyPeople showMyPeople, IUserDataManager userDataManager) {
-			return new Explorer(cardConfig, rootUrls, masterDetailSocial, service, userReader, userMembershipReader, groupsReader, playListGetter, loginStrategy, showMyData, showMyGroups, showMyPeople, userDataManager);
+		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, IUserReader userReader, IUserMembershipReader userMembershipReader, IGroupsReader groupsReader, CardConfig cardConfig, List<String> rootUrls, IPlayListGetter playListGetter, IServiceExecutor service, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IShowMyPeople showMyPeople, IUserDataManager userDataManager, ICommentWriter commentWriter) {
+			return new Explorer(cardConfig, rootUrls, masterDetailSocial, service, userReader, userMembershipReader, groupsReader, playListGetter, loginStrategy, showMyData, showMyGroups, showMyPeople, userDataManager, commentWriter);
 		}
 	}
 

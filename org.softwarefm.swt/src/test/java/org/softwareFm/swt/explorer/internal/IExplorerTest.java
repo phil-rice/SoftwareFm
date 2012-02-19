@@ -20,6 +20,7 @@ import org.softwareFm.eclipse.user.UserMembershipReaderForLocal;
 import org.softwareFm.images.general.GeneralAnchor;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.card.ICardHolderForTests;
+import org.softwareFm.swt.comments.ICommentWriter;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CollectionConstants;
 import org.softwareFm.swt.explorer.IExplorer;
@@ -52,7 +53,8 @@ public class IExplorerTest extends SwtTest {
 					IShowMyData.Utils.exceptionShowMyData(),//
 					IShowMyGroups.Utils.exceptionShowMyGroups(),//
 					IShowMyPeople.Utils.exceptionShowMyPeople(),//
-					IUserDataManager.Utils.userDataManager());
+					IUserDataManager.Utils.userDataManager(), //
+					ICommentWriter.Utils.exceptionCommentWriter());
 			ICardHolderForTests cardHolder = (ICardHolderForTests) explorer.cardHolder;
 			assertEquals(rootUrls, cardHolder.getRootUrls());
 			assertEquals(cardConfig, cardHolder.getCardConfig());

@@ -38,7 +38,6 @@ import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
-import org.softwareFm.eclipse.comments.ICommentDefn;
 import org.softwareFm.eclipse.constants.CommentConstants;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.user.IUserMembershipReader;
@@ -53,6 +52,7 @@ import org.softwareFm.swt.card.composites.CardShapedHolder;
 import org.softwareFm.swt.card.composites.TextInBorder;
 import org.softwareFm.swt.comments.Comments;
 import org.softwareFm.swt.comments.CommentsEditor;
+import org.softwareFm.swt.comments.ICommentWriter;
 import org.softwareFm.swt.comments.ICommentsCallback;
 import org.softwareFm.swt.comments.ICommentsEditorCallback;
 import org.softwareFm.swt.composites.IHasControl;
@@ -102,7 +102,7 @@ public class Explorer implements IExplorer {
 	private MySoftwareFm mySoftwareFm;
 	private final IShowMyPeople showMyPeople;
 
-	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, final IUserReader userReader, final IUserMembershipReader userMembershipReader, final IGroupsReader groupsReader, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IShowMyData showMyData, final IShowMyGroups showMyGroups, final IShowMyPeople showMyPeople, final IUserDataManager userDataManager) {
+	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, final IUserReader userReader, final IUserMembershipReader userMembershipReader, final IGroupsReader groupsReader, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IShowMyData showMyData, final IShowMyGroups showMyGroups, final IShowMyPeople showMyPeople, final IUserDataManager userDataManager, final ICommentWriter commentWriter) {
 		this.cardConfig = cardConfig;
 		this.masterDetailSocial = masterDetailSocial;
 		this.showMyPeople = showMyPeople;
@@ -175,14 +175,9 @@ public class Explorer implements IExplorer {
 								String title = CommentConstants.editorTitle;
 								List<Map<String, Object>> groupData = userMembershipReader.walkGroupsFor(userData.softwareFmId, userData.crypto);
 								List<String> groupNames = getGroupNames(groupData);
-								return new CommentsEditor(from, cardConfig, title, "", groupNames, new ICommentsEditorCallback() {
+								return new CommentsEditor(from, cardConfig, baseUrl, title, "", groupNames, ICommentsEditorCallback.Utils.writeComments(userReader, groupsReader, userData.softwareFmId, userData.crypto, groupData, commentWriter, new Runnable() {
 									@Override
-									public void youComment(String url, String text) {
-										sendComment(ICommentDefn.Utils.myInitial(userData.softwareFmId, userData.crypto, baseUrl), text);
-										displayCardAgain(baseUrl);
-									}
-
-									protected void displayCardAgain(final String baseUrl) {
+									public void run() {
 										masterDetailSocial.setDetail(null);
 										displayCard(baseUrl, new CardAndCollectionDataStoreAdapter() {
 											@Override
@@ -192,25 +187,7 @@ public class Explorer implements IExplorer {
 											}
 										});
 									}
-
-									@Override
-									public void groupComment(String url, int groupIndex, String text) {
-										System.out.println("group: " + groupIndex);
-										displayCardAgain(baseUrl);
-									}
-
-									@Override
-									public void everyoneComment(String url, String text) {
-										System.out.println("everyone: ");
-										displayCardAgain(baseUrl);
-									}
-
-									@Override
-									public void cancel() {
-										System.out.println("cancel");
-										displayCardAgain(baseUrl);
-									}
-								});
+								}));
 							}
 
 							@SuppressWarnings({ "rawtypes", "unchecked" })

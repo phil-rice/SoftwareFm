@@ -26,6 +26,9 @@ import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.eclipse.user.IUsageReader;
 import org.softwareFm.eclipse.user.IUserMembership;
 import org.softwareFm.server.ICrowdSourcedServer;
+import org.softwareFm.server.comments.CommentsForServer;
+import org.softwareFm.server.comments.IComments;
+import org.softwareFm.server.processors.CommentProcessor;
 import org.softwareFm.server.processors.IGenerateUsageReportGenerator;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.ProcessCallParameters;
@@ -55,7 +58,9 @@ public class SoftwareFmServer {
 
 				IUsageReader usageReader = new UsageReaderForServer(processCallParameters.gitOperations, processCallParameters.user, userUrlGenerator);
 				IGenerateUsageReportGenerator generator = new GenerateUsageProjectGenerator(groups, usageReader);
+				IComments comments = new CommentsForServer(processCallParameters.gitOperations, processCallParameters.user, userMembership, groups, Callables.time());
 				return new IProcessCall[] { makeUsageProcessor(processCallParameters.dataSource, processCallParameters.gitOperations, processCallParameters.user, userUrlGenerator),//
+						new CommentProcessor(processCallParameters.user, userMembership, groups, comments, processCallParameters.userCryptoFn),//
 						new GenerateGroupUsageProcessor(processCallParameters.gitOperations, generator, groups),//
 						new TakeOnGroupProcessor(takeOnProcessor, processCallParameters.signUpChecker, Callables.makeCryptoKey(), emailToSoftwareFmId, processCallParameters.saltGenerator, processCallParameters.softwareFmIdGenerator, processCallParameters.mailer) };
 			}

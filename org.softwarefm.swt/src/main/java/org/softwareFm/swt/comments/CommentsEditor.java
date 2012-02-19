@@ -162,8 +162,8 @@ public class CommentsEditor implements IHasComposite {
 
 	private final CommentsComposite content;
 
-	public CommentsEditor(Composite parent, CardConfig cardConfig, String titleKey, String initialText, List<String> groupNames, ICommentsEditorCallback callback) {
-		ICardData cardData = ICardData.Utils.create(cardConfig, CommentConstants.commentCardType, null, Maps.emptyStringObjectMap());// need one of these to get titlespec
+	public CommentsEditor(Composite parent, CardConfig cardConfig,String url, String titleKey, String initialText, List<String> groupNames, ICommentsEditorCallback callback) {
+		ICardData cardData = ICardData.Utils.create(cardConfig, CommentConstants.commentCardType, url, Maps.emptyStringObjectMap());// need one of these to get titlespec
 		this.content = new CommentsComposite(parent, titleKey, cardData, initialText, groupNames, callback);
 		content.setLayout(new ValueEditorLayout());
 
@@ -185,7 +185,7 @@ public class CommentsEditor implements IHasComposite {
 			public Composite apply(Composite from) throws Exception {
 				CardConfig cardConfig = ICardConfigurator.Utils.basicConfigurator().configure(from.getDisplay(), new CardConfig(ICardFactory.Utils.noCardFactory(), new CardDataStoreMock()));
 				List<String> groupNames = Arrays.asList("group1", "group2", "group3");
-				return new CommentsEditor(from, cardConfig, CommentConstants.editorTitle, "here\nis an \n initial comment", groupNames, ICommentsEditorCallback.Utils.sysout()).getComposite();
+				return new CommentsEditor(from, cardConfig, "someUrl",  CommentConstants.editorTitle, "here\nis an \n initial comment", groupNames, ICommentsEditorCallback.Utils.sysout()).getComposite();
 			}
 		});
 	}
