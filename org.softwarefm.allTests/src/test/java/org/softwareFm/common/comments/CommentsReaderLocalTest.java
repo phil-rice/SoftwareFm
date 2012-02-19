@@ -4,10 +4,10 @@ import java.util.Collections;
 import java.util.concurrent.Callable;
 
 import org.softwareFm.common.IGroups;
+import org.softwareFm.common.IGroupsReader;
 import org.softwareFm.common.IUser;
 import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
-import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.comments.AbstractCommentsReaderTest;
@@ -24,8 +24,8 @@ public class CommentsReaderLocalTest extends AbstractCommentsReaderTest {
 	IUrlGenerator userUrlGenerator = LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix);
 
 	@Override
-	protected ICommentsReader makeReader(IUser user, IUserMembershipReader userMembershipReader, String softwareFmId, String userCrypto, String commentsCrypto) {
-		return new CommentsReaderLocal(gitLocal, userMembershipReader, softwareFmId, commentsCrypto);
+	protected ICommentsReader makeReader(IUser user, IUserMembershipReader userMembershipReader, IGroupsReader groupsReader, String softwareFmId, String userCrypto, String commentsCrypto) {
+		return new CommentsReaderLocal(gitLocal, user, userMembershipReader, groupsReader, softwareFmId, commentsCrypto);
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class CommentsReaderLocalTest extends AbstractCommentsReaderTest {
 
 	@Override
 	protected IUserMembership makeUserMembership(IUser user, String softwareFmId, String crypto) {
-		return new UserMembershipForServer(userUrlGenerator, remoteOperations, user, Functions.mapFromKey(LoginConstants.softwareFmIdKey, softwareFmId, crypto), Strings.firstNSegments(3));
+		return new UserMembershipForServer(userUrlGenerator, user, remoteOperations, Strings.firstNSegments(3));
 	}
 
 	@Override

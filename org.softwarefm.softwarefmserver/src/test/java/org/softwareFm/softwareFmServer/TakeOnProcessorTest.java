@@ -38,7 +38,6 @@ public class TakeOnProcessorTest extends GitTest {
 	private IUrlGenerator groupUrlGenerator;
 
 	private String crypto1;
-
 	private String crypto2;
 
 	private IUserMembership membership;
@@ -83,8 +82,8 @@ public class TakeOnProcessorTest extends GitTest {
 		takeOnProcessor.addExistingUserToGroup(groupId, groupName, groupCrypto, "email1");
 		takeOnProcessor.addExistingUserToGroup(groupId, groupName, groupCrypto, "email2");
 		List<Map<String, Object>> expected = Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.groupCryptoKey, groupCrypto, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus));
-		assertEquals(expected, membership.walkGroupsFor("sfm1"));
-		assertEquals(expected, membership.walkGroupsFor("sfm2"));
+		assertEquals(expected, membership.walkGroupsFor("sfm1", crypto1));
+		assertEquals(expected, membership.walkGroupsFor("sfm2", crypto2));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -132,7 +131,7 @@ public class TakeOnProcessorTest extends GitTest {
 		IUrlGenerator groupsUrlGenerator = GroupConstants.groupsGenerator(SoftwareFmConstants.urlPrefix);
 		IUrlGenerator userUrlGenerator = LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix);
 		groups = new GroupsForServer(groupsUrlGenerator, remoteOperations, Strings.firstNSegments(3));
-		user = SoftwareFmServer.makeUser(remoteOperations, userUrlGenerator);
+		user = SoftwareFmServer.makeUser(remoteOperations, userUrlGenerator, SoftwareFmServer.makeDefaultProperties());
 		crypto1 = Crypto.makeKey();
 		crypto2 = Crypto.makeKey();
 		IFunction1<Map<String, Object>, String> cryptoFn = new IFunction1<Map<String, Object>, String>() {
@@ -147,7 +146,7 @@ public class TakeOnProcessorTest extends GitTest {
 		Callable<String> groupIdGenerator = Callables.uuidGenerator();
 		IFunction1<String, String> repoDefnFn = Strings.firstNSegments(3);
 		groupUrlGenerator = groupsUrlGenerator;
-		membership = new UserMembershipForServer(userUrlGenerator, remoteOperations, user, cryptoFn, repoDefnFn);
+		membership = new UserMembershipForServer(userUrlGenerator, user, remoteOperations, repoDefnFn);
 		takeOnProcessor = new TakeOnProcessor(remoteOperations, user, membership, groups, cryptoFn, emailToSoftware, groupUrlGenerator, groupIdGenerator, repoDefnFn);
 	}
 }

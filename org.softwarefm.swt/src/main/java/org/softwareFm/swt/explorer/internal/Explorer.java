@@ -6,6 +6,7 @@ package org.softwareFm.swt.explorer.internal;
 
 import java.io.File;
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -22,10 +23,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.softwareFm.common.IGroupsReader;
 import org.softwareFm.common.IUserReader;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
@@ -35,7 +38,10 @@ import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
+import org.softwareFm.eclipse.comments.ICommentDefn;
+import org.softwareFm.eclipse.constants.CommentConstants;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.user.IUserMembershipReader;
 import org.softwareFm.swt.browser.IBrowserPart;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardChangedListener;
@@ -43,11 +49,12 @@ import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.card.ICardHolder;
 import org.softwareFm.swt.card.ILineSelectedListener;
 import org.softwareFm.swt.card.RightClickCategoryResult;
-import org.softwareFm.swt.card.RightClickCategoryResult.Type;
 import org.softwareFm.swt.card.composites.CardShapedHolder;
 import org.softwareFm.swt.card.composites.TextInBorder;
 import org.softwareFm.swt.comments.Comments;
+import org.softwareFm.swt.comments.CommentsEditor;
 import org.softwareFm.swt.comments.ICommentsCallback;
+import org.softwareFm.swt.comments.ICommentsEditorCallback;
 import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
@@ -95,7 +102,7 @@ public class Explorer implements IExplorer {
 	private MySoftwareFm mySoftwareFm;
 	private final IShowMyPeople showMyPeople;
 
-	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, final IUserReader userReader, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IShowMyData showMyData, final IShowMyGroups showMyGroups, final IShowMyPeople showMyPeople, final IUserDataManager userDataManager) {
+	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, final IUserReader userReader, final IUserMembershipReader userMembershipReader, final IGroupsReader groupsReader, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IShowMyData showMyData, final IShowMyGroups showMyGroups, final IShowMyPeople showMyPeople, final IUserDataManager userDataManager) {
 		this.cardConfig = cardConfig;
 		this.masterDetailSocial = masterDetailSocial;
 		this.showMyPeople = showMyPeople;
@@ -159,52 +166,69 @@ public class Explorer implements IExplorer {
 					@Override
 					public void run() {
 						final String baseUrl = cardHolder.getCard().url(); // the url when the button was pushed
-						final String cardType = cardHolder.getCard().cardType(); // the url when the button was pushed
-						masterDetailSocial.createAndShowDetail(new IFunction1<Composite, IValueEditor>() {
+						masterDetailSocial.createAndShowDetail(new IFunction1<Composite, CommentsEditor>() {
 							@Override
-							public IValueEditor apply(Composite from) throws Exception {
-								return IValueEditor.Utils.cardEditorWithLayout(from, cardConfig, "Add Comment", CollectionConstants.comment, baseUrl, Maps.stringObjectMap(), new ICardEditorCallback() {
+							public CommentsEditor apply(Composite from) throws Exception {
+								final UserData userData = mySoftwareFm.getUserData();
+								if (userData.softwareFmId == null)
+									throw new IllegalStateException("Need to be logged in");
+								String title = CommentConstants.editorTitle;
+								List<Map<String, Object>> groupData = userMembershipReader.walkGroupsFor(userData.softwareFmId, userData.crypto);
+								List<String> groupNames = getGroupNames(groupData);
+								return new CommentsEditor(from, cardConfig, title, "", groupNames, new ICommentsEditorCallback() {
 									@Override
-									public void ok(ICardData cardData) {
-										RightClickCategoryResult result = new RightClickCategoryResult(Type.IS_COLLECTION, CollectionConstants.comment, CollectionConstants.comment, baseUrl);
+									public void youComment(String text) {
+										sendComment(ICommentDefn.Utils.myInitial(userData.softwareFmId, userData.crypto, baseUrl), text);
+										displayCardAgain(baseUrl);
+									}
 
-										addCollectionItem(result, CollectionConstants.comment, cardData, new IAfterEditCallback() {
+									protected void displayCardAgain(final String baseUrl) {
+										masterDetailSocial.setDetail(null);
+										displayCard(baseUrl, new CardAndCollectionDataStoreAdapter() {
 											@Override
-											public void afterEdit(final String addedCommentUrl) {
-												cardConfig.cardDataStore.processDataFor(baseUrl + "/" + CollectionConstants.comment, new CardDataStoreCallbackAdapter<Void>() {
-													@Override
-													public Void process(String localUrl, Map<String, Object> result) throws Exception {
-														final String commentsUrl = Strings.allButLastSegment(addedCommentUrl, "/");
-														final String key = Strings.lastSegment(addedCommentUrl, "/");
-														Map<String, Object> map = Maps.makeMap(CollectionConstants.comment, result);
-														comments.showCommentsFor(ICardData.Utils.create(cardConfig, cardType, commentsUrl, map));
-														comments.selectComment(key);
-														fireListeners(new ICallback<IExplorerListener>() {
-															@Override
-															public void process(IExplorerListener t) throws Exception {
-																t.commentAdded(commentsUrl, key);
-
-															}
-														});
-														return null;
-													}
-												});
+											public void finished(ICardHolder cardHolder, String url, ICard card) throws Exception {
+												String key = findDefaultChild(card);
+												showDetailForCardKey(card, key, card.data().get(key));
 											}
 										});
 									}
 
 									@Override
-									public void cancel(ICardData cardData) {
-										cardHolder.getCard().getTable().notifyListeners(SWT.Selection, new Event());
+									public void groupComment(int groupIndex, String text) {
+										System.out.println("group: " + groupIndex);
+										displayCardAgain(baseUrl);
 									}
 
 									@Override
-									public boolean canOk(Map<String, Object> data) {
-										String title = Strings.nullSafeToString(data.get(CollectionConstants.commentsTitleKey));
-										String text = Strings.nullSafeToString(data.get(CollectionConstants.commentsTextKey));
-										return title.length() > 0 && text.length() > 0;
+									public void everyoneComment(String text) {
+										System.out.println("everyone: ");
+										displayCardAgain(baseUrl);
+									}
+
+									@Override
+									public void cancel() {
+										System.out.println("cancel");
+										displayCardAgain(baseUrl);
 									}
 								});
+							}
+
+							@SuppressWarnings({ "rawtypes", "unchecked" })
+							private List<String> getGroupNames(Iterable<Map<String, Object>> groupData) {
+								UserData userData = mySoftwareFm.getUserData();
+								if (userData.softwareFmId == null)
+									return Collections.emptyList();
+								List result = Lists.map(groupData, new IFunction1<Map<String, Object>, String>() {
+									@Override
+									public String apply(Map<String, Object> from) throws Exception {
+										String groupId = (String) from.get(GroupConstants.groupIdKey);
+										String groupCrypto = (String) from.get(GroupConstants.groupCryptoKey);
+										if (groupId == null || groupCrypto == null)
+											throw new NullPointerException(from.toString());
+										return groupsReader.getGroupProperty(groupId, groupCrypto, GroupConstants.groupNameKey);
+									}
+								});
+								return result;
 							}
 						});
 					}

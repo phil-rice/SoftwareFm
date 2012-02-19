@@ -90,7 +90,8 @@ public class CommentsEditor implements IHasComposite {
 			if (groups.size() > 0) {
 				groupButton = Swts.Buttons.makeRadioButton(buttonComposite, resourceGetter, CommentConstants.commentsButtonGroupText, Runnables.noRunnable);
 				groupCombo = new Combo(buttonComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
-				groupCombo.setItems(groups.toArray(new String[0]));
+				String[] groupStrings = groups.toArray(new String[0]);
+				groupCombo.setItems(groupStrings);
 				groupCombo.setText(groups.get(0));
 				groupCombo.addModifyListener(new ModifyListener() {
 					@Override

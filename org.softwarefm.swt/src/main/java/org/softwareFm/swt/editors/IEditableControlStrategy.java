@@ -40,7 +40,7 @@ public interface IEditableControlStrategy<T extends Control> {
 			return new IEditableControlStrategy<StyledText>() {
 				@Override
 				public StyledText createControl(Composite from) {
-					return new StyledText(from, SWT.WRAP | SWT.READ_ONLY);
+					return new StyledText(from, SWT.WRAP);
 				}
 
 				@Override
@@ -100,13 +100,15 @@ class TextControlStrategy implements IEditableControlStrategy<Text> {
 
 	@Override
 	public Text createControl(Composite from) {
-		return new Text(from, SWT.WRAP | SWT.READ_ONLY);
+		Text text = new Text(from, SWT.NULL);
+		if (password) {
+			text.setEchoChar('#');
+		}
+		return text;
 	}
 
 	@Override
 	public void populateInitialValue(Text control, Object value) {
-		if (password)
-			control.setEchoChar('#');
 		control.setText(Strings.nullSafeToString(value));
 	}
 

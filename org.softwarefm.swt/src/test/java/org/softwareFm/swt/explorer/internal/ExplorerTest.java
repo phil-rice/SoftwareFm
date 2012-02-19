@@ -9,10 +9,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.softwareFm.common.IUserReader;
+import org.softwareFm.common.LocalGroupsReader;
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.resources.ResourceGetterMock;
+import org.softwareFm.eclipse.user.IUserMembershipReader;
+import org.softwareFm.eclipse.user.UserMembershipReaderForLocal;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardData;
@@ -63,9 +66,11 @@ public class ExplorerTest extends SwtAndServiceTest {
 				"noCardNameField", new ResourceGetterMock(), //
 				"withCardNameField", new ResourceGetterMock(CardConstants.cardNameFieldKey, "cardName"))).//
 				withTitleSpecFn(Functions.<ICardData, TitleSpec> constant(TitleSpec.noTitleSpec(shell.getBackground())));
+		IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(null, null, null);
+		LocalGroupsReader groupsReader = new LocalGroupsReader(null, null);
 		Explorer explorer = new Explorer(cardConfig, CardDataStoreFixture.urlAsList, masterDetailSocial, service, //
 				IUserReader.Utils.exceptionUserReader(),//
-				IPlayListGetter.Utils.noPlayListGetter(), //
+				userMembershipReader, groupsReader, IPlayListGetter.Utils.noPlayListGetter(), //
 				ILoginStrategy.Utils.noLoginStrategy(), //
 				IShowMyData.Utils.exceptionShowMyData(),//
 				IShowMyGroups.Utils.exceptionShowMyGroups(),//

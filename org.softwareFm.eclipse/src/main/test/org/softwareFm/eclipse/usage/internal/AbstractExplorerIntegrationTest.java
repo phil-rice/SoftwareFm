@@ -30,6 +30,7 @@ import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.IGitLocal;
 import org.softwareFm.common.IGitOperations;
 import org.softwareFm.common.IUserReader;
+import org.softwareFm.common.LocalGroupsReader;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.GroupConstants;
@@ -53,7 +54,9 @@ import org.softwareFm.eclipse.mysoftwareFm.MyPeople;
 import org.softwareFm.eclipse.mysoftwareFm.RequestGroupReportGeneration;
 import org.softwareFm.eclipse.snippets.SnippetFeedConfigurator;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
+import org.softwareFm.eclipse.user.IUserMembershipReader;
 import org.softwareFm.eclipse.user.ProjectTimeGetterFixture;
+import org.softwareFm.eclipse.user.UserMembershipReaderForLocal;
 import org.softwareFm.server.ICrowdSourcedServer;
 import org.softwareFm.server.processors.IMailer;
 import org.softwareFm.server.processors.IProcessCall;
@@ -272,7 +275,10 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 			IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator,groupUrlGenerator, gitLocal, projectTimeGetter, reportGenerator);
 			IShowMyPeople showMyPeople = MyPeople.showMyPeople(service, masterDetailSocial, cardConfig, gitLocal, userUrlGenerator, groupUrlGenerator, projectTimeGetter, reportGenerator, CommonConstants.testTimeOutMs);
 			IUserReader userReader = IUserReader.Utils.exceptionUserReader();
-			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, userReader, cardConfig, //
+			IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, userReader);
+			LocalGroupsReader groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
+
+			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, userReader, userMembershipReader, groupsReader, cardConfig, //
 					Arrays.asList(rootArtifactUrl, rootSnippetUrl), //
 					IPlayListGetter.Utils.noPlayListGetter(), service, //
 					ILoginStrategy.Utils.noLoginStrategy(),//

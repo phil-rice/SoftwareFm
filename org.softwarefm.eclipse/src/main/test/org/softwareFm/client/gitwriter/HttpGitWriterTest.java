@@ -20,6 +20,8 @@ public class HttpGitWriterTest extends AbstractProcessorDatabaseIntegrationTests
 	private File remoteAbcData;
 	private File remoteAbdData;
 
+
+
 	public void testInit() {
 		gitWriter.init("a/b");
 		assertTrue(remoteAbDotGit.exists());
@@ -30,11 +32,11 @@ public class HttpGitWriterTest extends AbstractProcessorDatabaseIntegrationTests
 		gitWriter.put(IFileDescription.Utils.plain("a/b/c"), v11);
 		assertEquals(v11, Json.parseFile(remoteAbcData));
 	}
-	
-	public void testInitPutAllowsGet(){
+
+	public void testInitPutAllowsGet() {
 		gitWriter.init("a/b");
 		gitWriter.put(IFileDescription.Utils.plain("a/b/c"), v11);
-		
+
 		localOperations.init("a/b");
 		localOperations.setConfigForRemotePull("a/b", remoteRoot.getAbsolutePath());
 		localOperations.pull("a/b");
@@ -45,9 +47,9 @@ public class HttpGitWriterTest extends AbstractProcessorDatabaseIntegrationTests
 		gitWriter.init("a/b");
 		gitWriter.put(IFileDescription.Utils.plain("a/b/c"), v11);
 		gitWriter.put(IFileDescription.Utils.plain("a/b/d"), v12);
-		
+
 		gitWriter.delete(IFileDescription.Utils.plain("a/b/c"));
-		
+
 		assertFalse(remoteAbcData.exists());
 		assertEquals(v12, Json.parseFile(remoteAbdData));
 	}

@@ -109,7 +109,7 @@ public class GenerateGroupUsageProcessorTest extends GitTest {
 		generateUsageReportGenerator = new GenerateUsageProjectGenerator(remoteGroups, usage);
 
 		IFunction1<String, String> emailToSoftwareFmId = Functions.map(email1, sfmId1, email2, sfmId2);
-		IUserMembership membership = new UserMembershipForServer(userUrlGenerator, remoteOperations, user, userCryptoFn, repoDefnFn);
+		IUserMembership membership = new UserMembershipForServer(userUrlGenerator, user, remoteOperations, repoDefnFn);
 		takeOnProcessor = new TakeOnProcessor(remoteOperations, user, membership, remoteGroups, userCryptoFn, emailToSoftwareFmId, groupsUrlGenerator, Callables.value(groupId), repoDefnFn);
 	}
 }

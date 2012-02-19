@@ -23,6 +23,7 @@ import org.softwareFm.client.http.requests.IResponseCallback;
 import org.softwareFm.common.IGitLocal;
 import org.softwareFm.common.IGitOperations;
 import org.softwareFm.common.IUserReader;
+import org.softwareFm.common.LocalGroupsReader;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.functions.IFunction1;
@@ -36,6 +37,8 @@ import org.softwareFm.eclipse.mysoftwareFm.MyPeople;
 import org.softwareFm.eclipse.mysoftwareFm.RequestGroupReportGeneration;
 import org.softwareFm.eclipse.snippets.SnippetFeedConfigurator;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
+import org.softwareFm.eclipse.user.IUserMembershipReader;
+import org.softwareFm.eclipse.user.UserMembershipReaderForLocal;
 import org.softwareFm.swt.ICollectionConfigurationFactory;
 import org.softwareFm.swt.browser.IBrowserConfigurator;
 import org.softwareFm.swt.card.ICard;
@@ -71,7 +74,7 @@ public class ExplorerWithRadioChannel {
 		Logger.getLogger(IHttpClient.class).setLevel(Level.DEBUG);
 		File home = new File(System.getProperty("user.home"));
 		final File localRoot = new File(home, ".sfm");
-		boolean local = false;
+		boolean local = true;
 		String server = local ? "localhost" : SoftwareFmConstants.softwareFmServerUrl;
 		String prefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : SoftwareFmConstants.gitProtocolAndGitServerName;
 		// String prefix = "git://localhost:7777/";
@@ -83,7 +86,7 @@ public class ExplorerWithRadioChannel {
 		final IServiceExecutor service = IServiceExecutor.Utils.defaultExecutor();
 		try {
 			final List<String> rootUrl = Arrays.asList("/softwareFm/data", "/softwareFm/snippet");
-			final String firstUrl = "/softwareFm/data/activemq/activemq/artifact/activemq-axis";
+			final String firstUrl = "/softwareFm/data/ant/ant/artifact/ant";
 			Swts.Show.display(ExplorerWithRadioChannel.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 				@Override
 				public Composite apply(Composite from) throws Exception {
@@ -106,7 +109,10 @@ public class ExplorerWithRadioChannel {
 					IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, projectTimeGetter, requestGroupReportGenerator);
 					IShowMyPeople showMyPeople = MyPeople.showMyPeople(service, masterDetailSocial, cardConfig, gitLocal, userUrlGenerator, groupUrlGenerator, projectTimeGetter, requestGroupReportGenerator, CommonConstants.clientTimeOut);
 					IUserReader userReader= IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
-					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, userReader, cardConfig, rootUrl, playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople, IUserDataManager.Utils.userDataManager());
+					IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, userReader);
+					LocalGroupsReader groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
+
+					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, userReader, userMembershipReader, groupsReader, cardConfig, rootUrl, playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople, IUserDataManager.Utils.userDataManager());
 
 					ICardMenuItemHandler.Utils.addSoftwareFmMenuItemHandlers(explorer);
 					IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);

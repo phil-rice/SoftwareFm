@@ -195,23 +195,20 @@ public class CrowdSourcedServer implements ICrowdSourcedServer {
 	private void doNothing() {
 	}
 
-
-
 	public static void main(String[] args) throws Exception {
 		File sfmRoot = Utils.makeSfmRoot();
 		IGitOperations gitOperations = IGitOperations.Utils.gitOperations(sfmRoot);
 		BasicDataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
-		makeServer(Utils.port(args), gitOperations, dataSource, Functions.<ProcessCallParameters, IProcessCall[]> constant(new IProcessCall[0]), "softwarefm");
+		makeServer(Utils.port(args), gitOperations, dataSource, Functions.<ProcessCallParameters, IProcessCall[]> constant(new IProcessCall[0]), "softwarefm", Collections.<String, Callable<Object>> emptyMap());
 	}
 
-	public static ICrowdSourcedServer makeServer(int port, IGitOperations gitOperations, BasicDataSource dataSource, IFunction1<ProcessCallParameters, IProcessCall[]> extraProcessCalls, String prefix) {
+	public static ICrowdSourcedServer makeServer(int port, IGitOperations gitOperations, BasicDataSource dataSource, IFunction1<ProcessCallParameters, IProcessCall[]> extraProcessCalls, String prefix, Map<String, Callable<Object>> defaultValues) {
 		System.out.println("Server: " + gitOperations);
 		final IUsage usage = IUsage.Utils.defaultUsage();
 		IMailer mailer = IMailer.Utils.email("localhost", null, null);
 		Callable<String> softwareFmIdGenerator = Callables.uuidGenerator();
 		IFunction1<Map<String, Object>, String> userCryptoFn = new UserCryptoFn(dataSource);
-		Map<String, Callable<Object>> defaultValue = Maps.newMap();
-		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, gitOperations, Callables.makeCryptoKey(), softwareFmIdGenerator, userCryptoFn, mailer, defaultValue, prefix);
+		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, gitOperations, Callables.makeCryptoKey(), softwareFmIdGenerator, userCryptoFn, mailer, defaultValues, prefix);
 		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, extraProcessCalls);
 		return new CrowdSourcedServer(port, 1000, processCall, ICallback.Utils.sysErrCallback(), usage);
 	}

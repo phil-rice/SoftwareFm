@@ -36,8 +36,8 @@ public interface ICrowdSourcedServer {
 
 	abstract public static class Utils {
 
-		public static ICrowdSourcedServer fullServer(int port, IGitOperations gitOperations, BasicDataSource dataSource, IFunction1<ProcessCallParameters, IProcessCall[]> extraProcessCalls, String prefix) {
-			return CrowdSourcedServer.makeServer(port, gitOperations, dataSource, extraProcessCalls, prefix);
+		public static ICrowdSourcedServer fullServer(int port, IGitOperations gitOperations, BasicDataSource dataSource, IFunction1<ProcessCallParameters, IProcessCall[]> extraProcessCalls, String prefix, Map<String, Callable<Object>> defaultValues) {
+			return CrowdSourcedServer.makeServer(port, gitOperations, dataSource, extraProcessCalls, prefix, defaultValues);
 		}
 
 		public static ICrowdSourcedServer testServerPort(IProcessCall processCall, ICallback<Throwable> errorHandler) {

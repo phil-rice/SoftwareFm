@@ -127,7 +127,7 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 				IFunction1<String, String> emailToSfmId = ICrowdSourcedServer.Utils.emailToSoftwareFmId(from.dataSource);
 				Callable<String> groupIdGenerator = Callables.value(groupId);
 
-				UserMembershipForServer membershipForServer = new UserMembershipForServer(userUrlGenerator, from.gitOperations, from.user, userCryptoFn, emailToSfmId);
+				UserMembershipForServer membershipForServer = new UserMembershipForServer(userUrlGenerator, from.user, from.gitOperations, emailToSfmId);
 				ITakeOnProcessor takeOnProcessor = new TakeOnProcessor(from.gitOperations, from.user, membershipForServer, groups, userCryptoFn, emailToSfmId, groupsGenerator, groupIdGenerator, repoDefnFn);
 				Callable<String> groupCryptoGenerator = Callables.value(groupCryptoKey);
 				return new IProcessCall[] { //

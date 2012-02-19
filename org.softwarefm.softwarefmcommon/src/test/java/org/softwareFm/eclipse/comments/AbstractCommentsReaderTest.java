@@ -2,13 +2,14 @@ package org.softwareFm.eclipse.comments;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.IGroups;
+import org.softwareFm.common.IGroupsReader;
 import org.softwareFm.common.IUser;
 import org.softwareFm.common.constants.GroupConstants;
+import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.crypto.Crypto;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.server.GitTest;
@@ -23,17 +24,20 @@ public abstract class AbstractCommentsReaderTest extends GitTest {
 
 	abstract protected IGroups makeGroups();
 
-	abstract protected ICommentsReader makeReader(IUser user, IUserMembershipReader userMembershipReader, String softwareFmId, String userCrypto, String commentsCrypto);
+	abstract protected ICommentsReader makeReader(IUser user, IUserMembershipReader userMembershipReader, IGroupsReader groupsReader, String softwareFmId, String userCrypto, String commentsCrypto);
 
-	protected final Map<String, Object> comment1 = Maps.stringObjectMap(CommentConstants.timeKey, 1l, CommentConstants.creatorKey, "sfm1", CommentConstants.textKey, "text1");
-	protected final Map<String, Object> comment2 = Maps.stringObjectMap(CommentConstants.timeKey, 2l, CommentConstants.creatorKey, "sfm2", CommentConstants.textKey, "text2");
-	private String userCrypto;
-	private String commentsCrypto;
-	private String softwareFmId;
-	private IUser user;
-	private ICommentsReader reader;
-	private String groupsCrypto;
-	private IUserMembership userMembership;
+	protected final long time1 = 1000l;
+	protected final long time2 = 2000l;
+	protected final Map<String, Object> comment1 = Maps.stringObjectMap(CommentConstants.timeKey, time1, LoginConstants.softwareFmIdKey, "sfm1", CommentConstants.creatorKey, "moniker", CommentConstants.textKey, "text1");
+	protected final Map<String, Object> comment2 = Maps.stringObjectMap(CommentConstants.timeKey, time2, LoginConstants.softwareFmIdKey, "sfm1", CommentConstants.creatorKey, "moniker", CommentConstants.textKey, "text2");
+	protected String userCrypto;
+	protected String userCommentsCrypto;
+	protected String softwareFmId;
+	protected IUser user;
+	protected ICommentsReader reader;
+	protected String groupsCrypto;
+	protected IUserMembership userMembership;
+	protected IGroups groups;
 
 	@SuppressWarnings("unchecked")
 	public void testGlobal() {
@@ -47,21 +51,21 @@ public abstract class AbstractCommentsReaderTest extends GitTest {
 
 	@SuppressWarnings("unchecked")
 	public void testUserComments() {
-		user.setUserProperty(softwareFmId, userCrypto, CommentConstants.commentCryptoKey, commentsCrypto);
-		IFileDescription fd = IFileDescription.Utils.encrypted("a/b", softwareFmId + "." + CommentConstants.commentExtension, commentsCrypto);
+		user.setUserProperty(softwareFmId, userCrypto, CommentConstants.commentCryptoKey, userCommentsCrypto);
+		IFileDescription fd = IFileDescription.Utils.encrypted("a/b", softwareFmId + "." + CommentConstants.commentExtension, userCommentsCrypto);
 		remoteOperations.init("a");
 		remoteOperations.append(fd, comment1);
 		remoteOperations.append(fd, comment2);
 		remoteOperations.addAllAndCommit("a", "testGlobal");
-		assertEquals(Arrays.asList(comment1, comment2), reader.myComments("a/b", softwareFmId));
+		assertEquals(Arrays.asList(comment1, comment2), reader.myComments("a/b", softwareFmId, userCrypto));
 	}
 
 	public void testUserCommentsWhenNoCommentsHaveBeenMade() {
-		user.setUserProperty(softwareFmId, userCrypto, CommentConstants.commentCryptoKey, commentsCrypto);
+		user.setUserProperty(softwareFmId, userCrypto, CommentConstants.commentCryptoKey, userCommentsCrypto);
 		remoteOperations.init("a");
 		remoteOperations.put(IFileDescription.Utils.plain("a/z"), v11);
-		remoteOperations.addAllAndCommit("a", "testUserCommentsWhenNoCommentsHaveBeenMade");//needed to ensure that the repository is in a good state  
-		assertEquals(Collections.emptyList(), reader.myComments("a/b", softwareFmId));
+		remoteOperations.addAllAndCommit("a", "testUserCommentsWhenNoCommentsHaveBeenMade");// needed to ensure that the repository is in a good state
+		assertEquals(Collections.emptyList(), reader.myComments("a/b", softwareFmId, userCrypto));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -71,13 +75,13 @@ public abstract class AbstractCommentsReaderTest extends GitTest {
 		user.setUserProperty(softwareFmId, userCrypto, GroupConstants.membershipCryptoKey, membershipCrypto);
 		assertEquals(groupsCrypto, user.getUserProperty(softwareFmId, userCrypto, GroupConstants.groupCryptoKey));
 		assertEquals(membershipCrypto, user.getUserProperty(softwareFmId, userCrypto, GroupConstants.membershipCryptoKey));
-		IGroups groups = makeGroups();
-		List<String> groupIds = Arrays.asList("groupId1", "groupId2", "groupId3");
-		for (String groupId : groupIds) {
-			String groupCrypto = Crypto.makeKey();
+		Map<String, String> groupIdToCrypto = setUpGroups("groupId1", "groupId2", "groupId3");
+		for (String groupId : groupIdToCrypto.keySet()) {
+			String groupCrypto = groupIdToCrypto.get(groupId);
 			groups.setGroupProperty(groupId, groupCrypto, GroupConstants.groupNameKey, groupId + "Name");
-			userMembership.addMembership(softwareFmId, groupId, groupCrypto, GroupConstants.invitedStatus);
-			IFileDescription fd = IFileDescription.Utils.encrypted("a/b", groupId + "." + CommentConstants.commentExtension, groupCrypto);
+			String groupCommentCrypto = groups.getGroupProperty(groupId, groupCrypto, CommentConstants.commentCryptoKey);
+
+			IFileDescription fd = IFileDescription.Utils.encrypted("a/b", groupId + "." + CommentConstants.commentExtension, groupCommentCrypto);
 			remoteOperations.init("a");
 			remoteOperations.append(fd, Maps.with(comment1, "a", groupId));
 			remoteOperations.append(fd, comment2);
@@ -86,19 +90,34 @@ public abstract class AbstractCommentsReaderTest extends GitTest {
 		assertEquals(Arrays.asList(//
 				Maps.with(comment1, "a", "groupId1"), comment2,//
 				Maps.with(comment1, "a", "groupId2"), comment2,//
-				Maps.with(comment1, "a", "groupId3"), comment2), reader.groupComments("a/b", softwareFmId));
+				Maps.with(comment1, "a", "groupId3"), comment2), reader.groupComments("a/b", softwareFmId, userCrypto));
+	}
+
+	protected Map<String, String> setUpGroups(String... groupIds) {
+		Map<String, String> groupIdToCrypto = Maps.newMap();
+		for (String groupId : groupIds) {
+			String groupCrypto = Crypto.makeKey();
+			groups.setGroupProperty(groupId, groupCrypto, GroupConstants.groupNameKey, groupId + "Name");
+			String groupCommentCrypto = Crypto.makeKey();
+			groupIdToCrypto.put(groupId, groupCrypto);
+			groups.setGroupProperty(groupId, groupCrypto, CommentConstants.commentCryptoKey, groupCommentCrypto);
+			userMembership.addMembership(softwareFmId, userCrypto, groupId, groupCrypto, GroupConstants.invitedStatus);
+		}
+		return groupIdToCrypto;
 	}
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		userCrypto = Crypto.makeKey();
-		commentsCrypto = Crypto.makeKey();
+		userCommentsCrypto = Crypto.makeKey();
 		groupsCrypto = Crypto.makeKey();
 		softwareFmId = "sfm1";
 		user = makeUser();
+		user.setUserProperty(softwareFmId, userCrypto, CommentConstants.commentCryptoKey, userCommentsCrypto);
 		userMembership = makeUserMembership(user, softwareFmId, userCrypto);
-		reader = makeReader(user, userMembership, softwareFmId, userCrypto, commentsCrypto);
+		groups = makeGroups();
+		reader = makeReader(user, userMembership, groups, softwareFmId, userCrypto, userCommentsCrypto);
 
 	}
 

@@ -15,7 +15,7 @@ public abstract class AbstractCommandProcessor implements IProcessCall {
 
 	protected IGitOperations gitOperations;
 	private final String method;
-	private final String prefix;
+	protected final String prefix;
 
 	public AbstractCommandProcessor(IGitOperations gitOperations, String method, String prefix) {
 		this.gitOperations = gitOperations;

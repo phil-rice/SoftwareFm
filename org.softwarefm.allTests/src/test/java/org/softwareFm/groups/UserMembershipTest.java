@@ -13,7 +13,6 @@ import org.softwareFm.common.IUser;
 import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.crypto.Crypto;
-import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.runnable.Callables;
@@ -42,63 +41,63 @@ public class UserMembershipTest extends GitTest {
 
 	@SuppressWarnings("unchecked")
 	public void testAddMembership() {
-		membershipForServer.addMembership(user1Id, groupId1, groupCrypto1, "someStatus1");
-		membershipForServer.addMembership(user1Id, groupId2, groupCrypto2, "someStatus2");
+		membershipForServer.addMembership(user1Id, userCrypto, groupId1, groupCrypto1, "someStatus1");
+		membershipForServer.addMembership(user1Id, userCrypto, groupId2, groupCrypto2, "someStatus2");
 
 		List<Map<String, Object>> expected = Arrays.asList(//
 				Maps.stringObjectMap(GroupConstants.groupIdKey, groupId1, GroupConstants.groupCryptoKey, groupCrypto1, GroupConstants.membershipStatusKey, "someStatus1"),//
 				Maps.stringObjectMap(GroupConstants.groupIdKey, groupId2, GroupConstants.groupCryptoKey, groupCrypto2, GroupConstants.membershipStatusKey, "someStatus2"));
 
-		assertEquals(expected, membershipForServer.walkGroupsFor(user1Id));
-		assertEquals(expected, membershipForLocal.walkGroupsFor(user1Id));
+		assertEquals(expected, membershipForServer.walkGroupsFor(user1Id, userCrypto));
+		assertEquals(expected, membershipForLocal.walkGroupsFor(user1Id, userCrypto));
 	}
 
 	public void testCannotAddSameGroupTwice() {
-		membershipForServer.addMembership(user1Id, groupId1, groupCrypto1, "someStatus1");
+		membershipForServer.addMembership(user1Id, userCrypto, groupId1, groupCrypto1, "someStatus1");
 		Tests.assertThrowsWithMessage(groupId1, RuntimeException.class, new Runnable() {
 			@Override
 			public void run() {
-				membershipForServer.addMembership(user1Id, groupId1, groupCrypto1, "someStatus1");
+				membershipForServer.addMembership(user1Id, userCrypto, groupId1, groupCrypto1, "someStatus1");
 			}
 		});
 	}
 
 	public void testAddingMembershipAddsPropertyToUser() {
-		membershipForServer.addMembership(user1Id, groupId1, groupCrypto1, "someStatus1");
+		membershipForServer.addMembership(user1Id, userCrypto, groupId1, groupCrypto1, "someStatus1");
 		assertNotNull(user.getUserProperty(user1Id, userCrypto, GroupConstants.membershipCryptoKey));
 	}
 
 	@SuppressWarnings("unchecked")
 	public void testSetGetMembershipProperty() {
-		membershipForServer.addMembership(user1Id, groupId1, groupCrypto1, "someStatus1");
-		membershipForServer.addMembership(user1Id, groupId2, groupCrypto2, "someStatus2");
+		membershipForServer.addMembership(user1Id, userCrypto, groupId1, groupCrypto1, "someStatus1");
+		membershipForServer.addMembership(user1Id, userCrypto, groupId2, groupCrypto2, "someStatus2");
 
-		membershipForServer.setMembershipProperty(user1Id, groupId1, "someProperty", "value1");
-		assertEquals("value1", membershipForServer.getMembershipProperty(user1Id, groupId1, "someProperty"));
-		assertEquals("value1", membershipForLocal.getMembershipProperty(user1Id, groupId1, "someProperty"));
+		membershipForServer.setMembershipProperty(user1Id, userCrypto, groupId1, "someProperty", "value1");
+		assertEquals("value1", membershipForServer.getMembershipProperty(user1Id, userCrypto, groupId1, "someProperty"));
+		assertEquals("value1", membershipForLocal.getMembershipProperty(user1Id, userCrypto, groupId1, "someProperty"));
 
-		membershipForServer.setMembershipProperty(user1Id, groupId1, "someProperty", "value2");
-		assertEquals("value2", membershipForServer.getMembershipProperty(user1Id, groupId1, "someProperty"));
-		assertEquals("value1", membershipForLocal.getMembershipProperty(user1Id, groupId1, "someProperty"));
+		membershipForServer.setMembershipProperty(user1Id, userCrypto, groupId1, "someProperty", "value2");
+		assertEquals("value2", membershipForServer.getMembershipProperty(user1Id, userCrypto, groupId1, "someProperty"));
+		assertEquals("value1", membershipForLocal.getMembershipProperty(user1Id, userCrypto, groupId1, "someProperty"));
 
 		gitLocal.clearCaches();
-		assertEquals("value2", membershipForServer.getMembershipProperty(user1Id, groupId1, "someProperty"));
-		assertEquals("value2", membershipForLocal.getMembershipProperty(user1Id, groupId1, "someProperty"));
+		assertEquals("value2", membershipForServer.getMembershipProperty(user1Id, userCrypto, groupId1, "someProperty"));
+		assertEquals("value2", membershipForLocal.getMembershipProperty(user1Id, userCrypto, groupId1, "someProperty"));
 
 		List<Map<String, Object>> expected = Arrays.asList(//
 				Maps.stringObjectMap(GroupConstants.groupIdKey, groupId1, GroupConstants.groupCryptoKey, groupCrypto1, GroupConstants.membershipStatusKey, "someStatus1", "someProperty", "value2"),//
 				Maps.stringObjectMap(GroupConstants.groupIdKey, groupId2, GroupConstants.groupCryptoKey, groupCrypto2, GroupConstants.membershipStatusKey, "someStatus2"));
 
-		assertEquals(expected, membershipForServer.walkGroupsFor(user1Id));
-		assertEquals(expected, membershipForLocal.walkGroupsFor(user1Id));
+		assertEquals(expected, membershipForServer.walkGroupsFor(user1Id, userCrypto));
+		assertEquals(expected, membershipForLocal.walkGroupsFor(user1Id, userCrypto));
 	}
 	
 	public void testSetMembershipPropertyThrowsExceptionIfGroupNotFound(){
-		membershipForServer.addMembership(user1Id, groupId1, groupCrypto1, "someStatus1");
+		membershipForServer.addMembership(user1Id, userCrypto, groupId1, groupCrypto1, "someStatus1");
 		Tests.assertThrowsWithMessage("Cannot find group id groupId2 for user sfmId1", IllegalArgumentException.class, new Runnable() {
 			@Override
 			public void run() {
-				membershipForServer.setMembershipProperty(user1Id, groupId2, "someProperty", "value2");
+				membershipForServer.setMembershipProperty(user1Id, userCrypto, groupId2, "someProperty", "value2");
 			}
 		});
 		
@@ -117,9 +116,8 @@ public class UserMembershipTest extends GitTest {
 		IUrlGenerator userUrlGenerator = LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix);
 		IFunction1<String, String> repoDefn = Strings.firstNSegments(3);
 		user = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, repoDefn,Maps.<String,Callable<Object>>makeMap( GroupConstants.membershipCryptoKey, Callables.makeCryptoKey()), SoftwareFmConstants.urlPrefix);
-		membershipForLocal = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, user, userCrypto);
+		membershipForLocal = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, user);
 
-		IFunction1<Map<String, Object>, String> userCryptoFn = Functions.constant(userCrypto);
-		membershipForServer = new UserMembershipForServer(userUrlGenerator, remoteOperations, user, userCryptoFn, repoDefn);
+		membershipForServer = new UserMembershipForServer(userUrlGenerator, user, remoteOperations, repoDefn);
 	}
 }

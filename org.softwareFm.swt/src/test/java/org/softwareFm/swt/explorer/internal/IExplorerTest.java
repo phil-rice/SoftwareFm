@@ -9,11 +9,14 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.softwareFm.common.IUserReader;
+import org.softwareFm.common.LocalGroupsReader;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.resources.ResourceGetterMock;
 import org.softwareFm.common.services.IServiceExecutor;
+import org.softwareFm.eclipse.user.IUserMembershipReader;
+import org.softwareFm.eclipse.user.UserMembershipReaderForLocal;
 import org.softwareFm.images.general.GeneralAnchor;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.card.ICardHolderForTests;
@@ -39,8 +42,12 @@ public class IExplorerTest extends SwtTest {
 		try {
 			List<String> rootUrls = Arrays.asList("rootUrl");
 			IPlayListGetter playListGetter = IPlayListGetter.Utils.noPlayListGetter();
+			IUserReader userReader = IUserReader.Utils.exceptionUserReader();
+			IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(null, null, userReader);
+			LocalGroupsReader groupsReader = new LocalGroupsReader(null, null);
+
 			Explorer explorer = (Explorer) IExplorer.Utils.explorer(//
-					masterDetailSocial, IUserReader.Utils.exceptionUserReader(), cardConfig, rootUrls, playListGetter, service, //
+					masterDetailSocial, userReader, userMembershipReader, groupsReader, cardConfig, rootUrls, playListGetter, service, //
 					ILoginStrategy.Utils.noLoginStrategy(), //
 					IShowMyData.Utils.exceptionShowMyData(),//
 					IShowMyGroups.Utils.exceptionShowMyGroups(),//

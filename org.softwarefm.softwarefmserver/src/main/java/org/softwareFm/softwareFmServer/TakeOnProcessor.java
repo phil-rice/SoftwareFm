@@ -57,7 +57,7 @@ public class TakeOnProcessor implements ITakeOnProcessor {
 		String initialStatus = GroupConstants.invitedStatus;
 		Map<String, Object> initialData = Maps.stringObjectMap(LoginConstants.emailKey, email, LoginConstants.softwareFmIdKey, softwareFmId, SoftwareFmConstants.projectCryptoKey, usersProjectCryptoKey, GroupConstants.userStatusInGroup, initialStatus);
 		groups.addUser(groupId, groupCryptoKey, initialData);
-		userMembership.addMembership(softwareFmId, groupId, groupCryptoKey, initialStatus);
+		userMembership.addMembership(softwareFmId, userCrypto, groupId, groupCryptoKey, initialStatus);
 	}
 
 	@Override

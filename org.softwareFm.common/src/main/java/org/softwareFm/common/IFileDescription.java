@@ -27,6 +27,8 @@ public interface IFileDescription {
 	String url();
 	
 	String crypto();
+	
+	String name();
 
 	String encode(Map<String, Object> data);
 

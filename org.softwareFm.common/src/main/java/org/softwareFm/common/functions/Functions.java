@@ -285,4 +285,13 @@ public class Functions {
 			}
 		};
 	}
+
+	public static <K,V>IFunction1<Map<K,V>,V> get(final K key) {
+		return new IFunction1<Map<K,V>, V>() {
+			@Override
+			public V apply(Map<K, V> from) throws Exception {
+				return from.get(key);
+			}
+		};
+	}
 }

@@ -71,7 +71,7 @@ public class MyGroups implements IHasComposite {
 							});
 							return null;
 						}
-						final IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix), gitLocal, user, userData.crypto);
+						final IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix), gitLocal, user);
 						Swts.asyncExec(masterDetailSocial.getControl(), new Runnable() {
 							@Override
 							public void run() {
@@ -79,7 +79,7 @@ public class MyGroups implements IHasComposite {
 								masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyGroups>() {
 									@Override
 									public MyGroups apply(Composite from) throws Exception {
-										return new MyGroups(from, cardConfig, userMembershipReader, groupsReader, userData.softwareFmId, projectTimeGetter, reportGenerator);
+										return new MyGroups(from, cardConfig, userMembershipReader, groupsReader, userData.softwareFmId, userData.crypto, projectTimeGetter, reportGenerator);
 									}
 								});
 							}
@@ -101,7 +101,7 @@ public class MyGroups implements IHasComposite {
 		private final Table membershipTable;
 		private final Map<String, String> idToCrypto = Maps.newMap();
 
-		public MyGroupsComposite(Composite parent, final CardConfig cardConfig, IUserMembershipReader membershipReader, final IGroupsReader groupReaders, String softwareFmId, IProjectTimeGetter projectTimeGetter, final IRequestGroupReportGeneration reportGenerator) {
+		public MyGroupsComposite(Composite parent, final CardConfig cardConfig, IUserMembershipReader membershipReader, final IGroupsReader groupReaders, String softwareFmId, String userCrypto, IProjectTimeGetter projectTimeGetter, final IRequestGroupReportGeneration reportGenerator) {
 			super(parent, SWT.NULL, cardConfig);
 			addPaintListener(new PaintListener() {
 				@Override
@@ -116,7 +116,7 @@ public class MyGroups implements IHasComposite {
 			summaryTable.setHeaderVisible(true);
 			new TableColumn(summaryTable, SWT.NULL).setText("Group Name");
 			new TableColumn(summaryTable, SWT.NULL).setText("Members");
-			for (Map<String, Object> map : membershipReader.walkGroupsFor(softwareFmId)) {
+			for (Map<String, Object> map : membershipReader.walkGroupsFor(softwareFmId, userCrypto)) {
 				String groupId = (String) map.get(GroupConstants.groupIdKey);
 				String groupCryptoKey = (String) map.get(GroupConstants.groupCryptoKey);
 				String groupName = groupReaders.getGroupProperty(groupId, groupCryptoKey, GroupConstants.groupNameKey);
@@ -156,7 +156,7 @@ public class MyGroups implements IHasComposite {
 						List<String> emails = Lists.newList();
 						for (Map<String, Object> user : groupsReader.users(groupId, groupCryptoKey))
 							emails.add(Strings.nullSafeToString(user.get(LoginConstants.emailKey)));
-						for (String email: Lists.sort(emails))
+						for (String email : Lists.sort(emails))
 							new TableItem(membershipTable, SWT.NULL).setText(email);
 					}
 					Swts.packColumns(membershipTable);
@@ -168,8 +168,8 @@ public class MyGroups implements IHasComposite {
 		}
 	}
 
-	public MyGroups(Composite parent, CardConfig cardConfig, IUserMembershipReader membershipReader, IGroupsReader groupsReader, String softwareFmId, IProjectTimeGetter projectTimeGetter, IRequestGroupReportGeneration reportGenerator) {
-		content = new MyGroupsComposite(parent, cardConfig, membershipReader, groupsReader, softwareFmId, projectTimeGetter, reportGenerator);
+	public MyGroups(Composite parent, CardConfig cardConfig, IUserMembershipReader membershipReader, IGroupsReader groupsReader, String softwareFmId, String userCrypto, IProjectTimeGetter projectTimeGetter, IRequestGroupReportGeneration reportGenerator) {
+		content = new MyGroupsComposite(parent, cardConfig, membershipReader, groupsReader, softwareFmId, userCrypto, projectTimeGetter, reportGenerator);
 		content.setLayout(new FillLayout());
 		Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithLastGrabingVertical(content);
 	}

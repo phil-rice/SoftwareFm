@@ -47,6 +47,7 @@ public class PostProcessorTest extends AbstractProcessCallTest<PostProcessor> {
 
 	}
 
+
 	@Override
 	protected PostProcessor makeProcessor() {
 		return new PostProcessor(remoteOperations);

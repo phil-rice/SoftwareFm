@@ -37,7 +37,7 @@ public class SoftwareFmServer {
 
 		BasicDataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
 		IGitOperations gitOperations = IGitOperations.Utils.gitOperations(ICrowdSourcedServer.Utils.makeSfmRoot());
-		ICrowdSourcedServer.Utils.fullServer(ICrowdSourcedServer.Utils.port(args), gitOperations, dataSource, makeExtraProcessCalls(), SoftwareFmConstants.urlPrefix);
+		ICrowdSourcedServer.Utils.fullServer(ICrowdSourcedServer.Utils.port(args), gitOperations, dataSource, makeExtraProcessCalls(), SoftwareFmConstants.urlPrefix, makeDefaultProperties());
 	}
 
 	private static IFunction1<ProcessCallParameters, IProcessCall[]> makeExtraProcessCalls() {
@@ -50,20 +50,19 @@ public class SoftwareFmServer {
 				IFunction1<String, String> repoDefnFn = Strings.firstNSegments(3);
 				IGroups groups = new GroupsForServer(groupsUrlGenerator, processCallParameters.gitOperations, repoDefnFn);
 				IFunction1<String, String> emailToSoftwareFmId = ICrowdSourcedServer.Utils.emailToSoftwareFmId(processCallParameters.dataSource);
-				IUserMembership userMembership = new UserMembershipForServer(userUrlGenerator, processCallParameters.gitOperations, processCallParameters.user, processCallParameters.userCryptoFn, repoDefnFn);
+				IUserMembership userMembership = new UserMembershipForServer(userUrlGenerator, processCallParameters.user, processCallParameters.gitOperations, repoDefnFn);
 				ITakeOnProcessor takeOnProcessor = new TakeOnProcessor(processCallParameters.gitOperations, processCallParameters.user, userMembership, groups, processCallParameters.userCryptoFn, emailToSoftwareFmId, groupsUrlGenerator, groupIdGenerator, repoDefnFn);
 
 				IUsageReader usageReader = new UsageReaderForServer(processCallParameters.gitOperations, processCallParameters.user, userUrlGenerator);
 				IGenerateUsageReportGenerator generator = new GenerateUsageProjectGenerator(groups, usageReader);
-				return new IProcessCall[] { makeUsageProcessor(processCallParameters.dataSource, processCallParameters.gitOperations, userUrlGenerator),//
+				return new IProcessCall[] { makeUsageProcessor(processCallParameters.dataSource, processCallParameters.gitOperations, processCallParameters.user, userUrlGenerator),//
 						new GenerateGroupUsageProcessor(processCallParameters.gitOperations, generator, groups),//
 						new TakeOnGroupProcessor(takeOnProcessor, processCallParameters.signUpChecker, Callables.makeCryptoKey(), emailToSoftwareFmId, processCallParameters.saltGenerator, processCallParameters.softwareFmIdGenerator, processCallParameters.mailer) };
 			}
 		};
 	}
 
-	protected static UsageProcessor makeUsageProcessor(BasicDataSource dataSource, IGitOperations gitOperations, IUrlGenerator userUrlGenerator) {
-		IUser user = makeUser(gitOperations, userUrlGenerator);
+	protected static UsageProcessor makeUsageProcessor(BasicDataSource dataSource, IGitOperations gitOperations, IUser user, IUrlGenerator userUrlGenerator) {
 		IProject project = new ProjectForServer(gitOperations, ICrowdSourcedServer.Utils.cryptoFn(dataSource), user, userUrlGenerator);
 		IProjectTimeGetter projectTimeGetter = IProjectTimeGetter.Utils.timeGetter();
 		UsageProcessor usageProcessor = new UsageProcessor(gitOperations, new JarToGroupArtifactVersionOnServer(SoftwareFmConstants.jarUrlGenerator(SoftwareFmConstants.urlPrefix), gitOperations), project, projectTimeGetter);
@@ -82,7 +81,4 @@ public class SoftwareFmServer {
 
 	}
 
-	public static IUser makeUser(IGitOperations gitOperations, IUrlGenerator userUrlGenerator) {
-		return makeUser(gitOperations, userUrlGenerator, makeDefaultProperties());
-	}
 }

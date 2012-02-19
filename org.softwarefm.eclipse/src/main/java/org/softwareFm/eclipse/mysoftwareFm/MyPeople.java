@@ -58,7 +58,7 @@ public class MyPeople implements IHasComposite {
 				executor.submit(new Callable<Void>() {
 					@Override
 					public Void call() throws Exception {
-						final UserMembershipReaderForLocal membershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, user, userData.crypto);
+						final UserMembershipReaderForLocal membershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, user);
 						MyPeople myPeople = masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyPeople>() {
 							@Override
 							public MyPeople apply(Composite from) throws Exception {
@@ -146,7 +146,7 @@ public class MyPeople implements IHasComposite {
 		final Map<String, List<String>> softwareFmIdToGroups = Maps.newMap();
 		final Map<String, Map<String, List<Integer>>> softwareFmIdToMonthToUsage = Maps.newMap();
 
-		List<Map<String, Object>> walkGroups = membershipReader.walkGroupsFor(userData.softwareFmId);
+		List<Map<String, Object>> walkGroups = membershipReader.walkGroupsFor(userData.softwareFmId, userData.crypto);
 		for (Map<String, Object> groupData : walkGroups) {
 			String groupsId = (String) groupData.get(GroupConstants.groupIdKey);
 			String groupsCrypto = (String) groupData.get(GroupConstants.groupCryptoKey);

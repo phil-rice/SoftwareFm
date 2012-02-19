@@ -25,22 +25,18 @@ public class UserMembershipForServer extends AbstractUserMembershipReader implem
 
 	private final IGitOperations gitOperations;
 	private final IFunction1<String, String> repoDefnFn;
-	private final IFunction1<Map<String, Object>, String> userCryptoFn;
-	private final IUser user;
 
-	public UserMembershipForServer(IUrlGenerator userUrlGenerator, IGitOperations gitOperations, IUser user, IFunction1<Map<String, Object>, String> userCryptoFn, IFunction1<String, String> repoDefnFn) {
+	public UserMembershipForServer(IUrlGenerator userUrlGenerator, IUser user, IGitOperations gitOperations, IFunction1<String, String> repoDefnFn) {
 		super(userUrlGenerator, user);
-		this.user = user;
 		this.gitOperations = gitOperations;
-		this.userCryptoFn = userCryptoFn;
 		this.repoDefnFn = repoDefnFn;
 	}
 
 	@Override
-	public void addMembership(String softwareFmId, String groupId, String groupCrypto, String membershipStatus) {
-		String usersMembershipCrypto = getMembershipCrypto(softwareFmId);
+	public void addMembership(String softwareFmId, String userCrypto, String groupId, String groupCrypto, String membershipStatus) {
+		String usersMembershipCrypto = getMembershipCrypto(softwareFmId, userCrypto);
 
-		for (Map<String, Object> map : walkGroupsFor(softwareFmId))
+		for (Map<String, Object> map : walkGroupsFor(softwareFmId, userCrypto))
 			if (groupId.equals(map.get(GroupConstants.groupIdKey)))
 				throw new IllegalArgumentException(groupId);
 
@@ -57,9 +53,9 @@ public class UserMembershipForServer extends AbstractUserMembershipReader implem
 	}
 
 	@Override
-	public void setMembershipProperty(String softwareFmId, final String groupId, final String property, final String value) {
+	public void setMembershipProperty(String softwareFmId, String userCrypto, final String groupId, final String property, final String value) {
 		String url = userUrlGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
-		String userMembershipCrypto = getMembershipCrypto(softwareFmId);
+		String userMembershipCrypto = getMembershipCrypto(softwareFmId, userCrypto);
 		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, GroupConstants.membershipFileName, userMembershipCrypto);
 		int count = gitOperations.map(fileDescription, new IFunction1<Map<String, Object>, Boolean>() {
 			@Override
@@ -75,7 +71,7 @@ public class UserMembershipForServer extends AbstractUserMembershipReader implem
 				return newMap;
 			}
 		}, "setMembershipProperty(" + softwareFmId + ", " + groupId + "," + property);
-		if (count == 0 )
+		if (count == 0)
 			throw new IllegalArgumentException(MessageFormat.format(GroupConstants.groupIdNotFound, groupId, softwareFmId));
 	}
 
@@ -84,13 +80,5 @@ public class UserMembershipForServer extends AbstractUserMembershipReader implem
 		return gitOperations.getFileAsListOfMaps(fileDescription);
 	}
 
-	@Override
-	protected String getMembershipCrypto(String softwareFmId) {
-		String userCrypto = Functions.call(userCryptoFn, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
-		String usersMembershipCrypto = user.getUserProperty(softwareFmId, userCrypto, GroupConstants.membershipCryptoKey);
-		if (usersMembershipCrypto ==null)
-			throw new NullPointerException(softwareFmId);
-		return usersMembershipCrypto;
-	}
 
 }

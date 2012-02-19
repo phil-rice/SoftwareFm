@@ -68,10 +68,14 @@ public class GitOperations implements IGitOperations {
 	@Override
 	public void put(IFileDescription fileDescription, Map<String, Object> data) {
 		IFileDescription.Utils.save(root, fileDescription, data);
+		addAllAndCommit(fileDescription);
+
+	}
+
+	protected void addAllAndCommit(IFileDescription fileDescription) {
 		File repositoryFile = fileDescription.findRepositoryUrl(root);
 		String url = Files.offset(root, repositoryFile);
 		addAllAndCommit(url, GitOperations.class.getSimpleName());
-
 	}
 
 	@Override
@@ -243,6 +247,7 @@ public class GitOperations implements IGitOperations {
 			} finally {
 				fileWriter.close();
 			}
+			addAllAndCommit(fileDescription);
 		} catch (IOException e) {
 			throw WrappedException.wrap(e);
 		}

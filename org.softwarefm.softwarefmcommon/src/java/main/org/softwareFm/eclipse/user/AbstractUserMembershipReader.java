@@ -4,6 +4,7 @@
 
 package org.softwareFm.eclipse.user;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -26,24 +27,29 @@ public abstract class AbstractUserMembershipReader implements IUserMembershipRea
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T getMembershipProperty(String softwareFmId, String groupId, String property) {
-		for (Map<String, Object> membershipProperties : walkGroupsFor(softwareFmId))
+	public <T> T getMembershipProperty(String softwareFmId, String userCrypto, String groupId, String property) {
+		for (Map<String, Object> membershipProperties : walkGroupsFor(softwareFmId, userCrypto))
 			if (groupId.equals(membershipProperties.get(GroupConstants.groupIdKey)))
 				return (T) membershipProperties.get(property);
 		return null;
 	}
 
-	abstract protected String getMembershipCrypto(String softwareFmId);
-
 	@Override
-	public List<Map<String, Object>> walkGroupsFor(String softwareFmId) {
+	public List<Map<String, Object>> walkGroupsFor(String softwareFmId, String crypto) {
 		String url = userUrlGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
-		String usersMembershipCrypto = getMembershipCrypto(softwareFmId);
+		String usersMembershipCrypto = getMembershipCrypto(softwareFmId, crypto);
+		if (usersMembershipCrypto== null)
+			return Collections.emptyList();
 		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, GroupConstants.membershipFileName, usersMembershipCrypto);
 		List<Map<String, Object>> result = getGroupFileAsText(fileDescription);
 		return result;
 	}
 
 	abstract protected List<Map<String, Object>> getGroupFileAsText(IFileDescription fileDescription);
+
+	protected String getMembershipCrypto(String softwareFmId ,String userCrypto) {
+		String usersMembershipCrypto = user.getUserProperty(softwareFmId, userCrypto, GroupConstants.membershipCryptoKey);
+		return usersMembershipCrypto;
+	}
 
 }
