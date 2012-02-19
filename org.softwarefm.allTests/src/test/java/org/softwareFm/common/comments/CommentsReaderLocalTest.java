@@ -25,7 +25,7 @@ public class CommentsReaderLocalTest extends AbstractCommentsReaderTest {
 
 	@Override
 	protected ICommentsReader makeReader(IUser user, IUserMembershipReader userMembershipReader, IGroupsReader groupsReader, String softwareFmId, String userCrypto, String commentsCrypto) {
-		return new CommentsReaderLocal(gitLocal, user, userMembershipReader, groupsReader, softwareFmId, commentsCrypto);
+		return new CommentsReaderLocal(gitLocal, user, userMembershipReader, groupsReader);
 	}
 
 	@Override

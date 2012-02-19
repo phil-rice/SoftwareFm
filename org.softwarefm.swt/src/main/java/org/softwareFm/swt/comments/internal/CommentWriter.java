@@ -31,7 +31,7 @@ public final class CommentWriter implements ICommentWriter {
 					addParam(CommentConstants.filenameKey, defn.fileDescription().name()).//
 					addParam(LoginConstants.softwareFmIdKey, softwareFmId).//
 					addParam(CommentConstants.textKey, encodedText).//
-					execute(IResponseCallback.Utils.noCallback()).get(timeoutMs, TimeUnit.MILLISECONDS);
+					execute(IResponseCallback.Utils.throwExeceptionIfFailCallback()).get(timeoutMs, TimeUnit.MILLISECONDS);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}

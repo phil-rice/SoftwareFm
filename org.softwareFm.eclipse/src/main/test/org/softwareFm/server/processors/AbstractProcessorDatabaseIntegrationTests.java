@@ -11,6 +11,7 @@ import java.util.concurrent.Future;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.IGroups;
+import org.softwareFm.common.IUser;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
@@ -29,6 +30,8 @@ import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.user.IProject;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.server.ICrowdSourcedServer;
+import org.softwareFm.server.comments.CommentsForServer;
+import org.softwareFm.server.comments.IComments;
 import org.softwareFm.server.processors.internal.MailerMock;
 import org.softwareFm.softwareFmServer.GroupsForServer;
 import org.softwareFm.softwareFmServer.ITakeOnProcessor;
@@ -57,6 +60,11 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 	private String userKey3;
 	protected String projectCryptoKey2;
 	protected String projectCryptoKey3;
+
+	protected UserMembershipForServer membershipForServer;
+	protected ITakeOnProcessor takeOnProcessor;
+	protected IComments comments;
+	protected IUser user;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -101,7 +109,6 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 
 	protected IFunction1<ProcessCallParameters, IProcessCall[]> getExtraProcessCalls() {
 		return new IFunction1<ProcessCallParameters, IProcessCall[]>() {
-
 			@Override
 			public IProcessCall[] apply(ProcessCallParameters from) throws Exception {
 				IUrlGenerator userUrlGenerator = LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix);
@@ -127,12 +134,16 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 				IFunction1<String, String> emailToSfmId = ICrowdSourcedServer.Utils.emailToSoftwareFmId(from.dataSource);
 				Callable<String> groupIdGenerator = Callables.value(groupId);
 
-				UserMembershipForServer membershipForServer = new UserMembershipForServer(userUrlGenerator, from.user, from.gitOperations, emailToSfmId);
-				ITakeOnProcessor takeOnProcessor = new TakeOnProcessor(from.gitOperations, from.user, membershipForServer, groups, userCryptoFn, emailToSfmId, groupsGenerator, groupIdGenerator, repoDefnFn);
+				membershipForServer = new UserMembershipForServer(userUrlGenerator, from.user, from.gitOperations, emailToSfmId);
+				takeOnProcessor = new TakeOnProcessor(from.gitOperations, from.user, membershipForServer, groups, userCryptoFn, emailToSfmId, groupsGenerator, groupIdGenerator, repoDefnFn);
 				Callable<String> groupCryptoGenerator = Callables.value(groupCryptoKey);
-				return new IProcessCall[] { //
-				new UsageProcessor(remoteOperations, getJarToGroupArtifactAndVersionProcessor(jarUrlGenerator), project, projectTimeGetter), //
+				comments = new CommentsForServer(from.gitOperations, from.user, membershipForServer, groups, Callables.value(1000l));
+				user = from.user;
+				IProcessCall[] result = new IProcessCall[] { //
+				new CommentProcessor(from.user, membershipForServer, groups, comments, from.userCryptoFn),//
+						new UsageProcessor(remoteOperations, getJarToGroupArtifactAndVersionProcessor(jarUrlGenerator), project, projectTimeGetter), //
 						new TakeOnGroupProcessor(takeOnProcessor, from.signUpChecker, groupCryptoGenerator, emailToSfmId, from.saltGenerator, from.softwareFmIdGenerator, mailerMock) };
+				return result;
 			}
 
 		};

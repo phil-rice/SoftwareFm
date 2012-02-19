@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.softwareFm.common.IGroupsReader;
 import org.softwareFm.common.IUserReader;
+import org.softwareFm.common.collections.Files;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
@@ -38,10 +39,9 @@ public class CommentProcessor extends AbstractCommandProcessor {
 	@Override
 	protected IProcessResult execute(String actualUrl, Map<String, Object> parameters) {
 		checkForParameter(parameters, LoginConstants.softwareFmIdKey, CommentConstants.textKey, CommentConstants.filenameKey);
-		String urlWithoutCommand = actualUrl.substring(prefix.length()+1);
-		String command = Strings.firstSegment(urlWithoutCommand, "/");
+		String command = Strings.firstSegment(actualUrl.substring(1), "/");
 		if (command.equals(CommentConstants.addCommandSuffix)) {
-			String url = urlWithoutCommand.substring(CommentConstants.addCommandSuffix.length()+1);
+			String url = actualUrl.substring(CommentConstants.addCommandSuffix.length()+1);
 			String userCrypto = Functions.call(cryptoFn, parameters);
 			if (userCrypto == null)
 				throw new IllegalArgumentException(MessageFormat.format(CommentConstants.illegalSoftwareFmId, parameters));
@@ -54,35 +54,23 @@ public class CommentProcessor extends AbstractCommandProcessor {
 		}
 		throw new IllegalArgumentException(actualUrl);
 	}
-//
-//	private Map<String, Object> makeData(Map<String, Object> parameters, String userCrypto) {
-//		String softwareFmId = (String) parameters.get(LoginConstants.softwareFmIdKey);
-//		String encoded = (String) parameters.get(CommentConstants.textKey);
-//		String text = Crypto.aesDecrypt(userCrypto, encoded);
-//		String moniker = userReader.getUserProperty(softwareFmId, userCrypto, LoginConstants.monikerKey);
-//		long time = Callables.call(timeCallable);
-//		return Maps.stringObjectMap(//
-//				LoginConstants.softwareFmIdKey, softwareFmId,//
-//				CommentConstants.creatorKey, moniker,//
-//				CommentConstants.timeKey, time,//
-//				CommentConstants.textKey, text);
-//	}
 
 	protected ICommentDefn getAddCommentDefn(String url, String userCrypto, Map<String, Object> parameters) {
 		String softwareFmId = (String) parameters.get(LoginConstants.softwareFmIdKey);
 		String filename = (String) parameters.get(CommentConstants.filenameKey);
+		String fileStem = Files.noExtension(filename);
 		if (filename.equals(CommentConstants.globalCommentsFile))
 			return ICommentDefn.Utils.everyoneInitial(url);
-		else if (filename.equals(softwareFmId)) {
+		else if (fileStem.equals(softwareFmId)) {
 			String commentCrypto = userReader.getUserProperty(softwareFmId, userCrypto, CommentConstants.commentCryptoKey);
 			if (commentCrypto == null)
 				throw new NullPointerException();
 			return ICommentDefn.Utils.myInitial(userReader, softwareFmId, userCrypto, url);
 		} else {
 			for (Map<String, Object> map : userMembershipReader.walkGroupsFor(softwareFmId, userCrypto)) {
-				if (filename.equals(map.get(GroupConstants.groupIdKey))) {
+				if (fileStem.equals(map.get(GroupConstants.groupIdKey))) {
 					String groupCrypto = (String) map.get(GroupConstants.groupCryptoKey);
-					return ICommentDefn.Utils.groupInitial(groupsReader, filename, groupCrypto, url);
+					return ICommentDefn.Utils.groupInitial(groupsReader, fileStem, groupCrypto, url);
 				}
 			}
 		}

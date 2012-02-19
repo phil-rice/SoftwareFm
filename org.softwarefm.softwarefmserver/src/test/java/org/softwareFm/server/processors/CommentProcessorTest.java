@@ -80,7 +80,7 @@ public class CommentProcessorTest extends AbstractProcessCallTest<CommentProcess
 
 	protected void checkAddComment(Map<String, Object> comment, String filename, Map<String, Object>... expected) {
 		Object text = comment.get(CommentConstants.textKey);
-		IProcessResult result = processor.execute(Urls.compose(CommentConstants.commentCommandPrefix, CommentConstants.addCommandSuffix, url), //
+		IProcessResult result = processor.execute(Urls.composeWithSlash(CommentConstants.addCommandSuffix, url), //
 				Maps.stringObjectMap(//
 						LoginConstants.softwareFmIdKey, softwareFmId, //
 						CommentConstants.textKey, Crypto.aesEncrypt(userCrypto, (String) text),//

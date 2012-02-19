@@ -7,7 +7,6 @@ package org.softwareFm.server.processors;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import org.softwareFm.client.gitwriter.GitWithHttpClientTest;
 import org.softwareFm.client.http.requests.IResponseCallback;
 import org.softwareFm.client.http.requests.MemoryResponseCallback;
 import org.softwareFm.client.http.response.IResponse;
@@ -17,6 +16,7 @@ import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.json.Json;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.tests.IIntegrationTest;
+import org.softwareFm.swt.card.GitWithHttpClientTest;
 
 abstract public class AbstractProcessorIntegrationTests extends GitWithHttpClientTest implements IIntegrationTest {
 

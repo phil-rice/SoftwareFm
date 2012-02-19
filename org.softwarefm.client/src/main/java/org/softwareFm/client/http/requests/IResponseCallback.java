@@ -5,6 +5,7 @@
 package org.softwareFm.client.http.requests;
 
 import org.softwareFm.client.http.response.IResponse;
+import org.softwareFm.common.constants.CommonConstants;
 
 public interface IResponseCallback {
 
@@ -19,7 +20,7 @@ public interface IResponseCallback {
 			};
 		}
 
-		public static  MemoryResponseCallback memoryCallback() {
+		public static MemoryResponseCallback memoryCallback() {
 			return new MemoryResponseCallback();
 		}
 
@@ -35,8 +36,19 @@ public interface IResponseCallback {
 		public static CheckCallback checkCallback(int status, String message) {
 			return new CheckCallback(status, message);
 		}
-		public static CheckMapCallback checkMapCallback(int status, Object...namesAndValues) {
+
+		public static CheckMapCallback checkMapCallback(int status, Object... namesAndValues) {
 			return new CheckMapCallback(status, namesAndValues);
+		}
+
+		public static IResponseCallback throwExeceptionIfFailCallback() {
+			return new IResponseCallback() {
+				@Override
+				public void process(IResponse response) {
+					if (!CommonConstants.okStatusCodes.contains(response.statusCode()))
+						throw new IllegalStateException(response.toString());
+				}
+			};
 		}
 	}
 }
