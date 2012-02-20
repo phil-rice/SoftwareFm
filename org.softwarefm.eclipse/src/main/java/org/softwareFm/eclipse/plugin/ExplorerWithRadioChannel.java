@@ -116,7 +116,7 @@ public class ExplorerWithRadioChannel {
 					IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, userReader);
 					LocalGroupsReader groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
 
-					ICommentWriter commentWriter = ICommentWriter.Utils.commentWriter(client, CommonConstants.clientTimeOut);
+					ICommentWriter commentWriter = ICommentWriter.Utils.commentWriter(client, CommonConstants.clientTimeOut, gitLocal);
 					ICommentsReader commentsReader = new CommentsReaderLocal(gitLocal, userReader, userMembershipReader, groupsReader);
 					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, userReader, userMembershipReader, groupsReader, cardConfig, rootUrl, playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople, IUserDataManager.Utils.userDataManager(), commentWriter, commentsReader, Callables.time());
 

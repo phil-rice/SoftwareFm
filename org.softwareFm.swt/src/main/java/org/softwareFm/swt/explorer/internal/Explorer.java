@@ -169,7 +169,7 @@ public class Explorer implements IExplorer {
 						String time = new ReadableTime().readableNameFor(Callables.call(timeGetter), (Long)comment.get(CommentConstants.timeKey));
 						String titlePattern = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, CommentConstants.commentDetailsTitle);
 						String title = MessageFormat.format(titlePattern, comment.get(CommentConstants.creatorKey), time, cardType, url);
-						masterDetailSocial.createAndShowDetail(TextInBorder.makeTextFromString(SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL, cardConfig, CollectionConstants.comment, title, (String) comment.get(CommentConstants.textKey)));
+						 masterDetailSocial.createAndShowDetail(TextInBorder.makeTextFromString(SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL, cardConfig, CollectionConstants.comment, title, (String) comment.get(CommentConstants.textKey)));
 					}
 				}, new Runnable() {
 					@Override

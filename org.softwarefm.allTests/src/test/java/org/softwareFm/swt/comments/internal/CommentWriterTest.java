@@ -103,7 +103,6 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 
 	protected void checkAdd(final String source, String text, Callable<ICommentDefn> makeDefinition, Callable<List<Map<String, Object>>> actualGetter, String... expectedText) {
 		commentWriter.addComment(softwareFmId, userCrypto, Callables.call(makeDefinition), text);
-		gitLocal.clearCaches();
 		List<Map<String, Object>> globalComments = Callables.call(actualGetter);
 		List<Map<String, Object>> expected = Lists.map(Arrays.asList(expectedText), new IFunction1<String, Map<String, Object>>() {
 			@Override
@@ -112,6 +111,7 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 			}
 		});
 		assertEquals(expected, globalComments);
+		
 	}
 
 	protected Map<String, Object> comment(String source, String text) {
@@ -124,7 +124,7 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 		remoteOperations.init("a");
 
 		userCrypto = Functions.call(userCryptoFn, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
-		commentWriter = ICommentWriter.Utils.commentWriter(getHttpClient(), CommonConstants.testTimeOutMs);
+		commentWriter = ICommentWriter.Utils.commentWriter(getHttpClient(), CommonConstants.testTimeOutMs, gitLocal);
 		IUrlGenerator userUrlGenerator = LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix);
 		IUrlGenerator groupUrlGenerator = GroupConstants.groupsGenerator(SoftwareFmConstants.urlPrefix);
 		userReader = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);

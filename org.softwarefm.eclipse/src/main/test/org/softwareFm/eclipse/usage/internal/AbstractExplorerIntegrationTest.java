@@ -300,7 +300,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 			userMembershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, userReader);
 			groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
 
-			commentsWriter = ICommentWriter.Utils.commentWriter(httpClient, CommonConstants.testTimeOutMs);
+			commentsWriter = ICommentWriter.Utils.commentWriter(httpClient, CommonConstants.testTimeOutMs, gitLocal);
 			commentsReader = makeCommentsReader();
 			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, userReader, userMembershipReader, groupsReader, cardConfig, //
 					Arrays.asList(rootArtifactUrl, rootSnippetUrl), //

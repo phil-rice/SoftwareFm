@@ -63,8 +63,12 @@ public class FileDescription implements IFileDescription {
 
 	@Override
 	public Map<String, Object> decode(String text) {
-		String raw = key == null ? text : Crypto.aesDecrypt(key, text);
-		return Json.mapFromString(raw);
+		try {
+			String raw = key == null ? text : Crypto.aesDecrypt(key, text);
+			return Json.mapFromString(raw);
+		} catch (Exception e) {
+			throw new RuntimeException("raw was [" + text +"]", e);
+		}
 	}
 
 	@Override

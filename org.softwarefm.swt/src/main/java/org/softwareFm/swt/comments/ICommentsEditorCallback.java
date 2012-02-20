@@ -42,8 +42,6 @@ public interface ICommentsEditorCallback {
 
 				@Override
 				public void cancel() {
-					// TODO Auto-generated method stub
-
 				}
 			};
 		}

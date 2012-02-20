@@ -85,7 +85,7 @@ public class ExplorerView extends ViewPart {
 		IUserDataManager userDataManager = activator.getUserDataManager();
 		IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, userReader);
 		LocalGroupsReader groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
-		ICommentWriter commentsWriter = ICommentWriter.Utils.commentWriter(client, CommonConstants.clientTimeOut);
+		ICommentWriter commentsWriter = ICommentWriter.Utils.commentWriter(client, CommonConstants.clientTimeOut, gitLocal);
 		ICommentsReader commentsReader= new CommentsReaderLocal(gitLocal, userReader, userMembershipReader, groupsReader);
 		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, userReader, userMembershipReader, groupsReader, cardConfig, getRootUrls(), playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople, userDataManager, commentsWriter, commentsReader, Callables.time());
 		IUsageStrategy usageStrategy = IUsageStrategy.Utils.usage(activator.getServiceExecutor(), client, gitLocal, userUrlGenerator);
