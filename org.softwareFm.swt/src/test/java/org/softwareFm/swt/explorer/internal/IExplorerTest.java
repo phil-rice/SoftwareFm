@@ -14,7 +14,10 @@ import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.resources.ResourceGetterMock;
+import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.services.IServiceExecutor;
+import org.softwareFm.eclipse.comments.ICommentsReader;
+import org.softwareFm.eclipse.constants.CommentConstants;
 import org.softwareFm.eclipse.user.IUserMembershipReader;
 import org.softwareFm.eclipse.user.UserMembershipReaderForLocal;
 import org.softwareFm.images.general.GeneralAnchor;
@@ -55,8 +58,8 @@ public class IExplorerTest extends SwtTest {
 					IShowMyPeople.Utils.exceptionShowMyPeople(),//
 					IUserDataManager.Utils.userDataManager(), //
 					ICommentWriter.Utils.exceptionCommentWriter(),//
-					ICommentWriter.Utils.exceptionCommentWriter());
-			ICardHolderForTests cardHolder = (ICardHolderForTests) explorer.cardHolder;
+					ICommentsReader.Utils.exceptionCommentsReader(), Callables.<Long>exceptionIfCalled());
+			ICardHolderForTests cardHolder = (ICardHolderForTests) explorer.cardHolder;  
 			assertEquals(rootUrls, cardHolder.getRootUrls());
 			assertEquals(cardConfig, cardHolder.getCardConfig());
 		} finally {
@@ -71,6 +74,9 @@ public class IExplorerTest extends SwtTest {
 		IResourceGetter withNeeded = resourceGetter.with(new ResourceGetterMock(//
 				CollectionConstants.addCommentButtonTitle, "Add Comment",//
 				CollectionConstants.addCommentButtonImage, GeneralAnchor.commentAdd,//
+				CommentConstants.tableCreatorColumnTitle, "creatorTitle",//
+				CommentConstants.tableSourceColumnTitle, "sourceTitle",//
+				CommentConstants.tableTextColumnTitle, "textTitle",//
 				CollectionConstants.commentsNoTitle, "No comments",//
 				CollectionConstants.commentsTitle, "Comments"));
 		return raw.withResourceGetterFn(Functions.<String, IResourceGetter> constant(withNeeded));

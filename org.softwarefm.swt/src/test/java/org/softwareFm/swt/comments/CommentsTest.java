@@ -4,67 +4,194 @@
 
 package org.softwareFm.swt.comments;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 
+import org.easymock.EasyMock;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.common.maps.Maps;
-import org.softwareFm.common.runnable.Runnables;
-import org.softwareFm.common.runnable.Runnables.CountRunnable;
+import org.softwareFm.eclipse.comments.ICommentsReader;
+import org.softwareFm.eclipse.constants.CommentConstants;
 import org.softwareFm.swt.card.CardDataStoreFixture;
-import org.softwareFm.swt.card.ICardData;
+import org.softwareFm.swt.comments.Comments.CommentsComposite;
 import org.softwareFm.swt.configuration.CardConfig;
-import org.softwareFm.swt.constants.CollectionConstants;
 import org.softwareFm.swt.explorer.internal.IExplorerTest;
+import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.swt.SwtTest;
 
 public class CommentsTest extends SwtTest {
 
-	private CountRunnable addRunnable;
 	private Comments comments;
 	private CardConfig cardConfig;
+	private ICommentsReader commentsReader;
+	private ICommentsCallback commentsCallback;
+	private Runnable addComment;
 
-	public void testCommentsUseDateOrderWhenPossible() {
-		Map<String, Object> data = Maps.stringObjectMap("a", 1, "b", 2, CollectionConstants.comment, Maps.stringObjectMap(//
-				"key1", makeComment("title1", "text1", 3),//
-				"key2", makeComment("title2", "text2", 1),//
-				"key3", makeComment("title3", "text3", 2)));
-		ICardData cardData = ICardData.Utils.create(cardConfig, "someCardType", "someUrl", data);
-		comments.showCommentsFor(cardData);
+	private final Map<String, Object> comment1 = Maps.stringObjectMap(CommentConstants.creatorKey, "creator1", CommentConstants.timeKey, 1l, CommentConstants.textKey, "text1", CommentConstants.sourceKey, "source1");
+	private final Map<String, Object> comment2 = Maps.stringObjectMap(CommentConstants.creatorKey, "creator2", CommentConstants.timeKey, 2l, CommentConstants.textKey, "text2", CommentConstants.sourceKey, "source2");
+	private final Map<String, Object> comment3 = Maps.stringObjectMap(CommentConstants.creatorKey, "creator3", CommentConstants.timeKey, 3l, CommentConstants.textKey, "text3", CommentConstants.sourceKey, "source3");
+
+	private final Map<String, Object> comment1S2T3 = Maps.stringObjectMap(CommentConstants.creatorKey, "creator1", CommentConstants.timeKey, 3l, CommentConstants.textKey, "text1", CommentConstants.sourceKey, "source2");
+	private final Map<String, Object> comment1S3T2 = Maps.stringObjectMap(CommentConstants.creatorKey, "creator1", CommentConstants.timeKey, 2l, CommentConstants.textKey, "text1", CommentConstants.sourceKey, "source3");
+
+	private final Map<String, Object> comment1S1T2 = Maps.stringObjectMap(CommentConstants.creatorKey, "creator1", CommentConstants.timeKey, 2l, CommentConstants.textKey, "text1", CommentConstants.sourceKey, "source1");
+	private final Map<String, Object> comment1S1T3 = Maps.stringObjectMap(CommentConstants.creatorKey, "creator1", CommentConstants.timeKey, 3l, CommentConstants.textKey, "text1", CommentConstants.sourceKey, "source1");
+
+
+	private final UserData loggedInUserData = new UserData("someEmail", "someSfmId", "someCrypto");
+
+	public void testTitleShowsNoContentsAndBlankContentsWhenNoCommentsAndNotLoggedIn() {
+		EasyMock.expect(commentsReader.globalComments("someUrl", CommentConstants.globalSource)).andReturn(Collections.<Map<String, Object>> emptyList());
+		replayMocks();
+		comments.showCommentsFor(UserData.blank(), "artefact", "someUrl");
 		Table table = comments.getTable();
-		checkTable(table, 0, "key1", "title1", "text1");
-		checkTable(table, 1, "key3", "title3", "text3");
-		checkTable(table, 2, "key2", "title2", "text2");
+		assertEquals(0, table.getItemCount());
+		checkTitleAndTableColumnNames(table, "No comments");
+	}
+
+	public void testTitleShowsNoContentsAndBlankContentsWhenNoCommentsAndLoggedIn() {
+		EasyMock.expect(commentsReader.globalComments("someUrl", CommentConstants.globalSource)).andReturn(Collections.<Map<String, Object>> emptyList());
+		EasyMock.expect(commentsReader.groupComments("someUrl", "someSfmId", "someCrypto")).andReturn(Collections.<Map<String, Object>> emptyList());
+		EasyMock.expect(commentsReader.myComments("someUrl", "someSfmId", "someCrypto", CommentConstants.mySource)).andReturn(Collections.<Map<String, Object>> emptyList());
+		replayMocks();
+		comments.showCommentsFor(loggedInUserData, "artefact", "someUrl");
+		Table table = comments.getTable();
+		assertEquals(0, table.getItemCount());
+		checkTitleAndTableColumnNames(table, "No comments");
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testShowsGlobalContentWhenNotLoggedIn() {
+		EasyMock.expect(commentsReader.globalComments("someUrl", CommentConstants.globalSource)).andReturn(Arrays.asList(comment1, comment2, comment3));
+		replayMocks();
+		comments.showCommentsFor(UserData.blank(), "artefact", "someUrl");
+		Table table = comments.getTable();
 		assertEquals(3, table.getItemCount());
+		checkTitleAndTableColumnNames(table, "Comments");
+		checkTable(table, 0, 0, "creator3", "source3", "text3");
+		checkTable(table, 1, 1, "creator2", "source2", "text2");
+		checkTable(table, 2, 2, "creator1", "source1", "text1");
 	}
 
-	private void checkTable(Table table, int index, String key, String... strings) {
-		TableItem item = table.getItem(index);
-		assertEquals(table.getColumnCount(), strings.length);
-		for (int i = 0; i < strings.length; i++)
-			assertEquals(strings[i], item.getText(i));
-
+	@SuppressWarnings("unchecked")
+	public void testShowsGlobalMyAndMyGroupsContentWhenLoggedIn() {
+		EasyMock.expect(commentsReader.globalComments("someUrl", CommentConstants.globalSource)).andReturn(Arrays.asList(comment1));
+		EasyMock.expect(commentsReader.groupComments("someUrl", "someSfmId", "someCrypto")).andReturn(Arrays.asList(comment2));
+		EasyMock.expect(commentsReader.myComments("someUrl", "someSfmId", "someCrypto", CommentConstants.mySource)).andReturn(Arrays.asList(comment3));
+		replayMocks();
+		comments.showCommentsFor(loggedInUserData, "artefact", "someUrl");
+		Table table = comments.getTable();
+		assertEquals(3, table.getItemCount());
+		checkTitleAndTableColumnNames(table, "Comments");
+		checkTable(table, 0, 0, "creator3", "source3", "text3");
+		checkTable(table, 1, 1, "creator2", "source2", "text2");
+		checkTable(table, 2, 2, "creator1", "source1", "text1");
 	}
 
-	private Map<String, Object> makeComment(String title, String text, int time) {
-		return Maps.stringObjectMap(CollectionConstants.commentTitleKey, title, CollectionConstants.commentTextKey, text, CollectionConstants.createdTimeKey, time);
+	@SuppressWarnings("unchecked")
+	public void testAddCommentButtonDisabledWhenNotLoggedIn() {
+		EasyMock.expect(commentsReader.globalComments("someUrl", CommentConstants.globalSource)).andReturn(Arrays.asList(comment1, comment2, comment3));
+		replayMocks();
+		comments.showCommentsFor(UserData.blank(), "artefact", "someUrl");
+		CommentsComposite composite = (CommentsComposite) comments.getControl();
+		assertFalse(composite.addCommentButton.isEnabled());
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testAddCommentButtonEnabledWhenLoggedIn() {
+		EasyMock.expect(commentsReader.globalComments("someUrl", CommentConstants.globalSource)).andReturn(Arrays.asList(comment1, comment2, comment3));
+		EasyMock.expect(commentsReader.groupComments("someUrl", "someSfmId", "someCrypto")).andReturn(Collections.<Map<String, Object>> emptyList());
+		EasyMock.expect(commentsReader.myComments("someUrl", "someSfmId", "someCrypto", CommentConstants.mySource)).andReturn(Collections.<Map<String, Object>> emptyList());
+
+		replayMocks();
+		comments.showCommentsFor(loggedInUserData, "artefact", "someUrl");
+		CommentsComposite composite = (CommentsComposite) comments.getControl();
+		assertTrue(composite.addCommentButton.isEnabled());
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testAddRunableIsCalledWhenButtonClicked() {
+		EasyMock.expect(commentsReader.globalComments("someUrl", CommentConstants.globalSource)).andReturn(Arrays.asList(comment1, comment2, comment3));
+		EasyMock.expect(commentsReader.groupComments("someUrl", "someSfmId", "someCrypto")).andReturn(Collections.<Map<String, Object>> emptyList());
+		EasyMock.expect(commentsReader.myComments("someUrl", "someSfmId", "someCrypto", CommentConstants.mySource)).andReturn(Collections.<Map<String, Object>> emptyList());
+		addComment.run();
+		replayMocks();
+		comments.showCommentsFor(loggedInUserData, "artefact", "someUrl");
+
+		CommentsComposite composite = (CommentsComposite) comments.getControl();
+		composite.addCommentButton.notifyListeners(SWT.MouseUp, new Event());
+		dispatchUntilQueueEmpty();
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testShowCommentCallbackIsCalledWhenTableLineIsSelected() {
+		EasyMock.expect(commentsReader.globalComments("someUrl", CommentConstants.globalSource)).andReturn(Arrays.asList(comment1));
+		EasyMock.expect(commentsReader.groupComments("someUrl", "someSfmId", "someCrypto")).andReturn(Arrays.asList(comment2));
+		EasyMock.expect(commentsReader.myComments("someUrl", "someSfmId", "someCrypto", CommentConstants.mySource)).andReturn(Arrays.asList(comment3));
+		commentsCallback.selected("artefact", "someUrl", 1, comment2);
+		replayMocks();
+
+		comments.showCommentsFor(loggedInUserData, "artefact", "someUrl");
+		Table table = comments.getTable();
+		table.select(1);
+		table.notifyListeners(SWT.Selection, new Event());
+	}
+
+	/** comment1,2 and 3 are checked earlier, and their source order and date order are in line */
+	@SuppressWarnings("unchecked")
+	public void testCommentsUseTimeOrderAsPrimary() {
+		EasyMock.expect(commentsReader.globalComments("someUrl", CommentConstants.globalSource)).andReturn(Arrays.asList(comment1S2T3, comment1S3T2, comment1));
+		replayMocks();
+		comments.showCommentsFor(UserData.blank(), "artefact", "someUrl");
+		Table table = comments.getTable();
+		assertEquals(3, table.getItemCount());
+		checkTitleAndTableColumnNames(table, "Comments");
+		checkTable(table, 0, 0, "creator1", "source2", "text1");
+		checkTable(table, 1, 1, "creator1", "source3", "text1");
+		checkTable(table, 2, 2, "creator1", "source1", "text1");
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testCommentsUseTimeOrder2() {
+		EasyMock.expect(commentsReader.globalComments("someUrl", CommentConstants.globalSource)).andReturn(Arrays.asList(comment1S1T2, comment1S1T3, comment1));
+		replayMocks();
+		comments.showCommentsFor(UserData.blank(), "artefact", "someUrl");
+		Table table = comments.getTable();
+		assertEquals(3, table.getItemCount());
+		checkTitleAndTableColumnNames(table, "Comments");
+		checkTable(table, 0, 0, "creator1", "source1", "text1");
+		checkTable(table, 1, 1, "creator1", "source1", "text1");
+		checkTable(table, 2, 2, "creator1", "source1", "text1");
+		CommentsComposite composite = (CommentsComposite) comments.getControl();
+		assertEquals(Arrays.asList(comment1S1T3, comment1S1T2, comment1), composite.allComments);
+	}
+
+	protected void checkTitleAndTableColumnNames(Table table, String expectedTitle) {
+		assertEquals(expectedTitle, comments.getTitle().getText());
+		checkTableColumns(table, "creatorTitle", "sourceTitle", "textTitle");
+	}
+
+	private void replayMocks() {
+		EasyMock.replay(commentsReader, commentsCallback, addComment);
 	}
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		addRunnable = Runnables.count();
 		cardConfig = IExplorerTest.addNeededResources(CardDataStoreFixture.syncCardConfig(display));
-		comments = new Comments(shell, cardConfig, new ICommentsCallback() {
-			@Override
-			public void selected(String cardType, String title, String text) {
-			}
-		}, addRunnable);
+		commentsReader = EasyMock.createMock(ICommentsReader.class);
+		commentsCallback = EasyMock.createMock(ICommentsCallback.class);
+		addComment = EasyMock.createMock(Runnable.class);
+		comments = new Comments(shell, cardConfig, commentsReader, commentsCallback, addComment);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
+		EasyMock.verify(commentsReader, commentsCallback, addComment);
 		super.tearDown();
 		cardConfig.dispose();
 	}

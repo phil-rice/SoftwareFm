@@ -8,6 +8,7 @@ import java.util.concurrent.Callable;
 import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.IGroups;
 import org.softwareFm.common.IUser;
+import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
@@ -75,7 +76,7 @@ public class CommentProcessorTest extends AbstractProcessCallTest<CommentProcess
 	}
 
 	private void checkGlobalComments(Map<String, Object>... expected) {
-		assertEquals(Arrays.asList(expected), comments.globalComments(url));
+		assertEquals(Lists.map(Arrays.asList(expected), Maps.<String,Object>withFn(CommentConstants.sourceKey,"someSource")), comments.globalComments(url, "someSource"));
 	}
 
 	protected void checkAddComment(Map<String, Object> comment, String filename, Map<String, Object>... expected) {
@@ -86,7 +87,7 @@ public class CommentProcessorTest extends AbstractProcessCallTest<CommentProcess
 						CommentConstants.textKey, Crypto.aesEncrypt(userCrypto, (String) text),//
 						CommentConstants.filenameKey, filename));
 		checkStringResult(result, "");
-		assertEquals(Arrays.asList(expected), ICommentsReader.Utils.allComments(comments, url, softwareFmId, userCrypto));
+		assertEquals(Lists.map(Arrays.asList(expected), Maps.<String,Object>withFn(CommentConstants.sourceKey,"source")), ICommentsReader.Utils.allComments(comments, url, softwareFmId, userCrypto, "source", "source"));
 	}
 
 	@Override

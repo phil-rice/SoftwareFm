@@ -14,6 +14,7 @@ import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.resources.ResourceGetterMock;
+import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.eclipse.comments.ICommentsReader;
 import org.softwareFm.eclipse.user.IUserMembershipReader;
 import org.softwareFm.eclipse.user.UserMembershipReaderForLocal;
@@ -79,7 +80,7 @@ public class ExplorerTest extends SwtAndServiceTest {
 				IShowMyPeople.Utils.exceptionShowMyPeople(),//
 				IUserDataManager.Utils.userDataManager(), //
 				ICommentWriter.Utils.exceptionCommentWriter(),//
-				ICommentsReader.Utils.exceptionCommentsReader()  ) {
+				ICommentsReader.Utils.mockReader("someId", "someMoniker", 1000), Callables.value(1000l)) {
 			@Override
 			protected String makeRandomUUID() {
 				return "randomUUID";

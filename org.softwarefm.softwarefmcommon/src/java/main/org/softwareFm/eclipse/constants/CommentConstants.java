@@ -31,5 +31,6 @@ public class CommentConstants {
 	public static final String tableCreatorColumnTitle = "table.creator.column.title";
 	public static final String tableSourceColumnTitle = "table.source.column.title";
 	public static final String tableTextColumnTitle = "table.text.column.title";
+	public static final String commentDetailsTitle = "comment.details.title";
 
 }

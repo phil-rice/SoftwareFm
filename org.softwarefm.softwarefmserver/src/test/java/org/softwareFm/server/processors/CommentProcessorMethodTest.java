@@ -29,7 +29,6 @@ public class CommentProcessorMethodTest extends TestCase {
 	private final String url = "someUrl";
 	private final String softwareFmId = "sfmId1";
 	private final String groupId = "groupId1";
-	private final String moniker = "moniker1";
 	private IUserReader userReader;
 	private IUserMembershipReader userMembershipReader;
 	private IGroupsReader groupsReader;

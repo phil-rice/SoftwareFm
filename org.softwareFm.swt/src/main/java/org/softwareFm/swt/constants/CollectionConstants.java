@@ -19,7 +19,7 @@ public class CollectionConstants {
 	public static final List<String> rootUrlList = Arrays.asList(rootDataUrl, rootJarUrl, rootSnippetUrl);
 	public static final String jarNotRecognisedTitle = "jar.notRecognised.title";
 	public static final String jarNotRecognisedText = "jar.notRecognised.text";
-	
+
 	public static final String jarRtNotRecognisedTitle = "jar.rt.notRecognised.title";
 	public static final String jarRtNotRecognisedText = "jar.rt.notRecognised.text";
 
@@ -38,12 +38,6 @@ public class CollectionConstants {
 
 	public static final String addCommentButtonTitle = "button.comment.add.title";
 	public static final String addCommentButtonImage = "button.comment.add.image";
-
-	public static final String commentsTitleKey = "title";
-	public static final String commentsTextKey = "text";
-	public static final String createdTimeKey = "created";
-	public static final String commentTitleKey = "title";
-	public static final String commentTextKey = "text";
 
 	public static final String actionWelcomeTitle = "action.welcome.title";
 	public static final String actionRefreshTitle = "action.refresh.title";
@@ -66,11 +60,11 @@ public class CollectionConstants {
 	public static final String actionNukeImage = "nuke.gif";
 	public static final String actionSnippetImage = "snippet.gif";
 	public static final String actionPeopleImage = "friends.gif";
-	
-	public static final String jarNotRecognisedSearchingText = "jar.notRecognised.searching.text" ;
-	public static final String jarNotRecognisedFound0Text = "jar.notRecognised.found0.text" ;
-	public static final String jarNotRecognisedFound1Text = "jar.notRecognised.found1.text" ;
-	public static final String jarNotRecognisedFoundManyText = "jar.notRecognised.foundMany.text" ;
+
+	public static final String jarNotRecognisedSearchingText = "jar.notRecognised.searching.text";
+	public static final String jarNotRecognisedFound0Text = "jar.notRecognised.found0.text";
+	public static final String jarNotRecognisedFound1Text = "jar.notRecognised.found1.text";
+	public static final String jarNotRecognisedFoundManyText = "jar.notRecognised.foundMany.text";
 	public static final String jarSearchButtonTitle = "button.jar.search";
 	public static final String jarSearchWithMavenButtonTitle = "button.jarAndMaven.search";
 	public static final String helpUnrecognisedPleaseAddText = "help.unrecognised.pleaseAdd.text";
@@ -81,11 +75,12 @@ public class CollectionConstants {
 	public static final String confirmDelete = "Confirm Delete";
 
 	public static final String mySoftwareFmCardType = "mySoftwareFm";
-	
+
 	public static final String email = "email";
 	public static final String password = "password";
 	public static final String confirmPassword = "confirmPassword";
 	public static final String forgotPassword = "login.button.forgotPassword";
 	public static final String signUp = "login.button.signUp";
+	public static final String createdTimeKey = "created";
 
 }

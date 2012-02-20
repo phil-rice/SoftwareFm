@@ -61,4 +61,16 @@ public class Comparators {
 			}
 		};
 	}
+
+	public static <K,V>Comparator<Map<K, V>> mapKey(final K key) {
+		return new Comparator<Map<K,V>>() {
+			@SuppressWarnings("unchecked")
+			@Override
+			public int compare(Map<K, V> o1, Map<K, V> o2) {
+				V value1 = o1.get(key);
+				V value2 = o2.get(key);
+				return naturalComparator.compare(value1, value2);
+			}
+		};
+	}
 }

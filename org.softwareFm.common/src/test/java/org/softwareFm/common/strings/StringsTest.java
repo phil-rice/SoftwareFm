@@ -11,10 +11,9 @@ import junit.framework.TestCase;
 
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.functions.Functions;
-import org.softwareFm.common.strings.PreAndPost;
-import org.softwareFm.common.strings.Strings;
 
 public class StringsTest extends TestCase {
+
 
 	public void testFromHex() {
 		checkFromHex("00", 0);

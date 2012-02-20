@@ -38,10 +38,15 @@ public class SoftwareFmServer {
 
 	public static void main(String[] args) {
 		DOMConfigurator.configure(System.getProperty("user.home") + "/log4j.xml");
+		int port = ICrowdSourcedServer.Utils.port(args);
 
+		makeSoftwareFmServer(port);
+	}
+
+	public static void makeSoftwareFmServer(int port) {
 		BasicDataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
 		IGitOperations gitOperations = IGitOperations.Utils.gitOperations(ICrowdSourcedServer.Utils.makeSfmRoot());
-		ICrowdSourcedServer.Utils.fullServer(ICrowdSourcedServer.Utils.port(args), gitOperations, dataSource, makeExtraProcessCalls(), SoftwareFmConstants.urlPrefix, makeDefaultProperties());
+		ICrowdSourcedServer.Utils.fullServer(port, gitOperations, dataSource, makeExtraProcessCalls(), SoftwareFmConstants.urlPrefix, makeDefaultProperties());
 	}
 
 	private static IFunction1<ProcessCallParameters, IProcessCall[]> makeExtraProcessCalls() {

@@ -4,8 +4,10 @@
 
 package org.softwareFm.swt.comments;
 
+import java.util.Map;
+
 public interface ICommentsCallback {
 
-	void selected(String cardType, String title, String text);
+	void selected(String cardType, String url, int index, Map<String, Object> comment);
 
 }

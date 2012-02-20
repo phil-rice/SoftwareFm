@@ -6,6 +6,7 @@ package org.softwareFm.swt.explorer;
 
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import org.softwareFm.common.IGroupsReader;
 import org.softwareFm.common.IUserReader;
@@ -75,8 +76,8 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 
 	public static class Utils {
 
-		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, IUserReader userReader, IUserMembershipReader userMembershipReader, IGroupsReader groupsReader, CardConfig cardConfig, List<String> rootUrls, IPlayListGetter playListGetter, IServiceExecutor service, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IShowMyPeople showMyPeople, IUserDataManager userDataManager, ICommentWriter commentWriter, ICommentsReader commentsReader) {
-			return new Explorer(cardConfig, rootUrls, masterDetailSocial, service, userReader, userMembershipReader, groupsReader, playListGetter, loginStrategy, showMyData, showMyGroups, showMyPeople, userDataManager, commentWriter, commentsReader);
+		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, IUserReader userReader, IUserMembershipReader userMembershipReader, IGroupsReader groupsReader, CardConfig cardConfig, List<String> rootUrls, IPlayListGetter playListGetter, IServiceExecutor service, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IShowMyPeople showMyPeople, IUserDataManager userDataManager, ICommentWriter commentWriter, ICommentsReader commentsReader, Callable<Long> timeGetter) {
+			return new Explorer(cardConfig, rootUrls, masterDetailSocial, service, userReader, userMembershipReader, groupsReader, playListGetter, loginStrategy, showMyData, showMyGroups, showMyPeople, userDataManager, commentWriter, commentsReader, timeGetter);
 		}
 	}
 

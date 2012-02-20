@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -35,7 +36,9 @@ import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.history.IHistoryListener;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.services.IServiceExecutor;
+import org.softwareFm.common.strings.ReadableTime;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.comments.ICommentsReader;
@@ -104,7 +107,7 @@ public class Explorer implements IExplorer {
 	private final IShowMyPeople showMyPeople;
 	protected ICommentsReader commentReader;
 
-	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, final IUserReader userReader, final IUserMembershipReader userMembershipReader, final IGroupsReader groupsReader, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IShowMyData showMyData, final IShowMyGroups showMyGroups, final IShowMyPeople showMyPeople, final IUserDataManager userDataManager, final ICommentWriter commentWriter, ICommentsReader commentsReader) {
+	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, final IUserReader userReader, final IUserMembershipReader userMembershipReader, final IGroupsReader groupsReader, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IShowMyData showMyData, final IShowMyGroups showMyGroups, final IShowMyPeople showMyPeople, final IUserDataManager userDataManager, final ICommentWriter commentWriter, ICommentsReader commentsReader, final Callable<Long>timeGetter) {
 		this.cardConfig = cardConfig;
 		this.masterDetailSocial = masterDetailSocial;
 		this.showMyPeople = showMyPeople;
@@ -159,11 +162,14 @@ public class Explorer implements IExplorer {
 			@Override
 			public Comments apply(Composite from) throws Exception {
 				return new Comments(from, cardConfig, commentReader, new ICommentsCallback() {
-					@Override
-					public void selected(String cardType, String title, String text) {
-						masterDetailSocial.putSocialOverDetail();
-						masterDetailSocial.createAndShowDetail(TextInBorder.makeTextFromString(SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL, cardConfig, CollectionConstants.comment, title, text));
 
+					@Override
+					public void selected(String cardType, String url, int index, Map<String, Object> comment) {
+						masterDetailSocial.putSocialOverDetail();
+						String time = new ReadableTime().readableNameFor(Callables.call(timeGetter), (Long)comment.get(CommentConstants.timeKey));
+						String titlePattern = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, CommentConstants.commentDetailsTitle);
+						String title = MessageFormat.format(titlePattern, comment.get(CommentConstants.creatorKey), time, cardType, url);
+						masterDetailSocial.createAndShowDetail(TextInBorder.makeTextFromString(SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL, cardConfig, CollectionConstants.comment, title, (String) comment.get(CommentConstants.textKey)));
 					}
 				}, new Runnable() {
 					@Override

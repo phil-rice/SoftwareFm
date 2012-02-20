@@ -19,6 +19,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.comparators.Comparators;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
@@ -47,14 +49,14 @@ public class Comments implements IHasControl {
 	static class CommentsComposite extends CompositeWithCardMargin {
 
 		private final Table table;
-		private final TableColumn titleColumn;
-		private final TableColumn textColumn;
 		private final CardConfig cc;
 		private final Composite body;
 		private final Title title;
 		private final ICommentsReader commentsReader;
-		private final TableColumn sourceColumn;
-		private final Label addCommentButton;
+		final Label addCommentButton;
+		protected List<Map<String, Object>> allComments;
+		private String cardType;
+		private String url;
 
 		public CommentsComposite(Composite parent, CardConfig cardConfig, ICommentsReader commentsReader, final ICommentsCallback callback, Runnable addButton) {
 			super(parent, SWT.NULL, cardConfig);
@@ -72,30 +74,28 @@ public class Comments implements IHasControl {
 			body.setLayout(new FillLayout());
 			this.table = new Table(body, SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 			table.setLinesVisible(true);
-			(this.titleColumn = new TableColumn(table, SWT.NONE)).setText(IResourceGetter.Utils.getOrException(resourceGetter, CommentConstants.tableCreatorColumnTitle));
-			(this.sourceColumn = new TableColumn(table, SWT.NONE)).setText(IResourceGetter.Utils.getOrException(resourceGetter, CommentConstants.tableSourceColumnTitle));
-			(this.textColumn = new TableColumn(table, SWT.NONE)).setText(IResourceGetter.Utils.getOrException(resourceGetter, CommentConstants.tableTextColumnTitle));
+			new TableColumn(table, SWT.NONE).setText(IResourceGetter.Utils.getOrException(resourceGetter, CommentConstants.tableCreatorColumnTitle));
+			new TableColumn(table, SWT.NONE).setText(IResourceGetter.Utils.getOrException(resourceGetter, CommentConstants.tableSourceColumnTitle));
+			new TableColumn(table, SWT.NONE).setText(IResourceGetter.Utils.getOrException(resourceGetter, CommentConstants.tableTextColumnTitle));
 			table.setHeaderVisible(true);
 			table.addListener(SWT.Selection, new Listener() {
 				@Override
 				public void handleEvent(Event event) {
 					int index = table.getSelectionIndex();
-					if (index != -1) {
-						// Object object = map.get(table.getItem(index).getData());
-						// if (object instanceof Map<?, ?>) {
-						// Map<String, Object> entryMap = (Map<String, Object>) object;
-						// String title = Strings.nullSafeToString(entryMap.get("title"));
-						// String text = Strings.nullSafeToString(entryMap.get("text"));
-						// callback.selected(cardType, title, text);
-						// }
+					if (index != -1 && index < allComments.size()) {
+						Map<String, Object> comment = allComments.get(index);
+						callback.selected(cardType, url, index, comment);
 					}
 				}
 			});
 		}
 
 		public void populate(UserData userData, String cardType, String url) {
-			List<Map<String, Object>> comments = ICommentsReader.Utils.allComments(commentsReader, url, userData.softwareFmId, userData.crypto, CommentConstants.globalSource, CommentConstants.mySource);
-			String titleKey = comments.size() > 0 ? CollectionConstants.commentsTitle : CollectionConstants.commentsNoTitle;
+			this.cardType = cardType;
+			this.url = url;
+			allComments = Lists.sort(ICommentsReader.Utils.allComments(commentsReader, url, userData.softwareFmId, userData.crypto, CommentConstants.globalSource, CommentConstants.mySource), //
+					Comparators.invert(Comparators.mapKey(CommentConstants.timeKey)));
+			String titleKey = allComments.size() > 0 ? CollectionConstants.commentsTitle : CollectionConstants.commentsNoTitle;
 			TitleSpec titleSpec = Functions.call(cc.titleSpecFn, ICardData.Utils.create(cc, cardType, url, Maps.emptyStringObjectMap()));
 
 			String pattern = IResourceGetter.Utils.getOrException(cc.resourceGetterFn, cardType, titleKey);
@@ -103,7 +103,7 @@ public class Comments implements IHasControl {
 			title.setTitleAndImage(titleText, "", titleSpec);
 			body.setBackground(titleSpec.titleColor);
 			addCommentButton.setEnabled(userData.softwareFmId != null);
-			updateDisplay(comments);
+			updateDisplay(allComments);
 		}
 
 		private void updateDisplay(List<Map<String, Object>> comments) {
@@ -127,12 +127,8 @@ public class Comments implements IHasControl {
 	}
 
 	private final CommentsComposite content;
-	private final ICommentsReader commentsReader;
-	private final CardConfig cardConfig;
 
 	public Comments(Composite parent, CardConfig cardConfig, ICommentsReader commentsReader, ICommentsCallback callback, Runnable addComment) {
-		this.cardConfig = cardConfig;
-		this.commentsReader = commentsReader;
 		content = new CommentsComposite(parent, cardConfig, commentsReader, callback, addComment);
 		content.setLayout(Swts.titleAndContentLayout(cardConfig.titleHeight));
 	}
@@ -176,9 +172,10 @@ public class Comments implements IHasControl {
 				Runnable addComment = Runnables.sysout("add comment");
 				ICommentsReader commentsReader = ICommentsReader.Utils.mockReader("sfmId", "Phil", System.currentTimeMillis(), "comment1", "comment2", "comment3");
 				Comments comments = new Comments(from, cardConfig, commentsReader, new ICommentsCallback() {
+
 					@Override
-					public void selected(String cardType, String title, String text) {
-						System.out.println("Selected: " + title + "," + text);
+					public void selected(String cardType, String url, int index, Map<String, Object> comment) {
+						System.out.println("Selected: " + cardType + ", " + url + ", " + index + ", " + comment);
 					}
 				}, addComment);
 				comments.showCommentsFor(new UserData("email", "someSfmId", "someCrypto"), "artifact", "someUrl");

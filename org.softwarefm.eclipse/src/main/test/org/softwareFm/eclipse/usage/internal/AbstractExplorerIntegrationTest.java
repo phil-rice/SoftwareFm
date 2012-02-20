@@ -29,11 +29,13 @@ import org.softwareFm.client.http.requests.IResponseCallback;
 import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.IGitLocal;
 import org.softwareFm.common.IGitOperations;
+import org.softwareFm.common.IUser;
 import org.softwareFm.common.IUserReader;
 import org.softwareFm.common.LocalGroupsReader;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.GroupConstants;
+import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
@@ -59,6 +61,9 @@ import org.softwareFm.eclipse.user.IUserMembershipReader;
 import org.softwareFm.eclipse.user.ProjectTimeGetterFixture;
 import org.softwareFm.eclipse.user.UserMembershipReaderForLocal;
 import org.softwareFm.server.ICrowdSourcedServer;
+import org.softwareFm.server.comments.CommentsForServer;
+import org.softwareFm.server.internal.ServerUser;
+import org.softwareFm.server.processors.CommentProcessor;
 import org.softwareFm.server.processors.IMailer;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.ProcessCallParameters;
@@ -112,6 +117,12 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	protected String userCryptoKey;
 	private ICrowdSourcedServer crowdSourcedServer;
 	private IShowMyData showMyData;
+	protected IUserReader userReader;
+	protected IUserMembershipReader userMembershipReader;
+	protected LocalGroupsReader groupsReader;
+	protected ICommentWriter commentsWriter;
+	protected ICommentsReader commentsReader;
+	protected BasicDataSource dataSource;
 
 	public static interface CardHolderAndCardCallback {
 		void process(ICardHolder cardHolder, ICard card) throws Exception;
@@ -237,6 +248,12 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 
 	}
 
+	protected IUser makeServerUser(Object... defaultValues) {
+		Map<String, Callable<Object>> defaultProperties = Maps.makeMap(defaultValues);
+		return new ServerUser(IGitOperations.Utils.gitOperations(remoteRoot), LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix), Strings.firstNSegments(3), defaultProperties);
+
+	}
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -251,7 +268,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 				new HttpRepoFinder(httpClient, CommonConstants.testTimeOutMs), //
 				IGitOperations.Utils.gitOperations(localRoot), //
 				new HttpGitWriter(httpClient, CommonConstants.testTimeOutMs), remoteAsUri, CommonConstants.staleCachePeriodForTest);
-		BasicDataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
+		dataSource = AbstractLoginDataAccessor.defaultDataSource();
 
 		Callable<String> cryptoGenerator = Callables.value(userCryptoKey);
 		Callable<String> softwareFmIdGenerator = Callables.patternWithCount("newSoftwareFmId{0}");
@@ -259,8 +276,10 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		IGitOperations remoteGitOperations = IGitOperations.Utils.gitOperations(remoteRoot);
 		IFunction1<Map<String, Object>, String> cryptoFn = ICrowdSourcedServer.Utils.cryptoFn(dataSource);
 		Map<String, Callable<Object>> defaultProperties = SoftwareFmServer.makeDefaultProperties();
-		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, remoteGitOperations, cryptoGenerator, softwareFmIdGenerator, cryptoFn, IMailer.Utils.noMailer(),defaultProperties, SoftwareFmConstants.urlPrefix);
-		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, Functions.<ProcessCallParameters, IProcessCall[]> constant(new IProcessCall[0]));
+		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, remoteGitOperations, cryptoGenerator, softwareFmIdGenerator, cryptoFn, IMailer.Utils.noMailer(), defaultProperties, SoftwareFmConstants.urlPrefix);
+		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, Functions.<ProcessCallParameters, IProcessCall[]> constant(new IProcessCall[] {//
+				new CommentProcessor(userReader, userMembershipReader, groupsReader, new CommentsForServer(remoteGitOperations, makeServerUser(), userMembershipReader, groupsReader, Callables.value(1000l)), cryptoFn)
+		}));
 		crowdSourcedServer = ICrowdSourcedServer.Utils.testServerPort(processCall, ICallback.Utils.rethrow());
 
 		try {
@@ -273,22 +292,22 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 			IUrlGenerator userUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.userUrlKey);
 			IUrlGenerator groupUrlGenerator = GroupConstants.groupsGenerator(SoftwareFmConstants.urlPrefix);
 			showMyData = MyDetails.showMyDetails(service, cardConfig, masterDetailSocial, userUrlGenerator, gitLocal, projectTimeGetter);
-			
-			IRequestGroupReportGeneration reportGenerator = new RequestGroupReportGeneration(httpClient, IResponseCallback.Utils.sysoutStatusCallback());
-			IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator,groupUrlGenerator, gitLocal, projectTimeGetter, reportGenerator);
-			IShowMyPeople showMyPeople = MyPeople.showMyPeople(service, masterDetailSocial, cardConfig, gitLocal, userUrlGenerator, groupUrlGenerator, projectTimeGetter, reportGenerator, CommonConstants.testTimeOutMs);
-			IUserReader userReader = IUserReader.Utils.exceptionUserReader();
-			IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, userReader);
-			LocalGroupsReader groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
 
-			ICommentWriter comments = ICommentWriter.Utils.commentWriter(httpClient, CommonConstants.testTimeOutMs);
-			ICommentsReader commentsReader = new CommentsReaderLocal(gitLocal, userReader, userMembershipReader, groupsReader);
+			IRequestGroupReportGeneration reportGenerator = new RequestGroupReportGeneration(httpClient, IResponseCallback.Utils.sysoutStatusCallback());
+			IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, projectTimeGetter, reportGenerator);
+			IShowMyPeople showMyPeople = MyPeople.showMyPeople(service, masterDetailSocial, cardConfig, gitLocal, userUrlGenerator, groupUrlGenerator, projectTimeGetter, reportGenerator, CommonConstants.testTimeOutMs);
+			userReader = IUserReader.Utils.exceptionUserReader();
+			userMembershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, userReader);
+			groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
+
+			commentsWriter = ICommentWriter.Utils.commentWriter(httpClient, CommonConstants.testTimeOutMs);
+			commentsReader = makeCommentsReader();
 			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, userReader, userMembershipReader, groupsReader, cardConfig, //
 					Arrays.asList(rootArtifactUrl, rootSnippetUrl), //
 					IPlayListGetter.Utils.noPlayListGetter(), service, //
 					ILoginStrategy.Utils.noLoginStrategy(),//
 					showMyData, showMyGroups, showMyPeople,//
-					IUserDataManager.Utils.userDataManager(), comments, commentsReader );
+					IUserDataManager.Utils.userDataManager(), commentsWriter, commentsReader, Callables.<Long>exceptionIfCalled());
 			IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
 			new SnippetFeedConfigurator(cardConfig.cardDataStore, cardConfig.resourceGetterFn).configure(explorer);
 			// SnippetFeedConfigurator.configure(explorer, cardConfig);
@@ -300,6 +319,10 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 			e.printStackTrace();
 			throw e;
 		}
+	}
+
+	protected ICommentsReader makeCommentsReader() {
+		return new CommentsReaderLocal(gitLocal, userReader, userMembershipReader, groupsReader);
 	}
 
 	@Override

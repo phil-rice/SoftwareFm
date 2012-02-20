@@ -74,6 +74,8 @@ public class GitOperations implements IGitOperations {
 
 	protected void addAllAndCommit(IFileDescription fileDescription) {
 		File repositoryFile = fileDescription.findRepositoryUrl(root);
+		if (repositoryFile == null)
+			throw new NullPointerException(MessageFormat.format(CommonMessages.cannotFindRepositoryUrl, fileDescription));
 		String url = Files.offset(root, repositoryFile);
 		addAllAndCommit(url, GitOperations.class.getSimpleName());
 	}

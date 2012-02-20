@@ -23,6 +23,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.future.GatedMockFuture;
@@ -147,13 +149,31 @@ abstract public class SwtTest extends TestCase {
 		List<String> actual = Arrays.asList(combo.getItems());
 		assertEquals(items, actual);
 		assertEquals(text, combo.getText());
-	
+
 	}
 
 	protected void checkRadioButton(Composite composite, int index, String text, boolean selected) {
 		Button button = (Button) composite.getChildren()[index];
 		assertEquals(text, button.getText());
 		assertEquals(selected, button.getSelection());
+	}
+
+	protected void checkTableColumns(Table table, String... strings) {
+		assertTrue(table.getHeaderVisible());
+		assertEquals(strings.length, table.getColumnCount());
+		for (int i = 0; i < strings.length; i++)
+			assertEquals(strings[i], table.getColumn(i).getText());
+
+	}
+
+	protected void checkTable(Table table, int index, Object key, String... strings) {
+		TableItem item = table.getItem(index);
+		TableColumn[] columns = table.getColumns();
+		assertEquals(columns.length, strings.length);
+		assertEquals(key, item.getData());
+		for (int i = 0; i < strings.length; i++)
+			assertEquals(strings[i], item.getText(i));
+
 	}
 
 }

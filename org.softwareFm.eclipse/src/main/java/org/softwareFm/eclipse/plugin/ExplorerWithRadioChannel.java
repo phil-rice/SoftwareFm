@@ -27,6 +27,7 @@ import org.softwareFm.common.LocalGroupsReader;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.IRequestGroupReportGeneration;
@@ -117,7 +118,7 @@ public class ExplorerWithRadioChannel {
 
 					ICommentWriter commentWriter = ICommentWriter.Utils.commentWriter(client, CommonConstants.clientTimeOut);
 					ICommentsReader commentsReader = new CommentsReaderLocal(gitLocal, userReader, userMembershipReader, groupsReader);
-					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, userReader, userMembershipReader, groupsReader, cardConfig, rootUrl, playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople, IUserDataManager.Utils.userDataManager(), commentWriter, commentsReader);
+					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, userReader, userMembershipReader, groupsReader, cardConfig, rootUrl, playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople, IUserDataManager.Utils.userDataManager(), commentWriter, commentsReader, Callables.time());
 
 					ICardMenuItemHandler.Utils.addSoftwareFmMenuItemHandlers(explorer);
 					IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);

@@ -13,5 +13,6 @@ public class CommonMessages {
 	public static final String madeRoot = "Made root at location {0}";
 	public static final String couldntStop = "Couldn't stop the server";
 	public static final String timedOut = "Timed out";
+	public static final String cannotFindRepositoryUrl = "Cannot find repository url for {0}";
 
 }

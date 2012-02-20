@@ -51,6 +51,7 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 
 	public void testGroupComments() {
 		groups.setGroupProperty(groupId, groupCryptoKey, CommentConstants.commentCryptoKey, Crypto.makeKey());
+		groups.setGroupProperty(groupId, groupCryptoKey, GroupConstants.groupNameKey, "groupName");
 		membershipForServer.addMembership(softwareFmId, userCrypto, groupId, groupCryptoKey, "someStatus");
 		
 		checkAddGroupComment(text1, text1);
@@ -59,7 +60,7 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 	}
 
 	protected void checkAddGlobalComment(String text, String... expectedText) {
-		checkAdd(text, new Callable<ICommentDefn>() {
+		checkAdd("someSource", text, new Callable<ICommentDefn>() {
 			@Override
 			public ICommentDefn call() throws Exception {
 				return ICommentDefn.Utils.everyoneInitial("a/b");
@@ -67,13 +68,13 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 		}, new Callable<List<Map<String, Object>>>() {
 			@Override
 			public List<Map<String, Object>> call() throws Exception {
-				return commentsReader.globalComments("a/b");
+				return commentsReader.globalComments("a/b","someSource");
 			}
 		}, expectedText);
 	}
 
 	protected void checkAddMyComment(String text, String... expectedText) {
-		checkAdd(text, new Callable<ICommentDefn>() {
+		checkAdd("someSource", text, new Callable<ICommentDefn>() {
 			@Override
 			public ICommentDefn call() throws Exception {
 				return ICommentDefn.Utils.myInitial(userReader, softwareFmId, userCrypto, "a/b");
@@ -81,13 +82,13 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 		}, new Callable<List<Map<String, Object>>>() {
 			@Override
 			public List<Map<String, Object>> call() throws Exception {
-				return commentsReader.myComments("a/b", softwareFmId, userCrypto);
+				return commentsReader.myComments("a/b", softwareFmId, userCrypto,"someSource");
 			}
 		}, expectedText);
 	}
 
 	protected void checkAddGroupComment(String text, String... expectedText) {
-		checkAdd(text, new Callable<ICommentDefn>() {
+		checkAdd("groupName", text, new Callable<ICommentDefn>() {
 			@Override
 			public ICommentDefn call() throws Exception {
 				return ICommentDefn.Utils.groupInitial(groups, groupId, groupCryptoKey, "a/b");
@@ -100,21 +101,21 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 		}, expectedText);
 	}
 
-	protected void checkAdd(String text, Callable<ICommentDefn> makeDefinition, Callable<List<Map<String, Object>>> actualGetter, String... expectedText) {
+	protected void checkAdd(final String source, String text, Callable<ICommentDefn> makeDefinition, Callable<List<Map<String, Object>>> actualGetter, String... expectedText) {
 		commentWriter.addComment(softwareFmId, userCrypto, Callables.call(makeDefinition), text);
 		gitLocal.clearCaches();
 		List<Map<String, Object>> globalComments = Callables.call(actualGetter);
 		List<Map<String, Object>> expected = Lists.map(Arrays.asList(expectedText), new IFunction1<String, Map<String, Object>>() {
 			@Override
 			public Map<String, Object> apply(String from) throws Exception {
-				return comment(from);
+				return comment(source, from);
 			}
 		});
 		assertEquals(expected, globalComments);
 	}
 
-	protected Map<String, Object> comment(String text) {
-		return Maps.makeMap(CommentConstants.textKey, text, LoginConstants.softwareFmIdKey, softwareFmId, CommentConstants.creatorKey, moniker, CommentConstants.timeKey, 1000l);
+	protected Map<String, Object> comment(String source, String text) {
+		return Maps.makeMap(CommentConstants.sourceKey, source, CommentConstants.textKey, text, LoginConstants.softwareFmIdKey, softwareFmId, CommentConstants.creatorKey, moniker, CommentConstants.timeKey, 1000l);
 	}
 
 	@Override

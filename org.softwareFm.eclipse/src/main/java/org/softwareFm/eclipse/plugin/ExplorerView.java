@@ -20,6 +20,7 @@ import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.IRequestGroupReportGeneration;
@@ -86,7 +87,7 @@ public class ExplorerView extends ViewPart {
 		LocalGroupsReader groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
 		ICommentWriter commentsWriter = ICommentWriter.Utils.commentWriter(client, CommonConstants.clientTimeOut);
 		ICommentsReader commentsReader= new CommentsReaderLocal(gitLocal, userReader, userMembershipReader, groupsReader);
-		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, userReader, userMembershipReader, groupsReader, cardConfig, getRootUrls(), playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople, userDataManager, commentsWriter, commentsReader);
+		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, userReader, userMembershipReader, groupsReader, cardConfig, getRootUrls(), playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople, userDataManager, commentsWriter, commentsReader, Callables.time());
 		IUsageStrategy usageStrategy = IUsageStrategy.Utils.usage(activator.getServiceExecutor(), client, gitLocal, userUrlGenerator);
 		actionBar = makeActionBar(explorer, cardConfig, usageStrategy);
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
