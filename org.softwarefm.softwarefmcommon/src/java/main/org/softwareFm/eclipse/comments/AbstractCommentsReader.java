@@ -46,7 +46,7 @@ public abstract class AbstractCommentsReader implements ICommentsReader {
 				throw new IllegalStateException(MessageFormat.format(GroupConstants.missingDataFromMembership, softwareFmId, groupData));
 			String commentCrypto = groupsReader.getGroupProperty(groupId, groupCrypto, CommentConstants.commentCryptoKey);
 			String groupName = groupsReader.getGroupProperty(groupId, groupCrypto, GroupConstants.groupNameKey);
-			if (commentCrypto == null) {//it is entirely possible to belong to a group for which no one has made a comment
+			if (commentCrypto != null) {//it is entirely possible to belong to a group for which no one has made a comment
 				IFileDescription fd = IFileDescription.Utils.encrypted(baseUrl, groupId + "." + CommentConstants.commentExtension, commentCrypto);
 				List<Map<String, Object>> maps = Lists.map(gitReader.getFileAsListOfMaps(fd), Maps.<String, Object> withFn(CommentConstants.sourceKey, groupName));
 				result.addAll(maps);

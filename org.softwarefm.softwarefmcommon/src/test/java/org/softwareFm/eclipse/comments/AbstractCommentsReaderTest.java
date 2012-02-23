@@ -42,6 +42,30 @@ public abstract class AbstractCommentsReaderTest extends GitTest {
 	protected IGroups groups;
 
 	@SuppressWarnings("unchecked")
+	public void testGroupComments() {
+		remoteOperations.init("a");
+		user.setUserProperty(softwareFmId, userCrypto, GroupConstants.groupCryptoKey, groupsCrypto);
+		user.setUserProperty(softwareFmId, userCrypto, GroupConstants.membershipCryptoKey, Crypto.makeKey());
+
+		Map<String, String> groupIdToCrypto = setUpGroups("groupId1", "groupId2", "groupId3");
+		for (String groupId : groupIdToCrypto.keySet()) {
+			String groupCrypto = groupIdToCrypto.get(groupId);
+			groups.setGroupProperty(groupId, groupCrypto, GroupConstants.groupNameKey, groupId + "Name");
+			String groupCommentCrypto = groups.getGroupProperty(groupId, groupCrypto, CommentConstants.commentCryptoKey);
+
+			IFileDescription fd = IFileDescription.Utils.encrypted("a/b", groupId + "." + CommentConstants.commentExtension, groupCommentCrypto);
+			remoteOperations.append(fd, Maps.with(comment1, "a", groupId));
+			remoteOperations.append(fd, comment2);
+			remoteOperations.addAllAndCommit("a", "testGlobal");
+		}
+		String sourcekey = CommentConstants.sourceKey;
+		assertEquals(Arrays.asList(//
+				Maps.with(comment1, "a", "groupId1", sourcekey, "groupId1Name"), Maps.with(comment2, sourcekey, "groupId1Name"),//
+				Maps.with(comment1, "a", "groupId2", sourcekey, "groupId2Name"), Maps.with(comment2, sourcekey, "groupId2Name"),//
+				Maps.with(comment1, "a", "groupId3", sourcekey, "groupId3Name"), Maps.with(comment2, sourcekey, "groupId3Name")), reader.groupComments("a/b", softwareFmId, userCrypto));
+	}
+
+	@SuppressWarnings("unchecked")
 	public void testGlobal() {
 		IFileDescription fd = IFileDescription.Utils.plain("a/b", CommentConstants.globalCommentsFile);
 		remoteOperations.init("a");
@@ -68,32 +92,6 @@ public abstract class AbstractCommentsReaderTest extends GitTest {
 		remoteOperations.put(IFileDescription.Utils.plain("a/z"), v11);
 		remoteOperations.addAllAndCommit("a", "testUserCommentsWhenNoCommentsHaveBeenMade");// needed to ensure that the repository is in a good state
 		assertEquals(Collections.emptyList(), reader.myComments("a/b", softwareFmId, userCrypto, "asd"));
-	}
-
-	@SuppressWarnings("unchecked")
-	public void testGroupComments() {
-		user.setUserProperty(softwareFmId, userCrypto, GroupConstants.groupCryptoKey, groupsCrypto);
-		String membershipCrypto = Crypto.makeKey();
-		user.setUserProperty(softwareFmId, userCrypto, GroupConstants.membershipCryptoKey, membershipCrypto);
-		assertEquals(groupsCrypto, user.getUserProperty(softwareFmId, userCrypto, GroupConstants.groupCryptoKey));
-		assertEquals(membershipCrypto, user.getUserProperty(softwareFmId, userCrypto, GroupConstants.membershipCryptoKey));
-		Map<String, String> groupIdToCrypto = setUpGroups("groupId1", "groupId2", "groupId3");
-		for (String groupId : groupIdToCrypto.keySet()) {
-			String groupCrypto = groupIdToCrypto.get(groupId);
-			groups.setGroupProperty(groupId, groupCrypto, GroupConstants.groupNameKey, groupId + "Name");
-			String groupCommentCrypto = groups.getGroupProperty(groupId, groupCrypto, CommentConstants.commentCryptoKey);
-
-			IFileDescription fd = IFileDescription.Utils.encrypted("a/b", groupId + "." + CommentConstants.commentExtension, groupCommentCrypto);
-			remoteOperations.init("a");
-			remoteOperations.append(fd, Maps.with(comment1, "a", groupId));
-			remoteOperations.append(fd, comment2);
-			remoteOperations.addAllAndCommit("a", "testGlobal");
-		}
-		String sourcekey = CommentConstants.sourceKey;
-		assertEquals(Arrays.asList(//
-				Maps.with(comment1, "a", "groupId1", sourcekey, "groupId1Name"), Maps.with(comment2, sourcekey, "groupId1Name"),//
-				Maps.with(comment1, "a", "groupId2", sourcekey, "groupId2Name"), Maps.with(comment2, sourcekey, "groupId2Name"),//
-				Maps.with(comment1, "a", "groupId3", sourcekey, "groupId3Name"), Maps.with(comment2, sourcekey, "groupId3Name")), reader.groupComments("a/b", softwareFmId, userCrypto));
 	}
 
 	protected Map<String, String> setUpGroups(String... groupIds) {
