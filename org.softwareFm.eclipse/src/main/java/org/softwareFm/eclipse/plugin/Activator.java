@@ -49,6 +49,8 @@ public class Activator extends AbstractUIPlugin {
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.softwareFm.explorer.eclipse.ExplorerView"; //$NON-NLS-1$
 
+	public static final boolean profile = true;
+
 	// The shared instance
 	private static Activator plugin;
 
@@ -202,13 +204,16 @@ public class Activator extends AbstractUIPlugin {
 		}
 	}
 
-	protected void preferencesPut(String softwarefmidkey, String softwareFmId) {
+	protected void preferencesPut(String key, String value) {
 		Preferences userDataPreferences = getPluginPreferences();
-		userDataPreferences.setValue(softwarefmidkey, softwareFmId);
+		if (value == null)
+			userDataPreferences.setToDefault(key);
+		else
+			userDataPreferences.setValue(key, value);
 	}
 
 	private String getOr(String key, String object) {
-		//This is using a deprecated approach, as this is supported on older versions of eclipse
+		// This is using a deprecated approach, as this is supported on older versions of eclipse
 		Preferences userDataPreferences = getPluginPreferences();
 		if (userDataPreferences.contains(key))
 			return userDataPreferences.getString(key);

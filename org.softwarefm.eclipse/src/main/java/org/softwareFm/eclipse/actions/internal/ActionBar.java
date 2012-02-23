@@ -27,6 +27,7 @@ import org.softwareFm.eclipse.jdtBinding.BindingRipperResult;
 import org.softwareFm.eclipse.jdtBinding.ExpressionData;
 import org.softwareFm.eclipse.jdtBinding.IExpressionCategoriser;
 import org.softwareFm.eclipse.jdtBinding.JdtConstants;
+import org.softwareFm.eclipse.plugin.Activator;
 import org.softwareFm.images.actions.ActionAnchor;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardHolder;
@@ -41,7 +42,7 @@ import org.softwareFm.swt.explorer.IExplorer;
 import org.softwareFm.swt.swt.Swts;
 
 public class ActionBar implements IActionBar {
-
+	private final static boolean profile = Activator.profile || true;
 	private final static boolean newFeatures = false;
 
 	private String urlKey;
@@ -53,9 +54,6 @@ public class ActionBar implements IActionBar {
 	private IAfterDisplayCard afterDisplayCard = IAfterDisplayCard.Utils.noCallback();
 
 	private final boolean admin;
-
-
-
 
 	static enum State {
 		URL, JUST_JAR, FROM_JAR, FROM_PATH, PEOPLE, DEBUG;
@@ -76,6 +74,7 @@ public class ActionBar implements IActionBar {
 	}
 
 	public void selectionOccured(final BindingRipperResult ripperResult, boolean showRadioStation) {
+		long startTime = profile ? System.currentTimeMillis() : 0;
 		this.ripperResult = ripperResult;
 		if (ripperResult == null || ripperResult.path == null)
 			return;
@@ -100,6 +99,8 @@ public class ActionBar implements IActionBar {
 		default:
 			throw new IllegalStateException(state.toString());
 		}
+		if (profile)
+			System.out.println("Action bar selection: " + (System.currentTimeMillis() - startTime));
 	}
 
 	private void debug() {
@@ -223,7 +224,7 @@ public class ActionBar implements IActionBar {
 				});
 				if (showRadioStation)
 					explorer.selectAndNext(url);
-				
+
 				return null;
 			}
 

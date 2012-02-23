@@ -31,7 +31,7 @@ public abstract class AbstractCommentsReader implements ICommentsReader {
 	@Override
 	public List<Map<String, Object>> globalComments(String baseUrl, String source) {
 		IFileDescription fd = IFileDescription.Utils.plain(baseUrl, CommentConstants.globalCommentsFile);
-		List<Map<String, Object>> result = Lists.map(gitReader.getFileAsListOfMaps(fd), Maps.<String,Object>withFn(CommentConstants.sourceKey, source));
+		List<Map<String, Object>> result = Lists.map(gitReader.getFileAsListOfMaps(fd), Maps.<String, Object> withFn(CommentConstants.sourceKey, source));
 		return result;
 	}
 
@@ -46,11 +46,11 @@ public abstract class AbstractCommentsReader implements ICommentsReader {
 				throw new IllegalStateException(MessageFormat.format(GroupConstants.missingDataFromMembership, softwareFmId, groupData));
 			String commentCrypto = groupsReader.getGroupProperty(groupId, groupCrypto, CommentConstants.commentCryptoKey);
 			String groupName = groupsReader.getGroupProperty(groupId, groupCrypto, GroupConstants.groupNameKey);
-			if (commentCrypto == null)
-				throw new IllegalStateException(MessageFormat.format(GroupConstants.missingDataFromMembership, softwareFmId, groupData));
-			IFileDescription fd = IFileDescription.Utils.encrypted(baseUrl, groupId + "." + CommentConstants.commentExtension, commentCrypto);
-			List<Map<String, Object>> maps = Lists.map(gitReader.getFileAsListOfMaps(fd), Maps.<String,Object>withFn(CommentConstants.sourceKey, groupName));
-			result.addAll(maps);
+			if (commentCrypto == null) {//it is entirely possible to belong to a group for which no one has made a comment
+				IFileDescription fd = IFileDescription.Utils.encrypted(baseUrl, groupId + "." + CommentConstants.commentExtension, commentCrypto);
+				List<Map<String, Object>> maps = Lists.map(gitReader.getFileAsListOfMaps(fd), Maps.<String, Object> withFn(CommentConstants.sourceKey, groupName));
+				result.addAll(maps);
+			}
 		}
 		return result;
 	}
@@ -59,7 +59,7 @@ public abstract class AbstractCommentsReader implements ICommentsReader {
 	public List<Map<String, Object>> myComments(String baseUrl, String softwareFmId, String userCrypto, String source) {
 		String commentCrypto = userReader.getUserProperty(softwareFmId, userCrypto, CommentConstants.commentCryptoKey);
 		IFileDescription fd = IFileDescription.Utils.encrypted(baseUrl, softwareFmId + "." + CommentConstants.commentExtension, commentCrypto);
-		List<Map<String, Object>> result = Lists.map(gitReader.getFileAsListOfMaps(fd), Maps.<String,Object>withFn(CommentConstants.sourceKey, source));
+		List<Map<String, Object>> result = Lists.map(gitReader.getFileAsListOfMaps(fd), Maps.<String, Object> withFn(CommentConstants.sourceKey, source));
 		return result;
 	}
 

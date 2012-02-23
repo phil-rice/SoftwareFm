@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.log4j.Logger;
 import org.softwareFm.common.IGroupsReader;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.maps.Maps;
@@ -18,6 +19,7 @@ import org.softwareFm.server.processors.IGenerateUsageReportGenerator;
 
 public class GenerateUsageProjectGenerator implements IGenerateUsageReportGenerator {
 
+	private final Logger logger = Logger.getLogger(GenerateUsageProjectGenerator.class);
 	private final IGroupsReader groupsReader;
 	private final IUsageReader usageReader;
 
@@ -28,11 +30,14 @@ public class GenerateUsageProjectGenerator implements IGenerateUsageReportGenera
 
 	@Override
 	public Map<String, Map<String, Map<String, List<Integer>>>> generateReport(String groupId, String groupCryptoKey, String month) {
+		logger.debug("generateReport. GroupId: " + groupId + ", Month: " + month);
 		Map<String, Map<String, Map<String, List<Integer>>>> result = Maps.newMap();
 		for (Map<String, Object> userData : groupsReader.users(groupId, groupCryptoKey)) {
 			String usersProjectCryptoKey = (String) userData.get(SoftwareFmConstants.projectCryptoKey);
 			String softwareFmId = (String) userData.get(LoginConstants.softwareFmIdKey);
+			logger.debug("user: " + softwareFmId);
 			Map<String, Map<String, List<Integer>>> projectDetails = usageReader.getProjectDetails(softwareFmId, usersProjectCryptoKey, month);
+			logger.debug("ProjectDetails: \n" + projectDetails);
 			if (projectDetails != null)
 				for (Entry<String, Map<String, List<Integer>>> groupEntry : projectDetails.entrySet())
 					for (Entry<String, List<Integer>> artifactEntry : groupEntry.getValue().entrySet())

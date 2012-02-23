@@ -43,7 +43,7 @@ public class UsageProcessor extends AbstractCommandProcessor {
 		jarToGroupArtifactAndVersion.convertJarToGroupArtifactAndVersion(digest, new IGroupArtifactVersionCallback() {
 			@Override
 			public void process(String groupId, String artifactId, String version) {
-				logger.debug("digest: " + digest +", groupId" + groupId + ", artifactId" + artifactId + ", version: " + version + month + ", " + day);
+				logger.debug("digest: " + digest +", groupId: " + groupId + ", artifactId: " + artifactId + ", version: " + version + month + ", " + day);
 				String softwareFmId = (String) parameters.get(LoginConstants.softwareFmIdKey);
 				project.addProjectDetails(softwareFmId, groupId, artifactId, month, day);
 			}

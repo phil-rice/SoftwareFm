@@ -162,7 +162,7 @@ public class MyPeople implements IHasComposite {
 				softwareFmIdToName.put(softwareFmId, email);
 			}
 			for (String month : timeGetter.lastNMonths(3)) {
-				generateReportIfPossible(groupId, groupsCrypto, month);
+				generateReportIfPossible(groupsId, groupsCrypto, month);
 				Map<String, Map<String, Map<String, List<Integer>>>> report = (Map) groupsReader.getUsageReport(groupsId, groupsCrypto, month);
 				if (report != null)
 					for (Entry<String, Map<String, Map<String, List<Integer>>>> groupEntry : report.entrySet())

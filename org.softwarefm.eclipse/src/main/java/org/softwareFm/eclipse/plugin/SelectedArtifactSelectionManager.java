@@ -33,6 +33,7 @@ import org.softwareFm.eclipse.jdtBinding.BindingRipperResult;
 import org.softwareFm.eclipse.jdtBinding.IBindingRipper;
 
 public class SelectedArtifactSelectionManager implements ISelectedBindingManager, ISelectionListener {
+	private static final boolean profile = Activator.profile || false;
 	private static final Object selectionKey = "selection";
 	private static final Object ripperKey = "ripper";
 
@@ -46,6 +47,7 @@ public class SelectedArtifactSelectionManager implements ISelectedBindingManager
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+		long startTime = profile ? System.currentTimeMillis() : 0;
 		try {
 			if (selection instanceof ITextSelection) {
 				ITextSelection textSelection = (ITextSelection) selection;
@@ -54,6 +56,9 @@ public class SelectedArtifactSelectionManager implements ISelectedBindingManager
 					fireListeners(ripperResult);
 			}
 		} catch (Exception e) {
+		} finally {
+			if (profile)
+				System.out.println(getClass().getSimpleName() + " took: " + (System.currentTimeMillis() - startTime));
 		}
 	}
 
