@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.softwarefm.common
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: SoftwareFM
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.junit;bundle-version="4.8.2";visibility:=reexport,
+Require-Bundle: org.junit;visibility:=reexport,
  org.softwarefm.externals;bundle-version="1.0.3";visibility:=reexport
 Export-Package: org.softwareFm.common,
  org.softwareFm.common.aggregators,

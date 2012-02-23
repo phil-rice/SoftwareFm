@@ -8,10 +8,9 @@ import java.io.File;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.equinox.security.storage.ISecurePreferences;
-import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -43,6 +42,7 @@ import org.softwareFm.swt.explorer.internal.UserData;
 /**
  * The activator class controls the plug-in life cycle
  */
+@SuppressWarnings("deprecation")
 public class Activator extends AbstractUIPlugin {
 	boolean local = false;
 
@@ -69,7 +69,7 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		
+
 	}
 
 	@Override
@@ -143,7 +143,6 @@ public class Activator extends AbstractUIPlugin {
 
 	private String findOrMakeUuid() {
 		try {
-			@SuppressWarnings("deprecation")
 			IEclipsePreferences prefs = new InstanceScope().getNode(PLUGIN_ID);
 			String uuid = prefs.get("Uuid", null);
 			if (uuid == null) {
@@ -181,22 +180,17 @@ public class Activator extends AbstractUIPlugin {
 	protected IUserDataManager makeUserDataManager() {
 		try {
 			IUserDataManager result = IUserDataManager.Utils.userDataManager();
-			ISecurePreferences preferences = SecurePreferencesFactory.getDefault();
-			ISecurePreferences userDataPreferences = preferences.node("softwareFmUserData");
-			String softwareFmId = userDataPreferences.get(LoginConstants.softwareFmIdKey, null);
-			String email = userDataPreferences.get(LoginConstants.emailKey, null);
-			String crypto = userDataPreferences.get(LoginConstants.cryptoKey, null);
+			String softwareFmId = getOr(LoginConstants.softwareFmIdKey, null);
+			String email = getOr(LoginConstants.emailKey, null);
+			String crypto = getOr(LoginConstants.cryptoKey, null);
 			result.setUserData(this, new UserData(email, softwareFmId, crypto));
 			result.addUserDataListener(new IUserDataListener() {
 				@Override
 				public void userDataChanged(Object source, UserData userData) {
 					try {
-						ISecurePreferences preferences = SecurePreferencesFactory.getDefault();
-						ISecurePreferences userDataPreferences = preferences.node("softwareFmUserData");
-						userDataPreferences.put(LoginConstants.softwareFmIdKey, userData.softwareFmId, false);
-						userDataPreferences.put(LoginConstants.emailKey, userData.email, false);
-						userDataPreferences.put(LoginConstants.cryptoKey, userData.crypto, true);
-						preferences.flush();
+						preferencesPut(LoginConstants.softwareFmIdKey, userData.softwareFmId);
+						preferencesPut(LoginConstants.emailKey, userData.email);
+						preferencesPut(LoginConstants.cryptoKey, userData.crypto);
 					} catch (Exception e) {
 						throw WrappedException.wrap(e);
 					}
@@ -206,6 +200,20 @@ public class Activator extends AbstractUIPlugin {
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
+	}
+
+	protected void preferencesPut(String softwarefmidkey, String softwareFmId) {
+		Preferences userDataPreferences = getPluginPreferences();
+		userDataPreferences.setValue(softwarefmidkey, softwareFmId);
+	}
+
+	private String getOr(String key, String object) {
+		//This is using a deprecated approach, as this is supported on older versions of eclipse
+		Preferences userDataPreferences = getPluginPreferences();
+		if (userDataPreferences.contains(key))
+			return userDataPreferences.getString(key);
+		else
+			return object;
 	}
 
 }
