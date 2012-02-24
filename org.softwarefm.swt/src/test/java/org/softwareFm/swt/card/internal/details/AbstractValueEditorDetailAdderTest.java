@@ -7,7 +7,6 @@ package org.softwareFm.swt.card.internal.details;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.junit.Test;
 import org.softwareFm.common.runnable.Runnables;
 import org.softwareFm.swt.card.ILineItemFunction;
@@ -55,10 +54,9 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 		checkHasTextBasedOnCardConfigValueFn("pre_stringValue", addPrefixToValue);
 	}
 
-
 	public void testOkButtonNotEnabledIfTextNotChanged() {
 		TE textEditor = makeHolder(stringValue);
-		Label okButton = textEditor.getOkCancel().okButton;
+		Control okButton =textEditor.getOkCancel().okButton();
 		assertFalse(okButton.isEnabled());
 
 		textEditor.setValue("someothervalue");
@@ -70,7 +68,7 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 
 	public void testCancelButtonEnabled() {
 		TE textEditor = makeHolder(stringValue);
-		Label cancelButton = textEditor.getOkCancel().cancelButton;
+		Control cancelButton = textEditor.getOkCancel().cancelButton();
 		assertTrue(cancelButton.isEnabled());
 
 		textEditor.setValue("some other value");
@@ -83,7 +81,7 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 
 	public void testUpdatesWhenOKPressed() {
 		TE textEditor = makeHolder(stringValue);
-		Label okButton = textEditor.getOkCancel().okButton;
+		Control okButton =  textEditor.getOkCancel().okButton();
 		textEditor.setValue("some other value");
 		checkCardDataStoreNotUpdated();
 		okButton.setEnabled(true);
@@ -93,22 +91,25 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 
 	public void testDisposesWhenOkPressed() {
 		TE textEditor = makeHolder(stringValue);
-		checkPressCausesDispose(textEditor, textEditor.getOkCancel().okButton);
+		Control okButton =  textEditor.getOkCancel().okButton();
+		checkPressCausesDispose(textEditor, okButton);
 	}
 
 	public void testDisposesWhenCancelPressed() {
 		TE textEditor = makeHolder(stringValue);
-		checkPressCausesDispose(textEditor, textEditor.getOkCancel().cancelButton);
+		Control cancelButton =  textEditor.getOkCancel().cancelButton();
+		checkPressCausesDispose(textEditor, cancelButton);
 	}
 
 	public void testDoesntUpdateWhenCancelPressed() {
 		TE textEditor = makeHolder(stringValue);
 		textEditor.setValue("some other value");
-		checkPressCausesDispose(textEditor, textEditor.getOkCancel().cancelButton);
+		Control cancelButton =  textEditor.getOkCancel().cancelButton();
+		checkPressCausesDispose(textEditor, cancelButton);
 		checkCardDataStoreNotUpdated();
 	}
 
-	private void checkPressCausesDispose(TE textEditor, Label button) {
+	private void checkPressCausesDispose(TE textEditor, Control button) {
 		button.setEnabled(true);
 		assertFalse(textEditor.getControl().isDisposed());
 		Swts.Buttons.press(button);
@@ -125,8 +126,6 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 		assertEquals(updatedValue, value);
 		assertEquals(0, cardDataStore.rememberedPuts.size()); // The card data store should be updated by the callback, not by other means
 	}
-
-
 
 	private void checkHasTextBasedOnCardConfigValueFn(String expected, ILineItemFunction<String> valueFn) {
 		TE holder = makeHolder(cardConfig.withValueFn(valueFn), stringValue);

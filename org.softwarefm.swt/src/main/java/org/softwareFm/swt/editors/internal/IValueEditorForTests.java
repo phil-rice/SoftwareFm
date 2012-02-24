@@ -5,7 +5,7 @@
 package org.softwareFm.swt.editors.internal;
 
 import org.softwareFm.swt.editors.IValueEditor;
-import org.softwareFm.swt.okCancel.OkCancel;
+import org.softwareFm.swt.okCancel.IOkCancel;
 
 public interface IValueEditorForTests extends IValueEditor {
 	String getTitleText();
@@ -13,7 +13,7 @@ public interface IValueEditorForTests extends IValueEditor {
 	/** The text representation that would be stored if ok was to be pressed */
 	String getValue();
 
-	OkCancel getOkCancel();
+	IOkCancel getOkCancel();
 
 	/** Set the value so that if getValue was called it would return this */
 	void setValue(String newValue);

@@ -10,68 +10,36 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.maps.Maps;
-import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.card.internal.CardTable;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
+import org.softwareFm.swt.editors.DataWithOkCancelComposite;
 import org.softwareFm.swt.editors.ICardEditorCallback;
 import org.softwareFm.swt.editors.IValueComposite;
 import org.softwareFm.swt.editors.IValueEditor;
-import org.softwareFm.swt.okCancel.OkCancel;
-import org.softwareFm.swt.title.TitleSpec;
-import org.softwareFm.swt.title.TitleWithTitlePaintListener;
 
 public class CardEditor implements IValueEditor, ICardData {
 
-	static class CardEditorComposite extends Composite implements IValueComposite<Table> {
+	static class CardEditorComposite extends DataWithOkCancelComposite<Table> implements IValueComposite<Table> {
 
-		private final CardConfig cardConfig;
-		private final OkCancel okCancel;
 		private final CardTable cardTable;
-		private final TitleWithTitlePaintListener titleWithTitlePaintListener;
-		private final ValueEditorBodyComposite body;
+		private final ICardEditorCallback callback;
+		private final ICardData cardData;
 
 		public CardEditorComposite(Composite parent, String titleString, final ICardData cardData, final ICardEditorCallback callback) {
-			super(parent, SWT.NULL);
-			this.cardConfig = cardData.getCardConfig();
-			TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, cardData);
-			titleWithTitlePaintListener = new TitleWithTitlePaintListener(this, cardConfig, titleSpec, titleString, "initialTooltip");
-			body = new ValueEditorBodyComposite(this, cardConfig, titleSpec);
-
-			cardTable = new CardTable(body.innerBody, cardConfig.withStyleAndSelection(cardConfig.cardStyle, true), titleSpec, cardData.cardType(), cardData.data());
-
-			IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, null);
-			okCancel = new OkCancel(body.innerBody, resourceGetter, cardConfig.imageFn, new Runnable() {
-				@Override
-				public void run() {
-					callback.ok(cardData);
-				}
-			}, new Runnable() {
-				@Override
-				public void run() {
-					callback.cancel(cardData);
-				}
-			});
-			body.innerBody.addPaintListener(new PaintListener() {
-				@Override
-				public void paintControl(PaintEvent e) {
-					int width = body.innerBody.getSize().x;
-					int y = okCancel.getControl().getLocation().y - 1;
-					e.gc.setForeground(e.display.getSystemColor(SWT.COLOR_GRAY));
-					e.gc.drawLine(0, y, width, y);
-				}
-			});
+			super(parent, cardData.getCardConfig(),cardData.cardType(), titleString);
+			this.cardData = cardData;
+			this.callback = callback;
+			CardConfig cardConfig = getCardConfig();
+			cardTable = new CardTable(getInnerBody(), cardConfig.withStyleAndSelection(cardConfig.cardStyle, true), getTitleSpec(), cardData.cardType(), cardData.data());
 
 			Control firstEditor = null;
 			for (TableItem item : cardTable.getTable().getItems()) {
@@ -96,7 +64,7 @@ public class CardEditor implements IValueEditor, ICardData {
 						String newValue = text.getText();
 						cardTable.setNewValue(key, newValue);
 						cardData.valueChanged(key, newValue);
-						okCancel.setOkEnabled(callback.canOk(cardData.data()));
+						getOkCancel().setOkEnabled(callback.canOk(cardData.data()));
 					}
 				});
 			}
@@ -106,23 +74,14 @@ public class CardEditor implements IValueEditor, ICardData {
 		}
 
 		@Override
-		public CardConfig getCardConfig() {
-			return cardConfig;
+		protected void ok() {
+			callback.ok(cardData);
 		}
 
 		@Override
-		public TitleWithTitlePaintListener getTitle() {
-			return titleWithTitlePaintListener;
-		}
+		protected void cancel() {
+			callback.ok(cardData);
 
-		@Override
-		public Composite getBody() {
-			return body;
-		}
-
-		@Override
-		public Composite getInnerBody() {
-			return body.innerBody;
 		}
 
 		@Override
@@ -130,15 +89,6 @@ public class CardEditor implements IValueEditor, ICardData {
 			return cardTable.getTable();
 		}
 
-		@Override
-		public OkCancel getOkCancel() {
-			return okCancel;
-		}
-
-		@Override
-		public boolean useAllHeight() {
-			return true;
-		}
 
 	}
 
@@ -154,7 +104,7 @@ public class CardEditor implements IValueEditor, ICardData {
 		this.url = url;
 		this.data = cardConfig.modify(url, Maps.with(initialData, CardConstants.slingResourceType, cardType));
 		content = new CardEditorComposite(parent, title, this, callback);
-		content.okCancel.setOkEnabled(callback.canOk(data));
+		content.getOkCancel().setOkEnabled(callback.canOk(data));
 	}
 
 	@Override
@@ -191,7 +141,5 @@ public class CardEditor implements IValueEditor, ICardData {
 	public Map<String, Object> data() {
 		return data;
 	}
-
-	
 
 }

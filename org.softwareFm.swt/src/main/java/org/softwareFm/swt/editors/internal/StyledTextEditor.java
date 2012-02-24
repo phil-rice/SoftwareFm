@@ -27,7 +27,7 @@ public class StyledTextEditor implements IValueEditor {
 
 		@Override
 		protected void updateEnabledStatusOfButtons() {
-			okCancel.setOkEnabled(!originalValue.equals(getValue()));
+			getOkCancel().setOkEnabled(!originalValue.equals(getValue()));
 		}
 
 		@Override

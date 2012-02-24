@@ -54,7 +54,7 @@ import org.softwareFm.swt.explorer.IUserDataManager;
 import org.softwareFm.swt.explorer.internal.MySoftwareFm;
 import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
-import org.softwareFm.swt.okCancel.OkCancel;
+import org.softwareFm.swt.okCancel.IOkCancelForTests;
 import org.softwareFm.swt.swt.SwtAndServiceTest;
 import org.softwareFm.swt.swt.Swts;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -108,7 +108,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 
 	public void testLoggedInWhenAnotherWindowLogsIn() {
 		UserData newUserData = new UserData(email, "sfmId", password);
-		userDataManager.setUserData(this,newUserData);
+		userDataManager.setUserData(this, newUserData);
 		displayUntilCompositeWithCardMargin();
 	}
 
@@ -184,7 +184,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 
 		mySoftwareFm.logout();
 		mySoftwareFm.start();
-		displayUntilValueComposite("Email", "Password").getOkCancel().pressButton(0);
+		displayUntilEmailPassword().pressButton(0);
 		displayUntilValueComposite("Email");
 		setValues(email);
 		assertTrue(getOkCancel().isOkEnabled());
@@ -209,6 +209,10 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		assertEquals(new UserData(email, "someNewSoftwareFmId0", crypto), userDataManager.getUserData());
 	}
 
+	protected IOkCancelForTests displayUntilEmailPassword() {
+		return (IOkCancelForTests) displayUntilValueComposite("Email", "Password").getOkCancel();
+	}
+
 	private String resetPassword(String magicString) throws InterruptedException, ExecutionException, TimeoutException {
 		MemoryResponseCallback memoryCallback = IResponseCallback.Utils.memoryCallback();
 		client.get(Urls.compose(LoginConstants.passwordResetLinkPrefix, magicString)).execute(memoryCallback).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
@@ -221,7 +225,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 
 	private String signUp(String email, String moniker, String password) {
 		String signUpSalt = startAndGetSignupSalt();
-		displayUntilValueComposite("Email", "Password").getOkCancel().pressButton(1);
+		displayUntilEmailPassword().pressButton(1);
 		displayUntilValueComposite("Email", "Moniker", "Password", "Confirm Password");
 		setValues(email, moniker, password, password);
 		assertTrue(getOkCancel().isOkEnabled());
@@ -233,7 +237,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 
 	public void testSignupNeedsValidEmailMonikerAndPasswords() {
 		startAndGetSignupSalt();
-		displayUntilValueComposite("Email", "Password").getOkCancel().pressButton(1);
+		displayUntilEmailPassword().pressButton(1);
 		displayUntilValueComposite("Email", "Moniker", "Password", "Confirm Password");
 		assertFalse(getOkCancel().isOkEnabled());
 
@@ -275,10 +279,10 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		});
 	}
 
-	OkCancel getOkCancel() {
+	IOkCancelForTests getOkCancel() {
 		@SuppressWarnings("unchecked")
 		IValueComposite<Composite> valueComposite = (IValueComposite<Composite>) softwareFmComposite.getChildren()[0];
-		return valueComposite.getOkCancel();
+		return (IOkCancelForTests) valueComposite.getOkCancel();
 
 	}
 

@@ -50,7 +50,7 @@ public class LoginTest extends AbstractNameAndValuesEditorTest<Login> {
 		checkOk("a.b.c@c.d", "somePassword", true);
 		assertEquals(0, loginCallback.loggedInUserData.size());
 		assertEquals(0, loginCallback.failedEmail.size());
-		Swts.Buttons.press(okCancel.okButton);
+		Swts.Buttons.press(okCancel.okButton());
 		assertEquals(0, loginCallback.loggedInUserData.size());
 		assertEquals(1, loginCallback.failedEmail.size());
 
@@ -60,7 +60,7 @@ public class LoginTest extends AbstractNameAndValuesEditorTest<Login> {
 		checkOk("a.b.c@c.d", "somePassword", true);
 		loginStrategy.setOk(true);
 		loginStrategy.setEmailSetOk(true);
-		Swts.Buttons.press(okCancel.okButton);
+		Swts.Buttons.press(okCancel.okButton());
 
 		assertEquals(new UserData("a.b.c@c.d", "someSoftwareFmId", loginStrategy.cryptoKey), Lists.getOnly(loginCallback.loggedInUserData));
 	}
@@ -68,7 +68,7 @@ public class LoginTest extends AbstractNameAndValuesEditorTest<Login> {
 	public void testEmailAndCryptoSentToLoginStrategyWithEmailSaltFail() {
 		checkOk("a.b.c@c.d", "somePassword", true);
 		loginStrategy.setOk(true);
-		Swts.Buttons.press(okCancel.okButton);
+		Swts.Buttons.press(okCancel.okButton());
 		assertEquals(0, loginCallback.loggedInUserData.size());
 
 		assertEquals("a.b.c@c.d", Lists.getOnly(loginCallback.failedEmail));

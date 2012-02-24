@@ -39,7 +39,7 @@ public class NameAndValuesEditorTest extends AbstractNameAndValuesEditorTest<Nam
 		assertFalse(okCancel.isOkEnabled());
 		checkChangeValue(1, "newerTwo", true);
 		assertEquals(0, callback.okData.size());
-		Swts.Buttons.press(okCancel.okButton);
+		Swts.Buttons.press(okCancel.okButton());
 		assertEquals(Maps.stringObjectMap("one", "newOne", "two", "newerTwo", "three", "newThree", CardConstants.slingResourceType, cardType), Lists.getOnly(callback.okData));
 	}
 

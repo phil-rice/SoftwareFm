@@ -2,7 +2,7 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwareFm.swt.okCancel;
+package org.softwareFm.swt.okCancel.internal;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -15,10 +15,11 @@ import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.swt.constants.DisplayConstants;
+import org.softwareFm.swt.okCancel.IOkCancelForTests;
 import org.softwareFm.swt.swt.Swts;
 import org.softwareFm.swt.swt.Swts.Row;
 
-public class OkCancel implements IOkCancel {
+public class OkCancel implements IOkCancelForTests {
 
 	public final Label okButton;
 	public final Label cancelButton;
@@ -58,9 +59,20 @@ public class OkCancel implements IOkCancel {
 		return result;
 	}
 
+	@Override
 	public Button addButton(String titleKey, Runnable runnable) {
 		Button result = Swts.Buttons.makePushButton(content, resourceGetter, titleKey, runnable);
 		return result;
+	}
+
+	@Override
+	public Control okButton() {
+		return okButton;
+	}
+
+	@Override
+	public Control cancelButton() {
+		return cancelButton;
 	}
 
 	@Override
@@ -89,6 +101,7 @@ public class OkCancel implements IOkCancel {
 		onCancel.run();
 	}
 
+	@Override
 	public void pressButton(int index) {
 		Swts.Buttons.press(content.getChildren()[index]);
 

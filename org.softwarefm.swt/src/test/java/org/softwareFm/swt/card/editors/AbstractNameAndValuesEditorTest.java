@@ -11,7 +11,7 @@ import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.configuration.ICardConfigurator;
 import org.softwareFm.swt.editors.AddCardCallbackMock;
 import org.softwareFm.swt.editors.IValueComposite;
-import org.softwareFm.swt.okCancel.OkCancel;
+import org.softwareFm.swt.okCancel.IOkCancelForTests;
 import org.softwareFm.swt.swt.SwtTest;
 
 public abstract class AbstractNameAndValuesEditorTest<T extends IHasComposite> extends SwtTest {
@@ -21,7 +21,7 @@ public abstract class AbstractNameAndValuesEditorTest<T extends IHasComposite> e
 
 	protected CardConfig cardConfig;
 	protected AddCardCallbackMock callback;
-	protected OkCancel okCancel;
+	protected IOkCancelForTests okCancel;
 	protected Composite labels;
 	protected Composite values;
 	protected String cardType;
@@ -36,7 +36,7 @@ public abstract class AbstractNameAndValuesEditorTest<T extends IHasComposite> e
 		editor = makeEditor();
 		@SuppressWarnings("unchecked")
 		IValueComposite<SashForm> composite = (IValueComposite<SashForm>) editor.getComposite();
-		okCancel = composite.getOkCancel();
+		okCancel = (IOkCancelForTests) composite.getOkCancel();
 		SashForm sashForm = composite.getEditor();
 		assertEquals(2, sashForm.getChildren().length);
 		labels = (Composite) sashForm.getChildren()[0];

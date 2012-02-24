@@ -47,7 +47,8 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 			}
 		});
 		Control detailContent = masterDetailSocial.getDetailContent();
-		Table table = (Table) Swts.getDescendant(detailContent, 1, 0, 0);
+
+		Table table = (Table) Swts.getDescendant(detailContent, 1, 0, 1); 
 		checkAndSet(table, 0, "Group Id", "Please specify the group id", "some.group");
 		checkAndSet(table, 1, "Artifact Id", "ant", "someArtifact");
 		checkAndSet(table, 2, "Version", "1.2.3", "someVersion");
@@ -93,7 +94,8 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 	}
 
 	private void clickOk(Control detailContent) {
-		final Control okButton = Swts.getDescendant(detailContent, 1, 0, 1, 1);
+		final Control okButton = Swts.getDescendant(detailContent, 1, 0, 0, 1); 
+		Swts.layoutDump(detailContent);
 		Swts.Buttons.press(okButton);
 	}
 

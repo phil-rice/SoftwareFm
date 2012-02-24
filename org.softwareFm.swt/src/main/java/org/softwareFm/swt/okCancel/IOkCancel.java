@@ -4,6 +4,8 @@
 
 package org.softwareFm.swt.okCancel;
 
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Control;
 import org.softwareFm.swt.composites.IHasComposite;
 
 /** Represents the ok cancel buttons in an editor */
@@ -17,4 +19,11 @@ public interface IOkCancel extends IHasComposite {
 
 	/** as though the user has clicked cancel */
 	void cancel();
+
+	Button addButton(String title, Runnable runnable);
+
+	Control okButton();
+
+	Control cancelButton();
+
 }

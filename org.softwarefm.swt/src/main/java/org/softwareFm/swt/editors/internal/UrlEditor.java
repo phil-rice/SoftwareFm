@@ -17,7 +17,7 @@ import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.details.IDetailsFactoryCallback;
 import org.softwareFm.swt.editors.internal.TextEditor.TextEditorComposite;
-import org.softwareFm.swt.okCancel.OkCancel;
+import org.softwareFm.swt.okCancel.IOkCancel;
 import org.softwareFm.swt.title.TitleSpec;
 
 public class UrlEditor implements IValueEditorForTests {
@@ -35,7 +35,7 @@ public class UrlEditor implements IValueEditorForTests {
 
 		@Override
 		protected void addAnyMoreButtons() {
-			testButton = okCancel.addButton(CardConstants.buttonTestTitle, new Runnable() {
+			testButton = getOkCancel().addButton(CardConstants.buttonTestTitle, new Runnable() {
 				@Override
 				public void run() {
 					try {
@@ -45,7 +45,7 @@ public class UrlEditor implements IValueEditorForTests {
 					}
 				}
 			});
-			testButton.moveAbove(okCancel.okButton);
+			testButton.moveAbove(getOkCancel().okButton());
 		}
 
 		@SuppressWarnings("unused")
@@ -61,7 +61,7 @@ public class UrlEditor implements IValueEditorForTests {
 		}
 
 		private void enableButtons(boolean enable) {
-			okCancel.setOkEnabled(enable);
+			getOkCancel().setOkEnabled(enable);
 			testButton.setEnabled(enable);
 		}
 	}
@@ -88,12 +88,12 @@ public class UrlEditor implements IValueEditorForTests {
 
 	@Override
 	public String getTitleText() {
-		return content.titleWithTitlePaintListener.getText();
+		return content.getTitle().getText();
 	}
 
 	@Override
-	public OkCancel getOkCancel() {
-		return content.okCancel;
+	public IOkCancel getOkCancel() {
+		return content.getOkCancel();
 	}
 
 	@Override

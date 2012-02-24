@@ -136,13 +136,13 @@ public class SnippetIntegrationTest extends AbstractExplorerIntegrationTest {
 	private void clickOkButton() {
 		IValueComposite<Composite> detailContent = (IValueComposite<Composite>) masterDetailSocial.getDetailContent();
 		assertTrue(detailContent.getOkCancel().isOkEnabled());
-		Swts.Buttons.press(detailContent.getOkCancel().okButton);
+		Swts.Buttons.press( detailContent.getOkCancel().okButton());
 	}
 
 	@SuppressWarnings("unchecked")
 	private void clickCancelButton() {
 		IValueComposite<Composite> detailContent = (IValueComposite<Composite>) masterDetailSocial.getDetailContent();
-		Swts.Buttons.press(detailContent.getOkCancel().cancelButton);
+		Swts.Buttons.press(detailContent.getOkCancel().cancelButton());
 	}
 
 	@SuppressWarnings("unchecked")

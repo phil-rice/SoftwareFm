@@ -17,7 +17,6 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.softwareFm.common.collections.Lists;
@@ -92,7 +91,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 		doSomethingAndWaitForCardDataStoreToFinish(new Runnable() {
 			@Override
 			public void run() {
-				Label okButton = valueComposite.getOkCancel().okButton;
+				Control okButton =  valueComposite.getOkCancel().okButton();
 				Swts.Buttons.press(okButton);
 			}
 		}, new CardHolderAndCardCallback() {
@@ -182,7 +181,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 				adding.tableItem(0, "Group Id", "Please specify the group id", group);
 				adding.tableItem(1, "Artifact Id", "artifact", artifact);
 				adding.tableItem(2, "Version", "1.0.0", version);
-				assertEquals(expected, valueComposite.getOkCancel().okButton.isEnabled());
+				assertEquals(expected, valueComposite.getOkCancel().okButton().isEnabled());
 			}
 		});
 

@@ -18,7 +18,7 @@ import org.softwareFm.swt.card.dataStore.CardDataStoreMock;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.configuration.ICardConfigurator;
 import org.softwareFm.swt.editors.IValueComposite;
-import org.softwareFm.swt.okCancel.OkCancel;
+import org.softwareFm.swt.okCancel.IOkCancel;
 import org.softwareFm.swt.swt.SwtTest;
 import org.softwareFm.swt.swt.Swts;
 
@@ -35,7 +35,7 @@ public class CommentsEditorTest extends SwtTest {
 		assertEquals("some initial comment", composite.getEditor().getText());
 		assertEquals("Edit comment", composite.getTitle().getText());//
 
-		OkCancel okCancel = composite.getOkCancel();
+		IOkCancel okCancel = composite.getOkCancel();
 		Composite okCancelComposite = okCancel.getComposite();
 		Control[] okCancelChildren = okCancelComposite.getChildren();
 		assertEquals(6, okCancelChildren.length);
@@ -43,22 +43,22 @@ public class CommentsEditorTest extends SwtTest {
 		checkRadioButton(okCancelComposite, 1, "You", false);
 		checkRadioButton(okCancelComposite, 2, "Group", false);
 		checkCombo(okCancelComposite, 3, groupNames, "group1");
-		assertEquals(okCancel.cancelButton, okCancelChildren[4]);
-		assertEquals(okCancel.okButton, okCancelChildren[5]);
+		assertEquals(okCancel.cancelButton(), okCancelChildren[4]);
+		assertEquals(okCancel.okButton(), okCancelChildren[5]);
 	}
 
 	public void testInitialLayoutWithOutGroups() {
 		CommentsEditor editor = new CommentsEditor(shell, cardConfig, url, CommentConstants.editorTitle, "some initial comment", Collections.<String> emptyList(), ICommentsEditorCallback.Utils.exceptionCallback());
 		@SuppressWarnings("unchecked")
 		IValueComposite<StyledText> composite = (IValueComposite<StyledText>) editor.getComposite();
-		OkCancel okCancel = composite.getOkCancel();
+		IOkCancel okCancel = composite.getOkCancel();
 		Composite okCancelComposite = okCancel.getComposite();
 		Control[] okCancelChildren = okCancelComposite.getChildren();
 		assertEquals(4, okCancelChildren.length);
 		checkRadioButton(okCancelComposite, 0, "Everyone", true);
 		checkRadioButton(okCancelComposite, 1, "You", false);
-		assertEquals(okCancel.cancelButton, okCancelChildren[2]);
-		assertEquals(okCancel.okButton, okCancelChildren[3]);
+		assertEquals(okCancel.cancelButton(), okCancelChildren[2]);
+		assertEquals(okCancel.okButton(), okCancelChildren[3]);
 	}
 
 	public void testOkButtonOnlyEnabledInitiallyWhenHaveSomeComment() {
@@ -99,9 +99,9 @@ public class CommentsEditorTest extends SwtTest {
 	}
 
 	public void testOkButtonCallsOkCallback() {
-		checkOkButton(new ICallback<OkCancel>() {
+		checkOkButton(new ICallback<IOkCancel>() {
 			@Override
-			public void process(OkCancel okCancel) throws Exception {
+			public void process(IOkCancel okCancel) throws Exception {
 				Swts.Buttons.selectRadioButton(okCancel.getComposite(), 0);
 			}
 		}, new CommentsEditorFailAdapter() {
@@ -111,9 +111,9 @@ public class CommentsEditorTest extends SwtTest {
 				assertEquals(CommentsEditorTest.this.url, url);
 			}
 		});
-		checkOkButton(new ICallback<OkCancel>() {
+		checkOkButton(new ICallback<IOkCancel>() {
 			@Override
-			public void process(OkCancel okCancel) throws Exception {
+			public void process(IOkCancel okCancel) throws Exception {
 				Swts.Buttons.selectRadioButton(okCancel.getComposite(), 1);
 			}
 		}, new CommentsEditorFailAdapter() {
@@ -123,9 +123,9 @@ public class CommentsEditorTest extends SwtTest {
 				assertEquals("expected", text);
 			}
 		});
-		checkOkButton(new ICallback<OkCancel>() {
+		checkOkButton(new ICallback<IOkCancel>() {
 			@Override
-			public void process(OkCancel okCancel) throws Exception {
+			public void process(IOkCancel okCancel) throws Exception {
 				Swts.Buttons.selectRadioButton(okCancel.getComposite(), 2);
 			}
 		}, new CommentsEditorFailAdapter() {
@@ -136,9 +136,9 @@ public class CommentsEditorTest extends SwtTest {
 				assertEquals(0, index);
 			}
 		});
-		checkOkButton(new ICallback<OkCancel>() {
+		checkOkButton(new ICallback<IOkCancel>() {
 			@Override
-			public void process(OkCancel okCancel) throws Exception {
+			public void process(IOkCancel okCancel) throws Exception {
 				Swts.Buttons.selectRadioButton(okCancel.getComposite(), 2);
 				Combo combo = (Combo) Swts.getDescendant(okCancel.getComposite(), 3);
 				combo.select(1);
@@ -154,7 +154,7 @@ public class CommentsEditorTest extends SwtTest {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void checkOkButton(ICallback<OkCancel> pressButtons, ICommentsEditorCallback callback) {
+	protected void checkOkButton(ICallback<IOkCancel> pressButtons, ICommentsEditorCallback callback) {
 		String text = "expected";
 		AtomicInteger count = new AtomicInteger();
 		CommentsEditor editor = new CommentsEditor(shell, cardConfig, url, CommentConstants.editorTitle, "some comment", //
@@ -162,7 +162,7 @@ public class CommentsEditorTest extends SwtTest {
 
 		IValueComposite<StyledText> composite = (IValueComposite<StyledText>) editor.getComposite();
 		composite.getEditor().setText(text);
-		OkCancel okCancel = composite.getOkCancel();
+		IOkCancel okCancel = composite.getOkCancel();
 		ICallback.Utils.call(pressButtons, okCancel);
 		okCancel.ok();
 		dispatchUntilQueueEmpty();
@@ -197,7 +197,7 @@ public class CommentsEditorTest extends SwtTest {
 		});
 		IValueComposite<StyledText> composite = (IValueComposite<StyledText>) editor.getComposite();
 		composite.getEditor().setText("expected");
-		OkCancel okCancel = composite.getOkCancel();
+		IOkCancel okCancel = composite.getOkCancel();
 		okCancel.cancel();
 		assertEquals(1, cancelCount.get());
 	}
@@ -206,7 +206,7 @@ public class CommentsEditorTest extends SwtTest {
 	protected void checkOkButtonInitiallyEnabled(String comment, boolean expected) {
 		CommentsEditor editor = new CommentsEditor(shell, cardConfig, url, CommentConstants.editorTitle, comment, Collections.<String> emptyList(), ICommentsEditorCallback.Utils.exceptionCallback());
 		IValueComposite<StyledText> composite = (IValueComposite<StyledText>) editor.getComposite();
-		OkCancel okCancel = composite.getOkCancel();
+		IOkCancel okCancel = composite.getOkCancel();
 		assertEquals(expected, okCancel.isOkEnabled());
 	}
 

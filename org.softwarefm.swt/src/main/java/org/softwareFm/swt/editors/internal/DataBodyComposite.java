@@ -11,13 +11,13 @@ import org.softwareFm.swt.card.CardOutlinePaintListener;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.title.TitleSpec;
 
-public class ValueEditorBodyComposite extends Composite {
+public class DataBodyComposite extends Composite {
 
 	public 	final CardConfig cardConfig;
 	public final Composite innerBody;
 	public final TitleSpec titleSpec;
 
-	public ValueEditorBodyComposite(Composite parent, CardConfig cardConfig, TitleSpec titleSpec) {
+	public DataBodyComposite(Composite parent, CardConfig cardConfig, TitleSpec titleSpec) {
 		super(parent, SWT.NULL);
 		this.cardConfig = cardConfig;
 		this.titleSpec = titleSpec;

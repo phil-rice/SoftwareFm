@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.details.IDetailsFactoryCallback;
-import org.softwareFm.swt.okCancel.OkCancel;
+import org.softwareFm.swt.okCancel.IOkCancel;
 import org.softwareFm.swt.title.TitleSpec;
 
 public class TextEditor implements IValueEditorForTests {
@@ -30,7 +30,7 @@ public class TextEditor implements IValueEditorForTests {
 
 		@Override
 		protected void updateEnabledStatusOfButtons() {
-			okCancel.setOkEnabled(!originalValue.equals(getValue()));
+			getOkCancel().setOkEnabled(!originalValue.equals(getValue()));
 		}
 
 		@Override
@@ -39,7 +39,7 @@ public class TextEditor implements IValueEditorForTests {
 			result.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetDefaultSelected(SelectionEvent e) {
-					okCancel.ok();
+					getOkCancel().ok();
 				}
 			});
 			result.setText(originalValue);
@@ -86,17 +86,18 @@ public class TextEditor implements IValueEditorForTests {
 
 	@Override
 	public String getTitleText() {
-		return content.titleWithTitlePaintListener.getText();
+		return content.getTitle().getText();
 	}
 
-	@Override
-	public OkCancel getOkCancel() {
-		return content.getOkCancel();
-	}
 
 	@Override
 	public void setValue(String newValue) {
 		content.getEditor().setText(newValue);
+	}
+
+	@Override
+	public IOkCancel getOkCancel() {
+		return content.getOkCancel();
 	}
 
 }

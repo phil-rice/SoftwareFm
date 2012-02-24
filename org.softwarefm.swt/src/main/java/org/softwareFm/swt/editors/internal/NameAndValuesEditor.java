@@ -15,79 +15,59 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.maps.Maps;
-import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.card.LineItem;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
+import org.softwareFm.swt.editors.DataWithOkCancelComposite;
 import org.softwareFm.swt.editors.ICardEditorCallback;
 import org.softwareFm.swt.editors.IEditableControlStrategy;
 import org.softwareFm.swt.editors.INamesAndValuesEditor;
 import org.softwareFm.swt.editors.IValueComposite;
 import org.softwareFm.swt.editors.KeyAndEditStrategy;
-import org.softwareFm.swt.okCancel.OkCancel;
 import org.softwareFm.swt.swt.Swts;
-import org.softwareFm.swt.title.TitleSpec;
-import org.softwareFm.swt.title.TitleWithTitlePaintListener;
 
 public class NameAndValuesEditor implements INamesAndValuesEditor {
 
-	static class NameAndValuesEditorComposite extends Composite implements IValueComposite<Composite> {
+	static class NameAndValuesEditorComposite extends DataWithOkCancelComposite<Composite> implements IValueComposite<Composite> {
 
-		private final CardConfig cardConfig;
-		private final OkCancel okCancel;
-		private final TitleWithTitlePaintListener titleWithTitlePaintListener;
-		private final ValueEditorBodyComposite body;
 		private final SashForm editing;
 		private final ICardEditorCallback callback;
 		private final Control firstChild;
+		private final ICardData cardData;
+		private final ICardEditorCallback cardEditorCallback;
 
 		public NameAndValuesEditorComposite(Composite parent, String titleString, final ICardData cardData, List<KeyAndEditStrategy> keyAndEditStrategy, final ICardEditorCallback strategy) {
-			super(parent, SWT.NULL);
+			super(parent, cardData.getCardConfig(), titleString, "");
+			this.cardData = cardData;
+			this.cardEditorCallback = strategy;
 			this.callback = strategy;
-			this.cardConfig = cardData.getCardConfig();
-			TitleSpec titleSpec = Functions.call(cardConfig.titleSpecFn, cardData);
-
-			titleWithTitlePaintListener = new TitleWithTitlePaintListener(this, cardConfig, titleSpec, titleString, "initialTooltip");
-			body = new ValueEditorBodyComposite(this, cardConfig, titleSpec);
-			editing = Swts.newSashForm(body.innerBody, SWT.HORIZONTAL, "editing");
+			editing = Swts.newSashForm(getInnerBody(), SWT.HORIZONTAL, "editing");
 			Composite labels = Swts.newComposite(editing, SWT.NULL, "Labels");
 			Composite values = Swts.newComposite(editing, SWT.NULL, "value");
-			labels.setBackground(titleSpec.background);
-			values.setBackground(titleSpec.background);
+			labels.setBackground(getTitleSpec().background);
+			values.setBackground(getTitleSpec().background);
 
-			IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, null);
-			okCancel = new OkCancel(body.innerBody, resourceGetter, cardConfig.imageFn, new Runnable() {
-				@Override
-				public void run() {
-					strategy.ok(cardData);
-				}
-			}, new Runnable() {
-				@Override
-				public void run() {
-					strategy.cancel(cardData);
-				}
-			});
+			CardConfig cc = getCardConfig();
 			for (KeyAndEditStrategy data : keyAndEditStrategy) {
-				Label label = INamesAndValuesEditor.Utils.label(labels, cardConfig, cardData.cardType(), data.key);
-				label.setBackground(titleSpec.background);
+				Label label = INamesAndValuesEditor.Utils.label(labels, cc, cardData.cardType(), data.key);
+				label.setBackground(getTitleSpec().background);
 				@SuppressWarnings("unchecked")
 				IEditableControlStrategy<Control> editableControlStrategy = (IEditableControlStrategy<Control>) data.editableControlStrategy;
 				Control editor = editableControlStrategy.createControl(values);
-				String value = cardConfig.valueFn.apply(cardConfig, new LineItem(cardData.cardType(), data.key, cardData.data().get(data.key)));
+				String value = cc.valueFn.apply(cc, new LineItem(cardData.cardType(), data.key, cardData.data().get(data.key)));
 				editableControlStrategy.populateInitialValue(editor, value);
 				editableControlStrategy.whenModifed(editor, cardData, data.key, new Runnable() {
 					@Override
 					public void run() {
-						okCancel.setOkEnabled(callback.canOk(cardData.data()));
+						getOkCancel().setOkEnabled(callback.canOk(cardData.data()));
 					}
 				});
-				editableControlStrategy.addEnterEscapeListeners(okCancel, editor);
+				editableControlStrategy.addEnterEscapeListeners(getOkCancel(), editor);
 			}
-			Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(labels, cardConfig.editorIndentY);
-			Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(values, cardConfig.editorIndentY);
+			Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(labels, cc.editorIndentY);
+			Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(values, cc.editorIndentY);
 
 			for (int i = 0; i < values.getChildren().length; i++) {
 				Control value = values.getChildren()[i];
@@ -100,12 +80,11 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 
 			editing.setWeights(new int[] { 1, 3 });
 
-
-			body.innerBody.addPaintListener(new PaintListener() {
+			getInnerBody().addPaintListener(new PaintListener() {
 				@Override
 				public void paintControl(PaintEvent e) {
-					int width = body.innerBody.getSize().x;
-					int y = okCancel.getControl().getLocation().y - 1;
+					int width = getInnerBody().getSize().x;
+					int y = getOkCancel().getControl().getLocation().y - 1;
 					e.gc.setForeground(e.display.getSystemColor(SWT.COLOR_GRAY));
 					e.gc.drawLine(0, y, width, y);
 				}
@@ -122,38 +101,23 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 		}
 
 		@Override
-		public CardConfig getCardConfig() {
-			return cardConfig;
-		}
-
-		@Override
-		public TitleWithTitlePaintListener getTitle() {
-			return titleWithTitlePaintListener;
-		}
-
-		@Override
-		public Composite getBody() {
-			return body;
-		}
-
-		@Override
-		public Composite getInnerBody() {
-			return body.innerBody;
-		}
-
-		@Override
 		public Composite getEditor() {
 			return editing;
 		}
 
 		@Override
-		public OkCancel getOkCancel() {
-			return okCancel;
+		public boolean useAllHeight() {
+			return true;
 		}
 
 		@Override
-		public boolean useAllHeight() {
-			return true;
+		protected void ok() {
+			cardEditorCallback.ok(cardData);
+		}
+
+		@Override
+		protected void cancel() {
+			cardEditorCallback.cancel(cardData);
 		}
 
 	}
@@ -170,7 +134,7 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 		this.url = url;
 		this.data = cardConfig.modify(url, Maps.with(initialData, CardConstants.slingResourceType, cardType));
 		content = new NameAndValuesEditorComposite(parent, title, this, keyAndEditStrategy, callback);
-		content.okCancel.setOkEnabled(callback.canOk(data));
+		content.getOkCancel().setOkEnabled(callback.canOk(data));
 		content.setLayout(new ValueEditorLayout());
 	}
 
@@ -196,7 +160,7 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 
 	@Override
 	public Composite getButtonComposite() {
-		return (Composite) content.okCancel.getControl();
+		return content.getOkCancel().getComposite();
 	}
 
 	@Override

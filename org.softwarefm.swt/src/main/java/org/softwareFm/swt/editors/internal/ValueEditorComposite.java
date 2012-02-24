@@ -10,53 +10,31 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.softwareFm.common.functions.Functions;
-import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.swt.card.LineItem;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.dataStore.IMutableCardDataStore;
 import org.softwareFm.swt.details.IDetailsFactoryCallback;
+import org.softwareFm.swt.editors.DataWithOkCancelComposite;
 import org.softwareFm.swt.editors.IValueComposite;
-import org.softwareFm.swt.okCancel.OkCancel;
 import org.softwareFm.swt.title.TitleSpec;
-import org.softwareFm.swt.title.TitleWithTitlePaintListener;
 
-abstract public class ValueEditorComposite<T extends Control> extends Composite implements IValueComposite<T> {
+abstract public class ValueEditorComposite<T extends Control> extends DataWithOkCancelComposite<T> implements IValueComposite<T> {
 
-	public TitleWithTitlePaintListener titleWithTitlePaintListener;
 	private final T editorControl;
-	protected final OkCancel okCancel;
-	protected final CardConfig cardConfig;
 	protected final String originalValue;
-	private final TitleSpec titleSpec;
-	protected final ValueEditorBodyComposite body;
+	private final String url;
+	private final String key;
+	private final IDetailsFactoryCallback detailsFactoryCallback;
 
 	public ValueEditorComposite(Composite parent, int style, final CardConfig cardConfig, final String url, String cardType, final String key, Object initialValue, TitleSpec titleSpec, final IDetailsFactoryCallback callback) {
-		super(parent, style);
-		this.cardConfig = cardConfig;
-		this.titleSpec = titleSpec;
-		LineItem lineItem = new LineItem(cardType, key, initialValue);
-		String name = Functions.call(cardConfig.nameFn(), lineItem);
-		titleWithTitlePaintListener = new TitleWithTitlePaintListener(this, cardConfig, titleSpec, name, url);
-		body = new ValueEditorBodyComposite(this, cardConfig, titleSpec);
+		super(parent, cardConfig, cardType, Functions.call(cardConfig.nameFn(), new LineItem(cardType, key, initialValue)));
+		this.url = url;
+		this.key = key;
+		this.detailsFactoryCallback = callback;
 
-		originalValue = Functions.call(cardConfig.valueFn(), lineItem);
-		editorControl = makeEditorControl(body.innerBody, originalValue);
-		IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, null);
-		okCancel = new OkCancel(body.innerBody, resourceGetter,cardConfig.imageFn, new Runnable() {
-			@Override
-			public void run() {
-				IMutableCardDataStore cardDataStore = cardConfig.cardDataStore;
-				String value = getValue();
-				if (!value.equals(originalValue))
-					callback.updateDataStore(cardDataStore, url, key, value);
-				ValueEditorComposite.this.dispose();
-			}
-		}, new Runnable() {
-			@Override
-			public void run() {
-				ValueEditorComposite.this.dispose();
-			}
-		});
+		originalValue = Functions.call(cardConfig.valueFn(), new LineItem(cardType, key, initialValue));
+		editorControl = makeEditorControl(getInnerBody(), originalValue);
+
 		addAnyMoreButtons();
 
 		updateEnabledStatusOfButtons();
@@ -65,9 +43,23 @@ abstract public class ValueEditorComposite<T extends Control> extends Composite 
 			@Override
 			public void handleEvent(Event e) {
 				if (e.detail == SWT.TRAVERSE_ESCAPE)
-					okCancel.cancel();
+					getOkCancel().cancel();
 			}
 		});
+	}
+
+	@Override
+	protected void ok() {
+		IMutableCardDataStore cardDataStore = getCardConfig().cardDataStore;
+		String value = getValue();
+		if (!value.equals(originalValue))
+			detailsFactoryCallback.updateDataStore(cardDataStore, url, key, value);
+		cancel();
+	}
+
+	@Override
+	protected void cancel() {
+		ValueEditorComposite.this.dispose();
 	}
 
 	protected void addAnyMoreButtons() {
@@ -80,37 +72,8 @@ abstract public class ValueEditorComposite<T extends Control> extends Composite 
 	abstract protected void updateEnabledStatusOfButtons();
 
 	@Override
-	public CardConfig getCardConfig() {
-		return cardConfig;
-	}
-
-	@Override
-	public TitleWithTitlePaintListener getTitle() {
-		return titleWithTitlePaintListener;
-	}
-
-	@Override
-	public Composite getBody() {
-		return body;
-	}
-
-	@Override
-	public Composite getInnerBody() {
-		return body.innerBody;
-	}
-
-	@Override
 	public T getEditor() {
 		return editorControl;
-	}
-
-	@Override
-	public OkCancel getOkCancel() {
-		return okCancel;
-	}
-
-	public TitleSpec getTitleSpec() {
-		return titleSpec;
 	}
 
 }
