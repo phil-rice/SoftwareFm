@@ -30,7 +30,7 @@ public class TextEditor implements IValueEditorForTests {
 
 		@Override
 		protected void updateEnabledStatusOfButtons() {
-			getOkCancel().setOkEnabled(!originalValue.equals(getValue()));
+			getFooter().setOkEnabled(!originalValue.equals(getValue()));
 		}
 
 		@Override
@@ -39,7 +39,7 @@ public class TextEditor implements IValueEditorForTests {
 			result.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetDefaultSelected(SelectionEvent e) {
-					getOkCancel().ok();
+					getFooter().ok();
 				}
 			});
 			result.setText(originalValue);
@@ -97,7 +97,7 @@ public class TextEditor implements IValueEditorForTests {
 
 	@Override
 	public IOkCancel getOkCancel() {
-		return content.getOkCancel();
+		return content.getFooter();
 	}
 
 }

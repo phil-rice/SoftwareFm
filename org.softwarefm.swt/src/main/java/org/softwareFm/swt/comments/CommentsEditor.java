@@ -24,12 +24,11 @@ import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.configuration.ICardConfigurator;
 import org.softwareFm.swt.editors.DataWithOkCancelComposite;
-import org.softwareFm.swt.editors.IValueComposite;
-import org.softwareFm.swt.editors.internal.ValueEditorLayout;
+import org.softwareFm.swt.editors.internal.DataCompositeWithFooterLayout;
 import org.softwareFm.swt.swt.Swts;
 
 public class CommentsEditor implements IHasComposite {
-	static class CommentsComposite extends DataWithOkCancelComposite<Composite> implements IValueComposite<Composite> {
+	static class CommentsComposite extends DataWithOkCancelComposite<Composite>  {
 
 		private final StyledText editor;
 		private final Button everyoneButton;
@@ -49,11 +48,11 @@ public class CommentsEditor implements IHasComposite {
 			editor.addModifyListener(new ModifyListener() {
 				@Override
 				public void modifyText(ModifyEvent e) {
-					getOkCancel().setOkEnabled(editor.getText().length() > 0);
+					getFooter().setOkEnabled(editor.getText().length() > 0);
 				}
 			});
 			editor.notifyListeners(SWT.Modify, new Event());
-			final Composite buttonComposite = getOkCancel().getComposite();
+			final Composite buttonComposite = getFooter().getComposite();
 			everyoneButton = Swts.Buttons.makeRadioButton(buttonComposite, CardConfig.resourceGetter(cardData), CommentConstants.commentsButtonEveryoneText, Runnables.noRunnable);
 			youButton = Swts.Buttons.makeRadioButton(buttonComposite, CardConfig.resourceGetter(cardData), CommentConstants.commentsButtonYouText, Runnables.noRunnable);
 			if (groups.size() > 0) {
@@ -108,7 +107,7 @@ public class CommentsEditor implements IHasComposite {
 	public CommentsEditor(Composite parent, CardConfig cardConfig, String url, String titleKey, String initialText, List<String> groupNames, ICommentsEditorCallback callback) {
 		ICardData cardData = ICardData.Utils.create(cardConfig, CommentConstants.commentCardType, url, Maps.emptyStringObjectMap());// need one of these to get titlespec
 		this.content = new CommentsComposite(parent, titleKey, cardData, initialText, groupNames, callback);
-		content.setLayout(new ValueEditorLayout());
+		content.setLayout(new DataCompositeWithFooterLayout());
 
 	}
 

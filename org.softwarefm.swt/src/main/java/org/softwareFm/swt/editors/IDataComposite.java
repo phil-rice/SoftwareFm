@@ -4,7 +4,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.swt.card.CardOutlinePaintListener;
 import org.softwareFm.swt.configuration.CardConfig;
-import org.softwareFm.swt.okCancel.IOkCancel;
 import org.softwareFm.swt.title.TitleSpec;
 import org.softwareFm.swt.title.TitleWithTitlePaintListener;
 
@@ -25,7 +24,10 @@ public interface IDataComposite<T extends Control> {
 	/** should the editor use all the available height, or it's own computed size */
 	boolean useAllHeight();
 
+	String getCardType();
+
 	TitleSpec getTitleSpec();
 
-	IOkCancel getOkCancel();
+
+
 }

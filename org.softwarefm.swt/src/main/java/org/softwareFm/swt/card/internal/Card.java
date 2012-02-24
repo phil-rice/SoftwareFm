@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.swt.card.CardOutlinePaintListener;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardValueChangedListener;
@@ -34,6 +35,9 @@ import org.softwareFm.swt.swt.Swts;
 import org.softwareFm.swt.title.TitleSpec;
 
 public class Card implements ICard {
+
+	private final static boolean profile = true;
+
 	public static class CardLayout extends Layout {
 
 		@Override
@@ -90,7 +94,7 @@ public class Card implements ICard {
 
 			this.table = new CardTable(this, cardConfig, titleSpec, cardType, data);
 
-			CardOutlinePaintListener cardOutlinePaintListener = new CardOutlinePaintListener(titleSpec, cardConfig);
+			CardOutlinePaintListener cardOutlinePaintListener = new CardOutlinePaintListener(cardConfig, Callables.value(titleSpec));
 			addPaintListener(cardOutlinePaintListener);
 		}
 
@@ -137,11 +141,14 @@ public class Card implements ICard {
 		content.table.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				long startTime = profile ? System.currentTimeMillis() : 0;
 				int index = content.table.getSelectionIndex();
 				String key = index == -1 ? null : (String) content.table.getItem(index).getData();
 				notifyLineSelectedListeners(key);
 				if (!cardConfig.allowSelection)
 					content.table.deselectAll();
+				if (profile)
+					System.out.println(Card.class.getSimpleName() + ".widgetSelected: " + (System.currentTimeMillis() - startTime));
 			}
 
 		});
@@ -169,7 +176,10 @@ public class Card implements ICard {
 
 	public void notifyLineSelectedListeners(String key) {
 		for (ILineSelectedListener lineSelectedListener : lineSelectedListeners) {
+			long startTime = profile ? System.currentTimeMillis() : 0;
 			lineSelectedListener.selected(Card.this, key, content.data.get(key));
+			if (profile)
+				System.out.println("    " + lineSelectedListener +" took: " +(System.currentTimeMillis()-startTime));
 		}
 	}
 
@@ -230,7 +240,6 @@ public class Card implements ICard {
 		return "Card [url=" + url() + ", cardType=" + cardType() + ", data=" + data() + "]";
 	}
 
-
 	@Override
 	public Table getTable() {
 		return content.table.getTable();
@@ -240,6 +249,5 @@ public class Card implements ICard {
 	public void addMenuDetectListener(Listener listener) {
 		content.table.getTable().addListener(SWT.MenuDetect, listener);
 	}
-
 
 }

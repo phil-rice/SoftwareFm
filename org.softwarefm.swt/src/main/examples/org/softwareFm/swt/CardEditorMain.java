@@ -13,7 +13,7 @@ import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.editors.ICardEditorCallback;
 import org.softwareFm.swt.editors.internal.CardEditor;
-import org.softwareFm.swt.editors.internal.ValueEditorLayout;
+import org.softwareFm.swt.editors.internal.DataCompositeWithFooterLayout;
 import org.softwareFm.swt.swt.Swts;
 
 public class CardEditorMain {
@@ -41,7 +41,7 @@ public class CardEditorMain {
 						return true;
 					}
 				});
-				editor.getComposite().setLayout(new ValueEditorLayout());
+				editor.getComposite().setLayout(new DataCompositeWithFooterLayout());
 				return editor.getComposite();
 			}
 		});

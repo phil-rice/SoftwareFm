@@ -23,12 +23,11 @@ import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.editors.DataWithOkCancelComposite;
 import org.softwareFm.swt.editors.ICardEditorCallback;
-import org.softwareFm.swt.editors.IValueComposite;
 import org.softwareFm.swt.editors.IValueEditor;
 
 public class CardEditor implements IValueEditor, ICardData {
 
-	static class CardEditorComposite extends DataWithOkCancelComposite<Table> implements IValueComposite<Table> {
+	static class CardEditorComposite extends DataWithOkCancelComposite<Table>  {
 
 		private final CardTable cardTable;
 		private final ICardEditorCallback callback;
@@ -64,7 +63,7 @@ public class CardEditor implements IValueEditor, ICardData {
 						String newValue = text.getText();
 						cardTable.setNewValue(key, newValue);
 						cardData.valueChanged(key, newValue);
-						getOkCancel().setOkEnabled(callback.canOk(cardData.data()));
+						getFooter().setOkEnabled(callback.canOk(cardData.data()));
 					}
 				});
 			}
@@ -104,7 +103,7 @@ public class CardEditor implements IValueEditor, ICardData {
 		this.url = url;
 		this.data = cardConfig.modify(url, Maps.with(initialData, CardConstants.slingResourceType, cardType));
 		content = new CardEditorComposite(parent, title, this, callback);
-		content.getOkCancel().setOkEnabled(callback.canOk(data));
+		content.getFooter().setOkEnabled(callback.canOk(data));
 	}
 
 	@Override

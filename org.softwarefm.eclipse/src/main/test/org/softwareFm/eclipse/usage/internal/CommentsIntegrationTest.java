@@ -11,6 +11,7 @@ import org.softwareFm.eclipse.comments.ICommentsReader;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardHolder;
 import org.softwareFm.swt.comments.Comments;
+import org.softwareFm.swt.comments.Comments.CommentsComposite;
 import org.softwareFm.swt.menu.ICardMenuItemHandler;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -28,9 +29,9 @@ public class CommentsIntegrationTest extends AbstractExplorerIntegrationTest {
 				dispatchUntilQueueEmpty();
 				Control socialContent = masterDetailSocial.getSocialContent();
 				Comments comments = explorer.getComments();
-				Control commentControl = comments.getControl();
+				CommentsComposite commentControl = (CommentsComposite) comments.getControl();
 				assertSame(socialContent, commentControl);
-				assertEquals("Comments for ant", comments.getTitle().getText());
+				assertEquals("Comments for ant", commentControl.getTitle().getText());
 				checkTable(comments.getTable(), 0, 0, "someMoniker", "Global", "globalComments/comment1");
 				assertEquals(1, comments.getTable().getItemCount());
 			}

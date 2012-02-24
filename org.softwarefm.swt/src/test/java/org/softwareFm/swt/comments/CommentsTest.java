@@ -97,7 +97,7 @@ public class CommentsTest extends SwtTest {
 		replayMocks();
 		comments.showCommentsFor(UserData.blank(), "artefact", "someUrl");
 		CommentsComposite composite = (CommentsComposite) comments.getControl();
-		assertFalse(composite.addCommentButton.isEnabled());
+		assertFalse(composite.getFooter().addCommentButton.isEnabled());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -109,7 +109,7 @@ public class CommentsTest extends SwtTest {
 		replayMocks();
 		comments.showCommentsFor(loggedInUserData, "artefact", "someUrl");
 		CommentsComposite composite = (CommentsComposite) comments.getControl();
-		assertTrue(composite.addCommentButton.isEnabled());
+		assertTrue(composite.getFooter().addCommentButton.isEnabled());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -122,7 +122,7 @@ public class CommentsTest extends SwtTest {
 		comments.showCommentsFor(loggedInUserData, "artefact", "someUrl");
 
 		CommentsComposite composite = (CommentsComposite) comments.getControl();
-		composite.addCommentButton.notifyListeners(SWT.MouseUp, new Event());
+		composite.getFooter().addCommentButton.notifyListeners(SWT.MouseUp, new Event());
 		dispatchUntilQueueEmpty();
 	}
 
@@ -170,7 +170,8 @@ public class CommentsTest extends SwtTest {
 	}
 
 	protected void checkTitleAndTableColumnNames(Table table, String expectedTitle) {
-		assertEquals(expectedTitle, comments.getTitle().getText());
+		CommentsComposite composite = (CommentsComposite) comments.getControl();
+		assertEquals(expectedTitle, composite.getTitle().getText());
 		checkTableColumns(table, "creatorTitle", "sourceTitle", "textTitle");
 	}
 

@@ -12,6 +12,11 @@ import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.card.internal.CardToTitleSpecFn;
 
 public class TitleSpec {
+	@Override
+	public String toString() {
+		return "TitleSpec [rightIndent=" + rightIndent + ", background=" + background + ", titleColor=" + titleColor + "]";
+	}
+
 	public final Image icon;
 	public final Color titleColor;
 	public final Color background;

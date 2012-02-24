@@ -29,7 +29,7 @@ import org.softwareFm.swt.card.composites.CompositeWithCardMargin;
 import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CollectionConstants;
-import org.softwareFm.swt.editors.IValueComposite;
+import org.softwareFm.swt.editors.IDataCompositeWithOkCancel;
 import org.softwareFm.swt.explorer.ExplorerAdapter;
 import org.softwareFm.swt.menu.ICardMenuItemHandler;
 import org.softwareFm.swt.swt.Swts;
@@ -75,7 +75,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 
 		text.notifyListeners(SWT.MouseUp, new Event());
 		Control detailContent = masterDetailSocial.getDetailContent();
-		final IValueComposite<Table> valueComposite = (IValueComposite<Table>) detailContent;
+		final IDataCompositeWithOkCancel<Table> valueComposite = (IDataCompositeWithOkCancel<Table>) detailContent;
 		TitleWithTitlePaintListener titleWithTitlePaintListener = valueComposite.getTitle();
 		String jarTitle = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.jarNotRecognisedTitle);
 		assertEquals(jarTitle, titleWithTitlePaintListener.getText());
@@ -91,7 +91,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 		doSomethingAndWaitForCardDataStoreToFinish(new Runnable() {
 			@Override
 			public void run() {
-				Control okButton =  valueComposite.getOkCancel().okButton();
+				Control okButton =  valueComposite.getFooter().okButton();
 				Swts.Buttons.press(okButton);
 			}
 		}, new CardHolderAndCardCallback() {
@@ -170,7 +170,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 
 		text.notifyListeners(SWT.MouseUp, new Event());
 		Control detailContent = masterDetailSocial.getDetailContent();
-		final IValueComposite<Table> valueComposite = (IValueComposite<Table>) detailContent;
+		final IDataCompositeWithOkCancel<Table> valueComposite = (IDataCompositeWithOkCancel<Table>) detailContent;
 		TitleWithTitlePaintListener titleWithTitlePaintListener = valueComposite.getTitle();
 		String jarTitle = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.jarNotRecognisedTitle);
 		assertEquals(jarTitle, titleWithTitlePaintListener.getText());
@@ -181,7 +181,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 				adding.tableItem(0, "Group Id", "Please specify the group id", group);
 				adding.tableItem(1, "Artifact Id", "artifact", artifact);
 				adding.tableItem(2, "Version", "1.0.0", version);
-				assertEquals(expected, valueComposite.getOkCancel().okButton().isEnabled());
+				assertEquals(expected, valueComposite.getFooter().okButton().isEnabled());
 			}
 		});
 

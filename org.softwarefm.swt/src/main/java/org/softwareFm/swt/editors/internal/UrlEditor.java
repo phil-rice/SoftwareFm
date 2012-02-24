@@ -35,7 +35,7 @@ public class UrlEditor implements IValueEditorForTests {
 
 		@Override
 		protected void addAnyMoreButtons() {
-			testButton = getOkCancel().addButton(CardConstants.buttonTestTitle, new Runnable() {
+			testButton = getFooter().addButton(CardConstants.buttonTestTitle, new Runnable() {
 				@Override
 				public void run() {
 					try {
@@ -45,7 +45,7 @@ public class UrlEditor implements IValueEditorForTests {
 					}
 				}
 			});
-			testButton.moveAbove(getOkCancel().okButton());
+			testButton.moveAbove(getFooter().okButton());
 		}
 
 		@SuppressWarnings("unused")
@@ -61,7 +61,7 @@ public class UrlEditor implements IValueEditorForTests {
 		}
 
 		private void enableButtons(boolean enable) {
-			getOkCancel().setOkEnabled(enable);
+			getFooter().setOkEnabled(enable);
 			testButton.setEnabled(enable);
 		}
 	}
@@ -93,7 +93,7 @@ public class UrlEditor implements IValueEditorForTests {
 
 	@Override
 	public IOkCancel getOkCancel() {
-		return content.getOkCancel();
+		return content.getFooter();
 	}
 
 	@Override

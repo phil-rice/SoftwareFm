@@ -47,7 +47,7 @@ import org.softwareFm.softwareFmServer.SoftwareFmServer;
 import org.softwareFm.swt.card.composites.CompositeWithCardMargin;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.configuration.ICardConfigurator;
-import org.softwareFm.swt.editors.IValueComposite;
+import org.softwareFm.swt.editors.IDataCompositeWithOkCancel;
 import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.explorer.IShowMyGroups;
 import org.softwareFm.swt.explorer.IUserDataManager;
@@ -210,7 +210,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 	}
 
 	protected IOkCancelForTests displayUntilEmailPassword() {
-		return (IOkCancelForTests) displayUntilValueComposite("Email", "Password").getOkCancel();
+		return (IOkCancelForTests) displayUntilValueComposite("Email", "Password").getFooter();
 	}
 
 	private String resetPassword(String magicString) throws InterruptedException, ExecutionException, TimeoutException {
@@ -281,14 +281,14 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 
 	IOkCancelForTests getOkCancel() {
 		@SuppressWarnings("unchecked")
-		IValueComposite<Composite> valueComposite = (IValueComposite<Composite>) softwareFmComposite.getChildren()[0];
-		return (IOkCancelForTests) valueComposite.getOkCancel();
+		IDataCompositeWithOkCancel<Composite> valueComposite = (IDataCompositeWithOkCancel<Composite>) softwareFmComposite.getChildren()[0];
+		return (IOkCancelForTests) valueComposite.getFooter();
 
 	}
 
 	private void setValues(final String... values) {
 		@SuppressWarnings("unchecked")
-		IValueComposite<Composite> valueComposite = (IValueComposite<Composite>) softwareFmComposite.getChildren()[0];
+		IDataCompositeWithOkCancel<Composite> valueComposite = (IDataCompositeWithOkCancel<Composite>) softwareFmComposite.getChildren()[0];
 		process(valueComposite, new IEditorCallback<Void>() {
 			@Override
 			public Void check(List<Label> labels, List<Control> editors) {
@@ -299,7 +299,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		});
 	}
 
-	private <T> T process(IValueComposite<Composite> valueComposite, IEditorCallback<T> callback) {
+	private <T> T process(IDataCompositeWithOkCancel<Composite> valueComposite, IEditorCallback<T> callback) {
 		Composite editor = valueComposite.getEditor();
 		Control[] children = editor.getChildren();
 		assertEquals(2, children.length);
@@ -322,15 +322,15 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 
 	}
 
-	private IValueComposite<Composite> displayUntilValueComposite(final String... expectedLabels) {
+	private IDataCompositeWithOkCancel<Composite> displayUntilValueComposite(final String... expectedLabels) {
 		Callable<Boolean> childIsValueComposite = new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				Control[] children = softwareFmComposite.getChildren();
 				if (children.length > 0)
-					if (children[0] instanceof IValueComposite<?>) {
+					if (children[0] instanceof IDataCompositeWithOkCancel<?>) {
 						@SuppressWarnings("unchecked")
-						IValueComposite<Composite> valueComposite = (IValueComposite<Composite>) softwareFmComposite.getChildren()[0];
+						IDataCompositeWithOkCancel<Composite> valueComposite = (IDataCompositeWithOkCancel<Composite>) softwareFmComposite.getChildren()[0];
 						return process(valueComposite, new IEditorCallback<Boolean>() {
 							@Override
 							public Boolean check(List<Label> labels, List<Control> editors) {
@@ -351,7 +351,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		};
 		dispatchUntil(display, CommonConstants.testTimeOutMs, childIsValueComposite);
 		@SuppressWarnings("unchecked")
-		IValueComposite<Composite> valueComposite = (IValueComposite<Composite>) softwareFmComposite.getChildren()[0];
+		IDataCompositeWithOkCancel<Composite> valueComposite = (IDataCompositeWithOkCancel<Composite>) softwareFmComposite.getChildren()[0];
 		return valueComposite;
 	}
 

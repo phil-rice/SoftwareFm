@@ -24,13 +24,12 @@ import org.softwareFm.swt.editors.DataWithOkCancelComposite;
 import org.softwareFm.swt.editors.ICardEditorCallback;
 import org.softwareFm.swt.editors.IEditableControlStrategy;
 import org.softwareFm.swt.editors.INamesAndValuesEditor;
-import org.softwareFm.swt.editors.IValueComposite;
 import org.softwareFm.swt.editors.KeyAndEditStrategy;
 import org.softwareFm.swt.swt.Swts;
 
 public class NameAndValuesEditor implements INamesAndValuesEditor {
 
-	static class NameAndValuesEditorComposite extends DataWithOkCancelComposite<Composite> implements IValueComposite<Composite> {
+	static class NameAndValuesEditorComposite extends DataWithOkCancelComposite<Composite> {
 
 		private final SashForm editing;
 		private final ICardEditorCallback callback;
@@ -61,10 +60,10 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 				editableControlStrategy.whenModifed(editor, cardData, data.key, new Runnable() {
 					@Override
 					public void run() {
-						getOkCancel().setOkEnabled(callback.canOk(cardData.data()));
+						getFooter().setOkEnabled(callback.canOk(cardData.data()));
 					}
 				});
-				editableControlStrategy.addEnterEscapeListeners(getOkCancel(), editor);
+				editableControlStrategy.addEnterEscapeListeners(getFooter(), editor);
 			}
 			Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(labels, cc.editorIndentY);
 			Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(values, cc.editorIndentY);
@@ -84,7 +83,7 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 				@Override
 				public void paintControl(PaintEvent e) {
 					int width = getInnerBody().getSize().x;
-					int y = getOkCancel().getControl().getLocation().y - 1;
+					int y = getFooter().getControl().getLocation().y - 1;
 					e.gc.setForeground(e.display.getSystemColor(SWT.COLOR_GRAY));
 					e.gc.drawLine(0, y, width, y);
 				}
@@ -134,8 +133,8 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 		this.url = url;
 		this.data = cardConfig.modify(url, Maps.with(initialData, CardConstants.slingResourceType, cardType));
 		content = new NameAndValuesEditorComposite(parent, title, this, keyAndEditStrategy, callback);
-		content.getOkCancel().setOkEnabled(callback.canOk(data));
-		content.setLayout(new ValueEditorLayout());
+		content.getFooter().setOkEnabled(callback.canOk(data));
+		content.setLayout(new DataCompositeWithFooterLayout());
 	}
 
 	@Override
@@ -160,7 +159,7 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 
 	@Override
 	public Composite getButtonComposite() {
-		return content.getOkCancel().getComposite();
+		return content.getFooter().getComposite();
 	}
 
 	@Override

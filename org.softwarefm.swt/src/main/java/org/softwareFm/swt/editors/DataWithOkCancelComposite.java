@@ -44,7 +44,7 @@ abstract public class DataWithOkCancelComposite<T extends Control> extends DataC
 	}
 
 	@Override
-	public IOkCancel getOkCancel() {
+	public IOkCancel getFooter() {
 		return okCancel;
 	}
 

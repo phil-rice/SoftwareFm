@@ -4,6 +4,8 @@
 
 package org.softwareFm.swt.editors.internal;
 
+import java.util.concurrent.Callable;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
@@ -15,15 +17,12 @@ public class DataBodyComposite extends Composite {
 
 	public 	final CardConfig cardConfig;
 	public final Composite innerBody;
-	public final TitleSpec titleSpec;
 
-	public DataBodyComposite(Composite parent, CardConfig cardConfig, TitleSpec titleSpec) {
+	public DataBodyComposite(Composite parent, CardConfig cardConfig,Callable<TitleSpec> titleSpecGetter) {
 		super(parent, SWT.NULL);
 		this.cardConfig = cardConfig;
-		this.titleSpec = titleSpec;
 		this.innerBody = new Composite(this, SWT.NULL);
-		innerBody.setBackground(titleSpec.background);
-		addPaintListener(new CardOutlinePaintListener(titleSpec, cardConfig));
+		addPaintListener(new CardOutlinePaintListener(cardConfig, titleSpecGetter));
 
 	}
 

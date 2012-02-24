@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
 import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.swt.card.CardOutlinePaintListener;
 import org.softwareFm.swt.card.ICard;
@@ -81,7 +82,7 @@ public class TextViewer implements IHasComposite {
 			};
 			StyledText text = new StyledText(body, SWT.V_SCROLL | SWT.WRAP | SWT.BORDER | SWT.READ_ONLY);
 			body.setBackground(titleSpec.background);
-			body.addPaintListener(new CardOutlinePaintListener(titleSpec, cardConfig));
+			body.addPaintListener(new CardOutlinePaintListener(cardConfig, Callables.value(titleSpec)));
 			text.setText(Strings.nullSafeToString(value));
 		}
 

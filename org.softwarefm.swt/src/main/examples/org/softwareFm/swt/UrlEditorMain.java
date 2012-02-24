@@ -11,7 +11,7 @@ import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.details.IDetailsFactoryCallback;
 import org.softwareFm.swt.editors.internal.UrlEditor;
-import org.softwareFm.swt.editors.internal.ValueEditorLayout;
+import org.softwareFm.swt.editors.internal.DataCompositeWithFooterLayout;
 import org.softwareFm.swt.swt.Swts;
 import org.softwareFm.swt.swt.Swts.Show;
 import org.softwareFm.swt.swt.Swts.Size;
@@ -24,7 +24,7 @@ public class UrlEditorMain {
 			public Composite apply(Composite from) throws Exception {
 				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay());
 				UrlEditor textEditor = new UrlEditor(from, cardConfig, "someUrl", null, "key", "value", IDetailsFactoryCallback.Utils.resizeAfterGotData(), TitleSpec.noTitleSpec(from.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN)));
-				textEditor.getComposite().setLayout(new ValueEditorLayout());
+				textEditor.getComposite().setLayout(new DataCompositeWithFooterLayout());
 				// Size.resizeMeToParentsSize(textEditor.getControl());
 				// textEditor.content.layout();
 				Swts.layoutDump(from);

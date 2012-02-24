@@ -10,11 +10,10 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -23,56 +22,69 @@ import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.comparators.Comparators;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.runnable.Runnables;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.eclipse.comments.ICommentsReader;
 import org.softwareFm.eclipse.constants.CommentConstants;
-import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.card.ICardFactory;
-import org.softwareFm.swt.card.composites.CompositeWithCardMargin;
-import org.softwareFm.swt.card.composites.CompositeWithEditorIndent;
-import org.softwareFm.swt.card.composites.OutlinePaintListener;
 import org.softwareFm.swt.card.dataStore.CardDataStoreMock;
+import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.configuration.ICardConfigurator;
 import org.softwareFm.swt.constants.CollectionConstants;
+import org.softwareFm.swt.editors.DataComposite;
+import org.softwareFm.swt.editors.IDataCompositeWithFooter;
+import org.softwareFm.swt.editors.internal.DataCompositeWithFooterLayout;
 import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.swt.Swts;
-import org.softwareFm.swt.title.Title;
-import org.softwareFm.swt.title.TitleSpec;
 
 public class Comments implements IHasControl {
 
-	static class CommentsComposite extends CompositeWithCardMargin {
+	public static class CommentsButtons implements IHasComposite {
+		private final Composite content;
+		final Control addCommentButton;
 
-		private final Table table;
-		private final CardConfig cc;
-		private final Composite body;
-		private final Title title;
-		private final ICommentsReader commentsReader;
-		final Label addCommentButton;
-		protected List<Map<String, Object>> allComments;
-		private String cardType;
-		private String url;
-
-		public CommentsComposite(Composite parent, CardConfig cardConfig, ICommentsReader commentsReader, final ICommentsCallback callback, Runnable addButton) {
-			super(parent, SWT.NULL, cardConfig);
-			this.cc = cardConfig;
-			this.commentsReader = commentsReader;
-			Composite header = Swts.newComposite(this, SWT.NULL, "header");
-			header.setLayout(Swts.titleAndRhsLayout(cardConfig.editorIndentX));
-			title = new Title(header, cardConfig, TitleSpec.noTitleSpec(getBackground()), "Comments", "");
+		public CommentsButtons(Composite parent, CardConfig cardConfig, Runnable addButton) {
+			this.content = new Composite(parent, SWT.NULL);
 			String imageName = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null, CollectionConstants.addCommentButtonImage);
 			Image addCommentImage = Functions.call(cardConfig.imageFn, imageName);
-			addCommentButton = Swts.Buttons.makeImageButton(header, addCommentImage, addButton);
+			addCommentButton = Swts.Buttons.makeImageButton(content, addCommentImage, addButton);
+//			addCommentButton = Swts.Buttons.makePushButton(content, "add", addButton);
+			RowLayout layout = Swts.Row.getHorizonalNoMarginRowLayout();layout.marginRight=20;
+			content.setLayout(layout);
+			
+		}
+
+		@Override
+		public Control getControl() {
+			return content;
+		}
+
+		@Override
+		public Composite getComposite() {
+			return content;
+		}
+
+		public void setUserData(UserData userData) {
+			addCommentButton.setEnabled(userData.softwareFmId != null);
+		}
+	}
+
+	public static class CommentsComposite extends DataComposite<Table> implements IDataCompositeWithFooter<Table, CommentsButtons> {
+
+		private final Table table;
+		private final ICommentsReader commentsReader;
+		protected List<Map<String, Object>> allComments;
+		private String url;
+		private final CommentsButtons footer;
+
+		public CommentsComposite(Composite parent, CardConfig cardConfig, ICommentsReader commentsReader, final ICommentsCallback callback, Runnable addButton) {
+			super(parent, cardConfig, CommentConstants.commentCardType, "");
+			this.commentsReader = commentsReader;
 			IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, CommentConstants.commentCardType);
-			this.body = new CompositeWithEditorIndent(this, SWT.NULL, cardConfig);
-			this.addPaintListener(new OutlinePaintListener(cardConfig));
-			body.setLayout(new FillLayout());
-			this.table = new Table(body, SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+			this.table = new Table(getInnerBody(), SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 			table.setLinesVisible(true);
 			new TableColumn(table, SWT.NONE).setText(IResourceGetter.Utils.getOrException(resourceGetter, CommentConstants.tableCreatorColumnTitle));
 			new TableColumn(table, SWT.NONE).setText(IResourceGetter.Utils.getOrException(resourceGetter, CommentConstants.tableSourceColumnTitle));
@@ -84,25 +96,35 @@ public class Comments implements IHasControl {
 					int index = table.getSelectionIndex();
 					if (index != -1 && index < allComments.size()) {
 						Map<String, Object> comment = allComments.get(index);
-						callback.selected(cardType, url, index, comment);
+						callback.selected(getCardType(), url, index, comment);
 					}
 				}
 			});
+			this.footer = new CommentsButtons(getInnerBody(), cardConfig, addButton);
+		}
+
+		@Override
+		public CommentsButtons getFooter() {
+			return footer;
+		}
+
+		@Override
+		public Table getEditor() {
+			return table;
 		}
 
 		public void populate(UserData userData, String cardType, String url) {
-			this.cardType = cardType;
 			this.url = url;
+			CardConfig cc = getCardConfig();
+
 			allComments = Lists.sort(ICommentsReader.Utils.allComments(commentsReader, url, userData.softwareFmId, userData.crypto, CommentConstants.globalSource, CommentConstants.mySource), //
 					Comparators.invert(Comparators.mapKey(CommentConstants.timeKey)));
 			String titleKey = allComments.size() > 0 ? CollectionConstants.commentsTitle : CollectionConstants.commentsNoTitle;
-			TitleSpec titleSpec = Functions.call(cc.titleSpecFn, ICardData.Utils.create(cc, cardType, url, Maps.emptyStringObjectMap()));
 
 			String pattern = IResourceGetter.Utils.getOrException(cc.resourceGetterFn, cardType, titleKey);
 			String titleText = MessageFormat.format(pattern, url, Strings.lastSegment(url, "/"), url);
-			title.setTitleAndImage(titleText, "", titleSpec);
-			body.setBackground(titleSpec.titleColor);
-			addCommentButton.setEnabled(userData.softwareFmId != null);
+			setTitleAndImage(titleText, "", cardType);
+			footer.setUserData(userData);
 			updateDisplay(allComments);
 		}
 
@@ -113,13 +135,11 @@ public class Comments implements IHasControl {
 				Object text = comment.get(CommentConstants.textKey);
 				Object creator = comment.get(CommentConstants.creatorKey);
 				Object source = comment.get(CommentConstants.sourceKey);
-				if (title != null) {
-					TableItem item = new TableItem(table, SWT.NULL);
-					item.setData(i++);
-					item.setText(0, Strings.nullSafeToString(creator));
-					item.setText(1, Strings.nullSafeToString(source));
-					item.setText(2, Strings.nullSafeToString(text));
-				}
+				TableItem item = new TableItem(table, SWT.NULL);
+				item.setData(i++);
+				item.setText(0, Strings.nullSafeToString(creator));
+				item.setText(1, Strings.nullSafeToString(source));
+				item.setText(2, Strings.nullSafeToString(text));
 			}
 			Swts.packColumns(table);
 		}
@@ -131,6 +151,7 @@ public class Comments implements IHasControl {
 	public Comments(Composite parent, CardConfig cardConfig, ICommentsReader commentsReader, ICommentsCallback callback, Runnable addComment) {
 		content = new CommentsComposite(parent, cardConfig, commentsReader, callback, addComment);
 		content.setLayout(Swts.titleAndContentLayout(cardConfig.titleHeight));
+		content.setLayout(new DataCompositeWithFooterLayout());
 	}
 
 	public void showCommentsFor(UserData userData, String cardType, String url) {
@@ -158,10 +179,6 @@ public class Comments implements IHasControl {
 
 	public Table getTable() {
 		return content.table;
-	}
-
-	public Title getTitle() {
-		return content.title;
 	}
 
 	public static void main(String[] args) {

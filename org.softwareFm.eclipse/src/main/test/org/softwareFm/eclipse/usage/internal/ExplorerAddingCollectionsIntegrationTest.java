@@ -30,7 +30,7 @@ import org.softwareFm.common.url.Urls;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardHolder;
 import org.softwareFm.swt.constants.CardConstants;
-import org.softwareFm.swt.editors.IValueComposite;
+import org.softwareFm.swt.editors.IDataCompositeWithOkCancel;
 import org.softwareFm.swt.explorer.ExplorerAdapter;
 import org.softwareFm.swt.menu.ICardMenuItemHandler;
 import org.softwareFm.swt.swt.Swts;
@@ -238,7 +238,7 @@ public abstract class ExplorerAddingCollectionsIntegrationTest extends AbstractE
 					}
 				});
 				@SuppressWarnings("unchecked")
-				Control okButton = ((IValueComposite<Composite>) detailContent1).getOkCancel().okButton();
+				Control okButton = ((IDataCompositeWithOkCancel<Composite>) detailContent1).getFooter().okButton();
 				final CountDownLatch latch = new CountDownLatch(1);
 				ExplorerAdapter listemer = new ExplorerAdapter() {
 

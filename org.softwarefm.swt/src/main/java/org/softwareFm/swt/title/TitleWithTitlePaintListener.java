@@ -40,11 +40,13 @@ public class TitleWithTitlePaintListener implements IHasControl {
 		return listener.getTitle();
 	}
 
+	public TitleSpec getTitleSpec() {
+		return listener.getTitleSpec();
+	}
+
 	@Override
 	public Control getControl() {
 		return canvas;
 	}
-
-
 
 }

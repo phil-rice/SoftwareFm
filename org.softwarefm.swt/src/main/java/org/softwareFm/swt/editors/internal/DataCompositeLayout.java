@@ -11,28 +11,29 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
 import org.softwareFm.swt.configuration.CardConfig;
-import org.softwareFm.swt.editors.IValueComposite;
+import org.softwareFm.swt.editors.IDataComposite;
 
 @SuppressWarnings("unchecked")
-public class ValueEditorLayout extends Layout {
+public class DataCompositeLayout extends Layout {
 
 	@Override
 	protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
-		IValueComposite<Control> c = (IValueComposite<Control>) composite;
+		IDataComposite<Control> c = (IDataComposite<Control>) composite;
 		Point editorSize = c.getEditor().computeSize(wHint, hHint);
-		Point okCancelSize = c.getOkCancel().getControl().computeSize(wHint, hHint);
-		int height = hHint == SWT.DEFAULT ? c.getCardConfig().titleHeight + editorSize.y + okCancelSize.y : hHint;
+		int height = hHint == SWT.DEFAULT ? c.getCardConfig().titleHeight + editorSize.y : hHint;
 		int width = composite.getParent().getClientArea().width; // want full width if can have it
 		return new Point(width, height);
 	}
 
 	@Override
 	protected void layout(Composite composite, boolean flushCache) {
-		IValueComposite<Control> c = (IValueComposite<Control>) composite;
+		IDataComposite<Control> c = (IDataComposite<Control>) composite;
 		Rectangle cb = composite.getBounds();
 		Rectangle ca = composite.getClientArea();
 		CardConfig cc = c.getCardConfig();
-
+		Control header = c.getTitle().getControl();
+		header.setBounds(ca.x, ca.y, ca.width, cc.titleHeight + cc.topMargin);
+		
 		c.getBody().setBounds(ca.x, ca.y + cc.topMargin + cc.titleHeight, ca.width, ca.height - cc.topMargin - cc.titleHeight);
 
 		c.getInnerBody().setBounds(c.getBody().getClientArea());
@@ -40,19 +41,8 @@ public class ValueEditorLayout extends Layout {
 
 		c.getTitle().getControl().setBounds(cb.x, cb.y, cb.width, cc.titleHeight + c.getCardConfig().topMargin);
 
-		Control okCancelControl = c.getOkCancel().getControl();
-		okCancelControl.pack();
-		int okCancelWidth = okCancelControl.getSize().x;
-		int okCancelHeight = okCancelControl.getSize().y;
-		okCancelControl.setBounds(//
-				cb_ca.x + cb_ca.width - okCancelWidth - 2,//
-				cb_ca.y + cb_ca.height - okCancelHeight - 2,//
-				okCancelWidth, okCancelHeight);
-
 		Control editor = c.getEditor();
-		int editorHeight = c.useAllHeight() ? //
-		cb_ca.height - 2 * cc.editorIndentY - okCancelControl.getSize().y //
-				: editor.computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
+		int editorHeight = c.useAllHeight() ? cb_ca.height - 2 * cc.editorIndentY : editor.computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
 
 		editor.setBounds(cb_ca.x + 1 + cc.editorIndentX,//
 				cb_ca.y + cc.editorIndentY, //

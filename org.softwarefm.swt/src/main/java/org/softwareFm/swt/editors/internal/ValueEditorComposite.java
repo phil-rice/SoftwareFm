@@ -15,10 +15,9 @@ import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.dataStore.IMutableCardDataStore;
 import org.softwareFm.swt.details.IDetailsFactoryCallback;
 import org.softwareFm.swt.editors.DataWithOkCancelComposite;
-import org.softwareFm.swt.editors.IValueComposite;
 import org.softwareFm.swt.title.TitleSpec;
 
-abstract public class ValueEditorComposite<T extends Control> extends DataWithOkCancelComposite<T> implements IValueComposite<T> {
+abstract public class ValueEditorComposite<T extends Control> extends DataWithOkCancelComposite<T>{
 
 	private final T editorControl;
 	protected final String originalValue;
@@ -43,7 +42,7 @@ abstract public class ValueEditorComposite<T extends Control> extends DataWithOk
 			@Override
 			public void handleEvent(Event e) {
 				if (e.detail == SWT.TRAVERSE_ESCAPE)
-					getOkCancel().cancel();
+					getFooter().cancel();
 			}
 		});
 	}

@@ -10,7 +10,7 @@ import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.configuration.ICardConfigurator;
 import org.softwareFm.swt.editors.AddCardCallbackMock;
-import org.softwareFm.swt.editors.IValueComposite;
+import org.softwareFm.swt.editors.IDataCompositeWithOkCancel;
 import org.softwareFm.swt.okCancel.IOkCancelForTests;
 import org.softwareFm.swt.swt.SwtTest;
 
@@ -35,8 +35,8 @@ public abstract class AbstractNameAndValuesEditorTest<T extends IHasComposite> e
 		cardType = getCardType();
 		editor = makeEditor();
 		@SuppressWarnings("unchecked")
-		IValueComposite<SashForm> composite = (IValueComposite<SashForm>) editor.getComposite();
-		okCancel = (IOkCancelForTests) composite.getOkCancel();
+		IDataCompositeWithOkCancel<SashForm> composite = (IDataCompositeWithOkCancel<SashForm>) editor.getComposite();
+		okCancel = (IOkCancelForTests) composite.getFooter();
 		SashForm sashForm = composite.getEditor();
 		assertEquals(2, sashForm.getChildren().length);
 		labels = (Composite) sashForm.getChildren()[0];

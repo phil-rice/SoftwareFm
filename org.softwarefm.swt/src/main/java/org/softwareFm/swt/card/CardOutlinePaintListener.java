@@ -4,31 +4,35 @@
 
 package org.softwareFm.swt.card;
 
+import java.util.concurrent.Callable;
+
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.title.TitleSpec;
 
 public class CardOutlinePaintListener implements PaintListener {
-	private final TitleSpec titleSpec;
 	private final CardConfig cardConfig;
+	private final Callable<TitleSpec> titleSpecGetter;
 
-
-	public CardOutlinePaintListener(TitleSpec titleSpec, CardConfig cardConfig) {
-		this.titleSpec = titleSpec;
+	public CardOutlinePaintListener(CardConfig cardConfig, Callable<TitleSpec> titleSpecGetter) {
+		this.titleSpecGetter = titleSpecGetter;
 		this.cardConfig = cardConfig;
 	}
 
 	@Override
 	public void paintControl(PaintEvent e) {
+		TitleSpec titleSpec = Callables.call(titleSpecGetter);
+		
 		Composite cardComposite = (Composite) e.widget;
 		Rectangle clientArea = cardComposite.getClientArea();
 
 		drawLeftAndBottom(e, clientArea);
-		drawRight(e, clientArea);
+		drawRight(e, clientArea, titleSpec);
 
 		e.gc.setClipping((Rectangle) null);
 		Rectangle topLeft = new Rectangle(clientArea.x - cardConfig.cornerRadiusComp, clientArea.y - cardConfig.cornerRadiusComp, clientArea.x - cardConfig.cornerRadiusComp, clientArea.y + -cardConfig.cornerRadiusComp + cardConfig.cornerRadius);
@@ -42,7 +46,7 @@ public class CardOutlinePaintListener implements PaintListener {
 		e.gc.drawLine(x, y, x + clientArea.width - titleSpec.rightIndent + cardConfig.cornerRadiusComp, y);
 	}
 
-	private void drawRight(PaintEvent e, Rectangle clientArea) {
+	private void drawRight(PaintEvent e, Rectangle clientArea, TitleSpec titleSpec) {
 		Rectangle clipRectangle = new Rectangle(clientArea.x + clientArea.width - titleSpec.rightIndent - cardConfig.cornerRadiusComp, clientArea.y - cardConfig.cornerRadiusComp, clientArea.width + 2 * cardConfig.cornerRadiusComp, clientArea.height + 2 * cardConfig.cornerRadiusComp + 1);
 		e.gc.setClipping(clipRectangle); // way to wide...but who cares. Don't know why need +1, but without it bottom right doesnt appear
 

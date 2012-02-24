@@ -16,7 +16,7 @@ import org.softwareFm.swt.editors.internal.CardEditorLayout;
 import org.softwareFm.swt.editors.internal.SnippetEditor;
 import org.softwareFm.swt.editors.internal.StyledTextEditor;
 import org.softwareFm.swt.editors.internal.TextEditor;
-import org.softwareFm.swt.editors.internal.ValueEditorLayout;
+import org.softwareFm.swt.editors.internal.DataCompositeWithFooterLayout;
 import org.softwareFm.swt.modifiers.ICardDataModifier;
 import org.softwareFm.swt.title.TitleSpec;
 
@@ -25,13 +25,13 @@ public interface IValueEditor extends IHasComposite {
 	public static class Utils {
 		public static IValueEditor textEditorWithLayout(Composite parentComposite, CardConfig cardConfig, String url, String cardType, String key, Object value, IDetailsFactoryCallback callback, TitleSpec titleSpec) {
 			TextEditor editor = new TextEditor(parentComposite, cardConfig, url, cardType, key, value, callback, titleSpec);
-			editor.getComposite().setLayout(new ValueEditorLayout());
+			editor.getComposite().setLayout(new DataCompositeWithFooterLayout());
 			return editor;
 		}
 
 		public static IValueEditor styledTextEditorWithLayout(Composite parentComposite, CardConfig cardConfig, String url, String cardType, String key, Object value, IDetailsFactoryCallback callback, TitleSpec titleSpec) {
 			StyledTextEditor editor = new StyledTextEditor(parentComposite, cardConfig, url, cardType, key, value, callback, titleSpec);
-			editor.getComposite().setLayout(new ValueEditorLayout());
+			editor.getComposite().setLayout(new DataCompositeWithFooterLayout());
 			return editor;
 		}
 

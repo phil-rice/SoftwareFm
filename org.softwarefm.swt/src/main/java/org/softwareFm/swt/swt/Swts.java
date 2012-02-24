@@ -544,7 +544,7 @@ public class Swts {
 
 	public static class Row {
 
-		public static Layout getHorizonalMarginRowLayout(int margin) {
+		public static RowLayout getHorizonalMarginRowLayout(int margin) {
 			RowLayout rowLayout = new RowLayout(SWT.HORIZONTAL);
 			rowLayout.marginWidth = 0;
 			rowLayout.marginHeight = 0;
@@ -558,7 +558,7 @@ public class Swts {
 			return rowLayout;
 		}
 
-		public static Layout getHorizonalNoMarginRowLayout() {
+		public static RowLayout getHorizonalNoMarginRowLayout() {
 			return Swts.Row.getHorizonalMarginRowLayout(0);
 		}
 

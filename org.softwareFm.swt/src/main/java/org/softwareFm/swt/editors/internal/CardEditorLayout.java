@@ -13,16 +13,16 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Table;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.configuration.CardConfig;
-import org.softwareFm.swt.editors.IValueComposite;
+import org.softwareFm.swt.editors.IDataCompositeWithOkCancel;
 
 @SuppressWarnings("unchecked")
 public class CardEditorLayout extends Layout {
 
 	@Override
 	protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
-		IValueComposite<Control> c = (IValueComposite<Control>) composite;
+		IDataCompositeWithOkCancel<Control> c = (IDataCompositeWithOkCancel<Control>) composite;
 		Point editorSize = c.getEditor().computeSize(wHint, hHint);
-		Point okCancelSize = c.getOkCancel().getControl().computeSize(wHint, hHint);
+		Point okCancelSize = c.getFooter().getControl().computeSize(wHint, hHint);
 		int height = hHint == SWT.DEFAULT ? c.getCardConfig().titleHeight + editorSize.y + okCancelSize.y : hHint;
 		int width = composite.getParent().getClientArea().width; // want full width if can have it
 		return new Point(width, height);
@@ -30,7 +30,7 @@ public class CardEditorLayout extends Layout {
 
 	@Override
 	protected void layout(Composite composite, boolean flushCache) {
-		IValueComposite<Table> c = (IValueComposite<Table>) composite;
+		IDataCompositeWithOkCancel<Table> c = (IDataCompositeWithOkCancel<Table>) composite;
 		Rectangle cb = composite.getBounds();
 		Rectangle ca = composite.getClientArea();
 		CardConfig cc = c.getCardConfig();
@@ -42,7 +42,7 @@ public class CardEditorLayout extends Layout {
 
 		c.getTitle().getControl().setBounds(cb.x, cb.y, cb.width, cc.titleHeight + c.getCardConfig().topMargin);
 
-		Control okCancelControl = c.getOkCancel().getControl();
+		Control okCancelControl = c.getFooter().getControl();
 		okCancelControl.pack();
 		int okCancelWidth = okCancelControl.getSize().x;
 		int okCancelHeight = okCancelControl.getSize().y;

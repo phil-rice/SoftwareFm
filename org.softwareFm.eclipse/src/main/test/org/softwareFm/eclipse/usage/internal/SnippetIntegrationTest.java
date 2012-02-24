@@ -22,7 +22,7 @@ import org.softwareFm.common.url.Urls;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardHolder;
 import org.softwareFm.swt.constants.CardConstants;
-import org.softwareFm.swt.editors.IValueComposite;
+import org.softwareFm.swt.editors.IDataCompositeWithOkCancel;
 import org.softwareFm.swt.menu.ICardMenuItemHandler;
 import org.softwareFm.swt.swt.Swts;
 
@@ -36,8 +36,8 @@ public class SnippetIntegrationTest extends AbstractExplorerIntegrationTest {
 				Menu menu = createPopupMenu(card);
 				String addNewSnippet = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null, CardConstants.menuItemAddSnippet);
 				executeMenuItem(menu, addNewSnippet);
-				IValueComposite<Composite> detailContent = (IValueComposite<Composite>) masterDetailSocial.getDetailContent();
-				assertFalse(detailContent.getOkCancel().isOkEnabled());
+				IDataCompositeWithOkCancel<Composite> detailContent = (IDataCompositeWithOkCancel<Composite>) masterDetailSocial.getDetailContent();
+				assertFalse(detailContent.getFooter().isOkEnabled());
 
 				checkLabel(0, "Title");
 				checkLabel(1, "Description");
@@ -95,8 +95,8 @@ public class SnippetIntegrationTest extends AbstractExplorerIntegrationTest {
 				checkTextEditorAndChangeTo(0, "", newTitle);
 				checkTextEditorAndChangeTo(1, "<Please add a description>", newDescription);
 				checkStyledTextEditorAndChangeTo(2, "", newContent);
-				IValueComposite<Composite> detailContent = (IValueComposite<Composite>) masterDetailSocial.getDetailContent();
-				assertFalse(detailContent.getOkCancel().isOkEnabled());
+				IDataCompositeWithOkCancel<Composite> detailContent = (IDataCompositeWithOkCancel<Composite>) masterDetailSocial.getDetailContent();
+				assertFalse(detailContent.getFooter().isOkEnabled());
 			}
 
 		});
@@ -134,20 +134,20 @@ public class SnippetIntegrationTest extends AbstractExplorerIntegrationTest {
 
 	@SuppressWarnings("unchecked")
 	private void clickOkButton() {
-		IValueComposite<Composite> detailContent = (IValueComposite<Composite>) masterDetailSocial.getDetailContent();
-		assertTrue(detailContent.getOkCancel().isOkEnabled());
-		Swts.Buttons.press( detailContent.getOkCancel().okButton());
+		IDataCompositeWithOkCancel<Composite> detailContent = (IDataCompositeWithOkCancel<Composite>) masterDetailSocial.getDetailContent();
+		assertTrue(detailContent.getFooter().isOkEnabled());
+		Swts.Buttons.press( detailContent.getFooter().okButton());
 	}
 
 	@SuppressWarnings("unchecked")
 	private void clickCancelButton() {
-		IValueComposite<Composite> detailContent = (IValueComposite<Composite>) masterDetailSocial.getDetailContent();
-		Swts.Buttons.press(detailContent.getOkCancel().cancelButton());
+		IDataCompositeWithOkCancel<Composite> detailContent = (IDataCompositeWithOkCancel<Composite>) masterDetailSocial.getDetailContent();
+		Swts.Buttons.press(detailContent.getFooter().cancelButton());
 	}
 
 	@SuppressWarnings("unchecked")
 	private void checkTextEditorAndChangeTo(int index, String expected, String newValue) {
-		IValueComposite<Composite> detailContent = (IValueComposite<Composite>) masterDetailSocial.getDetailContent();
+		IDataCompositeWithOkCancel<Composite> detailContent = (IDataCompositeWithOkCancel<Composite>) masterDetailSocial.getDetailContent();
 		Composite snippetComposite = detailContent.getEditor();
 		Composite editors = (Composite) snippetComposite.getChildren()[1];
 		Text text = (Text) editors.getChildren()[index];
@@ -158,7 +158,7 @@ public class SnippetIntegrationTest extends AbstractExplorerIntegrationTest {
 
 	@SuppressWarnings("unchecked")
 	private void checkStyledTextEditorAndChangeTo(int index, String expected, String newValue) {
-		IValueComposite<Composite> detailContent = (IValueComposite<Composite>) masterDetailSocial.getDetailContent();
+		IDataCompositeWithOkCancel<Composite> detailContent = (IDataCompositeWithOkCancel<Composite>) masterDetailSocial.getDetailContent();
 		Composite snippetComposite = detailContent.getEditor();
 		Composite editors = (Composite) snippetComposite.getChildren()[1];
 		StyledText text = (StyledText) editors.getChildren()[index];
@@ -169,7 +169,7 @@ public class SnippetIntegrationTest extends AbstractExplorerIntegrationTest {
 
 	@SuppressWarnings("unchecked")
 	private void checkLabel(int labelIndex, String expected) {
-		IValueComposite<Composite> detailContent = (IValueComposite<Composite>) masterDetailSocial.getDetailContent();
+		IDataCompositeWithOkCancel<Composite> detailContent = (IDataCompositeWithOkCancel<Composite>) masterDetailSocial.getDetailContent();
 		Composite snippetComposite = detailContent.getEditor();
 		Composite labels = (Composite) snippetComposite.getChildren()[0];
 		Label label = (Label) labels.getChildren()[labelIndex];
