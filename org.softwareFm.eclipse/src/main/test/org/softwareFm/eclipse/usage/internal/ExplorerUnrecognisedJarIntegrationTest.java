@@ -27,6 +27,8 @@ import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardHolder;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.constants.CollectionConstants;
+import org.softwareFm.swt.editors.IDataCompositeWithFooter;
+import org.softwareFm.swt.okCancel.IOkCancel;
 import org.softwareFm.swt.swt.Swts;
 
 public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerIntegrationTest {
@@ -46,9 +48,10 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 				return text.contains("SoftwareFM has not seen");
 			}
 		});
-		Control detailContent = masterDetailSocial.getDetailContent();
+		
+		IDataCompositeWithFooter<Table, IOkCancel> detailContent = (IDataCompositeWithFooter<Table, IOkCancel>) masterDetailSocial.getDetailContent();
 
-		Table table = (Table) Swts.getDescendant(detailContent, 1, 0, 1); 
+		Table table = detailContent.getEditor(); 
 		checkAndSet(table, 0, "Group Id", "Please specify the group id", "some.group");
 		checkAndSet(table, 1, "Artifact Id", "ant", "someArtifact");
 		checkAndSet(table, 2, "Version", "1.2.3", "someVersion");
@@ -93,9 +96,8 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 		checkRepositoryPopulated("012345", "sun.jdk", "runtime", "1.2.3");
 	}
 
-	private void clickOk(Control detailContent) {
-		final Control okButton = Swts.getDescendant(detailContent, 1, 0, 0, 1); 
-		Swts.layoutDump(detailContent);
+	private void clickOk(IDataCompositeWithFooter<Table, IOkCancel>  detailContent) {
+		final Control okButton = detailContent.getFooter().okButton(); 
 		Swts.Buttons.press(okButton);
 	}
 

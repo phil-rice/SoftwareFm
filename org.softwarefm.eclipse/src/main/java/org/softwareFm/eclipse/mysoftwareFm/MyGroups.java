@@ -11,10 +11,7 @@ import java.util.concurrent.Callable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StackLayout;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -31,6 +28,7 @@ import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
@@ -39,11 +37,11 @@ import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.eclipse.user.IUserMembershipReader;
 import org.softwareFm.eclipse.user.UserMembershipReaderForLocal;
-import org.softwareFm.swt.card.composites.CompositeWithCardMargin;
-import org.softwareFm.swt.card.composites.TextInBorder;
 import org.softwareFm.swt.card.composites.TextInCompositeWithCardMargin;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.editors.DataComposite;
+import org.softwareFm.swt.editors.DataCompositeLayout;
 import org.softwareFm.swt.explorer.IMasterDetailSocial;
 import org.softwareFm.swt.explorer.IShowMyGroups;
 import org.softwareFm.swt.explorer.internal.UserData;
@@ -93,7 +91,7 @@ public class MyGroups implements IHasComposite {
 
 	private final MyGroupsComposite content;
 
-	public static class MyGroupsComposite extends CompositeWithCardMargin {
+	public static class MyGroupsComposite extends DataComposite<SashForm> {
 		private final Table summaryTable;
 		private final IGroupsReader groupsReader;
 		private final SashForm sashForm;
@@ -101,17 +99,15 @@ public class MyGroups implements IHasComposite {
 		private final Table membershipTable;
 		private final Map<String, String> idToCrypto = Maps.newMap();
 
+		@Override
+		public SashForm getEditor() {
+			return sashForm;
+		}
+
 		public MyGroupsComposite(Composite parent, final CardConfig cardConfig, IUserMembershipReader membershipReader, final IGroupsReader groupReaders, String softwareFmId, String userCrypto, IProjectTimeGetter projectTimeGetter, final IRequestGroupReportGeneration reportGenerator) {
-			super(parent, SWT.NULL, cardConfig);
-			addPaintListener(new PaintListener() {
-				@Override
-				public void paintControl(PaintEvent e) {
-					Rectangle ca = getClientArea();
-					e.gc.drawRoundRectangle(ca.x - cardConfig.cornerRadiusComp, ca.y - cardConfig.cornerRadiusComp, ca.width + 2 * cardConfig.cornerRadiusComp, ca.height + 2 * cardConfig.cornerRadiusComp, cardConfig.cornerRadius, cardConfig.cornerRadius);
-				}
-			});
+			super(parent, cardConfig, GroupConstants.myGroupsCardType, SoftwareFmConstants.myGroupsTitle, true);
 			this.groupsReader = groupReaders;
-			sashForm = new SashForm(this, SWT.HORIZONTAL);
+			sashForm = new SashForm(getInnerBody(), SWT.HORIZONTAL);
 			summaryTable = new Table(sashForm, SWT.FULL_SELECTION);
 			summaryTable.setHeaderVisible(true);
 			new TableColumn(summaryTable, SWT.NULL).setText("Group Name");
@@ -132,9 +128,9 @@ public class MyGroups implements IHasComposite {
 			final StackLayout stackLayout = new StackLayout();
 			rightHand.setLayout(stackLayout);
 
-			TextInBorder textInBorder = new TextInBorder(rightHand, SWT.WRAP | SWT.READ_ONLY, cardConfig);
-			textInBorder.setTextFromResourceGetter(GroupConstants.myGroupsCardType, GroupConstants.groupMembersTitle, GroupConstants.needToSelectGroup);
-			stackLayout.topControl = textInBorder.getControl();
+			StyledText  textInBorder = new StyledText(rightHand, SWT.WRAP | SWT.READ_ONLY);
+			textInBorder.setText(IResourceGetter.Utils.getOrException(getResourceGetter(),  GroupConstants.needToSelectGroup));
+			stackLayout.topControl = textInBorder;
 
 			membershipTable = new Table(rightHand, SWT.FULL_SELECTION);
 			membershipTable.setHeaderVisible(true);
@@ -170,8 +166,7 @@ public class MyGroups implements IHasComposite {
 
 	public MyGroups(Composite parent, CardConfig cardConfig, IUserMembershipReader membershipReader, IGroupsReader groupsReader, String softwareFmId, String userCrypto, IProjectTimeGetter projectTimeGetter, IRequestGroupReportGeneration reportGenerator) {
 		content = new MyGroupsComposite(parent, cardConfig, membershipReader, groupsReader, softwareFmId, userCrypto, projectTimeGetter, reportGenerator);
-		content.setLayout(new FillLayout());
-		Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithLastGrabingVertical(content);
+		content.setLayout(new DataCompositeLayout());
 	}
 
 	@Override
@@ -183,5 +178,6 @@ public class MyGroups implements IHasComposite {
 	public Composite getComposite() {
 		return content;
 	}
+	
 
 }

@@ -29,6 +29,14 @@ public class SoftwareFmConstants {
 	public static final String projectDirectoryName = "project";
 	public static final long usageRefreshTimeMs = 10 * 60 * 60 * 1000;// 10 hours
 
+	public static final String mySoftwareFmLoggedInTitle = "mysoftwarefm.loggedin.title";
+	public static final String myGroupsTitle = "mygroups.title";
+	public static final String myProjectsTitle = "myprojects.title";
+
+	public static final String peopleIKnowTitle = "peopleIknow.loaded.title";
+
+	public static final String peopleIKnowLoadingTitle = "peopleIknow.loading.title";
+
 	public static IUrlGenerator jarUrlGenerator(String prefix) {
 		return new UrlGenerator(prefix + "/jars/{0}/{1}/{2}", SoftwareFmConstants.digest);
 	}

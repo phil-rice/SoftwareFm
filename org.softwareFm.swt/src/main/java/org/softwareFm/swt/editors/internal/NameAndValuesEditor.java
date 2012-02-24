@@ -20,6 +20,7 @@ import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.card.LineItem;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
+import org.softwareFm.swt.editors.DataCompositeWithFooterLayout;
 import org.softwareFm.swt.editors.DataWithOkCancelComposite;
 import org.softwareFm.swt.editors.ICardEditorCallback;
 import org.softwareFm.swt.editors.IEditableControlStrategy;
@@ -38,7 +39,7 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 		private final ICardEditorCallback cardEditorCallback;
 
 		public NameAndValuesEditorComposite(Composite parent, String titleString, final ICardData cardData, List<KeyAndEditStrategy> keyAndEditStrategy, final ICardEditorCallback strategy) {
-			super(parent, cardData.getCardConfig(), titleString, "");
+			super(parent, cardData.getCardConfig(), cardData.cardType(), titleString);
 			this.cardData = cardData;
 			this.cardEditorCallback = strategy;
 			this.callback = strategy;

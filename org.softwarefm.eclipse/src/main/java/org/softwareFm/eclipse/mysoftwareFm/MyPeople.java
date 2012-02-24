@@ -13,7 +13,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Rectangle;
@@ -32,17 +31,21 @@ import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.IRequestGroupReportGeneration;
+import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.eclipse.user.IUserMembershipReader;
 import org.softwareFm.eclipse.user.UserMembershipReaderForLocal;
 import org.softwareFm.swt.card.LineItem;
-import org.softwareFm.swt.card.composites.CompositeWithCardMargin;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.constants.CardConstants;
+import org.softwareFm.swt.editors.DataComposite;
+import org.softwareFm.swt.editors.DataCompositeLayout;
 import org.softwareFm.swt.explorer.IMasterDetailSocial;
 import org.softwareFm.swt.explorer.IShowMyPeople;
 import org.softwareFm.swt.explorer.internal.UserData;
@@ -73,15 +76,18 @@ public class MyPeople implements IHasComposite {
 		};
 	}
 
-	static class MyPeopleComposite extends CompositeWithCardMargin {
+	static class MyPeopleComposite extends DataComposite<Table> {
 
-		private final StyledText text;
 		private final Table table;
 
+		@Override
+		public Table getEditor() {
+			return table;
+		}
+
 		public MyPeopleComposite(Composite parent, int style, final CardConfig cc, IProjectTimeGetter timeGetter) {
-			super(parent, style, cc);
-			text = new StyledText(this, SWT.WRAP | SWT.READ_ONLY);
-			table = new Table(this, SWT.FULL_SELECTION);
+			super(parent, cc, CardConstants.loginCardType, SoftwareFmConstants.peopleIKnowLoadingTitle, true);
+			table = new Table(getInnerBody(), SWT.FULL_SELECTION);
 			addPaintListener(new PaintListener() {
 				@Override
 				public void paintControl(PaintEvent e) {
@@ -101,7 +107,8 @@ public class MyPeople implements IHasComposite {
 		}
 
 		public void setSoftwareFmIds(String groupId, String artifactId, Set<String> softwareFmIds, Map<String, String> softwareFmIdToName, Map<String, List<String>> softwareFmIdToGroups, Map<String, Map<String, List<Integer>>> softwareFmIdToMonthToUsage) {
-			text.setText("Group Id: " + groupId + "\nArtifact Id: " + artifactId);
+			String title = IResourceGetter.Utils.getMessageOrException(getCardConfig().resourceGetterFn, getCardType(), SoftwareFmConstants.peopleIKnowTitle, groupId, artifactId);
+			setTitleAndImage(title, "", CardConstants.loginCardType);
 			List<String> ids = Lists.sort(softwareFmIds);
 			for (String id : ids) {
 				TableItem item = new TableItem(table, SWT.NULL);
@@ -135,7 +142,7 @@ public class MyPeople implements IHasComposite {
 		this.reportGenerator = reportGenerator;
 		this.timeoutMs = timeoutMs;
 		this.content = new MyPeopleComposite(parent, SWT.NULL, cardConfig, timeGetter);
-		Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithLastGrabingVertical(content);
+		content.setLayout(new DataCompositeLayout());
 
 	}
 

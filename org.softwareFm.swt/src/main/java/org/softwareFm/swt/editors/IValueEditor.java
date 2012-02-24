@@ -16,7 +16,6 @@ import org.softwareFm.swt.editors.internal.CardEditorLayout;
 import org.softwareFm.swt.editors.internal.SnippetEditor;
 import org.softwareFm.swt.editors.internal.StyledTextEditor;
 import org.softwareFm.swt.editors.internal.TextEditor;
-import org.softwareFm.swt.editors.internal.DataCompositeWithFooterLayout;
 import org.softwareFm.swt.modifiers.ICardDataModifier;
 import org.softwareFm.swt.title.TitleSpec;
 

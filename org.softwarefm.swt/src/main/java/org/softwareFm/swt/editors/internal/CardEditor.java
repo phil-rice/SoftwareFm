@@ -27,14 +27,14 @@ import org.softwareFm.swt.editors.IValueEditor;
 
 public class CardEditor implements IValueEditor, ICardData {
 
-	static class CardEditorComposite extends DataWithOkCancelComposite<Table>  {
+	static class CardEditorComposite extends DataWithOkCancelComposite<Table> {
 
 		private final CardTable cardTable;
 		private final ICardEditorCallback callback;
 		private final ICardData cardData;
 
 		public CardEditorComposite(Composite parent, String titleString, final ICardData cardData, final ICardEditorCallback callback) {
-			super(parent, cardData.getCardConfig(),cardData.cardType(), titleString);
+			super(parent, cardData.getCardConfig(), cardData.cardType(), titleString);
 			this.cardData = cardData;
 			this.callback = callback;
 			CardConfig cardConfig = getCardConfig();
@@ -87,7 +87,6 @@ public class CardEditor implements IValueEditor, ICardData {
 		public Table getEditor() {
 			return cardTable.getTable();
 		}
-
 
 	}
 

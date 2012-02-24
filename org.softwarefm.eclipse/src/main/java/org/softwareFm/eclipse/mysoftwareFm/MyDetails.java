@@ -12,10 +12,6 @@ import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
@@ -34,9 +30,11 @@ import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.project.UserAndProjectFactory;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.eclipse.user.IUsageReader;
-import org.softwareFm.swt.card.composites.CompositeWithCardMargin;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.constants.CardConstants;
+import org.softwareFm.swt.editors.DataComposite;
+import org.softwareFm.swt.editors.DataCompositeLayout;
 import org.softwareFm.swt.explorer.IMasterDetailSocial;
 import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.explorer.internal.UserData;
@@ -74,25 +72,21 @@ public class MyDetails implements IHasComposite {
 
 	public static List<String> displayProperties = Arrays.asList(LoginConstants.emailKey, LoginConstants.monikerKey);
 
-	static class MyProjectComposite extends CompositeWithCardMargin {
+	static class MyProjectComposite extends DataComposite<Table> {
 
 		private final Table projectDetails;
 
-		@SuppressWarnings("unused")
+		@Override
+		public Table getEditor() {
+			return projectDetails;
+		}
+
 		public MyProjectComposite(Composite parent, int style, final CardConfig cc, UserData userData, IUserReader user, IUsageReader project, IProjectTimeGetter timeGetter) {
-			super(parent, style, cc);
-			addPaintListener(new PaintListener() {
-				@Override
-				public void paintControl(PaintEvent e) {
-					Point size = getSize();
-					Rectangle ca = getClientArea();
-					e.gc.drawRoundRectangle(ca.x - cc.cornerRadiusComp, ca.y - cc.cornerRadiusComp, ca.width + 2 * cc.cornerRadiusComp, ca.height + 2 * cc.cornerRadiusComp, cc.cornerRadius, cc.cornerRadius);
-				}
-			});
-		
+			super(parent, cc, CardConstants.loginCardType, SoftwareFmConstants.myProjectsTitle, true);
+
 			Map<String, Map<String, Map<String, Integer>>> groupToArtifactToMonthToCount = Maps.newMap();
 			Iterable<String> lastNMonths = timeGetter.lastNMonths(3);
-			this.projectDetails = new Table(this, SWT.FULL_SELECTION);
+			this.projectDetails = new Table(getInnerBody(), SWT.FULL_SELECTION);
 			projectDetails.setHeaderVisible(true);
 			new TableColumn(projectDetails, SWT.NULL).setText("Group ID");
 			new TableColumn(projectDetails, SWT.NULL).setText("Artifact ID");
@@ -123,7 +117,7 @@ public class MyDetails implements IHasComposite {
 					}
 				}
 			}
-			Swts.packTables( projectDetails);
+			Swts.packTables(projectDetails);
 		}
 	}
 
@@ -131,7 +125,7 @@ public class MyDetails implements IHasComposite {
 
 	public MyDetails(Composite parent, CardConfig cardConfig, UserData userData, IUserReader user, IUsageReader project, IProjectTimeGetter timeGetter) {
 		this.content = new MyProjectComposite(parent, SWT.NULL, cardConfig, userData, user, project, timeGetter);
-		Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithLastGrabingVertical(content);
+		content.setLayout(new DataCompositeLayout());
 	}
 
 	@Override

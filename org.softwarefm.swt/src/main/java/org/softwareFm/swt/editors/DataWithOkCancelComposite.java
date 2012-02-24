@@ -14,8 +14,12 @@ abstract public class DataWithOkCancelComposite<T extends Control> extends DataC
 	private final OkCancel okCancel;
 
 	public DataWithOkCancelComposite(Composite parent, CardConfig cardConfig, String cardType, String title) {
-		super(parent, cardConfig, cardType, title);
-		okCancel = new OkCancel(getInnerBody(), resourceGetter, cardConfig.imageFn, new Runnable() {
+		this(parent, cardConfig, cardType, title, false);
+	}
+
+	public DataWithOkCancelComposite(Composite parent, CardConfig cardConfig, String cardType, String title, boolean titleIsKey) {
+		super(parent, cardConfig, cardType, title, titleIsKey);
+		okCancel = new OkCancel(getInnerBody(), getResourceGetter(), cardConfig.imageFn, new Runnable() {
 			@Override
 			public void run() {
 				ok();

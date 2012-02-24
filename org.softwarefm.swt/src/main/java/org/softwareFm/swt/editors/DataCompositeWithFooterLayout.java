@@ -2,7 +2,7 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwareFm.swt.editors.internal;
+package org.softwareFm.swt.editors;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -12,7 +12,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
 import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;
-import org.softwareFm.swt.editors.IDataCompositeWithFooter;
 
 @SuppressWarnings("unchecked")
 public class DataCompositeWithFooterLayout extends Layout {

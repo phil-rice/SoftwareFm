@@ -23,8 +23,8 @@ import org.softwareFm.swt.card.dataStore.CardDataStoreMock;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.configuration.ICardConfigurator;
+import org.softwareFm.swt.editors.DataCompositeWithFooterLayout;
 import org.softwareFm.swt.editors.DataWithOkCancelComposite;
-import org.softwareFm.swt.editors.internal.DataCompositeWithFooterLayout;
 import org.softwareFm.swt.swt.Swts;
 
 public class CommentsEditor implements IHasComposite {
@@ -39,7 +39,7 @@ public class CommentsEditor implements IHasComposite {
 		private final ICommentsEditorCallback callback;
 
 		public CommentsComposite(Composite parent, String titleKey, final ICardData cardData, String initialText, List<String> groups, final ICommentsEditorCallback callback) {
-			super(parent, cardData.getCardConfig(), cardData.cardType(), IResourceGetter.Utils.getOrException(CardConfig.resourceGetter(cardData), titleKey));
+			super(parent, cardData.getCardConfig(), cardData.cardType(), titleKey, true);
 			this.callback = callback;
 			this.url = cardData.url();
 			editor = new StyledText(getInnerBody(), SWT.WRAP);

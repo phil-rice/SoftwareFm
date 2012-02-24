@@ -5,10 +5,6 @@
 package org.softwareFm.swt.explorer.internal;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
@@ -17,77 +13,116 @@ import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.strings.Strings;
+import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.swt.card.LineItem;
-import org.softwareFm.swt.card.composites.CompositeWithCardMargin;
+import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.configuration.ICardConfigurator;
 import org.softwareFm.swt.constants.CardConstants;
+import org.softwareFm.swt.editors.DataComposite;
+import org.softwareFm.swt.editors.DataCompositeWithFooterLayout;
+import org.softwareFm.swt.editors.IDataCompositeWithFooter;
 import org.softwareFm.swt.mySoftwareFm.ILoginDisplayStrategy;
 import org.softwareFm.swt.swt.Swts;
 
 public class MySoftwareFmLoggedIn implements IHasControl {
 
-	private final Table userDetails;
-	private final CompositeWithCardMargin content;
+	private final MySoftwareFmLoggedInComposite content;
+
+	static class MySoftwareFmButtons implements IHasComposite {
+
+		private final Composite content;
+
+		public MySoftwareFmButtons(Composite parent, final ILoginDisplayStrategy loginDisplayStrategy, final IMySoftwareFmLoggedInStrategy loggedInStrategy, UserData userData) {
+			this.content = new Composite(parent, SWT.NULL);
+			final String email = userData.email();
+			Swts.Buttons.makePushButton(content, "Logout", new Runnable() {
+				@Override
+				public void run() {
+					loggedInStrategy.logout();
+				}
+			});
+			Swts.Buttons.makePushButton(content, "Change Password", new Runnable() {
+				@Override
+				public void run() {
+					loginDisplayStrategy.showChangePassword(email);
+				}
+			});
+			content.setLayout(Swts.Row.getHorizonalNoMarginRowLayout());
+
+		}
+
+		@Override
+		public Control getControl() {
+			return content;
+		}
+
+		@Override
+		public Composite getComposite() {
+			return content;
+		}
+	}
+
+	static class MySoftwareFmLoggedInComposite extends DataComposite<Composite> implements IDataCompositeWithFooter<Composite, MySoftwareFmButtons> {
+
+		private final Table userDetails;
+		private final Composite mainComposite;
+		private final MySoftwareFmButtons buttonComposite;
+
+		public MySoftwareFmLoggedInComposite(Composite parent, CardConfig cardConfig, String cardType, final ILoginDisplayStrategy loginDisplayStrategy, final IMySoftwareFmLoggedInStrategy loggedInStrategy, UserData userData) {
+			super(parent, cardConfig, cardType, SoftwareFmConstants.mySoftwareFmLoggedInTitle, true);
+			mainComposite = new Composite(getInnerBody(), SWT.NULL);
+			mainComposite.setBackground(getTitleSpec().background);
+			this.userDetails = new Table(mainComposite, SWT.FULL_SELECTION);
+			userDetails.setHeaderVisible(false);
+			for (int i = 0; i < 2; i++)
+				new TableColumn(userDetails, SWT.NULL);
+			loggedInStrategy.userReader().refresh(userData.softwareFmId);
+			for (String property : loggedInStrategy.displayProperties()) {
+				TableItem item = new TableItem(userDetails, SWT.NULL);
+				Object value = loggedInStrategy.userReader().getUserProperty(userData.softwareFmId, userData.crypto, property);
+				String name = cardConfig.nameFn.apply(cardConfig, new LineItem(CardConstants.loginCardType, property, value));
+				item.setText(new String[] { name, Strings.nullSafeToString(value) });
+			}
+			String softwareFmIdName = cardConfig.nameFn.apply(cardConfig, new LineItem(CardConstants.loginCardType, LoginConstants.softwareFmIdKey, null));
+			TableItem softwareFmIdItem = new TableItem(userDetails, SWT.FULL_SELECTION);
+			softwareFmIdItem.setText(new String[] { softwareFmIdName, userData.softwareFmId });
+
+			Swts.Buttons.makePushButton(mainComposite, "My Data", new Runnable() {
+				@Override
+				public void run() {
+					loggedInStrategy.showMyData();
+				}
+			});
+			Swts.Buttons.makePushButton(mainComposite, "My Groups", new Runnable() {
+				@Override
+				public void run() {
+					loggedInStrategy.showMyGroups();
+				}
+			});
+			buttonComposite = new MySoftwareFmButtons(getInnerBody(), loginDisplayStrategy, loggedInStrategy, userData);
+
+			Swts.packTables(userDetails);
+			Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildren(mainComposite);
+		}
+
+		@Override
+		public MySoftwareFmButtons getFooter() {
+			return buttonComposite;
+		}
+
+		@Override
+		public Composite getEditor() {
+			return mainComposite;
+		}
+
+	}
 
 	@SuppressWarnings("unused")
 	public MySoftwareFmLoggedIn(Composite parent, final CardConfig cardConfig, String title, String text, final UserData userData, final ILoginDisplayStrategy loginDisplayStrategy, final IMySoftwareFmLoggedInStrategy loggedInStrategy) {
-		content = new CompositeWithCardMargin(parent, SWT.NULL, cardConfig);
-		content.addPaintListener(new PaintListener() {
-			@Override
-			public void paintControl(PaintEvent e) {
-				Point size = content.getSize();
-				Rectangle ca = content.getClientArea();
-				e.gc.drawRoundRectangle(ca.x - cardConfig.cornerRadiusComp, ca.y - cardConfig.cornerRadiusComp, ca.width + 2 * cardConfig.cornerRadiusComp, ca.height + 2 * cardConfig.cornerRadiusComp, cardConfig.cornerRadius, cardConfig.cornerRadius);
-			}
-		});
-		Composite mainComposite = new Composite(content, SWT.NULL);
-		this.userDetails = new Table(mainComposite, SWT.FULL_SELECTION);
-		userDetails.setHeaderVisible(false);
-		for (int i = 0; i < 2; i++)
-			new TableColumn(userDetails, SWT.NULL);
-		loggedInStrategy.userReader().refresh(userData.softwareFmId);
-		for (String property : loggedInStrategy.displayProperties()) {
-			TableItem item = new TableItem(userDetails, SWT.NULL);
-			Object value = loggedInStrategy.userReader().getUserProperty(userData.softwareFmId, userData.crypto, property);
-			String name = cardConfig.nameFn.apply(cardConfig, new LineItem(CardConstants.loginCardType, property, value));
-			item.setText(new String[] { name, Strings.nullSafeToString(value) });
-		}
-		String softwareFmIdName = cardConfig.nameFn.apply(cardConfig, new LineItem(CardConstants.loginCardType, LoginConstants.softwareFmIdKey, null));
-		TableItem softwareFmIdItem = new TableItem(userDetails, SWT.FULL_SELECTION);
-		softwareFmIdItem.setText(new String[] { softwareFmIdName, userData.softwareFmId });
-
-		Swts.Buttons.makePushButton(mainComposite, "My Data", new Runnable() {
-			@Override
-			public void run() {
-				loggedInStrategy.showMyData();
-			}
-		});
-		Swts.Buttons.makePushButton(mainComposite, "My Groups", new Runnable() {
-			@Override
-			public void run() {
-				loggedInStrategy.showMyGroups();
-			}
-		});
-		Composite buttonComposite = new Composite(content, SWT.NULL);
-		buttonComposite.setLayout(Swts.Row.getHorizonalNoMarginRowLayout());
-		final String email = userData.email();
-		Swts.packTables(userDetails);
-		Swts.Buttons.makePushButton(buttonComposite, "Logout", new Runnable() {
-			@Override
-			public void run() {
-				loggedInStrategy.logout();
-			}
-		});
-		Swts.Buttons.makePushButton(buttonComposite, "Change Password", new Runnable() {
-			@Override
-			public void run() {
-				loginDisplayStrategy.showChangePassword(email);
-			}
-		});
-		Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildren(mainComposite);
-		content.setLayout(Swts.contentAndButtonBarLayout());
+		content = new MySoftwareFmLoggedInComposite(parent, cardConfig, CardConstants.loginCardType, loginDisplayStrategy, loggedInStrategy, userData);
+		content.setLayout(new DataCompositeWithFooterLayout());
 	}
 
 	@Override

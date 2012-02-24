@@ -18,6 +18,7 @@ import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.resources.ResourceGetterMock;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGeneratorMap;
+import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.card.ICardFactory;
@@ -149,6 +150,7 @@ public class CardConfig {
 						DisplayConstants.buttonCancelTitle, "Cancel",//
 						CardConstants.contactingServerTitle, "Contacting Server",//
 						CardConstants.contactingServerText, "Contacting Server",//
+						SoftwareFmConstants.myProjectsTitle, "My Projects",//
 						CardConstants.failedToContactServerTitle, "Failed to Contact Server",//
 						CardConstants.failedToContactServerText, "Failed to Contact Server",//
 						CardConstants.cardNameUrlKey, "{0}",//

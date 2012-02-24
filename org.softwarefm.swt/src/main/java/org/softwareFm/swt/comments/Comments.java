@@ -35,8 +35,8 @@ import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.configuration.ICardConfigurator;
 import org.softwareFm.swt.constants.CollectionConstants;
 import org.softwareFm.swt.editors.DataComposite;
+import org.softwareFm.swt.editors.DataCompositeWithFooterLayout;
 import org.softwareFm.swt.editors.IDataCompositeWithFooter;
-import org.softwareFm.swt.editors.internal.DataCompositeWithFooterLayout;
 import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.swt.Swts;
 

@@ -36,6 +36,7 @@ public class GroupConstants {
 	public static final String groupIdNotFound = "Cannot find group id {0} for user {1}";
 	public static final String missingDataFromMembership = "Missing data from membership for user {0} map {1}";
 
+
 	public static IUrlGenerator groupsGenerator(String prefix) {
 		return IUrlGenerator.Utils.generator(prefix + "/groups/{0}/{1}/{2}", groupIdKey);
 	}

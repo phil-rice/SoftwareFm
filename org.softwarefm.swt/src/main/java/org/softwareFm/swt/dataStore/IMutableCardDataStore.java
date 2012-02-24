@@ -10,6 +10,7 @@ import java.util.concurrent.Future;
 import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.swt.card.RightClickCategoryResult;
+import org.softwareFm.swt.card.dataStore.CardDataStoreAsyncMock;
 import org.softwareFm.swt.constants.CardConstants;
 
 /** This is a card data store that can be changed. */
@@ -26,6 +27,10 @@ public interface IMutableCardDataStore extends ICardDataStore {
 	Future<?> makeRepo(String url, IAfterEditCallback callback);
 
 	public static class Utils {
+		
+		public static IMutableCardDataStore mock(Object... urlsAndMaps){
+			return new CardDataStoreAsyncMock(urlsAndMaps);
+		}
 
 		public static Future<Void> addCollectionItem(final IMutableCardDataStore store, RightClickCategoryResult result, final String itemUrlFragment, final Map<String, Object> map, final IAfterEditCallback callback) {
 			String collectionUrl = result.collectionUrl();

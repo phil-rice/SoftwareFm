@@ -19,7 +19,7 @@ public class CommonConstants {
 	public static final String dataParameterName = "data";
 	public static final String repoUrlKey = "repoUrl";
 
-	public static final long testTimeOutMs = 200000;
+	public static final long testTimeOutMs = 4000;
 
 	public static final String GET = "GET";
 	public static final String POST = "POST";

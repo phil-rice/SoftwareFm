@@ -14,6 +14,7 @@ import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -47,6 +48,8 @@ import org.softwareFm.softwareFmServer.SoftwareFmServer;
 import org.softwareFm.swt.card.composites.CompositeWithCardMargin;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.configuration.ICardConfigurator;
+import org.softwareFm.swt.editors.DataComposite;
+import org.softwareFm.swt.editors.IDataComposite;
 import org.softwareFm.swt.editors.IDataCompositeWithOkCancel;
 import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.explorer.IShowMyGroups;
@@ -92,7 +95,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		setValues(email, password);
 		assertTrue(getOkCancel().isOkEnabled());
 		getOkCancel().ok();
-		displayUntilCompositeWithCardMargin();
+		displayUntilDataCompositeWithTitle("My Software Fm");
 		checkLoggedInDisplay(crypto, softwareFmId);
 
 		assertSame(userDataManager.getUserData(), mySoftwareFm.getUserData());
@@ -109,7 +112,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 	public void testLoggedInWhenAnotherWindowLogsIn() {
 		UserData newUserData = new UserData(email, "sfmId", password);
 		userDataManager.setUserData(this, newUserData);
-		displayUntilCompositeWithCardMargin();
+		displayUntilDataCompositeWithTitle("My Software Fm");
 	}
 
 	public void testSignup() {
@@ -203,7 +206,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		setValues(email, newPassword);
 		assertTrue(getOkCancel().isOkEnabled());
 		getOkCancel().ok();
-		displayUntilCompositeWithCardMargin();
+		displayUntilDataCompositeWithTitle("My Software Fm");
 		checkLoggedInDisplay(crypto, "someNewSoftwareFmId0");
 
 		assertEquals(new UserData(email, "someNewSoftwareFmId0", crypto), userDataManager.getUserData());
@@ -230,7 +233,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		setValues(email, moniker, password, password);
 		assertTrue(getOkCancel().isOkEnabled());
 		getOkCancel().ok();
-		displayUntilCompositeWithCardMargin();
+		displayUntilDataCompositeWithTitle("My Software Fm");
 
 		return signUpSalt;
 	}
@@ -275,6 +278,20 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 				Control firstChild = softwareFmComposite.getChildren()[0];
 				boolean result = firstChild instanceof CompositeWithCardMargin;
 				return result;
+			}
+		});
+	}
+
+	private void displayUntilDataCompositeWithTitle(final String title) {
+		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				Control firstChild = softwareFmComposite.getChildren()[0];
+				if (firstChild instanceof DataComposite<?>) {
+					String actualText = ((DataComposite<?>) firstChild).getTitle().getText();
+					return title.equals(actualText);
+				}
+				return false;
 			}
 		});
 	}
@@ -367,10 +384,16 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 	}
 
 	protected void checkLoggedInDisplay(String crypto, String softwareFmId) {
-		Table table = (Table) Swts.getDescendant(mySoftwareFm.getControl(), 0, 0, 0);
+		IDataComposite<Composite> mySoftwareFmComposite = (IDataComposite<Composite>) mySoftwareFm.getComposite().getChildren()[0];
+		Control[] children = mySoftwareFmComposite.getEditor().getChildren();
+		Table table = (Table) children[0];
 		Swts.checkRow(table, 0, "Email", email);
 		Swts.checkRow(table, 1, "Moniker", moniker);
 		Swts.checkRow(table, 2, "Software Fm Id", userDataManager.getUserData().softwareFmId);
+
+		assertEquals(3, children.length);
+		assertTrue(children[1] instanceof Button);
+		assertTrue(children[2] instanceof Button);
 
 		assertEquals(new UserData(email, softwareFmId, crypto), userDataManager.getUserData());
 	}

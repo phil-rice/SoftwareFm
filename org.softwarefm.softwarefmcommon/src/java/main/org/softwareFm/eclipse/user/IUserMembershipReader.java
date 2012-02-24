@@ -28,6 +28,7 @@ public interface IUserMembershipReader {
 			throw new IllegalArgumentException("Could not find group with id: " + groupId + " in " + groups);
 		}
 
+		
 	}
 
 }

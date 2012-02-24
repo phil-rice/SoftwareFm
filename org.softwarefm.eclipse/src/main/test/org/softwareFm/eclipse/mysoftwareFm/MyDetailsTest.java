@@ -16,6 +16,7 @@ import org.softwareFm.eclipse.user.ProjectTimeGetterFixture;
 import org.softwareFm.eclipse.user.UserMock;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.editors.DataComposite;
 import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.swt.SwtTest;
 import org.softwareFm.swt.swt.Swts;
@@ -38,7 +39,8 @@ public class MyDetailsTest extends SwtTest {
 	}
 
 	private void checkProjectDetails(MyDetails myDetails) {
-		Table projectTable = (Table) Swts.getDescendant(myDetails.getControl(), 0);
+		DataComposite<Table> composite = (DataComposite<Table>) myDetails.getComposite();
+		Table projectTable = composite.getEditor();
 		Swts.checkColumns(projectTable, "Group ID", "Artifact ID", "Month1", "Month2", "Month3");
 
 		assertEquals(7, projectTable.getItemCount());

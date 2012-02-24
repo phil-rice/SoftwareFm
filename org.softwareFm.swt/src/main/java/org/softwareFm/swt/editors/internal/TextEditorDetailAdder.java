@@ -10,6 +10,7 @@ import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.details.IDetailsFactoryCallback;
+import org.softwareFm.swt.editors.DataCompositeWithFooterLayout;
 import org.softwareFm.swt.editors.IEditorDetailAdder;
 import org.softwareFm.swt.title.TitleSpec;
 
