@@ -43,8 +43,7 @@ public class OkCancel implements IOkCancelForTests {
 				if (okButton.isDisposed())
 					return;
 				if (okButton.isEnabled()) {
-					okButton.setEnabled(false);
-					onAccept.run();
+					ok();
 				}
 			}
 		});
@@ -93,11 +92,15 @@ public class OkCancel implements IOkCancelForTests {
 
 	@Override
 	public void ok() {
+		for (Control control : getComposite().getChildren())
+			control.setEnabled(false);
 		onAccept.run();
 	}
 
 	@Override
 	public void cancel() {
+		for (Control control : getComposite().getChildren())
+			control.setEnabled(false);
 		onCancel.run();
 	}
 

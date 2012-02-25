@@ -40,7 +40,6 @@ import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.eclipse.user.IUserMembershipReader;
 import org.softwareFm.eclipse.user.UserMembershipReaderForLocal;
-import org.softwareFm.swt.card.LineItem;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
@@ -97,8 +96,7 @@ public class MyPeople implements IHasComposite {
 			});
 			new TableColumn(table, SWT.NULL).setText("Person");
 			for (String month : timeGetter.lastNMonths(3)) {
-				LineItem lineItem = new LineItem(GroupConstants.myGroupsCardType, month, null);
-				String name = cc.nameFn.apply(cc, lineItem);
+				String name = MySoftwareFmFunctions.monthFileNameToPrettyName(month);
 				new TableColumn(table, SWT.NULL).setText(name);
 			}
 			new TableColumn(table, SWT.NULL).setText("Groups");

@@ -20,7 +20,7 @@ public class ProjectTimeGetterFixture implements IProjectTimeGetter {
 
 	@Override
 	public Iterable<String> lastNMonths(int n) {
-		return Arrays.asList("month1", "month2", "month3");
+		return Arrays.asList("january_12", "febuary_12", "march_12");
 	}
 
 }

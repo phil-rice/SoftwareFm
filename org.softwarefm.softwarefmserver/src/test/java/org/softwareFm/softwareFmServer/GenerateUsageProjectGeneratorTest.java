@@ -19,9 +19,9 @@ import org.softwareFm.eclipse.user.ProjectMock;
 public class GenerateUsageProjectGeneratorTest extends GroupsTest {
 
 	public void testGenerateReport() {
-		checkMonthsReport("month1", ProjectFixture.expectedMergeResultMonth1);
-		checkMonthsReport("month2", ProjectFixture.expectedMergeResultMonth2);
-		checkMonthsReport("month3", ProjectFixture.expectedMergeResultMonth3);
+		checkMonthsReport("january_12", ProjectFixture.expectedMergeResultMonth1);
+		checkMonthsReport("febuary_12", ProjectFixture.expectedMergeResultMonth2);
+		checkMonthsReport("march_12", ProjectFixture.expectedMergeResultMonth3);
 	}
 
 	protected void checkMonthsReport(String month, Map<String, Object> expected) {
@@ -42,13 +42,13 @@ public class GenerateUsageProjectGeneratorTest extends GroupsTest {
 		ProjectMock projectUser1 = ProjectFixture.project1(id1, user1ProjectCrypto);
 		ProjectMock projectUser2 = ProjectFixture.project2(id2, user2ProjectCrypto);
 
-		saveProjectData(id1, "month1", user1ProjectCrypto, projectUser1);
-		saveProjectData(id1, "month2", user1ProjectCrypto, projectUser1);
-		saveProjectData(id1, "month3", user1ProjectCrypto, projectUser1);
+		saveProjectData(id1, "january_12", user1ProjectCrypto, projectUser1);
+		saveProjectData(id1, "febuary_12", user1ProjectCrypto, projectUser1);
+		saveProjectData(id1, "march_12", user1ProjectCrypto, projectUser1);
 
-		saveProjectData(id2, "month1", user2ProjectCrypto, projectUser2);
+		saveProjectData(id2, "january_12", user2ProjectCrypto, projectUser2);
 		// saveProjectData(id2, "month2", user2ProjectCrypto, projectUser2); no month 2 data
-		saveProjectData(id2, "month3", user2ProjectCrypto, projectUser2);
+		saveProjectData(id2, "march_12", user2ProjectCrypto, projectUser2);
 
 		IGroups groups = new GroupsForServer(groupGenerator, remoteOperations, Strings.firstNSegments(3));
 		groups.setGroupProperty(groupId, groupCrypto, "someName", "someValue");

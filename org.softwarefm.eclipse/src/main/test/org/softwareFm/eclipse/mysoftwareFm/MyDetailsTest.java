@@ -41,7 +41,7 @@ public class MyDetailsTest extends SwtTest {
 	private void checkProjectDetails(MyDetails myDetails) {
 		DataComposite<Table> composite = (DataComposite<Table>) myDetails.getComposite();
 		Table projectTable = composite.getEditor();
-		Swts.checkColumns(projectTable, "Group ID", "Artifact ID", "Month1", "Month2", "Month3");
+		Swts.checkColumns(projectTable, "Group ID", "Artifact ID", "Jan 2012", "Feb 2012", "Mar 2012");
 
 		assertEquals(7, projectTable.getItemCount());
 		Swts.checkRow(projectTable, 0, "group1", "artifact11", "4", "4", "4");

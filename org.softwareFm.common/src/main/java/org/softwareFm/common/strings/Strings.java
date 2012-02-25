@@ -57,7 +57,7 @@ public class Strings {
 	}
 
 	public static byte[] fromHex(String hexCoded) {
-		if (hexCoded== null||hexCoded.length() % 2 != 0)
+		if (hexCoded == null || hexCoded.length() % 2 != 0)
 			throw new IllegalArgumentException(hexCoded);
 		byte[] result = new byte[hexCoded.length() / 2];
 		int index = 0;
@@ -551,5 +551,13 @@ public class Strings {
 		};
 	}
 
+	public static boolean isInteger(String string) {
+		try {
+			Integer.parseInt(string);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
 
 }

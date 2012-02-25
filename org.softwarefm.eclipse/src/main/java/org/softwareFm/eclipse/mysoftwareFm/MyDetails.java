@@ -24,7 +24,6 @@ import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.services.IServiceExecutor;
-import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.project.UserAndProjectFactory;
@@ -92,7 +91,7 @@ public class MyDetails implements IHasComposite {
 			new TableColumn(projectDetails, SWT.NULL).setText("Artifact ID");
 			for (String month : lastNMonths) {
 				TableColumn column = new TableColumn(projectDetails, SWT.NULL);
-				column.setText(Strings.upperCaseFirstCharacter(month.replace("_", " ")));
+				column.setText(MySoftwareFmFunctions.monthFileNameToPrettyName(month));
 			}
 			String projectCryptoKey = user.getUserProperty(userData.softwareFmId, userData.crypto, SoftwareFmConstants.projectCryptoKey);
 
