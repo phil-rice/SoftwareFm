@@ -20,6 +20,7 @@ import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.editors.ICardEditorCallback;
 import org.softwareFm.swt.editors.INamesAndValuesEditor;
 import org.softwareFm.swt.editors.KeyAndEditStrategy;
+import org.softwareFm.swt.editors.NameAndValuesEditor;
 import org.softwareFm.swt.swt.Swts;
 
 public class SnippetEditor extends NameAndValuesEditor {

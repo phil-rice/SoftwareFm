@@ -23,30 +23,38 @@ import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.server.processors.AbstractProcessorDatabaseIntegrationTests;
+import org.softwareFm.server.processors.SignUpResult;
 
 public class TakeOnGroupProcessorTest extends AbstractProcessorDatabaseIntegrationTests {
+
+	private final String fromEmail = "from@some.email";
+
+	private String fromSoftwareFmId;
+
+	private String userCryptoKey;
 
 	@SuppressWarnings("unchecked")
 	public void testTakeOnGroup() throws Exception {
 		getHttpClient().post(GroupConstants.takeOnCommandPrefix).//
 				addParam(GroupConstants.groupNameKey, "someNewGroupName").//
 				addParam(GroupConstants.takeOnSubjectKey, "someSubject").//
-				addParam(GroupConstants.takeOnFromKey, "someFrom").//
-				addParam(GroupConstants.takeOnEmailPattern, "emailPattern: $email$").//
-				addParam(GroupConstants.takeOnEmailListKey, "email1@a.b,email2@a.b,email3@a.b").//
+				addParam(LoginConstants.softwareFmIdKey, fromSoftwareFmId).//
+				addParam(GroupConstants.takeOnFromKey, fromEmail).//
+				addParam(GroupConstants.takeOnEmailPattern, "emailPattern: " + GroupConstants.emailMarker + "/" + GroupConstants.groupNameMarker).//
+				addParam(GroupConstants.takeOnEmailListKey, "email1@a.b,email2@a.b").//
 				execute(IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 		List<Map<String, Object>> actual = Iterables.list(groups.users(groupId, groupCryptoKey));
 		List<Map<String, Object>> expected = Arrays.asList(//
-				Maps.stringObjectMap(LoginConstants.softwareFmIdKey, "someNewSoftwareFmId0", SoftwareFmConstants.projectCryptoKey, projectCryptoKey1, LoginConstants.emailKey, "email1@a.b", GroupConstants.userStatusInGroup, GroupConstants.invitedStatus),//
-				Maps.stringObjectMap(LoginConstants.softwareFmIdKey, "someNewSoftwareFmId1", SoftwareFmConstants.projectCryptoKey, projectCryptoKey2, LoginConstants.emailKey, "email2@a.b", GroupConstants.userStatusInGroup, GroupConstants.invitedStatus),//
-				Maps.stringObjectMap(LoginConstants.softwareFmIdKey, "someNewSoftwareFmId2", SoftwareFmConstants.projectCryptoKey, projectCryptoKey3, LoginConstants.emailKey, "email3@a.b", GroupConstants.userStatusInGroup, GroupConstants.invitedStatus));
+				Maps.stringObjectMap(LoginConstants.softwareFmIdKey, fromSoftwareFmId, SoftwareFmConstants.projectCryptoKey, projectCryptoKey1, LoginConstants.emailKey, fromEmail, GroupConstants.membershipStatusKey, GroupConstants.adminStatus),//
+				Maps.stringObjectMap(LoginConstants.softwareFmIdKey, "someNewSoftwareFmId1", SoftwareFmConstants.projectCryptoKey, projectCryptoKey2, LoginConstants.emailKey, "email1@a.b", GroupConstants.membershipStatusKey, GroupConstants.invitedStatus),//
+				Maps.stringObjectMap(LoginConstants.softwareFmIdKey, "someNewSoftwareFmId2", SoftwareFmConstants.projectCryptoKey, projectCryptoKey3, LoginConstants.emailKey, "email2@a.b", GroupConstants.membershipStatusKey, GroupConstants.invitedStatus));
 		assertEquals(expected, actual);
 		assertEquals("someNewGroupName", groups.getGroupProperty(groupId, groupCryptoKey, GroupConstants.groupNameKey));
 
-		assertEquals(Lists.times(3, "someFrom"), mailerMock.froms);
-		assertEquals(Arrays.asList("email1@a.b", "email2@a.b", "email3@a.b"), mailerMock.tos);
-		assertEquals(Lists.times(3, "someSubject"), mailerMock.subjects);
-		assertEquals(Arrays.asList("emailPattern: email1@a.b", "emailPattern: email2@a.b", "emailPattern: email3@a.b"), mailerMock.messages);
+		assertEquals(Lists.times(2, fromEmail), mailerMock.froms);
+		assertEquals(Arrays.asList("email1@a.b", "email2@a.b"), mailerMock.tos);
+		assertEquals(Lists.times(2, "someSubject"), mailerMock.subjects);
+		assertEquals(Arrays.asList("emailPattern: email1@a.b/someNewGroupName", "emailPattern: email2@a.b/someNewGroupName"), mailerMock.messages);
 	}
 
 	public void testThrowsExceptionsAndAddNoUsersIfPropertiesNotFullySet() throws Exception {
@@ -59,6 +67,39 @@ public class TakeOnGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 		checkCannotTakeOn("someNewGroupName", "someSubject", "someFrom", "emailPattern: $email$", "email1,email2@a.b");
 
 		checkCannotTakeOn("someNewGroupName", "someSubject", null, "emailPattern: $email$", "email1@a.b,email1@a.b,email3@a.b");// duplicate
+	}
+
+	public void testThrowsExceptionIfFromEmailNotAnEmail() throws InterruptedException, ExecutionException, TimeoutException {
+		getHttpClient().post(GroupConstants.takeOnCommandPrefix).//
+				addParam(GroupConstants.groupNameKey, "someNewGroupName").//
+				addParam(GroupConstants.takeOnSubjectKey, "someSubject").//
+				addParam(LoginConstants.softwareFmIdKey, fromSoftwareFmId).//
+				addParam(GroupConstants.takeOnFromKey, "wrongEmail").//
+				addParam(GroupConstants.takeOnEmailPattern, "emailPattern: " + GroupConstants.emailMarker + "/" + GroupConstants.groupNameMarker).//
+				addParam(GroupConstants.takeOnEmailListKey, "email1@a.b,email2@a.b").//
+				execute(IResponseCallback.Utils.checkCallback(CommonConstants.serverErrorCode, "class java.lang.IllegalArgumentException/Invalid email wrongEmail")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+	}
+
+	public void testThrowsExceptionIfOneOfTheEmailListIsNotAnEmail() throws InterruptedException, ExecutionException, TimeoutException {
+		getHttpClient().post(GroupConstants.takeOnCommandPrefix).//
+				addParam(GroupConstants.groupNameKey, "someNewGroupName").//
+				addParam(GroupConstants.takeOnSubjectKey, "someSubject").//
+				addParam(LoginConstants.softwareFmIdKey, fromSoftwareFmId).//
+				addParam(GroupConstants.takeOnFromKey, "wrongEmail").//
+				addParam(GroupConstants.takeOnEmailPattern, "emailPattern: " + GroupConstants.emailMarker + "/" + GroupConstants.groupNameMarker).//
+				addParam(GroupConstants.takeOnEmailListKey, "email1@a.b,email2@a.b,notAnEmail").//
+				execute(IResponseCallback.Utils.checkCallback(CommonConstants.serverErrorCode, "class java.lang.IllegalArgumentException/Invalid email wrongEmail")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+	}
+
+	public void testThrowsExceptionIfEmailAndSoftwareFmNotForSameUser() throws InterruptedException, ExecutionException, TimeoutException {
+		getHttpClient().post(GroupConstants.takeOnCommandPrefix).//
+				addParam(GroupConstants.groupNameKey, "someNewGroupName").//
+				addParam(GroupConstants.takeOnSubjectKey, "someSubject").//
+				addParam(LoginConstants.softwareFmIdKey, fromSoftwareFmId).//
+				addParam(GroupConstants.takeOnFromKey, "wrongEmail@a.b").//
+				addParam(GroupConstants.takeOnEmailPattern, "emailPattern: " + GroupConstants.emailMarker + "/" + GroupConstants.groupNameMarker).//
+				addParam(GroupConstants.takeOnEmailListKey, "email1@a.b,email2@a.b").//
+				execute(IResponseCallback.Utils.checkCallback(CommonConstants.serverErrorCode, "class java.lang.IllegalArgumentException/Email / SoftwareFm mismatch. Email wrongEmail@a.b Expected null Actual someNewSoftwareFmId0")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 	}
 
 	protected void checkCannotTakeOn(String groupName, String subject, String from, String emailPattern, String emailList) throws InterruptedException, ExecutionException, TimeoutException {
@@ -81,6 +122,14 @@ public class TakeOnGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 	private void add(IRequestBuilder builder, String key, String value) {
 		if (value != null)
 			builder.addParam(key, value);
+	}
+
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		fromSoftwareFmId = softwareFmIdGenerator.call();
+		SignUpResult signUp = processCallParameters.signUpChecker.signUp(fromEmail, "someMoniker", "someSalt", "irrelevant", fromSoftwareFmId);
+		userCryptoKey = signUp.crypto;
 	}
 
 }

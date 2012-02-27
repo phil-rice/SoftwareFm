@@ -177,7 +177,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		Control firstChild = softwareFmComposite.getChildren()[0];
 		CompositeWithCardMargin compositeWithCardMargin = (CompositeWithCardMargin) firstChild;
 		Swts.layoutDump(compositeWithCardMargin);
-		StyledText text = (StyledText) Swts.getDescendant(compositeWithCardMargin, 1, 0, 0);
+		StyledText text = Swts.<StyledText>getDescendant(compositeWithCardMargin, 1, 0, 0);
 		return text.getText();
 	}
 

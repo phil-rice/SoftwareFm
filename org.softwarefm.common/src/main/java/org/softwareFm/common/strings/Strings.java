@@ -560,4 +560,14 @@ public class Strings {
 		}
 	}
 
+	public static IFunction1<String, Boolean> isEmailFn() {
+		return new IFunction1<String, Boolean>() {
+			@Override
+			public Boolean apply(String from) throws Exception {
+				return isEmail(from);
+			}
+		};
+	}
+
+
 }

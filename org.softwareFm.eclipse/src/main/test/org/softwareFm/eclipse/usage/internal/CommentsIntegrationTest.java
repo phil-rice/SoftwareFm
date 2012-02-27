@@ -49,7 +49,7 @@ public class CommentsIntegrationTest extends AbstractExplorerIntegrationTest {
 		JdbcTemplate template = new JdbcTemplate(dataSource);
 		template.update("delete from users");
 		template.update("insert into users (softwarefmid,crypto) values (?,?)", softwareFmId, key);
-		makeServerUser().setUserProperty(softwareFmId, key, LoginConstants.monikerKey, "someMoniker");// creates user
+		processCallParameters.user.setUserProperty(softwareFmId, key, LoginConstants.monikerKey, "someMoniker");// creates user
 
 		ICardMenuItemHandler.Utils.addExplorerMenuItemHandlers(explorer, "popupmenuid");
 	}

@@ -294,4 +294,21 @@ public class Functions {
 			}
 		};
 	}
+
+	public static IFoldFunction<Boolean, Boolean> or() {
+		return new IFoldFunction<Boolean, Boolean>() {
+			@Override
+			public Boolean apply(Boolean value, Boolean initial) {
+				return value || initial;
+			}
+		};
+	}
+	public static IFoldFunction<Boolean, Boolean> and() {
+		return new IFoldFunction<Boolean, Boolean>() {
+			@Override
+			public Boolean apply(Boolean value, Boolean initial) {
+				return value && initial;
+			}
+		};
+	}
 }

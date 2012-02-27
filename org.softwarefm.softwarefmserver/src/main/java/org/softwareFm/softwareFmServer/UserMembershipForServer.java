@@ -38,7 +38,7 @@ public class UserMembershipForServer extends AbstractUserMembershipReader implem
 
 		for (Map<String, Object> map : walkGroupsFor(softwareFmId, userCrypto))
 			if (groupId.equals(map.get(GroupConstants.groupIdKey)))
-				throw new IllegalArgumentException(groupId);
+				throw new IllegalArgumentException(MessageFormat.format(GroupConstants.alreadyAMemberOfGroup, softwareFmId, groupId));
 
 		String url = userUrlGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
 		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, GroupConstants.membershipFileName, usersMembershipCrypto);

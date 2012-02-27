@@ -33,6 +33,7 @@ import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.IRequestGroupReportGeneration;
 import org.softwareFm.eclipse.comments.ICommentsReader;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.mysoftwareFm.IGroupClientOperations;
 import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups;
 import org.softwareFm.eclipse.mysoftwareFm.MyPeople;
@@ -78,7 +79,7 @@ public class ExplorerWithRadioChannel {
 		Logger.getLogger(IHttpClient.class).setLevel(Level.DEBUG);
 		File home = new File(System.getProperty("user.home"));
 		final File localRoot = new File(home, ".sfm");
-		boolean local = false;
+		boolean local = true;
 		String server = local ? "localhost" : SoftwareFmConstants.softwareFmServerUrl;
 		String prefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : SoftwareFmConstants.gitProtocolAndGitServerName;
 		// String prefix = "git://localhost:7777/";
@@ -110,9 +111,9 @@ public class ExplorerWithRadioChannel {
 					IUrlGenerator groupUrlGenerator = GroupConstants.groupsGenerator(SoftwareFmConstants.urlPrefix);
 					IRequestGroupReportGeneration requestGroupReportGenerator = new RequestGroupReportGeneration(client, IResponseCallback.Utils.sysoutStatusCallback());
 					IShowMyData showMyDetails = MyDetails.showMyDetails(service, cardConfig, masterDetailSocial, userUrlGenerator, gitLocal, projectTimeGetter);
-					IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, projectTimeGetter, requestGroupReportGenerator);
+					IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, projectTimeGetter, requestGroupReportGenerator, IGroupClientOperations.Utils.groupOperations(masterDetailSocial, cardConfig, client));
 					IShowMyPeople showMyPeople = MyPeople.showMyPeople(service, masterDetailSocial, cardConfig, gitLocal, userUrlGenerator, groupUrlGenerator, projectTimeGetter, requestGroupReportGenerator, CommonConstants.clientTimeOut);
-					IUserReader userReader= IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
+					IUserReader userReader = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
 					IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, userReader);
 					LocalGroupsReader groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
 
@@ -185,7 +186,7 @@ public class ExplorerWithRadioChannel {
 							explorer.displayCard(firstUrl, new CardAndCollectionDataStoreAdapter());
 						}
 					});
-					
+
 					Buttons.makePushButton(buttonPanel, "people I know using Junit", new Runnable() {
 						@Override
 						public void run() {

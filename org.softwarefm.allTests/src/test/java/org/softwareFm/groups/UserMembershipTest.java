@@ -54,7 +54,7 @@ public class UserMembershipTest extends GitTest {
 
 	public void testCannotAddSameGroupTwice() {
 		membershipForServer.addMembership(user1Id, userCrypto, groupId1, groupCrypto1, "someStatus1");
-		Tests.assertThrowsWithMessage(groupId1, RuntimeException.class, new Runnable() {
+		Tests.assertThrowsWithMessage("Already a member of group. Sfm Id sfmId1. Group Id groupId1", RuntimeException.class, new Runnable() {
 			@Override
 			public void run() {
 				membershipForServer.addMembership(user1Id, userCrypto, groupId1, groupCrypto1, "someStatus1");

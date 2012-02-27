@@ -44,4 +44,13 @@ public class Runnables {
 		};
 	}
 
+	public static Runnable exception() {
+		return new Runnable() {
+			@Override
+			public void run() {
+				throw new RuntimeException();
+			}
+		};
+	}
+
 }

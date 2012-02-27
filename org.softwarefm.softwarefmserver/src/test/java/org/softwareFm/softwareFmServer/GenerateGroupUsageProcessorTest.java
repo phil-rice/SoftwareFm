@@ -46,8 +46,8 @@ public class GenerateGroupUsageProcessorTest extends GitTest {
 	public void test() {
 		String groupId = takeOnProcessor.createGroup("someGroupName", groupCryptoKey);
 		assertEquals(this.groupId, groupId);// testing setup
-		takeOnProcessor.addExistingUserToGroup(groupId, "someGroupName", groupCryptoKey, "email1");
-		takeOnProcessor.addExistingUserToGroup(groupId, "someGroupName", groupCryptoKey, "email2");
+		takeOnProcessor.addExistingUserToGroup(groupId, "someGroupName", groupCryptoKey,sfmId1,"email1",  "someStatus");
+		takeOnProcessor.addExistingUserToGroup(groupId, "someGroupName", groupCryptoKey,sfmId2, "email2",  "someStatus");
 
 		project.addProjectDetails(sfmId1, "gid1", "aid1", "month1", 1);
 		project.addProjectDetails(sfmId1, "gid1", "aid1", "month1", 2);
@@ -110,6 +110,6 @@ public class GenerateGroupUsageProcessorTest extends GitTest {
 
 		IFunction1<String, String> emailToSoftwareFmId = Functions.map(email1, sfmId1, email2, sfmId2);
 		IUserMembership membership = new UserMembershipForServer(userUrlGenerator, user, remoteOperations, repoDefnFn);
-		takeOnProcessor = new TakeOnProcessor(remoteOperations, user, membership, remoteGroups, userCryptoFn, emailToSoftwareFmId, groupsUrlGenerator, Callables.value(groupId), repoDefnFn);
+		takeOnProcessor = new TakeOnProcessor(remoteOperations, user, membership, remoteGroups, userCryptoFn, groupsUrlGenerator, Callables.value(groupId), repoDefnFn);
 	}
 }

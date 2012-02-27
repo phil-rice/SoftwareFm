@@ -5,6 +5,7 @@
 package org.softwareFm.swt.explorer.internal;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
@@ -30,20 +31,22 @@ public class MySoftwareFmLoggedIn implements IHasControl {
 
 	private final MySoftwareFmLoggedInComposite content;
 
-	static class MySoftwareFmButtons implements IHasComposite {
+	public static class MySoftwareFmButtons implements IHasComposite {
 
 		private final Composite content;
+		public final Button logoutButton;
+		public final Button changePasswordButton;
 
 		public MySoftwareFmButtons(Composite parent, final ILoginDisplayStrategy loginDisplayStrategy, final IMySoftwareFmLoggedInStrategy loggedInStrategy, UserData userData) {
 			this.content = new Composite(parent, SWT.NULL);
 			final String email = userData.email();
-			Swts.Buttons.makePushButton(content, "Logout", new Runnable() {
+			logoutButton = Swts.Buttons.makePushButton(content, "Logout", new Runnable() {
 				@Override
 				public void run() {
 					loggedInStrategy.logout();
 				}
 			});
-			Swts.Buttons.makePushButton(content, "Change Password", new Runnable() {
+			changePasswordButton = Swts.Buttons.makePushButton(content, "Change Password", new Runnable() {
 				@Override
 				public void run() {
 					loginDisplayStrategy.showChangePassword(email);
@@ -64,11 +67,13 @@ public class MySoftwareFmLoggedIn implements IHasControl {
 		}
 	}
 
-	static class MySoftwareFmLoggedInComposite extends DataComposite<Composite> implements IDataCompositeWithFooter<Composite, MySoftwareFmButtons> {
+	public static class MySoftwareFmLoggedInComposite extends DataComposite<Composite> implements IDataCompositeWithFooter<Composite, MySoftwareFmButtons> {
 
 		private final Table userDetails;
 		private final Composite mainComposite;
 		private final MySoftwareFmButtons buttonComposite;
+		public final Button myDataButton;
+		public final Button myGroupsButton;
 
 		public MySoftwareFmLoggedInComposite(Composite parent, CardConfig cardConfig, String cardType, final ILoginDisplayStrategy loginDisplayStrategy, final IMySoftwareFmLoggedInStrategy loggedInStrategy, UserData userData) {
 			super(parent, cardConfig, cardType, SoftwareFmConstants.mySoftwareFmLoggedInTitle, true);
@@ -89,13 +94,13 @@ public class MySoftwareFmLoggedIn implements IHasControl {
 			TableItem softwareFmIdItem = new TableItem(userDetails, SWT.FULL_SELECTION);
 			softwareFmIdItem.setText(new String[] { softwareFmIdName, userData.softwareFmId });
 
-			Swts.Buttons.makePushButton(mainComposite, "My Data", new Runnable() {
+			myDataButton = Swts.Buttons.makePushButton(mainComposite, "My Data", new Runnable() {
 				@Override
 				public void run() {
 					loggedInStrategy.showMyData();
 				}
 			});
-			Swts.Buttons.makePushButton(mainComposite, "My Groups", new Runnable() {
+			myGroupsButton = Swts.Buttons.makePushButton(mainComposite, "My Groups", new Runnable() {
 				@Override
 				public void run() {
 					loggedInStrategy.showMyGroups();
@@ -105,6 +110,10 @@ public class MySoftwareFmLoggedIn implements IHasControl {
 
 			Swts.packTables(userDetails);
 			Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildren(mainComposite);
+		}
+
+		public MySoftwareFmButtons getButtonComposite() {
+			return buttonComposite;
 		}
 
 		@Override

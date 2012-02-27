@@ -4,6 +4,9 @@
 
 package org.softwareFm.eclipse.user;
 
+import java.util.List;
+
+import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.eclipse.user.internal.ProjectTimeGetter;
 
@@ -18,6 +21,33 @@ public interface IProjectTimeGetter {
 	public static class Utils {
 		public static IProjectTimeGetter timeGetter() {
 			return new ProjectTimeGetter(Callables.calander());
+		}
+
+		public static IProjectTimeGetter mockJanFebMar(final int day) {
+			return mock(day, "january_12", "febuary_12", "march_12");
+			
+		}
+		public static IProjectTimeGetter mock(final int day, final String... months) {
+			return new IProjectTimeGetter() {
+
+				@Override
+				public String thisMonth() {
+					return months[months.length - 1];
+				}
+
+				@Override
+				public Iterable<String> lastNMonths(int n) {
+					List<String> result = Lists.newList();
+					for (int i = months.length - n; i < months.length; i++)
+						result.add(months[i]);
+					return result;
+				}
+
+				@Override
+				public int day() {
+					return day;
+				}
+			};
 		}
 	}
 

@@ -15,7 +15,7 @@ import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.editors.ICardEditorCallback;
 import org.softwareFm.swt.editors.INamesAndValuesEditor;
-import org.softwareFm.swt.editors.internal.NameAndValuesEditor;
+import org.softwareFm.swt.editors.NameAndValuesEditor;
 import org.softwareFm.swt.swt.Swts;
 
 public class NameAndValuesEditorMain {

@@ -51,7 +51,7 @@ abstract public class SwtTest extends TestCase {
 		}
 	}
 
-	protected void checkTextMatches(Composite values, String... expected) {
+	public static void checkTextMatches(Composite values, String... expected) {
 		Control[] children = values.getChildren();
 		for (int i = 0; i < children.length; i++) {
 			Control control = children[i];
@@ -64,7 +64,7 @@ abstract public class SwtTest extends TestCase {
 		}
 	}
 
-	protected void checkLabelsMatch(Composite labels, String... expected) {
+	public static void checkLabelsMatch(Composite labels, String... expected) {
 		Control[] children = labels.getChildren();
 		assertEquals(expected.length, children.length);
 		for (int i = 0; i < children.length; i++) {
@@ -73,14 +73,18 @@ abstract public class SwtTest extends TestCase {
 		}
 	}
 
-	protected void dispatchUntilTimeoutOrLatch(final CountDownLatch latch, long delay) {
+	public void dispatchUntilTimeoutOrLatch(final CountDownLatch latch, long delay) {
+		dispatchUntilTimeoutOrLatch(display, latch, delay);
+	}
+
+	public static void dispatchUntilTimeoutOrLatch(Display display, final CountDownLatch latch, long delay) {
 		try {
 			long start = System.currentTimeMillis();
-			dispatchUntilQueueEmpty();
+			dispatchUntilQueueEmpty(display);
 			while (!latch.await(10, TimeUnit.MILLISECONDS)) {
 				if (System.currentTimeMillis() > delay + start)
 					fail();
-				dispatchUntilQueueEmpty();
+				dispatchUntilQueueEmpty(display);
 				Thread.sleep(10);
 			}
 		} catch (InterruptedException e) {
@@ -88,7 +92,7 @@ abstract public class SwtTest extends TestCase {
 		}
 	}
 
-	protected void select(Table table, int colIndex, String value) {
+	public static void select(Table table, int colIndex, String value) {
 		for (int i = 0; i < table.getItemCount(); i++) {
 			String text = table.getItem(i).getText(colIndex);
 			if (text.equals(value)) {
@@ -106,10 +110,14 @@ abstract public class SwtTest extends TestCase {
 	}
 
 	protected void dispatchUntilQueueEmpty() {
-		Swts.dispatchUntilQueueEmpty(shell.getDisplay());
+		dispatchUntilQueueEmpty(display);
 	}
 
-	public <T> T callInDispatch(Display display, final Callable<T> callable) {
+	public static void dispatchUntilQueueEmpty(Display display) {
+		Swts.dispatchUntilQueueEmpty(display);
+	}
+
+	public static <T> T callInDispatch(Display display, final Callable<T> callable) {
 		final AtomicReference<T> result = new AtomicReference<T>();
 		display.syncExec(new Runnable() {
 			@Override
@@ -125,12 +133,12 @@ abstract public class SwtTest extends TestCase {
 		return result.get();
 	}
 
-	protected void dispatchUntil(Display display, long delay, Callable<Boolean> callable) {
+	public static void dispatchUntil(Display display, long delay, Callable<Boolean> callable) {
 		long startTime = System.currentTimeMillis();
 		try {
-			dispatchUntilQueueEmpty();
+			dispatchUntilQueueEmpty(display);
 			while (!callable.call() && System.currentTimeMillis() < startTime + delay) {
-				dispatchUntilQueueEmpty();
+				dispatchUntilQueueEmpty(display);
 				Thread.sleep(2);
 			}
 			checkAtEnd(display, callable);
@@ -139,7 +147,7 @@ abstract public class SwtTest extends TestCase {
 		}
 	}
 
-	private void checkAtEnd(Display display, Callable<Boolean> callable) {
+	private static void checkAtEnd(Display display, Callable<Boolean> callable) {
 		if (!callInDispatch(display, callable))
 			fail();
 	}
@@ -160,19 +168,19 @@ abstract public class SwtTest extends TestCase {
 
 	protected void checkTableColumns(Table table, String... strings) {
 		assertTrue(table.getHeaderVisible());
-		assertEquals(strings.length, table.getColumnCount());
 		for (int i = 0; i < strings.length; i++)
 			assertEquals(strings[i], table.getColumn(i).getText());
+		assertEquals(strings.length, table.getColumnCount());
 
 	}
 
 	protected void checkTable(Table table, int index, Object key, String... strings) {
 		TableItem item = table.getItem(index);
 		TableColumn[] columns = table.getColumns();
-		assertEquals(columns.length, strings.length);
 		assertEquals(key, item.getData());
 		for (int i = 0; i < strings.length; i++)
 			assertEquals(strings[i], item.getText(i));
+		assertEquals(columns.length, strings.length);
 
 	}
 

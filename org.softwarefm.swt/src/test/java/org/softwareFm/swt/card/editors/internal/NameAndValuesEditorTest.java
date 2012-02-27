@@ -17,7 +17,7 @@ import org.softwareFm.common.maps.Maps;
 import org.softwareFm.swt.card.editors.AbstractNameAndValuesEditorTest;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.editors.INamesAndValuesEditor;
-import org.softwareFm.swt.editors.internal.NameAndValuesEditor;
+import org.softwareFm.swt.editors.NameAndValuesEditor;
 import org.softwareFm.swt.swt.Swts;
 
 public class NameAndValuesEditorTest extends AbstractNameAndValuesEditorTest<NameAndValuesEditor> {

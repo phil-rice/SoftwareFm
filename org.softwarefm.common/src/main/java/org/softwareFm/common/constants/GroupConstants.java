@@ -25,16 +25,21 @@ public class GroupConstants {
 	public static final String takeOnSubjectKey = "subject";
 
 	public static final String takeOnEmailPattern = "emailPattern";
-	public static final String userStatusInGroup = "userStatus";
 
 	public static final String emailMarker = "$email$";
+	public static final String groupNameMarker = "$group$";
 
 	public static final String invitedStatus = "invited";
+	public static final String adminStatus = "admin";
+
 	public static final String membershipFileName = "membership.json";
 	public static final String groupMembersTitle = "group.members.title";
 	public static final String needToSelectGroup = "group.members.needToSelectGroup";
 	public static final String groupIdNotFound = "Cannot find group id {0} for user {1}";
 	public static final String missingDataFromMembership = "Missing data from membership for user {0} map {1}";
+	public static final String alreadyAMemberOfGroup = "Already a member of group. Sfm Id {0}. Group Id {1}";
+	public static final String invalidEmail = "Invalid email {0}";
+	public static final String emailSfmMismatch = "Email / SoftwareFm mismatch. Email {0} Expected {1} Actual {2}";
 
 
 	public static IUrlGenerator groupsGenerator(String prefix) {

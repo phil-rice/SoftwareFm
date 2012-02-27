@@ -48,7 +48,7 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 	protected MailerMock mailerMock;
 	protected String userKey;
 	protected IFunction1<Map<String, Object>, String> userCryptoFn;
-	private Callable<String> userCryptoGenerator;
+	protected Callable<String> userCryptoGenerator;
 	protected int thisDay;
 	protected String projectCryptoKey1;
 	protected IGroups groups;
@@ -65,6 +65,8 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 	protected ITakeOnProcessor takeOnProcessor;
 	protected IComments comments;
 	protected IUser user;
+	protected Callable<String> softwareFmIdGenerator;
+	protected ProcessCallParameters processCallParameters;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -76,7 +78,6 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 		userKey3 = Crypto.makeKey();
 		userCryptoFn = new IFunction1<Map<String, Object>, String>() {
 			private final Map<String, Object> map = Maps.makeMap("someNewSoftwareFmId0", userKey, "someNewSoftwareFmId1", userKey2, "someNewSoftwareFmId2", userKey3);
-
 			@Override
 			public String apply(Map<String, Object> from) throws Exception {
 				String softwareFmId = (String) from.get(LoginConstants.softwareFmIdKey);
@@ -86,7 +87,7 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 			}
 		};
 		userCryptoGenerator = Callables.valueFromList(userKey, userKey2, userKey3);
-		Callable<String> softwareFmIdGenerator = Callables.patternWithCount("someNewSoftwareFmId{0}");
+		softwareFmIdGenerator = Callables.patternWithCount("someNewSoftwareFmId{0}");
 		projectCryptoKey1 = Crypto.makeKey();
 		projectCryptoKey2 = Crypto.makeKey();
 		projectCryptoKey3 = Crypto.makeKey();
@@ -100,7 +101,7 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 				GroupConstants.membershipCryptoKey, Callables.makeCryptoKey(), //
 				GroupConstants.groupCryptoKey, Callables.valueFromList(groupCryptoKey),//
 				SoftwareFmConstants.projectCryptoKey, Callables.valueFromList(projectCryptoKey1, projectCryptoKey2, projectCryptoKey3));
-		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, remoteOperations, userCryptoGenerator, softwareFmIdGenerator, userCryptoFn, mailerMock, defaultValues, SoftwareFmConstants.urlPrefix);
+		processCallParameters = new ProcessCallParameters(dataSource, remoteOperations, userCryptoGenerator, softwareFmIdGenerator, userCryptoFn, mailerMock, defaultValues, SoftwareFmConstants.urlPrefix);
 		IProcessCall processCalls = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, getExtraProcessCalls());
 		template = new JdbcTemplate(dataSource);
 		server = ICrowdSourcedServer.Utils.testServerPort(processCalls, ICallback.Utils.rethrow());
@@ -135,7 +136,7 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 				Callable<String> groupIdGenerator = Callables.value(groupId);
 
 				membershipForServer = new UserMembershipForServer(userUrlGenerator, from.user, from.gitOperations, emailToSfmId);
-				takeOnProcessor = new TakeOnProcessor(from.gitOperations, from.user, membershipForServer, groups, userCryptoFn, emailToSfmId, groupsGenerator, groupIdGenerator, repoDefnFn);
+				takeOnProcessor = new TakeOnProcessor(from.gitOperations, from.user, membershipForServer, groups, userCryptoFn, groupsGenerator, groupIdGenerator, repoDefnFn);
 				Callable<String> groupCryptoGenerator = Callables.value(groupCryptoKey);
 				comments = new CommentsForServer(from.gitOperations, from.user, membershipForServer, groups, Callables.value(1000l));
 				user = from.user;

@@ -4,12 +4,14 @@
 
 package org.softwareFm.softwareFmServer;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.GroupConstants;
+import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.runnable.Callables;
@@ -43,34 +45,46 @@ public class TakeOnGroupProcessor extends AbstractCommandProcessor {
 
 	@Override
 	protected IProcessResult execute(String actualUrl, Map<String, Object> parameters) {
-		checkForParameter(parameters, GroupConstants.groupNameKey, GroupConstants.takeOnEmailPattern, GroupConstants.takeOnFromKey, GroupConstants.takeOnSubjectKey, GroupConstants.takeOnEmailListKey);
+		checkForParameter(parameters, LoginConstants.softwareFmIdKey, GroupConstants.groupNameKey, GroupConstants.takeOnEmailPattern, GroupConstants.takeOnFromKey, GroupConstants.takeOnSubjectKey, GroupConstants.takeOnEmailListKey);
+		String softwareFmId = (String) parameters.get(LoginConstants.softwareFmIdKey);
 		String groupName = (String) parameters.get(GroupConstants.groupNameKey);
 		String emailPattern = (String) parameters.get(GroupConstants.takeOnEmailPattern);
-		String from = (String) parameters.get(GroupConstants.takeOnFromKey);
-		String subject = (String) parameters.get(GroupConstants.takeOnSubjectKey);
 		String memberListRaw = (String) parameters.get(GroupConstants.takeOnEmailListKey);
+		String rawSubject = (String) parameters.get(GroupConstants.takeOnSubjectKey);
+		String from = (String) parameters.get(GroupConstants.takeOnFromKey);// this dude is now the admin
 
 		String groupCryptoKey = Callables.call(cryptoGenerator);
 		List<String> memberList = Strings.splitIgnoreBlanks(memberListRaw, ",");
-		for (String email : memberList) 
+		if (!Strings.isEmail(from))
+			throw new IllegalArgumentException(MessageFormat.format(GroupConstants.invalidEmail, from));
+		String expectedSfmId = Functions.call(emailToSfmId, from);
+		if (!softwareFmId.equals(expectedSfmId))
+			throw new IllegalArgumentException(MessageFormat.format(GroupConstants.emailSfmMismatch, from, expectedSfmId, softwareFmId));
+		for (String email : memberList)
 			if (!Strings.isEmail(email))
-				throw new IllegalArgumentException(email);
+				throw new IllegalArgumentException(MessageFormat.format(GroupConstants.invalidEmail, from));
 		String groupId = takeOnProcessor.createGroup(groupName, groupCryptoKey);
+		takeOnProcessor.addExistingUserToGroup(groupId, groupName, groupCryptoKey, softwareFmId, from, GroupConstants.adminStatus);
 		for (String email : memberList) {
-			String softwareFmId = Functions.call(emailToSfmId, email);
-			if (softwareFmId == null) {
-				softwareFmId = Callables.call(softwareFmIdGenerator);
+			String newSoftwareFmId = Functions.call(emailToSfmId, email);
+			if (newSoftwareFmId == null) {
+				newSoftwareFmId = Callables.call(softwareFmIdGenerator);
 				String moniker = Strings.split(email, '@').pre;
 				String salt = Callables.call(saltGenerator);
-				SignUpResult signUpResult = signUpChecker.signUp(email, moniker, salt, "not set", softwareFmId);
+				SignUpResult signUpResult = signUpChecker.signUp(email, moniker, salt, "not set", newSoftwareFmId);
 				if (signUpResult.errorMessage != null)
 					throw new RuntimeException(signUpResult.errorMessage);
 			}
-			takeOnProcessor.addExistingUserToGroup(groupId, groupName, groupCryptoKey, email);
-			String message = emailPattern.replace(GroupConstants.emailMarker, email);
+			takeOnProcessor.addExistingUserToGroup(groupId, groupName, groupCryptoKey, newSoftwareFmId, email, GroupConstants.invitedStatus);
+			String subject = replaceMarkers(rawSubject, groupName, email);
+			String message = replaceMarkers(emailPattern, groupName, email);
 			mailer.mail(from, email, subject, message);
 
 		}
 		return IProcessResult.Utils.processString("");
+	}
+
+	protected String replaceMarkers(String rawMessage, String groupName, String email) {
+		return rawMessage.replace(GroupConstants.emailMarker, email).replace(GroupConstants.groupNameMarker, groupName);
 	}
 }

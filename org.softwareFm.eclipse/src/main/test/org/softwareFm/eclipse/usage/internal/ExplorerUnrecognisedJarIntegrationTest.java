@@ -74,12 +74,12 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 	public void testRtJar() {
 		explorer.displayUnrecognisedJar(rtFile, "012345", "someProject");
 		Control originalMessage = masterDetailSocial.getMasterContent();
-		StyledText originalText = (StyledText) Swts.getDescendant(originalMessage, 1, 0, 0);
+		StyledText originalText = Swts.<StyledText>getDescendant(originalMessage, 1, 0, 0);
 		assertTrue(originalText.getText().contains("This is a version of the Java runtime that"));
 		originalText.notifyListeners(SWT.MouseUp, new Event());
 		Control importingMessage = masterDetailSocial.getMasterContent();
 		// possible race condition here...the card may arrive before we have tested that the import text occured. I think that because we are not dispatching this won't take place
-		StyledText importingText = (StyledText) Swts.getDescendant(importingMessage, 1, 0, 0);
+		StyledText importingText = Swts.<StyledText>getDescendant(importingMessage, 1, 0, 0);
 		assertTrue(importingText.getText().startsWith("Importing"));
 		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
 			@Override
@@ -108,7 +108,7 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 				// this is race condition territory. We may get a importing message (normally takes a while to import), then the card will appear
 				Control masterContent = masterDetailSocial.getMasterContent();
 				try {
-					StyledText text = (StyledText) Swts.getDescendant(masterContent, 1, 0, 0);
+					StyledText text = Swts.<StyledText>getDescendant(masterContent, 1, 0, 0);
 					return text.getText().startsWith("Importing");
 				} catch (Exception e) {
 					return false;
@@ -142,7 +142,7 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 	private String findSearchText() {
 		Control searchingMessage = masterDetailSocial.getMasterContent();
 		// Swts.layoutDump(searchingMessage);
-		StyledText importingText = (StyledText) Swts.getDescendant(searchingMessage, 1, 1);
+		StyledText importingText = Swts.<StyledText>getDescendant(searchingMessage, 1, 1);
 		String text = importingText.getText();
 		// System.out.println(text);
 		return text;
@@ -151,7 +151,7 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 	private void checkNonRtNoticeAppearsAndClickPanel() {
 		explorer.displayUnrecognisedJar(antFile, "012345", "someProject");
 		Control originalMessage = masterDetailSocial.getMasterContent();
-		StyledText originalText = (StyledText) Swts.getDescendant(originalMessage, 1, 0, 0);
+		StyledText originalText = Swts.<StyledText>getDescendant(originalMessage, 1, 0, 0);
 		System.out.println(originalText.getText());
 		assertTrue(originalText.getText(), originalText.getText().contains("Click this panel to add it to SoftwareFm"));
 		assertTrue(originalText.getText(), !originalText.getText().contains("This is a version of the Java runtime that"));

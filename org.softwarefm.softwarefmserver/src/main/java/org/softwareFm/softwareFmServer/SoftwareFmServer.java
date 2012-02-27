@@ -60,7 +60,7 @@ public class SoftwareFmServer {
 				IGroups groups = new GroupsForServer(groupsUrlGenerator, processCallParameters.gitOperations, repoDefnFn);
 				IFunction1<String, String> emailToSoftwareFmId = ICrowdSourcedServer.Utils.emailToSoftwareFmId(processCallParameters.dataSource);
 				IUserMembership userMembership = new UserMembershipForServer(userUrlGenerator, processCallParameters.user, processCallParameters.gitOperations, repoDefnFn);
-				ITakeOnProcessor takeOnProcessor = new TakeOnProcessor(processCallParameters.gitOperations, processCallParameters.user, userMembership, groups, processCallParameters.userCryptoFn, emailToSoftwareFmId, groupsUrlGenerator, groupIdGenerator, repoDefnFn);
+				ITakeOnProcessor takeOnProcessor = new TakeOnProcessor(processCallParameters.gitOperations, processCallParameters.user, userMembership, groups, processCallParameters.userCryptoFn, groupsUrlGenerator, groupIdGenerator, repoDefnFn);
 
 				IUsageReader usageReader = new UsageReaderForServer(processCallParameters.gitOperations, processCallParameters.user, userUrlGenerator);
 				IGenerateUsageReportGenerator generator = new GenerateUsageProjectGenerator(groups, usageReader);

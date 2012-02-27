@@ -23,6 +23,8 @@ public class GroupsForServerTest extends GroupsTest {
 	public void testAddGetPropertyWithoutUsers() {
 		checkSetGetGroups();
 	}
+	
+	
 
 	public void testAddUsers() {
 		IGroups groups = new GroupsForServer(groupGenerator, remoteOperations, repoGenerator);

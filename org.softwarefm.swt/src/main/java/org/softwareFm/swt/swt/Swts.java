@@ -1043,8 +1043,8 @@ public class Swts {
 		return new Point(maxX, sumY);
 	}
 
-	public static Control getDescendant(Control control, int... childIndicies) {
-		return getDescendant(control, 0, childIndicies);
+	public static <T extends Control> T getDescendant(Control control, int... childIndicies) {
+		return (T) getDescendant(control, 0, childIndicies);
 
 	}
 

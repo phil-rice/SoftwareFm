@@ -140,7 +140,7 @@ public class CommentsEditorTest extends SwtTest {
 			@Override
 			public void process(IOkCancel okCancel) throws Exception {
 				Swts.Buttons.selectRadioButton(okCancel.getComposite(), 2);
-				Combo combo = (Combo) Swts.getDescendant(okCancel.getComposite(), 3);
+				Combo combo = Swts.<Combo>getDescendant(okCancel.getComposite(), 3);
 				combo.select(1);
 			}
 		}, new CommentsEditorFailAdapter() {

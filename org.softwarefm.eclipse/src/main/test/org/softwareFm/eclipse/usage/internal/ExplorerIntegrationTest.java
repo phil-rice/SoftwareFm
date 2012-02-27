@@ -63,7 +63,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 
 		assertSame(detail.getControl(), masterDetailSocial.getDetailContent());
 		CompositeWithCardMargin socialContent = (CompositeWithCardMargin) masterDetailSocial.getSocialContent();
-		StyledText actualHelpTextComponent = (StyledText) Swts.getDescendant(socialContent, 1, 0, 0);
+		StyledText actualHelpTextComponent =  Swts.<StyledText>getDescendant(socialContent, 1, 0, 0);
 		String expectedHelp = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.helpUnrecognisedPleaseAddText);
 		assertEquals(expectedHelp, actualHelpTextComponent.getText());
 	}

@@ -2,7 +2,7 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwareFm.swt.editors.internal;
+package org.softwareFm.swt.editors;
 
 import java.util.List;
 import java.util.Map;
@@ -20,12 +20,6 @@ import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.card.LineItem;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
-import org.softwareFm.swt.editors.DataCompositeWithFooterLayout;
-import org.softwareFm.swt.editors.DataWithOkCancelComposite;
-import org.softwareFm.swt.editors.ICardEditorCallback;
-import org.softwareFm.swt.editors.IEditableControlStrategy;
-import org.softwareFm.swt.editors.INamesAndValuesEditor;
-import org.softwareFm.swt.editors.KeyAndEditStrategy;
 import org.softwareFm.swt.swt.Swts;
 
 public class NameAndValuesEditor implements INamesAndValuesEditor {

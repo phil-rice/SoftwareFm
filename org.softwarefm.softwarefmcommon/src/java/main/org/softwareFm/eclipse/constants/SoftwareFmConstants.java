@@ -37,6 +37,7 @@ public class SoftwareFmConstants {
 
 	public static final String peopleIKnowLoadingTitle = "peopleIknow.loading.title";
 
+
 	public static IUrlGenerator jarUrlGenerator(String prefix) {
 		return new UrlGenerator(prefix + "/jars/{0}/{1}/{2}", SoftwareFmConstants.digest);
 	}

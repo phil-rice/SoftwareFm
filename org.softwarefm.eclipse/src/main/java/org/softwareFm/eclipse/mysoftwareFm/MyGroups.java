@@ -12,6 +12,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -24,6 +25,7 @@ import org.softwareFm.common.IGroupsReader;
 import org.softwareFm.common.IUserReader;
 import org.softwareFm.common.LocalGroupsReader;
 import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.comparators.Comparators;
 import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.IFunction1;
@@ -37,18 +39,19 @@ import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.eclipse.user.IUserMembershipReader;
 import org.softwareFm.eclipse.user.UserMembershipReaderForLocal;
-import org.softwareFm.swt.card.composites.TextInCompositeWithCardMargin;
 import org.softwareFm.swt.composites.IHasComposite;
+import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.editors.DataComposite;
-import org.softwareFm.swt.editors.DataCompositeLayout;
+import org.softwareFm.swt.editors.DataCompositeWithFooterLayout;
+import org.softwareFm.swt.editors.IDataCompositeWithFooter;
 import org.softwareFm.swt.explorer.IMasterDetailSocial;
 import org.softwareFm.swt.explorer.IShowMyGroups;
 import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.swt.Swts;
 
 public class MyGroups implements IHasComposite {
-	public static IShowMyGroups showMyGroups(final IServiceExecutor executor, final CardConfig cardConfig, final IMasterDetailSocial masterDetailSocial, final IUrlGenerator userUrlGenerator, final IUrlGenerator groupUrlGenerator, final IGitLocal gitLocal, final IProjectTimeGetter projectTimeGetter, final IRequestGroupReportGeneration reportGenerator) {
+	public static IShowMyGroups showMyGroups(final IServiceExecutor executor, final CardConfig cardConfig, final IMasterDetailSocial masterDetailSocial, final IUrlGenerator userUrlGenerator, final IUrlGenerator groupUrlGenerator, final IGitLocal gitLocal, final IProjectTimeGetter projectTimeGetter, final IRequestGroupReportGeneration reportGenerator, final IGroupClientOperations groupClientOperations) {
 		return new IShowMyGroups() {
 			@Override
 			public void show(final UserData userData) {
@@ -56,20 +59,20 @@ public class MyGroups implements IHasComposite {
 					@Override
 					public Void call() throws Exception {
 						final IUserReader user = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
-						String membershipCrypto = user.getUserProperty(userData.softwareFmId, userData.crypto, GroupConstants.membershipCryptoKey);
+//						String membershipCrypto = user.getUserProperty(userData.softwareFmId, userData.crypto, GroupConstants.membershipCryptoKey);
 						final IGroupsReader groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
-						if (membershipCrypto == null) {
-							masterDetailSocial.createAndShowDetail(new IFunction1<Composite, TextInCompositeWithCardMargin>() {
-								@Override
-								public TextInCompositeWithCardMargin apply(Composite from) throws Exception {
-									TextInCompositeWithCardMargin result = new TextInCompositeWithCardMargin(from, SWT.WRAP | SWT.READ_ONLY, cardConfig);
-									result.setText("You belong to no groups");
-									return result;
-								}
-							});
-							return null;
-						}
-						final IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix), gitLocal, user);
+						// if (membershipCrypto == null) {
+						// masterDetailSocial.createAndShowDetail(new IFunction1<Composite, TextInCompositeWithCardMargin>() {
+						// @Override
+						// public TextInCompositeWithCardMargin apply(Composite from) throws Exception {
+						// TextInCompositeWithCardMargin result = new TextInCompositeWithCardMargin(from, SWT.WRAP | SWT.READ_ONLY, cardConfig);
+						// result.setText("You belong to no groups");
+						// return result;
+						// }
+						// });
+						// return null;
+						// }
+						final IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, user);
 						Swts.asyncExec(masterDetailSocial.getControl(), new Runnable() {
 							@Override
 							public void run() {
@@ -77,7 +80,7 @@ public class MyGroups implements IHasComposite {
 								masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyGroups>() {
 									@Override
 									public MyGroups apply(Composite from) throws Exception {
-										return new MyGroups(from, cardConfig, userMembershipReader, groupsReader, userData.softwareFmId, userData.crypto, projectTimeGetter, reportGenerator);
+										return new MyGroups(from, cardConfig, userMembershipReader, groupsReader, userData, projectTimeGetter, reportGenerator, groupClientOperations);
 									}
 								});
 							}
@@ -91,28 +94,57 @@ public class MyGroups implements IHasComposite {
 
 	private final MyGroupsComposite content;
 
-	public static class MyGroupsComposite extends DataComposite<SashForm> {
+	public static class MyGroupsButtons implements IHasControl {
+		private final Composite content;
+		public final Button invite;
+		public final Button create;
+		public final Button accept;
+
+		public MyGroupsButtons(Composite parent, IGroupClientOperations groupClientOperations, UserData userData) {
+			this.content = new Composite(parent, SWT.NULL);
+			content.setLayout(Swts.Row.getHorizonalNoMarginRowLayout());
+			accept = Swts.Buttons.makePushButton(content, "Accept", groupClientOperations.acceptInvitation(userData));
+			invite = Swts.Buttons.makePushButton(content, "Invite", groupClientOperations.inviteToGroup(userData));
+			create = Swts.Buttons.makePushButton(content, "Create new group", groupClientOperations.createGroup(userData));
+		}
+
+		@Override
+		public Control getControl() {
+			return content;
+		}
+	}
+
+	public static class MyGroupsComposite extends DataComposite<SashForm> implements IDataCompositeWithFooter<SashForm, MyGroupsButtons> {
 		private final Table summaryTable;
 		private final IGroupsReader groupsReader;
 		private final SashForm sashForm;
 		private final Composite rightHand;
 		private final Table membershipTable;
 		private final Map<String, String> idToCrypto = Maps.newMap();
+		private final MyGroupsButtons buttons;
+
+		@Override
+		public MyGroupsButtons getFooter() {
+			return buttons;
+		}
 
 		@Override
 		public SashForm getEditor() {
 			return sashForm;
 		}
 
-		public MyGroupsComposite(Composite parent, final CardConfig cardConfig, IUserMembershipReader membershipReader, final IGroupsReader groupReaders, String softwareFmId, String userCrypto, IProjectTimeGetter projectTimeGetter, final IRequestGroupReportGeneration reportGenerator) {
+		public MyGroupsComposite(Composite parent, final CardConfig cardConfig, IUserMembershipReader membershipReader, final IGroupsReader groupReaders, UserData userData,  IProjectTimeGetter projectTimeGetter, final IRequestGroupReportGeneration reportGenerator, IGroupClientOperations groupClientOperations) {
 			super(parent, cardConfig, GroupConstants.myGroupsCardType, SoftwareFmConstants.myGroupsTitle, true);
 			this.groupsReader = groupReaders;
 			sashForm = new SashForm(getInnerBody(), SWT.HORIZONTAL);
 			summaryTable = new Table(sashForm, SWT.FULL_SELECTION);
+			buttons = new MyGroupsButtons(getInnerBody(), groupClientOperations, userData);
 			summaryTable.setHeaderVisible(true);
 			new TableColumn(summaryTable, SWT.NULL).setText("Group Name");
 			new TableColumn(summaryTable, SWT.NULL).setText("Members");
-			for (Map<String, Object> map : membershipReader.walkGroupsFor(softwareFmId, userCrypto)) {
+			new TableColumn(summaryTable, SWT.NULL).setText("My Status");
+			List<Map<String, Object>> groups = membershipReader.walkGroupsFor(userData.softwareFmId, userData.crypto);
+			for (Map<String, Object> map : groups) {
 				String groupId = (String) map.get(GroupConstants.groupIdKey);
 				String groupCryptoKey = (String) map.get(GroupConstants.groupCryptoKey);
 				String groupName = groupReaders.getGroupProperty(groupId, groupCryptoKey, GroupConstants.groupNameKey);
@@ -120,7 +152,8 @@ public class MyGroups implements IHasComposite {
 				item.setData(groupId);
 				int membershipCount = groupsReader.membershipCount(groupId, groupCryptoKey);
 				String membershipCountString = Integer.toString(membershipCount);
-				item.setText(new String[] { groupName, membershipCountString });
+				String myStatus = Strings.nullSafeToString( map.get(GroupConstants.membershipStatusKey));
+				item.setText(new String[] { groupName, membershipCountString , myStatus});
 				idToCrypto.put(groupId, groupCryptoKey);
 			}
 
@@ -128,13 +161,14 @@ public class MyGroups implements IHasComposite {
 			final StackLayout stackLayout = new StackLayout();
 			rightHand.setLayout(stackLayout);
 
-			StyledText  textInBorder = new StyledText(rightHand, SWT.WRAP | SWT.READ_ONLY);
-			textInBorder.setText(IResourceGetter.Utils.getOrException(getResourceGetter(),  GroupConstants.needToSelectGroup));
+			StyledText textInBorder = new StyledText(rightHand, SWT.WRAP | SWT.READ_ONLY);
+			textInBorder.setText(IResourceGetter.Utils.getOrException(getResourceGetter(), GroupConstants.needToSelectGroup));
 			stackLayout.topControl = textInBorder;
 
 			membershipTable = new Table(rightHand, SWT.FULL_SELECTION);
 			membershipTable.setHeaderVisible(true);
 			new TableColumn(membershipTable, SWT.NULL).setText("Email");
+			new TableColumn(membershipTable, SWT.NULL).setText("Status");
 			summaryTable.addListener(SWT.Selection, new Listener() {
 				@Override
 				public void handleEvent(Event event) {
@@ -149,11 +183,10 @@ public class MyGroups implements IHasComposite {
 						String groupCryptoKey = idToCrypto.get(groupId);
 						if (groupCryptoKey == null)
 							throw new NullPointerException(groupCryptoKey);
-						List<String> emails = Lists.newList();
-						for (Map<String, Object> user : groupsReader.users(groupId, groupCryptoKey))
-							emails.add(Strings.nullSafeToString(user.get(LoginConstants.emailKey)));
-						for (String email : Lists.sort(emails))
-							new TableItem(membershipTable, SWT.NULL).setText(email);
+						for (Map<String, Object> user : Lists.sort( groupsReader.users(groupId, groupCryptoKey), Comparators.mapKey(LoginConstants.emailKey))){
+							new TableItem(membershipTable, SWT.NULL).setText(new String[]{ Strings.nullSafeToString(user.get(LoginConstants.emailKey)), Strings.nullSafeToString(user.get(GroupConstants.membershipStatusKey))});
+						}
+							
 					}
 					Swts.packColumns(membershipTable);
 					rightHand.layout();
@@ -162,11 +195,12 @@ public class MyGroups implements IHasComposite {
 			Swts.packTables(summaryTable, membershipTable);
 			sashForm.setWeights(new int[] { 2, 3 });
 		}
+
 	}
 
-	public MyGroups(Composite parent, CardConfig cardConfig, IUserMembershipReader membershipReader, IGroupsReader groupsReader, String softwareFmId, String userCrypto, IProjectTimeGetter projectTimeGetter, IRequestGroupReportGeneration reportGenerator) {
-		content = new MyGroupsComposite(parent, cardConfig, membershipReader, groupsReader, softwareFmId, userCrypto, projectTimeGetter, reportGenerator);
-		content.setLayout(new DataCompositeLayout());
+	public MyGroups(Composite parent, CardConfig cardConfig, IUserMembershipReader membershipReader, IGroupsReader groupsReader, UserData userData, IProjectTimeGetter projectTimeGetter, IRequestGroupReportGeneration reportGenerator,IGroupClientOperations groupClientOperations) {
+		content = new MyGroupsComposite(parent, cardConfig, membershipReader, groupsReader, userData, projectTimeGetter, reportGenerator, groupClientOperations);
+		content.setLayout(new DataCompositeWithFooterLayout());
 	}
 
 	@Override
@@ -178,6 +212,5 @@ public class MyGroups implements IHasComposite {
 	public Composite getComposite() {
 		return content;
 	}
-	
 
 }

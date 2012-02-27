@@ -28,6 +28,7 @@ import org.softwareFm.eclipse.actions.IActionBar;
 import org.softwareFm.eclipse.comments.ICommentsReader;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.jdtBinding.BindingRipperResult;
+import org.softwareFm.eclipse.mysoftwareFm.IGroupClientOperations;
 import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups;
 import org.softwareFm.eclipse.mysoftwareFm.MyPeople;
@@ -79,7 +80,8 @@ public class ExplorerView extends ViewPart {
 				GroupConstants.usageReportPeriod);
 
 		IShowMyData showMyDetails = MyDetails.showMyDetails(service, cardConfig, masterDetailSocial, userUrlGenerator, gitLocal, timeGetter);
-		IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, timeGetter, reportGenerator);
+		IGroupClientOperations groupOperations = IGroupClientOperations.Utils.groupOperations(masterDetailSocial, cardConfig, client);
+		IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, timeGetter, reportGenerator, groupOperations);
 		IShowMyPeople showMyPeople = MyPeople.showMyPeople(service, masterDetailSocial, cardConfig, gitLocal, userUrlGenerator, groupUrlGenerator, timeGetter, reportGenerator, CommonConstants.clientTimeOut);
 		IUserReader userReader = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
 		IUserDataManager userDataManager = activator.getUserDataManager();

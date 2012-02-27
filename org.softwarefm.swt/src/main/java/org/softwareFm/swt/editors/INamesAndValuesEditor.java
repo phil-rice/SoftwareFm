@@ -13,7 +13,6 @@ import org.eclipse.swt.widgets.Label;
 import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.card.LineItem;
 import org.softwareFm.swt.configuration.CardConfig;
-import org.softwareFm.swt.editors.internal.NameAndValuesEditor;
 
 public interface INamesAndValuesEditor extends IValueEditor, ICardData {
 
