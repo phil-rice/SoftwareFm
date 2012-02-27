@@ -23,15 +23,12 @@ import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.server.processors.AbstractProcessorDatabaseIntegrationTests;
-import org.softwareFm.server.processors.SignUpResult;
 
 public class TakeOnGroupProcessorTest extends AbstractProcessorDatabaseIntegrationTests {
 
 	private final String fromEmail = "from@some.email";
 
 	private String fromSoftwareFmId;
-
-	private String userCryptoKey;
 
 	@SuppressWarnings("unchecked")
 	public void testTakeOnGroup() throws Exception {
@@ -128,8 +125,7 @@ public class TakeOnGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 	protected void setUp() throws Exception {
 		super.setUp();
 		fromSoftwareFmId = softwareFmIdGenerator.call();
-		SignUpResult signUp = processCallParameters.signUpChecker.signUp(fromEmail, "someMoniker", "someSalt", "irrelevant", fromSoftwareFmId);
-		userCryptoKey = signUp.crypto;
+		processCallParameters.signUpChecker.signUp(fromEmail, "someMoniker", "someSalt", "irrelevant", fromSoftwareFmId);
 	}
 
 }

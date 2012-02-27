@@ -59,7 +59,7 @@ public class MyGroups implements IHasComposite {
 					@Override
 					public Void call() throws Exception {
 						final IUserReader user = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
-//						String membershipCrypto = user.getUserProperty(userData.softwareFmId, userData.crypto, GroupConstants.membershipCryptoKey);
+						// String membershipCrypto = user.getUserProperty(userData.softwareFmId, userData.crypto, GroupConstants.membershipCryptoKey);
 						final IGroupsReader groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
 						// if (membershipCrypto == null) {
 						// masterDetailSocial.createAndShowDetail(new IFunction1<Composite, TextInCompositeWithCardMargin>() {
@@ -80,7 +80,12 @@ public class MyGroups implements IHasComposite {
 								masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyGroups>() {
 									@Override
 									public MyGroups apply(Composite from) throws Exception {
-										return new MyGroups(from, cardConfig, userMembershipReader, groupsReader, userData, projectTimeGetter, reportGenerator, groupClientOperations);
+										return new MyGroups(from, cardConfig, userMembershipReader, groupsReader, userData, projectTimeGetter, reportGenerator, groupClientOperations, new Runnable() {
+											@Override
+											public void run() {
+												showMyGroups(executor, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, projectTimeGetter, reportGenerator, groupClientOperations);
+											}
+										});
 									}
 								});
 							}
@@ -100,12 +105,12 @@ public class MyGroups implements IHasComposite {
 		public final Button create;
 		public final Button accept;
 
-		public MyGroupsButtons(Composite parent, IGroupClientOperations groupClientOperations, UserData userData) {
+		public MyGroupsButtons(Composite parent, IGroupClientOperations groupClientOperations, UserData userData, Runnable showMyGroups) {
 			this.content = new Composite(parent, SWT.NULL);
 			content.setLayout(Swts.Row.getHorizonalNoMarginRowLayout());
 			accept = Swts.Buttons.makePushButton(content, "Accept", groupClientOperations.acceptInvitation(userData));
 			invite = Swts.Buttons.makePushButton(content, "Invite", groupClientOperations.inviteToGroup(userData));
-			create = Swts.Buttons.makePushButton(content, "Create new group", groupClientOperations.createGroup(userData));
+			create = Swts.Buttons.makePushButton(content, "Create new group", groupClientOperations.createGroup(userData, showMyGroups));
 		}
 
 		@Override
@@ -133,12 +138,12 @@ public class MyGroups implements IHasComposite {
 			return sashForm;
 		}
 
-		public MyGroupsComposite(Composite parent, final CardConfig cardConfig, IUserMembershipReader membershipReader, final IGroupsReader groupReaders, UserData userData,  IProjectTimeGetter projectTimeGetter, final IRequestGroupReportGeneration reportGenerator, IGroupClientOperations groupClientOperations) {
+		public MyGroupsComposite(Composite parent, final CardConfig cardConfig, IUserMembershipReader membershipReader, final IGroupsReader groupReaders, UserData userData, IProjectTimeGetter projectTimeGetter, final IRequestGroupReportGeneration reportGenerator, IGroupClientOperations groupClientOperations, Runnable showMyGroups) {
 			super(parent, cardConfig, GroupConstants.myGroupsCardType, SoftwareFmConstants.myGroupsTitle, true);
 			this.groupsReader = groupReaders;
 			sashForm = new SashForm(getInnerBody(), SWT.HORIZONTAL);
 			summaryTable = new Table(sashForm, SWT.FULL_SELECTION);
-			buttons = new MyGroupsButtons(getInnerBody(), groupClientOperations, userData);
+			buttons = new MyGroupsButtons(getInnerBody(), groupClientOperations, userData, showMyGroups);
 			summaryTable.setHeaderVisible(true);
 			new TableColumn(summaryTable, SWT.NULL).setText("Group Name");
 			new TableColumn(summaryTable, SWT.NULL).setText("Members");
@@ -152,8 +157,8 @@ public class MyGroups implements IHasComposite {
 				item.setData(groupId);
 				int membershipCount = groupsReader.membershipCount(groupId, groupCryptoKey);
 				String membershipCountString = Integer.toString(membershipCount);
-				String myStatus = Strings.nullSafeToString( map.get(GroupConstants.membershipStatusKey));
-				item.setText(new String[] { groupName, membershipCountString , myStatus});
+				String myStatus = Strings.nullSafeToString(map.get(GroupConstants.membershipStatusKey));
+				item.setText(new String[] { groupName, membershipCountString, myStatus });
 				idToCrypto.put(groupId, groupCryptoKey);
 			}
 
@@ -183,10 +188,10 @@ public class MyGroups implements IHasComposite {
 						String groupCryptoKey = idToCrypto.get(groupId);
 						if (groupCryptoKey == null)
 							throw new NullPointerException(groupCryptoKey);
-						for (Map<String, Object> user : Lists.sort( groupsReader.users(groupId, groupCryptoKey), Comparators.mapKey(LoginConstants.emailKey))){
-							new TableItem(membershipTable, SWT.NULL).setText(new String[]{ Strings.nullSafeToString(user.get(LoginConstants.emailKey)), Strings.nullSafeToString(user.get(GroupConstants.membershipStatusKey))});
+						for (Map<String, Object> user : Lists.sort(groupsReader.users(groupId, groupCryptoKey), Comparators.mapKey(LoginConstants.emailKey))) {
+							new TableItem(membershipTable, SWT.NULL).setText(new String[] { Strings.nullSafeToString(user.get(LoginConstants.emailKey)), Strings.nullSafeToString(user.get(GroupConstants.membershipStatusKey)) });
 						}
-							
+
 					}
 					Swts.packColumns(membershipTable);
 					rightHand.layout();
@@ -198,8 +203,8 @@ public class MyGroups implements IHasComposite {
 
 	}
 
-	public MyGroups(Composite parent, CardConfig cardConfig, IUserMembershipReader membershipReader, IGroupsReader groupsReader, UserData userData, IProjectTimeGetter projectTimeGetter, IRequestGroupReportGeneration reportGenerator,IGroupClientOperations groupClientOperations) {
-		content = new MyGroupsComposite(parent, cardConfig, membershipReader, groupsReader, userData, projectTimeGetter, reportGenerator, groupClientOperations);
+	public MyGroups(Composite parent, CardConfig cardConfig, IUserMembershipReader membershipReader, IGroupsReader groupsReader, UserData userData, IProjectTimeGetter projectTimeGetter, IRequestGroupReportGeneration reportGenerator, IGroupClientOperations groupClientOperations, Runnable showMyGroups) {
+		content = new MyGroupsComposite(parent, cardConfig, membershipReader, groupsReader, userData, projectTimeGetter, reportGenerator, groupClientOperations, showMyGroups);
 		content.setLayout(new DataCompositeWithFooterLayout());
 	}
 

@@ -40,5 +40,6 @@ public class CommonConstants {
 	public static final int staleCachePeriod = 5*60*1000;
 	public static final long clientTimeOut = 2000;
 	public static final int serverPort = 8080;
+	public static final Object errorKey = "error";
 
 }

@@ -11,6 +11,8 @@ import java.util.Map;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
 import org.softwareFm.common.collections.Files;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.CommonMessages;
 import org.softwareFm.common.constants.UtilityConstants;
 import org.softwareFm.common.constants.UtilityMessages;
 import org.softwareFm.common.crypto.Crypto;
@@ -64,9 +66,14 @@ public class Json {
 		return new IFunction1<String, Map<String, Object>>() {
 			@Override
 			public Map<String, Object> apply(String from) throws Exception {
-				String raw = key == null ? from : Crypto.aesDecrypt(key, from);
-				return mapFromString(raw);
+				try {
+					String raw = key == null ? from : Crypto.aesDecrypt(key, from);
+					return mapFromString(raw);
+				} catch (Exception e) {
+					return Maps.stringObjectMap(CommonConstants.errorKey, MessageFormat.format(CommonMessages.cannotDecrypt, from));
+				}
 			}
+
 		};
 	}
 }

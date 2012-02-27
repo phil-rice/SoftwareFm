@@ -8,11 +8,13 @@ import org.softwareFm.swt.explorer.IMasterDetailSocial;
 import org.softwareFm.swt.explorer.internal.UserData;
 
 public interface IGroupClientOperations {
-	Runnable createGroup(UserData userData);
+	Runnable createGroup(UserData userData, Runnable added);
 
 	Runnable inviteToGroup(UserData userData);
 
 	Runnable acceptInvitation(UserData userData);
+
+	Runnable deleteGroup(UserData userData);
 
 	public static class Utils {
 		public static IGroupClientOperations groupOperations(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, IHttpClient client) {
@@ -23,7 +25,7 @@ public interface IGroupClientOperations {
 			return new IGroupClientOperations() {
 
 				@Override
-				public Runnable createGroup(UserData userData) {
+				public Runnable createGroup(UserData userData, Runnable added) {
 					return Runnables.exception();
 				}
 
@@ -34,6 +36,11 @@ public interface IGroupClientOperations {
 
 				@Override
 				public Runnable acceptInvitation(UserData userData) {
+					return Runnables.exception();
+				}
+
+				@Override
+				public Runnable deleteGroup(UserData userData) {
 					return Runnables.exception();
 				}
 			};

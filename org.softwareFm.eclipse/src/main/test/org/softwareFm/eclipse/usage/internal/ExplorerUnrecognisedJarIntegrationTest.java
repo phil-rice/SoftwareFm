@@ -35,6 +35,7 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 	private final File rtFile = new File("a/b/c/jdk1.2.3/rt.jar");
 	private final File antFile = new File("a/b/c/ant-1.2.3.jar");
 
+	@SuppressWarnings("unchecked")
 	public void testNoneRtJarWithNoHitsInJarName() {
 		checkNonRtNoticeAppearsAndClickPanel();
 		String text = findSearchText();

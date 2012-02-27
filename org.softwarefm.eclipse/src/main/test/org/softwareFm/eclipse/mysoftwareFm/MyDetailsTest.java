@@ -38,6 +38,7 @@ public class MyDetailsTest extends SwtTest {
 		checkProjectDetails(myDetails);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void checkProjectDetails(MyDetails myDetails) {
 		DataComposite<Table> composite = (DataComposite<Table>) myDetails.getComposite();
 		Table projectTable = composite.getEditor();

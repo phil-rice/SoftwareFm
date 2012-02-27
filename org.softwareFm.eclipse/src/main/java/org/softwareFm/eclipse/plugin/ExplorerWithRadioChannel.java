@@ -109,9 +109,11 @@ public class ExplorerWithRadioChannel {
 					final IProjectTimeGetter projectTimeGetter = IProjectTimeGetter.Utils.timeGetter();
 					IUrlGenerator userUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.userUrlKey);
 					IUrlGenerator groupUrlGenerator = GroupConstants.groupsGenerator(SoftwareFmConstants.urlPrefix);
-					IRequestGroupReportGeneration requestGroupReportGenerator = new RequestGroupReportGeneration(client, IResponseCallback.Utils.sysoutStatusCallback());
+					IRequestGroupReportGeneration requestGroupReportGenerator = new RequestGroupReportGeneration(client, IResponseCallback.Utils.sysoutStatusCallback(), gitLocal);
+					final IUserDataManager userDataManager = IUserDataManager.Utils.userDataManager();
 					IShowMyData showMyDetails = MyDetails.showMyDetails(service, cardConfig, masterDetailSocial, userUrlGenerator, gitLocal, projectTimeGetter);
-					IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, projectTimeGetter, requestGroupReportGenerator, IGroupClientOperations.Utils.groupOperations(masterDetailSocial, cardConfig, client));
+					IGroupClientOperations groupOperations = IGroupClientOperations.Utils.groupOperations(masterDetailSocial, cardConfig, client);
+					IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, projectTimeGetter, requestGroupReportGenerator, groupOperations);
 					IShowMyPeople showMyPeople = MyPeople.showMyPeople(service, masterDetailSocial, cardConfig, gitLocal, userUrlGenerator, groupUrlGenerator, projectTimeGetter, requestGroupReportGenerator, CommonConstants.clientTimeOut);
 					IUserReader userReader = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
 					IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, userReader);
@@ -119,7 +121,7 @@ public class ExplorerWithRadioChannel {
 
 					ICommentWriter commentWriter = ICommentWriter.Utils.commentWriter(client, CommonConstants.clientTimeOut, gitLocal);
 					ICommentsReader commentsReader = new CommentsReaderLocal(gitLocal, userReader, userMembershipReader, groupsReader);
-					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, userReader, userMembershipReader, groupsReader, cardConfig, rootUrl, playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople, IUserDataManager.Utils.userDataManager(), commentWriter, commentsReader, Callables.time());
+					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, userReader, userMembershipReader, groupsReader, cardConfig, rootUrl, playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople, userDataManager, commentWriter, commentsReader, Callables.time());
 
 					ICardMenuItemHandler.Utils.addSoftwareFmMenuItemHandlers(explorer);
 					IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);

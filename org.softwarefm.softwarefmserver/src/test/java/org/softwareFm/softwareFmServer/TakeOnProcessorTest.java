@@ -17,7 +17,6 @@ import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.crypto.Crypto;
-import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.runnable.Callables;
@@ -142,7 +141,6 @@ public class TakeOnProcessorTest extends GitTest {
 				return map.get(from.get(LoginConstants.softwareFmIdKey));
 			}
 		};
-		IFunction1<String, String> emailToSoftware = Functions.map("email1", "sfm1", "email2", "sfm2");
 		Callable<String> groupIdGenerator = Callables.uuidGenerator();
 		IFunction1<String, String> repoDefnFn = Strings.firstNSegments(3);
 		groupUrlGenerator = groupsUrlGenerator;

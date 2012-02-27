@@ -383,6 +383,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		return mySoftwareFm.getSignupSalt();
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void checkLoggedInDisplay(String crypto, String softwareFmId) {
 		IDataComposite<Composite> mySoftwareFmComposite = (IDataComposite<Composite>) mySoftwareFm.getComposite().getChildren()[0];
 		Control[] children = mySoftwareFmComposite.getEditor().getChildren();

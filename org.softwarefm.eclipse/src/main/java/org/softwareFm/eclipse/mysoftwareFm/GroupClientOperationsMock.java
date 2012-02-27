@@ -14,9 +14,10 @@ public class GroupClientOperationsMock implements IGroupClientOperations {
 	public CountRunnable accept;
 
 	@Override
-	public Runnable createGroup(UserData userData) {
+	public Runnable createGroup(UserData userData, Runnable added) {
 		checkUserData(userData);
 		create = Runnables.count();
+		added.run();
 		return create;
 	}
 

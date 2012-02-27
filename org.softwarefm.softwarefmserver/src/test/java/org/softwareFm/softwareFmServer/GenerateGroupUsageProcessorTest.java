@@ -40,8 +40,6 @@ public class GenerateGroupUsageProcessorTest extends GitTest {
 	private String userCrypto2;
 	private ProjectForServer project;
 	private TakeOnProcessor takeOnProcessor;
-	private String email1;
-	private String email2;
 
 	public void test() {
 		String groupId = takeOnProcessor.createGroup("someGroupName", groupCryptoKey);
@@ -86,9 +84,6 @@ public class GenerateGroupUsageProcessorTest extends GitTest {
 		sfmId1 = "sfmId1";
 		sfmId2 = "sfmId2";
 
-		email1 = "email1";
-		email2 = "email2";
-
 		userCrypto1 = Crypto.makeKey();
 		userCrypto2 = Crypto.makeKey();
 
@@ -108,7 +103,6 @@ public class GenerateGroupUsageProcessorTest extends GitTest {
 		IUsageReader usage = new UsageReaderForServer(remoteOperations, user, userUrlGenerator);
 		generateUsageReportGenerator = new GenerateUsageProjectGenerator(remoteGroups, usage);
 
-		IFunction1<String, String> emailToSoftwareFmId = Functions.map(email1, sfmId1, email2, sfmId2);
 		IUserMembership membership = new UserMembershipForServer(userUrlGenerator, user, remoteOperations, repoDefnFn);
 		takeOnProcessor = new TakeOnProcessor(remoteOperations, user, membership, remoteGroups, userCryptoFn, groupsUrlGenerator, Callables.value(groupId), repoDefnFn);
 	}

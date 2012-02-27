@@ -5,6 +5,7 @@
 package org.softwareFm.common.server.internal;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.Map;
 import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.collections.Files;
 import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.CommonMessages;
 import org.softwareFm.common.crypto.Crypto;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.json.Json;
@@ -67,7 +69,24 @@ public class GitOperationsTest extends GitTest {
 		localOperations.append(fd, v21);
 
 		assertEquals(Arrays.asList(v11, v12, v21), localOperations.getFileAsListOfMaps(fd));
-
+	}
+	@SuppressWarnings("unchecked")
+	public void testGetAsListOfMapsWithOneLineBadEncryption() {
+		String crypto = Crypto.makeKey();
+		String badCrypto= Crypto.makeKey();
+		
+		localOperations.init("a");
+		IFileDescription fd = IFileDescription.Utils.encrypted("a","someFileName", crypto);
+		IFileDescription fdBad = IFileDescription.Utils.encrypted("a","someFileName", badCrypto);
+		
+		localOperations.append(fd, v11);
+		assertEquals(v11, localOperations.getFile(fd));
+		assertEquals(Arrays.asList(v11), localOperations.getFileAsListOfMaps(fd));
+		localOperations.append(fdBad, v12);
+		localOperations.append(fd, v21);
+		
+		Map<String, Object> bad = Maps.stringObjectMap(CommonConstants.errorKey, MessageFormat.format(CommonMessages.cannotDecrypt, Crypto.aesEncrypt(badCrypto, Json.toString(v12))));
+		assertEquals(Arrays.asList(v11, bad, v21), localOperations.getFileAsListOfMaps(fd));
 	}
 
 	@SuppressWarnings("unchecked")

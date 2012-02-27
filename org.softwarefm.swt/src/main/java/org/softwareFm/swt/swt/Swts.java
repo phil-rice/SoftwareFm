@@ -1043,6 +1043,7 @@ public class Swts {
 		return new Point(maxX, sumY);
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <T extends Control> T getDescendant(Control control, int... childIndicies) {
 		return (T) getDescendant(control, 0, childIndicies);
 

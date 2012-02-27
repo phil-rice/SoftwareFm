@@ -75,6 +75,7 @@ public class MySoftwareFmLoggedIn implements IHasControl {
 		public final Button myDataButton;
 		public final Button myGroupsButton;
 
+		@SuppressWarnings("unused")
 		public MySoftwareFmLoggedInComposite(Composite parent, CardConfig cardConfig, String cardType, final ILoginDisplayStrategy loginDisplayStrategy, final IMySoftwareFmLoggedInStrategy loggedInStrategy, UserData userData) {
 			super(parent, cardConfig, cardType, SoftwareFmConstants.mySoftwareFmLoggedInTitle, true);
 			mainComposite = new Composite(getInnerBody(), SWT.NULL);
@@ -128,7 +129,6 @@ public class MySoftwareFmLoggedIn implements IHasControl {
 
 	}
 
-	@SuppressWarnings("unused")
 	public MySoftwareFmLoggedIn(Composite parent, final CardConfig cardConfig, String title, String text, final UserData userData, final ILoginDisplayStrategy loginDisplayStrategy, final IMySoftwareFmLoggedInStrategy loggedInStrategy) {
 		content = new MySoftwareFmLoggedInComposite(parent, cardConfig, CardConstants.loginCardType, loginDisplayStrategy, loggedInStrategy, userData);
 		content.setLayout(new DataCompositeWithFooterLayout());

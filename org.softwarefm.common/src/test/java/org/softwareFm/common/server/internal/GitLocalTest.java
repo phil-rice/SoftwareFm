@@ -4,10 +4,13 @@
 
 package org.softwareFm.common.server.internal;
 
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Map;
 
 import org.softwareFm.common.IFileDescription;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.CommonMessages;
 import org.softwareFm.common.crypto.Crypto;
 import org.softwareFm.common.json.Json;
 import org.softwareFm.common.maps.Maps;
@@ -57,7 +60,6 @@ public class GitLocalTest extends GitTest {
 		assertEquals(v11, Json.mapFromString(gitLocal.getFileAsString(IFileDescription.Utils.plain("a"))));
 		assertEquals(v12, Json.mapFromString(gitLocal.getFileAsString(IFileDescription.Utils.plain("a/b"))));
 		assertEquals(v21, Json.mapFromString(Crypto.aesDecrypt(crypto, gitLocal.getFileAsString(ac))));
-
 	}
 
 	public void testGetFileAsStringWhenLocalRepository() {
@@ -96,6 +98,28 @@ public class GitLocalTest extends GitTest {
 		localOperations.pull("a");
 
 		assertEquals(Arrays.asList(v11, v12, v21, v22), gitLocal.getFileAsListOfMaps(ac));
+	}
+
+	public void testGetFileAsMapsWhenOneLineBadlyEncrypted() {
+		String crypto = Crypto.makeKey();
+		String badCrypto = Crypto.makeKey();
+		IFileDescription ac = IFileDescription.Utils.encrypted("a/c", "file", crypto);
+		IFileDescription acBad = IFileDescription.Utils.encrypted("a/c", "file", badCrypto);
+
+		remoteOperations.init("a");
+		remoteOperations.append(ac, v11);
+		remoteOperations.append(ac, v12);
+		remoteOperations.append(acBad, v21);
+		remoteOperations.append(ac, v22);
+		remoteOperations.addAllAndCommit("a", getClass().getSimpleName());
+
+		localOperations.init("a");
+		localOperations.setConfigForRemotePull("a", remoteRoot.getAbsolutePath());
+		localOperations.pull("a");
+
+		Map<String, Object> bad = Maps.stringObjectMap(CommonConstants.errorKey, MessageFormat.format(CommonMessages.cannotDecrypt, Crypto.aesEncrypt(badCrypto, Json.toString(v21))));
+		assertEquals(Arrays.asList(v11, v12, bad, v22), gitLocal.getFileAsListOfMaps(ac));
+
 	}
 
 	@SuppressWarnings("unchecked")

@@ -33,6 +33,7 @@ import org.softwareFm.eclipse.jdtBinding.BindingRipperResult;
 import org.softwareFm.eclipse.jdtBinding.IBindingRipper;
 
 public class SelectedArtifactSelectionManager implements ISelectedBindingManager, ISelectionListener {
+	@SuppressWarnings("unused")
 	private static final boolean profile = Activator.profile || false;
 	private static final Object selectionKey = "selection";
 	private static final Object ripperKey = "ripper";

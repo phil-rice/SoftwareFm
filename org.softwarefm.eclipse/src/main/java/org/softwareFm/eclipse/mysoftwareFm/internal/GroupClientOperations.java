@@ -10,7 +10,9 @@ import org.softwareFm.client.http.api.IHttpClient;
 import org.softwareFm.client.http.requests.IResponseCallback;
 import org.softwareFm.client.http.response.IResponse;
 import org.softwareFm.common.collections.Iterables;
+import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.GroupConstants;
+import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
@@ -40,31 +42,37 @@ public class GroupClientOperations implements IGroupClientOperations {
 	}
 
 	@Override
-	public Runnable createGroup(final UserData userData) {
+	public Runnable createGroup(final UserData userData, final Runnable added) {
 		return new Runnable() {
 
 			@Override
 			public void run() {
+				String email = userData.email();
+				final Map<String, Object> initialData = Maps.stringObjectMap(//
+						GroupConstants.takeOnEmailListKey, "<Type here a comma separated list of people you would like to invite to the group\nThe Email below will be sent with $email$ and $group$ replaced by your email, and the group name>",//
+						GroupConstants.takeOnFromKey, email,//
+						GroupConstants.takeOnSubjectKey, "You are invited to join the SoftwareFM group $group$",//
+						GroupConstants.takeOnEmailPattern, "Dear $email$,\nYou have been invited to join the SoftwareFm group $group$");
+				tryAndCreateGroup(initialData);
+
+			}
+
+			protected void tryAndCreateGroup(final Map<String, Object> initialData) {
 				masterDetailSocial.createAndShowDetail(new IFunction1<Composite, IHasControl>() {
 					@Override
 					public IHasControl apply(Composite from) throws Exception {
 						if (userData.softwareFmId == null || userData.crypto == null || userData.email == null)
 							throw new IllegalStateException(userData.toString());
-						String email = userData.email();
 						List<KeyAndEditStrategy> keyAndEditStrategy = Arrays.asList(//
 								INamesAndValuesEditor.Utils.text(cardConfig, GroupConstants.groupNameKey),//
 								INamesAndValuesEditor.Utils.styledText(cardConfig, GroupConstants.takeOnEmailListKey),//
 								INamesAndValuesEditor.Utils.styledText(cardConfig, GroupConstants.takeOnEmailPattern)//
 								);
-						return INamesAndValuesEditor.Utils.editor(from, cardConfig, GroupConstants.myGroupsCardType, "Add new group", "", Maps.stringObjectMap(//
-								GroupConstants.takeOnEmailListKey, "<Type here a comma separated list of people you would like to invite to the group\nThe Email below will be sent with $email$ and $group$ replaced by your email, and the group name>",//
-								GroupConstants.takeOnFromKey, email,//
-								GroupConstants.takeOnSubjectKey, "You are invited to join the SoftwareFM group $group$",//
-								GroupConstants.takeOnEmailPattern, "Dear $email$,\nYou have been invited to join the SoftwareFm group $group$"), keyAndEditStrategy, new ICardEditorCallback() {
+						return INamesAndValuesEditor.Utils.editor(from, cardConfig, GroupConstants.myGroupsCardType, "Add new group", "", initialData, keyAndEditStrategy, new ICardEditorCallback() {
 							@Override
-							public void ok(ICardData cardData) {
-								masterDetailSocial.setDetail(null);
+							public void ok(final ICardData cardData) {
 								client.post(GroupConstants.takeOnCommandPrefix).//
+										addParam(LoginConstants.softwareFmIdKey, userData.softwareFmId).//
 										addParam(GroupConstants.groupNameKey, (String) cardData.data().get(GroupConstants.groupNameKey)).//
 										addParam(GroupConstants.takeOnEmailPattern, (String) cardData.data().get(GroupConstants.takeOnEmailPattern)).//
 										addParam(GroupConstants.takeOnEmailListKey, (String) cardData.data().get(GroupConstants.takeOnEmailListKey)).//
@@ -73,7 +81,15 @@ public class GroupClientOperations implements IGroupClientOperations {
 										execute(new IResponseCallback() {
 											@Override
 											public void process(IResponse response) {
-												masterDetailSocial.createAndShowDetail(TextInBorderWithClick.makeTextFromString(SWT.WRAP | SWT.READ_ONLY, cardConfig, GroupConstants.myGroupsCardType, "Group Creation", response.asString(), Runnables.noRunnable));
+												if (CommonConstants.okStatusCodes.contains(response.statusCode()))
+													added.run();
+												else
+													masterDetailSocial.createAndShowDetail(TextInBorderWithClick.makeTextFromString(SWT.WRAP | SWT.READ_ONLY, cardConfig, GroupConstants.myGroupsCardType, "Group Creation", "Exception creating group. Click to try again\n" + response.asString(), new Runnable() {
+														@Override
+														public void run() {
+															tryAndCreateGroup(cardData.data());
+														}
+													}));
 											}
 										});
 							}
@@ -93,7 +109,6 @@ public class GroupClientOperations implements IGroupClientOperations {
 						});
 					}
 				});
-
 			}
 		};
 	}
@@ -108,5 +123,9 @@ public class GroupClientOperations implements IGroupClientOperations {
 		return Runnables.sysout("acceptInvitation");
 	}
 
+	@Override
+	public Runnable deleteGroup(UserData userData) {
+		return Runnables.sysout("deleteGroup");
+	}
 
 }

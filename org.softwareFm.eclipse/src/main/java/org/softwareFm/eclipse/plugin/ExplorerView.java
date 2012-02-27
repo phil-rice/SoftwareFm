@@ -76,7 +76,7 @@ public class ExplorerView extends ViewPart {
 		IGitLocal gitLocal = activator.getGitLocal();
 		IProjectTimeGetter timeGetter = activator.getProjectTimeGetter();
 		IRequestGroupReportGeneration reportGenerator = IRequestGroupReportGeneration.Utils.withCache(//
-				new RequestGroupReportGeneration(client, IResponseCallback.Utils.sysoutStatusCallback()),//
+				new RequestGroupReportGeneration(client, IResponseCallback.Utils.sysoutStatusCallback(), gitLocal),//
 				GroupConstants.usageReportPeriod);
 
 		IShowMyData showMyDetails = MyDetails.showMyDetails(service, cardConfig, masterDetailSocial, userUrlGenerator, gitLocal, timeGetter);

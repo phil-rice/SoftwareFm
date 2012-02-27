@@ -14,7 +14,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
-import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.runnable.Runnables;
 import org.softwareFm.eclipse.constants.CommentConstants;
 import org.softwareFm.swt.card.ICardData;
