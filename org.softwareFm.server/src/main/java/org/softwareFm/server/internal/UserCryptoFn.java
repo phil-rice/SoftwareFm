@@ -4,13 +4,19 @@
 
 package org.softwareFm.server.internal;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.MessageFormat;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
 import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.common.constants.LoginMessages;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.processors.AbstractLoginDataAccessor;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.ResultSetExtractor;
 
 public class UserCryptoFn extends AbstractLoginDataAccessor implements IFunction1<Map<String, Object>, String> {
 
@@ -23,9 +29,17 @@ public class UserCryptoFn extends AbstractLoginDataAccessor implements IFunction
 		String softwareFmId = (String) from.get(LoginConstants.softwareFmIdKey);
 		if (softwareFmId == null)
 			throw new NullPointerException(from.toString());
-		String crypto = template.queryForObject(selectCryptoForSoftwareFmIdsql, String.class, softwareFmId);
+		String crypto = template.query(selectCryptoForSoftwareFmIdsql, new ResultSetExtractor<String>() {
+			@Override
+			public String extractData(ResultSet rs) throws SQLException, DataAccessException {
+				if (rs.next())
+					return rs.getString("crypto");
+				else
+					return null;
+			}
+		},softwareFmId);
 		if (crypto == null)
-			throw new NullPointerException(from.toString());
+			throw new NullPointerException(MessageFormat.format(LoginMessages.cannotWorkOutCryptFor, softwareFmId, from));
 		return crypto;
 	}
 

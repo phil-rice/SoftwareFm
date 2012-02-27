@@ -8,16 +8,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.Table;
-import org.softwareFm.common.crypto.Crypto;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups.MyGroupsComposite;
 import org.softwareFm.swt.swt.Swts;
 
 public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
-	private final String groupId1 = "groupId1";
-	private final String groupId2 = "groupId2";
-
-	private final String groupCryptoKey1 = Crypto.makeKey();
-	private final String groupCryptoKey2 = Crypto.makeKey();
 
 	public void testContentsWhenUserNotMemberOfGroups() {
 		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
@@ -63,17 +57,9 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 
 		assertEquals(summaryTable, stackLayout.topControl);
 		checkTableColumns(summaryTable, "Email", "Status");
-		checkTable(summaryTable, 0, null, email, "someStatus2");
+		checkTable(summaryTable, 0, null, email2, "someStatus2");
 		assertEquals(1, summaryTable.getItemCount());
 
-	}
-
-	protected void addUserToGroup1AndGroup2() {
-		createGroup(groupId1, groupCryptoKey1);
-		addUserToGroup(groupId1, groupCryptoKey1, "someStatus1");
-
-		createGroup(groupId2, groupCryptoKey2);
-		addUserToGroup(groupId2, groupCryptoKey2, "someStatus2");
 	}
 
 	protected Table getMyGroupsTable(MyGroupsComposite myGroupsComposite) {

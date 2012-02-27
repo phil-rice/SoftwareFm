@@ -5,6 +5,7 @@
 package org.softwareFm.eclipse.mysoftwareFm;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -29,6 +30,7 @@ import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.collections.Sets;
 import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.resources.IResourceGetter;
@@ -78,6 +80,7 @@ public class MyPeople implements IHasComposite {
 	static class MyPeopleComposite extends DataComposite<Table> {
 
 		private final Table table;
+		private final Iterable<String> months;
 
 		@Override
 		public Table getEditor() {
@@ -95,7 +98,8 @@ public class MyPeople implements IHasComposite {
 				}
 			});
 			new TableColumn(table, SWT.NULL).setText("Person");
-			for (String month : timeGetter.lastNMonths(3)) {
+			months = timeGetter.lastNMonths(3);
+			for (String month : months) {
 				String name = MySoftwareFmFunctions.monthFileNameToPrettyName(month);
 				new TableColumn(table, SWT.NULL).setText(name);
 			}
@@ -104,7 +108,7 @@ public class MyPeople implements IHasComposite {
 			Swts.packTables(table);
 		}
 
-		public void setSoftwareFmIds(String groupId, String artifactId, Set<String> softwareFmIds, Map<String, String> softwareFmIdToName, Map<String, List<String>> softwareFmIdToGroups, Map<String, Map<String, List<Integer>>> softwareFmIdToMonthToUsage) {
+		public void setSoftwareFmIds(String groupId, String artifactId, Set<String> softwareFmIds, Map<String, String> softwareFmIdToName, Map<String, Set<String>> softwareFmIdToGroups, Map<String, Map<String, List<Integer>>> softwareFmIdToMonthToUsage) {
 			String title = IResourceGetter.Utils.getMessageOrException(getCardConfig().resourceGetterFn, getCardType(), SoftwareFmConstants.peopleIKnowTitle, groupId, artifactId);
 			setTitleAndImage(title, "", CardConstants.loginCardType);
 			List<String> ids = Lists.sort(softwareFmIds);
@@ -113,9 +117,15 @@ public class MyPeople implements IHasComposite {
 				String name = softwareFmIdToName.get(id);
 				String group = Strings.join(Lists.sort(softwareFmIdToGroups.get(id)), ", ");
 				item.setText(0, name);
-				int i = 1;
-				for (Entry<String, List<Integer>> e : softwareFmIdToMonthToUsage.get(id).entrySet()) {
-					item.setText(i++, Integer.toString(e.getValue().size()));
+				Map<String, List<Integer>> monthToUsage = softwareFmIdToMonthToUsage.get(id);
+				int i = 0;
+				if (monthToUsage != null) {
+					for (String month : months) {
+						i++;
+						List<Integer> days = monthToUsage.get(month);
+						if (days != null)
+							item.setText(i, Integer.toString(days.size()));
+					}
 				}
 				item.setText(4, group);
 			}
@@ -148,10 +158,22 @@ public class MyPeople implements IHasComposite {
 	public void setData(final String groupId, final String artifactId) {
 		final Set<String> softwareFmIds = Sets.newSet();
 		final Map<String, String> softwareFmIdToName = Maps.newMap();
-		final Map<String, List<String>> softwareFmIdToGroups = Maps.newMap();
+		final Map<String, Set<String>> softwareFmIdToGroups = Maps.newMap();
 		final Map<String, Map<String, List<Integer>>> softwareFmIdToMonthToUsage = Maps.newMap();
 
 		List<Map<String, Object>> walkGroups = membershipReader.walkGroupsFor(userData.softwareFmId, userData.crypto);
+
+		for (Map<String, Object> groupData : walkGroups)
+			for (String month : timeGetter.lastNMonths(3)) {
+				String groupsId = (String) groupData.get(GroupConstants.groupIdKey);
+				String groupsCrypto = (String) groupData.get(GroupConstants.groupCryptoKey);
+				if (groupsId == null)
+					throw new NullPointerException(groupsId);
+				if (groupsCrypto == null)
+					throw new NullPointerException(groupsCrypto);
+				generateReportIfPossible(groupsId, groupsCrypto, month);
+			}
+
 		for (Map<String, Object> groupData : walkGroups) {
 			String groupsId = (String) groupData.get(GroupConstants.groupIdKey);
 			String groupsCrypto = (String) groupData.get(GroupConstants.groupCryptoKey);
@@ -166,10 +188,12 @@ public class MyPeople implements IHasComposite {
 				String email = (String) userData.get(LoginConstants.emailKey);
 				softwareFmIdToName.put(softwareFmId, email);
 			}
+
 			for (String month : timeGetter.lastNMonths(3)) {
 				generateReportIfPossible(groupsId, groupsCrypto, month);
 				Map<String, Map<String, Map<String, List<Integer>>>> report = (Map) groupsReader.getUsageReport(groupsId, groupsCrypto, month);
-				if (report != null)
+				System.out.println("Id: " + groupsId + " Month: " + month + " Report: " + report);
+				if (report != null) {
 					for (Entry<String, Map<String, Map<String, List<Integer>>>> groupEntry : report.entrySet())
 						if (groupId.equals(groupEntry.getKey()))
 							for (Entry<String, Map<String, List<Integer>>> artifactEntry : groupEntry.getValue().entrySet())
@@ -177,14 +201,17 @@ public class MyPeople implements IHasComposite {
 									for (Entry<String, List<Integer>> e : artifactEntry.getValue().entrySet()) {
 										String softwareFmId = e.getKey();
 										softwareFmIds.add(softwareFmId);
-										Maps.addToList(softwareFmIdToGroups, softwareFmId, groupName);
+										Maps.addToCollection(softwareFmIdToGroups, HashSet.class, softwareFmId, groupName);
 										Maps.addToMapOfMaps(softwareFmIdToMonthToUsage, HashMap.class, softwareFmId, month, e.getValue());
 									}
+				}
 			}
 		}
 		Swts.syncExec(content, new Runnable() {
 			@Override
 			public void run() {
+				System.out.println("Report: ");
+				System.out.println(softwareFmIdToMonthToUsage);
 				content.setSoftwareFmIds(groupId, artifactId, softwareFmIds, softwareFmIdToName, softwareFmIdToGroups, softwareFmIdToMonthToUsage);
 			}
 		});
@@ -193,8 +220,11 @@ public class MyPeople implements IHasComposite {
 	protected void generateReportIfPossible(final String groupId, String groupsCrypto, String month) {
 		try {
 			reportGenerator.request(groupId, groupsCrypto, month).get(timeoutMs, TimeUnit.MILLISECONDS);
+
 		} catch (Exception e) {
 			// it wasn't possible
+			e.printStackTrace();
+			throw WrappedException.wrap(e);
 		}
 	}
 

@@ -4,6 +4,7 @@
 
 package org.softwareFm.softwareFmServer;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import org.softwareFm.server.processors.internal.AbstractCommandProcessor;
 
 public class GenerateGroupUsageProcessor extends AbstractCommandProcessor {
 
+	
 	private final IGenerateUsageReportGenerator generateUsageReportGenerator;
 	private final IGroups groups;
 
@@ -33,8 +35,18 @@ public class GenerateGroupUsageProcessor extends AbstractCommandProcessor {
 		String groupId = (String) parameters.get(GroupConstants.groupIdKey);
 		String groupCryptoKey = (String) parameters.get(GroupConstants.groupCryptoKey);
 		String month = (String) parameters.get(GroupConstants.monthKey);
+		if (logger.isDebugEnabled()) {
+			String message = MessageFormat.format("GroupId: {0},  Month: {1}",groupId, month);
+			logger.debug(message);
+			System.out.println(message);
+		}
 		Map<String, Map<String, Map<String, List<Integer>>>> report = generateUsageReportGenerator.generateReport(groupId, groupCryptoKey, month);
 		groups.setReport(groupId, groupCryptoKey, month, (Map) report);
+		if (logger.isDebugEnabled()) {
+			String message = MessageFormat.format("Result for GroupId: {0},  Month{1} is {2}",groupId, month, report);
+			logger.debug(message);
+			System.out.println(message);
+		}
 		return IProcessResult.Utils.processString(report.toString());
 	}
 

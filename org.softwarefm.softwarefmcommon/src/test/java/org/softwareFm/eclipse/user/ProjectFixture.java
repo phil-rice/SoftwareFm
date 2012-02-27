@@ -10,7 +10,7 @@ import java.util.Map;
 import org.softwareFm.common.maps.Maps;
 
 public class ProjectFixture {
-	private final static Map<String, Object> map1 = Maps.stringObjectMap(//
+	public final static Map<String, Object> map1 = Maps.stringObjectMap(//
 			"january_12", Maps.stringObjectMap(//
 					"group1", Maps.stringObjectMap(//
 							"artifact11", Arrays.asList(1, 3, 4, 5), "artifact12", Arrays.asList(1, 2, 3)),//
@@ -27,7 +27,7 @@ public class ProjectFixture {
 					"group3", Maps.stringObjectMap(//
 							"artifact31", Arrays.asList(1, 2), "artifact32", Arrays.asList(1, 2, 3))));
 
-	private final static Map<String, Object> map2 = Maps.stringObjectMap(//
+	public final static Map<String, Object> map2 = Maps.stringObjectMap(//
 			"january_12", Maps.stringObjectMap(//
 					"group1", Maps.stringObjectMap(//
 							"artifact11", Arrays.asList(1, 3), "artifact12", Arrays.asList(1, 2, 3)),//
@@ -63,10 +63,10 @@ public class ProjectFixture {
 					"artifact32", Maps.stringObjectMap("sfm1", Arrays.asList(1l, 2l, 3l), "sfm2", Arrays.asList(4l, 5l))));
 
 	public static ProjectMock project1(String expectedSoftwareFmId, String expectedProjectCryptoKey) {
-		return new ProjectMock(expectedSoftwareFmId, expectedProjectCryptoKey, map1);
+		return new ProjectMock(true).register(expectedSoftwareFmId, expectedProjectCryptoKey, map1);
 	}
 
 	public static ProjectMock project2(String expectedSoftwareFmId, String expectedProjectCryptoKey) {
-		return new ProjectMock(expectedSoftwareFmId, expectedProjectCryptoKey, map2);
+		return new ProjectMock(true).register(expectedSoftwareFmId, expectedProjectCryptoKey, map2);
 	}
 }

@@ -32,7 +32,8 @@ public class GenerateUsageProjectGenerator implements IGenerateUsageReportGenera
 	public Map<String, Map<String, Map<String, List<Integer>>>> generateReport(String groupId, String groupCryptoKey, String month) {
 		logger.debug("generateReport. GroupId: " + groupId + ", Month: " + month);
 		Map<String, Map<String, Map<String, List<Integer>>>> result = Maps.newMap();
-		for (Map<String, Object> userData : groupsReader.users(groupId, groupCryptoKey)) {
+		Iterable<Map<String, Object>> users = groupsReader.users(groupId, groupCryptoKey);
+		for (Map<String, Object> userData : users) {
 			String usersProjectCryptoKey = (String) userData.get(SoftwareFmConstants.projectCryptoKey);
 			String softwareFmId = (String) userData.get(LoginConstants.softwareFmIdKey);
 			logger.debug("user: " + softwareFmId);

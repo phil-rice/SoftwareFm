@@ -8,17 +8,21 @@ import java.util.concurrent.Future;
 
 import org.softwareFm.client.http.api.IHttpClient;
 import org.softwareFm.client.http.requests.IResponseCallback;
+import org.softwareFm.client.http.response.IResponse;
 import org.softwareFm.common.constants.GroupConstants;
+import org.softwareFm.common.maps.IHasCache;
 import org.softwareFm.eclipse.IRequestGroupReportGeneration;
 
 public class RequestGroupReportGeneration implements IRequestGroupReportGeneration {
 
 	private final IHttpClient client;
 	private final IResponseCallback callback;
+	private final IHasCache cache;
 
-	public RequestGroupReportGeneration(IHttpClient client, IResponseCallback callback) {
+	public RequestGroupReportGeneration(IHttpClient client, IResponseCallback callback, IHasCache cache) {
 		this.client = client;
 		this.callback = callback;
+		this.cache = cache;
 	}
 
 	@Override
@@ -27,6 +31,12 @@ public class RequestGroupReportGeneration implements IRequestGroupReportGenerati
 				addParam(GroupConstants.groupIdKey, groupId).//
 				addParam(GroupConstants.groupCryptoKey, groupCryptoKey).//
 				addParam(GroupConstants.monthKey, month).//
-				execute(callback);
+				execute(new IResponseCallback() {
+					@Override
+					public void process(IResponse response) {
+						cache.clearCaches();
+						callback.process(response);
+					}
+				});
 	}
 }

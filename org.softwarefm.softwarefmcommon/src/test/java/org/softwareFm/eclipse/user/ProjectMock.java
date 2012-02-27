@@ -4,30 +4,45 @@
 
 package org.softwareFm.eclipse.user;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import junit.framework.Assert;
 
+import org.softwareFm.common.maps.Maps;
+
 public class ProjectMock implements IProject {
 
-	private final String expectedSoftwareFmId;
-	private final String expectedProjectCryptoKey;
-	private final Map<String, Object> map;
+	/** sfmId => crypto => usage */
+	private final Map<String, Map<String, Map<String, Object>>> map = Maps.newMap();
+	private final boolean exceptionifNotIn;
 
-
-	public ProjectMock(String expectedSoftwareFmId, String expectedProjectCryptoKey, Map<String,Object> map) {
-		this.expectedSoftwareFmId = expectedSoftwareFmId;
-		this.expectedProjectCryptoKey = expectedProjectCryptoKey;
-		this.map = map;
+	public ProjectMock(boolean exceptionifNotIn) {
+		this.exceptionifNotIn = exceptionifNotIn;
 	}
 
-	@SuppressWarnings("unchecked")
+	public ProjectMock register(String expectedSoftwareFmId, String expectedProjectCryptoKey, Map<String, Object> map) {
+		Maps.addToMapOfMaps(this.map, HashMap.class, expectedSoftwareFmId, expectedProjectCryptoKey, map);
+		return this;
+	}
+
+	@SuppressWarnings({ "unchecked", "null" })
 	@Override
 	public Map<String, Map<String, List<Integer>>> getProjectDetails(String softwareFmId, String projectCryptoKey, String month) {
-		Assert.assertEquals(expectedSoftwareFmId, softwareFmId);
-		Assert.assertEquals(expectedProjectCryptoKey, projectCryptoKey);
-		return (Map<String, Map<String, List<Integer>>>) map.get(month);
+		Map<String, Map<String, Object>> cryptoMap = map.get(softwareFmId);
+		if (cryptoMap == null)
+			if (exceptionifNotIn)
+				Assert.fail("Crypto map for " + softwareFmId + " not found");
+			else
+				return null;
+		Map<String, Object> monthMap = cryptoMap.get(projectCryptoKey);
+		if (monthMap == null)
+			if (exceptionifNotIn)
+				Assert.fail("Month  map for " + softwareFmId + ", " + projectCryptoKey + " not found");
+			else
+				return null;
+		return (Map<String, Map<String, List<Integer>>>) monthMap.get(month);
 	}
 
 	@Override

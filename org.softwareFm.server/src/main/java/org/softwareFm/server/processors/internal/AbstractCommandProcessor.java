@@ -7,12 +7,13 @@ package org.softwareFm.server.processors.internal;
 import java.util.Map;
 
 import org.apache.http.RequestLine;
+import org.apache.log4j.Logger;
 import org.softwareFm.common.IGitOperations;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.IProcessResult;
 
 public abstract class AbstractCommandProcessor implements IProcessCall {
-
+	public final static Logger logger = Logger.getLogger(AbstractCommandProcessor.class);
 	protected IGitOperations gitOperations;
 	private final String method;
 	protected final String prefix;
@@ -40,7 +41,7 @@ public abstract class AbstractCommandProcessor implements IProcessCall {
 	protected void checkForParameter(Map<String, Object> parameters, String... keys) {
 		for (String key : keys)
 			if (!parameters.containsKey(key))
-				throw new IllegalArgumentException(key+", " + parameters);
+				throw new IllegalArgumentException(key + ", " + parameters);
 	}
 
 }
