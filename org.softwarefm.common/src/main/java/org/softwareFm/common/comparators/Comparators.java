@@ -15,10 +15,17 @@ public class Comparators {
 		public int compare(Object o1, Object o2) {
 			Comparable one = (Comparable) o1;
 			Comparable two = (Comparable) o2;
-			return one.compareTo(two);
+			if (one == null)
+				if (two == null)
+					return 0;
+				else
+					return -1;
+			else if (two == null)
+				return 1;
+			else
+				return one.compareTo(two);
 		}
 	};
-	
 
 	@SuppressWarnings("unchecked")
 	public static <T> Comparator<T> naturalOrder() {
@@ -62,9 +69,8 @@ public class Comparators {
 		};
 	}
 
-	
-	public static <K,V>Comparator<Map<K, V>> mapKey(final K key) {
-		return new Comparator<Map<K,V>>() {
+	public static <K, V> Comparator<Map<K, V>> mapKey(final K key) {
+		return new Comparator<Map<K, V>>() {
 			@SuppressWarnings("unchecked")
 			@Override
 			public int compare(Map<K, V> o1, Map<K, V> o2) {

@@ -23,32 +23,30 @@ import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
 
-public class GroupsForServer extends AbstractGroupReader implements IGroups {
+public class GroupsForServer extends AbstractGroupReader<IGitOperations> implements IGroups {
 
-	private final IGitOperations gitOperations;
 	private final IFunction1<String, String> repoUrlGenerator;
 
 	public GroupsForServer(IUrlGenerator urlGenerator, IGitOperations gitOperations, IFunction1<String, String> repoUrlGenerator) {
-		super(urlGenerator);
-		this.gitOperations = gitOperations;
+		super(urlGenerator, gitOperations);
 		this.repoUrlGenerator = repoUrlGenerator;
 	}
 
 	@Override
 	public void refresh(String groupId) {
-		gitOperations.clearCaches();
+		git.clearCaches();
 	}
 
 	@Override
 	public void setGroupProperty(String groupId, String groupCryptoKey, String property, String value) {
 		IFileDescription fileDescription = findFileDescription(groupId, groupCryptoKey);
-		String lines = getFileAsString(fileDescription);
+		String lines = git.getFileAsString(fileDescription);
 		List<String> listOfLines = Strings.splitIgnoreBlanks(lines, "\n");
 		Map<String, Object> data = initialMap(fileDescription, listOfLines);
 		Map<String, Object> newData = Maps.with(data, property, value);
 		String newLine0 = Crypto.aesEncrypt(groupCryptoKey, Json.toString(newData));
 		String newValue = Strings.join(Lists.addAtStart(Lists.tail(listOfLines), newLine0), "\n") +"\n";
-		File file = fileDescription.getFile(gitOperations.getRoot());
+		File file = fileDescription.getFile(git.getRoot());
 		makeRepoIfNecessary(fileDescription);
 		Files.setText(file, newValue);
 		String message = "setGroupProperty " + property + "," + value;
@@ -56,20 +54,20 @@ public class GroupsForServer extends AbstractGroupReader implements IGroups {
 	}
 
 	protected void makeRepoIfNecessary(IFileDescription fileDescription) {
-		File file = fileDescription.getFile(gitOperations.getRoot());
+		File file = fileDescription.getFile(git.getRoot());
 		String url = fileDescription.url();
 		if (!file.exists()) {
 			Files.makeDirectoryForFile(file);
-			File repositoryUrl = fileDescription.findRepositoryUrl(gitOperations.getRoot());
+			File repositoryUrl = fileDescription.findRepositoryUrl(git.getRoot());
 			if (repositoryUrl == null) {
-				gitOperations.init(Functions.call(repoUrlGenerator, url));
+				git.init(Functions.call(repoUrlGenerator, url));
 			}
 		}
 	}
 
 	protected void addAllAndCommit(IFileDescription fileDescription, String message) {
-		String repositoryUrl = IFileDescription.Utils.findRepositoryUrl(gitOperations.getRoot(), fileDescription.url());
-		gitOperations.addAllAndCommit(repositoryUrl, message);
+		String repositoryUrl = IFileDescription.Utils.findRepositoryUrl(git.getRoot(), fileDescription.url());
+		git.addAllAndCommit(repositoryUrl, message);
 	}
 
 	protected Map<String, Object> initialMap(IFileDescription fileDescription, List<String> listOfLines) {
@@ -84,20 +82,15 @@ public class GroupsForServer extends AbstractGroupReader implements IGroups {
 	@Override
 	public void addUser(String groupId, String groupCryptoKey, Map<String, Object> userDetails) {
 		IFileDescription fileDescription = findFileDescription(groupId, groupCryptoKey);
-		gitOperations.append(fileDescription, userDetails);
+		git.append(fileDescription, userDetails);
 		addAllAndCommit(fileDescription, "addUser " + userDetails);
-	}
-
-	@Override
-	protected String getFileAsString(IFileDescription groupFileDescription) {
-		return gitOperations.getFileAsString(groupFileDescription);
 	}
 
 	@Override
 	public void setReport(String groupId, String groupCryptoKey, String month, Map<String, Object> report) {
 		IFileDescription fileDescription = findReportFileDescription(groupId, groupCryptoKey, month);
 		makeRepoIfNecessary(fileDescription);
-		gitOperations.put(fileDescription, report);
+		git.put(fileDescription, report);
 	}
 
 }

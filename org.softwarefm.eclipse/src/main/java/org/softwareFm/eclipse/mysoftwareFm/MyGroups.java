@@ -4,7 +4,6 @@
 
 package org.softwareFm.eclipse.mysoftwareFm;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -26,6 +25,8 @@ import org.softwareFm.common.IUserReader;
 import org.softwareFm.common.LocalGroupsReader;
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.comparators.Comparators;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.CommonMessages;
 import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.IFunction1;
@@ -148,18 +149,23 @@ public class MyGroups implements IHasComposite {
 			new TableColumn(summaryTable, SWT.NULL).setText("Group Name");
 			new TableColumn(summaryTable, SWT.NULL).setText("Members");
 			new TableColumn(summaryTable, SWT.NULL).setText("My Status");
-			List<Map<String, Object>> groups = membershipReader.walkGroupsFor(userData.softwareFmId, userData.crypto);
+			Iterable<Map<String, Object>> groups = membershipReader.walkGroupsFor(userData.softwareFmId, userData.crypto);
 			for (Map<String, Object> map : groups) {
-				String groupId = (String) map.get(GroupConstants.groupIdKey);
-				String groupCryptoKey = (String) map.get(GroupConstants.groupCryptoKey);
-				String groupName = groupReaders.getGroupProperty(groupId, groupCryptoKey, GroupConstants.groupNameKey);
-				TableItem item = new TableItem(summaryTable, SWT.NULL);
-				item.setData(groupId);
-				int membershipCount = groupsReader.membershipCount(groupId, groupCryptoKey);
-				String membershipCountString = Integer.toString(membershipCount);
-				String myStatus = Strings.nullSafeToString(map.get(GroupConstants.membershipStatusKey));
-				item.setText(new String[] { groupName, membershipCountString, myStatus });
-				idToCrypto.put(groupId, groupCryptoKey);
+				if (map.containsKey(CommonConstants.errorKey)) {
+					TableItem item = new TableItem(summaryTable, SWT.NULL);
+					item.setText(new String[] { CommonMessages.corrupted, CommonMessages.record, "" });
+				} else {
+					String groupId = (String) map.get(GroupConstants.groupIdKey);
+					String groupCryptoKey = (String) map.get(GroupConstants.groupCryptoKey);
+					String groupName = groupReaders.getGroupProperty(groupId, groupCryptoKey, GroupConstants.groupNameKey);
+					TableItem item = new TableItem(summaryTable, SWT.NULL);
+					item.setData(groupId);
+					int membershipCount = groupsReader.membershipCount(groupId, groupCryptoKey);
+					String membershipCountString = Integer.toString(membershipCount);
+					String myStatus = Strings.nullSafeToString(map.get(GroupConstants.membershipStatusKey));
+					item.setText(new String[] { groupName, membershipCountString, myStatus });
+					idToCrypto.put(groupId, groupCryptoKey);
+				}
 			}
 
 			rightHand = new Composite(sashForm, SWT.NULL);
@@ -189,7 +195,10 @@ public class MyGroups implements IHasComposite {
 						if (groupCryptoKey == null)
 							throw new NullPointerException(groupCryptoKey);
 						for (Map<String, Object> user : Lists.sort(groupsReader.users(groupId, groupCryptoKey), Comparators.mapKey(LoginConstants.emailKey))) {
-							new TableItem(membershipTable, SWT.NULL).setText(new String[] { Strings.nullSafeToString(user.get(LoginConstants.emailKey)), Strings.nullSafeToString(user.get(GroupConstants.membershipStatusKey)) });
+							if (user.containsKey(CommonConstants.errorKey))
+								new TableItem(membershipTable, SWT.NULL).setText(new String[] { CommonMessages.corrupted, CommonMessages.record });
+							else
+								new TableItem(membershipTable, SWT.NULL).setText(new String[] { Strings.nullSafeToString(user.get(LoginConstants.emailKey)), Strings.nullSafeToString(user.get(GroupConstants.membershipStatusKey)) });
 						}
 
 					}

@@ -4,26 +4,26 @@
 
 package org.softwareFm.common;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.GroupConstants;
-import org.softwareFm.common.crypto.Crypto;
-import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.json.Json;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.common.url.Urls;
 
-public abstract class AbstractGroupReader implements IGroupsReader {
+public abstract class AbstractGroupReader<GR extends IGitReader> implements IGroupsReader {
 
 	protected IUrlGenerator groupUrlGenerator;
+	protected final GR git;
 
-	public AbstractGroupReader(IUrlGenerator groupUrlGenerator) {
+	public AbstractGroupReader(IUrlGenerator groupUrlGenerator, GR gitReader) {
 		this.groupUrlGenerator = groupUrlGenerator;
+		this.git = gitReader;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -35,41 +35,25 @@ public abstract class AbstractGroupReader implements IGroupsReader {
 	}
 
 	protected Map<String, Object> getGroupMap(IFileDescription groupFileDescription) {
-		String lines = getFileAsString(groupFileDescription);
-		List<String> listOfLines = Strings.splitIgnoreBlanks(lines, "\n");
-		if (listOfLines.size() == 0)
+		Iterable<Map<String, Object>> maps = git.getFileAsListOfMaps(groupFileDescription);
+		Iterator<Map<String, Object>> iterator = maps.iterator();
+		if (!iterator.hasNext())
 			throw new IllegalStateException(groupFileDescription.toString());
-		String line = listOfLines.get(0);
-		String decoded = Crypto.aesDecrypt(groupFileDescription.crypto(), line);
-		Map<String, Object> data = Json.mapFromString(decoded);
-		return data;
+		return iterator.next();
 	}
 
 	@Override
 	public Map<String, Object> getUsageReport(String groupId, String groupCryptoKey, String month) {
 		IFileDescription groupFileDescription = findReportFileDescription(groupId, groupCryptoKey, month);
-		String raw = getFileAsString(groupFileDescription);
-		return raw == null ? null : Json.mapFromString(Crypto.aesDecrypt(groupCryptoKey, raw));
+		return git.getFile(groupFileDescription);
 	}
 
 	@Override
 	public Iterable<Map<String, Object>> users(String groupId, final String groupCryptoKey) {
 		IFileDescription groupFileDescription = findFileDescription(groupId, groupCryptoKey);
-		String lines = getFileAsString(groupFileDescription);
-		List<String> listOfLines = Strings.splitIgnoreBlanks(lines, "\n");
-		if (listOfLines.size() == 0)
-			throw new IllegalStateException(groupFileDescription.toString()+"\n" + listOfLines);
-		return Lists.map(Lists.tail(listOfLines), new IFunction1<String, Map<String, Object>>() {
-			@Override
-			public Map<String, Object> apply(String from) throws Exception {
-				String decoded = Crypto.aesDecrypt(groupCryptoKey, from);
-				Map<String, Object> data = Json.mapFromString(decoded);
-				return data;
-			}
-		});
+		return Lists.tail(git.getFileAsListOfMaps(groupFileDescription));
 	}
 
-	abstract protected String getFileAsString(IFileDescription groupFileDescription);
 
 	protected IFileDescription findFileDescription(String groupId, String groupCryptoKey) {
 		String url = findUrl(groupId);
@@ -91,7 +75,7 @@ public abstract class AbstractGroupReader implements IGroupsReader {
 	@Override
 	public int membershipCount(String groupId, String groupCryptoKey) {
 		IFileDescription groupFileDescription = findFileDescription(groupId, groupCryptoKey);
-		String lines = getFileAsString(groupFileDescription);
+		String lines = git.getFileAsString(groupFileDescription);
 		List<String> listOfLines = Strings.splitIgnoreBlanks(lines, "\n");
 		return listOfLines.size() - 1;
 	}

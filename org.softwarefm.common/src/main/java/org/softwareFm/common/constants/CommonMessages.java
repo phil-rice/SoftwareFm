@@ -15,5 +15,7 @@ public class CommonMessages {
 	public static final String timedOut = "Timed out";
 	public static final String cannotFindRepositoryUrl = "Cannot find repository url for {0}";
 	public static final String cannotDecrypt = "Cannot decypt {0}";
+	public static final String corrupted = "Corrupted";
+	public static final String record = "Record";
 
 }

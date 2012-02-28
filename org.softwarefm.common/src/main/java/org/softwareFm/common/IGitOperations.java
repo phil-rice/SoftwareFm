@@ -141,6 +141,11 @@ public interface IGitOperations extends IGitReader{
 				public int map(IFileDescription fileDescription, IFunction1<Map<String, Object>, Boolean> acceptor, IFunction1<Map<String, Object>, Map<String, Object>> transform, String commitMessage) {
 					throw new IllegalArgumentException();
 				}
+
+				@Override
+				public int countOfFileAsListsOfMap(IFileDescription fileDescription) {
+					throw new IllegalArgumentException();
+				}
 			};
 		}
 	}

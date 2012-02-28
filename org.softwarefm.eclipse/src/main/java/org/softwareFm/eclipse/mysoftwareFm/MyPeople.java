@@ -161,7 +161,7 @@ public class MyPeople implements IHasComposite {
 		final Map<String, Set<String>> softwareFmIdToGroups = Maps.newMap();
 		final Map<String, Map<String, List<Integer>>> softwareFmIdToMonthToUsage = Maps.newMap();
 
-		List<Map<String, Object>> walkGroups = membershipReader.walkGroupsFor(userData.softwareFmId, userData.crypto);
+		Iterable<Map<String, Object>> walkGroups = membershipReader.walkGroupsFor(userData.softwareFmId, userData.crypto);
 
 		for (Map<String, Object> groupData : walkGroups)
 			for (String month : timeGetter.lastNMonths(3)) {

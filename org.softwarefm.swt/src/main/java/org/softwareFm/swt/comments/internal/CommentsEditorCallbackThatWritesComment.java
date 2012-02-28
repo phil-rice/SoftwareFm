@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.softwareFm.common.IGroupsReader;
 import org.softwareFm.common.IUserReader;
+import org.softwareFm.common.collections.Iterables;
 import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.eclipse.comments.ICommentDefn;
 import org.softwareFm.swt.comments.ICommentWriter;
@@ -19,11 +20,11 @@ public class CommentsEditorCallbackThatWritesComment implements ICommentsEditorC
 	private final Runnable whenFinished;
 	private final IUserReader userReader;
 
-	public CommentsEditorCallbackThatWritesComment(IUserReader userReader, IGroupsReader reader, ICommentWriter commentWriter, String softwareFmId, String userCrypto, List<Map<String, Object>> groupsData, Runnable whenFinished) {
+	public CommentsEditorCallbackThatWritesComment(IUserReader userReader, IGroupsReader reader, ICommentWriter commentWriter, String softwareFmId, String userCrypto, Iterable<Map<String, Object>> groupsData, Runnable whenFinished) {
 		this.softwareFmId = softwareFmId;
 		this.userCrypto = userCrypto;
 		this.commentWriter = commentWriter;
-		this.groupsData = groupsData;
+		this.groupsData= Iterables.list(groupsData);
 		this.reader = reader;
 		this.userReader = userReader;
 		this.whenFinished = whenFinished;

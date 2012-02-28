@@ -4,26 +4,15 @@
 
 package org.softwareFm.eclipse.user;
 
-import java.util.List;
-import java.util.Map;
-
-import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.IGitLocal;
 import org.softwareFm.common.IUserReader;
 import org.softwareFm.common.url.IUrlGenerator;
 
-public class UserMembershipReaderForLocal extends AbstractUserMembershipReader {
+public class UserMembershipReaderForLocal extends AbstractUserMembershipReader<IGitLocal> {
 
-	private final IGitLocal gitLocal;
 
 	public UserMembershipReaderForLocal(IUrlGenerator userUrlGenerator, IGitLocal gitLocal, IUserReader user) {
-		super(userUrlGenerator, user);
-		this.gitLocal = gitLocal;
-	}
-
-	@Override
-	protected List<Map<String, Object>> getGroupFileAsText(IFileDescription fileDescription) {
-		return gitLocal.getFileAsListOfMaps(fileDescription);
+		super(userUrlGenerator, user, gitLocal);
 	}
 
 

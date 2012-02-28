@@ -9,14 +9,14 @@ import org.softwareFm.swt.explorer.internal.UserData;
 public class GroupClientOperationsMock implements IGroupClientOperations {
 
 	private UserData userData;
-	public CountRunnable create;
-	public CountRunnable invite;
-	public CountRunnable accept;
+	public CountRunnable create = Runnables.count();
+	public CountRunnable invite= Runnables.count();
+	public CountRunnable accept= Runnables.count();
+	public CountRunnable delete= Runnables.count();
 
 	@Override
 	public Runnable createGroup(UserData userData, Runnable added) {
 		checkUserData(userData);
-		create = Runnables.count();
 		added.run();
 		return create;
 	}
@@ -30,15 +30,19 @@ public class GroupClientOperationsMock implements IGroupClientOperations {
 	@Override
 	public Runnable inviteToGroup(UserData userData) {
 		checkUserData(userData);
-		invite = Runnables.count();
 		return invite;
 	}
 
 	@Override
 	public Runnable acceptInvitation(UserData userData) {
 		checkUserData(userData);
-		accept = Runnables.count();
 		return accept;
+	}
+
+	@Override
+	public Runnable deleteGroup(UserData userData) {
+		checkUserData(userData);
+		return delete;
 	}
 
 }

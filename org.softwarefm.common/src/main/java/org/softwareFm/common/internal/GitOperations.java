@@ -79,6 +79,13 @@ public class GitOperations implements IGitOperations {
 		String url = Files.offset(root, repositoryFile);
 		addAllAndCommit(url, GitOperations.class.getSimpleName());
 	}
+	
+	@Override
+	public int countOfFileAsListsOfMap(IFileDescription fileDescription) {
+		String lines = getFileAsString(fileDescription);
+		List<String> listOfLines = Strings.splitIgnoreBlanks(lines, "\n");
+		return listOfLines.size() - 1;
+	}
 
 	@Override
 	public void pull(final String url) {

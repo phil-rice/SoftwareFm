@@ -5,24 +5,26 @@
 package org.softwareFm.eclipse.user;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.common.IFileDescription;
+import org.softwareFm.common.IGitReader;
 import org.softwareFm.common.IUserReader;
 import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.url.IUrlGenerator;
 
-public abstract class AbstractUserMembershipReader implements IUserMembershipReader {
+public abstract class AbstractUserMembershipReader<GR extends IGitReader> implements IUserMembershipReader {
 
 	protected final IUrlGenerator userUrlGenerator;
 	protected final IUserReader user;
+	protected final GR git;
 
-	public AbstractUserMembershipReader(IUrlGenerator userUrlGenerator, IUserReader user) {
+	public AbstractUserMembershipReader(IUrlGenerator userUrlGenerator, IUserReader user, GR git) {
 		this.userUrlGenerator = userUrlGenerator;
 		this.user = user;
+		this.git = git;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -35,17 +37,15 @@ public abstract class AbstractUserMembershipReader implements IUserMembershipRea
 	}
 
 	@Override
-	public List<Map<String, Object>> walkGroupsFor(String softwareFmId, String crypto) {
+	public Iterable<Map<String, Object>> walkGroupsFor(String softwareFmId, String crypto) {
 		String url = userUrlGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
 		String usersMembershipCrypto = getMembershipCrypto(softwareFmId, crypto);
 		if (usersMembershipCrypto== null)
 			return Collections.emptyList();
 		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, GroupConstants.membershipFileName, usersMembershipCrypto);
-		List<Map<String, Object>> result = getGroupFileAsText(fileDescription);
+		Iterable<Map<String, Object>> result =  git.getFileAsListOfMaps(fileDescription);
 		return result;
 	}
-
-	abstract protected List<Map<String, Object>> getGroupFileAsText(IFileDescription fileDescription);
 
 	protected String getMembershipCrypto(String softwareFmId ,String userCrypto) {
 		String usersMembershipCrypto = user.getUserProperty(softwareFmId, userCrypto, GroupConstants.membershipCryptoKey);

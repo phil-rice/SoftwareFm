@@ -8,12 +8,12 @@ import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.url.IUrlGenerator;
 
-public class LocalGroupsReader extends AbstractGroupReader {
+public class LocalGroupsReader extends AbstractGroupReader<IGitLocal> {
 
 	protected final IGitLocal gitLocal;
 
 	public LocalGroupsReader(IUrlGenerator groupUrlGenerator, IGitLocal gitLocal) {
-		super(groupUrlGenerator);
+		super(groupUrlGenerator, gitLocal);
 		this.gitLocal = gitLocal;
 	}
 
@@ -23,10 +23,6 @@ public class LocalGroupsReader extends AbstractGroupReader {
 		return url;
 	}
 
-	@Override
-	protected String getFileAsString(IFileDescription groupFileDescription) {
-		return gitLocal.getFileAsString(groupFileDescription);
-	}
 
 	@Override
 	public void refresh(String groupId) {

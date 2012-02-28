@@ -38,7 +38,7 @@ public abstract class AbstractCommentsReader implements ICommentsReader {
 	@Override
 	public List<Map<String, Object>> groupComments(String baseUrl, String softwareFmId, String userCrypto) {
 		List<Map<String, Object>> result = Lists.newList();
-		List<Map<String, Object>> allGroupData = userMembershipReader.walkGroupsFor(softwareFmId, userCrypto);
+		Iterable<Map<String, Object>> allGroupData = userMembershipReader.walkGroupsFor(softwareFmId, userCrypto);
 		for (Map<String, Object> groupData : allGroupData) {
 			String groupId = (String) groupData.get(GroupConstants.groupIdKey);
 			String groupCrypto = (String) groupData.get(GroupConstants.groupCryptoKey);

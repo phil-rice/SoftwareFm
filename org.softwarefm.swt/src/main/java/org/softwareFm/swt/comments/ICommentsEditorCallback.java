@@ -1,6 +1,5 @@
 package org.softwareFm.swt.comments;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -19,7 +18,7 @@ public interface ICommentsEditorCallback {
 	void cancel();
 
 	public static class Utils {
-		public static ICommentsEditorCallback writeComments(final IUserReader userReader, final IGroupsReader groupReader, final String softwareFmId, final String userCrypto, final List<Map<String,Object>> groupsData, final ICommentWriter commentWriter, final Runnable whenFinished){
+		public static ICommentsEditorCallback writeComments(final IUserReader userReader, final IGroupsReader groupReader, final String softwareFmId, final String userCrypto, final Iterable<Map<String,Object>> groupsData, final ICommentWriter commentWriter, final Runnable whenFinished){
 			return new CommentsEditorCallbackThatWritesComment(userReader, groupReader, commentWriter, softwareFmId, userCrypto, groupsData, whenFinished);
 		}
 		

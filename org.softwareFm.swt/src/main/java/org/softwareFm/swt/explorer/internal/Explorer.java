@@ -182,7 +182,7 @@ public class Explorer implements IExplorer {
 								if (userData.softwareFmId == null)
 									throw new IllegalStateException("Need to be logged in");
 								String title = CommentConstants.editorTitle;
-								List<Map<String, Object>> groupData = userMembershipReader.walkGroupsFor(userData.softwareFmId, userData.crypto);
+								Iterable<Map<String, Object>> groupData = userMembershipReader.walkGroupsFor(userData.softwareFmId, userData.crypto);
 								List<String> groupNames = getGroupNames(groupData);
 								return new CommentsEditor(from, cardConfig, baseUrl, title, "", groupNames, ICommentsEditorCallback.Utils.writeComments(userReader, groupsReader, userData.softwareFmId, userData.crypto, groupData, commentWriter, new Runnable() {
 									@Override

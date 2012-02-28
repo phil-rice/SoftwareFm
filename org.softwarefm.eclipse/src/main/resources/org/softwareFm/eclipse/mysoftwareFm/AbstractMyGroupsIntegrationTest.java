@@ -107,8 +107,12 @@ abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIn
 
 	protected void addUserToGroup(String softwareFmId, String email, String groupId, String groupCryptoKey, String status) {
 		String crypto = Functions.call(processCallParameters.userCryptoFn, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
-
 		String usersProjectCryptoKey = user.getUserProperty(softwareFmId, crypto, SoftwareFmConstants.projectCryptoKey);
+
+		addUserToGroup(softwareFmId, crypto, usersProjectCryptoKey, groupId, groupCryptoKey, email, status);
+	}
+
+	protected void addUserToGroup(String softwareFmId, String crypto, String usersProjectCryptoKey, String groupId, String groupCryptoKey, String email, String status) {
 		assertNotNull(usersProjectCryptoKey);
 		Map<String, Object> initialData = Maps.stringObjectMap(LoginConstants.emailKey, email,//
 				LoginConstants.softwareFmIdKey, softwareFmId, //

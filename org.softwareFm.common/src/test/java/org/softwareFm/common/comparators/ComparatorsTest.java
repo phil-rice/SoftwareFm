@@ -9,7 +9,6 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.softwareFm.common.comparators.Comparators;
 import org.softwareFm.common.maps.Maps;
 
 public class ComparatorsTest extends TestCase {
@@ -23,6 +22,9 @@ public class ComparatorsTest extends TestCase {
 		checkMore(comparator, "2", "1");
 		checkMore(comparator, "11", "100");
 		checkSame(comparator, "11", "11");
+
+		checkMore(comparator, 100, null);
+		checkSame(comparator, null, null);
 	}
 
 	public void testCompareBasedOnTagInValue() {

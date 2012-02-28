@@ -4,7 +4,6 @@
 
 package org.softwareFm.eclipse.user;
 
-import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.common.IGroupsReader;
@@ -14,11 +13,11 @@ public interface IUserMembershipReader {
 
 	<T> T getMembershipProperty(String softwareFmId, String userCrypto, String groupId, String property);
 
-	List<Map<String, Object>> walkGroupsFor(String softwareFmId, String crypto);
+	Iterable<Map<String, Object>> walkGroupsFor(String softwareFmId, String crypto);
 
 	public static class Utils {
 		public static String findGroupProperty(IUserMembershipReader reader, IGroupsReader groupsReader, String softwareFmId, String crypto, String groupId, String property) {
-			List<Map<String, Object>> groups = reader.walkGroupsFor(softwareFmId, crypto);
+			Iterable<Map<String, Object>> groups = reader.walkGroupsFor(softwareFmId, crypto);
 			for (Map<String, Object> map : groups) {
 				if (groupId.equals(map.get(GroupConstants.groupIdKey))) {
 					String groupCrypto = (String) map.get(GroupConstants.groupCryptoKey);
