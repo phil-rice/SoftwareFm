@@ -108,11 +108,11 @@ public class MyGroups implements IHasComposite {
 		public final Button create;
 		public final Button accept;
 
-		public MyGroupsButtons(Composite parent, IGroupClientOperations groupClientOperations, UserData userData, Runnable showMyGroups) {
+		public MyGroupsButtons(Composite parent, IGroupClientOperations groupClientOperations, UserData userData, Runnable showMyGroups, Callable<IdAndName> idAndNameGetter) {
 			this.content = new Composite(parent, SWT.NULL);
 			content.setLayout(Swts.Row.getHorizonalNoMarginRowLayout());
 			accept = Swts.Buttons.makePushButton(content, "Accept", groupClientOperations.acceptInvitation(userData));
-			invite = Swts.Buttons.makePushButton(content, "Invite", groupClientOperations.inviteToGroup(userData));
+			invite = Swts.Buttons.makePushButton(content, "Invite", groupClientOperations.inviteToGroup(userData, idAndNameGetter, showMyGroups));
 			create = Swts.Buttons.makePushButton(content, "Create new group", groupClientOperations.createGroup(userData, showMyGroups));
 		}
 
@@ -146,7 +146,17 @@ public class MyGroups implements IHasComposite {
 			this.groupsReader = groupReaders;
 			sashForm = new SashForm(getInnerBody(), SWT.HORIZONTAL);
 			summaryTable = new Table(sashForm, SWT.FULL_SELECTION);
-			buttons = new MyGroupsButtons(getInnerBody(), groupClientOperations, userData, showMyGroups);
+			buttons = new MyGroupsButtons(getInnerBody(), groupClientOperations, userData, showMyGroups, new Callable<IdAndName>() {
+				@Override
+				public IdAndName call() throws Exception {
+					int index = summaryTable.getSelectionIndex();
+					if (index == -1)
+						return null;
+					Object result = summaryTable.getItem(index).getData();
+					return (IdAndName) result;
+					
+				}
+			});
 			summaryTable.setHeaderVisible(true);
 			new TableColumn(summaryTable, SWT.NULL).setText("Group Name");
 			new TableColumn(summaryTable, SWT.NULL).setText("Members");
@@ -173,7 +183,7 @@ public class MyGroups implements IHasComposite {
 					String groupCryptoKey = (String) map.get(GroupConstants.groupCryptoKey);
 					String groupName = groupReaders.getGroupProperty(groupId, groupCryptoKey, GroupConstants.groupNameKey);
 					TableItem item = new TableItem(summaryTable, SWT.NULL);
-					item.setData(groupId);
+					item.setData(new IdAndName(groupId, groupName));
 					int membershipCount = groupsReader.membershipCount(groupId, groupCryptoKey);
 					String membershipCountString = Integer.toString(membershipCount);
 					String myStatus = Strings.nullSafeToString(map.get(GroupConstants.membershipStatusKey));
@@ -202,7 +212,8 @@ public class MyGroups implements IHasComposite {
 					int index = summaryTable.getSelectionIndex();
 					if (index >= 0) {
 						TableItem item = summaryTable.getItem(index);
-						String groupId = (String) item.getData();
+						IdAndName idAndName = (IdAndName) item.getData();
+						String groupId = idAndName.id;
 						if (groupId == null)
 							throw new NullPointerException(Integer.toString(index));
 						String groupCryptoKey = idToCrypto.get(groupId);

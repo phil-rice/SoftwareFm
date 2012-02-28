@@ -61,8 +61,8 @@ public class TakeOnProcessorTest extends GitTest {
 
 		String groupCrypto = Crypto.makeKey();
 		String groupId = takeOnProcessor.createGroup(groupName, groupCrypto);
-		takeOnProcessor.addExistingUserToGroup(groupId, groupName, groupCrypto, "sfm1","email1", "someStatus");
-		takeOnProcessor.addExistingUserToGroup(groupId, groupName, groupCrypto, "sfm2","email2", "someStatus");
+		takeOnProcessor.addExistingUserToGroup(groupId, groupCrypto, "sfm1", "email1","someStatus");
+		takeOnProcessor.addExistingUserToGroup(groupId, groupCrypto, "sfm2", "email2","someStatus");
 
 		List<Map<String, Object>> expected = Arrays.asList(//
 				Maps.stringObjectMap(LoginConstants.emailKey, "email1", LoginConstants.softwareFmIdKey, "sfm1", SoftwareFmConstants.projectCryptoKey, projectCrypto1, GroupConstants.membershipStatusKey,  "someStatus"), //
@@ -78,8 +78,8 @@ public class TakeOnProcessorTest extends GitTest {
 	public void testAddingUserToGroupUpdatesMembership() {
 		String groupCrypto = Crypto.makeKey();
 		String groupId = takeOnProcessor.createGroup(groupName, groupCrypto);
-		takeOnProcessor.addExistingUserToGroup(groupId, groupName, groupCrypto,"sfm1", "email1", "someStatus");
-		takeOnProcessor.addExistingUserToGroup(groupId, groupName, groupCrypto, "sfm2","email2", "someStatus");
+		takeOnProcessor.addExistingUserToGroup(groupId, groupCrypto, "sfm1","email1", "someStatus");
+		takeOnProcessor.addExistingUserToGroup(groupId, groupCrypto, "sfm2", "email2","someStatus");
 		List<Map<String, Object>> expected = Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.groupCryptoKey, groupCrypto, GroupConstants.membershipStatusKey,  "someStatus"));
 		assertEquals(expected, membership.walkGroupsFor("sfm1", crypto1));
 		assertEquals(expected, membership.walkGroupsFor("sfm2", crypto2));
@@ -89,8 +89,8 @@ public class TakeOnProcessorTest extends GitTest {
 	public void testAddUserToGroupAddsProjectCryptoIfItDoesntExist() {
 		String groupCrypto = Crypto.makeKey();
 		String groupId = takeOnProcessor.createGroup(groupName, groupCrypto);
-		takeOnProcessor.addExistingUserToGroup(groupId, groupName, groupCrypto, "sfm1","email1", "someStatus");
-		takeOnProcessor.addExistingUserToGroup(groupId, groupName, groupCrypto, "sfm2","email2", "someStatus");
+		takeOnProcessor.addExistingUserToGroup(groupId, groupCrypto, "sfm1", "email1","someStatus");
+		takeOnProcessor.addExistingUserToGroup(groupId, groupCrypto, "sfm2", "email2","someStatus");
 
 		String projectCrypto1 = user.getUserProperty("sfm1", crypto1, SoftwareFmConstants.projectCryptoKey);
 		String projectCrypto2 = user.getUserProperty("sfm2", crypto2, SoftwareFmConstants.projectCryptoKey);
@@ -108,7 +108,7 @@ public class TakeOnProcessorTest extends GitTest {
 		Tests.assertThrows(RuntimeException.class, new Runnable() {
 			@Override
 			public void run() {
-				takeOnProcessor.addExistingUserToGroup(groupId, groupName, groupCrypto, "userDoesntExist","emailDoesntExist", "someStatus");
+				takeOnProcessor.addExistingUserToGroup(groupId, groupCrypto, "userDoesntExist", "emailDoesntExist","someStatus");
 			}
 		});
 	}
@@ -119,7 +119,7 @@ public class TakeOnProcessorTest extends GitTest {
 		Tests.assertThrows(RuntimeException.class, new Runnable() {
 			@Override
 			public void run() {
-				takeOnProcessor.addExistingUserToGroup(groupId, groupName, groupCrypto, "sfm1","email1", "someStatus");
+				takeOnProcessor.addExistingUserToGroup(groupId, groupCrypto, "sfm1", "email1","someStatus");
 			}
 		});
 	}

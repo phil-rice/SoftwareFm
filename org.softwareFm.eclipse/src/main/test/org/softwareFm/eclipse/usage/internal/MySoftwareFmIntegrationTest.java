@@ -189,7 +189,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		mySoftwareFm.start();
 		displayUntilEmailPassword().pressButton(0);
 		IDataCompositeWithOkCancel<Composite> emailAndMessageComposite = displayUntilValueComposite("Email", "");// the empty string is the label for 'message'
-		checkTextMatches((Composite) emailAndMessageComposite.getEditor().getChildren()[1], email, "When your email address is correctly entered, please click the 'OK' button below. SoftwareFM will the email you a link to your password.");
+		checkTextMatches((Composite) emailAndMessageComposite.getEditor().getChildren()[1], email, "When your email address is correctly entered, please click the 'OK' button below. SoftwareFM will then email you a link to your password.");
 		setValues(email);
 		assertTrue(getOkCancel().isOkEnabled());
 		getOkCancel().ok();

@@ -1,5 +1,7 @@
 package org.softwareFm.eclipse.mysoftwareFm;
 
+import java.util.concurrent.Callable;
+
 import org.softwareFm.client.http.api.IHttpClient;
 import org.softwareFm.common.runnable.Runnables;
 import org.softwareFm.eclipse.mysoftwareFm.internal.GroupClientOperations;
@@ -10,7 +12,7 @@ import org.softwareFm.swt.explorer.internal.UserData;
 public interface IGroupClientOperations {
 	Runnable createGroup(UserData userData, Runnable added);
 
-	Runnable inviteToGroup(UserData userData);
+	Runnable inviteToGroup(UserData userData,  final Callable<IdAndName> idAndNameGetter,  Runnable invited);
 
 	Runnable acceptInvitation(UserData userData);
 
@@ -30,7 +32,7 @@ public interface IGroupClientOperations {
 				}
 
 				@Override
-				public Runnable inviteToGroup(UserData userData) {
+				public Runnable inviteToGroup(UserData userData, final Callable<IdAndName> idAndNameGetter,  Runnable invited) {
 					return Runnables.exception();
 				}
 

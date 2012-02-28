@@ -27,13 +27,13 @@ public interface IEditableControlStrategy<T extends Control> {
 
 	public static class Utils {
 
-		public static IEditableControlStrategy<Text> text() {
-			return new TextControlStrategy(false);
+		public static IEditableControlStrategy<Text> text(int style) {
+			return new TextControlStrategy(false, style);
 
 		}
 
-		public static IEditableControlStrategy<Text> password() {
-			return new TextControlStrategy(true);
+		public static IEditableControlStrategy<Text> password(int style) {
+			return new TextControlStrategy(true, style);
 		}
 
 		public static IEditableControlStrategy<StyledText> message() {
@@ -116,14 +116,16 @@ public interface IEditableControlStrategy<T extends Control> {
 
 class TextControlStrategy implements IEditableControlStrategy<Text> {
 	private final boolean password;
+	private final int style;
 
-	public TextControlStrategy(boolean password) {
+	public TextControlStrategy(boolean password, int style) {
 		this.password = password;
+		this.style = style;
 	}
 
 	@Override
 	public Text createControl(Composite from) {
-		Text text = new Text(from, SWT.NULL);
+		Text text = new Text(from, style);
 		if (password) {
 			text.setEchoChar('#');
 		}

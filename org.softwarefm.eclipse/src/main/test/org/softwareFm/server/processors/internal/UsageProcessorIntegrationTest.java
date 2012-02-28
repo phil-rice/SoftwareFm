@@ -30,10 +30,10 @@ public class UsageProcessorIntegrationTest extends AbstractProcessorDatabaseInte
 	private File projectFile;
 
 	public void testSetup() {
-		user.setUserProperty(softwareFmId, userKey, "someProperty", "someValue");
+		user.setUserProperty(softwareFmId, userCryptoKey, "someProperty", "someValue");
 
 		assertTrue(userFile.exists());
-		Map<String, Object> actualUserDetails = Json.mapFromEncryptedFile(userFile, userKey);
+		Map<String, Object> actualUserDetails = Json.mapFromEncryptedFile(userFile, userCryptoKey);
 		assertFalse(actualUserDetails.containsKey(SoftwareFmConstants.projectCryptoKey));
 	}
 
@@ -43,7 +43,7 @@ public class UsageProcessorIntegrationTest extends AbstractProcessorDatabaseInte
 				addParam(LoginConstants.softwareFmIdKey, "someNewSoftwareFmId0").// using this so cryptoGenerator/cryptoFnwork
 				addParam(SoftwareFmConstants.digest, "digest11").//
 				execute(IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.SECONDS);
-		String projectCryptoKey = user.getUserProperty(softwareFmId, userKey, SoftwareFmConstants.projectCryptoKey);
+		String projectCryptoKey = user.getUserProperty(softwareFmId, userCryptoKey, SoftwareFmConstants.projectCryptoKey);
 		assertNotNull(projectCryptoKey);
 		Map<String, Object> actualProjectDetails = Json.mapFromEncryptedFile(projectFile, projectCryptoKey);
 		assertEquals(Maps.stringObjectMap("someGroupId1", Maps.stringObjectMap("someArtifactId1", Arrays.asList(0l))), actualProjectDetails);
@@ -67,7 +67,7 @@ public class UsageProcessorIntegrationTest extends AbstractProcessorDatabaseInte
 					addParam(SoftwareFmConstants.digest, digest).//
 					execute(IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.SECONDS);
 			Map<String, Object> expected = Maps.stringObjectMap(namesAndValues);
-			Map<String, Object> actualUserDetails = Json.mapFromEncryptedFile(userFile, userKey);
+			Map<String, Object> actualUserDetails = Json.mapFromEncryptedFile(userFile, userCryptoKey);
 			String projectCryptoKey = (String) actualUserDetails.get(SoftwareFmConstants.projectCryptoKey);
 
 			Map<String, Object> actualProjectDetails = Json.mapFromEncryptedFile(projectFile, projectCryptoKey);

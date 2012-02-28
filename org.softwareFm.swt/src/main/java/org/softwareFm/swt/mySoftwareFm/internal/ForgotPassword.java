@@ -33,7 +33,7 @@ public class ForgotPassword implements IForgotPassword {
 		String message = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, CardConstants.forgotPasswordMessage);
 		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(LoginConstants.emailKey, initialEmail, "message", message), Arrays.asList(//
 				INamesAndValuesEditor.Utils.text(cardConfig, LoginConstants.emailKey),//
-				INamesAndValuesEditor.Utils.message(cardConfig, "message")//
+				INamesAndValuesEditor.Utils.message( cardConfig, "message")//
 				),//
 				new ICardEditorCallback() {
 					@Override
@@ -85,6 +85,5 @@ public class ForgotPassword implements IForgotPassword {
 	public Control getControl() {
 		return content.getControl();
 	}
-
 
 }

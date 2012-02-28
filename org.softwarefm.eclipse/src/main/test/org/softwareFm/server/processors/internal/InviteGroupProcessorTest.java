@@ -6,6 +6,7 @@ package org.softwareFm.server.processors.internal;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -24,47 +25,94 @@ import org.softwareFm.common.maps.Maps;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.server.processors.AbstractProcessorDatabaseIntegrationTests;
 
-public class TakeOnGroupProcessorTest extends AbstractProcessorDatabaseIntegrationTests {
+public class InviteGroupProcessorTest extends AbstractProcessorDatabaseIntegrationTests {
 
 	private final String fromEmail = "from@some.email";
-
 	private String fromSoftwareFmId;
 
 	@SuppressWarnings("unchecked")
-	public void testTakeOnGroup() throws Exception {
-		getHttpClient().post(GroupConstants.takeOnCommandPrefix).//
-				addParam(GroupConstants.groupNameKey, "someNewGroupName").//
+	public void testTakeOnGroupWhenEverythingCorrect() throws Exception {
+		groups.setGroupProperty(groupId, groupCryptoKey, GroupConstants.groupNameKey, "someGroupName");
+		membershipForServer.addMembership(fromSoftwareFmId, userCryptoKey, groupId, groupCryptoKey, GroupConstants.adminStatus);
+		groups.addUser(groupId, groupCryptoKey, Maps.stringObjectMap(//
+				LoginConstants.softwareFmIdKey, fromSoftwareFmId, //
+				GroupConstants.membershipStatusKey, GroupConstants.adminStatus,//
+				SoftwareFmConstants.projectCryptoKey, processCallParameters.user.getUserProperty(fromSoftwareFmId, userCryptoKey, SoftwareFmConstants.projectCryptoKey)));
+		getHttpClient().post(GroupConstants.inviteCommandPrefix).//
+				addParam(GroupConstants.groupIdKey, groupId).//
 				addParam(GroupConstants.takeOnSubjectKey, "someSubject").//
 				addParam(LoginConstants.softwareFmIdKey, fromSoftwareFmId).//
 				addParam(GroupConstants.takeOnFromKey, fromEmail).//
 				addParam(GroupConstants.takeOnEmailPattern, "emailPattern: " + GroupConstants.emailMarker + "/" + GroupConstants.groupNameMarker).//
 				addParam(GroupConstants.takeOnEmailListKey, "email1@a.b,email2@a.b").//
 				execute(IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
-		
+
 		List<Map<String, Object>> actual = Iterables.list(groups.users(groupId, groupCryptoKey));
 		List<Map<String, Object>> expected = Arrays.asList(//
-				Maps.stringObjectMap(LoginConstants.softwareFmIdKey, fromSoftwareFmId, SoftwareFmConstants.projectCryptoKey, projectCryptoKey1, LoginConstants.emailKey, fromEmail, GroupConstants.membershipStatusKey, GroupConstants.adminStatus),//
+				Maps.stringObjectMap(LoginConstants.softwareFmIdKey, fromSoftwareFmId, SoftwareFmConstants.projectCryptoKey, projectCryptoKey1, GroupConstants.membershipStatusKey, GroupConstants.adminStatus),//
 				Maps.stringObjectMap(LoginConstants.softwareFmIdKey, "someNewSoftwareFmId1", SoftwareFmConstants.projectCryptoKey, projectCryptoKey2, LoginConstants.emailKey, "email1@a.b", GroupConstants.membershipStatusKey, GroupConstants.invitedStatus),//
 				Maps.stringObjectMap(LoginConstants.softwareFmIdKey, "someNewSoftwareFmId2", SoftwareFmConstants.projectCryptoKey, projectCryptoKey3, LoginConstants.emailKey, "email2@a.b", GroupConstants.membershipStatusKey, GroupConstants.invitedStatus));
 		assertEquals(expected, actual);
-		assertEquals("someNewGroupName", groups.getGroupProperty(groupId, groupCryptoKey, GroupConstants.groupNameKey));
 
 		assertEquals(Lists.times(2, fromEmail), mailerMock.froms);
 		assertEquals(Arrays.asList("email1@a.b", "email2@a.b"), mailerMock.tos);
 		assertEquals(Lists.times(2, "someSubject"), mailerMock.subjects);
-		assertEquals(Arrays.asList("emailPattern: email1@a.b/someNewGroupName", "emailPattern: email2@a.b/someNewGroupName"), mailerMock.messages);
+		assertEquals(Arrays.asList("emailPattern: email1@a.b/someGroupName", "emailPattern: email2@a.b/someGroupName"), mailerMock.messages);
+	}
+
+	public void testExceptionIfNotAdmin() throws Exception {
+		groups.setGroupProperty(groupId, groupCryptoKey, GroupConstants.groupNameKey, "someGroupName");
+		membershipForServer.addMembership(fromSoftwareFmId, userCryptoKey, groupId, groupCryptoKey, "notAdmin");
+		groups.addUser(groupId, groupCryptoKey, Maps.stringObjectMap(//
+				LoginConstants.softwareFmIdKey, fromSoftwareFmId, //
+				GroupConstants.membershipStatusKey, "notAdmin",//
+				SoftwareFmConstants.projectCryptoKey, processCallParameters.user.getUserProperty(fromSoftwareFmId, userCryptoKey, SoftwareFmConstants.projectCryptoKey)));
+		getHttpClient().post(GroupConstants.inviteCommandPrefix).//
+				addParam(GroupConstants.groupIdKey, groupId).//
+				addParam(GroupConstants.takeOnSubjectKey, "someSubject").//
+				addParam(LoginConstants.softwareFmIdKey, fromSoftwareFmId).//
+				addParam(GroupConstants.takeOnFromKey, fromEmail).//
+				addParam(GroupConstants.takeOnEmailPattern, "emailPattern: " + GroupConstants.emailMarker + "/" + GroupConstants.groupNameMarker).//
+				addParam(GroupConstants.takeOnEmailListKey, "email1@a.b,email2@a.b").//
+				execute(IResponseCallback.Utils.checkCallback(CommonConstants.serverErrorCode, "class java.lang.IllegalArgumentException/Cannot invite other people to group someGroupName as you are not admin. You are status notAdmin")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+
+		List<Map<String, Object>> actual = Iterables.list(groups.users(groupId, groupCryptoKey));
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> expected = Arrays.asList(//
+				Maps.stringObjectMap(LoginConstants.softwareFmIdKey, fromSoftwareFmId, SoftwareFmConstants.projectCryptoKey, projectCryptoKey1, GroupConstants.membershipStatusKey, "notAdmin"));
+		assertEquals(expected, actual);
+
+		assertEquals(0, mailerMock.froms.size());
+	}
+
+	public void testExceptionIfNotMemberAtAll() throws Exception {
+		groups.setGroupProperty(groupId, groupCryptoKey, GroupConstants.groupNameKey, "someGroupName");
+		getHttpClient().post(GroupConstants.inviteCommandPrefix).//
+				addParam(GroupConstants.groupIdKey, groupId).//
+				addParam(GroupConstants.takeOnSubjectKey, "someSubject").//
+				addParam(LoginConstants.softwareFmIdKey, fromSoftwareFmId).//
+				addParam(GroupConstants.takeOnFromKey, fromEmail).//
+				addParam(GroupConstants.takeOnEmailPattern, "emailPattern: " + GroupConstants.emailMarker + "/" + GroupConstants.groupNameMarker).//
+				addParam(GroupConstants.takeOnEmailListKey, "email1@a.b,email2@a.b").//
+				execute(IResponseCallback.Utils.checkCallback(CommonConstants.serverErrorCode, "class java.lang.IllegalArgumentException/User someNewSoftwareFmId0 is not a member of group someGroupId")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+
+		List<Map<String, Object>> actual = Iterables.list(groups.users(groupId, groupCryptoKey));
+		List<Map<String, Object>> expected = Collections.emptyList();
+		assertEquals(expected, actual);
+
+		assertEquals(0, mailerMock.froms.size());
 	}
 
 	public void testThrowsExceptionsAndAddNoUsersIfPropertiesNotFullySet() throws Exception {
-		checkCannotTakeOn(null, "someSubject", "someFrom", "emailPattern: $email$", "email1@a.b,email2@a.b,email3@a.b");
-		checkCannotTakeOn("someNewGroupName", null, "someFrom", "emailPattern: $email$", "email1@a.b,email2@a.b,email3@a.b");
-		checkCannotTakeOn("someNewGroupName", "someSubject", null, "emailPattern: $email$", "email1@a.b,email2@a.b,email3@a.b");
-		checkCannotTakeOn("someNewGroupName", "someSubject", "someFrom", null, "email1@a.b,email2@a.b,email3@a.b");
-		checkCannotTakeOn("someNewGroupName", "someSubject", "someFrom", "emailPattern: $email$", null);
-		checkCannotTakeOn("someNewGroupName", "someSubject", "someFrom", "emailPattern: $email$", "email1");
-		checkCannotTakeOn("someNewGroupName", "someSubject", "someFrom", "emailPattern: $email$", "email1,email2@a.b");
+		checkCannotInviteOn(null, "sfmId", "someSubject", "someFrom", "emailPattern: $email$", "email1@a.b,email2@a.b,email3@a.b");
+		checkCannotInviteOn("someNewGroupName", null, "someSubject", "someFrom", "emailPattern: $email$", "email1@a.b,email2@a.b,email3@a.b");
+		checkCannotInviteOn("someNewGroupName", "sfmId", null, "someFrom", "emailPattern: $email$", "email1@a.b,email2@a.b,email3@a.b");
+		checkCannotInviteOn("someNewGroupName", "sfmId", "someSubject", null, "emailPattern: $email$", "email1@a.b,email2@a.b,email3@a.b");
+		checkCannotInviteOn("someNewGroupName", "sfmId", "someSubject", "someFrom", null, "email1@a.b,email2@a.b,email3@a.b");
+		checkCannotInviteOn("someNewGroupName", "sfmId", "someSubject", "someFrom", "emailPattern: $email$", null);
+		checkCannotInviteOn("someNewGroupName", "sfmId", "someSubject", "someFrom", "emailPattern: $email$", "email1");
+		checkCannotInviteOn("someNewGroupName", "sfmId", "someSubject", "someFrom", "emailPattern: $email$", "email1,email2@a.b");
 
-		checkCannotTakeOn("someNewGroupName", "someSubject", null, "emailPattern: $email$", "email1@a.b,email1@a.b,email3@a.b");// duplicate
 	}
 
 	public void testThrowsExceptionIfFromEmailNotAnEmail() throws InterruptedException, ExecutionException, TimeoutException {
@@ -78,7 +126,7 @@ public class TakeOnGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 				execute(IResponseCallback.Utils.checkCallback(CommonConstants.serverErrorCode, "class java.lang.IllegalArgumentException/Invalid email wrongEmail")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 	}
 
-	public void testThrowsExceptionIfOneOfTheEmailListIsNotAnEmail() throws InterruptedException, ExecutionException, TimeoutException {
+	public void testThrowsExceptionIfOneOfTheEmailListIsNotAnEmail() throws Exception {
 		getHttpClient().post(GroupConstants.takeOnCommandPrefix).//
 				addParam(GroupConstants.groupNameKey, "someNewGroupName").//
 				addParam(GroupConstants.takeOnSubjectKey, "someSubject").//
@@ -89,7 +137,7 @@ public class TakeOnGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 				execute(IResponseCallback.Utils.checkCallback(CommonConstants.serverErrorCode, "class java.lang.IllegalArgumentException/Invalid email wrongEmail")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 	}
 
-	public void testThrowsExceptionIfEmailAndSoftwareFmNotForSameUser() throws InterruptedException, ExecutionException, TimeoutException {
+	public void testThrowsExceptionIfEmailAndSoftwareFmNotForSameUser() throws Exception {
 		getHttpClient().post(GroupConstants.takeOnCommandPrefix).//
 				addParam(GroupConstants.groupNameKey, "someNewGroupName").//
 				addParam(GroupConstants.takeOnSubjectKey, "someSubject").//
@@ -100,9 +148,10 @@ public class TakeOnGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 				execute(IResponseCallback.Utils.checkCallback(CommonConstants.serverErrorCode, "class java.lang.IllegalArgumentException/Email / SoftwareFm mismatch. Email wrongEmail@a.b Expected null Actual someNewSoftwareFmId0")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 	}
 
-	protected void checkCannotTakeOn(String groupName, String subject, String from, String emailPattern, String emailList) throws InterruptedException, ExecutionException, TimeoutException {
+	protected void checkCannotInviteOn(String groupId, String softwareFmIdKey, String subject, String from, String emailPattern, String emailList) throws Exception {
 		IRequestBuilder builder = getHttpClient().post(GroupConstants.takeOnCommandPrefix);
-		add(builder, GroupConstants.groupNameKey, groupName);//
+		add(builder, GroupConstants.groupIdKey, groupId);//
+		add(builder, LoginConstants.softwareFmIdKey, softwareFmIdKey);//
 		add(builder, GroupConstants.takeOnSubjectKey, subject);//
 		add(builder, GroupConstants.takeOnFromKey, from);//
 		add(builder, GroupConstants.takeOnEmailPattern, emailPattern);//
@@ -112,7 +161,7 @@ public class TakeOnGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 		memoryCallback.assertCalledOnce();
 		assertEquals(500, memoryCallback.response.statusCode());
 		assertTrue(memoryCallback.response.asString(), memoryCallback.response.asString().startsWith("class java.lang.IllegalAr"));
-		File groupDirectory = new File(remoteRoot, GroupConstants.groupsGenerator(SoftwareFmConstants.urlPrefix).findUrlFor(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId)));
+		File groupDirectory = new File(remoteRoot, GroupConstants.groupsGenerator(SoftwareFmConstants.urlPrefix).findUrlFor(Maps.stringObjectMap(GroupConstants.groupIdKey, this.groupId)));
 		assertFalse(groupDirectory.exists());
 		assertEquals(0, mailerMock.froms.size());
 	}

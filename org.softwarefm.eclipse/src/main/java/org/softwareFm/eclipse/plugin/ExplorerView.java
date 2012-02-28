@@ -79,6 +79,7 @@ public class ExplorerView extends ViewPart {
 				new RequestGroupReportGeneration(client, IResponseCallback.Utils.sysoutStatusCallback(), gitLocal),//
 				GroupConstants.usageReportPeriod);
 
+		LocalGroupsReader groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
 		IShowMyData showMyDetails = MyDetails.showMyDetails(service, cardConfig, masterDetailSocial, userUrlGenerator, gitLocal, timeGetter);
 		IGroupClientOperations groupOperations = IGroupClientOperations.Utils.groupOperations(masterDetailSocial, cardConfig, client);
 		IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, timeGetter, reportGenerator, groupOperations);
@@ -86,7 +87,6 @@ public class ExplorerView extends ViewPart {
 		IUserReader userReader = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
 		IUserDataManager userDataManager = activator.getUserDataManager();
 		IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, userReader);
-		LocalGroupsReader groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
 		ICommentWriter commentsWriter = ICommentWriter.Utils.commentWriter(client, CommonConstants.clientTimeOut, gitLocal);
 		ICommentsReader commentsReader= new CommentsReaderLocal(gitLocal, userReader, userMembershipReader, groupsReader);
 		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, userReader, userMembershipReader, groupsReader, cardConfig, getRootUrls(), playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople, userDataManager, commentsWriter, commentsReader, Callables.time());

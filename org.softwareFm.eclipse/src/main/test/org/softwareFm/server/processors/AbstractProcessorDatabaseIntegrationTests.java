@@ -35,6 +35,7 @@ import org.softwareFm.server.comments.IComments;
 import org.softwareFm.server.processors.internal.MailerMock;
 import org.softwareFm.softwareFmServer.GroupsForServer;
 import org.softwareFm.softwareFmServer.ITakeOnProcessor;
+import org.softwareFm.softwareFmServer.InviteGroupProcessor;
 import org.softwareFm.softwareFmServer.ProjectForServer;
 import org.softwareFm.softwareFmServer.TakeOnGroupProcessor;
 import org.softwareFm.softwareFmServer.TakeOnProcessor;
@@ -46,7 +47,7 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 	private ICrowdSourcedServer server;
 	protected JdbcTemplate template;
 	protected MailerMock mailerMock;
-	protected String userKey;
+	protected String userCryptoKey;
 	protected IFunction1<Map<String, Object>, String> userCryptoFn;
 	protected Callable<String> userCryptoGenerator;
 	protected int thisDay;
@@ -67,17 +68,19 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 	protected IUser user;
 	protected Callable<String> softwareFmIdGenerator;
 	protected ProcessCallParameters processCallParameters;
+	private BasicDataSource dataSource;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		BasicDataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
+		dataSource = AbstractLoginDataAccessor.defaultDataSource();
 		mailerMock = new MailerMock();
-		userKey = Crypto.makeKey();
+		userCryptoKey = Crypto.makeKey();
 		userKey2 = Crypto.makeKey();
 		userKey3 = Crypto.makeKey();
 		userCryptoFn = new IFunction1<Map<String, Object>, String>() {
-			private final Map<String, Object> map = Maps.makeMap("someNewSoftwareFmId0", userKey, "someNewSoftwareFmId1", userKey2, "someNewSoftwareFmId2", userKey3);
+			private final Map<String, Object> map = Maps.makeMap("someNewSoftwareFmId0", userCryptoKey, "someNewSoftwareFmId1", userKey2, "someNewSoftwareFmId2", userKey3);
+
 			@Override
 			public String apply(Map<String, Object> from) throws Exception {
 				String softwareFmId = (String) from.get(LoginConstants.softwareFmIdKey);
@@ -86,7 +89,7 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 				return (String) map.get(softwareFmId);
 			}
 		};
-		userCryptoGenerator = Callables.valueFromList(userKey, userKey2, userKey3);
+		userCryptoGenerator = Callables.valueFromList(userCryptoKey, userKey2, userKey3);
 		softwareFmIdGenerator = Callables.patternWithCount("someNewSoftwareFmId{0}");
 		projectCryptoKey1 = Crypto.makeKey();
 		projectCryptoKey2 = Crypto.makeKey();
@@ -143,7 +146,8 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 				IProcessCall[] result = new IProcessCall[] { //
 				new CommentProcessor(from.user, membershipForServer, groups, comments, from.userCryptoFn),//
 						new UsageProcessor(remoteOperations, getJarToGroupArtifactAndVersionProcessor(jarUrlGenerator), project, projectTimeGetter), //
-						new TakeOnGroupProcessor(takeOnProcessor, from.signUpChecker, groupCryptoGenerator, emailToSfmId, from.saltGenerator, from.softwareFmIdGenerator, mailerMock) };
+						new TakeOnGroupProcessor(takeOnProcessor, from.signUpChecker, groupCryptoGenerator, emailToSfmId, from.saltGenerator, from.softwareFmIdGenerator, mailerMock),//
+						new InviteGroupProcessor(takeOnProcessor, from.signUpChecker, userCryptoGenerator, emailToSfmId, from.saltGenerator, softwareFmIdGenerator, mailerMock, userCryptoFn, membershipForServer, groups) };
 				return result;
 			}
 
@@ -177,6 +181,7 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		server.shutdown();
+		dataSource.close();
 	}
 
 	protected String getPasswordResetKeyFor(String email) {

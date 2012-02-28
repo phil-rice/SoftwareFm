@@ -31,8 +31,11 @@ public interface INamesAndValuesEditor extends IValueEditor, ICardData {
 			return result;
 		}
 
+		public static KeyAndEditStrategy readOnlyText(CardConfig cardConfig, String key) {
+			return new KeyAndEditStrategy(key, IEditableControlStrategy.Utils.text(SWT.READ_ONLY));
+		}
 		public static KeyAndEditStrategy text(CardConfig cardConfig, String key) {
-			return new KeyAndEditStrategy(key, IEditableControlStrategy.Utils.text());
+			return new KeyAndEditStrategy(key, IEditableControlStrategy.Utils.text(SWT.NULL));
 		}
 
 		public static KeyAndEditStrategy styledText(CardConfig cardConfig, String key) {
@@ -44,7 +47,7 @@ public interface INamesAndValuesEditor extends IValueEditor, ICardData {
 		}
 
 		public static KeyAndEditStrategy password(CardConfig cardConfig, String key) {
-			return new KeyAndEditStrategy(key, IEditableControlStrategy.Utils.password());
+			return new KeyAndEditStrategy(key, IEditableControlStrategy.Utils.password(SWT.NULL));
 		}
 
 	}

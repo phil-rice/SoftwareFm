@@ -19,74 +19,37 @@ import org.softwareFm.common.strings.Strings;
 import org.softwareFm.server.processors.IMailer;
 import org.softwareFm.server.processors.IProcessResult;
 import org.softwareFm.server.processors.ISignUpChecker;
-import org.softwareFm.server.processors.SignUpResult;
-import org.softwareFm.server.processors.internal.AbstractCommandProcessor;
 
-public class TakeOnGroupProcessor extends AbstractCommandProcessor {
+public class TakeOnGroupProcessor extends AbstractAddToGroupProcessor {
 
-	private final ITakeOnProcessor takeOnProcessor;
 	private final Callable<String> cryptoGenerator;
-	private final IFunction1<String, String> emailToSfmId;
-	private final ISignUpChecker signUpChecker;
-	private final Callable<String> saltGenerator;
-	private final Callable<String> softwareFmIdGenerator;
-	private final IMailer mailer;
 
 	public TakeOnGroupProcessor(ITakeOnProcessor takeOnProcessor, ISignUpChecker signUpChecker, Callable<String> cryptoGenerator, IFunction1<String, String> emailToSfmId, Callable<String> saltGenerator, Callable<String> softwareFmIdGenerator, IMailer mailer) {
-		super(null, CommonConstants.POST, GroupConstants.takeOnCommandPrefix);
-		this.takeOnProcessor = takeOnProcessor;
-		this.signUpChecker = signUpChecker;
+		super(null, CommonConstants.POST, GroupConstants.takeOnCommandPrefix, takeOnProcessor, signUpChecker, emailToSfmId, saltGenerator, softwareFmIdGenerator, mailer);
 		this.cryptoGenerator = cryptoGenerator;
-		this.emailToSfmId = emailToSfmId;
-		this.saltGenerator = saltGenerator;
-		this.softwareFmIdGenerator = softwareFmIdGenerator;
-		this.mailer = mailer;
 	}
 
 	@Override
 	protected IProcessResult execute(String actualUrl, Map<String, Object> parameters) {
 		checkForParameter(parameters, LoginConstants.softwareFmIdKey, GroupConstants.groupNameKey, GroupConstants.takeOnEmailPattern, GroupConstants.takeOnFromKey, GroupConstants.takeOnSubjectKey, GroupConstants.takeOnEmailListKey);
-		String softwareFmId = (String) parameters.get(LoginConstants.softwareFmIdKey);
 		String groupName = (String) parameters.get(GroupConstants.groupNameKey);
-		String emailPattern = (String) parameters.get(GroupConstants.takeOnEmailPattern);
-		String memberListRaw = (String) parameters.get(GroupConstants.takeOnEmailListKey);
-		String rawSubject = (String) parameters.get(GroupConstants.takeOnSubjectKey);
+		String softwareFmId = (String) parameters.get(LoginConstants.softwareFmIdKey);
 		String from = (String) parameters.get(GroupConstants.takeOnFromKey);// this dude is now the admin
 
 		String groupCrypto = Callables.call(cryptoGenerator);
-		List<String> memberList = Strings.splitIgnoreBlanks(memberListRaw, ",");
 		if (!Strings.isEmail(from))
 			throw new IllegalArgumentException(MessageFormat.format(GroupConstants.invalidEmail, from));
 		String expectedSfmId = Functions.call(emailToSfmId, from);
 		if (!softwareFmId.equals(expectedSfmId))
 			throw new IllegalArgumentException(MessageFormat.format(GroupConstants.emailSfmMismatch, from, expectedSfmId, softwareFmId));
-		for (String email : memberList)
-			if (!Strings.isEmail(email))
-				throw new IllegalArgumentException(MessageFormat.format(GroupConstants.invalidEmail, from));
+		
 		String groupId = takeOnProcessor.createGroup(groupName, groupCrypto);
-		takeOnProcessor.addExistingUserToGroup(groupId, groupName, groupCrypto, softwareFmId, from, GroupConstants.adminStatus);
-		for (String email : memberList) {
-			String newSoftwareFmId = Functions.call(emailToSfmId, email);
-			if (newSoftwareFmId == null) {
-				newSoftwareFmId = Callables.call(softwareFmIdGenerator);
-				String moniker = Strings.split(email, '@').pre;
-				String salt = Callables.call(saltGenerator);
-				SignUpResult signUpResult = signUpChecker.signUp(email, moniker, salt, "not set", newSoftwareFmId);
-				if (signUpResult.errorMessage != null)
-					throw new RuntimeException(signUpResult.errorMessage);
-			}
-			takeOnProcessor.addExistingUserToGroup(groupId, groupName, groupCrypto, newSoftwareFmId, email, GroupConstants.invitedStatus);
+		takeOnProcessor.addExistingUserToGroup(groupId, groupCrypto, softwareFmId, from, GroupConstants.adminStatus);
 
-		}
-		for (String email : memberList) {
-			String subject = replaceMarkers(rawSubject, groupName, email);
-			String message = replaceMarkers(emailPattern, groupName, email);
-			mailer.mail(from, email, subject, message);
-		}
+		List<String> memberList = getEmailList(parameters);
+		addUsersToGroup(groupId, groupCrypto, memberList);
+
+		sendInvitationEmails(parameters, groupName, memberList);
 		return IProcessResult.Utils.processString("");
-	}
-
-	protected String replaceMarkers(String rawMessage, String groupName, String email) {
-		return rawMessage.replace(GroupConstants.emailMarker, email).replace(GroupConstants.groupNameMarker, groupName);
 	}
 }

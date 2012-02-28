@@ -13,11 +13,12 @@ public class GroupConstants {
 	public static final String groupIdKey = "groupId";
 	public static final String groupCryptoKey = "groupCrypto";
 	public static final String groupNameKey = "groupName";
-	public static final Object membershipStatusKey = "membershipStatus";
+	public static final String membershipStatusKey = "membershipStatus";
 	public static final String membershipCryptoKey = "membershipCrypto";
 	public static final String monthKey = "month";
 	public static final String usageReportDirectory = "reports";
 	public static final String takeOnCommandPrefix = "command/takeOnGroup";
+	public static final String inviteCommandPrefix = "command/inviteGroup";
 	public static final String generateGroupReportPrefix = "command/generateGroupReport";
 
 	public static final String takeOnEmailListKey = "emailList";
@@ -42,7 +43,9 @@ public class GroupConstants {
 	public static final String emailSfmMismatch = "Email / SoftwareFm mismatch. Email {0} Expected {1} Actual {2}";
 	public static final String groupAlreadyExists = "Group already exists: {0}";
 	public static final String takeOnEmailDefault = "takeOn.email.default";
-
+	public static final String notAMemberOfGroup = "User {0} is not a member of group {1}";
+	public static final String groupNameIsNull = "Group {0} has no name";
+	public static final String cannotInviteToGroupUnlessAdmin = "Cannot invite other people to group {0} as you are not admin. You are status {1}";
 
 	public static IUrlGenerator groupsGenerator(String prefix) {
 		return IUrlGenerator.Utils.generator(prefix + "/groups/{0}/{1}/{2}", groupIdKey);

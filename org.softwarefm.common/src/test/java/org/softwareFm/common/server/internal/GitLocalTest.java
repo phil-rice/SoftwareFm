@@ -100,6 +100,7 @@ public class GitLocalTest extends GitTest {
 		assertEquals(Arrays.asList(v11, v12, v21, v22), gitLocal.getFileAsListOfMaps(ac));
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testGetFileAsMapsWhenOneLineBadlyEncrypted() {
 		String crypto = Crypto.makeKey();
 		String badCrypto = Crypto.makeKey();

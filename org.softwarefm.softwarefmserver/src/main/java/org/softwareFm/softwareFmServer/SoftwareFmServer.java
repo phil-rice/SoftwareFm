@@ -68,7 +68,8 @@ public class SoftwareFmServer {
 				return new IProcessCall[] { makeUsageProcessor(processCallParameters.dataSource, processCallParameters.gitOperations, processCallParameters.user, userUrlGenerator),//
 						new CommentProcessor(processCallParameters.user, userMembership, groups, comments, processCallParameters.userCryptoFn),//
 						new GenerateGroupUsageProcessor(processCallParameters.gitOperations, generator, groups),//
-						new TakeOnGroupProcessor(takeOnProcessor, processCallParameters.signUpChecker, Callables.makeCryptoKey(), emailToSoftwareFmId, processCallParameters.saltGenerator, processCallParameters.softwareFmIdGenerator, processCallParameters.mailer) };
+						new TakeOnGroupProcessor(takeOnProcessor, processCallParameters.signUpChecker, Callables.makeCryptoKey(), emailToSoftwareFmId, processCallParameters.saltGenerator, processCallParameters.softwareFmIdGenerator, processCallParameters.mailer),//
+						new InviteGroupProcessor(takeOnProcessor, processCallParameters.signUpChecker, Callables.makeCryptoKey(), emailToSoftwareFmId, processCallParameters.saltGenerator, processCallParameters.softwareFmIdGenerator,processCallParameters. mailer, processCallParameters.userCryptoFn, userMembership, groups) };
 			}
 		};
 	}

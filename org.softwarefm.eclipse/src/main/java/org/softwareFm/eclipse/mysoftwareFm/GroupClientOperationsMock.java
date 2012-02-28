@@ -1,5 +1,7 @@
 package org.softwareFm.eclipse.mysoftwareFm;
 
+import java.util.concurrent.Callable;
+
 import junit.framework.Assert;
 
 import org.softwareFm.common.runnable.Runnables;
@@ -10,9 +12,10 @@ public class GroupClientOperationsMock implements IGroupClientOperations {
 
 	private UserData userData;
 	public CountRunnable create = Runnables.count();
-	public CountRunnable invite= Runnables.count();
-	public CountRunnable accept= Runnables.count();
-	public CountRunnable delete= Runnables.count();
+	public CountRunnable invite = Runnables.count();
+	public CountRunnable accept = Runnables.count();
+	public CountRunnable delete = Runnables.count();
+	public Callable<IdAndName> idAndNameGetter;
 
 	@Override
 	public Runnable createGroup(UserData userData, Runnable added) {
@@ -28,7 +31,8 @@ public class GroupClientOperationsMock implements IGroupClientOperations {
 	}
 
 	@Override
-	public Runnable inviteToGroup(UserData userData) {
+	public Runnable inviteToGroup(UserData userData, Callable<IdAndName> idAndNameGetter, Runnable invited) {
+		this.idAndNameGetter = idAndNameGetter;
 		checkUserData(userData);
 		return invite;
 	}

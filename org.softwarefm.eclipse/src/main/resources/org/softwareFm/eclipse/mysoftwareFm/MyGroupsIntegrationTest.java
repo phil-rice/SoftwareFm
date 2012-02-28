@@ -42,8 +42,8 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 
 	protected void checkMainTable(Table table) {
 		checkTableColumns(table, "Group Name", "Members", "My Status");
-		checkTable(table, 0, "groupId1", "groupId1Name", "1", "someStatus1");
-		checkTable(table, 1, "groupId2", "groupId2Name", "1", "someStatus2");
+		checkTable(table, 0, new IdAndName("groupId1", "groupId1Name"), "groupId1Name", "1", "someStatus1");
+		checkTable(table, 1, new IdAndName("groupId2", "groupId2Name"), "groupId2Name", "1", "someStatus2");
 		assertEquals(2, table.getItemCount());
 	}
 
@@ -78,7 +78,7 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		Table table = getMyGroupsTable(myGroupsComposite);
 		checkTableColumns(table, "Group Name", "Members", "My Status");
-		checkTable(table, 0, "groupId1", "groupId1Name", "3", "someStatus1");
+		checkTable(table, 0, new IdAndName("groupId1", "groupId1Name"),  "groupId1Name", "3", "someStatus1");
 		assertEquals(1, table.getItemCount());
 
 		table.select(0);
@@ -86,7 +86,7 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		dispatchUntilQueueEmpty();
 
 		checkTableColumns(table, "Group Name", "Members", "My Status");
-		checkTable(table, 0, "groupId1", "groupId1Name", "3", "someStatus1");
+		checkTable(table, 0, new IdAndName("groupId1", "groupId1Name"), "groupId1Name", "3", "someStatus1");
 		assertEquals(1, table.getItemCount());
 
 		StackLayout stackLayout = (StackLayout) Swts.<Composite> getDescendant(myGroupsComposite.getEditor(), 1).getLayout();
@@ -117,8 +117,8 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		Table table = getMyGroupsTable(myGroupsComposite);
 		checkTableColumns(table, "Group Name", "Members", "My Status");
 		checkTable(table, 0, null, CommonMessages.corrupted, CommonMessages.record, "");
-		checkTable(table, 1, "groupId1", "groupId1Name", "1", "someStatus1");
-		checkTable(table, 2, "groupId2", "groupId2Name", "1", "someStatus2");
+		checkTable(table, 1, new IdAndName("groupId1", "groupId1Name"), "groupId1Name", "1", "someStatus1");
+		checkTable(table, 2, new IdAndName("groupId2", "groupId2Name"), "groupId2Name", "1", "someStatus2");
 		assertEquals(3, table.getItemCount());
 	}
 

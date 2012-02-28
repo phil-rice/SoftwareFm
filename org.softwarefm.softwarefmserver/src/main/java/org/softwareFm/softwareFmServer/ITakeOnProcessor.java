@@ -11,6 +11,6 @@ public interface ITakeOnProcessor {
 	
 	/** Adds the user to the group, and updates the group with the users data. 
 	 * @param status TODO*/
-	void addExistingUserToGroup(String groupId, String groupName, String groupCryptoKey, String softwareFmId,  String email, String status);
+	void addExistingUserToGroup(String groupId, String groupCryptoKey, String softwareFmId, String email,  String status);
 
 }

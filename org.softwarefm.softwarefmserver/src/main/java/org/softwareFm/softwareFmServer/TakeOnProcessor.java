@@ -49,8 +49,10 @@ public class TakeOnProcessor implements ITakeOnProcessor {
 	}
 
 	@Override
-	public void addExistingUserToGroup(String groupId, String groupName, String groupCryptoKey, String softwareFmId, String email, String status) {
+	public void addExistingUserToGroup(String groupId, String groupCryptoKey, String softwareFmId, String email, String status) {
 		String userCrypto = Functions.call(userCryptoFn, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId, LoginConstants.emailKey, email));
+		if (userCrypto == null)
+			throw new IllegalStateException(MessageFormat.format("Cannot add existing user {0} to group {1} as cannot determine usercrypto", softwareFmId, groupId));
 		String usersProjectCryptoKey = user.getUserProperty(softwareFmId, userCrypto, SoftwareFmConstants.projectCryptoKey);
 		Map<String, Object> initialData = Maps.stringObjectMap(LoginConstants.emailKey, email, LoginConstants.softwareFmIdKey, softwareFmId, SoftwareFmConstants.projectCryptoKey, usersProjectCryptoKey, GroupConstants.membershipStatusKey, status);
 		groups.addUser(groupId, groupCryptoKey, initialData);

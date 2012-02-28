@@ -44,8 +44,8 @@ public class GenerateGroupUsageProcessorTest extends GitTest {
 	public void test() {
 		String groupId = takeOnProcessor.createGroup("someGroupName", groupCryptoKey);
 		assertEquals(this.groupId, groupId);// testing setup
-		takeOnProcessor.addExistingUserToGroup(groupId, "someGroupName", groupCryptoKey,sfmId1,"email1",  "someStatus");
-		takeOnProcessor.addExistingUserToGroup(groupId, "someGroupName", groupCryptoKey,sfmId2, "email2",  "someStatus");
+		takeOnProcessor.addExistingUserToGroup(groupId, groupCryptoKey, sfmId1,"email1","someStatus");
+		takeOnProcessor.addExistingUserToGroup(groupId, groupCryptoKey, sfmId2,"email2", "someStatus");
 
 		project.addProjectDetails(sfmId1, "gid1", "aid1", "month1", 1);
 		project.addProjectDetails(sfmId1, "gid1", "aid1", "month1", 2);

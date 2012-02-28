@@ -4,6 +4,7 @@
 
 package org.softwareFm.eclipse.user;
 
+import java.text.MessageFormat;
 import java.util.Map;
 
 import org.softwareFm.common.IGroupsReader;
@@ -27,7 +28,13 @@ public interface IUserMembershipReader {
 			throw new IllegalArgumentException("Could not find group with id: " + groupId + " in " + groups);
 		}
 
-		
+		public static String findGroupCrytpo(IUserMembershipReader reader, String softwareFmId, String userCrypto, String groupId) {
+			for (Map<String, Object> map : reader.walkGroupsFor(softwareFmId, userCrypto))
+				if (groupId.equals(map.get(GroupConstants.groupIdKey)))
+					return (String) map.get(GroupConstants.groupCryptoKey);
+			throw new IllegalArgumentException(MessageFormat.format(GroupConstants.notAMemberOfGroup, softwareFmId, groupId));
+		}
+
 	}
 
 }

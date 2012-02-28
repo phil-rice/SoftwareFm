@@ -36,6 +36,8 @@ public class ServerUser implements IUser {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getUserProperty(String softwareFmId, String userCrypto, String property) {
+		if (userCrypto == null)
+			throw new NullPointerException();
 		String url = userUrlGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
 		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, CommonConstants.dataFileName, userCrypto);
 		Map<String, Object> data = gitOperations.getFile(fileDescription);
