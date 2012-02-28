@@ -6,10 +6,15 @@ package org.softwareFm.swt.editors;
 
 
 public class KeyAndEditStrategy {
+	public final boolean displayLabel;
 	public final String key;
 	public final IEditableControlStrategy<?> editableControlStrategy;
 
 	public KeyAndEditStrategy(String key, IEditableControlStrategy<?> editableControlStrategy) {
+		this(true, key, editableControlStrategy);
+	}
+	public KeyAndEditStrategy(boolean displayLabel, String key, IEditableControlStrategy<?> editableControlStrategy) {
+		this.displayLabel = displayLabel;
 		this.key = key;
 		this.editableControlStrategy = editableControlStrategy;
 	}

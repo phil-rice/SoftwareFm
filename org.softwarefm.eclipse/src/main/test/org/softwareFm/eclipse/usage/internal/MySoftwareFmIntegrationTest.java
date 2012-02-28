@@ -177,7 +177,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		Control firstChild = softwareFmComposite.getChildren()[0];
 		CompositeWithCardMargin compositeWithCardMargin = (CompositeWithCardMargin) firstChild;
 		Swts.layoutDump(compositeWithCardMargin);
-		StyledText text = Swts.<StyledText>getDescendant(compositeWithCardMargin, 1, 0, 0);
+		StyledText text = Swts.<StyledText> getDescendant(compositeWithCardMargin, 1, 0, 0);
 		return text.getText();
 	}
 
@@ -188,7 +188,8 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		mySoftwareFm.logout();
 		mySoftwareFm.start();
 		displayUntilEmailPassword().pressButton(0);
-		displayUntilValueComposite("Email");
+		IDataCompositeWithOkCancel<Composite> emailAndMessageComposite = displayUntilValueComposite("Email", "");// the empty string is the label for 'message'
+		checkTextMatches((Composite) emailAndMessageComposite.getEditor().getChildren()[1], email, "When your email address is correctly entered, please click the 'OK' button below. SoftwareFM will the email you a link to your password.");
 		setValues(email);
 		assertTrue(getOkCancel().isOkEnabled());
 		getOkCancel().ok();

@@ -53,7 +53,7 @@ public class TakeOnGroupProcessor extends AbstractCommandProcessor {
 		String rawSubject = (String) parameters.get(GroupConstants.takeOnSubjectKey);
 		String from = (String) parameters.get(GroupConstants.takeOnFromKey);// this dude is now the admin
 
-		String groupCryptoKey = Callables.call(cryptoGenerator);
+		String groupCrypto = Callables.call(cryptoGenerator);
 		List<String> memberList = Strings.splitIgnoreBlanks(memberListRaw, ",");
 		if (!Strings.isEmail(from))
 			throw new IllegalArgumentException(MessageFormat.format(GroupConstants.invalidEmail, from));
@@ -63,8 +63,8 @@ public class TakeOnGroupProcessor extends AbstractCommandProcessor {
 		for (String email : memberList)
 			if (!Strings.isEmail(email))
 				throw new IllegalArgumentException(MessageFormat.format(GroupConstants.invalidEmail, from));
-		String groupId = takeOnProcessor.createGroup(groupName, groupCryptoKey);
-		takeOnProcessor.addExistingUserToGroup(groupId, groupName, groupCryptoKey, softwareFmId, from, GroupConstants.adminStatus);
+		String groupId = takeOnProcessor.createGroup(groupName, groupCrypto);
+		takeOnProcessor.addExistingUserToGroup(groupId, groupName, groupCrypto, softwareFmId, from, GroupConstants.adminStatus);
 		for (String email : memberList) {
 			String newSoftwareFmId = Functions.call(emailToSfmId, email);
 			if (newSoftwareFmId == null) {
@@ -75,11 +75,13 @@ public class TakeOnGroupProcessor extends AbstractCommandProcessor {
 				if (signUpResult.errorMessage != null)
 					throw new RuntimeException(signUpResult.errorMessage);
 			}
-			takeOnProcessor.addExistingUserToGroup(groupId, groupName, groupCryptoKey, newSoftwareFmId, email, GroupConstants.invitedStatus);
+			takeOnProcessor.addExistingUserToGroup(groupId, groupName, groupCrypto, newSoftwareFmId, email, GroupConstants.invitedStatus);
+
+		}
+		for (String email : memberList) {
 			String subject = replaceMarkers(rawSubject, groupName, email);
 			String message = replaceMarkers(emailPattern, groupName, email);
 			mailer.mail(from, email, subject, message);
-
 		}
 		return IProcessResult.Utils.processString("");
 	}

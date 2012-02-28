@@ -104,20 +104,20 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		createGroup(groupId1, groupCryptoKey1);
 		createGroup(groupId2, groupCryptoKey2);
 
-		addUserToGroup(softwareFmId, email, groupId1, groupCryptoKey1, "someStatus1");
+		addUserToGroup(softwareFmId, email, groupId2, groupCryptoKey2, "someStatus2");
 
 		String badCrypto = Crypto.makeKey();
 		String userUrl = userUrlGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
 		IFileDescription fileDescription = IFileDescription.Utils.encrypted(userUrl, GroupConstants.membershipFileName, badCrypto);
 		processCallParameters.gitOperations.append(fileDescription, Maps.stringObjectMap("will be", "encoded wrong"));
 
-		addUserToGroup(softwareFmId, email, groupId2, groupCryptoKey2, "someStatus2");
+		addUserToGroup(softwareFmId, email, groupId1, groupCryptoKey1, "someStatus1");
 
 		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		Table table = getMyGroupsTable(myGroupsComposite);
 		checkTableColumns(table, "Group Name", "Members", "My Status");
-		checkTable(table, 0, "groupId1", "groupId1Name", "1", "someStatus1");
-		checkTable(table, 1, null, CommonMessages.corrupted, CommonMessages.record, "");
+		checkTable(table, 0, null, CommonMessages.corrupted, CommonMessages.record, "");
+		checkTable(table, 1, "groupId1", "groupId1Name", "1", "someStatus1");
 		checkTable(table, 2, "groupId2", "groupId2Name", "1", "someStatus2");
 		assertEquals(3, table.getItemCount());
 	}

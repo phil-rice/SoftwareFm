@@ -25,6 +25,9 @@ public class MagicStringForPassword extends AbstractLoginDataAccessor implements
 
 	@Override
 	public String allowResetPassword(String emailAddress) {
+		String existing = template.queryForObject(getPasswordResetKeyForUserSql, String.class, emailAddress);
+		if (existing != null)
+			return existing;
 		String magicString = Callables.call(magicStringGenerator);
 		int count = template.update(setPasswordResetKeyForUserSql, magicString, emailAddress);
 		if (count == 0)

@@ -36,11 +36,34 @@ public interface IEditableControlStrategy<T extends Control> {
 			return new TextControlStrategy(true);
 		}
 
-		public static IEditableControlStrategy<StyledText> styledText() {
+		public static IEditableControlStrategy<StyledText> message() {
+			return new IEditableControlStrategy<StyledText>(){
+				@Override
+				public StyledText createControl(Composite from) {
+					StyledText control = new StyledText(from, SWT.WRAP|SWT.READ_ONLY);
+					control.setBackground(from.getBackground());
+					return control;
+				}
+
+				@Override
+				public void populateInitialValue(StyledText control, Object value) {
+					control.setText(Strings.nullSafeToString(value));
+				}
+
+				@Override
+				public void whenModifed(StyledText control, ICardData cardData, String key, Runnable whenModified) {
+				}
+
+				@Override
+				public void addEnterEscapeListeners(IOkCancel okCancel, StyledText control) {
+				}};
+			
+		}
+		public static IEditableControlStrategy<StyledText> styledText(final int style) {
 			return new IEditableControlStrategy<StyledText>() {
 				@Override
 				public StyledText createControl(Composite from) {
-					return new StyledText(from, SWT.WRAP);
+					return new StyledText(from, style);
 				}
 
 				@Override

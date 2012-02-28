@@ -45,7 +45,7 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 
 			CardConfig cc = getCardConfig();
 			for (KeyAndEditStrategy data : keyAndEditStrategy) {
-				Label label = INamesAndValuesEditor.Utils.label(labels, cc, cardData.cardType(), data.key);
+				Label label = INamesAndValuesEditor.Utils.label(labels, cc, cardData.cardType(), data);
 				label.setBackground(getTitleSpec().background);
 				@SuppressWarnings("unchecked")
 				IEditableControlStrategy<Control> editableControlStrategy = (IEditableControlStrategy<Control>) data.editableControlStrategy;

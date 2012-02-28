@@ -4,6 +4,7 @@
 
 package org.softwareFm.eclipse.mysoftwareFm;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -74,6 +75,7 @@ public class MyGroups implements IHasComposite {
 						// return null;
 						// }
 						final IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, user);
+						gitLocal.clearCaches();
 						Swts.asyncExec(masterDetailSocial.getControl(), new Runnable() {
 							@Override
 							public void run() {
@@ -150,7 +152,19 @@ public class MyGroups implements IHasComposite {
 			new TableColumn(summaryTable, SWT.NULL).setText("Members");
 			new TableColumn(summaryTable, SWT.NULL).setText("My Status");
 			Iterable<Map<String, Object>> groups = membershipReader.walkGroupsFor(userData.softwareFmId, userData.crypto);
-			for (Map<String, Object> map : groups) {
+			List<Map<String, Object>> groupsWithName = Lists.map(groups, new IFunction1<Map<String, Object>, Map<String, Object>>() {
+				@Override
+				public Map<String, Object> apply(Map<String, Object> map) throws Exception {
+					if (map.containsKey(CommonConstants.errorKey))
+						return map;
+					String groupId = (String) map.get(GroupConstants.groupIdKey);
+					String groupCryptoKey = (String) map.get(GroupConstants.groupCryptoKey);
+					String groupName = groupReaders.getGroupProperty(groupId, groupCryptoKey, GroupConstants.groupNameKey);
+					return Maps.with(map, GroupConstants.groupNameKey, groupName);
+				}
+			});
+
+			for (Map<String, Object> map : Lists.sort(groupsWithName, Comparators.mapKey(GroupConstants.groupNameKey))) {
 				if (map.containsKey(CommonConstants.errorKey)) {
 					TableItem item = new TableItem(summaryTable, SWT.NULL);
 					item.setText(new String[] { CommonMessages.corrupted, CommonMessages.record, "" });

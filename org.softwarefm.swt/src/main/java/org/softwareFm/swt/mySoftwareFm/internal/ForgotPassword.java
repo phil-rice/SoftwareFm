@@ -30,8 +30,11 @@ public class ForgotPassword implements IForgotPassword {
 
 	public ForgotPassword(Composite parent, final CardConfig cardConfig, final String sessionSalt, String initialEmail, final ILoginStrategy loginStrategy, final ILoginDisplayStrategy loginDisplayStrategy, final IForgotPasswordCallback forgotPasswordCallback) {
 		String title = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, CardConstants.forgotPasswordTitle);
-		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(LoginConstants.emailKey, initialEmail), Arrays.asList(//
-				INamesAndValuesEditor.Utils.text(cardConfig, "email")),//
+		String message = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, CardConstants.forgotPasswordMessage);
+		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(LoginConstants.emailKey, initialEmail, "message", message), Arrays.asList(//
+				INamesAndValuesEditor.Utils.text(cardConfig, LoginConstants.emailKey),//
+				INamesAndValuesEditor.Utils.message(cardConfig, "message")//
+				),//
 				new ICardEditorCallback() {
 					@Override
 					public void ok(ICardData cardData) {

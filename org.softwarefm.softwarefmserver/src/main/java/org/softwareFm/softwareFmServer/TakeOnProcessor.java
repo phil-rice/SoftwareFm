@@ -5,6 +5,7 @@
 package org.softwareFm.softwareFmServer;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -69,7 +70,7 @@ public class TakeOnProcessor implements ITakeOnProcessor {
 		}
 		File file = new File(gitOperations.getRoot(), Urls.compose(url, CommonConstants.dataFileName));
 		if (file.exists())
-			throw new IllegalStateException(file.toString());
+			throw new IllegalStateException(MessageFormat.format(GroupConstants.groupAlreadyExists, file));
 		gitOperations.append(fileDescription, Maps.stringObjectMap(GroupConstants.groupNameKey, groupName));
 		gitOperations.addAllAndCommit(Files.offset(gitOperations.getRoot(), repositoryFile), "createGroup (" + groupName + ")");
 		return groupId;

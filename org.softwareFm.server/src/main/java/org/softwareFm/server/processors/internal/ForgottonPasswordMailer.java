@@ -7,6 +7,7 @@ package org.softwareFm.server.processors.internal;
 import java.text.MessageFormat;
 
 import org.softwareFm.common.constants.LoginMessages;
+import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.server.processors.IForgottonPasswordMailer;
 import org.softwareFm.server.processors.IMagicStringForPassword;
 import org.softwareFm.server.processors.IMailer;
@@ -24,9 +25,14 @@ public class ForgottonPasswordMailer implements IForgottonPasswordMailer {
 	@Override
 	public String process(String emailAddress) {
 		String magicString = magicStringForPassword.allowResetPassword(emailAddress);
-
 		String message = MessageFormat.format(LoginMessages.forgottonPasswordMessage, emailAddress, magicString);
-		mailer.mail("forgottonpasswords@softwarefm.org", emailAddress, LoginMessages.passwordResetSubject, message);
+		try {
+			mailer.mail("forgottonpasswords@softwarefm.org", emailAddress, LoginMessages.passwordResetSubject, message);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(message);
+			throw WrappedException.wrap(e);
+		}
 		return magicString;
 	}
 

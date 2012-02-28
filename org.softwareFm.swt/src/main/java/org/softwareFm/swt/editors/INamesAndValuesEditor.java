@@ -24,8 +24,8 @@ public interface INamesAndValuesEditor extends IValueEditor, ICardData {
 			return new NameAndValuesEditor(parent, cardConfig, cardType, title, url, initialData, keyAndEditStrategy, callback);
 		}
 
-		public static Label label(Composite composite, final CardConfig cardConfig, final String cardType, final String key) {
-			String name = cardConfig.nameFn.apply(cardConfig, new LineItem(cardType, key, ""));
+		public static Label label(Composite composite, final CardConfig cardConfig, final String cardType, final KeyAndEditStrategy data) {
+			String name = data.displayLabel ? cardConfig.nameFn.apply(cardConfig, new LineItem(cardType, data.key, "")) : "";
 			Label result = new Label(composite, SWT.NULL);
 			result.setText(name);
 			return result;
@@ -34,9 +34,15 @@ public interface INamesAndValuesEditor extends IValueEditor, ICardData {
 		public static KeyAndEditStrategy text(CardConfig cardConfig, String key) {
 			return new KeyAndEditStrategy(key, IEditableControlStrategy.Utils.text());
 		}
+
 		public static KeyAndEditStrategy styledText(CardConfig cardConfig, String key) {
-			return new KeyAndEditStrategy(key, IEditableControlStrategy.Utils.styledText());
+			return new KeyAndEditStrategy(key, IEditableControlStrategy.Utils.styledText(SWT.WRAP));
 		}
+
+		public static KeyAndEditStrategy message(CardConfig cardConfig, String key) {
+			return new KeyAndEditStrategy(false, key, IEditableControlStrategy.Utils.message());
+		}
+
 		public static KeyAndEditStrategy password(CardConfig cardConfig, String key) {
 			return new KeyAndEditStrategy(key, IEditableControlStrategy.Utils.password());
 		}

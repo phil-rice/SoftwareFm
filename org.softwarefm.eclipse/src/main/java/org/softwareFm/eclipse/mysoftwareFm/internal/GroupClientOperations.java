@@ -16,6 +16,7 @@ import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.runnable.Runnables;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.eclipse.mysoftwareFm.IGroupClientOperations;
@@ -34,11 +35,13 @@ public class GroupClientOperations implements IGroupClientOperations {
 	private final IMasterDetailSocial masterDetailSocial;
 	private final CardConfig cardConfig;
 	private final IHttpClient client;
+	private final IResourceGetter resourceGetter;
 
 	public GroupClientOperations(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, IHttpClient client) {
 		this.masterDetailSocial = masterDetailSocial;
 		this.cardConfig = cardConfig;
 		this.client = client;
+		this.resourceGetter = Functions.call(cardConfig.resourceGetterFn, GroupConstants.myGroupsCardType);
 	}
 
 	@Override
@@ -52,7 +55,7 @@ public class GroupClientOperations implements IGroupClientOperations {
 						GroupConstants.takeOnEmailListKey, "<Type here a comma separated list of people you would like to invite to the group\nThe Email below will be sent with $email$ and $group$ replaced by your email, and the group name>",//
 						GroupConstants.takeOnFromKey, email,//
 						GroupConstants.takeOnSubjectKey, "You are invited to join the SoftwareFM group $group$",//
-						GroupConstants.takeOnEmailPattern, "Dear $email$,\nYou have been invited to join the SoftwareFm group $group$");
+						GroupConstants.takeOnEmailPattern,IResourceGetter.Utils.getOrException(resourceGetter, GroupConstants.takeOnEmailDefault));
 				tryAndCreateGroup(initialData);
 
 			}

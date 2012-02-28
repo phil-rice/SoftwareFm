@@ -102,6 +102,7 @@ public class CardConstants {
 	public static final String forgotPasswordCardType = "forgotpassword";
 	public static final String loginTitle = "login.title.text";
 	public static final String forgotPasswordTitle = "forgotPassword.title.text";
+	public static final String forgotPasswordMessage ="forgotPassword.message.text";
 	public static final String signupTitle = "signup.title.text";
 
 	public static final String signUpButtonTitle = "signup.button.text";

@@ -13,6 +13,7 @@ abstract public class AbstractLoginDataAccessor {
 	public final static String createUsersSql = "create table users (email varchar(200), softwarefmid varchar(100), salt varchar(100), password text, crypto varchar(200), passwordResetKey varchar(200))";
 	public final static String selectUsersWithEmailSql = "select * from users where email = ?";
 	public final static String setPasswordResetKeyForUserSql = "update users set passwordResetKey=? where email=?";
+	public final static String getPasswordResetKeyForUserSql = "select passwordResetKey from  users where email=?";
 	public final static String selectUsersWithEmailAndPasswordHashSql = "select * from users where email = ? and password=?";
 	public final static String selectSaltFromUserWithPasswordResetKeySql = "select salt from users where passwordResetKey=?";
 	public final static String updatePasswordAndClearResetKeySql = "update users set passwordResetKey=null,password=? where passwordResetKey=?";

@@ -40,6 +40,8 @@ public class GroupConstants {
 	public static final String alreadyAMemberOfGroup = "Already a member of group. Sfm Id {0}. Group Id {1}";
 	public static final String invalidEmail = "Invalid email {0}";
 	public static final String emailSfmMismatch = "Email / SoftwareFm mismatch. Email {0} Expected {1} Actual {2}";
+	public static final String groupAlreadyExists = "Group already exists: {0}";
+	public static final String takeOnEmailDefault = "takeOn.email.default";
 
 
 	public static IUrlGenerator groupsGenerator(String prefix) {
