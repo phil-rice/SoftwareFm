@@ -49,7 +49,7 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 	public void testClickingOnMyGroupsOpensSummaryTable() {
 		addUserToGroup1AndGroup2();
 
-		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
+		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();// failed intermittantly once
 		Table table = getMyGroupsTable(myGroupsComposite);
 		checkMainTable(table);
 		table.select(1);
@@ -57,7 +57,6 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		dispatchUntilQueueEmpty();
 		checkMainTable(table);
 		assertEquals(1, table.getSelectionIndex());
-
 
 		StackLayout stackLayout = (StackLayout) Swts.<Composite> getDescendant(myGroupsComposite.getEditor(), 1).getLayout();
 		Table summaryTable = Swts.getDescendant(myGroupsComposite.getEditor(), 1, 1);
@@ -100,6 +99,7 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		checkTable(summaryTable, 1, null, email2, "someStatus3");
 		checkTable(summaryTable, 2, null, email, "someStatus1");
 		assertEquals(3, summaryTable.getItemCount());
+
 	}
 
 	public void testMyGroupsWhenMembershipTableBadlyEncrypted() {
@@ -123,6 +123,23 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		checkTable(table, 2, new IdNameAndStatus("groupId2", "groupId2Name", "someStatus2"), "groupId2Name", "1", "someStatus2");
 		assertEquals(3, table.getItemCount());
 		assertEquals(-1, table.getSelectionIndex());
+
+		table.select(0); // this is the bad crypto
+		Table summaryTable = Swts.getDescendant(myGroupsComposite.getEditor(), 1, 1);
+		table.notifyListeners(SWT.Selection, new Event());
+		dispatchUntilQueueEmpty();
+		assertEquals(0, summaryTable.getItemCount());
+
+		table.select(1);
+		table.notifyListeners(SWT.Selection, new Event());
+		dispatchUntilQueueEmpty();
+		assertEquals(1, summaryTable.getItemCount());
+		checkTable(summaryTable, 0, null, email, "someStatus1");
+
+		table.select(0);
+		table.notifyListeners(SWT.Selection, new Event());
+		dispatchUntilQueueEmpty();
+		assertEquals(0, summaryTable.getItemCount());
 
 	}
 }

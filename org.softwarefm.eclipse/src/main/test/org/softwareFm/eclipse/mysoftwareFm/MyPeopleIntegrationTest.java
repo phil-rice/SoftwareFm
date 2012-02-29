@@ -32,7 +32,7 @@ public class MyPeopleIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		addUserToGroup(softwareFmId1, email1, groupId1, groupCryptoKey1, "someStatus1");
 		addUserToGroup(softwareFmId2, email2, groupId2, groupCryptoKey2, "someStatus1");
 
-		MyPeopleComposite myPeopleComposite = displayMyPeople(groupId, artifactId, 2);
+		MyPeopleComposite myPeopleComposite = displayMyPeople(groupId, artifactId, 2);//failed intermittently once
 
 		Table table = myPeopleComposite.getEditor();
 		checkTableColumns(table, "Person", "Jan 2012", "Feb 2012", "Mar 2012", "Groups");

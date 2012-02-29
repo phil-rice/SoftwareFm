@@ -411,7 +411,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		Callable<String> cryptoGenerator = Callables.value(key);
 		IGitOperations remoteOperations = IGitOperations.Utils.gitOperations(remoteRoot);
 		IFunction1<Map<String, Object>, String> userCryptoFn = ICrowdSourcedServer.Utils.cryptoFn(dataSource);
-		Map<String, Callable<Object>> defaultValues = SoftwareFmServer.makeDefaultProperties();
+		Map<String, Callable<Object>> defaultValues = SoftwareFmServer.makeUserDefaultProperties();
 		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, remoteOperations, cryptoGenerator, softwareFmIdGenerator, userCryptoFn, IMailer.Utils.noMailer(), defaultValues, SoftwareFmConstants.urlPrefix);
 		IProcessCall softwareFmProcessCall = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, Functions.<ProcessCallParameters, IProcessCall[]> constant(new IProcessCall[0]));
 		server = ICrowdSourcedServer.Utils.testServerPort(softwareFmProcessCall, ICallback.Utils.rethrow());

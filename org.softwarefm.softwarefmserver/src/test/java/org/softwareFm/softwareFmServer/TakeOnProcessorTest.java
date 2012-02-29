@@ -130,7 +130,7 @@ public class TakeOnProcessorTest extends GitTest {
 		IUrlGenerator groupsUrlGenerator = GroupConstants.groupsGenerator(SoftwareFmConstants.urlPrefix);
 		IUrlGenerator userUrlGenerator = LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix);
 		groups = new GroupsForServer(groupsUrlGenerator, remoteOperations, Strings.firstNSegments(3));
-		user = SoftwareFmServer.makeUser(remoteOperations, userUrlGenerator, SoftwareFmServer.makeDefaultProperties());
+		user = SoftwareFmServer.makeUser(remoteOperations, userUrlGenerator, SoftwareFmServer.makeUserDefaultProperties());
 		crypto1 = Crypto.makeKey();
 		crypto2 = Crypto.makeKey();
 		IFunction1<Map<String, Object>, String> cryptoFn = new IFunction1<Map<String, Object>, String>() {

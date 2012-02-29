@@ -46,7 +46,7 @@ public class SoftwareFmServer {
 	public static void makeSoftwareFmServer(int port) {
 		BasicDataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
 		IGitOperations gitOperations = IGitOperations.Utils.gitOperations(ICrowdSourcedServer.Utils.makeSfmRoot());
-		ICrowdSourcedServer.Utils.fullServer(port, gitOperations, dataSource, makeExtraProcessCalls(), SoftwareFmConstants.urlPrefix, makeDefaultProperties());
+		ICrowdSourcedServer.Utils.fullServer(port, gitOperations, dataSource, makeExtraProcessCalls(), SoftwareFmConstants.urlPrefix, makeUserDefaultProperties());
 	}
 
 	private static IFunction1<ProcessCallParameters, IProcessCall[]> makeExtraProcessCalls() {
@@ -57,7 +57,7 @@ public class SoftwareFmServer {
 				IUrlGenerator userUrlGenerator = LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix);
 				Callable<String> groupIdGenerator = Callables.uuidGenerator();
 				IFunction1<String, String> repoDefnFn = Strings.firstNSegments(3);
-				IGroups groups = new GroupsForServer(groupsUrlGenerator, processCallParameters.gitOperations, repoDefnFn);
+				IGroups groups = new GroupsForServer(groupsUrlGenerator, processCallParameters.gitOperations, repoDefnFn,makeGroupDefaultProperties());
 				IFunction1<String, String> emailToSoftwareFmId = ICrowdSourcedServer.Utils.emailToSoftwareFmId(processCallParameters.dataSource);
 				IUserMembership userMembership = new UserMembershipForServer(userUrlGenerator, processCallParameters.user, processCallParameters.gitOperations, repoDefnFn);
 				ITakeOnProcessor takeOnProcessor = new TakeOnProcessor(processCallParameters.gitOperations, processCallParameters.user, userMembership, groups, processCallParameters.userCryptoFn, groupsUrlGenerator, groupIdGenerator, repoDefnFn);
@@ -69,7 +69,8 @@ public class SoftwareFmServer {
 						new CommentProcessor(processCallParameters.user, userMembership, groups, comments, processCallParameters.userCryptoFn),//
 						new GenerateGroupUsageProcessor(processCallParameters.gitOperations, generator, groups),//
 						new TakeOnGroupProcessor(takeOnProcessor, processCallParameters.signUpChecker, Callables.makeCryptoKey(), emailToSoftwareFmId, processCallParameters.saltGenerator, processCallParameters.softwareFmIdGenerator, processCallParameters.mailer),//
-						new InviteGroupProcessor(takeOnProcessor, processCallParameters.signUpChecker, emailToSoftwareFmId, processCallParameters.saltGenerator, processCallParameters.softwareFmIdGenerator, processCallParameters. mailer,processCallParameters.userCryptoFn, userMembership, groups) };
+						new InviteGroupProcessor(takeOnProcessor, processCallParameters.signUpChecker, emailToSoftwareFmId, processCallParameters.saltGenerator, processCallParameters.softwareFmIdGenerator, processCallParameters.mailer, processCallParameters.userCryptoFn, userMembership, groups),//
+						new AcceptInviteGroupProcessor(groups, userMembership, processCallParameters.userCryptoFn) };
 			}
 		};
 	}
@@ -81,11 +82,15 @@ public class SoftwareFmServer {
 		return usageProcessor;
 	}
 
-	public static Map<String, Callable<Object>> makeDefaultProperties() {
+	public static Map<String, Callable<Object>> makeUserDefaultProperties() {
 		return Maps.makeMap(GroupConstants.membershipCryptoKey, Callables.makeCryptoKey(), //
 				GroupConstants.groupCryptoKey, Callables.makeCryptoKey(),//
 				CommentConstants.commentCryptoKey, Callables.makeCryptoKey(),//
 				SoftwareFmConstants.projectCryptoKey, Callables.makeCryptoKey());
+	}
+
+	public static Map<String, Callable<Object>> makeGroupDefaultProperties() {
+		return Maps.makeMap(CommentConstants.commentCryptoKey, Callables.makeCryptoKey());
 	}
 
 	public static IUser makeUser(IGitOperations gitOperations, IUrlGenerator userUrlGenerator, Map<String, Callable<Object>> defaultProperties) {

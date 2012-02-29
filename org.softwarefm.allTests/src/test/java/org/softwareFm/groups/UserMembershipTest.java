@@ -78,7 +78,7 @@ public class UserMembershipTest extends GitTest {
 
 		membershipForServer.setMembershipProperty(user1Id, userCrypto, groupId1, "someProperty", "value2");
 		assertEquals("value2", membershipForServer.getMembershipProperty(user1Id, userCrypto, groupId1, "someProperty"));
-		assertEquals("value1", membershipForLocal.getMembershipProperty(user1Id, userCrypto, groupId1, "someProperty"));
+		assertEquals("value1", membershipForLocal.getMembershipProperty(user1Id, userCrypto, groupId1, "someProperty"));//oftens intermittantly fails
 
 		gitLocal.clearCaches();
 		assertEquals("value2", membershipForServer.getMembershipProperty(user1Id, userCrypto, groupId1, "someProperty"));

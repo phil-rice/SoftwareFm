@@ -128,13 +128,13 @@ public class GroupClientOperations implements IGroupClientOperations {
 	}
 
 	@Override
-	public Runnable inviteToGroup(final UserData userData, final Callable<IdNameAndStatus> idAndNameGetter, final ICallback<String> invited) {
+	public Runnable inviteToGroup(final UserData userData, final Callable<IdNameAndStatus> idNameStatusGetter, final ICallback<String> invited) {
 		return new Runnable() {
 
 			@Override
 			public void run() {
 				String email = userData.email();
-				IdNameAndStatus idNameAndStatus = Callables.call(idAndNameGetter);
+				IdNameAndStatus idNameAndStatus = Callables.call(idNameStatusGetter);
 				if (idNameAndStatus == null)
 					throw new NullPointerException("Cannot invite unless a group is selected.");
 				final Map<String, Object> initialData = Maps.stringObjectMap(//
@@ -204,8 +204,37 @@ public class GroupClientOperations implements IGroupClientOperations {
 	}
 
 	@Override
-	public Runnable acceptInvitation(UserData userData) {
-		return Runnables.sysout("acceptInvitation");
+	public Runnable acceptInvitation(final UserData userData, final Callable<IdNameAndStatus> idNameStatusGetter, final ICallback<String> showMyGroups) {
+		return new Runnable() {
+			@Override
+			public void run() {
+				IdNameAndStatus idNameAndStatus = Callables.call(idNameStatusGetter);
+				if (idNameAndStatus == null)
+					throw new NullPointerException("IdNameAndStatus is null");
+				final String groupId = idNameAndStatus.id;
+				if (groupId == null)
+					throw new NullPointerException("group id is null");
+				client.post(GroupConstants.acceptInvitePrefix).//
+						addParam(LoginConstants.softwareFmIdKey, userData.softwareFmId).//
+						addParam(GroupConstants.groupIdKey, groupId).//
+						addParam(GroupConstants.membershipStatusKey, GroupConstants.memberStatus).//
+						execute(new IResponseCallback() {
+							@Override
+							public void process(IResponse response) {
+								
+								if (CommonConstants.okStatusCodes.contains(response.statusCode()))
+									ICallback.Utils.call(showMyGroups, groupId);
+								else
+									masterDetailSocial.createAndShowDetail(TextInBorderWithClick.makeTextFromString(SWT.WRAP | SWT.READ_ONLY, cardConfig, GroupConstants.myGroupsCardType, "Accept", "Exception accepting. Click to try again\n\n" + response.asString(), new Runnable() {
+										@Override
+										public void run() {
+											ICallback.Utils.call(showMyGroups, groupId);
+										}
+									}));
+							}
+						});
+			}
+		};
 	}
 
 	@Override

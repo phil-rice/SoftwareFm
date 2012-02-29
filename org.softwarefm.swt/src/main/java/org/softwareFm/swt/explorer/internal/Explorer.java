@@ -107,7 +107,7 @@ public class Explorer implements IExplorer {
 	private final IShowMyPeople showMyPeople;
 	protected ICommentsReader commentReader;
 
-	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, final IUserReader userReader, final IUserMembershipReader userMembershipReader, final IGroupsReader groupsReader, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IShowMyData showMyData, final IShowMyGroups showMyGroups, final IShowMyPeople showMyPeople, final IUserDataManager userDataManager, final ICommentWriter commentWriter, ICommentsReader commentsReader, final Callable<Long>timeGetter) {
+	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, final IUserReader userReader, final IUserMembershipReader userMembershipReader, final IGroupsReader groupsReader, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IShowMyData showMyData, final IShowMyGroups showMyGroups, final IShowMyPeople showMyPeople, final IUserDataManager userDataManager, final ICommentWriter commentWriter, ICommentsReader commentsReader, final Callable<Long> timeGetter) {
 		this.cardConfig = cardConfig;
 		this.masterDetailSocial = masterDetailSocial;
 		this.showMyPeople = showMyPeople;
@@ -165,11 +165,17 @@ public class Explorer implements IExplorer {
 
 					@Override
 					public void selected(String cardType, String url, int index, Map<String, Object> comment) {
+						if (comment == null||comment.containsKey(CommonConstants.errorKey)){
+							System.out.println("Selected duff comment: " + comment);
+							return;
+						}
 						masterDetailSocial.putSocialOverDetail();
-						String time = new ReadableTime().readableNameFor(Callables.call(timeGetter), (Long)comment.get(CommentConstants.timeKey));
+						Long rawTime = Callables.call(timeGetter);
+						Long then = (Long) comment.get(CommentConstants.timeKey);
+						String time = new ReadableTime().readableNameFor(rawTime, then);
 						String titlePattern = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, CommentConstants.commentDetailsTitle);
 						String title = MessageFormat.format(titlePattern, comment.get(CommentConstants.creatorKey), time, cardType, url);
-						 masterDetailSocial.createAndShowDetail(TextInBorder.makeTextFromString(SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL, cardConfig, CollectionConstants.comment, title, (String) comment.get(CommentConstants.textKey)));
+						masterDetailSocial.createAndShowDetail(TextInBorder.makeTextFromString(SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL, cardConfig, CollectionConstants.comment, title, (String) comment.get(CommentConstants.textKey)));
 					}
 				}, new Runnable() {
 					@Override

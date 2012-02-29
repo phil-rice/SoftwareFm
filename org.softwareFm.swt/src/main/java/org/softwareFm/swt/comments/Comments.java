@@ -20,6 +20,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.comparators.Comparators;
+import org.softwareFm.common.constants.CommonConstants;
+import org.softwareFm.common.constants.CommonMessages;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.resources.IResourceGetter;
@@ -135,6 +137,8 @@ public class Comments implements IHasControl {
 				Object text = comment.get(CommentConstants.textKey);
 				Object creator = comment.get(CommentConstants.creatorKey);
 				Object source = comment.get(CommentConstants.sourceKey);
+				if (comment.containsKey(CommonConstants.errorKey))
+					text = CommonMessages.corrupted;
 				TableItem item = new TableItem(table, SWT.NULL);
 				item.setData(i++);
 				item.setText(0, Strings.nullSafeToString(creator));

@@ -168,6 +168,10 @@ public class CommentsTest extends SwtTest {
 		CommentsComposite composite = (CommentsComposite) comments.getControl();
 		assertEquals(Arrays.asList(comment1S1T3, comment1S1T2, comment1), composite.allComments);
 	}
+	
+	public void testDealsWithCorruptedComments(){
+		fail();
+	}
 
 	protected void checkTitleAndTableColumnNames(Table table, String expectedTitle) {
 		CommentsComposite composite = (CommentsComposite) comments.getControl();

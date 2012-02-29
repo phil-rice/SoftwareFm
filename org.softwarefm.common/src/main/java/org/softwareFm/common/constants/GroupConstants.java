@@ -19,6 +19,7 @@ public class GroupConstants {
 	public static final String usageReportDirectory = "reports";
 	public static final String takeOnCommandPrefix = "command/takeOnGroup";
 	public static final String inviteCommandPrefix = "command/inviteGroup";
+	public static final String acceptInvitePrefix = "command/acceptInvite";
 	public static final String generateGroupReportPrefix = "command/generateGroupReport";
 
 	public static final String takeOnEmailListKey = "emailList";
@@ -31,6 +32,7 @@ public class GroupConstants {
 	public static final String groupNameMarker = "$group$";
 
 	public static final String invitedStatus = "invited";
+	public static final String memberStatus = "member";
 	public static final String adminStatus = "admin";
 
 	public static final String membershipFileName = "membership.json";
@@ -47,6 +49,7 @@ public class GroupConstants {
 	public static final String groupNameIsNull = "Group {0} has no name";
 	public static final String cannotInviteToGroupUnlessAdmin = "Cannot invite other people to group {0} as you are not admin. You are status {1}";
 	public static final String notAMemberOfAnyGroup = "This software fm id is not a member of any group {0}";
+	public static final String errorSettingUserProperty = "Error setting user property. GroupId: {0} SoftwareFmId: {1} Property {2} Value {3} ChangedCount {4}";
 
 	public static IUrlGenerator groupsGenerator(String prefix) {
 		return IUrlGenerator.Utils.generator(prefix + "/groups/{0}/{1}/{2}", groupIdKey);

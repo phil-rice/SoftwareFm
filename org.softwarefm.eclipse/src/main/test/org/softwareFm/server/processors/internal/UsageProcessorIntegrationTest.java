@@ -83,7 +83,7 @@ public class UsageProcessorIntegrationTest extends AbstractProcessorDatabaseInte
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		user = IProcessCall.Utils.makeUser(remoteOperations, SoftwareFmServer.makeDefaultProperties(), SoftwareFmConstants.urlPrefix);
+		user = IProcessCall.Utils.makeUser(remoteOperations, SoftwareFmServer.makeUserDefaultProperties(), SoftwareFmConstants.urlPrefix);
 		// someNewSoftwareFmId0
 		String url = LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix).findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
 		userFile = new File(remoteRoot, Urls.compose(url, CommonConstants.dataFileName));

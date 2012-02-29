@@ -13,9 +13,9 @@ import org.softwareFm.swt.explorer.internal.UserData;
 public interface IGroupClientOperations {
 	Runnable createGroup(UserData userData, ICallback<String> added);
 
-	Runnable inviteToGroup(UserData userData,  final Callable<IdNameAndStatus> idAndNameGetter,  ICallback<String> showMyGroups);
+	Runnable inviteToGroup(UserData userData, final Callable<IdNameAndStatus> idNameStatusGetter, ICallback<String> showMyGroups);
 
-	Runnable acceptInvitation(UserData userData);
+	Runnable acceptInvitation(UserData userData, Callable<IdNameAndStatus> idNameStatusGetter, ICallback<String> showMyGroups);
 
 	Runnable deleteGroup(UserData userData);
 
@@ -33,12 +33,12 @@ public interface IGroupClientOperations {
 				}
 
 				@Override
-				public Runnable inviteToGroup(UserData userData, final Callable<IdNameAndStatus> idAndNameGetter,  ICallback<String> invited) {
+				public Runnable inviteToGroup(UserData userData, final Callable<IdNameAndStatus> idNameStatusGetter, ICallback<String> invited) {
 					return Runnables.exception();
 				}
 
 				@Override
-				public Runnable acceptInvitation(UserData userData) {
+				public Runnable acceptInvitation(UserData userData, Callable<IdNameAndStatus> idNameStatusGetter, ICallback<String> showMyGroups) {
 					return Runnables.exception();
 				}
 

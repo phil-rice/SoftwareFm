@@ -4,6 +4,7 @@
 
 package org.softwareFm.softwareFmServer;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -12,9 +13,11 @@ import org.softwareFm.common.IGroupsReader;
 import org.softwareFm.common.LocalGroupsReader;
 import org.softwareFm.common.collections.Iterables;
 import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.strings.Strings;
+import org.softwareFm.common.tests.Tests;
 
 public class GroupsForServerTest extends GroupsTest {
 
@@ -23,8 +26,6 @@ public class GroupsForServerTest extends GroupsTest {
 	public void testAddGetPropertyWithoutUsers() {
 		checkSetGetGroups();
 	}
-	
-	
 
 	public void testAddUsers() {
 		IGroups groups = new GroupsForServer(groupGenerator, remoteOperations, repoGenerator);
@@ -34,6 +35,10 @@ public class GroupsForServerTest extends GroupsTest {
 		groups.addUser(groupId, groupCrypto, makeUserDetails(2));
 
 		checkUsers(3);
+	}
+	
+	public void testGetWithDefaultPropertes(){
+		fail();
 	}
 
 	public void testAddingUsersDoesntImpactOnProperties() {
@@ -86,6 +91,49 @@ public class GroupsForServerTest extends GroupsTest {
 		checkUsers(3);
 	}
 
+	@SuppressWarnings("unchecked")
+	public void testSetUserProperty() {
+		IGroups groups = new GroupsForServer(groupGenerator, remoteOperations, repoGenerator);
+		groups.setGroupProperty(groupId, groupCrypto, "someProperty", "someValue");
+		groups.addUser(groupId, groupCrypto, makeInitialFor("someId1"));
+		groups.addUser(groupId, groupCrypto, makeInitialFor("someId2"));
+		groups.addUser(groupId, groupCrypto, makeInitialFor("someId3"));
+		groups.setUserProperty(groupId, groupCrypto, "someId2", "a", "c");
+		assertEquals(Arrays.asList(makeInitialFor("someId1"), Maps.with(makeInitialFor("someId2"), "a", "c"), makeInitialFor("someId3")), Iterables.list(groups.users(groupId, groupCrypto)));
+	}
+
+	public void testSetUserPropertyIfNotPresent() {
+		final IGroups groups = new GroupsForServer(groupGenerator, remoteOperations, repoGenerator);
+		groups.setGroupProperty(groupId, groupCrypto, "someProperty", "someValue");
+		groups.addUser(groupId, groupCrypto, makeInitialFor("someId1"));
+		groups.addUser(groupId, groupCrypto, makeInitialFor("someId2"));
+		Tests.assertThrowsWithMessage("Error setting user property. GroupId: groupId SoftwareFmId: someId3 Property a Value c ChangedCount 0", IllegalArgumentException.class, new Runnable() {
+			@Override
+			public void run() {
+				groups.setUserProperty(groupId, groupCrypto, "someId3", "a", "c");
+			}
+		});
+	}
+
+	public void testSetUserPropertyIfThroughCorruptDataIdInTwice() {
+		final IGroups groups = new GroupsForServer(groupGenerator, remoteOperations, repoGenerator);
+		groups.setGroupProperty(groupId, groupCrypto, "someProperty", "someValue");
+		groups.addUser(groupId, groupCrypto, makeInitialFor("someId1"));
+		groups.addUser(groupId, groupCrypto, makeInitialFor("someId2"));
+		groups.addUser(groupId, groupCrypto, makeInitialFor("someId2"));
+		Tests.assertThrowsWithMessage("Error setting user property. GroupId: groupId SoftwareFmId: someId2 Property a Value c ChangedCount 2", IllegalArgumentException.class, new Runnable() {
+			@Override
+			public void run() {
+				groups.setUserProperty(groupId, groupCrypto, "someId2", "a", "c");
+			}
+		});
+	}
+
+	protected Map<String, Object> makeInitialFor(String id) {
+		Map<String, Object> initial = Maps.stringObjectMap(LoginConstants.softwareFmIdKey, id, "a", "b");
+		return initial;
+	}
+
 	public void testSetGetReport() {
 		IGroups groups = new GroupsForServer(groupGenerator, remoteOperations, repoGenerator);
 		groups.setReport(groupId, groupCrypto, "month1", v11);
@@ -97,7 +145,7 @@ public class GroupsForServerTest extends GroupsTest {
 		IGroupsReader localGroupsReader = new LocalGroupsReader(groupGenerator, gitLocal);
 		assertEquals(v11, localGroupsReader.getUsageReport(groupId, groupCrypto, "month1"));
 		assertEquals(v12, localGroupsReader.getUsageReport(groupId, groupCrypto, "month2"));
-		
+
 	}
 
 	private void checkUsers(int userCount) {

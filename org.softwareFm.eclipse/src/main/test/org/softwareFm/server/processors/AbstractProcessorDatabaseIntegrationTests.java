@@ -33,6 +33,7 @@ import org.softwareFm.server.ICrowdSourcedServer;
 import org.softwareFm.server.comments.CommentsForServer;
 import org.softwareFm.server.comments.IComments;
 import org.softwareFm.server.processors.internal.MailerMock;
+import org.softwareFm.softwareFmServer.AcceptInviteGroupProcessor;
 import org.softwareFm.softwareFmServer.GroupsForServer;
 import org.softwareFm.softwareFmServer.ITakeOnProcessor;
 import org.softwareFm.softwareFmServer.InviteGroupProcessor;
@@ -102,7 +103,7 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 
 		Map<String, Callable<Object>> defaultValues = Maps.makeMap(//
 				GroupConstants.membershipCryptoKey, Callables.makeCryptoKey(), //
-				GroupConstants.groupCryptoKey, Callables.valueFromList(groupCryptoKey),//
+				// GroupConstants.groupCryptoKey, Callables.valueFromList(groupCryptoKey),//
 				SoftwareFmConstants.projectCryptoKey, Callables.valueFromList(projectCryptoKey1, projectCryptoKey2, projectCryptoKey3));
 		processCallParameters = new ProcessCallParameters(dataSource, remoteOperations, userCryptoGenerator, softwareFmIdGenerator, userCryptoFn, mailerMock, defaultValues, SoftwareFmConstants.urlPrefix);
 		IProcessCall processCalls = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, getExtraProcessCalls());
@@ -147,7 +148,8 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 				new CommentProcessor(from.user, membershipForServer, groups, comments, from.userCryptoFn),//
 						new UsageProcessor(remoteOperations, getJarToGroupArtifactAndVersionProcessor(jarUrlGenerator), project, projectTimeGetter), //
 						new TakeOnGroupProcessor(takeOnProcessor, from.signUpChecker, groupCryptoGenerator, emailToSfmId, from.saltGenerator, from.softwareFmIdGenerator, mailerMock),//
-						new InviteGroupProcessor(takeOnProcessor, from.signUpChecker, emailToSfmId, from.saltGenerator, softwareFmIdGenerator, mailerMock, userCryptoFn, membershipForServer, groups) };
+						new InviteGroupProcessor(takeOnProcessor, from.signUpChecker, emailToSfmId, from.saltGenerator, softwareFmIdGenerator, mailerMock, userCryptoFn, membershipForServer, groups),//
+						new AcceptInviteGroupProcessor(groups, membershipForServer, userCryptoFn) };
 				return result;
 			}
 

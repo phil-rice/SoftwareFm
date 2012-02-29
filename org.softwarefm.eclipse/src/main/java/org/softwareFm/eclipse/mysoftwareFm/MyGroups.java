@@ -117,7 +117,7 @@ public class MyGroups implements IHasComposite {
 			this.idNameStatusGetter = idNameStatusGetter;
 			this.content = new Composite(parent, SWT.NULL);
 			content.setLayout(Swts.Row.getHorizonalNoMarginRowLayout());
-			accept = Swts.Buttons.makePushButton(content, "Accept", groupClientOperations.acceptInvitation(userData));
+			accept = Swts.Buttons.makePushButton(content, "Accept", groupClientOperations.acceptInvitation(userData, idNameStatusGetter, showMyGroups));
 			invite = Swts.Buttons.makePushButton(content, "Invite", groupClientOperations.inviteToGroup(userData, idNameStatusGetter, showMyGroups));
 			create = Swts.Buttons.makePushButton(content, "Create new group", groupClientOperations.createGroup(userData, showMyGroups));
 		}
@@ -226,12 +226,14 @@ public class MyGroups implements IHasComposite {
 					if (index >= 0) {
 						TableItem item = summaryTable.getItem(index);
 						IdNameAndStatus idAndName = (IdNameAndStatus) item.getData();
+						if (idAndName == null)
+							return;
 						String groupId = idAndName.id;
 						if (groupId == null)
-							throw new NullPointerException(Integer.toString(index));
+							throw new NullPointerException("GroupId is null: " + Integer.toString(index));
 						String groupCryptoKey = idToCrypto.get(groupId);
 						if (groupCryptoKey == null)
-							throw new NullPointerException(groupCryptoKey);
+							throw new NullPointerException("GroupCrypto is null: " + Integer.toString(index));
 						for (Map<String, Object> user : Lists.sort(groupsReader.users(groupId, groupCryptoKey), Comparators.mapKey(LoginConstants.emailKey))) {
 							if (user.containsKey(CommonConstants.errorKey))
 								new TableItem(membershipTable, SWT.NULL).setText(new String[] { CommonMessages.corrupted, CommonMessages.record });

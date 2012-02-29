@@ -233,6 +233,18 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		assertFalse(editor.getFooter().okButton().isEnabled());
 	}
 
+	public void testCreateExceptionCausesTextPanelAndClickReturnsToMyGroups() {
+		fail();
+	}
+
+	public void testInviteExceptionCausesTextPanelAndClickReturnsToMyGroups() {
+		fail();
+	}
+
+	public void testAcceptExceptionCausesTextPanelAndClickReturnsToMyGroups() {
+		fail();
+	}
+
 	private void checkChange(NameAndValuesEditorComposite editor, int i, String newValue) {
 		Control control = editor.values.getChildren()[i];
 		Swts.setText(control, newValue);

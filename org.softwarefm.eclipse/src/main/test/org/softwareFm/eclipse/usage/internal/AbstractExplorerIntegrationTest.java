@@ -297,7 +297,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 
 		remoteOperations = IGitOperations.Utils.gitOperations(remoteRoot);
 		cryptoFn = ICrowdSourcedServer.Utils.cryptoFn(dataSource);
-		Map<String, Callable<Object>> defaultProperties = SoftwareFmServer.makeDefaultProperties();
+		Map<String, Callable<Object>> defaultProperties = SoftwareFmServer.makeUserDefaultProperties();
 		mailer = new MailerMock();
 		processCallParameters = new ProcessCallParameters(dataSource, remoteOperations, userCryptoGenerator, softwareFmIdGenerator, cryptoFn, mailer, defaultProperties, prefix);
 		user = processCallParameters.user;
