@@ -40,7 +40,7 @@ public class GroupConstants {
 	public static final String missingDataFromMembership = "Missing data from membership for user {0} map {1}";
 	public static final String alreadyAMemberOfGroup = "Already a member of group. Sfm Id {0}. Group Id {1}";
 	public static final String invalidEmail = "Invalid email {0}";
-	public static final String emailSfmMismatch = "Email / SoftwareFm mismatch. Email {0} Expected {1} Actual {2}";
+	public static final String emailSfmMismatch = "Email / SoftwareFm mismatch. Email {0} Expected {1} SoftwareFmId {2}";
 	public static final String groupAlreadyExists = "Group already exists: {0}";
 	public static final String takeOnEmailDefault = "takeOn.email.default";
 	public static final String notAMemberOfGroup = "User {0} is not a member of group {1}";

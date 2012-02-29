@@ -147,7 +147,7 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 				new CommentProcessor(from.user, membershipForServer, groups, comments, from.userCryptoFn),//
 						new UsageProcessor(remoteOperations, getJarToGroupArtifactAndVersionProcessor(jarUrlGenerator), project, projectTimeGetter), //
 						new TakeOnGroupProcessor(takeOnProcessor, from.signUpChecker, groupCryptoGenerator, emailToSfmId, from.saltGenerator, from.softwareFmIdGenerator, mailerMock),//
-						new InviteGroupProcessor(takeOnProcessor, from.signUpChecker, userCryptoGenerator, emailToSfmId, from.saltGenerator, softwareFmIdGenerator, mailerMock, userCryptoFn, membershipForServer, groups) };
+						new InviteGroupProcessor(takeOnProcessor, from.signUpChecker, emailToSfmId, from.saltGenerator, softwareFmIdGenerator, mailerMock, userCryptoFn, membershipForServer, groups) };
 				return result;
 			}
 

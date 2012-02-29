@@ -24,13 +24,15 @@ import org.softwareFm.swt.swt.Swts;
 
 public class NameAndValuesEditor implements INamesAndValuesEditor {
 
-	static class NameAndValuesEditorComposite extends DataWithOkCancelComposite<Composite> {
+	public static class NameAndValuesEditorComposite extends DataWithOkCancelComposite<Composite> {
 
 		private final SashForm editing;
 		private final ICardEditorCallback callback;
 		private final Control firstChild;
 		private final ICardData cardData;
 		private final ICardEditorCallback cardEditorCallback;
+		public Composite labels;
+		public Composite values;
 
 		public NameAndValuesEditorComposite(Composite parent, String titleString, final ICardData cardData, List<KeyAndEditStrategy> keyAndEditStrategy, final ICardEditorCallback strategy) {
 			super(parent, cardData.getCardConfig(), cardData.cardType(), titleString);
@@ -38,8 +40,8 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 			this.cardEditorCallback = strategy;
 			this.callback = strategy;
 			editing = Swts.newSashForm(getInnerBody(), SWT.HORIZONTAL, "editing");
-			Composite labels = Swts.newComposite(editing, SWT.NULL, "Labels");
-			Composite values = Swts.newComposite(editing, SWT.NULL, "value");
+			labels = Swts.newComposite(editing, SWT.NULL, "Labels");
+			values = Swts.newComposite(editing, SWT.NULL, "value");
 			labels.setBackground(getTitleSpec().background);
 			values.setBackground(getTitleSpec().background);
 

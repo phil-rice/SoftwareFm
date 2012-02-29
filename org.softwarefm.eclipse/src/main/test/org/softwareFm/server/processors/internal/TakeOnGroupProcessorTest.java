@@ -39,7 +39,7 @@ public class TakeOnGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 				addParam(GroupConstants.takeOnFromKey, fromEmail).//
 				addParam(GroupConstants.takeOnEmailPattern, "emailPattern: " + GroupConstants.emailMarker + "/" + GroupConstants.groupNameMarker).//
 				addParam(GroupConstants.takeOnEmailListKey, "email1@a.b,email2@a.b").//
-				execute(IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+				execute(IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, groupId)).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 		
 		List<Map<String, Object>> actual = Iterables.list(groups.users(groupId, groupCryptoKey));
 		List<Map<String, Object>> expected = Arrays.asList(//
@@ -97,7 +97,7 @@ public class TakeOnGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 				addParam(GroupConstants.takeOnFromKey, "wrongEmail@a.b").//
 				addParam(GroupConstants.takeOnEmailPattern, "emailPattern: " + GroupConstants.emailMarker + "/" + GroupConstants.groupNameMarker).//
 				addParam(GroupConstants.takeOnEmailListKey, "email1@a.b,email2@a.b").//
-				execute(IResponseCallback.Utils.checkCallback(CommonConstants.serverErrorCode, "class java.lang.IllegalArgumentException/Email / SoftwareFm mismatch. Email wrongEmail@a.b Expected null Actual someNewSoftwareFmId0")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+				execute(IResponseCallback.Utils.checkCallback(CommonConstants.serverErrorCode, "class java.lang.IllegalArgumentException/Email / SoftwareFm mismatch. Email wrongEmail@a.b Expected null SoftwareFmId someNewSoftwareFmId0")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 	}
 
 	protected void checkCannotTakeOn(String groupName, String subject, String from, String emailPattern, String emailList) throws InterruptedException, ExecutionException, TimeoutException {

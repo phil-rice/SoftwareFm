@@ -1,12 +1,10 @@
 package org.softwareFm.eclipse.mysoftwareFm;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.Table;
 import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.constants.CommonMessages;
@@ -22,8 +20,9 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 	public void testContentsWhenUserNotMemberOfGroups() {
 		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		Table table = getMyGroupsTable(myGroupsComposite);
-		System.out.println(table);
 		assertEquals(0, table.getItemCount());
+		assertEquals(-1, table.getSelectionIndex());
+
 	}
 
 	public void testContentsWhenMemberOfTwoGroups() {
@@ -31,8 +30,8 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 
 		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		Table table = getMyGroupsTable(myGroupsComposite);
-		System.out.println(table);
 		checkMainTable(table);
+		assertEquals(-1, table.getSelectionIndex());
 
 		StackLayout stackLayout = (StackLayout) Swts.<Composite> getDescendant(myGroupsComposite.getEditor(), 1).getLayout();
 		StyledText text = Swts.getDescendant(myGroupsComposite.getEditor(), 1, 0);
@@ -42,8 +41,8 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 
 	protected void checkMainTable(Table table) {
 		checkTableColumns(table, "Group Name", "Members", "My Status");
-		checkTable(table, 0, new IdAndName("groupId1", "groupId1Name"), "groupId1Name", "1", "someStatus1");
-		checkTable(table, 1, new IdAndName("groupId2", "groupId2Name"), "groupId2Name", "1", "someStatus2");
+		checkTable(table, 0, new IdNameAndStatus("groupId1", "groupId1Name", "someStatus1"), "groupId1Name", "1", "someStatus1");
+		checkTable(table, 1, new IdNameAndStatus("groupId2", "groupId2Name", "someStatus2"), "groupId2Name", "1", "someStatus2");
 		assertEquals(2, table.getItemCount());
 	}
 
@@ -57,6 +56,8 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		table.notifyListeners(SWT.Selection, new Event());
 		dispatchUntilQueueEmpty();
 		checkMainTable(table);
+		assertEquals(1, table.getSelectionIndex());
+
 
 		StackLayout stackLayout = (StackLayout) Swts.<Composite> getDescendant(myGroupsComposite.getEditor(), 1).getLayout();
 		Table summaryTable = Swts.getDescendant(myGroupsComposite.getEditor(), 1, 1);
@@ -78,7 +79,7 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		Table table = getMyGroupsTable(myGroupsComposite);
 		checkTableColumns(table, "Group Name", "Members", "My Status");
-		checkTable(table, 0, new IdAndName("groupId1", "groupId1Name"),  "groupId1Name", "3", "someStatus1");
+		checkTable(table, 0, new IdNameAndStatus("groupId1", "groupId1Name", "someStatus1"), "groupId1Name", "3", "someStatus1");
 		assertEquals(1, table.getItemCount());
 
 		table.select(0);
@@ -86,8 +87,9 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		dispatchUntilQueueEmpty();
 
 		checkTableColumns(table, "Group Name", "Members", "My Status");
-		checkTable(table, 0, new IdAndName("groupId1", "groupId1Name"), "groupId1Name", "3", "someStatus1");
+		checkTable(table, 0, new IdNameAndStatus("groupId1", "groupId1Name", "someStatus1"), "groupId1Name", "3", "someStatus1");
 		assertEquals(1, table.getItemCount());
+		assertEquals(0, table.getSelectionIndex());
 
 		StackLayout stackLayout = (StackLayout) Swts.<Composite> getDescendant(myGroupsComposite.getEditor(), 1).getLayout();
 		Table summaryTable = Swts.getDescendant(myGroupsComposite.getEditor(), 1, 1);
@@ -117,18 +119,10 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		Table table = getMyGroupsTable(myGroupsComposite);
 		checkTableColumns(table, "Group Name", "Members", "My Status");
 		checkTable(table, 0, null, CommonMessages.corrupted, CommonMessages.record, "");
-		checkTable(table, 1, new IdAndName("groupId1", "groupId1Name"), "groupId1Name", "1", "someStatus1");
-		checkTable(table, 2, new IdAndName("groupId2", "groupId2Name"), "groupId2Name", "1", "someStatus2");
+		checkTable(table, 1, new IdNameAndStatus("groupId1", "groupId1Name", "someStatus1"), "groupId1Name", "1", "someStatus1");
+		checkTable(table, 2, new IdNameAndStatus("groupId2", "groupId2Name", "someStatus2"), "groupId2Name", "1", "someStatus2");
 		assertEquals(3, table.getItemCount());
-	}
+		assertEquals(-1, table.getSelectionIndex());
 
-	protected Table getMyGroupsTable(MyGroupsComposite myGroupsComposite) {
-		SashForm sashForm = myGroupsComposite.getEditor();
-		assertEquals(3, sashForm.getChildren().length);
-		assertTrue(sashForm.getChildren()[1] instanceof Composite);
-		assertTrue(sashForm.getChildren()[2] instanceof Sash);
-
-		Table table = (Table) sashForm.getChildren()[0];
-		return table;
 	}
 }

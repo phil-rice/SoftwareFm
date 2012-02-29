@@ -56,7 +56,6 @@ public class NameAndValuesEditorTest extends AbstractNameAndValuesEditorTest<Nam
 		assertEquals(newValue, value);
 		assertEquals(newValue, actual.get(key));
 		assertEquals(expectedOkEnabled, okCancel.isOkEnabled());
-
 	}
 
 	public void testSelectCallsOKIfOkEnabled() {

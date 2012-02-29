@@ -145,7 +145,7 @@ public class InviteGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 				addParam(GroupConstants.takeOnFromKey, "wrongEmail@a.b").//
 				addParam(GroupConstants.takeOnEmailPattern, "emailPattern: " + GroupConstants.emailMarker + "/" + GroupConstants.groupNameMarker).//
 				addParam(GroupConstants.takeOnEmailListKey, "email1@a.b,email2@a.b").//
-				execute(IResponseCallback.Utils.checkCallback(CommonConstants.serverErrorCode, "class java.lang.IllegalArgumentException/Email / SoftwareFm mismatch. Email wrongEmail@a.b Expected null Actual someNewSoftwareFmId0")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+				execute(IResponseCallback.Utils.checkCallback(CommonConstants.serverErrorCode, "class java.lang.IllegalArgumentException/Email / SoftwareFm mismatch. Email wrongEmail@a.b Expected null SoftwareFmId someNewSoftwareFmId0")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 	}
 
 	protected void checkCannotInviteOn(String groupId, String softwareFmIdKey, String subject, String from, String emailPattern, String emailList) throws Exception {

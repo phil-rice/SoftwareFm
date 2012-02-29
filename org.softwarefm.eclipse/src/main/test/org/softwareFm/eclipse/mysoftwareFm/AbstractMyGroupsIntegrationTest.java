@@ -3,22 +3,34 @@ package org.softwareFm.eclipse.mysoftwareFm;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.Table;
+import org.softwareFm.common.IGitOperations;
 import org.softwareFm.common.IUserReader;
+import org.softwareFm.common.arrays.ArrayHelper;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
-import org.softwareFm.common.crypto.Crypto;
 import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups.MyGroupsComposite;
 import org.softwareFm.eclipse.mysoftwareFm.MyPeople.MyPeopleComposite;
 import org.softwareFm.eclipse.usage.internal.AbstractExplorerIntegrationTest;
+import org.softwareFm.server.ICrowdSourcedServer;
+import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.SignUpResult;
+import org.softwareFm.softwareFmServer.ITakeOnProcessor;
+import org.softwareFm.softwareFmServer.InviteGroupProcessor;
+import org.softwareFm.softwareFmServer.TakeOnGroupProcessor;
+import org.softwareFm.softwareFmServer.TakeOnProcessor;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.explorer.internal.MySoftwareFmLoggedIn.MySoftwareFmLoggedInComposite;
 import org.softwareFm.swt.explorer.internal.UserData;
@@ -26,11 +38,6 @@ import org.softwareFm.swt.swt.Swts;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIntegrationTest {
-	protected final String groupId1 = "groupId1";
-	protected final String groupId2 = "groupId2";
-
-	protected final String groupCryptoKey1 = Crypto.makeKey();
-	protected final String groupCryptoKey2 = Crypto.makeKey();
 
 	protected final String email = "my@email.com";
 	protected final String email1 = "my1@email.com";
@@ -89,8 +96,9 @@ abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIn
 	protected void setUp() throws Exception {
 		super.setUp();
 		new JdbcTemplate(processCallParameters.dataSource).update("delete from users");
-		assertEquals(userCryptoKey, signUpUser(softwareFmId, email));
-
+		String newSfmId = processCallParameters.softwareFmIdGenerator.call();
+		assertEquals(softwareFmId, newSfmId);
+		assertEquals(userCryptoKey, signUpUser(newSfmId, email));
 	}
 
 	protected String signUpUser(String softwareFmId, String email) {
@@ -134,5 +142,31 @@ abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIn
 
 		createGroup(groupId2, groupCryptoKey2);
 		addUserToGroup(softwareFmId, email2, groupId2, groupCryptoKey2, "someStatus2");
+	}
+
+	protected Table getMyGroupsTable(MyGroupsComposite myGroupsComposite) {
+		SashForm sashForm = myGroupsComposite.getEditor();
+		assertEquals(3, sashForm.getChildren().length);
+		assertTrue(sashForm.getChildren()[1] instanceof Composite);
+		assertTrue(sashForm.getChildren()[2] instanceof Sash);
+
+		Table table = (Table) sashForm.getChildren()[0];
+		return table;
+	}
+
+	@Override
+	protected IFunction1<String, String> getEmailToSfmIdFn() {
+		IFunction1<String, String> emailToSoftwareFmId = ICrowdSourcedServer.Utils.emailToSoftwareFmId(processCallParameters.dataSource);
+		return emailToSoftwareFmId;
+	}
+
+	@Override
+	protected IProcessCall[] getExtraProcessCalls(IGitOperations remoteGitOperations, IFunction1<Map<String, Object>, String> cryptoFn) {
+		Callable<String> groupIdGenerator = Callables.valueFromList(groupId1, groupId2);
+		Callable<String> groupCryptoGenerator = Callables.valueFromList(groupCryptoKey1, groupCryptoKey2);
+		ITakeOnProcessor takeOnProcessor = new TakeOnProcessor(remoteGitOperations, user, membershipForServer, groups, processCallParameters.userCryptoFn, groupUrlGenerator, groupIdGenerator, repoDefnFn);
+		TakeOnGroupProcessor takeOnGroupProcessor = new TakeOnGroupProcessor(takeOnProcessor, processCallParameters.signUpChecker, groupCryptoGenerator, getEmailToSfmIdFn(), processCallParameters.saltGenerator, processCallParameters.softwareFmIdGenerator, mailer);
+		InviteGroupProcessor inviteGroupProcessor = new InviteGroupProcessor(takeOnProcessor, processCallParameters.signUpChecker, getEmailToSfmIdFn(), processCallParameters.saltGenerator, processCallParameters.softwareFmIdGenerator, mailer, processCallParameters.userCryptoFn, userMembershipReader, groupsReader);
+		return ArrayHelper.append(super.getExtraProcessCalls(remoteGitOperations, cryptoFn), takeOnGroupProcessor, inviteGroupProcessor);
 	}
 }

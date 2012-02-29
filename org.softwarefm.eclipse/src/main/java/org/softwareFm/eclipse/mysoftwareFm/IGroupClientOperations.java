@@ -3,6 +3,7 @@ package org.softwareFm.eclipse.mysoftwareFm;
 import java.util.concurrent.Callable;
 
 import org.softwareFm.client.http.api.IHttpClient;
+import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.runnable.Runnables;
 import org.softwareFm.eclipse.mysoftwareFm.internal.GroupClientOperations;
 import org.softwareFm.swt.configuration.CardConfig;
@@ -10,9 +11,9 @@ import org.softwareFm.swt.explorer.IMasterDetailSocial;
 import org.softwareFm.swt.explorer.internal.UserData;
 
 public interface IGroupClientOperations {
-	Runnable createGroup(UserData userData, Runnable added);
+	Runnable createGroup(UserData userData, ICallback<String> added);
 
-	Runnable inviteToGroup(UserData userData,  final Callable<IdAndName> idAndNameGetter,  Runnable invited);
+	Runnable inviteToGroup(UserData userData,  final Callable<IdNameAndStatus> idAndNameGetter,  ICallback<String> showMyGroups);
 
 	Runnable acceptInvitation(UserData userData);
 
@@ -27,12 +28,12 @@ public interface IGroupClientOperations {
 			return new IGroupClientOperations() {
 
 				@Override
-				public Runnable createGroup(UserData userData, Runnable added) {
+				public Runnable createGroup(UserData userData, ICallback<String> added) {
 					return Runnables.exception();
 				}
 
 				@Override
-				public Runnable inviteToGroup(UserData userData, final Callable<IdAndName> idAndNameGetter,  Runnable invited) {
+				public Runnable inviteToGroup(UserData userData, final Callable<IdNameAndStatus> idAndNameGetter,  ICallback<String> invited) {
 					return Runnables.exception();
 				}
 
@@ -46,10 +47,6 @@ public interface IGroupClientOperations {
 					return Runnables.exception();
 				}
 			};
-		}
-
-		public static GroupClientOperationsMock mock() {
-			return new GroupClientOperationsMock();
 		}
 	}
 

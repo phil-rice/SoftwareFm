@@ -50,7 +50,6 @@ import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.common.url.Urls;
 import org.softwareFm.eclipse.IRequestGroupReportGeneration;
 import org.softwareFm.eclipse.comments.ICommentsReader;
-import org.softwareFm.eclipse.mysoftwareFm.GroupClientOperationsMock;
 import org.softwareFm.eclipse.mysoftwareFm.IGroupClientOperations;
 import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups;
@@ -64,9 +63,9 @@ import org.softwareFm.eclipse.user.UserMembershipReaderForLocal;
 import org.softwareFm.server.ICrowdSourcedServer;
 import org.softwareFm.server.comments.CommentsForServer;
 import org.softwareFm.server.processors.CommentProcessor;
-import org.softwareFm.server.processors.IMailer;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.ProcessCallParameters;
+import org.softwareFm.server.processors.internal.MailerMock;
 import org.softwareFm.softwareFmServer.GroupsForServer;
 import org.softwareFm.softwareFmServer.SoftwareFmServer;
 import org.softwareFm.softwareFmServer.UserMembershipForServer;
@@ -102,7 +101,13 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	final static String artifactUrl = "/ant/ant/artifact/ant";
 	final static String snippetrepoUrl = "/java/io/File";
 	final static String snippetUrl = "/snippet/java/io/File/snippet";
+	
+	protected final String groupId1 = "groupId1";
+	protected final String groupId2 = "groupId2";
 
+	protected final String groupCryptoKey1 = Crypto.makeKey();
+	protected final String groupCryptoKey2 = Crypto.makeKey();
+	
 	protected CardConfig cardConfig;
 	protected IGitLocal gitLocal;
 	public Explorer explorer;
@@ -128,7 +133,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	protected ICommentsReader commentsReader;
 	protected BasicDataSource dataSource;
 	protected IUserDataManager userDataManager;
-	private GroupClientOperationsMock groupClientOperations;
+	private IGroupClientOperations groupClientOperations;
 	protected IUser user;
 	protected ProcessCallParameters processCallParameters;
 	protected IUrlGenerator userUrlGenerator;
@@ -137,6 +142,10 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	protected GroupsForServer groups;
 	protected UserMembershipForServer membershipForServer;
 	protected IFunction1<String, String> repoDefnFn;
+	protected MailerMock mailer;
+	private Callable<String> userCryptoGenerator;
+	private Callable<String> softwareFmIdGenerator;
+	private IFunction1<Map<String, Object>, String> cryptoFn;
 
 	public static interface CardHolderAndCardCallback {
 		void process(ICardHolder cardHolder, ICard card) throws Exception;
@@ -279,17 +288,18 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 				new HttpGitWriter(httpClient, CommonConstants.testTimeOutMs), remoteAsUri, CommonConstants.staleCachePeriodForTest);
 		dataSource = AbstractLoginDataAccessor.defaultDataSource();
 
-		Callable<String> cryptoGenerator = Callables.valueFromList(userCryptoKey, userCryptoKey1, userCryptoKey2);
-		Callable<String> softwareFmIdGenerator = Callables.patternWithCount("newSoftwareFmId{0}");
+		userCryptoGenerator = Callables.valueFromList(userCryptoKey, userCryptoKey1, userCryptoKey2);
+		softwareFmIdGenerator = Callables.patternWithCount("newSoftwareFmId{0}");
 
 		cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().//
 				configure(display, new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(shell, service, gitLocal))).//
 				withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap(prefix, "data"));
 
 		remoteOperations = IGitOperations.Utils.gitOperations(remoteRoot);
-		IFunction1<Map<String, Object>, String> cryptoFn = ICrowdSourcedServer.Utils.cryptoFn(dataSource);
+		cryptoFn = ICrowdSourcedServer.Utils.cryptoFn(dataSource);
 		Map<String, Callable<Object>> defaultProperties = SoftwareFmServer.makeDefaultProperties();
-		processCallParameters = new ProcessCallParameters(dataSource, remoteOperations, cryptoGenerator, softwareFmIdGenerator, cryptoFn, IMailer.Utils.noMailer(), defaultProperties, prefix);
+		mailer = new MailerMock();
+		processCallParameters = new ProcessCallParameters(dataSource, remoteOperations, userCryptoGenerator, softwareFmIdGenerator, cryptoFn, mailer, defaultProperties, prefix);
 		user = processCallParameters.user;
 		userUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.userUrlKey);
 		groupUrlGenerator = GroupConstants.groupsGenerator(prefix);
@@ -308,9 +318,9 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 			showMyData = MyDetails.showMyDetails(service, cardConfig, masterDetailSocial, userUrlGenerator, gitLocal, projectTimeGetter);
 
 			IRequestGroupReportGeneration reportGenerator = new RequestGroupReportGeneration(httpClient, IResponseCallback.Utils.sysoutStatusCallback(), gitLocal);
-			groupClientOperations = IGroupClientOperations.Utils.mock();
+			groupClientOperations = IGroupClientOperations.Utils.groupOperations(masterDetailSocial, cardConfig, httpClient);
 			IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, projectTimeGetter, reportGenerator, groupClientOperations);
-			IShowMyPeople showMyPeople = MyPeople.showMyPeople(service, masterDetailSocial, cardConfig, gitLocal, userUrlGenerator, groupUrlGenerator, projectTimeGetter, reportGenerator, CommonConstants.testTimeOutMs*10);
+			IShowMyPeople showMyPeople = MyPeople.showMyPeople(service, masterDetailSocial, cardConfig, gitLocal, userUrlGenerator, groupUrlGenerator, projectTimeGetter, reportGenerator, CommonConstants.testTimeOutMs * 10);
 			userReader = makeUserReader();
 			userMembershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, userReader);
 
@@ -338,7 +348,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 
 	protected IProcessCall[] getExtraProcessCalls(IGitOperations remoteGitOperations, IFunction1<Map<String, Object>, String> cryptoFn) {
 		return new IProcessCall[] {//
-		new CommentProcessor(userReader, userMembershipReader, groupsReader, new CommentsForServer(remoteGitOperations, user, userMembershipReader, groupsReader, Callables.value(1000l)), cryptoFn) };
+				new CommentProcessor(userReader, userMembershipReader, groupsReader, new CommentsForServer(remoteGitOperations, user, userMembershipReader, groupsReader, Callables.value(1000l)), cryptoFn) };
 	}
 
 	protected IFunction1<String, String> getEmailToSfmIdFn() {
@@ -360,6 +370,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 			masterDetailSocial.dispose();
 			explorer.dispose();
 			cardConfig.dispose();
+			dataSource.close();
 		} finally {
 			crowdSourcedServer.shutdown();
 		}

@@ -69,7 +69,7 @@ public class SoftwareFmServer {
 						new CommentProcessor(processCallParameters.user, userMembership, groups, comments, processCallParameters.userCryptoFn),//
 						new GenerateGroupUsageProcessor(processCallParameters.gitOperations, generator, groups),//
 						new TakeOnGroupProcessor(takeOnProcessor, processCallParameters.signUpChecker, Callables.makeCryptoKey(), emailToSoftwareFmId, processCallParameters.saltGenerator, processCallParameters.softwareFmIdGenerator, processCallParameters.mailer),//
-						new InviteGroupProcessor(takeOnProcessor, processCallParameters.signUpChecker, Callables.makeCryptoKey(), emailToSoftwareFmId, processCallParameters.saltGenerator, processCallParameters.softwareFmIdGenerator,processCallParameters. mailer, processCallParameters.userCryptoFn, userMembership, groups) };
+						new InviteGroupProcessor(takeOnProcessor, processCallParameters.signUpChecker, emailToSoftwareFmId, processCallParameters.saltGenerator, processCallParameters.softwareFmIdGenerator, processCallParameters. mailer,processCallParameters.userCryptoFn, userMembership, groups) };
 			}
 		};
 	}

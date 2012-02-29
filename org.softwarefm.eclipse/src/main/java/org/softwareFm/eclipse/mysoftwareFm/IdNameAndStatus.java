@@ -1,17 +1,20 @@
 package org.softwareFm.eclipse.mysoftwareFm;
 
-public class IdAndName {
+public class IdNameAndStatus {
 	public final String id;
 	public final String name;
+	public final String status;
 
-	public IdAndName(String id, String name) {
+	public IdNameAndStatus(String id, String name, String status) {
+		super();
 		this.id = id;
 		this.name = name;
+		this.status = status;
 	}
 
 	@Override
 	public String toString() {
-		return "IdAndName [id=" + id + ", name=" + name + "]";
+		return "IdNameAndStatus [id=" + id + ", name=" + name + ", status=" + status + "]";
 	}
 
 	@Override
@@ -20,6 +23,7 @@ public class IdAndName {
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		return result;
 	}
 
@@ -31,7 +35,7 @@ public class IdAndName {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		IdAndName other = (IdAndName) obj;
+		IdNameAndStatus other = (IdNameAndStatus) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -41,6 +45,11 @@ public class IdAndName {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
+			return false;
+		if (status == null) {
+			if (other.status != null)
+				return false;
+		} else if (!status.equals(other.status))
 			return false;
 		return true;
 	}

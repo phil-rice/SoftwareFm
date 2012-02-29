@@ -8,15 +8,16 @@ import org.softwareFm.swt.explorer.internal.UserData;
 
 public interface IShowMyGroups {
 
-	void show(UserData data);
+	/** As well as showing, tries to select and scroll to make visible the groupId if it exists. GroupId can be null */
+	void show(UserData data, String groupId);
 
 	public static class Utils {
 
 		public static IShowMyGroups sysoutShowMyGroups() {
 			return new IShowMyGroups() {
 				@Override
-				public void show(UserData data) {
-					System.out.println("My groups: " + data);
+				public void show(UserData data, String groupId) {
+					System.out.println("My groups: " + groupId + "/" + data);
 				}
 			};
 		}
@@ -24,7 +25,7 @@ public interface IShowMyGroups {
 		public static IShowMyGroups exceptionShowMyGroups() {
 			return new IShowMyGroups() {
 				@Override
-				public void show(UserData data) {
+				public void show(UserData data, String groupId) {
 					throw new UnsupportedOperationException();
 				}
 			};

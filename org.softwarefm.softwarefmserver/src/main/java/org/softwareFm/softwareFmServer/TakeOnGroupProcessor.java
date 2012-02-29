@@ -22,11 +22,12 @@ import org.softwareFm.server.processors.ISignUpChecker;
 
 public class TakeOnGroupProcessor extends AbstractAddToGroupProcessor {
 
-	private final Callable<String> cryptoGenerator;
 
-	public TakeOnGroupProcessor(ITakeOnProcessor takeOnProcessor, ISignUpChecker signUpChecker, Callable<String> cryptoGenerator, IFunction1<String, String> emailToSfmId, Callable<String> saltGenerator, Callable<String> softwareFmIdGenerator, IMailer mailer) {
+	private final Callable<String> groupCryptoGenerator;
+
+	public TakeOnGroupProcessor(ITakeOnProcessor takeOnProcessor, ISignUpChecker signUpChecker, Callable<String> groupCryptoGenerator, IFunction1<String, String> emailToSfmId, Callable<String> saltGenerator, Callable<String> softwareFmIdGenerator, IMailer mailer) {
 		super(null, CommonConstants.POST, GroupConstants.takeOnCommandPrefix, takeOnProcessor, signUpChecker, emailToSfmId, saltGenerator, softwareFmIdGenerator, mailer);
-		this.cryptoGenerator = cryptoGenerator;
+		this.groupCryptoGenerator = groupCryptoGenerator;
 	}
 
 	@Override
@@ -36,7 +37,7 @@ public class TakeOnGroupProcessor extends AbstractAddToGroupProcessor {
 		String softwareFmId = (String) parameters.get(LoginConstants.softwareFmIdKey);
 		String from = (String) parameters.get(GroupConstants.takeOnFromKey);// this dude is now the admin
 
-		String groupCrypto = Callables.call(cryptoGenerator);
+		String groupCrypto = Callables.call(groupCryptoGenerator);
 		if (!Strings.isEmail(from))
 			throw new IllegalArgumentException(MessageFormat.format(GroupConstants.invalidEmail, from));
 		String expectedSfmId = Functions.call(emailToSfmId, from);
@@ -50,6 +51,6 @@ public class TakeOnGroupProcessor extends AbstractAddToGroupProcessor {
 		addUsersToGroup(groupId, groupCrypto, memberList);
 
 		sendInvitationEmails(parameters, groupName, memberList);
-		return IProcessResult.Utils.processString("");
+		return IProcessResult.Utils.processString(groupId);
 	}
 }

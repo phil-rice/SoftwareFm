@@ -28,7 +28,7 @@ public class InviteGroupProcessor extends AbstractAddToGroupProcessor {
 	private final IUserMembershipReader userMembershipReader;
 	private final IGroupsReader groupsReader;
 
-	public InviteGroupProcessor(ITakeOnProcessor takeOnProcessor, ISignUpChecker signUpChecker, Callable<String> cryptoGenerator, IFunction1<String, String> emailToSfmId, Callable<String> saltGenerator, Callable<String> softwareFmIdGenerator, IMailer mailer, IFunction1<Map<String, Object>, String> userCryptoFn, IUserMembershipReader userMembershipReader, IGroupsReader groupsReader) {
+	public InviteGroupProcessor(ITakeOnProcessor takeOnProcessor, ISignUpChecker signUpChecker, IFunction1<String, String> emailToSfmId, Callable<String> saltGenerator, Callable<String> softwareFmIdGenerator, IMailer mailer, IFunction1<Map<String, Object>, String> userCryptoFn, IUserMembershipReader userMembershipReader, IGroupsReader groupsReader) {
 		super(null, CommonConstants.POST, GroupConstants.inviteCommandPrefix, takeOnProcessor, signUpChecker, emailToSfmId, saltGenerator, softwareFmIdGenerator, mailer);
 		this.userCryptoFn = userCryptoFn;
 		this.userMembershipReader = userMembershipReader;

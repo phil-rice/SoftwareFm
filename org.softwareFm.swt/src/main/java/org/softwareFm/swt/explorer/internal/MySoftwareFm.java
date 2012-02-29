@@ -108,7 +108,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 
 			@Override
 			public void showMyGroups() {
-				showMyGroups.show(userData);
+				showMyGroups.show(userData, null);
 			}
 
 			@Override

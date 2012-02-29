@@ -24,6 +24,7 @@ import org.softwareFm.common.IGitLocal;
 import org.softwareFm.common.IGroupsReader;
 import org.softwareFm.common.IUserReader;
 import org.softwareFm.common.LocalGroupsReader;
+import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.comparators.Comparators;
 import org.softwareFm.common.constants.CommonConstants;
@@ -33,6 +34,7 @@ import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
@@ -56,7 +58,7 @@ public class MyGroups implements IHasComposite {
 	public static IShowMyGroups showMyGroups(final IServiceExecutor executor, final CardConfig cardConfig, final IMasterDetailSocial masterDetailSocial, final IUrlGenerator userUrlGenerator, final IUrlGenerator groupUrlGenerator, final IGitLocal gitLocal, final IProjectTimeGetter projectTimeGetter, final IRequestGroupReportGeneration reportGenerator, final IGroupClientOperations groupClientOperations) {
 		return new IShowMyGroups() {
 			@Override
-			public void show(final UserData userData) {
+			public void show(final UserData userData, final String groupId) {
 				executor.submit(new Callable<Void>() {
 					@Override
 					public Void call() throws Exception {
@@ -83,12 +85,14 @@ public class MyGroups implements IHasComposite {
 								masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyGroups>() {
 									@Override
 									public MyGroups apply(Composite from) throws Exception {
-										return new MyGroups(from, cardConfig, userMembershipReader, groupsReader, userData, projectTimeGetter, reportGenerator, groupClientOperations, new Runnable() {
+										MyGroups myGroups = new MyGroups(from, cardConfig, userMembershipReader, groupsReader, userData, projectTimeGetter, reportGenerator, groupClientOperations, new ICallback<String>() {
 											@Override
-											public void run() {
-												showMyGroups(executor, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, projectTimeGetter, reportGenerator, groupClientOperations);
+											public void process(String groupId) throws Exception {
+												showMyGroups(executor, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, projectTimeGetter, reportGenerator, groupClientOperations).show(userData, groupId);
 											}
 										});
+										myGroups.selectAndScrollTo(groupId);
+										return myGroups;
 									}
 								});
 							}
@@ -107,18 +111,26 @@ public class MyGroups implements IHasComposite {
 		public final Button invite;
 		public final Button create;
 		public final Button accept;
+		private final Callable<IdNameAndStatus> idNameStatusGetter;
 
-		public MyGroupsButtons(Composite parent, IGroupClientOperations groupClientOperations, UserData userData, Runnable showMyGroups, Callable<IdAndName> idAndNameGetter) {
+		public MyGroupsButtons(Composite parent, IGroupClientOperations groupClientOperations, UserData userData, ICallback<String> showMyGroups, Callable<IdNameAndStatus> idNameStatusGetter) {
+			this.idNameStatusGetter = idNameStatusGetter;
 			this.content = new Composite(parent, SWT.NULL);
 			content.setLayout(Swts.Row.getHorizonalNoMarginRowLayout());
 			accept = Swts.Buttons.makePushButton(content, "Accept", groupClientOperations.acceptInvitation(userData));
-			invite = Swts.Buttons.makePushButton(content, "Invite", groupClientOperations.inviteToGroup(userData, idAndNameGetter, showMyGroups));
+			invite = Swts.Buttons.makePushButton(content, "Invite", groupClientOperations.inviteToGroup(userData, idNameStatusGetter, showMyGroups));
 			create = Swts.Buttons.makePushButton(content, "Create new group", groupClientOperations.createGroup(userData, showMyGroups));
 		}
 
 		@Override
 		public Control getControl() {
 			return content;
+		}
+
+		public void sortOutButtonStatus() {
+			IdNameAndStatus idNameAndStatus = Callables.call(idNameStatusGetter);
+			accept.setEnabled(idNameAndStatus != null && GroupConstants.invitedStatus.equals(idNameAndStatus.status));
+			invite.setEnabled(idNameAndStatus != null && GroupConstants.adminStatus.equals(idNameAndStatus.status));
 		}
 	}
 
@@ -141,20 +153,20 @@ public class MyGroups implements IHasComposite {
 			return sashForm;
 		}
 
-		public MyGroupsComposite(Composite parent, final CardConfig cardConfig, IUserMembershipReader membershipReader, final IGroupsReader groupReaders, UserData userData, IProjectTimeGetter projectTimeGetter, final IRequestGroupReportGeneration reportGenerator, IGroupClientOperations groupClientOperations, Runnable showMyGroups) {
+		public MyGroupsComposite(Composite parent, final CardConfig cardConfig, IUserMembershipReader membershipReader, final IGroupsReader groupReaders, UserData userData, IProjectTimeGetter projectTimeGetter, final IRequestGroupReportGeneration reportGenerator, IGroupClientOperations groupClientOperations, ICallback<String> showMyGroups) {
 			super(parent, cardConfig, GroupConstants.myGroupsCardType, SoftwareFmConstants.myGroupsTitle, true);
 			this.groupsReader = groupReaders;
 			sashForm = new SashForm(getInnerBody(), SWT.HORIZONTAL);
 			summaryTable = new Table(sashForm, SWT.FULL_SELECTION);
-			buttons = new MyGroupsButtons(getInnerBody(), groupClientOperations, userData, showMyGroups, new Callable<IdAndName>() {
+			buttons = new MyGroupsButtons(getInnerBody(), groupClientOperations, userData, showMyGroups, new Callable<IdNameAndStatus>() {
 				@Override
-				public IdAndName call() throws Exception {
+				public IdNameAndStatus call() throws Exception {
 					int index = summaryTable.getSelectionIndex();
 					if (index == -1)
 						return null;
 					Object result = summaryTable.getItem(index).getData();
-					return (IdAndName) result;
-					
+					return (IdNameAndStatus) result;
+
 				}
 			});
 			summaryTable.setHeaderVisible(true);
@@ -183,10 +195,10 @@ public class MyGroups implements IHasComposite {
 					String groupCryptoKey = (String) map.get(GroupConstants.groupCryptoKey);
 					String groupName = groupReaders.getGroupProperty(groupId, groupCryptoKey, GroupConstants.groupNameKey);
 					TableItem item = new TableItem(summaryTable, SWT.NULL);
-					item.setData(new IdAndName(groupId, groupName));
 					int membershipCount = groupsReader.membershipCount(groupId, groupCryptoKey);
 					String membershipCountString = Integer.toString(membershipCount);
 					String myStatus = Strings.nullSafeToString(map.get(GroupConstants.membershipStatusKey));
+					item.setData(new IdNameAndStatus(groupId, groupName, myStatus));
 					item.setText(new String[] { groupName, membershipCountString, myStatus });
 					idToCrypto.put(groupId, groupCryptoKey);
 				}
@@ -207,12 +219,13 @@ public class MyGroups implements IHasComposite {
 			summaryTable.addListener(SWT.Selection, new Listener() {
 				@Override
 				public void handleEvent(Event event) {
+					sortOutButtonsEnabledStatus();
 					stackLayout.topControl = membershipTable;
 					membershipTable.removeAll();
 					int index = summaryTable.getSelectionIndex();
 					if (index >= 0) {
 						TableItem item = summaryTable.getItem(index);
-						IdAndName idAndName = (IdAndName) item.getData();
+						IdNameAndStatus idAndName = (IdNameAndStatus) item.getData();
 						String groupId = idAndName.id;
 						if (groupId == null)
 							throw new NullPointerException(Integer.toString(index));
@@ -233,11 +246,15 @@ public class MyGroups implements IHasComposite {
 			});
 			Swts.packTables(summaryTable, membershipTable);
 			sashForm.setWeights(new int[] { 2, 3 });
+			sortOutButtonsEnabledStatus();
 		}
 
+		private void sortOutButtonsEnabledStatus() {
+			buttons.sortOutButtonStatus();
+		}
 	}
 
-	public MyGroups(Composite parent, CardConfig cardConfig, IUserMembershipReader membershipReader, IGroupsReader groupsReader, UserData userData, IProjectTimeGetter projectTimeGetter, IRequestGroupReportGeneration reportGenerator, IGroupClientOperations groupClientOperations, Runnable showMyGroups) {
+	public MyGroups(Composite parent, CardConfig cardConfig, IUserMembershipReader membershipReader, IGroupsReader groupsReader, UserData userData, IProjectTimeGetter projectTimeGetter, IRequestGroupReportGeneration reportGenerator, IGroupClientOperations groupClientOperations, ICallback<String> showMyGroups) {
 		content = new MyGroupsComposite(parent, cardConfig, membershipReader, groupsReader, userData, projectTimeGetter, reportGenerator, groupClientOperations, showMyGroups);
 		content.setLayout(new DataCompositeWithFooterLayout());
 	}
@@ -250,6 +267,19 @@ public class MyGroups implements IHasComposite {
 	@Override
 	public Composite getComposite() {
 		return content;
+	}
+
+	protected void selectAndScrollTo(String groupId) {
+		Table table = content.summaryTable;
+		for (int i = 0; i < table.getItemCount(); i++) {
+			TableItem item = table.getItem(i);
+			IdNameAndStatus idNameAndStatus = (IdNameAndStatus) item.getData();
+			if (idNameAndStatus != null && idNameAndStatus.id.equals(groupId)) {
+				table.select(i);
+				table.showItem(item);
+			}
+		}
+
 	}
 
 }
