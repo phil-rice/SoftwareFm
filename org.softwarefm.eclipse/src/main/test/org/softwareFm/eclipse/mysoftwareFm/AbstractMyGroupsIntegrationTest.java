@@ -54,8 +54,21 @@ abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIn
 		MySoftwareFmLoggedInComposite composite = Swts.<MySoftwareFmLoggedInComposite> getDescendant(mySoftwareFmComposite, 0);
 		Button myGroupsButton = composite.myGroupsButton;
 		Swts.Buttons.press(myGroupsButton);
-		dispatchUntilQueueEmpty();
+		MyGroupsComposite myGroups = getMyGroups();
+		return myGroups;
+	}
+
+	private MyGroupsComposite getMyGroups() {
+		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				Control detail = masterDetailSocial.getDetailContent();
+				return detail instanceof MyGroupsComposite;
+			}
+		});
 		MyGroupsComposite myGroups = (MyGroupsComposite) masterDetailSocial.getDetailContent();
+		if (myGroups == null)
+			throw new NullPointerException();// is this because of a race condition... has intermittantly occured twice now
 		return myGroups;
 	}
 

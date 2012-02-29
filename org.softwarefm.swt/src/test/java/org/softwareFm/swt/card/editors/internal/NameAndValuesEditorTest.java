@@ -26,8 +26,8 @@ public class NameAndValuesEditorTest extends AbstractNameAndValuesEditorTest<Nam
 	private int changeValueIndex;
 
 	public void testInitialValuesWhenDisplayed() {
-		checkLabelsMatch(labels, "One", "Two", "Three");
-		checkTextMatches(values, "1", "2", "");
+		checkLabelsMatch(editorComposite, "One", "Two", "Three");
+		checkTextMatches(editorComposite, "1", "2", "");
 		assertFalse(okCancel.isOkEnabled());
 	}
 
@@ -44,9 +44,9 @@ public class NameAndValuesEditorTest extends AbstractNameAndValuesEditorTest<Nam
 	}
 
 	private void checkChangeValue(int index, String newValue, boolean expectedOkEnabled) {
-		Label label = (Label) labels.getChildren()[index];
+		Label label = (Label) editorComposite.getChildren()[index*2];
 		String key = label.getText().toLowerCase();// won't work in general, but is ok for one/two/three
-		Control control = values.getChildren()[index];
+		Control control = editorComposite.getChildren()[index*2+1];
 		assertEquals(changeValueIndex + 1, callback.canOkData.size());
 		Swts.setText(control, newValue);
 		changeValueIndex++;
@@ -59,7 +59,7 @@ public class NameAndValuesEditorTest extends AbstractNameAndValuesEditorTest<Nam
 	}
 
 	public void testSelectCallsOKIfOkEnabled() {
-		Text text = (Text) values.getChildren()[0];
+		Text text = (Text) editorComposite.getChildren()[1];
 
 		assertEquals(0, callback.okData.size());
 		text.notifyListeners(SWT.DefaultSelection, new Event());

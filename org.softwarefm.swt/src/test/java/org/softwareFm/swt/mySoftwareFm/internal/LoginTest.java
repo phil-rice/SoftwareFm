@@ -21,8 +21,8 @@ public class LoginTest extends AbstractNameAndValuesEditorTest<Login> {
 	private final LoginCallbackMock loginCallback = new LoginCallbackMock();
 
 	public void testLoginEditorWhenDisplayed() {
-		checkLabelsMatch(labels, "Email", "Password");
-		checkTextMatches(values, "initialEmail", "");
+		checkLabelsMatch(editorComposite, "Email", "Password");
+		checkTextMatches(editorComposite, "initialEmail", "");
 		assertFalse(okCancel.isOkEnabled());
 	}
 
@@ -76,8 +76,8 @@ public class LoginTest extends AbstractNameAndValuesEditorTest<Login> {
 	}
 
 	private void checkOk(String email, String password, boolean expectedOk) {
-		Swts.setText(values.getChildren()[0], email);
-		Swts.setText(values.getChildren()[1], password);
+		Swts.setText(editorComposite.getChildren()[1], email);
+		Swts.setText(editorComposite.getChildren()[3], password);
 		assertEquals(expectedOk, okCancel.isOkEnabled());
 
 	}

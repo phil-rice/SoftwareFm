@@ -8,10 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -26,37 +27,27 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 
 	public static class NameAndValuesEditorComposite extends DataWithOkCancelComposite<Composite> {
 
-		private final SashForm editing;
+		private final Composite editing;
 		private final ICardEditorCallback callback;
 		private final Control firstChild;
 		private final ICardData cardData;
 		private final ICardEditorCallback cardEditorCallback;
-		public Composite labels;
-		public Composite values;
 
 		public NameAndValuesEditorComposite(Composite parent, String titleString, final ICardData cardData, List<KeyAndEditStrategy> keyAndEditStrategy, final ICardEditorCallback strategy) {
 			super(parent, cardData.getCardConfig(), cardData.cardType(), titleString);
 			this.cardData = cardData;
 			this.cardEditorCallback = strategy;
 			this.callback = strategy;
-			editing = Swts.newSashForm(getInnerBody(), SWT.HORIZONTAL, "editing");
-			labels = Swts.newComposite(editing, SWT.NULL, "Labels");
-			values = Swts.newComposite(editing, SWT.NULL, "value");
-			labels.setBackground(getTitleSpec().background);
-			values.setBackground(getTitleSpec().background);
+			editing = Swts.newComposite(getInnerBody(), SWT.NULL, "editing");
+			editing.setBackground(getTitleSpec().background);
 
 			CardConfig cc = getCardConfig();
-			int dummy = 0;
 			for (KeyAndEditStrategy data : keyAndEditStrategy) {
-				Label label = INamesAndValuesEditor.Utils.label(labels, cc, cardData.cardType(), data);
+				Label label = INamesAndValuesEditor.Utils.label(editing, cc, cardData.cardType(), data);
 				label.setBackground(getTitleSpec().background);
-				if (dummy++ % 2 == 0)
-					label.setBackground(getDisplay().getSystemColor(SWT.COLOR_BLUE));
-				else
-					label.setBackground(getDisplay().getSystemColor(SWT.COLOR_RED));
 				@SuppressWarnings("unchecked")
 				IEditableControlStrategy<Control> editableControlStrategy = (IEditableControlStrategy<Control>) data.editableControlStrategy;
-				Control editor = editableControlStrategy.createControl(values);
+				Control editor = editableControlStrategy.createControl(editing);
 				String value = cc.valueFn.apply(cc, new LineItem(cardData.cardType(), data.key, cardData.data().get(data.key)));
 				editableControlStrategy.populateInitialValue(editor, value);
 				editableControlStrategy.whenModifed(editor, cardData, data.key, new Runnable() {
@@ -66,20 +57,14 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 					}
 				});
 				editableControlStrategy.addEnterEscapeListeners(getFooter(), editor);
-			}
-			Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(labels, cc.editorIndentY);
-			Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithMargins(values, cc.editorIndentY);
-
-			for (int i = 0; i < values.getChildren().length; i++) {
-				Control value = values.getChildren()[i];
-				if (value instanceof StyledText) {
-					Control label = labels.getChildren()[i];
-					Swts.Grid.addGrabVerticalToGridData(label, false);
-					Swts.Grid.addGrabVerticalToGridData(value, true);
-				}
+				boolean isStyledText = editor instanceof StyledText;
+				label.setLayoutData(new GridData(SWT.TOP, SWT.LEFT, isStyledText, false));
+				editor.setLayoutData(Swts.Grid.makeGrabHorizonalAndFillGridData());
+				if (isStyledText)
+					Swts.Grid.addGrabVerticalToGridData(editor, true);
 			}
 
-			editing.setWeights(new int[] { 1, 3 });
+			editing.setLayout(new GridLayout(2, false));
 
 			getInnerBody().addPaintListener(new PaintListener() {
 				@Override
@@ -91,7 +76,7 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 				}
 			});
 			assert keyAndEditStrategy.size() > 0;
-			firstChild = values.getChildren()[0];
+			firstChild = getChildren()[1];
 			firstChild.forceFocus();
 		}
 

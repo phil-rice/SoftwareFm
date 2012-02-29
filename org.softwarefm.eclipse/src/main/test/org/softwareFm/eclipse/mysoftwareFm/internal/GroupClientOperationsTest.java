@@ -55,7 +55,8 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		dispatchUntilQueueEmpty();
 
 		NameAndValuesEditorComposite editor = (NameAndValuesEditorComposite) masterDetailSocial.getDetailContent();
-		assertFalse(((Text) editor.values.getChildren()[0]).getEditable());
+		
+		assertFalse(((Text) editor.getEditor().getChildren()[1]).getEditable());
 		checkChange(editor, 1, "Not an email");
 		checkChange(editor, 2, "newSubject $email$/$group$");
 		checkChange(editor, 3, "newMail $email$/$group$");
@@ -88,7 +89,7 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 			}
 		});
 		NameAndValuesEditorComposite afterEditor = (NameAndValuesEditorComposite) masterDetailSocial.getDetailContent();
-		checkTextMatches(afterEditor.values, values);
+		checkTextMatches(afterEditor.getEditor(), values);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -108,7 +109,7 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		dispatchUntilQueueEmpty();
 
 		NameAndValuesEditorComposite editor = (NameAndValuesEditorComposite) masterDetailSocial.getDetailContent();
-		assertFalse(((Text) editor.values.getChildren()[0]).getEditable());
+		assertFalse(((Text) editor.getEditor().getChildren()[1]).getEditable());
 		checkChange(editor, 1, email1 + "," + email2);
 		checkChange(editor, 2, "newSubject $email$/$group$");
 		checkChange(editor, 3, "newMail $email$/$group$");
@@ -271,8 +272,8 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		Swts.Buttons.press(buttons.create);
 		dispatchUntilQueueEmpty();
 		NameAndValuesEditorComposite editor = (NameAndValuesEditorComposite) masterDetailSocial.getDetailContent();
-		checkLabelsMatch(editor.labels, "Group Name", "Email List", "Subject", "Email Pattern");
-		checkTextMatches(editor.values, //
+		checkLabelsMatch(editor.getEditor(), "Group Name", "Email List", "Subject", "Email Pattern");
+		checkTextMatches(editor.getEditor(), //
 				"", //
 				"<Type here a comma separated list of people you would like to invite to the group\nThe Email below will be sent with $email$ and $group$ replaced by your email, and the group name>",//
 				"You are invited to join the SoftwareFM group $group$",//
@@ -302,7 +303,7 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 	}
 
 	private void checkChange(NameAndValuesEditorComposite editor, int i, String newValue) {
-		Control control = editor.values.getChildren()[i];
+		Control control = editor.getEditor().getChildren()[i*2+1];
 		Swts.setText(control, newValue);
 	}
 

@@ -81,6 +81,38 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 	private File remoteRoot;
 	private IUserDataManager userDataManager;
 
+	public void testForgotPassword() throws Exception {
+		signUp(email, moniker, password);
+		String crypto = template.queryForObject("select crypto from users", String.class);
+
+		mySoftwareFm.logout();
+		mySoftwareFm.start();
+		displayUntilEmailPassword().pressButton(0);
+		IDataCompositeWithOkCancel<Composite> emailAndMessageComposite = displayUntilValueComposite("Email", "");// the empty string is the label for 'message'
+		checkTextMatches(emailAndMessageComposite.getEditor(), email, "When your email address is correctly entered, please click the 'OK' button below. SoftwareFM will then email you a link to your password.");
+		setValues(email);
+		assertTrue(getOkCancel().isOkEnabled());
+		getOkCancel().ok();
+		displayUntilCompositeWithCardMargin();
+		assertEquals("Reminder email sent to " + email + "\n\nClicking this panel will start login again", getText());
+
+		assertEquals(new UserData(email, null, null), userDataManager.getUserData());
+
+		mySoftwareFm.start();
+		displayUntilValueComposite("Email", "Password");
+
+		String magicString = template.queryForObject("select passwordResetKey from users", String.class);
+		String newPassword = resetPassword(magicString);
+		System.out.println("password: " + newPassword);
+		setValues(email, newPassword);
+		assertTrue(getOkCancel().isOkEnabled());
+		getOkCancel().ok();
+		displayUntilDataCompositeWithTitle("My Software Fm");
+		checkLoggedInDisplay(crypto, "someNewSoftwareFmId0");
+
+		assertEquals(new UserData(email, "someNewSoftwareFmId0", crypto), userDataManager.getUserData());
+	}
+
 	public void testSignupThenLogin() {
 		assertSame(userDataManager.getUserData(), mySoftwareFm.getUserData());
 
@@ -179,38 +211,6 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		Swts.layoutDump(compositeWithCardMargin);
 		StyledText text = Swts.<StyledText> getDescendant(compositeWithCardMargin, 1, 0, 0);
 		return text.getText();
-	}
-
-	public void testForgotPassword() throws Exception {
-		signUp(email, moniker, password);
-		String crypto = template.queryForObject("select crypto from users", String.class);
-
-		mySoftwareFm.logout();
-		mySoftwareFm.start();
-		displayUntilEmailPassword().pressButton(0);
-		IDataCompositeWithOkCancel<Composite> emailAndMessageComposite = displayUntilValueComposite("Email", "");// the empty string is the label for 'message'
-		checkTextMatches((Composite) emailAndMessageComposite.getEditor().getChildren()[1], email, "When your email address is correctly entered, please click the 'OK' button below. SoftwareFM will then email you a link to your password.");
-		setValues(email);
-		assertTrue(getOkCancel().isOkEnabled());
-		getOkCancel().ok();
-		displayUntilCompositeWithCardMargin();
-		assertEquals("Reminder email sent to " + email + "\n\nClicking this panel will start login again", getText());
-
-		assertEquals(new UserData(email, null, null), userDataManager.getUserData());
-
-		mySoftwareFm.start();
-		displayUntilValueComposite("Email", "Password");
-
-		String magicString = template.queryForObject("select passwordResetKey from users", String.class);
-		String newPassword = resetPassword(magicString);
-		System.out.println("password: " + newPassword);
-		setValues(email, newPassword);
-		assertTrue(getOkCancel().isOkEnabled());
-		getOkCancel().ok();
-		displayUntilDataCompositeWithTitle("My Software Fm");
-		checkLoggedInDisplay(crypto, "someNewSoftwareFmId0");
-
-		assertEquals(new UserData(email, "someNewSoftwareFmId0", crypto), userDataManager.getUserData());
 	}
 
 	protected IOkCancelForTests displayUntilEmailPassword() {
@@ -320,17 +320,13 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 	private <T> T process(IDataCompositeWithOkCancel<Composite> valueComposite, IEditorCallback<T> callback) {
 		Composite editor = valueComposite.getEditor();
 		Control[] children = editor.getChildren();
-		assertEquals(2, children.length);
-		Composite labels = (Composite) children[0];
-		Composite editors = (Composite) children[1];
 		List<Label> labelList = Lists.newList();
 		List<Control> editorList = Lists.newList();
-		for (int i = 0; i < labels.getChildren().length; i++) {
-			labelList.add((Label) labels.getChildren()[i]);
-			editorList.add(editors.getChildren()[i]);
+		int i = 0;
+		while (i < children.length) {
+			labelList.add((Label) children[i++]);
+			editorList.add(children[i++]);
 		}
-		if (labels.getChildren().length != editors.getChildren().length)
-			assertEquals(labels.getChildren().length, editors.getChildren().length);
 		return callback.check(labelList, editorList);
 
 	}

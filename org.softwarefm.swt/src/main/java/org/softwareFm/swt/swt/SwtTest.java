@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.future.GatedMockFuture;
+import org.softwareFm.swt.composites.IHasComposite;
 
 abstract public class SwtTest extends TestCase {
 
@@ -51,10 +52,13 @@ abstract public class SwtTest extends TestCase {
 		}
 	}
 
+	public static void checkTextMatches(IHasComposite values, String... expected) {
+		checkTextMatches(values.getComposite(), expected);
+	}
 	public static void checkTextMatches(Composite values, String... expected) {
 		Control[] children = values.getChildren();
-		for (int i = 0; i < children.length; i++) {
-			Control control = children[i];
+		for (int i = 0; i < expected.length; i++) {
+			Control control = children[i*2+1];
 			if (control instanceof Text)
 				assertEquals(expected[i], ((Text) control).getText());
 			else if (control instanceof StyledText)
@@ -64,11 +68,15 @@ abstract public class SwtTest extends TestCase {
 		}
 	}
 
-	public static void checkLabelsMatch(Composite labels, String... expected) {
-		Control[] children = labels.getChildren();
-		assertEquals(expected.length, children.length);
-		for (int i = 0; i < children.length; i++) {
-			Label label = (Label) children[i];
+	public static void checkLabelsMatch(IHasComposite editor, String... expected) {
+		checkLabelsMatch(editor.getComposite(), expected);
+	}
+
+	public static void checkLabelsMatch(Composite editor, String... expected) {
+		Control[] children = editor.getChildren();
+		assertEquals(expected.length*2, children.length);
+		for (int i = 0; i < expected.length; i++) {
+			Label label = (Label) children[i * 2];
 			assertEquals(expected[i], label.getText());
 		}
 	}
