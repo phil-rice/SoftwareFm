@@ -7,6 +7,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.Text;
 import org.softwareFm.common.collections.Iterables;
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.constants.CommonConstants;
@@ -22,6 +23,69 @@ import org.softwareFm.swt.editors.NameAndValuesEditor.NameAndValuesEditorComposi
 import org.softwareFm.swt.swt.Swts;
 
 public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
+	@SuppressWarnings("unchecked")
+	public void testInvite() {
+		createGroup(groupId1, groupCryptoKey1);
+		addUserToGroup(softwareFmId, email, groupId1, groupCryptoKey1, GroupConstants.adminStatus);
+		String groupName = groupId1 + "Name";
+
+		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
+		Table beforeTable = getMyGroupsTable(myGroupsComposite);
+		beforeTable.select(0);
+		beforeTable.notifyListeners(SWT.Selection, new Event());
+		dispatchUntilQueueEmpty();
+		MyGroupsButtons buttons = myGroupsComposite.getFooter();
+		assertTrue(buttons.invite.isEnabled());
+		Swts.Buttons.press(buttons.invite);
+		dispatchUntilQueueEmpty();
+
+		NameAndValuesEditorComposite editor = (NameAndValuesEditorComposite) masterDetailSocial.getDetailContent();
+		assertFalse(((Text) editor.values.getChildren()[0]).getEditable());
+		checkChange(editor, 1, email1 + "," + email2);
+		checkChange(editor, 2, "newSubject $email$/$group$");
+		checkChange(editor, 3, "newMail $email$/$group$");
+		assertTrue(editor.getFooter().okButton().isEnabled());
+
+		editor.getFooter().ok();
+		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				Control detailContent = masterDetailSocial.getDetailContent();
+				return detailContent instanceof MyGroupsComposite;
+			}
+		});
+
+		Table afterTable = getMyGroupsTable((MyGroupsComposite) masterDetailSocial.getDetailContent());
+		checkTable(afterTable, 0, new IdNameAndStatus(groupId1, groupName, GroupConstants.adminStatus), groupName, "3", GroupConstants.adminStatus);
+		assertEquals(1, afterTable.getItemCount());
+		assertEquals(0, afterTable.getSelectionIndex());
+
+		assertEquals(Lists.times(2, email), mailer.froms);
+		assertEquals(Arrays.asList(email1, email2), mailer.tos);
+		assertEquals(Arrays.asList("newSubject " + email1 + "/" + groupName, "newSubject " + email2 + "/" + groupName), mailer.subjects);
+		assertEquals(Arrays.asList("newMail " + email1 + "/" + groupName, "newMail " + email2 + "/" + groupName), mailer.messages);
+
+		assertEquals(groupName, groups.getGroupProperty(groupId1, groupCryptoKey1, GroupConstants.groupNameKey));
+
+		assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId1, GroupConstants.groupCryptoKey, groupCryptoKey1, GroupConstants.membershipStatusKey, GroupConstants.adminStatus)), userMembershipReader.walkGroupsFor(softwareFmId, userCryptoKey));
+		assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId1, GroupConstants.groupCryptoKey, groupCryptoKey1, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus)), userMembershipReader.walkGroupsFor(softwareFmId1, userCryptoKey1));
+		assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId1, GroupConstants.groupCryptoKey, groupCryptoKey1, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus)), userMembershipReader.walkGroupsFor(softwareFmId2, userCryptoKey2));
+
+		String projectCryptoKey = userReader.getUserProperty(softwareFmId, userCryptoKey, SoftwareFmConstants.projectCryptoKey);
+		String projectCryptoKey1 = userReader.getUserProperty(softwareFmId1, userCryptoKey1, SoftwareFmConstants.projectCryptoKey);
+		String projectCryptoKey2 = userReader.getUserProperty(softwareFmId2, userCryptoKey2, SoftwareFmConstants.projectCryptoKey);
+
+		assertNotNull(projectCryptoKey);
+		assertNotNull(projectCryptoKey1);
+		assertNotNull(projectCryptoKey2);
+
+		assertEquals(Arrays.asList(//
+				Maps.stringObjectMap(SoftwareFmConstants.projectCryptoKey, projectCryptoKey, LoginConstants.emailKey, email, GroupConstants.membershipStatusKey, GroupConstants.adminStatus, LoginConstants.softwareFmIdKey, softwareFmId), //
+				Maps.stringObjectMap(SoftwareFmConstants.projectCryptoKey, projectCryptoKey1, LoginConstants.emailKey, email1, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus, LoginConstants.softwareFmIdKey, softwareFmId1), //
+				Maps.stringObjectMap(SoftwareFmConstants.projectCryptoKey, projectCryptoKey2, LoginConstants.emailKey, email2, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus, LoginConstants.softwareFmIdKey, softwareFmId2)), //
+				Iterables.list(groupsReader.users(groupId1, groupCryptoKey1)));
+	}
+
 	@SuppressWarnings("unchecked")
 	public void testDisplaysCreateActuallyCreatesSendsEmailsAndDisplaysMyGroupsAtEnd() {
 		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
@@ -172,10 +236,6 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 	private void checkChange(NameAndValuesEditorComposite editor, int i, String newValue) {
 		Control control = editor.values.getChildren()[i];
 		Swts.setText(control, newValue);
-	}
-
-	public void testInvite() {
-		fail();
 	}
 
 	public void testAccept() {

@@ -33,6 +33,10 @@ public class InviteGroupProcessor extends AbstractAddToGroupProcessor {
 		this.userCryptoFn = userCryptoFn;
 		this.userMembershipReader = userMembershipReader;
 		this.groupsReader = groupsReader;
+		if (userMembershipReader == null)
+			throw new NullPointerException();
+		if (groupsReader == null)
+			throw new NullPointerException();
 	}
 
 	@Override
@@ -44,7 +48,7 @@ public class InviteGroupProcessor extends AbstractAddToGroupProcessor {
 		String userCrypto = Functions.call(userCryptoFn, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
 		String groupCrypto = IUserMembershipReader.Utils.findGroupCrytpo(userMembershipReader, softwareFmId, userCrypto, groupId);
 		String status = userMembershipReader.getMembershipProperty(softwareFmId, userCrypto, groupId, GroupConstants.membershipStatusKey); // could optimise and merge this with last
-		String groupName =groupsReader.getGroupProperty(groupId, groupCrypto, GroupConstants.groupNameKey);
+		String groupName = groupsReader.getGroupProperty(groupId, groupCrypto, GroupConstants.groupNameKey);
 		if (!GroupConstants.adminStatus.equals(status))
 			throw new IllegalArgumentException(MessageFormat.format(GroupConstants.cannotInviteToGroupUnlessAdmin, groupName, status));
 		if (groupName == null)

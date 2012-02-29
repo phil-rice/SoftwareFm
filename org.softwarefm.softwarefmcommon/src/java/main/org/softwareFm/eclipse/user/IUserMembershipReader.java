@@ -19,6 +19,8 @@ public interface IUserMembershipReader {
 	public static class Utils {
 		public static String findGroupProperty(IUserMembershipReader reader, IGroupsReader groupsReader, String softwareFmId, String crypto, String groupId, String property) {
 			Iterable<Map<String, Object>> groups = reader.walkGroupsFor(softwareFmId, crypto);
+			if (groups == null)
+				throw new NullPointerException(MessageFormat.format(GroupConstants.notAMemberOfAnyGroup, softwareFmId));
 			for (Map<String, Object> map : groups) {
 				if (groupId.equals(map.get(GroupConstants.groupIdKey))) {
 					String groupCrypto = (String) map.get(GroupConstants.groupCryptoKey);
@@ -29,7 +31,10 @@ public interface IUserMembershipReader {
 		}
 
 		public static String findGroupCrytpo(IUserMembershipReader reader, String softwareFmId, String userCrypto, String groupId) {
-			for (Map<String, Object> map : reader.walkGroupsFor(softwareFmId, userCrypto))
+			Iterable<Map<String, Object>> groups = reader.walkGroupsFor(softwareFmId, userCrypto);
+			if (groups == null)
+				throw new NullPointerException(MessageFormat.format(GroupConstants.notAMemberOfAnyGroup, softwareFmId));
+			for (Map<String, Object> map : groups)
 				if (groupId.equals(map.get(GroupConstants.groupIdKey)))
 					return (String) map.get(GroupConstants.groupCryptoKey);
 			throw new IllegalArgumentException(MessageFormat.format(GroupConstants.notAMemberOfGroup, softwareFmId, groupId));

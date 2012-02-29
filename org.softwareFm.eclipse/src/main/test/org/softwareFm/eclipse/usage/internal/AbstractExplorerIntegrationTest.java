@@ -307,6 +307,8 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		groups = new GroupsForServer(groupUrlGenerator, remoteOperations, repoDefnFn);
 		membershipForServer = new UserMembershipForServer(userUrlGenerator, user, remoteOperations, repoDefnFn);
 
+		userReader = makeUserReader();
+		userMembershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, userReader);
 		IProcessCall[] extraProcessCalls = getExtraProcessCalls(remoteOperations, cryptoFn);
 		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, Functions.<ProcessCallParameters, IProcessCall[]> constant(extraProcessCalls));
 		crowdSourcedServer = ICrowdSourcedServer.Utils.testServerPort(processCall, ICallback.Utils.rethrow());
@@ -321,8 +323,6 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 			groupClientOperations = IGroupClientOperations.Utils.groupOperations(masterDetailSocial, cardConfig, httpClient);
 			IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, projectTimeGetter, reportGenerator, groupClientOperations);
 			IShowMyPeople showMyPeople = MyPeople.showMyPeople(service, masterDetailSocial, cardConfig, gitLocal, userUrlGenerator, groupUrlGenerator, projectTimeGetter, reportGenerator, CommonConstants.testTimeOutMs * 10);
-			userReader = makeUserReader();
-			userMembershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, userReader);
 
 			commentsWriter = ICommentWriter.Utils.commentWriter(httpClient, CommonConstants.testTimeOutMs, gitLocal);
 			commentsReader = makeCommentsReader();

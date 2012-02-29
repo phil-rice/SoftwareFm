@@ -135,7 +135,7 @@ public class MyGroups implements IHasComposite {
 	}
 
 	public static class MyGroupsComposite extends DataComposite<SashForm> implements IDataCompositeWithFooter<SashForm, MyGroupsButtons> {
-		private final Table summaryTable;
+		public final Table summaryTable;
 		private final IGroupsReader groupsReader;
 		private final SashForm sashForm;
 		private final Composite rightHand;

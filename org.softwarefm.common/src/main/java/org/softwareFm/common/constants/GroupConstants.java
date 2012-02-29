@@ -46,6 +46,7 @@ public class GroupConstants {
 	public static final String notAMemberOfGroup = "User {0} is not a member of group {1}";
 	public static final String groupNameIsNull = "Group {0} has no name";
 	public static final String cannotInviteToGroupUnlessAdmin = "Cannot invite other people to group {0} as you are not admin. You are status {1}";
+	public static final String notAMemberOfAnyGroup = "This software fm id is not a member of any group {0}";
 
 	public static IUrlGenerator groupsGenerator(String prefix) {
 		return IUrlGenerator.Utils.generator(prefix + "/groups/{0}/{1}/{2}", groupIdKey);
