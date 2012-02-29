@@ -7,6 +7,7 @@ package org.softwareFm.softwareFmServer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import org.softwareFm.common.IGroups;
 import org.softwareFm.common.IGroupsReader;
@@ -16,6 +17,7 @@ import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.tests.Tests;
 
@@ -36,9 +38,22 @@ public class GroupsForServerTest extends GroupsTest {
 
 		checkUsers(3);
 	}
+
+	public void testGetWithDefaultPropertes() {
+		Map<String, Callable<Object>> defaults = Maps.makeMap("default", Callables.valueFromList("defaultValue"));
+		IGroups groups = new GroupsForServer(groupGenerator, remoteOperations, repoGenerator, defaults);
+		IGroupsReader localGroupsReader = new LocalGroupsReader(groupGenerator, gitLocal);
+
+		groups.setGroupProperty(groupId, groupCrypto, "property1", "value1");//creates group
+		assertEquals("defaultValue", groups.getGroupProperty(groupId, groupCrypto, "default"));
+		assertEquals("defaultValue", groups.getGroupProperty(groupId, groupCrypto, "default")); //this actually checks doesn't call default callable again, as it would run out of values
 	
-	public void testGetWithDefaultPropertes(){
-		fail();
+		assertNull(groups.getGroupProperty(groupId, groupCrypto, "noDefault"));
+
+		assertEquals("defaultValue", localGroupsReader.getGroupProperty(groupId, groupCrypto, "default"));
+		assertEquals("defaultValue", localGroupsReader.getGroupProperty(groupId, groupCrypto, "default")); //this actually checks doesn't call default callable again, as it would run out of values
+		
+		assertNull(localGroupsReader.getGroupProperty(groupId, groupCrypto, "noDefault"));
 	}
 
 	public void testAddingUsersDoesntImpactOnProperties() {

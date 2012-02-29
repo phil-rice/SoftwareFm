@@ -5,8 +5,10 @@
 package org.softwareFm.swt.explorer.internal;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Control;
 import org.junit.Test;
 import org.softwareFm.swt.swt.SwtTest;
+import org.softwareFm.swt.swt.Swts;
 
 public class MasterDetailSocialTest extends SwtTest {
 
@@ -18,6 +20,35 @@ public class MasterDetailSocialTest extends SwtTest {
 		assertEquals(null, masterDetailSocial.content.detailSocial.getMaximizedControl());
 	}
 
+	public void testSetSocialOverDetail() {
+		Control detail = masterDetailSocial.createAndShowDetail(Swts.labelFn("text1")).getControl();
+		Control social = masterDetailSocial.createAndShowSocial(Swts.labelFn("text1")).getControl();
+
+		checkSocialOverDetail(detail, social);
+		checkSocialOverDetail(detail, social);
+		
+		checkDetailOverSocial(detail, social);
+		checkDetailOverSocial(detail, social);
+
+		checkSocialOverDetail(detail, social);
+		checkSocialOverDetail(detail, social);
+	}
+
+	protected void checkDetailOverSocial(Control detail, Control social) {
+		masterDetailSocial.putDetailOverSocial();
+		assertSame(detail, masterDetailSocial.getDetailContent());
+		assertSame(social, masterDetailSocial.getSocialContent());
+		assertTrue(Swts.isBefore(detail.getParent(), social.getParent()));
+		assertTrue(Swts.isAfter(social.getParent(), detail.getParent()));
+	}
+
+	protected void checkSocialOverDetail(Control detail, Control social) {
+		masterDetailSocial.putSocialOverDetail();
+		assertSame(detail, masterDetailSocial.getDetailContent());
+		assertSame(social, masterDetailSocial.getSocialContent());
+		assertTrue(Swts.isBefore(social.getParent(), detail.getParent()));
+		assertTrue(Swts.isAfter(detail.getParent(), social.getParent()));
+	}
 
 	public void testHideShowSocialAdjustsDetailContentGetMaximizedControl() {
 		masterDetailSocial.hideSocial();
@@ -41,6 +72,7 @@ public class MasterDetailSocialTest extends SwtTest {
 		super.setUp();
 		masterDetailSocial = new MasterDetailSocial(shell, SWT.NULL);
 	}
+
 	@Override
 	protected void tearDown() throws Exception {
 		masterDetailSocial.dispose();

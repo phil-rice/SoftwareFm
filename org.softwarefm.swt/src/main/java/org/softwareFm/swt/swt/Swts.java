@@ -1110,4 +1110,28 @@ public class Swts {
 		for (Control control : composite.getChildren())
 			control.setBackground(background);
 	}
+
+	public static boolean isAfter(Control text1, Control text2) {
+		Composite parent1 = text1.getParent();
+		Composite parent2 = text2.getParent();
+		if (parent1 == parent2) {
+			int index1 = ArrayHelper.indentityIndexOf(parent1.getChildren(), text1);
+			int index2 = ArrayHelper.indentityIndexOf(parent1.getChildren(), text2);
+			assert index1 != -1 && index2 != -1 : "index1: " + index1 + "index 2 ";
+			return index1 > index2;
+		}
+		return false;
+	}
+
+	public static boolean isBefore(Control text1, Control text2) {
+		Composite parent1 = text1.getParent();
+		Composite parent2 = text2.getParent();
+		if (parent1 == parent2) {
+			int index1 = ArrayHelper.indentityIndexOf(parent1.getChildren(), text1);
+			int index2 = ArrayHelper.indentityIndexOf(parent1.getChildren(), text2);
+			assert index1 != -1 && index2 != -1 : "index1: " + index1 + "index 2 ";
+			return index1 < index2;
+		}
+		return false;
+	}
 }

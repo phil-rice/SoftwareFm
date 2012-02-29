@@ -176,7 +176,7 @@ public class GroupClientOperations implements IGroupClientOperations {
 												if (CommonConstants.okStatusCodes.contains(response.statusCode()))
 													ICallback.Utils.call(invited, groupId);
 												else
-													masterDetailSocial.createAndShowDetail(TextInBorderWithClick.makeTextFromString(SWT.WRAP | SWT.READ_ONLY, cardConfig, GroupConstants.myGroupsCardType, "Group Creation", "Exception creating group. Click to try again\n" + response.asString(), new Runnable() {
+													masterDetailSocial.createAndShowDetail(TextInBorderWithClick.makeTextFromString(SWT.WRAP | SWT.READ_ONLY, cardConfig, GroupConstants.myGroupsCardType, "Group Invitation", "Exception inviting to group. Click to try again\n" + response.asString(), new Runnable() {
 														@Override
 														public void run() {
 															tryAndInviteToGroup(userData, invited, cardData.data());

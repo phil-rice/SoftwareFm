@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.concurrent.Callable;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
@@ -19,10 +20,77 @@ import org.softwareFm.eclipse.mysoftwareFm.AbstractMyGroupsIntegrationTest;
 import org.softwareFm.eclipse.mysoftwareFm.IdNameAndStatus;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups.MyGroupsButtons;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups.MyGroupsComposite;
+import org.softwareFm.swt.card.composites.CompositeWithCardMargin;
 import org.softwareFm.swt.editors.NameAndValuesEditor.NameAndValuesEditorComposite;
 import org.softwareFm.swt.swt.Swts;
 
 public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
+	public void testCreateExceptionCausesTextPanelAndClickReturnsToMyGroups() {
+		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
+		MyGroupsButtons buttons = myGroupsComposite.getFooter();
+		Swts.Buttons.press(buttons.create);
+		dispatchUntilQueueEmpty();
+		NameAndValuesEditorComposite editor = (NameAndValuesEditorComposite) masterDetailSocial.getDetailContent();
+		checkChange(editor, 0, "someNewGroupName");
+		checkChange(editor, 1, "notAnEmail");
+		checkChange(editor, 2, "newSubject $email$/$group$");
+		checkChange(editor, 3, "newMail $email$/$group$");
+		pressOkEvenThoughBadAndCheckGetTextMessageAndEditorReturnsWithValues("Exception creating group. Click to try again\nclass java.lang.IllegalArgumentException/Invalid email notAnEmail",//
+				"someNewGroupName", "notAnEmail", "newSubject $email$/$group$", "newMail $email$/$group$");
+	}
+
+	public void testInviteExceptionCausesTextPanelAndClickReturnsToMyGroups() {
+		createGroup(groupId1, groupCryptoKey1);
+		addUserToGroup(softwareFmId, email, groupId1, groupCryptoKey1, GroupConstants.adminStatus);
+		String groupName = groupId1 + "Name";
+
+		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
+		Table beforeTable = getMyGroupsTable(myGroupsComposite);
+		beforeTable.select(0);
+		beforeTable.notifyListeners(SWT.Selection, new Event());
+		dispatchUntilQueueEmpty();
+		MyGroupsButtons buttons = myGroupsComposite.getFooter();
+		assertTrue(buttons.invite.isEnabled());
+		Swts.Buttons.press(buttons.invite);
+		dispatchUntilQueueEmpty();
+
+		NameAndValuesEditorComposite editor = (NameAndValuesEditorComposite) masterDetailSocial.getDetailContent();
+		assertFalse(((Text) editor.values.getChildren()[0]).getEditable());
+		checkChange(editor, 1, "Not an email");
+		checkChange(editor, 2, "newSubject $email$/$group$");
+		checkChange(editor, 3, "newMail $email$/$group$");
+		pressOkEvenThoughBadAndCheckGetTextMessageAndEditorReturnsWithValues("Exception inviting to group. Click to try again\nclass java.lang.IllegalArgumentException/Invalid email Not an email",//
+				groupName, "Not an email", "newSubject $email$/$group$", "newMail $email$/$group$");
+	}
+
+	protected void pressOkEvenThoughBadAndCheckGetTextMessageAndEditorReturnsWithValues(String exceptionMessage, String... values) {
+		NameAndValuesEditorComposite editor = (NameAndValuesEditorComposite) masterDetailSocial.getDetailContent();
+		assertFalse(editor.getFooter().okButton().isEnabled());
+		editor.getFooter().ok(); // press it anyway!
+
+		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				Control detailContent = masterDetailSocial.getDetailContent();
+				return detailContent instanceof CompositeWithCardMargin;
+			}
+		});
+		CompositeWithCardMargin compositeWithCardMargin = (CompositeWithCardMargin) masterDetailSocial.getDetailContent();
+		StyledText text = Swts.getDescendant(compositeWithCardMargin, 1, 0, 0);
+		assertEquals(exceptionMessage, text.getText());
+		assertFalse(text.getEditable());
+		text.notifyListeners(SWT.MouseUp, new Event());
+		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				Control detailContent = masterDetailSocial.getDetailContent();
+				return detailContent instanceof NameAndValuesEditorComposite;
+			}
+		});
+		NameAndValuesEditorComposite afterEditor = (NameAndValuesEditorComposite) masterDetailSocial.getDetailContent();
+		checkTextMatches(afterEditor.values, values);
+	}
+
 	@SuppressWarnings("unchecked")
 	public void testInvite() {
 		createGroup(groupId1, groupCryptoKey1);
@@ -233,24 +301,12 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		assertFalse(editor.getFooter().okButton().isEnabled());
 	}
 
-	public void testCreateExceptionCausesTextPanelAndClickReturnsToMyGroups() {
-		fail();
-	}
-
-	public void testInviteExceptionCausesTextPanelAndClickReturnsToMyGroups() {
-		fail();
-	}
-
-	public void testAcceptExceptionCausesTextPanelAndClickReturnsToMyGroups() {
-		fail();
-	}
-
 	private void checkChange(NameAndValuesEditorComposite editor, int i, String newValue) {
 		Control control = editor.values.getChildren()[i];
 		Swts.setText(control, newValue);
 	}
 
-	public void testAccept() {
+	public void testAcceptInvite() {
 		fail();
 	}
 

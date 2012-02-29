@@ -39,7 +39,7 @@ public interface INamesAndValuesEditor extends IValueEditor, ICardData {
 		}
 
 		public static KeyAndEditStrategy styledText(CardConfig cardConfig, String key) {
-			return new KeyAndEditStrategy(key, IEditableControlStrategy.Utils.styledText(SWT.WRAP));
+			return new KeyAndEditStrategy(key, IEditableControlStrategy.Utils.styledText(SWT.WRAP|SWT.V_SCROLL));
 		}
 
 		public static KeyAndEditStrategy message(CardConfig cardConfig, String key) {

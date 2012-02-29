@@ -46,9 +46,14 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 			values.setBackground(getTitleSpec().background);
 
 			CardConfig cc = getCardConfig();
+			int dummy = 0;
 			for (KeyAndEditStrategy data : keyAndEditStrategy) {
 				Label label = INamesAndValuesEditor.Utils.label(labels, cc, cardData.cardType(), data);
 				label.setBackground(getTitleSpec().background);
+				if (dummy++ % 2 == 0)
+					label.setBackground(getDisplay().getSystemColor(SWT.COLOR_BLUE));
+				else
+					label.setBackground(getDisplay().getSystemColor(SWT.COLOR_RED));
 				@SuppressWarnings("unchecked")
 				IEditableControlStrategy<Control> editableControlStrategy = (IEditableControlStrategy<Control>) data.editableControlStrategy;
 				Control editor = editableControlStrategy.createControl(values);

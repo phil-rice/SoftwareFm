@@ -59,4 +59,11 @@ public class ArrayHelper {
 		return result;
 	}
 
+	public static <T> int indentityIndexOf(T[] array, T t) {
+		for (int i = 0; i < array.length; i++)
+			if (array[i] == t)
+				return i;
+		return -1;
+	}
+
 }
