@@ -15,6 +15,7 @@ import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.constants.LoginMessages;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.runnable.Callables;
+import org.softwareFm.common.tests.Tests;
 import org.softwareFm.server.processors.AbstractProcessCallTest;
 import org.softwareFm.server.processors.IProcessResult;
 
@@ -41,17 +42,18 @@ public class SignUpProcessorTest extends AbstractProcessCallTest<SignupProcessor
 		checkStringResultWithMap(result, LoginConstants.cryptoKey, "someCrypto", LoginConstants.softwareFmIdKey, "someSoftwareFmId0");
 
 		assertEquals(salt, Lists.getOnly(checker.salts));
-		assertEquals("someEmail", Lists.getOnly(checker.emails));
+		assertEquals("a@b.com", Lists.getOnly(checker.emails));
 		assertEquals("someHash", Lists.getOnly(checker.passwordHashes));
+		assertEquals("someMoniker", Lists.getOnly(checker.monikers));
 		assertEquals(1, saltProcessor.checkAndInvalidateCount.get());
 	}
 
 	public void testCreatesUserDetails() {
 		String softwareFmId = "someSoftwareFmId0";
 		String salt = saltProcessor.makeSalt();
-		EasyMock.replay(user);//no calls to user
+		EasyMock.replay(user);// no calls to user
 
-		processor.process(requestLine, Maps.stringObjectMap(LoginConstants.sessionSaltKey, salt, LoginConstants.softwareFmIdKey,softwareFmId, LoginConstants.emailKey, "someEmail", LoginConstants.monikerKey, "someMoniker"));
+		processor.process(requestLine, Maps.stringObjectMap(LoginConstants.sessionSaltKey, salt, LoginConstants.softwareFmIdKey, softwareFmId, LoginConstants.emailKey, "a@b.com", LoginConstants.monikerKey, "someMoniker", LoginConstants.passwordHashKey, "someHash"));
 
 		EasyMock.verify(user);
 	}
@@ -66,6 +68,26 @@ public class SignUpProcessorTest extends AbstractProcessCallTest<SignupProcessor
 		assertEquals(0, checker.salts.size());
 	}
 
+	public void testThrowsExceptionIfParametersInvalid() {
+		checkThrowsException(null, "salt", "moniker", "passwordHash", "email, {moniker=moniker, passwordHash=passwordHash, sessionSalt=salt}");
+		checkThrowsException("a@b.com", null, "moniker", "passwordHash", "sessionSalt, {email=a@b.com, moniker=moniker, passwordHash=passwordHash}");
+		checkThrowsException("a@b.com", "salt", null, "passwordHash", "moniker, {email=a@b.com, passwordHash=passwordHash, sessionSalt=salt}");
+		checkThrowsException("a@b.com", "salt", "moniker", null, "passwordHash, {email=a@b.com, moniker=moniker, sessionSalt=salt}");
+
+		checkThrowsException("invalidEmail", "salt", "moniker", "passwordHash", "Invalid email invalidEmail");
+	}
+
+	private void checkThrowsException(String email, String salt, String moniker, String hash, String expectedMessaget) {
+		final Map<String, Object> parameters = Maps.makeMapWithoutNullValues(LoginConstants.emailKey, email, LoginConstants.sessionSaltKey, salt, LoginConstants.monikerKey, moniker, LoginConstants.passwordHashKey, hash);
+		Tests.assertThrowsWithMessage(expectedMessaget, IllegalArgumentException.class, new Runnable() {
+			@Override
+			public void run() {
+				processor.process(requestLine, parameters);
+			}
+		});
+
+	}
+
 	@Override
 	protected SignupProcessor makeProcessor() {
 		saltProcessor = new SaltProcessorMock();
@@ -77,7 +99,7 @@ public class SignUpProcessorTest extends AbstractProcessCallTest<SignupProcessor
 	}
 
 	private Map<String, Object> makeData(String salt) {
-		return Maps.stringObjectMap(LoginConstants.emailKey, "someEmail", LoginConstants.sessionSaltKey, salt, LoginConstants.passwordHashKey, "someHash");
+		return Maps.stringObjectMap(LoginConstants.emailKey, "a@b.com", LoginConstants.sessionSaltKey, salt, LoginConstants.passwordHashKey, "someHash", LoginConstants.monikerKey, "someMoniker");
 	}
 
 }

@@ -13,7 +13,7 @@ import org.softwareFm.common.crypto.Crypto;
 import org.softwareFm.server.processors.AbstractProcessorDatabaseIntegrationTests;
 
 public class SignUpLoginForgetResetDatabaseTest extends AbstractProcessorDatabaseIntegrationTests {
-	final String email = "someEmail1@a";
+	final String email = "someEmail1@a.com";
 
 	public void testSignupPutsSaltCryptoHashAndSoftwareFmIdInDatabase() {
 		String initialSalt = makeSalt();

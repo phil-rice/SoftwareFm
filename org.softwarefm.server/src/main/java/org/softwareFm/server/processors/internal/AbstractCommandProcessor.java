@@ -9,6 +9,8 @@ import java.util.Map;
 import org.apache.http.RequestLine;
 import org.apache.log4j.Logger;
 import org.softwareFm.common.IGitOperations;
+import org.softwareFm.common.comparators.Comparators;
+import org.softwareFm.common.maps.Maps;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.IProcessResult;
 
@@ -41,7 +43,7 @@ public abstract class AbstractCommandProcessor implements IProcessCall {
 	protected void checkForParameter(Map<String, Object> parameters, String... keys) {
 		for (String key : keys)
 			if (!parameters.containsKey(key))
-				throw new IllegalArgumentException(key + ", " + parameters);
+				throw new IllegalArgumentException(key + ", " + Maps.sortByKey(parameters, Comparators.<String>naturalOrder()));
 	}
 
 }

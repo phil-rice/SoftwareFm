@@ -16,6 +16,7 @@ public class SignUpCheckerMock implements ISignUpChecker {
 	public final List<String> salts = Lists.newList();
 	public final List<String> passwordHashes = Lists.newList();
 	public final List<String> softwareFmIds = Lists.newList();
+	public final List<String> monikers = Lists.newList();
 	private final String errorMessage;
 	private final String crypto;
 
@@ -30,6 +31,7 @@ public class SignUpCheckerMock implements ISignUpChecker {
 		salts.add(salt);
 		passwordHashes.add(passwordHash);
 		softwareFmIds.add(softwareFmId);
+		monikers.add(moniker);
 		return new SignUpResult(errorMessage, crypto);
 	}
 

@@ -137,8 +137,18 @@ public class Maps {
 	}
 
 	public static <K, V> Map<K, V> makeMap(Object... attributesAndValues) {
+		if (attributesAndValues.length % 2 != 0)
+			throw new IllegalArgumentException("Illegal size: " + attributesAndValues.length);
 		Map<K, V> result = new HashMap<K, V>(attributesAndValues.length / 2);
 		return putInto(result, attributesAndValues);
+	}
+
+	public static <K, V> Map<K, V> makeMapWithoutNullValues(Object... attributesAndValues) {
+		if (attributesAndValues.length % 2 != 0)
+			throw new IllegalArgumentException("Illegal size: " + attributesAndValues.length);
+		Map<K, V> result = new HashMap<K, V>(attributesAndValues.length / 2);
+		return putInto(false, result, attributesAndValues);
+
 	}
 
 	public static <K, V> Map<K, V> makeImmutableMap(Object... attributesAndValues) {
@@ -209,7 +219,7 @@ public class Maps {
 			throw WrappedException.wrap(e);
 		}
 	}
-	
+
 	public static <K, V> void addToList(Map<K, List<V>> map, K key, V value) {
 		Maps.addToCollection(map, ArrayList.class, key, value);
 
@@ -229,8 +239,12 @@ public class Maps {
 		}
 	}
 
+	private static <K, V> Map<K, V> putInto( Map<K, V> result, Object... attributesAndValues) {
+		return putInto(true, result, attributesAndValues);
+	}
+
 	@SuppressWarnings("unchecked")
-	private static <K, V> Map<K, V> putInto(Map<K, V> result, Object... attributesAndValues) {
+	private static <K, V> Map<K, V> putInto(boolean acceptNullValues, Map<K, V> result, Object... attributesAndValues) {
 		List<Object>[] keysAndValues = Lists.partition(2, Arrays.asList(attributesAndValues));
 		Iterator<Object> keys = keysAndValues[0].iterator();
 		Iterator<Object> values = keysAndValues[1].iterator();
@@ -239,7 +253,8 @@ public class Maps {
 			V value = (V) values.next();
 			if (result.containsKey(key))
 				throw new IllegalArgumentException(MessageFormat.format(UtilityMessages.duplicateKey, key, result.get(key), value));
-			result.put(key, value);
+			if (acceptNullValues || value != null)
+				result.put(key, value);
 		}
 		return result;
 	}
@@ -526,12 +541,13 @@ public class Maps {
 			return defaultValue;
 	}
 
-	public static<K,V> IFunction1<Map<K,V>, Map<K,V>> withFn( final K newKey, final V newValue) {
-		return new IFunction1<Map<K,V>, Map<K,V>>() {
+	public static <K, V> IFunction1<Map<K, V>, Map<K, V>> withFn(final K newKey, final V newValue) {
+		return new IFunction1<Map<K, V>, Map<K, V>>() {
 			@Override
 			public Map<K, V> apply(Map<K, V> from) throws Exception {
 				return with(from, newKey, newValue);
 			}
 		};
 	}
+
 }

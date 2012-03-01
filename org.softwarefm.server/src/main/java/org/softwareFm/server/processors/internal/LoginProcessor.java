@@ -4,6 +4,7 @@
 
 package org.softwareFm.server.processors.internal;
 
+import java.text.MessageFormat;
 import java.util.Map;
 
 import org.softwareFm.common.constants.CommonConstants;
@@ -29,9 +30,11 @@ public class LoginProcessor extends AbstractCommandProcessor {
 
 	@Override
 	protected IProcessResult execute(String actualUrl, Map<String, Object> parameters) {
+		checkForParameter(parameters, LoginConstants.sessionSaltKey, LoginConstants.emailKey, LoginConstants.passwordHashKey);
 		String salt = Strings.nullSafeToString(parameters.get(LoginConstants.sessionSaltKey));
 		saltProcessor.invalidateSalt(salt);
 		String email = Strings.nullSafeToString(parameters.get(LoginConstants.emailKey));
+		if (!Strings.isEmail(email))throw new IllegalArgumentException(MessageFormat.format(LoginMessages.invalidEmail, email));
 		String passwordHash = Strings.nullSafeToString(parameters.get(LoginConstants.passwordHashKey));
 		Map<String, String> map = checker.login(email, passwordHash);
 		if (map == null)

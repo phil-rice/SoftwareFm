@@ -25,10 +25,11 @@ public class IUsageStrategyTest extends AbstractProcessorDatabaseIntegrationTest
 	private File directory;
 	private File userFile;
 	private File userProjectFile;
+	private final String email = "a@b.com";
 
 	public void testUsingUpdatesProjectData() throws Exception {
 		String sessionSalt = makeSalt();
-		String crypto = signup("someEmail", sessionSalt, "someMoniker", "hash", "someNewSoftwareFmId0");
+		String crypto = signup(email, sessionSalt, "someMoniker", "hash", "someNewSoftwareFmId0");
 		usageStrategy.using("someNewSoftwareFmId0", "digest11", IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 		assertTrue(userFile.exists());
 		assertTrue(userProjectFile.exists());
@@ -38,10 +39,10 @@ public class IUsageStrategyTest extends AbstractProcessorDatabaseIntegrationTest
 
 	public void testMyData() throws Exception {
 		String sessionSalt = makeSalt();
-		String crypto = signup("someEmail", sessionSalt, "someMoniker", "hash", "someNewSoftwareFmId0");
+		String crypto = signup(email, sessionSalt, "someMoniker", "hash", "someNewSoftwareFmId0");
 		usageStrategy.using("someNewSoftwareFmId0", "digest11", IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 		usageStrategy.using("someNewSoftwareFmId0", "digest12", IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
-		usageStrategy.using("someNewSoftwareFmId0", "digest23",  IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+		usageStrategy.using("someNewSoftwareFmId0", "digest23", IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 
 		Map<String, Object> projectData = getProjectData(crypto);
 

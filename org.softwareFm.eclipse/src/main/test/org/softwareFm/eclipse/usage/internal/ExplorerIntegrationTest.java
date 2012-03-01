@@ -88,7 +88,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 				adding.tableItem(2, "Version", "1.0.0", "1.2.0");
 			}
 		});
-		doSomethingAndWaitForCardDataStoreToFinish(new Runnable() {
+		doSomethingAndWaitForCardDataStoreToFinish(new Runnable() {//one intermittent failing test
 			@Override
 			public void run() {
 				Control okButton =  valueComposite.getFooter().okButton();

@@ -9,7 +9,6 @@ import java.util.Arrays;
 
 import junit.framework.TestCase;
 
-import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.functions.Functions;
 
 public class StringsTest extends TestCase {
@@ -20,7 +19,6 @@ public class StringsTest extends TestCase {
 		checkFromHex("09", 9);
 		checkFromHex("0a", 10);
 		byte[] actual = Strings.fromHex("000102030405060708090a0b0c0d0e0f101112");
-		System.out.println(Lists.asList(actual));
 		assertTrue(Arrays.equals(new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 }, actual));
 	}
 
@@ -30,9 +28,21 @@ public class StringsTest extends TestCase {
 			expected[i] = (byte) bytes[i];
 		byte[] actual = Strings.fromHex(string);
 		assertTrue(Arrays.equals(expected, actual));
-
 	}
 
+	public void testIsEmail(){
+		assertEquals(true, Strings.isEmail("a@b.com"));
+		assertEquals(true, Strings.isEmail("a.b@c.com"));
+		
+		assertEquals(false, Strings.isEmail("a@b"));
+		assertEquals(false, Strings.isEmail("a@b@com"));
+		assertEquals(false, Strings.isEmail("a.b@com "));
+		assertEquals(false, Strings.isEmail(" a.b@com "));
+		assertEquals(false, Strings.isEmail(" a.b @com "));
+		assertEquals(false, Strings.isEmail(" ^.b @com "));
+		assertEquals(false, Strings.isEmail("a_b @com "));
+	}
+	
 	public void testHtmlEscape() {
 		assertEquals("&lt;tag&gt;", Strings.htmlEscape("<tag>"));
 	}

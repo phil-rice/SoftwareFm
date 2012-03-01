@@ -12,6 +12,7 @@ import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.constants.LoginMessages;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.tests.Tests;
 import org.softwareFm.server.processors.AbstractProcessCallTest;
 import org.softwareFm.server.processors.IProcessResult;
 
@@ -22,7 +23,7 @@ public class LoginProcessorTest extends AbstractProcessCallTest<LoginProcessor> 
 	private final SaltProcessorMock saltProcessor = new SaltProcessorMock();
 	private final RequestLine requestLine = makeRequestLine(CommonConstants.POST, url);
 	private final LoginCheckerMock checker = new LoginCheckerMock("someCrypto", "checkSoftwareFmId");
-	private final Map<String, Object> data = Maps.stringObjectMap(LoginConstants.emailKey, "someEmail", LoginConstants.passwordHashKey, "someHash");
+	private final Map<String, Object> data = Maps.stringObjectMap(LoginConstants.emailKey, "a@b.com", LoginConstants.passwordHashKey, "someHash", LoginConstants.sessionSaltKey, "someSalt");
 
 	public void testIgnoresEverythingExceptGetWithPrefix() {
 		checkIgnoresNoneGet();
@@ -33,23 +34,41 @@ public class LoginProcessorTest extends AbstractProcessCallTest<LoginProcessor> 
 
 	public void testLogsIn() {
 		IProcessResult processResult = processor.process(requestLine, data);
-		checkStringResultWithMap(processResult, LoginConstants.cryptoKey, "someCrypto", LoginConstants.emailKey, "someEmail", LoginConstants.softwareFmIdKey, "checkSoftwareFmId");
-		assertEquals("someEmail", Lists.getOnly(checker.emails));
+		checkStringResultWithMap(processResult, LoginConstants.cryptoKey, "someCrypto", LoginConstants.emailKey, "a@b.com", LoginConstants.softwareFmIdKey, "checkSoftwareFmId");
+		assertEquals("a@b.com", Lists.getOnly(checker.emails));
 		assertEquals("someHash", Lists.getOnly(checker.passwordHashes));
 	}
-	
-	public void testDoesntLogInIfCheckerRespondsBadly(){
+
+	public void testThrowsExceptionIfParametersInvalid() {
+		checkThrowsException("invalidEmail", "salt", "passwordHash", "Invalid email invalidEmail");
+		checkThrowsException(null, "salt", "passwordHash", "email, {passwordHash=passwordHash, sessionSalt=salt}");
+		checkThrowsException("email@a.com", null, "passwordHash", "sessionSalt, {email=email@a.com, passwordHash=passwordHash}");
+		checkThrowsException("email@a.com", "salt", null, "passwordHash, {email=email@a.com, sessionSalt=salt}");
+	}
+
+	private void checkThrowsException(String email, String salt, String hash, String expectedMessaget) {
+		final Map<String, Object> parameters = Maps.makeMapWithoutNullValues(LoginConstants.emailKey, email, LoginConstants.sessionSaltKey, salt, LoginConstants.passwordHashKey, hash);
+		Tests.assertThrowsWithMessage(expectedMessaget, IllegalArgumentException.class, new Runnable() {
+			@Override
+			public void run() {
+				processor.process(requestLine, parameters);
+			}
+		});
+
+	}
+
+	public void testDoesntLogInIfCheckerRespondsBadly() {
 		checker.setResultToNull();
 		IProcessResult processResult = processor.process(requestLine, data);
-		checkErrorResult(processResult, CommonConstants.notFoundStatusCode, LoginMessages.emailPasswordMismatch,LoginMessages.emailPasswordMismatch);
-		assertEquals("someEmail", Lists.getOnly(checker.emails));
+		checkErrorResult(processResult, CommonConstants.notFoundStatusCode, LoginMessages.emailPasswordMismatch, LoginMessages.emailPasswordMismatch);
+		assertEquals("a@b.com", Lists.getOnly(checker.emails));
 		assertEquals("someHash", Lists.getOnly(checker.passwordHashes));
-		
+
 	}
 
 	@Override
 	protected LoginProcessor makeProcessor() {
-		return new LoginProcessor( saltProcessor, checker);
+		return new LoginProcessor(saltProcessor, checker);
 	}
 
 }

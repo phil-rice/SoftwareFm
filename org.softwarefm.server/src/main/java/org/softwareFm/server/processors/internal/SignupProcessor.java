@@ -4,6 +4,7 @@
 
 package org.softwareFm.server.processors.internal;
 
+import java.text.MessageFormat;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -33,11 +34,15 @@ public class SignupProcessor extends AbstractCommandProcessor {
 
 	@Override
 	protected IProcessResult execute(String actualUrl, Map<String, Object> parameters) {
+		checkForParameter(parameters, LoginConstants.sessionSaltKey, LoginConstants.emailKey, LoginConstants.monikerKey, LoginConstants.passwordHashKey);
+		String email = Strings.nullSafeToString(parameters.get(LoginConstants.emailKey));
+		String moniker = Strings.nullSafeToString(parameters.get(LoginConstants.monikerKey));
+		String passwordHash = Strings.nullSafeToString(parameters.get(LoginConstants.passwordHashKey));
+		if (!Strings.isEmail(email))
+			throw new IllegalArgumentException(MessageFormat.format(LoginMessages.invalidEmail, email));
+
 		String salt = Strings.nullSafeToString(parameters.get(LoginConstants.sessionSaltKey));
 		if (saltProcessor.invalidateSalt(salt)) {
-			String email = Strings.nullSafeToString(parameters.get(LoginConstants.emailKey));
-			String moniker = Strings.nullSafeToString(parameters.get(LoginConstants.monikerKey));
-			String passwordHash = Strings.nullSafeToString(parameters.get(LoginConstants.passwordHashKey));
 			String softwareFmId = Callables.call(softwareFmIdGenerator);
 			if (email == null || moniker == null || passwordHash == null || softwareFmId == null)
 				throw new IllegalArgumentException(parameters.toString());

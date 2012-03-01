@@ -484,7 +484,7 @@ public class Explorer implements IExplorer {
 								cardConfig.cardDataStore.makeRepo(url, new IAfterEditCallback() {
 									@Override
 									public void afterEdit(String url) {
-										cardConfig.cardDataStore.put(url, Maps.stringObjectMap(CardConstants.collection), new IAfterEditCallback() {
+										cardConfig.cardDataStore.put(url, Maps.stringObjectMap(CommonConstants.typeTag, CardConstants.collection), new IAfterEditCallback() {
 											@Override
 											public void afterEdit(String url) {
 												try {

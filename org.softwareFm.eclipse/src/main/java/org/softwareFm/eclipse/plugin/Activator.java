@@ -44,7 +44,7 @@ import org.softwareFm.swt.explorer.internal.UserData;
  */
 @SuppressWarnings("deprecation")
 public class Activator extends AbstractUIPlugin {
-	boolean local = true;
+	boolean local = false;
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.softwareFm.explorer.eclipse.ExplorerView"; //$NON-NLS-1$

@@ -14,20 +14,23 @@ import org.softwareFm.server.processors.AbstractProcessorMockIntegrationTests;
 
 public class SignupIntegrationTest extends AbstractProcessorMockIntegrationTests {
 
+	private final String email = "a@b.com";
+
 	public void testMakeSaltThenSignUp() throws Exception {
-		EasyMock.replay(userMock);//no calls
+		EasyMock.replay(userMock);// no calls
 
 		String salt = "salt 0";
 		getHttpClient().get(LoginConstants.makeSaltPrefix).execute(IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, salt)).get(); // salt won't be used but we want it removed
 		assertEquals(salt, Sets.getOnly(saltProcessor.legalSalts));
-		assertEquals(signUpCrypto, signup("someEmail", salt, "someMoniker", "hash", "someSoftwareFmId0"));
+		assertEquals(signUpCrypto, signup(email, salt, "someMoniker", "hash", "someSoftwareFmId0"));
 		assertEquals(0, saltProcessor.legalSalts.size());
 
 		EasyMock.verify(userMock);
+		fail("this test needs to check that email is used");
 	}
 
 	public void testNeedsToUseSignupSalt() throws Exception {
-		signup("someEmail", "some salt", "someMoniker", "someHash", IResponseCallback.Utils.checkCallback(CommonConstants.notFoundStatusCode, LoginMessages.invalidSaltMessage));
+		signup(email, "some salt", "someMoniker", "someHash", IResponseCallback.Utils.checkCallback(CommonConstants.notFoundStatusCode, LoginMessages.invalidSaltMessage));
 	}
 
 }

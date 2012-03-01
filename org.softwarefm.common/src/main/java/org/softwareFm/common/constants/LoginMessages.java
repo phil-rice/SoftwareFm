@@ -22,5 +22,6 @@ public class LoginMessages {
 	public static final String cannotDelete = "Cannot delete {0}";
 	public static final String cannotClearDirectory = "Cannot clear directory: {0}";
 	public static final String cannotWorkOutCryptFor = "Could not work out crypto for {0}. Full map {1}";
+	public static final String invalidEmail = "Invalid email {0}";
 
 }

@@ -10,7 +10,7 @@ import org.softwareFm.server.processors.AbstractProcessorDatabaseIntegrationTest
 public class EmailSaltRequestIntegrationTest extends AbstractProcessorDatabaseIntegrationTests {
 
 	public void testWithNoError() throws Exception {
-		String email = "someEmail";
+		String email = "a@b.com";
 
 		String salt1 = makeSalt();
 		signup(email, salt1, "someMoniker", "hash", "someNewSoftwareFmId0");

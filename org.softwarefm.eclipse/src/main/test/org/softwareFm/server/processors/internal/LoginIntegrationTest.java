@@ -12,20 +12,20 @@ import org.softwareFm.common.constants.LoginMessages;
 import org.softwareFm.server.processors.AbstractProcessorMockIntegrationTests;
 
 public class LoginIntegrationTest extends AbstractProcessorMockIntegrationTests {
+	private final String email = "a@b.com";
 
 	public void testMakeSaltLogin() throws Exception {
 		String sessionSalt = "salt 0";
-		String email = "someEmail";
+		String email = "a@b.com";
 		getHttpClient().get(LoginConstants.makeSaltPrefix).execute(IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, sessionSalt)).get(); // salt won't be used but we want it removed
 		assertEquals(sessionSalt, Sets.getOnly(saltProcessor.legalSalts));
 		String emailSalt = requestEmailSalt(sessionSalt, email);
 		login(email, sessionSalt, emailSalt, "someHash", IResponseCallback.Utils.checkMapCallback(//
-				CommonConstants.okStatusCode, LoginConstants.cryptoKey, "loginCrypto", LoginConstants.emailKey, "someEmail", LoginConstants.softwareFmIdKey, "loginCheckersSoftwareFmId"));
+				CommonConstants.okStatusCode, LoginConstants.cryptoKey, "loginCrypto", LoginConstants.emailKey, email, LoginConstants.softwareFmIdKey, "loginCheckersSoftwareFmId"));
 		assertEquals(0, saltProcessor.legalSalts.size());
 	}
 
 	public void testRemovesSaltAndLogsins() throws Exception {
-		String email = "someEmail";
 		String sessionSalt = "salt 0";
 		getHttpClient().get(LoginConstants.makeSaltPrefix).execute(IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, sessionSalt)).get(); // salt won't be used but we want it removed
 		assertEquals(sessionSalt, Sets.getOnly(saltProcessor.legalSalts));
