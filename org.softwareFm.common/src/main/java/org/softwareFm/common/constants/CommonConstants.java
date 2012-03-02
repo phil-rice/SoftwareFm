@@ -18,7 +18,7 @@ public class CommonConstants {
 	public static final String collectionType = "collection";
 	public static final String dataParameterName = "data";
 	public static final String repoUrlKey = "repoUrl";
-
+ 
 	public static final long testTimeOutMs = 4000;
 
 	public static final String GET = "GET";
