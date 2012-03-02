@@ -11,38 +11,23 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.softwareFm.common.functions.IFunction1WithDispose;
 import org.softwareFm.images.artifacts.ArtifactsAnchor;
-import org.softwareFm.images.backdrop.BackdropAnchor;
 import org.softwareFm.images.general.GeneralAnchor;
 import org.softwareFm.images.login.LoginAnchor;
-import org.softwareFm.images.overlays.OverlaysAnchor;
-import org.softwareFm.images.smallIcons.SmallIconsAnchor;
 import org.softwareFm.images.title.TitleAnchor;
 
 public class BasicImageRegisterConfigurator implements IImageRegisterConfigurator {
 
 	@Override
 	public void registerWith(Device device, ImageRegistry imageRegistry) {
-		Images.registerImages(device, imageRegistry, BackdropAnchor.class, "backdrop", //
-				"main", "depressed", //
-				"group1", "group1Active",//
-				"group2", "group2Active",//
-				"group3", "group3Active",//
-				"group4", "group4Active",//
-				"group5", "group5Active",//
-				"group6", "group6Active");
 		Images.registerImages(device, imageRegistry, ArtifactsAnchor.class, "artifact", "archive", "advert",//
-				"article", "jar", "jarClearEclipse", "jarCopyFromSoftwareFm", "jarCopyToSoftwareFm", "jarUnrecognised", //
+				"article", "jar",  "jarUnrecognised", //
 				"comment", "company", "description", "document", "email", "faceBook", "folder", "forum", "javadoc", //
 				"issues", "job", "license", "mailingList", "merchandise", "nothing", "name", "group", "artifact",//
 				"news", "rss", "source", "snippet", "subscribe", "tutorial", "twitter", "unsubscribe");
-		Images.registerImages(device, imageRegistry, OverlaysAnchor.class, "overlay", //
-				"add", "delete", "edit", "properties");
-		Images.registerImages(device, imageRegistry, SmallIconsAnchor.class, "smallIcon", //
-				"softwareFm", "javadoc", "source");
 		Images.registerImages(device, imageRegistry, GeneralAnchor.class, "general", //
 				"browse", "help", "clear", "sfmLogo", "commentAdd", "cancel", "ok");
 		Images.registerImages(device, imageRegistry, LoginAnchor.class, "login", //
-				"login", "changePasswod", "forgotPasswod", "loginButton", "signUp");
+				"login", "changePassword", "forgotPassword", "loginButton", "signUp");
 		Images.registerImages(device, imageRegistry, TitleAnchor.class, "title",//
 				"advert", "artifact", "blog", "document", "facebook", "folder", "forum", "group", "history", "jar", //
 				"mailingList", "next", "previous", "refresh", "rss", "tutorial", "twitter", "version");

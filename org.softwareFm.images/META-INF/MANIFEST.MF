@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.softwarefm.images
 Bundle-SymbolicName: org.softwarefm.images;singleton:=true
-Bundle-Version: 1.0.8
+Bundle-Version: 1.0.9
 Bundle-Vendor: SoftwareFM
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.jface;visibility:=reexport,
@@ -15,11 +15,7 @@ Export-Package: org.softwareFm.images;
    org.eclipse.swt.graphics",
  org.softwareFm.images.actions,
  org.softwareFm.images.artifacts,
- org.softwareFm.images.backdrop,
  org.softwareFm.images.general,
- org.softwareFm.images.listTabs,
  org.softwareFm.images.login,
- org.softwareFm.images.overlays,
- org.softwareFm.images.smallIcons,
  org.softwareFm.images.title,
  org.softwareFm.images.comments
