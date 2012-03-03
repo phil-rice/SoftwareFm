@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.Callable;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -23,8 +22,10 @@ import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.monitor.IMonitor;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.common.url.IUrlGenerator;
+import org.softwareFm.eclipse.constants.EclipseMessages;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.project.UserAndProjectFactory;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
@@ -45,11 +46,14 @@ public class MyDetails implements IHasComposite {
 		return new IShowMyData() {
 			@Override
 			public void show(final UserData userData) {
-				executor.submit(new Callable<Void>() {
+				
+				executor.submit(new IFunction1<IMonitor,Void>() {
 					@Override
-					public Void call() throws Exception {
+					public Void apply(IMonitor monitor) throws Exception {
+						monitor.beginTask(EclipseMessages.showMyData, 2);
 						final IUserReader user = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
 						final IUsageReader project = UserAndProjectFactory.projectForLocal(user, userUrlGenerator, userData.crypto, gitLocal);
+						
 						Swts.asyncExec(masterDetailSocial.getControl(), new Runnable() {
 							@Override
 							public void run() {

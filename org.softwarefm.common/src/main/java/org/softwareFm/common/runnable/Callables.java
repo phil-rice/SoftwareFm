@@ -51,6 +51,10 @@ public class Callables {
 			public T call() throws Exception {
 				return value;
 			}
+			@Override
+			public String toString() {
+				return "Callable.value(" + value + ")";
+			}
 		};
 	}
 	public static <T> Callable<T> valueFromList(final T... value) {
@@ -79,6 +83,14 @@ public class Callables {
 			@Override
 			public T call() throws Exception {
 				throw new RuntimeException();
+			}
+		};
+	}
+	public static <T> Callable<T> exceptionIfCalled(final Throwable throwable) {
+		return new Callable<T>() {
+			@Override
+			public T call() throws Exception {
+				throw WrappedException.wrap(throwable);
 			}
 		};
 	}

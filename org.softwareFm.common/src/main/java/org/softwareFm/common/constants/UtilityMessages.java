@@ -24,4 +24,5 @@ public class UtilityMessages {
 	public static final String cannotFindOffset = "Cannot find offset. \nRoot {0}\nLeaf {1}";
 	public static final String cannotGetDescendant = "Cannot find descendant in {0} index is {1} childIndicies are {1}";
 	public static final String cannotCloseServer = "Cannot close server";
+	public static final String expectedButGot = "Expected {0} but got {1}";
 }

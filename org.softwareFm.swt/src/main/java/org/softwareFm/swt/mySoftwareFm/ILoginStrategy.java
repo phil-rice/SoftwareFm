@@ -4,6 +4,7 @@
 
 package org.softwareFm.swt.mySoftwareFm;
 
+import java.text.MessageFormat;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Callable;
@@ -17,10 +18,16 @@ import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.CommonMessages;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.crypto.Crypto;
+import org.softwareFm.common.exceptions.Exceptions;
+import org.softwareFm.common.exceptions.WrappedException;
+import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.json.Json;
+import org.softwareFm.common.monitor.IMonitor;
 import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.services.IServiceExecutor;
+import org.softwareFm.swt.constants.CardMessages;
 import org.softwareFm.swt.explorer.internal.UserData;
+import org.softwareFm.swt.swt.Swts;
 
 public interface ILoginStrategy {
 
@@ -44,9 +51,10 @@ public interface ILoginStrategy {
 			return new ILoginStrategy() {
 				@Override
 				public void signup(final String email, final String moniker, final String sessionSalt, final String passwordHash, final ISignUpCallback callback) {
-					serviceExecutor.submit(new Callable<Void>() {
+					serviceExecutor.submit(new IFunction1<IMonitor, Void>() {
 						@Override
-						public Void call() throws Exception {
+						@SuppressWarnings({ "finally" })
+						public Void apply(IMonitor monitor) throws Exception {
 							try {
 								client.post(LoginConstants.signupPrefix).//
 										addParam(LoginConstants.emailKey, email).//
@@ -77,7 +85,12 @@ public interface ILoginStrategy {
 											}
 										}).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 							} catch (Exception e) {
-								callback.failed(email, CommonMessages.timedOut);
+								try {
+									callback.failed(email, CommonMessages.timedOut);
+								} finally {
+									monitor.done();
+									throw WrappedException.wrap(e);
+								}
 							}
 							return null;
 						}
@@ -87,14 +100,17 @@ public interface ILoginStrategy {
 				@Override
 				public void requestSessionSalt(final IRequestSaltCallback callback) {
 					try {
-						serviceExecutor.submit(new Callable<Void>() {
+						serviceExecutor.submit(new IFunction1<IMonitor, Void>() {
 							@Override
-							public Void call() throws Exception {
+							@SuppressWarnings("finally")
+							public Void apply(final IMonitor monitor) throws Exception {
+								monitor.beginTask(CardMessages.requestSessionSalt, 2);
 								try {
 									client.get(LoginConstants.makeSaltPrefix).execute(new IResponseCallback() {
 										@Override
 										public void process(final IResponse response) {
-											display.asyncExec(new Runnable() {
+											monitor.worked(1);
+											Swts.asyncExecAndMarkDone(display, monitor, new Runnable() {
 												@Override
 												public void run() {
 													if (response.statusCode() == CommonConstants.okStatusCode)
@@ -106,7 +122,12 @@ public interface ILoginStrategy {
 										}
 									}); // salt won't be used but we want it removedS
 								} catch (Exception e) {
-									callback.problemGettingSalt(e.getMessage());
+									try {
+										callback.problemGettingSalt(e.getMessage());
+									} finally {
+										monitor.done();// note: shouldn't be done in finally, as the work continues in the swt thread
+										throw WrappedException.wrap(e);
+									}
 								}
 								return null;
 							}
@@ -118,34 +139,46 @@ public interface ILoginStrategy {
 
 				@Override
 				public void login(final String email, final String sessionSalt, final String emailSalt, final String password, final ILoginCallback callback) {
-					serviceExecutor.submit(new Callable<Void>() {
+					serviceExecutor.submit(new IFunction1<IMonitor, Void>() {
+						@SuppressWarnings("finally")
 						@Override
-						public Void call() throws Exception {
+						public Void apply(final IMonitor monitor) throws Exception {
+							monitor.beginTask(MessageFormat.format(CardMessages.loggingIn, email), 2);
 							String hash = Crypto.digest(emailSalt, password);
-							client.post(LoginConstants.loginCommandPrefix).//
-									addParam(LoginConstants.emailKey, email).//
-									addParam(LoginConstants.sessionSaltKey, sessionSalt).//
-									addParam(LoginConstants.passwordHashKey, hash).//
-									execute(new IResponseCallback() {
-										@Override
-										public void process(final IResponse response) {
-											display.asyncExec(new Runnable() {
-												@Override
-												public void run() {
-													if (response.statusCode() == CommonConstants.okStatusCode) {
-														Map<String, Object> map = Json.mapFromString(response.asString());
-														String crypto = (String) map.get(LoginConstants.cryptoKey);
-														String softwareFmId = (String) map.get(LoginConstants.softwareFmIdKey);
-														if (crypto == null || softwareFmId == null)
-															throw new NullPointerException(map.toString());
-														UserData userData = new UserData(email, softwareFmId, crypto);
-														callback.loggedIn(userData);
-													} else
-														callback.failedToLogin(email, response.asString());
-												}
-											});
-										}
-									}).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+							try {
+								client.post(LoginConstants.loginCommandPrefix).//
+										addParam(LoginConstants.emailKey, email).//
+										addParam(LoginConstants.sessionSaltKey, sessionSalt).//
+										addParam(LoginConstants.passwordHashKey, hash).//
+										execute(new IResponseCallback() {
+											@Override
+											public void process(final IResponse response) {
+												monitor.worked(1);
+												Swts.asyncExecAndMarkDone(display, monitor, new Runnable() {
+													@Override
+													public void run() {
+														if (response.statusCode() == CommonConstants.okStatusCode) {
+															Map<String, Object> map = Json.mapFromString(response.asString());
+															String crypto = (String) map.get(LoginConstants.cryptoKey);
+															String softwareFmId = (String) map.get(LoginConstants.softwareFmIdKey);
+															if (crypto == null || softwareFmId == null)
+																throw new NullPointerException(map.toString());
+															UserData userData = new UserData(email, softwareFmId, crypto);
+															callback.loggedIn(userData);
+														} else
+															callback.failedToLogin(email, response.asString());
+													}
+												});
+											}
+										}).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+							} catch (Exception e) {
+								try {
+									callback.failedToLogin(email, Exceptions.classAndMessage(e));
+								} finally {
+									monitor.done();// note: shouldn't be done in finally, as the work continues in the swt thread
+									throw WrappedException.wrap(e);
+								}
+							}
 							return null;
 						}
 					});
@@ -153,17 +186,19 @@ public interface ILoginStrategy {
 
 				@Override
 				public void forgotPassword(final String email, final String sessionSalt, final IForgotPasswordCallback callback) {
-					serviceExecutor.submit(new Callable<Void>() {
+					serviceExecutor.submit(new IFunction1<IMonitor, Void>() {
 						@Override
-						public Void call() throws Exception {
+						public Void apply(final IMonitor monitor) throws Exception {
 							try {
+								monitor.beginTask(MessageFormat.format(CardMessages.forgotPassword, email), 2);
 								client.post(LoginConstants.forgottonPasswordPrefix).//
 										addParam(LoginConstants.emailKey, email).//
 										addParam(LoginConstants.sessionSaltKey, sessionSalt).//
 										execute(new IResponseCallback() {
 											@Override
 											public void process(final IResponse response) {
-												display.asyncExec(new Runnable() {
+												monitor.worked(1);
+												Swts.asyncExecAndMarkDone(display, monitor, new Runnable() {
 													@Override
 													public void run() {
 														if (response.statusCode() == CommonConstants.okStatusCode)
@@ -176,6 +211,8 @@ public interface ILoginStrategy {
 										}).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 							} catch (Exception e) {
 								callback.failedToSend(email, e.getMessage());
+								monitor.done();
+								throw WrappedException.wrap(e);
 							}
 							return null;
 						}
@@ -184,54 +221,71 @@ public interface ILoginStrategy {
 
 				@Override
 				public void requestEmailSalt(final String email, final String sessionSalt, final IRequestSaltCallback callback) {
-					serviceExecutor.submit(new Callable<Void>() {
+					serviceExecutor.submit(new IFunction1<IMonitor, Void>() {
 						@Override
-						public Void call() throws Exception {
-							client.post(CommonConstants.emailSaltPrefix).//
-									addParam(LoginConstants.sessionSaltKey, sessionSalt).//
-									addParam(LoginConstants.emailKey, email).//
-									execute(new IResponseCallback() {
-										@Override
-										public void process(final IResponse response) {
-											display.asyncExec(new Runnable() {
-												@Override
-												public void run() {
-													if (response.statusCode() == CommonConstants.okStatusCode)
-														callback.saltReceived(response.asString());
-													else
-														callback.problemGettingSalt(response.asString());
-												}
-											});
-										}
-									}).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
-							return null;
+						public Void apply(final IMonitor monitor) throws Exception {
+							monitor.beginTask(MessageFormat.format(CardMessages.requestEmailSalt, email), 1);
+							try {
+								client.post(CommonConstants.emailSaltPrefix).//
+										addParam(LoginConstants.sessionSaltKey, sessionSalt).//
+										addParam(LoginConstants.emailKey, email).//
+										execute(new IResponseCallback() {
+											@Override
+											public void process(final IResponse response) {
+												Swts.asyncExecAndMarkDone(display, monitor, new Runnable() {
+													@Override
+													public void run() {
+														if (response.statusCode() == CommonConstants.okStatusCode)
+															callback.saltReceived(response.asString());
+														else
+															callback.problemGettingSalt(response.asString());
+													}
+												});
+											}
+										}).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+								return null;
+							} catch (Exception e) {
+								callback.problemGettingSalt(Exceptions.classAndMessage(e));
+								monitor.done();
+								throw WrappedException.wrap(e);
+							}
 						}
 					});
 				}
 
 				@Override
 				public void changePassword(final String email, final String oldHash, final String newHash, final IChangePasswordCallback callback) {
-					serviceExecutor.submit(new Callable<Void>() {
+					serviceExecutor.submit(new IFunction1<IMonitor, Void>() {
 						@Override
-						public Void call() throws Exception {
-							client.post(LoginConstants.changePasswordPrefix).//
-									addParam(LoginConstants.emailKey, email).//
-									addParam(LoginConstants.passwordHashKey, oldHash).//
-									addParam(LoginConstants.newPasswordHashKey, newHash).//
-									execute(new IResponseCallback() {
-										@Override
-										public void process(final IResponse response) {
-											display.asyncExec(new Runnable() {
-												@Override
-												public void run() {
-													if (response.statusCode() == CommonConstants.okStatusCode)
-														callback.changedPassword(email);
-													else
-														callback.failedToChangePassword(email, response.asString());
-												}
-											});
-										}
-									}).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+						@SuppressWarnings("finally")
+						public Void apply(IMonitor monitor) throws Exception {
+							try {
+								client.post(LoginConstants.changePasswordPrefix).//
+										addParam(LoginConstants.emailKey, email).//
+										addParam(LoginConstants.passwordHashKey, oldHash).//
+										addParam(LoginConstants.newPasswordHashKey, newHash).//
+										execute(new IResponseCallback() {
+											@Override
+											public void process(final IResponse response) {
+												display.asyncExec(new Runnable() {
+													@Override
+													public void run() {
+														if (response.statusCode() == CommonConstants.okStatusCode)
+															callback.changedPassword(email);
+														else
+															callback.failedToChangePassword(email, response.asString());
+													}
+												});
+											}
+										}).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+							} catch (Exception e) {
+								try {
+									callback.failedToChangePassword(email, Exceptions.classAndMessage(e));
+								} finally {
+									monitor.done();
+									throw WrappedException.wrap(e);
+								}
+							}
 							return null;
 						}
 					});

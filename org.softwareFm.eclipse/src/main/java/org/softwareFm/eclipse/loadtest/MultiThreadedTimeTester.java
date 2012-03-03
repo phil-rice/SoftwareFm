@@ -5,12 +5,13 @@
 package org.softwareFm.eclipse.loadtest;
 
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import org.softwareFm.common.exceptions.WrappedException;
+import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.monitor.IMonitor;
 import org.softwareFm.common.profiling.Stats;
 import org.softwareFm.common.services.IServiceExecutor;
 
@@ -34,9 +35,9 @@ public class MultiThreadedTimeTester<Context> {
 			final CountDownLatch latch = new CountDownLatch(threads);
 			for (int i = 0; i < threads; i++) {
 				final int thread = i;
-				serviceExecutor.submit(new Callable<Void>() {
+				serviceExecutor.submit(new IFunction1<IMonitor,Void>() {
 					@Override
-					public Void call() throws Exception {
+					public Void apply(IMonitor monitor) throws Exception {
 						Stats stats = new Stats();
 						Context context = toBeTested.start(thread);
 						try {

@@ -4,13 +4,14 @@
 
 package org.softwareFm.eclipse.plugin;
 
-import java.util.concurrent.Callable;
-
 import org.eclipse.ui.IStartup;
 import org.softwareFm.client.http.requests.IResponseCallback;
 import org.softwareFm.common.IGitLocal;
 import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.monitor.IMonitor;
 import org.softwareFm.common.services.IServiceExecutor;
+import org.softwareFm.eclipse.constants.EclipseMessages;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.jdtBinding.BindingRipperResult;
 import org.softwareFm.eclipse.snippets.internal.UsageStrategy;
@@ -22,22 +23,27 @@ public class Startup implements IStartup {
 	public void earlyStartup() {
 		final Activator activator = Activator.getDefault();
 		final IServiceExecutor serviceExecutor = activator.getServiceExecutor();
-		serviceExecutor.submit(new Callable<Void>() {
+		serviceExecutor.submit(new IFunction1<IMonitor, Void>() {
 			@Override
-			public Void call() throws Exception {
-				IGitLocal gitLocal = activator.getGitLocal();
-				IUsageStrategy rawUsageStrategy = new UsageStrategy(activator.getClient(), serviceExecutor, gitLocal, LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix));
-				final IUsageStrategy cachedUsageStrategy = IUsageStrategy.Utils.cached(rawUsageStrategy, SoftwareFmConstants.usageRefreshTimeMs, gitLocal, activator.getUserDataManager());
-				activator.getSelectedBindingManager().addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
-					@Override
-					public void selectionOccured(BindingRipperResult ripperResult) {
-						if ("jar".equals(ripperResult.path.getFileExtension())) {
-							String softwareFmId = activator.getUserDataManager().getUserData().softwareFmId;
-							if (softwareFmId != null)
-								cachedUsageStrategy.using(softwareFmId, ripperResult.hexDigest, IResponseCallback.Utils.noCallback());
+			public Void apply(IMonitor monitor) throws Exception {
+				monitor.beginTask(EclipseMessages.startUp, 1);
+				try {
+					IGitLocal gitLocal = activator.getGitLocal();
+					IUsageStrategy rawUsageStrategy = new UsageStrategy(activator.getClient(), serviceExecutor, gitLocal, LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix));
+					final IUsageStrategy cachedUsageStrategy = IUsageStrategy.Utils.cached(rawUsageStrategy, SoftwareFmConstants.usageRefreshTimeMs, gitLocal, activator.getUserDataManager());
+					activator.getSelectedBindingManager().addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
+						@Override
+						public void selectionOccured(BindingRipperResult ripperResult) {
+							if ("jar".equals(ripperResult.path.getFileExtension())) {
+								String softwareFmId = activator.getUserDataManager().getUserData().softwareFmId;
+								if (softwareFmId != null)
+									cachedUsageStrategy.using(softwareFmId, ripperResult.hexDigest, IResponseCallback.Utils.noCallback());
+							}
 						}
-					}
-				});
+					});
+				} finally {
+					monitor.done();
+				}
 				return null;
 			}
 		});

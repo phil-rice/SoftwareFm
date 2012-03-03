@@ -5,14 +5,13 @@
 package org.softwareFm.common.collections;
 
 import java.io.File;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.TestCase;
 
-import org.softwareFm.common.collections.Files;
 import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.monitor.IMonitor;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.common.tests.IIntegrationTest;
 
@@ -34,9 +33,9 @@ public class FilesIntegrationTest extends TestCase implements IIntegrationTest {
 		final String lockFileName = "lock";
 
 		for (int i = 0; i < size; i++) {
-			executor.submit(new Callable<Void>() {
+			executor.submit(new IFunction1<IMonitor, Void>() {
 				@Override
-				public Void call() throws Exception {
+				public Void apply(IMonitor from) throws Exception {
 					for (int i = 0; i < size; i++)
 						Files.doOperationInLock(dir, lockFileName, new IFunction1<File, Void>() {
 							@Override

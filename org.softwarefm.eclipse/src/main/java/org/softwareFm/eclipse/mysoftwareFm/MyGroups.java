@@ -33,12 +33,14 @@ import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.monitor.IMonitor;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.IRequestGroupReportGeneration;
+import org.softwareFm.eclipse.constants.EclipseMessages;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.eclipse.user.IUserMembershipReader;
@@ -59,9 +61,10 @@ public class MyGroups implements IHasComposite {
 		return new IShowMyGroups() {
 			@Override
 			public void show(final UserData userData, final String groupId) {
-				executor.submit(new Callable<Void>() {
+				executor.submit(new IFunction1<IMonitor,Void>() {
 					@Override
-					public Void call() throws Exception {
+					public Void apply(IMonitor monitor) throws Exception {
+						monitor.beginTask(EclipseMessages.showMyGroups, 2);
 						final IUserReader user = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
 						// String membershipCrypto = user.getUserProperty(userData.softwareFmId, userData.crypto, GroupConstants.membershipCryptoKey);
 						final IGroupsReader groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
@@ -78,7 +81,7 @@ public class MyGroups implements IHasComposite {
 						// }
 						final IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, user);
 						gitLocal.clearCaches();
-						Swts.asyncExec(masterDetailSocial.getControl(), new Runnable() {
+						Swts.asyncExecAndMarkDone(masterDetailSocial.getControl(), monitor, new Runnable() {
 							@Override
 							public void run() {
 								masterDetailSocial.hideSocial();

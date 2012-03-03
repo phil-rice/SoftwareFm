@@ -6,22 +6,25 @@ package org.softwareFm.eclipse.snippets.internal;
 
 import java.io.File;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import org.softwareFm.client.http.api.IHttpClient;
 import org.softwareFm.client.http.requests.IResponseCallback;
+import org.softwareFm.client.http.response.IResponse;
 import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.IGitLocal;
 import org.softwareFm.common.collections.Lists;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.json.Json;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.monitor.IMonitor;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.common.url.Urls;
+import org.softwareFm.eclipse.constants.EclipseMessages;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.usage.IUsageStrategy;
 
@@ -40,13 +43,23 @@ public class UsageStrategy implements IUsageStrategy {
 
 	@Override
 	public Future<?> using(final String softwareFmId, final String digest, final IResponseCallback callback) {
-		return serviceExecutor.submit(new Callable<Void>() {
+		return serviceExecutor.submit(new IFunction1<IMonitor, Void>() {
 			@Override
-			public Void call() throws Exception {
+			public Void apply(final IMonitor monitor) throws Exception {
+				monitor.beginTask(EclipseMessages.recordingUsage, 2);
 				client.post(SoftwareFmConstants.usagePrefix).//
 						addParam(LoginConstants.softwareFmIdKey, softwareFmId).//
 						addParam(SoftwareFmConstants.digest, digest).//
-						execute(callback).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+						execute(new IResponseCallback() {
+							@Override
+							public void process(IResponse response) {
+								try {
+									callback.process(response);
+								} finally {
+									monitor.done();
+								}
+							}
+						}).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 				return null;
 			}
 		});
@@ -58,7 +71,7 @@ public class UsageStrategy implements IUsageStrategy {
 		String userUrl = userGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
 		Map<String, Object> userDataResult = gitLocal.getFile(IFileDescription.Utils.encrypted(userUrl, CommonConstants.dataFileName, crypto));
 
-		if (userDataResult==null)
+		if (userDataResult == null)
 			throw new IllegalArgumentException(softwareFmId);
 		String projectCrypto = (String) userDataResult.get(SoftwareFmConstants.projectCryptoKey);
 

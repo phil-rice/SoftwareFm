@@ -4,23 +4,21 @@
 
 package org.softwareFm.common.services;
 
-import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.softwareFm.common.collections.Lists;
-import org.softwareFm.common.constants.UtilityMessages;
-import org.softwareFm.common.exceptions.WrappedException;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.monitor.IMonitor;
+import org.softwareFm.common.services.internal.ServiceExecutor;
 
 public interface IServiceExecutor {
 
-	<T> Future<T> submit(Callable<T> callable);
+	/** The monitor is provided by the IServiceExecutor. The called task should call beginTask, worked and done. etc,Note that the task may not be finished when this service executor is finished (the task could for example end on the SWT thread). The task can be cancelled using future.cancel, or monitor.cancel */
+	<T> Future<T> submit(IFunction1<IMonitor, T> job);
 
 	void addExceptionListener(IExceptionListener listener);
+
+	void addLifeCycleListener(IServiceExecutorLifeCycleListener listener);
 
 	void shutdown();
 
@@ -30,60 +28,10 @@ public interface IServiceExecutor {
 
 		public static IServiceExecutor defaultExecutor() {
 			return executor(10);
-
 		}
 
 		public static IServiceExecutor executor(final int threadPoolSize) {
-			IServiceExecutor executor = new IServiceExecutor() {
-				private final List<IExceptionListener> listeners = Lists.newList();
-				private final ExecutorService service = new ThreadPoolExecutor(threadPoolSize, threadPoolSize, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(1000)) {
-					@Override
-					protected void afterExecute(Runnable r, Throwable t) {
-						super.afterExecute(r, t);
-					}
-				};
-
-				@Override
-				public <T> Future<T> submit(final Callable<T> callable) {
-					return service.submit(new Callable<T>() {
-						@Override
-						public T call() throws Exception {
-							try {
-								return callable.call();
-							} catch (Exception e) {
-								if (e != null)
-									for (IExceptionListener listener : listeners)
-										listener.exceptionOccured(e);
-								throw e;
-							}
-						}
-					});
-				}
-
-				@Override
-				public void addExceptionListener(IExceptionListener listener) {
-					listeners.add(listener);
-
-				}
-
-				@Override
-				public void shutdown() {
-					service.shutdown();
-				}
-
-				@Override
-				public void shutdownAndAwaitTermination(long time, TimeUnit unit) {
-					try {
-						service.shutdown();
-						boolean suceeded = service.awaitTermination(time, unit);
-						if (!suceeded){
-							throw new ServerExecutorException(UtilityMessages.cannotCloseServer);
-						}
-					} catch (InterruptedException e) {
-						throw WrappedException.wrap(e);
-					}
-				}
-			};
+			IServiceExecutor executor = new ServiceExecutor(IMonitorFactory.Utils.noMonitors, threadPoolSize);
 			executor.addExceptionListener(IExceptionListener.Utils.syserr());
 			return executor;
 		}

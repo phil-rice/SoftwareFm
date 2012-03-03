@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.swt.SWT;
@@ -33,11 +32,13 @@ import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.monitor.IMonitor;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.IRequestGroupReportGeneration;
+import org.softwareFm.eclipse.constants.EclipseMessages;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.eclipse.user.IUserMembershipReader;
@@ -59,9 +60,10 @@ public class MyPeople implements IHasComposite {
 		return new IShowMyPeople() {
 			@Override
 			public void showMyPeople(final UserData userData, final String groupId, final String artifactId) {
-				executor.submit(new Callable<Void>() {
+				executor.submit(new IFunction1<IMonitor,Void>() {
 					@Override
-					public Void call() throws Exception {
+					public Void apply(IMonitor monitor) throws Exception {
+						monitor.beginTask(EclipseMessages.showMyPeople, 2);
 						final UserMembershipReaderForLocal membershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, user);
 						MyPeople myPeople = masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyPeople>() {
 							@Override

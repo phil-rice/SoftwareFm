@@ -5,15 +5,18 @@
 package org.softwareFm.swt.dataStore.internal;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.common.IFileDescription;
 import org.softwareFm.common.IGitLocal;
 import org.softwareFm.common.collections.Files;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.monitor.IMonitor;
 import org.softwareFm.common.services.IServiceExecutor;
+import org.softwareFm.swt.constants.CardMessages;
 import org.softwareFm.swt.dataStore.IAfterEditCallback;
 import org.softwareFm.swt.dataStore.ICardDataStoreCallback;
 import org.softwareFm.swt.dataStore.IMutableCardDataStore;
@@ -48,24 +51,36 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 
 	@Override
 	public Future<?> makeRepo(final String url, final IAfterEditCallback callback) {
-		return serviceExecutor.submit(new Callable<Void>() {
+		return serviceExecutor.submit(new IFunction1<IMonitor, Void>() {
 			@Override
-			public Void call() throws Exception {
-				gitLocal.init(url);
-				callback.afterEdit(url);
-				return null;
+			public Void apply(IMonitor from) throws Exception {
+				from.beginTask(MessageFormat.format(CardMessages.makeRepo, url), 2);
+				try {
+					gitLocal.init(url);
+					from.worked(1);
+					callback.afterEdit(url);
+					return null;
+				} finally {
+					from.done();
+				}
 			}
 		});
 	}
 
 	@Override
 	public void delete(final String url, final IAfterEditCallback callback) {
-		serviceExecutor.submit(new Callable<Void>() {
+		serviceExecutor.submit(new IFunction1<IMonitor, Void>() {
 			@Override
-			public Void call() throws Exception {
-				gitLocal.delete(IFileDescription.Utils.plain(url));
-				callback.afterEdit(url);
-				return null;
+			public Void apply(IMonitor from) throws Exception {
+				from.beginTask(MessageFormat.format(CardMessages.delete, url), 2);
+				try {
+					gitLocal.delete(IFileDescription.Utils.plain(url));
+					from.worked(1);
+					callback.afterEdit(url);
+					return null;
+				} finally {
+					from.done();
+				}
 			}
 		});
 
@@ -74,12 +89,13 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 	@Override
 	public <T> Future<T> processDataFor(final String url, final ICardDataStoreCallback<T> callback) {
 		final IFileDescription fileDescription = IFileDescription.Utils.plain(url);
-		return serviceExecutor.submit(new Callable<T>() {
+		return serviceExecutor.submit(new IFunction1<IMonitor, T>() {
 			@Override
-			public T call() throws Exception {
+			public T apply(final IMonitor from) throws Exception {
+				from.beginTask(MessageFormat.format(CardMessages.processDataFor, url), 2);
 				final Map<String, Object> data = gitLocal.getFileAndDescendants(fileDescription);
-				System.out.println(fileDescription.url() + ": " + data);
-				Swts.asyncExec(control, new Runnable() {
+				from.worked(1);
+				Swts.asyncExecAndMarkDone(control, from, new Runnable() {
 					@Override
 					public void run() {
 						if (data == null || data.size() == 0)
@@ -95,16 +111,17 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 
 	@Override
 	public Future<?> put(final String url, final Map<String, Object> map, final IAfterEditCallback afterEdit) {
-		return serviceExecutor.submit(new Callable<Void>() {
+		return serviceExecutor.submit(new IFunction1<IMonitor, Void>() {
 			@Override
-			public Void call() throws Exception {
+			public Void apply(IMonitor from) throws Exception {
+				from.beginTask(MessageFormat.format(CardMessages.put, url, map), 2);
 				IFileDescription fileDescription = IFileDescription.Utils.plain(url);
 				gitLocal.put(fileDescription, map);
-				Swts.asyncExec(control, new Runnable() {
+				from.worked(1);
+				Swts.asyncExecAndMarkDone(control, from, new Runnable() {
 					@Override
 					public void run() {
 						afterEdit.afterEdit(url);
-
 					}
 				});
 				return null;

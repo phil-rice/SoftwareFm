@@ -11,9 +11,41 @@ import java.util.concurrent.TimeoutException;
 
 import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.monitor.IMonitor;
 
 public class Futures {
 
+	public static <T> Future<T> bindToMonitor(final Future<T> rawFuture, final IMonitor rawMonitor){
+		return new Future<T>() {
+
+			@Override
+			public boolean cancel(boolean mayInterruptIfRunning) {
+				rawMonitor.cancel();
+				return rawFuture.cancel(mayInterruptIfRunning);
+			}
+
+			@Override
+			public boolean isCancelled() {
+				return rawFuture.isCancelled();
+			}
+
+			@Override
+			public boolean isDone() {
+				return rawFuture.isDone();
+			}
+
+			@Override
+			public T get() throws InterruptedException, ExecutionException {
+				return rawFuture.get();
+			}
+
+			@Override
+			public T get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+				return rawFuture.get(timeout, unit);
+			}
+		};
+	}
+	
 	public static <T> Future<T> doneFuture(final T value) {
 		return new Future<T>() {
 

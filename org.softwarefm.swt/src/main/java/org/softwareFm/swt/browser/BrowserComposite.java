@@ -7,7 +7,6 @@ package org.softwareFm.swt.browser;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 import org.apache.http.HttpResponse;
@@ -25,6 +24,7 @@ import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.future.Futures;
 import org.softwareFm.common.maps.ISimpleMap;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.monitor.IMonitor;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.swt.constants.DisplayConstants;
 import org.softwareFm.swt.swt.Swts;
@@ -48,7 +48,7 @@ public class BrowserComposite implements IBrowserCompositeBuilder, ISimpleMap<St
 	}
 
 	@Override
-	public Future<String> processUrl(String feedType, final String url) {
+	public Future<String> processUrl(final String feedType, final String url) {
 		final IBrowserPart transformer = transformerMap.get(feedType);
 		if (transformer == null)
 			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.unrecognisedFeedType, feedType, Lists.sort(transformerMap.keySet())));
@@ -69,13 +69,15 @@ public class BrowserComposite implements IBrowserCompositeBuilder, ISimpleMap<St
 
 			return Futures.doneFuture(null);
 		} else
-			return service.submit(new Callable<String>() {
+			return service.submit(new IFunction1<IMonitor, String>() {
 				@Override
-				public String call() throws Exception {
+				public String apply(IMonitor from) throws Exception {
+					from.beginTask(MessageFormat.format(DisplayConstants.browsing, feedType, url), 2);
 					HttpGet get = new HttpGet(url.trim());
 					final HttpResponse httpResponse = client.execute(get);
+					from.worked(1);
 					final String reply = EntityUtils.toString(httpResponse.getEntity());
-					Swts.asyncExec(transformer, new Runnable() {
+					Swts.asyncExecAndMarkDone(transformer, from, new Runnable() {
 						@Override
 						public void run() {
 							try {

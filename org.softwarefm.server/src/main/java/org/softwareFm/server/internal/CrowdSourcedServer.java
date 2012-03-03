@@ -37,6 +37,7 @@ import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.monitor.IMonitor;
 import org.softwareFm.common.processors.AbstractLoginDataAccessor;
 import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.services.IServiceExecutor;
@@ -64,9 +65,9 @@ public class CrowdSourcedServer implements ICrowdSourcedServer {
 			serverSocket = new ServerSocket(port);
 			executor = IServiceExecutor.Utils.executor(threads);
 			shutdownLatch = new CountDownLatch(threads);
-			Callable<Void> callable = new Callable<Void>() {
+			IFunction1<IMonitor, Void> job = new IFunction1<IMonitor, Void>() {
 				@Override
-				public Void call() throws Exception {
+				public Void apply(IMonitor from) throws Exception {
 					long aggregatedUsage = 0;
 					long count = 0;
 					startLatch.countDown();
@@ -156,7 +157,7 @@ public class CrowdSourcedServer implements ICrowdSourcedServer {
 				}
 			};
 			for (int i = 0; i < threads; i++) {
-				executor.submit(callable);
+				executor.submit(job);
 			}
 			startLatch.await();
 		} catch (Exception e) {

@@ -5,7 +5,6 @@
 package org.softwareFm.client.http.requests.internal;
 
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 import org.apache.http.Header;
@@ -23,6 +22,8 @@ import org.softwareFm.client.http.requests.IRequestBuilder;
 import org.softwareFm.client.http.requests.IResponseCallback;
 import org.softwareFm.client.http.response.internal.Response;
 import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.common.monitor.IMonitor;
 import org.softwareFm.common.services.IServiceExecutor;
 
 public abstract class AbstractRequestBuilder implements IRequestBuilder {
@@ -74,28 +75,32 @@ public abstract class AbstractRequestBuilder implements IRequestBuilder {
 
 	@Override
 	public Future<?> execute(final IResponseCallback callback) {
-		return executor.submit(new Callable<Void>() {
+		return executor.submit(new IFunction1<IMonitor, Void>() {
 			@Override
-			public Void call() throws Exception {
+			public Void apply(IMonitor from) throws Exception {
 				String protocolHostAndUrl = protocolHostAndUrl();
 				HttpRequestBase base = getRequestBase(protocolHostAndUrl);
 				for (NameValuePair pair : Lists.nullSafe(defaultHeaders))
 					base.addHeader(pair.getName(), pair.getValue());
-
-				String message = base.getClass().getSimpleName() + " " +url  + " "+ parameters;
-				logger.debug(message);
-				HttpResponse httpResponse = client.execute(base);
-				HttpEntity entity = httpResponse.getEntity();
-				String mimeType = findMimeType(entity);
-
-				Response response = new Response(//
-						httpResponse.getStatusLine().getStatusCode(), //
-						url,//
-						entity == null ? "" : EntityUtils.toString(entity),//
-						mimeType);
-				logger.debug("end of " + message +"\n" + response);
-				callback.process(response);
-				return null;
+				String message = base.getClass().getSimpleName() + " " + url + " " + parameters;
+				from.beginTask(message, 2);
+				try {
+					logger.debug(message);
+					HttpResponse httpResponse = client.execute(base);
+					HttpEntity entity = httpResponse.getEntity();
+					String mimeType = findMimeType(entity);
+					from.worked(1);
+					Response response = new Response(//
+							httpResponse.getStatusLine().getStatusCode(), //
+							url,//
+							entity == null ? "" : EntityUtils.toString(entity),//
+							mimeType);
+					logger.debug("end of " + message + "\n" + response);
+					callback.process(response);
+					return null;
+				} finally {
+					from.done();
+				}
 			}
 
 			private String findMimeType(HttpEntity entity) {
@@ -106,6 +111,7 @@ public abstract class AbstractRequestBuilder implements IRequestBuilder {
 				}
 				return "unknown";
 			}
+
 		});
 	}
 

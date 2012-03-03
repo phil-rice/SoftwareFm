@@ -4,13 +4,16 @@
 
 package org.softwareFm.common.functions;
 
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.common.collections.Lists;
+import org.softwareFm.common.constants.UtilityMessages;
 import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.common.monitor.IMonitor;
 
 public class Functions {
 
@@ -20,7 +23,17 @@ public class Functions {
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
+	}
 
+	public static <From, To> IFunction1<From, To> expectValueAndReturnConstant(final From expectedFrom, final To to) {
+		return new IFunction1<From, To>() {
+			@Override
+			public To apply(From from) throws Exception {
+				if (expectedFrom.equals(from))
+					return to;
+				throw new IllegalArgumentException(MessageFormat.format(UtilityMessages.expectedButGot, expectedFrom, from));
+			}
+		};
 	}
 
 	public static <From, Middle, To> IFunction1<From, To> compose(final IFunction1<From, Middle> one, final IFunction1<Middle, To> two) {
@@ -265,9 +278,10 @@ public class Functions {
 		};
 	}
 
-	public static <From,To>IFunction1<From, To> map(final Object...nameAndAttributes) {
+	public static <From, To> IFunction1<From, To> map(final Object... nameAndAttributes) {
 		return new IFunction1<From, To>() {
-			private final Map<From,To> map = Maps.makeMap(nameAndAttributes);
+			private final Map<From, To> map = Maps.makeMap(nameAndAttributes);
+
 			@Override
 			public To apply(From from) throws Exception {
 				return map.get(from);
@@ -275,9 +289,10 @@ public class Functions {
 		};
 	}
 
-	public static IFunction1<Map<String, Object>, String> mapFromKey(final String key, final Object...namesAndValues) {
-		return new IFunction1<Map<String,Object>, String>() {
-			private final Map<String,Object> map = Maps.stringObjectMap(namesAndValues);
+	public static IFunction1<Map<String, Object>, String> mapFromKey(final String key, final Object... namesAndValues) {
+		return new IFunction1<Map<String, Object>, String>() {
+			private final Map<String, Object> map = Maps.stringObjectMap(namesAndValues);
+
 			@Override
 			public String apply(Map<String, Object> from) throws Exception {
 				Object actualKey = from.get(key);
@@ -286,8 +301,8 @@ public class Functions {
 		};
 	}
 
-	public static <K,V>IFunction1<Map<K,V>,V> get(final K key) {
-		return new IFunction1<Map<K,V>, V>() {
+	public static <K, V> IFunction1<Map<K, V>, V> get(final K key) {
+		return new IFunction1<Map<K, V>, V>() {
 			@Override
 			public V apply(Map<K, V> from) throws Exception {
 				return from.get(key);
@@ -303,11 +318,21 @@ public class Functions {
 			}
 		};
 	}
+
 	public static IFoldFunction<Boolean, Boolean> and() {
 		return new IFoldFunction<Boolean, Boolean>() {
 			@Override
 			public Boolean apply(Boolean value, Boolean initial) {
 				return value && initial;
+			}
+		};
+	}
+
+	public static IFunction1<IMonitor, String> exceptionIfCalled(final RuntimeException runtimeException) {
+		return new IFunction1<IMonitor, String>() {
+			@Override
+			public String apply(IMonitor from) throws Exception {
+				throw runtimeException;
 			}
 		};
 	}

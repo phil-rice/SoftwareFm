@@ -69,6 +69,7 @@ import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.indent.Indent;
+import org.softwareFm.common.monitor.IMonitor;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.swt.composites.IHasComposite;
@@ -807,6 +808,40 @@ public class Swts {
 		};
 	}
 
+	public static void asyncExecAndMarkDone(Display display, final IMonitor monitor, final Runnable runnable) {
+		display.asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					if (!monitor.isCanceled())
+						runnable.run();
+				} finally {
+					monitor.done();
+				}
+			}
+		});
+
+	}
+
+	public static void asyncExecAndMarkDone(IHasControl control, final IMonitor monitor, final Runnable runnable) {
+		asyncExecAndMarkDone(control.getControl(), monitor, runnable);
+	}
+
+	public static void asyncExecAndMarkDone(Control control, final IMonitor monitor, final Runnable runnable) {
+		asyncExec(control, new Runnable() {
+			@Override
+			public void run() {
+				try {
+					if (!monitor.isCanceled())
+						runnable.run();
+				} finally {
+					monitor.done();
+				}
+			}
+		});
+
+	}
+
 	public static void asyncExec(IHasControl hasControl, Runnable runnable) {
 		Control control = hasControl.getControl();
 		if (!control.isDisposed())
@@ -1134,4 +1169,5 @@ public class Swts {
 		}
 		return false;
 	}
+
 }

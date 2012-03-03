@@ -13,4 +13,9 @@ public class Exceptions {
 		return Strings.join(Iterables.iterable(stackTrace), separator);
 	}
 
+	public static String classAndMessage(Exception e) {
+		String raw = e.getClass().getSimpleName();
+		return e.getMessage() == null ? raw : raw + ", " + e.getMessage();
+	}
+
 }
