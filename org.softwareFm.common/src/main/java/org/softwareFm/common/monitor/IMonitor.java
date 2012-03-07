@@ -24,6 +24,8 @@ public interface IMonitor {
 	 */
 	public void beginTask(String name, int totalWork);
 
+	boolean hasBegun();
+
 	/* Sets the task name to the given value. This method is used to restore the task label after a nested operation was executed. Normally there is no need for clients to call this method. */
 	public void setTaskName(String name);
 
@@ -37,10 +39,11 @@ public interface IMonitor {
 	void done();
 
 	public static class Utils {
-		
-		
+
 		public static IMonitor noMonitor() {
 			return new IMonitor() {
+				private boolean began;
+
 				@Override
 				public void worked(int work) {
 				}
@@ -64,6 +67,12 @@ public interface IMonitor {
 
 				@Override
 				public void beginTask(String name, int totalWork) {
+					this.began = true;
+				}
+
+				@Override
+				public boolean hasBegun() {
+					return began;
 				}
 			};
 		}
@@ -107,6 +116,11 @@ public interface IMonitor {
 				@Override
 				public void cancel() {
 					cancelled = true;
+				}
+
+				@Override
+				public boolean hasBegun() {
+					return this.taskName != null;
 				}
 
 			};

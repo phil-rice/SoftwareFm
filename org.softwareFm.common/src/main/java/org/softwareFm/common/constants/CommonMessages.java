@@ -17,5 +17,6 @@ public class CommonMessages {
 	public static final String cannotDecrypt = "Cannot decypt {0}";
 	public static final String corrupted = "Corrupted";
 	public static final String record = "Record";
+	public static final String monitorWasNotBegun = "Monitor begin method was not called for {0}";
 
 }

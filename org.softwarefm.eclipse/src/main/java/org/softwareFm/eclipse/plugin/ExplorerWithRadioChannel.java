@@ -220,7 +220,6 @@ public class ExplorerWithRadioChannel {
 			});
 		} finally {
 			service.shutdownAndAwaitTermination(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
-			IServiceExecutor.Utils.defaultExecutor().shutdownAndAwaitTermination(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 			client.shutdown();
 		}
 

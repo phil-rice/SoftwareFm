@@ -30,10 +30,14 @@ public interface IServiceExecutor {
 			return executor(10);
 		}
 
-		public static IServiceExecutor executor(final int threadPoolSize) {
-			IServiceExecutor executor = new ServiceExecutor(IMonitorFactory.Utils.noMonitors, threadPoolSize);
+		public static IServiceExecutor executor(final int threadPoolSize, IMonitorFactory monitorFactory) {
+			IServiceExecutor executor = new ServiceExecutor(monitorFactory, threadPoolSize);
 			executor.addExceptionListener(IExceptionListener.Utils.syserr());
 			return executor;
+			
+		}
+		public static IServiceExecutor executor(final int threadPoolSize) {
+			return executor(threadPoolSize, IMonitorFactory.Utils.noMonitors);
 		}
 	}
 }

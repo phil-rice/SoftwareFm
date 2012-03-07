@@ -1,5 +1,6 @@
 package org.softwareFm.common.services.internal;
 
+import java.text.MessageFormat;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -9,6 +10,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.softwareFm.common.constants.CommonMessages;
 import org.softwareFm.common.constants.UtilityMessages;
 import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.functions.IFunction1;
@@ -25,6 +27,7 @@ public class ServiceExecutor implements IServiceExecutor {
 	private final CopyOnWriteArrayList<IExceptionListener> exceptionListeners = new CopyOnWriteArrayList<IExceptionListener>();
 	private final CopyOnWriteArrayList<IServiceExecutorLifeCycleListener> lifeCycleListeners = new CopyOnWriteArrayList<IServiceExecutorLifeCycleListener>();
 	private final IMonitorFactory monitorFactory;
+	private final CopyOnWriteArrayList<IMonitor> monitors = new CopyOnWriteArrayList<IMonitor>();
 
 	public ServiceExecutor(IMonitorFactory monitorFactory, int threadPoolSize) {
 		this.monitorFactory = monitorFactory;
@@ -43,7 +46,7 @@ public class ServiceExecutor implements IServiceExecutor {
 
 	@Override
 	public <T> Future<T> submit(final IFunction1<IMonitor, T> task) {
-		final IMonitor rawMonitor = monitorFactory.createMonitor();
+		final IMonitor monitor = monitorFactory.createMonitor();
 		final CountDownLatch latch = new CountDownLatch(1);
 		Future<T> rawFuture = service.submit(new Callable<T>() {
 			@Override
@@ -52,9 +55,11 @@ public class ServiceExecutor implements IServiceExecutor {
 				try {
 					for (IServiceExecutorLifeCycleListener listener : lifeCycleListeners)
 						listener.starting(task);
-					T result = task.apply(rawMonitor);
+					T result = task.apply(monitor);
 					for (IServiceExecutorLifeCycleListener listener : lifeCycleListeners)
 						listener.finished(task, result);
+					if (!monitor.hasBegun() && !monitor.isCanceled())
+						throw new IllegalStateException(MessageFormat.format(CommonMessages.monitorWasNotBegun, task));
 					return result;
 				} catch (Exception e) {
 					if (e != null) {
@@ -64,11 +69,14 @@ public class ServiceExecutor implements IServiceExecutor {
 							listener.exception(task, e);
 					}
 					throw e;
+				} finally {
+					monitors.remove(monitor);
 				}
 			}
 		});
+		monitors.add(monitor);
 		latch.countDown();
-		return Futures.bindToMonitor(rawFuture,rawMonitor);
+		return Futures.bindToMonitor(rawFuture, monitor);
 	}
 
 	@Override
@@ -86,6 +94,8 @@ public class ServiceExecutor implements IServiceExecutor {
 	public void shutdownAndAwaitTermination(long time, TimeUnit unit) {
 		try {
 			service.shutdown();
+			for (IMonitor monitor : monitors)
+				monitor.cancel();
 			boolean suceeded = service.awaitTermination(time, unit);
 			if (!suceeded) {
 				throw new ServerExecutorException(UtilityMessages.cannotCloseServer);

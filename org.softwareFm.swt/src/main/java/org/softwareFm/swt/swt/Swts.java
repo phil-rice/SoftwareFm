@@ -808,13 +808,14 @@ public class Swts {
 		};
 	}
 
-	public static void asyncExecAndMarkDone(Display display, final IMonitor monitor, final Runnable runnable) {
+	public static void asyncExecAndMarkDone(final Display display, final IMonitor monitor, final Runnable runnable) {
 		display.asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					if (!monitor.isCanceled())
-						runnable.run();
+					if (!display.isDisposed())
+						if (!monitor.isCanceled())
+							runnable.run();
 				} finally {
 					monitor.done();
 				}
@@ -827,10 +828,12 @@ public class Swts {
 		asyncExecAndMarkDone(control.getControl(), monitor, runnable);
 	}
 
-	public static void asyncExecAndMarkDone(Control control, final IMonitor monitor, final Runnable runnable) {
+	public static void asyncExecAndMarkDone(final Control control, final IMonitor monitor, final Runnable runnable) {
 		asyncExec(control, new Runnable() {
 			@Override
 			public void run() {
+				if (control.isDisposed())
+					return;
 				try {
 					if (!monitor.isCanceled())
 						runnable.run();
@@ -842,27 +845,51 @@ public class Swts {
 
 	}
 
-	public static void asyncExec(IHasControl hasControl, Runnable runnable) {
-		Control control = hasControl.getControl();
+	public static void asyncExec(IHasControl hasControl, final Runnable runnable) {
+		final Control control = hasControl.getControl();
 		if (!control.isDisposed())
-			control.getDisplay().asyncExec(runnable);
+			control.getDisplay().asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					if (!control.isDisposed())
+						runnable.run();
+				}
+			});
 	}
 
-	public static void asyncExec(Control control, Runnable runnable) {
+	public static void asyncExec(final Control control, final Runnable runnable) {
 		if (!control.isDisposed())
-			control.getDisplay().asyncExec(runnable);
+			control.getDisplay().asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					if (!control.isDisposed())
+						runnable.run();
+				}
+			});
 
 	}
 
-	public static void syncExec(IHasControl hasControl, Runnable runnable) {
-		Control control = hasControl.getControl();
+	public static void syncExec(IHasControl hasControl, final Runnable runnable) {
+		final Control control = hasControl.getControl();
 		if (!control.isDisposed())
-			control.getDisplay().syncExec(runnable);
+			control.getDisplay().syncExec(new Runnable() {
+				@Override
+				public void run() {
+					if (!control.isDisposed())
+						runnable.run();
+				}
+			});
 	}
 
-	public static void syncExec(Composite control, Runnable runnable) {
+	public static void syncExec(final Composite control, final Runnable runnable) {
 		if (!control.isDisposed())
-			control.getDisplay().syncExec(runnable);
+			control.getDisplay().syncExec(new Runnable() {
+				@Override
+				public void run() {
+					if (!control.isDisposed())
+						runnable.run();
+				}
+			});
 	}
 
 	public static void dispatchUntilQueueEmpty(Display display) {
