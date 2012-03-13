@@ -12,22 +12,19 @@ import org.eclipse.swt.widgets.Display;
 import org.softwareFm.common.functions.IFunction1WithDispose;
 import org.softwareFm.images.artifacts.ArtifactsAnchor;
 import org.softwareFm.images.general.GeneralAnchor;
-import org.softwareFm.images.login.LoginAnchor;
 import org.softwareFm.images.title.TitleAnchor;
 
 public class BasicImageRegisterConfigurator implements IImageRegisterConfigurator {
 
 	@Override
 	public void registerWith(Device device, ImageRegistry imageRegistry) {
-		Images.registerImages(device, imageRegistry, ArtifactsAnchor.class, "artifact", "archive", "advert",//
-				"article", "jar",  "jarUnrecognised", //
+		Images.registerImages(device, imageRegistry, ArtifactsAnchor.class, "artifact",//
+				"archive", "advert", "article", "jar", "jarUnrecognised", //
 				"comment", "company", "description", "document", "email", "faceBook", "folder", "forum", "javadoc", //
-				"issues", "job", "license", "mailingList", "merchandise", "nothing", "name", "group", "artifact",//
+				"issues", "job", "license", "login", "mailingList", "merchandise", "nothing", "name", "group", "artifact",//
 				"news", "rss", "source", "snippet", "subscribe", "tutorial", "twitter", "unsubscribe");
 		Images.registerImages(device, imageRegistry, GeneralAnchor.class, "general", //
-				"browse", "help", "clear", "sfmLogo", "commentAdd", "cancel", "ok");
-		Images.registerImages(device, imageRegistry, LoginAnchor.class, "login", //
-				"login", "changePassword", "forgotPassword", "loginButton", "signUp");
+				"browse", "help", "clear", "sfmLogo", "commentAdd");
 		Images.registerImages(device, imageRegistry, TitleAnchor.class, "title",//
 				"advert", "artifact", "blog", "document", "facebook", "folder", "forum", "group", "history", "jar", //
 				"mailingList", "next", "previous", "refresh", "rss", "tutorial", "twitter", "version");
@@ -48,6 +45,7 @@ public class BasicImageRegisterConfigurator implements IImageRegisterConfigurato
 		new BasicImageRegisterConfigurator().registerWith(from.getDisplay(), imageRegistry);
 		return imageRegistry;
 	}
+
 	public static IFunction1WithDispose<String, Image> imageFnForTests(Composite from) {
 		final ImageRegistry imageRegistry = forTests(from);
 		return new IFunction1WithDispose<String, Image>() {

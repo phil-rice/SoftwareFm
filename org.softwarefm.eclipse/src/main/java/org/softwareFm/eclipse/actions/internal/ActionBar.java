@@ -257,16 +257,6 @@ public class ActionBar implements IActionBar {
 			}
 		}));
 
-		if (newFeatures)
-			toolBarManager.add(Swts.Actions.radioAction(resourceGetter, CollectionConstants.actionGroupTitle, ActionAnchor.class, CollectionConstants.actionGroupImage, new Runnable() {
-				@Override
-				public void run() {
-					setState(State.FROM_JAR);
-					urlKey = CardConstants.groupUrlKey;
-					reselect();
-					showUrl(CardConstants.webPageGroupUrl);
-				}
-			}));
 		Action artifactAction = Swts.Actions.radioAction(resourceGetter, CollectionConstants.actionArtifactTitle, ActionAnchor.class, CollectionConstants.actionArtifactImage, new Runnable() {
 			@Override
 			public void run() {

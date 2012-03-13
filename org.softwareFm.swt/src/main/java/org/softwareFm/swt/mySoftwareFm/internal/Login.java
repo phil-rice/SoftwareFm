@@ -10,6 +10,7 @@ import java.util.Map;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.common.functions.Functions;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.strings.Strings;
@@ -30,7 +31,8 @@ public class Login implements ILogin {
 	final INamesAndValuesEditor content;
 
 	public Login(Composite parent, final CardConfig cardConfig, final String sessionSalt, String initialEmail, final ILoginStrategy loginStrategy, final ILoginDisplayStrategy loginDisplayStrategy, final ILoginCallback callback) {
-		String title = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, cardType, CardConstants.loginTitle);
+		IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, cardType);
+		String title = IResourceGetter.Utils.getOrException(resourceGetter,  CardConstants.loginTitle);
 		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(LoginConstants.emailKey, initialEmail), Arrays.asList(//
 				INamesAndValuesEditor.Utils.text(cardConfig, "email"),//
 				INamesAndValuesEditor.Utils.password(cardConfig, "password")),//
@@ -79,13 +81,13 @@ public class Login implements ILogin {
 
 				});
 		Composite buttonComposite = content.getButtonComposite();
-		Swts.Buttons.makeImageButtonAtStart(buttonComposite, cardConfig.imageFn, CardConstants.signUpImage, new Runnable() {
+		Swts.Buttons.makePushButtonAtStart(buttonComposite, resourceGetter, CardConstants.signUpButtonTitle, new Runnable() {
 			@Override
 			public void run() {
 				loginDisplayStrategy.showSignup(sessionSalt, getEmail());
 			}
 		});
-		Swts.Buttons.makeImageButtonAtStart(buttonComposite, cardConfig.imageFn, CardConstants.forgotPasswordImage, new Runnable() {
+		Swts.Buttons.makePushButtonAtStart(buttonComposite, resourceGetter, CardConstants.forgotPasswordButtonTitle, new Runnable() {
 			@Override
 			public void run() {
 				loginDisplayStrategy.showForgotPassword(sessionSalt, getEmail());

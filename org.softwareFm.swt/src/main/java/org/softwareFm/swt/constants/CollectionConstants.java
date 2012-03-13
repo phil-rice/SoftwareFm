@@ -50,16 +50,16 @@ public class CollectionConstants {
 	public static final String actionSnippetTitle = "action.snippet.title";
 	public static final String actionPeopleTitle = "action.people.title";
 
-	public static final String actionWelcomeImage = "welcome.gif";
-	public static final String actionGroupImage = "group.gif";
-	public static final String actionRefreshImage = "refresh.gif";
-	public static final String actionArtifactImage = "artifact.gif";
-	public static final String actionVersionImage = "version.gif";
-	public static final String actionJarImage = "jar.gif";
-	public static final String actionDebugImage = "debug.gif";
-	public static final String actionNukeImage = "nuke.gif";
-	public static final String actionSnippetImage = "snippet.gif";
-	public static final String actionPeopleImage = "friends.gif";
+	public static final String actionWelcomeImage = "welcome.png";
+	public static final String actionGroupImage = "group.png";
+	public static final String actionRefreshImage = "refresh.png";
+	public static final String actionArtifactImage = "artifact.png";
+	public static final String actionVersionImage = "version.png";
+	public static final String actionJarImage = "jar.png";
+	public static final String actionDebugImage = "debug.png";
+	public static final String actionNukeImage = "nuke.png";
+	public static final String actionSnippetImage = "snippet.png";
+	public static final String actionPeopleImage = "friends.png";
 
 	public static final String jarNotRecognisedSearchingText = "jar.notRecognised.searching.text";
 	public static final String jarNotRecognisedFound0Text = "jar.notRecognised.found0.text";
@@ -79,7 +79,6 @@ public class CollectionConstants {
 	public static final String email = "email";
 	public static final String password = "password";
 	public static final String confirmPassword = "confirmPassword";
-	public static final String forgotPassword = "login.button.forgotPassword";
 	public static final String signUp = "login.button.signUp";
 	public static final String createdTimeKey = "created";
 

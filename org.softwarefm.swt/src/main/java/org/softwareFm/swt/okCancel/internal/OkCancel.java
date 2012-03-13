@@ -21,8 +21,8 @@ import org.softwareFm.swt.swt.Swts.Row;
 
 public class OkCancel implements IOkCancelForTests {
 
-	public final Label okButton;
-	public final Label cancelButton;
+	public final Button okButton;
+	public final Button cancelButton;
 	private boolean enabled = true;
 	private final Composite content;
 	private final Runnable onAccept;
@@ -36,8 +36,8 @@ public class OkCancel implements IOkCancelForTests {
 		this.onAccept = onAccept;
 		this.onCancel = onCancel;
 		content = new Composite(parent, SWT.NULL);
-		cancelButton = addImageButton(DisplayConstants.buttonCancelImage, onCancel);
-		okButton = addImageButton(DisplayConstants.buttonOkImage, new Runnable() {
+		cancelButton = addButton(DisplayConstants.buttonCancelTitle, onCancel);
+		okButton = addButton(DisplayConstants.buttonOkTitle, new Runnable() {
 			@Override
 			public void run() {
 				if (okButton.isDisposed())

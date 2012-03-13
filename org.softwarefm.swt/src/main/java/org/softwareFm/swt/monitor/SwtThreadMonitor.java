@@ -32,6 +32,7 @@ public class SwtThreadMonitor implements IHasComposite, IMonitorFactory {
 	private final IMonitorFactory realMonitorFactory;
 	private final SwtThreadMonitorComposite content;
 
+	@SuppressWarnings("unused")
 	public static class SwtThreadMonitorComposite extends DataComposite<Table> {
 		private final Table table;
 		private TableColumn taskName;
