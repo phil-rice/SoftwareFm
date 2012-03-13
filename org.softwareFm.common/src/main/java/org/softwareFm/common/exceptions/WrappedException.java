@@ -11,6 +11,11 @@ public class WrappedException extends RuntimeException {
 	public WrappedException(Throwable e) {
 		super(e);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public <T extends Throwable> T unwrap(){
+		return (T) unwrap(this);
+	}
 
 	public static RuntimeException wrap(Throwable e) {
 		if (e instanceof ThreadDeath)

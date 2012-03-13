@@ -6,6 +6,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import junit.framework.TestCase;
@@ -16,12 +17,15 @@ import org.softwareFm.common.collections.Sets;
 import org.softwareFm.common.constants.CommonConstants;
 import org.softwareFm.common.exceptions.WrappedException;
 import org.softwareFm.common.functions.Functions;
+import org.softwareFm.common.functions.Functions.ConstantFunctionWithMemoryOfFroms;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.monitor.IMonitor;
 import org.softwareFm.common.runnable.Runnables;
 import org.softwareFm.common.runnable.Runnables.CountRunnable;
+import org.softwareFm.common.services.IMonitorFactory;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.common.services.IServiceExecutorLifeCycleListener;
+import org.softwareFm.common.services.internal.ServiceExecutor.TrackBeginMonitor;
 import org.softwareFm.common.tests.Tests;
 
 public class ServiceExecutorTest extends TestCase {
@@ -43,17 +47,34 @@ public class ServiceExecutorTest extends TestCase {
 		checkCanRunInParallel(Runnables.noRunnable, 0);
 	}
 
-	public void testPassesMonitorFromMonitorFactoryToJob() {
-		fail();
+	public void testPassesMonitorFromMonitorFactoryToJob() throws Exception {
+		ConstantFunctionWithMemoryOfFroms<IMonitor, String> job = createSimpleJob("some result");
+		IMonitor monitor = IMonitor.Utils.noMonitor();
+		executeWithSpecificMonitor(job, monitor);
+		ServiceExecutor.TrackBeginMonitor actual = (TrackBeginMonitor) Lists.getOnly(job.froms);
+		assertEquals(monitor, actual.getDelegate());
 	}
 
-	public void testCallsDoneOnMonitorIfBeginWasntCalled() {
-		fail();
+	public void testThrowsExceptionIfBeginWasntCalled() {
+		final IFunction1<IMonitor, String> job = Functions.<IMonitor, String> constant("result");
+		WrappedException e = Tests.assertThrows(WrappedException.class, new Runnable() {
+			@Override
+			public void run() {
+				try {
+					serviceExecutor.submit(job).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+				} catch (Exception e) {
+					throw WrappedException.wrap(e);
+				}
+			}
+		});
+		Throwable ExecutionException = e.unwrap();
+		IllegalStateException realException = (IllegalStateException) ExecutionException.getCause();
+		assertEquals("Monitor begin method was not called for Constant: result", realException.getMessage());
 	}
 
 	public void testListenerCalled() throws Exception {
-		String result = "someValue";
-		IFunction1<IMonitor, String> job = Functions.constant(result);
+		String result = "result";
+		IFunction1<IMonitor, String> job = createSimpleJob(result);
 
 		IServiceExecutorLifeCycleListener listener1 = EasyMock.createStrictMock(IServiceExecutorLifeCycleListener.class);
 		listener1.starting(job);
@@ -142,6 +163,26 @@ public class ServiceExecutorTest extends TestCase {
 		}
 		assertEquals(exceptionCount, exceptionCount);
 		assertEquals(expected, results);
+	}
+
+	private ConstantFunctionWithMemoryOfFroms<IMonitor, String> createSimpleJob(String result) {
+		ConstantFunctionWithMemoryOfFroms<IMonitor, String> job = new ConstantFunctionWithMemoryOfFroms<IMonitor, String>(result) {
+			@Override
+			public String apply(IMonitor from) throws Exception {
+				from.beginTask("somename", 1);
+				return super.apply(from);
+			}
+		};
+		return job;
+	}
+
+	private void executeWithSpecificMonitor(IFunction1<IMonitor, String> job, IMonitor monitor) throws InterruptedException, ExecutionException, TimeoutException {
+		IServiceExecutor executorWithMockFactory = IServiceExecutor.Utils.executor(10, IMonitorFactory.Utils.specific(monitor));
+		try {
+			executorWithMockFactory.submit(job).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+		} finally {
+			executorWithMockFactory.shutdown();
+		}
 	}
 
 	@Override

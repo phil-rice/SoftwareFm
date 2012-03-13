@@ -17,6 +17,22 @@ import org.softwareFm.common.monitor.IMonitor;
 
 public class Functions {
 
+	public static class ConstantFunctionWithMemoryOfFroms<From, To> implements IFunction1<From, To> {
+		private final To object;
+		public final List<From> froms = Lists.newList();
+
+		public ConstantFunctionWithMemoryOfFroms(To object) {
+			this.object = object;
+		}
+
+		@Override
+		public To apply(From from) throws Exception {
+			froms.add(from);
+			return object;
+		}
+		
+	}
+
 	public static <From, To> To call(final IFunction1<From, To> fn, From value) {
 		try {
 			return fn.apply(value);
@@ -247,9 +263,17 @@ public class Functions {
 			public To apply(From from) throws Exception {
 				return object;
 			}
+			@Override
+			public String toString() {
+				return "Constant: " + object;
+			}
 		};
 	}
 
+	public static <From, To> ConstantFunctionWithMemoryOfFroms<From, To> constantWithMemoryOfFrom(final To object) {
+		return new ConstantFunctionWithMemoryOfFroms<From, To>(object);
+	}
+	
 	public static <From, To> IFunction1<From, To> expectionIfCalled() {
 		return new IFunction1<From, To>() {
 			@Override

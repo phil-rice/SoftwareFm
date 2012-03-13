@@ -108,11 +108,6 @@ public class SwtThreadMonitor implements IHasComposite, IMonitorFactory {
 				}
 
 				@Override
-				public boolean hasBegun() {
-					return monitor.hasBegun();
-				}
-
-				@Override
 				public void setTaskName(String name) {
 					monitor.setTaskName(name);
 				}

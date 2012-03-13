@@ -55,11 +55,11 @@ public class ServiceExecutor implements IServiceExecutor {
 				try {
 					for (IServiceExecutorLifeCycleListener listener : lifeCycleListeners)
 						listener.starting(task);
-					T result = task.apply(monitor);
+					TrackBeginMonitor trackingMonitor = new TrackBeginMonitor(monitor, task);
+					T result = task.apply(trackingMonitor);
 					for (IServiceExecutorLifeCycleListener listener : lifeCycleListeners)
 						listener.finished(task, result);
-					if (!monitor.hasBegun() && !monitor.isCanceled())
-						throw new IllegalStateException(MessageFormat.format(CommonMessages.monitorWasNotBegun, task));
+					trackingMonitor.checkHasBegan();
 					return result;
 				} catch (Exception e) {
 					if (e != null) {
@@ -77,6 +77,59 @@ public class ServiceExecutor implements IServiceExecutor {
 		monitors.add(monitor);
 		latch.countDown();
 		return Futures.bindToMonitor(rawFuture, monitor);
+	}
+
+	public static class TrackBeginMonitor implements IMonitor {
+		private final IMonitor delegate;
+		private boolean hasBegan;
+		private final IFunction1<IMonitor, ?> task;
+
+
+		public TrackBeginMonitor(IMonitor delegate, IFunction1<IMonitor, ?> task) {
+			this.delegate = delegate;
+			this.task = task;
+		}
+
+		@Override
+		public void beginTask(String name, int totalWork) {
+			delegate.beginTask(name, totalWork);
+			hasBegan = true;
+		}
+
+		@Override
+		public void setTaskName(String name) {
+			delegate.setTaskName(name);
+		}
+
+		@Override
+		public void worked(int work) {
+			delegate.worked(work);
+		}
+
+		@Override
+		public void cancel() {
+			delegate.cancel();
+		}
+
+		@Override
+		public boolean isCanceled() {
+			return delegate.isCanceled();
+		}
+
+		@Override
+		public void done() {
+			delegate.done();
+		}
+
+		public void checkHasBegan() {
+			boolean needsBeginCalling = !delegate.isCanceled();
+			if (needsBeginCalling && !hasBegan)
+				throw new IllegalStateException(MessageFormat.format(CommonMessages.monitorWasNotBegun, task));
+		}
+
+		public IMonitor getDelegate() {
+			return delegate;
+		}
 	}
 
 	@Override
