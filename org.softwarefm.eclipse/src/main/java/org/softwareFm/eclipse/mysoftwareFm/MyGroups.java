@@ -201,7 +201,8 @@ public class MyGroups implements IHasComposite {
 					int membershipCount = groupsReader.membershipCount(groupId, groupCryptoKey);
 					String membershipCountString = Integer.toString(membershipCount);
 					String myStatus = Strings.nullSafeToString(map.get(GroupConstants.membershipStatusKey));
-					item.setData(new IdNameAndStatus(groupId, groupName, myStatus));
+					IdNameAndStatus data = new IdNameAndStatus(groupId, groupName, myStatus);
+					item.setData(data);
 					item.setText(new String[] { groupName, membershipCountString, myStatus });
 					idToCrypto.put(groupId, groupCryptoKey);
 				}

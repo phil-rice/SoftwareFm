@@ -68,6 +68,7 @@ public class CrowdSourcedServer implements ICrowdSourcedServer {
 			IFunction1<IMonitor, Void> job = new IFunction1<IMonitor, Void>() {
 				@Override
 				public Void apply(IMonitor from) throws Exception {
+					from.beginTask("Processing request2", IMonitor.UNKNOWN);
 					long aggregatedUsage = 0;
 					long count = 0;
 					startLatch.countDown();
@@ -95,6 +96,7 @@ public class CrowdSourcedServer implements ICrowdSourcedServer {
 									String remoteSocketAddress = socket.getRemoteSocketAddress().toString();
 									ip = Strings.firstSegment(remoteSocketAddress, ":");
 								} finally {
+									from.worked(1);
 									conn.close();
 									long now = System.currentTimeMillis();
 									long duration = now - startTime;
@@ -154,6 +156,11 @@ public class CrowdSourcedServer implements ICrowdSourcedServer {
 						}
 					}
 					return Collections.emptyMap();
+				}
+				
+				@Override
+				public String toString() {
+					return "Processing User Connection on "+ Thread.currentThread();
 				}
 			};
 			for (int i = 0; i < threads; i++) {

@@ -8,6 +8,7 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.softwareFm.common.collections.Iterables;
 import org.softwareFm.common.collections.Lists;
@@ -25,6 +26,46 @@ import org.softwareFm.swt.editors.NameAndValuesEditor.NameAndValuesEditorComposi
 import org.softwareFm.swt.swt.Swts;
 
 public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
+	public void testAcceptInvite() {
+		createGroup(groupId1, groupCryptoKey1);
+		addUserToGroup(softwareFmId, email, groupId1, groupCryptoKey1, GroupConstants.invitedStatus);
+
+		final MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
+		MyGroupsButtons buttons = myGroupsComposite.getFooter();
+		Table beforeTable = getMyGroupsTable(myGroupsComposite);
+		beforeTable.select(0);
+		beforeTable.notifyListeners(SWT.Selection, new Event());
+		dispatchUntilQueueEmpty();
+
+		assertTrue(buttons.accept.isEnabled());
+		Swts.Buttons.press(buttons.accept);
+		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				if (masterDetailSocial.getDetailContent() instanceof MyGroupsComposite) {
+					MyGroupsComposite myGroupsComposite = (MyGroupsComposite) masterDetailSocial.getDetailContent();
+					Table table = getMyGroupsTable(myGroupsComposite);
+					TableItem item = table.getItem(0);
+					IdNameAndStatus idNameAndStatus = (IdNameAndStatus) item.getData();
+					return idNameAndStatus.status.equals(GroupConstants.memberStatus);
+				}
+				return false;
+			}
+		});
+
+		String projectCryptoKey = userReader.getUserProperty(softwareFmId, userCryptoKey, SoftwareFmConstants.projectCryptoKey);
+		assertEquals(GroupConstants.memberStatus, userMembershipReader.getMembershipProperty(softwareFmId, userCryptoKey, groupId1, GroupConstants.membershipStatusKey));
+		assertEquals(Maps.stringObjectMap(SoftwareFmConstants.projectCryptoKey, projectCryptoKey, //
+				LoginConstants.emailKey, email, //
+				LoginConstants.softwareFmIdKey, softwareFmId,//
+				GroupConstants.membershipStatusKey, GroupConstants.memberStatus), Lists.getOnly(Iterables.list(groups.users(groupId1, groupCryptoKey1))));
+		assertEquals(Maps.stringObjectMap(SoftwareFmConstants.projectCryptoKey, projectCryptoKey, //
+				LoginConstants.emailKey, email, //
+				LoginConstants.softwareFmIdKey, softwareFmId,//
+				GroupConstants.membershipStatusKey, GroupConstants.memberStatus), Lists.getOnly(Iterables.list(groupsReader.users(groupId1, groupCryptoKey1))));
+
+	}
+
 	public void testCreateExceptionCausesTextPanelAndClickReturnsToMyGroups() {
 		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		MyGroupsButtons buttons = myGroupsComposite.getFooter();
@@ -55,7 +96,7 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		dispatchUntilQueueEmpty();
 
 		NameAndValuesEditorComposite editor = (NameAndValuesEditorComposite) masterDetailSocial.getDetailContent();
-		
+
 		assertFalse(((Text) editor.getEditor().getChildren()[1]).getEditable());
 		checkChange(editor, 1, "Not an email");
 		checkChange(editor, 2, "newSubject $email$/$group$");
@@ -303,12 +344,20 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 	}
 
 	private void checkChange(NameAndValuesEditorComposite editor, int i, String newValue) {
-		Control control = editor.getEditor().getChildren()[i*2+1];
+		Control control = editor.getEditor().getChildren()[i * 2 + 1];
 		Swts.setText(control, newValue);
 	}
 
-	public void _testAcceptInvite() {
-		fail("Feature not implemented yet"); 
+	public void testDelete() {
+		fail("Feature not implemented yet");
+	}
+
+	public void testKick() {
+		fail("Feature not implemented yet");
+	}
+
+	public void testLeave() {
+		fail("Feature not implemented yet");
 	}
 
 }

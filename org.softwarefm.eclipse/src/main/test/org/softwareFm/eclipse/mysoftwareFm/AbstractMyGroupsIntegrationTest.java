@@ -27,6 +27,7 @@ import org.softwareFm.eclipse.usage.internal.AbstractExplorerIntegrationTest;
 import org.softwareFm.server.ICrowdSourcedServer;
 import org.softwareFm.server.processors.IProcessCall;
 import org.softwareFm.server.processors.SignUpResult;
+import org.softwareFm.softwareFmServer.AcceptInviteGroupProcessor;
 import org.softwareFm.softwareFmServer.ITakeOnProcessor;
 import org.softwareFm.softwareFmServer.InviteGroupProcessor;
 import org.softwareFm.softwareFmServer.TakeOnGroupProcessor;
@@ -54,11 +55,11 @@ abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIn
 		MySoftwareFmLoggedInComposite composite = Swts.<MySoftwareFmLoggedInComposite> getDescendant(mySoftwareFmComposite, 0);
 		Button myGroupsButton = composite.myGroupsButton;
 		Swts.Buttons.press(myGroupsButton);
-		MyGroupsComposite myGroups = getMyGroups();
+		MyGroupsComposite myGroups = dispatchUntilMyGroups();
 		return myGroups;
 	}
 
-	private MyGroupsComposite getMyGroups() {
+	protected MyGroupsComposite dispatchUntilMyGroups() {
 		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
@@ -180,6 +181,7 @@ abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIn
 		ITakeOnProcessor takeOnProcessor = new TakeOnProcessor(remoteGitOperations, user, membershipForServer, groups, processCallParameters.userCryptoFn, groupUrlGenerator, groupIdGenerator, repoDefnFn);
 		TakeOnGroupProcessor takeOnGroupProcessor = new TakeOnGroupProcessor(takeOnProcessor, processCallParameters.signUpChecker, groupCryptoGenerator, getEmailToSfmIdFn(), processCallParameters.saltGenerator, processCallParameters.softwareFmIdGenerator, mailer);
 		InviteGroupProcessor inviteGroupProcessor = new InviteGroupProcessor(takeOnProcessor, processCallParameters.signUpChecker, getEmailToSfmIdFn(), processCallParameters.saltGenerator, processCallParameters.softwareFmIdGenerator, mailer, processCallParameters.userCryptoFn, userMembershipReader, groupsReader);
-		return ArrayHelper.append(super.getExtraProcessCalls(remoteGitOperations, cryptoFn), takeOnGroupProcessor, inviteGroupProcessor);
+		AcceptInviteGroupProcessor acceptInviteGroupProcessor = new AcceptInviteGroupProcessor(groups, membershipForServer, processCallParameters.userCryptoFn);
+		return ArrayHelper.append(super.getExtraProcessCalls(remoteGitOperations, cryptoFn), takeOnGroupProcessor, inviteGroupProcessor, acceptInviteGroupProcessor);
 	}
 }
