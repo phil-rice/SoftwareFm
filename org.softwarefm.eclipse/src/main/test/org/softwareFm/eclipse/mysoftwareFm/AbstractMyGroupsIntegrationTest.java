@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -30,6 +31,7 @@ import org.softwareFm.server.processors.SignUpResult;
 import org.softwareFm.softwareFmServer.AcceptInviteGroupProcessor;
 import org.softwareFm.softwareFmServer.ITakeOnProcessor;
 import org.softwareFm.softwareFmServer.InviteGroupProcessor;
+import org.softwareFm.softwareFmServer.KickFromGroupCommandProcessor;
 import org.softwareFm.softwareFmServer.TakeOnGroupProcessor;
 import org.softwareFm.softwareFmServer.TakeOnProcessor;
 import org.softwareFm.swt.constants.CardConstants;
@@ -168,6 +170,18 @@ abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIn
 		return table;
 	}
 
+	protected Table getMembershipTable(MyGroupsComposite myGroupsComposite) {
+		SashForm sashForm = myGroupsComposite.getEditor();
+		assertEquals(3, sashForm.getChildren().length);
+		assertTrue(sashForm.getChildren()[1] instanceof Composite);
+		assertTrue(sashForm.getChildren()[2] instanceof Sash);
+		Composite rhsComposite = (Composite) sashForm.getChildren()[1];
+		StackLayout stackLayout = (StackLayout) rhsComposite.getLayout();
+		
+		Table table = (Table) stackLayout.topControl;
+		return table;
+	}
+
 	@Override
 	protected IFunction1<String, String> getEmailToSfmIdFn() {
 		IFunction1<String, String> emailToSoftwareFmId = ICrowdSourcedServer.Utils.emailToSoftwareFmId(processCallParameters.dataSource);
@@ -182,6 +196,7 @@ abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIn
 		TakeOnGroupProcessor takeOnGroupProcessor = new TakeOnGroupProcessor(takeOnProcessor, processCallParameters.signUpChecker, groupCryptoGenerator, getEmailToSfmIdFn(), processCallParameters.saltGenerator, processCallParameters.softwareFmIdGenerator, mailer);
 		InviteGroupProcessor inviteGroupProcessor = new InviteGroupProcessor(takeOnProcessor, processCallParameters.signUpChecker, getEmailToSfmIdFn(), processCallParameters.saltGenerator, processCallParameters.softwareFmIdGenerator, mailer, processCallParameters.userCryptoFn, userMembershipReader, groupsReader);
 		AcceptInviteGroupProcessor acceptInviteGroupProcessor = new AcceptInviteGroupProcessor(groups, membershipForServer, processCallParameters.userCryptoFn);
-		return ArrayHelper.append(super.getExtraProcessCalls(remoteGitOperations, cryptoFn), takeOnGroupProcessor, inviteGroupProcessor, acceptInviteGroupProcessor);
+		KickFromGroupCommandProcessor kickFromGroupCommandProcessor = new KickFromGroupCommandProcessor(groups, membershipForServer, processCallParameters.userCryptoFn);
+		return ArrayHelper.append(super.getExtraProcessCalls(remoteGitOperations, cryptoFn), takeOnGroupProcessor, inviteGroupProcessor, acceptInviteGroupProcessor, kickFromGroupCommandProcessor);
 	}
 }

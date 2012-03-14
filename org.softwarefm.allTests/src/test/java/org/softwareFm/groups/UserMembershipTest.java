@@ -32,9 +32,11 @@ public class UserMembershipTest extends GitTest {
 
 	private String groupId1;
 	private String groupId2;
+	private String groupId3;
 
 	private String groupCrypto1;
 	private String groupCrypto2;
+	private String groupCrypto3;
 	private String user1Id;
 	private IUser user;
 	private String userCrypto;
@@ -53,7 +55,30 @@ public class UserMembershipTest extends GitTest {
 	}
 
 	public void testRemoveUser() {
-		fail();
+		membershipForServer.addMembership(user1Id, userCrypto, groupId1, groupCrypto1, "someStatus1");
+		membershipForServer.addMembership(user1Id, userCrypto, groupId2, groupCrypto2, "someStatus2");
+		membershipForServer.addMembership(user1Id, userCrypto, groupId3, groupCrypto3, "someStatus3");
+		membershipForServer.remove(user1Id, userCrypto, groupId2, groupCrypto2);
+
+		List<Map<String, Object>> expected = Arrays.asList(//
+				Maps.stringObjectMap(GroupConstants.groupIdKey, groupId1, GroupConstants.groupCryptoKey, groupCrypto1, GroupConstants.membershipStatusKey, "someStatus1"),//
+				Maps.stringObjectMap(GroupConstants.groupIdKey, groupId3, GroupConstants.groupCryptoKey, groupCrypto3, GroupConstants.membershipStatusKey, "someStatus3"));
+
+		assertEquals(expected, membershipForServer.walkGroupsFor(user1Id, userCrypto));
+		assertEquals(expected, membershipForLocal.walkGroupsFor(user1Id, userCrypto));
+	}
+	public void testRemoveUserWhenGroupIsntPresent() {
+		membershipForServer.addMembership(user1Id, userCrypto, groupId1, groupCrypto1, "someStatus1");
+		membershipForServer.addMembership(user1Id, userCrypto, groupId3, groupCrypto3, "someStatus3");
+
+		membershipForServer.remove(user1Id, userCrypto, groupId2, groupCrypto2);
+		
+		List<Map<String, Object>> expected = Arrays.asList(//
+				Maps.stringObjectMap(GroupConstants.groupIdKey, groupId1, GroupConstants.groupCryptoKey, groupCrypto1, GroupConstants.membershipStatusKey, "someStatus1"),//
+				Maps.stringObjectMap(GroupConstants.groupIdKey, groupId3, GroupConstants.groupCryptoKey, groupCrypto3, GroupConstants.membershipStatusKey, "someStatus3"));
+		
+		assertEquals(expected, membershipForServer.walkGroupsFor(user1Id, userCrypto));
+		assertEquals(expected, membershipForLocal.walkGroupsFor(user1Id, userCrypto));
 	}
 
 	public void testCannotAddSameGroupTwice() {
@@ -113,8 +138,10 @@ public class UserMembershipTest extends GitTest {
 		userCrypto = Crypto.makeKey();
 		groupId1 = "groupId1";
 		groupId2 = "groupId2";
+		groupId3 = "groupId3";
 		groupCrypto1 = Crypto.makeKey();
 		groupCrypto2 = Crypto.makeKey();
+		groupCrypto3 = Crypto.makeKey();
 		user1Id = "sfmId1";
 
 		IUrlGenerator userUrlGenerator = LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix);

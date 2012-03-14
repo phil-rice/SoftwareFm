@@ -37,8 +37,11 @@ public class KickFromGroupCommandProcessor extends AbstractCommandProcessor{
 		String objectCrypto = Functions.call(userCryptoFn, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, objectSoftwareFmId));
 		String groupCrypto = IUserMembershipReader.Utils.findGroupCrytpo(userMembership, softwareFmId, userCrypto, groupId);
 		String myStatus = userMembership.getMembershipProperty(softwareFmId, userCrypto, groupId, GroupConstants.membershipStatusKey);
+		String objectsStatus = userMembership.getMembershipProperty(objectSoftwareFmId, objectCrypto, groupId, GroupConstants.membershipStatusKey);
 		if (!GroupConstants.adminStatus.equals(myStatus))
 			throw new IllegalArgumentException(MessageFormat.format(GroupConstants.cannotKickUnlessAdmin, groupId, softwareFmId, myStatus, objectSoftwareFmId));
+		if (GroupConstants.adminStatus.equals(objectsStatus))
+			throw new IllegalArgumentException(MessageFormat.format(GroupConstants.cannotKickAdmin, groupId, softwareFmId, myStatus, objectSoftwareFmId));
 		userMembership.remove(objectSoftwareFmId, objectCrypto, groupId, groupCrypto);
 		groups.removeUser(groupId, groupCrypto, objectSoftwareFmId);
 		return IProcessResult.Utils.processString("");

@@ -1,5 +1,7 @@
 package org.softwareFm.eclipse.mysoftwareFm;
 
+import java.util.Map;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.custom.StyledText;
@@ -12,6 +14,7 @@ import org.softwareFm.common.constants.GroupConstants;
 import org.softwareFm.common.constants.LoginConstants;
 import org.softwareFm.common.crypto.Crypto;
 import org.softwareFm.common.maps.Maps;
+import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups.MyGroupsComposite;
 import org.softwareFm.swt.swt.Swts;
 
@@ -63,7 +66,7 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 
 		assertEquals(summaryTable, stackLayout.topControl);
 		checkTableColumns(summaryTable, "Email", "Status");
-		checkTable(summaryTable, 0, null, email2, "someStatus2");
+		checkTable(summaryTable, 0, makeMembershipMap(softwareFmId, userCryptoKey, email2, "someStatus2"), email2, "someStatus2");
 		assertEquals(1, summaryTable.getItemCount());
 	}
 
@@ -96,8 +99,8 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		assertEquals(summaryTable, stackLayout.topControl);
 		checkTableColumns(summaryTable, "Email", "Status");
 		checkTable(summaryTable, 0, null, "Corrupted", "Record");
-		checkTable(summaryTable, 1, null, email2, "someStatus3");
-		checkTable(summaryTable, 2, null, email, "someStatus1");
+		checkTable(summaryTable, 1, makeMembershipMap(softwareFmId2, userCryptoKey2, email2, "someStatus3"), email2, "someStatus3");
+		checkTable(summaryTable, 2, makeMembershipMap(softwareFmId, userCryptoKey, email, "someStatus1"), email, "someStatus1");
 		assertEquals(3, summaryTable.getItemCount());
 
 	}
@@ -134,12 +137,17 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		table.notifyListeners(SWT.Selection, new Event());
 		dispatchUntilQueueEmpty();
 		assertEquals(1, summaryTable.getItemCount());
-		checkTable(summaryTable, 0, null, email, "someStatus1");
+		checkTable(summaryTable, 0,  makeMembershipMap(softwareFmId, userCryptoKey, email, "someStatus1"), email, "someStatus1");
 
 		table.select(0);
 		table.notifyListeners(SWT.Selection, new Event());
 		dispatchUntilQueueEmpty();
 		assertEquals(0, summaryTable.getItemCount());
 
+	}
+
+	private Map<String, Object> makeMembershipMap(String softwareFmId, String cryptoKey, String email, String status) {
+		String projectCryptoKey = user.getUserProperty(softwareFmId, cryptoKey, SoftwareFmConstants.projectCryptoKey);
+		return Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId, SoftwareFmConstants.projectCryptoKey, projectCryptoKey, LoginConstants.emailKey, email, GroupConstants.membershipStatusKey, status);
 	}
 }

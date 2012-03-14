@@ -244,18 +244,25 @@ public class GroupClientOperations implements IGroupClientOperations {
 	}
 
 	@Override
-	public Runnable kickMember(final UserData userData, final Callable<IdNameAndStatus> idNameStatusGetter, final ICallback<String> showMyGroups) {
+	public Runnable kickMember(final UserData userData, final Callable<IdNameAndStatus> idNameStatusGetter, final Callable<Map<String, Object>> objectMembershipGetter, final ICallback<String> showMyGroups) {
 		return new Runnable() {
 			@Override
 			public void run() {
 				IdNameAndStatus idNameAndStatus = Callables.call(idNameStatusGetter);
+				Map<String, Object> objectMembershipDetails = Callables.call(objectMembershipGetter);
+				if (objectMembershipDetails == null)
+					throw new NullPointerException("objectMembershipDetails is null");
+				String otherId = (String) objectMembershipDetails.get(LoginConstants.softwareFmIdKey);
+				if (otherId == null)
+					throw new NullPointerException("otherId is null, " + objectMembershipDetails);
 				if (idNameAndStatus == null)
-					throw new NullPointerException("IdNameAndStatus is null");
+					throw new NullPointerException("idNameAndStatus is null");
 				final String groupId = idNameAndStatus.id;
 				if (groupId == null)
 					throw new NullPointerException("group id is null");
 				client.post(GroupConstants.kickFromGroupPrefix).//
 						addParam(LoginConstants.softwareFmIdKey, userData.softwareFmId).//
+						addParam(GroupConstants.objectSoftwareFmId,otherId).//
 						addParam(GroupConstants.groupIdKey, groupId).//
 						addParam(GroupConstants.membershipStatusKey, GroupConstants.memberStatus).//
 						execute(new IResponseCallback() {

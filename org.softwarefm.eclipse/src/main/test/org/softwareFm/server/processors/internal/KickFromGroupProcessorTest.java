@@ -22,7 +22,7 @@ public class KickFromGroupProcessorTest extends AbstractProcessorDatabaseIntegra
 	private final String objectId = "someNewSoftwareFmId1";
 
 	public void testWhenUserIsAdminCanKickAnotherPerson() throws Exception {
-		createGroupWithAdminHavingStatus(GroupConstants.adminStatus);
+		createGroup(GroupConstants.adminStatus, "initialStatus");
 
 		getHttpClient().post(GroupConstants.kickFromGroupPrefix).//
 				addParam(GroupConstants.groupIdKey, groupId).//
@@ -36,8 +36,29 @@ public class KickFromGroupProcessorTest extends AbstractProcessorDatabaseIntegra
 		assertEquals(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.groupCryptoKey, groupCryptoKey, GroupConstants.membershipStatusKey, GroupConstants.adminStatus), Iterables.getOnly(membershipForServer.walkGroupsFor(adminId, userCryptoKey)));
 	}
 
+	public void testEvenWhenAdminCannotKickAnotherAdmin() throws Exception {
+		createGroup(GroupConstants.adminStatus, GroupConstants.adminStatus);
+
+		getHttpClient().post(GroupConstants.kickFromGroupPrefix).//
+				addParam(GroupConstants.groupIdKey, groupId).//
+				addParam(LoginConstants.softwareFmIdKey, adminId).//
+				addParam(GroupConstants.objectSoftwareFmId, objectId).//
+				execute(IResponseCallback.Utils.checkCallback(CommonConstants.serverErrorCode, "class java.lang.IllegalArgumentException/Cannot kick admin.\n" + //
+						"Group someGroupId\n" + //
+						"User someNewSoftwareFmId0\n" + //
+						"Users status admin\n" + //
+						"Object SoftwareFmId someNewSoftwareFmId1")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+
+		assertEquals(Arrays.asList(//
+				Maps.stringObjectMap(GroupConstants.membershipStatusKey, GroupConstants.adminStatus, LoginConstants.softwareFmIdKey, adminId, "a", "b"),//
+				Maps.stringObjectMap(GroupConstants.membershipStatusKey, GroupConstants.adminStatus, LoginConstants.softwareFmIdKey, objectId, "a", "b")), Iterables.list(groups.users(groupId, groupCryptoKey)));
+
+		assertEquals(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.groupCryptoKey, groupCryptoKey, GroupConstants.membershipStatusKey, GroupConstants.adminStatus), Iterables.getOnly(membershipForServer.walkGroupsFor(adminId, userCryptoKey)));
+		assertEquals(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.groupCryptoKey, groupCryptoKey, GroupConstants.membershipStatusKey, GroupConstants.adminStatus), Iterables.getOnly(membershipForServer.walkGroupsFor(objectId, userKey2)));
+	}
+
 	public void testWhenUserIsNotAdminCannotKickAnotherPerson() throws Exception {
-		createGroupWithAdminHavingStatus("nonAdminStatus");
+		createGroup("nonAdminStatus", "initialStatus");
 
 		getHttpClient().post(GroupConstants.kickFromGroupPrefix).//
 				addParam(GroupConstants.groupIdKey, groupId).//
@@ -47,22 +68,21 @@ public class KickFromGroupProcessorTest extends AbstractProcessorDatabaseIntegra
 
 		assertEquals(Arrays.asList(//
 				Maps.stringObjectMap(GroupConstants.membershipStatusKey, "nonAdminStatus", LoginConstants.softwareFmIdKey, adminId, "a", "b"),//
-				Maps.stringObjectMap(GroupConstants.membershipStatusKey, "initialStatus", LoginConstants.softwareFmIdKey, objectId, "a", "b")
-				), Iterables.list(groups.users(groupId, groupCryptoKey)));
+				Maps.stringObjectMap(GroupConstants.membershipStatusKey, "initialStatus", LoginConstants.softwareFmIdKey, objectId, "a", "b")), Iterables.list(groups.users(groupId, groupCryptoKey)));
 
 		assertEquals(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.groupCryptoKey, groupCryptoKey, GroupConstants.membershipStatusKey, "nonAdminStatus"), Iterables.getOnly(membershipForServer.walkGroupsFor(adminId, userCryptoKey)));
 		assertEquals(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.groupCryptoKey, groupCryptoKey, GroupConstants.membershipStatusKey, "initialStatus"), Iterables.getOnly(membershipForServer.walkGroupsFor(objectId, userKey2)));
 	}
 
-	private void createGroupWithAdminHavingStatus(String adminStatus) {
+	private void createGroup(String subjectStatus, String otherStatus) {
 		groups.setGroupProperty(groupId, groupCryptoKey, GroupConstants.groupNameKey, "someName");
 		user.setUserProperty(adminId, userCryptoKey, LoginConstants.emailKey, "someEmail");
 		user.setUserProperty(objectId, userKey2, LoginConstants.emailKey, "someEmail1");
-		groups.addUser(groupId, groupCryptoKey, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, adminId, GroupConstants.membershipStatusKey, adminStatus, "a", "b"));
-		membershipForServer.addMembership(adminId, userCryptoKey, groupId, groupCryptoKey, adminStatus);
+		groups.addUser(groupId, groupCryptoKey, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, adminId, GroupConstants.membershipStatusKey, subjectStatus, "a", "b"));
+		membershipForServer.addMembership(adminId, userCryptoKey, groupId, groupCryptoKey, subjectStatus);
 
-		groups.addUser(groupId, groupCryptoKey, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, objectId, GroupConstants.membershipStatusKey, "initialStatus", "a", "b"));
-		membershipForServer.addMembership(objectId, userKey2, groupId, groupCryptoKey, "initialStatus");
+		groups.addUser(groupId, groupCryptoKey, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, objectId, GroupConstants.membershipStatusKey, otherStatus, "a", "b"));
+		membershipForServer.addMembership(objectId, userKey2, groupId, groupCryptoKey, otherStatus);
 	}
 
 	@Override

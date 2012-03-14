@@ -38,8 +38,15 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		MyGroupsButtons buttons = myGroupsComposite.getFooter();
 
 		assertFalse(buttons.kick.getEnabled());
-		Table table = getMyGroupsTable(myGroupsComposite);
-		Swts.selectAndNotiftyListener(table, 0);
+		Table summaryTable = getMyGroupsTable(myGroupsComposite);
+
+		Swts.selectAndNotiftyListener(summaryTable, 0);
+		assertFalse(buttons.kick.getEnabled());// nothing is selected on membership table
+
+		Table membershipTable = getMembershipTable(myGroupsComposite);
+		Swts.selectAndNotiftyListener(membershipTable, 0);
+		assertTrue(buttons.kick.getEnabled());// this is selecting the other person
+
 		Swts.Buttons.press(buttons.kick);
 		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
 			@Override
@@ -51,25 +58,38 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		});
 	}
 
-	public void testKickButtonIsOnlyEnabledWhenAdmin() {
-		System.exit(1);
+	public void testKickButtonIsOnlyEnabledWhenAdminAndSelectedNoneAdmin() {
 		createGroup(groupId1, groupCryptoKey1);
-		addUserToGroup(softwareFmId, email1, groupId1, groupCryptoKey1, GroupConstants.adminStatus);
+		assertEquals(userCryptoKey1, signUpUser(softwareFmId1, email1));
 
+		addUserToGroup(softwareFmId, email, groupId1, groupCryptoKey1, GroupConstants.adminStatus);
+		addUserToGroup(softwareFmId1, email1, groupId1, groupCryptoKey1, "someStatus2");
+		
 		createGroup(groupId2, groupCryptoKey2);
-		addUserToGroup(softwareFmId, email2, groupId2, groupCryptoKey2, "someStatus2");
+		addUserToGroup(softwareFmId, email, groupId2, groupCryptoKey2, "notAdmin");
 
 		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		MyGroupsButtons buttons = myGroupsComposite.getFooter();
-
 		assertFalse(buttons.kick.getEnabled());
-		Table table = getMyGroupsTable(myGroupsComposite);
 
-		Swts.selectAndNotiftyListener(table, 0);
-		assertTrue(buttons.kick.getEnabled());
+		Table summaryTable = getMyGroupsTable(myGroupsComposite);
 
-		Swts.selectAndNotiftyListener(table, 1);
+		Swts.selectAndNotiftyListener(summaryTable, 0);
+		assertFalse(buttons.kick.getEnabled());// nothing is selected on membership table
+
+		Table membershipTable = getMembershipTable(myGroupsComposite);
+		Swts.selectAndNotiftyListener(membershipTable, 0);
+		assertTrue(buttons.kick.getEnabled());// you are admin, they are not admin
+
+		Swts.selectAndNotiftyListener(membershipTable, 1); //you are the admin, they are admin too
 		assertFalse(buttons.kick.getEnabled());
+		
+		Swts.selectAndNotiftyListener(summaryTable, 1);
+		assertFalse(buttons.kick.getEnabled());// nothing is selected on membership table
+
+		Swts.selectAndNotiftyListener(membershipTable, 0); //you are not admin
+		assertFalse(buttons.kick.getEnabled());
+		
 	}
 
 	public void testAcceptInvite() {

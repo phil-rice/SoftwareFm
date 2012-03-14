@@ -61,7 +61,7 @@ public class MyGroups implements IHasComposite {
 		return new IShowMyGroups() {
 			@Override
 			public void show(final UserData userData, final String groupId) {
-				executor.submit(new IFunction1<IMonitor,Void>() {
+				executor.submit(new IFunction1<IMonitor, Void>() {
 					@Override
 					public Void apply(IMonitor monitor) throws Exception {
 						monitor.beginTask(EclipseMessages.showMyGroups, 2);
@@ -116,16 +116,18 @@ public class MyGroups implements IHasComposite {
 		public final Button accept;
 		public final Button kick;
 		private final Callable<IdNameAndStatus> idNameStatusGetter;
+		private final Callable<Map<String, Object>> objectMapGetter;
 
 		@SuppressWarnings("Need to externalise these string")
-		public MyGroupsButtons(Composite parent, IGroupClientOperations groupClientOperations, UserData userData, ICallback<String> showMyGroups, Callable<IdNameAndStatus> idNameStatusGetter) {
+		public MyGroupsButtons(Composite parent, IGroupClientOperations groupClientOperations, UserData userData, ICallback<String> showMyGroups, Callable<IdNameAndStatus> idNameStatusGetter, Callable<Map<String, Object>> objectMapGetter) {
 			this.idNameStatusGetter = idNameStatusGetter;
+			this.objectMapGetter = objectMapGetter;
 			this.content = new Composite(parent, SWT.NULL);
 			content.setLayout(Swts.Row.getHorizonalNoMarginRowLayout());
 			accept = Swts.Buttons.makePushButton(content, "Accept", groupClientOperations.acceptInvitation(userData, idNameStatusGetter, showMyGroups));
 			invite = Swts.Buttons.makePushButton(content, "Invite", groupClientOperations.inviteToGroup(userData, idNameStatusGetter, showMyGroups));
 			create = Swts.Buttons.makePushButton(content, "Create new group", groupClientOperations.createGroup(userData, showMyGroups));
-			kick = Swts.Buttons.makePushButton(content, "Kick", groupClientOperations.kickMember(userData, idNameStatusGetter, showMyGroups));
+			kick = Swts.Buttons.makePushButton(content, "Kick", groupClientOperations.kickMember(userData, idNameStatusGetter, objectMapGetter, showMyGroups));
 		}
 
 		@Override
@@ -135,12 +137,13 @@ public class MyGroups implements IHasComposite {
 
 		public void sortOutButtonStatus() {
 			IdNameAndStatus idNameAndStatus = Callables.call(idNameStatusGetter);
+			Map<String, Object> objectUser = Callables.call(objectMapGetter);
 			boolean invited = idNameAndStatus != null && GroupConstants.invitedStatus.equals(idNameAndStatus.status);
 			boolean admin = idNameAndStatus != null && GroupConstants.adminStatus.equals(idNameAndStatus.status);
-
+			boolean objectIsAdmin = objectUser != null && GroupConstants.adminStatus.equals(objectUser.get(GroupConstants.membershipStatusKey));
 			accept.setEnabled(invited);
 			invite.setEnabled(admin);
-			kick.setEnabled(admin);
+			kick.setEnabled(admin && objectUser != null && !objectIsAdmin);
 		}
 	}
 
@@ -177,6 +180,15 @@ public class MyGroups implements IHasComposite {
 					Object result = summaryTable.getItem(index).getData();
 					return (IdNameAndStatus) result;
 
+				}
+			}, new Callable<Map<String,Object>>() {
+				@Override
+				public Map<String, Object> call() throws Exception {
+					int index = membershipTable.getSelectionIndex();
+					if (index == -1)
+						return null;
+					Object result = membershipTable.getItem(index).getData();
+					return  (Map<String, Object>) result;
 				}
 			});
 			summaryTable.setHeaderVisible(true);
@@ -246,15 +258,24 @@ public class MyGroups implements IHasComposite {
 						if (groupCryptoKey == null)
 							throw new NullPointerException("GroupCrypto is null: " + Integer.toString(index));
 						for (Map<String, Object> user : Lists.sort(groupsReader.users(groupId, groupCryptoKey), Comparators.mapKey(LoginConstants.emailKey))) {
+							TableItem tableItem = new TableItem(membershipTable, SWT.NULL);
 							if (user.containsKey(CommonConstants.errorKey))
-								new TableItem(membershipTable, SWT.NULL).setText(new String[] { CommonMessages.corrupted, CommonMessages.record });
-							else
-								new TableItem(membershipTable, SWT.NULL).setText(new String[] { Strings.nullSafeToString(user.get(LoginConstants.emailKey)), Strings.nullSafeToString(user.get(GroupConstants.membershipStatusKey)) });
+								tableItem.setText(new String[] { CommonMessages.corrupted, CommonMessages.record });
+							else {
+								tableItem.setData(user);
+								tableItem.setText(new String[] { Strings.nullSafeToString(user.get(LoginConstants.emailKey)), Strings.nullSafeToString(user.get(GroupConstants.membershipStatusKey)) });
+							}
 						}
 
 					}
 					Swts.packColumns(membershipTable);
 					rightHand.layout();
+				}
+			});
+			membershipTable.addListener(SWT.Selection, new Listener() {
+				@Override
+				public void handleEvent(Event event) {
+					sortOutButtonsEnabledStatus();
 				}
 			});
 			Swts.packTables(summaryTable, membershipTable);
