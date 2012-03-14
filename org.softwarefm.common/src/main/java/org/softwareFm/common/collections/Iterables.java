@@ -14,6 +14,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import junit.framework.Assert;
+
 import org.softwareFm.common.aggregators.IAggregator;
 import org.softwareFm.common.callbacks.ICallback;
 import org.softwareFm.common.constants.UtilityMessages;
@@ -26,7 +28,7 @@ public class Iterables {
 
 	public static <T> Iterable<T> times(final int count, final T value) {
 		return new AbstractFindNextIterable<T, AtomicInteger>() {
-			
+
 			@Override
 			protected T findNext(AtomicInteger context) throws Exception {
 				int index = context.getAndIncrement();
@@ -35,31 +37,32 @@ public class Iterables {
 				else
 					return value;
 			}
-			
+
 			@Override
 			protected AtomicInteger reset() throws Exception {
 				return new AtomicInteger();
 			}
 		};
 	}
-//	public static <To> Iterable<To> times(final int count, final IFunction1<Integer, To> fn) {
-//		return new AbstractFindNextIterable<To, AtomicInteger>() {
-//
-//			@Override
-//			protected To findNext(AtomicInteger context) throws Exception {
-//				int index = context.getAndIncrement();
-//				if (index >= count)
-//					return null;
-//				else
-//					return fn.apply(index);
-//			}
-//
-//			@Override
-//			protected AtomicInteger reset() throws Exception {
-//				return new AtomicInteger();
-//			}
-//		};
-//	}
+
+	// public static <To> Iterable<To> times(final int count, final IFunction1<Integer, To> fn) {
+	// return new AbstractFindNextIterable<To, AtomicInteger>() {
+	//
+	// @Override
+	// protected To findNext(AtomicInteger context) throws Exception {
+	// int index = context.getAndIncrement();
+	// if (index >= count)
+	// return null;
+	// else
+	// return fn.apply(index);
+	// }
+	//
+	// @Override
+	// protected AtomicInteger reset() throws Exception {
+	// return new AtomicInteger();
+	// }
+	// };
+	// }
 
 	public static <From, To> Future<To> fold(ExecutorService service, final Iterable<From> iterable, final IFoldFunction<From, To> foldFunction, final To initial) {
 		return service.submit(new Callable<To>() {
@@ -278,6 +281,18 @@ public class Iterables {
 				return iterable.iterator();
 			}
 		};
+	}
+
+	public static <T> T getOnly(Iterable<T> iterable) {
+		Iterator<T> iterator = iterable.iterator();
+		if (iterator.hasNext()) {
+			T result = iterator.next();
+			if (iterator.hasNext())
+				Assert.fail(iterable.toString());
+			return result;
+		}
+		Assert.fail(iterable.toString());
+		return null;
 	}
 
 }

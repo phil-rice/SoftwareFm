@@ -9,4 +9,7 @@ public interface IUserMembership extends IUserMembershipReader {
 
 	void setMembershipProperty(String softwareFmId, String userCrypto, String groupId,  String property, String value);
 
+	/** removes the user. Note that we are passing the group crypto in case of corrupted data in the users files: we really want to remove this user! */
+	void remove(String softwareFmId, String userCrypto, String groupId, String groupCrypto);
+
 }

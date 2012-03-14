@@ -52,6 +52,10 @@ public class UserMembershipTest extends GitTest {
 		assertEquals(expected, membershipForLocal.walkGroupsFor(user1Id, userCrypto));
 	}
 
+	public void testRemoveUser() {
+		fail();
+	}
+
 	public void testCannotAddSameGroupTwice() {
 		membershipForServer.addMembership(user1Id, userCrypto, groupId1, groupCrypto1, "someStatus1");
 		Tests.assertThrowsWithMessage("Already a member of group. Sfm Id sfmId1. Group Id groupId1", RuntimeException.class, new Runnable() {
@@ -78,7 +82,7 @@ public class UserMembershipTest extends GitTest {
 
 		membershipForServer.setMembershipProperty(user1Id, userCrypto, groupId1, "someProperty", "value2");
 		assertEquals("value2", membershipForServer.getMembershipProperty(user1Id, userCrypto, groupId1, "someProperty"));
-		assertEquals("value1", membershipForLocal.getMembershipProperty(user1Id, userCrypto, groupId1, "someProperty"));//oftens intermittantly fails
+		assertEquals("value1", membershipForLocal.getMembershipProperty(user1Id, userCrypto, groupId1, "someProperty"));// oftens intermittantly fails
 
 		gitLocal.clearCaches();
 		assertEquals("value2", membershipForServer.getMembershipProperty(user1Id, userCrypto, groupId1, "someProperty"));
@@ -91,8 +95,8 @@ public class UserMembershipTest extends GitTest {
 		assertEquals(expected, membershipForServer.walkGroupsFor(user1Id, userCrypto));
 		assertEquals(expected, membershipForLocal.walkGroupsFor(user1Id, userCrypto));
 	}
-	
-	public void testSetMembershipPropertyThrowsExceptionIfGroupNotFound(){
+
+	public void testSetMembershipPropertyThrowsExceptionIfGroupNotFound() {
 		membershipForServer.addMembership(user1Id, userCrypto, groupId1, groupCrypto1, "someStatus1");
 		Tests.assertThrowsWithMessage("Cannot find group id groupId2 for user sfmId1", IllegalArgumentException.class, new Runnable() {
 			@Override
@@ -100,7 +104,7 @@ public class UserMembershipTest extends GitTest {
 				membershipForServer.setMembershipProperty(user1Id, userCrypto, groupId2, "someProperty", "value2");
 			}
 		});
-		
+
 	}
 
 	@Override
@@ -115,7 +119,7 @@ public class UserMembershipTest extends GitTest {
 
 		IUrlGenerator userUrlGenerator = LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix);
 		IFunction1<String, String> repoDefn = Strings.firstNSegments(3);
-		user = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, repoDefn,Maps.<String,Callable<Object>>makeMap( GroupConstants.membershipCryptoKey, Callables.makeCryptoKey()), SoftwareFmConstants.urlPrefix);
+		user = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, repoDefn, Maps.<String, Callable<Object>> makeMap(GroupConstants.membershipCryptoKey, Callables.makeCryptoKey()), SoftwareFmConstants.urlPrefix);
 		membershipForLocal = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, user);
 
 		membershipForServer = new UserMembershipForServer(userUrlGenerator, user, remoteOperations, repoDefn);

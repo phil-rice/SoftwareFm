@@ -19,6 +19,7 @@ public interface IGroupClientOperations {
 
 	Runnable deleteGroup(UserData userData);
 
+	Runnable kickMember(UserData userData, final Callable<IdNameAndStatus> idNameStatusGetter, ICallback<String> showMyGroups);
 	public static class Utils {
 		public static IGroupClientOperations groupOperations(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, IHttpClient client) {
 			return new GroupClientOperations(masterDetailSocial, cardConfig, client);
@@ -46,8 +47,14 @@ public interface IGroupClientOperations {
 				public Runnable deleteGroup(UserData userData) {
 					return Runnables.exception();
 				}
+
+				@Override
+				public Runnable kickMember(UserData userData, Callable<IdNameAndStatus> idNameStatusGetter, ICallback<String> showMyGroups) {
+					return Runnables.exception();
+				}
 			};
 		}
 	}
+
 
 }

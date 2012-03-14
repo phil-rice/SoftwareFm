@@ -10,6 +10,7 @@ public class GroupConstants {
 	public static final long usageReportPeriod = 6 * 60 * 60 * 1000;// hrs
 	public static final String myGroupsCardType = "myGroups";
 
+	public static final String objectSoftwareFmId= "objectSoftwareFmId"; //used when admin is doing things to other people
 	public static final String groupIdKey = "groupId";
 	public static final String groupCryptoKey = "groupCrypto";
 	public static final String groupNameKey = "groupName";
@@ -20,6 +21,7 @@ public class GroupConstants {
 	public static final String takeOnCommandPrefix = "command/takeOnGroup";
 	public static final String inviteCommandPrefix = "command/inviteGroup";
 	public static final String acceptInvitePrefix = "command/acceptInvite";
+	public static final String kickFromGroupPrefix = "command/kickFromGroup";
 	public static final String generateGroupReportPrefix = "command/generateGroupReport";
 
 	public static final String takeOnEmailListKey = "emailList";
@@ -50,6 +52,7 @@ public class GroupConstants {
 	public static final String cannotInviteToGroupUnlessAdmin = "Cannot invite other people to group {0} as you are not admin. You are status {1}";
 	public static final String notAMemberOfAnyGroup = "This software fm id is not a member of any group {0}";
 	public static final String errorSettingUserProperty = "Error setting user property. GroupId: {0} SoftwareFmId: {1} Property {2} Value {3} ChangedCount {4}";
+	public static final String cannotKickUnlessAdmin = "Cannot kick unless admin.\n Group {0}\nUser {1}\nUsers status {2}\nObject SoftwareFmId {3}";
 
 	public static IUrlGenerator groupsGenerator(String prefix) {
 		return IUrlGenerator.Utils.generator(prefix + "/groups/{0}/{1}/{2}", groupIdKey);

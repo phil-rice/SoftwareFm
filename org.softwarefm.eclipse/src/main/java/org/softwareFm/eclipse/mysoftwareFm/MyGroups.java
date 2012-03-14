@@ -114,8 +114,10 @@ public class MyGroups implements IHasComposite {
 		public final Button invite;
 		public final Button create;
 		public final Button accept;
+		public final Button kick;
 		private final Callable<IdNameAndStatus> idNameStatusGetter;
 
+		@SuppressWarnings("Need to externalise these string")
 		public MyGroupsButtons(Composite parent, IGroupClientOperations groupClientOperations, UserData userData, ICallback<String> showMyGroups, Callable<IdNameAndStatus> idNameStatusGetter) {
 			this.idNameStatusGetter = idNameStatusGetter;
 			this.content = new Composite(parent, SWT.NULL);
@@ -123,6 +125,7 @@ public class MyGroups implements IHasComposite {
 			accept = Swts.Buttons.makePushButton(content, "Accept", groupClientOperations.acceptInvitation(userData, idNameStatusGetter, showMyGroups));
 			invite = Swts.Buttons.makePushButton(content, "Invite", groupClientOperations.inviteToGroup(userData, idNameStatusGetter, showMyGroups));
 			create = Swts.Buttons.makePushButton(content, "Create new group", groupClientOperations.createGroup(userData, showMyGroups));
+			kick = Swts.Buttons.makePushButton(content, "Kick", groupClientOperations.kickMember(userData, idNameStatusGetter, showMyGroups));
 		}
 
 		@Override
@@ -132,8 +135,12 @@ public class MyGroups implements IHasComposite {
 
 		public void sortOutButtonStatus() {
 			IdNameAndStatus idNameAndStatus = Callables.call(idNameStatusGetter);
-			accept.setEnabled(idNameAndStatus != null && GroupConstants.invitedStatus.equals(idNameAndStatus.status));
-			invite.setEnabled(idNameAndStatus != null && GroupConstants.adminStatus.equals(idNameAndStatus.status));
+			boolean invited = idNameAndStatus != null && GroupConstants.invitedStatus.equals(idNameAndStatus.status);
+			boolean admin = idNameAndStatus != null && GroupConstants.adminStatus.equals(idNameAndStatus.status);
+
+			accept.setEnabled(invited);
+			invite.setEnabled(admin);
+			kick.setEnabled(admin);
 		}
 	}
 

@@ -34,6 +34,7 @@ import org.softwareFm.swt.editors.KeyAndEditStrategy;
 import org.softwareFm.swt.explorer.IMasterDetailSocial;
 import org.softwareFm.swt.explorer.internal.UserData;
 
+@SuppressWarnings("Need to externalise these string")
 public class GroupClientOperations implements IGroupClientOperations {
 
 	private final IMasterDetailSocial masterDetailSocial;
@@ -221,7 +222,7 @@ public class GroupClientOperations implements IGroupClientOperations {
 						execute(new IResponseCallback() {
 							@Override
 							public void process(IResponse response) {
-								
+
 								if (CommonConstants.okStatusCodes.contains(response.statusCode()))
 									ICallback.Utils.call(showMyGroups, groupId);
 								else
@@ -240,6 +241,40 @@ public class GroupClientOperations implements IGroupClientOperations {
 	@Override
 	public Runnable deleteGroup(UserData userData) {
 		return Runnables.sysout("deleteGroup");
+	}
+
+	@Override
+	public Runnable kickMember(final UserData userData, final Callable<IdNameAndStatus> idNameStatusGetter, final ICallback<String> showMyGroups) {
+		return new Runnable() {
+			@Override
+			public void run() {
+				IdNameAndStatus idNameAndStatus = Callables.call(idNameStatusGetter);
+				if (idNameAndStatus == null)
+					throw new NullPointerException("IdNameAndStatus is null");
+				final String groupId = idNameAndStatus.id;
+				if (groupId == null)
+					throw new NullPointerException("group id is null");
+				client.post(GroupConstants.kickFromGroupPrefix).//
+						addParam(LoginConstants.softwareFmIdKey, userData.softwareFmId).//
+						addParam(GroupConstants.groupIdKey, groupId).//
+						addParam(GroupConstants.membershipStatusKey, GroupConstants.memberStatus).//
+						execute(new IResponseCallback() {
+							@Override
+							public void process(IResponse response) {
+
+								if (CommonConstants.okStatusCodes.contains(response.statusCode()))
+									ICallback.Utils.call(showMyGroups, groupId);
+								else
+									masterDetailSocial.createAndShowDetail(TextInBorderWithClick.makeTextFromString(SWT.WRAP | SWT.READ_ONLY, cardConfig, GroupConstants.myGroupsCardType, "Kick", "Exception kicking. Click to try again\n\n" + response.asString(), new Runnable() {
+										@Override
+										public void run() {
+											ICallback.Utils.call(showMyGroups, groupId);
+										}
+									}));
+							}
+						});
+			}
+		};
 	}
 
 }

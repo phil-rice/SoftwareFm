@@ -26,6 +26,52 @@ import org.softwareFm.swt.editors.NameAndValuesEditor.NameAndValuesEditorComposi
 import org.softwareFm.swt.swt.Swts;
 
 public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
+
+	public void testKickButtonRemovesUserFromGroup() {
+		createGroup(groupId1, groupCryptoKey1);
+		assertEquals(userCryptoKey1, signUpUser(softwareFmId1, email1));
+
+		addUserToGroup(softwareFmId, email, groupId1, groupCryptoKey1, GroupConstants.adminStatus);
+		addUserToGroup(softwareFmId1, email1, groupId1, groupCryptoKey1, "someStatus2");
+
+		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
+		MyGroupsButtons buttons = myGroupsComposite.getFooter();
+
+		assertFalse(buttons.kick.getEnabled());
+		Table table = getMyGroupsTable(myGroupsComposite);
+		Swts.selectAndNotiftyListener(table, 0);
+		Swts.Buttons.press(buttons.kick);
+		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				if (masterDetailSocial.getDetailContent() instanceof MyGroupsComposite)
+					return groups.membershipCount(groupId1, groupCryptoKey1) == 1;
+				return false;
+			}
+		});
+	}
+
+	public void testKickButtonIsOnlyEnabledWhenAdmin() {
+		System.exit(1);
+		createGroup(groupId1, groupCryptoKey1);
+		addUserToGroup(softwareFmId, email1, groupId1, groupCryptoKey1, GroupConstants.adminStatus);
+
+		createGroup(groupId2, groupCryptoKey2);
+		addUserToGroup(softwareFmId, email2, groupId2, groupCryptoKey2, "someStatus2");
+
+		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
+		MyGroupsButtons buttons = myGroupsComposite.getFooter();
+
+		assertFalse(buttons.kick.getEnabled());
+		Table table = getMyGroupsTable(myGroupsComposite);
+
+		Swts.selectAndNotiftyListener(table, 0);
+		assertTrue(buttons.kick.getEnabled());
+
+		Swts.selectAndNotiftyListener(table, 1);
+		assertFalse(buttons.kick.getEnabled());
+	}
+
 	public void testAcceptInvite() {
 		createGroup(groupId1, groupCryptoKey1);
 		addUserToGroup(softwareFmId, email, groupId1, groupCryptoKey1, GroupConstants.invitedStatus);
@@ -33,8 +79,7 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		final MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		MyGroupsButtons buttons = myGroupsComposite.getFooter();
 		Table beforeTable = getMyGroupsTable(myGroupsComposite);
-		beforeTable.select(0);
-		beforeTable.notifyListeners(SWT.Selection, new Event());
+		Swts.selectAndNotiftyListener(beforeTable, 0);
 		dispatchUntilQueueEmpty();
 
 		assertTrue(buttons.accept.isEnabled());
@@ -63,6 +108,12 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 				LoginConstants.emailKey, email, //
 				LoginConstants.softwareFmIdKey, softwareFmId,//
 				GroupConstants.membershipStatusKey, GroupConstants.memberStatus), Lists.getOnly(Iterables.list(groupsReader.users(groupId1, groupCryptoKey1))));
+		MyGroupsComposite afterMyGroupsComposite = (MyGroupsComposite) masterDetailSocial.getDetailContent();
+		Table afterTable = getMyGroupsTable(afterMyGroupsComposite);
+		assertEquals(1, afterTable.getItemCount());
+		assertEquals(groupId1 + "Name", afterTable.getItem(0).getText(0));
+		assertEquals("1", afterTable.getItem(0).getText(1));
+		assertEquals(GroupConstants.memberStatus, afterTable.getItem(0).getText(2));
 
 	}
 
@@ -87,8 +138,7 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 
 		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		Table beforeTable = getMyGroupsTable(myGroupsComposite);
-		beforeTable.select(0);
-		beforeTable.notifyListeners(SWT.Selection, new Event());
+		Swts.selectAndNotiftyListener(beforeTable, 0);
 		dispatchUntilQueueEmpty();
 		MyGroupsButtons buttons = myGroupsComposite.getFooter();
 		assertTrue(buttons.invite.isEnabled());
@@ -141,8 +191,7 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 
 		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		Table beforeTable = getMyGroupsTable(myGroupsComposite);
-		beforeTable.select(0);
-		beforeTable.notifyListeners(SWT.Selection, new Event());
+		Swts.selectAndNotiftyListener(beforeTable, 0);
 		dispatchUntilQueueEmpty();
 		MyGroupsButtons buttons = myGroupsComposite.getFooter();
 		assertTrue(buttons.invite.isEnabled());
@@ -346,10 +395,6 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 	private void checkChange(NameAndValuesEditorComposite editor, int i, String newValue) {
 		Control control = editor.getEditor().getChildren()[i * 2 + 1];
 		Swts.setText(control, newValue);
-	}
-
-	public void testDelete() {
-		fail("Feature not implemented yet");
 	}
 
 	public void testKick() {

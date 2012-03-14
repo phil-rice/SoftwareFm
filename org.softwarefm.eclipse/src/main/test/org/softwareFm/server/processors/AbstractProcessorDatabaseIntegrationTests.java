@@ -58,8 +58,8 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 	private IUrlGenerator groupsGenerator;
 	private IFunction1<String, String> repoDefnFn;
 	protected String groupCryptoKey;
-	private String userKey2;
-	private String userKey3;
+	protected String userKey2;
+	protected String userKey3;
 	protected String projectCryptoKey2;
 	protected String projectCryptoKey3;
 

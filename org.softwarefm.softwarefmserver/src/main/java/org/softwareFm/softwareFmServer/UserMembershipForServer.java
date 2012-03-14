@@ -72,5 +72,17 @@ public class UserMembershipForServer extends AbstractUserMembershipReader<IGitOp
 			throw new IllegalArgumentException(MessageFormat.format(GroupConstants.groupIdNotFound, groupId, softwareFmId));
 	}
 
+	@Override
+	public void remove(final String softwareFmId, String userCrypto, final String groupId, String groupCrypto) {
+		String url = userUrlGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
+		String userMembershipCrypto = getMembershipCrypto(softwareFmId, userCrypto);
+		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, GroupConstants.membershipFileName, userMembershipCrypto);
+		git.removeLine(fileDescription, new IFunction1<Map<String, Object>, Boolean>() {
+			@Override
+			public Boolean apply(Map<String, Object> from) throws Exception {
+				return groupId.equals(from.get(GroupConstants.groupIdKey));
+			}
+		}, "removingUser(" + softwareFmId + ")");
+	}
 
 }

@@ -17,7 +17,7 @@ public class AcceptGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 	private final String softwareFmId = "someNewSoftwareFmId0";
 
 	@SuppressWarnings("unchecked")
-	public void test() throws Exception {
+	public void testAcceptChangesStatusToMember() throws Exception {
 		user.setUserProperty(softwareFmId, userCryptoKey, LoginConstants.emailKey, "someEmail");
 		groups.setGroupProperty(groupId, groupCryptoKey, GroupConstants.groupNameKey, "someName");
 

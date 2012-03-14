@@ -12,6 +12,8 @@ public interface IGroups extends IGroupsReader {
 
 	void addUser(String groupId, String groupCryptoKey, Map<String, Object> userDetails);
 
+	void removeUser(String groupId, String groupCryptoKey, String softwareFmId);
+
 	void setReport(String groupId, String groupCryptoKey, String month, Map<String, Object> report);
 
 	void setUserProperty(String groupId, String groupCrypto, String softwareFmId, String property, String value);

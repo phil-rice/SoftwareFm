@@ -1197,4 +1197,10 @@ public class Swts {
 		return false;
 	}
 
+	public static void selectAndNotiftyListener(Table table, int i) {
+		table.select(i);
+		table.notifyListeners(SWT.Selection, new Event());
+		
+	}
+
 }

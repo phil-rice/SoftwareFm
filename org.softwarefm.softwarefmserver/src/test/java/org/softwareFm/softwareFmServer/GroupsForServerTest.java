@@ -38,6 +38,10 @@ public class GroupsForServerTest extends GroupsTest {
 
 		checkUsers(3);
 	}
+	
+	public void testRemoveUser(){
+		fail();
+	}
 
 	public void testGetWithDefaultPropertes() {
 		Map<String, Callable<Object>> defaults = Maps.makeMap("default", Callables.valueFromList("defaultValue"));

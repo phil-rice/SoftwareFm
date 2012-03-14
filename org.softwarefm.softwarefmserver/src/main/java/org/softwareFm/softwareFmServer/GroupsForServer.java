@@ -129,6 +129,17 @@ public class GroupsForServer extends AbstractGroupReader<IGitOperations> impleme
 		git.append(fileDescription, userDetails);
 		addAllAndCommit(fileDescription, "addUser " + userDetails);
 	}
+	
+	@Override
+	public void removeUser(String groupId, String groupCryptoKey, final String softwareFmId) {
+		IFileDescription fileDescription = findFileDescription(groupId, groupCryptoKey);
+		git.removeLine(fileDescription, new IFunction1<Map<String,Object>, Boolean>() {
+			@Override
+			public Boolean apply(Map<String, Object> from) throws Exception {
+				return softwareFmId.equals(from.get(LoginConstants.softwareFmIdKey));
+			}
+		}, "removeUser " + softwareFmId);
+	}
 
 	@Override
 	public void setReport(String groupId, String groupCryptoKey, String month, Map<String, Object> report) {

@@ -79,7 +79,7 @@ public class GitOperations implements IGitOperations {
 		String url = Files.offset(root, repositoryFile);
 		addAllAndCommit(url, GitOperations.class.getSimpleName());
 	}
-	
+
 	@Override
 	public int countOfFileAsListsOfMap(IFileDescription fileDescription) {
 		String lines = getFileAsString(fileDescription);
@@ -274,6 +274,32 @@ public class GitOperations implements IGitOperations {
 	}
 
 	@Override
+	public int removeLine(IFileDescription fileDescription, IFunction1<Map<String, Object>, Boolean> acceptor, String commitMessage) {
+		String text = getFileAsString(fileDescription);
+		List<String> lines = Strings.splitIgnoreBlanks(text, "\n");
+		int count = 0;
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < lines.size(); i++) {
+			String line = lines.get(i);
+			Map<String, Object> map = fileDescription.decode(line);
+			if (Functions.call(acceptor, map)) 
+				count++;
+			 else
+				builder.append(line + "\n");
+		}
+		if (count > 0) {
+			File file = fileDescription.getFile(getRoot());
+			Files.setText(file, builder.toString());
+			File findRepositoryFile = fileDescription.findRepositoryUrl(getRoot());
+			String repositoryUrl = Files.offset(getRoot(), findRepositoryFile);
+			if (repositoryUrl == null)
+				throw new IllegalStateException(file.toString());
+			addAllAndCommit(repositoryUrl, commitMessage);
+		}
+		return count;
+	}
+
+	@Override
 	public int map(IFileDescription fileDescription, IFunction1<Map<String, Object>, Boolean> acceptor, IFunction1<Map<String, Object>, Map<String, Object>> transform, String commitMessage) {
 		String text = getFileAsString(fileDescription);
 		List<String> lines = Strings.splitIgnoreBlanks(text, "\n");
@@ -285,11 +311,11 @@ public class GitOperations implements IGitOperations {
 			if (Functions.call(acceptor, map)) {
 				Map<String, Object> newMap = Functions.call(transform, map);
 				builder.append(Crypto.aesEncrypt(fileDescription.crypto(), Json.toString(newMap)) + "\n");
-				count++; 
+				count++;
 			} else
 				builder.append(line + "\n");
 		}
-		if (count>0) {
+		if (count > 0) {
 			File file = fileDescription.getFile(getRoot());
 			Files.setText(file, builder.toString());
 			File findRepositoryFile = fileDescription.findRepositoryUrl(getRoot());
