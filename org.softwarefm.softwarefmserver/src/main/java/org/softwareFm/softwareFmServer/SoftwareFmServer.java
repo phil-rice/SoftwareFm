@@ -57,7 +57,7 @@ public class SoftwareFmServer {
 				IUrlGenerator userUrlGenerator = LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix);
 				Callable<String> groupIdGenerator = Callables.uuidGenerator();
 				IFunction1<String, String> repoDefnFn = Strings.firstNSegments(3);
-				IGroups groups = new GroupsForServer(groupsUrlGenerator, processCallParameters.gitOperations, repoDefnFn,makeGroupDefaultProperties());
+				IGroups groups = new GroupsForServer(groupsUrlGenerator, processCallParameters.gitOperations, repoDefnFn, makeGroupDefaultProperties());
 				IFunction1<String, String> emailToSoftwareFmId = ICrowdSourcedServer.Utils.emailToSoftwareFmId(processCallParameters.dataSource);
 				IUserMembership userMembership = new UserMembershipForServer(userUrlGenerator, processCallParameters.user, processCallParameters.gitOperations, repoDefnFn);
 				ITakeOnProcessor takeOnProcessor = new TakeOnProcessor(processCallParameters.gitOperations, processCallParameters.user, userMembership, groups, processCallParameters.userCryptoFn, groupsUrlGenerator, groupIdGenerator, repoDefnFn);
@@ -70,7 +70,8 @@ public class SoftwareFmServer {
 						new GenerateGroupUsageProcessor(processCallParameters.gitOperations, generator, groups),//
 						new TakeOnGroupProcessor(takeOnProcessor, processCallParameters.signUpChecker, Callables.makeCryptoKey(), emailToSoftwareFmId, processCallParameters.saltGenerator, processCallParameters.softwareFmIdGenerator, processCallParameters.mailer),//
 						new InviteGroupProcessor(takeOnProcessor, processCallParameters.signUpChecker, emailToSoftwareFmId, processCallParameters.saltGenerator, processCallParameters.softwareFmIdGenerator, processCallParameters.mailer, processCallParameters.userCryptoFn, userMembership, groups),//
-						new AcceptInviteGroupProcessor(groups, userMembership, processCallParameters.userCryptoFn) };
+						new AcceptInviteGroupProcessor(groups, userMembership, processCallParameters.userCryptoFn),//
+						new KickFromGroupCommandProcessor(groups, userMembership, processCallParameters.userCryptoFn) };
 			}
 		};
 	}

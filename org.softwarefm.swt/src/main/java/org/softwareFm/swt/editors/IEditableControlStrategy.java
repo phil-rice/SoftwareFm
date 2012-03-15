@@ -37,10 +37,10 @@ public interface IEditableControlStrategy<T extends Control> {
 		}
 
 		public static IEditableControlStrategy<StyledText> message() {
-			return new IEditableControlStrategy<StyledText>(){
+			return new IEditableControlStrategy<StyledText>() {
 				@Override
 				public StyledText createControl(Composite from) {
-					StyledText control = new StyledText(from, SWT.WRAP|SWT.READ_ONLY);
+					StyledText control = new StyledText(from, SWT.WRAP | SWT.READ_ONLY);
 					control.setBackground(from.getBackground());
 					return control;
 				}
@@ -56,9 +56,11 @@ public interface IEditableControlStrategy<T extends Control> {
 
 				@Override
 				public void addEnterEscapeListeners(IOkCancel okCancel, StyledText control) {
-				}};
-			
+				}
+			};
+
 		}
+
 		public static IEditableControlStrategy<StyledText> styledText(final int style) {
 			return new IEditableControlStrategy<StyledText>() {
 				@Override
@@ -111,6 +113,8 @@ public interface IEditableControlStrategy<T extends Control> {
 				}
 			};
 		}
+
+		
 	}
 }
 

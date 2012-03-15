@@ -51,7 +51,7 @@ public interface IGroupClientOperations {
 				}
 
 				@Override
-				public Runnable kickMember(UserData userData, Callable<IdNameAndStatus> idNameStatusGetter, ICallback<String> showMyGroups) {
+				public Runnable kickMember(UserData userData, Callable<IdNameAndStatus> idNameStatusGetter, Callable<Map<String, Object>> objectMembershipGetter, ICallback<String> showMyGroups) {
 					return Runnables.exception();
 				}
 			};

@@ -26,7 +26,6 @@ public class SignupIntegrationTest extends AbstractProcessorMockIntegrationTests
 		assertEquals(0, saltProcessor.legalSalts.size());
 
 		EasyMock.verify(userMock);
-		fail("this test needs to check that email is used");
 	}
 
 	public void testNeedsToUseSignupSalt() throws Exception {

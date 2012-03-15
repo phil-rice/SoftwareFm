@@ -31,6 +31,8 @@ public class NameAndValuesEditorTest extends AbstractNameAndValuesEditorTest<Nam
 		assertFalse(okCancel.isOkEnabled());
 	}
 
+
+
 	public void testEditorUpdatesOKEnabledAndCardData() {
 		checkChangeValue(0, "newOne", false);
 		checkChangeValue(1, "newTwo", false);
@@ -44,9 +46,9 @@ public class NameAndValuesEditorTest extends AbstractNameAndValuesEditorTest<Nam
 	}
 
 	private void checkChangeValue(int index, String newValue, boolean expectedOkEnabled) {
-		Label label = (Label) editorComposite.getChildren()[index*2];
+		Label label = (Label) editorComposite.getChildren()[index * 2];
 		String key = label.getText().toLowerCase();// won't work in general, but is ok for one/two/three
-		Control control = editorComposite.getChildren()[index*2+1];
+		Control control = editorComposite.getChildren()[index * 2 + 1];
 		assertEquals(changeValueIndex + 1, callback.canOkData.size());
 		Swts.setText(control, newValue);
 		changeValueIndex++;

@@ -29,7 +29,7 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 
 		private final Composite editing;
 		private final ICardEditorCallback callback;
-		private final Control firstChild;
+		private final Control firstEditor;
 		private final ICardData cardData;
 		private final ICardEditorCallback cardEditorCallback;
 
@@ -76,13 +76,14 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 				}
 			});
 			assert keyAndEditStrategy.size() > 0;
-			firstChild = getChildren()[1];
-			firstChild.forceFocus();
+			Control[] editors = getEditor().getChildren();
+			firstEditor = editors[1];
+			firstEditor.forceFocus();
 		}
 
 		@Override
 		public boolean forceFocus() {
-			boolean gotFocus = firstChild.forceFocus();
+			boolean gotFocus = firstEditor.forceFocus();
 			return gotFocus;
 		}
 

@@ -417,9 +417,6 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		Swts.setText(control, newValue);
 	}
 
-	public void testKick() {
-		fail("Feature not implemented yet");
-	}
 
 	public void testLeave() {
 		fail("Feature not implemented yet");

@@ -70,6 +70,10 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		assertEquals(1, summaryTable.getItemCount());
 	}
 
+	public void testLeave() {
+		fail();
+	}
+
 	public void testMyGroupsWhenOneLineIsBadlyEncrypted() {
 		signUpUser(softwareFmId1, email1);
 		signUpUser(softwareFmId2, email2);
@@ -102,7 +106,6 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		checkTable(summaryTable, 1, makeMembershipMap(softwareFmId2, userCryptoKey2, email2, "someStatus3"), email2, "someStatus3");
 		checkTable(summaryTable, 2, makeMembershipMap(softwareFmId, userCryptoKey, email, "someStatus1"), email, "someStatus1");
 		assertEquals(3, summaryTable.getItemCount());
-
 	}
 
 	public void testMyGroupsWhenMembershipTableBadlyEncrypted() {
@@ -137,7 +140,7 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		table.notifyListeners(SWT.Selection, new Event());
 		dispatchUntilQueueEmpty();
 		assertEquals(1, summaryTable.getItemCount());
-		checkTable(summaryTable, 0,  makeMembershipMap(softwareFmId, userCryptoKey, email, "someStatus1"), email, "someStatus1");
+		checkTable(summaryTable, 0, makeMembershipMap(softwareFmId, userCryptoKey, email, "someStatus1"), email, "someStatus1");
 
 		table.select(0);
 		table.notifyListeners(SWT.Selection, new Event());
