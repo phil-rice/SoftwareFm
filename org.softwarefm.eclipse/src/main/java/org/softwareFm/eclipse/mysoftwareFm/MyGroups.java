@@ -117,13 +117,17 @@ public class MyGroups implements IHasComposite {
 		public final Button create;
 		public final Button accept;
 		public final Button kick;
+		public Button leave;
 		private final Callable<IdNameAndStatus> idNameStatusGetter;
 		private final Callable<List<Map<String, Object>>> objectMapGetter;
+		private final Callable<Integer> groupSizeGetter;
 
 		@SuppressWarnings("Need to externalise these string")
-		public MyGroupsButtons(final Composite parent, final boolean showDialogs, final IGroupClientOperations groupClientOperations, final UserData userData, final ICallback<String> showMyGroups, final Callable<IdNameAndStatus> idNameStatusGetter, final Callable<List<Map<String, Object>>> objectMapGetter) {
+		//show dialogs exists because it is very hard to test for this: the dialog actually appears... I could rewrite the open confirm dialog so that it didn't appear in tests, but it doesn't seem worth it
+		public MyGroupsButtons(final Composite parent, final boolean showDialogs, final IGroupClientOperations groupClientOperations, final UserData userData, final ICallback<String> showMyGroups, final Callable<IdNameAndStatus> idNameStatusGetter, final Callable<List<Map<String, Object>>> objectMapGetter, Callable<Integer> groupSizeGetter) {
 			this.idNameStatusGetter = idNameStatusGetter;
 			this.objectMapGetter = objectMapGetter;
+			this.groupSizeGetter = groupSizeGetter;
 			this.content = new Composite(parent, SWT.NULL);
 			content.setLayout(Swts.Row.getHorizonalNoMarginRowLayout());
 			accept = Swts.Buttons.makePushButton(content, "Accept", groupClientOperations.acceptInvitation(userData, idNameStatusGetter, showMyGroups));
@@ -132,7 +136,6 @@ public class MyGroups implements IHasComposite {
 			Runnable kickRunnable = new Runnable() {
 				@Override
 				public void run() {
-					//show dialogs exists because it is very hard to test for this: the dialog actually appears... I could rewrite the open confirm dialog so that it didn't appear in tests, but it doesn't seem worth it
 					if (showDialogs && !MessageDialog.openConfirm(parent.getShell(), "Kick", MessageFormat.format("Are you sure you want to kick {0} members", Callables.call(objectMapGetter).size())))
 						return;
 					groupClientOperations.kickMember(userData, idNameStatusGetter, objectMapGetter, new ICallback<String>() {
@@ -143,6 +146,15 @@ public class MyGroups implements IHasComposite {
 					}).run();
 				}
 			};
+			leave = Swts.Buttons.makePushButton(content, "Leave", new Runnable() {
+				@Override
+				public void run() {
+					if (showDialogs && !MessageDialog.openConfirm(parent.getShell(), "Leave", MessageFormat.format("Are you sure you want to leave", Callables.call(objectMapGetter).size())))
+						return;
+					groupClientOperations.leaveGroup(userData, showMyGroups, idNameStatusGetter).run();					
+				}
+			});
+			
 			kick = Swts.Buttons.makePushButton(content, "Kick", kickRunnable);
 		}
 
@@ -154,14 +166,19 @@ public class MyGroups implements IHasComposite {
 		public void sortOutButtonStatus() {
 			IdNameAndStatus idNameAndStatus = Callables.call(idNameStatusGetter);
 			List<Map<String, Object>> objectUsers = Callables.call(objectMapGetter);
+			int groupSize = Callables.call(groupSizeGetter);
 			boolean invited = idNameAndStatus != null && GroupConstants.invitedStatus.equals(idNameAndStatus.status);
 			boolean admin = idNameAndStatus != null && GroupConstants.adminStatus.equals(idNameAndStatus.status);
 			boolean someOneSelected = objectUsers.size() > 0;
 			boolean someSelectedIsAdmin = someOneSelected && areAnyAdmin(objectUsers);
+			boolean kickstatus = admin && someOneSelected && !someSelectedIsAdmin;
+			boolean lastMember = groupSize ==1;
+			boolean leaveStatus = idNameAndStatus != null && (!admin || lastMember); 
 			accept.setEnabled(invited);
 			invite.setEnabled(admin);
-			boolean kickstatus = admin && someOneSelected && !someSelectedIsAdmin;
 			kick.setEnabled(kickstatus);
+			leave.setEnabled(leaveStatus);
+			
 		}
 
 		private boolean areAnyAdmin(List<Map<String, Object>> objectUsers) {
@@ -215,6 +232,11 @@ public class MyGroups implements IHasComposite {
 						result.add((Map<String, Object>) membershipTable.getItem(i).getData());
 					return result;
 				}
+			},new Callable<Integer>() {
+				@Override
+				public Integer call() throws Exception {
+					return membershipTable.getItemCount();
+				}
 			});
 			summaryTable.setHeaderVisible(true);
 			new TableColumn(summaryTable, SWT.NULL).setText("Group Name");
@@ -267,7 +289,6 @@ public class MyGroups implements IHasComposite {
 			summaryTable.addListener(SWT.Selection, new Listener() {
 				@Override
 				public void handleEvent(Event event) {
-					sortOutButtonsEnabledStatus();
 					stackLayout.topControl = membershipTable;
 					membershipTable.removeAll();
 					int index = summaryTable.getSelectionIndex();
@@ -295,6 +316,7 @@ public class MyGroups implements IHasComposite {
 					}
 					Swts.packColumns(membershipTable);
 					rightHand.layout();
+					sortOutButtonsEnabledStatus();
 				}
 			});
 			membershipTable.addListener(SWT.Selection, new Listener() {

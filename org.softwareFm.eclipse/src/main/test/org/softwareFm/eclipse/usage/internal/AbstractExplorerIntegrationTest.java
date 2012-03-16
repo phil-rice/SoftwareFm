@@ -44,6 +44,7 @@ import org.softwareFm.common.processors.AbstractLoginDataAccessor;
 import org.softwareFm.common.resources.IResourceGetter;
 import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.strings.Strings;
+import org.softwareFm.common.tests.IIntegrationTest;
 import org.softwareFm.common.tests.INeedsServerTest;
 import org.softwareFm.common.tests.Tests;
 import org.softwareFm.common.url.IUrlGenerator;
@@ -95,7 +96,7 @@ import org.softwareFm.swt.swt.Swts;
 import org.softwareFm.swt.timeline.IPlayListGetter;
 
 /** These tests go out to software fm, so they are much more fragile */
-abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest implements INeedsServerTest {
+abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest implements INeedsServerTest, IIntegrationTest {
 
 	final static String groupUrl = "/ant";
 	final static String artifactUrl = "/ant/ant/artifact/ant";

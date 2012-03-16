@@ -22,6 +22,7 @@ public class GroupConstants {
 	public static final String inviteCommandPrefix = "command/inviteGroup";
 	public static final String acceptInvitePrefix = "command/acceptInvite";
 	public static final String kickFromGroupPrefix = "command/kickFromGroup";
+	public static final String leaveGroupPrefix = "command/leaveGroup";
 	public static final String generateGroupReportPrefix = "command/generateGroupReport";
 
 	public static final String takeOnEmailListKey = "emailList";
@@ -54,6 +55,7 @@ public class GroupConstants {
 	public static final String errorSettingUserProperty = "Error setting user property. GroupId: {0} SoftwareFmId: {1} Property {2} Value {3} ChangedCount {4}";
 	public static final String cannotKickUnlessAdmin = "Cannot kick unless admin.\n Group {0}\nUser {1}\nUsers status {2}\nObject SoftwareFmIds {3}";
 	public static final String cannotKickAdmin = "Cannot kick admin.\nGroup {0}\nUser {1}\nUsers status {2}\nObject SoftwareFmId {3}";
+	public static final String cannotLeaveIfAdminAndGroupIsntEmpty = "Cannot leave if admin and group isn't empty.\nGroup {0}\nUser {1}\nCount {2}";
 
 	public static IUrlGenerator groupsGenerator(String prefix) {
 		return IUrlGenerator.Utils.generator(prefix + "/groups/{0}/{1}/{2}", groupIdKey);

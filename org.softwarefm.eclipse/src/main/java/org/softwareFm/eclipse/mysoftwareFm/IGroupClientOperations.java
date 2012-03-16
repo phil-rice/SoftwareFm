@@ -15,13 +15,13 @@ import org.softwareFm.swt.explorer.internal.UserData;
 public interface IGroupClientOperations {
 	Runnable createGroup(UserData userData, ICallback<String> added);
 
-	Runnable inviteToGroup(UserData userData, final Callable<IdNameAndStatus> idNameStatusGetter, ICallback<String> showMyGroups);
+	Runnable inviteToGroup(UserData userData,  Callable<IdNameAndStatus> idNameStatusGetter, ICallback<String> showMyGroups);
 
 	Runnable acceptInvitation(UserData userData, Callable<IdNameAndStatus> idNameStatusGetter, ICallback<String> showMyGroups);
 
-	Runnable deleteGroup(UserData userData);
+	Runnable leaveGroup(UserData userData, ICallback<String> showMyGroups,  Callable<IdNameAndStatus> idNameStatusGetter);
 
-	Runnable kickMember(UserData userData, final Callable<IdNameAndStatus> idNameStatusGetter, Callable<List<Map<String, Object>>> objectMapGetter, ICallback<String> showMyGroups);
+	Runnable kickMember(UserData userData,  Callable<IdNameAndStatus> idNameStatusGetter, Callable<List<Map<String, Object>>> objectMapGetter, ICallback<String> showMyGroups);
 
 	public static class Utils {
 		public static IGroupClientOperations groupOperations(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, IHttpClient client) {
@@ -47,7 +47,7 @@ public interface IGroupClientOperations {
 				}
 
 				@Override
-				public Runnable deleteGroup(UserData userData) {
+				public Runnable leaveGroup(UserData userData, ICallback<String> showMyGroups, final Callable<IdNameAndStatus> idNameStatusGetter) {
 					return Runnables.exception();
 				}
 

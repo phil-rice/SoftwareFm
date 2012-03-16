@@ -28,6 +28,42 @@ import org.softwareFm.swt.editors.NameAndValuesEditor.NameAndValuesEditorComposi
 import org.softwareFm.swt.swt.Swts;
 
 public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
+	public void testLeaveIsEnabledIfAdminAndNoOtherMembers() {
+		createGroup(groupId1, groupCryptoKey1);
+		assertEquals(userCryptoKey1, signUpUser(softwareFmId1, email1));
+		addUserToGroup(softwareFmId, email, groupId1, groupCryptoKey1, GroupConstants.adminStatus);
+		addUserToGroup(softwareFmId1, email1, groupId1, groupCryptoKey1, "someStatus2");
+
+		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
+		MyGroupsButtons buttons = myGroupsComposite.getFooter();
+		Table myGroupsTable = getMyGroupsTable(myGroupsComposite);
+
+		Swts.selectAndNotifyListener(myGroupsTable, 0);
+		assertFalse(buttons.leave.getEnabled()); //
+		Table membershipTable = getMembershipTable(myGroupsComposite);
+		
+		Swts.selectOnlyAndNotifyListener(membershipTable, 1);
+		pressKickButtonAndWaitUntilMembershipTableIsOfSize(buttons, 1);
+		
+		MyGroupsComposite afterMyGroupsComposite = (MyGroupsComposite) masterDetailSocial.getDetailContent();
+		MyGroupsButtons afterButtons = afterMyGroupsComposite.getFooter();
+		assertTrue(afterButtons.leave.getEnabled());
+		Swts.selectAndNotifyListener(getMyGroupsTable(afterMyGroupsComposite), 0);// redundant as should be already selected, but doesn't hurt
+		assertTrue(afterButtons.leave.getEnabled());
+	}
+
+	public void testLeaveIsEnabledIfNotAdmin() {
+		addUserToGroup1AndGroup2();
+
+		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
+		MyGroupsButtons buttons = myGroupsComposite.getFooter();
+		assertFalse(buttons.leave.getEnabled());// no group selected
+		Table myGroupsTable = getMyGroupsTable(myGroupsComposite);
+		Swts.selectAndNotifyListener(myGroupsTable, 0);
+		assertTrue(buttons.leave.getEnabled());
+		Swts.selectAndNotifyListener(myGroupsTable, 1);
+		assertTrue(buttons.leave.getEnabled());
+	}
 
 	public void testKickButtonRemovesUserFromGroup() {
 		createGroup(groupId1, groupCryptoKey1);
@@ -137,7 +173,7 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		final Table membershipTable = getMembershipTable(myGroupsComposite);
 		Swts.selectAndNotifyListener(membershipTable, kick);
 
-		pressKickButtonAndWaitUntilMembershipTableIfOfSize(buttons, expected.length);
+		pressKickButtonAndWaitUntilMembershipTableIsOfSize(buttons, expected.length);
 		MyGroupsComposite afterMyGroupsComposite = (MyGroupsComposite) masterDetailSocial.getDetailContent();
 		final Table afterMembershipTable = getMembershipTable(afterMyGroupsComposite);
 		MyGroupsButtons afterButtons = afterMyGroupsComposite.getFooter();
@@ -147,10 +183,10 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		for (int i = 1; i < afterMembershipTable.getItemCount(); i++)
 			afterMembershipTable.select(i);
 		afterMembershipTable.notifyListeners(SWT.Selection, new Event());
-		pressKickButtonAndWaitUntilMembershipTableIfOfSize(afterButtons, 1);
+		pressKickButtonAndWaitUntilMembershipTableIsOfSize(afterButtons, 1);
 	}
 
-	private void pressKickButtonAndWaitUntilMembershipTableIfOfSize(MyGroupsButtons buttons, final int length) {
+	private void pressKickButtonAndWaitUntilMembershipTableIsOfSize(MyGroupsButtons buttons, final int length) {
 		assertTrue(buttons.kick.getEnabled());
 		Swts.Buttons.press(buttons.kick);
 		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
@@ -450,10 +486,8 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		MyGroupsButtons buttons = myGroupsComposite.getFooter();
 
 		Table table = getMyGroupsTable(myGroupsComposite);
-		table.select(0);
-		table.notifyListeners(SWT.Selection, new Event());
+		Swts.selectOnlyAndNotifyListener(table, 0);
 		dispatchUntilQueueEmpty();
-
 		assertTrue(buttons.accept.getEnabled());
 		assertFalse(buttons.invite.getEnabled());
 		assertTrue(buttons.create.getEnabled());
@@ -500,10 +534,6 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 	private void checkChange(NameAndValuesEditorComposite editor, int i, String newValue) {
 		Control control = editor.getEditor().getChildren()[i * 2 + 1];
 		Swts.setText(control, newValue);
-	}
-
-	public void testLeave() {
-		fail("Feature not implemented yet");
 	}
 
 }
