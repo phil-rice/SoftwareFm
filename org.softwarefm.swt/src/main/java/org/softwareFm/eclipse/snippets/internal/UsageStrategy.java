@@ -24,7 +24,6 @@ import org.softwareFm.common.monitor.IMonitor;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.common.url.Urls;
-import org.softwareFm.eclipse.constants.EclipseMessages;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.usage.IUsageStrategy;
 

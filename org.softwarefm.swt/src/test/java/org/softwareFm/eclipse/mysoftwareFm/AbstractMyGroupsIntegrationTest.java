@@ -23,6 +23,8 @@ import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.mysoftwareFm.MyGroups.MyGroupsComposite;
+import org.softwareFm.eclipse.mysoftwareFm.MyPeople.MyPeopleComposite;
 import org.softwareFm.eclipse.usage.internal.AbstractExplorerIntegrationTest;
 import org.softwareFm.server.ICrowdSourcedServer;
 import org.softwareFm.server.processors.IProcessCall;
