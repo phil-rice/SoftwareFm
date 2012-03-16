@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.softwareFm.client.http.constants.CommentConstants;
 import org.softwareFm.common.IUserReader;
 import org.softwareFm.common.LocalGroupsReader;
 import org.softwareFm.common.constants.CommonConstants;
@@ -17,7 +18,6 @@ import org.softwareFm.common.resources.ResourceGetterMock;
 import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.services.IServiceExecutor;
 import org.softwareFm.eclipse.comments.ICommentsReader;
-import org.softwareFm.eclipse.constants.CommentConstants;
 import org.softwareFm.eclipse.user.IUserMembershipReader;
 import org.softwareFm.eclipse.user.UserMembershipReaderForLocal;
 import org.softwareFm.images.general.GeneralAnchor;

@@ -8,6 +8,7 @@ import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
+import org.softwareFm.client.http.constants.CommentConstants;
 import org.softwareFm.common.IGroupsReader;
 import org.softwareFm.common.IUserReader;
 import org.softwareFm.common.constants.GroupConstants;
@@ -15,7 +16,6 @@ import org.softwareFm.common.crypto.Crypto;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.runnable.Runnables;
 import org.softwareFm.eclipse.comments.ICommentDefn;
-import org.softwareFm.eclipse.constants.CommentConstants;
 import org.softwareFm.swt.comments.ICommentWriter;
 
 public class CommentsEditorCallbackThatWritesCommentTest extends TestCase {

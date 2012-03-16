@@ -7,7 +7,7 @@ Bundle-Vendor: SoftwareFM
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.jface;visibility:=reexport,
  org.eclipse.core.runtime;visibility:=reexport,
- org.softwarefm.common;bundle-version="1.0.0";visibility:=reexport
+ org.softwarefm.crowdsource;bundle-version="1.0.0";visibility:=reexport
 Export-Package: org.softwareFm.images;
   uses:="org.eclipse.jface.resource,
    org.softwareFm.swtBasics.images,

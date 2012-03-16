@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+import org.softwareFm.client.http.constants.CommentConstants;
 import org.softwareFm.common.IGroupsReader;
 import org.softwareFm.common.IUserReader;
 import org.softwareFm.common.LocalGroupsReader;
@@ -19,7 +20,6 @@ import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.eclipse.comments.ICommentDefn;
-import org.softwareFm.eclipse.constants.CommentConstants;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.user.UserMembershipReaderForLocal;
 import org.softwareFm.server.processors.AbstractProcessorDatabaseIntegrationTests;

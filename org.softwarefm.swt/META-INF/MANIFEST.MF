@@ -6,9 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: SoftwareFM
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.jface.text;visibility:=reexport,
- org.softwarefm.client;bundle-version="1.0.0";visibility:=reexport,
  org.softwarefm.images;bundle-version="1.0.6";visibility:=reexport,
- org.softwarefm.softwarefmcommon;bundle-version="1.0.0";visibility:=reexport
+ org.softwarefm.jar;bundle-version="1.0.0";visibility:=reexport
 Export-Package: org.softwareFm.swt,
  org.softwareFm.swt.browser,
  org.softwareFm.swt.card,

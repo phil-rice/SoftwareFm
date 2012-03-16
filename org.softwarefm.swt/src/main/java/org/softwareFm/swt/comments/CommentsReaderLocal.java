@@ -8,10 +8,8 @@ import org.softwareFm.eclipse.user.IUserMembershipReader;
 
 public class CommentsReaderLocal extends AbstractCommentsReader {
 
-
 	public CommentsReaderLocal(IGitLocal gitLocal, IUserReader userReader, IUserMembershipReader userMembershipReader, IGroupsReader groupsReader) {
 		super(gitLocal, userReader, userMembershipReader, groupsReader);
 	}
-
 
 }
