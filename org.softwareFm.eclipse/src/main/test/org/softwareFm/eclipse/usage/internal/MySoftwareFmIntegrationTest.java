@@ -112,6 +112,10 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 
 		assertEquals(new UserData(email, "someNewSoftwareFmId0", crypto), userDataManager.getUserData());
 	}
+	
+	public void testFocus(){
+		fail();
+	}
 
 	public void testSignupThenLogin() {
 		assertSame(userDataManager.getUserData(), mySoftwareFm.getUserData());

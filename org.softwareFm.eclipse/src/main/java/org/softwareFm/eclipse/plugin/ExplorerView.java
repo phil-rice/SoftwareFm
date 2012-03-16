@@ -82,7 +82,7 @@ public class ExplorerView extends ViewPart {
 		LocalGroupsReader groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
 		IShowMyData showMyDetails = MyDetails.showMyDetails(service, cardConfig, masterDetailSocial, userUrlGenerator, gitLocal, timeGetter);
 		IGroupClientOperations groupOperations = IGroupClientOperations.Utils.groupOperations(masterDetailSocial, cardConfig, client);
-		IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, timeGetter, reportGenerator, groupOperations);
+		IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, true, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, timeGetter, reportGenerator, groupOperations);
 		IShowMyPeople showMyPeople = MyPeople.showMyPeople(service, masterDetailSocial, cardConfig, gitLocal, userUrlGenerator, groupUrlGenerator, timeGetter, reportGenerator, CommonConstants.clientTimeOut);
 		IUserReader userReader = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
 		IUserDataManager userDataManager = activator.getUserDataManager();

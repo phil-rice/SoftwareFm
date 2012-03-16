@@ -171,7 +171,7 @@ public class CommentsTest extends SwtTest {
 	
 	public void testDealsWithCorruptedComments(){
 		fail();
-	}
+	} 
 
 	protected void checkTitleAndTableColumnNames(Table table, String expectedTitle) {
 		CommentsComposite composite = (CommentsComposite) comments.getControl();

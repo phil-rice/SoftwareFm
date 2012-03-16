@@ -38,62 +38,64 @@ public class GroupsForServerTest extends GroupsTest {
 
 		checkUsers(3);
 	}
-	
-	public void testRemoveUserAtEnd(){
+
+	public void testRemoveUsers() {
+		IGroups groups = new GroupsForServer(groupGenerator, remoteOperations, repoGenerator);
+		groups.setGroupProperty(groupId, groupCrypto, "someProperty", "someValue");
+		checkRemove(groups, new int[] { 1 }, 0, 2);
+		checkRemove(groups, new int[] { 0}, 1, 2);
+		checkRemove(groups, new int[] { 2}, 0, 1);
+		checkRemove(groups, new int[] { 0, 1, 2});
+		checkRemove(groups, new int[] { 0,  2}, 1);
+		checkRemove(groups, new int[] { 0,  1}, 2);
+		checkRemove(groups, new int[] { 1,  2}, 0);
+	}
+
+	private void checkRemove(IGroups groups, int[] kickIndicies, int... expected) {
+		List<String> kick = indiciesToIds(kickIndicies);
+
+		groups.addUser(groupId, groupCrypto, makeUserDetails(0));
+		groups.addUser(groupId, groupCrypto, makeUserDetails(1));
+		groups.addUser(groupId, groupCrypto, makeUserDetails(2));
+		groups.removeUsers(groupId, groupCrypto, kick);
+
+		checkUsersWithIndex(expected);
+		groups.removeUsers(groupId, groupCrypto, indiciesToIds(0, 1, 2));
+		checkUsersWithIndex();
+	}
+
+	private List<String> indiciesToIds(int ...kickIndicies) {
+		List<String> kick = Lists.newList();
+		for (int i : kickIndicies)
+			kick.add((String) makeUserDetails(i).get(LoginConstants.softwareFmIdKey));
+		return kick;
+	}
+
+
+	public void testRemoveUserWhoIsntPresent() {
 		IGroups groups = new GroupsForServer(groupGenerator, remoteOperations, repoGenerator);
 		groups.setGroupProperty(groupId, groupCrypto, "someProperty", "someValue");
 		groups.addUser(groupId, groupCrypto, makeUserDetails(0));
 		groups.addUser(groupId, groupCrypto, makeUserDetails(1));
-		groups.addUser(groupId, groupCrypto, makeUserDetails(2));
-		groups.removeUser(groupId, groupCrypto, (String) makeUserDetails(2).get(LoginConstants.softwareFmIdKey));
+		groups.removeUsers(groupId, groupCrypto, Arrays.asList((String) makeUserDetails(2).get(LoginConstants.softwareFmIdKey)));
 
 		checkUsersWithIndex(0, 1);
 	}
-	public void testRemoveUserInMiddle(){
-		IGroups groups = new GroupsForServer(groupGenerator, remoteOperations, repoGenerator);
-		groups.setGroupProperty(groupId, groupCrypto, "someProperty", "someValue");
-		groups.addUser(groupId, groupCrypto, makeUserDetails(0));
-		groups.addUser(groupId, groupCrypto, makeUserDetails(1));
-		groups.addUser(groupId, groupCrypto, makeUserDetails(2));
-		groups.removeUser(groupId, groupCrypto, (String) makeUserDetails(1).get(LoginConstants.softwareFmIdKey));
-		
-		checkUsersWithIndex(0, 2);
-	}
-	public void testRemoveUserAtStart(){
-		IGroups groups = new GroupsForServer(groupGenerator, remoteOperations, repoGenerator);
-		groups.setGroupProperty(groupId, groupCrypto, "someProperty", "someValue");
-		groups.addUser(groupId, groupCrypto, makeUserDetails(0));
-		groups.addUser(groupId, groupCrypto, makeUserDetails(1));
-		groups.addUser(groupId, groupCrypto, makeUserDetails(2));
-		groups.removeUser(groupId, groupCrypto, (String) makeUserDetails(0).get(LoginConstants.softwareFmIdKey));
-		
-		checkUsersWithIndex(1, 2);
-	}
 
-	public void testRemoveUserWhoIsntPresent(){
-		IGroups groups = new GroupsForServer(groupGenerator, remoteOperations, repoGenerator);
-		groups.setGroupProperty(groupId, groupCrypto, "someProperty", "someValue");
-		groups.addUser(groupId, groupCrypto, makeUserDetails(0));
-		groups.addUser(groupId, groupCrypto, makeUserDetails(1));
-		groups.removeUser(groupId, groupCrypto, (String) makeUserDetails(2).get(LoginConstants.softwareFmIdKey));
-		
-		checkUsersWithIndex(0,1);
-	}
-	
 	public void testGetWithDefaultPropertes() {
 		Map<String, Callable<Object>> defaults = Maps.makeMap("default", Callables.valueFromList("defaultValue"));
 		IGroups groups = new GroupsForServer(groupGenerator, remoteOperations, repoGenerator, defaults);
 		IGroupsReader localGroupsReader = new LocalGroupsReader(groupGenerator, gitLocal);
 
-		groups.setGroupProperty(groupId, groupCrypto, "property1", "value1");//creates group
+		groups.setGroupProperty(groupId, groupCrypto, "property1", "value1");// creates group
 		assertEquals("defaultValue", groups.getGroupProperty(groupId, groupCrypto, "default"));
-		assertEquals("defaultValue", groups.getGroupProperty(groupId, groupCrypto, "default")); //this actually checks doesn't call default callable again, as it would run out of values
-	
+		assertEquals("defaultValue", groups.getGroupProperty(groupId, groupCrypto, "default")); // this actually checks doesn't call default callable again, as it would run out of values
+
 		assertNull(groups.getGroupProperty(groupId, groupCrypto, "noDefault"));
 
 		assertEquals("defaultValue", localGroupsReader.getGroupProperty(groupId, groupCrypto, "default"));
-		assertEquals("defaultValue", localGroupsReader.getGroupProperty(groupId, groupCrypto, "default")); //this actually checks doesn't call default callable again, as it would run out of values
-		
+		assertEquals("defaultValue", localGroupsReader.getGroupProperty(groupId, groupCrypto, "default")); // this actually checks doesn't call default callable again, as it would run out of values
+
 		assertNull(localGroupsReader.getGroupProperty(groupId, groupCrypto, "noDefault"));
 	}
 
@@ -206,10 +208,11 @@ public class GroupsForServerTest extends GroupsTest {
 
 	private void checkUsers(int userCount) {
 		int[] indicies = new int[userCount];
-		for (int i = 0; i<indicies.length; i++)
+		for (int i = 0; i < indicies.length; i++)
 			indicies[i] = i;
 		checkUsersWithIndex(indicies);
 	}
+
 	private void checkUsersWithIndex(int... userIndicies) {
 		IGroups groups = new GroupsForServer(groupGenerator, remoteOperations, repoGenerator);
 		List<Map<String, Object>> expected = Lists.newList();

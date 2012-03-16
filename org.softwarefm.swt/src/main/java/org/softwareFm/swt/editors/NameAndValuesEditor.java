@@ -29,13 +29,14 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 
 		private final Composite editing;
 		private final ICardEditorCallback callback;
-		private final Control firstEditor;
 		private final ICardData cardData;
 		private final ICardEditorCallback cardEditorCallback;
+		private final List<KeyAndEditStrategy> keyAndEditStrategy;
 
 		public NameAndValuesEditorComposite(Composite parent, String titleString, final ICardData cardData, List<KeyAndEditStrategy> keyAndEditStrategy, final ICardEditorCallback strategy) {
 			super(parent, cardData.getCardConfig(), cardData.cardType(), titleString);
 			this.cardData = cardData;
+			this.keyAndEditStrategy = keyAndEditStrategy;
 			this.cardEditorCallback = strategy;
 			this.callback = strategy;
 			editing = Swts.newComposite(getInnerBody(), SWT.NULL, "editing");
@@ -76,15 +77,21 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 				}
 			});
 			assert keyAndEditStrategy.size() > 0;
-			Control[] editors = getEditor().getChildren();
-			firstEditor = editors[1];
-			firstEditor.forceFocus();
+
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public boolean forceFocus() {
-			boolean gotFocus = firstEditor.forceFocus();
-			return gotFocus;
+			Control[] editors = getEditor().getChildren();
+			for (int i = 0; i < editors.length; i += 2) {
+				Control editor = editors[i+1];
+				IEditableControlStrategy<Control> editableControlStrategy = (IEditableControlStrategy<Control>) keyAndEditStrategy.get(i / 2).editableControlStrategy;
+				if (editor.isEnabled())
+					if (editableControlStrategy.forceFocus(editor))
+							return true;
+			}
+			return false;
 		}
 
 		@Override
@@ -123,6 +130,7 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 		content = new NameAndValuesEditorComposite(parent, title, this, keyAndEditStrategy, callback);
 		content.getFooter().setOkEnabled(callback.canOk(data));
 		content.setLayout(new DataCompositeWithFooterLayout());
+		content.forceFocus();
 	}
 
 	@Override

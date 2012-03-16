@@ -114,7 +114,7 @@ public class ExplorerWithRadioChannel {
 					LocalGroupsReader groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
 					IShowMyData showMyDetails = MyDetails.showMyDetails(service, cardConfig, masterDetailSocial, userUrlGenerator, gitLocal, projectTimeGetter);
 					IGroupClientOperations groupOperations = IGroupClientOperations.Utils.groupOperations(masterDetailSocial, cardConfig, client);
-					IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, projectTimeGetter, requestGroupReportGenerator, groupOperations);
+					IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, true, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, projectTimeGetter, requestGroupReportGenerator, groupOperations);
 					IShowMyPeople showMyPeople = MyPeople.showMyPeople(service, masterDetailSocial, cardConfig, gitLocal, userUrlGenerator, groupUrlGenerator, projectTimeGetter, requestGroupReportGenerator, CommonConstants.clientTimeOut);
 					IUserReader userReader = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
 					IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, userReader);

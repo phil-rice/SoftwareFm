@@ -103,8 +103,8 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		assertEquals(summaryTable, stackLayout.topControl);
 		checkTableColumns(summaryTable, "Email", "Status");
 		checkTable(summaryTable, 0, null, "Corrupted", "Record");
-		checkTable(summaryTable, 1, makeMembershipMap(softwareFmId2, userCryptoKey2, email2, "someStatus3"), email2, "someStatus3");
-		checkTable(summaryTable, 2, makeMembershipMap(softwareFmId, userCryptoKey, email, "someStatus1"), email, "someStatus1");
+		checkTable(summaryTable, 1, makeMembershipMap(softwareFmId, userCryptoKey, email, "someStatus1"), email, "someStatus1");
+		checkTable(summaryTable, 2, makeMembershipMap(softwareFmId2, userCryptoKey2, email2, "someStatus3"), email2, "someStatus3");
 		assertEquals(3, summaryTable.getItemCount());
 	}
 

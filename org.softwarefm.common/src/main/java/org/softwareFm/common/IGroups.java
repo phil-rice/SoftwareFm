@@ -4,6 +4,7 @@
 
 package org.softwareFm.common;
 
+import java.util.List;
 import java.util.Map;
 
 public interface IGroups extends IGroupsReader {
@@ -12,7 +13,7 @@ public interface IGroups extends IGroupsReader {
 
 	void addUser(String groupId, String groupCryptoKey, Map<String, Object> userDetails);
 
-	void removeUser(String groupId, String groupCryptoKey, String softwareFmId);
+	void removeUsers(String groupId, String groupCryptoKey, List<String> softwareFmId);
 
 	void setReport(String groupId, String groupCryptoKey, String month, Map<String, Object> report);
 

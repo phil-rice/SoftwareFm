@@ -131,14 +131,15 @@ public class GroupsForServer extends AbstractGroupReader<IGitOperations> impleme
 	}
 	
 	@Override
-	public void removeUser(String groupId, String groupCryptoKey, final String softwareFmId) {
+	public void removeUsers(String groupId, String groupCryptoKey, final List<String> softwareFmIds) {
 		IFileDescription fileDescription = findFileDescription(groupId, groupCryptoKey);
 		git.removeLine(fileDescription, new IFunction1<Map<String,Object>, Boolean>() {
 			@Override
 			public Boolean apply(Map<String, Object> from) throws Exception {
-				return softwareFmId.equals(from.get(LoginConstants.softwareFmIdKey));
+				boolean result = softwareFmIds.contains(from.get(LoginConstants.softwareFmIdKey));
+				return result;
 			}
-		}, "removeUser " + softwareFmId);
+		}, "removeUser " + softwareFmIds);
 	}
 
 	@Override

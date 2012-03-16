@@ -16,6 +16,8 @@ public class SignupIntegrationTest extends AbstractProcessorMockIntegrationTests
 
 	private final String email = "a@b.com";
 
+
+
 	public void testMakeSaltThenSignUp() throws Exception {
 		EasyMock.replay(userMock);// no calls
 

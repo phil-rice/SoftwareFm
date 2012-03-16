@@ -54,6 +54,7 @@ public class UserMembershipTest extends GitTest {
 		assertEquals(expected, membershipForLocal.walkGroupsFor(user1Id, userCrypto));
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testRemoveUser() {
 		membershipForServer.addMembership(user1Id, userCrypto, groupId1, groupCrypto1, "someStatus1");
 		membershipForServer.addMembership(user1Id, userCrypto, groupId2, groupCrypto2, "someStatus2");
@@ -67,6 +68,7 @@ public class UserMembershipTest extends GitTest {
 		assertEquals(expected, membershipForServer.walkGroupsFor(user1Id, userCrypto));
 		assertEquals(expected, membershipForLocal.walkGroupsFor(user1Id, userCrypto));
 	}
+	@SuppressWarnings("unchecked")
 	public void testRemoveUserWhenGroupIsntPresent() {
 		membershipForServer.addMembership(user1Id, userCrypto, groupId1, groupCrypto1, "someStatus1");
 		membershipForServer.addMembership(user1Id, userCrypto, groupId3, groupCrypto3, "someStatus3");

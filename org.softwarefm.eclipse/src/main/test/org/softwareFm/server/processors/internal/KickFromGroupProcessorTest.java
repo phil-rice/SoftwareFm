@@ -21,6 +21,7 @@ public class KickFromGroupProcessorTest extends AbstractProcessorDatabaseIntegra
 	private final String adminId = "someNewSoftwareFmId0";
 	private final String objectId = "someNewSoftwareFmId1";
 
+	@SuppressWarnings("unchecked")
 	public void testWhenUserIsAdminCanKickAnotherPerson() throws Exception {
 		createGroup(GroupConstants.adminStatus, "initialStatus");
 
@@ -36,6 +37,7 @@ public class KickFromGroupProcessorTest extends AbstractProcessorDatabaseIntegra
 		assertEquals(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.groupCryptoKey, groupCryptoKey, GroupConstants.membershipStatusKey, GroupConstants.adminStatus), Iterables.getOnly(membershipForServer.walkGroupsFor(adminId, userCryptoKey)));
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testEvenWhenAdminCannotKickAnotherAdmin() throws Exception {
 		createGroup(GroupConstants.adminStatus, GroupConstants.adminStatus);
 
@@ -57,6 +59,7 @@ public class KickFromGroupProcessorTest extends AbstractProcessorDatabaseIntegra
 		assertEquals(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.groupCryptoKey, groupCryptoKey, GroupConstants.membershipStatusKey, GroupConstants.adminStatus), Iterables.getOnly(membershipForServer.walkGroupsFor(objectId, userKey2)));
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testWhenUserIsNotAdminCannotKickAnotherPerson() throws Exception {
 		createGroup("nonAdminStatus", "initialStatus");
 
@@ -64,7 +67,7 @@ public class KickFromGroupProcessorTest extends AbstractProcessorDatabaseIntegra
 				addParam(GroupConstants.groupIdKey, groupId).//
 				addParam(LoginConstants.softwareFmIdKey, adminId).//
 				addParam(GroupConstants.objectSoftwareFmId, objectId).//
-				execute(IResponseCallback.Utils.checkCallback(CommonConstants.serverErrorCode, "class java.lang.IllegalArgumentException/Cannot kick unless admin.\n Group someGroupId\nUser someNewSoftwareFmId0\nUsers status nonAdminStatus\nObject SoftwareFmId someNewSoftwareFmId1")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+				execute(IResponseCallback.Utils.checkCallback(CommonConstants.serverErrorCode, "class java.lang.IllegalArgumentException/Cannot kick unless admin.\n Group someGroupId\nUser someNewSoftwareFmId0\nUsers status nonAdminStatus\nObject SoftwareFmIds [someNewSoftwareFmId1]")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 
 		assertEquals(Arrays.asList(//
 				Maps.stringObjectMap(GroupConstants.membershipStatusKey, "nonAdminStatus", LoginConstants.softwareFmIdKey, adminId, "a", "b"),//

@@ -25,6 +25,8 @@ public interface IEditableControlStrategy<T extends Control> {
 
 	void addEnterEscapeListeners(IOkCancel okCancel, T control);
 
+	boolean forceFocus(T control);
+
 	public static class Utils {
 
 		public static IEditableControlStrategy<Text> text(int style) {
@@ -56,6 +58,11 @@ public interface IEditableControlStrategy<T extends Control> {
 
 				@Override
 				public void addEnterEscapeListeners(IOkCancel okCancel, StyledText control) {
+				}
+
+				@Override
+				public boolean forceFocus(StyledText control) {
+					return false;
 				}
 			};
 
@@ -111,11 +118,23 @@ public interface IEditableControlStrategy<T extends Control> {
 						}
 					});
 				}
+
+				@Override
+				public boolean forceFocus(StyledText control) {
+					if (control.getEditable()) {
+						control.selectAll();
+						control.setSelection(0, control.getText().length() + 1);
+						return control.forceFocus();
+					}
+					return false;
+
+				}
+
 			};
 		}
 
-		
 	}
+
 }
 
 class TextControlStrategy implements IEditableControlStrategy<Text> {
@@ -134,6 +153,16 @@ class TextControlStrategy implements IEditableControlStrategy<Text> {
 			text.setEchoChar('#');
 		}
 		return text;
+	}
+
+	@Override
+	public boolean forceFocus(Text control) {
+		if (control.getEditable()) {
+			control.selectAll();
+			control.setSelection(0, control.getText().length() + 1);
+			return control.forceFocus();
+		}
+		return false;
 	}
 
 	@Override

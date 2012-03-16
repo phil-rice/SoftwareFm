@@ -1197,10 +1197,19 @@ public class Swts {
 		return false;
 	}
 
-	public static void selectAndNotiftyListener(Table table, int i) {
+	public static void selectOnlyAndNotifyListener(Table table, int i) {
+		table.deselectAll();
 		table.select(i);
 		table.notifyListeners(SWT.Selection, new Event());
-		
+
+	}
+
+	public static void selectAndNotifyListener(Table table, int... is) {
+		table.deselectAll();
+		for (int i : is)
+			table.select(i);
+		table.notifyListeners(SWT.Selection, new Event());
+
 	}
 
 }

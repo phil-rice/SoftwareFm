@@ -124,6 +124,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	protected String userCryptoKey = Crypto.makeKey();
 	protected String userCryptoKey1 = Crypto.makeKey();
 	protected String userCryptoKey2 = Crypto.makeKey();
+	protected String userCryptoKey3 = Crypto.makeKey();
 	private ICrowdSourcedServer crowdSourcedServer;
 	private IShowMyData showMyData;
 	protected IUserReader userReader;
@@ -288,7 +289,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 				new HttpGitWriter(httpClient, CommonConstants.testTimeOutMs), remoteAsUri, CommonConstants.staleCachePeriodForTest);
 		dataSource = AbstractLoginDataAccessor.defaultDataSource();
 
-		userCryptoGenerator = Callables.valueFromList(userCryptoKey, userCryptoKey1, userCryptoKey2);
+		userCryptoGenerator = Callables.valueFromList(userCryptoKey, userCryptoKey1, userCryptoKey2, userCryptoKey3);
 		softwareFmIdGenerator = Callables.patternWithCount("newSoftwareFmId{0}");
 
 		cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().//
@@ -321,7 +322,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 
 			IRequestGroupReportGeneration reportGenerator = new RequestGroupReportGeneration(httpClient, IResponseCallback.Utils.sysoutStatusCallback(), gitLocal);
 			groupClientOperations = IGroupClientOperations.Utils.groupOperations(masterDetailSocial, cardConfig, httpClient);
-			IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, projectTimeGetter, reportGenerator, groupClientOperations);
+			IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, false, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, projectTimeGetter, reportGenerator, groupClientOperations);
 			IShowMyPeople showMyPeople = MyPeople.showMyPeople(service, masterDetailSocial, cardConfig, gitLocal, userUrlGenerator, groupUrlGenerator, projectTimeGetter, reportGenerator, CommonConstants.testTimeOutMs * 10);
 
 			commentsWriter = ICommentWriter.Utils.commentWriter(httpClient, CommonConstants.testTimeOutMs, gitLocal);

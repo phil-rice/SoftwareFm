@@ -42,12 +42,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIntegrationTest {
 
-	protected final String email = "my@email.com";
+	protected final String email = "my0@email.com";
 	protected final String email1 = "my1@email.com";
 	protected final String email2 = "my2@email.com";
+	protected final String email3 = "my3@email.com";
 	protected final String softwareFmId = "newSoftwareFmId0";
 	protected final String softwareFmId1 = "newSoftwareFmId1";
 	protected final String softwareFmId2 = "newSoftwareFmId2";
+	protected final String softwareFmId3 = "newSoftwareFmId3";
 	protected final UserData userData = new UserData(email, softwareFmId, userCryptoKey);
 
 	protected MyGroupsComposite displayMySoftwareClickMyGroup() {
@@ -177,9 +179,12 @@ abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIn
 		assertTrue(sashForm.getChildren()[2] instanceof Sash);
 		Composite rhsComposite = (Composite) sashForm.getChildren()[1];
 		StackLayout stackLayout = (StackLayout) rhsComposite.getLayout();
-		
-		Table table = (Table) stackLayout.topControl;
-		return table;
+
+		Control topControl = stackLayout.topControl;
+		if (topControl instanceof Table)
+			return (Table) topControl;
+		else
+			return null;
 	}
 
 	@Override

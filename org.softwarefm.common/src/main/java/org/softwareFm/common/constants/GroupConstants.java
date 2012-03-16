@@ -52,7 +52,7 @@ public class GroupConstants {
 	public static final String cannotInviteToGroupUnlessAdmin = "Cannot invite other people to group {0} as you are not admin. You are status {1}";
 	public static final String notAMemberOfAnyGroup = "This software fm id is not a member of any group {0}";
 	public static final String errorSettingUserProperty = "Error setting user property. GroupId: {0} SoftwareFmId: {1} Property {2} Value {3} ChangedCount {4}";
-	public static final String cannotKickUnlessAdmin = "Cannot kick unless admin.\n Group {0}\nUser {1}\nUsers status {2}\nObject SoftwareFmId {3}";
+	public static final String cannotKickUnlessAdmin = "Cannot kick unless admin.\n Group {0}\nUser {1}\nUsers status {2}\nObject SoftwareFmIds {3}";
 	public static final String cannotKickAdmin = "Cannot kick admin.\nGroup {0}\nUser {1}\nUsers status {2}\nObject SoftwareFmId {3}";
 
 	public static IUrlGenerator groupsGenerator(String prefix) {

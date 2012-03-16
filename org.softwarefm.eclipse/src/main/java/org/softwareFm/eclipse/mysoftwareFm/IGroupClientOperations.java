@@ -1,5 +1,6 @@
 package org.softwareFm.eclipse.mysoftwareFm;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -20,7 +21,7 @@ public interface IGroupClientOperations {
 
 	Runnable deleteGroup(UserData userData);
 
-	Runnable kickMember(UserData userData, final Callable<IdNameAndStatus> idNameStatusGetter, Callable<Map<String, Object>> objectMembershipGetter, ICallback<String> showMyGroups);
+	Runnable kickMember(UserData userData, final Callable<IdNameAndStatus> idNameStatusGetter, Callable<List<Map<String, Object>>> objectMapGetter, ICallback<String> showMyGroups);
 
 	public static class Utils {
 		public static IGroupClientOperations groupOperations(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, IHttpClient client) {
@@ -51,7 +52,7 @@ public interface IGroupClientOperations {
 				}
 
 				@Override
-				public Runnable kickMember(UserData userData, Callable<IdNameAndStatus> idNameStatusGetter, Callable<Map<String, Object>> objectMembershipGetter, ICallback<String> showMyGroups) {
+				public Runnable kickMember(UserData userData, Callable<IdNameAndStatus> idNameStatusGetter, Callable<List<Map<String, Object>>> objectMembershipGetter, ICallback<String> showMyGroups) {
 					return Runnables.exception();
 				}
 			};

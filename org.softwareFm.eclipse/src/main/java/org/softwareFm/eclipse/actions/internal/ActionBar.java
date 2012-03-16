@@ -44,7 +44,6 @@ import org.softwareFm.swt.swt.Swts;
 public class ActionBar implements IActionBar {
 	@SuppressWarnings("unused")
 	private final static boolean profile = Activator.profile || true;
-	private final static boolean newFeatures = false;
 
 	private String urlKey;
 	private final IExplorer explorer;
