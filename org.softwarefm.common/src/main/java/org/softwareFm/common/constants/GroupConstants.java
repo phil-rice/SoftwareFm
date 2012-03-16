@@ -56,6 +56,7 @@ public class GroupConstants {
 	public static final String cannotKickUnlessAdmin = "Cannot kick unless admin.\n Group {0}\nUser {1}\nUsers status {2}\nObject SoftwareFmIds {3}";
 	public static final String cannotKickAdmin = "Cannot kick admin.\nGroup {0}\nUser {1}\nUsers status {2}\nObject SoftwareFmId {3}";
 	public static final String cannotLeaveIfAdminAndGroupIsntEmpty = "Cannot leave if admin and group isn't empty.\nGroup {0}\nUser {1}\nCount {2}";
+	public static final String cannotDetermineGroupName = "Cannot work out name of group {0}, because of error {1}";
 
 	public static IUrlGenerator groupsGenerator(String prefix) {
 		return IUrlGenerator.Utils.generator(prefix + "/groups/{0}/{1}/{2}", groupIdKey);

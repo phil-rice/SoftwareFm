@@ -1,0 +1,1 @@
+1.6.15: Adding capability to Kick people from group if admin, or Leave a group. Uses SoftwareFmServer_38

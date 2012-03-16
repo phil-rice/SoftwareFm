@@ -70,10 +70,6 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		assertEquals(1, summaryTable.getItemCount());
 	}
 
-	public void testLeave() {
-		fail();
-	}
-
 	public void testMyGroupsWhenOneLineIsBadlyEncrypted() {
 		signUpUser(softwareFmId1, email1);
 		signUpUser(softwareFmId2, email2);

@@ -71,6 +71,7 @@ public class SoftwareFmServer {
 						new TakeOnGroupProcessor(takeOnProcessor, processCallParameters.signUpChecker, Callables.makeCryptoKey(), emailToSoftwareFmId, processCallParameters.saltGenerator, processCallParameters.softwareFmIdGenerator, processCallParameters.mailer),//
 						new InviteGroupProcessor(takeOnProcessor, processCallParameters.signUpChecker, emailToSoftwareFmId, processCallParameters.saltGenerator, processCallParameters.softwareFmIdGenerator, processCallParameters.mailer, processCallParameters.userCryptoFn, userMembership, groups),//
 						new AcceptInviteGroupProcessor(groups, userMembership, processCallParameters.userCryptoFn),//
+						new LeaveGroupCommandProcessor(groups, userMembership, processCallParameters.userCryptoFn),//
 						new KickFromGroupCommandProcessor(groups, userMembership, processCallParameters.userCryptoFn) };
 			}
 		};

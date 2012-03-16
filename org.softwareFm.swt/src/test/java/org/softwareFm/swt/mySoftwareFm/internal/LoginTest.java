@@ -30,9 +30,6 @@ public class LoginTest extends AbstractNameAndValuesEditorTest<Login> {
 		assertEquals(Maps.stringObjectMap(LoginConstants.emailKey, "initialEmail", CardConstants.slingResourceType, CardConstants.loginCardType), editor.content.data());
 	}
 	
-	public void testFocus(){
-		fail();
-	}
 
 	public void testNeedEmailAndPasswordToBeOk() {
 		checkOk("a.b.c@c.d", "passwordValue", true);

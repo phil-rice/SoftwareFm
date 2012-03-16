@@ -250,8 +250,12 @@ public class MyGroups implements IHasComposite {
 						return map;
 					String groupId = (String) map.get(GroupConstants.groupIdKey);
 					String groupCryptoKey = (String) map.get(GroupConstants.groupCryptoKey);
-					String groupName = groupReaders.getGroupProperty(groupId, groupCryptoKey, GroupConstants.groupNameKey);
-					return Maps.with(map, GroupConstants.groupNameKey, groupName);
+					try {
+						String groupName = groupReaders.getGroupProperty(groupId, groupCryptoKey, GroupConstants.groupNameKey);
+						return Maps.with(map, GroupConstants.groupNameKey, groupName);
+					} catch (Exception e) {
+						return Maps.with(map, CommonConstants.errorKey, MessageFormat.format(GroupConstants.cannotDetermineGroupName, groupId, e));
+					}
 				}
 			});
 
