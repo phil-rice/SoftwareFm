@@ -5,10 +5,10 @@
 package org.softwareFm.swt.explorer;
 
 import org.eclipse.swt.SWT;
-import org.softwareFm.common.callbacks.ICallback;
-import org.softwareFm.common.callbacks.MemoryCallback;
-import org.softwareFm.common.history.History;
-import org.softwareFm.common.history.IHistory;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
+import org.softwareFm.crowdsource.utilities.callbacks.MemoryCallback;
+import org.softwareFm.crowdsource.utilities.history.History;
+import org.softwareFm.crowdsource.utilities.history.IHistory;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.navigation.internal.NavNextHistoryPrevConfig;

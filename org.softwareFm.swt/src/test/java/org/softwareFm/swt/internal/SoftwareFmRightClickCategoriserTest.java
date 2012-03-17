@@ -8,7 +8,7 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.softwareFm.common.maps.Maps;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.swt.card.IRightClickCategoriser;
 import org.softwareFm.swt.card.RightClickCategoryResult;
 import org.softwareFm.swt.card.RightClickCategoryResult.Type;

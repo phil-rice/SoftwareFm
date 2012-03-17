@@ -6,7 +6,7 @@ package org.softwareFm.swt.swt;
 
 import java.util.concurrent.TimeUnit;
 
-import org.softwareFm.common.services.IServiceExecutor;
+import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 
 abstract public class SwtAndServiceTest extends SwtTest {
 

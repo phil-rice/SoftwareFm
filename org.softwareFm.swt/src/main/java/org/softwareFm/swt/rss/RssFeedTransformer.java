@@ -15,8 +15,8 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.jdom.transform.XSLTransformer;
-import org.softwareFm.common.collections.Files;
-import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.collections.Files;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.swt.swt.Swts.Show;
 import org.springframework.core.io.ClassPathResource;
 

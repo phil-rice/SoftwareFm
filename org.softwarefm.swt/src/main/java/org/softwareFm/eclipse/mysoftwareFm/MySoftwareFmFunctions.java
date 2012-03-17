@@ -1,7 +1,7 @@
 package org.softwareFm.eclipse.mysoftwareFm;
 
-import org.softwareFm.common.strings.PreAndPost;
-import org.softwareFm.common.strings.Strings;
+import org.softwareFm.crowdsource.utilities.strings.PreAndPost;
+import org.softwareFm.crowdsource.utilities.strings.Strings;
 
 public class MySoftwareFmFunctions {
 

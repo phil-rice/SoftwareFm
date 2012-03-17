@@ -7,7 +7,7 @@ package org.softwareFm.swt.card.internal;
 import java.util.Arrays;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardHolder;

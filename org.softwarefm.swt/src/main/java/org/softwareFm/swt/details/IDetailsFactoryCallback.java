@@ -5,7 +5,7 @@
 package org.softwareFm.swt.details;
 
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.common.maps.Maps;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.swt.card.ICardSelectedListener;
 import org.softwareFm.swt.dataStore.IAfterEditCallback;
 import org.softwareFm.swt.dataStore.IMutableCardDataStore;

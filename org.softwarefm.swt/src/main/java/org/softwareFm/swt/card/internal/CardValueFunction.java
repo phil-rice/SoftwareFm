@@ -6,9 +6,9 @@ package org.softwareFm.swt.card.internal;
 
 import java.text.MessageFormat;
 
-import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.resources.IResourceGetter;
-import org.softwareFm.common.strings.Strings;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
+import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.swt.card.AbstractLineItemFunction;
 import org.softwareFm.swt.card.LineItem;
 import org.softwareFm.swt.configuration.CardConfig;

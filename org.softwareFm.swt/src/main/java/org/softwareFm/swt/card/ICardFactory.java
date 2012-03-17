@@ -9,9 +9,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.common.callbacks.ICallback;
-import org.softwareFm.common.exceptions.WrappedException;
-import org.softwareFm.common.maps.Maps;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
+import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.swt.card.card.CardFactoryMock;
 import org.softwareFm.swt.card.internal.Card;
 import org.softwareFm.swt.card.internal.CardFactory;

@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.softwareFm.common.maps.Maps;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.modifiers.ICardDataModifier;
 

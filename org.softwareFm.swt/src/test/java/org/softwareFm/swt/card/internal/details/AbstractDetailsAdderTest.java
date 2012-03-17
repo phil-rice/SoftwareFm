@@ -6,7 +6,7 @@ package org.softwareFm.swt.card.internal.details;
 
 import java.util.Arrays;
 
-import org.softwareFm.common.strings.Strings;
+import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.swt.card.ILineItemFunction;
 import org.softwareFm.swt.card.LineItem;
 import org.softwareFm.swt.card.internal.CardCollectionHolder;

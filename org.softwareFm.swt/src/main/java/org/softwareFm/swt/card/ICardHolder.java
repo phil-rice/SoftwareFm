@@ -7,7 +7,7 @@ package org.softwareFm.swt.card;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.common.callbacks.ICallback;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.swt.card.internal.CardHolder;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;

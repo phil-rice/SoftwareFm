@@ -7,7 +7,7 @@ package org.softwareFm.swt.title;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.card.internal.CardToTitleSpecFn;
 

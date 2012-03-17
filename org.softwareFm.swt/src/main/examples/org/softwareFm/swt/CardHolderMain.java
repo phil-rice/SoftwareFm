@@ -8,10 +8,10 @@ import java.util.Arrays;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.common.callbacks.ICallback;
-import org.softwareFm.common.exceptions.WrappedException;
-import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.future.GatedMockFuture;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
+import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.future.GatedMockFuture;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardFactory;

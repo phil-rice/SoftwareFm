@@ -7,10 +7,8 @@ package org.softwareFm.eclipse.usage.internal;
 import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
-import org.softwareFm.client.http.requests.IResponseCallback;
-import org.softwareFm.client.http.requests.MemoryResponseCallback;
-import org.softwareFm.common.future.Futures;
-import org.softwareFm.common.maps.IHasCache;
+import org.softwareFm.crowdsource.utilities.future.Futures;
+import org.softwareFm.crowdsource.utilities.maps.IHasCache;
 import org.softwareFm.eclipse.usage.IUsageStrategy;
 import org.softwareFm.swt.explorer.IUserDataManager;
 

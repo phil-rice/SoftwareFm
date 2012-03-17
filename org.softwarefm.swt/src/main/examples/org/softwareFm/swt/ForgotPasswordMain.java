@@ -7,7 +7,7 @@ package org.softwareFm.swt;
 import java.util.UUID;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.configuration.ICardConfigurator;
 import org.softwareFm.swt.mySoftwareFm.ILoginCallbacks;

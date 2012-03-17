@@ -16,7 +16,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.softwareFm.common.maps.Maps;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.card.LineItem;
 import org.softwareFm.swt.configuration.CardConfig;

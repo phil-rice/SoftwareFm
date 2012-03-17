@@ -26,8 +26,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.softwareFm.common.exceptions.WrappedException;
-import org.softwareFm.common.future.GatedMockFuture;
+import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
+import org.softwareFm.crowdsource.utilities.future.GatedMockFuture;
 import org.softwareFm.swt.composites.IHasComposite;
 
 abstract public class SwtTest extends TestCase {

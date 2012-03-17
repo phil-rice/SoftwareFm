@@ -3,8 +3,8 @@ package org.softwareFm.swt.comments;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.softwareFm.common.IGroupsReader;
-import org.softwareFm.common.IUserReader;
+import org.softwareFm.crowdsource.api.user.IGroupsReader;
+import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.swt.comments.internal.CommentsEditorCallbackThatWritesComment;
 
 public interface ICommentsEditorCallback {

@@ -11,7 +11,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
-import org.softwareFm.common.strings.Strings;
+import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.okCancel.IOkCancel;
 

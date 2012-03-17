@@ -7,7 +7,7 @@ package org.softwareFm.swt.editors;
 import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.common.collections.Lists;
+import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.details.IDetailsFactoryCallback;

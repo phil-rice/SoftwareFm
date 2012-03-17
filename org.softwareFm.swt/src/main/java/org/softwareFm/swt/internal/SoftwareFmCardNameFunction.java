@@ -6,7 +6,7 @@ package org.softwareFm.swt.internal;
 
 import java.util.Map;
 
-import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.swt.card.AbstractLineItemFunction;
 import org.softwareFm.swt.card.ILineItemFunction;
 import org.softwareFm.swt.card.LineItem;

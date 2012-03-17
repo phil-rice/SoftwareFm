@@ -10,8 +10,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.TableItem;
-import org.softwareFm.common.functions.Functions;
-import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.crowdsource.utilities.functions.Functions;
+import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.explorer.IExplorer;
 

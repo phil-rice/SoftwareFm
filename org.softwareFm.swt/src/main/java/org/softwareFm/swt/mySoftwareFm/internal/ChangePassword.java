@@ -9,12 +9,12 @@ import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.common.constants.LoginConstants;
-import org.softwareFm.common.crypto.Crypto;
-import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.maps.Maps;
-import org.softwareFm.common.resources.IResourceGetter;
-import org.softwareFm.common.strings.Strings;
+import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
+import org.softwareFm.crowdsource.utilities.crypto.Crypto;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
+import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.configuration.ICardConfigurator;

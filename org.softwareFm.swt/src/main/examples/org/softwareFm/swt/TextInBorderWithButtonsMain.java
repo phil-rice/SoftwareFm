@@ -6,8 +6,8 @@ package org.softwareFm.swt;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.runnable.Runnables;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.runnable.Runnables;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.card.composites.TextInBorderWithButtons;
 import org.softwareFm.swt.configuration.CardConfig;

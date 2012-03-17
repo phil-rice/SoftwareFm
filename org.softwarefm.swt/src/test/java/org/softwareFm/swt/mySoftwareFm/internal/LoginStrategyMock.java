@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.softwareFm.common.collections.Lists;
-import org.softwareFm.common.crypto.Crypto;
+import org.softwareFm.crowdsource.utilities.collections.Lists;
+import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.mySoftwareFm.IChangePasswordCallback;
 import org.softwareFm.swt.mySoftwareFm.IForgotPasswordCallback;

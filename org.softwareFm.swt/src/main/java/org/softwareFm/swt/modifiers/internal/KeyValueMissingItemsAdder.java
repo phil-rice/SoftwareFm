@@ -8,9 +8,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.softwareFm.common.maps.Maps;
-import org.softwareFm.common.resources.IResourceGetter;
-import org.softwareFm.common.strings.Strings;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
+import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.modifiers.ICardDataModifier;

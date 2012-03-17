@@ -7,8 +7,8 @@ package org.softwareFm.swt.navigation;
 import java.util.Map;
 
 import org.eclipse.swt.graphics.Image;
-import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.navigation.internal.NavIconFunction;

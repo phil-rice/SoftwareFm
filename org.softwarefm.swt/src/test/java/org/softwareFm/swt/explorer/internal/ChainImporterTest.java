@@ -8,10 +8,9 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.softwareFm.common.collections.Sets;
-import org.softwareFm.common.maps.Maps;
-import org.softwareFm.common.runnable.Runnables;
-import org.softwareFm.common.runnable.Runnables.CountRunnable;
+import org.softwareFm.crowdsource.utilities.collections.Sets;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.crowdsource.utilities.runnable.Runnables;
 import org.softwareFm.swt.card.dataStore.CardDataStoreMock;
 import org.softwareFm.swt.explorer.internal.NewJarImporter.ImportStageCommand;
 

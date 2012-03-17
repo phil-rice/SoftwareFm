@@ -5,8 +5,8 @@
 package org.softwareFm.swt.details.internal;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.common.functions.Functions;
-import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.crowdsource.utilities.functions.Functions;
+import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;

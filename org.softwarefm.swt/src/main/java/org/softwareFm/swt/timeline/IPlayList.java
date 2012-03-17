@@ -8,7 +8,7 @@ import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.List;
 
-import org.softwareFm.common.collections.Lists;
+import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.swt.constants.DisplayConstants;
 
 public interface IPlayList {

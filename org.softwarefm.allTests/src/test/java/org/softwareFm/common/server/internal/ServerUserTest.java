@@ -16,11 +16,11 @@ import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.json.Json;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.runnable.Callables;
-import org.softwareFm.common.server.GitTest;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.common.url.Urls;
-import org.softwareFm.server.ICrowdSourcedServer;
+import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
+import org.softwareFm.crowdsource.api.git.GitTest;
 
 public class ServerUserTest extends GitTest {
 

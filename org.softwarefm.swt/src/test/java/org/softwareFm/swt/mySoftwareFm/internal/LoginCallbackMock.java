@@ -6,7 +6,7 @@ package org.softwareFm.swt.mySoftwareFm.internal;
 
 import java.util.List;
 
-import org.softwareFm.common.collections.Lists;
+import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.mySoftwareFm.ILoginCallback;
 

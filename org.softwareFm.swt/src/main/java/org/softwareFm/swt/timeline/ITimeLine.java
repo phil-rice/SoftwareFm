@@ -6,7 +6,7 @@ package org.softwareFm.swt.timeline;
 
 import java.util.concurrent.Future;
 
-import org.softwareFm.common.history.IHistory;
+import org.softwareFm.crowdsource.utilities.history.IHistory;
 
 public interface ITimeLine extends IHistory<PlayItem> {
 

@@ -4,9 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import org.softwareFm.client.http.api.IHttpClient;
-import org.softwareFm.common.callbacks.ICallback;
-import org.softwareFm.common.runnable.Runnables;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
+import org.softwareFm.crowdsource.utilities.runnable.Runnables;
 import org.softwareFm.eclipse.mysoftwareFm.internal.GroupClientOperations;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.explorer.IMasterDetailSocial;

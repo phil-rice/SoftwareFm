@@ -9,9 +9,9 @@ import java.util.Map;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.resources.IResourceGetter;
-import org.softwareFm.common.strings.Strings;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
+import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.images.artifacts.ArtifactsAnchor;
 import org.softwareFm.swt.ICollectionConfigurationFactory;
 import org.softwareFm.swt.card.ICard;

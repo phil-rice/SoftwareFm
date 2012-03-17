@@ -6,11 +6,8 @@ package org.softwareFm.eclipse.mysoftwareFm;
 
 import java.util.concurrent.Future;
 
-import org.softwareFm.client.http.api.IHttpClient;
-import org.softwareFm.client.http.requests.IResponseCallback;
-import org.softwareFm.client.http.response.IResponse;
-import org.softwareFm.common.constants.GroupConstants;
-import org.softwareFm.common.maps.IHasCache;
+import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
+import org.softwareFm.crowdsource.utilities.maps.IHasCache;
 import org.softwareFm.eclipse.IRequestGroupReportGeneration;
 
 public class RequestGroupReportGeneration implements IRequestGroupReportGeneration {

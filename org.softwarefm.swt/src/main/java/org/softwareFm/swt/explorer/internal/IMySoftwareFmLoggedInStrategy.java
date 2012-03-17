@@ -7,8 +7,8 @@ package org.softwareFm.swt.explorer.internal;
 import java.util.Arrays;
 import java.util.List;
 
-import org.softwareFm.common.IUserReader;
-import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.crowdsource.api.user.IUserReader;
+import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 
 public interface IMySoftwareFmLoggedInStrategy {
 	IUserReader userReader();

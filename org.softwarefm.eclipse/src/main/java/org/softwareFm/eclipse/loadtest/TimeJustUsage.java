@@ -4,7 +4,7 @@
 
 package org.softwareFm.eclipse.loadtest;
 
-import org.softwareFm.server.IUsage;
+import org.softwareFm.crowdsource.api.server.IUsage;
 
 public class TimeJustUsage {
 	public static void main(String[] args) {

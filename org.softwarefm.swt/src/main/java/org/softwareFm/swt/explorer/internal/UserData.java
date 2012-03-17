@@ -4,7 +4,7 @@
 
 package org.softwareFm.swt.explorer.internal;
 
-import org.softwareFm.common.strings.Strings;
+import org.softwareFm.crowdsource.utilities.strings.Strings;
 
 public class UserData {
 

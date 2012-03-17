@@ -11,10 +11,10 @@ import java.util.Set;
 
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
-import org.softwareFm.common.collections.Iterables;
-import org.softwareFm.common.collections.Lists;
-import org.softwareFm.common.collections.Sets;
-import org.softwareFm.common.maps.Maps;
+import org.softwareFm.crowdsource.utilities.collections.Iterables;
+import org.softwareFm.crowdsource.utilities.collections.Lists;
+import org.softwareFm.crowdsource.utilities.collections.Sets;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.swt.constants.DisplayConstants;
 import org.softwareFm.swt.menu.IPopupMenuContributor;
 import org.softwareFm.swt.menu.IPopupMenuService;

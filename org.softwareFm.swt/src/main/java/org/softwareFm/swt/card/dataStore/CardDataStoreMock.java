@@ -10,10 +10,10 @@ import java.util.concurrent.Future;
 
 import junit.framework.Assert;
 
-import org.softwareFm.common.collections.Sets;
-import org.softwareFm.common.exceptions.WrappedException;
-import org.softwareFm.common.future.Futures;
-import org.softwareFm.common.maps.Maps;
+import org.softwareFm.crowdsource.utilities.collections.Sets;
+import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
+import org.softwareFm.crowdsource.utilities.future.Futures;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.swt.dataStore.IAfterEditCallback;
 import org.softwareFm.swt.dataStore.ICardDataStoreCallback;
 import org.softwareFm.swt.dataStore.IMutableCardDataStore;

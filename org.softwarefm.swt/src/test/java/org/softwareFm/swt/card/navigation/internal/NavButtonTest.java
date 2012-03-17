@@ -8,8 +8,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.junit.Test;
-import org.softwareFm.common.callbacks.ICallback;
-import org.softwareFm.common.callbacks.MemoryCallback;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
+import org.softwareFm.crowdsource.utilities.callbacks.MemoryCallback;
 import org.softwareFm.swt.navigation.internal.NavButton;
 import org.softwareFm.swt.swt.SwtTest;
 

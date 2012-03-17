@@ -9,10 +9,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-import org.softwareFm.client.http.requests.IResponseCallback;
-import org.softwareFm.common.collections.Sets;
-import org.softwareFm.common.future.Futures;
-import org.softwareFm.common.maps.IHasCache;
+import org.softwareFm.crowdsource.utilities.collections.Sets;
+import org.softwareFm.crowdsource.utilities.future.Futures;
+import org.softwareFm.crowdsource.utilities.maps.IHasCache;
 import org.softwareFm.eclipse.usage.IUsageStrategy;
 import org.softwareFm.swt.explorer.IUserDataListener;
 import org.softwareFm.swt.explorer.IUserDataManager;

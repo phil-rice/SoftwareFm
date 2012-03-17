@@ -8,13 +8,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.softwareFm.common.IFileDescription;
-import org.softwareFm.common.IGitLocal;
-import org.softwareFm.common.IUserReader;
-import org.softwareFm.common.constants.LoginConstants;
-import org.softwareFm.common.maps.Maps;
-import org.softwareFm.common.url.IUrlGenerator;
-import org.softwareFm.common.url.Urls;
+import org.softwareFm.crowdsource.api.git.IFileDescription;
+import org.softwareFm.crowdsource.api.git.IGitLocal;
+import org.softwareFm.crowdsource.api.user.IUserReader;
+import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
+import org.softwareFm.crowdsource.utilities.url.Urls;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.user.AbstractUsageReader;
 

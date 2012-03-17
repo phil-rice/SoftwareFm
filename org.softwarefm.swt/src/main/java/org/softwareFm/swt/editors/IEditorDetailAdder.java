@@ -4,7 +4,7 @@
 
 package org.softwareFm.swt.editors;
 
-import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.swt.details.IDetailAdder;
 import org.softwareFm.swt.editors.internal.StyledTextEditorDetailAdder;
 import org.softwareFm.swt.editors.internal.TextEditorDetailAdder;

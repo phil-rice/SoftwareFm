@@ -5,10 +5,10 @@
 package org.softwareFm.swt.card.internal.details;
 
 import org.eclipse.swt.graphics.Image;
-import org.softwareFm.common.functions.Functions;
-import org.softwareFm.common.functions.IFunction1WithDispose;
-import org.softwareFm.common.resources.IResourceGetter;
-import org.softwareFm.common.resources.ResourceGetterMock;
+import org.softwareFm.crowdsource.utilities.functions.Functions;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1WithDispose;
+import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
+import org.softwareFm.crowdsource.utilities.resources.ResourceGetterMock;
 import org.softwareFm.images.BasicImageRegisterConfigurator;
 import org.softwareFm.swt.card.LineItem;
 import org.softwareFm.swt.configuration.CardConfig;

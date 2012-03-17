@@ -8,8 +8,8 @@ import java.util.Comparator;
 
 import junit.framework.TestCase;
 
-import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.tests.Tests;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.tests.Tests;
 
 public class KeyValueTest extends TestCase {
 

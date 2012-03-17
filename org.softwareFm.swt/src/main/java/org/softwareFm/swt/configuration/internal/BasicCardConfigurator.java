@@ -6,8 +6,8 @@ package org.softwareFm.swt.configuration.internal;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.images.BasicImageRegisterConfigurator;
 import org.softwareFm.swt.card.ILineItemFunction;

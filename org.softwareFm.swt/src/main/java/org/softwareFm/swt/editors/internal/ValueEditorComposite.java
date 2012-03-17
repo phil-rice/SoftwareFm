@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.softwareFm.common.functions.Functions;
+import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.swt.card.LineItem;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.dataStore.IMutableCardDataStore;

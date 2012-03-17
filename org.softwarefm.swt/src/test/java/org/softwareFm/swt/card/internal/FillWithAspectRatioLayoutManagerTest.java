@@ -12,7 +12,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.common.collections.Lists;
+import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.swt.swt.SwtTest;
 
 public class FillWithAspectRatioLayoutManagerTest extends SwtTest {

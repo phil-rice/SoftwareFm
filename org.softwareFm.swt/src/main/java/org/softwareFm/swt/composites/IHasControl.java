@@ -7,8 +7,8 @@ package org.softwareFm.swt.composites;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.common.collections.Lists;
-import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.collections.Lists;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 
 public interface IHasControl {
 

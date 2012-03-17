@@ -10,11 +10,8 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
-import org.softwareFm.common.functions.Functions;
-import org.softwareFm.common.maps.Maps;
-import org.softwareFm.swt.card.ICardData;
-import org.softwareFm.swt.card.ICardFactory;
-import org.softwareFm.swt.card.LineItem;
+import org.softwareFm.crowdsource.utilities.functions.Functions;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.swt.card.dataStore.CardDataStoreAsyncMock;
 import org.softwareFm.swt.card.dataStore.CardDataStoreMock;
 import org.softwareFm.swt.configuration.CardConfig;

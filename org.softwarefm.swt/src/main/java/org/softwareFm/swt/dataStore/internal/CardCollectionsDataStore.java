@@ -11,10 +11,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.softwareFm.common.callbacks.ICallback;
-import org.softwareFm.common.exceptions.WrappedException;
-import org.softwareFm.common.future.Futures;
-import org.softwareFm.common.future.GatedFuture;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
+import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
+import org.softwareFm.crowdsource.utilities.future.Futures;
+import org.softwareFm.crowdsource.utilities.future.GatedFuture;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardFactory;
 import org.softwareFm.swt.card.ICardHolder;

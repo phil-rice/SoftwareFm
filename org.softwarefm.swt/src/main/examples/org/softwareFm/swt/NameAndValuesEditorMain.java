@@ -8,8 +8,8 @@ import java.util.Arrays;
 import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.maps.Maps;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.configuration.CardConfig;

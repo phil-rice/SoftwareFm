@@ -2,16 +2,12 @@ package org.softwareFm.swt.comments.internal;
 
 import java.util.concurrent.TimeUnit;
 
-import org.softwareFm.client.http.api.IHttpClient;
-import org.softwareFm.client.http.constants.CommentConstants;
-import org.softwareFm.client.http.requests.IResponseCallback;
-import org.softwareFm.common.IFileDescription;
-import org.softwareFm.common.constants.LoginConstants;
-import org.softwareFm.common.crypto.Crypto;
-import org.softwareFm.common.exceptions.WrappedException;
-import org.softwareFm.common.maps.IHasUrlCache;
-import org.softwareFm.common.url.Urls;
-import org.softwareFm.eclipse.comments.ICommentDefn;
+import org.softwareFm.crowdsource.api.git.IFileDescription;
+import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
+import org.softwareFm.crowdsource.utilities.crypto.Crypto;
+import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
+import org.softwareFm.crowdsource.utilities.maps.IHasUrlCache;
+import org.softwareFm.crowdsource.utilities.url.Urls;
 import org.softwareFm.swt.comments.ICommentWriter;
 
 public final class CommentWriter implements ICommentWriter {

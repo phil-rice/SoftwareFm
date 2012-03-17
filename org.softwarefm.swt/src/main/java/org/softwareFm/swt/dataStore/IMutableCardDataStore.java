@@ -7,8 +7,8 @@ package org.softwareFm.swt.dataStore;
 import java.util.Map;
 import java.util.concurrent.Future;
 
-import org.softwareFm.common.exceptions.WrappedException;
-import org.softwareFm.common.maps.Maps;
+import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.swt.card.RightClickCategoryResult;
 import org.softwareFm.swt.card.dataStore.CardDataStoreAsyncMock;
 import org.softwareFm.swt.constants.CardConstants;

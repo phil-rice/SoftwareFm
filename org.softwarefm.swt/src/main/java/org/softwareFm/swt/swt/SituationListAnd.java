@@ -16,7 +16,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.List;
-import org.softwareFm.common.exceptions.WrappedException;
+import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.swt.Swts.Grid;

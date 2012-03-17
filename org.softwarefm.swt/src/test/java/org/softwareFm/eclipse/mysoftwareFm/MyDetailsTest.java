@@ -5,9 +5,9 @@
 package org.softwareFm.eclipse.mysoftwareFm;
 
 import org.eclipse.swt.widgets.Table;
-import org.softwareFm.common.IUser;
-import org.softwareFm.common.constants.LoginConstants;
-import org.softwareFm.common.crypto.Crypto;
+import org.softwareFm.crowdsource.api.user.IUser;
+import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
+import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.user.IProject;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;

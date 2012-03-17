@@ -4,9 +4,9 @@
 
 package org.softwareFm.eclipse.project;
 
-import org.softwareFm.common.IGitLocal;
-import org.softwareFm.common.IUserReader;
-import org.softwareFm.common.url.IUrlGenerator;
+import org.softwareFm.crowdsource.api.git.IGitLocal;
+import org.softwareFm.crowdsource.api.user.IUserReader;
+import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.eclipse.project.internal.UsageReaderForLocal;
 import org.softwareFm.eclipse.user.IUsageReader;
 

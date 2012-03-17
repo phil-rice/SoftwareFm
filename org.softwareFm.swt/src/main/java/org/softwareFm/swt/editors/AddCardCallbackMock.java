@@ -7,8 +7,8 @@ package org.softwareFm.swt.editors;
 import java.util.List;
 import java.util.Map;
 
-import org.softwareFm.common.collections.Lists;
-import org.softwareFm.common.maps.Maps;
+import org.softwareFm.crowdsource.utilities.collections.Lists;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.swt.card.ICardData;
 
 public class AddCardCallbackMock implements ICardEditorCallback {

@@ -7,9 +7,9 @@ package org.softwareFm.swt.navigation.internal;
 import java.util.Map;
 
 import org.eclipse.swt.graphics.Image;
-import org.softwareFm.common.functions.Functions;
-import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.crowdsource.utilities.functions.Functions;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.swt.constants.CardConstants;
 
 public class NavIconFunction implements IFunction1<Map<String, Object>, Image> {

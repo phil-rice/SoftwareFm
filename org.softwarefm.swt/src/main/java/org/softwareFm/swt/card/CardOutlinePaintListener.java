@@ -11,7 +11,7 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.common.runnable.Callables;
+import org.softwareFm.crowdsource.utilities.runnable.Callables;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.title.TitleSpec;
 

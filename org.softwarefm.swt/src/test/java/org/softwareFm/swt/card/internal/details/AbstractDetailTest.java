@@ -7,9 +7,9 @@ package org.softwareFm.swt.card.internal.details;
 import java.util.Collections;
 
 import org.eclipse.swt.graphics.Image;
-import org.softwareFm.common.functions.Functions;
-import org.softwareFm.common.functions.IFunction1WithDispose;
-import org.softwareFm.common.maps.Maps;
+import org.softwareFm.crowdsource.utilities.functions.Functions;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1WithDispose;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.images.BasicImageRegisterConfigurator;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.card.ICardData;

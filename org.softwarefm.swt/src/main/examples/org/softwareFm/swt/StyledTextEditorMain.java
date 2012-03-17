@@ -6,7 +6,7 @@ package org.softwareFm.swt;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.details.IDetailsFactoryCallback;

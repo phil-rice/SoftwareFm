@@ -6,7 +6,7 @@ package org.softwareFm.swt.dataStore;
 
 import java.util.List;
 
-import org.softwareFm.common.collections.Lists;
+import org.softwareFm.crowdsource.utilities.collections.Lists;
 
 public class MemoryAfterEditCallback implements IAfterEditCallback {
 	public final List<String> urls = Lists.newList();

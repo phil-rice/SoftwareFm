@@ -6,7 +6,7 @@ package org.softwareFm.swt.card;
 
 import java.util.List;
 
-import org.softwareFm.common.collections.Lists;
+import org.softwareFm.crowdsource.utilities.collections.Lists;
 
 public class CardChangedListenerMock implements ICardChangedListener {
 

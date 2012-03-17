@@ -7,8 +7,8 @@ package org.softwareFm.swt.dataStore;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.common.IGitLocal;
-import org.softwareFm.common.services.IServiceExecutor;
+import org.softwareFm.crowdsource.api.git.IGitLocal;
+import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.swt.card.dataStore.CardDataStoreMock;
 import org.softwareFm.swt.dataStore.internal.CardDataStoreForRepository;
 

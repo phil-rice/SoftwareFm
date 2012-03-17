@@ -7,7 +7,7 @@ package org.softwareFm.swt.constants;
 import java.util.Arrays;
 import java.util.List;
 
-import org.softwareFm.common.url.Urls;
+import org.softwareFm.crowdsource.utilities.url.Urls;
 
 public class CollectionConstants {
 

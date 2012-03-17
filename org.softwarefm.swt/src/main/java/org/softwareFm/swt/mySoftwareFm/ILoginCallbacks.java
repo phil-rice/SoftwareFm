@@ -4,7 +4,7 @@
 
 package org.softwareFm.swt.mySoftwareFm;
 
-import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.explorer.internal.UserData;

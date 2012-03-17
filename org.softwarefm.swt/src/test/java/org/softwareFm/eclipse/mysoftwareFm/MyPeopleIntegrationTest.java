@@ -4,15 +4,13 @@ import java.util.Map;
 
 import org.apache.log4j.Level;
 import org.eclipse.swt.widgets.Table;
-import org.softwareFm.common.IGitOperations;
-import org.softwareFm.common.arrays.ArrayHelper;
-import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.crowdsource.api.git.IGitOperations;
+import org.softwareFm.crowdsource.utilities.arrays.ArrayHelper;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.mysoftwareFm.MyPeople.MyPeopleComposite;
 import org.softwareFm.eclipse.user.ProjectFixture;
 import org.softwareFm.eclipse.user.ProjectMock;
-import org.softwareFm.server.processors.IProcessCall;
-import org.softwareFm.server.processors.internal.AbstractCommandProcessor;
 import org.softwareFm.softwareFmServer.GenerateGroupUsageProcessor;
 import org.softwareFm.softwareFmServer.GenerateUsageProjectGenerator;
 

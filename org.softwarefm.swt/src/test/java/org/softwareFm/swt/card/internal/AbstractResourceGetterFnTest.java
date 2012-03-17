@@ -6,9 +6,9 @@ package org.softwareFm.swt.card.internal;
 
 import junit.framework.TestCase;
 
-import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.resources.IResourceGetter;
-import org.softwareFm.common.resources.ResourceGetterMock;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
+import org.softwareFm.crowdsource.utilities.resources.ResourceGetterMock;
 
 abstract public class AbstractResourceGetterFnTest extends TestCase {
 

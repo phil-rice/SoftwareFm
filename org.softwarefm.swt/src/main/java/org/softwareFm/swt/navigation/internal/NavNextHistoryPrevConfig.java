@@ -5,9 +5,9 @@
 package org.softwareFm.swt.navigation.internal;
 
 import org.eclipse.swt.graphics.Image;
-import org.softwareFm.common.callbacks.ICallback;
-import org.softwareFm.common.functions.Functions;
-import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
+import org.softwareFm.crowdsource.utilities.functions.Functions;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 
 public class NavNextHistoryPrevConfig<T> {
 

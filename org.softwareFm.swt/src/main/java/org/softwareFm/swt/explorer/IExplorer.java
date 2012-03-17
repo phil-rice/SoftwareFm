@@ -8,11 +8,10 @@ import java.io.File;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import org.softwareFm.common.IGroupsReader;
-import org.softwareFm.common.IUserReader;
-import org.softwareFm.common.services.IServiceExecutor;
-import org.softwareFm.eclipse.comments.ICommentsReader;
-import org.softwareFm.eclipse.user.IUserMembershipReader;
+import org.softwareFm.crowdsource.api.user.IGroupsReader;
+import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
+import org.softwareFm.crowdsource.api.user.IUserReader;
+import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.swt.browser.IBrowserCompositeBuilder;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardChangedListener;

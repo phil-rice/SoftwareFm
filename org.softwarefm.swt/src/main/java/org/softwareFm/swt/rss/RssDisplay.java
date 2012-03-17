@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Label;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
-import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.swt.browser.IBrowserPart;
 import org.softwareFm.swt.constants.DisplayConstants;
 import org.softwareFm.swt.swt.Swts;

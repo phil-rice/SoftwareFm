@@ -3,11 +3,10 @@ package org.softwareFm.swt.comments.internal;
 import java.util.List;
 import java.util.Map;
 
-import org.softwareFm.common.IGroupsReader;
-import org.softwareFm.common.IUserReader;
-import org.softwareFm.common.collections.Iterables;
-import org.softwareFm.common.constants.GroupConstants;
-import org.softwareFm.eclipse.comments.ICommentDefn;
+import org.softwareFm.crowdsource.api.user.IGroupsReader;
+import org.softwareFm.crowdsource.api.user.IUserReader;
+import org.softwareFm.crowdsource.utilities.collections.Iterables;
+import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.swt.comments.ICommentWriter;
 import org.softwareFm.swt.comments.ICommentsEditorCallback;
 

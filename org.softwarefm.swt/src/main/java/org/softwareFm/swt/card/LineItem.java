@@ -6,9 +6,9 @@ package org.softwareFm.swt.card;
 
 import java.util.Comparator;
 
-import org.softwareFm.common.collections.Lists;
-import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.strings.Strings;
+import org.softwareFm.crowdsource.utilities.collections.Lists;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.swt.configuration.CardConfig;
 
 /** Data about a single line in the card */

@@ -9,10 +9,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
-import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.maps.Maps;
-import org.softwareFm.common.resources.IResourceGetter;
-import org.softwareFm.common.strings.Strings;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
+import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.swt.card.ILineItemFunction;
 import org.softwareFm.swt.card.LineItem;
 import org.softwareFm.swt.configuration.CardConfig;

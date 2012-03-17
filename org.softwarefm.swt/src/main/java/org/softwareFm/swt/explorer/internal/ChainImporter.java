@@ -6,7 +6,7 @@ package org.softwareFm.swt.explorer.internal;
 
 import java.util.concurrent.Future;
 
-import org.softwareFm.common.future.Futures;
+import org.softwareFm.crowdsource.utilities.future.Futures;
 import org.softwareFm.swt.dataStore.IAfterEditCallback;
 import org.softwareFm.swt.dataStore.IMutableCardDataStore;
 import org.softwareFm.swt.explorer.internal.NewJarImporter.ImportStage;

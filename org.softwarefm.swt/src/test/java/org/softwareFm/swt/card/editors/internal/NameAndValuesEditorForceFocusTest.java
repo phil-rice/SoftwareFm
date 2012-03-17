@@ -7,7 +7,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.softwareFm.common.maps.Maps;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.card.editors.AbstractNameAndValuesEditorTest;
 import org.softwareFm.swt.editors.IEditableControlStrategy;

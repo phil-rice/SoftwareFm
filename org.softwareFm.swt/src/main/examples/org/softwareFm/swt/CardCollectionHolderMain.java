@@ -6,9 +6,9 @@ package org.softwareFm.swt;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.maps.Maps;
-import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.card.internal.CardCollectionHolder;
 import org.softwareFm.swt.configuration.CardConfig;

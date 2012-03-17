@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.jdom.Element;
-import org.softwareFm.common.strings.Strings;
+import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.swt.Swts.Grid;
 

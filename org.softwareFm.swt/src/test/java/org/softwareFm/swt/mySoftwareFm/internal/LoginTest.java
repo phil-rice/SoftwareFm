@@ -4,10 +4,10 @@
 
 package org.softwareFm.swt.mySoftwareFm.internal;
 
-import org.softwareFm.common.collections.Lists;
-import org.softwareFm.common.constants.LoginConstants;
-import org.softwareFm.common.maps.Maps;
-import org.softwareFm.common.tests.Tests;
+import org.softwareFm.crowdsource.utilities.collections.Lists;
+import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.crowdsource.utilities.tests.Tests;
 import org.softwareFm.swt.card.editors.AbstractNameAndValuesEditorTest;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.explorer.internal.UserData;

@@ -16,14 +16,14 @@ import org.softwareFm.common.crypto.Crypto;
 import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.runnable.Callables;
-import org.softwareFm.common.server.GitTest;
 import org.softwareFm.common.strings.Strings;
 import org.softwareFm.common.tests.Tests;
 import org.softwareFm.common.url.IUrlGenerator;
+import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
+import org.softwareFm.crowdsource.api.git.GitTest;
+import org.softwareFm.crowdsource.membership.internal.UserMembershipReaderForLocal;
+import org.softwareFm.crowdsource.user.internal.UserMembershipForServer;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
-import org.softwareFm.eclipse.user.UserMembershipReaderForLocal;
-import org.softwareFm.server.ICrowdSourcedServer;
-import org.softwareFm.softwareFmServer.UserMembershipForServer;
 
 public class UserMembershipTest extends GitTest {
 

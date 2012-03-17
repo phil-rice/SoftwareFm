@@ -10,14 +10,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import org.softwareFm.client.http.requests.IResponseCallback;
-import org.softwareFm.common.constants.CommonConstants;
-import org.softwareFm.common.constants.LoginConstants;
-import org.softwareFm.common.json.Json;
-import org.softwareFm.common.maps.Maps;
-import org.softwareFm.common.url.Urls;
+import org.softwareFm.crowdsource.api.server.AbstractProcessorDatabaseIntegrationTests;
+import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
+import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
+import org.softwareFm.crowdsource.utilities.json.Json;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.crowdsource.utilities.url.Urls;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
-import org.softwareFm.server.processors.AbstractProcessorDatabaseIntegrationTests;
 
 public class IUsageStrategyTest extends AbstractProcessorDatabaseIntegrationTests {
 

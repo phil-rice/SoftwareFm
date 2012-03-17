@@ -7,7 +7,7 @@ package org.softwareFm.swt.constants;
 import java.util.Arrays;
 import java.util.List;
 
-import org.softwareFm.common.constants.LoginConstants;
+import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 
 
 public class CardConstants {

@@ -6,7 +6,7 @@ package org.softwareFm.swt.internal;
 
 import java.util.Map;
 
-import org.softwareFm.common.strings.Strings;
+import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.swt.card.IRightClickCategoriser;
 import org.softwareFm.swt.card.RightClickCategoryResult;
 import org.softwareFm.swt.card.RightClickCategoryResult.Type;

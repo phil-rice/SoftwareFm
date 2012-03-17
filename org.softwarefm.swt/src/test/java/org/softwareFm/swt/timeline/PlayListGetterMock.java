@@ -8,10 +8,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Future;
 
-import org.softwareFm.common.callbacks.ICallback;
-import org.softwareFm.common.collections.Lists;
-import org.softwareFm.common.exceptions.WrappedException;
-import org.softwareFm.common.future.Futures;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
+import org.softwareFm.crowdsource.utilities.collections.Lists;
+import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
+import org.softwareFm.crowdsource.utilities.future.Futures;
 
 public class PlayListGetterMock implements IPlayListGetter {
 

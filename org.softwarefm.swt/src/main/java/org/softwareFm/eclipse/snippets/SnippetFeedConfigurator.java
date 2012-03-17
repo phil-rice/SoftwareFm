@@ -9,11 +9,11 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.common.constants.CommonConstants;
-import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.maps.Maps;
-import org.softwareFm.common.resources.IResourceGetter;
-import org.softwareFm.common.strings.Strings;
+import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
+import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.swt.browser.BrowserPart;
 import org.softwareFm.swt.browser.IBrowserCompositeBuilder;

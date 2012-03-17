@@ -19,11 +19,11 @@ import org.softwareFm.common.functions.IFunction1;
 import org.softwareFm.common.maps.Maps;
 import org.softwareFm.common.runnable.Callables;
 import org.softwareFm.common.url.IUrlGenerator;
+import org.softwareFm.crowdsource.api.server.AbstractProcessorDatabaseIntegrationTests;
+import org.softwareFm.crowdsource.membership.internal.UserMembershipReaderForLocal;
 import org.softwareFm.eclipse.comments.CommentsReaderLocal;
 import org.softwareFm.eclipse.comments.ICommentDefn;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
-import org.softwareFm.eclipse.user.UserMembershipReaderForLocal;
-import org.softwareFm.server.processors.AbstractProcessorDatabaseIntegrationTests;
 import org.softwareFm.swt.comments.ICommentWriter;
 
 public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests {

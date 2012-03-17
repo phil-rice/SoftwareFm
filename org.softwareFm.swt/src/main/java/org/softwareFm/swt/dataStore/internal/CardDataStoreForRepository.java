@@ -10,12 +10,12 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.common.IFileDescription;
-import org.softwareFm.common.IGitLocal;
-import org.softwareFm.common.collections.Files;
-import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.monitor.IMonitor;
-import org.softwareFm.common.services.IServiceExecutor;
+import org.softwareFm.crowdsource.api.git.IFileDescription;
+import org.softwareFm.crowdsource.api.git.IGitLocal;
+import org.softwareFm.crowdsource.utilities.collections.Files;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
+import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.swt.constants.CardMessages;
 import org.softwareFm.swt.dataStore.IAfterEditCallback;
 import org.softwareFm.swt.dataStore.ICardDataStoreCallback;

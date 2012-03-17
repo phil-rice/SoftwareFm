@@ -6,7 +6,7 @@ package org.softwareFm.swt.dataStore;
 
 import java.util.Map;
 
-import org.softwareFm.common.exceptions.WrappedException;
+import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 
 /** Data has been found for the card */
 public interface ICardDataStoreCallback<T> {

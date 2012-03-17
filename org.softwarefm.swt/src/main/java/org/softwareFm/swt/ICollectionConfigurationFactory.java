@@ -4,11 +4,11 @@
 
 package org.softwareFm.swt;
 
-import org.softwareFm.common.constants.LoginConstants;
-import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.resources.IResourceGetter;
-import org.softwareFm.common.url.IUrlGeneratorMap;
-import org.softwareFm.common.url.UrlGenerator;
+import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
+import org.softwareFm.crowdsource.utilities.url.IUrlGeneratorMap;
+import org.softwareFm.crowdsource.utilities.url.UrlGenerator;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ILineItemFunction;

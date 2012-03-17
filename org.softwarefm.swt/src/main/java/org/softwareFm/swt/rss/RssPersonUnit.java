@@ -8,7 +8,7 @@ import java.io.File;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.common.resources.IResourceGetter;
+import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.swt.Marker;
 import org.softwareFm.swt.swt.ISituationListAndBuilder;
 import org.softwareFm.swt.swt.Swts.Show;

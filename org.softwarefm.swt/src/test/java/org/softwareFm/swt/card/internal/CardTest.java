@@ -8,7 +8,7 @@ import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
 import org.junit.Test;
-import org.softwareFm.common.maps.Maps;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;

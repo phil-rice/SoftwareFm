@@ -7,8 +7,8 @@ package org.softwareFm.swt.card.internal;
 import java.util.Arrays;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.common.callbacks.ICallback;
-import org.softwareFm.common.history.IHistory;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
+import org.softwareFm.crowdsource.utilities.history.IHistory;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardHolder;
 import org.softwareFm.swt.configuration.CardConfig;
