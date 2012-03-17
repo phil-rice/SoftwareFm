@@ -5,7 +5,7 @@
 package org.softwareFm.eclipse.actions;
 
 import org.eclipse.jface.action.IToolBarManager;
-import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.eclipse.actions.internal.ActionBar;
 import org.softwareFm.eclipse.jdtBinding.BindingRipperResult;
 import org.softwareFm.eclipse.usage.IUsageStrategy;

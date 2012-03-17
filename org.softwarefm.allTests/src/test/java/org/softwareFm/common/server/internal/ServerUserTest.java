@@ -8,19 +8,18 @@ import java.io.File;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import org.softwareFm.common.IUser;
-import org.softwareFm.common.constants.CommonConstants;
-import org.softwareFm.common.constants.LoginConstants;
-import org.softwareFm.common.crypto.Crypto;
-import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.json.Json;
-import org.softwareFm.common.maps.Maps;
-import org.softwareFm.common.runnable.Callables;
-import org.softwareFm.common.strings.Strings;
-import org.softwareFm.common.url.IUrlGenerator;
-import org.softwareFm.common.url.Urls;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
 import org.softwareFm.crowdsource.api.git.GitTest;
+import org.softwareFm.crowdsource.api.user.IUser;
+import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
+import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
+import org.softwareFm.crowdsource.utilities.crypto.Crypto;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.json.Json;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.crowdsource.utilities.runnable.Callables;
+import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
+import org.softwareFm.crowdsource.utilities.url.Urls;
 
 public class ServerUserTest extends GitTest {
 

@@ -8,8 +8,8 @@ import java.io.File;
 
 import junit.framework.Test;
 
-import org.softwareFm.common.reflection.IClassAcceptor;
-import org.softwareFm.common.tests.Tests;
+import org.softwareFm.crowdsource.utilities.reflection.IClassAcceptor;
+import org.softwareFm.crowdsource.utilities.tests.Tests;
 
 public class AllTests {
 

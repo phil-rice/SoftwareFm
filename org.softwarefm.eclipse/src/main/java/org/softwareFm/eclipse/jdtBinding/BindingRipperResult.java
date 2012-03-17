@@ -13,8 +13,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.IBinding;
-import org.softwareFm.common.exceptions.WrappedException;
-import org.softwareFm.common.strings.Strings;
+import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 
 /** this is my javadoc */
 public class BindingRipperResult {

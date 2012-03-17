@@ -4,7 +4,7 @@
 
 package org.softwareFm.common.crypto;
 
-import org.softwareFm.common.crypto.Crypto;
+import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 
 public class TimeCrypto {
 	public static void main(String[] args) {

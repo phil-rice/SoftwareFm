@@ -11,7 +11,7 @@ import java.util.List;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
-import org.softwareFm.common.collections.Lists;
+import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.springframework.core.io.ClassPathResource;
 
 public class Images {

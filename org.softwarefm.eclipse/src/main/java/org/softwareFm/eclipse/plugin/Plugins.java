@@ -12,9 +12,9 @@ import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.softwareFm.common.callbacks.ICallback;
-import org.softwareFm.common.collections.Lists;
-import org.softwareFm.common.exceptions.WrappedException;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
+import org.softwareFm.crowdsource.utilities.collections.Lists;
+import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 
 public class Plugins {
 

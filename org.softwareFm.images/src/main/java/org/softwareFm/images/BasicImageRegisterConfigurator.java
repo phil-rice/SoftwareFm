@@ -9,7 +9,7 @@ import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.softwareFm.common.functions.IFunction1WithDispose;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1WithDispose;
 import org.softwareFm.images.artifacts.ArtifactsAnchor;
 import org.softwareFm.images.general.GeneralAnchor;
 import org.softwareFm.images.title.TitleAnchor;

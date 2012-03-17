@@ -6,6 +6,9 @@ package org.softwareFm.eclipse.mysoftwareFm;
 
 import java.util.concurrent.Future;
 
+import org.softwareFm.crowdsource.httpClient.IHttpClient;
+import org.softwareFm.crowdsource.httpClient.IResponse;
+import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.maps.IHasCache;
 import org.softwareFm.eclipse.IRequestGroupReportGeneration;

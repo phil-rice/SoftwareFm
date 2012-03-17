@@ -11,6 +11,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.swt.widgets.Display;
+import org.softwareFm.crowdsource.httpClient.IHttpClient;
+import org.softwareFm.crowdsource.httpClient.IResponse;
+import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;

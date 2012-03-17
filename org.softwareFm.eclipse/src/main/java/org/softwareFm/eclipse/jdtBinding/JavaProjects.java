@@ -22,10 +22,10 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.softwareFm.common.arrays.ArrayHelper;
-import org.softwareFm.common.collections.Iterables;
-import org.softwareFm.common.exceptions.WrappedException;
-import org.softwareFm.common.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.arrays.ArrayHelper;
+import org.softwareFm.crowdsource.utilities.collections.Iterables;
+import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.eclipse.jdtBinding.FoundClassPathEntry.FoundIn;
 
 public class JavaProjects {

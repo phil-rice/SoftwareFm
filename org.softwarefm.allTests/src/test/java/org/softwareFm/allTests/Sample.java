@@ -14,7 +14,7 @@ import org.apache.tools.ant.taskdefs.Ant;
 import org.codehaus.cake.forkjoin.RecursiveTask;
 import org.easymock.EasyMock;
 import org.jdom.JDOMFactory;
-import org.softwareFm.client.http.api.IHttpClient;
+import org.softwareFm.crowdsource.httpClient.IHttpClient;
 
 import twitter4j.Tweet;
 import de.java2html.Java2Html;

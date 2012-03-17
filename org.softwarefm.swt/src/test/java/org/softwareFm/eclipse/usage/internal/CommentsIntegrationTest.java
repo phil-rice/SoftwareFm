@@ -5,6 +5,7 @@
 package org.softwareFm.eclipse.usage.internal;
 
 import org.eclipse.swt.widgets.Control;
+import org.softwareFm.crowdsource.api.ICommentsReader;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.swt.card.ICard;

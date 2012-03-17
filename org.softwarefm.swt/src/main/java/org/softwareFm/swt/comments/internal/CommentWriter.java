@@ -2,7 +2,11 @@ package org.softwareFm.swt.comments.internal;
 
 import java.util.concurrent.TimeUnit;
 
+import org.softwareFm.crowdsource.api.ICommentDefn;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
+import org.softwareFm.crowdsource.constants.CommentConstants;
+import org.softwareFm.crowdsource.httpClient.IHttpClient;
+import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;

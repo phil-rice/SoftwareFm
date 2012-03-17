@@ -12,6 +12,8 @@ import org.easymock.EasyMock;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
+import org.softwareFm.crowdsource.api.ICommentsReader;
+import org.softwareFm.crowdsource.constants.CommentConstants;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.comments.Comments.CommentsComposite;

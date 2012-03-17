@@ -3,6 +3,7 @@ package org.softwareFm.swt.comments.internal;
 import java.util.List;
 import java.util.Map;
 
+import org.softwareFm.crowdsource.api.ICommentDefn;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.utilities.collections.Iterables;

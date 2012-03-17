@@ -14,10 +14,10 @@ import java.lang.reflect.Modifier;
 
 import junit.framework.Test;
 
-import org.softwareFm.common.collections.Files;
-import org.softwareFm.common.reflection.IClassAcceptor;
-import org.softwareFm.common.tests.IIntegrationTest;
-import org.softwareFm.common.tests.Tests;
+import org.softwareFm.crowdsource.utilities.collections.Files;
+import org.softwareFm.crowdsource.utilities.reflection.IClassAcceptor;
+import org.softwareFm.crowdsource.utilities.tests.IIntegrationTest;
+import org.softwareFm.crowdsource.utilities.tests.Tests;
 
 public class AllIntegrationTests {
 

@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.softwareFm.crowdsource.constants.CommentConstants;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.swt.card.ICardFactory;
 import org.softwareFm.swt.card.dataStore.CardDataStoreMock;

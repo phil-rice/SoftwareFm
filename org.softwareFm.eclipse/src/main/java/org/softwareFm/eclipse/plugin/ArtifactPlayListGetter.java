@@ -12,10 +12,10 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.concurrent.Future;
 
-import org.softwareFm.common.callbacks.ICallback;
-import org.softwareFm.common.collections.Lists;
-import org.softwareFm.common.future.Futures;
-import org.softwareFm.common.future.GatedFuture;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
+import org.softwareFm.crowdsource.utilities.collections.Lists;
+import org.softwareFm.crowdsource.utilities.future.Futures;
+import org.softwareFm.crowdsource.utilities.future.GatedFuture;
 import org.softwareFm.swt.constants.DisplayConstants;
 import org.softwareFm.swt.dataStore.ICardDataStore;
 import org.softwareFm.swt.dataStore.ICardDataStoreCallback;

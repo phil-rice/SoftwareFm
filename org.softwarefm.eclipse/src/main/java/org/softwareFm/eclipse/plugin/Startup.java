@@ -5,12 +5,12 @@
 package org.softwareFm.eclipse.plugin;
 
 import org.eclipse.ui.IStartup;
-import org.softwareFm.client.http.requests.IResponseCallback;
-import org.softwareFm.common.IGitLocal;
-import org.softwareFm.common.constants.LoginConstants;
-import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.monitor.IMonitor;
-import org.softwareFm.common.services.IServiceExecutor;
+import org.softwareFm.crowdsource.api.git.IGitLocal;
+import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
+import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
+import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.eclipse.constants.EclipseMessages;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 import org.softwareFm.eclipse.jdtBinding.BindingRipperResult;

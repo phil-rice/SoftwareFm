@@ -13,6 +13,8 @@ import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.Table;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
 import org.softwareFm.crowdsource.api.git.IGitOperations;
+import org.softwareFm.crowdsource.api.server.ITakeOnProcessor;
+import org.softwareFm.crowdsource.api.server.SignUpResult;
 import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.utilities.arrays.ArrayHelper;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;

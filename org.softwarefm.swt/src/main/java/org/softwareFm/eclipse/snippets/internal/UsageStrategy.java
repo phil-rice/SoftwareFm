@@ -11,6 +11,9 @@ import java.util.concurrent.TimeUnit;
 
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitLocal;
+import org.softwareFm.crowdsource.httpClient.IHttpClient;
+import org.softwareFm.crowdsource.httpClient.IResponse;
+import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;

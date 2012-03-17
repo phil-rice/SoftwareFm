@@ -26,9 +26,9 @@ import org.eclipse.jdt.internal.core.ResolvedBinaryMethod;
 import org.eclipse.jdt.internal.core.ResolvedBinaryType;
 import org.eclipse.jdt.internal.core.ResolvedSourceMethod;
 import org.eclipse.jdt.internal.core.ResolvedSourceType;
-import org.softwareFm.common.collections.Files;
-import org.softwareFm.common.exceptions.WrappedException;
-import org.softwareFm.common.maps.Maps;
+import org.softwareFm.crowdsource.utilities.collections.Files;
+import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.eclipse.jdtBinding.BindingRipperResult;
 import org.softwareFm.eclipse.jdtBinding.IBindingRipper;
 

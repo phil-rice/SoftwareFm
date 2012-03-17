@@ -8,6 +8,9 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 import org.softwareFm.crowdsource.api.git.IGitLocal;
+import org.softwareFm.crowdsource.httpClient.IHttpClient;
+import org.softwareFm.crowdsource.httpClient.IResponse;
+import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
 import org.softwareFm.crowdsource.utilities.future.Futures;
 import org.softwareFm.crowdsource.utilities.maps.IHasCache;
 import org.softwareFm.crowdsource.utilities.maps.Maps;

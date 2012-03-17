@@ -1,5 +1,7 @@
 package org.softwareFm.swt.comments;
 
+import org.softwareFm.crowdsource.api.ICommentDefn;
+import org.softwareFm.crowdsource.httpClient.IHttpClient;
 import org.softwareFm.crowdsource.utilities.maps.IHasUrlCache;
 import org.softwareFm.swt.comments.internal.CommentWriter;
 

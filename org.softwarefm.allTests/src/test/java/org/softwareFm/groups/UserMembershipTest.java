@@ -9,20 +9,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import org.softwareFm.common.IUser;
-import org.softwareFm.common.constants.GroupConstants;
-import org.softwareFm.common.constants.LoginConstants;
-import org.softwareFm.common.crypto.Crypto;
-import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.maps.Maps;
-import org.softwareFm.common.runnable.Callables;
-import org.softwareFm.common.strings.Strings;
-import org.softwareFm.common.tests.Tests;
-import org.softwareFm.common.url.IUrlGenerator;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
 import org.softwareFm.crowdsource.api.git.GitTest;
+import org.softwareFm.crowdsource.api.user.IUser;
 import org.softwareFm.crowdsource.membership.internal.UserMembershipReaderForLocal;
 import org.softwareFm.crowdsource.user.internal.UserMembershipForServer;
+import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
+import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
+import org.softwareFm.crowdsource.utilities.crypto.Crypto;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.crowdsource.utilities.runnable.Callables;
+import org.softwareFm.crowdsource.utilities.tests.Tests;
+import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.eclipse.constants.SoftwareFmConstants;
 
 public class UserMembershipTest extends GitTest {

@@ -8,8 +8,10 @@ import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
+import org.softwareFm.crowdsource.api.ICommentDefn;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUserReader;
+import org.softwareFm.crowdsource.constants.CommentConstants;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.crowdsource.utilities.maps.Maps;

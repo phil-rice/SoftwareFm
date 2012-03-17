@@ -13,8 +13,7 @@ import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.softwareFm.common.strings.PreAndPost;
-import org.softwareFm.common.strings.Strings;
+import org.softwareFm.crowdsource.utilities.strings.PreAndPost;
 import org.softwareFm.eclipse.jdtBinding.ExpressionData;
 import org.softwareFm.eclipse.jdtBinding.IExpressionCategoriser;
 

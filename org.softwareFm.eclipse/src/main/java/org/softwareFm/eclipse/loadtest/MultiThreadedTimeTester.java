@@ -8,12 +8,12 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import org.softwareFm.common.exceptions.WrappedException;
-import org.softwareFm.common.functions.IFunction1;
-import org.softwareFm.common.maps.Maps;
-import org.softwareFm.common.monitor.IMonitor;
-import org.softwareFm.common.profiling.Stats;
-import org.softwareFm.common.services.IServiceExecutor;
+import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
+import org.softwareFm.crowdsource.utilities.profiling.Stats;
+import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 
 public class MultiThreadedTimeTester<Context> {
 
