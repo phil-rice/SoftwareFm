@@ -131,6 +131,7 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 		commentsReader = new CommentsReaderLocal(gitLocal, userReader, userMembershipReader, groupsReader);
 
 		user.setUserProperty(softwareFmId, userCrypto, LoginConstants.monikerKey, moniker);
-		user.setUserProperty(softwareFmId, userCrypto, CommentConstants.commentCryptoKey, Crypto.makeKey());
+		user.setUserProperty(softwareFmId, userCrypto, CommentConstant
+				s.commentCryptoKey, Crypto.makeKey());
 	}
 }
