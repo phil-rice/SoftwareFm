@@ -25,7 +25,7 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.runnable.Callables;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
-import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.constants.JarAndPathConstants;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups.MyGroupsComposite;
 import org.softwareFm.eclipse.mysoftwareFm.MyPeople.MyPeopleComposite;
 import org.softwareFm.eclipse.usage.internal.AbstractExplorerIntegrationTest;
@@ -128,7 +128,7 @@ abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIn
 
 	protected void addUserToGroup(String softwareFmId, String email, String groupId, String groupCryptoKey, String status) {
 		String crypto = Functions.call(processCallParameters.userCryptoFn, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
-		String usersProjectCryptoKey = user.getUserProperty(softwareFmId, crypto, SoftwareFmConstants.projectCryptoKey);
+		String usersProjectCryptoKey = user.getUserProperty(softwareFmId, crypto, JarAndPathConstants.projectCryptoKey);
 
 		addUserToGroup(softwareFmId, crypto, usersProjectCryptoKey, groupId, groupCryptoKey, email, status);
 	}
@@ -137,7 +137,7 @@ abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIn
 		assertNotNull(usersProjectCryptoKey);
 		Map<String, Object> initialData = Maps.stringObjectMap(LoginConstants.emailKey, email,//
 				LoginConstants.softwareFmIdKey, softwareFmId, //
-				SoftwareFmConstants.projectCryptoKey, usersProjectCryptoKey, //
+				JarAndPathConstants.projectCryptoKey, usersProjectCryptoKey, //
 				GroupConstants.membershipStatusKey, status);
 		groups.addUser(groupId, groupCryptoKey, initialData);
 		membershipForServer.addMembership(softwareFmId, crypto, groupId, groupCryptoKey, status);

@@ -22,7 +22,7 @@ import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.crowdsource.utilities.url.Urls;
-import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.constants.JarAndPathConstants;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardHolder;
 import org.softwareFm.swt.constants.CardConstants;
@@ -161,8 +161,8 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 
 	private void checkCanPullJarData() {
 		checkCanPullData(CardConstants.jarUrlKey, //
-				Maps.stringObjectMap(SoftwareFmConstants.digest, "012345"), //
-				SoftwareFmConstants.groupId, "some.group", SoftwareFmConstants.artifactId, "someArtifact", SoftwareFmConstants.version, "someVersion");
+				Maps.stringObjectMap(JarAndPathConstants.digest, "012345"), //
+				JarAndPathConstants.groupId, "some.group", JarAndPathConstants.artifactId, "someArtifact", JarAndPathConstants.version, "someVersion");
 	}
 
 	private void checkCanPullJarNameData() {
@@ -173,7 +173,7 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 
 	private void checkCanPullRepositoryData() {
 		checkCanPullData(CardConstants.artifactUrlKey, //
-				Maps.stringObjectMap(SoftwareFmConstants.groupId, "some.group", SoftwareFmConstants.artifactId, "someArtifact"), //
+				Maps.stringObjectMap(JarAndPathConstants.groupId, "some.group", JarAndPathConstants.artifactId, "someArtifact"), //
 				CommonConstants.typeTag, CardConstants.artifact); // under the collection are the individual values
 
 	}
@@ -196,13 +196,13 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 		File[] antSubDirectories = Files.listChildDirectoriesIgnoringDot(antDirectory);
 		assertEquals(1, antSubDirectories.length);
 		File subDirectory = antSubDirectories[0];
-		assertEquals(Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.jarName, CardConstants.group, "some.group", SoftwareFmConstants.artifactId, "someArtifact"), //
+		assertEquals(Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.jarName, CardConstants.group, "some.group", JarAndPathConstants.artifactId, "someArtifact"), //
 				Json.mapFromString(Files.getText(new File(subDirectory, CommonConstants.dataFileName))));
 	}
 
 	private void checkRepositoryPopulated(String digest, String group, String artifact, String version) {
-		Map<String, Object> groupArtifactVersion = Maps.stringObjectLinkedMap(SoftwareFmConstants.groupId, group, SoftwareFmConstants.artifactId, artifact, SoftwareFmConstants.version, version);
-		Map<String, Object> groupArtifactVersionDigest = Maps.with(groupArtifactVersion, SoftwareFmConstants.digest, digest);
+		Map<String, Object> groupArtifactVersion = Maps.stringObjectLinkedMap(JarAndPathConstants.groupId, group, JarAndPathConstants.artifactId, artifact, JarAndPathConstants.version, version);
+		Map<String, Object> groupArtifactVersionDigest = Maps.with(groupArtifactVersion, JarAndPathConstants.digest, digest);
 
 		IUrlGenerator jarUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.jarUrlKey);
 		String jarUrl = jarUrlGenerator.findUrlFor(groupArtifactVersionDigest);

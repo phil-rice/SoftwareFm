@@ -25,7 +25,7 @@ import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
-import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.constants.JarAndPathConstants;
 import org.softwareFm.eclipse.project.UserAndProjectFactory;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.eclipse.user.IUsageReader;
@@ -84,7 +84,7 @@ public class MyDetails implements IHasComposite {
 		}
 
 		public MyProjectComposite(Composite parent, int style, final CardConfig cc, UserData userData, IUserReader user, IUsageReader project, IProjectTimeGetter timeGetter) {
-			super(parent, cc, CardConstants.loginCardType, SoftwareFmConstants.myProjectsTitle, true);
+			super(parent, cc, CardConstants.loginCardType, JarAndPathConstants.myProjectsTitle, true);
 
 			Map<String, Map<String, Map<String, Integer>>> groupToArtifactToMonthToCount = Maps.newMap();
 			Iterable<String> lastNMonths = timeGetter.lastNMonths(3);
@@ -96,7 +96,7 @@ public class MyDetails implements IHasComposite {
 				TableColumn column = new TableColumn(projectDetails, SWT.NULL);
 				column.setText(MySoftwareFmFunctions.monthFileNameToPrettyName(month));
 			}
-			String projectCryptoKey = user.getUserProperty(userData.softwareFmId, userData.crypto, SoftwareFmConstants.projectCryptoKey);
+			String projectCryptoKey = user.getUserProperty(userData.softwareFmId, userData.crypto, JarAndPathConstants.projectCryptoKey);
 
 			for (String month : lastNMonths) {
 				Map<String, Map<String, List<Integer>>> monthDetails = project.getProjectDetails(userData.softwareFmId, projectCryptoKey, month);

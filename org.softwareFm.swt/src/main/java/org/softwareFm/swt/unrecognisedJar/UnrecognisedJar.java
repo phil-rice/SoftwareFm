@@ -27,7 +27,7 @@ import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
-import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.constants.JarAndPathConstants;
 import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.card.ICardTable;
 import org.softwareFm.swt.card.LineItem;
@@ -144,7 +144,7 @@ public class UnrecognisedJar implements IHasControl {
 	private Table makeTable() {
 		final Table table = new Table(content, SWT.FULL_SELECTION | SWT.V_SCROLL);
 		TableColumn groupColumn = new TableColumn(table, SWT.NULL, 0);
-		setColumnTitle(cardConfig, groupColumn, SoftwareFmConstants.groupId);
+		setColumnTitle(cardConfig, groupColumn, JarAndPathConstants.groupId);
 		table.setHeaderVisible(true);
 		table.addListener(SWT.Selection, new Listener() {
 			@Override

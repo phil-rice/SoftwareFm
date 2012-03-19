@@ -31,7 +31,7 @@ import org.softwareFm.crowdsource.utilities.runnable.Callables;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.eclipse.IRequestGroupReportGeneration;
-import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.constants.JarAndPathConstants;
 import org.softwareFm.eclipse.mysoftwareFm.IGroupClientOperations;
 import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups;
@@ -76,8 +76,8 @@ public class ExplorerWithRadioChannel {
 		File home = new File(System.getProperty("user.home"));
 		final File localRoot = new File(home, ".sfm");
 		boolean local = true;
-		String server = local ? "localhost" : SoftwareFmConstants.softwareFmServerUrl;
-		String prefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : SoftwareFmConstants.gitProtocolAndGitServerName;
+		String server = local ? "localhost" : JarAndPathConstants.softwareFmServerUrl;
+		String prefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : JarAndPathConstants.gitProtocolAndGitServerName;
 		// String prefix = "git://localhost:7777/";
 		int port = local ? 8080 : 80;
 		final IHttpClient client = IHttpClient.Utils.builder(server, port);
@@ -104,7 +104,7 @@ public class ExplorerWithRadioChannel {
 					ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(from.getDisplay(), service, client);
 					final IProjectTimeGetter projectTimeGetter = IProjectTimeGetter.Utils.timeGetter();
 					IUrlGenerator userUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.userUrlKey);
-					IUrlGenerator groupUrlGenerator = GroupConstants.groupsGenerator(SoftwareFmConstants.urlPrefix);
+					IUrlGenerator groupUrlGenerator = GroupConstants.groupsGenerator(JarAndPathConstants.urlPrefix);
 					IRequestGroupReportGeneration requestGroupReportGenerator = new RequestGroupReportGeneration(client, IResponseCallback.Utils.sysoutStatusCallback(), gitLocal);
 					final IUserDataManager userDataManager = IUserDataManager.Utils.userDataManager();
 					LocalGroupsReader groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);

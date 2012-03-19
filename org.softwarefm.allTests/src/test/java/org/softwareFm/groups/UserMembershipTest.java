@@ -22,7 +22,7 @@ import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.runnable.Callables;
 import org.softwareFm.crowdsource.utilities.tests.Tests;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
-import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.constants.JarAndPathConstants;
 
 public class UserMembershipTest extends GitTest {
 
@@ -145,9 +145,9 @@ public class UserMembershipTest extends GitTest {
 		groupCrypto3 = Crypto.makeKey();
 		user1Id = "sfmId1";
 
-		IUrlGenerator userUrlGenerator = LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix);
+		IUrlGenerator userUrlGenerator = LoginConstants.userGenerator(JarAndPathConstants.urlPrefix);
 		IFunction1<String, String> repoDefn = Strings.firstNSegments(3);
-		user = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, repoDefn, Maps.<String, Callable<Object>> makeMap(GroupConstants.membershipCryptoKey, Callables.makeCryptoKey()), SoftwareFmConstants.urlPrefix);
+		user = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, repoDefn, Maps.<String, Callable<Object>> makeMap(GroupConstants.membershipCryptoKey, Callables.makeCryptoKey()), JarAndPathConstants.urlPrefix);
 		membershipForLocal = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, user);
 
 		membershipForServer = new UserMembershipForServer(userUrlGenerator, user, remoteOperations, repoDefn);

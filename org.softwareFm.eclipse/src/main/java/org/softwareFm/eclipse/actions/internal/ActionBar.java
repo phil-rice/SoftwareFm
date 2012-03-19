@@ -22,7 +22,7 @@ import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.eclipse.actions.IActionBar;
-import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.constants.JarAndPathConstants;
 import org.softwareFm.eclipse.jdtBinding.BindingRipperResult;
 import org.softwareFm.eclipse.jdtBinding.ExpressionData;
 import org.softwareFm.eclipse.jdtBinding.IExpressionCategoriser;
@@ -146,8 +146,8 @@ public class ActionBar implements IActionBar {
 		cardConfig.cardDataStore.processDataFor(jarUrl, new ICardDataStoreCallback<Void>() {
 			@Override
 			public Void process(String jarUrl, final Map<String, Object> groupArtifactVersionMap) throws Exception {
-				String groupId = (String) groupArtifactVersionMap.get(SoftwareFmConstants.groupId);
-				String artifactId = (String) groupArtifactVersionMap.get(SoftwareFmConstants.artifactId);
+				String groupId = (String) groupArtifactVersionMap.get(JarAndPathConstants.groupId);
+				String artifactId = (String) groupArtifactVersionMap.get(JarAndPathConstants.artifactId);
 				IUrlGenerator urlGenerator = cardConfig.urlGeneratorMap.get(urlKey);
 				String url = urlGenerator.findUrlFor(groupArtifactVersionMap);
 				if (url == null)
@@ -274,7 +274,7 @@ public class ActionBar implements IActionBar {
 				afterDisplayCard = new IAfterDisplayCard() {
 					@Override
 					public void process(ICard card, Map<String, Object> groupArtifactVersionMap) {
-						String version = Strings.nullSafeToString(groupArtifactVersionMap.get(SoftwareFmConstants.version));
+						String version = Strings.nullSafeToString(groupArtifactVersionMap.get(JarAndPathConstants.version));
 						if (version != null) {
 							Table table = card.getTable();
 							for (TableItem item : table.getItems()) {

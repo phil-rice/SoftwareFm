@@ -39,7 +39,7 @@ import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.eclipse.IRequestGroupReportGeneration;
-import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.constants.JarAndPathConstants;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
@@ -88,7 +88,7 @@ public class MyPeople implements IHasComposite {
 		}
 
 		public MyPeopleComposite(Composite parent, int style, final CardConfig cc, IProjectTimeGetter timeGetter) {
-			super(parent, cc, CardConstants.loginCardType, SoftwareFmConstants.peopleIKnowLoadingTitle, true);
+			super(parent, cc, CardConstants.loginCardType, JarAndPathConstants.peopleIKnowLoadingTitle, true);
 			table = new Table(getInnerBody(), SWT.FULL_SELECTION);
 			addPaintListener(new PaintListener() {
 				@Override
@@ -109,7 +109,7 @@ public class MyPeople implements IHasComposite {
 		}
 
 		public void setSoftwareFmIds(String groupId, String artifactId, Set<String> softwareFmIds, Map<String, String> softwareFmIdToName, Map<String, Set<String>> softwareFmIdToGroups, Map<String, Map<String, List<Integer>>> softwareFmIdToMonthToUsage) {
-			String title = IResourceGetter.Utils.getMessageOrException(getCardConfig().resourceGetterFn, getCardType(), SoftwareFmConstants.peopleIKnowTitle, groupId, artifactId);
+			String title = IResourceGetter.Utils.getMessageOrException(getCardConfig().resourceGetterFn, getCardType(), JarAndPathConstants.peopleIKnowTitle, groupId, artifactId);
 			setTitleAndImage(title, "", CardConstants.loginCardType);
 			List<String> ids = Lists.sort(softwareFmIds);
 			for (String id : ids) {

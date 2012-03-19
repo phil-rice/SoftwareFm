@@ -18,7 +18,7 @@ import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.crowdsource.utilities.resources.ResourceGetterMock;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.crowdsource.utilities.url.IUrlGeneratorMap;
-import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.constants.JarAndPathConstants;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.card.ICardFactory;
@@ -150,7 +150,7 @@ public class CardConfig {
 						DisplayConstants.buttonCancelTitle, "Cancel",//
 						CardConstants.contactingServerTitle, "Contacting Server",//
 						CardConstants.contactingServerText, "Contacting Server",//
-						SoftwareFmConstants.myProjectsTitle, "My Projects",//
+						JarAndPathConstants.myProjectsTitle, "My Projects",//
 						CardConstants.failedToContactServerTitle, "Failed to Contact Server",//
 						CardConstants.failedToContactServerText, "Failed to Contact Server",//
 						CardConstants.cardNameUrlKey, "{0}",//

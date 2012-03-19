@@ -9,7 +9,7 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.crowdsource.utilities.url.IUrlGeneratorMap;
 import org.softwareFm.crowdsource.utilities.url.UrlGenerator;
-import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.constants.JarAndPathConstants;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ILineItemFunction;
 import org.softwareFm.swt.card.IRightClickCategoriser;
@@ -48,15 +48,15 @@ public interface ICollectionConfigurationFactory {
 		public static IUrlGeneratorMap makeSoftwareFmUrlGeneratorMap(String prefix, String data) {
 			String dataPrefix = prefix + "/" + data + "/";
 			final IUrlGeneratorMap urlGeneratorMap = IUrlGeneratorMap.Utils.urlGeneratorMap(//
-					CardConstants.groupUrlKey, new UrlGenerator(dataPrefix + "{3}/{2}", SoftwareFmConstants.groupId),// hash, hash, groupId, groundIdWithSlash
+					CardConstants.groupUrlKey, new UrlGenerator(dataPrefix + "{3}/{2}", JarAndPathConstants.groupId),// hash, hash, groupId, groundIdWithSlash
 					CardConstants.snippetUrlKey, new UrlGenerator(prefix + "/snippet/{3}", CardConstants.snippet),// 0,1: hash, 2,3: snippet
 					CardConstants.jarNameUrlKey, new UrlGenerator(prefix + "/jarname/{0}/{1}/{2}", CollectionConstants.jarStem),// 0,1: hash,
-					CardConstants.artifactUrlKey, new UrlGenerator(dataPrefix + "{3}/{2}/artifact/{4}", SoftwareFmConstants.groupId, SoftwareFmConstants.artifactId),// 0,1: hash, 2,3: groupId, 4,5: artifactId
-					CardConstants.versionCollectionUrlKey, new UrlGenerator(dataPrefix + "{3}/{2}/artifact/{4}/version", SoftwareFmConstants.groupId, SoftwareFmConstants.artifactId, SoftwareFmConstants.version),// 0,1: hash, 2,3: groupId, 4,5: artifactId, 6,7: version
-					CardConstants.versionUrlKey, new UrlGenerator(dataPrefix + "{3}/{2}/artifact/{4}/version/{6}", SoftwareFmConstants.groupId, SoftwareFmConstants.artifactId, SoftwareFmConstants.version),// 0,1: hash, 2,3: groupId, 4,5: artifactId, 6,7: version
-					CardConstants.digestUrlKey, new UrlGenerator(dataPrefix + "{3}/{2}/artifact/{4}/version/{6}/digest/{8}", SoftwareFmConstants.groupId, SoftwareFmConstants.artifactId, SoftwareFmConstants.version, SoftwareFmConstants.digest),// 0,1: hash, 2,3: groupId, 4,5: artifactId, 6,7: version, 8,9: digest
-					CardConstants.jarUrlKey, SoftwareFmConstants.jarUrlGenerator(prefix),//
-					CardConstants.jarUrlRootKey, new UrlGenerator(prefix + "/jars/{0}/{1}", SoftwareFmConstants.digest),// 0,1: hash, 2,3: digest
+					CardConstants.artifactUrlKey, new UrlGenerator(dataPrefix + "{3}/{2}/artifact/{4}", JarAndPathConstants.groupId, JarAndPathConstants.artifactId),// 0,1: hash, 2,3: groupId, 4,5: artifactId
+					CardConstants.versionCollectionUrlKey, new UrlGenerator(dataPrefix + "{3}/{2}/artifact/{4}/version", JarAndPathConstants.groupId, JarAndPathConstants.artifactId, JarAndPathConstants.version),// 0,1: hash, 2,3: groupId, 4,5: artifactId, 6,7: version
+					CardConstants.versionUrlKey, new UrlGenerator(dataPrefix + "{3}/{2}/artifact/{4}/version/{6}", JarAndPathConstants.groupId, JarAndPathConstants.artifactId, JarAndPathConstants.version),// 0,1: hash, 2,3: groupId, 4,5: artifactId, 6,7: version
+					CardConstants.digestUrlKey, new UrlGenerator(dataPrefix + "{3}/{2}/artifact/{4}/version/{6}/digest/{8}", JarAndPathConstants.groupId, JarAndPathConstants.artifactId, JarAndPathConstants.version, JarAndPathConstants.digest),// 0,1: hash, 2,3: groupId, 4,5: artifactId, 6,7: version, 8,9: digest
+					CardConstants.jarUrlKey, JarAndPathConstants.jarUrlGenerator(prefix),//
+					CardConstants.jarUrlRootKey, new UrlGenerator(prefix + "/jars/{0}/{1}", JarAndPathConstants.digest),// 0,1: hash, 2,3: digest
 //					CardConstants.projectUrlKey, ServerConstants.projectGenerator(),//
 					CardConstants.userUrlKey, LoginConstants.userGenerator(prefix));
 			return urlGeneratorMap;

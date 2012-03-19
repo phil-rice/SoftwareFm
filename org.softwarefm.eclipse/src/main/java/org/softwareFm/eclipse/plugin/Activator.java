@@ -26,7 +26,7 @@ import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
-import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.constants.JarAndPathConstants;
 import org.softwareFm.eclipse.jdtBinding.IBindingRipper;
 import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.swt.ICollectionConfigurationFactory;
@@ -87,7 +87,7 @@ public class Activator extends AbstractUIPlugin {
 
 	public IHttpClient getClient() {
 		if (httpClient == null) {
-			String server = local ? "localhost" : SoftwareFmConstants.softwareFmServerUrl;
+			String server = local ? "localhost" : JarAndPathConstants.softwareFmServerUrl;
 			int port = local ? 8080 : 80;
 			httpClient = IHttpClient.Utils.builder(server, port);
 		}
@@ -114,7 +114,7 @@ public class Activator extends AbstractUIPlugin {
 		if (gitLocal == null) {
 			File home = new File(System.getProperty("user.home"));
 			final File localRoot = new File(home, ".sfm");
-			String remoteUriPrefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : SoftwareFmConstants.gitProtocolAndGitServerName;
+			String remoteUriPrefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : JarAndPathConstants.gitProtocolAndGitServerName;
 			IGitOperations gitOperations = IGitOperations.Utils.gitOperations(localRoot);
 			gitLocal = IGitLocal.Utils.localReader(getFindRepositoryRoot(), gitOperations, getGitWriter(), remoteUriPrefix, CommonConstants.staleCachePeriod);
 		}

@@ -8,7 +8,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
-import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.constants.JarAndPathConstants;
 import org.softwareFm.images.BasicImageRegisterConfigurator;
 import org.softwareFm.swt.card.ILineItemFunction;
 import org.softwareFm.swt.configuration.CardConfig;
@@ -46,7 +46,7 @@ public class BasicCardConfigurator implements ICardConfigurator {
 						ICardDataModifier.Utils.collectionsAggregator(CardConstants.slingResourceType), //
 						ICardDataModifier.Utils.folderAggregator(CardConstants.jcrPrimaryType, CardConstants.ntUnstructured, CardConstants.slingResourceType), //
 						ICardDataModifier.Utils.missingItems(), //
-						ICardDataModifier.Utils.sorter(SoftwareFmConstants.version)).//
+						ICardDataModifier.Utils.sorter(JarAndPathConstants.version)).//
 				withFollowOn(IFollowOnFragment.Utils.followOnMaps).//
 
 				withTitleSpecFn(TitleSpec.cardToTitleSpecFn(display, imageFn)).//

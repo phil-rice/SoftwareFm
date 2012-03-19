@@ -7,7 +7,7 @@ import org.eclipse.swt.widgets.Table;
 import org.softwareFm.crowdsource.api.git.IGitOperations;
 import org.softwareFm.crowdsource.utilities.arrays.ArrayHelper;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
-import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.constants.JarAndPathConstants;
 import org.softwareFm.eclipse.mysoftwareFm.MyPeople.MyPeopleComposite;
 import org.softwareFm.eclipse.user.ProjectFixture;
 import org.softwareFm.eclipse.user.ProjectMock;
@@ -69,7 +69,7 @@ public class MyPeopleIntegrationTest extends AbstractMyGroupsIntegrationTest {
 	}
 
 	protected void addProjectDetails(ProjectMock projectMock, String softwareFmId, String userCryptoKey, Map<String, Object> map) {
-		String projectCrypto = user.getUserProperty(softwareFmId, userCryptoKey, SoftwareFmConstants.projectCryptoKey);
+		String projectCrypto = user.getUserProperty(softwareFmId, userCryptoKey, JarAndPathConstants.projectCryptoKey);
 		assertNotNull(projectCrypto);
 		projectMock.register(softwareFmId, projectCrypto, map);
 	}

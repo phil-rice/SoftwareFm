@@ -13,7 +13,7 @@ import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
-import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.constants.JarAndPathConstants;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups.MyGroupsComposite;
 import org.softwareFm.swt.swt.Swts;
 
@@ -145,7 +145,7 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 	}
 
 	private Map<String, Object> makeMembershipMap(String softwareFmId, String cryptoKey, String email, String status) {
-		String projectCryptoKey = user.getUserProperty(softwareFmId, cryptoKey, SoftwareFmConstants.projectCryptoKey);
-		return Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId, SoftwareFmConstants.projectCryptoKey, projectCryptoKey, LoginConstants.emailKey, email, GroupConstants.membershipStatusKey, status);
+		String projectCryptoKey = user.getUserProperty(softwareFmId, cryptoKey, JarAndPathConstants.projectCryptoKey);
+		return Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId, JarAndPathConstants.projectCryptoKey, projectCryptoKey, LoginConstants.emailKey, email, GroupConstants.membershipStatusKey, status);
 	}
 }

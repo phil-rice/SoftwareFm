@@ -18,7 +18,7 @@ import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
-import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.constants.JarAndPathConstants;
 import org.softwareFm.eclipse.mysoftwareFm.AbstractMyGroupsIntegrationTest;
 import org.softwareFm.eclipse.mysoftwareFm.IdNameAndStatus;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups.MyGroupsButtons;
@@ -239,13 +239,13 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 			}
 		});
 
-		String projectCryptoKey = userReader.getUserProperty(softwareFmId, userCryptoKey, SoftwareFmConstants.projectCryptoKey);
+		String projectCryptoKey = userReader.getUserProperty(softwareFmId, userCryptoKey, JarAndPathConstants.projectCryptoKey);
 		assertEquals(GroupConstants.memberStatus, userMembershipReader.getMembershipProperty(softwareFmId, userCryptoKey, groupId1, GroupConstants.membershipStatusKey));
-		assertEquals(Maps.stringObjectMap(SoftwareFmConstants.projectCryptoKey, projectCryptoKey, //
+		assertEquals(Maps.stringObjectMap(JarAndPathConstants.projectCryptoKey, projectCryptoKey, //
 				LoginConstants.emailKey, email, //
 				LoginConstants.softwareFmIdKey, softwareFmId,//
 				GroupConstants.membershipStatusKey, GroupConstants.memberStatus), Lists.getOnly(Iterables.list(groups.users(groupId1, groupCryptoKey1))));
-		assertEquals(Maps.stringObjectMap(SoftwareFmConstants.projectCryptoKey, projectCryptoKey, //
+		assertEquals(Maps.stringObjectMap(JarAndPathConstants.projectCryptoKey, projectCryptoKey, //
 				LoginConstants.emailKey, email, //
 				LoginConstants.softwareFmIdKey, softwareFmId,//
 				GroupConstants.membershipStatusKey, GroupConstants.memberStatus), Lists.getOnly(Iterables.list(groupsReader.users(groupId1, groupCryptoKey1))));
@@ -371,18 +371,18 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId1, GroupConstants.groupCryptoKey, groupCryptoKey1, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus)), userMembershipReader.walkGroupsFor(softwareFmId1, userCryptoKey1));
 		assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId1, GroupConstants.groupCryptoKey, groupCryptoKey1, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus)), userMembershipReader.walkGroupsFor(softwareFmId2, userCryptoKey2));
 
-		String projectCryptoKey = userReader.getUserProperty(softwareFmId, userCryptoKey, SoftwareFmConstants.projectCryptoKey);
-		String projectCryptoKey1 = userReader.getUserProperty(softwareFmId1, userCryptoKey1, SoftwareFmConstants.projectCryptoKey);
-		String projectCryptoKey2 = userReader.getUserProperty(softwareFmId2, userCryptoKey2, SoftwareFmConstants.projectCryptoKey);
+		String projectCryptoKey = userReader.getUserProperty(softwareFmId, userCryptoKey, JarAndPathConstants.projectCryptoKey);
+		String projectCryptoKey1 = userReader.getUserProperty(softwareFmId1, userCryptoKey1, JarAndPathConstants.projectCryptoKey);
+		String projectCryptoKey2 = userReader.getUserProperty(softwareFmId2, userCryptoKey2, JarAndPathConstants.projectCryptoKey);
 
 		assertNotNull(projectCryptoKey);
 		assertNotNull(projectCryptoKey1);
 		assertNotNull(projectCryptoKey2);
 
 		assertEquals(Arrays.asList(//
-				Maps.stringObjectMap(SoftwareFmConstants.projectCryptoKey, projectCryptoKey, LoginConstants.emailKey, email, GroupConstants.membershipStatusKey, GroupConstants.adminStatus, LoginConstants.softwareFmIdKey, softwareFmId), //
-				Maps.stringObjectMap(SoftwareFmConstants.projectCryptoKey, projectCryptoKey1, LoginConstants.emailKey, email1, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus, LoginConstants.softwareFmIdKey, softwareFmId1), //
-				Maps.stringObjectMap(SoftwareFmConstants.projectCryptoKey, projectCryptoKey2, LoginConstants.emailKey, email2, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus, LoginConstants.softwareFmIdKey, softwareFmId2)), //
+				Maps.stringObjectMap(JarAndPathConstants.projectCryptoKey, projectCryptoKey, LoginConstants.emailKey, email, GroupConstants.membershipStatusKey, GroupConstants.adminStatus, LoginConstants.softwareFmIdKey, softwareFmId), //
+				Maps.stringObjectMap(JarAndPathConstants.projectCryptoKey, projectCryptoKey1, LoginConstants.emailKey, email1, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus, LoginConstants.softwareFmIdKey, softwareFmId1), //
+				Maps.stringObjectMap(JarAndPathConstants.projectCryptoKey, projectCryptoKey2, LoginConstants.emailKey, email2, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus, LoginConstants.softwareFmIdKey, softwareFmId2)), //
 				Iterables.list(groupsReader.users(groupId1, groupCryptoKey1)));
 	}
 
@@ -424,18 +424,18 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId1, GroupConstants.groupCryptoKey, groupCryptoKey1, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus)), userMembershipReader.walkGroupsFor(softwareFmId1, userCryptoKey1));
 		assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId1, GroupConstants.groupCryptoKey, groupCryptoKey1, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus)), userMembershipReader.walkGroupsFor(softwareFmId2, userCryptoKey2));
 
-		String projectCryptoKey = userReader.getUserProperty(softwareFmId, userCryptoKey, SoftwareFmConstants.projectCryptoKey);
-		String projectCryptoKey1 = userReader.getUserProperty(softwareFmId1, userCryptoKey1, SoftwareFmConstants.projectCryptoKey);
-		String projectCryptoKey2 = userReader.getUserProperty(softwareFmId2, userCryptoKey2, SoftwareFmConstants.projectCryptoKey);
+		String projectCryptoKey = userReader.getUserProperty(softwareFmId, userCryptoKey, JarAndPathConstants.projectCryptoKey);
+		String projectCryptoKey1 = userReader.getUserProperty(softwareFmId1, userCryptoKey1, JarAndPathConstants.projectCryptoKey);
+		String projectCryptoKey2 = userReader.getUserProperty(softwareFmId2, userCryptoKey2, JarAndPathConstants.projectCryptoKey);
 
 		assertNotNull(projectCryptoKey);
 		assertNotNull(projectCryptoKey1);
 		assertNotNull(projectCryptoKey2);
 
 		assertEquals(Arrays.asList(//
-				Maps.stringObjectMap(SoftwareFmConstants.projectCryptoKey, projectCryptoKey, LoginConstants.emailKey, email, GroupConstants.membershipStatusKey, GroupConstants.adminStatus, LoginConstants.softwareFmIdKey, softwareFmId), //
-				Maps.stringObjectMap(SoftwareFmConstants.projectCryptoKey, projectCryptoKey1, LoginConstants.emailKey, email1, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus, LoginConstants.softwareFmIdKey, softwareFmId1), //
-				Maps.stringObjectMap(SoftwareFmConstants.projectCryptoKey, projectCryptoKey2, LoginConstants.emailKey, email2, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus, LoginConstants.softwareFmIdKey, softwareFmId2)), //
+				Maps.stringObjectMap(JarAndPathConstants.projectCryptoKey, projectCryptoKey, LoginConstants.emailKey, email, GroupConstants.membershipStatusKey, GroupConstants.adminStatus, LoginConstants.softwareFmIdKey, softwareFmId), //
+				Maps.stringObjectMap(JarAndPathConstants.projectCryptoKey, projectCryptoKey1, LoginConstants.emailKey, email1, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus, LoginConstants.softwareFmIdKey, softwareFmId1), //
+				Maps.stringObjectMap(JarAndPathConstants.projectCryptoKey, projectCryptoKey2, LoginConstants.emailKey, email2, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus, LoginConstants.softwareFmIdKey, softwareFmId2)), //
 				Iterables.list(groupsReader.users(groupId1, groupCryptoKey1)));
 	}
 

@@ -24,7 +24,7 @@ import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.crowdsource.utilities.url.Urls;
-import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.constants.JarAndPathConstants;
 import org.softwareFm.eclipse.usage.IUsageStrategy;
 
 public class UsageStrategy implements IUsageStrategy {
@@ -46,9 +46,9 @@ public class UsageStrategy implements IUsageStrategy {
 			@Override
 			public Void apply(final IMonitor monitor) throws Exception {
 				monitor.beginTask(EclipseMessages.recordingUsage, 2);
-				client.post(SoftwareFmConstants.usagePrefix).//
+				client.post(JarAndPathConstants.usagePrefix).//
 						addParam(LoginConstants.softwareFmIdKey, softwareFmId).//
-						addParam(SoftwareFmConstants.digest, digest).//
+						addParam(JarAndPathConstants.digest, digest).//
 						execute(new IResponseCallback() {
 							@Override
 							public void process(IResponse response) {
@@ -72,9 +72,9 @@ public class UsageStrategy implements IUsageStrategy {
 
 		if (userDataResult == null)
 			throw new IllegalArgumentException(softwareFmId);
-		String projectCrypto = (String) userDataResult.get(SoftwareFmConstants.projectCryptoKey);
+		String projectCrypto = (String) userDataResult.get(JarAndPathConstants.projectCryptoKey);
 
-		File directory = new File(root, Urls.compose(userUrl, SoftwareFmConstants.projectDirectoryName));
+		File directory = new File(root, Urls.compose(userUrl, JarAndPathConstants.projectDirectoryName));
 		Map<String, Object> result = Maps.newMap();
 		for (File file : Lists.list(directory.listFiles())) {
 			Map<String, Object> map = Json.mapFromEncryptedFile(file, projectCrypto);

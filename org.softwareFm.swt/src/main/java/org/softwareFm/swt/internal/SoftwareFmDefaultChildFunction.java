@@ -9,15 +9,15 @@ import java.util.Map.Entry;
 
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
-import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.constants.JarAndPathConstants;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.constants.CardConstants;
 
 public class SoftwareFmDefaultChildFunction implements IFunction1<ICard, String> {
 	final Map<String, String> typeToDefaultChildMap = Maps.makeMap(//
 			CardConstants.group, CardConstants.artifact,//
-			CardConstants.artifact, SoftwareFmConstants.version,//
-			SoftwareFmConstants.version, SoftwareFmConstants.digest);
+			CardConstants.artifact, JarAndPathConstants.version,//
+			JarAndPathConstants.version, JarAndPathConstants.digest);
 
 	@Override
 	public String apply(ICard from) throws Exception {

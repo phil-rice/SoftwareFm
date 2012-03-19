@@ -16,7 +16,7 @@ import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.crowdsource.utilities.url.IUrlGeneratorMap;
 import org.softwareFm.crowdsource.utilities.url.Urls;
-import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.constants.JarAndPathConstants;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.constants.CollectionConstants;
@@ -65,8 +65,8 @@ public class NewJarImporter {
 		this.groupId = groupId;
 		this.map = cardConfig.urlGeneratorMap;
 		this.importer = chainImporter;
-		this.groupIdArtifactIdVersionMap = Maps.stringObjectMap(SoftwareFmConstants.groupId, groupId, SoftwareFmConstants.artifactId, artifactId, SoftwareFmConstants.version, version);
-		this.groupIdArtifactIdVersionDigestJarStemMap = Maps.with(groupIdArtifactIdVersionMap, SoftwareFmConstants.digest, digest, CollectionConstants.jarStem, jarStem);
+		this.groupIdArtifactIdVersionMap = Maps.stringObjectMap(JarAndPathConstants.groupId, groupId, JarAndPathConstants.artifactId, artifactId, JarAndPathConstants.version, version);
+		this.groupIdArtifactIdVersionDigestJarStemMap = Maps.with(groupIdArtifactIdVersionMap, JarAndPathConstants.digest, digest, CollectionConstants.jarStem, jarStem);
 	}
 
 	public ImportStage stage(String urlKey, Object... namesAndValues) {
@@ -123,14 +123,14 @@ public class NewJarImporter {
 
 				makeRepo(CardConstants.artifactUrlKey),//
 				stage(CardConstants.artifactUrlKey, CardConstants.slingResourceType, CardConstants.artifact),//
-				collection(CardConstants.artifactUrlKey, SoftwareFmConstants.version), //
-				map(CardConstants.versionUrlKey, Maps.with(groupIdArtifactIdVersionMap, CardConstants.slingResourceType, SoftwareFmConstants.version)), //
-				collection(CardConstants.versionUrlKey, SoftwareFmConstants.digest), //
-				stage(CardConstants.digestUrlKey, CardConstants.slingResourceType, CardConstants.versionJar, SoftwareFmConstants.digest, digest, CardConstants.found, found),//
+				collection(CardConstants.artifactUrlKey, JarAndPathConstants.version), //
+				map(CardConstants.versionUrlKey, Maps.with(groupIdArtifactIdVersionMap, CardConstants.slingResourceType, JarAndPathConstants.version)), //
+				collection(CardConstants.versionUrlKey, JarAndPathConstants.digest), //
+				stage(CardConstants.digestUrlKey, CardConstants.slingResourceType, CardConstants.versionJar, JarAndPathConstants.digest, digest, CardConstants.found, found),//
 
 				makeRepo(CardConstants.jarNameUrlKey),//
 				map(CardConstants.jarNameUrlKey, Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection)), //
-				mapWithOffset(CardConstants.jarNameUrlKey, jarNameUuid, Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.jarName, SoftwareFmConstants.artifactId, groupIdArtifactIdVersionMap.get(SoftwareFmConstants.artifactId), CardConstants.group, groupIdArtifactIdVersionMap.get(SoftwareFmConstants.groupId))) //
+				mapWithOffset(CardConstants.jarNameUrlKey, jarNameUuid, Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.jarName, JarAndPathConstants.artifactId, groupIdArtifactIdVersionMap.get(JarAndPathConstants.artifactId), CardConstants.group, groupIdArtifactIdVersionMap.get(JarAndPathConstants.groupId))) //
 		);
 	}
 

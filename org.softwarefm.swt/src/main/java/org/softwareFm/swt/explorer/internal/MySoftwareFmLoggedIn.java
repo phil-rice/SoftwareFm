@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
-import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.constants.JarAndPathConstants;
 import org.softwareFm.swt.card.LineItem;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.composites.IHasControl;
@@ -77,7 +77,7 @@ public class MySoftwareFmLoggedIn implements IHasControl {
 
 		@SuppressWarnings("unused")
 		public MySoftwareFmLoggedInComposite(Composite parent, CardConfig cardConfig, String cardType, final ILoginDisplayStrategy loginDisplayStrategy, final IMySoftwareFmLoggedInStrategy loggedInStrategy, UserData userData) {
-			super(parent, cardConfig, cardType, SoftwareFmConstants.mySoftwareFmLoggedInTitle, true);
+			super(parent, cardConfig, cardType, JarAndPathConstants.mySoftwareFmLoggedInTitle, true);
 			mainComposite = new Composite(getInnerBody(), SWT.NULL);
 			mainComposite.setBackground(getTitleSpec().background);
 			this.userDetails = new Table(mainComposite, SWT.FULL_SELECTION);

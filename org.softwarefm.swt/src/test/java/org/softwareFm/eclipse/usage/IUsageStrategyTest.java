@@ -17,7 +17,7 @@ import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.url.Urls;
-import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.constants.JarAndPathConstants;
 
 public class IUsageStrategyTest extends AbstractProcessorDatabaseIntegrationTests {
 
@@ -56,7 +56,7 @@ public class IUsageStrategyTest extends AbstractProcessorDatabaseIntegrationTest
 
 	private Map<String, Object> getProjectData(String crypto) {
 		Map<String, Object> userData = Json.mapFromEncryptedFile(userFile, crypto);
-		String projectCrypto = (String) userData.get(SoftwareFmConstants.projectCryptoKey);
+		String projectCrypto = (String) userData.get(JarAndPathConstants.projectCryptoKey);
 		Map<String, Object> projectData = Json.mapFromEncryptedFile(userProjectFile, projectCrypto);
 		return projectData;
 	}
@@ -64,7 +64,7 @@ public class IUsageStrategyTest extends AbstractProcessorDatabaseIntegrationTest
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		usageStrategy = IUsageStrategy.Utils.usage(getServiceExecutor(), getHttpClient(), gitLocal, LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix));
+		usageStrategy = IUsageStrategy.Utils.usage(getServiceExecutor(), getHttpClient(), gitLocal, LoginConstants.userGenerator(JarAndPathConstants.urlPrefix));
 		directory = new File(remoteRoot, "softwareFm/users/so/me/someNewSoftwareFmId0");
 		userFile = new File(directory, CommonConstants.dataFileName);
 		userProjectFile = new File(directory, Urls.compose("project", "someMonth"));

@@ -14,7 +14,7 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
-import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.constants.JarAndPathConstants;
 import org.softwareFm.swt.browser.BrowserPart;
 import org.softwareFm.swt.browser.IBrowserCompositeBuilder;
 import org.softwareFm.swt.browser.IBrowserConfigurator;
@@ -52,7 +52,7 @@ public class SnippetFeedConfigurator implements IBrowserConfigurator {
 						cardDataStore.processDataFor(url, new ICardDataStoreCallback<Void>() {
 							@Override
 							public Void process(String url, Map<String, Object> result) throws Exception {
-								String template = IResourceGetter.Utils.getOrException(resourceGetterFn, CardConstants.snippet, SoftwareFmConstants.snipperTemplateKey);
+								String template = IResourceGetter.Utils.getOrException(resourceGetterFn, CardConstants.snippet, JarAndPathConstants.snipperTemplateKey);
 								String content = Java2Html.convertToHtml(Strings.nullSafeToString(result.get("content")));
 								String html = MessageFormat.format(template, //
 										Strings.htmlEscape(Strings.nullSafeToString(result.get("title"))), //

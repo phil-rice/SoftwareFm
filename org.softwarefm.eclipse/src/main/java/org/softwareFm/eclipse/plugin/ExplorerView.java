@@ -27,7 +27,7 @@ import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.eclipse.IRequestGroupReportGeneration;
 import org.softwareFm.eclipse.actions.IActionBar;
-import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.constants.JarAndPathConstants;
 import org.softwareFm.eclipse.jdtBinding.BindingRipperResult;
 import org.softwareFm.eclipse.mysoftwareFm.IGroupClientOperations;
 import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
@@ -70,7 +70,7 @@ public class ExplorerView extends ViewPart {
 		IHttpClient client = activator.getClient();
 		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(parent.getDisplay(), activator.getServiceExecutor(), client);
 		IUrlGenerator userUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.userUrlKey);
-		IUrlGenerator groupUrlGenerator = GroupConstants.groupsGenerator(SoftwareFmConstants.urlPrefix);
+		IUrlGenerator groupUrlGenerator = GroupConstants.groupsGenerator(JarAndPathConstants.urlPrefix);
 		IGitLocal gitLocal = activator.getGitLocal();
 		IProjectTimeGetter timeGetter = activator.getProjectTimeGetter();
 		IRequestGroupReportGeneration reportGenerator = IRequestGroupReportGeneration.Utils.withCache(//

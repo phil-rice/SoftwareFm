@@ -19,7 +19,7 @@ import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.crowdsource.utilities.url.IUrlGeneratorMap;
 import org.softwareFm.crowdsource.utilities.url.UrlGenerator;
-import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.constants.JarAndPathConstants;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
@@ -106,7 +106,7 @@ public class NewJarImporterTest extends SwtTest {
 	}
 
 	private IUrlGenerator urlKey(String string) {
-		return new UrlGenerator("<" + string + ">/{2}/{4}/{6}", SoftwareFmConstants.groupId, SoftwareFmConstants.artifactId, SoftwareFmConstants.version);// 0,1: hash, 2,3: groupId, 4,5: artifactId, 6,7: version
+		return new UrlGenerator("<" + string + ">/{2}/{4}/{6}", JarAndPathConstants.groupId, JarAndPathConstants.artifactId, JarAndPathConstants.version);// 0,1: hash, 2,3: groupId, 4,5: artifactId, 6,7: version
 	}
 
 	private IUrlGenerator urlKeyForJarName(String string) {
@@ -114,7 +114,7 @@ public class NewJarImporterTest extends SwtTest {
 	}
 
 	private IUrlGenerator urlKeyWithDigest(String string) {
-		return new UrlGenerator("<" + string + ">/{2}/{4}/{6}/{8}", SoftwareFmConstants.groupId, SoftwareFmConstants.artifactId, SoftwareFmConstants.version, SoftwareFmConstants.digest);// 0,1: hash, 2,3: groupId, 4,5: artifactId, 6,7: version, 8,9: digest
+		return new UrlGenerator("<" + string + ">/{2}/{4}/{6}/{8}", JarAndPathConstants.groupId, JarAndPathConstants.artifactId, JarAndPathConstants.version, JarAndPathConstants.digest);// 0,1: hash, 2,3: groupId, 4,5: artifactId, 6,7: version, 8,9: digest
 	}
 
 	static class ChainImporterMock implements IChainImporter {

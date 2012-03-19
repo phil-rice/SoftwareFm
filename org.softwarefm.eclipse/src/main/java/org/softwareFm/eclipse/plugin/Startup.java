@@ -12,7 +12,7 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.eclipse.constants.EclipseMessages;
-import org.softwareFm.eclipse.constants.SoftwareFmConstants;
+import org.softwareFm.eclipse.constants.JarAndPathConstants;
 import org.softwareFm.eclipse.jdtBinding.BindingRipperResult;
 import org.softwareFm.eclipse.snippets.internal.UsageStrategy;
 import org.softwareFm.eclipse.usage.IUsageStrategy;
@@ -29,8 +29,8 @@ public class Startup implements IStartup {
 				monitor.beginTask(EclipseMessages.startUp, 1);
 				try {
 					IGitLocal gitLocal = activator.getGitLocal();
-					IUsageStrategy rawUsageStrategy = new UsageStrategy(activator.getClient(), serviceExecutor, gitLocal, LoginConstants.userGenerator(SoftwareFmConstants.urlPrefix));
-					final IUsageStrategy cachedUsageStrategy = IUsageStrategy.Utils.cached(rawUsageStrategy, SoftwareFmConstants.usageRefreshTimeMs, gitLocal, activator.getUserDataManager());
+					IUsageStrategy rawUsageStrategy = new UsageStrategy(activator.getClient(), serviceExecutor, gitLocal, LoginConstants.userGenerator(JarAndPathConstants.urlPrefix));
+					final IUsageStrategy cachedUsageStrategy = IUsageStrategy.Utils.cached(rawUsageStrategy, JarAndPathConstants.usageRefreshTimeMs, gitLocal, activator.getUserDataManager());
 					activator.getSelectedBindingManager().addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
 						@Override
 						public void selectionOccured(BindingRipperResult ripperResult) {
