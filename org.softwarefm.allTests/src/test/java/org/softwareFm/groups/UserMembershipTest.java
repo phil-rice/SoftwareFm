@@ -22,7 +22,7 @@ import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.runnable.Callables;
 import org.softwareFm.crowdsource.utilities.tests.Tests;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
-import org.softwareFm.eclipse.constants.JarAndPathConstants;
+import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 
 public class UserMembershipTest extends GitTest {
 

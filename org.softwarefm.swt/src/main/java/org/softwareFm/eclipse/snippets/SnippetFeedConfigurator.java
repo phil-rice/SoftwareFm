@@ -14,7 +14,7 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
-import org.softwareFm.eclipse.constants.JarAndPathConstants;
+import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.swt.browser.BrowserPart;
 import org.softwareFm.swt.browser.IBrowserCompositeBuilder;
 import org.softwareFm.swt.browser.IBrowserConfigurator;

@@ -6,14 +6,14 @@ package org.softwareFm.eclipse.mysoftwareFm;
 
 import org.eclipse.swt.widgets.Table;
 import org.softwareFm.crowdsource.api.user.IUser;
+import org.softwareFm.crowdsource.api.user.UserMock;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
-import org.softwareFm.eclipse.constants.JarAndPathConstants;
-import org.softwareFm.eclipse.user.IProject;
-import org.softwareFm.eclipse.user.IProjectTimeGetter;
 import org.softwareFm.eclipse.user.ProjectFixture;
 import org.softwareFm.eclipse.user.ProjectTimeGetterFixture;
-import org.softwareFm.eclipse.user.UserMock;
+import org.softwareFm.jarAndClassPath.api.IProject;
+import org.softwareFm.jarAndClassPath.api.IProjectTimeGetter;
+import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.editors.DataComposite;

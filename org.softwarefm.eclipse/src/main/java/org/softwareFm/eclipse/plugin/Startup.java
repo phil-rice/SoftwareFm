@@ -11,11 +11,11 @@ import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
-import org.softwareFm.eclipse.constants.EclipseMessages;
-import org.softwareFm.eclipse.constants.JarAndPathConstants;
 import org.softwareFm.eclipse.jdtBinding.BindingRipperResult;
 import org.softwareFm.eclipse.snippets.internal.UsageStrategy;
 import org.softwareFm.eclipse.usage.IUsageStrategy;
+import org.softwareFm.jar.EclipseMessages;
+import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 
 public class Startup implements IStartup {
 

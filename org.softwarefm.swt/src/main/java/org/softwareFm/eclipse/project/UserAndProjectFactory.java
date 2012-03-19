@@ -7,8 +7,8 @@ package org.softwareFm.eclipse.project;
 import org.softwareFm.crowdsource.api.git.IGitLocal;
 import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
-import org.softwareFm.eclipse.user.IUsageReader;
-import org.softwareFm.eclipse.user.UsageReaderForLocal;
+import org.softwareFm.jarAndClassPath.api.IUsageReader;
+import org.softwareFm.jarAndClassPath.internal.UsageReaderForLocal;
 
 public class UserAndProjectFactory {
 

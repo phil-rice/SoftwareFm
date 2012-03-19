@@ -18,7 +18,7 @@ import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.crowdsource.utilities.resources.ResourceGetterMock;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.crowdsource.utilities.url.IUrlGeneratorMap;
-import org.softwareFm.eclipse.constants.JarAndPathConstants;
+import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.card.ICardFactory;

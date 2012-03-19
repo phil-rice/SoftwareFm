@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
-import org.softwareFm.eclipse.constants.JarAndPathConstants;
+import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.constants.CardConstants;
 

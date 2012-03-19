@@ -13,8 +13,8 @@ import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
-import org.softwareFm.eclipse.constants.JarAndPathConstants;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups.MyGroupsComposite;
+import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.swt.swt.Swts;
 
 public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {

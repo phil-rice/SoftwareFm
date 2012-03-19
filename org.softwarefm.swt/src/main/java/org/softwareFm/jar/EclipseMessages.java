@@ -1,5 +1,6 @@
-package org.softwareFm.eclipse.constants;
+package org.softwareFm.jar;
 
+@SuppressWarnings("rename this")
 public class EclipseMessages {
 
 	public static final String showMyData = "Show My Data";

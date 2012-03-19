@@ -16,7 +16,7 @@ import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.crowdsource.utilities.url.IUrlGeneratorMap;
 import org.softwareFm.crowdsource.utilities.url.Urls;
-import org.softwareFm.eclipse.constants.JarAndPathConstants;
+import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.constants.CollectionConstants;

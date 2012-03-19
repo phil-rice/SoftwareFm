@@ -9,7 +9,7 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.crowdsource.utilities.url.IUrlGeneratorMap;
 import org.softwareFm.crowdsource.utilities.url.UrlGenerator;
-import org.softwareFm.eclipse.constants.JarAndPathConstants;
+import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ILineItemFunction;
 import org.softwareFm.swt.card.IRightClickCategoriser;

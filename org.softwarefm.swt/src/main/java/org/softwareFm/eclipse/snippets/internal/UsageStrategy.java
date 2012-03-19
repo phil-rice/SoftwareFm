@@ -24,8 +24,9 @@ import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.crowdsource.utilities.url.Urls;
-import org.softwareFm.eclipse.constants.JarAndPathConstants;
 import org.softwareFm.eclipse.usage.IUsageStrategy;
+import org.softwareFm.jar.EclipseMessages;
+import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 
 public class UsageStrategy implements IUsageStrategy {
 	private final IHttpClient client;

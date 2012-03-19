@@ -5,6 +5,7 @@
 package org.softwareFm.swt;
 
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.crowdsource.api.user.UserMock;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
@@ -12,7 +13,6 @@ import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
 import org.softwareFm.eclipse.user.ProjectFixture;
 import org.softwareFm.eclipse.user.ProjectMock;
 import org.softwareFm.eclipse.user.ProjectTimeGetterFixture;
-import org.softwareFm.eclipse.user.UserMock;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.explorer.internal.UserData;

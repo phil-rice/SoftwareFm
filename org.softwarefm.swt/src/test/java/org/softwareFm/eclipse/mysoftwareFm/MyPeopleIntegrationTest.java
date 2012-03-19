@@ -7,12 +7,12 @@ import org.eclipse.swt.widgets.Table;
 import org.softwareFm.crowdsource.api.git.IGitOperations;
 import org.softwareFm.crowdsource.utilities.arrays.ArrayHelper;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
-import org.softwareFm.eclipse.constants.JarAndPathConstants;
 import org.softwareFm.eclipse.mysoftwareFm.MyPeople.MyPeopleComposite;
 import org.softwareFm.eclipse.user.ProjectFixture;
 import org.softwareFm.eclipse.user.ProjectMock;
-import org.softwareFm.softwareFmServer.GenerateGroupUsageProcessor;
-import org.softwareFm.softwareFmServer.GenerateUsageProjectGenerator;
+import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
+import org.softwareFm.jarAndClassPath.server.internal.GenerateGroupUsageProcessor;
+import org.softwareFm.jarAndClassPath.server.internal.GenerateUsageProjectGenerator;
 
 public class MyPeopleIntegrationTest extends AbstractMyGroupsIntegrationTest {
 	private final String groupId = "group1";

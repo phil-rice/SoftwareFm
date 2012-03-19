@@ -44,7 +44,7 @@ import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.crowdsource.utilities.strings.ReadableTime;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
-import org.softwareFm.eclipse.constants.JarAndPathConstants;
+import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.swt.browser.IBrowserPart;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardChangedListener;

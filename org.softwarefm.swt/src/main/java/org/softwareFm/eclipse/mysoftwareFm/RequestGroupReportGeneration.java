@@ -11,7 +11,7 @@ import org.softwareFm.crowdsource.httpClient.IResponse;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.maps.IHasCache;
-import org.softwareFm.eclipse.IRequestGroupReportGeneration;
+import org.softwareFm.jarAndClassPath.api.IRequestGroupReportGeneration;
 
 public class RequestGroupReportGeneration implements IRequestGroupReportGeneration {
 
