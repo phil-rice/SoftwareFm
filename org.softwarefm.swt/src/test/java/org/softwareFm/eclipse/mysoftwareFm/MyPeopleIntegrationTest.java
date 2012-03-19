@@ -62,8 +62,8 @@ public class MyPeopleIntegrationTest extends AbstractMyGroupsIntegrationTest {
 	protected IProcessCall[] getExtraProcessCalls(IGitOperations remoteGitOperations, IFunction1<Map<String, Object>, String> cryptoFn) {
 		IProcessCall[] raw = super.getExtraProcessCalls(remoteGitOperations, cryptoFn);
 		ProjectMock projectMock = new ProjectMock(false);
-		addProjectDetails(projectMock, softwareFmId1, userCryptoKey1, ProjectFixture.map1);
-		addProjectDetails(projectMock, softwareFmId2, userCryptoKey2, ProjectFixture.map2);
+		addProjectDetails(projectMock, softwareFmId1, userCryptoKey1, ProjectFixture.map0);
+		addProjectDetails(projectMock, softwareFmId2, userCryptoKey2, ProjectFixture.map1);
 		GenerateGroupUsageProcessor groupUsageProcessor = new GenerateGroupUsageProcessor(remoteGitOperations, new GenerateUsageProjectGenerator(groups, projectMock), groups);
 		return ArrayHelper.append(raw, groupUsageProcessor);
 	}
