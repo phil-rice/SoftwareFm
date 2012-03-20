@@ -3,6 +3,7 @@ package org.softwareFm.swt.comments.internal;
 import java.util.concurrent.TimeUnit;
 
 import org.softwareFm.crowdsource.api.ICommentDefn;
+import org.softwareFm.crowdsource.api.IComments;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.constants.CommentConstants;
 import org.softwareFm.crowdsource.httpClient.IHttpClient;
@@ -12,9 +13,8 @@ import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.maps.IHasUrlCache;
 import org.softwareFm.crowdsource.utilities.url.Urls;
-import org.softwareFm.swt.comments.ICommentWriter;
 
-public final class CommentWriter implements ICommentWriter {
+public final class CommentWriter implements IComments {
 	private final IHttpClient client;
 	private final long timeoutMs;
 	private final IHasUrlCache cache;
@@ -41,4 +41,5 @@ public final class CommentWriter implements ICommentWriter {
 		}
 
 	}
+
 }
