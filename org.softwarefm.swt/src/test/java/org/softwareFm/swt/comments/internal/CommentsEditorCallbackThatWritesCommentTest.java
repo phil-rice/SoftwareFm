@@ -9,6 +9,7 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.junit.Test;
 import org.softwareFm.crowdsource.api.ICommentDefn;
+import org.softwareFm.crowdsource.api.IComments;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.constants.CommentConstants;
@@ -16,14 +17,13 @@ import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.runnable.Runnables;
-import org.softwareFm.swt.comments.ICommentWriter;
 
 public class CommentsEditorCallbackThatWritesCommentTest extends TestCase {
 
 	private Runnable whenFinished;
 	private IUserReader userReader;
 	private IGroupsReader groupsReader;
-	private ICommentWriter commentWriter;
+	private IComments commentWriter;
 	private final String softwareFmId = "sfmId1";
 	private final String userCrypto = Crypto.makeKey();
 	private final String url = "url";
@@ -83,7 +83,7 @@ public class CommentsEditorCallbackThatWritesCommentTest extends TestCase {
 		whenFinished = Runnables.count();
 		userReader = EasyMock.createMock(IUserReader.class);
 		groupsReader = EasyMock.createMock(IGroupsReader.class);
-		commentWriter = EasyMock.createMock(ICommentWriter.class);
+		commentWriter = EasyMock.createMock(IComments.class);
 		whenFinished = EasyMock.createMock(Runnable.class);
 		callback = new CommentsEditorCallbackThatWritesComment(userReader, groupsReader, commentWriter, softwareFmId, userCrypto, groupsData, whenFinished);
 	}

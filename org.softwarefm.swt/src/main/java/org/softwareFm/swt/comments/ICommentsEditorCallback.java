@@ -3,8 +3,8 @@ package org.softwareFm.swt.comments;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.softwareFm.crowdsource.api.user.IGroupsReader;
-import org.softwareFm.crowdsource.api.user.IUserReader;
+import org.softwareFm.crowdsource.api.IComments;
+import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
 import org.softwareFm.swt.comments.internal.CommentsEditorCallbackThatWritesComment;
 
 public interface ICommentsEditorCallback {
@@ -18,10 +18,10 @@ public interface ICommentsEditorCallback {
 	void cancel();
 
 	public static class Utils {
-		public static ICommentsEditorCallback writeComments(final IUserReader userReader, final IGroupsReader groupReader, final String softwareFmId, final String userCrypto, final Iterable<Map<String,Object>> groupsData, final ICommentWriter commentWriter, final Runnable whenFinished){
-			return new CommentsEditorCallbackThatWritesComment(userReader, groupReader, commentWriter, softwareFmId, userCrypto, groupsData, whenFinished);
+		public static ICommentsEditorCallback writeComments(ICrowdSourceReadWriteApi readWriteApi, final String softwareFmId, final String userCrypto, final Iterable<Map<String, Object>> groupsData, final IComments commentWriter, final Runnable whenFinished) {
+			return new CommentsEditorCallbackThatWritesComment(readWriteApi, softwareFmId, userCrypto, groupsData, whenFinished);
 		}
-		
+
 		public static ICommentsEditorCallback sysout() {
 			return new ICommentsEditorCallback() {
 				@Override
@@ -36,7 +36,7 @@ public interface ICommentsEditorCallback {
 
 				@Override
 				public void everyoneComment(String url, String text) {
-					System.out.println("everyoneComment: " +  text);
+					System.out.println("everyoneComment: " + text);
 				}
 
 				@Override

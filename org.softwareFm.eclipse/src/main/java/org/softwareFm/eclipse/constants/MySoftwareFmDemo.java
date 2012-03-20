@@ -12,6 +12,7 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
 import org.softwareFm.crowdsource.api.git.IGitOperations;
+import org.softwareFm.crowdsource.api.server.ICallProcessor;
 import org.softwareFm.crowdsource.api.server.IMailer;
 import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.httpClient.IClientBuilder;
@@ -47,7 +48,7 @@ public class MySoftwareFmDemo {
 		IFunction1<Map<String, Object>, String> userCryptoFn = ICrowdSourcedServer.Utils.cryptoFn(dataSource);
 		Map<String, Callable<Object>> defaultValues = Maps.newMap();
 		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, gitOperations, cryptoGenerator, softwareFmIdGenerator, userCryptoFn, IMailer.Utils.noMailer(), defaultValues, JarAndPathConstants.urlPrefix);
-		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, Functions.<ProcessCallParameters, IProcessCall[]> constant(new IProcessCall[0]));
+		ICallProcessor processCall = ICallProcessor.Utils.softwareFmProcessCall(processCallParameters, Functions.<ProcessCallParameters, ICallProcessor[]> constant(new ICallProcessor[0]));
 		ICrowdSourcedServer server = ICrowdSourcedServer.Utils.testServerPort(processCall, ICallback.Utils.rethrow());
 		try {
 			Swts.Show.display(MySoftwareFm.class.getSimpleName(), new IFunction1<Composite, Composite>() {

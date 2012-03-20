@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.crowdsource.api.IComments;
 import org.softwareFm.crowdsource.api.ICommentsReader;
 import org.softwareFm.crowdsource.api.git.IGitLocal;
 import org.softwareFm.crowdsource.api.git.IGitOperations;
@@ -45,7 +46,6 @@ import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardChangedListener;
 import org.softwareFm.swt.card.ICardFactory;
 import org.softwareFm.swt.card.ICardHolder;
-import org.softwareFm.swt.comments.ICommentWriter;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.dataStore.CardAndCollectionDataStoreAdapter;
@@ -115,7 +115,7 @@ public class ExplorerWithRadioChannel {
 					IUserReader userReader = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
 					IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, userReader);
 
-					ICommentWriter commentWriter = ICommentWriter.Utils.commentWriter(client, CommonConstants.clientTimeOut, gitLocal);
+					IComments commentWriter = IComments.Utils.commentWriter(client, CommonConstants.clientTimeOut, gitLocal);
 					ICommentsReader commentsReader = new CommentsReaderLocal(gitLocal, userReader, userMembershipReader, groupsReader);
 					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, userReader, userMembershipReader, groupsReader, cardConfig, rootUrl, playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople, userDataManager, commentWriter, commentsReader, Callables.time());
 

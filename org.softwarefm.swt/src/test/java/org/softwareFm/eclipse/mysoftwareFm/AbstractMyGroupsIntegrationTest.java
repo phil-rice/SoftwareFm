@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.Table;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
 import org.softwareFm.crowdsource.api.git.IGitOperations;
+import org.softwareFm.crowdsource.api.server.ICallProcessor;
 import org.softwareFm.crowdsource.api.server.ITakeOnProcessor;
 import org.softwareFm.crowdsource.api.server.SignUpResult;
 import org.softwareFm.crowdsource.api.user.IUserReader;
@@ -189,7 +190,7 @@ abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIn
 	}
 
 	@Override
-	protected IProcessCall[] getExtraProcessCalls(IGitOperations remoteGitOperations, IFunction1<Map<String, Object>, String> cryptoFn) {
+	protected ICallProcessor[] getExtraProcessCalls(IGitOperations remoteGitOperations, IFunction1<Map<String, Object>, String> cryptoFn) {
 		Callable<String> groupIdGenerator = Callables.valueFromList(groupId1, groupId2);
 		Callable<String> groupCryptoGenerator = Callables.valueFromList(groupCryptoKey1, groupCryptoKey2);
 		ITakeOnProcessor takeOnProcessor = new TakeOnProcessor(remoteGitOperations, user, membershipForServer, groups, processCallParameters.userCryptoFn, groupUrlGenerator, groupIdGenerator, repoDefnFn);

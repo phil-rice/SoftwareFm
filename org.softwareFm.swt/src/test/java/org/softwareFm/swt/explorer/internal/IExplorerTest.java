@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.softwareFm.crowdsource.api.IComments;
 import org.softwareFm.crowdsource.api.ICommentsReader;
 import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
 import org.softwareFm.crowdsource.api.user.IUserReader;
@@ -22,7 +23,6 @@ import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.images.general.GeneralAnchor;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.card.ICardHolderForTests;
-import org.softwareFm.swt.comments.ICommentWriter;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CollectionConstants;
 import org.softwareFm.swt.explorer.IExplorer;
@@ -56,7 +56,7 @@ public class IExplorerTest extends SwtTest {
 					IShowMyGroups.Utils.exceptionShowMyGroups(),//
 					IShowMyPeople.Utils.exceptionShowMyPeople(),//
 					IUserDataManager.Utils.userDataManager(), //
-					ICommentWriter.Utils.exceptionCommentWriter(),//
+					IComments.Utils.exceptionCommentWriter(),//
 					ICommentsReader.Utils.exceptionCommentsReader(), Callables.<Long>exceptionIfCalled());
 			ICardHolderForTests cardHolder = (ICardHolderForTests) explorer.cardHolder;  
 			assertEquals(rootUrls, cardHolder.getRootUrls());

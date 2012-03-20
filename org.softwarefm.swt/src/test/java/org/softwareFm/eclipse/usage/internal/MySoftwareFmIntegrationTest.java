@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
 import org.softwareFm.crowdsource.api.git.IGitOperations;
+import org.softwareFm.crowdsource.api.server.ICallProcessor;
 import org.softwareFm.crowdsource.api.server.IMailer;
 import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.httpClient.IHttpClient;
@@ -407,7 +408,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		IFunction1<Map<String, Object>, String> userCryptoFn = ICrowdSourcedServer.Utils.cryptoFn(dataSource);
 		Map<String, Callable<Object>> defaultValues = SoftwareFmServer.makeUserDefaultProperties();
 		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, remoteOperations, cryptoGenerator, softwareFmIdGenerator, userCryptoFn, IMailer.Utils.noMailer(), defaultValues, JarAndPathConstants.urlPrefix);
-		IProcessCall softwareFmProcessCall = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, Functions.<ProcessCallParameters, IProcessCall[]> constant(new IProcessCall[0]));
+		ICallProcessor softwareFmProcessCall = ICallProcessor.Utils.softwareFmProcessCall(processCallParameters, Functions.<ProcessCallParameters, ICallProcessor[]> constant(new ICallProcessor[0]));
 		server = ICrowdSourcedServer.Utils.testServerPort(softwareFmProcessCall, ICallback.Utils.rethrow());
 		client = IHttpClient.Utils.builder("localhost", 8080);
 		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(display, service, client);

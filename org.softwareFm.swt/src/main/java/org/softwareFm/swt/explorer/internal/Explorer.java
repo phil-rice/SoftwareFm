@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.softwareFm.crowdsource.api.IComments;
 import org.softwareFm.crowdsource.api.ICommentsReader;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
@@ -56,7 +57,6 @@ import org.softwareFm.swt.card.composites.CardShapedHolder;
 import org.softwareFm.swt.card.composites.TextInBorder;
 import org.softwareFm.swt.comments.Comments;
 import org.softwareFm.swt.comments.CommentsEditor;
-import org.softwareFm.swt.comments.ICommentWriter;
 import org.softwareFm.swt.comments.ICommentsCallback;
 import org.softwareFm.swt.comments.ICommentsEditorCallback;
 import org.softwareFm.swt.composites.IHasControl;
@@ -107,7 +107,7 @@ public class Explorer implements IExplorer {
 	private final IShowMyPeople showMyPeople;
 	protected ICommentsReader commentReader;
 
-	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, final IUserReader userReader, final IUserMembershipReader userMembershipReader, final IGroupsReader groupsReader, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IShowMyData showMyData, final IShowMyGroups showMyGroups, final IShowMyPeople showMyPeople, final IUserDataManager userDataManager, final ICommentWriter commentWriter, ICommentsReader commentsReader, final Callable<Long> timeGetter) {
+	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, final IUserReader userReader, final IUserMembershipReader userMembershipReader, final IGroupsReader groupsReader, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IShowMyData showMyData, final IShowMyGroups showMyGroups, final IShowMyPeople showMyPeople, final IUserDataManager userDataManager, final IComments commentWriter, ICommentsReader commentsReader, final Callable<Long> timeGetter) {
 		this.cardConfig = cardConfig;
 		this.masterDetailSocial = masterDetailSocial;
 		this.showMyPeople = showMyPeople;

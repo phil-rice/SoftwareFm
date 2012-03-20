@@ -58,7 +58,7 @@ public class SwtServiceLifeCycleListener implements IHasComposite, IServiceExecu
 	}
 
 	@Override
-	public <T> void finished(final org.softwareFm.common.functions.IFunction1<IMonitor, T> task, final T value) {
+	public <T> void finished(final IFunction1<IMonitor, T> task, final T value) {
 		final String name = Thread.currentThread().getName();
 		Swts.asyncExec(this, new Runnable() {
 			@Override

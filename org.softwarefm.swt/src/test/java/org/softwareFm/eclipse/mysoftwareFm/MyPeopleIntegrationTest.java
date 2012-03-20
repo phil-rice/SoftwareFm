@@ -5,6 +5,7 @@ import java.util.Map;
 import org.apache.log4j.Level;
 import org.eclipse.swt.widgets.Table;
 import org.softwareFm.crowdsource.api.git.IGitOperations;
+import org.softwareFm.crowdsource.api.server.ICallProcessor;
 import org.softwareFm.crowdsource.utilities.arrays.ArrayHelper;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.eclipse.mysoftwareFm.MyPeople.MyPeopleComposite;
@@ -59,8 +60,8 @@ public class MyPeopleIntegrationTest extends AbstractMyGroupsIntegrationTest {
 	}
 
 	@Override
-	protected IProcessCall[] getExtraProcessCalls(IGitOperations remoteGitOperations, IFunction1<Map<String, Object>, String> cryptoFn) {
-		IProcessCall[] raw = super.getExtraProcessCalls(remoteGitOperations, cryptoFn);
+	protected ICallProcessor[] getExtraProcessCalls(IGitOperations remoteGitOperations, IFunction1<Map<String, Object>, String> cryptoFn) {
+		ICallProcessor[] raw = super.getExtraProcessCalls(remoteGitOperations, cryptoFn);
 		ProjectMock projectMock = new ProjectMock(false);
 		addProjectDetails(projectMock, softwareFmId1, userCryptoKey1, ProjectFixture.map0);
 		addProjectDetails(projectMock, softwareFmId2, userCryptoKey2, ProjectFixture.map1);

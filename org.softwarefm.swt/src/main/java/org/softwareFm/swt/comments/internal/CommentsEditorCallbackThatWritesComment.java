@@ -4,36 +4,31 @@ import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.crowdsource.api.ICommentDefn;
-import org.softwareFm.crowdsource.api.user.IGroupsReader;
-import org.softwareFm.crowdsource.api.user.IUserReader;
+import org.softwareFm.crowdsource.api.IComments;
+import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
 import org.softwareFm.crowdsource.utilities.collections.Iterables;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
-import org.softwareFm.swt.comments.ICommentWriter;
 import org.softwareFm.swt.comments.ICommentsEditorCallback;
 
 public class CommentsEditorCallbackThatWritesComment implements ICommentsEditorCallback {
 	private final String softwareFmId;
 	private final String userCrypto;
-	private final ICommentWriter commentWriter;
 	private final List<Map<String, Object>> groupsData;
-	private final IGroupsReader reader;
 	private final Runnable whenFinished;
-	private final IUserReader userReader;
+	private final ICrowdSourceReadWriteApi readWriteApi;
 
-	public CommentsEditorCallbackThatWritesComment(IUserReader userReader, IGroupsReader reader, ICommentWriter commentWriter, String softwareFmId, String userCrypto, Iterable<Map<String, Object>> groupsData, Runnable whenFinished) {
+	public CommentsEditorCallbackThatWritesComment(ICrowdSourceReadWriteApi readWriteApi,  String softwareFmId, String userCrypto, Iterable<Map<String, Object>> groupsData, Runnable whenFinished) {
+		this.readWriteApi = readWriteApi;
 		this.softwareFmId = softwareFmId;
 		this.userCrypto = userCrypto;
-		this.commentWriter = commentWriter;
 		this.groupsData= Iterables.list(groupsData);
-		this.reader = reader;
-		this.userReader = userReader;
 		this.whenFinished = whenFinished;
 	}
 
 	@Override
 	public void youComment(String url, String text) {
-		ICommentDefn defn = ICommentDefn.Utils.myInitial(userReader, softwareFmId, userCrypto, url);
-		commentWriter.addComment(softwareFmId, userCrypto, defn, text);
+		ICommentDefn defn = ICommentDefn.Utils.myInitial(readWriteApi, softwareFmId, userCrypto, url);
+		IComments.Utils.addComment(readWriteApi, text, userCrypto, defn, text);
 		whenFinished.run();
 	}
 
@@ -44,15 +39,15 @@ public class CommentsEditorCallbackThatWritesComment implements ICommentsEditorC
 		String groupCrypto = (String) data.get(GroupConstants.groupCryptoKey);
 		if (groupId == null || groupCrypto == null)
 			throw new IllegalStateException(data.toString());
-		ICommentDefn defn = ICommentDefn.Utils.groupInitial(reader, groupId, groupCrypto, url);
-		commentWriter.addComment(softwareFmId, userCrypto, defn, text);
+		ICommentDefn defn = ICommentDefn.Utils.groupInitial(readWriteApi, groupId, groupCrypto, url);
+		IComments.Utils.addComment(readWriteApi, text, userCrypto, defn, text);
 		whenFinished.run();
 	}
 
 	@Override
 	public void everyoneComment(String url, String text) {
 		ICommentDefn defn = ICommentDefn.Utils.everyoneInitial(url);
-		commentWriter.addComment(softwareFmId, userCrypto, defn, text);
+		IComments.Utils.addComment(readWriteApi, text, userCrypto, defn, text);
 		whenFinished.run();
 	}
 

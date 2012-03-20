@@ -10,6 +10,7 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.crowdsource.utilities.resources.ResourceGetterMock;
 import org.softwareFm.crowdsource.utilities.runnable.Runnables;
+import org.softwareFm.crowdsource.utilities.runnable.Runnables.CountRunnable;
 import org.softwareFm.images.BasicImageRegisterConfigurator;
 import org.softwareFm.swt.constants.DisplayConstants;
 import org.softwareFm.swt.okCancel.internal.OkCancel;

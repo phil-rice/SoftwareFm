@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import org.softwareFm.crowdsource.api.IComments;
 import org.softwareFm.crowdsource.api.ICommentsReader;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
@@ -19,7 +20,6 @@ import org.softwareFm.swt.card.ICardChangedListener;
 import org.softwareFm.swt.card.ICardHolder;
 import org.softwareFm.swt.card.IHasCardConfig;
 import org.softwareFm.swt.card.RightClickCategoryResult;
-import org.softwareFm.swt.comments.ICommentWriter;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.dataStore.ICardAndCollectionDataStoreVisitor;
 import org.softwareFm.swt.explorer.internal.Explorer;
@@ -76,7 +76,7 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 
 	public static class Utils {
 
-		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, IUserReader userReader, IUserMembershipReader userMembershipReader, IGroupsReader groupsReader, CardConfig cardConfig, List<String> rootUrls, IPlayListGetter playListGetter, IServiceExecutor service, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IShowMyPeople showMyPeople, IUserDataManager userDataManager, ICommentWriter commentWriter, ICommentsReader commentsReader, Callable<Long> timeGetter) {
+		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, IUserReader userReader, IUserMembershipReader userMembershipReader, IGroupsReader groupsReader, CardConfig cardConfig, List<String> rootUrls, IPlayListGetter playListGetter, IServiceExecutor service, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IShowMyPeople showMyPeople, IUserDataManager userDataManager, IComments commentWriter, ICommentsReader commentsReader, Callable<Long> timeGetter) {
 			return new Explorer(cardConfig, rootUrls, masterDetailSocial, service, userReader, userMembershipReader, groupsReader, playListGetter, loginStrategy, showMyData, showMyGroups, showMyPeople, userDataManager, commentWriter, commentsReader, timeGetter);
 		}
 	}

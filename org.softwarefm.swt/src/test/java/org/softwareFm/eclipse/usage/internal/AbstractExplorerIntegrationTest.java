@@ -22,11 +22,14 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.softwareFm.crowdsource.api.IComments;
 import org.softwareFm.crowdsource.api.ICommentsReader;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
+import org.softwareFm.crowdsource.api.MailerMock;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitLocal;
 import org.softwareFm.crowdsource.api.git.IGitOperations;
+import org.softwareFm.crowdsource.api.server.ICallProcessor;
 import org.softwareFm.crowdsource.api.user.IUser;
 import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
 import org.softwareFm.crowdsource.api.user.IUserReader;
@@ -69,7 +72,6 @@ import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardFactory;
 import org.softwareFm.swt.card.ICardHolder;
 import org.softwareFm.swt.card.ILineSelectedListener;
-import org.softwareFm.swt.comments.ICommentWriter;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.dataStore.CardAndCollectionDataStoreAdapter;
@@ -123,7 +125,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	protected IUserReader userReader;
 	protected IUserMembershipReader userMembershipReader;
 	protected LocalGroupsReader groupsReader;
-	protected ICommentWriter commentsWriter;
+	protected IComments commentsWriter;
 	protected ICommentsReader commentsReader;
 	protected BasicDataSource dataSource;
 	protected IUserDataManager userDataManager;
@@ -303,8 +305,8 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 
 		userReader = makeUserReader();
 		userMembershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, userReader);
-		IProcessCall[] extraProcessCalls = getExtraProcessCalls(remoteOperations, cryptoFn);
-		IProcessCall processCall = IProcessCall.Utils.softwareFmProcessCall(processCallParameters, Functions.<ProcessCallParameters, IProcessCall[]> constant(extraProcessCalls));
+		ICallProcessor[] extraProcessCalls = getExtraProcessCalls(remoteOperations, cryptoFn);
+		ICallProcessor processCall = ICallProcessor.Utils.softwareFmProcessCall(processCallParameters, Functions.<ProcessCallParameters, ICallProcessor[]> constant(extraProcessCalls));
 		crowdSourcedServer = ICrowdSourcedServer.Utils.testServerPort(processCall, ICallback.Utils.rethrow());
 		try {
 
@@ -318,7 +320,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 			IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, false, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, projectTimeGetter, reportGenerator, groupClientOperations);
 			IShowMyPeople showMyPeople = MyPeople.showMyPeople(service, masterDetailSocial, cardConfig, gitLocal, userUrlGenerator, groupUrlGenerator, projectTimeGetter, reportGenerator, CommonConstants.testTimeOutMs * 10);
 
-			commentsWriter = ICommentWriter.Utils.commentWriter(httpClient, CommonConstants.testTimeOutMs, gitLocal);
+			commentsWriter = IComments.Utils.commentWriter(httpClient, CommonConstants.testTimeOutMs, gitLocal);
 			commentsReader = makeCommentsReader();
 			userDataManager = IUserDataManager.Utils.userDataManager();
 			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, userReader, userMembershipReader, groupsReader, cardConfig, //
@@ -340,8 +342,8 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 		}
 	}
 
-	protected IProcessCall[] getExtraProcessCalls(IGitOperations remoteGitOperations, IFunction1<Map<String, Object>, String> cryptoFn) {
-		return new IProcessCall[] {//
+	protected ICallProcessor[] getExtraProcessCalls(IGitOperations remoteGitOperations, IFunction1<Map<String, Object>, String> cryptoFn) {
+		return new ICallProcessor[] {//
 				new CommentProcessor(userReader, userMembershipReader, groupsReader, new CommentsForServer(remoteGitOperations, user, userMembershipReader, groupsReader, Callables.value(1000l)), cryptoFn) };
 	}
 
