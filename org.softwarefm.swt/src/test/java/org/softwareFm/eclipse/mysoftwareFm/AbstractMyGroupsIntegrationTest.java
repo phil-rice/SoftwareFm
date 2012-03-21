@@ -11,42 +11,33 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.Table;
-import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
-import org.softwareFm.crowdsource.api.git.IGitOperations;
-import org.softwareFm.crowdsource.api.server.ICallProcessor;
-import org.softwareFm.crowdsource.api.server.ITakeOnProcessor;
-import org.softwareFm.crowdsource.api.server.SignUpResult;
+import org.softwareFm.crowdsource.api.user.IGroups;
+import org.softwareFm.crowdsource.api.user.IUserMembership;
 import org.softwareFm.crowdsource.api.user.IUserReader;
-import org.softwareFm.crowdsource.utilities.arrays.ArrayHelper;
-import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback2;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
-import org.softwareFm.crowdsource.utilities.functions.Functions;
-import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
-import org.softwareFm.crowdsource.utilities.runnable.Callables;
-import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups.MyGroupsComposite;
 import org.softwareFm.eclipse.mysoftwareFm.MyPeople.MyPeopleComposite;
 import org.softwareFm.eclipse.usage.internal.AbstractExplorerIntegrationTest;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
-import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.explorer.internal.MySoftwareFmLoggedIn.MySoftwareFmLoggedInComposite;
 import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.swt.Swts;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIntegrationTest {
 
-	protected final String email = "my0@email.com";
-	protected final String email1 = "my1@email.com";
-	protected final String email2 = "my2@email.com";
-	protected final String email3 = "my3@email.com";
-	protected final String softwareFmId = "newSoftwareFmId0";
-	protected final String softwareFmId1 = "newSoftwareFmId1";
-	protected final String softwareFmId2 = "newSoftwareFmId2";
-	protected final String softwareFmId3 = "newSoftwareFmId3";
-	protected final UserData userData = new UserData(email, softwareFmId, userCryptoKey);
+	protected final String softwareFmId0 = "someNewSoftwareFmId0";
+	protected final String softwareFmId1 = "someNewSoftwareFmId1";
+	protected final String softwareFmId2 = "someNewSoftwareFmId2";
+	protected final String softwareFmId3 = "someNewSoftwareFmId3";
+
+	protected final String email0 = softwareFmId0+"@someEmail.com";
+	protected final String email1 = softwareFmId1+"@someEmail.com";
+	protected final String email2 = softwareFmId2+"@someEmail.com";
+	protected final String email3 = softwareFmId3+"@someEmail.com";
+	protected final UserData userData = new UserData(email0, softwareFmId0, userKey0);
 
 	protected MyGroupsComposite displayMySoftwareClickMyGroup() {
 		userDataManager.setUserData(this, userData);
@@ -60,7 +51,7 @@ abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIn
 	}
 
 	protected MyGroupsComposite dispatchUntilMyGroups() {
-		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
+		dispatchUntil(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				Control detail = masterDetailSocial.getDetailContent();
@@ -76,14 +67,14 @@ abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIn
 	protected MyPeopleComposite displayMyPeople(final String groupId, final String artifactId, final int expectedTableCount) {
 		userDataManager.setUserData(this, userData);
 		explorer.showPeople(groupId, artifactId);
-		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
+		dispatchUntil(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				Control detailContent = masterDetailSocial.getDetailContent();
 				return detailContent instanceof MyPeopleComposite;
 			}
 		});
-		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
+		dispatchUntil(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				MyPeopleComposite myPeopleComposite = (MyPeopleComposite) masterDetailSocial.getDetailContent();
@@ -94,7 +85,7 @@ abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIn
 				return false;
 			}
 		});
-		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
+		dispatchUntil(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				MyPeopleComposite myPeopleComposite = (MyPeopleComposite) masterDetailSocial.getDetailContent();
@@ -109,53 +100,39 @@ abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIn
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		new JdbcTemplate(processCallParameters.dataSource).update("delete from users");
-		String newSfmId = processCallParameters.softwareFmIdGenerator.call();
-		assertEquals(softwareFmId, newSfmId);
-		assertEquals(userCryptoKey, signUpUser(newSfmId, email));
+		truncateUsersTable();
+		assertEquals(softwareFmId0, createUser());
 	}
 
-	protected String signUpUser(String softwareFmId, String email) {
-		SignUpResult signUp = processCallParameters.signUpChecker.signUp(email, softwareFmId + "Moniker", "someSalt", "somePassword", softwareFmId);
-		if (signUp.errorMessage != null)
-			fail(signUp.errorMessage);
-		return signUp.crypto;
-	}
-
-	protected void createGroup(String groupId, String groupCryptoKey) {
-		groups.setGroupProperty(groupId, groupCryptoKey, GroupConstants.groupNameKey, groupId + "Name");
-		processCallParameters.aboveRepostoryUrlCache.clear();
-	}
 
 	protected void addUserToGroup(String softwareFmId, String email, String groupId, String groupCryptoKey, String status) {
-		String crypto = Functions.call(processCallParameters.userCryptoFn, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
-		String usersProjectCryptoKey = user.getUserProperty(softwareFmId, crypto, JarAndPathConstants.projectCryptoKey);
+		String crypto = getUserCryptoAccess().getCryptoForUser(softwareFmId);
+		String usersProjectCryptoKey = IUserReader.Utils.getUserProperty(getServerApi().makeReader(), softwareFmId, crypto, JarAndPathConstants.projectCryptoKey);
 
 		addUserToGroup(softwareFmId, crypto, usersProjectCryptoKey, groupId, groupCryptoKey, email, status);
 	}
 
-	protected void addUserToGroup(String softwareFmId, String crypto, String usersProjectCryptoKey, String groupId, String groupCryptoKey, String email, String status) {
+	protected void addUserToGroup(final String softwareFmId, final String crypto, String usersProjectCryptoKey, final String groupId, final String groupCryptoKey, String email, final String status) {
 		assertNotNull(usersProjectCryptoKey);
-		Map<String, Object> initialData = Maps.stringObjectMap(LoginConstants.emailKey, email,//
+		final Map<String, Object> initialData = Maps.stringObjectMap(LoginConstants.emailKey, email,//
 				LoginConstants.softwareFmIdKey, softwareFmId, //
 				JarAndPathConstants.projectCryptoKey, usersProjectCryptoKey, //
 				GroupConstants.membershipStatusKey, status);
-		groups.addUser(groupId, groupCryptoKey, initialData);
-		membershipForServer.addMembership(softwareFmId, crypto, groupId, groupCryptoKey, status);
+		getServerApi().makeReadWriter().modifyUserMembership(new ICallback2<IGroups, IUserMembership>(){
+			@Override
+			public void process(IGroups groups, IUserMembership membershipForServer) throws Exception {
+				groups.addUser(groupId, groupCryptoKey, initialData);
+				membershipForServer.addMembership(softwareFmId, crypto, groupId, groupCryptoKey, status);
+			}});
 	}
 
-	@Override
-	protected IUserReader makeUserReader() {
-		IUrlGenerator userUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.userUrlKey);
-		return IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
-	}
 
 	protected void addUserToGroup1AndGroup2() {
-		createGroup(groupId1, groupCryptoKey1);
-		addUserToGroup(softwareFmId, email1, groupId1, groupCryptoKey1, "someStatus1");
+		assertEquals(groupId0, createGroup(groupId0 +"Name", groupCryptoKey0));
+		addUserToGroup(softwareFmId0, email0, groupId0, groupCryptoKey0, "someStatus1");
 
-		createGroup(groupId2, groupCryptoKey2);
-		addUserToGroup(softwareFmId, email2, groupId2, groupCryptoKey2, "someStatus2");
+		assertEquals(groupId1, createGroup(groupId1 +"Name", groupCryptoKey1));
+		addUserToGroup(softwareFmId0, email0, groupId1, groupCryptoKey1, "someStatus2");
 	}
 
 	protected Table getMyGroupsTable(MyGroupsComposite myGroupsComposite) {
@@ -183,21 +160,5 @@ abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIn
 			return null;
 	}
 
-	@Override
-	protected IFunction1<String, String> getEmailToSfmIdFn() {
-		IFunction1<String, String> emailToSoftwareFmId = ICrowdSourcedServer.Utils.emailToSoftwareFmId(processCallParameters.dataSource);
-		return emailToSoftwareFmId;
-	}
 
-	@Override
-	protected ICallProcessor[] getExtraProcessCalls(IGitOperations remoteGitOperations, IFunction1<Map<String, Object>, String> cryptoFn) {
-		Callable<String> groupIdGenerator = Callables.valueFromList(groupId1, groupId2);
-		Callable<String> groupCryptoGenerator = Callables.valueFromList(groupCryptoKey1, groupCryptoKey2);
-		ITakeOnProcessor takeOnProcessor = new TakeOnProcessor(remoteGitOperations, user, membershipForServer, groups, processCallParameters.userCryptoFn, groupUrlGenerator, groupIdGenerator, repoDefnFn);
-		TakeOnGroupProcessor takeOnGroupProcessor = new TakeOnGroupProcessor(takeOnProcessor, processCallParameters.signUpChecker, groupCryptoGenerator, getEmailToSfmIdFn(), processCallParameters.saltGenerator, processCallParameters.softwareFmIdGenerator, mailer);
-		InviteGroupProcessor inviteGroupProcessor = new InviteGroupProcessor(takeOnProcessor, processCallParameters.signUpChecker, getEmailToSfmIdFn(), processCallParameters.saltGenerator, processCallParameters.softwareFmIdGenerator, mailer, processCallParameters.userCryptoFn, userMembershipReader, groupsReader);
-		AcceptInviteGroupProcessor acceptInviteGroupProcessor = new AcceptInviteGroupProcessor(groups, membershipForServer, processCallParameters.userCryptoFn);
-		KickFromGroupCommandProcessor kickFromGroupCommandProcessor = new KickFromGroupCommandProcessor(groups, membershipForServer, processCallParameters.userCryptoFn);
-		return ArrayHelper.append(super.getExtraProcessCalls(remoteGitOperations, cryptoFn), takeOnGroupProcessor, inviteGroupProcessor, acceptInviteGroupProcessor, kickFromGroupCommandProcessor);
-	}
 }

@@ -7,6 +7,7 @@ import java.util.concurrent.Callable;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
 import org.softwareFm.crowdsource.httpClient.IHttpClient;
 import org.softwareFm.crowdsource.httpClient.IResponse;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
@@ -42,10 +43,10 @@ public class GroupClientOperations implements IGroupClientOperations {
 	private final IHttpClient client;
 	private final IResourceGetter resourceGetter;
 
-	public GroupClientOperations(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, IHttpClient client) {
+	public GroupClientOperations(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, ICrowdSourceReadWriteApi readWriteApi) {
 		this.masterDetailSocial = masterDetailSocial;
 		this.cardConfig = cardConfig;
-		this.client = client;
+		this.client = readWriteApi.access(IHttpClient.class, Functions.<IHttpClient, IHttpClient>identity());
 		this.resourceGetter = Functions.call(cardConfig.resourceGetterFn, GroupConstants.myGroupsCardType);
 	}
 

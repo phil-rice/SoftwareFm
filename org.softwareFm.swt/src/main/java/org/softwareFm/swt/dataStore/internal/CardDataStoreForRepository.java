@@ -10,8 +10,11 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.widgets.Control;
+import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitLocal;
+import org.softwareFm.crowdsource.api.git.IGitReader;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
@@ -24,29 +27,41 @@ import org.softwareFm.swt.swt.Swts;
 
 public class CardDataStoreForRepository implements IMutableCardDataStore {
 	private final Control control;
-	private final IGitLocal gitLocal;
 	private final IServiceExecutor serviceExecutor;
+	private final ICrowdSourceReadWriteApi readWriteApi;
+	private final File root;
 
-	public CardDataStoreForRepository(Control from, IServiceExecutor serviceExecutor, IGitLocal facard) {
+	public CardDataStoreForRepository(Control from, IServiceExecutor serviceExecutor, ICrowdSourceReadWriteApi readWriteApi) {
 		this.control = from;
 		this.serviceExecutor = serviceExecutor;
-		this.gitLocal = facard;
+		this.readWriteApi = readWriteApi;
+		this.root = readWriteApi.gitOperations().getRoot();
 	}
 
 	@Override
-	public void clearCache(String url) {
-		gitLocal.clearCache(url);
+	public void clearCache(final String url) {
+		readWriteApi.modify(IGitLocal.class, new ICallback<IGitLocal>() {
+			@Override
+			public void process(IGitLocal gitLocal) throws Exception {
+				gitLocal.clearCache(url);
+			}
+		});
 	}
 
 	@Override
 	public void refresh(String url) {
-		gitLocal.clearCaches();
-		Files.deleteDirectory(new File(gitLocal.getRoot(), url));
+		clearCache(url);
+		Files.deleteDirectory(new File(root, url));
 	}
 
 	@Override
 	public void clearCaches() {
-		gitLocal.clearCaches();
+		readWriteApi.modify(IGitLocal.class, new ICallback<IGitLocal>() {
+			@Override
+			public void process(IGitLocal gitLocal) throws Exception {
+				gitLocal.clearCaches();
+			}
+		});
 	}
 
 	@Override
@@ -56,7 +71,12 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 			public Void apply(IMonitor from) throws Exception {
 				from.beginTask(MessageFormat.format(CardMessages.makeRepo, url), 2);
 				try {
-					gitLocal.init(url);
+					readWriteApi.modify(IGitLocal.class, new ICallback<IGitLocal>() {
+						@Override
+						public void process(IGitLocal gitLocal) throws Exception {
+							gitLocal.init(url);
+						}
+					});
 					from.worked(1);
 					callback.afterEdit(url);
 					return null;
@@ -74,7 +94,12 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 			public Void apply(IMonitor from) throws Exception {
 				from.beginTask(MessageFormat.format(CardMessages.delete, url), 2);
 				try {
-					gitLocal.delete(IFileDescription.Utils.plain(url));
+					readWriteApi.modify(IGitLocal.class, new ICallback<IGitLocal>() {
+						@Override
+						public void process(IGitLocal gitLocal) throws Exception {
+							gitLocal.init(url);
+						}
+					});
 					from.worked(1);
 					callback.afterEdit(url);
 					return null;
@@ -93,7 +118,7 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 			@Override
 			public T apply(final IMonitor from) throws Exception {
 				from.beginTask(MessageFormat.format(CardMessages.processDataFor, url), 2);
-				final Map<String, Object> data = gitLocal.getFileAndDescendants(fileDescription);
+				final Map<String, Object> data = IGitReader.Utils.getFileAndDescendants(readWriteApi, fileDescription);
 				from.worked(1);
 				Swts.asyncExecAndMarkDone(control, from, new Runnable() {
 					@Override
@@ -115,8 +140,13 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 			@Override
 			public Void apply(IMonitor from) throws Exception {
 				from.beginTask(MessageFormat.format(CardMessages.put, url, map), 2);
-				IFileDescription fileDescription = IFileDescription.Utils.plain(url);
-				gitLocal.put(fileDescription, map);
+				final IFileDescription fileDescription = IFileDescription.Utils.plain(url);
+				readWriteApi.modify(IGitLocal.class, new ICallback<IGitLocal>() {
+					@Override
+					public void process(IGitLocal gitLocal) throws Exception {
+						gitLocal.put(fileDescription, map);
+					}
+				});
 				from.worked(1);
 				Swts.asyncExecAndMarkDone(control, from, new Runnable() {
 					@Override

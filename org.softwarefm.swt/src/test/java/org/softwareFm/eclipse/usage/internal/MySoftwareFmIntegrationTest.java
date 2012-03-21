@@ -12,38 +12,23 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.commons.dbcp.BasicDataSource;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
-import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
-import org.softwareFm.crowdsource.api.git.IGitOperations;
-import org.softwareFm.crowdsource.api.server.ICallProcessor;
-import org.softwareFm.crowdsource.api.server.IMailer;
-import org.softwareFm.crowdsource.api.user.IUserReader;
-import org.softwareFm.crowdsource.httpClient.IHttpClient;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
 import org.softwareFm.crowdsource.httpClient.internal.MemoryResponseCallback;
-import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
-import org.softwareFm.crowdsource.utilities.functions.Functions;
-import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
-import org.softwareFm.crowdsource.utilities.processors.AbstractLoginDataAccessor;
-import org.softwareFm.crowdsource.utilities.runnable.Callables;
 import org.softwareFm.crowdsource.utilities.tests.IIntegrationTest;
-import org.softwareFm.crowdsource.utilities.tests.Tests;
 import org.softwareFm.crowdsource.utilities.url.Urls;
-import org.softwareFm.jarAndClassPath.api.SoftwareFmServer;
-import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.swt.card.composites.CompositeWithCardMargin;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.configuration.ICardConfigurator;
@@ -57,38 +42,31 @@ import org.softwareFm.swt.explorer.internal.MySoftwareFm;
 import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.swt.okCancel.IOkCancelForTests;
-import org.softwareFm.swt.swt.SwtAndServiceTest;
 import org.softwareFm.swt.swt.Swts;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements IIntegrationTest {
+public class MySoftwareFmIntegrationTest extends ApiAndSwtTest implements IIntegrationTest {
 
-	private IHttpClient client;
 	private MySoftwareFm mySoftwareFm;
-	private BasicDataSource dataSource;
-	private JdbcTemplate template;
 	private Composite softwareFmComposite;
-	private ICrowdSourcedServer server;
 
 	private final String email = "a.b@c.com";
 	private final String password = "pass1";
 	private final String moniker = "moniker";
+	
 	private CardConfig cardConfig;
-	private String key;
-	private File root;
 	private File userFile;
-	private File remoteRoot;
 	private IUserDataManager userDataManager;
 
 	public void testForgotPassword() throws Exception {
 		signUp(email, moniker, password);
-		String crypto = template.queryForObject("select crypto from users", String.class);
+		String crypto = getTemplate().queryForObject("select crypto from users", String.class);
 
 		mySoftwareFm.logout();
 		mySoftwareFm.start();
 		displayUntilEmailPassword().pressButton(0);
 		IDataCompositeWithOkCancel<Composite> emailAndMessageComposite = displayUntilValueComposite("Email", "");// the empty string is the label for 'message'
-		checkTextMatches(emailAndMessageComposite.getEditor(), email, "When your email address is correctly entered, please click the 'OK' button below. SoftwareFM will then email you a link to your password.");
+		Swts.checkTextMatches(emailAndMessageComposite.getEditor(), email, "When your email address is correctly entered, please click the 'OK' button below. SoftwareFM will then email you a link to your password.");
 		setValues(email);
 		assertTrue(getOkCancel().isOkEnabled());
 		getOkCancel().ok();
@@ -100,7 +78,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 		mySoftwareFm.start();
 		displayUntilValueComposite("Email", "Password");
 
-		String magicString = template.queryForObject("select passwordResetKey from users", String.class);
+		String magicString = getTemplate().queryForObject("select passwordResetKey from users", String.class);
 		String newPassword = resetPassword(magicString);
 		System.out.println("password: " + newPassword);
 		setValues(email, newPassword);
@@ -111,13 +89,13 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 
 		assertEquals(new UserData(email, "someNewSoftwareFmId0", crypto), userDataManager.getUserData());
 	}
-	
+
 	public void testSignupThenLogin() {
 		assertSame(userDataManager.getUserData(), mySoftwareFm.getUserData());
-
 		signUp(email, moniker, password);
-		String crypto = template.queryForObject("select crypto from users", String.class);
-		String softwareFmId = template.queryForObject("select softwarefmid from users", String.class);
+
+		String crypto = getTemplate().queryForObject("select crypto from users", String.class);
+		String softwareFmId = getTemplate().queryForObject("select softwarefmid from users", String.class);
 		mySoftwareFm.logout();
 
 		mySoftwareFm.start();
@@ -148,6 +126,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 
 	public void testSignup() {
 		String signUpSalt = signUp(email, moniker, password);
+		JdbcTemplate template = getTemplate();
 
 		assertEquals(1, template.queryForInt("select count(*) from users"));
 		assertEquals(email, template.queryForObject("select email from users", String.class));
@@ -168,7 +147,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 
 	public void testLoginErrors() {
 		signUp(email, moniker, password);
-		template.queryForObject("select crypto from users", String.class);
+		getTemplate().queryForObject("select crypto from users", String.class);
 		mySoftwareFm.logout();
 
 		checkLoginError(email, "password", "Email / Password didn't match\n\nClicking this panel will start login again");
@@ -180,7 +159,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 	public void testStartRequestsSalt() {
 		assertNull(mySoftwareFm.getSignupSalt());
 		startAndGetSignupSalt();
-		assertEquals(0, template.queryForInt("select count(*) from users"));
+		assertEquals(0, getTemplate().queryForInt("select count(*) from users"));
 
 		assertNull(userDataManager.getUserData().crypto);
 		assertNull(userDataManager.getUserData().softwareFmId);
@@ -272,7 +251,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 	}
 
 	private void displayUntilCompositeWithCardMargin() {
-		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
+		dispatchUntil(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				Control firstChild = softwareFmComposite.getChildren()[0];
@@ -283,7 +262,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 	}
 
 	private void displayUntilDataCompositeWithTitle(final String title) {
-		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
+		dispatchUntil(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				Control firstChild = softwareFmComposite.getChildren()[0];
@@ -362,7 +341,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 				return false;
 			}
 		};
-		dispatchUntil(display, CommonConstants.testTimeOutMs, childIsValueComposite);
+		dispatchUntil(childIsValueComposite);
 		@SuppressWarnings("unchecked")
 		IDataCompositeWithOkCancel<Composite> valueComposite = (IDataCompositeWithOkCancel<Composite>) softwareFmComposite.getChildren()[0];
 		return valueComposite;
@@ -370,7 +349,7 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 
 	private String startAndGetSignupSalt() {
 		mySoftwareFm.start();
-		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
+		dispatchUntil(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				return mySoftwareFm.getSignupSalt() != null;
@@ -398,37 +377,19 @@ public class MySoftwareFmIntegrationTest extends SwtAndServiceTest implements II
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		root = Tests.makeTempDirectory(getClass().getSimpleName());
-		remoteRoot = new File(root, "remote");
-		dataSource = AbstractLoginDataAccessor.defaultDataSource();
-		Callable<String> softwareFmIdGenerator = Callables.patternWithCount("someNewSoftwareFmId{0}");
-		key = Crypto.makeKey();
-		Callable<String> cryptoGenerator = Callables.value(key);
-		IGitOperations remoteOperations = IGitOperations.Utils.gitOperations(remoteRoot);
-		IFunction1<Map<String, Object>, String> userCryptoFn = ICrowdSourcedServer.Utils.cryptoFn(dataSource);
-		Map<String, Callable<Object>> defaultValues = SoftwareFmServer.makeUserDefaultProperties();
-		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, remoteOperations, cryptoGenerator, softwareFmIdGenerator, userCryptoFn, IMailer.Utils.noMailer(), defaultValues, JarAndPathConstants.urlPrefix);
-		ICallProcessor softwareFmProcessCall = ICallProcessor.Utils.softwareFmProcessCall(processCallParameters, Functions.<ProcessCallParameters, ICallProcessor[]> constant(new ICallProcessor[0]));
-		server = ICrowdSourcedServer.Utils.testServerPort(softwareFmProcessCall, ICallback.Utils.rethrow());
-		client = IHttpClient.Utils.builder("localhost", 8080);
-		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(display, service, client);
+		getServerApi().getServer();
+		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(display, getServiceExecutor(), getLocalApi().makeReadWriter());
 		cardConfig = ICardConfigurator.Utils.cardConfigForTests(display);
-		IUserReader userReader = IUserReader.Utils.mockReader(LoginConstants.emailKey, email, LoginConstants.monikerKey, moniker);
 		userDataManager = IUserDataManager.Utils.userDataManager();
-		mySoftwareFm = new MySoftwareFm(shell, cardConfig, loginStrategy, IShowMyData.Utils.exceptionShowMyData(), IShowMyGroups.Utils.exceptionShowMyGroups(), userReader, userDataManager);
-		template = new JdbcTemplate(dataSource);
-		template.update("truncate users");
+		mySoftwareFm = new MySoftwareFm(shell, getLocalApi().makeReadWriter(), cardConfig, loginStrategy, IShowMyData.Utils.exceptionShowMyData(), IShowMyGroups.Utils.exceptionShowMyGroups(), userDataManager);
 		softwareFmComposite = mySoftwareFm.getComposite();
-
 		userFile = new File(remoteRoot, Urls.compose("softwareFm/users/so/me/someNewSoftwareFmId0", CommonConstants.dataFileName));
+		truncateUsersTable();
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		server.shutdown();
-		client.shutdown();
-		dataSource.close();
 		cardConfig.dispose();
 		if (root.exists())
 			assertTrue(Files.deleteDirectory(root));

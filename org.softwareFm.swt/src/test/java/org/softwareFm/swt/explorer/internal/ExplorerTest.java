@@ -8,22 +8,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
-import org.softwareFm.crowdsource.api.ICommentsReader;
-import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
-import org.softwareFm.crowdsource.api.user.IUserReader;
-import org.softwareFm.crowdsource.membership.internal.UserMembershipReaderForLocal;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.crowdsource.utilities.resources.ResourceGetterMock;
 import org.softwareFm.crowdsource.utilities.runnable.Callables;
+import org.softwareFm.eclipse.usage.internal.ApiAndSwtTest;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.card.ICardFactory;
 import org.softwareFm.swt.card.ICardHolder;
 import org.softwareFm.swt.card.dataStore.CardDataStoreMock;
-import org.softwareFm.swt.comments.ICommentWriter;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.dataStore.CardAndCollectionDataStoreAdapter;
@@ -33,11 +29,10 @@ import org.softwareFm.swt.explorer.IShowMyPeople;
 import org.softwareFm.swt.explorer.IUserDataManager;
 import org.softwareFm.swt.menu.PopupMenuContributorMock;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
-import org.softwareFm.swt.swt.SwtAndServiceTest;
 import org.softwareFm.swt.timeline.IPlayListGetter;
 import org.softwareFm.swt.title.TitleSpec;
 
-public class ExplorerTest extends SwtAndServiceTest {
+public class ExplorerTest extends ApiAndSwtTest {
 
 	private final static String popupMenuId = "some";
 	private CardDataStoreMock updateStore;
@@ -68,18 +63,12 @@ public class ExplorerTest extends SwtAndServiceTest {
 				"noCardNameField", new ResourceGetterMock(), //
 				"withCardNameField", new ResourceGetterMock(CardConstants.cardNameFieldKey, "cardName"))).//
 				withTitleSpecFn(Functions.<ICardData, TitleSpec> constant(TitleSpec.noTitleSpec(shell.getBackground())));
-		IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(null, null, null);
-		LocalGroupsReader groupsReader = new LocalGroupsReader(null, null);
-		Explorer explorer = new Explorer(cardConfig, CardDataStoreFixture.urlAsList, masterDetailSocial, service, //
-				IUserReader.Utils.exceptionUserReader(),//
-				userMembershipReader, groupsReader, IPlayListGetter.Utils.noPlayListGetter(), //
-				ILoginStrategy.Utils.noLoginStrategy(), //
-				IShowMyData.Utils.exceptionShowMyData(),//
-				IShowMyGroups.Utils.exceptionShowMyGroups(),//
-				IShowMyPeople.Utils.exceptionShowMyPeople(),//
-				IUserDataManager.Utils.userDataManager(), //
-				ICommentWriter.Utils.exceptionCommentWriter(),//
-				ICommentsReader.Utils.mockReader("someId", "someMoniker", 1000), Callables.value(1000l)) {
+		Explorer explorer = new Explorer(getLocalApi().makeReadWriter(), cardConfig, CardDataStoreFixture.urlAsList, masterDetailSocial, getServiceExecutor(), //
+				IPlayListGetter.Utils.noPlayListGetter(),//
+				ILoginStrategy.Utils.noLoginStrategy(), IShowMyData.Utils.exceptionShowMyData(), IShowMyGroups.Utils.exceptionShowMyGroups(), //
+				IShowMyPeople.Utils.exceptionShowMyPeople(), //
+				IUserDataManager.Utils.userDataManager(),//
+				Callables.value(1000l)) {
 			@Override
 			protected String makeRandomUUID() {
 				return "randomUUID";

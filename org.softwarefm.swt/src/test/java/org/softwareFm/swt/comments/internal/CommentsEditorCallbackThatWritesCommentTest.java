@@ -8,8 +8,13 @@ import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
+import org.softwareFm.crowdsource.api.ApiConfig;
+import org.softwareFm.crowdsource.api.IApiBuilder;
 import org.softwareFm.crowdsource.api.ICommentDefn;
 import org.softwareFm.crowdsource.api.IComments;
+import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcesApi;
+import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.constants.CommentConstants;
@@ -37,6 +42,7 @@ public class CommentsEditorCallbackThatWritesCommentTest extends TestCase {
 			Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.groupCryptoKey, groupCrypto), //
 			Maps.stringObjectMap(GroupConstants.groupIdKey, "groupIdAfter", GroupConstants.groupCryptoKey, Crypto.makeKey()));
 	private CommentsEditorCallbackThatWritesComment callback;
+	private ICrowdSourceReadWriteApi readWriteApi;
 
 	@Test
 	public void testCancel() {
@@ -59,7 +65,7 @@ public class CommentsEditorCallbackThatWritesCommentTest extends TestCase {
 		EasyMock.expect(userReader.getUserProperty(softwareFmId, userCrypto, CommentConstants.commentCryptoKey)).andReturn(Crypto.makeKey()).times(2);
 		EasyMock.replay(userReader);
 
-		commentWriter.addComment(softwareFmId, userCrypto, ICommentDefn.Utils.myInitial(userReader, softwareFmId, userCrypto, url), text);
+		commentWriter.addComment(softwareFmId, userCrypto, ICommentDefn.Utils.myInitial(readWriteApi, softwareFmId, userCrypto, url), text);
 		EasyMock.replay(groupsReader, commentWriter, whenFinished);
 
 		callback.youComment(url, text);
@@ -71,7 +77,7 @@ public class CommentsEditorCallbackThatWritesCommentTest extends TestCase {
 		EasyMock.expect(groupsReader.getGroupProperty(groupId, groupCrypto, CommentConstants.commentCryptoKey)).andReturn(groupCommentCrypto).times(2);
 		EasyMock.replay(groupsReader);
 
-		commentWriter.addComment(softwareFmId, userCrypto, ICommentDefn.Utils.groupInitial(groupsReader, groupId, groupCrypto, url), text);
+		commentWriter.addComment(softwareFmId, userCrypto, ICommentDefn.Utils.groupInitial(readWriteApi, groupId, groupCrypto, url), text);
 		EasyMock.replay(userReader, commentWriter, whenFinished);
 
 		callback.groupComment(url, 1, text);
@@ -85,7 +91,16 @@ public class CommentsEditorCallbackThatWritesCommentTest extends TestCase {
 		groupsReader = EasyMock.createMock(IGroupsReader.class);
 		commentWriter = EasyMock.createMock(IComments.class);
 		whenFinished = EasyMock.createMock(Runnable.class);
-		callback = new CommentsEditorCallbackThatWritesComment(userReader, groupsReader, commentWriter, softwareFmId, userCrypto, groupsData, whenFinished);
+		ICrowdSourcesApi api = ICrowdSourcesApi.Utils.forTests(new IExtraReaderWriterConfigurator<ApiConfig>() {
+			@Override
+			public void builder(IApiBuilder builder, ApiConfig apiConfig) {
+				builder.registerReader(IUserReader.class, userReader);
+				builder.registerReader(IGroupsReader.class, groupsReader);
+				builder.registerReaderAndWriter(IComments.class, commentWriter);
+			}
+		}, null);
+		readWriteApi = api.makeReadWriter();
+		callback = new CommentsEditorCallbackThatWritesComment(readWriteApi, softwareFmId, userCrypto, groupsData, whenFinished);
 	}
 
 	@Override

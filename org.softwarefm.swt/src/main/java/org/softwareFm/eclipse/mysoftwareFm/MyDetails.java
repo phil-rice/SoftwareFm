@@ -16,16 +16,15 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.softwareFm.crowdsource.api.git.IGitLocal;
+import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
 import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.functions.IFunction3;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
-import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
-import org.softwareFm.eclipse.project.UserAndProjectFactory;
 import org.softwareFm.jar.EclipseMessages;
 import org.softwareFm.jarAndClassPath.api.IProjectTimeGetter;
 import org.softwareFm.jarAndClassPath.api.IUsageReader;
@@ -42,7 +41,7 @@ import org.softwareFm.swt.swt.Swts;
 
 public class MyDetails implements IHasComposite {
 
-	public static IShowMyData showMyDetails(final IServiceExecutor executor, final CardConfig cardConfig, final IMasterDetailSocial masterDetailSocial, final IUrlGenerator userUrlGenerator, final IGitLocal gitLocal, final IProjectTimeGetter timeGetter) {
+	public static IShowMyData showMyDetails(final ICrowdSourceReadWriteApi readWriteApi, final IServiceExecutor executor, final CardConfig cardConfig, final IMasterDetailSocial masterDetailSocial) {
 		return new IShowMyData() {
 			@Override
 			public void show(final UserData userData) {
@@ -50,10 +49,7 @@ public class MyDetails implements IHasComposite {
 				executor.submit(new IFunction1<IMonitor,Void>() {
 					@Override
 					public Void apply(IMonitor monitor) throws Exception {
-						monitor.beginTask(EclipseMessages.showMyData, 2);
-						final IUserReader user = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
-						final IUsageReader project = UserAndProjectFactory.projectForLocal(user, userUrlGenerator, userData.crypto, gitLocal);
-						
+						monitor.beginTask(EclipseMessages.showMyData, 1);
 						Swts.asyncExec(masterDetailSocial.getControl(), new Runnable() {
 							@Override
 							public void run() {
@@ -61,7 +57,7 @@ public class MyDetails implements IHasComposite {
 								masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyDetails>() {
 									@Override
 									public MyDetails apply(Composite from) throws Exception {
-										return new MyDetails(from, cardConfig, userData, user, project, timeGetter);
+										return new MyDetails(from, readWriteApi, cardConfig, userData);
 									}
 								});
 							}
@@ -84,50 +80,55 @@ public class MyDetails implements IHasComposite {
 			return projectDetails;
 		}
 
-		public MyProjectComposite(Composite parent, int style, final CardConfig cc, UserData userData, IUserReader user, IUsageReader project, IProjectTimeGetter timeGetter) {
+		public MyProjectComposite(Composite parent, int style, final CardConfig cc, final UserData userData, ICrowdSourceReadWriteApi readWriteApi) {
 			super(parent, cc, CardConstants.loginCardType, JarAndPathConstants.myProjectsTitle, true);
-
-			Map<String, Map<String, Map<String, Integer>>> groupToArtifactToMonthToCount = Maps.newMap();
-			Iterable<String> lastNMonths = timeGetter.lastNMonths(3);
 			this.projectDetails = new Table(getInnerBody(), SWT.FULL_SELECTION);
-			projectDetails.setHeaderVisible(true);
-			new TableColumn(projectDetails, SWT.NULL).setText("Group ID");
-			new TableColumn(projectDetails, SWT.NULL).setText("Artifact ID");
-			for (String month : lastNMonths) {
-				TableColumn column = new TableColumn(projectDetails, SWT.NULL);
-				column.setText(MySoftwareFmFunctions.monthFileNameToPrettyName(month));
-			}
-			String projectCryptoKey = user.getUserProperty(userData.softwareFmId, userData.crypto, JarAndPathConstants.projectCryptoKey);
-
-			for (String month : lastNMonths) {
-				Map<String, Map<String, List<Integer>>> monthDetails = project.getProjectDetails(userData.softwareFmId, projectCryptoKey, month);
-				for (Entry<String, Map<String, List<Integer>>> groupEntry : monthDetails.entrySet())
-					for (Entry<String, List<Integer>> artifactEntry : groupEntry.getValue().entrySet())
-						Maps.addToMapOfMapOfMaps(groupToArtifactToMonthToCount, HashMap.class, groupEntry.getKey(), artifactEntry.getKey(), month, artifactEntry.getValue().size());
-			}
-
-			for (String groupId : Lists.sort(groupToArtifactToMonthToCount.keySet())) {
-				Map<String, Map<String, Integer>> groupMap = groupToArtifactToMonthToCount.get(groupId);
-				for (String artifactId : Lists.sort(groupMap.keySet())) {
-					Map<String, Integer> artifactMap = groupMap.get(artifactId);
-					TableItem item = new TableItem(projectDetails, SWT.FULL_SELECTION);
-					item.setText(0, groupId);
-					item.setText(1, artifactId);
-					int index = 2;
+			readWriteApi.access(IUserReader.class, IProjectTimeGetter.class, IUsageReader.class, new IFunction3<IUserReader, IProjectTimeGetter, IUsageReader, Void>() {
+				@Override
+				public Void apply(IUserReader user, IProjectTimeGetter timeGetter, IUsageReader project) throws Exception {
+					Map<String, Map<String, Map<String, Integer>>> groupToArtifactToMonthToCount = Maps.newMap();
+					Iterable<String> lastNMonths = timeGetter.lastNMonths(3);
+					projectDetails.setHeaderVisible(true);
+					new TableColumn(projectDetails, SWT.NULL).setText("Group ID");
+					new TableColumn(projectDetails, SWT.NULL).setText("Artifact ID");
 					for (String month : lastNMonths) {
-						Integer count = Maps.intFor(artifactMap, month);
-						item.setText(index++, Integer.toString(count));
+						TableColumn column = new TableColumn(projectDetails, SWT.NULL);
+						column.setText(MySoftwareFmFunctions.monthFileNameToPrettyName(month));
 					}
+					String projectCryptoKey = user.getUserProperty(userData.softwareFmId, userData.crypto, JarAndPathConstants.projectCryptoKey);
+					
+					for (String month : lastNMonths) {
+						Map<String, Map<String, List<Integer>>> monthDetails = project.getProjectDetails(userData.softwareFmId, projectCryptoKey, month);
+						for (Entry<String, Map<String, List<Integer>>> groupEntry : monthDetails.entrySet())
+							for (Entry<String, List<Integer>> artifactEntry : groupEntry.getValue().entrySet())
+								Maps.addToMapOfMapOfMaps(groupToArtifactToMonthToCount, HashMap.class, groupEntry.getKey(), artifactEntry.getKey(), month, artifactEntry.getValue().size());
+					}
+					
+					for (String groupId : Lists.sort(groupToArtifactToMonthToCount.keySet())) {
+						Map<String, Map<String, Integer>> groupMap = groupToArtifactToMonthToCount.get(groupId);
+						for (String artifactId : Lists.sort(groupMap.keySet())) {
+							Map<String, Integer> artifactMap = groupMap.get(artifactId);
+							TableItem item = new TableItem(projectDetails, SWT.FULL_SELECTION);
+							item.setText(0, groupId);
+							item.setText(1, artifactId);
+							int index = 2;
+							for (String month : lastNMonths) {
+								Integer count = Maps.intFor(artifactMap, month);
+								item.setText(index++, Integer.toString(count));
+							}
+						}
+					}
+					Swts.packTables(projectDetails);
+					return null;
 				}
-			}
-			Swts.packTables(projectDetails);
+			});
 		}
 	}
 
 	private final MyProjectComposite content;
 
-	public MyDetails(Composite parent, CardConfig cardConfig, UserData userData, IUserReader user, IUsageReader project, IProjectTimeGetter timeGetter) {
-		this.content = new MyProjectComposite(parent, SWT.NULL, cardConfig, userData, user, project, timeGetter);
+	public MyDetails(Composite parent, ICrowdSourceReadWriteApi readWriteApi, CardConfig cardConfig, UserData userData) {
+		this.content = new MyProjectComposite(parent, SWT.NULL, cardConfig, userData, readWriteApi);
 		content.setLayout(new DataCompositeLayout());
 	}
 

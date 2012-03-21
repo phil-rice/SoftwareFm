@@ -24,11 +24,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
-import org.softwareFm.crowdsource.api.IComments;
-import org.softwareFm.crowdsource.api.ICommentsReader;
+import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
-import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.constants.CommentConstants;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
@@ -105,13 +103,11 @@ public class Explorer implements IExplorer {
 	private Comments comments;
 	private MySoftwareFm mySoftwareFm;
 	private final IShowMyPeople showMyPeople;
-	protected ICommentsReader commentReader;
 
-	public Explorer(final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, final IUserReader userReader, final IUserMembershipReader userMembershipReader, final IGroupsReader groupsReader, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IShowMyData showMyData, final IShowMyGroups showMyGroups, final IShowMyPeople showMyPeople, final IUserDataManager userDataManager, final IComments commentWriter, ICommentsReader commentsReader, final Callable<Long> timeGetter) {
+	public Explorer(final ICrowdSourceReadWriteApi readWriteApi, final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IShowMyData showMyData, final IShowMyGroups showMyGroups, final IShowMyPeople showMyPeople, final IUserDataManager userDataManager, final Callable<Long> timeGetter) {
 		this.cardConfig = cardConfig;
 		this.masterDetailSocial = masterDetailSocial;
 		this.showMyPeople = showMyPeople;
-		this.commentReader = commentsReader;
 		callbackToGotoUrlAndUpdateDetails = new ICallback<String>() {
 			@Override
 			public void process(String url) throws Exception {
@@ -161,7 +157,7 @@ public class Explorer implements IExplorer {
 		comments = masterDetailSocial.createSocial(new IFunction1<Composite, Comments>() {
 			@Override
 			public Comments apply(Composite from) throws Exception {
-				return new Comments(from, cardConfig, commentReader, new ICommentsCallback() {
+				return new Comments(from, readWriteApi, cardConfig, new ICommentsCallback() {
 
 					@Override
 					public void selected(String cardType, String url, int index, Map<String, Object> comment) {
@@ -188,9 +184,9 @@ public class Explorer implements IExplorer {
 								if (userData.softwareFmId == null)
 									throw new IllegalStateException("Need to be logged in");
 								String title = CommentConstants.editorTitle;
-								Iterable<Map<String, Object>> groupData = userMembershipReader.walkGroupsFor(userData.softwareFmId, userData.crypto);
+								Iterable<Map<String, Object>> groupData = IUserMembershipReader.Utils.walkGroups(readWriteApi, userData.softwareFmId, userData.crypto);
 								List<String> groupNames = getGroupNames(groupData);
-								return new CommentsEditor(from, cardConfig, baseUrl, title, "", groupNames, ICommentsEditorCallback.Utils.writeComments(userReader, groupsReader, userData.softwareFmId, userData.crypto, groupData, commentWriter, new Runnable() {
+								return new CommentsEditor(from, cardConfig, baseUrl, title, "", groupNames, ICommentsEditorCallback.Utils.writeComments(readWriteApi, userData.softwareFmId, userData.crypto, groupData,  new Runnable() {
 									@Override
 									public void run() {
 										masterDetailSocial.setDetail(null);
@@ -217,7 +213,7 @@ public class Explorer implements IExplorer {
 										String groupCrypto = (String) from.get(GroupConstants.groupCryptoKey);
 										if (groupId == null || groupCrypto == null)
 											throw new NullPointerException(from.toString());
-										return groupsReader.getGroupProperty(groupId, groupCrypto, GroupConstants.groupNameKey);
+										return IGroupsReader.Utils.getGroupProperty(readWriteApi, groupId, groupCrypto, GroupConstants.groupNameKey);
 									}
 								});
 								return result;
@@ -230,7 +226,7 @@ public class Explorer implements IExplorer {
 		mySoftwareFm = masterDetailSocial.createMaster(new IFunction1<Composite, MySoftwareFm>() {
 			@Override
 			public MySoftwareFm apply(Composite from) throws Exception {
-				MySoftwareFm mySoftwareFm = new MySoftwareFm(from, cardConfig, loginStrategy, showMyData, showMyGroups, userReader, userDataManager);
+				MySoftwareFm mySoftwareFm = new MySoftwareFm(from, readWriteApi, cardConfig, loginStrategy, showMyData, showMyGroups, userDataManager);
 				mySoftwareFm.start();
 				return mySoftwareFm;
 			}

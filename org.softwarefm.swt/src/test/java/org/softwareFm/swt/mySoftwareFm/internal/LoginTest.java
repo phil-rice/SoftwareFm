@@ -21,8 +21,8 @@ public class LoginTest extends AbstractNameAndValuesEditorTest<Login> {
 	private final LoginCallbackMock loginCallback = new LoginCallbackMock();
 
 	public void testLoginEditorWhenDisplayed() {
-		checkLabelsMatch(editorComposite, "Email", "Password");
-		checkTextMatches(editorComposite, "initialEmail", "");
+		Swts.	checkLabelsMatch(editorComposite, "Email", "Password");
+		Swts.	checkTextMatches(editorComposite, "initialEmail", "");
 		assertFalse(okCancel.isOkEnabled());
 	}
 

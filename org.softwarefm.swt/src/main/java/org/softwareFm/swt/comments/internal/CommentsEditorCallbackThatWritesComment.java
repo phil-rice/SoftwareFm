@@ -28,7 +28,7 @@ public class CommentsEditorCallbackThatWritesComment implements ICommentsEditorC
 	@Override
 	public void youComment(String url, String text) {
 		ICommentDefn defn = ICommentDefn.Utils.myInitial(readWriteApi, softwareFmId, userCrypto, url);
-		IComments.Utils.addComment(readWriteApi, text, userCrypto, defn, text);
+		IComments.Utils.addComment(readWriteApi, softwareFmId, userCrypto, defn, text);
 		whenFinished.run();
 	}
 
@@ -40,14 +40,14 @@ public class CommentsEditorCallbackThatWritesComment implements ICommentsEditorC
 		if (groupId == null || groupCrypto == null)
 			throw new IllegalStateException(data.toString());
 		ICommentDefn defn = ICommentDefn.Utils.groupInitial(readWriteApi, groupId, groupCrypto, url);
-		IComments.Utils.addComment(readWriteApi, text, userCrypto, defn, text);
+		IComments.Utils.addComment(readWriteApi, softwareFmId, userCrypto, defn, text);
 		whenFinished.run();
 	}
 
 	@Override
 	public void everyoneComment(String url, String text) {
 		ICommentDefn defn = ICommentDefn.Utils.everyoneInitial(url);
-		IComments.Utils.addComment(readWriteApi, text, userCrypto, defn, text);
+		IComments.Utils.addComment(readWriteApi, softwareFmId, userCrypto, defn, text);
 		whenFinished.run();
 	}
 

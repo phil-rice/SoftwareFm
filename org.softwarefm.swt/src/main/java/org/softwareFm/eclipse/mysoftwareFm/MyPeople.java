@@ -21,23 +21,22 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.softwareFm.crowdsource.api.git.IGitLocal;
+import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
-import org.softwareFm.crowdsource.api.user.IUserReader;
-import org.softwareFm.crowdsource.membership.internal.UserMembershipReaderForLocal;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.collections.Sets;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
-import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
+import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.functions.IFunction3;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
-import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.jar.EclipseMessages;
 import org.softwareFm.jarAndClassPath.api.IProjectTimeGetter;
 import org.softwareFm.jarAndClassPath.api.IRequestGroupReportGeneration;
@@ -53,21 +52,18 @@ import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.swt.Swts;
 
 public class MyPeople implements IHasComposite {
-	public static IShowMyPeople showMyPeople(final IServiceExecutor executor, final IMasterDetailSocial masterDetailSocial, final CardConfig cardConfig, final IGitLocal gitLocal, final IUrlGenerator userUrlGenerator, IUrlGenerator groupUrlGenerator, final IProjectTimeGetter timeGetter, final IRequestGroupReportGeneration reportGenerator, final long timeoutMs) {
-		final IUserReader user = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
-		final IGroupsReader groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
+	public static IShowMyPeople showMyPeople(final ICrowdSourceReadWriteApi readWriteApi, final IServiceExecutor executor, final IMasterDetailSocial masterDetailSocial, final CardConfig cardConfig, final long timeoutMs) {
 		return new IShowMyPeople() {
 			@Override
 			public void showMyPeople(final UserData userData, final String groupId, final String artifactId) {
-				executor.submit(new IFunction1<IMonitor,Void>() {
+				executor.submit(new IFunction1<IMonitor, Void>() {
 					@Override
 					public Void apply(IMonitor monitor) throws Exception {
 						monitor.beginTask(EclipseMessages.showMyPeople, 2);
-						final UserMembershipReaderForLocal membershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, user);
 						MyPeople myPeople = masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyPeople>() {
 							@Override
 							public MyPeople apply(Composite from) throws Exception {
-								return new MyPeople(from, cardConfig, userData, membershipReader, groupsReader, timeGetter, reportGenerator, timeoutMs);
+								return new MyPeople(from, readWriteApi, cardConfig, userData, timeoutMs);
 							}
 						});
 						myPeople.setData(groupId, artifactId);
@@ -88,7 +84,7 @@ public class MyPeople implements IHasComposite {
 			return table;
 		}
 
-		public MyPeopleComposite(Composite parent, int style, final CardConfig cc, IProjectTimeGetter timeGetter) {
+		public MyPeopleComposite(Composite parent, ICrowdSourceReadWriteApi readWriteApi, int style, final CardConfig cc) {
 			super(parent, cc, CardConstants.loginCardType, JarAndPathConstants.peopleIKnowLoadingTitle, true);
 			table = new Table(getInnerBody(), SWT.FULL_SELECTION);
 			addPaintListener(new PaintListener() {
@@ -99,7 +95,7 @@ public class MyPeople implements IHasComposite {
 				}
 			});
 			new TableColumn(table, SWT.NULL).setText("Person");
-			months = timeGetter.lastNMonths(3);
+			months = readWriteApi.access(IProjectTimeGetter.class, Functions.<IProjectTimeGetter, IProjectTimeGetter> identity()).lastNMonths(3);
 			for (String month : months) {
 				String name = MySoftwareFmFunctions.monthFileNameToPrettyName(month);
 				new TableColumn(table, SWT.NULL).setText(name);
@@ -137,20 +133,14 @@ public class MyPeople implements IHasComposite {
 
 	private final MyPeopleComposite content;
 	private final UserData userData;
-	private final IUserMembershipReader membershipReader;
-	private final IGroupsReader groupsReader;
-	private final IProjectTimeGetter timeGetter;
-	private final IRequestGroupReportGeneration reportGenerator;
 	private final long timeoutMs;
+	private final ICrowdSourceReadWriteApi readWriteApi;
 
-	public MyPeople(Composite parent, CardConfig cardConfig, UserData userData, IUserMembershipReader membershipReader, IGroupsReader groupsReader, IProjectTimeGetter timeGetter, IRequestGroupReportGeneration reportGenerator, long timeoutMs) {
+	public MyPeople(Composite parent, ICrowdSourceReadWriteApi readWriteApi, CardConfig cardConfig, UserData userData, long timeoutMs) {
+		this.readWriteApi = readWriteApi;
 		this.userData = userData;
-		this.membershipReader = membershipReader;
-		this.groupsReader = groupsReader;
-		this.timeGetter = timeGetter;
-		this.reportGenerator = reportGenerator;
 		this.timeoutMs = timeoutMs;
-		this.content = new MyPeopleComposite(parent, SWT.NULL, cardConfig, timeGetter);
+		this.content = new MyPeopleComposite(parent, readWriteApi, SWT.NULL, cardConfig);
 		content.setLayout(new DataCompositeLayout());
 
 	}
@@ -162,52 +152,60 @@ public class MyPeople implements IHasComposite {
 		final Map<String, Set<String>> softwareFmIdToGroups = Maps.newMap();
 		final Map<String, Map<String, List<Integer>>> softwareFmIdToMonthToUsage = Maps.newMap();
 
-		Iterable<Map<String, Object>> walkGroups = membershipReader.walkGroupsFor(userData.softwareFmId, userData.crypto);
+		readWriteApi.access(IUserMembershipReader.class, IProjectTimeGetter.class, IGroupsReader.class, new IFunction3<IUserMembershipReader, IProjectTimeGetter, IGroupsReader, Void>() {
+			@Override
+			public Void apply(IUserMembershipReader membershipReader, IProjectTimeGetter timeGetter, IGroupsReader groupsReader) throws Exception {
 
-		for (Map<String, Object> groupData : walkGroups)
-			for (String month : timeGetter.lastNMonths(3)) {
-				String groupsId = (String) groupData.get(GroupConstants.groupIdKey);
-				String groupsCrypto = (String) groupData.get(GroupConstants.groupCryptoKey);
-				if (groupsId == null)
-					throw new NullPointerException(groupsId);
-				if (groupsCrypto == null)
-					throw new NullPointerException(groupsCrypto);
-				generateReportIfPossible(groupsId, groupsCrypto, month);
-			}
+				Iterable<Map<String, Object>> walkGroups = membershipReader.walkGroupsFor(userData.softwareFmId, userData.crypto);
 
-		for (Map<String, Object> groupData : walkGroups) {
-			String groupsId = (String) groupData.get(GroupConstants.groupIdKey);
-			String groupsCrypto = (String) groupData.get(GroupConstants.groupCryptoKey);
-			if (groupsId == null)
-				throw new NullPointerException(groupsId);
-			if (groupsCrypto == null)
-				throw new NullPointerException(groupsCrypto);
-			String groupName = groupsReader.getGroupProperty(groupsId, groupsCrypto, GroupConstants.groupNameKey);
-			Iterable<Map<String, Object>> users = groupsReader.users(groupsId, groupsCrypto);
-			for (Map<String, Object> userData : users) {
-				String softwareFmId = (String) userData.get(LoginConstants.softwareFmIdKey);
-				String email = (String) userData.get(LoginConstants.emailKey);
-				softwareFmIdToName.put(softwareFmId, email);
-			}
+				for (Map<String, Object> groupData : walkGroups)
+					for (String month : timeGetter.lastNMonths(3)) {
+						String groupsId = (String) groupData.get(GroupConstants.groupIdKey);
+						String groupsCrypto = (String) groupData.get(GroupConstants.groupCryptoKey);
+						if (groupsId == null)
+							throw new NullPointerException(groupsId);
+						if (groupsCrypto == null)
+							throw new NullPointerException(groupsCrypto);
+						generateReportIfPossible(groupsId, groupsCrypto, month);
+					}
 
-			for (String month : timeGetter.lastNMonths(3)) {
-				generateReportIfPossible(groupsId, groupsCrypto, month);
-				Map<String, Map<String, Map<String, List<Integer>>>> report = (Map) groupsReader.getUsageReport(groupsId, groupsCrypto, month);
-				System.out.println("Id: " + groupsId + " Month: " + month + " Report: " + report);
-				if (report != null) {
-					for (Entry<String, Map<String, Map<String, List<Integer>>>> groupEntry : report.entrySet())
-						if (groupId.equals(groupEntry.getKey()))
-							for (Entry<String, Map<String, List<Integer>>> artifactEntry : groupEntry.getValue().entrySet())
-								if (artifactId.equals(artifactEntry.getKey()))
-									for (Entry<String, List<Integer>> e : artifactEntry.getValue().entrySet()) {
-										String softwareFmId = e.getKey();
-										softwareFmIds.add(softwareFmId);
-										Maps.addToCollection(softwareFmIdToGroups, HashSet.class, softwareFmId, groupName);
-										Maps.addToMapOfMaps(softwareFmIdToMonthToUsage, HashMap.class, softwareFmId, month, e.getValue());
-									}
+				for (Map<String, Object> groupData : walkGroups) {
+					String groupsId = (String) groupData.get(GroupConstants.groupIdKey);
+					String groupsCrypto = (String) groupData.get(GroupConstants.groupCryptoKey);
+					if (groupsId == null)
+						throw new NullPointerException(groupsId);
+					if (groupsCrypto == null)
+						throw new NullPointerException(groupsCrypto);
+					String groupName = groupsReader.getGroupProperty(groupsId, groupsCrypto, GroupConstants.groupNameKey);
+					Iterable<Map<String, Object>> users = groupsReader.users(groupsId, groupsCrypto);
+					for (Map<String, Object> userData : users) {
+						String softwareFmId = (String) userData.get(LoginConstants.softwareFmIdKey);
+						String email = (String) userData.get(LoginConstants.emailKey);
+						softwareFmIdToName.put(softwareFmId, email);
+					}
+
+					for (String month : timeGetter.lastNMonths(3)) {
+						generateReportIfPossible(groupsId, groupsCrypto, month);
+						Map<String, Map<String, Map<String, List<Integer>>>> report = (Map) groupsReader.getUsageReport(groupsId, groupsCrypto, month);
+						System.out.println("Id: " + groupsId + " Month: " + month + " Report: " + report);
+						if (report != null) {
+							for (Entry<String, Map<String, Map<String, List<Integer>>>> groupEntry : report.entrySet())
+								if (groupId.equals(groupEntry.getKey()))
+									for (Entry<String, Map<String, List<Integer>>> artifactEntry : groupEntry.getValue().entrySet())
+										if (artifactId.equals(artifactEntry.getKey()))
+											for (Entry<String, List<Integer>> e : artifactEntry.getValue().entrySet()) {
+												String softwareFmId = e.getKey();
+												softwareFmIds.add(softwareFmId);
+												Maps.addToCollection(softwareFmIdToGroups, HashSet.class, softwareFmId, groupName);
+												Maps.addToMapOfMaps(softwareFmIdToMonthToUsage, HashMap.class, softwareFmId, month, e.getValue());
+											}
+						}
+					}
 				}
+				return null;
 			}
-		}
+		});
+
 		Swts.syncExec(content, new Runnable() {
 			@Override
 			public void run() {
@@ -218,15 +216,13 @@ public class MyPeople implements IHasComposite {
 		});
 	}
 
-	protected void generateReportIfPossible(final String groupId, String groupsCrypto, String month) {
-		try {
-			reportGenerator.request(groupId, groupsCrypto, month).get(timeoutMs, TimeUnit.MILLISECONDS);
-
-		} catch (Exception e) {
-			// it wasn't possible
-			e.printStackTrace();
-			throw WrappedException.wrap(e);
-		}
+	protected void generateReportIfPossible(final String groupId, final String groupsCrypto, final String month) {
+		readWriteApi.modify(IRequestGroupReportGeneration.class, new ICallback<IRequestGroupReportGeneration>() {
+			@Override
+			public void process(IRequestGroupReportGeneration reportGenerator) throws Exception {
+				reportGenerator.request(groupId, groupsCrypto, month).get(timeoutMs, TimeUnit.MILLISECONDS);
+			}
+		});
 	}
 
 	@Override

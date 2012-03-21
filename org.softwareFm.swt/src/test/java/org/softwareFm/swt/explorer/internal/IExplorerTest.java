@@ -8,18 +8,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.softwareFm.crowdsource.api.IComments;
-import org.softwareFm.crowdsource.api.ICommentsReader;
-import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
-import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.constants.CommentConstants;
-import org.softwareFm.crowdsource.membership.internal.UserMembershipReaderForLocal;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.crowdsource.utilities.resources.ResourceGetterMock;
 import org.softwareFm.crowdsource.utilities.runnable.Callables;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
+import org.softwareFm.eclipse.usage.internal.ApiAndSwtTest;
 import org.softwareFm.images.general.GeneralAnchor;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.card.ICardHolderForTests;
@@ -32,10 +28,9 @@ import org.softwareFm.swt.explorer.IShowMyGroups;
 import org.softwareFm.swt.explorer.IShowMyPeople;
 import org.softwareFm.swt.explorer.IUserDataManager;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
-import org.softwareFm.swt.swt.SwtTest;
 import org.softwareFm.swt.timeline.IPlayListGetter;
 
-public class IExplorerTest extends SwtTest {
+public class IExplorerTest extends ApiAndSwtTest {
 
 	private IServiceExecutor service;
 
@@ -45,20 +40,16 @@ public class IExplorerTest extends SwtTest {
 		try {
 			List<String> rootUrls = Arrays.asList("rootUrl");
 			IPlayListGetter playListGetter = IPlayListGetter.Utils.noPlayListGetter();
-			IUserReader userReader = IUserReader.Utils.exceptionUserReader();
-			IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(null, null, userReader);
-			LocalGroupsReader groupsReader = new LocalGroupsReader(null, null);
 
 			Explorer explorer = (Explorer) IExplorer.Utils.explorer(//
-					masterDetailSocial, userReader, userMembershipReader, groupsReader, cardConfig, rootUrls, playListGetter, service, //
+					masterDetailSocial, getLocalApi().makeReadWriter(), cardConfig, rootUrls, playListGetter, service, //
 					ILoginStrategy.Utils.noLoginStrategy(), //
 					IShowMyData.Utils.exceptionShowMyData(),//
 					IShowMyGroups.Utils.exceptionShowMyGroups(),//
 					IShowMyPeople.Utils.exceptionShowMyPeople(),//
 					IUserDataManager.Utils.userDataManager(), //
-					IComments.Utils.exceptionCommentWriter(),//
-					ICommentsReader.Utils.exceptionCommentsReader(), Callables.<Long>exceptionIfCalled());
-			ICardHolderForTests cardHolder = (ICardHolderForTests) explorer.cardHolder;  
+					Callables.<Long> exceptionIfCalled());
+			ICardHolderForTests cardHolder = (ICardHolderForTests) explorer.cardHolder;
 			assertEquals(rootUrls, cardHolder.getRootUrls());
 			assertEquals(cardConfig, cardHolder.getCardConfig());
 		} finally {

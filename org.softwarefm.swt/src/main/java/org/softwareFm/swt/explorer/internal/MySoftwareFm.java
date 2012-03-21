@@ -10,7 +10,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.crowdsource.api.user.IUserReader;
+import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
 import org.softwareFm.crowdsource.utilities.arrays.ArrayHelper;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.swt.card.composites.TextInBorder;
@@ -44,15 +44,15 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 	protected ICallback<String> restart;
 	private final IShowMyData showMyData;
 	private final IShowMyGroups showMyGroups;
-	private final IUserReader userReader;
 	private final IUserDataManager userDataManager;
+	private final ICrowdSourceReadWriteApi readWriteApi;
 
-	public MySoftwareFm(Composite parent, CardConfig cardConfig, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IUserReader userReader, IUserDataManager userDataManager) {
+	public MySoftwareFm(Composite parent,ICrowdSourceReadWriteApi readWriteApi,  CardConfig cardConfig, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IUserDataManager userDataManager) {
+		this.readWriteApi = readWriteApi;
 		this.cardConfig = cardConfig;
 		this.loginStrategy = loginStrategy;
 		this.showMyData = showMyData;
 		this.showMyGroups = showMyGroups;
-		this.userReader = userReader;
 		this.userDataManager = userDataManager;
 		this.content = new Composite(parent, SWT.NULL);
 		content.setLayout(new FillLayout());
@@ -100,11 +100,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		final String email = userData.email();
 		Swts.removeAllChildren(content);
 		IChangePasswordCallback callback = null;
-		new MySoftwareFmLoggedIn(content, cardConfig, CardConstants.loggedInTitle, CardConstants.loggedInText, userData, this, new IMySoftwareFmLoggedInStrategy() {
-			@Override
-			public IUserReader userReader() {
-				return userReader;
-			}
+		new MySoftwareFmLoggedIn(content, readWriteApi, cardConfig, CardConstants.loggedInTitle, CardConstants.loggedInText, userData, this, new IMySoftwareFmLoggedInStrategy() {
 
 			@Override
 			public void showMyGroups() {

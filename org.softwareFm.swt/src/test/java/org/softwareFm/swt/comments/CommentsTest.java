@@ -12,17 +12,21 @@ import org.easymock.EasyMock;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
+import org.softwareFm.crowdsource.api.IApiBuilder;
 import org.softwareFm.crowdsource.api.ICommentsReader;
+import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
+import org.softwareFm.crowdsource.api.LocalConfig;
 import org.softwareFm.crowdsource.constants.CommentConstants;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.eclipse.usage.internal.ApiAndSwtTest;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.comments.Comments.CommentsComposite;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.explorer.internal.IExplorerTest;
 import org.softwareFm.swt.explorer.internal.UserData;
-import org.softwareFm.swt.swt.SwtTest;
+import org.softwareFm.swt.swt.Swts;
 
-public class CommentsTest extends SwtTest {
+public class CommentsTest extends ApiAndSwtTest {
 
 	private Comments comments;
 	private CardConfig cardConfig;
@@ -39,7 +43,6 @@ public class CommentsTest extends SwtTest {
 
 	private final Map<String, Object> comment1S1T2 = Maps.stringObjectMap(CommentConstants.creatorKey, "creator1", CommentConstants.timeKey, 2l, CommentConstants.textKey, "text1", CommentConstants.sourceKey, "source1");
 	private final Map<String, Object> comment1S1T3 = Maps.stringObjectMap(CommentConstants.creatorKey, "creator1", CommentConstants.timeKey, 3l, CommentConstants.textKey, "text1", CommentConstants.sourceKey, "source1");
-
 
 	private final UserData loggedInUserData = new UserData("someEmail", "someSfmId", "someCrypto");
 
@@ -71,9 +74,9 @@ public class CommentsTest extends SwtTest {
 		Table table = comments.getTable();
 		assertEquals(3, table.getItemCount());
 		checkTitleAndTableColumnNames(table, "Comments");
-		checkTable(table, 0, 0, "creator3", "source3", "text3");
-		checkTable(table, 1, 1, "creator2", "source2", "text2");
-		checkTable(table, 2, 2, "creator1", "source1", "text1");
+		Swts.checkTable(table, 0, 0, "creator3", "source3", "text3");
+		Swts.checkTable(table, 1, 1, "creator2", "source2", "text2");
+		Swts.checkTable(table, 2, 2, "creator1", "source1", "text1");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -86,9 +89,9 @@ public class CommentsTest extends SwtTest {
 		Table table = comments.getTable();
 		assertEquals(3, table.getItemCount());
 		checkTitleAndTableColumnNames(table, "Comments");
-		checkTable(table, 0, 0, "creator3", "source3", "text3");
-		checkTable(table, 1, 1, "creator2", "source2", "text2");
-		checkTable(table, 2, 2, "creator1", "source1", "text1");
+		Swts.checkTable(table, 0, 0, "creator3", "source3", "text3");
+		Swts.checkTable(table, 1, 1, "creator2", "source2", "text2");
+		Swts.checkTable(table, 2, 2, "creator1", "source1", "text1");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -149,9 +152,9 @@ public class CommentsTest extends SwtTest {
 		Table table = comments.getTable();
 		assertEquals(3, table.getItemCount());
 		checkTitleAndTableColumnNames(table, "Comments");
-		checkTable(table, 0, 0, "creator1", "source2", "text1");
-		checkTable(table, 1, 1, "creator1", "source3", "text1");
-		checkTable(table, 2, 2, "creator1", "source1", "text1");
+		Swts.checkTable(table, 0, 0, "creator1", "source2", "text1");
+		Swts.checkTable(table, 1, 1, "creator1", "source3", "text1");
+		Swts.checkTable(table, 2, 2, "creator1", "source1", "text1");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -162,21 +165,21 @@ public class CommentsTest extends SwtTest {
 		Table table = comments.getTable();
 		assertEquals(3, table.getItemCount());
 		checkTitleAndTableColumnNames(table, "Comments");
-		checkTable(table, 0, 0, "creator1", "source1", "text1");
-		checkTable(table, 1, 1, "creator1", "source1", "text1");
-		checkTable(table, 2, 2, "creator1", "source1", "text1");
+		Swts.checkTable(table, 0, 0, "creator1", "source1", "text1");
+		Swts.checkTable(table, 1, 1, "creator1", "source1", "text1");
+		Swts.checkTable(table, 2, 2, "creator1", "source1", "text1");
 		CommentsComposite composite = (CommentsComposite) comments.getControl();
 		assertEquals(Arrays.asList(comment1S1T3, comment1S1T2, comment1), composite.allComments);
 	}
-	
-	public void testDealsWithCorruptedComments(){
+
+	public void testDealsWithCorruptedComments() {
 		fail();
-	} 
+	}
 
 	protected void checkTitleAndTableColumnNames(Table table, String expectedTitle) {
 		CommentsComposite composite = (CommentsComposite) comments.getControl();
 		assertEquals(expectedTitle, composite.getTitle().getText());
-		checkTableColumns(table, "creatorTitle", "sourceTitle", "textTitle");
+		Swts.checkTableColumns(table, "creatorTitle", "sourceTitle", "textTitle");
 	}
 
 	private void replayMocks() {
@@ -184,14 +187,24 @@ public class CommentsTest extends SwtTest {
 	}
 
 	@Override
+	protected IExtraReaderWriterConfigurator<LocalConfig> getLocalExtraReaderWriterConfigurator() {
+		final IExtraReaderWriterConfigurator<LocalConfig> parent = super.getLocalExtraReaderWriterConfigurator();
+		return new IExtraReaderWriterConfigurator<LocalConfig>() {
+			@Override
+			public void builder(IApiBuilder builder, LocalConfig apiConfig) {
+				parent.builder(builder, apiConfig);
+				builder.registerReader(ICommentsReader.class, commentsReader);
+			}
+		};
+	}
+	@Override
 	protected void setUp() throws Exception {
-		super.setUp();
-
-		cardConfig = IExplorerTest.addNeededResources(CardDataStoreFixture.syncCardConfig(display));
 		commentsReader = EasyMock.createMock(ICommentsReader.class);
 		commentsCallback = EasyMock.createMock(ICommentsCallback.class);
 		addComment = EasyMock.createMock(Runnable.class);
-		comments = new Comments(shell, cardConfig, commentsReader, commentsCallback, addComment);
+		super.setUp();
+		cardConfig = IExplorerTest.addNeededResources(CardDataStoreFixture.syncCardConfig(display));
+		comments = new Comments(shell, getLocalApi().makeReadWriter(), cardConfig, commentsCallback, addComment);
 	}
 
 	@Override

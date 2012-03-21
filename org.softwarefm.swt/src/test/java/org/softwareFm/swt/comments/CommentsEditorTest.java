@@ -39,10 +39,10 @@ public class CommentsEditorTest extends SwtTest {
 		Composite okCancelComposite = okCancel.getComposite();
 		Control[] okCancelChildren = okCancelComposite.getChildren();
 		assertEquals(6, okCancelChildren.length);
-		checkRadioButton(okCancelComposite, 0, "Everyone", true);
-		checkRadioButton(okCancelComposite, 1, "You", false);
-		checkRadioButton(okCancelComposite, 2, "Group", false);
-		checkCombo(okCancelComposite, 3, groupNames, "group1");
+		Swts.checkRadioButton(okCancelComposite, 0, "Everyone", true);
+		Swts.checkRadioButton(okCancelComposite, 1, "You", false);
+		Swts.checkRadioButton(okCancelComposite, 2, "Group", false);
+		Swts.checkCombo(okCancelComposite, 3, groupNames, "group1");
 		assertEquals(okCancel.cancelButton(), okCancelChildren[4]);
 		assertEquals(okCancel.okButton(), okCancelChildren[5]);
 	}
@@ -55,8 +55,8 @@ public class CommentsEditorTest extends SwtTest {
 		Composite okCancelComposite = okCancel.getComposite();
 		Control[] okCancelChildren = okCancelComposite.getChildren();
 		assertEquals(4, okCancelChildren.length);
-		checkRadioButton(okCancelComposite, 0, "Everyone", true);
-		checkRadioButton(okCancelComposite, 1, "You", false);
+		Swts.checkRadioButton(okCancelComposite, 0, "Everyone", true);
+		Swts.checkRadioButton(okCancelComposite, 1, "You", false);
 		assertEquals(okCancel.cancelButton(), okCancelChildren[2]);
 		assertEquals(okCancel.okButton(), okCancelChildren[3]);
 	}
@@ -140,7 +140,7 @@ public class CommentsEditorTest extends SwtTest {
 			@Override
 			public void process(IOkCancel okCancel) throws Exception {
 				Swts.Buttons.selectRadioButton(okCancel.getComposite(), 2);
-				Combo combo = Swts.<Combo>getDescendant(okCancel.getComposite(), 3);
+				Combo combo = Swts.<Combo> getDescendant(okCancel.getComposite(), 3);
 				combo.select(1);
 			}
 		}, new CommentsEditorFailAdapter() {

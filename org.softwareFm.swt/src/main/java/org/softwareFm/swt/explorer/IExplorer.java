@@ -8,11 +8,7 @@ import java.io.File;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import org.softwareFm.crowdsource.api.IComments;
-import org.softwareFm.crowdsource.api.ICommentsReader;
-import org.softwareFm.crowdsource.api.user.IGroupsReader;
-import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
-import org.softwareFm.crowdsource.api.user.IUserReader;
+import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.swt.browser.IBrowserCompositeBuilder;
 import org.softwareFm.swt.card.ICard;
@@ -76,8 +72,8 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 
 	public static class Utils {
 
-		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, IUserReader userReader, IUserMembershipReader userMembershipReader, IGroupsReader groupsReader, CardConfig cardConfig, List<String> rootUrls, IPlayListGetter playListGetter, IServiceExecutor service, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IShowMyPeople showMyPeople, IUserDataManager userDataManager, IComments commentWriter, ICommentsReader commentsReader, Callable<Long> timeGetter) {
-			return new Explorer(cardConfig, rootUrls, masterDetailSocial, service, userReader, userMembershipReader, groupsReader, playListGetter, loginStrategy, showMyData, showMyGroups, showMyPeople, userDataManager, commentWriter, commentsReader, timeGetter);
+		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, ICrowdSourceReadWriteApi readWriteApi, CardConfig cardConfig, List<String> rootUrls, IPlayListGetter playListGetter, IServiceExecutor service, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IShowMyPeople showMyPeople, IUserDataManager userDataManager, Callable<Long> timeGetter) {
+			return new Explorer(readWriteApi, cardConfig, rootUrls, masterDetailSocial, service, playListGetter, loginStrategy, showMyData, showMyGroups, showMyPeople, userDataManager, timeGetter);
 		}
 	}
 

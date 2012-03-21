@@ -7,7 +7,7 @@ package org.softwareFm.swt.dataStore;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.crowdsource.api.git.IGitLocal;
+import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.swt.card.dataStore.CardDataStoreMock;
 import org.softwareFm.swt.dataStore.internal.CardDataStoreForRepository;
@@ -25,9 +25,13 @@ public interface ICardDataStore {
 			return new CardDataStoreMock(urlsAndMaps);
 		}
 
-		/** The control is used to ensure that call backs are in the correct thread, and everything ceases to work if the control is disposed */
-		public static IMutableCardDataStore repositoryCardDataStore(Control from, IServiceExecutor serviceExecutor, IGitLocal gitLocal) {
-			return new CardDataStoreForRepository(from, serviceExecutor, gitLocal);
+		/**
+		 * The control is used to ensure that call backs are in the correct thread, and everything ceases to work if the control is disposed
+		 * 
+		 * @param readWriteApi
+		 */
+		public static IMutableCardDataStore repositoryCardDataStore(Control from, IServiceExecutor serviceExecutor, ICrowdSourceReadWriteApi readWriteApi) {
+			return new CardDataStoreForRepository(from, serviceExecutor, readWriteApi);
 		}
 	}
 

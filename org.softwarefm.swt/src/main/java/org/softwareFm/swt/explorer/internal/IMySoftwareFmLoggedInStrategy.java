@@ -7,11 +7,9 @@ package org.softwareFm.swt.explorer.internal;
 import java.util.Arrays;
 import java.util.List;
 
-import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 
 public interface IMySoftwareFmLoggedInStrategy {
-	IUserReader userReader();
 
 	void logout();
 
@@ -25,11 +23,6 @@ public interface IMySoftwareFmLoggedInStrategy {
 	public static class Utils {
 		public static IMySoftwareFmLoggedInStrategy sysout(final Object... nameAndValues) {
 			return new IMySoftwareFmLoggedInStrategy() {
-				@Override
-				public IUserReader userReader() {
-					return IUserReader.Utils.mockReader(nameAndValues);
-				}
-
 				@Override
 				public void showMyGroups() {
 					System.out.println("Show My Groups");

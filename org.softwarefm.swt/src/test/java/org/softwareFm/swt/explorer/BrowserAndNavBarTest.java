@@ -12,10 +12,10 @@ import org.softwareFm.crowdsource.utilities.history.IHistory;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.navigation.internal.NavNextHistoryPrevConfig;
-import org.softwareFm.swt.swt.SwtAndServiceTest;
+import org.softwareFm.swt.swt.SwtTest;
 import org.softwareFm.swt.timeline.PlayItem;
 
-public class BrowserAndNavBarTest extends SwtAndServiceTest {
+public class BrowserAndNavBarTest extends SwtTest {
 
 	private IHistory<PlayItem> history;
 	private BrowserAndNavBar browserAndNavBar;
@@ -33,7 +33,7 @@ public class BrowserAndNavBarTest extends SwtAndServiceTest {
 		history = new History<PlayItem>();
 		memoryCallback = ICallback.Utils.<PlayItem> memory();
 		cardConfig = CardDataStoreFixture.syncCardConfig(display);
-		browserAndNavBar = new BrowserAndNavBar(shell, SWT.NULL, 4, cardConfig, NavNextHistoryPrevConfig.<PlayItem> forTests(), service, history);
+		browserAndNavBar = new BrowserAndNavBar(shell, SWT.NULL, 4, cardConfig, NavNextHistoryPrevConfig.<PlayItem> forTests(), null, history);
 	}
 
 	@Override
@@ -41,6 +41,5 @@ public class BrowserAndNavBarTest extends SwtAndServiceTest {
 		super.tearDown();
 		cardConfig.dispose();
 	}
-
 
 }

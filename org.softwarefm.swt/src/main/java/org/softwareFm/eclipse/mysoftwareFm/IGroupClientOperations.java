@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import org.softwareFm.crowdsource.httpClient.IHttpClient;
+import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.runnable.Runnables;
 import org.softwareFm.eclipse.mysoftwareFm.internal.GroupClientOperations;
@@ -24,8 +24,8 @@ public interface IGroupClientOperations {
 	Runnable kickMember(UserData userData,  Callable<IdNameAndStatus> idNameStatusGetter, Callable<List<Map<String, Object>>> objectMapGetter, ICallback<String> showMyGroups);
 
 	public static class Utils {
-		public static IGroupClientOperations groupOperations(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, IHttpClient client) {
-			return new GroupClientOperations(masterDetailSocial, cardConfig, client);
+		public static IGroupClientOperations groupOperations(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, ICrowdSourceReadWriteApi readWriteApi) {
+			return new GroupClientOperations(masterDetailSocial, cardConfig, readWriteApi);
 		}
 
 		public static IGroupClientOperations exception() {

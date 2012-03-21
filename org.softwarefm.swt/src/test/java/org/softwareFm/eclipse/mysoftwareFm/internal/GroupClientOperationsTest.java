@@ -12,11 +12,15 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.softwareFm.crowdsource.api.ITakeOnEnrichmentProvider;
+import org.softwareFm.crowdsource.api.user.IGroupsReader;
+import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
+import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.utilities.collections.Iterables;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
-import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
+import org.softwareFm.crowdsource.utilities.functions.IFunction3;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.eclipse.mysoftwareFm.AbstractMyGroupsIntegrationTest;
 import org.softwareFm.eclipse.mysoftwareFm.IdNameAndStatus;
@@ -28,11 +32,25 @@ import org.softwareFm.swt.editors.NameAndValuesEditor.NameAndValuesEditorComposi
 import org.softwareFm.swt.swt.Swts;
 
 public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
+	public void testCreateExceptionCausesTextPanelAndClickReturnsToMyGroups() {
+		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
+		MyGroupsButtons buttons = myGroupsComposite.getFooter();
+		Swts.Buttons.press(buttons.create);
+		dispatchUntilQueueEmpty();
+		NameAndValuesEditorComposite editor = (NameAndValuesEditorComposite) masterDetailSocial.getDetailContent();
+		checkChange(editor, 0, "someNewGroupName");
+		checkChange(editor, 1, "notAnEmail");
+		checkChange(editor, 2, "newSubject $email$/$group$");
+		checkChange(editor, 3, "newMail $email$/$group$");
+		pressOkEvenThoughBadAndCheckGetTextMessageAndEditorReturnsWithValues("Exception creating group. Click to try again\nclass java.lang.IllegalArgumentException/Invalid email notAnEmail",//
+				"someNewGroupName", "notAnEmail", "newSubject $email$/$group$", "newMail $email$/$group$");
+	}
+
 	public void testLeaveIsEnabledIfAdminAndNoOtherMembers() {
-		createGroup(groupId1, groupCryptoKey1);
-		assertEquals(userCryptoKey1, signUpUser(softwareFmId1, email1));
-		addUserToGroup(softwareFmId, email, groupId1, groupCryptoKey1, GroupConstants.adminStatus);
-		addUserToGroup(softwareFmId1, email1, groupId1, groupCryptoKey1, "someStatus2");
+		createGroup(groupId0, groupCryptoKey0);
+		createUser(softwareFmId1, email1);
+		addUserToGroup(softwareFmId0, email0, groupId0, groupCryptoKey0, GroupConstants.adminStatus);
+		addUserToGroup(softwareFmId1, email1, groupId0, groupCryptoKey0, "someStatus2");
 
 		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		MyGroupsButtons buttons = myGroupsComposite.getFooter();
@@ -41,10 +59,10 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		Swts.selectAndNotifyListener(myGroupsTable, 0);
 		assertFalse(buttons.leave.getEnabled()); //
 		Table membershipTable = getMembershipTable(myGroupsComposite);
-		
+
 		Swts.selectOnlyAndNotifyListener(membershipTable, 1);
 		pressKickButtonAndWaitUntilMembershipTableIsOfSize(buttons, 1);
-		
+
 		MyGroupsComposite afterMyGroupsComposite = (MyGroupsComposite) masterDetailSocial.getDetailContent();
 		MyGroupsButtons afterButtons = afterMyGroupsComposite.getFooter();
 		assertTrue(afterButtons.leave.getEnabled());
@@ -66,28 +84,28 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 	}
 
 	public void testKickButtonRemovesUserFromGroup() {
-		createGroup(groupId1, groupCryptoKey1);
-		assertEquals(userCryptoKey1, signUpUser(softwareFmId1, email1));
-		assertEquals(userCryptoKey2, signUpUser(softwareFmId2, email2));
-		assertEquals(userCryptoKey3, signUpUser(softwareFmId3, email3));
-		addUserToGroup(softwareFmId, email, groupId1, groupCryptoKey1, GroupConstants.adminStatus);
+		createGroup(groupId0, groupCryptoKey0);
+		createUser(softwareFmId1, email1);
+		createUser(softwareFmId2, email2);
+		createUser(softwareFmId3, email3);
+		addUserToGroup(softwareFmId0, email0, groupId0, groupCryptoKey0, GroupConstants.adminStatus);
 
-		checkCanAddAndKick(new int[] { 1, 2 }, softwareFmId, softwareFmId3);
-		checkCanAddAndKick(new int[] { 1, 2 }, softwareFmId, softwareFmId3);
-		checkCanAddAndKick(new int[] { 1 }, softwareFmId, softwareFmId2, softwareFmId3);
-		checkCanAddAndKick(new int[] { 2 }, softwareFmId, softwareFmId1, softwareFmId3);
-		checkCanAddAndKick(new int[] { 3 }, softwareFmId, softwareFmId1, softwareFmId2);
+		checkCanAddAndKick(new int[] { 1, 2 }, softwareFmId0, softwareFmId3);
+		checkCanAddAndKick(new int[] { 1, 2 }, softwareFmId0, softwareFmId3);
+		checkCanAddAndKick(new int[] { 1 }, softwareFmId0, softwareFmId2, softwareFmId3);
+		checkCanAddAndKick(new int[] { 2 }, softwareFmId0, softwareFmId1, softwareFmId3);
+		checkCanAddAndKick(new int[] { 3 }, softwareFmId0, softwareFmId1, softwareFmId2);
 	}
 
 	public void testKickButtonIsOnlyEnabledWhenAdminAndSelectedNoneAdmin() {
+		createGroup(groupId0, groupCryptoKey0);
+		createUser(softwareFmId1, email1);
+
+		addUserToGroup(softwareFmId0, email0, groupId0, groupCryptoKey0, GroupConstants.adminStatus);
+		addUserToGroup(softwareFmId1, email1, groupId0, groupCryptoKey0, "someStatus2");
+
 		createGroup(groupId1, groupCryptoKey1);
-		assertEquals(userCryptoKey1, signUpUser(softwareFmId1, email1));
-
-		addUserToGroup(softwareFmId, email, groupId1, groupCryptoKey1, GroupConstants.adminStatus);
-		addUserToGroup(softwareFmId1, email1, groupId1, groupCryptoKey1, "someStatus2");
-
-		createGroup(groupId2, groupCryptoKey2);
-		addUserToGroup(softwareFmId, email, groupId2, groupCryptoKey2, "notAdmin");
+		addUserToGroup(softwareFmId0, email0, groupId1, groupCryptoKey1, "notAdmin");
 
 		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		MyGroupsButtons buttons = myGroupsComposite.getFooter();
@@ -116,15 +134,15 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 	}
 
 	public void testCannotKickIfOneOfMultipleSelectIsAdmin() {
-		createGroup(groupId1, groupCryptoKey1);
-		assertEquals(userCryptoKey1, signUpUser(softwareFmId1, email1));
-		assertEquals(userCryptoKey2, signUpUser(softwareFmId2, email2));
-		assertEquals(userCryptoKey3, signUpUser(softwareFmId3, email3));
+		createGroup(groupId0, groupCryptoKey0);
+		createUser(softwareFmId1, email1);
+		createUser(softwareFmId2, email2);
+		createUser(softwareFmId3, email3);
 
-		addUserToGroup(softwareFmId, email, groupId1, groupCryptoKey1, GroupConstants.adminStatus);
-		addUserToGroup(softwareFmId1, email1, groupId1, groupCryptoKey1, "someStatus1");
-		addUserToGroup(softwareFmId2, email2, groupId1, groupCryptoKey1, "someStatus2");
-		addUserToGroup(softwareFmId3, email3, groupId1, groupCryptoKey1, GroupConstants.adminStatus);
+		addUserToGroup(softwareFmId0, email0, groupId0, groupCryptoKey0, GroupConstants.adminStatus);
+		addUserToGroup(softwareFmId1, email1, groupId0, groupCryptoKey0, "someStatus1");
+		addUserToGroup(softwareFmId2, email2, groupId0, groupCryptoKey0, "someStatus2");
+		addUserToGroup(softwareFmId3, email3, groupId0, groupCryptoKey0, GroupConstants.adminStatus);
 
 		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		Table summaryTable = getMyGroupsTable(myGroupsComposite);
@@ -157,9 +175,9 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 	}
 
 	private void checkCanAddAndKick(int[] kick, final String... expected) {
-		addUserToGroup(softwareFmId1, email1, groupId1, groupCryptoKey1, "someStatus1");
-		addUserToGroup(softwareFmId2, email2, groupId1, groupCryptoKey1, "someStatus2");
-		addUserToGroup(softwareFmId3, email3, groupId1, groupCryptoKey1, "someStatus3");
+		addUserToGroup(softwareFmId1, email1, groupId0, groupCryptoKey0, "someStatus1");
+		addUserToGroup(softwareFmId2, email2, groupId0, groupCryptoKey0, "someStatus2");
+		addUserToGroup(softwareFmId3, email3, groupId0, groupCryptoKey0, "someStatus3");
 
 		final MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		MyGroupsButtons buttons = myGroupsComposite.getFooter();
@@ -189,7 +207,7 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 	private void pressKickButtonAndWaitUntilMembershipTableIsOfSize(MyGroupsButtons buttons, final int length) {
 		assertTrue(buttons.kick.getEnabled());
 		Swts.Buttons.press(buttons.kick);
-		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
+		dispatchUntil(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				if (masterDetailSocial.getDetailContent() instanceof MyGroupsComposite) {
@@ -214,8 +232,8 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 	}
 
 	public void testAcceptInvite() {
-		createGroup(groupId1, groupCryptoKey1);
-		addUserToGroup(softwareFmId, email, groupId1, groupCryptoKey1, GroupConstants.invitedStatus);
+		assertEquals(groupId0, createGroup(groupName0, groupCryptoKey0));
+		addUserToGroup(softwareFmId0, email0, groupId0, groupCryptoKey0, GroupConstants.invitedStatus);
 
 		final MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		MyGroupsButtons buttons = myGroupsComposite.getFooter();
@@ -225,7 +243,7 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 
 		assertTrue(buttons.accept.isEnabled());
 		Swts.Buttons.press(buttons.accept);
-		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
+		dispatchUntil(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				if (masterDetailSocial.getDetailContent() instanceof MyGroupsComposite) {
@@ -238,44 +256,32 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 				return false;
 			}
 		});
+		IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void> checkFn = new IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void>() {
+			@Override
+			public Void apply(IGroupsReader groupsReader, IUserReader userReader, IUserMembershipReader userMembershipReader) throws Exception {
+				String projectCryptoKey = userReader.getUserProperty(softwareFmId0, userKey0, JarAndPathConstants.projectCryptoKey);
+				assertEquals(GroupConstants.memberStatus, userMembershipReader.getMembershipProperty(softwareFmId0, userKey0, groupId0, GroupConstants.membershipStatusKey));
+				assertEquals(Maps.stringObjectMap(JarAndPathConstants.projectCryptoKey, projectCryptoKey, //
+						LoginConstants.emailKey, email0, //
+						LoginConstants.softwareFmIdKey, softwareFmId0,//
+						GroupConstants.membershipStatusKey, GroupConstants.memberStatus), Lists.getOnly(Iterables.list(groupsReader.users(groupId0, groupCryptoKey0))));
+				MyGroupsComposite afterMyGroupsComposite = (MyGroupsComposite) masterDetailSocial.getDetailContent();
+				Table afterTable = getMyGroupsTable(afterMyGroupsComposite);
+				assertEquals(1, afterTable.getItemCount());
+				assertEquals(groupId0 + "Name", afterTable.getItem(0).getText(0));
+				assertEquals("1", afterTable.getItem(0).getText(1));
+				assertEquals(GroupConstants.memberStatus, afterTable.getItem(0).getText(2));
+				return null;
+			}
+		};
+		checkOnServerAndLocally(checkFn);
 
-		String projectCryptoKey = userReader.getUserProperty(softwareFmId, userCryptoKey, JarAndPathConstants.projectCryptoKey);
-		assertEquals(GroupConstants.memberStatus, userMembershipReader.getMembershipProperty(softwareFmId, userCryptoKey, groupId1, GroupConstants.membershipStatusKey));
-		assertEquals(Maps.stringObjectMap(JarAndPathConstants.projectCryptoKey, projectCryptoKey, //
-				LoginConstants.emailKey, email, //
-				LoginConstants.softwareFmIdKey, softwareFmId,//
-				GroupConstants.membershipStatusKey, GroupConstants.memberStatus), Lists.getOnly(Iterables.list(groups.users(groupId1, groupCryptoKey1))));
-		assertEquals(Maps.stringObjectMap(JarAndPathConstants.projectCryptoKey, projectCryptoKey, //
-				LoginConstants.emailKey, email, //
-				LoginConstants.softwareFmIdKey, softwareFmId,//
-				GroupConstants.membershipStatusKey, GroupConstants.memberStatus), Lists.getOnly(Iterables.list(groupsReader.users(groupId1, groupCryptoKey1))));
-		MyGroupsComposite afterMyGroupsComposite = (MyGroupsComposite) masterDetailSocial.getDetailContent();
-		Table afterTable = getMyGroupsTable(afterMyGroupsComposite);
-		assertEquals(1, afterTable.getItemCount());
-		assertEquals(groupId1 + "Name", afterTable.getItem(0).getText(0));
-		assertEquals("1", afterTable.getItem(0).getText(1));
-		assertEquals(GroupConstants.memberStatus, afterTable.getItem(0).getText(2));
-
-	}
-
-	public void testCreateExceptionCausesTextPanelAndClickReturnsToMyGroups() {
-		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
-		MyGroupsButtons buttons = myGroupsComposite.getFooter();
-		Swts.Buttons.press(buttons.create);
-		dispatchUntilQueueEmpty();
-		NameAndValuesEditorComposite editor = (NameAndValuesEditorComposite) masterDetailSocial.getDetailContent();
-		checkChange(editor, 0, "someNewGroupName");
-		checkChange(editor, 1, "notAnEmail");
-		checkChange(editor, 2, "newSubject $email$/$group$");
-		checkChange(editor, 3, "newMail $email$/$group$");
-		pressOkEvenThoughBadAndCheckGetTextMessageAndEditorReturnsWithValues("Exception creating group. Click to try again\nclass java.lang.IllegalArgumentException/Invalid email notAnEmail",//
-				"someNewGroupName", "notAnEmail", "newSubject $email$/$group$", "newMail $email$/$group$");
 	}
 
 	public void testInviteExceptionCausesTextPanelAndClickReturnsToMyGroups() {
-		createGroup(groupId1, groupCryptoKey1);
-		addUserToGroup(softwareFmId, email, groupId1, groupCryptoKey1, GroupConstants.adminStatus);
-		String groupName = groupId1 + "Name";
+		createGroup(groupName0, groupCryptoKey0);
+		addUserToGroup(softwareFmId0, email0, groupId0, groupCryptoKey0, GroupConstants.adminStatus);
+		String groupName = groupId0 + "Name";
 
 		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		Table beforeTable = getMyGroupsTable(myGroupsComposite);
@@ -301,7 +307,7 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		assertFalse(editor.getFooter().okButton().isEnabled());
 		editor.getFooter().ok(); // press it anyway!
 
-		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
+		dispatchUntil(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				Control detailContent = masterDetailSocial.getDetailContent();
@@ -313,7 +319,7 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		assertEquals(exceptionMessage, text.getText());
 		assertFalse(text.getEditable());
 		text.notifyListeners(SWT.MouseUp, new Event());
-		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
+		dispatchUntil(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				Control detailContent = masterDetailSocial.getDetailContent();
@@ -321,15 +327,13 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 			}
 		});
 		NameAndValuesEditorComposite afterEditor = (NameAndValuesEditorComposite) masterDetailSocial.getDetailContent();
-		checkTextMatches(afterEditor.getEditor(), values);
+		Swts.checkTextMatches(afterEditor.getEditor(), values);
 	}
 
 	@SuppressWarnings("unchecked")
 	public void testInvite() {
-		createGroup(groupId1, groupCryptoKey1);
-		addUserToGroup(softwareFmId, email, groupId1, groupCryptoKey1, GroupConstants.adminStatus);
-		String groupName = groupId1 + "Name";
-
+		createGroup(groupName0, groupCryptoKey0);
+		addUserToGroup(softwareFmId0, email0, groupId0, groupCryptoKey0, GroupConstants.adminStatus);
 		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		Table beforeTable = getMyGroupsTable(myGroupsComposite);
 		Swts.selectOnlyAndNotifyListener(beforeTable, 0);
@@ -347,7 +351,7 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		assertTrue(editor.getFooter().okButton().isEnabled());
 
 		editor.getFooter().ok();
-		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
+		dispatchUntil(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				Control detailContent = masterDetailSocial.getDetailContent();
@@ -356,34 +360,40 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		});
 
 		Table afterTable = getMyGroupsTable((MyGroupsComposite) masterDetailSocial.getDetailContent());
-		checkTable(afterTable, 0, new IdNameAndStatus(groupId1, groupName, GroupConstants.adminStatus), groupName, "3", GroupConstants.adminStatus);
+		Swts.checkTable(afterTable, 0, new IdNameAndStatus(groupId0, groupName0, GroupConstants.adminStatus), groupName0, "3", GroupConstants.adminStatus);
 		assertEquals(1, afterTable.getItemCount());
 		assertEquals(0, afterTable.getSelectionIndex());
 
-		assertEquals(Lists.times(2, email), mailer.froms);
+		assertEquals(Lists.times(2, email0), mailer.froms);
 		assertEquals(Arrays.asList(email1, email2), mailer.tos);
-		assertEquals(Arrays.asList("newSubject " + email1 + "/" + groupName, "newSubject " + email2 + "/" + groupName), mailer.subjects);
-		assertEquals(Arrays.asList("newMail " + email1 + "/" + groupName, "newMail " + email2 + "/" + groupName), mailer.messages);
+		assertEquals(Arrays.asList("newSubject " + email1 + "/" + groupName0, "newSubject " + email2 + "/" + groupName0), mailer.subjects);
+		assertEquals(Arrays.asList("newMail " + email1 + "/" + groupName0, "newMail " + email2 + "/" + groupName0), mailer.messages);
+		IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void> checkFn = new IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void>() {
+			@Override
+			public Void apply(IGroupsReader groupsReader, IUserReader userReader, IUserMembershipReader userMembershipReader) throws Exception {
+				assertEquals(groupName0, groupsReader.getGroupProperty(groupId0, groupCryptoKey0, GroupConstants.groupNameKey));
 
-		assertEquals(groupName, groups.getGroupProperty(groupId1, groupCryptoKey1, GroupConstants.groupNameKey));
+				assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId0, GroupConstants.groupCryptoKey, groupCryptoKey0, GroupConstants.membershipStatusKey, GroupConstants.adminStatus)), userMembershipReader.walkGroupsFor(softwareFmId0, userKey0));
+				assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId0, GroupConstants.groupCryptoKey, groupCryptoKey0, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus)), userMembershipReader.walkGroupsFor(softwareFmId1, userKey1));
+				assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId0, GroupConstants.groupCryptoKey, groupCryptoKey0, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus)), userMembershipReader.walkGroupsFor(softwareFmId2, userKey2));
 
-		assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId1, GroupConstants.groupCryptoKey, groupCryptoKey1, GroupConstants.membershipStatusKey, GroupConstants.adminStatus)), userMembershipReader.walkGroupsFor(softwareFmId, userCryptoKey));
-		assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId1, GroupConstants.groupCryptoKey, groupCryptoKey1, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus)), userMembershipReader.walkGroupsFor(softwareFmId1, userCryptoKey1));
-		assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId1, GroupConstants.groupCryptoKey, groupCryptoKey1, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus)), userMembershipReader.walkGroupsFor(softwareFmId2, userCryptoKey2));
+				String projectCryptoKey = userReader.getUserProperty(softwareFmId0, userKey0, JarAndPathConstants.projectCryptoKey);
+				String projectCryptoKey1 = userReader.getUserProperty(softwareFmId1, userKey1, JarAndPathConstants.projectCryptoKey);
+				String projectCryptoKey2 = userReader.getUserProperty(softwareFmId2, userKey2, JarAndPathConstants.projectCryptoKey);
 
-		String projectCryptoKey = userReader.getUserProperty(softwareFmId, userCryptoKey, JarAndPathConstants.projectCryptoKey);
-		String projectCryptoKey1 = userReader.getUserProperty(softwareFmId1, userCryptoKey1, JarAndPathConstants.projectCryptoKey);
-		String projectCryptoKey2 = userReader.getUserProperty(softwareFmId2, userCryptoKey2, JarAndPathConstants.projectCryptoKey);
+				assertNotNull(projectCryptoKey);
+				assertNotNull(projectCryptoKey1);
+				assertNotNull(projectCryptoKey2);
 
-		assertNotNull(projectCryptoKey);
-		assertNotNull(projectCryptoKey1);
-		assertNotNull(projectCryptoKey2);
-
-		assertEquals(Arrays.asList(//
-				Maps.stringObjectMap(JarAndPathConstants.projectCryptoKey, projectCryptoKey, LoginConstants.emailKey, email, GroupConstants.membershipStatusKey, GroupConstants.adminStatus, LoginConstants.softwareFmIdKey, softwareFmId), //
-				Maps.stringObjectMap(JarAndPathConstants.projectCryptoKey, projectCryptoKey1, LoginConstants.emailKey, email1, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus, LoginConstants.softwareFmIdKey, softwareFmId1), //
-				Maps.stringObjectMap(JarAndPathConstants.projectCryptoKey, projectCryptoKey2, LoginConstants.emailKey, email2, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus, LoginConstants.softwareFmIdKey, softwareFmId2)), //
-				Iterables.list(groupsReader.users(groupId1, groupCryptoKey1)));
+				assertEquals(Arrays.asList(//
+						Maps.stringObjectMap(JarAndPathConstants.projectCryptoKey, projectCryptoKey, LoginConstants.emailKey, email0, GroupConstants.membershipStatusKey, GroupConstants.adminStatus, LoginConstants.softwareFmIdKey, softwareFmId0), //
+						Maps.stringObjectMap(JarAndPathConstants.projectCryptoKey, projectCryptoKey1, LoginConstants.emailKey, email1, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus, LoginConstants.softwareFmIdKey, softwareFmId1), //
+						Maps.stringObjectMap(JarAndPathConstants.projectCryptoKey, projectCryptoKey2, LoginConstants.emailKey, email2, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus, LoginConstants.softwareFmIdKey, softwareFmId2)), //
+						Iterables.list(groupsReader.users(groupId0, groupCryptoKey0)));
+				return null;
+			}
+		};
+		checkOnServerAndLocally(checkFn);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -400,7 +410,7 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		assertTrue(editor.getFooter().okButton().isEnabled());
 
 		editor.getFooter().ok();
-		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
+		dispatchUntil(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				Control detailContent = masterDetailSocial.getDetailContent();
@@ -409,34 +419,38 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		});
 
 		Table table = getMyGroupsTable((MyGroupsComposite) masterDetailSocial.getDetailContent());
-		checkTable(table, 0, new IdNameAndStatus(groupId1, "someNewGroupName", GroupConstants.adminStatus), "someNewGroupName", "3", GroupConstants.adminStatus);
+		Swts.checkTable(table, 0, new IdNameAndStatus(groupId0, "someNewGroupName", GroupConstants.adminStatus), "someNewGroupName", "3", GroupConstants.adminStatus);
 		assertEquals(1, table.getItemCount());
 		assertEquals(0, table.getSelectionIndex());
 
-		assertEquals(Lists.times(2, email), mailer.froms);
+		assertEquals(Lists.times(2, email0), mailer.froms);
 		assertEquals(Arrays.asList(email1, email2), mailer.tos);
 		assertEquals(Arrays.asList("newSubject " + email1 + "/someNewGroupName", "newSubject " + email2 + "/someNewGroupName"), mailer.subjects);
 		assertEquals(Arrays.asList("newMail " + email1 + "/someNewGroupName", "newMail " + email2 + "/someNewGroupName"), mailer.messages);
 
-		assertEquals("someNewGroupName", groups.getGroupProperty(groupId1, groupCryptoKey1, GroupConstants.groupNameKey));
+		IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void> checkFn = new IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void>() {
+			@Override
+			public Void apply(IGroupsReader groupsReader, IUserReader userReader, IUserMembershipReader userMembershipReader) throws Exception {
+				assertEquals("someNewGroupName", groupsReader.getGroupProperty(groupId0, groupCryptoKey0, GroupConstants.groupNameKey));
 
-		assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId1, GroupConstants.groupCryptoKey, groupCryptoKey1, GroupConstants.membershipStatusKey, GroupConstants.adminStatus)), userMembershipReader.walkGroupsFor(softwareFmId, userCryptoKey));
-		assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId1, GroupConstants.groupCryptoKey, groupCryptoKey1, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus)), userMembershipReader.walkGroupsFor(softwareFmId1, userCryptoKey1));
-		assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId1, GroupConstants.groupCryptoKey, groupCryptoKey1, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus)), userMembershipReader.walkGroupsFor(softwareFmId2, userCryptoKey2));
+				assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId0, GroupConstants.groupCryptoKey, groupCryptoKey0, GroupConstants.membershipStatusKey, GroupConstants.adminStatus)), userMembershipReader.walkGroupsFor(softwareFmId0, userKey0));
+				assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId0, GroupConstants.groupCryptoKey, groupCryptoKey0, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus)), userMembershipReader.walkGroupsFor(softwareFmId1, userKey1));
+				assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId0, GroupConstants.groupCryptoKey, groupCryptoKey0, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus)), userMembershipReader.walkGroupsFor(softwareFmId2, userKey2));
 
-		String projectCryptoKey = userReader.getUserProperty(softwareFmId, userCryptoKey, JarAndPathConstants.projectCryptoKey);
-		String projectCryptoKey1 = userReader.getUserProperty(softwareFmId1, userCryptoKey1, JarAndPathConstants.projectCryptoKey);
-		String projectCryptoKey2 = userReader.getUserProperty(softwareFmId2, userCryptoKey2, JarAndPathConstants.projectCryptoKey);
+				assertEquals(Arrays.asList(//
+						Maps.stringObjectMap(JarAndPathConstants.projectCryptoKey, projectCryptoKey0, LoginConstants.emailKey, email0, GroupConstants.membershipStatusKey, GroupConstants.adminStatus, LoginConstants.softwareFmIdKey, softwareFmId0), //
+						Maps.stringObjectMap(JarAndPathConstants.projectCryptoKey, projectCryptoKey1, LoginConstants.emailKey, email1, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus, LoginConstants.softwareFmIdKey, softwareFmId1), //
+						Maps.stringObjectMap(JarAndPathConstants.projectCryptoKey, projectCryptoKey2, LoginConstants.emailKey, email2, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus, LoginConstants.softwareFmIdKey, softwareFmId2)), //
+						Iterables.list(groupsReader.users(groupId0, groupCryptoKey0)));
+				return null;
+			}
+		};
+		checkOnServerAndLocally(checkFn);
+	}
 
-		assertNotNull(projectCryptoKey);
-		assertNotNull(projectCryptoKey1);
-		assertNotNull(projectCryptoKey2);
-
-		assertEquals(Arrays.asList(//
-				Maps.stringObjectMap(JarAndPathConstants.projectCryptoKey, projectCryptoKey, LoginConstants.emailKey, email, GroupConstants.membershipStatusKey, GroupConstants.adminStatus, LoginConstants.softwareFmIdKey, softwareFmId), //
-				Maps.stringObjectMap(JarAndPathConstants.projectCryptoKey, projectCryptoKey1, LoginConstants.emailKey, email1, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus, LoginConstants.softwareFmIdKey, softwareFmId1), //
-				Maps.stringObjectMap(JarAndPathConstants.projectCryptoKey, projectCryptoKey2, LoginConstants.emailKey, email2, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus, LoginConstants.softwareFmIdKey, softwareFmId2)), //
-				Iterables.list(groupsReader.users(groupId1, groupCryptoKey1)));
+	private void checkOnServerAndLocally(IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void> checkFn) {
+		getServerApi().makeReadWriter().access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, checkFn);
+		getLocalApi().makeReadWriter().access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, checkFn);
 	}
 
 	public void testButtonsEnabledStatusWhenNotMemberOfAnyGroup() {
@@ -458,11 +472,11 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 	}
 
 	public void testButtonsEnabledStatusWhenAdmin() {
-		createGroup(groupId1, groupCryptoKey1);
-		addUserToGroup(softwareFmId, email1, groupId1, groupCryptoKey1, GroupConstants.adminStatus);
+		createGroup(groupId0, groupCryptoKey0);
+		addUserToGroup(softwareFmId0, email1, groupId0, groupCryptoKey0, GroupConstants.adminStatus);
 
-		createGroup(groupId2, groupCryptoKey2);
-		addUserToGroup(softwareFmId, email2, groupId2, groupCryptoKey2, "someStatus2");
+		createGroup(groupId1, groupCryptoKey1);
+		addUserToGroup(softwareFmId0, email2, groupId1, groupCryptoKey1, "someStatus2");
 		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		MyGroupsButtons buttons = myGroupsComposite.getFooter();
 
@@ -477,11 +491,11 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 	}
 
 	public void testButtonsEnabledStatusWhenInvited() {
-		createGroup(groupId1, groupCryptoKey1);
-		addUserToGroup(softwareFmId, email1, groupId1, groupCryptoKey1, GroupConstants.invitedStatus);
+		createGroup(groupId0, groupCryptoKey0);
+		addUserToGroup(softwareFmId0, email1, groupId0, groupCryptoKey0, GroupConstants.invitedStatus);
 
-		createGroup(groupId2, groupCryptoKey2);
-		addUserToGroup(softwareFmId, email2, groupId2, groupCryptoKey2, "someStatus2");
+		createGroup(groupId1, groupCryptoKey1);
+		addUserToGroup(softwareFmId0, email2, groupId1, groupCryptoKey1, "someStatus2");
 		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		MyGroupsButtons buttons = myGroupsComposite.getFooter();
 
@@ -501,8 +515,8 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		Swts.Buttons.press(buttons.create);
 		dispatchUntilQueueEmpty();
 		NameAndValuesEditorComposite editor = (NameAndValuesEditorComposite) masterDetailSocial.getDetailContent();
-		checkLabelsMatch(editor.getEditor(), "Group Name", "Email List", "Subject", "Email Pattern");
-		checkTextMatches(editor.getEditor(), //
+		Swts.checkLabelsMatch(editor.getEditor(), "Group Name", "Email List", "Subject", "Email Pattern");
+		Swts.checkTextMatches(editor.getEditor(), //
 				"", //
 				"<Type here a comma separated list of people you would like to invite to the group\nThe Email below will be sent with $email$ and $group$ replaced by your email, and the group name>",//
 				"You are invited to join the SoftwareFM group $group$",//
@@ -536,4 +550,9 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		Swts.setText(control, newValue);
 	}
 
+	
+	@Override
+	protected ITakeOnEnrichmentProvider getTakeOnEnrichment() {
+		return ITakeOnEnrichmentProvider.Utils.enrichmentWithUserProperty(JarAndPathConstants.projectCryptoKey);
+	}
 }

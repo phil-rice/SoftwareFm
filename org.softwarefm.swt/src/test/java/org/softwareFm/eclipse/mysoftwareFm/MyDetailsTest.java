@@ -5,37 +5,44 @@
 package org.softwareFm.eclipse.mysoftwareFm;
 
 import org.eclipse.swt.widgets.Table;
-import org.softwareFm.crowdsource.api.user.IUser;
-import org.softwareFm.crowdsource.api.user.UserMock;
-import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
-import org.softwareFm.crowdsource.utilities.crypto.Crypto;
-import org.softwareFm.jarAndClassPath.api.IProject;
+import org.softwareFm.crowdsource.api.IApiBuilder;
+import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
+import org.softwareFm.crowdsource.api.LocalConfig;
+import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.jarAndClassPath.api.IProjectTimeGetter;
-import org.softwareFm.jarAndClassPath.api.ProjectFixture;
+import org.softwareFm.jarAndClassPath.api.IUsageReader;
 import org.softwareFm.jarAndClassPath.api.ProjectTimeGetterFixture;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.editors.DataComposite;
 import org.softwareFm.swt.explorer.internal.UserData;
-import org.softwareFm.swt.swt.SwtTest;
 import org.softwareFm.swt.swt.Swts;
 
-public class MyDetailsTest extends SwtTest {
+public class MyDetailsTest extends AbstractMyGroupsIntegrationTest {
 
-	private final IProjectTimeGetter timeGetter = new ProjectTimeGetterFixture();
-	private final String cryptoKey = Crypto.makeKey();
-	private final String softwareFmId = "someSoftwareFmId";
 	private final String email = "someEmail";
 	private CardConfig cardConfig;
 
-	public void test() {
-		IUser user = new UserMock(cryptoKey, softwareFmId, LoginConstants.emailKey, email, LoginConstants.monikerKey, "someMoniker");
-		String projectCryptoKey = user.getUserProperty(softwareFmId, cryptoKey, JarAndPathConstants.projectCryptoKey);
-		IProject project = ProjectFixture.project1(softwareFmId, projectCryptoKey);
-		UserData userData = new UserData(email, softwareFmId, cryptoKey);
-		MyDetails myDetails = new MyDetails(shell, cardConfig, userData, user, project, timeGetter);
+
+	public void testMyDetails() {
+		assertNotNull(IUserReader.Utils.getUserProperty(getServerApi().makeReader(), softwareFmId0, userKey0, JarAndPathConstants.projectCryptoKey));
+		UserData userData = new UserData(email, softwareFmId0, userKey0);
+		ICrowdSourceReadWriteApi localReadWriter = getLocalApi().makeReadWriter();
+		MyDetails myDetails = new MyDetails(shell, localReadWriter, cardConfig, userData);
 		checkProjectDetails(myDetails);
+	}
+	
+	@Override
+	protected IExtraReaderWriterConfigurator<LocalConfig> getLocalExtraReaderWriterConfigurator() {
+		return new IExtraReaderWriterConfigurator<LocalConfig>() {
+			@Override
+			public void builder(IApiBuilder builder, LocalConfig apiConfig) {
+				builder.registerReader(IProjectTimeGetter.class, new ProjectTimeGetterFixture());
+				builder.registerReader(IUsageReader.class, getProjectTimeGetterFixture(builder));
+			}
+		}; 
 	}
 
 	@SuppressWarnings("unchecked")
@@ -45,13 +52,13 @@ public class MyDetailsTest extends SwtTest {
 		Swts.checkColumns(projectTable, "Group ID", "Artifact ID", "Jan 2012", "Feb 2012", "Mar 2012");
 
 		assertEquals(7, projectTable.getItemCount());
-		Swts.checkRow(projectTable, 0, "group1", "artifact11", "4", "4", "4");
-		Swts.checkRow(projectTable, 1, "group1", "artifact12", "3", "0", "3");
-		Swts.checkRow(projectTable, 2, "group1", "artifact13", "0", "3", "0");
-		Swts.checkRow(projectTable, 3, "group2", "artifact21", "2", "2", "0");
-		Swts.checkRow(projectTable, 4, "group2", "artifact22", "3", "3", "0");
-		Swts.checkRow(projectTable, 5, "group3", "artifact31", "0", "0", "2");
-		Swts.checkRow(projectTable, 6, "group3", "artifact32", "0", "0", "3");
+		Swts.checkRow(projectTable, 0, "groupId0", "artifact11", "4", "4", "4");
+		Swts.checkRow(projectTable, 1, "groupId0", "artifact12", "3", "0", "3");
+		Swts.checkRow(projectTable, 2, "groupId0", "artifact13", "0", "3", "0");
+		Swts.checkRow(projectTable, 3, "groupId1", "artifact21", "2", "2", "0");
+		Swts.checkRow(projectTable, 4, "groupId1", "artifact22", "3", "3", "0");
+		Swts.checkRow(projectTable, 5, "groupId2", "artifact31", "0", "0", "2");
+		Swts.checkRow(projectTable, 6, "groupId2", "artifact32", "0", "0", "3");
 	}
 
 	@Override

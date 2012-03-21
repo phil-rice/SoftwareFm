@@ -13,7 +13,6 @@ import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
-import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.url.Urls;
 import org.softwareFm.swt.card.ICard;
@@ -68,7 +67,7 @@ public class ExplorerNavigationIntegrationTest extends AbstractExplorerIntegrati
 	private void clickOnChildCardAndCheckUrl(final ICardHolder cardHolder, ICard childCard) {
 		final String expectedUrl = childCard.url();
 		childCard.getTable().notifyListeners(SWT.Selection, new Event());
-		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
+		dispatchUntil(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				return expectedUrl.equals(cardHolder.getCard().url());
@@ -83,7 +82,7 @@ public class ExplorerNavigationIntegrationTest extends AbstractExplorerIntegrati
 		final Control firstGrandChild = ((Composite) firstChild).getChildren()[index];
 		firstGrandChild.notifyListeners(SWT.Paint, new Event());
 		// need to wait for data to be set up
-		dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
+		dispatchUntil(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
 				ICard childCard = ((IHasCard) firstGrandChild).getCard();

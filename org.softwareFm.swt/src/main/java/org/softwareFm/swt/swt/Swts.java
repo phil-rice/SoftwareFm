@@ -12,6 +12,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.Assert;
 
@@ -43,6 +47,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -68,6 +73,7 @@ import org.softwareFm.crowdsource.utilities.constants.UtilityMessages;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.future.GatedMockFuture;
 import org.softwareFm.crowdsource.utilities.indent.Indent;
 import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
@@ -77,6 +83,70 @@ import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.constants.DisplayConstants;
 
 public class Swts {
+
+	public static class Dispatch {
+
+		public static void dispatchUntilTimeoutOrLatch(Display display, final CountDownLatch latch, long delay) {
+			try {
+				long start = System.currentTimeMillis();
+				dispatchUntilQueueEmpty(display);
+				while (!latch.await(10, TimeUnit.MILLISECONDS)) {
+					if (System.currentTimeMillis() > delay + start)
+						Assert.fail();
+					dispatchUntilQueueEmpty(display);
+					Thread.sleep(10);
+				}
+			} catch (InterruptedException e) {
+				throw WrappedException.wrap(e);
+			}
+		}
+
+		public static void kickAndDispatch(Display display, Future<?> future) {
+			GatedMockFuture<?, ?> gatedMockFuture = (GatedMockFuture<?, ?>) future;
+			gatedMockFuture.kick();
+			dispatchUntilQueueEmpty(display);
+		}
+
+		public static void dispatchUntilQueueEmpty(Display display) {
+			Swts.dispatchUntilQueueEmpty(display);
+		}
+
+		public static <T> T callInDispatch(Display display, final Callable<T> callable) {
+			final AtomicReference<T> result = new AtomicReference<T>();
+			display.syncExec(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						result.set(callable.call());
+					} catch (Exception e) {
+						throw WrappedException.wrap(e);
+					}
+				}
+			});
+
+			return result.get();
+		}
+
+		public static void dispatchUntil(Display display, long delay, Callable<Boolean> callable) {
+			long startTime = System.currentTimeMillis();
+			try {
+				dispatchUntilQueueEmpty(display);
+				while (!callable.call() && System.currentTimeMillis() < startTime + delay) {
+					dispatchUntilQueueEmpty(display);
+					Thread.sleep(2);
+				}
+				checkAtEnd(display, callable);
+			} catch (Exception e) {
+				throw WrappedException.wrap(e);
+			}
+		}
+
+		private static void checkAtEnd(Display display, Callable<Boolean> callable) {
+			if (!callInDispatch(display, callable))
+				Assert.fail();
+		}
+
+	}
 
 	public static class Actions {
 		public static Action pushAction(IResourceGetter resourceGetter, String key, Class<?> imageAnchor, String imageKey, final Runnable run) {
@@ -1212,4 +1282,76 @@ public class Swts {
 
 	}
 
+	public static void checkTextMatches(IHasComposite values, String... expected) {
+		checkTextMatches(values.getComposite(), expected);
+	}
+
+	public static void checkTextMatches(Composite values, String... expected) {
+		Control[] children = values.getChildren();
+		for (int i = 0; i < expected.length; i++) {
+			Control control = children[i * 2 + 1];
+			if (control instanceof Text)
+				Assert.assertEquals(expected[i], ((Text) control).getText());
+			else if (control instanceof StyledText)
+				Assert.assertEquals(expected[i], ((StyledText) control).getText());
+			else
+				throw new IllegalArgumentException(control.getClass().getName());
+		}
+	}
+
+	public static void checkLabelsMatch(IHasComposite editor, String... expected) {
+		checkLabelsMatch(editor.getComposite(), expected);
+	}
+
+	public static void checkLabelsMatch(Composite editor, String... expected) {
+		Control[] children = editor.getChildren();
+		Assert.assertEquals(expected.length * 2, children.length);
+		for (int i = 0; i < expected.length; i++) {
+			Label label = (Label) children[i * 2];
+			Assert.assertEquals(expected[i], label.getText());
+		}
+	}
+
+	public static void select(Table table, int colIndex, String value) {
+		for (int i = 0; i < table.getItemCount(); i++) {
+			String text = table.getItem(i).getText(colIndex);
+			if (text.equals(value)) {
+				table.select(i);
+				return;
+			}
+		}
+		throw new IllegalArgumentException(colIndex + ", " + value);
+	}
+
+	public static void checkCombo(Composite composite, int index, List<String> items, String text) {
+		Combo combo = (Combo) composite.getChildren()[index];
+		List<String> actual = Arrays.asList(combo.getItems());
+		Assert.assertEquals(items, actual);
+		Assert.assertEquals(text, combo.getText());
+
+	}
+
+	public static void checkRadioButton(Composite composite, int index, String text, boolean selected) {
+		Button button = (Button) composite.getChildren()[index];
+		Assert.assertEquals(text, button.getText());
+		Assert.assertEquals(selected, button.getSelection());
+	}
+
+	public static void checkTableColumns(Table table, String... strings) {
+		Assert.assertTrue(table.getHeaderVisible());
+		for (int i = 0; i < strings.length; i++)
+			Assert.assertEquals(strings[i], table.getColumn(i).getText());
+		Assert.assertEquals(strings.length, table.getColumnCount());
+
+	}
+
+	public static void checkTable(Table table, int index, Object key, String... strings) {
+		TableItem item = table.getItem(index);
+		TableColumn[] columns = table.getColumns();
+		Assert.assertEquals(key, item.getData());
+		for (int i = 0; i < strings.length; i++)
+			Assert.assertEquals(strings[i], item.getText(i));
+		Assert.assertEquals(columns.length, strings.length);
+
+	}
 }

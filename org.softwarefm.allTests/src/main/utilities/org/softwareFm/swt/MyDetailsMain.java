@@ -12,7 +12,6 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
 import org.softwareFm.jarAndClassPath.api.ProjectFixture;
 import org.softwareFm.jarAndClassPath.api.ProjectMock;
-import org.softwareFm.jarAndClassPath.api.ProjectTimeGetterFixture;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.explorer.internal.UserData;
@@ -31,7 +30,7 @@ public class MyDetailsMain {
 				ProjectMock project = ProjectFixture.project1(softwareFmId, projectCryptoKey);
 				UserData userData = new UserData(email, softwareFmId, cryptoKey);
 				CardConfig cardConfig = CardDataStoreFixture.syncCardConfig(from.getDisplay());
-				return new MyDetails(from, cardConfig, userData, user, project, new ProjectTimeGetterFixture()).getComposite();
+				return new MyDetails(from, cardConfig, userData).getComposite();
 			}
 		});
 	}

@@ -20,7 +20,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
-import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.swt.card.ICard;
@@ -120,7 +119,7 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 					}
 				});
 				explorer.showContents();
-				dispatchUntilTimeoutOrLatch(latch, CommonConstants.testTimeOutMs);
+				dispatchUntilTimeoutOrLatch(latch);
 
 			}
 		});

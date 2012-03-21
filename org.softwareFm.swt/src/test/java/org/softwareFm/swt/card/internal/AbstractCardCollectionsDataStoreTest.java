@@ -4,6 +4,7 @@
 
 package org.softwareFm.swt.card.internal;
 
+
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.card.CardMock;
 import org.softwareFm.swt.card.ICardFactory;

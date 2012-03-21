@@ -18,9 +18,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
+import org.softwareFm.crowdsource.api.git.IGitLocal;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
-import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
@@ -177,8 +177,14 @@ public abstract class ExplorerAddingCollectionsIntegrationTest extends AbstractE
 		}
 	}
 
-	protected void makeCollectionUrlAndExistingUrl(String collectionUrl) {
-		gitLocal.put(IFileDescription.Utils.compose(rootArtifactUrl, collectionUrl), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection));
+	protected void makeCollectionUrlAndExistingUrl(final String collectionUrl) {
+		getLocalApi().makeReadWriter().access(IGitLocal.class, new IFunction1<IGitLocal, Void>() {
+			@Override
+			public Void apply(IGitLocal gitLocal) throws Exception {
+				gitLocal.put(IFileDescription.Utils.compose(rootArtifactUrl, collectionUrl), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection));
+				return null;
+			}
+		});
 	}
 
 	protected void addFromCollection(final String collection, final String nameInMainCard, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback, String collectionUrl) {
@@ -269,7 +275,7 @@ public abstract class ExplorerAddingCollectionsIntegrationTest extends AbstractE
 				};
 				explorer.addExplorerListener(listemer);
 				Swts.Buttons.press(okButton);
-				dispatchUntilTimeoutOrLatch(latch, CommonConstants.testTimeOutMs);
+				dispatchUntilTimeoutOrLatch(latch);
 			}
 		});
 	}

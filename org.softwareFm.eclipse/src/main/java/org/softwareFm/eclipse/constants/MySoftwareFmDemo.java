@@ -56,7 +56,7 @@ public class MySoftwareFmDemo {
 				public Composite apply(Composite from) throws Exception {
 					CardConfig cardConfig = ICardConfigurator.Utils.cardConfigForTests(from.getDisplay());
 					IUserReader userReader = IUserReader.Utils.exceptionUserReader();
-					MySoftwareFm mySoftwareFm = new MySoftwareFm(from, cardConfig, ILoginStrategy.Utils.softwareFmLoginStrategy(from.getDisplay(), service, client), IShowMyData.Utils.sysout(), IShowMyGroups.Utils.sysoutShowMyGroups(), userReader, IUserDataManager.Utils.userDataManager());
+					MySoftwareFm mySoftwareFm = new MySoftwareFm(from, cardConfig, ILoginStrategy.Utils.softwareFmLoginStrategy(from.getDisplay(), service, client), IShowMyData.Utils.sysout(), IShowMyGroups.Utils.sysoutShowMyGroups(), IUserDataManager.Utils.userDataManager());
 					mySoftwareFm.start();
 					return mySoftwareFm.getComposite();
 				}

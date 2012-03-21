@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
+import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.utilities.constants.CommonMessages;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
@@ -19,15 +20,6 @@ import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.swt.swt.Swts;
 
 public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
-
-	public void testContentsWhenUserNotMemberOfGroups() {
-		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
-		Table table = getMyGroupsTable(myGroupsComposite);
-		assertEquals(0, table.getItemCount());
-		assertEquals(-1, table.getSelectionIndex());
-
-	}
-
 	public void testContentsWhenMemberOfTwoGroups() {
 		addUserToGroup1AndGroup2();
 
@@ -42,10 +34,18 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		assertEquals("Select a group to see members", text.getText());
 	}
 
+	public void testContentsWhenUserNotMemberOfGroups() {
+		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
+		Table table = getMyGroupsTable(myGroupsComposite);
+		assertEquals(0, table.getItemCount());
+		assertEquals(-1, table.getSelectionIndex());
+
+	}
+
 	protected void checkMainTable(Table table) {
-		checkTableColumns(table, "Group Name", "Members", "My Status");
-		checkTable(table, 0, new IdNameAndStatus("groupId1", "groupId1Name", "someStatus1"), "groupId1Name", "1", "someStatus1");
-		checkTable(table, 1, new IdNameAndStatus("groupId2", "groupId2Name", "someStatus2"), "groupId2Name", "1", "someStatus2");
+		Swts.checkTableColumns(table, "Group Name", "Members", "My Status");
+		Swts.checkTable(table, 0, new IdNameAndStatus(groupId0, groupName0, "someStatus1"), "groupId0Name", "1", "someStatus1");
+		Swts.checkTable(table, 1, new IdNameAndStatus(groupId1, groupName1, "someStatus2"), "groupId1Name", "1", "someStatus2");
 		assertEquals(2, table.getItemCount());
 	}
 
@@ -65,31 +65,31 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		Table summaryTable = Swts.getDescendant(myGroupsComposite.getEditor(), 1, 1);
 
 		assertEquals(summaryTable, stackLayout.topControl);
-		checkTableColumns(summaryTable, "Email", "Status");
-		checkTable(summaryTable, 0, makeMembershipMap(softwareFmId, userCryptoKey, email2, "someStatus2"), email2, "someStatus2");
+		Swts.checkTableColumns(summaryTable, "Email", "Status");
+		Swts.checkTable(summaryTable, 0, makeMembershipMap(softwareFmId0, userKey0, email0, "someStatus2"), email0, "someStatus2");
 		assertEquals(1, summaryTable.getItemCount());
 	}
 
 	public void testMyGroupsWhenOneLineIsBadlyEncrypted() {
-		signUpUser(softwareFmId1, email1);
-		signUpUser(softwareFmId2, email2);
-		createGroup(groupId1, groupCryptoKey1);
-		addUserToGroup(softwareFmId, email, groupId1, groupCryptoKey1, "someStatus1");
-		addUserToGroup(softwareFmId1, email1, groupId1, groupCryptoKey2, "someStatus2"); // note bad crypto key
-		addUserToGroup(softwareFmId2, email2, groupId1, groupCryptoKey1, "someStatus3");
+		createUser(softwareFmId1, email1);
+		createUser(softwareFmId2, email2);
+		assertEquals(groupId0, createGroup(groupName0, groupCryptoKey0));
+		addUserToGroup(softwareFmId0, email0, groupId0, groupCryptoKey0, "someStatus1");
+		addUserToGroup(softwareFmId1, email1, groupId0, groupCryptoKey1, "someStatus2"); // note bad crypto key
+		addUserToGroup(softwareFmId2, email2, groupId0, groupCryptoKey0, "someStatus3");
 
 		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		Table table = getMyGroupsTable(myGroupsComposite);
-		checkTableColumns(table, "Group Name", "Members", "My Status");
-		checkTable(table, 0, new IdNameAndStatus("groupId1", "groupId1Name", "someStatus1"), "groupId1Name", "3", "someStatus1");
+		Swts.checkTableColumns(table, "Group Name", "Members", "My Status");
+		Swts.checkTable(table, 0, new IdNameAndStatus(groupId0, groupName0, "someStatus1"), groupName0, "3", "someStatus1");
 		assertEquals(1, table.getItemCount());
 
 		table.select(0);
 		table.notifyListeners(SWT.Selection, new Event());
 		dispatchUntilQueueEmpty();
 
-		checkTableColumns(table, "Group Name", "Members", "My Status");
-		checkTable(table, 0, new IdNameAndStatus("groupId1", "groupId1Name", "someStatus1"), "groupId1Name", "3", "someStatus1");
+		Swts.checkTableColumns(table, "Group Name", "Members", "My Status");
+		Swts.checkTable(table, 0, new IdNameAndStatus(groupId0, groupName0, "someStatus1"), groupName0, "3", "someStatus1");
 		assertEquals(1, table.getItemCount());
 		assertEquals(0, table.getSelectionIndex());
 
@@ -97,32 +97,32 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		Table summaryTable = Swts.getDescendant(myGroupsComposite.getEditor(), 1, 1);
 
 		assertEquals(summaryTable, stackLayout.topControl);
-		checkTableColumns(summaryTable, "Email", "Status");
-		checkTable(summaryTable, 0, null, "Corrupted", "Record");
-		checkTable(summaryTable, 1, makeMembershipMap(softwareFmId, userCryptoKey, email, "someStatus1"), email, "someStatus1");
-		checkTable(summaryTable, 2, makeMembershipMap(softwareFmId2, userCryptoKey2, email2, "someStatus3"), email2, "someStatus3");
+		Swts.checkTableColumns(summaryTable, "Email", "Status");
+		Swts.checkTable(summaryTable, 0, null, "Corrupted", "Record");
+		Swts.checkTable(summaryTable, 1, makeMembershipMap(softwareFmId0, userKey0, email0, "someStatus1"), email0, "someStatus1");
+		Swts.checkTable(summaryTable, 2, makeMembershipMap(softwareFmId2, userKey2, email2, "someStatus3"), email2, "someStatus3");
 		assertEquals(3, summaryTable.getItemCount());
 	}
 
 	public void testMyGroupsWhenMembershipTableBadlyEncrypted() {
-		createGroup(groupId1, groupCryptoKey1);
-		createGroup(groupId2, groupCryptoKey2);
+		assertEquals(groupId0, createGroup(groupName0, groupCryptoKey0));
+		assertEquals(groupId1, createGroup(groupName1, groupCryptoKey1));
 
-		addUserToGroup(softwareFmId, email, groupId2, groupCryptoKey2, "someStatus2");
+		addUserToGroup(softwareFmId0, email0, groupId1, groupCryptoKey1, "someStatus2");
 
 		String badCrypto = Crypto.makeKey();
-		String userUrl = userUrlGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
+		String userUrl = getServerConfig().userUrlGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId0));
 		IFileDescription fileDescription = IFileDescription.Utils.encrypted(userUrl, GroupConstants.membershipFileName, badCrypto);
-		processCallParameters.gitOperations.append(fileDescription, Maps.stringObjectMap("will be", "encoded wrong"));
+		getServerApi().makeReader().gitOperations().append(fileDescription, Maps.stringObjectMap("will be", "encoded wrong"));
 
-		addUserToGroup(softwareFmId, email, groupId1, groupCryptoKey1, "someStatus1");
+		addUserToGroup(softwareFmId0, email0, groupId0, groupCryptoKey0, "someStatus1");
 
 		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		Table table = getMyGroupsTable(myGroupsComposite);
-		checkTableColumns(table, "Group Name", "Members", "My Status");
-		checkTable(table, 0, null, CommonMessages.corrupted, CommonMessages.record, "");
-		checkTable(table, 1, new IdNameAndStatus("groupId1", "groupId1Name", "someStatus1"), "groupId1Name", "1", "someStatus1");
-		checkTable(table, 2, new IdNameAndStatus("groupId2", "groupId2Name", "someStatus2"), "groupId2Name", "1", "someStatus2");
+		Swts.checkTableColumns(table, "Group Name", "Members", "My Status");
+		Swts.checkTable(table, 0, null, CommonMessages.corrupted, CommonMessages.record, "");
+		Swts.checkTable(table, 1, new IdNameAndStatus(groupId0, groupName0, "someStatus1"), groupName0, "1", "someStatus1");
+		Swts.checkTable(table, 2, new IdNameAndStatus(groupId1, groupName1, "someStatus2"), groupName1, "1", "someStatus2");
 		assertEquals(3, table.getItemCount());
 		assertEquals(-1, table.getSelectionIndex());
 
@@ -136,7 +136,7 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		table.notifyListeners(SWT.Selection, new Event());
 		dispatchUntilQueueEmpty();
 		assertEquals(1, summaryTable.getItemCount());
-		checkTable(summaryTable, 0, makeMembershipMap(softwareFmId, userCryptoKey, email, "someStatus1"), email, "someStatus1");
+		Swts.checkTable(summaryTable, 0, makeMembershipMap(softwareFmId0, userKey0, email0, "someStatus1"), email0, "someStatus1");
 
 		table.select(0);
 		table.notifyListeners(SWT.Selection, new Event());
@@ -146,7 +146,7 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 	}
 
 	private Map<String, Object> makeMembershipMap(String softwareFmId, String cryptoKey, String email, String status) {
-		String projectCryptoKey = user.getUserProperty(softwareFmId, cryptoKey, JarAndPathConstants.projectCryptoKey);
+		String projectCryptoKey = IUserReader.Utils.getUserProperty(getServerApi().makeReader(), softwareFmId, cryptoKey, JarAndPathConstants.projectCryptoKey);
 		return Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId, JarAndPathConstants.projectCryptoKey, projectCryptoKey, LoginConstants.emailKey, email, GroupConstants.membershipStatusKey, status);
 	}
 }

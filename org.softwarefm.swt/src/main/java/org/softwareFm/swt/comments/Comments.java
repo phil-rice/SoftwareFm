@@ -4,6 +4,7 @@
 
 package org.softwareFm.swt.comments;
 
+import java.io.File;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,11 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.crowdsource.api.ICommentsReader;
+import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
+import org.softwareFm.crowdsource.api.ICrowdSourcesApi;
+import org.softwareFm.crowdsource.api.ServerConfig;
+import org.softwareFm.crowdsource.api.server.IMailer;
 import org.softwareFm.crowdsource.constants.CommentConstants;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.comparators.Comparators;
@@ -53,10 +59,11 @@ public class Comments implements IHasControl {
 			String imageName = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, null, CollectionConstants.addCommentButtonImage);
 			Image addCommentImage = Functions.call(cardConfig.imageFn, imageName);
 			addCommentButton = Swts.Buttons.makeImageButton(content, addCommentImage, addButton);
-//			addCommentButton = Swts.Buttons.makePushButton(content, "add", addButton);
-			RowLayout layout = Swts.Row.getHorizonalNoMarginRowLayout();layout.marginRight=20;
+			// addCommentButton = Swts.Buttons.makePushButton(content, "add", addButton);
+			RowLayout layout = Swts.Row.getHorizonalNoMarginRowLayout();
+			layout.marginRight = 20;
 			content.setLayout(layout);
-			
+
 		}
 
 		@Override
@@ -77,14 +84,14 @@ public class Comments implements IHasControl {
 	public static class CommentsComposite extends DataComposite<Table> implements IDataCompositeWithFooter<Table, CommentsButtons> {
 
 		private final Table table;
-		private final ICommentsReader commentsReader;
 		protected List<Map<String, Object>> allComments;
 		private String url;
 		private final CommentsButtons footer;
+		private final ICrowdSourceReadWriteApi readWriteApi;
 
-		public CommentsComposite(Composite parent, CardConfig cardConfig, ICommentsReader commentsReader, final ICommentsCallback callback, Runnable addButton) {
+		public CommentsComposite(Composite parent, CardConfig cardConfig, ICrowdSourceReadWriteApi readWriteApi, final ICommentsCallback callback, Runnable addButton) {
 			super(parent, cardConfig, CommentConstants.commentCardType, "");
-			this.commentsReader = commentsReader;
+			this.readWriteApi = readWriteApi;
 			IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, CommentConstants.commentCardType);
 			this.table = new Table(getInnerBody(), SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 			table.setLinesVisible(true);
@@ -115,12 +122,18 @@ public class Comments implements IHasControl {
 			return table;
 		}
 
-		public void populate(UserData userData, String cardType, String url) {
+		@SuppressWarnings("threadiness...look at which thread this is in, and the allComments call")
+		public void populate(final UserData userData, String cardType, final String url) {
 			this.url = url;
 			CardConfig cc = getCardConfig();
 
-			allComments = Lists.sort(ICommentsReader.Utils.allComments(commentsReader, url, userData.softwareFmId, userData.crypto, CommentConstants.globalSource, CommentConstants.mySource), //
-					Comparators.invert(Comparators.mapKey(CommentConstants.timeKey)));
+			allComments = readWriteApi.accessCommentsReader(new IFunction1<ICommentsReader, List<Map<String, Object>>>() {
+				@Override
+				public List<Map<String, Object>> apply(ICommentsReader commentsReader) throws Exception {
+					return Lists.sort(ICommentsReader.Utils.allComments(commentsReader, url, userData.softwareFmId, userData.crypto, CommentConstants.globalSource, CommentConstants.mySource), //
+							Comparators.invert(Comparators.mapKey(CommentConstants.timeKey)));
+				}
+			});
 			String titleKey = allComments.size() > 0 ? CollectionConstants.commentsTitle : CollectionConstants.commentsNoTitle;
 
 			String pattern = IResourceGetter.Utils.getOrException(cc.resourceGetterFn, cardType, titleKey);
@@ -152,8 +165,8 @@ public class Comments implements IHasControl {
 
 	private final CommentsComposite content;
 
-	public Comments(Composite parent, CardConfig cardConfig, ICommentsReader commentsReader, ICommentsCallback callback, Runnable addComment) {
-		content = new CommentsComposite(parent, cardConfig, commentsReader, callback, addComment);
+	public Comments(Composite parent, ICrowdSourceReadWriteApi readWriteApi, CardConfig cardConfig, ICommentsCallback callback, Runnable addComment) {
+		content = new CommentsComposite(parent, cardConfig, readWriteApi, callback, addComment);
 		content.setLayout(Swts.titleAndContentLayout(cardConfig.titleHeight));
 		content.setLayout(new DataCompositeWithFooterLayout());
 	}
@@ -191,9 +204,11 @@ public class Comments implements IHasControl {
 			public Composite apply(Composite from) throws Exception {
 				CardConfig cardConfig = ICardConfigurator.Utils.basicConfigurator().configure(from.getDisplay(), new CardConfig(ICardFactory.Utils.noCardFactory(), new CardDataStoreMock()));
 				Runnable addComment = Runnables.sysout("add comment");
+				File sfmRoot = ICrowdSourcedServer.Utils.makeSfmRoot();
+				ICrowdSourcesApi api = ICrowdSourcesApi.Utils.forServer(ServerConfig.serverConfigForTests(sfmRoot, IMailer.Utils.noMailer()));
+				@SuppressWarnings("This isnt correct: comeback and work out how to easily inject the comments reader")
 				ICommentsReader commentsReader = ICommentsReader.Utils.mockReader("sfmId", "Phil", System.currentTimeMillis(), "comment1", "comment2", "comment3");
-				Comments comments = new Comments(from, cardConfig, commentsReader, new ICommentsCallback() {
-
+				Comments comments = new Comments(from, api.makeReadWriter(), cardConfig, new ICommentsCallback() {
 					@Override
 					public void selected(String cardType, String url, int index, Map<String, Object> comment) {
 						System.out.println("Selected: " + cardType + ", " + url + ", " + index + ", " + comment);

@@ -22,11 +22,10 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.softwareFm.crowdsource.api.git.IGitLocal;
+import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
-import org.softwareFm.crowdsource.api.user.IUserReader;
-import org.softwareFm.crowdsource.membership.internal.UserMembershipReaderForLocal;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.comparators.Comparators;
@@ -35,16 +34,14 @@ import org.softwareFm.crowdsource.utilities.constants.CommonMessages;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.functions.IFunction2;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.crowdsource.utilities.runnable.Callables;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
-import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.jar.EclipseMessages;
-import org.softwareFm.jarAndClassPath.api.IProjectTimeGetter;
-import org.softwareFm.jarAndClassPath.api.IRequestGroupReportGeneration;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.composites.IHasControl;
@@ -58,7 +55,7 @@ import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.swt.Swts;
 
 public class MyGroups implements IHasComposite {
-	public static IShowMyGroups showMyGroups(final IServiceExecutor executor, final boolean showDialogs, final CardConfig cardConfig, final IMasterDetailSocial masterDetailSocial, final IUrlGenerator userUrlGenerator, final IUrlGenerator groupUrlGenerator, final IGitLocal gitLocal, final IProjectTimeGetter projectTimeGetter, final IRequestGroupReportGeneration reportGenerator, final IGroupClientOperations groupClientOperations) {
+	public static IShowMyGroups showMyGroups(final ICrowdSourceReadWriteApi readWriteApi, final IServiceExecutor executor, final boolean showDialogs, final CardConfig cardConfig, final IMasterDetailSocial masterDetailSocial, final IGroupClientOperations groupClientOperations) {
 		return new IShowMyGroups() {
 			@Override
 			public void show(final UserData userData, final String groupId) {
@@ -66,22 +63,7 @@ public class MyGroups implements IHasComposite {
 					@Override
 					public Void apply(IMonitor monitor) throws Exception {
 						monitor.beginTask(EclipseMessages.showMyGroups, 2);
-						final IUserReader user = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
-						// String membershipCrypto = user.getUserProperty(userData.softwareFmId, userData.crypto, GroupConstants.membershipCryptoKey);
-						final IGroupsReader groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
-						// if (membershipCrypto == null) {
-						// masterDetailSocial.createAndShowDetail(new IFunction1<Composite, TextInCompositeWithCardMargin>() {
-						// @Override
-						// public TextInCompositeWithCardMargin apply(Composite from) throws Exception {
-						// TextInCompositeWithCardMargin result = new TextInCompositeWithCardMargin(from, SWT.WRAP | SWT.READ_ONLY, cardConfig);
-						// result.setText("You belong to no groups");
-						// return result;
-						// }
-						// });
-						// return null;
-						// }
-						final IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, user);
-						gitLocal.clearCaches();
+						IGitReader.Utils.clearCache(readWriteApi);
 						Swts.asyncExecAndMarkDone(masterDetailSocial.getControl(), monitor, new Runnable() {
 							@Override
 							public void run() {
@@ -89,10 +71,10 @@ public class MyGroups implements IHasComposite {
 								masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyGroups>() {
 									@Override
 									public MyGroups apply(Composite from) throws Exception {
-										MyGroups myGroups = new MyGroups(from, showDialogs, cardConfig, userMembershipReader, groupsReader, userData, projectTimeGetter, reportGenerator, groupClientOperations, new ICallback<String>() {
+										MyGroups myGroups = new MyGroups(from, readWriteApi, showDialogs, cardConfig, userData, groupClientOperations, new ICallback<String>() {
 											@Override
 											public void process(String groupId) throws Exception {
-												showMyGroups(executor, showDialogs, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, projectTimeGetter, reportGenerator, groupClientOperations).show(userData, groupId);
+												showMyGroups(readWriteApi, executor, showDialogs, cardConfig, masterDetailSocial, groupClientOperations).show(userData, groupId);
 											}
 										});
 										myGroups.selectAndScrollTo(groupId);
@@ -122,7 +104,7 @@ public class MyGroups implements IHasComposite {
 		private final Callable<Integer> groupSizeGetter;
 
 		@SuppressWarnings("Need to externalise these string")
-		//show dialogs exists because it is very hard to test for this: the dialog actually appears... I could rewrite the open confirm dialog so that it didn't appear in tests, but it doesn't seem worth it
+		// show dialogs exists because it is very hard to test for this: the dialog actually appears... I could rewrite the open confirm dialog so that it didn't appear in tests, but it doesn't seem worth it
 		public MyGroupsButtons(final Composite parent, final boolean showDialogs, final IGroupClientOperations groupClientOperations, final UserData userData, final ICallback<String> showMyGroups, final Callable<IdNameAndStatus> idNameStatusGetter, final Callable<List<Map<String, Object>>> objectMapGetter, Callable<Integer> groupSizeGetter) {
 			this.idNameStatusGetter = idNameStatusGetter;
 			this.objectMapGetter = objectMapGetter;
@@ -150,10 +132,10 @@ public class MyGroups implements IHasComposite {
 				public void run() {
 					if (showDialogs && !MessageDialog.openConfirm(parent.getShell(), "Leave", MessageFormat.format("Are you sure you want to leave", Callables.call(objectMapGetter).size())))
 						return;
-					groupClientOperations.leaveGroup(userData, showMyGroups, idNameStatusGetter).run();					
+					groupClientOperations.leaveGroup(userData, showMyGroups, idNameStatusGetter).run();
 				}
 			});
-			
+
 			kick = Swts.Buttons.makePushButton(content, "Kick", kickRunnable);
 		}
 
@@ -171,13 +153,13 @@ public class MyGroups implements IHasComposite {
 			boolean someOneSelected = objectUsers.size() > 0;
 			boolean someSelectedIsAdmin = someOneSelected && areAnyAdmin(objectUsers);
 			boolean kickstatus = admin && someOneSelected && !someSelectedIsAdmin;
-			boolean lastMember = groupSize ==1;
-			boolean leaveStatus = idNameAndStatus != null && (!admin || lastMember); 
+			boolean lastMember = groupSize == 1;
+			boolean leaveStatus = idNameAndStatus != null && (!admin || lastMember);
 			accept.setEnabled(invited);
 			invite.setEnabled(admin);
 			kick.setEnabled(kickstatus);
 			leave.setEnabled(leaveStatus);
-			
+
 		}
 
 		private boolean areAnyAdmin(List<Map<String, Object>> objectUsers) {
@@ -190,7 +172,6 @@ public class MyGroups implements IHasComposite {
 
 	public static class MyGroupsComposite extends DataComposite<SashForm> implements IDataCompositeWithFooter<SashForm, MyGroupsButtons> {
 		public final Table summaryTable;
-		private final IGroupsReader groupsReader;
 		private final SashForm sashForm;
 		private final Composite rightHand;
 		private final Table membershipTable;
@@ -207,9 +188,8 @@ public class MyGroups implements IHasComposite {
 			return sashForm;
 		}
 
-		public MyGroupsComposite(Composite parent, boolean showDialogs, final CardConfig cardConfig, IUserMembershipReader membershipReader, final IGroupsReader groupReaders, UserData userData, IProjectTimeGetter projectTimeGetter, final IRequestGroupReportGeneration reportGenerator, IGroupClientOperations groupClientOperations, ICallback<String> showMyGroups) {
+		public MyGroupsComposite(Composite parent, final ICrowdSourceReadWriteApi readWriteApi, IGroupClientOperations groupClientOperations, boolean showDialogs, final CardConfig cardConfig, final UserData userData, ICallback<String> showMyGroups) {
 			super(parent, cardConfig, GroupConstants.myGroupsCardType, JarAndPathConstants.myGroupsTitle, true);
-			this.groupsReader = groupReaders;
 			sashForm = new SashForm(getInnerBody(), SWT.HORIZONTAL);
 			summaryTable = new Table(sashForm, SWT.FULL_SELECTION);
 			buttons = new MyGroupsButtons(getInnerBody(), showDialogs, groupClientOperations, userData, showMyGroups, new Callable<IdNameAndStatus>() {
@@ -231,7 +211,7 @@ public class MyGroups implements IHasComposite {
 						result.add((Map<String, Object>) membershipTable.getItem(i).getData());
 					return result;
 				}
-			},new Callable<Integer>() {
+			}, new Callable<Integer>() {
 				@Override
 				public Integer call() throws Exception {
 					return membershipTable.getItemCount();
@@ -241,41 +221,47 @@ public class MyGroups implements IHasComposite {
 			new TableColumn(summaryTable, SWT.NULL).setText("Group Name");
 			new TableColumn(summaryTable, SWT.NULL).setText("Members");
 			new TableColumn(summaryTable, SWT.NULL).setText("My Status");
-			Iterable<Map<String, Object>> groups = membershipReader.walkGroupsFor(userData.softwareFmId, userData.crypto);
-			List<Map<String, Object>> groupsWithName = Lists.map(groups, new IFunction1<Map<String, Object>, Map<String, Object>>() {
+
+			readWriteApi.access(IGroupsReader.class, IUserMembershipReader.class, new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
 				@Override
-				public Map<String, Object> apply(Map<String, Object> map) throws Exception {
-					if (map.containsKey(CommonConstants.errorKey))
-						return map;
-					String groupId = (String) map.get(GroupConstants.groupIdKey);
-					String groupCryptoKey = (String) map.get(GroupConstants.groupCryptoKey);
-					try {
-						String groupName = groupReaders.getGroupProperty(groupId, groupCryptoKey, GroupConstants.groupNameKey);
-						return Maps.with(map, GroupConstants.groupNameKey, groupName);
-					} catch (Exception e) {
-						return Maps.with(map, CommonConstants.errorKey, MessageFormat.format(GroupConstants.cannotDetermineGroupName, groupId, e));
+				public Void apply(IGroupsReader groupsReader, IUserMembershipReader userMembershipReader) throws Exception {
+					Iterable<Map<String, Object>> groups = userMembershipReader.walkGroupsFor(userData.softwareFmId, userData.crypto);
+					List<Map<String, Object>> groupsWithName = Lists.map(groups, new IFunction1<Map<String, Object>, Map<String, Object>>() {
+						@Override
+						public Map<String, Object> apply(Map<String, Object> map) throws Exception {
+							if (map.containsKey(CommonConstants.errorKey))
+								return map;
+							String groupId = (String) map.get(GroupConstants.groupIdKey);
+							String groupCryptoKey = (String) map.get(GroupConstants.groupCryptoKey);
+							try {
+								String groupName = IGroupsReader.Utils.getGroupProperty(readWriteApi, groupId, groupCryptoKey, GroupConstants.groupNameKey);
+								return Maps.with(map, GroupConstants.groupNameKey, groupName);
+							} catch (Exception e) {
+								return Maps.with(map, CommonConstants.errorKey, MessageFormat.format(GroupConstants.cannotDetermineGroupName, groupId, e));
+							}
+						}
+					});
+					for (Map<String, Object> map : Lists.sort(groupsWithName, Comparators.mapKey(GroupConstants.groupNameKey))) {
+						if (map.containsKey(CommonConstants.errorKey)) {
+							TableItem item = new TableItem(summaryTable, SWT.NULL);
+							item.setText(new String[] { CommonMessages.corrupted, CommonMessages.record, "" });
+						} else {
+							String groupId = (String) map.get(GroupConstants.groupIdKey);
+							String groupCryptoKey = (String) map.get(GroupConstants.groupCryptoKey);
+							String groupName = groupsReader.getGroupProperty(groupId, groupCryptoKey, GroupConstants.groupNameKey);
+							TableItem item = new TableItem(summaryTable, SWT.NULL);
+							int membershipCount = groupsReader.membershipCount(groupId, groupCryptoKey);
+							String membershipCountString = Integer.toString(membershipCount);
+							String myStatus = Strings.nullSafeToString(map.get(GroupConstants.membershipStatusKey));
+							IdNameAndStatus data = new IdNameAndStatus(groupId, groupName, myStatus);
+							item.setData(data);
+							item.setText(new String[] { groupName, membershipCountString, myStatus });
+							idToCrypto.put(groupId, groupCryptoKey);
+						}
 					}
+					return null;
 				}
 			});
-
-			for (Map<String, Object> map : Lists.sort(groupsWithName, Comparators.mapKey(GroupConstants.groupNameKey))) {
-				if (map.containsKey(CommonConstants.errorKey)) {
-					TableItem item = new TableItem(summaryTable, SWT.NULL);
-					item.setText(new String[] { CommonMessages.corrupted, CommonMessages.record, "" });
-				} else {
-					String groupId = (String) map.get(GroupConstants.groupIdKey);
-					String groupCryptoKey = (String) map.get(GroupConstants.groupCryptoKey);
-					String groupName = groupReaders.getGroupProperty(groupId, groupCryptoKey, GroupConstants.groupNameKey);
-					TableItem item = new TableItem(summaryTable, SWT.NULL);
-					int membershipCount = groupsReader.membershipCount(groupId, groupCryptoKey);
-					String membershipCountString = Integer.toString(membershipCount);
-					String myStatus = Strings.nullSafeToString(map.get(GroupConstants.membershipStatusKey));
-					IdNameAndStatus data = new IdNameAndStatus(groupId, groupName, myStatus);
-					item.setData(data);
-					item.setText(new String[] { groupName, membershipCountString, myStatus });
-					idToCrypto.put(groupId, groupCryptoKey);
-				}
-			}
 
 			rightHand = new Composite(sashForm, SWT.NULL);
 			final StackLayout stackLayout = new StackLayout();
@@ -300,13 +286,19 @@ public class MyGroups implements IHasComposite {
 						IdNameAndStatus idAndName = (IdNameAndStatus) item.getData();
 						if (idAndName == null)
 							return;
-						String groupId = idAndName.id;
+						final String groupId = idAndName.id;
 						if (groupId == null)
 							throw new NullPointerException("GroupId is null: " + Integer.toString(index));
-						String groupCryptoKey = idToCrypto.get(groupId);
+						final String groupCryptoKey = idToCrypto.get(groupId);
 						if (groupCryptoKey == null)
 							throw new NullPointerException("GroupCrypto is null: " + Integer.toString(index));
-						for (Map<String, Object> user : Lists.sort(groupsReader.users(groupId, groupCryptoKey), Comparators.mapKey(LoginConstants.emailKey))) {
+						Iterable<Map<String, Object>> users = readWriteApi.accessGroupReader(new IFunction1<IGroupsReader, Iterable<Map<String,Object>>>() {
+							@Override
+							public Iterable<Map<String, Object>> apply(IGroupsReader from) throws Exception {
+								return from.users(groupId, groupCryptoKey);
+							}
+						});
+						for (Map<String, Object> user : Lists.sort(users, Comparators.mapKey(LoginConstants.emailKey))) {
 							TableItem tableItem = new TableItem(membershipTable, SWT.NULL);
 							if (user.containsKey(CommonConstants.errorKey))
 								tableItem.setText(new String[] { CommonMessages.corrupted, CommonMessages.record });
@@ -338,8 +330,8 @@ public class MyGroups implements IHasComposite {
 		}
 	}
 
-	public MyGroups(Composite parent, boolean showDialogs, CardConfig cardConfig, IUserMembershipReader membershipReader, IGroupsReader groupsReader, UserData userData, IProjectTimeGetter projectTimeGetter, IRequestGroupReportGeneration reportGenerator, IGroupClientOperations groupClientOperations, ICallback<String> showMyGroups) {
-		content = new MyGroupsComposite(parent, showDialogs, cardConfig, membershipReader, groupsReader, userData, projectTimeGetter, reportGenerator, groupClientOperations, showMyGroups);
+	public MyGroups(Composite parent,ICrowdSourceReadWriteApi readWriteApi, boolean showDialogs, CardConfig cardConfig, UserData userData, IGroupClientOperations groupClientOperations, ICallback<String> showMyGroups) {
+		content = new MyGroupsComposite(parent, readWriteApi, groupClientOperations, showDialogs, cardConfig, userData, showMyGroups);
 		content.setLayout(new DataCompositeWithFooterLayout());
 	}
 

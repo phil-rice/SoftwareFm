@@ -4,17 +4,13 @@
 
 package org.softwareFm.eclipse.usage.internal;
 
-import java.io.File;
 import java.util.Arrays;
-import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.Assert;
 
-import org.apache.commons.dbcp.BasicDataSource;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
@@ -22,48 +18,42 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.softwareFm.crowdsource.api.IComments;
-import org.softwareFm.crowdsource.api.ICommentsReader;
+import org.softwareFm.crowdsource.api.IApiBuilder;
+import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
+import org.softwareFm.crowdsource.api.IExtraCallProcessorFactory;
+import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
+import org.softwareFm.crowdsource.api.LocalConfig;
 import org.softwareFm.crowdsource.api.MailerMock;
+import org.softwareFm.crowdsource.api.ServerConfig;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitLocal;
-import org.softwareFm.crowdsource.api.git.IGitOperations;
+import org.softwareFm.crowdsource.api.git.IGitWriter;
 import org.softwareFm.crowdsource.api.server.ICallProcessor;
-import org.softwareFm.crowdsource.api.user.IUser;
-import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
-import org.softwareFm.crowdsource.api.user.IUserReader;
+import org.softwareFm.crowdsource.api.server.IMailer;
 import org.softwareFm.crowdsource.httpClient.IHttpClient;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
-import org.softwareFm.crowdsource.membership.internal.UserMembershipReaderForLocal;
-import org.softwareFm.crowdsource.server.callProcessor.internal.CommentProcessor;
-import org.softwareFm.crowdsource.user.internal.GroupsForServer;
-import org.softwareFm.crowdsource.user.internal.UserMembershipForServer;
+import org.softwareFm.crowdsource.utilities.arrays.ArrayHelper;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
-import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
-import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
-import org.softwareFm.crowdsource.utilities.crypto.Crypto;
-import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback2;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
-import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
-import org.softwareFm.crowdsource.utilities.processors.AbstractLoginDataAccessor;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.crowdsource.utilities.runnable.Callables;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
-import org.softwareFm.crowdsource.utilities.tests.IIntegrationTest;
 import org.softwareFm.crowdsource.utilities.tests.INeedsServerTest;
 import org.softwareFm.crowdsource.utilities.tests.Tests;
-import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.crowdsource.utilities.url.Urls;
 import org.softwareFm.eclipse.mysoftwareFm.IGroupClientOperations;
 import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups;
 import org.softwareFm.eclipse.mysoftwareFm.MyPeople;
-import org.softwareFm.eclipse.mysoftwareFm.RequestGroupReportGeneration;
 import org.softwareFm.eclipse.snippets.SnippetFeedConfigurator;
 import org.softwareFm.jarAndClassPath.api.IProjectTimeGetter;
 import org.softwareFm.jarAndClassPath.api.IRequestGroupReportGeneration;
+import org.softwareFm.jarAndClassPath.api.IUsageReader;
+import org.softwareFm.jarAndClassPath.api.ProjectFixture;
+import org.softwareFm.jarAndClassPath.api.ProjectMock;
 import org.softwareFm.jarAndClassPath.api.ProjectTimeGetterFixture;
 import org.softwareFm.jarAndClassPath.api.SoftwareFmServer;
 import org.softwareFm.swt.ICollectionConfigurationFactory;
@@ -85,63 +75,28 @@ import org.softwareFm.swt.explorer.IUserDataManager;
 import org.softwareFm.swt.explorer.internal.Explorer;
 import org.softwareFm.swt.explorer.internal.MasterDetailSocial;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
-import org.softwareFm.swt.swt.SwtAndServiceTest;
 import org.softwareFm.swt.swt.Swts;
 import org.softwareFm.swt.timeline.IPlayListGetter;
 
 /** These tests go out to software fm, so they are much more fragile */
-abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest implements INeedsServerTest, IIntegrationTest {
-
+abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest implements INeedsServerTest {
 	final static String groupUrl = "/ant";
 	final static String artifactUrl = "/ant/ant/artifact/ant";
 	final static String snippetrepoUrl = "/java/io/File";
 	final static String snippetUrl = "/snippet/java/io/File/snippet";
-	
-	protected final String groupId1 = "groupId1";
-	protected final String groupId2 = "groupId2";
 
-	protected final String groupCryptoKey1 = Crypto.makeKey();
-	protected final String groupCryptoKey2 = Crypto.makeKey();
-	
 	protected CardConfig cardConfig;
-	protected IGitLocal gitLocal;
 	public Explorer explorer;
-	protected IHttpClient httpClient;
 	protected MasterDetailSocial masterDetailSocial;
 
 	protected final String prefix = "/tests/" + getClass().getSimpleName();
 	protected final String rootArtifactUrl = prefix + "/data";
 	protected final String rootSnippetUrl = prefix + "/snippet";
 	protected IResourceGetter rawResourceGetter;
-	private File root;
-	protected File localRoot;
-	protected File remoteRoot;
-	protected String userCryptoKey = Crypto.makeKey();
-	protected String userCryptoKey1 = Crypto.makeKey();
-	protected String userCryptoKey2 = Crypto.makeKey();
-	protected String userCryptoKey3 = Crypto.makeKey();
-	private ICrowdSourcedServer crowdSourcedServer;
+
 	private IShowMyData showMyData;
-	protected IUserReader userReader;
-	protected IUserMembershipReader userMembershipReader;
-	protected LocalGroupsReader groupsReader;
-	protected IComments commentsWriter;
-	protected ICommentsReader commentsReader;
-	protected BasicDataSource dataSource;
 	protected IUserDataManager userDataManager;
-	private IGroupClientOperations groupClientOperations;
-	protected IUser user;
-	protected ProcessCallParameters processCallParameters;
-	protected IUrlGenerator userUrlGenerator;
-	protected IUrlGenerator groupUrlGenerator;
-	private IGitOperations remoteOperations;
-	protected GroupsForServer groups;
-	protected UserMembershipForServer membershipForServer;
-	protected IFunction1<String, String> repoDefnFn;
 	protected MailerMock mailer;
-	private Callable<String> userCryptoGenerator;
-	private Callable<String> softwareFmIdGenerator;
-	private IFunction1<Map<String, Object>, String> cryptoFn;
 
 	public static interface CardHolderAndCardCallback {
 		void process(ICardHolder cardHolder, ICard card) throws Exception;
@@ -185,7 +140,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 				executeMenuItem(menu, "View");
 				// this should have called "explorer.showContents
 				// Now wait for the menu to have "done it's thing"
-				dispatchUntilTimeoutOrLatch(latch, CommonConstants.testTimeOutMs);
+				dispatchUntilTimeoutOrLatch(latch);
 				ICard childCard = cardHolder.getCard();
 				callback.process(cardHolder, childCard);
 				assertEquals(1, count.incrementAndGet());
@@ -216,7 +171,7 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 			}
 		});
 		something.run();
-		dispatchUntilTimeoutOrLatch(latch, CommonConstants.testTimeOutMs);
+		dispatchUntilTimeoutOrLatch(latch);
 		if (exception.get() != null)
 			throw new RuntimeException(exception.get());
 		return cardRef.get();
@@ -268,126 +223,135 @@ abstract public class AbstractExplorerIntegrationTest extends SwtAndServiceTest 
 	}
 
 	@Override
+	protected IMailer getMailer() {
+		return mailer;
+	}
+
+	@Override
+	protected IExtraCallProcessorFactory getExtraProcessCalls() {
+		final IExtraCallProcessorFactory parent = super.getExtraProcessCalls();
+		return new IExtraCallProcessorFactory() {
+			@Override
+			public ICallProcessor[] makeExtraCalls(ICrowdSourceReadWriteApi api, ServerConfig serverConfig) {
+				ICallProcessor[] parentCalls = parent.makeExtraCalls(api, serverConfig);
+				ICallProcessor[] softwareFmCalls = SoftwareFmServer.getExtraProcessCalls().makeExtraCalls(api, serverConfig);
+				return ArrayHelper.append(parentCalls, softwareFmCalls);
+			}
+		};
+	}
+
+
+	@Override
+	protected IExtraReaderWriterConfigurator<ServerConfig> getServerExtraReaderWriterConfigurator() {
+		return new IExtraReaderWriterConfigurator<ServerConfig>() {
+			@Override
+			public void builder(IApiBuilder builder, ServerConfig apiConfig) {
+				SoftwareFmServer.getServerExtraReaderWriterConfigurator(getUrlPrefix()).builder(builder, apiConfig);
+				ProjectMock projectMock = getProjectTimeGetterFixture(builder);
+				builder.registerReaderAndWriter(IUsageReader.class, projectMock);
+			}
+
+		};
+	}
+	protected ProjectMock getProjectTimeGetterFixture(IApiBuilder builder) {
+		IProjectTimeGetter projectTimeGetter = new ProjectTimeGetterFixture();
+		builder.registerReaderAndWriter(IProjectTimeGetter.class, projectTimeGetter);
+		ProjectMock projectMock = new ProjectMock(false);
+		projectMock.register("someNewSoftwareFmId0", projectCryptoKey0, ProjectFixture.map0);
+		projectMock.register("someNewSoftwareFmId1", projectCryptoKey1, ProjectFixture.map1);
+		return projectMock;
+	}
+
+	@Override
+	protected IExtraReaderWriterConfigurator<LocalConfig> getLocalExtraReaderWriterConfigurator() {
+		final IExtraReaderWriterConfigurator<LocalConfig> parent = super.getLocalExtraReaderWriterConfigurator();
+		return new IExtraReaderWriterConfigurator<LocalConfig>() {
+			@Override
+			public void builder(IApiBuilder builder, LocalConfig localConfig) {
+				parent.builder(builder, localConfig);
+				IProjectTimeGetter projectTimeGetter = new ProjectTimeGetterFixture();
+				IRequestGroupReportGeneration requestGroupReportGeneration = IRequestGroupReportGeneration.Utils.httpClient(builder, IResponseCallback.Utils.noCallback());
+
+				builder.registerReaderAndWriter(IProjectTimeGetter.class, projectTimeGetter);
+				builder.registerReaderAndWriter(IRequestGroupReportGeneration.class, requestGroupReportGeneration);
+				builder.registerReader(IUsageReader.class, IUsageReader.Utils.localUsageReader(builder, localConfig.userUrlGenerator)); 
+			}
+		};
+	}
+
+	@Override
 	protected void setUp() throws Exception {
-		super.setUp();
-		root = Tests.makeTempDirectory(getClass().getSimpleName());
-		localRoot = new File(root, "local");
-		remoteRoot = new File(root, "remote");
-		String remoteAsUri = new File(root, "remote").getAbsolutePath();
-		repoDefnFn = Strings.firstNSegments(3);
-
-		httpClient = IHttpClient.Utils.builder("localhost", CommonConstants.testPort);
-
-		gitLocal = IGitLocal.Utils.localReader(//
-				new HttpRepoFinder(httpClient, CommonConstants.testTimeOutMs), //
-				IGitOperations.Utils.gitOperations(localRoot), //
-				new HttpGitWriter(httpClient, CommonConstants.testTimeOutMs), remoteAsUri, CommonConstants.staleCachePeriodForTest);
-		dataSource = AbstractLoginDataAccessor.defaultDataSource();
-
-		userCryptoGenerator = Callables.valueFromList(userCryptoKey, userCryptoKey1, userCryptoKey2, userCryptoKey3);
-		softwareFmIdGenerator = Callables.patternWithCount("newSoftwareFmId{0}");
-
-		cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().//
-				configure(display, new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(shell, service, gitLocal))).//
-				withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap(prefix, "data"));
-
-		remoteOperations = IGitOperations.Utils.gitOperations(remoteRoot);
-		cryptoFn = ICrowdSourcedServer.Utils.cryptoFn(dataSource);
-		Map<String, Callable<Object>> defaultProperties = SoftwareFmServer.makeUserDefaultProperties();
 		mailer = new MailerMock();
-		processCallParameters = new ProcessCallParameters(dataSource, remoteOperations, userCryptoGenerator, softwareFmIdGenerator, cryptoFn, mailer, defaultProperties, prefix);
-		user = processCallParameters.user;
-		userUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.userUrlKey);
-		groupUrlGenerator = GroupConstants.groupsGenerator(prefix);
-		groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
-		groups = new GroupsForServer(groupUrlGenerator, remoteOperations, repoDefnFn);
-		membershipForServer = new UserMembershipForServer(userUrlGenerator, user, remoteOperations, repoDefnFn);
-
-		userReader = makeUserReader();
-		userMembershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, userReader);
-		ICallProcessor[] extraProcessCalls = getExtraProcessCalls(remoteOperations, cryptoFn);
-		ICallProcessor processCall = ICallProcessor.Utils.softwareFmProcessCall(processCallParameters, Functions.<ProcessCallParameters, ICallProcessor[]> constant(extraProcessCalls));
-		crowdSourcedServer = ICrowdSourcedServer.Utils.testServerPort(processCall, ICallback.Utils.rethrow());
+		super.setUp();
+		cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().//
+				configure(display, new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(shell, getServiceExecutor(), getLocalApi().makeReadWriter()))).//
+				withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap(prefix, "data"));
+		ICrowdSourcedServer server = getServerApi().getServer();
+		ICrowdSourceReadWriteApi localReadWriteApi = getLocalApi().makeReadWriter();
 		try {
-
 			rawResourceGetter = cardConfig.resourceGetterFn.apply(null);
 			masterDetailSocial = new MasterDetailSocial(shell, SWT.NULL);
-			IProjectTimeGetter projectTimeGetter = new ProjectTimeGetterFixture();
-			showMyData = MyDetails.showMyDetails(service, cardConfig, masterDetailSocial, userUrlGenerator, gitLocal, projectTimeGetter);
+			showMyData = MyDetails.showMyDetails(localReadWriteApi, getServiceExecutor(), cardConfig, masterDetailSocial);
+			IGroupClientOperations groupClientOperations = IGroupClientOperations.Utils.groupOperations(masterDetailSocial, cardConfig, localReadWriteApi);
+			IShowMyGroups showMyGroups = MyGroups.showMyGroups(localReadWriteApi, serviceExecutor, false, cardConfig, masterDetailSocial, groupClientOperations);
+			IShowMyPeople showMyPeople = MyPeople.showMyPeople(localReadWriteApi, serviceExecutor, masterDetailSocial, cardConfig, 2 * getLocalConfig().timeOutMs);
 
-			IRequestGroupReportGeneration reportGenerator = new RequestGroupReportGeneration(httpClient, IResponseCallback.Utils.sysoutStatusCallback(), gitLocal);
-			groupClientOperations = IGroupClientOperations.Utils.groupOperations(masterDetailSocial, cardConfig, httpClient);
-			IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, false, cardConfig, masterDetailSocial, userUrlGenerator, groupUrlGenerator, gitLocal, projectTimeGetter, reportGenerator, groupClientOperations);
-			IShowMyPeople showMyPeople = MyPeople.showMyPeople(service, masterDetailSocial, cardConfig, gitLocal, userUrlGenerator, groupUrlGenerator, projectTimeGetter, reportGenerator, CommonConstants.testTimeOutMs * 10);
-
-			commentsWriter = IComments.Utils.commentWriter(httpClient, CommonConstants.testTimeOutMs, gitLocal);
-			commentsReader = makeCommentsReader();
 			userDataManager = IUserDataManager.Utils.userDataManager();
-			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, userReader, userMembershipReader, groupsReader, cardConfig, //
+			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, localReadWriteApi, cardConfig, //
 					Arrays.asList(rootArtifactUrl, rootSnippetUrl), //
-					IPlayListGetter.Utils.noPlayListGetter(), service, //
-					ILoginStrategy.Utils.noLoginStrategy(),//
+					IPlayListGetter.Utils.noPlayListGetter(), //
+					serviceExecutor, ILoginStrategy.Utils.noLoginStrategy(),//
 					showMyData, showMyGroups, showMyPeople,//
-					userDataManager, commentsWriter, commentsReader, Callables.<Long> exceptionIfCalled());
+					userDataManager, Callables.<Long> exceptionIfCalled());
 			IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
 			new SnippetFeedConfigurator(cardConfig.cardDataStore, cardConfig.resourceGetterFn).configure(explorer);
 			// SnippetFeedConfigurator.configure(explorer, cardConfig);
-			httpClient.delete(Urls.compose(rootArtifactUrl, artifactUrl)).execute(IResponseCallback.Utils.noCallback()).get();
-			httpClient.delete(Urls.compose(rootArtifactUrl, snippetUrl)).execute(IResponseCallback.Utils.noCallback()).get();
-			gitLocal.init(Urls.compose(rootArtifactUrl, groupUrl));
+			getLocalApi().makeReadWriter().modify(IHttpClient.class, IGitLocal.class, new ICallback2<IHttpClient, IGitLocal>() {
+				@Override
+				public void process(IHttpClient httpClient, IGitLocal gitLocal) throws Exception {
+					httpClient.delete(Urls.compose(rootArtifactUrl, artifactUrl)).execute(IResponseCallback.Utils.noCallback()).get();
+					httpClient.delete(Urls.compose(rootArtifactUrl, snippetUrl)).execute(IResponseCallback.Utils.noCallback()).get();
+					gitLocal.init(Urls.compose(rootArtifactUrl, groupUrl));
+				}
+			});
 		} catch (Exception e) {
-			crowdSourcedServer.shutdown();
+			server.shutdown();
 			e.printStackTrace();
 			throw e;
 		}
 	}
 
-	protected ICallProcessor[] getExtraProcessCalls(IGitOperations remoteGitOperations, IFunction1<Map<String, Object>, String> cryptoFn) {
-		return new ICallProcessor[] {//
-				new CommentProcessor(userReader, userMembershipReader, groupsReader, new CommentsForServer(remoteGitOperations, user, userMembershipReader, groupsReader, Callables.value(1000l)), cryptoFn) };
-	}
-
-	protected IFunction1<String, String> getEmailToSfmIdFn() {
-		return Functions.expectionIfCalled();
-	}
-
-	protected IUserReader makeUserReader() {
-		return IUserReader.Utils.exceptionUserReader();
-	}
-
-	protected ICommentsReader makeCommentsReader() {
-		return new CommentsReaderLocal(gitLocal, userReader, userMembershipReader, groupsReader);
-	}
-
 	@Override
 	protected void tearDown() throws Exception {
-		try {
-			super.tearDown();
-			masterDetailSocial.dispose();
-			explorer.dispose();
-			cardConfig.dispose();
-			dataSource.close();
-		} finally {
-			crowdSourcedServer.shutdown();
-		}
+		super.tearDown();
+		masterDetailSocial.dispose();
+		explorer.dispose();
+		cardConfig.dispose();
+		dataSource.close();
 		Tests.waitUntilCanDeleteTempDirectory(getClass().getSimpleName(), 2000);
 
 	}
 
 	protected void postSnippetData() {
-		try {
-			String url = Urls.compose(rootSnippetUrl, snippetUrl);
-			gitLocal.put(IFileDescription.Utils.plain(url), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection));
-		} catch (Exception e) {
-			throw WrappedException.wrap(e);
-		}
+		final String url = Urls.compose(rootSnippetUrl, snippetUrl);
+		getLocalApi().makeReadWriter().modify(IGitWriter.class, new ICallback<IGitWriter>() {
+			@Override
+			public void process(IGitWriter gitWriter) throws Exception {
+				gitWriter.put(IFileDescription.Utils.plain(url), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection));
+			}
+		});
 	}
 
 	protected void postArtifactData() {
-		gitLocal.put(IFileDescription.Utils.plain(Urls.compose(rootArtifactUrl, artifactUrl)), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.artifact));
-		gitLocal.put(IFileDescription.Utils.plain(Urls.compose(rootArtifactUrl, artifactUrl, "/tutorial")), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection));
-		gitLocal.put(IFileDescription.Utils.plain(Urls.compose(rootArtifactUrl, artifactUrl, "/tutorial/one")), Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"));
-		gitLocal.put(IFileDescription.Utils.plain(Urls.compose(rootArtifactUrl, artifactUrl, "/tutorial/two")), Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"));
+		getLocalApi().makeReadWriter().modify(IGitWriter.class, new ICallback<IGitWriter>() {
+			@Override
+			public void process(IGitWriter gitWriter) throws Exception {
+				gitWriter.put(IFileDescription.Utils.plain(Urls.compose(rootArtifactUrl, artifactUrl)), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.artifact));
+				gitWriter.put(IFileDescription.Utils.plain(Urls.compose(rootArtifactUrl, artifactUrl, "/tutorial")), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection));
+				gitWriter.put(IFileDescription.Utils.plain(Urls.compose(rootArtifactUrl, artifactUrl, "/tutorial/one")), Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"));
+				gitWriter.put(IFileDescription.Utils.plain(Urls.compose(rootArtifactUrl, artifactUrl, "/tutorial/two")), Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"));
+			}
+		});
 	}
 
 	protected void checkAndEdit(final Table cardTable, IAddingCallback<Table> addingCallback) {

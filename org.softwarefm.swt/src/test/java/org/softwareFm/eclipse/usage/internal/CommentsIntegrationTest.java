@@ -5,15 +5,13 @@
 package org.softwareFm.eclipse.usage.internal;
 
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.crowdsource.api.ICommentsReader;
-import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardHolder;
 import org.softwareFm.swt.comments.Comments;
 import org.softwareFm.swt.comments.Comments.CommentsComposite;
 import org.softwareFm.swt.menu.ICardMenuItemHandler;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.softwareFm.swt.swt.Swts;
 
 public class CommentsIntegrationTest extends AbstractExplorerIntegrationTest {
 	private final String key = Crypto.makeKey();
@@ -32,25 +30,18 @@ public class CommentsIntegrationTest extends AbstractExplorerIntegrationTest {
 				CommentsComposite commentControl = (CommentsComposite) comments.getControl();
 				assertSame(socialContent, commentControl);
 				assertEquals("Comments for ant", commentControl.getTitle().getText());
-				checkTable(comments.getTable(), 0, 0, "someMoniker", "Global", "globalComments/comment1");
+				Swts.checkTable(comments.getTable(), 0, 0, "someMoniker", "Global", "globalComments/comment1");
 				assertEquals(1, comments.getTable().getItemCount());
 			}
 		});
 	}
 
-	@Override
-	protected ICommentsReader makeCommentsReader() {
-		return ICommentsReader.Utils.mockReader(softwareFmId, "someMoniker", 1000l, "comment1");
-	}
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		JdbcTemplate template = new JdbcTemplate(dataSource);
-		template.update("delete from users");
-		template.update("insert into users (softwarefmid,crypto) values (?,?)", softwareFmId, key);
-		processCallParameters.user.setUserProperty(softwareFmId, key, LoginConstants.monikerKey, "someMoniker");// creates user
-
+		truncateUsersTable();
+		createUser();
 		ICardMenuItemHandler.Utils.addExplorerMenuItemHandlers(explorer, "popupmenuid");
 	}
 }
