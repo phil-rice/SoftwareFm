@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Jar
+Bundle-SymbolicName: org.softwarefm.jar
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: SoftwareFm
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.softwarefm.crowdsource;bundle-version="1.0.0";visibility:=reexport
+Export-Package: org.softwareFm.jarAndClassPath.api,
+ org.softwareFm.jarAndClassPath.constants

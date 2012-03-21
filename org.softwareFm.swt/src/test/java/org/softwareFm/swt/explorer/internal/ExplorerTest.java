@@ -84,5 +84,6 @@ public class ExplorerTest extends ApiAndSwtTest {
 		masterDetailSocial = new MasterDetailSocial(shell, SWT.NULL);
 		raw = IExplorerTest.addNeededResources(new CardConfig(ICardFactory.Utils.cardFactory(), updateStore));
 		raw.popupMenuService.registerMenuId(popupMenuId);
+		getServerApi().getServer();
 	}
 }
