@@ -22,15 +22,14 @@ public class LoginTest extends AbstractNameAndValuesEditorTest<Login> {
 	private final LoginCallbackMock loginCallback = new LoginCallbackMock();
 
 	public void testLoginEditorWhenDisplayed() {
-		Swts.	checkLabelsMatch(editorComposite, "Email", "Password");
-		Swts.	checkTextMatches(editorComposite, "initialEmail", "");
+		Swts.checkLabelsMatch(editorComposite, "Email", "Password");
+		Swts.checkTextMatches(editorComposite, "initialEmail", "");
 		assertFalse(okCancel.isOkEnabled());
 	}
 
 	public void testInitialEmailAddedToCardData() {
 		assertEquals(Maps.stringObjectMap(LoginConstants.emailKey, "initialEmail", CardConstants.slingResourceType, CardConstants.loginCardType), editor.content.data());
 	}
-	
 
 	public void testNeedEmailAndPasswordToBeOk() {
 		checkOk("a.b.c@c.d", "passwordValue", true);

@@ -5,12 +5,15 @@
 package org.softwareFm.crowdsource.utilities.callbacks;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import junit.framework.Assert;
 
+import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
+
 public class MemoryCallback<T> implements ICallback<T> {
-	private final List<T> result = new ArrayList<T>();
+	private final List<T> result = Collections.synchronizedList(new ArrayList<T>());
 
 	@Override
 	public void process(T t) throws Exception {
@@ -29,5 +32,17 @@ public class MemoryCallback<T> implements ICallback<T> {
 	public void assertNotCalled() {
 		if (result.size() > 0)
 			Assert.fail(result.toString());
+	}
+
+	public void waitUntilCalled(long timeout) {
+		long start = System.currentTimeMillis();
+		while (result.size() == 0 && System.currentTimeMillis() < start + timeout)
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				throw WrappedException.wrap(e);
+			}
+		if (result.size() == 0)
+			throw new IllegalStateException();
 	}
 }

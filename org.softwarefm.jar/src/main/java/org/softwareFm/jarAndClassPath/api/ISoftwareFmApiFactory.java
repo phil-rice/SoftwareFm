@@ -39,26 +39,26 @@ import org.softwareFm.jarAndClassPath.server.internal.UsageReaderForServer;
 public interface ISoftwareFmApiFactory {
 
 	public static class Utils {
-		public static ICrowdSourcedApi makeClientApiForLocalHost(IExtraReaderWriterConfigurator<LocalConfig> extras) {
+		public static ICrowdSourcedApi makeClientApiForLocalHost() {
 			File home = new File(System.getProperty("user.home"));
 			String remoteGitPrefix = new File(home, ".sfm_remote").getAbsolutePath();
-			return makeClientApi("localhost", 8080, remoteGitPrefix, extras);
+			return makeClientApi("localhost", 8080, remoteGitPrefix);
 		}
 
-		public static ICrowdSourcedApi makeClientApiForSoftwareFmServer(IExtraReaderWriterConfigurator<LocalConfig> extras) {
-			return makeClientApi(JarAndPathConstants.softwareFmServerUrl, 80, JarAndPathConstants.gitProtocolAndGitServerName, extras);
+		public static ICrowdSourcedApi makeClientApiForSoftwareFmServer() {
+			return makeClientApi(JarAndPathConstants.softwareFmServerUrl, 80, JarAndPathConstants.gitProtocolAndGitServerName);
 		}
 
-		public static ICrowdSourcedApi makeClientApi(String host, int port, String remoteGitPrefix, IExtraReaderWriterConfigurator<LocalConfig> extras) {
+		public static ICrowdSourcedApi makeClientApi(String host, int port, String remoteGitPrefix) {
 			File home = new File(System.getProperty("user.home"));
 			File root = new File(home, ".sfm");
 			final String urlPrefix = JarAndPathConstants.urlPrefix;
-			IExtraReaderWriterConfigurator<LocalConfig> extraReaderWriterConfigurator = getLocalExtraReaderWriterConfigurator(extras);
+			IExtraReaderWriterConfigurator<LocalConfig> extraReaderWriterConfigurator = getLocalExtraReaderWriterConfigurator();
 			LocalConfig localConfig = new LocalConfig(port, 10, host, root, urlPrefix, remoteGitPrefix, CommonConstants.clientTimeOut, CommonConstants.staleCachePeriod, ICallback.Utils.rethrow(), extraReaderWriterConfigurator);
 			return ICrowdSourcedApi.Utils.forClient(localConfig);
 		}
 
-		public static IExtraReaderWriterConfigurator<LocalConfig> getLocalExtraReaderWriterConfigurator(final IExtraReaderWriterConfigurator<LocalConfig> extras) {
+		public static IExtraReaderWriterConfigurator<LocalConfig> getLocalExtraReaderWriterConfigurator() {
 			return new IExtraReaderWriterConfigurator<LocalConfig>() {
 				@Override
 				public void builder(IApiBuilder builder, LocalConfig localConfig) {
@@ -67,7 +67,6 @@ public interface ISoftwareFmApiFactory {
 					builder.registerReaderAndWriter(IProjectTimeGetter.class, projectTimeGetter);
 					builder.registerReaderAndWriter(IRequestGroupReportGeneration.class, requestGroupReportGeneration);
 					builder.registerReader(IUsageReader.class, IUsageReader.Utils.localUsageReader(builder, localConfig.userUrlGenerator)); 
-					extras.builder(builder, localConfig);
 				}
 			};
 		}

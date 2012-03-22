@@ -55,7 +55,7 @@ import org.softwareFm.swt.explorer.IShowMyGroups;
 import org.softwareFm.swt.swt.Swts;
 
 public class MyGroups implements IHasComposite {
-	public static IShowMyGroups showMyGroups(final ICrowdSourcedReadWriteApi readWriteApi, final IServiceExecutor executor, final boolean showDialogs, final CardConfig cardConfig, final IMasterDetailSocial masterDetailSocial) {
+	public static IShowMyGroups showMyGroups(final IMasterDetailSocial masterDetailSocial, final ICrowdSourcedReadWriteApi readWriteApi, final IServiceExecutor executor, final boolean showDialogs, final CardConfig cardConfig) {
 		return new IShowMyGroups() {
 			@Override
 			public void show(final UserData userData, final String groupId) {
@@ -71,10 +71,10 @@ public class MyGroups implements IHasComposite {
 								masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyGroups>() {
 									@Override
 									public MyGroups apply(Composite from) throws Exception {
-										MyGroups myGroups = new MyGroups(from, readWriteApi, showDialogs, cardConfig, userData, new ICallback<String>() {
+										MyGroups myGroups = new MyGroups(from, masterDetailSocial, readWriteApi, showDialogs, cardConfig, userData, new ICallback<String>() {
 											@Override
 											public void process(String groupId) throws Exception {
-												showMyGroups(readWriteApi, executor, showDialogs, cardConfig, masterDetailSocial).show(userData, groupId);
+												showMyGroups(masterDetailSocial, readWriteApi, executor, showDialogs, cardConfig).show(userData, groupId);
 											}
 										});
 										myGroups.selectAndScrollTo(groupId);
@@ -105,45 +105,41 @@ public class MyGroups implements IHasComposite {
 
 		@SuppressWarnings("Need to externalise these string")
 		// show dialogs exists because it is very hard to test for this: the dialog actually appears... I could rewrite the open confirm dialog so that it didn't appear in tests, but it doesn't seem worth it
-		public MyGroupsButtons(final Composite parent, final CardConfig cardConfig, ICrowdSourcedReadWriteApi readWriteApi, final boolean showDialogs, final UserData userData, final ICallback<String> showMyGroups, final Callable<IdNameAndStatus> idNameStatusGetter, final Callable<List<Map<String, Object>>> objectMapGetter, Callable<Integer> groupSizeGetter) {
+		public MyGroupsButtons(final Composite parent, IMasterDetailSocial masterDetailSocial, final CardConfig cardConfig, ICrowdSourcedReadWriteApi readWriteApi, final boolean showDialogs, final UserData userData, final ICallback<String> showMyGroups, final Callable<IdNameAndStatus> idNameStatusGetter, final Callable<List<Map<String, Object>>> objectMapGetter, Callable<Integer> groupSizeGetter) {
 			this.idNameStatusGetter = idNameStatusGetter;
 			this.objectMapGetter = objectMapGetter;
 			this.groupSizeGetter = groupSizeGetter;
 			this.content = new Composite(parent, SWT.NULL);
 			content.setLayout(Swts.Row.getHorizonalNoMarginRowLayout());
-			readWriteApi.modify(IGroupClientOperations.class, new ICallback<IGroupClientOperations>() {
+			final IGroupClientOperations groupClientOperations = IGroupClientOperations.Utils.groupOperations(masterDetailSocial, cardConfig, readWriteApi);
+			final Callable<CardConfig> cardConfigGetter = Callables.value(cardConfig);
+			accept = Swts.Buttons.makePushButton(content, "Accept", groupClientOperations.acceptInvitation(userData, idNameStatusGetter, showMyGroups));
+			invite = Swts.Buttons.makePushButton(content, "Invite", groupClientOperations.inviteToGroup(userData, idNameStatusGetter, showMyGroups));
+			create = Swts.Buttons.makePushButton(content, "Create new group", groupClientOperations.createGroup(userData, showMyGroups));
+
+			Runnable kickRunnable = new Runnable() {
 				@Override
-				public void process(final IGroupClientOperations groupClientOperations) throws Exception {
-					final Callable<CardConfig> cardConfigGetter = Callables.value(cardConfig);
-					accept = Swts.Buttons.makePushButton(content, "Accept", groupClientOperations.acceptInvitation(userData, cardConfigGetter, idNameStatusGetter, showMyGroups));
-					invite = Swts.Buttons.makePushButton(content, "Invite", groupClientOperations.inviteToGroup(userData, cardConfigGetter, idNameStatusGetter, showMyGroups));
-					create = Swts.Buttons.makePushButton(content, "Create new group", groupClientOperations.createGroup(userData, cardConfigGetter, showMyGroups));
-
-					Runnable kickRunnable = new Runnable() {
+				public void run() {
+					if (showDialogs && !MessageDialog.openConfirm(parent.getShell(), "Kick", MessageFormat.format("Are you sure you want to kick {0} members", Callables.call(objectMapGetter).size())))
+						return;
+					groupClientOperations.kickMember(userData, idNameStatusGetter, objectMapGetter, new ICallback<String>() {
 						@Override
-						public void run() {
-							if (showDialogs && !MessageDialog.openConfirm(parent.getShell(), "Kick", MessageFormat.format("Are you sure you want to kick {0} members", Callables.call(objectMapGetter).size())))
-								return;
-							groupClientOperations.kickMember(userData, cardConfigGetter, idNameStatusGetter, objectMapGetter, new ICallback<String>() {
-								@Override
-								public void process(String t) throws Exception {
-									showMyGroups.process(t);
-								}
-							}).run();
+						public void process(String t) throws Exception {
+							showMyGroups.process(t);
 						}
-					};
-					leave = Swts.Buttons.makePushButton(content, "Leave", new Runnable() {
-						@Override
-						public void run() {
-							if (showDialogs && !MessageDialog.openConfirm(parent.getShell(), "Leave", MessageFormat.format("Are you sure you want to leave", Callables.call(objectMapGetter).size())))
-								return;
-							groupClientOperations.leaveGroup(userData, cardConfigGetter, showMyGroups, idNameStatusGetter).run();
-						}
-					});
-
-					kick = Swts.Buttons.makePushButton(content, "Kick", kickRunnable);
+					}).run();
+				}
+			};
+			leave = Swts.Buttons.makePushButton(content, "Leave", new Runnable() {
+				@Override
+				public void run() {
+					if (showDialogs && !MessageDialog.openConfirm(parent.getShell(), "Leave", MessageFormat.format("Are you sure you want to leave", Callables.call(objectMapGetter).size())))
+						return;
+					groupClientOperations.leaveGroup(userData, showMyGroups, idNameStatusGetter).run();
 				}
 			});
+
+			kick = Swts.Buttons.makePushButton(content, "Kick", kickRunnable);
 		}
 
 		@Override
@@ -195,11 +191,11 @@ public class MyGroups implements IHasComposite {
 			return sashForm;
 		}
 
-		public MyGroupsComposite(Composite parent, final ICrowdSourcedReadWriteApi readWriteApi, boolean showDialogs, final CardConfig cardConfig, final UserData userData, ICallback<String> showMyGroups) {
+		public MyGroupsComposite(Composite parent, IMasterDetailSocial masterDetailSocial, final ICrowdSourcedReadWriteApi readWriteApi, boolean showDialogs, final CardConfig cardConfig, final UserData userData, ICallback<String> showMyGroups) {
 			super(parent, cardConfig, GroupConstants.myGroupsCardType, JarAndPathConstants.myGroupsTitle, true);
 			sashForm = new SashForm(getInnerBody(), SWT.HORIZONTAL);
 			summaryTable = new Table(sashForm, SWT.FULL_SELECTION);
-			buttons = new MyGroupsButtons(getInnerBody(), cardConfig, readWriteApi, showDialogs, userData, showMyGroups, new Callable<IdNameAndStatus>() {
+			buttons = new MyGroupsButtons(getInnerBody(), masterDetailSocial, cardConfig, readWriteApi, showDialogs, userData, showMyGroups, new Callable<IdNameAndStatus>() {
 				@Override
 				public IdNameAndStatus call() throws Exception {
 					int index = summaryTable.getSelectionIndex();
@@ -337,8 +333,8 @@ public class MyGroups implements IHasComposite {
 		}
 	}
 
-	public MyGroups(Composite parent, ICrowdSourcedReadWriteApi readWriteApi, boolean showDialogs, CardConfig cardConfig, UserData userData, ICallback<String> showMyGroups) {
-		content = new MyGroupsComposite(parent, readWriteApi, showDialogs, cardConfig, userData, showMyGroups);
+	public MyGroups(Composite parent, IMasterDetailSocial masterDetailSocial, ICrowdSourcedReadWriteApi readWriteApi, boolean showDialogs, CardConfig cardConfig, UserData userData, ICallback<String> showMyGroups) {
+		content = new MyGroupsComposite(parent, masterDetailSocial, readWriteApi, showDialogs, cardConfig, userData, showMyGroups);
 		content.setLayout(new DataCompositeWithFooterLayout());
 	}
 

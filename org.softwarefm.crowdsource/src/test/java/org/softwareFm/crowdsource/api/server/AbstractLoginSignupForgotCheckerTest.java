@@ -14,7 +14,6 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.softwareFm.crowdsource.api.ApiTest;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.ICryptoGenerators;
-import org.softwareFm.crowdsource.api.MailerMock;
 import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.server.doers.internal.ForgottonPasswordMailer;
 import org.softwareFm.crowdsource.server.doers.internal.LoginChecker;
@@ -40,7 +39,6 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends ApiTest imple
 	protected PasswordResetter resetPassword;
 	private BasicDataSource dataSource;
 	protected JdbcTemplate template;
-	private MailerMock mailerMock;
 	private ICrowdSourcedApi api;
 
 	protected String checkSignup(final String email, final String moniker, final String salt, final String hash, final String softwareFmId) {
@@ -89,10 +87,6 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends ApiTest imple
 	}
 
 	@Override
-	protected IMailer getMailer() {
-		return mailerMock;
-	}
-	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		dataSource = AbstractLoginDataAccessor.defaultDataSource();
@@ -102,9 +96,8 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends ApiTest imple
 
 		signupChecker = new SignUpChecker(dataSource, cryptoGenerators, api.makeReadWriter());
 		loginChecker = new LoginChecker(dataSource);
-		mailerMock = new MailerMock();
 		IMagicStringForPassword magicStringForPassword = new MagicStringForPassword(dataSource, Callables.uuidGenerator());
-		passwordMailer = new ForgottonPasswordMailer(mailerMock, magicStringForPassword);// bit of a cheat...won't actually mail
+		passwordMailer = new ForgottonPasswordMailer(getMailer(), magicStringForPassword);// bit of a cheat...won't actually mail
 		resetPassword = new PasswordResetter(dataSource);
 		template = new JdbcTemplate(dataSource);
 		template.update("truncate users");

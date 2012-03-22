@@ -9,12 +9,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
 import org.softwareFm.crowdsource.api.UserData;
-import org.softwareFm.crowdsource.httpClient.IHttpClient;
-import org.softwareFm.crowdsource.httpClient.IResponse;
-import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
+import org.softwareFm.crowdsource.api.user.GroupOperationResult;
+import org.softwareFm.crowdsource.api.user.IGroupOperations;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.collections.Iterables;
-import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
@@ -38,21 +36,24 @@ import org.softwareFm.swt.explorer.IMasterDetailSocial;
 @SuppressWarnings("Need to externalise these string")
 public class GroupClientOperations implements IGroupClientOperations {
 
-	private final IHttpClient client;
+	private final ICrowdSourcedReadWriteApi readWriteApi;
+	private final CardConfig cardConfig;
+	private final IMasterDetailSocial masterDetailSocial;
 
-	public GroupClientOperations(IMasterDetailSocial masterDetailSocial, ICrowdSourcedReadWriteApi readWriteApi) {
-		this.client = readWriteApi.access(IHttpClient.class, Functions.<IHttpClient, IHttpClient> identity());
-
+	public GroupClientOperations(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, ICrowdSourcedReadWriteApi readWriteApi) {
+		this.masterDetailSocial = masterDetailSocial;
+		this.cardConfig = cardConfig;
+		this.readWriteApi = readWriteApi;
 	}
 
 	@Override
-	public Runnable createGroup(final UserData userData, Callable<CardConfig> cardConfigGetter, final ICallback<String> added) {
-		final CardConfig cardConfig = Callables.call(cardConfigGetter);
+	public Runnable createGroup(final UserData userData, final ICallback<String> added) {
 		final IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, GroupConstants.myGroupsCardType);
 		return new Runnable() {
 
 			@Override
 			public void run() {
+
 				String email = userData.email();
 				final Map<String, Object> initialData = Maps.stringObjectMap(//
 						GroupConstants.takeOnEmailListKey, "<Type here a comma separated list of people you would like to invite to the group\nThe Email below will be sent with $email$ and $group$ replaced by your email, and the group name>",//
@@ -77,20 +78,20 @@ public class GroupClientOperations implements IGroupClientOperations {
 						return INamesAndValuesEditor.Utils.editor(from, cardConfig, GroupConstants.myGroupsCardType, "Add new group", "", initialData, keyAndEditStrategy, new ICardEditorCallback() {
 							@Override
 							public void ok(final ICardData cardData) {
-								client.post(GroupConstants.takeOnCommandPrefix).//
-										addParam(LoginConstants.softwareFmIdKey, userData.softwareFmId).//
-										addParam(GroupConstants.groupNameKey, (String) cardData.data().get(GroupConstants.groupNameKey)).//
-										addParam(GroupConstants.takeOnEmailPattern, (String) cardData.data().get(GroupConstants.takeOnEmailPattern)).//
-										addParam(GroupConstants.takeOnEmailListKey, (String) cardData.data().get(GroupConstants.takeOnEmailListKey)).//
-										addParam(GroupConstants.takeOnSubjectKey, (String) cardData.data().get(GroupConstants.takeOnSubjectKey)).//
-										addParam(GroupConstants.takeOnFromKey, (String) cardData.data().get(GroupConstants.takeOnFromKey)).//
-										execute(new IResponseCallback() {
+								readWriteApi.modify(IGroupOperations.class, new ICallback<IGroupOperations>() {
+									@Override
+									public void process(IGroupOperations groupOperations) throws Exception {
+										String groupName = (String) cardData.data().get(GroupConstants.groupNameKey);
+										String takeOnEmailPattern = (String) cardData.data().get(GroupConstants.takeOnEmailPattern);
+										String takeOnEmailList = (String) cardData.data().get(GroupConstants.takeOnEmailListKey);
+										String takeOnSubjectPattern = (String) cardData.data().get(GroupConstants.takeOnSubjectKey);
+										groupOperations.createGroup(userData.softwareFmId, userData.crypto, groupName, userData.email, takeOnEmailList, takeOnSubjectPattern, takeOnEmailPattern, new ICallback<GroupOperationResult>() {
 											@Override
-											public void process(IResponse response) {
-												if (CommonConstants.okStatusCodes.contains(response.statusCode()))
-													ICallback.Utils.call(added, response.asString());
+											public void process(GroupOperationResult result) throws Exception {
+												if (result.errorMessage == null)
+													ICallback.Utils.call(added, result.groupId);
 												else
-													masterDetailSocial.createAndShowDetail(TextInBorderWithClick.makeTextFromString(SWT.WRAP | SWT.READ_ONLY, cardConfig, GroupConstants.myGroupsCardType, "Group Creation", "Exception creating group. Click to try again\n" + response.asString(), new Runnable() {
+													masterDetailSocial.createAndShowDetail(TextInBorderWithClick.makeTextFromString(SWT.WRAP | SWT.READ_ONLY, cardConfig, GroupConstants.myGroupsCardType, "Group Creation", "Exception creating group. Click to try again\n" + result.errorMessage, new Runnable() {
 														@Override
 														public void run() {
 															tryAndInviteToGroup(userData, added, cardData.data());
@@ -98,6 +99,8 @@ public class GroupClientOperations implements IGroupClientOperations {
 													}));
 											}
 										});
+									}
+								});
 							}
 
 							@Override
@@ -127,8 +130,7 @@ public class GroupClientOperations implements IGroupClientOperations {
 	}
 
 	@Override
-	public Runnable inviteToGroup(final UserData userData, Callable<CardConfig> cardConfigGetter, final Callable<IdNameAndStatus> idNameStatusGetter, final ICallback<String> invited) {
-		final CardConfig cardConfig = Callables.call(cardConfigGetter);
+	public Runnable inviteToGroup(final UserData userData, final Callable<IdNameAndStatus> idNameStatusGetter, final ICallback<String> invited) {
 		final IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, GroupConstants.myGroupsCardType);
 		return new Runnable() {
 
@@ -164,20 +166,19 @@ public class GroupClientOperations implements IGroupClientOperations {
 							@Override
 							public void ok(final ICardData cardData) {
 								final String groupId = (String) cardData.data().get(GroupConstants.groupIdKey);
-								client.post(GroupConstants.inviteCommandPrefix).//
-										addParam(LoginConstants.softwareFmIdKey, userData.softwareFmId).//
-										addParam(GroupConstants.groupIdKey, groupId).//
-										addParam(GroupConstants.takeOnEmailPattern, (String) cardData.data().get(GroupConstants.takeOnEmailPattern)).//
-										addParam(GroupConstants.takeOnEmailListKey, (String) cardData.data().get(GroupConstants.takeOnEmailListKey)).//
-										addParam(GroupConstants.takeOnSubjectKey, (String) cardData.data().get(GroupConstants.takeOnSubjectKey)).//
-										addParam(GroupConstants.takeOnFromKey, (String) cardData.data().get(GroupConstants.takeOnFromKey)).//
-										execute(new IResponseCallback() {
+								readWriteApi.modify(IGroupOperations.class, new ICallback<IGroupOperations>() {
+									@Override
+									public void process(IGroupOperations groupOperations) throws Exception {
+										String takeOnEmailPattern = (String) cardData.data().get(GroupConstants.takeOnEmailPattern);
+										String takeOnEmailList = (String) cardData.data().get(GroupConstants.takeOnEmailListKey);
+										String takeOnSubjectPattern = (String) cardData.data().get(GroupConstants.takeOnSubjectKey);
+										groupOperations.inviteToGroup(userData.softwareFmId, userData.crypto, groupId, userData.email, takeOnEmailList, takeOnSubjectPattern, takeOnEmailPattern, new ICallback<GroupOperationResult>() {
 											@Override
-											public void process(IResponse response) {
-												if (CommonConstants.okStatusCodes.contains(response.statusCode()))
+											public void process(GroupOperationResult t) throws Exception {
+												if (t.errorMessage == null)
 													ICallback.Utils.call(invited, groupId);
 												else
-													masterDetailSocial.createAndShowDetail(TextInBorderWithClick.makeTextFromString(SWT.WRAP | SWT.READ_ONLY, cardConfig, GroupConstants.myGroupsCardType, "Group Invitation", "Exception inviting to group. Click to try again\n" + response.asString(), new Runnable() {
+													masterDetailSocial.createAndShowDetail(TextInBorderWithClick.makeTextFromString(SWT.WRAP | SWT.READ_ONLY, cardConfig, GroupConstants.myGroupsCardType, "Group Invitation", "Exception inviting to group. Click to try again\n" + t.errorMessage, new Runnable() {
 														@Override
 														public void run() {
 															tryAndInviteToGroup(userData, invited, cardData.data());
@@ -185,6 +186,8 @@ public class GroupClientOperations implements IGroupClientOperations {
 													}));
 											}
 										});
+									}
+								});
 							}
 
 							@Override
@@ -205,8 +208,7 @@ public class GroupClientOperations implements IGroupClientOperations {
 	}
 
 	@Override
-	public Runnable acceptInvitation(final UserData userData, Callable<CardConfig> cardConfigGetter, final Callable<IdNameAndStatus> idNameStatusGetter, final ICallback<String> showMyGroups) {
-		final CardConfig cardConfig = Callables.call(cardConfigGetter);
+	public Runnable acceptInvitation(final UserData userData, final Callable<IdNameAndStatus> idNameStatusGetter, final ICallback<String> showMyGroups) {
 		return new Runnable() {
 			@Override
 			public void run() {
@@ -216,18 +218,17 @@ public class GroupClientOperations implements IGroupClientOperations {
 				final String groupId = idNameAndStatus.id;
 				if (groupId == null)
 					throw new NullPointerException("group id is null");
-				client.post(GroupConstants.acceptInvitePrefix).//
-						addParam(LoginConstants.softwareFmIdKey, userData.softwareFmId).//
-						addParam(GroupConstants.groupIdKey, groupId).//
-						addParam(GroupConstants.membershipStatusKey, GroupConstants.memberStatus).//
-						execute(new IResponseCallback() {
+				readWriteApi.modify(IGroupOperations.class, new ICallback<IGroupOperations>() {
+					@Override
+					public void process(IGroupOperations t) throws Exception {
+						t.acceptInvite(userData.softwareFmId, userData.crypto, groupId, new ICallback<GroupOperationResult>() {
 							@Override
-							public void process(IResponse response) {
+							public void process(GroupOperationResult t) throws Exception {
 
-								if (CommonConstants.okStatusCodes.contains(response.statusCode()))
+								if (t.errorMessage == null)
 									ICallback.Utils.call(showMyGroups, groupId);
 								else
-									masterDetailSocial.createAndShowDetail(TextInBorderWithClick.makeTextFromString(SWT.WRAP | SWT.READ_ONLY, cardConfig, GroupConstants.myGroupsCardType, "Accept", "Exception accepting. Click to try again\n\n" + response.asString(), new Runnable() {
+									masterDetailSocial.createAndShowDetail(TextInBorderWithClick.makeTextFromString(SWT.WRAP | SWT.READ_ONLY, cardConfig, GroupConstants.myGroupsCardType, "Accept", "Exception accepting. Click to try again\n\n" + t.errorMessage, new Runnable() {
 										@Override
 										public void run() {
 											ICallback.Utils.call(showMyGroups, groupId);
@@ -235,13 +236,16 @@ public class GroupClientOperations implements IGroupClientOperations {
 									}));
 							}
 						});
+
+					}
+				});
+
 			}
 		};
 	}
 
 	@Override
-	public Runnable kickMember(final UserData userData, Callable<CardConfig> cardConfigGetter, final Callable<IdNameAndStatus> idNameStatusGetter, final Callable<List<Map<String, Object>>> objectMembershipGetter, final ICallback<String> showMyGroups) {
-		final CardConfig cardConfig = Callables.call(cardConfigGetter);
+	public Runnable kickMember(final UserData userData, final Callable<IdNameAndStatus> idNameStatusGetter, final Callable<List<Map<String, Object>>> objectMembershipGetter, final ICallback<String> showMyGroups) {
 		return new Runnable() {
 			@Override
 			public void run() {
@@ -249,7 +253,7 @@ public class GroupClientOperations implements IGroupClientOperations {
 				List<Map<String, Object>> objectMembershipDetails = Callables.call(objectMembershipGetter);
 				if (objectMembershipDetails == null)
 					throw new NullPointerException("objectMembershipDetails is null");
-				String otherIds = Iterables.fold(new IFoldFunction<Map<String, Object>, String>() {
+				final String otherIds = Iterables.fold(new IFoldFunction<Map<String, Object>, String>() {
 					@Override
 					public String apply(Map<String, Object> value, String initial) {
 						String id = (String) value.get(LoginConstants.softwareFmIdKey);
@@ -266,32 +270,32 @@ public class GroupClientOperations implements IGroupClientOperations {
 				final String groupId = idNameAndStatus.id;
 				if (groupId == null)
 					throw new NullPointerException("group id is null");
-				client.post(GroupConstants.kickFromGroupPrefix).//
-						addParam(LoginConstants.softwareFmIdKey, userData.softwareFmId).//
-						addParam(GroupConstants.objectSoftwareFmId, otherIds).//
-						addParam(GroupConstants.groupIdKey, groupId).//
-						execute(new IResponseCallback() {
+				readWriteApi.modify(IGroupOperations.class, new ICallback<IGroupOperations>() {
+					@Override
+					public void process(IGroupOperations t) throws Exception {
+						t.kickFromGroup(userData.softwareFmId, userData.crypto, groupId, otherIds, new ICallback<GroupOperationResult>() {
 							@Override
-							public void process(IResponse response) {
-
-								if (CommonConstants.okStatusCodes.contains(response.statusCode()))
+							public void process(GroupOperationResult t) throws Exception {
+								if (t.errorMessage == null)
 									ICallback.Utils.call(showMyGroups, groupId);
 								else
-									masterDetailSocial.createAndShowDetail(TextInBorderWithClick.makeTextFromString(SWT.WRAP | SWT.READ_ONLY, cardConfig, GroupConstants.myGroupsCardType, "Kick", "Exception kicking. Click to try again\n\n" + response.asString(), new Runnable() {
+									masterDetailSocial.createAndShowDetail(TextInBorderWithClick.makeTextFromString(SWT.WRAP | SWT.READ_ONLY, cardConfig, GroupConstants.myGroupsCardType, "Kick", "Exception kicking. Click to try again\n\n" + t.errorMessage, new Runnable() {
 										@Override
 										public void run() {
 											ICallback.Utils.call(showMyGroups, groupId);
 										}
 									}));
+
 							}
 						});
+					}
+				});
 			}
 		};
 	}
 
 	@Override
-	public Runnable leaveGroup(final UserData userData, Callable<CardConfig> cardConfigGetter, final ICallback<String> showMyGroups, final Callable<IdNameAndStatus> idNameStatusGetter) {
-		final CardConfig cardConfig = Callables.call(cardConfigGetter);
+	public Runnable leaveGroup(final UserData userData, final ICallback<String> showMyGroups, final Callable<IdNameAndStatus> idNameStatusGetter) {
 		return new Runnable() {
 			@Override
 			public void run() {
@@ -301,16 +305,16 @@ public class GroupClientOperations implements IGroupClientOperations {
 				final String groupId = idNameAndStatus.id;
 				if (groupId == null)
 					throw new NullPointerException("group id is null");
-				client.post(GroupConstants.leaveGroupPrefix).//
-						addParam(LoginConstants.softwareFmIdKey, userData.softwareFmId).//
-						addParam(GroupConstants.groupIdKey, groupId).//
-						execute(new IResponseCallback() {
+				readWriteApi.modify(IGroupOperations.class, new ICallback<IGroupOperations>() {
+					@Override
+					public void process(IGroupOperations t) throws Exception {
+						t.leaveGroup(userData.softwareFmId, userData.crypto, groupId, new ICallback<GroupOperationResult>() {
 							@Override
-							public void process(IResponse response) {
-								if (CommonConstants.okStatusCodes.contains(response.statusCode()))
+							public void process(GroupOperationResult t) throws Exception {
+								if (t.errorMessage == null)
 									ICallback.Utils.call(showMyGroups, groupId);
 								else
-									masterDetailSocial.createAndShowDetail(TextInBorderWithClick.makeTextFromString(SWT.WRAP | SWT.READ_ONLY, cardConfig, GroupConstants.myGroupsCardType, "Kick", "Exception Leaving. Click to try again\n\n" + response.asString(), new Runnable() {
+									masterDetailSocial.createAndShowDetail(TextInBorderWithClick.makeTextFromString(SWT.WRAP | SWT.READ_ONLY, cardConfig, GroupConstants.myGroupsCardType, "Kick", "Exception Leaving. Click to try again\n\n" + t.errorMessage, new Runnable() {
 										@Override
 										public void run() {
 											ICallback.Utils.call(showMyGroups, groupId);
@@ -318,6 +322,9 @@ public class GroupClientOperations implements IGroupClientOperations {
 									}));
 							}
 						});
+					}
+				});
+
 			}
 		};
 	}

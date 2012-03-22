@@ -15,10 +15,7 @@ import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.prefs.BackingStoreException;
-import org.softwareFm.crowdsource.api.IApiBuilder;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
-import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
-import org.softwareFm.crowdsource.api.LocalConfig;
 import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
@@ -26,7 +23,6 @@ import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.eclipse.jdtBinding.IBindingRipper;
-import org.softwareFm.eclipse.mysoftwareFm.IGroupClientOperations;
 import org.softwareFm.jarAndClassPath.api.ISoftwareFmApiFactory;
 import org.softwareFm.jarAndClassPath.api.IUserDataListener;
 import org.softwareFm.jarAndClassPath.api.IUserDataManager;
@@ -34,7 +30,6 @@ import org.softwareFm.swt.ICollectionConfigurationFactory;
 import org.softwareFm.swt.card.ICardFactory;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.dataStore.ICardDataStore;
-import org.softwareFm.swt.explorer.IMasterDetailSocial;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -86,28 +81,21 @@ public class Activator extends AbstractUIPlugin {
 		super.stop(context);
 	}
 
-	public ICrowdSourcedApi getApi(final IMasterDetailSocial masterDetailSocial) {
+	public ICrowdSourcedApi getApi() {
 		if (api != null)
 			synchronized (lock) {
 				if (api != null) {
-					IExtraReaderWriterConfigurator<LocalConfig> extras = new IExtraReaderWriterConfigurator<LocalConfig>() {
-						@Override
-						public void builder(IApiBuilder builder, LocalConfig apiConfig) {
-							builder.registerReaderAndWriter(IGroupClientOperations.class, IGroupClientOperations.Utils.groupOperations(masterDetailSocial, builder));
-						}
-					};
-
-					api = local ? ISoftwareFmApiFactory.Utils.makeClientApiForLocalHost(extras) : ISoftwareFmApiFactory.Utils.makeClientApiForSoftwareFmServer(extras);
+					api = local ? ISoftwareFmApiFactory.Utils.makeClientApiForLocalHost() : ISoftwareFmApiFactory.Utils.makeClientApiForSoftwareFmServer();
 				}
 			}
 		return api;
 	}
 
-	public CardConfig getCardConfig(Composite parent, IMasterDetailSocial masterDetailSocial) {
+	public CardConfig getCardConfig(Composite parent) {
 		final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(//
 				parent.getDisplay(), //
 				new CardConfig(ICardFactory.Utils.cardFactory(), //
-						ICardDataStore.Utils.repositoryCardDataStore(parent, getServiceExecutor(), getApi(masterDetailSocial).makeReadWriter())));
+						ICardDataStore.Utils.repositoryCardDataStore(parent, getServiceExecutor(), getApi().makeReadWriter())));
 		return cardConfig;
 	}
 

@@ -12,6 +12,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.softwareFm.crowdsource.api.MailerMock;
 import org.softwareFm.crowdsource.api.server.AbstractProcessorDatabaseIntegrationTests;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
@@ -58,11 +59,11 @@ public class TakeOnGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 				return null;
 			}
 		});
-
+		MailerMock mailerMock = getMailer();
 		assertEquals(Lists.times(2, fromEmail), mailerMock.froms);
 		assertEquals(Arrays.asList("email1@a.b", "email2@a.b"), mailerMock.tos);
 		assertEquals(Lists.times(2, "someSubject"), mailerMock.subjects);
-		assertEquals(Arrays.asList("emailPattern: email1@a.b/someNewGroupName", "emailPattern: email2@a.b/someNewGroupName"), mailerMock.messages);
+		assertEquals(Lists.times(2, "emailPattern: from@some.email/someNewGroupName"), mailerMock.messages);
 	}
 
 	public void testThrowsExceptionsAndAddNoUsersIfPropertiesNotFullySet() throws Exception {
@@ -126,7 +127,7 @@ public class TakeOnGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 			File groupDirectory = new File(remoteRoot, GroupConstants.groupsGenerator(getUrlPrefix()).findUrlFor(Maps.stringObjectMap(GroupConstants.groupIdKey, expectedGroupId)));
 			assertFalse(groupDirectory.exists());
 		}
-		assertEquals(0, mailerMock.froms.size());
+		assertEquals(0, getMailer().froms.size());
 	}
 
 	private void add(IRequestBuilder builder, String key, String value) {

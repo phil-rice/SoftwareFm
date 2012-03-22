@@ -11,11 +11,8 @@ import java.util.concurrent.Callable;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
-import org.softwareFm.crowdsource.api.IApiBuilder;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
-import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
-import org.softwareFm.crowdsource.api.LocalConfig;
 import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
@@ -24,7 +21,6 @@ import org.softwareFm.crowdsource.utilities.runnable.Callables;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.eclipse.actions.IActionBar;
 import org.softwareFm.eclipse.jdtBinding.BindingRipperResult;
-import org.softwareFm.eclipse.mysoftwareFm.IGroupClientOperations;
 import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups;
 import org.softwareFm.eclipse.mysoftwareFm.MyPeople;
@@ -55,21 +51,15 @@ public class ExplorerView extends ViewPart {
 		final Activator activator = Activator.getDefault();
 		final IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(parent);
 		Size.resizeMeToParentsSize(masterDetailSocial.getControl());
-		final CardConfig cardConfig = activator.getCardConfig(parent, masterDetailSocial);
+		final CardConfig cardConfig = activator.getCardConfig(parent);
 
-		IExtraReaderWriterConfigurator<LocalConfig> extras = new IExtraReaderWriterConfigurator<LocalConfig>() {
-			@Override
-			public void builder(IApiBuilder builder, LocalConfig apiConfig) {
-				builder.registerReaderAndWriter(IGroupClientOperations.class, IGroupClientOperations.Utils.groupOperations(masterDetailSocial, builder));
-			}
-		};
-		ICrowdSourcedApi api = activator.local ? ISoftwareFmApiFactory.Utils.makeClientApiForLocalHost(extras) : ISoftwareFmApiFactory.Utils.makeClientApiForSoftwareFmServer(extras);
+		ICrowdSourcedApi api = activator.local ? ISoftwareFmApiFactory.Utils.makeClientApiForLocalHost() : ISoftwareFmApiFactory.Utils.makeClientApiForSoftwareFmServer();
 		final ICrowdSourcedReadWriteApi readWriteApi = api.makeReadWriter();
 
 		IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardConfig.cardDataStore);
 		IServiceExecutor service = activator.getServiceExecutor();
 		IShowMyData showMyDetails = MyDetails.showMyDetails(readWriteApi, service, cardConfig, masterDetailSocial);
-		IShowMyGroups showMyGroups = MyGroups.showMyGroups(readWriteApi, service, false, cardConfig, masterDetailSocial);
+		IShowMyGroups showMyGroups = MyGroups.showMyGroups(masterDetailSocial, readWriteApi, service, false, cardConfig);
 		IShowMyPeople showMyPeople = MyPeople.showMyPeople(readWriteApi, service, masterDetailSocial, cardConfig, CommonConstants.clientTimeOut * 2);
 		Callable<Long> timeGetter = Callables.time();
 		List<String> rootUrls = getRootUrls();

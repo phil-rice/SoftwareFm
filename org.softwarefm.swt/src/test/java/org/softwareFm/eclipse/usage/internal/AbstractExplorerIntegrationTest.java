@@ -24,13 +24,12 @@ import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
 import org.softwareFm.crowdsource.api.IExtraCallProcessorFactory;
 import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
 import org.softwareFm.crowdsource.api.LocalConfig;
-import org.softwareFm.crowdsource.api.MailerMock;
 import org.softwareFm.crowdsource.api.ServerConfig;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitLocal;
 import org.softwareFm.crowdsource.api.git.IGitWriter;
 import org.softwareFm.crowdsource.api.server.ICallProcessor;
-import org.softwareFm.crowdsource.api.server.IMailer;
+import org.softwareFm.crowdsource.api.user.IGroupOperations;
 import org.softwareFm.crowdsource.httpClient.IHttpClient;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
 import org.softwareFm.crowdsource.utilities.arrays.ArrayHelper;
@@ -44,7 +43,6 @@ import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.crowdsource.utilities.tests.INeedsServerTest;
 import org.softwareFm.crowdsource.utilities.tests.Tests;
 import org.softwareFm.crowdsource.utilities.url.Urls;
-import org.softwareFm.eclipse.mysoftwareFm.IGroupClientOperations;
 import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups;
 import org.softwareFm.eclipse.mysoftwareFm.MyPeople;
@@ -95,7 +93,6 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 
 	private IShowMyData showMyData;
 	protected IUserDataManager userDataManager;
-	protected MailerMock mailer;
 
 	public static interface CardHolderAndCardCallback {
 		void process(ICardHolder cardHolder, ICard card) throws Exception;
@@ -221,10 +218,6 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 
 	}
 
-	@Override
-	protected IMailer getMailer() {
-		return mailer;
-	}
 
 	@Override
 	protected IExtraCallProcessorFactory getExtraProcessCalls() {
@@ -270,17 +263,18 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 				parent.builder(builder, localConfig);
 				IProjectTimeGetter projectTimeGetter = new ProjectTimeGetterFixture();
 				IRequestGroupReportGeneration requestGroupReportGeneration = IRequestGroupReportGeneration.Utils.httpClient(builder, IResponseCallback.Utils.noCallback());
-
+				IGroupOperations clientGroupOperations = IGroupOperations.Utils.clientGroupOperations(builder, localConfig.timeOutMs);
+				
 				builder.registerReaderAndWriter(IProjectTimeGetter.class, projectTimeGetter);
 				builder.registerReaderAndWriter(IRequestGroupReportGeneration.class, requestGroupReportGeneration);
-				builder.registerReader(IUsageReader.class, IUsageReader.Utils.localUsageReader(builder, localConfig.userUrlGenerator)); 
+				builder.registerReader(IUsageReader.class, IUsageReader.Utils.localUsageReader(builder, localConfig.userUrlGenerator));
+				builder.registerReaderAndWriter(IGroupOperations.class, clientGroupOperations);
 			}
 		};
 	}
 
 	@Override
 	protected void setUp() throws Exception {
-		mailer = new MailerMock();
 		super.setUp();
 		cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().//
 				configure(display, new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(shell, getServiceExecutor(), getLocalApi().makeReadWriter()))).//
@@ -291,8 +285,7 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 			rawResourceGetter = cardConfig.resourceGetterFn.apply(null);
 			masterDetailSocial = new MasterDetailSocial(shell, SWT.NULL);
 			showMyData = MyDetails.showMyDetails(localReadWriteApi, getServiceExecutor(), cardConfig, masterDetailSocial);
-			IGroupClientOperations groupClientOperations = IGroupClientOperations.Utils.groupOperations(masterDetailSocial, localReadWriteApi);
-			IShowMyGroups showMyGroups = MyGroups.showMyGroups(localReadWriteApi, serviceExecutor, false, cardConfig, masterDetailSocial);
+			IShowMyGroups showMyGroups = MyGroups.showMyGroups(masterDetailSocial,  localReadWriteApi, serviceExecutor, false, cardConfig);
 			IShowMyPeople showMyPeople = MyPeople.showMyPeople(localReadWriteApi, serviceExecutor, masterDetailSocial, cardConfig, 2 * getLocalConfig().timeOutMs);
 
 			userDataManager = IUserDataManager.Utils.userDataManager();

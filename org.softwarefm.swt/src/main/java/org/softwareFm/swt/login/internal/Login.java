@@ -28,7 +28,7 @@ import org.softwareFm.swt.swt.Swts;
 
 public class Login implements ILogin {
 	private final String cardType = CardConstants.loginCardType;
-	final INamesAndValuesEditor content;
+	public final INamesAndValuesEditor content;
 
 	public Login(Composite parent, final CardConfig cardConfig, final String sessionSalt, String initialEmail, final ILoginStrategy loginStrategy, final ILoginDisplayStrategy loginDisplayStrategy, final ILoginCallback callback) {
 		IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, cardType);

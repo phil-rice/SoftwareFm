@@ -366,8 +366,8 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 
 		assertEquals(Lists.times(2, email0), mailer.froms);
 		assertEquals(Arrays.asList(email1, email2), mailer.tos);
-		assertEquals(Arrays.asList("newSubject " + email1 + "/" + groupName0, "newSubject " + email2 + "/" + groupName0), mailer.subjects);
-		assertEquals(Arrays.asList("newMail " + email1 + "/" + groupName0, "newMail " + email2 + "/" + groupName0), mailer.messages);
+		assertEquals(Arrays.asList("newSubject " + email0 + "/" + groupName0, "newSubject " + email0 + "/" + groupName0), mailer.subjects);
+		assertEquals(Arrays.asList("newMail " + email0 + "/" + groupName0, "newMail " + email0 + "/" + groupName0), mailer.messages);
 		IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void> checkFn = new IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void>() {
 			@Override
 			public Void apply(IGroupsReader groupsReader, IUserReader userReader, IUserMembershipReader userMembershipReader) throws Exception {
@@ -425,8 +425,8 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 
 		assertEquals(Lists.times(2, email0), mailer.froms);
 		assertEquals(Arrays.asList(email1, email2), mailer.tos);
-		assertEquals(Arrays.asList("newSubject " + email1 + "/someNewGroupName", "newSubject " + email2 + "/someNewGroupName"), mailer.subjects);
-		assertEquals(Arrays.asList("newMail " + email1 + "/someNewGroupName", "newMail " + email2 + "/someNewGroupName"), mailer.messages);
+		assertEquals(Arrays.asList("newSubject " + email0 + "/someNewGroupName", "newSubject " + email0 + "/someNewGroupName"), mailer.subjects);
+		assertEquals(Arrays.asList("newMail " + email0 + "/someNewGroupName", "newMail " + email0 + "/someNewGroupName"), mailer.messages);
 
 		IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void> checkFn = new IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void>() {
 			@Override

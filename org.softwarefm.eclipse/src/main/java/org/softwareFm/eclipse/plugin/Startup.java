@@ -27,7 +27,7 @@ public class Startup implements IStartup {
 			public Void apply(IMonitor monitor) throws Exception {
 				monitor.beginTask(EclipseMessages.startUp, 1);
 				try {
-					IUsageStrategy rawUsageStrategy = IUsageStrategy.Utils.usage(serviceExecutor, activator.getApi(masterDetailSocial), userGenerator);
+					IUsageStrategy rawUsageStrategy = IUsageStrategy.Utils.usage(serviceExecutor, activator.getApi(), userGenerator);
 					
 					new UsageStrategy(activator.getClient(), serviceExecutor, gitLocal, LoginConstants.userGenerator(JarAndPathConstants.urlPrefix));
 					final IUsageStrategy cachedUsageStrategy = IUsageStrategy.Utils.cached(rawUsageStrategy, JarAndPathConstants.usageRefreshTimeMs, gitLocal, activator.getUserDataManager());

@@ -13,6 +13,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.softwareFm.crowdsource.api.MailerMock;
 import org.softwareFm.crowdsource.api.server.AbstractProcessorDatabaseIntegrationTests;
 import org.softwareFm.crowdsource.api.user.IGroups;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
@@ -71,10 +72,11 @@ public class InviteGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 
 		});
 
+		MailerMock mailerMock = getMailer();
 		assertEquals(Lists.times(2, fromEmail), mailerMock.froms);
 		assertEquals(Arrays.asList("email1@a.b", "email2@a.b"), mailerMock.tos);
 		assertEquals(Lists.times(2, "someSubject"), mailerMock.subjects);
-		assertEquals(Arrays.asList("emailPattern: email1@a.b/someGroupName", "emailPattern: email2@a.b/someGroupName"), mailerMock.messages);
+		assertEquals(Lists.times(2,"emailPattern: from@some.email/someGroupName"), mailerMock.messages);
 	}
 
 	public void testExceptionIfNotAdmin() throws Exception {
@@ -105,8 +107,7 @@ public class InviteGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 				List<Map<String, Object>> expected = Arrays.asList(//
 						Maps.stringObjectMap(LoginConstants.softwareFmIdKey, fromSoftwareFmId, GroupConstants.membershipStatusKey, "notAdmin"));
 				assertEquals(expected, actual);
-
-				assertEquals(0, mailerMock.froms.size());
+				assertEquals(0, getMailer().froms.size());
 				return null;
 			}
 		});
@@ -137,8 +138,7 @@ public class InviteGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 				assertEquals(expected, actual);
 			}
 		});
-
-		assertEquals(0, mailerMock.froms.size());
+		assertEquals(0, getMailer().froms.size());
 	}
 
 	public void testThrowsExceptionsAndAddNoUsersIfPropertiesNotFullySet() throws Exception {
@@ -203,7 +203,7 @@ public class InviteGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 			String url = GroupConstants.groupsGenerator(getUrlPrefix()).findUrlFor(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId));
 			File groupDirectory = new File(remoteRoot, url);
 			assertFalse(groupDirectory.exists());
-			assertEquals(0, mailerMock.froms.size());
+			assertEquals(0, getMailer().froms.size());
 		}
 	}
 

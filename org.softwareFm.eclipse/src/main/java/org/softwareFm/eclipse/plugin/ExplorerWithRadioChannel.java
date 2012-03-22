@@ -16,17 +16,13 @@ import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.crowdsource.api.IApiBuilder;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
-import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
-import org.softwareFm.crowdsource.api.LocalConfig;
 import org.softwareFm.crowdsource.httpClient.IHttpClient;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.runnable.Callables;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
-import org.softwareFm.eclipse.mysoftwareFm.IGroupClientOperations;
 import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups;
 import org.softwareFm.eclipse.mysoftwareFm.MyPeople;
@@ -81,13 +77,7 @@ public class ExplorerWithRadioChannel {
 					explorerAndButton.setLayout(new GridLayout());
 					buttonPanel.setLayout(Swts.Row.getHorizonalNoMarginRowLayout());
 
-					IExtraReaderWriterConfigurator<LocalConfig> extras = new IExtraReaderWriterConfigurator<LocalConfig>() {
-						@Override
-						public void builder(IApiBuilder builder, LocalConfig apiConfig) {
-							builder.registerReaderAndWriter(IGroupClientOperations.class, IGroupClientOperations.Utils.groupOperations(masterDetailSocial, builder));
-						}
-					};
-					ICrowdSourcedApi api = local ? ISoftwareFmApiFactory.Utils.makeClientApiForLocalHost(extras) : ISoftwareFmApiFactory.Utils.makeClientApiForSoftwareFmServer(extras);
+					ICrowdSourcedApi api = local ? ISoftwareFmApiFactory.Utils.makeClientApiForLocalHost() : ISoftwareFmApiFactory.Utils.makeClientApiForSoftwareFmServer();
 					final ICrowdSourcedReadWriteApi readWriteApi = api.makeReadWriter();
 					forShutdown.set(api);
 
@@ -99,7 +89,7 @@ public class ExplorerWithRadioChannel {
 					ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(from.getDisplay(), serviceExecutor, readWriteApi);
 					final IUserDataManager userDataManager = IUserDataManager.Utils.userDataManager();
 					IShowMyData showMyDetails = MyDetails.showMyDetails(readWriteApi, serviceExecutor, cardConfig, masterDetailSocial);
-					IShowMyGroups showMyGroups = MyGroups.showMyGroups(readWriteApi, serviceExecutor, false, cardConfig, masterDetailSocial);
+					IShowMyGroups showMyGroups = MyGroups.showMyGroups(masterDetailSocial, readWriteApi, serviceExecutor, false, cardConfig);
 					IShowMyPeople showMyPeople = MyPeople.showMyPeople(readWriteApi, serviceExecutor, masterDetailSocial, cardConfig, CommonConstants.clientTimeOut * 2);
 					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, readWriteApi, cardConfig, rootUrls, playListGetter, serviceExecutor, loginStrategy, showMyDetails, showMyGroups, showMyPeople, userDataManager, Callables.time());
 
