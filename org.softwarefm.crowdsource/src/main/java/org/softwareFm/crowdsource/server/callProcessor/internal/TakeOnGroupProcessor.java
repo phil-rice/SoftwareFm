@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
 import org.softwareFm.crowdsource.api.ICryptoGenerators;
 import org.softwareFm.crowdsource.api.IIdAndSaltGenerator;
 import org.softwareFm.crowdsource.api.IUserCryptoAccess;
@@ -26,10 +26,10 @@ import org.softwareFm.crowdsource.utilities.strings.Strings;
 
 public class TakeOnGroupProcessor extends AbstractAddToGroupProcessor {
 
-	private final ICrowdSourceReadWriteApi readWriteApi;
+	private final ICrowdSourcedReadWriteApi readWriteApi;
 	private final ICryptoGenerators cryptoGenerators;
 
-	public TakeOnGroupProcessor( IServerDoers serverDoers, IUserCryptoAccess userCryptoAccess, IIdAndSaltGenerator idAndSaltGenerator, ICryptoGenerators cryptoGenerators, ICrowdSourceReadWriteApi readWriteApi) {
+	public TakeOnGroupProcessor( IServerDoers serverDoers, IUserCryptoAccess userCryptoAccess, IIdAndSaltGenerator idAndSaltGenerator, ICryptoGenerators cryptoGenerators, ICrowdSourcedReadWriteApi readWriteApi) {
 		super(CommonConstants.POST, GroupConstants.takeOnCommandPrefix, serverDoers, userCryptoAccess, idAndSaltGenerator);
 		this.cryptoGenerators = cryptoGenerators;
 		this.readWriteApi = readWriteApi;

@@ -6,14 +6,14 @@ package org.softwareFm.eclipse.mysoftwareFm;
 
 import org.eclipse.swt.widgets.Table;
 import org.softwareFm.crowdsource.api.IApiBuilder;
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
 import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
 import org.softwareFm.crowdsource.api.LocalConfig;
+import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.jarAndClassPath.api.IProjectTimeGetter;
 import org.softwareFm.jarAndClassPath.api.IUsageReader;
 import org.softwareFm.jarAndClassPath.api.ProjectTimeGetterFixture;
-import org.softwareFm.jarAndClassPath.api.UserData;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
@@ -29,7 +29,7 @@ public class MyDetailsTest extends AbstractMyGroupsIntegrationTest {
 	public void testMyDetails() {
 		assertNotNull(IUserReader.Utils.getUserProperty(getServerApi().makeReader(), softwareFmId0, userKey0, JarAndPathConstants.projectCryptoKey));
 		UserData userData = new UserData(email, softwareFmId0, userKey0);
-		ICrowdSourceReadWriteApi localReadWriter = getLocalApi().makeReadWriter();
+		ICrowdSourcedReadWriteApi localReadWriter = getLocalApi().makeReadWriter();
 		MyDetails myDetails = new MyDetails(shell, localReadWriter, cardConfig, userData);
 		checkProjectDetails(myDetails);
 	}

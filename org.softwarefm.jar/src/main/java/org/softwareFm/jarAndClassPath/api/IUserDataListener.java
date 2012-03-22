@@ -4,6 +4,8 @@
 
 package org.softwareFm.jarAndClassPath.api;
 
+import org.softwareFm.crowdsource.api.UserData;
+
 
 public interface IUserDataListener {
 

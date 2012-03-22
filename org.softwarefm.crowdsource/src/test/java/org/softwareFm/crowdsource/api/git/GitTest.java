@@ -8,7 +8,7 @@ import java.io.File;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import org.softwareFm.crowdsource.api.ICrowdSourceReaderApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.api.git.internal.GitWriterForTests;
 import org.softwareFm.crowdsource.git.internal.GitOperations;
 import org.softwareFm.crowdsource.utilities.collections.Files;
@@ -109,20 +109,20 @@ public abstract class GitTest extends TemporaryFileTest {
 		assertNull(reader.getFile(plain));
 	}
 
-	protected void checkGetFileAndDescendants(ICrowdSourceReaderApi reader, String url, Map<String, Object> data) {
+	protected void checkGetFileAndDescendants(ICrowdSourcedReaderApi reader, String url, Map<String, Object> data) {
 		IFileDescription fileDescription = IFileDescription.Utils.plain(url);
 		checkGetFileAndDescendants(reader, fileDescription, data);
 	}
 
-	protected void checkGetFileAndDescendants(ICrowdSourceReaderApi reader, IFileDescription fileDescription, Map<String, Object> data) {
+	protected void checkGetFileAndDescendants(ICrowdSourcedReaderApi reader, IFileDescription fileDescription, Map<String, Object> data) {
 		assertEquals(data, IGitReader.Utils.getFileAndDescendants(reader, fileDescription));
 	}
 
-	protected void checkGetFile(ICrowdSourceReaderApi readerApi, String url, Map<String, Object> data) {
+	protected void checkGetFile(ICrowdSourcedReaderApi readerApi, String url, Map<String, Object> data) {
 		checkGetFile(readerApi, IFileDescription.Utils.plain(url), data);
 	}
 
-	protected void checkGetFile(ICrowdSourceReaderApi readerApi, IFileDescription fileDescription, Map<String, Object> data) {
+	protected void checkGetFile(ICrowdSourcedReaderApi readerApi, IFileDescription fileDescription, Map<String, Object> data) {
 		assertEquals(data, IGitReader.Utils.getFileAsMap(readerApi, fileDescription));
 	}
 

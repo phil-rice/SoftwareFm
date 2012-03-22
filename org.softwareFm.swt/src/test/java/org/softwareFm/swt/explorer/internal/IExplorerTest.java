@@ -27,7 +27,7 @@ import org.softwareFm.swt.explorer.IMasterDetailSocial;
 import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.explorer.IShowMyGroups;
 import org.softwareFm.swt.explorer.IShowMyPeople;
-import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
+import org.softwareFm.swt.login.ILoginStrategy;
 import org.softwareFm.swt.timeline.IPlayListGetter;
 
 public class IExplorerTest extends ApiAndSwtTest {

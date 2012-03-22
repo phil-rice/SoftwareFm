@@ -10,9 +10,9 @@ import java.util.concurrent.Callable;
 
 import org.softwareFm.crowdsource.api.ApiConfig;
 import org.softwareFm.crowdsource.api.IApiBuilder;
-import org.softwareFm.crowdsource.api.ICrowdSourceReaderApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
-import org.softwareFm.crowdsource.api.ICrowdSourcesApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
 import org.softwareFm.crowdsource.api.git.GitTest;
 import org.softwareFm.crowdsource.api.git.IGitReader;
@@ -79,7 +79,7 @@ public class LocalUserReaderTest extends GitTest {
 		IUrlGenerator userUrlGenerator = IUrlGenerator.Utils.generator("user/{0}/{1}/{2}", LoginConstants.softwareFmIdKey);
 		Map<String, Callable<Object>> defaults = Maps.<String, Callable<Object>> makeMap("defProperty", Callables.valueFromList("value"));
 		remoteUser = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, userUrlGenerator, findRepositoryRoot, defaults);
-		ICrowdSourceReaderApi readerApi = ICrowdSourcesApi.Utils.forTests(new IExtraReaderWriterConfigurator<ApiConfig>() {
+		ICrowdSourcedReaderApi readerApi = ICrowdSourcedApi.Utils.forTests(new IExtraReaderWriterConfigurator<ApiConfig>() {
 			@Override
 			public void builder(IApiBuilder builder, ApiConfig apiConfig) {
 				builder.registerReader(IGitReader.class, new GitLocal(builder, remoteAsUri, CommonConstants.staleCachePeriodForTest));

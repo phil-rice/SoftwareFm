@@ -6,7 +6,7 @@ package org.softwareFm.jarAndClassPath.internal;
 
 import java.util.concurrent.Future;
 
-import org.softwareFm.crowdsource.api.ICrowdSourceReaderApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.api.git.IGitLocal;
 import org.softwareFm.crowdsource.httpClient.IHttpClient;
 import org.softwareFm.crowdsource.httpClient.IResponse;
@@ -21,9 +21,9 @@ public class RequestGroupReportGeneration implements IRequestGroupReportGenerati
 
 	private final IResponseCallback callback;
 	private final IHasCache cache;
-	private final ICrowdSourceReaderApi readerApi;
+	private final ICrowdSourcedReaderApi readerApi;
 
-	public RequestGroupReportGeneration(ICrowdSourceReaderApi readerApi, IResponseCallback callback) {
+	public RequestGroupReportGeneration(ICrowdSourcedReaderApi readerApi, IResponseCallback callback) {
 		this.readerApi = readerApi;
 		this.callback = callback;
 		this.cache = readerApi.access(IGitLocal.class, Functions.<IGitLocal, IGitLocal>identity());

@@ -7,7 +7,7 @@ package org.softwareFm.crowdsource.membership.internal;
 import java.util.Collections;
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.ICrowdSourceReaderApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
@@ -19,10 +19,10 @@ import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 
 public abstract class AbstractUserMembershipReader implements IUserMembershipReader {
 
-	protected final ICrowdSourceReaderApi readerApi;
+	protected final ICrowdSourcedReaderApi readerApi;
 	protected final IUrlGenerator userUrlGenerator;
 
-	public AbstractUserMembershipReader(ICrowdSourceReaderApi readerApi, IUrlGenerator userUrlGenerator) {
+	public AbstractUserMembershipReader(ICrowdSourcedReaderApi readerApi, IUrlGenerator userUrlGenerator) {
 		this.readerApi = readerApi;
 		this.userUrlGenerator = userUrlGenerator;
 	}

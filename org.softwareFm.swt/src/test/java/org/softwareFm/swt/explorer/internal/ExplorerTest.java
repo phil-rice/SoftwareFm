@@ -27,8 +27,8 @@ import org.softwareFm.swt.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.explorer.IShowMyGroups;
 import org.softwareFm.swt.explorer.IShowMyPeople;
+import org.softwareFm.swt.login.ILoginStrategy;
 import org.softwareFm.swt.menu.PopupMenuContributorMock;
-import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.swt.timeline.IPlayListGetter;
 import org.softwareFm.swt.title.TitleSpec;
 

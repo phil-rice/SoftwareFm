@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitLocal;
 import org.softwareFm.crowdsource.api.git.IGitOperations;
@@ -34,11 +34,11 @@ public class GitLocal implements IGitLocal {
 
 	private final UrlCache<Map<String, Object>> aboveRepoCache = new UrlCache<Map<String, Object>>();
 
-	private final ICrowdSourceReadWriteApi readWriteApi;
+	private final ICrowdSourcedReadWriteApi readWriteApi;
 
 	private final String remoteGitPrefix;
 
-	public GitLocal(ICrowdSourceReadWriteApi readWriteApi, String remoteGitPrefix, long period) {
+	public GitLocal(ICrowdSourcedReadWriteApi readWriteApi, String remoteGitPrefix, long period) {
 		this.readWriteApi = readWriteApi;
 		this.remoteGitPrefix = remoteGitPrefix;
 		this.period = period;
@@ -105,7 +105,8 @@ public class GitLocal implements IGitLocal {
 			if (aboveRepoCache.containsKey(url))
 				return;// not redundant
 			IGitOperations gitOperations = readWriteApi.gitOperations();
-			File repositoryUrl = fileDescription.findRepositoryUrl(gitOperations.getRoot());
+			File root = gitOperations.getRoot();
+			File repositoryUrl = fileDescription.findRepositoryUrl(root);
 			final long now = System.currentTimeMillis();
 			if (repositoryUrl == null) {
 				logger.debug("        " + getClass().getSimpleName() + ".pullIfNeeded/clone(" + fileDescription + ")");
@@ -123,7 +124,7 @@ public class GitLocal implements IGitLocal {
 				});
 			} else if (needToPull(repositoryUrl, now)) {
 				logger.debug("        " + getClass().getSimpleName() + ".pullIfNeeded/pull(" + fileDescription + ")");
-				String remoteUrl = Files.offset(gitOperations.getRoot(), repositoryUrl);
+				String remoteUrl = Files.offset(root, repositoryUrl);
 				gitOperations.pull(remoteUrl);
 			} else
 				logger.debug("        " + getClass().getSimpleName() + ".pullIfNeeded/notNeeded(" + fileDescription + ")");

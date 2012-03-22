@@ -4,13 +4,14 @@
 
 package org.softwareFm.swt.mySoftwareFm.internal;
 
+import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.tests.Tests;
-import org.softwareFm.jarAndClassPath.api.UserData;
 import org.softwareFm.swt.card.editors.AbstractNameAndValuesEditorTest;
 import org.softwareFm.swt.constants.CardConstants;
+import org.softwareFm.swt.login.internal.Login;
 import org.softwareFm.swt.swt.Swts;
 
 public class LoginTest extends AbstractNameAndValuesEditorTest<Login> {

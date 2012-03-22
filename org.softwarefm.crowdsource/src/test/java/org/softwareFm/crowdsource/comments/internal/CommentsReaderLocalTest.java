@@ -1,11 +1,11 @@
 package org.softwareFm.crowdsource.comments.internal;
 
-import org.softwareFm.crowdsource.api.ICrowdSourcesApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 
 public class CommentsReaderLocalTest extends AbstractCommentsReaderTest {
 
 	@Override
-	protected ICrowdSourcesApi getApi() {
+	protected ICrowdSourcedApi getApi() {
 		getServerApi().getServer();
 		return getLocalApi();
 	}

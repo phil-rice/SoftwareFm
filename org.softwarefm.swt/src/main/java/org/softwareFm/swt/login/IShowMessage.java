@@ -2,14 +2,24 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwareFm.swt.mySoftwareFm;
+package org.softwareFm.swt.login;
 
-public interface IChangePasswordCallback {
 
-	void changedPassword(String email);
+public interface IShowMessage {
 
-	void failedToChangePassword(String email, String message);
+	void showMessage(String cardType, String title, String message);
 
-	void cancelChangePassword();
+	public static class Utils {
+
+		public static IShowMessage sysout() {
+			return new IShowMessage() {
+				@Override
+				public void showMessage(String cardType, String title, String message) {
+					System.out.println(title + " " + message);
+				}
+			};
+		}
+
+	}
 
 }

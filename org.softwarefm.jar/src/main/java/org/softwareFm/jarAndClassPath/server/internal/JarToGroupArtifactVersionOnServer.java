@@ -7,7 +7,7 @@ package org.softwareFm.jarAndClassPath.server.internal;
 import java.util.Map;
 import java.util.concurrent.Future;
 
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitOperations;
 import org.softwareFm.crowdsource.utilities.future.Futures;
@@ -17,9 +17,9 @@ import org.softwareFm.jarAndClassPath.internal.AbstractJarToGroupArtifactVersion
 
 public class JarToGroupArtifactVersionOnServer extends AbstractJarToGroupArtifactVersion {
 
-	private final ICrowdSourceReadWriteApi readWriteApi;
+	private final ICrowdSourcedReadWriteApi readWriteApi;
 
-	public JarToGroupArtifactVersionOnServer(ICrowdSourceReadWriteApi readWriteApi, IUrlGenerator jarUrlGenerator) {
+	public JarToGroupArtifactVersionOnServer(ICrowdSourcedReadWriteApi readWriteApi, IUrlGenerator jarUrlGenerator) {
 		super(jarUrlGenerator);
 		this.readWriteApi = readWriteApi;
 	}

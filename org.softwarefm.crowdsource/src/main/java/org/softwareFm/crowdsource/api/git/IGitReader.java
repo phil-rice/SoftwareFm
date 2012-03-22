@@ -3,7 +3,7 @@ package org.softwareFm.crowdsource.api.git;
 import java.io.File;
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.ICrowdSourceReaderApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.IHasCache;
 
@@ -28,7 +28,7 @@ public interface IGitReader extends IHasCache {
 
 	public static class Utils {
 
-		public static Iterable<Map<String, Object>> getFileAsListOfMaps(ICrowdSourceReaderApi readerApi, final IFileDescription fileDescription) {
+		public static Iterable<Map<String, Object>> getFileAsListOfMaps(ICrowdSourcedReaderApi readerApi, final IFileDescription fileDescription) {
 			return readerApi.accessGitReader(new IFunction1<IGitReader, Iterable<Map<String, Object>>>() {
 				@Override
 				public Iterable<Map<String, Object>> apply(IGitReader gitReader) throws Exception {
@@ -38,7 +38,7 @@ public interface IGitReader extends IHasCache {
 			});
 		}
 
-		public static String getFileAsString(ICrowdSourceReaderApi readerApi, final IFileDescription fileDescription) {
+		public static String getFileAsString(ICrowdSourcedReaderApi readerApi, final IFileDescription fileDescription) {
 			return readerApi.accessGitReader(new IFunction1<IGitReader, String>() {
 				@Override
 				public String apply(IGitReader gitReader) throws Exception {
@@ -48,7 +48,7 @@ public interface IGitReader extends IHasCache {
 			});
 		}
 
-		public static Map<String, Object> getFileAsMap(ICrowdSourceReaderApi readerApi, final IFileDescription fileDescription) {
+		public static Map<String, Object> getFileAsMap(ICrowdSourcedReaderApi readerApi, final IFileDescription fileDescription) {
 			return readerApi.accessGitReader(new IFunction1<IGitReader, Map<String, Object>>() {
 				@Override
 				public Map<String, Object> apply(IGitReader gitReader) throws Exception {
@@ -58,7 +58,7 @@ public interface IGitReader extends IHasCache {
 			});
 		}
 
-		public static Integer countOfFileAsListsOfMap(ICrowdSourceReaderApi readerApi, final IFileDescription fileDescription) {
+		public static Integer countOfFileAsListsOfMap(ICrowdSourcedReaderApi readerApi, final IFileDescription fileDescription) {
 			return readerApi.accessGitReader(new IFunction1<IGitReader, Integer>() {
 				@Override
 				public Integer apply(IGitReader gitReader) throws Exception {
@@ -68,7 +68,7 @@ public interface IGitReader extends IHasCache {
 			});
 		}
 
-		public static void clearCache(ICrowdSourceReaderApi readerApi) {
+		public static void clearCache(ICrowdSourcedReaderApi readerApi) {
 			readerApi.accessGitReader(new IFunction1<IGitReader, Void>() {
 				@Override
 				public Void apply(IGitReader gitReader) throws Exception {
@@ -78,7 +78,7 @@ public interface IGitReader extends IHasCache {
 			});
 		}
 
-		public static Map<String,Object> getFileAndDescendants(ICrowdSourceReaderApi readerApi, final IFileDescription fileDescription) {
+		public static Map<String,Object> getFileAndDescendants(ICrowdSourcedReaderApi readerApi, final IFileDescription fileDescription) {
 			return readerApi.accessGitReader(new IFunction1<IGitReader, Map<String,Object>>() {
 				@Override
 				public Map<String,Object> apply(IGitReader gitReader) throws Exception {

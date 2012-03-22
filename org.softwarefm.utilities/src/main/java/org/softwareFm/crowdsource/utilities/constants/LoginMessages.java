@@ -24,4 +24,10 @@ public class LoginMessages {
 	public static final String cannotWorkOutCryptFor = "Could not work out crypto for {0}. Full map {1}";
 	public static final String invalidEmail = "Invalid email {0}";
 
+	public static final String requestSessionSalt = "Requesting Session Salt";
+	public static final String loggingIn = "Logging in {0}";
+	public static final String forgotPassword = "Forgot Password for {0}";
+	public static final String requestEmailSalt = "Request Email Salt for {0}";
+
+	
 }

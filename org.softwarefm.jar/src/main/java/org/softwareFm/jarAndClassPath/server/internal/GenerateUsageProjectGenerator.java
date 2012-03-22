@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
-import org.softwareFm.crowdsource.api.ICrowdSourceReaderApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.utilities.constants.CommonMessages;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
@@ -24,9 +24,9 @@ import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 public class GenerateUsageProjectGenerator implements IGenerateUsageReportGenerator {
 
 	private final Logger logger = Logger.getLogger(GenerateUsageProjectGenerator.class);
-	private final ICrowdSourceReaderApi readerApi;
+	private final ICrowdSourcedReaderApi readerApi;
 
-	public GenerateUsageProjectGenerator(ICrowdSourceReaderApi readerApi) {
+	public GenerateUsageProjectGenerator(ICrowdSourcedReaderApi readerApi) {
 		this.readerApi = readerApi;
 	}
 

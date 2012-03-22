@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.apache.http.RequestLine;
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
 import org.softwareFm.crowdsource.api.IIdAndSaltGenerator;
 import org.softwareFm.crowdsource.api.IUserCryptoAccess;
@@ -69,7 +69,7 @@ public interface ICallProcessor extends IServerDoer{
 		}
 
 
-		public static ICallProcessor softwareFmProcessCall(ICrowdSourceReadWriteApi readWriteApi, IServerDoers serverDoers, ServerConfig serverConfig) {
+		public static ICallProcessor softwareFmProcessCall(ICrowdSourcedReadWriteApi readWriteApi, IServerDoers serverDoers, ServerConfig serverConfig) {
 			IGitOperations gitOperations = readWriteApi.gitOperations();
 			IUserCryptoAccess userCryptoAccess = serverConfig.userCryptoAccess;
 			IIdAndSaltGenerator idAndSaltGenerator = serverConfig.idAndSaltGenerator;

@@ -6,9 +6,9 @@ package org.softwareFm.swt.mySoftwareFm.internal;
 
 import java.util.List;
 
+import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
-import org.softwareFm.jarAndClassPath.api.UserData;
-import org.softwareFm.swt.mySoftwareFm.ILoginCallback;
+import org.softwareFm.swt.login.ILoginCallback;
 
 public class LoginCallbackMock implements ILoginCallback {
 

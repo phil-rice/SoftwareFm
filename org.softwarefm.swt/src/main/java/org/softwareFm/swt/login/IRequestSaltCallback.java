@@ -2,14 +2,12 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwareFm.swt.mySoftwareFm;
+package org.softwareFm.swt.login;
 
-import org.softwareFm.jarAndClassPath.api.UserData;
+public interface IRequestSaltCallback {
 
-public interface ISignUpCallback {
+	void saltReceived(String salt);
 
-	void signedUp(UserData userData);
-
-	void failed(String email, String message);
+	void problemGettingSalt(String message);
 
 }

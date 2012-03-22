@@ -4,7 +4,7 @@
 
 package org.softwareFm.crowdsource.api.server;
 
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
 import org.softwareFm.crowdsource.api.MailerMock;
 import org.softwareFm.crowdsource.api.internal.CrowdSourcedServerApi;
@@ -15,7 +15,7 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 	protected int thisDay;
 
 	public CrowdSourcedServerApi api;
-	public ICrowdSourceReadWriteApi readWriter;
+	public ICrowdSourcedReadWriteApi readWriter;
 
 	@Override
 	protected IMailer getMailer() {

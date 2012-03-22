@@ -6,8 +6,8 @@ package org.softwareFm.crowdsource.api.user;
 
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
-import org.softwareFm.crowdsource.api.ICrowdSourceReaderApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
@@ -18,7 +18,7 @@ public interface IUserReader {
 	void refresh(String userId);
 
 	abstract public static class Utils {
-		public static String getUserProperty(ICrowdSourceReaderApi readerApi, final String softwareFmId, final String userCrypto, final String propertyName) {
+		public static String getUserProperty(ICrowdSourcedReaderApi readerApi, final String softwareFmId, final String userCrypto, final String propertyName) {
 			return readerApi.accessUserReader(new IFunction1<IUserReader, String>() {
 				@Override
 				public String apply(IUserReader from) throws Exception {
@@ -27,7 +27,7 @@ public interface IUserReader {
 			});
 		}
 
-		public static void setUserProperty(ICrowdSourceReadWriteApi readWriteApi, final String softwareFmId, final String userCrypto, final String propertyName, final String value) {
+		public static void setUserProperty(ICrowdSourcedReadWriteApi readWriteApi, final String softwareFmId, final String userCrypto, final String propertyName, final String value) {
 			readWriteApi.modifyUser(new ICallback<IUser>() {
 				@Override
 				public void process(IUser user) throws Exception {
@@ -67,7 +67,7 @@ public interface IUserReader {
 			};
 		}
 
-		public static void refresh(ICrowdSourceReaderApi readerApi, final String softwareFmId) {
+		public static void refresh(ICrowdSourcedReaderApi readerApi, final String softwareFmId) {
 			readerApi.accessUserReader(new IFunction1<IUserReader, Void>() {
 				@Override
 				public Void apply(IUserReader from) throws Exception {

@@ -2,8 +2,8 @@ package org.softwareFm.crowdsource.api.internal;
 
 import org.softwareFm.crowdsource.api.IComments;
 import org.softwareFm.crowdsource.api.ICommentsReader;
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
-import org.softwareFm.crowdsource.api.ICrowdSourceReaderApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
 import org.softwareFm.crowdsource.api.LocalConfig;
 import org.softwareFm.crowdsource.api.git.IGitLocal;
@@ -47,7 +47,7 @@ public class CrowdSourcedLocalApi extends AbstractCrowdSourcesApi {
 		readWriterApi.registerReader(IUserReader.class, userReader);
 		readWriterApi.registerReader(IGroupsReader.class, new LocalGroupsReader(readWriterApi, localConfig.groupUrlGenerator));
 		readWriterApi.registerReader(IUserMembershipReader.class, new UserMembershipReaderForLocal(readWriterApi, userUrlGenerator));
-		readWriterApi.registerReaderAndWriter(IRepoFinder.class, localConfig.repoFinder);
+		readWriterApi.registerReaderAndWriter(IRepoFinder.class, repoFinder);
 		readWriterApi.registerReader(IGitReader.class, gitLocal);
 		readWriterApi.registerReadWriter(IGitWriter.class, gitWriter);
 		readWriterApi.registerReader(ICommentsReader.class, comments);
@@ -58,12 +58,12 @@ public class CrowdSourcedLocalApi extends AbstractCrowdSourcesApi {
 	}
 
 	@Override
-	public ICrowdSourceReaderApi makeReader() {
+	public ICrowdSourcedReaderApi makeReader() {
 		return readWriterApi;
 	}
 
 	@Override
-	public ICrowdSourceReadWriteApi makeReadWriter() {
+	public ICrowdSourcedReadWriteApi makeReadWriter() {
 		return readWriterApi;
 	}
 

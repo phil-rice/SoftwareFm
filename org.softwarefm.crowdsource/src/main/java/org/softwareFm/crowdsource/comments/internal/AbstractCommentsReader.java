@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.crowdsource.api.ICommentsReader;
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
@@ -21,9 +21,9 @@ import org.softwareFm.crowdsource.utilities.maps.Maps;
 
 public abstract class AbstractCommentsReader implements ICommentsReader {
 
-	protected final ICrowdSourceReadWriteApi api;
+	protected final ICrowdSourcedReadWriteApi api;
 
-	public AbstractCommentsReader(ICrowdSourceReadWriteApi api) {
+	public AbstractCommentsReader(ICrowdSourcedReadWriteApi api) {
 		this.api = api;
 	}
 

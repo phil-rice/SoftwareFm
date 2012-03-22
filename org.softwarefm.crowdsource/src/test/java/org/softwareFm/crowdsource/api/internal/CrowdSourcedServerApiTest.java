@@ -4,9 +4,9 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
-import org.softwareFm.crowdsource.api.ICrowdSourceReaderApi;
-import org.softwareFm.crowdsource.api.ICrowdSourcesApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.ServerConfig;
 import org.softwareFm.crowdsource.api.server.IMailer;
 
@@ -15,19 +15,19 @@ public class CrowdSourcedServerApiTest extends TestCase {
 	private final ServerConfig serverConfig = ServerConfig.serverConfigForTests(root, IMailer.Utils.noMailer());
 
 	public void testConstructor() {
-		ICrowdSourcesApi api1 = ICrowdSourcesApi.Utils.forServer(serverConfig);
+		ICrowdSourcedApi api1 = ICrowdSourcedApi.Utils.forServer(serverConfig);
 		assertTrue(api1 instanceof CrowdSourcedServerApi);
-		ICrowdSourcesApi api2 = ICrowdSourcesApi.Utils.forServer(serverConfig);
+		ICrowdSourcedApi api2 = ICrowdSourcedApi.Utils.forServer(serverConfig);
 		assertNotSame(api1, api2);
 	}
 
 	public void testGettersReturnsSameObjectEachTime() {
-		ICrowdSourcesApi api = ICrowdSourcesApi.Utils.forServer(serverConfig);
+		ICrowdSourcedApi api = ICrowdSourcedApi.Utils.forServer(serverConfig);
 		assertTrue(api instanceof CrowdSourcedServerApi);
-		ICrowdSourceReaderApi reader1 = api.makeReader();
-		ICrowdSourceReaderApi reader2 = api.makeReader();
-		ICrowdSourceReadWriteApi readWriter1 = api.makeReadWriter();
-		ICrowdSourceReadWriteApi readWriter2 = api.makeReadWriter();
+		ICrowdSourcedReaderApi reader1 = api.makeReader();
+		ICrowdSourcedReaderApi reader2 = api.makeReader();
+		ICrowdSourcedReadWriteApi readWriter1 = api.makeReadWriter();
+		ICrowdSourcedReadWriteApi readWriter2 = api.makeReadWriter();
 		
 		assertSame(reader1, reader2);
 		assertSame(reader1, readWriter1);

@@ -7,9 +7,9 @@ package org.softwareFm.jarAndClassPath.internal;
 import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
+import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.jarAndClassPath.api.IUserDataListener;
 import org.softwareFm.jarAndClassPath.api.IUserDataManager;
-import org.softwareFm.jarAndClassPath.api.UserData;
 
 public class UserDataManagerTest extends TestCase {
 	private IUserDataManager manager;

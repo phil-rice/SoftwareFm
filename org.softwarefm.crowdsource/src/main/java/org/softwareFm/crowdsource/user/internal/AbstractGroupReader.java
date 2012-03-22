@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.ICrowdSourceReaderApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
@@ -24,9 +24,9 @@ import org.softwareFm.crowdsource.utilities.url.Urls;
 public abstract class AbstractGroupReader implements IGroupsReader {
 
 	protected IUrlGenerator groupUrlGenerator;
-	protected final ICrowdSourceReaderApi readerApi;
+	protected final ICrowdSourcedReaderApi readerApi;
 
-	public AbstractGroupReader(ICrowdSourceReaderApi readerApi, IUrlGenerator groupUrlGenerator) {
+	public AbstractGroupReader(ICrowdSourcedReaderApi readerApi, IUrlGenerator groupUrlGenerator) {
 		this.readerApi = readerApi;
 		this.groupUrlGenerator = groupUrlGenerator;
 	}

@@ -7,7 +7,7 @@ package org.softwareFm.jarAndClassPath.server.internal;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
 import org.softwareFm.crowdsource.api.server.AbstractCallProcessor;
 import org.softwareFm.crowdsource.api.server.IProcessResult;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback3;
@@ -23,9 +23,9 @@ public class UsageProcessor extends AbstractCallProcessor {
 
 	private static Logger logger = Logger.getLogger(IProject.class);
 
-	private final ICrowdSourceReadWriteApi api;
+	private final ICrowdSourcedReadWriteApi api;
 
-	public UsageProcessor(ICrowdSourceReadWriteApi api) {
+	public UsageProcessor(ICrowdSourcedReadWriteApi api) {
 		super(CommonConstants.POST, JarAndPathConstants.usagePrefix);
 		this.api = api;
 	}

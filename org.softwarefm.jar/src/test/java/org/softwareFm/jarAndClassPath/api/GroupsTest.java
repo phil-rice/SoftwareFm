@@ -12,7 +12,7 @@ import java.util.concurrent.Callable;
 import org.softwareFm.crowdsource.api.ApiConfig;
 import org.softwareFm.crowdsource.api.ApiTest;
 import org.softwareFm.crowdsource.api.IApiBuilder;
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
 import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
 import org.softwareFm.crowdsource.api.ITakeOnEnrichmentProvider;
 import org.softwareFm.crowdsource.utilities.collections.Files;
@@ -37,7 +37,7 @@ abstract public class GroupsTest extends ApiTest {
 	protected String sfmId1;
 	protected String sfmId2;
 
-	protected ICrowdSourceReadWriteApi readWriteApi;
+	protected ICrowdSourcedReadWriteApi readWriteApi;
 
 	protected void saveProjectData(String softwareFmId, String projectCrypto, String month, ProjectMock project) {
 		String url = Urls.compose(getServerConfig().userUrlGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId)), JarAndPathConstants.projectDirectoryName);

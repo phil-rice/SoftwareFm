@@ -6,26 +6,22 @@ package org.softwareFm.eclipse.plugin;
 
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
-import org.softwareFm.crowdsource.api.IComments;
-import org.softwareFm.crowdsource.api.ICommentsReader;
-import org.softwareFm.crowdsource.api.git.IGitLocal;
-import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
-import org.softwareFm.crowdsource.api.user.IUserReader;
-import org.softwareFm.crowdsource.httpClient.IHttpClient;
-import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
-import org.softwareFm.crowdsource.membership.internal.UserMembershipReaderForLocal;
+import org.softwareFm.crowdsource.api.IApiBuilder;
+import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
+import org.softwareFm.crowdsource.api.LocalConfig;
 import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
-import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.crowdsource.utilities.runnable.Callables;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
-import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.eclipse.actions.IActionBar;
 import org.softwareFm.eclipse.jdtBinding.BindingRipperResult;
 import org.softwareFm.eclipse.mysoftwareFm.IGroupClientOperations;
@@ -33,12 +29,8 @@ import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups;
 import org.softwareFm.eclipse.mysoftwareFm.MyPeople;
 import org.softwareFm.eclipse.snippets.SnippetFeedConfigurator;
-import org.softwareFm.jarAndClassPath.api.IProjectTimeGetter;
-import org.softwareFm.jarAndClassPath.api.IRequestGroupReportGeneration;
-import org.softwareFm.jarAndClassPath.api.IUsageStrategy;
+import org.softwareFm.jarAndClassPath.api.ISoftwareFmApiFactory;
 import org.softwareFm.jarAndClassPath.api.IUserDataManager;
-import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
-import org.softwareFm.jarAndClassPath.internal.RequestGroupReportGeneration;
 import org.softwareFm.swt.browser.IBrowserConfigurator;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
@@ -49,8 +41,8 @@ import org.softwareFm.swt.explorer.IMasterDetailSocial;
 import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.explorer.IShowMyGroups;
 import org.softwareFm.swt.explorer.IShowMyPeople;
+import org.softwareFm.swt.login.ILoginStrategy;
 import org.softwareFm.swt.menu.ICardMenuItemHandler;
-import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.swt.swt.Swts.Size;
 import org.softwareFm.swt.timeline.IPlayListGetter;
 
@@ -61,35 +53,31 @@ public class ExplorerView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		final Activator activator = Activator.getDefault();
-		final CardConfig cardConfig = makeCardConfig(parent);
-		IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(parent);
+		final IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(parent);
 		Size.resizeMeToParentsSize(masterDetailSocial.getControl());
+		final CardConfig cardConfig = activator.getCardConfig(parent, masterDetailSocial);
+
+		IExtraReaderWriterConfigurator<LocalConfig> extras = new IExtraReaderWriterConfigurator<LocalConfig>() {
+			@Override
+			public void builder(IApiBuilder builder, LocalConfig apiConfig) {
+				builder.registerReaderAndWriter(IGroupClientOperations.class, IGroupClientOperations.Utils.groupOperations(masterDetailSocial, builder));
+			}
+		};
+		ICrowdSourcedApi api = activator.local ? ISoftwareFmApiFactory.Utils.makeClientApiForLocalHost(extras) : ISoftwareFmApiFactory.Utils.makeClientApiForSoftwareFmServer(extras);
+		final ICrowdSourcedReadWriteApi readWriteApi = api.makeReadWriter();
 
 		IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardConfig.cardDataStore);
 		IServiceExecutor service = activator.getServiceExecutor();
-		IHttpClient client = activator.getClient();
-		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(parent.getDisplay(), activator.getServiceExecutor(), client);
-		IUrlGenerator userUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.userUrlKey);
-		IUrlGenerator groupUrlGenerator = GroupConstants.groupsGenerator(JarAndPathConstants.urlPrefix);
-		IGitLocal gitLocal = activator.getGitLocal();
-		IProjectTimeGetter timeGetter = activator.getProjectTimeGetter();
-		IRequestGroupReportGeneration reportGenerator = IRequestGroupReportGeneration.Utils.withCache(//
-				new RequestGroupReportGeneration(client, IResponseCallback.Utils.sysoutStatusCallback(), gitLocal),//
-				GroupConstants.usageReportPeriod);
+		IShowMyData showMyDetails = MyDetails.showMyDetails(readWriteApi, service, cardConfig, masterDetailSocial);
+		IShowMyGroups showMyGroups = MyGroups.showMyGroups(readWriteApi, service, false, cardConfig, masterDetailSocial);
+		IShowMyPeople showMyPeople = MyPeople.showMyPeople(readWriteApi, service, masterDetailSocial, cardConfig, CommonConstants.clientTimeOut * 2);
+		Callable<Long> timeGetter = Callables.time();
+		List<String> rootUrls = getRootUrls();
+		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(parent.getDisplay(), activator.getServiceExecutor(), readWriteApi);
 
-		LocalGroupsReader groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
-		IShowMyData showMyDetails = MyDetails.showMyDetails(service, cardConfig, masterDetailSocial, userUrlGenerator, gitLocal, timeGetter);
-		IGroupClientOperations groupOperations = IGroupClientOperations.Utils.groupOperations(masterDetailSocial, cardConfig, client);
-		IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, true, cardConfig, masterDetailSocial, groupOperations);
-		IShowMyPeople showMyPeople = MyPeople.showMyPeople(service, masterDetailSocial, cardConfig);
-		IUserReader userReader = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
 		IUserDataManager userDataManager = activator.getUserDataManager();
-		IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, userReader);
-		IComments commentsWriter = IComments.Utils.commentWriter(client, CommonConstants.clientTimeOut, gitLocal);
-		ICommentsReader commentsReader= new CommentsReaderLocal(gitLocal, userReader, userMembershipReader, groupsReader);
-		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, userReader, userMembershipReader, groupsReader, cardConfig, getRootUrls(), playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople, userDataManager, commentsWriter, commentsReader, Callables.time());
-		IUsageStrategy usageStrategy = IUsageStrategy.Utils.usage(activator.getServiceExecutor(), client, gitLocal, userUrlGenerator);
-		actionBar = makeActionBar(explorer, cardConfig, usageStrategy);
+		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, readWriteApi, cardConfig, rootUrls, playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople, userDataManager, timeGetter);
+		actionBar = makeActionBar(explorer, cardConfig);
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
 		actionBar.populateToolbar(toolBarManager);
 		addMenuItems(explorer);
@@ -112,8 +100,8 @@ public class ExplorerView extends ViewPart {
 		explorer.processUrl(DisplayConstants.browserFeedType, welcomeUrl);
 	}
 
-	protected IActionBar makeActionBar(final IExplorer explorer, final CardConfig cardConfig, IUsageStrategy usageStrategy) {
-		return IActionBar.Utils.actionBar(explorer, cardConfig, SelectedArtifactSelectionManager.reRipFn(), false, usageStrategy);
+	protected IActionBar makeActionBar(final IExplorer explorer, final CardConfig cardConfig) {
+		return IActionBar.Utils.actionBar(explorer, cardConfig, SelectedArtifactSelectionManager.reRipFn(), false);
 	}
 
 	protected void addMenuItems(final IExplorer explorer) {
@@ -122,11 +110,6 @@ public class ExplorerView extends ViewPart {
 
 	protected List<String> getRootUrls() {
 		return CollectionConstants.rootUrlList;
-	}
-
-	protected CardConfig makeCardConfig(Composite parent) {
-		Activator activator = Activator.getDefault();
-		return activator.getCardConfig(parent);
 	}
 
 	protected void processNoData(CardConfig cardConfig, final IExplorer explorer, final IResourceGetter resourceGetter, final BindingRipperResult ripperResult) {

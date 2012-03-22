@@ -2,7 +2,7 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwareFm.swt.mySoftwareFm;
+package org.softwareFm.swt.login;
 
 import java.text.MessageFormat;
 import java.util.Map;
@@ -11,13 +11,15 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.swt.widgets.Display;
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.httpClient.IHttpClient;
 import org.softwareFm.crowdsource.httpClient.IResponse;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.CommonMessages;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
+import org.softwareFm.crowdsource.utilities.constants.LoginMessages;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.crowdsource.utilities.exceptions.Exceptions;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
@@ -27,8 +29,6 @@ import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.runnable.Callables;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
-import org.softwareFm.jarAndClassPath.api.UserData;
-import org.softwareFm.swt.constants.CardMessages;
 import org.softwareFm.swt.swt.Swts;
 
 public interface ILoginStrategy {
@@ -47,7 +47,7 @@ public interface ILoginStrategy {
 
 	public static class Utils {
 
-		public static ILoginStrategy softwareFmLoginStrategy(final Display display, final IServiceExecutor serviceExecutor, final ICrowdSourceReadWriteApi readWriteApi) {
+		public static ILoginStrategy softwareFmLoginStrategy(final Display display, final IServiceExecutor serviceExecutor, final ICrowdSourcedReadWriteApi readWriteApi) {
 			final IHttpClient client = readWriteApi.access(IHttpClient.class, Functions.<IHttpClient, IHttpClient> identity());
 			return new ILoginStrategy() {
 				@Override
@@ -105,7 +105,7 @@ public interface ILoginStrategy {
 							@Override
 							@SuppressWarnings("finally")
 							public Void apply(final IMonitor monitor) throws Exception {
-								monitor.beginTask(CardMessages.requestSessionSalt, 2);
+								monitor.beginTask(LoginMessages.requestSessionSalt, 2);
 								try {
 									client.get(LoginConstants.makeSaltPrefix).execute(new IResponseCallback() {
 										@Override
@@ -144,7 +144,7 @@ public interface ILoginStrategy {
 						@SuppressWarnings("finally")
 						@Override
 						public Void apply(final IMonitor monitor) throws Exception {
-							monitor.beginTask(MessageFormat.format(CardMessages.loggingIn, email), 2);
+							monitor.beginTask(MessageFormat.format(LoginMessages.loggingIn, email), 2);
 							String hash = Crypto.digest(emailSalt, password);
 							try {
 								client.post(LoginConstants.loginCommandPrefix).//
@@ -191,7 +191,7 @@ public interface ILoginStrategy {
 						@Override
 						public Void apply(final IMonitor monitor) throws Exception {
 							try {
-								monitor.beginTask(MessageFormat.format(CardMessages.forgotPassword, email), 2);
+								monitor.beginTask(MessageFormat.format(LoginMessages.forgotPassword, email), 2);
 								client.post(LoginConstants.forgottonPasswordPrefix).//
 										addParam(LoginConstants.emailKey, email).//
 										addParam(LoginConstants.sessionSaltKey, sessionSalt).//
@@ -225,7 +225,7 @@ public interface ILoginStrategy {
 					serviceExecutor.submit(new IFunction1<IMonitor, Void>() {
 						@Override
 						public Void apply(final IMonitor monitor) throws Exception {
-							monitor.beginTask(MessageFormat.format(CardMessages.requestEmailSalt, email), 1);
+							monitor.beginTask(MessageFormat.format(LoginMessages.requestEmailSalt, email), 1);
 							try {
 								client.post(CommonConstants.emailSaltPrefix).//
 										addParam(LoginConstants.sessionSaltKey, sessionSalt).//

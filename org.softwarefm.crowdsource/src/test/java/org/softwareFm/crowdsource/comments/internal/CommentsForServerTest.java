@@ -7,7 +7,7 @@ import java.util.Map;
 import org.softwareFm.crowdsource.api.ICommentDefn;
 import org.softwareFm.crowdsource.api.IComments;
 import org.softwareFm.crowdsource.api.ICommentsReader;
-import org.softwareFm.crowdsource.api.ICrowdSourceReaderApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.api.user.IUser;
 import org.softwareFm.crowdsource.constants.CommentConstants;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
@@ -51,7 +51,7 @@ public class CommentsForServerTest extends AbstractCommentsReaderTest {
 			}
 		});
 
-		ICrowdSourceReaderApi reader = getApi().makeReader();
+		ICrowdSourcedReaderApi reader = getApi().makeReader();
 		checkAddComment(comment1, CommentConstants.mySource, ICommentDefn.Utils.myInitial(reader, softwareFmId, userKey0, "a/b"), comment1);
 		checkAddComment(comment2, CommentConstants.mySource, ICommentDefn.Utils.myInitial(reader, softwareFmId, userKey0, "a/b"), comment1, comment2);
 
@@ -78,7 +78,7 @@ public class CommentsForServerTest extends AbstractCommentsReaderTest {
 		Map<String, String> idToCrypto = setUpGroups("groupId1", "groupId2", "groupId3");
 
 		String group1Crypto = idToCrypto.get("groupId1");
-		ICrowdSourceReaderApi reader = getApi().makeReader();
+		ICrowdSourcedReaderApi reader = getApi().makeReader();
 		checkAddComment(comment1, "groupId1Name", ICommentDefn.Utils.groupInitial(reader, "groupId1", group1Crypto, "a/b"), comment1);
 		checkAddComment(comment2, "groupId1Name", ICommentDefn.Utils.groupInitial(reader, "groupId1", group1Crypto, "a/b"), comment1, comment2);
 

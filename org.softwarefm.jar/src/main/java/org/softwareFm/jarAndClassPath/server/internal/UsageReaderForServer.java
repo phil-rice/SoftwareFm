@@ -7,7 +7,7 @@ package org.softwareFm.jarAndClassPath.server.internal;
 import java.util.List;
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.ICrowdSourceReaderApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
@@ -16,7 +16,7 @@ import org.softwareFm.jarAndClassPath.internal.AbstractUsageReader;
 
 public class UsageReaderForServer extends AbstractUsageReader {
 
-	public UsageReaderForServer(ICrowdSourceReaderApi readerApi, IUrlGenerator userUrlGenerator) {
+	public UsageReaderForServer(ICrowdSourcedReaderApi readerApi, IUrlGenerator userUrlGenerator) {
 		super(readerApi, userUrlGenerator);
 	}
 

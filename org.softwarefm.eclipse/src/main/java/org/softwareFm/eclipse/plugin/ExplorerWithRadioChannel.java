@@ -16,31 +16,23 @@ import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.crowdsource.api.IComments;
-import org.softwareFm.crowdsource.api.ICommentsReader;
-import org.softwareFm.crowdsource.api.git.IGitLocal;
-import org.softwareFm.crowdsource.api.git.IGitOperations;
-import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
-import org.softwareFm.crowdsource.api.user.IUserReader;
+import org.softwareFm.crowdsource.api.IApiBuilder;
+import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
+import org.softwareFm.crowdsource.api.LocalConfig;
 import org.softwareFm.crowdsource.httpClient.IHttpClient;
-import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
-import org.softwareFm.crowdsource.membership.internal.UserMembershipReaderForLocal;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
-import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.runnable.Callables;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
-import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.eclipse.mysoftwareFm.IGroupClientOperations;
 import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups;
 import org.softwareFm.eclipse.mysoftwareFm.MyPeople;
 import org.softwareFm.eclipse.snippets.SnippetFeedConfigurator;
-import org.softwareFm.jarAndClassPath.api.IProjectTimeGetter;
-import org.softwareFm.jarAndClassPath.api.IRequestGroupReportGeneration;
+import org.softwareFm.jarAndClassPath.api.ISoftwareFmApiFactory;
 import org.softwareFm.jarAndClassPath.api.IUserDataManager;
-import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
-import org.softwareFm.jarAndClassPath.internal.RequestGroupReportGeneration;
 import org.softwareFm.swt.ICollectionConfigurationFactory;
 import org.softwareFm.swt.browser.IBrowserConfigurator;
 import org.softwareFm.swt.card.ICard;
@@ -48,7 +40,6 @@ import org.softwareFm.swt.card.ICardChangedListener;
 import org.softwareFm.swt.card.ICardFactory;
 import org.softwareFm.swt.card.ICardHolder;
 import org.softwareFm.swt.configuration.CardConfig;
-import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.dataStore.CardAndCollectionDataStoreAdapter;
 import org.softwareFm.swt.dataStore.IAfterEditCallback;
 import org.softwareFm.swt.dataStore.ICardDataStore;
@@ -59,65 +50,58 @@ import org.softwareFm.swt.explorer.IMasterDetailSocial;
 import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.explorer.IShowMyGroups;
 import org.softwareFm.swt.explorer.IShowMyPeople;
+import org.softwareFm.swt.login.ILoginStrategy;
 import org.softwareFm.swt.menu.ICardMenuItemHandler;
-import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.swt.swt.Swts;
 import org.softwareFm.swt.swt.Swts.Buttons;
 import org.softwareFm.swt.swt.Swts.Grid;
 import org.softwareFm.swt.timeline.IPlayListGetter;
 
 public class ExplorerWithRadioChannel {
+	private static boolean local = true;
+
 	public static void main(String[] args) {
 		BasicConfigurator.configure();
 		Logger.getRootLogger().setLevel(Level.ERROR);
-
 		// Logger.getLogger(IGitLocal.class).setLevel(Level.DEBUG);
 		Logger.getLogger(IHttpClient.class).setLevel(Level.DEBUG);
-		File home = new File(System.getProperty("user.home"));
-		final File localRoot = new File(home, ".sfm");
-		boolean local = true;
-		String server = local ? "localhost" : JarAndPathConstants.softwareFmServerUrl;
-		String prefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : JarAndPathConstants.gitProtocolAndGitServerName;
-		// String prefix = "git://localhost:7777/";
-		int port = local ? 8080 : 80;
-		final IHttpClient client = IHttpClient.Utils.builder(server, port);
-		final IGitOperations gitOperations = IGitOperations.Utils.gitOperations(localRoot);
-		final IGitLocal gitLocal = IGitLocal.Utils.localReader(new HttpRepoFinder(client, CommonConstants.clientTimeOut), gitOperations, new HttpGitWriter(client), prefix, CommonConstants.staleCachePeriodForTest);
 
-		final IServiceExecutor service = IServiceExecutor.Utils.defaultExecutor();
+		final IServiceExecutor serviceExecutor = IServiceExecutor.Utils.defaultExecutor();
+		final AtomicReference<ICrowdSourcedApi> forShutdown = new AtomicReference<ICrowdSourcedApi>();
+
 		try {
-			final List<String> rootUrl = Arrays.asList("/softwareFm/data", "/softwareFm/snippet");
+			final List<String> rootUrls = Arrays.asList("/softwareFm/data", "/softwareFm/snippet");
 			final String firstUrl = "/softwareFm/data/ant/ant/artifact/ant";
 			Swts.Show.display(ExplorerWithRadioChannel.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 				@Override
 				public Composite apply(Composite from) throws Exception {
 					Composite explorerAndButton = Swts.newComposite(from, SWT.NULL, "ExplorerAndButton");
-					explorerAndButton.setLayout(new GridLayout());
 					Composite buttonPanel = Swts.newComposite(explorerAndButton, SWT.NULL, "ButtonPanel");
+					final IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(explorerAndButton);
+					explorerAndButton.setLayout(new GridLayout());
 					buttonPanel.setLayout(Swts.Row.getHorizonalNoMarginRowLayout());
 
-					final IMutableCardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(from, service, gitLocal);
+					IExtraReaderWriterConfigurator<LocalConfig> extras = new IExtraReaderWriterConfigurator<LocalConfig>() {
+						@Override
+						public void builder(IApiBuilder builder, LocalConfig apiConfig) {
+							builder.registerReaderAndWriter(IGroupClientOperations.class, IGroupClientOperations.Utils.groupOperations(masterDetailSocial, builder));
+						}
+					};
+					ICrowdSourcedApi api = local ? ISoftwareFmApiFactory.Utils.makeClientApiForLocalHost(extras) : ISoftwareFmApiFactory.Utils.makeClientApiForSoftwareFmServer(extras);
+					final ICrowdSourcedReadWriteApi readWriteApi = api.makeReadWriter();
+					forShutdown.set(api);
+
+					final IMutableCardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(from, serviceExecutor, readWriteApi);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 					final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
-					IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(explorerAndButton);
-					IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardDataStore);
-					ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(from.getDisplay(), service, client);
-					final IProjectTimeGetter projectTimeGetter = IProjectTimeGetter.Utils.timeGetter();
-					IUrlGenerator userUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.userUrlKey);
-					IUrlGenerator groupUrlGenerator = GroupConstants.groupsGenerator(JarAndPathConstants.urlPrefix);
-					IRequestGroupReportGeneration requestGroupReportGenerator = new RequestGroupReportGeneration(client, IResponseCallback.Utils.sysoutStatusCallback(), gitLocal);
-					final IUserDataManager userDataManager = IUserDataManager.Utils.userDataManager();
-					LocalGroupsReader groupsReader = new LocalGroupsReader(groupUrlGenerator, gitLocal);
-					IShowMyData showMyDetails = MyDetails.showMyDetails(service, cardConfig, masterDetailSocial, userUrlGenerator, gitLocal, projectTimeGetter);
-					IGroupClientOperations groupOperations = IGroupClientOperations.Utils.groupOperations(masterDetailSocial, cardConfig, client);
-					IShowMyGroups showMyGroups = MyGroups.showMyGroups(service, true, cardConfig, masterDetailSocial, groupOperations);
-					IShowMyPeople showMyPeople = MyPeople.showMyPeople(service, masterDetailSocial, cardConfig);
-					IUserReader userReader = IUserReader.Utils.localUserReader(gitLocal, userUrlGenerator);
-					IUserMembershipReader userMembershipReader = new UserMembershipReaderForLocal(userUrlGenerator, gitLocal, userReader);
 
-					IComments commentWriter = IComments.Utils.commentWriter(client, CommonConstants.clientTimeOut, gitLocal);
-					ICommentsReader commentsReader = new CommentsReaderLocal(gitLocal, userReader, userMembershipReader, groupsReader);
-					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, userReader, userMembershipReader, groupsReader, cardConfig, rootUrl, playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople, userDataManager, commentWriter, commentsReader, Callables.time());
+					IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardDataStore);
+					ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(from.getDisplay(), serviceExecutor, readWriteApi);
+					final IUserDataManager userDataManager = IUserDataManager.Utils.userDataManager();
+					IShowMyData showMyDetails = MyDetails.showMyDetails(readWriteApi, serviceExecutor, cardConfig, masterDetailSocial);
+					IShowMyGroups showMyGroups = MyGroups.showMyGroups(readWriteApi, serviceExecutor, false, cardConfig, masterDetailSocial);
+					IShowMyPeople showMyPeople = MyPeople.showMyPeople(readWriteApi, serviceExecutor, masterDetailSocial, cardConfig, CommonConstants.clientTimeOut * 2);
+					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, readWriteApi, cardConfig, rootUrls, playListGetter, serviceExecutor, loginStrategy, showMyDetails, showMyGroups, showMyPeople, userDataManager, Callables.time());
 
 					ICardMenuItemHandler.Utils.addSoftwareFmMenuItemHandlers(explorer);
 					IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
@@ -215,8 +199,10 @@ public class ExplorerWithRadioChannel {
 				}
 			});
 		} finally {
-			service.shutdownAndAwaitTermination(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
-			client.shutdown();
+			serviceExecutor.shutdownAndAwaitTermination(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+			ICrowdSourcedApi api = forShutdown.get();
+			if (api != null)
+				api.shutdown();
 		}
 
 	}

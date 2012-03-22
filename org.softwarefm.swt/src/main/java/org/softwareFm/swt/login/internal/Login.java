@@ -2,7 +2,7 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwareFm.swt.mySoftwareFm.internal;
+package org.softwareFm.swt.login.internal;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -19,29 +19,39 @@ import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.editors.ICardEditorCallback;
 import org.softwareFm.swt.editors.INamesAndValuesEditor;
-import org.softwareFm.swt.mySoftwareFm.IForgotPassword;
-import org.softwareFm.swt.mySoftwareFm.IForgotPasswordCallback;
-import org.softwareFm.swt.mySoftwareFm.ILoginDisplayStrategy;
-import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
+import org.softwareFm.swt.login.ILogin;
+import org.softwareFm.swt.login.ILoginCallback;
+import org.softwareFm.swt.login.ILoginDisplayStrategy;
+import org.softwareFm.swt.login.ILoginStrategy;
+import org.softwareFm.swt.login.IRequestSaltCallback;
 import org.softwareFm.swt.swt.Swts;
 
-public class ForgotPassword implements IForgotPassword {
-	private final String cardType = CardConstants.forgotPasswordCardType;
-	private final INamesAndValuesEditor content;
+public class Login implements ILogin {
+	private final String cardType = CardConstants.loginCardType;
+	final INamesAndValuesEditor content;
 
-	public ForgotPassword(Composite parent, final CardConfig cardConfig, final String sessionSalt, String initialEmail, final ILoginStrategy loginStrategy, final ILoginDisplayStrategy loginDisplayStrategy, final IForgotPasswordCallback forgotPasswordCallback) {
+	public Login(Composite parent, final CardConfig cardConfig, final String sessionSalt, String initialEmail, final ILoginStrategy loginStrategy, final ILoginDisplayStrategy loginDisplayStrategy, final ILoginCallback callback) {
 		IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, cardType);
-		String title = IResourceGetter.Utils.getOrException(resourceGetter,  CardConstants.forgotPasswordTitle);
-		String message = IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.forgotPasswordMessage);
-		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(LoginConstants.emailKey, initialEmail, "message", message), Arrays.asList(//
-				INamesAndValuesEditor.Utils.text(cardConfig, LoginConstants.emailKey),//
-				INamesAndValuesEditor.Utils.message( cardConfig, "message")//
-				),//
+		String title = IResourceGetter.Utils.getOrException(resourceGetter,  CardConstants.loginTitle);
+		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(LoginConstants.emailKey, initialEmail), Arrays.asList(//
+				INamesAndValuesEditor.Utils.text(cardConfig, "email"),//
+				INamesAndValuesEditor.Utils.password(cardConfig, "password")),//
 				new ICardEditorCallback() {
 					@Override
 					public void ok(ICardData cardData) {
+						final Map<String, Object> data = cardData.data();
 						final String email = getEmail(cardData.data());
-						loginStrategy.forgotPassword(email, sessionSalt, forgotPasswordCallback);
+						loginStrategy.requestEmailSalt(email, sessionSalt, new IRequestSaltCallback() {
+							@Override
+							public void saltReceived(String emailSalt) {
+								loginStrategy.login(email, sessionSalt, emailSalt, getPassword(data), callback);
+							}
+
+							@Override
+							public void problemGettingSalt(String message) {
+								callback.failedToLogin(email, message);
+							}
+						});
 					}
 
 					private String get(Map<String, Object> data, String key) {
@@ -55,12 +65,18 @@ public class ForgotPassword implements IForgotPassword {
 
 					@Override
 					public boolean canOk(Map<String, Object> data) {
-						boolean emailOk = getEmail(data).length() > 0;
-						return emailOk;
+						String email = getEmail(data);
+						boolean emailOk = Strings.isEmail(email);
+						boolean passwordOk = getPassword(data).length() > 0;
+						return emailOk && passwordOk;
 					}
 
 					private String getEmail(Map<String, Object> data) {
 						return get(data, "email");
+					}
+
+					private String getPassword(Map<String, Object> data) {
+						return get(data, "password");
 					}
 
 				});
@@ -71,7 +87,12 @@ public class ForgotPassword implements IForgotPassword {
 				loginDisplayStrategy.showSignup(sessionSalt, getEmail());
 			}
 		});
-
+		Swts.Buttons.makePushButtonAtStart(buttonComposite, resourceGetter, CardConstants.forgotPasswordButtonTitle, new Runnable() {
+			@Override
+			public void run() {
+				loginDisplayStrategy.showForgotPassword(sessionSalt, getEmail());
+			}
+		});
 	}
 
 	private String getEmail() {
@@ -87,5 +108,7 @@ public class ForgotPassword implements IForgotPassword {
 	public Control getControl() {
 		return content.getControl();
 	}
+
+
 
 }

@@ -8,10 +8,10 @@ import java.io.File;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.jarAndClassPath.api.IUserDataManager;
-import org.softwareFm.jarAndClassPath.api.UserData;
 import org.softwareFm.swt.browser.IBrowserCompositeBuilder;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardChangedListener;
@@ -21,7 +21,7 @@ import org.softwareFm.swt.card.RightClickCategoryResult;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.dataStore.ICardAndCollectionDataStoreVisitor;
 import org.softwareFm.swt.explorer.internal.Explorer;
-import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
+import org.softwareFm.swt.login.ILoginStrategy;
 import org.softwareFm.swt.timeline.IPlayListGetter;
 import org.softwareFm.swt.timeline.ITimeLine;
 
@@ -73,7 +73,7 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 
 	public static class Utils {
 
-		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, ICrowdSourceReadWriteApi readWriteApi, CardConfig cardConfig, List<String> rootUrls, IPlayListGetter playListGetter, IServiceExecutor service, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IShowMyPeople showMyPeople, IUserDataManager userDataManager, Callable<Long> timeGetter) {
+		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, ICrowdSourcedReadWriteApi readWriteApi, CardConfig cardConfig, List<String> rootUrls, IPlayListGetter playListGetter, IServiceExecutor service, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IShowMyPeople showMyPeople, IUserDataManager userDataManager, Callable<Long> timeGetter) {
 			return new Explorer(readWriteApi, cardConfig, rootUrls, masterDetailSocial, service, playListGetter, loginStrategy, showMyData, showMyGroups, showMyPeople, userDataManager, timeGetter);
 		}
 	}

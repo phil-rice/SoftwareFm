@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.ICrowdSourceReaderApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
@@ -21,7 +21,7 @@ import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 public class UsageReaderForLocal extends AbstractUsageReader {
 
 
-	public UsageReaderForLocal(ICrowdSourceReaderApi readerApi, IUrlGenerator userUrlGenerator) {
+	public UsageReaderForLocal(ICrowdSourcedReaderApi readerApi, IUrlGenerator userUrlGenerator) {
 		super(readerApi, userUrlGenerator);
 	}
 

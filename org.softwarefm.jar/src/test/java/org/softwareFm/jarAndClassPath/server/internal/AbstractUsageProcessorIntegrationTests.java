@@ -17,7 +17,7 @@ import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.jarAndClassPath.api.IGroupArtifactVersionCallback;
 import org.softwareFm.jarAndClassPath.api.IJarToGroupArtifactAndVersion;
 import org.softwareFm.jarAndClassPath.api.IProjectTimeGetter;
-import org.softwareFm.jarAndClassPath.api.SoftwareFmServer;
+import org.softwareFm.jarAndClassPath.api.ISoftwareFmApiFactory.Utils;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.jarAndClassPath.internal.AbstractJarToGroupArtifactVersion;
 
@@ -47,7 +47,7 @@ public abstract class AbstractUsageProcessorIntegrationTests extends AbstractPro
 
 	@Override
 	protected IExtraCallProcessorFactory getExtraProcessCalls() {
-		return SoftwareFmServer.getExtraProcessCalls();
+		return Utils.getExtraProcessCalls();
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public abstract class AbstractUsageProcessorIntegrationTests extends AbstractPro
 		return new IExtraReaderWriterConfigurator<ServerConfig>() {
 			@Override
 			public void builder(IApiBuilder builder, ServerConfig serverConfig) {
-				SoftwareFmServer.getServerExtraReaderWriterConfigurator(getUrlPrefix()).builder(builder, serverConfig);
+				org.softwareFm.jarAndClassPath.api.ISoftwareFmApiFactory.Utils.getServerExtraReaderWriterConfigurator(getUrlPrefix()).builder(builder, serverConfig);
 	
 				IJarToGroupArtifactAndVersion jarToGroupArtifactAndVersion = getJarToGroupArtifactVersion(JarAndPathConstants.jarUrlGenerator(serverConfig.prefix));
 				builder.registerReaderAndWriter(IJarToGroupArtifactAndVersion.class, jarToGroupArtifactAndVersion);
@@ -68,7 +68,7 @@ public abstract class AbstractUsageProcessorIntegrationTests extends AbstractPro
 
 	@Override
 	protected Map<String, Callable<Object>> getDefaultUserValues() {
-		return SoftwareFmServer.getDefaultUserValues();
+		return Utils.getDefaultUserValues();
 	}
 
 	abstract protected IProjectTimeGetter getProjectTimeGetter();

@@ -11,12 +11,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
-import org.softwareFm.jarAndClassPath.api.UserData;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.swt.card.LineItem;
 import org.softwareFm.swt.composites.IHasComposite;
@@ -27,7 +27,7 @@ import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.editors.DataComposite;
 import org.softwareFm.swt.editors.DataCompositeWithFooterLayout;
 import org.softwareFm.swt.editors.IDataCompositeWithFooter;
-import org.softwareFm.swt.mySoftwareFm.ILoginDisplayStrategy;
+import org.softwareFm.swt.login.ILoginDisplayStrategy;
 import org.softwareFm.swt.swt.Swts;
 
 public class MySoftwareFmLoggedIn implements IHasControl {
@@ -79,7 +79,7 @@ public class MySoftwareFmLoggedIn implements IHasControl {
 		public final Button myGroupsButton;
 
 		@SuppressWarnings("unused")
-		public MySoftwareFmLoggedInComposite(Composite parent, ICrowdSourceReadWriteApi readWriteApi, CardConfig cardConfig, String cardType, final ILoginDisplayStrategy loginDisplayStrategy, final IMySoftwareFmLoggedInStrategy loggedInStrategy, UserData userData) {
+		public MySoftwareFmLoggedInComposite(Composite parent, ICrowdSourcedReadWriteApi readWriteApi, CardConfig cardConfig, String cardType, final ILoginDisplayStrategy loginDisplayStrategy, final IMySoftwareFmLoggedInStrategy loggedInStrategy, UserData userData) {
 			super(parent, cardConfig, cardType, JarAndPathConstants.mySoftwareFmLoggedInTitle, true);
 			mainComposite = new Composite(getInnerBody(), SWT.NULL);
 			mainComposite.setBackground(getTitleSpec().background);
@@ -132,7 +132,7 @@ public class MySoftwareFmLoggedIn implements IHasControl {
 
 	}
 
-	public MySoftwareFmLoggedIn(Composite parent, ICrowdSourceReadWriteApi readWriterApi, final CardConfig cardConfig, String title, String text, final UserData userData, final ILoginDisplayStrategy loginDisplayStrategy, final IMySoftwareFmLoggedInStrategy loggedInStrategy) {
+	public MySoftwareFmLoggedIn(Composite parent, ICrowdSourcedReadWriteApi readWriterApi, final CardConfig cardConfig, String title, String text, final UserData userData, final ILoginDisplayStrategy loginDisplayStrategy, final IMySoftwareFmLoggedInStrategy loggedInStrategy) {
 		content = new MySoftwareFmLoggedInComposite(parent, readWriterApi, cardConfig, CardConstants.loginCardType, loginDisplayStrategy, loggedInStrategy, userData);
 		content.setLayout(new DataCompositeWithFooterLayout());
 	}

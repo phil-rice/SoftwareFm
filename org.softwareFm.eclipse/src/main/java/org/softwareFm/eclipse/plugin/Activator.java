@@ -4,7 +4,6 @@
 
 package org.softwareFm.eclipse.plugin;
 
-import java.io.File;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -16,26 +15,26 @@ import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.prefs.BackingStoreException;
-import org.softwareFm.crowdsource.api.git.IGitLocal;
-import org.softwareFm.crowdsource.api.git.IGitOperations;
-import org.softwareFm.crowdsource.api.git.IGitWriter;
-import org.softwareFm.crowdsource.api.git.IRepoFinder;
-import org.softwareFm.crowdsource.httpClient.IHttpClient;
+import org.softwareFm.crowdsource.api.IApiBuilder;
+import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
+import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
+import org.softwareFm.crowdsource.api.LocalConfig;
+import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.eclipse.jdtBinding.IBindingRipper;
-import org.softwareFm.jarAndClassPath.api.IProjectTimeGetter;
+import org.softwareFm.eclipse.mysoftwareFm.IGroupClientOperations;
+import org.softwareFm.jarAndClassPath.api.ISoftwareFmApiFactory;
+import org.softwareFm.jarAndClassPath.api.IUserDataListener;
 import org.softwareFm.jarAndClassPath.api.IUserDataManager;
-import org.softwareFm.jarAndClassPath.api.UserData;
-import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.swt.ICollectionConfigurationFactory;
 import org.softwareFm.swt.card.ICardFactory;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.dataStore.ICardDataStore;
-import org.softwareFm.swt.explorer.IUserDataListener;
+import org.softwareFm.swt.explorer.IMasterDetailSocial;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -56,9 +55,8 @@ public class Activator extends AbstractUIPlugin {
 	private ISelectedBindingManager selectedArtifactSelectionManager;
 	private IServiceExecutor serviceExecutor;
 
-	private IHttpClient httpClient;
-
-	private IGitLocal gitLocal;
+	private ICrowdSourcedApi api;
+	private final Object lock = new Object();
 
 	private IUserDataManager userDataManager;
 
@@ -75,50 +73,42 @@ public class Activator extends AbstractUIPlugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
-
-		if (serviceExecutor != null)
-			serviceExecutor.shutdownAndAwaitTermination(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
-		serviceExecutor = null;
-		if (httpClient != null)
-			httpClient.shutdown();
-		httpClient = null;
+		synchronized (lock) {
+			if (serviceExecutor != null)
+				serviceExecutor.shutdownAndAwaitTermination(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+			serviceExecutor = null;
+			if (api != null)
+				api.shutdown();
+			api = null;
+			selectedArtifactSelectionManager = null;
+			userDataManager = null;
+		}
 		super.stop(context);
 	}
 
-	public IHttpClient getClient() {
-		if (httpClient == null) {
-			String server = local ? "localhost" : JarAndPathConstants.softwareFmServerUrl;
-			int port = local ? 8080 : 80;
-			httpClient = IHttpClient.Utils.builder(server, port);
-		}
-		return httpClient;
+	public ICrowdSourcedApi getApi(final IMasterDetailSocial masterDetailSocial) {
+		if (api != null)
+			synchronized (lock) {
+				if (api != null) {
+					IExtraReaderWriterConfigurator<LocalConfig> extras = new IExtraReaderWriterConfigurator<LocalConfig>() {
+						@Override
+						public void builder(IApiBuilder builder, LocalConfig apiConfig) {
+							builder.registerReaderAndWriter(IGroupClientOperations.class, IGroupClientOperations.Utils.groupOperations(masterDetailSocial, builder));
+						}
+					};
+
+					api = local ? ISoftwareFmApiFactory.Utils.makeClientApiForLocalHost(extras) : ISoftwareFmApiFactory.Utils.makeClientApiForSoftwareFmServer(extras);
+				}
+			}
+		return api;
 	}
 
-	public CardConfig getCardConfig(Composite parent) {
+	public CardConfig getCardConfig(Composite parent, IMasterDetailSocial masterDetailSocial) {
 		final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(//
 				parent.getDisplay(), //
 				new CardConfig(ICardFactory.Utils.cardFactory(), //
-						ICardDataStore.Utils.repositoryCardDataStore(parent, getServiceExecutor(), getGitLocal())));
+						ICardDataStore.Utils.repositoryCardDataStore(parent, getServiceExecutor(), getApi(masterDetailSocial).makeReadWriter())));
 		return cardConfig;
-	}
-
-	public IRepoFinder getFindRepositoryRoot() {
-		return new HttpRepoFinder(getClient(), CommonConstants.clientTimeOut);
-	}
-
-	public IGitWriter getGitWriter() {
-		return new HttpGitWriter(getClient());
-	}
-
-	public IGitLocal getGitLocal() {
-		if (gitLocal == null) {
-			File home = new File(System.getProperty("user.home"));
-			final File localRoot = new File(home, ".sfm");
-			String remoteUriPrefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : JarAndPathConstants.gitProtocolAndGitServerName;
-			IGitOperations gitOperations = IGitOperations.Utils.gitOperations(localRoot);
-			gitLocal = IGitLocal.Utils.localReader(getFindRepositoryRoot(), gitOperations, getGitWriter(), remoteUriPrefix, CommonConstants.staleCachePeriod);
-		}
-		return gitLocal;
 	}
 
 	public ISelectedBindingManager getSelectedBindingManager() {
@@ -126,15 +116,20 @@ public class Activator extends AbstractUIPlugin {
 
 	}
 
-	private SelectedArtifactSelectionManager makeNewSelectedArtifactManager() {
-		final SelectedArtifactSelectionManager result = new SelectedArtifactSelectionManager(IBindingRipper.Utils.ripper());
-		Plugins.walkSelectionServices(new ICallback<ISelectionService>() {
-			@Override
-			public void process(ISelectionService t) throws Exception {
-				t.addPostSelectionListener(result);
-			}
-		});
-		return result;
+	private ISelectedBindingManager makeNewSelectedArtifactManager() {
+		synchronized (lock) {
+			if (selectedArtifactSelectionManager != null)
+				return selectedArtifactSelectionManager;
+			final SelectedArtifactSelectionManager result = new SelectedArtifactSelectionManager(IBindingRipper.Utils.ripper());
+			Plugins.walkSelectionServices(new ICallback<ISelectionService>() {
+				@Override
+				public void process(ISelectionService t) throws Exception {
+					t.addPostSelectionListener(result);
+				}
+			});
+			return result;
+
+		}
 	}
 
 	public String getUuid() {
@@ -142,17 +137,22 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	private String findOrMakeUuid() {
-		try {
-			IEclipsePreferences prefs = new InstanceScope().getNode(PLUGIN_ID);
-			String uuid = prefs.get("Uuid", null);
-			if (uuid == null) {
-				uuid = UUID.randomUUID().toString();
-				prefs.put("Uuid", uuid);
-				prefs.flush();
+		synchronized (lock) {
+			if (uuid != null)
+				return uuid;
+			try {
+				IEclipsePreferences prefs = new InstanceScope().getNode(PLUGIN_ID);
+				String uuid = prefs.get("Uuid", null);
+				if (uuid == null) {
+					uuid = UUID.randomUUID().toString();
+					prefs.put("Uuid", uuid);
+					prefs.flush();
+				}
+				return uuid;
+			} catch (BackingStoreException e) {
+				throw WrappedException.wrap(e);
 			}
-			return uuid;
-		} catch (BackingStoreException e) {
-			throw WrappedException.wrap(e);
+
 		}
 	}
 
@@ -169,36 +169,36 @@ public class Activator extends AbstractUIPlugin {
 		return serviceExecutor == null ? serviceExecutor = IServiceExecutor.Utils.defaultExecutor() : serviceExecutor;
 	}
 
-	public IProjectTimeGetter getProjectTimeGetter() {
-		return IProjectTimeGetter.Utils.timeGetter();
-	}
-
 	public IUserDataManager getUserDataManager() {
 		return userDataManager == null ? userDataManager = makeUserDataManager() : userDataManager;
 	}
 
 	protected IUserDataManager makeUserDataManager() {
-		try {
-			IUserDataManager result = IUserDataManager.Utils.userDataManager();
-			String softwareFmId = getOr(LoginConstants.softwareFmIdKey, null);
-			String email = getOr(LoginConstants.emailKey, null);
-			String crypto = getOr(LoginConstants.cryptoKey, null);
-			result.setUserData(this, new UserData(email, softwareFmId, crypto));
-			result.addUserDataListener(new IUserDataListener() {
-				@Override
-				public void userDataChanged(Object source, UserData userData) {
-					try {
-						preferencesPut(LoginConstants.softwareFmIdKey, userData.softwareFmId);
-						preferencesPut(LoginConstants.emailKey, userData.email);
-						preferencesPut(LoginConstants.cryptoKey, userData.crypto);
-					} catch (Exception e) {
-						throw WrappedException.wrap(e);
+		synchronized (lock) {
+			try {
+				if (userDataManager != null)
+					return userDataManager;
+				IUserDataManager result = IUserDataManager.Utils.userDataManager();
+				String softwareFmId = getOr(LoginConstants.softwareFmIdKey, null);
+				String email = getOr(LoginConstants.emailKey, null);
+				String crypto = getOr(LoginConstants.cryptoKey, null);
+				result.setUserData(this, new UserData(email, softwareFmId, crypto));
+				result.addUserDataListener(new IUserDataListener() {
+					@Override
+					public void userDataChanged(Object source, UserData userData) {
+						try {
+							preferencesPut(LoginConstants.softwareFmIdKey, userData.softwareFmId);
+							preferencesPut(LoginConstants.emailKey, userData.email);
+							preferencesPut(LoginConstants.cryptoKey, userData.crypto);
+						} catch (Exception e) {
+							throw WrappedException.wrap(e);
+						}
 					}
-				}
-			});
-			return result;
-		} catch (Exception e) {
-			throw WrappedException.wrap(e);
+				});
+				return result;
+			} catch (Exception e) {
+				throw WrappedException.wrap(e);
+			}
 		}
 	}
 

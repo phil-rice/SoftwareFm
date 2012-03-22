@@ -10,29 +10,29 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.utilities.arrays.ArrayHelper;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.jarAndClassPath.api.IUserDataListener;
 import org.softwareFm.jarAndClassPath.api.IUserDataManager;
-import org.softwareFm.jarAndClassPath.api.UserData;
 import org.softwareFm.swt.card.composites.TextInBorder;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.explorer.IShowMyGroups;
-import org.softwareFm.swt.mySoftwareFm.IChangePassword;
-import org.softwareFm.swt.mySoftwareFm.IChangePasswordCallback;
-import org.softwareFm.swt.mySoftwareFm.IForgotPassword;
-import org.softwareFm.swt.mySoftwareFm.IForgotPasswordCallback;
-import org.softwareFm.swt.mySoftwareFm.ILogin;
-import org.softwareFm.swt.mySoftwareFm.ILoginCallback;
-import org.softwareFm.swt.mySoftwareFm.ILoginDisplayStrategy;
-import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
-import org.softwareFm.swt.mySoftwareFm.IRequestSaltCallback;
-import org.softwareFm.swt.mySoftwareFm.ISignUp;
-import org.softwareFm.swt.mySoftwareFm.ISignUpCallback;
+import org.softwareFm.swt.login.IChangePassword;
+import org.softwareFm.swt.login.IChangePasswordCallback;
+import org.softwareFm.swt.login.IForgotPassword;
+import org.softwareFm.swt.login.IForgotPasswordCallback;
+import org.softwareFm.swt.login.ILogin;
+import org.softwareFm.swt.login.ILoginCallback;
+import org.softwareFm.swt.login.ILoginDisplayStrategy;
+import org.softwareFm.swt.login.ILoginStrategy;
+import org.softwareFm.swt.login.IRequestSaltCallback;
+import org.softwareFm.swt.login.ISignUp;
+import org.softwareFm.swt.login.ISignUpCallback;
 import org.softwareFm.swt.swt.Swts;
 
 public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
@@ -46,9 +46,9 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 	private final IShowMyData showMyData;
 	private final IShowMyGroups showMyGroups;
 	private final IUserDataManager userDataManager;
-	private final ICrowdSourceReadWriteApi readWriteApi;
+	private final ICrowdSourcedReadWriteApi readWriteApi;
 
-	public MySoftwareFm(Composite parent,ICrowdSourceReadWriteApi readWriteApi,  CardConfig cardConfig, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IUserDataManager userDataManager) {
+	public MySoftwareFm(Composite parent,ICrowdSourcedReadWriteApi readWriteApi,  CardConfig cardConfig, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IUserDataManager userDataManager) {
 		this.readWriteApi = readWriteApi;
 		this.cardConfig = cardConfig;
 		this.loginStrategy = loginStrategy;

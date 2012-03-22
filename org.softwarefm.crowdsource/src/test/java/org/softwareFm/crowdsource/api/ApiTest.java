@@ -53,7 +53,7 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 	private LocalConfig localConfig;
 	private CrowdSourcedServerApi serverApi;
 	private CrowdSourcedLocalApi localApi;
-	private ICrowdSourcesApi api;
+	private ICrowdSourcedApi api;
 	private JdbcTemplate template;
 
 	protected JdbcTemplate getTemplate() {
@@ -64,16 +64,16 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 		return ((CrowdSourcedServerApi) getServerApi()).getServerDoers();
 	}
 
-	protected ICrowdSourcesApi getApi() {
+	protected ICrowdSourcedApi getApi() {
 		return api == null ? api = getServerApi() : api;
 	}
 
-	protected ICrowdSourcesApi getServerApi() {
-		return serverApi == null ? serverApi = (CrowdSourcedServerApi) ICrowdSourcesApi.Utils.forServer(getServerConfig()) : serverApi;
+	protected ICrowdSourcedApi getServerApi() {
+		return serverApi == null ? serverApi = (CrowdSourcedServerApi) ICrowdSourcedApi.Utils.forServer(getServerConfig()) : serverApi;
 	}
 
-	protected ICrowdSourcesApi getLocalApi() {
-		return localApi == null ? localApi = (CrowdSourcedLocalApi) ICrowdSourcesApi.Utils.forClient(getLocalConfig()) : localApi;
+	protected ICrowdSourcedApi getLocalApi() {
+		return localApi == null ? localApi = (CrowdSourcedLocalApi) ICrowdSourcedApi.Utils.forClient(getLocalConfig()) : localApi;
 	}
 
 	protected ServerConfig getServerConfig() {
@@ -83,7 +83,7 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 	}
 
 	protected LocalConfig getLocalConfig() {
-		return localConfig == null ? localConfig = new LocalConfig(CommonConstants.testPort, 10, "localhost", localRoot, getUrlPrefix(), remoteAsUri, CommonConstants.testTimeOutMs, repoFinder, CommonConstants.staleCachePeriodForTest, getErrorHandler(), getLocalExtraReaderWriterConfigurator()) : localConfig;
+		return localConfig == null ? localConfig = new LocalConfig(CommonConstants.testPort, 10, "localhost", localRoot, getUrlPrefix(), remoteAsUri, CommonConstants.testTimeOutMs, CommonConstants.staleCachePeriodForTest, getErrorHandler(), getLocalExtraReaderWriterConfigurator()) : localConfig;
 	}
 
 	protected IExtraReaderWriterConfigurator<ServerConfig> getServerExtraReaderWriterConfigurator() {
@@ -138,7 +138,7 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 	protected ITakeOnEnrichmentProvider getTakeOnEnrichment() {
 		return new ITakeOnEnrichmentProvider() {
 			@Override
-			public Map<String, Object> takeOn(Map<String, Object> initial, String userCrypto, ICrowdSourceReaderApi reader) {
+			public Map<String, Object> takeOn(Map<String, Object> initial, String userCrypto, ICrowdSourcedReaderApi reader) {
 				return Maps.with(initial, "with", "enrich_" + takeOnCount++);
 			}
 		};

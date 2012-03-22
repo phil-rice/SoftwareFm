@@ -26,7 +26,7 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction2;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.runnable.Callables;
 import org.softwareFm.crowdsource.utilities.tests.Tests;
-import org.softwareFm.jarAndClassPath.api.SoftwareFmServer;
+import org.softwareFm.jarAndClassPath.api.ISoftwareFmApiFactory.Utils;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 
 public class TakeOnProcessorTest extends ApiTest {
@@ -127,7 +127,7 @@ public class TakeOnProcessorTest extends ApiTest {
 
 	@Override
 	protected ITakeOnEnrichmentProvider getTakeOnEnrichment() {
-		return SoftwareFmServer.getTakeOnEnrichment();
+		return Utils.getTakeOnEnrichment();
 	}
 
 	@Override

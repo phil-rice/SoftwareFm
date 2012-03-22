@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.crowdsource.api.ApiTest;
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IGroups;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
@@ -34,8 +34,8 @@ public class UserMembershipTest extends ApiTest {
 	private String groupCrypto2;
 	private String groupCrypto3;
 	private String user1Id;
-	private ICrowdSourceReadWriteApi serverReadWriter;
-	private ICrowdSourceReadWriteApi localReadWriter;
+	private ICrowdSourcedReadWriteApi serverReadWriter;
+	private ICrowdSourcedReadWriteApi localReadWriter;
 
 	@SuppressWarnings("unchecked")
 	public void testAddMembership() {

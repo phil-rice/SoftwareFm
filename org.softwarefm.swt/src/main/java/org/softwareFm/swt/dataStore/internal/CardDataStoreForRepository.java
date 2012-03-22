@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitLocal;
 import org.softwareFm.crowdsource.api.git.IGitReader;
@@ -28,10 +28,10 @@ import org.softwareFm.swt.swt.Swts;
 public class CardDataStoreForRepository implements IMutableCardDataStore {
 	private final Control control;
 	private final IServiceExecutor serviceExecutor;
-	private final ICrowdSourceReadWriteApi readWriteApi;
+	private final ICrowdSourcedReadWriteApi readWriteApi;
 	private final File root;
 
-	public CardDataStoreForRepository(Control from, IServiceExecutor serviceExecutor, ICrowdSourceReadWriteApi readWriteApi) {
+	public CardDataStoreForRepository(Control from, IServiceExecutor serviceExecutor, ICrowdSourcedReadWriteApi readWriteApi) {
 		this.control = from;
 		this.serviceExecutor = serviceExecutor;
 		this.readWriteApi = readWriteApi;

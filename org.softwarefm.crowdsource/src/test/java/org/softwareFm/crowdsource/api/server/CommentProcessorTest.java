@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import org.softwareFm.crowdsource.api.ICommentsReader;
-import org.softwareFm.crowdsource.api.ICrowdSourcesApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.IUserCryptoAccess;
 import org.softwareFm.crowdsource.api.ServerConfig;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
@@ -51,7 +51,7 @@ public class CommentProcessorTest extends AbstractProcessCallTest<CommentProcess
 			CommentConstants.creatorKey, monikor,//
 			CommentConstants.timeKey, 3000l,//
 			CommentConstants.textKey, "text3");
-	private ICrowdSourcesApi api;
+	private ICrowdSourcedApi api;
 
 	public void testNeedsPost() {
 		checkIgnoresNonePosts();
@@ -106,7 +106,7 @@ public class CommentProcessorTest extends AbstractProcessCallTest<CommentProcess
 	@Override
 	protected CommentProcessor makeProcessor() {
 		ServerConfig serverConfig = ServerConfig.serverConfigForTests(remoteRoot, IMailer.Utils.noMailer());
-		api = ICrowdSourcesApi.Utils.forServer(serverConfig);
+		api = ICrowdSourcedApi.Utils.forServer(serverConfig);
 		comments = new CommentsForServer(api.makeReadWriter(), Callables.valueFromList(1000l, 2000l, 3000l));
 		return new CommentProcessor(api.makeReadWriter(), IUserCryptoAccess.Utils.mock(softwareFmId, userCrypto));
 	}

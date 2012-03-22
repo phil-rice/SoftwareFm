@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.softwareFm.crowdsource.api.ICommentDefn;
 import org.softwareFm.crowdsource.api.IComments;
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.constants.CommentConstants;
 import org.softwareFm.crowdsource.httpClient.IHttpClient;
@@ -20,7 +20,7 @@ public class CommentsLocal extends AbstractCommentsReader implements IComments {
 	private final long timeOutMs;
 	private final IHasUrlCache urlCache;
 
-	public CommentsLocal(ICrowdSourceReadWriteApi api, IHasUrlCache urlCache, long timeOutMs) {
+	public CommentsLocal(ICrowdSourcedReadWriteApi api, IHasUrlCache urlCache, long timeOutMs) {
 		super(api);
 		this.urlCache = urlCache;
 		this.timeOutMs = timeOutMs;

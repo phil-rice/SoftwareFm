@@ -7,7 +7,8 @@ import java.util.concurrent.Callable;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.httpClient.IHttpClient;
 import org.softwareFm.crowdsource.httpClient.IResponse;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
@@ -25,7 +26,6 @@ import org.softwareFm.crowdsource.utilities.runnable.Callables;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.eclipse.mysoftwareFm.IGroupClientOperations;
 import org.softwareFm.eclipse.mysoftwareFm.IdNameAndStatus;
-import org.softwareFm.jarAndClassPath.api.UserData;
 import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.card.composites.TextInBorderWithClick;
 import org.softwareFm.swt.composites.IHasControl;
@@ -39,19 +39,18 @@ import org.softwareFm.swt.explorer.IMasterDetailSocial;
 public class GroupClientOperations implements IGroupClientOperations {
 
 	private final IMasterDetailSocial masterDetailSocial;
-	private final CardConfig cardConfig;
 	private final IHttpClient client;
-	private final IResourceGetter resourceGetter;
 
-	public GroupClientOperations(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, ICrowdSourceReadWriteApi readWriteApi) {
+	public GroupClientOperations(IMasterDetailSocial masterDetailSocial, ICrowdSourcedReadWriteApi readWriteApi) {
 		this.masterDetailSocial = masterDetailSocial;
-		this.cardConfig = cardConfig;
-		this.client = readWriteApi.access(IHttpClient.class, Functions.<IHttpClient, IHttpClient>identity());
-		this.resourceGetter = Functions.call(cardConfig.resourceGetterFn, GroupConstants.myGroupsCardType);
+		this.client = readWriteApi.access(IHttpClient.class, Functions.<IHttpClient, IHttpClient> identity());
+
 	}
 
 	@Override
-	public Runnable createGroup(final UserData userData, final ICallback<String> added) {
+	public Runnable createGroup(final UserData userData, Callable<CardConfig> cardConfigGetter, final ICallback<String> added) {
+		final CardConfig cardConfig = Callables.call(cardConfigGetter);
+		final IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, GroupConstants.myGroupsCardType);
 		return new Runnable() {
 
 			@Override
@@ -130,7 +129,9 @@ public class GroupClientOperations implements IGroupClientOperations {
 	}
 
 	@Override
-	public Runnable inviteToGroup(final UserData userData, final Callable<IdNameAndStatus> idNameStatusGetter, final ICallback<String> invited) {
+	public Runnable inviteToGroup(final UserData userData, Callable<CardConfig> cardConfigGetter, final Callable<IdNameAndStatus> idNameStatusGetter, final ICallback<String> invited) {
+		final CardConfig cardConfig = Callables.call(cardConfigGetter);
+		final IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, GroupConstants.myGroupsCardType);
 		return new Runnable() {
 
 			@Override
@@ -206,7 +207,8 @@ public class GroupClientOperations implements IGroupClientOperations {
 	}
 
 	@Override
-	public Runnable acceptInvitation(final UserData userData, final Callable<IdNameAndStatus> idNameStatusGetter, final ICallback<String> showMyGroups) {
+	public Runnable acceptInvitation(final UserData userData, Callable<CardConfig> cardConfigGetter, final Callable<IdNameAndStatus> idNameStatusGetter, final ICallback<String> showMyGroups) {
+		final CardConfig cardConfig = Callables.call(cardConfigGetter);
 		return new Runnable() {
 			@Override
 			public void run() {
@@ -240,7 +242,8 @@ public class GroupClientOperations implements IGroupClientOperations {
 	}
 
 	@Override
-	public Runnable kickMember(final UserData userData, final Callable<IdNameAndStatus> idNameStatusGetter, final Callable<List<Map<String, Object>>> objectMembershipGetter, final ICallback<String> showMyGroups) {
+	public Runnable kickMember(final UserData userData, Callable<CardConfig> cardConfigGetter, final Callable<IdNameAndStatus> idNameStatusGetter, final Callable<List<Map<String, Object>>> objectMembershipGetter, final ICallback<String> showMyGroups) {
+		final CardConfig cardConfig = Callables.call(cardConfigGetter);
 		return new Runnable() {
 			@Override
 			public void run() {
@@ -289,7 +292,8 @@ public class GroupClientOperations implements IGroupClientOperations {
 	}
 
 	@Override
-	public Runnable leaveGroup(final UserData userData, final ICallback<String> showMyGroups, final Callable<IdNameAndStatus> idNameStatusGetter) {
+	public Runnable leaveGroup(final UserData userData, Callable<CardConfig> cardConfigGetter, final ICallback<String> showMyGroups, final Callable<IdNameAndStatus> idNameStatusGetter) {
+		final CardConfig cardConfig = Callables.call(cardConfigGetter);
 		return new Runnable() {
 			@Override
 			public void run() {

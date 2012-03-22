@@ -7,7 +7,7 @@ package org.softwareFm.swt.mySoftwareFm.internal;
 import java.util.List;
 
 import org.softwareFm.crowdsource.utilities.collections.Lists;
-import org.softwareFm.swt.mySoftwareFm.ILoginDisplayStrategy;
+import org.softwareFm.swt.login.ILoginDisplayStrategy;
 
 public class LoginDisplayStrategyMock implements ILoginDisplayStrategy {
 

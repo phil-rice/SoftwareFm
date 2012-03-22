@@ -21,7 +21,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
@@ -40,7 +41,6 @@ import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.jar.EclipseMessages;
 import org.softwareFm.jarAndClassPath.api.IProjectTimeGetter;
 import org.softwareFm.jarAndClassPath.api.IRequestGroupReportGeneration;
-import org.softwareFm.jarAndClassPath.api.UserData;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
@@ -52,7 +52,7 @@ import org.softwareFm.swt.explorer.IShowMyPeople;
 import org.softwareFm.swt.swt.Swts;
 
 public class MyPeople implements IHasComposite {
-	public static IShowMyPeople showMyPeople(final ICrowdSourceReadWriteApi readWriteApi, final IServiceExecutor executor, final IMasterDetailSocial masterDetailSocial, final CardConfig cardConfig, final long timeoutMs) {
+	public static IShowMyPeople showMyPeople(final ICrowdSourcedReadWriteApi readWriteApi, final IServiceExecutor executor, final IMasterDetailSocial masterDetailSocial, final CardConfig cardConfig, final long timeoutMs) {
 		return new IShowMyPeople() {
 			@Override
 			public void showMyPeople(final UserData userData, final String groupId, final String artifactId) {
@@ -84,7 +84,7 @@ public class MyPeople implements IHasComposite {
 			return table;
 		}
 
-		public MyPeopleComposite(Composite parent, ICrowdSourceReadWriteApi readWriteApi, int style, final CardConfig cc) {
+		public MyPeopleComposite(Composite parent, ICrowdSourcedReadWriteApi readWriteApi, int style, final CardConfig cc) {
 			super(parent, cc, CardConstants.loginCardType, JarAndPathConstants.peopleIKnowLoadingTitle, true);
 			table = new Table(getInnerBody(), SWT.FULL_SELECTION);
 			addPaintListener(new PaintListener() {
@@ -134,9 +134,9 @@ public class MyPeople implements IHasComposite {
 	private final MyPeopleComposite content;
 	private final UserData userData;
 	private final long timeoutMs;
-	private final ICrowdSourceReadWriteApi readWriteApi;
+	private final ICrowdSourcedReadWriteApi readWriteApi;
 
-	public MyPeople(Composite parent, ICrowdSourceReadWriteApi readWriteApi, CardConfig cardConfig, UserData userData, long timeoutMs) {
+	public MyPeople(Composite parent, ICrowdSourcedReadWriteApi readWriteApi, CardConfig cardConfig, UserData userData, long timeoutMs) {
 		this.readWriteApi = readWriteApi;
 		this.userData = userData;
 		this.timeoutMs = timeoutMs;

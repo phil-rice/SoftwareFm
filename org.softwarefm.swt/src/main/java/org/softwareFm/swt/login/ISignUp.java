@@ -2,18 +2,20 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwareFm.swt.mySoftwareFm;
+package org.softwareFm.swt.login;
+
 
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
-import org.softwareFm.swt.mySoftwareFm.internal.ChangePassword;
+import org.softwareFm.swt.login.internal.Signup;
 
-public interface IChangePassword extends IHasComposite {
+public interface ISignUp extends IHasComposite {
 
-	public static class Utils{
-		public static IChangePassword changePassword(Composite parent, CardConfig cardConfig, String initialEmail,ILoginStrategy loginStrategy, ILoginDisplayStrategy loginDisplayStrategy,IChangePasswordCallback callback){
-			return new ChangePassword(parent, cardConfig, initialEmail, loginStrategy, loginDisplayStrategy, callback);
+	public static class Utils {
+		public static ISignUp signUp(Composite parent, CardConfig cardConfig, String salt, String initialEmail, ILoginStrategy strategy, ILoginDisplayStrategy loginDisplayStrategy, ISignUpCallback callback) {
+			return new Signup(parent, cardConfig, salt, initialEmail, strategy, loginDisplayStrategy, callback);
 		}
 	}
+
 }

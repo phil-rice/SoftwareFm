@@ -4,7 +4,7 @@
 
 package org.softwareFm.crowdsource.user.internal;
 
-import org.softwareFm.crowdsource.api.ICrowdSourceReaderApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
@@ -13,7 +13,7 @@ import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 
 public class LocalGroupsReader extends AbstractGroupReader {
 
-	public LocalGroupsReader(ICrowdSourceReaderApi readerApi, IUrlGenerator groupUrlGenerator) {
+	public LocalGroupsReader(ICrowdSourcedReaderApi readerApi, IUrlGenerator groupUrlGenerator) {
 		super(readerApi, groupUrlGenerator);
 	}
 

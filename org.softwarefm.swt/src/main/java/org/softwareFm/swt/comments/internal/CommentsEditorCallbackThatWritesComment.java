@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.softwareFm.crowdsource.api.ICommentDefn;
 import org.softwareFm.crowdsource.api.IComments;
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
 import org.softwareFm.crowdsource.utilities.collections.Iterables;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.swt.comments.ICommentsEditorCallback;
@@ -15,9 +15,9 @@ public class CommentsEditorCallbackThatWritesComment implements ICommentsEditorC
 	private final String userCrypto;
 	private final List<Map<String, Object>> groupsData;
 	private final Runnable whenFinished;
-	private final ICrowdSourceReadWriteApi readWriteApi;
+	private final ICrowdSourcedReadWriteApi readWriteApi;
 
-	public CommentsEditorCallbackThatWritesComment(ICrowdSourceReadWriteApi readWriteApi,  String softwareFmId, String userCrypto, Iterable<Map<String, Object>> groupsData, Runnable whenFinished) {
+	public CommentsEditorCallbackThatWritesComment(ICrowdSourcedReadWriteApi readWriteApi,  String softwareFmId, String userCrypto, Iterable<Map<String, Object>> groupsData, Runnable whenFinished) {
 		this.readWriteApi = readWriteApi;
 		this.softwareFmId = softwareFmId;
 		this.userCrypto = userCrypto;

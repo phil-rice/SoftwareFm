@@ -9,7 +9,7 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.functions.IFunction2;
 import org.softwareFm.crowdsource.utilities.functions.IFunction3;
 
-public interface ICrowdSourceReaderApi {
+public interface ICrowdSourcedReaderApi {
 	@SuppressWarnings("Need to migrate away from this")
 	IGitOperations gitOperations();
 	<T> T accessGitReader(IFunction1<IGitReader, T> function);

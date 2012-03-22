@@ -22,11 +22,11 @@ public interface ICommentDefn {
 			return new CommentDefn(IFileDescription.Utils.plain(url, CommentConstants.globalCommentsFile), replyIndex);
 		}
 
-		public static ICommentDefn myInitial(ICrowdSourceReaderApi reader, String softwareFmId, String crypto, String url) {
+		public static ICommentDefn myInitial(ICrowdSourcedReaderApi reader, String softwareFmId, String crypto, String url) {
 			return myReply(reader, softwareFmId, crypto, url, -1);
 		}
 
-		public static ICommentDefn myReply(ICrowdSourceReaderApi reader, final String softwareFmId, final String crypto, final String url, final int replyIndex) {
+		public static ICommentDefn myReply(ICrowdSourcedReaderApi reader, final String softwareFmId, final String crypto, final String url, final int replyIndex) {
 			return reader.accessUserReader(new IFunction1<IUserReader, ICommentDefn>() {
 				@Override
 				public ICommentDefn apply(IUserReader userReader) throws Exception {
@@ -38,11 +38,11 @@ public interface ICommentDefn {
 			});
 		}
 
-		public static ICommentDefn groupInitial(ICrowdSourceReaderApi reader, String groupId, String groupCrypto, String url) {
+		public static ICommentDefn groupInitial(ICrowdSourcedReaderApi reader, String groupId, String groupCrypto, String url) {
 			return groupReply(reader, groupId, groupCrypto, url, -1);
 		}
 
-		public static ICommentDefn groupReply(ICrowdSourceReaderApi reader, final String groupId, final String groupCrypto, final String url, final int replyIndex) {
+		public static ICommentDefn groupReply(ICrowdSourcedReaderApi reader, final String groupId, final String groupCrypto, final String url, final int replyIndex) {
 			return reader.accessGroupReader(new IFunction1<IGroupsReader, ICommentDefn>() {
 				@Override
 				public ICommentDefn apply(IGroupsReader groupsReader) throws Exception {

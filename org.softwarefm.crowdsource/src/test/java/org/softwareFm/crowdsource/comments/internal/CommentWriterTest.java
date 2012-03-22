@@ -8,8 +8,8 @@ import java.util.concurrent.Callable;
 import org.softwareFm.crowdsource.api.ICommentDefn;
 import org.softwareFm.crowdsource.api.IComments;
 import org.softwareFm.crowdsource.api.ICommentsReader;
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
-import org.softwareFm.crowdsource.api.ICrowdSourceReaderApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.api.server.AbstractProcessorDatabaseIntegrationTests;
 import org.softwareFm.crowdsource.api.user.IGroups;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
@@ -62,7 +62,7 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 	}
 
 	protected void checkAddGlobalComment(final String text, final String... expectedText) {
-		ICrowdSourceReaderApi localReaderApi = getLocalApi().makeReader();
+		ICrowdSourcedReaderApi localReaderApi = getLocalApi().makeReader();
 		localReaderApi.accessCommentsReader(new IFunction1<ICommentsReader, Void>() {
 			@Override
 			public Void apply(final ICommentsReader commentsReader) throws Exception {
@@ -83,7 +83,7 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 	}
 
 	protected void checkAddMyComment(final String text, final String... expectedText) {
-		final ICrowdSourceReaderApi localReaderApi = getLocalApi().makeReader();
+		final ICrowdSourcedReaderApi localReaderApi = getLocalApi().makeReader();
 		localReaderApi.access(ICommentsReader.class, IUserReader.class, new IFunction2<ICommentsReader, IUserReader, Void>() {
 			@Override
 			public Void apply(final ICommentsReader commentsReader, final IUserReader userReader) throws Exception {
@@ -104,7 +104,7 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 	}
 
 	protected void checkAddGroupComment(final String text, final String... expectedText) {
-		final ICrowdSourceReaderApi localReaderApi = getLocalApi().makeReader();
+		final ICrowdSourcedReaderApi localReaderApi = getLocalApi().makeReader();
 		localReaderApi.access(ICommentsReader.class, IGroupsReader.class, new IFunction2<ICommentsReader, IGroupsReader, Void>() {
 			@Override
 			public Void apply(final ICommentsReader commentsReader, final IGroupsReader groupsReader) throws Exception {
@@ -126,7 +126,7 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 	}
 
 	protected void checkAdd(final String source, final String text, final Callable<ICommentDefn> makeDefinition, final Callable<List<Map<String, Object>>> actualGetter, final String... expectedText) {
-		ICrowdSourceReadWriteApi localWriterApi = getLocalApi().makeReadWriter();
+		ICrowdSourcedReadWriteApi localWriterApi = getLocalApi().makeReadWriter();
 		localWriterApi.modifyComments(new ICallback<IComments>() {
 			@Override
 			public void process(IComments comments) throws Exception {

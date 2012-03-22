@@ -7,7 +7,7 @@ import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback2;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback3;
 
-public interface ICrowdSourceReadWriteApi extends ICrowdSourceReaderApi {
+public interface ICrowdSourcedReadWriteApi extends ICrowdSourcedReaderApi {
 
 	
 

@@ -1,8 +1,8 @@
 package org.softwareFm.crowdsource.comments.internal;
 
 import org.softwareFm.crowdsource.api.ICommentDefn;
-import org.softwareFm.crowdsource.api.ICrowdSourceReaderApi;
-import org.softwareFm.crowdsource.api.ICrowdSourcesApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.ServerConfig;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.TemporaryFileTest;
@@ -23,7 +23,7 @@ public class ICommentDefnTest extends TemporaryFileTest {
 	String softwareFmId = "sfmId";
 	String groupId = "groupId";
 	private CrowdSourcedServerApi api;
-	private ICrowdSourceReaderApi reader;
+	private ICrowdSourcedReaderApi reader;
 
 	public void testGlobal() {
 		assertEquals(initial(CommentConstants.globalCommentsFile, null), ICommentDefn.Utils.everyoneInitial(url));
@@ -74,7 +74,7 @@ public class ICommentDefnTest extends TemporaryFileTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		ServerConfig serverConfig = ServerConfig.serverConfigForTests(root, IMailer.Utils.noMailer());
-		api = (CrowdSourcedServerApi) ICrowdSourcesApi.Utils.forServer(serverConfig);
+		api = (CrowdSourcedServerApi) ICrowdSourcedApi.Utils.forServer(serverConfig);
 		reader = api.makeReader();
 		new JdbcTemplate(serverConfig.dataSource).update("delete From users");
 	}

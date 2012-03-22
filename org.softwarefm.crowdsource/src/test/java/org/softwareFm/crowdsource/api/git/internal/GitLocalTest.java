@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import org.softwareFm.crowdsource.api.ApiTest;
-import org.softwareFm.crowdsource.api.ICrowdSourceReaderApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
@@ -19,7 +19,7 @@ import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 
 public class GitLocalTest extends ApiTest {
-	private ICrowdSourceReaderApi localReaderApi;
+	private ICrowdSourcedReaderApi localReaderApi;
 
 	public void testGetFileWhenNeedToCreate() {
 		remoteOperations.init("a");

@@ -1,7 +1,7 @@
 package org.softwareFm.crowdsource.api.internal;
 
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
-import org.softwareFm.crowdsource.api.ICrowdSourceReaderApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
 import org.softwareFm.crowdsource.api.ServerConfig;
 import org.softwareFm.crowdsource.api.server.ICallProcessor;
@@ -19,7 +19,7 @@ public class CrowdSourcedServerApi extends AbstractCrowdSourcesApi {
 	private ICrowdSourcedServer server;
 	private final Object lock = new Object();
 
-	public CrowdSourcedServerApi(ServerConfig serverConfig, IFunction1<ICrowdSourceReadWriteApi, IServerDoers> serverDoersCreator) {
+	public CrowdSourcedServerApi(ServerConfig serverConfig, IFunction1<ICrowdSourcedReadWriteApi, IServerDoers> serverDoersCreator) {
 		this.serverConfig = serverConfig;
 		crowdSourcedServerReadWriterApi = new CrowdSourcedServerReadWriterApi(serverConfig);
 		serverDoers = Functions.call(serverDoersCreator, crowdSourcedServerReadWriterApi);
@@ -27,12 +27,12 @@ public class CrowdSourcedServerApi extends AbstractCrowdSourcesApi {
 	}
 
 	@Override
-	public ICrowdSourceReaderApi makeReader() {
+	public ICrowdSourcedReaderApi makeReader() {
 		return  crowdSourcedServerReadWriterApi;
 	}
 
 	@Override
-	public ICrowdSourceReadWriteApi makeReadWriter() {
+	public ICrowdSourcedReadWriteApi makeReadWriter() {
 		return crowdSourcedServerReadWriterApi;
 	}
 

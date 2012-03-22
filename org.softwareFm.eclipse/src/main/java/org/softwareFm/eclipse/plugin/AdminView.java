@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.softwareFm.eclipse.actions.IActionBar;
-import org.softwareFm.jarAndClassPath.api.IUsageStrategy;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CollectionConstants;
 import org.softwareFm.swt.explorer.IExplorer;
@@ -27,7 +26,7 @@ public class AdminView extends ExplorerView {
 	}
 
 	@Override
-	protected IActionBar makeActionBar(IExplorer explorer, CardConfig cardConfig, IUsageStrategy usageStrategy) {
-		return IActionBar.Utils.actionBar(explorer, cardConfig, SelectedArtifactSelectionManager.reRipFn(), true, usageStrategy);
+	protected IActionBar makeActionBar(IExplorer explorer, CardConfig cardConfig) {
+		return IActionBar.Utils.actionBar(explorer, cardConfig, SelectedArtifactSelectionManager.reRipFn(), true);
 	}
 }

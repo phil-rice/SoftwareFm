@@ -10,11 +10,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.configuration.ICardConfigurator;
-import org.softwareFm.swt.mySoftwareFm.ILoginCallbacks;
-import org.softwareFm.swt.mySoftwareFm.ILoginDisplayStrategy;
-import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
-import org.softwareFm.swt.mySoftwareFm.IShowMessage;
-import org.softwareFm.swt.mySoftwareFm.internal.ForgotPassword;
+import org.softwareFm.swt.login.ILoginCallbacks;
+import org.softwareFm.swt.login.ILoginDisplayStrategy;
+import org.softwareFm.swt.login.ILoginStrategy;
+import org.softwareFm.swt.login.IShowMessage;
+import org.softwareFm.swt.login.internal.ForgotPassword;
 import org.softwareFm.swt.swt.Swts;
 
 public class ForgotPasswordMain {

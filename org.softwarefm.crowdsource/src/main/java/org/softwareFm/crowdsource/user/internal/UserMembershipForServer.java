@@ -8,7 +8,7 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.ICrowdSourceReaderApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitOperations;
 import org.softwareFm.crowdsource.api.user.IUserMembership;
@@ -26,7 +26,7 @@ public class UserMembershipForServer extends AbstractUserMembershipReader implem
 	private final IFunction1<String, String> repoDefnFn;
 	private final IGitOperations git;
 
-	public UserMembershipForServer(ICrowdSourceReaderApi readerApi, IUrlGenerator userUrlGenerator, IFunction1<String, String> repoDefnFn) {
+	public UserMembershipForServer(ICrowdSourcedReaderApi readerApi, IUrlGenerator userUrlGenerator, IFunction1<String, String> repoDefnFn) {
 		super(readerApi, userUrlGenerator);
 		this.repoDefnFn = repoDefnFn;
 		git = readerApi.gitOperations();

@@ -16,7 +16,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
@@ -28,7 +29,6 @@ import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.jar.EclipseMessages;
 import org.softwareFm.jarAndClassPath.api.IProjectTimeGetter;
 import org.softwareFm.jarAndClassPath.api.IUsageReader;
-import org.softwareFm.jarAndClassPath.api.UserData;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
@@ -41,7 +41,7 @@ import org.softwareFm.swt.swt.Swts;
 
 public class MyDetails implements IHasComposite {
 
-	public static IShowMyData showMyDetails(final ICrowdSourceReadWriteApi readWriteApi, final IServiceExecutor executor, final CardConfig cardConfig, final IMasterDetailSocial masterDetailSocial) {
+	public static IShowMyData showMyDetails(final ICrowdSourcedReadWriteApi readWriteApi, final IServiceExecutor executor, final CardConfig cardConfig, final IMasterDetailSocial masterDetailSocial) {
 		return new IShowMyData() {
 			@Override
 			public void show(final UserData userData) {
@@ -80,7 +80,7 @@ public class MyDetails implements IHasComposite {
 			return projectDetails;
 		}
 
-		public MyProjectComposite(Composite parent, int style, final CardConfig cc, final UserData userData, ICrowdSourceReadWriteApi readWriteApi) {
+		public MyProjectComposite(Composite parent, int style, final CardConfig cc, final UserData userData, ICrowdSourcedReadWriteApi readWriteApi) {
 			super(parent, cc, CardConstants.loginCardType, JarAndPathConstants.myProjectsTitle, true);
 			this.projectDetails = new Table(getInnerBody(), SWT.FULL_SELECTION);
 			readWriteApi.access(IUserReader.class, IProjectTimeGetter.class, IUsageReader.class, new IFunction3<IUserReader, IProjectTimeGetter, IUsageReader, Void>() {
@@ -127,7 +127,7 @@ public class MyDetails implements IHasComposite {
 
 	private final MyProjectComposite content;
 
-	public MyDetails(Composite parent, ICrowdSourceReadWriteApi readWriteApi, CardConfig cardConfig, UserData userData) {
+	public MyDetails(Composite parent, ICrowdSourcedReadWriteApi readWriteApi, CardConfig cardConfig, UserData userData) {
 		this.content = new MyProjectComposite(parent, SWT.NULL, cardConfig, userData, readWriteApi);
 		content.setLayout(new DataCompositeLayout());
 	}

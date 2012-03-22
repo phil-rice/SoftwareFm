@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.softwareFm.crowdsource.api.ApiTest;
-import org.softwareFm.crowdsource.api.ICrowdSourcesApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.ICryptoGenerators;
 import org.softwareFm.crowdsource.api.MailerMock;
 import org.softwareFm.crowdsource.api.user.IUserReader;
@@ -41,7 +41,7 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends ApiTest imple
 	private BasicDataSource dataSource;
 	protected JdbcTemplate template;
 	private MailerMock mailerMock;
-	private ICrowdSourcesApi api;
+	private ICrowdSourcedApi api;
 
 	protected String checkSignup(final String email, final String moniker, final String salt, final String hash, final String softwareFmId) {
 		int initial = findUsersSize();

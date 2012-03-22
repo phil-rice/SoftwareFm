@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.softwareFm.crowdsource.api.IApiBuilder;
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
 import org.softwareFm.crowdsource.api.IExtraCallProcessorFactory;
 import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
@@ -56,7 +56,6 @@ import org.softwareFm.jarAndClassPath.api.IUserDataManager;
 import org.softwareFm.jarAndClassPath.api.ProjectFixture;
 import org.softwareFm.jarAndClassPath.api.ProjectMock;
 import org.softwareFm.jarAndClassPath.api.ProjectTimeGetterFixture;
-import org.softwareFm.jarAndClassPath.api.SoftwareFmServer;
 import org.softwareFm.swt.ICollectionConfigurationFactory;
 import org.softwareFm.swt.browser.IBrowserConfigurator;
 import org.softwareFm.swt.card.ICard;
@@ -74,7 +73,7 @@ import org.softwareFm.swt.explorer.IShowMyGroups;
 import org.softwareFm.swt.explorer.IShowMyPeople;
 import org.softwareFm.swt.explorer.internal.Explorer;
 import org.softwareFm.swt.explorer.internal.MasterDetailSocial;
-import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
+import org.softwareFm.swt.login.ILoginStrategy;
 import org.softwareFm.swt.swt.Swts;
 import org.softwareFm.swt.timeline.IPlayListGetter;
 
@@ -232,9 +231,9 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 		final IExtraCallProcessorFactory parent = super.getExtraProcessCalls();
 		return new IExtraCallProcessorFactory() {
 			@Override
-			public ICallProcessor[] makeExtraCalls(ICrowdSourceReadWriteApi api, ServerConfig serverConfig) {
+			public ICallProcessor[] makeExtraCalls(ICrowdSourcedReadWriteApi api, ServerConfig serverConfig) {
 				ICallProcessor[] parentCalls = parent.makeExtraCalls(api, serverConfig);
-				ICallProcessor[] softwareFmCalls = SoftwareFmServer.getExtraProcessCalls().makeExtraCalls(api, serverConfig);
+				ICallProcessor[] softwareFmCalls = org.softwareFm.jarAndClassPath.api.ISoftwareFmApiFactory.Utils.getExtraProcessCalls().makeExtraCalls(api, serverConfig);
 				return ArrayHelper.append(parentCalls, softwareFmCalls);
 			}
 		};
@@ -246,7 +245,7 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 		return new IExtraReaderWriterConfigurator<ServerConfig>() {
 			@Override
 			public void builder(IApiBuilder builder, ServerConfig apiConfig) {
-				SoftwareFmServer.getServerExtraReaderWriterConfigurator(getUrlPrefix()).builder(builder, apiConfig);
+				org.softwareFm.jarAndClassPath.api.ISoftwareFmApiFactory.Utils.getServerExtraReaderWriterConfigurator(getUrlPrefix()).builder(builder, apiConfig);
 				ProjectMock projectMock = getProjectTimeGetterFixture(builder);
 				builder.registerReaderAndWriter(IUsageReader.class, projectMock);
 			}
@@ -287,13 +286,13 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 				configure(display, new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(shell, getServiceExecutor(), getLocalApi().makeReadWriter()))).//
 				withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap(prefix, "data"));
 		ICrowdSourcedServer server = getServerApi().getServer();
-		ICrowdSourceReadWriteApi localReadWriteApi = getLocalApi().makeReadWriter();
+		ICrowdSourcedReadWriteApi localReadWriteApi = getLocalApi().makeReadWriter();
 		try {
 			rawResourceGetter = cardConfig.resourceGetterFn.apply(null);
 			masterDetailSocial = new MasterDetailSocial(shell, SWT.NULL);
 			showMyData = MyDetails.showMyDetails(localReadWriteApi, getServiceExecutor(), cardConfig, masterDetailSocial);
-			IGroupClientOperations groupClientOperations = IGroupClientOperations.Utils.groupOperations(masterDetailSocial, cardConfig, localReadWriteApi);
-			IShowMyGroups showMyGroups = MyGroups.showMyGroups(localReadWriteApi, serviceExecutor, false, cardConfig, masterDetailSocial, groupClientOperations);
+			IGroupClientOperations groupClientOperations = IGroupClientOperations.Utils.groupOperations(masterDetailSocial, localReadWriteApi);
+			IShowMyGroups showMyGroups = MyGroups.showMyGroups(localReadWriteApi, serviceExecutor, false, cardConfig, masterDetailSocial);
 			IShowMyPeople showMyPeople = MyPeople.showMyPeople(localReadWriteApi, serviceExecutor, masterDetailSocial, cardConfig, 2 * getLocalConfig().timeOutMs);
 
 			userDataManager = IUserDataManager.Utils.userDataManager();

@@ -4,7 +4,7 @@
 
 package org.softwareFm.crowdsource.api.server;
 
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
 import org.softwareFm.crowdsource.api.IExtraCallProcessorFactory;
 import org.softwareFm.crowdsource.api.IIdAndSaltGenerator;
 import org.softwareFm.crowdsource.api.ServerConfig;
@@ -45,7 +45,7 @@ abstract public class AbstractProcessorMockIntegrationTests extends AbstractProc
 		idAndSaltGenerator = IIdAndSaltGenerator.Utils.mockGenerators("someSoftwareFmId{0}", null, null, null);
 		return new IExtraCallProcessorFactory() {
 			@Override
-			public ICallProcessor[] makeExtraCalls(ICrowdSourceReadWriteApi api, ServerConfig serverConfig) {
+			public ICallProcessor[] makeExtraCalls(ICrowdSourcedReadWriteApi api, ServerConfig serverConfig) {
 				return new ICallProcessor[] { new LoginProcessor(saltProcessor, loginChecker), //
 						new SignupProcessor(signUpChecker, saltProcessor, idAndSaltGenerator), //
 						new MakeSaltForLoginProcessor(saltProcessor),//

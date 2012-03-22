@@ -12,7 +12,7 @@ import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
-import org.softwareFm.jarAndClassPath.api.SoftwareFmServer;
+import org.softwareFm.jarAndClassPath.api.ISoftwareFmApiFactory.Utils;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 
 public class SoftwareFmServerTest extends ApiTest {
@@ -43,7 +43,7 @@ public class SoftwareFmServerTest extends ApiTest {
 	
 	@Override
 	protected Map<String, Callable<Object>> getDefaultUserValues() {
-		return SoftwareFmServer.getDefaultUserValues();
+		return Utils.getDefaultUserValues();
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package org.softwareFm.crowdsource.api.internal;
 
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
 import org.softwareFm.crowdsource.api.ServerConfig;
 import org.softwareFm.crowdsource.api.server.IEmailSaltRequester;
 import org.softwareFm.crowdsource.api.server.IForgottonPasswordMailer;
@@ -22,7 +22,7 @@ import org.softwareFm.crowdsource.server.doers.internal.TakeOnProcessor;
 
 public class ServerDoers implements IServerDoers {
 	private final ServerConfig serverConfig;
-	private final ICrowdSourceReadWriteApi crowdSourceServerReadWriterApi;
+	private final ICrowdSourcedReadWriteApi crowdSourceServerReadWriterApi;
 	private final SignUpChecker signUpChecker;
 	private final SaltProcessor saltProcessor;
 	private final IMailer mailer;
@@ -32,7 +32,7 @@ public class ServerDoers implements IServerDoers {
 	private final ForgottonPasswordMailer forgottonPasswordMailer;
 	private final EmailSaltRequester emailSaltRequester;
 
-	public ServerDoers(ServerConfig serverConfig, ICrowdSourceReadWriteApi crowdSourceServerReadWriterApi) {
+	public ServerDoers(ServerConfig serverConfig, ICrowdSourcedReadWriteApi crowdSourceServerReadWriterApi) {
 		this.serverConfig = serverConfig;
 		this.crowdSourceServerReadWriterApi = crowdSourceServerReadWriterApi;
 		this.mailer = serverConfig.mailer;

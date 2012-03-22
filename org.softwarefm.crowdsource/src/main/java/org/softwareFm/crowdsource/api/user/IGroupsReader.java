@@ -6,7 +6,7 @@ package org.softwareFm.crowdsource.api.user;
 
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.ICrowdSourceReaderApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 
 /**
@@ -37,7 +37,7 @@ public interface IGroupsReader {
 	int membershipCount(String groupId,String groupCryptoKey);
 	public static class  Utils {
 
-		public static String getGroupProperty(ICrowdSourceReaderApi readerApi, final String groupId, final String groupCrypto, final String propertyName) {
+		public static String getGroupProperty(ICrowdSourcedReaderApi readerApi, final String groupId, final String groupCrypto, final String propertyName) {
 			return readerApi.accessGroupReader(new IFunction1<IGroupsReader, String>() {
 				@Override
 				public String apply(IGroupsReader from) throws Exception {

@@ -12,8 +12,8 @@ import org.softwareFm.crowdsource.api.ApiConfig;
 import org.softwareFm.crowdsource.api.IApiBuilder;
 import org.softwareFm.crowdsource.api.ICommentDefn;
 import org.softwareFm.crowdsource.api.IComments;
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
-import org.softwareFm.crowdsource.api.ICrowdSourcesApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUserReader;
@@ -42,7 +42,7 @@ public class CommentsEditorCallbackThatWritesCommentTest extends TestCase {
 			Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.groupCryptoKey, groupCrypto), //
 			Maps.stringObjectMap(GroupConstants.groupIdKey, "groupIdAfter", GroupConstants.groupCryptoKey, Crypto.makeKey()));
 	private CommentsEditorCallbackThatWritesComment callback;
-	private ICrowdSourceReadWriteApi readWriteApi;
+	private ICrowdSourcedReadWriteApi readWriteApi;
 
 	@Test
 	public void testCancel() {
@@ -91,7 +91,7 @@ public class CommentsEditorCallbackThatWritesCommentTest extends TestCase {
 		groupsReader = EasyMock.createMock(IGroupsReader.class);
 		commentWriter = EasyMock.createMock(IComments.class);
 		whenFinished = EasyMock.createMock(Runnable.class);
-		ICrowdSourcesApi api = ICrowdSourcesApi.Utils.forTests(new IExtraReaderWriterConfigurator<ApiConfig>() {
+		ICrowdSourcedApi api = ICrowdSourcedApi.Utils.forTests(new IExtraReaderWriterConfigurator<ApiConfig>() {
 			@Override
 			public void builder(IApiBuilder builder, ApiConfig apiConfig) {
 				builder.registerReader(IUserReader.class, userReader);

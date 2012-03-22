@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IGroups;
@@ -32,10 +32,10 @@ public class GroupsForServer extends AbstractGroupReader implements IGroups {
 
 	private final IFunction1<String, String> repoUrlGenerator;
 	private final Map<String, Callable<Object>> defaultProperties;
-	private final ICrowdSourceReadWriteApi readWriteApi;
+	private final ICrowdSourcedReadWriteApi readWriteApi;
 
 
-	public GroupsForServer(ICrowdSourceReadWriteApi readWriteApi, IUrlGenerator groupUrlGenerator, IFunction1<String, String> repoUrlGenerator, Map<String, Callable<Object>> defaultProperties) {
+	public GroupsForServer(ICrowdSourcedReadWriteApi readWriteApi, IUrlGenerator groupUrlGenerator, IFunction1<String, String> repoUrlGenerator, Map<String, Callable<Object>> defaultProperties) {
 		super(readWriteApi, groupUrlGenerator);
 		this.readWriteApi = readWriteApi;
 		this.repoUrlGenerator = repoUrlGenerator;

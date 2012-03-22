@@ -8,15 +8,15 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
-import org.softwareFm.jarAndClassPath.api.UserData;
-import org.softwareFm.swt.mySoftwareFm.IChangePasswordCallback;
-import org.softwareFm.swt.mySoftwareFm.IForgotPasswordCallback;
-import org.softwareFm.swt.mySoftwareFm.ILoginCallback;
-import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
-import org.softwareFm.swt.mySoftwareFm.IRequestSaltCallback;
-import org.softwareFm.swt.mySoftwareFm.ISignUpCallback;
+import org.softwareFm.swt.login.IChangePasswordCallback;
+import org.softwareFm.swt.login.IForgotPasswordCallback;
+import org.softwareFm.swt.login.ILoginCallback;
+import org.softwareFm.swt.login.ILoginStrategy;
+import org.softwareFm.swt.login.IRequestSaltCallback;
+import org.softwareFm.swt.login.ISignUpCallback;
 
 public class LoginStrategyMock implements ILoginStrategy {
 

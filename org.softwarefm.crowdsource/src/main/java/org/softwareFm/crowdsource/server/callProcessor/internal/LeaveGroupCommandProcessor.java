@@ -4,7 +4,7 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
 import org.softwareFm.crowdsource.api.IUserCryptoAccess;
 import org.softwareFm.crowdsource.api.server.AbstractCallProcessor;
 import org.softwareFm.crowdsource.api.server.IProcessResult;
@@ -18,10 +18,10 @@ import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 
 public class LeaveGroupCommandProcessor extends AbstractCallProcessor {
 
-	private final ICrowdSourceReadWriteApi readWriteApi;
+	private final ICrowdSourcedReadWriteApi readWriteApi;
 	private final IUserCryptoAccess userCryptoAccess;
 
-	public LeaveGroupCommandProcessor(ICrowdSourceReadWriteApi readWriteApi, IUserCryptoAccess userCryptoAccess) {
+	public LeaveGroupCommandProcessor(ICrowdSourcedReadWriteApi readWriteApi, IUserCryptoAccess userCryptoAccess) {
 		super(CommonConstants.POST, GroupConstants.leaveGroupPrefix);
 		this.readWriteApi = readWriteApi;
 		this.userCryptoAccess = userCryptoAccess;

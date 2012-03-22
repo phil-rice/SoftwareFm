@@ -7,7 +7,7 @@ package org.softwareFm.jarAndClassPath.api;
 import java.util.List;
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.ICrowdSourceReaderApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.jarAndClassPath.internal.UsageReaderForLocal;
 
@@ -16,7 +16,7 @@ public interface IUsageReader {
 	Map<String, Map<String, List<Integer>>> getProjectDetails(String softwareFmId, String usersProjectCryptoKey, String month);
 
 	public static class Utils {
-		public static IUsageReader localUsageReader(ICrowdSourceReaderApi readerApi, IUrlGenerator userUrlGenerator) {
+		public static IUsageReader localUsageReader(ICrowdSourcedReaderApi readerApi, IUrlGenerator userUrlGenerator) {
 			return new UsageReaderForLocal(readerApi, userUrlGenerator);
 		}
 	}

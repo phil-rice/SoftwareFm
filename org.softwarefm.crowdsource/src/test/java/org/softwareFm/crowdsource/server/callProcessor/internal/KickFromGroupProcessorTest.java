@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
 import org.softwareFm.crowdsource.api.server.AbstractProcessorDatabaseIntegrationTests;
 import org.softwareFm.crowdsource.api.server.ISignUpChecker;
 import org.softwareFm.crowdsource.api.user.IGroups;
@@ -103,7 +103,7 @@ public class KickFromGroupProcessorTest extends AbstractProcessorDatabaseIntegra
 		signUpChecker.signUp("someEmail", "monikor", "salt", "passwordHash", adminId =  getIdAndSaltGenerator().makeNewUserId());
 		signUpChecker.signUp("someEmail1", "monikor", "salt", "passwordHash", objectId =  getIdAndSaltGenerator().makeNewUserId());
 		groupId =  getIdAndSaltGenerator().makeNewGroupId();
-		ICrowdSourceReadWriteApi readWriteApi = api.makeReadWriter();
+		ICrowdSourcedReadWriteApi readWriteApi = api.makeReadWriter();
 		readWriteApi.modifyUser(new ICallback<IUser>() {
 			@Override
 			public void process(IUser user) throws Exception {

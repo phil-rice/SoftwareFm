@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.apache.http.RequestLine;
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitOperations;
 import org.softwareFm.crowdsource.api.server.ICallProcessor;

@@ -4,7 +4,7 @@
 
 package org.softwareFm.swt.explorer;
 
-import org.softwareFm.jarAndClassPath.api.UserData;
+import org.softwareFm.crowdsource.api.UserData;
 
 public interface IShowMyPeople {
 	void showMyPeople(UserData userData, String groupId, String artifactId);

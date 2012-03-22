@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import org.softwareFm.crowdsource.api.ICrowdSourceReaderApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitLocal;
 import org.softwareFm.crowdsource.httpClient.IHttpClient;
@@ -32,10 +32,10 @@ import org.softwareFm.jarAndClassPath.constants.JarAndPathMessages;
 public class UsageStrategy implements IUsageStrategy {
 	private final IServiceExecutor serviceExecutor;
 	private final IUrlGenerator userGenerator;
-	private final ICrowdSourceReaderApi readerApi;
+	private final ICrowdSourcedReaderApi readerApi;
 	private final File root;
 
-	public UsageStrategy(ICrowdSourceReaderApi readerApi, IServiceExecutor serviceExecutor, IUrlGenerator userGenerator) {
+	public UsageStrategy(ICrowdSourcedReaderApi readerApi, IServiceExecutor serviceExecutor, IUrlGenerator userGenerator) {
 		this.readerApi = readerApi;
 		this.userGenerator = userGenerator;
 		this.serviceExecutor = serviceExecutor;

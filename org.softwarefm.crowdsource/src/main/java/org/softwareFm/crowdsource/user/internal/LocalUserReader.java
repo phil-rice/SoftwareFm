@@ -6,7 +6,7 @@ package org.softwareFm.crowdsource.user.internal;
 
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.ICrowdSourceReaderApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IUserReader;
@@ -19,9 +19,9 @@ import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 public class LocalUserReader implements IUserReader {
 
 	private final IUrlGenerator userGenerator;
-	private final ICrowdSourceReaderApi readerApi;
+	private final ICrowdSourcedReaderApi readerApi;
 
-	public LocalUserReader(ICrowdSourceReaderApi readerApi, IUrlGenerator userGenerator) {
+	public LocalUserReader(ICrowdSourcedReaderApi readerApi, IUrlGenerator userGenerator) {
 		this.readerApi = readerApi;
 		this.userGenerator = userGenerator;
 

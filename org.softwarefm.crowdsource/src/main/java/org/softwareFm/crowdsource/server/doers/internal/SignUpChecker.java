@@ -8,7 +8,7 @@ import java.text.MessageFormat;
 
 import javax.sql.DataSource;
 
-import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
 import org.softwareFm.crowdsource.api.ICryptoGenerators;
 import org.softwareFm.crowdsource.api.server.ISignUpChecker;
 import org.softwareFm.crowdsource.api.server.SignUpResult;
@@ -20,10 +20,10 @@ import org.softwareFm.crowdsource.utilities.processors.AbstractLoginDataAccessor
 
 public class SignUpChecker extends AbstractLoginDataAccessor implements ISignUpChecker {
 
-	private final ICrowdSourceReadWriteApi readWriteApi;
+	private final ICrowdSourcedReadWriteApi readWriteApi;
 	private final ICryptoGenerators cryptoGenerator;
 
-	public SignUpChecker(DataSource dataSource, ICryptoGenerators cryptoGenerator, ICrowdSourceReadWriteApi readWriteApi) {
+	public SignUpChecker(DataSource dataSource, ICryptoGenerators cryptoGenerator, ICrowdSourcedReadWriteApi readWriteApi) {
 		super(dataSource);
 		this.cryptoGenerator = cryptoGenerator;
 		this.readWriteApi = readWriteApi;

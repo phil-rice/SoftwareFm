@@ -11,36 +11,36 @@ import org.softwareFm.crowdsource.api.internal.ServerDoers;
 import org.softwareFm.crowdsource.api.server.IServerDoers;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 
-public interface ICrowdSourcesApi {
+public interface ICrowdSourcedApi {
 
 	/** this instantiates a server that listeners to the given port. */
 	ICrowdSourcedServer getServer();
 
-	ICrowdSourceReaderApi makeReader();
+	ICrowdSourcedReaderApi makeReader();
 
-	ICrowdSourceReadWriteApi makeReadWriter();
+	ICrowdSourcedReadWriteApi makeReadWriter();
 
 	void shutdown();
 
 	public static class Utils {
-		public static ICrowdSourcesApi forServer(final ServerConfig serverConfig) {
-			return new CrowdSourcedServerApi(serverConfig, new IFunction1<ICrowdSourceReadWriteApi, IServerDoers>() {
+		public static ICrowdSourcedApi forServer(final ServerConfig serverConfig) {
+			return new CrowdSourcedServerApi(serverConfig, new IFunction1<ICrowdSourcedReadWriteApi, IServerDoers>() {
 				@Override
-				public IServerDoers apply(ICrowdSourceReadWriteApi from) throws Exception {
+				public IServerDoers apply(ICrowdSourcedReadWriteApi from) throws Exception {
 					return new ServerDoers(serverConfig, from);
 				}
 			});
 		}
 
-		public static ICrowdSourcesApi forServer(ServerConfig serverConfig, IFunction1<ICrowdSourceReadWriteApi, IServerDoers> serverDoersCreator) {
+		public static ICrowdSourcedApi forServer(ServerConfig serverConfig, IFunction1<ICrowdSourcedReadWriteApi, IServerDoers> serverDoersCreator) {
 			return new CrowdSourcedServerApi(serverConfig, serverDoersCreator);
 		}
 
-		public static ICrowdSourcesApi forClient(LocalConfig localConfig) {
+		public static ICrowdSourcedApi forClient(LocalConfig localConfig) {
 			return new CrowdSourcedLocalApi(localConfig);
 		}
 
-		public static ICrowdSourcesApi forTests(IExtraReaderWriterConfigurator<ApiConfig> configurator, final File root) {
+		public static ICrowdSourcedApi forTests(IExtraReaderWriterConfigurator<ApiConfig> configurator, final File root) {
 			final IGitOperations gitOperations = IGitOperations.Utils.gitOperations(root);
 			final AbstractCrowdSourceReadWriterApi readWriter = new AbstractCrowdSourceReadWriterApi() {
 				@Override
@@ -52,12 +52,12 @@ public interface ICrowdSourcesApi {
 			return new AbstractCrowdSourcesApi() {
 
 				@Override
-				public ICrowdSourceReaderApi makeReader() {
+				public ICrowdSourcedReaderApi makeReader() {
 					return readWriter;
 				}
 
 				@Override
-				public ICrowdSourceReadWriteApi makeReadWriter() {
+				public ICrowdSourcedReadWriteApi makeReadWriter() {
 					return readWriter;
 				}
 			};
