@@ -41,6 +41,7 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 	protected String getPasswordResetKeyFor(String email) {
 		return getTemplate().queryForObject("select passwordResetKey from users where email=?", String.class, email);
 	}
+
 }
 
 // @Override

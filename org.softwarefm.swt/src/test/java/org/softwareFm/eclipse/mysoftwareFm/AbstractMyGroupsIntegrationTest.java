@@ -21,9 +21,9 @@ import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups.MyGroupsComposite;
 import org.softwareFm.eclipse.mysoftwareFm.MyPeople.MyPeopleComposite;
 import org.softwareFm.eclipse.usage.internal.AbstractExplorerIntegrationTest;
+import org.softwareFm.jarAndClassPath.api.UserData;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.swt.explorer.internal.MySoftwareFmLoggedIn.MySoftwareFmLoggedInComposite;
-import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.swt.Swts;
 
 abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIntegrationTest {

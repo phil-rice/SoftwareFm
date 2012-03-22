@@ -2,7 +2,7 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwareFm.eclipse.usage.internal;
+package org.softwareFm.jarAndClassPath.internal;
 
 import java.util.Collections;
 import java.util.Map;
@@ -13,10 +13,10 @@ import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
 import org.softwareFm.crowdsource.utilities.collections.Sets;
 import org.softwareFm.crowdsource.utilities.future.Futures;
 import org.softwareFm.crowdsource.utilities.maps.IHasCache;
-import org.softwareFm.eclipse.usage.IUsageStrategy;
-import org.softwareFm.swt.explorer.IUserDataListener;
-import org.softwareFm.swt.explorer.IUserDataManager;
-import org.softwareFm.swt.explorer.internal.UserData;
+import org.softwareFm.jarAndClassPath.api.IUsageStrategy;
+import org.softwareFm.jarAndClassPath.api.IUserDataListener;
+import org.softwareFm.jarAndClassPath.api.IUserDataManager;
+import org.softwareFm.jarAndClassPath.api.UserData;
 
 public class CachedUsageStrategy implements IUsageStrategy, IHasCache {
 

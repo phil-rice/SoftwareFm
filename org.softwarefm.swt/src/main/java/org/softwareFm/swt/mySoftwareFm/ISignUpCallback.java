@@ -4,7 +4,7 @@
 
 package org.softwareFm.swt.mySoftwareFm;
 
-import org.softwareFm.swt.explorer.internal.UserData;
+import org.softwareFm.jarAndClassPath.api.UserData;
 
 public interface ISignUpCallback {
 

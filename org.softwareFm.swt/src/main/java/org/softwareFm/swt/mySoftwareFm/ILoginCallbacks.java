@@ -5,9 +5,9 @@
 package org.softwareFm.swt.mySoftwareFm;
 
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
+import org.softwareFm.jarAndClassPath.api.UserData;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
-import org.softwareFm.swt.explorer.internal.UserData;
 
 public interface ILoginCallbacks extends ILoginCallback, IForgotPasswordCallback, ISignUpCallback, IChangePasswordCallback {
 

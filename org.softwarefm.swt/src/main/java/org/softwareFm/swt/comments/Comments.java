@@ -35,6 +35,7 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.crowdsource.utilities.runnable.Runnables;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
+import org.softwareFm.jarAndClassPath.api.UserData;
 import org.softwareFm.swt.card.ICardFactory;
 import org.softwareFm.swt.card.dataStore.CardDataStoreMock;
 import org.softwareFm.swt.composites.IHasComposite;
@@ -45,7 +46,6 @@ import org.softwareFm.swt.constants.CollectionConstants;
 import org.softwareFm.swt.editors.DataComposite;
 import org.softwareFm.swt.editors.DataCompositeWithFooterLayout;
 import org.softwareFm.swt.editors.IDataCompositeWithFooter;
-import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.swt.Swts;
 
 public class Comments implements IHasControl {

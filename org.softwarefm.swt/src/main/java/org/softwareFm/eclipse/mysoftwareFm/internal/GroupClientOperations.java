@@ -25,6 +25,7 @@ import org.softwareFm.crowdsource.utilities.runnable.Callables;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.eclipse.mysoftwareFm.IGroupClientOperations;
 import org.softwareFm.eclipse.mysoftwareFm.IdNameAndStatus;
+import org.softwareFm.jarAndClassPath.api.UserData;
 import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.card.composites.TextInBorderWithClick;
 import org.softwareFm.swt.composites.IHasControl;
@@ -33,7 +34,6 @@ import org.softwareFm.swt.editors.ICardEditorCallback;
 import org.softwareFm.swt.editors.INamesAndValuesEditor;
 import org.softwareFm.swt.editors.KeyAndEditStrategy;
 import org.softwareFm.swt.explorer.IMasterDetailSocial;
-import org.softwareFm.swt.explorer.internal.UserData;
 
 @SuppressWarnings("Need to externalise these string")
 public class GroupClientOperations implements IGroupClientOperations {

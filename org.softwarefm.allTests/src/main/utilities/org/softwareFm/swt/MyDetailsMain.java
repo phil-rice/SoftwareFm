@@ -12,9 +12,9 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
 import org.softwareFm.jarAndClassPath.api.ProjectFixture;
 import org.softwareFm.jarAndClassPath.api.ProjectMock;
+import org.softwareFm.jarAndClassPath.api.UserData;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
-import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.swt.Swts;
 
 public class MyDetailsMain {

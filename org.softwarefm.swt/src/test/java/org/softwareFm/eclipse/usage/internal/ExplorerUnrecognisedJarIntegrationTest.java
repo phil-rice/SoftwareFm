@@ -16,6 +16,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
+import org.softwareFm.crowdsource.api.git.IGitLocal;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.json.Json;
@@ -180,10 +182,14 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 
 	private void checkCanPullData(String urlKey, Map<String, Object> urlMap, Object... expectedNamesAndValues) {
 		IUrlGenerator jarUrlGenerator = cardConfig.urlGeneratorMap.get(urlKey);
-		String url = jarUrlGenerator.findUrlFor(urlMap);
-		Map<String, Object> expectedJarData = Maps.stringObjectMap(expectedNamesAndValues);
-		assertEquals(expectedJarData, gitLocal.getFile(IFileDescription.Utils.plain(url)));
-		assertEquals(expectedJarData, Json.parseFile(new File(localRoot, Urls.compose(url, CommonConstants.dataFileName))));
+		final String url = jarUrlGenerator.findUrlFor(urlMap);
+		final Map<String, Object> expectedJarData = Maps.stringObjectMap(expectedNamesAndValues);
+		getLocalApi().makeReadWriter().modify(IGitLocal.class, new ICallback<IGitLocal>(){
+			@Override
+			public void process(IGitLocal gitLocal) throws Exception {
+				assertEquals(expectedJarData, gitLocal.getFile(IFileDescription.Utils.plain(url)));
+				assertEquals(expectedJarData, Json.parseFile(new File(localRoot, Urls.compose(url, CommonConstants.dataFileName))));
+			}});
 	}
 
 	private void checkRuntimeJarPopulated() {

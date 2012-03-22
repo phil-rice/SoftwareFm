@@ -10,6 +10,8 @@ import java.util.concurrent.Callable;
 
 import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
+import org.softwareFm.jarAndClassPath.api.IUserDataManager;
+import org.softwareFm.jarAndClassPath.api.UserData;
 import org.softwareFm.swt.browser.IBrowserCompositeBuilder;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardChangedListener;
@@ -19,7 +21,6 @@ import org.softwareFm.swt.card.RightClickCategoryResult;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.dataStore.ICardAndCollectionDataStoreVisitor;
 import org.softwareFm.swt.explorer.internal.Explorer;
-import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.swt.timeline.IPlayListGetter;
 import org.softwareFm.swt.timeline.ITimeLine;

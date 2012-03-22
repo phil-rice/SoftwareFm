@@ -2,13 +2,14 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwareFm.swt.explorer.internal;
+package org.softwareFm.jarAndClassPath.internal;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.softwareFm.swt.explorer.IUserDataListener;
-import org.softwareFm.swt.explorer.IUserDataManager;
+import org.softwareFm.jarAndClassPath.api.IUserDataListener;
+import org.softwareFm.jarAndClassPath.api.IUserDataManager;
+import org.softwareFm.jarAndClassPath.api.UserData;
 
 public class UserDataManager implements IUserDataManager {
 

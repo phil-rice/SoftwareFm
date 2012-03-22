@@ -2,12 +2,22 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwareFm.swt.explorer;
+package org.softwareFm.jarAndClassPath.api;
 
-import org.softwareFm.swt.explorer.internal.UserData;
+import org.softwareFm.jarAndClassPath.internal.UserDataManager;
 
-public interface IUserDataListener {
 
-	void userDataChanged(Object source, UserData userData);
+public interface IUserDataManager {
 
+	void setUserData(Object source, UserData userData);
+
+	UserData getUserData();
+
+	void addUserDataListener(IUserDataListener userDataListener);
+
+	public static class Utils {
+		public static IUserDataManager userDataManager() {
+			return new UserDataManager();
+		}
+	}
 }

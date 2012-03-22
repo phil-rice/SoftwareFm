@@ -19,11 +19,11 @@ import org.softwareFm.crowdsource.api.LocalConfig;
 import org.softwareFm.crowdsource.constants.CommentConstants;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.eclipse.usage.internal.ApiAndSwtTest;
+import org.softwareFm.jarAndClassPath.api.UserData;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.comments.Comments.CommentsComposite;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.explorer.internal.IExplorerTest;
-import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.swt.Swts;
 
 public class CommentsTest extends ApiAndSwtTest {

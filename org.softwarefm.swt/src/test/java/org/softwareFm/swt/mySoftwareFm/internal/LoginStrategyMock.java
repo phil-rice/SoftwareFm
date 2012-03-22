@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
-import org.softwareFm.swt.explorer.internal.UserData;
+import org.softwareFm.jarAndClassPath.api.UserData;
 import org.softwareFm.swt.mySoftwareFm.IChangePasswordCallback;
 import org.softwareFm.swt.mySoftwareFm.IForgotPasswordCallback;
 import org.softwareFm.swt.mySoftwareFm.ILoginCallback;

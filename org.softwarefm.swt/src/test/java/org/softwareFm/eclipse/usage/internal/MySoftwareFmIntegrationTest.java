@@ -8,9 +8,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Button;
@@ -18,8 +16,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
+import org.softwareFm.crowdsource.httpClient.IHttpClient;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
 import org.softwareFm.crowdsource.httpClient.internal.MemoryResponseCallback;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
@@ -29,6 +29,8 @@ import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.tests.IIntegrationTest;
 import org.softwareFm.crowdsource.utilities.url.Urls;
+import org.softwareFm.jarAndClassPath.api.IUserDataManager;
+import org.softwareFm.jarAndClassPath.api.UserData;
 import org.softwareFm.swt.card.composites.CompositeWithCardMargin;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.configuration.ICardConfigurator;
@@ -37,9 +39,7 @@ import org.softwareFm.swt.editors.IDataComposite;
 import org.softwareFm.swt.editors.IDataCompositeWithOkCancel;
 import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.explorer.IShowMyGroups;
-import org.softwareFm.swt.explorer.IUserDataManager;
 import org.softwareFm.swt.explorer.internal.MySoftwareFm;
-import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.swt.okCancel.IOkCancelForTests;
 import org.softwareFm.swt.swt.Swts;
@@ -195,9 +195,13 @@ public class MySoftwareFmIntegrationTest extends ApiAndSwtTest implements IInteg
 		return (IOkCancelForTests) displayUntilValueComposite("Email", "Password").getFooter();
 	}
 
-	private String resetPassword(String magicString) throws InterruptedException, ExecutionException, TimeoutException {
-		MemoryResponseCallback memoryCallback = IResponseCallback.Utils.memoryCallback();
-		client.get(Urls.compose(LoginConstants.passwordResetLinkPrefix, magicString)).execute(memoryCallback).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+	private String resetPassword(final String magicString)  {
+		final MemoryResponseCallback memoryCallback = IResponseCallback.Utils.memoryCallback();
+		getLocalApi().makeReadWriter().modify(IHttpClient.class, new ICallback<IHttpClient>(){
+			@Override
+			public void process(IHttpClient client) throws Exception {
+				client.get(Urls.compose(LoginConstants.passwordResetLinkPrefix, magicString)).execute(memoryCallback).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+			}});
 		String html = memoryCallback.response.asString();
 		int start = html.indexOf(": ") + 2;
 		int end = html.indexOf("</html");
@@ -383,7 +387,7 @@ public class MySoftwareFmIntegrationTest extends ApiAndSwtTest implements IInteg
 		userDataManager = IUserDataManager.Utils.userDataManager();
 		mySoftwareFm = new MySoftwareFm(shell, getLocalApi().makeReadWriter(), cardConfig, loginStrategy, IShowMyData.Utils.exceptionShowMyData(), IShowMyGroups.Utils.exceptionShowMyGroups(), userDataManager);
 		softwareFmComposite = mySoftwareFm.getComposite();
-		userFile = new File(remoteRoot, Urls.compose("softwareFm/users/so/me/someNewSoftwareFmId0", CommonConstants.dataFileName));
+		userFile = new File(remoteRoot, Urls.compose(getUrlPrefix(), "users/so/me/someNewSoftwareFmId0", CommonConstants.dataFileName));
 		truncateUsersTable();
 	}
 

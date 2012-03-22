@@ -5,17 +5,13 @@
 package org.softwareFm.eclipse.usage.internal;
 
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardHolder;
 import org.softwareFm.swt.comments.Comments;
 import org.softwareFm.swt.comments.Comments.CommentsComposite;
 import org.softwareFm.swt.menu.ICardMenuItemHandler;
-import org.softwareFm.swt.swt.Swts;
 
 public class CommentsIntegrationTest extends AbstractExplorerIntegrationTest {
-	private final String key = Crypto.makeKey();
-	private final String softwareFmId = "softwareFmId";
 
 	public void testCommentsAreNotShownInitiallyUntilATextItemIsSelected() {
 		postArtifactData();
@@ -29,9 +25,8 @@ public class CommentsIntegrationTest extends AbstractExplorerIntegrationTest {
 				Comments comments = explorer.getComments();
 				CommentsComposite commentControl = (CommentsComposite) comments.getControl();
 				assertSame(socialContent, commentControl);
-				assertEquals("Comments for ant", commentControl.getTitle().getText());
-				Swts.checkTable(comments.getTable(), 0, 0, "someMoniker", "Global", "globalComments/comment1");
-				assertEquals(1, comments.getTable().getItemCount());
+				assertEquals("No Comments. ", commentControl.getTitle().getText());
+				assertEquals(0, comments.getTable().getItemCount());
 			}
 		});
 	}

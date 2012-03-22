@@ -27,8 +27,8 @@ import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.runnable.Callables;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
+import org.softwareFm.jarAndClassPath.api.UserData;
 import org.softwareFm.swt.constants.CardMessages;
-import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.swt.Swts;
 
 public interface ILoginStrategy {

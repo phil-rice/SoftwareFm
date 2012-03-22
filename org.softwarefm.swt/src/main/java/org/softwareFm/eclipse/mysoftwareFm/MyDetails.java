@@ -28,6 +28,7 @@ import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.jar.EclipseMessages;
 import org.softwareFm.jarAndClassPath.api.IProjectTimeGetter;
 import org.softwareFm.jarAndClassPath.api.IUsageReader;
+import org.softwareFm.jarAndClassPath.api.UserData;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
@@ -36,7 +37,6 @@ import org.softwareFm.swt.editors.DataComposite;
 import org.softwareFm.swt.editors.DataCompositeLayout;
 import org.softwareFm.swt.explorer.IMasterDetailSocial;
 import org.softwareFm.swt.explorer.IShowMyData;
-import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.swt.Swts;
 
 public class MyDetails implements IHasComposite {

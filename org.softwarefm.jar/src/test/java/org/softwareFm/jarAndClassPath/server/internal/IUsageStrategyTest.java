@@ -2,30 +2,36 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwareFm.eclipse.usage;
+package org.softwareFm.jarAndClassPath.server.internal;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-import org.softwareFm.crowdsource.api.server.AbstractProcessorDatabaseIntegrationTests;
+import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
+import org.softwareFm.crowdsource.api.ServerConfig;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
-import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
+import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.crowdsource.utilities.runnable.Callables;
 import org.softwareFm.crowdsource.utilities.url.Urls;
+import org.softwareFm.jarAndClassPath.api.IProjectTimeGetter;
+import org.softwareFm.jarAndClassPath.api.IUsageStrategy;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 
-public class IUsageStrategyTest extends AbstractProcessorDatabaseIntegrationTests {
+public class IUsageStrategyTest extends AbstractUsageProcessorIntegrationTests {
 
 	private IUsageStrategy usageStrategy;
 	private File directory;
 	private File userFile;
 	private File userProjectFile;
 	private final String email = "a@b.com";
+	private final static String projectCryptoKey = Crypto.makeKey();
 
 	public void testUsingUpdatesProjectData() throws Exception {
 		String sessionSalt = makeSalt();
@@ -62,10 +68,41 @@ public class IUsageStrategyTest extends AbstractProcessorDatabaseIntegrationTest
 	}
 
 	@Override
+	protected IProjectTimeGetter getProjectTimeGetter() {
+		IProjectTimeGetter projectTimeGetter = new IProjectTimeGetter() {
+			@Override
+			public String thisMonth() {
+				return "someMonth";
+			}
+
+			@Override
+			public Iterable<String> lastNMonths(int n) {
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			public int day() {
+				return thisDay;
+			}
+		};
+		return projectTimeGetter;
+	}
+
+	@Override
+	protected IExtraReaderWriterConfigurator<ServerConfig> getServerExtraReaderWriterConfigurator() {
+		return super.getServerExtraReaderWriterConfigurator();
+	}
+
+	@Override
+	protected Map<String, Callable<Object>> getDefaultUserValues() {
+		return Maps.with(super.getDefaultUserValues(), JarAndPathConstants.projectCryptoKey, Callables.valueFromList(projectCryptoKey));
+	}
+
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		usageStrategy = IUsageStrategy.Utils.usage(getServiceExecutor(), getHttpClient(), gitLocal, LoginConstants.userGenerator(JarAndPathConstants.urlPrefix));
-		directory = new File(remoteRoot, "softwareFm/users/so/me/someNewSoftwareFmId0");
+		usageStrategy = IUsageStrategy.Utils.usage(getServiceExecutor(), getLocalApi().makeReader(), getServerConfig().userUrlGenerator);
+		directory = new File(remoteRoot, getUrlPrefix() + "/users/so/me/someNewSoftwareFmId0");
 		userFile = new File(directory, CommonConstants.dataFileName);
 		userProjectFile = new File(directory, Urls.compose("project", "someMonth"));
 	}

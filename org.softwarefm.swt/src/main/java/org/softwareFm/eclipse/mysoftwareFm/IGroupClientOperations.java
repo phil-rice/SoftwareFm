@@ -8,9 +8,9 @@ import org.softwareFm.crowdsource.api.ICrowdSourceReadWriteApi;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.runnable.Runnables;
 import org.softwareFm.eclipse.mysoftwareFm.internal.GroupClientOperations;
+import org.softwareFm.jarAndClassPath.api.UserData;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.explorer.IMasterDetailSocial;
-import org.softwareFm.swt.explorer.internal.UserData;
 
 public interface IGroupClientOperations {
 	Runnable createGroup(UserData userData, ICallback<String> added);

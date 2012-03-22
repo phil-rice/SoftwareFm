@@ -1,5 +1,7 @@
 package org.softwareFm.crowdsource.api;
 
+import java.io.File;
+
 import org.softwareFm.crowdsource.api.git.IGitOperations;
 import org.softwareFm.crowdsource.api.internal.AbstractCrowdSourceReadWriterApi;
 import org.softwareFm.crowdsource.api.internal.AbstractCrowdSourcesApi;
@@ -38,14 +40,15 @@ public interface ICrowdSourcesApi {
 			return new CrowdSourcedLocalApi(localConfig);
 		}
 
-		public static ICrowdSourcesApi forTests(IExtraReaderWriterConfigurator<ApiConfig> configurator, ApiConfig apiConfig) {
+		public static ICrowdSourcesApi forTests(IExtraReaderWriterConfigurator<ApiConfig> configurator, final File root) {
+			final IGitOperations gitOperations = IGitOperations.Utils.gitOperations(root);
 			final AbstractCrowdSourceReadWriterApi readWriter = new AbstractCrowdSourceReadWriterApi() {
 				@Override
 				public IGitOperations gitOperations() {
-					throw new UnsupportedOperationException();
+					return gitOperations;
 				}
 			};
-			configurator.builder(readWriter, apiConfig);
+			configurator.builder(readWriter, null);
 			return new AbstractCrowdSourcesApi() {
 
 				@Override

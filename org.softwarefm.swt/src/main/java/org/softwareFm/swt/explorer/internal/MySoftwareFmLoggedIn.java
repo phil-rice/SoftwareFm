@@ -16,6 +16,7 @@ import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
+import org.softwareFm.jarAndClassPath.api.UserData;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.swt.card.LineItem;
 import org.softwareFm.swt.composites.IHasComposite;

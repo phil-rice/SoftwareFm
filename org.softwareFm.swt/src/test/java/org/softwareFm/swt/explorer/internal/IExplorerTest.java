@@ -17,6 +17,7 @@ import org.softwareFm.crowdsource.utilities.runnable.Callables;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.eclipse.usage.internal.ApiAndSwtTest;
 import org.softwareFm.images.general.GeneralAnchor;
+import org.softwareFm.jarAndClassPath.api.IUserDataManager;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.card.ICardHolderForTests;
 import org.softwareFm.swt.configuration.CardConfig;
@@ -26,7 +27,6 @@ import org.softwareFm.swt.explorer.IMasterDetailSocial;
 import org.softwareFm.swt.explorer.IShowMyData;
 import org.softwareFm.swt.explorer.IShowMyGroups;
 import org.softwareFm.swt.explorer.IShowMyPeople;
-import org.softwareFm.swt.explorer.IUserDataManager;
 import org.softwareFm.swt.mySoftwareFm.ILoginStrategy;
 import org.softwareFm.swt.timeline.IPlayListGetter;
 

@@ -12,10 +12,10 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.eclipse.jdtBinding.BindingRipperResult;
-import org.softwareFm.eclipse.snippets.internal.UsageStrategy;
-import org.softwareFm.eclipse.usage.IUsageStrategy;
 import org.softwareFm.jar.EclipseMessages;
+import org.softwareFm.jarAndClassPath.api.IUsageStrategy;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
+import org.softwareFm.jarAndClassPath.internal.UsageStrategy;
 
 public class Startup implements IStartup {
 

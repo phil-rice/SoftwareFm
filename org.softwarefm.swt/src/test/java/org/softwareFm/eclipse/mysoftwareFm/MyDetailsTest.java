@@ -13,11 +13,11 @@ import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.jarAndClassPath.api.IProjectTimeGetter;
 import org.softwareFm.jarAndClassPath.api.IUsageReader;
 import org.softwareFm.jarAndClassPath.api.ProjectTimeGetterFixture;
+import org.softwareFm.jarAndClassPath.api.UserData;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.editors.DataComposite;
-import org.softwareFm.swt.explorer.internal.UserData;
 import org.softwareFm.swt.swt.Swts;
 
 public class MyDetailsTest extends AbstractMyGroupsIntegrationTest {

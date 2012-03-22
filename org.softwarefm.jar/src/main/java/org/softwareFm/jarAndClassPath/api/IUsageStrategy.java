@@ -2,13 +2,12 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwareFm.eclipse.usage;
+package org.softwareFm.jarAndClassPath.api;
 
 import java.util.Map;
 import java.util.concurrent.Future;
 
-import org.softwareFm.crowdsource.api.git.IGitLocal;
-import org.softwareFm.crowdsource.httpClient.IHttpClient;
+import org.softwareFm.crowdsource.api.ICrowdSourceReaderApi;
 import org.softwareFm.crowdsource.httpClient.IResponse;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
 import org.softwareFm.crowdsource.utilities.future.Futures;
@@ -16,9 +15,8 @@ import org.softwareFm.crowdsource.utilities.maps.IHasCache;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
-import org.softwareFm.eclipse.snippets.internal.UsageStrategy;
-import org.softwareFm.eclipse.usage.internal.CachedUsageStrategy;
-import org.softwareFm.swt.explorer.IUserDataManager;
+import org.softwareFm.jarAndClassPath.internal.CachedUsageStrategy;
+import org.softwareFm.jarAndClassPath.internal.UsageStrategy;
 
 public interface IUsageStrategy {
 
@@ -27,13 +25,12 @@ public interface IUsageStrategy {
 	public Map<String, Object> myProjectData(String softwareFmId, String crypto);
 
 	public static class Utils {
-		public static IUsageStrategy cached(IUsageStrategy delegate, long period, IHasCache cachesToClear, IUserDataManager userDataManager ){
+		public static IUsageStrategy cached(IUsageStrategy delegate, long period, IHasCache cachesToClear, IUserDataManager userDataManager) {
 			return new CachedUsageStrategy(delegate, period, cachesToClear, userDataManager);
 		}
-		
 
-		public static IUsageStrategy usage(final IServiceExecutor serviceExecutor, final IHttpClient client, final IGitLocal gitLocal, IUrlGenerator userGenerator) {
-			return new UsageStrategy(client, serviceExecutor, gitLocal, userGenerator);
+		public static IUsageStrategy usage(final IServiceExecutor serviceExecutor, final ICrowdSourceReaderApi readerApi, IUrlGenerator userGenerator) {
+			return new UsageStrategy(readerApi, serviceExecutor, userGenerator);
 		}
 
 		public static IUsageStrategy noUsageStrategy() {
@@ -70,7 +67,6 @@ public interface IUsageStrategy {
 			};
 		}
 
-		
 	}
 
 }

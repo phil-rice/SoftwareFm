@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.softwareFm.eclipse.actions.IActionBar;
-import org.softwareFm.eclipse.usage.IUsageStrategy;
+import org.softwareFm.jarAndClassPath.api.IUsageStrategy;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CollectionConstants;
 import org.softwareFm.swt.explorer.IExplorer;

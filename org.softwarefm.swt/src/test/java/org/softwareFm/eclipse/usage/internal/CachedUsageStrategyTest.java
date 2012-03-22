@@ -11,8 +11,8 @@ import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
 import org.softwareFm.crowdsource.httpClient.internal.MemoryResponseCallback;
 import org.softwareFm.crowdsource.utilities.future.Futures;
 import org.softwareFm.crowdsource.utilities.maps.IHasCache;
-import org.softwareFm.eclipse.usage.IUsageStrategy;
-import org.softwareFm.swt.explorer.IUserDataManager;
+import org.softwareFm.jarAndClassPath.api.IUsageStrategy;
+import org.softwareFm.jarAndClassPath.api.IUserDataManager;
 
 public class CachedUsageStrategyTest extends TestCase {
 

@@ -8,8 +8,17 @@ import java.io.File;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+import org.softwareFm.crowdsource.api.ApiConfig;
+import org.softwareFm.crowdsource.api.IApiBuilder;
+import org.softwareFm.crowdsource.api.ICrowdSourceReaderApi;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
+import org.softwareFm.crowdsource.api.ICrowdSourcesApi;
+import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
 import org.softwareFm.crowdsource.api.git.GitTest;
+import org.softwareFm.crowdsource.api.git.IGitReader;
+import org.softwareFm.crowdsource.api.git.IRepoFinder;
+import org.softwareFm.crowdsource.git.internal.GitLocal;
+import org.softwareFm.crowdsource.user.internal.LocalUserReader;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
@@ -70,7 +79,14 @@ public class LocalUserReaderTest extends GitTest {
 		IUrlGenerator userUrlGenerator = IUrlGenerator.Utils.generator("user/{0}/{1}/{2}", LoginConstants.softwareFmIdKey);
 		Map<String, Callable<Object>> defaults = Maps.<String, Callable<Object>> makeMap("defProperty", Callables.valueFromList("value"));
 		remoteUser = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, userUrlGenerator, findRepositoryRoot, defaults);
- 
+		ICrowdSourceReaderApi readerApi = ICrowdSourcesApi.Utils.forTests(new IExtraReaderWriterConfigurator<ApiConfig>() {
+			@Override
+			public void builder(IApiBuilder builder, ApiConfig apiConfig) {
+				builder.registerReader(IGitReader.class, new GitLocal(builder, remoteAsUri, CommonConstants.staleCachePeriodForTest));
+				builder.registerReadWriter(IRepoFinder.class, IRepoFinder.Utils.forTests(remoteOperations));
+			}
+		}, localRoot).makeReader();
+		localUser = new LocalUserReader(readerApi, userUrlGenerator);
 		remoteSfmId1File = new File(remoteRoot, Urls.compose("user/sf/mI/sfmId1/", CommonConstants.dataFileName));
 		remoteSfmId2File = new File(remoteRoot, Urls.compose("user/sf/mI/sfmId2/", CommonConstants.dataFileName));
 

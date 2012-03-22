@@ -28,14 +28,14 @@ import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.eclipse.jdtBinding.IBindingRipper;
 import org.softwareFm.jarAndClassPath.api.IProjectTimeGetter;
+import org.softwareFm.jarAndClassPath.api.IUserDataManager;
+import org.softwareFm.jarAndClassPath.api.UserData;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.swt.ICollectionConfigurationFactory;
 import org.softwareFm.swt.card.ICardFactory;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.dataStore.ICardDataStore;
 import org.softwareFm.swt.explorer.IUserDataListener;
-import org.softwareFm.swt.explorer.IUserDataManager;
-import org.softwareFm.swt.explorer.internal.UserData;
 
 /**
  * The activator class controls the plug-in life cycle
