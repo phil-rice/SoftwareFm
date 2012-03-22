@@ -7,7 +7,6 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.softwareFm.crowdsource.api.internal.CrowdSourcedLocalApi;
 import org.softwareFm.crowdsource.api.internal.CrowdSourcedServerApi;
 import org.softwareFm.crowdsource.api.server.GitWithHttpClientTest;
-import org.softwareFm.crowdsource.api.server.IMailer;
 import org.softwareFm.crowdsource.api.server.IServerDoers;
 import org.softwareFm.crowdsource.api.server.IUsage;
 import org.softwareFm.crowdsource.api.server.SignUpResult;
@@ -26,22 +25,39 @@ import org.softwareFm.crowdsource.utilities.runnable.Callables;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 abstract public class ApiTest extends GitWithHttpClientTest {
+	// these are returned by the cryptoGenerators
 	protected final static String userKey0 = Crypto.makeKey();
 	protected final static String userKey1 = Crypto.makeKey();
 	protected final static String userKey2 = Crypto.makeKey();
 	protected final static String userKey3 = Crypto.makeKey();
 
+	// these are returned by the cryptoGenerators
+	protected final static String groupCryptoKey0 = Crypto.makeKey();
+	protected final static String groupCryptoKey1 = Crypto.makeKey();
+	protected final static String groupCryptoKey2 = Crypto.makeKey();
+
+	private final String softwareFmIdPrefix = "someNewSoftwareFmId";
+
+	// these are the results of the idAndSaltGenerator
+	protected final String softwareFmId0 = softwareFmIdPrefix + "0";
+	protected final String softwareFmId1 = softwareFmIdPrefix + "1";
+	protected final String softwareFmId2 = softwareFmIdPrefix + "2";
+
+	// these are the emails created by createUser
+	protected final String email0 = softwareFmId0 + "@someEmail.com";
+	protected final String email1 = softwareFmId1 + "@someEmail.com";
+	protected final String email2 = softwareFmId2 + "@someEmail.com";
+
+	// these are the results of the idAndSaltGenerator
 	protected final String groupId0 = "groupId0";
 	protected final String groupId1 = "groupId1";
 	protected final String groupId2 = "groupId2";
 
+	// these are suggested group names
 	protected final String groupName0 = "groupId0Name";
 	protected final String groupName1 = "groupId1Name";
 	protected final String groupName2 = "groupId2Name";
 
-	protected final static String groupCryptoKey0 = Crypto.makeKey();
-	protected final static String groupCryptoKey1 = Crypto.makeKey();
-	protected final static String groupCryptoKey2 = Crypto.makeKey();
 	protected final String someMoniker = "someMoniker";
 
 	protected BasicDataSource dataSource;
@@ -94,7 +110,6 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 		return IExtraReaderWriterConfigurator.Utils.noExtras();
 	}
 
-
 	protected IUserCryptoAccess getUserCryptoAccess() {
 		return userCryptoAccess == null ? userCryptoAccess = IUserCryptoAccess.Utils.database(dataSource, idAndSaltGenerator) : userCryptoAccess;
 	}
@@ -106,7 +121,7 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 	}
 
 	protected IIdAndSaltGenerator getIdAndSaltGenerator() {
-		return idAndSaltGenerator == null ? idAndSaltGenerator = IIdAndSaltGenerator.Utils.mockGenerators("someNewSoftwareFmId{0}", "groupId{0}", "salt{0}", "magicString{0}") : idAndSaltGenerator;
+		return idAndSaltGenerator == null ? idAndSaltGenerator = IIdAndSaltGenerator.Utils.mockGenerators(softwareFmIdPrefix + "{0}", "groupId{0}", "salt{0}", "magicString{0}") : idAndSaltGenerator;
 	}
 
 	protected Callable<Long> getTimeGetter() {
@@ -134,6 +149,7 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 	}
 
 	private int takeOnCount;
+	protected MailerMock mailer;
 
 	protected ITakeOnEnrichmentProvider getTakeOnEnrichment() {
 		return new ITakeOnEnrichmentProvider() {
@@ -148,12 +164,13 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 		return "prefix";
 	}
 
-	protected IMailer getMailer() {
-		return IMailer.Utils.noMailer();
+	protected MailerMock getMailer() {
+		return mailer;
 	}
 
 	@Override
 	protected void setUp() throws Exception {
+		mailer = new MailerMock();
 		super.setUp();
 		dataSource = AbstractLoginDataAccessor.defaultDataSource();
 	}
@@ -180,7 +197,7 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 	protected String createUser() {
 		final String userId = getIdAndSaltGenerator().makeNewUserId();
 		final String email = userId + "@someEmail.com";
-		createUser( userId, email);
+		createUser(userId, email);
 		return userId;
 	}
 

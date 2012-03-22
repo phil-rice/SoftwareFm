@@ -26,12 +26,12 @@ public abstract class AbstractAddToGroupProcessor extends AbstractCallProcessor 
 	}
 
 	protected void sendInvitationEmails(Map<String, Object> parameters, String groupName, List<String> memberList) {
-		String from = (String) parameters.get(GroupConstants.takeOnFromKey);// this dude is now the admin
+		String from = (String) parameters.get(GroupConstants.takeOnFromKey);
 		String emailPattern = (String) parameters.get(GroupConstants.takeOnEmailPattern);
 		String rawSubject = (String) parameters.get(GroupConstants.takeOnSubjectKey);
 		for (String email : memberList) {
-			String subject = replaceMarkers(rawSubject, groupName, email);
-			String message = replaceMarkers(emailPattern, groupName, email);
+			String subject = replaceMarkers(rawSubject, groupName, from);
+			String message = replaceMarkers(emailPattern, groupName, from);
 			serverDoers.getMailer().mail(from, email, subject, message);
 		}
 	}
@@ -40,7 +40,7 @@ public abstract class AbstractAddToGroupProcessor extends AbstractCallProcessor 
 		if (groupCrypto == null)
 			throw new NullPointerException();
 		for (String email : memberList) {
-			String newSoftwareFmId = userCryptoAccess.emailToSoftwareFnId(email);
+			String newSoftwareFmId = userCryptoAccess.emailToSoftwareFmId(email);
 			if (newSoftwareFmId == null) {
 				newSoftwareFmId = idAndSaltGenerator.makeNewUserId();
 				String moniker = Strings.split(email, '@').pre;

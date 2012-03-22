@@ -38,11 +38,9 @@ import org.softwareFm.swt.explorer.IMasterDetailSocial;
 @SuppressWarnings("Need to externalise these string")
 public class GroupClientOperations implements IGroupClientOperations {
 
-	private final IMasterDetailSocial masterDetailSocial;
 	private final IHttpClient client;
 
 	public GroupClientOperations(IMasterDetailSocial masterDetailSocial, ICrowdSourcedReadWriteApi readWriteApi) {
-		this.masterDetailSocial = masterDetailSocial;
 		this.client = readWriteApi.access(IHttpClient.class, Functions.<IHttpClient, IHttpClient> identity());
 
 	}

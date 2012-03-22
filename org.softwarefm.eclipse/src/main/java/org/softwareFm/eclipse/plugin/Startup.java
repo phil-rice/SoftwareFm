@@ -5,7 +5,6 @@
 package org.softwareFm.eclipse.plugin;
 
 import org.eclipse.ui.IStartup;
-import org.softwareFm.crowdsource.api.git.IGitLocal;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
@@ -28,8 +27,9 @@ public class Startup implements IStartup {
 			public Void apply(IMonitor monitor) throws Exception {
 				monitor.beginTask(EclipseMessages.startUp, 1);
 				try {
-					IGitLocal gitLocal = activator.getGitLocal();
-					IUsageStrategy rawUsageStrategy = new UsageStrategy(activator.getClient(), serviceExecutor, gitLocal, LoginConstants.userGenerator(JarAndPathConstants.urlPrefix));
+					IUsageStrategy rawUsageStrategy = IUsageStrategy.Utils.usage(serviceExecutor, activator.getApi(masterDetailSocial), userGenerator);
+					
+					new UsageStrategy(activator.getClient(), serviceExecutor, gitLocal, LoginConstants.userGenerator(JarAndPathConstants.urlPrefix));
 					final IUsageStrategy cachedUsageStrategy = IUsageStrategy.Utils.cached(rawUsageStrategy, JarAndPathConstants.usageRefreshTimeMs, gitLocal, activator.getUserDataManager());
 					activator.getSelectedBindingManager().addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
 						@Override

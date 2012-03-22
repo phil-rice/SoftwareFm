@@ -69,7 +69,7 @@ public class DatabaseCryptoAccess implements IUserCryptoAccess {
 	}
 
 	@Override
-	public String emailToSoftwareFnId(String softwareFmId) {
+	public String emailToSoftwareFmId(String softwareFmId) {
 		return template.query(AbstractLoginDataAccessor.selectUsersWithEmailSql, new Object[] { softwareFmId }, new ResultSetExtractor<String>() {
 			@Override
 			public String extractData(ResultSet rs) throws SQLException, DataAccessException {

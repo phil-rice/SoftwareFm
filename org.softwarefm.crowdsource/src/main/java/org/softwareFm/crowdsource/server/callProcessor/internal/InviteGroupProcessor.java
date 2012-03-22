@@ -51,7 +51,7 @@ public class InviteGroupProcessor extends AbstractAddToGroupProcessor {
 				if (!Strings.isEmail(fromEmail))
 					throw new IllegalArgumentException(MessageFormat.format(GroupConstants.invalidEmail, fromEmail));
 				
-				String expectedSfmId = userCryptoAccess.emailToSoftwareFnId(fromEmail);
+				String expectedSfmId = userCryptoAccess.emailToSoftwareFmId(fromEmail);
 				if (!softwareFmId.equals(expectedSfmId))
 					throw new IllegalArgumentException(MessageFormat.format(GroupConstants.emailSfmMismatch, fromEmail, expectedSfmId, softwareFmId));
 				

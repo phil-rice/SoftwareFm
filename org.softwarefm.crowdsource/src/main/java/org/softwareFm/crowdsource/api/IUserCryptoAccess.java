@@ -18,7 +18,7 @@ public interface IUserCryptoAccess extends IMagicStringForPassword {
 
 	String getCryptoForUser(String softwareFmId);
 
-	String emailToSoftwareFnId(String softwareFmId);
+	String emailToSoftwareFmId(String softwareFmId);
 
 	boolean changePassword(String email, String oldHash, String newHash);
 
@@ -52,7 +52,7 @@ public interface IUserCryptoAccess extends IMagicStringForPassword {
 				}
 
 				@Override
-				public String emailToSoftwareFnId(String softwareFmId) {
+				public String emailToSoftwareFmId(String softwareFmId) {
 					throw new UnsupportedOperationException();
 				}
 			};
