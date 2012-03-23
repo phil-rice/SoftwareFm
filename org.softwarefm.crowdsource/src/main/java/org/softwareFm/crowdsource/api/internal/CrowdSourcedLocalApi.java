@@ -30,7 +30,7 @@ public class CrowdSourcedLocalApi extends AbstractCrowdSourcesApi {
 	private final CrowdSourceLocalReadWriterApi readWriterApi;
 	private final IClientBuilder httpClient;
 
-	@SuppressWarnings("Look really hard to git operations...why is it needed when we have a git local")
+	@SuppressWarnings({ "Look really hard to git operations...why is it needed when we have a git local", "unchecked" })
 	public CrowdSourcedLocalApi(LocalConfig localConfig) {
 		readWriterApi = new CrowdSourceLocalReadWriterApi(IGitOperations.Utils.gitOperations(localConfig.root));
 		@SuppressWarnings("really dont want this either")

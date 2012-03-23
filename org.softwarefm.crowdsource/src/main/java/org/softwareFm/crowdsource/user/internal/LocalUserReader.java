@@ -51,7 +51,6 @@ public class LocalUserReader implements IUserReader {
 
 	@Override
 	public void refresh(String softwareFmId) {
-		String url = userGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
 		IGitReader.Utils.clearCache(readerApi);
 	}
 }

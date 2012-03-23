@@ -40,22 +40,23 @@ public interface ISoftwareFmApiFactory {
 
 	public static class Utils {
 		public static ICrowdSourcedApi makeClientApiForLocalHost() {
-			File home = new File(System.getProperty("user.home"));
-			String remoteGitPrefix = new File(home, ".sfm_remote").getAbsolutePath();
-			return makeClientApi("localhost", 8080, remoteGitPrefix);
+			return ICrowdSourcedApi.Utils.forClient(getLocalConfig(true));
 		}
 
 		public static ICrowdSourcedApi makeClientApiForSoftwareFmServer() {
-			return makeClientApi(JarAndPathConstants.softwareFmServerUrl, 80, JarAndPathConstants.gitProtocolAndGitServerName);
+			return ICrowdSourcedApi.Utils.forClient(getLocalConfig(false));
 		}
 
-		public static ICrowdSourcedApi makeClientApi(String host, int port, String remoteGitPrefix) {
+		public static LocalConfig getLocalConfig(boolean local) {
 			File home = new File(System.getProperty("user.home"));
+			String host = local ? "localhost" : JarAndPathConstants.softwareFmServerUrl;
+			int port = local ? 8080 : 80;
+			String remoteGitPrefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : JarAndPathConstants.gitProtocolAndGitServerName;
 			File root = new File(home, ".sfm");
 			final String urlPrefix = JarAndPathConstants.urlPrefix;
 			IExtraReaderWriterConfigurator<LocalConfig> extraReaderWriterConfigurator = getLocalExtraReaderWriterConfigurator();
 			LocalConfig localConfig = new LocalConfig(port, 10, host, root, urlPrefix, remoteGitPrefix, CommonConstants.clientTimeOut, CommonConstants.staleCachePeriod, ICallback.Utils.rethrow(), extraReaderWriterConfigurator);
-			return ICrowdSourcedApi.Utils.forClient(localConfig);
+			return localConfig;
 		}
 
 		public static IExtraReaderWriterConfigurator<LocalConfig> getLocalExtraReaderWriterConfigurator() {
@@ -66,7 +67,7 @@ public interface ISoftwareFmApiFactory {
 					IRequestGroupReportGeneration requestGroupReportGeneration = IRequestGroupReportGeneration.Utils.httpClient(builder, IResponseCallback.Utils.noCallback());
 					builder.registerReaderAndWriter(IProjectTimeGetter.class, projectTimeGetter);
 					builder.registerReaderAndWriter(IRequestGroupReportGeneration.class, requestGroupReportGeneration);
-					builder.registerReader(IUsageReader.class, IUsageReader.Utils.localUsageReader(builder, localConfig.userUrlGenerator)); 
+					builder.registerReader(IUsageReader.class, IUsageReader.Utils.localUsageReader(builder, localConfig.userUrlGenerator));
 				}
 			};
 		}

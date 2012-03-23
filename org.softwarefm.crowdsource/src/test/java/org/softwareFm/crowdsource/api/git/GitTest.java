@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
-import org.softwareFm.crowdsource.api.git.internal.GitWriterForTests;
 import org.softwareFm.crowdsource.git.internal.GitOperations;
 import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
@@ -44,7 +43,6 @@ public abstract class GitTest extends TemporaryFileTest {
 
 	protected IRepoFinder repoFinder;
 
-	private IGitWriter gitWriter;
 
 	protected void put(String url, Map<String, Object> data) {
 		put(root, url, data);
@@ -89,7 +87,6 @@ public abstract class GitTest extends TemporaryFileTest {
 		localOperations = IGitOperations.Utils.gitOperations(localRoot);
 		remoteOperations = IGitOperations.Utils.gitOperations(remoteRoot);
 		repoFinder = makeFindRepositoryRoot();
-		gitWriter = new GitWriterForTests(remoteOperations);
 	}
 
 	protected IRepoFinder makeFindRepositoryRoot() {

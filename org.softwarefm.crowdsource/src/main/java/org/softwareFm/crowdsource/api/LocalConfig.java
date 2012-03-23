@@ -11,7 +11,7 @@ public class LocalConfig extends ApiConfig {
 	public final long timeOutMs;
 	public final long autoRefreshPeriod;
 
-	public LocalConfig(int port, int workerThreads, String host, File root, String urlPrefix, String remoteGitPrefix, long timeOutms, long AutoRefreshPeriod, ICallback<Throwable> errorHandler, IExtraReaderWriterConfigurator extraReaderWriterConfigurator) {
+	public LocalConfig(int port, int workerThreads, String host, File root, String urlPrefix, String remoteGitPrefix, long timeOutms, long AutoRefreshPeriod, ICallback<Throwable> errorHandler, IExtraReaderWriterConfigurator<LocalConfig> extraReaderWriterConfigurator) {
 		super(port, workerThreads, root, urlPrefix, errorHandler, extraReaderWriterConfigurator);
 		this.host = host;
 		this.remoteGitPrefix = remoteGitPrefix;

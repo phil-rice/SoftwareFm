@@ -1,6 +1,5 @@
 package org.softwareFm.crowdsource.api.internal;
 
-import org.softwareFm.crowdsource.api.IApiBuilder;
 import org.softwareFm.crowdsource.api.IComments;
 import org.softwareFm.crowdsource.api.ICommentsReader;
 import org.softwareFm.crowdsource.api.ServerConfig;
@@ -18,7 +17,7 @@ import org.softwareFm.crowdsource.user.internal.GroupsForServer;
 import org.softwareFm.crowdsource.user.internal.ServerUser;
 import org.softwareFm.crowdsource.user.internal.UserMembershipForServer;
 
-public class CrowdSourcedServerReadWriterApi extends AbstractCrowdSourceReadWriterApi implements IApiBuilder {
+public class CrowdSourcedServerReadWriterApi extends AbstractCrowdSourceReadWriterApi {
 
 	private final IGitOperations gitOperations;
 	private final ServerUser user;

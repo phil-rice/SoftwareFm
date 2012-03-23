@@ -22,7 +22,6 @@ import org.softwareFm.crowdsource.server.doers.internal.TakeOnProcessor;
 
 public class ServerDoers implements IServerDoers {
 	private final ServerConfig serverConfig;
-	private final ICrowdSourcedReadWriteApi crowdSourceServerReadWriterApi;
 	private final SignUpChecker signUpChecker;
 	private final SaltProcessor saltProcessor;
 	private final IMailer mailer;
@@ -34,7 +33,6 @@ public class ServerDoers implements IServerDoers {
 
 	public ServerDoers(ServerConfig serverConfig, ICrowdSourcedReadWriteApi crowdSourceServerReadWriterApi) {
 		this.serverConfig = serverConfig;
-		this.crowdSourceServerReadWriterApi = crowdSourceServerReadWriterApi;
 		this.mailer = serverConfig.mailer;
 		
 		this.signUpChecker = new SignUpChecker(serverConfig.dataSource, serverConfig.cryptoGenerators, crowdSourceServerReadWriterApi);

@@ -25,6 +25,7 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction2;
 import org.softwareFm.crowdsource.utilities.functions.IFunction3;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 
+@SuppressWarnings("unchecked")
 abstract public class AbstractCrowdSourceReadWriterApi implements IApiBuilder {
 
 	private final Map<Class<?>, Object> readerMap = Maps.newMap();

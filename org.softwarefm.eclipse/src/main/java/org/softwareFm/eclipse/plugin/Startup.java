@@ -5,16 +5,19 @@
 package org.softwareFm.eclipse.plugin;
 
 import org.eclipse.ui.IStartup;
+import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
+import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
+import org.softwareFm.crowdsource.api.git.IGitLocal;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
-import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
+import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.maps.IHasCache;
 import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.eclipse.jdtBinding.BindingRipperResult;
 import org.softwareFm.jar.EclipseMessages;
 import org.softwareFm.jarAndClassPath.api.IUsageStrategy;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
-import org.softwareFm.jarAndClassPath.internal.UsageStrategy;
 
 public class Startup implements IStartup {
 
@@ -27,9 +30,10 @@ public class Startup implements IStartup {
 			public Void apply(IMonitor monitor) throws Exception {
 				monitor.beginTask(EclipseMessages.startUp, 1);
 				try {
-					IUsageStrategy rawUsageStrategy = IUsageStrategy.Utils.usage(serviceExecutor, activator.getApi(), userGenerator);
-					
-					new UsageStrategy(activator.getClient(), serviceExecutor, gitLocal, LoginConstants.userGenerator(JarAndPathConstants.urlPrefix));
+					ICrowdSourcedApi api = activator.getApi();
+					ICrowdSourcedReaderApi makeReader = api.makeReader();
+					IUsageStrategy rawUsageStrategy = IUsageStrategy.Utils.usage(serviceExecutor, makeReader, activator.getLocalConfig().userUrlGenerator);
+					IHasCache gitLocal = makeReader.access(IGitLocal.class, Functions.<IGitLocal, IGitLocal>identity());
 					final IUsageStrategy cachedUsageStrategy = IUsageStrategy.Utils.cached(rawUsageStrategy, JarAndPathConstants.usageRefreshTimeMs, gitLocal, activator.getUserDataManager());
 					activator.getSelectedBindingManager().addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
 						@Override

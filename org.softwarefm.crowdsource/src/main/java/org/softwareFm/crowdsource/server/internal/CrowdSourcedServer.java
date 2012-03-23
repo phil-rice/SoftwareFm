@@ -4,7 +4,6 @@
 
 package org.softwareFm.crowdsource.server.internal;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -14,7 +13,6 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpException;
@@ -30,7 +28,6 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
-import org.softwareFm.crowdsource.api.git.IGitOperations;
 import org.softwareFm.crowdsource.api.server.ICallProcessor;
 import org.softwareFm.crowdsource.api.server.IProcessResult;
 import org.softwareFm.crowdsource.api.server.IUsage;
@@ -40,7 +37,6 @@ import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
-import org.softwareFm.crowdsource.utilities.processors.AbstractLoginDataAccessor;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
 
@@ -152,10 +148,10 @@ public class CrowdSourcedServer implements ICrowdSourcedServer {
 					}
 					return Collections.emptyMap();
 				}
-				
+
 				@Override
 				public String toString() {
-					return "Processing User Connection on "+ Thread.currentThread();
+					return "Processing User Connection on " + Thread.currentThread();
 				}
 			};
 			for (int i = 0; i < threads; i++) {
@@ -198,21 +194,4 @@ public class CrowdSourcedServer implements ICrowdSourcedServer {
 	private void doNothing() {
 	}
 
-	public static void main(String[] args) throws Exception {
-		File sfmRoot = Utils.makeSfmRoot();
-		IGitOperations gitOperations = IGitOperations.Utils.gitOperations(sfmRoot);
-		BasicDataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
-//		makeServer(Utils.port(args), gitOperations, dataSource, Functions.<ProcessCallParameters, ICallProcessor[]> constant(new ICallProcessor[0]), "softwarefm", Collections.<String, Callable<Object>> emptyMap());
-	}
-
-//	public static ICrowdSourcedServer makeServer(int port, IGitOperations gitOperations, BasicDataSource dataSource, IFunction1<ProcessCallParameters, ICallProcessor[]> extraProcessCalls, String prefix, Map<String, Callable<Object>> defaultValues) {
-//		System.out.println("Server: " + gitOperations);
-//		final IUsage usage = IUsage.Utils.defaultUsage();
-//		IMailer mailer = IMailer.Utils.email("localhost", null, null);
-//		Callable<String> softwareFmIdGenerator = Callables.uuidGenerator();
-//		IFunction1<Map<String, Object>, String> userCryptoFn = new UserCryptoFn(dataSource);
-//		ProcessCallParameters processCallParameters = new ProcessCallParameters(dataSource, gitOperations, Callables.makeCryptoKey(), softwareFmIdGenerator, userCryptoFn, mailer, defaultValues, prefix);
-//		ICallProcessor callProcessor = ICallProcessor.Utils.softwareFmProcessCall(processCallParameters, extraProcessCalls);
-//		return new CrowdSourcedServer(port, 1000, callProcessor, ICallback.Utils.sysErrCallback(), usage);
-//	}
 }

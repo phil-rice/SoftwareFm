@@ -16,6 +16,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.prefs.BackingStoreException;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
+import org.softwareFm.crowdsource.api.LocalConfig;
 import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
@@ -36,7 +37,7 @@ import org.softwareFm.swt.dataStore.ICardDataStore;
  */
 @SuppressWarnings("deprecation")
 public class Activator extends AbstractUIPlugin {
-	boolean local = false;
+	boolean local = true;
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.softwareFm.explorer.eclipse.ExplorerView"; //$NON-NLS-1$
@@ -54,6 +55,8 @@ public class Activator extends AbstractUIPlugin {
 	private final Object lock = new Object();
 
 	private IUserDataManager userDataManager;
+
+	private LocalConfig localConfig;
 
 	public Activator() {
 	}
@@ -77,18 +80,28 @@ public class Activator extends AbstractUIPlugin {
 			api = null;
 			selectedArtifactSelectionManager = null;
 			userDataManager = null;
+			localConfig = null;
 		}
 		super.stop(context);
 	}
 
 	public ICrowdSourcedApi getApi() {
-		if (api != null)
+		if (api == null)
 			synchronized (lock) {
-				if (api != null) {
-					api = local ? ISoftwareFmApiFactory.Utils.makeClientApiForLocalHost() : ISoftwareFmApiFactory.Utils.makeClientApiForSoftwareFmServer();
+				if (api == null) {
+					api = ICrowdSourcedApi.Utils.forClient(getLocalConfig());
 				}
 			}
 		return api;
+	}
+
+	public LocalConfig getLocalConfig() {
+		if (localConfig == null)
+			synchronized (lock) {
+				if (localConfig == null)
+					localConfig = ISoftwareFmApiFactory.Utils.getLocalConfig(local);
+			}
+		return localConfig;
 	}
 
 	public CardConfig getCardConfig(Composite parent) {

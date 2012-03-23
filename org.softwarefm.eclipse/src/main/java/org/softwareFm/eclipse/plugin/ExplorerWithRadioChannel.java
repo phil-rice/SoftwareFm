@@ -54,7 +54,7 @@ import org.softwareFm.swt.swt.Swts.Grid;
 import org.softwareFm.swt.timeline.IPlayListGetter;
 
 public class ExplorerWithRadioChannel {
-	private static boolean local = true;
+	private static boolean local = false;
 
 	public static void main(String[] args) {
 		BasicConfigurator.configure();

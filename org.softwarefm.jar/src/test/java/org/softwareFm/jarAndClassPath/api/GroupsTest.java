@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import org.softwareFm.crowdsource.api.ApiConfig;
 import org.softwareFm.crowdsource.api.ApiTest;
 import org.softwareFm.crowdsource.api.IApiBuilder;
 import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
 import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
 import org.softwareFm.crowdsource.api.ITakeOnEnrichmentProvider;
+import org.softwareFm.crowdsource.api.ServerConfig;
 import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
@@ -22,8 +22,6 @@ import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.runnable.Callables;
 import org.softwareFm.crowdsource.utilities.url.Urls;
-import org.softwareFm.jarAndClassPath.api.IProject;
-import org.softwareFm.jarAndClassPath.api.IUsageReader;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.jarAndClassPath.server.internal.GenerateUsageProjectGenerator;
 import org.softwareFm.jarAndClassPath.server.internal.ProjectForServer;
@@ -49,10 +47,10 @@ abstract public class GroupsTest extends ApiTest {
 	}
 
 	@Override
-	protected IExtraReaderWriterConfigurator getServerExtraReaderWriterConfigurator() {
-		return new IExtraReaderWriterConfigurator() {
+	protected IExtraReaderWriterConfigurator<ServerConfig> getServerExtraReaderWriterConfigurator() {
+		return new IExtraReaderWriterConfigurator<ServerConfig>() {
 			@Override
-			public void builder(IApiBuilder builder, ApiConfig apiConfig) {
+			public void builder(IApiBuilder builder, ServerConfig apiConfig) {
 				builder.registerReaderAndWriter(IGenerateUsageReportGenerator.class, new GenerateUsageProjectGenerator(builder));
 				builder.registerReaderAndWriter(IUsageReader.class, new UsageReaderForServer(builder, apiConfig.userUrlGenerator));
 				builder.registerReaderAndWriter(IProject.class, new ProjectForServer(builder, getUserCryptoAccess(), apiConfig.userUrlGenerator));

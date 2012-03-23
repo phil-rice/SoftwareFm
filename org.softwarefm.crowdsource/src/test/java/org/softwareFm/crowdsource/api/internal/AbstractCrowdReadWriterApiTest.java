@@ -3,9 +3,9 @@ package org.softwareFm.crowdsource.api.internal;
 import org.softwareFm.crowdsource.api.ApiTest;
 import org.softwareFm.crowdsource.api.IComments;
 import org.softwareFm.crowdsource.api.ICommentsReader;
+import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
 import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
-import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IGroups;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
@@ -147,7 +147,7 @@ abstract public class AbstractCrowdReadWriterApiTest extends ApiTest {
 		checkExceptionWhenModifying(readWriter, IUserReader.class, "Cannot modify without registered readWriter for class interface org.softwareFm.crowdsource.api.user.IUserReader. Legal readWriters are ");
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void checkExceptionWhenModifying(final ICrowdSourcedReadWriteApi readWriter, final Class<?> class1, String expectedMessage) {
 		final ICallback callback = ICallback.Utils.exception("should not be called");
 		NullPointerException e = Tests.assertThrows( NullPointerException.class, new Runnable() {
@@ -159,7 +159,7 @@ abstract public class AbstractCrowdReadWriterApiTest extends ApiTest {
 		assertTrue(e.getMessage(), e.getMessage().startsWith(expectedMessage));
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void checkExceptionWhenAccessing(final ICrowdSourcedReaderApi reader, final Class<?> class1, String expectedMessage) {
 		final IFunction1 expectionIfCalled = Functions.expectionIfCalled();
 		NullPointerException e = Tests.assertThrows( NullPointerException.class, new Runnable() {

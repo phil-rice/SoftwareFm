@@ -4,7 +4,6 @@
 
 package org.softwareFm.swt.comments;
 
-import java.io.File;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
@@ -21,11 +20,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.crowdsource.api.ICommentsReader;
 import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
-import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
-import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
-import org.softwareFm.crowdsource.api.ServerConfig;
 import org.softwareFm.crowdsource.api.UserData;
-import org.softwareFm.crowdsource.api.server.IMailer;
 import org.softwareFm.crowdsource.constants.CommentConstants;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.comparators.Comparators;
@@ -34,14 +29,10 @@ import org.softwareFm.crowdsource.utilities.constants.CommonMessages;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
-import org.softwareFm.crowdsource.utilities.runnable.Runnables;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
-import org.softwareFm.swt.card.ICardFactory;
-import org.softwareFm.swt.card.dataStore.CardDataStoreMock;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;
-import org.softwareFm.swt.configuration.ICardConfigurator;
 import org.softwareFm.swt.constants.CollectionConstants;
 import org.softwareFm.swt.editors.DataComposite;
 import org.softwareFm.swt.editors.DataCompositeWithFooterLayout;
@@ -197,26 +188,5 @@ public class Comments implements IHasControl {
 	public Table getTable() {
 		return content.table;
 	}
-
-	public static void main(String[] args) {
-		Swts.Show.display(Comments.class.getSimpleName(), new IFunction1<Composite, Composite>() {
-			@Override
-			public Composite apply(Composite from) throws Exception {
-				CardConfig cardConfig = ICardConfigurator.Utils.basicConfigurator().configure(from.getDisplay(), new CardConfig(ICardFactory.Utils.noCardFactory(), new CardDataStoreMock()));
-				Runnable addComment = Runnables.sysout("add comment");
-				File sfmRoot = ICrowdSourcedServer.Utils.makeSfmRoot();
-				ICrowdSourcedApi api = ICrowdSourcedApi.Utils.forServer(ServerConfig.serverConfigForTests(sfmRoot, IMailer.Utils.noMailer()));
-				@SuppressWarnings("This isnt correct: comeback and work out how to easily inject the comments reader")
-				ICommentsReader commentsReader = ICommentsReader.Utils.mockReader("sfmId", "Phil", System.currentTimeMillis(), "comment1", "comment2", "comment3");
-				Comments comments = new Comments(from, api.makeReadWriter(), cardConfig, new ICommentsCallback() {
-					@Override
-					public void selected(String cardType, String url, int index, Map<String, Object> comment) {
-						System.out.println("Selected: " + cardType + ", " + url + ", " + index + ", " + comment);
-					}
-				}, addComment);
-				comments.showCommentsFor(new UserData("email", "someSfmId", "someCrypto"), "artifact", "someUrl");
-				return (Composite) comments.getControl();
-			}
-		});
-	}
+	
 }

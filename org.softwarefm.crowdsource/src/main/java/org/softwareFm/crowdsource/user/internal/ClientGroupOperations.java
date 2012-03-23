@@ -14,11 +14,9 @@ import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 public class ClientGroupOperations implements IGroupOperations {
 
 	private final ICrowdSourcedReadWriteApi readWriteApi;
-	private final long timeOutMs;
 
-	public ClientGroupOperations(ICrowdSourcedReadWriteApi readWriteApi, long timeOutMs) {
+	public ClientGroupOperations(ICrowdSourcedReadWriteApi readWriteApi) {
 		this.readWriteApi = readWriteApi;
-		this.timeOutMs = timeOutMs;
 	}
 
 	@Override

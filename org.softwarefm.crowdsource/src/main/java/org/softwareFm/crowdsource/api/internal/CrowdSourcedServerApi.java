@@ -19,6 +19,7 @@ public class CrowdSourcedServerApi extends AbstractCrowdSourcesApi {
 	private ICrowdSourcedServer server;
 	private final Object lock = new Object();
 
+	@SuppressWarnings("unchecked")
 	public CrowdSourcedServerApi(ServerConfig serverConfig, IFunction1<ICrowdSourcedReadWriteApi, IServerDoers> serverDoersCreator) {
 		this.serverConfig = serverConfig;
 		crowdSourcedServerReadWriterApi = new CrowdSourcedServerReadWriterApi(serverConfig);

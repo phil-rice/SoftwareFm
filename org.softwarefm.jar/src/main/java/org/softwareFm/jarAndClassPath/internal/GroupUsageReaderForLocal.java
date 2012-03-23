@@ -9,7 +9,6 @@ import java.util.Map;
 
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitLocal;
-import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
@@ -19,14 +18,12 @@ import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 
 public class GroupUsageReaderForLocal implements IGroupUsageReader {
 
-	private final IGroupsReader groupsReader;
 	private final IUrlGenerator groupUrlGenerator;
 	private final IGitLocal gitLocal;
 
-	public GroupUsageReaderForLocal(IUrlGenerator groupUrlGenerator, IGitLocal gitLocal, IGroupsReader groupsReader) {
+	public GroupUsageReaderForLocal(IUrlGenerator groupUrlGenerator, IGitLocal gitLocal) {
 		this.groupUrlGenerator = groupUrlGenerator;
 		this.gitLocal = gitLocal;
-		this.groupsReader = groupsReader;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

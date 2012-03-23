@@ -13,7 +13,6 @@ import org.softwareFm.crowdsource.utilities.constants.LoginMessages;
 
 public class SignupIntegrationTests extends AbstractProcessorMockIntegrationTests {
 
-	private final String softwareFmId = "someSoftwareFmId0";
 	private final String email = "email@a.b";
 
 	public void testMakeSaltThenSignUp() throws Exception {

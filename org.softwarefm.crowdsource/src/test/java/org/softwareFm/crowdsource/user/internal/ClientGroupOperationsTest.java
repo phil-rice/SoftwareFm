@@ -96,6 +96,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 		});
 
 		localReadWriter.access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, new IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void>() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public Void apply(IGroupsReader groupsReader, IUserReader userReader, IUserMembershipReader userMembershipReader) throws Exception {
 				checkUserExistsAndIsMember(userReader, userMembershipReader, softwareFmId0, userKey0, email0, GroupConstants.adminStatus);
@@ -250,6 +251,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 		});
 	}
 
+	@SuppressWarnings("unchecked")
 	private void checkUserExistsAndIsMember(IUserReader userReader, IUserMembershipReader userMembershipReader, String id, String key, String email, String status) {
 		assertEquals(email, userReader.getUserProperty(id, key, LoginConstants.emailKey));
 		assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId0, GroupConstants.groupCryptoKey, groupCryptoKey0, GroupConstants.membershipStatusKey, status)), userMembershipReader.walkGroupsFor(id, key));

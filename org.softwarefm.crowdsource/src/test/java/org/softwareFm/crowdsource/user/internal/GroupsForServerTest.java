@@ -23,12 +23,10 @@ import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.runnable.Callables;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.crowdsource.utilities.tests.Tests;
-import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 
 public class GroupsForServerTest extends ApiTest {
 
 	public IFunction1<String, String> repoGenerator = Strings.firstNSegments(3);
-	private IUrlGenerator groupUrlGenerator;
 	private final String groupId = "groupId";
 	private final String groupCrypto = Crypto.makeKey();
 
@@ -286,7 +284,6 @@ public class GroupsForServerTest extends ApiTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		getServerApi().getServer();
-		groupUrlGenerator = getServerConfig().groupUrlGenerator;
 
 	}
 }

@@ -7,6 +7,7 @@ import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 
+@SuppressWarnings("rawtypes")
 public class ApiConfig {
 	public final int port;
 	public final File root;

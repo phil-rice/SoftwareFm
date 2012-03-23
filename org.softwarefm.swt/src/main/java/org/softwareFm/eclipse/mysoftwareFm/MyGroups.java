@@ -112,7 +112,6 @@ public class MyGroups implements IHasComposite {
 			this.content = new Composite(parent, SWT.NULL);
 			content.setLayout(Swts.Row.getHorizonalNoMarginRowLayout());
 			final IGroupClientOperations groupClientOperations = IGroupClientOperations.Utils.groupOperations(masterDetailSocial, cardConfig, readWriteApi);
-			final Callable<CardConfig> cardConfigGetter = Callables.value(cardConfig);
 			accept = Swts.Buttons.makePushButton(content, "Accept", groupClientOperations.acceptInvitation(userData, idNameStatusGetter, showMyGroups));
 			invite = Swts.Buttons.makePushButton(content, "Invite", groupClientOperations.inviteToGroup(userData, idNameStatusGetter, showMyGroups));
 			create = Swts.Buttons.makePushButton(content, "Create new group", groupClientOperations.createGroup(userData, showMyGroups));
