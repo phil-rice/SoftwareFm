@@ -1,6 +1,5 @@
 package org.softwareFm.crowdsource.api;
 
-import org.softwareFm.crowdsource.api.git.IGitOperations;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
@@ -10,8 +9,8 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction2;
 import org.softwareFm.crowdsource.utilities.functions.IFunction3;
 
 public interface ICrowdSourcedReaderApi {
-	@SuppressWarnings("Need to migrate away from this")
-	IGitOperations gitOperations();
+	
+	
 	<T> T accessGitReader(IFunction1<IGitReader, T> function);
 
 	<T> T accessCommentsReader(IFunction1<ICommentsReader, T> function);

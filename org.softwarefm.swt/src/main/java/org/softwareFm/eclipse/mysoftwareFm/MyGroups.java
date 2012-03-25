@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
@@ -55,7 +55,7 @@ import org.softwareFm.swt.explorer.IShowMyGroups;
 import org.softwareFm.swt.swt.Swts;
 
 public class MyGroups implements IHasComposite {
-	public static IShowMyGroups showMyGroups(final IMasterDetailSocial masterDetailSocial, final ICrowdSourcedReadWriteApi readWriteApi, final IServiceExecutor executor, final boolean showDialogs, final CardConfig cardConfig) {
+	public static IShowMyGroups showMyGroups(final IMasterDetailSocial masterDetailSocial, final IContainer readWriteApi, final IServiceExecutor executor, final boolean showDialogs, final CardConfig cardConfig) {
 		return new IShowMyGroups() {
 			@Override
 			public void show(final UserData userData, final String groupId) {
@@ -105,7 +105,7 @@ public class MyGroups implements IHasComposite {
 
 		@SuppressWarnings("Need to externalise these string")
 		// show dialogs exists because it is very hard to test for this: the dialog actually appears... I could rewrite the open confirm dialog so that it didn't appear in tests, but it doesn't seem worth it
-		public MyGroupsButtons(final Composite parent, IMasterDetailSocial masterDetailSocial, final CardConfig cardConfig, ICrowdSourcedReadWriteApi readWriteApi, final boolean showDialogs, final UserData userData, final ICallback<String> showMyGroups, final Callable<IdNameAndStatus> idNameStatusGetter, final Callable<List<Map<String, Object>>> objectMapGetter, Callable<Integer> groupSizeGetter) {
+		public MyGroupsButtons(final Composite parent, IMasterDetailSocial masterDetailSocial, final CardConfig cardConfig, IContainer readWriteApi, final boolean showDialogs, final UserData userData, final ICallback<String> showMyGroups, final Callable<IdNameAndStatus> idNameStatusGetter, final Callable<List<Map<String, Object>>> objectMapGetter, Callable<Integer> groupSizeGetter) {
 			this.idNameStatusGetter = idNameStatusGetter;
 			this.objectMapGetter = objectMapGetter;
 			this.groupSizeGetter = groupSizeGetter;
@@ -190,7 +190,7 @@ public class MyGroups implements IHasComposite {
 			return sashForm;
 		}
 
-		public MyGroupsComposite(Composite parent, IMasterDetailSocial masterDetailSocial, final ICrowdSourcedReadWriteApi readWriteApi, boolean showDialogs, final CardConfig cardConfig, final UserData userData, ICallback<String> showMyGroups) {
+		public MyGroupsComposite(Composite parent, IMasterDetailSocial masterDetailSocial, final IContainer readWriteApi, boolean showDialogs, final CardConfig cardConfig, final UserData userData, ICallback<String> showMyGroups) {
 			super(parent, cardConfig, GroupConstants.myGroupsCardType, JarAndPathConstants.myGroupsTitle, true);
 			sashForm = new SashForm(getInnerBody(), SWT.HORIZONTAL);
 			summaryTable = new Table(sashForm, SWT.FULL_SELECTION);
@@ -332,7 +332,7 @@ public class MyGroups implements IHasComposite {
 		}
 	}
 
-	public MyGroups(Composite parent, IMasterDetailSocial masterDetailSocial, ICrowdSourcedReadWriteApi readWriteApi, boolean showDialogs, CardConfig cardConfig, UserData userData, ICallback<String> showMyGroups) {
+	public MyGroups(Composite parent, IMasterDetailSocial masterDetailSocial, IContainer readWriteApi, boolean showDialogs, CardConfig cardConfig, UserData userData, ICallback<String> showMyGroups) {
 		content = new MyGroupsComposite(parent, masterDetailSocial, readWriteApi, showDialogs, cardConfig, userData, showMyGroups);
 		content.setLayout(new DataCompositeWithFooterLayout());
 	}

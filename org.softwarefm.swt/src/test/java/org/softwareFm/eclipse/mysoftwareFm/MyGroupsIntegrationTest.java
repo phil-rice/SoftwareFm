@@ -113,7 +113,7 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		String badCrypto = Crypto.makeKey();
 		String userUrl = getServerConfig().userUrlGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId0));
 		IFileDescription fileDescription = IFileDescription.Utils.encrypted(userUrl, GroupConstants.membershipFileName, badCrypto);
-		getServerApi().makeReader().gitOperations().append(fileDescription, Maps.stringObjectMap("will be", "encoded wrong"));
+		getServerApi().makeContainer().gitOperations().append(fileDescription, Maps.stringObjectMap("will be", "encoded wrong"));
 
 		addUserToGroup(softwareFmId0, email0, groupId0, groupCryptoKey0, "someStatus1");
 
@@ -146,7 +146,7 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 	}
 
 	private Map<String, Object> makeMembershipMap(String softwareFmId, String cryptoKey, String email, String status) {
-		String projectCryptoKey = IUserReader.Utils.getUserProperty(getServerApi().makeReader(), softwareFmId, cryptoKey, JarAndPathConstants.projectCryptoKey);
+		String projectCryptoKey = IUserReader.Utils.getUserProperty(getServerApi().makeContainer(), softwareFmId, cryptoKey, JarAndPathConstants.projectCryptoKey);
 		return Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId, JarAndPathConstants.projectCryptoKey, projectCryptoKey, LoginConstants.emailKey, email, GroupConstants.membershipStatusKey, status);
 	}
 }

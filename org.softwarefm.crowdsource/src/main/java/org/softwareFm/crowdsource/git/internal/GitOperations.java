@@ -68,16 +68,16 @@ public class GitOperations implements IGitOperations {
 	@Override
 	public void put(IFileDescription fileDescription, Map<String, Object> data) {
 		IFileDescription.Utils.save(root, fileDescription, data);
-		addAllAndCommit(fileDescription);
+		addAllAndCommit(fileDescription, "put " + fileDescription + " " + data);
 
 	}
 
-	protected void addAllAndCommit(IFileDescription fileDescription) {
+	protected void addAllAndCommit(IFileDescription fileDescription, String commitMessage) {
 		File repositoryFile = fileDescription.findRepositoryUrl(root);
 		if (repositoryFile == null)
 			throw new NullPointerException(MessageFormat.format(CommonMessages.cannotFindRepositoryUrl, fileDescription));
 		String url = Files.offset(root, repositoryFile);
-		addAllAndCommit(url, GitOperations.class.getSimpleName());
+		addAllAndCommit(url, commitMessage);
 	}
 
 	@Override
@@ -256,7 +256,7 @@ public class GitOperations implements IGitOperations {
 			} finally {
 				fileWriter.close();
 			}
-			addAllAndCommit(fileDescription);
+			addAllAndCommit(fileDescription, "append " + fileDescription + " " + data);
 		} catch (IOException e) {
 			throw WrappedException.wrap(e);
 		}
@@ -282,9 +282,9 @@ public class GitOperations implements IGitOperations {
 		for (int i = 0; i < lines.size(); i++) {
 			String line = lines.get(i);
 			Map<String, Object> map = fileDescription.decode(line);
-			if (Functions.call(acceptor, map)) 
+			if (Functions.call(acceptor, map))
 				count++;
-			 else
+			else
 				builder.append(line + "\n");
 		}
 		if (count > 0) {
@@ -325,6 +325,16 @@ public class GitOperations implements IGitOperations {
 			addAllAndCommit(repositoryUrl, commitMessage);
 		}
 		return count;
+	}
+
+	@Override
+	public void delete(IFileDescription fileDescription) {
+		File file = fileDescription.getFile(root);
+		if (file.exists()) {
+			file.delete();
+			File repositoryFile = fileDescription.findRepositoryUrl(root);
+			String repositoryUrl = Files.offset(root, repositoryFile);
+		}
 	}
 
 }

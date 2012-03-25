@@ -19,7 +19,7 @@ public class CommonConstants {
 	public static final String dataParameterName = "data";
 	public static final String repoUrlKey = "repoUrl";
  
-	public static final long testTimeOutMs = 3000;
+	public static final long testTimeOutMs = 3000000;
 
 	public static final String GET = "GET";
 	public static final String POST = "POST";
@@ -28,6 +28,7 @@ public class CommonConstants {
 
 	public static final String makeRootPrefix = "command/makeRoot";
 	public static final String emailSaltPrefix = "command/emailSalt";
+	public static final String commitMessageKey = "commitMessage";
 
 	public static final int okStatusCode = 200;
 	public static final int notFoundStatusCode = 404;

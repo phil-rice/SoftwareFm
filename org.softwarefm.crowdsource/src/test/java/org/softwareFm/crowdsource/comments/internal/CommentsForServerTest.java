@@ -7,7 +7,8 @@ import java.util.Map;
 import org.softwareFm.crowdsource.api.ICommentDefn;
 import org.softwareFm.crowdsource.api.IComments;
 import org.softwareFm.crowdsource.api.ICommentsReader;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
+import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.user.IUser;
 import org.softwareFm.crowdsource.constants.CommentConstants;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
@@ -18,10 +19,15 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 
 public class CommentsForServerTest extends AbstractCommentsReaderTest {
 
+	@Override
+	protected ICrowdSourcedApi getApi() {
+		return getServerApi();
+	}
+	
 	@SuppressWarnings("unchecked")
 	public void testAddGlobalComments() {
 		remoteOperations.init("a");
-		getApi().makeReadWriter().modifyUser(new ICallback<IUser>() {
+		getServerContainer().modifyUser(new ICallback<IUser>() {
 			@Override
 			public void process(IUser user) throws Exception {
 				user.setUserProperty(softwareFmId, userKey0, LoginConstants.monikerKey, "moniker");
@@ -31,7 +37,7 @@ public class CommentsForServerTest extends AbstractCommentsReaderTest {
 		checkAddComment(comment1, CommentConstants.globalSource, ICommentDefn.Utils.everyoneInitial("a/b"), comment1);
 		checkAddComment(comment2, CommentConstants.globalSource, ICommentDefn.Utils.everyoneInitial("a/b"), comment1, comment2);
 
-		getApi().makeReader().accessCommentsReader(new IFunction1<ICommentsReader, Void>() {
+		getServerContainer().accessCommentsReader(new IFunction1<ICommentsReader, Void>() {
 			@Override
 			public Void apply(ICommentsReader reader) throws Exception {
 				assertEquals(addSource(CommentConstants.globalSource, comment1, comment2), reader.globalComments("a/b", CommentConstants.globalSource));
@@ -44,18 +50,18 @@ public class CommentsForServerTest extends AbstractCommentsReaderTest {
 	@SuppressWarnings("unchecked")
 	public void testAddMyComments() {
 		remoteOperations.init("a");
-		getApi().makeReadWriter().modifyUser(new ICallback<IUser>() {
+		IContainer serverContainer = getServerContainer();
+		serverContainer.modifyUser(new ICallback<IUser>() {
 			@Override
 			public void process(IUser user) throws Exception {
 				user.setUserProperty(softwareFmId, userKey0, LoginConstants.monikerKey, "moniker");
 			}
 		});
 
-		ICrowdSourcedReaderApi reader = getApi().makeReader();
-		checkAddComment(comment1, CommentConstants.mySource, ICommentDefn.Utils.myInitial(reader, softwareFmId, userKey0, "a/b"), comment1);
-		checkAddComment(comment2, CommentConstants.mySource, ICommentDefn.Utils.myInitial(reader, softwareFmId, userKey0, "a/b"), comment1, comment2);
+		checkAddComment(comment1, CommentConstants.mySource, ICommentDefn.Utils.myInitial(serverContainer, softwareFmId, userKey0, "a/b"), comment1);
+		checkAddComment(comment2, CommentConstants.mySource, ICommentDefn.Utils.myInitial(serverContainer, softwareFmId, userKey0, "a/b"), comment1, comment2);
 
-		reader.accessCommentsReader(new IFunction1<ICommentsReader, Void>() {
+		serverContainer.accessCommentsReader(new IFunction1<ICommentsReader, Void>() {
 			@Override
 			public Void apply(ICommentsReader reader) throws Exception {
 				assertEquals(Arrays.asList(), reader.globalComments("a/b", CommentConstants.globalSource));
@@ -68,21 +74,22 @@ public class CommentsForServerTest extends AbstractCommentsReaderTest {
 	@SuppressWarnings("unchecked")
 	public void testAddGroupComments() {
 		remoteOperations.init("a");
-		getApi().makeReadWriter().modifyUser(new ICallback<IUser>(){
+		IContainer serverContainer = getServerContainer();
+		serverContainer.modifyUser(new ICallback<IUser>() {
 			@Override
 			public void process(IUser user) throws Exception {
 				user.setUserProperty(softwareFmId, userKey0, GroupConstants.membershipCryptoKey, Crypto.makeKey());
 				user.setUserProperty(softwareFmId, userKey0, LoginConstants.monikerKey, "moniker");
-				
-			}});
+
+			}
+		});
 		Map<String, String> idToCrypto = setUpGroups("groupId1", "groupId2", "groupId3");
 
 		String group1Crypto = idToCrypto.get("groupId1");
-		ICrowdSourcedReaderApi reader = getApi().makeReader();
-		checkAddComment(comment1, "groupId1Name", ICommentDefn.Utils.groupInitial(reader, "groupId1", group1Crypto, "a/b"), comment1);
-		checkAddComment(comment2, "groupId1Name", ICommentDefn.Utils.groupInitial(reader, "groupId1", group1Crypto, "a/b"), comment1, comment2);
+		checkAddComment(comment1, "groupId1Name", ICommentDefn.Utils.groupInitial(serverContainer, "groupId1", group1Crypto, "a/b"), comment1);
+		checkAddComment(comment2, "groupId1Name", ICommentDefn.Utils.groupInitial(serverContainer, "groupId1", group1Crypto, "a/b"), comment1, comment2);
 
-		reader.accessCommentsReader(new IFunction1<ICommentsReader, Void>() {
+		serverContainer.accessCommentsReader(new IFunction1<ICommentsReader, Void>() {
 			@Override
 			public Void apply(ICommentsReader commentsReader) throws Exception {
 				assertEquals(Arrays.asList(), commentsReader.globalComments("a/b", CommentConstants.globalSource));
@@ -94,7 +101,7 @@ public class CommentsForServerTest extends AbstractCommentsReaderTest {
 	}
 
 	protected void checkAddComment(final Map<String, Object> comment, final String source, final ICommentDefn defn, final Map<String, Object>... rawExpected) {
-		getApi().makeReadWriter().modifyComments(new ICallback<IComments>() {
+		getServerContainer().modifyComments(new ICallback<IComments>() {
 			@Override
 			public void process(IComments comments) throws Exception {
 				comments.addComment(softwareFmId, userKey0, defn, (String) comment.get(CommentConstants.textKey));
@@ -104,6 +111,5 @@ public class CommentsForServerTest extends AbstractCommentsReaderTest {
 			}
 		});
 	}
-
 
 }

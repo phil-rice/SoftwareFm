@@ -12,7 +12,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.softwareFm.crowdsource.api.ApiTest;
-import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.ICryptoGenerators;
 import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.server.doers.internal.ForgottonPasswordMailer;
@@ -39,7 +38,6 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends ApiTest imple
 	protected PasswordResetter resetPassword;
 	private BasicDataSource dataSource;
 	protected JdbcTemplate template;
-	private ICrowdSourcedApi api;
 
 	protected String checkSignup(final String email, final String moniker, final String salt, final String hash, final String softwareFmId) {
 		int initial = findUsersSize();
@@ -62,7 +60,7 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends ApiTest imple
 		assertEquals(initial + 1, finalCount);
 		assertEquals(1, count.get());
 
-		api.makeReader().accessUserReader(new IFunction1<IUserReader, Void>() {
+		getServerContainer().accessUserReader(new IFunction1<IUserReader, Void>() {
 			@Override
 			public Void apply(IUserReader user) throws Exception {
 				assertEquals(email, user.getUserProperty(softwareFmId, crypto, LoginConstants.emailKey));
@@ -92,9 +90,8 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends ApiTest imple
 		dataSource = AbstractLoginDataAccessor.defaultDataSource();
 
 		ICryptoGenerators cryptoGenerators = ICryptoGenerators.Utils.mock(new String[] { Crypto.makeKey(), Crypto.makeKey() }, new String[0]);
-		api = getApi();
 
-		signupChecker = new SignUpChecker(dataSource, cryptoGenerators, api.makeReadWriter());
+		signupChecker = new SignUpChecker(dataSource, cryptoGenerators, getServerContainer());
 		loginChecker = new LoginChecker(dataSource);
 		IMagicStringForPassword magicStringForPassword = new MagicStringForPassword(dataSource, Callables.uuidGenerator());
 		passwordMailer = new ForgottonPasswordMailer(getMailer(), magicStringForPassword);// bit of a cheat...won't actually mail

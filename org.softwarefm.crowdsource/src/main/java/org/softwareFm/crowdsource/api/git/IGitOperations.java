@@ -57,6 +57,7 @@ public interface IGitOperations extends IGitReader {
 	/** get the config from the repository at url */
 	String getConfig(String url, String section, String subsection, String name);
 
+	void delete(IFileDescription fileDescription);
 	abstract public static class Utils {
 		public static IGitOperations gitOperations(File root) {
 			return new GitOperations(root);
@@ -67,7 +68,7 @@ public interface IGitOperations extends IGitReader {
 			gitOperations.init(url);
 		}
 
-		public static IGitOperations noGitOperations() {
+		public static IGitOperations exceptionGitOperations() {
 			return new IGitOperations() {
 
 				@Override
@@ -159,7 +160,13 @@ public interface IGitOperations extends IGitReader {
 				public int countOfFileAsListsOfMap(IFileDescription fileDescription) {
 					throw new UnsupportedOperationException();
 				}
+
+				@Override
+				public void delete(IFileDescription fileDescription) {
+					throw new UnsupportedOperationException();
+				}
 			};
 		}
 	}
+
 }

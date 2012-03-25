@@ -10,7 +10,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.utilities.arrays.ArrayHelper;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
@@ -46,9 +46,9 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 	private final IShowMyData showMyData;
 	private final IShowMyGroups showMyGroups;
 	private final IUserDataManager userDataManager;
-	private final ICrowdSourcedReadWriteApi readWriteApi;
+	private final IContainer readWriteApi;
 
-	public MySoftwareFm(Composite parent,ICrowdSourcedReadWriteApi readWriteApi,  CardConfig cardConfig, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IUserDataManager userDataManager) {
+	public MySoftwareFm(Composite parent,IContainer readWriteApi,  CardConfig cardConfig, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IUserDataManager userDataManager) {
 		this.readWriteApi = readWriteApi;
 		this.cardConfig = cardConfig;
 		this.loginStrategy = loginStrategy;

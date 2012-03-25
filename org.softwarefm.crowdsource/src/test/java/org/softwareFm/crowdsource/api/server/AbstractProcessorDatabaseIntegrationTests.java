@@ -4,7 +4,7 @@
 
 package org.softwareFm.crowdsource.api.server;
 
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
 import org.softwareFm.crowdsource.api.internal.CrowdSourcedServerApi;
 
@@ -13,13 +13,13 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 	protected int thisDay;
 
 	public CrowdSourcedServerApi api;
-	public ICrowdSourcedReadWriteApi readWriter;
+	public IContainer readWriter;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		api = (CrowdSourcedServerApi) getServerApi();
-		readWriter = api.makeReadWriter();
+		readWriter = api.makeContainer();
 		server = api.getServer();
 		truncateUsersTable();
 	}

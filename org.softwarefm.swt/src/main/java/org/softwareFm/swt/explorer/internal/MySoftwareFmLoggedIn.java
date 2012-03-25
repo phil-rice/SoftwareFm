@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
@@ -79,7 +79,7 @@ public class MySoftwareFmLoggedIn implements IHasControl {
 		public final Button myGroupsButton;
 
 		@SuppressWarnings("unused")
-		public MySoftwareFmLoggedInComposite(Composite parent, ICrowdSourcedReadWriteApi readWriteApi, CardConfig cardConfig, String cardType, final ILoginDisplayStrategy loginDisplayStrategy, final IMySoftwareFmLoggedInStrategy loggedInStrategy, UserData userData) {
+		public MySoftwareFmLoggedInComposite(Composite parent, IContainer readWriteApi, CardConfig cardConfig, String cardType, final ILoginDisplayStrategy loginDisplayStrategy, final IMySoftwareFmLoggedInStrategy loggedInStrategy, UserData userData) {
 			super(parent, cardConfig, cardType, JarAndPathConstants.mySoftwareFmLoggedInTitle, true);
 			mainComposite = new Composite(getInnerBody(), SWT.NULL);
 			mainComposite.setBackground(getTitleSpec().background);
@@ -132,7 +132,7 @@ public class MySoftwareFmLoggedIn implements IHasControl {
 
 	}
 
-	public MySoftwareFmLoggedIn(Composite parent, ICrowdSourcedReadWriteApi readWriterApi, final CardConfig cardConfig, String title, String text, final UserData userData, final ILoginDisplayStrategy loginDisplayStrategy, final IMySoftwareFmLoggedInStrategy loggedInStrategy) {
+	public MySoftwareFmLoggedIn(Composite parent, IContainer readWriterApi, final CardConfig cardConfig, String title, String text, final UserData userData, final ILoginDisplayStrategy loginDisplayStrategy, final IMySoftwareFmLoggedInStrategy loggedInStrategy) {
 		content = new MySoftwareFmLoggedInComposite(parent, readWriterApi, cardConfig, CardConstants.loginCardType, loginDisplayStrategy, loggedInStrategy, userData);
 		content.setLayout(new DataCompositeWithFooterLayout());
 	}

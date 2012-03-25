@@ -6,11 +6,30 @@ package org.softwareFm.crowdsource.api.git;
 
 import java.util.Map;
 
-public interface IGitWriter  {
-	void init(String url);
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 
-	void put(IFileDescription fileDescription, Map<String, Object> data);
+public interface IGitWriter extends IGitReader {
+	void init(String url, String commitMessage);
 
-	void delete(IFileDescription fileDescription);
+	/** creates/overwrites a file at this file description */
+	void put(IFileDescription fileDescription, Map<String, Object> data, String commitMessage);
+
+	void delete(IFileDescription fileDescription, String commitMessage);
+
+	/** Assumes the file is a list of maps, each map is on a separate line (separated by \n). If encrypted, each line is separately encrypted */
+	void append(IFileDescription fileDescription, Map<String, Object> data, String commitMessage);
+
+	/**
+	 * Assumes the file is a list of maps, each map is on a separate line (separated by \n). If encrypted, each line is separately encrypted <br />
+	 * Each line that is accepted deleted<br />
+	 * 
+	 * @return count of lines deleted
+	 */
+
+	int removeLine(IFileDescription fileDescription, IFunction1<Map<String, Object>, Boolean> acceptor, String commitMessage);
+
+	public static class Utils {
+
+	}
 
 }

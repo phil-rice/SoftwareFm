@@ -3,8 +3,8 @@ package org.softwareFm.crowdsource.api.internal;
 import org.softwareFm.crowdsource.api.ApiTest;
 import org.softwareFm.crowdsource.api.IComments;
 import org.softwareFm.crowdsource.api.ICommentsReader;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
 import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IGroups;
@@ -24,10 +24,11 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction3;
 import org.softwareFm.crowdsource.utilities.tests.Tests;
 
 abstract public class AbstractCrowdReadWriterApiTest extends ApiTest {
+	abstract protected ICrowdSourcedApi getApi();
 
 	public void testGetSameReads() {
 		ICrowdSourcedApi api = getApi();
-		final ICrowdSourcedReaderApi reader = api.makeReader();
+		final ICrowdSourcedReaderApi reader = api.makeContainer();
 
 		IFunction1<ICommentsReader, Integer> commentsFn = Functions.ensureSameParameters();
 		reader.accessCommentsReader(commentsFn);
@@ -83,7 +84,7 @@ abstract public class AbstractCrowdReadWriterApiTest extends ApiTest {
 
 	public void testGetSameReadWriters() {
 		ICrowdSourcedApi api = getApi();
-		final ICrowdSourcedReadWriteApi readWriter = api.makeReadWriter();
+		final IContainer readWriter = api.makeContainer();
 
 		final EnsureSameParameter<IUser> usersCallback = ICallback.Utils.ensureSameParameter();
 		readWriter.modifyUser(usersCallback);
@@ -128,7 +129,7 @@ abstract public class AbstractCrowdReadWriterApiTest extends ApiTest {
 				groupsCallback.process(groups);
 			}
 		});
-		
+
 		EnsureSameParameter<IComments> commentsCallback = ICallback.Utils.ensureSameParameter();
 		readWriter.modifyComments(commentsCallback);
 		readWriter.modify(IComments.class, commentsCallback);
@@ -138,19 +139,19 @@ abstract public class AbstractCrowdReadWriterApiTest extends ApiTest {
 
 	public void testExceptionWhenNotRegistered() {
 		ICrowdSourcedApi api = getApi();
-		final ICrowdSourcedReaderApi reader = api.makeReader();
+		final ICrowdSourcedReaderApi reader = api.makeContainer();
 		checkExceptionWhenAccessing(reader, Object.class, "Cannot access without registered reader for class class java.lang.Object. Legal readers are");
 		checkExceptionWhenAccessing(reader, IUser.class, "Cannot access without registered reader for class interface org.softwareFm.crowdsource.api.user.IUser. Legal readers are ");
 
-		final ICrowdSourcedReadWriteApi readWriter = api.makeReadWriter();
+		final IContainer readWriter = api.makeContainer();
 		checkExceptionWhenModifying(readWriter, Object.class, "Cannot modify without registered readWriter for class class java.lang.Object. Legal readWriters are ");
 		checkExceptionWhenModifying(readWriter, IUserReader.class, "Cannot modify without registered readWriter for class interface org.softwareFm.crowdsource.api.user.IUserReader. Legal readWriters are ");
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void checkExceptionWhenModifying(final ICrowdSourcedReadWriteApi readWriter, final Class<?> class1, String expectedMessage) {
+	private void checkExceptionWhenModifying(final IContainer readWriter, final Class<?> class1, String expectedMessage) {
 		final ICallback callback = ICallback.Utils.exception("should not be called");
-		NullPointerException e = Tests.assertThrows( NullPointerException.class, new Runnable() {
+		NullPointerException e = Tests.assertThrows(NullPointerException.class, new Runnable() {
 			@Override
 			public void run() {
 				readWriter.modify(class1, callback);
@@ -162,7 +163,7 @@ abstract public class AbstractCrowdReadWriterApiTest extends ApiTest {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void checkExceptionWhenAccessing(final ICrowdSourcedReaderApi reader, final Class<?> class1, String expectedMessage) {
 		final IFunction1 expectionIfCalled = Functions.expectionIfCalled();
-		NullPointerException e = Tests.assertThrows( NullPointerException.class, new Runnable() {
+		NullPointerException e = Tests.assertThrows(NullPointerException.class, new Runnable() {
 			@Override
 			public void run() {
 				reader.access(class1, expectionIfCalled);

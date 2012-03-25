@@ -108,7 +108,7 @@ public class Activator extends AbstractUIPlugin {
 		final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(//
 				parent.getDisplay(), //
 				new CardConfig(ICardFactory.Utils.cardFactory(), //
-						ICardDataStore.Utils.repositoryCardDataStore(parent, getServiceExecutor(), getApi().makeReadWriter())));
+						ICardDataStore.Utils.repositoryCardDataStore(parent, getServiceExecutor(), getApi().makeContainer())));
 		return cardConfig;
 	}
 

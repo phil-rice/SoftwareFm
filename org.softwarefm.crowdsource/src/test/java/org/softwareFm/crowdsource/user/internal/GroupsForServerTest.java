@@ -35,7 +35,7 @@ public class GroupsForServerTest extends ApiTest {
 	}
 
 	public void testAddUsers() {
-		getApi().makeReadWriter().modifyGroups(new ICallback<IGroups>() {
+		getServerContainer().modifyGroups(new ICallback<IGroups>() {
 			@Override
 			public void process(IGroups groups) throws Exception {
 				groups.setGroupProperty(groupId, groupCrypto, "someProperty", "someValue");
@@ -79,7 +79,7 @@ public class GroupsForServerTest extends ApiTest {
 	}
 
 	public void testAddingUsersDoesntImpactOnProperties() {
-		getApi().makeReadWriter().modifyGroups(new ICallback<IGroups>() {
+		getServerContainer().modifyGroups(new ICallback<IGroups>() {
 			@Override
 			public void process(IGroups groups) throws Exception {
 				checkSetGetGroups();
@@ -136,7 +136,7 @@ public class GroupsForServerTest extends ApiTest {
 
 	@SuppressWarnings("unchecked")
 	public void testSetUserProperty() {
-		getApi().makeReadWriter().modifyGroups(new ICallback<IGroups>() {
+		getServerContainer().modifyGroups(new ICallback<IGroups>() {
 			@Override
 			public void process(IGroups groups) throws Exception {
 				groups.setGroupProperty(groupId, groupCrypto, "someProperty", "someValue");
@@ -150,7 +150,7 @@ public class GroupsForServerTest extends ApiTest {
 	}
 
 	public void testSetUserPropertyIfNotPresent() {
-		getApi().makeReadWriter().modifyGroups(new ICallback<IGroups>() {
+		getServerContainer().modifyGroups(new ICallback<IGroups>() {
 			@Override
 			public void process(final IGroups groups) throws Exception {
 				groups.setGroupProperty(groupId, groupCrypto, "someProperty", "someValue");
@@ -167,7 +167,7 @@ public class GroupsForServerTest extends ApiTest {
 	}
 
 	public void testSetUserPropertyIfThroughCorruptDataIdInTwice() {
-		getApi().makeReadWriter().modifyGroups(new ICallback<IGroups>() {
+		getServerContainer().modifyGroups(new ICallback<IGroups>() {
 			@Override
 			public void process(final IGroups groups) throws Exception {
 				groups.setGroupProperty(groupId, groupCrypto, "someProperty", "someValue");
@@ -225,10 +225,10 @@ public class GroupsForServerTest extends ApiTest {
 	}
 
 	protected void useLocalReaderRemoteGroups(final ICallback2<IGroupsReader, IGroups> callback) {
-		getServerApi().makeReadWriter().modifyGroups(new ICallback<IGroups>() {
+		getServerApi().makeContainer().modifyGroups(new ICallback<IGroups>() {
 			@Override
 			public void process(final IGroups groups) throws Exception {
-				getLocalApi().makeReader().accessGroupReader(new IFunction1<IGroupsReader, Void>() {
+				getLocalApi().makeContainer().accessGroupReader(new IFunction1<IGroupsReader, Void>() {
 					@Override
 					public Void apply(IGroupsReader groupsReader) throws Exception {
 						callback.process(groupsReader, groups);

@@ -9,8 +9,8 @@ public class CrowdSourceLocalReadWriteApiTest extends AbstractCrowdReadWriterApi
 
 	public void testExtras(){
 		IFunction1<IRepoFinder, Integer> repoFinderFn = Functions.<IRepoFinder>ensureSameParameters();
-		getApi().makeReader().access(IRepoFinder.class, repoFinderFn);
-		getApi().makeReader().access(IRepoFinder.class, repoFinderFn);
+		getApi().makeContainer().access(IRepoFinder.class, repoFinderFn);
+		getApi().makeContainer().access(IRepoFinder.class, repoFinderFn);
 	}
 	
 	@Override

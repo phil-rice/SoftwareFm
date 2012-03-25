@@ -9,12 +9,11 @@ import java.util.Collections;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitLocal;
 import org.softwareFm.crowdsource.api.git.IGitOperations;
 import org.softwareFm.crowdsource.api.git.IGitReader;
-import org.softwareFm.crowdsource.api.git.IGitWriter;
 import org.softwareFm.crowdsource.api.git.IRepoFinder;
 import org.softwareFm.crowdsource.api.git.RepoDetails;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
@@ -34,12 +33,15 @@ public class GitLocal implements IGitLocal {
 
 	private final UrlCache<Map<String, Object>> aboveRepoCache = new UrlCache<Map<String, Object>>();
 
-	private final ICrowdSourcedReadWriteApi readWriteApi;
+	private final IContainer comtainer;
 
 	private final String remoteGitPrefix;
 
-	public GitLocal(ICrowdSourcedReadWriteApi readWriteApi, String remoteGitPrefix, long period) {
-		this.readWriteApi = readWriteApi;
+	private final HttpGitWriter httpGitWriter;
+
+	public GitLocal(IContainer container, HttpGitWriter gitWriter, String remoteGitPrefix, long period) {
+		this.comtainer = container;
+		this.httpGitWriter = gitWriter;
 		this.remoteGitPrefix = remoteGitPrefix;
 		this.period = period;
 	}
@@ -50,7 +52,7 @@ public class GitLocal implements IGitLocal {
 		String message = "  " + url + "   " + getClass().getSimpleName() + ".getFileAsString(" + fileDescription + ")";
 		logger.debug(message);
 		pullIfNeeded(fileDescription);
-		String result = readWriteApi.gitOperations().getFileAsString( fileDescription);
+		String result = comtainer.gitOperations().getFileAsString(fileDescription);
 		logger.debug(message + " -> " + result);
 		return result;
 	}
@@ -58,7 +60,7 @@ public class GitLocal implements IGitLocal {
 	@Override
 	public int countOfFileAsListsOfMap(IFileDescription fileDescription) {
 		pullIfNeeded(fileDescription); // possible issue here, in that this and the various "get" methods may return a different result
-		return IGitReader.Utils.countOfFileAsListsOfMap(readWriteApi, fileDescription);
+		return IGitReader.Utils.countOfFileAsListsOfMap(comtainer, fileDescription);
 	}
 
 	@Override
@@ -67,7 +69,7 @@ public class GitLocal implements IGitLocal {
 		String message = "  " + url + "   " + getClass().getSimpleName() + ".getFileAsListOfMaps(" + fileDescription + ")";
 		logger.debug(message);
 		pullIfNeeded(fileDescription);
-		Iterable<Map<String, Object>> result = readWriteApi.gitOperations().getFileAsListOfMaps( fileDescription);
+		Iterable<Map<String, Object>> result = comtainer.gitOperations().getFileAsListOfMaps(fileDescription);
 		logger.debug(message + " -> " + result);
 		return result;
 	}
@@ -78,7 +80,7 @@ public class GitLocal implements IGitLocal {
 		String message = "  " + url + "   " + getClass().getSimpleName() + ".getFile(" + fileDescription + ")";
 		logger.debug(message);
 		pullIfNeeded(fileDescription);
-		Map<String, Object> result = readWriteApi.gitOperations().getFile(fileDescription);
+		Map<String, Object> result = comtainer.gitOperations().getFile(fileDescription);
 		if (aboveRepoCache.containsKey(url))
 			return aboveRepoCache.get(url);
 		logger.debug(message + " -> " + result);
@@ -90,7 +92,7 @@ public class GitLocal implements IGitLocal {
 		String url = fileDescription.url();
 		logger.debug(getClass().getSimpleName() + ".getFileAndDescendants(" + fileDescription + ")");
 		pullIfNeeded(fileDescription);
-		Map<String, Object> result = readWriteApi.gitOperations().getFileAndDescendants(fileDescription);
+		Map<String, Object> result = comtainer.gitOperations().getFileAndDescendants(fileDescription);
 		if (aboveRepoCache.containsKey(url))
 			return aboveRepoCache.get(url);
 		logger.debug(getClass().getSimpleName() + ".getFileAndDescendants_end(" + fileDescription + ")-> " + result);
@@ -104,13 +106,13 @@ public class GitLocal implements IGitLocal {
 		synchronized (lock) {
 			if (aboveRepoCache.containsKey(url))
 				return;// not redundant
-			IGitOperations gitOperations = readWriteApi.gitOperations();
+			IGitOperations gitOperations = comtainer.gitOperations();
 			File root = gitOperations.getRoot();
 			File repositoryUrl = fileDescription.findRepositoryUrl(root);
 			final long now = System.currentTimeMillis();
 			if (repositoryUrl == null) {
 				logger.debug("        " + getClass().getSimpleName() + ".pullIfNeeded/clone(" + fileDescription + ")");
-				readWriteApi.modify(IRepoFinder.class, new ICallback<IRepoFinder>() {
+				comtainer.modify(IRepoFinder.class, new ICallback<IRepoFinder>() {
 					@Override
 					public void process(IRepoFinder repoFinder) throws Exception {
 						RepoDetails repoDetails = repoFinder.findRepoUrl(url);
@@ -132,7 +134,7 @@ public class GitLocal implements IGitLocal {
 	}
 
 	private void clone(final String remoteUrl, final long now) {
-		final IGitOperations gitOperations = readWriteApi.gitOperations();
+		final IGitOperations gitOperations = comtainer.gitOperations();
 		final File root = gitOperations.getRoot();
 		Files.doOperationInLock(root, CommonConstants.lockFileName, new IFunction1<File, Void>() {
 			@Override
@@ -157,39 +159,15 @@ public class GitLocal implements IGitLocal {
 
 	@Override
 	public File getRoot() {
-		final IGitOperations gitOperations = readWriteApi.gitOperations();
+		final IGitOperations gitOperations = comtainer.gitOperations();
 		return gitOperations.getRoot();
-	}
-
-	@Override
-	public void init(final String url) {
-		logger.debug(getClass().getSimpleName() + ".init(" + url + ")");
-		readWriteApi.modify(IGitWriter.class, new ICallback<IGitWriter>() {
-			@Override
-			public void process(IGitWriter gitWriter) throws Exception {
-				gitWriter.init(url);
-
-			}
-		});
-	}
-
-	@Override
-	public void put(final IFileDescription fileDescription, final Map<String, Object> data) {
-		logger.debug(getClass().getSimpleName() + ".put(" + fileDescription + ", " + data + ")");
-		readWriteApi.modify(IGitWriter.class, new ICallback<IGitWriter>() {
-			@Override
-			public void process(IGitWriter gitWriter) throws Exception {
-				gitWriter.put(fileDescription, data);
-				clearCaches();
-			}
-		});
 	}
 
 	@Override
 	public void clearCaches() {
 		logger.debug(getClass().getSimpleName() + ".clearCaches");
 		lastPulledTime.clear();
-		readWriteApi.modify(IRepoFinder.class, new ICallback<IRepoFinder>() {
+		comtainer.modify(IRepoFinder.class, new ICallback<IRepoFinder>() {
 			@Override
 			public void process(IRepoFinder repoFinder) throws Exception {
 				repoFinder.clearCaches();
@@ -203,14 +181,32 @@ public class GitLocal implements IGitLocal {
 		clearCaches();
 	}
 
+	@SuppressWarnings("ensure git local fully implements git writer")
 	@Override
-	public void delete(final IFileDescription fileDescription) {
-		logger.debug(getClass().getSimpleName() + ".delete(" + fileDescription + ")");
-		readWriteApi.modify(IGitWriter.class, new ICallback<IGitWriter>() {
-			@Override
-			public void process(IGitWriter gitWriter) throws Exception {
-				gitWriter.delete(fileDescription);
-			}
-		});
+	public void append(IFileDescription fileDescription, Map<String, Object> data, String commitMessage) {
+		throw new UnsupportedOperationException();
 	}
+
+	@Override
+	public int removeLine(IFileDescription fileDescription, IFunction1<Map<String, Object>, Boolean> acceptor, String commitMessage) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void init(String url, String commitMessage) {
+		httpGitWriter.init(url, commitMessage);
+	}
+
+	@Override
+	public void put(IFileDescription fileDescription, Map<String, Object> data, String commitMessage) {
+		httpGitWriter.put(fileDescription, data, commitMessage);
+		clearCaches();
+	}
+
+	@Override
+	public void delete(IFileDescription fileDescription, String commitMessage) {
+		httpGitWriter.delete(fileDescription, commitMessage);
+		clearCaches();
+	}
+
 }

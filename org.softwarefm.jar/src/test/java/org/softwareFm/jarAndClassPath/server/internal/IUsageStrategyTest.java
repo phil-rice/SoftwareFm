@@ -101,7 +101,7 @@ public class IUsageStrategyTest extends AbstractUsageProcessorIntegrationTests {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		usageStrategy = IUsageStrategy.Utils.usage(getServiceExecutor(), getLocalApi().makeReader(), getServerConfig().userUrlGenerator);
+		usageStrategy = IUsageStrategy.Utils.usage(getServiceExecutor(), getLocalApi().makeContainer(), getServerConfig().userUrlGenerator);
 		directory = new File(remoteRoot, getUrlPrefix() + "/users/so/me/someNewSoftwareFmId0");
 		userFile = new File(directory, CommonConstants.dataFileName);
 		userProjectFile = new File(directory, Urls.compose("project", "someMonth"));

@@ -11,7 +11,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.swt.widgets.Display;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.httpClient.IHttpClient;
 import org.softwareFm.crowdsource.httpClient.IResponse;
@@ -47,7 +47,7 @@ public interface ILoginStrategy {
 
 	public static class Utils {
 
-		public static ILoginStrategy softwareFmLoginStrategy(final Display display, final IServiceExecutor serviceExecutor, final ICrowdSourcedReadWriteApi readWriteApi) {
+		public static ILoginStrategy softwareFmLoginStrategy(final Display display, final IServiceExecutor serviceExecutor, final IContainer readWriteApi) {
 			final IHttpClient client = readWriteApi.access(IHttpClient.class, Functions.<IHttpClient, IHttpClient> identity());
 			return new ILoginStrategy() {
 				@Override

@@ -4,7 +4,7 @@
 
 package org.softwareFm.crowdsource.user.internal;
 
-import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
@@ -13,8 +13,8 @@ import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 
 public class LocalGroupsReader extends AbstractGroupReader {
 
-	public LocalGroupsReader(ICrowdSourcedReaderApi readerApi, IUrlGenerator groupUrlGenerator) {
-		super(readerApi, groupUrlGenerator);
+	public LocalGroupsReader(IContainer container, IUrlGenerator groupUrlGenerator) {
+		super(container, groupUrlGenerator);
 	}
 
 	@Override
@@ -25,7 +25,7 @@ public class LocalGroupsReader extends AbstractGroupReader {
 
 	@Override
 	public void refresh(final String groupId) {
-		readerApi.accessGitReader(new IFunction1<IGitReader, Void>() {
+		container.accessGitReader(new IFunction1<IGitReader, Void>() {
 			@Override
 			public Void apply(IGitReader gitReader) throws Exception {
 				gitReader.clearCaches();

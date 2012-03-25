@@ -85,14 +85,14 @@ public class CommentProcessorTest extends AbstractProcessCallTest<CommentProcess
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		api.makeReadWriter().modifyUser(new ICallback<IUser>(){
+		api.makeContainer().modifyUser(new ICallback<IUser>(){
 			@Override
 			public void process(IUser user) throws Exception {
 				user.setUserProperty(softwareFmId, userCrypto, GroupConstants.membershipCryptoKey, groupCrypto);
 				user.setUserProperty(softwareFmId, userCrypto, CommentConstants.commentCryptoKey, userCommentCrypto);
 				user.setUserProperty(softwareFmId, userCrypto, LoginConstants.monikerKey, monikor);
 			}});
-		api.makeReadWriter().modifyUserMembership(new ICallback2<IGroups, IUserMembership>(){
+		api.makeContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>(){
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				groups.setGroupProperty(groupId, groupCrypto, CommentConstants.commentCryptoKey, groupCommentCrypto);
@@ -107,7 +107,7 @@ public class CommentProcessorTest extends AbstractProcessCallTest<CommentProcess
 	protected CommentProcessor makeProcessor() {
 		ServerConfig serverConfig = ServerConfig.serverConfigForTests(remoteRoot, IMailer.Utils.noMailer());
 		api = ICrowdSourcedApi.Utils.forServer(serverConfig);
-		comments = new CommentsForServer(api.makeReadWriter(), Callables.valueFromList(1000l, 2000l, 3000l));
-		return new CommentProcessor(api.makeReadWriter(), IUserCryptoAccess.Utils.mock(softwareFmId, userCrypto));
+		comments = new CommentsForServer(api.makeContainer(), Callables.valueFromList(1000l, 2000l, 3000l));
+		return new CommentProcessor(api.makeContainer(), IUserCryptoAccess.Utils.mock(softwareFmId, userCrypto));
 	}
 }

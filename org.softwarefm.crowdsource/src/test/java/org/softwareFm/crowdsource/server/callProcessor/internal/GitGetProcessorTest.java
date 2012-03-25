@@ -30,7 +30,7 @@ public class GitGetProcessorTest extends AbstractProcessCallTest<GitGetProcessor
 	@Override
 	protected GitGetProcessor makeProcessor() {
 		UrlCache<String> cache = new UrlCache<String>();
-		return new GitGetProcessor(remoteOperations, cache);
+		return new GitGetProcessor(getServerContainer(), cache);
 	}
 
 }

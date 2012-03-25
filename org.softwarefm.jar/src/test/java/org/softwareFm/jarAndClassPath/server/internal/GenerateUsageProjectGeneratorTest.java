@@ -27,7 +27,7 @@ public class GenerateUsageProjectGeneratorTest extends GroupsTest {
 	}
 
 	protected void checkMonthsReport(final String month, final Map<String, Object> expected) {
-		readWriteApi.modify(IGenerateUsageReportGenerator.class, new ICallback<IGenerateUsageReportGenerator>() {
+		serverContainer.modify(IGenerateUsageReportGenerator.class, new ICallback<IGenerateUsageReportGenerator>() {
 			@Override
 			public void process(IGenerateUsageReportGenerator generator) throws Exception {
 				Map<String, Map<String, Map<String, List<Integer>>>> month1 = generator.generateReport(groupId, groupCrypto, month);
@@ -41,8 +41,8 @@ public class GenerateUsageProjectGeneratorTest extends GroupsTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		final String user1ProjectCrypto = IUserReader.Utils.getUserProperty(readWriteApi, sfmId1, userKey0, JarAndPathConstants.projectCryptoKey);
-		final String user2ProjectCrypto = IUserReader.Utils.getUserProperty(readWriteApi, sfmId2, userKey1, JarAndPathConstants.projectCryptoKey);
+		final String user1ProjectCrypto = IUserReader.Utils.getUserProperty(serverContainer, sfmId1, userKey0, JarAndPathConstants.projectCryptoKey);
+		final String user2ProjectCrypto = IUserReader.Utils.getUserProperty(serverContainer, sfmId2, userKey1, JarAndPathConstants.projectCryptoKey);
 
 		ProjectMock projectUser1 = ProjectFixture.project1(sfmId1, user1ProjectCrypto);
 		ProjectMock projectUser2 = ProjectFixture.project2(sfmId2, user2ProjectCrypto);
@@ -54,7 +54,7 @@ public class GenerateUsageProjectGeneratorTest extends GroupsTest {
 		saveProjectData(sfmId2, user2ProjectCrypto, "january_12", projectUser2);
 		// saveProjectData(id2, "month2", user2ProjectCrypto, projectUser2); no month 2 data
 		saveProjectData(sfmId2, user2ProjectCrypto, "march_12", projectUser2);
-		readWriteApi.modifyGroups(new ICallback<IGroups>() {
+		serverContainer.modifyGroups(new ICallback<IGroups>() {
 			@Override
 			public void process(IGroups groups) throws Exception {
 				groups.setGroupProperty(groupId, groupCrypto, "someName", "someValue");

@@ -1,6 +1,6 @@
 package org.softwareFm.crowdsource.user.internal;
 
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.user.GroupOperationResult;
 import org.softwareFm.crowdsource.api.user.IGroupOperations;
 import org.softwareFm.crowdsource.httpClient.IHttpClient;
@@ -13,9 +13,9 @@ import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 
 public class ClientGroupOperations implements IGroupOperations {
 
-	private final ICrowdSourcedReadWriteApi readWriteApi;
+	private final IContainer readWriteApi;
 
-	public ClientGroupOperations(ICrowdSourcedReadWriteApi readWriteApi) {
+	public ClientGroupOperations(IContainer readWriteApi) {
 		this.readWriteApi = readWriteApi;
 	}
 

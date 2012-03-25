@@ -5,8 +5,8 @@
 package org.softwareFm.eclipse.plugin;
 
 import org.eclipse.ui.IStartup;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.api.git.IGitLocal;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
@@ -31,9 +31,9 @@ public class Startup implements IStartup {
 				monitor.beginTask(EclipseMessages.startUp, 1);
 				try {
 					ICrowdSourcedApi api = activator.getApi();
-					ICrowdSourcedReaderApi makeReader = api.makeReader();
-					IUsageStrategy rawUsageStrategy = IUsageStrategy.Utils.usage(serviceExecutor, makeReader, activator.getLocalConfig().userUrlGenerator);
-					IHasCache gitLocal = makeReader.access(IGitLocal.class, Functions.<IGitLocal, IGitLocal>identity());
+					IContainer container = api.makeContainer();
+					IUsageStrategy rawUsageStrategy = IUsageStrategy.Utils.usage(serviceExecutor, container, activator.getLocalConfig().userUrlGenerator);
+					IHasCache gitLocal = container.access(IGitLocal.class, Functions.<IGitLocal, IGitLocal>identity());
 					final IUsageStrategy cachedUsageStrategy = IUsageStrategy.Utils.cached(rawUsageStrategy, JarAndPathConstants.usageRefreshTimeMs, gitLocal, activator.getUserDataManager());
 					activator.getSelectedBindingManager().addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
 						@Override

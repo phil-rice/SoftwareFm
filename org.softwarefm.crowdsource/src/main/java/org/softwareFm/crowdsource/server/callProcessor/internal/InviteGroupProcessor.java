@@ -8,7 +8,7 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.IIdAndSaltGenerator;
 import org.softwareFm.crowdsource.api.IUserCryptoAccess;
 import org.softwareFm.crowdsource.api.server.IProcessResult;
@@ -24,17 +24,17 @@ import org.softwareFm.crowdsource.utilities.strings.Strings;
 
 public class InviteGroupProcessor extends AbstractAddToGroupProcessor {
 
-	private final ICrowdSourcedReadWriteApi crowdSourcedReadWriteApi;
+	private final IContainer container;
 
-	public InviteGroupProcessor(ICrowdSourcedReadWriteApi crowdSourcedReadWriteApi, IServerDoers serverDoers, IUserCryptoAccess userCryptoAccess, IIdAndSaltGenerator idAndSaltGenerator) {
+	public InviteGroupProcessor(IContainer container, IServerDoers serverDoers, IUserCryptoAccess userCryptoAccess, IIdAndSaltGenerator idAndSaltGenerator) {
 		super(CommonConstants.POST, GroupConstants.inviteCommandPrefix, serverDoers, userCryptoAccess, idAndSaltGenerator);
-		this.crowdSourcedReadWriteApi = crowdSourcedReadWriteApi;
+		this.container = container;
 	}
 
 	@Override
 	protected IProcessResult execute(String actualUrl, final Map<String, Object> parameters) {
 		checkForParameter(parameters, LoginConstants.softwareFmIdKey, GroupConstants.groupIdKey, GroupConstants.takeOnFromKey, GroupConstants.takeOnEmailPattern, GroupConstants.takeOnEmailListKey);
-		crowdSourcedReadWriteApi.modifyUserMembership(new ICallback2<IGroups, IUserMembership>(){
+		container.modifyUserMembership(new ICallback2<IGroups, IUserMembership>(){
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				String groupId = (String) parameters.get(GroupConstants.groupIdKey);

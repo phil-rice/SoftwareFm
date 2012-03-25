@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.server.AbstractCallProcessor;
 import org.softwareFm.crowdsource.api.server.IProcessResult;
 import org.softwareFm.crowdsource.api.user.IGroups;
@@ -21,9 +21,9 @@ import org.softwareFm.jarAndClassPath.api.IGenerateUsageReportGenerator;
 
 public class GenerateGroupUsageProcessor extends AbstractCallProcessor {
 
-	private final ICrowdSourcedReadWriteApi readWriteApi;
+	private final IContainer readWriteApi;
 
-	public GenerateGroupUsageProcessor(ICrowdSourcedReadWriteApi readWriteApi) {
+	public GenerateGroupUsageProcessor(IContainer readWriteApi) {
 		super(CommonConstants.POST, GroupConstants.generateGroupReportPrefix);
 		this.readWriteApi = readWriteApi;
 	}

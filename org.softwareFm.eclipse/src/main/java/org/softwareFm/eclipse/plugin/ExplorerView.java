@@ -12,7 +12,7 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
@@ -54,7 +54,7 @@ public class ExplorerView extends ViewPart {
 		final CardConfig cardConfig = activator.getCardConfig(parent);
 
 		ICrowdSourcedApi api = activator.local ? ISoftwareFmApiFactory.Utils.makeClientApiForLocalHost() : ISoftwareFmApiFactory.Utils.makeClientApiForSoftwareFmServer();
-		final ICrowdSourcedReadWriteApi readWriteApi = api.makeReadWriter();
+		final IContainer readWriteApi = api.makeContainer();
 
 		IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardConfig.cardDataStore);
 		IServiceExecutor service = activator.getServiceExecutor();

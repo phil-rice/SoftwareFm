@@ -178,10 +178,10 @@ public abstract class ExplorerAddingCollectionsIntegrationTest extends AbstractE
 	}
 
 	protected void makeCollectionUrlAndExistingUrl(final String collectionUrl) {
-		getLocalApi().makeReadWriter().access(IGitLocal.class, new IFunction1<IGitLocal, Void>() {
+		getLocalApi().makeContainer().access(IGitLocal.class, new IFunction1<IGitLocal, Void>() {
 			@Override
 			public Void apply(IGitLocal gitLocal) throws Exception {
-				gitLocal.put(IFileDescription.Utils.compose(rootArtifactUrl, collectionUrl), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection));
+				gitLocal.put(IFileDescription.Utils.compose(rootArtifactUrl, collectionUrl), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), "makeCollectionUrlAndExistingUrl");
 				return null;
 			}
 		});

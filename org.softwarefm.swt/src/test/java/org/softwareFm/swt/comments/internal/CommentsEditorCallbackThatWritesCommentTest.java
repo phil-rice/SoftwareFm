@@ -12,7 +12,7 @@ import org.softwareFm.crowdsource.api.ApiConfig;
 import org.softwareFm.crowdsource.api.IApiBuilder;
 import org.softwareFm.crowdsource.api.ICommentDefn;
 import org.softwareFm.crowdsource.api.IComments;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
@@ -42,7 +42,7 @@ public class CommentsEditorCallbackThatWritesCommentTest extends TestCase {
 			Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.groupCryptoKey, groupCrypto), //
 			Maps.stringObjectMap(GroupConstants.groupIdKey, "groupIdAfter", GroupConstants.groupCryptoKey, Crypto.makeKey()));
 	private CommentsEditorCallbackThatWritesComment callback;
-	private ICrowdSourcedReadWriteApi readWriteApi;
+	private IContainer readWriteApi;
 
 	@Test
 	public void testCancel() {
@@ -99,7 +99,7 @@ public class CommentsEditorCallbackThatWritesCommentTest extends TestCase {
 				builder.registerReaderAndWriter(IComments.class, commentWriter);
 			}
 		}, null);
-		readWriteApi = api.makeReadWriter();
+		readWriteApi = api.makeContainer();
 		callback = new CommentsEditorCallbackThatWritesComment(readWriteApi, softwareFmId, userCrypto, groupsData, whenFinished);
 	}
 

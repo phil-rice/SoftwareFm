@@ -2,7 +2,7 @@ package org.softwareFm.crowdsource.server.callProcessor.internal;
 
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.IUserCryptoAccess;
 import org.softwareFm.crowdsource.api.server.AbstractCallProcessor;
 import org.softwareFm.crowdsource.api.server.IProcessResult;
@@ -17,9 +17,9 @@ import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 public class AcceptInviteGroupProcessor extends AbstractCallProcessor {
 
 	private final IUserCryptoAccess userCryptoAccess;
-	private final ICrowdSourcedReadWriteApi readWriteApi;
+	private final IContainer readWriteApi;
 
-	public AcceptInviteGroupProcessor(IUserCryptoAccess userCryptoAccess, ICrowdSourcedReadWriteApi readWriteApi) {
+	public AcceptInviteGroupProcessor(IUserCryptoAccess userCryptoAccess, IContainer readWriteApi) {
 		super(CommonConstants.POST, GroupConstants.acceptInvitePrefix);
 		this.userCryptoAccess = userCryptoAccess;
 		this.readWriteApi = readWriteApi;

@@ -42,7 +42,7 @@ public class TakeOnProcessorTest extends ApiTest {
 		IFileDescription fileDescription = IFileDescription.Utils.encrypted(groupUrl, CommonConstants.dataFileName, groupCrypto);
 		Map<String, Object> expected = Maps.stringObjectMap(GroupConstants.groupNameKey, groupName);
 		assertEquals(expected, remoteOperations.getFile(fileDescription));
-		assertEquals(expected, IGitReader.Utils.getFileAsMap(getLocalApi().makeReader(), fileDescription));
+		assertEquals(expected, IGitReader.Utils.getFileAsMap(getLocalApi().makeContainer(), fileDescription));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -61,7 +61,7 @@ public class TakeOnProcessorTest extends ApiTest {
 		takeOnProcessor.addExistingUserToGroup(groupId, groupCrypto, softwareFmId1, email1, "someStatus");
 		takeOnProcessor.addExistingUserToGroup(groupId, groupCrypto, softwareFmId2, email2, "someStatus");
 
-		getApi().makeReader().accessGroupReader(new IFunction1<IGroupsReader, Void>() {
+		getServerContainer().accessGroupReader(new IFunction1<IGroupsReader, Void>() {
 			@Override
 			public Void apply(IGroupsReader groups) throws Exception {
 				List<Map<String, Object>> expected = Arrays.asList(//
@@ -88,7 +88,7 @@ public class TakeOnProcessorTest extends ApiTest {
 		takeOnProcessor.addExistingUserToGroup(groupId, groupCrypto, softwareFmId1, email1, "someStatus");
 		takeOnProcessor.addExistingUserToGroup(groupId, groupCrypto, softwareFmId2, email2, "someStatus");
 		final List<Map<String, Object>> expected = Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.groupCryptoKey, groupCrypto, GroupConstants.membershipStatusKey, "someStatus"));
-		getApi().makeReadWriter().accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
+		getServerContainer().accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
 			@Override
 			public Void apply(IGroupsReader from1, IUserMembershipReader membership) throws Exception {
 				assertEquals(expected, membership.walkGroupsFor(softwareFmId1, userKey0));

@@ -107,7 +107,7 @@ abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIn
 
 	protected void addUserToGroup(String softwareFmId, String email, String groupId, String groupCryptoKey, String status) {
 		String crypto = getUserCryptoAccess().getCryptoForUser(softwareFmId);
-		String usersProjectCryptoKey = IUserReader.Utils.getUserProperty(getServerApi().makeReader(), softwareFmId, crypto, JarAndPathConstants.projectCryptoKey);
+		String usersProjectCryptoKey = IUserReader.Utils.getUserProperty(getServerApi().makeContainer(), softwareFmId, crypto, JarAndPathConstants.projectCryptoKey);
 
 		addUserToGroup(softwareFmId, crypto, usersProjectCryptoKey, groupId, groupCryptoKey, email, status);
 	}
@@ -118,7 +118,7 @@ abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIn
 				LoginConstants.softwareFmIdKey, softwareFmId, //
 				JarAndPathConstants.projectCryptoKey, usersProjectCryptoKey, //
 				GroupConstants.membershipStatusKey, status);
-		getServerApi().makeReadWriter().modifyUserMembership(new ICallback2<IGroups, IUserMembership>(){
+		getServerApi().makeContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>(){
 			@Override
 			public void process(IGroups groups, IUserMembership membershipForServer) throws Exception {
 				groups.addUser(groupId, groupCryptoKey, initialData);

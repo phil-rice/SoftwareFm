@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.IUserCryptoAccess;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitOperations;
@@ -26,9 +26,9 @@ public class ProjectForServer implements IProject {
 	private static Logger logger = Logger.getLogger(IProject.class);
 	private final IUrlGenerator userUrlGenerator;
 	private final IUserCryptoAccess userCryptoAccess;
-	private final ICrowdSourcedReadWriteApi readWriteApi;
+	private final IContainer readWriteApi;
 
-	public ProjectForServer(ICrowdSourcedReadWriteApi readWriteApi, IUserCryptoAccess userCryptoAccess, IUrlGenerator userUrlGenerator) {
+	public ProjectForServer(IContainer readWriteApi, IUserCryptoAccess userCryptoAccess, IUrlGenerator userUrlGenerator) {
 		this.readWriteApi = readWriteApi;
 		this.userCryptoAccess = userCryptoAccess;
 		this.userUrlGenerator = userUrlGenerator;

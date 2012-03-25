@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
@@ -105,7 +105,7 @@ public class Explorer implements IExplorer {
 	private MySoftwareFm mySoftwareFm;
 	private final IShowMyPeople showMyPeople;
 
-	public Explorer(final ICrowdSourcedReadWriteApi readWriteApi, final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IShowMyData showMyData, final IShowMyGroups showMyGroups, final IShowMyPeople showMyPeople, final IUserDataManager userDataManager, final Callable<Long> timeGetter) {
+	public Explorer(final IContainer readWriteApi, final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IShowMyData showMyData, final IShowMyGroups showMyGroups, final IShowMyPeople showMyPeople, final IUserDataManager userDataManager, final Callable<Long> timeGetter) {
 		this.cardConfig = cardConfig;
 		this.masterDetailSocial = masterDetailSocial;
 		this.showMyPeople = showMyPeople;

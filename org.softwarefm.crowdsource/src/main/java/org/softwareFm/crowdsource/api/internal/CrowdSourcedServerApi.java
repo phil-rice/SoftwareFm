@@ -1,13 +1,15 @@
 package org.softwareFm.crowdsource.api.internal;
 
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
+import java.sql.SQLException;
+
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
 import org.softwareFm.crowdsource.api.ServerConfig;
 import org.softwareFm.crowdsource.api.server.ICallProcessor;
 import org.softwareFm.crowdsource.api.server.IServerDoers;
 import org.softwareFm.crowdsource.server.internal.CrowdSourcedServer;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
+import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 
@@ -20,7 +22,7 @@ public class CrowdSourcedServerApi extends AbstractCrowdSourcesApi {
 	private final Object lock = new Object();
 
 	@SuppressWarnings("unchecked")
-	public CrowdSourcedServerApi(ServerConfig serverConfig, IFunction1<ICrowdSourcedReadWriteApi, IServerDoers> serverDoersCreator) {
+	public CrowdSourcedServerApi(ServerConfig serverConfig, IFunction1<IContainer, IServerDoers> serverDoersCreator) {
 		this.serverConfig = serverConfig;
 		crowdSourcedServerReadWriterApi = new CrowdSourcedServerReadWriterApi(serverConfig);
 		serverDoers = Functions.call(serverDoersCreator, crowdSourcedServerReadWriterApi);
@@ -28,12 +30,7 @@ public class CrowdSourcedServerApi extends AbstractCrowdSourcesApi {
 	}
 
 	@Override
-	public ICrowdSourcedReaderApi makeReader() {
-		return  crowdSourcedServerReadWriterApi;
-	}
-
-	@Override
-	public ICrowdSourcedReadWriteApi makeReadWriter() {
+	public IContainer makeContainer() {
 		return crowdSourcedServerReadWriterApi;
 	}
 
@@ -58,6 +55,11 @@ public class CrowdSourcedServerApi extends AbstractCrowdSourcesApi {
 	public void shutdown() {
 		if (server != null)
 			server.shutdown();
+		try {
+			serverConfig.dataSource.close();
+		} catch (SQLException e) {
+			throw WrappedException.wrap(e);
+		}
 
 	}
 }

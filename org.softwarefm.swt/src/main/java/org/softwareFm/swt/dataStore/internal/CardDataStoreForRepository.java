@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitLocal;
 import org.softwareFm.crowdsource.api.git.IGitReader;
@@ -28,10 +28,10 @@ import org.softwareFm.swt.swt.Swts;
 public class CardDataStoreForRepository implements IMutableCardDataStore {
 	private final Control control;
 	private final IServiceExecutor serviceExecutor;
-	private final ICrowdSourcedReadWriteApi readWriteApi;
+	private final IContainer readWriteApi;
 	private final File root;
 
-	public CardDataStoreForRepository(Control from, IServiceExecutor serviceExecutor, ICrowdSourcedReadWriteApi readWriteApi) {
+	public CardDataStoreForRepository(Control from, IServiceExecutor serviceExecutor, IContainer readWriteApi) {
 		this.control = from;
 		this.serviceExecutor = serviceExecutor;
 		this.readWriteApi = readWriteApi;
@@ -74,7 +74,7 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 					readWriteApi.modify(IGitLocal.class, new ICallback<IGitLocal>() {
 						@Override
 						public void process(IGitLocal gitLocal) throws Exception {
-							gitLocal.init(url);
+							gitLocal.init(url, "CardDataStore.makeRepo(" + url + ")");
 						}
 					});
 					from.worked(1);
@@ -96,8 +96,10 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 				try {
 					readWriteApi.modify(IGitLocal.class, new ICallback<IGitLocal>() {
 						@Override
+						@SuppressWarnings("wtf")
 						public void process(IGitLocal gitLocal) throws Exception {
-							gitLocal.init(url);
+							throw new IllegalStateException("Used to call gitLocal.init...");
+							// gitLocal.init(url);
 						}
 					});
 					from.worked(1);
@@ -144,7 +146,7 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 				readWriteApi.modify(IGitLocal.class, new ICallback<IGitLocal>() {
 					@Override
 					public void process(IGitLocal gitLocal) throws Exception {
-						gitLocal.put(fileDescription, map);
+						gitLocal.put(fileDescription, map, "CardDataStore.put(" + url + ", " + map + ")");
 					}
 				});
 				from.worked(1);

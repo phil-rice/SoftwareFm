@@ -69,7 +69,6 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 	private LocalConfig localConfig;
 	private CrowdSourcedServerApi serverApi;
 	private CrowdSourcedLocalApi localApi;
-	private ICrowdSourcedApi api;
 	private JdbcTemplate template;
 
 	protected JdbcTemplate getTemplate() {
@@ -78,10 +77,6 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 
 	protected IServerDoers getServerDoers() {
 		return ((CrowdSourcedServerApi) getServerApi()).getServerDoers();
-	}
-
-	protected ICrowdSourcedApi getApi() {
-		return api == null ? api = getServerApi() : api;
 	}
 
 	protected ICrowdSourcedApi getServerApi() {
@@ -186,7 +181,7 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 		serverApi = null;
 		cryptoGenerators = null;
 		serverConfig = null;
-		api = null;
+		localApi = null;
 	}
 
 	protected void truncateUsersTable() {
@@ -202,7 +197,7 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 	}
 
 	protected void createUser(final String userId, final String email) {
-		getServerApi().makeReadWriter().modifyUser(new ICallback<IUser>() {
+		getServerApi().makeContainer().modifyUser(new ICallback<IUser>() {
 			@Override
 			public void process(IUser user) throws Exception {
 				SignUpResult signUp = serverApi.getServerDoers().getSignUpChecker().signUp(email, someMoniker, "someSalt", "passHash", userId);
@@ -219,12 +214,20 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 	}
 
 	protected String getUserProperty(final String softwareFmId, final String userCrypto, final String property) {
-		return getApi().makeReader().accessUserReader(new IFunction1<IUserReader, String>() {
+		return getServerContainer().accessUserReader(new IFunction1<IUserReader, String>() {
 			@Override
 			public String apply(IUserReader from) throws Exception {
 				return from.getUserProperty(softwareFmId, userCrypto, property);
 			}
 		});
+	}
+
+	protected IContainer getServerContainer() {
+		return getServerApi().makeContainer();
+	}
+
+	protected IContainer getLocalContainer() {
+		return getLocalApi().makeContainer();
 	}
 
 }

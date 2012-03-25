@@ -56,7 +56,7 @@ public class AboveRepositoryCacheTest extends AbstractProcessCallTest<GitGetProc
 	private void makeRepo(String url) {
 		RequestLine requestLine = makeRequestLine(CommonConstants.POST, Urls.composeWithSlash(CommonConstants.makeRootPrefix, url));
 		Map<String, Object> empty = Maps.emptyStringObjectMap();
-		MakeRootProcessor makeRootProcessor = new MakeRootProcessor(cache, remoteOperations);
+		MakeRootProcessor makeRootProcessor = new MakeRootProcessor(cache, getServerContainer());
 		makeRootProcessor.process(requestLine, empty);
 	}
 
@@ -75,7 +75,7 @@ public class AboveRepositoryCacheTest extends AbstractProcessCallTest<GitGetProc
 	@Override
 	protected GitGetProcessor makeProcessor() {
 		cache = new UrlCache<String>();
-		return new GitGetProcessor(remoteOperations, cache);
+		return new GitGetProcessor(getServerContainer(), cache);
 	}
 
 }

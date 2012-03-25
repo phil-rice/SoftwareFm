@@ -5,6 +5,7 @@ import org.softwareFm.crowdsource.api.ICommentsReader;
 import org.softwareFm.crowdsource.api.ServerConfig;
 import org.softwareFm.crowdsource.api.git.IGitOperations;
 import org.softwareFm.crowdsource.api.git.IGitReader;
+import org.softwareFm.crowdsource.api.git.IGitWriter;
 import org.softwareFm.crowdsource.api.user.IGroups;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUser;
@@ -13,6 +14,7 @@ import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
 import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.comments.internal.CommentsForServer;
 import org.softwareFm.crowdsource.git.internal.GitOperations;
+import org.softwareFm.crowdsource.git.internal.GitWriterForServer;
 import org.softwareFm.crowdsource.user.internal.GroupsForServer;
 import org.softwareFm.crowdsource.user.internal.ServerUser;
 import org.softwareFm.crowdsource.user.internal.UserMembershipForServer;
@@ -44,6 +46,7 @@ public class CrowdSourcedServerReadWriterApi extends AbstractCrowdSourceReadWrit
 		registerReader(IUserReader.class, user);
 
 		registerReader(IGitReader.class, gitOperations);
+		registerReaderAndWriter(IGitWriter.class, new GitWriterForServer(gitOperations));
 	}
 
 	@Override

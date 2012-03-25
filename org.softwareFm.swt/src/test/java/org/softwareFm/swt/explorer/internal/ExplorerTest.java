@@ -63,7 +63,7 @@ public class ExplorerTest extends ApiAndSwtTest {
 				"noCardNameField", new ResourceGetterMock(), //
 				"withCardNameField", new ResourceGetterMock(CardConstants.cardNameFieldKey, "cardName"))).//
 				withTitleSpecFn(Functions.<ICardData, TitleSpec> constant(TitleSpec.noTitleSpec(shell.getBackground())));
-		Explorer explorer = new Explorer(getLocalApi().makeReadWriter(), cardConfig, CardDataStoreFixture.urlAsList, masterDetailSocial, getServiceExecutor(), //
+		Explorer explorer = new Explorer(getLocalApi().makeContainer(), cardConfig, CardDataStoreFixture.urlAsList, masterDetailSocial, getServiceExecutor(), //
 				IPlayListGetter.Utils.noPlayListGetter(),//
 				ILoginStrategy.Utils.noLoginStrategy(), IShowMyData.Utils.exceptionShowMyData(), IShowMyGroups.Utils.exceptionShowMyGroups(), //
 				IShowMyPeople.Utils.exceptionShowMyPeople(), //

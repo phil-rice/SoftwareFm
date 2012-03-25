@@ -7,6 +7,7 @@ package org.softwareFm.crowdsource.utilities.strings;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -18,6 +19,7 @@ import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.collections.Iterables;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.collections.Sets;
+import org.softwareFm.crowdsource.utilities.constants.UtilityMessages;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.utililties.aggregators.IAggregator;
 
@@ -569,5 +571,10 @@ public class Strings {
 		};
 	}
 
+	public static String firstNCharacters(String raw, int i) {
+		if (i<0)
+			throw new IllegalArgumentException(MessageFormat.format(UtilityMessages.cannotGetFirstNCharacters, i));
+		return raw == null ? null : raw.substring(0, Math.min(i, raw.length()));
+	}
 
 }

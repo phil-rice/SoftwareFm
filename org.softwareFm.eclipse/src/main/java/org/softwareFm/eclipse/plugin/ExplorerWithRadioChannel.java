@@ -17,7 +17,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.httpClient.IHttpClient;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
@@ -78,7 +78,7 @@ public class ExplorerWithRadioChannel {
 					buttonPanel.setLayout(Swts.Row.getHorizonalNoMarginRowLayout());
 
 					ICrowdSourcedApi api = local ? ISoftwareFmApiFactory.Utils.makeClientApiForLocalHost() : ISoftwareFmApiFactory.Utils.makeClientApiForSoftwareFmServer();
-					final ICrowdSourcedReadWriteApi readWriteApi = api.makeReadWriter();
+					final IContainer readWriteApi = api.makeContainer();
 					forShutdown.set(api);
 
 					final IMutableCardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(from, serviceExecutor, readWriteApi);

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.crowdsource.api.IApiBuilder;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
 import org.softwareFm.crowdsource.api.LocalConfig;
 import org.softwareFm.crowdsource.api.MailerMock;
@@ -32,7 +32,7 @@ import org.softwareFm.crowdsource.utilities.maps.Maps;
 /** This is just checking the wiring: the details of the gui interaction and server side processor are checked elsewhere */
 public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrationTests {
 
-	private ICrowdSourcedReadWriteApi localReadWriter;
+	private IContainer localReadWriter;
 
 	@SuppressWarnings("unchecked")
 	public void testCreateGroup() {
@@ -75,7 +75,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 
 	public void testInviteGroup() {
 		assertEquals(groupId0, createGroup(groupName0, groupCryptoKey0));
-		getServerApi().makeReadWriter().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		getServerApi().makeContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				groups.addUser(groupId0, groupCryptoKey0, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId0, LoginConstants.emailKey, email0, GroupConstants.membershipStatusKey, GroupConstants.adminStatus));
@@ -129,7 +129,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 	public void testAcceptInvite() {
 		assertEquals(softwareFmId1, createUser());
 		assertEquals(groupId0, createGroup(groupName0, groupCryptoKey0));
-		getServerApi().makeReadWriter().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		getServerApi().makeContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				groups.addUser(groupId0, groupCryptoKey0, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId0, LoginConstants.emailKey, email0, GroupConstants.membershipStatusKey, GroupConstants.adminStatus));
@@ -173,7 +173,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 	public void testLEaveGroup() {
 		assertEquals(softwareFmId1, createUser());
 		assertEquals(groupId0, createGroup(groupName0, groupCryptoKey0));
-		getServerApi().makeReadWriter().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		getServerApi().makeContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				groups.addUser(groupId0, groupCryptoKey0, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId0, LoginConstants.emailKey, email0, GroupConstants.membershipStatusKey, GroupConstants.adminStatus));
@@ -214,7 +214,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 	public void testKickFromGroup() {
 		assertEquals(softwareFmId1, createUser());
 		assertEquals(groupId0, createGroup(groupName0, groupCryptoKey0));
-		getServerApi().makeReadWriter().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		getServerApi().makeContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				groups.addUser(groupId0, groupCryptoKey0, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId0, LoginConstants.emailKey, email0, GroupConstants.membershipStatusKey, GroupConstants.adminStatus));
@@ -270,7 +270,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		localReadWriter = getLocalApi().makeReadWriter();
+		localReadWriter = getLocalApi().makeContainer();
 		assertEquals(softwareFmId0, createUser());
 	}
 

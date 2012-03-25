@@ -204,7 +204,7 @@ public class CommentsTest extends ApiAndSwtTest {
 		addComment = EasyMock.createMock(Runnable.class);
 		super.setUp();
 		cardConfig = IExplorerTest.addNeededResources(CardDataStoreFixture.syncCardConfig(display));
-		comments = new Comments(shell, getLocalApi().makeReadWriter(), cardConfig, commentsCallback, addComment);
+		comments = new Comments(shell, getLocalApi().makeContainer(), cardConfig, commentsCallback, addComment);
 	}
 
 	@Override

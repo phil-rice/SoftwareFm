@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import javax.sql.DataSource;
-
 import org.apache.commons.dbcp.BasicDataSource;
 import org.softwareFm.crowdsource.api.server.IMailer;
 import org.softwareFm.crowdsource.api.server.IUsage;
@@ -40,7 +38,7 @@ public class ServerConfig extends ApiConfig {
 	public final Map<String, Callable<Object>> defaultUserValues;
 	public final Map<String, Callable<Object>> defaultGroupProperties;
 	@SuppressWarnings("migrate away from this towarsd the usercryptoaccess")
-	public final DataSource dataSource;
+	public final BasicDataSource dataSource;
 	public final ITakeOnEnrichmentProvider takeOnEnrichment;
 	public final IExtraCallProcessorFactory extraCallProcessors;
 	public final IUsage usage;
@@ -57,7 +55,7 @@ public class ServerConfig extends ApiConfig {
 
 	public final IMailer mailer;
 
-	public ServerConfig(int port, int workerThreads, File root, DataSource dataSource, ITakeOnEnrichmentProvider takeOnEnrichment, IExtraCallProcessorFactory extraCallProcessors, IUsage usage, IIdAndSaltGenerator idAndSaltGenerator, ICryptoGenerators cryptoGenerators, IUserCryptoAccess userCryptoAccess, String prefix, Map<String, Callable<Object>> defaultUserValues, Map<String, Callable<Object>> defaultGroupValues, ICallback<Throwable> errorHandler, IMailer mailer, Callable<Long> timeGetter, IExtraReaderWriterConfigurator<ServerConfig> extraReaderWriterConfigurator) {
+	public ServerConfig(int port, int workerThreads, File root, BasicDataSource dataSource, ITakeOnEnrichmentProvider takeOnEnrichment, IExtraCallProcessorFactory extraCallProcessors, IUsage usage, IIdAndSaltGenerator idAndSaltGenerator, ICryptoGenerators cryptoGenerators, IUserCryptoAccess userCryptoAccess, String prefix, Map<String, Callable<Object>> defaultUserValues, Map<String, Callable<Object>> defaultGroupValues, ICallback<Throwable> errorHandler, IMailer mailer, Callable<Long> timeGetter, IExtraReaderWriterConfigurator<ServerConfig> extraReaderWriterConfigurator) {
 		super(port, workerThreads, root, prefix, errorHandler, extraReaderWriterConfigurator);
 		this.dataSource = dataSource;
 		this.takeOnEnrichment = takeOnEnrichment;

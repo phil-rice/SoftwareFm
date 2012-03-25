@@ -2,8 +2,7 @@ package org.softwareFm.crowdsource.api.internal;
 
 import org.softwareFm.crowdsource.api.IComments;
 import org.softwareFm.crowdsource.api.ICommentsReader;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
 import org.softwareFm.crowdsource.api.LocalConfig;
 import org.softwareFm.crowdsource.api.git.IGitLocal;
@@ -30,18 +29,17 @@ public class CrowdSourcedLocalApi extends AbstractCrowdSourcesApi {
 	private final CrowdSourceLocalReadWriterApi readWriterApi;
 	private final IClientBuilder httpClient;
 
-	@SuppressWarnings({ "Look really hard to git operations...why is it needed when we have a git local", "unchecked" })
+	@SuppressWarnings("unchecked")
 	public CrowdSourcedLocalApi(LocalConfig localConfig) {
 		readWriterApi = new CrowdSourceLocalReadWriterApi(IGitOperations.Utils.gitOperations(localConfig.root));
-		@SuppressWarnings("really dont want this either")
-		GitLocal gitLocal = new GitLocal(readWriterApi, localConfig.remoteGitPrefix, localConfig.autoRefreshPeriod);
-
 		httpClient = IHttpClient.Utils.builderWithThreads(localConfig.host, localConfig.port, localConfig.workerThreads);
+		HttpGitWriter gitWriter = new HttpGitWriter(httpClient);
+		GitLocal gitLocal = new GitLocal(readWriterApi, gitWriter, localConfig.remoteGitPrefix, localConfig.autoRefreshPeriod);
+
 		IUrlGenerator userUrlGenerator = localConfig.userUrlGenerator;
 		HttpRepoFinder repoFinder = new HttpRepoFinder(httpClient, localConfig.timeOutMs);
 		CommentsLocal comments = new CommentsLocal(readWriterApi, gitLocal, localConfig.timeOutMs);
 		LocalUserReader userReader = new LocalUserReader(readWriterApi, userUrlGenerator);
-		HttpGitWriter gitWriter = new HttpGitWriter(httpClient);
 		readWriterApi.registerReaderAndWriter(IGitLocal.class, gitLocal);
 		readWriterApi.registerReaderAndWriter(IHttpClient.class, httpClient);
 		readWriterApi.registerReader(IUserReader.class, userReader);
@@ -49,7 +47,7 @@ public class CrowdSourcedLocalApi extends AbstractCrowdSourcesApi {
 		readWriterApi.registerReader(IUserMembershipReader.class, new UserMembershipReaderForLocal(readWriterApi, userUrlGenerator));
 		readWriterApi.registerReaderAndWriter(IRepoFinder.class, repoFinder);
 		readWriterApi.registerReader(IGitReader.class, gitLocal);
-		readWriterApi.registerReadWriter(IGitWriter.class, gitWriter);
+		readWriterApi.registerReadWriter(IGitWriter.class, gitLocal);
 		readWriterApi.registerReader(ICommentsReader.class, comments);
 		readWriterApi.registerReadWriter(IComments.class, comments);
 		readWriterApi.registerReader(IUserReader.class, userReader);
@@ -57,13 +55,9 @@ public class CrowdSourcedLocalApi extends AbstractCrowdSourcesApi {
 		localConfig.extraReaderWriterConfigurator.builder(readWriterApi, localConfig );
 	}
 
-	@Override
-	public ICrowdSourcedReaderApi makeReader() {
-		return readWriterApi;
-	}
 
 	@Override
-	public ICrowdSourcedReadWriteApi makeReadWriter() {
+	public IContainer makeContainer() {
 		return readWriterApi;
 	}
 

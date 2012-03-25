@@ -12,9 +12,9 @@ import junit.framework.TestCase;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.strings.PreAndPost;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
+import org.softwareFm.crowdsource.utilities.tests.Tests;
 
 public class StringsTest extends TestCase {
-
 
 	public void testFromHex() {
 		checkFromHex("00", 0);
@@ -22,6 +22,19 @@ public class StringsTest extends TestCase {
 		checkFromHex("0a", 10);
 		byte[] actual = Strings.fromHex("000102030405060708090a0b0c0d0e0f101112");
 		assertTrue(Arrays.equals(new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 }, actual));
+	}
+
+	public void testFirstNCharacters() {
+		assertEquals(null, Strings.firstNCharacters(null, 5));
+		assertEquals("abc", Strings.firstNCharacters("abcde", 3));
+		assertEquals("ab", Strings.firstNCharacters("ab", 3));
+		assertEquals("", Strings.firstNCharacters("", 3));
+		Tests.assertThrowsWithMessage("Cannot get first (-1) characters", IllegalArgumentException.class, new Runnable() {
+			@Override
+			public void run() {
+				Strings.firstNCharacters("asdjk", -1);
+			}
+		});
 	}
 
 	private void checkFromHex(String string, int... bytes) {
@@ -32,10 +45,10 @@ public class StringsTest extends TestCase {
 		assertTrue(Arrays.equals(expected, actual));
 	}
 
-	public void testIsEmail(){
+	public void testIsEmail() {
 		assertEquals(true, Strings.isEmail("a@b.com"));
 		assertEquals(true, Strings.isEmail("a.b@c.com"));
-		
+
 		assertEquals(false, Strings.isEmail("a@b"));
 		assertEquals(false, Strings.isEmail("a@b@com"));
 		assertEquals(false, Strings.isEmail("a.b@com "));
@@ -44,7 +57,7 @@ public class StringsTest extends TestCase {
 		assertEquals(false, Strings.isEmail(" ^.b @com "));
 		assertEquals(false, Strings.isEmail("a_b @com "));
 	}
-	
+
 	public void testHtmlEscape() {
 		assertEquals("&lt;tag&gt;", Strings.htmlEscape("<tag>"));
 	}

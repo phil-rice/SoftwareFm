@@ -16,23 +16,21 @@ public interface ICrowdSourcedApi {
 	/** this instantiates a server that listeners to the given port. */
 	ICrowdSourcedServer getServer();
 
-	ICrowdSourcedReaderApi makeReader();
-
-	ICrowdSourcedReadWriteApi makeReadWriter();
+	IContainer makeContainer();
 
 	void shutdown();
 
 	public static class Utils {
 		public static ICrowdSourcedApi forServer(final ServerConfig serverConfig) {
-			return new CrowdSourcedServerApi(serverConfig, new IFunction1<ICrowdSourcedReadWriteApi, IServerDoers>() {
+			return new CrowdSourcedServerApi(serverConfig, new IFunction1<IContainer, IServerDoers>() {
 				@Override
-				public IServerDoers apply(ICrowdSourcedReadWriteApi from) throws Exception {
+				public IServerDoers apply(IContainer from) throws Exception {
 					return new ServerDoers(serverConfig, from);
 				}
 			});
 		}
 
-		public static ICrowdSourcedApi forServer(ServerConfig serverConfig, IFunction1<ICrowdSourcedReadWriteApi, IServerDoers> serverDoersCreator) {
+		public static ICrowdSourcedApi forServer(ServerConfig serverConfig, IFunction1<IContainer, IServerDoers> serverDoersCreator) {
 			return new CrowdSourcedServerApi(serverConfig, serverDoersCreator);
 		}
 
@@ -52,12 +50,7 @@ public interface ICrowdSourcedApi {
 			return new AbstractCrowdSourcesApi() {
 
 				@Override
-				public ICrowdSourcedReaderApi makeReader() {
-					return readWriter;
-				}
-
-				@Override
-				public ICrowdSourcedReadWriteApi makeReadWriter() {
+				public IContainer makeContainer() {
 					return readWriter;
 				}
 			};

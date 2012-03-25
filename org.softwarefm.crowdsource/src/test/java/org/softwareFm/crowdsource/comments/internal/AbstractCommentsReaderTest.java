@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.softwareFm.crowdsource.api.ApiTest;
 import org.softwareFm.crowdsource.api.ICommentsReader;
+import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IGroups;
@@ -30,13 +32,16 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 	protected final Map<String, Object> comment2 = Maps.stringObjectMap(CommentConstants.timeKey, time2, LoginConstants.softwareFmIdKey, "someNewSoftwareFmId0", CommentConstants.creatorKey, "moniker", CommentConstants.textKey, "text2");
 	protected String softwareFmId;
 
+	abstract protected ICrowdSourcedApi getApi();
+
 	@SuppressWarnings("unchecked")
 	public void testGroupComments() {
 		remoteOperations.init("a");
 		ensureUserHasDefaultValues();
 		final Map<String, String> groupIdToCrypto = setUpGroups("groupId1", "groupId2", "groupId3");
 
-		getServerApi().makeReadWriter().accessGroupReader(new IFunction1<IGroupsReader, Void>() {
+		IContainer container = getApi().makeContainer();
+		container.accessGroupReader(new IFunction1<IGroupsReader, Void>() {
 			@Override
 			public Void apply(IGroupsReader groups) throws Exception {
 				for (String groupId : groupIdToCrypto.keySet()) {
@@ -52,8 +57,8 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 			}
 
 		});
-		IGitReader.Utils.clearCache(getApi().makeReader());
-		getApi().makeReader().accessCommentsReader(new IFunction1<ICommentsReader, Void>() {
+		IGitReader.Utils.clearCache(container);
+		container.accessCommentsReader(new IFunction1<ICommentsReader, Void>() {
 			@Override
 			public Void apply(ICommentsReader reader) throws Exception {
 				String sourcekey = CommentConstants.sourceKey;
@@ -68,7 +73,8 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 	}
 
 	private void ensureUserHasDefaultValues() {
-		getApi().makeReader().accessUserReader(new IFunction1<IUserReader, Void>() {
+		IContainer container = getApi().makeContainer();
+		container.accessUserReader(new IFunction1<IUserReader, Void>() {
 			@Override
 			public Void apply(IUserReader user) throws Exception {
 				user.getUserProperty(softwareFmId, userKey0, GroupConstants.groupCryptoKey);
@@ -85,7 +91,8 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 		remoteOperations.append(fd, comment1);
 		remoteOperations.append(fd, comment2);
 		remoteOperations.addAllAndCommit("a", "testGlobal");
-		getApi().makeReader().accessCommentsReader(new IFunction1<ICommentsReader, Void>() {
+		IContainer container = getApi().makeContainer();
+		container.accessCommentsReader(new IFunction1<ICommentsReader, Void>() {
 			@Override
 			public Void apply(ICommentsReader reader) throws Exception {
 				assertEquals(addSource("asd", comment1, comment2), reader.globalComments("a/b", "asd"));
@@ -103,7 +110,8 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 		remoteOperations.append(fd, comment1);
 		remoteOperations.append(fd, comment2);
 		remoteOperations.addAllAndCommit("a", "testGlobal");
-		getApi().makeReader().accessCommentsReader(new IFunction1<ICommentsReader, Void>() {
+		IContainer container = getApi().makeContainer();
+		container.accessCommentsReader(new IFunction1<ICommentsReader, Void>() {
 			@Override
 			public Void apply(ICommentsReader reader) throws Exception {
 				assertEquals(addSource("asd", comment1, comment2), reader.myComments("a/b", softwareFmId, userKey0, "asd"));
@@ -116,7 +124,8 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 		remoteOperations.init("a");
 		remoteOperations.put(IFileDescription.Utils.plain("a/z"), v11);
 		remoteOperations.addAllAndCommit("a", "testUserCommentsWhenNoCommentsHaveBeenMade");// needed to ensure that the repository is in a good state
-		getApi().makeReader().accessCommentsReader(new IFunction1<ICommentsReader, Void>() {
+		IContainer container = getApi().makeContainer();
+		container.accessCommentsReader(new IFunction1<ICommentsReader, Void>() {
 			@Override
 			public Void apply(ICommentsReader reader) throws Exception {
 				assertEquals(Collections.emptyList(), reader.myComments("a/b", softwareFmId, userKey0, "asd"));
@@ -127,7 +136,8 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 
 	protected Map<String, String> setUpGroups(final String... groupIds) {
 		final Map<String, String> groupIdToCrypto = Maps.newMap();
-		getServerApi().makeReadWriter().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		IContainer container = getApi().makeContainer();
+		container.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				for (String groupId : groupIds) {
@@ -144,7 +154,8 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 	}
 
 	private String getUserCommentCrypto() {
-		String userCommentsCrypto = getApi().makeReader().accessUserReader(new IFunction1<IUserReader, String>() {
+		IContainer container = getApi().makeContainer();
+		String userCommentsCrypto = container.accessUserReader(new IFunction1<IUserReader, String>() {
 			@Override
 			public String apply(IUserReader from) throws Exception {
 				return from.getUserProperty(softwareFmId, userKey0, CommentConstants.commentCryptoKey);

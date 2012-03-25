@@ -42,7 +42,7 @@ public class LocalGroupsReaderTest extends ApiTest {
 		getServerApi().getServer();
 		groupCryptoKey = Crypto.makeKey();
 		IUrlGenerator groupGenerator = getServerConfig().groupUrlGenerator;
-		groupsReader = new LocalGroupsReader(getLocalApi().makeReader(), groupGenerator);
+		groupsReader = new LocalGroupsReader(getLocalApi().makeContainer(), groupGenerator);
 		groupId1 = "groupId1";
 		group1Url = groupGenerator.findUrlFor(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId1));
 		remoteGroupFile1 = new File(remoteRoot, Urls.compose(group1Url, CommonConstants.dataFileName));

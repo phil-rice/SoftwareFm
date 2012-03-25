@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.softwareFm.crowdsource.api.IApiBuilder;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
 import org.softwareFm.crowdsource.api.IExtraCallProcessorFactory;
 import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
@@ -218,20 +218,18 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 
 	}
 
-
 	@Override
 	protected IExtraCallProcessorFactory getExtraProcessCalls() {
 		final IExtraCallProcessorFactory parent = super.getExtraProcessCalls();
 		return new IExtraCallProcessorFactory() {
 			@Override
-			public ICallProcessor[] makeExtraCalls(ICrowdSourcedReadWriteApi api, ServerConfig serverConfig) {
+			public ICallProcessor[] makeExtraCalls(IContainer api, ServerConfig serverConfig) {
 				ICallProcessor[] parentCalls = parent.makeExtraCalls(api, serverConfig);
 				ICallProcessor[] softwareFmCalls = org.softwareFm.jarAndClassPath.api.ISoftwareFmApiFactory.Utils.getExtraProcessCalls().makeExtraCalls(api, serverConfig);
 				return ArrayHelper.append(parentCalls, softwareFmCalls);
 			}
 		};
 	}
-
 
 	@Override
 	protected IExtraReaderWriterConfigurator<ServerConfig> getServerExtraReaderWriterConfigurator() {
@@ -245,6 +243,7 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 
 		};
 	}
+
 	protected ProjectMock getProjectTimeGetterFixture(IApiBuilder builder) {
 		IProjectTimeGetter projectTimeGetter = new ProjectTimeGetterFixture();
 		builder.registerReaderAndWriter(IProjectTimeGetter.class, projectTimeGetter);
@@ -264,7 +263,7 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 				IProjectTimeGetter projectTimeGetter = new ProjectTimeGetterFixture();
 				IRequestGroupReportGeneration requestGroupReportGeneration = IRequestGroupReportGeneration.Utils.httpClient(builder, IResponseCallback.Utils.noCallback());
 				IGroupOperations clientGroupOperations = IGroupOperations.Utils.clientGroupOperations(builder, localConfig.timeOutMs);
-				
+
 				builder.registerReaderAndWriter(IProjectTimeGetter.class, projectTimeGetter);
 				builder.registerReaderAndWriter(IRequestGroupReportGeneration.class, requestGroupReportGeneration);
 				builder.registerReader(IUsageReader.class, IUsageReader.Utils.localUsageReader(builder, localConfig.userUrlGenerator));
@@ -277,15 +276,15 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 	protected void setUp() throws Exception {
 		super.setUp();
 		cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().//
-				configure(display, new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(shell, getServiceExecutor(), getLocalApi().makeReadWriter()))).//
+				configure(display, new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(shell, getServiceExecutor(), getLocalApi().makeContainer()))).//
 				withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap(prefix, "data"));
 		ICrowdSourcedServer server = getServerApi().getServer();
-		ICrowdSourcedReadWriteApi localReadWriteApi = getLocalApi().makeReadWriter();
+		IContainer localReadWriteApi = getLocalApi().makeContainer();
 		try {
 			rawResourceGetter = cardConfig.resourceGetterFn.apply(null);
 			masterDetailSocial = new MasterDetailSocial(shell, SWT.NULL);
 			showMyData = MyDetails.showMyDetails(localReadWriteApi, getServiceExecutor(), cardConfig, masterDetailSocial);
-			IShowMyGroups showMyGroups = MyGroups.showMyGroups(masterDetailSocial,  localReadWriteApi, serviceExecutor, false, cardConfig);
+			IShowMyGroups showMyGroups = MyGroups.showMyGroups(masterDetailSocial, localReadWriteApi, serviceExecutor, false, cardConfig);
 			IShowMyPeople showMyPeople = MyPeople.showMyPeople(localReadWriteApi, serviceExecutor, masterDetailSocial, cardConfig, 2 * getLocalConfig().timeOutMs);
 
 			userDataManager = IUserDataManager.Utils.userDataManager();
@@ -298,12 +297,12 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 			IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
 			new SnippetFeedConfigurator(cardConfig.cardDataStore, cardConfig.resourceGetterFn).configure(explorer);
 			// SnippetFeedConfigurator.configure(explorer, cardConfig);
-			getLocalApi().makeReadWriter().modify(IHttpClient.class, IGitLocal.class, new ICallback2<IHttpClient, IGitLocal>() {
+			getLocalContainer().modify(IHttpClient.class, IGitLocal.class, new ICallback2<IHttpClient, IGitLocal>() {
 				@Override
 				public void process(IHttpClient httpClient, IGitLocal gitLocal) throws Exception {
 					httpClient.delete(Urls.compose(rootArtifactUrl, artifactUrl)).execute(IResponseCallback.Utils.noCallback()).get();
 					httpClient.delete(Urls.compose(rootArtifactUrl, snippetUrl)).execute(IResponseCallback.Utils.noCallback()).get();
-					gitLocal.init(Urls.compose(rootArtifactUrl, groupUrl));
+					gitLocal.init(Urls.compose(rootArtifactUrl, groupUrl), "setup");
 				}
 			});
 		} catch (Exception e) {
@@ -326,22 +325,22 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 
 	protected void postSnippetData() {
 		final String url = Urls.compose(rootSnippetUrl, snippetUrl);
-		getLocalApi().makeReadWriter().modify(IGitWriter.class, new ICallback<IGitWriter>() {
+		getLocalApi().makeContainer().modify(IGitWriter.class, new ICallback<IGitWriter>() {
 			@Override
 			public void process(IGitWriter gitWriter) throws Exception {
-				gitWriter.put(IFileDescription.Utils.plain(url), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection));
+				gitWriter.put(IFileDescription.Utils.plain(url), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), "postSnippetData");
 			}
 		});
 	}
 
 	protected void postArtifactData() {
-		getLocalApi().makeReadWriter().modify(IGitWriter.class, new ICallback<IGitWriter>() {
+		getLocalApi().makeContainer().modify(IGitWriter.class, new ICallback<IGitWriter>() {
 			@Override
 			public void process(IGitWriter gitWriter) throws Exception {
-				gitWriter.put(IFileDescription.Utils.plain(Urls.compose(rootArtifactUrl, artifactUrl)), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.artifact));
-				gitWriter.put(IFileDescription.Utils.plain(Urls.compose(rootArtifactUrl, artifactUrl, "/tutorial")), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection));
-				gitWriter.put(IFileDescription.Utils.plain(Urls.compose(rootArtifactUrl, artifactUrl, "/tutorial/one")), Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"));
-				gitWriter.put(IFileDescription.Utils.plain(Urls.compose(rootArtifactUrl, artifactUrl, "/tutorial/two")), Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"));
+				gitWriter.put(IFileDescription.Utils.plain(Urls.compose(rootArtifactUrl, artifactUrl)), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.artifact), "postArtefactData_0");
+				gitWriter.put(IFileDescription.Utils.plain(Urls.compose(rootArtifactUrl, artifactUrl, "/tutorial")), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), "postArtefactData_1");
+				gitWriter.put(IFileDescription.Utils.plain(Urls.compose(rootArtifactUrl, artifactUrl, "/tutorial/one")), Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"), "postArtefactData_2");
+				gitWriter.put(IFileDescription.Utils.plain(Urls.compose(rootArtifactUrl, artifactUrl, "/tutorial/two")), Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"), "postArtefactData_3");
 			}
 		});
 	}

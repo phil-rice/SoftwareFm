@@ -449,8 +449,8 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 	}
 
 	private void checkOnServerAndLocally(IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void> checkFn) {
-		getServerApi().makeReadWriter().access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, checkFn);
-		getLocalApi().makeReadWriter().access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, checkFn);
+		getServerApi().makeContainer().access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, checkFn);
+		getLocalApi().makeContainer().access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, checkFn);
 	}
 
 	public void testButtonsEnabledStatusWhenNotMemberOfAnyGroup() {

@@ -4,16 +4,9 @@
 
 package org.softwareFm.crowdsource.api.git;
 
-import java.util.Map;
-
 import org.softwareFm.crowdsource.utilities.maps.IHasUrlCache;
 
 /** These are all blocking calls that may take a long time to execute */
-public interface IGitLocal extends IGitReader, IHasUrlCache {
-	void init(String url);
-
-	void put(IFileDescription fileDescription, Map<String, Object> data);
-
-	void delete(IFileDescription fileDescription);
+public interface IGitLocal extends IGitWriter, IHasUrlCache {
 
 }

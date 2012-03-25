@@ -4,7 +4,7 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.ServerConfig;
@@ -24,10 +24,10 @@ public class CrowdSourcedServerApiTest extends TestCase {
 	public void testGettersReturnsSameObjectEachTime() {
 		ICrowdSourcedApi api = ICrowdSourcedApi.Utils.forServer(serverConfig);
 		assertTrue(api instanceof CrowdSourcedServerApi);
-		ICrowdSourcedReaderApi reader1 = api.makeReader();
-		ICrowdSourcedReaderApi reader2 = api.makeReader();
-		ICrowdSourcedReadWriteApi readWriter1 = api.makeReadWriter();
-		ICrowdSourcedReadWriteApi readWriter2 = api.makeReadWriter();
+		ICrowdSourcedReaderApi reader1 = api.makeContainer();
+		ICrowdSourcedReaderApi reader2 = api.makeContainer();
+		IContainer readWriter1 = api.makeContainer();
+		IContainer readWriter2 = api.makeContainer();
 		
 		assertSame(reader1, reader2);
 		assertSame(reader1, readWriter1);

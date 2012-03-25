@@ -28,7 +28,7 @@ public class GenerateGroupUsageProcessorTest extends GroupsTest {
 		takeOnProcessor.addExistingUserToGroup(groupId, groupCryptoKey, sfmId1, "email1", "someStatus");
 		takeOnProcessor.addExistingUserToGroup(groupId, groupCryptoKey, sfmId2, "email2", "someStatus");
 
-		readWriteApi.modify(IProject.class, new ICallback<IProject>() {
+		serverContainer.modify(IProject.class, new ICallback<IProject>() {
 			@Override
 			public void process(IProject project) throws Exception {
 				project.addProjectDetails(sfmId1, "gid1", "aid1", "month1", 1);
@@ -43,10 +43,10 @@ public class GenerateGroupUsageProcessorTest extends GroupsTest {
 			}
 		});
 
-		readWriteApi.accessGroupReader(new IFunction1<IGroupsReader, Void>() {
+		serverContainer.accessGroupReader(new IFunction1<IGroupsReader, Void>() {
 			@Override
 			public Void apply(IGroupsReader groups) throws Exception {
-				GenerateGroupUsageProcessor processor = new GenerateGroupUsageProcessor(readWriteApi);
+				GenerateGroupUsageProcessor processor = new GenerateGroupUsageProcessor(serverContainer);
 				processor.execute(GroupConstants.generateGroupReportPrefix, Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.monthKey, "month1", GroupConstants.groupCryptoKey, groupCryptoKey));
 				Map<String, Object> month1Report = groups.getUsageReport(groupId, groupCryptoKey, "month1");
 				Map<String, Object> month2Report = groups.getUsageReport(groupId, groupCryptoKey, "month2");

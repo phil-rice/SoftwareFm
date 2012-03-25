@@ -7,7 +7,7 @@ package org.softwareFm.crowdsource.membership.internal;
 import java.util.Collections;
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
@@ -19,11 +19,11 @@ import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 
 public abstract class AbstractUserMembershipReader implements IUserMembershipReader {
 
-	protected final ICrowdSourcedReaderApi readerApi;
+	protected final IContainer container;
 	protected final IUrlGenerator userUrlGenerator;
 
-	public AbstractUserMembershipReader(ICrowdSourcedReaderApi readerApi, IUrlGenerator userUrlGenerator) {
-		this.readerApi = readerApi;
+	public AbstractUserMembershipReader(IContainer container, IUrlGenerator userUrlGenerator) {
+		this.container = container;
 		this.userUrlGenerator = userUrlGenerator;
 	}
 
@@ -43,11 +43,11 @@ public abstract class AbstractUserMembershipReader implements IUserMembershipRea
 		if (usersMembershipCrypto == null)
 			return Collections.emptyList();
 		final IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, GroupConstants.membershipFileName, usersMembershipCrypto);
-		return IGitReader.Utils.getFileAsListOfMaps(readerApi, fileDescription);
+		return IGitReader.Utils.getFileAsListOfMaps(container, fileDescription);
 	}
 
 	protected String getMembershipCrypto(String softwareFmId, String userCrypto) {
-		String usersMembershipCrypto =IUserReader.Utils.getUserProperty(readerApi, softwareFmId, userCrypto,  GroupConstants.membershipCryptoKey);
+		String usersMembershipCrypto =IUserReader.Utils.getUserProperty(container, softwareFmId, userCrypto,  GroupConstants.membershipCryptoKey);
 		return usersMembershipCrypto;
 	}
 

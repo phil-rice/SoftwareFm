@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
@@ -24,10 +24,10 @@ import org.softwareFm.crowdsource.utilities.url.Urls;
 public abstract class AbstractGroupReader implements IGroupsReader {
 
 	protected IUrlGenerator groupUrlGenerator;
-	protected final ICrowdSourcedReaderApi readerApi;
+	protected final IContainer container;
 
-	public AbstractGroupReader(ICrowdSourcedReaderApi readerApi, IUrlGenerator groupUrlGenerator) {
-		this.readerApi = readerApi;
+	public AbstractGroupReader(IContainer container, IUrlGenerator groupUrlGenerator) {
+		this.container = container;
 		this.groupUrlGenerator = groupUrlGenerator;
 	}
 
@@ -40,7 +40,7 @@ public abstract class AbstractGroupReader implements IGroupsReader {
 	}
 
 	protected Map<String, Object> getGroupMap(final IFileDescription groupFileDescription) {
-		return readerApi.accessGitReader(new IFunction1<IGitReader, Map<String, Object>>() {
+		return container.accessGitReader(new IFunction1<IGitReader, Map<String, Object>>() {
 			@Override
 			public Map<String, Object> apply(IGitReader git) throws Exception {
 				Iterable<Map<String, Object>> maps = git.getFileAsListOfMaps(groupFileDescription);
@@ -54,7 +54,7 @@ public abstract class AbstractGroupReader implements IGroupsReader {
 
 	@Override
 	public Map<String, Object> getUsageReport(final String groupId, final String groupCryptoKey, final String month) {
-		return readerApi.accessGitReader(new IFunction1<IGitReader, Map<String, Object>>() {
+		return container.accessGitReader(new IFunction1<IGitReader, Map<String, Object>>() {
 			@Override
 			public Map<String, Object> apply(IGitReader git) throws Exception {
 				IFileDescription groupFileDescription = findReportFileDescription(groupId, groupCryptoKey, month);
@@ -66,7 +66,7 @@ public abstract class AbstractGroupReader implements IGroupsReader {
 	@Override
 	public Iterable<Map<String, Object>> users(final String groupId, final String groupCryptoKey) {
 		IFileDescription groupFileDescription = findFileDescription(groupId, groupCryptoKey);
-		return Iterables.tail(IGitReader.Utils.getFileAsListOfMaps(readerApi, groupFileDescription));
+		return Iterables.tail(IGitReader.Utils.getFileAsListOfMaps(container, groupFileDescription));
 	}
 
 	protected IFileDescription findFileDescription(String groupId, String groupCryptoKey) {
@@ -88,7 +88,7 @@ public abstract class AbstractGroupReader implements IGroupsReader {
 
 	@Override
 	public int membershipCount(final String groupId, final String groupCryptoKey) {
-		return readerApi.accessGitReader(new IFunction1<IGitReader, Integer>() {
+		return container.accessGitReader(new IFunction1<IGitReader, Integer>() {
 			@Override
 			public Integer apply(IGitReader git) throws Exception {
 				IFileDescription groupFileDescription = findFileDescription(groupId, groupCryptoKey);

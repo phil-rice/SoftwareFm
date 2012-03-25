@@ -7,7 +7,7 @@ package org.softwareFm.swt.dataStore;
 import java.util.concurrent.Future;
 
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.swt.card.dataStore.CardDataStoreMock;
 import org.softwareFm.swt.dataStore.internal.CardDataStoreForRepository;
@@ -30,7 +30,7 @@ public interface ICardDataStore {
 		 * 
 		 * @param readWriteApi
 		 */
-		public static IMutableCardDataStore repositoryCardDataStore(Control from, IServiceExecutor serviceExecutor, ICrowdSourcedReadWriteApi readWriteApi) {
+		public static IMutableCardDataStore repositoryCardDataStore(Control from, IServiceExecutor serviceExecutor, IContainer readWriteApi) {
 			return new CardDataStoreForRepository(from, serviceExecutor, readWriteApi);
 		}
 	}

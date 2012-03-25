@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.apache.http.RequestLine;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
 import org.softwareFm.crowdsource.api.IIdAndSaltGenerator;
 import org.softwareFm.crowdsource.api.IUserCryptoAccess;
@@ -69,12 +69,11 @@ public interface ICallProcessor extends IServerDoer{
 		}
 
 
-		public static ICallProcessor softwareFmProcessCall(ICrowdSourcedReadWriteApi readWriteApi, IServerDoers serverDoers, ServerConfig serverConfig) {
-			IGitOperations gitOperations = readWriteApi.gitOperations();
+		public static ICallProcessor softwareFmProcessCall(IContainer container, IServerDoers serverDoers, ServerConfig serverConfig) {
 			IUserCryptoAccess userCryptoAccess = serverConfig.userCryptoAccess;
 			IIdAndSaltGenerator idAndSaltGenerator = serverConfig.idAndSaltGenerator;
 			ICallProcessor[] rawProcessCalls = new ICallProcessor[] {//
-					new MakeRootProcessor(serverConfig.aboveRepostoryUrlCache, gitOperations), //
+					new MakeRootProcessor(serverConfig.aboveRepostoryUrlCache, container), //
 
 					new LoginProcessor(serverDoers.getSaltProcessor(), serverDoers.getLoginChecker()), //
 					new SignupProcessor(serverDoers.getSignUpChecker(), serverDoers.getSaltProcessor(), idAndSaltGenerator), //
@@ -84,16 +83,16 @@ public interface ICallProcessor extends IServerDoer{
 					new ForgottonPasswordWebPageProcessor(serverDoers.getPasswordResetter()),//
 					new ChangePasswordProcessor(userCryptoAccess),//
 					
-					new TakeOnGroupProcessor(serverDoers, userCryptoAccess, idAndSaltGenerator, serverConfig.cryptoGenerators, readWriteApi),//
-					new InviteGroupProcessor(readWriteApi, serverDoers, userCryptoAccess, idAndSaltGenerator),//
-					new AcceptInviteGroupProcessor(userCryptoAccess, readWriteApi),//
-					new LeaveGroupCommandProcessor(readWriteApi, userCryptoAccess),//
-					new KickFromGroupCommandProcessor(readWriteApi, userCryptoAccess),//
-					new GitGetProcessor(readWriteApi.gitOperations(), serverConfig.aboveRepostoryUrlCache), //
-					new CommentProcessor(readWriteApi, userCryptoAccess),//
-					new DeleteProcessor(gitOperations),//
-					new PostProcessor(gitOperations) };
-			ICallProcessor[] extraProcessCalls = serverConfig.extraCallProcessors.makeExtraCalls(readWriteApi, serverConfig);
+					new TakeOnGroupProcessor(serverDoers, userCryptoAccess, idAndSaltGenerator, serverConfig.cryptoGenerators, container),//
+					new InviteGroupProcessor(container, serverDoers, userCryptoAccess, idAndSaltGenerator),//
+					new AcceptInviteGroupProcessor(userCryptoAccess, container),//
+					new LeaveGroupCommandProcessor(container, userCryptoAccess),//
+					new KickFromGroupCommandProcessor(container, userCryptoAccess),//
+					new GitGetProcessor(container, serverConfig.aboveRepostoryUrlCache), //
+					new CommentProcessor(container, userCryptoAccess),//
+					new DeleteProcessor(container),//
+					new PostProcessor(container.gitOperations()) };
+			ICallProcessor[] extraProcessCalls = serverConfig.extraCallProcessors.makeExtraCalls(container, serverConfig);
 			ICallProcessor[] processCalls = ArrayHelper.insert(rawProcessCalls, extraProcessCalls);
 			return chain(processCalls);
 		}

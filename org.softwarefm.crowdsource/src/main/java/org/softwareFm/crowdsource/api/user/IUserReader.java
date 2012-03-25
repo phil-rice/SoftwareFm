@@ -6,7 +6,7 @@ package org.softwareFm.crowdsource.api.user;
 
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
@@ -27,7 +27,7 @@ public interface IUserReader {
 			});
 		}
 
-		public static void setUserProperty(ICrowdSourcedReadWriteApi readWriteApi, final String softwareFmId, final String userCrypto, final String propertyName, final String value) {
+		public static void setUserProperty(IContainer readWriteApi, final String softwareFmId, final String userCrypto, final String propertyName, final String value) {
 			readWriteApi.modifyUser(new ICallback<IUser>() {
 				@Override
 				public void process(IUser user) throws Exception {

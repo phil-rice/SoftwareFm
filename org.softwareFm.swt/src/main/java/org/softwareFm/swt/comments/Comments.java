@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.crowdsource.api.ICommentsReader;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.constants.CommentConstants;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
@@ -78,9 +78,9 @@ public class Comments implements IHasControl {
 		protected List<Map<String, Object>> allComments;
 		private String url;
 		private final CommentsButtons footer;
-		private final ICrowdSourcedReadWriteApi readWriteApi;
+		private final IContainer readWriteApi;
 
-		public CommentsComposite(Composite parent, CardConfig cardConfig, ICrowdSourcedReadWriteApi readWriteApi, final ICommentsCallback callback, Runnable addButton) {
+		public CommentsComposite(Composite parent, CardConfig cardConfig, IContainer readWriteApi, final ICommentsCallback callback, Runnable addButton) {
 			super(parent, cardConfig, CommentConstants.commentCardType, "");
 			this.readWriteApi = readWriteApi;
 			IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, CommentConstants.commentCardType);
@@ -156,7 +156,7 @@ public class Comments implements IHasControl {
 
 	private final CommentsComposite content;
 
-	public Comments(Composite parent, ICrowdSourcedReadWriteApi readWriteApi, CardConfig cardConfig, ICommentsCallback callback, Runnable addComment) {
+	public Comments(Composite parent, IContainer readWriteApi, CardConfig cardConfig, ICommentsCallback callback, Runnable addComment) {
 		content = new CommentsComposite(parent, cardConfig, readWriteApi, callback, addComment);
 		content.setLayout(Swts.titleAndContentLayout(cardConfig.titleHeight));
 		content.setLayout(new DataCompositeWithFooterLayout());

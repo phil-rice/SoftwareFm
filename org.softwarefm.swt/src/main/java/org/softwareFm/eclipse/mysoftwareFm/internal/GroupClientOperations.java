@@ -7,7 +7,7 @@ import java.util.concurrent.Callable;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.api.user.GroupOperationResult;
 import org.softwareFm.crowdsource.api.user.IGroupOperations;
@@ -36,11 +36,11 @@ import org.softwareFm.swt.explorer.IMasterDetailSocial;
 @SuppressWarnings("Need to externalise these string")
 public class GroupClientOperations implements IGroupClientOperations {
 
-	private final ICrowdSourcedReadWriteApi readWriteApi;
+	private final IContainer readWriteApi;
 	private final CardConfig cardConfig;
 	private final IMasterDetailSocial masterDetailSocial;
 
-	public GroupClientOperations(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, ICrowdSourcedReadWriteApi readWriteApi) {
+	public GroupClientOperations(IMasterDetailSocial masterDetailSocial, CardConfig cardConfig, IContainer readWriteApi) {
 		this.masterDetailSocial = masterDetailSocial;
 		this.cardConfig = cardConfig;
 		this.readWriteApi = readWriteApi;

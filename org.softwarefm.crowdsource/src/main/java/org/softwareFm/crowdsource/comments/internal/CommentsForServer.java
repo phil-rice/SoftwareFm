@@ -5,7 +5,7 @@ import java.util.concurrent.Callable;
 
 import org.softwareFm.crowdsource.api.ICommentDefn;
 import org.softwareFm.crowdsource.api.IComments;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.constants.CommentConstants;
@@ -18,7 +18,7 @@ public class CommentsForServer extends AbstractCommentsReader implements ICommen
 
 	private final Callable<Long> timeGetter;
 
-	public CommentsForServer(ICrowdSourcedReadWriteApi api, Callable<Long> timeGetter) {
+	public CommentsForServer(IContainer api, Callable<Long> timeGetter) {
 		super(api);
 		this.timeGetter = timeGetter;
 	}

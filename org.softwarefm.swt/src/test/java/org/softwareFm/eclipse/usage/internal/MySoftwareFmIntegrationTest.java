@@ -197,7 +197,7 @@ public class MySoftwareFmIntegrationTest extends ApiAndSwtTest implements IInteg
 
 	private String resetPassword(final String magicString)  {
 		final MemoryResponseCallback memoryCallback = IResponseCallback.Utils.memoryCallback();
-		getLocalApi().makeReadWriter().modify(IHttpClient.class, new ICallback<IHttpClient>(){
+		getLocalApi().makeContainer().modify(IHttpClient.class, new ICallback<IHttpClient>(){
 			@Override
 			public void process(IHttpClient client) throws Exception {
 				client.get(Urls.compose(LoginConstants.passwordResetLinkPrefix, magicString)).execute(memoryCallback).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
@@ -382,10 +382,10 @@ public class MySoftwareFmIntegrationTest extends ApiAndSwtTest implements IInteg
 	protected void setUp() throws Exception {
 		super.setUp();
 		getServerApi().getServer();
-		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(display, getServiceExecutor(), getLocalApi().makeReadWriter());
+		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(display, getServiceExecutor(), getLocalApi().makeContainer());
 		cardConfig = ICardConfigurator.Utils.cardConfigForTests(display);
 		userDataManager = IUserDataManager.Utils.userDataManager();
-		mySoftwareFm = new MySoftwareFm(shell, getLocalApi().makeReadWriter(), cardConfig, loginStrategy, IShowMyData.Utils.exceptionShowMyData(), IShowMyGroups.Utils.exceptionShowMyGroups(), userDataManager);
+		mySoftwareFm = new MySoftwareFm(shell, getLocalApi().makeContainer(), cardConfig, loginStrategy, IShowMyData.Utils.exceptionShowMyData(), IShowMyGroups.Utils.exceptionShowMyGroups(), userDataManager);
 		softwareFmComposite = mySoftwareFm.getComposite();
 		userFile = new File(remoteRoot, Urls.compose(getUrlPrefix(), "users/so/me/someNewSoftwareFmId0", CommonConstants.dataFileName));
 		truncateUsersTable();

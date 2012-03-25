@@ -9,22 +9,24 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.apache.http.RequestLine;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
-import org.softwareFm.crowdsource.api.git.IGitOperations;
+import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.server.ICallProcessor;
 import org.softwareFm.crowdsource.api.server.IProcessResult;
 import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.maps.UrlCache;
 
 public class GitGetProcessor implements ICallProcessor {
-	private final IGitOperations gitOperations;
 	private final UrlCache<String> cache;
+	private final IContainer container;
 
-	public GitGetProcessor(IGitOperations gitOperations, UrlCache<String> cache) {
-		this.gitOperations = gitOperations;
+	public GitGetProcessor(IContainer container, UrlCache<String> cache) {
+		this.container = container;
 		this.cache = cache;
 	}
 
@@ -37,26 +39,33 @@ public class GitGetProcessor implements ICallProcessor {
 	}
 
 	private String getString(final RequestLine requestLine) {
-		IFileDescription fileDescription = IFileDescription.Utils.fromRequest(requestLine, Maps.emptyStringObjectMap());
+		final IFileDescription fileDescription = IFileDescription.Utils.fromRequest(requestLine, Maps.emptyStringObjectMap());
 		final String url = requestLine.getUri();
 		String existing = cache.get(url);
 		if (existing != null)
 			return existing;
-		File root = gitOperations.getRoot();
-		File repositoryLocation = fileDescription.findRepositoryUrl(root);
-		if (repositoryLocation == null) {
-			return cache.findOrCreate(url, new Callable<String>() {
-				@Override
-				public String call() throws Exception {
-					IFileDescription fileDescription = IFileDescription.Utils.fromRequest(requestLine, Maps.emptyStringObjectMap());
-					Map<String, Object> data = gitOperations.getFileAndDescendants(fileDescription);
-					return Json.mapToString(CommonConstants.dataKey, data);
+		String result = container.access(IGitReader.class, new IFunction1<IGitReader, String>() {
+			@Override
+			public String apply(final IGitReader gitReader) throws Exception {
+				File root = gitReader.getRoot();
+				File repositoryLocation = fileDescription.findRepositoryUrl(root);
+				if (repositoryLocation == null) {
+					return cache.findOrCreate(url, new Callable<String>() {
+						@Override
+						public String call() throws Exception {
+							IFileDescription fileDescription = IFileDescription.Utils.fromRequest(requestLine, Maps.emptyStringObjectMap());
+							Map<String, Object> data = gitReader.getFileAndDescendants(fileDescription);
+							return Json.mapToString(CommonConstants.dataKey, data);
+						}
+					});
+				} else {
+					String repoUrl = Files.offset(root, repositoryLocation);
+					return Json.toString(Maps.stringObjectLinkedMap(CommonConstants.repoUrlKey, repoUrl));
 				}
-			});
-		} else {
-			String repoUrl = Files.offset(root, repositoryLocation);
-			return Json.toString(Maps.stringObjectLinkedMap(CommonConstants.repoUrlKey, repoUrl));
-		}
+			}
+		});
+		return result;
+		
 	}
 
 }

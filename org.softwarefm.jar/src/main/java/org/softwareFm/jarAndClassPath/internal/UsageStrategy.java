@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitLocal;
 import org.softwareFm.crowdsource.httpClient.IHttpClient;
@@ -32,19 +32,19 @@ import org.softwareFm.jarAndClassPath.constants.JarAndPathMessages;
 public class UsageStrategy implements IUsageStrategy {
 	private final IServiceExecutor serviceExecutor;
 	private final IUrlGenerator userGenerator;
-	private final ICrowdSourcedReaderApi readerApi;
+	private final IContainer container;
 	private final File root;
 
-	public UsageStrategy(ICrowdSourcedReaderApi readerApi, IServiceExecutor serviceExecutor, IUrlGenerator userGenerator) {
-		this.readerApi = readerApi;
+	public UsageStrategy(IContainer container, IServiceExecutor serviceExecutor, IUrlGenerator userGenerator) {
+		this.container = container;
 		this.userGenerator = userGenerator;
 		this.serviceExecutor = serviceExecutor;
-		this.root = readerApi.gitOperations().getRoot();
+		this.root = container.gitOperations().getRoot();
 	}
 
 	@Override
 	public Future<?> using(final String softwareFmId, final String digest, final IResponseCallback callback) {
-		return readerApi.access(IHttpClient.class, new IFunction1<IHttpClient, Future<?>>() {
+		return container.access(IHttpClient.class, new IFunction1<IHttpClient, Future<?>>() {
 			@Override
 			public Future<?> apply(final IHttpClient client) throws Exception {
 				return serviceExecutor.submit(new IFunction1<IMonitor, Void>() {
@@ -74,7 +74,7 @@ public class UsageStrategy implements IUsageStrategy {
 
 	@Override
 	public Map<String, Object> myProjectData(final String softwareFmId, final String crypto) {
-		return readerApi.access(IGitLocal.class, new IFunction1<IGitLocal, Map<String, Object>>() {
+		return container.access(IGitLocal.class, new IFunction1<IGitLocal, Map<String, Object>>() {
 			@Override
 			public Map<String, Object> apply(IGitLocal gitLocal) throws Exception {
 				String userUrl = userGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));

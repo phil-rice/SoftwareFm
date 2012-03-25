@@ -10,14 +10,15 @@ import java.util.concurrent.Callable;
 
 import org.softwareFm.crowdsource.api.ApiConfig;
 import org.softwareFm.crowdsource.api.IApiBuilder;
+import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
-import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
 import org.softwareFm.crowdsource.api.git.GitTest;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.git.IRepoFinder;
 import org.softwareFm.crowdsource.git.internal.GitLocal;
+import org.softwareFm.crowdsource.git.internal.HttpGitWriter;
 import org.softwareFm.crowdsource.user.internal.LocalUserReader;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
@@ -82,10 +83,11 @@ public class LocalUserReaderTest extends GitTest {
 		ICrowdSourcedReaderApi readerApi = ICrowdSourcedApi.Utils.forTests(new IExtraReaderWriterConfigurator<ApiConfig>() {
 			@Override
 			public void builder(IApiBuilder builder, ApiConfig apiConfig) {
-				builder.registerReader(IGitReader.class, new GitLocal(builder, remoteAsUri, CommonConstants.staleCachePeriodForTest));
+				HttpGitWriter httpGitWriter = null;
+				builder.registerReader(IGitReader.class, new GitLocal(builder, httpGitWriter, remoteAsUri, CommonConstants.staleCachePeriodForTest));
 				builder.registerReadWriter(IRepoFinder.class, IRepoFinder.Utils.forTests(remoteOperations));
 			}
-		}, localRoot).makeReader();
+		}, localRoot).makeContainer();
 		localUser = new LocalUserReader(readerApi, userUrlGenerator);
 		remoteSfmId1File = new File(remoteRoot, Urls.compose("user/sf/mI/sfmId1/", CommonConstants.dataFileName));
 		remoteSfmId2File = new File(remoteRoot, Urls.compose("user/sf/mI/sfmId2/", CommonConstants.dataFileName));

@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.softwareFm.crowdsource.api.git.IFileDescription;
-import org.softwareFm.crowdsource.api.git.IGitWriter;
 import org.softwareFm.crowdsource.httpClient.IHttpClient;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
@@ -16,21 +15,21 @@ import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.url.Urls;
 
-public class HttpGitWriter implements IGitWriter {
+public class HttpGitWriter  {
 
 	private final IHttpClient httpClient;
 	private final long delayMs;
 
-	public HttpGitWriter(IHttpClient httpClient) {
-		this (httpClient, CommonConstants.clientTimeOut);
+	public HttpGitWriter(IHttpClient httpClient ) {
+		this(httpClient, CommonConstants.clientTimeOut);
 	}
+
 	public HttpGitWriter(IHttpClient httpClient, long delayMs) {
 		this.httpClient = httpClient;
 		this.delayMs = delayMs;
 	}
 
-	@Override
-	public void init(String url) {
+	public void init(String url, String commitMessage) {
 		try {
 			httpClient.post(Urls.compose(CommonConstants.makeRootPrefix, url)).execute(IResponseCallback.Utils.noCallback()).get(delayMs, TimeUnit.MILLISECONDS);
 		} catch (Exception e) {
@@ -38,8 +37,7 @@ public class HttpGitWriter implements IGitWriter {
 		}
 	}
 
-	@Override
-	public void put(IFileDescription fileDescription, Map<String, Object> data) {
+	public void put(IFileDescription fileDescription, Map<String, Object> data, String commitMessage) {
 		try {
 			httpClient.post(fileDescription.url()).//
 					addParam(CommonConstants.dataParameterName, Json.toString(data)).//
@@ -50,13 +48,13 @@ public class HttpGitWriter implements IGitWriter {
 		}
 	}
 
-	@Override
-	public void delete(IFileDescription fileDescription) {
+	public void delete(IFileDescription fileDescription, String commitMessage) {
 		try {
 			httpClient.delete(fileDescription.url()).execute(IResponseCallback.Utils.noCallback()).get(delayMs, TimeUnit.MILLISECONDS);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
 	}
+
 
 }

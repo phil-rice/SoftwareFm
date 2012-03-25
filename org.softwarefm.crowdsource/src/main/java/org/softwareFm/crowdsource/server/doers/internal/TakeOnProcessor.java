@@ -8,7 +8,7 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.ServerConfig;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitOperations;
@@ -28,9 +28,9 @@ public class TakeOnProcessor implements ITakeOnProcessor {
 
 
 	private final ServerConfig serverConfig;
-	private final ICrowdSourcedReadWriteApi readWriteApi;
+	private final IContainer readWriteApi;
 
-	public TakeOnProcessor(ICrowdSourcedReadWriteApi readWriteApi, ServerConfig serverConfig) {
+	public TakeOnProcessor(IContainer readWriteApi, ServerConfig serverConfig) {
 		this.readWriteApi = readWriteApi;
 		this.serverConfig = serverConfig;
 	}

@@ -48,7 +48,7 @@ public class ICommentDefnTest extends TemporaryFileTest {
 	public void testGroup() {
 		final String groupCrypto = Crypto.makeKey();
 		final String groupCommentCrypto = Crypto.makeKey();
-		api.makeReadWriter().modifyGroups(new ICallback<IGroups>() {
+		api.makeContainer().modifyGroups(new ICallback<IGroups>() {
 			@Override
 			public void process(IGroups groups) throws Exception {
 				groups.setGroupProperty(groupId, groupCrypto, CommentConstants.commentCryptoKey, groupCommentCrypto);
@@ -75,7 +75,7 @@ public class ICommentDefnTest extends TemporaryFileTest {
 		super.setUp();
 		ServerConfig serverConfig = ServerConfig.serverConfigForTests(root, IMailer.Utils.noMailer());
 		api = (CrowdSourcedServerApi) ICrowdSourcedApi.Utils.forServer(serverConfig);
-		reader = api.makeReader();
+		reader = api.makeContainer();
 		new JdbcTemplate(serverConfig.dataSource).update("delete From users");
 	}
 }

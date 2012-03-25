@@ -7,7 +7,7 @@ package org.softwareFm.jarAndClassPath.api;
 import java.util.Map;
 import java.util.concurrent.Future;
 
-import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.httpClient.IResponse;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
 import org.softwareFm.crowdsource.utilities.future.Futures;
@@ -29,8 +29,8 @@ public interface IUsageStrategy {
 			return new CachedUsageStrategy(delegate, period, cachesToClear, userDataManager);
 		}
 
-		public static IUsageStrategy usage(final IServiceExecutor serviceExecutor, final ICrowdSourcedReaderApi readerApi, IUrlGenerator userGenerator) {
-			return new UsageStrategy(readerApi, serviceExecutor, userGenerator);
+		public static IUsageStrategy usage(final IServiceExecutor serviceExecutor, final IContainer container, IUrlGenerator userGenerator) {
+			return new UsageStrategy(container, serviceExecutor, userGenerator);
 		}
 
 		public static IUsageStrategy noUsageStrategy() {

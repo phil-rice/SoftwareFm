@@ -55,7 +55,7 @@ public class MakeRootProcessorTest extends AbstractProcessCallTest<MakeRootProce
 
 	@Override
 	protected MakeRootProcessor makeProcessor() {
-		return new MakeRootProcessor(new UrlCache<String>(), remoteOperations);
+		return new MakeRootProcessor(new UrlCache<String>(), getServerApi().makeContainer());
 	}
 
 }

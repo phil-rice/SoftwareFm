@@ -58,6 +58,10 @@ public class Files {
 
 	public static String offset(File root, File leaf) {
 		try {
+			if (root == null)
+				throw new NullPointerException("Root is null");
+			if (leaf == null)
+				throw new NullPointerException("Leaf is null");
 			String rootString = root.getAbsolutePath();
 			String leafString = leaf.getAbsolutePath();
 			if (leafString.startsWith(rootString))

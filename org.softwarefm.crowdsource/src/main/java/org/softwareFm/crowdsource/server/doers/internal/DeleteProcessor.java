@@ -4,41 +4,39 @@
 
 package org.softwareFm.crowdsource.server.doers.internal;
 
-import java.io.File;
 import java.util.Map;
 
 import org.apache.http.RequestLine;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
-import org.softwareFm.crowdsource.api.git.IGitOperations;
+import org.softwareFm.crowdsource.api.git.IGitWriter;
 import org.softwareFm.crowdsource.api.server.ICallProcessor;
 import org.softwareFm.crowdsource.api.server.IProcessResult;
-import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
 
 public class DeleteProcessor implements ICallProcessor {
 
-	private final IGitOperations gitOperations;
+	private final IContainer container;
 
-	public DeleteProcessor(IGitOperations gitOperations) {
-		this.gitOperations = gitOperations;
+	public DeleteProcessor(IContainer container) {
+		this.container = container;
 	}
 
 	@Override
-	public IProcessResult process(RequestLine requestLine, Map<String, Object> parameters) {
-		if (requestLine.getMethod().equals(CommonConstants.DELETE)) {
-			String uri = requestLine.getUri();
-			IFileDescription fileDescription = IFileDescription.Utils.fromRequest(requestLine, parameters);
-			File root = gitOperations.getRoot();
-			File file = fileDescription.getFile(root);
-			if (file.exists()) {
-				file.delete();
-				File repositoryFile = fileDescription.findRepositoryUrl(root);
-				String repositoryUrl = Files.offset(root, repositoryFile);
-				gitOperations.addAllAndCommit(repositoryUrl, "delete: " + uri);
+	public IProcessResult process(final RequestLine requestLine, final Map<String, Object> parameters) {
+		return container.access(IGitWriter.class, new IFunction1<IGitWriter, IProcessResult>() {
+			@Override
+			public IProcessResult apply(IGitWriter writer) throws Exception {
+				if (requestLine.getMethod().equals(CommonConstants.DELETE)) {
+					IFileDescription fileDescription = IFileDescription.Utils.fromRequest(requestLine, parameters);
+					String commitMessage = (String) Maps.getOrDefault(parameters, CommonConstants.commitMessageKey, DeleteProcessor.this.getClass() + ": " + requestLine.getUri());
+						writer.delete(fileDescription, commitMessage);
+					return IProcessResult.Utils.doNothing();
+				}
+				return null;
 			}
-			return IProcessResult.Utils.doNothing();
-		}
-		return null;
+		});
 	}
-
 }

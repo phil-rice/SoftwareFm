@@ -209,7 +209,7 @@ public class GitLocalTest extends ApiTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		getServerApi().getServer();
-		localReaderApi = getLocalApi().makeReader();
+		localReaderApi = getLocalApi().makeContainer();
 
 	}
 }

@@ -12,6 +12,7 @@ import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.crowdsource.utilities.json.Json;
+import org.softwareFm.crowdsource.utilities.strings.Strings;
 
 public class FileDescription implements IFileDescription {
 
@@ -67,7 +68,7 @@ public class FileDescription implements IFileDescription {
 			String raw = key == null ? text : Crypto.aesDecrypt(key, text);
 			return Json.mapFromString(raw);
 		} catch (Exception e) {
-			throw new RuntimeException("raw was [" + text +"]", e);
+			throw new RuntimeException("raw was [" + text + "]", e);
 		}
 	}
 
@@ -82,7 +83,7 @@ public class FileDescription implements IFileDescription {
 
 	@Override
 	public String toString() {
-		return "FileDescription [url=" + url + ", name=" + name + ", key=" + key + "]";
+		return "FileDescription [url=" + url + ", name=" + name + ", key=" + Strings.firstNCharacters(key, 6) + "]";
 	}
 
 	@Override

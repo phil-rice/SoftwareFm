@@ -39,7 +39,7 @@ public class InviteGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 	@SuppressWarnings("unchecked")
 	public void testTakeOnGroupWhenEverythingCorrect() throws Exception {
 		final String groupId = getIdAndSaltGenerator().makeNewGroupId();
-		api.makeReadWriter().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		api.makeContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership membershipForServer) throws Exception {
 				groups.setGroupProperty(groupId, groupCryptoKey0, GroupConstants.groupNameKey, "someGroupName");
@@ -58,7 +58,7 @@ public class InviteGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 				addParam(GroupConstants.takeOnEmailListKey, "email1@a.b,email2@a.b").//
 				execute(IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 
-		api.makeReader().accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
+		api.makeContainer().accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
 			@Override
 			public Void apply(IGroupsReader groups, IUserMembershipReader from2) {
 				List<Map<String, Object>> actual = Iterables.list(groups.users(groupId, groupCryptoKey0));
@@ -81,7 +81,7 @@ public class InviteGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 
 	public void testExceptionIfNotAdmin() throws Exception {
 		final String groupId =  getIdAndSaltGenerator().makeNewGroupId();
-		api.makeReadWriter().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		api.makeContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership membershipForServer) throws Exception {
 				groups.setGroupProperty(groupId, groupCryptoKey0, GroupConstants.groupNameKey, "someGroupName");
@@ -99,7 +99,7 @@ public class InviteGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 				addParam(GroupConstants.takeOnEmailPattern, "emailPattern: " + GroupConstants.emailMarker + "/" + GroupConstants.groupNameMarker).//
 				addParam(GroupConstants.takeOnEmailListKey, "email1@a.b,email2@a.b").//
 				execute(IResponseCallback.Utils.checkCallback(CommonConstants.serverErrorCode, "class java.lang.IllegalArgumentException/Cannot invite other people to group someGroupName as you are not admin. You are status notAdmin")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
-		api.makeReader().accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
+		api.makeContainer().accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
 			@Override
 			public Void apply(IGroupsReader groups, IUserMembershipReader second) {
 				List<Map<String, Object>> actual = Iterables.list(groups.users(groupId, groupCryptoKey0));
@@ -115,7 +115,7 @@ public class InviteGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 
 	public void testExceptionIfNotMemberAtAll() throws Exception {
 		final String groupId =  getIdAndSaltGenerator().makeNewGroupId();
-		api.makeReadWriter().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		api.makeContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership second) throws Exception {
 				groups.setGroupProperty(groupId, groupCryptoKey0, GroupConstants.groupNameKey, "someGroupName");
@@ -130,7 +130,7 @@ public class InviteGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 				addParam(GroupConstants.takeOnEmailListKey, "email1@a.b,email2@a.b").//
 				execute(IResponseCallback.Utils.checkCallback(CommonConstants.serverErrorCode, "class java.lang.IllegalArgumentException/User someNewSoftwareFmId0 is not a member of group groupId0")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 
-		api.makeReadWriter().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		api.makeContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership second) throws Exception {
 				List<Map<String, Object>> actual = Iterables.list(groups.users(groupId, groupCryptoKey0));

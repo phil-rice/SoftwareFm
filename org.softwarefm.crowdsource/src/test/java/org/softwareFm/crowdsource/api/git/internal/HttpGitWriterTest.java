@@ -7,7 +7,6 @@ package org.softwareFm.crowdsource.api.git.internal;
 import java.io.File;
 
 import org.softwareFm.crowdsource.api.git.IFileDescription;
-import org.softwareFm.crowdsource.api.git.IGitWriter;
 import org.softwareFm.crowdsource.api.server.AbstractProcessorDatabaseIntegrationTests;
 import org.softwareFm.crowdsource.git.internal.HttpGitWriter;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
@@ -16,27 +15,25 @@ import org.softwareFm.crowdsource.utilities.url.Urls;
 
 public class HttpGitWriterTest extends AbstractProcessorDatabaseIntegrationTests {
 
-	private IGitWriter gitWriter;
+	private HttpGitWriter httpGitWriter;
 	private File remoteAbDotGit;
 	private File remoteAbcData;
 	private File remoteAbdData;
 
-
-
 	public void testInit() {
-		gitWriter.init("a/b");
+		httpGitWriter.init("a/b", "init");
 		assertTrue(remoteAbDotGit.exists());
 	}
 
 	public void testPut() {
-		gitWriter.init("a/b");
-		gitWriter.put(IFileDescription.Utils.plain("a/b/c"), v11);
+		httpGitWriter.init("a/b", "init");
+		httpGitWriter.put(IFileDescription.Utils.plain("a/b/c"), v11, "v11->a/b/c");
 		assertEquals(v11, Json.parseFile(remoteAbcData));
 	}
 
 	public void testInitPutAllowsGet() {
-		gitWriter.init("a/b");
-		gitWriter.put(IFileDescription.Utils.plain("a/b/c"), v11);
+		httpGitWriter.init("a/b", "init");
+		httpGitWriter.put(IFileDescription.Utils.plain("a/b/c"), v11, "v11->a/b/c");
 
 		localOperations.init("a/b");
 		localOperations.setConfigForRemotePull("a/b", remoteRoot.getAbsolutePath());
@@ -45,20 +42,24 @@ public class HttpGitWriterTest extends AbstractProcessorDatabaseIntegrationTests
 	}
 
 	public void testDelete() {
-		gitWriter.init("a/b");
-		gitWriter.put(IFileDescription.Utils.plain("a/b/c"), v11);
-		gitWriter.put(IFileDescription.Utils.plain("a/b/d"), v12);
+		httpGitWriter.init("a/b", "init");
+		httpGitWriter.put(IFileDescription.Utils.plain("a/b/c"), v11, "v11->a/b/c");
+		httpGitWriter.put(IFileDescription.Utils.plain("a/b/d"), v12, "v12->a/b/d");
 
-		gitWriter.delete(IFileDescription.Utils.plain("a/b/c"));
+		httpGitWriter.delete(IFileDescription.Utils.plain("a/b/c"), "delete a/b/c");
 
 		assertFalse(remoteAbcData.exists());
 		assertEquals(v12, Json.parseFile(remoteAbdData));
 	}
 
+	public void testDelegateMethods() {
+		fail();
+	}
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		gitWriter = new HttpGitWriter(getHttpClient());
+		httpGitWriter = new HttpGitWriter(getHttpClient());
 		remoteAbcData = new File(remoteRoot, Urls.compose("a/b/c", CommonConstants.dataFileName));
 		remoteAbdData = new File(remoteRoot, Urls.compose("a/b/d", CommonConstants.dataFileName));
 		remoteAbDotGit = new File(remoteRoot, Urls.compose("a/b", CommonConstants.DOT_GIT));

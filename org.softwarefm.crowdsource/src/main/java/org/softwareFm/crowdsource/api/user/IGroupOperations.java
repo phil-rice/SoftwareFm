@@ -1,6 +1,6 @@
 package org.softwareFm.crowdsource.api.user;
 
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.user.internal.ClientGroupOperations;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 
@@ -16,7 +16,7 @@ public interface IGroupOperations {
 	void kickFromGroup(String softwareFmId, String userCryptoKey, String groupId, String memberId, ICallback<GroupOperationResult> callback);
 
 	public static class Utils{
-		public static IGroupOperations clientGroupOperations(ICrowdSourcedReadWriteApi readWriteApi, long timeOutMs){
+		public static IGroupOperations clientGroupOperations(IContainer readWriteApi, long timeOutMs){
 			return new ClientGroupOperations(readWriteApi);
 		}
 	}

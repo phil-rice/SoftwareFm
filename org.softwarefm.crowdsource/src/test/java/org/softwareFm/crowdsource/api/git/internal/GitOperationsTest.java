@@ -44,6 +44,10 @@ public class GitOperationsTest extends GitTest {
 		assertEquals(Collections.emptyList(), localOperations.getFileAsListOfMaps(fd));
 	}
 
+	public void testDelete(){
+		fail();
+	}
+	
 	public void testGetFileAsString() {
 		String crypto = Crypto.makeKey();
 		IFileDescription ac = IFileDescription.Utils.encrypted("a/c", "file", crypto);

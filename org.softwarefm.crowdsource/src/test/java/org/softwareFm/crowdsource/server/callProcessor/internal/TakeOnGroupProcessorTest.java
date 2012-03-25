@@ -46,7 +46,7 @@ public class TakeOnGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 				addParam(GroupConstants.takeOnEmailListKey, "email1@a.b,email2@a.b").//
 				execute(IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, expectedGroupId)).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 
-		api.makeReadWriter().accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
+		api.makeContainer().accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
 			@Override
 			public Void apply(IGroupsReader groups, IUserMembershipReader second) throws Exception {
 				List<Map<String, Object>> actual = Iterables.list(groups.users(expectedGroupId, groupCryptoKey0));

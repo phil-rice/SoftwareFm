@@ -21,6 +21,10 @@ public class PostProcessorTest extends AbstractProcessCallTest<PostProcessor> {
 		checkContents(remoteRoot, "a/b", v11);
 	}
 
+	public void testCommitMessageIsUsed(){
+		fail();
+	}
+	
 	@SuppressWarnings("unchecked")
 	public void testMergesTheNewDataWithOldData() {
 		remoteOperations.init("a");
@@ -51,7 +55,7 @@ public class PostProcessorTest extends AbstractProcessCallTest<PostProcessor> {
 
 	@Override
 	protected PostProcessor makeProcessor() {
-		return new PostProcessor(remoteOperations);
+		return new PostProcessor(getServerApi().makeContainer().gitOperations());
 	}
 
 }

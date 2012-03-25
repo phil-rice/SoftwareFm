@@ -7,7 +7,7 @@ import java.util.concurrent.Callable;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.softwareFm.crowdsource.api.IApiBuilder;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
 import org.softwareFm.crowdsource.api.ICryptoGenerators;
 import org.softwareFm.crowdsource.api.IExtraCallProcessorFactory;
@@ -136,7 +136,7 @@ public interface ISoftwareFmApiFactory {
 		public static IExtraCallProcessorFactory getExtraProcessCalls() {
 			return new IExtraCallProcessorFactory() {
 				@Override
-				public ICallProcessor[] makeExtraCalls(ICrowdSourcedReadWriteApi api, ServerConfig serverConfig) {
+				public ICallProcessor[] makeExtraCalls(IContainer api, ServerConfig serverConfig) {
 					return new ICallProcessor[] { //
 					new UsageProcessor(api),//
 							new GenerateGroupUsageProcessor(api) };

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.softwareFm.crowdsource.api.ICommentDefn;
 import org.softwareFm.crowdsource.api.IComments;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReadWriteApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.IUserCryptoAccess;
 import org.softwareFm.crowdsource.api.server.AbstractCallProcessor;
 import org.softwareFm.crowdsource.api.server.IProcessResult;
@@ -25,10 +25,10 @@ import org.softwareFm.crowdsource.utilities.strings.Strings;
 
 public class CommentProcessor extends AbstractCallProcessor {
 
-	private final ICrowdSourcedReadWriteApi api;
+	private final IContainer api;
 	private final IUserCryptoAccess cryptoAccess;
 
-	public CommentProcessor(ICrowdSourcedReadWriteApi api, IUserCryptoAccess cryptoAccess) {
+	public CommentProcessor(IContainer api, IUserCryptoAccess cryptoAccess) {
 		super(CommonConstants.POST, CommentConstants.commentCommandPrefix);
 		this.api = api;
 		this.cryptoAccess = cryptoAccess;

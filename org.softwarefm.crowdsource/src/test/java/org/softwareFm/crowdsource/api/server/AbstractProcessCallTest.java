@@ -12,14 +12,14 @@ import org.apache.http.HttpEntity;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.RequestLine;
 import org.apache.http.entity.StringEntity;
-import org.softwareFm.crowdsource.api.git.GitTest;
+import org.softwareFm.crowdsource.api.ApiTest;
 import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 
-abstract public class AbstractProcessCallTest<T extends ICallProcessor> extends GitTest {
+abstract public class AbstractProcessCallTest<T extends ICallProcessor> extends ApiTest {
 
 	abstract protected T makeProcessor();
 
