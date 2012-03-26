@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.softwareFm.crowdsource.api.ICommentDefn;
 import org.softwareFm.crowdsource.api.IComments;
-import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.IUserCryptoAccess;
 import org.softwareFm.crowdsource.api.server.AbstractCallProcessor;
 import org.softwareFm.crowdsource.api.server.IProcessResult;
@@ -25,12 +25,12 @@ import org.softwareFm.crowdsource.utilities.strings.Strings;
 
 public class CommentProcessor extends AbstractCallProcessor {
 
-	private final IContainer api;
+	private final IUserAndGroupsContainer container;
 	private final IUserCryptoAccess cryptoAccess;
 
-	public CommentProcessor(IContainer api, IUserCryptoAccess cryptoAccess) {
+	public CommentProcessor(IUserAndGroupsContainer container, IUserCryptoAccess cryptoAccess) {
 		super(CommonConstants.POST, CommentConstants.commentCommandPrefix);
-		this.api = api;
+		this.container = container;
 		this.cryptoAccess = cryptoAccess;
 	}
 
@@ -39,7 +39,7 @@ public class CommentProcessor extends AbstractCallProcessor {
 		checkForParameter(parameters, LoginConstants.softwareFmIdKey, CommentConstants.textKey, CommentConstants.filenameKey);
 		String command = Strings.firstSegment(actualUrl.substring(1), "/");
 		if (command.equals(CommentConstants.addCommandSuffix)) {
-			api.modifyComments(new ICallback<IComments>() {
+			container.modifyComments(new ICallback<IComments>() {
 				@Override
 				public void process(IComments comments) throws Exception {
 					String url = actualUrl.substring(CommentConstants.addCommandSuffix.length() + 1);
@@ -65,23 +65,23 @@ public class CommentProcessor extends AbstractCallProcessor {
 		if (filename.equals(CommentConstants.globalCommentsFile))
 			return ICommentDefn.Utils.everyoneInitial(url);
 		else if (fileStem.equals(softwareFmId)) {
-			return api.accessUserReader(new IFunction1<IUserReader, ICommentDefn>() {
+			return container.accessUserReader(new IFunction1<IUserReader, ICommentDefn>() {
 				@Override
 				public ICommentDefn apply(IUserReader userReader) throws Exception {
 					String commentCrypto = userReader.getUserProperty(softwareFmId, userCrypto, CommentConstants.commentCryptoKey);
 					if (commentCrypto == null)
 						throw new NullPointerException();
-					return ICommentDefn.Utils.myInitial(api, softwareFmId, userCrypto, url);
+					return ICommentDefn.Utils.myInitial(container, softwareFmId, userCrypto, url);
 				}
 			});
 		} else {
-			return api.accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, ICommentDefn>() {
+			return container.accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, ICommentDefn>() {
 				@Override
 				public ICommentDefn apply(IGroupsReader groupsReader, IUserMembershipReader userMembershipReader) {
 					for (Map<String, Object> map : userMembershipReader.walkGroupsFor(softwareFmId, userCrypto)) {
 						if (fileStem.equals(map.get(GroupConstants.groupIdKey))) {
 							String groupCrypto = (String) map.get(GroupConstants.groupCryptoKey);
-							return ICommentDefn.Utils.groupInitial(api, fileStem, groupCrypto, url);
+							return ICommentDefn.Utils.groupInitial(container, fileStem, groupCrypto, url);
 						}
 					}
 					throw new IllegalArgumentException(MessageFormat.format(CommentConstants.cannotWorkOutFileDescription, parameters));

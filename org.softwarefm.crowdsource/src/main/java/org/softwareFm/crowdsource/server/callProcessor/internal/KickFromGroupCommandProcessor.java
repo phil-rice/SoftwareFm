@@ -4,7 +4,7 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.IUserCryptoAccess;
 import org.softwareFm.crowdsource.api.server.AbstractCallProcessor;
 import org.softwareFm.crowdsource.api.server.IProcessResult;
@@ -19,9 +19,9 @@ import org.softwareFm.crowdsource.utilities.strings.Strings;
 
 public class KickFromGroupCommandProcessor extends AbstractCallProcessor {
 	private final IUserCryptoAccess cryptoAccess;
-	private final IContainer api;
+	private final IUserAndGroupsContainer api;
 
-	public KickFromGroupCommandProcessor(IContainer api, IUserCryptoAccess cryptoAccess) {
+	public KickFromGroupCommandProcessor(IUserAndGroupsContainer api, IUserCryptoAccess cryptoAccess) {
 		super(CommonConstants.POST, GroupConstants.kickFromGroupPrefix);
 		this.api = api;
 		this.cryptoAccess = cryptoAccess;

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.crowdsource.api.ApiTest;
-import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IGroups;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
@@ -34,15 +34,15 @@ public class UserMembershipTest extends ApiTest {
 	private String groupCrypto2;
 	private String groupCrypto3;
 	private String user1Id;
-	private IContainer serverReadWriter;
-	private IContainer localReadWriter;
+	private IUserAndGroupsContainer serverContainer;
+	private IUserAndGroupsContainer localContainer;
 
 	@SuppressWarnings("unchecked")
 	public void testAddMembership() {
 		final List<Map<String, Object>> expected = Arrays.asList(//
 				Maps.stringObjectMap(GroupConstants.groupIdKey, groupId1, GroupConstants.groupCryptoKey, groupCrypto1, GroupConstants.membershipStatusKey, "someStatus1"),//
 				Maps.stringObjectMap(GroupConstants.groupIdKey, groupId2, GroupConstants.groupCryptoKey, groupCrypto2, GroupConstants.membershipStatusKey, "someStatus2"));
-		serverReadWriter.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		serverContainer.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups first, IUserMembership membershipForServer) throws Exception {
 				membershipForServer.addMembership(user1Id, userKey0, groupId1, groupCrypto1, "someStatus1");
@@ -56,7 +56,7 @@ public class UserMembershipTest extends ApiTest {
 	}
 
 	private void checkLocalMembership(final List<Map<String, Object>> expected) {
-		localReadWriter.accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
+		localContainer.accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
 			@Override
 			public Void apply(IGroupsReader from1, IUserMembershipReader membershipForLocal) throws Exception {
 				assertEquals(expected, membershipForLocal.walkGroupsFor(user1Id, userKey0));
@@ -70,7 +70,7 @@ public class UserMembershipTest extends ApiTest {
 		final List<Map<String, Object>> expected = Arrays.asList(//
 				Maps.stringObjectMap(GroupConstants.groupIdKey, groupId1, GroupConstants.groupCryptoKey, groupCrypto1, GroupConstants.membershipStatusKey, "someStatus1"),//
 				Maps.stringObjectMap(GroupConstants.groupIdKey, groupId3, GroupConstants.groupCryptoKey, groupCrypto3, GroupConstants.membershipStatusKey, "someStatus3"));
-		serverReadWriter.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		serverContainer.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups first, IUserMembership membershipForServer) throws Exception {
 				membershipForServer.addMembership(user1Id, userKey0, groupId1, groupCrypto1, "someStatus1");
@@ -91,7 +91,7 @@ public class UserMembershipTest extends ApiTest {
 		final List<Map<String, Object>> expected = Arrays.asList(//
 				Maps.stringObjectMap(GroupConstants.groupIdKey, groupId1, GroupConstants.groupCryptoKey, groupCrypto1, GroupConstants.membershipStatusKey, "someStatus1"),//
 				Maps.stringObjectMap(GroupConstants.groupIdKey, groupId3, GroupConstants.groupCryptoKey, groupCrypto3, GroupConstants.membershipStatusKey, "someStatus3"));
-		serverReadWriter.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		serverContainer.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups first, IUserMembership membershipForServer) throws Exception {
 				membershipForServer.addMembership(user1Id, userKey0, groupId1, groupCrypto1, "someStatus1");
@@ -108,7 +108,7 @@ public class UserMembershipTest extends ApiTest {
 	}
 
 	public void testCannotAddSameGroupTwice() {
-		serverReadWriter.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		serverContainer.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups first, final IUserMembership membershipForServer) throws Exception {
 				membershipForServer.addMembership(user1Id, userKey0, groupId1, groupCrypto1, "someStatus1");
@@ -123,7 +123,7 @@ public class UserMembershipTest extends ApiTest {
 	}
 
 	public void testMembershipCryptoIsDefaultUserValue() {
-		serverReadWriter.accessUserReader(new IFunction1<IUserReader, Void>() {
+		serverContainer.accessUserReader(new IFunction1<IUserReader, Void>() {
 			@Override
 			public Void apply(IUserReader user) throws Exception {
 				assertNotNull(user.getUserProperty(user1Id, userKey0, GroupConstants.membershipCryptoKey));
@@ -134,10 +134,10 @@ public class UserMembershipTest extends ApiTest {
 
 	@SuppressWarnings("unchecked")
 	public void testSetGetMembershipProperty() {
-		serverReadWriter.modify(IUserMembership.class, new ICallback<IUserMembership>() {
+		serverContainer.modify(IUserMembership.class, new ICallback<IUserMembership>() {
 			@Override
 			public void process(final IUserMembership membershipForServer) throws Exception {
-				localReadWriter.access(IUserMembershipReader.class, IGitReader.class, new IFunction2<IUserMembershipReader, IGitReader, Void>() {
+				localContainer.access(IUserMembershipReader.class, IGitReader.class, new IFunction2<IUserMembershipReader, IGitReader, Void>() {
 					@Override
 					public Void apply(IUserMembershipReader membershipForLocal, IGitReader gitReader) throws Exception {
 						membershipForServer.addMembership(user1Id, userKey0, groupId1, groupCrypto1, "someStatus1");
@@ -170,7 +170,7 @@ public class UserMembershipTest extends ApiTest {
 	}
 
 	public void testSetMembershipPropertyThrowsExceptionIfGroupNotFound() {
-		serverReadWriter.modify(IUserMembership.class, new ICallback<IUserMembership>() {
+		serverContainer.modify(IUserMembership.class, new ICallback<IUserMembership>() {
 			@Override
 			public void process(final IUserMembership membershipForServer) throws Exception {
 				membershipForServer.addMembership(user1Id, userKey0, groupId1, groupCrypto1, "someStatus1");
@@ -191,7 +191,7 @@ public class UserMembershipTest extends ApiTest {
 		truncateUsersTable();
 		getServerApi().getServer();
 		user1Id = createUser();
-		serverReadWriter = getServerApi().makeContainer();
-		localReadWriter = getLocalApi().makeContainer();
+		serverContainer = getServerApi().makeUserAndGroupsContainer();
+		localContainer = getLocalApi().makeUserAndGroupsContainer();
 	}
 }

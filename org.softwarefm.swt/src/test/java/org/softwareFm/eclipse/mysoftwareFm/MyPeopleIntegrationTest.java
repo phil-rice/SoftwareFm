@@ -53,7 +53,7 @@ public class MyPeopleIntegrationTest extends AbstractMyGroupsIntegrationTest {
 	}
 
 	protected void addProjectDetails(ProjectMock projectMock, String softwareFmId, String userCryptoKey, Map<String, Object> map) {
-		String projectCrypto = IUserReader.Utils.getUserProperty(getLocalApi().makeContainer(), softwareFmId, userCryptoKey, JarAndPathConstants.projectCryptoKey);
+		String projectCrypto = IUserReader.Utils.getUserProperty(getLocalApi().makeUserAndGroupsContainer(), softwareFmId, userCryptoKey, JarAndPathConstants.projectCryptoKey);
 		assertNotNull(projectCrypto);
 		projectMock.register(softwareFmId, projectCrypto, map);
 	}

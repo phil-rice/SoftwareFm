@@ -5,15 +5,16 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.apache.commons.dbcp.BasicDataSource;
-import org.softwareFm.crowdsource.api.IApiBuilder;
-import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.api.IContainerBuilder;
+import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
 import org.softwareFm.crowdsource.api.ICryptoGenerators;
 import org.softwareFm.crowdsource.api.IExtraCallProcessorFactory;
 import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
 import org.softwareFm.crowdsource.api.IIdAndSaltGenerator;
 import org.softwareFm.crowdsource.api.ITakeOnEnrichmentProvider;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.IUserCryptoAccess;
 import org.softwareFm.crowdsource.api.LocalConfig;
 import org.softwareFm.crowdsource.api.ServerConfig;
@@ -62,12 +63,12 @@ public interface ISoftwareFmApiFactory {
 		public static IExtraReaderWriterConfigurator<LocalConfig> getLocalExtraReaderWriterConfigurator() {
 			return new IExtraReaderWriterConfigurator<LocalConfig>() {
 				@Override
-				public void builder(IApiBuilder builder, LocalConfig localConfig) {
+				public void builder(IContainerBuilder builder, LocalConfig localConfig) {
 					IProjectTimeGetter projectTimeGetter = IProjectTimeGetter.Utils.timeGetter();
 					IRequestGroupReportGeneration requestGroupReportGeneration = IRequestGroupReportGeneration.Utils.httpClient(builder, IResponseCallback.Utils.noCallback());
-					builder.registerReaderAndWriter(IProjectTimeGetter.class, projectTimeGetter);
-					builder.registerReaderAndWriter(IRequestGroupReportGeneration.class, requestGroupReportGeneration);
-					builder.registerReader(IUsageReader.class, IUsageReader.Utils.localUsageReader(builder, localConfig.userUrlGenerator));
+					builder.register(IProjectTimeGetter.class, projectTimeGetter);
+					builder.register(IRequestGroupReportGeneration.class, requestGroupReportGeneration);
+					builder.register(IUsageReader.class, IUsageReader.Utils.localUsageReader(builder, localConfig.userUrlGenerator));
 				}
 			};
 		}
@@ -99,21 +100,21 @@ public interface ISoftwareFmApiFactory {
 		public static IExtraReaderWriterConfigurator<ServerConfig> getServerExtraReaderWriterConfigurator(final String prefix) {
 			return new IExtraReaderWriterConfigurator<ServerConfig>() {
 				@Override
-				public void builder(IApiBuilder builder, ServerConfig serverConfig) {
+				public void builder(IContainerBuilder builder, ServerConfig serverConfig) {
 					IUsageReader usageReader = new UsageReaderForServer(builder, serverConfig.userUrlGenerator);
-					builder.registerReader(IUsageReader.class, usageReader);
+					builder.register(IUsageReader.class, usageReader);
 
 					IGenerateUsageReportGenerator generator = new GenerateUsageProjectGenerator(builder);
-					builder.registerReadWriter(IGenerateUsageReportGenerator.class, generator);
+					builder.register(IGenerateUsageReportGenerator.class, generator);
 
-					ProjectForServer project = new ProjectForServer(builder, serverConfig.userCryptoAccess, serverConfig.userUrlGenerator);
-					builder.registerReaderAndWriter(IProject.class, project);
+					ProjectForServer project = new ProjectForServer((IUserAndGroupsContainer) builder, serverConfig.userCryptoAccess, serverConfig.userUrlGenerator);
+					builder.register(IProject.class, project);
 
 					IJarToGroupArtifactAndVersion jarToGroupArtifactAndVersion = new JarToGroupArtifactVersionOnServer(builder, JarAndPathConstants.jarUrlGenerator(prefix));
-					builder.registerReaderAndWriter(IJarToGroupArtifactAndVersion.class, jarToGroupArtifactAndVersion);
+					builder.register(IJarToGroupArtifactAndVersion.class, jarToGroupArtifactAndVersion);
 
 					IProjectTimeGetter projectTimeGetter = IProjectTimeGetter.Utils.timeGetter();
-					builder.registerReaderAndWriter(IProjectTimeGetter.class, projectTimeGetter);
+					builder.register(IProjectTimeGetter.class, projectTimeGetter);
 				}
 			};
 		}

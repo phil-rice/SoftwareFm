@@ -33,20 +33,20 @@ public class CrowdSourcedServerReadWriterApi extends AbstractCrowdSourceReadWrit
 		this.groups = new GroupsForServer(this, serverConfig.groupUrlGenerator, serverConfig.groupRepoDefnFn, serverConfig.defaultGroupProperties);
 		this.userMembership = new UserMembershipForServer(this, serverConfig.userUrlGenerator, serverConfig.userRepoDefnFn);
 		this.comments = new CommentsForServer(this, serverConfig.timeGetter);
-		registerReadWriter(IComments.class, comments);
-		registerReader(ICommentsReader.class, comments);
+		register(IComments.class, comments);
+		register(ICommentsReader.class, comments);
 
-		registerReadWriter(IGroups.class, groups);
-		registerReader(IGroupsReader.class, groups);
+		register(IGroups.class, groups);
+		register(IGroupsReader.class, groups);
 
-		registerReadWriter(IUserMembership.class, userMembership);
-		registerReader(IUserMembershipReader.class, userMembership);
+		register(IUserMembership.class, userMembership);
+		register(IUserMembershipReader.class, userMembership);
 
-		registerReadWriter(IUser.class, user);
-		registerReader(IUserReader.class, user);
+		register(IUser.class, user);
+		register(IUserReader.class, user);
 
-		registerReader(IGitReader.class, gitOperations);
-		registerReaderAndWriter(IGitWriter.class, new GitWriterForServer(gitOperations));
+		register(IGitReader.class, gitOperations);
+		register(IGitWriter.class, new GitWriterForServer(gitOperations));
 	}
 
 	@Override

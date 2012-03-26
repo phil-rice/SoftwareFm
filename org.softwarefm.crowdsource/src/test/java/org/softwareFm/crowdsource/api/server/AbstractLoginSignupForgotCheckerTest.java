@@ -60,7 +60,7 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends ApiTest imple
 		assertEquals(initial + 1, finalCount);
 		assertEquals(1, count.get());
 
-		getServerContainer().accessUserReader(new IFunction1<IUserReader, Void>() {
+		getServerUserAndGroupsContainer().accessUserReader(new IFunction1<IUserReader, Void>() {
 			@Override
 			public Void apply(IUserReader user) throws Exception {
 				assertEquals(email, user.getUserProperty(softwareFmId, crypto, LoginConstants.emailKey));
@@ -91,7 +91,7 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends ApiTest imple
 
 		ICryptoGenerators cryptoGenerators = ICryptoGenerators.Utils.mock(new String[] { Crypto.makeKey(), Crypto.makeKey() }, new String[0]);
 
-		signupChecker = new SignUpChecker(dataSource, cryptoGenerators, getServerContainer());
+		signupChecker = new SignUpChecker(dataSource, cryptoGenerators, getServerUserAndGroupsContainer());
 		loginChecker = new LoginChecker(dataSource);
 		IMagicStringForPassword magicStringForPassword = new MagicStringForPassword(dataSource, Callables.uuidGenerator());
 		passwordMailer = new ForgottonPasswordMailer(getMailer(), magicStringForPassword);// bit of a cheat...won't actually mail

@@ -26,7 +26,7 @@ public class SoftwareFmServerTest extends ApiTest {
 	}
 
 	protected void checkPropertyIsCreatedAndIsCrypto(final String key) {
-		getServerContainer().accessUserReader(new IFunction1<IUserReader, Void>() {
+		getServerUserAndGroupsContainer().accessUserReader(new IFunction1<IUserReader, Void>() {
 			@Override
 			public Void apply(IUserReader user) throws Exception {
 				String crypto1 = user.getUserProperty(softwareFmId, userKey0, key);

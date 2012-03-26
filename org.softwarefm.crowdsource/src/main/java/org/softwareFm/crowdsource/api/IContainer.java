@@ -1,9 +1,6 @@
 package org.softwareFm.crowdsource.api;
 
 import org.softwareFm.crowdsource.api.git.IGitOperations;
-import org.softwareFm.crowdsource.api.user.IGroups;
-import org.softwareFm.crowdsource.api.user.IUser;
-import org.softwareFm.crowdsource.api.user.IUserMembership;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback2;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback3;
@@ -11,11 +8,7 @@ import org.softwareFm.crowdsource.utilities.callbacks.ICallback3;
 public interface IContainer extends ICrowdSourcedReaderApi {
 
 
-	void modifyUser(ICallback<IUser> callback);
 
-	void modifyGroups(ICallback<IGroups> callback);
-
-	void modifyUserMembership(ICallback2<IGroups, IUserMembership> callback);
 
 	void modifyComments(ICallback<IComments> callback);
 

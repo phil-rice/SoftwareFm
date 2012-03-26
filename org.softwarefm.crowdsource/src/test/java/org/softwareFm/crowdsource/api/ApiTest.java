@@ -36,29 +36,29 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 	protected final static String groupCryptoKey1 = Crypto.makeKey();
 	protected final static String groupCryptoKey2 = Crypto.makeKey();
 
-	private final String softwareFmIdPrefix = "someNewSoftwareFmId";
+	private final static String softwareFmIdPrefix = "someNewSoftwareFmId";
 
 	// these are the results of the idAndSaltGenerator
-	protected final String softwareFmId0 = softwareFmIdPrefix + "0";
-	protected final String softwareFmId1 = softwareFmIdPrefix + "1";
-	protected final String softwareFmId2 = softwareFmIdPrefix + "2";
+	protected final static String softwareFmId0 = softwareFmIdPrefix + "0";
+	protected final static String softwareFmId1 = softwareFmIdPrefix + "1";
+	protected final static String softwareFmId2 = softwareFmIdPrefix + "2";
 
 	// these are the emails created by createUser
-	protected final String email0 = softwareFmId0 + "@someEmail.com";
-	protected final String email1 = softwareFmId1 + "@someEmail.com";
-	protected final String email2 = softwareFmId2 + "@someEmail.com";
+	protected final static String email0 = softwareFmId0 + "@someEmail.com";
+	protected final static String email1 = softwareFmId1 + "@someEmail.com";
+	protected final static String email2 = softwareFmId2 + "@someEmail.com";
 
 	// these are the results of the idAndSaltGenerator
-	protected final String groupId0 = "groupId0";
-	protected final String groupId1 = "groupId1";
-	protected final String groupId2 = "groupId2";
+	protected final static String groupId0 = "groupId0";
+	protected final static String groupId1 = "groupId1";
+	protected final static String groupId2 = "groupId2";
 
 	// these are suggested group names
-	protected final String groupName0 = "groupId0Name";
-	protected final String groupName1 = "groupId1Name";
-	protected final String groupName2 = "groupId2Name";
+	protected final static String groupName0 = "groupId0Name";
+	protected final static String groupName1 = "groupId1Name";
+	protected final static String groupName2 = "groupId2Name";
 
-	protected final String someMoniker = "someMoniker";
+	protected final static String someMoniker = "someMoniker";
 
 	protected BasicDataSource dataSource;
 
@@ -149,7 +149,7 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 	protected ITakeOnEnrichmentProvider getTakeOnEnrichment() {
 		return new ITakeOnEnrichmentProvider() {
 			@Override
-			public Map<String, Object> takeOn(Map<String, Object> initial, String userCrypto, ICrowdSourcedReaderApi reader) {
+			public Map<String, Object> takeOn(Map<String, Object> initial, String userCrypto, IUserAndGroupsContainer container) {
 				return Maps.with(initial, "with", "enrich_" + takeOnCount++);
 			}
 		};
@@ -197,7 +197,7 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 	}
 
 	protected void createUser(final String userId, final String email) {
-		getServerApi().makeContainer().modifyUser(new ICallback<IUser>() {
+		getServerApi().makeUserAndGroupsContainer().modifyUser(new ICallback<IUser>() {
 			@Override
 			public void process(IUser user) throws Exception {
 				SignUpResult signUp = serverApi.getServerDoers().getSignUpChecker().signUp(email, someMoniker, "someSalt", "passHash", userId);
@@ -214,7 +214,7 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 	}
 
 	protected String getUserProperty(final String softwareFmId, final String userCrypto, final String property) {
-		return getServerContainer().accessUserReader(new IFunction1<IUserReader, String>() {
+		return getServerUserAndGroupsContainer().accessUserReader(new IFunction1<IUserReader, String>() {
 			@Override
 			public String apply(IUserReader from) throws Exception {
 				return from.getUserProperty(softwareFmId, userCrypto, property);
@@ -224,6 +224,14 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 
 	protected IContainer getServerContainer() {
 		return getServerApi().makeContainer();
+	}
+
+	protected IUserAndGroupsContainer getServerUserAndGroupsContainer() {
+		return getServerApi().makeUserAndGroupsContainer();
+	}
+
+	protected IUserAndGroupsContainer getLocalUserAndGroupsContainer() {
+		return getLocalApi().makeUserAndGroupsContainer();
 	}
 
 	protected IContainer getLocalContainer() {

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.IUserCryptoAccess;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitOperations;
@@ -26,10 +26,10 @@ public class ProjectForServer implements IProject {
 	private static Logger logger = Logger.getLogger(IProject.class);
 	private final IUrlGenerator userUrlGenerator;
 	private final IUserCryptoAccess userCryptoAccess;
-	private final IContainer readWriteApi;
+	private final IUserAndGroupsContainer container;
 
-	public ProjectForServer(IContainer readWriteApi, IUserCryptoAccess userCryptoAccess, IUrlGenerator userUrlGenerator) {
-		this.readWriteApi = readWriteApi;
+	public ProjectForServer(IUserAndGroupsContainer container, IUserCryptoAccess userCryptoAccess, IUrlGenerator userUrlGenerator) {
+		this.container = container;
 		this.userCryptoAccess = userCryptoAccess;
 		this.userUrlGenerator = userUrlGenerator;
 	}
@@ -37,7 +37,7 @@ public class ProjectForServer implements IProject {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Map<String, Map<String, List<Integer>>> getProjectDetails(String softwareFm, String projectCryptoKey, String month) {
-		IGitOperations gitOperations = readWriteApi.gitOperations();
+		IGitOperations gitOperations = container.gitOperations();
 		final IFileDescription projectFileDescription = getFileDescriptionForProject(softwareFm, month);
 		Map<String, Map<String, List<Integer>>> projectDetails = (Map) gitOperations.getFile(projectFileDescription);
 		return projectDetails;
@@ -47,7 +47,7 @@ public class ProjectForServer implements IProject {
 	@Override
 	public void addProjectDetails(String softwareFmId, String groupId, String artifactId, String month, long day) {
 		IFileDescription projectFileDescription = getFileDescriptionForProject(softwareFmId, month);
-		IGitOperations gitOperations = readWriteApi.gitOperations();
+		IGitOperations gitOperations = container.gitOperations();
 		logger.debug(projectFileDescription);
 		Map<String, Object> initialProjectDetails = gitOperations.getFile(projectFileDescription);
 		logger.debug("Initial Project Details: " + initialProjectDetails);
@@ -69,7 +69,7 @@ public class ProjectForServer implements IProject {
 		logger.debug("User url: " + userUrl);
 		String cryptoKey = userCryptoAccess.getCryptoForUser((String) userDetailMap.get(LoginConstants.softwareFmIdKey));
 		logger.debug("User crypto key: " + cryptoKey);
-		String projectCryptoKey = IUserReader.Utils.getUserProperty(readWriteApi, softwareFmId, cryptoKey, JarAndPathConstants.projectCryptoKey);
+		String projectCryptoKey = IUserReader.Utils.getUserProperty(container, softwareFmId, cryptoKey, JarAndPathConstants.projectCryptoKey);
 		if (projectCryptoKey == null)
 			throw new NullPointerException();
 		logger.debug("Project crypto key: " + cryptoKey);

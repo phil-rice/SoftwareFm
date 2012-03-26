@@ -6,6 +6,7 @@ package org.softwareFm.crowdsource.api.server;
 
 import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.internal.CrowdSourcedServerApi;
 
 abstract public class AbstractProcessorDatabaseIntegrationTests extends AbstractProcessorIntegrationTests {
@@ -13,13 +14,15 @@ abstract public class AbstractProcessorDatabaseIntegrationTests extends Abstract
 	protected int thisDay;
 
 	public CrowdSourcedServerApi api;
-	public IContainer readWriter;
+	public IContainer container;
+	public IUserAndGroupsContainer userAndGroupsContainer;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		api = (CrowdSourcedServerApi) getServerApi();
-		readWriter = api.makeContainer();
+		container = api.makeContainer();
+		userAndGroupsContainer = api.makeUserAndGroupsContainer();
 		server = api.getServer();
 		truncateUsersTable();
 	}

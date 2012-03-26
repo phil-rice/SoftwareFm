@@ -12,8 +12,8 @@ import org.easymock.EasyMock;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
-import org.softwareFm.crowdsource.api.IApiBuilder;
 import org.softwareFm.crowdsource.api.ICommentsReader;
+import org.softwareFm.crowdsource.api.IContainerBuilder;
 import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
 import org.softwareFm.crowdsource.api.LocalConfig;
 import org.softwareFm.crowdsource.api.UserData;
@@ -172,9 +172,6 @@ public class CommentsTest extends ApiAndSwtTest {
 		assertEquals(Arrays.asList(comment1S1T3, comment1S1T2, comment1), composite.allComments);
 	}
 
-	public void testDealsWithCorruptedComments() {
-		fail();
-	}
 
 	protected void checkTitleAndTableColumnNames(Table table, String expectedTitle) {
 		CommentsComposite composite = (CommentsComposite) comments.getControl();
@@ -191,9 +188,9 @@ public class CommentsTest extends ApiAndSwtTest {
 		final IExtraReaderWriterConfigurator<LocalConfig> parent = super.getLocalExtraReaderWriterConfigurator();
 		return new IExtraReaderWriterConfigurator<LocalConfig>() {
 			@Override
-			public void builder(IApiBuilder builder, LocalConfig apiConfig) {
+			public void builder(IContainerBuilder builder, LocalConfig apiConfig) {
 				parent.builder(builder, apiConfig);
-				builder.registerReader(ICommentsReader.class, commentsReader);
+				builder.register(ICommentsReader.class, commentsReader);
 			}
 		};
 	}

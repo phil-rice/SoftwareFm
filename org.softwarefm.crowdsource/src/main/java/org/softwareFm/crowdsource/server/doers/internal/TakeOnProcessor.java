@@ -8,7 +8,7 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.ServerConfig;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitOperations;
@@ -28,23 +28,23 @@ public class TakeOnProcessor implements ITakeOnProcessor {
 
 
 	private final ServerConfig serverConfig;
-	private final IContainer readWriteApi;
+	private final IUserAndGroupsContainer container;
 
-	public TakeOnProcessor(IContainer readWriteApi, ServerConfig serverConfig) {
-		this.readWriteApi = readWriteApi;
+	public TakeOnProcessor(IUserAndGroupsContainer container, ServerConfig serverConfig) {
+		this.container = container;
 		this.serverConfig = serverConfig;
 	}
 
 	@Override
 	public void addExistingUserToGroup(final String groupId, final String groupCryptoKey, final String softwareFmId, final String email, final String status) {
-		readWriteApi.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		container.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				String userCrypto = Functions.call(serverConfig.userCryptoAccess.userCryptoFn(), Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId, LoginConstants.emailKey, email));
 				if (userCrypto == null)
 					throw new IllegalStateException(MessageFormat.format("Cannot add existing user {0} to group {1} as cannot determine usercrypto", softwareFmId, groupId));
 				Map<String, Object> initialData = Maps.stringObjectMap(LoginConstants.emailKey, email, LoginConstants.softwareFmIdKey, softwareFmId, GroupConstants.membershipStatusKey, status);
-				Map<String, Object> enrichedData = serverConfig.takeOnEnrichment.takeOn(initialData, userCrypto, readWriteApi);
+				Map<String, Object> enrichedData = serverConfig.takeOnEnrichment.takeOn(initialData, userCrypto, container);
 				groups.addUser(groupId, groupCryptoKey, enrichedData);
 				userMembership.addMembership(softwareFmId, userCrypto, groupId, groupCryptoKey, status);
 			}
@@ -53,7 +53,7 @@ public class TakeOnProcessor implements ITakeOnProcessor {
 
 	@Override
 	public String createGroup(String groupName, String groupCrypto) {
-		IGitOperations gitOperations = readWriteApi.gitOperations();
+		IGitOperations gitOperations = container.gitOperations();
 		String groupId = serverConfig.idAndSaltGenerator.makeNewGroupId();
 		String url = serverConfig.groupUrlGenerator.findUrlFor(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId));
 		IFileDescription fileDescription = IFileDescription.Utils.encrypted(url, CommonConstants.dataFileName, groupCrypto);

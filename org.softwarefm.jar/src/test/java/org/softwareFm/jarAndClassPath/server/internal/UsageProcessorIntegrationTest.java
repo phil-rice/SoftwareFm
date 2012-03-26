@@ -37,7 +37,7 @@ public class UsageProcessorIntegrationTest extends AbstractUsageProcessorIntegra
 				addParam(LoginConstants.softwareFmIdKey, "someNewSoftwareFmId0").// using this so cryptoGenerator/cryptoFnwork
 				addParam(JarAndPathConstants.digest, "digest11").//
 				execute(IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
-		String projectCryptoKey = IUserReader.Utils.getUserProperty(readWriter, softwareFmId, userKey0, JarAndPathConstants.projectCryptoKey);
+		String projectCryptoKey = IUserReader.Utils.getUserProperty(userAndGroupsContainer, softwareFmId, userKey0, JarAndPathConstants.projectCryptoKey);
 		assertNotNull(projectCryptoKey);
 		Map<String, Object> actualProjectDetails = Json.mapFromEncryptedFile(projectFile, projectCryptoKey);
 		assertEquals(Maps.stringObjectMap("someGroupId1", Maps.stringObjectMap("someArtifactId1", Arrays.asList(0l))), actualProjectDetails);

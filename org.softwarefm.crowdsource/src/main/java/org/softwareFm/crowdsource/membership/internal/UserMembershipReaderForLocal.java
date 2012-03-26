@@ -4,12 +4,12 @@
 
 package org.softwareFm.crowdsource.membership.internal;
 
-import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 
 public class UserMembershipReaderForLocal extends AbstractUserMembershipReader {
 
-	public UserMembershipReaderForLocal(IContainer container, IUrlGenerator userUrlGenerator) {
+	public UserMembershipReaderForLocal(IUserAndGroupsContainer container, IUrlGenerator userUrlGenerator) {
 		super(container, userUrlGenerator);
 	}
 

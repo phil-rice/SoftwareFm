@@ -146,7 +146,7 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 	}
 
 	private Map<String, Object> makeMembershipMap(String softwareFmId, String cryptoKey, String email, String status) {
-		String projectCryptoKey = IUserReader.Utils.getUserProperty(getServerApi().makeContainer(), softwareFmId, cryptoKey, JarAndPathConstants.projectCryptoKey);
+		String projectCryptoKey = IUserReader.Utils.getUserProperty(getServerApi().makeUserAndGroupsContainer(), softwareFmId, cryptoKey, JarAndPathConstants.projectCryptoKey);
 		return Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId, JarAndPathConstants.projectCryptoKey, projectCryptoKey, LoginConstants.emailKey, email, GroupConstants.membershipStatusKey, status);
 	}
 }

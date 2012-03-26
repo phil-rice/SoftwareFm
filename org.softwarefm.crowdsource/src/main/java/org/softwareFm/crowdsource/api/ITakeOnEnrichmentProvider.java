@@ -9,13 +9,13 @@ import org.softwareFm.crowdsource.utilities.maps.Maps;
 
 public interface ITakeOnEnrichmentProvider {
 
-	Map<String,Object> takeOn(Map<String,Object> initial, String userCrypto, ICrowdSourcedReaderApi reader);
+	Map<String,Object> takeOn(Map<String,Object> initial, String userCrypto, IUserAndGroupsContainer container);
 	
 	public static class Utils {
 		public static ITakeOnEnrichmentProvider noEnrichment(){
 			return  new ITakeOnEnrichmentProvider() {
 				@Override
-				public Map<String, Object> takeOn(Map<String, Object> initial, String userCrypto, ICrowdSourcedReaderApi reader) {
+				public Map<String, Object> takeOn(Map<String, Object> initial, String userCrypto, IUserAndGroupsContainer container) {
 					return initial;
 				}
 			};
@@ -23,9 +23,9 @@ public interface ITakeOnEnrichmentProvider {
 		public static ITakeOnEnrichmentProvider enrichmentWithUserProperty(final String propertyName){
 			return  new ITakeOnEnrichmentProvider() {
 				@Override
-				public Map<String, Object> takeOn(Map<String, Object> initial, final String userCrypto, ICrowdSourcedReaderApi reader) {
+				public Map<String, Object> takeOn(Map<String, Object> initial, final String userCrypto, IUserAndGroupsContainer container) {
 					final String userId = (String) initial.get(LoginConstants.softwareFmIdKey);
-					String propertyValue = reader.accessUserReader(new IFunction1<IUserReader, String>() {
+					String propertyValue = container.accessUserReader(new IFunction1<IUserReader, String>() {
 						@Override
 						public String apply(IUserReader from) throws Exception {
 							return from.getUserProperty(userId, userCrypto, propertyName);

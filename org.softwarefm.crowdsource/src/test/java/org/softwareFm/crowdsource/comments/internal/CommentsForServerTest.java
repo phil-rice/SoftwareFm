@@ -7,8 +7,8 @@ import java.util.Map;
 import org.softwareFm.crowdsource.api.ICommentDefn;
 import org.softwareFm.crowdsource.api.IComments;
 import org.softwareFm.crowdsource.api.ICommentsReader;
-import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.user.IUser;
 import org.softwareFm.crowdsource.constants.CommentConstants;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
@@ -23,11 +23,11 @@ public class CommentsForServerTest extends AbstractCommentsReaderTest {
 	protected ICrowdSourcedApi getApi() {
 		return getServerApi();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void testAddGlobalComments() {
 		remoteOperations.init("a");
-		getServerContainer().modifyUser(new ICallback<IUser>() {
+		getServerUserAndGroupsContainer().modifyUser(new ICallback<IUser>() {
 			@Override
 			public void process(IUser user) throws Exception {
 				user.setUserProperty(softwareFmId, userKey0, LoginConstants.monikerKey, "moniker");
@@ -50,7 +50,7 @@ public class CommentsForServerTest extends AbstractCommentsReaderTest {
 	@SuppressWarnings("unchecked")
 	public void testAddMyComments() {
 		remoteOperations.init("a");
-		IContainer serverContainer = getServerContainer();
+		IUserAndGroupsContainer serverContainer = getServerUserAndGroupsContainer();
 		serverContainer.modifyUser(new ICallback<IUser>() {
 			@Override
 			public void process(IUser user) throws Exception {
@@ -74,7 +74,7 @@ public class CommentsForServerTest extends AbstractCommentsReaderTest {
 	@SuppressWarnings("unchecked")
 	public void testAddGroupComments() {
 		remoteOperations.init("a");
-		IContainer serverContainer = getServerContainer();
+		IUserAndGroupsContainer serverContainer = getServerUserAndGroupsContainer();
 		serverContainer.modifyUser(new ICallback<IUser>() {
 			@Override
 			public void process(IUser user) throws Exception {

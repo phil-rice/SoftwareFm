@@ -4,6 +4,7 @@ import org.softwareFm.crowdsource.api.IComments;
 import org.softwareFm.crowdsource.api.ICommentsReader;
 import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.LocalConfig;
 import org.softwareFm.crowdsource.api.git.IGitLocal;
 import org.softwareFm.crowdsource.api.git.IGitOperations;
@@ -26,39 +27,44 @@ import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 
 public class CrowdSourcedLocalApi extends AbstractCrowdSourcesApi {
 
-	private final CrowdSourceLocalReadWriterApi readWriterApi;
+	private final CrowdSourceLocalReadWriterApi container;
 	private final IClientBuilder httpClient;
 
 	@SuppressWarnings("unchecked")
 	public CrowdSourcedLocalApi(LocalConfig localConfig) {
-		readWriterApi = new CrowdSourceLocalReadWriterApi(IGitOperations.Utils.gitOperations(localConfig.root));
+		container = new CrowdSourceLocalReadWriterApi(IGitOperations.Utils.gitOperations(localConfig.root));
 		httpClient = IHttpClient.Utils.builderWithThreads(localConfig.host, localConfig.port, localConfig.workerThreads);
 		HttpGitWriter gitWriter = new HttpGitWriter(httpClient);
-		GitLocal gitLocal = new GitLocal(readWriterApi, gitWriter, localConfig.remoteGitPrefix, localConfig.autoRefreshPeriod);
+		GitLocal gitLocal = new GitLocal(container, gitWriter, localConfig.remoteGitPrefix, localConfig.autoRefreshPeriod);
 
 		IUrlGenerator userUrlGenerator = localConfig.userUrlGenerator;
 		HttpRepoFinder repoFinder = new HttpRepoFinder(httpClient, localConfig.timeOutMs);
-		CommentsLocal comments = new CommentsLocal(readWriterApi, gitLocal, localConfig.timeOutMs);
-		LocalUserReader userReader = new LocalUserReader(readWriterApi, userUrlGenerator);
-		readWriterApi.registerReaderAndWriter(IGitLocal.class, gitLocal);
-		readWriterApi.registerReaderAndWriter(IHttpClient.class, httpClient);
-		readWriterApi.registerReader(IUserReader.class, userReader);
-		readWriterApi.registerReader(IGroupsReader.class, new LocalGroupsReader(readWriterApi, localConfig.groupUrlGenerator));
-		readWriterApi.registerReader(IUserMembershipReader.class, new UserMembershipReaderForLocal(readWriterApi, userUrlGenerator));
-		readWriterApi.registerReaderAndWriter(IRepoFinder.class, repoFinder);
-		readWriterApi.registerReader(IGitReader.class, gitLocal);
-		readWriterApi.registerReadWriter(IGitWriter.class, gitLocal);
-		readWriterApi.registerReader(ICommentsReader.class, comments);
-		readWriterApi.registerReadWriter(IComments.class, comments);
-		readWriterApi.registerReader(IUserReader.class, userReader);
-		readWriterApi.registerReadWriter(IRepoFinder.class, repoFinder);
-		localConfig.extraReaderWriterConfigurator.builder(readWriterApi, localConfig );
+		CommentsLocal comments = new CommentsLocal(container, gitLocal, localConfig.timeOutMs);
+		LocalUserReader userReader = new LocalUserReader(container, userUrlGenerator);
+		container.register(IGitLocal.class, gitLocal);
+		container.register(IHttpClient.class, httpClient);
+		container.register(IUserReader.class, userReader);
+		container.register(IGroupsReader.class, new LocalGroupsReader(container, localConfig.groupUrlGenerator));
+		container.register(IUserMembershipReader.class, new UserMembershipReaderForLocal(container, userUrlGenerator));
+		container.register(IRepoFinder.class, repoFinder);
+		container.register(IGitReader.class, gitLocal);
+		container.register(IGitWriter.class, gitLocal);
+		container.register(ICommentsReader.class, comments);
+		container.register(IComments.class, comments);
+		container.register(IUserReader.class, userReader);
+		container.register(IRepoFinder.class, repoFinder);
+		localConfig.extraReaderWriterConfigurator.builder(container, localConfig );
 	}
 
 
 	@Override
 	public IContainer makeContainer() {
-		return readWriterApi;
+		return container;
+	}
+	
+	@Override
+	public IUserAndGroupsContainer makeUserAndGroupsContainer() {
+		return container;
 	}
 
 	@Override

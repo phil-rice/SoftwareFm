@@ -5,8 +5,8 @@
 package org.softwareFm.eclipse.mysoftwareFm;
 
 import org.eclipse.swt.widgets.Table;
-import org.softwareFm.crowdsource.api.IApiBuilder;
 import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.api.IContainerBuilder;
 import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
 import org.softwareFm.crowdsource.api.LocalConfig;
 import org.softwareFm.crowdsource.api.UserData;
@@ -27,7 +27,7 @@ public class MyDetailsTest extends AbstractMyGroupsIntegrationTest {
 
 
 	public void testMyDetails() {
-		assertNotNull(IUserReader.Utils.getUserProperty(getServerApi().makeContainer(), softwareFmId0, userKey0, JarAndPathConstants.projectCryptoKey));
+		assertNotNull(IUserReader.Utils.getUserProperty(getServerApi().makeUserAndGroupsContainer(), softwareFmId0, userKey0, JarAndPathConstants.projectCryptoKey));
 		UserData userData = new UserData(email, softwareFmId0, userKey0);
 		IContainer localReadWriter = getLocalApi().makeContainer();
 		MyDetails myDetails = new MyDetails(shell, localReadWriter, cardConfig, userData);
@@ -38,9 +38,9 @@ public class MyDetailsTest extends AbstractMyGroupsIntegrationTest {
 	protected IExtraReaderWriterConfigurator<LocalConfig> getLocalExtraReaderWriterConfigurator() {
 		return new IExtraReaderWriterConfigurator<LocalConfig>() {
 			@Override
-			public void builder(IApiBuilder builder, LocalConfig apiConfig) {
-				builder.registerReader(IProjectTimeGetter.class, new ProjectTimeGetterFixture());
-				builder.registerReader(IUsageReader.class, getProjectTimeGetterFixture(builder));
+			public void builder(IContainerBuilder builder, LocalConfig apiConfig) {
+				builder.register(IProjectTimeGetter.class, new ProjectTimeGetterFixture());
+				builder.register(IUsageReader.class, getProjectTimeGetterFixture(builder));
 			}
 		}; 
 	}

@@ -15,11 +15,16 @@ import org.apache.http.entity.StringEntity;
 import org.softwareFm.crowdsource.api.ApiTest;
 import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
+import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
+import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 
 abstract public class AbstractProcessCallTest<T extends ICallProcessor> extends ApiTest {
+	protected final static Map<String, Object> sfm0Invited = Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId0, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus);
+	protected final static Map<String, Object> sfm0Member = Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId0, GroupConstants.membershipStatusKey, GroupConstants.memberStatus);
+	protected final static Map<String, Object> sfm1Admin = Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId1, GroupConstants.membershipStatusKey, GroupConstants.adminStatus);
 
 	abstract protected T makeProcessor();
 
@@ -30,6 +35,7 @@ abstract public class AbstractProcessCallTest<T extends ICallProcessor> extends 
 		IProcessResult result = processor.process(makeRequestLine(method, uri), Maps.stringObjectMap("a", 1));
 		assertNull(result);
 	}
+
 	protected void checkIgnores(String method, String uri) {
 		IProcessResult result = processor.process(makeRequestLine(method, uri), Maps.stringObjectMap("a", 1));
 		assertNull(result);

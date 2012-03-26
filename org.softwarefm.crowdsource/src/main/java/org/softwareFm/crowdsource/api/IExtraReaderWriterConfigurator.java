@@ -1,14 +1,14 @@
 package org.softwareFm.crowdsource.api;
 
-public interface IExtraReaderWriterConfigurator<C extends ApiConfig> {
+public interface IExtraReaderWriterConfigurator<API extends ApiConfig> {
 
-	void builder(IApiBuilder builder, C apiConfig);
+	void builder(IContainerBuilder builder,  API apiConfig);
 
 	public static class Utils {
-		public static <C extends ApiConfig> IExtraReaderWriterConfigurator<C> noExtras() {
-			return new IExtraReaderWriterConfigurator<C>() {
+		public static <API extends ApiConfig> IExtraReaderWriterConfigurator<API> noExtras() {
+			return new IExtraReaderWriterConfigurator<API>() {
 				@Override
-				public void builder(IApiBuilder builder,C apiConfig) {
+				public  void builder(IContainerBuilder builder, API apiConfig) {
 				}
 			};
 		}

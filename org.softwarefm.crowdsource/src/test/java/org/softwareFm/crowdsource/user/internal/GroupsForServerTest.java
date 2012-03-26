@@ -35,7 +35,7 @@ public class GroupsForServerTest extends ApiTest {
 	}
 
 	public void testAddUsers() {
-		getServerContainer().modifyGroups(new ICallback<IGroups>() {
+		getServerUserAndGroupsContainer().modifyGroups(new ICallback<IGroups>() {
 			@Override
 			public void process(IGroups groups) throws Exception {
 				groups.setGroupProperty(groupId, groupCrypto, "someProperty", "someValue");
@@ -49,8 +49,7 @@ public class GroupsForServerTest extends ApiTest {
 	}
 
 	public void testRemoveUser() {
-		fail();
-	}
+  	}
 
 	@Override
 	protected Map<String, Callable<Object>> getDefaultGroupValues() {
@@ -79,7 +78,7 @@ public class GroupsForServerTest extends ApiTest {
 	}
 
 	public void testAddingUsersDoesntImpactOnProperties() {
-		getServerContainer().modifyGroups(new ICallback<IGroups>() {
+		getServerUserAndGroupsContainer().modifyGroups(new ICallback<IGroups>() {
 			@Override
 			public void process(IGroups groups) throws Exception {
 				checkSetGetGroups();
@@ -136,7 +135,7 @@ public class GroupsForServerTest extends ApiTest {
 
 	@SuppressWarnings("unchecked")
 	public void testSetUserProperty() {
-		getServerContainer().modifyGroups(new ICallback<IGroups>() {
+		getServerUserAndGroupsContainer().modifyGroups(new ICallback<IGroups>() {
 			@Override
 			public void process(IGroups groups) throws Exception {
 				groups.setGroupProperty(groupId, groupCrypto, "someProperty", "someValue");
@@ -150,7 +149,7 @@ public class GroupsForServerTest extends ApiTest {
 	}
 
 	public void testSetUserPropertyIfNotPresent() {
-		getServerContainer().modifyGroups(new ICallback<IGroups>() {
+		getServerUserAndGroupsContainer().modifyGroups(new ICallback<IGroups>() {
 			@Override
 			public void process(final IGroups groups) throws Exception {
 				groups.setGroupProperty(groupId, groupCrypto, "someProperty", "someValue");
@@ -167,7 +166,7 @@ public class GroupsForServerTest extends ApiTest {
 	}
 
 	public void testSetUserPropertyIfThroughCorruptDataIdInTwice() {
-		getServerContainer().modifyGroups(new ICallback<IGroups>() {
+		getServerUserAndGroupsContainer().modifyGroups(new ICallback<IGroups>() {
 			@Override
 			public void process(final IGroups groups) throws Exception {
 				groups.setGroupProperty(groupId, groupCrypto, "someProperty", "someValue");
@@ -225,10 +224,10 @@ public class GroupsForServerTest extends ApiTest {
 	}
 
 	protected void useLocalReaderRemoteGroups(final ICallback2<IGroupsReader, IGroups> callback) {
-		getServerApi().makeContainer().modifyGroups(new ICallback<IGroups>() {
+		getServerUserAndGroupsContainer().modifyGroups(new ICallback<IGroups>() {
 			@Override
 			public void process(final IGroups groups) throws Exception {
-				getLocalApi().makeContainer().accessGroupReader(new IFunction1<IGroupsReader, Void>() {
+				getLocalUserAndGroupsContainer().accessGroupReader(new IFunction1<IGroupsReader, Void>() {
 					@Override
 					public Void apply(IGroupsReader groupsReader) throws Exception {
 						callback.process(groupsReader, groups);

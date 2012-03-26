@@ -385,7 +385,7 @@ public class MySoftwareFmIntegrationTest extends ApiAndSwtTest implements IInteg
 		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(display, getServiceExecutor(), getLocalApi().makeContainer());
 		cardConfig = ICardConfigurator.Utils.cardConfigForTests(display);
 		userDataManager = IUserDataManager.Utils.userDataManager();
-		mySoftwareFm = new MySoftwareFm(shell, getLocalApi().makeContainer(), cardConfig, loginStrategy, IShowMyData.Utils.exceptionShowMyData(), IShowMyGroups.Utils.exceptionShowMyGroups(), userDataManager);
+		mySoftwareFm = new MySoftwareFm(shell, getLocalApi().makeUserAndGroupsContainer(), cardConfig, loginStrategy, IShowMyData.Utils.exceptionShowMyData(), IShowMyGroups.Utils.exceptionShowMyGroups(), userDataManager);
 		softwareFmComposite = mySoftwareFm.getComposite();
 		userFile = new File(remoteRoot, Urls.compose(getUrlPrefix(), "users/so/me/someNewSoftwareFmId0", CommonConstants.dataFileName));
 		truncateUsersTable();

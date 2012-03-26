@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.crowdsource.api.ICommentsReader;
-import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
@@ -21,16 +21,16 @@ import org.softwareFm.crowdsource.utilities.maps.Maps;
 
 public abstract class AbstractCommentsReader implements ICommentsReader {
 
-	protected final IContainer api;
+	protected final IUserAndGroupsContainer container;
 
-	public AbstractCommentsReader(IContainer api) {
-		this.api = api;
+	public AbstractCommentsReader(IUserAndGroupsContainer container) {
+		this.container = container;
 	}
 
 	@Override
 	public List<Map<String, Object>> globalComments(String baseUrl, final String source) {
 		final IFileDescription fd = IFileDescription.Utils.plain(baseUrl, CommentConstants.globalCommentsFile);
-		return api.accessGitReader(new IFunction1<IGitReader, List<Map<String, Object>>>() {
+		return container.accessGitReader(new IFunction1<IGitReader, List<Map<String, Object>>>() {
 			@Override
 			public List<Map<String, Object>> apply(IGitReader gitReader) throws Exception {
 				List<Map<String, Object>> result = Lists.map(gitReader.getFileAsListOfMaps(fd), Maps.<String, Object> withFn(CommentConstants.sourceKey, source));
@@ -41,7 +41,7 @@ public abstract class AbstractCommentsReader implements ICommentsReader {
 
 	@Override
 	public List<Map<String, Object>> groupComments(final String baseUrl, final String softwareFmId, final String userCrypto) {
-		return api.access(IGitReader.class, IGroupsReader.class, IUserMembershipReader.class, new IFunction3<IGitReader, IGroupsReader, IUserMembershipReader, List<Map<String, Object>>>() {
+		return container.access(IGitReader.class, IGroupsReader.class, IUserMembershipReader.class, new IFunction3<IGitReader, IGroupsReader, IUserMembershipReader, List<Map<String, Object>>>() {
 			@Override
 			public List<Map<String, Object>> apply(IGitReader gitReader, IGroupsReader groupsReader, IUserMembershipReader userMembershipReader) {
 				final List<Map<String, Object>> result = Lists.newList();
@@ -66,13 +66,13 @@ public abstract class AbstractCommentsReader implements ICommentsReader {
 
 	@Override
 	public List<Map<String, Object>> myComments(final String baseUrl, final String softwareFmId, final String userCrypto, final String source) {
-		return api.accessGitReader(new IFunction1<IGitReader, List<Map<String, Object>>>() {
+		return container.accessGitReader(new IFunction1<IGitReader, List<Map<String, Object>>>() {
 			@Override
 			public List<Map<String, Object>> apply(final IGitReader gitReader) throws Exception {
-				return api.accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, List<Map<String, Object>>>() {
+				return container.accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, List<Map<String, Object>>>() {
 					@Override
 					public List<Map<String, Object>> apply(IGroupsReader from1, IUserMembershipReader from2) {
-						return api.accessUserReader(new IFunction1<IUserReader, List<Map<String, Object>>>() {
+						return container.accessUserReader(new IFunction1<IUserReader, List<Map<String, Object>>>() {
 							@Override
 							public List<Map<String, Object>> apply(IUserReader userReader) throws Exception {
 								String commentCrypto = userReader.getUserProperty(softwareFmId, userCrypto, CommentConstants.commentCryptoKey);

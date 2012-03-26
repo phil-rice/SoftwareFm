@@ -1,6 +1,6 @@
 package org.softwareFm.crowdsource.api.internal;
 
-import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.ServerConfig;
 import org.softwareFm.crowdsource.api.server.IEmailSaltRequester;
 import org.softwareFm.crowdsource.api.server.IForgottonPasswordMailer;
@@ -31,14 +31,14 @@ public class ServerDoers implements IServerDoers {
 	private final ForgottonPasswordMailer forgottonPasswordMailer;
 	private final EmailSaltRequester emailSaltRequester;
 
-	public ServerDoers(ServerConfig serverConfig, IContainer crowdSourceServerReadWriterApi) {
+	public ServerDoers(ServerConfig serverConfig, IUserAndGroupsContainer container) {
 		this.serverConfig = serverConfig;
 		this.mailer = serverConfig.mailer;
 		
-		this.signUpChecker = new SignUpChecker(serverConfig.dataSource, serverConfig.cryptoGenerators, crowdSourceServerReadWriterApi);
+		this.signUpChecker = new SignUpChecker(serverConfig.dataSource, serverConfig.cryptoGenerators, container);
 		this.saltProcessor = new SaltProcessor();
 		this.loginChecker = new LoginChecker(serverConfig.dataSource);
-		this.takeOnProcessor = new TakeOnProcessor(crowdSourceServerReadWriterApi, serverConfig);
+		this.takeOnProcessor = new TakeOnProcessor(container, serverConfig);
 		this.passwordResetter = new PasswordResetter(serverConfig.dataSource);
 		this.forgottonPasswordMailer = new ForgottonPasswordMailer(getMailer(), serverConfig.userCryptoAccess);
 		this.emailSaltRequester = new EmailSaltRequester(serverConfig.dataSource);

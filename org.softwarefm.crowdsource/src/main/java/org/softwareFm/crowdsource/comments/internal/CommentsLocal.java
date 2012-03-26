@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.softwareFm.crowdsource.api.ICommentDefn;
 import org.softwareFm.crowdsource.api.IComments;
-import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.constants.CommentConstants;
 import org.softwareFm.crowdsource.httpClient.IHttpClient;
@@ -20,15 +20,15 @@ public class CommentsLocal extends AbstractCommentsReader implements IComments {
 	private final long timeOutMs;
 	private final IHasUrlCache urlCache;
 
-	public CommentsLocal(IContainer api, IHasUrlCache urlCache, long timeOutMs) {
-		super(api);
+	public CommentsLocal(IUserAndGroupsContainer container, IHasUrlCache urlCache, long timeOutMs) {
+		super(container);
 		this.urlCache = urlCache;
 		this.timeOutMs = timeOutMs;
 	}
 
 	@Override
 	public void addComment(final String softwareFmId, final String userCrypto, final ICommentDefn defn, final String text) {
-		api.modify(IHttpClient.class, new ICallback<IHttpClient>() {
+		container.modify(IHttpClient.class, new ICallback<IHttpClient>() {
 			@Override
 			public void process(IHttpClient client) throws Exception {
 				IFileDescription fileDescription = defn.fileDescription();

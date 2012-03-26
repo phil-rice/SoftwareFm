@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
-import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.server.AbstractProcessorDatabaseIntegrationTests;
 import org.softwareFm.crowdsource.api.server.ISignUpChecker;
 import org.softwareFm.crowdsource.api.user.IGroups;
@@ -37,7 +37,7 @@ public class KickFromGroupProcessorTest extends AbstractProcessorDatabaseIntegra
 				addParam(GroupConstants.objectSoftwareFmId, objectId).//
 				execute(IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 
-		api.makeContainer().accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
+		api.makeUserAndGroupsContainer().accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
 			@Override
 			public Void apply(IGroupsReader groups, IUserMembershipReader membershipForServer) throws Exception {
 				assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.membershipStatusKey, GroupConstants.adminStatus, LoginConstants.softwareFmIdKey, adminId, "a", "b")), Iterables.list(groups.users(groupId, groupCryptoKey0)));
@@ -61,7 +61,7 @@ public class KickFromGroupProcessorTest extends AbstractProcessorDatabaseIntegra
 						"User someNewSoftwareFmId0\n" + //
 						"Users status admin\n" + //
 						"Object SoftwareFmId someNewSoftwareFmId1")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
-		api.makeContainer().accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
+		api.makeUserAndGroupsContainer().accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
 			@Override
 			public Void apply(IGroupsReader groups, IUserMembershipReader membershipForServer) throws Exception {
 				assertEquals(Arrays.asList(//
@@ -84,7 +84,7 @@ public class KickFromGroupProcessorTest extends AbstractProcessorDatabaseIntegra
 				addParam(LoginConstants.softwareFmIdKey, adminId).//
 				addParam(GroupConstants.objectSoftwareFmId, objectId).//
 				execute(IResponseCallback.Utils.checkCallback(CommonConstants.serverErrorCode, "class java.lang.IllegalArgumentException/Cannot kick unless admin.\n Group groupId0\nUser someNewSoftwareFmId0\nUsers status nonAdminStatus\nObject SoftwareFmIds [someNewSoftwareFmId1]")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
-		api.makeContainer().accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
+		api.makeUserAndGroupsContainer().accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
 			@Override
 			public Void apply(IGroupsReader groups, IUserMembershipReader membershipForServer) throws Exception {
 				assertEquals(Arrays.asList(//
@@ -103,8 +103,8 @@ public class KickFromGroupProcessorTest extends AbstractProcessorDatabaseIntegra
 		signUpChecker.signUp("someEmail", "monikor", "salt", "passwordHash", adminId =  getIdAndSaltGenerator().makeNewUserId());
 		signUpChecker.signUp("someEmail1", "monikor", "salt", "passwordHash", objectId =  getIdAndSaltGenerator().makeNewUserId());
 		groupId =  getIdAndSaltGenerator().makeNewGroupId();
-		IContainer readWriteApi = api.makeContainer();
-		readWriteApi.modifyUser(new ICallback<IUser>() {
+		IUserAndGroupsContainer container = api.makeUserAndGroupsContainer();
+		container.modifyUser(new ICallback<IUser>() {
 			@Override
 			public void process(IUser user) throws Exception {
 				user.setUserProperty(adminId, userKey0, LoginConstants.emailKey, "someEmail");
@@ -112,7 +112,7 @@ public class KickFromGroupProcessorTest extends AbstractProcessorDatabaseIntegra
 			}
 		});
 
-		readWriteApi.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		container.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership membershipForServer) throws Exception {
 				groups.setGroupProperty(groupId, groupCryptoKey0, GroupConstants.groupNameKey, "someName");

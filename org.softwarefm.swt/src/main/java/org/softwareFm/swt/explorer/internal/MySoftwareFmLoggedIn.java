@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
@@ -79,7 +79,7 @@ public class MySoftwareFmLoggedIn implements IHasControl {
 		public final Button myGroupsButton;
 
 		@SuppressWarnings("unused")
-		public MySoftwareFmLoggedInComposite(Composite parent, IContainer readWriteApi, CardConfig cardConfig, String cardType, final ILoginDisplayStrategy loginDisplayStrategy, final IMySoftwareFmLoggedInStrategy loggedInStrategy, UserData userData) {
+		public MySoftwareFmLoggedInComposite(Composite parent, IUserAndGroupsContainer container, CardConfig cardConfig, String cardType, final ILoginDisplayStrategy loginDisplayStrategy, final IMySoftwareFmLoggedInStrategy loggedInStrategy, UserData userData) {
 			super(parent, cardConfig, cardType, JarAndPathConstants.mySoftwareFmLoggedInTitle, true);
 			mainComposite = new Composite(getInnerBody(), SWT.NULL);
 			mainComposite.setBackground(getTitleSpec().background);
@@ -87,10 +87,10 @@ public class MySoftwareFmLoggedIn implements IHasControl {
 			userDetails.setHeaderVisible(false);
 			for (int i = 0; i < 2; i++)
 				new TableColumn(userDetails, SWT.NULL);
-			IUserReader.Utils.refresh(readWriteApi, userData.softwareFmId);
+			IUserReader.Utils.refresh(container, userData.softwareFmId);
 			for (String property : loggedInStrategy.displayProperties()) {
 				TableItem item = new TableItem(userDetails, SWT.NULL);
-				Object value = IUserReader.Utils.getUserProperty(readWriteApi, userData.softwareFmId, userData.crypto, property);
+				Object value = IUserReader.Utils.getUserProperty(container, userData.softwareFmId, userData.crypto, property);
 				String name = cardConfig.nameFn.apply(cardConfig, new LineItem(CardConstants.loginCardType, property, value));
 				item.setText(new String[] { name, Strings.nullSafeToString(value) });
 			}
@@ -132,8 +132,8 @@ public class MySoftwareFmLoggedIn implements IHasControl {
 
 	}
 
-	public MySoftwareFmLoggedIn(Composite parent, IContainer readWriterApi, final CardConfig cardConfig, String title, String text, final UserData userData, final ILoginDisplayStrategy loginDisplayStrategy, final IMySoftwareFmLoggedInStrategy loggedInStrategy) {
-		content = new MySoftwareFmLoggedInComposite(parent, readWriterApi, cardConfig, CardConstants.loginCardType, loginDisplayStrategy, loggedInStrategy, userData);
+	public MySoftwareFmLoggedIn(Composite parent, IUserAndGroupsContainer comment, final CardConfig cardConfig, String title, String text, final UserData userData, final ILoginDisplayStrategy loginDisplayStrategy, final IMySoftwareFmLoggedInStrategy loggedInStrategy) {
+		content = new MySoftwareFmLoggedInComposite(parent, comment, cardConfig, CardConstants.loginCardType, loginDisplayStrategy, loggedInStrategy, userData);
 		content.setLayout(new DataCompositeWithFooterLayout());
 	}
 

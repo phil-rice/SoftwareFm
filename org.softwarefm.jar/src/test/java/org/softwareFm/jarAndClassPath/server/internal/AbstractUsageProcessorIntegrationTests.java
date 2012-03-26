@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-import org.softwareFm.crowdsource.api.IApiBuilder;
+import org.softwareFm.crowdsource.api.IContainerBuilder;
 import org.softwareFm.crowdsource.api.IExtraCallProcessorFactory;
 import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
 import org.softwareFm.crowdsource.api.ServerConfig;
@@ -17,6 +17,7 @@ import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.jarAndClassPath.api.IGroupArtifactVersionCallback;
 import org.softwareFm.jarAndClassPath.api.IJarToGroupArtifactAndVersion;
 import org.softwareFm.jarAndClassPath.api.IProjectTimeGetter;
+import org.softwareFm.jarAndClassPath.api.ISoftwareFmApiFactory;
 import org.softwareFm.jarAndClassPath.api.ISoftwareFmApiFactory.Utils;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.jarAndClassPath.internal.AbstractJarToGroupArtifactVersion;
@@ -54,14 +55,14 @@ public abstract class AbstractUsageProcessorIntegrationTests extends AbstractPro
 	protected IExtraReaderWriterConfigurator<ServerConfig> getServerExtraReaderWriterConfigurator() {
 		return new IExtraReaderWriterConfigurator<ServerConfig>() {
 			@Override
-			public void builder(IApiBuilder builder, ServerConfig serverConfig) {
-				org.softwareFm.jarAndClassPath.api.ISoftwareFmApiFactory.Utils.getServerExtraReaderWriterConfigurator(getUrlPrefix()).builder(builder, serverConfig);
+			public void builder(IContainerBuilder builder, ServerConfig serverConfig) {
+				ISoftwareFmApiFactory.Utils.getServerExtraReaderWriterConfigurator(getUrlPrefix()).builder(builder, serverConfig);
 	
 				IJarToGroupArtifactAndVersion jarToGroupArtifactAndVersion = getJarToGroupArtifactVersion(JarAndPathConstants.jarUrlGenerator(serverConfig.prefix));
-				builder.registerReaderAndWriter(IJarToGroupArtifactAndVersion.class, jarToGroupArtifactAndVersion);
+				builder.register(IJarToGroupArtifactAndVersion.class, jarToGroupArtifactAndVersion);
 	
 				IProjectTimeGetter projectTimeGetter = getProjectTimeGetter(); 
-				builder.registerReaderAndWriter(IProjectTimeGetter.class, projectTimeGetter);
+				builder.register(IProjectTimeGetter.class, projectTimeGetter);
 			}
 		};
 	}

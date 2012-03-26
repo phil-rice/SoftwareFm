@@ -2,7 +2,7 @@ package org.softwareFm.crowdsource.server.callProcessor.internal;
 
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.IUserCryptoAccess;
 import org.softwareFm.crowdsource.api.server.AbstractCallProcessor;
 import org.softwareFm.crowdsource.api.server.IProcessResult;
@@ -17,23 +17,23 @@ import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 public class AcceptInviteGroupProcessor extends AbstractCallProcessor {
 
 	private final IUserCryptoAccess userCryptoAccess;
-	private final IContainer readWriteApi;
+	private final IUserAndGroupsContainer container;
 
-	public AcceptInviteGroupProcessor(IUserCryptoAccess userCryptoAccess, IContainer readWriteApi) {
+	public AcceptInviteGroupProcessor(IUserCryptoAccess userCryptoAccess, IUserAndGroupsContainer container) {
 		super(CommonConstants.POST, GroupConstants.acceptInvitePrefix);
 		this.userCryptoAccess = userCryptoAccess;
-		this.readWriteApi = readWriteApi;
+		this.container = container;
 	}
 
 	@Override
 	protected IProcessResult execute(String actualUrl, final Map<String, Object> parameters) {
-		checkForParameter(parameters, LoginConstants.softwareFmIdKey, GroupConstants.groupIdKey, GroupConstants.membershipStatusKey);
-		readWriteApi.modifyUserMembership(new ICallback2<IGroups, IUserMembership>(){
+		checkForParameter(parameters, LoginConstants.softwareFmIdKey, GroupConstants.groupIdKey);
+		container.modifyUserMembership(new ICallback2<IGroups, IUserMembership>(){
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				String softwareFmId = (String) parameters.get(LoginConstants.softwareFmIdKey);
 				String groupId = (String) parameters.get(GroupConstants.groupIdKey);
-				final String newStatus = (String) parameters.get(GroupConstants.membershipStatusKey);
+				final String newStatus = GroupConstants.memberStatus;
 				String userCrypto = userCryptoAccess.getCryptoForUser(softwareFmId);
 				String groupCrypto = IUserMembershipReader.Utils.findGroupCrytpo(userMembership, softwareFmId, userCrypto, groupId);
 				groups.setUserProperty(groupId, groupCrypto, softwareFmId, GroupConstants.membershipStatusKey, newStatus);

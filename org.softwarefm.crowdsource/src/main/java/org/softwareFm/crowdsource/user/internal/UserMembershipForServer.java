@@ -8,7 +8,7 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitOperations;
 import org.softwareFm.crowdsource.api.git.IGitWriter;
@@ -28,7 +28,7 @@ public class UserMembershipForServer extends AbstractUserMembershipReader implem
 	private final IFunction1<String, String> repoDefnFn;
 	private final IGitOperations git;
 
-	public UserMembershipForServer(IContainer container, IUrlGenerator userUrlGenerator, IFunction1<String, String> repoDefnFn) {
+	public UserMembershipForServer(IUserAndGroupsContainer container, IUrlGenerator userUrlGenerator, IFunction1<String, String> repoDefnFn) {
 		super(container, userUrlGenerator);
 		this.git = container.gitOperations();
 		this.repoDefnFn = repoDefnFn;

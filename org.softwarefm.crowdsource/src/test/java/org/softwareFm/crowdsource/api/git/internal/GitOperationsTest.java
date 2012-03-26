@@ -44,10 +44,23 @@ public class GitOperationsTest extends GitTest {
 		assertEquals(Collections.emptyList(), localOperations.getFileAsListOfMaps(fd));
 	}
 
-	public void testDelete(){
-		fail();
+	public void testDelete() {
+		localOperations.init("a");
+		IFileDescription fd = IFileDescription.Utils.plain("a");
+		localOperations.put(fd, v11);
+
+		File localFile = fd.getFile(localOperations.getRoot());
+		File remoteFile = fd.getFile(localOperations.getRoot());
+
+		assertTrue(localFile.exists());
+		assertTrue(remoteFile.exists());
+
+		localOperations.delete(fd);
+
+		assertFalse(localFile.exists());
+		assertFalse(remoteFile.exists());
 	}
-	
+
 	public void testGetFileAsString() {
 		String crypto = Crypto.makeKey();
 		IFileDescription ac = IFileDescription.Utils.encrypted("a/c", "file", crypto);
@@ -74,21 +87,22 @@ public class GitOperationsTest extends GitTest {
 
 		assertEquals(Arrays.asList(v11, v12, v21), localOperations.getFileAsListOfMaps(fd));
 	}
+
 	@SuppressWarnings("unchecked")
 	public void testGetAsListOfMapsWithOneLineBadEncryption() {
 		String crypto = Crypto.makeKey();
-		String badCrypto= Crypto.makeKey();
-		
+		String badCrypto = Crypto.makeKey();
+
 		localOperations.init("a");
-		IFileDescription fd = IFileDescription.Utils.encrypted("a","someFileName", crypto);
-		IFileDescription fdBad = IFileDescription.Utils.encrypted("a","someFileName", badCrypto);
-		
+		IFileDescription fd = IFileDescription.Utils.encrypted("a", "someFileName", crypto);
+		IFileDescription fdBad = IFileDescription.Utils.encrypted("a", "someFileName", badCrypto);
+
 		localOperations.append(fd, v11);
 		assertEquals(v11, localOperations.getFile(fd));
 		assertEquals(Arrays.asList(v11), localOperations.getFileAsListOfMaps(fd));
 		localOperations.append(fdBad, v12);
 		localOperations.append(fd, v21);
-		
+
 		Map<String, Object> bad = Maps.stringObjectMap(CommonConstants.errorKey, MessageFormat.format(CommonMessages.cannotDecrypt, Crypto.aesEncrypt(badCrypto, Json.toString(v12))));
 		assertEquals(Arrays.asList(v11, bad, v21), localOperations.getFileAsListOfMaps(fd));
 	}
@@ -206,11 +220,11 @@ public class GitOperationsTest extends GitTest {
 				return Maps.with(from, "d", "1");
 			}
 		}, "someMessage");
-		
+
 		localOperations.init("a");
 		localOperations.setConfigForRemotePull("a", remoteRoot.getAbsolutePath());
 		localOperations.pull("a");
-		
+
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> expected = Arrays.asList(v11, v21, v12, v22);
 		assertEquals(expected, remoteOperations.getFileAsListOfMaps(fd));

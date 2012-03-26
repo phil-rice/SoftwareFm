@@ -7,7 +7,7 @@ package org.softwareFm.crowdsource.api.user;
 import java.text.MessageFormat;
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction2;
 
@@ -19,8 +19,8 @@ public interface IUserMembershipReader {
 
 	public static class Utils {
 
-		public static Iterable<Map<String, Object>> walkGroups(ICrowdSourcedReaderApi readerApi, final String softwareFmId, final String crypto){
-			return readerApi.accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, Iterable<Map<String, Object>>>() {
+		public static Iterable<Map<String, Object>> walkGroups(IUserAndGroupsContainer container, final String softwareFmId, final String crypto){
+			return container.accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, Iterable<Map<String, Object>>>() {
 				@Override
 				public Iterable<Map<String, Object>> apply(IGroupsReader from1, IUserMembershipReader userMembershipReader) throws Exception {
 					return userMembershipReader.walkGroupsFor(softwareFmId, crypto);

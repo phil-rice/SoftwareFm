@@ -4,7 +4,7 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.IUserCryptoAccess;
 import org.softwareFm.crowdsource.api.server.AbstractCallProcessor;
 import org.softwareFm.crowdsource.api.server.IProcessResult;
@@ -18,19 +18,19 @@ import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 
 public class LeaveGroupCommandProcessor extends AbstractCallProcessor {
 
-	private final IContainer readWriteApi;
+	private final IUserAndGroupsContainer container;
 	private final IUserCryptoAccess userCryptoAccess;
 
-	public LeaveGroupCommandProcessor(IContainer readWriteApi, IUserCryptoAccess userCryptoAccess) {
+	public LeaveGroupCommandProcessor(IUserAndGroupsContainer container, IUserCryptoAccess userCryptoAccess) {
 		super(CommonConstants.POST, GroupConstants.leaveGroupPrefix);
-		this.readWriteApi = readWriteApi;
+		this.container = container;
 		this.userCryptoAccess = userCryptoAccess;
 	}
 
 	@Override
 	protected IProcessResult execute(String actualUrl, final Map<String, Object> parameters) {
 		checkForParameter(parameters, LoginConstants.softwareFmIdKey, GroupConstants.groupIdKey);
-		readWriteApi.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		container.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				String softwareFmId = (String) parameters.get(LoginConstants.softwareFmIdKey);

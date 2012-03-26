@@ -17,4 +17,5 @@ public class CrowdSourceLocalReadWriteApiTest extends AbstractCrowdReadWriterApi
 	protected ICrowdSourcedApi getApi() {
 		return super.getLocalApi();
 	}
+
 }

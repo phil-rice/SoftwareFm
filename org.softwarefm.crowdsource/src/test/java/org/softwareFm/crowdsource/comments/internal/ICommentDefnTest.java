@@ -1,8 +1,8 @@
 package org.softwareFm.crowdsource.comments.internal;
 
 import org.softwareFm.crowdsource.api.ICommentDefn;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.ServerConfig;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.TemporaryFileTest;
@@ -23,7 +23,7 @@ public class ICommentDefnTest extends TemporaryFileTest {
 	String softwareFmId = "sfmId";
 	String groupId = "groupId";
 	private CrowdSourcedServerApi api;
-	private ICrowdSourcedReaderApi reader;
+	private IUserAndGroupsContainer container;
 
 	public void testGlobal() {
 		assertEquals(initial(CommentConstants.globalCommentsFile, null), ICommentDefn.Utils.everyoneInitial(url));
@@ -34,28 +34,28 @@ public class ICommentDefnTest extends TemporaryFileTest {
 		SignUpResult signUpResult = api.getServerDoers().getSignUpChecker().signUp("a@email.com", "someMoniker", "someSalt", "pass", softwareFmId);
 		final String userCrypto = signUpResult.crypto;
 		assertNotNull(signUpResult.errorMessage, userCrypto);
-		String userCommentCrypto = reader.accessUserReader(new IFunction1<IUserReader, String>() {
+		String userCommentCrypto = container.accessUserReader(new IFunction1<IUserReader, String>() {
 			@Override
 			public String apply(IUserReader userReader) throws Exception {
 				return userReader.getUserProperty(softwareFmId, userCrypto, CommentConstants.commentCryptoKey);
 			}
 		});
 		assertNotNull(userCommentCrypto);
-		assertEquals(initial(softwareFmId, userCommentCrypto), ICommentDefn.Utils.myInitial(reader, softwareFmId, userCrypto, url));
-		assertEquals(reply(softwareFmId, userCommentCrypto), ICommentDefn.Utils.myReply(reader, softwareFmId, userCrypto, url, replyIndex));
+		assertEquals(initial(softwareFmId, userCommentCrypto), ICommentDefn.Utils.myInitial(container, softwareFmId, userCrypto, url));
+		assertEquals(reply(softwareFmId, userCommentCrypto), ICommentDefn.Utils.myReply(container, softwareFmId, userCrypto, url, replyIndex));
 	}
 
 	public void testGroup() {
 		final String groupCrypto = Crypto.makeKey();
 		final String groupCommentCrypto = Crypto.makeKey();
-		api.makeContainer().modifyGroups(new ICallback<IGroups>() {
+		api.makeUserAndGroupsContainer().modifyGroups(new ICallback<IGroups>() {
 			@Override
 			public void process(IGroups groups) throws Exception {
 				groups.setGroupProperty(groupId, groupCrypto, CommentConstants.commentCryptoKey, groupCommentCrypto);
 			}
 		});
-		assertEquals(initial(groupId, groupCommentCrypto), ICommentDefn.Utils.groupInitial(reader, groupId, groupCrypto, url));
-		assertEquals(reply(groupId, groupCommentCrypto), ICommentDefn.Utils.groupReply(reader, groupId, groupCrypto, url, replyIndex));
+		assertEquals(initial(groupId, groupCommentCrypto), ICommentDefn.Utils.groupInitial(container, groupId, groupCrypto, url));
+		assertEquals(reply(groupId, groupCommentCrypto), ICommentDefn.Utils.groupReply(container, groupId, groupCrypto, url, replyIndex));
 	}
 
 	protected CommentDefn initial(String name, String crpto) {
@@ -75,7 +75,7 @@ public class ICommentDefnTest extends TemporaryFileTest {
 		super.setUp();
 		ServerConfig serverConfig = ServerConfig.serverConfigForTests(root, IMailer.Utils.noMailer());
 		api = (CrowdSourcedServerApi) ICrowdSourcedApi.Utils.forServer(serverConfig);
-		reader = api.makeContainer();
+		container = api.makeUserAndGroupsContainer();
 		new JdbcTemplate(serverConfig.dataSource).update("delete From users");
 	}
 }

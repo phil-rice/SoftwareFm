@@ -6,8 +6,7 @@ package org.softwareFm.crowdsource.api.user;
 
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.IContainer;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
@@ -18,8 +17,8 @@ public interface IUserReader {
 	void refresh(String userId);
 
 	abstract public static class Utils {
-		public static String getUserProperty(ICrowdSourcedReaderApi readerApi, final String softwareFmId, final String userCrypto, final String propertyName) {
-			return readerApi.accessUserReader(new IFunction1<IUserReader, String>() {
+		public static String getUserProperty(IUserAndGroupsContainer container, final String softwareFmId, final String userCrypto, final String propertyName) {
+			return container.accessUserReader(new IFunction1<IUserReader, String>() {
 				@Override
 				public String apply(IUserReader from) throws Exception {
 					return from.getUserProperty(softwareFmId, userCrypto, propertyName);
@@ -27,7 +26,7 @@ public interface IUserReader {
 			});
 		}
 
-		public static void setUserProperty(IContainer readWriteApi, final String softwareFmId, final String userCrypto, final String propertyName, final String value) {
+		public static void setUserProperty(IUserAndGroupsContainer readWriteApi, final String softwareFmId, final String userCrypto, final String propertyName, final String value) {
 			readWriteApi.modifyUser(new ICallback<IUser>() {
 				@Override
 				public void process(IUser user) throws Exception {
@@ -67,8 +66,8 @@ public interface IUserReader {
 			};
 		}
 
-		public static void refresh(ICrowdSourcedReaderApi readerApi, final String softwareFmId) {
-			readerApi.accessUserReader(new IFunction1<IUserReader, Void>() {
+		public static void refresh(IUserAndGroupsContainer container, final String softwareFmId) {
+			container.accessUserReader(new IFunction1<IUserReader, Void>() {
 				@Override
 				public Void apply(IUserReader from) throws Exception {
 					from.refresh(softwareFmId);

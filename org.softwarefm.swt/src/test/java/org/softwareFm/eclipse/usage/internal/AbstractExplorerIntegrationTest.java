@@ -18,11 +18,12 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.softwareFm.crowdsource.api.IApiBuilder;
 import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.api.IContainerBuilder;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
 import org.softwareFm.crowdsource.api.IExtraCallProcessorFactory;
 import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.LocalConfig;
 import org.softwareFm.crowdsource.api.ServerConfig;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
@@ -49,6 +50,7 @@ import org.softwareFm.eclipse.mysoftwareFm.MyPeople;
 import org.softwareFm.eclipse.snippets.SnippetFeedConfigurator;
 import org.softwareFm.jarAndClassPath.api.IProjectTimeGetter;
 import org.softwareFm.jarAndClassPath.api.IRequestGroupReportGeneration;
+import org.softwareFm.jarAndClassPath.api.ISoftwareFmApiFactory;
 import org.softwareFm.jarAndClassPath.api.IUsageReader;
 import org.softwareFm.jarAndClassPath.api.IUserDataManager;
 import org.softwareFm.jarAndClassPath.api.ProjectFixture;
@@ -225,7 +227,7 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 			@Override
 			public ICallProcessor[] makeExtraCalls(IContainer api, ServerConfig serverConfig) {
 				ICallProcessor[] parentCalls = parent.makeExtraCalls(api, serverConfig);
-				ICallProcessor[] softwareFmCalls = org.softwareFm.jarAndClassPath.api.ISoftwareFmApiFactory.Utils.getExtraProcessCalls().makeExtraCalls(api, serverConfig);
+				ICallProcessor[] softwareFmCalls = ISoftwareFmApiFactory.Utils.getExtraProcessCalls().makeExtraCalls(api, serverConfig);
 				return ArrayHelper.append(parentCalls, softwareFmCalls);
 			}
 		};
@@ -235,18 +237,17 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 	protected IExtraReaderWriterConfigurator<ServerConfig> getServerExtraReaderWriterConfigurator() {
 		return new IExtraReaderWriterConfigurator<ServerConfig>() {
 			@Override
-			public void builder(IApiBuilder builder, ServerConfig apiConfig) {
-				org.softwareFm.jarAndClassPath.api.ISoftwareFmApiFactory.Utils.getServerExtraReaderWriterConfigurator(getUrlPrefix()).builder(builder, apiConfig);
+			public void builder(IContainerBuilder builder,ServerConfig apiConfig) {
+				ISoftwareFmApiFactory.Utils.getServerExtraReaderWriterConfigurator(getUrlPrefix()).builder(builder, apiConfig);
 				ProjectMock projectMock = getProjectTimeGetterFixture(builder);
-				builder.registerReaderAndWriter(IUsageReader.class, projectMock);
+				builder.register(IUsageReader.class, projectMock);
 			}
-
 		};
 	}
 
-	protected ProjectMock getProjectTimeGetterFixture(IApiBuilder builder) {
+	protected ProjectMock getProjectTimeGetterFixture(IContainerBuilder builder) {
 		IProjectTimeGetter projectTimeGetter = new ProjectTimeGetterFixture();
-		builder.registerReaderAndWriter(IProjectTimeGetter.class, projectTimeGetter);
+		builder.register(IProjectTimeGetter.class, projectTimeGetter);
 		ProjectMock projectMock = new ProjectMock(false);
 		projectMock.register("someNewSoftwareFmId0", projectCryptoKey0, ProjectFixture.map0);
 		projectMock.register("someNewSoftwareFmId1", projectCryptoKey1, ProjectFixture.map1);
@@ -258,17 +259,18 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 		final IExtraReaderWriterConfigurator<LocalConfig> parent = super.getLocalExtraReaderWriterConfigurator();
 		return new IExtraReaderWriterConfigurator<LocalConfig>() {
 			@Override
-			public void builder(IApiBuilder builder, LocalConfig localConfig) {
+			public  void builder(IContainerBuilder builder, LocalConfig localConfig) {
 				parent.builder(builder, localConfig);
 				IProjectTimeGetter projectTimeGetter = new ProjectTimeGetterFixture();
 				IRequestGroupReportGeneration requestGroupReportGeneration = IRequestGroupReportGeneration.Utils.httpClient(builder, IResponseCallback.Utils.noCallback());
 				IGroupOperations clientGroupOperations = IGroupOperations.Utils.clientGroupOperations(builder, localConfig.timeOutMs);
 
-				builder.registerReaderAndWriter(IProjectTimeGetter.class, projectTimeGetter);
-				builder.registerReaderAndWriter(IRequestGroupReportGeneration.class, requestGroupReportGeneration);
-				builder.registerReader(IUsageReader.class, IUsageReader.Utils.localUsageReader(builder, localConfig.userUrlGenerator));
-				builder.registerReaderAndWriter(IGroupOperations.class, clientGroupOperations);
+				builder.register(IProjectTimeGetter.class, projectTimeGetter);
+				builder.register(IRequestGroupReportGeneration.class, requestGroupReportGeneration);
+				builder.register(IUsageReader.class, IUsageReader.Utils.localUsageReader(builder, localConfig.userUrlGenerator));
+				builder.register(IGroupOperations.class, clientGroupOperations);
 			}
+
 		};
 	}
 
@@ -279,16 +281,16 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 				configure(display, new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(shell, getServiceExecutor(), getLocalApi().makeContainer()))).//
 				withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap(prefix, "data"));
 		ICrowdSourcedServer server = getServerApi().getServer();
-		IContainer localReadWriteApi = getLocalApi().makeContainer();
+		IUserAndGroupsContainer container = getLocalApi().makeUserAndGroupsContainer();
 		try {
 			rawResourceGetter = cardConfig.resourceGetterFn.apply(null);
 			masterDetailSocial = new MasterDetailSocial(shell, SWT.NULL);
-			showMyData = MyDetails.showMyDetails(localReadWriteApi, getServiceExecutor(), cardConfig, masterDetailSocial);
-			IShowMyGroups showMyGroups = MyGroups.showMyGroups(masterDetailSocial, localReadWriteApi, serviceExecutor, false, cardConfig);
-			IShowMyPeople showMyPeople = MyPeople.showMyPeople(localReadWriteApi, serviceExecutor, masterDetailSocial, cardConfig, 2 * getLocalConfig().timeOutMs);
+			showMyData = MyDetails.showMyDetails(container, getServiceExecutor(), cardConfig, masterDetailSocial);
+			IShowMyGroups showMyGroups = MyGroups.showMyGroups(masterDetailSocial, container, serviceExecutor, false, cardConfig);
+			IShowMyPeople showMyPeople = MyPeople.showMyPeople(container, serviceExecutor, masterDetailSocial, cardConfig, 2 * getLocalConfig().timeOutMs);
 
 			userDataManager = IUserDataManager.Utils.userDataManager();
-			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, localReadWriteApi, cardConfig, //
+			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, container, cardConfig, //
 					Arrays.asList(rootArtifactUrl, rootSnippetUrl), //
 					IPlayListGetter.Utils.noPlayListGetter(), //
 					serviceExecutor, ILoginStrategy.Utils.noLoginStrategy(),//

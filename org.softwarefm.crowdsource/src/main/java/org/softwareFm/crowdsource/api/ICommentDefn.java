@@ -22,12 +22,12 @@ public interface ICommentDefn {
 			return new CommentDefn(IFileDescription.Utils.plain(url, CommentConstants.globalCommentsFile), replyIndex);
 		}
 
-		public static ICommentDefn myInitial(ICrowdSourcedReaderApi reader, String softwareFmId, String crypto, String url) {
-			return myReply(reader, softwareFmId, crypto, url, -1);
+		public static ICommentDefn myInitial(IUserAndGroupsContainer container, String softwareFmId, String crypto, String url) {
+			return myReply(container, softwareFmId, crypto, url, -1);
 		}
 
-		public static ICommentDefn myReply(ICrowdSourcedReaderApi reader, final String softwareFmId, final String crypto, final String url, final int replyIndex) {
-			return reader.accessUserReader(new IFunction1<IUserReader, ICommentDefn>() {
+		public static ICommentDefn myReply(IUserAndGroupsContainer container, final String softwareFmId, final String crypto, final String url, final int replyIndex) {
+			return container.accessUserReader(new IFunction1<IUserReader, ICommentDefn>() {
 				@Override
 				public ICommentDefn apply(IUserReader userReader) throws Exception {
 					String commentCrypto = userReader.getUserProperty(softwareFmId, crypto, CommentConstants.commentCryptoKey);
@@ -38,12 +38,12 @@ public interface ICommentDefn {
 			});
 		}
 
-		public static ICommentDefn groupInitial(ICrowdSourcedReaderApi reader, String groupId, String groupCrypto, String url) {
-			return groupReply(reader, groupId, groupCrypto, url, -1);
+		public static ICommentDefn groupInitial(IUserAndGroupsContainer container, String groupId, String groupCrypto, String url) {
+			return groupReply(container, groupId, groupCrypto, url, -1);
 		}
 
-		public static ICommentDefn groupReply(ICrowdSourcedReaderApi reader, final String groupId, final String groupCrypto, final String url, final int replyIndex) {
-			return reader.accessGroupReader(new IFunction1<IGroupsReader, ICommentDefn>() {
+		public static ICommentDefn groupReply(IUserAndGroupsContainer container, final String groupId, final String groupCrypto, final String url, final int replyIndex) {
+			return container.accessGroupReader(new IFunction1<IGroupsReader, ICommentDefn>() {
 				@Override
 				public ICommentDefn apply(IGroupsReader groupsReader) throws Exception {
 					String commentCrypto = groupsReader.getGroupProperty(groupId, groupCrypto, CommentConstants.commentCryptoKey);

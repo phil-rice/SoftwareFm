@@ -8,8 +8,8 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.IIdAndSaltGenerator;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.IUserCryptoAccess;
 import org.softwareFm.crowdsource.api.server.IProcessResult;
 import org.softwareFm.crowdsource.api.server.IServerDoers;
@@ -24,9 +24,9 @@ import org.softwareFm.crowdsource.utilities.strings.Strings;
 
 public class InviteGroupProcessor extends AbstractAddToGroupProcessor {
 
-	private final IContainer container;
+	private final IUserAndGroupsContainer container;
 
-	public InviteGroupProcessor(IContainer container, IServerDoers serverDoers, IUserCryptoAccess userCryptoAccess, IIdAndSaltGenerator idAndSaltGenerator) {
+	public InviteGroupProcessor(IUserAndGroupsContainer container, IServerDoers serverDoers, IUserCryptoAccess userCryptoAccess, IIdAndSaltGenerator idAndSaltGenerator) {
 		super(CommonConstants.POST, GroupConstants.inviteCommandPrefix, serverDoers, userCryptoAccess, idAndSaltGenerator);
 		this.container = container;
 	}

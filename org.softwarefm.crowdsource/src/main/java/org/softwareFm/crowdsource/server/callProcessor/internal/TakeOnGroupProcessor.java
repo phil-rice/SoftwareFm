@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.ICryptoGenerators;
 import org.softwareFm.crowdsource.api.IIdAndSaltGenerator;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.IUserCryptoAccess;
 import org.softwareFm.crowdsource.api.server.IProcessResult;
 import org.softwareFm.crowdsource.api.server.IServerDoers;
@@ -26,13 +26,13 @@ import org.softwareFm.crowdsource.utilities.strings.Strings;
 
 public class TakeOnGroupProcessor extends AbstractAddToGroupProcessor {
 
-	private final IContainer readWriteApi;
+	private final IUserAndGroupsContainer container;
 	private final ICryptoGenerators cryptoGenerators;
 
-	public TakeOnGroupProcessor( IServerDoers serverDoers, IUserCryptoAccess userCryptoAccess, IIdAndSaltGenerator idAndSaltGenerator, ICryptoGenerators cryptoGenerators, IContainer readWriteApi) {
+	public TakeOnGroupProcessor( IServerDoers serverDoers, IUserCryptoAccess userCryptoAccess, IIdAndSaltGenerator idAndSaltGenerator, ICryptoGenerators cryptoGenerators, IUserAndGroupsContainer container) {
 		super(CommonConstants.POST, GroupConstants.takeOnCommandPrefix, serverDoers, userCryptoAccess, idAndSaltGenerator);
 		this.cryptoGenerators = cryptoGenerators;
-		this.readWriteApi = readWriteApi;
+		this.container = container;
 
 	}
 
@@ -40,7 +40,7 @@ public class TakeOnGroupProcessor extends AbstractAddToGroupProcessor {
 	protected IProcessResult execute(String actualUrl, final Map<String, Object> parameters) {
 		checkForParameter(parameters, LoginConstants.softwareFmIdKey, GroupConstants.groupNameKey, GroupConstants.takeOnEmailPattern, GroupConstants.takeOnFromKey, GroupConstants.takeOnSubjectKey, GroupConstants.takeOnEmailListKey);
 		final AtomicReference<String> replyMessage = new AtomicReference<String>();
-		readWriteApi.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		container.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups first, IUserMembership second) throws Exception {
 				String groupName = (String) parameters.get(GroupConstants.groupNameKey);

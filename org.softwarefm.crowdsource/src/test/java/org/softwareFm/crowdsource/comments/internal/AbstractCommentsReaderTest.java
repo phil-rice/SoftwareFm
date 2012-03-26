@@ -9,6 +9,7 @@ import org.softwareFm.crowdsource.api.ApiTest;
 import org.softwareFm.crowdsource.api.ICommentsReader;
 import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IGroups;
@@ -40,7 +41,7 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 		ensureUserHasDefaultValues();
 		final Map<String, String> groupIdToCrypto = setUpGroups("groupId1", "groupId2", "groupId3");
 
-		IContainer container = getApi().makeContainer();
+		IUserAndGroupsContainer container = getApi().makeUserAndGroupsContainer();
 		container.accessGroupReader(new IFunction1<IGroupsReader, Void>() {
 			@Override
 			public Void apply(IGroupsReader groups) throws Exception {
@@ -73,7 +74,7 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 	}
 
 	private void ensureUserHasDefaultValues() {
-		IContainer container = getApi().makeContainer();
+		IUserAndGroupsContainer container = getApi().makeUserAndGroupsContainer();
 		container.accessUserReader(new IFunction1<IUserReader, Void>() {
 			@Override
 			public Void apply(IUserReader user) throws Exception {
@@ -136,7 +137,7 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 
 	protected Map<String, String> setUpGroups(final String... groupIds) {
 		final Map<String, String> groupIdToCrypto = Maps.newMap();
-		IContainer container = getApi().makeContainer();
+		 IUserAndGroupsContainer container = getServerUserAndGroupsContainer();
 		container.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
@@ -154,7 +155,7 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 	}
 
 	private String getUserCommentCrypto() {
-		IContainer container = getApi().makeContainer();
+		IUserAndGroupsContainer container = getApi().makeUserAndGroupsContainer();
 		String userCommentsCrypto = container.accessUserReader(new IFunction1<IUserReader, String>() {
 			@Override
 			public String apply(IUserReader from) throws Exception {

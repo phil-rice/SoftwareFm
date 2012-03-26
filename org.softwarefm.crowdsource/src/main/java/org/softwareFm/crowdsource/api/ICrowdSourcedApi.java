@@ -18,19 +18,21 @@ public interface ICrowdSourcedApi {
 
 	IContainer makeContainer();
 
+	IUserAndGroupsContainer makeUserAndGroupsContainer();
+
 	void shutdown();
 
 	public static class Utils {
 		public static ICrowdSourcedApi forServer(final ServerConfig serverConfig) {
-			return new CrowdSourcedServerApi(serverConfig, new IFunction1<IContainer, IServerDoers>() {
+			return new CrowdSourcedServerApi(serverConfig, new IFunction1<IUserAndGroupsContainer, IServerDoers>() {
 				@Override
-				public IServerDoers apply(IContainer from) throws Exception {
+				public IServerDoers apply(IUserAndGroupsContainer from) throws Exception {
 					return new ServerDoers(serverConfig, from);
 				}
 			});
 		}
 
-		public static ICrowdSourcedApi forServer(ServerConfig serverConfig, IFunction1<IContainer, IServerDoers> serverDoersCreator) {
+		public static ICrowdSourcedApi forServer(ServerConfig serverConfig, IFunction1<IUserAndGroupsContainer, IServerDoers> serverDoersCreator) {
 			return new CrowdSourcedServerApi(serverConfig, serverDoersCreator);
 		}
 
@@ -53,8 +55,14 @@ public interface ICrowdSourcedApi {
 				public IContainer makeContainer() {
 					return readWriter;
 				}
+
+				@Override
+				public IUserAndGroupsContainer makeUserAndGroupsContainer() {
+					return readWriter;
+				}
 			};
 		}
 
 	}
+
 }

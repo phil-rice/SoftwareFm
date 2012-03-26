@@ -5,8 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.IApiBuilder;
 import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.api.IContainerBuilder;
 import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
 import org.softwareFm.crowdsource.api.LocalConfig;
 import org.softwareFm.crowdsource.api.MailerMock;
@@ -75,7 +75,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 
 	public void testInviteGroup() {
 		assertEquals(groupId0, createGroup(groupName0, groupCryptoKey0));
-		getServerApi().makeContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		getServerApi().makeUserAndGroupsContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				groups.addUser(groupId0, groupCryptoKey0, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId0, LoginConstants.emailKey, email0, GroupConstants.membershipStatusKey, GroupConstants.adminStatus));
@@ -129,7 +129,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 	public void testAcceptInvite() {
 		assertEquals(softwareFmId1, createUser());
 		assertEquals(groupId0, createGroup(groupName0, groupCryptoKey0));
-		getServerApi().makeContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		getServerApi().makeUserAndGroupsContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				groups.addUser(groupId0, groupCryptoKey0, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId0, LoginConstants.emailKey, email0, GroupConstants.membershipStatusKey, GroupConstants.adminStatus));
@@ -173,7 +173,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 	public void testLEaveGroup() {
 		assertEquals(softwareFmId1, createUser());
 		assertEquals(groupId0, createGroup(groupName0, groupCryptoKey0));
-		getServerApi().makeContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		getServerApi().makeUserAndGroupsContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				groups.addUser(groupId0, groupCryptoKey0, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId0, LoginConstants.emailKey, email0, GroupConstants.membershipStatusKey, GroupConstants.adminStatus));
@@ -214,7 +214,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 	public void testKickFromGroup() {
 		assertEquals(softwareFmId1, createUser());
 		assertEquals(groupId0, createGroup(groupName0, groupCryptoKey0));
-		getServerApi().makeContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		getServerApi().makeUserAndGroupsContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				groups.addUser(groupId0, groupCryptoKey0, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId0, LoginConstants.emailKey, email0, GroupConstants.membershipStatusKey, GroupConstants.adminStatus));
@@ -261,8 +261,8 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 	protected IExtraReaderWriterConfigurator<LocalConfig> getLocalExtraReaderWriterConfigurator() {
 		return new IExtraReaderWriterConfigurator<LocalConfig>() {
 			@Override
-			public void builder(IApiBuilder builder, LocalConfig apiConfig) {
-				builder.registerReaderAndWriter(IGroupOperations.class, IGroupOperations.Utils.clientGroupOperations(builder, CommonConstants.testTimeOutMs));
+			public void builder(IContainerBuilder builder,LocalConfig apiConfig) {
+				builder.register(IGroupOperations.class, IGroupOperations.Utils.clientGroupOperations(builder, CommonConstants.testTimeOutMs));
 			}
 		};
 	}

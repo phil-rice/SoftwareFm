@@ -10,10 +10,10 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.softwareFm.crowdsource.api.ApiTest;
-import org.softwareFm.crowdsource.api.IApiBuilder;
-import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.api.IContainerBuilder;
 import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
 import org.softwareFm.crowdsource.api.ITakeOnEnrichmentProvider;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.ServerConfig;
 import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
@@ -35,7 +35,7 @@ abstract public class GroupsTest extends ApiTest {
 	protected String sfmId1;
 	protected String sfmId2;
 
-	protected IContainer serverContainer;
+	protected IUserAndGroupsContainer serverContainer;
 
 	protected void saveProjectData(String softwareFmId, String projectCrypto, String month, ProjectMock project) {
 		String url = Urls.compose(getServerConfig().userUrlGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId)), JarAndPathConstants.projectDirectoryName);
@@ -50,10 +50,10 @@ abstract public class GroupsTest extends ApiTest {
 	protected IExtraReaderWriterConfigurator<ServerConfig> getServerExtraReaderWriterConfigurator() {
 		return new IExtraReaderWriterConfigurator<ServerConfig>() {
 			@Override
-			public void builder(IApiBuilder builder, ServerConfig apiConfig) {
-				builder.registerReaderAndWriter(IGenerateUsageReportGenerator.class, new GenerateUsageProjectGenerator(builder));
-				builder.registerReaderAndWriter(IUsageReader.class, new UsageReaderForServer(builder, apiConfig.userUrlGenerator));
-				builder.registerReaderAndWriter(IProject.class, new ProjectForServer(builder, getUserCryptoAccess(), apiConfig.userUrlGenerator));
+			public void builder(IContainerBuilder builder, ServerConfig apiConfig) {
+				builder.register(IGenerateUsageReportGenerator.class, new GenerateUsageProjectGenerator(builder));
+				builder.register(IUsageReader.class, new UsageReaderForServer(builder, apiConfig.userUrlGenerator));
+				builder.register(IProject.class, new ProjectForServer((IUserAndGroupsContainer) builder, getUserCryptoAccess(), apiConfig.userUrlGenerator));
 			}
 		};
 	}
@@ -74,6 +74,6 @@ abstract public class GroupsTest extends ApiTest {
 		truncateUsersTable();
 		sfmId1 = createUser();
 		sfmId2 = createUser();
-		serverContainer = getServerContainer();
+		serverContainer = getServerUserAndGroupsContainer();
 	}
 }

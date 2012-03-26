@@ -3,9 +3,10 @@ package org.softwareFm.crowdsource.api.internal;
 import java.text.MessageFormat;
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.IApiBuilder;
 import org.softwareFm.crowdsource.api.IComments;
 import org.softwareFm.crowdsource.api.ICommentsReader;
+import org.softwareFm.crowdsource.api.IContainerBuilder;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IGroups;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
@@ -26,10 +27,9 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction3;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 
 @SuppressWarnings("unchecked")
-abstract public class AbstractCrowdSourceReadWriterApi implements IApiBuilder {
+abstract public class AbstractCrowdSourceReadWriterApi implements IContainerBuilder, IUserAndGroupsContainer {
 
-	private final Map<Class<?>, Object> readerMap = Maps.newMap();
-	private final Map<Class<?>, Object> readWriterMap = Maps.newMap();
+	private final Map<Class<?>, Object> map = Maps.newMap();
 
 	@Override
 	public <API> void modify(Class<API> clazz, ICallback<API> callback) {
@@ -38,9 +38,9 @@ abstract public class AbstractCrowdSourceReadWriterApi implements IApiBuilder {
 	}
 
 	private <API> API getReadWriter(Class<API> clazz) {
-		Object readWriter = readWriterMap.get(clazz);
+		Object readWriter = map.get(clazz);
 		if (readWriter == null)
-			throw new NullPointerException(MessageFormat.format(CommonMessages.cannotAccessModifyWithoutRegisteredReader, "modify", "readWriter", clazz, Lists.sort(readWriterMap.keySet(), Comparators.classComporator())));
+			throw new NullPointerException(MessageFormat.format(CommonMessages.cannotAccessModifyWithoutRegisteredReader, "modify", "readWriter", clazz, Lists.sort(map.keySet(), Comparators.classComporator())));
 		if (!clazz.isAssignableFrom(readWriter.getClass()))
 			throw new IllegalStateException(MessageFormat.format(CommonMessages.readWriterSetUpIncorrectly, readWriter.getClass().getName(), readWriter));
 		return (API) readWriter;
@@ -53,28 +53,17 @@ abstract public class AbstractCrowdSourceReadWriterApi implements IApiBuilder {
 	}
 
 	private <API> API getReader(Class<API> clazz) {
-		Object reader = readerMap.get(clazz);
+		Object reader = map.get(clazz);
 		if (reader == null)
-			throw new NullPointerException(MessageFormat.format(CommonMessages.cannotAccessModifyWithoutRegisteredReader, "access", "reader", clazz, Lists.sort(readerMap.keySet(), Comparators.classComporator())));
+			throw new NullPointerException(MessageFormat.format(CommonMessages.cannotAccessModifyWithoutRegisteredReader, "access", "reader", clazz, Lists.sort(map.keySet(), Comparators.classComporator())));
 		if (!clazz.isAssignableFrom(reader.getClass()))
 			throw new IllegalStateException(MessageFormat.format(CommonMessages.readWriterSetUpIncorrectly, reader.getClass().getName(), reader));
 		return (API) reader;
 	}
 
 	@Override
-	public <T, X extends T> void registerReader(Class<T> class1, X x) {
-		readerMap.put(class1, x);
-	}
-
-	@Override
-	public <T, X extends T> void registerReadWriter(Class<T> class1, X x) {
-		readWriterMap.put(class1, x);
-	}
-
-	@Override
-	public <T, X extends T> void registerReaderAndWriter(Class<T> class1, X x) {
-		readerMap.put(class1, x);
-		readWriterMap.put(class1, x);
+	public <T, X extends T> void register(Class<T> class1, X x) {
+		map.put(class1, x);
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.ServerConfig;
 import org.softwareFm.crowdsource.api.server.ICallProcessor;
 import org.softwareFm.crowdsource.api.server.IServerDoers;
@@ -22,7 +23,7 @@ public class CrowdSourcedServerApi extends AbstractCrowdSourcesApi {
 	private final Object lock = new Object();
 
 	@SuppressWarnings("unchecked")
-	public CrowdSourcedServerApi(ServerConfig serverConfig, IFunction1<IContainer, IServerDoers> serverDoersCreator) {
+	public CrowdSourcedServerApi(ServerConfig serverConfig, IFunction1<IUserAndGroupsContainer, IServerDoers> serverDoersCreator) {
 		this.serverConfig = serverConfig;
 		crowdSourcedServerReadWriterApi = new CrowdSourcedServerReadWriterApi(serverConfig);
 		serverDoers = Functions.call(serverDoersCreator, crowdSourcedServerReadWriterApi);
@@ -31,6 +32,10 @@ public class CrowdSourcedServerApi extends AbstractCrowdSourcesApi {
 
 	@Override
 	public IContainer makeContainer() {
+		return crowdSourcedServerReadWriterApi;
+	}
+	@Override
+	public IUserAndGroupsContainer makeUserAndGroupsContainer() {
 		return crowdSourcedServerReadWriterApi;
 	}
 
@@ -62,4 +67,5 @@ public class CrowdSourcedServerApi extends AbstractCrowdSourcesApi {
 		}
 
 	}
+
 }

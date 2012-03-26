@@ -5,7 +5,7 @@ import java.util.concurrent.Callable;
 
 import org.softwareFm.crowdsource.api.ICommentDefn;
 import org.softwareFm.crowdsource.api.IComments;
-import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.constants.CommentConstants;
@@ -18,7 +18,7 @@ public class CommentsForServer extends AbstractCommentsReader implements ICommen
 
 	private final Callable<Long> timeGetter;
 
-	public CommentsForServer(IContainer api, Callable<Long> timeGetter) {
+	public CommentsForServer(IUserAndGroupsContainer api, Callable<Long> timeGetter) {
 		super(api);
 		this.timeGetter = timeGetter;
 	}
@@ -27,11 +27,11 @@ public class CommentsForServer extends AbstractCommentsReader implements ICommen
 	public void addComment(String softwareFmId, String userCrypto, ICommentDefn defn, String text) {
 		Map<String, Object> data = makeData(softwareFmId, userCrypto, text);
 		IFileDescription fileDescription = defn.fileDescription();
-		api.gitOperations().append(fileDescription, data);
+		container.gitOperations().append(fileDescription, data);
 	}
 
 	private Map<String, Object> makeData(final String softwareFmId, final String userCrypto, final String text) {
-		return api.accessUserReader(new IFunction1<IUserReader, Map<String,Object>>() {
+		return container.accessUserReader(new IFunction1<IUserReader, Map<String,Object>>() {
 			@Override
 			public Map<String, Object> apply(IUserReader user) throws Exception {
 				return Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId, //

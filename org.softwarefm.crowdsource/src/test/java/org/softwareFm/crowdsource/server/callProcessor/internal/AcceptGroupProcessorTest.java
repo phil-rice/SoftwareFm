@@ -32,13 +32,12 @@ public class AcceptGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 		getHttpClient().post(GroupConstants.acceptInvitePrefix).//
 				addParam(GroupConstants.groupIdKey, groupId).//
 				addParam(LoginConstants.softwareFmIdKey, softwareFmId).//
-				addParam(GroupConstants.membershipStatusKey, "newStatus").//
 				execute(IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
-		readWriter.accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
+		userAndGroupsContainer.accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
 			@Override
 			public Void apply(IGroupsReader groups, IUserMembershipReader membership) throws Exception {
-				assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.membershipStatusKey, "newStatus", LoginConstants.softwareFmIdKey, softwareFmId, "a", "b")), Iterables.list(groups.users(groupId, groupCryptoKey0)));
-				assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.groupCryptoKey, groupCryptoKey0, GroupConstants.membershipStatusKey, "newStatus")), membership.walkGroupsFor(softwareFmId, userKey0));
+				assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.membershipStatusKey, GroupConstants.memberStatus, LoginConstants.softwareFmIdKey, softwareFmId, "a", "b")), Iterables.list(groups.users(groupId, groupCryptoKey0)));
+				assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.groupCryptoKey, groupCryptoKey0, GroupConstants.membershipStatusKey, GroupConstants.memberStatus)), membership.walkGroupsFor(softwareFmId, userKey0));
 				return null;
 			}
 		});
@@ -46,7 +45,7 @@ public class AcceptGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 
 	private void createSoftwareFmUserAndGroupId0() {
 		softwareFmId= createUser();
-		readWriter.modifyGroups(new ICallback<IGroups>() {
+		userAndGroupsContainer.modifyGroups(new ICallback<IGroups>() {
 			@Override
 			public void process(IGroups groups) throws Exception {
 				groups.setGroupProperty(groupId = getIdAndSaltGenerator().makeNewGroupId(), groupCryptoKey0, GroupConstants.groupNameKey, "someName");
@@ -55,7 +54,7 @@ public class AcceptGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 	}
 
 	private void addUserToGroup() {
-		readWriter.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		userAndGroupsContainer.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership membership) throws Exception {
 				groups.addUser(groupId, groupCryptoKey0, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId, GroupConstants.membershipStatusKey, "initialStatus", "a", "b"));
@@ -67,16 +66,14 @@ public class AcceptGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 	public void testThrowsExceptionIfNotEnoughParametersAreSent() throws Exception {
 		createSoftwareFmUserAndGroupId0();
 
-		checkThrowsException(null, softwareFmId, "newStatus", "class java.lang.IllegalArgumentException/groupId, {membershipStatus=newStatus, softwareFmId=someNewSoftwareFmId0}");
-		checkThrowsException(groupId, null, "newStatus", "class java.lang.IllegalArgumentException/softwareFmId, {groupId=groupId0, membershipStatus=newStatus}");
-		checkThrowsException(groupId, softwareFmId, null, "class java.lang.IllegalArgumentException/membershipStatus, {groupId=groupId0, softwareFmId=someNewSoftwareFmId0}");
+		checkThrowsException(null, softwareFmId, "class java.lang.IllegalArgumentException/groupId, {softwareFmId=someNewSoftwareFmId0}");
+		checkThrowsException(groupId, null, "class java.lang.IllegalArgumentException/softwareFmId, {groupId=groupId0}");
 	}
 
-	private void checkThrowsException(String groupId, String softwareFmId, String status, String error) throws Exception {
+	private void checkThrowsException(String groupId, String softwareFmId, String error) throws Exception {
 		IRequestBuilder requestBuilder = getHttpClient().post(GroupConstants.acceptInvitePrefix);
 		add(requestBuilder, GroupConstants.groupIdKey, groupId);//
 		add(requestBuilder, LoginConstants.softwareFmIdKey, softwareFmId);//
-		add(requestBuilder, GroupConstants.membershipStatusKey, status);//
 		requestBuilder.execute(IResponseCallback.Utils.checkCallback(CommonConstants.serverErrorCode, error)).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 
 	}

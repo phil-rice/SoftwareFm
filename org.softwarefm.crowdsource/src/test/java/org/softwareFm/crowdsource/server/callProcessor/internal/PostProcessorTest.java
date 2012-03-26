@@ -21,9 +21,6 @@ public class PostProcessorTest extends AbstractProcessCallTest<PostProcessor> {
 		checkContents(remoteRoot, "a/b", v11);
 	}
 
-	public void testCommitMessageIsUsed(){
-		fail();
-	}
 	
 	@SuppressWarnings("unchecked")
 	public void testMergesTheNewDataWithOldData() {

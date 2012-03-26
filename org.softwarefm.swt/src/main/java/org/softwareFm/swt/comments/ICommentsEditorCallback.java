@@ -3,7 +3,7 @@ package org.softwareFm.swt.comments;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.swt.comments.internal.CommentsEditorCallbackThatWritesComment;
 
 public interface ICommentsEditorCallback {
@@ -17,8 +17,8 @@ public interface ICommentsEditorCallback {
 	void cancel();
 
 	public static class Utils {
-		public static ICommentsEditorCallback writeComments(IContainer readWriteApi, final String softwareFmId, final String userCrypto, final Iterable<Map<String, Object>> groupsData, final Runnable whenFinished) {
-			return new CommentsEditorCallbackThatWritesComment(readWriteApi, softwareFmId, userCrypto, groupsData, whenFinished);
+		public static ICommentsEditorCallback writeComments(IUserAndGroupsContainer container, final String softwareFmId, final String userCrypto, final Iterable<Map<String, Object>> groupsData, final Runnable whenFinished) {
+			return new CommentsEditorCallbackThatWritesComment(container, softwareFmId, userCrypto, groupsData, whenFinished);
 		}
 
 		public static ICommentsEditorCallback sysout() {

@@ -12,7 +12,7 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
-import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
@@ -54,19 +54,19 @@ public class ExplorerView extends ViewPart {
 		final CardConfig cardConfig = activator.getCardConfig(parent);
 
 		ICrowdSourcedApi api = activator.local ? ISoftwareFmApiFactory.Utils.makeClientApiForLocalHost() : ISoftwareFmApiFactory.Utils.makeClientApiForSoftwareFmServer();
-		final IContainer readWriteApi = api.makeContainer();
+		final IUserAndGroupsContainer container = api.makeUserAndGroupsContainer();
 
 		IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardConfig.cardDataStore);
 		IServiceExecutor service = activator.getServiceExecutor();
-		IShowMyData showMyDetails = MyDetails.showMyDetails(readWriteApi, service, cardConfig, masterDetailSocial);
-		IShowMyGroups showMyGroups = MyGroups.showMyGroups(masterDetailSocial, readWriteApi, service, false, cardConfig);
-		IShowMyPeople showMyPeople = MyPeople.showMyPeople(readWriteApi, service, masterDetailSocial, cardConfig, CommonConstants.clientTimeOut * 2);
+		IShowMyData showMyDetails = MyDetails.showMyDetails(container, service, cardConfig, masterDetailSocial);
+		IShowMyGroups showMyGroups = MyGroups.showMyGroups(masterDetailSocial, container, service, false, cardConfig);
+		IShowMyPeople showMyPeople = MyPeople.showMyPeople(container, service, masterDetailSocial, cardConfig, CommonConstants.clientTimeOut * 2);
 		Callable<Long> timeGetter = Callables.time();
 		List<String> rootUrls = getRootUrls();
-		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(parent.getDisplay(), activator.getServiceExecutor(), readWriteApi);
+		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(parent.getDisplay(), activator.getServiceExecutor(), container);
 
 		IUserDataManager userDataManager = activator.getUserDataManager();
-		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, readWriteApi, cardConfig, rootUrls, playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople, userDataManager, timeGetter);
+		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, container, cardConfig, rootUrls, playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople, userDataManager, timeGetter);
 		actionBar = makeActionBar(explorer, cardConfig);
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
 		actionBar.populateToolbar(toolBarManager);

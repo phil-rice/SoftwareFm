@@ -1,25 +1,16 @@
 package org.softwareFm.crowdsource.api;
 
 import org.softwareFm.crowdsource.api.git.IGitReader;
-import org.softwareFm.crowdsource.api.user.IGroupsReader;
-import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
-import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.functions.IFunction2;
 import org.softwareFm.crowdsource.utilities.functions.IFunction3;
 
 public interface ICrowdSourcedReaderApi {
 	
-	
 	<T> T accessGitReader(IFunction1<IGitReader, T> function);
 
 	<T> T accessCommentsReader(IFunction1<ICommentsReader, T> function);
 
-	<T> T accessGroupReader(IFunction1<IGroupsReader, T> function);
-
-	<T> T accessUserReader(IFunction1<IUserReader, T> function);
-
-	<T> T accessUserMembershipReader(IFunction2<IGroupsReader, IUserMembershipReader, T> function);
 
 	<Result, API> Result access(Class<API> clazz, IFunction1<API, Result> function);
 

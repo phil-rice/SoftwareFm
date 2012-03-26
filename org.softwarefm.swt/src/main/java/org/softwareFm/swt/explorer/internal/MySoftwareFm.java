@@ -10,7 +10,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.utilities.arrays.ArrayHelper;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
@@ -46,10 +46,10 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 	private final IShowMyData showMyData;
 	private final IShowMyGroups showMyGroups;
 	private final IUserDataManager userDataManager;
-	private final IContainer readWriteApi;
+	private final IUserAndGroupsContainer container;
 
-	public MySoftwareFm(Composite parent,IContainer readWriteApi,  CardConfig cardConfig, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IUserDataManager userDataManager) {
-		this.readWriteApi = readWriteApi;
+	public MySoftwareFm(Composite parent,IUserAndGroupsContainer container,  CardConfig cardConfig, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IUserDataManager userDataManager) {
+		this.container = container;
 		this.cardConfig = cardConfig;
 		this.loginStrategy = loginStrategy;
 		this.showMyData = showMyData;
@@ -101,7 +101,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 		final String email = userData.email();
 		Swts.removeAllChildren(content);
 		IChangePasswordCallback callback = null;
-		new MySoftwareFmLoggedIn(content, readWriteApi, cardConfig, CardConstants.loggedInTitle, CardConstants.loggedInText, userData, this, new IMySoftwareFmLoggedInStrategy() {
+		new MySoftwareFmLoggedIn(content, container, cardConfig, CardConstants.loggedInTitle, CardConstants.loggedInText, userData, this, new IMySoftwareFmLoggedInStrategy() {
 
 			@Override
 			public void showMyGroups() {

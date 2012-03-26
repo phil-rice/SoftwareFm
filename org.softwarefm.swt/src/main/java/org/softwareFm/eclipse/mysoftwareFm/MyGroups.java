@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
@@ -55,7 +56,7 @@ import org.softwareFm.swt.explorer.IShowMyGroups;
 import org.softwareFm.swt.swt.Swts;
 
 public class MyGroups implements IHasComposite {
-	public static IShowMyGroups showMyGroups(final IMasterDetailSocial masterDetailSocial, final IContainer readWriteApi, final IServiceExecutor executor, final boolean showDialogs, final CardConfig cardConfig) {
+	public static IShowMyGroups showMyGroups(final IMasterDetailSocial masterDetailSocial, final IUserAndGroupsContainer container, final IServiceExecutor executor, final boolean showDialogs, final CardConfig cardConfig) {
 		return new IShowMyGroups() {
 			@Override
 			public void show(final UserData userData, final String groupId) {
@@ -63,7 +64,7 @@ public class MyGroups implements IHasComposite {
 					@Override
 					public Void apply(IMonitor monitor) throws Exception {
 						monitor.beginTask(EclipseMessages.showMyGroups, 2);
-						IGitReader.Utils.clearCache(readWriteApi);
+						IGitReader.Utils.clearCache(container);
 						Swts.asyncExecAndMarkDone(masterDetailSocial.getControl(), monitor, new Runnable() {
 							@Override
 							public void run() {
@@ -71,10 +72,10 @@ public class MyGroups implements IHasComposite {
 								masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyGroups>() {
 									@Override
 									public MyGroups apply(Composite from) throws Exception {
-										MyGroups myGroups = new MyGroups(from, masterDetailSocial, readWriteApi, showDialogs, cardConfig, userData, new ICallback<String>() {
+										MyGroups myGroups = new MyGroups(from, masterDetailSocial, container, showDialogs, cardConfig, userData, new ICallback<String>() {
 											@Override
 											public void process(String groupId) throws Exception {
-												showMyGroups(masterDetailSocial, readWriteApi, executor, showDialogs, cardConfig).show(userData, groupId);
+												showMyGroups(masterDetailSocial, container, executor, showDialogs, cardConfig).show(userData, groupId);
 											}
 										});
 										myGroups.selectAndScrollTo(groupId);
@@ -190,11 +191,11 @@ public class MyGroups implements IHasComposite {
 			return sashForm;
 		}
 
-		public MyGroupsComposite(Composite parent, IMasterDetailSocial masterDetailSocial, final IContainer readWriteApi, boolean showDialogs, final CardConfig cardConfig, final UserData userData, ICallback<String> showMyGroups) {
+		public MyGroupsComposite(Composite parent, IMasterDetailSocial masterDetailSocial, final IUserAndGroupsContainer container, boolean showDialogs, final CardConfig cardConfig, final UserData userData, ICallback<String> showMyGroups) {
 			super(parent, cardConfig, GroupConstants.myGroupsCardType, JarAndPathConstants.myGroupsTitle, true);
 			sashForm = new SashForm(getInnerBody(), SWT.HORIZONTAL);
 			summaryTable = new Table(sashForm, SWT.FULL_SELECTION);
-			buttons = new MyGroupsButtons(getInnerBody(), masterDetailSocial, cardConfig, readWriteApi, showDialogs, userData, showMyGroups, new Callable<IdNameAndStatus>() {
+			buttons = new MyGroupsButtons(getInnerBody(), masterDetailSocial, cardConfig, container, showDialogs, userData, showMyGroups, new Callable<IdNameAndStatus>() {
 				@Override
 				public IdNameAndStatus call() throws Exception {
 					int index = summaryTable.getSelectionIndex();
@@ -224,7 +225,7 @@ public class MyGroups implements IHasComposite {
 			new TableColumn(summaryTable, SWT.NULL).setText("Members");
 			new TableColumn(summaryTable, SWT.NULL).setText("My Status");
 
-			readWriteApi.access(IGroupsReader.class, IUserMembershipReader.class, new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
+			container.access(IGroupsReader.class, IUserMembershipReader.class, new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
 				@Override
 				public Void apply(IGroupsReader groupsReader, IUserMembershipReader userMembershipReader) throws Exception {
 					Iterable<Map<String, Object>> groups = userMembershipReader.walkGroupsFor(userData.softwareFmId, userData.crypto);
@@ -236,7 +237,7 @@ public class MyGroups implements IHasComposite {
 							String groupId = (String) map.get(GroupConstants.groupIdKey);
 							String groupCryptoKey = (String) map.get(GroupConstants.groupCryptoKey);
 							try {
-								String groupName = IGroupsReader.Utils.getGroupProperty(readWriteApi, groupId, groupCryptoKey, GroupConstants.groupNameKey);
+								String groupName = IGroupsReader.Utils.getGroupProperty(container, groupId, groupCryptoKey, GroupConstants.groupNameKey);
 								return Maps.with(map, GroupConstants.groupNameKey, groupName);
 							} catch (Exception e) {
 								return Maps.with(map, CommonConstants.errorKey, MessageFormat.format(GroupConstants.cannotDetermineGroupName, groupId, e));
@@ -294,7 +295,7 @@ public class MyGroups implements IHasComposite {
 						final String groupCryptoKey = idToCrypto.get(groupId);
 						if (groupCryptoKey == null)
 							throw new NullPointerException("GroupCrypto is null: " + Integer.toString(index));
-						Iterable<Map<String, Object>> users = readWriteApi.accessGroupReader(new IFunction1<IGroupsReader, Iterable<Map<String, Object>>>() {
+						Iterable<Map<String, Object>> users = container.accessGroupReader(new IFunction1<IGroupsReader, Iterable<Map<String, Object>>>() {
 							@Override
 							public Iterable<Map<String, Object>> apply(IGroupsReader from) throws Exception {
 								return from.users(groupId, groupCryptoKey);
@@ -332,8 +333,8 @@ public class MyGroups implements IHasComposite {
 		}
 	}
 
-	public MyGroups(Composite parent, IMasterDetailSocial masterDetailSocial, IContainer readWriteApi, boolean showDialogs, CardConfig cardConfig, UserData userData, ICallback<String> showMyGroups) {
-		content = new MyGroupsComposite(parent, masterDetailSocial, readWriteApi, showDialogs, cardConfig, userData, showMyGroups);
+	public MyGroups(Composite parent, IMasterDetailSocial masterDetailSocial, IUserAndGroupsContainer container, boolean showDialogs, CardConfig cardConfig, UserData userData, ICallback<String> showMyGroups) {
+		content = new MyGroupsComposite(parent, masterDetailSocial, container, showDialogs, cardConfig, userData, showMyGroups);
 		content.setLayout(new DataCompositeWithFooterLayout());
 	}
 
