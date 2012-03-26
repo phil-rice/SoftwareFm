@@ -40,7 +40,7 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 
 	@Override
 	public void clearCache(final String url) {
-		readWriteApi.modify(IGitLocal.class, new ICallback<IGitLocal>() {
+		readWriteApi.access(IGitLocal.class, new ICallback<IGitLocal>() {
 			@Override
 			public void process(IGitLocal gitLocal) throws Exception {
 				gitLocal.clearCache(url);
@@ -56,7 +56,7 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 
 	@Override
 	public void clearCaches() {
-		readWriteApi.modify(IGitLocal.class, new ICallback<IGitLocal>() {
+		readWriteApi.access(IGitLocal.class, new ICallback<IGitLocal>() {
 			@Override
 			public void process(IGitLocal gitLocal) throws Exception {
 				gitLocal.clearCaches();
@@ -71,7 +71,7 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 			public Void apply(IMonitor from) throws Exception {
 				from.beginTask(MessageFormat.format(CardMessages.makeRepo, url), 2);
 				try {
-					readWriteApi.modify(IGitLocal.class, new ICallback<IGitLocal>() {
+					readWriteApi.access(IGitLocal.class, new ICallback<IGitLocal>() {
 						@Override
 						public void process(IGitLocal gitLocal) throws Exception {
 							gitLocal.init(url, "CardDataStore.makeRepo(" + url + ")");
@@ -94,7 +94,7 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 			public Void apply(IMonitor from) throws Exception {
 				from.beginTask(MessageFormat.format(CardMessages.delete, url), 2);
 				try {
-					readWriteApi.modify(IGitLocal.class, new ICallback<IGitLocal>() {
+					readWriteApi.access(IGitLocal.class, new ICallback<IGitLocal>() {
 						@Override
 						@SuppressWarnings("wtf")
 						public void process(IGitLocal gitLocal) throws Exception {
@@ -143,7 +143,7 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 			public Void apply(IMonitor from) throws Exception {
 				from.beginTask(MessageFormat.format(CardMessages.put, url, map), 2);
 				final IFileDescription fileDescription = IFileDescription.Utils.plain(url);
-				readWriteApi.modify(IGitLocal.class, new ICallback<IGitLocal>() {
+				readWriteApi.access(IGitLocal.class, new ICallback<IGitLocal>() {
 					@Override
 					public void process(IGitLocal gitLocal) throws Exception {
 						gitLocal.put(fileDescription, map, "CardDataStore.put(" + url + ", " + map + ")");

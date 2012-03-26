@@ -36,7 +36,7 @@ public class UserMembershipForServer extends AbstractUserMembershipReader implem
 
 	@Override
 	public void addMembership(final String softwareFmId, final String userCrypto, final String groupId, final String groupCrypto, final String membershipStatus) {
-		container.modify( IGitWriter.class, new ICallback< IGitWriter>() {
+		container.access( IGitWriter.class, new ICallback< IGitWriter>() {
 			@Override
 			public void process( IGitWriter writer) throws Exception {
 				String usersMembershipCrypto = getMembershipCrypto(softwareFmId, userCrypto);

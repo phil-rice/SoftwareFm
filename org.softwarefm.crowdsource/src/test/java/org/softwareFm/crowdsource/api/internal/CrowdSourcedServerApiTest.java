@@ -5,7 +5,6 @@ import java.io.File;
 import junit.framework.TestCase;
 
 import org.softwareFm.crowdsource.api.IContainer;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.ServerConfig;
 import org.softwareFm.crowdsource.api.server.IMailer;
@@ -24,14 +23,10 @@ public class CrowdSourcedServerApiTest extends TestCase {
 	public void testGettersReturnsSameObjectEachTime() {
 		ICrowdSourcedApi api = ICrowdSourcedApi.Utils.forServer(serverConfig);
 		assertTrue(api instanceof CrowdSourcedServerApi);
-		ICrowdSourcedReaderApi reader1 = api.makeContainer();
-		ICrowdSourcedReaderApi reader2 = api.makeContainer();
-		IContainer readWriter1 = api.makeContainer();
-		IContainer readWriter2 = api.makeContainer();
+		IContainer container1 = api.makeContainer();
+		IContainer container2 = api.makeContainer();
 		
-		assertSame(reader1, reader2);
-		assertSame(reader1, readWriter1);
-		assertSame(reader1, readWriter2);
+		assertSame(container1, container2);
 	}
 
 }

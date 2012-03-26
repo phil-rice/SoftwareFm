@@ -3,7 +3,7 @@ package org.softwareFm.crowdsource.api.git;
 import java.io.File;
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.IHasCache;
 
@@ -28,8 +28,8 @@ public interface IGitReader extends IHasCache {
 
 	public static class Utils {
 
-		public static Iterable<Map<String, Object>> getFileAsListOfMaps(ICrowdSourcedReaderApi readerApi, final IFileDescription fileDescription) {
-			return readerApi.accessGitReader(new IFunction1<IGitReader, Iterable<Map<String, Object>>>() {
+		public static Iterable<Map<String, Object>> getFileAsListOfMaps(IContainer container, final IFileDescription fileDescription) {
+			return container.accessGitReader(new IFunction1<IGitReader, Iterable<Map<String, Object>>>() {
 				@Override
 				public Iterable<Map<String, Object>> apply(IGitReader gitReader) throws Exception {
 					Iterable<Map<String, Object>> result = gitReader.getFileAsListOfMaps(fileDescription);
@@ -38,8 +38,8 @@ public interface IGitReader extends IHasCache {
 			});
 		}
 
-		public static String getFileAsString(ICrowdSourcedReaderApi readerApi, final IFileDescription fileDescription) {
-			return readerApi.accessGitReader(new IFunction1<IGitReader, String>() {
+		public static String getFileAsString(IContainer container, final IFileDescription fileDescription) {
+			return container.accessGitReader(new IFunction1<IGitReader, String>() {
 				@Override
 				public String apply(IGitReader gitReader) throws Exception {
 					String result = gitReader.getFileAsString(fileDescription);
@@ -48,8 +48,8 @@ public interface IGitReader extends IHasCache {
 			});
 		}
 
-		public static Map<String, Object> getFileAsMap(ICrowdSourcedReaderApi readerApi, final IFileDescription fileDescription) {
-			return readerApi.accessGitReader(new IFunction1<IGitReader, Map<String, Object>>() {
+		public static Map<String, Object> getFileAsMap(IContainer container, final IFileDescription fileDescription) {
+			return container.accessGitReader(new IFunction1<IGitReader, Map<String, Object>>() {
 				@Override
 				public Map<String, Object> apply(IGitReader gitReader) throws Exception {
 					Map<String, Object> result = gitReader.getFile(fileDescription);
@@ -58,8 +58,8 @@ public interface IGitReader extends IHasCache {
 			});
 		}
 
-		public static Integer countOfFileAsListsOfMap(ICrowdSourcedReaderApi readerApi, final IFileDescription fileDescription) {
-			return readerApi.accessGitReader(new IFunction1<IGitReader, Integer>() {
+		public static Integer countOfFileAsListsOfMap(IContainer container, final IFileDescription fileDescription) {
+			return container.accessGitReader(new IFunction1<IGitReader, Integer>() {
 				@Override
 				public Integer apply(IGitReader gitReader) throws Exception {
 					int result = gitReader.countOfFileAsListsOfMap(fileDescription);
@@ -68,8 +68,8 @@ public interface IGitReader extends IHasCache {
 			});
 		}
 
-		public static void clearCache(ICrowdSourcedReaderApi readerApi) {
-			readerApi.accessGitReader(new IFunction1<IGitReader, Void>() {
+		public static void clearCache(IContainer container) {
+			container.accessGitReader(new IFunction1<IGitReader, Void>() {
 				@Override
 				public Void apply(IGitReader gitReader) throws Exception {
 					gitReader.clearCaches();
@@ -78,8 +78,8 @@ public interface IGitReader extends IHasCache {
 			});
 		}
 
-		public static Map<String,Object> getFileAndDescendants(ICrowdSourcedReaderApi readerApi, final IFileDescription fileDescription) {
-			return readerApi.accessGitReader(new IFunction1<IGitReader, Map<String,Object>>() {
+		public static Map<String,Object> getFileAndDescendants(IContainer container, final IFileDescription fileDescription) {
+			return container.accessGitReader(new IFunction1<IGitReader, Map<String,Object>>() {
 				@Override
 				public Map<String,Object> apply(IGitReader gitReader) throws Exception {
 					return gitReader.getFileAndDescendants(fileDescription);

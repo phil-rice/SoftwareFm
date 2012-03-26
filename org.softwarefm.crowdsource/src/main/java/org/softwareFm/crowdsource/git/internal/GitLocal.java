@@ -112,7 +112,7 @@ public class GitLocal implements IGitLocal {
 			final long now = System.currentTimeMillis();
 			if (repositoryUrl == null) {
 				logger.debug("        " + getClass().getSimpleName() + ".pullIfNeeded/clone(" + fileDescription + ")");
-				comtainer.modify(IRepoFinder.class, new ICallback<IRepoFinder>() {
+				comtainer.access(IRepoFinder.class, new ICallback<IRepoFinder>() {
 					@Override
 					public void process(IRepoFinder repoFinder) throws Exception {
 						RepoDetails repoDetails = repoFinder.findRepoUrl(url);
@@ -167,7 +167,7 @@ public class GitLocal implements IGitLocal {
 	public void clearCaches() {
 		logger.debug(getClass().getSimpleName() + ".clearCaches");
 		lastPulledTime.clear();
-		comtainer.modify(IRepoFinder.class, new ICallback<IRepoFinder>() {
+		comtainer.access(IRepoFinder.class, new ICallback<IRepoFinder>() {
 			@Override
 			public void process(IRepoFinder repoFinder) throws Exception {
 				repoFinder.clearCaches();

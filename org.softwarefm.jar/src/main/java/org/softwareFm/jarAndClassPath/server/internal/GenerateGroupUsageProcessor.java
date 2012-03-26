@@ -33,7 +33,7 @@ public class GenerateGroupUsageProcessor extends AbstractCallProcessor {
 	protected IProcessResult execute(String actualUrl, final Map<String, Object> parameters) {
 		checkForParameter(parameters, GroupConstants.groupIdKey, GroupConstants.monthKey, GroupConstants.monthKey);
 		final AtomicReference<String> report = new AtomicReference<String>();
-		readWriteApi.modify(IGroups.class, IGenerateUsageReportGenerator.class, new ICallback2<IGroups, IGenerateUsageReportGenerator>() {
+		readWriteApi.access(IGroups.class, IGenerateUsageReportGenerator.class, new ICallback2<IGroups, IGenerateUsageReportGenerator>() {
 			@Override
 			public void process(final IGroups groups, IGenerateUsageReportGenerator generateUsageReportGenerator) throws Exception {
 				String groupId = (String) parameters.get(GroupConstants.groupIdKey);

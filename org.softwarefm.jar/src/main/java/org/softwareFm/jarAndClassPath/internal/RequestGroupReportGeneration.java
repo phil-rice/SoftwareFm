@@ -6,7 +6,7 @@ package org.softwareFm.jarAndClassPath.internal;
 
 import java.util.concurrent.Future;
 
-import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.git.IGitLocal;
 import org.softwareFm.crowdsource.httpClient.IHttpClient;
 import org.softwareFm.crowdsource.httpClient.IResponse;
@@ -21,17 +21,17 @@ public class RequestGroupReportGeneration implements IRequestGroupReportGenerati
 
 	private final IResponseCallback callback;
 	private final IHasCache cache;
-	private final ICrowdSourcedReaderApi readerApi;
+	private final IContainer container;
 
-	public RequestGroupReportGeneration(ICrowdSourcedReaderApi readerApi, IResponseCallback callback) {
-		this.readerApi = readerApi;
+	public RequestGroupReportGeneration(IContainer container, IResponseCallback callback) {
+		this.container = container;
 		this.callback = callback;
-		this.cache = readerApi.access(IGitLocal.class, Functions.<IGitLocal, IGitLocal>identity());
+		this.cache = container.access(IGitLocal.class, Functions.<IGitLocal, IGitLocal>identity());
 	}
 
 	@Override
 	public Future<?> request(final String groupId, final String groupCryptoKey, final String month) {
-		return readerApi.access(IHttpClient.class, new IFunction1<IHttpClient, Future<?>>() {
+		return container.access(IHttpClient.class, new IFunction1<IHttpClient, Future<?>>() {
 			@Override
 			public Future<?> apply(IHttpClient client) throws Exception {
 				return client.post(GroupConstants.generateGroupReportPrefix).//

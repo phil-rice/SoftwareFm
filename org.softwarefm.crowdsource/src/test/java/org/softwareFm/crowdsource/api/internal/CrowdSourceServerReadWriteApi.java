@@ -20,21 +20,21 @@ public class CrowdSourceServerReadWriteApi extends AbstractCrowdReadWriterApiTes
 		final ICallback2<IGroups, IUserMembership> userMembershipCallback = ICallback2.Utils.ensureSameParameters();
 
 		container.modifyGroups(groupsCallback);
-		container.modify(IGroups.class, groupsCallback);
+		container.access(IGroups.class, groupsCallback);
 		container.modifyGroups(groupsCallback);
 		assertEquals(3, groupsCallback.count.get());
 
 		container.modifyUser(usersCallback);
-		container.modify(IUser.class, usersCallback);
+		container.access(IUser.class, usersCallback);
 		container.modifyUser(usersCallback);
 		assertEquals(3, usersCallback.count.get());
 
 		container.modifyUserMembership(userMembershipCallback);
 		container.modifyUserMembership(userMembershipCallback);
-		container.modify(IUserMembership.class, new ICallback<IUserMembership>() {
+		container.access(IUserMembership.class, new ICallback<IUserMembership>() {
 			@Override
 			public void process(final IUserMembership userMembership) throws Exception {
-				container.modify(IGroups.class, new ICallback<IGroups>() {
+				container.access(IGroups.class, new ICallback<IGroups>() {
 					@Override
 					public void process(IGroups groups) throws Exception {
 						userMembershipCallback.process(groups, userMembership);
@@ -43,7 +43,7 @@ public class CrowdSourceServerReadWriteApi extends AbstractCrowdReadWriterApiTes
 			}
 		});
 
-		container.modify(IGroups.class, IUser.class, new ICallback2<IGroups, IUser>() {
+		container.access(IGroups.class, IUser.class, new ICallback2<IGroups, IUser>() {
 			@Override
 			public void process(IGroups groups, IUser user) throws Exception {
 				groupsCallback.process(groups);
@@ -51,7 +51,7 @@ public class CrowdSourceServerReadWriteApi extends AbstractCrowdReadWriterApiTes
 			}
 		});
 
-		container.modify(IUserMembership.class, IUser.class, IGroups.class, new ICallback3<IUserMembership, IUser, IGroups>() {
+		container.access(IUserMembership.class, IUser.class, IGroups.class, new ICallback3<IUserMembership, IUser, IGroups>() {
 			@Override
 			public void process(IUserMembership userMembership, IUser user, IGroups groups) throws Exception {
 				userMembershipCallback.process(groups, userMembership);
@@ -62,7 +62,7 @@ public class CrowdSourceServerReadWriteApi extends AbstractCrowdReadWriterApiTes
 
 		EnsureSameParameter<IComments> commentsCallback = ICallback.Utils.ensureSameParameter();
 		container.modifyComments(commentsCallback);
-		container.modify(IComments.class, commentsCallback);
+		container.access(IComments.class, commentsCallback);
 		container.modifyComments(commentsCallback);
 		assertEquals(3, commentsCallback.count.get());
 	}

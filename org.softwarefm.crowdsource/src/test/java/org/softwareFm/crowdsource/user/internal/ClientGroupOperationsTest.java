@@ -36,7 +36,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 
 	@SuppressWarnings("unchecked")
 	public void testCreateGroup() {
-		localReadWriter.modify(IGroupOperations.class, new ICallback<IGroupOperations>() {
+		localReadWriter.access(IGroupOperations.class, new ICallback<IGroupOperations>() {
 			@Override
 			public void process(IGroupOperations groupOperations) throws Exception {
 				String takeOnEmailList = "a@x.com,b@x.com";
@@ -83,7 +83,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 			}
 		});
 
-		localReadWriter.modify(IGroupOperations.class, new ICallback<IGroupOperations>() {
+		localReadWriter.access(IGroupOperations.class, new ICallback<IGroupOperations>() {
 			@Override
 			public void process(IGroupOperations groupOperations) throws Exception {
 				String takeOnEmailList = "a@x.com,b@x.com";
@@ -140,7 +140,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 			}
 		});
 
-		localReadWriter.modify(IGroupOperations.class, new ICallback<IGroupOperations>() {
+		localReadWriter.access(IGroupOperations.class, new ICallback<IGroupOperations>() {
 			@Override
 			public void process(IGroupOperations groupOperations) throws Exception {
 				MemoryCallback<GroupOperationResult> memory = ICallback.Utils.memory();
@@ -184,7 +184,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 			}
 		});
 
-		localReadWriter.modify(IGroupOperations.class, new ICallback<IGroupOperations>() {
+		localReadWriter.access(IGroupOperations.class, new ICallback<IGroupOperations>() {
 			@Override
 			public void process(IGroupOperations groupOperations) throws Exception {
 				MemoryCallback<GroupOperationResult> memory = ICallback.Utils.memory();
@@ -225,7 +225,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 			}
 		});
 
-		localReadWriter.modify(IGroupOperations.class, new ICallback<IGroupOperations>() {
+		localReadWriter.access(IGroupOperations.class, new ICallback<IGroupOperations>() {
 			@Override
 			public void process(IGroupOperations groupOperations) throws Exception {
 				MemoryCallback<GroupOperationResult> memory = ICallback.Utils.memory();

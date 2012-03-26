@@ -32,7 +32,7 @@ abstract public class AbstractCrowdSourceReadWriterApi implements IContainerBuil
 	private final Map<Class<?>, Object> map = Maps.newMap();
 
 	@Override
-	public <API> void modify(Class<API> clazz, ICallback<API> callback) {
+	public <API> void access(Class<API> clazz, ICallback<API> callback) {
 		Object readWriter = getReadWriter(clazz);
 		ICallback.Utils.call(callback, (API) readWriter);
 	}
@@ -73,7 +73,7 @@ abstract public class AbstractCrowdSourceReadWriterApi implements IContainerBuil
 
 	@Override
 	public void modifyUser(ICallback<IUser> callback) {
-		modify(IUser.class, callback);
+		access(IUser.class, callback);
 	}
 
 	@Override
@@ -89,7 +89,7 @@ abstract public class AbstractCrowdSourceReadWriterApi implements IContainerBuil
 
 	@Override
 	public void modifyGroups(ICallback<IGroups> callback) {
-		modify(IGroups.class, callback);
+		access(IGroups.class, callback);
 	}
 
 	@Override
@@ -99,12 +99,12 @@ abstract public class AbstractCrowdSourceReadWriterApi implements IContainerBuil
 
 	@Override
 	public void modifyUserMembership(ICallback2<IGroups, IUserMembership> callback) {
-		modify(IGroups.class, IUserMembership.class, callback);
+		access(IGroups.class, IUserMembership.class, callback);
 	}
 
 	@Override
 	public void modifyComments(ICallback<IComments> callback) {
-		modify(IComments.class, callback);
+		access(IComments.class, callback);
 	}
 
 	@Override
@@ -113,14 +113,14 @@ abstract public class AbstractCrowdSourceReadWriterApi implements IContainerBuil
 	}
 
 	@Override
-	public <A1, A2> void modify(Class<A1> clazz1, Class<A2> clazz2, ICallback2<A1, A2> callback) {
+	public <A1, A2> void access(Class<A1> clazz1, Class<A2> clazz2, ICallback2<A1, A2> callback) {
 		A1 one = getReadWriter(clazz1);
 		A2 two = getReadWriter(clazz2);
 		ICallback2.Utils.call(callback, one, two);
 	}
 
 	@Override
-	public <A1, A2, A3> void modify(Class<A1> clazz1, Class<A2> clazz2, Class<A3> clazz3, ICallback3<A1, A2, A3> callback) {
+	public <A1, A2, A3> void access(Class<A1> clazz1, Class<A2> clazz2, Class<A3> clazz3, ICallback3<A1, A2, A3> callback) {
 		A1 one = getReadWriter(clazz1);
 		A2 two = getReadWriter(clazz2);
 		A3 three = getReadWriter(clazz3);

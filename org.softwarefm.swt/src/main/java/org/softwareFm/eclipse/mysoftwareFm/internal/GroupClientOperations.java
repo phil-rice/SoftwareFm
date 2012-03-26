@@ -78,7 +78,7 @@ public class GroupClientOperations implements IGroupClientOperations {
 						return INamesAndValuesEditor.Utils.editor(from, cardConfig, GroupConstants.myGroupsCardType, "Add new group", "", initialData, keyAndEditStrategy, new ICardEditorCallback() {
 							@Override
 							public void ok(final ICardData cardData) {
-								readWriteApi.modify(IGroupOperations.class, new ICallback<IGroupOperations>() {
+								readWriteApi.access(IGroupOperations.class, new ICallback<IGroupOperations>() {
 									@Override
 									public void process(IGroupOperations groupOperations) throws Exception {
 										String groupName = (String) cardData.data().get(GroupConstants.groupNameKey);
@@ -166,7 +166,7 @@ public class GroupClientOperations implements IGroupClientOperations {
 							@Override
 							public void ok(final ICardData cardData) {
 								final String groupId = (String) cardData.data().get(GroupConstants.groupIdKey);
-								readWriteApi.modify(IGroupOperations.class, new ICallback<IGroupOperations>() {
+								readWriteApi.access(IGroupOperations.class, new ICallback<IGroupOperations>() {
 									@Override
 									public void process(IGroupOperations groupOperations) throws Exception {
 										String takeOnEmailPattern = (String) cardData.data().get(GroupConstants.takeOnEmailPattern);
@@ -218,7 +218,7 @@ public class GroupClientOperations implements IGroupClientOperations {
 				final String groupId = idNameAndStatus.id;
 				if (groupId == null)
 					throw new NullPointerException("group id is null");
-				readWriteApi.modify(IGroupOperations.class, new ICallback<IGroupOperations>() {
+				readWriteApi.access(IGroupOperations.class, new ICallback<IGroupOperations>() {
 					@Override
 					public void process(IGroupOperations t) throws Exception {
 						t.acceptInvite(userData.softwareFmId, userData.crypto, groupId, new ICallback<GroupOperationResult>() {
@@ -270,7 +270,7 @@ public class GroupClientOperations implements IGroupClientOperations {
 				final String groupId = idNameAndStatus.id;
 				if (groupId == null)
 					throw new NullPointerException("group id is null");
-				readWriteApi.modify(IGroupOperations.class, new ICallback<IGroupOperations>() {
+				readWriteApi.access(IGroupOperations.class, new ICallback<IGroupOperations>() {
 					@Override
 					public void process(IGroupOperations t) throws Exception {
 						t.kickFromGroup(userData.softwareFmId, userData.crypto, groupId, otherIds, new ICallback<GroupOperationResult>() {
@@ -305,7 +305,7 @@ public class GroupClientOperations implements IGroupClientOperations {
 				final String groupId = idNameAndStatus.id;
 				if (groupId == null)
 					throw new NullPointerException("group id is null");
-				readWriteApi.modify(IGroupOperations.class, new ICallback<IGroupOperations>() {
+				readWriteApi.access(IGroupOperations.class, new ICallback<IGroupOperations>() {
 					@Override
 					public void process(IGroupOperations t) throws Exception {
 						t.leaveGroup(userData.softwareFmId, userData.crypto, groupId, new ICallback<GroupOperationResult>() {

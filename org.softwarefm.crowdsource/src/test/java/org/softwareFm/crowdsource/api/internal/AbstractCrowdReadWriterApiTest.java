@@ -4,7 +4,6 @@ import org.softwareFm.crowdsource.api.ApiTest;
 import org.softwareFm.crowdsource.api.ICommentsReader;
 import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
@@ -79,27 +78,26 @@ abstract public class AbstractCrowdReadWriterApiTest extends ApiTest {
 	
 	public void testExceptionWhenNotRegistered() {
 		ICrowdSourcedApi api = getApi();
-		final ICrowdSourcedReaderApi reader = api.makeContainer();
-		checkExceptionWhenAccessing(reader, Object.class, "Cannot access without registered reader for class class java.lang.Object. Legal readers are");
-	
-		final IContainer readWriter = api.makeContainer();
-		checkExceptionWhenModifying(readWriter, Object.class, "Cannot modify without registered readWriter for class class java.lang.Object. Legal readWriters are ");
+		final IContainer container = api.makeContainer();
+
+		checkExceptionWhenAccessingFunction(container, Object.class, "Cannot access without registered reader for class class java.lang.Object. Legal readers are");
+		checkExceptionWhenModifyingCallback(container, Object.class, "Cannot modify without registered readWriter for class class java.lang.Object. Legal readWriters are ");
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void checkExceptionWhenModifying(final IContainer readWriter, final Class<?> class1, String expectedMessage) {
+	private void checkExceptionWhenModifyingCallback(final IContainer readWriter, final Class<?> class1, String expectedMessage) {
 		final ICallback callback = ICallback.Utils.exception("should not be called");
 		NullPointerException e = Tests.assertThrows(NullPointerException.class, new Runnable() {
 			@Override
 			public void run() {
-				readWriter.modify(class1, callback);
+				readWriter.access(class1, callback);
 			}
 		});
 		assertTrue(e.getMessage(), e.getMessage().startsWith(expectedMessage));
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void checkExceptionWhenAccessing(final ICrowdSourcedReaderApi reader, final Class<?> class1, String expectedMessage) {
+	private void checkExceptionWhenAccessingFunction(final IContainer reader, final Class<?> class1, String expectedMessage) {
 		final IFunction1 expectionIfCalled = Functions.expectionIfCalled();
 		NullPointerException e = Tests.assertThrows(NullPointerException.class, new Runnable() {
 			@Override

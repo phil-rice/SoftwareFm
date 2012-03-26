@@ -6,7 +6,7 @@ package org.softwareFm.crowdsource.user.internal;
 
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IUserReader;
@@ -19,10 +19,10 @@ import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 public class LocalUserReader implements IUserReader {
 
 	private final IUrlGenerator userGenerator;
-	private final ICrowdSourcedReaderApi readerApi;
+	private final IContainer container;
 
-	public LocalUserReader(ICrowdSourcedReaderApi readerApi, IUrlGenerator userGenerator) {
-		this.readerApi = readerApi;
+	public LocalUserReader(IContainer container, IUrlGenerator userGenerator) {
+		this.container = container;
 		this.userGenerator = userGenerator;
 
 	}
@@ -38,7 +38,7 @@ public class LocalUserReader implements IUserReader {
 	}
 
 	protected Map<String, Object> getUserData(final String softwareFmId, final String cryptoKey) {
-		return readerApi.accessGitReader(new IFunction1<IGitReader, Map<String, Object>>() {
+		return container.accessGitReader(new IFunction1<IGitReader, Map<String, Object>>() {
 			@Override
 			public Map<String, Object> apply(IGitReader from) throws Exception {
 				String url = userGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
@@ -51,6 +51,6 @@ public class LocalUserReader implements IUserReader {
 
 	@Override
 	public void refresh(String softwareFmId) {
-		IGitReader.Utils.clearCache(readerApi);
+		IGitReader.Utils.clearCache(container);
 	}
 }

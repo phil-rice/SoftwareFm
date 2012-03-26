@@ -299,7 +299,7 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 			IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
 			new SnippetFeedConfigurator(cardConfig.cardDataStore, cardConfig.resourceGetterFn).configure(explorer);
 			// SnippetFeedConfigurator.configure(explorer, cardConfig);
-			getLocalContainer().modify(IHttpClient.class, IGitLocal.class, new ICallback2<IHttpClient, IGitLocal>() {
+			getLocalContainer().access(IHttpClient.class, IGitLocal.class, new ICallback2<IHttpClient, IGitLocal>() {
 				@Override
 				public void process(IHttpClient httpClient, IGitLocal gitLocal) throws Exception {
 					httpClient.delete(Urls.compose(rootArtifactUrl, artifactUrl)).execute(IResponseCallback.Utils.noCallback()).get();
@@ -327,7 +327,7 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 
 	protected void postSnippetData() {
 		final String url = Urls.compose(rootSnippetUrl, snippetUrl);
-		getLocalApi().makeContainer().modify(IGitWriter.class, new ICallback<IGitWriter>() {
+		getLocalApi().makeContainer().access(IGitWriter.class, new ICallback<IGitWriter>() {
 			@Override
 			public void process(IGitWriter gitWriter) throws Exception {
 				gitWriter.put(IFileDescription.Utils.plain(url), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), "postSnippetData");
@@ -336,7 +336,7 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 	}
 
 	protected void postArtifactData() {
-		getLocalApi().makeContainer().modify(IGitWriter.class, new ICallback<IGitWriter>() {
+		getLocalApi().makeContainer().access(IGitWriter.class, new ICallback<IGitWriter>() {
 			@Override
 			public void process(IGitWriter gitWriter) throws Exception {
 				gitWriter.put(IFileDescription.Utils.plain(Urls.compose(rootArtifactUrl, artifactUrl)), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.artifact), "postArtefactData_0");

@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
@@ -21,8 +21,8 @@ import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 public class UsageReaderForLocal extends AbstractUsageReader {
 
 
-	public UsageReaderForLocal(ICrowdSourcedReaderApi readerApi, IUrlGenerator userUrlGenerator) {
-		super(readerApi, userUrlGenerator);
+	public UsageReaderForLocal(IContainer container, IUrlGenerator userUrlGenerator) {
+		super(container, userUrlGenerator);
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class UsageReaderForLocal extends AbstractUsageReader {
 	@Override
 	protected Map<String, Map<String, List<Integer>>> getProjectDetails(final IFileDescription projectFileDescription) {
 		if (projectFileDescription != null)
-			return readerApi.accessGitReader(new IFunction1<IGitReader, Map<String, Map<String, List<Integer>>>>() {
+			return container.accessGitReader(new IFunction1<IGitReader, Map<String, Map<String, List<Integer>>>>() {
 				@Override
 				public Map<String, Map<String, List<Integer>>> apply(IGitReader gitReader) throws Exception {
 					Map<String, Map<String, List<Integer>>> data = (Map) gitReader.getFile(projectFileDescription);

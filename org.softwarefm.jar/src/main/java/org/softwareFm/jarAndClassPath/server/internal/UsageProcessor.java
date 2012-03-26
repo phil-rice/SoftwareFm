@@ -33,7 +33,7 @@ public class UsageProcessor extends AbstractCallProcessor {
 	@Override
 	protected IProcessResult execute(final String actualUrl, final Map<String, Object> parameters) {
 		checkForParameter(parameters, LoginConstants.softwareFmIdKey, JarAndPathConstants.digest);
-		api.modify(IProject.class, IProjectTimeGetter.class, IJarToGroupArtifactAndVersion.class, new ICallback3<IProject, IProjectTimeGetter, IJarToGroupArtifactAndVersion>() {
+		api.access(IProject.class, IProjectTimeGetter.class, IJarToGroupArtifactAndVersion.class, new ICallback3<IProject, IProjectTimeGetter, IJarToGroupArtifactAndVersion>() {
 			@Override
 			public void process(final IProject project, IProjectTimeGetter projectTimeGetter, IJarToGroupArtifactAndVersion jarToGroupArtifactAndVersion) throws Exception {
 				final String month = projectTimeGetter.thisMonth();

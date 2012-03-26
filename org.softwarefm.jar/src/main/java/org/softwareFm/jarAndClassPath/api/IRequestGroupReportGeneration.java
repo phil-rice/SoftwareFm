@@ -7,7 +7,7 @@ package org.softwareFm.jarAndClassPath.api;
 import java.util.Map;
 import java.util.concurrent.Future;
 
-import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
 import org.softwareFm.crowdsource.utilities.future.Futures;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
@@ -18,8 +18,8 @@ public interface IRequestGroupReportGeneration {
 	Future<?> request(String groupId, String groupCryptoKey, String month);
 
 	public static class Utils {
-		public static IRequestGroupReportGeneration httpClient(ICrowdSourcedReaderApi readerApi, IResponseCallback callback) {
-			return new RequestGroupReportGeneration(readerApi, callback);
+		public static IRequestGroupReportGeneration httpClient(IContainer container, IResponseCallback callback) {
+			return new RequestGroupReportGeneration(container, callback);
 		}
 
 		public static IRequestGroupReportGeneration withCache(final IRequestGroupReportGeneration reportGeneration, final long period) {

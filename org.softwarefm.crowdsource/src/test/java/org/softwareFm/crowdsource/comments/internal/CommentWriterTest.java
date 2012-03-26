@@ -9,7 +9,6 @@ import org.softwareFm.crowdsource.api.ICommentDefn;
 import org.softwareFm.crowdsource.api.IComments;
 import org.softwareFm.crowdsource.api.ICommentsReader;
 import org.softwareFm.crowdsource.api.IContainer;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.server.AbstractProcessorDatabaseIntegrationTests;
 import org.softwareFm.crowdsource.api.user.IGroups;
@@ -63,8 +62,8 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 	}
 
 	protected void checkAddGlobalComment(final String text, final String... expectedText) {
-		ICrowdSourcedReaderApi localReaderApi = getLocalApi().makeContainer();
-		localReaderApi.accessCommentsReader(new IFunction1<ICommentsReader, Void>() {
+		IContainer container = getLocalContainer();
+		container.accessCommentsReader(new IFunction1<ICommentsReader, Void>() {
 			@Override
 			public Void apply(final ICommentsReader commentsReader) throws Exception {
 				checkAdd("someSource", text, new Callable<ICommentDefn>() {

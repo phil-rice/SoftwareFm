@@ -44,6 +44,7 @@ public class AcceptInviteProcessorTest extends AbstractProcessCallTest<AcceptInv
 		IProcessResult result = processor.execute(GroupConstants.acceptInvitePrefix, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId0, GroupConstants.groupIdKey, groupId0));
 		checkStringResult(result, "");
 		getServerUserAndGroupsContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				assertEquals(Arrays.asList(sfm0Member, sfm1Admin), Iterables.list(groups.users(groupId0, groupCryptoKey0)));

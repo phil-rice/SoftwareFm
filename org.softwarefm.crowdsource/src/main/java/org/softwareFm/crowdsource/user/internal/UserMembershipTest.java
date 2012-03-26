@@ -134,7 +134,7 @@ public class UserMembershipTest extends ApiTest {
 
 	@SuppressWarnings("unchecked")
 	public void testSetGetMembershipProperty() {
-		serverContainer.modify(IUserMembership.class, new ICallback<IUserMembership>() {
+		serverContainer.access(IUserMembership.class, new ICallback<IUserMembership>() {
 			@Override
 			public void process(final IUserMembership membershipForServer) throws Exception {
 				localContainer.access(IUserMembershipReader.class, IGitReader.class, new IFunction2<IUserMembershipReader, IGitReader, Void>() {
@@ -170,7 +170,7 @@ public class UserMembershipTest extends ApiTest {
 	}
 
 	public void testSetMembershipPropertyThrowsExceptionIfGroupNotFound() {
-		serverContainer.modify(IUserMembership.class, new ICallback<IUserMembership>() {
+		serverContainer.access(IUserMembership.class, new ICallback<IUserMembership>() {
 			@Override
 			public void process(final IUserMembership membershipForServer) throws Exception {
 				membershipForServer.addMembership(user1Id, userKey0, groupId1, groupCrypto1, "someStatus1");

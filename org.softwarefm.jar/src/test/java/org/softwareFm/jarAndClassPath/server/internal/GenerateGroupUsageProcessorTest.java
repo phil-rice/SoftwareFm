@@ -28,7 +28,7 @@ public class GenerateGroupUsageProcessorTest extends GroupsTest {
 		takeOnProcessor.addExistingUserToGroup(groupId, groupCryptoKey, sfmId1, "email1", "someStatus");
 		takeOnProcessor.addExistingUserToGroup(groupId, groupCryptoKey, sfmId2, "email2", "someStatus");
 
-		serverContainer.modify(IProject.class, new ICallback<IProject>() {
+		serverContainer.access(IProject.class, new ICallback<IProject>() {
 			@Override
 			public void process(IProject project) throws Exception {
 				project.addProjectDetails(sfmId1, "gid1", "aid1", "month1", 1);

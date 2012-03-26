@@ -7,7 +7,7 @@ package org.softwareFm.jarAndClassPath.server.internal;
 import java.util.List;
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
@@ -16,14 +16,14 @@ import org.softwareFm.jarAndClassPath.internal.AbstractUsageReader;
 
 public class UsageReaderForServer extends AbstractUsageReader {
 
-	public UsageReaderForServer(ICrowdSourcedReaderApi readerApi, IUrlGenerator userUrlGenerator) {
-		super(readerApi, userUrlGenerator);
+	public UsageReaderForServer(IContainer container, IUrlGenerator userUrlGenerator) {
+		super(container, userUrlGenerator);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	protected Map<String, Map<String, List<Integer>>> getProjectDetails(final IFileDescription projectFileDescription) {
-		return readerApi.accessGitReader(new IFunction1<IGitReader, Map<String, Map<String, List<Integer>>>>() {
+		return container.accessGitReader(new IFunction1<IGitReader, Map<String, Map<String, List<Integer>>>>() {
 			@Override
 			public Map<String, Map<String, List<Integer>>> apply(IGitReader gitReader) throws Exception {
 				Map<String, Map<String, List<Integer>>> projectDetails = (Map) gitReader.getFile(projectFileDescription);

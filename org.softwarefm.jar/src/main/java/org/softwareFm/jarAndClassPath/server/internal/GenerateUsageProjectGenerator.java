@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.utilities.constants.CommonMessages;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
@@ -24,15 +24,15 @@ import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 public class GenerateUsageProjectGenerator implements IGenerateUsageReportGenerator {
 
 	private final Logger logger = Logger.getLogger(GenerateUsageProjectGenerator.class);
-	private final ICrowdSourcedReaderApi readerApi;
+	private final IContainer container;
 
-	public GenerateUsageProjectGenerator(ICrowdSourcedReaderApi readerApi) {
-		this.readerApi = readerApi;
+	public GenerateUsageProjectGenerator(IContainer container) {
+		this.container = container;
 	}
 
 	@Override
 	public Map<String, Map<String, Map<String, List<Integer>>>> generateReport(final String groupId, final String groupCryptoKey, final String month) {
-		return readerApi.access(IGroupsReader.class, IUsageReader.class, new IFunction2<IGroupsReader, IUsageReader, Map<String, Map<String, Map<String, List<Integer>>>>>() {
+		return container.access(IGroupsReader.class, IUsageReader.class, new IFunction2<IGroupsReader, IUsageReader, Map<String, Map<String, Map<String, List<Integer>>>>>() {
 			@Override
 			public Map<String, Map<String, Map<String, List<Integer>>>> apply(final IGroupsReader groupsReader, IUsageReader usageReader) throws Exception {
 				final Map<String, Map<String, Map<String, List<Integer>>>> result = Maps.newMap();

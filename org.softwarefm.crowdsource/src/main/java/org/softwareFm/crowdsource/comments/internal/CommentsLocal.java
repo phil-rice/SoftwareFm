@@ -28,7 +28,7 @@ public class CommentsLocal extends AbstractCommentsReader implements IComments {
 
 	@Override
 	public void addComment(final String softwareFmId, final String userCrypto, final ICommentDefn defn, final String text) {
-		container.modify(IHttpClient.class, new ICallback<IHttpClient>() {
+		container.access(IHttpClient.class, new ICallback<IHttpClient>() {
 			@Override
 			public void process(IHttpClient client) throws Exception {
 				IFileDescription fileDescription = defn.fileDescription();

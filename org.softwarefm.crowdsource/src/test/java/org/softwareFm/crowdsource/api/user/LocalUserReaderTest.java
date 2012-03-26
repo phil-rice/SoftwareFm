@@ -9,9 +9,9 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.softwareFm.crowdsource.api.ApiConfig;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.IContainerBuilder;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
-import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
 import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
 import org.softwareFm.crowdsource.api.git.GitTest;
@@ -80,7 +80,7 @@ public class LocalUserReaderTest extends GitTest {
 		IUrlGenerator userUrlGenerator = IUrlGenerator.Utils.generator("user/{0}/{1}/{2}", LoginConstants.softwareFmIdKey);
 		Map<String, Callable<Object>> defaults = Maps.<String, Callable<Object>> makeMap("defProperty", Callables.valueFromList("value"));
 		remoteUser = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, userUrlGenerator, findRepositoryRoot, defaults);
-		ICrowdSourcedReaderApi readerApi = ICrowdSourcedApi.Utils.forTests(new IExtraReaderWriterConfigurator<ApiConfig>() {
+		IContainer container = ICrowdSourcedApi.Utils.forTests(new IExtraReaderWriterConfigurator<ApiConfig>() {
 			@Override
 			public void builder(IContainerBuilder builder, ApiConfig apiConfig) {
 				HttpGitWriter httpGitWriter = null;
@@ -88,7 +88,7 @@ public class LocalUserReaderTest extends GitTest {
 				builder.register(IRepoFinder.class, IRepoFinder.Utils.forTests(remoteOperations));
 			}
 		}, localRoot).makeContainer();
-		localUser = new LocalUserReader(readerApi, userUrlGenerator);
+		localUser = new LocalUserReader(container, userUrlGenerator);
 		remoteSfmId1File = new File(remoteRoot, Urls.compose("user/sf/mI/sfmId1/", CommonConstants.dataFileName));
 		remoteSfmId2File = new File(remoteRoot, Urls.compose("user/sf/mI/sfmId2/", CommonConstants.dataFileName));
 

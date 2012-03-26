@@ -7,7 +7,7 @@ package org.softwareFm.jarAndClassPath.internal;
 import java.util.List;
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
@@ -18,11 +18,11 @@ import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 
 abstract public class AbstractUsageReader implements IUsageReader {
 
-	protected final ICrowdSourcedReaderApi readerApi;
+	protected final IContainer container;
 	protected final IUrlGenerator userUrlGenerator;
 
-	public AbstractUsageReader(ICrowdSourcedReaderApi readerApi, IUrlGenerator userIUrlGenerator) {
-		this.readerApi = readerApi;
+	public AbstractUsageReader(IContainer container, IUrlGenerator userIUrlGenerator) {
+		this.container = container;
 		this.userUrlGenerator = userIUrlGenerator;
 	}
 

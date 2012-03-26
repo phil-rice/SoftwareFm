@@ -27,7 +27,7 @@ public class GenerateUsageProjectGeneratorTest extends GroupsTest {
 	}
 
 	protected void checkMonthsReport(final String month, final Map<String, Object> expected) {
-		serverContainer.modify(IGenerateUsageReportGenerator.class, new ICallback<IGenerateUsageReportGenerator>() {
+		serverContainer.access(IGenerateUsageReportGenerator.class, new ICallback<IGenerateUsageReportGenerator>() {
 			@Override
 			public void process(IGenerateUsageReportGenerator generator) throws Exception {
 				Map<String, Map<String, Map<String, List<Integer>>>> month1 = generator.generateReport(groupId, groupCrypto, month);

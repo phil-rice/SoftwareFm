@@ -217,7 +217,7 @@ public class MyPeople implements IHasComposite {
 	}
 
 	protected void generateReportIfPossible(final String groupId, final String groupsCrypto, final String month) {
-		readWriteApi.modify(IRequestGroupReportGeneration.class, new ICallback<IRequestGroupReportGeneration>() {
+		readWriteApi.access(IRequestGroupReportGeneration.class, new ICallback<IRequestGroupReportGeneration>() {
 			@Override
 			public void process(IRequestGroupReportGeneration reportGenerator) throws Exception {
 				reportGenerator.request(groupId, groupsCrypto, month).get(timeoutMs, TimeUnit.MILLISECONDS);

@@ -21,7 +21,7 @@ public class ClientGroupOperations implements IGroupOperations {
 
 	@Override
 	public void createGroup(final String softwareFmId, final String userCryptoKey, final String groupName, final String fromEmail, final String takeOnEmailList, final String takeOnSubjectPattern, final String takeOnEmailPattern, final ICallback<GroupOperationResult> callback) {
-		readWriteApi.modify(IHttpClient.class, new ICallback<IHttpClient>() {
+		readWriteApi.access(IHttpClient.class, new ICallback<IHttpClient>() {
 			@Override
 			public void process(IHttpClient client) throws Exception {
 				client.post(GroupConstants.takeOnCommandPrefix).//
@@ -39,7 +39,7 @@ public class ClientGroupOperations implements IGroupOperations {
 
 	@Override
 	public void inviteToGroup(final String softwareFmId, final String userCryptoKey, final String groupId, final String fromEmail, final String takeOnEmailList, final String takeOnSubjectPattern, final String takeOnEmailPattern, final ICallback<GroupOperationResult> callback) {
-		readWriteApi.modify(IHttpClient.class, new ICallback<IHttpClient>() {
+		readWriteApi.access(IHttpClient.class, new ICallback<IHttpClient>() {
 			@Override
 			public void process(IHttpClient client) throws Exception {
 				client.post(GroupConstants.inviteCommandPrefix).//
@@ -57,7 +57,7 @@ public class ClientGroupOperations implements IGroupOperations {
 
 	@Override
 	public void acceptInvite(final String softwareFmId, String userCryptoKey, final String groupId, final ICallback<GroupOperationResult> callback) {
-		readWriteApi.modify(IHttpClient.class, new ICallback<IHttpClient>() {
+		readWriteApi.access(IHttpClient.class, new ICallback<IHttpClient>() {
 			@Override
 			public void process(IHttpClient client) throws Exception {
 				client.post(GroupConstants.acceptInvitePrefix).//
@@ -71,7 +71,7 @@ public class ClientGroupOperations implements IGroupOperations {
 
 	@Override
 	public void leaveGroup(final String softwareFmId, String userCryptoKey, final String groupId, final ICallback<GroupOperationResult> callback) {
-		readWriteApi.modify(IHttpClient.class, new ICallback<IHttpClient>() {
+		readWriteApi.access(IHttpClient.class, new ICallback<IHttpClient>() {
 			@Override
 			public void process(IHttpClient client) throws Exception {
 				client.post(GroupConstants.leaveGroupPrefix).//
@@ -84,7 +84,7 @@ public class ClientGroupOperations implements IGroupOperations {
 
 	@Override
 	public void kickFromGroup(final String softwareFmId, String userCryptoKey, final String groupId, final String otherIds, final ICallback<GroupOperationResult> callback) {
-		readWriteApi.modify(IHttpClient.class, new ICallback<IHttpClient>() {
+		readWriteApi.access(IHttpClient.class, new ICallback<IHttpClient>() {
 			@Override
 			public void process(IHttpClient client) throws Exception {
 				client.post(GroupConstants.kickFromGroupPrefix).//

@@ -197,7 +197,7 @@ public class MySoftwareFmIntegrationTest extends ApiAndSwtTest implements IInteg
 
 	private String resetPassword(final String magicString)  {
 		final MemoryResponseCallback memoryCallback = IResponseCallback.Utils.memoryCallback();
-		getLocalApi().makeContainer().modify(IHttpClient.class, new ICallback<IHttpClient>(){
+		getLocalApi().makeContainer().access(IHttpClient.class, new ICallback<IHttpClient>(){
 			@Override
 			public void process(IHttpClient client) throws Exception {
 				client.get(Urls.compose(LoginConstants.passwordResetLinkPrefix, magicString)).execute(memoryCallback).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);

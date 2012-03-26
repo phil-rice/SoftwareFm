@@ -8,7 +8,7 @@ import java.io.File;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import org.softwareFm.crowdsource.api.ICrowdSourcedReaderApi;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.git.internal.GitOperations;
 import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
@@ -106,21 +106,21 @@ public abstract class GitTest extends TemporaryFileTest {
 		assertNull(reader.getFile(plain));
 	}
 
-	protected void checkGetFileAndDescendants(ICrowdSourcedReaderApi reader, String url, Map<String, Object> data) {
+	protected void checkGetFileAndDescendants(IContainer container, String url, Map<String, Object> data) {
 		IFileDescription fileDescription = IFileDescription.Utils.plain(url);
-		checkGetFileAndDescendants(reader, fileDescription, data);
+		checkGetFileAndDescendants(container, fileDescription, data);
 	}
 
-	protected void checkGetFileAndDescendants(ICrowdSourcedReaderApi reader, IFileDescription fileDescription, Map<String, Object> data) {
-		assertEquals(data, IGitReader.Utils.getFileAndDescendants(reader, fileDescription));
+	protected void checkGetFileAndDescendants(IContainer container, IFileDescription fileDescription, Map<String, Object> data) {
+		assertEquals(data, IGitReader.Utils.getFileAndDescendants(container, fileDescription));
 	}
 
-	protected void checkGetFile(ICrowdSourcedReaderApi readerApi, String url, Map<String, Object> data) {
-		checkGetFile(readerApi, IFileDescription.Utils.plain(url), data);
+	protected void checkGetFile(IContainer container, String url, Map<String, Object> data) {
+		checkGetFile(container, IFileDescription.Utils.plain(url), data);
 	}
 
-	protected void checkGetFile(ICrowdSourcedReaderApi readerApi, IFileDescription fileDescription, Map<String, Object> data) {
-		assertEquals(data, IGitReader.Utils.getFileAsMap(readerApi, fileDescription));
+	protected void checkGetFile(IContainer container, IFileDescription fileDescription, Map<String, Object> data) {
+		assertEquals(data, IGitReader.Utils.getFileAsMap(container, fileDescription));
 	}
 
 	protected IServiceExecutor getServiceExecutor() {

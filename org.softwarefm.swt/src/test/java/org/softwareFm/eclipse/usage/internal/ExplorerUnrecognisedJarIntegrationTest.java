@@ -184,7 +184,7 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 		IUrlGenerator jarUrlGenerator = cardConfig.urlGeneratorMap.get(urlKey);
 		final String url = jarUrlGenerator.findUrlFor(urlMap);
 		final Map<String, Object> expectedJarData = Maps.stringObjectMap(expectedNamesAndValues);
-		getLocalApi().makeContainer().modify(IGitLocal.class, new ICallback<IGitLocal>(){
+		getLocalApi().makeContainer().access(IGitLocal.class, new ICallback<IGitLocal>(){
 			@Override
 			public void process(IGitLocal gitLocal) throws Exception {
 				assertEquals(expectedJarData, gitLocal.getFile(IFileDescription.Utils.plain(url)));
