@@ -5,6 +5,7 @@ import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.comments.internal.CommentDefn;
 import org.softwareFm.crowdsource.constants.CommentConstants;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 
 public interface ICommentDefn {
@@ -35,7 +36,7 @@ public interface ICommentDefn {
 					// throw new NullPointerException(MessageFormat.format(CommentConstants.cannotGetCommentsCrypto, "softwareFmId", softwareFmId));
 					return new CommentDefn(IFileDescription.Utils.encrypted(url, softwareFmId + "." + CommentConstants.commentExtension, commentCrypto), replyIndex);
 				}
-			});
+			}, ICallback.Utils.<ICommentDefn>noCallback()).get();
 		}
 
 		public static ICommentDefn groupInitial(IUserAndGroupsContainer container, String groupId, String groupCrypto, String url) {
@@ -51,7 +52,7 @@ public interface ICommentDefn {
 					// throw new NullPointerException(MessageFormat.format(CommentConstants.cannotGetCommentsCrypto, "groupId", groupId));
 					return new CommentDefn(IFileDescription.Utils.encrypted(url, groupId + "." + CommentConstants.commentExtension, commentCrypto), replyIndex);
 				}
-			});
+			}, ICallback.Utils.<ICommentDefn>noCallback()).get();
 		}
 	}
 

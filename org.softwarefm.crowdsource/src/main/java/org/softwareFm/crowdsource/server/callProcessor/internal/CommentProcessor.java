@@ -39,7 +39,7 @@ public class CommentProcessor extends AbstractCallProcessor {
 		checkForParameter(parameters, LoginConstants.softwareFmIdKey, CommentConstants.textKey, CommentConstants.filenameKey);
 		String command = Strings.firstSegment(actualUrl.substring(1), "/");
 		if (command.equals(CommentConstants.addCommandSuffix)) {
-			container.modifyComments(new ICallback<IComments>() {
+			container.accessComments(new ICallback<IComments>() {
 				@Override
 				public void process(IComments comments) throws Exception {
 					String url = actualUrl.substring(CommentConstants.addCommandSuffix.length() + 1);
@@ -52,7 +52,7 @@ public class CommentProcessor extends AbstractCallProcessor {
 					String text = Crypto.aesDecrypt(userCrypto, encoded);
 					comments.addComment(softwareFmId, userCrypto, defn, text);
 				}
-			});
+			}).get();
 			return IProcessResult.Utils.processString("");
 		}
 		throw new IllegalArgumentException(actualUrl);
@@ -73,7 +73,7 @@ public class CommentProcessor extends AbstractCallProcessor {
 						throw new NullPointerException();
 					return ICommentDefn.Utils.myInitial(container, softwareFmId, userCrypto, url);
 				}
-			});
+			},  ICallback.Utils.<ICommentDefn>noCallback()).get();
 		} else {
 			return container.accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, ICommentDefn>() {
 				@Override
@@ -86,7 +86,7 @@ public class CommentProcessor extends AbstractCallProcessor {
 					}
 					throw new IllegalArgumentException(MessageFormat.format(CommentConstants.cannotWorkOutFileDescription, parameters));
 				}
-			});
+			}, ICallback.Utils.<ICommentDefn>noCallback()).get();
 		}
 	}
 }

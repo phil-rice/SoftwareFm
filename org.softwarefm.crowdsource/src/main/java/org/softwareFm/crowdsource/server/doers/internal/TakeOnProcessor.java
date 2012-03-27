@@ -37,7 +37,7 @@ public class TakeOnProcessor implements ITakeOnProcessor {
 
 	@Override
 	public void addExistingUserToGroup(final String groupId, final String groupCryptoKey, final String softwareFmId, final String email, final String status) {
-		container.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		container.accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				String userCrypto = Functions.call(serverConfig.userCryptoAccess.userCryptoFn(), Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId, LoginConstants.emailKey, email));
@@ -48,7 +48,7 @@ public class TakeOnProcessor implements ITakeOnProcessor {
 				groups.addUser(groupId, groupCryptoKey, enrichedData);
 				userMembership.addMembership(softwareFmId, userCrypto, groupId, groupCryptoKey, status);
 			}
-		});
+		}).get();
 	}
 
 	@Override

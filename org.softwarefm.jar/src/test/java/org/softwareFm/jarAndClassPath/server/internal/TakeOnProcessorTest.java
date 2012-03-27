@@ -16,6 +16,7 @@ import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.server.ITakeOnProcessor;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.collections.Iterables;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
@@ -71,7 +72,7 @@ public class TakeOnProcessorTest extends ApiTest {
 				assertEquals(expected, actualUsers);
 				return null;
 			}
-		});
+		}, ICallback.Utils.<Void>noCallback()).get();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -95,7 +96,7 @@ public class TakeOnProcessorTest extends ApiTest {
 				assertEquals(expected, membership.walkGroupsFor(softwareFmId2, userKey1));
 				return null;
 			}
-		});
+		}, ICallback.Utils.<Void>noCallback()).get();
 	}
 
 	public void testWhenUserDoesntExist() {

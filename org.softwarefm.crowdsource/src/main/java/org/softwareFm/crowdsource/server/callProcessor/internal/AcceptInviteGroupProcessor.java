@@ -28,7 +28,7 @@ public class AcceptInviteGroupProcessor extends AbstractCallProcessor {
 	@Override
 	protected IProcessResult execute(String actualUrl, final Map<String, Object> parameters) {
 		checkForParameter(parameters, LoginConstants.softwareFmIdKey, GroupConstants.groupIdKey);
-		container.modifyUserMembership(new ICallback2<IGroups, IUserMembership>(){
+		container.accessUserMembership(new ICallback2<IGroups, IUserMembership>(){
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				String softwareFmId = (String) parameters.get(LoginConstants.softwareFmIdKey);
@@ -38,7 +38,7 @@ public class AcceptInviteGroupProcessor extends AbstractCallProcessor {
 				String groupCrypto = IUserMembershipReader.Utils.findGroupCrytpo(userMembership, softwareFmId, userCrypto, groupId);
 				groups.setUserProperty(groupId, groupCrypto, softwareFmId, GroupConstants.membershipStatusKey, newStatus);
 				userMembership.setMembershipProperty(softwareFmId, userCrypto, groupId, GroupConstants.membershipStatusKey, newStatus);
-			}});
+			}}).get();
 		return IProcessResult.Utils.processString("");
 	}
 }

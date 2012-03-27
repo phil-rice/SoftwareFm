@@ -88,7 +88,7 @@ public interface ICallProcessor extends IServerDoer{
 					new AcceptInviteGroupProcessor(userCryptoAccess, container),//
 					new LeaveGroupCommandProcessor(container, userCryptoAccess),//
 					new KickFromGroupCommandProcessor(container, userCryptoAccess),//
-					new GitGetProcessor(container, serverConfig.aboveRepostoryUrlCache, serverConfig.timeOutMs), //
+					new GitGetProcessor(container, serverConfig.aboveRepostoryUrlCache), //
 					new CommentProcessor(container, userCryptoAccess),//
 					new DeleteProcessor(container, serverConfig.timeOutMs),//
 					new PostProcessor(container.gitOperations()) };

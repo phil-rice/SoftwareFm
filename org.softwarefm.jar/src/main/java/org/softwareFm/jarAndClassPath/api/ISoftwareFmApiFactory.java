@@ -92,19 +92,19 @@ public interface ISoftwareFmApiFactory {
 			IMailer mailer = IMailer.Utils.email("localhost", null, null);
 			Callable<Long> timeGetter = Callables.time();
 			final String urlPrefix = JarAndPathConstants.urlPrefix;
-			IExtraReaderWriterConfigurator<ServerConfig> extraReadWriterConfigurator = Utils.getServerExtraReaderWriterConfigurator(urlPrefix);
+			IExtraReaderWriterConfigurator<ServerConfig> extraReadWriterConfigurator = Utils.getServerExtraReaderWriterConfigurator(urlPrefix, timeOutMs);
 			ServerConfig serverConfig = new ServerConfig(port, 1000,timeOutMs, root, dataSource, takeOnEnrichment, extraCallProcessors, usage, idAndSaltGenerator, cryptoGenerators, userCryptoAccess, urlPrefix, defaultUserValues, defaultGroupValues, errorHandler, mailer, timeGetter, extraReadWriterConfigurator);//
 			return serverConfig;
 		}
 
-		public static IExtraReaderWriterConfigurator<ServerConfig> getServerExtraReaderWriterConfigurator(final String prefix) {
+		public static IExtraReaderWriterConfigurator<ServerConfig> getServerExtraReaderWriterConfigurator(final String prefix, final long timeOutMs) {
 			return new IExtraReaderWriterConfigurator<ServerConfig>() {
 				@Override
 				public void builder(IContainerBuilder builder, ServerConfig serverConfig) {
 					IUsageReader usageReader = new UsageReaderForServer(builder, serverConfig.userUrlGenerator);
 					builder.register(IUsageReader.class, usageReader);
 
-					IGenerateUsageReportGenerator generator = new GenerateUsageProjectGenerator(builder, builder.defaultTimeOutMs());
+					IGenerateUsageReportGenerator generator = new GenerateUsageProjectGenerator(builder, timeOutMs);
 					builder.register(IGenerateUsageReportGenerator.class, generator);
 
 					ProjectForServer project = new ProjectForServer((IUserAndGroupsContainer) builder, serverConfig.userCryptoAccess, serverConfig.userUrlGenerator);

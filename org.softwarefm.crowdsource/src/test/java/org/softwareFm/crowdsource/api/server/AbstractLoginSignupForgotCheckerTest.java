@@ -19,6 +19,7 @@ import org.softwareFm.crowdsource.server.doers.internal.LoginChecker;
 import org.softwareFm.crowdsource.server.doers.internal.MagicStringForPassword;
 import org.softwareFm.crowdsource.server.doers.internal.PasswordResetter;
 import org.softwareFm.crowdsource.server.doers.internal.SignUpChecker;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginMessages;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
@@ -67,7 +68,7 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends ApiTest imple
 				assertEquals(moniker, user.getUserProperty(softwareFmId, crypto, LoginConstants.monikerKey));
 				return null;
 			}
-		});
+		}, ICallback.Utils.<Void>noCallback());
 		return crypto;
 	}
 

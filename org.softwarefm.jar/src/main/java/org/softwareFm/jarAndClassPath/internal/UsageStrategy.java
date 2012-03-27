@@ -15,6 +15,7 @@ import org.softwareFm.crowdsource.api.git.IGitLocal;
 import org.softwareFm.crowdsource.httpClient.IHttpClient;
 import org.softwareFm.crowdsource.httpClient.IResponse;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
@@ -68,7 +69,7 @@ public class UsageStrategy implements IUsageStrategy {
 					}
 				});
 			}
-		}).get(container.defaultTimeOutMs());
+		}, ICallback.Utils.<Future<?>> noCallback()).get();
 
 	}
 
@@ -92,7 +93,7 @@ public class UsageStrategy implements IUsageStrategy {
 				}
 				return result;
 			}
-		}).get(container.defaultTimeOutMs());
+		}, ICallback.Utils.<Map<String, Object>> noCallback()).get();
 
 	}
 }

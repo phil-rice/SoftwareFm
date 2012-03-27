@@ -42,7 +42,7 @@ public class UserMembershipTest extends ApiTest {
 		final List<Map<String, Object>> expected = Arrays.asList(//
 				Maps.stringObjectMap(GroupConstants.groupIdKey, groupId1, GroupConstants.groupCryptoKey, groupCrypto1, GroupConstants.membershipStatusKey, "someStatus1"),//
 				Maps.stringObjectMap(GroupConstants.groupIdKey, groupId2, GroupConstants.groupCryptoKey, groupCrypto2, GroupConstants.membershipStatusKey, "someStatus2"));
-		serverContainer.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		serverContainer.accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups first, IUserMembership membershipForServer) throws Exception {
 				membershipForServer.addMembership(user1Id, userKey0, groupId1, groupCrypto1, "someStatus1");
@@ -62,7 +62,7 @@ public class UserMembershipTest extends ApiTest {
 				assertEquals(expected, membershipForLocal.walkGroupsFor(user1Id, userKey0));
 				return null;
 			}
-		});
+		}, ICallback.Utils.<Void>noCallback()).get();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -70,7 +70,7 @@ public class UserMembershipTest extends ApiTest {
 		final List<Map<String, Object>> expected = Arrays.asList(//
 				Maps.stringObjectMap(GroupConstants.groupIdKey, groupId1, GroupConstants.groupCryptoKey, groupCrypto1, GroupConstants.membershipStatusKey, "someStatus1"),//
 				Maps.stringObjectMap(GroupConstants.groupIdKey, groupId3, GroupConstants.groupCryptoKey, groupCrypto3, GroupConstants.membershipStatusKey, "someStatus3"));
-		serverContainer.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		serverContainer.accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups first, IUserMembership membershipForServer) throws Exception {
 				membershipForServer.addMembership(user1Id, userKey0, groupId1, groupCrypto1, "someStatus1");
@@ -80,7 +80,7 @@ public class UserMembershipTest extends ApiTest {
 
 				assertEquals(expected, membershipForServer.walkGroupsFor(user1Id, userKey0));
 			}
-		});
+		}).get();
 
 		checkLocalMembership(expected);
 
@@ -91,7 +91,7 @@ public class UserMembershipTest extends ApiTest {
 		final List<Map<String, Object>> expected = Arrays.asList(//
 				Maps.stringObjectMap(GroupConstants.groupIdKey, groupId1, GroupConstants.groupCryptoKey, groupCrypto1, GroupConstants.membershipStatusKey, "someStatus1"),//
 				Maps.stringObjectMap(GroupConstants.groupIdKey, groupId3, GroupConstants.groupCryptoKey, groupCrypto3, GroupConstants.membershipStatusKey, "someStatus3"));
-		serverContainer.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		serverContainer.accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups first, IUserMembership membershipForServer) throws Exception {
 				membershipForServer.addMembership(user1Id, userKey0, groupId1, groupCrypto1, "someStatus1");
@@ -102,13 +102,13 @@ public class UserMembershipTest extends ApiTest {
 				assertEquals(expected, membershipForServer.walkGroupsFor(user1Id, userKey0));
 				assertEquals(expected, membershipForServer.walkGroupsFor(user1Id, userKey0));
 			}
-		});
+		}).get();
 
 		checkLocalMembership(expected);
 	}
 
 	public void testCannotAddSameGroupTwice() {
-		serverContainer.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		serverContainer.accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups first, final IUserMembership membershipForServer) throws Exception {
 				membershipForServer.addMembership(user1Id, userKey0, groupId1, groupCrypto1, "someStatus1");
@@ -119,7 +119,7 @@ public class UserMembershipTest extends ApiTest {
 					}
 				});
 			}
-		});
+		}).get();
 	}
 
 	public void testMembershipCryptoIsDefaultUserValue() {
@@ -129,7 +129,7 @@ public class UserMembershipTest extends ApiTest {
 				assertNotNull(user.getUserProperty(user1Id, userKey0, GroupConstants.membershipCryptoKey));
 				return null;
 			}
-		});
+		}, ICallback.Utils.<Void>noCallback()).get();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -137,9 +137,9 @@ public class UserMembershipTest extends ApiTest {
 		serverContainer.access(IUserMembership.class, new ICallback<IUserMembership>() {
 			@Override
 			public void process(final IUserMembership membershipForServer) throws Exception {
-				localContainer.access(IUserMembershipReader.class, IGitReader.class, new IFunction2<IUserMembershipReader, IGitReader, Void>() {
+				localContainer.access(IUserMembershipReader.class, IGitReader.class, new ICallback2<IUserMembershipReader, IGitReader>() {
 					@Override
-					public Void apply(IUserMembershipReader membershipForLocal, IGitReader gitReader) throws Exception {
+					public void process(IUserMembershipReader membershipForLocal, IGitReader gitReader) throws Exception {
 						membershipForServer.addMembership(user1Id, userKey0, groupId1, groupCrypto1, "someStatus1");
 						membershipForServer.addMembership(user1Id, userKey0, groupId2, groupCrypto2, "someStatus2");
 
@@ -161,9 +161,8 @@ public class UserMembershipTest extends ApiTest {
 
 						assertEquals(expected, membershipForServer.walkGroupsFor(user1Id, userKey0));
 						assertEquals(expected, membershipForLocal.walkGroupsFor(user1Id, userKey0));
-						return null;
 					}
-				});
+				}).get();
 			}
 		});
 

@@ -85,19 +85,19 @@ public class CommentProcessorTest extends AbstractProcessCallTest<CommentProcess
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		api.makeUserAndGroupsContainer().modifyUser(new ICallback<IUser>(){
+		api.makeUserAndGroupsContainer().accessUser(new ICallback<IUser>(){
 			@Override
 			public void process(IUser user) throws Exception {
 				user.setUserProperty(softwareFmId, userCrypto, GroupConstants.membershipCryptoKey, groupCrypto);
 				user.setUserProperty(softwareFmId, userCrypto, CommentConstants.commentCryptoKey, userCommentCrypto);
 				user.setUserProperty(softwareFmId, userCrypto, LoginConstants.monikerKey, monikor);
-			}});
-		api.makeUserAndGroupsContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>(){
+			}}).get();
+		api.makeUserAndGroupsContainer().accessUserMembership(new ICallback2<IGroups, IUserMembership>(){
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				groups.setGroupProperty(groupId, groupCrypto, CommentConstants.commentCryptoKey, groupCommentCrypto);
 				userMembership.addMembership(softwareFmId, userCrypto, groupId, groupCrypto, "someStatus");
-			}});
+			}}).get();
 
 		remoteOperations.init("a");
 		remoteOperations.put(IFileDescription.Utils.plain("a/b"), v11);

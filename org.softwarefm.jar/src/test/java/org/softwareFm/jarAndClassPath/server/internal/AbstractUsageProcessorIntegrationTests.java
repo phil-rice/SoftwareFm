@@ -56,12 +56,12 @@ public abstract class AbstractUsageProcessorIntegrationTests extends AbstractPro
 		return new IExtraReaderWriterConfigurator<ServerConfig>() {
 			@Override
 			public void builder(IContainerBuilder builder, ServerConfig serverConfig) {
-				ISoftwareFmApiFactory.Utils.getServerExtraReaderWriterConfigurator(getUrlPrefix()).builder(builder, serverConfig);
-	
+				ISoftwareFmApiFactory.Utils.getServerExtraReaderWriterConfigurator(getUrlPrefix(), serverConfig.timeOutMs).builder(builder, serverConfig);
+
 				IJarToGroupArtifactAndVersion jarToGroupArtifactAndVersion = getJarToGroupArtifactVersion(JarAndPathConstants.jarUrlGenerator(serverConfig.prefix));
 				builder.register(IJarToGroupArtifactAndVersion.class, jarToGroupArtifactAndVersion);
-	
-				IProjectTimeGetter projectTimeGetter = getProjectTimeGetter(); 
+
+				IProjectTimeGetter projectTimeGetter = getProjectTimeGetter();
 				builder.register(IProjectTimeGetter.class, projectTimeGetter);
 			}
 		};

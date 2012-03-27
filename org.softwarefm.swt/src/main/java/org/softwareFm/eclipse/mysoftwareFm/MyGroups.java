@@ -264,7 +264,7 @@ public class MyGroups implements IHasComposite {
 					}
 					return null;
 				}
-			});
+			}, ICallback.Utils.<Void> noCallback()).get();
 
 			rightHand = new Composite(sashForm, SWT.NULL);
 			final StackLayout stackLayout = new StackLayout();
@@ -300,7 +300,7 @@ public class MyGroups implements IHasComposite {
 							public Iterable<Map<String, Object>> apply(IGroupsReader from) throws Exception {
 								return from.users(groupId, groupCryptoKey);
 							}
-						});
+						}, ICallback.Utils.<Iterable<Map<String, Object>>> noCallback()).get();
 						for (Map<String, Object> user : Lists.sort(users, Comparators.mapKey(LoginConstants.emailKey))) {
 							TableItem tableItem = new TableItem(membershipTable, SWT.NULL);
 							if (user.containsKey(CommonConstants.errorKey))

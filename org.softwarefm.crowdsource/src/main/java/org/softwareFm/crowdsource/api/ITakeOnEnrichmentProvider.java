@@ -3,6 +3,7 @@ package org.softwareFm.crowdsource.api;
 import java.util.Map;
 
 import org.softwareFm.crowdsource.api.user.IUserReader;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
@@ -30,7 +31,7 @@ public interface ITakeOnEnrichmentProvider {
 						public String apply(IUserReader from) throws Exception {
 							return from.getUserProperty(userId, userCrypto, propertyName);
 						}
-					});
+					}, ICallback.Utils.<String>noCallback()).get();
 					return Maps.with(initial,propertyName, propertyValue);
 				}
 			};

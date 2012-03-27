@@ -34,7 +34,7 @@ public class InviteGroupProcessor extends AbstractAddToGroupProcessor {
 	@Override
 	protected IProcessResult execute(String actualUrl, final Map<String, Object> parameters) {
 		checkForParameter(parameters, LoginConstants.softwareFmIdKey, GroupConstants.groupIdKey, GroupConstants.takeOnFromKey, GroupConstants.takeOnEmailPattern, GroupConstants.takeOnEmailListKey);
-		container.modifyUserMembership(new ICallback2<IGroups, IUserMembership>(){
+		container.accessUserMembership(new ICallback2<IGroups, IUserMembership>(){
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				String groupId = (String) parameters.get(GroupConstants.groupIdKey);
@@ -60,7 +60,7 @@ public class InviteGroupProcessor extends AbstractAddToGroupProcessor {
 				
 				sendInvitationEmails(parameters, groupName, memberList);
 				
-			}});
+			}}).get();
 		
 		return IProcessResult.Utils.processString("");
 	}

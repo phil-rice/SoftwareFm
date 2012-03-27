@@ -125,7 +125,7 @@ public class TransactionManagerTest extends TestCase {
 		mock3.commit();
 		EasyMock.replay(mock1, mock2, mock3);
 
-		assertEquals("value", manager.start(Functions.<Object> constantWithMemoryOfMonitor("value"), ICallback.Utils.noCallback(), mock1, mock2, mock3).get(CommonConstants.testTimeOutMs));
+		assertEquals("value", manager.start(Functions.<Object> constantWithMemoryOfMonitor("value"), ICallback.Utils.noCallback(), mock1, mock2, "notTransactional", mock3).get(CommonConstants.testTimeOutMs));
 
 		EasyMock.verify(mock1, mock2, mock3);
 	}
@@ -197,7 +197,7 @@ public class TransactionManagerTest extends TestCase {
 		EasyMock.verify(mock1, mock2, mock3);
 	}
 
-	public void testExceptionInRollbackCausesAggregateExceptionButAllRollbacksCalled(){
+	public void testExceptionInRollbackCausesAggregateExceptionButAllRollbacksCalled() {
 		final Exception original = new RuntimeException("orig");
 		final Exception expected1 = new RuntimeException("one");
 		final Exception expected2 = new RuntimeException();
@@ -223,8 +223,8 @@ public class TransactionManagerTest extends TestCase {
 
 		EasyMock.verify(mock1, mock2, mock3);
 	}
-	
-	public void testExceptionInHandlerDoesntStopRollbackAndCausesAggregateException(){
+
+	public void testExceptionInHandlerDoesntStopRollbackAndCausesAggregateException() {
 		final Exception original = new RuntimeException("orig");
 		final RuntimeException callback = new RuntimeException("callback");
 		final Exception expected1 = new RuntimeException("one");
@@ -260,9 +260,9 @@ public class TransactionManagerTest extends TestCase {
 		assertEquals("class java.lang.RuntimeException/orig,class java.lang.RuntimeException/callback,class java.lang.RuntimeException/one,class java.lang.RuntimeException/null", actual.getMessage());
 
 		EasyMock.verify(mock1, mock2, mock3);
-		
+
 	}
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();

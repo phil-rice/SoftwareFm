@@ -332,8 +332,8 @@ public class GitOperations implements IGitOperations {
 		File file = fileDescription.getFile(root);
 		if (file.exists()) {
 			file.delete();
-			File repositoryFile = fileDescription.findRepositoryUrl(root);
-			String repositoryUrl = Files.offset(root, repositoryFile);
+//			File repositoryFile = fileDescription.findRepositoryUrl(root);
+//			String repositoryUrl = Files.offset(root, repositoryFile);
 		}
 	}
 

@@ -3,13 +3,14 @@ package org.softwareFm.crowdsource.api;
 import java.io.File;
 
 import org.softwareFm.crowdsource.api.git.IGitOperations;
-import org.softwareFm.crowdsource.api.internal.AbstractCrowdSourceReadWriterApi;
 import org.softwareFm.crowdsource.api.internal.AbstractCrowdSourcesApi;
+import org.softwareFm.crowdsource.api.internal.Container;
 import org.softwareFm.crowdsource.api.internal.CrowdSourcedLocalApi;
 import org.softwareFm.crowdsource.api.internal.CrowdSourcedServerApi;
 import org.softwareFm.crowdsource.api.internal.ServerDoers;
 import org.softwareFm.crowdsource.api.server.IServerDoers;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.transaction.ITransactionManager;
 
 public interface ICrowdSourcedApi {
 
@@ -40,13 +41,10 @@ public interface ICrowdSourcedApi {
 			return new CrowdSourcedLocalApi(localConfig);
 		}
 
+		//TODO This should deal with swt threading in the transaction manager
 		public static ICrowdSourcedApi forTests(IExtraReaderWriterConfigurator<ApiConfig> configurator, final File root) {
 			final IGitOperations gitOperations = IGitOperations.Utils.gitOperations(root);
-			final AbstractCrowdSourceReadWriterApi readWriter = new AbstractCrowdSourceReadWriterApi() {
-				@Override
-				public IGitOperations gitOperations() {
-					return gitOperations;
-				}
+			final Container readWriter = new Container(ITransactionManager.Utils.standard(), gitOperations) {
 			};
 			configurator.builder(readWriter, null);
 			return new AbstractCrowdSourcesApi() {

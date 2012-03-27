@@ -20,13 +20,13 @@ import org.softwareFm.crowdsource.utilities.processors.AbstractLoginDataAccessor
 
 public class SignUpChecker extends AbstractLoginDataAccessor implements ISignUpChecker {
 
-	private final IUserAndGroupsContainer readWriteApi;
+	private final IUserAndGroupsContainer container;
 	private final ICryptoGenerators cryptoGenerator;
 
 	public SignUpChecker(DataSource dataSource, ICryptoGenerators cryptoGenerator, IUserAndGroupsContainer container) {
 		super(dataSource);
 		this.cryptoGenerator = cryptoGenerator;
-		this.readWriteApi = container;
+		this.container = container;
 	}
 
 	@Override
@@ -39,12 +39,12 @@ public class SignUpChecker extends AbstractLoginDataAccessor implements ISignUpC
 			return new SignUpResult(MessageFormat.format(LoginMessages.existingSoftwareFmId, softwareFmId), null);
 		final String key = cryptoGenerator.userCrypto();
 		template.update(addNewUserSql, email, salt, passwordHash, key, softwareFmId);
-		readWriteApi.modifyUser(new ICallback<IUser>(){
+		container.accessUser(new ICallback<IUser>(){
 			@Override
 			public void process(IUser user) throws Exception {
 				user.setUserProperty(softwareFmId, key, LoginConstants.emailKey, email);
 				user.setUserProperty(softwareFmId, key, LoginConstants.monikerKey, moniker);
-			}});
+			}}).get();
 		return new SignUpResult(null, key);
 	}
 

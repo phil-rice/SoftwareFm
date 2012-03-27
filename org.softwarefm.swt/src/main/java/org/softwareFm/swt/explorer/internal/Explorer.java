@@ -221,7 +221,7 @@ public class Explorer implements IExplorer {
 							}
 						});
 					}
-				}, container.defaultTimeOutMs());
+				});
 			}
 		}, true);
 		mySoftwareFm = masterDetailSocial.createMaster(new IFunction1<Composite, MySoftwareFm>() {

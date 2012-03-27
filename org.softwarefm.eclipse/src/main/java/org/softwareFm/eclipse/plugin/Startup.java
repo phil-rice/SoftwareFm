@@ -9,6 +9,7 @@ import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.git.IGitLocal;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.IHasCache;
@@ -33,7 +34,7 @@ public class Startup implements IStartup {
 					ICrowdSourcedApi api = activator.getApi();
 					IContainer container = api.makeContainer();
 					IUsageStrategy rawUsageStrategy = IUsageStrategy.Utils.usage(serviceExecutor, container, activator.getLocalConfig().userUrlGenerator);
-					IHasCache gitLocal = container.access(IGitLocal.class, Functions.<IGitLocal, IGitLocal>identity()).get(container.defaultTimeOutMs());
+					IHasCache gitLocal = container.access(IGitLocal.class, Functions.<IGitLocal, IGitLocal>identity(), ICallback.Utils.<IGitLocal>noCallback()).get();
 					final IUsageStrategy cachedUsageStrategy = IUsageStrategy.Utils.cached(rawUsageStrategy, JarAndPathConstants.usageRefreshTimeMs, gitLocal, activator.getUserDataManager());
 					activator.getSelectedBindingManager().addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
 						@Override

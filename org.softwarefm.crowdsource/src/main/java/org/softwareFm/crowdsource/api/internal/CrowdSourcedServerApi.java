@@ -17,7 +17,7 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 public class CrowdSourcedServerApi extends AbstractCrowdSourcesApi {
 
 	private final ServerConfig serverConfig;
-	private final CrowdSourcedServerReadWriterApi crowdSourcedServerReadWriterApi;
+	private final ContainerForServer containerForServer;
 	private final IServerDoers serverDoers;
 	private ICrowdSourcedServer server;
 	private final Object lock = new Object();
@@ -25,18 +25,18 @@ public class CrowdSourcedServerApi extends AbstractCrowdSourcesApi {
 	@SuppressWarnings("unchecked")
 	public CrowdSourcedServerApi(ServerConfig serverConfig, IFunction1<IUserAndGroupsContainer, IServerDoers> serverDoersCreator) {
 		this.serverConfig = serverConfig;
-		crowdSourcedServerReadWriterApi = new CrowdSourcedServerReadWriterApi(serverConfig);
-		serverDoers = Functions.call(serverDoersCreator, crowdSourcedServerReadWriterApi);
-		serverConfig.extraReaderWriterConfigurator.builder(crowdSourcedServerReadWriterApi, serverConfig);
+		containerForServer = new ContainerForServer(serverConfig);
+		serverDoers = Functions.call(serverDoersCreator, containerForServer);
+		serverConfig.extraReaderWriterConfigurator.builder(containerForServer, serverConfig);
 	}
 
 	@Override
 	public IContainer makeContainer() {
-		return crowdSourcedServerReadWriterApi;
+		return containerForServer;
 	}
 	@Override
 	public IUserAndGroupsContainer makeUserAndGroupsContainer() {
-		return crowdSourcedServerReadWriterApi;
+		return containerForServer;
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class CrowdSourcedServerApi extends AbstractCrowdSourcesApi {
 		if (server == null) {
 			synchronized (lock) {
 				if (server == null) {
-					ICallProcessor callProcessor = ICallProcessor.Utils.softwareFmProcessCall(crowdSourcedServerReadWriterApi, serverDoers, serverConfig);
+					ICallProcessor callProcessor = ICallProcessor.Utils.softwareFmProcessCall(containerForServer, serverDoers, serverConfig);
 					server = new CrowdSourcedServer(serverConfig.port, serverConfig.workerThreads, callProcessor, ICallback.Utils.sysErrCallback(), serverConfig.usage);
 				}
 			}

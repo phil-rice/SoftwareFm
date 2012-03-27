@@ -20,6 +20,7 @@ import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
 import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback2;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback3;
 import org.softwareFm.crowdsource.utilities.callbacks.MemoryCallback;
 import org.softwareFm.crowdsource.utilities.collections.Iterables;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
@@ -61,7 +62,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 						Iterables.list(groupsReader.users(groupId0, groupCryptoKey0)));
 				return null;
 			}
-		});
+		}, ICallback.Utils.<Void>noCallback()).get();
 		MailerMock mailer = getMailer();
 		String subject = "subject " + email0 + ", someNewGroup";
 		String message = "email " + email0 + ", someNewGroup";
@@ -75,13 +76,13 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 
 	public void testInviteGroup() {
 		assertEquals(groupId0, createGroup(groupName0, groupCryptoKey0));
-		getServerApi().makeUserAndGroupsContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		getServerApi().makeUserAndGroupsContainer().accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				groups.addUser(groupId0, groupCryptoKey0, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId0, LoginConstants.emailKey, email0, GroupConstants.membershipStatusKey, GroupConstants.adminStatus));
 				userMembership.addMembership(softwareFmId0, userKey0, groupId0, groupCryptoKey0, GroupConstants.adminStatus);
 			}
-		});
+		}).get();
 
 		localReadWriter.access(IGroupOperations.class, new ICallback<IGroupOperations>() {
 			@Override
@@ -93,12 +94,12 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 				assertEquals(GroupOperationResult.groupId(groupId0), memory.getOnlyResult());
 
 			}
-		});
+		}).get();
 
-		localReadWriter.access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, new IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void>() {
+		localReadWriter.access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, new ICallback3<IGroupsReader, IUserReader, IUserMembershipReader>() {
 			@SuppressWarnings("unchecked")
 			@Override
-			public Void apply(IGroupsReader groupsReader, IUserReader userReader, IUserMembershipReader userMembershipReader) throws Exception {
+			public void process(IGroupsReader groupsReader, IUserReader userReader, IUserMembershipReader userMembershipReader) throws Exception {
 				checkUserExistsAndIsMember(userReader, userMembershipReader, softwareFmId0, userKey0, email0, GroupConstants.adminStatus);
 				checkUserExistsAndIsMember(userReader, userMembershipReader, softwareFmId1, userKey1, "a@x.com", GroupConstants.invitedStatus);
 				checkUserExistsAndIsMember(userReader, userMembershipReader, softwareFmId2, userKey2, "b@x.com", GroupConstants.invitedStatus);
@@ -111,10 +112,9 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 				for (int i = 0; i < expected.size(); i++)
 					assertEquals(expected.get(i), actual.get(i));
 				assertEquals(expected.size(), actual.size());
-				return null;
 			}
 
-		});
+		}).get();
 		MailerMock mailer = getMailer();
 		String subject = "subject " + email0 + ", groupId0Name";
 		String message = "email " + email0 + ", groupId0Name";
@@ -129,7 +129,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 	public void testAcceptInvite() {
 		assertEquals(softwareFmId1, createUser());
 		assertEquals(groupId0, createGroup(groupName0, groupCryptoKey0));
-		getServerApi().makeUserAndGroupsContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		getServerApi().makeUserAndGroupsContainer().accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				groups.addUser(groupId0, groupCryptoKey0, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId0, LoginConstants.emailKey, email0, GroupConstants.membershipStatusKey, GroupConstants.adminStatus));
@@ -138,7 +138,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 				groups.addUser(groupId0, groupCryptoKey0, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId1, LoginConstants.emailKey, email1, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus));
 				userMembership.addMembership(softwareFmId1, userKey1, groupId0, groupCryptoKey0, GroupConstants.invitedStatus);
 			}
-		});
+		}).get();
 
 		localReadWriter.access(IGroupOperations.class, new ICallback<IGroupOperations>() {
 			@Override
@@ -148,12 +148,12 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 				memory.waitUntilCalled(CommonConstants.testTimeOutMs);
 				assertEquals(GroupOperationResult.groupId(groupId0), memory.getOnlyResult());
 			}
-		});
+		}).get();
 
-		localReadWriter.access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, new IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void>() {
+		localReadWriter.access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, new ICallback3<IGroupsReader, IUserReader, IUserMembershipReader>() {
 			@SuppressWarnings("unchecked")
 			@Override
-			public Void apply(IGroupsReader groupsReader, IUserReader userReader, IUserMembershipReader userMembershipReader) throws Exception {
+			public void process(IGroupsReader groupsReader, IUserReader userReader, IUserMembershipReader userMembershipReader) throws Exception {
 				checkUserExistsAndIsMember(userReader, userMembershipReader, softwareFmId0, userKey0, email0, GroupConstants.adminStatus);
 				checkUserExistsAndIsMember(userReader, userMembershipReader, softwareFmId1, userKey1, email1, GroupConstants.memberStatus);
 
@@ -164,16 +164,15 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 				for (int i = 0; i < expected.size(); i++)
 					assertEquals(expected.get(i), actual.get(i));
 				assertEquals(expected.size(), actual.size());
-				return null;
 			}
 
-		});
+		}).get();
 	}
 
 	public void testLEaveGroup() {
 		assertEquals(softwareFmId1, createUser());
 		assertEquals(groupId0, createGroup(groupName0, groupCryptoKey0));
-		getServerApi().makeUserAndGroupsContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		getServerApi().makeUserAndGroupsContainer().accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				groups.addUser(groupId0, groupCryptoKey0, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId0, LoginConstants.emailKey, email0, GroupConstants.membershipStatusKey, GroupConstants.adminStatus));
@@ -182,7 +181,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 				groups.addUser(groupId0, groupCryptoKey0, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId1, LoginConstants.emailKey, email1, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus));
 				userMembership.addMembership(softwareFmId1, userKey1, groupId0, groupCryptoKey0, GroupConstants.memberStatus);
 			}
-		});
+		}).get();
 
 		localReadWriter.access(IGroupOperations.class, new ICallback<IGroupOperations>() {
 			@Override
@@ -192,29 +191,28 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 				memory.waitUntilCalled(CommonConstants.testTimeOutMs);
 				assertEquals(GroupOperationResult.groupId(groupId0), memory.getOnlyResult());
 			}
-		});
+		}).get();
 
-		localReadWriter.access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, new IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void>() {
+		localReadWriter.access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, new ICallback3<IGroupsReader, IUserReader, IUserMembershipReader>() {
 			@SuppressWarnings("unchecked")
 			@Override
-			public Void apply(IGroupsReader groupsReader, IUserReader userReader, IUserMembershipReader userMembershipReader) throws Exception {
+			public void process(IGroupsReader groupsReader, IUserReader userReader, IUserMembershipReader userMembershipReader) throws Exception {
 				checkUserExistsAndIsMember(userReader, userMembershipReader, softwareFmId0, userKey0, email0, GroupConstants.adminStatus);
 				assertEquals(Collections.emptyList(), userMembershipReader.walkGroupsFor(softwareFmId1, userKey1));
 
 				List<Map<String, Object>> expected = Arrays.asList(//
 						Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId0, GroupConstants.membershipStatusKey, GroupConstants.adminStatus, LoginConstants.emailKey, email0));//
 				assertEquals(expected, Iterables.list(groupsReader.users(groupId0, groupCryptoKey0)));
-				return null;
 			}
 
-		});
+		}).get();
 
 	}
 
 	public void testKickFromGroup() {
 		assertEquals(softwareFmId1, createUser());
 		assertEquals(groupId0, createGroup(groupName0, groupCryptoKey0));
-		getServerApi().makeUserAndGroupsContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		getServerApi().makeUserAndGroupsContainer().accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				groups.addUser(groupId0, groupCryptoKey0, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId0, LoginConstants.emailKey, email0, GroupConstants.membershipStatusKey, GroupConstants.adminStatus));
@@ -223,7 +221,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 				groups.addUser(groupId0, groupCryptoKey0, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId1, LoginConstants.emailKey, email1, GroupConstants.membershipStatusKey, GroupConstants.invitedStatus));
 				userMembership.addMembership(softwareFmId1, userKey1, groupId0, groupCryptoKey0, GroupConstants.memberStatus);
 			}
-		});
+		}).get();
 
 		localReadWriter.access(IGroupOperations.class, new ICallback<IGroupOperations>() {
 			@Override
@@ -233,22 +231,20 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 				memory.waitUntilCalled(CommonConstants.testTimeOutMs);
 				assertEquals(GroupOperationResult.groupId(groupId0), memory.getOnlyResult());
 			}
-		});
+		}).get();
 
-		localReadWriter.access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, new IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void>() {
+		localReadWriter.access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, new ICallback3<IGroupsReader, IUserReader, IUserMembershipReader>() {
 			@SuppressWarnings("unchecked")
 			@Override
-			public Void apply(IGroupsReader groupsReader, IUserReader userReader, IUserMembershipReader userMembershipReader) throws Exception {
+			public void process(IGroupsReader groupsReader, IUserReader userReader, IUserMembershipReader userMembershipReader) throws Exception {
 				checkUserExistsAndIsMember(userReader, userMembershipReader, softwareFmId0, userKey0, email0, GroupConstants.adminStatus);
 				assertEquals(Collections.emptyList(), userMembershipReader.walkGroupsFor(softwareFmId1, userKey1));
 
 				List<Map<String, Object>> expected = Arrays.asList(//
 						Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId0, GroupConstants.membershipStatusKey, GroupConstants.adminStatus, LoginConstants.emailKey, email0));//
 				assertEquals(expected, Iterables.list(groupsReader.users(groupId0, groupCryptoKey0)));
-				return null;
 			}
-
-		});
+		}).get();
 	}
 
 	@SuppressWarnings("unchecked")

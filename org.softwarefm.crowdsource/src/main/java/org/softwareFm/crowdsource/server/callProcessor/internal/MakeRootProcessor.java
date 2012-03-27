@@ -14,6 +14,7 @@ import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.git.IGitWriter;
 import org.softwareFm.crowdsource.api.server.AbstractCallProcessor;
 import org.softwareFm.crowdsource.api.server.IProcessResult;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.CommonMessages;
 import org.softwareFm.crowdsource.utilities.functions.IFunction2;
@@ -48,6 +49,6 @@ public class MakeRootProcessor extends AbstractCallProcessor {
 						return IProcessResult.Utils.processError(CommonConstants.notFoundStatusCode, MessageFormat.format(CommonMessages.cannotCreateGitUnderSecondRepository, actualUrl));
 				}
 			}
-		}).get(container.defaultTimeOutMs());
+		}, ICallback.Utils.<IProcessResult>noCallback()).get();
 	}
 }

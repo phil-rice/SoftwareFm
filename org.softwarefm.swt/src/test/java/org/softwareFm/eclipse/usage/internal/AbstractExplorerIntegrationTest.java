@@ -238,7 +238,7 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 		return new IExtraReaderWriterConfigurator<ServerConfig>() {
 			@Override
 			public void builder(IContainerBuilder builder,ServerConfig apiConfig) {
-				ISoftwareFmApiFactory.Utils.getServerExtraReaderWriterConfigurator(getUrlPrefix()).builder(builder, apiConfig);
+				ISoftwareFmApiFactory.Utils.getServerExtraReaderWriterConfigurator(getUrlPrefix(), apiConfig.timeOutMs).builder(builder, apiConfig);
 				ProjectMock projectMock = getProjectTimeGetterFixture(builder);
 				builder.register(IUsageReader.class, projectMock);
 			}

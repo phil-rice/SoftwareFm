@@ -18,7 +18,6 @@ import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
 import org.softwareFm.crowdsource.api.LocalConfig;
 import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.constants.CommentConstants;
-import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.eclipse.usage.internal.ApiAndSwtTest;
 import org.softwareFm.swt.card.CardDataStoreFixture;
@@ -202,7 +201,7 @@ public class CommentsTest extends ApiAndSwtTest {
 		addComment = EasyMock.createMock(Runnable.class);
 		super.setUp();
 		cardConfig = IExplorerTest.addNeededResources(CardDataStoreFixture.syncCardConfig(display));
-		comments = new Comments(shell, getLocalApi().makeContainer(), cardConfig, commentsCallback, addComment, CommonConstants.testTimeOutMs);
+		comments = new Comments(shell, getLocalApi().makeContainer(), cardConfig, commentsCallback, addComment);
 	}
 
 	@Override

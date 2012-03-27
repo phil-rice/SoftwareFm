@@ -12,6 +12,7 @@ import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.collections.Iterables;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
@@ -49,7 +50,7 @@ public abstract class AbstractGroupReader implements IGroupsReader {
 					throw new IllegalStateException(groupFileDescription.toString());
 				return iterator.next();
 			}
-		}).get(container.defaultTimeOutMs());
+		}, ICallback.Utils.<Map<String, Object>>noCallback()).get();
 	}
 
 	@Override
@@ -60,7 +61,7 @@ public abstract class AbstractGroupReader implements IGroupsReader {
 				IFileDescription groupFileDescription = findReportFileDescription(groupId, groupCryptoKey, month);
 				return git.getFile(groupFileDescription);
 			}
-		}).get(container.defaultTimeOutMs());
+		}, ICallback.Utils.<Map<String, Object>>noCallback()).get();
 	}
 
 	@Override
@@ -96,6 +97,6 @@ public abstract class AbstractGroupReader implements IGroupsReader {
 				List<String> listOfLines = Strings.splitIgnoreBlanks(lines, "\n");
 				return listOfLines.size() - 1;
 			}
-		}).get(container.defaultTimeOutMs());
+		}, ICallback.Utils.<Integer>noCallback()).get();
 	}
 }

@@ -23,7 +23,6 @@ import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
-import org.softwareFm.crowdsource.utilities.functions.IFunction2;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.runnable.Callables;
 
@@ -47,7 +46,7 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 	}
 
 	public void testGroupComments() {
-		getServerUserAndGroupsContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		getServerUserAndGroupsContainer().accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership membershipForServer) throws Exception {
 				groups.setGroupProperty(groupId, groupCryptoKey0, CommentConstants.commentCryptoKey, Crypto.makeKey());
@@ -79,14 +78,14 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 				}, expectedText);
 				return null;
 			}
-		});
+		},  ICallback.Utils.<Void>noCallback()).get();
 	}
 
 	protected void checkAddMyComment(final String text, final String... expectedText) {
 		 final IUserAndGroupsContainer container = getLocalUserAndGroupsContainer();
-		 container.access(ICommentsReader.class, IUserReader.class, new IFunction2<ICommentsReader, IUserReader, Void>() {
+		 container.access(ICommentsReader.class, IUserReader.class, new ICallback2<ICommentsReader, IUserReader>() {
 			@Override
-			public Void apply(final ICommentsReader commentsReader, final IUserReader userReader) throws Exception {
+			public void process(final ICommentsReader commentsReader, final IUserReader userReader) throws Exception {
 				checkAdd("someSource", text, new Callable<ICommentDefn>() {
 					@Override
 					public ICommentDefn call() throws Exception {
@@ -98,16 +97,15 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 						return commentsReader.myComments("a/b", softwareFmId, userKey0, "someSource");
 					}
 				}, expectedText);
-				return null;
 			}
-		});
+		}).get();
 	}
 
 	protected void checkAddGroupComment(final String text, final String... expectedText) {
 		final IUserAndGroupsContainer container = getLocalUserAndGroupsContainer();
-		container.access(ICommentsReader.class, IGroupsReader.class, new IFunction2<ICommentsReader, IGroupsReader, Void>() {
+		container.access(ICommentsReader.class, IGroupsReader.class, new ICallback2<ICommentsReader, IGroupsReader>() {
 			@Override
-			public Void apply(final ICommentsReader commentsReader, final IGroupsReader groupsReader) throws Exception {
+			public void process(final ICommentsReader commentsReader, final IGroupsReader groupsReader) throws Exception {
 
 				checkAdd("groupName", text, new Callable<ICommentDefn>() {
 					@Override
@@ -120,14 +118,13 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 						return commentsReader.groupComments("a/b", softwareFmId, userKey0);
 					}
 				}, expectedText);
-				return null;
 			}
 		});
 	}
 
 	protected void checkAdd(final String source, final String text, final Callable<ICommentDefn> makeDefinition, final Callable<List<Map<String, Object>>> actualGetter, final String... expectedText) {
 		IContainer localWriterApi = getLocalApi().makeContainer();
-		localWriterApi.modifyComments(new ICallback<IComments>() {
+		localWriterApi.accessComments(new ICallback<IComments>() {
 			@Override
 			public void process(IComments comments) throws Exception {
 				comments.addComment(softwareFmId, userKey0, Callables.call(makeDefinition), text);

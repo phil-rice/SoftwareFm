@@ -12,6 +12,7 @@ import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
 import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.constants.CommentConstants;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
@@ -36,7 +37,7 @@ public abstract class AbstractCommentsReader implements ICommentsReader {
 				List<Map<String, Object>> result = Lists.map(gitReader.getFileAsListOfMaps(fd), Maps.<String, Object> withFn(CommentConstants.sourceKey, source));
 				return result;
 			}
-		}).get(container.defaultTimeOutMs());
+		},  ICallback.Utils.<List<Map<String, Object>>> noCallback()).get();
 	}
 
 	@Override
@@ -61,7 +62,7 @@ public abstract class AbstractCommentsReader implements ICommentsReader {
 				}
 				return result;
 			}
-		}).get(container.defaultTimeOutMs());
+		}, ICallback.Utils.<List<Map<String, Object>>> noCallback()).get();
 	}
 
 	@Override
@@ -80,11 +81,11 @@ public abstract class AbstractCommentsReader implements ICommentsReader {
 								List<Map<String, Object>> result = Lists.map(gitReader.getFileAsListOfMaps(fd), Maps.<String, Object> withFn(CommentConstants.sourceKey, source));
 								return result;
 							}
-						});
+						}, ICallback.Utils.<List<Map<String, Object>>> noCallback()).get();
 					}
-				});
+				}, ICallback.Utils.<List<Map<String, Object>>> noCallback()).get();
 			}
 
-		}).get(container.defaultTimeOutMs());
+		}, ICallback.Utils.<List<Map<String, Object>>> noCallback()).get();
 	}
 }

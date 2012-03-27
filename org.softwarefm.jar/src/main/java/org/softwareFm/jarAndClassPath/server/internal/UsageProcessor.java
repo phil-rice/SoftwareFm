@@ -53,7 +53,7 @@ public class UsageProcessor extends AbstractCallProcessor {
 					}
 				});
 			}
-		});
+		}).get();
 		return IProcessResult.Utils.doNothing();
 	}
 

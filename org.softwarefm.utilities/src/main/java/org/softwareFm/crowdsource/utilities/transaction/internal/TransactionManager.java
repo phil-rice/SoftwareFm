@@ -39,7 +39,7 @@ public class TransactionManager implements ITransactionManagerBuilder {
 	}
 
 	@Override
-	public <T> ITransaction<T> start(final IFunction1<IMonitor, T> job, final ICallback<T> resultCallback, ITransactional... transactionals) {
+	public <T> ITransaction<T> start(final IFunction1<IMonitor, T> job, final ICallback<T> resultCallback, Object... potentialTransactionals) {
 		final CountDownLatch latch = new CountDownLatch(1);
 		IFunction1<IMonitor, T> fullJob = new IFunction1<IMonitor, T>() {
 			@Override
@@ -102,7 +102,7 @@ public class TransactionManager implements ITransactionManagerBuilder {
 				}
 			}
 
-			private <T> void executeCallback(final ICallback<T> resultCallback, T result) throws Exception {
+			private void executeCallback(final ICallback<T> resultCallback, T result) throws Exception {
 				for (Entry<Class<?>, ICallback3<IServiceExecutor, ICallback<?>, Object>> entry : callbackExecutors.entrySet())
 					if (entry.getKey().isAssignableFrom(resultCallback.getClass())) {
 						entry.getValue().process(serviceExecutor, resultCallback, result);
@@ -113,8 +113,9 @@ public class TransactionManager implements ITransactionManagerBuilder {
 		};
 		Future<T> future = serviceExecutor.submit(fullJob);
 		ITransaction<T> transaction = getTransaction(future);
-		for (ITransactional transactional : transactionals)
-			Maps.addToList(transactionalMap, transaction, transactional);
+		for (Object potential : potentialTransactionals)
+			if (potential instanceof ITransactional)
+				Maps.addToList(transactionalMap, transaction, (ITransactional) potential);
 		fullJobToTransaction.put(fullJob, transaction);
 		latch.countDown();
 		return transaction;
@@ -131,7 +132,7 @@ public class TransactionManager implements ITransactionManagerBuilder {
 				} catch (InterruptedException e) {
 					throw WrappedException.wrap(e);
 				} catch (ExecutionException e) {
-					throw WrappedException.wrap(e);
+					throw WrappedException.wrap(e.getCause());
 				}
 			}
 

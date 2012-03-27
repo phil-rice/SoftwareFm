@@ -39,7 +39,7 @@ public class ICommentDefnTest extends TemporaryFileTest {
 			public String apply(IUserReader userReader) throws Exception {
 				return userReader.getUserProperty(softwareFmId, userCrypto, CommentConstants.commentCryptoKey);
 			}
-		});
+		}, ICallback.Utils.<String>noCallback()).get();
 		assertNotNull(userCommentCrypto);
 		assertEquals(initial(softwareFmId, userCommentCrypto), ICommentDefn.Utils.myInitial(container, softwareFmId, userCrypto, url));
 		assertEquals(reply(softwareFmId, userCommentCrypto), ICommentDefn.Utils.myReply(container, softwareFmId, userCrypto, url, replyIndex));
@@ -48,12 +48,12 @@ public class ICommentDefnTest extends TemporaryFileTest {
 	public void testGroup() {
 		final String groupCrypto = Crypto.makeKey();
 		final String groupCommentCrypto = Crypto.makeKey();
-		api.makeUserAndGroupsContainer().modifyGroups(new ICallback<IGroups>() {
+		api.makeUserAndGroupsContainer().accessGroups(new ICallback<IGroups>() {
 			@Override
 			public void process(IGroups groups) throws Exception {
 				groups.setGroupProperty(groupId, groupCrypto, CommentConstants.commentCryptoKey, groupCommentCrypto);
 			}
-		});
+		}).get();
 		assertEquals(initial(groupId, groupCommentCrypto), ICommentDefn.Utils.groupInitial(container, groupId, groupCrypto, url));
 		assertEquals(reply(groupId, groupCommentCrypto), ICommentDefn.Utils.groupReply(container, groupId, groupCrypto, url, replyIndex));
 	}

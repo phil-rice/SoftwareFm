@@ -19,6 +19,7 @@ import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
 import org.softwareFm.crowdsource.httpClient.IRequestBuilder;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
 import org.softwareFm.crowdsource.httpClient.internal.MemoryResponseCallback;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.collections.Iterables;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
@@ -36,7 +37,7 @@ public class TakeOnGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 
 	@SuppressWarnings("unchecked")
 	public void testTakeOnGroup() throws Exception {
-	
+
 		getHttpClient().post(GroupConstants.takeOnCommandPrefix).//
 				addParam(GroupConstants.groupNameKey, "someNewGroupName").//
 				addParam(GroupConstants.takeOnSubjectKey, "someSubject").//
@@ -58,7 +59,7 @@ public class TakeOnGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 				assertEquals("someNewGroupName", groups.getGroupProperty(expectedGroupId, groupCryptoKey0, GroupConstants.groupNameKey));
 				return null;
 			}
-		});
+		}, ICallback.Utils.<Void> noCallback()).get();
 		MailerMock mailerMock = getMailer();
 		assertEquals(Lists.times(2, fromEmail), mailerMock.froms);
 		assertEquals(Arrays.asList("email1@a.b", "email2@a.b"), mailerMock.tos);
@@ -135,11 +136,10 @@ public class TakeOnGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 			builder.addParam(key, value);
 	}
 
-
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		fromSoftwareFmId =  getIdAndSaltGenerator().makeNewUserId();
+		fromSoftwareFmId = getIdAndSaltGenerator().makeNewUserId();
 		api.getServerDoers().getSignUpChecker().signUp(fromEmail, "someMoniker", "someSalt", "irrelevant", fromSoftwareFmId);
 	}
 

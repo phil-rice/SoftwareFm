@@ -23,16 +23,16 @@ public interface IUserReader {
 				public String apply(IUserReader from) throws Exception {
 					return from.getUserProperty(softwareFmId, userCrypto, propertyName);
 				}
-			});
+			}, ICallback.Utils.<String>noCallback()).get();
 		}
 
 		public static void setUserProperty(IUserAndGroupsContainer readWriteApi, final String softwareFmId, final String userCrypto, final String propertyName, final String value) {
-			readWriteApi.modifyUser(new ICallback<IUser>() {
+			readWriteApi.accessUser(new ICallback<IUser>() {
 				@Override
 				public void process(IUser user) throws Exception {
 					user.setUserProperty(softwareFmId, userCrypto, propertyName, value);
 				}
-			});
+			}).get();
 		}
 
 		public static IUserReader mockReader(final Object... nameAndVariables) {
@@ -73,7 +73,7 @@ public interface IUserReader {
 					from.refresh(softwareFmId);
 					return null;
 				}
-			});
+			},  ICallback.Utils.<Void>noCallback()).get();
 		}
 
 	}

@@ -54,7 +54,7 @@ public class GenerateUsageProjectGeneratorTest extends GroupsTest {
 		saveProjectData(sfmId2, user2ProjectCrypto, "january_12", projectUser2);
 		// saveProjectData(id2, "month2", user2ProjectCrypto, projectUser2); no month 2 data
 		saveProjectData(sfmId2, user2ProjectCrypto, "march_12", projectUser2);
-		serverContainer.modifyGroups(new ICallback<IGroups>() {
+		serverContainer.accessGroups(new ICallback<IGroups>() {
 			@Override
 			public void process(IGroups groups) throws Exception {
 				groups.setGroupProperty(groupId, groupCrypto, "someName", "someValue");

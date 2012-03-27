@@ -16,6 +16,7 @@ import org.softwareFm.crowdsource.api.ITakeOnEnrichmentProvider;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
 import org.softwareFm.crowdsource.api.user.IUserReader;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.collections.Iterables;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
@@ -449,8 +450,8 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 	}
 
 	private void checkOnServerAndLocally(IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void> checkFn) {
-		getServerApi().makeContainer().access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, checkFn);
-		getLocalApi().makeContainer().access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, checkFn);
+		getServerApi().makeContainer().access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, checkFn, ICallback.Utils.<Void> noCallback()).get();
+		getLocalApi().makeContainer().access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, checkFn, ICallback.Utils.<Void> noCallback()).get();
 	}
 
 	public void testButtonsEnabledStatusWhenNotMemberOfAnyGroup() {
@@ -550,7 +551,6 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		Swts.setText(control, newValue);
 	}
 
-	
 	@Override
 	protected ITakeOnEnrichmentProvider getTakeOnEnrichment() {
 		return ITakeOnEnrichmentProvider.Utils.enrichmentWithUserProperty(JarAndPathConstants.projectCryptoKey);

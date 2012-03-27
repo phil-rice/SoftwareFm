@@ -14,6 +14,7 @@ import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.server.ICallProcessor;
 import org.softwareFm.crowdsource.api.server.IProcessResult;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
@@ -24,12 +25,10 @@ import org.softwareFm.crowdsource.utilities.maps.UrlCache;
 public class GitGetProcessor implements ICallProcessor {
 	private final UrlCache<String> cache;
 	private final IContainer container;
-	private final long timeOutMs;
 
-	public GitGetProcessor(IContainer container, UrlCache<String> cache, long timeOutMs) {
+	public GitGetProcessor(IContainer container, UrlCache<String> cache) {
 		this.container = container;
 		this.cache = cache;
-		this.timeOutMs = timeOutMs;
 	}
 
 	@Override
@@ -65,7 +64,7 @@ public class GitGetProcessor implements ICallProcessor {
 					return Json.toString(Maps.stringObjectLinkedMap(CommonConstants.repoUrlKey, repoUrl));
 				}
 			}
-		}).get(timeOutMs);
+		}, ICallback.Utils.<String>noCallback()).get();
 		return result;
 		
 	}

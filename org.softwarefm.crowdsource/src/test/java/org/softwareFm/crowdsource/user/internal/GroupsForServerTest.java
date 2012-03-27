@@ -35,7 +35,7 @@ public class GroupsForServerTest extends ApiTest {
 	}
 
 	public void testAddUsers() {
-		getServerUserAndGroupsContainer().modifyGroups(new ICallback<IGroups>() {
+		getServerUserAndGroupsContainer().accessGroups(new ICallback<IGroups>() {
 			@Override
 			public void process(IGroups groups) throws Exception {
 				groups.setGroupProperty(groupId, groupCrypto, "someProperty", "someValue");
@@ -43,7 +43,7 @@ public class GroupsForServerTest extends ApiTest {
 				groups.addUser(groupId, groupCrypto, makeUserDetails(1));
 				groups.addUser(groupId, groupCrypto, makeUserDetails(2));
 			}
-		});
+		}).get();
 
 		checkUsers(3);
 	}
@@ -78,7 +78,7 @@ public class GroupsForServerTest extends ApiTest {
 	}
 
 	public void testAddingUsersDoesntImpactOnProperties() {
-		getServerUserAndGroupsContainer().modifyGroups(new ICallback<IGroups>() {
+		getServerUserAndGroupsContainer().accessGroups(new ICallback<IGroups>() {
 			@Override
 			public void process(IGroups groups) throws Exception {
 				checkSetGetGroups();
@@ -93,7 +93,7 @@ public class GroupsForServerTest extends ApiTest {
 				groups.addUser(groupId, groupCrypto, makeUserDetails(2));
 				checkUsers(3);
 			}
-		});
+		}).get();
 	}
 
 	public void testSettingPropertiesDoesntImpactOnUsers() {
@@ -135,7 +135,7 @@ public class GroupsForServerTest extends ApiTest {
 
 	@SuppressWarnings("unchecked")
 	public void testSetUserProperty() {
-		getServerUserAndGroupsContainer().modifyGroups(new ICallback<IGroups>() {
+		getServerUserAndGroupsContainer().accessGroups(new ICallback<IGroups>() {
 			@Override
 			public void process(IGroups groups) throws Exception {
 				groups.setGroupProperty(groupId, groupCrypto, "someProperty", "someValue");
@@ -145,11 +145,11 @@ public class GroupsForServerTest extends ApiTest {
 				groups.setUserProperty(groupId, groupCrypto, "someId2", "a", "c");
 				assertEquals(Arrays.asList(makeInitialFor("someId1"), Maps.with(makeInitialFor("someId2"), "a", "c"), makeInitialFor("someId3")), Iterables.list(groups.users(groupId, groupCrypto)));
 			}
-		});
+		}).get();
 	}
 
 	public void testSetUserPropertyIfNotPresent() {
-		getServerUserAndGroupsContainer().modifyGroups(new ICallback<IGroups>() {
+		getServerUserAndGroupsContainer().accessGroups(new ICallback<IGroups>() {
 			@Override
 			public void process(final IGroups groups) throws Exception {
 				groups.setGroupProperty(groupId, groupCrypto, "someProperty", "someValue");
@@ -162,11 +162,11 @@ public class GroupsForServerTest extends ApiTest {
 					}
 				});
 			}
-		});
+		}).get();
 	}
 
 	public void testSetUserPropertyIfThroughCorruptDataIdInTwice() {
-		getServerUserAndGroupsContainer().modifyGroups(new ICallback<IGroups>() {
+		getServerUserAndGroupsContainer().accessGroups(new ICallback<IGroups>() {
 			@Override
 			public void process(final IGroups groups) throws Exception {
 				groups.setGroupProperty(groupId, groupCrypto, "someProperty", "someValue");
@@ -180,7 +180,7 @@ public class GroupsForServerTest extends ApiTest {
 					}
 				});
 			}
-		});
+		}).get();
 	}
 
 	protected Map<String, Object> makeInitialFor(String id) {
@@ -224,7 +224,7 @@ public class GroupsForServerTest extends ApiTest {
 	}
 
 	protected void useLocalReaderRemoteGroups(final ICallback2<IGroupsReader, IGroups> callback) {
-		getServerUserAndGroupsContainer().modifyGroups(new ICallback<IGroups>() {
+		getServerUserAndGroupsContainer().accessGroups(new ICallback<IGroups>() {
 			@Override
 			public void process(final IGroups groups) throws Exception {
 				getLocalUserAndGroupsContainer().accessGroupReader(new IFunction1<IGroupsReader, Void>() {
@@ -233,9 +233,9 @@ public class GroupsForServerTest extends ApiTest {
 						callback.process(groupsReader, groups);
 						return null;
 					}
-				});
+				}, ICallback.Utils.<Void>noCallback()).get();
 			}
-		});
+		}).get();
 	}
 
 	protected void checkSetGetGroups() {

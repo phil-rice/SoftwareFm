@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Map;
 
 import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.IHasCache;
 
@@ -35,7 +36,7 @@ public interface IGitReader extends IHasCache {
 					Iterable<Map<String, Object>> result = gitReader.getFileAsListOfMaps(fileDescription);
 					return result;
 				}
-			}).get(container.defaultTimeOutMs());
+			}, ICallback.Utils.<Iterable<Map<String,Object>>>noCallback()).get();
 		}
 
 		public static String getFileAsString(IContainer container, final IFileDescription fileDescription) {
@@ -45,7 +46,7 @@ public interface IGitReader extends IHasCache {
 					String result = gitReader.getFileAsString(fileDescription);
 					return result;
 				}
-			}).get(container.defaultTimeOutMs());
+			}, ICallback.Utils.<String>noCallback()).get();
 		}
 
 		public static Map<String, Object> getFileAsMap(IContainer container, final IFileDescription fileDescription) {
@@ -55,7 +56,7 @@ public interface IGitReader extends IHasCache {
 					Map<String, Object> result = gitReader.getFile(fileDescription);
 					return result;
 				}
-			}).get(container.defaultTimeOutMs());
+			}, ICallback.Utils.<Map<String,Object>>noCallback()).get();
 		}
 
 		public static Integer countOfFileAsListsOfMap(IContainer container, final IFileDescription fileDescription) {
@@ -65,7 +66,7 @@ public interface IGitReader extends IHasCache {
 					int result = gitReader.countOfFileAsListsOfMap(fileDescription);
 					return result;
 				}
-			}).get(container.defaultTimeOutMs());
+			}, ICallback.Utils.<Integer>noCallback()).get();
 		}
 
 		public static void clearCache(IContainer container) {
@@ -75,7 +76,7 @@ public interface IGitReader extends IHasCache {
 					gitReader.clearCaches();
 					return null;
 				}
-			});
+			}, ICallback.Utils.<Void>noCallback());
 		}
 
 		public static Map<String,Object> getFileAndDescendants(IContainer container, final IFileDescription fileDescription) {
@@ -84,7 +85,7 @@ public interface IGitReader extends IHasCache {
 				public Map<String,Object> apply(IGitReader gitReader) throws Exception {
 					return gitReader.getFileAndDescendants(fileDescription);
 				}
-			}).get(container.defaultTimeOutMs());
+			}, ICallback.Utils.<Map<String,Object>>noCallback()).get();
 		}
 
 	}

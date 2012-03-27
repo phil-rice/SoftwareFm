@@ -40,7 +40,7 @@ public class TakeOnGroupProcessor extends AbstractAddToGroupProcessor {
 	protected IProcessResult execute(String actualUrl, final Map<String, Object> parameters) {
 		checkForParameter(parameters, LoginConstants.softwareFmIdKey, GroupConstants.groupNameKey, GroupConstants.takeOnEmailPattern, GroupConstants.takeOnFromKey, GroupConstants.takeOnSubjectKey, GroupConstants.takeOnEmailListKey);
 		final AtomicReference<String> replyMessage = new AtomicReference<String>();
-		container.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		container.accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups first, IUserMembership second) throws Exception {
 				String groupName = (String) parameters.get(GroupConstants.groupNameKey);
@@ -64,7 +64,7 @@ public class TakeOnGroupProcessor extends AbstractAddToGroupProcessor {
 				sendInvitationEmails(parameters, groupName, memberList);
 				replyMessage.set(groupId);
 			}
-		});
+		}).get();
 		return IProcessResult.Utils.processString(replyMessage.get());
 	}
 }

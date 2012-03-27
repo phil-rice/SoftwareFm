@@ -11,6 +11,7 @@ import java.util.Map;
 import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitReader;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
@@ -19,7 +20,6 @@ import org.softwareFm.crowdsource.utilities.url.Urls;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 
 public class UsageReaderForLocal extends AbstractUsageReader {
-
 
 	public UsageReaderForLocal(IContainer container, IUrlGenerator userUrlGenerator) {
 		super(container, userUrlGenerator);
@@ -43,7 +43,7 @@ public class UsageReaderForLocal extends AbstractUsageReader {
 						return data;
 					return Collections.emptyMap();
 				}
-			}).get(container.defaultTimeOutMs());
+			}, ICallback.Utils.<Map<String, Map<String, List<Integer>>>> noCallback()).get();
 		return Collections.emptyMap();
 	}
 

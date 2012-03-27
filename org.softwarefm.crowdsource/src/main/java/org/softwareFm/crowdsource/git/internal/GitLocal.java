@@ -123,7 +123,7 @@ public class GitLocal implements IGitLocal {
 						String remoteUrl = repoDetails.getRepositoryUrl();
 						GitLocal.this.clone(remoteUrl, now);
 					}
-				});
+				}).get();
 			} else if (needToPull(repositoryUrl, now)) {
 				logger.debug("        " + getClass().getSimpleName() + ".pullIfNeeded/pull(" + fileDescription + ")");
 				String remoteUrl = Files.offset(root, repositoryUrl);

@@ -19,7 +19,7 @@ import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 
 public class GitLocalTest extends ApiTest {
-	private IContainer localReaderApi;
+	private IContainer container;
 
 	public void testGetFileWhenNeedToCreate() {
 		remoteOperations.init("a");
@@ -28,9 +28,9 @@ public class GitLocalTest extends ApiTest {
 		remoteOperations.put(IFileDescription.Utils.plain("a/b/d"), v21);
 		remoteOperations.addAllAndCommit("a", getClass().getSimpleName());
 
-		checkGetFile(localReaderApi, IFileDescription.Utils.plain("a/b"), v11);
-		checkGetFile(localReaderApi, IFileDescription.Utils.plain("a/b/c"), v12);
-		checkGetFile(localReaderApi, IFileDescription.Utils.plain("a/b/d"), v21);
+		checkGetFile(container, IFileDescription.Utils.plain("a/b"), v11);
+		checkGetFile(container, IFileDescription.Utils.plain("a/b/c"), v12);
+		checkGetFile(container, IFileDescription.Utils.plain("a/b/d"), v21);
 	}
 
 	public void testGetFile() {
@@ -45,10 +45,10 @@ public class GitLocalTest extends ApiTest {
 		localOperations.setConfigForRemotePull("a", remoteRoot.getAbsolutePath());
 		localOperations.pull("a");
 
-		checkGetFile(localReaderApi, IFileDescription.Utils.plain("a"), v11);
-		checkGetFile(localReaderApi, IFileDescription.Utils.plain("a/b"), v11);
-		checkGetFile(localReaderApi, IFileDescription.Utils.plain("a/b/c"), v12);
-		checkGetFile(localReaderApi, IFileDescription.Utils.plain("a/b/d"), v21);
+		checkGetFile(container, IFileDescription.Utils.plain("a"), v11);
+		checkGetFile(container, IFileDescription.Utils.plain("a/b"), v11);
+		checkGetFile(container, IFileDescription.Utils.plain("a/b/c"), v12);
+		checkGetFile(container, IFileDescription.Utils.plain("a/b/d"), v21);
 	}
 
 	public void testGetFileAsStringWhenNoLocalRepository() {
@@ -61,9 +61,9 @@ public class GitLocalTest extends ApiTest {
 		remoteOperations.put(ac, v21);
 		remoteOperations.addAllAndCommit("a", getClass().getSimpleName());
 
-		assertEquals(v11, Json.mapFromString(IGitReader.Utils.getFileAsString(localReaderApi, IFileDescription.Utils.plain("a"))));
-		assertEquals(v12, Json.mapFromString(IGitReader.Utils.getFileAsString(localReaderApi, IFileDescription.Utils.plain("a/b"))));
-		assertEquals(v21, Json.mapFromString(Crypto.aesDecrypt(crypto, IGitReader.Utils.getFileAsString(localReaderApi, ac))));
+		assertEquals(v11, Json.mapFromString(IGitReader.Utils.getFileAsString(container, IFileDescription.Utils.plain("a"))));
+		assertEquals(v12, Json.mapFromString(IGitReader.Utils.getFileAsString(container, IFileDescription.Utils.plain("a/b"))));
+		assertEquals(v21, Json.mapFromString(Crypto.aesDecrypt(crypto, IGitReader.Utils.getFileAsString(container, ac))));
 	}
 
 	public void testGetFileAsStringWhenLocalRepository() {
@@ -80,9 +80,9 @@ public class GitLocalTest extends ApiTest {
 		localOperations.setConfigForRemotePull("a", remoteRoot.getAbsolutePath());
 		localOperations.pull("a");
 
-		assertEquals(v11, Json.mapFromString(IGitReader.Utils.getFileAsString(localReaderApi, IFileDescription.Utils.plain("a"))));
-		assertEquals(v12, Json.mapFromString(IGitReader.Utils.getFileAsString(localReaderApi, IFileDescription.Utils.plain("a/b"))));
-		assertEquals(v21, Json.mapFromString(Crypto.aesDecrypt(crypto, IGitReader.Utils.getFileAsString(localReaderApi, ac))));
+		assertEquals(v11, Json.mapFromString(IGitReader.Utils.getFileAsString(container, IFileDescription.Utils.plain("a"))));
+		assertEquals(v12, Json.mapFromString(IGitReader.Utils.getFileAsString(container, IFileDescription.Utils.plain("a/b"))));
+		assertEquals(v21, Json.mapFromString(Crypto.aesDecrypt(crypto, IGitReader.Utils.getFileAsString(container, ac))));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -101,7 +101,7 @@ public class GitLocalTest extends ApiTest {
 		localOperations.setConfigForRemotePull("a", remoteRoot.getAbsolutePath());
 		localOperations.pull("a");
 
-		assertEquals(Arrays.asList(v11, v12, v21, v22), IGitReader.Utils.getFileAsListOfMaps(localReaderApi, ac));
+		assertEquals(Arrays.asList(v11, v12, v21, v22), IGitReader.Utils.getFileAsListOfMaps(container, ac));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -123,7 +123,7 @@ public class GitLocalTest extends ApiTest {
 		localOperations.pull("a");
 
 		Map<String, Object> bad = Maps.stringObjectMap(CommonConstants.errorKey, MessageFormat.format(CommonMessages.cannotDecrypt, Crypto.aesEncrypt(badCrypto, Json.toString(v21))));
-		assertEquals(Arrays.asList(v11, v12, bad, v22), IGitReader.Utils.getFileAsListOfMaps(localReaderApi,ac));
+		assertEquals(Arrays.asList(v11, v12, bad, v22), IGitReader.Utils.getFileAsListOfMaps(container,ac));
 
 	}
 
@@ -138,7 +138,7 @@ public class GitLocalTest extends ApiTest {
 		remoteOperations.append(ac, v22);
 		remoteOperations.addAllAndCommit("a", getClass().getSimpleName());
 
-		assertEquals(Arrays.asList(v11, v12, v21, v22), IGitReader.Utils.getFileAsListOfMaps(localReaderApi,ac));
+		assertEquals(Arrays.asList(v11, v12, v21, v22), IGitReader.Utils.getFileAsListOfMaps(container,ac));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -152,7 +152,7 @@ public class GitLocalTest extends ApiTest {
 		remoteOperations.append(ac, v22);
 		remoteOperations.addAllAndCommit("a", getClass().getSimpleName());
 
-		assertEquals(Arrays.asList(v11, v12, v21, v22), IGitReader.Utils.getFileAsListOfMaps(localReaderApi,ac));
+		assertEquals(Arrays.asList(v11, v12, v21, v22), IGitReader.Utils.getFileAsListOfMaps(container,ac));
 	}
 
 	public void testGetFileAndDescendants() {
@@ -167,21 +167,21 @@ public class GitLocalTest extends ApiTest {
 		localOperations.setConfigForRemotePull("a", remoteRoot.getAbsolutePath());
 		localOperations.pull("a");
 
-		checkGetFileAndDescendants(localReaderApi, IFileDescription.Utils.plain("a/b"), map);
-		checkGetFileAndDescendants(localReaderApi, IFileDescription.Utils.plain("a/b/c"), v12);
-		checkGetFileAndDescendants(localReaderApi, IFileDescription.Utils.plain("a/b/d"), v21);
+		checkGetFileAndDescendants(container, IFileDescription.Utils.plain("a/b"), map);
+		checkGetFileAndDescendants(container, IFileDescription.Utils.plain("a/b/c"), v12);
+		checkGetFileAndDescendants(container, IFileDescription.Utils.plain("a/b/d"), v21);
 	}
 
 	public void testGetFileAboveRepo() {
 		remoteOperations.init("a/b/c");
 		remoteOperations.put(IFileDescription.Utils.plain("a/b/c"), v12);
-		assertEquals(Maps.stringObjectMap("b", Maps.stringObjectMap("c", v12)), IGitReader.Utils.getFileAsMap(localReaderApi, IFileDescription.Utils.plain("a")));
+		assertEquals(Maps.stringObjectMap("b", Maps.stringObjectMap("c", v12)), IGitReader.Utils.getFileAsMap(container, IFileDescription.Utils.plain("a")));
 	}
 
 	public void testGetFileAndDescendantsAboveRepo() {
 		remoteOperations.init("a/b/c");
 		remoteOperations.put(IFileDescription.Utils.plain("a/b/c"), v12);
-		checkGetFileAndDescendants(localReaderApi, IFileDescription.Utils.plain("a"), Maps.stringObjectMap("b", Maps.stringObjectMap("c", v12)));
+		checkGetFileAndDescendants(container, IFileDescription.Utils.plain("a"), Maps.stringObjectMap("b", Maps.stringObjectMap("c", v12)));
 	}
 
 	public void testClearCache() {
@@ -195,21 +195,21 @@ public class GitLocalTest extends ApiTest {
 		localOperations.setConfigForRemotePull("a", remoteRoot.getAbsolutePath());
 		localOperations.pull("a");
 
-		checkGetFile(localReaderApi, IFileDescription.Utils.plain("a/b"), v11);
-		checkGetFile(localReaderApi, IFileDescription.Utils.plain("a/b/c"), v12);
-		checkGetFile(localReaderApi, IFileDescription.Utils.plain("a/b/d"), v21);
+		checkGetFile(container, IFileDescription.Utils.plain("a/b"), v11);
+		checkGetFile(container, IFileDescription.Utils.plain("a/b/c"), v12);
+		checkGetFile(container, IFileDescription.Utils.plain("a/b/d"), v21);
 
 		remoteOperations.put(IFileDescription.Utils.plain("a/b"), v22);
-		checkGetFile(localReaderApi, IFileDescription.Utils.plain("a/b"), v11);// timeout hasn't happened, so pull doesn't actually take place
-		IGitReader.Utils.clearCache(localReaderApi);
-		checkGetFile(localReaderApi, IFileDescription.Utils.plain("a/b"), v22);// timeout has happened
+		checkGetFile(container, IFileDescription.Utils.plain("a/b"), v11);// timeout hasn't happened, so pull doesn't actually take place
+		IGitReader.Utils.clearCache(container);
+		checkGetFile(container, IFileDescription.Utils.plain("a/b"), v22);// timeout has happened
 	}
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		getServerApi().getServer();
-		localReaderApi = getLocalApi().makeContainer();
+		container = getLocalApi().makeContainer();
 
 	}
 }

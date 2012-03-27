@@ -16,6 +16,7 @@ import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.httpClient.IHttpClient;
 import org.softwareFm.crowdsource.httpClient.IResponse;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.CommonMessages;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
@@ -48,7 +49,7 @@ public interface ILoginStrategy {
 	public static class Utils {
 
 		public static ILoginStrategy softwareFmLoginStrategy(final Display display, final IServiceExecutor serviceExecutor, final IContainer container) {
-			final IHttpClient client = container.access(IHttpClient.class, Functions.<IHttpClient, IHttpClient> identity()).get(container.defaultTimeOutMs());
+			final IHttpClient client = container.access(IHttpClient.class, Functions.<IHttpClient, IHttpClient> identity(), ICallback.Utils.<IHttpClient> noCallback()).get();
 			return new ILoginStrategy() {
 				@Override
 				public void signup(final String email, final String moniker, final String sessionSalt, final String passwordHash, final ISignUpCallback callback) {

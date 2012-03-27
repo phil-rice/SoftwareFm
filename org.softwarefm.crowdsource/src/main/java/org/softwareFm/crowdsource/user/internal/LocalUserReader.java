@@ -10,6 +10,7 @@ import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IUserReader;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
@@ -46,7 +47,7 @@ public class LocalUserReader implements IUserReader {
 				Map<String, Object> data = from.getFile(fileDescription);
 				return data;
 			}
-		}).get(container.defaultTimeOutMs());
+		}, ICallback.Utils.<Map<String, Object>>noCallback()).get();
 	}
 
 	@Override

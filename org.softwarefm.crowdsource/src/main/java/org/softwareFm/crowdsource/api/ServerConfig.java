@@ -21,7 +21,6 @@ import org.softwareFm.crowdsource.utilities.strings.Strings;
 
 public class ServerConfig extends ApiConfig {
 
-	@SuppressWarnings("rawtypes")
 	public static ServerConfig serverConfigForTests(File root, IMailer mailer) {
 		ITakeOnEnrichmentProvider takeOnEnrichment = ITakeOnEnrichmentProvider.Utils.noEnrichment();
 		BasicDataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();

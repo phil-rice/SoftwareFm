@@ -9,6 +9,7 @@ import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.constants.CommentConstants;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
@@ -31,7 +32,7 @@ public class CommentsForServer extends AbstractCommentsReader implements ICommen
 	}
 
 	private Map<String, Object> makeData(final String softwareFmId, final String userCrypto, final String text) {
-		return container.accessUserReader(new IFunction1<IUserReader, Map<String,Object>>() {
+		return container.accessUserReader(new IFunction1<IUserReader, Map<String, Object>>() {
 			@Override
 			public Map<String, Object> apply(IUserReader user) throws Exception {
 				return Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId, //
@@ -39,7 +40,7 @@ public class CommentsForServer extends AbstractCommentsReader implements ICommen
 						CommentConstants.creatorKey, user.getUserProperty(softwareFmId, userCrypto, LoginConstants.monikerKey),//
 						CommentConstants.timeKey, Callables.call(timeGetter));
 			}
-		});
+		}, ICallback.Utils.<Map<String, Object>> noCallback()).get();
 	}
 
 }

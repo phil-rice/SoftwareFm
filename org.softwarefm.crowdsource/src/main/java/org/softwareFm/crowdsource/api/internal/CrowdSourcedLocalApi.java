@@ -23,6 +23,7 @@ import org.softwareFm.crowdsource.httpClient.IHttpClient;
 import org.softwareFm.crowdsource.membership.internal.UserMembershipReaderForLocal;
 import org.softwareFm.crowdsource.user.internal.LocalGroupsReader;
 import org.softwareFm.crowdsource.user.internal.LocalUserReader;
+import org.softwareFm.crowdsource.utilities.transaction.ITransactionManager;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 
 public class CrowdSourcedLocalApi extends AbstractCrowdSourcesApi {
@@ -32,7 +33,8 @@ public class CrowdSourcedLocalApi extends AbstractCrowdSourcesApi {
 
 	@SuppressWarnings("unchecked")
 	public CrowdSourcedLocalApi(LocalConfig localConfig) {
-		container = new CrowdSourceLocalReadWriterApi(IGitOperations.Utils.gitOperations(localConfig.root));
+		ITransactionManager manager = ITransactionManager.Utils.standard();
+		container = new CrowdSourceLocalReadWriterApi(manager, IGitOperations.Utils.gitOperations(localConfig.root), localConfig.timeOutMs);
 		httpClient = IHttpClient.Utils.builderWithThreads(localConfig.host, localConfig.port, localConfig.workerThreads);
 		HttpGitWriter gitWriter = new HttpGitWriter(httpClient);
 		GitLocal gitLocal = new GitLocal(container, gitWriter, localConfig.remoteGitPrefix, localConfig.autoRefreshPeriod);

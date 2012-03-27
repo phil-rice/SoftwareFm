@@ -40,27 +40,27 @@ public class AcceptGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 				assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.groupCryptoKey, groupCryptoKey0, GroupConstants.membershipStatusKey, GroupConstants.memberStatus)), membership.walkGroupsFor(softwareFmId, userKey0));
 				return null;
 			}
-		});
+		}, ICallback.Utils.<Void>noCallback()).get();
 	}
 
 	private void createSoftwareFmUserAndGroupId0() {
 		softwareFmId= createUser();
-		userAndGroupsContainer.modifyGroups(new ICallback<IGroups>() {
+		userAndGroupsContainer.accessGroups(new ICallback<IGroups>() {
 			@Override
 			public void process(IGroups groups) throws Exception {
 				groups.setGroupProperty(groupId = getIdAndSaltGenerator().makeNewGroupId(), groupCryptoKey0, GroupConstants.groupNameKey, "someName");
 			}
-		});
+		}).get();
 	}
 
 	private void addUserToGroup() {
-		userAndGroupsContainer.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		userAndGroupsContainer.accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership membership) throws Exception {
 				groups.addUser(groupId, groupCryptoKey0, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId, GroupConstants.membershipStatusKey, "initialStatus", "a", "b"));
 				membership.addMembership(softwareFmId, userKey0, groupId, groupCryptoKey0, "initialStatus");
 			}
-		});
+		}).get();
 	}
 
 	public void testThrowsExceptionIfNotEnoughParametersAreSent() throws Exception {

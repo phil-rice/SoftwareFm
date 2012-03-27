@@ -17,6 +17,7 @@ import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUserMembership;
 import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.constants.CommentConstants;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback2;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
@@ -57,7 +58,7 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 				return null;
 			}
 
-		});
+		},  ICallback.Utils.<Void> noCallback());
 		IGitReader.Utils.clearCache(container);
 		container.accessCommentsReader(new IFunction1<ICommentsReader, Void>() {
 			@Override
@@ -70,7 +71,7 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 						Maps.with(comment1, "a", "groupId3", sourcekey, "groupId3Name"), Maps.with(comment2, sourcekey, "groupId3Name")), actual);
 				return null;
 			}
-		});
+		},  ICallback.Utils.<Void> noCallback());
 	}
 
 	private void ensureUserHasDefaultValues() {
@@ -82,7 +83,7 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 				user.getUserProperty(softwareFmId, userKey0, GroupConstants.membershipCryptoKey);
 				return null;
 			}
-		});
+		}, ICallback.Utils.<Void> noCallback());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -99,7 +100,7 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 				assertEquals(addSource("asd", comment1, comment2), reader.globalComments("a/b", "asd"));
 				return null;
 			}
-		});
+		}, ICallback.Utils.<Void> noCallback());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -118,7 +119,7 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 				assertEquals(addSource("asd", comment1, comment2), reader.myComments("a/b", softwareFmId, userKey0, "asd"));
 				return null;
 			}
-		});
+		}, ICallback.Utils.<Void> noCallback()).get();
 	}
 
 	public void testUserCommentsWhenNoCommentsHaveBeenMade() {
@@ -132,13 +133,13 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 				assertEquals(Collections.emptyList(), reader.myComments("a/b", softwareFmId, userKey0, "asd"));
 				return null;
 			}
-		});
+		}, ICallback.Utils.<Void> noCallback());
 	}
 
 	protected Map<String, String> setUpGroups(final String... groupIds) {
 		final Map<String, String> groupIdToCrypto = Maps.newMap();
 		 IUserAndGroupsContainer container = getServerUserAndGroupsContainer();
-		container.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		container.accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				for (String groupId : groupIds) {
@@ -150,7 +151,7 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 					userMembership.addMembership(softwareFmId, userKey0, groupId, groupCrypto, GroupConstants.invitedStatus);
 				}
 			}
-		});
+		}).get();
 		return groupIdToCrypto;
 	}
 
@@ -161,7 +162,7 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 			public String apply(IUserReader from) throws Exception {
 				return from.getUserProperty(softwareFmId, userKey0, CommentConstants.commentCryptoKey);
 			}
-		});
+		}, ICallback.Utils.<String> noCallback()).get();
 		return userCommentsCrypto;
 	}
 

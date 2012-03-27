@@ -6,6 +6,7 @@ package org.softwareFm.crowdsource.user.internal;
 
 import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.git.IGitReader;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
@@ -31,6 +32,6 @@ public class LocalGroupsReader extends AbstractGroupReader {
 				gitReader.clearCaches();
 				return null;
 			}
-		});
+		}, ICallback.Utils.<Void>noCallback()).get();
 	}
 }

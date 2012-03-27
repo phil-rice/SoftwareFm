@@ -57,7 +57,7 @@ public class UserMembershipForServer extends AbstractUserMembershipReader implem
 				container.gitOperations().append(fileDescription, data);
 				container.gitOperations().addAllAndCommit(repositoryUrl, "add membership " + groupId + "," + membershipStatus);
 			}
-		});
+		}).get();
 	}
 
 	@Override

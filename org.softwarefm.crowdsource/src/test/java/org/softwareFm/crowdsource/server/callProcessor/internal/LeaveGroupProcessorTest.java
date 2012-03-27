@@ -24,7 +24,7 @@ public class LeaveGroupProcessorTest extends AbstractProcessCallTest<LeaveGroupC
 		truncateUsersTable();
 		assertEquals(softwareFmId0, createUser());
 		assertEquals(groupId0, createGroup("name", groupCryptoKey0));
-		getServerUserAndGroupsContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		getServerUserAndGroupsContainer().accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				groups.addUser(groupId0, groupCryptoKey0, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId0, GroupConstants.membershipStatusKey, GroupConstants.adminStatus));

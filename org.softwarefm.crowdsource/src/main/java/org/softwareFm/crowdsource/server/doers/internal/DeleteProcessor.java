@@ -12,6 +12,7 @@ import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitWriter;
 import org.softwareFm.crowdsource.api.server.ICallProcessor;
 import org.softwareFm.crowdsource.api.server.IProcessResult;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
@@ -34,11 +35,11 @@ public class DeleteProcessor implements ICallProcessor {
 				if (requestLine.getMethod().equals(CommonConstants.DELETE)) {
 					IFileDescription fileDescription = IFileDescription.Utils.fromRequest(requestLine, parameters);
 					String commitMessage = (String) Maps.getOrDefault(parameters, CommonConstants.commitMessageKey, DeleteProcessor.this.getClass() + ": " + requestLine.getUri());
-						writer.delete(fileDescription, commitMessage);
+					writer.delete(fileDescription, commitMessage);
 					return IProcessResult.Utils.doNothing();
 				}
 				return null;
 			}
-		}).get(timeOutMs);
+		}, ICallback.Utils.<IProcessResult> noCallback()).get(timeOutMs);
 	}
 }

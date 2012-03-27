@@ -19,18 +19,18 @@ public class CrowdSourceServerReadWriteApi extends AbstractCrowdReadWriterApiTes
 		final EnsureSameParameter<IGroups> groupsCallback = ICallback.Utils.ensureSameParameter();
 		final ICallback2<IGroups, IUserMembership> userMembershipCallback = ICallback2.Utils.ensureSameParameters();
 
-		container.modifyGroups(groupsCallback);
-		container.access(IGroups.class, groupsCallback);
-		container.modifyGroups(groupsCallback);
+		container.accessGroups(groupsCallback).get();
+		container.access(IGroups.class, groupsCallback).get();
+		container.accessGroups(groupsCallback).get();
 		assertEquals(3, groupsCallback.count.get());
 
-		container.modifyUser(usersCallback);
-		container.access(IUser.class, usersCallback);
-		container.modifyUser(usersCallback);
+		container.accessUser(usersCallback).get();
+		container.access(IUser.class, usersCallback).get();
+		container.accessUser(usersCallback).get();
 		assertEquals(3, usersCallback.count.get());
 
-		container.modifyUserMembership(userMembershipCallback);
-		container.modifyUserMembership(userMembershipCallback);
+		container.accessUserMembership(userMembershipCallback).get();
+		container.accessUserMembership(userMembershipCallback).get();
 		container.access(IUserMembership.class, new ICallback<IUserMembership>() {
 			@Override
 			public void process(final IUserMembership userMembership) throws Exception {
@@ -41,7 +41,7 @@ public class CrowdSourceServerReadWriteApi extends AbstractCrowdReadWriterApiTes
 					}
 				});
 			}
-		});
+		}).get();
 
 		container.access(IGroups.class, IUser.class, new ICallback2<IGroups, IUser>() {
 			@Override
@@ -49,7 +49,7 @@ public class CrowdSourceServerReadWriteApi extends AbstractCrowdReadWriterApiTes
 				groupsCallback.process(groups);
 				usersCallback.process(user);
 			}
-		});
+		}).get();
 
 		container.access(IUserMembership.class, IUser.class, IGroups.class, new ICallback3<IUserMembership, IUser, IGroups>() {
 			@Override
@@ -58,12 +58,12 @@ public class CrowdSourceServerReadWriteApi extends AbstractCrowdReadWriterApiTes
 				usersCallback.process(user);
 				groupsCallback.process(groups);
 			}
-		});
+		}).get();
 
 		EnsureSameParameter<IComments> commentsCallback = ICallback.Utils.ensureSameParameter();
-		container.modifyComments(commentsCallback);
-		container.access(IComments.class, commentsCallback);
-		container.modifyComments(commentsCallback);
+		container.accessComments(commentsCallback).get();
+		container.access(IComments.class, commentsCallback).get();
+		container.accessComments(commentsCallback).get();
 		assertEquals(3, commentsCallback.count.get());
 	}
 

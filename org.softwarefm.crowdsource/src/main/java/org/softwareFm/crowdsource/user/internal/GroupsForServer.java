@@ -35,7 +35,7 @@ public class GroupsForServer extends AbstractGroupReader implements IGroups {
 	private final IContainer container;
 
 
-	public GroupsForServer(IContainer container, IUrlGenerator groupUrlGenerator, long timeOutMs, IFunction1<String, String> repoUrlGenerator, Map<String, Callable<Object>> defaultProperties) {
+	public GroupsForServer(IContainer container, IUrlGenerator groupUrlGenerator, IFunction1<String, String> repoUrlGenerator, Map<String, Callable<Object>> defaultProperties) {
 		super(container, groupUrlGenerator);
 		this.container = container;
 		this.repoUrlGenerator = repoUrlGenerator;

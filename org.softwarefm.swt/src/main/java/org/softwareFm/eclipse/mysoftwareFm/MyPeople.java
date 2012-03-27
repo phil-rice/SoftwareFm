@@ -25,13 +25,13 @@ import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback3;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.collections.Sets;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
-import org.softwareFm.crowdsource.utilities.functions.IFunction3;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
@@ -95,7 +95,7 @@ public class MyPeople implements IHasComposite {
 				}
 			});
 			new TableColumn(table, SWT.NULL).setText("Person");
-			months = container.access(IProjectTimeGetter.class, Functions.<IProjectTimeGetter, IProjectTimeGetter> identity()).get(container.defaultTimeOutMs()).lastNMonths(3);
+			months = container.access(IProjectTimeGetter.class, Functions.<IProjectTimeGetter, IProjectTimeGetter> identity(), ICallback.Utils.<IProjectTimeGetter>noCallback()).get().lastNMonths(3);
 			for (String month : months) {
 				String name = MySoftwareFmFunctions.monthFileNameToPrettyName(month);
 				new TableColumn(table, SWT.NULL).setText(name);
@@ -150,9 +150,9 @@ public class MyPeople implements IHasComposite {
 		final Map<String, Set<String>> softwareFmIdToGroups = Maps.newMap();
 		final Map<String, Map<String, List<Integer>>> softwareFmIdToMonthToUsage = Maps.newMap();
 
-		container.access(IUserMembershipReader.class, IProjectTimeGetter.class, IGroupsReader.class, new IFunction3<IUserMembershipReader, IProjectTimeGetter, IGroupsReader, Void>() {
+		container.access(IUserMembershipReader.class, IProjectTimeGetter.class, IGroupsReader.class, new ICallback3<IUserMembershipReader, IProjectTimeGetter, IGroupsReader>() {
 			@Override
-			public Void apply(IUserMembershipReader membershipReader, IProjectTimeGetter timeGetter, IGroupsReader groupsReader) throws Exception {
+			public void process(IUserMembershipReader membershipReader, IProjectTimeGetter timeGetter, IGroupsReader groupsReader) throws Exception {
 
 				Iterable<Map<String, Object>> walkGroups = membershipReader.walkGroupsFor(userData.softwareFmId, userData.crypto);
 
@@ -200,9 +200,8 @@ public class MyPeople implements IHasComposite {
 						}
 					}
 				}
-				return null;
 			}
-		});
+		}).get();
 
 		Swts.syncExec(content, new Runnable() {
 			@Override
@@ -218,7 +217,7 @@ public class MyPeople implements IHasComposite {
 		container.access(IRequestGroupReportGeneration.class, new ICallback<IRequestGroupReportGeneration>() {
 			@Override
 			public void process(IRequestGroupReportGeneration reportGenerator) throws Exception {
-				reportGenerator.request(groupId, groupsCrypto, month).get(container.defaultTimeOutMs());
+				reportGenerator.request(groupId, groupsCrypto, month).get();
 			}
 		});
 	}

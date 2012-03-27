@@ -118,7 +118,7 @@ abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIn
 				LoginConstants.softwareFmIdKey, softwareFmId, //
 				JarAndPathConstants.projectCryptoKey, usersProjectCryptoKey, //
 				GroupConstants.membershipStatusKey, status);
-		getServerApi().makeUserAndGroupsContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>(){
+		getServerApi().makeUserAndGroupsContainer().accessUserMembership(new ICallback2<IGroups, IUserMembership>(){
 			@Override
 			public void process(IGroups groups, IUserMembership membershipForServer) throws Exception {
 				groups.addUser(groupId, groupCryptoKey, initialData);

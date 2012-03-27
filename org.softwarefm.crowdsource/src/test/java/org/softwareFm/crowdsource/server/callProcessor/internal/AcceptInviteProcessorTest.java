@@ -28,7 +28,7 @@ public class AcceptInviteProcessorTest extends AbstractProcessCallTest<AcceptInv
 		assertEquals(softwareFmId1, createUser());
 		assertEquals(groupId0, createGroup("name1", groupCryptoKey0));
 		assertEquals(groupId1, createGroup("name2", groupCryptoKey2));
-		getServerUserAndGroupsContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		getServerUserAndGroupsContainer().accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				groups.addUser(groupId0, groupCryptoKey0, sfm0Invited);
@@ -39,11 +39,11 @@ public class AcceptInviteProcessorTest extends AbstractProcessCallTest<AcceptInv
 				groups.addUser(groupId1, groupCryptoKey1, sfm0Member);
 				userMembership.addMembership(softwareFmId0, userKey0, groupId1, groupCryptoKey1, GroupConstants.invitedStatus);
 			}
-		});
+		}).get();
 
 		IProcessResult result = processor.execute(GroupConstants.acceptInvitePrefix, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId0, GroupConstants.groupIdKey, groupId0));
 		checkStringResult(result, "");
-		getServerUserAndGroupsContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		getServerUserAndGroupsContainer().accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {

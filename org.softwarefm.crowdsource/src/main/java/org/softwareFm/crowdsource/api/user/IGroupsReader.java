@@ -7,6 +7,7 @@ package org.softwareFm.crowdsource.api.user;
 import java.util.Map;
 
 import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 
 /**
@@ -43,7 +44,7 @@ public interface IGroupsReader {
 				public String apply(IGroupsReader from) throws Exception {
 					return from.getGroupProperty(groupId, groupCrypto, propertyName);
 				}
-			});
+			}, ICallback.Utils.<String>noCallback()).get();
 		}
 		
 	}

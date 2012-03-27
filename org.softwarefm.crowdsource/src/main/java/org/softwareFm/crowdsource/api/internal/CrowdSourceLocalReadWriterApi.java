@@ -1,18 +1,15 @@
 package org.softwareFm.crowdsource.api.internal;
 
 import org.softwareFm.crowdsource.api.git.IGitOperations;
+import org.softwareFm.crowdsource.utilities.transaction.ITransactionManager;
 
-public class CrowdSourceLocalReadWriterApi extends AbstractCrowdSourceReadWriterApi{
 
-	private final IGitOperations gitOperations;
+public class CrowdSourceLocalReadWriterApi extends Container{
 
-	public CrowdSourceLocalReadWriterApi(IGitOperations gitOperations) {
-		this.gitOperations = gitOperations;
+	public CrowdSourceLocalReadWriterApi(ITransactionManager transactionManager, IGitOperations gitOperations, long timeOutMs) {
+		super(transactionManager, gitOperations);
 	}
-	
-	@Override
-	public IGitOperations gitOperations() {
-		return gitOperations;
-	}
+
+
 
 }

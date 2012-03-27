@@ -10,17 +10,18 @@ import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback2;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.functions.IFunction2;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 
 public interface IUserAndGroupsContainer extends IContainer {
-	<T> T accessGroupReader(IFunction1<IGroupsReader, T> function);
+	<T> ITransaction<T> accessGroupReader(IFunction1<IGroupsReader, T> function, ICallback<T> resultCallback);
 
-	<T> T accessUserReader(IFunction1<IUserReader, T> function);
+	<T> ITransaction<T> accessUserReader(IFunction1<IUserReader, T> function, ICallback<T> resultCallback);
 
-	<T> T accessUserMembershipReader(IFunction2<IGroupsReader, IUserMembershipReader, T> function);
+	<T> ITransaction<T> accessUserMembershipReader(IFunction2<IGroupsReader, IUserMembershipReader, T> function, ICallback<T> resultCallback);
 
-	void modifyUser(ICallback<IUser> callback);
+	ITransaction<Void> accessUser(ICallback<IUser> callback);
 
-	void modifyGroups(ICallback<IGroups> callback);
+	ITransaction<Void> accessGroups(ICallback<IGroups> callback);
 
-	void modifyUserMembership(ICallback2<IGroups, IUserMembership> callback);
+	ITransaction<Void> accessUserMembership(ICallback2<IGroups, IUserMembership> callback);
 }

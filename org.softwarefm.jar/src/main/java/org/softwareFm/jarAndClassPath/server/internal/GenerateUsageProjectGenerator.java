@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import org.apache.log4j.Logger;
 import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.constants.CommonMessages;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction2;
@@ -55,6 +56,6 @@ public class GenerateUsageProjectGenerator implements IGenerateUsageReportGenera
 				}
 				return result;
 			}
-		}).get(timeOutMs);
+		}, ICallback.Utils.<Map<String, Map<String, Map<String, List<Integer>>>>>noCallback()).get(timeOutMs);
 	}
 }

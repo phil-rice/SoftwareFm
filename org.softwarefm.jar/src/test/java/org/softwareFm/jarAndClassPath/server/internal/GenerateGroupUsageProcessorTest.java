@@ -8,15 +8,13 @@ import java.util.Arrays;
 import java.util.Map;
 
 import org.softwareFm.crowdsource.api.server.ITakeOnProcessor;
-import org.softwareFm.crowdsource.api.user.IGroupsReader;
+import org.softwareFm.crowdsource.api.user.IGroups;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
-import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.jarAndClassPath.api.GroupsTest;
 import org.softwareFm.jarAndClassPath.api.IProject;
-import org.softwareFm.jarAndClassPath.server.internal.GenerateGroupUsageProcessor;
 
 public class GenerateGroupUsageProcessorTest extends GroupsTest {
 
@@ -41,11 +39,11 @@ public class GenerateGroupUsageProcessorTest extends GroupsTest {
 				project.addProjectDetails(sfmId2, "gid1", "aid4", "month2", 1);
 				project.addProjectDetails(sfmId2, "gid1", "aid5", "month2", 1);
 			}
-		});
+		}).get();
 
-		serverContainer.accessGroupReader(new IFunction1<IGroupsReader, Void>() {
+		serverContainer.accessGroups(new ICallback<IGroups>() {
 			@Override
-			public Void apply(IGroupsReader groups) throws Exception {
+			public void process(IGroups groups) throws Exception {
 				GenerateGroupUsageProcessor processor = new GenerateGroupUsageProcessor(serverContainer);
 				processor.execute(GroupConstants.generateGroupReportPrefix, Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.monthKey, "month1", GroupConstants.groupCryptoKey, groupCryptoKey));
 				Map<String, Object> month1Report = groups.getUsageReport(groupId, groupCryptoKey, "month1");
@@ -62,17 +60,13 @@ public class GenerateGroupUsageProcessorTest extends GroupsTest {
 						"aid3", Maps.stringObjectMap(sfmId1, Arrays.asList(1l)),//
 						"aid4", Maps.stringObjectMap(sfmId2, Arrays.asList(1l)),//
 						"aid5", Maps.stringObjectMap(sfmId2, Arrays.asList(1l)))), month2SecondReport);
-				return null;
 			}
-		});
+		}).get();
 	}
-
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-
-	
 
 		takeOnProcessor = getServerDoers().getTakeOnProcessor();
 	}

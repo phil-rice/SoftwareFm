@@ -30,7 +30,7 @@ public class KickFromGroupCommandProcessor extends AbstractCallProcessor {
 	@Override
 	protected IProcessResult execute(String actualUrl, final Map<String, Object> parameters) {
 		checkForParameter(parameters, LoginConstants.softwareFmIdKey, GroupConstants.groupIdKey, GroupConstants.objectSoftwareFmId);
-		api.modifyUserMembership(new ICallback2<IGroups, IUserMembership>(){
+		api.accessUserMembership(new ICallback2<IGroups, IUserMembership>(){
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				String softwareFmId = (String) parameters.get(LoginConstants.softwareFmIdKey);
@@ -45,7 +45,7 @@ public class KickFromGroupCommandProcessor extends AbstractCallProcessor {
 				}
 				groups.removeUsers(groupId, groupCrypto, objectSoftwareFmIds);
 				
-			}});
+			}}).get();
 		return IProcessResult.Utils.processString("");
 	}
 

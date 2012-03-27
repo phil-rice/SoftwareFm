@@ -16,9 +16,7 @@ import java.util.concurrent.TimeoutException;
 import org.softwareFm.crowdsource.api.MailerMock;
 import org.softwareFm.crowdsource.api.server.AbstractProcessorDatabaseIntegrationTests;
 import org.softwareFm.crowdsource.api.user.IGroups;
-import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUserMembership;
-import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
 import org.softwareFm.crowdsource.httpClient.IRequestBuilder;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
 import org.softwareFm.crowdsource.httpClient.internal.MemoryResponseCallback;
@@ -28,7 +26,6 @@ import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
-import org.softwareFm.crowdsource.utilities.functions.IFunction2;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 
 public class InviteGroupProcessorTest extends AbstractProcessorDatabaseIntegrationTests {
@@ -39,7 +36,7 @@ public class InviteGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 	@SuppressWarnings("unchecked")
 	public void testTakeOnGroupWhenEverythingCorrect() throws Exception {
 		final String groupId = getIdAndSaltGenerator().makeNewGroupId();
-		api.makeUserAndGroupsContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		api.makeUserAndGroupsContainer().accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership membershipForServer) throws Exception {
 				groups.setGroupProperty(groupId, groupCryptoKey0, GroupConstants.groupNameKey, "someGroupName");
@@ -48,7 +45,7 @@ public class InviteGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 						LoginConstants.softwareFmIdKey, fromSoftwareFmId, //
 						GroupConstants.membershipStatusKey, GroupConstants.adminStatus));
 			}
-		});
+		}).get();
 		getHttpClient().post(GroupConstants.inviteCommandPrefix).//
 				addParam(GroupConstants.groupIdKey, groupId).//
 				addParam(GroupConstants.takeOnSubjectKey, "someSubject").//
@@ -58,30 +55,29 @@ public class InviteGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 				addParam(GroupConstants.takeOnEmailListKey, "email1@a.b,email2@a.b").//
 				execute(IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 
-		api.makeUserAndGroupsContainer().accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
+		api.makeUserAndGroupsContainer().accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
-			public Void apply(IGroupsReader groups, IUserMembershipReader from2) {
+			public void process(IGroups groups, IUserMembership from2) {
 				List<Map<String, Object>> actual = Iterables.list(groups.users(groupId, groupCryptoKey0));
 				List<Map<String, Object>> expected = Arrays.asList(//
 						Maps.stringObjectMap(LoginConstants.softwareFmIdKey, fromSoftwareFmId, GroupConstants.membershipStatusKey, GroupConstants.adminStatus),//
 						Maps.stringObjectMap(LoginConstants.softwareFmIdKey, "someNewSoftwareFmId1", "with", "enrich_0", LoginConstants.emailKey, "email1@a.b", GroupConstants.membershipStatusKey, GroupConstants.invitedStatus),//
 						Maps.stringObjectMap(LoginConstants.softwareFmIdKey, "someNewSoftwareFmId2", "with", "enrich_1", LoginConstants.emailKey, "email2@a.b", GroupConstants.membershipStatusKey, GroupConstants.invitedStatus));
 				assertEquals(expected, actual);
-				return null;
 			}
 
-		});
+		}).get();
 
 		MailerMock mailerMock = getMailer();
 		assertEquals(Lists.times(2, fromEmail), mailerMock.froms);
 		assertEquals(Arrays.asList("email1@a.b", "email2@a.b"), mailerMock.tos);
 		assertEquals(Lists.times(2, "someSubject"), mailerMock.subjects);
-		assertEquals(Lists.times(2,"emailPattern: from@some.email/someGroupName"), mailerMock.messages);
+		assertEquals(Lists.times(2, "emailPattern: from@some.email/someGroupName"), mailerMock.messages);
 	}
 
 	public void testExceptionIfNotAdmin() throws Exception {
-		final String groupId =  getIdAndSaltGenerator().makeNewGroupId();
-		api.makeUserAndGroupsContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		final String groupId = getIdAndSaltGenerator().makeNewGroupId();
+		api.makeUserAndGroupsContainer().accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership membershipForServer) throws Exception {
 				groups.setGroupProperty(groupId, groupCryptoKey0, GroupConstants.groupNameKey, "someGroupName");
@@ -90,7 +86,7 @@ public class InviteGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 						LoginConstants.softwareFmIdKey, fromSoftwareFmId, //
 						GroupConstants.membershipStatusKey, "notAdmin"));
 			}
-		});
+		}).get();
 		getHttpClient().post(GroupConstants.inviteCommandPrefix).//
 				addParam(GroupConstants.groupIdKey, groupId).//
 				addParam(GroupConstants.takeOnSubjectKey, "someSubject").//
@@ -99,28 +95,27 @@ public class InviteGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 				addParam(GroupConstants.takeOnEmailPattern, "emailPattern: " + GroupConstants.emailMarker + "/" + GroupConstants.groupNameMarker).//
 				addParam(GroupConstants.takeOnEmailListKey, "email1@a.b,email2@a.b").//
 				execute(IResponseCallback.Utils.checkCallback(CommonConstants.serverErrorCode, "class java.lang.IllegalArgumentException/Cannot invite other people to group someGroupName as you are not admin. You are status notAdmin")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
-		api.makeUserAndGroupsContainer().accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
+		api.makeUserAndGroupsContainer().accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
-			public Void apply(IGroupsReader groups, IUserMembershipReader second) {
+			public void process(IGroups groups, IUserMembership second) {
 				List<Map<String, Object>> actual = Iterables.list(groups.users(groupId, groupCryptoKey0));
 				@SuppressWarnings("unchecked")
 				List<Map<String, Object>> expected = Arrays.asList(//
 						Maps.stringObjectMap(LoginConstants.softwareFmIdKey, fromSoftwareFmId, GroupConstants.membershipStatusKey, "notAdmin"));
 				assertEquals(expected, actual);
 				assertEquals(0, getMailer().froms.size());
-				return null;
 			}
-		});
+		}).get();
 	}
 
 	public void testExceptionIfNotMemberAtAll() throws Exception {
-		final String groupId =  getIdAndSaltGenerator().makeNewGroupId();
-		api.makeUserAndGroupsContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		final String groupId = getIdAndSaltGenerator().makeNewGroupId();
+		api.makeUserAndGroupsContainer().accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership second) throws Exception {
 				groups.setGroupProperty(groupId, groupCryptoKey0, GroupConstants.groupNameKey, "someGroupName");
 			}
-		});
+		}).get();
 		getHttpClient().post(GroupConstants.inviteCommandPrefix).//
 				addParam(GroupConstants.groupIdKey, groupId).//
 				addParam(GroupConstants.takeOnSubjectKey, "someSubject").//
@@ -130,14 +125,14 @@ public class InviteGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 				addParam(GroupConstants.takeOnEmailListKey, "email1@a.b,email2@a.b").//
 				execute(IResponseCallback.Utils.checkCallback(CommonConstants.serverErrorCode, "class java.lang.IllegalArgumentException/User someNewSoftwareFmId0 is not a member of group groupId0")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 
-		api.makeUserAndGroupsContainer().modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		api.makeUserAndGroupsContainer().accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership second) throws Exception {
 				List<Map<String, Object>> actual = Iterables.list(groups.users(groupId, groupCryptoKey0));
 				List<Map<String, Object>> expected = Collections.emptyList();
 				assertEquals(expected, actual);
 			}
-		});
+		}).get();
 		assertEquals(0, getMailer().froms.size());
 	}
 
@@ -199,7 +194,7 @@ public class InviteGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 		memoryCallback.assertCalledOnce();
 		assertEquals(500, memoryCallback.response.statusCode());
 		assertTrue(memoryCallback.response.asString(), memoryCallback.response.asString().startsWith("class java.lang.IllegalAr"));
-		if (groupId != null) {//just stops exception being thrown when no group id
+		if (groupId != null) {// just stops exception being thrown when no group id
 			String url = GroupConstants.groupsGenerator(getUrlPrefix()).findUrlFor(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId));
 			File groupDirectory = new File(remoteRoot, url);
 			assertFalse(groupDirectory.exists());
@@ -215,8 +210,8 @@ public class InviteGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		fromSoftwareFmId =  getIdAndSaltGenerator().makeNewUserId();
-		api.getServerDoers().getSignUpChecker().signUp(fromEmail, "someMoniker", "someSalt", "irrelevant", fromSoftwareFmId);
+		assertEquals(softwareFmId0, fromSoftwareFmId = getIdAndSaltGenerator().makeNewUserId());
+		assertEquals(userKey0, api.getServerDoers().getSignUpChecker().signUp(fromEmail, "someMoniker", "someSalt", "irrelevant", fromSoftwareFmId).crypto);
 	}
 
 }

@@ -9,6 +9,7 @@ import java.util.concurrent.Callable;
 
 import org.softwareFm.crowdsource.api.ApiTest;
 import org.softwareFm.crowdsource.api.user.IUserReader;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
@@ -38,7 +39,7 @@ public class SoftwareFmServerTest extends ApiTest {
 				assertEquals("value", Crypto.aesDecrypt(crypto1, encrypted));
 				return null;
 			}
-		});
+		}, ICallback.Utils.<Void>noCallback()).get();
 	}
 	
 	@Override

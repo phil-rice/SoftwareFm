@@ -30,7 +30,7 @@ public class LeaveGroupCommandProcessor extends AbstractCallProcessor {
 	@Override
 	protected IProcessResult execute(String actualUrl, final Map<String, Object> parameters) {
 		checkForParameter(parameters, LoginConstants.softwareFmIdKey, GroupConstants.groupIdKey);
-		container.modifyUserMembership(new ICallback2<IGroups, IUserMembership>() {
+		container.accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				String softwareFmId = (String) parameters.get(LoginConstants.softwareFmIdKey);

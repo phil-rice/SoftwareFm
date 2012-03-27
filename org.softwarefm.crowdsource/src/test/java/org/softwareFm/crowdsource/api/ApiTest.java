@@ -197,7 +197,7 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 	}
 
 	protected void createUser(final String userId, final String email) {
-		getServerApi().makeUserAndGroupsContainer().modifyUser(new ICallback<IUser>() {
+		getServerApi().makeUserAndGroupsContainer().accessUser(new ICallback<IUser>() {
 			@Override
 			public void process(IUser user) throws Exception {
 				SignUpResult signUp = serverApi.getServerDoers().getSignUpChecker().signUp(email, someMoniker, "someSalt", "passHash", userId);
@@ -206,7 +206,7 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 					fail(signUp.errorMessage);
 				user.setUserProperty(userId, crypto, LoginConstants.emailKey, email);
 			}
-		});
+		}).get();
 	}
 
 	protected String createGroup(String groupName, String groupCrypto) {
@@ -219,7 +219,7 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 			public String apply(IUserReader from) throws Exception {
 				return from.getUserProperty(softwareFmId, userCrypto, property);
 			}
-		});
+		}, ICallback.Utils.<String>noCallback()).get();
 	}
 
 	protected IContainer getServerContainer() {

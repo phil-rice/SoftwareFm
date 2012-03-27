@@ -19,10 +19,10 @@ import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.api.user.IUserReader;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback3;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
-import org.softwareFm.crowdsource.utilities.functions.IFunction3;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
@@ -83,9 +83,9 @@ public class MyDetails implements IHasComposite {
 		public MyProjectComposite(Composite parent, int style, final CardConfig cc, final UserData userData, IContainer readWriteApi) {
 			super(parent, cc, CardConstants.loginCardType, JarAndPathConstants.myProjectsTitle, true);
 			this.projectDetails = new Table(getInnerBody(), SWT.FULL_SELECTION);
-			readWriteApi.access(IUserReader.class, IProjectTimeGetter.class, IUsageReader.class, new IFunction3<IUserReader, IProjectTimeGetter, IUsageReader, Void>() {
+			readWriteApi.access(IUserReader.class, IProjectTimeGetter.class, IUsageReader.class, new ICallback3<IUserReader, IProjectTimeGetter, IUsageReader>() {
 				@Override
-				public Void apply(IUserReader user, IProjectTimeGetter timeGetter, IUsageReader project) throws Exception {
+				public void process(IUserReader user, IProjectTimeGetter timeGetter, IUsageReader project) throws Exception {
 					Map<String, Map<String, Map<String, Integer>>> groupToArtifactToMonthToCount = Maps.newMap();
 					Iterable<String> lastNMonths = timeGetter.lastNMonths(3);
 					projectDetails.setHeaderVisible(true);
@@ -119,9 +119,8 @@ public class MyDetails implements IHasComposite {
 						}
 					}
 					Swts.packTables(projectDetails);
-					return null;
 				}
-			});
+			}).get();
 		}
 	}
 

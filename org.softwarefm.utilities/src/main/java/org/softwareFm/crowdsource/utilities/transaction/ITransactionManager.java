@@ -10,8 +10,8 @@ import org.softwareFm.crowdsource.utilities.transaction.internal.TransactionMana
 
 public interface ITransactionManager extends IShutdown{
 
-	/** The job is executed (probably in a different thread. The result callback is called with the result. Transactionals are either commited or rollbacked after the result callback has been called. */
-	<T> ITransaction<T> start(IFunction1<IMonitor, T> job, ICallback<T> resultCallback, ITransactional... transactionals);
+	/** The job is executed (probably in a different thread. The result callback is called with the result. potentialTransactions are added to the list of transactionals if they implements ITransactional. Transactionals are either commited or rollbacked after the result callback has been called. */
+	<T> ITransaction<T> start(IFunction1<IMonitor, T> job, ICallback<T> resultCallback, Object... potentialTransactionals);
 
 	/** Adds a resource to the transaction: this will be commited or rollbacked when the transaction concludes */
 	<T> void addResource(ITransaction<T> transaction, ITransactional transactional);
