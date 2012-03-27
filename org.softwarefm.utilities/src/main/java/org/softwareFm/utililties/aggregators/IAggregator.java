@@ -8,7 +8,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.functions.IFoldFunction;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
 
 /** This is the mutable version of an {@link IFoldFunction} */
@@ -21,6 +23,27 @@ public interface IAggregator<From, To> {
 
 		public static <T> IAggregator<T, String> join(String separator) {
 			return Strings.join(separator);
+		}
+
+		public static <T> IAggregator<T, String> join(final IFunction1<T, String> mapFn, final String separator) {
+			return new IAggregator<T, String>() {
+				private final StringBuilder builder = new StringBuilder();
+				private boolean addSeparator;
+
+				@Override
+				public void add(T t) {
+					if (addSeparator)
+						builder.append(separator);
+					addSeparator = true;
+					String string = Functions.call(mapFn, t);
+					builder.append(string);
+				}
+
+				@Override
+				public String result() {
+					return builder.toString();
+				}
+			};
 		}
 
 		public static IAggregator<Integer, Integer> sumInts() {

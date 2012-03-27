@@ -5,17 +5,17 @@
 package org.softwareFm.jarAndClassPath.api;
 
 import java.util.Map;
-import java.util.concurrent.Future;
 
 import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
 import org.softwareFm.crowdsource.utilities.future.Futures;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.jarAndClassPath.internal.RequestGroupReportGeneration;
 
 public interface IRequestGroupReportGeneration {
 
-	Future<?> request(String groupId, String groupCryptoKey, String month);
+	ITransaction<?> request(String groupId, String groupCryptoKey, String month);
 
 	public static class Utils {
 		public static IRequestGroupReportGeneration httpClient(IContainer container, IResponseCallback callback) {
@@ -27,7 +27,7 @@ public interface IRequestGroupReportGeneration {
 				private final Map<String, Long> map = Maps.newMap();
 
 				@Override
-				public Future<?> request(String groupId, String groupCryptoKey, String month) {
+				public ITransaction<?> request(String groupId, String groupCryptoKey, String month) {
 					long now = System.currentTimeMillis();
 					Long last = Maps.getOrDefault(map, groupId, now - period * 2);
 					if (now > period + last) {

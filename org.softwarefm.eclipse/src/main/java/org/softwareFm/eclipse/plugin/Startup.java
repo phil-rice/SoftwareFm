@@ -33,7 +33,7 @@ public class Startup implements IStartup {
 					ICrowdSourcedApi api = activator.getApi();
 					IContainer container = api.makeContainer();
 					IUsageStrategy rawUsageStrategy = IUsageStrategy.Utils.usage(serviceExecutor, container, activator.getLocalConfig().userUrlGenerator);
-					IHasCache gitLocal = container.access(IGitLocal.class, Functions.<IGitLocal, IGitLocal>identity());
+					IHasCache gitLocal = container.access(IGitLocal.class, Functions.<IGitLocal, IGitLocal>identity()).get(container.defaultTimeOutMs());
 					final IUsageStrategy cachedUsageStrategy = IUsageStrategy.Utils.cached(rawUsageStrategy, JarAndPathConstants.usageRefreshTimeMs, gitLocal, activator.getUserDataManager());
 					activator.getSelectedBindingManager().addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
 						@Override

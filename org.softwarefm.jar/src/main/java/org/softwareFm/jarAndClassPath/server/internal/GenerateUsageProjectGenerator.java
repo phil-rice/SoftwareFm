@@ -25,9 +25,11 @@ public class GenerateUsageProjectGenerator implements IGenerateUsageReportGenera
 
 	private final Logger logger = Logger.getLogger(GenerateUsageProjectGenerator.class);
 	private final IContainer container;
+	private final long timeOutMs;
 
-	public GenerateUsageProjectGenerator(IContainer container) {
+	public GenerateUsageProjectGenerator(IContainer container, long timeOutMs) {
 		this.container = container;
+		this.timeOutMs = timeOutMs;
 	}
 
 	@Override
@@ -53,6 +55,6 @@ public class GenerateUsageProjectGenerator implements IGenerateUsageReportGenera
 				}
 				return result;
 			}
-		});
+		}).get(timeOutMs);
 	}
 }

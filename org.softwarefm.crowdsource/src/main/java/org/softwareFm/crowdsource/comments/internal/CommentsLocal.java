@@ -17,13 +17,11 @@ import org.softwareFm.crowdsource.utilities.url.Urls;
 
 public class CommentsLocal extends AbstractCommentsReader implements IComments {
 
-	private final long timeOutMs;
 	private final IHasUrlCache urlCache;
 
 	public CommentsLocal(IUserAndGroupsContainer container, IHasUrlCache urlCache, long timeOutMs) {
 		super(container);
 		this.urlCache = urlCache;
-		this.timeOutMs = timeOutMs;
 	}
 
 	@Override
@@ -37,7 +35,7 @@ public class CommentsLocal extends AbstractCommentsReader implements IComments {
 						addParam(CommentConstants.filenameKey, defn.fileDescription().name()).//
 						addParam(LoginConstants.softwareFmIdKey, softwareFmId).//
 						addParam(CommentConstants.textKey, encodedText).//
-						execute(IResponseCallback.Utils.throwExeceptionIfFailCallback()).get(timeOutMs, TimeUnit.MILLISECONDS);
+						execute(IResponseCallback.Utils.throwExeceptionIfFailCallback()).get(container.defaultTimeOutMs(), TimeUnit.MILLISECONDS);
 				urlCache.clearCaches();
 			}
 		});

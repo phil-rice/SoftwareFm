@@ -48,6 +48,6 @@ public class MakeRootProcessor extends AbstractCallProcessor {
 						return IProcessResult.Utils.processError(CommonConstants.notFoundStatusCode, MessageFormat.format(CommonMessages.cannotCreateGitUnderSecondRepository, actualUrl));
 				}
 			}
-		});
+		}).get(container.defaultTimeOutMs());
 	}
 }

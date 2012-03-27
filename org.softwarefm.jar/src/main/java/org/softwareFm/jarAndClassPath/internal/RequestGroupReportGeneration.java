@@ -15,6 +15,7 @@ import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.IHasCache;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.jarAndClassPath.api.IRequestGroupReportGeneration;
 
 public class RequestGroupReportGeneration implements IRequestGroupReportGeneration {
@@ -26,11 +27,11 @@ public class RequestGroupReportGeneration implements IRequestGroupReportGenerati
 	public RequestGroupReportGeneration(IContainer container, IResponseCallback callback) {
 		this.container = container;
 		this.callback = callback;
-		this.cache = container.access(IGitLocal.class, Functions.<IGitLocal, IGitLocal>identity());
+		this.cache = container.access(IGitLocal.class, Functions.<IGitLocal, IGitLocal>identity()).get(container.defaultTimeOutMs());
 	}
 
 	@Override
-	public Future<?> request(final String groupId, final String groupCryptoKey, final String month) {
+	public ITransaction<?> request(final String groupId, final String groupCryptoKey, final String month) {
 		return container.access(IHttpClient.class, new IFunction1<IHttpClient, Future<?>>() {
 			@Override
 			public Future<?> apply(IHttpClient client) throws Exception {

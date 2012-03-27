@@ -79,10 +79,12 @@ public class Comments implements IHasControl {
 		private String url;
 		private final CommentsButtons footer;
 		private final IContainer readWriteApi;
+		private final long timeOutMs;
 
-		public CommentsComposite(Composite parent, CardConfig cardConfig, IContainer readWriteApi, final ICommentsCallback callback, Runnable addButton) {
+		public CommentsComposite(Composite parent, CardConfig cardConfig, IContainer readWriteApi, final ICommentsCallback callback, Runnable addButton, long timeOutMs) {
 			super(parent, cardConfig, CommentConstants.commentCardType, "");
 			this.readWriteApi = readWriteApi;
+			this.timeOutMs = timeOutMs;
 			IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, CommentConstants.commentCardType);
 			this.table = new Table(getInnerBody(), SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 			table.setLinesVisible(true);
@@ -124,7 +126,7 @@ public class Comments implements IHasControl {
 					return Lists.sort(ICommentsReader.Utils.allComments(commentsReader, url, userData.softwareFmId, userData.crypto, CommentConstants.globalSource, CommentConstants.mySource), //
 							Comparators.invert(Comparators.mapKey(CommentConstants.timeKey)));
 				}
-			});
+			}).get(timeOutMs);
 			String titleKey = allComments.size() > 0 ? CollectionConstants.commentsTitle : CollectionConstants.commentsNoTitle;
 
 			String pattern = IResourceGetter.Utils.getOrException(cc.resourceGetterFn, cardType, titleKey);
@@ -156,8 +158,8 @@ public class Comments implements IHasControl {
 
 	private final CommentsComposite content;
 
-	public Comments(Composite parent, IContainer readWriteApi, CardConfig cardConfig, ICommentsCallback callback, Runnable addComment) {
-		content = new CommentsComposite(parent, cardConfig, readWriteApi, callback, addComment);
+	public Comments(Composite parent, IContainer readWriteApi, CardConfig cardConfig, ICommentsCallback callback, Runnable addComment, long timeOutMs) {
+		content = new CommentsComposite(parent, cardConfig, readWriteApi, callback, addComment, timeOutMs);
 		content.setLayout(Swts.titleAndContentLayout(cardConfig.titleHeight));
 		content.setLayout(new DataCompositeWithFooterLayout());
 	}

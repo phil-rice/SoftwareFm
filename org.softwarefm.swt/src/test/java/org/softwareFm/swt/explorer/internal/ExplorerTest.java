@@ -63,11 +63,10 @@ public class ExplorerTest extends ApiAndSwtTest {
 				"noCardNameField", new ResourceGetterMock(), //
 				"withCardNameField", new ResourceGetterMock(CardConstants.cardNameFieldKey, "cardName"))).//
 				withTitleSpecFn(Functions.<ICardData, TitleSpec> constant(TitleSpec.noTitleSpec(shell.getBackground())));
-		Explorer explorer = new Explorer(getLocalApi().makeUserAndGroupsContainer(), cardConfig, CardDataStoreFixture.urlAsList, masterDetailSocial, getServiceExecutor(), //
-				IPlayListGetter.Utils.noPlayListGetter(),//
-				ILoginStrategy.Utils.noLoginStrategy(), IShowMyData.Utils.exceptionShowMyData(), IShowMyGroups.Utils.exceptionShowMyGroups(), //
-				IShowMyPeople.Utils.exceptionShowMyPeople(), //
-				IUserDataManager.Utils.userDataManager(),//
+		Explorer explorer = new Explorer(getLocalApi().makeUserAndGroupsContainer(),cardConfig, CardDataStoreFixture.urlAsList, masterDetailSocial, getServiceExecutor(), IPlayListGetter.Utils.noPlayListGetter(), //
+				ILoginStrategy.Utils.noLoginStrategy(),//
+				IShowMyData.Utils.exceptionShowMyData(), IShowMyGroups.Utils.exceptionShowMyGroups(), IShowMyPeople.Utils.exceptionShowMyPeople(), //
+				IUserDataManager.Utils.userDataManager(), //
 				Callables.value(1000l)) {
 			@Override
 			protected String makeRandomUUID() {

@@ -43,7 +43,7 @@ public class UsageReaderForLocal extends AbstractUsageReader {
 						return data;
 					return Collections.emptyMap();
 				}
-			});
+			}).get(container.defaultTimeOutMs());
 		return Collections.emptyMap();
 	}
 

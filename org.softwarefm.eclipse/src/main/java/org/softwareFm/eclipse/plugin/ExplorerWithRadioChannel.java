@@ -77,7 +77,7 @@ public class ExplorerWithRadioChannel {
 					explorerAndButton.setLayout(new GridLayout());
 					buttonPanel.setLayout(Swts.Row.getHorizonalNoMarginRowLayout());
 
-					ICrowdSourcedApi api = local ? ISoftwareFmApiFactory.Utils.makeClientApiForLocalHost() : ISoftwareFmApiFactory.Utils.makeClientApiForSoftwareFmServer();
+					ICrowdSourcedApi api = local ? ISoftwareFmApiFactory.Utils.makeClientApiForLocalHost(CommonConstants.clientTimeOut) : ISoftwareFmApiFactory.Utils.makeClientApiForSoftwareFmServer(CommonConstants.clientTimeOut);
 					final IUserAndGroupsContainer container = api.makeUserAndGroupsContainer();
 					forShutdown.set(api);
 

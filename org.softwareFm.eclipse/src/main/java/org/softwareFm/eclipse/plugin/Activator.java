@@ -37,7 +37,7 @@ import org.softwareFm.swt.dataStore.ICardDataStore;
  */
 @SuppressWarnings("deprecation")
 public class Activator extends AbstractUIPlugin {
-	boolean local = true;
+	boolean localServer = true;
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.softwareFm.explorer.eclipse.ExplorerView"; //$NON-NLS-1$
@@ -99,7 +99,7 @@ public class Activator extends AbstractUIPlugin {
 		if (localConfig == null)
 			synchronized (lock) {
 				if (localConfig == null)
-					localConfig = ISoftwareFmApiFactory.Utils.getLocalConfig(local);
+					localConfig = ISoftwareFmApiFactory.Utils.getLocalConfig(localServer, CommonConstants.clientTimeOut);
 			}
 		return localConfig;
 	}

@@ -88,13 +88,13 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 	}
 
 	protected ServerConfig getServerConfig() {
-		return serverConfig == null ? serverConfig = new ServerConfig(CommonConstants.testPort, 10, remoteRoot, dataSource, //
+		return serverConfig == null ? serverConfig = new ServerConfig(CommonConstants.testPort, 10, CommonConstants.testTimeOutMs, remoteRoot, dataSource, //
 				getTakeOnEnrichment(), getExtraProcessCalls(), getUsage(), getIdAndSaltGenerator(), getCryptoGenerators(), //
 				getUserCryptoAccess(), getUrlPrefix(), getDefaultUserValues(), getDefaultGroupValues(), getErrorHandler(), getMailer(), getTimeGetter(), getServerExtraReaderWriterConfigurator()) : serverConfig;
 	}
 
 	protected LocalConfig getLocalConfig() {
-		return localConfig == null ? localConfig = new LocalConfig(CommonConstants.testPort, 10, "localhost", localRoot, getUrlPrefix(), remoteAsUri, CommonConstants.testTimeOutMs, CommonConstants.staleCachePeriodForTest, getErrorHandler(), getLocalExtraReaderWriterConfigurator()) : localConfig;
+		return localConfig == null ? localConfig = new LocalConfig(CommonConstants.testPort, 10, CommonConstants.testTimeOutMs, "localhost", localRoot, getUrlPrefix(), remoteAsUri, CommonConstants.staleCachePeriodForTest, takeOnCount, getErrorHandler(), getLocalExtraReaderWriterConfigurator()) : localConfig;
 	}
 
 	protected IExtraReaderWriterConfigurator<ServerConfig> getServerExtraReaderWriterConfigurator() {

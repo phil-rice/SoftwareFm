@@ -36,7 +36,7 @@ public abstract class AbstractCommentsReader implements ICommentsReader {
 				List<Map<String, Object>> result = Lists.map(gitReader.getFileAsListOfMaps(fd), Maps.<String, Object> withFn(CommentConstants.sourceKey, source));
 				return result;
 			}
-		});
+		}).get(container.defaultTimeOutMs());
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public abstract class AbstractCommentsReader implements ICommentsReader {
 				}
 				return result;
 			}
-		});
+		}).get(container.defaultTimeOutMs());
 	}
 
 	@Override
@@ -85,6 +85,6 @@ public abstract class AbstractCommentsReader implements ICommentsReader {
 				});
 			}
 
-		});
+		}).get(container.defaultTimeOutMs());
 	}
 }

@@ -35,7 +35,7 @@ public interface IGitReader extends IHasCache {
 					Iterable<Map<String, Object>> result = gitReader.getFileAsListOfMaps(fileDescription);
 					return result;
 				}
-			});
+			}).get(container.defaultTimeOutMs());
 		}
 
 		public static String getFileAsString(IContainer container, final IFileDescription fileDescription) {
@@ -45,7 +45,7 @@ public interface IGitReader extends IHasCache {
 					String result = gitReader.getFileAsString(fileDescription);
 					return result;
 				}
-			});
+			}).get(container.defaultTimeOutMs());
 		}
 
 		public static Map<String, Object> getFileAsMap(IContainer container, final IFileDescription fileDescription) {
@@ -55,7 +55,7 @@ public interface IGitReader extends IHasCache {
 					Map<String, Object> result = gitReader.getFile(fileDescription);
 					return result;
 				}
-			});
+			}).get(container.defaultTimeOutMs());
 		}
 
 		public static Integer countOfFileAsListsOfMap(IContainer container, final IFileDescription fileDescription) {
@@ -65,7 +65,7 @@ public interface IGitReader extends IHasCache {
 					int result = gitReader.countOfFileAsListsOfMap(fileDescription);
 					return result;
 				}
-			});
+			}).get(container.defaultTimeOutMs());
 		}
 
 		public static void clearCache(IContainer container) {
@@ -84,7 +84,7 @@ public interface IGitReader extends IHasCache {
 				public Map<String,Object> apply(IGitReader gitReader) throws Exception {
 					return gitReader.getFileAndDescendants(fileDescription);
 				}
-			});
+			}).get(container.defaultTimeOutMs());
 		}
 
 	}

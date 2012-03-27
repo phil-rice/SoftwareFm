@@ -47,8 +47,8 @@ public interface ILoginStrategy {
 
 	public static class Utils {
 
-		public static ILoginStrategy softwareFmLoginStrategy(final Display display, final IServiceExecutor serviceExecutor, final IContainer readWriteApi) {
-			final IHttpClient client = readWriteApi.access(IHttpClient.class, Functions.<IHttpClient, IHttpClient> identity());
+		public static ILoginStrategy softwareFmLoginStrategy(final Display display, final IServiceExecutor serviceExecutor, final IContainer container) {
+			final IHttpClient client = container.access(IHttpClient.class, Functions.<IHttpClient, IHttpClient> identity()).get(container.defaultTimeOutMs());
 			return new ILoginStrategy() {
 				@Override
 				public void signup(final String email, final String moniker, final String sessionSalt, final String passwordHash, final ISignUpCallback callback) {

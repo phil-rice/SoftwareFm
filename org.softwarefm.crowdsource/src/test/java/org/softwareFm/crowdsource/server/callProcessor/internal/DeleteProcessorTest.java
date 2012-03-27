@@ -45,7 +45,7 @@ public class DeleteProcessorTest extends AbstractProcessCallTest<DeleteProcessor
 
 	@Override
 	protected DeleteProcessor makeProcessor() {
-		return new DeleteProcessor(getServerContainer());
+		return new DeleteProcessor(getServerContainer(), CommonConstants.testTimeOutMs);
 	}
 
 }

@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
+import org.softwareFm.crowdsource.api.LocalConfig;
 import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
@@ -25,7 +26,6 @@ import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups;
 import org.softwareFm.eclipse.mysoftwareFm.MyPeople;
 import org.softwareFm.eclipse.snippets.SnippetFeedConfigurator;
-import org.softwareFm.jarAndClassPath.api.ISoftwareFmApiFactory;
 import org.softwareFm.jarAndClassPath.api.IUserDataManager;
 import org.softwareFm.swt.browser.IBrowserConfigurator;
 import org.softwareFm.swt.configuration.CardConfig;
@@ -53,7 +53,8 @@ public class ExplorerView extends ViewPart {
 		Size.resizeMeToParentsSize(masterDetailSocial.getControl());
 		final CardConfig cardConfig = activator.getCardConfig(parent);
 
-		ICrowdSourcedApi api = activator.local ? ISoftwareFmApiFactory.Utils.makeClientApiForLocalHost() : ISoftwareFmApiFactory.Utils.makeClientApiForSoftwareFmServer();
+		LocalConfig localConfig = activator.getLocalConfig();
+		ICrowdSourcedApi api = ICrowdSourcedApi.Utils.forClient(localConfig);
 		final IUserAndGroupsContainer container = api.makeUserAndGroupsContainer();
 
 		IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardConfig.cardDataStore);

@@ -23,6 +23,7 @@ public class Functions {
 	public static class ConstantFunctionWithMemoryOfFroms<From, To> implements IFunction1<From, To> {
 		private final To object;
 		public final List<From> froms = Lists.newList();
+		public final List<Thread> threads = Lists.newList();
 
 		public ConstantFunctionWithMemoryOfFroms(To object) {
 			this.object = object;
@@ -30,6 +31,7 @@ public class Functions {
 
 		@Override
 		public To apply(From from) throws Exception {
+			threads.add(Thread.currentThread());
 			froms.add(from);
 			return object;
 		}
@@ -294,11 +296,29 @@ public class Functions {
 		return new ConstantFunctionWithMemoryOfFroms<From, To>(object);
 	}
 
+	public static <To> ConstantFunctionWithMemoryOfFroms<IMonitor, To> constantWithMemoryOfMonitor(final To object) {
+		return new ConstantFunctionWithMemoryOfFroms<IMonitor, To>(object) {
+			@Override
+			public To apply(IMonitor from) throws Exception {
+				from.beginTask("someTask", 1);
+				return super.apply(from);
+			}
+		};
+	}
+
 	public static <From, To> IFunction1<From, To> expectionIfCalled() {
 		return new IFunction1<From, To>() {
 			@Override
 			public To apply(From from) throws Exception {
 				throw new RuntimeException();
+			}
+		};
+	}
+	public static <From, To> IFunction1<From, To> expectionIfCalled(final Exception e) {
+		return new IFunction1<From, To>() {
+			@Override
+			public To apply(From from) throws Exception {
+				throw e;
 			}
 		};
 	}

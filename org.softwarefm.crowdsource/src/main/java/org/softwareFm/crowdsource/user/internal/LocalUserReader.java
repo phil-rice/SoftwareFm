@@ -46,7 +46,7 @@ public class LocalUserReader implements IUserReader {
 				Map<String, Object> data = from.getFile(fileDescription);
 				return data;
 			}
-		});
+		}).get(container.defaultTimeOutMs());
 	}
 
 	@Override

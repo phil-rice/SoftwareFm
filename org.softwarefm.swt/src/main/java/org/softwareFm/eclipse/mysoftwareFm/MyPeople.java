@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
@@ -63,7 +62,7 @@ public class MyPeople implements IHasComposite {
 						MyPeople myPeople = masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyPeople>() {
 							@Override
 							public MyPeople apply(Composite from) throws Exception {
-								return new MyPeople(from, readWriteApi, cardConfig, userData, timeoutMs);
+								return new MyPeople(from, readWriteApi, cardConfig, userData);
 							}
 						});
 						myPeople.setData(groupId, artifactId);
@@ -84,7 +83,8 @@ public class MyPeople implements IHasComposite {
 			return table;
 		}
 
-		public MyPeopleComposite(Composite parent, IContainer readWriteApi, int style, final CardConfig cc) {
+		// TODO Evil threadiness
+		public MyPeopleComposite(Composite parent, IContainer container, int style, final CardConfig cc) {
 			super(parent, cc, CardConstants.loginCardType, JarAndPathConstants.peopleIKnowLoadingTitle, true);
 			table = new Table(getInnerBody(), SWT.FULL_SELECTION);
 			addPaintListener(new PaintListener() {
@@ -95,7 +95,7 @@ public class MyPeople implements IHasComposite {
 				}
 			});
 			new TableColumn(table, SWT.NULL).setText("Person");
-			months = readWriteApi.access(IProjectTimeGetter.class, Functions.<IProjectTimeGetter, IProjectTimeGetter> identity()).lastNMonths(3);
+			months = container.access(IProjectTimeGetter.class, Functions.<IProjectTimeGetter, IProjectTimeGetter> identity()).get(container.defaultTimeOutMs()).lastNMonths(3);
 			for (String month : months) {
 				String name = MySoftwareFmFunctions.monthFileNameToPrettyName(month);
 				new TableColumn(table, SWT.NULL).setText(name);
@@ -133,13 +133,11 @@ public class MyPeople implements IHasComposite {
 
 	private final MyPeopleComposite content;
 	private final UserData userData;
-	private final long timeoutMs;
-	private final IContainer readWriteApi;
+	private final IContainer container;
 
-	public MyPeople(Composite parent, IContainer readWriteApi, CardConfig cardConfig, UserData userData, long timeoutMs) {
-		this.readWriteApi = readWriteApi;
+	public MyPeople(Composite parent, IContainer readWriteApi, CardConfig cardConfig, UserData userData) {
+		this.container = readWriteApi;
 		this.userData = userData;
-		this.timeoutMs = timeoutMs;
 		this.content = new MyPeopleComposite(parent, readWriteApi, SWT.NULL, cardConfig);
 		content.setLayout(new DataCompositeLayout());
 
@@ -152,7 +150,7 @@ public class MyPeople implements IHasComposite {
 		final Map<String, Set<String>> softwareFmIdToGroups = Maps.newMap();
 		final Map<String, Map<String, List<Integer>>> softwareFmIdToMonthToUsage = Maps.newMap();
 
-		readWriteApi.access(IUserMembershipReader.class, IProjectTimeGetter.class, IGroupsReader.class, new IFunction3<IUserMembershipReader, IProjectTimeGetter, IGroupsReader, Void>() {
+		container.access(IUserMembershipReader.class, IProjectTimeGetter.class, IGroupsReader.class, new IFunction3<IUserMembershipReader, IProjectTimeGetter, IGroupsReader, Void>() {
 			@Override
 			public Void apply(IUserMembershipReader membershipReader, IProjectTimeGetter timeGetter, IGroupsReader groupsReader) throws Exception {
 
@@ -217,10 +215,10 @@ public class MyPeople implements IHasComposite {
 	}
 
 	protected void generateReportIfPossible(final String groupId, final String groupsCrypto, final String month) {
-		readWriteApi.access(IRequestGroupReportGeneration.class, new ICallback<IRequestGroupReportGeneration>() {
+		container.access(IRequestGroupReportGeneration.class, new ICallback<IRequestGroupReportGeneration>() {
 			@Override
 			public void process(IRequestGroupReportGeneration reportGenerator) throws Exception {
-				reportGenerator.request(groupId, groupsCrypto, month).get(timeoutMs, TimeUnit.MILLISECONDS);
+				reportGenerator.request(groupId, groupsCrypto, month).get(container.defaultTimeOutMs());
 			}
 		});
 	}

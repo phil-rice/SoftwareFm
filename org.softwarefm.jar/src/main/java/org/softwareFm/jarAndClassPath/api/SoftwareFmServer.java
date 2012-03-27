@@ -8,6 +8,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
 import org.softwareFm.crowdsource.api.ServerConfig;
+import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.jarAndClassPath.api.ISoftwareFmApiFactory.Utils;
 
 public class SoftwareFmServer {
@@ -16,7 +17,7 @@ public class SoftwareFmServer {
 		DOMConfigurator.configure(System.getProperty("user.home") + "/log4j.xml");
 		int port = ICrowdSourcedServer.Utils.port(args);
 
-		ServerConfig serverConfig = Utils.getServerConfig(port);
+		ServerConfig serverConfig = Utils.getServerConfig(port, CommonConstants.clientTimeOut);
 		ICrowdSourcedApi api = ICrowdSourcedApi.Utils.forServer(serverConfig);
 		api.getServer();
 	}

@@ -53,6 +53,7 @@ Export-Package: org.softwareFm.client.http.api.impl,
  org.softwareFm.crowdsource.utilities.services.internal,
  org.softwareFm.crowdsource.utilities.strings,
  org.softwareFm.crowdsource.utilities.tests,
+ org.softwareFm.crowdsource.utilities.transaction,
  org.softwareFm.crowdsource.utilities.url,
  org.softwareFm.utililties,
  org.softwareFm.utililties.aggregators

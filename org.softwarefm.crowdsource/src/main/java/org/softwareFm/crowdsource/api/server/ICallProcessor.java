@@ -88,9 +88,9 @@ public interface ICallProcessor extends IServerDoer{
 					new AcceptInviteGroupProcessor(userCryptoAccess, container),//
 					new LeaveGroupCommandProcessor(container, userCryptoAccess),//
 					new KickFromGroupCommandProcessor(container, userCryptoAccess),//
-					new GitGetProcessor(container, serverConfig.aboveRepostoryUrlCache), //
+					new GitGetProcessor(container, serverConfig.aboveRepostoryUrlCache, serverConfig.timeOutMs), //
 					new CommentProcessor(container, userCryptoAccess),//
-					new DeleteProcessor(container),//
+					new DeleteProcessor(container, serverConfig.timeOutMs),//
 					new PostProcessor(container.gitOperations()) };
 			ICallProcessor[] extraProcessCalls = serverConfig.extraCallProcessors.makeExtraCalls(container, serverConfig);
 			ICallProcessor[] processCalls = ArrayHelper.insert(rawProcessCalls, extraProcessCalls);

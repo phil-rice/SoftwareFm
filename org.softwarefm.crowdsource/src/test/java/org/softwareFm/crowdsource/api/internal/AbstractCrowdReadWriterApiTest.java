@@ -10,6 +10,7 @@ import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
 import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
+import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.functions.IFunction2;
@@ -26,7 +27,7 @@ abstract public class AbstractCrowdReadWriterApiTest extends ApiTest {
 		IFunction1<ICommentsReader, Integer> commentsFn = Functions.ensureSameParameters();
 		container.accessCommentsReader(commentsFn);
 		container.access(ICommentsReader.class, commentsFn);
-		assertEquals(3, container.accessCommentsReader(commentsFn).intValue());
+		assertEquals(3, container.accessCommentsReader(commentsFn).get(CommonConstants.testTimeOutMs).intValue());
 
 		IFunction1<IUserReader, Integer> userReaderFn = Functions.ensureSameParameters();
 		container.accessUserReader(userReaderFn);
@@ -57,7 +58,7 @@ abstract public class AbstractCrowdReadWriterApiTest extends ApiTest {
 		final IFunction1<IGitReader, Integer> gitReaderFn = Functions.ensureSameParameters();
 		container.accessGitReader(gitReaderFn);
 		container.access(IGitReader.class, gitReaderFn);
-		assertEquals(3, container.accessGitReader(gitReaderFn).intValue());
+		assertEquals(3, container.accessGitReader(gitReaderFn).get(CommonConstants.testTimeOutMs).intValue());
 
 		container.access(IGroupsReader.class, IUserMembershipReader.class, new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
 			@Override

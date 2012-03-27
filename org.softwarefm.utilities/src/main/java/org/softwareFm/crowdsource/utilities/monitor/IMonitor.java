@@ -10,6 +10,7 @@ import java.text.MessageFormat;
  * A wrapper for IProgressMonitor. I don't want to make this project dependent on eclipse...
  * 
  * The primary use for this is with the IServiceExecutor. Note that jobs return futures, and that the future has to interact with cancel. Specifically if the future is cancelled, the progress monitor needs to be told, and if the progress is cancelled, the future needs to be told
+ * 
  */
 public interface IMonitor {
 	/** Constant indicating an unknown amount of work. */

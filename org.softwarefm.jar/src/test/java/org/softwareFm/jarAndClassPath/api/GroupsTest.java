@@ -16,6 +16,7 @@ import org.softwareFm.crowdsource.api.ITakeOnEnrichmentProvider;
 import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.ServerConfig;
 import org.softwareFm.crowdsource.utilities.collections.Files;
+import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.crowdsource.utilities.json.Json;
@@ -51,7 +52,7 @@ abstract public class GroupsTest extends ApiTest {
 		return new IExtraReaderWriterConfigurator<ServerConfig>() {
 			@Override
 			public void builder(IContainerBuilder builder, ServerConfig apiConfig) {
-				builder.register(IGenerateUsageReportGenerator.class, new GenerateUsageProjectGenerator(builder));
+				builder.register(IGenerateUsageReportGenerator.class, new GenerateUsageProjectGenerator(builder, CommonConstants.testTimeOutMs));
 				builder.register(IUsageReader.class, new UsageReaderForServer(builder, apiConfig.userUrlGenerator));
 				builder.register(IProject.class, new ProjectForServer((IUserAndGroupsContainer) builder, getUserCryptoAccess(), apiConfig.userUrlGenerator));
 			}

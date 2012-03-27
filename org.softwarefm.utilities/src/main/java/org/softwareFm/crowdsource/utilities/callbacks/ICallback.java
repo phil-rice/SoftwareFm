@@ -64,6 +64,9 @@ public interface ICallback<T> {
 		public static final <T> MemoryCallback<T> memory() {
 			return new MemoryCallback<T>();
 		}
+		public static final <T> MemoryWithThreadCallback<T> memoryWithThread() {
+			return new MemoryWithThreadCallback<T>();
+		}
 
 		public static ICallback<Integer> count = new ICallback<Integer>() {
 			@Override
@@ -113,6 +116,15 @@ public interface ICallback<T> {
 
 		public static <T> EnsureSameParameter<T> ensureSameParameter() {
 			return new EnsureSameParameter<T>();
+		}
+
+		public static <T>ICallback<T> exception(final Exception e) {
+			return new ICallback<T>() {
+				@Override
+				public void process(T t) throws Exception {
+					throw e;
+				}
+			};
 		}
 	}
 

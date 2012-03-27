@@ -107,7 +107,7 @@ public class CommentProcessorTest extends AbstractProcessCallTest<CommentProcess
 	protected CommentProcessor makeProcessor() {
 		ServerConfig serverConfig = ServerConfig.serverConfigForTests(remoteRoot, IMailer.Utils.noMailer());
 		api = ICrowdSourcedApi.Utils.forServer(serverConfig);
-		comments = new CommentsForServer(api.makeUserAndGroupsContainer(), Callables.valueFromList(1000l, 2000l, 3000l));
+		comments = new CommentsForServer(api.makeUserAndGroupsContainer(),Callables.valueFromList(1000l, 2000l, 3000l));
 		return new CommentProcessor(api.makeUserAndGroupsContainer(), IUserCryptoAccess.Utils.mock(softwareFmId, userCrypto));
 	}
 }

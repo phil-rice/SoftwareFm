@@ -68,7 +68,7 @@ public class UsageStrategy implements IUsageStrategy {
 					}
 				});
 			}
-		});
+		}).get(container.defaultTimeOutMs());
 
 	}
 
@@ -92,7 +92,7 @@ public class UsageStrategy implements IUsageStrategy {
 				}
 				return result;
 			}
-		});
+		}).get(container.defaultTimeOutMs());
 
 	}
 }

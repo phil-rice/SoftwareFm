@@ -29,7 +29,7 @@ public class UsageReaderForServer extends AbstractUsageReader {
 				Map<String, Map<String, List<Integer>>> projectDetails = (Map) gitReader.getFile(projectFileDescription);
 				return projectDetails;
 			}
-		});
+		}).get(container.defaultTimeOutMs());
 	}
 
 }

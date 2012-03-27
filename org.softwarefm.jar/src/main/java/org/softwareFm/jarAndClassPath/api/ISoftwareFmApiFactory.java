@@ -40,15 +40,15 @@ import org.softwareFm.jarAndClassPath.server.internal.UsageReaderForServer;
 public interface ISoftwareFmApiFactory {
 
 	public static class Utils {
-		public static ICrowdSourcedApi makeClientApiForLocalHost() {
-			return ICrowdSourcedApi.Utils.forClient(getLocalConfig(true));
+		public static ICrowdSourcedApi makeClientApiForLocalHost(long timeOutMs) {
+			return ICrowdSourcedApi.Utils.forClient(getLocalConfig(true, timeOutMs));
 		}
 
-		public static ICrowdSourcedApi makeClientApiForSoftwareFmServer() {
-			return ICrowdSourcedApi.Utils.forClient(getLocalConfig(false));
+		public static ICrowdSourcedApi makeClientApiForSoftwareFmServer(long timeOutMs) {
+			return ICrowdSourcedApi.Utils.forClient(getLocalConfig(false, timeOutMs));
 		}
 
-		public static LocalConfig getLocalConfig(boolean local) {
+		public static LocalConfig getLocalConfig(boolean local, long timeOutMs) {
 			File home = new File(System.getProperty("user.home"));
 			String host = local ? "localhost" : JarAndPathConstants.softwareFmServerUrl;
 			int port = local ? 8080 : 80;
@@ -56,7 +56,7 @@ public interface ISoftwareFmApiFactory {
 			File root = new File(home, ".sfm");
 			final String urlPrefix = JarAndPathConstants.urlPrefix;
 			IExtraReaderWriterConfigurator<LocalConfig> extraReaderWriterConfigurator = getLocalExtraReaderWriterConfigurator();
-			LocalConfig localConfig = new LocalConfig(port, 10, host, root, urlPrefix, remoteGitPrefix, CommonConstants.clientTimeOut, CommonConstants.staleCachePeriod, ICallback.Utils.rethrow(), extraReaderWriterConfigurator);
+			LocalConfig localConfig = new LocalConfig(port, 10, timeOutMs, host, root, urlPrefix, remoteGitPrefix, CommonConstants.clientTimeOut, CommonConstants.staleCachePeriod, ICallback.Utils.rethrow(), extraReaderWriterConfigurator);
 			return localConfig;
 		}
 
@@ -73,11 +73,11 @@ public interface ISoftwareFmApiFactory {
 			};
 		}
 
-		public static ICrowdSourcedApi makeServerApi(int port) {
-			return ICrowdSourcedApi.Utils.forServer(getServerConfig(port));
+		public static ICrowdSourcedApi makeServerApi(int port, long timeOutMs) {
+			return ICrowdSourcedApi.Utils.forServer(getServerConfig(port, timeOutMs));
 		}
 
-		public static ServerConfig getServerConfig(int port) {
+		public static ServerConfig getServerConfig(int port, long timeOutMs) {
 			BasicDataSource dataSource = AbstractLoginDataAccessor.defaultDataSource();
 			File root = ICrowdSourcedServer.Utils.makeSfmRoot();
 			IIdAndSaltGenerator idAndSaltGenerator = IIdAndSaltGenerator.Utils.uuidGenerators();
@@ -93,7 +93,7 @@ public interface ISoftwareFmApiFactory {
 			Callable<Long> timeGetter = Callables.time();
 			final String urlPrefix = JarAndPathConstants.urlPrefix;
 			IExtraReaderWriterConfigurator<ServerConfig> extraReadWriterConfigurator = Utils.getServerExtraReaderWriterConfigurator(urlPrefix);
-			ServerConfig serverConfig = new ServerConfig(port, 1000, root, dataSource, takeOnEnrichment, extraCallProcessors, usage, idAndSaltGenerator, cryptoGenerators, userCryptoAccess, urlPrefix, defaultUserValues, defaultGroupValues, errorHandler, mailer, timeGetter, extraReadWriterConfigurator);//
+			ServerConfig serverConfig = new ServerConfig(port, 1000,timeOutMs, root, dataSource, takeOnEnrichment, extraCallProcessors, usage, idAndSaltGenerator, cryptoGenerators, userCryptoAccess, urlPrefix, defaultUserValues, defaultGroupValues, errorHandler, mailer, timeGetter, extraReadWriterConfigurator);//
 			return serverConfig;
 		}
 
@@ -104,7 +104,7 @@ public interface ISoftwareFmApiFactory {
 					IUsageReader usageReader = new UsageReaderForServer(builder, serverConfig.userUrlGenerator);
 					builder.register(IUsageReader.class, usageReader);
 
-					IGenerateUsageReportGenerator generator = new GenerateUsageProjectGenerator(builder);
+					IGenerateUsageReportGenerator generator = new GenerateUsageProjectGenerator(builder, builder.defaultTimeOutMs());
 					builder.register(IGenerateUsageReportGenerator.class, generator);
 
 					ProjectForServer project = new ProjectForServer((IUserAndGroupsContainer) builder, serverConfig.userCryptoAccess, serverConfig.userUrlGenerator);

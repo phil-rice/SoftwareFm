@@ -75,7 +75,7 @@ public class AboveRepositoryCacheTest extends AbstractProcessCallTest<GitGetProc
 	@Override
 	protected GitGetProcessor makeProcessor() {
 		cache = new UrlCache<String>();
-		return new GitGetProcessor(getServerContainer(), cache);
+		return new GitGetProcessor(getServerContainer(), cache, CommonConstants.testTimeOutMs);
 	}
 
 }

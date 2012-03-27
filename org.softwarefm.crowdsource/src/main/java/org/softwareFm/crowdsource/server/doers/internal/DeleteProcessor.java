@@ -19,9 +19,11 @@ import org.softwareFm.crowdsource.utilities.maps.Maps;
 public class DeleteProcessor implements ICallProcessor {
 
 	private final IContainer container;
+	private final long timeOutMs;
 
-	public DeleteProcessor(IContainer container) {
+	public DeleteProcessor(IContainer container, long timeOutMs) {
 		this.container = container;
+		this.timeOutMs = timeOutMs;
 	}
 
 	@Override
@@ -37,6 +39,6 @@ public class DeleteProcessor implements ICallProcessor {
 				}
 				return null;
 			}
-		});
+		}).get(timeOutMs);
 	}
 }

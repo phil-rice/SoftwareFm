@@ -550,4 +550,8 @@ public class Maps {
 		};
 	}
 
+	public static <K, V>Map<K, V> newSynchronisedMap() {
+		return Collections.synchronizedMap(new HashMap<K, V>());
+	}
+
 }

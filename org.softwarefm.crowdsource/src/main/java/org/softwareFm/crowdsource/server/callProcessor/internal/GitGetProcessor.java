@@ -24,10 +24,12 @@ import org.softwareFm.crowdsource.utilities.maps.UrlCache;
 public class GitGetProcessor implements ICallProcessor {
 	private final UrlCache<String> cache;
 	private final IContainer container;
+	private final long timeOutMs;
 
-	public GitGetProcessor(IContainer container, UrlCache<String> cache) {
+	public GitGetProcessor(IContainer container, UrlCache<String> cache, long timeOutMs) {
 		this.container = container;
 		this.cache = cache;
+		this.timeOutMs = timeOutMs;
 	}
 
 	@Override
@@ -63,7 +65,7 @@ public class GitGetProcessor implements ICallProcessor {
 					return Json.toString(Maps.stringObjectLinkedMap(CommonConstants.repoUrlKey, repoUrl));
 				}
 			}
-		});
+		}).get(timeOutMs);
 		return result;
 		
 	}

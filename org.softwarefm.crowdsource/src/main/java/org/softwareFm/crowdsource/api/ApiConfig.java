@@ -9,8 +9,10 @@ import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 
 @SuppressWarnings("rawtypes")
 public class ApiConfig {
+
 	public final int port;
 	public final File root;
+	public long timeOutMs;
 	public final IUrlGenerator userUrlGenerator;
 	public final IUrlGenerator groupUrlGenerator;
 	public final ICallback<Throwable> errorHandler;
@@ -18,9 +20,10 @@ public class ApiConfig {
 	public final int workerThreads;
 	public final String prefix;
 
-	public ApiConfig(int port, int workerThreads, File root, String urlPrefix, ICallback<Throwable> errorHandler, IExtraReaderWriterConfigurator extraReaderWriterConfigurator) {
+	public ApiConfig(int port, int workerThreads, long timeOutMs, File root, String urlPrefix, ICallback<Throwable> errorHandler, IExtraReaderWriterConfigurator extraReaderWriterConfigurator) {
 		this.port = port;
 		this.workerThreads = workerThreads;
+		this.timeOutMs = timeOutMs;
 		this.root = root;
 		this.prefix = urlPrefix;
 		this.extraReaderWriterConfigurator = extraReaderWriterConfigurator;
@@ -28,6 +31,5 @@ public class ApiConfig {
 		this.groupUrlGenerator = GroupConstants.groupsGenerator(urlPrefix);
 		this.errorHandler = errorHandler;
 	}
-
 
 }

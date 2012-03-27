@@ -42,12 +42,11 @@ public class IExplorerTest extends ApiAndSwtTest {
 			IPlayListGetter playListGetter = IPlayListGetter.Utils.noPlayListGetter();
 
 			Explorer explorer = (Explorer) IExplorer.Utils.explorer(//
-					masterDetailSocial, getLocalApi().makeUserAndGroupsContainer(), cardConfig, rootUrls, playListGetter, service, //
-					ILoginStrategy.Utils.noLoginStrategy(), //
-					IShowMyData.Utils.exceptionShowMyData(),//
+					masterDetailSocial, getLocalApi().makeUserAndGroupsContainer(), cardConfig, rootUrls, playListGetter, service, ILoginStrategy.Utils.noLoginStrategy(), //
+					IShowMyData.Utils.exceptionShowMyData(), //
 					IShowMyGroups.Utils.exceptionShowMyGroups(),//
 					IShowMyPeople.Utils.exceptionShowMyPeople(),//
-					IUserDataManager.Utils.userDataManager(), //
+					IUserDataManager.Utils.userDataManager(),//
 					Callables.<Long> exceptionIfCalled());
 			ICardHolderForTests cardHolder = (ICardHolderForTests) explorer.cardHolder;
 			assertEquals(rootUrls, cardHolder.getRootUrls());
